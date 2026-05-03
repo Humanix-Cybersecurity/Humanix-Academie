@@ -1,0 +1,85 @@
+{
+  "name": "humanix-academie",
+  "version": "0.3.0",
+  "private": true,
+  "license": "AGPL-3.0-or-later",
+  "description": "Humanix Académie Community Edition — plateforme française open source de cybersensibilisation pour PME.",
+  "homepage": "https://humanix-cybersecurity.fr",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/humanix-cybersecurity/humanix-academie.git"
+  },
+  "bugs": {
+    "url": "https://github.com/humanix-cybersecurity/humanix-academie/issues"
+  },
+  "author": "Humanix Cybersecurity <contact@humanix-cybersecurity.fr>",
+  "keywords": [
+    "cybersecurity",
+    "awareness",
+    "phishing-simulation",
+    "gamification",
+    "pme",
+    "souverain",
+    "rgpd",
+    "nis2",
+    "agpl"
+  ],
+  "scripts": {
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint && tsc --noEmit",
+    "format": "prettier --write .",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:reset": "prisma migrate reset --force && npm run db:seed",
+    "breaches:refresh": "tsx scripts/scrape-breaches.ts",
+    "breaches:refresh:deep": "tsx scripts/scrape-breaches.ts --deep",
+    "breaches:debug": "tsx scripts/debug-breaches.ts",
+    "breaches:cleanup": "tsx scripts/cleanup-breaches.ts",
+    "postinstall": "prisma generate",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down",
+    "docker:reset": "docker compose down -v && docker compose up --build"
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "^2.7.0",
+    "@prisma/client": "^5.22.0",
+    "@react-pdf/renderer": "^4.1.5",
+    "canvas-confetti": "^1.9.3",
+    "clsx": "^2.1.1",
+    "gray-matter": "^4.0.3",
+    "next": "15.0.3",
+    "next-auth": "5.0.0-beta.25",
+    "next-mdx-remote": "^5.0.0",
+    "papaparse": "^5.4.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "recharts": "^2.13.3",
+    "resend": "^4.0.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/canvas-confetti": "^1.6.4",
+    "@types/node": "^22.9.0",
+    "@types/papaparse": "^5.3.15",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.15.0",
+    "eslint-config-next": "15.0.3",
+    "postcss": "^8.4.49",
+    "prettier": "^3.3.3",
+    "prisma": "^5.22.0",
+    "tailwindcss": "^3.4.15",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

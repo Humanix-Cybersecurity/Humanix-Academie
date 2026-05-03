@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  Manifeste Office Add-in pour le bouton "Signaler un phishing" Humanix.
+
+  À FINALISER AVANT PUBLICATION :
+   - Remplacer humanix-cybersecurity.fr par votre domaine si différent
+   - Générer un GUID unique pour <Id> (ex : crypto.randomUUID() ou guidgen.com)
+   - Héberger les icônes 16/32/64/80 px dans /public/outlook/
+   - Pour la publication AppSource : passer la validation manifest via
+     https://learn.microsoft.com/office/dev/add-ins/testing/troubleshoot-manifest
+   - Pour distribution interne uniquement : déposer le XML dans le centre
+     d'administration Microsoft 365 > Applications intégrées
+-->
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0"
+  xsi:type="MailApp">
+
+  <Id>4a34b37e-81de-4a46-bb56-d5309bb33037</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Humanix-Cybersecurity SASU</ProviderName>
+  <DefaultLocale>fr-FR</DefaultLocale>
+  <DisplayName DefaultValue="Humanix — Signaler un phishing" />
+  <Description DefaultValue="Bouton 1-clic pour signaler un mail suspect à votre référent cyber et au programme Humanix Académie." />
+  <IconUrl DefaultValue="https://humanix-cybersecurity.fr/outlook/icon-64.png" />
+  <HighResolutionIconUrl DefaultValue="https://humanix-cybersecurity.fr/outlook/icon-128.png" />
+  <SupportUrl DefaultValue="https://humanix-cybersecurity.fr/contact" />
+
+  <AppDomains>
+    <AppDomain>https://humanix-cybersecurity.fr</AppDomain>
+  </AppDomains>
+
+  <Hosts>
+    <Host Name="Mailbox" />
+  </Hosts>
+
+  <Requirements>
+    <Sets>
+      <Set Name="Mailbox" MinVersion="1.5" />
+    </Sets>
+  </Requirements>
+
+  <FormSettings>
+    <Form xsi:type="ItemRead">
+      <DesktopSettings>
+        <SourceLocation DefaultValue="https://humanix-cybersecurity.fr/outlook/taskpane.html" />
+        <RequestedHeight>250</RequestedHeight>
+      </DesktopSettings>
+    </Form>
+  </FormSettings>
+
+  <Permissions>ReadWriteMailbox</Permissions>
+
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read" />
+  </Rule>
+
+  <DisableEntityHighlighting>false</DisableEntityHighlighting>
+
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Requirements>
+      <bt:Sets DefaultMinVersion="1.5">
+        <bt:Set Name="Mailbox" />
+      </bt:Sets>
+    </Requirements>
+    <Hosts>
+      <Host xsi:type="MailHost">
+        <DesktopFormFactor>
+          <ExtensionPoint xsi:type="MessageReadCommandSurface">
+            <OfficeTab id="TabDefault">
+              <Group id="msgReadGroup">
+                <Label resid="GroupLabel" />
+                <Control xsi:type="Button" id="msgReadOpenPaneButton">
+                  <Label resid="ButtonLabel" />
+                  <Supertip>
+                    <Title resid="ButtonLabel" />
+                    <Description resid="ButtonTooltip" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16" />
+                    <bt:Image size="32" resid="Icon.32x32" />
+                    <bt:Image size="80" resid="Icon.80x80" />
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="Taskpane.Url" />
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Icon.16x16" DefaultValue="https://humanix-cybersecurity.fr/outlook/icon-16.png" />
+        <bt:Image id="Icon.32x32" DefaultValue="https://humanix-cybersecurity.fr/outlook/icon-32.png" />
+        <bt:Image id="Icon.80x80" DefaultValue="https://humanix-cybersecurity.fr/outlook/icon-80.png" />
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="Taskpane.Url" DefaultValue="https://humanix-cybersecurity.fr/outlook/taskpane.html" />
+      </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="GroupLabel" DefaultValue="Humanix" />
+        <bt:String id="ButtonLabel" DefaultValue="Signaler à Humanix" />
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="ButtonTooltip" DefaultValue="Signale ce mail comme suspect à votre référent cyber. Le mail sera analysé et vous gagnerez des points sur Humanix Académie." />
+      </bt:LongStrings>
+    </Resources>
+  </VersionOverrides>
+</OfficeApp>

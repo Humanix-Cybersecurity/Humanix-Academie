@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0B3D91;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00A3A1;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  <text x="50%" y="60%" text-anchor="middle" font-size="280" dominant-baseline="middle">🦊</text>
+  <text x="50%" y="92%" text-anchor="middle" font-size="34" font-family="system-ui, -apple-system, sans-serif" font-weight="800" fill="white" opacity="0.9">HUMANIX</text>
+</svg>

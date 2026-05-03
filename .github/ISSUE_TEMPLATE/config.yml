@@ -1,0 +1,26 @@
+# Configuration des templates d'issues GitHub.
+# Désactive les issues "vides" et redirige les utilisateurs vers le bon canal
+# selon leur besoin.
+
+blank_issues_enabled: false
+
+contact_links:
+  - name: Question d'usage ou de configuration
+    url: https://github.com/humanix-cybersecurity/humanix-academie/discussions/categories/q-a
+    about: Pose ta question dans GitHub Discussions plutôt que dans une issue.
+
+  - name: Idée de nouvelle feature à débattre
+    url: https://github.com/humanix-cybersecurity/humanix-academie/discussions/categories/ideas
+    about: Pour les grosses features, préfère une RFC dans Discussions.
+
+  - name: Vulnérabilité de sécurité
+    url: https://github.com/humanix-cybersecurity/humanix-academie/blob/main/SECURITY.md
+    about: NE PAS ouvrir d'issue publique. Voir SECURITY.md pour la procédure de divulgation responsable.
+
+  - name: Rejoindre le Discord
+    url: https://discord.gg/humanix
+    about: Pour discuter en direct avec la communauté et les mainteneurs.
+
+  - name: Demander un devis ou une licence commerciale
+    url: mailto:contact@humanix-cybersecurity.fr
+    about: Pour les questions commerciales (cloud, audit, formation, dual-licensing).
