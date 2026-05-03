@@ -1,0 +1,88 @@
+---
+title: "Mon laptop a ete oublie dans le train"
+durationMinutes: 5
+persona: "tous"
+objective: "Reagir correctement a la perte ou au vol d'un terminal pro"
+xpReward: 50
+scenario: |
+  Vendredi 19h. Tu sors du TGV, tu es en weekend. Sur le quai, tu te rends compte : ton laptop pro est reste dans le filet du wagon. Le train repart vers Marseille.
+
+  Sur ce laptop : ta boite mail M365 connectee, des fichiers clients sensibles, un acces VPN ouvert.
+choices:
+  - id: "a"
+    label: "Je rentre chez moi et je verrai lundi matin"
+    outcome: "bad"
+    feedback: "Catastrophique. 60 heures pendant lesquelles n'importe qui peut acceder a ta boite mail et tes fichiers clients."
+    points: -15
+  - id: "b"
+    label: "J'appelle TOUT DE SUITE mon support IT / mon dirigeant pour signaler la perte"
+    outcome: "good"
+    feedback: "Excellent reflexe. Le support IT va revoquer tes acces, deconnecter tes sessions, et lancer un effacement a distance si possible."
+    points: 30
+  - id: "c"
+    label: "Je change mon mot de passe M365 depuis mon telephone"
+    outcome: "neutral"
+    feedback: "Bonne intention mais incomplet. Si l'attaquant a deja extrait des donnees ou utilise ton VPN, le seul changement de mdp ne suffit pas."
+    points: 10
+  - id: "d"
+    label: "Je tweete a la SNCF pour qu'ils retrouvent mon laptop"
+    outcome: "bad"
+    feedback: "Tu informes publiquement qu'un laptop pro contenant des donnees clients est dans la nature. Mauvais signal d'image et zero protection technique."
+    points: -10
+debrief: |
+  Le bon reflexe pour la perte ou le vol d'un terminal pro est immediat et standardise :
+
+  1. **Signaler dans l'heure** au support IT, dirigeant, ou hotline cyber.
+  2. **Revoquer tous les acces** : sessions M365, VPN, applications metier (l'IT le fait depuis sa console).
+  3. **Effacement a distance** si Intune / Jamf est deploye.
+  4. **Changer les mots de passe sensibles** (au moins le mot de passe principal Microsoft / Google).
+  5. **Declarer le vol/perte** a la SNCF/police selon contexte (assurance + RGPD).
+  6. **Notifier le DPO** si donnees personnelles : 72h pour decider d'une notification CNIL si fuite probable.
+
+  La culture du "pas grave, on verra lundi" cree des incidents majeurs. **Une heure de retard peut transformer une perte en violation de donnees.**
+quiz:
+  - question: "Premier reflexe en cas de perte de laptop pro ?"
+    choices:
+      - id: "a"
+        label: "Attendre lundi matin"
+        correct: false
+      - id: "b"
+        label: "Signaler immediatement au support IT / dirigeant"
+        correct: true
+      - id: "c"
+        label: "Appeler la SNCF en premier"
+        correct: false
+    explanation: "Le signalement immediat permet de revoquer les acces avant qu'un attaquant ne s'en serve."
+
+  - question: "Combien de temps une PME a-t-elle pour decider de notifier la CNIL en cas de fuite ?"
+    choices:
+      - id: "a"
+        label: "30 jours"
+        correct: false
+      - id: "b"
+        label: "72 heures"
+        correct: true
+      - id: "c"
+        label: "Aucune obligation"
+        correct: false
+    explanation: "RGPD art. 33 : 72 heures pour notifier la CNIL en cas de violation de donnees presentant un risque."
+
+  - question: "Vrai ou faux : un mot de passe long suffit a proteger un laptop perdu."
+    choices:
+      - id: "a"
+        label: "Vrai"
+        correct: false
+      - id: "b"
+        label: "Faux — le chiffrement disque + revocation d'acces est necessaire"
+        correct: true
+    explanation: "Un mot de passe peut etre contourne (live USB, dump RAM). Le chiffrement complet (BitLocker, FileVault) protege vraiment."
+---
+
+## Pour aller plus loin
+
+Trois gestes preventifs pour limiter l'impact d'une perte :
+- **Activer le chiffrement** du disque (BitLocker sur Windows Pro, FileVault sur Mac)
+- **Verrouillage automatique** apres 5 minutes d'inactivite
+- **Inscrire** ton terminal au gestionnaire d'entreprise (Intune, Jamf) pour effacement a distance
+
+Ces 3 gestes sont gratuits ou inclus dans ta licence M365 Business.

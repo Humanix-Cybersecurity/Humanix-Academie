@@ -1,0 +1,181 @@
+# ============================================================
+# HumaniX Academy — Stack Docker production-ready
+# Démarrage : docker compose up --build
+# Reset complet : docker compose down -v && docker compose up --build
+# ============================================================
+#
+# Architecture :
+#
+#   [Internet:80,443] ──► [haproxy] ─── frontend public, TLS, ACL, rate limit
+#                              │
+#                              ▼ (réseau humanix_frontend)
+#                          [app] (Next.js)
+#                              │
+#                              ▼ (réseau humanix_backend, isolé)
+#                       [postgres]  [tts]
+#
+# Sécurité :
+#  - app, postgres, tts JAMAIS exposés sur l'host (ports retirés)
+#  - Seul haproxy expose 80/443 sur l'host
+#  - 2 réseaux Docker : frontend (haproxy↔app) et backend (app↔db, app↔tts)
+#  - postgres n'a accès qu'à app (pas à tts ni haproxy)
+
+services:
+  # =====================================================================
+  # HAPROXY — frontend public, sécurité L4/L7
+  # =====================================================================
+  haproxy:
+    image: haproxy:2.9-alpine
+    container_name: humanix-haproxy
+    restart: unless-stopped
+    ports:
+      # Seul service exposé publiquement
+      - "80:80"
+      # Décommenter quand un cert TLS est en place (cf. infra/haproxy/certs/)
+      # - "443:443"
+      # Stats internes — uniquement bindé sur localhost (debug local)
+      - "127.0.0.1:8404:8404"
+    volumes:
+      - ./infra/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      - ./infra/haproxy/errors:/etc/haproxy/errors:ro
+      # Décommenter quand un cert est dispo :
+      # - ./infra/haproxy/certs:/etc/haproxy/certs:ro
+    networks:
+      - humanix_frontend
+    depends_on:
+      app:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "sh", "-c", "wget -qO- http://localhost:8404/ | grep -q 'Statistics Report'"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # =====================================================================
+  # POSTGRES — base de données (réseau backend uniquement)
+  # =====================================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: humanix-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: humanix
+      POSTGRES_PASSWORD: humanix_demo
+      POSTGRES_DB: humanix
+    # PAS de "ports" : postgres n'est plus exposé sur l'host pour des raisons
+    # de sécurité. Pour debug local : `docker exec -it humanix-postgres psql -U humanix`
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - humanix_backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U humanix -d humanix"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  # =====================================================================
+  # TTS — synthèse vocale neurale (Piper, CPU-friendly)
+  # Réseau backend uniquement, accessible par app via http://tts:5500
+  # =====================================================================
+  tts:
+    build:
+      context: ./infra/tts
+      dockerfile: Dockerfile
+    image: humanix-tts:1.0.0
+    container_name: humanix-tts
+    restart: unless-stopped
+    # PAS de "ports" : usage strictement interne
+    networks:
+      - humanix_backend
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:5500/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    # Limite de RAM : Piper avec voix FR consomme ~200 Mo, on plafonne à 512 Mo
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1.5"
+
+  # =====================================================================
+  # APP — Next.js
+  # Pas exposé sur l'host : seul haproxy y accède via réseau frontend
+  # =====================================================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: humanix-app
+    restart: unless-stopped
+    # PAS de "ports" : on passe systématiquement par haproxy
+    environment:
+      DATABASE_URL: "postgresql://humanix:humanix_demo@postgres:5432/humanix?schema=public"
+      AUTH_SECRET: "demo-secret-change-me-in-prod-d3m0-s3cr3t-1234567890"
+      AUTH_URL: "http://localhost:80"
+      AUTH_TRUST_HOST: "true"  # Indispensable derrière un reverse proxy
+      NEXT_PUBLIC_APP_URL: "http://localhost"
+      NEXT_PUBLIC_APP_NAME: "HumaniX Academy"
+      DEMO_MODE: "true"
+      EMAIL_FROM: "demo@humanix.local"
+      RESEND_API_KEY: "demo-key-not-used-in-demo-mode"
+      NODE_ENV: "production"
+      # === TTS premium serveur ===
+      # URL du service TTS interne (réseau humanix_backend).
+      # Si vide ou absent → fallback Web Speech API navigateur.
+      TTS_SERVER_URL: "http://tts:5500"
+      # Plan minimum requis pour bénéficier du TTS premium serveur.
+      # Aligné sur lib/plans.ts. Valeurs : trial / solo / essentielle / pro / premium
+      TTS_MIN_PLAN: "pro"
+      # === IA generative phishing (Mistral souverain FR) ===
+      # Si MISTRAL_API_KEY est vide, l'app sert des fixtures statiques en
+      # demo (UI fonctionnelle sans facturation Mistral).
+      MISTRAL_API_KEY: ""
+      MISTRAL_MODEL: "ministral-8b-latest"
+      # === SSO Google + Microsoft ===
+      # Si vide, les boutons SSO ne s'affichent pas (fallback magic link).
+      # Pour activer Google : creer un projet sur console.cloud.google.com,
+      # ajouter une URL de redirection : http://localhost/api/auth/callback/google
+      AUTH_GOOGLE_ID: ""
+      AUTH_GOOGLE_SECRET: ""
+      # Pour Microsoft / Entra ID : portal.azure.com → App registrations
+      # Redirect URI : http://localhost/api/auth/callback/microsoft-entra-id
+      AUTH_MICROSOFT_ENTRA_ID_ID: ""
+      AUTH_MICROSOFT_ENTRA_ID_SECRET: ""
+      AUTH_MICROSOFT_ENTRA_ID_ISSUER: ""
+      # === Cron secret (observatoire des fuites + autres jobs futurs) ===
+      # Generer avec : openssl rand -hex 32
+      # Utilise pour /api/cron/breaches-refresh (auth header x-cron-secret)
+      CRON_SECRET: "demo-cron-secret-change-me-32-chars-minimum-pour-prod"
+    networks:
+      - humanix_frontend
+      - humanix_backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+      tts:
+        condition: service_started
+
+# =====================================================================
+# RÉSEAUX — segmentation L3
+# =====================================================================
+networks:
+  # Réseau public-facing : haproxy ↔ app uniquement
+  humanix_frontend:
+    driver: bridge
+    name: humanix_frontend
+
+  # Réseau interne : app ↔ postgres, app ↔ tts
+  # internal=true bloquerait toute sortie internet → on laisse à false pour
+  # que l'app puisse appeler Resend, Stripe, etc. en sortie.
+  humanix_backend:
+    driver: bridge
+    name: humanix_backend
+    internal: false
+
+volumes:
+  postgres_data:
+    driver: local

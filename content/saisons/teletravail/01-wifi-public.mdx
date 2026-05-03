@@ -1,0 +1,89 @@
+---
+title: "Le Wi-Fi de la gare"
+durationMinutes: 5
+persona: "commercial-mobile"
+objective: "Identifier le danger des reseaux Wi-Fi publics"
+xpReward: 50
+scenario: |
+  Tu es commercial. En attente d'un train, gare TGV. Tu dois envoyer une proposition commerciale a un gros prospect avant 18h. Pas de 4G correcte. Tu vois 3 reseaux disponibles :
+
+  - "SNCF_Voyageurs"
+  - "FREE_WIFI_GARE"
+  - "WIFI_Officiel_GareSNCF"
+choices:
+  - id: "a"
+    label: "Je me connecte au WIFI_Officiel_GareSNCF, c'est explicite"
+    outcome: "bad"
+    feedback: "Aïe. N'importe qui peut nommer son point d'acces 'WIFI_Officiel_'. Tu viens probablement de te connecter a un 'evil twin'."
+    points: -10
+  - id: "b"
+    label: "Je me connecte au FREE_WIFI_GARE, ça a l'air gratuit"
+    outcome: "bad"
+    feedback: "Free Wi-Fi = piege classique. L'attaquant intercepte tout ton trafic en clair."
+    points: -10
+  - id: "c"
+    label: "J'utilise le partage de connexion 4G/5G de mon telephone"
+    outcome: "good"
+    feedback: "Excellent. Ton operateur est ton meilleur Wi-Fi. Trafic chiffre, identifie, fiable."
+    points: 30
+  - id: "d"
+    label: "Je me connecte a SNCF_Voyageurs et j'active mon VPN entreprise"
+    outcome: "good"
+    feedback: "Tres bien aussi. Le VPN chiffre tout ton trafic meme sur un reseau hostile."
+    points: 25
+debrief: |
+  Tout reseau Wi-Fi public doit etre considere comme **hostile par defaut**. Pourquoi ?
+
+  - L'attaquant peut monter un faux point d'acces au nom plausible ("evil twin")
+  - Sur un reseau ouvert, tout le trafic non-chiffre est interceptable
+  - Les certificats HTTPS peuvent etre compromis par MITM si tu cliques OK sur des avertissements
+
+  Deux solutions sures :
+  1. **Partage de connexion 4G/5G** de ton smartphone → ideal en mobilite
+  2. **VPN entreprise** sur Wi-Fi public → chiffre tout, meme sur reseau hostile
+
+  Reflexe : si je dois envoyer/lire qqch de sensible, **JAMAIS sur un Wi-Fi public sans VPN**.
+quiz:
+  - question: "Quel est le reseau le plus sur en gare ?"
+    choices:
+      - id: "a"
+        label: "Le Wi-Fi gratuit officiel"
+        correct: false
+      - id: "b"
+        label: "Le partage de connexion 4G/5G de mon smartphone"
+        correct: true
+      - id: "c"
+        label: "N'importe quel Wi-Fi avec un nom officiel"
+        correct: false
+    explanation: "Ton operateur est ton canal le plus fiable. Aucun risque d'evil twin sur ta propre 4G."
+
+  - question: "Si je dois absolument utiliser le Wi-Fi public, je :"
+    choices:
+      - id: "a"
+        label: "Active mon VPN entreprise"
+        correct: true
+      - id: "b"
+        label: "Eteins mon antivirus pour aller plus vite"
+        correct: false
+      - id: "c"
+        label: "Verifie que le nom du reseau est officiel"
+        correct: false
+    explanation: "Le VPN chiffre tout ton trafic, meme sur un reseau hostile. Le nom du reseau peut etre usurpe."
+
+  - question: "Vrai ou faux : un cafe / hotel demande 'WIFI_HOTEL_GUEST' est forcement legitime."
+    choices:
+      - id: "a"
+        label: "Vrai"
+        correct: false
+      - id: "b"
+        label: "Faux — le nom peut etre usurpe trivialement"
+        correct: true
+    explanation: "Un attaquant peut nommer son point d'acces comme il veut. Demande au comptoir si tu veux verifier."
+---
+
+## Pour aller plus loin
+
+Le partage de connexion mobile coute quelques minutes de batterie et un peu de data. C'est ridicule a cote du risque qu'il evite. Tu peux meme :
+- Activer le partage en USB (pas de Wi-Fi visible, encore plus sur)
+- Definir un mot de passe fort pour ton point d'acces personnel
+- Le couper des que tu n'as plus besoin

@@ -1,0 +1,99 @@
+; =============================================================================
+; humanix-splunk-searches.spl
+; Searches Splunk officielles pour Humanix Académie Community Edition.
+;
+; Importez ces searches dans votre Splunk via :
+;   Settings -> Searches, reports, and alerts -> New report
+; OU copiez/collez directement dans la barre de recherche.
+;
+; Pré-requis : connecteur humanix-splunk-connector déployé
+; (cf. README.md du même dossier).
+;
+; Sourcetype attendu : "humanix:compliance:evidence"
+; Index recommandé : security_compliance
+; =============================================================================
+
+
+; -----------------------------------------------------------------------------
+; 1. Score moyen de conformité par framework, sur 30 jours.
+;    Utile pour le dashboard COMEX / RSSI.
+; -----------------------------------------------------------------------------
+
+sourcetype="humanix:compliance:evidence"
+| timechart span=1d avg(compliance_score) as score by framework
+
+
+; -----------------------------------------------------------------------------
+; 2. Contrôles non-conformes récents (24h).
+;    Pour le suivi opérationnel quotidien.
+; -----------------------------------------------------------------------------
+
+sourcetype="humanix:compliance:evidence" compliance_status=non_compliant
+earliest=-24h
+| table _time tenant_name framework control_ref control_name compliance_score
+| sort -_time
+
+
+; -----------------------------------------------------------------------------
+; 3. Alerte dégradation : contrôle qui passe de "compliant" à "non_compliant".
+;    À programmer en alerte schedulée (toutes les heures).
+; -----------------------------------------------------------------------------
+
+sourcetype="humanix:compliance:evidence" severity_id>=7
+| stats latest(compliance_status) as current_status,
+        earliest(compliance_status) as previous_status
+        by tenant_name, control_ref
+| where current_status="non_compliant" AND previous_status="compliant"
+| eval alert_msg = "Contrôle " . control_ref . " a régressé pour " . tenant_name
+
+
+; -----------------------------------------------------------------------------
+; 4. Top 10 tenants à risque (plus bas score moyen).
+;    Pour les MSP qui multi-instancient Humanix pour leurs clients.
+; -----------------------------------------------------------------------------
+
+sourcetype="humanix:compliance:evidence"
+earliest=-7d
+| stats avg(compliance_score) as avg_score by tenant_name
+| sort 10 avg_score
+| eval risk_band = case(avg_score < 40, "Critique",
+                        avg_score < 60, "À surveiller",
+                        avg_score < 80, "Correct",
+                        true(), "Excellent")
+
+
+; -----------------------------------------------------------------------------
+; 5. Évolution du score Pack NIS2 (cible : NIS2 art. 21).
+;    Pour les rapports de conformité réglementaires.
+; -----------------------------------------------------------------------------
+
+sourcetype="humanix:compliance:evidence" framework="NIS2"
+| timechart span=7d
+    avg(compliance_score) as score_moyen,
+    count(eval(compliance_status="compliant")) as controles_ok,
+    count(eval(compliance_status="non_compliant")) as controles_ko
+
+
+; -----------------------------------------------------------------------------
+; 6. Heatmap Sensibilisation par service / par mois.
+;    Combinable avec un heatmap dans Splunk Visualization.
+; -----------------------------------------------------------------------------
+
+sourcetype="humanix:compliance:evidence"
+earliest=-3mon
+| eval mois = strftime(_time, "%Y-%m")
+| stats avg(compliance_score) as score by mois, service
+| xyseries mois service score
+
+
+; -----------------------------------------------------------------------------
+; 7. Détection d'inactivité prolongée (60+ jours sans nouveau score).
+;    Signal qu'un tenant a probablement abandonné l'usage.
+; -----------------------------------------------------------------------------
+
+sourcetype="humanix:compliance:evidence"
+| stats latest(_time) as last_seen by tenant_name
+| eval days_since = (now() - last_seen) / 86400
+| where days_since > 60
+| eval action = "Relancer le tenant ou clore l'abonnement"
+| sort -days_since

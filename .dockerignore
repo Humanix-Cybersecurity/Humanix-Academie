@@ -1,0 +1,16 @@
+node_modules
+.next
+.git
+.gitignore
+.env
+.env.local
+.env.*.local
+.DS_Store
+*.log
+README.md
+SETUP_GUIDE.md
+DEMO_SCRIPT.md
+.vscode
+.idea
+coverage
+prisma/migrations/dev.db*

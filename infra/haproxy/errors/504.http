@@ -1,0 +1,6 @@
+HTTP/1.1 504 Gateway Timeout
+Cache-Control: no-cache
+Connection: close
+Content-Type: text/html; charset=utf-8
+
+<!doctype html><html lang=fr><head><meta charset=utf-8><title>Délai serveur dépassé</title><style>body{font-family:system-ui,sans-serif;max-width:480px;margin:80px auto;padding:0 16px;color:#1a1a1a}h1{color:#0B3D91}p{line-height:1.5}</style></head><body><h1>Le serveur met trop de temps à répondre</h1><p>Le serveur applicatif n'a pas répondu à temps. Réessayez dans un instant.</p><p>Si le problème persiste : <a href="mailto:support@humanix-cybersecurity.fr">support@humanix-cybersecurity.fr</a>.</p></body></html>
