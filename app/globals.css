@@ -1,0 +1,416 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* HumaniX Academy — Tokens design system + dark mode */
+@layer base {
+  :root {
+    --color-bg: #FFFFFF;
+    --color-bg-soft: #EAF3F8;
+    --color-card: #FFFFFF;
+    --color-fg: #1A1A1A;
+    --color-fg-muted: #555555;
+    --color-border: #E5E7EB;
+    --color-primary: #0B3D91;
+    --color-primary-50: #EAF3F8;
+    --color-accent: #00A3A1;
+    --color-success: #2E8B57;
+    --color-warn: #C0392B;
+  }
+
+  .dark {
+    --color-bg: #0F172A;
+    --color-bg-soft: #1E293B;
+    --color-card: #1E293B;
+    --color-fg: #F1F5F9;
+    --color-fg-muted: #94A3B8;
+    --color-border: #334155;
+    --color-primary: #60A5FA;
+    --color-primary-50: #1E293B;
+    --color-accent: #2DD4BF;
+    --color-success: #10B981;
+    --color-warn: #F87171;
+  }
+
+  html, body {
+    background: var(--color-bg-soft);
+    color: var(--color-fg);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body.easy-mode {
+    font-size: 18px;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+  }
+
+  *:focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 0.5rem;
+  }
+
+  /* Skip link pour accessibilite — invisible jusqu'au focus clavier */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    padding: 1rem 1.5rem;
+    background: var(--color-primary);
+    color: white;
+    font-weight: bold;
+    border-radius: 0 0 1rem 0;
+    text-decoration: none;
+  }
+  .skip-link:focus {
+    left: 0;
+  }
+
+  /* prefers-reduced-motion : desactive les animations */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl bg-accent-500 px-6 py-4 font-semibold text-white shadow-md transition-all hover:bg-accent-600 hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0;
+  }
+  .dark .btn-primary {
+    @apply bg-teal-400 text-slate-900 hover:bg-teal-300;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl border-2 border-primary-500 px-6 py-4 font-semibold text-primary-500 transition-all hover:bg-primary-50 hover:-translate-y-0.5 active:scale-95;
+  }
+  .dark .btn-secondary {
+    @apply border-blue-400 text-blue-400 hover:bg-slate-800;
+  }
+
+  .card {
+    @apply rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md;
+  }
+  .dark .card {
+    @apply border-slate-700 bg-slate-800 shadow-md;
+  }
+
+  /* Input/select de formulaire (audit-flash, formulaires admin futurs) */
+  .input {
+    @apply w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3 focus:border-accent-500 focus:outline-none text-sm text-gray-900 dark:text-gray-100;
+  }
+
+  /* ============================================================
+   * DESIGN SYSTEM HumaniX — Variantes de cards officielles
+   * Toutes pensées pour être combinables (pas d'override interne).
+   * ============================================================ */
+
+  /* Card stat : pour mettre en avant un chiffre fort (KPI, score) */
+  .card-stat {
+    @apply rounded-2xl border-2 border-gray-100 bg-white p-6 shadow-sm hover:shadow-lg transition-all
+           hover:-translate-y-0.5 relative overflow-hidden;
+  }
+  .dark .card-stat { @apply border-slate-700 bg-slate-800; }
+  .card-stat::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 4px;
+    background: linear-gradient(90deg, #00A3A1 0%, #0B3D91 100%);
+  }
+
+  /* Card feature : barre accent à gauche, pour features en grille */
+  .card-feature {
+    @apply rounded-2xl bg-white p-6 shadow-sm hover:shadow-md transition
+           border-l-4 border-accent-500 border-t border-r border-b border-gray-100;
+  }
+  .dark .card-feature { @apply bg-slate-800 border-t-slate-700 border-r-slate-700 border-b-slate-700; }
+
+  /* Card alert : pour avertissements importants (NIS2, risque) */
+  .card-alert {
+    @apply rounded-2xl bg-amber-50 border-l-4 border-amber-500 p-5
+           border-t border-r border-b border-amber-200;
+  }
+  .dark .card-alert { @apply bg-amber-900/20 border-t-amber-800 border-r-amber-800 border-b-amber-800; }
+
+  /* Card hero : carte premium avec gradient HumaniX (pour CTA majeurs) */
+  .card-hero {
+    @apply rounded-3xl bg-humanix-hero text-white p-8 shadow-xl;
+  }
+
+  /* ============================================================
+   * GRADIENTS OFFICIELS (3 SEULEMENT)
+   * Tous les gradients du produit doivent passer par ces utilities.
+   * ============================================================ */
+  .bg-humanix-hero {
+    background-image: linear-gradient(135deg, #0B3D91 0%, #00A3A1 100%);
+  }
+  .bg-humanix-soft {
+    background-image: linear-gradient(180deg, #EAF3F8 0%, #FFFFFF 100%);
+  }
+  .dark .bg-humanix-soft {
+    background-image: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+  }
+  .bg-humanix-warm {
+    background-image: linear-gradient(135deg, #F59E0B 0%, #E67E22 100%);
+  }
+
+  /* ============================================================
+   * MOTIF HEX SIGNATURE — fond subtil hexagonal en arrière-plan
+   * Référence visuelle directe au nom HumaniX. SVG inline.
+   * ============================================================ */
+  .bg-hex-pattern {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'><path d='M28 2L52 16v32L28 62L4 48V16z' fill='none' stroke='%230B3D91' stroke-opacity='0.06' stroke-width='1.4'/><path d='M28 52L52 66v32L28 112L4 98V66z' fill='none' stroke='%230B3D91' stroke-opacity='0.06' stroke-width='1.4'/></svg>");
+    background-size: 56px 100px;
+  }
+  .dark .bg-hex-pattern {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'><path d='M28 2L52 16v32L28 62L4 48V16z' fill='none' stroke='%2360A5FA' stroke-opacity='0.08' stroke-width='1.4'/><path d='M28 52L52 66v32L28 112L4 98V66z' fill='none' stroke='%2360A5FA' stroke-opacity='0.08' stroke-width='1.4'/></svg>");
+    background-size: 56px 100px;
+  }
+
+  /* Chiffres tabulaires (KPIs alignés colonne) */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  /* Texte par defaut s'adapte */
+  .dark .text-primary-500 { color: #60A5FA; }
+  .dark .text-accent-500 { color: #2DD4BF; }
+  .dark .text-gray-600 { color: #94A3B8; }
+  .dark .text-gray-700 { color: #CBD5E1; }
+  .dark .text-gray-800 { color: #E2E8F0; }
+  .dark .text-gray-500 { color: #94A3B8; }
+  .dark .text-gray-400 { color: #64748B; }
+  .dark .text-gray-300 { color: #475569; }
+
+  /* Backgrounds soft en dark */
+  .dark .bg-white { background: #1E293B; }
+  .dark .bg-gray-50 { background: #0F172A; }
+  .dark .bg-gray-100 { background: #1E293B; }
+  .dark .bg-primary-50 { background: rgba(96, 165, 250, 0.1); }
+
+  /* Borders */
+  .dark .border-gray-200 { border-color: #334155; }
+  .dark .border-gray-100 { border-color: #1E293B; }
+}
+
+/* ====== Animations Duolingo-style ====== */
+@layer utilities {
+  .animate-fadeIn { animation: fadeIn 0.4s ease-out; }
+  .animate-bounce-once { animation: bounceOnce 0.7s ease-out; }
+  .animate-bounce-slow { animation: bounceSlow 2s ease-in-out infinite; }
+  .animate-wiggle { animation: wiggle 0.6s ease-in-out; }
+  .animate-pulse-once { animation: pulseOnce 0.6s ease-out; }
+  .animate-slide-up { animation: slideUp 0.4s ease-out; }
+  .animate-shake { animation: shake 0.4s ease-out; }
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradientShift 3s ease infinite;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes bounceOnce {
+  0% { transform: scale(0.5) translateY(20px); opacity: 0; }
+  50% { transform: scale(1.15) translateY(-10px); opacity: 1; }
+  80% { transform: scale(0.95) translateY(2px); }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+@keyframes bounceSlow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+}
+@keyframes pulseOnce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.07); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Scrollbar discrète pour la nav admin (qui scroll horizontalement
+   sur écran moyen pour éviter le wrap sur 2 lignes). */
+.admin-nav-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(203 213 225) transparent;
+}
+.admin-nav-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+.admin-nav-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.admin-nav-scroll::-webkit-scrollbar-thumb {
+  background-color: rgb(203 213 225);
+  border-radius: 9999px;
+}
+.dark .admin-nav-scroll {
+  scrollbar-color: rgb(71 85 105) transparent;
+}
+.dark .admin-nav-scroll::-webkit-scrollbar-thumb {
+  background-color: rgb(71 85 105);
+}
+
+/* =============================================================================
+   Console dirigeant — refonte mai 2026.
+   Le hack .has-admin-nav a ete supprime : le layout app/admin/layout.tsx
+   gere l'offset nativement via flex + padding-left lg:pl-14 (sidebar slim
+   56px). Aucun useEffect ni classe injectee n'est necessaire.
+   ============================================================================= */
+
+/* =============================================================================
+   Styles pour les pages légales (mentions, CGV, CGU, confidentialité, cookies)
+   Évite la dépendance à @tailwindcss/typography.
+   ============================================================================= */
+.legal-prose {
+  color: rgb(55 65 81);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+.dark .legal-prose {
+  color: rgb(229 231 235);
+}
+.legal-prose p {
+  margin: 0.75em 0;
+}
+.legal-prose p:first-child { margin-top: 0; }
+.legal-prose p:last-child { margin-bottom: 0; }
+.legal-prose ul,
+.legal-prose ol {
+  margin: 0.75em 0 0.75em 1.25rem;
+  padding-left: 0.5rem;
+}
+.legal-prose ul { list-style: disc; }
+.legal-prose ol { list-style: decimal; }
+.legal-prose li {
+  margin: 0.4em 0;
+  padding-left: 0.25rem;
+}
+.legal-prose li::marker {
+  color: rgb(0 163 161);
+  font-weight: 700;
+}
+.legal-prose strong {
+  color: rgb(11 61 145);
+  font-weight: 700;
+}
+.dark .legal-prose strong {
+  color: rgb(125 211 252);
+}
+.legal-prose a {
+  color: rgb(0 163 161);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  font-weight: 500;
+}
+.legal-prose a:hover {
+  color: rgb(11 61 145);
+  text-decoration-thickness: 2px;
+}
+.legal-prose code {
+  background: rgb(243 244 246);
+  border: 1px solid rgb(229 231 235);
+  border-radius: 0.375rem;
+  padding: 0.1rem 0.4rem;
+  font-size: 0.85em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: rgb(11 61 145);
+}
+.dark .legal-prose code {
+  background: rgb(30 41 59);
+  border-color: rgb(51 65 85);
+  color: rgb(125 211 252);
+}
+.legal-prose em {
+  font-style: italic;
+  color: rgb(75 85 99);
+}
+
+/* Layout du contenu légal : largeur lisible + ancres */
+.legal-content {
+  max-width: 100%;
+}
+.legal-content h2,
+.legal-content h3 {
+  scroll-margin-top: 6rem;
+}
+
+/* Print : masquer les éléments décoratifs */
+@media print {
+  .legal-content aside,
+  header.card,
+  .skip-link,
+  nav,
+  footer { display: none !important; }
+  .legal-content { max-width: 100% !important; }
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    page-break-inside: avoid;
+  }
+}
+
+/* =============================================================================
+   Améliorations accessibilité globales
+   ============================================================================= */
+
+/* Visually hidden : caché visuellement mais accessible aux lecteurs d'écran.
+   Convention sr-only standard. */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Focus visible renforcé pour les liens dans les pages légales */
+.legal-prose a:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* main:focus pour skip link : pas de outline puisque c'est un container */
+main:focus {
+  outline: none;
+}
+
+/* Tap targets minimum 44x44 pour boutons sur mobile (WCAG 2.5.5) */
+@media (max-width: 640px) {
+  button, a.btn-primary, a.btn-secondary {
+    min-height: 44px;
+  }
+}

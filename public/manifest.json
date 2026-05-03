@@ -1,0 +1,47 @@
+{
+  "name": "Humanix Académie",
+  "short_name": "Humanix",
+  "description": "Humanix Académie, par Humanix-Cybersecurity. Cybersécurité ludique pour PME : modules de 5 minutes, mascotte évolutive, librairie.",
+  "start_url": "/apprendre",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#0B3D91",
+  "lang": "fr",
+  "dir": "ltr",
+  "categories": ["education", "productivity", "business"],
+  "icons": [
+    {
+      "src": "/logo-humanix-academie-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-humanix-academie-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Apprendre",
+      "short_name": "Apprendre",
+      "url": "/apprendre",
+      "description": "Reprendre mon parcours"
+    },
+    {
+      "name": "Librairie",
+      "short_name": "Librairie",
+      "url": "/librairie",
+      "description": "Articles micro-learning"
+    },
+    {
+      "name": "Mon profil",
+      "short_name": "Profil",
+      "url": "/profil"
+    }
+  ]
+}

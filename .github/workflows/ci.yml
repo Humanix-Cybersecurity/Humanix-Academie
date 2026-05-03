@@ -1,0 +1,153 @@
+name: CI
+
+# Tourne sur :
+# - chaque push sur main
+# - chaque PR vers main
+# Vérifie : lint + typecheck + build (et tests si présents).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Permissions minimales (principe du moindre privilège).
+permissions:
+  contents: read
+
+# Annule les runs précédents pour la même PR (gain CI minutes).
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Job 1 : Lint + TypeScript strict
+  # ---------------------------------------------------------------------------
+  lint:
+    name: Lint & TypeScript
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Run ESLint + tsc --noEmit
+        run: npm run lint
+
+  # ---------------------------------------------------------------------------
+  # Job 2 : Build production (sanity check)
+  # ---------------------------------------------------------------------------
+  build:
+    name: Production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: lint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js
+        run: npm run build
+        env:
+          # Variables minimales pour que le build passe (pas de runtime).
+          AUTH_SECRET: build-time-only-not-a-real-secret
+          DATABASE_URL: postgresql://user:pass@localhost:5432/build?schema=public
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
+          NEXT_PUBLIC_APP_NAME: Humanix Académie
+
+  # ---------------------------------------------------------------------------
+  # Job 3 : Audit de sécurité npm
+  # ---------------------------------------------------------------------------
+  security:
+    name: npm audit (HIGH/CRITICAL)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Audit production dependencies (HIGH/CRITICAL only)
+        run: npm audit --omit=dev --audit-level=high
+
+  # ---------------------------------------------------------------------------
+  # Job 4 : Vérification format Prettier
+  # ---------------------------------------------------------------------------
+  format:
+    name: Prettier check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Check formatting
+        run: npx prettier --check "**/*.{ts,tsx,js,jsx,json,md,yml,yaml}"
+        continue-on-error: true   # Format check ne bloque pas la PR (avertissement seulement)
+
+  # ---------------------------------------------------------------------------
+  # Job 5 : Vérification DCO (Developer Certificate of Origin)
+  # ---------------------------------------------------------------------------
+  dco:
+    name: DCO signed-off-by check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify Signed-off-by on commits
+        run: |
+          BASE_SHA=$(git merge-base origin/main HEAD)
+          UNSIGNED=$(git log --format='%h %s' "${BASE_SHA}..HEAD" --invert-grep --grep='^Signed-off-by:' || true)
+          if [ -n "${UNSIGNED}" ]; then
+            echo "Les commits suivants ne sont pas signés DCO :"
+            echo "${UNSIGNED}"
+            echo ""
+            echo "Pour corriger : git rebase --signoff ${BASE_SHA}"
+            echo "Puis : git push --force-with-lease"
+            exit 1
+          fi
+          echo "Tous les commits sont signés DCO."

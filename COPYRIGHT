@@ -1,0 +1,52 @@
+Humanix Académie — Community Edition
+
+Copyright (C) 2026 Humanix Cybersecurity
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License as published by the Free
+Software Foundation, version 3 of the License.
+
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+details.
+
+You should have received a copy of the GNU Affero General Public License along
+with this program. If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+
+================================================================================
+
+Authors and contributors
+------------------------
+
+Original author:
+  Florian Durano  (Humanix Cybersecurity)
+
+Contributors are listed in the AUTHORS file (generated from git history).
+
+Contact
+-------
+
+  Website        https://humanix-cybersecurity.fr
+  Security       security@humanix-cybersecurity.fr
+  Commercial     contact@humanix-cybersecurity.fr
+  Repository     https://github.com/humanix-cybersecurity/humanix-academie
+
+Trademarks
+----------
+
+"Humanix", "Humanix Cybersecurity" and "Humanix Académie" are trademarks of
+Humanix Cybersecurity. The AGPLv3 license grants you the right to use, modify
+and redistribute the source code; it does NOT grant any right to use these
+trademarks for derivative works without prior written authorization.
+
+Third-party components
+----------------------
+
+This program includes third-party open source components, each governed by
+its own license. See the full list and respective notices in:
+  - package.json (npm dependencies)
+  - prisma/schema.prisma (database schema dependencies)
+
+A consolidated NOTICE file may be added in a future release listing all
+material third-party components and their licenses.

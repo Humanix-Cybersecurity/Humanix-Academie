@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Humanix — Signaler un phishing</title>
+<!-- Office.js : SDK officiel Microsoft pour Add-ins. CDN MS uniquement. -->
+<script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    margin: 0;
+    padding: 16px;
+    background: #FFFFFF;
+    color: #1A1A1A;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  h1 {
+    font-size: 18px;
+    color: #0B3D91;
+    margin: 0 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  h1 .logo { font-size: 22px; }
+  p.intro {
+    color: #555;
+    margin: 0 0 16px;
+  }
+  .meta {
+    background: #F8F9FA;
+    border-left: 3px solid #00A3A1;
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-size: 12px;
+  }
+  .meta strong { color: #0B3D91; }
+  button {
+    background: #C0392B;
+    color: white;
+    border: 0;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    width: 100%;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  button:hover { background: #8E2A1F; }
+  button:disabled { opacity: .6; cursor: wait; }
+  .result {
+    margin-top: 16px;
+    padding: 12px;
+    border-radius: 6px;
+    display: none;
+    font-size: 13px;
+  }
+  .result.success {
+    background: #D1FAE5;
+    color: #065F46;
+    border: 1px solid #6EE7B7;
+    display: block;
+  }
+  .result.error {
+    background: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid #FCA5A5;
+    display: block;
+  }
+  .footer {
+    margin-top: 20px;
+    padding-top: 12px;
+    border-top: 1px solid #E5E7EB;
+    font-size: 11px;
+    color: #999;
+    text-align: center;
+  }
+  a { color: #00A3A1; text-decoration: none; }
+</style>
+</head>
+<body>
+<h1><span class="logo" aria-hidden="true">🛡️</span> Humanix Académie</h1>
+<p class="intro">Vous suspectez ce mail. Signalez-le à votre référent cyber en 1 clic — Humanix gagnera des points pour vous et alertera votre équipe.</p>
+
+<div class="meta" id="mailMeta">
+  <p><strong>Expéditeur :</strong> <span id="metaFrom">…</span></p>
+  <p><strong>Sujet :</strong> <span id="metaSubject">…</span></p>
+  <p><strong>Reçu le :</strong> <span id="metaDate">…</span></p>
+</div>
+
+<button id="reportBtn" type="button">Signaler comme suspect</button>
+
+<div id="result" class="result" role="status" aria-live="polite"></div>
+
+<p class="footer">
+  Humanix Académie · <a href="https://humanix-cybersecurity.fr" target="_blank" rel="noopener">humanix-cybersecurity.fr</a>
+</p>
+
+<script>
+  // Configuration : URL du backend Humanix qui recevra le signalement.
+  // À surcharger si auto-hébergement (env REPORT_ENDPOINT).
+  var REPORT_ENDPOINT = "https://humanix-cybersecurity.fr/api/phishing/report";
+
+  Office.onReady(function (info) {
+    if (info.host !== Office.HostType.Outlook) return;
+
+    var item = Office.context.mailbox.item;
+    document.getElementById("metaFrom").textContent =
+      (item.from && (item.from.displayName + " <" + item.from.emailAddress + ">")) || "—";
+    document.getElementById("metaSubject").textContent = item.subject || "—";
+    document.getElementById("metaDate").textContent = item.dateTimeCreated
+      ? new Date(item.dateTimeCreated).toLocaleString("fr-FR")
+      : "—";
+
+    document.getElementById("reportBtn").addEventListener("click", function () {
+      submitReport(item);
+    });
+  });
+
+  function submitReport(item) {
+    var btn = document.getElementById("reportBtn");
+    var result = document.getElementById("result");
+    btn.disabled = true;
+    btn.textContent = "Envoi en cours…";
+
+    // Récupère le contenu du mail pour analyse côté serveur
+    item.body.getAsync(Office.CoercionType.Text, function (asyncResult) {
+      var bodyText = "";
+      if (asyncResult.status === Office.AsyncResultStatus.Succeeded) {
+        bodyText = (asyncResult.value || "").slice(0, 10000);
+      }
+
+      var payload = {
+        userEmail: Office.context.mailbox.userProfile.emailAddress,
+        from: item.from ? item.from.emailAddress : null,
+        fromDisplayName: item.from ? item.from.displayName : null,
+        subject: item.subject || "",
+        receivedAt: item.dateTimeCreated ? new Date(item.dateTimeCreated).toISOString() : null,
+        bodyExcerpt: bodyText,
+        internetMessageId: item.internetMessageId || null,
+        source: "outlook-addin",
+      };
+
+      fetch(REPORT_ENDPOINT, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+        credentials: "omit",
+      })
+        .then(function (res) {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.json();
+        })
+        .then(function (data) {
+          result.className = "result success";
+          result.textContent = "✅ Signalement envoyé à votre référent cyber. " +
+            (data.coinsAwarded ? "+" + data.coinsAwarded + " 🪙 attribués sur Humanix !" : "Merci d'avoir aidé votre équipe.");
+          btn.style.display = "none";
+        })
+        .catch(function (err) {
+          result.className = "result error";
+          result.textContent = "❌ Échec de l'envoi : " + err.message + ". Réessayez plus tard.";
+          btn.disabled = false;
+          btn.textContent = "Signaler comme suspect";
+        });
+    });
+  }
+</script>
+</body>
+</html>
