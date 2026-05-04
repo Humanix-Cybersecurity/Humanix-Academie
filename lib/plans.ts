@@ -116,7 +116,7 @@ export function planHasFeature(
  */
 export async function getTenantPlan(tenantId: string): Promise<PlanId> {
   // 1. Licence signée si présente et valide
-  const license = await import("./license/index.js")
+  const license = await import("./license/index")
     .then((m) => m.getActiveLicense())
     .catch(() => null);
   if (license?.valid) {

@@ -8,8 +8,8 @@
 // L'app runtime importe uniquement verify.ts (avec la cle publique).
 
 import { createPrivateKey, generateKeyPairSync, sign as cryptoSign } from "node:crypto";
-import { canonicalJson, encodeLicense } from "./format.js";
-import type { LicensePayload } from "./types.js";
+import { canonicalJson, encodeLicense } from "./format";
+import type { LicensePayload } from "./types";
 
 /**
  * Signe un payload avec la cle privee fournie en PEM.
