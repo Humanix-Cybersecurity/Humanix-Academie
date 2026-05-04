@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Tests OSCAL v1.1.2 — Assessment Results Model.
 // Critique : un OSCAL invalide est rejeté par les outils GRC tiers
 // (Eramba, RegScale, OpenSCAP) → preuve perdue → audit raté chez le client.

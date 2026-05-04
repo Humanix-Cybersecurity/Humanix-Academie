@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Endpoint léger pour le sondage côté client : "le TTS premium est-il
 // disponible pour moi ?". Pas d'audit log, pas d'appel au service TTS,
 // pas de calcul lourd. Juste : auth + plan check.

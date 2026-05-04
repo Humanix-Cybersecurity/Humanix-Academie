@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
 // AdminDashboard — Console dirigeant v3 (mai 2026, refonte Linear/Vercel-like).
 //

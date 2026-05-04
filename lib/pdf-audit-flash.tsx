@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // PDF du rapport d'audit flash cyber HumaniX.
 // Genere serveur via @react-pdf/renderer.
 // Style aligne sur lib/pdf-report.tsx pour coherence visuelle.

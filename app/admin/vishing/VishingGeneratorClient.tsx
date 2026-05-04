@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Client component : formulaire de generation + preview du script + bouton
 // "Ecouter avec Piper TTS". Tout passe par l'endpoint /api/admin/vishing/generate
 // (server-side : auth, plan-gating, rate limit, anti-PII).

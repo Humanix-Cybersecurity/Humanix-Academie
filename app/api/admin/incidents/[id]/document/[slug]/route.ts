@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Telechargement d'un document de reponse a incident.
 // Authn : ADMIN/SUPERADMIN du tenant proprietaire.
 

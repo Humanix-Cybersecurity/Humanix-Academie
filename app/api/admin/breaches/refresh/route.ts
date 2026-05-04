@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Endpoint manuel SUPERADMIN pour relancer le scrape des fuites de données.
 // Réservé à l'admin Humanix (contact@humanix-cybersecurity.fr).
 

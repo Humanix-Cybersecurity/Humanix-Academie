@@ -1,5 +1,6 @@
 "use server";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getTenantPlan } from "@/lib/plans";

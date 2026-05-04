@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Endpoint debug : retourne le HTML brut récupéré pour chaque source
 // (premier extrait de 2000 caractères). Permet de calibrer précisément
 // les parsers en cas de structure inattendue.

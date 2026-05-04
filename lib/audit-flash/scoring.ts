@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Moteur de scoring de l'audit flash.
 // Convertit les reponses en : score / 100, verdict, top 3 risques, recommandations,
 // et propose une offre HumaniX adaptee a la taille de l'entreprise.

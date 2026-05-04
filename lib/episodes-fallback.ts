@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Fallback intelligent pour les episodes dont le MDX n'a pas encore ete ecrit.
 //
 // CONTEXTE : on a 150 episodes au catalogue (cf. prisma/catalog-saisons.ts)

@@ -1,4 +1,5 @@
 "use client";
+// SPDX-License-Identifier: AGPL-3.0-or-later
 import { useTransition, useState } from "react";
 import { launchCampaign } from "@/app/admin/phishing/actions";
 import { PHISHING_TEMPLATES } from "@/lib/phishing";
