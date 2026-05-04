@@ -57,7 +57,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "recharts": "^2.13.3",
-    "resend": "^4.0.1",
+    "resend": "^6.12.2",
     "zod": "^4.4.3"
   },
   "devDependencies": {
