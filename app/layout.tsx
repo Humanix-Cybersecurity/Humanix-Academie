@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import Providers from "./providers";

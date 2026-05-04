@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SCIM v2 - ServiceProviderConfig (RFC 7643 §5)
 // Decrit les capacites de notre serveur SCIM. Lecture publique (pas d'auth).
 

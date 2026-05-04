@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
 // /admin/modules — Catalogue des modules pédagogiques (activer/désactiver,
 // réordonner, marquer obligatoire).

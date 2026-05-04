@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page publique Cyber-météo France — accessible à tous (pas d'auth requise).
 // Sert de landing pour le badge en bandeau home, et de page éducative
 // "comprendre les niveaux d'alerte cyber".

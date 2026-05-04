@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Tests du mapper SCIM ↔ Prisma.
 // Critique : SCIM est l'interface de provisioning enterprise (Entra, Okta).
 // Une regression ici = Active Directory ne sync plus = client enterprise furieux.

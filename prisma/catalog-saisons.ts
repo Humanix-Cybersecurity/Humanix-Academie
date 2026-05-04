@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Catalogue HumaniX Académie — 25 saisons × 6 épisodes = 150 modules officiels.
 //
 // Ce catalogue alimente la BDD (table Saison + Episode) au seeding. Le contenu

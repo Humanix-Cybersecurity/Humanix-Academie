@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Helpers crypto SERVER-ONLY (utilisent node:crypto)
 // Ne JAMAIS importer ce fichier depuis un composant client.
 // L'import node:crypto fait deja echouer le bundle client.

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Tests des helpers crypto.
 // Critique : api-keys + tracking tokens — un bug = compromission auth.
 

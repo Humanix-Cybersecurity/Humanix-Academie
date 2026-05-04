@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Table des webhooks (vue admin/integrations).
 // Server-actions passees via props pour rester en harmonie avec le reste.
 

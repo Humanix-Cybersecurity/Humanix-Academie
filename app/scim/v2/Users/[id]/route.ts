@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SCIM v2 - /Users/{id} : GET / PUT / PATCH / DELETE
 // RFC 7644 §3.4.1 (retrieve), §3.5.1 (replace), §3.5.2 (modify), §3.6 (delete)
 

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Trust Center — page commerciale + transparence sécurité
 // Cible : RSSI / DSI / dirigeant qui demande "vous gérez la sécu comment ?"
 import Link from "next/link";

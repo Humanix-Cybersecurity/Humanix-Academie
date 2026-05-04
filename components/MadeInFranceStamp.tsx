@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Cachet rond style "tampon officiel" - signature souveraine Humanix.
 // V2 : design fini.
 //   - Double cercle pointille (style sceau notaire) avec rythme regulier
