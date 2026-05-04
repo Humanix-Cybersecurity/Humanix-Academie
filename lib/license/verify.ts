@@ -15,14 +15,14 @@
 // pour eviter de recalculer Ed25519 a chaque request.
 
 import { createPublicKey, verify as cryptoVerify } from "node:crypto";
-import { canonicalJson, decodeLicense } from "./format.js";
-import { PUBLIC_KEY_PEM } from "./public-key.js";
+import { canonicalJson, decodeLicense } from "./format";
+import { PUBLIC_KEY_PEM } from "./public-key";
 import type {
   License,
   LicenseCheckResult,
   LicenseError,
   LicensePayload,
-} from "./types.js";
+} from "./types";
 
 /**
  * Verifie une string licence complete.
