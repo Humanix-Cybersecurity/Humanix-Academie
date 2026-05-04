@@ -9,7 +9,8 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   const session = await auth();
-  if (!session?.user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!session?.user)
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const role = session.user!.role;
   if (role !== "ADMIN" && role !== "MANAGER" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
@@ -35,20 +36,25 @@ export async function GET() {
     }),
   ]);
 
-  if (!tenant) return NextResponse.json({ error: "tenant_not_found" }, { status: 404 });
+  if (!tenant)
+    return NextResponse.json({ error: "tenant_not_found" }, { status: 404 });
 
   const totalSeats = users.length;
   const seenAtLeastOne = new Set(allProgress.map((p) => p.user.id)).size;
-  const activationRate = totalSeats === 0 ? 0 : Math.round((seenAtLeastOne / totalSeats) * 100);
+  const activationRate =
+    totalSeats === 0 ? 0 : Math.round((seenAtLeastOne / totalSeats) * 100);
   const completedEpisodes = allProgress.length;
   const totalEpisodes = saisons.reduce((s, sa) => s + sa.episodes.length, 0);
   // Sur le rapport NIS2/conformite : on utilise le score de MAITRISE (riskScore
   // moyen, borne 0..100) plutot que la moyenne des Progress.score qui est de
   // l'XP brute (peut depasser 100, faux ami sur un PDF de conformite). L'XP
   // brute reste expose en "totalXP" pour la gamification.
-  const averageScore = totalSeats === 0
-    ? 0
-    : Math.round(users.reduce((s, u) => s + (u.riskScore ?? 50), 0) / totalSeats);
+  const averageScore =
+    totalSeats === 0
+      ? 0
+      : Math.round(
+          users.reduce((s, u) => s + (u.riskScore ?? 50), 0) / totalSeats,
+        );
   const conformityScore = Math.round(
     activationRate * 0.4 +
       (completedEpisodes / Math.max(totalEpisodes * totalSeats, 1)) * 100 * 0.6,
@@ -57,7 +63,9 @@ export async function GET() {
   const saisonsBreakdown = saisons.map((s) => {
     const completedBy = new Set<string>();
     for (const u of users) {
-      const userEps = allProgress.filter((p) => p.user.id === u.id && p.saisonId === s.id);
+      const userEps = allProgress.filter(
+        (p) => p.user.id === u.id && p.saisonId === s.id,
+      );
       if (s.episodes.length > 0 && userEps.length === s.episodes.length) {
         completedBy.add(u.id);
       }
@@ -66,13 +74,19 @@ export async function GET() {
       name: s.title,
       completed: completedBy.size,
       total: totalSeats,
-      pct: totalSeats === 0 ? 0 : Math.round((completedBy.size / totalSeats) * 100),
+      pct:
+        totalSeats === 0
+          ? 0
+          : Math.round((completedBy.size / totalSeats) * 100),
     };
   });
 
   const team = users.map((u) => {
     const ups = allProgress.filter((p) => p.user.id === u.id);
-    const last = ups.sort((a, b) => (b.completedAt?.getTime() || 0) - (a.completedAt?.getTime() || 0))[0];
+    const last = ups.sort(
+      (a, b) =>
+        (b.completedAt?.getTime() || 0) - (a.completedAt?.getTime() || 0),
+    )[0];
     return {
       name: u.name || u.email.split("@")[0],
       service: u.service ?? "—",

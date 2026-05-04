@@ -61,7 +61,8 @@ export async function upsertAnecdote(formData: FormData) {
     category: formData.get("category"),
     incidentDate: formData.get("incidentDate"),
     scheduledFor: formData.get("scheduledFor") || null,
-    isActive: formData.get("isActive") === "on" || formData.get("isActive") === "true",
+    isActive:
+      formData.get("isActive") === "on" || formData.get("isActive") === "true",
   });
 
   if (!parsed.success) {
@@ -139,6 +140,8 @@ export async function seedAnecdotesIfEmpty() {
  * Form-action compatible : Next 15 attend (formData) => void | Promise<void>
  * Ce wrapper appelle seedAnecdotesIfEmpty et ignore le retour.
  */
-export async function seedAnecdotesFormAction(_formData: FormData): Promise<void> {
+export async function seedAnecdotesFormAction(
+  _formData: FormData,
+): Promise<void> {
   await seedAnecdotesIfEmpty();
 }

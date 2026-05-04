@@ -2,7 +2,13 @@
 import { useTransition } from "react";
 import { stopCampaign, simulateClicks } from "@/app/admin/phishing/actions";
 
-export default function CampaignActions({ campaignId, isActive }: { campaignId: string; isActive: boolean }) {
+export default function CampaignActions({
+  campaignId,
+  isActive,
+}: {
+  campaignId: string;
+  isActive: boolean;
+}) {
   const [pending, startTransition] = useTransition();
 
   const onSimulate = () => {

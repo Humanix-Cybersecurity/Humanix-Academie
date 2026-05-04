@@ -48,24 +48,37 @@ export default async function AdminConformiteNis2Page() {
 
       <div className="space-y-6 min-w-0">
         {/* Composition du pack */}
-        <AdminSection
-          title="Ce que contient ce pack"
-          variant="highlight"
-        >
+        <AdminSection title="Ce que contient ce pack" variant="highlight">
           <ol className="space-y-2.5 text-sm text-gray-700 dark:text-gray-300 list-none">
             {[
-              { name: "Politique de sensibilisation à la cybersécurité", desc: "engagement direction signable" },
-              { name: "Procédure de déclaration d'incident", desc: "checklist opérationnelle (24h / 72h / 1 mois)" },
-              { name: "Registre des actions de sensibilisation", desc: "extrait consolidé des stats Humanix" },
-              { name: "Engagement cyber du collaborateur", desc: "charte courte à joindre au contrat de travail" },
+              {
+                name: "Politique de sensibilisation à la cybersécurité",
+                desc: "engagement direction signable",
+              },
+              {
+                name: "Procédure de déclaration d'incident",
+                desc: "checklist opérationnelle (24h / 72h / 1 mois)",
+              },
+              {
+                name: "Registre des actions de sensibilisation",
+                desc: "extrait consolidé des stats Humanix",
+              },
+              {
+                name: "Engagement cyber du collaborateur",
+                desc: "charte courte à joindre au contrat de travail",
+              },
             ].map((doc, i) => (
               <li key={i} className="flex items-start gap-3">
                 <span className="shrink-0 w-7 h-7 rounded-md bg-accent-500/10 text-accent-600 dark:text-accent-300 font-bold flex items-center justify-center text-sm tabular-nums">
                   {i + 1}
                 </span>
                 <div className="min-w-0">
-                  <p className="font-semibold text-gray-900 dark:text-gray-100">{doc.name}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{doc.desc}</p>
+                  <p className="font-semibold text-gray-900 dark:text-gray-100">
+                    {doc.name}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    {doc.desc}
+                  </p>
                 </div>
               </li>
             ))}
@@ -83,20 +96,19 @@ export default async function AdminConformiteNis2Page() {
         {/* Note légale */}
         <article className="rounded-xl border border-gray-200 dark:border-slate-800 bg-gray-50/60 dark:bg-slate-900/40 p-4">
           <h3 className="font-bold text-gray-900 dark:text-gray-100 text-sm mb-2 flex items-center gap-2">
-            <span aria-hidden="true">ℹ️</span>
-            À savoir
+            <span aria-hidden="true">ℹ️</span>À savoir
           </h3>
           <div className="text-xs text-gray-600 dark:text-gray-400 space-y-2 leading-relaxed">
             <p>
-              Ces documents sont rédigés pour couvrir les exigences usuelles d'une
-              PME française concernée par NIS2. Ils ne se substituent pas à un
-              audit réglementaire formel par un cabinet certifié, mais constituent
-              un socle organisationnel solide accepté par la majorité des
-              assureurs cyber et auditeurs clients.
+              Ces documents sont rédigés pour couvrir les exigences usuelles
+              d'une PME française concernée par NIS2. Ils ne se substituent pas
+              à un audit réglementaire formel par un cabinet certifié, mais
+              constituent un socle organisationnel solide accepté par la
+              majorité des assureurs cyber et auditeurs clients.
             </p>
             <p>
-              Conservez le PDF émis (horodaté) : il fait office de <em>preuve de
-              démarche cyber</em> en cas d'audit ou d'incident.
+              Conservez le PDF émis (horodaté) : il fait office de{" "}
+              <em>preuve de démarche cyber</em> en cas d'audit ou d'incident.
             </p>
           </div>
         </article>

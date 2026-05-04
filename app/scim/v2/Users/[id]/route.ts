@@ -38,7 +38,11 @@ async function loadScopedUser(req: Request, id: string, op: string) {
 
   // Rate limit operation-specifique (read : 200/min, write : 100/min)
   const limit = op === "get" ? 200 : SCIM_WRITE_LIMIT;
-  const rl = checkRateLimit(`scim:users-${op}:${auth.tenantId}`, limit, SCIM_RATE_WINDOW_MS);
+  const rl = checkRateLimit(
+    `scim:users-${op}:${auth.tenantId}`,
+    limit,
+    SCIM_RATE_WINDOW_MS,
+  );
   if (!rl.ok) {
     return {
       response: NextResponse.json(
@@ -56,10 +60,10 @@ async function loadScopedUser(req: Request, id: string, op: string) {
   });
   if (!user) {
     return {
-      response: NextResponse.json(
-        scimError(404, `User ${id} not found`),
-        { status: 404, headers: SCIM_HEADERS },
-      ),
+      response: NextResponse.json(scimError(404, `User ${id} not found`), {
+        status: 404,
+        headers: SCIM_HEADERS,
+      }),
     };
   }
   return { auth, user };
@@ -148,7 +152,11 @@ export async function PATCH(
     );
   }
 
-  const ops = body.Operations as { op: string; path?: string; value?: unknown }[];
+  const ops = body.Operations as {
+    op: string;
+    path?: string;
+    value?: unknown;
+  }[];
   const update = applyScimPatch(r.user!, ops);
 
   if (Object.keys(update).length === 0) {

@@ -2,7 +2,11 @@
 import { useTransition } from "react";
 import { stopChallenge } from "@/app/admin/actions";
 
-export default function StopChallengeButton({ challengeId }: { challengeId: string }) {
+export default function StopChallengeButton({
+  challengeId,
+}: {
+  challengeId: string;
+}) {
   const [pending, startTransition] = useTransition();
 
   const onClick = () => {

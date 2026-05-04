@@ -10,7 +10,10 @@ export async function GET(req: Request) {
   if (!a.ok) return NextResponse.json({ error: a.error }, { status: a.status });
 
   const url = new URL(req.url);
-  const limit = Math.min(parseInt(url.searchParams.get("limit") ?? "100", 10), 500);
+  const limit = Math.min(
+    parseInt(url.searchParams.get("limit") ?? "100", 10),
+    500,
+  );
 
   const users = await db.user.findMany({
     where: { tenantId: a.tenantId! },

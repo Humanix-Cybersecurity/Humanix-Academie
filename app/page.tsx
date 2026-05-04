@@ -35,13 +35,15 @@ export default async function HomePage() {
               />
             </div>
             <h1 className="text-4xl sm:text-6xl font-extrabold text-primary-500 dark:text-accent-300 leading-tight mb-6">
-              La cybersécurité,<br />
+              La cybersécurité,
+              <br />
               <span className="text-accent-500">simple et ludique</span>,<br />
               pour ta PME.
             </h1>
             <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto mb-10">
-              Forme tes équipes en 5 minutes par semaine. Mises en situation, mini-jeux, badges.
-              Pensé pour ceux qui ne sont pas à l'aise avec l'informatique.
+              Forme tes équipes en 5 minutes par semaine. Mises en situation,
+              mini-jeux, badges. Pensé pour ceux qui ne sont pas à l'aise avec
+              l'informatique.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a href="/connexion" className="btn-primary text-lg">
@@ -56,10 +58,15 @@ export default async function HomePage() {
             </p>
 
             <div className="mt-10 inline-flex items-center gap-3 px-5 py-3 rounded-2xl bg-accent-50 dark:bg-accent-900/20 border border-accent-300 dark:border-accent-700">
-              <span className="text-2xl" aria-hidden="true">🎯</span>
+              <span className="text-2xl" aria-hidden="true">
+                🎯
+              </span>
               <p className="text-sm text-gray-700 dark:text-gray-200 text-left">
                 Pas encore prêt ?{" "}
-                <a href="/audit-flash" className="font-bold text-accent-600 dark:text-accent-300 hover:underline">
+                <a
+                  href="/audit-flash"
+                  className="font-bold text-accent-600 dark:text-accent-300 hover:underline"
+                >
                   Faites un audit cyber gratuit en 5 minutes →
                 </a>
               </p>
@@ -73,11 +80,21 @@ export default async function HomePage() {
         aria-labelledby="numbers-title"
         className="max-w-6xl mx-auto px-4 -mt-10 mb-20 relative z-10"
       >
-        <h2 id="numbers-title" className="sr-only">Chiffres clés</h2>
+        <h2 id="numbers-title" className="sr-only">
+          Chiffres clés
+        </h2>
         <div className="grid sm:grid-cols-4 gap-4">
           <StatCard value="180+" label="modules cyber prêts" emoji="📚" />
-          <StatCard value="5 min" label="par semaine et par employé" emoji="⏱" />
-          <StatCard value="49 €" label="par mois pour 15 personnes" emoji="💶" />
+          <StatCard
+            value="5 min"
+            label="par semaine et par employé"
+            emoji="⏱"
+          />
+          <StatCard
+            value="49 €"
+            label="par mois pour 15 personnes"
+            emoji="💶"
+          />
           <StatCard value="100 %" label="hébergé en France" emoji="🇫🇷" />
         </div>
       </section>
@@ -116,9 +133,15 @@ export default async function HomePage() {
               <div className="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-accent-500 text-white font-extrabold flex items-center justify-center shadow-md text-sm">
                 {i + 1}
               </div>
-              <div className="text-4xl mb-4" aria-hidden="true">{c.emoji}</div>
-              <h3 className="font-bold text-primary-500 dark:text-accent-300 mb-2 text-lg">{c.title}</h3>
-              <p className="text-gray-700 dark:text-gray-300 text-sm">{c.text}</p>
+              <div className="text-4xl mb-4" aria-hidden="true">
+                {c.emoji}
+              </div>
+              <h3 className="font-bold text-primary-500 dark:text-accent-300 mb-2 text-lg">
+                {c.title}
+              </h3>
+              <p className="text-gray-700 dark:text-gray-300 text-sm">
+                {c.text}
+              </p>
             </article>
           ))}
         </div>
@@ -136,7 +159,9 @@ export default async function HomePage() {
           Voici ce que vous obtenez
         </h2>
         <p className="text-center text-gray-600 dark:text-gray-300 mb-12 max-w-2xl mx-auto">
-          Pas que de la formation. Un écosystème complet pensé pour faire monter en compétence vos équipes ET prouver votre démarche aux assureurs, OPCO, clients.
+          Pas que de la formation. Un écosystème complet pensé pour faire monter
+          en compétence vos équipes ET prouver votre démarche aux assureurs,
+          OPCO, clients.
         </p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <FeaturePreview
@@ -188,11 +213,16 @@ export default async function HomePage() {
         className="max-w-6xl mx-auto px-4 mb-24"
       >
         <div className="card-hero bg-humanix-hero text-white text-center p-10">
-          <h2 id="trust-title" className="text-2xl sm:text-3xl font-extrabold mb-4">
+          <h2
+            id="trust-title"
+            className="text-2xl sm:text-3xl font-extrabold mb-4"
+          >
             Pourquoi nous faire confiance ?
           </h2>
           <p className="opacity-90 mb-8 max-w-2xl mx-auto">
-            Pas un nouveau player anonyme. HumaniX est conçu, hébergé et opéré en France par <strong>Humanix-Cybersecurity SASU</strong>, par un Tech Lead spécialiste cyber offensive depuis plus de 10 ans.
+            Pas un nouveau player anonyme. HumaniX est conçu, hébergé et opéré
+            en France par <strong>Humanix-Cybersecurity SASU</strong>, par un
+            Tech Lead spécialiste cyber offensive depuis plus de 10 ans.
           </p>
           <div className="grid sm:grid-cols-4 gap-4 text-sm">
             <TrustBadge emoji="🇫🇷" label="100 % hébergé en France" />
@@ -201,8 +231,16 @@ export default async function HomePage() {
             <TrustBadge emoji="🔓" label="Code transparent, audit public" />
           </div>
           <p className="mt-8 text-sm opacity-80">
-            <a href="/comparatif" className="underline hover:no-underline">Voir le comparatif honnête vs concurrents</a>{" · "}
-            <a href="/securite/rapport-audit" className="underline hover:no-underline">Lire notre rapport d'audit public</a>
+            <a href="/comparatif" className="underline hover:no-underline">
+              Voir le comparatif honnête vs concurrents
+            </a>
+            {" · "}
+            <a
+              href="/securite/rapport-audit"
+              className="underline hover:no-underline"
+            >
+              Lire notre rapport d'audit public
+            </a>
           </p>
         </div>
       </section>
@@ -218,11 +256,16 @@ export default async function HomePage() {
               <p className="text-xs uppercase tracking-widest opacity-90 font-bold mb-2">
                 📅 Newsletter gratuite
               </p>
-              <h2 id="anecdote-cta-title" className="text-3xl font-extrabold mb-3">
+              <h2
+                id="anecdote-cta-title"
+                className="text-3xl font-extrabold mb-3"
+              >
                 La Cyber-Anecdote du Lundi
               </h2>
               <p className="opacity-95 mb-2">
-                Chaque lundi matin : <strong>1 incident cyber réel</strong>, <strong>1 leçon en 3 lignes</strong>, et <strong>1 mini-action</strong> à faire dans la semaine.
+                Chaque lundi matin : <strong>1 incident cyber réel</strong>,{" "}
+                <strong>1 leçon en 3 lignes</strong>, et{" "}
+                <strong>1 mini-action</strong> à faire dans la semaine.
               </p>
               <p className="text-sm opacity-85">
                 Aucun spam, désinscription en 1 clic. Hébergé en France.
@@ -239,22 +282,37 @@ export default async function HomePage() {
       <section className="max-w-4xl mx-auto px-4 mb-24">
         <div className="text-center bg-white dark:bg-slate-900 rounded-3xl p-10 border-2 border-accent-500/30 shadow-sm">
           <h2 className="text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-4">
-            Self-host gratuit ou cloud à partir de <span className="tabular-nums">0 €</span>.
+            Self-host gratuit ou cloud à partir de{" "}
+            <span className="tabular-nums">0 €</span>.
           </h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-xl mx-auto">
-            Pas de tarif à 4 chiffres. Pas d'engagement. Pas de jargon. 6 paliers limpides — Community, Découverte, Starter, Essentielle, Pro, Enterprise.
+            Pas de tarif à 4 chiffres. Pas d'engagement. Pas de jargon. 6
+            paliers limpides — Community, Découverte, Starter, Essentielle, Pro,
+            Enterprise.
           </p>
-          <a href="/tarifs" className="btn-primary">Voir les tarifs détaillés</a>
+          <a href="/tarifs" className="btn-primary">
+            Voir les tarifs détaillés
+          </a>
         </div>
       </section>
     </>
   );
 }
 
-function StatCard({ value, label, emoji }: { value: string; label: string; emoji: string }) {
+function StatCard({
+  value,
+  label,
+  emoji,
+}: {
+  value: string;
+  label: string;
+  emoji: string;
+}) {
   return (
     <div className="card-stat text-center">
-      <div className="text-2xl mb-1" aria-hidden="true">{emoji}</div>
+      <div className="text-2xl mb-1" aria-hidden="true">
+        {emoji}
+      </div>
       <p className="text-3xl sm:text-4xl font-extrabold text-primary-500 dark:text-accent-300 tabular-nums leading-none">
         {value}
       </p>
@@ -280,10 +338,17 @@ function FeaturePreview({
 }) {
   return (
     <article className="card-feature">
-      <div className="text-3xl mb-3" aria-hidden="true">{emoji}</div>
-      <h3 className="font-bold text-primary-500 dark:text-accent-300 mb-2">{title}</h3>
+      <div className="text-3xl mb-3" aria-hidden="true">
+        {emoji}
+      </div>
+      <h3 className="font-bold text-primary-500 dark:text-accent-300 mb-2">
+        {title}
+      </h3>
       <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">{text}</p>
-      <a href={href} className="text-xs font-bold text-accent-500 dark:text-accent-300 hover:text-accent-600 inline-flex items-center gap-1">
+      <a
+        href={href}
+        className="text-xs font-bold text-accent-500 dark:text-accent-300 hover:text-accent-600 inline-flex items-center gap-1"
+      >
         {cta ?? "En savoir plus"} →
       </a>
     </article>
@@ -293,7 +358,9 @@ function FeaturePreview({
 function TrustBadge({ emoji, label }: { emoji: string; label: string }) {
   return (
     <div className="bg-white/15 backdrop-blur rounded-xl px-3 py-3 border border-white/30">
-      <div className="text-2xl mb-1" aria-hidden="true">{emoji}</div>
+      <div className="text-2xl mb-1" aria-hidden="true">
+        {emoji}
+      </div>
       <p className="text-xs font-medium leading-tight">{label}</p>
     </div>
   );

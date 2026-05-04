@@ -4,7 +4,10 @@
 
 import type { WeeklyAnecdote } from "@prisma/client";
 
-const CATEGORY_BADGES: Record<string, { label: string; emoji: string; color: string }> = {
+const CATEGORY_BADGES: Record<
+  string,
+  { label: string; emoji: string; color: string }
+> = {
   RANSOMWARE: { label: "Rançongiciel", emoji: "🔒", color: "#C0392B" },
   PHISHING: { label: "Phishing", emoji: "🎣", color: "#E67E22" },
   FRAUDE: { label: "Fraude", emoji: "💸", color: "#8E44AD" },

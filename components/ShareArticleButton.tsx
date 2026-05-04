@@ -13,9 +13,10 @@ export default function ShareArticleButton({
 }) {
   const [copied, setCopied] = useState(false);
 
-  const url = typeof window !== "undefined"
-    ? `${window.location.origin}/librairie/${slug}?via=share`
-    : `/librairie/${slug}`;
+  const url =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/librairie/${slug}?via=share`
+      : `/librairie/${slug}`;
 
   const trackShare = async () => {
     try {
@@ -57,7 +58,9 @@ export default function ShareArticleButton({
 
   const onEmail = () => {
     const subject = encodeURIComponent(`À lire : ${title}`);
-    const body = encodeURIComponent(`Je suis tombé sur cet article cyber, je pense qu'il peut t'être utile :\n\n${title}\n${description}\n\n${url}\n\n— Partagé via Humanix Académie`);
+    const body = encodeURIComponent(
+      `Je suis tombé sur cet article cyber, je pense qu'il peut t'être utile :\n\n${title}\n${description}\n\n${url}\n\n— Partagé via Humanix Académie`,
+    );
     window.location.href = `mailto:?subject=${subject}&body=${body}`;
     trackShare();
   };
@@ -69,7 +72,8 @@ export default function ShareArticleButton({
         <div className="flex-1">
           <h3 className="font-bold text-primary-500">Partage cet article</h3>
           <p className="text-sm text-gray-600">
-            Quelqu'un autour de toi pourrait avoir besoin de ces réflexes. Le lien est gratuit, sans inscription.
+            Quelqu'un autour de toi pourrait avoir besoin de ces réflexes. Le
+            lien est gratuit, sans inscription.
           </p>
         </div>
       </div>
@@ -104,7 +108,9 @@ export default function ShareArticleButton({
           aria-label="Copier le lien"
         >
           <span className="text-2xl">{copied ? "✅" : "🔗"}</span>
-          <span className="text-xs font-bold text-primary-500">{copied ? "Copié !" : "Copier"}</span>
+          <span className="text-xs font-bold text-primary-500">
+            {copied ? "Copié !" : "Copier"}
+          </span>
         </button>
       </div>
       <p className="text-xs text-center text-gray-500 mt-3 italic">

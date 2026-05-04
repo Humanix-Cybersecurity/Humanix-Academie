@@ -12,8 +12,18 @@
 //  - bouton retour disponible
 
 import { useState, useTransition } from "react";
-import { AUDIT_QUESTIONS, AuditQuestion, CATEGORY_EMOJI, CATEGORY_LABELS } from "@/lib/audit-flash/questions";
-import { SIZE_LABELS, SECTOR_LABELS, CompanySize, Sector } from "@/lib/audit-flash/scoring";
+import {
+  AUDIT_QUESTIONS,
+  AuditQuestion,
+  CATEGORY_EMOJI,
+  CATEGORY_LABELS,
+} from "@/lib/audit-flash/questions";
+import {
+  SIZE_LABELS,
+  SECTOR_LABELS,
+  CompanySize,
+  Sector,
+} from "@/lib/audit-flash/scoring";
 import { submitAuditFlash } from "./actions";
 import { useRouter } from "next/navigation";
 
@@ -39,7 +49,9 @@ export default function AuditWizard() {
   const router = useRouter();
   const [step, setStep] = useState<number>(0); // 0 = identite, 1..15 = questions
   const [identity, setIdentity] = useState<Identity>(INITIAL_IDENTITY);
-  const [answers, setAnswers] = useState<Record<string, "yes" | "no" | "unsure">>({});
+  const [answers, setAnswers] = useState<
+    Record<string, "yes" | "no" | "unsure">
+  >({});
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -53,10 +65,11 @@ export default function AuditWizard() {
     identity.sector !== "";
 
   const currentQuestion: AuditQuestion | null =
-    step >= 1 && step <= AUDIT_QUESTIONS.length ? AUDIT_QUESTIONS[step - 1] : null;
+    step >= 1 && step <= AUDIT_QUESTIONS.length
+      ? AUDIT_QUESTIONS[step - 1]
+      : null;
 
-  const allAnswered =
-    AUDIT_QUESTIONS.every((q) => answers[q.id] !== undefined);
+  const allAnswered = AUDIT_QUESTIONS.every((q) => answers[q.id] !== undefined);
 
   const handleAnswer = (qId: string, value: "yes" | "no" | "unsure") => {
     setAnswers((prev) => ({ ...prev, [qId]: value }));
@@ -203,7 +216,10 @@ export default function AuditWizard() {
                 id="size"
                 value={identity.size}
                 onChange={(e) =>
-                  setIdentity({ ...identity, size: e.target.value as CompanySize })
+                  setIdentity({
+                    ...identity,
+                    size: e.target.value as CompanySize,
+                  })
                 }
                 className="input"
                 required
@@ -241,13 +257,17 @@ export default function AuditWizard() {
                 type="checkbox"
                 checked={identity.consentMarketing}
                 onChange={(e) =>
-                  setIdentity({ ...identity, consentMarketing: e.target.checked })
+                  setIdentity({
+                    ...identity,
+                    consentMarketing: e.target.checked,
+                  })
                 }
                 className="mt-1"
               />
               <span>
-                J'accepte de recevoir occasionnellement des conseils cyber et des
-                actualités HumaniX (1-2 emails / mois max, désabonnement libre).
+                J'accepte de recevoir occasionnellement des conseils cyber et
+                des actualités HumaniX (1-2 emails / mois max, désabonnement
+                libre).
               </span>
             </label>
           </div>

@@ -12,7 +12,11 @@
 
 import { useTransition, useState } from "react";
 import type { Role } from "@prisma/client";
-import { toggleUserActive, changeUserRole, deleteUser } from "@/app/admin/actions";
+import {
+  toggleUserActive,
+  changeUserRole,
+  deleteUser,
+} from "@/app/admin/actions";
 
 type U = {
   id: string;
@@ -30,9 +34,9 @@ type U = {
 };
 
 const ROLE_LABEL: Record<string, { label: string; emoji: string }> = {
-  LEARNER:    { label: "Apprenant",   emoji: "🎓" },
-  MANAGER:    { label: "Manager",     emoji: "👔" },
-  ADMIN:      { label: "Admin",       emoji: "🛡️" },
+  LEARNER: { label: "Apprenant", emoji: "🎓" },
+  MANAGER: { label: "Manager", emoji: "👔" },
+  ADMIN: { label: "Admin", emoji: "🛡️" },
   SUPERADMIN: { label: "Super-Admin", emoji: "⚙️" },
 };
 
@@ -58,8 +62,11 @@ export default function UsersTable({ users }: { users: U[] }) {
     }
     setBusy(u.id);
     startTransition(async () => {
-      try { await toggleUserActive(u.id, !u.isActive); }
-      catch { alert("Action impossible."); }
+      try {
+        await toggleUserActive(u.id, !u.isActive);
+      } catch {
+        alert("Action impossible.");
+      }
       setBusy(null);
     });
   };
@@ -71,8 +78,11 @@ export default function UsersTable({ users }: { users: U[] }) {
     }
     setBusy(u.id);
     startTransition(async () => {
-      try { await changeUserRole(u.id, role); }
-      catch { alert("Action impossible."); }
+      try {
+        await changeUserRole(u.id, role);
+      } catch {
+        alert("Action impossible.");
+      }
       setBusy(null);
     });
   };
@@ -82,13 +92,20 @@ export default function UsersTable({ users }: { users: U[] }) {
       alert("Impossible de supprimer ton propre compte.");
       return;
     }
-    if (!confirm(`Supprimer définitivement ${u.name} ? Toutes ses données seront effacées (RGPD).`)) {
+    if (
+      !confirm(
+        `Supprimer définitivement ${u.name} ? Toutes ses données seront effacées (RGPD).`,
+      )
+    ) {
       return;
     }
     setBusy(u.id);
     startTransition(async () => {
-      try { await deleteUser(u.id); }
-      catch { alert("Suppression impossible."); }
+      try {
+        await deleteUser(u.id);
+      } catch {
+        alert("Suppression impossible.");
+      }
       setBusy(null);
     });
   };
@@ -109,23 +126,43 @@ export default function UsersTable({ users }: { users: U[] }) {
         <table className="w-full text-sm">
           <thead className="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-slate-800">
             <tr>
-              <th scope="col" className="pb-2.5 font-medium text-xs">Collaborateur</th>
-              <th scope="col" className="pb-2.5 font-medium text-xs">Rôle</th>
-              <th scope="col" className="pb-2.5 font-medium text-xs">Service</th>
-              <th scope="col" className="pb-2.5 font-medium text-xs">Progression</th>
-              <th scope="col" className="pb-2.5 font-medium text-xs">Statut</th>
-              <th scope="col" className="pb-2.5 font-medium text-xs text-right pr-2">Actions</th>
+              <th scope="col" className="pb-2.5 font-medium text-xs">
+                Collaborateur
+              </th>
+              <th scope="col" className="pb-2.5 font-medium text-xs">
+                Rôle
+              </th>
+              <th scope="col" className="pb-2.5 font-medium text-xs">
+                Service
+              </th>
+              <th scope="col" className="pb-2.5 font-medium text-xs">
+                Progression
+              </th>
+              <th scope="col" className="pb-2.5 font-medium text-xs">
+                Statut
+              </th>
+              <th
+                scope="col"
+                className="pb-2.5 font-medium text-xs text-right pr-2"
+              >
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
             {filtered.map((u) => {
-              const pct = u.totalEpisodes === 0 ? 0 : Math.round((u.completed / u.totalEpisodes) * 100);
+              const pct =
+                u.totalEpisodes === 0
+                  ? 0
+                  : Math.round((u.completed / u.totalEpisodes) * 100);
               const isBusy = busy === u.id;
               return (
                 <tr
                   key={u.id}
                   className={`border-b border-gray-100 dark:border-slate-800/60 last:border-0 transition ${
-                    isBusy ? "animate-pulse bg-gray-50 dark:bg-slate-800/40" : "hover:bg-gray-50/60 dark:hover:bg-slate-800/30"
+                    isBusy
+                      ? "animate-pulse bg-gray-50 dark:bg-slate-800/40"
+                      : "hover:bg-gray-50/60 dark:hover:bg-slate-800/30"
                   } ${!u.isActive ? "opacity-60" : ""}`}
                 >
                   {/* Collaborateur — sans avatar 1-lettre, juste nom + email */}
@@ -133,10 +170,14 @@ export default function UsersTable({ users }: { users: U[] }) {
                     <p className="font-semibold text-gray-900 dark:text-gray-100 truncate">
                       {u.name}
                       {u.isCurrent && (
-                        <span className="ml-2 text-xs text-accent-500 font-bold">(toi)</span>
+                        <span className="ml-2 text-xs text-accent-500 font-bold">
+                          (toi)
+                        </span>
                       )}
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{u.email}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                      {u.email}
+                    </p>
                   </td>
 
                   {/* Rôle */}
@@ -149,7 +190,9 @@ export default function UsersTable({ users }: { users: U[] }) {
                       className="text-xs border border-gray-200 dark:border-slate-700 rounded-lg px-2 py-1 disabled:opacity-50 bg-white dark:bg-slate-950"
                     >
                       {Object.entries(ROLE_LABEL).map(([k, v]) => (
-                        <option key={k} value={k}>{v.emoji} {v.label}</option>
+                        <option key={k} value={k}>
+                          {v.emoji} {v.label}
+                        </option>
                       ))}
                     </select>
                   </td>
@@ -163,12 +206,17 @@ export default function UsersTable({ users }: { users: U[] }) {
                   <td className="py-3 pr-3 whitespace-nowrap">
                     <div className="flex items-center gap-2">
                       <div className="w-16 lg:w-20 h-1.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden shrink-0">
-                        <div className="h-full bg-accent-500" style={{ width: `${pct}%` }} />
+                        <div
+                          className="h-full bg-accent-500"
+                          style={{ width: `${pct}%` }}
+                        />
                       </div>
                       <span className="text-xs text-gray-500 tabular-nums">
                         {u.completed}/{u.totalEpisodes}
                       </span>
-                      <span className="text-xs text-accent-600 font-bold tabular-nums">{u.xp}XP</span>
+                      <span className="text-xs text-accent-600 font-bold tabular-nums">
+                        {u.xp}XP
+                      </span>
                     </div>
                   </td>
 
@@ -193,8 +241,16 @@ export default function UsersTable({ users }: { users: U[] }) {
                       <IconButton
                         onClick={() => onToggleActive(u)}
                         disabled={pending || u.isCurrent}
-                        title={u.isActive ? "Suspendre l'utilisateur" : "Réactiver l'utilisateur"}
-                        aria-label={u.isActive ? `Suspendre ${u.name}` : `Réactiver ${u.name}`}
+                        title={
+                          u.isActive
+                            ? "Suspendre l'utilisateur"
+                            : "Réactiver l'utilisateur"
+                        }
+                        aria-label={
+                          u.isActive
+                            ? `Suspendre ${u.name}`
+                            : `Réactiver ${u.name}`
+                        }
                         variant="default"
                       >
                         {u.isActive ? <PauseIcon /> : <PlayIcon />}
@@ -216,7 +272,9 @@ export default function UsersTable({ users }: { users: U[] }) {
           </tbody>
         </table>
         {filtered.length === 0 && (
-          <p className="text-center text-gray-400 py-8 italic text-sm">Aucun utilisateur trouvé</p>
+          <p className="text-center text-gray-400 py-8 italic text-sm">
+            Aucun utilisateur trouvé
+          </p>
         )}
       </div>
     </>
@@ -228,7 +286,12 @@ export default function UsersTable({ users }: { users: U[] }) {
 // =============================================================================
 
 function IconButton({
-  children, onClick, disabled, title, "aria-label": ariaLabel, variant,
+  children,
+  onClick,
+  disabled,
+  title,
+  "aria-label": ariaLabel,
+  variant,
 }: {
   children: React.ReactNode;
   onClick: () => void;
@@ -258,7 +321,13 @@ function IconButton({
 // SVG inline pour ne pas ajouter de dépendance lucide-react.
 function PauseIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 16 16"
+      fill="currentColor"
+      aria-hidden="true"
+    >
       <rect x="4" y="3" width="3" height="10" rx="1" />
       <rect x="9" y="3" width="3" height="10" rx="1" />
     </svg>
@@ -267,7 +336,13 @@ function PauseIcon() {
 
 function PlayIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 16 16"
+      fill="currentColor"
+      aria-hidden="true"
+    >
       <path d="M5 3v10l8-5z" />
     </svg>
   );
@@ -275,7 +350,17 @@ function PlayIcon() {
 
 function TrashIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
       <path d="M2.5 4h11M5.5 4V2.5h5V4M4 4l1 9.5h6L12 4M6.5 7v4M9.5 7v4" />
     </svg>
   );

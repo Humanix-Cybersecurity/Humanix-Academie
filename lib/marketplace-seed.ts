@@ -63,7 +63,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "bonnes-pratiques-dev",
     title: "Bonnes pratiques de dev sécurisé",
-    description: "Code review, secrets en clair, dépendances : 3 réflexes pour un code défendable en prod.",
+    description:
+      "Code review, secrets en clair, dépendances : 3 réflexes pour un code défendable en prod.",
     emoji: "💻",
     category: "autre",
     difficulty: "medium",
@@ -90,7 +91,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
             {
               id: "b",
-              label: "Je crée une branche, je sors la clé en variable d'env, je fais une PR avec review",
+              label:
+                "Je crée une branche, je sors la clé en variable d'env, je fais une PR avec review",
               outcome: "good",
               feedback:
                 "Réflexe pro : la clé reste hors du code, l'historique git est propre, la PR force une relecture.",
@@ -98,7 +100,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
             {
               id: "c",
-              label: "Je push direct mais je supprime la clé dans un commit suivant",
+              label:
+                "Je push direct mais je supprime la clé dans un commit suivant",
               outcome: "bad",
               feedback:
                 "Trop tard : le commit initial est dans l'historique. Il faut révoquer la clé chez Stripe et nettoyer l'historique avec git filter-branch (douloureux).",
@@ -109,9 +112,14 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             "Trois principes non négociables : 1) zéro secret hardcodé (utilise .env, vault, secrets manager) ; 2) zéro push direct sur main (PR + au moins 1 review) ; 3) commits messages explicites (pour pouvoir tracer une régression). Bonus : active gitleaks ou trufflehog en pre-commit hook pour bloquer les fuites avant qu'elles ne partent.",
           quiz: [
             {
-              question: "Une clé API hardcodée commitée puis supprimée dans un commit suivant est :",
+              question:
+                "Une clé API hardcodée commitée puis supprimée dans un commit suivant est :",
               choices: [
-                { id: "a", label: "Toujours présente dans l'historique git", correct: true },
+                {
+                  id: "a",
+                  label: "Toujours présente dans l'historique git",
+                  correct: true,
+                },
                 { id: "b", label: "Effacée définitivement", correct: false },
               ],
               explanation:
@@ -120,9 +128,21 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             {
               question: "Le minimum vital avant un push sur main :",
               choices: [
-                { id: "a", label: "Une PR + relecture par un pair", correct: true },
-                { id: "b", label: "Un message de commit court", correct: false },
-                { id: "c", label: "Que les tests passent en local", correct: false },
+                {
+                  id: "a",
+                  label: "Une PR + relecture par un pair",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Un message de commit court",
+                  correct: false,
+                },
+                {
+                  id: "c",
+                  label: "Que les tests passent en local",
+                  correct: false,
+                },
               ],
               explanation:
                 "La review par un pair attrape les fautes de raisonnement, les regressions et les fuites de secrets. C'est le filet de sécurité humain.",
@@ -140,7 +160,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "bonnes-pratiques-hebergement",
     title: "Bonnes pratiques d'hébergement",
-    description: "Localisation, chiffrement, sauvegardes : choisir un hébergeur sans se faire avoir.",
+    description:
+      "Localisation, chiffrement, sauvegardes : choisir un hébergeur sans se faire avoir.",
     emoji: "🏗️",
     category: "autre",
     difficulty: "hard",
@@ -167,7 +188,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
             {
               id: "b",
-              label: "Je vérifie : nationalité juridique de l'hébergeur, sous-traitants, certifications SecNumCloud",
+              label:
+                "Je vérifie : nationalité juridique de l'hébergeur, sous-traitants, certifications SecNumCloud",
               outcome: "good",
               feedback:
                 "Excellent : pour des données clients UE, vise un hébergeur de droit européen (OVH, Scaleway, Outscale, Clever Cloud). Pour des données sensibles, exige SecNumCloud (qualification ANSSI).",
@@ -186,9 +208,14 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             "Le RGPD n'est pas qu'une affaire de localisation des serveurs : c'est aussi le droit applicable à l'hébergeur. Un AWS Frankfurt reste juridiquement américain. Pour des données sensibles ou stratégiques, privilégie un hébergeur européen souverain. SecNumCloud (ANSSI) est le standard exigeant : isolement, chiffrement, contrôle d'accès, audit. Hyperscalers US passent en 'qualifié' uniquement via des montages comme Bleu (Microsoft x Capgemini x Orange).",
           quiz: [
             {
-              question: "Un cloud US avec datacenter à Paris est-il automatiquement RGPD-compliant ?",
+              question:
+                "Un cloud US avec datacenter à Paris est-il automatiquement RGPD-compliant ?",
               choices: [
-                { id: "a", label: "Non, le Cloud Act US prévaut sur la localisation", correct: true },
+                {
+                  id: "a",
+                  label: "Non, le Cloud Act US prévaut sur la localisation",
+                  correct: true,
+                },
                 { id: "b", label: "Oui, c'est en Europe", correct: false },
               ],
               explanation:
@@ -217,7 +244,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "protection-cicd",
     title: "Protéger sa chaîne CI/CD",
-    description: "Secrets en pipeline, dépendances pourries, runner compromis : durcir GitHub Actions et GitLab CI.",
+    description:
+      "Secrets en pipeline, dépendances pourries, runner compromis : durcir GitHub Actions et GitLab CI.",
     emoji: "🔧",
     category: "autre",
     difficulty: "hard",
@@ -244,7 +272,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
             {
               id: "b",
-              label: "Je pinne par hash SHA, je limite les secrets exposés, et je revois le code de l'action",
+              label:
+                "Je pinne par hash SHA, je limite les secrets exposés, et je revois le code de l'action",
               outcome: "good",
               feedback:
                 "Pratique standard pro : 'uses: org/action@abc123' (hash 40 caractères) figeule l'action. Plus de surprise sur push silencieux d'une nouvelle version.",
@@ -263,10 +292,19 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             "La CI/CD est devenue la cible n°1 du supply chain attack (cf. SolarWinds, Codecov, GitHub Actions tj-actions/changed-files en 2025). Hardening minimum : 1) pin par SHA et pas par tag ; 2) principe du moindre privilège sur les secrets (un secret = une action) ; 3) runners self-hosted isolés, jamais réutilisés entre repos ; 4) provenance SLSA + SBOM ; 5) blocage des actions tierces non auditées via allowlist.",
           quiz: [
             {
-              question: "Pour qu'une GitHub Action soit immutable, on la pinne :",
+              question:
+                "Pour qu'une GitHub Action soit immutable, on la pinne :",
               choices: [
-                { id: "a", label: "Par hash SHA complet (40 caractères)", correct: true },
-                { id: "b", label: "Par tag de version (v1.2.3)", correct: false },
+                {
+                  id: "a",
+                  label: "Par hash SHA complet (40 caractères)",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Par tag de version (v1.2.3)",
+                  correct: false,
+                },
                 { id: "c", label: "Par tag majeur (v1)", correct: false },
               ],
               explanation:
@@ -275,8 +313,16 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             {
               question: "Un runner CI self-hosted devrait être :",
               choices: [
-                { id: "a", label: "Éphémère et isolé par exécution", correct: true },
-                { id: "b", label: "Persistant pour gagner du temps", correct: false },
+                {
+                  id: "a",
+                  label: "Éphémère et isolé par exécution",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Persistant pour gagner du temps",
+                  correct: false,
+                },
               ],
               explanation:
                 "Un runner persistant accumule des artefacts entre exécutions. Une action malicieuse peut laisser une backdoor pour la prochaine pipeline.",
@@ -294,7 +340,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "intervention-poste-distance",
     title: "Intervenir sur un poste à distance",
-    description: "TeamViewer, AnyDesk, RustDesk : qui peut prendre la main, et dans quelles conditions.",
+    description:
+      "TeamViewer, AnyDesk, RustDesk : qui peut prendre la main, et dans quelles conditions.",
     emoji: "🖥️",
     category: "autre",
     difficulty: "medium",
@@ -321,7 +368,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
             {
               id: "b",
-              label: "Je raccroche et j'appelle le numéro officiel de mon DSI ou prestataire IT",
+              label:
+                "Je raccroche et j'appelle le numéro officiel de mon DSI ou prestataire IT",
               outcome: "good",
               feedback:
                 "Réflexe en or : aucun support légitime ne t'appelle de manière non sollicitée. Vérification par canal de confiance.",
@@ -340,10 +388,19 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             "L'attaque par fausse intervention est extrêmement répandue (arnaque type Tech Support Scam). Règle absolue : un support légitime ne t'appelle JAMAIS spontanément pour t'aider. Si tu as un vrai souci, c'est TOI qui appelles ton support, sur le numéro que tu connais. Côté entreprise : avoir une procédure écrite (qui appelle, par quel canal) et la former. Côté outil : préfère des solutions où l'utilisateur DOIT initier la session (pas de prise en main passive sans accord explicite).",
           quiz: [
             {
-              question: "Un support légitime te contacte spontanément pour t'aider :",
+              question:
+                "Un support légitime te contacte spontanément pour t'aider :",
               choices: [
-                { id: "a", label: "Très rare. Toujours suspect par défaut", correct: true },
-                { id: "b", label: "Normal, c'est bienveillant", correct: false },
+                {
+                  id: "a",
+                  label: "Très rare. Toujours suspect par défaut",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Normal, c'est bienveillant",
+                  correct: false,
+                },
               ],
               explanation:
                 "99 pour cent du temps, le support attend que TU appelles. L'inverse est un signal d'arnaque.",
@@ -351,8 +408,17 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             {
               question: "Avant d'autoriser une prise en main, tu dois :",
               choices: [
-                { id: "a", label: "Vérifier l'identité par un canal indépendant que TU choisis", correct: true },
-                { id: "b", label: "Faire confiance si la personne connaît ton nom", correct: false },
+                {
+                  id: "a",
+                  label:
+                    "Vérifier l'identité par un canal indépendant que TU choisis",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Faire confiance si la personne connaît ton nom",
+                  correct: false,
+                },
               ],
               explanation:
                 "Connaître ton nom et ton entreprise est trivial via LinkedIn ou OSINT. Cela ne prouve rien.",
@@ -370,7 +436,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "reset-mfa-support",
     title: "Reset MFA au support : qui valide quoi",
-    description: "Le maillon faible n'est pas le MFA, c'est sa procédure de réinitialisation.",
+    description:
+      "Le maillon faible n'est pas le MFA, c'est sa procédure de réinitialisation.",
     emoji: "🔄",
     category: "autre",
     difficulty: "medium",
@@ -397,7 +464,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
             {
               id: "b",
-              label: "Je lui demande de venir physiquement le lundi avec sa pièce d'identité, ou j'appelle son N+1 sur SON numéro pro pour valider",
+              label:
+                "Je lui demande de venir physiquement le lundi avec sa pièce d'identité, ou j'appelle son N+1 sur SON numéro pro pour valider",
               outcome: "good",
               feedback:
                 "Procédure correcte : tu vérifies l'identité par un canal indépendant que tu contrôles. L'urgence n'est jamais une excuse pour shorter la sécurité.",
@@ -405,7 +473,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
             {
               id: "c",
-              label: "Je lui pose 2-3 questions de sécurité (date de naissance, dernière connexion)",
+              label:
+                "Je lui pose 2-3 questions de sécurité (date de naissance, dernière connexion)",
               outcome: "bad",
               feedback:
                 "Insuffisant : ces infos sont en partie publiques (LinkedIn, Pages Blanches) ou volables par phishing. Il faut un canal hors-bande.",
@@ -416,10 +485,20 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             "Le MFA est aussi solide que sa procédure de reset. Beaucoup d'attaques contournent le MFA en se faisant passer pour l'utilisateur auprès du support. Procédure type à appliquer : 1) jamais de reset uniquement sur appel ; 2) vérification par canal indépendant (manager, RH, présence physique) ; 3) traçabilité écrite (ticket horodaté, identité du valideur) ; 4) procédure d'urgence formalisée pour les cas légitimes (clé de secours scellée, code-mot validé par 2 personnes).",
           quiz: [
             {
-              question: "Une demande de reset MFA en urgence par téléphone est :",
+              question:
+                "Une demande de reset MFA en urgence par téléphone est :",
               choices: [
-                { id: "a", label: "Un signal d'alerte qui exige une vérification hors-bande", correct: true },
-                { id: "b", label: "Un cas légitime qu'il faut traiter vite", correct: false },
+                {
+                  id: "a",
+                  label:
+                    "Un signal d'alerte qui exige une vérification hors-bande",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Un cas légitime qu'il faut traiter vite",
+                  correct: false,
+                },
               ],
               explanation:
                 "L'urgence est un levier classique de social engineering. La règle : plus c'est urgent, plus on vérifie.",
@@ -427,8 +506,16 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             {
               question: "Le canal de vérification doit être :",
               choices: [
-                { id: "a", label: "Initié par le support (rappel sur numéro pro connu)", correct: true },
-                { id: "b", label: "Le téléphone donné par le demandeur lui-même", correct: false },
+                {
+                  id: "a",
+                  label: "Initié par le support (rappel sur numéro pro connu)",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Le téléphone donné par le demandeur lui-même",
+                  correct: false,
+                },
               ],
               explanation:
                 "Si l'attaquant te donne son numéro, il contrôle le canal. Tu dois rappeler sur le numéro que TU connais (annuaire interne).",
@@ -446,7 +533,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "cas-byod",
     title: "Le cas BYOD : son perso au boulot",
-    description: "Mon téléphone perso pour les mails pro : ce qui est OK, ce qui est interdit.",
+    description:
+      "Mon téléphone perso pour les mails pro : ce qui est OK, ce qui est interdit.",
     emoji: "📱",
     category: "teletravail",
     difficulty: "medium",
@@ -473,7 +561,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
             {
               id: "b",
-              label: "Avant, j'exige une charte BYOD écrite avec MDM, container pro/perso et procédure de wipe au départ",
+              label:
+                "Avant, j'exige une charte BYOD écrite avec MDM, container pro/perso et procédure de wipe au départ",
               outcome: "good",
               feedback:
                 "Excellente exigence : Microsoft Intune, Google Workspace, ou MDM tiers cloisonnent les données pro dans un container chiffré. Au départ, l'employeur wipe UNIQUEMENT le container pro.",
@@ -494,7 +583,12 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             {
               question: "BYOD sans MDM ni charte, c'est :",
               choices: [
-                { id: "a", label: "Une fuite de données quasi-garantie au départ d'un salarié", correct: true },
+                {
+                  id: "a",
+                  label:
+                    "Une fuite de données quasi-garantie au départ d'un salarié",
+                  correct: true,
+                },
                 { id: "b", label: "Une économie maligne", correct: false },
               ],
               explanation:
@@ -503,8 +597,17 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             {
               question: "Le 'container pro' dans un MDM permet :",
               choices: [
-                { id: "a", label: "D'effacer uniquement les données pro sans toucher au perso", correct: true },
-                { id: "b", label: "De suivre la position GPS du salarié", correct: false },
+                {
+                  id: "a",
+                  label:
+                    "D'effacer uniquement les données pro sans toucher au perso",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "De suivre la position GPS du salarié",
+                  correct: false,
+                },
               ],
               explanation:
                 "Le container isole les apps et fichiers pro. Le wipe est sélectif. Le respect de la vie privée du salarié est ainsi garanti.",
@@ -522,7 +625,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "admin-de-son-poste",
     title: "Admin de son poste : utile ou dangereux",
-    description: "Pourquoi le compte admin sur ton ordi pro double la surface d'attaque.",
+    description:
+      "Pourquoi le compte admin sur ton ordi pro double la surface d'attaque.",
     emoji: "🛡️",
     category: "teletravail",
     difficulty: "easy",
@@ -549,7 +653,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
             {
               id: "b",
-              label: "Je signale la fuite du mot de passe au DSI et je passe par le canal d'install officiel",
+              label:
+                "Je signale la fuite du mot de passe au DSI et je passe par le canal d'install officiel",
               outcome: "good",
               feedback:
                 "Réflexe parfait : tu protèges l'entreprise et tu utilises la procédure prévue.",
@@ -570,8 +675,16 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             {
               question: "Travailler en compte admin au quotidien :",
               choices: [
-                { id: "a", label: "Multiplie l'impact d'un éventuel malware", correct: true },
-                { id: "b", label: "Améliore la productivité sans risque", correct: false },
+                {
+                  id: "a",
+                  label: "Multiplie l'impact d'un éventuel malware",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Améliore la productivité sans risque",
+                  correct: false,
+                },
               ],
               explanation:
                 "Un malware exécuté hérite des droits du compte courant. En admin, il peut tout faire ; en standard, il est très limité.",
@@ -579,8 +692,16 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             {
               question: "Un mot de passe admin partagé sur un post-it est :",
               choices: [
-                { id: "a", label: "Une vulnérabilité majeure, à signaler et changer", correct: true },
-                { id: "b", label: "Une commodité acceptable en PME", correct: false },
+                {
+                  id: "a",
+                  label: "Une vulnérabilité majeure, à signaler et changer",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Une commodité acceptable en PME",
+                  correct: false,
+                },
               ],
               explanation:
                 "Un mot de passe admin doit être unique, fort, et stocké dans un coffre (KeePass, Bitwarden, vault). Jamais en clair.",
@@ -598,7 +719,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "principe-moindre-privilege",
     title: "Le principe du moindre privilège",
-    description: "Donner le strict minimum : un concept simple qui désamorce 80 pour cent des incidents.",
+    description:
+      "Donner le strict minimum : un concept simple qui désamorce 80 pour cent des incidents.",
     emoji: "🔐",
     category: "autre",
     difficulty: "medium",
@@ -625,7 +747,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
             {
               id: "b",
-              label: "Je revois la politique d'accès : chaque rôle a strictement les droits dont il a besoin",
+              label:
+                "Je revois la politique d'accès : chaque rôle a strictement les droits dont il a besoin",
               outcome: "good",
               feedback:
                 "Excellent : c'est le principe du moindre privilège (least privilege). Un stagiaire en saisie n'a besoin que de saisir, pas d'exporter ni de modifier les écritures clôturées.",
@@ -646,8 +769,17 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             {
               question: "Le moindre privilège, c'est :",
               choices: [
-                { id: "a", label: "N'attribuer que les droits strictement nécessaires à la tâche", correct: true },
-                { id: "b", label: "Mettre tout le monde en lecture seule", correct: false },
+                {
+                  id: "a",
+                  label:
+                    "N'attribuer que les droits strictement nécessaires à la tâche",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Mettre tout le monde en lecture seule",
+                  correct: false,
+                },
               ],
               explanation:
                 "C'est l'ajustement précis du droit à la fonction. Pas un nivellement par le bas généralisé.",
@@ -655,8 +787,17 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             {
               question: "Un stagiaire en saisie compta a besoin de :",
               choices: [
-                { id: "a", label: "Saisir uniquement, pas exporter ni modifier les écritures clôturées", correct: true },
-                { id: "b", label: "Tous les droits du DAF pour aller vite", correct: false },
+                {
+                  id: "a",
+                  label:
+                    "Saisir uniquement, pas exporter ni modifier les écritures clôturées",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Tous les droits du DAF pour aller vite",
+                  correct: false,
+                },
               ],
               explanation:
                 "Le rôle 'saisie' est limité par construction. C'est exactement le moindre privilège appliqué.",
@@ -674,7 +815,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "zero-knowledge-protocol",
     title: "Zero-Knowledge : prouver sans révéler",
-    description: "Pourquoi ton coffre Bitwarden ne peut pas, techniquement, lire tes mots de passe.",
+    description:
+      "Pourquoi ton coffre Bitwarden ne peut pas, techniquement, lire tes mots de passe.",
     emoji: "🤐",
     category: "donnees-sensibles",
     difficulty: "hard",
@@ -701,7 +843,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
             {
               id: "b",
-              label: "Je prends B : zero-knowledge, l'éditeur ne peut techniquement rien voir",
+              label:
+                "Je prends B : zero-knowledge, l'éditeur ne peut techniquement rien voir",
               outcome: "good",
               feedback:
                 "Excellent : Bitwarden, 1Password, KeePass, Proton sont en zero-knowledge. Le mot de passe maître ne quitte jamais ton appareil ; il dérive la clé qui chiffre ton coffre localement.",
@@ -712,9 +855,14 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             "Zero-Knowledge Protocol (ZKP) : ton fournisseur stocke tes données mais ne peut PAS les déchiffrer car il ne connaît pas ta clé. Avantages : 1) une compromission de l'éditeur ne révèle pas tes secrets (Bitwarden hack 2022 = aucun mot de passe lu) ; 2) résistance aux subpoenas : l'éditeur ne peut pas livrer ce qu'il ne lit pas. Limite : si tu perds ton mot de passe maître, c'est définitif. Bonne pratique : générer une clé de récupération imprimée, stockée hors-ligne dans un coffre physique.",
           quiz: [
             {
-              question: "Si un éditeur peut réinitialiser ton mot de passe maître, c'est qu'il :",
+              question:
+                "Si un éditeur peut réinitialiser ton mot de passe maître, c'est qu'il :",
               choices: [
-                { id: "a", label: "Peut techniquement lire tes données chiffrées", correct: true },
+                {
+                  id: "a",
+                  label: "Peut techniquement lire tes données chiffrées",
+                  correct: true,
+                },
                 { id: "b", label: "Est juste plus serviable", correct: false },
               ],
               explanation:
@@ -723,8 +871,16 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             {
               question: "Le zero-knowledge protège contre :",
               choices: [
-                { id: "a", label: "La compromission du fournisseur lui-même", correct: true },
-                { id: "b", label: "Tes propres erreurs de mot de passe maître", correct: false },
+                {
+                  id: "a",
+                  label: "La compromission du fournisseur lui-même",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Tes propres erreurs de mot de passe maître",
+                  correct: false,
+                },
               ],
               explanation:
                 "ZKP empêche le fournisseur de lire tes données. Mais si TU perds ton mot de passe maître, personne ne peut t'aider — c'est le compromis assumé.",
@@ -742,7 +898,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "signature-des-commits",
     title: "Signer ses commits Git",
-    description: "Comment prouver que c'est bien toi qui as commité, et pas un attaquant qui se fait passer pour toi.",
+    description:
+      "Comment prouver que c'est bien toi qui as commité, et pas un attaquant qui se fait passer pour toi.",
     emoji: "✍️",
     category: "autre",
     difficulty: "medium",
@@ -769,7 +926,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
             {
               id: "b",
-              label: "On active la signature GPG ou Sigstore obligatoire pour merger sur main",
+              label:
+                "On active la signature GPG ou Sigstore obligatoire pour merger sur main",
               outcome: "good",
               feedback:
                 "Excellent : seuls les commits cryptographiquement signés par une clé connue de l'équipe peuvent atterrir en production. L'usurpation devient impossible.",
@@ -788,10 +946,19 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             "La signature de commit (GPG, SSH, ou Sigstore/gitsign) prouve cryptographiquement l'identité de l'auteur. Sans elle, 'Author: Bob' dans git log est juste une étiquette modifiable. Mise en place : 1) chaque dev génère une clé ; 2) la clé publique est ajoutée à GitHub/GitLab ; 3) git config commit.gpgsign true ; 4) côté repo : règle de protection 'require signed commits'. Sigstore/keyless (gitsign) est l'évolution moderne : pas de gestion de clé GPG, signature via OIDC (Google, GitHub).",
           quiz: [
             {
-              question: "Sans signature de commit, le champ 'Author' dans git log est :",
+              question:
+                "Sans signature de commit, le champ 'Author' dans git log est :",
               choices: [
-                { id: "a", label: "Modifiable par n'importe qui", correct: true },
-                { id: "b", label: "Cryptographiquement vérifié", correct: false },
+                {
+                  id: "a",
+                  label: "Modifiable par n'importe qui",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Cryptographiquement vérifié",
+                  correct: false,
+                },
               ],
               explanation:
                 "git config user.name et user.email peuvent contenir n'importe quoi. Aucune vérification par défaut.",
@@ -799,7 +966,11 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             {
               question: "L'évolution moderne de la signature GPG s'appelle :",
               choices: [
-                { id: "a", label: "Sigstore / gitsign (signature keyless via OIDC)", correct: true },
+                {
+                  id: "a",
+                  label: "Sigstore / gitsign (signature keyless via OIDC)",
+                  correct: true,
+                },
                 { id: "b", label: "MD5", correct: false },
                 { id: "c", label: "SHA-256", correct: false },
               ],
@@ -819,7 +990,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "niveau-confidentialite",
     title: "Le bon niveau de confidentialité",
-    description: "Public, interne, confidentiel, secret : comment classer un document pour ne pas tout protéger pareil.",
+    description:
+      "Public, interne, confidentiel, secret : comment classer un document pour ne pas tout protéger pareil.",
     emoji: "🏷️",
     category: "donnees-sensibles",
     difficulty: "easy",
@@ -846,7 +1018,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
             {
               id: "b",
-              label: "Je propose une grille : Public / Interne / Confidentiel / Secret avec règles différentes",
+              label:
+                "Je propose une grille : Public / Interne / Confidentiel / Secret avec règles différentes",
               outcome: "good",
               feedback:
                 "Bonne approche : seules les données sensibles méritent les protections fortes. Les autres peuvent circuler librement. C'est la classification (cf. ISO 27001).",
@@ -865,10 +1038,20 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             "La classification est la base de la protection des données : on ne protège pas une recette de cantine et un brevet stratégique avec les mêmes outils. Schéma classique en 4 niveaux : 1) Public (site web, plaquettes) ; 2) Interne (organigramme, procédures, tout ce qui ne sort pas mais peut circuler en interne) ; 3) Confidentiel (contrats, RH, données clients) ; 4) Secret (brevets, M&A, plans stratégiques, accès très restreint). Chaque niveau a ses règles : stockage, transmission, droits d'accès, durée de rétention.",
           quiz: [
             {
-              question: "Tout protéger pareil, indépendamment de la sensibilité, c'est :",
+              question:
+                "Tout protéger pareil, indépendamment de la sensibilité, c'est :",
               choices: [
-                { id: "a", label: "Inefficace : les utilisateurs contournent les contrôles excessifs", correct: true },
-                { id: "b", label: "La meilleure protection possible", correct: false },
+                {
+                  id: "a",
+                  label:
+                    "Inefficace : les utilisateurs contournent les contrôles excessifs",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "La meilleure protection possible",
+                  correct: false,
+                },
               ],
               explanation:
                 "Une politique non proportionnée crée du shadow IT (post-it, partage WhatsApp, clé USB). La proportionnalité est clé.",
@@ -876,8 +1059,17 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             {
               question: "Un brevet stratégique relève typiquement de :",
               choices: [
-                { id: "a", label: "Niveau Secret (accès très restreint, chiffrement, traçabilité)", correct: true },
-                { id: "b", label: "Niveau Public (puisque le brevet sera déposé)", correct: false },
+                {
+                  id: "a",
+                  label:
+                    "Niveau Secret (accès très restreint, chiffrement, traçabilité)",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Niveau Public (puisque le brevet sera déposé)",
+                  correct: false,
+                },
               ],
               explanation:
                 "Avant dépôt, un brevet doit rester ultra-confidentiel. Après dépôt il devient public, mais les variantes d'innovation associées restent souvent Secret.",
@@ -895,7 +1087,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "transports-en-commun",
     title: "Sécurité dans les transports en commun",
-    description: "Wi-Fi public, écran visible, écouteurs partagés : les pièges quotidiens du métro et du train.",
+    description:
+      "Wi-Fi public, écran visible, écouteurs partagés : les pièges quotidiens du métro et du train.",
     emoji: "🚆",
     category: "donnees-sensibles",
     difficulty: "easy",
@@ -922,7 +1115,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
             {
               id: "b",
-              label: "Je sors un filtre de confidentialité, j'utilise le 4G via partage de connexion, je range les papiers",
+              label:
+                "Je sors un filtre de confidentialité, j'utilise le 4G via partage de connexion, je range les papiers",
               outcome: "good",
               feedback:
                 "Trois bonnes pratiques d'un coup : filtre écran (limite l'angle de vue), 4G perso au lieu du Wi-Fi public, et papier rangé tant que je ne suis pas seul.",
@@ -943,8 +1137,17 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             {
               question: "Un Wi-Fi public 'gratuit' nommé 'SNCF_Free' est :",
               choices: [
-                { id: "a", label: "Imitable en 5 minutes par un attaquant avec un Pineapple", correct: true },
-                { id: "b", label: "Forcément le vrai Wi-Fi de la SNCF", correct: false },
+                {
+                  id: "a",
+                  label:
+                    "Imitable en 5 minutes par un attaquant avec un Pineapple",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Forcément le vrai Wi-Fi de la SNCF",
+                  correct: false,
+                },
               ],
               explanation:
                 "Un Wi-Fi Pineapple ou un simple smartphone peut diffuser un point d'accès du même nom. Tout le trafic non chiffré HTTPS y passe en clair pour l'attaquant.",
@@ -952,8 +1155,16 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             {
               question: "Le bon réflexe en transport bondé pour bosser :",
               choices: [
-                { id: "a", label: "Filtre de confidentialité + 4G perso", correct: true },
-                { id: "b", label: "Tourner l'écran face à la fenêtre", correct: false },
+                {
+                  id: "a",
+                  label: "Filtre de confidentialité + 4G perso",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Tourner l'écran face à la fenêtre",
+                  correct: false,
+                },
               ],
               explanation:
                 "Le filtre rend l'écran illisible au-delà de 30 degrés. La 4G évite le Wi-Fi public hostile. Combiné, c'est très robuste.",
@@ -971,7 +1182,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "parler-boulot-train",
     title: "Parler boulot dans le train",
-    description: "Visio en gare, appels clients à voix haute : ce que tu donnes gratuitement à tes voisins.",
+    description:
+      "Visio en gare, appels clients à voix haute : ce que tu donnes gratuitement à tes voisins.",
     emoji: "🗣️",
     category: "donnees-sensibles",
     difficulty: "easy",
@@ -998,7 +1210,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
             {
               id: "b",
-              label: "Je note : je ne ferai jamais ça. Mes appels sensibles attendent un endroit privé",
+              label:
+                "Je note : je ne ferai jamais ça. Mes appels sensibles attendent un endroit privé",
               outcome: "good",
               feedback:
                 "Bonne prise de conscience : les conversations pro contiennent en moyenne plus de renseignement utile à un concurrent que ce qu'on imagine. Le train est un terrain de chasse pour la veille concurrentielle.",
@@ -1017,10 +1230,20 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             "La fuite par conversation orale est l'une des plus sous-estimées. Les commerciaux concurrents et les enquêteurs OSINT exploitent activement les transports (TGV, vols, taxis). En 20 minutes d'écoute passive, on peut reconstruire un organigramme, un pipeline commercial, une stratégie. Règles de discipline : 1) jamais de noms de clients à voix haute ; 2) jamais de chiffres sensibles (montants, parts de marché) ; 3) si l'appel est urgent, sortir sur le quai à l'arrêt suivant ou utiliser le mode 'remettre à plus tard' avec un SMS du genre 'rappel à 16h depuis le bureau' ; 4) en visio, écouteurs obligatoires et caméra coupée si décor visible.",
           quiz: [
             {
-              question: "Parler à voix haute d'un contrat client en TGV, c'est :",
+              question:
+                "Parler à voix haute d'un contrat client en TGV, c'est :",
               choices: [
-                { id: "a", label: "Du renseignement gratuit pour la concurrence et les attaquants", correct: true },
-                { id: "b", label: "Sans risque, personne n'écoute", correct: false },
+                {
+                  id: "a",
+                  label:
+                    "Du renseignement gratuit pour la concurrence et les attaquants",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Sans risque, personne n'écoute",
+                  correct: false,
+                },
               ],
               explanation:
                 "Les transports professionnels sont fréquentés par tes concurrents directs. Les conversations sont une mine d'informations exploitables.",
@@ -1028,8 +1251,16 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             {
               question: "Si l'appel est urgent en transport :",
               choices: [
-                { id: "a", label: "Tu décales et tu rappelles depuis un endroit privé", correct: true },
-                { id: "b", label: "Tu prends sans contrainte, c'est urgent", correct: false },
+                {
+                  id: "a",
+                  label: "Tu décales et tu rappelles depuis un endroit privé",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Tu prends sans contrainte, c'est urgent",
+                  correct: false,
+                },
               ],
               explanation:
                 "Un SMS 'rappel à 16h' suffit dans 95 pour cent des cas. La sécurité passe avant la réactivité illusoire.",
@@ -1047,7 +1278,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "besoin-d-en-connaitre",
     title: "Le besoin d'en connaître",
-    description: "Pourquoi limiter l'accès à une info, même pour quelqu'un de confiance qui pourrait la voir.",
+    description:
+      "Pourquoi limiter l'accès à une info, même pour quelqu'un de confiance qui pourrait la voir.",
     emoji: "🔍",
     category: "donnees-sensibles",
     difficulty: "medium",
@@ -1074,7 +1306,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
             {
               id: "b",
-              label: "Je propose au DG une note résumée pour le ComEx, et la version complète uniquement pour le DAF",
+              label:
+                "Je propose au DG une note résumée pour le ComEx, et la version complète uniquement pour le DAF",
               outcome: "good",
               feedback:
                 "Excellent : tu appliques le besoin d'en connaître. Chacun reçoit ce qu'il lui faut pour son rôle, ni plus ni moins.",
@@ -1093,10 +1326,20 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             "Le 'besoin d'en connaître' (need-to-know) est un principe né dans le militaire et le renseignement, repris en cybersécurité d'entreprise : avoir une habilitation suffisante NE SUFFIT PAS pour accéder à une information. Il faut aussi en avoir BESOIN pour son rôle. Cas d'usage : sur une opération M&A, seuls 5-10 personnes doivent connaître. Sur un licenciement, seuls le RH, le N+1 et la paie. Sur un brevet, l'inventeur et 2-3 personnes du juridique. Le 'besoin d'en connaître' réduit la surface d'attaque et la probabilité de fuite, qu'elle soit intentionnelle ou accidentelle.",
           quiz: [
             {
-              question: "Le besoin d'en connaître ajoute au principe d'habilitation :",
+              question:
+                "Le besoin d'en connaître ajoute au principe d'habilitation :",
               choices: [
-                { id: "a", label: "Le fait d'avoir une raison opérationnelle de voir l'info", correct: true },
-                { id: "b", label: "Une couche bureaucratique inutile", correct: false },
+                {
+                  id: "a",
+                  label:
+                    "Le fait d'avoir une raison opérationnelle de voir l'info",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Une couche bureaucratique inutile",
+                  correct: false,
+                },
               ],
               explanation:
                 "Habilité oui, mais pour cette info précise et ce moment précis. Les deux conditions sont cumulatives.",
@@ -1104,8 +1347,16 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             {
               question: "Sur une opération M&A, le bon réflexe est :",
               choices: [
-                { id: "a", label: "Cercle minimal, communications cloisonnées par phase", correct: true },
-                { id: "b", label: "Informer largement pour faire adhérer", correct: false },
+                {
+                  id: "a",
+                  label: "Cercle minimal, communications cloisonnées par phase",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Informer largement pour faire adhérer",
+                  correct: false,
+                },
               ],
               explanation:
                 "Plus le cercle est large, plus la fuite est probable. L'élargissement se fait par étapes contrôlées.",
@@ -1123,7 +1374,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "diffusion-restreinte",
     title: "Diffusion Restreinte : la mention qui change tout",
-    description: "DR, secret commercial, NDA : reconnaître et traiter un document sensible en PME.",
+    description:
+      "DR, secret commercial, NDA : reconnaître et traiter un document sensible en PME.",
     emoji: "📜",
     category: "donnees-sensibles",
     difficulty: "medium",
@@ -1150,7 +1402,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
             {
               id: "b",
-              label: "Je vérifie le NDA du sous-traitant, je transmets via canal chiffré, je trace l'envoi",
+              label:
+                "Je vérifie le NDA du sous-traitant, je transmets via canal chiffré, je trace l'envoi",
               outcome: "good",
               feedback:
                 "Procédure pro : NDA signé, canal de transmission contrôlé (espace partagé sécurisé, mail chiffré PGP, clé USB chiffrée remise en main propre), et journal des transmissions pour traçabilité.",
@@ -1171,17 +1424,30 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             {
               question: "La mention 'Diffusion Restreinte' couvre :",
               choices: [
-                { id: "a", label: "L'information, dans n'importe quel format ou extrait", correct: true },
+                {
+                  id: "a",
+                  label: "L'information, dans n'importe quel format ou extrait",
+                  correct: true,
+                },
                 { id: "b", label: "Seulement le PDF original", correct: false },
               ],
               explanation:
                 "C'est l'info qui est protégée. Recopier, photographier, extraire : tout reste sous DR.",
             },
             {
-              question: "Avant de transmettre un document DR à un sous-traitant :",
+              question:
+                "Avant de transmettre un document DR à un sous-traitant :",
               choices: [
-                { id: "a", label: "NDA signé + canal chiffré + traçabilité", correct: true },
-                { id: "b", label: "Confiance verbale, c'est plus rapide", correct: false },
+                {
+                  id: "a",
+                  label: "NDA signé + canal chiffré + traçabilité",
+                  correct: true,
+                },
+                {
+                  id: "b",
+                  label: "Confiance verbale, c'est plus rapide",
+                  correct: false,
+                },
               ],
               explanation:
                 "Sans engagement écrit, en cas de fuite tu n'as aucun recours. Le NDA est la base.",
@@ -1233,9 +1499,11 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
             {
               id: "logout-tout",
-              label: "Se déconnecter de toutes les sessions, changer le mot de passe et activer le MFA",
+              label:
+                "Se déconnecter de toutes les sessions, changer le mot de passe et activer le MFA",
               outcome: "good",
-              feedback: "Bon réflexe. Les 3 actions à faire en moins de 10 min.",
+              feedback:
+                "Bon réflexe. Les 3 actions à faire en moins de 10 min.",
               points: 30,
             },
             {
@@ -1253,10 +1521,16 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
               question: "Quel est le premier réflexe en cas d'intrusion ?",
               choices: [
                 { id: "a", label: "Supprimer les preuves", correct: false },
-                { id: "b", label: "Se déconnecter de toutes les sessions et changer le mot de passe", correct: true },
+                {
+                  id: "b",
+                  label:
+                    "Se déconnecter de toutes les sessions et changer le mot de passe",
+                  correct: true,
+                },
                 { id: "c", label: "Attendre 24h pour voir", correct: false },
               ],
-              explanation: "Couper l'accès attaquant en priorité, puis sécuriser.",
+              explanation:
+                "Couper l'accès attaquant en priorité, puis sécuriser.",
             },
           ],
           xpReward: 50,
@@ -1291,21 +1565,24 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
               id: "oui",
               label: "Oui, on a un NAS",
               outcome: "bad",
-              feedback: "Le NAS est sur le même réseau : il a aussi été chiffré.",
+              feedback:
+                "Le NAS est sur le même réseau : il a aussi été chiffré.",
               points: 0,
             },
             {
               id: "non-online",
               label: "Non, le NAS est en ligne donc chiffré aussi",
               outcome: "good",
-              feedback: "Exactement. Il faut une sauvegarde déconnectée ou immuable.",
+              feedback:
+                "Exactement. Il faut une sauvegarde déconnectée ou immuable.",
               points: 25,
             },
             {
               id: "depend",
               label: "Ça dépend du ransomware",
               outcome: "neutral",
-              feedback: "Trop optimiste : la majorité des ransomwares actuels ciblent les NAS.",
+              feedback:
+                "Trop optimiste : la majorité des ransomwares actuels ciblent les NAS.",
               points: 10,
             },
           ],
@@ -1313,7 +1590,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             "La règle 3-2-1 : 3 copies des données, sur 2 supports différents, dont 1 hors-site et déconnecté. Sans ça, un NAS branché ne sauve rien.",
           quiz: [
             {
-              question: "Combien de copies de sauvegarde recommande la règle 3-2-1 ?",
+              question:
+                "Combien de copies de sauvegarde recommande la règle 3-2-1 ?",
               choices: [
                 { id: "a", label: "1", correct: false },
                 { id: "b", label: "3", correct: true },
@@ -1332,7 +1610,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "wifi-public-risques",
     title: "Wi-Fi public : ce que vous risquez vraiment",
-    description: "Café, gare, hôtel : ce qui se passe quand vous vous connectez, et comment vous protéger en 2 min.",
+    description:
+      "Café, gare, hôtel : ce qui se passe quand vous vous connectez, et comment vous protéger en 2 min.",
     emoji: "📶",
     category: "teletravail",
     difficulty: "easy",
@@ -1346,15 +1625,44 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
         {
           title: "Le Wi-Fi de la gare",
           durationMinutes: 5,
-          scenario: "Vous attendez votre train à Lyon Part-Dieu. Un Wi-Fi 'SNCF-Free' s'affiche. Vous vous connectez ?",
+          scenario:
+            "Vous attendez votre train à Lyon Part-Dieu. Un Wi-Fi 'SNCF-Free' s'affiche. Vous vous connectez ?",
           choices: [
-            { id: "go", label: "Oui, le nom inspire confiance", outcome: "bad", feedback: "Un attaquant peut nommer son Wi-Fi 'SNCF-Free' en 30 secondes.", points: 0 },
-            { id: "partage", label: "Non, j'utilise le partage de connexion de mon téléphone", outcome: "good", feedback: "Le bon réflexe.", points: 25 },
-            { id: "vpn", label: "Oui, mais avec un VPN actif", outcome: "good", feedback: "Acceptable si le VPN est de confiance.", points: 20 },
+            {
+              id: "go",
+              label: "Oui, le nom inspire confiance",
+              outcome: "bad",
+              feedback:
+                "Un attaquant peut nommer son Wi-Fi 'SNCF-Free' en 30 secondes.",
+              points: 0,
+            },
+            {
+              id: "partage",
+              label: "Non, j'utilise le partage de connexion de mon téléphone",
+              outcome: "good",
+              feedback: "Le bon réflexe.",
+              points: 25,
+            },
+            {
+              id: "vpn",
+              label: "Oui, mais avec un VPN actif",
+              outcome: "good",
+              feedback: "Acceptable si le VPN est de confiance.",
+              points: 20,
+            },
           ],
-          debrief: "Sur Wi-Fi public, partage de connexion 4G/5G > VPN > rien. Jamais de saisie de mot de passe sans VPN.",
+          debrief:
+            "Sur Wi-Fi public, partage de connexion 4G/5G > VPN > rien. Jamais de saisie de mot de passe sans VPN.",
           quiz: [
-            { question: "Quelle est la meilleure option en gare ?", choices: [{ id: "a", label: "Partage de connexion 4G/5G", correct: true }, { id: "b", label: "Wi-Fi public sans VPN", correct: false }], explanation: "Le partage de connexion mobile est sous votre contrôle." },
+            {
+              question: "Quelle est la meilleure option en gare ?",
+              choices: [
+                { id: "a", label: "Partage de connexion 4G/5G", correct: true },
+                { id: "b", label: "Wi-Fi public sans VPN", correct: false },
+              ],
+              explanation:
+                "Le partage de connexion mobile est sous votre contrôle.",
+            },
           ],
           xpReward: 45,
         },
@@ -1366,7 +1674,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "verifier-url",
     title: "Vérifier une URL en 5 secondes",
-    description: "humanix-cybersecurity.fr ou humanix-cybersecurity.fr.malware-host.ru ? Le réflexe qui sauve.",
+    description:
+      "humanix-cybersecurity.fr ou humanix-cybersecurity.fr.malware-host.ru ? Le réflexe qui sauve.",
     emoji: "🔗",
     category: "phishing",
     difficulty: "easy",
@@ -1380,14 +1689,38 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
         {
           title: "Lire une URL : le bon morceau",
           durationMinutes: 5,
-          scenario: "Vous recevez un mail avec un lien : login.microsoft-365.support-update.com. Cliquez ?",
+          scenario:
+            "Vous recevez un mail avec un lien : login.microsoft-365.support-update.com. Cliquez ?",
           choices: [
-            { id: "go", label: "Oui, c'est un sous-domaine Microsoft", outcome: "bad", feedback: "FAUX. Le domaine c'est support-update.com, pas microsoft.com.", points: 0 },
-            { id: "no", label: "Non, le vrai domaine est support-update.com qui n'est pas Microsoft", outcome: "good", feedback: "Exactement. Toujours lire de droite à gauche.", points: 30 },
+            {
+              id: "go",
+              label: "Oui, c'est un sous-domaine Microsoft",
+              outcome: "bad",
+              feedback:
+                "FAUX. Le domaine c'est support-update.com, pas microsoft.com.",
+              points: 0,
+            },
+            {
+              id: "no",
+              label:
+                "Non, le vrai domaine est support-update.com qui n'est pas Microsoft",
+              outcome: "good",
+              feedback: "Exactement. Toujours lire de droite à gauche.",
+              points: 30,
+            },
           ],
-          debrief: "Une URL se lit de droite à gauche. Le domaine = ce qui est juste avant le premier slash. Tout ce qui précède n'est qu'un sous-domaine que n'importe qui peut nommer.",
+          debrief:
+            "Une URL se lit de droite à gauche. Le domaine = ce qui est juste avant le premier slash. Tout ce qui précède n'est qu'un sous-domaine que n'importe qui peut nommer.",
           quiz: [
-            { question: "Dans https://login.microsoft.exemple.com/, quel est le domaine ?", choices: [{ id: "a", label: "microsoft.com", correct: false }, { id: "b", label: "exemple.com", correct: true }], explanation: "Le domaine = juste avant le premier /." },
+            {
+              question:
+                "Dans https://login.microsoft.exemple.com/, quel est le domaine ?",
+              choices: [
+                { id: "a", label: "microsoft.com", correct: false },
+                { id: "b", label: "exemple.com", correct: true },
+              ],
+              explanation: "Le domaine = juste avant le premier /.",
+            },
           ],
           xpReward: 50,
         },
@@ -1399,7 +1732,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "detecter-faux-site",
     title: "Détecter un faux site bancaire / impôts",
-    description: "8 signaux faibles qui trahissent un faux site, même bien fait.",
+    description:
+      "8 signaux faibles qui trahissent un faux site, même bien fait.",
     emoji: "🏛️",
     category: "phishing",
     difficulty: "medium",
@@ -1413,15 +1747,43 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
         {
           title: "Les 8 signaux faibles",
           durationMinutes: 7,
-          scenario: "Un site '.com' se présente comme impots-gouv. Que vérifiez-vous ?",
+          scenario:
+            "Un site '.com' se présente comme impots-gouv. Que vérifiez-vous ?",
           choices: [
-            { id: "https", label: "Le HTTPS et le cadenas", outcome: "neutral", feedback: "Insuffisant : 70% des phishings ont un HTTPS valide aujourd'hui.", points: 10 },
-            { id: "tld", label: "Le TLD (.gouv.fr pour l'État)", outcome: "good", feedback: "Bon. Les services publics français sont en .gouv.fr.", points: 30 },
-            { id: "design", label: "Le design", outcome: "bad", feedback: "Le design se copie en 5 min.", points: 0 },
+            {
+              id: "https",
+              label: "Le HTTPS et le cadenas",
+              outcome: "neutral",
+              feedback:
+                "Insuffisant : 70% des phishings ont un HTTPS valide aujourd'hui.",
+              points: 10,
+            },
+            {
+              id: "tld",
+              label: "Le TLD (.gouv.fr pour l'État)",
+              outcome: "good",
+              feedback: "Bon. Les services publics français sont en .gouv.fr.",
+              points: 30,
+            },
+            {
+              id: "design",
+              label: "Le design",
+              outcome: "bad",
+              feedback: "Le design se copie en 5 min.",
+              points: 0,
+            },
           ],
-          debrief: "Vérifications à faire : TLD officiel, fautes d'ortho, urgence artificielle, demandes d'infos sensibles, certificat émis depuis < 30 jours.",
+          debrief:
+            "Vérifications à faire : TLD officiel, fautes d'ortho, urgence artificielle, demandes d'infos sensibles, certificat émis depuis < 30 jours.",
           quiz: [
-            { question: "Le TLD officiel des services publics français est ?", choices: [{ id: "a", label: ".com", correct: false }, { id: "b", label: ".gouv.fr", correct: true }], explanation: "Tout site public français est en .gouv.fr." },
+            {
+              question: "Le TLD officiel des services publics français est ?",
+              choices: [
+                { id: "a", label: ".com", correct: false },
+                { id: "b", label: ".gouv.fr", correct: true },
+              ],
+              explanation: "Tout site public français est en .gouv.fr.",
+            },
           ],
           xpReward: 60,
         },
@@ -1433,7 +1795,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "securiser-routeur-pme",
     title: "Sécuriser le routeur Wi-Fi de l'entreprise",
-    description: "Mot de passe par défaut, firmware à jour, WPA3 : le routeur, premier rempart.",
+    description:
+      "Mot de passe par défaut, firmware à jour, WPA3 : le routeur, premier rempart.",
     emoji: "📡",
     category: "autre",
     difficulty: "medium",
@@ -1447,14 +1810,37 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
         {
           title: "Audit express du routeur",
           durationMinutes: 8,
-          scenario: "Votre routeur PME a admin/admin comme login. Quelle est la priorité ?",
+          scenario:
+            "Votre routeur PME a admin/admin comme login. Quelle est la priorité ?",
           choices: [
-            { id: "tout", label: "Changer immédiatement le mot de passe admin et le SSID", outcome: "good", feedback: "Étape 1. Ensuite : firmware à jour, WPA3, désactiver WPS.", points: 30 },
-            { id: "wps", label: "Activer le WPS pour la facilité", outcome: "bad", feedback: "WPS a des failles connues. Désactiver.", points: 0 },
+            {
+              id: "tout",
+              label: "Changer immédiatement le mot de passe admin et le SSID",
+              outcome: "good",
+              feedback:
+                "Étape 1. Ensuite : firmware à jour, WPA3, désactiver WPS.",
+              points: 30,
+            },
+            {
+              id: "wps",
+              label: "Activer le WPS pour la facilité",
+              outcome: "bad",
+              feedback: "WPS a des failles connues. Désactiver.",
+              points: 0,
+            },
           ],
-          debrief: "Audit routeur : (1) MdP admin fort, (2) firmware à jour, (3) WPA3 (sinon WPA2-AES), (4) WPS désactivé, (5) UPnP désactivé, (6) Wi-Fi invité séparé.",
+          debrief:
+            "Audit routeur : (1) MdP admin fort, (2) firmware à jour, (3) WPA3 (sinon WPA2-AES), (4) WPS désactivé, (5) UPnP désactivé, (6) Wi-Fi invité séparé.",
           quiz: [
-            { question: "Quel protocole Wi-Fi est recommandé en 2026 ?", choices: [{ id: "a", label: "WEP", correct: false }, { id: "b", label: "WPA3", correct: true }, { id: "c", label: "Pas de chiffrement", correct: false }], explanation: "WPA3 ou WPA2-AES." },
+            {
+              question: "Quel protocole Wi-Fi est recommandé en 2026 ?",
+              choices: [
+                { id: "a", label: "WEP", correct: false },
+                { id: "b", label: "WPA3", correct: true },
+                { id: "c", label: "Pas de chiffrement", correct: false },
+              ],
+              explanation: "WPA3 ou WPA2-AES.",
+            },
           ],
           xpReward: 60,
         },
@@ -1466,7 +1852,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "qr-code-piege",
     title: "Le piège des QR codes (quishing)",
-    description: "QR code dans le métro, sur un parking, dans un restaurant : la nouvelle vague de phishing.",
+    description:
+      "QR code dans le métro, sur un parking, dans un restaurant : la nouvelle vague de phishing.",
     emoji: "📲",
     category: "phishing",
     difficulty: "easy",
@@ -1480,15 +1867,45 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
         {
           title: "Le QR code du parking",
           durationMinutes: 5,
-          scenario: "Une étiquette QR code 'Paiement parking' est collée sur l'horodateur. Vous scannez ?",
+          scenario:
+            "Une étiquette QR code 'Paiement parking' est collée sur l'horodateur. Vous scannez ?",
           choices: [
-            { id: "scan", label: "Oui, c'est officiel", outcome: "bad", feedback: "Une étiquette se colle en 2 secondes. URL frauduleuse.", points: 0 },
-            { id: "url", label: "Je vérifie l'URL avant de continuer", outcome: "good", feedback: "Toujours vérifier l'URL après scan, avant toute saisie.", points: 25 },
-            { id: "horodateur", label: "Je paye à l'horodateur uniquement", outcome: "good", feedback: "Le plus sûr.", points: 30 },
+            {
+              id: "scan",
+              label: "Oui, c'est officiel",
+              outcome: "bad",
+              feedback:
+                "Une étiquette se colle en 2 secondes. URL frauduleuse.",
+              points: 0,
+            },
+            {
+              id: "url",
+              label: "Je vérifie l'URL avant de continuer",
+              outcome: "good",
+              feedback:
+                "Toujours vérifier l'URL après scan, avant toute saisie.",
+              points: 25,
+            },
+            {
+              id: "horodateur",
+              label: "Je paye à l'horodateur uniquement",
+              outcome: "good",
+              feedback: "Le plus sûr.",
+              points: 30,
+            },
           ],
-          debrief: "Le quishing (QR phishing) explose en 2025-2026. Réflexe : ne jamais scanner un QR collé en extérieur sans vérifier l'URL avant la saisie.",
+          debrief:
+            "Le quishing (QR phishing) explose en 2025-2026. Réflexe : ne jamais scanner un QR collé en extérieur sans vérifier l'URL avant la saisie.",
           quiz: [
-            { question: "Avant tout paiement après scan d'un QR code, on vérifie ?", choices: [{ id: "a", label: "Le design du site", correct: false }, { id: "b", label: "L'URL et le TLD", correct: true }], explanation: "Domaine d'abord, design ensuite." },
+            {
+              question:
+                "Avant tout paiement après scan d'un QR code, on vérifie ?",
+              choices: [
+                { id: "a", label: "Le design du site", correct: false },
+                { id: "b", label: "L'URL et le TLD", correct: true },
+              ],
+              explanation: "Domaine d'abord, design ensuite.",
+            },
           ],
           xpReward: 45,
         },
@@ -1500,7 +1917,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "securite-cloud-saas",
     title: "Sécurité de vos SaaS (Drive, Slack, Notion)",
-    description: "Permissions, partages publics, MFA admin : 5 règles pour une utilisation sûre des SaaS quotidiens.",
+    description:
+      "Permissions, partages publics, MFA admin : 5 règles pour une utilisation sûre des SaaS quotidiens.",
     emoji: "☁️",
     category: "autre",
     difficulty: "medium",
@@ -1514,14 +1932,45 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
         {
           title: "Le partage public oublié",
           durationMinutes: 7,
-          scenario: "Vous créez un Google Doc 'Plan stratégique 2026' et l'envoyez à 3 collègues via le bouton 'Toute personne ayant le lien'. Risque ?",
+          scenario:
+            "Vous créez un Google Doc 'Plan stratégique 2026' et l'envoyez à 3 collègues via le bouton 'Toute personne ayant le lien'. Risque ?",
           choices: [
-            { id: "ok", label: "Pas de risque, le lien est secret", outcome: "bad", feedback: "Le lien peut être partagé, il fuite via emails ou Slack.", points: 0 },
-            { id: "specifique", label: "Mauvais : il faut partager nommément", outcome: "good", feedback: "Toujours partage nominatif. Lien public = fuite assurée à terme.", points: 30 },
+            {
+              id: "ok",
+              label: "Pas de risque, le lien est secret",
+              outcome: "bad",
+              feedback:
+                "Le lien peut être partagé, il fuite via emails ou Slack.",
+              points: 0,
+            },
+            {
+              id: "specifique",
+              label: "Mauvais : il faut partager nommément",
+              outcome: "good",
+              feedback:
+                "Toujours partage nominatif. Lien public = fuite assurée à terme.",
+              points: 30,
+            },
           ],
-          debrief: "Sur SaaS : partage nominatif uniquement, MFA obligatoire pour les admins, audit trimestriel des partages publics, déboarding immédiat.",
+          debrief:
+            "Sur SaaS : partage nominatif uniquement, MFA obligatoire pour les admins, audit trimestriel des partages publics, déboarding immédiat.",
           quiz: [
-            { question: "Quel partage est le plus sûr sur Google Drive ?", choices: [{ id: "a", label: "Toute personne ayant le lien", correct: false }, { id: "b", label: "Personnes spécifiques nommées", correct: true }], explanation: "Le partage nominatif limite la diffusion." },
+            {
+              question: "Quel partage est le plus sûr sur Google Drive ?",
+              choices: [
+                {
+                  id: "a",
+                  label: "Toute personne ayant le lien",
+                  correct: false,
+                },
+                {
+                  id: "b",
+                  label: "Personnes spécifiques nommées",
+                  correct: true,
+                },
+              ],
+              explanation: "Le partage nominatif limite la diffusion.",
+            },
           ],
           xpReward: 55,
         },
@@ -1533,7 +1982,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "cyber-pour-les-ados",
     title: "Sensibiliser les ados à la cyber",
-    description: "TikTok, Snap, Discord, jeux : ce que vos ados doivent savoir avant qu'il ne soit trop tard.",
+    description:
+      "TikTok, Snap, Discord, jeux : ce que vos ados doivent savoir avant qu'il ne soit trop tard.",
     emoji: "🧒",
     category: "autre",
     difficulty: "easy",
@@ -1547,14 +1997,39 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
         {
           title: "Les 4 règles à transmettre",
           durationMinutes: 6,
-          scenario: "Votre ado de 13 ans veut s'inscrire sur Discord. Que vérifiez-vous ensemble ?",
+          scenario:
+            "Votre ado de 13 ans veut s'inscrire sur Discord. Que vérifiez-vous ensemble ?",
           choices: [
-            { id: "rien", label: "Rien, c'est leur vie privée", outcome: "bad", feedback: "À 13 ans, l'accompagnement reste nécessaire (CNIL : majorité numérique 15 ans).", points: 5 },
-            { id: "regles", label: "Vie privée, MFA, pas de photos perso, ne jamais accepter d'inconnu", outcome: "good", feedback: "Les 4 règles de base.", points: 30 },
+            {
+              id: "rien",
+              label: "Rien, c'est leur vie privée",
+              outcome: "bad",
+              feedback:
+                "À 13 ans, l'accompagnement reste nécessaire (CNIL : majorité numérique 15 ans).",
+              points: 5,
+            },
+            {
+              id: "regles",
+              label:
+                "Vie privée, MFA, pas de photos perso, ne jamais accepter d'inconnu",
+              outcome: "good",
+              feedback: "Les 4 règles de base.",
+              points: 30,
+            },
           ],
-          debrief: "À transmettre aux ados : (1) Tout ce qu'on poste reste, (2) Activer le MFA, (3) Ne jamais accepter un inconnu, (4) Parler à un adulte si malaise.",
+          debrief:
+            "À transmettre aux ados : (1) Tout ce qu'on poste reste, (2) Activer le MFA, (3) Ne jamais accepter un inconnu, (4) Parler à un adulte si malaise.",
           quiz: [
-            { question: "Quelle est la majorité numérique en France ?", choices: [{ id: "a", label: "13 ans", correct: false }, { id: "b", label: "15 ans (loi 2024)", correct: true }, { id: "c", label: "18 ans", correct: false }], explanation: "Loi française du 29 juin 2024 : 15 ans pour les réseaux sociaux." },
+            {
+              question: "Quelle est la majorité numérique en France ?",
+              choices: [
+                { id: "a", label: "13 ans", correct: false },
+                { id: "b", label: "15 ans (loi 2024)", correct: true },
+                { id: "c", label: "18 ans", correct: false },
+              ],
+              explanation:
+                "Loi française du 29 juin 2024 : 15 ans pour les réseaux sociaux.",
+            },
           ],
           xpReward: 45,
         },
@@ -1566,7 +2041,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "sim-swapping",
     title: "Le SIM swapping : votre numéro volé",
-    description: "L'attaque qui prend le contrôle de votre téléphone et vide vos comptes en 30 minutes.",
+    description:
+      "L'attaque qui prend le contrôle de votre téléphone et vide vos comptes en 30 minutes.",
     emoji: "📵",
     category: "fraude",
     difficulty: "hard",
@@ -1580,14 +2056,43 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
         {
           title: "Mon numéro a été volé",
           durationMinutes: 8,
-          scenario: "Votre téléphone affiche 'Pas de service' et vous recevez une alerte de connexion bancaire. Vous suspectez quoi ?",
+          scenario:
+            "Votre téléphone affiche 'Pas de service' et vous recevez une alerte de connexion bancaire. Vous suspectez quoi ?",
           choices: [
-            { id: "panne", label: "Une panne réseau", outcome: "bad", feedback: "Trop optimiste : combiné à l'alerte bancaire = SIM swapping en cours.", points: 0 },
-            { id: "swap", label: "SIM swapping en cours, j'appelle mon opérateur immédiatement", outcome: "good", feedback: "Bon réflexe : appeler depuis un autre téléphone, bloquer la SIM, prévenir la banque.", points: 40 },
+            {
+              id: "panne",
+              label: "Une panne réseau",
+              outcome: "bad",
+              feedback:
+                "Trop optimiste : combiné à l'alerte bancaire = SIM swapping en cours.",
+              points: 0,
+            },
+            {
+              id: "swap",
+              label:
+                "SIM swapping en cours, j'appelle mon opérateur immédiatement",
+              outcome: "good",
+              feedback:
+                "Bon réflexe : appeler depuis un autre téléphone, bloquer la SIM, prévenir la banque.",
+              points: 40,
+            },
           ],
-          debrief: "Réflexes SIM swap : (1) appeler opérateur depuis un autre téléphone, (2) bloquer la SIM, (3) changer mots de passe email + banque, (4) appeler la banque, (5) déposer plainte.",
+          debrief:
+            "Réflexes SIM swap : (1) appeler opérateur depuis un autre téléphone, (2) bloquer la SIM, (3) changer mots de passe email + banque, (4) appeler la banque, (5) déposer plainte.",
           quiz: [
-            { question: "Le SMS comme 2e facteur d'authentification est-il fiable face au SIM swap ?", choices: [{ id: "a", label: "Oui, totalement", correct: false }, { id: "b", label: "Non, préférer une app TOTP ou un passkey", correct: true }], explanation: "TOTP (Authenticator) ou passkey > SMS." },
+            {
+              question:
+                "Le SMS comme 2e facteur d'authentification est-il fiable face au SIM swap ?",
+              choices: [
+                { id: "a", label: "Oui, totalement", correct: false },
+                {
+                  id: "b",
+                  label: "Non, préférer une app TOTP ou un passkey",
+                  correct: true,
+                },
+              ],
+              explanation: "TOTP (Authenticator) ou passkey > SMS.",
+            },
           ],
           xpReward: 80,
         },
@@ -1599,7 +2104,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "decrypter-assurance-cyber",
     title: "Décrypter son contrat d'assurance cyber",
-    description: "Franchise, exclusions, limite par sinistre : ce qu'il faut vraiment regarder avant de signer.",
+    description:
+      "Franchise, exclusions, limite par sinistre : ce qu'il faut vraiment regarder avant de signer.",
     emoji: "📑",
     category: "autre",
     difficulty: "hard",
@@ -1613,14 +2119,39 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
         {
           title: "Les 5 lignes à vérifier",
           durationMinutes: 8,
-          scenario: "Votre assureur vous propose une cyber-assurance à 800 €/an. Que vérifiez-vous en priorité ?",
+          scenario:
+            "Votre assureur vous propose une cyber-assurance à 800 €/an. Que vérifiez-vous en priorité ?",
           choices: [
-            { id: "prix", label: "Le prix uniquement", outcome: "bad", feedback: "L'important c'est ce qui est couvert et exclu, pas le prix.", points: 0 },
-            { id: "details", label: "Franchise, plafond, exclusions (rançon, négligence), délai d'indemnisation", outcome: "good", feedback: "Les 4 lignes critiques.", points: 35 },
+            {
+              id: "prix",
+              label: "Le prix uniquement",
+              outcome: "bad",
+              feedback:
+                "L'important c'est ce qui est couvert et exclu, pas le prix.",
+              points: 0,
+            },
+            {
+              id: "details",
+              label:
+                "Franchise, plafond, exclusions (rançon, négligence), délai d'indemnisation",
+              outcome: "good",
+              feedback: "Les 4 lignes critiques.",
+              points: 35,
+            },
           ],
-          debrief: "Lignes-clés : franchise (souvent 5-10 K€), plafond annuel (souvent 500 K€-1 M€), exclusions courantes (rançon, négligence grave, conflits armés), délai d'indemnisation, conditions préalables (MFA, sauvegardes).",
+          debrief:
+            "Lignes-clés : franchise (souvent 5-10 K€), plafond annuel (souvent 500 K€-1 M€), exclusions courantes (rançon, négligence grave, conflits armés), délai d'indemnisation, conditions préalables (MFA, sauvegardes).",
           quiz: [
-            { question: "Quelle exclusion est la plus courante en cyber-assurance ?", choices: [{ id: "a", label: "Le ransomware", correct: false }, { id: "b", label: "Le paiement de la rançon", correct: true }], explanation: "Beaucoup d'assureurs excluent désormais le paiement direct de rançon." },
+            {
+              question:
+                "Quelle exclusion est la plus courante en cyber-assurance ?",
+              choices: [
+                { id: "a", label: "Le ransomware", correct: false },
+                { id: "b", label: "Le paiement de la rançon", correct: true },
+              ],
+              explanation:
+                "Beaucoup d'assureurs excluent désormais le paiement direct de rançon.",
+            },
           ],
           xpReward: 75,
         },
@@ -1632,7 +2163,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "iot-bureau",
     title: "Sécurité IoT au bureau (caméras, imprimantes, thermostats)",
-    description: "L'imprimante de l'open-space est une porte d'entrée. Cas Casino, Mirai botnet.",
+    description:
+      "L'imprimante de l'open-space est une porte d'entrée. Cas Casino, Mirai botnet.",
     emoji: "🖨️",
     category: "autre",
     difficulty: "medium",
@@ -1646,14 +2178,45 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
         {
           title: "L'imprimante compromise",
           durationMinutes: 7,
-          scenario: "Votre imprimante réseau est restée avec login admin/admin depuis 2018. Que faut-il faire ?",
+          scenario:
+            "Votre imprimante réseau est restée avec login admin/admin depuis 2018. Que faut-il faire ?",
           choices: [
-            { id: "rien", label: "Rien, c'est juste une imprimante", outcome: "bad", feedback: "L'imprimante a accès au réseau et stocke des docs : porte d'entrée idéale.", points: 0 },
-            { id: "audit", label: "Audit des objets connectés : MdP, firmware, segmentation VLAN", outcome: "good", feedback: "Bon. Idéalement, mettre les IoT sur un VLAN séparé.", points: 30 },
+            {
+              id: "rien",
+              label: "Rien, c'est juste une imprimante",
+              outcome: "bad",
+              feedback:
+                "L'imprimante a accès au réseau et stocke des docs : porte d'entrée idéale.",
+              points: 0,
+            },
+            {
+              id: "audit",
+              label:
+                "Audit des objets connectés : MdP, firmware, segmentation VLAN",
+              outcome: "good",
+              feedback: "Bon. Idéalement, mettre les IoT sur un VLAN séparé.",
+              points: 30,
+            },
           ],
-          debrief: "Tout objet connecté est une cible. Réflexes : changer MdP par défaut, firmware à jour, VLAN dédié IoT, désactiver UPnP.",
+          debrief:
+            "Tout objet connecté est une cible. Réflexes : changer MdP par défaut, firmware à jour, VLAN dédié IoT, désactiver UPnP.",
           quiz: [
-            { question: "Que faire des objets connectés en entreprise ?", choices: [{ id: "a", label: "Les laisser sur le réseau principal", correct: false }, { id: "b", label: "Les isoler sur un VLAN dédié", correct: true }], explanation: "Segmentation = limitation du blast radius." },
+            {
+              question: "Que faire des objets connectés en entreprise ?",
+              choices: [
+                {
+                  id: "a",
+                  label: "Les laisser sur le réseau principal",
+                  correct: false,
+                },
+                {
+                  id: "b",
+                  label: "Les isoler sur un VLAN dédié",
+                  correct: true,
+                },
+              ],
+              explanation: "Segmentation = limitation du blast radius.",
+            },
           ],
           xpReward: 60,
         },
@@ -1665,7 +2228,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "cyber-com-responsable",
     title: "Cyber pour le ou la responsable com",
-    description: "Réseaux sociaux entreprise, gestion de crise, fake news : le rôle clé en cas d'incident.",
+    description:
+      "Réseaux sociaux entreprise, gestion de crise, fake news : le rôle clé en cas d'incident.",
     emoji: "📢",
     category: "crise",
     difficulty: "medium",
@@ -1679,15 +2243,52 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
         {
           title: "Communiquer après un incident",
           durationMinutes: 7,
-          scenario: "Votre PME vient d'être victime d'un ransomware. Un journaliste local appelle. Que dites-vous ?",
+          scenario:
+            "Votre PME vient d'être victime d'un ransomware. Un journaliste local appelle. Que dites-vous ?",
           choices: [
-            { id: "nier", label: "Nier l'incident", outcome: "bad", feedback: "Mensonge = perte de confiance amplifiée. Risque légal.", points: 0 },
-            { id: "tout", label: "Tout dire en détail", outcome: "bad", feedback: "Pas en cours d'enquête : aide les attaquants.", points: 5 },
-            { id: "mesure", label: "Confirmer l'incident, dire les actions prises, ne pas spéculer sur l'auteur", outcome: "good", feedback: "Posture juste. Transparence + retenue.", points: 35 },
+            {
+              id: "nier",
+              label: "Nier l'incident",
+              outcome: "bad",
+              feedback:
+                "Mensonge = perte de confiance amplifiée. Risque légal.",
+              points: 0,
+            },
+            {
+              id: "tout",
+              label: "Tout dire en détail",
+              outcome: "bad",
+              feedback: "Pas en cours d'enquête : aide les attaquants.",
+              points: 5,
+            },
+            {
+              id: "mesure",
+              label:
+                "Confirmer l'incident, dire les actions prises, ne pas spéculer sur l'auteur",
+              outcome: "good",
+              feedback: "Posture juste. Transparence + retenue.",
+              points: 35,
+            },
           ],
-          debrief: "Communication post-incident : (1) Confirmer ce qui est public, (2) Dire les mesures prises, (3) Ne pas spéculer, (4) Renvoyer vers un porte-parole unique, (5) Coordonner avec ANSSI/CNIL.",
+          debrief:
+            "Communication post-incident : (1) Confirmer ce qui est public, (2) Dire les mesures prises, (3) Ne pas spéculer, (4) Renvoyer vers un porte-parole unique, (5) Coordonner avec ANSSI/CNIL.",
           quiz: [
-            { question: "En cas d'incident cyber, qui parle aux médias ?", choices: [{ id: "a", label: "Tout le monde, pour la transparence", correct: false }, { id: "b", label: "Un porte-parole unique désigné", correct: true }], explanation: "Un seul canal officiel évite les contradictions." },
+            {
+              question: "En cas d'incident cyber, qui parle aux médias ?",
+              choices: [
+                {
+                  id: "a",
+                  label: "Tout le monde, pour la transparence",
+                  correct: false,
+                },
+                {
+                  id: "b",
+                  label: "Un porte-parole unique désigné",
+                  correct: true,
+                },
+              ],
+              explanation: "Un seul canal officiel évite les contradictions.",
+            },
           ],
           xpReward: 65,
         },
@@ -1699,7 +2300,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "securite-acces-partages",
     title: "Comptes partagés : la mauvaise idée à corriger",
-    description: "Le compte admin@entreprise.fr connu de toute l'équipe : pourquoi c'est dangereux et comment sortir.",
+    description:
+      "Le compte admin@entreprise.fr connu de toute l'équipe : pourquoi c'est dangereux et comment sortir.",
     emoji: "👥",
     category: "mots-de-passe",
     difficulty: "medium",
@@ -1713,15 +2315,47 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
         {
           title: "Le compte admin partagé",
           durationMinutes: 7,
-          scenario: "5 personnes utilisent le même compte admin@entreprise.fr avec le même mot de passe. Une démissionne. Que faire ?",
+          scenario:
+            "5 personnes utilisent le même compte admin@entreprise.fr avec le même mot de passe. Une démissionne. Que faire ?",
           choices: [
-            { id: "rien", label: "Rien, ça va aller", outcome: "bad", feedback: "L'ex-employé garde l'accès. Risque légal et de sécurité.", points: 0 },
-            { id: "mdp", label: "Changer le mot de passe immédiatement", outcome: "neutral", feedback: "Solution court terme. Mais le problème reste.", points: 15 },
-            { id: "individuel", label: "Migrer vers des comptes individuels avec MFA", outcome: "good", feedback: "Bon. Audit trail + offboarding propre.", points: 35 },
+            {
+              id: "rien",
+              label: "Rien, ça va aller",
+              outcome: "bad",
+              feedback:
+                "L'ex-employé garde l'accès. Risque légal et de sécurité.",
+              points: 0,
+            },
+            {
+              id: "mdp",
+              label: "Changer le mot de passe immédiatement",
+              outcome: "neutral",
+              feedback: "Solution court terme. Mais le problème reste.",
+              points: 15,
+            },
+            {
+              id: "individuel",
+              label: "Migrer vers des comptes individuels avec MFA",
+              outcome: "good",
+              feedback: "Bon. Audit trail + offboarding propre.",
+              points: 35,
+            },
           ],
-          debrief: "Compte partagé = aucun audit trail, offboarding cassé, MFA impossible. Solution : 1 compte par personne + droits granulaires + MFA obligatoire.",
+          debrief:
+            "Compte partagé = aucun audit trail, offboarding cassé, MFA impossible. Solution : 1 compte par personne + droits granulaires + MFA obligatoire.",
           quiz: [
-            { question: "Pourquoi un compte partagé est-il dangereux ?", choices: [{ id: "a", label: "Pas d'audit trail individuel", correct: true }, { id: "b", label: "Plus économique", correct: false }], explanation: "Impossible de savoir qui a fait quoi." },
+            {
+              question: "Pourquoi un compte partagé est-il dangereux ?",
+              choices: [
+                {
+                  id: "a",
+                  label: "Pas d'audit trail individuel",
+                  correct: true,
+                },
+                { id: "b", label: "Plus économique", correct: false },
+              ],
+              explanation: "Impossible de savoir qui a fait quoi.",
+            },
           ],
           xpReward: 60,
         },
@@ -1733,7 +2367,8 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   {
     slug: "cyber-interimaires",
     title: "Cyber pour intérimaires et CDD",
-    description: "Onboarding accéléré, accès limité, offboarding immédiat : protocoles spécifiques RH.",
+    description:
+      "Onboarding accéléré, accès limité, offboarding immédiat : protocoles spécifiques RH.",
     emoji: "📅",
     category: "autre",
     difficulty: "medium",
@@ -1747,14 +2382,44 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
         {
           title: "Le contrat court : enjeux cyber",
           durationMinutes: 7,
-          scenario: "Vous embauchez un intérimaire pour 2 semaines. Quels accès lui donnez-vous ?",
+          scenario:
+            "Vous embauchez un intérimaire pour 2 semaines. Quels accès lui donnez-vous ?",
           choices: [
-            { id: "tout", label: "Les mêmes que les salariés", outcome: "bad", feedback: "Risque exposé : surface d'attaque inutile.", points: 0 },
-            { id: "minimum", label: "Le strict minimum + sensibilisation 30 min + offboarding J+0", outcome: "good", feedback: "Bon. Principle of Least Privilege appliqué.", points: 35 },
+            {
+              id: "tout",
+              label: "Les mêmes que les salariés",
+              outcome: "bad",
+              feedback: "Risque exposé : surface d'attaque inutile.",
+              points: 0,
+            },
+            {
+              id: "minimum",
+              label:
+                "Le strict minimum + sensibilisation 30 min + offboarding J+0",
+              outcome: "good",
+              feedback: "Bon. Principle of Least Privilege appliqué.",
+              points: 35,
+            },
           ],
-          debrief: "Pour un contrat court : (1) Sensibilisation cyber 30 min obligatoire, (2) Accès minimum nécessaire, (3) Pas de partage de compte, (4) Offboarding au dernier jour, (5) Re-vérification des accès toutes les semaines.",
+          debrief:
+            "Pour un contrat court : (1) Sensibilisation cyber 30 min obligatoire, (2) Accès minimum nécessaire, (3) Pas de partage de compte, (4) Offboarding au dernier jour, (5) Re-vérification des accès toutes les semaines.",
           quiz: [
-            { question: "Quand révoquer les accès d'un intérimaire ?", choices: [{ id: "a", label: "Après 30 jours par sécurité", correct: false }, { id: "b", label: "Le jour-même de la fin du contrat", correct: true }], explanation: "Offboarding doit être immédiat." },
+            {
+              question: "Quand révoquer les accès d'un intérimaire ?",
+              choices: [
+                {
+                  id: "a",
+                  label: "Après 30 jours par sécurité",
+                  correct: false,
+                },
+                {
+                  id: "b",
+                  label: "Le jour-même de la fin du contrat",
+                  correct: true,
+                },
+              ],
+              explanation: "Offboarding doit être immédiat.",
+            },
           ],
           xpReward: 60,
         },

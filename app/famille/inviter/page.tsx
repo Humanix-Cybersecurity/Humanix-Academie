@@ -16,7 +16,8 @@ export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Offrir Cyber Famille à mes proches | Humanix Académie",
-  description: "Offre 3 accès gratuits aux articles Cyber Famille à tes proches.",
+  description:
+    "Offre 3 accès gratuits aux articles Cyber Famille à tes proches.",
 };
 
 export default async function FamilleInviterPage() {
@@ -60,8 +61,8 @@ export default async function FamilleInviterPage() {
           </h2>
           <p className="text-sm text-amber-800">
             Vous pourrez offrir vos 3 invitations dès que vous aurez terminé{" "}
-            <strong>au moins une saison complète</strong> dans Humanix
-            Académie. Continuez votre progression !
+            <strong>au moins une saison complète</strong> dans Humanix Académie.
+            Continuez votre progression !
           </p>
           <div className="mt-3">
             <Link href="/apprendre" className="btn-primary text-sm">
@@ -100,7 +101,10 @@ export default async function FamilleInviterPage() {
 
           <div className="grid sm:grid-cols-2 gap-3">
             <div>
-              <label htmlFor="invitee-firstname" className="block text-xs font-bold uppercase text-gray-500 mb-1">
+              <label
+                htmlFor="invitee-firstname"
+                className="block text-xs font-bold uppercase text-gray-500 mb-1"
+              >
                 Prénom (facultatif)
               </label>
               <input
@@ -113,8 +117,14 @@ export default async function FamilleInviterPage() {
               />
             </div>
             <div>
-              <label htmlFor="invitee-email" className="block text-xs font-bold uppercase text-gray-500 mb-1">
-                Email du proche <span className="text-red-500" aria-hidden="true">*</span>
+              <label
+                htmlFor="invitee-email"
+                className="block text-xs font-bold uppercase text-gray-500 mb-1"
+              >
+                Email du proche{" "}
+                <span className="text-red-500" aria-hidden="true">
+                  *
+                </span>
                 <span className="sr-only"> (champ obligatoire)</span>
               </label>
               <input
@@ -131,7 +141,10 @@ export default async function FamilleInviterPage() {
           </div>
 
           <div>
-            <label htmlFor="invitee-message" className="block text-xs font-bold uppercase text-gray-500 mb-1">
+            <label
+              htmlFor="invitee-message"
+              className="block text-xs font-bold uppercase text-gray-500 mb-1"
+            >
               Message personnel (facultatif)
             </label>
             <textarea
@@ -154,7 +167,8 @@ export default async function FamilleInviterPage() {
               personnelle avec le destinataire et que celui-ci n'a pas exprimé
               de refus de recevoir des messages cyber-pédagogiques. Vous restez
               responsable du choix d'inviter cette personne. Le destinataire
-              peut ignorer le message et n'aura plus aucun contact de notre part.
+              peut ignorer le message et n'aura plus aucun contact de notre
+              part.
             </p>
           </div>
 

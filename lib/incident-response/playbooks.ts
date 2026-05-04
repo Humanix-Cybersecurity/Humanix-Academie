@@ -268,7 +268,13 @@ const INTRUSION_SPECIFIC: PlaybookAction[] = [
 // AGGREGATEUR PAR TYPE
 // ===========================================================================
 export function getPlaybook(type: IncidentType): PlaybookAction[] {
-  const common = [...COMMON_H0, ...COMMON_H24, ...COMMON_H72, ...COMMON_W1, ...COMMON_RETEX];
+  const common = [
+    ...COMMON_H0,
+    ...COMMON_H24,
+    ...COMMON_H72,
+    ...COMMON_W1,
+    ...COMMON_RETEX,
+  ];
   const specific: Record<IncidentType, PlaybookAction[]> = {
     RANSOMWARE: RANSOMWARE_SPECIFIC,
     DATA_LEAK: DATA_LEAK_SPECIFIC,
@@ -282,7 +288,10 @@ export function getPlaybook(type: IncidentType): PlaybookAction[] {
   return [...common, ...specific[type]];
 }
 
-export const INCIDENT_TYPE_LABELS: Record<IncidentType, { label: string; emoji: string }> = {
+export const INCIDENT_TYPE_LABELS: Record<
+  IncidentType,
+  { label: string; emoji: string }
+> = {
   RANSOMWARE: { label: "Rançongiciel", emoji: "🔒" },
   DATA_LEAK: { label: "Fuite de données", emoji: "📤" },
   PHISHING_VICTIM: { label: "Victime de phishing", emoji: "🎣" },

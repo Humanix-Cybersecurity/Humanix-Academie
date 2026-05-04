@@ -87,7 +87,10 @@ export function normalizePlan(value: unknown): PlanId {
  * Le plan donné couvre-t-il la feature demandée ?
  * Exemple : planHasFeature("essentielle", "phishing") === false (phishing requiert pro+)
  */
-export function planHasFeature(plan: PlanId | string | null | undefined, feature: Feature): boolean {
+export function planHasFeature(
+  plan: PlanId | string | null | undefined,
+  feature: Feature,
+): boolean {
   const p = normalizePlan(plan);
   const required = FEATURE_MIN_PLAN[feature];
   return PLAN_RANK[p] >= PLAN_RANK[required];

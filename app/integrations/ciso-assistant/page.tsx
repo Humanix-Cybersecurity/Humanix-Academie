@@ -32,8 +32,9 @@ export default function CisoAssistantIntegrationPage() {
         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
           Vos preuves de sensibilisation, certificats individuels, score de
           maturite et Pack NIS2 alimentent automatiquement{" "}
-          <strong>CISO Assistant</strong> (intuitem) et tout outil GRC compatible.
-          Plus de copier-coller, plus d'Excel partage, plus d'audit douloureux.
+          <strong>CISO Assistant</strong> (intuitem) et tout outil GRC
+          compatible. Plus de copier-coller, plus d'Excel partage, plus d'audit
+          douloureux.
         </p>
       </header>
 
@@ -61,7 +62,13 @@ export default function CisoAssistantIntegrationPage() {
           aria-label="Schema d'architecture : CISO Assistant interroge Humanix Academie via l'API REST evidence-export, qui retourne un bundle JSON de preuves de conformite."
         >
           <defs>
-            <linearGradient id="grad-humanix" x1="0%" y1="0%" x2="100%" y2="100%">
+            <linearGradient
+              id="grad-humanix"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%"
+            >
               <stop offset="0%" stopColor="#0B3D91" />
               <stop offset="100%" stopColor="#00A3A1" />
             </linearGradient>
@@ -242,9 +249,9 @@ export default function CisoAssistantIntegrationPage() {
         </h2>
         <ul className="space-y-3 text-sm">
           <li>
-            <strong>Pour le RSSI externalise</strong> : 8 PME = 8 instances
-            CISO Assistant. Une seule passerelle Humanix consolide les preuves
-            de sensibilisation des 8 tenants.
+            <strong>Pour le RSSI externalise</strong> : 8 PME = 8 instances CISO
+            Assistant. Une seule passerelle Humanix consolide les preuves de
+            sensibilisation des 8 tenants.
           </li>
           <li>
             <strong>Pour le DSI ETI en demarche ISO 27001</strong> : le controle
@@ -283,9 +290,10 @@ export default function CisoAssistantIntegrationPage() {
               Quels frameworks sont supportes ?
             </summary>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-              ISO 27001:2022, NIS2, RGPD, ANSSI Hygiene Informatique en couverture
-              detaillee. NIST CSF en couverture partielle (mapping complet en
-              v1.1). Tous les mappings sont open-source et auditables.
+              ISO 27001:2022, NIS2, RGPD, ANSSI Hygiene Informatique en
+              couverture detaillee. NIST CSF en couverture partielle (mapping
+              complet en v1.1). Tous les mappings sont open-source et
+              auditables.
             </p>
           </details>
           <details className="card">
@@ -303,10 +311,10 @@ export default function CisoAssistantIntegrationPage() {
               Et le mode push (webhook) ?
             </summary>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-              Prevu en v1.1 : un webhook outbound{" "}
-              <code>evidence.created</code> signe HMAC-SHA256 sera disponible
-              pour pousser les preuves en temps reel a chaque generation de
-              certificat ou changement de score.
+              Prevu en v1.1 : un webhook outbound <code>evidence.created</code>{" "}
+              signe HMAC-SHA256 sera disponible pour pousser les preuves en
+              temps reel a chaque generation de certificat ou changement de
+              score.
             </p>
           </details>
           <details className="card">
@@ -315,9 +323,8 @@ export default function CisoAssistantIntegrationPage() {
             </summary>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
               L'export ne contient pas de PII brute : les certificats sont
-              represente par des liens (telechargeables avec votre cle API),
-              pas par leurs contenus. Les metriques sont agregees au niveau
-              tenant.
+              represente par des liens (telechargeables avec votre cle API), pas
+              par leurs contenus. Les metriques sont agregees au niveau tenant.
             </p>
           </details>
         </div>

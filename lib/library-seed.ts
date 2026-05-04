@@ -16,7 +16,8 @@ export const LIBRARY_ARTICLES: LibraryArticleSeed[] = [
   {
     slug: "mfa-en-10-minutes",
     title: "Le MFA en 10 minutes",
-    description: "Comprendre et activer la double authentification sur tes outils du quotidien — sans rien casser.",
+    description:
+      "Comprendre et activer la double authentification sur tes outils du quotidien — sans rien casser.",
     emoji: "🔐",
     category: "mots-de-passe",
     readTimeMinutes: 10,
@@ -69,7 +70,8 @@ Sur tous les services qui tiennent un peu : MFA activé, sans exception. Mail pr
   {
     slug: "reflexes-pour-ma-grand-mere",
     title: "Les réflexes cyber pour ma grand-mère",
-    description: "5 règles d'or qu'on peut expliquer à n'importe qui en 5 minutes — sans aucun jargon.",
+    description:
+      "5 règles d'or qu'on peut expliquer à n'importe qui en 5 minutes — sans aucun jargon.",
     emoji: "👵",
     category: "grand-public",
     readTimeMinutes: 6,
@@ -112,7 +114,8 @@ Faux. La cybersécurité, c'est **du bon sens**, comme fermer sa porte à clé. 
   {
     slug: "dangers-byod",
     title: "Les dangers du BYOD",
-    description: "BYOD = ton smartphone perso utilisé pour le boulot. Pratique, mais pas sans pièges.",
+    description:
+      "BYOD = ton smartphone perso utilisé pour le boulot. Pratique, mais pas sans pièges.",
     emoji: "📱",
     category: "byod",
     readTimeMinutes: 7,
@@ -229,7 +232,8 @@ Si la réponse est "non, c'est weird" : ne fais rien. Vérifie.`,
   {
     slug: "donnees-personnelles-rgpd-quotidien",
     title: "RGPD au quotidien — Le guide express",
-    description: "Les 7 réflexes RGPD à avoir quand tu manipules des données clients ou collègues.",
+    description:
+      "Les 7 réflexes RGPD à avoir quand tu manipules des données clients ou collègues.",
     emoji: "📁",
     category: "rgpd",
     readTimeMinutes: 8,
@@ -300,7 +304,8 @@ Si la réponse est "non", c'est que tu as un sujet RGPD à régler.`,
   {
     slug: "wifi-public-vraiment-dangereux",
     title: "Wi-Fi public : vraiment dangereux ?",
-    description: "Démêler le vrai du faux sur les réseaux Wi-Fi en gare, café, hôtel.",
+    description:
+      "Démêler le vrai du faux sur les réseaux Wi-Fi en gare, café, hôtel.",
     emoji: "📶",
     category: "teletravail",
     readTimeMinutes: 5,
@@ -366,8 +371,10 @@ C'est tout.`,
 
   {
     slug: "faux-conseiller-bancaire",
-    title: "Le faux conseiller bancaire : l'arnaque qui a piégé 64 000 Français en 2025",
-    description: "Un appel \"de votre banque\" pour bloquer un virement frauduleux… qui finit par vider votre compte. Les 4 signes à connaître.",
+    title:
+      "Le faux conseiller bancaire : l'arnaque qui a piégé 64 000 Français en 2025",
+    description:
+      'Un appel "de votre banque" pour bloquer un virement frauduleux… qui finit par vider votre compte. Les 4 signes à connaître.',
     emoji: "📞",
     category: "fraude",
     readTimeMinutes: 8,
@@ -431,7 +438,8 @@ Cette règle, gravée, sauve des comptes en banque.`,
   {
     slug: "smartphone-de-mes-parents",
     title: "Sécuriser le smartphone d'un parent ou grand-parent",
-    description: "10 minutes pour vérifier 5 réglages essentiels qui éviteront 90 % des arnaques courantes.",
+    description:
+      "10 minutes pour vérifier 5 réglages essentiels qui éviteront 90 % des arnaques courantes.",
     emoji: "📱",
     category: "famille",
     readTimeMinutes: 12,
@@ -518,8 +526,10 @@ Cette feuille collée bien en évidence est l'investissement cyber le plus renta
 
   {
     slug: "arnaques-rencontres-en-ligne",
-    title: "Arnaques aux sentiments : reconnaître un escroc avant qu'il ne soit trop tard",
-    description: "L'arnaque qui coûte en moyenne 16 800 € par victime en France. 7 signaux faibles à connaître.",
+    title:
+      "Arnaques aux sentiments : reconnaître un escroc avant qu'il ne soit trop tard",
+    description:
+      "L'arnaque qui coûte en moyenne 16 800 € par victime en France. 7 signaux faibles à connaître.",
     emoji: "💔",
     category: "fraude",
     readTimeMinutes: 10,
@@ -585,8 +595,10 @@ Cette question, posée avec bienveillance, évite des drames financiers et émot
 
   {
     slug: "securite-jeux-video-ados",
-    title: "Sécurité des jeux en ligne : ce que les parents doivent savoir sur Roblox, Fortnite et Minecraft",
-    description: "Grooming, vol de comptes, achats cachés : 6 réglages parentaux qui changent tout.",
+    title:
+      "Sécurité des jeux en ligne : ce que les parents doivent savoir sur Roblox, Fortnite et Minecraft",
+    description:
+      "Grooming, vol de comptes, achats cachés : 6 réglages parentaux qui changent tout.",
     emoji: "🎮",
     category: "famille",
     readTimeMinutes: 11,
@@ -675,7 +687,8 @@ L'enfant n'est jamais en faute. Ne le grondez pas. Protégez-le.`,
   {
     slug: "perte-vol-smartphone",
     title: "J'ai perdu mon téléphone : les 60 minutes qui changent tout",
-    description: "Les 5 actions à faire dans l'heure pour transformer un drame en simple incident.",
+    description:
+      "Les 5 actions à faire dans l'heure pour transformer un drame en simple incident.",
     emoji: "🔍",
     category: "famille",
     readTimeMinutes: 8,
@@ -773,8 +786,10 @@ La règle : **si après 30 minutes vous ne l'avez pas retrouvé, démarrez le pr
 
   {
     slug: "photos-famille-reseaux",
-    title: "Sharenting : pourquoi protéger les photos de vos enfants n'est pas excessif",
-    description: "Ce que des milliers de photos d'enfants partagées chaque seconde deviennent vraiment.",
+    title:
+      "Sharenting : pourquoi protéger les photos de vos enfants n'est pas excessif",
+    description:
+      "Ce que des milliers de photos d'enfants partagées chaque seconde deviennent vraiment.",
     emoji: "📸",
     category: "famille",
     readTimeMinutes: 9,
@@ -859,7 +874,8 @@ Les vrais souvenirs : albums papier, vidéos privées, applications famille. Le 
   {
     slug: "wifi-public-vacances",
     title: "Wifi de l'hôtel, du train, du café : ce qui passe vraiment dessus",
-    description: "Le risque réel, ce qui change avec un VPN, et la règle simple à appliquer en vacances.",
+    description:
+      "Le risque réel, ce qui change avec un VPN, et la règle simple à appliquer en vacances.",
     emoji: "📶",
     category: "famille",
     readTimeMinutes: 7,
@@ -935,8 +951,10 @@ C'est le 1-clic qui résout le problème.`,
 
   {
     slug: "deces-numerique",
-    title: "Préparer sa succession numérique : pour ne pas laisser un cauchemar à ses proches",
-    description: "Mots de passe, comptes, photos : ce qu'il faut anticiper, et comment le faire en 30 minutes.",
+    title:
+      "Préparer sa succession numérique : pour ne pas laisser un cauchemar à ses proches",
+    description:
+      "Mots de passe, comptes, photos : ce qu'il faut anticiper, et comment le faire en 30 minutes.",
     emoji: "🕊️",
     category: "famille",
     readTimeMinutes: 9,
@@ -1060,7 +1078,8 @@ C'est tout. Et c'est assez. Vous venez de faire à vos proches le plus beau cade
   {
     slug: "compte-pirate-recuperation",
     title: "Mon compte est piraté : guide de récupération en 30 minutes",
-    description: "Gmail, Facebook, Instagram, banque : ce qu'il faut faire dans l'ordre, même en panique.",
+    description:
+      "Gmail, Facebook, Instagram, banque : ce qu'il faut faire dans l'ordre, même en panique.",
     emoji: "🆘",
     category: "famille",
     readTimeMinutes: 10,

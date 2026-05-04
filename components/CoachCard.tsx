@@ -18,7 +18,15 @@ const REC_EMOJI: Record<string, string> = {
   rest: "💤",
 };
 
-export default function CoachCard({ advice, xp, species = "fox" }: { advice: CoachAdvice; xp: number; species?: string }) {
+export default function CoachCard({
+  advice,
+  xp,
+  species = "fox",
+}: {
+  advice: CoachAdvice;
+  xp: number;
+  species?: string;
+}) {
   const mascot = getMascotById(species);
   return (
     <div className={`card bg-gradient-to-br ${MOOD_BG[advice.mood]} border-2`}>
@@ -26,7 +34,13 @@ export default function CoachCard({ advice, xp, species = "fox" }: { advice: Coa
         <HexMascotEvolved
           xp={xp}
           size="lg"
-          mood={advice.mood === "urgent" ? "thinking" : advice.mood === "celebrate" ? "celebrate" : "happy"}
+          mood={
+            advice.mood === "urgent"
+              ? "thinking"
+              : advice.mood === "celebrate"
+                ? "celebrate"
+                : "happy"
+          }
           animated
           species={species}
         />
@@ -35,7 +49,9 @@ export default function CoachCard({ advice, xp, species = "fox" }: { advice: Coa
             {mascot.emoji} {mascot.name} te coache
           </p>
           <p className="font-bold text-primary-500 mb-1">{advice.greeting}</p>
-          <p className="text-gray-700 leading-relaxed">{advice.primaryMessage}</p>
+          <p className="text-gray-700 leading-relaxed">
+            {advice.primaryMessage}
+          </p>
         </div>
       </div>
 
@@ -44,17 +60,25 @@ export default function CoachCard({ advice, xp, species = "fox" }: { advice: Coa
           href={advice.recommendation.href}
           className="card mb-3 hover:scale-[1.01] transition-all bg-white border-accent-500/30 flex items-center gap-3"
         >
-          <span className="text-3xl">{REC_EMOJI[advice.recommendation.type]}</span>
+          <span className="text-3xl">
+            {REC_EMOJI[advice.recommendation.type]}
+          </span>
           <div className="flex-1">
-            <p className="font-bold text-primary-500 text-sm">{advice.recommendation.label}</p>
-            <p className="text-xs text-gray-500 italic">{advice.recommendation.reason}</p>
+            <p className="font-bold text-primary-500 text-sm">
+              {advice.recommendation.label}
+            </p>
+            <p className="text-xs text-gray-500 italic">
+              {advice.recommendation.reason}
+            </p>
           </div>
           <span className="text-accent-500">→</span>
         </Link>
       )}
 
       <div className="border-t border-white/50 pt-3">
-        <p className="text-[10px] uppercase tracking-wide text-gray-500 font-bold mb-1.5">Le saviez-vous</p>
+        <p className="text-[10px] uppercase tracking-wide text-gray-500 font-bold mb-1.5">
+          Le saviez-vous
+        </p>
         <ul className="space-y-1 text-xs text-gray-700">
           {advice.microTips.map((tip, i) => (
             <li key={i} className="flex items-start gap-1.5">

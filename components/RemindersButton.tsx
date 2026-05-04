@@ -3,7 +3,10 @@ import { useState } from "react";
 
 export default function RemindersButton() {
   const [loading, setLoading] = useState<"check" | "send" | null>(null);
-  const [feedback, setFeedback] = useState<{ type: "ok" | "info" | "err"; msg: string } | null>(null);
+  const [feedback, setFeedback] = useState<{
+    type: "ok" | "info" | "err";
+    msg: string;
+  } | null>(null);
 
   const onCheck = async () => {
     setLoading("check");
@@ -12,7 +15,10 @@ export default function RemindersButton() {
       const res = await fetch("/api/admin/send-reminders");
       const data = await res.json();
       if (data.candidates === 0) {
-        setFeedback({ type: "info", msg: "Aucun utilisateur inactif à relancer 👍" });
+        setFeedback({
+          type: "info",
+          msg: "Aucun utilisateur inactif à relancer 👍",
+        });
       } else {
         setFeedback({
           type: "info",
@@ -26,7 +32,12 @@ export default function RemindersButton() {
   };
 
   const onSend = async () => {
-    if (!confirm("Envoyer un rappel à tous les utilisateurs inactifs depuis 7+ jours ?")) return;
+    if (
+      !confirm(
+        "Envoyer un rappel à tous les utilisateurs inactifs depuis 7+ jours ?",
+      )
+    )
+      return;
     setLoading("send");
     setFeedback(null);
     try {
@@ -47,20 +58,33 @@ export default function RemindersButton() {
   return (
     <div className="space-y-3">
       <p className="text-sm text-gray-600">
-        Détecte automatiquement les utilisateurs qui n'ont pas complété d'épisode depuis 7 jours et leur envoie un mail bienveillant via Hex.
+        Détecte automatiquement les utilisateurs qui n'ont pas complété
+        d'épisode depuis 7 jours et leur envoie un mail bienveillant via Hex.
       </p>
       <div className="flex gap-2">
-        <button onClick={onCheck} disabled={loading !== null} className="btn-secondary text-sm flex-1">
+        <button
+          onClick={onCheck}
+          disabled={loading !== null}
+          className="btn-secondary text-sm flex-1"
+        >
           {loading === "check" ? "Vérification…" : "Voir les inactifs"}
         </button>
-        <button onClick={onSend} disabled={loading !== null} className="btn-primary text-sm flex-1">
+        <button
+          onClick={onSend}
+          disabled={loading !== null}
+          className="btn-primary text-sm flex-1"
+        >
           {loading === "send" ? "Envoi…" : "✉️ Envoyer les rappels"}
         </button>
       </div>
       {feedback && (
         <p
           className={`text-sm text-center font-medium ${
-            feedback.type === "ok" ? "text-success" : feedback.type === "err" ? "text-warn" : "text-primary-500"
+            feedback.type === "ok"
+              ? "text-success"
+              : feedback.type === "err"
+                ? "text-warn"
+                : "text-primary-500"
           }`}
         >
           {feedback.msg}

@@ -23,8 +23,7 @@ export type SeedAnecdote = {
 export const ANECDOTES_SEED: SeedAnecdote[] = [
   {
     slug: "chu-corbeil-essonnes-rancongiciel",
-    title:
-      "Le CHU de Corbeil-Essonnes paralysé 5 semaines par un rançongiciel",
+    title: "Le CHU de Corbeil-Essonnes paralysé 5 semaines par un rançongiciel",
     summary:
       "En août 2022, le groupe LockBit chiffre les serveurs du CHU. 11 To de données exfiltrées, retour au papier pour les médecins, opérations reportées. Rançon demandée : 10 M$. L'hôpital a refusé de payer.",
     lesson:
@@ -39,8 +38,7 @@ export const ANECDOTES_SEED: SeedAnecdote[] = [
   },
   {
     slug: "fraude-president-pathe-19m",
-    title:
-      "Pathé Hollande perd 19 M€ dans une fraude au président par email",
+    title: "Pathé Hollande perd 19 M€ dans une fraude au président par email",
     summary:
       "Mars 2018. La directrice financière reçoit un email du « PDG » demandant un virement urgent et confidentiel pour une acquisition. Elle vire 19 M€ en plusieurs fois. Le PDG n'a jamais envoyé l'email.",
     lesson:
@@ -77,16 +75,14 @@ export const ANECDOTES_SEED: SeedAnecdote[] = [
       "L'IA générative a tué le « j'ai reconnu sa voix / son visage » comme preuve d'identité. Tout protocole de validation doit désormais reposer sur un deuxième canal indépendant (numéro connu, mot de passe partagé, présence physique).",
     miniAction:
       "Définissez avec vos équipes un « mot de code » verbal, jamais écrit nulle part, à demander en cas de doute lors d'un appel ou d'une visio anormale. Ex : la question « Quel est notre safe word de l'année ? » doit recevoir la bonne réponse.",
-    sourceUrl:
-      "https://www.bbc.com/news/world-asia-china-68246674",
+    sourceUrl: "https://www.bbc.com/news/world-asia-china-68246674",
     sourceLabel: "BBC, février 2024",
     category: "IA_ABUS",
     incidentDate: "2024-01-15",
   },
   {
     slug: "france-travail-43m-fuite",
-    title:
-      "France Travail : 43 millions de personnes touchées par une fuite",
+    title: "France Travail : 43 millions de personnes touchées par une fuite",
     summary:
       "Mars 2024. France Travail (ex-Pôle Emploi) annonce qu'un de ses prestataires (Cap Gemini) a été compromis. Les données personnelles de 43 millions de Français — dont 10 ans de demandeurs d'emploi — sont dans la nature. Risque : phishing ciblé pendant des années.",
     lesson:
@@ -100,8 +96,7 @@ export const ANECDOTES_SEED: SeedAnecdote[] = [
   },
   {
     slug: "phishing-mfa-okta",
-    title:
-      "Okta piratée via le LinkedIn d'un sous-traitant",
+    title: "Okta piratée via le LinkedIn d'un sous-traitant",
     summary:
       "Octobre 2023. Le géant de l'authentification Okta est compromis. Vecteur d'entrée : un employé de leur sous-traitant a stocké ses identifiants Okta dans son compte Google personnel… qui a été piraté via un phishing. Impact : 134 clients Okta touchés, dont 1Password et Cloudflare.",
     lesson:

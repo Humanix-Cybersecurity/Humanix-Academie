@@ -26,8 +26,17 @@ export type PricingTier = {
   /** Forever-free cloud : pas de CB demandée */
   freeForever?: boolean;
   pricing: {
-    monthly: { display: string; amount: number | null; unit?: "forfait" | "user" | "free" };
-    annual: { display: string; amount: number | null; unit?: "forfait" | "user" | "free"; saving?: string };
+    monthly: {
+      display: string;
+      amount: number | null;
+      unit?: "forfait" | "user" | "free";
+    };
+    annual: {
+      display: string;
+      amount: number | null;
+      unit?: "forfait" | "user" | "free";
+      saving?: string;
+    };
   };
   seats: { min: number; max: number | null };
   highlight?: boolean;
@@ -91,7 +100,12 @@ export const TIERS: PricingTier[] = [
     emoji: "⚡",
     pricing: {
       monthly: { display: "19 €/mois", amount: 19, unit: "forfait" },
-      annual: { display: "15 €/mois", amount: 15, unit: "forfait", saving: "−21 % engagement annuel" },
+      annual: {
+        display: "15 €/mois",
+        amount: 15,
+        unit: "forfait",
+        saving: "−21 % engagement annuel",
+      },
     },
     seats: { min: 1, max: 15 },
     features: [
@@ -111,12 +125,18 @@ export const TIERS: PricingTier[] = [
   {
     id: "essentielle",
     name: "Essentielle",
-    tagline: "Le standard PME — tout le contenu, tous les connecteurs souverains",
+    tagline:
+      "Le standard PME — tout le contenu, tous les connecteurs souverains",
     emoji: "✨",
     highlight: true,
     pricing: {
       monthly: { display: "3 €/utilisateur/mois", amount: 3, unit: "user" },
-      annual: { display: "2,50 €/utilisateur/mois", amount: 2.5, unit: "user", saving: "−17 % engagement annuel" },
+      annual: {
+        display: "2,50 €/utilisateur/mois",
+        amount: 2.5,
+        unit: "user",
+        saving: "−17 % engagement annuel",
+      },
     },
     seats: { min: 16, max: 50 },
     features: [
@@ -142,8 +162,17 @@ export const TIERS: PricingTier[] = [
     tagline: "Pour PME industrialisées — phishing, marketplace, IA, SIEM",
     emoji: "🚀",
     pricing: {
-      monthly: { display: "2,50 €/utilisateur/mois", amount: 2.5, unit: "user" },
-      annual: { display: "2 €/utilisateur/mois", amount: 2, unit: "user", saving: "−20 % engagement annuel" },
+      monthly: {
+        display: "2,50 €/utilisateur/mois",
+        amount: 2.5,
+        unit: "user",
+      },
+      annual: {
+        display: "2 €/utilisateur/mois",
+        amount: 2,
+        unit: "user",
+        saving: "−20 % engagement annuel",
+      },
     },
     seats: { min: 51, max: 250 },
     features: [
@@ -210,8 +239,12 @@ export const ADD_ONS: AddOn[] = [
     id: "managed",
     name: "Pack Managed Service",
     emoji: "🤝",
-    description: "Pour les PME qui veulent un accompagnement humain en plus de la plateforme.",
-    price: { display: "+ 990 €/an HT", details: "S'ajoute à n'importe quel abonnement payant" },
+    description:
+      "Pour les PME qui veulent un accompagnement humain en plus de la plateforme.",
+    price: {
+      display: "+ 990 €/an HT",
+      details: "S'ajoute à n'importe quel abonnement payant",
+    },
     features: [
       "Audit de maturité cyber humaine initial (1 jour)",
       "Onboarding accompagné par expert Humanix (3 sessions)",
@@ -225,7 +258,8 @@ export const ADD_ONS: AddOn[] = [
     id: "audit-pentest",
     name: "Pack Audit + Pentest annuel",
     emoji: "🛡️",
-    description: "Une vue technique externe régulière sur ton niveau de cyberprotection réel.",
+    description:
+      "Une vue technique externe régulière sur ton niveau de cyberprotection réel.",
     price: { display: "+ 2 400 €/an HT", details: "Disponible dès Pro" },
     features: [
       "1 audit cyber complet par an (5 jours sur site ou hybride)",
@@ -267,12 +301,20 @@ export const ADD_ONS: AddOn[] = [
 export function calculateMonthlyPrice(
   seats: number,
   billing: "monthly" | "annual",
-): { tier: PricingTier; total: number; perUser: number; isQuote: boolean; isFree: boolean } {
+): {
+  tier: PricingTier;
+  total: number;
+  perUser: number;
+  isQuote: boolean;
+  isFree: boolean;
+} {
   // On exclut Community Edition (self-host) du matching cloud
   const cloudTiers = TIERS.filter((t) => !t.selfHostOnly);
   const tier =
-    cloudTiers.find((t) => seats >= t.seats.min && (t.seats.max === null || seats <= t.seats.max))
-    ?? cloudTiers[cloudTiers.length - 1];
+    cloudTiers.find(
+      (t) =>
+        seats >= t.seats.min && (t.seats.max === null || seats <= t.seats.max),
+    ) ?? cloudTiers[cloudTiers.length - 1];
 
   const p = tier.pricing[billing];
   if (p.amount === null) {
@@ -282,7 +324,13 @@ export function calculateMonthlyPrice(
     return { tier, total: 0, perUser: 0, isQuote: false, isFree: true };
   }
   if (p.unit === "forfait") {
-    return { tier, total: p.amount, perUser: p.amount / seats, isQuote: false, isFree: false };
+    return {
+      tier,
+      total: p.amount,
+      perUser: p.amount / seats,
+      isQuote: false,
+      isFree: false,
+    };
   }
   const total = p.amount * seats;
   return { tier, total, perUser: p.amount, isQuote: false, isFree: false };

@@ -20,12 +20,14 @@ export const PHISHING_TEMPLATES: PhishingTemplateDef[] = [
     id: "FAKE_MICROSOFT",
     name: "Faux Microsoft 365",
     emoji: "🔐",
-    description: "Mail \"votre mot de passe expire dans 24h\". Très commun, taux de clic 30 %+.",
+    description:
+      'Mail "votre mot de passe expire dans 24h". Très commun, taux de clic 30 %+.',
     difficulty: "medium",
-    emailSubject: "[Action requise] Votre mot de passe Microsoft 365 expire bientôt",
+    emailSubject:
+      "[Action requise] Votre mot de passe Microsoft 365 expire bientôt",
     emailFrom: "no-reply@microsoft-security.com",
     markers: [
-      "Domaine expéditeur \"microsoft-security.com\" (pas microsoft.com officiel)",
+      'Domaine expéditeur "microsoft-security.com" (pas microsoft.com officiel)',
       "Sentiment d'urgence (24h pour agir)",
       "Lien direct vers une page de connexion (un vrai service ne fait jamais ça par mail)",
       "Ton générique sans personnalisation profonde",
@@ -52,12 +54,13 @@ export const PHISHING_TEMPLATES: PhishingTemplateDef[] = [
     id: "FAKE_COLISSIMO",
     name: "Faux Colissimo",
     emoji: "📦",
-    description: "Faux SMS / mail \"votre colis n'a pas pu être livré\". Taux de clic 20 %.",
+    description:
+      'Faux SMS / mail "votre colis n\'a pas pu être livré". Taux de clic 20 %.',
     difficulty: "easy",
     emailSubject: "Colissimo : votre colis n'a pas pu être livré",
     emailFrom: "suivi@colissimo-livraison.fr",
     markers: [
-      "Domaine \"colissimo-livraison.fr\" — le vrai est \"laposte.fr\"",
+      'Domaine "colissimo-livraison.fr" — le vrai est "laposte.fr"',
       "Demande de paiement pour un service normalement gratuit",
       "URL raccourcie ou avec sous-domaine suspect",
       "Pas de référence au numéro de suivi exact",
@@ -82,7 +85,8 @@ export const PHISHING_TEMPLATES: PhishingTemplateDef[] = [
     id: "FAKE_PRESIDENT",
     name: "Faux PDG (fraude au président)",
     emoji: "💼",
-    description: "Mail urgent du \"PDG\" demandant un virement confidentiel. Difficile à détecter.",
+    description:
+      'Mail urgent du "PDG" demandant un virement confidentiel. Difficile à détecter.',
     difficulty: "hard",
     emailSubject: "URGENT - Confidentiel - Virement à effectuer",
     emailFrom: "patrick.durand-direction@gmail.com",

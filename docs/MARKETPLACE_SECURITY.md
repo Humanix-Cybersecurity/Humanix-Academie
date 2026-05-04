@@ -18,27 +18,28 @@
 
 Le payload est validé par un schéma Zod strict (`lib/marketplace/schema.ts`) :
 
-| Champ | Contrainte |
-|---|---|
-| Titre module | 5–80 caractères, pas de `<` `>` |
-| Description | 20–400 caractères, pas de HTML |
-| Slug | regex `[a-z0-9-]`, 3–50 caractères |
-| Emoji | 1–4 caractères |
-| Catégorie | Enum strict (10 valeurs autorisées) |
-| Difficulté | `easy` / `medium` / `hard` |
-| Langue | `fr` uniquement (V1, contrôle qualité linguistique) |
-| Licence | `CC_BY` ou `CC_BY_SA` (communauté), `PROPRIETARY` (officiel) |
-| Nombre d'épisodes | 1–10 |
-| Scénario d'épisode | 50–2000 caractères, pas de HTML |
-| Choix par épisode | 2–4, IDs uniques, ≥ 1 issue "good" |
-| Quiz par épisode | 1–5 questions, 2–4 choix, exactement 1 bonne réponse |
-| Points par choix | -30 à +50 |
+| Champ              | Contrainte                                                   |
+| ------------------ | ------------------------------------------------------------ |
+| Titre module       | 5–80 caractères, pas de `<` `>`                              |
+| Description        | 20–400 caractères, pas de HTML                               |
+| Slug               | regex `[a-z0-9-]`, 3–50 caractères                           |
+| Emoji              | 1–4 caractères                                               |
+| Catégorie          | Enum strict (10 valeurs autorisées)                          |
+| Difficulté         | `easy` / `medium` / `hard`                                   |
+| Langue             | `fr` uniquement (V1, contrôle qualité linguistique)          |
+| Licence            | `CC_BY` ou `CC_BY_SA` (communauté), `PROPRIETARY` (officiel) |
+| Nombre d'épisodes  | 1–10                                                         |
+| Scénario d'épisode | 50–2000 caractères, pas de HTML                              |
+| Choix par épisode  | 2–4, IDs uniques, ≥ 1 issue "good"                           |
+| Quiz par épisode   | 1–5 questions, 2–4 choix, exactement 1 bonne réponse         |
+| Points par choix   | -30 à +50                                                    |
 
 Toute violation entraîne un refus immédiat avec liste détaillée des erreurs renvoyée à l'auteur.
 
 ### Sanitization
 
 Le schéma rejette explicitement :
+
 - Toute balise HTML (`<script>`, `<a>`, etc.)
 - Les caractères `&` et `;` consécutifs (entités HTML)
 - Les chevrons et esperluettes brutes dans les champs sensibles
@@ -48,6 +49,7 @@ React échappe par défaut tout texte injecté dans le DOM. **Aucun `dangerously
 ### Hash d'intégrité (SHA-256)
 
 À chaque sauvegarde de brouillon ou modification, le serveur calcule un **hash déterministe** du payload :
+
 1. Sérialisation JSON canonique (clés triées récursivement)
 2. SHA-256 hex (64 caractères)
 3. Stocké dans `MarketplaceModule.contentHash`
@@ -62,14 +64,14 @@ Au moment de l'approbation, le modérateur recompute le hash et **rejette automa
 
 ### Permissions
 
-| Action | Rôle requis |
-|---|---|
-| Voir le marketplace (lecture catalogue) | ADMIN, SUPERADMIN |
-| Soumettre / éditer un brouillon | ADMIN, SUPERADMIN (auteur uniquement) |
-| Installer un module sur son tenant | ADMIN, SUPERADMIN |
-| Désinstaller un module | ADMIN, SUPERADMIN |
-| **Modérer (approuver / refuser)** | **SUPERADMIN seul** |
-| Marquer un module comme "officiel" | SUPERADMIN seul (via création directe) |
+| Action                                  | Rôle requis                            |
+| --------------------------------------- | -------------------------------------- |
+| Voir le marketplace (lecture catalogue) | ADMIN, SUPERADMIN                      |
+| Soumettre / éditer un brouillon         | ADMIN, SUPERADMIN (auteur uniquement)  |
+| Installer un module sur son tenant      | ADMIN, SUPERADMIN                      |
+| Désinstaller un module                  | ADMIN, SUPERADMIN                      |
+| **Modérer (approuver / refuser)**       | **SUPERADMIN seul**                    |
+| Marquer un module comme "officiel"      | SUPERADMIN seul (via création directe) |
 
 Vérifications faites dans chaque Server Action via `requireAdmin()` / `requireModerator()`.
 
@@ -178,6 +180,7 @@ Le motif de refus (≥ 10 caractères) est **toujours communiqué** à l'auteur,
 ## 📊 Métriques de transparence
 
 Toute organisation peut, via l'API `/api/v1/saisons`, voir les modules installés sur son tenant avec :
+
 - Hash d'intégrité
 - Auteur
 - Date d'approbation
@@ -194,4 +197,4 @@ Les statistiques d'installation par module sont publiques.
 
 ---
 
-*Document maintenu à jour avec le code source de la plateforme. Dernière révision : version v0.5.*
+_Document maintenu à jour avec le code source de la plateforme. Dernière révision : version v0.5._

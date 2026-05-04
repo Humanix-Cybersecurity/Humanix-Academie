@@ -8,10 +8,12 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   const session = await auth();
-  if (!session?.user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!session?.user)
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const userId = session.user!.id as string;
   const tenantId = session.user!.tenantId as string | undefined;
-  if (!tenantId) return NextResponse.json({ error: "no_tenant" }, { status: 400 });
+  if (!tenantId)
+    return NextResponse.json({ error: "no_tenant" }, { status: 400 });
 
   // Filtrage tenantId explicite : si un user est migré entre tenants,
   // on ne renvoie QUE les stats du tenant actif (pas un cumul historique).

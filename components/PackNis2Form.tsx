@@ -26,9 +26,7 @@ export default function PackNis2Form({ tenantName }: Props) {
       className="card space-y-5"
       aria-label="Génération du pack NIS2"
     >
-      <h2 className="text-xl font-bold text-primary-500">
-        Vos informations
-      </h2>
+      <h2 className="text-xl font-bold text-primary-500">Vos informations</h2>
       <p className="text-sm text-gray-500">
         Saisissez ces informations une fois — elles seront injectées dans les 4
         documents PDF générés. Aucune information n'est stockée serveur côté
@@ -37,8 +35,14 @@ export default function PackNis2Form({ tenantName }: Props) {
 
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
-          <label htmlFor="nis2-tenant-name" className="block text-xs font-bold uppercase text-gray-500 mb-1">
-            Raison sociale <span className="text-red-500" aria-hidden="true">*</span>
+          <label
+            htmlFor="nis2-tenant-name"
+            className="block text-xs font-bold uppercase text-gray-500 mb-1"
+          >
+            Raison sociale{" "}
+            <span className="text-red-500" aria-hidden="true">
+              *
+            </span>
           </label>
           <input
             id="nis2-tenant-name"
@@ -51,7 +55,10 @@ export default function PackNis2Form({ tenantName }: Props) {
           />
         </div>
         <div>
-          <label htmlFor="nis2-siren" className="block text-xs font-bold uppercase text-gray-500 mb-1">
+          <label
+            htmlFor="nis2-siren"
+            className="block text-xs font-bold uppercase text-gray-500 mb-1"
+          >
             SIREN
           </label>
           <input
@@ -64,8 +71,14 @@ export default function PackNis2Form({ tenantName }: Props) {
           />
         </div>
         <div>
-          <label htmlFor="nis2-city" className="block text-xs font-bold uppercase text-gray-500 mb-1">
-            Ville du siège <span className="text-red-500" aria-hidden="true">*</span>
+          <label
+            htmlFor="nis2-city"
+            className="block text-xs font-bold uppercase text-gray-500 mb-1"
+          >
+            Ville du siège{" "}
+            <span className="text-red-500" aria-hidden="true">
+              *
+            </span>
           </label>
           <input
             id="nis2-city"
@@ -78,8 +91,14 @@ export default function PackNis2Form({ tenantName }: Props) {
           />
         </div>
         <div>
-          <label htmlFor="nis2-director-name" className="block text-xs font-bold uppercase text-gray-500 mb-1">
-            Nom du dirigeant signataire <span className="text-red-500" aria-hidden="true">*</span>
+          <label
+            htmlFor="nis2-director-name"
+            className="block text-xs font-bold uppercase text-gray-500 mb-1"
+          >
+            Nom du dirigeant signataire{" "}
+            <span className="text-red-500" aria-hidden="true">
+              *
+            </span>
           </label>
           <input
             id="nis2-director-name"
@@ -92,8 +111,14 @@ export default function PackNis2Form({ tenantName }: Props) {
           />
         </div>
         <div>
-          <label htmlFor="nis2-director-title" className="block text-xs font-bold uppercase text-gray-500 mb-1">
-            Fonction du dirigeant <span className="text-red-500" aria-hidden="true">*</span>
+          <label
+            htmlFor="nis2-director-title"
+            className="block text-xs font-bold uppercase text-gray-500 mb-1"
+          >
+            Fonction du dirigeant{" "}
+            <span className="text-red-500" aria-hidden="true">
+              *
+            </span>
           </label>
           <input
             id="nis2-director-title"
@@ -107,8 +132,14 @@ export default function PackNis2Form({ tenantName }: Props) {
           />
         </div>
         <div>
-          <label htmlFor="nis2-director-email" className="block text-xs font-bold uppercase text-gray-500 mb-1">
-            Email du dirigeant <span className="text-red-500" aria-hidden="true">*</span>
+          <label
+            htmlFor="nis2-director-email"
+            className="block text-xs font-bold uppercase text-gray-500 mb-1"
+          >
+            Email du dirigeant{" "}
+            <span className="text-red-500" aria-hidden="true">
+              *
+            </span>
           </label>
           <input
             id="nis2-director-email"
@@ -121,7 +152,10 @@ export default function PackNis2Form({ tenantName }: Props) {
           />
         </div>
         <div>
-          <label htmlFor="nis2-dpo" className="block text-xs font-bold uppercase text-gray-500 mb-1">
+          <label
+            htmlFor="nis2-dpo"
+            className="block text-xs font-bold uppercase text-gray-500 mb-1"
+          >
             DPO ou référent cyber
           </label>
           <input
@@ -133,7 +167,10 @@ export default function PackNis2Form({ tenantName }: Props) {
           />
         </div>
         <div>
-          <label htmlFor="nis2-crisis-name" className="block text-xs font-bold uppercase text-gray-500 mb-1">
+          <label
+            htmlFor="nis2-crisis-name"
+            className="block text-xs font-bold uppercase text-gray-500 mb-1"
+          >
             Contact crise (nom)
           </label>
           <input
@@ -145,7 +182,10 @@ export default function PackNis2Form({ tenantName }: Props) {
           />
         </div>
         <div>
-          <label htmlFor="nis2-crisis-email" className="block text-xs font-bold uppercase text-gray-500 mb-1">
+          <label
+            htmlFor="nis2-crisis-email"
+            className="block text-xs font-bold uppercase text-gray-500 mb-1"
+          >
             Contact crise (email)
           </label>
           <input
@@ -157,7 +197,10 @@ export default function PackNis2Form({ tenantName }: Props) {
           />
         </div>
         <div>
-          <label htmlFor="nis2-crisis-tel" className="block text-xs font-bold uppercase text-gray-500 mb-1">
+          <label
+            htmlFor="nis2-crisis-tel"
+            className="block text-xs font-bold uppercase text-gray-500 mb-1"
+          >
             Contact crise (téléphone)
           </label>
           <input

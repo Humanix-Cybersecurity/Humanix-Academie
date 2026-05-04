@@ -27,7 +27,9 @@ function hashIp(ip: string | null): string | null {
     .slice(0, 32);
 }
 
-export async function subscribeToAnecdote(formData: FormData): Promise<SubscribeState> {
+export async function subscribeToAnecdote(
+  formData: FormData,
+): Promise<SubscribeState> {
   const parsed = InputSchema.safeParse({
     email: formData.get("email"),
     source: formData.get("source") ?? undefined,
@@ -51,7 +53,8 @@ export async function subscribeToAnecdote(formData: FormData): Promise<Subscribe
     if (recent) {
       return {
         ok: false,
-        message: "Une inscription récente a déjà été enregistrée. Merci de patienter un instant.",
+        message:
+          "Une inscription récente a déjà été enregistrée. Merci de patienter un instant.",
       };
     }
   }
@@ -67,6 +70,7 @@ export async function subscribeToAnecdote(formData: FormData): Promise<Subscribe
   }
   return {
     ok: true,
-    message: "Inscription confirmée ! Vous recevrez la prochaine Cyber-Anecdote ce lundi matin.",
+    message:
+      "Inscription confirmée ! Vous recevrez la prochaine Cyber-Anecdote ce lundi matin.",
   };
 }

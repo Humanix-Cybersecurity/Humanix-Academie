@@ -20,7 +20,10 @@ export default function AnecdoteSubscribeForm({
 }) {
   const [email, setEmail] = useState(defaultEmail);
   const [pending, startTransition] = useTransition();
-  const [feedback, setFeedback] = useState<{ ok: boolean; message: string } | null>(null);
+  const [feedback, setFeedback] = useState<{
+    ok: boolean;
+    message: string;
+  } | null>(null);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

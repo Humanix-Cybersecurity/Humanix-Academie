@@ -41,12 +41,14 @@ Pour la prod, déployer derrière un reverse proxy HTTPS et exposer :
 ## Configuration côté Mailinblack
 
 Console admin → Webhooks → Ajouter :
+
 - URL : `https://humanix-antiphishing.exemple.fr/webhook/mailinblack`
 - Événements : `phishing.detected`
 
 ## Configuration côté Vade
 
 Vade Secure for M365 → Webhook Configuration → Add :
+
 - Endpoint : `https://humanix-antiphishing.exemple.fr/webhook/vade`
 - Type : `ThreatDetection`
 

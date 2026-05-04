@@ -104,8 +104,7 @@ export async function dispatchWeeklyAnecdote(options?: {
   const isDemo =
     process.env.DEMO_MODE === "true" || !process.env.RESEND_API_KEY;
   const fromEmail = process.env.EMAIL_FROM ?? "hex@humanix-cybersecurity.fr";
-  const appUrl =
-    process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
   // Lazy import Resend pour ne pas le charger en demo
   let resend: any = null;

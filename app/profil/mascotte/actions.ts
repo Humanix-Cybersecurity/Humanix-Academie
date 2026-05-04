@@ -4,7 +4,14 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getMascotById } from "@/lib/mascots";
 
-const VALID_MOODS = ["neutral", "happy", "sad", "curious", "celebrate", "thinking"] as const;
+const VALID_MOODS = [
+  "neutral",
+  "happy",
+  "sad",
+  "curious",
+  "celebrate",
+  "thinking",
+] as const;
 type Mood = (typeof VALID_MOODS)[number];
 
 function refreshMascotPaths() {
@@ -24,7 +31,10 @@ export async function chooseMascot(mascotId: string) {
   const mascot = getMascotById(mascotId);
   if (!mascot) throw new Error("invalid_mascot");
 
-  const user = await db.user.findUnique({ where: { id: userId }, select: { level: true } });
+  const user = await db.user.findUnique({
+    where: { id: userId },
+    select: { level: true },
+  });
   if (!user) throw new Error("user_not_found");
 
   if (user.level < mascot.unlockLevel) {
@@ -65,7 +75,9 @@ export async function chooseMood(mood: string): Promise<{ ok: true }> {
  * server : 0 a 8 caracteres (assez pour les ZWJ sequences type 👨‍🚀).
  * On accepte n'importe quel caractere unicode visible — c'est le but.
  */
-export async function setCustomMascotEmoji(emoji: string | null): Promise<{ ok: true }> {
+export async function setCustomMascotEmoji(
+  emoji: string | null,
+): Promise<{ ok: true }> {
   const session = await auth();
   if (!session?.user) throw new Error("unauthorized");
   const userId = session.user!.id as string;

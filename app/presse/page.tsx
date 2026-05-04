@@ -26,14 +26,33 @@ Humanix Académie se positionne comme la brique humaine indispensable de l'écos
 const FAITS_CLES = [
   { label: "Date de lancement OSS", value: "Mardi 26 mai 2026" },
   { label: "Licence", value: "GNU AGPLv3" },
-  { label: "Repo public", value: "github.com/humanix-cybersecurity/humanix-academie" },
-  { label: "Tarif minimum cloud", value: "0 €/mois (forever-free, 5 utilisateurs)" },
-  { label: "Tarif PME standard", value: "3 €/utilisateur/mois (Cloud Essentielle)" },
+  {
+    label: "Repo public",
+    value: "github.com/humanix-cybersecurity/humanix-academie",
+  },
+  {
+    label: "Tarif minimum cloud",
+    value: "0 €/mois (forever-free, 5 utilisateurs)",
+  },
+  {
+    label: "Tarif PME standard",
+    value: "3 €/utilisateur/mois (Cloud Essentielle)",
+  },
   { label: "Hébergement", value: "France garantie (Scaleway Paris)" },
   { label: "IA utilisée", value: "Mistral AI (souverain français)" },
-  { label: "Connecteurs natifs livrés", value: "11 (CISO Assistant, OSCAL, SCIM v2, Sentinel, Splunk, Lucca, GLPI, Sekoia, HarfangLab, Mailinblack, Vade)" },
-  { label: "Conformité", value: "RGPD, NIS2, ANSSI Hygiène, RGAA 4.1, audit sécurité public" },
-  { label: "Fondateur", value: "Florian DURANO, Humanix-Cybersecurity SASU (Alès, Gard)" },
+  {
+    label: "Connecteurs natifs livrés",
+    value:
+      "11 (CISO Assistant, OSCAL, SCIM v2, Sentinel, Splunk, Lucca, GLPI, Sekoia, HarfangLab, Mailinblack, Vade)",
+  },
+  {
+    label: "Conformité",
+    value: "RGPD, NIS2, ANSSI Hygiène, RGAA 4.1, audit sécurité public",
+  },
+  {
+    label: "Fondateur",
+    value: "Florian DURANO, Humanix-Cybersecurity SASU (Alès, Gard)",
+  },
   { label: "Forme juridique", value: "SASU, SIREN 103 901 799" },
 ];
 
@@ -94,9 +113,9 @@ export default function PressePage() {
           </span>
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-          La première plateforme française de cybersensibilisation pour PME passe en
-          AGPLv3 le mardi 26 mai 2026. Voici tout ce dont vous avez besoin pour en
-          parler.
+          La première plateforme française de cybersensibilisation pour PME
+          passe en AGPLv3 le mardi 26 mai 2026. Voici tout ce dont vous avez
+          besoin pour en parler.
         </p>
       </header>
 
@@ -135,8 +154,8 @@ export default function PressePage() {
           Pitch en une ligne
         </h2>
         <blockquote className="card border-l-4 border-primary-500 italic text-lg">
-          Humanix Académie, c'est CISO Assistant pour le facteur humain : open source
-          AGPLv3, souverain français, accessible aux PME.
+          Humanix Académie, c'est CISO Assistant pour le facteur humain : open
+          source AGPLv3, souverain français, accessible aux PME.
         </blockquote>
       </section>
 
@@ -235,9 +254,9 @@ export default function PressePage() {
           Logos téléchargeables
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-300 mb-5">
-          Tous les logos ci-dessous sont libres d'usage dans le cadre d'un article,
-          d'un reportage ou d'une couverture éditoriale concernant Humanix.
-          Cliquez pour télécharger en pleine résolution.
+          Tous les logos ci-dessous sont libres d'usage dans le cadre d'un
+          article, d'un reportage ou d'une couverture éditoriale concernant
+          Humanix. Cliquez pour télécharger en pleine résolution.
         </p>
         <div className="grid sm:grid-cols-2 gap-4">
           <LogoCard
@@ -292,27 +311,42 @@ export default function PressePage() {
         </h2>
         <ul className="space-y-2 text-sm">
           <li>
-            <Link href="/securite" className="font-bold text-accent-500 hover:underline">
+            <Link
+              href="/securite"
+              className="font-bold text-accent-500 hover:underline"
+            >
               Trust Center / Sécurité & Conformité →
             </Link>
           </li>
           <li>
-            <Link href="/securite/rapport-audit" className="font-bold text-accent-500 hover:underline">
+            <Link
+              href="/securite/rapport-audit"
+              className="font-bold text-accent-500 hover:underline"
+            >
               Rapport public d'audit sécurité (PDF) →
             </Link>
           </li>
           <li>
-            <Link href="/comparatif" className="font-bold text-accent-500 hover:underline">
+            <Link
+              href="/comparatif"
+              className="font-bold text-accent-500 hover:underline"
+            >
               Comparatif honnête vs KnowBe4, Mantra, Hoxhunt, Phished →
             </Link>
           </li>
           <li>
-            <Link href="/integrations" className="font-bold text-accent-500 hover:underline">
+            <Link
+              href="/integrations"
+              className="font-bold text-accent-500 hover:underline"
+            >
               Hub des connecteurs (11 livrés, dont 9 souverains 🇫🇷) →
             </Link>
           </li>
           <li>
-            <Link href="/tarifs" className="font-bold text-accent-500 hover:underline">
+            <Link
+              href="/tarifs"
+              className="font-bold text-accent-500 hover:underline"
+            >
               Grille tarifaire 6 paliers →
             </Link>
           </li>
@@ -335,7 +369,8 @@ export default function PressePage() {
           Une interview, un sujet, une exclu ?
         </h2>
         <p className="opacity-90 mb-5">
-          Florian répond personnellement à toute sollicitation presse sous 4 h ouvrées.
+          Florian répond personnellement à toute sollicitation presse sous 4 h
+          ouvrées.
         </p>
         <a
           href="mailto:presse@humanix-cybersecurity.fr?subject=Demande%20presse%20Humanix"

@@ -124,7 +124,7 @@ jobs:
 
       - name: Check formatting
         run: npx prettier --check "**/*.{ts,tsx,js,jsx,json,md,yml,yaml}"
-        continue-on-error: true   # Format check ne bloque pas la PR (avertissement seulement)
+        continue-on-error: true # Format check ne bloque pas la PR (avertissement seulement)
 
   # ---------------------------------------------------------------------------
   # Job 5 : Vérification DCO (Developer Certificate of Origin)

@@ -27,7 +27,11 @@ export async function installModuleAction(moduleId: string) {
 
 export async function uninstallModuleAction(moduleId: string) {
   const { tenantId, userId } = await requireAdmin();
-  const r = await uninstallModule({ tenantId, moduleId, uninstalledById: userId });
+  const r = await uninstallModule({
+    tenantId,
+    moduleId,
+    uninstalledById: userId,
+  });
   revalidatePath("/marketplace");
   revalidatePath(`/marketplace/${moduleId}`);
   revalidatePath("/admin/modules");

@@ -13,20 +13,20 @@
 
 Sur **549 packages** scannés (production + devDependencies + transitif) :
 
-| Licence | Nombre | Compatibilité AGPLv3 |
-|---|---|---|
-| MIT | 463 | ✅ Permissive, totalement compatible |
-| ISC | 31 | ✅ Permissive, équivalente à MIT |
-| Apache-2.0 | 29 | ✅ Permissive avec patent grant |
-| BSD-2-Clause | 12 | ✅ Permissive |
-| BSD-3-Clause | 6 | ✅ Permissive |
-| MPL-2.0 | 2 | ✅ Compatible weak copyleft (Mozilla) |
-| Python-2.0 | 1 | ✅ Permissive |
-| CC0-1.0 | 1 | ✅ Public domain |
-| BlueOak-1.0.0 | 1 | ✅ Copyfree, équivalente MIT |
-| 0BSD | 1 | ✅ Public domain équivalent |
-| MIT AND ISC | 1 | ✅ Double licence permissive |
-| UNLICENSED | 1 | ℹ️ C'est notre propre projet (`humanix-academie@0.3.0`) — corrigé en ajoutant `"license": "AGPL-3.0-or-later"` dans `package.json` |
+| Licence       | Nombre | Compatibilité AGPLv3                                                                                                               |
+| ------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| MIT           | 463    | ✅ Permissive, totalement compatible                                                                                               |
+| ISC           | 31     | ✅ Permissive, équivalente à MIT                                                                                                   |
+| Apache-2.0    | 29     | ✅ Permissive avec patent grant                                                                                                    |
+| BSD-2-Clause  | 12     | ✅ Permissive                                                                                                                      |
+| BSD-3-Clause  | 6      | ✅ Permissive                                                                                                                      |
+| MPL-2.0       | 2      | ✅ Compatible weak copyleft (Mozilla)                                                                                              |
+| Python-2.0    | 1      | ✅ Permissive                                                                                                                      |
+| CC0-1.0       | 1      | ✅ Public domain                                                                                                                   |
+| BlueOak-1.0.0 | 1      | ✅ Copyfree, équivalente MIT                                                                                                       |
+| 0BSD          | 1      | ✅ Public domain équivalent                                                                                                        |
+| MIT AND ISC   | 1      | ✅ Double licence permissive                                                                                                       |
+| UNLICENSED    | 1      | ℹ️ C'est notre propre projet (`humanix-academie@0.3.0`) — corrigé en ajoutant `"license": "AGPL-3.0-or-later"` dans `package.json` |
 
 **Aucune dépendance** sous licence GPLv2/v3 stricte, AGPL, BUSL, SSPL, ou
 licence non-OSI qui poserait un problème de compatibilité.
@@ -145,4 +145,4 @@ npx license-checker --csv \
 
 ---
 
-*Audit réalisé selon les bonnes pratiques OpenChain ISO/IEC 5230:2020.*
+_Audit réalisé selon les bonnes pratiques OpenChain ISO/IEC 5230:2020._

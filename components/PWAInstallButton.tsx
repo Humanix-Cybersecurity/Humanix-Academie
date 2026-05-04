@@ -11,20 +11,27 @@ type BeforeInstallPromptEvent = Event & {
 };
 
 export default function PWAInstallButton() {
-  const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
+  const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(
+    null,
+  );
   const [showIOSHint, setShowIOSHint] = useState(false);
   const [installed, setInstalled] = useState(false);
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     // Standalone deja active = installe
-    if (typeof window !== "undefined" && window.matchMedia("(display-mode: standalone)").matches) {
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(display-mode: standalone)").matches
+    ) {
       setInstalled(true);
       return;
     }
 
     // iOS detection (Safari ne supporte pas beforeinstallprompt)
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !/(CriOS|FxiOS)/.test(navigator.userAgent);
+    const isIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+      !/(CriOS|FxiOS)/.test(navigator.userAgent);
     if (isIOS) {
       setShowIOSHint(true);
       return;
@@ -57,7 +64,9 @@ export default function PWAInstallButton() {
         <div className="flex items-start gap-3 mb-3">
           <span className="text-3xl">🦊</span>
           <div>
-            <p className="font-bold text-primary-500 text-sm">Installer Humanix</p>
+            <p className="font-bold text-primary-500 text-sm">
+              Installer Humanix
+            </p>
             <p className="text-xs text-gray-500">
               Pour un accès rapide depuis ton écran d'accueil.
             </p>
@@ -65,19 +74,29 @@ export default function PWAInstallButton() {
         </div>
         {deferred ? (
           <div className="flex gap-2">
-            <button onClick={onInstall} className="btn-primary text-xs py-2 px-3 flex-1">
+            <button
+              onClick={onInstall}
+              className="btn-primary text-xs py-2 px-3 flex-1"
+            >
               Installer
             </button>
-            <button onClick={() => setHidden(true)} className="text-xs text-gray-500 hover:text-warn px-2">
+            <button
+              onClick={() => setHidden(true)}
+              className="text-xs text-gray-500 hover:text-warn px-2"
+            >
               Plus tard
             </button>
           </div>
         ) : showIOSHint ? (
           <div>
             <p className="text-xs text-gray-700 mb-2">
-              Sur iPhone : appuie sur <strong>Partager</strong> ⬆️ puis <strong>« Sur l'écran d'accueil »</strong>.
+              Sur iPhone : appuie sur <strong>Partager</strong> ⬆️ puis{" "}
+              <strong>« Sur l'écran d'accueil »</strong>.
             </p>
-            <button onClick={() => setHidden(true)} className="text-xs text-gray-500 hover:text-warn">
+            <button
+              onClick={() => setHidden(true)}
+              className="text-xs text-gray-500 hover:text-warn"
+            >
               Compris, fermer
             </button>
           </div>

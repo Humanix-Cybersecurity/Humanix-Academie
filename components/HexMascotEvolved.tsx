@@ -7,12 +7,40 @@ import clsx from "clsx";
 type Mood = "neutral" | "happy" | "sad" | "curious" | "celebrate" | "thinking";
 type Size = "sm" | "md" | "lg" | "xl" | "hero";
 
-const SIZES: Record<Size, { emoji: string; container: string; accessory: string; subAcc: string }> = {
-  sm: { emoji: "text-2xl", container: "w-12 h-12", accessory: "text-sm", subAcc: "text-xs" },
-  md: { emoji: "text-4xl", container: "w-20 h-20", accessory: "text-base", subAcc: "text-sm" },
-  lg: { emoji: "text-6xl", container: "w-28 h-28", accessory: "text-2xl", subAcc: "text-base" },
-  xl: { emoji: "text-7xl", container: "w-36 h-36", accessory: "text-3xl", subAcc: "text-xl" },
-  hero: { emoji: "text-9xl", container: "w-48 h-48", accessory: "text-5xl", subAcc: "text-3xl" },
+const SIZES: Record<
+  Size,
+  { emoji: string; container: string; accessory: string; subAcc: string }
+> = {
+  sm: {
+    emoji: "text-2xl",
+    container: "w-12 h-12",
+    accessory: "text-sm",
+    subAcc: "text-xs",
+  },
+  md: {
+    emoji: "text-4xl",
+    container: "w-20 h-20",
+    accessory: "text-base",
+    subAcc: "text-sm",
+  },
+  lg: {
+    emoji: "text-6xl",
+    container: "w-28 h-28",
+    accessory: "text-2xl",
+    subAcc: "text-base",
+  },
+  xl: {
+    emoji: "text-7xl",
+    container: "w-36 h-36",
+    accessory: "text-3xl",
+    subAcc: "text-xl",
+  },
+  hero: {
+    emoji: "text-9xl",
+    container: "w-48 h-48",
+    accessory: "text-5xl",
+    subAcc: "text-3xl",
+  },
 };
 
 const MOOD_ANIM: Record<Mood, string> = {
@@ -52,7 +80,8 @@ export default function HexMascotEvolved({
   const animClass = animated ? MOOD_ANIM[mood] : "";
   const mascot = getMascotById(species);
   // L'emoji affiche : custom > espece de la liste
-  const displayedEmoji = customEmoji && customEmoji.trim().length > 0 ? customEmoji : mascot.emoji;
+  const displayedEmoji =
+    customEmoji && customEmoji.trim().length > 0 ? customEmoji : mascot.emoji;
 
   // Le chapeau equipe override l'accessoire de niveau (couronne/bouclier...)
   const hatToShow = equipped?.hat ?? level.accessory;
@@ -68,9 +97,21 @@ export default function HexMascotEvolved({
         {/* Particules pour les niveaux 3+ */}
         {level.particles && (
           <>
-            <span className="absolute -top-2 -left-2 text-amber-400 animate-bounce-slow text-xs">✦</span>
-            <span className="absolute -top-1 -right-3 text-amber-400 animate-bounce-slow text-xs" style={{ animationDelay: "0.5s" }}>✦</span>
-            <span className="absolute -bottom-2 -left-3 text-amber-400 animate-bounce-slow text-xs" style={{ animationDelay: "1s" }}>✦</span>
+            <span className="absolute -top-2 -left-2 text-amber-400 animate-bounce-slow text-xs">
+              ✦
+            </span>
+            <span
+              className="absolute -top-1 -right-3 text-amber-400 animate-bounce-slow text-xs"
+              style={{ animationDelay: "0.5s" }}
+            >
+              ✦
+            </span>
+            <span
+              className="absolute -bottom-2 -left-3 text-amber-400 animate-bounce-slow text-xs"
+              style={{ animationDelay: "1s" }}
+            >
+              ✦
+            </span>
           </>
         )}
 
@@ -84,13 +125,20 @@ export default function HexMascotEvolved({
             animClass,
           )}
         >
-          <span className={sz.emoji} role="img" aria-label={`Mascotte ${mascot.name}, niveau ${level.id}`}>
+          <span
+            className={sz.emoji}
+            role="img"
+            aria-label={`Mascotte ${mascot.name}, niveau ${level.id}`}
+          >
             {displayedEmoji}
           </span>
 
           {/* Lunettes equipees - sur le visage */}
           {glassesToShow && (
-            <span className={clsx("absolute drop-shadow-md", sz.subAcc)} style={{ top: "30%", transform: "translateY(-50%)" }}>
+            <span
+              className={clsx("absolute drop-shadow-md", sz.subAcc)}
+              style={{ top: "30%", transform: "translateY(-50%)" }}
+            >
               {glassesToShow}
             </span>
           )}
@@ -136,8 +184,23 @@ export default function HexMascotEvolved({
 
       {showLevel && (
         <div className="text-center">
-          <p className="text-xs uppercase tracking-wide text-gray-500 font-medium">Niveau {level.id}</p>
-          <p className={clsx("font-bold", level.id === 5 ? "text-purple-600" : level.id === 4 ? "text-amber-600" : level.id === 3 ? "text-emerald-600" : level.id === 2 ? "text-cyan-600" : "text-gray-700")}>
+          <p className="text-xs uppercase tracking-wide text-gray-500 font-medium">
+            Niveau {level.id}
+          </p>
+          <p
+            className={clsx(
+              "font-bold",
+              level.id === 5
+                ? "text-purple-600"
+                : level.id === 4
+                  ? "text-amber-600"
+                  : level.id === 3
+                    ? "text-emerald-600"
+                    : level.id === 2
+                      ? "text-cyan-600"
+                      : "text-gray-700",
+            )}
+          >
             {level.name}
           </p>
         </div>
@@ -160,7 +223,9 @@ export function LevelProgressBar({ xp }: { xp: number }) {
             {xpNeededForNext} XP pour le niveau {next.id}
           </span>
         ) : (
-          <span className="text-purple-600 font-bold">Niveau max atteint 🏆</span>
+          <span className="text-purple-600 font-bold">
+            Niveau max atteint 🏆
+          </span>
         )}
       </div>
       <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">

@@ -11,7 +11,11 @@ export function hashApiKey(plain: string): string {
   return createHash("sha256").update(plain).digest("hex");
 }
 
-export function generateApiKey(): { plain: string; prefix: string; hashed: string } {
+export function generateApiKey(): {
+  plain: string;
+  prefix: string;
+  hashed: string;
+} {
   const random = randomBytes(24).toString("base64url");
   const plain = `hxa_${random}`;
   return {
