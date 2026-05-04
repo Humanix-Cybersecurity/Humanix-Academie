@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // PlanGate dedie au Pack NIS2 (incluse en plan Pro+).
 
 import Link from "next/link";

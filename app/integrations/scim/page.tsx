@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page publique de doc SCIM v2.
 // Cible : DSI / IAM admin qui configure le provisioning automatique.
 // A11y RGAA AA + UI/UX différenciante (onglets fournisseurs, code samples,

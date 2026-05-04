@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Pied de page HumaniX - refonte UX.2.
 // Hierarchie visuelle nette : 4 colonnes + bandeau identite + stamp Made in France.
 // Distinction claire entre "Outils gratuits" (lead-gen, mis en avant accent),

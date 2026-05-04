@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Lib utilitaire pour la hierarchie multi-etablissements.
 // Regle metier : un user est attache a UN tenant precis (sa fiche RH /
 // son etablissement). Quand un dirigeant a plusieurs tenants enfants, il

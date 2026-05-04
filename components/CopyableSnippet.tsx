@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Composant snippet copiable reutilisable.
 // A11y : aria-live pour annoncer la copie aux lecteurs d'ecran.
 

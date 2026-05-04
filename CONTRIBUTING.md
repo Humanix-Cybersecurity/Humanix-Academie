@@ -164,6 +164,22 @@ git push origin main
 - Toute nouvelle feature DOIT avoir au moins 1 test (unitaire ou e2e)
 - Coverage cible : 70 % sur le code métier (`lib/`)
 
+### Header de licence
+
+Tous les fichiers source TS/TSX dans `app/`, `lib/`, `components/`, `scripts/`, `prisma/`, et `middleware.ts` doivent porter en première ligne :
+
+```ts
+// SPDX-License-Identifier: AGPL-3.0-or-later
+```
+
+(immédiatement après une directive `"use client"` / `"use server"` ou un shebang `#!` si présent).
+
+Approche moderne FSF + Linux kernel : 1 ligne SPDX plutôt qu'un boilerplate copyright. Lisible par REUSE, FOSSology, GitHub.
+
+**Régénération automatique** : `npm run license:headers` ajoute la ligne aux fichiers qui en manquent. La CI lance `npm run license:check` à chaque PR — bloque le merge si un fichier oublie.
+
+Les sous-projets `connectors/` et `outlook-addin/` sont sous **MIT** (cf. leur propre `LICENSE`) et ne sont donc pas concernés par cette règle.
+
 ---
 
 ## Conventions de commit

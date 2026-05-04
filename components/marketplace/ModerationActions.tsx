@@ -1,4 +1,5 @@
 "use client";
+// SPDX-License-Identifier: AGPL-3.0-or-later
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { approveModule, rejectModule } from "@/app/admin/contributions/actions";

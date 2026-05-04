@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Endpoint de desinscription one-click pour la newsletter Cyber-Anecdote.
 // Compatible RFC 8058 (List-Unsubscribe-Post : One-Click).
 // Repond a GET (lien classique) ET POST (one-click Gmail/Outlook).

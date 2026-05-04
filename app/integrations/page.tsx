@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page hub /integrations.
 // Vue d'ensemble visuelle de tous les connecteurs livres + a venir.
 // A11y RGAA AA, UI/UX différenciante (cartes filtrables, stamps statut FR/UE/US).

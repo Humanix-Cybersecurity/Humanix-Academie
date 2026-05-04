@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Calcul des metriques GRC pour un tenant donne.
 // Centralise les requetes Prisma pour eviter de les dupliquer dans l'endpoint
 // /api/v1/evidence-export et dans la page /integrations/ciso-assistant (preview).

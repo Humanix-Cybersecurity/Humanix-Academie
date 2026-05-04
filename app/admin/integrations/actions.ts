@@ -1,5 +1,6 @@
 "use server";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Server actions admin pour la page /admin/integrations.
 // Validation Zod stricte. Authz : ADMIN/MANAGER/SUPERADMIN obligatoire,
 // scoping tenant systematique (impossible de toucher au webhook d'un autre).

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
 // AdminPageHeader — En-tête standard d'une page console (style Linear).
 //

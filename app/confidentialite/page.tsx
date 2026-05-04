@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Politique de confidentialité — RGPD art. 13 + 14
 import Link from "next/link";
 import LegalLayout, {

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Mes contributions au marketplace
 import Link from "next/link";
 import { auth } from "@/lib/auth";

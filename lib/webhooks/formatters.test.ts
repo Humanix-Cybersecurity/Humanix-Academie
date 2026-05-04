@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Tests des formatters Slack/Teams.
 // Critique : un escape oublié = injection markdown chez Slack/Teams.
 

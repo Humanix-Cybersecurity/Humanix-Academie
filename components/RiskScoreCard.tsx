@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Carte affichant le score de risque humain detaille
 import type { RiskFactors } from "@/lib/risk-score";
 import { RISK_VERDICT_LABEL } from "@/lib/risk-score";

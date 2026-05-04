@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page detail d'une anecdote (web view du email).
 // SEO friendly. Affichee aussi via le lien "voir sur le web" dans l'email.
 

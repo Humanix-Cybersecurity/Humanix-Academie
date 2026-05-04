@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Mascotte qui "peek" en bas a droite des pages publiques.
 // Bulle de dialogue contextuelle selon la page (audit, tarifs, anecdotes...).
 // Ferme par croix, etat persiste en localStorage pour ne pas re-apparaitre

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Dispatcher de la newsletter "Cyber-Anecdote du Lundi".
 //
 // Logique :

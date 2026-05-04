@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Telechargement du certificat individuel de l'apprenant
 import { NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";

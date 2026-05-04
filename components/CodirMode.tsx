@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Mode "Presentation CODIR" : passe le dashboard en plein ecran avec polices XL
 // et masque les details techniques. Le dirigeant projette ce composant pendant
 // son CODIR mensuel.

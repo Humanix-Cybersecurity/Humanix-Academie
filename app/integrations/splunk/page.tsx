@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page publique Splunk. A11y RGAA AA. UI/UX différenciante : SPL queries
 // prêtes à coller, mode d'emploi HEC, snippet curl.
 
