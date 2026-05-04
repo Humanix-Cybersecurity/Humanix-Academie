@@ -17,6 +17,7 @@
 // fournit juste la grille externe.
 // =============================================================================
 
+import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import AdminSidebar from "@/components/AdminSidebar";
@@ -24,7 +25,7 @@ import AdminTopBar from "@/components/AdminTopBar";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: ReactNode }) {
   // Vérification rôle au layout : protège TOUTES les pages /admin/* d'un coup
   // (defense-in-depth en plus du middleware existant).
   const session = await auth();
@@ -39,9 +40,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       {/* Sidebar slim — icons-only desktop, drawer mobile */}
       <AdminSidebar />
 
-      {/* Zone principale : top bar + content */}
+      {/* Zone principale : top bar (breadcrumb seul) + content */}
       <div className="flex-1 min-w-0 flex flex-col lg:pl-14">
-        <AdminTopBar user={session.user as { name?: string; email?: string }} />
+        <AdminTopBar />
 
         <main className="flex-1 min-w-0 overflow-x-hidden">
           {/* Container centré, padding adaptatif. Les pages contrôlent leur layout
