@@ -26,7 +26,7 @@ const STATUS_LABEL: Record<string, string> = {
 
 export default async function ContributionsPage() {
   const session = await auth();
-  const userId = (session!.user as any).id as string;
+  const userId = session!.user.id as string;
 
   const modules = await db.marketplaceModule.findMany({
     where: { authorId: userId },

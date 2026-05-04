@@ -164,9 +164,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       const { session, user, token } = params;
       if (session.user) {
         if (token) {
-          (session.user as any).id = token.uid as string;
-          (session.user as any).tenantId = token.tenantId as string;
-          (session.user as any).role = token.role as string;
+          session.user!.id = token.uid as string;
+          session.user!.tenantId = token.tenantId as string;
+          session.user!.role = token.role as string;
           session.user.name = (token.name as string) ?? session.user.name;
         } else if (user) {
           const dbUser = await db.user.findUnique({
@@ -174,9 +174,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             select: { tenantId: true, role: true, name: true, isActive: true },
           });
           if (dbUser && dbUser.isActive) {
-            (session.user as any).id = user.id;
-            (session.user as any).tenantId = dbUser.tenantId;
-            (session.user as any).role = dbUser.role;
+            session.user!.id = user.id;
+            session.user!.tenantId = dbUser.tenantId;
+            session.user!.role = dbUser.role;
             session.user.name = dbUser.name ?? session.user.name;
           }
         }

@@ -14,7 +14,7 @@ export default async function EditContributionPage({
   params: Promise<{ id: string }>;
 }) {
   const session = await auth();
-  const userId = (session!.user as any).id as string;
+  const userId = session!.user.id as string;
 
   const { id } = await params;
   const module_ = await db.marketplaceModule.findUnique({ where: { id } });

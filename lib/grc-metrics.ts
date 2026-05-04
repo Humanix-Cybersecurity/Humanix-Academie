@@ -115,8 +115,8 @@ export async function computeGrcMetrics(tenantId: string): Promise<GrcMetrics> {
     .filter((id: string | null): id is string => id !== null);
   const marketplaceModulesActive = moduleIds.length;
 
-  let modulesBySlug: Record<string, number> = {};
-  let modulesByCategory: Record<string, number> = {};
+  const modulesBySlug: Record<string, number> = {};
+  const modulesByCategory: Record<string, number> = {};
   if (moduleIds.length > 0) {
     const modules = await db.marketplaceModule.findMany({
       where: { id: { in: moduleIds } },

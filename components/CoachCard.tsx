@@ -11,13 +11,6 @@ const MOOD_BG: Record<CoachAdvice["mood"], string> = {
   celebrate: "from-purple-50 via-pink-50 to-amber-50 border-purple-300",
 };
 
-const MOOD_EMOJI: Record<CoachAdvice["mood"], "happy" | "encouraging" | "urgent" | "celebrate"> = {
-  happy: "happy",
-  encouraging: "encouraging",
-  urgent: "urgent",
-  celebrate: "celebrate",
-};
-
 const REC_EMOJI: Record<string, string> = {
   module: "🎯",
   library: "📚",

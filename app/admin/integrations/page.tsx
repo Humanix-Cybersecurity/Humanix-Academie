@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 
 export default async function IntegrationsPage() {
   const session = await auth();
-  const tenantId = (session!.user as any).tenantId as string;
+  const tenantId = session!.user.tenantId as string;
 
   const webhooks = await db.tenantWebhook.findMany({
     where: { tenantId },

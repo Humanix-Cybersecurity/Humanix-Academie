@@ -50,10 +50,10 @@ const VALID_STATUSES: IncidentStatus[] = [
 async function requireAdminWithPlan() {
   const session = await auth();
   if (!session?.user) throw new Error("unauthorized");
-  const role = (session.user as any).role;
+  const role = session.user!.role;
   if (role !== "ADMIN" && role !== "SUPERADMIN") throw new Error("forbidden");
-  const tenantId = (session.user as any).tenantId as string;
-  const userId = (session.user as any).id as string;
+  const tenantId = session.user!.tenantId as string;
+  const userId = session.user!.id as string;
   const plan = await getTenantPlan(tenantId);
   if (!planHasFeature(plan, "incidents")) {
     throw new Error("plan_required");

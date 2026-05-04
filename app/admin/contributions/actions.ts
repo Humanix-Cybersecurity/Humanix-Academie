@@ -22,11 +22,11 @@ function bumpPatch(version: string): string {
 async function requireContributor() {
   const session = await auth();
   if (!session?.user) throw new Error("unauthorized");
-  const role = (session.user as any).role;
+  const role = session.user!.role;
   if (role !== "ADMIN" && role !== "SUPERADMIN") throw new Error("forbidden");
   return {
-    userId: (session.user as any).id as string,
-    tenantId: (session.user as any).tenantId as string,
+    userId: session.user!.id as string,
+    tenantId: session.user!.tenantId as string,
     role,
   };
 }
@@ -181,11 +181,11 @@ export async function deleteDraft(moduleId: string) {
 async function requireModerator() {
   const session = await auth();
   if (!session?.user) throw new Error("unauthorized");
-  const role = (session.user as any).role;
+  const role = session.user!.role;
   if (role !== "SUPERADMIN") throw new Error("forbidden_moderator_only");
   return {
-    userId: (session.user as any).id as string,
-    tenantId: (session.user as any).tenantId as string,
+    userId: session.user!.id as string,
+    tenantId: session.user!.tenantId as string,
   };
 }
 

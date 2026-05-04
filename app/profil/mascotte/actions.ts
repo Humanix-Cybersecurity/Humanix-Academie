@@ -19,7 +19,7 @@ function refreshMascotPaths() {
 export async function chooseMascot(mascotId: string) {
   const session = await auth();
   if (!session?.user) throw new Error("unauthorized");
-  const userId = (session.user as any).id as string;
+  const userId = session.user!.id as string;
 
   const mascot = getMascotById(mascotId);
   if (!mascot) throw new Error("invalid_mascot");
@@ -46,7 +46,7 @@ export async function chooseMascot(mascotId: string) {
 export async function chooseMood(mood: string): Promise<{ ok: true }> {
   const session = await auth();
   if (!session?.user) throw new Error("unauthorized");
-  const userId = (session.user as any).id as string;
+  const userId = session.user!.id as string;
 
   if (!VALID_MOODS.includes(mood as Mood)) {
     throw new Error("invalid_mood");
@@ -68,7 +68,7 @@ export async function chooseMood(mood: string): Promise<{ ok: true }> {
 export async function setCustomMascotEmoji(emoji: string | null): Promise<{ ok: true }> {
   const session = await auth();
   if (!session?.user) throw new Error("unauthorized");
-  const userId = (session.user as any).id as string;
+  const userId = session.user!.id as string;
 
   let toStore: string | null = null;
   if (emoji && emoji.trim().length > 0) {

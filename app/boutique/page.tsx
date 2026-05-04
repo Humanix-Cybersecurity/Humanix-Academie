@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import HexMascotEvolved from "@/components/HexMascotEvolved";
-import { getLevel } from "@/lib/levels";
 import { buildEquippedFromInventory, CATEGORY_LABEL } from "@/lib/shop";
 import ShopGrid from "@/components/ShopGrid";
 
@@ -12,7 +11,7 @@ export const dynamic = "force-dynamic";
 export default async function BoutiquePage() {
   const session = await auth();
   if (!session?.user) redirect("/demo");
-  const userId = (session.user as any).id as string;
+  const userId = session.user!.id as string;
 
   const [user, items, inventory] = await Promise.all([
     db.user.findUnique({

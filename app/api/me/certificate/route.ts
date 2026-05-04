@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  const userId = (session.user as any).id as string;
+  const userId = session.user!.id as string;
 
   const user = await db.user.findUnique({
     where: { id: userId },

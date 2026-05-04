@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
   if (!session?.user) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  const tenantId = (session.user as any).tenantId as string | undefined;
+  const tenantId = session.user!.tenantId as string | undefined;
   if (!tenantId) {
     return NextResponse.json({ error: "no_tenant" }, { status: 400 });
   }
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Rate limit léger : 50 req/heure par user via Event count
-  const userId = (session.user as any).id as string;
+  const userId = session.user!.id as string;
   const oneHourAgo = new Date(Date.now() - 3600_000);
   const recentCount = await db.event.count({
     where: { userId, type: "tts_synthesize", createdAt: { gte: oneHourAgo } },

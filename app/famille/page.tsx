@@ -30,8 +30,8 @@ export default async function FamillePage() {
   const session = await auth();
   let inviteCta: { remaining: number; eligible: boolean } | null = null;
   if (session?.user) {
-    const userId = (session.user as any).id as string;
-    const tenantId = (session.user as any).tenantId as string;
+    const userId = session.user!.id as string;
+    const tenantId = session.user!.tenantId as string;
     if (userId && tenantId) {
       const [eligible, remaining] = await Promise.all([
         isEligibleToInvite(userId, tenantId),

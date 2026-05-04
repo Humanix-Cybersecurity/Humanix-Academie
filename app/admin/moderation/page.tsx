@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 export default async function ModerationPage() {
   const session = await auth();
-  const role = (session!.user as any).role;
+  const role = session!.user.role;
   if (role !== "SUPERADMIN") redirect("/admin");
 
   const queue = await db.marketplaceModule.findMany({

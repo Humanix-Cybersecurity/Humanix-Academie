@@ -30,7 +30,7 @@ async function checkAuth(req: Request): Promise<{ authorized: boolean; reason?: 
   // 2. Admin authentifie
   const session = await auth();
   if (!session?.user) return { authorized: false, reason: "unauthorized" };
-  const role = (session.user as any).role;
+  const role = session.user!.role;
   if (role !== "ADMIN" && role !== "SUPERADMIN") {
     return { authorized: false, reason: "forbidden" };
   }

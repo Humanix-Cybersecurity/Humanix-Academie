@@ -10,11 +10,11 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  const role = (session.user as any).role;
+  const role = session.user!.role;
   if (role !== "ADMIN" && role !== "MANAGER" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const tenantId = (session.user as any).tenantId as string;
+  const tenantId = session.user!.tenantId as string;
 
   const [tenant, users, saisons, allProgress] = await Promise.all([
     db.tenant.findUnique({ where: { id: tenantId } }),
@@ -86,7 +86,7 @@ export async function GET() {
   });
   team.sort((a, b) => b.xp - a.xp);
 
-  const generatedBy = session.user.name ?? (session.user as any).email ?? "Admin";
+  const generatedBy = session.user.name ?? session.user!.email ?? "Admin";
 
   const buffer = await renderToBuffer(
     ConformityReport({

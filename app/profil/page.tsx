@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 export default async function ProfilPage() {
   const session = await auth();
   if (!session?.user) redirect("/demo");
-  const userId = (session.user as any).id as string;
+  const userId = session.user!.id as string;
 
   const user = await db.user.findUnique({
     where: { id: userId },

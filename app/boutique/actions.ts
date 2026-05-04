@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 async function requireUser() {
   const session = await auth();
   if (!session?.user) throw new Error("unauthorized");
-  return { userId: (session.user as any).id as string };
+  return { userId: session.user!.id as string };
 }
 
 export async function buyItem(itemId: string) {

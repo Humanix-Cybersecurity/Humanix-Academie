@@ -20,7 +20,7 @@ export async function GET() {
   if (!session?.user) {
     return NextResponse.json({ available: false, reason: "unauthenticated" });
   }
-  const tenantId = (session.user as any).tenantId as string | undefined;
+  const tenantId = session.user!.tenantId as string | undefined;
   if (!tenantId) {
     return NextResponse.json({ available: false, reason: "no_tenant" });
   }

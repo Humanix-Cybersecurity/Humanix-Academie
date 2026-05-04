@@ -39,11 +39,11 @@ export async function GET(req: Request) {
   }
 
   if (!session?.user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  const role = (session.user as any).role;
+  const role = session.user!.role;
   if (role !== "ADMIN" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  tenantId = (session.user as any).tenantId;
+  tenantId = session.user!.tenantId;
   if (!tenantId) return NextResponse.json({ error: "no_tenant" }, { status: 400 });
 
   const candidates = await findInactiveUsers(tenantId);
@@ -74,11 +74,11 @@ export async function POST(req: Request) {
   }
 
   if (!session?.user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  const role = (session.user as any).role;
+  const role = session.user!.role;
   if (role !== "ADMIN" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  tenantId = (session.user as any).tenantId;
+  tenantId = session.user!.tenantId;
   if (!tenantId) return NextResponse.json({ error: "no_tenant" }, { status: 400 });
 
   const result = await sendReminders(tenantId);

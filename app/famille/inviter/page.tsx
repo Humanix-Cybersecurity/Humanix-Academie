@@ -22,8 +22,8 @@ export const metadata = {
 export default async function FamilleInviterPage() {
   const session = await auth();
   if (!session?.user) redirect("/connexion?next=/famille/inviter");
-  const userId = (session.user as any).id as string;
-  const tenantId = (session.user as any).tenantId as string;
+  const userId = session.user!.id as string;
+  const tenantId = session.user!.tenantId as string;
 
   const [eligible, remaining, history] = await Promise.all([
     isEligibleToInvite(userId, tenantId),

@@ -15,9 +15,9 @@ export const dynamic = "force-dynamic";
 export default async function PersonalizePhishingPage() {
   const session = await auth();
   if (!session?.user) redirect("/demo");
-  const role = (session.user as any).role;
+  const role = session.user!.role;
   if (role !== "ADMIN" && role !== "SUPERADMIN") redirect("/apprendre");
-  const tenantId = (session.user as any).tenantId as string;
+  const tenantId = session.user!.tenantId as string;
   const plan = await getTenantPlan(tenantId);
 
   if (!planHasFeature(plan, "phishing_ia")) {

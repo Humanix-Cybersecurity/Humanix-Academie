@@ -47,7 +47,7 @@ const VERDICT_TEXT_STYLES = {
 export default async function AdminBusinessPage() {
   // Auth garantie par app/admin/layout.tsx (defense-in-depth déjà appliquée).
   const session = await auth();
-  const tenantId = (session!.user as any).tenantId as string;
+  const tenantId = session!.user.tenantId as string;
 
   const [impact, tenant, meteo] = await Promise.all([
     computeBusinessImpact(tenantId),

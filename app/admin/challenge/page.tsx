@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminChallengePage() {
   const session = await auth();
-  const tenantId = (session!.user as any).tenantId as string;
+  const tenantId = session!.user.tenantId as string;
 
   const plan = await getTenantPlan(tenantId);
   if (!planHasFeature(plan, "challenges")) {

@@ -19,11 +19,11 @@ export async function GET(req: NextRequest) {
   if (!session?.user) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  const role = (session.user as any).role;
+  const role = session.user!.role;
   if (role !== "ADMIN" && role !== "MANAGER" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const tenantId = (session.user as any).tenantId as string;
+  const tenantId = session.user!.tenantId as string;
 
   const plan = await getTenantPlan(tenantId);
   if (!["pro", "premium"].includes(plan)) {
@@ -95,7 +95,7 @@ export async function GET(req: NextRequest) {
   await db.event.create({
     data: {
       tenantId,
-      userId: (session.user as any).id ?? null,
+      userId: session.user!.id ?? null,
       type: "pack_nis2_generated",
       payload: {
         directeurName: variables.directeurName,
