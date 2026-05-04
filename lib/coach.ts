@@ -59,7 +59,8 @@ export async function generateCoachAdvice(
   });
   if (!user) throw new Error("user_not_found");
 
-  const firstName = (user.name || user.email).split(" ")[0].split("@")[0];
+  const rawIdentity = user.name ?? user.email ?? "collègue";
+  const firstName = rawIdentity.split(" ")[0].split("@")[0];
   const hour = new Date().getHours();
   const greeting = GREETINGS_TIME(hour, firstName);
 
@@ -163,9 +164,12 @@ export async function generateCoachAdvice(
   }
 
   // Micro-tips : 2 random
-  const microTips = [...POSITIVE_MICROTIPS]
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 2);
+  const shuffledMicroTips = [...POSITIVE_MICROTIPS];
+  for (let i = shuffledMicroTips.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledMicroTips[i], shuffledMicroTips[j]] = [shuffledMicroTips[j], shuffledMicroTips[i]];
+  }
+  const microTips = shuffledMicroTips.slice(0, 2);
 
   return { greeting, primaryMessage, recommendation, microTips, mood };
 }
@@ -182,8 +186,8 @@ export async function enrichWithLLM(advice: CoachAdvice): Promise<CoachAdvice> {
   // Slot LLM : a brancher quand l'API key sera disponible.
   // Exemple :
   // if (process.env.OPENAI_API_KEY) {
-  //   const llmReponse = await callOpenAI(...);
-  //   return { ...advice, primaryMessage: llmReponse };
+  //   const llmResponse = await callOpenAI(...);
+  //   return { ...advice, primaryMessage: llmResponse };
   // }
   return advice;
 }
