@@ -43,6 +43,7 @@ export default defineConfig({
       // tts, business-impact, marketplace/install...
       include: [
         "lib/audit-flash/scoring.ts",
+        "lib/content-availability.ts",
         "lib/marketplace/integrity.ts",
         "lib/marketplace/schema.ts",
         "lib/plans.ts",
