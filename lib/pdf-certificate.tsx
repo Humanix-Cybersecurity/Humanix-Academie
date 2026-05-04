@@ -189,7 +189,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 8,
     fontStyle: "italic",
-  },
+  const dateFormatOptions: Intl.DateTimeFormatOptions = { dateStyle: "long" };
+  const date = props.generatedAt.toLocaleDateString("fr-FR", dateFormatOptions);
 });
 
 type Props = {
