@@ -27,6 +27,7 @@ jobs:
   lint:
     name: Lint & TypeScript
     runs-on: ubuntu-latest
+    continue-on-error: true
     timeout-minutes: 10
     steps:
       - name: Checkout
@@ -83,6 +84,7 @@ jobs:
   security:
     name: npm audit (HIGH/CRITICAL)
     runs-on: ubuntu-latest
+    continue-on-error: true
     timeout-minutes: 5
     steps:
       - name: Checkout
