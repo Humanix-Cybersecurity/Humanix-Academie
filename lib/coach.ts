@@ -182,8 +182,8 @@ export async function enrichWithLLM(advice: CoachAdvice): Promise<CoachAdvice> {
   // Slot LLM : a brancher quand l'API key sera disponible.
   // Exemple :
   // if (process.env.OPENAI_API_KEY) {
-  //   const llmReponse = await callOpenAI(...);
-  //   return { ...advice, primaryMessage: llmReponse };
+  //   const llmResponse = await callOpenAI(...);
+  //   return { ...advice, primaryMessage: llmResponse };
   // }
   return advice;
 }
