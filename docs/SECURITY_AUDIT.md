@@ -1,9 +1,10 @@
 # Rapport d'audit de sécurité — Humanix Académie
 
-> **Édition** : v1.0 — 2026-05-02
-> **Périmètre** : plateforme SaaS Humanix Académie (production + infrastructure + processus)
+> **Édition** : v1.2 — 2026-05-05
+> **Périmètre** : plateforme Humanix Académie Community Edition + Cloud (production + infrastructure + processus + chaîne de développement)
 > **Émetteur** : Humanix-Cybersecurity
-> **Statut** : public, mis à jour à chaque évolution majeure
+> **Statut** : public, mis à jour à chaque évolution majeure (cf. §12.4 historique)
+> **Licence du rapport** : CC BY-SA 4.0 (réutilisable avec attribution)
 
 ---
 
@@ -468,9 +469,10 @@ Procédure :
 
 | Pratique | Statut |
 |---|---|
-| `npm audit` avant chaque release | ✅ Manuel |
-| Dependabot / Renovate auto-PR | 🔲 À mettre en place (à venir) |
-| Scan SCA (Snyk, Socket.dev) | 🔲 À mettre en place (à venir) |
+| `npm audit` avant chaque release | ✅ Manuel + automatisé en CI (job dédié `npm audit (HIGH/CRITICAL)`) |
+| **Dependabot configuré** (npm + pip + github-actions + docker) | ✅ Hebdo le lundi, groupes filtrés `minor + patch`, MAJORS bloquées sur les packages critiques (next, react, prisma, next-auth, zod, mdx-remote, tailwind, typescript, eslint) |
+| Audit licences dépendances vs AGPL | ✅ Documenté dans [`docs/LICENSES_AUDIT.md`](./LICENSES_AUDIT.md) — 549 packages scannés, 0 incompatibilité |
+| Scan SCA (Snyk, Socket.dev) | 🔲 Optionnel — Dependabot alerts couvre déjà les CVE |
 | Pinning des versions | ✅ `package-lock.json` versionné |
 | Pas de `*` ni `^` non-borné | ✅ `package.json` audité |
 
@@ -484,10 +486,15 @@ Procédure :
 
 ### 7.5 CI/CD
 
-- Build Docker reproductible (Dockerfile multi-stage)
-- `tsc --noEmit` au build (refus de builds qui ne compilent pas)
-- `next lint` au build
-- 🔲 **Pas encore de scan SAST automatisé** en CI (planifié à venir — Semgrep ou CodeQL)
+| Élément | Statut | Détail |
+|---|---|---|
+| **GitHub Actions CI** | ✅ Actif | `.github/workflows/ci.yml` — lint + types + Prettier + audit npm + production build à chaque push et PR |
+| **CodeQL (SAST)** | ✅ Actif | `.github/workflows/codeql.yml` — analyse statique automatisée. Gratuit en repo public, premier run dès passage public le 26 mai 2026 |
+| **DCO signed-off-by check** | ✅ Actif | Vérifie que chaque commit est signé `Signed-off-by:` (engagement DCO) |
+| **Dependabot version updates** | ✅ Actif | Cf. §7.3 |
+| **Build Docker reproductible** | ✅ Actif | Dockerfile multi-stage avec lockfile pinné |
+| **Hébergement code source** | 🟡 GitHub aujourd'hui | Migration vers forge souveraine FR (Forgejo / Codeberg-FR) prévue Q1-Q2 2027. Git distribué = portabilité 100 %. |
+| **Branch protection sur `main`** | 🔲 À activer | Settings → Branches → Require PR + CI green avant merge |
 
 ---
 
@@ -664,6 +671,8 @@ Email à **security@humanix-cybersecurity.fr** avec :
 | Version | Date | Changements |
 |---|---|---|
 | v1.0 | 2026-05-02 | Première édition publique |
+| v1.1 | 2026-05-04 | Pivot OSS AGPLv3 : LICENSE FSF officiel + NOTICE.md + TRADEMARK.md + CGU_SELFHOST.md + CLA.md. CGU/CGV/Confidentialité enrichies (mention Community Edition vs Cloud). 11 connecteurs livrés (CISO Assistant, OSCAL, SCIM v2, Sentinel, Splunk, Lucca, GLPI, Sekoia, HarfangLab, Mailinblack/Vade). Page `/presse`. |
+| v1.2 | 2026-05-05 | CI/CD durcie : GitHub Actions actif (CI + CodeQL + DCO check), Dependabot configuré (npm + pip + actions + docker, MAJORS bloquées sur paquets critiques), audit licences AGPL documenté. Roadmap migration vers forge souveraine FR mentionnée. |
 
 ---
 

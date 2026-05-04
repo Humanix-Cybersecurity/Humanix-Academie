@@ -20,7 +20,14 @@ export default async function EditContributionPage({
   const module_ = await db.marketplaceModule.findUnique({ where: { id } });
   if (!module_ || module_.authorId !== userId) notFound();
 
-  const isEditable = module_.status === "DRAFT" || module_.status === "REJECTED";
+  // L'édition est ouverte sur tous les statuts SAUF PENDING_REVIEW
+  // (verrou pendant la modération pour éviter les conflits avec le modérateur).
+  // Pour APPROVED : éditer crée une nouvelle version qui retourne en DRAFT
+  // puis devra repasser en validation (cf. server action saveDraft).
+  const isEditable =
+    module_.status === "DRAFT" ||
+    module_.status === "REJECTED" ||
+    module_.status === "APPROVED";
 
   return (
     <>
@@ -35,12 +42,27 @@ export default async function EditContributionPage({
       />
 
       <div className="space-y-4 min-w-0">
-        {!isEditable && (
+        {module_.status === "PENDING_REVIEW" && (
           <article className="rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-900/15 p-4">
             <p className="text-sm text-amber-800 dark:text-amber-200">
-              <strong>{module_.status === "PENDING_REVIEW" ? "En attente de modération" : "Module publié"}</strong> —
-              l'édition est verrouillée.
-              {module_.status === "PENDING_REVIEW" && " Tu reçois une notification dès qu'un modérateur a tranché."}
+              <strong>En attente de modération</strong> — l'édition est temporairement
+              verrouillée pour éviter les conflits avec le modérateur. Tu reçois une
+              notification dès qu'un modérateur a tranché.
+            </p>
+          </article>
+        )}
+
+        {module_.status === "APPROVED" && (
+          <article className="rounded-xl border border-blue-200 dark:border-blue-900/50 bg-blue-50/60 dark:bg-blue-900/15 p-4">
+            <p className="text-sm text-blue-800 dark:text-blue-200 mb-1">
+              <strong>Module publié — édition autorisée</strong>
+            </p>
+            <p className="text-xs text-blue-700 dark:text-blue-300">
+              Tes modifications créeront une nouvelle version (le numéro de patch sera
+              incrémenté automatiquement) qui devra repasser en validation par un
+              modérateur. Pendant ce temps, le module sera temporairement retiré du
+              marketplace public, mais les organisations qui l'ont déjà installé
+              gardent leur copie en cours.
             </p>
           </article>
         )}

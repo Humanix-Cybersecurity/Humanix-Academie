@@ -6,6 +6,19 @@ import { db } from "@/lib/db";
 import { ModuleSubmissionSchema } from "@/lib/marketplace/schema";
 import { computeContentHash } from "@/lib/marketplace/integrity";
 
+/**
+ * Incrémente le patch d'une version SemVer 1.2.3 → 1.2.4.
+ * Si le format n'est pas reconnu, on revient à "1.0.1" par sécurité.
+ */
+function bumpPatch(version: string): string {
+  const m = /^(\d+)\.(\d+)\.(\d+)$/.exec(version.trim());
+  if (!m) return "1.0.1";
+  const major = parseInt(m[1], 10);
+  const minor = parseInt(m[2], 10);
+  const patch = parseInt(m[3], 10) + 1;
+  return `${major}.${minor}.${patch}`;
+}
+
 async function requireContributor() {
   const session = await auth();
   if (!session?.user) throw new Error("unauthorized");
@@ -47,14 +60,31 @@ export async function saveDraft(input: {
 
   let module_;
   if (input.moduleId) {
-    // Edition : seulement le brouillon de l'auteur (pas de modif d'un module publie)
+    // Edition autorisée pour : DRAFT, REJECTED, APPROVED.
+    //   - DRAFT / REJECTED : on écrase le brouillon directement.
+    //   - APPROVED : on incrémente le patch (1.0.0 → 1.0.1) et on retombe
+    //     en DRAFT pour signaler qu'une nouvelle version est en préparation.
+    //     L'auteur devra explicitement re-soumettre via submitForReview().
+    // PENDING_REVIEW reste verrouillé pour éviter conflit avec modérateur.
     const existing = await db.marketplaceModule.findUnique({ where: { id: input.moduleId } });
     if (!existing || existing.authorId !== userId) {
       return { ok: false as const, error: "not_found_or_forbidden" };
     }
-    if (existing.status !== "DRAFT" && existing.status !== "REJECTED") {
-      return { ok: false as const, error: "not_editable" };
+    if (existing.status === "PENDING_REVIEW") {
+      return { ok: false as const, error: "in_moderation" };
     }
+    if (existing.status === "DEPRECATED") {
+      return { ok: false as const, error: "deprecated" };
+    }
+
+    // Bump version si on quitte un état APPROVED (= nouvelle version pour
+    // re-validation). Sur DRAFT/REJECTED on garde la version courante puisqu'il
+    // n'y a pas eu de publication entre temps.
+    let nextVersion = existing.version;
+    if (existing.status === "APPROVED") {
+      nextVersion = bumpPatch(existing.version);
+    }
+
     module_ = await db.marketplaceModule.update({
       where: { id: input.moduleId },
       data: {
@@ -69,6 +99,7 @@ export async function saveDraft(input: {
         license: data.license,
         payload: data.payload,
         contentHash,
+        version: nextVersion,
         status: "DRAFT",
         rejectionReason: null,
       },

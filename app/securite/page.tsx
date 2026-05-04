@@ -167,6 +167,7 @@ export default function SecuritePage() {
         <ul>
           <li>à venir : Référencement CyberMalveillance.gouv.fr finalisé</li>
           <li>à venir : Évaluation Label Cyber Expert AFNOR</li>
+          <li>à venir : <strong>Migration du code source vers une forge souveraine française</strong> (Forgejo auto-hébergé chez Scaleway, ou plateforme communautaire FR équivalente). GitHub reste utilisé en attendant pour la visibilité écosystème open source — la portabilité est garantie par Git lui-même.</li>
           <li>2027 : Étude qualification PASSI ANSSI (audits) — selon évolution business</li>
           <li>Conformité <strong>NIS2</strong> : application du référentiel ANSSI dès que applicable au volume d'activité</li>
         </ul>

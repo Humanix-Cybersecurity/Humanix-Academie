@@ -239,7 +239,7 @@ export default function PressePage() {
           d'un reportage ou d'une couverture éditoriale concernant Humanix.
           Cliquez pour télécharger en pleine résolution.
         </p>
-        <div className="grid sm:grid-cols-3 gap-4">
+        <div className="grid sm:grid-cols-2 gap-4">
           <LogoCard
             src="/logo-humanix-academie-512.png"
             label="Logo carré PNG (512×512)"
@@ -249,12 +249,6 @@ export default function PressePage() {
             src="/logo-humanix-horizontal-400.png"
             label="Logo horizontal PNG (400×120)"
             href="/logo-humanix-horizontal-400.png"
-          />
-          <LogoCard
-            src="/logo-mark-academie.svg"
-            label="Logo SVG (vectoriel)"
-            href="/logo-mark-academie.svg"
-            isSvg
           />
         </div>
         <p className="text-xs text-gray-500 mt-3">
@@ -358,12 +352,10 @@ function LogoCard({
   src,
   label,
   href,
-  isSvg,
 }: {
   src: string;
   label: string;
   href: string;
-  isSvg?: boolean;
 }) {
   return (
     <a
@@ -372,18 +364,13 @@ function LogoCard({
       className="card flex flex-col items-center text-center hover:scale-[1.02] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-500"
     >
       <div className="bg-white dark:bg-slate-700 rounded-xl p-4 mb-3 w-full flex items-center justify-center">
-        {isSvg ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={src} alt="" className="h-20 w-auto" />
-        ) : (
-          <Image
-            src={src}
-            alt=""
-            width={120}
-            height={120}
-            className="h-20 w-auto object-contain"
-          />
-        )}
+        <Image
+          src={src}
+          alt=""
+          width={120}
+          height={120}
+          className="h-20 w-auto object-contain"
+        />
       </div>
       <p className="text-sm font-bold text-primary-500">{label}</p>
       <p className="text-xs text-accent-500 mt-1">Cliquer pour télécharger ↓</p>
