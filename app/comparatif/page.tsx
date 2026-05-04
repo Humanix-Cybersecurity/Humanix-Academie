@@ -178,7 +178,7 @@ const ROWS: Row[] = [
   {
     category: "Simulation phishing & ingénierie sociale",
     feature: "Vishing / simulation voix (deepfake +442 % H2 2024)",
-    humanix: loss("Roadmap mai 2026 — Mistral + Piper TTS souverain FR"),
+    humanix: eq("MVP livré — Mistral + Piper TTS 100 % souverain FR"),
     knowbe4: eq("AIDA voice agent (cloud US)"),
     cyberGuru: loss("Non documenté"),
     hoxhunt: win("Voice overlays mature"),
@@ -806,9 +806,9 @@ export default function ComparatifPage() {
             (volume catalogue, plugin Outlook mature, agent IA orchestrateur,
             simulation smishing/voice native, SAML/SCIM enterprise) : ces écarts
             sont réels mais ne sont pas bloquants pour une PME de moins de
-            250 personnes. Nous comblons progressivement (vishing souverain en
-            développement pour mai 2026, audit RGAA cabinet à venir, Qualiopi
-            en cours).
+            250 personnes. Nous comblons progressivement (vishing souverain
+            MVP livré pour mai 2026 sur /admin/vishing, audit RGAA cabinet à
+            venir, Qualiopi en cours).
           </p>
           <p>
             <strong className="text-primary-500">
