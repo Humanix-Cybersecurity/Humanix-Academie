@@ -236,14 +236,14 @@ async function main() {
         name: it.name,
         emoji: it.emoji,
         category: it.category as ItemCategory,
-        price: it.price,
+        title: "Le badge oublié au comptoir",
         minLevel: it.minLevel,
         description: it.description,
-        rarity: it.rarity,
+          "Tu rentres au bureau après ta pause café. Tu remarques qu'un visiteur (probablement un livreur, en gilet jaune) attend devant la porte avec un colis. Il sourit et te dit : « Tiens, tu peux me laisser passer ? J'ai oublié mon badge. C'est urgent. »",
       },
-    });
+          { id: "a", label: "J'ouvre la porte, c'est évident qu'il a besoin d'entrer", outcome: "bad" as const, feedback: "Très mauvais réflexe : tu viens de pratiquer du tailgating. Aucun contrôle d'identité, accès libre à une zone potentiellement sensible.", points: -10 },
     shopItemsBySlug.set(it.slug, dbItem);
-  }
+          { id: "c", label: "Je le laisse passer mais je le suis du regard", outcome: "neutral" as const, feedback: "Mauvais compromis : tu n'as pas vérifié son identité et tu es complice du tailgating.", points: -5 },
   console.log(`  Boutique ✓ (${SHOP_CATALOG.length} items)`);
 
   // Users + progressions
