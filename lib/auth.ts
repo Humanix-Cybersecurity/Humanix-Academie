@@ -75,11 +75,12 @@ if (isDemoMode) {
 // Magic link en prod
 if (
   process.env.RESEND_API_KEY &&
-  process.env.RESEND_API_KEY !== "demo-key-not-used-in-demo-mode"
+  process.env.RESEND_API_KEY !== "demo-key-not-used-in-demo-mode" &&
+  process.env.EMAIL_FROM
 ) {
   providers.push(
     Resend({
-      from: process.env.EMAIL_FROM!,
+      from: process.env.EMAIL_FROM,
       apiKey: process.env.RESEND_API_KEY!,
       sendVerificationRequest: async (params: any) => {
         const { identifier, url, provider } = params;
