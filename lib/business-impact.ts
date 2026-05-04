@@ -51,13 +51,15 @@ function probabilityFromScore(score: number): number {
 }
 
 /**
- * Cout annuel Humanix selon la taille (palier le plus probable + Pack Managed).
+ * Cout annuel Humanix selon la taille — grille mai 2026 (cf. lib/pricing.ts).
+ * On prend les tarifs ANNUELS (engagement annuel = remise -17 a -21%).
  */
 function estimateHumanixCost(seats: number): number {
-  if (seats <= 15) return 49 * 12; // forfait Solo
-  if (seats <= 50) return 4 * seats * 12; // Essentielle annuel
-  if (seats <= 250) return 3.5 * seats * 12; // Pro annuel
-  return 3 * seats * 12; // Premium estime
+  if (seats <= 5)   return 0;                      // Découverte forever-free
+  if (seats <= 15)  return 15 * 12;                // Starter annuel = 15€/mois
+  if (seats <= 50)  return 2.5 * seats * 12;       // Essentielle annuel = 2,50€/user/mois
+  if (seats <= 250) return 2 * seats * 12;         // Pro annuel = 2€/user/mois
+  return 5000;                                     // Enterprise sur devis (estimation plancher)
 }
 
 export async function computeBusinessImpact(tenantId: string): Promise<BusinessImpact> {
