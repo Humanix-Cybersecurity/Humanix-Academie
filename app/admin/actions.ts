@@ -9,11 +9,11 @@ import type { Role } from "@prisma/client";
 async function requireAdmin() {
   const session = await auth();
   if (!session?.user) throw new Error("unauthorized");
-  const role = (session.user as any).role as string;
+  const role = session.user!.role as string;
   if (role !== "ADMIN" && role !== "SUPERADMIN") throw new Error("forbidden");
-  const tenantId = (session.user as any).tenantId as string;
+  const tenantId = session.user!.tenantId as string;
   if (!tenantId) throw new Error("no_tenant");
-  return { tenantId, userId: (session.user as any).id as string };
+  return { tenantId, userId: session.user!.id as string };
 }
 
 // =====================================================

@@ -30,7 +30,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   // (defense-in-depth en plus du middleware existant).
   const session = await auth();
   if (!session?.user) redirect("/connexion");
-  const role = (session.user as any).role;
+  const role = session.user!.role;
   if (role !== "ADMIN" && role !== "MANAGER" && role !== "SUPERADMIN") {
     redirect("/apprendre");
   }

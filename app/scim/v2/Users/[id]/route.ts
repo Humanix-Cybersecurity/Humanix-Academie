@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import { authenticateApiKey } from "@/lib/api-auth";
 import { db } from "@/lib/db";
 import { checkRateLimit } from "@/lib/rate-limit";
-import { SCIM_SCHEMAS, scimError } from "@/lib/scim/types";
+import { scimError } from "@/lib/scim/types";
 import {
   prismaToScim,
   scimToPrismaCreate,

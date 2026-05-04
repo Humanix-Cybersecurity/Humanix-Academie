@@ -7,11 +7,11 @@ import { installModule, uninstallModule } from "@/lib/marketplace/install";
 async function requireAdmin() {
   const session = await auth();
   if (!session?.user) throw new Error("unauthorized");
-  const role = (session.user as any).role;
+  const role = session.user!.role;
   if (role !== "ADMIN" && role !== "SUPERADMIN") throw new Error("forbidden");
   return {
-    tenantId: (session.user as any).tenantId as string,
-    userId: (session.user as any).id as string,
+    tenantId: session.user!.tenantId as string,
+    userId: session.user!.id as string,
   };
 }
 

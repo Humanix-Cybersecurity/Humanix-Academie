@@ -9,8 +9,8 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  const userId = (session.user as any).id as string;
-  const tenantId = (session.user as any).tenantId as string | undefined;
+  const userId = session.user!.id as string;
+  const tenantId = session.user!.tenantId as string | undefined;
   if (!tenantId) return NextResponse.json({ error: "no_tenant" }, { status: 400 });
 
   // Filtrage tenantId explicite : si un user est migré entre tenants,

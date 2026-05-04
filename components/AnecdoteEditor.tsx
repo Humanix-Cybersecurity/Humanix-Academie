@@ -4,6 +4,7 @@
 // Utilise une server action via prop pour soumettre.
 
 import { useState } from "react";
+import Link from "next/link";
 import { upsertAnecdote } from "@/app/admin/anecdotes/actions";
 
 const CATEGORIES = [
@@ -226,9 +227,9 @@ export default function AnecdoteEditor({
         <button type="submit" className="btn-primary">
           {isEdit ? "💾 Enregistrer" : "➕ Créer l'anecdote"}
         </button>
-        <a href="/admin/anecdotes" className="btn-secondary">
+        <Link href="/admin/anecdotes" className="btn-secondary">
           Annuler
-        </a>
+        </Link>
       </div>
     </form>
   );

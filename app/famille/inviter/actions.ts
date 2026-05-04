@@ -14,8 +14,8 @@ import { sendFamilyInviteEmail } from "@/lib/family-invites/email";
 export async function sendInviteAction(formData: FormData) {
   const session = await auth();
   if (!session?.user) throw new Error("unauthorized");
-  const userId = (session.user as any).id as string;
-  const tenantId = (session.user as any).tenantId as string;
+  const userId = session.user!.id as string;
+  const tenantId = session.user!.tenantId as string;
 
   const result = await createFamilyInvite({
     sponsorUserId: userId,
