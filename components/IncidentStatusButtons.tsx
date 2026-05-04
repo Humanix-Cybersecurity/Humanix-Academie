@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Boutons de transition de statut d'un incident.
 
 import { useTransition } from "react";

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // GET /api/v1/evidence-export
 //
 // Export de preuves de conformite (evidence) pour un framework GRC donne.

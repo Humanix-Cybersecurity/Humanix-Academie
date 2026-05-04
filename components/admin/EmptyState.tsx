@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
 // EmptyState — État vide standard (liste sans résultat, aucune donnée, etc.).
 //

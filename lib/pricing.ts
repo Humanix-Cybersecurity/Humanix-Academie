@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Source de vérité de la grille tarifaire Humanix Académie.
 // Aligné sur le pivot mai 2026 — open core service-led, modèle volume.
 // Cf. Pack_Lancement_Solo/05_Pivot_OSS_Mai_2026/05_PRICING_VOLUME.md

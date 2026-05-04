@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Checkbox d'action de la checklist incident.
 // Server action via toggleIncidentAction.
 

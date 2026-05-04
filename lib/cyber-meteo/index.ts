@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Cyber-météo France — niveau d'alerte cyber national agrégé.
 //
 // SOURCE OFFICIELLE : feed RSS du CERT-FR (cert.ssi.gouv.fr).

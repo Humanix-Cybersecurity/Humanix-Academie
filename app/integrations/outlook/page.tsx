@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page publique d'installation du plugin Outlook HumaniX.
 // Vise les administrateurs Microsoft 365 qui veulent deployer le bouton
 // "Signaler un phishing" a tous leurs collaborateurs.

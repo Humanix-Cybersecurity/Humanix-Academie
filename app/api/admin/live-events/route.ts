@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Stream Server-Sent Events temps reel pour la Live Attack Map.
 //
 // Approche : long-polling des Event Prisma toutes les N secondes, push

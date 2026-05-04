@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Templates HTML + text de l'email "Cyber-Anecdote du Lundi".
 // HTML responsive et compatible avec les principaux clients mail (Gmail, Outlook, Apple Mail).
 // La version text est essentielle (RGPD + delivrability + screen readers).

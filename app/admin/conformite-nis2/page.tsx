@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
 // /admin/conformite-nis2 — Pack Conformité NIS2 (feature plan Pro+).
 //

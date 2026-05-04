@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Liste des incidents en cours et historiques pour le tenant.
 // Module Cyber-Reflexe - gated Pro+.
 

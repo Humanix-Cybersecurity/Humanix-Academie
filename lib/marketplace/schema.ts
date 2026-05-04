@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SCHEMA STRICT du payload d'un module marketplace.
 // Aucune zone libre, aucune balise HTML, aucune URL externe.
 // Tout texte est valide pour des longueurs max raisonnables.

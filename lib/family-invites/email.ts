@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Templates email pour l'invitation famille.
 // Inspire de lib/anecdotes/email-template : meme style minimal, RGPD-friendly.
 

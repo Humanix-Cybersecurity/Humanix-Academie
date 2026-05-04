@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Bandeau d'information cookies.
 // Pas un bandeau de consentement RGPD : nous n'utilisons que des cookies
 // strictement nécessaires (session, CSRF, préférence thème), donc le

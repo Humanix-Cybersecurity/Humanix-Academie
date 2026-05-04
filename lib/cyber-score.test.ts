@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Tests du Cyberscore — composantes, pénalités, courbe concave.
 // Critique : ce score apparaît sur le dashboard CODIR + rapports clients.
 // Une régression = perte de confiance immédiate (le RSSI compare aux mois précédents).

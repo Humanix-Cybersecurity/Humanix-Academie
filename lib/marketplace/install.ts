@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Logique d'installation d'un module marketplace pour un tenant.
 // Cree une Saison "tenant-scopee" + ses Episodes a partir du payload.
 // SERVER-ONLY (utilise db).

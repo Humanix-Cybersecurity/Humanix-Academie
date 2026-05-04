@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Modal accessible : focus trap + ESC pour fermer + retour focus + aria-modal.
 // Pattern WCAG 2.1 SC 2.1.2 (No Keyboard Trap) + 2.4.3 (Focus Order).
 "use client";

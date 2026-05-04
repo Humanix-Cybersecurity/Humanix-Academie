@@ -1,4 +1,5 @@
 "use client";
+// SPDX-License-Identifier: AGPL-3.0-or-later
 import { useTransition } from "react";
 import { stopChallenge } from "@/app/admin/actions";
 

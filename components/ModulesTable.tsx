@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 import { useTransition, useState } from "react";
 import {
   toggleSaisonActive,

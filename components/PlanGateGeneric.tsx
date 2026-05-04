@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // PlanGate generique reutilisable pour toute fonctionnalite gatee.
 // Substitue progressivement les PlanGateNis2/PlanGateXXX dedies.
 //

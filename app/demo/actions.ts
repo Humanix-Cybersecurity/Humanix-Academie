@@ -1,5 +1,6 @@
 "use server";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Actions cote serveur reservees au mode demo.
 // Toute action ici DOIT verifier DEMO_MODE et refuser en prod.
 

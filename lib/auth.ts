@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Auth.js v5 + Prisma adapter
 // Modes supportés :
 //  - Production : magic link via Resend (default)

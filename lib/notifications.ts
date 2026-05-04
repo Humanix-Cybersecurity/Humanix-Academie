@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Notifications email — rappels aux utilisateurs inactifs
 // En DEMO_MODE : log dans NotificationLog seulement (pas d'envoi reel)
 // En prod : envoi via Resend

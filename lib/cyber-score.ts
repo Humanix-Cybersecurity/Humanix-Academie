@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
 // lib/cyber-score.ts — Calcul du Cyberscore (refonte mai 2026, version sévère).
 //

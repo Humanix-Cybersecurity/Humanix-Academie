@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page detail moderation : voir l'integralite du module avant de trancher
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";

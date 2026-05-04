@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page /demo : choix de l'offre + role pour les demos live (salons, ventes, RDV)
 // Active uniquement quand DEMO_MODE=true
 "use client";

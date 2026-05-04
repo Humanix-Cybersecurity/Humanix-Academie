@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Landing pedagogique : "Tu as cliqué sur un mail piège — voici pourquoi"
 import { notFound } from "next/navigation";
 import Link from "next/link";

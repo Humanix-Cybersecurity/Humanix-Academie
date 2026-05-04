@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+// SPDX-License-Identifier: AGPL-3.0-or-later
 /**
  * Inspecte les 3 sources et logge un échantillon du HTML/JSON récupéré.
  * Usage : docker compose exec app npm run breaches:debug

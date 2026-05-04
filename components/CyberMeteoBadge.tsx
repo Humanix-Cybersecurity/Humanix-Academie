@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Composant Cyber-météo : 2 variantes
 //   - "compact" : badge inline pour le bandeau home / header
 //   - "card" : carte détaillée pour le dashboard /admin/business

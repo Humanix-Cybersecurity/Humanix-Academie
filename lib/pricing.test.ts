@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Tests de la grille tarifaire — calculateMonthlyPrice + structure TIERS.
 // Critique : un bug de pricing = mauvaise facturation = litige client.
 //

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Catalogue des 12 posters mensuels — 1 thème par mois.
 //
 // PHILOSOPHIE : un poster = une accroche graphique + un message simple +

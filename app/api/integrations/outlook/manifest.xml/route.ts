@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Sert dynamiquement le manifest Office Add-in en remplacant le domaine
 // par celui de l'instance courante (NEXT_PUBLIC_APP_URL).
 // Permet a chaque deploiement self-hosted (Scaleway / OVH / on-prem)

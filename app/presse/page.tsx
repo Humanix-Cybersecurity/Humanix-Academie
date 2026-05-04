@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page Presse — kit journalistes pour le launch open source du 26 mai 2026.
 // A11y RGAA AA. UI/UX différenciante : pitchs en 3 longueurs, faits clés,
 // citation fondateur, screenshots, logos téléchargeables, FAQ journalistes.

@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Composant client pour la page /integrations/ciso-assistant.
 // Gere : onglets framework, copie 1-clic des snippets, preview JSON live.
 // A11y : aria-selected sur tabs, focus visible, prefers-reduced-motion.

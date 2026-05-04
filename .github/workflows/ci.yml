@@ -145,6 +145,33 @@ jobs:
         run: npm audit --omit=dev --audit-level=high
 
   # ---------------------------------------------------------------------------
+  # Job : Headers SPDX AGPL-3.0-or-later
+  # ---------------------------------------------------------------------------
+  # Verifie que tous les fichiers source TS/TSX ont un header SPDX. Bloque
+  # le merge si un nouveau fichier oublie de le mettre. Approche moderne
+  # (FSF + Linux kernel) : 1 ligne SPDX au lieu d'un boilerplate copyright.
+  # Cf. scripts/add-license-headers.ts (regen avec `npm run license:headers`).
+  license-headers:
+    name: Headers SPDX AGPL-3.0
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Verify SPDX headers on source files
+        run: npm run license:check
+
+  # ---------------------------------------------------------------------------
   # Job 4 : Vérification format Prettier
   # ---------------------------------------------------------------------------
   format:

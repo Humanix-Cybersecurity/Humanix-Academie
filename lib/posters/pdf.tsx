@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Generation PDF d'un poster mensuel A3 portrait imprimable.
 //
 // Personnalisation tenant : nom de l'organisation + service le plus à

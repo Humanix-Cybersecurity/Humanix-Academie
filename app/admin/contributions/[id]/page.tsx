@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Edition / detail d'un module en brouillon
 import Link from "next/link";
 import { notFound } from "next/navigation";

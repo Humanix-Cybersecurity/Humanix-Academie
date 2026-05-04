@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Generation du Pack NIS2 par-tenant en PDF unique multi-pages.
 // 4 documents pre-remplis, signables tels quels par le dirigeant.
 //
