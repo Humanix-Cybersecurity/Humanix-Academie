@@ -98,7 +98,7 @@ export async function createFamilyInvite(args: {
 }): Promise<CreateInviteResult> {
   const parsed = InviteInput.safeParse(args.raw);
   if (!parsed.success) {
-    return { ok: false, error: parsed.error.errors[0]?.message ?? "Données invalides" };
+    return { ok: false, error: parsed.error.issues[0]?.message ?? "Données invalides" };
   }
   const data = parsed.data;
 
