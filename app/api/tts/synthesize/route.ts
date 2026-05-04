@@ -13,7 +13,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { getTenantPlan, normalizePlan, PLAN_RANK, type PlanId } from "@/lib/plans";
+import {
+  getTenantPlan,
+  normalizePlan,
+  PLAN_RANK,
+  type PlanId,
+} from "@/lib/plans";
 import { isTtsServerEnabled, synthesizeText } from "@/lib/tts/server-client";
 
 export const dynamic = "force-dynamic";
@@ -22,10 +27,7 @@ const MIN_PLAN: PlanId = normalizePlan(process.env.TTS_MIN_PLAN ?? "pro");
 
 export async function POST(req: NextRequest) {
   if (!isTtsServerEnabled()) {
-    return NextResponse.json(
-      { error: "tts_server_disabled" },
-      { status: 503 },
-    );
+    return NextResponse.json({ error: "tts_server_disabled" }, { status: 503 });
   }
 
   const session = await auth();
@@ -77,7 +79,8 @@ export async function POST(req: NextRequest) {
     );
   }
   const format: "mp3" | "wav" = body.format === "wav" ? "wav" : "mp3";
-  const voice = typeof body.voice === "string" ? body.voice.slice(0, 80) : undefined;
+  const voice =
+    typeof body.voice === "string" ? body.voice.slice(0, 80) : undefined;
 
   // Synthèse (avec cache disque)
   let result: { buffer: Buffer; format: string; cached: boolean };

@@ -129,10 +129,7 @@ export default function AnecdoteEditor({
         />
       </Field>
 
-      <Field
-        label="La leçon * (1-2 phrases percutantes)"
-        htmlFor="lesson"
-      >
+      <Field label="La leçon * (1-2 phrases percutantes)" htmlFor="lesson">
         <textarea
           id="lesson"
           name="lesson"

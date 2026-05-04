@@ -41,7 +41,8 @@ export default function AccessibleDialog({
   // Save focus on open
   useEffect(() => {
     if (!open) return;
-    previousActiveElement.current = document.activeElement as HTMLElement | null;
+    previousActiveElement.current =
+      document.activeElement as HTMLElement | null;
   }, [open]);
 
   // Restore focus on close
@@ -85,7 +86,9 @@ export default function AccessibleDialog({
       }
       if (e.key !== "Tab") return;
       // Refresh à chaque Tab car le DOM peut bouger
-      const items = Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
+      const items = Array.from(
+        dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+      );
       if (items.length === 0) {
         e.preventDefault();
         return;

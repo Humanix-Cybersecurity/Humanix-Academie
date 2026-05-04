@@ -55,7 +55,10 @@ export function listEpisodes(saisonSlug: string): string[] {
     .sort();
 }
 
-export function loadEpisode(saisonSlug: string, episodeSlug: string): EpisodeContent | null {
+export function loadEpisode(
+  saisonSlug: string,
+  episodeSlug: string,
+): EpisodeContent | null {
   const file = path.join(CONTENT_ROOT, saisonSlug, `${episodeSlug}.mdx`);
   if (!fs.existsSync(file)) return null;
   const raw = fs.readFileSync(file, "utf-8");

@@ -56,7 +56,10 @@ type FeedItem = { title: string; date: string; url: string };
 export async function getCyberMeteo(): Promise<CyberMeteo> {
   // 1. Lookup cache
   const cached = await readCache();
-  if (cached && Date.now() - new Date(cached.computedAt).getTime() < CACHE_TTL_MS) {
+  if (
+    cached &&
+    Date.now() - new Date(cached.computedAt).getTime() < CACHE_TTL_MS
+  ) {
     return cached;
   }
 
@@ -69,7 +72,10 @@ export async function getCyberMeteo(): Promise<CyberMeteo> {
   } catch (e) {
     // Réseau down / cert-fr indisponible : on retombe sur le cache même périmé
     if (cached) {
-      return { ...cached, summary: cached.summary + " (données mises en cache)" };
+      return {
+        ...cached,
+        summary: cached.summary + " (données mises en cache)",
+      };
     }
     // Pas de cache : on retourne un état neutre
     return defaultMeteo();
@@ -134,7 +140,10 @@ function extractTag(block: string, tag: string): string {
 }
 
 function stripCdata(s: string): string {
-  return s.replace(/^<!\[CDATA\[/, "").replace(/\]\]>$/, "").trim();
+  return s
+    .replace(/^<!\[CDATA\[/, "")
+    .replace(/\]\]>$/, "")
+    .trim();
 }
 
 /**
@@ -153,8 +162,12 @@ function computeMeteo(items: FeedItem[]): CyberMeteo {
   const ms24h = 24 * 3600 * 1000;
   const ms7d = 7 * 24 * 3600 * 1000;
 
-  const last24h = items.filter((i) => now - new Date(i.date).getTime() < ms24h).length;
-  const last7d = items.filter((i) => now - new Date(i.date).getTime() < ms7d).length;
+  const last24h = items.filter(
+    (i) => now - new Date(i.date).getTime() < ms24h,
+  ).length;
+  const last7d = items.filter(
+    (i) => now - new Date(i.date).getTime() < ms7d,
+  ).length;
 
   const score = last7d + last24h * 3;
 
@@ -201,7 +214,8 @@ function buildSummary(
   }
   // rouge
   const themes = extractThemes(items.slice(0, 8));
-  const themesTxt = themes.length > 0 ? ` Thèmes dominants : ${themes.join(", ")}.` : "";
+  const themesTxt =
+    themes.length > 0 ? ` Thèmes dominants : ${themes.join(", ")}.` : "";
   return `Alerte critique : ${last24h} alertes CERT-FR ces dernières 24h, ${last7d} sur 7 jours.${themesTxt}`;
 }
 
@@ -236,7 +250,8 @@ function defaultMeteo(): CyberMeteo {
     level: "vert",
     label: LEVEL_META.vert.label,
     emoji: LEVEL_META.vert.emoji,
-    summary: "Données CERT-FR temporairement indisponibles. Retentez plus tard.",
+    summary:
+      "Données CERT-FR temporairement indisponibles. Retentez plus tard.",
     topAlerts: [],
     alertsLast7d: 0,
     alertsLast24h: 0,

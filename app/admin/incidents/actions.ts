@@ -67,7 +67,9 @@ async function requireAdminWithPlan() {
 const CreateSchema = z.object({
   title: z.string().min(5).max(200),
   type: z.enum(VALID_TYPES as [IncidentType, ...IncidentType[]]),
-  severity: z.enum(VALID_SEVERITIES as [IncidentSeverity, ...IncidentSeverity[]]),
+  severity: z.enum(
+    VALID_SEVERITIES as [IncidentSeverity, ...IncidentSeverity[]],
+  ),
   detectedAt: z.string().min(8),
   description: z.string().min(20).max(5000),
   affectedSystems: z.string().max(1000).optional().nullable(),

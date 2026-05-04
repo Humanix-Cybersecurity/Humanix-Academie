@@ -50,7 +50,10 @@ export type SubmitState = {
 
 function hashIp(ip: string | null): string | null {
   if (!ip) return null;
-  return createHash("sha256").update(ip + "|humanix-audit-salt-v1").digest("hex").slice(0, 32);
+  return createHash("sha256")
+    .update(ip + "|humanix-audit-salt-v1")
+    .digest("hex")
+    .slice(0, 32);
 }
 
 export async function submitAuditFlash(input: unknown): Promise<SubmitState> {
@@ -93,7 +96,8 @@ export async function submitAuditFlash(input: unknown): Promise<SubmitState> {
     if (recent) {
       return {
         ok: false,
-        error: "Une soumission récente a déjà été enregistrée depuis votre poste. Merci de patienter quelques minutes.",
+        error:
+          "Une soumission récente a déjà été enregistrée depuis votre poste. Merci de patienter quelques minutes.",
       };
     }
   }

@@ -1,7 +1,12 @@
 "use client";
 
 import { useTransition, useState } from "react";
-import { toggleSaisonActive, toggleSaisonMandatory, moveSaison, resetSaisonsOrder } from "@/app/admin/actions";
+import {
+  toggleSaisonActive,
+  toggleSaisonMandatory,
+  moveSaison,
+  resetSaisonsOrder,
+} from "@/app/admin/actions";
 
 type Saison = {
   id: string;
@@ -55,7 +60,9 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
           <div
             key={s.id}
             className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all ${
-              s.isActive ? "border-gray-200 bg-white" : "border-gray-200 bg-gray-50 opacity-70"
+              s.isActive
+                ? "border-gray-200 bg-white"
+                : "border-gray-200 bg-gray-50 opacity-70"
             } ${busy === s.id ? "animate-pulse" : ""}`}
           >
             {/* Ordre + flèches */}
@@ -85,7 +92,9 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-2xl">{s.coverEmoji}</span>
-                <h3 className="font-bold text-primary-500 truncate">{s.title}</h3>
+                <h3 className="font-bold text-primary-500 truncate">
+                  {s.title}
+                </h3>
                 {s.isMandatory && (
                   <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-bold">
                     OBLIGATOIRE
@@ -126,9 +135,15 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
 
       <div className="mt-6 flex items-center justify-between text-sm">
         <p className="text-gray-500">
-          {pending ? "Sauvegarde en cours…" : "✓ Toutes les modifications sont sauvegardées automatiquement"}
+          {pending
+            ? "Sauvegarde en cours…"
+            : "✓ Toutes les modifications sont sauvegardées automatiquement"}
         </p>
-        <button onClick={onReset} disabled={pending} className="text-gray-500 hover:text-primary-500 disabled:opacity-50">
+        <button
+          onClick={onReset}
+          disabled={pending}
+          className="text-gray-500 hover:text-primary-500 disabled:opacity-50"
+        >
           Réinitialiser l'ordre par défaut
         </button>
       </div>

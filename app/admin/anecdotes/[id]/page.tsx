@@ -37,7 +37,10 @@ export default async function EditAnecdotePage({
         title={`Édition : ${a.title}`}
         description={description}
         actions={
-          <Link href="/admin/anecdotes" className="text-sm text-gray-500 hover:text-primary-500 dark:hover:text-accent-300">
+          <Link
+            href="/admin/anecdotes"
+            className="text-sm text-gray-500 hover:text-primary-500 dark:hover:text-accent-300"
+          >
             ← Retour aux anecdotes
           </Link>
         }

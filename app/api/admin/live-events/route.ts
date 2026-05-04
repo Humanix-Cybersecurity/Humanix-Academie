@@ -43,7 +43,9 @@ export async function GET(req: NextRequest) {
         if (closed) return;
         try {
           controller.enqueue(
-            encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`),
+            encoder.encode(
+              `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`,
+            ),
           );
         } catch {
           closed = true;
@@ -75,7 +77,9 @@ export async function GET(req: NextRequest) {
             },
             orderBy: { createdAt: "asc" },
             include: {
-              user: { select: { id: true, name: true, email: true, service: true } },
+              user: {
+                select: { id: true, name: true, email: true, service: true },
+              },
             },
             take: 50,
           });
@@ -131,7 +135,7 @@ export async function GET(req: NextRequest) {
     headers: {
       "content-type": "text/event-stream",
       "cache-control": "no-cache, no-transform",
-      "connection": "keep-alive",
+      connection: "keep-alive",
       "x-accel-buffering": "no", // disable buffering pour Nginx/HAProxy si proxy
     },
   });

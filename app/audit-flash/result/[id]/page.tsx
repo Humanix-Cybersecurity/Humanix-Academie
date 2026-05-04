@@ -26,7 +26,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const VERDICT_TONES: Record<string, { bg: string; ring: string; text: string }> = {
+const VERDICT_TONES: Record<
+  string,
+  { bg: string; ring: string; text: string }
+> = {
   green: {
     bg: "bg-green-50 dark:bg-green-900/20",
     ring: "ring-green-500",
@@ -193,7 +196,8 @@ export default async function AuditResultPage({
                     ))}
                   </ul>
                   <div className="text-sm text-primary-700 dark:text-accent-200 italic border-t border-gray-100 dark:border-slate-700 pt-3">
-                    💡 <strong>Action recommandée :</strong> {risk.recommendation}
+                    💡 <strong>Action recommandée :</strong>{" "}
+                    {risk.recommendation}
                   </div>
                 </article>
               ))}
@@ -206,7 +210,9 @@ export default async function AuditResultPage({
           className="mb-10 rounded-3xl p-8 bg-primary-500 text-white"
           aria-labelledby="reco-title"
         >
-          <p className="text-sm opacity-80 mb-1">Notre recommandation pour vous</p>
+          <p className="text-sm opacity-80 mb-1">
+            Notre recommandation pour vous
+          </p>
           <h2
             id="reco-title"
             className="text-3xl sm:text-4xl font-extrabold mb-2"
@@ -215,7 +221,9 @@ export default async function AuditResultPage({
           </h2>
           <p className="text-xl text-accent-200 font-bold mb-4">
             {result.recommendedPlan.monthlyPrice} ·{" "}
-            <span className="opacity-80">{result.recommendedPlan.annualEstimate}</span>
+            <span className="opacity-80">
+              {result.recommendedPlan.annualEstimate}
+            </span>
           </p>
           <p className="opacity-90 mb-6">{result.recommendedPlan.rationale}</p>
           <div className="flex flex-col sm:flex-row gap-3">

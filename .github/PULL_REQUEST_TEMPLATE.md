@@ -41,13 +41,14 @@ pertinent.
 
 Si la PR touche l'UI, ajoute **avant / après** :
 
-| Avant | Après |
-|---|---|
+| Avant     | Après     |
+| --------- | --------- |
 | (capture) | (capture) |
 
 ## Breaking changes
 
 Si applicable, décris :
+
 - Ce qui change pour les utilisateurs / self-hostés / API consumers
 - La procédure de migration
 - La compat ascendante (combien de versions on peut passer d'un coup)

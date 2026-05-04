@@ -9,7 +9,10 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { computeBusinessImpact, VERDICT_LABEL } from "@/lib/business-impact";
-import { buildAllExplanations, METHODOLOGY_LIMITATIONS } from "@/lib/business-impact-methodology";
+import {
+  buildAllExplanations,
+  METHODOLOGY_LIMITATIONS,
+} from "@/lib/business-impact-methodology";
 import BusinessImpactView from "@/components/BusinessImpactView";
 import CodirMode from "@/components/CodirMode";
 import LiveAttackMap from "@/components/LiveAttackMap";
@@ -31,17 +34,20 @@ const VERDICT_TO_CODIR_COLOR = {
 
 // Mapping verdict -> couleurs hero (cohérent avec LEVEL_META du dashboard)
 const VERDICT_HERO_STYLES = {
-  excellent:    "border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/50 dark:bg-emerald-900/10",
-  bon:          "border-teal-200 dark:border-teal-900/50 bg-teal-50/50 dark:bg-teal-900/10",
-  a_surveiller: "border-amber-200 dark:border-amber-900/50 bg-amber-50/50 dark:bg-amber-900/10",
-  a_risque:     "border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-900/10",
+  excellent:
+    "border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/50 dark:bg-emerald-900/10",
+  bon: "border-teal-200 dark:border-teal-900/50 bg-teal-50/50 dark:bg-teal-900/10",
+  a_surveiller:
+    "border-amber-200 dark:border-amber-900/50 bg-amber-50/50 dark:bg-amber-900/10",
+  a_risque:
+    "border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-900/10",
 } as const;
 
 const VERDICT_TEXT_STYLES = {
-  excellent:    "text-emerald-700 dark:text-emerald-300",
-  bon:          "text-teal-700 dark:text-teal-300",
+  excellent: "text-emerald-700 dark:text-emerald-300",
+  bon: "text-teal-700 dark:text-teal-300",
   a_surveiller: "text-amber-700 dark:text-amber-300",
-  a_risque:     "text-rose-700 dark:text-rose-300",
+  a_risque: "text-rose-700 dark:text-rose-300",
 } as const;
 
 export default async function AdminBusinessPage() {
@@ -69,7 +75,9 @@ export default async function AdminBusinessPage() {
             scoreVerdictLabel={verdict.label}
             scoreVerdictColor={VERDICT_TO_CODIR_COLOR[impact.scoreVerdict]}
             expectedAnnualLoss={impact.expectedAnnualLoss}
-            incidentProbabilityPct={Math.round(impact.incidentProbability12m * 100)}
+            incidentProbabilityPct={Math.round(
+              impact.incidentProbability12m * 100,
+            )}
             estimatedAnnualSaving={impact.estimatedAnnualSaving}
             roiMultiplier={impact.roiMultiplier}
             totalSeats={impact.totalSeats}
@@ -94,7 +102,9 @@ export default async function AdminBusinessPage() {
                 {impact.collectiveScore}
                 <span className="text-2xl text-gray-400">/100</span>
               </p>
-              <p className={`text-base font-bold mt-2 ${VERDICT_TEXT_STYLES[impact.scoreVerdict]}`}>
+              <p
+                className={`text-base font-bold mt-2 ${VERDICT_TEXT_STYLES[impact.scoreVerdict]}`}
+              >
                 {verdict.label}
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1.5">
@@ -102,17 +112,20 @@ export default async function AdminBusinessPage() {
               </p>
             </HeroBlock>
 
-            <HeroBlock
-              label="Coût attendu sur 12 mois"
-              border
-            >
+            <HeroBlock label="Coût attendu sur 12 mois" border>
               <p className="text-3xl sm:text-4xl font-extrabold text-rose-600 dark:text-rose-400 tabular-nums">
                 {impact.expectedAnnualLoss.toLocaleString("fr-FR")} €
               </p>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-2 leading-relaxed">
-                Probabilité incident&nbsp;: <strong className="text-gray-900 dark:text-gray-200">{Math.round(impact.incidentProbability12m * 100)}%</strong>
+                Probabilité incident&nbsp;:{" "}
+                <strong className="text-gray-900 dark:text-gray-200">
+                  {Math.round(impact.incidentProbability12m * 100)}%
+                </strong>
                 <br />
-                Coût moyen incident PME&nbsp;: <strong className="text-gray-900 dark:text-gray-200">{impact.estimatedIncidentCost.toLocaleString("fr-FR")} €</strong>
+                Coût moyen incident PME&nbsp;:{" "}
+                <strong className="text-gray-900 dark:text-gray-200">
+                  {impact.estimatedIncidentCost.toLocaleString("fr-FR")} €
+                </strong>
               </p>
             </HeroBlock>
 
@@ -121,9 +134,13 @@ export default async function AdminBusinessPage() {
                 ×{impact.roiMultiplier}
               </p>
               <p className="text-xs text-gray-600 dark:text-gray-400 mt-2 leading-relaxed">
-                Économie estimée&nbsp;: <strong className="text-gray-900 dark:text-gray-200">{impact.estimatedAnnualSaving.toLocaleString("fr-FR")} €/an</strong>
+                Économie estimée&nbsp;:{" "}
+                <strong className="text-gray-900 dark:text-gray-200">
+                  {impact.estimatedAnnualSaving.toLocaleString("fr-FR")} €/an
+                </strong>
                 <br />
-                Coût Humanix&nbsp;: {impact.humanixAnnualCost.toLocaleString("fr-FR")} €/an
+                Coût Humanix&nbsp;:{" "}
+                {impact.humanixAnnualCost.toLocaleString("fr-FR")} €/an
               </p>
             </HeroBlock>
           </div>
@@ -162,21 +179,35 @@ export default async function AdminBusinessPage() {
                   {i + 1}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm text-gray-900 dark:text-gray-100 truncate">{a.label}</p>
+                  <p className="font-semibold text-sm text-gray-900 dark:text-gray-100 truncate">
+                    {a.label}
+                  </p>
                   <p className="text-xs text-gray-500 mt-0.5">
                     Difficulté&nbsp;:{" "}
-                    <span className={
-                      a.difficulty === "easy" ? "text-emerald-600 dark:text-emerald-400 font-semibold" :
-                      a.difficulty === "medium" ? "text-amber-600 dark:text-amber-400 font-semibold" :
-                      "text-rose-600 dark:text-rose-400 font-semibold"
-                    }>
-                      {a.difficulty === "easy" ? "facile" : a.difficulty === "medium" ? "moyenne" : "élevée"}
+                    <span
+                      className={
+                        a.difficulty === "easy"
+                          ? "text-emerald-600 dark:text-emerald-400 font-semibold"
+                          : a.difficulty === "medium"
+                            ? "text-amber-600 dark:text-amber-400 font-semibold"
+                            : "text-rose-600 dark:text-rose-400 font-semibold"
+                      }
+                    >
+                      {a.difficulty === "easy"
+                        ? "facile"
+                        : a.difficulty === "medium"
+                          ? "moyenne"
+                          : "élevée"}
                     </span>
                   </p>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 tabular-nums">+{a.potentialPoints}</p>
-                  <p className="text-[10px] uppercase text-gray-400 tracking-wide">pts/score</p>
+                  <p className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                    +{a.potentialPoints}
+                  </p>
+                  <p className="text-[10px] uppercase text-gray-400 tracking-wide">
+                    pts/score
+                  </p>
                 </div>
               </li>
             ))}
@@ -186,7 +217,10 @@ export default async function AdminBusinessPage() {
         {/* Poster mensuel */}
         <article className="rounded-xl border border-amber-200 dark:border-amber-900/50 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/15 dark:to-orange-900/15 p-4 sm:p-5">
           <div className="flex flex-wrap items-center gap-4">
-            <span className="shrink-0 w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-2xl" aria-hidden="true">
+            <span
+              className="shrink-0 w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-2xl"
+              aria-hidden="true"
+            >
               🖼️
             </span>
             <div className="flex-1 min-w-0">
@@ -194,8 +228,9 @@ export default async function AdminBusinessPage() {
                 Poster du mois pour votre open-space
               </h3>
               <p className="text-sm text-amber-800/80 dark:text-amber-200/80 mt-1 leading-relaxed">
-                PDF A3 imprimable, personnalisé à votre nom et à votre service le plus à risque.
-                Affichez-le dans la salle de pause — votre équipe l'attendra chaque mois.
+                PDF A3 imprimable, personnalisé à votre nom et à votre service
+                le plus à risque. Affichez-le dans la salle de pause — votre
+                équipe l'attendra chaque mois.
               </p>
             </div>
             <a
@@ -204,7 +239,10 @@ export default async function AdminBusinessPage() {
               className="shrink-0 inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm py-2 px-4 rounded-lg transition whitespace-nowrap"
             >
               <span aria-hidden="true">📥</span>
-              <span>Télécharger ({new Date().toLocaleDateString("fr-FR", { month: "long" })})</span>
+              <span>
+                Télécharger (
+                {new Date().toLocaleDateString("fr-FR", { month: "long" })})
+              </span>
             </a>
           </div>
         </article>
@@ -216,7 +254,8 @@ export default async function AdminBusinessPage() {
             <span>Convaincre votre COMEX</span>
           </h3>
           <p className="text-sm opacity-90 mb-4">
-            Partagez ce dashboard avec votre dirigeant ou votre direction financière.
+            Partagez ce dashboard avec votre dirigeant ou votre direction
+            financière.
           </p>
           <div className="flex flex-wrap gap-2">
             <a
@@ -246,7 +285,10 @@ export default async function AdminBusinessPage() {
 // =============================================================================
 
 function HeroBlock({
-  label, children, border, valueClassName,
+  label,
+  children,
+  border,
+  valueClassName,
 }: {
   label: string;
   children: React.ReactNode;
@@ -254,7 +296,9 @@ function HeroBlock({
   valueClassName?: string;
 }) {
   return (
-    <div className={`min-w-0 ${border ? "sm:px-6 sm:border-l sm:border-r border-white/40 dark:border-slate-700/40" : ""} ${valueClassName ?? ""}`}>
+    <div
+      className={`min-w-0 ${border ? "sm:px-6 sm:border-l sm:border-r border-white/40 dark:border-slate-700/40" : ""} ${valueClassName ?? ""}`}
+    >
       <p className="text-[10px] uppercase tracking-widest text-gray-600 dark:text-gray-400 font-bold mb-1.5">
         {label}
       </p>

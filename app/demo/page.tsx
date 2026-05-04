@@ -14,11 +14,31 @@ type RoleId = "learner" | "admin" | "moderator";
 // Les labels affichés (PLAN_LABEL) sont eux alignés sur la nouvelle grille
 // mai 2026 — `solo` -> Starter, `premium` -> Enterprise.
 const PLAN_OPTIONS: { id: PlanId; tagline: string; price: string }[] = [
-  { id: "decouverte", tagline: "Cloud forever-free 5 sièges", price: "0 €/mois" },
-  { id: "solo", tagline: "TPE qui démarre (15 sièges max)", price: "19 €/mois (forfait)" },
-  { id: "essentielle", tagline: "Standard PME (16-50 sièges)", price: "3 €/user/mois" },
-  { id: "pro", tagline: "PME industrialisée (51-250 sièges)", price: "2,50 €/user/mois" },
-  { id: "premium", tagline: "ETI / multi-sites / SecNumCloud", price: "Sur devis" },
+  {
+    id: "decouverte",
+    tagline: "Cloud forever-free 5 sièges",
+    price: "0 €/mois",
+  },
+  {
+    id: "solo",
+    tagline: "TPE qui démarre (15 sièges max)",
+    price: "19 €/mois (forfait)",
+  },
+  {
+    id: "essentielle",
+    tagline: "Standard PME (16-50 sièges)",
+    price: "3 €/user/mois",
+  },
+  {
+    id: "pro",
+    tagline: "PME industrialisée (51-250 sièges)",
+    price: "2,50 €/user/mois",
+  },
+  {
+    id: "premium",
+    tagline: "ETI / multi-sites / SecNumCloud",
+    price: "Sur devis",
+  },
 ];
 
 const ROLES: {
@@ -36,7 +56,8 @@ const ROLES: {
     emoji: "🎮",
     title: "Apprenant",
     who: "Yanis · Commercial",
-    description: "Parcours collaborateur : modules, mises en situation, quiz, badges, mascotte évolutive, boutique.",
+    description:
+      "Parcours collaborateur : modules, mises en situation, quiz, badges, mascotte évolutive, boutique.",
     email: "yanis@demo-pme.fr",
     target: "/apprendre",
     color: "accent",
@@ -46,7 +67,8 @@ const ROLES: {
     emoji: "👔",
     title: "Dirigeant",
     who: "Sophie · CEO PME Demo",
-    description: "Console : tableau de bord, modules, utilisateurs, score de risque, rapport de conformité PDF.",
+    description:
+      "Console : tableau de bord, modules, utilisateurs, score de risque, rapport de conformité PDF.",
     email: "sophie@demo-pme.fr",
     target: "/admin",
     color: "primary",
@@ -56,7 +78,8 @@ const ROLES: {
     emoji: "⚖️",
     title: "Modérateur",
     who: "Florian · Humanix",
-    description: "SUPERADMIN : modération du marketplace, validation/refus des contributions communauté.",
+    description:
+      "SUPERADMIN : modération du marketplace, validation/refus des contributions communauté.",
     email: "contact@humanix-cybersecurity.fr",
     target: "/admin/moderation",
     color: "amber",
@@ -84,7 +107,9 @@ export default function DemoPage() {
     try {
       await switchDemoPlan(plan);
     } catch {
-      setError("Impossible de changer d'offre. Le mode démo est-il bien activé ?");
+      setError(
+        "Impossible de changer d'offre. Le mode démo est-il bien activé ?",
+      );
     } finally {
       setPlanSyncing(false);
     }
@@ -100,7 +125,11 @@ export default function DemoPage() {
     } catch {
       // si ca foire, on continue quand meme avec le plan en place
     }
-    const res = await signIn("demo", { email, redirect: false, callbackUrl: target });
+    const res = await signIn("demo", {
+      email,
+      redirect: false,
+      callbackUrl: target,
+    });
     if (res?.ok) router.push(target);
     setLoading(null);
   };
@@ -115,7 +144,8 @@ export default function DemoPage() {
             Mode Démo Humanix Académie
           </h1>
           <p className="text-gray-600 dark:text-gray-300 max-w-xl mx-auto">
-            1. Choisis l'offre que tu veux découvrir<br />
+            1. Choisis l'offre que tu veux découvrir
+            <br />
             2. Choisis ton rôle pour entrer dans l'expérience
           </p>
         </div>
@@ -142,10 +172,18 @@ export default function DemoPage() {
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-2xl">{PLAN_EMOJI[p.id]}</span>
-                    <span className="font-bold text-primary-500">{PLAN_LABEL[p.id]}</span>
-                    {active && <span className="ml-auto text-xs text-accent-500 font-bold">✓</span>}
+                    <span className="font-bold text-primary-500">
+                      {PLAN_LABEL[p.id]}
+                    </span>
+                    {active && (
+                      <span className="ml-auto text-xs text-accent-500 font-bold">
+                        ✓
+                      </span>
+                    )}
                   </div>
-                  <p className="text-xs text-gray-600 dark:text-gray-300 mb-1">{p.tagline}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-300 mb-1">
+                    {p.tagline}
+                  </p>
                   <p className="text-xs font-medium text-gray-500">{p.price}</p>
                 </button>
               );
@@ -169,7 +207,11 @@ export default function DemoPage() {
                 title={r.title}
                 who={r.who}
                 description={r.description}
-                cta={loading === r.id ? "Connexion…" : `Entrer comme ${r.title.toLowerCase()}`}
+                cta={
+                  loading === r.id
+                    ? "Connexion…"
+                    : `Entrer comme ${r.title.toLowerCase()}`
+                }
                 onClick={() => loginAs(r.id, r.email, r.target)}
                 loading={loading !== null}
                 color={r.color}
@@ -179,7 +221,8 @@ export default function DemoPage() {
         </div>
 
         <div className="mt-10 text-center text-xs text-gray-500">
-          Données de démo locales · Aucune donnée n'est envoyée à l'extérieur<br />
+          Données de démo locales · Aucune donnée n'est envoyée à l'extérieur
+          <br />
           Plan actif : <strong>{PLAN_LABEL[selectedPlan]}</strong>
         </div>
       </div>
@@ -207,13 +250,17 @@ function DemoCard({
   color: "accent" | "primary" | "amber";
 }) {
   const ringClass =
-    color === "accent" ? "hover:ring-accent-500" : color === "primary" ? "hover:ring-primary-500" : "hover:ring-amber-500";
+    color === "accent"
+      ? "hover:ring-accent-500"
+      : color === "primary"
+        ? "hover:ring-primary-500"
+        : "hover:ring-amber-500";
   const btnClass =
     color === "accent"
       ? "btn-primary"
       : color === "primary"
-      ? "btn-secondary"
-      : "btn-secondary border-amber-500 text-amber-700 hover:bg-amber-50";
+        ? "btn-secondary"
+        : "btn-secondary border-amber-500 text-amber-700 hover:bg-amber-50";
   return (
     <button
       onClick={onClick}
@@ -223,7 +270,9 @@ function DemoCard({
       <div className="text-5xl mb-4">{emoji}</div>
       <h2 className="text-2xl font-bold text-primary-500 mb-1">{title}</h2>
       <p className="text-sm text-accent-500 font-medium mb-3">{who}</p>
-      <p className="text-gray-600 dark:text-gray-300 text-sm mb-6 leading-relaxed">{description}</p>
+      <p className="text-gray-600 dark:text-gray-300 text-sm mb-6 leading-relaxed">
+        {description}
+      </p>
       <div className={`${btnClass} w-full pointer-events-none`}>{cta}</div>
     </button>
   );

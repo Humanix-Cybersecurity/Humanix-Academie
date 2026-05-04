@@ -44,7 +44,9 @@ export async function GET(
     }),
   );
 
-  const safeCompany = submission.companyName.replace(/[^a-z0-9]/gi, "-").toLowerCase();
+  const safeCompany = submission.companyName
+    .replace(/[^a-z0-9]/gi, "-")
+    .toLowerCase();
   const filename = `audit-cyber-humanix-${safeCompany}-${submission.createdAt.toISOString().split("T")[0]}.pdf`;
 
   return new NextResponse(buffer as any, {

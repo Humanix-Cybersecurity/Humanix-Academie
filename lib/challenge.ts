@@ -10,7 +10,11 @@ export async function getActiveChallenge(tenantId: string) {
 }
 
 // Calcule le classement par service durant la periode du challenge
-export async function getChallengeRanking(tenantId: string, startDate: Date, endDate: Date) {
+export async function getChallengeRanking(
+  tenantId: string,
+  startDate: Date,
+  endDate: Date,
+) {
   const progress = await db.progress.findMany({
     where: {
       tenantId,
@@ -23,7 +27,10 @@ export async function getChallengeRanking(tenantId: string, startDate: Date, end
   });
 
   // Agregation par service
-  const services = new Map<string, { service: string; xp: number; episodes: number; users: Set<string> }>();
+  const services = new Map<
+    string,
+    { service: string; xp: number; episodes: number; users: Set<string> }
+  >();
   for (const p of progress) {
     if (!p.user.isActive) continue;
     const svc = p.user.service ?? "Sans service";
@@ -50,17 +57,32 @@ export async function getChallengeRanking(tenantId: string, startDate: Date, end
 }
 
 // Top 10 individuel pendant la periode du challenge
-export async function getChallengeIndividualRanking(tenantId: string, startDate: Date, endDate: Date) {
+export async function getChallengeIndividualRanking(
+  tenantId: string,
+  startDate: Date,
+  endDate: Date,
+) {
   const progress = await db.progress.findMany({
     where: {
       tenantId,
       status: "COMPLETED",
       completedAt: { gte: startDate, lte: endDate },
     },
-    include: { user: { select: { id: true, name: true, service: true, isActive: true } } },
+    include: {
+      user: { select: { id: true, name: true, service: true, isActive: true } },
+    },
   });
 
-  const users = new Map<string, { userId: string; name: string; service: string | null; xp: number; episodes: number }>();
+  const users = new Map<
+    string,
+    {
+      userId: string;
+      name: string;
+      service: string | null;
+      xp: number;
+      episodes: number;
+    }
+  >();
   for (const p of progress) {
     if (!p.user.isActive) continue;
     if (!users.has(p.user.id)) {

@@ -39,7 +39,10 @@ const ROWS: Row[] = [
   {
     category: "Tarification",
     feature: "Prix d'entrée pour 10 personnes",
-    humanix: { status: "win", text: "0 € self-host AGPL ou 19 €/mois cloud Starter" },
+    humanix: {
+      status: "win",
+      text: "0 € self-host AGPL ou 19 €/mois cloud Starter",
+    },
     knowbe4: { status: "loss", text: "~3 500 €/an minimum" },
     mantra: { status: "loss", text: "~2 400 €/an minimum" },
     hoxhunt: { status: "loss", text: "Sur devis (>3 000 €/an)" },
@@ -79,7 +82,10 @@ const ROWS: Row[] = [
   {
     category: "Catalogue & contenu",
     feature: "Nombre de modules disponibles",
-    humanix: { status: "equal", text: "180 modules (25 saisons + marketplace)" },
+    humanix: {
+      status: "equal",
+      text: "180 modules (25 saisons + marketplace)",
+    },
     knowbe4: { status: "win", text: "1 000+ modules" },
     mantra: { status: "equal", text: "300+ modules" },
     hoxhunt: { status: "equal", text: "~100 modules" },
@@ -106,7 +112,10 @@ const ROWS: Row[] = [
   {
     category: "Catalogue & contenu",
     feature: "Modules pour la sphère personnelle / famille",
-    humanix: { status: "win", text: "Oui, /famille gratuit + invitations proches" },
+    humanix: {
+      status: "win",
+      text: "Oui, /famille gratuit + invitations proches",
+    },
     knowbe4: { status: "loss", text: "Non" },
     mantra: { status: "loss", text: "Non" },
     hoxhunt: { status: "loss", text: "Non" },
@@ -177,7 +186,10 @@ const ROWS: Row[] = [
   {
     category: "Conformité & souveraineté",
     feature: "Accessibilité RGAA / WCAG 2.1 AA",
-    humanix: { status: "win", text: "Conformité interne 88 %, audit cabinet à venir" },
+    humanix: {
+      status: "win",
+      text: "Conformité interne 88 %, audit cabinet à venir",
+    },
     knowbe4: { status: "equal", text: "WCAG partiel" },
     mantra: { status: "equal", text: "WCAG partiel" },
     hoxhunt: { status: "equal", text: "WCAG partiel" },
@@ -186,7 +198,10 @@ const ROWS: Row[] = [
   {
     category: "Conformité & souveraineté",
     feature: "Rapport d'audit de sécurité public",
-    humanix: { status: "win", text: "Oui, PDF public + Markdown versionné Git" },
+    humanix: {
+      status: "win",
+      text: "Oui, PDF public + Markdown versionné Git",
+    },
     knowbe4: { status: "equal", text: "SOC 2 Type II (sur demande NDA)" },
     mantra: { status: "loss", text: "Non" },
     hoxhunt: { status: "equal", text: "ISO 27001 (sur demande NDA)" },
@@ -284,7 +299,10 @@ const ROWS: Row[] = [
   {
     category: "Intégrations",
     feature: "Connecteur GRC natif (CISO Assistant)",
-    humanix: { status: "win", text: "Oui — endpoint /api/v1/evidence-export + connecteur Python" },
+    humanix: {
+      status: "win",
+      text: "Oui — endpoint /api/v1/evidence-export + connecteur Python",
+    },
     knowbe4: { status: "loss", text: "Non" },
     mantra: { status: "loss", text: "Non" },
     hoxhunt: { status: "loss", text: "Non" },
@@ -293,7 +311,10 @@ const ROWS: Row[] = [
   {
     category: "Intégrations",
     feature: "Format OSCAL v1.1.2 (NIST) — preuves portables",
-    humanix: { status: "win", text: "Oui — format=oscal-v1, compatible Eramba/RegScale" },
+    humanix: {
+      status: "win",
+      text: "Oui — format=oscal-v1, compatible Eramba/RegScale",
+    },
     knowbe4: { status: "loss", text: "Non" },
     mantra: { status: "loss", text: "Non" },
     hoxhunt: { status: "loss", text: "Non" },
@@ -302,7 +323,10 @@ const ROWS: Row[] = [
   {
     category: "Intégrations",
     feature: "SCIM v2 auto-provisioning (Entra/Okta/Google)",
-    humanix: { status: "win", text: "Oui — RFC 7643/7644, extension custom Humanix" },
+    humanix: {
+      status: "win",
+      text: "Oui — RFC 7643/7644, extension custom Humanix",
+    },
     knowbe4: { status: "equal", text: "Oui (Enterprise)" },
     mantra: { status: "loss", text: "Non" },
     hoxhunt: { status: "equal", text: "Oui" },
@@ -311,7 +335,10 @@ const ROWS: Row[] = [
   {
     category: "Intégrations",
     feature: "Webhooks signés HMAC + doc publique",
-    humanix: { status: "win", text: "Oui — HMAC-SHA256, SSRF-safe, doc Stripe-like" },
+    humanix: {
+      status: "win",
+      text: "Oui — HMAC-SHA256, SSRF-safe, doc Stripe-like",
+    },
     knowbe4: { status: "equal", text: "Oui (basique)" },
     mantra: { status: "equal", text: "Oui" },
     hoxhunt: { status: "equal", text: "Oui" },
@@ -320,7 +347,10 @@ const ROWS: Row[] = [
   {
     category: "Intégrations",
     feature: "Connecteur Microsoft Sentinel + workbook clé en main",
-    humanix: { status: "win", text: "Oui — Logs Ingestion API + workbook JSON fourni" },
+    humanix: {
+      status: "win",
+      text: "Oui — Logs Ingestion API + workbook JSON fourni",
+    },
     knowbe4: { status: "equal", text: "Doc partielle, pas de workbook" },
     mantra: { status: "loss", text: "Non" },
     hoxhunt: { status: "loss", text: "Non" },
@@ -329,7 +359,10 @@ const ROWS: Row[] = [
   {
     category: "Intégrations",
     feature: "Connecteur Splunk HEC + SPL queries fournies",
-    humanix: { status: "win", text: "Oui — format CIM v1 + connecteur Python MIT" },
+    humanix: {
+      status: "win",
+      text: "Oui — format CIM v1 + connecteur Python MIT",
+    },
     knowbe4: { status: "equal", text: "Format propriétaire" },
     mantra: { status: "loss", text: "Non" },
     hoxhunt: { status: "loss", text: "Non" },
@@ -365,7 +398,10 @@ const ROWS: Row[] = [
   {
     category: "Intégrations",
     feature: "Liaison CyberMalveillance.gouv.fr",
-    humanix: { status: "win", text: "Oui — référencement officiel + ressources intégrées" },
+    humanix: {
+      status: "win",
+      text: "Oui — référencement officiel + ressources intégrées",
+    },
     knowbe4: { status: "loss", text: "Non (acteur US)" },
     mantra: { status: "loss", text: "Non" },
     hoxhunt: { status: "loss", text: "Non (acteur FI)" },
@@ -425,7 +461,13 @@ const STATUS_LABEL = {
   na: "Non applicable",
 } as const;
 
-function StatusCell({ cell, isHumanix = false }: { cell: Cell; isHumanix?: boolean }) {
+function StatusCell({
+  cell,
+  isHumanix = false,
+}: {
+  cell: Cell;
+  isHumanix?: boolean;
+}) {
   return (
     <td
       className={`p-3 border ${STATUS_STYLE[cell.status]} text-xs sm:text-sm align-top ${
@@ -469,15 +511,21 @@ export default function ComparatifPage() {
         </p>
         <div className="grid sm:grid-cols-3 gap-3 text-sm">
           <div className="card bg-green-50 border-green-200">
-            <p className="text-3xl font-extrabold text-green-700">{winsHumanix}</p>
+            <p className="text-3xl font-extrabold text-green-700">
+              {winsHumanix}
+            </p>
             <p className="text-green-800 font-medium">avantages HumaniX</p>
           </div>
           <div className="card bg-amber-50 border-amber-200">
-            <p className="text-3xl font-extrabold text-amber-700">{equalHumanix}</p>
+            <p className="text-3xl font-extrabold text-amber-700">
+              {equalHumanix}
+            </p>
             <p className="text-amber-800 font-medium">équivalences</p>
           </div>
           <div className="card bg-red-50 border-red-200">
-            <p className="text-3xl font-extrabold text-red-700">{lossesHumanix}</p>
+            <p className="text-3xl font-extrabold text-red-700">
+              {lossesHumanix}
+            </p>
             <p className="text-red-800 font-medium">où ils sont meilleurs</p>
           </div>
         </div>
@@ -485,11 +533,14 @@ export default function ComparatifPage() {
 
       {/* Engagement éditorial */}
       <div className="card mb-8 bg-primary-50 dark:bg-primary-900/20 border-l-4 border-primary-500">
-        <h2 className="font-bold text-primary-500 mb-2">Notre engagement éditorial</h2>
+        <h2 className="font-bold text-primary-500 mb-2">
+          Notre engagement éditorial
+        </h2>
         <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-          Cette page est mise à jour <strong>à chaque sortie produit majeure</strong>{" "}
-          (la nôtre comme celle des concurrents). Si vous constatez une
-          information inexacte, écrivez à{" "}
+          Cette page est mise à jour{" "}
+          <strong>à chaque sortie produit majeure</strong> (la nôtre comme celle
+          des concurrents). Si vous constatez une information inexacte, écrivez
+          à{" "}
           <a
             href="mailto:contact@humanix-cybersecurity.fr"
             className="text-accent-500 underline font-medium"
@@ -498,14 +549,16 @@ export default function ComparatifPage() {
           </a>{" "}
           : on corrige sous 7 jours et on cite votre signalement. Aucun
           concurrent n'a été contacté pour valider cette page : c'est notre
-          lecture honnête, basée sur leurs sites publics et nos retours
-          clients.
+          lecture honnête, basée sur leurs sites publics et nos retours clients.
         </p>
       </div>
 
       {/* Tableau */}
       <div className="overflow-x-auto -mx-4 px-4 mb-10">
-        <table className="w-full border-collapse min-w-[900px]" aria-label="Comparatif Humanix Académie versus concurrents">
+        <table
+          className="w-full border-collapse min-w-[900px]"
+          aria-label="Comparatif Humanix Académie versus concurrents"
+        >
           <thead>
             <tr>
               <th className="bg-gray-50 dark:bg-slate-800 p-3 border text-left text-xs uppercase tracking-wide text-gray-600 dark:text-gray-300 sticky left-0 z-10">
@@ -515,7 +568,10 @@ export default function ComparatifPage() {
                 Humanix Académie
               </th>
               {COMPETITORS.map((c) => (
-                <th key={c.key} className="bg-gray-50 dark:bg-slate-800 p-3 border text-sm">
+                <th
+                  key={c.key}
+                  className="bg-gray-50 dark:bg-slate-800 p-3 border text-sm"
+                >
                   <a
                     href={c.site}
                     target="_blank"
@@ -523,8 +579,13 @@ export default function ComparatifPage() {
                     className="hover:text-accent-500 underline-offset-2 hover:underline"
                   >
                     {c.name}
-                    <span aria-hidden="true" className="text-xs ml-1">↗</span>
-                    <span className="sr-only"> (s'ouvre dans un nouvel onglet)</span>
+                    <span aria-hidden="true" className="text-xs ml-1">
+                      ↗
+                    </span>
+                    <span className="sr-only">
+                      {" "}
+                      (s'ouvre dans un nouvel onglet)
+                    </span>
                   </a>
                 </th>
               ))}
@@ -570,7 +631,9 @@ export default function ComparatifPage() {
         </div>
         <div className={`p-3 rounded border ${STATUS_STYLE.equal}`}>
           <span className="font-bold">≈ Équivalent</span>
-          <p className="mt-1">Performance comparable, choix sur d'autres critères.</p>
+          <p className="mt-1">
+            Performance comparable, choix sur d'autres critères.
+          </p>
         </div>
         <div className={`p-3 rounded border ${STATUS_STYLE.loss}`}>
           <span className="font-bold">− Avantage concurrent</span>
@@ -590,25 +653,26 @@ export default function ComparatifPage() {
         <div className="space-y-4 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
           <p>
             <strong className="text-primary-500">Là où nous gagnons</strong>{" "}
-            (souveraineté, transparence tarifaire, marketplace ouverte, accessibilité,
-            programme famille, pack NIS2 par-tenant) : ces choix sont structurels,
-            difficiles à copier rapidement par des acteurs internationaux focalisés
-            sur le mid-market.
+            (souveraineté, transparence tarifaire, marketplace ouverte,
+            accessibilité, programme famille, pack NIS2 par-tenant) : ces choix
+            sont structurels, difficiles à copier rapidement par des acteurs
+            internationaux focalisés sur le mid-market.
           </p>
           <p>
             <strong className="text-primary-500">Là où ils gagnent</strong>{" "}
             (volume catalogue, plugin Outlook mature, IA générative, SSO/SAML) :
-            ces écarts sont réels mais ne sont pas bloquants pour une PME de moins
-            de 250 personnes. Nous comblons progressivement (plugin Outlook prévu
-            à venir, audit RGAA cabinet à venir, Qualiopi en cours).
+            ces écarts sont réels mais ne sont pas bloquants pour une PME de
+            moins de 250 personnes. Nous comblons progressivement (plugin
+            Outlook prévu à venir, audit RGAA cabinet à venir, Qualiopi en
+            cours).
           </p>
           <p>
-            <strong className="text-primary-500">Notre conviction</strong> : pour
-            une PME française qui démarre une démarche cyber, payer 5 à 10 fois
-            moins cher pour 80 % des fonctionnalités utiles — et bénéficier d'un
-            accompagnement humain plutôt que d'un support tier-3 anglophone — est
-            le bon arbitrage. Pour une ETI multi-pays avec besoins SSO/SCIM lourds,
-            les acteurs historiques restent plus adaptés.
+            <strong className="text-primary-500">Notre conviction</strong> :
+            pour une PME française qui démarre une démarche cyber, payer 5 à 10
+            fois moins cher pour 80 % des fonctionnalités utiles — et bénéficier
+            d'un accompagnement humain plutôt que d'un support tier-3 anglophone
+            — est le bon arbitrage. Pour une ETI multi-pays avec besoins
+            SSO/SCIM lourds, les acteurs historiques restent plus adaptés.
           </p>
         </div>
       </div>
@@ -619,8 +683,8 @@ export default function ComparatifPage() {
           Pas convaincu·e par notre version ?
         </h2>
         <p className="opacity-90 mb-6 max-w-xl mx-auto">
-          Faites votre propre comparaison. Démarrez 14 jours gratuits, sans carte
-          bancaire, et confrontez Humanix Académie à vos critères réels.
+          Faites votre propre comparaison. Démarrez 14 jours gratuits, sans
+          carte bancaire, et confrontez Humanix Académie à vos critères réels.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link

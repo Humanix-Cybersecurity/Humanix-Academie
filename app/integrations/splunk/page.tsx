@@ -59,12 +59,14 @@ export default function SplunkIntegrationPage() {
         </h2>
         <ol className="space-y-3 text-sm">
           <li>
-            <strong>1.</strong> Splunk → <em>Settings → Data inputs → HTTP Event
-            Collector → New Token</em>. Source type :{" "}
-            <code>humanix:compliance:evidence</code>. Récupérez le token GUID.
+            <strong>1.</strong> Splunk →{" "}
+            <em>Settings → Data inputs → HTTP Event Collector → New Token</em>.
+            Source type : <code>humanix:compliance:evidence</code>. Récupérez le
+            token GUID.
           </li>
           <li>
-            <strong>2.</strong> Sur Humanix : <Link href="/admin/api-keys" className="font-bold underline">
+            <strong>2.</strong> Sur Humanix :{" "}
+            <Link href="/admin/api-keys" className="font-bold underline">
               générez une clé API
             </Link>{" "}
             (plan Essentielle ou supérieur).
@@ -78,7 +80,10 @@ export default function SplunkIntegrationPage() {
 
       {/* 2. Snippet curl */}
       <section aria-labelledby="curl-title" className="mb-10">
-        <h2 id="curl-title" className="text-xl font-extrabold text-primary-500 mb-3">
+        <h2
+          id="curl-title"
+          className="text-xl font-extrabold text-primary-500 mb-3"
+        >
           Snippet curl (test rapide)
         </h2>
         <CopyableSnippet code={CURL_SNIPPET} label="curl pipe Splunk" />
@@ -96,21 +101,33 @@ export default function SplunkIntegrationPage() {
 
       {/* 3. SPL queries pretes */}
       <section aria-labelledby="spl-title" className="mb-10">
-        <h2 id="spl-title" className="text-2xl font-extrabold text-primary-500 mb-3">
+        <h2
+          id="spl-title"
+          className="text-2xl font-extrabold text-primary-500 mb-3"
+        >
           SPL queries prêtes à l'emploi
         </h2>
 
         <div className="space-y-6">
           <div>
-            <h3 className="font-bold mb-2 text-primary-500">Score moyen par framework</h3>
+            <h3 className="font-bold mb-2 text-primary-500">
+              Score moyen par framework
+            </h3>
             <CopyableSnippet code={SPL_SCORE} label="SPL score" />
           </div>
           <div>
-            <h3 className="font-bold mb-2 text-primary-500">Contrôles non-conformes</h3>
-            <CopyableSnippet code={SPL_NON_COMPLIANT} label="SPL non-compliant" />
+            <h3 className="font-bold mb-2 text-primary-500">
+              Contrôles non-conformes
+            </h3>
+            <CopyableSnippet
+              code={SPL_NON_COMPLIANT}
+              label="SPL non-compliant"
+            />
           </div>
           <div>
-            <h3 className="font-bold mb-2 text-primary-500">Alerte sur sévérité haute</h3>
+            <h3 className="font-bold mb-2 text-primary-500">
+              Alerte sur sévérité haute
+            </h3>
             <CopyableSnippet code={SPL_ALERT} label="SPL alert" />
           </div>
         </div>
@@ -118,31 +135,53 @@ export default function SplunkIntegrationPage() {
 
       {/* 4. Champs CIM */}
       <section aria-labelledby="cim-title" className="mb-10">
-        <h2 id="cim-title" className="text-2xl font-extrabold text-primary-500 mb-3">
+        <h2
+          id="cim-title"
+          className="text-2xl font-extrabold text-primary-500 mb-3"
+        >
           Champs CIM exposés
         </h2>
         <div className="overflow-x-auto card p-0">
           <table className="w-full text-sm">
             <caption className="sr-only">
-              Champs Splunk CIM v1 exposés par Humanix pour les preuves de conformité
+              Champs Splunk CIM v1 exposés par Humanix pour les preuves de
+              conformité
             </caption>
             <thead>
               <tr className="bg-gray-50 dark:bg-slate-800 text-left">
-                <th scope="col" className="p-3 font-bold">Champ</th>
-                <th scope="col" className="p-3 font-bold">Type</th>
-                <th scope="col" className="p-3 font-bold">Exemple</th>
+                <th scope="col" className="p-3 font-bold">
+                  Champ
+                </th>
+                <th scope="col" className="p-3 font-bold">
+                  Type
+                </th>
+                <th scope="col" className="p-3 font-bold">
+                  Exemple
+                </th>
               </tr>
             </thead>
             <tbody>
               <Row name="action" type="string" example="evidence_exported" />
-              <Row name="severity" type="string" example="informational | low | high" />
+              <Row
+                name="severity"
+                type="string"
+                example="informational | low | high"
+              />
               <Row name="severity_id" type="number" example="1 | 4 | 7" />
-              <Row name="signature" type="string" example="humanix.a.6.3.compliant" />
+              <Row
+                name="signature"
+                type="string"
+                example="humanix.a.6.3.compliant"
+              />
               <Row name="signature_id" type="string" example="A.6.3" />
               <Row name="tenant_id" type="string" example="acme-corp" />
               <Row name="framework" type="string" example="ISO27001:2022" />
               <Row name="control_ref" type="string" example="A.6.3" />
-              <Row name="compliance_status" type="string" example="compliant | partial | non_compliant" />
+              <Row
+                name="compliance_status"
+                type="string"
+                example="compliant | partial | non_compliant"
+              />
               <Row name="compliance_score" type="number" example="0.87" />
             </tbody>
           </table>
@@ -150,9 +189,12 @@ export default function SplunkIntegrationPage() {
       </section>
 
       <section className="card text-center bg-gradient-to-br from-primary-500 to-accent-500 text-white">
-        <h2 className="text-2xl font-extrabold mb-2">Prêt à brancher Splunk ?</h2>
+        <h2 className="text-2xl font-extrabold mb-2">
+          Prêt à brancher Splunk ?
+        </h2>
         <p className="opacity-90 mb-5">
-          Dashboard maturité humaine + alerting compliance dès le 1er run du connecteur.
+          Dashboard maturité humaine + alerting compliance dès le 1er run du
+          connecteur.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
           <Link
@@ -173,12 +215,22 @@ export default function SplunkIntegrationPage() {
   );
 }
 
-function Row({ name, type, example }: { name: string; type: string; example: string }) {
+function Row({
+  name,
+  type,
+  example,
+}: {
+  name: string;
+  type: string;
+  example: string;
+}) {
   return (
     <tr className="border-t border-gray-100 dark:border-slate-700">
       <td className="p-3 font-mono text-xs">{name}</td>
       <td className="p-3 text-xs text-accent-500">{type}</td>
-      <td className="p-3 text-xs text-gray-600 dark:text-gray-300">{example}</td>
+      <td className="p-3 text-xs text-gray-600 dark:text-gray-300">
+        {example}
+      </td>
     </tr>
   );
 }

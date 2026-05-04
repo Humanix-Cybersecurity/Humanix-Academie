@@ -6,7 +6,11 @@ import { getTemplate } from "@/lib/phishing";
 
 export const dynamic = "force-dynamic";
 
-export default async function PhishingLandingPage({ params }: { params: Promise<{ token: string }> }) {
+export default async function PhishingLandingPage({
+  params,
+}: {
+  params: Promise<{ token: string }>;
+}) {
   const { token } = await params;
 
   const result = await db.phishingResult.findUnique({
@@ -43,7 +47,8 @@ export default async function PhishingLandingPage({ params }: { params: Promise<
           </h1>
           <p className="text-gray-600">
             Heureusement, c'était un test de sensibilisation Humanix. <br />
-            <strong>Aucune donnée n'a été compromise</strong> — mais la prochaine fois pourrait être réelle.
+            <strong>Aucune donnée n'a été compromise</strong> — mais la
+            prochaine fois pourrait être réelle.
           </p>
         </div>
 
@@ -65,7 +70,8 @@ export default async function PhishingLandingPage({ params }: { params: Promise<
               💡 Comment tu aurais pu détecter le piège ?
             </h2>
             <p className="text-sm text-gray-700 mb-3">
-              Voici les <strong>{tpl.markers.length} indices</strong> que ce mail contenait :
+              Voici les <strong>{tpl.markers.length} indices</strong> que ce
+              mail contenait :
             </p>
             <ul className="text-sm text-gray-700 space-y-2">
               {tpl.markers.map((m, i) => (
@@ -81,17 +87,22 @@ export default async function PhishingLandingPage({ params }: { params: Promise<
         )}
 
         <div className="bg-success/10 border-l-4 border-success rounded-r-xl p-5 mb-6">
-          <h2 className="font-bold text-success text-lg mb-2">✅ Le bon réflexe à adopter</h2>
+          <h2 className="font-bold text-success text-lg mb-2">
+            ✅ Le bon réflexe à adopter
+          </h2>
           <p className="text-sm text-gray-700">
-            Devant un mail suspect, ne clique jamais. Fais un <strong>signalement</strong>{" "}
-            (à ton DSI, à un collègue, ou simplement en utilisant la fonction "Signaler" de ta messagerie).
-            Mieux vaut signaler 10 mails légitimes par excès que rater 1 vrai phishing.
+            Devant un mail suspect, ne clique jamais. Fais un{" "}
+            <strong>signalement</strong> (à ton DSI, à un collègue, ou
+            simplement en utilisant la fonction "Signaler" de ta messagerie).
+            Mieux vaut signaler 10 mails légitimes par excès que rater 1 vrai
+            phishing.
           </p>
         </div>
 
         <div className="text-center">
           <p className="text-sm text-gray-600 mb-4">
-            Ne te culpabilise pas — <strong>1 personne sur 3 clique</strong> sur ce type de mail. C'est exactement pour ça qu'on s'entraîne.
+            Ne te culpabilise pas — <strong>1 personne sur 3 clique</strong> sur
+            ce type de mail. C'est exactement pour ça qu'on s'entraîne.
           </p>
           <Link href="/apprendre" className="btn-primary">
             Aller renforcer mes réflexes →
@@ -100,9 +111,11 @@ export default async function PhishingLandingPage({ params }: { params: Promise<
       </div>
 
       <p className="text-xs text-center text-gray-400 italic mt-6">
-        Test effectué dans le cadre du programme de sensibilisation cyber de ton entreprise.
+        Test effectué dans le cadre du programme de sensibilisation cyber de ton
+        entreprise.
         <br />
-        Aucun usage disciplinaire de ce résultat — c'est un exercice pédagogique.
+        Aucun usage disciplinaire de ce résultat — c'est un exercice
+        pédagogique.
       </p>
     </div>
   );

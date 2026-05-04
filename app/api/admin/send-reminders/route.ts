@@ -38,13 +38,15 @@ export async function GET(req: Request) {
     return NextResponse.json({ totalCandidates, tenants: tenants.length });
   }
 
-  if (!session?.user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!session?.user)
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const role = session.user!.role;
   if (role !== "ADMIN" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
   tenantId = session.user!.tenantId;
-  if (!tenantId) return NextResponse.json({ error: "no_tenant" }, { status: 400 });
+  if (!tenantId)
+    return NextResponse.json({ error: "no_tenant" }, { status: 400 });
 
   const candidates = await findInactiveUsers(tenantId);
   return NextResponse.json({
@@ -73,13 +75,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true, results });
   }
 
-  if (!session?.user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!session?.user)
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const role = session.user!.role;
   if (role !== "ADMIN" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
   tenantId = session.user!.tenantId;
-  if (!tenantId) return NextResponse.json({ error: "no_tenant" }, { status: 400 });
+  if (!tenantId)
+    return NextResponse.json({ error: "no_tenant" }, { status: 400 });
 
   const result = await sendReminders(tenantId);
   return NextResponse.json({ ok: true, ...result });

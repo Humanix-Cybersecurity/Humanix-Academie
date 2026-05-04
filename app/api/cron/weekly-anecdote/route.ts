@@ -21,7 +21,9 @@ function safeEqual(a: string, b: string): boolean {
   }
 }
 
-async function checkAuth(req: Request): Promise<{ authorized: boolean; reason?: string }> {
+async function checkAuth(
+  req: Request,
+): Promise<{ authorized: boolean; reason?: string }> {
   // 1. Cron header
   const cronSecret = req.headers.get("x-cron-secret");
   if (cronSecret && safeEqual(cronSecret, process.env.CRON_SECRET ?? "")) {
@@ -40,12 +42,16 @@ async function checkAuth(req: Request): Promise<{ authorized: boolean; reason?: 
 export async function POST(req: Request) {
   const auth = await checkAuth(req);
   if (!auth.authorized) {
-    return NextResponse.json({ error: auth.reason ?? "unauthorized" }, { status: 401 });
+    return NextResponse.json(
+      { error: auth.reason ?? "unauthorized" },
+      { status: 401 },
+    );
   }
 
   const body = await req.json().catch(() => ({}));
   const force = body?.force === true;
-  const anecdoteId = typeof body?.anecdoteId === "string" ? body.anecdoteId : undefined;
+  const anecdoteId =
+    typeof body?.anecdoteId === "string" ? body.anecdoteId : undefined;
 
   const result = await dispatchWeeklyAnecdote({ force, anecdoteId });
   return NextResponse.json(result);
@@ -55,11 +61,16 @@ export async function POST(req: Request) {
 export async function GET(req: Request) {
   const auth = await checkAuth(req);
   if (!auth.authorized) {
-    return NextResponse.json({ error: auth.reason ?? "unauthorized" }, { status: 401 });
+    return NextResponse.json(
+      { error: auth.reason ?? "unauthorized" },
+      { status: 401 },
+    );
   }
 
   const { db } = await import("@/lib/db");
-  const subsCount = await db.anecdoteSubscription.count({ where: { isActive: true } });
+  const subsCount = await db.anecdoteSubscription.count({
+    where: { isActive: true },
+  });
   const next = await db.weeklyAnecdote.findFirst({
     where: { isActive: true, publishedAt: null },
     orderBy: [{ scheduledFor: "asc" }, { incidentDate: "desc" }],

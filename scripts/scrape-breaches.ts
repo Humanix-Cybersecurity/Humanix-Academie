@@ -39,11 +39,19 @@ async function main() {
 
     if (result.totalInserted === 0 && !result.perSource.some((s) => s.ok)) {
       console.log("");
-      console.log("💡 Aucune source n'a remonté de fuite. Pour calibrer les parsers :");
+      console.log(
+        "💡 Aucune source n'a remonté de fuite. Pour calibrer les parsers :",
+      );
       console.log("   - Connecte-toi en SUPERADMIN puis :");
-      console.log("     curl http://localhost/api/admin/breaches/debug -b 'authjs.session-token=...'");
-      console.log("   - Le retour JSON contient les 2000 premiers chars de chaque page récupérée");
-      console.log("   - Colle-le dans une issue, on adapte les parsers selon la structure réelle");
+      console.log(
+        "     curl http://localhost/api/admin/breaches/debug -b 'authjs.session-token=...'",
+      );
+      console.log(
+        "   - Le retour JSON contient les 2000 premiers chars de chaque page récupérée",
+      );
+      console.log(
+        "   - Colle-le dans une issue, on adapte les parsers selon la structure réelle",
+      );
     }
 
     const anyOk = result.perSource.some((s) => s.ok);

@@ -13,17 +13,17 @@ Temps estimé : **10 à 30 minutes** selon le mode et ton expérience.
 
 ## Prérequis
 
-| Composant | Version minimale | Recommandée |
-|---|---|---|
-| **CPU** | 2 vCPU | 4 vCPU |
-| **RAM** | 2 Go | 4 Go |
-| **Disque SSD** | 5 Go | 20 Go |
-| **OS hôte** | Linux 5.10+ / macOS 12+ / Windows 11 (WSL2) | Ubuntu 24.04 LTS |
-| **Docker** (mode 1) | 24.0+ | 26+ |
-| **Docker Compose** (mode 1) | v2.20+ | v2.27+ |
-| **Node.js** (mode 2) | 20.10+ | 20.x LTS |
-| **PostgreSQL** (mode 2) | 14+ | 16 |
-| **Redis** (optionnel, sessions) | — | 7.2 |
+| Composant                       | Version minimale                            | Recommandée      |
+| ------------------------------- | ------------------------------------------- | ---------------- |
+| **CPU**                         | 2 vCPU                                      | 4 vCPU           |
+| **RAM**                         | 2 Go                                        | 4 Go             |
+| **Disque SSD**                  | 5 Go                                        | 20 Go            |
+| **OS hôte**                     | Linux 5.10+ / macOS 12+ / Windows 11 (WSL2) | Ubuntu 24.04 LTS |
+| **Docker** (mode 1)             | 24.0+                                       | 26+              |
+| **Docker Compose** (mode 1)     | v2.20+                                      | v2.27+           |
+| **Node.js** (mode 2)            | 20.10+                                      | 20.x LTS         |
+| **PostgreSQL** (mode 2)         | 14+                                         | 16               |
+| **Redis** (optionnel, sessions) | —                                           | 7.2              |
 
 ---
 
@@ -71,6 +71,7 @@ docker compose up -d
 ```
 
 Cela lance trois services :
+
 - `postgres` — base de données
 - `app` — application Next.js (port 3000)
 - `caddy` — reverse proxy avec TLS auto Let's Encrypt (ports 80 et 443)
@@ -236,6 +237,7 @@ kubectl apply -n humanix -k infra/kubernetes/overlays/production
 ```
 
 Couvre :
+
 - Deployment Next.js (3 réplicas par défaut)
 - StatefulSet PostgreSQL (1 réplica + PVC)
 - Service ClusterIP + Ingress (cert-manager)

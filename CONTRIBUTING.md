@@ -35,15 +35,15 @@ sous 72 h.
 
 ## Types de contributions acceptées
 
-| Type | Comment | Validation |
-|---|---|---|
-| **Bugfix** | Issue + PR | Review d'un mainteneur |
-| **Documentation** | PR directe (typo, exemple, traduction) | Review légère |
-| **Nouvelle feature** | RFC d'abord (issue avec label `rfc`) puis PR | Discussion + review |
-| **Module pédagogique** | PR dans `content/community/` | Review pédagogique + technique |
-| **Traduction** | PR dans `messages/<locale>.json` | Review native speaker |
-| **Refactor large** | RFC obligatoire | Discussion + review |
-| **Sécurité** | NE PAS ouvrir d'issue publique. Voir [SECURITY.md](./SECURITY.md) | Disclosure responsable |
+| Type                   | Comment                                                           | Validation                     |
+| ---------------------- | ----------------------------------------------------------------- | ------------------------------ |
+| **Bugfix**             | Issue + PR                                                        | Review d'un mainteneur         |
+| **Documentation**      | PR directe (typo, exemple, traduction)                            | Review légère                  |
+| **Nouvelle feature**   | RFC d'abord (issue avec label `rfc`) puis PR                      | Discussion + review            |
+| **Module pédagogique** | PR dans `content/community/`                                      | Review pédagogique + technique |
+| **Traduction**         | PR dans `messages/<locale>.json`                                  | Review native speaker          |
+| **Refactor large**     | RFC obligatoire                                                   | Discussion + review            |
+| **Sécurité**           | NE PAS ouvrir d'issue publique. Voir [SECURITY.md](./SECURITY.md) | Disclosure responsable         |
 
 Avant d'ouvrir une PR de feature ou de refactor large, **discute d'abord** via
 une issue ou GitHub Discussions. Ça évite que tu passes une semaine sur du code
@@ -180,18 +180,18 @@ On utilise [Conventional Commits](https://www.conventionalcommits.org/fr/v1.0.0/
 
 ### Types autorisés
 
-| Type | Usage | Exemple |
-|---|---|---|
-| `feat` | Nouvelle feature utilisateur | `feat(dashboard): ajoute filtres avancés sur table équipe` |
-| `fix` | Bugfix | `fix(auth): corrige redirect après SSO Microsoft` |
-| `docs` | Documentation uniquement | `docs(readme): clarifie installation Docker` |
-| `style` | Formattage, pas de logique | `style: applique prettier sur components/` |
-| `refactor` | Refacto sans changement fonctionnel | `refactor(plans): centralise FEATURE_MIN_PLAN` |
-| `perf` | Amélioration performance | `perf(table): memoize row rendering` |
-| `test` | Ajout/modif de tests | `test(scoring): couvre edge case score=0` |
-| `chore` | Maintenance (deps, config) | `chore: bump prisma to 5.22` |
-| `ci` | Workflow CI/CD | `ci: ajoute job lint sur PR` |
-| `build` | Système de build | `build: optimise Dockerfile multistage` |
+| Type       | Usage                               | Exemple                                                    |
+| ---------- | ----------------------------------- | ---------------------------------------------------------- |
+| `feat`     | Nouvelle feature utilisateur        | `feat(dashboard): ajoute filtres avancés sur table équipe` |
+| `fix`      | Bugfix                              | `fix(auth): corrige redirect après SSO Microsoft`          |
+| `docs`     | Documentation uniquement            | `docs(readme): clarifie installation Docker`               |
+| `style`    | Formattage, pas de logique          | `style: applique prettier sur components/`                 |
+| `refactor` | Refacto sans changement fonctionnel | `refactor(plans): centralise FEATURE_MIN_PLAN`             |
+| `perf`     | Amélioration performance            | `perf(table): memoize row rendering`                       |
+| `test`     | Ajout/modif de tests                | `test(scoring): couvre edge case score=0`                  |
+| `chore`    | Maintenance (deps, config)          | `chore: bump prisma to 5.22`                               |
+| `ci`       | Workflow CI/CD                      | `ci: ajoute job lint sur PR`                               |
+| `build`    | Système de build                    | `build: optimise Dockerfile multistage`                    |
 
 ### Scopes courants
 
@@ -232,6 +232,7 @@ l'ouverture). Tu dois minimum :
 ### Taille
 
 Préférer **plusieurs PR petites** à une grosse PR :
+
 - < 200 lignes modifiées : review rapide
 - 200-500 lignes : review approfondie
 - 500-1000 lignes : motiver dans la description
@@ -302,18 +303,18 @@ Pour candidater, écris à `contact@humanix-cybersecurity.fr` ou ping
 
 ## Questions
 
-| Type | Où aller |
-|---|---|
-| Question d'usage / configuration | [GitHub Discussions · Q&A](https://github.com/humanix-cybersecurity/humanix-academie/discussions/categories/q-a) |
-| Idée de feature à débattre | [GitHub Discussions · Ideas](https://github.com/humanix-cybersecurity/humanix-academie/discussions/categories/ideas) |
-| Bug confirmé | [GitHub Issues](https://github.com/humanix-cybersecurity/humanix-academie/issues) |
-| Vulnérabilité sécurité | security@humanix-cybersecurity.fr (voir [SECURITY.md](./SECURITY.md)) |
-| Discussion live | Discord (lien dans GitHub Discussions, accès libre) |
-| Contact direct | contact@humanix-cybersecurity.fr |
+| Type                             | Où aller                                                                                                             |
+| -------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Question d'usage / configuration | [GitHub Discussions · Q&A](https://github.com/humanix-cybersecurity/humanix-academie/discussions/categories/q-a)     |
+| Idée de feature à débattre       | [GitHub Discussions · Ideas](https://github.com/humanix-cybersecurity/humanix-academie/discussions/categories/ideas) |
+| Bug confirmé                     | [GitHub Issues](https://github.com/humanix-cybersecurity/humanix-academie/issues)                                    |
+| Vulnérabilité sécurité           | security@humanix-cybersecurity.fr (voir [SECURITY.md](./SECURITY.md))                                                |
+| Discussion live                  | Discord (lien dans GitHub Discussions, accès libre)                                                                  |
+| Contact direct                   | contact@humanix-cybersecurity.fr                                                                                     |
 
 ---
 
 Merci de contribuer. Chaque PR, chaque issue, chaque question fait avancer la
 brique humaine de la cyber souveraine française.
 
-*Humanix Cybersecurity*
+_Humanix Cybersecurity_

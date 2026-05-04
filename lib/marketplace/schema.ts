@@ -26,10 +26,20 @@ const TXT_LIMITS = {
 } as const;
 
 const txt = (min: number, max: number) =>
-  z.string().trim().min(min).max(max).regex(NO_HTML, "Aucune balise HTML autorisée");
+  z
+    .string()
+    .trim()
+    .min(min)
+    .max(max)
+    .regex(NO_HTML, "Aucune balise HTML autorisée");
 
 const txtStrict = (min: number, max: number) =>
-  z.string().trim().min(min).max(max).regex(NO_HTML_NO_AMP, "Caractères <, > et & interdits");
+  z
+    .string()
+    .trim()
+    .min(min)
+    .max(max)
+    .regex(NO_HTML_NO_AMP, "Caractères <, > et & interdits");
 
 // CHOICE (mise en situation)
 export const ChoiceSchema = z.object({
@@ -56,7 +66,10 @@ export const QuizQuestionSchema = z.object({
     .refine((arr) => arr.filter((c) => c.correct).length === 1, {
       message: "Exactement 1 bonne réponse requise",
     }),
-  explanation: txt(TXT_LIMITS.quizExplanation.min, TXT_LIMITS.quizExplanation.max),
+  explanation: txt(
+    TXT_LIMITS.quizExplanation.min,
+    TXT_LIMITS.quizExplanation.max,
+  ),
 });
 
 // EPISODE
@@ -68,16 +81,17 @@ export const EpisodeSchema = z.object({
     .array(ChoiceSchema)
     .min(2, "2 choix minimum")
     .max(4, "4 choix maximum")
-    .refine(
-      (arr) => arr.some((c) => c.outcome === "good"),
-      { message: "Au moins une option doit avoir l'issue 'good'" },
-    )
-    .refine(
-      (arr) => new Set(arr.map((c) => c.id)).size === arr.length,
-      { message: "Les IDs des choix doivent être uniques" },
-    ),
+    .refine((arr) => arr.some((c) => c.outcome === "good"), {
+      message: "Au moins une option doit avoir l'issue 'good'",
+    })
+    .refine((arr) => new Set(arr.map((c) => c.id)).size === arr.length, {
+      message: "Les IDs des choix doivent être uniques",
+    }),
   debrief: txt(TXT_LIMITS.debrief.min, TXT_LIMITS.debrief.max),
-  quiz: z.array(QuizQuestionSchema).min(1, "1 question quiz minimum").max(5, "5 questions max"),
+  quiz: z
+    .array(QuizQuestionSchema)
+    .min(1, "1 question quiz minimum")
+    .max(5, "5 questions max"),
   xpReward: z.number().int().min(20).max(100).default(50),
 });
 
@@ -109,12 +123,17 @@ export const ModuleMetadataSchema = z.object({
 });
 
 export const ModulePayloadSchema = z.object({
-  episodes: z.array(EpisodeSchema).min(1, "1 épisode minimum").max(10, "10 épisodes maximum"),
+  episodes: z
+    .array(EpisodeSchema)
+    .min(1, "1 épisode minimum")
+    .max(10, "10 épisodes maximum"),
 });
 
 // Utilise pour la creation/edition cote API
 export const ModuleSubmissionSchema = ModuleMetadataSchema.extend({
-  slug: z.string().regex(SLUG_RE, "Slug invalide (a-z, 0-9, tirets, 3-50 caractères)"),
+  slug: z
+    .string()
+    .regex(SLUG_RE, "Slug invalide (a-z, 0-9, tirets, 3-50 caractères)"),
   payload: ModulePayloadSchema,
 });
 

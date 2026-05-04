@@ -6,7 +6,11 @@ import { useEffect, useState } from "react";
 
 type Theme = "light" | "dark" | "system";
 
-export default function ThemeToggle({ compact = false }: { compact?: boolean }) {
+export default function ThemeToggle({
+  compact = false,
+}: {
+  compact?: boolean;
+}) {
   // Default produit : "light". Le user peut basculer vers "system" ou "dark"
   // explicitement via le toggle. Cohérent avec le script anti-flash du layout.
   const [theme, setTheme] = useState<Theme>("light");
@@ -14,7 +18,8 @@ export default function ThemeToggle({ compact = false }: { compact?: boolean }) 
 
   useEffect(() => {
     setMounted(true);
-    const saved = (localStorage.getItem("humanix-theme") as Theme | null) ?? "light";
+    const saved =
+      (localStorage.getItem("humanix-theme") as Theme | null) ?? "light";
     setTheme(saved);
   }, []);
 
@@ -22,7 +27,11 @@ export default function ThemeToggle({ compact = false }: { compact?: boolean }) 
     setTheme(t);
     localStorage.setItem("humanix-theme", t);
     const root = document.documentElement;
-    if (t === "dark" || (t === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+    if (
+      t === "dark" ||
+      (t === "system" &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
       root.classList.add("dark");
     } else {
       root.classList.remove("dark");
@@ -46,9 +55,15 @@ export default function ThemeToggle({ compact = false }: { compact?: boolean }) 
 
   if (compact) {
     // Bouton unique : cycle light → dark → system
-    const next: Theme = theme === "light" ? "dark" : theme === "dark" ? "system" : "light";
+    const next: Theme =
+      theme === "light" ? "dark" : theme === "dark" ? "system" : "light";
     const icon = theme === "light" ? "☀️" : theme === "dark" ? "🌙" : "💻";
-    const label = theme === "light" ? "Mode clair" : theme === "dark" ? "Mode sombre" : "Mode système";
+    const label =
+      theme === "light"
+        ? "Mode clair"
+        : theme === "dark"
+          ? "Mode sombre"
+          : "Mode système";
     return (
       <button
         onClick={() => apply(next)}
@@ -62,15 +77,49 @@ export default function ThemeToggle({ compact = false }: { compact?: boolean }) 
   }
 
   return (
-    <div className="inline-flex bg-gray-100 dark:bg-slate-800 rounded-xl p-1" role="group" aria-label="Choix du thème">
-      <ThemeBtn current={theme} value="light" icon="☀️" label="Clair" onClick={() => apply("light")} />
-      <ThemeBtn current={theme} value="system" icon="💻" label="Auto" onClick={() => apply("system")} />
-      <ThemeBtn current={theme} value="dark" icon="🌙" label="Sombre" onClick={() => apply("dark")} />
+    <div
+      className="inline-flex bg-gray-100 dark:bg-slate-800 rounded-xl p-1"
+      role="group"
+      aria-label="Choix du thème"
+    >
+      <ThemeBtn
+        current={theme}
+        value="light"
+        icon="☀️"
+        label="Clair"
+        onClick={() => apply("light")}
+      />
+      <ThemeBtn
+        current={theme}
+        value="system"
+        icon="💻"
+        label="Auto"
+        onClick={() => apply("system")}
+      />
+      <ThemeBtn
+        current={theme}
+        value="dark"
+        icon="🌙"
+        label="Sombre"
+        onClick={() => apply("dark")}
+      />
     </div>
   );
 }
 
-function ThemeBtn({ current, value, icon, label, onClick }: { current: Theme; value: Theme; icon: string; label: string; onClick: () => void }) {
+function ThemeBtn({
+  current,
+  value,
+  icon,
+  label,
+  onClick,
+}: {
+  current: Theme;
+  value: Theme;
+  icon: string;
+  label: string;
+  onClick: () => void;
+}) {
   const active = current === value;
   return (
     <button

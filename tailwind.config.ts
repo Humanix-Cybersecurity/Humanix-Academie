@@ -14,23 +14,44 @@ const config: Config = {
   // Sinon : décor acheté = aucun effet visuel.
   safelist: [
     // Backgrounds boutique (cf. BACKGROUND_GRADIENTS dans lib/shop.ts)
-    "from-orange-200", "via-pink-200", "to-amber-200",      // bg-aurora
-    "from-purple-700", "via-indigo-700", "to-blue-900",     // bg-space
-    "from-cyan-200", "via-blue-300", "to-blue-500",         // bg-ocean
-    "from-pink-100", "via-rose-200", "to-pink-300",         // bg-sakura
-    "from-fuchsia-500", "via-violet-600", "to-cyan-500",    // bg-cyber
+    "from-orange-200",
+    "via-pink-200",
+    "to-amber-200", // bg-aurora
+    "from-purple-700",
+    "via-indigo-700",
+    "to-blue-900", // bg-space
+    "from-cyan-200",
+    "via-blue-300",
+    "to-blue-500", // bg-ocean
+    "from-pink-100",
+    "via-rose-200",
+    "to-pink-300", // bg-sakura
+    "from-fuchsia-500",
+    "via-violet-600",
+    "to-cyan-500", // bg-cyber
     // Gradients de niveau mascotte (cf. lib/levels.ts)
-    "from-gray-100", "to-gray-200",
-    "from-cyan-100", "to-blue-200",
-    "from-emerald-100", "to-teal-200",
-    "from-amber-100", "to-orange-200",
-    "from-purple-100", "to-pink-200",
+    "from-gray-100",
+    "to-gray-200",
+    "from-cyan-100",
+    "to-blue-200",
+    "from-emerald-100",
+    "to-teal-200",
+    "from-amber-100",
+    "to-orange-200",
+    "from-purple-100",
+    "to-pink-200",
     // Ring colors de niveau
-    "ring-gray-300", "ring-cyan-400", "ring-emerald-400",
-    "ring-amber-400", "ring-purple-400",
+    "ring-gray-300",
+    "ring-cyan-400",
+    "ring-emerald-400",
+    "ring-amber-400",
+    "ring-purple-400",
     // Border-* derives (utilisé dans /profil hero card via .replace("ring-", "border-"))
-    "border-gray-300", "border-cyan-400", "border-emerald-400",
-    "border-amber-400", "border-purple-400",
+    "border-gray-300",
+    "border-cyan-400",
+    "border-emerald-400",
+    "border-amber-400",
+    "border-purple-400",
   ],
   theme: {
     extend: {
@@ -50,8 +71,8 @@ const config: Config = {
       },
       fontFamily: {
         // Polices accessibles, gratuites et larges
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Atkinson Hyperlegible', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ["Inter", "system-ui", "sans-serif"],
+        display: ["Atkinson Hyperlegible", "Inter", "system-ui", "sans-serif"],
       },
       borderRadius: {
         xl: "1rem",

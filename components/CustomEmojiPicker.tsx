@@ -8,9 +8,30 @@ import { setCustomMascotEmoji } from "@/app/profil/mascotte/actions";
 import { getMascotById } from "@/lib/mascots";
 
 const SUGGESTED_EMOJIS = [
-  "🚀", "🌈", "☕", "🌵", "🍕", "🎸", "🎮", "🎨",
-  "📚", "🌻", "🪐", "🎯", "🔥", "💡", "✨", "🌊",
-  "🎪", "🚲", "🌮", "👻", "🤖", "🦋", "🍀", "🌟",
+  "🚀",
+  "🌈",
+  "☕",
+  "🌵",
+  "🍕",
+  "🎸",
+  "🎮",
+  "🎨",
+  "📚",
+  "🌻",
+  "🪐",
+  "🎯",
+  "🔥",
+  "💡",
+  "✨",
+  "🌊",
+  "🎪",
+  "🚲",
+  "🌮",
+  "👻",
+  "🤖",
+  "🦋",
+  "🍀",
+  "🌟",
 ];
 
 export default function CustomEmojiPicker({
@@ -92,8 +113,8 @@ export default function CustomEmojiPicker({
           )}
         </div>
         <p id="custom-emoji-help" className="text-xs text-gray-500 mb-3">
-          Tapez ou collez n'importe quel emoji (max 8 caractères pour les
-          emojis composites). Laisser vide pour revenir à l'animal totem.
+          Tapez ou collez n'importe quel emoji (max 8 caractères pour les emojis
+          composites). Laisser vide pour revenir à l'animal totem.
         </p>
 
         <div>

@@ -21,7 +21,14 @@ const MAX_BYTES = 800 * 1024;
 // HELPERS GENERIQUES
 // =============================================================================
 
-export type FetchResult = { url: string; ok: boolean; body: string; bytes: number; status?: number; error?: string };
+export type FetchResult = {
+  url: string;
+  ok: boolean;
+  body: string;
+  bytes: number;
+  status?: number;
+  error?: string;
+};
 
 export async function fetchText(url: string): Promise<FetchResult> {
   const ctrl = new AbortController();
@@ -39,11 +46,24 @@ export async function fetchText(url: string): Promise<FetchResult> {
       redirect: "follow",
     });
     if (!res.ok) {
-      return { url, ok: false, body: "", bytes: 0, status: res.status, error: `http_${res.status}` };
+      return {
+        url,
+        ok: false,
+        body: "",
+        bytes: 0,
+        status: res.status,
+        error: `http_${res.status}`,
+      };
     }
     const buf = await res.arrayBuffer();
     if (buf.byteLength > MAX_BYTES) {
-      return { url, ok: false, body: "", bytes: buf.byteLength, error: "response_too_big" };
+      return {
+        url,
+        ok: false,
+        body: "",
+        bytes: buf.byteLength,
+        error: "response_too_big",
+      };
     }
     return {
       url,
@@ -66,7 +86,11 @@ export async function fetchText(url: string): Promise<FetchResult> {
 }
 
 function hashStable(parts: string[]): string {
-  return crypto.createHash("sha256").update(parts.join("|")).digest("hex").slice(0, 32);
+  return crypto
+    .createHash("sha256")
+    .update(parts.join("|"))
+    .digest("hex")
+    .slice(0, 32);
 }
 
 function decodeHtmlEntities(s: string): string {
@@ -165,7 +189,10 @@ function stripTags(html: string): string {
 }
 
 function extractCdata(s: string): string {
-  return s.replace(/^<!\[CDATA\[/, "").replace(/\]\]>$/, "").trim();
+  return s
+    .replace(/^<!\[CDATA\[/, "")
+    .replace(/\]\]>$/, "")
+    .trim();
 }
 
 function absolutize(url: string, base: string): string {
@@ -180,7 +207,12 @@ function absolutize(url: string, base: string): string {
 }
 
 // Parsing RSS/Atom unifié
-type FeedItem = { title: string; link: string; pubDate: string; description: string };
+type FeedItem = {
+  title: string;
+  link: string;
+  pubDate: string;
+  description: string;
+};
 
 function parseFeed(xml: string): FeedItem[] {
   const items: FeedItem[] = [];
@@ -188,25 +220,35 @@ function parseFeed(xml: string): FeedItem[] {
   // RSS 2.0 : <item>
   const rssItems = xml.match(/<item[\s\S]*?<\/item>/g) ?? [];
   for (const block of rssItems) {
-    const title = extractCdata(/<title[^>]*>([\s\S]*?)<\/title>/.exec(block)?.[1] ?? "");
+    const title = extractCdata(
+      /<title[^>]*>([\s\S]*?)<\/title>/.exec(block)?.[1] ?? "",
+    );
     // Le <link> est optionnel en pratique : certains feeds (Eleventy, JSON-feed
     // converti, etc.) ne l'incluent pas et utilisent uniquement <guid
     // isPermaLink="true">. On accepte les deux comme source de l'URL.
-    let link = extractCdata(/<link[^>]*>([\s\S]*?)<\/link>/.exec(block)?.[1] ?? "");
+    let link = extractCdata(
+      /<link[^>]*>([\s\S]*?)<\/link>/.exec(block)?.[1] ?? "",
+    );
     if (!link) {
       const guidMatch = /<guid(?:\s[^>]*)?>([\s\S]*?)<\/guid>/.exec(block);
       if (guidMatch) link = extractCdata(guidMatch[1]);
     }
     const pubDate = extractCdata(
-      (/<pubDate[^>]*>([\s\S]*?)<\/pubDate>/.exec(block)?.[1] ??
+      (
+        /<pubDate[^>]*>([\s\S]*?)<\/pubDate>/.exec(block)?.[1] ??
         /<dc:date[^>]*>([\s\S]*?)<\/dc:date>/.exec(block)?.[1] ??
-        "").trim(),
+        ""
+      ).trim(),
     );
     const description = extractCdata(
-      (/<description[^>]*>([\s\S]*?)<\/description>/.exec(block)?.[1] ??
-        /<content:encoded[^>]*>([\s\S]*?)<\/content:encoded>/.exec(block)?.[1] ??
+      (
+        /<description[^>]*>([\s\S]*?)<\/description>/.exec(block)?.[1] ??
+        /<content:encoded[^>]*>([\s\S]*?)<\/content:encoded>/.exec(
+          block,
+        )?.[1] ??
         /<summary[^>]*>([\s\S]*?)<\/summary>/.exec(block)?.[1] ??
-        "").trim(),
+        ""
+      ).trim(),
     );
     if (title && link) items.push({ title, link, pubDate, description });
   }
@@ -215,13 +257,17 @@ function parseFeed(xml: string): FeedItem[] {
   if (items.length === 0) {
     const atomEntries = xml.match(/<entry[\s\S]*?<\/entry>/g) ?? [];
     for (const block of atomEntries) {
-      const title = extractCdata(/<title[^>]*>([\s\S]*?)<\/title>/.exec(block)?.[1] ?? "");
+      const title = extractCdata(
+        /<title[^>]*>([\s\S]*?)<\/title>/.exec(block)?.[1] ?? "",
+      );
       const linkMatch = /<link[^>]+href="([^"]+)"/.exec(block);
       const link = linkMatch?.[1] ?? "";
       const pubDate = extractCdata(
-        (/<published[^>]*>([\s\S]*?)<\/published>/.exec(block)?.[1] ??
+        (
+          /<published[^>]*>([\s\S]*?)<\/published>/.exec(block)?.[1] ??
           /<updated[^>]*>([\s\S]*?)<\/updated>/.exec(block)?.[1] ??
-          "").trim(),
+          ""
+        ).trim(),
       );
       const description = extractCdata(
         /<summary[^>]*>([\s\S]*?)<\/summary>/.exec(block)?.[1] ??
@@ -260,7 +306,8 @@ function parseRecordsExposed(text: string): number | null {
     if (m[2].startsWith("milliard")) return Math.round(num * 1_000_000_000);
     return Math.round(num * 1_000_000);
   }
-  const re2 = /\b(\d{4,})\b\s*(?:enregistrements?|comptes?|utilisateurs?|clients?|emails?|adresses|données|donnees|personnes|lignes|fiches)/;
+  const re2 =
+    /\b(\d{4,})\b\s*(?:enregistrements?|comptes?|utilisateurs?|clients?|emails?|adresses|données|donnees|personnes|lignes|fiches)/;
   const m2 = re2.exec(t);
   if (m2) {
     const n = parseInt(m2[1], 10);
@@ -269,7 +316,9 @@ function parseRecordsExposed(text: string): number | null {
   return null;
 }
 
-function inferSeverity(records: number | null): "low" | "medium" | "high" | "critical" {
+function inferSeverity(
+  records: number | null,
+): "low" | "medium" | "high" | "critical" {
   if (records == null) return "medium";
   if (records >= 1_000_000) return "critical";
   if (records >= 100_000) return "high";
@@ -278,9 +327,21 @@ function inferSeverity(records: number | null): "low" | "medium" | "high" | "cri
 }
 
 const MONTHS_FR: Record<string, number> = {
-  janvier: 0, février: 1, fevrier: 1, mars: 2, avril: 3, mai: 4, juin: 5,
-  juillet: 6, août: 7, aout: 7, septembre: 8, octobre: 9, novembre: 10,
-  décembre: 11, decembre: 11,
+  janvier: 0,
+  février: 1,
+  fevrier: 1,
+  mars: 2,
+  avril: 3,
+  mai: 4,
+  juin: 5,
+  juillet: 6,
+  août: 7,
+  aout: 7,
+  septembre: 8,
+  octobre: 9,
+  novembre: 10,
+  décembre: 11,
+  decembre: 11,
 };
 
 function parseDateFr(s: string): Date | null {
@@ -288,13 +349,15 @@ function parseDateFr(s: string): Date | null {
   const direct = new Date(s);
   if (!Number.isNaN(direct.getTime())) return direct;
   // "12 mars 2026" / "12/03/2026" / "12-03-2026" / "2026-03-12"
-  const reFr = /(\d{1,2})\s+(janvier|février|fevrier|mars|avril|mai|juin|juillet|août|aout|septembre|octobre|novembre|décembre|decembre)\s+(\d{4})/i;
+  const reFr =
+    /(\d{1,2})\s+(janvier|février|fevrier|mars|avril|mai|juin|juillet|août|aout|septembre|octobre|novembre|décembre|decembre)\s+(\d{4})/i;
   const m = reFr.exec(s);
   if (m) {
     const d = parseInt(m[1], 10);
     const mo = MONTHS_FR[m[2].toLowerCase()];
     const y = parseInt(m[3], 10);
-    if (Number.isFinite(d) && mo != null && Number.isFinite(y)) return new Date(y, mo, d);
+    if (Number.isFinite(d) && mo != null && Number.isFinite(y))
+      return new Date(y, mo, d);
   }
   const reSlash = /(\d{1,2})[/\-](\d{1,2})[/\-](\d{4})/;
   const m2 = reSlash.exec(s);
@@ -302,7 +365,8 @@ function parseDateFr(s: string): Date | null {
     const d = parseInt(m2[1], 10);
     const mo = parseInt(m2[2], 10) - 1;
     const y = parseInt(m2[3], 10);
-    if (Number.isFinite(d) && mo >= 0 && mo < 12 && Number.isFinite(y)) return new Date(y, mo, d);
+    if (Number.isFinite(d) && mo >= 0 && mo < 12 && Number.isFinite(y))
+      return new Date(y, mo, d);
   }
   const reIso = /(\d{4})-(\d{2})-(\d{2})/;
   const m3 = reIso.exec(s);
@@ -321,7 +385,9 @@ function makeBreach(args: {
   // safeSlice révèle un surrogate orphelin restant). Le 1er sanitize retire
   // les chars de contrôle, le safeSlice respecte les surrogate pairs, le
   // 2ème sanitize finalise au cas où.
-  const url = sanitizeForDb(safeSlice(absolutize(args.url, args.baseUrl), 1000));
+  const url = sanitizeForDb(
+    safeSlice(absolutize(args.url, args.baseUrl), 1000),
+  );
   const cleanTitle = sanitizeForDb(safeSlice(sanitizeForDb(args.title), 500));
   const cleanDesc = args.description
     ? sanitizeForDb(safeSlice(sanitizeForDb(stripTags(args.description)), 500))
@@ -330,7 +396,7 @@ function makeBreach(args: {
     args.date instanceof Date
       ? args.date
       : args.date
-        ? parseDateFr(args.date) ?? new Date()
+        ? (parseDateFr(args.date) ?? new Date())
         : new Date();
   const records = parseRecordsExposed(`${cleanTitle} ${cleanDesc ?? ""}`);
   const org = guessOrganization(cleanTitle);
@@ -366,7 +432,9 @@ function dedupItems(items: ScrapedBreach[]): ScrapedBreach[] {
 // Structure observée : site PHP, articles sous /blog/<slug> et /alertes/<slug>,
 // archives sous /archives.php, catégorie /blog/categorie/fuites-de-donnees
 // =============================================================================
-export async function scrapeFrenchBreaches(opts: { deep?: boolean } = {}): Promise<ScrapeResult> {
+export async function scrapeFrenchBreaches(
+  opts: { deep?: boolean } = {},
+): Promise<ScrapeResult> {
   const result: ScrapeResult = {
     source: "FRENCHBREACHES",
     ok: false,
@@ -414,13 +482,15 @@ export async function scrapeFrenchBreaches(opts: { deep?: boolean } = {}): Promi
     const items = parseFeed(fr.body);
     if (items.length > 0) {
       for (const it of items.slice(0, 80)) {
-        result.items.push(makeBreach({
-          url: it.link,
-          title: it.title,
-          description: it.description,
-          date: it.pubDate || null,
-          baseUrl: base,
-        }));
+        result.items.push(
+          makeBreach({
+            url: it.link,
+            title: it.title,
+            description: it.description,
+            date: it.pubDate || null,
+            baseUrl: base,
+          }),
+        );
       }
     }
 
@@ -435,29 +505,37 @@ export async function scrapeFrenchBreaches(opts: { deep?: boolean } = {}): Promi
         if (!titleMatch || !linkMatch) continue;
         const title = stripTags(titleMatch[1]);
         if (title.length < 5) continue;
-        result.items.push(makeBreach({
-          url: linkMatch[1],
-          title,
-          description: stripTags(a).slice(0, 400),
-          date: null,
-          baseUrl: base,
-        }));
+        result.items.push(
+          makeBreach({
+            url: linkMatch[1],
+            title,
+            description: stripTags(a).slice(0, 400),
+            date: null,
+            baseUrl: base,
+          }),
+        );
       }
 
       // Pattern 2 : liens directs vers /blog/<slug> ou /alertes/<slug>
       if (result.items.length === 0) {
-        const linkRe = /<a[^>]+href="(\/(?:blog|alertes)\/[^"]+)"[^>]*>([^<]{10,200})<\/a>/g;
+        const linkRe =
+          /<a[^>]+href="(\/(?:blog|alertes)\/[^"]+)"[^>]*>([^<]{10,200})<\/a>/g;
         let m: RegExpExecArray | null;
-        while ((m = linkRe.exec(fr.body)) !== null && result.items.length < 50) {
+        while (
+          (m = linkRe.exec(fr.body)) !== null &&
+          result.items.length < 50
+        ) {
           const href = m[1];
           const text = stripTags(m[2]);
           if (text.length < 10) continue;
-          result.items.push(makeBreach({
-            url: href,
-            title: text,
-            baseUrl: base,
-            date: null,
-          }));
+          result.items.push(
+            makeBreach({
+              url: href,
+              title: text,
+              baseUrl: base,
+              date: null,
+            }),
+          );
         }
       }
     }
@@ -477,7 +555,9 @@ export async function scrapeFrenchBreaches(opts: { deep?: boolean } = {}): Promi
 // Structure observée : site timeline, probablement Hugo/static, page unique
 // avec liste chronologique d'incidents.
 // =============================================================================
-export async function scrapeBonjourLaFuite(opts: { deep?: boolean } = {}): Promise<ScrapeResult> {
+export async function scrapeBonjourLaFuite(
+  opts: { deep?: boolean } = {},
+): Promise<ScrapeResult> {
   const result: ScrapeResult = {
     source: "BONJOURLAFUITE",
     ok: false,
@@ -520,13 +600,15 @@ export async function scrapeBonjourLaFuite(opts: { deep?: boolean } = {}): Promi
     const items = parseFeed(fr.body);
     if (items.length > 0) {
       for (const it of items.slice(0, 80)) {
-        result.items.push(makeBreach({
-          url: it.link,
-          title: it.title,
-          description: it.description,
-          date: it.pubDate || null,
-          baseUrl: base,
-        }));
+        result.items.push(
+          makeBreach({
+            url: it.link,
+            title: it.title,
+            description: it.description,
+            date: it.pubDate || null,
+            baseUrl: base,
+          }),
+        );
       }
       // Dès que le RSS retourne des items, on s'arrête immédiatement
       break;
@@ -555,22 +637,28 @@ export async function scrapeBonjourLaFuite(opts: { deep?: boolean } = {}): Promi
 // EXPORT PUBLIC
 // =============================================================================
 
-export async function scrapeAllSources(opts: { deep?: boolean } = {}): Promise<ScrapeResult[]> {
+export async function scrapeAllSources(
+  opts: { deep?: boolean } = {},
+): Promise<ScrapeResult[]> {
   return Promise.all([
-    scrapeFrenchBreaches(opts).catch((e): ScrapeResult => ({
-      source: "FRENCHBREACHES",
-      ok: false,
-      count: 0,
-      errors: [String(e?.message ?? e)],
-      items: [],
-    })),
-    scrapeBonjourLaFuite(opts).catch((e): ScrapeResult => ({
-      source: "BONJOURLAFUITE",
-      ok: false,
-      count: 0,
-      errors: [String(e?.message ?? e)],
-      items: [],
-    })),
+    scrapeFrenchBreaches(opts).catch(
+      (e): ScrapeResult => ({
+        source: "FRENCHBREACHES",
+        ok: false,
+        count: 0,
+        errors: [String(e?.message ?? e)],
+        items: [],
+      }),
+    ),
+    scrapeBonjourLaFuite(opts).catch(
+      (e): ScrapeResult => ({
+        source: "BONJOURLAFUITE",
+        ok: false,
+        count: 0,
+        errors: [String(e?.message ?? e)],
+        items: [],
+      }),
+    ),
     // FUITESINFOS retiré (cf. note plus haut)
   ]);
 }
@@ -579,15 +667,17 @@ export async function scrapeAllSources(opts: { deep?: boolean } = {}): Promise<S
 // DEBUG : retourne le HTML brut récupéré pour calibration
 // =============================================================================
 
-export async function debugFetchAll(): Promise<{
-  source: string;
-  url: string;
-  ok: boolean;
-  status?: number;
-  bytes: number;
-  error?: string;
-  bodyExcerpt: string;
-}[]> {
+export async function debugFetchAll(): Promise<
+  {
+    source: string;
+    url: string;
+    ok: boolean;
+    status?: number;
+    bytes: number;
+    error?: string;
+    bodyExcerpt: string;
+  }[]
+> {
   const sources = [
     {
       label: "FRENCHBREACHES",
@@ -611,7 +701,9 @@ export async function debugFetchAll(): Promise<{
     // FUITESINFOS retiré du diagnostic (source non scrapée)
   ];
 
-  const out: ReturnType<typeof debugFetchAll> extends Promise<infer T> ? T : never = [];
+  const out: ReturnType<typeof debugFetchAll> extends Promise<infer T>
+    ? T
+    : never = [];
   // Mode "verbose" : on teste TOUTES les URLs candidates de chaque source
   // pour pouvoir comparer ce que chacune retourne et identifier la bonne.
   for (const s of sources) {

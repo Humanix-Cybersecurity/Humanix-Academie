@@ -14,11 +14,31 @@ const COLORS = {
 };
 
 const styles = StyleSheet.create({
-  page: { padding: 40, fontSize: 10, fontFamily: "Helvetica", color: "#1A1A1A" },
-  header: { marginBottom: 20, borderBottom: "2pt solid #0B3D91", paddingBottom: 10 },
-  brand: { fontSize: 18, fontWeight: "bold", color: COLORS.primary, marginBottom: 4 },
+  page: {
+    padding: 40,
+    fontSize: 10,
+    fontFamily: "Helvetica",
+    color: "#1A1A1A",
+  },
+  header: {
+    marginBottom: 20,
+    borderBottom: "2pt solid #0B3D91",
+    paddingBottom: 10,
+  },
+  brand: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: COLORS.primary,
+    marginBottom: 4,
+  },
   subtitle: { fontSize: 9, color: COLORS.gray },
-  title: { fontSize: 22, fontWeight: "bold", color: COLORS.primary, marginTop: 20, marginBottom: 8 },
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: COLORS.primary,
+    marginTop: 20,
+    marginBottom: 8,
+  },
   meta: { fontSize: 9, color: COLORS.gray, marginBottom: 16 },
 
   scoreBox: {
@@ -29,7 +49,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  scoreNumber: { fontSize: 48, fontWeight: "bold", color: COLORS.primary, marginRight: 16 },
+  scoreNumber: {
+    fontSize: 48,
+    fontWeight: "bold",
+    color: COLORS.primary,
+    marginRight: 16,
+  },
   scoreLabel: { fontSize: 11, color: COLORS.gray },
   scoreVerdict: { fontSize: 14, fontWeight: "bold" },
 
@@ -96,38 +121,75 @@ type ReportProps = {
     averageScore: number;
     conformityScore: number;
   };
-  saisonsBreakdown: { name: string; completed: number; total: number; pct: number }[];
-  team: { name: string; service: string; episodesDone: number; totalEpisodes: number; xp: number; lastActivity: string | null }[];
+  saisonsBreakdown: {
+    name: string;
+    completed: number;
+    total: number;
+    pct: number;
+  }[];
+  team: {
+    name: string;
+    service: string;
+    episodesDone: number;
+    totalEpisodes: number;
+    xp: number;
+    lastActivity: string | null;
+  }[];
 };
 
-export function ConformityReport({ tenantName, generatedAt, generatedBy, stats, saisonsBreakdown, team }: ReportProps) {
+export function ConformityReport({
+  tenantName,
+  generatedAt,
+  generatedBy,
+  stats,
+  saisonsBreakdown,
+  team,
+}: ReportProps) {
   const verdict =
-    stats.conformityScore >= 80 ? "EXCELLENT" : stats.conformityScore >= 50 ? "CORRECT" : "À AMÉLIORER";
+    stats.conformityScore >= 80
+      ? "EXCELLENT"
+      : stats.conformityScore >= 50
+        ? "CORRECT"
+        : "À AMÉLIORER";
   const verdictColor =
-    stats.conformityScore >= 80 ? COLORS.success : stats.conformityScore >= 50 ? COLORS.accent : COLORS.warn;
+    stats.conformityScore >= 80
+      ? COLORS.success
+      : stats.conformityScore >= 50
+        ? COLORS.accent
+        : COLORS.warn;
 
-  const dateFr = generatedAt.toLocaleDateString("fr-FR", { dateStyle: "long" } as any);
+  const dateFr = generatedAt.toLocaleDateString("fr-FR", {
+    dateStyle: "long",
+  } as any);
   const horodatage = generatedAt.toISOString();
 
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
-          <Text style={styles.brand}>Humanix Académie · Rapport de Conformité Cyber</Text>
-          <Text style={styles.subtitle}>Émis le {dateFr} · Pour {tenantName}</Text>
+          <Text style={styles.brand}>
+            Humanix Académie · Rapport de Conformité Cyber
+          </Text>
+          <Text style={styles.subtitle}>
+            Émis le {dateFr} · Pour {tenantName}
+          </Text>
         </View>
 
         <Text style={styles.title}>Score de conformité cyber humaine</Text>
         <Text style={styles.meta}>
-          Évaluation de la maturité cyber des collaborateurs sur la base des modules de sensibilisation Humanix Académie.
+          Évaluation de la maturité cyber des collaborateurs sur la base des
+          modules de sensibilisation Humanix Académie.
         </Text>
 
         <View style={styles.scoreBox}>
           <Text style={styles.scoreNumber}>{stats.conformityScore}%</Text>
           <View>
-            <Text style={[styles.scoreVerdict, { color: verdictColor }]}>{verdict}</Text>
+            <Text style={[styles.scoreVerdict, { color: verdictColor }]}>
+              {verdict}
+            </Text>
             <Text style={styles.scoreLabel}>
-              Calculé depuis le taux d'activation et le taux de complétion des modules.
+              Calculé depuis le taux d'activation et le taux de complétion des
+              modules.
             </Text>
           </View>
         </View>
@@ -159,16 +221,33 @@ export function ConformityReport({ tenantName, generatedAt, generatedBy, stats, 
           <View style={styles.table}>
             <View style={styles.tableHeader}>
               <Text style={[styles.tableHeaderCell, { flex: 4 }]}>Module</Text>
-              <Text style={[styles.tableHeaderCell, { flex: 2 }]}>Couverture</Text>
-              <Text style={[styles.tableHeaderCell, { flex: 1, textAlign: "right" }]}>%</Text>
+              <Text style={[styles.tableHeaderCell, { flex: 2 }]}>
+                Couverture
+              </Text>
+              <Text
+                style={[
+                  styles.tableHeaderCell,
+                  { flex: 1, textAlign: "right" },
+                ]}
+              >
+                %
+              </Text>
             </View>
             {saisonsBreakdown.map((s, i) => (
-              <View key={s.name} style={[styles.tableRow, i % 2 ? styles.tableRowAlt : {}]}>
+              <View
+                key={s.name}
+                style={[styles.tableRow, i % 2 ? styles.tableRowAlt : {}]}
+              >
                 <Text style={[styles.tableCell, { flex: 4 }]}>{s.name}</Text>
                 <Text style={[styles.tableCell, { flex: 2 }]}>
                   {s.completed} / {s.total} équipiers
                 </Text>
-                <Text style={[styles.tableCell, { flex: 1, textAlign: "right", fontWeight: "bold" }]}>
+                <Text
+                  style={[
+                    styles.tableCell,
+                    { flex: 1, textAlign: "right", fontWeight: "bold" },
+                  ]}
+                >
                   {s.pct}%
                 </Text>
               </View>
@@ -178,60 +257,99 @@ export function ConformityReport({ tenantName, generatedAt, generatedBy, stats, 
 
         <View style={styles.legalBox}>
           <Text style={styles.legalText}>
-            Ce rapport atteste que les collaborateurs listés ont suivi les modules de sensibilisation cybersécurité dans le cadre du programme de l'employeur. Conformément au RGPD (art. 32) et à la directive NIS2, l'employeur a mis en oeuvre des mesures techniques et organisationnelles pour assurer la sensibilisation continue de ses équipes.
+            Ce rapport atteste que les collaborateurs listés ont suivi les
+            modules de sensibilisation cybersécurité dans le cadre du programme
+            de l'employeur. Conformément au RGPD (art. 32) et à la directive
+            NIS2, l'employeur a mis en oeuvre des mesures techniques et
+            organisationnelles pour assurer la sensibilisation continue de ses
+            équipes.
           </Text>
         </View>
 
         <View style={styles.footer} fixed>
           <Text>Document généré par Humanix Académie · {horodatage}</Text>
-          <Text render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`} />
+          <Text
+            render={({ pageNumber, totalPages }) =>
+              `Page ${pageNumber} / ${totalPages}`
+            }
+          />
         </View>
       </Page>
 
       {/* Page 2 : detail equipe */}
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
-          <Text style={styles.brand}>Humanix Académie · Rapport de Conformité Cyber</Text>
+          <Text style={styles.brand}>
+            Humanix Académie · Rapport de Conformité Cyber
+          </Text>
           <Text style={styles.subtitle}>Détail équipe — {tenantName}</Text>
         </View>
 
         <Text style={styles.title}>Suivi équipe complet</Text>
         <Text style={styles.meta}>
-          État individuel à la date de génération. Données non-discriminatoires : la plateforme exclut tout usage disciplinaire des résultats.
+          État individuel à la date de génération. Données non-discriminatoires
+          : la plateforme exclut tout usage disciplinaire des résultats.
         </Text>
 
         <View style={styles.table}>
           <View style={styles.tableHeader}>
-            <Text style={[styles.tableHeaderCell, { flex: 3 }]}>Collaborateur</Text>
+            <Text style={[styles.tableHeaderCell, { flex: 3 }]}>
+              Collaborateur
+            </Text>
             <Text style={[styles.tableHeaderCell, { flex: 2 }]}>Service</Text>
-            <Text style={[styles.tableHeaderCell, { flex: 2 }]}>Progression</Text>
-            <Text style={[styles.tableHeaderCell, { flex: 1, textAlign: "right" }]}>XP</Text>
-            <Text style={[styles.tableHeaderCell, { flex: 2 }]}>Dernière activité</Text>
+            <Text style={[styles.tableHeaderCell, { flex: 2 }]}>
+              Progression
+            </Text>
+            <Text
+              style={[styles.tableHeaderCell, { flex: 1, textAlign: "right" }]}
+            >
+              XP
+            </Text>
+            <Text style={[styles.tableHeaderCell, { flex: 2 }]}>
+              Dernière activité
+            </Text>
           </View>
           {team.map((u, i) => (
-            <View key={u.name} style={[styles.tableRow, i % 2 ? styles.tableRowAlt : {}]}>
+            <View
+              key={u.name}
+              style={[styles.tableRow, i % 2 ? styles.tableRowAlt : {}]}
+            >
               <Text style={[styles.tableCell, { flex: 3 }]}>{u.name}</Text>
               <Text style={[styles.tableCell, { flex: 2 }]}>{u.service}</Text>
               <Text style={[styles.tableCell, { flex: 2 }]}>
                 {u.episodesDone}/{u.totalEpisodes}
               </Text>
-              <Text style={[styles.tableCell, { flex: 1, textAlign: "right", fontWeight: "bold" }]}>
+              <Text
+                style={[
+                  styles.tableCell,
+                  { flex: 1, textAlign: "right", fontWeight: "bold" },
+                ]}
+              >
                 {u.xp}
               </Text>
-              <Text style={[styles.tableCell, { flex: 2 }]}>{u.lastActivity ?? "—"}</Text>
+              <Text style={[styles.tableCell, { flex: 2 }]}>
+                {u.lastActivity ?? "—"}
+              </Text>
             </View>
           ))}
         </View>
 
         <View style={styles.legalBox}>
           <Text style={styles.legalText}>
-            Document signé électroniquement par génération automatique. Hash de signature : {hashOf(`${tenantName}-${horodatage}-${stats.conformityScore}`)}. Émis par {generatedBy}.
+            Document signé électroniquement par génération automatique. Hash de
+            signature :{" "}
+            {hashOf(`${tenantName}-${horodatage}-${stats.conformityScore}`)}.
+            Émis par {generatedBy}.
           </Text>
         </View>
 
         <View style={styles.footer} fixed>
           <Text>Document généré par Humanix Académie · {horodatage}</Text>
-          <Text render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`} />
+          <Text
+            render={({ pageNumber, totalPages }) =>
+              `Page ${pageNumber} / ${totalPages}`
+            }
+          />
         </View>
       </Page>
     </Document>
@@ -242,7 +360,7 @@ export function ConformityReport({ tenantName, generatedAt, generatedBy, stats, 
 function hashOf(input: string): string {
   let h = 0;
   for (let i = 0; i < input.length; i++) {
-    h = ((h << 5) - h) + input.charCodeAt(i);
+    h = (h << 5) - h + input.charCodeAt(i);
     h |= 0;
   }
   return Math.abs(h).toString(16).padStart(8, "0").toUpperCase();

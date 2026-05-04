@@ -44,15 +44,15 @@ Il est versionné dans Git, accessible publiquement, et mis à jour à chaque é
 
 ### Niveau de maturité global
 
-| Domaine | Niveau | Commentaire |
-|---|---|---|
-| Authentification & autorisation | 🟢 Mature | Auth.js v5, MFA SSO, multi-tenant scoping strict |
-| Sécurité applicative | 🟢 Mature | Validation Zod, sanitisation, anti-SSRF, anti-CSRF |
-| Sécurité réseau & infrastructure | 🟢 Mature | HAProxy + segmentation Docker + TLS 1.2+ |
-| Protection des données (RGPD) | 🟢 Mature | DPA + registre + droits implémentés + souverain FR |
-| SDLC sécurisé | 🟡 Intermédiaire | TypeScript strict, mais pas encore de scan automatisé en CI |
-| Gestion des incidents | 🟡 Intermédiaire | Procédure documentée, mais sans drill annuel formel |
-| Audit externe formel | 🔴 À faire | Aucun pentest externe à ce jour (programmé à venir) |
+| Domaine                          | Niveau           | Commentaire                                                 |
+| -------------------------------- | ---------------- | ----------------------------------------------------------- |
+| Authentification & autorisation  | 🟢 Mature        | Auth.js v5, MFA SSO, multi-tenant scoping strict            |
+| Sécurité applicative             | 🟢 Mature        | Validation Zod, sanitisation, anti-SSRF, anti-CSRF          |
+| Sécurité réseau & infrastructure | 🟢 Mature        | HAProxy + segmentation Docker + TLS 1.2+                    |
+| Protection des données (RGPD)    | 🟢 Mature        | DPA + registre + droits implémentés + souverain FR          |
+| SDLC sécurisé                    | 🟡 Intermédiaire | TypeScript strict, mais pas encore de scan automatisé en CI |
+| Gestion des incidents            | 🟡 Intermédiaire | Procédure documentée, mais sans drill annuel formel         |
+| Audit externe formel             | 🔴 À faire       | Aucun pentest externe à ce jour (programmé à venir)         |
 
 ### Synthèse en 3 chiffres
 
@@ -72,17 +72,17 @@ Il est versionné dans Git, accessible publiquement, et mis à jour à chaque é
 
 ### 2.1 Périmètre couvert par ce rapport
 
-| Composant | Inclus | Exclu |
-|---|---|---|
-| Plateforme web Humanix Académie | ✅ | — |
-| API REST publique (`/api/v1/*`) | ✅ | — |
-| Service TTS auto-hébergé (Piper) | ✅ | — |
-| Reverse proxy HAProxy | ✅ | — |
-| Base de données PostgreSQL | ✅ | — |
-| Plugin Outlook (squelette livré) | ✅ | — |
-| Endpoints cron (observatoire fuites, anecdotes) | ✅ | — |
-| Postes de travail des collaborateurs | — | (couvert par charte interne hors scope rapport produit) |
-| Code des modules Marketplace community | Partiellement | (validation Zod + hash SHA-256, mais code non audité unitairement) |
+| Composant                                       | Inclus        | Exclu                                                              |
+| ----------------------------------------------- | ------------- | ------------------------------------------------------------------ |
+| Plateforme web Humanix Académie                 | ✅            | —                                                                  |
+| API REST publique (`/api/v1/*`)                 | ✅            | —                                                                  |
+| Service TTS auto-hébergé (Piper)                | ✅            | —                                                                  |
+| Reverse proxy HAProxy                           | ✅            | —                                                                  |
+| Base de données PostgreSQL                      | ✅            | —                                                                  |
+| Plugin Outlook (squelette livré)                | ✅            | —                                                                  |
+| Endpoints cron (observatoire fuites, anecdotes) | ✅            | —                                                                  |
+| Postes de travail des collaborateurs            | —             | (couvert par charte interne hors scope rapport produit)            |
+| Code des modules Marketplace community          | Partiellement | (validation Zod + hash SHA-256, mais code non audité unitairement) |
 
 ### 2.2 Méthodologie d'évaluation
 
@@ -95,15 +95,15 @@ L'évaluation repose sur **4 sources de référence** :
 
 ### 2.3 Tests effectués
 
-| Test | Description | Date |
-|---|---|---|
-| Revue de code interne | Lecture systématique des routes API, des server actions et des helpers d'auth | Continue |
-| Test SSRF sur webhooks | URLs internes (10.x, 127.x, 192.168.x, .local, .internal) refusées par allowlist | Validé |
-| Test injection HTML / XSS sur générateur phishing IA | Sanitisation script/iframe/event handlers vérifiée | Validé |
-| Test rate limiting | Tentatives répétées sur endpoints sensibles (`/api/tts/synthesize`, `/api/admin/breaches/refresh`) | Limites respectées |
-| Test isolation tenant | Tentative d'accès à une saison d'un autre tenant via manipulation de paramètres | Refus correct |
-| Test échappement Prisma | Inputs avec backslashes, surrogate pairs, NULL bytes | Sanitisation BDD validée |
-| Audit accessibilité interne | WCAG 2.1 AA / RGAA 4.1 — score interne 88 % | Cf. `/accessibilite` |
+| Test                                                 | Description                                                                                        | Date                     |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------ |
+| Revue de code interne                                | Lecture systématique des routes API, des server actions et des helpers d'auth                      | Continue                 |
+| Test SSRF sur webhooks                               | URLs internes (10.x, 127.x, 192.168.x, .local, .internal) refusées par allowlist                   | Validé                   |
+| Test injection HTML / XSS sur générateur phishing IA | Sanitisation script/iframe/event handlers vérifiée                                                 | Validé                   |
+| Test rate limiting                                   | Tentatives répétées sur endpoints sensibles (`/api/tts/synthesize`, `/api/admin/breaches/refresh`) | Limites respectées       |
+| Test isolation tenant                                | Tentative d'accès à une saison d'un autre tenant via manipulation de paramètres                    | Refus correct            |
+| Test échappement Prisma                              | Inputs avec backslashes, surrogate pairs, NULL bytes                                               | Sanitisation BDD validée |
+| Audit accessibilité interne                          | WCAG 2.1 AA / RGAA 4.1 — score interne 88 %                                                        | Cf. `/accessibilite`     |
 
 ### 2.4 Tests **non encore réalisés** (transparence)
 
@@ -142,17 +142,17 @@ L'évaluation repose sur **4 sources de référence** :
 
 ### 3.2 Flux de données sensibles
 
-| Donnée | Source | Stockage | Sortie réseau |
-|---|---|---|---|
-| Identifiants utilisateurs | Saisie utilisateur | PostgreSQL (Auth.js Account/Session) | Aucune |
-| Mots de passe | Aucun (zero-password : magic link ou SSO) | Aucun | Aucune |
-| Tokens OAuth | Provider Google/Microsoft | PostgreSQL (Account.access_token, chiffré au filesystem) | Aucune |
-| Progression apprenant | Saisie via player | PostgreSQL | Aucune |
-| Contenu Cyber-Anecdote | Rédaction interne | PostgreSQL | Resend (envoi mail) |
-| Prompts Mistral | Saisie admin tenant | Mémoire vive uniquement | Mistral AI (Paris, France) |
-| Audio TTS | Texte de modules | Cache disque hash sha256, TTL 30j | Aucune (service interne) |
-| Webhooks | Événements tenant | Trigger sur Slack/Teams/URL custom | URL configurée par tenant |
-| Logs système | Logs HAProxy + Next.js | stdout (capturé Docker) | Aucune par défaut |
+| Donnée                    | Source                                    | Stockage                                                 | Sortie réseau              |
+| ------------------------- | ----------------------------------------- | -------------------------------------------------------- | -------------------------- |
+| Identifiants utilisateurs | Saisie utilisateur                        | PostgreSQL (Auth.js Account/Session)                     | Aucune                     |
+| Mots de passe             | Aucun (zero-password : magic link ou SSO) | Aucun                                                    | Aucune                     |
+| Tokens OAuth              | Provider Google/Microsoft                 | PostgreSQL (Account.access_token, chiffré au filesystem) | Aucune                     |
+| Progression apprenant     | Saisie via player                         | PostgreSQL                                               | Aucune                     |
+| Contenu Cyber-Anecdote    | Rédaction interne                         | PostgreSQL                                               | Resend (envoi mail)        |
+| Prompts Mistral           | Saisie admin tenant                       | Mémoire vive uniquement                                  | Mistral AI (Paris, France) |
+| Audio TTS                 | Texte de modules                          | Cache disque hash sha256, TTL 30j                        | Aucune (service interne)   |
+| Webhooks                  | Événements tenant                         | Trigger sur Slack/Teams/URL custom                       | URL configurée par tenant  |
+| Logs système              | Logs HAProxy + Next.js                    | stdout (capturé Docker)                                  | Aucune par défaut          |
 
 **Aucune donnée utilisateur** n'est envoyée à un service tiers sans configuration explicite par le tenant (intégrations webhook, etc.).
 
@@ -180,14 +180,14 @@ L'évaluation repose sur **4 sources de référence** :
 
 #### Contrôles vérifiés
 
-| Contrôle | Statut |
-|---|---|
-| Pas de mot de passe en clair en log | ✅ Vérifié |
-| Pas de mot de passe en BDD | ✅ N/A (zero-password) |
-| Magic link à usage unique avec TTL court (1h) | ✅ Vérifié |
-| Compte suspendu refusé même si magic link valide | ✅ Vérifié `isActive` check |
-| SSO refuse comptes inexistants en BDD | ✅ Vérifié `signIn` callback (pas d'auto-création) |
-| Erreur de connexion ne révèle pas si l'email existe | ✅ Vérifié |
+| Contrôle                                            | Statut                                             |
+| --------------------------------------------------- | -------------------------------------------------- |
+| Pas de mot de passe en clair en log                 | ✅ Vérifié                                         |
+| Pas de mot de passe en BDD                          | ✅ N/A (zero-password)                             |
+| Magic link à usage unique avec TTL court (1h)       | ✅ Vérifié                                         |
+| Compte suspendu refusé même si magic link valide    | ✅ Vérifié `isActive` check                        |
+| SSO refuse comptes inexistants en BDD               | ✅ Vérifié `signIn` callback (pas d'auto-création) |
+| Erreur de connexion ne révèle pas si l'email existe | ✅ Vérifié                                         |
 
 ### 4.2 Autorisation (multi-tenant)
 
@@ -200,13 +200,13 @@ L'évaluation repose sur **4 sources de référence** :
 
 #### Contrôles vérifiés
 
-| Contrôle | Statut |
-|---|---|
-| Tous les `findMany` / `findUnique` filtrent sur `tenantId` | ✅ Audit code |
-| Server actions vérifient le rôle ET le `tenantId` | ✅ Helper `requireAdminTenant()` réutilisé |
+| Contrôle                                                                                             | Statut                                                 |
+| ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| Tous les `findMany` / `findUnique` filtrent sur `tenantId`                                           | ✅ Audit code                                          |
+| Server actions vérifient le rôle ET le `tenantId`                                                    | ✅ Helper `requireAdminTenant()` réutilisé             |
 | Saison globale (`tenantId: null`) accessible à tous, saison custom uniquement au tenant propriétaire | ✅ Filtre `OR: [{tenantId: null}, {tenantId}]` partout |
-| Plan-gate vérifié côté server action AVANT toute action | ✅ Helper `getTenantPlan()` + comparaison rang |
-| Tentative d'accès à un tenant via paramètre URL falsifié | ✅ Refus correct (404) |
+| Plan-gate vérifié côté server action AVANT toute action                                              | ✅ Helper `getTenantPlan()` + comparaison rang         |
+| Tentative d'accès à un tenant via paramètre URL falsifié                                             | ✅ Refus correct (404)                                 |
 
 #### Test d'isolation tenant manuel
 
@@ -226,40 +226,40 @@ Résultat observé : ✅ Conforme (aucune fuite)
 
 #### Exemples concrets
 
-| Route | Validation |
-|---|---|
-| `POST /api/progress` | `score: z.number().int().min(0).max(1000), quizScorePct: z.number().int().min(0).max(100).optional()` |
-| `POST /api/admin/breaches/refresh` | Authn + role check + pas de payload accepté |
-| `POST /api/tts/synthesize` | `text: max 5000 chars`, format whitelist `mp3\|wav` |
-| `POST /api/phishing/report` | Email pro vérifié BDD, body excerpt max 10K, CORS allowlist |
-| Création webhook tenant | URL HTTPS obligatoire, anti-SSRF (refus IPs privées + .local + .internal) |
-| Génération phishing IA Mistral | Anti-PII (refus si SIRET/SIREN/email détecté dans contexte libre) |
+| Route                              | Validation                                                                                            |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `POST /api/progress`               | `score: z.number().int().min(0).max(1000), quizScorePct: z.number().int().min(0).max(100).optional()` |
+| `POST /api/admin/breaches/refresh` | Authn + role check + pas de payload accepté                                                           |
+| `POST /api/tts/synthesize`         | `text: max 5000 chars`, format whitelist `mp3\|wav`                                                   |
+| `POST /api/phishing/report`        | Email pro vérifié BDD, body excerpt max 10K, CORS allowlist                                           |
+| Création webhook tenant            | URL HTTPS obligatoire, anti-SSRF (refus IPs privées + .local + .internal)                             |
+| Génération phishing IA Mistral     | Anti-PII (refus si SIRET/SIREN/email détecté dans contexte libre)                                     |
 
 ### 4.4 Protection contre les attaques courantes
 
-| Attaque | Protection |
-|---|---|
-| **SQL Injection** | Prisma ORM (queries paramétrées par nature). Aucun `$queryRawUnsafe` dans le code. |
-| **XSS** | React échappe par défaut. Utilisation de `dangerouslySetInnerHTML` limitée à 2 cas auditables : (1) script anti-flash thème (CSS toggle) et (2) preview HTML phishing IA — ce dernier passe par `sanitizeHtml()` qui retire `<script>`, `<iframe>`, attributs `on*`, `javascript:` |
-| **CSRF** | Server Actions Next.js avec protection CSRF native (token automatique). |
-| **SSRF (webhooks)** | `isSafeWebhookUrl()` refuse : non-HTTPS, hostname `localhost` / `*.local` / `*.internal` / `*.lan`, IPv4 littéraux dans les ranges privées (10.x, 127.x, 169.254.x, 172.16-31.x, 192.168.x, 0.x). |
-| **Open redirect** | Aucune redirection basée sur paramètre utilisateur non-whitelisté. |
-| **Clickjacking** | Header `X-Frame-Options: DENY` poussé par HAProxy. |
-| **MIME sniffing** | Header `X-Content-Type-Options: nosniff`. |
-| **Information disclosure** | Headers `Server` et `X-Powered-By` supprimés par HAProxy. Errorfiles brandés (anti-fingerprint). |
-| **Brute force connexion** | Magic link à usage unique + rate limit HAProxy (100 req/10s par IP). |
-| **Énumération comptes** | Réponse identique pour email existant / inexistant à la connexion. |
+| Attaque                    | Protection                                                                                                                                                                                                                                                                         |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **SQL Injection**          | Prisma ORM (queries paramétrées par nature). Aucun `$queryRawUnsafe` dans le code.                                                                                                                                                                                                 |
+| **XSS**                    | React échappe par défaut. Utilisation de `dangerouslySetInnerHTML` limitée à 2 cas auditables : (1) script anti-flash thème (CSS toggle) et (2) preview HTML phishing IA — ce dernier passe par `sanitizeHtml()` qui retire `<script>`, `<iframe>`, attributs `on*`, `javascript:` |
+| **CSRF**                   | Server Actions Next.js avec protection CSRF native (token automatique).                                                                                                                                                                                                            |
+| **SSRF (webhooks)**        | `isSafeWebhookUrl()` refuse : non-HTTPS, hostname `localhost` / `*.local` / `*.internal` / `*.lan`, IPv4 littéraux dans les ranges privées (10.x, 127.x, 169.254.x, 172.16-31.x, 192.168.x, 0.x).                                                                                  |
+| **Open redirect**          | Aucune redirection basée sur paramètre utilisateur non-whitelisté.                                                                                                                                                                                                                 |
+| **Clickjacking**           | Header `X-Frame-Options: DENY` poussé par HAProxy.                                                                                                                                                                                                                                 |
+| **MIME sniffing**          | Header `X-Content-Type-Options: nosniff`.                                                                                                                                                                                                                                          |
+| **Information disclosure** | Headers `Server` et `X-Powered-By` supprimés par HAProxy. Errorfiles brandés (anti-fingerprint).                                                                                                                                                                                   |
+| **Brute force connexion**  | Magic link à usage unique + rate limit HAProxy (100 req/10s par IP).                                                                                                                                                                                                               |
+| **Énumération comptes**    | Réponse identique pour email existant / inexistant à la connexion.                                                                                                                                                                                                                 |
 
 ### 4.5 Rate limiting applicatif
 
 En complément du rate limit HAProxy, certains endpoints ont leurs propres compteurs :
 
-| Endpoint | Limite | Mécanisme |
-|---|---|---|
-| `POST /api/tts/synthesize` | 50 req/h/user | `Event` count |
-| `POST /api/phishing/report` | 30 signalements/h/user | `Event` count |
-| `POST /api/admin/phishing/generer` | 10 générations/h/user | `Event` count |
-| `POST /api/cron/breaches-refresh` | Rate non-applicatif (token CRON_SECRET) | — |
+| Endpoint                           | Limite                                  | Mécanisme     |
+| ---------------------------------- | --------------------------------------- | ------------- |
+| `POST /api/tts/synthesize`         | 50 req/h/user                           | `Event` count |
+| `POST /api/phishing/report`        | 30 signalements/h/user                  | `Event` count |
+| `POST /api/admin/phishing/generer` | 10 générations/h/user                   | `Event` count |
+| `POST /api/cron/breaches-refresh`  | Rate non-applicatif (token CRON_SECRET) | —             |
 
 ### 4.6 Audit trail
 
@@ -270,6 +270,7 @@ Toutes les actions sensibles produisent un `Event` en BDD, avec :
 - `payload` (métadonnées **sans contenu sensible** : longueurs, hashes, et non le texte original)
 
 **Exemples** :
+
 - Connexion : pas de log direct (Auth.js gère sa propre table `Session`)
 - Téléchargement Pack NIS2 : `pack_nis2_generated` + nom dirigeant + ville (consigne contractuelle légitime)
 - Génération phishing IA : `phishing_generated` + template + service + difficulté + longueurs (jamais le contenu)
@@ -296,15 +297,15 @@ Avant cette refonte (version V0.3 et antérieures), Postgres était exposé sur 
 
 Configuration : `infra/haproxy/haproxy.cfg`. Caractéristiques :
 
-| Paramètre | Valeur |
-|---|---|
-| Version | 2.9-alpine |
-| TLS minimum | TLS 1.2 |
-| Ciphers | Mozilla Intermediate (AEAD only : ECDHE-AES-GCM, ECDHE-CHACHA20) |
-| HTTP/2 ALPN | h2, http/1.1 |
-| Healthcheck | `GET /api/health` toutes les 5s |
-| Rate limit | 100 req/10s par IP, 30 errors/10s, 50 conn/10s |
-| Stick-table | IPv6, taille 100K, expire 30 min |
+| Paramètre   | Valeur                                                           |
+| ----------- | ---------------------------------------------------------------- |
+| Version     | 2.9-alpine                                                       |
+| TLS minimum | TLS 1.2                                                          |
+| Ciphers     | Mozilla Intermediate (AEAD only : ECDHE-AES-GCM, ECDHE-CHACHA20) |
+| HTTP/2 ALPN | h2, http/1.1                                                     |
+| Healthcheck | `GET /api/health` toutes les 5s                                  |
+| Rate limit  | 100 req/10s par IP, 30 errors/10s, 50 conn/10s                   |
+| Stick-table | IPv6, taille 100K, expire 30 min                                 |
 
 #### Règles HAProxy de sécurité
 
@@ -328,12 +329,12 @@ http-request deny deny_status 429 if is_abuser_req
 
 ### 5.2 Conteneurisation
 
-| Service | Image | User | Volumes | Réseau |
-|---|---|---|---|---|
-| haproxy | `haproxy:2.9-alpine` | non-root | config + errors RO | frontend |
-| app (Next.js) | Build local multi-stage | `nextjs:nodejs` (1001:1001) | aucun | frontend + backend |
-| postgres | `postgres:16-alpine` | par défaut | volume persistant | backend |
-| tts | Build local (Python 3.11-slim + Piper) | `tts:tts` non-root | aucun | backend |
+| Service       | Image                                  | User                        | Volumes            | Réseau             |
+| ------------- | -------------------------------------- | --------------------------- | ------------------ | ------------------ |
+| haproxy       | `haproxy:2.9-alpine`                   | non-root                    | config + errors RO | frontend           |
+| app (Next.js) | Build local multi-stage                | `nextjs:nodejs` (1001:1001) | aucun              | frontend + backend |
+| postgres      | `postgres:16-alpine`                   | par défaut                  | volume persistant  | backend            |
+| tts           | Build local (Python 3.11-slim + Piper) | `tts:tts` non-root          | aucun              | backend            |
 
 #### Hardening Dockerfile principal (Next.js)
 
@@ -354,16 +355,17 @@ http-request deny deny_status 429 if is_abuser_req
 
 ### 5.3 Gestion des secrets
 
-| Secret | Lieu | Génération recommandée |
-|---|---|---|
-| `AUTH_SECRET` | env conteneur | `openssl rand -base64 32` |
-| `CRON_SECRET` | env conteneur | `openssl rand -hex 32` |
-| `DATABASE_URL` | env conteneur (mot de passe DB inclus) | mot de passe fort, géré par opérateur |
-| `MISTRAL_API_KEY` | env conteneur | fournie par Mistral AI |
-| OAuth secrets (Google, Microsoft) | env conteneur | fournis par provider |
-| Resend API key | env conteneur | fournie par Resend |
+| Secret                            | Lieu                                   | Génération recommandée                |
+| --------------------------------- | -------------------------------------- | ------------------------------------- |
+| `AUTH_SECRET`                     | env conteneur                          | `openssl rand -base64 32`             |
+| `CRON_SECRET`                     | env conteneur                          | `openssl rand -hex 32`                |
+| `DATABASE_URL`                    | env conteneur (mot de passe DB inclus) | mot de passe fort, géré par opérateur |
+| `MISTRAL_API_KEY`                 | env conteneur                          | fournie par Mistral AI                |
+| OAuth secrets (Google, Microsoft) | env conteneur                          | fournis par provider                  |
+| Resend API key                    | env conteneur                          | fournie par Resend                    |
 
 **Pratiques** :
+
 - Aucun secret committé dans Git
 - `.env.example` (à venir V0.5) avec valeurs vides
 - En production : stockage dans le secret manager Scaleway / Vault
@@ -371,12 +373,12 @@ http-request deny deny_status 429 if is_abuser_req
 
 ### 5.4 Mises à jour et CVE
 
-| Composant | Mise à jour |
-|---|---|
-| Dépendances npm | `npm audit` mensuel manuel (à automatiser via Dependabot, cf. plan de remédiation) |
-| Image PostgreSQL | Suivi des releases mineures (16.x) |
-| Image HAProxy | Suivi des branches stables 2.9.x |
-| Image Python TTS | Rebuild trimestriel pour patches CVE base image |
+| Composant        | Mise à jour                                                                        |
+| ---------------- | ---------------------------------------------------------------------------------- |
+| Dépendances npm  | `npm audit` mensuel manuel (à automatiser via Dependabot, cf. plan de remédiation) |
+| Image PostgreSQL | Suivi des releases mineures (16.x)                                                 |
+| Image HAProxy    | Suivi des branches stables 2.9.x                                                   |
+| Image Python TTS | Rebuild trimestriel pour patches CVE base image                                    |
 
 ---
 
@@ -384,28 +386,28 @@ http-request deny deny_status 429 if is_abuser_req
 
 ### 6.1 Catégorisation des données
 
-| Catégorie | Exemples | Base légale RGPD | Durée de conservation |
-|---|---|---|---|
-| **Identification compte** | email, nom, rôle, tenant | Exécution du contrat (art. 6.1.b) | Durée du contrat + 13 mois |
-| **Données de progression** | scores, modules complétés, XP | Exécution du contrat | Durée du contrat |
-| **Risk score & maîtrise** | scores agrégés par user | Intérêt légitime + contrat | Durée du contrat |
-| **Logs d'événements** | type d'action, timestamps | Intérêt légitime (sécurité, debug) | 13 mois (à formaliser) |
-| **Données techniques** | IP hashées, user-agent | Intérêt légitime (sécurité) | 13 mois |
-| **Audit Flash** | entrée publique pour leads | Consentement (case cochée) | 36 mois max |
-| **Newsletter Cyber-Anecdote** | email, opt-in | Consentement explicite | Jusqu'à désinscription |
+| Catégorie                     | Exemples                      | Base légale RGPD                   | Durée de conservation      |
+| ----------------------------- | ----------------------------- | ---------------------------------- | -------------------------- |
+| **Identification compte**     | email, nom, rôle, tenant      | Exécution du contrat (art. 6.1.b)  | Durée du contrat + 13 mois |
+| **Données de progression**    | scores, modules complétés, XP | Exécution du contrat               | Durée du contrat           |
+| **Risk score & maîtrise**     | scores agrégés par user       | Intérêt légitime + contrat         | Durée du contrat           |
+| **Logs d'événements**         | type d'action, timestamps     | Intérêt légitime (sécurité, debug) | 13 mois (à formaliser)     |
+| **Données techniques**        | IP hashées, user-agent        | Intérêt légitime (sécurité)        | 13 mois                    |
+| **Audit Flash**               | entrée publique pour leads    | Consentement (case cochée)         | 36 mois max                |
+| **Newsletter Cyber-Anecdote** | email, opt-in                 | Consentement explicite             | Jusqu'à désinscription     |
 
 ### 6.2 Droits des personnes implémentés
 
-| Droit | Statut | Modalité |
-|---|---|---|
-| **Information** (art. 13) | ✅ | Page `/confidentialite` exhaustive |
-| **Accès** (art. 15) | ✅ | Sur demande à `rgpd@humanix-cybersecurity.fr`, réponse < 30 jours |
-| **Rectification** (art. 16) | ✅ | Auto-service depuis `/profil` |
-| **Effacement** (art. 17) | ✅ | Sur demande, traitement < 30 jours, cascade Prisma `onDelete: Cascade` |
-| **Limitation** (art. 18) | ✅ | Compte mis en `isActive: false` sur demande |
-| **Portabilité** (art. 20) | ⚠️ Partiel | Export CSV des progressions disponible, pas encore d'export complet zip |
-| **Opposition** (art. 21) | ✅ | Désinscription newsletter en 1 clic, refus marketing |
-| **Décision automatisée** (art. 22) | N/A | Aucune décision impactante automatisée |
+| Droit                              | Statut     | Modalité                                                                |
+| ---------------------------------- | ---------- | ----------------------------------------------------------------------- |
+| **Information** (art. 13)          | ✅         | Page `/confidentialite` exhaustive                                      |
+| **Accès** (art. 15)                | ✅         | Sur demande à `rgpd@humanix-cybersecurity.fr`, réponse < 30 jours       |
+| **Rectification** (art. 16)        | ✅         | Auto-service depuis `/profil`                                           |
+| **Effacement** (art. 17)           | ✅         | Sur demande, traitement < 30 jours, cascade Prisma `onDelete: Cascade`  |
+| **Limitation** (art. 18)           | ✅         | Compte mis en `isActive: false` sur demande                             |
+| **Portabilité** (art. 20)          | ⚠️ Partiel | Export CSV des progressions disponible, pas encore d'export complet zip |
+| **Opposition** (art. 21)           | ✅         | Désinscription newsletter en 1 clic, refus marketing                    |
+| **Décision automatisée** (art. 22) | N/A        | Aucune décision impactante automatisée                                  |
 
 ### 6.3 Privacy by design
 
@@ -416,14 +418,14 @@ http-request deny deny_status 429 if is_abuser_req
 
 ### 6.4 Sous-traitants RGPD (art. 28)
 
-| Sous-traitant | Service | Pays | DPA |
-|---|---|---|---|
-| Scaleway | Hébergement | France 🇫🇷 | DPA standard signé |
-| Resend | Envoi de mails | UE 🇪🇺 (Berlin/Dublin) | DPA standard signé |
-| Mistral AI | IA générative phishing | France 🇫🇷 | DPA standard signé |
-| Stripe (à venir) | Paiements | Irlande 🇮🇪 + USA (mais data EU) | DPA standard |
-| Google (SSO optionnel) | Authentification SSO | USA 🇺🇸 | OAuth uniquement, aucune donnée HumaniX transmise |
-| Microsoft (SSO optionnel) | Authentification SSO | USA 🇺🇸 | OAuth uniquement |
+| Sous-traitant             | Service                | Pays                            | DPA                                               |
+| ------------------------- | ---------------------- | ------------------------------- | ------------------------------------------------- |
+| Scaleway                  | Hébergement            | France 🇫🇷                       | DPA standard signé                                |
+| Resend                    | Envoi de mails         | UE 🇪🇺 (Berlin/Dublin)           | DPA standard signé                                |
+| Mistral AI                | IA générative phishing | France 🇫🇷                       | DPA standard signé                                |
+| Stripe (à venir)          | Paiements              | Irlande 🇮🇪 + USA (mais data EU) | DPA standard                                      |
+| Google (SSO optionnel)    | Authentification SSO   | USA 🇺🇸                          | OAuth uniquement, aucune donnée HumaniX transmise |
+| Microsoft (SSO optionnel) | Authentification SSO   | USA 🇺🇸                          | OAuth uniquement                                  |
 
 **Aucune dépendance Cloud Act US** sur les données HumaniX (Google/Microsoft sont uniquement consultés pour valider une identité, aucune donnée tenant ne leur est transmise).
 
@@ -436,6 +438,7 @@ http-request deny deny_status 429 if is_abuser_req
 ### 6.6 Notifications de violation (art. 33)
 
 Procédure :
+
 1. Détection (par alerte ou signalement)
 2. Évaluation : la fuite concerne-t-elle des données personnelles ?
 3. Si oui : notification CNIL via `notifications.cnil.fr` sous **72h**
@@ -450,14 +453,14 @@ Procédure :
 
 ### 7.1 Stack technique et choix
 
-| Choix | Justification sécurité |
-|---|---|
-| **TypeScript strict** | Détection d'erreurs au build, réduction des bugs runtime |
+| Choix                       | Justification sécurité                                                                     |
+| --------------------------- | ------------------------------------------------------------------------------------------ |
+| **TypeScript strict**       | Détection d'erreurs au build, réduction des bugs runtime                                   |
 | **Next.js 15 + App Router** | Server Components par défaut (moins d'attaques côté client), CSRF natif sur Server Actions |
-| **Prisma ORM** | Queries paramétrées par nature (immune SQL injection), schema versionné |
-| **Auth.js v5** | Lib auditée, base installée massive |
-| **Zod** | Validation runtime systématique |
-| **React 19** | Stable, sans deps connues vulnérables |
+| **Prisma ORM**              | Queries paramétrées par nature (immune SQL injection), schema versionné                    |
+| **Auth.js v5**              | Lib auditée, base installée massive                                                        |
+| **Zod**                     | Validation runtime systématique                                                            |
+| **React 19**                | Stable, sans deps connues vulnérables                                                      |
 
 ### 7.2 Code review
 
@@ -467,14 +470,14 @@ Procédure :
 
 ### 7.3 Gestion des dépendances
 
-| Pratique | Statut |
-|---|---|
-| `npm audit` avant chaque release | ✅ Manuel + automatisé en CI (job dédié `npm audit (HIGH/CRITICAL)`) |
+| Pratique                                                       | Statut                                                                                                                                                                         |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `npm audit` avant chaque release                               | ✅ Manuel + automatisé en CI (job dédié `npm audit (HIGH/CRITICAL)`)                                                                                                           |
 | **Dependabot configuré** (npm + pip + github-actions + docker) | ✅ Hebdo le lundi, groupes filtrés `minor + patch`, MAJORS bloquées sur les packages critiques (next, react, prisma, next-auth, zod, mdx-remote, tailwind, typescript, eslint) |
-| Audit licences dépendances vs AGPL | ✅ Documenté dans [`docs/LICENSES_AUDIT.md`](./LICENSES_AUDIT.md) — 549 packages scannés, 0 incompatibilité |
-| Scan SCA (Snyk, Socket.dev) | 🔲 Optionnel — Dependabot alerts couvre déjà les CVE |
-| Pinning des versions | ✅ `package-lock.json` versionné |
-| Pas de `*` ni `^` non-borné | ✅ `package.json` audité |
+| Audit licences dépendances vs AGPL                             | ✅ Documenté dans [`docs/LICENSES_AUDIT.md`](./LICENSES_AUDIT.md) — 549 packages scannés, 0 incompatibilité                                                                    |
+| Scan SCA (Snyk, Socket.dev)                                    | 🔲 Optionnel — Dependabot alerts couvre déjà les CVE                                                                                                                           |
+| Pinning des versions                                           | ✅ `package-lock.json` versionné                                                                                                                                               |
+| Pas de `*` ni `^` non-borné                                    | ✅ `package.json` audité                                                                                                                                                       |
 
 ### 7.4 Tests automatisés
 
@@ -486,15 +489,15 @@ Procédure :
 
 ### 7.5 CI/CD
 
-| Élément | Statut | Détail |
-|---|---|---|
-| **GitHub Actions CI** | ✅ Actif | `.github/workflows/ci.yml` — lint + types + Prettier + audit npm + production build à chaque push et PR |
-| **CodeQL (SAST)** | ✅ Actif | `.github/workflows/codeql.yml` — analyse statique automatisée. Gratuit en repo public, premier run dès passage public le 26 mai 2026 |
-| **DCO signed-off-by check** | ✅ Actif | Vérifie que chaque commit est signé `Signed-off-by:` (engagement DCO) |
-| **Dependabot version updates** | ✅ Actif | Cf. §7.3 |
-| **Build Docker reproductible** | ✅ Actif | Dockerfile multi-stage avec lockfile pinné |
-| **Hébergement code source** | 🟡 GitHub aujourd'hui | Migration vers forge souveraine FR (Forgejo / Codeberg-FR) prévue Q1-Q2 2027. Git distribué = portabilité 100 %. |
-| **Branch protection sur `main`** | 🔲 À activer | Settings → Branches → Require PR + CI green avant merge |
+| Élément                          | Statut                | Détail                                                                                                                               |
+| -------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| **GitHub Actions CI**            | ✅ Actif              | `.github/workflows/ci.yml` — lint + types + Prettier + audit npm + production build à chaque push et PR                              |
+| **CodeQL (SAST)**                | ✅ Actif              | `.github/workflows/codeql.yml` — analyse statique automatisée. Gratuit en repo public, premier run dès passage public le 26 mai 2026 |
+| **DCO signed-off-by check**      | ✅ Actif              | Vérifie que chaque commit est signé `Signed-off-by:` (engagement DCO)                                                                |
+| **Dependabot version updates**   | ✅ Actif              | Cf. §7.3                                                                                                                             |
+| **Build Docker reproductible**   | ✅ Actif              | Dockerfile multi-stage avec lockfile pinné                                                                                           |
+| **Hébergement code source**      | 🟡 GitHub aujourd'hui | Migration vers forge souveraine FR (Forgejo / Codeberg-FR) prévue Q1-Q2 2027. Git distribué = portabilité 100 %.                     |
+| **Branch protection sur `main`** | 🔲 À activer          | Settings → Branches → Require PR + CI green avant merge                                                                              |
 
 ---
 
@@ -504,15 +507,15 @@ Procédure :
 
 Documenté dans `lib/pack-nis2/data.ts` et fourni aux clients Pro+ comme livrable. En interne, nous appliquons le même plan :
 
-| Étape | Délai cible |
-|---|---|
-| Détection (alerte ou signalement) | T+0 |
-| Confinement réseau | T+15 min |
-| Notification équipe interne | T+30 min |
-| Notification client (si fuite tenant) | T+4h |
-| Notification CNIL (si données personnelles) | T+72h max |
-| Communication publique (blog, email, /securite) | T+7j max |
-| REX écrit et publié | T+30j |
+| Étape                                           | Délai cible |
+| ----------------------------------------------- | ----------- |
+| Détection (alerte ou signalement)               | T+0         |
+| Confinement réseau                              | T+15 min    |
+| Notification équipe interne                     | T+30 min    |
+| Notification client (si fuite tenant)           | T+4h        |
+| Notification CNIL (si données personnelles)     | T+72h max   |
+| Communication publique (blog, email, /securite) | T+7j max    |
+| REX écrit et publié                             | T+30j       |
 
 ### 8.2 Contacts incident
 
@@ -548,16 +551,16 @@ Toutes les actions admin sensibles sont loggées dans `Event`. En cas d'incident
 
 ### 9.2 Points d'amélioration (en backlog)
 
-| # | Sujet | Priorité | Échéance |
-|---|---|---|---|
-| 1 | Pentest externe par cabinet tiers | Haute | à venir |
-| 2 | Audit RGAA externe | Moyenne | à venir |
-| 3 | Dependabot / Renovate en CI | Haute | à venir |
-| 4 | Scan SAST CI (Semgrep/CodeQL) | Haute | à venir |
-| 5 | Tests E2E Playwright sur flows critiques | Moyenne | à venir |
-| 6 | Bug bounty formalisé (programme public) | Moyenne | à venir |
-| 7 | Politique de purge des `Event` à 13 mois | Moyenne | à venir |
-| 8 | Drill incident annuel formel | Basse | 2027 |
+| #   | Sujet                                    | Priorité | Échéance |
+| --- | ---------------------------------------- | -------- | -------- |
+| 1   | Pentest externe par cabinet tiers        | Haute    | à venir  |
+| 2   | Audit RGAA externe                       | Moyenne  | à venir  |
+| 3   | Dependabot / Renovate en CI              | Haute    | à venir  |
+| 4   | Scan SAST CI (Semgrep/CodeQL)            | Haute    | à venir  |
+| 5   | Tests E2E Playwright sur flows critiques | Moyenne  | à venir  |
+| 6   | Bug bounty formalisé (programme public)  | Moyenne  | à venir  |
+| 7   | Politique de purge des `Event` à 13 mois | Moyenne  | à venir  |
+| 8   | Drill incident annuel formel             | Basse    | 2027     |
 
 ### 9.3 Limites assumées par design
 
@@ -600,6 +603,7 @@ Toute découverte de vulnérabilité affectant **`humanix-cybersecurity.fr`** et
 ### 11.2 Comment signaler
 
 Email à **security@humanix-cybersecurity.fr** avec :
+
 - Description du problème
 - Étapes de reproduction
 - Impact estimé (qui peut faire quoi)
@@ -625,6 +629,7 @@ Email à **security@humanix-cybersecurity.fr** avec :
 ### 11.5 Récompenses
 
 À ce jour, **pas de prime monétaire** formalisée (programme à structurer en à venir). Mais :
+
 - Crédit public + remerciements
 - Mention sur LinkedIn d'Humanix-Cybersecurity
 - Pour les contributions majeures : abonnement Premium offert + module signé sur la marketplace
@@ -635,20 +640,20 @@ Email à **security@humanix-cybersecurity.fr** avec :
 
 ### 12.1 Glossaire
 
-| Terme | Définition |
-|---|---|
-| **MFA / 2FA** | Authentification à plusieurs facteurs |
-| **SSO** | Single Sign-On — connexion unique via Google, Microsoft, etc. |
-| **RBAC** | Role-Based Access Control — gestion d'accès par rôle |
-| **Multi-tenant** | Architecture où plusieurs clients (tenants) partagent l'infrastructure tout en étant cloisonnés |
-| **SSRF** | Server-Side Request Forgery — attaque où un serveur fait des requêtes vers des ressources internes |
-| **CSRF** | Cross-Site Request Forgery — attaque où un site malveillant déclenche des actions sur un autre |
-| **XSS** | Cross-Site Scripting — injection de code dans une page consultée par un autre utilisateur |
-| **NIS2** | Directive européenne 2022/2555 sur la cybersécurité |
-| **RGPD** | Règlement européen 2016/679 sur la protection des données |
-| **RGAA** | Référentiel Général d'Amélioration de l'Accessibilité |
-| **PASSI** | Prestataires d'Audit de la Sécurité des Systèmes d'Information (qualifiés ANSSI) |
-| **DPA** | Data Processing Agreement — contrat de sous-traitance RGPD (art. 28) |
+| Terme            | Définition                                                                                         |
+| ---------------- | -------------------------------------------------------------------------------------------------- |
+| **MFA / 2FA**    | Authentification à plusieurs facteurs                                                              |
+| **SSO**          | Single Sign-On — connexion unique via Google, Microsoft, etc.                                      |
+| **RBAC**         | Role-Based Access Control — gestion d'accès par rôle                                               |
+| **Multi-tenant** | Architecture où plusieurs clients (tenants) partagent l'infrastructure tout en étant cloisonnés    |
+| **SSRF**         | Server-Side Request Forgery — attaque où un serveur fait des requêtes vers des ressources internes |
+| **CSRF**         | Cross-Site Request Forgery — attaque où un site malveillant déclenche des actions sur un autre     |
+| **XSS**          | Cross-Site Scripting — injection de code dans une page consultée par un autre utilisateur          |
+| **NIS2**         | Directive européenne 2022/2555 sur la cybersécurité                                                |
+| **RGPD**         | Règlement européen 2016/679 sur la protection des données                                          |
+| **RGAA**         | Référentiel Général d'Amélioration de l'Accessibilité                                              |
+| **PASSI**        | Prestataires d'Audit de la Sécurité des Systèmes d'Information (qualifiés ANSSI)                   |
+| **DPA**          | Data Processing Agreement — contrat de sous-traitance RGPD (art. 28)                               |
 
 ### 12.2 Références utilisées
 
@@ -668,11 +673,11 @@ Email à **security@humanix-cybersecurity.fr** avec :
 
 ### 12.4 Historique des versions de ce rapport
 
-| Version | Date | Changements |
-|---|---|---|
-| v1.0 | 2026-05-02 | Première édition publique |
-| v1.1 | 2026-05-04 | Pivot OSS AGPLv3 : LICENSE FSF officiel + NOTICE.md + TRADEMARK.md + CGU_SELFHOST.md + CLA.md. CGU/CGV/Confidentialité enrichies (mention Community Edition vs Cloud). 11 connecteurs livrés (CISO Assistant, OSCAL, SCIM v2, Sentinel, Splunk, Lucca, GLPI, Sekoia, HarfangLab, Mailinblack/Vade). Page `/presse`. |
-| v1.2 | 2026-05-05 | CI/CD durcie : GitHub Actions actif (CI + CodeQL + DCO check), Dependabot configuré (npm + pip + actions + docker, MAJORS bloquées sur paquets critiques), audit licences AGPL documenté. Roadmap migration vers forge souveraine FR mentionnée. |
+| Version | Date       | Changements                                                                                                                                                                                                                                                                                                         |
+| ------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| v1.0    | 2026-05-02 | Première édition publique                                                                                                                                                                                                                                                                                           |
+| v1.1    | 2026-05-04 | Pivot OSS AGPLv3 : LICENSE FSF officiel + NOTICE.md + TRADEMARK.md + CGU_SELFHOST.md + CLA.md. CGU/CGV/Confidentialité enrichies (mention Community Edition vs Cloud). 11 connecteurs livrés (CISO Assistant, OSCAL, SCIM v2, Sentinel, Splunk, Lucca, GLPI, Sekoia, HarfangLab, Mailinblack/Vade). Page `/presse`. |
+| v1.2    | 2026-05-05 | CI/CD durcie : GitHub Actions actif (CI + CodeQL + DCO check), Dependabot configuré (npm + pip + actions + docker, MAJORS bloquées sur paquets critiques), audit licences AGPL documenté. Roadmap migration vers forge souveraine FR mentionnée.                                                                    |
 
 ---
 

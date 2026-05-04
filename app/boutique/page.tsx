@@ -27,7 +27,10 @@ export default async function BoutiquePage() {
         progress: { select: { score: true } },
       },
     }),
-    db.shopItem.findMany({ where: { isActive: true }, orderBy: [{ category: "asc" }, { price: "asc" }] }),
+    db.shopItem.findMany({
+      where: { isActive: true },
+      orderBy: [{ category: "asc" }, { price: "asc" }],
+    }),
     db.userInventory.findMany({
       where: { userId },
       include: { item: true },
@@ -40,7 +43,9 @@ export default async function BoutiquePage() {
     inventory.map((i) => ({ item: i.item, isEquipped: i.isEquipped })),
   );
   const ownedIds = new Set(inventory.map((i) => i.itemId));
-  const equippedIds = new Set(inventory.filter((i) => i.isEquipped).map((i) => i.itemId));
+  const equippedIds = new Set(
+    inventory.filter((i) => i.isEquipped).map((i) => i.itemId),
+  );
 
   // Group items par categorie
   const grouped = {
@@ -56,7 +61,8 @@ export default async function BoutiquePage() {
         🛒 Boutique
       </h1>
       <p className="text-gray-600 mb-8">
-        Personnalise ta mascotte avec tes coins durement gagnés. Plus tu progresses, plus tu débloques d'options !
+        Personnalise ta mascotte avec tes coins durement gagnés. Plus tu
+        progresses, plus tu débloques d'options !
       </p>
 
       {/* Hero : aperçu de Hex avec les items équipés */}
@@ -79,12 +85,26 @@ export default async function BoutiquePage() {
               Salut {user.name?.split(" ")[0] ?? "👋"}, c'est ta vitrine !
             </h2>
             <p className="text-gray-600 mb-4">
-              Voici ta mascotte actuelle. Achète et équipe des items dans les sections ci-dessous.
+              Voici ta mascotte actuelle. Achète et équipe des items dans les
+              sections ci-dessous.
             </p>
             <div className="flex flex-wrap gap-3">
-              <Stat emoji="🪙" value={user.coins.toString()} label="Coins disponibles" highlight />
-              <Stat emoji="🎁" value={ownedIds.size.toString()} label="Items possédés" />
-              <Stat emoji="✨" value={equippedIds.size.toString()} label="Équipés" />
+              <Stat
+                emoji="🪙"
+                value={user.coins.toString()}
+                label="Coins disponibles"
+                highlight
+              />
+              <Stat
+                emoji="🎁"
+                value={ownedIds.size.toString()}
+                label="Items possédés"
+              />
+              <Stat
+                emoji="✨"
+                value={equippedIds.size.toString()}
+                label="Équipés"
+              />
             </div>
           </div>
         </div>
@@ -97,7 +117,8 @@ export default async function BoutiquePage() {
             <span>{CATEGORY_LABEL[cat].emoji}</span>
             {CATEGORY_LABEL[cat].label}
             <span className="text-sm font-normal text-gray-500">
-              ({list.filter((i) => ownedIds.has(i.id)).length}/{list.length} possédés)
+              ({list.filter((i) => ownedIds.has(i.id)).length}/{list.length}{" "}
+              possédés)
             </span>
           </h2>
           <ShopGrid
@@ -122,7 +143,9 @@ export default async function BoutiquePage() {
 
       {/* Info shop */}
       <div className="card bg-amber-50 border-amber-200">
-        <h3 className="font-bold text-amber-900 mb-2">💡 Comment gagner plus de coins ?</h3>
+        <h3 className="font-bold text-amber-900 mb-2">
+          💡 Comment gagner plus de coins ?
+        </h3>
         <ul className="text-sm text-amber-800 space-y-1 list-disc pl-5">
           <li>10 coins de base à chaque épisode complété</li>
           <li>+1 coin par 10 points de score</li>
@@ -134,11 +157,27 @@ export default async function BoutiquePage() {
   );
 }
 
-function Stat({ emoji, value, label, highlight }: { emoji: string; value: string; label: string; highlight?: boolean }) {
+function Stat({
+  emoji,
+  value,
+  label,
+  highlight,
+}: {
+  emoji: string;
+  value: string;
+  label: string;
+  highlight?: boolean;
+}) {
   return (
-    <div className={`rounded-2xl px-4 py-3 ${highlight ? "bg-amber-500 text-white shadow-md" : "bg-white border border-gray-200"}`}>
-      <p className="text-lg">{emoji} <span className="font-extrabold">{value}</span></p>
-      <p className={`text-[10px] uppercase ${highlight ? "text-white/80" : "text-gray-500"}`}>
+    <div
+      className={`rounded-2xl px-4 py-3 ${highlight ? "bg-amber-500 text-white shadow-md" : "bg-white border border-gray-200"}`}
+    >
+      <p className="text-lg">
+        {emoji} <span className="font-extrabold">{value}</span>
+      </p>
+      <p
+        className={`text-[10px] uppercase ${highlight ? "text-white/80" : "text-gray-500"}`}
+      >
         {label}
       </p>
     </div>

@@ -40,7 +40,10 @@ const CreateSchema = z.object({
 export async function createWebhook(formData: FormData) {
   const { tenantId } = await requireAdminTenant();
 
-  const events = formData.getAll("events").map(String).filter(isWebhookEventKey);
+  const events = formData
+    .getAll("events")
+    .map(String)
+    .filter(isWebhookEventKey);
 
   const parsed = CreateSchema.safeParse({
     label: formData.get("label"),

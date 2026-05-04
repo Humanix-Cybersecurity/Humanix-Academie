@@ -19,11 +19,13 @@ export type BreachListFilter = {
   fromDate?: Date;
 };
 
-export async function listRecentBreaches(args: {
-  limit?: number;
-  offset?: number;
-  filter?: BreachListFilter;
-} = {}) {
+export async function listRecentBreaches(
+  args: {
+    limit?: number;
+    offset?: number;
+    filter?: BreachListFilter;
+  } = {},
+) {
   const limit = Math.min(args.limit ?? 30, 100);
   const offset = Math.max(args.offset ?? 0, 0);
 
@@ -63,8 +65,12 @@ export async function getBreachStats() {
 
   const [total, last30d, last7d, bySource, lastSync] = await Promise.all([
     db.dataBreach.count({ where: { isPublished: true } }),
-    db.dataBreach.count({ where: { isPublished: true, incidentDate: { gte: last30 } } }),
-    db.dataBreach.count({ where: { isPublished: true, incidentDate: { gte: last7 } } }),
+    db.dataBreach.count({
+      where: { isPublished: true, incidentDate: { gte: last30 } },
+    }),
+    db.dataBreach.count({
+      where: { isPublished: true, incidentDate: { gte: last7 } },
+    }),
     db.dataBreach.groupBy({
       by: ["source"],
       where: { isPublished: true },
@@ -146,7 +152,9 @@ export async function upsertScraped(args: {
           title: item.title.slice(0, 80),
           url: item.sourceUrl.slice(0, 120),
           // Bytes de chaque champ pour repérer les chars exotiques
-          titleCodePoints: [...item.title.slice(0, 40)].map((c) => c.codePointAt(0)),
+          titleCodePoints: [...item.title.slice(0, 40)].map((c) =>
+            c.codePointAt(0),
+          ),
           summaryLen: item.summary?.length ?? 0,
         }),
         "->",
@@ -164,7 +172,9 @@ export async function upsertScraped(args: {
       });
       if (
         wasInsert &&
-        Math.abs(wasInsert.createdAt.getTime() - wasInsert.scrapedAt.getTime()) < 5_000
+        Math.abs(
+          wasInsert.createdAt.getTime() - wasInsert.scrapedAt.getTime(),
+        ) < 5_000
       ) {
         inserted++;
       } else {
@@ -188,7 +198,13 @@ export async function upsertScraped(args: {
 export async function refreshBreaches(opts: { deep?: boolean } = {}): Promise<{
   totalInserted: number;
   totalSkipped: number;
-  perSource: { source: string; ok: boolean; inserted: number; skipped: number; errors: string[] }[];
+  perSource: {
+    source: string;
+    ok: boolean;
+    inserted: number;
+    skipped: number;
+    errors: string[];
+  }[];
   durationMs: number;
   deep: boolean;
 }> {
@@ -262,19 +278,22 @@ export function maybeTriggerLazyRefresh(): void {
         orderBy: { scrapedAt: "desc" },
         select: { scrapedAt: true },
       });
-      const stale = !last || Date.now() - last.scrapedAt.getTime() > STALENESS_MS;
+      const stale =
+        !last || Date.now() - last.scrapedAt.getTime() > STALENESS_MS;
       if (!stale) return;
 
       // Pas de spam : si un autre lazy refresh tourne déjà, on n'en lance
       // pas un autre. Best-effort via Event count.
       const inflightWindow = new Date(Date.now() - 5 * 60 * 1000);
-      const inflight = await db.event.count({
-        where: {
-          tenantId: "_system",
-          type: "breaches_lazy_refresh_started",
-          createdAt: { gte: inflightWindow },
-        },
-      }).catch(() => 0);
+      const inflight = await db.event
+        .count({
+          where: {
+            tenantId: "_system",
+            type: "breaches_lazy_refresh_started",
+            createdAt: { gte: inflightWindow },
+          },
+        })
+        .catch(() => 0);
       if (inflight > 0) return;
 
       await refreshBreaches();

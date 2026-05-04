@@ -142,15 +142,15 @@ avocat compétent.
 
 Si vous avez besoin de :
 
-| Besoin | Où aller |
-|---|---|
-| Hébergement managé | [Cloud Humanix Découverte/Starter/Essentielle/Pro](https://humanix-cybersecurity.fr/tarifs) |
-| Modules pédagogiques avancés (catalogue 30+) | Plans Cloud payants |
-| Phishing simulé avec infrastructure | Plan Cloud Pro |
-| Pack NIS2 turnkey clé en main | Plan Cloud Pro |
-| SSO entreprise (SAML, SCIM avancé) | Plan Cloud Pro / Enterprise |
-| Audit cyber, formation, RSSI externalisé | <contact@humanix-cybersecurity.fr> (services) |
-| Licence commerciale alternative à l'AGPL | <contact@humanix-cybersecurity.fr> |
+| Besoin                                       | Où aller                                                                                    |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Hébergement managé                           | [Cloud Humanix Découverte/Starter/Essentielle/Pro](https://humanix-cybersecurity.fr/tarifs) |
+| Modules pédagogiques avancés (catalogue 30+) | Plans Cloud payants                                                                         |
+| Phishing simulé avec infrastructure          | Plan Cloud Pro                                                                              |
+| Pack NIS2 turnkey clé en main                | Plan Cloud Pro                                                                              |
+| SSO entreprise (SAML, SCIM avancé)           | Plan Cloud Pro / Enterprise                                                                 |
+| Audit cyber, formation, RSSI externalisé     | <contact@humanix-cybersecurity.fr> (services)                                               |
+| Licence commerciale alternative à l'AGPL     | <contact@humanix-cybersecurity.fr>                                                          |
 
 ---
 

@@ -46,49 +46,66 @@ export default function LuccaIntegrationPage() {
         </h2>
         <ol className="space-y-3 text-sm">
           <li>
-            <strong>1. Lucca</strong> — un nouveau collaborateur est créé par RH (ou import via API).
+            <strong>1. Lucca</strong> — un nouveau collaborateur est créé par RH
+            (ou import via API).
           </li>
           <li>
-            <strong>2. Connecteur Humanix</strong> — déclenché en cron horaire, pull les nouveaux users via <code>/api/v3/users</code>.
+            <strong>2. Connecteur Humanix</strong> — déclenché en cron horaire,
+            pull les nouveaux users via <code>/api/v3/users</code>.
           </li>
           <li>
-            <strong>3. SCIM v2 Humanix</strong> — POST /scim/v2/Users → compte créé avec <code>role=LEARNER</code> et <code>service=&lt;département Lucca&gt;</code>.
+            <strong>3. SCIM v2 Humanix</strong> — POST /scim/v2/Users → compte
+            créé avec <code>role=LEARNER</code> et{" "}
+            <code>service=&lt;département Lucca&gt;</code>.
           </li>
           <li>
-            <strong>4. Magic link</strong> — Humanix envoie automatiquement le lien d'accès au collaborateur, avec module onboarding cyber prioritaire.
+            <strong>4. Magic link</strong> — Humanix envoie automatiquement le
+            lien d'accès au collaborateur, avec module onboarding cyber
+            prioritaire.
           </li>
           <li>
-            <strong>5. Au départ</strong> — Lucca passe le user en <code>isActive=false</code>, le connecteur le détecte, soft-delete côté Humanix (historique conservé pour audit).
+            <strong>5. Au départ</strong> — Lucca passe le user en{" "}
+            <code>isActive=false</code>, le connecteur le détecte, soft-delete
+            côté Humanix (historique conservé pour audit).
           </li>
         </ol>
       </section>
 
       {/* Setup */}
       <section aria-labelledby="setup-title" className="mb-10">
-        <h2 id="setup-title" className="text-2xl font-extrabold text-primary-500 mb-3">
+        <h2
+          id="setup-title"
+          className="text-2xl font-extrabold text-primary-500 mb-3"
+        >
           Setup en 5 minutes
         </h2>
         <ol className="space-y-3 text-sm list-decimal list-inside">
           <li>
-            Lucca → <strong>Settings → API</strong> → générer une clé application avec scope lecture utilisateurs.
+            Lucca → <strong>Settings → API</strong> → générer une clé
+            application avec scope lecture utilisateurs.
           </li>
           <li>
             Humanix →{" "}
             <Link href="/admin/api-keys" className="font-bold underline">
               générer une clé API
-            </Link>
-            {" "}(plan Essentielle ou supérieur).
+            </Link>{" "}
+            (plan Essentielle ou supérieur).
           </li>
           <li>
-            Cloner <a href="https://github.com/humanix-cybersecurity/humanix-lucca-connector" className="font-bold underline">le connecteur Python</a>{" "}
-            (MIT). Renseigner <code>LUCCA_BASE_URL</code>, <code>LUCCA_API_KEY</code>, <code>HUMANIX_API_KEY</code>.
+            Cloner{" "}
+            <a
+              href="https://github.com/humanix-cybersecurity/humanix-lucca-connector"
+              className="font-bold underline"
+            >
+              le connecteur Python
+            </a>{" "}
+            (MIT). Renseigner <code>LUCCA_BASE_URL</code>,{" "}
+            <code>LUCCA_API_KEY</code>, <code>HUMANIX_API_KEY</code>.
           </li>
           <li>
             Tester : <code>python humanix_lucca_connector.py --dry-run</code>
           </li>
-          <li>
-            Activer en cron (1×/h recommandé) :
-          </li>
+          <li>Activer en cron (1×/h recommandé) :</li>
         </ol>
         <div className="mt-4">
           <CopyableSnippet code={CRON_SNIPPET} label="cron Lucca" />
@@ -97,40 +114,80 @@ export default function LuccaIntegrationPage() {
 
       {/* Mapping */}
       <section aria-labelledby="mapping-title" className="mb-10">
-        <h2 id="mapping-title" className="text-2xl font-extrabold text-primary-500 mb-3">
+        <h2
+          id="mapping-title"
+          className="text-2xl font-extrabold text-primary-500 mb-3"
+        >
           Mapping des champs
         </h2>
         <div className="overflow-x-auto card p-0">
           <table className="w-full text-sm">
-            <caption className="sr-only">Mapping des attributs Lucca vers les champs Humanix</caption>
+            <caption className="sr-only">
+              Mapping des attributs Lucca vers les champs Humanix
+            </caption>
             <thead>
               <tr className="bg-gray-50 dark:bg-slate-800 text-left">
-                <th scope="col" className="p-3 font-bold">Champ Lucca</th>
-                <th scope="col" className="p-3 font-bold">Champ Humanix</th>
-                <th scope="col" className="p-3 font-bold">Notes</th>
+                <th scope="col" className="p-3 font-bold">
+                  Champ Lucca
+                </th>
+                <th scope="col" className="p-3 font-bold">
+                  Champ Humanix
+                </th>
+                <th scope="col" className="p-3 font-bold">
+                  Notes
+                </th>
               </tr>
             </thead>
             <tbody>
-              <Row lucca="mail" humanix="userName + email primaire" notes="Identifiant unique côté Humanix" />
-              <Row lucca="firstName + lastName" humanix="displayName + name" notes="Mis à jour à chaque sync" />
-              <Row lucca="department.name" humanix="service (extension Humanix)" notes="Mappe automatiquement sur Group SCIM" />
-              <Row lucca="isActive" humanix="active" notes="false = soft-delete (historique conservé)" />
-              <Row lucca="(par défaut)" humanix="role = LEARNER" notes="Élévation manuelle ADMIN/MANAGER côté Humanix" />
+              <Row
+                lucca="mail"
+                humanix="userName + email primaire"
+                notes="Identifiant unique côté Humanix"
+              />
+              <Row
+                lucca="firstName + lastName"
+                humanix="displayName + name"
+                notes="Mis à jour à chaque sync"
+              />
+              <Row
+                lucca="department.name"
+                humanix="service (extension Humanix)"
+                notes="Mappe automatiquement sur Group SCIM"
+              />
+              <Row
+                lucca="isActive"
+                humanix="active"
+                notes="false = soft-delete (historique conservé)"
+              />
+              <Row
+                lucca="(par défaut)"
+                humanix="role = LEARNER"
+                notes="Élévation manuelle ADMIN/MANAGER côté Humanix"
+              />
             </tbody>
           </table>
         </div>
       </section>
 
       <section className="card text-center bg-gradient-to-br from-primary-500 to-accent-500 text-white">
-        <h2 className="text-2xl font-extrabold mb-2">100 % souverain, 100 % automatique 🇫🇷</h2>
+        <h2 className="text-2xl font-extrabold mb-2">
+          100 % souverain, 100 % automatique 🇫🇷
+        </h2>
         <p className="opacity-90 mb-5">
-          Votre stack RH française parle à votre stack cyber française. Sans intermédiaire US.
+          Votre stack RH française parle à votre stack cyber française. Sans
+          intermédiaire US.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
-          <Link href="/admin/api-keys" className="bg-white text-primary-500 font-bold px-6 py-3 rounded-2xl hover:scale-105 transition shadow-lg">
+          <Link
+            href="/admin/api-keys"
+            className="bg-white text-primary-500 font-bold px-6 py-3 rounded-2xl hover:scale-105 transition shadow-lg"
+          >
             Générer ma clé API
           </Link>
-          <Link href="/integrations" className="bg-white/10 hover:bg-white/20 text-white font-bold px-6 py-3 rounded-2xl transition border-2 border-white/30">
+          <Link
+            href="/integrations"
+            className="bg-white/10 hover:bg-white/20 text-white font-bold px-6 py-3 rounded-2xl transition border-2 border-white/30"
+          >
             Tous les connecteurs
           </Link>
         </div>
@@ -139,7 +196,15 @@ export default function LuccaIntegrationPage() {
   );
 }
 
-function Row({ lucca, humanix, notes }: { lucca: string; humanix: string; notes: string }) {
+function Row({
+  lucca,
+  humanix,
+  notes,
+}: {
+  lucca: string;
+  humanix: string;
+  notes: string;
+}) {
   return (
     <tr className="border-t border-gray-100 dark:border-slate-700">
       <td className="p-3 font-mono text-xs">{lucca}</td>
