@@ -250,7 +250,7 @@ Trois options :
   pas une issue publique
 - **Bug confirmé** : ouvre une [GitHub Issue](https://github.com/humanix-cybersecurity/humanix-academie/issues)
 - **Contact commercial** : `contact@humanix-cybersecurity.fr`
-- **Discussion live** : [Discord Humanix](https://discord.gg/humanix)
+- **Discussion live** : [GitHub Discussions](https://github.com/humanix-cybersecurity/humanix-academie/discussions) (Discord communautaire ouvre après le launch OSS du 26 mai 2026)
 
 ---
 
