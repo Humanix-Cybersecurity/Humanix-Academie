@@ -1,27 +1,25 @@
-// Page admin "Pack Conformite NIS2" — feature plan Pro+.
-// Le dirigeant remplit un formulaire (nom dirigeant, ville siege, contact crise...)
-// et telecharge un PDF de 4 documents pre-remplis.
+// =============================================================================
+// /admin/conformite-nis2 — Pack Conformité NIS2 (feature plan Pro+).
+//
+// REFONTE MAI 2026 : aligné design system Linear (PageHeader, Section).
+// =============================================================================
 
-import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import AdminNav from "@/components/AdminNav";
 import { getTenantPlan } from "@/lib/plans";
 import PackNis2Form from "@/components/PackNis2Form";
 import PlanGateNis2 from "@/components/PlanGateNis2";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import AdminSection from "@/components/admin/AdminSection";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminConformiteNis2Page() {
+  // Auth garantie par app/admin/layout.tsx (defense-in-depth déjà appliquée).
   const session = await auth();
-  if (!session?.user) redirect("/demo");
-  const role = (session.user as any).role;
-  if (role !== "ADMIN" && role !== "MANAGER" && role !== "SUPERADMIN") redirect("/apprendre");
-  const tenantId = (session.user as any).tenantId as string;
+  const tenantId = (session!.user as any).tenantId as string;
 
   const plan = await getTenantPlan(tenantId);
-  // Le pack NIS2 est disponible en Pro+. On ajoute l'entree dans FEATURE_MIN_PLAN
-  // si vous voulez le formaliser (cf. lib/plans.ts).
   const isAllowed = ["pro", "premium"].includes(plan);
 
   const tenant = await db.tenant.findUnique({
@@ -31,72 +29,78 @@ export default async function AdminConformiteNis2Page() {
 
   if (!isAllowed) {
     return (
-      <div className="max-w-5xl mx-auto px-4 py-10">
-        <h1 className="text-3xl font-extrabold text-primary-500">
-          Pack Conformité NIS2
-        </h1>
-        <p className="text-gray-600 dark:text-gray-300 mb-6">
-          4 documents prêts à signer pour répondre aux exigences NIS2.
-        </p>
-        <AdminNav />
+      <>
+        <AdminPageHeader
+          title="Pack Conformité NIS2"
+          description="4 documents prêts à signer pour répondre aux exigences NIS2."
+        />
         <PlanGateNis2 plan={plan} />
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-extrabold text-primary-500">
-        Pack Conformité NIS2
-      </h1>
-      <p className="text-gray-600 dark:text-gray-300 mb-6">
-        4 documents prêts à signer, pré-remplis avec vos informations,
-        couvrant les exigences NIS2 article 21 (mesures techniques et
-        organisationnelles) et article 23 (notification d'incident).
-      </p>
+    <>
+      <AdminPageHeader
+        title="Pack Conformité NIS2"
+        description="4 documents prêts à signer, pré-remplis avec vos informations, couvrant les exigences NIS2 article 21 (mesures techniques et organisationnelles) et article 23 (notification d'incident)."
+      />
 
-      <AdminNav />
+      <div className="space-y-6 min-w-0">
+        {/* Composition du pack */}
+        <AdminSection
+          title="Ce que contient ce pack"
+          variant="highlight"
+        >
+          <ol className="space-y-2.5 text-sm text-gray-700 dark:text-gray-300 list-none">
+            {[
+              { name: "Politique de sensibilisation à la cybersécurité", desc: "engagement direction signable" },
+              { name: "Procédure de déclaration d'incident", desc: "checklist opérationnelle (24h / 72h / 1 mois)" },
+              { name: "Registre des actions de sensibilisation", desc: "extrait consolidé des stats Humanix" },
+              { name: "Engagement cyber du collaborateur", desc: "charte courte à joindre au contrat de travail" },
+            ].map((doc, i) => (
+              <li key={i} className="flex items-start gap-3">
+                <span className="shrink-0 w-7 h-7 rounded-md bg-accent-500/10 text-accent-600 dark:text-accent-300 font-bold flex items-center justify-center text-sm tabular-nums">
+                  {i + 1}
+                </span>
+                <div className="min-w-0">
+                  <p className="font-semibold text-gray-900 dark:text-gray-100">{doc.name}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{doc.desc}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </AdminSection>
 
-      <div className="card mb-6 bg-accent-50 dark:bg-accent-900/20 border-l-4 border-accent-500">
-        <h2 className="font-bold text-accent-700 dark:text-accent-300 mb-2">
-          Ce que contient ce pack
-        </h2>
-        <ol className="list-decimal pl-5 text-sm space-y-1 text-gray-800 dark:text-gray-200">
-          <li>
-            <strong>Politique de sensibilisation à la cybersécurité</strong> —
-            engagement direction signable
-          </li>
-          <li>
-            <strong>Procédure de déclaration d'incident</strong> — checklist
-            opérationnelle (24h / 72h / 1 mois)
-          </li>
-          <li>
-            <strong>Registre des actions de sensibilisation</strong> — extrait
-            consolidé des stats Humanix
-          </li>
-          <li>
-            <strong>Engagement cyber du collaborateur</strong> — charte courte à
-            joindre au contrat de travail
-          </li>
-        </ol>
+        {/* Formulaire principal */}
+        <AdminSection
+          title="Générer votre pack"
+          description="Renseignez les informations ci-dessous : nous générons un PDF horodaté avec les 4 documents pré-remplis."
+        >
+          <PackNis2Form tenantName={tenant?.name ?? "Votre entreprise"} />
+        </AdminSection>
+
+        {/* Note légale */}
+        <article className="rounded-xl border border-gray-200 dark:border-slate-800 bg-gray-50/60 dark:bg-slate-900/40 p-4">
+          <h3 className="font-bold text-gray-900 dark:text-gray-100 text-sm mb-2 flex items-center gap-2">
+            <span aria-hidden="true">ℹ️</span>
+            À savoir
+          </h3>
+          <div className="text-xs text-gray-600 dark:text-gray-400 space-y-2 leading-relaxed">
+            <p>
+              Ces documents sont rédigés pour couvrir les exigences usuelles d'une
+              PME française concernée par NIS2. Ils ne se substituent pas à un
+              audit réglementaire formel par un cabinet certifié, mais constituent
+              un socle organisationnel solide accepté par la majorité des
+              assureurs cyber et auditeurs clients.
+            </p>
+            <p>
+              Conservez le PDF émis (horodaté) : il fait office de <em>preuve de
+              démarche cyber</em> en cas d'audit ou d'incident.
+            </p>
+          </div>
+        </article>
       </div>
-
-      <PackNis2Form tenantName={tenant?.name ?? "Votre entreprise"} />
-
-      <div className="card mt-8 text-xs text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-slate-800">
-        <p className="font-bold text-primary-500 mb-1">À savoir</p>
-        <p className="mb-2">
-          Ces documents sont rédigés pour couvrir les exigences usuelles d'une
-          PME française concernée par NIS2. Ils ne se substituent pas à un
-          audit réglementaire formel par un cabinet certifié, mais constituent
-          un socle organisationnel solide accepté par la majorité des
-          assureurs cyber et auditeurs clients.
-        </p>
-        <p>
-          Conservez le PDF émis (horodaté) : il fait office de <em>preuve de
-          démarche cyber</em> en cas d'audit ou d'incident.
-        </p>
-      </div>
-    </div>
+    </>
   );
 }

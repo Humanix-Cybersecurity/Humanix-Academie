@@ -3,16 +3,15 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import AdminNav from "@/components/AdminNav";
 import ModerationActions from "@/components/marketplace/ModerationActions";
 import { shortHash } from "@/lib/marketplace/integrity";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
 
 export const dynamic = "force-dynamic";
 
 export default async function ModerationPage() {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
-  const role = (session.user as any).role;
+  const role = (session!.user as any).role;
   if (role !== "SUPERADMIN") redirect("/admin");
 
   const queue = await db.marketplaceModule.findMany({
@@ -28,17 +27,14 @@ export default async function ModerationPage() {
   });
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-extrabold text-primary-500">Console dirigeant</h1>
-      <p className="text-gray-600 mb-6">Gestion fine de votre programme de sensibilisation cyber.</p>
-      <AdminNav />
+    <>
+      <AdminPageHeader
+        title="Modération marketplace"
+        description="En tant que SUPERADMIN, tu valides ou rejettes les soumissions communauté avant publication."
+      />
 
-      <h2 className="text-2xl font-bold text-primary-500 mb-2">⚖️ Modération marketplace</h2>
-      <p className="text-gray-600 mb-6">
-        En tant que SUPERADMIN, tu valides ou rejettes les soumissions communauté avant publication.
-      </p>
-
-      <div className="card mb-6 bg-primary-50 border-primary-500/30">
+      <div className="space-y-6 min-w-0">
+      <article className="rounded-xl border border-primary-500/20 bg-primary-50/40 dark:bg-blue-900/10 p-5">
         <h3 className="font-bold text-primary-500 mb-2">📋 Critères d'approbation</h3>
         <ul className="text-sm text-gray-700 space-y-1 list-disc pl-5">
           <li>Exactitude technique : pas d'information cyber erronée ou dangereuse</li>
@@ -48,9 +44,9 @@ export default async function ModerationPage() {
           <li>Respect du format : longueurs respectées, pas de contenu hors sujet</li>
           <li>Originalité : contenu original ou cité avec référence claire</li>
         </ul>
-      </div>
+      </article>
 
-      <h3 className="text-xl font-bold text-primary-500 mb-3">🕒 En attente ({queue.length})</h3>
+      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3">🕒 En attente ({queue.length})</h3>
       {queue.length === 0 ? (
         <div className="card text-center py-8 text-gray-400 italic">
           Aucun module en attente. Bonne tasse de café ☕.
@@ -122,6 +118,7 @@ export default async function ModerationPage() {
         </table>
         {recent.length === 0 && <p className="text-center text-gray-400 italic py-4">Pas encore d'historique.</p>}
       </div>
-    </div>
+      </div>
+    </>
   );
 }
