@@ -340,7 +340,7 @@ const ROWS: Row[] = [
   {
     category: "Human Risk Management 2026",
     feature: "MCP Server pour agents IA (Claude / Mistral / GPT)",
-    humanix: eq("Roadmap mai 2026 — premier mover SAT/HRM 🇫🇷"),
+    humanix: win("MVP livré — connectors/mcp-server, premier mover SAT/HRM 🇫🇷"),
     knowbe4: loss("Non documenté"),
     cyberGuru: loss("Non"),
     hoxhunt: loss("Non"),
