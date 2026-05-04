@@ -1,0 +1,161 @@
+# Dependabot v2 — Humanix Académie Community Edition
+#
+# Stratégie pour solo mainteneur :
+#   - Hebdomadaire (pas quotidien) pour limiter le bruit
+#   - Groupes (production/dev/security) pour réduire le nombre de PRs
+#   - Limite stricte de PRs ouvertes en parallèle
+#   - Préfixe commit cohérent `chore(deps)` aligné sur conventional commits
+#   - Assignation auto à Florian pour notification
+#
+# Documentation : https://docs.github.com/code-security/dependabot
+
+version: 2
+
+updates:
+  # =========================================================================
+  # 1. Stack Next.js (racine)
+  # =========================================================================
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Europe/Paris"
+    open-pull-requests-limit: 5
+    assignees:
+      - "Meg4R0M"
+    labels:
+      - "dependencies"
+      - "npm"
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+      include: "scope"
+    # Regroupement : 1 PR au lieu de 30 par semaine
+    groups:
+      next-stack:
+        patterns:
+          - "next"
+          - "next-*"
+          - "@next/*"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+      prisma-stack:
+        patterns:
+          - "prisma"
+          - "@prisma/*"
+      auth-stack:
+        patterns:
+          - "next-auth"
+          - "@auth/*"
+      tailwind-stack:
+        patterns:
+          - "tailwindcss"
+          - "postcss"
+          - "autoprefixer"
+          - "@tailwindcss/*"
+      production-minor-patch:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+      development-minor-patch:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+    # Les MAJ majeures (breaking) restent en PR séparées pour relecture.
+    ignore:
+      # Bloque Next.js 15 → 16 tant que la migration n'est pas planifiée
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+      # Idem React, lourd à migrer
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+
+  # =========================================================================
+  # 2. Connecteurs Python (8 dossiers)
+  # =========================================================================
+  # Syntaxe `directories:` (pluriel) supportée depuis Dependabot v2 fin 2024.
+  # Permet de mutualiser une seule entrée pour tous les connecteurs Python.
+  - package-ecosystem: "pip"
+    directories:
+      - "/connectors/ciso-assistant"
+      - "/connectors/splunk"
+      - "/connectors/sentinel"
+      - "/connectors/lucca"
+      - "/connectors/glpi"
+      - "/connectors/sekoia"
+      - "/connectors/harfanglab"
+      - "/connectors/mailinblack-vade"
+    schedule:
+      interval: "monthly"  # Mensuel suffit, peu de deps Python
+      day: "monday"
+      time: "06:00"
+      timezone: "Europe/Paris"
+    open-pull-requests-limit: 3
+    assignees:
+      - "Meg4R0M"
+    labels:
+      - "dependencies"
+      - "python"
+      - "connectors"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    groups:
+      python-deps:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # =========================================================================
+  # 3. GitHub Actions workflows
+  # =========================================================================
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Europe/Paris"
+    open-pull-requests-limit: 3
+    assignees:
+      - "Meg4R0M"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(ci)"
+      include: "scope"
+    groups:
+      gh-actions:
+        patterns:
+          - "*"
+
+  # =========================================================================
+  # 4. Docker (si Dockerfile présent à la racine)
+  # =========================================================================
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Europe/Paris"
+    open-pull-requests-limit: 2
+    assignees:
+      - "Meg4R0M"
+    labels:
+      - "dependencies"
+      - "docker"
+    commit-message:
+      prefix: "chore(docker)"
+      include: "scope"
