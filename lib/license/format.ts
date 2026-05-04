@@ -10,7 +10,7 @@
 //   - pas de PII en clair (le JSON est b64-encoded mais reste decodable)
 //   - aligne sur la philosophie JWT (header implicite : Ed25519)
 
-import type { License, LicensePayload } from "./types.js";
+import type { License, LicensePayload } from "./types";
 
 const PREFIX = "HUMANIX-LICENSE-v1";
 
