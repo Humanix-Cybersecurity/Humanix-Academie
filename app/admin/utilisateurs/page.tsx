@@ -1,22 +1,26 @@
-// Admin > Utilisateurs : activer/desactiver, role, suppression RGPD, invitation
-import { redirect } from "next/navigation";
+// =============================================================================
+// /admin/utilisateurs — Gestion des collaborateurs (activer/désactiver, rôle,
+// invitation, import CSV, rappels, suppression RGPD).
+//
+// REFONTE MAI 2026 : aligné design system Linear (PageHeader, Section).
+// =============================================================================
+
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import AdminNav from "@/components/AdminNav";
 import UsersTable from "@/components/UsersTable";
 import InviteUserForm from "@/components/InviteUserForm";
 import CsvImporter from "@/components/CsvImporter";
 import RemindersButton from "@/components/RemindersButton";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import AdminSection from "@/components/admin/AdminSection";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminUsersPage() {
+  // Auth garantie par app/admin/layout.tsx (defense-in-depth déjà appliquée).
   const session = await auth();
-  if (!session?.user) redirect("/demo");
-  const role = (session.user as any).role;
-  if (role !== "ADMIN" && role !== "SUPERADMIN") redirect("/apprendre");
-  const tenantId = (session.user as any).tenantId as string;
-  const currentUserId = (session.user as any).id as string;
+  const tenantId = (session!.user as any).tenantId as string;
+  const currentUserId = (session!.user as any).id as string;
 
   const users = await db.user.findMany({
     where: { tenantId },
@@ -53,67 +57,99 @@ export default async function AdminUsersPage() {
 
   const activeCount = enriched.filter((u) => u.isActive).length;
   const adminCount = enriched.filter((u) => u.role === "ADMIN" || u.role === "SUPERADMIN").length;
+  const suspendedCount = enriched.length - activeCount;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-extrabold text-primary-500">Console dirigeant</h1>
-      <p className="text-gray-600 mb-6">Gestion fine de votre programme de sensibilisation cyber.</p>
+    <>
+      <AdminPageHeader
+        title="Utilisateurs"
+        description="Gestion fine de votre programme de sensibilisation cyber."
+      />
 
-      <AdminNav />
-
-      <div className="grid sm:grid-cols-4 gap-4 mb-6">
-        <Stat label="Utilisateurs" value={enriched.length.toString()} />
-        <Stat label="Actifs" value={activeCount.toString()} />
-        <Stat label="Suspendus" value={(enriched.length - activeCount).toString()} />
-        <Stat label="Admins" value={adminCount.toString()} />
-      </div>
-
-      <div className="grid lg:grid-cols-[2fr_1fr] gap-6">
-        <div className="card">
-          <h2 className="font-bold text-primary-500 text-lg mb-4">Tous mes collaborateurs</h2>
-          <UsersTable users={enriched} />
+      <div className="space-y-6 min-w-0">
+        {/* KPI strip — 4 chiffres clés */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <StatCard label="Utilisateurs"  value={enriched.length} />
+          <StatCard label="Actifs"        value={activeCount}    accent="emerald" />
+          <StatCard label="Suspendus"     value={suspendedCount} accent={suspendedCount > 0 ? "amber" : undefined} />
+          <StatCard label="Admins"        value={adminCount} />
         </div>
 
-        <div className="space-y-4">
-          <div className="card">
-            <h2 className="font-bold text-primary-500 text-lg mb-2">Inviter un collaborateur</h2>
-            <p className="text-sm text-gray-500 mb-4">
-              Le nouvel utilisateur pourra se connecter via magic link (mode prod) ou via la console démo.
-            </p>
-            <InviteUserForm />
-          </div>
+        {/* Layout 2/3 + 1/3 : table principale + actions latérales */}
+        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4">
+          <AdminSection
+            title="Tous mes collaborateurs"
+            description={`${enriched.length} utilisateur${enriched.length > 1 ? "s" : ""} dans votre organisation`}
+          >
+            <UsersTable users={enriched} />
+          </AdminSection>
 
-          <div className="card">
-            <h2 className="font-bold text-primary-500 text-lg mb-2">📥 Import CSV en masse</h2>
-            <p className="text-sm text-gray-500 mb-4">
-              Onboarde toute ton équipe en 30 secondes : importe un CSV d'emails, le système crée tous les comptes d'un coup.
-            </p>
-            <CsvImporter />
-          </div>
+          <div className="space-y-4 min-w-0">
+            <AdminSection
+              title="Inviter un collaborateur"
+              description="Le nouvel utilisateur recevra un magic link pour se connecter."
+            >
+              <InviteUserForm />
+            </AdminSection>
 
-          <div className="card">
-            <h2 className="font-bold text-primary-500 text-lg mb-2">✉️ Rappels aux inactifs</h2>
-            <RemindersButton />
-          </div>
+            <AdminSection
+              title="Import CSV en masse"
+              description="Onboarde toute ton équipe en 30 secondes."
+            >
+              <CsvImporter />
+            </AdminSection>
 
-          <div className="card bg-amber-50 border-amber-200">
-            <h3 className="font-bold text-amber-900 mb-2">⚖️ Conformité RGPD</h3>
-            <p className="text-sm text-amber-800 leading-relaxed">
-              La suppression d'un utilisateur efface toutes ses données (progression, événements). Une trace agrégée et anonymisée est conservée pour la conformité (preuve de formation suivie).
-            </p>
+            <AdminSection
+              title="Rappels aux inactifs"
+              description="Notifie ceux qui n'ont pas commencé leur parcours."
+            >
+              <RemindersButton />
+            </AdminSection>
+
+            {/* Notice RGPD — variante visuelle warning */}
+            <article className="rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-900/15 p-4">
+              <h3 className="font-bold text-amber-800 dark:text-amber-200 text-sm flex items-center gap-2">
+                <span aria-hidden="true">⚖️</span>
+                Conformité RGPD
+              </h3>
+              <p className="text-xs text-amber-800/80 dark:text-amber-200/80 mt-2 leading-relaxed">
+                La suppression d'un utilisateur efface toutes ses données
+                (progression, événements). Une trace agrégée et anonymisée est
+                conservée pour la conformité (preuve de formation suivie).
+              </p>
+            </article>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+// =============================================================================
+// Sous-composants locaux
+// =============================================================================
+
+function StatCard({
+  label, value, accent,
+}: {
+  label: string;
+  value: number;
+  accent?: "emerald" | "amber" | "rose";
+}) {
+  const accentClass =
+    accent === "emerald" ? "text-emerald-600 dark:text-emerald-400" :
+    accent === "amber"   ? "text-amber-600 dark:text-amber-400" :
+    accent === "rose"    ? "text-rose-600 dark:text-rose-400" :
+    "text-gray-900 dark:text-gray-100";
   return (
-    <div className="card">
-      <p className="text-xs uppercase tracking-wide text-gray-500">{label}</p>
-      <p className="text-3xl font-extrabold text-primary-500 mt-1">{value}</p>
-    </div>
+    <article className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 min-w-0">
+      <p className="text-[10px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-bold">
+        {label}
+      </p>
+      <p className={`text-2xl sm:text-3xl font-extrabold mt-1 tabular-nums ${accentClass}`}>
+        {value}
+      </p>
+    </article>
   );
 }
 

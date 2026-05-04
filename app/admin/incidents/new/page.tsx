@@ -3,10 +3,11 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
-import AdminNav from "@/components/AdminNav";
 import { createIncidentAction } from "../actions";
 import { INCIDENT_TYPE_LABELS } from "@/lib/incident-response/playbooks";
 import { getTenantPlan, planHasFeature } from "@/lib/plans";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import AdminSection from "@/components/admin/AdminSection";
 
 export const dynamic = "force-dynamic";
 
@@ -19,33 +20,27 @@ const SEVERITIES = [
 
 export default async function NewIncidentPage() {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
-  const role = (session.user as any).role;
-  if (role !== "ADMIN" && role !== "SUPERADMIN") redirect("/apprendre");
-  const tenantId = (session.user as any).tenantId as string;
+  const tenantId = (session!.user as any).tenantId as string;
   const plan = await getTenantPlan(tenantId);
   if (!planHasFeature(plan, "incidents")) redirect("/admin/incidents");
 
   const today = new Date().toISOString().slice(0, 16);
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10">
-      <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-        <Link href="/admin/incidents" className="hover:underline">
-          ← Retour aux incidents
-        </Link>
-      </div>
-      <h1 className="text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-1">
-        🚨 Déclarer un incident
-      </h1>
-      <p className="text-gray-600 dark:text-gray-300 mb-6">
-        Le workflow va se générer automatiquement avec une checklist adaptée à
-        votre type d'incident (H+0, H+24, H+72, semaine 1, RetEx).
-      </p>
+    <>
+      <AdminPageHeader
+        title="Déclarer un incident"
+        description="Le workflow va se générer automatiquement avec une checklist adaptée à votre type d'incident (H+0, H+24, H+72, semaine 1, RetEx)."
+        icon="🚨"
+        actions={
+          <Link href="/admin/incidents" className="text-sm text-gray-500 hover:text-primary-500 dark:hover:text-accent-300">
+            ← Retour aux incidents
+          </Link>
+        }
+      />
 
-      <AdminNav />
-
-      <form action={createIncidentAction} className="card mt-8 space-y-4">
+      <AdminSection>
+      <form action={createIncidentAction} className="space-y-4">
         <div>
           <label htmlFor="title" className="block text-sm font-medium mb-1">
             Titre court *
@@ -196,6 +191,7 @@ export default async function NewIncidentPage() {
           </Link>
         </div>
       </form>
-    </div>
+      </AdminSection>
+    </>
   );
 }

@@ -3,7 +3,6 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
-import AdminNav from "@/components/AdminNav";
 import IncidentActionCheckbox from "@/components/IncidentActionCheckbox";
 import IncidentStatusButtons from "@/components/IncidentStatusButtons";
 import {
@@ -34,10 +33,7 @@ export default async function IncidentDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
-  const role = (session.user as any).role;
-  if (role !== "ADMIN" && role !== "SUPERADMIN") redirect("/apprendre");
-  const tenantId = (session.user as any).tenantId as string;
+  const tenantId = (session!.user as any).tenantId as string;
   const plan = await getTenantPlan(tenantId);
   if (!planHasFeature(plan, "incidents")) redirect("/admin/incidents");
 
@@ -49,7 +45,6 @@ export default async function IncidentDetailPage({
   const severityMeta = INCIDENT_SEVERITY_LABELS[incident.severity];
   const statusMeta = INCIDENT_STATUS_LABELS[incident.status];
 
-  // Group actions par phase
   const actionsByPhase = new Map<string, typeof incident.actions>();
   for (const phase of PHASES) actionsByPhase.set(phase, []);
   for (const a of incident.actions) {
@@ -61,27 +56,27 @@ export default async function IncidentDetailPage({
   const progressPct = totalActions === 0 ? 0 : Math.round((totalDone / totalActions) * 100);
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10">
-      <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-        <Link href="/admin/incidents" className="hover:underline">
-          ← Tous les incidents
-        </Link>
-      </div>
-
+    <>
       <header className="mb-6">
-        <div className="flex items-center gap-3 flex-wrap mb-2">
-          <span className="font-mono text-sm font-bold text-primary-500 bg-gray-100 dark:bg-slate-800 px-2 py-1 rounded">
+        <div className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+          <Link href="/admin/incidents" className="hover:text-primary-500 dark:hover:text-accent-300">
+            ← Tous les incidents
+          </Link>
+        </div>
+        <div className="flex items-center gap-2 flex-wrap mb-2">
+          <span className="font-mono text-xs font-bold text-primary-500 bg-gray-100 dark:bg-slate-800 px-2 py-1 rounded">
             {incident.reference}
           </span>
           <span className={`text-xs font-bold px-2 py-1 rounded ${STATUS_COLORS[incident.status]}`}>
             {statusMeta.label}
           </span>
-          <span className="text-xs font-bold px-2 py-1 rounded bg-red-100 text-red-700">
+          <span className="text-xs font-bold px-2 py-1 rounded bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300">
             {severityMeta.label}
           </span>
         </div>
-        <h1 className="text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-1">
-          <span aria-hidden="true">{typeMeta.emoji}</span> {incident.title}
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight mb-1 flex items-center gap-2.5">
+          <span aria-hidden="true" className="text-2xl">{typeMeta.emoji}</span>
+          <span className="min-w-0">{incident.title}</span>
         </h1>
         <p className="text-sm text-gray-500 dark:text-gray-400">
           {typeMeta.label} · Détecté le{" "}
@@ -92,7 +87,6 @@ export default async function IncidentDetailPage({
         </p>
       </header>
 
-      <AdminNav />
 
       {/* Progression globale */}
       <div className="card my-6">
@@ -335,6 +329,6 @@ export default async function IncidentDetailPage({
           </form>
         </section>
       )}
-    </div>
+    </>
   );
 }

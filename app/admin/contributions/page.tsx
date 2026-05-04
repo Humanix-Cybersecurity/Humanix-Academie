@@ -1,26 +1,32 @@
 // Mes contributions au marketplace
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import AdminNav from "@/components/AdminNav";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import EmptyState from "@/components/admin/EmptyState";
+import StatusBadge from "@/components/admin/StatusBadge";
 
 export const dynamic = "force-dynamic";
 
-const STATUS_BADGE: Record<string, { label: string; className: string }> = {
-  DRAFT: { label: "Brouillon", className: "bg-gray-100 text-gray-700" },
-  PENDING_REVIEW: { label: "En attente de modération", className: "bg-amber-100 text-amber-700" },
-  APPROVED: { label: "✓ Publié", className: "bg-green-100 text-green-700" },
-  REJECTED: { label: "Refusé", className: "bg-red-100 text-red-700" },
-  DEPRECATED: { label: "Déprécié", className: "bg-gray-200 text-gray-500" },
+const STATUS_LEVEL: Record<string, "neutral" | "info" | "success" | "warning" | "danger"> = {
+  DRAFT:           "neutral",
+  PENDING_REVIEW:  "warning",
+  APPROVED:        "success",
+  REJECTED:        "danger",
+  DEPRECATED:      "neutral",
+};
+
+const STATUS_LABEL: Record<string, string> = {
+  DRAFT:          "Brouillon",
+  PENDING_REVIEW: "En modération",
+  APPROVED:       "Publié",
+  REJECTED:       "Refusé",
+  DEPRECATED:     "Déprécié",
 };
 
 export default async function ContributionsPage() {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
-  const role = (session.user as any).role;
-  if (role !== "ADMIN" && role !== "SUPERADMIN") redirect("/apprendre");
-  const userId = (session.user as any).id as string;
+  const userId = (session!.user as any).id as string;
 
   const modules = await db.marketplaceModule.findMany({
     where: { authorId: userId },
@@ -28,69 +34,71 @@ export default async function ContributionsPage() {
   });
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-extrabold text-primary-500">Console dirigeant</h1>
-      <p className="text-gray-600 mb-6">Gestion fine de votre programme de sensibilisation cyber.</p>
-      <AdminNav />
+    <>
+      <AdminPageHeader
+        title="Mes contributions"
+        description="Crée et partage des modules pédagogiques avec la communauté Humanix."
+        actions={
+          <Link href="/admin/contributions/new" className="inline-flex items-center gap-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-white font-semibold px-4 py-2 text-sm transition">
+            <span aria-hidden="true">➕</span> Nouveau module
+          </Link>
+        }
+      />
 
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <div>
-          <h2 className="text-2xl font-bold text-primary-500">✍️ Mes contributions</h2>
-          <p className="text-gray-600 text-sm">Crée et partage des modules avec la communauté Humanix.</p>
-        </div>
-        <Link href="/admin/contributions/new" className="btn-primary text-sm py-2 px-4">
-          + Nouveau module
-        </Link>
-      </div>
+      <div className="space-y-6 min-w-0">
+        {/* Engagement contributeur */}
+        <article className="rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-900/15 p-4">
+          <h3 className="font-bold text-amber-800 dark:text-amber-200 text-sm flex items-center gap-2">
+            <span aria-hidden="true">📜</span>
+            Engagement contributeur
+          </h3>
+          <p className="text-xs text-amber-800/80 dark:text-amber-200/80 mt-2 leading-relaxed">
+            En soumettant un module, tu acceptes la <Link href="/marketplace/security" className="underline">charte de contribution</Link> :
+            contenu original ou cité, pas de propos discriminatoires, pas de promotion produit, exactitude technique.
+            Chaque module est <strong>modéré humainement</strong> avant publication. Maximum <strong>5 soumissions par 24h</strong>.
+          </p>
+        </article>
 
-      <div className="card mb-6 bg-amber-50 border-amber-300">
-        <h3 className="font-bold text-amber-900 mb-2">📜 Engagement contributeur</h3>
-        <p className="text-sm text-amber-800 leading-relaxed">
-          En soumettant un module, tu acceptes la <Link href="/marketplace/security" className="underline">charte de contribution</Link> :
-          contenu original ou cité, pas de propos discriminatoires, pas de promotion produit, exactitude technique.
-          Chaque module est <strong>modéré humainement</strong> avant publication.
-          Maximum <strong>5 soumissions par 24h</strong>.
-        </p>
-      </div>
-
-      {modules.length === 0 ? (
-        <div className="card text-center py-12">
-          <p className="text-5xl mb-3">📝</p>
-          <p className="text-gray-500 mb-4">Tu n'as pas encore créé de module.</p>
-          <Link href="/admin/contributions/new" className="btn-primary">Créer mon premier module →</Link>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {modules.map((m) => {
-            const badge = STATUS_BADGE[m.status];
-            return (
-              <Link
-                key={m.id}
-                href={`/admin/contributions/${m.id}`}
-                className="card hover:shadow-md transition flex items-center gap-4"
-              >
-                <div className="text-4xl">{m.emoji}</div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <h3 className="font-bold text-primary-500">{m.title}</h3>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${badge.className}`}>
-                      {badge.label}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-600 line-clamp-1">{m.description}</p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    v{m.version} · {m.category} · maj {m.updatedAt.toLocaleDateString("fr-FR")}
-                  </p>
-                  {m.status === "REJECTED" && m.rejectionReason && (
-                    <p className="text-xs text-warn mt-1 italic">Motif refus : {m.rejectionReason}</p>
-                  )}
-                </div>
-                <span className="text-gray-400">→</span>
+        {modules.length === 0 ? (
+          <EmptyState
+            icon="📝"
+            title="Tu n'as pas encore créé de module"
+            description="Partage ton expertise avec la communauté Humanix."
+            cta={
+              <Link href="/admin/contributions/new" className="inline-flex items-center gap-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-white font-semibold px-4 py-2 text-sm transition">
+                Créer mon premier module →
               </Link>
-            );
-          })}
-        </div>
-      )}
-    </div>
+            }
+          />
+        ) : (
+          <ul className="space-y-2 list-none">
+            {modules.map((m) => (
+              <li key={m.id}>
+                <Link
+                  href={`/admin/contributions/${m.id}`}
+                  className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 flex items-center gap-4 hover:shadow-sm hover:border-accent-500/50 transition"
+                >
+                  <span className="text-3xl shrink-0" aria-hidden="true">{m.emoji}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-bold text-gray-900 dark:text-gray-100 truncate">{m.title}</h3>
+                      <StatusBadge level={STATUS_LEVEL[m.status]} pill>{STATUS_LABEL[m.status]}</StatusBadge>
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-1 mt-0.5">{m.description}</p>
+                    <p className="text-xs text-gray-400 mt-1">
+                      v{m.version} · {m.category} · maj {m.updatedAt.toLocaleDateString("fr-FR")}
+                    </p>
+                    {m.status === "REJECTED" && m.rejectionReason && (
+                      <p className="text-xs text-rose-600 dark:text-rose-400 mt-1 italic">Motif refus : {m.rejectionReason}</p>
+                    )}
+                  </div>
+                  <span className="text-gray-400 shrink-0" aria-hidden="true">→</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </>
   );
 }

@@ -1,10 +1,8 @@
 // Liste des incidents en cours et historiques pour le tenant.
 // Module Cyber-Reflexe - gated Pro+.
 
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
-import AdminNav from "@/components/AdminNav";
 import { listIncidents } from "@/lib/incident-response/service";
 import {
   INCIDENT_TYPE_LABELS,
@@ -13,6 +11,7 @@ import {
 } from "@/lib/incident-response/playbooks";
 import PlanGate from "@/components/PlanGate";
 import { getTenantPlan, planHasFeature, FEATURE_MIN_PLAN } from "@/lib/plans";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
 
 export const dynamic = "force-dynamic";
 
@@ -33,30 +32,23 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default async function AdminIncidentsPage() {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
-  const role = (session.user as any).role;
-  if (role !== "ADMIN" && role !== "SUPERADMIN") redirect("/apprendre");
-  const tenantId = (session.user as any).tenantId as string;
+  const tenantId = (session!.user as any).tenantId as string;
 
   const plan = await getTenantPlan(tenantId);
   if (!planHasFeature(plan, "incidents")) {
     return (
-      <div className="max-w-5xl mx-auto px-4 py-10">
-        <h1 className="text-3xl font-extrabold text-primary-500 dark:text-accent-300">
-          🚨 Cyber-Réflexe
-        </h1>
-        <p className="text-gray-600 dark:text-gray-300 mb-6">
-          Module de réponse à incident guidé.
-        </p>
-        <AdminNav />
-        <div className="mt-8">
-          <PlanGate
-            feature="incidents"
-            currentPlan={plan}
-            requiredPlan={FEATURE_MIN_PLAN.incidents}
-          />
-        </div>
-      </div>
+      <>
+        <AdminPageHeader
+          title="Cyber-Réflexe"
+          description="Module de réponse à incident guidé."
+          icon="🚨"
+        />
+        <PlanGate
+          feature="incidents"
+          currentPlan={plan}
+          requiredPlan={FEATURE_MIN_PLAN.incidents}
+        />
+      </>
     );
   }
 
@@ -64,16 +56,14 @@ export default async function AdminIncidentsPage() {
   const openCount = incidents.filter((i) => !["RESOLVED", "CLOSED"].includes(i.status)).length;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-extrabold text-primary-500 dark:text-accent-300">
-        🚨 Cyber-Réflexe
-      </h1>
-      <p className="text-gray-600 dark:text-gray-300 mb-6">
-        Module de réponse à incident guidé. Workflow ANSSI + RGPD + NIS2,
-        documents pré-remplis prêts à être déposés.
-      </p>
+    <>
+      <AdminPageHeader
+        title="Cyber-Réflexe"
+        description="Module de réponse à incident guidé. Workflow ANSSI + RGPD + NIS2, documents pré-remplis prêts à être déposés."
+        icon="🚨"
+      />
 
-      <AdminNav />
+      <div className="space-y-6 min-w-0">
 
       {/* Hero CTA / KPI */}
       <div className="grid sm:grid-cols-3 gap-4 my-6">
@@ -196,7 +186,8 @@ export default async function AdminIncidentsPage() {
           </table>
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }
 

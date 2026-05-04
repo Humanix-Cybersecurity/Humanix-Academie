@@ -6,7 +6,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
-import AdminNav from "@/components/AdminNav";
 import { getTenantPlan } from "@/lib/plans";
 import PlanGateGeneric from "@/components/PlanGateGeneric";
 import PhishingGenerator from "@/components/PhishingGenerator";
@@ -34,7 +33,6 @@ export default async function PhishingGenererPage() {
           Créez un faux mail de phishing crédible en français, en 5 secondes,
           via Mistral (IA souveraine française).
         </p>
-        <AdminNav />
         <PlanGateGeneric
           plan={plan}
           featureLabel="Générateur de phishing IA"
@@ -55,7 +53,6 @@ export default async function PhishingGenererPage() {
         crédible en 5 secondes. Modifiez si besoin, puis lancez votre campagne.
       </p>
 
-      <AdminNav />
 
       <div className="card mb-6 bg-gradient-to-br from-primary-50 to-cyan-50 dark:from-primary-900/30 dark:to-cyan-900/30 border-l-4 border-accent-500">
         <h2 className="font-bold text-primary-500 mb-2 flex items-center gap-2">

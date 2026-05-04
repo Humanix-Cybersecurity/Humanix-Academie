@@ -1,23 +1,18 @@
 // Page admin "Intégrations" — gestion des webhooks Slack/Teams/generiques.
-// Acces : ADMIN, MANAGER, SUPERADMIN. Pas de gate plan : la fonctionnalite est
-// incluse dans tous les paliers (c'est un differenciateur commercial).
-
-import { redirect } from "next/navigation";
+// Acces : ADMIN, MANAGER, SUPERADMIN. Pas de gate plan.
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import AdminNav from "@/components/AdminNav";
 import { WEBHOOK_EVENTS } from "@/lib/webhooks/events";
 import WebhookTable from "@/components/WebhookTable";
 import { createWebhook, deleteWebhook, fireTestWebhook, toggleWebhook } from "./actions";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import AdminSection from "@/components/admin/AdminSection";
 
 export const dynamic = "force-dynamic";
 
 export default async function IntegrationsPage() {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
-  const role = (session.user as any).role;
-  if (role !== "ADMIN" && role !== "MANAGER" && role !== "SUPERADMIN") redirect("/apprendre");
-  const tenantId = (session.user as any).tenantId as string;
+  const tenantId = (session!.user as any).tenantId as string;
 
   const webhooks = await db.tenantWebhook.findMany({
     where: { tenantId },
@@ -25,42 +20,34 @@ export default async function IntegrationsPage() {
   });
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-extrabold text-primary-500">Intégrations</h1>
-      <p className="text-gray-600 dark:text-gray-300 mb-6">
-        Reliez Humanix Académie à votre canal Slack, Microsoft Teams, ou tout
-        outil acceptant un webhook (Zapier, n8n, custom). Notification temps
-        réel des évènements clés.
-      </p>
-
-      <AdminNav />
-
-      <h2 className="text-xl font-bold text-primary-500 mb-2 mt-8">
-        Vos webhooks configurés
-      </h2>
-      <WebhookTable
-        webhooks={webhooks.map((w) => ({
-          id: w.id,
-          label: w.label,
-          type: w.type,
-          urlMasked: maskUrl(w.url),
-          events: w.events.split(",").filter(Boolean),
-          isActive: w.isActive,
-          successCount: w.successCount,
-          failureCount: w.failureCount,
-          lastFiredAt: w.lastFiredAt?.toISOString() ?? null,
-          lastError: w.lastError,
-        }))}
-        onDeleteAction={deleteWebhook}
-        onTestAction={fireTestWebhook}
-        onToggleAction={toggleWebhook}
+    <>
+      <AdminPageHeader
+        title="Intégrations"
+        description="Reliez Humanix Académie à Slack, Microsoft Teams, ou tout outil acceptant un webhook (Zapier, n8n, custom). Notification temps réel des évènements clés."
       />
 
-      {/* Formulaire de creation */}
-      <section className="card mt-10">
-        <h2 className="text-xl font-bold text-primary-500 mb-1">
-          ➕ Ajouter un webhook
-        </h2>
+      <div className="space-y-6 min-w-0">
+      <AdminSection title="Vos webhooks configurés">
+        <WebhookTable
+          webhooks={webhooks.map((w) => ({
+            id: w.id,
+            label: w.label,
+            type: w.type,
+            urlMasked: maskUrl(w.url),
+            events: w.events.split(",").filter(Boolean),
+            isActive: w.isActive,
+            successCount: w.successCount,
+            failureCount: w.failureCount,
+            lastFiredAt: w.lastFiredAt?.toISOString() ?? null,
+            lastError: w.lastError,
+          }))}
+          onDeleteAction={deleteWebhook}
+          onTestAction={fireTestWebhook}
+          onToggleAction={toggleWebhook}
+        />
+      </AdminSection>
+
+      <AdminSection title="Ajouter un webhook">
         <p className="text-sm text-gray-500 mb-4">
           Pour Slack : créez un{" "}
           <a
@@ -163,14 +150,10 @@ export default async function IntegrationsPage() {
             Créer le webhook
           </button>
         </form>
-      </section>
+      </AdminSection>
 
-      {/* Documentation */}
-      <section className="card mt-6 bg-gray-50 dark:bg-slate-800 text-sm">
-        <h3 className="font-bold text-primary-500 mb-2">
-          Format des payloads
-        </h3>
-        <p className="text-gray-700 dark:text-gray-300 mb-2">
+      <AdminSection variant="muted" title="Format des payloads">
+        <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
           <strong>Slack &amp; Teams :</strong> les messages sont formatés avec
           un titre, un résumé contextuel et un bouton « Ouvrir le dashboard ».
           Aucun setup côté Humanix : collez l'URL et c'est joué.
@@ -186,8 +169,9 @@ export default async function IntegrationsPage() {
           </code>{" "}
           si un secret est configuré (calculé sur le body brut).
         </p>
-      </section>
-    </div>
+      </AdminSection>
+      </div>
+    </>
   );
 }
 
