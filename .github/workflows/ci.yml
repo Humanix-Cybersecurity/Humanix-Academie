@@ -15,6 +15,13 @@ on:
 permissions:
   contents: read
 
+# Opt-in immédiat sur Node 24 pour les actions JavaScript (cf. annonce GitHub
+# du 19/09/2025 : Node 20 deprecated, suppression le 16/09/2026).
+# On s'aligne dès maintenant pour valider la compatibilité avant que GitHub
+# force la migration le 2 juin 2026 (1 semaine après notre launch).
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 # Annule les runs précédents pour la même PR (gain CI minutes).
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
