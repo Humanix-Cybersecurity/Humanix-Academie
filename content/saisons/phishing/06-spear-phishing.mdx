@@ -1,0 +1,130 @@
+---
+title: "Le spear phishing cible direction"
+durationMinutes: 8
+persona: "direction-comex"
+objective: "Reperer un spear phishing cible — l'attaque sur-mesure qui passe les filtres techniques"
+xpReward: 90
+scenario: |
+  Lundi 8h54. Tu es directeur financier d'une PME industrielle de 87 personnes.
+  Tu prepares ton COMEX de 9h30. Tu reçois un mail :
+
+  De : "Marc Lefevre <m.lefevre@cabinet-deveza-associes.com>"
+  Objet : "[Confidentiel] Suite a notre echange salon Industrie 2026"
+
+  "Bonjour [ton prenom],
+  Comme convenu apres notre echange en marge du salon Industrie 2026 la semaine
+  derniere, je vous transmets le draft de la note d'opportunite sur l'acquisition
+  de Filtragex (le concurrent dont vous me parliez).
+
+  Le document est en piece jointe (PDF protege par mot de passe pour des raisons
+  evidentes de confidentialite). Le mot de passe vous a ete envoye par SMS sur
+  votre numero pro a l'instant.
+
+  Pour gagner du temps, je vous propose un point telephonique des cette semaine.
+  Mes creneaux : mardi 14h-16h ou mercredi 10h-12h.
+
+  Bien a vous,
+  Marc LEFEVRE
+  Cabinet Deveza & Associes
+  Conseil M&A pour PME industrielles
+  06 23 XX XX XX"
+
+  Tu te souviens vaguement avoir croise un consultant sur ce salon. Le mail est
+  parfaitement personnalise : ton secteur, ton role, le nom d'un vrai concurrent,
+  un cabinet dont tu n'es pas sur mais qui sonne credible. Tu reçois effectivement
+  un SMS avec un mot de passe a 8 caracteres alphanumeriques.
+choices:
+  - id: "a"
+    label: "J'ouvre le PDF avec le mot de passe pour preparer le point telephonique"
+    outcome: "bad"
+    feedback: "Catastrophe : le PDF contient un payload qui exploite ton lecteur PDF (CVE 2026-XXXX) et installe un Remote Access Trojan. L'attaquant a maintenant acces a ta machine, tes mails, et donc aux donnees financieres confidentielles."
+    points: -15
+  - id: "b"
+    label: "Je verifie sur internet l'existence du Cabinet Deveza & Associes"
+    outcome: "neutral"
+    feedback: "Bon reflexe initial, mais l'attaquant a bien fait son boulot : un site web propre, un LinkedIn, peut-etre meme une page Wikipedia recente. La verification web ne suffit pas pour un spear phishing sophistique."
+    points: 5
+  - id: "c"
+    label: "Je rappelle le numero qui m'a envoye le SMS pour confirmer"
+    outcome: "bad"
+    feedback: "Le numero SMS est aussi controle par l'attaquant. Il va te confirmer son identite avec aplomb. Le SMS a ete envoye depuis un service VoIP qui spoof le numero d'apparence."
+    points: -5
+  - id: "d"
+    label: "Je transfere le mail a la DSI/RSSI sans ouvrir le PDF, et je n'agis pas avant verification croisee"
+    outcome: "good"
+    feedback: "Excellent reflexe ! La DSI peut analyser le PDF en sandbox, verifier l'expediteur via les outils de threat intel, et te confirmer si c'est legitime. Tu protegeges l'entreprise."
+    points: 50
+debrief: |
+  Cette attaque s'appelle le **spear phishing** — un phishing **cible**, conçu
+  spefiquement pour toi, avec de l'OSINT pousse et un scenario credible.
+  Contrairement au phishing de masse, il **passe les filtres techniques** car :
+  - Pas de domaine en blacklist : l'attaquant a achete un domaine credible
+  - Pas de keyword de phishing classique : le ton est professionnel
+  - Pas d'envoi en masse : impossibilite de detection comportementale
+  - Reputation expediteur correcte : le domaine a ete "warm-up" pendant des semaines
+
+  Les marqueurs d'un spear phishing :
+  - **Personnalisation excessive** : ton prenom, ton role, ton secteur, un evenement
+    auquel tu as reellement participe (LinkedIn / agenda public).
+  - **Histoire credible** : reference a une rencontre passee dont tu te souviens
+    vaguement. Le doute joue contre toi.
+  - **Pretexte pour ouvrir un fichier** : PDF protege par mot de passe (qui lui
+    contourne les filtres), ZIP, fichier Office avec macro.
+  - **Canal multiple** : mail + SMS (avec mot de passe) renforce l'illusion de
+    securite. C'est en fait un signal d'alerte.
+  - **Escalade conversationnelle** : proposition d'un point telephonique pour creer
+    une relation et abaisser tes defenses.
+  - **Timing strategique** : avant ton COMEX, en debut de semaine, quand tu es
+    presse.
+
+  Cibles classiques du spear phishing : direction generale, direction financiere,
+  achats, responsables RH (donnees personnelles), responsables informatique
+  (acces privilegies). En 2026, **les attaquants utilisent l'IA generative** pour
+  produire des spear phishings en masse de qualite quasi-indetectable.
+
+  La regle universelle pour les profils a risque : **toute communication avec
+  piece jointe entrante doit etre verifiee hors-canal AVANT ouverture**. Et la
+  DSI doit pouvoir analyser en sandbox sans que tu touches le fichier.
+
+  En cas d'ouverture deja faite : deconnecte ta machine du reseau IMMEDIATEMENT,
+  alerte la DSI, change tous les mots de passe critiques, et fais auditer les
+  acces des dernieres heures (mails sortants, fichiers consultes, exports).
+quiz:
+  - question: "Quelle est la difference entre phishing classique et spear phishing ?"
+    choices:
+      - { id: "a", label: "Le spear phishing est en anglais", correct: false }
+      - { id: "b", label: "Le spear phishing est cible et personnalise — il passe les filtres techniques", correct: true }
+      - { id: "c", label: "Le spear phishing utilise toujours des deepfakes vocaux", correct: false }
+      - { id: "d", label: "Aucune difference, c'est le meme mot", correct: false }
+    explanation: "Le spear phishing (du verbe 'spear' = harponner) cible une personne specifique avec un message sur-mesure base sur de l'OSINT. Il passe les filtres anti-spam classiques car il n'a pas les marqueurs du phishing de masse."
+
+  - question: "Tu es DAF, tu reçois un PDF par mail prive avec mot de passe SMS. Premier reflexe ?"
+    choices:
+      - { id: "a", label: "Ouvrir le PDF c'est protege par mot de passe donc safe", correct: false }
+      - { id: "b", label: "Ne PAS ouvrir le PDF, transferer mail+SMS a la DSI pour analyse", correct: true }
+      - { id: "c", label: "Ouvrir dans une VM jetable", correct: false }
+      - { id: "d", label: "Repondre pour demander plus de contexte", correct: false }
+    explanation: "Un PDF protege par mot de passe contourne LES filtres anti-malware (qui ne peuvent pas le scanner). C'est l'inverse de 'safe' — c'est un signal d'alerte. La DSI peut l'analyser en sandbox sans risque."
+
+  - question: "Pourquoi le spear phishing passe-t-il les filtres techniques ?"
+    choices:
+      - { id: "a", label: "Parce que les filtres sont mal configures", correct: false }
+      - { id: "b", label: "Parce que le mail n'a pas les marqueurs comportementaux du phishing de masse (pas de blacklist, pas de keywords, pas d'envoi en masse)", correct: true }
+      - { id: "c", label: "Parce qu'il utilise SSL/TLS", correct: false }
+      - { id: "d", label: "Parce qu'il vient d'un domaine .com", correct: false }
+    explanation: "Les filtres anti-phishing detectent surtout le phishing de masse via des heuristiques (reputation domaine, keywords, volume). Le spear phishing arrive en 1 exemplaire d'un domaine credible et 'warmed-up' — il passe sous le radar technique. Seule la vigilance humaine reste efficace."
+
+  - question: "Si tu as ouvert un PDF malveillant, quelle est l'action de PRIORITE 1 ?"
+    choices:
+      - { id: "a", label: "Eteindre la machine", correct: false }
+      - { id: "b", label: "Deconnecter immediatement la machine du reseau (Wi-Fi off + cable debranche)", correct: true }
+      - { id: "c", label: "Faire un screenshot pour la DSI", correct: false }
+      - { id: "d", label: "Continuer normalement", correct: false }
+    explanation: "Deconnecter du reseau coupe l'exfiltration en cours et la communication avec le C2 (Command & Control). C'est l'action #1. Eteindre la machine peut detruire des indices forensiques. Apres deconnexion : alerter la DSI, qui prend le relais avec leurs procedures."
+---
+
+> 💡 **Pour aller plus loin** : le spear phishing est l'arme principale des
+> APT (Advanced Persistent Threats). En France, les groupes APT28 (russe) et
+> APT31 (chinois) ciblent regulierement les PME industrielles strategiques.
+> L'ANSSI publie des fiches sectorielles : voir
+> [cyber.gouv.fr](https://www.cyber.gouv.fr) pour le secteur industriel.
