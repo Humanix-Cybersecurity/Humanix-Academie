@@ -59,7 +59,8 @@ export async function generateCoachAdvice(
   });
   if (!user) throw new Error("user_not_found");
 
-  const firstName = (user.name || user.email).split(" ")[0].split("@")[0];
+  const rawIdentity = user.name ?? user.email ?? "collègue";
+  const firstName = rawIdentity.split(" ")[0].split("@")[0];
   const hour = new Date().getHours();
   const greeting = GREETINGS_TIME(hour, firstName);
 
