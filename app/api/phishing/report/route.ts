@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Endpoint qui reçoit les signalements de phishing depuis le plugin Outlook.
 //
 // Auth : pas de NextAuth ici (l'add-in tourne dans Outlook avec une autre

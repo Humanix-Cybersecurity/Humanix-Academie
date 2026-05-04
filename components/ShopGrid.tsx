@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 import { useTransition, useState } from "react";
 import { buyItem, equipItem, unequipItem } from "@/app/boutique/actions";
 import { RARITY_STYLE } from "@/lib/shop";

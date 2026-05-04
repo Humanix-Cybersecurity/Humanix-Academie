@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Parser SCIM filter v2 minimal (RFC 7644 §3.4.2.2).
 // On supporte uniquement les filtres simples qu'Entra et Okta utilisent en
 // pratique pour le provisioning :

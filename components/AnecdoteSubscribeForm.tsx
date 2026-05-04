@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Formulaire d'inscription a la newsletter Cyber-Anecdote.
 // Reutilisable : home, footer, page anecdotes, audit-flash.
 // Compact (1 input + 1 bouton) ou inline selon le prop variant.

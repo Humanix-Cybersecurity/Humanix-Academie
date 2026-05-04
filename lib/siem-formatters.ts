@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Formatters SIEM : Splunk CIM v1 + Sentinel/ArcSight CEF v1.
 // Cible : injection dans Splunk HEC, Microsoft Sentinel CEF Forwarder, Sekoia,
 // Elastic Security, Wazuh, Graylog ou tout SIEM consommateur de NDJSON / CEF.

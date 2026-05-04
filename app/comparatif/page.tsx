@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page publique "Comparatif honnête".
 // Le pari editorial : poser noir sur blanc nos forces ET nos faiblesses face
 // aux concurrents identifies. C'est un acte commercial differencant : aucune

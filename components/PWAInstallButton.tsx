@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Bouton flottant : "Installer l'app" pour ajouter Humanix a l'ecran d'accueil mobile.
 // Sur navigateurs supportant beforeinstallprompt (Chrome / Edge / Samsung Internet),
 // on declenche le prompt natif. Sur iOS Safari, on affiche une instruction.

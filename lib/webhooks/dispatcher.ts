@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Dispatcher webhooks : envoie 1 evenement vers tous les webhooks abonnes
 // d'un tenant donne. Async / fire-and-forget : on n'attend pas la reponse
 // pour ne pas bloquer la requete utilisateur.

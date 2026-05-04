@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page publique Microsoft Sentinel. A11y RGAA AA + UI/UX différenciante :
 // schéma SVG flow, snippets KQL prêts, mode d'emploi step-by-step pour
 // configurer DCE/DCR/Workbook.

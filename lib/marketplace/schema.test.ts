@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Tests du schéma Zod marketplace.
 // Sécurité critique : ce schéma est la première ligne de défense contre
 // les payloads malveillants soumis par des contributeurs externes (XSS,

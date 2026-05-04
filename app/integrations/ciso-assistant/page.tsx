@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page publique : passerelle Humanix Academie <-> CISO Assistant.
 // Cible : RSSI / DSI qui evalue notre integration GRC.
 // Contraintes editoriales :

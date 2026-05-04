@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Loader des episodes : MDX dans /content/saisons/*
 // Le frontmatter decrit le scenario, les choix, le debrief, le quiz.
 import fs from "node:fs";

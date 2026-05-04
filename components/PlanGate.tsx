@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Bloc d'upsell affiche quand le plan du tenant ne couvre pas la feature.
 // Composant pur (pas de logique cote serveur) — la verification du plan
 // est faite par les pages parent qui decident d'afficher PlanGate ou non.

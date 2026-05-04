@@ -1,5 +1,6 @@
 "use server";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Server actions du module Cyber-Reflexe (reponse a incident).
 // Toutes les actions sont gated Pro+ et tenant-scoped.
 

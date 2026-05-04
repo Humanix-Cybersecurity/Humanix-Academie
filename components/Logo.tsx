@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Composant logo réutilisable.
 // 3 variantes :
 //  - "mark"     : icône seule (HeaderBar compact, favicon, mascotte UI)

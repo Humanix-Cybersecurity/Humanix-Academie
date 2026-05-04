@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // API : POST progression d'un episode + attribution XP, coins, level up
 import { NextResponse } from "next/server";
 import { z } from "zod";

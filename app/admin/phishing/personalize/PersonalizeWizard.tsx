@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Wizard de generation de phishings personnalises :
 //   1. Selection des cibles (employes du tenant)
 //   2. Configuration : template + difficulte + ton + evenement contextuel

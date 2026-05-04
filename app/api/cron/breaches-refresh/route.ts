@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Endpoint de cron pour rafraîchir l'observatoire des fuites.
 //
 // SECURITE : pas de session NextAuth (les crons ne sont pas auth user).

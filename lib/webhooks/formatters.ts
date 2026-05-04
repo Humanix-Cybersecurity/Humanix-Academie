@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Formatage des payloads pour Slack et Microsoft Teams.
 // L'objectif : que le message soit immediatement lisible dans le canal,
 // sans avoir besoin de lien externe.

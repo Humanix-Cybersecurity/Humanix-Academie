@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Helpers d'inscription / desinscription a la newsletter Cyber-Anecdote du Lundi.
 // Utilise par : formulaire public, auto-subscribe au login, endpoint /unsubscribe.
 

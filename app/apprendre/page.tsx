@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Hub apprenant — vue Duolingo evolutive : mascotte, level, streak, daily goal
 import Link from "next/link";
 import { auth } from "@/lib/auth";

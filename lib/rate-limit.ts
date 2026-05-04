@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Rate limiter in-memory simple (sliding window).
 // Suffisant pour les endpoints API peu sollicites.
 // Pour du multi-instance, remplacer par Redis ou la table Event.

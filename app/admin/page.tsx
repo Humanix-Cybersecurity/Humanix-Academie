@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Console dirigeant — vue agregee, KPIs, graphiques, suivi equipe.
 //
 // REFONTE MAI 2026 : ce composant ne gère PLUS le layout (sidebar, header,

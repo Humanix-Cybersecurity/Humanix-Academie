@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 import { useState, useTransition } from "react";
 import Papa from "papaparse";
 import { bulkImportUsers } from "@/app/admin/actions";

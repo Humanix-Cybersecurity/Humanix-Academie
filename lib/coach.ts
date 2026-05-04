@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // IA Coach Hex
 // V1 : moteur a regles deterministe base sur les donnees reelles de l'utilisateur.
 // V2 : si MISTRAL_API_KEY est defini, on peut enrichir avec Mistral (Paris,

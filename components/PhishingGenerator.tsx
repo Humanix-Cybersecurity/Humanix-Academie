@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // UI du générateur de phishing IA. Formulaire → server action → preview avec
 // onglets (HTML rendu / texte / signaux faibles).
 

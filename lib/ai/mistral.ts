@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Client Mistral pour la génération de contenu cyber pédagogique.
 //
 // POURQUOI MISTRAL :
