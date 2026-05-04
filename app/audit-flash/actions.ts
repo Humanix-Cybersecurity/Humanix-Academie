@@ -1,5 +1,6 @@
 "use server";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Server actions de l'audit flash : creation d'une soumission + scoring serveur.
 // Securite :
 //  - validation Zod stricte cote serveur

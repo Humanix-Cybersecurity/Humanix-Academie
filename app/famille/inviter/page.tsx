@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page connectee : un employe peut offrir 3 acces gratuits a /famille a ses
 // proches. Pre-requis : avoir complete au moins 1 saison.
 

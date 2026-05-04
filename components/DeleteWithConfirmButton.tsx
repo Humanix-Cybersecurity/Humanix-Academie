@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Mini Client Component reutilisable : un bouton de form action avec
 // confirmation native window.confirm. Utilise dans toutes les tables
 // admin pour eviter de sprinkler des "use client" partout.

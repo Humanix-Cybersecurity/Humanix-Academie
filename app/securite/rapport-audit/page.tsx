@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page publique : rapport d'audit de sécurité.
 // Manifeste : "on va vers la cyber, on ne la subit pas".
 

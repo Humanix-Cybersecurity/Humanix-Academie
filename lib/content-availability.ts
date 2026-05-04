@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Determine si un episode du catalogue dispose d'un contenu MDX redige
 // (par opposition au fallback generique de buildFallbackContent).
 //

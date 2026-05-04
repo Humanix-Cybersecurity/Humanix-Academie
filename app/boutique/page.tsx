@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page boutique : Hex se relooke avec les coins
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";

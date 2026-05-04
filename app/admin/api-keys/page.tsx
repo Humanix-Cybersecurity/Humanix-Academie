@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // /admin/api-keys — Gestion des clés API publiques (Essentielle+).
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";

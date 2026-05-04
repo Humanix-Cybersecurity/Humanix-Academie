@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Authentification API key pour endpoints /api/v1/*
 import { db } from "@/lib/db";
 import { hashApiKey } from "@/lib/crypto";

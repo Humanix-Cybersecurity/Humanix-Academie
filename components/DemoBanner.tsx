@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Bandeau persistant en mode demo.
 // Si l'user est connecte, on affiche le PLAN actif du tenant pour rendre
 // la demo plus credible (chaque visiteur sait quelle offre il est en train

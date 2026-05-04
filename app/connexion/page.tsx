@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page de connexion : 3 voies au choix
 //  1. SSO Google (1 clic, si compte deja invite)
 //  2. SSO Microsoft / Entra ID (1 clic, idem)

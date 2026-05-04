@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Player d'episode Duolingo-style — coeur de l'experience
 // 4 etapes : Scenario -> Debrief -> Quiz -> Recap (avec confettis)
 // + Detection level-up via reponse API et overlay

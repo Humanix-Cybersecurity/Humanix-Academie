@@ -1,5 +1,6 @@
 "use server";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Server actions admin (SUPERADMIN) pour gerer les anecdotes hebdo.
 
 import { revalidatePath } from "next/cache";

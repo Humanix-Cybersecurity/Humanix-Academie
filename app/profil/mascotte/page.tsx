@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page choix de mascotte + humeur + emoji custom.
 import { redirect } from "next/navigation";
 import Link from "next/link";

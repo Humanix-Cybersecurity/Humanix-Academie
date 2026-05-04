@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Tests du parser SCIM filter v2 (RFC 7644 §3.4.2.2).
 // Critique : un parser permissif = filter injection sur la BDD via SCIM.
 

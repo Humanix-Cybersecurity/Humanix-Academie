@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Endpoint admin : genere un script de vishing simule via Mistral souverain.
 //
 // Securite :

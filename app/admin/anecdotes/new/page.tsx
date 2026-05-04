@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Creation d'une nouvelle anecdote (SUPERADMIN).
 import { redirect } from "next/navigation";
 import Link from "next/link";
