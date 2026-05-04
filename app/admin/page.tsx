@@ -8,7 +8,8 @@
 //   - le data fetching côté serveur (Prisma)
 //   - le rendu du dashboard métier (AdminDashboard)
 //
-// Plus de wrapper max-w-7xl, plus d'AdminNav importé : layout natif Next.js.
+// Plus de wrapper max-w-7xl, plus de sidebar importée localement :
+// layout natif Next.js dans app/admin/layout.tsx.
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import AdminDashboard from "@/components/AdminDashboard";
