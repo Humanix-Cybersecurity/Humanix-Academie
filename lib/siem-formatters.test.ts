@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Tests des formatters SIEM (Splunk CIM + Sentinel CEF).
 // Critique : un format mal-formé = ligne ignorée par le SIEM = preuve manquante
 // dans l'audit GRC du client (incident potentiellement non détecté).

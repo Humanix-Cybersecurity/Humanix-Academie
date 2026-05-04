@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Mapping GRC : Humanix -> referentiels de conformite (ISO 27001, NIS2, RGPD, ANSSI HG)
 // Utilise par /api/v1/evidence-export et le connecteur CISO Assistant.
 //

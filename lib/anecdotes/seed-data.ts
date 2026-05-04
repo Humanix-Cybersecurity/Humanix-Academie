@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Catalogue de pre-seed pour la newsletter "Cyber-Anecdote du Lundi".
 // 6 anecdotes basees sur des incidents documentes en France (2023-2025).
 // Format : 1 incident reel + 1 lecon courte + 1 mini-action concrete realisable

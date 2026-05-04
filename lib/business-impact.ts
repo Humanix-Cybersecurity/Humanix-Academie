@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Calcul de l'impact business (financier) pour un tenant.
 // Sources : Tracfin, ANSSI cert-fr, etudes Hiscox / Generali sur sinistralite cyber PME.
 // Les chiffres sont des ordres de grandeur publics — la valeur ajoutee

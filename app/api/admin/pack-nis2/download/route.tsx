@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Genere et streame le Pack NIS2 PDF.
 // Authz : ADMIN/MANAGER/SUPERADMIN + plan Pro+.
 //

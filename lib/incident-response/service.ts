@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Couche service du module Post-Incident.
 // Encapsule : creation d'incident (avec generation auto checklist), update,
 // transitions de statut, ajout d'evenements timeline.

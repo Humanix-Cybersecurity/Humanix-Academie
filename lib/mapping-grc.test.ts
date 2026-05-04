@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Tests du mapping GRC.
 // Critique : un mapping incorrect = surcote artificielle de la conformité
 // = audit raté quand le RSSI vérifie. Notre intégrité commerciale en dépend.

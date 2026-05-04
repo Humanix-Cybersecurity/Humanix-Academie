@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Lib invitations Famille — boucle virale offerte aux employes qui terminent
 // la saison 1.
 //

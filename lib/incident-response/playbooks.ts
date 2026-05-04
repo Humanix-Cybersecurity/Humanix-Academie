@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Playbooks de reponse a incident par type, structures en 5 phases :
 //
 //   h0     - Action immediate (premiere heure)

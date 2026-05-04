@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page profil utilisateur — vue de progression personnelle + relance des episodes a refaire
 import Link from "next/link";
 import { redirect } from "next/navigation";
