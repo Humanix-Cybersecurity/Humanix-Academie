@@ -239,7 +239,7 @@ async function main() {
         price: it.price,
         minLevel: it.minLevel,
         description: it.description,
-        rarity: it.rarity,
+          "Tu rentres au bureau après ta pause café. Tu remarques qu'un visiteur (probablement un livreur, en gilet jaune) attend devant la porte avec un colis. Il sourit et te dit : « Tiens, tu peux me laisser passer ? J'ai oublié mon badge. C'est urgent. »",
       },
           { id: "a", label: "J'ouvre la porte, c'est évident qu'il a besoin d'entrer", outcome: "bad" as const, feedback: "Très mauvais réflexe : tu viens de pratiquer du tailgating. Aucun contrôle d'identité, accès libre à une zone potentiellement sensible.", points: -10 },
     shopItemsBySlug.set(it.slug, dbItem);
