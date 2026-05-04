@@ -38,7 +38,7 @@ const MAX_PAYLOAD_BYTES = 50 * 1024;
  * Note : on autorise des domaines whitelistes pour Slack/Teams meme s'ils
  * resolvent a des CDN tiers (le DNS resoudra cote runtime).
  */
-function isSafeWebhookUrl(rawUrl: string): boolean {
+export function isSafeWebhookUrl(rawUrl: string): boolean {
   let u: URL;
   try {
     u = new URL(rawUrl);
@@ -69,7 +69,7 @@ function isSafeWebhookUrl(rawUrl: string): boolean {
   return true;
 }
 
-function signPayload(payload: string, secret: string): string {
+export function signPayload(payload: string, secret: string): string {
   return crypto.createHmac("sha256", secret).update(payload).digest("hex");
 }
 
