@@ -98,32 +98,26 @@ export function planHasFeature(
 }
 
 /**
- * Récupère le plan du tenant courant.
+ * Récupère le plan du tenant courant DEPUIS LA BASE DE DONNÉES uniquement.
  *
- * **Priorité licence signée** : si `HUMANIX_LICENSE_KEY` est configurée
- * et valide (signature Ed25519, non expirée, domaine match), son plan
- * écrase la valeur DB. Cela permet de débloquer un palier supérieur sans
- * modifier la DB — utile pour le self-host AGPL où Humanix Cybersecurity
- * délivre une clé après contrat.
+ * Cette fonction est **client-safe** : elle peut être importée depuis un
+ * Server Component ou un module utilitaire, et `lib/plans.ts` reste sans
+ * dépendance Node-only. C'est nécessaire car certains "use client"
+ * (cf. `app/demo/page.tsx`) importent ce fichier pour les constantes
+ * `PLAN_LABEL` / `PLAN_EMOJI` — Webpack pré-bundle alors `lib/plans.ts`
+ * pour le browser, et tout import statique de `node:crypto` dans la
+ * chaîne casse le build.
  *
- * Si la licence est invalide ou expirée, fallback sur la valeur DB
- * (typiquement `trial` ou `decouverte` selon le seed).
+ * Pour avoir le plan effectif **prenant en compte une licence Ed25519
+ * éventuellement configurée** (HUMANIX_LICENSE_KEY), appelle
+ * `getEffectivePlan(tenantId)` exporté par `@/lib/license` à la place.
  *
- * Retourne "trial" en dernier recours si tenant introuvable.
+ * Cf. `docs/LICENSE_KEY.md` pour le système de licence côté self-host
+ * commercial.
  *
- * Cf. `lib/license/` pour la mécanique cryptographique et
- * `docs/LICENSE_KEY.md` pour la procédure d'obtention de licence.
+ * Retourne "trial" en fallback si tenant introuvable.
  */
 export async function getTenantPlan(tenantId: string): Promise<PlanId> {
-  // 1. Licence signée si présente et valide
-  const license = await import("./license/index")
-    .then((m) => m.getActiveLicense())
-    .catch(() => null);
-  if (license?.valid) {
-    return normalizePlan(license.license.plan);
-  }
-
-  // 2. Fallback DB tenant
   const tenant = await db.tenant.findUnique({
     where: { id: tenantId },
     select: { plan: true },
