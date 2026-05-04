@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Articles de micro-learning pre-rediges (seed)
 // Texte plein en markdown LIGHT (juste paragraphes et puces) — pas de HTML.
 export type LibraryArticleSeed = {

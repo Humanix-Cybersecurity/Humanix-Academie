@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Bouton de narration audio. Bascule automatique entre 2 moteurs :
 //  1. TTS premium serveur (POST /api/tts/synthesize → MP3 streaming) si dispo
 //     ET si le tenant a le plan requis (Pro+ par defaut).

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Certificat de completion individuel — version 1 page, encadrable.
 //
 // EVOLUTIONS V2 :

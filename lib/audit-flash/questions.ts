@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Catalogue des 15 questions de l'audit flash cyber HumaniX.
 // Format : OUI / NON / JE NE SAIS PAS (équivalent NON pour le score).
 // Chaque question est ponderee selon sa criticite cyber et son impact NIS2/RGPD.

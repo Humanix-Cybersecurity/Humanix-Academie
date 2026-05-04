@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Catalogue marketplace public — visible par tout admin connecte
 import Link from "next/link";
 import { redirect } from "next/navigation";

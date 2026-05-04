@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Déclaration d'accessibilité RGAA + page d'engagement.
 // Format conforme à l'arrêté du 20 septembre 2019 relatif à la déclaration
 // d'accessibilité (article 47 loi 2005-102).

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page detail d'un incident : workflow stepper + checklist + timeline + RetEx.
 
 import { notFound, redirect } from "next/navigation";

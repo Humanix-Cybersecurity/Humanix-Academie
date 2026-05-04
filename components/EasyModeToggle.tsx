@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Bouton "Mode facile" : agrandit la typo, ralentit les animations,
 // pour les profils peu numeriques / dyslexiques / seniors.
 import { useEffect, useState } from "react";

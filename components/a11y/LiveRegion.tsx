@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Region "aria-live" qui annonce les changements dynamiques aux lecteurs d'écran.
 // - "polite" : attend que le SR ait fini ce qu'il dit (par défaut, recommandé)
 // - "assertive" : interrompt le SR (à n'utiliser que pour erreurs critiques)

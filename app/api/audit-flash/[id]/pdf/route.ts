@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Telechargement du rapport PDF d'audit flash.
 // Public : l'URL contient l'id de soumission (cuid). Pas de session requise.
 

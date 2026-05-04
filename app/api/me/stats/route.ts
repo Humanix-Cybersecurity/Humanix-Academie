@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Stats utilisateur : XP / coins / level — utilisees dans le HeaderBar
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";

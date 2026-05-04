@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page publique de documentation des webhooks signés HMAC.
 // Cible : développeur RSSI / SOC qui veut intégrer Humanix à son SIEM ou
 // son outil interne via webhook.

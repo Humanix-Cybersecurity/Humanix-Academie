@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Generation et telechargement du rapport de conformite PDF
 import { NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";

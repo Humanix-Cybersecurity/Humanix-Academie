@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Generateur de script vishing (voice phishing) souverain.
 //
 // POURQUOI :

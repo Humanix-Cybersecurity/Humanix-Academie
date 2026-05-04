@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // PDF du rapport d'audit de sécurité.
 // Source de vérité : SECURITY_AUDIT.md à la racine. On ne rejoue pas le
 // markdown intégral (pertes de fidélité @react-pdf vs MD), on construit
