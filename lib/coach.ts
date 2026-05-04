@@ -167,7 +167,10 @@ export async function generateCoachAdvice(
   const shuffledMicroTips = [...POSITIVE_MICROTIPS];
   for (let i = shuffledMicroTips.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [shuffledMicroTips[i], shuffledMicroTips[j]] = [shuffledMicroTips[j], shuffledMicroTips[i]];
+    [shuffledMicroTips[i], shuffledMicroTips[j]] = [
+      shuffledMicroTips[j],
+      shuffledMicroTips[i],
+    ];
   }
   const microTips = shuffledMicroTips.slice(0, 2);
 
