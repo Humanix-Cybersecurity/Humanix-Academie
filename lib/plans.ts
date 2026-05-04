@@ -99,9 +99,31 @@ export function planHasFeature(
 
 /**
  * Récupère le plan du tenant courant.
- * Retourne "trial" en fallback si tenant introuvable.
+ *
+ * **Priorité licence signée** : si `HUMANIX_LICENSE_KEY` est configurée
+ * et valide (signature Ed25519, non expirée, domaine match), son plan
+ * écrase la valeur DB. Cela permet de débloquer un palier supérieur sans
+ * modifier la DB — utile pour le self-host AGPL où Humanix Cybersecurity
+ * délivre une clé après contrat.
+ *
+ * Si la licence est invalide ou expirée, fallback sur la valeur DB
+ * (typiquement `trial` ou `decouverte` selon le seed).
+ *
+ * Retourne "trial" en dernier recours si tenant introuvable.
+ *
+ * Cf. `lib/license/` pour la mécanique cryptographique et
+ * `docs/LICENSE_KEY.md` pour la procédure d'obtention de licence.
  */
 export async function getTenantPlan(tenantId: string): Promise<PlanId> {
+  // 1. Licence signée si présente et valide
+  const license = await import("./license/index.js")
+    .then((m) => m.getActiveLicense())
+    .catch(() => null);
+  if (license?.valid) {
+    return normalizePlan(license.license.plan);
+  }
+
+  // 2. Fallback DB tenant
   const tenant = await db.tenant.findUnique({
     where: { id: tenantId },
     select: { plan: true },
