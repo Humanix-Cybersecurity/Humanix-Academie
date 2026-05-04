@@ -59,6 +59,7 @@ export default defineConfig({
         "lib/crypto.ts",
         "lib/levels.ts",
         "lib/cyber-score.ts",
+        "lib/vishing/script-generator.ts",
       ],
       exclude: ["**/*.test.ts", "**/*.spec.ts"],
       // Note coverage pendant la phase de montée en charge des tests :
