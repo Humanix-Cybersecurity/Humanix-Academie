@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page admin Vishing (voice phishing) — generation de scripts pedagogiques
 // via Mistral souverain + lecture Piper TTS local. Combler le gap face a
 // Adaptive Security et Hoxhunt avec une stack 100 % FR/UE.

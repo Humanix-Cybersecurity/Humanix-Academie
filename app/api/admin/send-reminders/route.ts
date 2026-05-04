@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Endpoint POST : envoi des rappels aux inactifs
 // Peut etre appele :
 //  - manuellement depuis la console (bouton)

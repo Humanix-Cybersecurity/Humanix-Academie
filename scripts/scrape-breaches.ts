@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+// SPDX-License-Identifier: AGPL-3.0-or-later
 /**
  * Script standalone : scrape les 3 sources et upsert en BDD.
  *

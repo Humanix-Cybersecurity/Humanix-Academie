@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Génère et streame un poster mensuel personnalisé en PDF A3.
 // Authz : ADMIN/MANAGER/SUPERADMIN.
 // Pas de plan-gate : c'est un cadeau différenciant offert à tous les paliers.

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Catalogue de la boutique Hex
 // Seed-data : la BDD est peuplée depuis ce catalogue.
 // Pour ajouter un item : ajouter ici + relancer `npm run db:seed`

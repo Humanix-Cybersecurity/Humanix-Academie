@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Lib bibliotheque experts.
 // Helpers pour requeter, denormaliser les stats, generer les slugs.
 

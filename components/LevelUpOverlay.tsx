@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Overlay plein ecran qui apparait quand un episode debloque un nouveau niveau.
 // Accessible : focus trap (via AccessibleDialog), ESC pour fermer, retour focus,
 // confettis désactivés si prefers-reduced-motion, annonce lecteur d'écran.

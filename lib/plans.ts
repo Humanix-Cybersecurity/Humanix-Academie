@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Source de vérité du plan-gating.
 // Aligné sur la grille tarifaire (cf. lib/pricing.ts).
 //

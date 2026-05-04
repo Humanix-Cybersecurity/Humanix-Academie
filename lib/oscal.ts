@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Formatter OSCAL v1.1.2 (NIST Open Security Controls Assessment Language).
 // Sortie : Assessment Results Model.
 // Reference : https://pages.nist.gov/OSCAL/reference/latest/assessment-results/json-outline/

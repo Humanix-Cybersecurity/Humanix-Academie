@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Tracking d'un partage d'article (badge ambassadeur)
 import { NextResponse } from "next/server";
 import { z } from "zod";

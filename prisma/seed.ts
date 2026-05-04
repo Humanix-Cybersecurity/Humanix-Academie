@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Seed riche pour POC démo
 import {
   PrismaClient,

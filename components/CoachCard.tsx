@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Carte IA Coach Hex affichee sur le hub apprenant et /profil
 import Link from "next/link";
 import HexMascotEvolved from "@/components/HexMascotEvolved";

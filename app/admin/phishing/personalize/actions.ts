@@ -1,5 +1,6 @@
 "use server";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Server actions pour la generation phishing personnalisee.
 // Tenant-scope strict + plan-gating Pro+.
 

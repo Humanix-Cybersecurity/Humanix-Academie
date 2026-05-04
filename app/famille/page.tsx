@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page publique "Coffre-fort cyber pour ta famille"
 // Accessible SANS LOGIN — partage hors-pro pour transformer
 // les apprenants en ambassadeurs auprès de leurs proches.

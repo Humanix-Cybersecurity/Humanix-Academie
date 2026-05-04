@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page admin "Générateur de phishing IA Mistral".
 // Plan-gate Pro+. Outil clé pour les démos commerciales : un prospect voit
 // l'admin taper "phishing fake-fournisseur pour service compta", et 5

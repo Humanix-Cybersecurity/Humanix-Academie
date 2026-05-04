@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Integrite : hash SHA-256 du payload normalise pour publication
 // SERVER-ONLY (utilise node:crypto)
 import { createHash } from "node:crypto";

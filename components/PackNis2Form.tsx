@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Formulaire de saisie des variables du Pack NIS2.
 // Soumission GET vers /api/admin/pack-nis2/download avec query params.
 // Pas d'etat serveur a stocker : a chaque telechargement on re-genere.

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Creation d'un nouveau module marketplace
 import Link from "next/link";
 import ModuleEditor from "@/components/marketplace/ModuleEditor";

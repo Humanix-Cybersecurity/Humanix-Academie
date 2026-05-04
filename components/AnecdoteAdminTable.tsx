@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Tableau admin des anecdotes avec actions : envoyer, supprimer, editer.
 
 import Link from "next/link";

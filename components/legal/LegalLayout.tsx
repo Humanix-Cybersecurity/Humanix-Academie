@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Layout commun aux pages légales : breadcrumb, hero, sidebar TOC sticky,
 // section principale, CTA contact en pied. Design aligné sur le ton du site.
 import Link from "next/link";

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Donnees structurees du Pack NIS2 par-tenant.
 // Un seul fichier source pour les 4 documents : politique sensibilisation,
 // procedure incident, registre formations (resume + lien export CSV),

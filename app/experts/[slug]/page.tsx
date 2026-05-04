@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Profil expert public + ses modules.
 
 import { notFound } from "next/navigation";

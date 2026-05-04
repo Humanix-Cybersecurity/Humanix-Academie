@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Tests d'intégrité — computeContentHash, shortHash.
 // Sécurité critique : un hash incorrect = injection de payload après modération.
 // Le hash DOIT être déterministe (même input → même output, peu importe l'ordre des clés)

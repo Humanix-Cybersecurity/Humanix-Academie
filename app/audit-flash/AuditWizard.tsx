@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Wizard client de l'audit flash :
 //  1. Identite (entreprise, secteur, taille, email)
 //  2. 15 questions OUI/NON/Je ne sais pas avec barre de progression

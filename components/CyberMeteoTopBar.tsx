@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Bandeau fin (4px) tout en haut du site, couleur dynamique selon la
 // cyber-meteo France. Aucun concurrent ne fait ca - c'est une signature
 // visuelle qui rend la cyber-meteo presente partout dans l'UI.

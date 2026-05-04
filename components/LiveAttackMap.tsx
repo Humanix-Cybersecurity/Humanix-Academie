@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Live Attack Map — visualisation temps reel des evenements cyber du tenant.
 // Connecte a /api/admin/live-events via EventSource (SSE).
 //

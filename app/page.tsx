@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Landing publique — refonte UX.3.
 // Sections : hero + chiffres marquants + comment ca marche + ce que vous obtenez
 //          + temoignages-types + cyber-anecdote + audit flash + tarifs.

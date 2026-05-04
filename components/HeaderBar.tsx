@@ -1,4 +1,5 @@
 "use client";
+// SPDX-License-Identifier: AGPL-3.0-or-later
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";

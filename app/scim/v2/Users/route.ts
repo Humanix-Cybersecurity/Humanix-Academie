@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SCIM v2 - /Users (GET list+filter, POST create)
 // RFC 7644 §3.4.1 (list/query) et §3.3 (create)
 

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Catalogue des evenements webhook.
 // Source de verite : ce fichier.
 // Une feature qui veut envoyer un webhook DOIT etre listee ici.

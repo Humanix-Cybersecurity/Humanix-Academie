@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page publique CyberMalveillance.gouv.fr.
 // A11y RGAA AA + UI/UX différenciante. Cible : RSSI / dirigeant PME qui veut
 // savoir comment Humanix s'articule avec le dispositif officiel français.

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Generation de phishing PERSONNALISES par employe via Mistral.
 // Chaque employe recoit un mail unique base sur :
 //   - son service (Compta, RH, Direction, IT...)

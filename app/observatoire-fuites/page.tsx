@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page publique "Observatoire des fuites de données".
 //
 // Agrege 3 sources francaises (frenchbreaches, bonjourlafuite, fuitesinfos).

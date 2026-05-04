@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Types partages entre scrapers et repository.
 
 // FUITESINFOS reste dans le type pour rétrocompat (enum Prisma + items déjà

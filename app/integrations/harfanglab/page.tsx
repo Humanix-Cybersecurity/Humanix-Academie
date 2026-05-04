@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page publique HarfangLab. A11y RGAA AA + UI/UX différenciante.
 
 import Link from "next/link";

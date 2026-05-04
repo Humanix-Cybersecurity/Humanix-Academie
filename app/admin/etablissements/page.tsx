@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page admin "Multi-etablissements" — feature plan Pro+.
 // Gestion des sites/agences/BU rattachees au tenant racine.
 // Vue consolidee + liste des etablissements + creation d'un nouveau site.

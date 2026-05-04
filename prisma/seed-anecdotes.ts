@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Seed des Cyber-Anecdotes du Lundi.
 // Ces anecdotes sont visibles publiquement sur /anecdotes et envoyées par
 // email aux abonnés à la newsletter du lundi matin.
