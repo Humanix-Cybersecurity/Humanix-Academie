@@ -157,6 +157,41 @@ pédagogiques, retours d'expérience, signalements de vulnérabilité.
 - Vulnérabilités : [SECURITY.md](./SECURITY.md) — disclosure responsable
 - Discussions : [GitHub Discussions](https://github.com/humanix-cybersecurity/humanix-academie/discussions)
 
+### Tests unitaires
+
+La logique critique (auth, plans, billing, marketplace integrity, scoring,
+SCIM, OSCAL, SIEM, webhooks HMAC, conformité GRC) est couverte par
+**279 tests unitaires Vitest** au coverage 97-100% par fichier.
+
+```bash
+npm test                # Lance les tests une fois
+npm run test:watch      # Mode watch (TDD)
+npm run test:coverage   # Coverage report HTML dans ./coverage/index.html
+```
+
+Les tests tournent en CI sur chaque push/PR. Toute PR qui casse les tests
+existants ou n'apporte pas de tests sur du code critique sera refusée.
+
+**Périmètre couvert (sprint 1)** :
+
+- `lib/audit-flash/scoring.ts` — moteur scoring audit-flash (100%)
+- `lib/marketplace/integrity.ts` — hash SHA-256 modules (100%)
+- `lib/marketplace/schema.ts` — validation Zod stricte (100%)
+- `lib/plans.ts` + `lib/pricing.ts` — plan-gating + 6 paliers (100%)
+- `lib/scim/mapper.ts` + `filter.ts` — RFC 7644 SCIM v2 (94-100%)
+- `lib/webhooks/dispatcher.ts` — HMAC + SSRF guard (helpers exposés)
+- `lib/webhooks/formatters.ts` — Slack/Teams payloads (97%)
+- `lib/siem-formatters.ts` — Splunk CIM + ArcSight CEF (100%)
+- `lib/oscal.ts` — NIST OSCAL v1.1.2 (100%)
+- `lib/mapping-grc.ts` — ISO 27001 / NIS2 / RGPD / ANSSI HG (100%)
+- `lib/crypto.ts` — API keys + HMAC + tokens (100%)
+- `lib/levels.ts` — gamification XP (100%)
+- `lib/cyber-score.ts` — score CODIR (100%)
+
+**À venir post-launch** : breaches/parsers, ai/mistral, anecdotes,
+business-impact, family-invites, incident-response, phishing/personalized,
+tts. Cible globale : 80% coverage Q3 2026.
+
 ---
 
 ## Modèle économique — comment Humanix vit
