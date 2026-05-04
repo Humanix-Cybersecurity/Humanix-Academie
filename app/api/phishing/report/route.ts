@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
   const parsed = PayloadSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "invalid_payload", details: parsed.error.errors[0]?.message },
+      { error: "invalid_payload", details: parsed.error.issues[0]?.message },
       { status: 400, headers: cors },
     );
   }

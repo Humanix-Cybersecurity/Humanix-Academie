@@ -35,7 +35,7 @@ export async function createEstablishmentAction(formData: FormData) {
     name: formData.get("name"),
     establishmentType: formData.get("establishmentType"),
   });
-  if (!parsed.success) throw new Error(parsed.error.errors[0]?.message ?? "Données invalides");
+  if (!parsed.success) throw new Error(parsed.error.issues[0]?.message ?? "Données invalides");
 
   // Quota V1 : 25 enfants max
   const childCount = await db.tenant.count({ where: { parentTenantId: tenantId } });
