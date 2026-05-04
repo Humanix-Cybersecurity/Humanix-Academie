@@ -95,7 +95,7 @@ export default function SecuritePage() {
             <strong>Registre des traitements</strong> tenu à jour (côté
             responsable de traitement et côté sous-traitant)
           </li>
-          <li>
+          <li><strong>TLS 1.2+</strong> pour toutes les connexions, redirection HTTPS forcée</li>
             <strong>Procédure violation de données</strong> : notification CNIL
             sous 72h, information des clients concernés
           </li>
