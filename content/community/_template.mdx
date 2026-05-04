@@ -1,0 +1,64 @@
+---
+title: "Titre court et concret (max 60 chars)"
+durationMinutes: 6
+persona: "tous"
+objective: "Phrase d'objectif pédagogique, ce que l'apprenant saura faire après le module"
+xpReward: 50
+difficulty: "medium"
+author:
+  name: "Ton pseudo ou nom"
+  url: "https://github.com/ton-username"
+contentLicense: "CC-BY-SA-4.0"
+
+scenario: |
+  Décris la situation à laquelle l'apprenant fait face.
+  3-6 lignes max. Concret, situé, cohérent avec le persona.
+
+  Ex : Tu travailles à la compta d'une PME industrielle. Tu reçois ce mail :
+  ...
+
+choices:
+  - id: "a"
+    label: "Première option (la mauvaise tentation)"
+    outcome: "bad"
+    feedback: "Pourquoi c'est dangereux ici (1-2 phrases)."
+    points: 0
+  - id: "b"
+    label: "Deuxième option (la bonne action)"
+    outcome: "good"
+    feedback: "Pourquoi c'est la bonne réaction (1-2 phrases)."
+    points: 50
+  - id: "c"
+    label: "Troisième option (le faux ami)"
+    outcome: "neutral"
+    feedback: "Pourquoi c'est ni bon ni catastrophique."
+    points: 20
+
+debrief: |
+  Récap pédagogique en 5-8 lignes. Reprend les signaux faibles que
+  l'apprenant aurait dû détecter, donne 1-2 réflexes à retenir.
+
+  Tip : commence par le réflexe principal, puis les détails.
+
+quiz:
+  - question: "Question fermée précise, pas de double négation"
+    choices:
+      - { id: "a", label: "Réponse A", correct: false }
+      - { id: "b", label: "Réponse B", correct: true }
+      - { id: "c", label: "Réponse C", correct: false }
+    explanation: "Pourquoi B. 1-2 phrases."
+
+  - question: "Deuxième question (focus différent)"
+    choices:
+      - { id: "a", label: "Réponse A", correct: true }
+      - { id: "b", label: "Réponse B", correct: false }
+    explanation: "Pourquoi A."
+---
+
+{/* Le corps MDX ci-dessous est optionnel : visuels, encadrés, liens
+    complémentaires. Laisse vide si le frontmatter suffit. */}
+
+{/* Exemple :
+> 💡 **Pour aller plus loin** : voir l'article CNIL sur le faux RIB
+> https://www.cnil.fr/...
+*/}
