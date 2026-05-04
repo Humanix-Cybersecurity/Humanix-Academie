@@ -9,8 +9,8 @@
 // l'expiration "naturelle" de licence soit detectee rapidement (sinon
 // une licence expirant a 23h59 resterait active jusqu'au prochain restart).
 
-import { verifyLicenseString } from "./verify.js";
-import type { LicenseCheckResult } from "./types.js";
+import { verifyLicenseString } from "./verify";
+import type { LicenseCheckResult } from "./types";
 
 const CACHE_TTL_MS = 5 * 60 * 1000;
 
