@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Lecture d'un article librairie
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";

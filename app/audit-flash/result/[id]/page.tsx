@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page resultat publique de l'audit flash.
 // On affiche : score, verdict, top 3 risques, recommandation HumaniX, NIS2,
 // + bouton telechargement PDF + CTA contact.

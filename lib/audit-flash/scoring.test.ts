@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Tests du moteur de scoring audit-flash.
 // Couvre : computeScore, buildVerdict (via verdict.label/color), computeTopRisks,
 // recommendPlan, isNis2Concerned, buildAuditResult.

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page admin : generation phishing personnalisee par employe via IA Mistral.
 // Reserve aux admins, gated Pro+.
 

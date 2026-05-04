@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Tests du plan-gating.
 // Critique : un bug ici = feature payante exposée gratuitement OU
 // utilisateur bloqué qui devrait avoir accès. Les deux cas = perte client.

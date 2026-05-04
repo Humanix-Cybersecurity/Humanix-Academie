@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Landing publique de l'audit flash cyber.
 // SEO-friendly (server component) + wizard interactif (client).
 // Page accessible sans authentification : c'est notre machine a leads.

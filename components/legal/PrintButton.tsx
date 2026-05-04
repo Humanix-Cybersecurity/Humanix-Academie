@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Bouton "Imprimer" pour les pages légales — isolé en client component
 // car les Server Components ne peuvent pas recevoir d'event handlers.
 export default function PrintButton() {

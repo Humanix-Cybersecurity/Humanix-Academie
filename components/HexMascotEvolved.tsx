@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Mascotte evolutive — 5 paliers + customizations boutique + choix d'espece
 import { getLevel, getXPProgress, type LevelDef } from "@/lib/levels";
 import type { EquippedItems } from "@/lib/shop";

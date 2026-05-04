@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Toggle dark/light avec persistance localStorage et respect des preferences systeme.
 // Pas de flash blanc au chargement : on applique le theme en pre-script (cf. layout).
 import { useEffect, useState } from "react";

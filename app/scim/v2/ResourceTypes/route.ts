@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SCIM v2 - ResourceTypes (RFC 7643 §6)
 // Decrit les types de ressources exposes : User et Group.
 

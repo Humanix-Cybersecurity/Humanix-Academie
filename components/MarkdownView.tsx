@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Rendu safe d'un contenu markdown : aucun dangerouslySetInnerHTML
 import { parseMarkdown, renderInlineBold } from "@/lib/markdown";
 

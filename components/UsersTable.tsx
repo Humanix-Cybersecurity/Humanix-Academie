@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
 // UsersTable — Table de gestion des collaborateurs (refonte mai 2026).
 //

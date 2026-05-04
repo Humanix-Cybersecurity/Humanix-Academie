@@ -1,5 +1,6 @@
 "use server";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Server actions multi-etablissements.
 // Authz : ADMIN/SUPERADMIN du tenant racine uniquement.
 

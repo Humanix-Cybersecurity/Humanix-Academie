@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Calcul du score de risque humain par utilisateur.
 // Echelle 0-100 : 100 = excellent (faible risque cyber), 0 = catastrophe.
 // Recompute possible a la volee, OU mis en cache sur User.riskScore via update().
