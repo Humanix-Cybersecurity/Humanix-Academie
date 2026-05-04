@@ -69,6 +69,7 @@ __pycache__/
 
 # backups
 *.bak
+*.bak2
 *.tmp
 *.orig
 
