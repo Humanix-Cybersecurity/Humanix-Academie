@@ -39,8 +39,14 @@ function resolveLogoPath(): string | null {
       "standalone",
       "public",
       "logo-humanix-academie-512.png",
-    ),
+let LOGO_PATH_CACHE: string | null | undefined;
     path.join(__dirname ?? "", "..", "public", "logo-humanix-academie-512.png"),
+function getLogoPath(): string | null {
+  if (LOGO_PATH_CACHE !== undefined) return LOGO_PATH_CACHE;
+  LOGO_PATH_CACHE = resolveLogoPath();
+  return LOGO_PATH_CACHE;
+}
+
   ];
   for (const p of candidates) {
     try {
@@ -189,7 +195,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 8,
     fontStyle: "italic",
-  },
+  const dateFormatOptions: Intl.DateTimeFormatOptions = { dateStyle: "long" };
+  const date = props.generatedAt.toLocaleDateString("fr-FR", dateFormatOptions);
 });
 
 type Props = {
