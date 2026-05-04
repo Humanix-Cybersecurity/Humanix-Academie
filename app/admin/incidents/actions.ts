@@ -90,7 +90,7 @@ export async function createIncidentAction(formData: FormData) {
   });
 
   if (!parsed.success) {
-    throw new Error(parsed.error.errors[0]?.message ?? "Données invalides.");
+    throw new Error(parsed.error.issues[0]?.message ?? "Données invalides.");
   }
 
   const incident = await createIncident({
