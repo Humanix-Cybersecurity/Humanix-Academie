@@ -1,10 +1,21 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { canonicalJson, decodeLicense, encodeLicense } from "./format";
 import { generateKeyPair, signLicense } from "./sign";
 import { resetLicenseCache, verifyLicenseCached } from "./cache";
 import { describeLicenseError, verifyLicenseString } from "./verify";
 import type { LicensePayload } from "./types";
+
+// Mock Prisma au niveau de ce fichier (le setup global throw a l'acces).
+// On garde la mock-fonction en haut pour que les tests puissent l'override.
+const mockTenantFindUnique = vi.fn();
+vi.mock("@/lib/db", () => ({
+  db: {
+    tenant: {
+      findUnique: (...args: unknown[]) => mockTenantFindUnique(...args),
+    },
+  },
+}));
 
 const ORIGINAL_ENV = { ...process.env };
 
@@ -270,5 +281,67 @@ describe("describeLicenseError", () => {
     expect(describeLicenseError("not_yet_valid")).toMatch(/futur/);
     expect(describeLicenseError("domain_mismatch")).toMatch(/domaine/);
     expect(describeLicenseError("unsupported_version")).toMatch(/Version/);
+  });
+});
+
+describe("getEffectivePlan — combinaison licence + DB", () => {
+  it("priorise le plan licence quand la licence est valide", async () => {
+    // Import dynamique pour reset module entre tests (la licence est lue
+    // au moment de l'appel via process.env, pas a l'import).
+    const { getEffectivePlan } = await import("./index");
+    const payload = makePayload({ plan: "premium" });
+    const str = signLicense(payload, TEST_KEYS.privateKeyPem);
+    process.env.HUMANIX_LICENSE_KEY = str;
+    resetLicenseCache();
+
+    // mockTenantFindUnique ne devrait JAMAIS etre appele car la licence
+    // valide court-circuite la requete DB.
+    mockTenantFindUnique.mockResolvedValue({ plan: "trial" });
+
+    const plan = await getEffectivePlan("any-tenant-id");
+    expect(plan).toBe("premium");
+    // Verification : la DB n'est pas touchee quand la licence est valide
+    expect(mockTenantFindUnique).not.toHaveBeenCalled();
+  });
+
+  it("fallback DB quand pas de licence configuree", async () => {
+    const { getEffectivePlan } = await import("./index");
+    delete process.env.HUMANIX_LICENSE_KEY;
+    resetLicenseCache();
+    mockTenantFindUnique.mockResolvedValue({ plan: "essentielle" });
+
+    const plan = await getEffectivePlan("acme-tenant");
+    expect(plan).toBe("essentielle");
+    expect(mockTenantFindUnique).toHaveBeenCalledWith({
+      where: { id: "acme-tenant" },
+      select: { plan: true },
+    });
+  });
+
+  it("fallback DB quand licence expiree", async () => {
+    const { getEffectivePlan } = await import("./index");
+    const payload = makePayload({
+      issuedAt: "2025-01-01T00:00:00Z",
+      expiresAt: "2025-12-31T00:00:00Z",
+      plan: "premium",
+    });
+    const str = signLicense(payload, TEST_KEYS.privateKeyPem);
+    process.env.HUMANIX_LICENSE_KEY = str;
+    resetLicenseCache();
+    mockTenantFindUnique.mockResolvedValue({ plan: "decouverte" });
+
+    const plan = await getEffectivePlan("acme-tenant");
+    // Licence expiree → fallback DB → "decouverte"
+    expect(plan).toBe("decouverte");
+  });
+
+  it('retourne "trial" si tenant introuvable en DB', async () => {
+    const { getEffectivePlan } = await import("./index");
+    delete process.env.HUMANIX_LICENSE_KEY;
+    resetLicenseCache();
+    mockTenantFindUnique.mockResolvedValue(null);
+
+    const plan = await getEffectivePlan("ghost-tenant");
+    expect(plan).toBe("trial");
   });
 });
