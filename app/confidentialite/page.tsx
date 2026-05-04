@@ -34,6 +34,9 @@ export default function ConfidentialitePage() {
         <p>
           Le responsable du traitement est <strong>Humanix-Cybersecurity SASU</strong>, 16 Rue Joseph Loiret, 30100 Alès, France (SIREN 103 901 799).
         </p>
+        <p>
+          La présente politique s'applique uniquement aux services Cloud opérés par Humanix-Cybersecurity (paliers Découverte, Starter, Essentielle, Pro, Enterprise). Les organisations qui déploient elles-mêmes <strong>Humanix Community Edition</strong> en self-host (à partir du code source publié sous licence GNU AGPL v3) deviennent <strong>seules responsables de traitement</strong> au sens du RGPD pour leur instance. Humanix-Cybersecurity n'a, dans ce cas, ni qualité de sous-traitant, ni accès aux données traitées, ni obligation de notification CNIL. Les modèles publiés dans le dépôt (<code>docs/PRIVACY_TEMPLATE.md</code>, registre, DPA) sont fournis à titre indicatif et ne constituent pas une délégation de responsabilité.
+        </p>
         <ul>
           <li>Contact RGPD : <a href="mailto:rgpd@humanix-cybersecurity.fr">rgpd@humanix-cybersecurity.fr</a></li>
           <li>Représentant : Florian Durano, Président</li>
