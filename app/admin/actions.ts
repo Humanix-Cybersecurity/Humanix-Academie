@@ -31,7 +31,10 @@ export async function toggleSaisonActive(saisonId: string, isActive: boolean) {
   return { ok: true };
 }
 
-export async function toggleSaisonMandatory(saisonId: string, isMandatory: boolean) {
+export async function toggleSaisonMandatory(
+  saisonId: string,
+  isMandatory: boolean,
+) {
   const { tenantId } = await requireAdmin();
   await db.tenantSaisonConfig.upsert({
     where: { tenantId_saisonId: { tenantId, saisonId } },
@@ -141,7 +144,13 @@ export async function inviteUser(formData: FormData) {
   if (existing) throw new Error("email_taken");
 
   await db.user.create({
-    data: { tenantId, email, name: name || null, service: service || null, role },
+    data: {
+      tenantId,
+      email,
+      name: name || null,
+      service: service || null,
+      role,
+    },
   });
   revalidatePath("/admin/utilisateurs");
   return { ok: true };
@@ -152,9 +161,13 @@ export async function inviteUser(formData: FormData) {
 // =====================================================
 export async function startChallenge(formData: FormData) {
   const { tenantId } = await requireAdmin();
-  const title = (formData.get("title") as string) || "Cyber-Challenge des équipes";
+  const title =
+    (formData.get("title") as string) || "Cyber-Challenge des équipes";
   const description = formData.get("description") as string;
-  const durationDays = parseInt((formData.get("durationDays") as string) || "7", 10);
+  const durationDays = parseInt(
+    (formData.get("durationDays") as string) || "7",
+    10,
+  );
 
   const startDate = new Date();
   const endDate = new Date();

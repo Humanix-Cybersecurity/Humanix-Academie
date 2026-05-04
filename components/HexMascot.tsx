@@ -40,8 +40,8 @@ export default function HexMascot({
     ? mood === "celebrate"
       ? "animate-bounce-once"
       : mood === "happy"
-      ? "animate-wiggle"
-      : "animate-pulse-once"
+        ? "animate-wiggle"
+        : "animate-pulse-once"
     : "";
   return (
     <div className={`relative inline-block ${SIZES[size]} ${animClass}`}>

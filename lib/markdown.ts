@@ -49,7 +49,10 @@ export function parseMarkdown(src: string): MdBlock[] {
     }
     if (trim.startsWith("- ") || trim.startsWith("* ")) {
       const items: string[] = [];
-      while (i < lines.length && (lines[i].trim().startsWith("- ") || lines[i].trim().startsWith("* "))) {
+      while (
+        i < lines.length &&
+        (lines[i].trim().startsWith("- ") || lines[i].trim().startsWith("* "))
+      ) {
         items.push(lines[i].trim().slice(2).trim());
         i++;
       }
@@ -68,7 +71,11 @@ export function parseMarkdown(src: string): MdBlock[] {
 
     // Paragraphe : aggregue lignes consecutives non-vides
     const paragLines: string[] = [];
-    while (i < lines.length && lines[i].trim() !== "" && !/^(#|>|-|\*|\d+\.)\s/.test(lines[i].trim())) {
+    while (
+      i < lines.length &&
+      lines[i].trim() !== "" &&
+      !/^(#|>|-|\*|\d+\.)\s/.test(lines[i].trim())
+    ) {
       paragLines.push(lines[i]);
       i++;
     }
@@ -100,5 +107,9 @@ export function renderInlineBold(text: string): (string | { bold: string })[] {
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
   return parts
     .filter(Boolean)
-    .map((part) => (part.startsWith("**") && part.endsWith("**") ? { bold: part.slice(2, -2) } : part));
+    .map((part) =>
+      part.startsWith("**") && part.endsWith("**")
+        ? { bold: part.slice(2, -2) }
+        : part,
+    );
 }

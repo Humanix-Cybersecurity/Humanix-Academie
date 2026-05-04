@@ -22,16 +22,17 @@ URL de connexion PostgreSQL. Format standard libpq.
 DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public"
 ```
 
-| Param | Exemple | Notes |
-|---|---|---|
-| `USER` | `humanix` | Utilisateur PostgreSQL dédié, droits limités à la base |
-| `PASSWORD` | `un-mot-de-passe-fort` | URL-encoded si caractères spéciaux |
-| `HOST` | `postgres` (Docker) ou `localhost` (bare-metal) | |
-| `PORT` | `5432` | Port standard PostgreSQL |
-| `DATABASE` | `humanix` | Nom de la base, créée préalablement |
-| `?schema=public` | obligatoire | Prisma utilise le schema `public` par défaut |
+| Param            | Exemple                                         | Notes                                                  |
+| ---------------- | ----------------------------------------------- | ------------------------------------------------------ |
+| `USER`           | `humanix`                                       | Utilisateur PostgreSQL dédié, droits limités à la base |
+| `PASSWORD`       | `un-mot-de-passe-fort`                          | URL-encoded si caractères spéciaux                     |
+| `HOST`           | `postgres` (Docker) ou `localhost` (bare-metal) |                                                        |
+| `PORT`           | `5432`                                          | Port standard PostgreSQL                               |
+| `DATABASE`       | `humanix`                                       | Nom de la base, créée préalablement                    |
+| `?schema=public` | obligatoire                                     | Prisma utilise le schema `public` par défaut           |
 
 **Bonnes pratiques** :
+
 - Ne JAMAIS exposer ce port sur Internet
 - Utiliser un user dédié sans privilège `CREATE`/`DROP` en production
 - Pour managed DB (RDS, Scaleway DB) : ajouter `?sslmode=require`
@@ -53,6 +54,7 @@ openssl rand -base64 32
 ```
 
 **Important** :
+
 - 32 caractères minimum
 - Régénérer = invalider toutes les sessions existantes (déconnecte tous les utilisateurs)
 - Ne JAMAIS commiter en git (gitignore couvre `.env`)
@@ -78,11 +80,11 @@ les emails transactionnels, les exports PDF, etc.).
 NEXT_PUBLIC_APP_URL="https://academie.tonentreprise.fr"
 ```
 
-| Environnement | Valeur typique |
-|---|---|
-| Développement local | `http://localhost:3000` |
-| Staging | `https://staging.academie.tonentreprise.fr` |
-| Production | `https://academie.tonentreprise.fr` |
+| Environnement       | Valeur typique                              |
+| ------------------- | ------------------------------------------- |
+| Développement local | `http://localhost:3000`                     |
+| Staging             | `https://staging.academie.tonentreprise.fr` |
+| Production          | `https://academie.tonentreprise.fr`         |
 
 ### `NEXT_PUBLIC_APP_NAME`
 
@@ -107,6 +109,7 @@ RESEND_API_KEY="re_xxxxxxxxxxxxxxxxxxxxx"
 ```
 
 **Sans cette clé** :
+
 - Les magic links ne sont pas envoyés (utilisateurs ne peuvent pas se
   connecter sauf via SSO ou en mode `DEMO_MODE=true`)
 - Les rappels automatiques ne fonctionnent pas
@@ -123,6 +126,7 @@ EMAIL_FROM="noreply@academie.tonentreprise.fr"
 ```
 
 **Pré-requis** :
+
 - Domaine vérifié dans Resend (SPF + DKIM configurés)
 - Pour les domaines custom : configurer DMARC à `quarantine` minimum
 
@@ -156,6 +160,7 @@ pour les détails (hors repo public).
 ### `MISTRAL_API_KEY`
 
 Clé API [Mistral AI](https://mistral.ai) pour les features IA souveraines :
+
 - Phishing personnalisé par employé (palier Pro+)
 - IA Coach Hex (palier Pro+)
 - Génération d'anecdotes cyber (admin)
@@ -214,6 +219,7 @@ S3_PUBLIC_URL="https://humanix-uploads.s3.fr-par.scw.cloud"
 ```
 
 Providers supportés et testés :
+
 - **Scaleway Object Storage** (recommandé, FR/EU souverain)
 - **OVHcloud Object Storage**
 - **AWS S3**
@@ -305,13 +311,13 @@ diff -u .env .env.example | grep "^[-+]"
 En production, **ne stocke pas** les secrets dans un fichier `.env` en clair
 sur disque. Utilise un secret manager :
 
-| Manager | Notes |
-|---|---|
-| **HashiCorp Vault** | Standard de l'industrie, self-hosted ou Cloud |
-| **AWS Secrets Manager** | Si déjà sur AWS |
-| **Scaleway Secrets** | Souverain FR, intégration native Scaleway |
-| **Doppler** | Cloud, simple, free tier généreux |
-| **Kubernetes Secrets** | Si déploiement K8s, avec sealed-secrets ou external-secrets-operator |
+| Manager                 | Notes                                                                |
+| ----------------------- | -------------------------------------------------------------------- |
+| **HashiCorp Vault**     | Standard de l'industrie, self-hosted ou Cloud                        |
+| **AWS Secrets Manager** | Si déjà sur AWS                                                      |
+| **Scaleway Secrets**    | Souverain FR, intégration native Scaleway                            |
+| **Doppler**             | Cloud, simple, free tier généreux                                    |
+| **Kubernetes Secrets**  | Si déploiement K8s, avec sealed-secrets ou external-secrets-operator |
 
 Exemple avec Vault (extrait `entrypoint.sh`) :
 

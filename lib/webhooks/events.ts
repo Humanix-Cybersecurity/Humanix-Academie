@@ -96,7 +96,9 @@ export const WEBHOOK_EVENTS = {
 
 export type WebhookEventKey = keyof typeof WEBHOOK_EVENTS;
 
-export const ALL_WEBHOOK_EVENTS = Object.keys(WEBHOOK_EVENTS) as WebhookEventKey[];
+export const ALL_WEBHOOK_EVENTS = Object.keys(
+  WEBHOOK_EVENTS,
+) as WebhookEventKey[];
 
 export function isWebhookEventKey(value: string): value is WebhookEventKey {
   return value in WEBHOOK_EVENTS;

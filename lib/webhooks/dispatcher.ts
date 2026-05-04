@@ -93,7 +93,11 @@ async function postWithTimeout(
     });
     return { ok: res.ok, status: res.status };
   } catch (e: any) {
-    return { ok: false, status: 0, error: String(e?.message ?? e).slice(0, 200) };
+    return {
+      ok: false,
+      status: 0,
+      error: String(e?.message ?? e).slice(0, 200),
+    };
   } finally {
     clearTimeout(timer);
   }
@@ -113,7 +117,9 @@ function buildPayload(
   const occurredAt = new Date().toISOString();
 
   if (type === "SLACK") {
-    return JSON.stringify(formatSlackBlocks(event, meta.label, tenantName, data));
+    return JSON.stringify(
+      formatSlackBlocks(event, meta.label, tenantName, data),
+    );
   }
   if (type === "TEAMS") {
     return JSON.stringify(formatTeamsCard(event, meta.label, tenantName, data));
@@ -174,13 +180,7 @@ export async function fireWebhook(
         return;
       }
 
-      const payload = buildPayload(
-        w.type,
-        event,
-        tenantId,
-        tenant.name,
-        data,
-      );
+      const payload = buildPayload(w.type, event, tenantId, tenant.name, data);
 
       if (Buffer.byteLength(payload) > MAX_PAYLOAD_BYTES) {
         await db.tenantWebhook.update({
@@ -236,7 +236,8 @@ export async function testWebhook(webhookId: string): Promise<{
   const w = await db.tenantWebhook.findUnique({ where: { id: webhookId } });
   if (!w) return { ok: false, error: "Webhook introuvable" };
 
-  if (!isSafeWebhookUrl(w.url)) return { ok: false, error: "URL refusee (SSRF)" };
+  if (!isSafeWebhookUrl(w.url))
+    return { ok: false, error: "URL refusee (SSRF)" };
 
   const tenant = await db.tenant.findUnique({
     where: { id: w.tenantId },

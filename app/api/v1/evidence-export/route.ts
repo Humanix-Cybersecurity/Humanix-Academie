@@ -29,10 +29,7 @@ import {
   resolveMetricValue,
 } from "@/lib/grc-metrics";
 import { buildOscalAssessmentResults } from "@/lib/oscal";
-import {
-  buildSplunkCimNdjson,
-  buildSentinelCef,
-} from "@/lib/siem-formatters";
+import { buildSplunkCimNdjson, buildSentinelCef } from "@/lib/siem-formatters";
 import { fireWebhook } from "@/lib/webhooks/dispatcher";
 
 export const dynamic = "force-dynamic";
@@ -139,15 +136,13 @@ export async function GET(req: Request) {
     select: { id: true, name: true, slug: true },
   });
   if (!tenant) {
-    return NextResponse.json(
-      { error: "tenant_not_found" },
-      { status: 404 },
-    );
+    return NextResponse.json({ error: "tenant_not_found" }, { status: 404 });
   }
 
   const metrics = await computeGrcMetrics(tenantId);
   const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL ?? `https://${req.headers.get("host") ?? "academie.humanix-cybersecurity.fr"}`;
+    process.env.NEXT_PUBLIC_BASE_URL ??
+    `https://${req.headers.get("host") ?? "academie.humanix-cybersecurity.fr"}`;
 
   // ----- 5. Construction des evidences -----
   const evidences = framework.controls
@@ -169,12 +164,16 @@ export async function GET(req: Request) {
       }
 
       const artifacts = control.artifacts.map((a) => {
-        const value = a.type === "metric" ? resolveMetricValue(a, metrics) : null;
+        const value =
+          a.type === "metric" ? resolveMetricValue(a, metrics) : null;
         const link = resolveArtifactUrl(a, baseUrl, tenantId);
         return {
           type: a.type,
           name: a.label,
-          ...(value !== null && { value: Math.round(value * 1000) / 10, unit: "%" }),
+          ...(value !== null && {
+            value: Math.round(value * 1000) / 10,
+            unit: "%",
+          }),
           ...(link && { url: link }),
           ...(a.filter && { filter: a.filter }),
         };
@@ -221,7 +220,8 @@ export async function GET(req: Request) {
     summary: {
       compliant: evidences.filter((e) => e.status === "compliant").length,
       partial: evidences.filter((e) => e.status === "partial").length,
-      non_compliant: evidences.filter((e) => e.status === "non_compliant").length,
+      non_compliant: evidences.filter((e) => e.status === "non_compliant")
+        .length,
     },
     bundle_url: `${baseUrl}/api/v1/evidence-export?framework=${framework.ref}&format=${formatParam}`,
     generated_at: generatedAt.toISOString(),
@@ -304,10 +304,12 @@ export async function GET(req: Request) {
     generated_at: new Date().toISOString(),
     summary: {
       total_controls: framework.controls.length,
-      assessed_controls: evidences.filter((e) => e.status !== "not_assessed").length,
+      assessed_controls: evidences.filter((e) => e.status !== "not_assessed")
+        .length,
       compliant: evidences.filter((e) => e.status === "compliant").length,
       partial: evidences.filter((e) => e.status === "partial").length,
-      non_compliant: evidences.filter((e) => e.status === "non_compliant").length,
+      non_compliant: evidences.filter((e) => e.status === "non_compliant")
+        .length,
     },
     evidences,
     out_of_scope: framework.outOfScope,

@@ -24,7 +24,8 @@ export default async function ExpertsPage() {
           Communauté Marketplace
         </p>
         <h1 className="text-4xl sm:text-5xl font-extrabold text-primary-500 leading-tight mb-4">
-          Une bibliothèque <span className="text-accent-500">vivante</span>,<br />
+          Une bibliothèque <span className="text-accent-500">vivante</span>,
+          <br />
           signée par de vrais experts.
         </h1>
         <p className="text-lg text-gray-700 dark:text-gray-300">
@@ -41,8 +42,8 @@ export default async function ExpertsPage() {
         </h2>
         <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
           La cybersécurité humaine ne se forme pas avec des slides recyclés.
-          Elle se forme avec des histoires vraies, racontées par des gens qui
-          en ont vu passer. En valorisant nos experts contributeurs, nous
+          Elle se forme avec des histoires vraies, racontées par des gens qui en
+          ont vu passer. En valorisant nos experts contributeurs, nous
           construisons un catalogue qui grandit avec la communauté française —
           plutôt qu'un produit clé-en-main figé. Chaque expert est librement
           contactable. Chaque module rappelle qui l'a écrit.
@@ -86,8 +87,12 @@ export default async function ExpertsPage() {
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="font-bold text-primary-500 truncate">{e.name}</p>
-                  <p className="text-xs text-gray-500 line-clamp-2">{e.headline}</p>
+                  <p className="font-bold text-primary-500 truncate">
+                    {e.name}
+                  </p>
+                  <p className="text-xs text-gray-500 line-clamp-2">
+                    {e.headline}
+                  </p>
                 </div>
               </div>
 
@@ -117,7 +122,9 @@ export default async function ExpertsPage() {
                 </span>
                 {e.totalInstalls > 0 && (
                   <span>
-                    <strong className="text-primary-500">{e.totalInstalls}</strong>{" "}
+                    <strong className="text-primary-500">
+                      {e.totalInstalls}
+                    </strong>{" "}
                     installation{e.totalInstalls > 1 ? "s" : ""}
                   </span>
                 )}

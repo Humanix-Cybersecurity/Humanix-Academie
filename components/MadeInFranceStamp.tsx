@@ -40,20 +40,17 @@ export default function MadeInFranceStamp({
       >
         <defs>
           {/* Arc HAUT pour le texte "MADE IN FRANCE" */}
-          <path
-            id="mif-arc-top"
-            d="M 18,60 A 42,42 0 0 1 102,60"
-            fill="none"
-          />
+          <path id="mif-arc-top" d="M 18,60 A 42,42 0 0 1 102,60" fill="none" />
           {/* Arc BAS pour la mention conformite */}
-          <path
-            id="mif-arc-bot"
-            d="M 18,60 A 42,42 0 0 0 102,60"
-            fill="none"
-          />
+          <path id="mif-arc-bot" d="M 18,60 A 42,42 0 0 0 102,60" fill="none" />
           {/* Filtre : tres subtile texture papier/encre */}
           <filter id="mif-grain" x="0" y="0" width="100%" height="100%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" />
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.9"
+              numOctaves="2"
+              seed="3"
+            />
             <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.06 0" />
             <feComposite in2="SourceGraphic" operator="in" />
           </filter>
@@ -62,19 +59,34 @@ export default function MadeInFranceStamp({
         {/* === DOUBLE CERCLE (style sceau) === */}
         {/* Cercle exterieur trait plein */}
         <circle
-          cx="60" cy="60" r="56"
-          fill="none" stroke={ENCRE} strokeWidth="1.5" opacity="0.9"
+          cx="60"
+          cy="60"
+          r="56"
+          fill="none"
+          stroke={ENCRE}
+          strokeWidth="1.5"
+          opacity="0.9"
         />
         {/* Cercle interieur pointille regulier (rythme tampon notaire) */}
         <circle
-          cx="60" cy="60" r="50"
-          fill="none" stroke={ENCRE} strokeWidth="1"
-          strokeDasharray="1.5 2.5" opacity="0.85"
+          cx="60"
+          cy="60"
+          r="50"
+          fill="none"
+          stroke={ENCRE}
+          strokeWidth="1"
+          strokeDasharray="1.5 2.5"
+          opacity="0.85"
         />
         {/* Cercle central qui porte le drapeau */}
         <circle
-          cx="60" cy="60" r="32"
-          fill="none" stroke={ENCRE} strokeWidth="0.8" opacity="0.45"
+          cx="60"
+          cy="60"
+          r="32"
+          fill="none"
+          stroke={ENCRE}
+          strokeWidth="0.8"
+          opacity="0.45"
         />
 
         {/* === TEXTE COURBE HAUT === */}
@@ -113,20 +125,37 @@ export default function MadeInFranceStamp({
         {/* === DRAPEAU FR centre, ratio 2:3, coins legerement arrondis === */}
         <g transform="translate(39, 47)">
           {/* Ombre portee tres legere */}
-          <rect x="0.5" y="0.5" width="42" height="26" rx="2"
-                fill="black" opacity="0.08" />
+          <rect
+            x="0.5"
+            y="0.5"
+            width="42"
+            height="26"
+            rx="2"
+            fill="black"
+            opacity="0.08"
+          />
           {/* Bandes */}
-          <rect x="0"  y="0" width="14" height="26" rx="1.5" fill={BLEU}    />
-          <rect x="14" y="0" width="14" height="26"           fill="#FFFFFF" />
-          <rect x="28" y="0" width="14" height="26" rx="1.5" fill={ROUGE}   />
+          <rect x="0" y="0" width="14" height="26" rx="1.5" fill={BLEU} />
+          <rect x="14" y="0" width="14" height="26" fill="#FFFFFF" />
+          <rect x="28" y="0" width="14" height="26" rx="1.5" fill={ROUGE} />
           {/* Filets internes pour casser la perfection imprimerie */}
-          <rect x="0" y="0" width="42" height="26" rx="2"
-                fill="none" stroke={ENCRE} strokeWidth="0.4" opacity="0.35" />
+          <rect
+            x="0"
+            y="0"
+            width="42"
+            height="26"
+            rx="2"
+            fill="none"
+            stroke={ENCRE}
+            strokeWidth="0.4"
+            opacity="0.35"
+          />
         </g>
 
         {/* === MENTION "EST. 2026" sous le drapeau === */}
         <text
-          x="60" y="86"
+          x="60"
+          y="86"
           fontSize="5.5"
           fontWeight="700"
           fill={ENCRE}
@@ -152,7 +181,14 @@ export default function MadeInFranceStamp({
         </g>
 
         {/* Effet de grain leger (donne le "tampon imprime" plutot que vectoriel froid) */}
-        <rect x="0" y="0" width="120" height="120" filter="url(#mif-grain)" opacity="0.5" />
+        <rect
+          x="0"
+          y="0"
+          width="120"
+          height="120"
+          filter="url(#mif-grain)"
+          opacity="0.5"
+        />
       </svg>
     </div>
   );
@@ -165,7 +201,9 @@ function Star({ cx, cy, r }: { cx: number; cy: number; r: number }) {
   for (let i = 0; i < 10; i++) {
     const angle = (i * 36 - 90) * (Math.PI / 180);
     const radius = i % 2 === 0 ? r : r / 2.2;
-    points.push(`${cx + radius * Math.cos(angle)},${cy + radius * Math.sin(angle)}`);
+    points.push(
+      `${cx + radius * Math.cos(angle)},${cy + radius * Math.sin(angle)}`,
+    );
   }
   return <polygon points={points.join(" ")} />;
 }

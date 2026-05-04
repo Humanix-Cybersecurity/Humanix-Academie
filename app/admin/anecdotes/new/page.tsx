@@ -19,7 +19,10 @@ export default async function NewAnecdotePage() {
         title="Nouvelle anecdote"
         description="Une bonne anecdote = un fait, une leçon, une action concrète."
         actions={
-          <Link href="/admin/anecdotes" className="text-sm text-gray-500 hover:text-primary-500 dark:hover:text-accent-300">
+          <Link
+            href="/admin/anecdotes"
+            className="text-sm text-gray-500 hover:text-primary-500 dark:hover:text-accent-300"
+          >
             ← Retour aux anecdotes
           </Link>
         }

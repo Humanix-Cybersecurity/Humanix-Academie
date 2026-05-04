@@ -53,13 +53,17 @@ export default async function IncidentDetailPage({
 
   const totalDone = incident.actions.filter((a) => a.isDone).length;
   const totalActions = incident.actions.length;
-  const progressPct = totalActions === 0 ? 0 : Math.round((totalDone / totalActions) * 100);
+  const progressPct =
+    totalActions === 0 ? 0 : Math.round((totalDone / totalActions) * 100);
 
   return (
     <>
       <header className="mb-6">
         <div className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-          <Link href="/admin/incidents" className="hover:text-primary-500 dark:hover:text-accent-300">
+          <Link
+            href="/admin/incidents"
+            className="hover:text-primary-500 dark:hover:text-accent-300"
+          >
             ← Tous les incidents
           </Link>
         </div>
@@ -67,7 +71,9 @@ export default async function IncidentDetailPage({
           <span className="font-mono text-xs font-bold text-primary-500 bg-gray-100 dark:bg-slate-800 px-2 py-1 rounded">
             {incident.reference}
           </span>
-          <span className={`text-xs font-bold px-2 py-1 rounded ${STATUS_COLORS[incident.status]}`}>
+          <span
+            className={`text-xs font-bold px-2 py-1 rounded ${STATUS_COLORS[incident.status]}`}
+          >
             {statusMeta.label}
           </span>
           <span className="text-xs font-bold px-2 py-1 rounded bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300">
@@ -75,7 +81,9 @@ export default async function IncidentDetailPage({
           </span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight mb-1 flex items-center gap-2.5">
-          <span aria-hidden="true" className="text-2xl">{typeMeta.emoji}</span>
+          <span aria-hidden="true" className="text-2xl">
+            {typeMeta.emoji}
+          </span>
           <span className="min-w-0">{incident.title}</span>
         </h1>
         <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -86,7 +94,6 @@ export default async function IncidentDetailPage({
           } as any)}
         </p>
       </header>
-
 
       {/* Progression globale */}
       <div className="card my-6">
@@ -129,23 +136,31 @@ export default async function IncidentDetailPage({
           📝 Description
         </h2>
         <p className="text-sm whitespace-pre-line">{incident.description}</p>
-        {(incident.affectedSystems || incident.affectedUsers || incident.dataConcerned) && (
+        {(incident.affectedSystems ||
+          incident.affectedUsers ||
+          incident.dataConcerned) && (
           <dl className="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700 text-sm grid sm:grid-cols-3 gap-3">
             {incident.affectedSystems && (
               <div>
-                <dt className="text-xs uppercase text-gray-500 dark:text-gray-400 font-bold">Systèmes</dt>
+                <dt className="text-xs uppercase text-gray-500 dark:text-gray-400 font-bold">
+                  Systèmes
+                </dt>
                 <dd>{incident.affectedSystems}</dd>
               </div>
             )}
             {incident.affectedUsers !== null && (
               <div>
-                <dt className="text-xs uppercase text-gray-500 dark:text-gray-400 font-bold">Personnes touchées</dt>
+                <dt className="text-xs uppercase text-gray-500 dark:text-gray-400 font-bold">
+                  Personnes touchées
+                </dt>
                 <dd>{incident.affectedUsers}</dd>
               </div>
             )}
             {incident.dataConcerned && (
               <div>
-                <dt className="text-xs uppercase text-gray-500 dark:text-gray-400 font-bold">Données</dt>
+                <dt className="text-xs uppercase text-gray-500 dark:text-gray-400 font-bold">
+                  Données
+                </dt>
                 <dd>{incident.dataConcerned}</dd>
               </div>
             )}
@@ -209,18 +224,26 @@ export default async function IncidentDetailPage({
         <form action={addTimelineNote} className="card mb-4 space-y-3">
           <input type="hidden" name="incidentId" value={incident.id} />
           <div>
-            <label htmlFor="kind" className="block text-xs uppercase font-bold mb-1">
+            <label
+              htmlFor="kind"
+              className="block text-xs uppercase font-bold mb-1"
+            >
               Type d'évènement
             </label>
             <select id="kind" name="kind" className="input" defaultValue="note">
               <option value="note">📝 Note</option>
               <option value="decision">⚖ Décision</option>
               <option value="external_comm">📞 Communication externe</option>
-              <option value="discovery">🔍 Découverte / élément forensique</option>
+              <option value="discovery">
+                🔍 Découverte / élément forensique
+              </option>
             </select>
           </div>
           <div>
-            <label htmlFor="content" className="block text-xs uppercase font-bold mb-1">
+            <label
+              htmlFor="content"
+              className="block text-xs uppercase font-bold mb-1"
+            >
               Contenu *
             </label>
             <textarea
@@ -282,7 +305,10 @@ export default async function IncidentDetailPage({
           <form action={saveRetex} className="card space-y-3">
             <input type="hidden" name="incidentId" value={incident.id} />
             <div>
-              <label htmlFor="rootCause" className="block text-sm font-medium mb-1">
+              <label
+                htmlFor="rootCause"
+                className="block text-sm font-medium mb-1"
+              >
                 Cause racine identifiée
               </label>
               <textarea
@@ -296,7 +322,10 @@ export default async function IncidentDetailPage({
               />
             </div>
             <div>
-              <label htmlFor="retexNotes" className="block text-sm font-medium mb-1">
+              <label
+                htmlFor="retexNotes"
+                className="block text-sm font-medium mb-1"
+              >
                 Leçons apprises et plan d'action
               </label>
               <textarea
@@ -310,7 +339,10 @@ export default async function IncidentDetailPage({
               />
             </div>
             <div>
-              <label htmlFor="estimatedCost" className="block text-sm font-medium mb-1">
+              <label
+                htmlFor="estimatedCost"
+                className="block text-sm font-medium mb-1"
+              >
                 Coût estimé (€) — optionnel
               </label>
               <input

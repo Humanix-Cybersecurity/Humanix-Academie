@@ -75,7 +75,13 @@ export async function installModule(opts: {
     const installation = await tx.marketplaceInstallation.upsert({
       where: { tenantId_moduleId: { tenantId, moduleId } },
       update: { saisonId: saison.id, installedById, isActive: true },
-      create: { tenantId, moduleId, saisonId: saison.id, installedById, isActive: true },
+      create: {
+        tenantId,
+        moduleId,
+        saisonId: saison.id,
+        installedById,
+        isActive: true,
+      },
     });
 
     // TenantSaisonConfig actif
@@ -107,7 +113,11 @@ export async function installModule(opts: {
     return { saison, installation };
   });
 
-  return { ok: true, installationId: result.installation.id, saisonId: result.saison.id };
+  return {
+    ok: true,
+    installationId: result.installation.id,
+    saisonId: result.saison.id,
+  };
 }
 
 /**
@@ -137,8 +147,14 @@ export async function uninstallModule(opts: {
     ...(installation.saisonId
       ? [
           db.tenantSaisonConfig.upsert({
-            where: { tenantId_saisonId: { tenantId, saisonId: installation.saisonId } },
-            create: { tenantId, saisonId: installation.saisonId, isActive: false },
+            where: {
+              tenantId_saisonId: { tenantId, saisonId: installation.saisonId },
+            },
+            create: {
+              tenantId,
+              saisonId: installation.saisonId,
+              isActive: false,
+            },
             update: { isActive: false },
           }),
         ]

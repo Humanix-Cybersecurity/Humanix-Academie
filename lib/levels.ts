@@ -90,14 +90,20 @@ export function getNextLevel(xp: number): LevelDef | null {
 export function getXPProgress(xp: number): {
   current: LevelDef;
   next: LevelDef | null;
-  pct: number;          // % vers le niveau suivant (0..100)
-  xpInLevel: number;    // XP gagnés dans ce niveau
+  pct: number; // % vers le niveau suivant (0..100)
+  xpInLevel: number; // XP gagnés dans ce niveau
   xpNeededForNext: number; // XP totaux requis pour le prochain niveau
 } {
   const current = getLevel(xp);
   const next = getNextLevel(xp);
   if (!next) {
-    return { current, next: null, pct: 100, xpInLevel: xp - current.minXP, xpNeededForNext: 0 };
+    return {
+      current,
+      next: null,
+      pct: 100,
+      xpInLevel: xp - current.minXP,
+      xpNeededForNext: 0,
+    };
   }
   const span = next.minXP - current.minXP;
   const xpInLevel = xp - current.minXP;
@@ -107,7 +113,10 @@ export function getXPProgress(xp: number): {
 
 // Coins gagnés à chaque épisode complété
 // Base : 10 coins / épisode + bonus selon score
-export function computeCoinsEarned(score: number, isPerfectQuiz: boolean): number {
+export function computeCoinsEarned(
+  score: number,
+  isPerfectQuiz: boolean,
+): number {
   const base = 10;
   const scoreBonus = Math.max(0, Math.floor(score / 10)); // 1 coin par 10 points
   const perfectBonus = isPerfectQuiz ? 15 : 0;

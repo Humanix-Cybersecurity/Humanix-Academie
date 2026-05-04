@@ -34,9 +34,27 @@ export default function LevelUpOverlay({
     const duration = 3000;
     const end = Date.now() + duration;
     (function frame() {
-      confetti({ particleCount: 8, angle: 60, spread: 80, origin: { x: 0, y: 0.7 }, colors });
-      confetti({ particleCount: 8, angle: 120, spread: 80, origin: { x: 1, y: 0.7 }, colors });
-      confetti({ particleCount: 5, angle: 270, spread: 100, origin: { y: 0.1 }, colors });
+      confetti({
+        particleCount: 8,
+        angle: 60,
+        spread: 80,
+        origin: { x: 0, y: 0.7 },
+        colors,
+      });
+      confetti({
+        particleCount: 8,
+        angle: 120,
+        spread: 80,
+        origin: { x: 1, y: 0.7 },
+        colors,
+      });
+      confetti({
+        particleCount: 5,
+        angle: 270,
+        spread: 100,
+        origin: { y: 0.1 },
+        colors,
+      });
       if (Date.now() < end) requestAnimationFrame(frame);
     })();
   }, [reduced, level]);
@@ -54,11 +72,19 @@ export default function LevelUpOverlay({
       >
         <div
           className="fixed inset-0 -z-10"
-          style={{ background: "rgba(11, 61, 145, 0.85)", backdropFilter: "blur(8px)" }}
+          style={{
+            background: "rgba(11, 61, 145, 0.85)",
+            backdropFilter: "blur(8px)",
+          }}
           aria-hidden="true"
         />
-        <div className={`relative max-w-lg w-full rounded-3xl p-10 text-center bg-gradient-to-br ${level.bgGradient} border-4 ${level.ringColor.replace("ring-", "border-")} shadow-2xl ${reduced ? "" : "animate-bounce-once"}`}>
-          <p className="text-xs uppercase tracking-widest text-gray-600 font-bold mb-2" aria-hidden="true">
+        <div
+          className={`relative max-w-lg w-full rounded-3xl p-10 text-center bg-gradient-to-br ${level.bgGradient} border-4 ${level.ringColor.replace("ring-", "border-")} shadow-2xl ${reduced ? "" : "animate-bounce-once"}`}
+        >
+          <p
+            className="text-xs uppercase tracking-widest text-gray-600 font-bold mb-2"
+            aria-hidden="true"
+          >
             ✨ Niveau débloqué ! ✨
           </p>
           <h1 className="text-5xl font-extrabold text-primary-500 mb-1">
@@ -69,13 +95,23 @@ export default function LevelUpOverlay({
           </h2>
 
           <div className="flex justify-center mb-6">
-            <HexMascotEvolved level={level} size="hero" mood="celebrate" animated={!reduced} species={species} />
+            <HexMascotEvolved
+              level={level}
+              size="hero"
+              mood="celebrate"
+              animated={!reduced}
+              species={species}
+            />
           </div>
 
-          <p className="text-gray-700 italic mb-8 text-lg">"{level.description}"</p>
+          <p className="text-gray-700 italic mb-8 text-lg">
+            "{level.description}"
+          </p>
 
           <div className="bg-white/70 rounded-2xl p-4 mb-6">
-            <p className="text-sm font-bold text-primary-500 mb-2">🎁 Tu débloques</p>
+            <p className="text-sm font-bold text-primary-500 mb-2">
+              🎁 Tu débloques
+            </p>
             <div className="grid grid-cols-2 gap-3 text-left text-sm">
               {level.id === 2 && (
                 <>
@@ -110,7 +146,11 @@ export default function LevelUpOverlay({
             </div>
           </div>
 
-          <button onClick={onClose} className="btn-primary w-full text-lg" autoFocus>
+          <button
+            onClick={onClose}
+            className="btn-primary w-full text-lg"
+            autoFocus
+          >
             Continuer mon aventure →
           </button>
           <p className="text-xs text-gray-500 mt-3">
@@ -125,7 +165,9 @@ export default function LevelUpOverlay({
 function Bonus({ icon, label }: { icon: string; label: string }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="text-xl" aria-hidden="true">{icon}</span>
+      <span className="text-xl" aria-hidden="true">
+        {icon}
+      </span>
       <span className="text-gray-700">{label}</span>
     </div>
   );

@@ -15,7 +15,9 @@ export const metadata: Metadata = {
   title: "Humanix Académie — Cybersécurité ludique pour PME",
   description:
     "Plateforme gamifiée de sensibilisation cybersécurité pour TPE et PME. Modules de 5 minutes, mises en situation, conformes RGPD.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
+  ),
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -24,8 +26,16 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/logo-humanix-academie-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/logo-humanix-academie-512.png", sizes: "512x512", type: "image/png" },
+      {
+        url: "/logo-humanix-academie-192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        url: "/logo-humanix-academie-512.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
     ],
     apple: [{ url: "/logo-humanix-academie-512.png" }],
     shortcut: "/logo-humanix-academie-192.png",
@@ -60,7 +70,11 @@ const themeInitScript = `
 })();
 `;
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="fr">
       <head>
@@ -68,17 +82,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen">
         <Providers>
-          <a href="#main-content" className="skip-link">Aller au contenu principal</a>
+          <a href="#main-content" className="skip-link">
+            Aller au contenu principal
+          </a>
           {/* Signature visuelle : barre cyber-meteo France 4px tout en haut.
               Couleur dynamique (vert/orange/rouge) selon le niveau d'alerte. */}
-          <Suspense fallback={<div className="h-1 w-full bg-emerald-500" aria-hidden="true" />}>
+          <Suspense
+            fallback={
+              <div className="h-1 w-full bg-emerald-500" aria-hidden="true" />
+            }
+          >
             <CyberMeteoTopBar />
           </Suspense>
           {/* Bandeau démo dynamique : montre l'offre active si l'user est connecté */}
           <DemoBanner />
           <HeaderBar />
           <ScrollProgress />
-          <main id="main-content" tabIndex={-1} aria-label="Contenu principal">{children}</main>
+          <main id="main-content" tabIndex={-1} aria-label="Contenu principal">
+            {children}
+          </main>
           <PWAInstallButton />
           <CookieNotice />
           <MascotPeek />

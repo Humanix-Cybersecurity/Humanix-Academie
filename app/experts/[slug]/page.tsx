@@ -6,7 +6,11 @@ import { getExpertBySlug } from "@/lib/experts";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const expert = await getExpertBySlug(slug);
   if (!expert) return { title: "Expert introuvable | Humanix Académie" };
@@ -27,8 +31,14 @@ export default async function ExpertProfilePage({
   if (!expert) notFound();
 
   const name = expert.user.name ?? expert.user.email.split("@")[0];
-  const credentials = expert.credentials.split(",").map((s) => s.trim()).filter(Boolean);
-  const tags = expert.expertiseTags.split(",").map((s) => s.trim()).filter(Boolean);
+  const credentials = expert.credentials
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const tags = expert.expertiseTags
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
@@ -145,7 +155,9 @@ export default async function ExpertProfilePage({
           <ul className="space-y-2">
             {credentials.map((c) => (
               <li key={c} className="flex items-start gap-2 text-sm">
-                <span className="text-accent-500 mt-0.5" aria-hidden="true">✓</span>
+                <span className="text-accent-500 mt-0.5" aria-hidden="true">
+                  ✓
+                </span>
                 <span>{c}</span>
               </li>
             ))}
@@ -171,7 +183,9 @@ export default async function ExpertProfilePage({
                 className="card hover:shadow-lg transition-all flex flex-col"
               >
                 <div className="flex items-start gap-3 mb-2">
-                  <div className="text-3xl" aria-hidden="true">{m.emoji}</div>
+                  <div className="text-3xl" aria-hidden="true">
+                    {m.emoji}
+                  </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-bold text-primary-500">{m.title}</p>
                     {m.isOfficial && (
@@ -188,9 +202,7 @@ export default async function ExpertProfilePage({
                   <span>
                     {m.category} · {m.difficulty}
                   </span>
-                  {m.installCount > 0 && (
-                    <span>{m.installCount} install.</span>
-                  )}
+                  {m.installCount > 0 && <span>{m.installCount} install.</span>}
                 </div>
               </Link>
             ))}

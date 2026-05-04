@@ -51,9 +51,7 @@ export function policyDocument(v: PackNis2Variables): Document {
       },
       {
         heading: "3. Engagements",
-        paragraphs: [
-          "L'entreprise s'engage à :",
-        ],
+        paragraphs: ["L'entreprise s'engage à :"],
         bullets: [
           "Déployer un programme de formation continue à la cybersécurité, accessible à 100 % des collaborateurs",
           "Diffuser au moins une action de sensibilisation par mois (newsletter, mini-module, simulation, atelier)",

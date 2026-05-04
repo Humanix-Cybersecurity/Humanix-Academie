@@ -50,7 +50,9 @@ export default async function AdminModulesPage() {
         customOrder: cfg?.customOrder ?? null,
       };
     })
-    .sort((a, b) => (a.customOrder ?? a.baseOrder) - (b.customOrder ?? b.baseOrder));
+    .sort(
+      (a, b) => (a.customOrder ?? a.baseOrder) - (b.customOrder ?? b.baseOrder),
+    );
 
   const activeCount = enriched.filter((s) => s.isActive).length;
   const mandatoryCount = enriched.filter((s) => s.isMandatory).length;
@@ -65,9 +67,17 @@ export default async function AdminModulesPage() {
       <div className="space-y-6 min-w-0">
         {/* KPI strip */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <StatCard label="Modules disponibles"   value={enriched.length} />
-          <StatCard label="Actifs pour vos équipes" value={activeCount} accent="emerald" />
-          <StatCard label="Marqués obligatoires"   value={mandatoryCount} accent="amber" />
+          <StatCard label="Modules disponibles" value={enriched.length} />
+          <StatCard
+            label="Actifs pour vos équipes"
+            value={activeCount}
+            accent="emerald"
+          />
+          <StatCard
+            label="Marqués obligatoires"
+            value={mandatoryCount}
+            accent="amber"
+          />
         </div>
 
         {/* Catalogue principal */}
@@ -85,10 +95,22 @@ export default async function AdminModulesPage() {
             Bonnes pratiques
           </h3>
           <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1.5 list-disc pl-5 leading-relaxed">
-            <li>Active 2 à 3 modules au démarrage pour éviter la surcharge cognitive.</li>
-            <li>Marque comme <strong>obligatoires</strong> les modules critiques (phishing, mots de passe).</li>
-            <li>Réorganise l'ordre selon tes priorités : commence par ce qui rapporte le plus vite (phishing).</li>
-            <li>Tu peux désactiver un module à tout moment sans perdre la progression des collaborateurs (elle est conservée).</li>
+            <li>
+              Active 2 à 3 modules au démarrage pour éviter la surcharge
+              cognitive.
+            </li>
+            <li>
+              Marque comme <strong>obligatoires</strong> les modules critiques
+              (phishing, mots de passe).
+            </li>
+            <li>
+              Réorganise l'ordre selon tes priorités : commence par ce qui
+              rapporte le plus vite (phishing).
+            </li>
+            <li>
+              Tu peux désactiver un module à tout moment sans perdre la
+              progression des collaborateurs (elle est conservée).
+            </li>
           </ul>
         </article>
       </div>
@@ -101,23 +123,30 @@ export default async function AdminModulesPage() {
 // =============================================================================
 
 function StatCard({
-  label, value, accent,
+  label,
+  value,
+  accent,
 }: {
   label: string;
   value: number;
   accent?: "emerald" | "amber" | "rose";
 }) {
   const accentClass =
-    accent === "emerald" ? "text-emerald-600 dark:text-emerald-400" :
-    accent === "amber"   ? "text-amber-600 dark:text-amber-400" :
-    accent === "rose"    ? "text-rose-600 dark:text-rose-400" :
-    "text-gray-900 dark:text-gray-100";
+    accent === "emerald"
+      ? "text-emerald-600 dark:text-emerald-400"
+      : accent === "amber"
+        ? "text-amber-600 dark:text-amber-400"
+        : accent === "rose"
+          ? "text-rose-600 dark:text-rose-400"
+          : "text-gray-900 dark:text-gray-100";
   return (
     <article className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 min-w-0">
       <p className="text-[10px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-bold">
         {label}
       </p>
-      <p className={`text-2xl sm:text-3xl font-extrabold mt-1 tabular-nums ${accentClass}`}>
+      <p
+        className={`text-2xl sm:text-3xl font-extrabold mt-1 tabular-nums ${accentClass}`}
+      >
         {value}
       </p>
     </article>

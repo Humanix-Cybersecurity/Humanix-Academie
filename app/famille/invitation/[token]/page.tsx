@@ -22,7 +22,8 @@ export default async function InvitationRedeemPage({
 
   // Hash IP pour analytics anti-fraude (RGPD)
   const h = await headers();
-  const ip = h.get("x-forwarded-for")?.split(",")[0].trim() ?? h.get("x-real-ip");
+  const ip =
+    h.get("x-forwarded-for")?.split(",")[0].trim() ?? h.get("x-real-ip");
   const ipHash = hashIp(ip);
 
   const result = await redeemInvite({ token, ipHash: ipHash ?? undefined });
@@ -30,7 +31,9 @@ export default async function InvitationRedeemPage({
   if (!result.ok) {
     return (
       <div className="max-w-xl mx-auto px-4 py-16 text-center">
-        <div className="text-6xl mb-6" aria-hidden="true">😔</div>
+        <div className="text-6xl mb-6" aria-hidden="true">
+          😔
+        </div>
         <h1 className="text-3xl font-extrabold text-primary-500 mb-3">
           Cette invitation n'est plus valable
         </h1>
@@ -47,7 +50,9 @@ export default async function InvitationRedeemPage({
 
   return (
     <div className="max-w-xl mx-auto px-4 py-16 text-center">
-      <div className="text-7xl mb-6" aria-hidden="true">🎁</div>
+      <div className="text-7xl mb-6" aria-hidden="true">
+        🎁
+      </div>
       <p className="text-xs uppercase tracking-widest text-pink-600 font-bold mb-2">
         Invitation activée
       </p>
@@ -59,21 +64,20 @@ export default async function InvitationRedeemPage({
         <p className="text-gray-700 leading-relaxed">
           {result.sponsorUserName ? (
             <>
-              <strong>{result.sponsorUserName}</strong>, qui suit le programme cyber chez
-              {" "}
-              <strong>{result.sponsorTenantName}</strong>, vous a offert l'accès
-              à nos articles cyber grand public.
+              <strong>{result.sponsorUserName}</strong>, qui suit le programme
+              cyber chez <strong>{result.sponsorTenantName}</strong>, vous a
+              offert l'accès à nos articles cyber grand public.
             </>
           ) : (
             <>
-              Un proche de chez <strong>{result.sponsorTenantName}</strong> vous a
-              offert l'accès à nos articles cyber grand public.
+              Un proche de chez <strong>{result.sponsorTenantName}</strong> vous
+              a offert l'accès à nos articles cyber grand public.
             </>
           )}
         </p>
         <p className="text-sm text-gray-600 mt-3">
-          Aucun compte à créer. Aucune donnée collectée. Aucune publicité.
-          Juste des articles utiles, écrits sans jargon.
+          Aucun compte à créer. Aucune donnée collectée. Aucune publicité. Juste
+          des articles utiles, écrits sans jargon.
         </p>
       </div>
 

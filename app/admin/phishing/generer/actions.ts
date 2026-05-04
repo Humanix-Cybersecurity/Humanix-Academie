@@ -3,7 +3,11 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getTenantPlan } from "@/lib/plans";
-import { generatePhishing, type GeneratePhishingArgs, type GeneratedPhishing } from "@/lib/ai/mistral";
+import {
+  generatePhishing,
+  type GeneratePhishingArgs,
+  type GeneratedPhishing,
+} from "@/lib/ai/mistral";
 
 async function requirePro(): Promise<{ tenantId: string; userId: string }> {
   const session = await auth();
@@ -27,7 +31,9 @@ async function requirePro(): Promise<{ tenantId: string; userId: string }> {
  */
 export async function generatePhishingAction(
   args: GeneratePhishingArgs,
-): Promise<{ ok: true; data: GeneratedPhishing } | { ok: false; error: string }> {
+): Promise<
+  { ok: true; data: GeneratedPhishing } | { ok: false; error: string }
+> {
   let auth: { tenantId: string; userId: string };
   try {
     auth = await requirePro();

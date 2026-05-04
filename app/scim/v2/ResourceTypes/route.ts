@@ -25,7 +25,10 @@ export async function GET() {
               required: false,
             },
           ],
-          meta: { resourceType: "ResourceType", location: "/scim/v2/ResourceTypes/User" },
+          meta: {
+            resourceType: "ResourceType",
+            location: "/scim/v2/ResourceTypes/User",
+          },
         },
         {
           schemas: [SCIM_SCHEMAS.RESOURCE_TYPE],
@@ -34,7 +37,10 @@ export async function GET() {
           endpoint: "/Groups",
           description: "Group (mappe sur le service utilisateur)",
           schema: SCIM_SCHEMAS.GROUP,
-          meta: { resourceType: "ResourceType", location: "/scim/v2/ResourceTypes/Group" },
+          meta: {
+            resourceType: "ResourceType",
+            location: "/scim/v2/ResourceTypes/Group",
+          },
         },
       ],
     },

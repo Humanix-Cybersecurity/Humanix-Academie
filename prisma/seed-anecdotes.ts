@@ -78,7 +78,8 @@ const ANECDOTES: AnecdoteSeed[] = [
       "L'IA générative démocratise les fraudes ultra-ciblées qui étaient autrefois réservées aux États-nations. Une convocation à une visio inhabituelle, même avec des visages qu'on connaît, doit déclencher une vérification par un canal alternatif (téléphone, message Signal, message en personne) avant tout virement significatif.",
     miniAction:
       "Établis avec ta direction une règle simple : tout virement supérieur à X € doit être confirmé par un appel téléphonique sortant (jamais entrant) au numéro connu du donneur d'ordre. Cette règle te protège des deepfakes, du SIM-swapping et de la fraude au président classique.",
-    sourceUrl: "https://www.cnn.com/2024/02/04/asia/deepfake-arup-finance-worker",
+    sourceUrl:
+      "https://www.cnn.com/2024/02/04/asia/deepfake-arup-finance-worker",
     sourceLabel: "CNN · 4 février 2024",
     category: "IA_ABUS",
     incidentDate: new Date("2024-01-29"),
@@ -135,5 +136,7 @@ export async function seedAnecdotes(prisma: PrismaClient) {
       },
     });
   }
-  console.log(`  Cyber-Anecdotes ✓ (${ANECDOTES.length} : 3 publiées + 1 brouillon)`);
+  console.log(
+    `  Cyber-Anecdotes ✓ (${ANECDOTES.length} : 3 publiées + 1 brouillon)`,
+  );
 }

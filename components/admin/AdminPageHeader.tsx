@@ -25,12 +25,21 @@ type Props = {
   icon?: string;
 };
 
-export default function AdminPageHeader({ title, description, actions, icon }: Props) {
+export default function AdminPageHeader({
+  title,
+  description,
+  actions,
+  icon,
+}: Props) {
   return (
     <header className="mb-6 flex flex-wrap items-end justify-between gap-3">
       <div className="min-w-0">
         <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight flex items-center gap-2.5">
-          {icon && <span aria-hidden="true" className="text-2xl">{icon}</span>}
+          {icon && (
+            <span aria-hidden="true" className="text-2xl">
+              {icon}
+            </span>
+          )}
           <span className="min-w-0">{title}</span>
         </h1>
         {description && (

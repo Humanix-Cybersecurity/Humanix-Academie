@@ -44,7 +44,12 @@ const COLORS = {
 };
 
 const styles = StyleSheet.create({
-  page: { padding: 40, fontSize: 10, fontFamily: "Helvetica", color: "#1A1A1A" },
+  page: {
+    padding: 40,
+    fontSize: 10,
+    fontFamily: "Helvetica",
+    color: "#1A1A1A",
+  },
 
   header: {
     borderBottom: "2pt solid #0B3D91",
@@ -55,7 +60,12 @@ const styles = StyleSheet.create({
   subBrand: { fontSize: 9, color: COLORS.gray, marginTop: 2 },
 
   // Doc title
-  docTitle: { fontSize: 18, color: COLORS.primary, fontWeight: "bold", marginBottom: 4 },
+  docTitle: {
+    fontSize: 18,
+    color: COLORS.primary,
+    fontWeight: "bold",
+    marginBottom: 4,
+  },
   docSubtitle: { fontSize: 10, color: COLORS.gray, marginBottom: 16 },
 
   // Sections
@@ -120,7 +130,13 @@ const styles = StyleSheet.create({
   },
 });
 
-function PageHeader({ tenantName, generatedAt }: { tenantName: string; generatedAt: Date }) {
+function PageHeader({
+  tenantName,
+  generatedAt,
+}: {
+  tenantName: string;
+  generatedAt: Date;
+}) {
   const dateFr = generatedAt.toLocaleDateString("fr-FR", { dateStyle: "long" });
   return (
     <View style={styles.header} fixed>
@@ -142,7 +158,9 @@ function PageFooter({
   const horodatage = generatedAt.toISOString();
   return (
     <View style={styles.footer} fixed>
-      <Text>{tenantName} · Pack NIS2 · {horodatage}</Text>
+      <Text>
+        {tenantName} · Pack NIS2 · {horodatage}
+      </Text>
       <Text
         render={({ pageNumber, totalPages }) =>
           `Page ${pageNumber} / ${totalPages}`
@@ -155,7 +173,9 @@ function PageFooter({
 function DocSection({ section }: { section: DocSpec["sections"][number] }) {
   return (
     <View>
-      {section.heading && <Text style={styles.sectionHeading}>{section.heading}</Text>}
+      {section.heading && (
+        <Text style={styles.sectionHeading}>{section.heading}</Text>
+      )}
       {section.paragraphs.map((p, i) => (
         <Text key={`p-${i}`} style={styles.paragraph}>
           {p}
@@ -174,7 +194,9 @@ function DocSection({ section }: { section: DocSpec["sections"][number] }) {
 export function PackNis2Pdf(props: { variables: PackNis2Variables }) {
   const v = props.variables;
   const docs = buildAllDocuments(v);
-  const dateFr = v.generatedAt.toLocaleDateString("fr-FR", { dateStyle: "long" });
+  const dateFr = v.generatedAt.toLocaleDateString("fr-FR", {
+    dateStyle: "long",
+  });
 
   return (
     <PdfDocument>
@@ -189,7 +211,9 @@ export function PackNis2Pdf(props: { variables: PackNis2Variables }) {
             <Text style={styles.coverLabel}>Préparé pour</Text>
             <Text style={styles.coverValue}>{v.tenantName}</Text>
             {v.tenantSiren && (
-              <Text style={[styles.paragraph, { marginTop: 4, color: COLORS.gray }]}>
+              <Text
+                style={[styles.paragraph, { marginTop: 4, color: COLORS.gray }]}
+              >
                 SIREN : {v.tenantSiren}
               </Text>
             )}
@@ -209,13 +233,16 @@ export function PackNis2Pdf(props: { variables: PackNis2Variables }) {
             ))}
           </View>
 
-          <Text style={[styles.paragraph, { marginTop: 16, color: COLORS.gray }]}>
-            Ce pack documentaire couvre les exigences de l'article 21 (mesures de
-            gestion des risques) et de l'article 23 (notification d'incident) de la
-            directive NIS2, transposée en France. Les documents sont rédigés pour
-            être signables tels quels par un dirigeant non-juriste, à adapter
-            marginalement à votre contexte. Ils ne se substituent pas à un audit
-            réglementaire formel mais constituent un socle organisationnel solide.
+          <Text
+            style={[styles.paragraph, { marginTop: 16, color: COLORS.gray }]}
+          >
+            Ce pack documentaire couvre les exigences de l'article 21 (mesures
+            de gestion des risques) et de l'article 23 (notification d'incident)
+            de la directive NIS2, transposée en France. Les documents sont
+            rédigés pour être signables tels quels par un dirigeant non-juriste,
+            à adapter marginalement à votre contexte. Ils ne se substituent pas
+            à un audit réglementaire formel mais constituent un socle
+            organisationnel solide.
           </Text>
         </View>
         <PageFooter tenantName={v.tenantName} generatedAt={v.generatedAt} />
@@ -233,7 +260,9 @@ export function PackNis2Pdf(props: { variables: PackNis2Variables }) {
             <DocSection key={j} section={s} />
           ))}
           {doc.footer && (
-            <Text style={[styles.paragraph, { marginTop: 16, color: COLORS.gray }]}>
+            <Text
+              style={[styles.paragraph, { marginTop: 16, color: COLORS.gray }]}
+            >
               {doc.footer}
             </Text>
           )}

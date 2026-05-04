@@ -76,12 +76,18 @@ function toCard(p: any): ExpertCard {
     organization: p.organization ?? null,
     avatarUrl: p.avatarUrl ?? null,
     expertiseTags: p.expertiseTags
-      ? p.expertiseTags.split(",").map((s: string) => s.trim()).filter(Boolean)
+      ? p.expertiseTags
+          .split(",")
+          .map((s: string) => s.trim())
+          .filter(Boolean)
       : [],
     modulesCount: p.modulesCount,
     totalInstalls: p.totalInstalls,
     credentials: p.credentials
-      ? p.credentials.split(",").map((s: string) => s.trim()).filter(Boolean)
+      ? p.credentials
+          .split(",")
+          .map((s: string) => s.trim())
+          .filter(Boolean)
       : [],
   };
 }

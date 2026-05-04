@@ -10,7 +10,11 @@ export default function CsvImporter() {
   const [pending, startTransition] = useTransition();
   const [rows, setRows] = useState<Row[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<{ created: number; skipped: number; errors: string[] } | null>(null);
+  const [result, setResult] = useState<{
+    created: number;
+    skipped: number;
+    errors: string[];
+  } | null>(null);
 
   const onFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(null);
@@ -29,7 +33,9 @@ export default function CsvImporter() {
         }
         const cleaned = (res.data as Row[]).filter((r) => r.email);
         if (cleaned.length === 0) {
-          setError("Aucune ligne valide. Vérifie qu'il y a une colonne 'email'.");
+          setError(
+            "Aucune ligne valide. Vérifie qu'il y a une colonne 'email'.",
+          );
           return;
         }
         setRows(cleaned);
@@ -69,7 +75,9 @@ export default function CsvImporter() {
             />
             <label htmlFor="csv-file" className="cursor-pointer">
               <p className="text-4xl mb-2">📂</p>
-              <p className="font-bold text-primary-500">Choisir un fichier CSV</p>
+              <p className="font-bold text-primary-500">
+                Choisir un fichier CSV
+              </p>
               <p className="text-xs text-gray-500 mt-1">
                 Colonnes attendues : email (requis), name, service, role
               </p>
@@ -79,7 +87,7 @@ export default function CsvImporter() {
           <div className="bg-gray-50 rounded-xl p-4 text-xs text-gray-600">
             <p className="font-bold mb-1">Format type :</p>
             <pre className="text-[11px] overflow-x-auto">
-{`email,name,service,role
+              {`email,name,service,role
 sophie@masociete.fr,Sophie Martin,Direction,ADMIN
 yanis@masociete.fr,Yanis Bernard,Commercial,LEARNER
 christine@masociete.fr,Christine Dubois,Compta,LEARNER`}
@@ -98,9 +106,12 @@ christine@masociete.fr,Christine Dubois,Compta,LEARNER`}
         <>
           <div className="bg-primary-50 rounded-xl p-3 text-sm">
             <p className="font-bold text-primary-500 mb-1">
-              📋 {rows.length} ligne{rows.length > 1 ? "s" : ""} prête{rows.length > 1 ? "s" : ""} à importer
+              📋 {rows.length} ligne{rows.length > 1 ? "s" : ""} prête
+              {rows.length > 1 ? "s" : ""} à importer
             </p>
-            <p className="text-xs text-gray-600">Aperçu des 5 premières lignes :</p>
+            <p className="text-xs text-gray-600">
+              Aperçu des 5 premières lignes :
+            </p>
           </div>
 
           <div className="overflow-x-auto bg-white border rounded-xl">
@@ -124,7 +135,10 @@ christine@masociete.fr,Christine Dubois,Compta,LEARNER`}
                 ))}
                 {rows.length > 5 && (
                   <tr>
-                    <td colSpan={4} className="px-3 py-2 text-gray-400 text-center italic">
+                    <td
+                      colSpan={4}
+                      className="px-3 py-2 text-gray-400 text-center italic"
+                    >
                       … et {rows.length - 5} de plus
                     </td>
                   </tr>
@@ -134,10 +148,20 @@ christine@masociete.fr,Christine Dubois,Compta,LEARNER`}
           </div>
 
           <div className="flex gap-2">
-            <button onClick={onConfirm} disabled={pending} className="btn-primary flex-1 text-sm">
-              {pending ? "Import en cours…" : `Importer ${rows.length} utilisateur${rows.length > 1 ? "s" : ""}`}
+            <button
+              onClick={onConfirm}
+              disabled={pending}
+              className="btn-primary flex-1 text-sm"
+            >
+              {pending
+                ? "Import en cours…"
+                : `Importer ${rows.length} utilisateur${rows.length > 1 ? "s" : ""}`}
             </button>
-            <button onClick={reset} disabled={pending} className="btn-secondary text-sm">
+            <button
+              onClick={reset}
+              disabled={pending}
+              className="btn-secondary text-sm"
+            >
               Annuler
             </button>
           </div>
@@ -154,20 +178,27 @@ christine@masociete.fr,Christine Dubois,Compta,LEARNER`}
             }`}
           >
             <p className="font-bold mb-2">
-              {result.errors.length === 0 ? "✅ Import réussi" : "⚠️ Import partiel"}
+              {result.errors.length === 0
+                ? "✅ Import réussi"
+                : "⚠️ Import partiel"}
             </p>
             <p>
-              <strong>{result.created}</strong> créé{result.created > 1 ? "s" : ""} ·{" "}
-              <strong>{result.skipped}</strong> ignoré{result.skipped > 1 ? "s" : ""} (déjà présent
+              <strong>{result.created}</strong> créé
+              {result.created > 1 ? "s" : ""} ·{" "}
+              <strong>{result.skipped}</strong> ignoré
+              {result.skipped > 1 ? "s" : ""} (déjà présent
               {result.skipped > 1 ? "s" : ""}) ·{" "}
-              <strong>{result.errors.length}</strong> erreur{result.errors.length > 1 ? "s" : ""}
+              <strong>{result.errors.length}</strong> erreur
+              {result.errors.length > 1 ? "s" : ""}
             </p>
             {result.errors.length > 0 && (
               <ul className="mt-2 text-xs list-disc pl-5 space-y-0.5">
                 {result.errors.slice(0, 5).map((e, i) => (
                   <li key={i}>{e}</li>
                 ))}
-                {result.errors.length > 5 && <li>… et {result.errors.length - 5} de plus</li>}
+                {result.errors.length > 5 && (
+                  <li>… et {result.errors.length - 5} de plus</li>
+                )}
               </ul>
             )}
           </div>

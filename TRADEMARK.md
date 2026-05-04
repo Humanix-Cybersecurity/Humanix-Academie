@@ -15,13 +15,13 @@ Les marques suivantes sont propriété de **Humanix-Cybersecurity SASU**
 (SIREN 103 901 799, 16 Rue Joseph Loiret, 30100 Alès, France) et font
 l'objet d'un dépôt INPI :
 
-| Marque | Type | Classes Nice |
-|---|---|---|
-| **Humanix** | Verbale | 9 (logiciels), 41 (formation), 42 (services SaaS) |
-| **Humanix Académie** | Verbale | 9, 41, 42 |
-| **Humanix Community Edition** | Verbale | 9, 42 |
-| **Logo Hex** (la mascotte) | Figurative | 9, 41 |
-| « La cyber souveraine, simple et accessible » | Slogan | 9, 41, 42 |
+| Marque                                        | Type       | Classes Nice                                      |
+| --------------------------------------------- | ---------- | ------------------------------------------------- |
+| **Humanix**                                   | Verbale    | 9 (logiciels), 41 (formation), 42 (services SaaS) |
+| **Humanix Académie**                          | Verbale    | 9, 41, 42                                         |
+| **Humanix Community Edition**                 | Verbale    | 9, 42                                             |
+| **Logo Hex** (la mascotte)                    | Figurative | 9, 41                                             |
+| « La cyber souveraine, simple et accessible » | Slogan     | 9, 41, 42                                         |
 
 Le **nom de domaine** `humanix-cybersecurity.fr` et tous ses
 sous-domaines, ainsi que le compte `@humanix-cybersecurity` sur GitHub,
@@ -167,6 +167,7 @@ acceptées par retour de mail sous 24 h.
 ## 6. Que faire en cas d'usage non conforme
 
 ### 6.1 Vous voyez quelqu'un utiliser la marque Humanix de manière
+
 abusive
 
 Signalez-le-nous à `legal@humanix-cybersecurity.fr` avec :
@@ -179,6 +180,7 @@ Nous évaluerons et déclencherons éventuellement une démarche amiable
 (courrier de mise en demeure) avant toute action contentieuse.
 
 ### 6.2 Vous avez utilisé la marque sans autorisation et vous le
+
 réalisez
 
 Pas de panique. Écrivez à `legal@humanix-cybersecurity.fr` en

@@ -221,8 +221,7 @@ const INTEGRATIONS: Integration[] = [
     category: "GRC / Conformité",
     status: "on-demand",
     origin: "US",
-    description:
-      "GRC US automatisé. Idem : sur-mesure ou via format OSCAL.",
+    description: "GRC US automatisé. Idem : sur-mesure ou via format OSCAL.",
     emoji: "🇺🇸",
   },
   {
@@ -281,7 +280,8 @@ export default function IntegrationsHubPage() {
   const stats = {
     total: INTEGRATIONS.length,
     live: INTEGRATIONS.filter((i) => i.status === "live").length,
-    fr: INTEGRATIONS.filter((i) => i.origin === "FR" && i.status === "live").length,
+    fr: INTEGRATIONS.filter((i) => i.origin === "FR" && i.status === "live")
+      .length,
     onDemand: INTEGRATIONS.filter((i) => i.status === "on-demand").length,
   };
 
@@ -322,11 +322,7 @@ export default function IntegrationsHubPage() {
         const items = INTEGRATIONS.filter((i) => i.category === cat);
         if (items.length === 0) return null;
         return (
-          <section
-            key={cat}
-            aria-labelledby={`cat-${cat}`}
-            className="mb-10"
-          >
+          <section key={cat} aria-labelledby={`cat-${cat}`} className="mb-10">
             <h2
               id={`cat-${cat}`}
               className="text-xl font-extrabold text-primary-500 mb-4 flex items-center gap-2"
@@ -362,8 +358,8 @@ export default function IntegrationsHubPage() {
         <ol className="space-y-2 text-sm list-decimal list-inside">
           <li>
             <strong>Votre outil parle un standard que nous exposons</strong>{" "}
-            (OSCAL, SCIM v2, webhook signé, CEF) → la doc suffit, vous codez côté
-            client.
+            (OSCAL, SCIM v2, webhook signé, CEF) → la doc suffit, vous codez
+            côté client.
           </li>
           <li>
             <strong>Vous voulez un connecteur dédié</strong> → développement
@@ -400,7 +396,9 @@ function Stat({
   return (
     <div
       className={`card text-center ${
-        accent ? "bg-gradient-to-br from-primary-500 to-accent-500 text-white" : ""
+        accent
+          ? "bg-gradient-to-br from-primary-500 to-accent-500 text-white"
+          : ""
       }`}
     >
       <p
@@ -451,7 +449,13 @@ function IntegrationCard({ integration }: { integration: Integration }) {
       className="inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full bg-primary-50 dark:bg-slate-700 text-primary-600 dark:text-accent-300"
       title={`Origine : ${origin}`}
     >
-      {origin === "FR" ? "🇫🇷 FR" : origin === "EU" ? "🇪🇺 UE" : origin === "US" ? "🇺🇸 US" : "📐 Standard"}
+      {origin === "FR"
+        ? "🇫🇷 FR"
+        : origin === "EU"
+          ? "🇪🇺 UE"
+          : origin === "US"
+            ? "🇺🇸 US"
+            : "📐 Standard"}
     </span>
   );
 
@@ -479,7 +483,10 @@ function IntegrationCard({ integration }: { integration: Integration }) {
   );
 
   return href ? (
-    <Link href={href} className="block h-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-500 rounded-2xl">
+    <Link
+      href={href}
+      className="block h-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-500 rounded-2xl"
+    >
       {inner}
     </Link>
   ) : (

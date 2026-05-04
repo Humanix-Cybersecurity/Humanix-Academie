@@ -57,15 +57,26 @@ export default async function PersonalizePhishingPage() {
         de la personne et au contexte que vous fournissez.
       </p>
 
-
       <div className="card mt-8 mb-6 bg-blue-50 dark:bg-blue-900/20 border-blue-200">
         <h2 className="font-bold text-primary-500 dark:text-accent-300 mb-1">
           🛡 Cadre éthique
         </h2>
         <ul className="text-sm text-gray-700 dark:text-gray-200 space-y-1 list-disc list-inside">
-          <li>Aucun mail réel n'est envoyé ici. Cette page <strong>génère le contenu uniquement</strong>.</li>
-          <li>Pour lancer une vraie campagne phishing simulée, allez ensuite dans <Link href="/admin/phishing" className="underline">Phishing classique</Link> et créez une campagne avec ces contenus.</li>
-          <li>L'usage doit respecter votre politique RH (information préalable, débriefing systématique, pas de sanction).</li>
+          <li>
+            Aucun mail réel n'est envoyé ici. Cette page{" "}
+            <strong>génère le contenu uniquement</strong>.
+          </li>
+          <li>
+            Pour lancer une vraie campagne phishing simulée, allez ensuite dans{" "}
+            <Link href="/admin/phishing" className="underline">
+              Phishing classique
+            </Link>{" "}
+            et créez une campagne avec ces contenus.
+          </li>
+          <li>
+            L'usage doit respecter votre politique RH (information préalable,
+            débriefing systématique, pas de sanction).
+          </li>
         </ul>
       </div>
 

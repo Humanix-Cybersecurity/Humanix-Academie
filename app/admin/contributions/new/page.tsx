@@ -12,7 +12,10 @@ export default async function NewContributionPage() {
         title="Nouveau module"
         description="Construis ton module pas à pas. Tu peux sauvegarder en brouillon à tout moment."
         actions={
-          <Link href="/admin/contributions" className="text-sm text-gray-500 hover:text-primary-500 dark:hover:text-accent-300">
+          <Link
+            href="/admin/contributions"
+            className="text-sm text-gray-500 hover:text-primary-500 dark:hover:text-accent-300"
+          >
             ← Retour aux contributions
           </Link>
         }

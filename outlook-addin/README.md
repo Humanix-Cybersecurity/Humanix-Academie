@@ -17,12 +17,12 @@ Outlook (web/desktop/mobile)
 
 ## Fichiers livrés
 
-| Fichier | Rôle |
-|---|---|
-| `outlook-addin/manifest.xml` | Manifeste Office Add-in (à finaliser : GUID, icônes) |
-| `public/outlook/taskpane.html` | Page chargée dans Outlook (Office.js + UI) |
-| `public/outlook/icon-{16,32,64,80,128}.png` | **À créer** : icônes du bouton (déclinaisons logo Humanix) |
-| `app/api/phishing/report/route.ts` | Endpoint qui reçoit les signalements (CORS Outlook, rate limit, audit, +coins, webhook) |
+| Fichier                                     | Rôle                                                                                    |
+| ------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `outlook-addin/manifest.xml`                | Manifeste Office Add-in (à finaliser : GUID, icônes)                                    |
+| `public/outlook/taskpane.html`              | Page chargée dans Outlook (Office.js + UI)                                              |
+| `public/outlook/icon-{16,32,64,80,128}.png` | **À créer** : icônes du bouton (déclinaisons logo Humanix)                              |
+| `app/api/phishing/report/route.ts`          | Endpoint qui reçoit les signalements (CORS Outlook, rate limit, audit, +coins, webhook) |
 
 ## Étapes pour finaliser et publier
 
@@ -50,10 +50,12 @@ done
 ### 3. Tester en local (side-loading)
 
 Outlook Web :
+
 1. Ouvrir Outlook → Paramètres → Mes compléments → Personnalisé → Importer le manifest
 2. Le bouton apparaît dans le ruban d'un mail ouvert
 
 Outlook Desktop :
+
 1. Activer Developer Mode dans `regedit` (HKCU\Software\Microsoft\Office\16.0\WEF\Developer)
 2. Pointer vers le manifest local
 
@@ -70,6 +72,7 @@ Plus long (validation Microsoft 4-8 semaines), mais visibilité publique. Docume
 ### 5. Configurer le backend
 
 Pas de config supplémentaire requise — la route `/api/phishing/report` est déjà active en production avec :
+
 - CORS allowlist : outlook.office.com, outlook.office365.com, outlook.live.com
 - Rate limit 30 signalements/h/user
 - Authn par email professionnel (l'user doit exister en BDD)
@@ -85,6 +88,7 @@ Pas de config supplémentaire requise — la route `/api/phishing/report` est d�
 ## Effets côté Humanix Académie
 
 Quand un user signale :
+
 - ✅ +5 coins ajoutés instantanément
 - ✅ Événement `phishing_external_report` dans le dashboard /admin/business (visible en Live Attack Map)
 - ✅ Webhook `phishing.reported` envoyé sur les canaux Slack/Teams configurés

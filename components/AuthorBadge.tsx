@@ -39,9 +39,7 @@ export default function AuthorBadge({
       ) : (
         <span
           className={
-            (size === "md"
-              ? "w-8 h-8 text-xs"
-              : "w-6 h-6 text-[10px]") +
+            (size === "md" ? "w-8 h-8 text-xs" : "w-6 h-6 text-[10px]") +
             " rounded-full bg-gradient-to-br from-primary-500 to-accent-500 text-white font-bold flex items-center justify-center shrink-0"
           }
           aria-hidden="true"
@@ -51,7 +49,14 @@ export default function AuthorBadge({
       )}
       <span className={size === "md" ? "text-sm" : "text-xs"}>
         <span className="text-gray-500">Signé par </span>
-        <span className={"font-bold " + (expertSlug ? "text-accent-500 group-hover:underline" : "text-primary-500")}>
+        <span
+          className={
+            "font-bold " +
+            (expertSlug
+              ? "text-accent-500 group-hover:underline"
+              : "text-primary-500")
+          }
+        >
           {name}
         </span>
         {organization && (

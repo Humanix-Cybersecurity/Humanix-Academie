@@ -19,11 +19,15 @@ function assertDemoMode(): void {
  * Appele depuis /demo avant la connexion d'un role, pour que la session
  * voit le bon plan (gates par feature, bandeau plan, etc.)
  */
-export async function switchDemoPlan(plan: PlanId): Promise<{ ok: true; plan: PlanId }> {
+export async function switchDemoPlan(
+  plan: PlanId,
+): Promise<{ ok: true; plan: PlanId }> {
   assertDemoMode();
   if (!isPlanId(plan)) throw new Error("invalid_plan");
 
-  const tenant = await db.tenant.findUnique({ where: { slug: DEMO_TENANT_SLUG } });
+  const tenant = await db.tenant.findUnique({
+    where: { slug: DEMO_TENANT_SLUG },
+  });
   if (!tenant) throw new Error("demo_tenant_not_found");
 
   await db.tenant.update({

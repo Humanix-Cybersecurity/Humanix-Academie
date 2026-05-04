@@ -17,7 +17,8 @@ export type SimpleFilter = {
   value: string | number | boolean | null;
 };
 
-const RE_SIMPLE = /^\s*([A-Za-z][A-Za-z0-9_.:-]*)\s+(eq|ne|co|sw|ew|gt|ge|lt|le|pr)\s*(?:"((?:[^"\\]|\\.)*)"|(true|false|null|\d+(?:\.\d+)?))?\s*$/i;
+const RE_SIMPLE =
+  /^\s*([A-Za-z][A-Za-z0-9_.:-]*)\s+(eq|ne|co|sw|ew|gt|ge|lt|le|pr)\s*(?:"((?:[^"\\]|\\.)*)"|(true|false|null|\d+(?:\.\d+)?))?\s*$/i;
 
 export function parseScimFilter(raw: string | null): SimpleFilter | null {
   if (!raw) return null;
