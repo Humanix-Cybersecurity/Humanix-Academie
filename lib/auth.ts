@@ -155,7 +155,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return true;
     },
 
-    async jwt(params: any) {
+    async jwt(params: {
+      token: {
+        [key: string]: unknown;
+        uid?: string;
+        tenantId?: string;
+        role?: string;
+        name?: string | null;
+      };
+      user?: {
+        id?: string;
+      };
+    }) {
       const { token, user } = params;
       if (user) {
         const dbUser = await db.user.findUnique({
