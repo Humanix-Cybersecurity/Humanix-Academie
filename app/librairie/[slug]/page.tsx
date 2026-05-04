@@ -31,7 +31,13 @@ export default async function ArticleReadPage({
       where: { id: article.id },
       data: { viewCount: { increment: 1 } },
     })
-    .catch(() => {});
+    .catch((error) => {
+      console.error("Failed to increment library article view count", {
+        articleId: article.id,
+        slug: article.slug,
+        error,
+      });
+    });
 
   const plainText = markdownToPlainText(article.body);
 
