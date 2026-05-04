@@ -241,7 +241,7 @@ async function main() {
         description: it.description,
         rarity: it.rarity,
       },
-    });
+          { id: "a", label: "J'ouvre la porte, c'est évident qu'il a besoin d'entrer", outcome: "bad" as const, feedback: "Très mauvais réflexe : tu viens de pratiquer du tailgating. Aucun contrôle d'identité, accès libre à une zone potentiellement sensible.", points: -10 },
     shopItemsBySlug.set(it.slug, dbItem);
           { id: "c", label: "Je le laisse passer mais je le suis du regard", outcome: "neutral" as const, feedback: "Mauvais compromis : tu n'as pas vérifié son identité et tu es complice du tailgating.", points: -5 },
   console.log(`  Boutique ✓ (${SHOP_CATALOG.length} items)`);
