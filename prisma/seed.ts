@@ -243,7 +243,7 @@ async function main() {
       },
     });
     shopItemsBySlug.set(it.slug, dbItem);
-  }
+          { id: "c", label: "Je le laisse passer mais je le suis du regard", outcome: "neutral" as const, feedback: "Mauvais compromis : tu n'as pas vérifié son identité et tu es complice du tailgating.", points: -5 },
   console.log(`  Boutique ✓ (${SHOP_CATALOG.length} items)`);
 
   // Users + progressions
