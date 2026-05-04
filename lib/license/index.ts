@@ -12,14 +12,14 @@ export type {
   LicensePayload,
   LicenseCheckResult,
   LicenseError,
-} from "./types.js";
+} from "./types";
 
-export { LICENSE_ERROR_LABEL } from "./types.js";
-export { describeLicenseError, verifyLicenseString } from "./verify.js";
-export { verifyLicenseCached, resetLicenseCache } from "./cache.js";
+export { LICENSE_ERROR_LABEL } from "./types";
+export { describeLicenseError, verifyLicenseString } from "./verify";
+export { verifyLicenseCached, resetLicenseCache } from "./cache";
 
-import { verifyLicenseCached } from "./cache.js";
-import type { LicenseCheckResult } from "./types.js";
+import { verifyLicenseCached } from "./cache";
+import type { LicenseCheckResult } from "./types";
 
 /**
  * Recupere la licence active depuis l'env HUMANIX_LICENSE_KEY.
