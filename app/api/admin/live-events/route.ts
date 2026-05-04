@@ -24,11 +24,11 @@ export async function GET(req: NextRequest) {
   if (!session?.user) {
     return new Response("unauthorized", { status: 401 });
   }
-  const role = (session.user as any).role;
+  const role = session.user!.role;
   if (role !== "ADMIN" && role !== "MANAGER" && role !== "SUPERADMIN") {
     return new Response("forbidden", { status: 403 });
   }
-  const tenantId = (session.user as any).tenantId as string;
+  const tenantId = session.user!.tenantId as string;
 
   const encoder = new TextEncoder();
 

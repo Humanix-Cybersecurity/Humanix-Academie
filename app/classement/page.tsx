@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export default async function ClassementPage() {
   const session = await auth();
   if (!session?.user) redirect("/demo");
-  const tenantId = (session.user as any).tenantId as string;
+  const tenantId = session.user!.tenantId as string;
 
   const active = await getActiveChallenge(tenantId);
   if (!active) {

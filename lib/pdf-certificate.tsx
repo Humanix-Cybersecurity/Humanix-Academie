@@ -200,6 +200,7 @@ export function CertificateOfCompletion(props: Props) {
         {/* Filigrane : logo Humanix transparent au centre. Sous tous les
             autres elements grace a position absolute + ordre de rendu.
             Omis silencieusement si le fichier n'est pas trouve au runtime. */}
+        {/* eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf/renderer Image n'accepte pas la prop alt */}
         {LOGO_PATH && <Image src={LOGO_PATH} style={styles.watermark} />}
 
         <View style={styles.border}>

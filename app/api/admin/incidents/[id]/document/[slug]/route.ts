@@ -17,11 +17,11 @@ export async function GET(
   if (!session?.user) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  const role = (session.user as any).role;
+  const role = session.user!.role;
   if (role !== "ADMIN" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const tenantId = (session.user as any).tenantId as string;
+  const tenantId = session.user!.tenantId as string;
 
   const { id, slug } = await params;
   const doc = DOCUMENT_REGISTRY[slug];

@@ -33,7 +33,7 @@ export default async function IncidentDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const session = await auth();
-  const tenantId = (session!.user as any).tenantId as string;
+  const tenantId = session!.user.tenantId as string;
   const plan = await getTenantPlan(tenantId);
   if (!planHasFeature(plan, "incidents")) redirect("/admin/incidents");
 

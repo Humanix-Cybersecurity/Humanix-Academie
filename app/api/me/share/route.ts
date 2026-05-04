@@ -15,8 +15,8 @@ const Schema = z.object({
 export async function POST(req: Request) {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ ok: true, anonymous: true });
-  const userId = (session.user as any).id as string;
-  const tenantId = (session.user as any).tenantId as string | undefined;
+  const userId = session.user!.id as string;
+  const tenantId = session.user!.tenantId as string | undefined;
 
   const body = await req.json();
   const parsed = Schema.safeParse(body);

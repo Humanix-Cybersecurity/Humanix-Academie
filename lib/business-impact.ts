@@ -3,7 +3,6 @@
 // Les chiffres sont des ordres de grandeur publics — la valeur ajoutee
 // pour le dirigeant est de RAPPORTER les efforts cyber a leur impact economique.
 import { db } from "@/lib/db";
-import { computeRiskScore } from "@/lib/risk-score";
 
 export type BusinessImpact = {
   // Score collectif

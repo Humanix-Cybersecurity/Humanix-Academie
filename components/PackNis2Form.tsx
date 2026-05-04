@@ -11,7 +11,7 @@ type Props = { tenantName: string };
 export default function PackNis2Form({ tenantName }: Props) {
   const [submitting, setSubmitting] = useState(false);
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function onSubmit() {
     setSubmitting(true);
     // On laisse le navigateur gerer la soumission GET native ; le timeout
     // ci-dessous reactive le bouton si l'utilisateur reste sur la page.

@@ -15,8 +15,8 @@ export const dynamic = "force-dynamic";
 export default async function ApprendrePage() {
   const session = await auth();
   if (!session?.user) redirect("/demo");
-  const userId = (session.user as any).id as string;
-  const tenantId = (session.user as any).tenantId as string;
+  const userId = session.user!.id as string;
+  const tenantId = session.user!.tenantId as string;
 
   // Saisons publiees + config tenant + inventaire pour customisations Hex
   // Filtrage : saisons globales (tenantId null) + saisons custom du tenant

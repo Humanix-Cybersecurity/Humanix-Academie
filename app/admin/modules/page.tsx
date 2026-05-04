@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminModulesPage() {
   // Auth garantie par app/admin/layout.tsx (defense-in-depth déjà appliquée).
   const session = await auth();
-  const tenantId = (session!.user as any).tenantId as string;
+  const tenantId = session!.user.tenantId as string;
 
   // Multi-tenant : saisons globales + custom du tenant courant
   const [saisons, configs] = await Promise.all([

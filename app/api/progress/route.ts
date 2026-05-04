@@ -37,8 +37,8 @@ export async function POST(req: Request) {
   // generalise du nouveau client).
   const quizScorePct = parsed.data.quizScorePct ?? Math.min(100, Math.max(0, score));
 
-  const userId = (session.user as any).id as string;
-  const tenantId = (session.user as any).tenantId as string;
+  const userId = session.user!.id as string;
+  const tenantId = session.user!.tenantId as string;
   if (!tenantId) return NextResponse.json({ error: "no_tenant" }, { status: 400 });
 
   const episode = await db.episode.findUnique({ where: { id: episodeId } });

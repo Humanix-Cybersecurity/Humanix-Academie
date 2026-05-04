@@ -47,7 +47,7 @@ export default async function EpisodePage({ params }: { params: Promise<Params> 
 
   // Mascotte choisie par l'user — propagée au player pour que les
   // animations affichent SA mascotte (pas le 🦊 par défaut)
-  const userId = (session.user as any).id as string;
+  const userId = session.user!.id as string;
   const dbUser = await db.user.findUnique({
     where: { id: userId },
     select: { mascotSpecies: true, mascotEmojiCustom: true, mood: true },

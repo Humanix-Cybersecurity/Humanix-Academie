@@ -5,6 +5,7 @@
 // + Detection level-up via reponse API et overlay
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import confetti from "canvas-confetti";
 import type { Choice, QuizQuestion } from "@/lib/episodes";
 import HexMascotEvolved from "@/components/HexMascotEvolved";
@@ -330,12 +331,12 @@ export default function EpisodePlayer(props: {
             )}
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <a href="/apprendre" className="btn-primary text-lg">
+              <Link href="/apprendre" className="btn-primary text-lg">
                 Continuer mon parcours →
-              </a>
-              <a href="/profil" className="btn-secondary text-lg">
+              </Link>
+              <Link href="/profil" className="btn-secondary text-lg">
                 Voir mon profil
-              </a>
+              </Link>
             </div>
           </div>
         )}
