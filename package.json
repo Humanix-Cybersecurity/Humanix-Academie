@@ -58,7 +58,7 @@
     "react-dom": "^19.0.0",
     "recharts": "^2.13.3",
     "resend": "^4.0.1",
-    "zod": "^3.23.8"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/canvas-confetti": "^1.6.4",
