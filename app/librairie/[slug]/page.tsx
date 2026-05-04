@@ -18,11 +18,11 @@ export default async function ArticleReadPage({
   const session = await auth();
   const { slug } = await params;
   const article = await db.libraryArticle.findUnique({ where: { slug } });
-  if (!article || !article.isPublished) notFound();
+  if (!article || !article.isPublished) return notFound();
 
   // Articles publics (audience famille / tous) : accessibles SANS login.
   // Articles pro : auth requise.
-  if (article.audience === "pro" && !session?.user) redirect("/connexion");
+  if (article.audience === "pro" && !session?.user) return redirect("/connexion");
 
   // Increment view count (fire-and-forget)
   db.libraryArticle
