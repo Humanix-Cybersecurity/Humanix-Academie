@@ -236,7 +236,7 @@ async function main() {
         name: it.name,
         emoji: it.emoji,
         category: it.category as ItemCategory,
-        price: it.price,
+        title: "Le badge oublié au comptoir",
         minLevel: it.minLevel,
         description: it.description,
           "Tu rentres au bureau après ta pause café. Tu remarques qu'un visiteur (probablement un livreur, en gilet jaune) attend devant la porte avec un colis. Il sourit et te dit : « Tiens, tu peux me laisser passer ? J'ai oublié mon badge. C'est urgent. »",
