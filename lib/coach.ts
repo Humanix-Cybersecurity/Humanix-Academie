@@ -96,7 +96,7 @@ export async function generateCoachAdvice(
 
   let primaryMessage: string;
   let recommendation: CoachAdvice["recommendation"] = null;
-  let mood: CoachAdvice["mood"] = "happy";
+  let mood: CoachAdvice["mood"];
 
   // PRIORITE 1 — Phishing recent cliqué (urgent)
   if (recentPhishingClick) {
