@@ -144,8 +144,3 @@ function parseArgs(
     context: typeof b.context === "string" ? b.context : undefined,
   };
 }
-
-// Export pour tests : permet de reset les buckets entre tests si besoin.
-export function __resetRateLimitForTests() {
-  buckets.clear();
-}
