@@ -25,10 +25,10 @@
 
 import fs from "node:fs";
 import path from "node:path";
-import { decodeLicense } from "../lib/license/format.js";
-import { generateKeyPair, signLicense } from "../lib/license/sign.js";
-import { verifyLicenseString } from "../lib/license/verify.js";
-import type { LicensePayload } from "../lib/license/types.js";
+import { decodeLicense } from "../lib/license/format";
+import { generateKeyPair, signLicense } from "../lib/license/sign";
+import { verifyLicenseString } from "../lib/license/verify";
+import type { LicensePayload } from "../lib/license/types";
 
 const KEYPAIR_FILE = path.join(process.cwd(), "humanix-license-keypair.json");
 
