@@ -345,5 +345,5 @@ sudo rm -rf /opt/humanix-academie
 
 - Questions self-host : [GitHub Discussions Q&A](https://github.com/humanix-cybersecurity/humanix-academie/discussions/categories/q-a)
 - Bugs : [GitHub Issues](https://github.com/humanix-cybersecurity/humanix-academie/issues)
-- Discord live : https://discord.gg/humanix
+- Discord communautaire : ouverture après le launch OSS du 26 mai 2026
 - Cloud managé (sans installation) : https://humanix-cybersecurity.fr/tarifs

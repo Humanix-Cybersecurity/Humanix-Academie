@@ -17,9 +17,9 @@ contact_links:
     url: https://github.com/humanix-cybersecurity/humanix-academie/blob/main/SECURITY.md
     about: NE PAS ouvrir d'issue publique. Voir SECURITY.md pour la procédure de divulgation responsable.
 
-  - name: Rejoindre le Discord
-    url: https://discord.gg/humanix
-    about: Pour discuter en direct avec la communauté et les mainteneurs.
+  - name: Discuter avec la communauté
+    url: https://github.com/humanix-cybersecurity/humanix-academie/discussions
+    about: Pour discuter en direct. Un Discord communautaire ouvrira après le launch OSS du 26 mai 2026.
 
   - name: Demander un devis ou une licence commerciale
     url: mailto:contact@humanix-cybersecurity.fr
