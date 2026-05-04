@@ -59,7 +59,8 @@ if (isDemoMode) {
       id: "demo",
       name: "Demo",
       credentials: { email: { label: "Email", type: "email" } },
-      async authorize(credentials: Record<string, unknown> | undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- next-auth beta types volatils
+      async authorize(credentials: any) {
         const email = credentials?.email as string | undefined;
         if (!email) return null;
         const user = await db.user.findUnique({ where: { email } });
@@ -78,11 +79,8 @@ if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== "demo-key-not-u
     Resend({
       from: process.env.EMAIL_FROM!,
       apiKey: process.env.RESEND_API_KEY!,
-      sendVerificationRequest: async (params: {
-        identifier: string;
-        url: string;
-        provider: { apiKey?: string; from?: string };
-      }) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- next-auth beta types volatils
+      sendVerificationRequest: async (params: any) => {
         const { identifier, url, provider } = params;
         // Verifier que l'utilisateur n'est pas suspendu avant l'envoi
         const u = await db.user.findUnique({ where: { email: identifier } });
@@ -120,13 +118,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
      * d'auto-creer des comptes au passage : un employe externe ne peut pas
      * s'inviter avec le mauvais domaine email.
      */
-    async signIn({
-      user,
-      account,
-    }: {
-      user: { email?: string | null; id?: string };
-      account: { provider: string } | null;
-    }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- next-auth beta types volatils
+    async signIn(params: any) {
+      const { user, account } = params;
       // Demo mode + magic link : on laisse Auth.js gerer (Credentials a deja
       // verifie isActive dans authorize, magic link n'a pas besoin)
       if (account?.provider === "demo" || account?.provider === "resend") {
@@ -153,13 +147,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return true;
     },
 
-    async jwt({
-      token,
-      user,
-    }: {
-      token: Record<string, unknown>;
-      user?: { id?: string };
-    }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- next-auth beta types volatils
+    async jwt(params: any) {
+      const { token, user } = params;
       if (user) {
         const dbUser = await db.user.findUnique({
           where: { id: user.id as string },
@@ -174,15 +164,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return token;
     },
-    async session({
-      session,
-      user,
-      token,
-    }: {
-      session: { user?: { id?: string; name?: string | null; email?: string | null } };
-      user?: { id: string };
-      token?: Record<string, unknown>;
-    }) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- next-auth beta types volatils
+    async session(params: any) {
+      const { session, user, token } = params;
       if (session.user) {
         if (token) {
           (session.user as any).id = token.uid as string;
