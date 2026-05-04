@@ -53,6 +53,9 @@ export default function CGUPage() {
         <p>
           En accédant à la Plateforme, l'Utilisateur reconnaît avoir lu et accepté les présentes CGU. L'utilisation est réservée aux personnes ayant la capacité juridique de contracter ou agissant sous l'autorité d'un représentant légal.
         </p>
+        <p>
+          Les présentes CGU s'appliquent uniquement à l'utilisation de la Plateforme dans son <strong>mode Cloud SaaS</strong> opérée par Humanix-Cybersecurity. Les utilisateurs d'instances <strong>Humanix Community Edition self-host</strong> (déployées par leur organisation à partir du code source publié sous licence GNU AGPL v3) ne sont pas liés par les présentes CGU mais par les termes de la <Link href="/CGU_SELFHOST">licence libre AGPLv3</Link> et, le cas échéant, par les conditions internes propres à leur organisation hôte.
+        </p>
       </LegalSection>
 
       <LegalSection id="compte" num="3" title="Création et sécurité du compte">
