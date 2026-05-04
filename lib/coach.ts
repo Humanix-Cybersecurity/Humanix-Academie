@@ -1,7 +1,9 @@
 // IA Coach Hex
 // V1 : moteur a regles deterministe base sur les donnees reelles de l'utilisateur.
-// V2 : si OPENAI_API_KEY ou ANTHROPIC_API_KEY est defini, on peut enrichir
-//      avec un LLM (boucle ouverte, ne casse pas la V1 si non configure).
+// V2 : si MISTRAL_API_KEY est defini, on peut enrichir avec Mistral (Paris,
+//      souverain FR, RGPD natif). Boucle ouverte : ne casse pas la V1 si
+//      non configure. On ne supporte pas OpenAI ni Anthropic ici par
+//      cohérence avec le positionnement souverain (Cloud Act US).
 import { db } from "@/lib/db";
 
 export type CoachAdvice = {
@@ -179,17 +181,22 @@ export async function generateCoachAdvice(
 
 /**
  * Optionnel V2 : enrichir l'advice avec un LLM si configure.
- * Plug-and-play : si OPENAI_API_KEY ou ANTHROPIC_API_KEY est present, on l'utilise.
+ * Plug-and-play : si MISTRAL_API_KEY est present, on l'utilise.
  * Sinon on retombe sur les regles deterministes.
  *
+ * Choix souverain assumé : pas d'OpenAI, pas d'Anthropic, pas de Cloud
+ * Act US. Si tu forks et veux brancher un autre LLM, garde au moins une
+ * alternative UE par cohérence avec la promesse de la plateforme.
+ *
  * NB : implementation laissee vide pour le POC. Le slot existe :
- * il suffit d'ajouter l'appel API dans cette fonction.
+ * il suffit d'ajouter l'appel API dans cette fonction (cf. lib/ai/mistral.ts
+ * pour le pattern de reference).
  */
 export async function enrichWithLLM(advice: CoachAdvice): Promise<CoachAdvice> {
-  // Slot LLM : a brancher quand l'API key sera disponible.
-  // Exemple :
-  // if (process.env.OPENAI_API_KEY) {
-  //   const llmResponse = await callOpenAI(...);
+  // Slot LLM : a brancher quand on voudra enrichir le coach.
+  // Exemple (a implementer avec Mistral ministral-8b-latest) :
+  // if (process.env.MISTRAL_API_KEY) {
+  //   const llmResponse = await callMistral(...);
   //   return { ...advice, primaryMessage: llmResponse };
   // }
   return advice;
