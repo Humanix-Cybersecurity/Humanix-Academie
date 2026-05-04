@@ -1,0 +1,112 @@
+---
+title: "Le coup de fil du faux support"
+durationMinutes: 6
+persona: "tous-collaborateurs"
+objective: "Detecter un appel vishing — l'attaquant cherche urgence, autorite, et acces a distance"
+xpReward: 60
+scenario: |
+  Mercredi 14h30. Tu sors de pause, ton telephone fixe sonne.
+
+  Une voix masculine, calme, professionnelle :
+  "Bonjour, ici Olivier du support technique externalise mandate par votre DSI.
+  On a detecte une activite suspecte sur votre poste ce matin a 11h47, et il faut
+  agir vite avant que ca ne se propage au reseau."
+
+  Il enchaine :
+  "Pour proteger l'entreprise, je vais vous guider pour installer un patch
+  d'urgence. Ouvrez votre navigateur et tapez ce lien : aide-rapide.example/connect.
+  Ensuite vous me donnerez le code a 6 chiffres qui s'affiche pour que je prenne
+  la main et nettoie le poste."
+
+  Il connait votre prenom, le nom de votre PME, et meme le prenom de votre RSSI.
+  Il ajoute, presse :
+  "Votre poste sera deconnecte automatiquement du reseau dans quinze minutes si
+  on ne reagit pas. On peut commencer ?"
+
+  Tu as effectivement remarque ton ordi un peu lent ce matin.
+choices:
+  - id: "a"
+    label: "J'ouvre le lien et je donne le code, ca a l'air officiel"
+    outcome: "bad"
+    feedback: "Aïe — tu viens de donner un acces a distance complet de ton poste a un attaquant. Il peut maintenant lire tes mails, voler tes documents, et pivoter sur le reseau de l'entreprise."
+    points: -10
+  - id: "b"
+    label: "Je raccroche et je rappelle le standard interne pour verifier"
+    outcome: "good"
+    feedback: "Excellent reflexe ! Verification hors-canal sur un numero de confiance = la regle d'or contre le vishing. Tu protegges toi ET l'entreprise."
+    points: 30
+  - id: "c"
+    label: "Je demande son numero direct pour le rappeler"
+    outcome: "neutral"
+    feedback: "Bonne intention, mais l'attaquant te donnera un numero qu'il controle. Mieux vaut rappeler le standard officiel via l'annuaire interne."
+    points: 10
+  - id: "d"
+    label: "Je transfere l'appel a la DSI sans donner d'info"
+    outcome: "good"
+    feedback: "Tres bon reflexe. La DSI a les outils pour verifier la legitimite, et bloquer la campagne si c'est une attaque ciblee qui touche aussi tes collegues."
+    points: 25
+debrief: |
+  Cette attaque s'appelle le **vishing** (voice phishing). Elle a explose de
+  **+442 % au H2 2024** selon Hoxhunt et represente desormais **plus de 60 %
+  des incidents de reponse en entreprise**. Avec l'IA generative, les attaquants
+  peuvent meme cloner la voix d'un dirigeant a partir de 3 secondes d'audio
+  (deepfake vocal).
+
+  Les marqueurs typiques d'un appel vishing :
+  - **Urgence artificielle** : "15 minutes", "avant que ca ne se propage", "tout
+    de suite" — la peur paralyse la verification.
+  - **Autorite pretendue** : "mandate par votre DSI", "agent de la CNIL", "votre
+    banque". L'attaquant joue la legitimite institutionnelle.
+  - **Demande d'acces a distance** : code OTP, lien a cliquer, partage d'ecran.
+    AUCUN support legitime ne demandera un code OTP par telephone.
+  - **Connaissance d'OSINT** : ton prenom, ton entreprise, le nom de ton RSSI.
+    Tout ca se trouve sur LinkedIn en 2 minutes — ne te laisse pas impressionner.
+  - **Pretextes techniques crediblbes** : "patch d'urgence", "activite suspecte",
+    "mise a jour Microsoft". Le jargon est la pour rassurer.
+
+  La regle universelle : si quelqu'un t'appelle pour te demander d'agir
+  immediatement avec une urgence, **raccroche et rappelle via un numero de
+  confiance** (annuaire interne, site officiel). Aucun risque cyber legitime ne
+  necessite que tu agisses sans verifier.
+
+  En cas de doute : transferer a la DSI avant d'agir. Personne ne te reprochera
+  d'avoir verifie.
+quiz:
+  - question: "Un soi-disant support IT t'appelle et te demande un code OTP recu par SMS. Que fais-tu ?"
+    choices:
+      - { id: "a", label: "Je le donne, c'est pour debloquer mon compte", correct: false }
+      - { id: "b", label: "Je raccroche immediatement, aucun support legitime ne demande de code OTP par telephone", correct: true }
+      - { id: "c", label: "Je verifie d'abord son identite avec quelques questions", correct: false }
+      - { id: "d", label: "Je le mets en attente le temps de demander a la DSI", correct: false }
+    explanation: "Un code OTP est une CLE. Aucun support n'a besoin de ton OTP pour t'aider — il a ses propres acces. Si on te le demande au telephone, c'est de la fraude a 100 %."
+
+  - question: "Quel est le 1er reflexe contre un appel suspect ?"
+    choices:
+      - { id: "a", label: "Tester l'attaquant avec des questions piegees", correct: false }
+      - { id: "b", label: "Raccrocher et rappeler via un numero de confiance", correct: true }
+      - { id: "c", label: "Mettre en haut-parleur pour temoigner", correct: false }
+      - { id: "d", label: "Coder par mail pour avoir une trace", correct: false }
+    explanation: "Raccrocher + rappeler via un numero de confiance (annuaire interne, site officiel) est la regle d'or. Cela coupe l'urgence artificielle et permet de verifier dans le calme."
+
+  - question: "L'attaquant connait ton prenom, ton entreprise, le nom de ton RSSI. Cela prouve-t-il sa legitimite ?"
+    choices:
+      - { id: "a", label: "Oui, seul un vrai prestataire connait ces infos", correct: false }
+      - { id: "b", label: "Non, ces infos se trouvent sur LinkedIn ou le site web de l'entreprise en 2 minutes", correct: true }
+      - { id: "c", label: "Oui, sauf si l'entreprise a ete piratee avant", correct: false }
+      - { id: "d", label: "Cela depend du contexte", correct: false }
+    explanation: "L'OSINT (Open Source Intelligence) est l'arme principale du vishing. Une recherche LinkedIn donne le nom des dirigeants, l'organigramme, et la stack tech publique. Ne te laisse pas impressionner par 'il connait mes infos'."
+
+  - question: "L'augmentation des attaques vishing entre H1 et H2 2024 est de :"
+    choices:
+      - { id: "a", label: "+15 %", correct: false }
+      - { id: "b", label: "+58 %", correct: false }
+      - { id: "c", label: "+442 %", correct: true }
+      - { id: "d", label: "Stable", correct: false }
+    explanation: "Le vishing a explose de +442 % au H2 2024 selon le rapport Hoxhunt 2026. C'est aujourd'hui plus de 60 % des incidents de reponse en entreprise. Avec l'IA generative et le deepfake vocal, le phenomene s'amplifie."
+---
+
+> 💡 **Pour aller plus loin** : Humanix Académie propose un **generateur de scripts
+> de vishing pedagogiques** sur `/admin/vishing` (palier Pro+). Stack 100 %
+> souveraine : scripts generes par Mistral AI (Paris) + lecture audio par Piper
+> TTS local. Aucune donnee envoyee a OpenAI ou cloud US. C'est l'outil ideal pour
+> entrainer ton equipe contre cette menace en pleine explosion en France.
