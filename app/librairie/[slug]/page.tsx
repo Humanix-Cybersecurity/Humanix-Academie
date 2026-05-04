@@ -22,7 +22,8 @@ export default async function ArticleReadPage({
 
   // Articles publics (audience famille / tous) : accessibles SANS login.
   // Articles pro : auth requise.
-  if (article.audience === "pro" && !session?.user) return redirect("/connexion");
+  if (article.audience === "pro" && !session?.user)
+    return redirect("/connexion");
 
   // Increment view count (fire-and-forget)
   db.libraryArticle
