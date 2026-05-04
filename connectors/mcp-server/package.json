@@ -1,0 +1,40 @@
+{
+  "name": "humanix-mcp-server",
+  "version": "0.1.0",
+  "description": "Serveur MCP (Model Context Protocol) pour exposer les donnees Humanix Academie aux agents IA (Claude Desktop, Mistral, GPT). Premier MCP server du marche SAT/HRM.",
+  "license": "MIT",
+  "author": "Humanix-Cybersecurity <contact@humanix-cybersecurity.fr>",
+  "homepage": "https://humanix-cybersecurity.fr",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/humanix-cybersecurity/humanix-academie.git",
+    "directory": "connectors/mcp-server"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "humanix-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit"
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.9"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": ["mcp", "model-context-protocol", "claude", "humanix", "cybersecurity", "awareness", "hrm", "grc"]
+}
