@@ -18,7 +18,7 @@ export default async function ArticleReadPage({
   const session = await auth();
   const { slug } = await params;
   const article = await db.libraryArticle.findUnique({ where: { slug } });
-  if (!article || !article.isPublished) notFound();
+  if (!article || !article.isPublished) return notFound();
 
   // Articles publics (audience famille / tous) : accessibles SANS login.
   // Articles pro : auth requise.
