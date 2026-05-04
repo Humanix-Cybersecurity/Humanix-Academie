@@ -3,7 +3,7 @@ name: CI
 # Tourne sur :
 # - chaque push sur main
 # - chaque PR vers main
-# Vérifie : lint + typecheck + build (et tests si présents).
+# Vérifie : lint + typecheck + tests + build + audits OSS + format + DCO.
 
 on:
   push:
@@ -29,7 +29,7 @@ concurrency:
 
 jobs:
   # ---------------------------------------------------------------------------
-  # Job 1 : Lint + TypeScript strict
+  # Job : Lint + TypeScript strict
   # ---------------------------------------------------------------------------
   lint:
     name: Lint & TypeScript
@@ -56,7 +56,7 @@ jobs:
         run: npm run lint
 
   # ---------------------------------------------------------------------------
-  # Job 2 : Tests unitaires + coverage (Vitest)
+  # Job : Tests unitaires + coverage (Vitest)
   # ---------------------------------------------------------------------------
   test:
     name: Tests unitaires (Vitest)
@@ -91,7 +91,7 @@ jobs:
           retention-days: 7
 
   # ---------------------------------------------------------------------------
-  # Job 3 : Build production (sanity check)
+  # Job : Build production (sanity check)
   # ---------------------------------------------------------------------------
   build:
     name: Production build
@@ -121,7 +121,7 @@ jobs:
           NEXT_PUBLIC_APP_NAME: Humanix Académie
 
   # ---------------------------------------------------------------------------
-  # Job 3 : Audit de sécurité npm
+  # Job : Audit de sécurité npm
   # ---------------------------------------------------------------------------
   security:
     name: npm audit (HIGH/CRITICAL)
@@ -153,6 +153,25 @@ jobs:
   # Cf. scripts/validate-mdx-catalog.ts.
   mdx-catalog:
     name: Validation MDX <-> catalogue
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Verify MDX slugs match catalog
+        run: npm run validate:mdx
+
+  # ---------------------------------------------------------------------------
   # Job : Headers SPDX AGPL-3.0-or-later
   # ---------------------------------------------------------------------------
   # Verifie que tous les fichiers source TS/TSX ont un header SPDX. Bloque
@@ -161,6 +180,25 @@ jobs:
   # Cf. scripts/add-license-headers.ts (regen avec `npm run license:headers`).
   license-headers:
     name: Headers SPDX AGPL-3.0
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Verify SPDX headers on source files
+        run: npm run license:check
+
+  # ---------------------------------------------------------------------------
   # Job : Audit couverture .env.example
   # ---------------------------------------------------------------------------
   # Vérifie qu'aucune variable consommée par le code (process.env.X) ne manque
@@ -183,8 +221,8 @@ jobs:
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
-      - name: Verify MDX slugs match catalog
-        run: npm run validate:mdx
+      - name: Audit env coverage
+        run: npm run audit:env
 
   # ---------------------------------------------------------------------------
   # Job : Build du connecteur MCP server autonome
@@ -221,13 +259,9 @@ jobs:
       - name: Tests
         working-directory: connectors/mcp-server
         run: npm test
-      - name: Verify SPDX headers on source files
-        run: npm run license:check
-      - name: Audit env coverage
-        run: npm run audit:env
 
   # ---------------------------------------------------------------------------
-  # Job 4 : Vérification format Prettier
+  # Job : Vérification format Prettier
   # ---------------------------------------------------------------------------
   format:
     name: Prettier check
@@ -251,7 +285,7 @@ jobs:
         continue-on-error: true # Format check ne bloque pas la PR (avertissement seulement)
 
   # ---------------------------------------------------------------------------
-  # Job 5 : Vérification DCO (Developer Certificate of Origin)
+  # Job : Vérification DCO (Developer Certificate of Origin)
   # ---------------------------------------------------------------------------
   dco:
     name: DCO signed-off-by check
