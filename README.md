@@ -126,7 +126,11 @@ proposés en cloud managé ou via une licence commerciale.
 | Pack NIS2 turnkey complet                                          | Cloud Pro / Enterprise               |
 | SSO SAML / SCIM enterprise                                         | Cloud Enterprise                     |
 
-Tarifs cloud : voir [humanix-cybersecurity.fr/tarifs](https://humanix-cybersecurity.fr/tarifs)
+Tarifs cloud : voir [humanix-cybersecurity.fr/tarifs](https://humanix-cybersecurity.fr/tarifs).
+
+📖 **Document de référence détaillé** : [`docs/OPEN_CORE.md`](./docs/OPEN_CORE.md) liste exhaustivement ce qui est ouvert vs ce qui est plan-gated en cloud, avec la justification économique et la position sur le fork hostile.
+
+📝 **Tu veux contribuer un module pédagogique ?** Lis [`content/community/README.md`](./content/community/README.md) — frontmatter, workflow de review, licence CC BY-SA 4.0 sur le contenu.
 
 ---
 
