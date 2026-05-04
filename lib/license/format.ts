@@ -34,7 +34,6 @@ export function decodeLicense(licenseString: string): License | null {
   const trimmed = licenseString.trim();
   if (!trimmed.startsWith(`${PREFIX}.`)) return null;
 
-  const parts = trimmed.split(".");
   // PREFIX a 3 segments separes par "." (HUMANIX-LICENSE-v1)
   // Donc avec payload + signature on attend 5 segments au total :
   // ["HUMANIX-LICENSE-v1", "...", "..."]
