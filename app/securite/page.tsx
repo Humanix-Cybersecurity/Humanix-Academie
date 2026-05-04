@@ -8,6 +8,8 @@ export const metadata = {
     "Hébergement souverain, RGPD, gestion des secrets, sauvegardes : la sécurité chez Humanix en transparence.",
 };
 
+const AUDIT_REPORT_BADGE = "Nouveau · v1.0 — 2 mai 2026";
+
 export default function SecuritePage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-10 sm:py-14 animate-fadeIn">
@@ -34,7 +36,7 @@ export default function SecuritePage() {
           </div>
           <div>
             <p className="text-xs uppercase tracking-widest opacity-80 font-bold mb-1">
-              Nouveau · v1.0 — 2 mai 2026
+              {AUDIT_REPORT_BADGE}
             </p>
             <h2 className="text-xl font-bold">
               Rapport public d'audit de sécurité
