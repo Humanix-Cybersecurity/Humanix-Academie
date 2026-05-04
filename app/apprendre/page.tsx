@@ -11,6 +11,7 @@ import { getLevel } from "@/lib/levels";
 import { buildEquippedFromInventory } from "@/lib/shop";
 import { getActiveChallenge } from "@/lib/challenge";
 import { generateCoachAdvice } from "@/lib/coach";
+import { listExpertEpisodes } from "@/lib/content-availability";
 
 export const dynamic = "force-dynamic";
 
@@ -93,6 +94,12 @@ export default async function ApprendrePage() {
   ).length;
   const totalEpisodes = saisons.reduce((s, sa) => s + sa.episodes.length, 0);
   const currentLevel = getLevel(totalXP);
+
+  // Episodes avec contenu MDX redige (vs fallback generique).
+  // Sert a afficher un compteur "Expert" subtil sur chaque saison.
+  const expertEpisodes = new Set(
+    listExpertEpisodes().map((e) => `${e.saisonSlug}/${e.episodeSlug}`),
+  );
 
   // Streak
   const completedDates = progress
@@ -253,6 +260,9 @@ export default async function ApprendrePage() {
                 (e) => progressByEp.get(e.id)?.status !== "COMPLETED",
               );
               const isLocked = total === 0;
+              const expertCount = s.episodes.filter((e) =>
+                expertEpisodes.has(`${s.slug}/${e.slug}`),
+              ).length;
               return (
                 <div
                   key={s.id}
@@ -314,6 +324,18 @@ export default async function ApprendrePage() {
                   )}
                   <p className="text-xs text-gray-400 mt-2 text-center">
                     {total} épisode{total > 1 ? "s" : ""} · {total * 6} min
+                    {expertCount > 0 && (
+                      <>
+                        {" "}
+                        ·{" "}
+                        <span
+                          className="text-accent-500 font-semibold"
+                          title="Episodes avec scenario detaille redige par un expert"
+                        >
+                          📝 {expertCount} expert{expertCount > 1 ? "s" : ""}
+                        </span>
+                      </>
+                    )}
                   </p>
                 </div>
               );
