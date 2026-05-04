@@ -59,7 +59,6 @@ if (isDemoMode) {
       id: "demo",
       name: "Demo",
       credentials: { email: { label: "Email", type: "email" } },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- next-auth beta types volatils
       async authorize(credentials: any) {
         const email = credentials?.email as string | undefined;
         if (!email) return null;
@@ -79,7 +78,6 @@ if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== "demo-key-not-u
     Resend({
       from: process.env.EMAIL_FROM!,
       apiKey: process.env.RESEND_API_KEY!,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- next-auth beta types volatils
       sendVerificationRequest: async (params: any) => {
         const { identifier, url, provider } = params;
         // Verifier que l'utilisateur n'est pas suspendu avant l'envoi
@@ -118,7 +116,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
      * d'auto-creer des comptes au passage : un employe externe ne peut pas
      * s'inviter avec le mauvais domaine email.
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- next-auth beta types volatils
     async signIn(params: any) {
       const { user, account } = params;
       // Demo mode + magic link : on laisse Auth.js gerer (Credentials a deja
@@ -147,7 +144,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return true;
     },
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- next-auth beta types volatils
     async jwt(params: any) {
       const { token, user } = params;
       if (user) {
@@ -164,7 +160,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return token;
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- next-auth beta types volatils
     async session(params: any) {
       const { session, user, token } = params;
       if (session.user) {
