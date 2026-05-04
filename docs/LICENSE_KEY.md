@@ -211,7 +211,7 @@ Si tu fork Humanix Académie pour ton propre usage commercial (en respectant l'A
 2. Remplacer `PUBLIC_KEY_PEM` dans `lib/license/public-key.ts`
 3. Émettre tes propres licences avec `licensing:generate`
 
-OU plus simple : **désactiver la vérification** (commenter le check dans `getTenantPlan`). C'est ce que beaucoup de community forks font. AGPL te le permet — c'est même l'esprit.
+OU plus simple : **désactiver la vérification** (modifier `getEffectivePlan` dans `lib/license/index.ts` pour qu'il retourne directement le plan DB sans regarder la licence). C'est ce que beaucoup de community forks font. AGPL te le permet — c'est même l'esprit.
 
 ## 9. Implementation interne
 
@@ -226,7 +226,8 @@ OU plus simple : **désactiver la vérification** (commenter le check dans `getT
 | [`lib/license/index.ts`](../lib/license/index.ts) | API publique : `getActiveLicense()`, `isFeatureLicensed()` |
 | [`lib/license/license.test.ts`](../lib/license/license.test.ts) | Tests Vitest (signature, falsification, expiration, domain) |
 | [`scripts/license-tool.ts`](../scripts/license-tool.ts) | CLI keygen / generate / inspect / verify |
-| [`lib/plans.ts`](../lib/plans.ts) | Hook : `getTenantPlan()` priorité licence > DB |
+| [`lib/license/index.ts`](../lib/license/index.ts) | API publique : `getActiveLicense()`, **`getEffectivePlan(tenantId)`** (licence override > DB), `isFeatureLicensed()` |
+| [`lib/plans.ts`](../lib/plans.ts) | `getTenantPlan(tenantId)` — pure DB, **client-safe** (pas de dépendance node:crypto) |
 
 ## 10. Roadmap
 
