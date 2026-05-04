@@ -22,7 +22,8 @@ type Integration = {
     | "ITSM / Tickets"
     | "RH / Provisioning"
     | "Email security"
-    | "Standards";
+    | "Standards"
+    | "Agents IA";
   status: IntegrationStatus | "on-demand";
   origin: "FR" | "EU" | "US" | "Standard";
   description: string;
@@ -92,6 +93,19 @@ const INTEGRATIONS: Integration[] = [
     href: "/integrations/outlook",
     releasedAt: "Avr 2026",
     emoji: "📨",
+  },
+  // ============ MCP Server (premier mover SAT/HRM) ============
+  {
+    slug: "mcp-server",
+    name: "MCP Server (Anthropic Model Context Protocol)",
+    category: "Agents IA",
+    status: "live",
+    origin: "Standard",
+    description:
+      "Premier MCP server du marché Security Awareness / Human Risk Management. Branche Claude Desktop, Mistral ou GPT sur les données Humanix en read-only : score conformité, utilisateurs à risque, exports OSCAL, campagnes récentes. Connecteur TypeScript autonome MIT.",
+    href: "https://github.com/humanix-cybersecurity/humanix-academie/tree/main/connectors/mcp-server",
+    releasedAt: "Mai 2026",
+    emoji: "🤖",
   },
   // ============ Sprint 11 - Roadmap ============
   {
@@ -274,6 +288,7 @@ const CATEGORIES = [
   "RH / Provisioning",
   "Email security",
   "Standards",
+  "Agents IA",
 ] as const;
 
 export default function IntegrationsHubPage() {
