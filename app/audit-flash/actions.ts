@@ -59,7 +59,7 @@ export async function submitAuditFlash(input: unknown): Promise<SubmitState> {
   if (!parsed.success) {
     return {
       ok: false,
-      error: parsed.error.errors[0]?.message ?? "Données invalides.",
+      error: parsed.error.issues[0]?.message ?? "Données invalides.",
     };
   }
   const data = parsed.data;

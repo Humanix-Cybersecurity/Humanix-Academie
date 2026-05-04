@@ -49,7 +49,7 @@ export async function createWebhook(formData: FormData) {
     events,
   });
   if (!parsed.success) {
-    throw new Error(parsed.error.errors[0]?.message ?? "Données invalides");
+    throw new Error(parsed.error.issues[0]?.message ?? "Données invalides");
   }
   const data = parsed.data;
 

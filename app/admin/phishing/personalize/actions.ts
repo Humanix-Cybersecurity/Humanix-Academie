@@ -59,7 +59,7 @@ export async function generatePersonalizedBatch(
   const ctx = await requireAdminWithPlan();
   const parsed = Schema.safeParse(input);
   if (!parsed.success) {
-    return { ok: false, error: parsed.error.errors[0]?.message ?? "Invalide." };
+    return { ok: false, error: parsed.error.issues[0]?.message ?? "Invalide." };
   }
   const data = parsed.data;
 
