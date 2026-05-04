@@ -1,19 +1,22 @@
-// Console SUPERADMIN : gestion des anecdotes hebdomadaires.
+// =============================================================================
+// /admin/anecdotes — Pilotage de la Cyber-Anecdote du Lundi (SUPERADMIN).
+// REFONTE MAI 2026 : design system Linear (PageHeader, Section).
+// =============================================================================
 
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import AdminNav from "@/components/AdminNav";
 import AnecdoteAdminTable from "@/components/AnecdoteAdminTable";
 import { seedAnecdotesFormAction } from "./actions";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminAnecdotesPage() {
+  // Auth garantie par layout, mais SUPERADMIN-only -> check spécifique
   const session = await auth();
-  if (!session?.user) redirect("/demo");
-  const role = (session.user as any).role;
+  const role = (session!.user as any).role;
   if (role !== "SUPERADMIN") redirect("/admin");
 
   const [anecdotes, subscribersCount, draftCount] = await Promise.all([
@@ -32,85 +35,74 @@ export default async function AdminAnecdotesPage() {
   ]);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-extrabold text-primary-500 dark:text-accent-300">
-        📅 Cyber-Anecdote du Lundi
-      </h1>
-      <p className="text-gray-600 dark:text-gray-300 mb-6">
-        Pilotage de la newsletter hebdomadaire. Réservé SUPERADMIN.
-      </p>
+    <>
+      <AdminPageHeader
+        title="Cyber-Anecdote du Lundi"
+        description="Pilotage de la newsletter hebdomadaire (incidents français commentés)."
+        actions={
+          <>
+            <Link href="/admin/anecdotes/new" className="inline-flex items-center gap-1.5 rounded-lg bg-primary-500 hover:bg-primary-600 text-white font-semibold px-4 py-2 text-sm transition">
+              <span aria-hidden="true">➕</span> Nouvelle anecdote
+            </Link>
+            <Link href="/anecdotes" target="_blank" className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 dark:border-slate-700 hover:border-accent-500 text-gray-700 dark:text-gray-200 font-semibold px-4 py-2 text-sm transition">
+              <span aria-hidden="true">🔗</span> Voir la page publique
+            </Link>
+          </>
+        }
+      />
 
-      <AdminNav />
+      <div className="space-y-6 min-w-0">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <Kpi label="Abonnés actifs" value={subscribersCount} icon="📬" />
+          <Kpi label="En file d'attente" value={draftCount} icon="📝" />
+          <Kpi label="Total publiées" value={anecdotes.filter((a) => a.publishedAt).length} icon="✅" accent="emerald" />
+        </div>
 
-      {/* KPIs */}
-      <div className="grid sm:grid-cols-3 gap-4 mb-8">
-        <Kpi label="Abonnés actifs" value={subscribersCount} emoji="📬" />
-        <Kpi label="Anecdotes en file d'attente" value={draftCount} emoji="📝" />
-        <Kpi
-          label="Total publiées"
-          value={anecdotes.filter((a) => a.publishedAt).length}
-          emoji="✅"
+        {anecdotes.length === 0 && (
+          <article className="rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-900/15 p-5">
+            <h2 className="font-bold text-amber-800 dark:text-amber-200 mb-2 flex items-center gap-2">
+              <span aria-hidden="true">🚀</span>
+              Aucune anecdote n'existe encore
+            </h2>
+            <p className="text-sm text-amber-800/80 dark:text-amber-200/80 mb-3 leading-relaxed">
+              Importez les 6 anecdotes pré-rédigées (incidents français 2018-2024)
+              pour démarrer la newsletter immédiatement.
+            </p>
+            <form action={seedAnecdotesFormAction}>
+              <button type="submit" className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-semibold px-4 py-2 text-sm transition">
+                <span aria-hidden="true">📥</span> Importer 6 anecdotes pré-rédigées
+              </button>
+            </form>
+          </article>
+        )}
+
+        <AnecdoteAdminTable
+          anecdotes={anecdotes.map((a) => ({
+            id: a.id,
+            slug: a.slug,
+            title: a.title,
+            category: a.category,
+            isActive: a.isActive,
+            publishedAt: a.publishedAt?.toISOString() ?? null,
+            scheduledFor: a.scheduledFor?.toISOString() ?? null,
+            sentCount: a.sentCount,
+            incidentDate: a.incidentDate.toISOString(),
+          }))}
         />
       </div>
-
-      {/* Pre-seed action */}
-      {anecdotes.length === 0 && (
-        <div className="card mb-6 bg-amber-50 dark:bg-amber-900/20 border-amber-300">
-          <h2 className="font-bold text-amber-800 dark:text-amber-200 mb-2">
-            🚀 Aucune anecdote n'existe encore
-          </h2>
-          <p className="text-sm text-amber-700 dark:text-amber-300 mb-3">
-            Importez les 6 anecdotes pré-rédigées (incidents français 2018-2024)
-            pour démarrer la newsletter immédiatement.
-          </p>
-          <form action={seedAnecdotesFormAction}>
-            <button type="submit" className="btn-primary text-sm">
-              📥 Importer 6 anecdotes pré-rédigées
-            </button>
-          </form>
-        </div>
-      )}
-
-      {/* Actions globales */}
-      <div className="flex flex-wrap gap-3 mb-6">
-        <Link href="/admin/anecdotes/new" className="btn-primary text-sm">
-          ➕ Nouvelle anecdote
-        </Link>
-        <Link href="/anecdotes" target="_blank" className="btn-secondary text-sm">
-          🔗 Voir la page publique
-        </Link>
-      </div>
-
-      {/* Liste */}
-      <AnecdoteAdminTable
-        anecdotes={anecdotes.map((a) => ({
-          id: a.id,
-          slug: a.slug,
-          title: a.title,
-          category: a.category,
-          isActive: a.isActive,
-          publishedAt: a.publishedAt?.toISOString() ?? null,
-          scheduledFor: a.scheduledFor?.toISOString() ?? null,
-          sentCount: a.sentCount,
-          incidentDate: a.incidentDate.toISOString(),
-        }))}
-      />
-    </div>
+    </>
   );
 }
 
-function Kpi({ label, value, emoji }: { label: string; value: number; emoji: string }) {
+function Kpi({ label, value, icon, accent }: { label: string; value: number; icon: string; accent?: "emerald" | "amber" }) {
+  const accentClass = accent === "emerald" ? "text-emerald-600 dark:text-emerald-400" : "text-gray-900 dark:text-gray-100";
   return (
-    <div className="card text-center">
-      <div className="text-3xl mb-1" aria-hidden="true">
-        {emoji}
+    <article className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 min-w-0 flex items-center gap-3">
+      <span className="shrink-0 w-9 h-9 rounded-lg bg-gray-100 dark:bg-slate-800 flex items-center justify-center text-base" aria-hidden="true">{icon}</span>
+      <div className="min-w-0">
+        <p className="text-[10px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-bold">{label}</p>
+        <p className={`text-2xl font-extrabold tabular-nums ${accentClass}`}>{value}</p>
       </div>
-      <div className="text-3xl font-extrabold text-primary-500 dark:text-accent-300">
-        {value}
-      </div>
-      <div className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-        {label}
-      </div>
-    </div>
+    </article>
   );
 }
