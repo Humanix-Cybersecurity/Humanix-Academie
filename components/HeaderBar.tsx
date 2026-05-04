@@ -258,6 +258,12 @@ export default function HeaderBar() {
               ❤️ Famille
             </Link>
             <Link
+              href="/manifeste"
+              className="hidden md:inline text-sm text-gray-600 dark:text-gray-300 hover:text-primary-500 font-medium"
+            >
+              Manifeste
+            </Link>
+            <Link
               href="/tarifs"
               className="hidden sm:inline text-sm text-gray-600 dark:text-gray-300 hover:text-primary-500 font-medium"
             >
