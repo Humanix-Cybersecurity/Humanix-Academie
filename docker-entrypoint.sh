@@ -8,7 +8,7 @@ echo "  =============================================="
 echo ""
 
 # Attendre que Postgres soit pret
-echo "[1/3] Attente Postgres..."
+echo "[1/4] Attente Postgres..."
 RETRY=0
 until npx prisma db execute --schema=./prisma/schema.prisma --stdin >/dev/null 2>&1 <<EOF
 SELECT 1;
@@ -24,12 +24,36 @@ done
 echo "  -> Postgres pret"
 
 # Sync du schema (db push : pas de migration formelle, parfait pour POC)
-echo "[2/3] Synchronisation du schema Prisma..."
+echo "[2/4] Synchronisation du schema Prisma..."
 npx prisma db push --skip-generate --accept-data-loss
 
 # Seed (idempotent grace aux upserts)
-echo "[3/3] Seed des donnees de demo..."
+echo "[3/4] Seed des donnees de demo..."
 npx prisma db seed
+
+# Premier import de l'observatoire des fuites — uniquement si la table est
+# vide (pour ne pas re-scraper a chaque redemarrage). Le mode --deep parcourt
+# les archives par annee pour construire un historique meaningful.
+# Les scrapes suivants sont declenches par le cron externe sur
+# /api/cron/breaches-refresh (configure independamment).
+echo "[4/4] Observatoire des fuites — premier import si necessaire..."
+HAS_BREACHES=$(npx tsx -e "
+import { PrismaClient } from '@prisma/client';
+const p = new PrismaClient();
+p.dataBreach.count()
+  .then((n) => { console.log(n > 0 ? 'yes' : 'no'); return p.\$disconnect(); })
+  .catch(() => { console.log('no'); return p.\$disconnect(); });
+" 2>/dev/null | tail -n 1)
+
+if [ "$HAS_BREACHES" = "yes" ]; then
+  echo "  -> Table DataBreach deja peuplee, skip de l'import initial"
+else
+  echo "  -> Table DataBreach vide, import deep en cours (peut prendre 1-2 min)..."
+  # Timeout 180s pour ne pas bloquer le demarrage si une source est lente.
+  # En cas d'echec partiel, le cron externe rattrapera au prochain run.
+  timeout 180 npx tsx scripts/scrape-breaches.ts --deep \
+    || echo "  -> Import partiel ou echec reseau, reessai au prochain cron"
+fi
 
 echo ""
 echo "  =============================================="
