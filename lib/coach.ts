@@ -163,9 +163,12 @@ export async function generateCoachAdvice(
   }
 
   // Micro-tips : 2 random
-  const microTips = [...POSITIVE_MICROTIPS]
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 2);
+  const shuffledMicroTips = [...POSITIVE_MICROTIPS];
+  for (let i = shuffledMicroTips.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledMicroTips[i], shuffledMicroTips[j]] = [shuffledMicroTips[j], shuffledMicroTips[i]];
+  }
+  const microTips = shuffledMicroTips.slice(0, 2);
 
   return { greeting, primaryMessage, recommendation, microTips, mood };
 }
