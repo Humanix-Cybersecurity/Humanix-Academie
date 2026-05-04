@@ -6,6 +6,7 @@ import { computeContentHash } from "../lib/marketplace/integrity";
 import { LIBRARY_ARTICLES } from "../lib/library-seed";
 import { MARKETPLACE_MODULES } from "../lib/marketplace-seed";
 import { CATALOG_SAISONS, rewardsFor, validateCatalog } from "./catalog-saisons";
+import { seedAnecdotes } from "./seed-anecdotes";
 
 const prisma = new PrismaClient();
 
@@ -209,6 +210,9 @@ async function main() {
 
   // Librairie micro-learning
   await seedLibrary();
+
+  // Cyber-Anecdotes du Lundi (4 cas réels documentés, 3 publiées + 1 brouillon)
+  await seedAnecdotes(prisma);
 
   console.log("✅ Seed terminé.");
   console.log("");
