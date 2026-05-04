@@ -145,6 +145,69 @@ jobs:
         run: npm audit --omit=dev --audit-level=high
 
   # ---------------------------------------------------------------------------
+  # Job : Validation MDX <-> catalogue
+  # ---------------------------------------------------------------------------
+  # Catch les MDX orphelins dont le slug ne match pas prisma/catalog-saisons.ts.
+  # Bug observe en mai 2026 : 7 fichiers MDX rediges par des experts ne se
+  # chargeaient jamais (mismatch silencieux 02-faux-rib vs 02-le-faux-rib).
+  # Cf. scripts/validate-mdx-catalog.ts.
+  mdx-catalog:
+    name: Validation MDX <-> catalogue
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Verify MDX slugs match catalog
+        run: npm run validate:mdx
+
+  # ---------------------------------------------------------------------------
+  # Job : Build du connecteur MCP server autonome
+  # ---------------------------------------------------------------------------
+  # connectors/mcp-server/ est un sous-projet TypeScript autonome avec son
+  # propre package.json (deps MIT pour publication npm independante). Il n'est
+  # pas couvert par le `npm ci` racine. Sans ce job, on a deja eu un bug en
+  # mai 2026 ou un import casse n'etait detecte qu'au build Docker (PR #34).
+  mcp-server-build:
+    name: Build connectors/mcp-server
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+
+      - name: Install MCP server dependencies
+        working-directory: connectors/mcp-server
+        run: npm install
+
+      - name: Lint (tsc --noEmit)
+        working-directory: connectors/mcp-server
+        run: npm run lint
+
+      - name: Build
+        working-directory: connectors/mcp-server
+        run: npm run build
+
+      - name: Tests
+        working-directory: connectors/mcp-server
+        run: npm test
+
+  # ---------------------------------------------------------------------------
   # Job 4 : Vérification format Prettier
   # ---------------------------------------------------------------------------
   format:
