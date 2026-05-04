@@ -44,6 +44,10 @@ export default defineConfig({
       include: [
         "lib/audit-flash/scoring.ts",
         "lib/content-availability.ts",
+        "lib/license/format.ts",
+        "lib/license/verify.ts",
+        "lib/license/cache.ts",
+        "lib/license/index.ts",
         "lib/marketplace/integrity.ts",
         "lib/marketplace/schema.ts",
         "lib/plans.ts",

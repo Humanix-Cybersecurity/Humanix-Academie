@@ -79,3 +79,8 @@ __pycache__/
 
 # node_modules dans workspaces nested
 **/node_modules
+
+# Cle privee Ed25519 pour licences (jamais commit)
+humanix-license-keypair.json
+*.private.pem
+
