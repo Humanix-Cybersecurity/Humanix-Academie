@@ -7,7 +7,7 @@
 //   - Desktop (lg+) : sidebar fixed slim 56px, icons-only, tooltip au hover
 //   - Mobile (< lg) : drawer plein écran déclenché par le burger de la TopBar
 //
-// Différences vs ancienne AdminNav :
+// Choix d'architecture (vs versions antérieures) :
 //   - Plus de float-left ni de hack scroll listener pour le footer
 //   - Plus de useEffect qui pose une classe sur <main>
 //   - Tooltips natifs au hover (pas de menu wide qui prend la moitié de l'écran)
@@ -111,22 +111,39 @@ export default function AdminSidebar() {
   return (
     <>
       {/* =====================================================================
-          DESKTOP — sidebar slim 56px fixed
+          DESKTOP — sidebar slim 56px qui s'agrandit à 224px au hover.
+          Pattern Notion / Mattermost / Linear : icons-only par défaut, labels
+          révélés au hover avec animation CSS fluide (200ms).
+          Le content principal reste offset de 56px (lg:pl-14 du layout) — la
+          sidebar s'élargit en overlay par-dessus, pas besoin de pousser le
+          contenu (pattern moins disruptif).
           ===================================================================== */}
       <aside
-        className="hidden lg:flex fixed top-20 left-0 bottom-0 z-30 w-14 flex-col bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-slate-800"
+        className="group hidden lg:flex fixed top-20 left-0 bottom-0 z-30 w-14 hover:w-56 flex-col bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-slate-800 transition-[width] duration-200 ease-out shadow-[2px_0_0_0_transparent] hover:shadow-[2px_0_8px_-2px_rgba(0,0,0,0.08)]"
         aria-label="Navigation console"
       >
-        <nav className="flex-1 overflow-y-auto admin-nav-scroll py-4">
+        {/* Header (visible uniquement quand expanded) */}
+        <div className="px-4 pt-4 pb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 whitespace-nowrap overflow-hidden">
+          <p className="text-[10px] uppercase tracking-widest font-bold text-accent-500 flex items-center gap-2">
+            <span aria-hidden="true">🎛</span>
+            <span>Console</span>
+          </p>
+        </div>
+
+        <nav className="flex-1 overflow-y-auto overflow-x-hidden admin-nav-scroll py-2">
           {sections.map((section, idx) => (
             <div key={section.title}>
               {idx > 0 && (
                 <div className="my-3 mx-3 border-t border-gray-100 dark:border-slate-800" aria-hidden="true" />
               )}
-              <ul className="space-y-1">
+              {/* Titre de section : visible seulement au hover */}
+              <p className="px-4 pt-1 pb-1 text-[9px] uppercase tracking-widest font-bold text-gray-400 dark:text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-150 whitespace-nowrap overflow-hidden">
+                {section.title}
+              </p>
+              <ul className="space-y-0.5">
                 {section.items.map((item) => (
                   <li key={item.href}>
-                    <SlimNavIcon item={item} active={isActive(path, item.href)} />
+                    <ExpandableNavLink item={item} active={isActive(path, item.href)} />
                   </li>
                 ))}
               </ul>
@@ -193,17 +210,21 @@ export default function AdminSidebar() {
 // Sous-composants : icône slim (desktop) + lien wide (drawer mobile)
 // =============================================================================
 
-function SlimNavIcon({ item, active }: { item: NavItem; active: boolean }) {
+/**
+ * ExpandableNavLink — icône toujours visible, label révélé quand le parent
+ * .group (l'aside) est hover. L'item actif a une barre verticale à gauche.
+ */
+function ExpandableNavLink({ item, active }: { item: NavItem; active: boolean }) {
   return (
     <Link
       href={item.href}
       aria-current={active ? "page" : undefined}
-      aria-label={item.label}
+      title={item.label}
       className={clsx(
-        "group relative mx-2 flex items-center justify-center h-10 rounded-lg transition-colors",
+        "relative mx-2 flex items-center gap-3 h-10 px-2.5 rounded-lg transition-colors overflow-hidden",
         active
           ? "bg-accent-500/10 text-accent-500 dark:bg-accent-500/15 dark:text-accent-300"
-          : "text-gray-500 hover:bg-gray-100 hover:text-primary-500 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-accent-300",
+          : "text-gray-600 hover:bg-gray-100 hover:text-primary-500 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-accent-300",
       )}
     >
       {/* Indicateur barre verticale gauche pour l'item actif */}
@@ -214,20 +235,27 @@ function SlimNavIcon({ item, active }: { item: NavItem; active: boolean }) {
         />
       )}
 
-      <span aria-hidden="true" className="text-lg">{item.icon}</span>
+      {/* Icône (toujours visible) */}
+      <span aria-hidden="true" className="text-lg shrink-0 w-5 text-center">{item.icon}</span>
 
-      {/* Tooltip au hover (rendu côté droit pour ne pas sortir du viewport) */}
-      <span
-        role="tooltip"
-        className="pointer-events-none absolute left-full ml-3 px-2.5 py-1.5 rounded-md bg-gray-900 dark:bg-slate-700 text-white text-xs font-medium whitespace-nowrap opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all shadow-lg z-50"
-      >
+      {/* Label (révélé au hover du parent .group sur l'aside) */}
+      <span className="flex-1 min-w-0 text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150 truncate">
         {item.label}
-        {item.gate && (
-          <span className="ml-1.5 inline-block px-1.5 py-px rounded-sm bg-amber-500/20 text-amber-300 text-[9px] font-bold uppercase tracking-wide">
-            {item.gate}
-          </span>
-        )}
       </span>
+
+      {/* Badge gate (révélé au hover) */}
+      {item.gate && (
+        <span
+          className={clsx(
+            "shrink-0 text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-150",
+            active
+              ? "bg-accent-500/20 text-accent-600 dark:text-accent-300"
+              : "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
+          )}
+        >
+          {item.gate}
+        </span>
+      )}
     </Link>
   );
 }
