@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page d'activation d'une invitation famille.
 // Pas de login requis. Accueil chaleureux + redirige vers /famille apres
 // activation pour laisser le proche decouvrir les articles.

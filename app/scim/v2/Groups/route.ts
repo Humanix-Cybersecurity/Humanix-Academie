@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // SCIM v2 - /Groups
 // Implementation pragmatique : un Group SCIM = un "service" Humanix (ex:
 // "Direction", "Compta", "IT"). Lecture seulement en v1 — la creation/mise

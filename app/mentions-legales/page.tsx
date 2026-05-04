@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Mentions légales — obligation LCEN art. 6-III-1
 import Link from "next/link";
 import LegalLayout, {

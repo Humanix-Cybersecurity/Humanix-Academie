@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Types SCIM v2 (RFC 7643 - Schema, RFC 7644 - Protocol).
 // Implementation pragmatique : on ne couvre que les schemas core (User, Group)
 // + une extension custom Humanix (role, service, plan).

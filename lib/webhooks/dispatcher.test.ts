@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Tests des helpers sécurité du dispatcher webhook.
 // Critique : signPayload garantit l'intégrité des évènements outbound.
 // isSafeWebhookUrl bloque les attaques SSRF (Server-Side Request Forgery).

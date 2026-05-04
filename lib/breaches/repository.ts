@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Repository Prisma + dedup + lazy refresh.
 
 import { db } from "@/lib/db";

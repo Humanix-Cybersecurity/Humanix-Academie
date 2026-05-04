@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Templates PDF des documents de reponse a incident.
 // Tous bases sur Helvetica (pas d'emojis - cf. convention etablie pour les
 // PDF dans lib/pdf-audit-flash.tsx).

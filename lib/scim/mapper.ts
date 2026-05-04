@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Mapping bidirectionnel User Prisma <-> SCIM User.
 // Les champs custom Humanix (role, service) sont exposes via une extension
 // dediee : urn:humanix:scim:schemas:extension:User:1.0

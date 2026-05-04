@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Parsers HTML/RSS robustes pour les 3 sources publiques de fuites FR.
 //
 // Chaque parser tente plusieurs URLs candidates dans l'ordre et accumule
