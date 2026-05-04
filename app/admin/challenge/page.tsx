@@ -1,36 +1,31 @@
-// Admin > Challenge : lancer ou arreter un challenge equipe temporaire
-import { redirect } from "next/navigation";
+// /admin/challenge — Cyber-Challenges (gate Pro+).
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import AdminNav from "@/components/AdminNav";
 import { getActiveChallenge, getChallengeRanking } from "@/lib/challenge";
 import StartChallengeForm from "@/components/StartChallengeForm";
 import StopChallengeButton from "@/components/StopChallengeButton";
 import PlanGate from "@/components/PlanGate";
 import { getTenantPlan, planHasFeature, FEATURE_MIN_PLAN } from "@/lib/plans";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import AdminSection from "@/components/admin/AdminSection";
+import StatusBadge from "@/components/admin/StatusBadge";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminChallengePage() {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
-  const role = (session.user as any).role;
-  if (role !== "ADMIN" && role !== "SUPERADMIN") redirect("/apprendre");
-  const tenantId = (session.user as any).tenantId as string;
+  const tenantId = (session!.user as any).tenantId as string;
 
   const plan = await getTenantPlan(tenantId);
-
-  // Gate : Challenges = Pro+
   if (!planHasFeature(plan, "challenges")) {
     return (
-      <div className="max-w-6xl mx-auto px-4 py-10">
-        <h1 className="text-3xl font-extrabold text-primary-500">Console dirigeant</h1>
-        <p className="text-gray-600 mb-6">Gestion fine de votre programme de sensibilisation cyber.</p>
-        <AdminNav />
-        <div className="mt-8">
-          <PlanGate feature="challenges" currentPlan={plan} requiredPlan={FEATURE_MIN_PLAN.challenges} />
-        </div>
-      </div>
+      <>
+        <AdminPageHeader
+          title="Cyber-Challenges"
+          description="Compétitions inter-services pour booster l'engagement de votre équipe."
+        />
+        <PlanGate feature="challenges" currentPlan={plan} requiredPlan={FEATURE_MIN_PLAN.challenges} />
+      </>
     );
   }
 
@@ -43,97 +38,103 @@ export default async function AdminChallengePage() {
   });
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-extrabold text-primary-500">Console dirigeant</h1>
-      <p className="text-gray-600 mb-6">Gestion fine de votre programme de sensibilisation cyber.</p>
+    <>
+      <AdminPageHeader
+        title="Cyber-Challenges"
+        description="Active un classement temporaire entre les services. Tes équipes vont s'affronter avec bienveillance sur les XP gagnés pendant la période."
+      />
 
-      <AdminNav />
+      <div className="space-y-6 min-w-0">
+        {active ? (
+          <article className="rounded-xl border-2 border-amber-300 dark:border-amber-700 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/15 dark:to-orange-900/15 p-5">
+            <header className="flex items-start justify-between gap-4 mb-4 flex-wrap">
+              <div className="min-w-0">
+                <StatusBadge level="warning" pill icon="⏱️">En cours</StatusBadge>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mt-2">{active.title}</h3>
+                {active.description && (
+                  <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm">{active.description}</p>
+                )}
+                <p className="text-xs text-gray-500 mt-2">
+                  Du {active.startDate.toLocaleDateString("fr-FR")} au {active.endDate.toLocaleDateString("fr-FR")}
+                </p>
+              </div>
+              <StopChallengeButton challengeId={active.id} />
+            </header>
 
-      <h2 className="text-2xl font-bold text-primary-500 mb-4">🏆 Cyber-Challenges</h2>
-
-      {active ? (
-        <div className="card mb-8 bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-400">
-          <div className="flex items-start justify-between gap-4 mb-4">
-            <div>
-              <span className="inline-block bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded-full mb-2">
-                EN COURS
-              </span>
-              <h3 className="text-2xl font-bold text-primary-500">{active.title}</h3>
-              {active.description && (
-                <p className="text-gray-600 mt-1">{active.description}</p>
-              )}
-              <p className="text-xs text-gray-500 mt-2">
-                Du {active.startDate.toLocaleDateString("fr-FR")} au{" "}
-                {active.endDate.toLocaleDateString("fr-FR")}
+            <h4 className="font-bold text-gray-900 dark:text-gray-100 mb-3 text-sm">
+              Classement par service en temps réel
+            </h4>
+            {ranking.length === 0 ? (
+              <p className="text-gray-500 dark:text-gray-400 text-sm italic py-3">
+                Personne n'a encore complété d'épisode pendant ce challenge.
               </p>
-            </div>
-            <StopChallengeButton challengeId={active.id} />
-          </div>
+            ) : (
+              <ol className="space-y-2 list-none">
+                {ranking.map((r, i) => (
+                  <li key={r.service} className="flex items-center gap-3 bg-white dark:bg-slate-900 rounded-lg p-3 border border-amber-100 dark:border-amber-900/30">
+                    <span className={`shrink-0 w-9 h-9 rounded-lg font-bold flex items-center justify-center text-sm
+                      ${i === 0 ? "bg-amber-100 text-amber-700 ring-1 ring-amber-300" :
+                        i === 1 ? "bg-gray-200 text-gray-700 dark:bg-slate-700 dark:text-gray-200" :
+                        i === 2 ? "bg-orange-100 text-orange-700" :
+                        "bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-gray-300"}`}>
+                      {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}`}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-gray-900 dark:text-gray-100 truncate">{r.service}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                        {r.participants} participant{r.participants > 1 ? "s" : ""} · {r.episodes} épisode{r.episodes > 1 ? "s" : ""} · {r.avgPerParticipant} XP/personne moy.
+                      </p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-xl font-extrabold text-accent-500 tabular-nums">{r.xp}</p>
+                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">XP totaux</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </article>
+        ) : (
+          <AdminSection
+            title="Lancer un nouveau challenge"
+            description="Active un classement temporaire entre les services de ta PME."
+          >
+            <StartChallengeForm />
+          </AdminSection>
+        )}
 
-          <h4 className="font-bold text-primary-500 mb-3">Classement par service en temps réel</h4>
-          {ranking.length === 0 ? (
-            <p className="text-gray-500 text-sm italic">Personne n'a encore complété d'épisode pendant ce challenge.</p>
-          ) : (
-            <div className="space-y-2">
-              {ranking.map((r, i) => (
-                <div key={r.service} className="flex items-center gap-3 bg-white rounded-xl p-3">
-                  <span className="text-2xl font-bold w-10">
-                    {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `${i + 1}`}
-                  </span>
-                  <div className="flex-1">
-                    <p className="font-bold text-primary-500">{r.service}</p>
-                    <p className="text-xs text-gray-500">
-                      {r.participants} participant{r.participants > 1 ? "s" : ""} · {r.episodes} épisode{r.episodes > 1 ? "s" : ""} ·{" "}
-                      {r.avgPerParticipant} XP/personne en moyenne
+        {/* Pourquoi un challenge — variant highlight */}
+        <article className="rounded-xl border border-primary-500/20 bg-primary-50/40 dark:bg-blue-900/10 p-5">
+          <h3 className="font-bold text-primary-600 dark:text-accent-300 mb-3 flex items-center gap-2">
+            <span aria-hidden="true">💡</span>
+            Pourquoi un challenge ?
+          </h3>
+          <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1.5 list-disc pl-5 leading-relaxed">
+            <li>Crée un événement marquant qui pousse à l'action.</li>
+            <li>Génère 3-5x plus d'engagement qu'une période classique.</li>
+            <li>Le classement par service évite l'humiliation individuelle.</li>
+            <li>Idéal pendant le Cybermois (octobre) ou avant un audit.</li>
+          </ul>
+        </article>
+
+        {pastChallenges.length > 0 && (
+          <AdminSection title="Historique" description={`${pastChallenges.length} challenge${pastChallenges.length > 1 ? "s" : ""} terminé${pastChallenges.length > 1 ? "s" : ""}`}>
+            <ul className="space-y-2 list-none">
+              {pastChallenges.map((c) => (
+                <li key={c.id} className="flex items-center justify-between gap-3 p-3 rounded-lg border border-gray-100 dark:border-slate-800">
+                  <div className="min-w-0">
+                    <p className="font-medium text-gray-900 dark:text-gray-100 truncate">{c.title}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                      Du {c.startDate.toLocaleDateString("fr-FR")} au {c.endDate.toLocaleDateString("fr-FR")}
                     </p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-2xl font-extrabold text-accent-500">{r.xp}</p>
-                    <p className="text-[10px] text-gray-500">XP TOTAUX</p>
-                  </div>
-                </div>
+                  <StatusBadge level="neutral" pill>Terminé</StatusBadge>
+                </li>
               ))}
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className="card mb-8">
-          <h3 className="font-bold text-primary-500 text-lg mb-2">Lancer un nouveau challenge</h3>
-          <p className="text-sm text-gray-500 mb-4">
-            Active un classement temporaire entre les services de ta PME. Tes équipes vont s'affronter (avec bienveillance !) sur les XP gagnés pendant la période.
-          </p>
-          <StartChallengeForm />
-        </div>
-      )}
-
-      <div className="card bg-primary-50 border-primary-500/20 mb-6">
-        <h3 className="font-bold text-primary-500 mb-2">💡 Pourquoi un challenge ?</h3>
-        <ul className="text-sm text-gray-700 space-y-1.5 list-disc pl-5">
-          <li>Crée un événement marquant qui pousse à l'action.</li>
-          <li>Génère 3-5x plus d'engagement qu'une période classique.</li>
-          <li>Le classement par service évite l'humiliation individuelle.</li>
-          <li>Idéal pendant le Cybermois (octobre) ou avant un audit.</li>
-        </ul>
+            </ul>
+          </AdminSection>
+        )}
       </div>
-
-      {pastChallenges.length > 0 && (
-        <>
-          <h3 className="text-lg font-bold text-primary-500 mb-3">Historique</h3>
-          <div className="space-y-2">
-            {pastChallenges.map((c) => (
-              <div key={c.id} className="card flex items-center justify-between">
-                <div>
-                  <p className="font-medium">{c.title}</p>
-                  <p className="text-xs text-gray-500">
-                    Du {c.startDate.toLocaleDateString("fr-FR")} au {c.endDate.toLocaleDateString("fr-FR")}
-                  </p>
-                </div>
-                <span className="text-xs text-gray-400 italic">Terminé</span>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-    </div>
+    </>
   );
 }

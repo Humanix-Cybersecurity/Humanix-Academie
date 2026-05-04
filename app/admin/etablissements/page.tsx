@@ -2,10 +2,8 @@
 // Gestion des sites/agences/BU rattachees au tenant racine.
 // Vue consolidee + liste des etablissements + creation d'un nouveau site.
 
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
-import AdminNav from "@/components/AdminNav";
 import { getTenantPlan } from "@/lib/plans";
 import {
   loadTenantTree,
@@ -14,56 +12,44 @@ import {
 import { createEstablishmentAction, deleteEstablishmentAction } from "./actions";
 import PlanGateGeneric from "@/components/PlanGateGeneric";
 import DeleteWithConfirmButton from "@/components/DeleteWithConfirmButton";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
 
 export const dynamic = "force-dynamic";
 
 export default async function EtablissementsPage() {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
-  const role = (session.user as any).role;
-  if (role !== "ADMIN" && role !== "SUPERADMIN") redirect("/admin");
-  const tenantId = (session.user as any).tenantId as string;
+  const tenantId = (session!.user as any).tenantId as string;
 
   const plan = await getTenantPlan(tenantId);
-  // Multi-etablissements = Pro+ (segment cabinets/franchises = upsell naturel)
   if (!["pro", "premium"].includes(plan)) {
     return (
-      <div className="max-w-5xl mx-auto px-4 py-10">
-        <h1 className="text-3xl font-extrabold text-primary-500">
-          Multi-établissements
-        </h1>
-        <p className="text-gray-600 dark:text-gray-300 mb-6">
-          Gérez plusieurs sites, agences ou BU avec consolidation au niveau direction.
-        </p>
-        <AdminNav />
+      <>
+        <AdminPageHeader
+          title="Multi-établissements"
+          description="Gérez plusieurs sites, agences ou BU avec consolidation au niveau direction."
+        />
         <PlanGateGeneric
           plan={plan}
           featureLabel="Multi-établissements"
           featureExplain="Idéal pour les cabinets multi-sites (dentaires, comptables, avocats), les franchises et les groupes avec plusieurs filiales. Une seule licence Pro pour piloter l'ensemble."
           minPlan="pro"
         />
-      </div>
+      </>
     );
   }
 
   const tree = await loadTenantTree(tenantId);
-
-  // On n'autorise pas la creation d'enfants sur un tenant qui est deja un
-  // enfant (limite 2 niveaux V1).
   const canAddChildren = !tree.root.parentTenantId;
   const stats = await buildConsolidatedStats(tenantId);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-extrabold text-primary-500">
-        Multi-établissements
-      </h1>
-      <p className="text-gray-600 dark:text-gray-300 mb-6">
-        Pilotez vos {tree.children.length + 1} établissements depuis une vue
-        unique, avec consolidation des indicateurs.
-      </p>
+    <>
+      <AdminPageHeader
+        title="Multi-établissements"
+        description={`Pilotez vos ${tree.children.length + 1} établissements depuis une vue unique, avec consolidation des indicateurs.`}
+      />
 
-      <AdminNav />
+      <div className="space-y-6 min-w-0">
 
       {/* Vue consolidee */}
       <section className="card mb-8">
@@ -249,7 +235,8 @@ export default async function EtablissementsPage() {
           </li>
         </ul>
       </section>
-    </div>
+      </div>
+    </>
   );
 }
 

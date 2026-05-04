@@ -4,7 +4,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
-import AdminNav from "@/components/AdminNav";
 import { listEmployeeTargets } from "./actions";
 import PersonalizeWizard from "./PersonalizeWizard";
 import PlanGate from "@/components/PlanGate";
@@ -27,7 +26,6 @@ export default async function PersonalizePhishingPage() {
         <h1 className="text-3xl font-extrabold text-primary-500 dark:text-accent-300">
           🤖 Phishing personnalisé IA
         </h1>
-        <AdminNav />
         <div className="mt-8">
           <PlanGate
             feature="phishing_ia"
@@ -59,7 +57,6 @@ export default async function PersonalizePhishingPage() {
         de la personne et au contexte que vous fournissez.
       </p>
 
-      <AdminNav />
 
       <div className="card mt-8 mb-6 bg-blue-50 dark:bg-blue-900/20 border-blue-200">
         <h2 className="font-bold text-primary-500 dark:text-accent-300 mb-1">

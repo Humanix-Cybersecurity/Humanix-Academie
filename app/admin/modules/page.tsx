@@ -1,18 +1,22 @@
-// Admin > Modules : activer/desactiver, reordonner, marquer obligatoire
-import { redirect } from "next/navigation";
+// =============================================================================
+// /admin/modules — Catalogue des modules pédagogiques (activer/désactiver,
+// réordonner, marquer obligatoire).
+//
+// REFONTE MAI 2026 : aligné design system Linear (PageHeader, Section).
+// =============================================================================
+
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import AdminNav from "@/components/AdminNav";
 import ModulesTable from "@/components/ModulesTable";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import AdminSection from "@/components/admin/AdminSection";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminModulesPage() {
+  // Auth garantie par app/admin/layout.tsx (defense-in-depth déjà appliquée).
   const session = await auth();
-  if (!session?.user) redirect("/demo");
-  const role = (session.user as any).role;
-  if (role !== "ADMIN" && role !== "SUPERADMIN") redirect("/apprendre");
-  const tenantId = (session.user as any).tenantId as string;
+  const tenantId = (session!.user as any).tenantId as string;
 
   // Multi-tenant : saisons globales + custom du tenant courant
   const [saisons, configs] = await Promise.all([
@@ -52,49 +56,70 @@ export default async function AdminModulesPage() {
   const mandatoryCount = enriched.filter((s) => s.isMandatory).length;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-extrabold text-primary-500">Console dirigeant</h1>
-      <p className="text-gray-600 mb-6">Gestion fine de votre programme de sensibilisation cyber.</p>
+    <>
+      <AdminPageHeader
+        title="Modules"
+        description="Gérez votre catalogue de sensibilisation : activez ce qui est pertinent, marquez les modules critiques comme obligatoires, ajustez l'ordre."
+      />
 
-      <AdminNav />
-
-      <div className="grid sm:grid-cols-3 gap-4 mb-6">
-        <Stat label="Modules totaux" value={enriched.length.toString()} />
-        <Stat label="Actifs pour mes équipes" value={activeCount.toString()} />
-        <Stat label="Obligatoires" value={mandatoryCount.toString()} />
-      </div>
-
-      <div className="card">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="font-bold text-primary-500 text-lg">Catalogue des modules</h2>
-            <p className="text-sm text-gray-500">
-              Active uniquement ce qui est pertinent pour ta PME. L'ordre détermine la séquence d'apprentissage proposée à tes équipes.
-            </p>
-          </div>
+      <div className="space-y-6 min-w-0">
+        {/* KPI strip */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <StatCard label="Modules disponibles"   value={enriched.length} />
+          <StatCard label="Actifs pour vos équipes" value={activeCount} accent="emerald" />
+          <StatCard label="Marqués obligatoires"   value={mandatoryCount} accent="amber" />
         </div>
 
-        <ModulesTable saisons={enriched} />
-      </div>
+        {/* Catalogue principal */}
+        <AdminSection
+          title="Catalogue des modules"
+          description="Active uniquement ce qui est pertinent pour ta PME. L'ordre détermine la séquence d'apprentissage proposée à tes équipes."
+        >
+          <ModulesTable saisons={enriched} />
+        </AdminSection>
 
-      <div className="mt-6 card bg-primary-50 border-primary-500/20">
-        <h3 className="font-bold text-primary-500 mb-2">💡 Bonnes pratiques</h3>
-        <ul className="text-sm text-gray-700 space-y-1.5 list-disc pl-5">
-          <li>Active 2 à 3 modules au démarrage pour éviter la surcharge cognitive.</li>
-          <li>Marque comme <strong>obligatoires</strong> les modules critiques (phishing, mots de passe).</li>
-          <li>Réorganise l'ordre selon tes priorités : commence par ce qui rapporte le plus vite (phishing).</li>
-          <li>Tu peux désactiver un module à tout moment sans perdre la progression des collaborateurs (elle est conservée).</li>
-        </ul>
+        {/* Bonnes pratiques */}
+        <article className="rounded-xl border border-primary-500/20 bg-primary-50/40 dark:bg-blue-900/10 p-5">
+          <h3 className="font-bold text-primary-600 dark:text-accent-300 mb-3 flex items-center gap-2">
+            <span aria-hidden="true">💡</span>
+            Bonnes pratiques
+          </h3>
+          <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1.5 list-disc pl-5 leading-relaxed">
+            <li>Active 2 à 3 modules au démarrage pour éviter la surcharge cognitive.</li>
+            <li>Marque comme <strong>obligatoires</strong> les modules critiques (phishing, mots de passe).</li>
+            <li>Réorganise l'ordre selon tes priorités : commence par ce qui rapporte le plus vite (phishing).</li>
+            <li>Tu peux désactiver un module à tout moment sans perdre la progression des collaborateurs (elle est conservée).</li>
+          </ul>
+        </article>
       </div>
-    </div>
+    </>
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+// =============================================================================
+// Sous-composants locaux
+// =============================================================================
+
+function StatCard({
+  label, value, accent,
+}: {
+  label: string;
+  value: number;
+  accent?: "emerald" | "amber" | "rose";
+}) {
+  const accentClass =
+    accent === "emerald" ? "text-emerald-600 dark:text-emerald-400" :
+    accent === "amber"   ? "text-amber-600 dark:text-amber-400" :
+    accent === "rose"    ? "text-rose-600 dark:text-rose-400" :
+    "text-gray-900 dark:text-gray-100";
   return (
-    <div className="card">
-      <p className="text-xs uppercase tracking-wide text-gray-500">{label}</p>
-      <p className="text-3xl font-extrabold text-primary-500 mt-1">{value}</p>
-    </div>
+    <article className="rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 min-w-0">
+      <p className="text-[10px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-bold">
+        {label}
+      </p>
+      <p className={`text-2xl sm:text-3xl font-extrabold mt-1 tabular-nums ${accentClass}`}>
+        {value}
+      </p>
+    </article>
   );
 }

@@ -3,17 +3,16 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import AdminNav from "@/components/AdminNav";
 import { shortHash } from "@/lib/marketplace/integrity";
 import type { ModulePayload } from "@/lib/marketplace/schema";
 import ModerationActions from "@/components/marketplace/ModerationActions";
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
 
 export const dynamic = "force-dynamic";
 
 export default async function ModerationDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
-  const role = (session.user as any).role;
+  const role = (session!.user as any).role;
   if (role !== "SUPERADMIN") redirect("/admin");
 
   const { id } = await params;
@@ -25,15 +24,18 @@ export default async function ModerationDetailPage({ params }: { params: Promise
   const payload = m.payload as unknown as ModulePayload;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-extrabold text-primary-500">Console dirigeant</h1>
-      <p className="text-gray-600 mb-6">Gestion fine de votre programme de sensibilisation cyber.</p>
-      <AdminNav />
+    <>
+      <AdminPageHeader
+        title="Modérer le module"
+        description={`Auteur : ${m.author.name ?? m.author.email}${m.authorOrgName ? ` (${m.authorOrgName})` : ""}`}
+        actions={
+          <Link href="/admin/moderation" className="text-sm text-gray-500 hover:text-primary-500 dark:hover:text-accent-300">
+            ← File de modération
+          </Link>
+        }
+      />
 
-      <Link href="/admin/moderation" className="text-sm text-gray-500 hover:text-primary-500 mb-3 inline-block">
-        ← File de modération
-      </Link>
-
+      <div className="space-y-4 min-w-0">
       <div className="card mb-4">
         <div className="flex items-start gap-4">
           <span className="text-5xl">{m.emoji}</span>
@@ -119,6 +121,7 @@ export default async function ModerationDetailPage({ params }: { params: Promise
         </span>
         <ModerationActions moduleId={m.id} />
       </div>
-    </div>
+      </div>
+    </>
   );
 }
