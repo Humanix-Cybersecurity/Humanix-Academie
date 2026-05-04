@@ -326,6 +326,14 @@ export default function TarifsPage() {
                 cells={["—", "—", "—", "—", "Illimité", "Illimité"]}
               />
               <FeatureRow
+                label="Vishing IA souverain 🇫🇷 (Mistral + Piper)"
+                cells={["—", "—", "—", "—", "✓", "✓"]}
+              />
+              <FeatureRow
+                label="MCP Server (agents IA Claude/Mistral/GPT)"
+                cells={["✓", "✓", "✓", "✓", "✓", "✓"]}
+              />
+              <FeatureRow
                 label="Challenges d'équipe"
                 cells={["—", "—", "—", "—", "✓", "✓"]}
               />
