@@ -15,13 +15,16 @@ export default function ScrollProgress() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (window.matchMedia) {
-      setReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+      setReducedMotion(
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+      );
     }
     const onScroll = () => {
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       const scrollHeight =
         (document.documentElement.scrollHeight || 1) - window.innerHeight;
-      const ratio = scrollHeight > 0 ? Math.min(1, scrollTop / scrollHeight) : 0;
+      const ratio =
+        scrollHeight > 0 ? Math.min(1, scrollTop / scrollHeight) : 0;
       setPct(ratio * 100);
     };
     onScroll();

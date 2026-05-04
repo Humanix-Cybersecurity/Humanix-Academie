@@ -15,7 +15,11 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 // Messages contextuels par chemin (matching prefix)
-const MESSAGES: { match: (path: string) => boolean; text: string; cta?: { label: string; href: string } }[] = [
+const MESSAGES: {
+  match: (path: string) => boolean;
+  text: string;
+  cta?: { label: string; href: string };
+}[] = [
   {
     match: (p) => p.startsWith("/audit-flash"),
     text: "5 minutes pour savoir où vous en êtes — et un PDF brandé en sortie. Promis !",

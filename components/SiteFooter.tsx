@@ -6,13 +6,22 @@
 import Image from "next/image";
 import MadeInFranceStamp from "@/components/MadeInFranceStamp";
 
-type FooterLink = { href: string; label: string; emoji?: string; external?: boolean };
+type FooterLink = {
+  href: string;
+  label: string;
+  emoji?: string;
+  external?: boolean;
+};
 
 const OUTILS_GRATUITS: FooterLink[] = [
   { href: "/audit-flash", label: "Audit Cyber gratuit (5 min)", emoji: "🎯" },
   { href: "/anecdotes", label: "Cyber-Anecdote du Lundi", emoji: "📅" },
   { href: "/cyber-meteo", label: "Cyber-météo France", emoji: "🇫🇷" },
-  { href: "/observatoire-fuites", label: "Observatoire des fuites FR", emoji: "📊" },
+  {
+    href: "/observatoire-fuites",
+    label: "Observatoire des fuites FR",
+    emoji: "📊",
+  },
   { href: "/comparatif", label: "Comparatif honnête", emoji: "⚖️" },
 ];
 
@@ -28,7 +37,11 @@ const PRODUIT: FooterLink[] = [
 
 const CONFIANCE: FooterLink[] = [
   { href: "/securite", label: "Sécurité & Conformité" },
-  { href: "/securite/rapport-audit", label: "Rapport d'audit public", emoji: "📄" },
+  {
+    href: "/securite/rapport-audit",
+    label: "Rapport d'audit public",
+    emoji: "📄",
+  },
   { href: "/accessibilite", label: "Accessibilité (RGAA)" },
   { href: "/marketplace/security", label: "Charte Marketplace" },
   { href: "/presse", label: "Espace presse", emoji: "📰" },
@@ -43,9 +56,18 @@ const LEGAL: FooterLink[] = [
 ];
 
 const CONTACT: FooterLink[] = [
-  { href: "mailto:contact@humanix-cybersecurity.fr", label: "contact@humanix-cybersecurity.fr" },
-  { href: "mailto:rgpd@humanix-cybersecurity.fr", label: "rgpd@humanix-cybersecurity.fr" },
-  { href: "mailto:support@humanix-cybersecurity.fr", label: "support@humanix-cybersecurity.fr" },
+  {
+    href: "mailto:contact@humanix-cybersecurity.fr",
+    label: "contact@humanix-cybersecurity.fr",
+  },
+  {
+    href: "mailto:rgpd@humanix-cybersecurity.fr",
+    label: "rgpd@humanix-cybersecurity.fr",
+  },
+  {
+    href: "mailto:support@humanix-cybersecurity.fr",
+    label: "support@humanix-cybersecurity.fr",
+  },
 ];
 
 function FooterColumn({
@@ -126,7 +148,11 @@ export default function SiteFooter() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-8 mb-10">
           {/* Colonne 1 : Outils gratuits (mis en avant en accent) */}
           <div className="lg:col-span-1">
-            <FooterColumn title="Outils gratuits" accent links={OUTILS_GRATUITS} />
+            <FooterColumn
+              title="Outils gratuits"
+              accent
+              links={OUTILS_GRATUITS}
+            />
           </div>
           <FooterColumn title="Produit" links={PRODUIT} />
           <FooterColumn title="Confiance" links={CONFIANCE} />
@@ -139,14 +165,21 @@ export default function SiteFooter() {
           <p className="flex items-center gap-2">
             <span aria-hidden="true">©</span>
             <span>
-              {new Date().getFullYear()} <strong className="text-primary-500 dark:text-accent-300">Humanix-Cybersecurity</strong> SASU
+              {new Date().getFullYear()}{" "}
+              <strong className="text-primary-500 dark:text-accent-300">
+                Humanix-Cybersecurity
+              </strong>{" "}
+              SASU
             </span>
             <span aria-hidden="true">·</span>
             <span className="tabular-nums">SIREN 103 901 799</span>
             <span aria-hidden="true">·</span>
             <span className="tabular-nums">TVA FR 80 103 901 799</span>
           </p>
-          <ul className="flex flex-wrap items-center gap-x-3 gap-y-1.5" aria-label="Garanties">
+          <ul
+            className="flex flex-wrap items-center gap-x-3 gap-y-1.5"
+            aria-label="Garanties"
+          >
             <li className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-50 dark:bg-slate-800 border border-primary-100 dark:border-slate-700">
               <span aria-hidden="true">🇫🇷</span>
               <span className="font-medium">Hébergé en France</span>

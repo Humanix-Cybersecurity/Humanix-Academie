@@ -38,13 +38,13 @@ python humanix_lucca_connector.py
 
 ## Mapping Lucca → Humanix
 
-| Champ Lucca | Champ Humanix (SCIM) |
-|---|---|
-| `mail` | `userName` + `emails[0].value` |
-| `firstName + lastName` | `displayName` + `name` |
-| `department.name` | `urn:humanix:...:service` |
-| `isActive` | `active` |
-| (par défaut) | `urn:humanix:...:role = LEARNER` |
+| Champ Lucca            | Champ Humanix (SCIM)             |
+| ---------------------- | -------------------------------- |
+| `mail`                 | `userName` + `emails[0].value`   |
+| `firstName + lastName` | `displayName` + `name`           |
+| `department.name`      | `urn:humanix:...:service`        |
+| `isActive`             | `active`                         |
+| (par défaut)           | `urn:humanix:...:role = LEARNER` |
 
 ## Licence
 

@@ -96,10 +96,26 @@
               "formatOptions": {
                 "thresholdsOptions": "icons",
                 "thresholdsGrid": [
-                  { "operator": "==", "thresholdValue": "compliant", "representation": "success" },
-                  { "operator": "==", "thresholdValue": "partial", "representation": "3" },
-                  { "operator": "==", "thresholdValue": "non_compliant", "representation": "error" },
-                  { "operator": "==", "thresholdValue": "not_assessed", "representation": "unknown" }
+                  {
+                    "operator": "==",
+                    "thresholdValue": "compliant",
+                    "representation": "success"
+                  },
+                  {
+                    "operator": "==",
+                    "thresholdValue": "partial",
+                    "representation": "3"
+                  },
+                  {
+                    "operator": "==",
+                    "thresholdValue": "non_compliant",
+                    "representation": "error"
+                  },
+                  {
+                    "operator": "==",
+                    "thresholdValue": "not_assessed",
+                    "representation": "unknown"
+                  }
                 ]
               }
             }

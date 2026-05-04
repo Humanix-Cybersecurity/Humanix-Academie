@@ -46,12 +46,18 @@ export default function CookieNotice() {
         <div className="flex items-start gap-3 mb-3">
           <span className="text-2xl shrink-0">🍪</span>
           <div className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
-            <p className="font-bold text-primary-500 mb-1">Cookies, version courte</p>
+            <p className="font-bold text-primary-500 mb-1">
+              Cookies, version courte
+            </p>
             <p>
-              On utilise uniquement des cookies <strong>strictement nécessaires</strong>{" "}
-              (session, sécurité, choix de thème). Pas de tracking publicitaire, pas de
-              pixels tiers, pas de revente.{" "}
-              <Link href="/cookies" className="text-accent-500 hover:underline font-medium">
+              On utilise uniquement des cookies{" "}
+              <strong>strictement nécessaires</strong> (session, sécurité, choix
+              de thème). Pas de tracking publicitaire, pas de pixels tiers, pas
+              de revente.{" "}
+              <Link
+                href="/cookies"
+                className="text-accent-500 hover:underline font-medium"
+              >
                 Voir le détail
               </Link>
             </p>

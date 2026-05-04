@@ -11,7 +11,8 @@ export const dynamic = "force-dynamic";
 export const revalidate = 3600;
 
 export const metadata = {
-  title: "Cyber-météo France — niveau d'alerte cyber national | Humanix Académie",
+  title:
+    "Cyber-météo France — niveau d'alerte cyber national | Humanix Académie",
   description:
     "Niveau d'alerte cyber national en temps réel, calculé à partir du flux officiel CERT-FR. Souverain, gratuit, hébergé en France.",
 };
@@ -26,7 +27,8 @@ export default async function CyberMeteoPage() {
           🇫🇷 Cyber-météo France
         </p>
         <h1 className="text-4xl sm:text-5xl font-extrabold text-primary-500 leading-tight mb-4">
-          Le niveau d'alerte cyber national,<br />
+          Le niveau d'alerte cyber national,
+          <br />
           <span className="text-accent-500">en temps réel</span>.
         </h1>
         <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
@@ -38,7 +40,9 @@ export default async function CyberMeteoPage() {
       <CyberMeteoCard meteo={meteo} />
 
       <section className="card mt-10">
-        <h2 className="text-2xl font-bold text-primary-500 mb-4">Comprendre les niveaux</h2>
+        <h2 className="text-2xl font-bold text-primary-500 mb-4">
+          Comprendre les niveaux
+        </h2>
         <div className="grid sm:grid-cols-2 gap-3">
           <LevelRow
             emoji="🟢"
@@ -64,15 +68,17 @@ export default async function CyberMeteoPage() {
       </section>
 
       <section className="card mt-6 bg-gray-50 dark:bg-slate-800 text-sm">
-        <h3 className="font-bold text-primary-500 mb-2">Comment c'est calculé ?</h3>
+        <h3 className="font-bold text-primary-500 mb-2">
+          Comment c'est calculé ?
+        </h3>
         <p className="text-gray-700 dark:text-gray-300 mb-2">
           Nous interrogeons toutes les heures les flux RSS officiels CERT-FR
           (alertes + avis). Le niveau est déduit de :
         </p>
         <ul className="list-disc pl-5 text-gray-700 dark:text-gray-300 space-y-1">
           <li>
-            <strong>Volume sur 7 jours</strong> — un nombre élevé d'alertes signe
-            une période chaude
+            <strong>Volume sur 7 jours</strong> — un nombre élevé d'alertes
+            signe une période chaude
           </li>
           <li>
             <strong>Pic sur 24h</strong> — déclenche un saut de niveau plus
@@ -84,9 +90,9 @@ export default async function CyberMeteoPage() {
           </li>
         </ul>
         <p className="text-gray-700 dark:text-gray-300 mt-3">
-          Les seuils sont calibrés sur les observations CERT-FR 2023-2025 :
-          ~5 alertes/semaine en steady state, 10+ = vague, 15+ ou 4+ en 24h
-          = critique.
+          Les seuils sont calibrés sur les observations CERT-FR 2023-2025 : ~5
+          alertes/semaine en steady state, 10+ = vague, 15+ ou 4+ en 24h =
+          critique.
         </p>
       </section>
 
@@ -94,8 +100,8 @@ export default async function CyberMeteoPage() {
         <h2 className="text-2xl font-extrabold mb-2">Aller plus loin</h2>
         <p className="opacity-90 mb-4 max-w-xl mx-auto">
           Cette météo est notre engagement public de transparence. Pour aller
-          au-delà : audit cyber gratuit en 5 minutes, ou démarrage d'un programme
-          de sensibilisation pour vos équipes.
+          au-delà : audit cyber gratuit en 5 minutes, ou démarrage d'un
+          programme de sensibilisation pour vos équipes.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
@@ -116,10 +122,20 @@ export default async function CyberMeteoPage() {
   );
 }
 
-function LevelRow({ emoji, title, desc }: { emoji: string; title: string; desc: string }) {
+function LevelRow({
+  emoji,
+  title,
+  desc,
+}: {
+  emoji: string;
+  title: string;
+  desc: string;
+}) {
   return (
     <div className="flex items-start gap-3 p-3 rounded-xl bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700">
-      <div className="text-2xl shrink-0" aria-hidden="true">{emoji}</div>
+      <div className="text-2xl shrink-0" aria-hidden="true">
+        {emoji}
+      </div>
       <div>
         <p className="font-bold text-primary-500">{title}</p>
         <p className="text-sm text-gray-600 dark:text-gray-300">{desc}</p>

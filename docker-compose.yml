@@ -46,7 +46,13 @@ services:
       app:
         condition: service_started
     healthcheck:
-      test: ["CMD", "sh", "-c", "wget -qO- http://localhost:8404/ | grep -q 'Statistics Report'"]
+      test:
+        [
+          "CMD",
+          "sh",
+          "-c",
+          "wget -qO- http://localhost:8404/ | grep -q 'Statistics Report'",
+        ]
       interval: 10s
       timeout: 3s
       retries: 5
@@ -116,7 +122,7 @@ services:
       DATABASE_URL: "postgresql://humanix:humanix_demo@postgres:5432/humanix?schema=public"
       AUTH_SECRET: "demo-secret-change-me-in-prod-d3m0-s3cr3t-1234567890"
       AUTH_URL: "http://localhost:80"
-      AUTH_TRUST_HOST: "true"  # Indispensable derrière un reverse proxy
+      AUTH_TRUST_HOST: "true" # Indispensable derrière un reverse proxy
       NEXT_PUBLIC_APP_URL: "http://localhost"
       NEXT_PUBLIC_APP_NAME: "HumaniX Academy"
       DEMO_MODE: "true"

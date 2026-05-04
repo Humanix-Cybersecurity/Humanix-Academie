@@ -28,13 +28,20 @@ type Props = {
 };
 
 const VARIANT_STYLES = {
-  default:   "bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800",
-  muted:     "bg-gray-50/60 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800",
-  highlight: "bg-white dark:bg-slate-900 border-accent-500/40 ring-1 ring-accent-500/10",
+  default: "bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800",
+  muted:
+    "bg-gray-50/60 dark:bg-slate-900/50 border-gray-200 dark:border-slate-800",
+  highlight:
+    "bg-white dark:bg-slate-900 border-accent-500/40 ring-1 ring-accent-500/10",
 };
 
 export default function AdminSection({
-  title, description, action, children, variant = "default", className = "",
+  title,
+  description,
+  action,
+  children,
+  variant = "default",
+  className = "",
 }: Props) {
   return (
     <section

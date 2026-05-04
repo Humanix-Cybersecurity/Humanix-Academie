@@ -9,11 +9,11 @@ réponse, et comment nous traitons les chercheurs en sécurité.
 
 ## Versions supportées
 
-| Version | Statut | Patches sécurité |
-|---|---|---|
-| `main` (en développement) | Active | Oui, immédiat |
-| `1.x` (dernière release stable) | Active | Oui, dans les 7 jours pour critique |
-| `0.x` (anciennes pre-release) | Non supportée | Non — migrer vers `1.x` |
+| Version                         | Statut        | Patches sécurité                    |
+| ------------------------------- | ------------- | ----------------------------------- |
+| `main` (en développement)       | Active        | Oui, immédiat                       |
+| `1.x` (dernière release stable) | Active        | Oui, dans les 7 jours pour critique |
+| `0.x` (anciennes pre-release)   | Non supportée | Non — migrer vers `1.x`             |
 
 Une version est supportée pendant **12 mois** après la sortie de la version
 majeure suivante. Au-delà, elle ne reçoit plus de patches sécurité — la mise
@@ -60,15 +60,15 @@ Si la clé n'est pas encore en ligne, envoie en clair à
 
 ## Notre engagement de réponse
 
-| Étape | SLA cible |
-|---|---|
-| Accusé de réception du rapport | **24 h** ouvrées |
-| Triage initial (gravité, scope) | **72 h** ouvrées |
-| Plan d'action communiqué | **7 jours** ouvrés |
-| Patch publié — Critique (CVSS ≥ 9) | **7 jours** |
-| Patch publié — Élevé (CVSS 7-8.9) | **30 jours** |
-| Patch publié — Moyen (CVSS 4-6.9) | **60 jours** |
-| Patch publié — Bas (CVSS < 4) | **prochaine release mineure** |
+| Étape                              | SLA cible                     |
+| ---------------------------------- | ----------------------------- |
+| Accusé de réception du rapport     | **24 h** ouvrées              |
+| Triage initial (gravité, scope)    | **72 h** ouvrées              |
+| Plan d'action communiqué           | **7 jours** ouvrés            |
+| Patch publié — Critique (CVSS ≥ 9) | **7 jours**                   |
+| Patch publié — Élevé (CVSS 7-8.9)  | **30 jours**                  |
+| Patch publié — Moyen (CVSS 4-6.9)  | **60 jours**                  |
+| Patch publié — Bas (CVSS < 4)      | **prochaine release mineure** |
 
 Une fois le patch livré, nous publions un **avis de sécurité** (GitHub
 Security Advisory) avec ton crédit (ou ton anonymat si tu préfères) — cf.
@@ -113,9 +113,9 @@ Nous remercions publiquement les chercheurs qui ont contribué à la sécurité
 d'Humanix. Avec ton accord, ton nom sera ajouté ici après la divulgation
 responsable du patch.
 
-| Date | Chercheur | Vulnérabilité | Sévérité |
-|---|---|---|---|
-| _En attente de la première contribution communautaire_ | | | |
+| Date                                                   | Chercheur | Vulnérabilité | Sévérité |
+| ------------------------------------------------------ | --------- | ------------- | -------- |
+| _En attente de la première contribution communautaire_ |           |               |          |
 
 ---
 
@@ -174,11 +174,11 @@ détaillées de durcissement.
 
 ## Contact
 
-| Sujet | Adresse |
-|---|---|
-| Vulnérabilité confirmée | security@humanix-cybersecurity.fr |
+| Sujet                        | Adresse                           |
+| ---------------------------- | --------------------------------- |
+| Vulnérabilité confirmée      | security@humanix-cybersecurity.fr |
 | Question sur cette politique | security@humanix-cybersecurity.fr |
-| Demande générale | contact@humanix-cybersecurity.fr |
+| Demande générale             | contact@humanix-cybersecurity.fr  |
 
 Pour discussion publique non sensible, utilise les
 [GitHub Discussions](https://github.com/humanix-cybersecurity/humanix-academie/discussions/categories/security)
@@ -186,6 +186,6 @@ catégorie Security.
 
 ---
 
-*Politique de sécurité v1.0 — Mai 2026 · Sera revue annuellement.*
+_Politique de sécurité v1.0 — Mai 2026 · Sera revue annuellement._
 
-*Humanix Cybersecurity*
+_Humanix Cybersecurity_

@@ -78,7 +78,12 @@ export type CyberscoreTenantMeta = {
 // Types de sortie — détail pédagogique pour affichage UI
 // -----------------------------------------------------------------------------
 
-export type CyberscoreLevel = "excellent" | "bon" | "correct" | "warning" | "danger";
+export type CyberscoreLevel =
+  | "excellent"
+  | "bon"
+  | "correct"
+  | "warning"
+  | "danger";
 
 export type CyberscoreBreakdown = {
   /** Score final 0-100 (clamp + arrondi) */
@@ -91,9 +96,14 @@ export type CyberscoreBreakdown = {
   raw: number;
   /** Détail des composantes positives */
   components: {
-    activation:    { score: number; max: 25; label: string; explanation: string };
-    mastery:       { score: number; max: 50; label: string; explanation: string };
-    fundamentals:  { score: number; max: 25; label: string; explanation: string };
+    activation: { score: number; max: 25; label: string; explanation: string };
+    mastery: { score: number; max: 50; label: string; explanation: string };
+    fundamentals: {
+      score: number;
+      max: 25;
+      label: string;
+      explanation: string;
+    };
   };
   /** Pénalités appliquées (vide si aucune) */
   penalties: Array<{ points: number; label: string; reason: string }>;
@@ -105,15 +115,22 @@ export type CyberscoreBreakdown = {
 
 /** Slugs des saisons considérées comme "fondamentales" pour le scoring. */
 const FUNDAMENTAL_SAISON_KEYWORDS = [
-  "phishing", "mots-de-passe", "mots de passe", "mfa",
-  "authentification", "double", "donnees", "données", "rgpd",
+  "phishing",
+  "mots-de-passe",
+  "mots de passe",
+  "mfa",
+  "authentification",
+  "double",
+  "donnees",
+  "données",
+  "rgpd",
 ];
 
 /** Nombre de jours depuis lequel un user est considéré "dormant". */
 const DORMANT_THRESHOLD_DAYS = 30;
 
 /** % seuil de dormants pour déclencher la pénalité d'inactivité. */
-const DORMANT_RATE_THRESHOLD = 0.30;
+const DORMANT_RATE_THRESHOLD = 0.3;
 
 /** % seuil de complétion en dessous duquel un service est "maillon faible". */
 const WEAK_LINK_PCT_THRESHOLD = 40;
@@ -142,9 +159,24 @@ export function computeCyberscore(
       label: "Aucune donnée",
       raw: 0,
       components: {
-        activation:   { score: 0, max: 25, label: "Activation", explanation: "Aucun siège actif." },
-        mastery:      { score: 0, max: 50, label: "Maîtrise", explanation: "Aucun siège actif." },
-        fundamentals: { score: 0, max: 25, label: "Fondamentaux", explanation: "Aucun siège actif." },
+        activation: {
+          score: 0,
+          max: 25,
+          label: "Activation",
+          explanation: "Aucun siège actif.",
+        },
+        mastery: {
+          score: 0,
+          max: 50,
+          label: "Maîtrise",
+          explanation: "Aucun siège actif.",
+        },
+        fundamentals: {
+          score: 0,
+          max: 25,
+          label: "Fondamentaux",
+          explanation: "Aucun siège actif.",
+        },
       },
       penalties: [],
     };
@@ -159,7 +191,8 @@ export function computeCyberscore(
   //    les users qui ont eu une activité dans les 30 derniers jours (recency).
   //    Logique : un user qui s'est connecté il y a 6 mois ne protège plus rien.
   const recentlyActiveCount = countRecentlyActive(team);
-  const activeRate = stats.totalSeats > 0 ? recentlyActiveCount / stats.totalSeats : 0;
+  const activeRate =
+    stats.totalSeats > 0 ? recentlyActiveCount / stats.totalSeats : 0;
   const activationScore = Math.round(activeRate * 25);
 
   // 2. MAÎTRISE CYBER (50 pts max)
@@ -192,7 +225,11 @@ export function computeCyberscore(
   // ---------------------------
   // Un service à <40% complétion est exploitable même si la moyenne est bonne.
   const weakest = findWeakestService(team);
-  if (weakest && weakest.completionPct < WEAK_LINK_PCT_THRESHOLD && weakest.size >= 2) {
+  if (
+    weakest &&
+    weakest.completionPct < WEAK_LINK_PCT_THRESHOLD &&
+    weakest.size >= 2
+  ) {
     penalties.push({
       points: 10,
       label: "Maillon faible identifié",
@@ -216,11 +253,14 @@ export function computeCyberscore(
   // -----------------------------
   // Le phishing est la #1 menace en PME. Si aucun module phishing n'a été fait,
   // -20 pts (la sévérité est volontaire).
-  const phishingSaison = saisons.find((s) =>
-    s.name.toLowerCase().includes("phishing") ||
-    s.emoji === "🎣",
+  const phishingSaison = saisons.find(
+    (s) => s.name.toLowerCase().includes("phishing") || s.emoji === "🎣",
   );
-  if (phishingSaison && phishingSaison.completed === 0 && phishingSaison.total > 0) {
+  if (
+    phishingSaison &&
+    phishingSaison.completed === 0 &&
+    phishingSaison.total > 0
+  ) {
     penalties.push({
       points: 20,
       label: "Phishing négligé",
@@ -232,7 +272,9 @@ export function computeCyberscore(
   // ------------------------------
   // <90j d'usage : pas assez de recul. Le score reflète peu de comportements.
   if (tenantMeta.createdAt) {
-    const ageDays = Math.floor((Date.now() - tenantMeta.createdAt.getTime()) / (1000 * 60 * 60 * 24));
+    const ageDays = Math.floor(
+      (Date.now() - tenantMeta.createdAt.getTime()) / (1000 * 60 * 60 * 24),
+    );
     if (ageDays < YOUNG_TENANT_DAYS_THRESHOLD) {
       penalties.push({
         points: 5,
@@ -247,7 +289,10 @@ export function computeCyberscore(
   // ========================================================================
 
   const totalPenalties = penalties.reduce((s, p) => s + p.points, 0);
-  const finalScore = Math.max(0, Math.min(100, Math.round(rawScoreCurved - totalPenalties)));
+  const finalScore = Math.max(
+    0,
+    Math.min(100, Math.round(rawScoreCurved - totalPenalties)),
+  );
 
   return {
     score: finalScore,
@@ -305,8 +350,14 @@ function isWithinDays(lastActivity: string, days: number): boolean {
   // Date FR JJ/MM/AAAA
   const dateMatch = lower.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
   if (dateMatch) {
-    const d = new Date(parseInt(dateMatch[3]), parseInt(dateMatch[2]) - 1, parseInt(dateMatch[1]));
-    const ageDays = Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24));
+    const d = new Date(
+      parseInt(dateMatch[3]),
+      parseInt(dateMatch[2]) - 1,
+      parseInt(dateMatch[1]),
+    );
+    const ageDays = Math.floor(
+      (Date.now() - d.getTime()) / (1000 * 60 * 60 * 24),
+    );
     return ageDays <= days;
   }
   return false; // format inconnu = considéré comme dormant (sécuritaire)
@@ -324,17 +375,25 @@ function findWeakestService(team: CyberscoreTeam[]): {
   if (team.length === 0) return null;
 
   // Group par service
-  const byService = new Map<string, { totalDone: number; totalPossible: number; size: number }>();
+  const byService = new Map<
+    string,
+    { totalDone: number; totalPossible: number; size: number }
+  >();
   for (const u of team) {
     const key = u.service || "—";
-    const cur = byService.get(key) ?? { totalDone: 0, totalPossible: 0, size: 0 };
+    const cur = byService.get(key) ?? {
+      totalDone: 0,
+      totalPossible: 0,
+      size: 0,
+    };
     cur.totalDone += u.episodesDone;
     cur.totalPossible += u.totalEpisodes;
     cur.size += 1;
     byService.set(key, cur);
   }
 
-  let weakest: { service: string; completionPct: number; size: number } | null = null;
+  let weakest: { service: string; completionPct: number; size: number } | null =
+    null;
   for (const [service, agg] of byService.entries()) {
     if (agg.totalPossible === 0) continue;
     const pct = Math.round((agg.totalDone / agg.totalPossible) * 100);
@@ -362,10 +421,11 @@ function computeFundamentalsScore(saisons: CyberscoreSaison[]): number {
   // mais avec un cap à 60% (puisqu'on ne peut pas vérifier les fondamentaux)
   if (fundamentals.length === 0) {
     const avg = saisons.reduce((s, sa) => s + sa.pct, 0) / saisons.length;
-    return Math.round(Math.min(60, avg) / 100 * 25);
+    return Math.round((Math.min(60, avg) / 100) * 25);
   }
 
-  const avg = fundamentals.reduce((s, sa) => s + sa.pct, 0) / fundamentals.length;
+  const avg =
+    fundamentals.reduce((s, sa) => s + sa.pct, 0) / fundamentals.length;
   return Math.round((avg / 100) * 25);
 }
 
@@ -376,8 +436,13 @@ function explainFundamentals(saisons: CyberscoreSaison[]): string {
   if (fundamentals.length === 0) {
     return `Aucune saison fondamentale identifiée (capage à 60% de la moyenne globale)`;
   }
-  const names = fundamentals.slice(0, 3).map((s) => s.name).join(" · ");
-  const avgPct = Math.round(fundamentals.reduce((s, sa) => s + sa.pct, 0) / fundamentals.length);
+  const names = fundamentals
+    .slice(0, 3)
+    .map((s) => s.name)
+    .join(" · ");
+  const avgPct = Math.round(
+    fundamentals.reduce((s, sa) => s + sa.pct, 0) / fundamentals.length,
+  );
   return `Moyenne ${avgPct}% sur ${fundamentals.length} saison(s) critique(s) : ${names}`;
 }
 

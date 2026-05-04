@@ -46,5 +46,8 @@ export async function GET(req: Request) {
     };
   });
 
-  return NextResponse.json({ data, meta: { count: data.length, tenantId: a.tenantId } });
+  return NextResponse.json({
+    data,
+    meta: { count: data.length, tenantId: a.tenantId },
+  });
 }

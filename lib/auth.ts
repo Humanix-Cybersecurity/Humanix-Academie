@@ -73,7 +73,10 @@ if (isDemoMode) {
 }
 
 // Magic link en prod
-if (process.env.RESEND_API_KEY && process.env.RESEND_API_KEY !== "demo-key-not-used-in-demo-mode") {
+if (
+  process.env.RESEND_API_KEY &&
+  process.env.RESEND_API_KEY !== "demo-key-not-used-in-demo-mode"
+) {
   providers.push(
     Resend({
       from: process.env.EMAIL_FROM!,
@@ -125,7 +128,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
 
       // Providers SSO : on exige que l'email existe en BDD avec isActive=true
-      if (account?.provider === "google" || account?.provider === "microsoft-entra-id") {
+      if (
+        account?.provider === "google" ||
+        account?.provider === "microsoft-entra-id"
+      ) {
         if (!user.email) return false;
         const existing = await db.user.findUnique({
           where: { email: user.email.toLowerCase() },
@@ -149,7 +155,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         const dbUser = await db.user.findUnique({
           where: { id: user.id as string },
-          select: { id: true, tenantId: true, role: true, name: true, isActive: true },
+          select: {
+            id: true,
+            tenantId: true,
+            role: true,
+            name: true,
+            isActive: true,
+          },
         });
         if (dbUser && dbUser.isActive) {
           token.uid = dbUser.id;

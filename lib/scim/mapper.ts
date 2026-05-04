@@ -20,10 +20,7 @@ const HUMANIX_EXT = SCIM_SCHEMAS.HUMANIX_USER;
 /**
  * Convertit un User Prisma en SCIM User pour reponse GET.
  */
-export function prismaToScim(
-  user: PrismaUser,
-  baseUrl: string,
-): ScimUser {
+export function prismaToScim(user: PrismaUser, baseUrl: string): ScimUser {
   const split = splitName(user.name);
   return {
     schemas: [SCIM_SCHEMAS.USER, HUMANIX_EXT],
@@ -71,7 +68,9 @@ export function scimToPrismaCreate(payload: unknown): {
   if (!userName) return null;
 
   // Email primaire
-  const emails = Array.isArray(p.emails) ? (p.emails as Record<string, unknown>[]) : [];
+  const emails = Array.isArray(p.emails)
+    ? (p.emails as Record<string, unknown>[])
+    : [];
   const primaryEmail = emails.find((e) => e.primary === true) ?? emails[0];
   const email =
     (primaryEmail && typeof primaryEmail.value === "string"

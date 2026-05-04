@@ -1,7 +1,7 @@
 # Contributor License Agreement — Humanix Académie Community Edition
 
 > **Version 1.0 · 4 mai 2026**
-> Inspiré du *Apache Individual Contributor License Agreement v2.0*,
+> Inspiré du _Apache Individual Contributor License Agreement v2.0_,
 > adapté en français et simplifié pour Humanix Académie Community
 > Edition. Ce document n'a pas valeur de conseil juridique. En cas de
 > doute, consultez votre propre avocat avant de signer.
@@ -53,25 +53,25 @@ de ce CLA et **pour la durée légale de protection des droits d'auteur**,
 droit de :
 
 a) **Reproduire** votre Contribution sur tout support, par tout moyen
-   technique connu ou à venir.
+technique connu ou à venir.
 
 b) **Représenter** votre Contribution publiquement (diffusion via
-   réseaux numériques, exécution sur serveurs, intégration dans tout
-   produit ou service).
+réseaux numériques, exécution sur serveurs, intégration dans tout
+produit ou service).
 
 c) **Adapter, modifier, traduire, fusionner** votre Contribution avec
-   d'autres éléments du Projet ou de futures versions.
+d'autres éléments du Projet ou de futures versions.
 
 d) **Distribuer** votre Contribution au public, sous toute forme et
-   par tout canal.
+par tout canal.
 
 e) **Sous-licencier** votre Contribution à des tiers, y compris sous
-   des termes différents de la licence d'origine du Projet (notamment
-   dans le cadre d'un éventuel dual-licensing commercial — voir §6
-   ci-dessous).
+des termes différents de la licence d'origine du Projet (notamment
+dans le cadre d'un éventuel dual-licensing commercial — voir §6
+ci-dessous).
 
 f) **Exploiter commercialement** votre Contribution, seul ou en
-   combinaison avec d'autres éléments.
+combinaison avec d'autres éléments.
 
 Cette cession est **exclusive** : vous ne pouvez pas céder ces mêmes
 droits à un tiers en parallèle. Cette cession est **transférable** :
@@ -120,19 +120,19 @@ la date d'introduction de l'action.
 Vous garantissez à Humanix-Cybersecurity que :
 
 a) **Votre Contribution est originale**, ou que vous disposez de tous
-   les droits nécessaires (notamment de votre employeur si vous
-   contribuez sur du temps de travail) pour la céder selon les termes
-   du présent CLA.
+les droits nécessaires (notamment de votre employeur si vous
+contribuez sur du temps de travail) pour la céder selon les termes
+du présent CLA.
 
 b) **Votre Contribution ne contrevient à aucun droit de tiers** (droit
-   d'auteur, brevet, marque, secret d'affaires, etc.).
+d'auteur, brevet, marque, secret d'affaires, etc.).
 
 c) **Vous n'êtes lié par aucun engagement** (avec un employeur, un
-   client, une école) qui empêcherait cette cession.
+client, une école) qui empêcherait cette cession.
 
 d) Si votre Contribution incorpore du code tiers, ce code tiers est
-   **clairement identifié** et son **utilisation est autorisée** par
-   sa licence d'origine (compatible AGPL — cf. [`docs/LICENSES_AUDIT.md`](../docs/LICENSES_AUDIT.md)).
+**clairement identifié** et son **utilisation est autorisée** par
+sa licence d'origine (compatible AGPL — cf. [`docs/LICENSES_AUDIT.md`](../docs/LICENSES_AUDIT.md)).
 
 Vous acceptez d'**indemniser et défendre** Humanix-Cybersecurity contre
 toute réclamation de tiers résultant d'une fausse déclaration de votre

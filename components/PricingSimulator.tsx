@@ -7,11 +7,17 @@ export default function PricingSimulator() {
   const [seats, setSeats] = useState(30);
   const [billing, setBilling] = useState<"monthly" | "annual">("annual");
 
-  const result = useMemo(() => calculateMonthlyPrice(seats, billing), [seats, billing]);
+  const result = useMemo(
+    () => calculateMonthlyPrice(seats, billing),
+    [seats, billing],
+  );
 
   const monthlyTotal = result.total;
   const annualTotal = monthlyTotal * 12;
-  const monthlyOnlyResult = useMemo(() => calculateMonthlyPrice(seats, "monthly"), [seats]);
+  const monthlyOnlyResult = useMemo(
+    () => calculateMonthlyPrice(seats, "monthly"),
+    [seats],
+  );
   const savingsAmount = (monthlyOnlyResult.total - monthlyTotal) * 12;
 
   return (
@@ -20,14 +26,17 @@ export default function PricingSimulator() {
         <h2 className="text-2xl font-extrabold text-primary-500 mb-1">
           🧮 Simulateur de tarif
         </h2>
-        <p className="text-gray-600 text-sm">Combien ça va te coûter exactement.</p>
+        <p className="text-gray-600 text-sm">
+          Combien ça va te coûter exactement.
+        </p>
       </div>
 
       <div className="grid sm:grid-cols-[1fr_auto_1fr] gap-6 items-center">
         {/* Slider taille équipe */}
         <div>
           <label className="text-sm font-medium text-gray-700 block mb-2">
-            Nombre de collaborateurs : <strong className="text-primary-500 text-lg">{seats}</strong>
+            Nombre de collaborateurs :{" "}
+            <strong className="text-primary-500 text-lg">{seats}</strong>
           </label>
           <input
             type="range"
@@ -50,7 +59,9 @@ export default function PricingSimulator() {
                 key={n}
                 onClick={() => setSeats(n)}
                 className={`rounded-lg py-1 transition ${
-                  seats === n ? "bg-accent-500 text-white" : "bg-white border border-gray-200 hover:border-accent-500"
+                  seats === n
+                    ? "bg-accent-500 text-white"
+                    : "bg-white border border-gray-200 hover:border-accent-500"
                 }`}
               >
                 {n}
@@ -64,7 +75,9 @@ export default function PricingSimulator() {
           <button
             onClick={() => setBilling("monthly")}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
-              billing === "monthly" ? "bg-white text-primary-500 shadow" : "text-gray-500"
+              billing === "monthly"
+                ? "bg-white text-primary-500 shadow"
+                : "text-gray-500"
             }`}
           >
             Mensuel
@@ -72,7 +85,9 @@ export default function PricingSimulator() {
           <button
             onClick={() => setBilling("annual")}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition relative ${
-              billing === "annual" ? "bg-white text-primary-500 shadow" : "text-gray-500"
+              billing === "annual"
+                ? "bg-white text-primary-500 shadow"
+                : "text-gray-500"
             }`}
           >
             Annuel
@@ -86,9 +101,16 @@ export default function PricingSimulator() {
         <div className="text-center sm:text-right">
           {result.isQuote ? (
             <>
-              <p className="text-3xl font-extrabold text-primary-500">Sur devis</p>
-              <p className="text-sm text-gray-600 mt-1">Au-delà de 250 utilisateurs, on construit ensemble.</p>
-              <a href="mailto:contact@humanix-cybersecurity.fr" className="btn-primary text-xs mt-3 inline-flex">
+              <p className="text-3xl font-extrabold text-primary-500">
+                Sur devis
+              </p>
+              <p className="text-sm text-gray-600 mt-1">
+                Au-delà de 250 utilisateurs, on construit ensemble.
+              </p>
+              <a
+                href="mailto:contact@humanix-cybersecurity.fr"
+                className="btn-primary text-xs mt-3 inline-flex"
+              >
                 Demander un devis
               </a>
             </>
@@ -99,15 +121,19 @@ export default function PricingSimulator() {
               </p>
               <p className="text-4xl sm:text-5xl font-extrabold text-primary-500 mt-1">
                 {monthlyTotal.toLocaleString("fr-FR")} €
-                <span className="text-sm text-gray-500 font-medium">/mois HT</span>
+                <span className="text-sm text-gray-500 font-medium">
+                  /mois HT
+                </span>
               </p>
               {result.tier.pricing.monthly.unit === "user" && (
                 <p className="text-xs text-gray-600">
-                  soit {result.perUser.toLocaleString("fr-FR")} €/utilisateur/mois
+                  soit {result.perUser.toLocaleString("fr-FR")}{" "}
+                  €/utilisateur/mois
                 </p>
               )}
               <p className="text-xs text-gray-500 mt-2">
-                Annuel : <strong>{annualTotal.toLocaleString("fr-FR")} €</strong> HT
+                Annuel :{" "}
+                <strong>{annualTotal.toLocaleString("fr-FR")} €</strong> HT
               </p>
               {billing === "annual" && savingsAmount > 0 && (
                 <p className="text-xs text-success font-bold mt-1">

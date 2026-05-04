@@ -43,7 +43,9 @@ const PayloadSchema = z.object({
 });
 
 function corsHeaders(origin: string | null): Record<string, string> {
-  const allow = ALLOWED_ORIGINS.includes(origin ?? "") ? origin! : "https://outlook.office.com";
+  const allow = ALLOWED_ORIGINS.includes(origin ?? "")
+    ? origin!
+    : "https://outlook.office.com";
   return {
     "access-control-allow-origin": allow,
     "access-control-allow-methods": "POST, OPTIONS",
@@ -66,7 +68,10 @@ export async function POST(req: NextRequest) {
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ error: "invalid_json" }, { status: 400, headers: cors });
+    return NextResponse.json(
+      { error: "invalid_json" },
+      { status: 400, headers: cors },
+    );
   }
   const parsed = PayloadSchema.safeParse(body);
   if (!parsed.success) {

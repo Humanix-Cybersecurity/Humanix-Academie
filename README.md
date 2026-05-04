@@ -95,16 +95,16 @@ Premier compte admin : voir le log `docker compose logs app | grep "Initial admi
 
 ## Stack technique
 
-| Couche | Technologie | Pourquoi |
-|---|---|---|
-| Front + back | **Next.js 14** (App Router) + TypeScript | SSR + API routes dans un seul process |
-| Styling | **Tailwind CSS** | Cohérence visuelle, performance, dark mode natif |
-| ORM | **Prisma** | Schema-first, type-safe, migrations propres |
-| Base | **PostgreSQL 16** | Multi-tenant scoping, indices fins, full-text |
-| Auth | **NextAuth.js v5** | SSO Google/Microsoft, magic link, RBAC |
-| Charts | **Recharts** | Composants React idiomatiques |
-| PDF | **@react-pdf/renderer** | Rapports de conformité côté serveur |
-| Container | **Docker** + Compose | Déploiement reproductible |
+| Couche       | Technologie                              | Pourquoi                                         |
+| ------------ | ---------------------------------------- | ------------------------------------------------ |
+| Front + back | **Next.js 14** (App Router) + TypeScript | SSR + API routes dans un seul process            |
+| Styling      | **Tailwind CSS**                         | Cohérence visuelle, performance, dark mode natif |
+| ORM          | **Prisma**                               | Schema-first, type-safe, migrations propres      |
+| Base         | **PostgreSQL 16**                        | Multi-tenant scoping, indices fins, full-text    |
+| Auth         | **NextAuth.js v5**                       | SSO Google/Microsoft, magic link, RBAC           |
+| Charts       | **Recharts**                             | Composants React idiomatiques                    |
+| PDF          | **@react-pdf/renderer**                  | Rapports de conformité côté serveur              |
+| Container    | **Docker** + Compose                     | Déploiement reproductible                        |
 
 ---
 
@@ -115,16 +115,16 @@ modules pédagogiques de base sont open source AGPLv3. Les modules pédagogiques
 avancés, le phishing simulé, le Pack NIS2 turnkey et le SSO entreprise sont
 proposés en cloud managé ou via une licence commerciale.
 
-| Composant | Statut |
-|---|---|
-| Plateforme Next.js (engine, dashboard, API, multi-tenant) | Open AGPLv3 (ce repo) |
-| 5 modules de base (mots de passe, MFA, phishing, sauvegarde, RGPD) | Open AGPLv3 (ce repo) |
-| Gamification engine + mascotte | Open AGPLv3 (ce repo) |
-| Connecteur CISO Assistant + format OSCAL | Open AGPLv3 (ce repo) |
-| Catalogue 30+ modules avancés | Cloud Essentielle / Pro / Enterprise |
-| Phishing simulé (templates + IA Mistral) | Cloud Pro / Enterprise |
-| Pack NIS2 turnkey complet | Cloud Pro / Enterprise |
-| SSO SAML / SCIM enterprise | Cloud Enterprise |
+| Composant                                                          | Statut                               |
+| ------------------------------------------------------------------ | ------------------------------------ |
+| Plateforme Next.js (engine, dashboard, API, multi-tenant)          | Open AGPLv3 (ce repo)                |
+| 5 modules de base (mots de passe, MFA, phishing, sauvegarde, RGPD) | Open AGPLv3 (ce repo)                |
+| Gamification engine + mascotte                                     | Open AGPLv3 (ce repo)                |
+| Connecteur CISO Assistant + format OSCAL                           | Open AGPLv3 (ce repo)                |
+| Catalogue 30+ modules avancés                                      | Cloud Essentielle / Pro / Enterprise |
+| Phishing simulé (templates + IA Mistral)                           | Cloud Pro / Enterprise               |
+| Pack NIS2 turnkey complet                                          | Cloud Pro / Enterprise               |
+| SSO SAML / SCIM enterprise                                         | Cloud Enterprise                     |
 
 Tarifs cloud : voir [humanix-cybersecurity.fr/tarifs](https://humanix-cybersecurity.fr/tarifs)
 
@@ -135,15 +135,15 @@ Tarifs cloud : voir [humanix-cybersecurity.fr/tarifs](https://humanix-cybersecur
 Humanix Académie s'inscrit dans l'écosystème open source cyber souverain
 français. Intégrations natives ou en cours :
 
-| Outil | Rôle | Statut |
-|---|---|---|
+| Outil                                                                  | Rôle                                  | Statut           |
+| ---------------------------------------------------------------------- | ------------------------------------- | ---------------- |
 | [CISO Assistant](https://github.com/intuitem/ciso-assistant-community) | GRC (gouvernance, risque, conformité) | Connecteur natif |
-| [OpenCTI](https://github.com/OpenCTI-Platform/opencti) | Threat intelligence | Roadmap Q3 2026 |
-| [Wazuh](https://github.com/wazuh/wazuh) | SIEM / détection | Format CEF |
-| [TheHive](https://github.com/TheHive-Project/TheHive) | Réponse à incident | Roadmap Q4 2026 |
-| Microsoft Sentinel | SIEM cloud | Workbook fourni |
-| Splunk | SIEM | Format HEC + SPL |
-| Sekoia.io | XDR français | Format CEF |
+| [OpenCTI](https://github.com/OpenCTI-Platform/opencti)                 | Threat intelligence                   | Roadmap Q3 2026  |
+| [Wazuh](https://github.com/wazuh/wazuh)                                | SIEM / détection                      | Format CEF       |
+| [TheHive](https://github.com/TheHive-Project/TheHive)                  | Réponse à incident                    | Roadmap Q4 2026  |
+| Microsoft Sentinel                                                     | SIEM cloud                            | Workbook fourni  |
+| Splunk                                                                 | SIEM                                  | Format HEC + SPL |
+| Sekoia.io                                                              | XDR français                          | Format CEF       |
 
 ---
 
@@ -189,6 +189,7 @@ Public License v3.0** (AGPLv3). Voir [LICENSE](./LICENSE) pour le texte
 intégral et [COPYRIGHT](./COPYRIGHT) pour la notice de copyright.
 
 **Implications principales** :
+
 - Self-host gratuit, modification interne libre
 - Si tu héberges Humanix en SaaS pour des tiers, tu dois **redistribuer le
   code source** (incluant tes modifications) sous AGPLv3
@@ -202,19 +203,20 @@ Humanix Cybersecurity propose un dual-licensing au cas par cas.
 
 ## Contact
 
-| Sujet | Adresse |
-|---|---|
-| Questions générales | [GitHub Discussions](https://github.com/humanix-cybersecurity/humanix-academie/discussions) |
-| Bugs et features | [GitHub Issues](https://github.com/humanix-cybersecurity/humanix-academie/issues) |
-| Vulnérabilités sécurité | security@humanix-cybersecurity.fr (voir [SECURITY.md](./SECURITY.md)) |
-| Commercial / partenariats | contact@humanix-cybersecurity.fr |
-| Site web | https://humanix-cybersecurity.fr |
+| Sujet                     | Adresse                                                                                     |
+| ------------------------- | ------------------------------------------------------------------------------------------- |
+| Questions générales       | [GitHub Discussions](https://github.com/humanix-cybersecurity/humanix-academie/discussions) |
+| Bugs et features          | [GitHub Issues](https://github.com/humanix-cybersecurity/humanix-academie/issues)           |
+| Vulnérabilités sécurité   | security@humanix-cybersecurity.fr (voir [SECURITY.md](./SECURITY.md))                       |
+| Commercial / partenariats | contact@humanix-cybersecurity.fr                                                            |
+| Site web                  | https://humanix-cybersecurity.fr                                                            |
 
 ---
 
 ## Remerciements
 
 Humanix Académie n'existerait pas sans :
+
 - L'écosystème **open source cyber français** : intuitem, Filigran, Centreon, OVHcloud, Scaleway
 - La communauté **CESIN, OSSIR, CEFCYS** pour le partage d'expérience
 - Tous les **dirigeants PME** qui ont accepté d'être pilotes en phase de validation
@@ -223,4 +225,4 @@ Et toi, en lisant ce README jusqu'ici. Bienvenue.
 
 ---
 
-*Made in France by [Humanix Cybersecurity](https://humanix-cybersecurity.fr)*
+_Made in France by [Humanix Cybersecurity](https://humanix-cybersecurity.fr)_

@@ -49,9 +49,15 @@ export default function MoodPicker({ currentMood }: { currentMood: string }) {
                 : "border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-accent-300 hover:bg-accent-50/50"
             } ${pending ? "opacity-60 cursor-wait" : "cursor-pointer"}`}
           >
-            <span className="text-3xl" aria-hidden="true">{m.emoji}</span>
-            <span className="text-xs font-bold text-primary-500">{m.label}</span>
-            <span className="text-[10px] text-gray-500 text-center leading-tight">{m.desc}</span>
+            <span className="text-3xl" aria-hidden="true">
+              {m.emoji}
+            </span>
+            <span className="text-xs font-bold text-primary-500">
+              {m.label}
+            </span>
+            <span className="text-[10px] text-gray-500 text-center leading-tight">
+              {m.desc}
+            </span>
           </button>
         );
       })}

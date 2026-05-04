@@ -16,9 +16,9 @@ License v3.0 (AGPLv3)**. Tu peux :
 - ✅ La modifier pour tes besoins (sans publier)
 - ✅ La forker et y contribuer
 - ⚠️ **Si tu l'héberges en SaaS pour des tiers**, tu dois redistribuer le
-   code source (incluant tes modifs) sous AGPLv3
+  code source (incluant tes modifs) sous AGPLv3
 - ❌ Tu ne peux pas l'embarquer dans un produit fermé sans nous contacter
-   pour une licence commerciale
+  pour une licence commerciale
 
 Pour 99 % des PME qui veulent juste former leurs collaborateurs en interne,
 **l'AGPL ne pose aucun problème**.
@@ -53,32 +53,33 @@ Contact : `contact@humanix-cybersecurity.fr`
 
 ### 5. Quelle est la différence entre self-host gratuit et Cloud payant ?
 
-| Critère | Self-host (Community) | Cloud (Découverte/Starter/...) |
-|---|---|---|
-| Prix | 0 € | 0 € à sur devis |
-| Installation | Tu installes (Docker ou bare-metal) | Aucune, juste signup |
-| Maintenance | Tu maintiens | Géré par Humanix |
-| Mises à jour | Manuelles | Automatiques |
-| Hébergement | Chez toi (souverain par défaut) | France garantie |
-| Support | Communautaire (Discord, GitHub) | Email/Chat selon palier |
-| Modules | 5 de base + connecteur GRC | 5 → 30+ selon palier |
-| Phishing simulé | Non inclus | Inclus dès Pro |
-| SSO entreprise | Non inclus | Inclus dès Essentielle |
-| SecNumCloud | Non | Inclus dès Enterprise |
+| Critère         | Self-host (Community)               | Cloud (Découverte/Starter/...) |
+| --------------- | ----------------------------------- | ------------------------------ |
+| Prix            | 0 €                                 | 0 € à sur devis                |
+| Installation    | Tu installes (Docker ou bare-metal) | Aucune, juste signup           |
+| Maintenance     | Tu maintiens                        | Géré par Humanix               |
+| Mises à jour    | Manuelles                           | Automatiques                   |
+| Hébergement     | Chez toi (souverain par défaut)     | France garantie                |
+| Support         | Communautaire (Discord, GitHub)     | Email/Chat selon palier        |
+| Modules         | 5 de base + connecteur GRC          | 5 → 30+ selon palier           |
+| Phishing simulé | Non inclus                          | Inclus dès Pro                 |
+| SSO entreprise  | Non inclus                          | Inclus dès Essentielle         |
+| SecNumCloud     | Non                                 | Inclus dès Enterprise          |
 
 ### 6. Quel est le coût réel du self-host ?
 
 Estimation honnête pour une PME de 30 collaborateurs sur 1 an :
 
-| Poste | Coût |
-|---|---|
-| Serveur (Scaleway DEV1-S, OVH Eco) | 6-12 €/mois = ~120 €/an |
-| Domaine + DNS | ~12 €/an |
-| Backups (S3 50 Go) | ~10 €/an |
+| Poste                               | Coût                        |
+| ----------------------------------- | --------------------------- |
+| Serveur (Scaleway DEV1-S, OVH Eco)  | 6-12 €/mois = ~120 €/an     |
+| Domaine + DNS                       | ~12 €/an                    |
+| Backups (S3 50 Go)                  | ~10 €/an                    |
 | Temps admin (install + maintenance) | 2j/an × ~600 € = 1 200 €/an |
-| **Total estimé** | **~1 350 €/an** |
+| **Total estimé**                    | **~1 350 €/an**             |
 
 Comparaison Cloud Essentielle pour 30 sièges :
+
 - 30 × 3 €/mois × 12 = **1 080 €/an** (-20 %)
 
 → Le Cloud est souvent **moins cher** que le self-host pour une PME sans
@@ -91,12 +92,12 @@ tu as une DSI déjà payée.
 
 ### 7. Combien de temps prend l'installation ?
 
-| Mode | Temps |
-|---|---|
-| Docker Compose (déjà installé) | **10-15 min** |
-| Bare-metal Node + PostgreSQL | 30-45 min |
-| Kubernetes (manifestes existants) | 1-2h |
-| Kubernetes from scratch | 1 jour |
+| Mode                              | Temps         |
+| --------------------------------- | ------------- |
+| Docker Compose (déjà installé)    | **10-15 min** |
+| Bare-metal Node + PostgreSQL      | 30-45 min     |
+| Kubernetes (manifestes existants) | 1-2h          |
+| Kubernetes from scratch           | 1 jour        |
 
 ### 8. Quels sont les prérequis matériels minimum ?
 
@@ -117,6 +118,7 @@ Cyber Famille intégré) : c'est largement suffisant.
 ### 10. Compatible avec Synology / TrueNAS / NAS ?
 
 Oui via Docker Compose. Plusieurs utilisateurs l'ont fait tourner sur :
+
 - Synology DS920+ et DS1621+
 - TrueNAS Scale (apps Docker)
 - QNAP avec Container Station
@@ -252,4 +254,4 @@ Trois options :
 
 ---
 
-*FAQ vivante — révisée à chaque release majeure.*
+_FAQ vivante — révisée à chaque release majeure._

@@ -98,15 +98,22 @@ export async function createFamilyInvite(args: {
 }): Promise<CreateInviteResult> {
   const parsed = InviteInput.safeParse(args.raw);
   if (!parsed.success) {
-    return { ok: false, error: parsed.error.issues[0]?.message ?? "Données invalides" };
+    return {
+      ok: false,
+      error: parsed.error.issues[0]?.message ?? "Données invalides",
+    };
   }
   const data = parsed.data;
 
-  const eligible = await isEligibleToInvite(args.sponsorUserId, args.sponsorTenantId);
+  const eligible = await isEligibleToInvite(
+    args.sponsorUserId,
+    args.sponsorTenantId,
+  );
   if (!eligible) {
     return {
       ok: false,
-      error: "Vous devez terminer au moins une saison complète avant de pouvoir inviter vos proches.",
+      error:
+        "Vous devez terminer au moins une saison complète avant de pouvoir inviter vos proches.",
     };
   }
 
@@ -143,7 +150,8 @@ export async function createFamilyInvite(args: {
     },
   });
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://humanix-cybersecurity.fr";
+  const appUrl =
+    process.env.NEXT_PUBLIC_APP_URL ?? "https://humanix-cybersecurity.fr";
   const redeemUrl = `${appUrl}/famille/invitation/${token}`;
 
   return { ok: true, inviteId: invite.id, token, redeemUrl };
@@ -167,7 +175,8 @@ export async function redeemInvite(args: {
     },
   });
   if (!invite) return { ok: false, error: "Invitation introuvable." };
-  if (invite.status === "REVOKED") return { ok: false, error: "Invitation révoquée." };
+  if (invite.status === "REVOKED")
+    return { ok: false, error: "Invitation révoquée." };
   if (invite.expiresAt.getTime() < Date.now()) {
     if (invite.status === "PENDING") {
       await db.familyInvite.update({

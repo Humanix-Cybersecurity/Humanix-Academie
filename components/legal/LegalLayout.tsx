@@ -27,7 +27,9 @@ export default function LegalLayout({
     <div className="bg-gradient-to-b from-primary-50/50 to-white dark:from-slate-900 dark:to-slate-950 min-h-screen">
       {/* Breadcrumb */}
       <div className="max-w-6xl mx-auto px-4 pt-6 text-xs text-gray-500 dark:text-gray-400">
-        <Link href="/" className="hover:text-primary-500">Accueil</Link>
+        <Link href="/" className="hover:text-primary-500">
+          Accueil
+        </Link>
         <span className="mx-2">/</span>
         <span className="font-medium">Documents légaux</span>
         <span className="mx-2">/</span>
@@ -42,8 +44,14 @@ export default function LegalLayout({
             <span className="inline-block bg-white/20 backdrop-blur text-white text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">
               📜 {badge}
             </span>
-            <h1 className="text-3xl sm:text-5xl font-extrabold leading-tight mb-3">{title}</h1>
-            {subtitle && <p className="text-lg sm:text-xl opacity-90 max-w-3xl mb-4">{subtitle}</p>}
+            <h1 className="text-3xl sm:text-5xl font-extrabold leading-tight mb-3">
+              {title}
+            </h1>
+            {subtitle && (
+              <p className="text-lg sm:text-xl opacity-90 max-w-3xl mb-4">
+                {subtitle}
+              </p>
+            )}
             <div className="flex flex-wrap items-center gap-3 text-sm opacity-90 mt-6">
               {version && (
                 <span className="bg-white/20 backdrop-blur rounded-full px-3 py-1 font-medium">
@@ -98,15 +106,25 @@ export default function LegalLayout({
       <div className="max-w-6xl mx-auto px-4 pb-16">
         <div className="card bg-gradient-to-br from-cyan-50 to-primary-50 dark:from-slate-800 dark:to-slate-700 border-2 border-accent-500/30 text-center">
           <p className="text-3xl mb-3">💬</p>
-          <h2 className="text-xl font-extrabold text-primary-500 mb-2">Une question sur ce document ?</h2>
+          <h2 className="text-xl font-extrabold text-primary-500 mb-2">
+            Une question sur ce document ?
+          </h2>
           <p className="text-gray-600 dark:text-gray-300 mb-5 text-sm">
-            Notre équipe répond sous 5 jours ouvrés. Pour toute demande relative à vos données personnelles, écrivez directement à notre adresse RGPD.
+            Notre équipe répond sous 5 jours ouvrés. Pour toute demande relative
+            à vos données personnelles, écrivez directement à notre adresse
+            RGPD.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <a href="mailto:contact@humanix-cybersecurity.fr" className="btn-primary text-sm py-2 px-5">
+            <a
+              href="mailto:contact@humanix-cybersecurity.fr"
+              className="btn-primary text-sm py-2 px-5"
+            >
               ✉️ contact@humanix-cybersecurity.fr
             </a>
-            <a href="mailto:rgpd@humanix-cybersecurity.fr" className="btn-secondary text-sm py-2 px-5">
+            <a
+              href="mailto:rgpd@humanix-cybersecurity.fr"
+              className="btn-secondary text-sm py-2 px-5"
+            >
               🔐 rgpd@humanix-cybersecurity.fr
             </a>
           </div>
@@ -138,7 +156,9 @@ export function LegalSection({
             {num}
           </span>
         )}
-        <h2 className="text-xl sm:text-2xl font-extrabold text-primary-500">{title}</h2>
+        <h2 className="text-xl sm:text-2xl font-extrabold text-primary-500">
+          {title}
+        </h2>
       </div>
       <div className="legal-prose">{children}</div>
     </section>
@@ -171,14 +191,23 @@ export function LegalSubsection({
 // =============================================================================
 // LegalTable : tableau stylé pour données structurées
 // =============================================================================
-export function LegalTable({ headers, rows }: { headers: string[]; rows: string[][] }) {
+export function LegalTable({
+  headers,
+  rows,
+}: {
+  headers: string[];
+  rows: string[][];
+}) {
   return (
     <div className="overflow-x-auto -mx-2 sm:mx-0 my-4">
       <table className="w-full text-sm border-collapse">
         <thead>
           <tr className="bg-primary-500 text-white">
             {headers.map((h, i) => (
-              <th key={i} className="border border-primary-600 px-3 py-2.5 text-left font-bold">
+              <th
+                key={i}
+                className="border border-primary-600 px-3 py-2.5 text-left font-bold"
+              >
                 {h}
               </th>
             ))}
@@ -188,7 +217,11 @@ export function LegalTable({ headers, rows }: { headers: string[]; rows: string[
           {rows.map((row, ri) => (
             <tr
               key={ri}
-              className={ri % 2 === 0 ? "bg-white dark:bg-slate-800" : "bg-primary-50/30 dark:bg-slate-700/30"}
+              className={
+                ri % 2 === 0
+                  ? "bg-white dark:bg-slate-800"
+                  : "bg-primary-50/30 dark:bg-slate-700/30"
+              }
             >
               {row.map((cell, ci) => (
                 <td
@@ -220,8 +253,10 @@ export function LegalHighlight({
 }) {
   const styles = {
     info: "bg-cyan-50 dark:bg-cyan-900/30 border-cyan-400 text-cyan-900 dark:text-cyan-100",
-    warning: "bg-amber-50 dark:bg-amber-900/30 border-amber-400 text-amber-900 dark:text-amber-100",
-    success: "bg-emerald-50 dark:bg-emerald-900/30 border-emerald-400 text-emerald-900 dark:text-emerald-100",
+    warning:
+      "bg-amber-50 dark:bg-amber-900/30 border-amber-400 text-amber-900 dark:text-amber-100",
+    success:
+      "bg-emerald-50 dark:bg-emerald-900/30 border-emerald-400 text-emerald-900 dark:text-emerald-100",
   };
   const defaultEmoji = { info: "ℹ️", warning: "⚠️", success: "✅" }[variant];
   return (

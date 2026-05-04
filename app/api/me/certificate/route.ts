@@ -10,7 +10,8 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   const session = await auth();
-  if (!session?.user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!session?.user)
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const userId = session.user!.id as string;
 
   const user = await db.user.findUnique({
@@ -30,7 +31,10 @@ export async function GET() {
   const averageScore =
     user.progress.length === 0
       ? 0
-      : Math.round(user.progress.reduce((s, p) => s + (p.score || 0), 0) / user.progress.length);
+      : Math.round(
+          user.progress.reduce((s, p) => s + (p.score || 0), 0) /
+            user.progress.length,
+        );
   const level = getLevel(totalXP);
 
   const buffer = await renderToBuffer(

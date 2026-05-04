@@ -10,7 +10,9 @@ export type FamilyInviteEmailContext = {
 };
 
 export function renderFamilyInviteHTML(ctx: FamilyInviteEmailContext): string {
-  const greeting = ctx.inviteeFirstName ? `Bonjour ${escapeHtml(ctx.inviteeFirstName)},` : "Bonjour,";
+  const greeting = ctx.inviteeFirstName
+    ? `Bonjour ${escapeHtml(ctx.inviteeFirstName)},`
+    : "Bonjour,";
   const personal =
     ctx.personalMessage && ctx.personalMessage.trim().length > 0
       ? `<blockquote style="margin:24px 0;padding:16px 20px;border-left:3px solid #0B3D91;background:#F8F9FA;font-style:italic;color:#333">${escapeHtml(ctx.personalMessage)}</blockquote>`
@@ -47,8 +49,12 @@ Humanix-Cybersecurity · 30340 Salindres · <a href="mailto:rgpd@humanix-cyberse
 }
 
 export function renderFamilyInviteText(ctx: FamilyInviteEmailContext): string {
-  const greeting = ctx.inviteeFirstName ? `Bonjour ${ctx.inviteeFirstName},` : "Bonjour,";
-  const personal = ctx.personalMessage ? `\n\nMessage personnel :\n"${ctx.personalMessage}"\n` : "";
+  const greeting = ctx.inviteeFirstName
+    ? `Bonjour ${ctx.inviteeFirstName},`
+    : "Bonjour,";
+  const personal = ctx.personalMessage
+    ? `\n\nMessage personnel :\n"${ctx.personalMessage}"\n`
+    : "";
   return [
     greeting,
     "",
@@ -66,7 +72,9 @@ export function renderFamilyInviteText(ctx: FamilyInviteEmailContext): string {
   ].join("\n");
 }
 
-export function buildFamilyInviteSubject(ctx: FamilyInviteEmailContext): string {
+export function buildFamilyInviteSubject(
+  ctx: FamilyInviteEmailContext,
+): string {
   return `${ctx.sponsorUserName || "Un proche"} vous offre l'accès à Cyber Famille — Humanix`;
 }
 

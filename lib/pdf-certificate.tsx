@@ -9,7 +9,14 @@
 import fs from "node:fs";
 import path from "node:path";
 import React from "react";
-import { Document, Image, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import {
+  Document,
+  Image,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+} from "@react-pdf/renderer";
 
 const COLORS = {
   primary: "#0B3D91",
@@ -26,7 +33,13 @@ const COLORS = {
 function resolveLogoPath(): string | null {
   const candidates = [
     path.join(process.cwd(), "public", "logo-humanix-academie-512.png"),
-    path.join(process.cwd(), ".next", "standalone", "public", "logo-humanix-academie-512.png"),
+    path.join(
+      process.cwd(),
+      ".next",
+      "standalone",
+      "public",
+      "logo-humanix-academie-512.png",
+    ),
     path.join(__dirname ?? "", "..", "public", "logo-humanix-academie-512.png"),
   ];
   for (const p of candidates) {
@@ -122,7 +135,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 40,
     borderBottom: `1pt solid ${COLORS.amber}`,
   },
-  body: { fontSize: 11, textAlign: "center", lineHeight: 1.6, marginBottom: 20 },
+  body: {
+    fontSize: 11,
+    textAlign: "center",
+    lineHeight: 1.6,
+    marginBottom: 20,
+  },
 
   // BLOC NIVEAU
   levelBlock: {
@@ -189,7 +207,9 @@ type Props = {
 };
 
 export function CertificateOfCompletion(props: Props) {
-  const date = props.generatedAt.toLocaleDateString("fr-FR", { dateStyle: "long" } as any);
+  const date = props.generatedAt.toLocaleDateString("fr-FR", {
+    dateStyle: "long",
+  } as any);
   const hash = computeHash(
     `${props.recipientName}-${props.tenantName}-${props.totalXP}-${props.generatedAt.toISOString()}`,
   );
@@ -208,9 +228,13 @@ export function CertificateOfCompletion(props: Props) {
             {/* Marque (sans le H stylise) */}
             <View>
               <Text style={styles.brandName}>HUMANIX ACADÉMIE</Text>
-              <Text style={styles.brandTagline}>Cybersécurité humaine pour PME</Text>
+              <Text style={styles.brandTagline}>
+                Cybersécurité humaine pour PME
+              </Text>
 
-              <Text style={styles.certificateTitle}>Certificat de Sensibilisation Cyber</Text>
+              <Text style={styles.certificateTitle}>
+                Certificat de Sensibilisation Cyber
+              </Text>
               <Text style={styles.subtitle}>
                 Programme de formation continue à la cybersécurité humaine
               </Text>
@@ -220,15 +244,18 @@ export function CertificateOfCompletion(props: Props) {
 
               <Text style={styles.body}>
                 pour la complétion de {props.totalEpisodes} module
-                {props.totalEpisodes > 1 ? "s" : ""} de sensibilisation cyber au sein de l'organisation{" "}
-                <Text style={{ fontWeight: "bold" }}>{props.tenantName}</Text>.{"\n"}
+                {props.totalEpisodes > 1 ? "s" : ""} de sensibilisation cyber au
+                sein de l'organisation{" "}
+                <Text style={{ fontWeight: "bold" }}>{props.tenantName}</Text>.
+                {"\n"}
                 Score moyen obtenu : {props.averageScore} / 100.
               </Text>
 
               <View style={styles.levelBlock}>
                 <Text style={styles.levelLabel}>Niveau atteint :</Text>
                 <Text style={styles.levelValue}>
-                  Niveau {props.levelId} · {props.levelName} · {props.totalXP} XP
+                  Niveau {props.levelId} · {props.levelName} · {props.totalXP}{" "}
+                  XP
                 </Text>
               </View>
             </View>
@@ -242,14 +269,16 @@ export function CertificateOfCompletion(props: Props) {
                 </View>
                 <View style={styles.signatureBlockRight}>
                   <Text style={styles.signatureLine}>Validé par</Text>
-                  <Text style={styles.signatureName}>Humanix-Cybersecurity</Text>
+                  <Text style={styles.signatureName}>
+                    Humanix-Cybersecurity
+                  </Text>
                   <Text style={styles.hash}>SIGNATURE : {hash}</Text>
                 </View>
               </View>
               <Text style={styles.legalNote}>
-                Ce certificat atteste de l'engagement de la personne nommée dans un programme de
-                sensibilisation cyber. Il ne se substitue pas à une certification professionnelle de
-                cybersécurité.
+                Ce certificat atteste de l'engagement de la personne nommée dans
+                un programme de sensibilisation cyber. Il ne se substitue pas à
+                une certification professionnelle de cybersécurité.
               </Text>
             </View>
           </View>

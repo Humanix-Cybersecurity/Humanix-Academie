@@ -33,7 +33,13 @@ export type EmployeeTarget = {
 export type CampaignContext = {
   recentEvent?: string; // Ex: "CSE du 15 mai", "Seminaire Lyon", "Lancement produit X"
   attackerStyle?: "urgent" | "amical" | "autoritaire" | "discret";
-  template: "fake-microsoft" | "fake-fournisseur" | "fake-rh" | "fake-banque" | "fake-livreur" | "free";
+  template:
+    | "fake-microsoft"
+    | "fake-fournisseur"
+    | "fake-rh"
+    | "fake-banque"
+    | "fake-livreur"
+    | "free";
   difficulty: "easy" | "medium" | "hard";
 };
 
@@ -53,7 +59,10 @@ export type BatchProgress = {
   current?: string;
 };
 
-const STYLE_HINTS: Record<NonNullable<CampaignContext["attackerStyle"]>, string> = {
+const STYLE_HINTS: Record<
+  NonNullable<CampaignContext["attackerStyle"]>,
+  string
+> = {
   urgent:
     "Ton URGENT et pressant. L'expediteur insiste sur la deadline immediate.",
   amical:
@@ -76,7 +85,10 @@ export async function generateBatch(
   targets: EmployeeTarget[],
   ctx: CampaignContext,
   onProgress?: (p: BatchProgress) => void,
-): Promise<{ results: PersonalizedPhishing[]; errors: { target: EmployeeTarget; message: string }[] }> {
+): Promise<{
+  results: PersonalizedPhishing[];
+  errors: { target: EmployeeTarget; message: string }[];
+}> {
   const results: PersonalizedPhishing[] = [];
   const errors: { target: EmployeeTarget; message: string }[] = [];
 
@@ -126,7 +138,8 @@ async function generateOne(
   // Construit un prompt contextuel SANS leak de PII reel :
   // on ne passe pas le nom de la personne, juste son service.
   const contextBits: string[] = [];
-  if (ctx.recentEvent) contextBits.push(`Évènement à mentionner : ${ctx.recentEvent}.`);
+  if (ctx.recentEvent)
+    contextBits.push(`Évènement à mentionner : ${ctx.recentEvent}.`);
   if (ctx.attackerStyle) contextBits.push(STYLE_HINTS[ctx.attackerStyle]);
 
   const generated = await generatePhishing({
@@ -141,7 +154,9 @@ async function generateOne(
     targetEmail: target.email,
     targetService: target.service,
     generated,
-    promptHash: hashId(`${target.id}|${ctx.template}|${ctx.difficulty}|${ctx.recentEvent ?? ""}`),
+    promptHash: hashId(
+      `${target.id}|${ctx.template}|${ctx.difficulty}|${ctx.recentEvent ?? ""}`,
+    ),
     generatedAt: new Date().toISOString(),
   };
 }

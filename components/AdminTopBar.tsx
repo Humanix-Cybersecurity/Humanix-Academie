@@ -52,8 +52,11 @@ function buildBreadcrumb(pathname: string): { label: string; href: string }[] {
   for (const seg of segments) {
     currentHref += `/${seg}`;
     // Skip les segments dynamiques [id] qui sont en réalité des UUIDs/slugs
-    const label = SEGMENT_LABELS[seg]
-      ?? (seg.length > 20 ? seg.slice(0, 8) + "…" : seg.charAt(0).toUpperCase() + seg.slice(1));
+    const label =
+      SEGMENT_LABELS[seg] ??
+      (seg.length > 20
+        ? seg.slice(0, 8) + "…"
+        : seg.charAt(0).toUpperCase() + seg.slice(1));
     items.push({ label, href: currentHref });
   }
   // Sur /admin pur, on ajoute "Tableau de bord" implicite
@@ -88,7 +91,9 @@ export default function AdminTopBar(_props: Props) {
         className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-600 dark:text-gray-300"
         aria-label="Ouvrir le menu"
       >
-        <span aria-hidden="true" className="text-lg">☰</span>
+        <span aria-hidden="true" className="text-lg">
+          ☰
+        </span>
       </button>
 
       {/* Breadcrumb — seul élément utile de cette barre */}
@@ -103,13 +108,19 @@ export default function AdminTopBar(_props: Props) {
 
 function Breadcrumb({ items }: { items: { label: string; href: string }[] }) {
   return (
-    <nav aria-label="Fil d'Ariane" className="flex items-center gap-1.5 text-sm min-w-0 overflow-hidden">
+    <nav
+      aria-label="Fil d'Ariane"
+      className="flex items-center gap-1.5 text-sm min-w-0 overflow-hidden"
+    >
       {items.map((item, i) => {
         const isLast = i === items.length - 1;
         return (
           <span key={item.href} className="flex items-center gap-1.5 min-w-0">
             {i > 0 && (
-              <span aria-hidden="true" className="text-gray-300 dark:text-slate-600 shrink-0">
+              <span
+                aria-hidden="true"
+                className="text-gray-300 dark:text-slate-600 shrink-0"
+              >
                 /
               </span>
             )}

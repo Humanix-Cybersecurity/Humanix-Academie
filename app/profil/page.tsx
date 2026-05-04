@@ -3,7 +3,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import HexMascotEvolved, { LevelProgressBar } from "@/components/HexMascotEvolved";
+import HexMascotEvolved, {
+  LevelProgressBar,
+} from "@/components/HexMascotEvolved";
 import RiskScoreCard from "@/components/RiskScoreCard";
 import AnecdoteSubscribeForm from "@/components/AnecdoteSubscribeForm";
 import { getLevel } from "@/lib/levels";
@@ -38,12 +40,18 @@ export default async function ProfilPage() {
   const risk = await computeRiskScore(userId);
 
   const totalXP = user.progress.reduce((s, p) => s + (p.score || 0), 0);
-  const completedCount = user.progress.filter((p) => p.status === "COMPLETED").length;
-  const totalEpisodes = await db.episode.count({ where: { isPublished: true } });
+  const completedCount = user.progress.filter(
+    (p) => p.status === "COMPLETED",
+  ).length;
+  const totalEpisodes = await db.episode.count({
+    where: { isPublished: true },
+  });
   const level = getLevel(totalXP);
 
   // Streak
-  const completedDates = user.progress.filter((p) => p.completedAt).map((p) => p.completedAt!);
+  const completedDates = user.progress
+    .filter((p) => p.completedAt)
+    .map((p) => p.completedAt!);
   const streak = computeStreak(completedDates);
 
   // Etat d'abonnement a la newsletter Cyber-Anecdote du Lundi
@@ -55,19 +63,28 @@ export default async function ProfilPage() {
 
   // Categorisation : parfait (>=70%) / a ameliorer (<70%)
   const PERFECT_THRESHOLD = 70;
-  const perfectEpisodes = user.progress.filter((p) => p.status === "COMPLETED" && (p.score ?? 0) >= PERFECT_THRESHOLD);
-  const toImproveEpisodes = user.progress.filter((p) => p.status === "COMPLETED" && (p.score ?? 0) < PERFECT_THRESHOLD);
+  const perfectEpisodes = user.progress.filter(
+    (p) => p.status === "COMPLETED" && (p.score ?? 0) >= PERFECT_THRESHOLD,
+  );
+  const toImproveEpisodes = user.progress.filter(
+    (p) => p.status === "COMPLETED" && (p.score ?? 0) < PERFECT_THRESHOLD,
+  );
 
   // Top 3 meilleurs scores
-  const topScores = [...perfectEpisodes].sort((a, b) => (b.score ?? 0) - (a.score ?? 0)).slice(0, 3);
+  const topScores = [...perfectEpisodes]
+    .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
+    .slice(0, 3);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 sm:py-12 animate-fadeIn">
       <div className="flex items-center justify-between mb-8 gap-4 flex-wrap">
         <div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-primary-500 mb-1">Mon profil</h1>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-primary-500 mb-1">
+            Mon profil
+          </h1>
           <p className="text-gray-600">
-            Bilan de ta progression cyber. Rejoue les épisodes que tu peux améliorer.
+            Bilan de ta progression cyber. Rejoue les épisodes que tu peux
+            améliorer.
           </p>
         </div>
         {user.progress.length > 0 && (
@@ -82,7 +99,9 @@ export default async function ProfilPage() {
       </div>
 
       {/* Hero card : Mascot + Niveau + XP */}
-      <div className={`card mb-8 bg-gradient-to-br ${level.bgGradient} border-2 ${level.ringColor.replace("ring-", "border-")}`}>
+      <div
+        className={`card mb-8 bg-gradient-to-br ${level.bgGradient} border-2 ${level.ringColor.replace("ring-", "border-")}`}
+      >
         <div className="grid sm:grid-cols-[auto_1fr] gap-8 items-center">
           <div className="flex flex-col items-center gap-2">
             <HexMascotEvolved
@@ -95,7 +114,10 @@ export default async function ProfilPage() {
               species={user.mascotSpecies}
               customEmoji={user.mascotEmojiCustom}
             />
-            <Link href="/profil/mascotte" className="text-xs text-accent-500 hover:text-accent-600 font-medium underline">
+            <Link
+              href="/profil/mascotte"
+              className="text-xs text-accent-500 hover:text-accent-600 font-medium underline"
+            >
               🎭 Changer de mascotte
             </Link>
           </div>
@@ -119,9 +141,17 @@ export default async function ProfilPage() {
             {/* Stats inline */}
             <div className="grid grid-cols-4 gap-3 mt-6">
               <MiniStat emoji="⚡" value={totalXP.toString()} label="XP" />
-              <MiniStat emoji="🪙" value={user.coins.toString()} label="coins" />
+              <MiniStat
+                emoji="🪙"
+                value={user.coins.toString()}
+                label="coins"
+              />
               <MiniStat emoji="🔥" value={streak.toString()} label="streak" />
-              <MiniStat emoji="✓" value={`${completedCount}/${totalEpisodes}`} label="épisodes" />
+              <MiniStat
+                emoji="✓"
+                value={`${completedCount}/${totalEpisodes}`}
+                label="épisodes"
+              />
             </div>
           </div>
         </div>
@@ -176,7 +206,9 @@ export default async function ProfilPage() {
             <h2 className="text-2xl font-bold text-primary-500">
               🎯 À améliorer ({toImproveEpisodes.length})
             </h2>
-            <span className="text-sm text-gray-500">Score &lt; {PERFECT_THRESHOLD}%</span>
+            <span className="text-sm text-gray-500">
+              Score &lt; {PERFECT_THRESHOLD}%
+            </span>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {toImproveEpisodes.map((p) => (
@@ -189,7 +221,9 @@ export default async function ProfilPage() {
       {/* Top 3 réussites */}
       {topScores.length > 0 && (
         <section className="mb-10">
-          <h2 className="text-2xl font-bold text-primary-500 mb-4">🏆 Mes meilleures réussites</h2>
+          <h2 className="text-2xl font-bold text-primary-500 mb-4">
+            🏆 Mes meilleures réussites
+          </h2>
           <div className="grid sm:grid-cols-3 gap-4">
             {topScores.map((p, i) => (
               <div key={p.id} className="card relative overflow-hidden">
@@ -198,8 +232,12 @@ export default async function ProfilPage() {
                 </span>
                 <p className="text-3xl mb-1">{p.saison.coverEmoji}</p>
                 <p className="text-xs text-gray-500 mb-1">{p.saison.title}</p>
-                <p className="font-bold text-primary-500 mb-2">{p.episode.title}</p>
-                <p className="text-2xl font-extrabold text-success">{p.score} XP</p>
+                <p className="font-bold text-primary-500 mb-2">
+                  {p.episode.title}
+                </p>
+                <p className="text-2xl font-extrabold text-success">
+                  {p.score} XP
+                </p>
               </div>
             ))}
           </div>
@@ -214,8 +252,12 @@ export default async function ProfilPage() {
         {user.progress.length === 0 ? (
           <div className="card text-center py-12">
             <p className="text-6xl mb-4">📖</p>
-            <p className="text-gray-500 mb-4">Tu n'as encore complété aucun épisode.</p>
-            <Link href="/apprendre" className="btn-primary">Commencer ma première saison →</Link>
+            <p className="text-gray-500 mb-4">
+              Tu n'as encore complété aucun épisode.
+            </p>
+            <Link href="/apprendre" className="btn-primary">
+              Commencer ma première saison →
+            </Link>
           </div>
         ) : (
           <div className="card overflow-x-auto">
@@ -234,13 +276,18 @@ export default async function ProfilPage() {
                   const score = p.score ?? 0;
                   const perfect = score >= PERFECT_THRESHOLD;
                   return (
-                    <tr key={p.id} className="border-b last:border-0 hover:bg-primary-50/50 transition">
+                    <tr
+                      key={p.id}
+                      className="border-b last:border-0 hover:bg-primary-50/50 transition"
+                    >
                       <td className="py-3 font-medium">{p.episode.title}</td>
                       <td className="py-3 text-gray-600">
                         {p.saison.coverEmoji} {p.saison.title}
                       </td>
                       <td className="py-3">
-                        <span className={`font-bold ${perfect ? "text-success" : "text-amber-600"}`}>
+                        <span
+                          className={`font-bold ${perfect ? "text-success" : "text-amber-600"}`}
+                        >
                           {score} XP
                         </span>
                         {perfect && <span className="ml-1 text-xs">✓</span>}
@@ -282,7 +329,9 @@ function ImproveCard({ progress }: { progress: any }) {
         </span>
       </div>
       <p className="text-xs text-gray-500 mb-1">{progress.saison.title}</p>
-      <h3 className="font-bold text-primary-500 mb-3">{progress.episode.title}</h3>
+      <h3 className="font-bold text-primary-500 mb-3">
+        {progress.episode.title}
+      </h3>
       <div className="text-sm text-accent-500 font-bold flex items-center gap-1">
         Refaire pour améliorer →
       </div>
@@ -290,7 +339,15 @@ function ImproveCard({ progress }: { progress: any }) {
   );
 }
 
-function MiniStat({ emoji, value, label }: { emoji: string; value: string; label: string }) {
+function MiniStat({
+  emoji,
+  value,
+  label,
+}: {
+  emoji: string;
+  value: string;
+  label: string;
+}) {
   return (
     <div className="bg-white/70 rounded-xl p-3 text-center">
       <p className="text-lg">{emoji}</p>

@@ -44,14 +44,19 @@ export default function AuditFlashPage() {
 
         <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-600 dark:text-gray-300 mb-2">
           <span className="flex items-center gap-1">⏱ 5 minutes</span>
-          <span className="flex items-center gap-1">📄 Rapport PDF immédiat</span>
+          <span className="flex items-center gap-1">
+            📄 Rapport PDF immédiat
+          </span>
           <span className="flex items-center gap-1">🇫🇷 100 % français</span>
           <span className="flex items-center gap-1">🛡 RGPD-compliant</span>
         </div>
       </section>
 
       {/* Wizard */}
-      <section className="max-w-5xl mx-auto px-4 pb-16" aria-label="Quiz audit cyber">
+      <section
+        className="max-w-5xl mx-auto px-4 pb-16"
+        aria-label="Quiz audit cyber"
+      >
         <AuditWizard />
       </section>
 
@@ -99,9 +104,10 @@ export default function AuditFlashPage() {
           </h2>
           <ul className="space-y-3 text-gray-700 dark:text-gray-200">
             <TrustItem>
-              <strong>Conçu pour les PME françaises.</strong> Pas un copier-coller
-              d'un questionnaire ISO 27001 inadapté à votre réalité. Chaque
-              question vise un risque concret pour votre TPE / PME.
+              <strong>Conçu pour les PME françaises.</strong> Pas un
+              copier-coller d'un questionnaire ISO 27001 inadapté à votre
+              réalité. Chaque question vise un risque concret pour votre TPE /
+              PME.
             </TrustItem>
             <TrustItem>
               <strong>Aligné sur la réalité 2026.</strong> Inclut la conformité
@@ -114,8 +120,8 @@ export default function AuditFlashPage() {
               vous qui nous écrivez.
             </TrustItem>
             <TrustItem>
-              <strong>Vos données sont en sécurité.</strong> Hébergées en France,
-              jamais revendues, supprimables sur demande à{" "}
+              <strong>Vos données sont en sécurité.</strong> Hébergées en
+              France, jamais revendues, supprimables sur demande à{" "}
               <a
                 href="mailto:rgpd@humanix-cybersecurity.fr"
                 className="text-accent-500 hover:underline"
@@ -149,8 +155,8 @@ export default function AuditFlashPage() {
             <p>
               Chaque question est pondérée selon sa criticité (1 à 3 points).
               Une réponse "OUI" rapporte les points, "NON" et "Je ne sais pas"
-              ne rapportent rien — en cybersécurité, ne pas savoir équivaut à
-              ne pas faire.
+              ne rapportent rien — en cybersécurité, ne pas savoir équivaut à ne
+              pas faire.
             </p>
             <p>
               Le score final est un pourcentage entre 0 et 100. Verdict

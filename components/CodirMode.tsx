@@ -33,12 +33,13 @@ export type CodirModeProps = {
   tenantName: string;
 };
 
-const VERDICT_TEXT_COLOR: Record<CodirModeProps["scoreVerdictColor"], string> = {
-  green: "text-green-600",
-  amber: "text-amber-500",
-  orange: "text-orange-600",
-  red: "text-red-600",
-};
+const VERDICT_TEXT_COLOR: Record<CodirModeProps["scoreVerdictColor"], string> =
+  {
+    green: "text-green-600",
+    amber: "text-amber-500",
+    orange: "text-orange-600",
+    red: "text-red-600",
+  };
 
 const VERDICT_BG: Record<CodirModeProps["scoreVerdictColor"], string> = {
   green: "bg-green-50 border-green-300",
@@ -163,7 +164,8 @@ export default function CodirMode(props: CodirModeProps) {
                   <span className="text-3xl text-red-400 ml-1">€</span>
                 </p>
                 <p className="text-sm text-gray-700 mt-3">
-                  Probabilité d'incident : <strong>{props.incidentProbabilityPct} %</strong>
+                  Probabilité d'incident :{" "}
+                  <strong>{props.incidentProbabilityPct} %</strong>
                 </p>
                 <p className="text-xs text-gray-500 mt-1">
                   Sources : ANSSI 2024, baromètre Hiscox 2023
@@ -179,7 +181,10 @@ export default function CodirMode(props: CodirModeProps) {
                   ×{props.roiMultiplier}
                 </p>
                 <p className="text-sm text-gray-700 mt-3">
-                  Économie estimée : <strong>{props.estimatedAnnualSaving.toLocaleString("fr-FR")} €/an</strong>
+                  Économie estimée :{" "}
+                  <strong>
+                    {props.estimatedAnnualSaving.toLocaleString("fr-FR")} €/an
+                  </strong>
                 </p>
               </div>
             </div>

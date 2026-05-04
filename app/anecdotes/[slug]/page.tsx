@@ -7,14 +7,45 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import AnecdoteSubscribeForm from "@/components/AnecdoteSubscribeForm";
 
-const CATEGORY_BADGES: Record<string, { label: string; emoji: string; color: string }> = {
-  RANSOMWARE: { label: "Rançongiciel", emoji: "🔒", color: "bg-red-100 text-red-700" },
-  PHISHING: { label: "Phishing", emoji: "🎣", color: "bg-orange-100 text-orange-700" },
-  FRAUDE: { label: "Fraude", emoji: "💸", color: "bg-purple-100 text-purple-700" },
-  DATA_LEAK: { label: "Fuite", emoji: "📤", color: "bg-blue-100 text-blue-700" },
-  SUPPLY_CHAIN: { label: "Supply chain", emoji: "🔗", color: "bg-teal-100 text-teal-700" },
-  HACKTIVISME: { label: "Hacktivisme", emoji: "🚩", color: "bg-amber-100 text-amber-700" },
-  IA_ABUS: { label: "Abus IA", emoji: "🤖", color: "bg-violet-100 text-violet-700" },
+const CATEGORY_BADGES: Record<
+  string,
+  { label: string; emoji: string; color: string }
+> = {
+  RANSOMWARE: {
+    label: "Rançongiciel",
+    emoji: "🔒",
+    color: "bg-red-100 text-red-700",
+  },
+  PHISHING: {
+    label: "Phishing",
+    emoji: "🎣",
+    color: "bg-orange-100 text-orange-700",
+  },
+  FRAUDE: {
+    label: "Fraude",
+    emoji: "💸",
+    color: "bg-purple-100 text-purple-700",
+  },
+  DATA_LEAK: {
+    label: "Fuite",
+    emoji: "📤",
+    color: "bg-blue-100 text-blue-700",
+  },
+  SUPPLY_CHAIN: {
+    label: "Supply chain",
+    emoji: "🔗",
+    color: "bg-teal-100 text-teal-700",
+  },
+  HACKTIVISME: {
+    label: "Hacktivisme",
+    emoji: "🚩",
+    color: "bg-amber-100 text-amber-700",
+  },
+  IA_ABUS: {
+    label: "Abus IA",
+    emoji: "🤖",
+    color: "bg-violet-100 text-violet-700",
+  },
   AUTRE: { label: "Cyber", emoji: "🛡", color: "bg-gray-100 text-gray-700" },
 };
 
@@ -67,7 +98,9 @@ export default async function AnecdoteDetailPage({
             </Link>
           </p>
           <div className="flex items-center gap-2 flex-wrap mb-3">
-            <span className={`text-xs font-bold px-2 py-1 rounded ${badge.color}`}>
+            <span
+              className={`text-xs font-bold px-2 py-1 rounded ${badge.color}`}
+            >
               {badge.emoji} {badge.label}
             </span>
             <span className="text-xs text-gray-500 dark:text-gray-400">

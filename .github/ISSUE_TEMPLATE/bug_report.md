@@ -39,14 +39,14 @@ Si applicable, ajoute des captures d'écran pour expliquer le problème.
 
 ## Environnement
 
-| Item | Valeur |
-|---|---|
-| Version Humanix | (ex: `v1.0.0` ou commit hash) |
-| Mode de déploiement | (ex: Docker Compose, bare-metal, Kubernetes) |
-| OS hôte | (ex: Ubuntu 24.04 LTS, macOS 14.5) |
-| Version Node.js | (`node --version`) |
-| Version PostgreSQL | (`psql --version`) |
-| Navigateur (si bug UI) | (ex: Firefox 138, Chrome 134) |
+| Item                   | Valeur                                       |
+| ---------------------- | -------------------------------------------- |
+| Version Humanix        | (ex: `v1.0.0` ou commit hash)                |
+| Mode de déploiement    | (ex: Docker Compose, bare-metal, Kubernetes) |
+| OS hôte                | (ex: Ubuntu 24.04 LTS, macOS 14.5)           |
+| Version Node.js        | (`node --version`)                           |
+| Version PostgreSQL     | (`psql --version`)                           |
+| Navigateur (si bug UI) | (ex: Firefox 138, Chrome 134)                |
 
 ## Logs pertinents
 

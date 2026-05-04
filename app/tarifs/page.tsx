@@ -25,12 +25,16 @@ export default function TarifsPage() {
           Open Source · Souverain · Pour PME
         </p>
         <h1 className="text-4xl sm:text-5xl font-extrabold text-primary-500 leading-tight mb-4">
-          La cybersécurité accessible.<br />
-          <span className="text-accent-500">Self-host gratuit ou cloud à partir de 0 €.</span>
+          La cybersécurité accessible.
+          <br />
+          <span className="text-accent-500">
+            Self-host gratuit ou cloud à partir de 0 €.
+          </span>
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
-          Plateforme libre AGPLv3, hébergement souverain France, intégration native CISO Assistant.
-          Pas de tarif à 4 chiffres. Pas d'engagement piège. Pas de jargon.
+          Plateforme libre AGPLv3, hébergement souverain France, intégration
+          native CISO Assistant. Pas de tarif à 4 chiffres. Pas d'engagement
+          piège. Pas de jargon.
         </p>
         <div className="flex flex-wrap justify-center gap-2 text-xs">
           <Trust>🇫🇷 Code open source AGPL</Trust>
@@ -47,16 +51,23 @@ export default function TarifsPage() {
       <section className="mb-12" aria-labelledby="audit-cta-title">
         <div className="rounded-3xl bg-gradient-to-br from-accent-500 to-primary-500 text-white p-6 sm:p-10 shadow-xl">
           <div className="flex flex-col sm:flex-row items-center gap-6">
-            <div className="text-6xl" aria-hidden="true">🎯</div>
+            <div className="text-6xl" aria-hidden="true">
+              🎯
+            </div>
             <div className="flex-1 text-center sm:text-left">
               <p className="text-xs uppercase tracking-widest opacity-80 font-bold mb-1">
                 100 % gratuit · 5 minutes
               </p>
-              <h2 id="audit-cta-title" className="text-2xl sm:text-3xl font-extrabold mb-2">
+              <h2
+                id="audit-cta-title"
+                className="text-2xl sm:text-3xl font-extrabold mb-2"
+              >
                 Pas sûr de l'offre qu'il vous faut ?
               </h2>
               <p className="opacity-90 mb-4">
-                Faites notre <strong>audit cyber flash</strong> : 15 questions, un rapport PDF avec votre score et notre recommandation personnalisée.
+                Faites notre <strong>audit cyber flash</strong> : 15 questions,
+                un rapport PDF avec votre score et notre recommandation
+                personnalisée.
               </p>
               <Link
                 href="/audit-flash"
@@ -87,9 +98,12 @@ export default function TarifsPage() {
           ===================================================================== */}
       <section className="mb-16">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-extrabold text-primary-500 mb-2">Choisis ton offre</h2>
+          <h2 className="text-3xl font-extrabold text-primary-500 mb-2">
+            Choisis ton offre
+          </h2>
           <p className="text-gray-600">
-            Self-host libre ou cloud managé. Tu peux changer à tout moment, sans pénalité.
+            Self-host libre ou cloud managé. Tu peux changer à tout moment, sans
+            pénalité.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -98,7 +112,8 @@ export default function TarifsPage() {
           ))}
         </div>
         <p className="text-xs text-center text-gray-500 mt-6">
-          Tous les prix sont HT. Facturation mensuelle ou annuelle au choix. Pas d'engagement minimum.
+          Tous les prix sont HT. Facturation mensuelle ou annuelle au choix. Pas
+          d'engagement minimum.
         </p>
       </section>
 
@@ -107,22 +122,37 @@ export default function TarifsPage() {
           ===================================================================== */}
       <section className="mb-16">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-extrabold text-primary-500 mb-2">Options additionnelles</h2>
-          <p className="text-gray-600">À combiner avec n'importe quel palier payant.</p>
+          <h2 className="text-3xl font-extrabold text-primary-500 mb-2">
+            Options additionnelles
+          </h2>
+          <p className="text-gray-600">
+            À combiner avec n'importe quel palier payant.
+          </p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {ADD_ONS.map((a) => (
-            <div key={a.id} className="card border border-amber-200 bg-amber-50/30">
+            <div
+              key={a.id}
+              className="card border border-amber-200 bg-amber-50/30"
+            >
               <div className="flex items-start gap-4 mb-3">
                 <span className="text-4xl shrink-0">{a.emoji}</span>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-bold text-primary-500">{a.name}</h3>
-                  <p className="text-sm text-gray-600 mt-0.5">{a.description}</p>
+                  <h3 className="text-lg font-bold text-primary-500">
+                    {a.name}
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-0.5">
+                    {a.description}
+                  </p>
                 </div>
               </div>
               <p className="text-right">
-                <span className="font-extrabold text-amber-700">{a.price.display}</span>
-                <span className="block text-[10px] text-gray-500">{a.price.details}</span>
+                <span className="font-extrabold text-amber-700">
+                  {a.price.display}
+                </span>
+                <span className="block text-[10px] text-gray-500">
+                  {a.price.details}
+                </span>
               </p>
               <ul className="space-y-1 text-sm mt-3 pt-3 border-t border-amber-200/50">
                 {a.features.map((f, i) => (
@@ -142,7 +172,9 @@ export default function TarifsPage() {
           ===================================================================== */}
       <section className="mb-16">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-extrabold text-primary-500 mb-2">Pourquoi Humanix ?</h2>
+          <h2 className="text-3xl font-extrabold text-primary-500 mb-2">
+            Pourquoi Humanix ?
+          </h2>
           <p className="text-gray-600">Notre positionnement face au marché.</p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -199,8 +231,12 @@ export default function TarifsPage() {
           ===================================================================== */}
       <section className="mb-16">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-extrabold text-primary-500 mb-2">Comparaison détaillée</h2>
-          <p className="text-gray-600">Ce qui est inclus, ce qui ne l'est pas.</p>
+          <h2 className="text-3xl font-extrabold text-primary-500 mb-2">
+            Comparaison détaillée
+          </h2>
+          <p className="text-gray-600">
+            Ce qui est inclus, ce qui ne l'est pas.
+          </p>
         </div>
         <div className="overflow-x-auto card p-0">
           <table className="w-full text-sm">
@@ -210,7 +246,10 @@ export default function TarifsPage() {
                   Fonctionnalité
                 </th>
                 {TIERS.map((t) => (
-                  <th key={t.id} className="p-3 font-bold text-primary-500 text-center min-w-[100px]">
+                  <th
+                    key={t.id}
+                    className="p-3 font-bold text-primary-500 text-center min-w-[100px]"
+                  >
                     <div className="text-lg">{t.emoji}</div>
                     <div className="text-xs">{t.name}</div>
                   </th>
@@ -218,32 +257,124 @@ export default function TarifsPage() {
               </tr>
             </thead>
             <tbody>
-              <FeatureRow label="Code source AGPL"           cells={["✓", "—", "—", "—", "—", "—"]} />
-              <FeatureRow label="Self-host"                  cells={["✓", "—", "—", "—", "—", "✓"]} />
-              <FeatureRow label="Cloud SaaS hébergé France"  cells={["—", "✓", "✓", "✓", "✓", "✓"]} />
-              <FeatureRow label="5 modules de base"          cells={["✓", "✓", "✓", "✓", "✓", "✓"]} />
-              <FeatureRow label="Catalogue complet"          cells={["—", "—", "Partiel", "✓", "✓", "✓"]} />
-              <FeatureRow label="Mascotte évolutive"         cells={["✓", "✓", "✓", "✓", "✓", "✓"]} />
-              <FeatureRow label="Console dirigeant"          cells={["Basique", "Standard", "Standard", "Avancée", "Avancée", "Avancée"]} />
-              <FeatureRow label="Score de risque humain"     cells={["—", "—", "—", "✓", "✓", "✓"]} />
-              <FeatureRow label="SSO M365 / Google"          cells={["—", "—", "—", "✓", "✓", "✓"]} />
-              <FeatureRow label="SCIM v2 (Entra/Okta)"       cells={["—", "—", "—", "✓", "✓", "✓"]} />
-              <FeatureRow label="Certificats individuels PDF" cells={["—", "—", "—", "✓", "✓", "✓"]} />
-              <FeatureRow label="API REST publique"          cells={["—", "—", "—", "Lecture", "Illimitée", "Illimitée"]} />
-              <FeatureRow label="Connecteur CISO Assistant"  cells={["✓", "—", "—", "✓", "✓", "✓"]} />
-              <FeatureRow label="Webhooks signés HMAC"       cells={["—", "—", "—", "✓", "✓", "✓"]} />
-              <FeatureRow label="Phishing simulé"            cells={["—", "—", "—", "—", "Illimité", "Illimité"]} />
-              <FeatureRow label="Challenges d'équipe"        cells={["—", "—", "—", "—", "✓", "✓"]} />
-              <FeatureRow label="Marketplace communauté"     cells={["—", "—", "—", "—", "✓", "✓"]} />
-              <FeatureRow label="IA Coach personnalisé"      cells={["—", "—", "—", "—", "✓", "✓"]} />
-              <FeatureRow label="Cyber-Réflexe (incidents)"  cells={["—", "—", "—", "—", "✓", "✓"]} />
-              <FeatureRow label="Pack NIS2 turnkey"          cells={["Lite", "Lite", "Lite", "Lite", "Complet", "Complet"]} />
-              <FeatureRow label="Multi-établissements"       cells={["—", "—", "—", "—", "Light", "Filiales"]} />
-              <FeatureRow label="Customer Success Manager"   cells={["—", "—", "—", "—", "Dédié", "Dédié + onsite"]} />
-              <FeatureRow label="SLA garanti"                cells={["—", "—", "—", "—", "—", "99,9 %"]} />
-              <FeatureRow label="Option SecNumCloud"         cells={["—", "—", "—", "—", "—", "✓"]} />
-              <FeatureRow label="White-label"                cells={["—", "—", "—", "—", "—", "✓"]} />
-              <FeatureRow label="Support"                    cells={["Communauté", "Communauté", "Email 48h", "Chat 4h", "CSM dédié", "7j/7 + DPO"]} />
+              <FeatureRow
+                label="Code source AGPL"
+                cells={["✓", "—", "—", "—", "—", "—"]}
+              />
+              <FeatureRow
+                label="Self-host"
+                cells={["✓", "—", "—", "—", "—", "✓"]}
+              />
+              <FeatureRow
+                label="Cloud SaaS hébergé France"
+                cells={["—", "✓", "✓", "✓", "✓", "✓"]}
+              />
+              <FeatureRow
+                label="5 modules de base"
+                cells={["✓", "✓", "✓", "✓", "✓", "✓"]}
+              />
+              <FeatureRow
+                label="Catalogue complet"
+                cells={["—", "—", "Partiel", "✓", "✓", "✓"]}
+              />
+              <FeatureRow
+                label="Mascotte évolutive"
+                cells={["✓", "✓", "✓", "✓", "✓", "✓"]}
+              />
+              <FeatureRow
+                label="Console dirigeant"
+                cells={[
+                  "Basique",
+                  "Standard",
+                  "Standard",
+                  "Avancée",
+                  "Avancée",
+                  "Avancée",
+                ]}
+              />
+              <FeatureRow
+                label="Score de risque humain"
+                cells={["—", "—", "—", "✓", "✓", "✓"]}
+              />
+              <FeatureRow
+                label="SSO M365 / Google"
+                cells={["—", "—", "—", "✓", "✓", "✓"]}
+              />
+              <FeatureRow
+                label="SCIM v2 (Entra/Okta)"
+                cells={["—", "—", "—", "✓", "✓", "✓"]}
+              />
+              <FeatureRow
+                label="Certificats individuels PDF"
+                cells={["—", "—", "—", "✓", "✓", "✓"]}
+              />
+              <FeatureRow
+                label="API REST publique"
+                cells={["—", "—", "—", "Lecture", "Illimitée", "Illimitée"]}
+              />
+              <FeatureRow
+                label="Connecteur CISO Assistant"
+                cells={["✓", "—", "—", "✓", "✓", "✓"]}
+              />
+              <FeatureRow
+                label="Webhooks signés HMAC"
+                cells={["—", "—", "—", "✓", "✓", "✓"]}
+              />
+              <FeatureRow
+                label="Phishing simulé"
+                cells={["—", "—", "—", "—", "Illimité", "Illimité"]}
+              />
+              <FeatureRow
+                label="Challenges d'équipe"
+                cells={["—", "—", "—", "—", "✓", "✓"]}
+              />
+              <FeatureRow
+                label="Marketplace communauté"
+                cells={["—", "—", "—", "—", "✓", "✓"]}
+              />
+              <FeatureRow
+                label="IA Coach personnalisé"
+                cells={["—", "—", "—", "—", "✓", "✓"]}
+              />
+              <FeatureRow
+                label="Cyber-Réflexe (incidents)"
+                cells={["—", "—", "—", "—", "✓", "✓"]}
+              />
+              <FeatureRow
+                label="Pack NIS2 turnkey"
+                cells={["Lite", "Lite", "Lite", "Lite", "Complet", "Complet"]}
+              />
+              <FeatureRow
+                label="Multi-établissements"
+                cells={["—", "—", "—", "—", "Light", "Filiales"]}
+              />
+              <FeatureRow
+                label="Customer Success Manager"
+                cells={["—", "—", "—", "—", "Dédié", "Dédié + onsite"]}
+              />
+              <FeatureRow
+                label="SLA garanti"
+                cells={["—", "—", "—", "—", "—", "99,9 %"]}
+              />
+              <FeatureRow
+                label="Option SecNumCloud"
+                cells={["—", "—", "—", "—", "—", "✓"]}
+              />
+              <FeatureRow
+                label="White-label"
+                cells={["—", "—", "—", "—", "—", "✓"]}
+              />
+              <FeatureRow
+                label="Support"
+                cells={[
+                  "Communauté",
+                  "Communauté",
+                  "Email 48h",
+                  "Chat 4h",
+                  "CSM dédié",
+                  "7j/7 + DPO",
+                ]}
+              />
             </tbody>
           </table>
         </div>
@@ -279,7 +410,9 @@ export default function TarifsPage() {
                 />
               </ul>
               <p className="text-sm text-gray-600 mt-4 italic">
-                À 900 €/an, l'investissement est rentabilisé dès la première attaque évitée — qui statistiquement arrive en 18 mois sur une PME non-formée.
+                À 900 €/an, l'investissement est rentabilisé dès la première
+                attaque évitée — qui statistiquement arrive en 18 mois sur une
+                PME non-formée.
               </p>
             </div>
           </div>
@@ -291,32 +424,54 @@ export default function TarifsPage() {
           ===================================================================== */}
       <section className="mb-16">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-extrabold text-primary-500 mb-2">Questions fréquentes</h2>
+          <h2 className="text-3xl font-extrabold text-primary-500 mb-2">
+            Questions fréquentes
+          </h2>
         </div>
         <div className="grid md:grid-cols-2 gap-4">
           <Faq question="C'est trop pas cher, ça m'inspire pas confiance">
-            Notre code est en open source sur GitHub, vous pouvez l'auditer ligne par ligne. Notre équipe vit de l'expertise et de l'accompagnement (audit, formation, RSSI externalisé), pas du hold-up sur les abonnements SaaS. Le prix bas est un choix politique : la cybersécurité ne doit pas être un luxe.
+            Notre code est en open source sur GitHub, vous pouvez l'auditer
+            ligne par ligne. Notre équipe vit de l'expertise et de
+            l'accompagnement (audit, formation, RSSI externalisé), pas du
+            hold-up sur les abonnements SaaS. Le prix bas est un choix politique
+            : la cybersécurité ne doit pas être un luxe.
           </Faq>
           <Faq question="Pourquoi gratuit en self-host si vous êtes sérieux ?">
-            C'est exactement le modèle de CISO Assistant (intuitem), OpenCTI (Filigran), Centreon, Wazuh. Open source = plateforme libre + service expert payant. Modèle éprouvé qui finance durablement le développement.
+            C'est exactement le modèle de CISO Assistant (intuitem), OpenCTI
+            (Filigran), Centreon, Wazuh. Open source = plateforme libre +
+            service expert payant. Modèle éprouvé qui finance durablement le
+            développement.
           </Faq>
           <Faq question="Y a-t-il un essai gratuit du cloud payant ?">
-            Oui, 30 jours pour les paliers Starter, Essentielle et Pro. Pas de carte bancaire à fournir, accès complet aux fonctionnalités. Tu choisis ou non de continuer à la fin.
+            Oui, 30 jours pour les paliers Starter, Essentielle et Pro. Pas de
+            carte bancaire à fournir, accès complet aux fonctionnalités. Tu
+            choisis ou non de continuer à la fin.
           </Faq>
           <Faq question="Mes données sont-elles hébergées en France ?">
-            Hébergement Union Européenne par défaut (Paris ou Roubaix selon configuration). Hébergement français exclusif sur Pro et Enterprise. Option SecNumCloud disponible en Enterprise.
+            Hébergement Union Européenne par défaut (Paris ou Roubaix selon
+            configuration). Hébergement français exclusif sur Pro et Enterprise.
+            Option SecNumCloud disponible en Enterprise.
           </Faq>
           <Faq question="Que se passe-t-il en cas de désinstallation ?">
-            Tes données restent accessibles 30 jours pour export complet (RGPD). Au-delà, suppression définitive avec attestation. Les certificats individuels déjà émis restent valables.
+            Tes données restent accessibles 30 jours pour export complet (RGPD).
+            Au-delà, suppression définitive avec attestation. Les certificats
+            individuels déjà émis restent valables.
           </Faq>
           <Faq question="Y aura-t-il des hausses de prix dans 6 mois ?">
-            La grille de mai 2026 est garantie pour 12 mois minimum. Les clients déjà inscrits gardent leur tarif lock-in à vie (grand-fathering). Toute évolution sera annoncée 60 jours en avance.
+            La grille de mai 2026 est garantie pour 12 mois minimum. Les clients
+            déjà inscrits gardent leur tarif lock-in à vie (grand-fathering).
+            Toute évolution sera annoncée 60 jours en avance.
           </Faq>
           <Faq question="Quel est l'engagement contractuel ?">
-            Aucun engagement minimum sur Cloud. Tu peux résilier à tout moment depuis ta console, prorata jour exact. Engagement annuel = remise –17 à –21 %, totalement optionnel.
+            Aucun engagement minimum sur Cloud. Tu peux résilier à tout moment
+            depuis ta console, prorata jour exact. Engagement annuel = remise
+            –17 à –21 %, totalement optionnel.
           </Faq>
           <Faq question="Quelle différence avec votre concurrent intuitem (CISO Assistant) ?">
-            Aucune, on est complémentaires. CISO Assistant fait la conformité (registres, contrôles, preuves). Humanix fait la sensibilisation humaine (modules, gamification, phishing). Notre intégration native exporte les preuves Humanix vers CISO Assistant.
+            Aucune, on est complémentaires. CISO Assistant fait la conformité
+            (registres, contrôles, preuves). Humanix fait la sensibilisation
+            humaine (modules, gamification, phishing). Notre intégration native
+            exporte les preuves Humanix vers CISO Assistant.
           </Faq>
         </div>
       </section>
@@ -329,7 +484,8 @@ export default function TarifsPage() {
           Prêt à commencer ?
         </h2>
         <p className="text-lg opacity-90 mb-8 max-w-xl mx-auto">
-          Self-host libre ou compte cloud gratuit en 2 minutes. Premier module jouable immédiatement.
+          Self-host libre ou compte cloud gratuit en 2 minutes. Premier module
+          jouable immédiatement.
         </p>
         <div className="flex flex-wrap justify-center gap-3">
           <Link
@@ -354,7 +510,9 @@ export default function TarifsPage() {
           </a>
         </div>
         <p className="text-xs opacity-70 mt-6">
-          Une question ? Écris-nous à <strong>contact@humanix-cybersecurity.fr</strong> — on répond sous 4h ouvrées.
+          Une question ? Écris-nous à{" "}
+          <strong>contact@humanix-cybersecurity.fr</strong> — on répond sous 4h
+          ouvrées.
         </p>
       </section>
     </div>
@@ -393,7 +551,9 @@ function PricingCard({ tier: t }: { tier: PricingTier }) {
 
       <div className="text-4xl mb-2">{t.emoji}</div>
       <h3 className="text-xl font-bold text-primary-500 mb-1">{t.name}</h3>
-      <p className="text-xs text-gray-500 italic mb-3 min-h-[32px]">{t.tagline}</p>
+      <p className="text-xs text-gray-500 italic mb-3 min-h-[32px]">
+        {t.tagline}
+      </p>
 
       <div className="mb-4 pb-4 border-b border-gray-100">
         {t.pricing.monthly.amount === null ? (
@@ -478,7 +638,15 @@ function Trust({ children }: { children: ReactNode }) {
   );
 }
 
-function DiffCard({ emoji, title, text }: { emoji: string; title: string; text: string }) {
+function DiffCard({
+  emoji,
+  title,
+  text,
+}: {
+  emoji: string;
+  title: string;
+  text: string;
+}) {
   return (
     <div className="card hover:scale-[1.02] hover:shadow-md transition-all">
       <div className="text-3xl mb-3">{emoji}</div>
@@ -519,12 +687,20 @@ function Roi({ label, value }: { label: string; value: string }) {
   );
 }
 
-function Faq({ question, children }: { question: string; children: ReactNode }) {
+function Faq({
+  question,
+  children,
+}: {
+  question: string;
+  children: ReactNode;
+}) {
   return (
     <details className="card group">
       <summary className="font-bold text-primary-500 cursor-pointer list-none flex items-center justify-between">
         <span>{question}</span>
-        <span className="text-accent-500 group-open:rotate-45 transition-transform text-xl">+</span>
+        <span className="text-accent-500 group-open:rotate-45 transition-transform text-xl">
+          +
+        </span>
       </summary>
       <p className="text-sm text-gray-600 mt-3 leading-relaxed">{children}</p>
     </details>

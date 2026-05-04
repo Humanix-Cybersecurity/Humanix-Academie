@@ -25,9 +25,9 @@ export default function OutlookIntegrationPage() {
             Bouton « Signaler un phishing » dans Outlook
           </h1>
           <p className="text-lg text-gray-700 dark:text-gray-200 max-w-2xl mx-auto">
-            Vos collaborateurs signalent un mail suspect en 1 clic depuis Outlook.
-            Vous recevez l'alerte en temps réel, l'employé gagne des points sur
-            HumaniX. Compatible Outlook Web, Desktop, Mobile.
+            Vos collaborateurs signalent un mail suspect en 1 clic depuis
+            Outlook. Vous recevez l'alerte en temps réel, l'employé gagne des
+            points sur HumaniX. Compatible Outlook Web, Desktop, Mobile.
           </p>
         </header>
 
@@ -35,7 +35,8 @@ export default function OutlookIntegrationPage() {
         <section className="rounded-3xl bg-gradient-to-br from-primary-500 to-accent-500 text-white p-8 mb-12 text-center">
           <h2 className="text-2xl font-bold mb-2">Téléchargez le manifest</h2>
           <p className="opacity-90 mb-6 text-sm">
-            Le fichier XML pré-configuré avec le domaine de votre instance HumaniX.
+            Le fichier XML pré-configuré avec le domaine de votre instance
+            HumaniX.
           </p>
           <a
             href="/api/integrations/outlook/manifest.xml"
@@ -150,12 +151,11 @@ export default function OutlookIntegrationPage() {
                   <strong>Ajouter un complément personnalisé</strong> →{" "}
                   <strong>À partir d'un fichier</strong>.
                 </li>
-                <li>
-                  Sélectionnez le manifest téléchargé. Confirmez.
-                </li>
+                <li>Sélectionnez le manifest téléchargé. Confirmez.</li>
                 <li>
                   Ouvrez n'importe quel email : le bouton{" "}
-                  <strong>« Signaler à HumaniX »</strong> apparaît dans le ruban.
+                  <strong>« Signaler à HumaniX »</strong> apparaît dans le
+                  ruban.
                 </li>
               </ol>
             </article>
@@ -233,9 +233,9 @@ export default function OutlookIntegrationPage() {
               outlook.live.com) peuvent appeler l'API.
             </li>
             <li>
-              <strong>Minimisation RGPD</strong> : seules les métadonnées du mail
-              sont enregistrées (expéditeur, sujet, longueur). Le contenu n'est
-              jamais persisté.
+              <strong>Minimisation RGPD</strong> : seules les métadonnées du
+              mail sont enregistrées (expéditeur, sujet, longueur). Le contenu
+              n'est jamais persisté.
             </li>
             <li>
               <strong>Rate limit anti-abus</strong> : 30 signalements/heure par

@@ -18,27 +18,33 @@ export default function RapportAuditPage() {
           🛡️ Trust Center · Transparence radicale
         </p>
         <h1 className="text-4xl sm:text-5xl font-extrabold text-primary-500 leading-tight mb-4">
-          Rapport d'audit de sécurité.<br />
+          Rapport d'audit de sécurité.
+          <br />
           <span className="text-accent-500">Public, daté, signé.</span>
         </h1>
         <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-          On vend de la sensibilisation à la cybersécurité. Le minimum d'honnêteté
-          est d'appliquer la règle à nous-mêmes — et de rendre nos pratiques
-          inspectables par tous.
+          On vend de la sensibilisation à la cybersécurité. Le minimum
+          d'honnêteté est d'appliquer la règle à nous-mêmes — et de rendre nos
+          pratiques inspectables par tous.
         </p>
       </div>
 
       {/* CTA téléchargement */}
       <div className="card bg-gradient-to-br from-primary-500 to-accent-500 text-white mb-8">
         <div className="grid sm:grid-cols-[auto_1fr_auto] gap-5 items-center">
-          <div className="text-5xl shrink-0" aria-hidden="true">📄</div>
+          <div className="text-5xl shrink-0" aria-hidden="true">
+            📄
+          </div>
           <div>
             <p className="text-xs uppercase tracking-widest opacity-80 font-bold mb-1">
               Édition v1.0 · 2 mai 2026
             </p>
-            <h2 className="text-xl font-bold">Rapport complet (PDF, ~12 pages)</h2>
+            <h2 className="text-xl font-bold">
+              Rapport complet (PDF, ~12 pages)
+            </h2>
             <p className="text-sm opacity-90 mt-1">
-              Méthodologie, périmètre, contrôles vérifiés, gaps assumés, plan de remédiation à 6 mois.
+              Méthodologie, périmètre, contrôles vérifiés, gaps assumés, plan de
+              remédiation à 6 mois.
             </p>
           </div>
           <a
@@ -65,12 +71,24 @@ export default function RapportAuditPage() {
         </h2>
         <div className="space-y-2">
           <Maturity label="Authentification & autorisation" level="mature" />
-          <Maturity label="Sécurité applicative (validation, anti-XSS, anti-SSRF)" level="mature" />
+          <Maturity
+            label="Sécurité applicative (validation, anti-XSS, anti-SSRF)"
+            level="mature"
+          />
           <Maturity label="Sécurité réseau & infrastructure" level="mature" />
-          <Maturity label="Protection des données personnelles (RGPD)" level="mature" />
-          <Maturity label="SDLC sécurisé (TypeScript, ORM, CI)" level="intermediate" />
+          <Maturity
+            label="Protection des données personnelles (RGPD)"
+            level="mature"
+          />
+          <Maturity
+            label="SDLC sécurisé (TypeScript, ORM, CI)"
+            level="intermediate"
+          />
           <Maturity label="Gestion des incidents" level="intermediate" />
-          <Maturity label="Audit externe formel par cabinet tiers" level="todo" />
+          <Maturity
+            label="Audit externe formel par cabinet tiers"
+            level="todo"
+          />
         </div>
       </section>
 
@@ -81,8 +99,8 @@ export default function RapportAuditPage() {
         </h2>
         <ul className="text-sm text-amber-900 dark:text-amber-100 space-y-2 list-disc pl-5">
           <li>
-            Nous <strong>ne prétendons pas</strong> être ISO 27001 ni SOC 2.
-            Ces certifications sont disproportionnées pour notre segment (TPE/PME
+            Nous <strong>ne prétendons pas</strong> être ISO 27001 ni SOC 2. Ces
+            certifications sont disproportionnées pour notre segment (TPE/PME
             françaises avec budget cyber &lt; 5 K€/an).
           </li>
           <li>
@@ -195,12 +213,20 @@ export default function RapportAuditPage() {
           la corrigeons. Pas de poursuites tant que les règles sont respectées.
         </p>
         <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-1 list-disc pl-5 mb-4">
-          <li>Accusé de réception sous <strong>48h ouvrées</strong></li>
-          <li>Évaluation et plan d'action sous <strong>5 jours ouvrés</strong></li>
-          <li>Information sur la résolution dans les <strong>30 jours</strong></li>
+          <li>
+            Accusé de réception sous <strong>48h ouvrées</strong>
+          </li>
+          <li>
+            Évaluation et plan d'action sous <strong>5 jours ouvrés</strong>
+          </li>
+          <li>
+            Information sur la résolution dans les <strong>30 jours</strong>
+          </li>
           <li>
             Crédit public sur ce rapport et la page{" "}
-            <Link href="/securite" className="text-accent-500 underline">/securite</Link>{" "}
+            <Link href="/securite" className="text-accent-500 underline">
+              /securite
+            </Link>{" "}
             (avec votre accord)
           </li>
         </ul>
@@ -214,7 +240,9 @@ export default function RapportAuditPage() {
 
       {/* Liens utiles */}
       <section className="card mb-10">
-        <h3 className="font-bold text-primary-500 mb-3">Documents complémentaires</h3>
+        <h3 className="font-bold text-primary-500 mb-3">
+          Documents complémentaires
+        </h3>
         <div className="grid sm:grid-cols-2 gap-2 text-sm">
           <Link href="/securite" className="hover:text-accent-500">
             🛡️ Trust Center (vue d'ensemble)
@@ -240,8 +268,8 @@ export default function RapportAuditPage() {
       {/* Footer signé */}
       <p className="text-center text-sm text-gray-500 italic">
         « La cybersécurité n'est pas une destination, c'est une trajectoire.
-        Nous vous tenons informés. »<br />
-        — Florian DURANO, fondateur, Humanix-Cybersecurity.
+        Nous vous tenons informés. »<br />— Florian DURANO, fondateur,
+        Humanix-Cybersecurity.
       </p>
     </div>
   );
@@ -257,14 +285,19 @@ function Stat({
   tone: "success" | "info" | "warn";
 }) {
   const cls: Record<string, string> = {
-    success: "border-green-300 bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-300",
+    success:
+      "border-green-300 bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-300",
     info: "border-cyan-300 bg-cyan-50 text-cyan-700 dark:bg-cyan-900/20 dark:text-cyan-300",
     warn: "border-amber-300 bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300",
   };
   return (
     <div className={`rounded-2xl border-2 p-4 text-center ${cls[tone]}`}>
-      <p className="text-3xl sm:text-4xl font-extrabold tabular-nums">{value}</p>
-      <p className="text-[10px] uppercase tracking-wide mt-1 leading-tight">{label}</p>
+      <p className="text-3xl sm:text-4xl font-extrabold tabular-nums">
+        {value}
+      </p>
+      <p className="text-[10px] uppercase tracking-wide mt-1 leading-tight">
+        {label}
+      </p>
     </div>
   );
 }
@@ -277,15 +310,32 @@ function Maturity({
   level: "mature" | "intermediate" | "todo";
 }) {
   const meta = {
-    mature: { color: "bg-green-500", text: "Mature", textColor: "text-green-700 dark:text-green-300" },
-    intermediate: { color: "bg-amber-500", text: "Intermédiaire", textColor: "text-amber-700 dark:text-amber-300" },
-    todo: { color: "bg-red-500", text: "À faire", textColor: "text-red-700 dark:text-red-300" },
+    mature: {
+      color: "bg-green-500",
+      text: "Mature",
+      textColor: "text-green-700 dark:text-green-300",
+    },
+    intermediate: {
+      color: "bg-amber-500",
+      text: "Intermédiaire",
+      textColor: "text-amber-700 dark:text-amber-300",
+    },
+    todo: {
+      color: "bg-red-500",
+      text: "À faire",
+      textColor: "text-red-700 dark:text-red-300",
+    },
   }[level];
   return (
     <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-gray-50 dark:bg-slate-800">
       <span className="text-sm">{label}</span>
-      <span className={`text-xs font-bold uppercase tracking-wide ${meta.textColor} flex items-center gap-2 shrink-0`}>
-        <span className={`w-2 h-2 rounded-full ${meta.color}`} aria-hidden="true" />
+      <span
+        className={`text-xs font-bold uppercase tracking-wide ${meta.textColor} flex items-center gap-2 shrink-0`}
+      >
+        <span
+          className={`w-2 h-2 rounded-full ${meta.color}`}
+          aria-hidden="true"
+        />
         {meta.text}
       </span>
     </div>
@@ -295,13 +345,23 @@ function Maturity({
 function Bullet({ text }: { text: string }) {
   return (
     <p className="flex items-start gap-2">
-      <span className="text-green-600 mt-0.5 shrink-0" aria-hidden="true">✓</span>
+      <span className="text-green-600 mt-0.5 shrink-0" aria-hidden="true">
+        ✓
+      </span>
       <span>{text}</span>
     </p>
   );
 }
 
-function Backlog({ title, when, why }: { title: string; when: string; why: string }) {
+function Backlog({
+  title,
+  when,
+  why,
+}: {
+  title: string;
+  when: string;
+  why: string;
+}) {
   return (
     <div className="border-l-4 border-amber-400 pl-3">
       <p className="font-bold text-primary-500">

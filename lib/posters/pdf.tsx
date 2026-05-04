@@ -193,7 +193,9 @@ export function MonthlyPoster(props: { variables: PosterVariables }) {
 
         {/* Bandeau couleur — titre du poster */}
         <View style={styles.topStrip}>
-          <Text style={styles.brandLine}>HUMANIX ACADÉMIE · POSTER DU MOIS</Text>
+          <Text style={styles.brandLine}>
+            HUMANIX ACADÉMIE · POSTER DU MOIS
+          </Text>
           <Text style={styles.monthLabel}>{theme.monthLabel}</Text>
           <Text style={styles.title}>{theme.title}</Text>
           <Text style={styles.subtitle}>{theme.subtitle}</Text>
@@ -202,32 +204,54 @@ export function MonthlyPoster(props: { variables: PosterVariables }) {
         {/* Contenu principal sur fond blanc */}
         <View style={styles.contentBlock}>
           {/* Hook : phrase choc */}
-          <View style={[styles.hookBlock, { backgroundColor: C.cream, borderLeft: `4pt solid ${C.accent}` }]}>
+          <View
+            style={[
+              styles.hookBlock,
+              { backgroundColor: C.cream, borderLeft: `4pt solid ${C.accent}` },
+            ]}
+          >
             <Text style={styles.hookText}>{theme.hook}</Text>
           </View>
 
           {/* 3 actions concretes */}
-          <Text style={[styles.actionsTitle, { color: C.bg }]}>3 réflexes à adopter ce mois-ci</Text>
+          <Text style={[styles.actionsTitle, { color: C.bg }]}>
+            3 réflexes à adopter ce mois-ci
+          </Text>
           {theme.actions.map((action, i) => (
             <View key={i} style={styles.actionItem} wrap={false}>
-              <Text style={[styles.actionNumber, { color: C.accent }]}>{i + 1}.</Text>
+              <Text style={[styles.actionNumber, { color: C.accent }]}>
+                {i + 1}.
+              </Text>
               <Text style={styles.actionText}>{action}</Text>
             </View>
           ))}
 
           {/* Bloc personnalise pour le tenant */}
-          {v.weakestService && v.weakestScore != null && v.weakestScore < 70 && (
-            <View style={[styles.personalizedBlock, { borderLeftColor: C.accent }]} wrap={false}>
-              <Text style={styles.personalizedLabel}>
-                Spécifiquement pour {v.tenantName}
-              </Text>
-              <Text style={styles.personalizedText}>
-                Le service <Text style={{ fontWeight: "bold" }}>{v.weakestService}</Text> a un score de
-                maîtrise cyber de <Text style={{ fontWeight: "bold" }}>{v.weakestScore}/100</Text>.
-                C'est lui qui bénéficiera le plus des actions ci-dessus ce mois-ci.
-              </Text>
-            </View>
-          )}
+          {v.weakestService &&
+            v.weakestScore != null &&
+            v.weakestScore < 70 && (
+              <View
+                style={[
+                  styles.personalizedBlock,
+                  { borderLeftColor: C.accent },
+                ]}
+                wrap={false}
+              >
+                <Text style={styles.personalizedLabel}>
+                  Spécifiquement pour {v.tenantName}
+                </Text>
+                <Text style={styles.personalizedText}>
+                  Le service{" "}
+                  <Text style={{ fontWeight: "bold" }}>{v.weakestService}</Text>{" "}
+                  a un score de maîtrise cyber de{" "}
+                  <Text style={{ fontWeight: "bold" }}>
+                    {v.weakestScore}/100
+                  </Text>
+                  . C'est lui qui bénéficiera le plus des actions ci-dessus ce
+                  mois-ci.
+                </Text>
+              </View>
+            )}
         </View>
 
         {/* Pied de page */}
@@ -239,7 +263,10 @@ export function MonthlyPoster(props: { variables: PosterVariables }) {
                 {v.tenantName} · Programme cyber Humanix Académie
               </Text>
               <Text style={styles.brandFooterTagline}>
-                Imprimé le {v.generatedAt.toLocaleDateString("fr-FR", { dateStyle: "long" } as any)}
+                Imprimé le{" "}
+                {v.generatedAt.toLocaleDateString("fr-FR", {
+                  dateStyle: "long",
+                } as any)}
               </Text>
             </View>
             <Text style={styles.brandFooterTagline}>

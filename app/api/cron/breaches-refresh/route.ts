@@ -40,7 +40,8 @@ export async function POST(req: NextRequest) {
 // Support GET aussi pour les services qui ne savent que faire des GET
 // (cron-job.org gratuit). Sécurité identique : verif du secret en query.
 export async function GET(req: NextRequest) {
-  const provided = req.headers.get("x-cron-secret") ?? req.nextUrl.searchParams.get("secret");
+  const provided =
+    req.headers.get("x-cron-secret") ?? req.nextUrl.searchParams.get("secret");
   if (!verifySecret(provided)) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }

@@ -32,7 +32,11 @@ export default function ShopGrid({
 }) {
   const [pending, startTransition] = useTransition();
   const [busy, setBusy] = useState<string | null>(null);
-  const [feedback, setFeedback] = useState<{ id: string; type: "ok" | "err"; msg: string } | null>(null);
+  const [feedback, setFeedback] = useState<{
+    id: string;
+    type: "ok" | "err";
+    msg: string;
+  } | null>(null);
 
   const owned = new Set(ownedIds);
   const equipped = new Set(equippedIds);
@@ -43,7 +47,11 @@ export default function ShopGrid({
     startTransition(async () => {
       try {
         await buyItem(item.id);
-        setFeedback({ id: item.id, type: "ok", msg: `🎉 ${item.name} acheté !` });
+        setFeedback({
+          id: item.id,
+          type: "ok",
+          msg: `🎉 ${item.name} acheté !`,
+        });
       } catch (e: any) {
         const msg = mapError(e?.message);
         setFeedback({ id: item.id, type: "err", msg });
@@ -90,25 +98,43 @@ export default function ShopGrid({
             key={item.id}
             className={clsx(
               "rounded-2xl p-4 border-2 transition-all relative",
-              isEquipped ? "border-accent-500 bg-accent-50 shadow-md" : "border-gray-200 bg-white hover:border-gray-300",
+              isEquipped
+                ? "border-accent-500 bg-accent-50 shadow-md"
+                : "border-gray-200 bg-white hover:border-gray-300",
               !isOwned && !canLevel ? "opacity-60" : "",
               isBusy ? "animate-pulse" : "",
             )}
           >
             {/* Rarity badge */}
-            <span className={clsx("absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase", rarity.bg, "text-gray-700")}>
+            <span
+              className={clsx(
+                "absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase",
+                rarity.bg,
+                "text-gray-700",
+              )}
+            >
               {rarity.label}
             </span>
 
             {/* Item visual */}
-            <div className={clsx("aspect-square rounded-xl flex items-center justify-center mb-3 ring-2", rarity.ring, rarity.bg)}>
+            <div
+              className={clsx(
+                "aspect-square rounded-xl flex items-center justify-center mb-3 ring-2",
+                rarity.ring,
+                rarity.bg,
+              )}
+            >
               <span className="text-5xl">{item.emoji}</span>
             </div>
 
             {/* Info */}
-            <h3 className="font-bold text-primary-500 text-sm mb-0.5 truncate">{item.name}</h3>
+            <h3 className="font-bold text-primary-500 text-sm mb-0.5 truncate">
+              {item.name}
+            </h3>
             {item.description && (
-              <p className="text-[11px] text-gray-500 mb-3 leading-tight line-clamp-2">{item.description}</p>
+              <p className="text-[11px] text-gray-500 mb-3 leading-tight line-clamp-2">
+                {item.description}
+              </p>
             )}
 
             {/* Statut + action */}
@@ -173,6 +199,7 @@ function mapError(code?: string): string {
   if (!code) return "Erreur inconnue";
   if (code === "insufficient_coins") return "Pas assez de coins";
   if (code === "already_owned") return "Déjà possédé";
-  if (code.startsWith("level_required")) return `Niveau ${code.split(":")[1]} requis`;
+  if (code.startsWith("level_required"))
+    return `Niveau ${code.split(":")[1]} requis`;
   return "Achat impossible";
 }

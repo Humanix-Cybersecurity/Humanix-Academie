@@ -23,7 +23,10 @@ type Props = {
   limitations: string[];
 };
 
-export default function BusinessMethodology({ explanations, limitations }: Props) {
+export default function BusinessMethodology({
+  explanations,
+  limitations,
+}: Props) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
 
   return (
@@ -97,11 +100,17 @@ export default function BusinessMethodology({ explanations, limitations }: Props
                       {e.variables.map((v, j) => (
                         <li key={j} className="text-xs">
                           <p className="flex items-baseline justify-between gap-2">
-                            <span className="font-semibold text-gray-700 dark:text-gray-300">{v.name}</span>
-                            <span className="font-bold text-gray-900 dark:text-gray-100 tabular-nums shrink-0">{v.value}</span>
+                            <span className="font-semibold text-gray-700 dark:text-gray-300">
+                              {v.name}
+                            </span>
+                            <span className="font-bold text-gray-900 dark:text-gray-100 tabular-nums shrink-0">
+                              {v.value}
+                            </span>
                           </p>
                           {v.explain && (
-                            <p className="text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">{v.explain}</p>
+                            <p className="text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">
+                              {v.explain}
+                            </p>
                           )}
                         </li>
                       ))}
@@ -119,18 +128,30 @@ export default function BusinessMethodology({ explanations, limitations }: Props
                           key={j}
                           className="flex items-start gap-2 text-xs bg-white dark:bg-slate-950 rounded-md p-2.5 border border-gray-100 dark:border-slate-800"
                         >
-                          <span aria-hidden="true" className="text-gray-400 shrink-0">📚</span>
+                          <span
+                            aria-hidden="true"
+                            className="text-gray-400 shrink-0"
+                          >
+                            📚
+                          </span>
                           <div className="min-w-0">
                             <p className="font-semibold text-gray-900 dark:text-gray-100">
                               {s.url ? (
-                                <a href={s.url} target="_blank" rel="noopener noreferrer" className="hover:text-primary-500 dark:hover:text-accent-300 hover:underline">
+                                <a
+                                  href={s.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="hover:text-primary-500 dark:hover:text-accent-300 hover:underline"
+                                >
                                   {s.name} ↗
                                 </a>
                               ) : (
                                 s.name
                               )}
                             </p>
-                            <p className="text-gray-600 dark:text-gray-400 mt-0.5 leading-relaxed">{s.detail}</p>
+                            <p className="text-gray-600 dark:text-gray-400 mt-0.5 leading-relaxed">
+                              {s.detail}
+                            </p>
                           </div>
                         </li>
                       ))}
@@ -140,8 +161,8 @@ export default function BusinessMethodology({ explanations, limitations }: Props
                   {/* Pitch COMEX prêt à copier */}
                   <div>
                     <p className="text-[10px] uppercase tracking-widest font-bold text-gray-500 dark:text-gray-400 mb-2 flex items-center gap-2">
-                      <span aria-hidden="true">🎤</span>
-                      À dire en COMEX (prêt à copier)
+                      <span aria-hidden="true">🎤</span>À dire en COMEX (prêt à
+                      copier)
                     </p>
                     <blockquote className="bg-primary-50/60 dark:bg-blue-900/15 border-l-4 border-primary-500 dark:border-accent-500 rounded-r-md p-3 text-sm italic text-gray-700 dark:text-gray-200 leading-relaxed">
                       {e.comexPitch}
@@ -157,15 +178,30 @@ export default function BusinessMethodology({ explanations, limitations }: Props
       {/* Limites méthodologiques (honnêteté intellectuelle) */}
       <details className="mt-4 group">
         <summary className="cursor-pointer text-xs font-semibold text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-accent-300 list-none flex items-center gap-2">
-          <span aria-hidden="true" className="text-gray-400 group-open:rotate-90 transition-transform">▸</span>
-          <span>Limites méthodologiques (à connaître pour ne pas survendre)</span>
+          <span
+            aria-hidden="true"
+            className="text-gray-400 group-open:rotate-90 transition-transform"
+          >
+            ▸
+          </span>
+          <span>
+            Limites méthodologiques (à connaître pour ne pas survendre)
+          </span>
         </summary>
         <ul className="mt-3 space-y-1.5 text-xs text-gray-600 dark:text-gray-400 list-none pl-5 border-l-2 border-amber-300 dark:border-amber-700">
           {limitations.map((l, i) => (
-            <li key={i} className="leading-relaxed" dangerouslySetInnerHTML={{
-              __html: "<span class='text-amber-600 dark:text-amber-400 font-bold mr-1'>⚠</span>"
-                + l.replace(/\*\*(.+?)\*\*/g, '<strong class="text-gray-900 dark:text-gray-200">$1</strong>'),
-            }} />
+            <li
+              key={i}
+              className="leading-relaxed"
+              dangerouslySetInnerHTML={{
+                __html:
+                  "<span class='text-amber-600 dark:text-amber-400 font-bold mr-1'>⚠</span>" +
+                  l.replace(
+                    /\*\*(.+?)\*\*/g,
+                    '<strong class="text-gray-900 dark:text-gray-200">$1</strong>',
+                  ),
+              }}
+            />
           ))}
         </ul>
       </details>

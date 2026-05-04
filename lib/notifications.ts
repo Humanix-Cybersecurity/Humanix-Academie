@@ -10,7 +10,12 @@ export type ReminderResult = {
   sent: number;
   simulated: number;
   errors: number;
-  details: { name: string; email: string; daysSinceLastActivity: number; status: string }[];
+  details: {
+    name: string;
+    email: string;
+    daysSinceLastActivity: number;
+    status: string;
+  }[];
 };
 
 export async function findInactiveUsers(tenantId: string) {
@@ -41,7 +46,9 @@ export async function findInactiveUsers(tenantId: string) {
     .map((u) => {
       const lastActivity = u.progress[0]?.completedAt ?? u.createdAt;
       const lastReminder = u.notificationLogs[0]?.sentAt;
-      const daysSince = Math.floor((Date.now() - lastActivity.getTime()) / (24 * 3600 * 1000));
+      const daysSince = Math.floor(
+        (Date.now() - lastActivity.getTime()) / (24 * 3600 * 1000),
+      );
       const daysSinceLastReminder = lastReminder
         ? Math.floor((Date.now() - lastReminder.getTime()) / (24 * 3600 * 1000))
         : Infinity;
@@ -52,7 +59,10 @@ export async function findInactiveUsers(tenantId: string) {
         daysSinceLastReminder,
       };
     })
-    .filter((c) => c.daysSince >= INACTIVE_THRESHOLD_DAYS && c.daysSinceLastReminder >= 7);
+    .filter(
+      (c) =>
+        c.daysSince >= INACTIVE_THRESHOLD_DAYS && c.daysSinceLastReminder >= 7,
+    );
 
   return inactiveCandidates;
 }

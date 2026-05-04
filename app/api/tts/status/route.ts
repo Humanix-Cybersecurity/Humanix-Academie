@@ -4,7 +4,12 @@
 
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import { getTenantPlan, normalizePlan, PLAN_RANK, type PlanId } from "@/lib/plans";
+import {
+  getTenantPlan,
+  normalizePlan,
+  PLAN_RANK,
+  type PlanId,
+} from "@/lib/plans";
 import { isTtsServerEnabled } from "@/lib/tts/server-client";
 
 export const dynamic = "force-dynamic";
@@ -35,5 +40,9 @@ export async function GET() {
     });
   }
 
-  return NextResponse.json({ available: true, plan, voice: "fr_FR-siwis-medium" });
+  return NextResponse.json({
+    available: true,
+    plan,
+    voice: "fr_FR-siwis-medium",
+  });
 }

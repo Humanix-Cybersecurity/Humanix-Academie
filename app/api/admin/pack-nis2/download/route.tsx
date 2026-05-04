@@ -106,7 +106,9 @@ export async function GET(req: NextRequest) {
 
   const buffer = await renderToBuffer(<PackNis2Pdf variables={variables} />);
 
-  const safeName = variables.tenantName.replace(/[^a-zA-Z0-9-]/g, "-").slice(0, 40);
+  const safeName = variables.tenantName
+    .replace(/[^a-zA-Z0-9-]/g, "-")
+    .slice(0, 40);
   const filename = `pack-nis2-${safeName}-${variables.generatedAt.toISOString().slice(0, 10)}.pdf`;
 
   // Cast `as any` aligne sur le pattern de app/api/admin/conformity-report :

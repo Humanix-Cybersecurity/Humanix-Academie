@@ -40,7 +40,8 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
       "Vérifier mes sauvegardes : où ? quand ? testées ?",
       "Signaler les mails suspects à l'IT plutôt que de les ignorer",
     ],
-    factOrQuote: "« Le maillon faible n'est pas l'humain — c'est l'humain mal informé. »",
+    factOrQuote:
+      "« Le maillon faible n'est pas l'humain — c'est l'humain mal informé. »",
   },
   2: {
     month: 2,
@@ -56,7 +57,8 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
       "Un nouveau contact LinkedIn avec photo trop parfaite ? Verifier sa cohérence (poste, parcours, autres contacts).",
       "Ne JAMAIS partager de selfie ou document d'identité avec une rencontre numérique.",
     ],
-    factOrQuote: "« Les escrocs sentimentaux gagnent en moyenne 5 800 € par victime française. — ANSSI 2024 »",
+    factOrQuote:
+      "« Les escrocs sentimentaux gagnent en moyenne 5 800 € par victime française. — ANSSI 2024 »",
   },
   3: {
     month: 3,
@@ -72,7 +74,8 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
       "Activer le MFA sur les comptes critiques (mail, banque, ERP, paie)",
       "Bannir les mots de passe sur post-it, dans Excel, ou dans le bloc-notes",
     ],
-    factOrQuote: "« 81% des piratages d'entreprises commencent par un mot de passe faible ou réutilisé. — Verizon DBIR »",
+    factOrQuote:
+      "« 81% des piratages d'entreprises commencent par un mot de passe faible ou réutilisé. — Verizon DBIR »",
   },
   4: {
     month: 4,
@@ -88,7 +91,8 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
       "2 supports différents (interne + externe)",
       "1 copie hors-site et déconnectée du réseau",
     ],
-    factOrQuote: "« Une sauvegarde non testée n'est pas une sauvegarde. C'est de l'optimisme. »",
+    factOrQuote:
+      "« Une sauvegarde non testée n'est pas une sauvegarde. C'est de l'optimisme. »",
   },
   5: {
     month: 5,
@@ -104,7 +108,8 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
       "Verrouiller son écran dès qu'on quitte la pièce (Win+L / Cmd+Ctrl+Q)",
       "Pas de visio confidentielle sur wifi public",
     ],
-    factOrQuote: "« 67% des fuites de données en télétravail viennent du wifi public. — IBM Security 2024 »",
+    factOrQuote:
+      "« 67% des fuites de données en télétravail viennent du wifi public. — IBM Security 2024 »",
   },
   6: {
     month: 6,
@@ -117,10 +122,11 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
     hook: "Votre smartphone pro contient mails, contrats, planning, et accès à 30 SaaS. Un cambrioleur en rêverait.",
     actions: [
       "Code PIN/biométrie obligatoire, jamais désactivé",
-      "Pas d'apps perso douteuses (jeux gratuits, VPN \"pas chers\")",
+      'Pas d\'apps perso douteuses (jeux gratuits, VPN "pas chers")',
       "Activer la localisation à distance et l'effacement à distance",
     ],
-    factOrQuote: "« Un smartphone professionnel volé sans MDM = 0 €/jour de chiffre d'affaires pour la PME concernée. »",
+    factOrQuote:
+      "« Un smartphone professionnel volé sans MDM = 0 €/jour de chiffre d'affaires pour la PME concernée. »",
   },
   7: {
     month: 7,
@@ -136,7 +142,8 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
       "Activer les notifications de connexion suspectes sur les comptes critiques",
       "Désigner un référent cyber joignable en cas d'incident pendant vos congés",
     ],
-    factOrQuote: "« Les attaques ransomware augmentent de 40% en juillet-août. Les attaquants ciblent les périodes creuses. — Cybermalveillance 2024 »",
+    factOrQuote:
+      "« Les attaques ransomware augmentent de 40% en juillet-août. Les attaquants ciblent les périodes creuses. — Cybermalveillance 2024 »",
   },
   8: {
     month: 8,
@@ -146,13 +153,14 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
     subtitle: "Aéroport, gare, hôtel : ne branchez jamais.",
     bgColor: "#C0392B",
     accentColor: "#F59E0B",
-    hook: "Une borne USB publique peut injecter un malware en 3 secondes. Le \"juice jacking\" existe vraiment.",
+    hook: 'Une borne USB publique peut injecter un malware en 3 secondes. Le "juice jacking" existe vraiment.',
     actions: [
       "Toujours utiliser votre propre chargeur sur prise secteur",
-      "Si vous DEVEZ utiliser un USB public, prenez un câble \"data blocker\" (5€ sur Amazon)",
-      "Ne jamais accepter une demande de \"faire confiance à cet ordinateur\" depuis votre téléphone pro",
+      'Si vous DEVEZ utiliser un USB public, prenez un câble "data blocker" (5€ sur Amazon)',
+      'Ne jamais accepter une demande de "faire confiance à cet ordinateur" depuis votre téléphone pro',
     ],
-    factOrQuote: "« 1 borne USB publique sur 100 a été modifiée pour voler des données. — étude Kaspersky 2023 »",
+    factOrQuote:
+      "« 1 borne USB publique sur 100 a été modifiée pour voler des données. — étude Kaspersky 2023 »",
   },
   9: {
     month: 9,
@@ -168,7 +176,8 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
       "Vérifier les droits d'accès (principe de moindre privilège)",
       "Forcer les mises à jour OS / antivirus sur tous les postes",
     ],
-    factOrQuote: "« 38% des incidents cyber PME viennent d'un compte d'ex-collaborateur encore actif. »",
+    factOrQuote:
+      "« 38% des incidents cyber PME viennent d'un compte d'ex-collaborateur encore actif. »",
   },
   10: {
     month: 10,
@@ -180,11 +189,12 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
     accentColor: "#F59E0B",
     hook: "Octobre est LE mois pour mobiliser. Profitez-en : un challenge inter-équipes, un quiz hebdo, des affiches dans la salle de pause.",
     actions: [
-      "Lancer un challenge \"signaleur du mois\" sur les phishings simulés",
+      'Lancer un challenge "signaleur du mois" sur les phishings simulés',
       "Afficher un poster cyber chaque semaine dans la salle de pause",
       "Faire un quiz collectif de 10 min en réunion d'équipe",
     ],
-    factOrQuote: "« Le Cyber-Mois Européen, lancé en 2012, est aujourd'hui suivi dans 30 pays. C'est le moment où la cyber se vit collectivement. »",
+    factOrQuote:
+      "« Le Cyber-Mois Européen, lancé en 2012, est aujourd'hui suivi dans 30 pays. C'est le moment où la cyber se vit collectivement. »",
   },
   11: {
     month: 11,
@@ -200,7 +210,8 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
       "Si concerné : nommer un référent cyber et documenter les mesures",
       "En cas d'incident significatif : notification CSIRT-FR sous 24h obligatoire",
     ],
-    factOrQuote: "« Sanctions NIS2 : jusqu'à 10 M€ ou 2% du CA mondial. Mieux vaut prévenir. »",
+    factOrQuote:
+      "« Sanctions NIS2 : jusqu'à 10 M€ ou 2% du CA mondial. Mieux vaut prévenir. »",
   },
   12: {
     month: 12,
@@ -216,7 +227,8 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
       "Bilan : 95% des modules de sensibilisation complétés par l'équipe",
       "Cap 2027 : un objectif simple, mesurable, ambitieux pour la cyber",
     ],
-    factOrQuote: "« La sécurité, c'est un parcours, pas une destination. Chaque mois compte. »",
+    factOrQuote:
+      "« La sécurité, c'est un parcours, pas une destination. Chaque mois compte. »",
   },
 };
 

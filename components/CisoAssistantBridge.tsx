@@ -5,7 +5,11 @@
 // A11y : aria-selected sur tabs, focus visible, prefers-reduced-motion.
 
 import { useEffect, useMemo, useState } from "react";
-import { FRAMEWORKS, SUPPORTED_FRAMEWORKS, type FrameworkRef } from "@/lib/mapping-grc";
+import {
+  FRAMEWORKS,
+  SUPPORTED_FRAMEWORKS,
+  type FrameworkRef,
+} from "@/lib/mapping-grc";
 
 type Snippet = { id: "curl" | "python" | "node"; label: string; code: string };
 
@@ -42,13 +46,14 @@ console.log(\`\${bundle.summary.compliant}/\${bundle.summary.total_controls} com
   },
 ];
 
-const FRAMEWORK_LABELS: Record<FrameworkRef, { short: string; emoji: string }> = {
-  "ISO27001:2022": { short: "ISO 27001", emoji: "🌍" },
-  NIS2: { short: "NIS2", emoji: "🇪🇺" },
-  RGPD: { short: "RGPD", emoji: "📋" },
-  "ANSSI-HG": { short: "ANSSI HG", emoji: "🇫🇷" },
-  "NIST-CSF": { short: "NIST CSF", emoji: "🇺🇸" },
-};
+const FRAMEWORK_LABELS: Record<FrameworkRef, { short: string; emoji: string }> =
+  {
+    "ISO27001:2022": { short: "ISO 27001", emoji: "🌍" },
+    NIS2: { short: "NIS2", emoji: "🇪🇺" },
+    RGPD: { short: "RGPD", emoji: "📋" },
+    "ANSSI-HG": { short: "ANSSI HG", emoji: "🇫🇷" },
+    "NIST-CSF": { short: "NIST CSF", emoji: "🇺🇸" },
+  };
 
 export default function CisoAssistantBridge() {
   const [framework, setFramework] = useState<FrameworkRef>("ISO27001:2022");
@@ -58,7 +63,8 @@ export default function CisoAssistantBridge() {
 
   const fw = FRAMEWORKS[framework];
   const snippets = useMemo(() => SNIPPET_TEMPLATES(framework), [framework]);
-  const currentSnippet = snippets.find((s) => s.id === snippetTab) ?? snippets[0];
+  const currentSnippet =
+    snippets.find((s) => s.id === snippetTab) ?? snippets[0];
 
   const filteredControls = fw.controls.filter((c) => {
     if (!search) return true;
@@ -146,8 +152,8 @@ export default function CisoAssistantBridge() {
           Une cle API tenant suffit. Generez-la depuis{" "}
           <code className="text-xs bg-gray-100 dark:bg-slate-700 px-1.5 py-0.5 rounded">
             /admin/api-keys
-          </code>
-          {" "}(plan Essentielle ou superieur).
+          </code>{" "}
+          (plan Essentielle ou superieur).
         </p>
 
         <div
@@ -180,7 +186,9 @@ export default function CisoAssistantBridge() {
             <code>{currentSnippet.code}</code>
           </pre>
           <button
-            onClick={() => copyToClipboard(currentSnippet.code, currentSnippet.id)}
+            onClick={() =>
+              copyToClipboard(currentSnippet.code, currentSnippet.id)
+            }
             className="absolute top-3 right-3 bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-500"
             aria-label={`Copier le snippet ${currentSnippet.label}`}
           >
@@ -188,12 +196,10 @@ export default function CisoAssistantBridge() {
           </button>
         </div>
 
-        <div
-          role="status"
-          aria-live="polite"
-          className="sr-only"
-        >
-          {copied === currentSnippet.id ? "Snippet copie dans le presse-papiers" : ""}
+        <div role="status" aria-live="polite" className="sr-only">
+          {copied === currentSnippet.id
+            ? "Snippet copie dans le presse-papiers"
+            : ""}
         </div>
       </section>
 

@@ -49,7 +49,9 @@ async function main() {
       },
     });
     if (result.count > 0) {
-      console.log(`  ✓ Pattern « ${pattern} » : ${result.count} items supprimés`);
+      console.log(
+        `  ✓ Pattern « ${pattern} » : ${result.count} items supprimés`,
+      );
       pollutionRemoved += result.count;
     }
   }

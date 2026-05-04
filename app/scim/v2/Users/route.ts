@@ -19,7 +19,11 @@ const SCIM_RATE_LIMIT = 200;
 const SCIM_RATE_WINDOW_MS = 60 * 1000;
 
 function rateLimitGuard(tenantId: string, op: string) {
-  return checkRateLimit(`scim:${op}:${tenantId}`, SCIM_RATE_LIMIT, SCIM_RATE_WINDOW_MS);
+  return checkRateLimit(
+    `scim:${op}:${tenantId}`,
+    SCIM_RATE_LIMIT,
+    SCIM_RATE_WINDOW_MS,
+  );
 }
 
 function baseUrlOf(req: Request): string {
@@ -114,7 +118,9 @@ export async function GET(req: Request) {
       totalResults: total,
       startIndex,
       itemsPerPage: users.length,
-      Resources: (users as PrismaUserShape[]).map((u) => prismaToScim(u, baseUrl)),
+      Resources: (users as PrismaUserShape[]).map((u) =>
+        prismaToScim(u, baseUrl),
+      ),
     },
     { headers: SCIM_HEADERS },
   );
@@ -132,10 +138,18 @@ export async function POST(req: Request) {
   const tenantId = auth.tenantId!;
 
   // Rate limit specifique POST (creation : on est plus strict, 50/min)
-  const rl = checkRateLimit(`scim:users-post:${tenantId}`, 50, SCIM_RATE_WINDOW_MS);
+  const rl = checkRateLimit(
+    `scim:users-post:${tenantId}`,
+    50,
+    SCIM_RATE_WINDOW_MS,
+  );
   if (!rl.ok) {
     return NextResponse.json(
-      scimError(429, "Rate limit 50/min atteint pour les creations.", "tooMany"),
+      scimError(
+        429,
+        "Rate limit 50/min atteint pour les creations.",
+        "tooMany",
+      ),
       {
         status: 429,
         headers: { ...SCIM_HEADERS, "Retry-After": String(rl.retryAfter) },
@@ -167,7 +181,11 @@ export async function POST(req: Request) {
   });
   if (existing) {
     return NextResponse.json(
-      scimError(409, `User with userName ${data.email} already exists`, "uniqueness"),
+      scimError(
+        409,
+        `User with userName ${data.email} already exists`,
+        "uniqueness",
+      ),
       { status: 409, headers: SCIM_HEADERS },
     );
   }

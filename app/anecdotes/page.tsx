@@ -13,14 +13,45 @@ export const metadata: Metadata = {
   alternates: { canonical: "/anecdotes" },
 };
 
-const CATEGORY_BADGES: Record<string, { label: string; emoji: string; color: string }> = {
-  RANSOMWARE: { label: "Rançongiciel", emoji: "🔒", color: "bg-red-100 text-red-700" },
-  PHISHING: { label: "Phishing", emoji: "🎣", color: "bg-orange-100 text-orange-700" },
-  FRAUDE: { label: "Fraude", emoji: "💸", color: "bg-purple-100 text-purple-700" },
-  DATA_LEAK: { label: "Fuite", emoji: "📤", color: "bg-blue-100 text-blue-700" },
-  SUPPLY_CHAIN: { label: "Supply chain", emoji: "🔗", color: "bg-teal-100 text-teal-700" },
-  HACKTIVISME: { label: "Hacktivisme", emoji: "🚩", color: "bg-amber-100 text-amber-700" },
-  IA_ABUS: { label: "Abus IA", emoji: "🤖", color: "bg-violet-100 text-violet-700" },
+const CATEGORY_BADGES: Record<
+  string,
+  { label: string; emoji: string; color: string }
+> = {
+  RANSOMWARE: {
+    label: "Rançongiciel",
+    emoji: "🔒",
+    color: "bg-red-100 text-red-700",
+  },
+  PHISHING: {
+    label: "Phishing",
+    emoji: "🎣",
+    color: "bg-orange-100 text-orange-700",
+  },
+  FRAUDE: {
+    label: "Fraude",
+    emoji: "💸",
+    color: "bg-purple-100 text-purple-700",
+  },
+  DATA_LEAK: {
+    label: "Fuite",
+    emoji: "📤",
+    color: "bg-blue-100 text-blue-700",
+  },
+  SUPPLY_CHAIN: {
+    label: "Supply chain",
+    emoji: "🔗",
+    color: "bg-teal-100 text-teal-700",
+  },
+  HACKTIVISME: {
+    label: "Hacktivisme",
+    emoji: "🚩",
+    color: "bg-amber-100 text-amber-700",
+  },
+  IA_ABUS: {
+    label: "Abus IA",
+    emoji: "🤖",
+    color: "bg-violet-100 text-violet-700",
+  },
   AUTRE: { label: "Cyber", emoji: "🛡", color: "bg-gray-100 text-gray-700" },
 };
 
@@ -83,13 +114,15 @@ export default async function AnecdotesArchivePage() {
           {anecdotes.length === 0 ? (
             <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 text-center border border-gray-200 dark:border-slate-700">
               <p className="text-gray-600 dark:text-gray-300">
-                La première anecdote arrive très bientôt. Inscrivez-vous ci-dessus pour la recevoir !
+                La première anecdote arrive très bientôt. Inscrivez-vous
+                ci-dessus pour la recevoir !
               </p>
             </div>
           ) : (
             <div className="grid sm:grid-cols-2 gap-4">
               {anecdotes.map((a) => {
-                const badge = CATEGORY_BADGES[a.category] ?? CATEGORY_BADGES.AUTRE;
+                const badge =
+                  CATEGORY_BADGES[a.category] ?? CATEGORY_BADGES.AUTRE;
                 return (
                   <article
                     key={a.id}

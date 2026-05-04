@@ -40,7 +40,8 @@ export default function WebhookTable({
   if (webhooks.length === 0) {
     return (
       <div className="card text-center text-gray-500 dark:text-gray-300">
-        Aucun webhook configuré pour le moment. Ajoutez votre premier ci-dessous.
+        Aucun webhook configuré pour le moment. Ajoutez votre premier
+        ci-dessous.
       </div>
     );
   }
@@ -50,12 +51,24 @@ export default function WebhookTable({
       <table className="w-full border-collapse min-w-[800px]">
         <thead>
           <tr className="text-left text-xs uppercase tracking-wide text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-slate-700">
-            <th scope="col" className="p-3">Webhook</th>
-            <th scope="col" className="p-3">Type</th>
-            <th scope="col" className="p-3">Évènements</th>
-            <th scope="col" className="p-3">État</th>
-            <th scope="col" className="p-3">Stats</th>
-            <th scope="col" className="p-3">Actions</th>
+            <th scope="col" className="p-3">
+              Webhook
+            </th>
+            <th scope="col" className="p-3">
+              Type
+            </th>
+            <th scope="col" className="p-3">
+              Évènements
+            </th>
+            <th scope="col" className="p-3">
+              État
+            </th>
+            <th scope="col" className="p-3">
+              Stats
+            </th>
+            <th scope="col" className="p-3">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -103,7 +116,11 @@ export default function WebhookTable({
               </td>
               <td className="p-3 text-xs">
                 <p className="text-green-700">✓ {w.successCount} succès</p>
-                <p className={w.failureCount > 0 ? "text-red-600" : "text-gray-400"}>
+                <p
+                  className={
+                    w.failureCount > 0 ? "text-red-600" : "text-gray-400"
+                  }
+                >
                   ✕ {w.failureCount} échecs
                 </p>
                 {w.lastFiredAt && (
@@ -112,7 +129,10 @@ export default function WebhookTable({
                   </p>
                 )}
                 {w.lastError && (
-                  <p className="text-red-600 mt-1 max-w-[200px] line-clamp-2" title={w.lastError}>
+                  <p
+                    className="text-red-600 mt-1 max-w-[200px] line-clamp-2"
+                    title={w.lastError}
+                  >
                     ⚠ {w.lastError}
                   </p>
                 )}
@@ -134,7 +154,11 @@ export default function WebhookTable({
                     <button
                       type="submit"
                       className="text-xs px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 dark:bg-slate-700 dark:hover:bg-slate-600"
-                      aria-label={w.isActive ? `Désactiver ${w.label}` : `Activer ${w.label}`}
+                      aria-label={
+                        w.isActive
+                          ? `Désactiver ${w.label}`
+                          : `Activer ${w.label}`
+                      }
                     >
                       {w.isActive ? "Désactiver" : "Activer"}
                     </button>

@@ -14,13 +14,13 @@ Approche **Pull** : CISO Assistant interroge `/api/v1/evidence-export` avec une 
 
 ## Endpoint — formats supportés
 
-| Format | Usage |
-|---|---|
-| `ciso-assistant-v1` (défaut) | Intégration CISO Assistant native |
-| `oscal-v1` | Standard NIST — débloque Eramba, RegScale, OpenSCAP |
-| `splunk-cim-v1` | NDJSON HEC-compatible |
-| `sentinel-cef-v1` | CEF — Sentinel, QRadar, Sekoia, Wazuh, Graylog |
-| `raw` | JSON brut Humanix (debug) |
+| Format                       | Usage                                               |
+| ---------------------------- | --------------------------------------------------- |
+| `ciso-assistant-v1` (défaut) | Intégration CISO Assistant native                   |
+| `oscal-v1`                   | Standard NIST — débloque Eramba, RegScale, OpenSCAP |
+| `splunk-cim-v1`              | NDJSON HEC-compatible                               |
+| `sentinel-cef-v1`            | CEF — Sentinel, QRadar, Sekoia, Wazuh, Graylog      |
+| `raw`                        | JSON brut Humanix (debug)                           |
 
 ## Mapping référentiels → données Humanix
 

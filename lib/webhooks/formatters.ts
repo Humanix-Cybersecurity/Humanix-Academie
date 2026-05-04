@@ -4,7 +4,8 @@
 
 import { WebhookEventKey } from "./events";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://humanix-cybersecurity.fr";
+const APP_URL =
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://humanix-cybersecurity.fr";
 
 /**
  * Construit un payload Slack "Incoming Webhook" avec blocks.
@@ -111,13 +112,18 @@ export function formatTeamsCard(
 /**
  * Resume libre, contextuel a l'evenement.
  */
-function renderSummary(event: WebhookEventKey, data: Record<string, unknown>): string {
+function renderSummary(
+  event: WebhookEventKey,
+  data: Record<string, unknown>,
+): string {
   switch (event) {
     case "phishing.campaign_completed": {
       const sent = num(data.sentTo);
       const clicked = num(data.clicked);
       const reported = num(data.reported);
-      const rate = data.reportRate ? Math.round(Number(data.reportRate) * 100) : 0;
+      const rate = data.reportRate
+        ? Math.round(Number(data.reportRate) * 100)
+        : 0;
       return `Campagne *${escapeSlack(String(data.campaignTitle ?? ""))}* terminée : ${sent} envoyés, ${clicked} cliqués, ${reported} signalés (taux signalement *${rate} %*).`;
     }
     case "phishing.reported": {
@@ -147,7 +153,9 @@ function renderSummary(event: WebhookEventKey, data: Record<string, unknown>): s
   }
 }
 
-function renderKeyValuePairs(data: Record<string, unknown>): [string, unknown][] {
+function renderKeyValuePairs(
+  data: Record<string, unknown>,
+): [string, unknown][] {
   return Object.entries(data)
     .filter(([k]) => !k.startsWith("_"))
     .map(([k, v]) => [humanizeKey(k), v] as [string, unknown]);

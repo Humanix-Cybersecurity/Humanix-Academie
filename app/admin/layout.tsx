@@ -25,7 +25,11 @@ import AdminTopBar from "@/components/AdminTopBar";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminLayout({ children }: { children: ReactNode }) {
+export default async function AdminLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   // Vérification rôle au layout : protège TOUTES les pages /admin/* d'un coup
   // (defense-in-depth en plus du middleware existant).
   const session = await auth();

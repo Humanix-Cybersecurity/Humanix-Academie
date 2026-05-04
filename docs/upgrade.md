@@ -27,6 +27,7 @@ v MAJOR . MINOR . PATCH
 ```
 
 **Conséquences pratiques** :
+
 - Patches (`v1.2.x → v1.2.x+1`) : upgrade en 1 commande, zéro risque
 - Mineures (`v1.x → v1.x+1`) : upgrade simple, lis le changelog
 - Majeures (`v1 → v2`) : lis CAREFULLY le guide de migration
@@ -185,11 +186,11 @@ curl http://localhost:3000/api/health
 
 ### Versions avec migrations annoncées
 
-| Version | Date | Type | Guide |
-|---|---|---|---|
-| v1.0.0 | mai 2026 | Initial OSS release | — |
-| v1.1.0 | juin 2026 (prévu) | Helm chart Kubernetes | — |
-| v2.0.0 | (à planifier) | TBD | TBD |
+| Version | Date              | Type                  | Guide |
+| ------- | ----------------- | --------------------- | ----- |
+| v1.0.0  | mai 2026          | Initial OSS release   | —     |
+| v1.1.0  | juin 2026 (prévu) | Helm chart Kubernetes | —     |
+| v2.0.0  | (à planifier)     | TBD                   | TBD   |
 
 ---
 
@@ -223,6 +224,7 @@ docker compose up -d
 ### Si le rollback ne suffit pas
 
 Ouvre une issue GitHub avec :
+
 - La version d'origine et la version cible
 - Les logs `docker compose logs app`
 - Les migrations Prisma listées (`npx prisma migrate status`)
@@ -234,15 +236,16 @@ Et passe sur Discord pour de l'aide en direct si urgent.
 
 ## Politique de support des versions
 
-| Version | Statut | Support patches sécurité |
-|---|---|---|
-| `main` (dev) | Active | Immédiat |
-| Dernière minor stable (`v1.x`) | Active | Oui, 7j max pour critique |
-| Avant-dernière minor | Maintenance | 12 mois |
-| Avant-avant-dernière | Non supportée | Migration recommandée |
+| Version                        | Statut        | Support patches sécurité  |
+| ------------------------------ | ------------- | ------------------------- |
+| `main` (dev)                   | Active        | Immédiat                  |
+| Dernière minor stable (`v1.x`) | Active        | Oui, 7j max pour critique |
+| Avant-dernière minor           | Maintenance   | 12 mois                   |
+| Avant-avant-dernière           | Non supportée | Migration recommandée     |
 
 Une release majeure (v2, v3) signe la fin de support de la majeure
 précédente après **12 mois de cohabitation**. Exemple :
+
 - v2.0.0 sortie en juin 2027 → v1.x supportée jusqu'à juin 2028.
 
 ---
@@ -261,7 +264,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      WATCHTOWER_SCHEDULE: "0 0 4 * * *"   # Tous les jours à 4h
+      WATCHTOWER_SCHEDULE: "0 0 4 * * *" # Tous les jours à 4h
       WATCHTOWER_CLEANUP: "true"
       WATCHTOWER_INCLUDE_RESTARTING: "true"
       WATCHTOWER_NOTIFICATIONS: "email"
@@ -270,6 +273,7 @@ services:
 ```
 
 **Attention** : déconseillé en prod sans staging. Préfère :
+
 - Staging : auto-update toutes les nuits
 - Prod : update manuelle après validation staging
 

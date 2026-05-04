@@ -25,7 +25,9 @@ export default function ConnexionPage() {
 function ConnexionFallback() {
   return (
     <div className="max-w-md mx-auto px-4 py-20 text-center">
-      <div className="text-4xl opacity-40 animate-pulse" aria-hidden="true">🦊</div>
+      <div className="text-4xl opacity-40 animate-pulse" aria-hidden="true">
+        🦊
+      </div>
       <p className="text-sm text-gray-500 mt-3">Chargement…</p>
     </div>
   );
@@ -35,7 +37,10 @@ function ConnexionInner() {
   const [email, setEmail] = useState("");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
-  const [sso, setSso] = useState<SsoProviders>({ google: false, microsoft: false });
+  const [sso, setSso] = useState<SsoProviders>({
+    google: false,
+    microsoft: false,
+  });
   const params = useSearchParams();
   const errorCode = params.get("error");
 
@@ -56,7 +61,11 @@ function ConnexionInner() {
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSending(true);
-    await signIn("resend", { email, redirect: false, callbackUrl: "/apprendre" });
+    await signIn("resend", {
+      email,
+      redirect: false,
+      callbackUrl: "/apprendre",
+    });
     setSent(true);
     setSending(false);
   };
@@ -65,9 +74,12 @@ function ConnexionInner() {
     return (
       <div className="max-w-md mx-auto px-4 py-20 text-center">
         <div className="text-6xl mb-4">📬</div>
-        <h1 className="text-2xl font-bold text-primary-500 mb-3">Mail envoyé !</h1>
+        <h1 className="text-2xl font-bold text-primary-500 mb-3">
+          Mail envoyé !
+        </h1>
         <p className="text-gray-600">
-          On vient de t'envoyer un lien magique sur <strong>{email}</strong>. Clique dessus pour entrer.
+          On vient de t'envoyer un lien magique sur <strong>{email}</strong>.
+          Clique dessus pour entrer.
         </p>
         <p className="text-sm text-gray-400 mt-4">
           (Pense à vérifier tes spams s'il n'arrive pas tout de suite.)
@@ -81,23 +93,34 @@ function ConnexionInner() {
       <div className="text-center mb-8">
         <div className="flex justify-center mb-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-humanix-academie-192.png" alt="Humanix Académie" className="h-24 w-auto mx-auto" />
+          <img
+            src="/logo-humanix-academie-192.png"
+            alt="Humanix Académie"
+            className="h-24 w-auto mx-auto"
+          />
         </div>
         <h1 className="text-3xl font-bold text-primary-500">Connexion</h1>
-        <p className="text-gray-600 mt-2">Pas de mot de passe à créer : connexion SSO ou lien magique.</p>
+        <p className="text-gray-600 mt-2">
+          Pas de mot de passe à créer : connexion SSO ou lien magique.
+        </p>
       </div>
 
       {/* Erreur SSO si applicable */}
       {errorCode && (
-        <div role="alert" className="card mb-4 bg-amber-50 border-amber-300 text-amber-900 text-sm">
+        <div
+          role="alert"
+          className="card mb-4 bg-amber-50 border-amber-300 text-amber-900 text-sm"
+        >
           {errorCode === "NoAccount" && (
             <p>
-              <strong>Aucun compte trouvé pour cette adresse.</strong> Demandez à votre administrateur de vous inviter d'abord.
+              <strong>Aucun compte trouvé pour cette adresse.</strong> Demandez
+              à votre administrateur de vous inviter d'abord.
             </p>
           )}
           {errorCode === "AccountSuspended" && (
             <p>
-              <strong>Votre compte est suspendu.</strong> Contactez votre administrateur.
+              <strong>Votre compte est suspendu.</strong> Contactez votre
+              administrateur.
             </p>
           )}
           {!["NoAccount", "AccountSuspended"].includes(errorCode) && (
@@ -112,7 +135,9 @@ function ConnexionInner() {
           {sso.microsoft && (
             <button
               type="button"
-              onClick={() => signIn("microsoft-entra-id", { callbackUrl: "/apprendre" })}
+              onClick={() =>
+                signIn("microsoft-entra-id", { callbackUrl: "/apprendre" })
+              }
               className="w-full flex items-center justify-center gap-3 p-3 rounded-xl border-2 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 transition font-medium text-sm"
               aria-label="Se connecter avec Microsoft"
             >
@@ -137,16 +162,28 @@ function ConnexionInner() {
       {(sso.google || sso.microsoft) && (
         <div className="flex items-center gap-3 mb-6">
           <div className="h-px flex-1 bg-gray-200 dark:bg-slate-700" />
-          <span className="text-xs text-gray-500 uppercase tracking-wide">ou</span>
+          <span className="text-xs text-gray-500 uppercase tracking-wide">
+            ou
+          </span>
           <div className="h-px flex-1 bg-gray-200 dark:bg-slate-700" />
         </div>
       )}
 
       {/* Magic link */}
-      <form onSubmit={onSubmit} className="card space-y-4" aria-describedby="connexion-aide">
+      <form
+        onSubmit={onSubmit}
+        className="card space-y-4"
+        aria-describedby="connexion-aide"
+      >
         <div>
-          <label htmlFor="connexion-email" className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2">
-            Ton email professionnel <span className="text-warn" aria-hidden="true">*</span>
+          <label
+            htmlFor="connexion-email"
+            className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
+          >
+            Ton email professionnel{" "}
+            <span className="text-warn" aria-hidden="true">
+              *
+            </span>
           </label>
           <input
             id="connexion-email"
@@ -161,10 +198,19 @@ function ConnexionInner() {
             autoComplete="email"
           />
         </div>
-        <p id="connexion-aide" className="text-xs text-gray-600 dark:text-gray-400">
-          Champs marqués <span className="text-warn">*</span> obligatoires. Aucun mot de passe ne te sera demandé.
+        <p
+          id="connexion-aide"
+          className="text-xs text-gray-600 dark:text-gray-400"
+        >
+          Champs marqués <span className="text-warn">*</span> obligatoires.
+          Aucun mot de passe ne te sera demandé.
         </p>
-        <button type="submit" disabled={sending} aria-busy={sending} className="btn-primary w-full">
+        <button
+          type="submit"
+          disabled={sending}
+          aria-busy={sending}
+          className="btn-primary w-full"
+        >
           {sending ? "Envoi en cours…" : "Recevoir mon lien"}
         </button>
       </form>

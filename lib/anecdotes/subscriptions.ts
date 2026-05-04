@@ -29,7 +29,9 @@ export async function subscribe(input: SubscribeInput) {
     return { ok: true as const, alreadySubscribed: true };
   }
 
-  const consentTextHash = createHash("sha256").update(CONSENT_TEXT_V1).digest("hex");
+  const consentTextHash = createHash("sha256")
+    .update(CONSENT_TEXT_V1)
+    .digest("hex");
 
   if (existing && !existing.isActive) {
     // Reactivation

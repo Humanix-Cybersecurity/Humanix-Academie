@@ -34,7 +34,9 @@ export type MetricExplanation = {
 // SCORE COLLECTIF
 // -----------------------------------------------------------------------------
 
-export function explainCollectiveScore(impact: BusinessImpact): MetricExplanation {
+export function explainCollectiveScore(
+  impact: BusinessImpact,
+): MetricExplanation {
   return {
     title: "Score collectif",
     valueLabel: `${impact.collectiveScore}/100`,
@@ -43,22 +45,26 @@ export function explainCollectiveScore(impact: BusinessImpact): MetricExplanatio
       {
         name: "Risk Score individuel",
         value: "0–100 par collaborateur",
-        explain: "Calculé à partir de la complétion des modules, du score aux quiz, de l'inactivité et des résultats de phishing simulé.",
+        explain:
+          "Calculé à partir de la complétion des modules, du score aux quiz, de l'inactivité et des résultats de phishing simulé.",
       },
       {
         name: "Effectif retenu",
         value: `${impact.totalSeats} collaborateurs actifs`,
-        explain: "Seuls les comptes activés et de rôle LEARNER ou MANAGER comptent. Admins exclus (pour ne pas biaiser).",
+        explain:
+          "Seuls les comptes activés et de rôle LEARNER ou MANAGER comptent. Admins exclus (pour ne pas biaiser).",
       },
     ],
     sources: [
       {
         name: "ANSSI — Référentiel Hygiène Informatique 2024",
-        detail: "Définit la sensibilisation comme indicateur n°1 de maturité humaine. La moyenne pondérée est conforme à l'esprit du référentiel (1 maillon faible = 1 vulnérabilité).",
+        detail:
+          "Définit la sensibilisation comme indicateur n°1 de maturité humaine. La moyenne pondérée est conforme à l'esprit du référentiel (1 maillon faible = 1 vulnérabilité).",
       },
       {
         name: "ISO 27001 §A.6.3",
-        detail: "« La sensibilisation à la sécurité doit être mesurée et documentée par collaborateur. »",
+        detail:
+          "« La sensibilisation à la sécurité doit être mesurée et documentée par collaborateur. »",
       },
     ],
     comexPitch: `« Notre score humain cyber est de ${impact.collectiveScore}/100. C'est la moyenne du niveau de protection apporté par chaque collaborateur. Au-dessus de 80, on est dans les standards ISO 27001 ; en-dessous de 50, on est dans la zone à risque imposant une action. »`,
@@ -69,7 +75,9 @@ export function explainCollectiveScore(impact: BusinessImpact): MetricExplanatio
 // COÛT ATTENDU SUR 12 MOIS
 // -----------------------------------------------------------------------------
 
-export function explainExpectedAnnualLoss(impact: BusinessImpact): MetricExplanation {
+export function explainExpectedAnnualLoss(
+  impact: BusinessImpact,
+): MetricExplanation {
   return {
     title: "Coût attendu sur 12 mois",
     valueLabel: `${impact.expectedAnnualLoss.toLocaleString("fr-FR")} €`,
@@ -89,16 +97,19 @@ export function explainExpectedAnnualLoss(impact: BusinessImpact): MetricExplana
     sources: [
       {
         name: "Tracfin — Bilan cybercriminalité PME 2024",
-        detail: "Coût moyen d'une cyberattaque réussie en PME française : 35 000 € (rançon + chômage technique + remédiation + perte de données).",
+        detail:
+          "Coût moyen d'une cyberattaque réussie en PME française : 35 000 € (rançon + chômage technique + remédiation + perte de données).",
         url: "https://www.economie.gouv.fr/tracfin",
       },
       {
         name: "Baromètre Hiscox 2023",
-        detail: "75% des PME victimes mettent plus de 2 jours à reprendre une activité normale. Coût moyen indirect : 14 000 € en plus.",
+        detail:
+          "75% des PME victimes mettent plus de 2 jours à reprendre une activité normale. Coût moyen indirect : 14 000 € en plus.",
       },
       {
         name: "ANSSI cert-fr — Panorama de la menace 2024",
-        detail: "1 PME sur 2 sans formation cyber a subi un incident significatif sur 12 mois. C'est la base de notre calibrage probabiliste.",
+        detail:
+          "1 PME sur 2 sans formation cyber a subi un incident significatif sur 12 mois. C'est la base de notre calibrage probabiliste.",
         url: "https://www.cert.ssi.gouv.fr",
       },
     ],
@@ -115,7 +126,9 @@ export function explainRoi(impact: BusinessImpact): MetricExplanation {
   // Cf. lib/business-impact.ts : ROI = (saving / humanixCost), arrondi à 1 décimale.
   // saving = baselineExpectedLoss − expectedAnnualLoss (différence avec PME non-formée)
   const baselineProb = 0.25;
-  const baselineExpectedLoss = Math.round(impact.estimatedIncidentCost * baselineProb);
+  const baselineExpectedLoss = Math.round(
+    impact.estimatedIncidentCost * baselineProb,
+  );
   const grossSaving = baselineExpectedLoss - impact.expectedAnnualLoss;
 
   return {
@@ -147,11 +160,13 @@ export function explainRoi(impact: BusinessImpact): MetricExplanation {
     sources: [
       {
         name: "Étude IBM Cost of a Data Breach Report 2024",
-        detail: "La sensibilisation cyber réduit en moyenne le coût d'une violation de 232 000 USD (~210 k€), pour un coût programme moyen de 30 k€/an. ROI moyen observé : ×7.",
+        detail:
+          "La sensibilisation cyber réduit en moyenne le coût d'une violation de 232 000 USD (~210 k€), pour un coût programme moyen de 30 k€/an. ROI moyen observé : ×7.",
       },
       {
         name: "Generali — Étude Sinistralité Cyber PME 2023",
-        detail: "Les PME formées affichent une sinistralité 4× moindre que les non-formées sur les 24 derniers mois.",
+        detail:
+          "Les PME formées affichent une sinistralité 4× moindre que les non-formées sur les 24 derniers mois.",
       },
     ],
     comexPitch: `« Pour ${impact.humanixAnnualCost.toLocaleString("fr-FR")} € de programme cyber annuel, nous évitons statistiquement ${grossSaving.toLocaleString("fr-FR")} € de pertes attendues. Le ROI de ×${impact.roiMultiplier} est conservateur — Generali et IBM observent ×4 à ×7 sur des programmes structurés. »`,
@@ -174,7 +189,9 @@ export const METHODOLOGY_LIMITATIONS = [
 // Helper : retourne TOUS les explainers d'un coup
 // -----------------------------------------------------------------------------
 
-export function buildAllExplanations(impact: BusinessImpact): MetricExplanation[] {
+export function buildAllExplanations(
+  impact: BusinessImpact,
+): MetricExplanation[] {
   return [
     explainCollectiveScore(impact),
     explainExpectedAnnualLoss(impact),

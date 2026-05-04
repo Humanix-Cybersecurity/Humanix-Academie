@@ -38,13 +38,17 @@ export default function SekoiaIntegrationPage() {
         aria-labelledby="setup-title"
         className="card mb-10 bg-gradient-to-br from-primary-50 to-cyan-50 dark:from-slate-800 dark:to-slate-700"
       >
-        <h2 id="setup-title" className="text-xl font-extrabold text-primary-500 mb-3">
+        <h2
+          id="setup-title"
+          className="text-xl font-extrabold text-primary-500 mb-3"
+        >
           Setup en 3 étapes
         </h2>
         <ol className="space-y-3 text-sm list-decimal list-inside">
           <li>
-            Sekoia → <strong>Operations Center → Intakes → Add Intake</strong>{" "}
-            → format <strong>ArcSight CEF</strong> (parser générique). Récupérez l'<strong>Intake Key</strong>.
+            Sekoia → <strong>Operations Center → Intakes → Add Intake</strong> →
+            format <strong>ArcSight CEF</strong> (parser générique). Récupérez
+            l'<strong>Intake Key</strong>.
           </li>
           <li>
             Humanix →{" "}
@@ -53,9 +57,7 @@ export default function SekoiaIntegrationPage() {
             </Link>{" "}
             (Essentielle+).
           </li>
-          <li>
-            Cron quotidien :
-          </li>
+          <li>Cron quotidien :</li>
         </ol>
         <div className="mt-4">
           <CopyableSnippet code={CRON} label="cron Sekoia" />
@@ -63,51 +65,72 @@ export default function SekoiaIntegrationPage() {
       </section>
 
       <section aria-labelledby="usecases-title" className="mb-10">
-        <h2 id="usecases-title" className="text-2xl font-extrabold text-primary-500 mb-3">
+        <h2
+          id="usecases-title"
+          className="text-2xl font-extrabold text-primary-500 mb-3"
+        >
           Cas d'usage Sekoia côté SOC
         </h2>
         <div className="grid sm:grid-cols-2 gap-4">
           <article className="card">
-            <h3 className="font-bold text-primary-500 mb-2">Dashboard maturité humaine</h3>
+            <h3 className="font-bold text-primary-500 mb-2">
+              Dashboard maturité humaine
+            </h3>
             <p className="text-sm text-gray-600 dark:text-gray-300">
               Visualisez en live l'évolution du score Humanix par tenant
               directement dans Sekoia, à côté de vos métriques EDR.
             </p>
           </article>
           <article className="card">
-            <h3 className="font-bold text-primary-500 mb-2">Règle de corrélation enrichie</h3>
+            <h3 className="font-bold text-primary-500 mb-2">
+              Règle de corrélation enrichie
+            </h3>
             <p className="text-sm text-gray-600 dark:text-gray-300">
               Si un user déclenche une alerte EDR <strong>et</strong> son score
               Humanix est inférieur à 50 % → priorité d'alerte automatique.
             </p>
           </article>
           <article className="card">
-            <h3 className="font-bold text-primary-500 mb-2">Audit NIS2 / ANSSI</h3>
+            <h3 className="font-bold text-primary-500 mb-2">
+              Audit NIS2 / ANSSI
+            </h3>
             <p className="text-sm text-gray-600 dark:text-gray-300">
               Toutes les preuves Humanix sont historisées dans Sekoia, avec les
               événements de signalement phishing — preuve directe pour audit.
             </p>
           </article>
           <article className="card">
-            <h3 className="font-bold text-primary-500 mb-2">Co-marketing souverain</h3>
+            <h3 className="font-bold text-primary-500 mb-2">
+              Co-marketing souverain
+            </h3>
             <p className="text-sm text-gray-600 dark:text-gray-300">
               Première intégration sensibilisation cyber du marketplace Sekoia.
-              Visible dans leur catalogue de connecteurs (PR communautaire à venir).
+              Visible dans leur catalogue de connecteurs (PR communautaire à
+              venir).
             </p>
           </article>
         </div>
       </section>
 
       <section className="card text-center bg-gradient-to-br from-primary-500 to-accent-500 text-white">
-        <h2 className="text-2xl font-extrabold mb-2">SIEM souverain × sensibilisation souveraine 🇫🇷</h2>
+        <h2 className="text-2xl font-extrabold mb-2">
+          SIEM souverain × sensibilisation souveraine 🇫🇷
+        </h2>
         <p className="opacity-90 mb-5">
-          Aucune dépendance non-UE dans la boucle. Conformité native NIS2 / ANSSI.
+          Aucune dépendance non-UE dans la boucle. Conformité native NIS2 /
+          ANSSI.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
-          <Link href="/admin/api-keys" className="bg-white text-primary-500 font-bold px-6 py-3 rounded-2xl hover:scale-105 transition shadow-lg">
+          <Link
+            href="/admin/api-keys"
+            className="bg-white text-primary-500 font-bold px-6 py-3 rounded-2xl hover:scale-105 transition shadow-lg"
+          >
             Générer ma clé API
           </Link>
-          <Link href="/integrations" className="bg-white/10 hover:bg-white/20 text-white font-bold px-6 py-3 rounded-2xl transition border-2 border-white/30">
+          <Link
+            href="/integrations"
+            className="bg-white/10 hover:bg-white/20 text-white font-bold px-6 py-3 rounded-2xl transition border-2 border-white/30"
+          >
             Tous les connecteurs
           </Link>
         </div>

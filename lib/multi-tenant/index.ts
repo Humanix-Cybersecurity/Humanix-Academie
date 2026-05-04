@@ -28,7 +28,9 @@ export type TenantNode = {
  * Retourne tous les tenantIds dans l'arbre descendant (inclus le tenant lui-meme).
  * Utilise pour les requetes consolidees au niveau parent.
  */
-export async function getDescendantTenantIds(tenantId: string): Promise<string[]> {
+export async function getDescendantTenantIds(
+  tenantId: string,
+): Promise<string[]> {
   // V1 : 2 niveaux max. On charge l'enfant direct.
   const children = await db.tenant.findMany({
     where: { parentTenantId: tenantId },
@@ -188,7 +190,9 @@ export async function buildConsolidatedStats(rootTenantId: string): Promise<{
   const averageMastery =
     totalSeats === 0
       ? 0
-      : Math.round(users.reduce((s, u) => s + (u.riskScore ?? 50), 0) / totalSeats);
+      : Math.round(
+          users.reduce((s, u) => s + (u.riskScore ?? 50), 0) / totalSeats,
+        );
 
   const byEstablishment = allTenants.map((t) => {
     const tenantUsers = users.filter((u) => u.tenantId === t.id);
@@ -198,7 +202,8 @@ export async function buildConsolidatedStats(rootTenantId: string): Promise<{
       tenantSeats === 0
         ? 0
         : Math.round(
-            tenantUsers.reduce((s, u) => s + (u.riskScore ?? 50), 0) / tenantSeats,
+            tenantUsers.reduce((s, u) => s + (u.riskScore ?? 50), 0) /
+              tenantSeats,
           );
     return {
       tenantId: t.id,

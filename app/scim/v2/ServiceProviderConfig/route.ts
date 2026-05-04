@@ -10,7 +10,8 @@ export async function GET() {
   return NextResponse.json(
     {
       schemas: [SCIM_SCHEMAS.SERVICE_PROVIDER_CONFIG],
-      documentationUri: "https://academie.humanix-cybersecurity.fr/integrations/scim",
+      documentationUri:
+        "https://academie.humanix-cybersecurity.fr/integrations/scim",
       patch: { supported: true },
       bulk: { supported: false, maxOperations: 0, maxPayloadSize: 0 },
       filter: { supported: true, maxResults: 200 },

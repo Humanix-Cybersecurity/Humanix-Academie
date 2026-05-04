@@ -42,7 +42,10 @@ export default async function ModuleDetailPage({
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10 animate-fadeIn">
-      <Link href="/marketplace" className="text-sm text-gray-500 hover:text-primary-500 mb-4 inline-block">
+      <Link
+        href="/marketplace"
+        className="text-sm text-gray-500 hover:text-primary-500 mb-4 inline-block"
+      >
         ← Retour au catalogue
       </Link>
 
@@ -60,12 +63,22 @@ export default async function ModuleDetailPage({
                   🌍 CONTRIBUTION COMMUNAUTÉ
                 </span>
               )}
-              <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">{module_.category}</span>
-              <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">{module_.difficulty}</span>
-              <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">{module_.language.toUpperCase()}</span>
+              <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">
+                {module_.category}
+              </span>
+              <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">
+                {module_.difficulty}
+              </span>
+              <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">
+                {module_.language.toUpperCase()}
+              </span>
             </div>
-            <h1 className="text-3xl font-extrabold text-primary-500 mb-2">{module_.title}</h1>
-            <p className="text-gray-700 leading-relaxed">{module_.description}</p>
+            <h1 className="text-3xl font-extrabold text-primary-500 mb-2">
+              {module_.title}
+            </h1>
+            <p className="text-gray-700 leading-relaxed">
+              {module_.description}
+            </p>
           </div>
         </div>
       </div>
@@ -75,10 +88,12 @@ export default async function ModuleDetailPage({
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div>
             <p className="font-bold text-primary-500">
-              {payload.episodes.length} épisode{payload.episodes.length > 1 ? "s" : ""}
+              {payload.episodes.length} épisode
+              {payload.episodes.length > 1 ? "s" : ""}
             </p>
             <p className="text-sm text-gray-500">
-              ~{payload.episodes.reduce((s, e) => s + e.durationMinutes, 0)} minutes au total
+              ~{payload.episodes.reduce((s, e) => s + e.durationMinutes, 0)}{" "}
+              minutes au total
             </p>
           </div>
           <InstallButton moduleId={module_.id} isInstalled={isInstalled} />
@@ -86,7 +101,9 @@ export default async function ModuleDetailPage({
       </div>
 
       {/* Liste des episodes */}
-      <h2 className="text-xl font-bold text-primary-500 mb-3">📚 Aperçu des épisodes</h2>
+      <h2 className="text-xl font-bold text-primary-500 mb-3">
+        📚 Aperçu des épisodes
+      </h2>
       <div className="space-y-3 mb-8">
         {payload.episodes.map((ep, i) => (
           <div key={i} className="card">
@@ -95,15 +112,21 @@ export default async function ModuleDetailPage({
                 {i + 1}
               </span>
               <h3 className="font-bold text-primary-500 flex-1">{ep.title}</h3>
-              <span className="text-xs text-gray-500">~{ep.durationMinutes} min</span>
+              <span className="text-xs text-gray-500">
+                ~{ep.durationMinutes} min
+              </span>
             </div>
-            <p className="text-sm text-gray-600 line-clamp-2 mb-2">{ep.scenario.slice(0, 200)}…</p>
+            <p className="text-sm text-gray-600 line-clamp-2 mb-2">
+              {ep.scenario.slice(0, 200)}…
+            </p>
             <div className="flex gap-3 text-xs text-gray-500">
               <span>{ep.choices.length} choix</span>
               <span>•</span>
               <span>{ep.quiz.length} questions de quiz</span>
               <span>•</span>
-              <span className="text-accent-500 font-bold">+{ep.xpReward} XP</span>
+              <span className="text-accent-500 font-bold">
+                +{ep.xpReward} XP
+              </span>
             </div>
           </div>
         ))}
@@ -112,9 +135,15 @@ export default async function ModuleDetailPage({
       {/* Auteur + integrite */}
       <div className="grid sm:grid-cols-2 gap-4">
         <div className="card">
-          <h3 className="font-bold text-primary-500 text-sm uppercase tracking-wide mb-3">Auteur</h3>
-          <p className="font-bold">{module_.author.name ?? module_.author.email.split("@")[0]}</p>
-          {module_.authorOrgName && <p className="text-sm text-gray-600">{module_.authorOrgName}</p>}
+          <h3 className="font-bold text-primary-500 text-sm uppercase tracking-wide mb-3">
+            Auteur
+          </h3>
+          <p className="font-bold">
+            {module_.author.name ?? module_.author.email.split("@")[0]}
+          </p>
+          {module_.authorOrgName && (
+            <p className="text-sm text-gray-600">{module_.authorOrgName}</p>
+          )}
           <p className="text-xs text-gray-500 mt-2">
             Soumis le {module_.submittedAt?.toLocaleDateString("fr-FR")}
             <br />
@@ -122,15 +151,22 @@ export default async function ModuleDetailPage({
           </p>
         </div>
         <div className="card">
-          <h3 className="font-bold text-primary-500 text-sm uppercase tracking-wide mb-3">Intégrité & licence</h3>
+          <h3 className="font-bold text-primary-500 text-sm uppercase tracking-wide mb-3">
+            Intégrité & licence
+          </h3>
           <p className="text-sm">
             Version <strong>{module_.version}</strong>
           </p>
           <p className="text-xs font-mono text-gray-600 break-all">
             SHA-256 : {shortHash(module_.contentHash)}
           </p>
-          <p className="text-xs text-gray-500 mt-2">{LICENSE_LABEL[module_.license] ?? module_.license}</p>
-          <p className="text-xs text-gray-500">📥 Installé par {module_.installCount} organisation{module_.installCount > 1 ? "s" : ""}</p>
+          <p className="text-xs text-gray-500 mt-2">
+            {LICENSE_LABEL[module_.license] ?? module_.license}
+          </p>
+          <p className="text-xs text-gray-500">
+            📥 Installé par {module_.installCount} organisation
+            {module_.installCount > 1 ? "s" : ""}
+          </p>
         </div>
       </div>
     </div>

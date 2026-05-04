@@ -326,7 +326,8 @@ const NIS2: FrameworkMapping = {
   outOfScope: [
     {
       ref: "art-21-2-c",
-      reason: "Continuite des activites - DRP/BCP technique hors scope sensibilisation",
+      reason:
+        "Continuite des activites - DRP/BCP technique hors scope sensibilisation",
     },
     {
       ref: "art-21-2-d",
@@ -566,8 +567,14 @@ const ANSSI_HG: FrameworkMapping = {
   ],
   outOfScope: [
     { ref: "M5-M10", reason: "Configuration postes - outils techniques tiers" },
-    { ref: "M16-M20", reason: "Architecture reseau - hors scope sensibilisation" },
-    { ref: "M35-M39", reason: "Securite physique - hors scope plateforme SaaS" },
+    {
+      ref: "M16-M20",
+      reason: "Architecture reseau - hors scope sensibilisation",
+    },
+    {
+      ref: "M35-M39",
+      reason: "Securite physique - hors scope plateforme SaaS",
+    },
   ],
 };
 
@@ -612,7 +619,8 @@ const NIST_CSF: FrameworkMapping = {
   outOfScope: [
     {
       ref: "ID.* / DE.* / RS.* / RC.*",
-      reason: "Mapping NIST detaille prevu en v1.1 - sortie initiale focus sur PR (Protect)",
+      reason:
+        "Mapping NIST detaille prevu en v1.1 - sortie initiale focus sur PR (Protect)",
     },
   ],
 };
@@ -649,7 +657,10 @@ export function statusFromMetric(
   if (value === null || value === undefined) return "not_assessed";
   if (control.thresholdCompliant === undefined) return "compliant";
   if (value >= control.thresholdCompliant) return "compliant";
-  if (control.thresholdPartial !== undefined && value >= control.thresholdPartial)
+  if (
+    control.thresholdPartial !== undefined &&
+    value >= control.thresholdPartial
+  )
     return "partial";
   return "non_compliant";
 }

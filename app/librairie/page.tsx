@@ -6,7 +6,11 @@ import { db } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
-export default async function LibrairiePage({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
+export default async function LibrairiePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>;
+}) {
   const session = await auth();
   if (!session?.user) redirect("/demo");
 
@@ -28,16 +32,21 @@ export default async function LibrairiePage({ searchParams }: { searchParams: Pr
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 animate-fadeIn">
-      <h1 className="text-3xl sm:text-4xl font-extrabold text-primary-500 mb-2">📚 Librairie</h1>
+      <h1 className="text-3xl sm:text-4xl font-extrabold text-primary-500 mb-2">
+        📚 Librairie
+      </h1>
       <p className="text-gray-600 mb-6">
-        Articles courts et autonomes pour apprendre à ton rythme. 5 à 10 minutes par lecture.
+        Articles courts et autonomes pour apprendre à ton rythme. 5 à 10 minutes
+        par lecture.
       </p>
 
       <div className="flex flex-wrap gap-2 mb-6 text-xs">
         <Link
           href="/librairie"
           className={`px-3 py-1 rounded-full border ${
-            !category ? "bg-accent-500 text-white border-accent-500" : "bg-white border-gray-200 hover:border-accent-500"
+            !category
+              ? "bg-accent-500 text-white border-accent-500"
+              : "bg-white border-gray-200 hover:border-accent-500"
           }`}
         >
           Tous
@@ -47,7 +56,9 @@ export default async function LibrairiePage({ searchParams }: { searchParams: Pr
             key={c.category}
             href={`/librairie?category=${c.category}`}
             className={`px-3 py-1 rounded-full border ${
-              category === c.category ? "bg-accent-500 text-white border-accent-500" : "bg-white border-gray-200 hover:border-accent-500"
+              category === c.category
+                ? "bg-accent-500 text-white border-accent-500"
+                : "bg-white border-gray-200 hover:border-accent-500"
             }`}
           >
             {c.category}
@@ -69,11 +80,17 @@ export default async function LibrairiePage({ searchParams }: { searchParams: Pr
               className="card hover:scale-[1.02] hover:shadow-lg transition-all flex flex-col"
             >
               <div className="text-5xl mb-3">{a.emoji}</div>
-              <h3 className="font-bold text-primary-500 text-lg mb-1">{a.title}</h3>
-              <p className="text-sm text-gray-600 mb-3 line-clamp-2 flex-1">{a.description}</p>
+              <h3 className="font-bold text-primary-500 text-lg mb-1">
+                {a.title}
+              </h3>
+              <p className="text-sm text-gray-600 mb-3 line-clamp-2 flex-1">
+                {a.description}
+              </p>
               <div className="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-gray-100">
                 <span>⏱ {a.readTimeMinutes} min</span>
-                <span className="bg-gray-100 px-2 py-0.5 rounded-full">{a.category}</span>
+                <span className="bg-gray-100 px-2 py-0.5 rounded-full">
+                  {a.category}
+                </span>
               </div>
             </Link>
           ))}

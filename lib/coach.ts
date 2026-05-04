@@ -33,7 +33,9 @@ const POSITIVE_MICROTIPS = [
   "L'erreur n'est pas grave : ne pas la signaler l'est.",
 ];
 
-export async function generateCoachAdvice(userId: string): Promise<CoachAdvice> {
+export async function generateCoachAdvice(
+  userId: string,
+): Promise<CoachAdvice> {
   const user = await db.user.findUnique({
     where: { id: userId },
     include: {
@@ -63,12 +65,17 @@ export async function generateCoachAdvice(userId: string): Promise<CoachAdvice> 
 
   // Detection des situations prioritaires
   const lastActivityDate = user.progress[0]?.completedAt ?? user.createdAt;
-  const daysSinceLastActivity = Math.floor((Date.now() - lastActivityDate.getTime()) / (24 * 3600 * 1000));
+  const daysSinceLastActivity = Math.floor(
+    (Date.now() - lastActivityDate.getTime()) / (24 * 3600 * 1000),
+  );
 
   // Modules obligatoires non termines
   const completedSaisonsByCount = new Map<string, number>();
   for (const p of user.progress.filter((p) => p.status === "COMPLETED")) {
-    completedSaisonsByCount.set(p.saisonId, (completedSaisonsByCount.get(p.saisonId) ?? 0) + 1);
+    completedSaisonsByCount.set(
+      p.saisonId,
+      (completedSaisonsByCount.get(p.saisonId) ?? 0) + 1,
+    );
   }
   const missingMandatory = user.tenant.saisonConfigs.find((cfg) => {
     const totalEps = cfg.saison.episodes.length;
@@ -77,11 +84,15 @@ export async function generateCoachAdvice(userId: string): Promise<CoachAdvice> 
   });
 
   // Episodes avec score faible (< 70%)
-  const lowScored = user.progress.filter((p) => p.status === "COMPLETED" && (p.score ?? 0) < 70);
+  const lowScored = user.progress.filter(
+    (p) => p.status === "COMPLETED" && (p.score ?? 0) < 70,
+  );
   const recentLowScore = lowScored[0]; // premier (le plus recent)
 
   // Phishing recent cliqué
-  const recentPhishingClick = user.phishingResults.find((r) => r.status === "CLICKED");
+  const recentPhishingClick = user.phishingResults.find(
+    (r) => r.status === "CLICKED",
+  );
 
   let primaryMessage: string;
   let recommendation: CoachAdvice["recommendation"] = null;
@@ -131,7 +142,8 @@ export async function generateCoachAdvice(userId: string): Promise<CoachAdvice> 
       type: "module",
       label: `Refaire "${recentLowScore.episode.title}"`,
       href: `/apprendre/${recentLowScore.saison.slug}/${recentLowScore.episode.slug}`,
-      reason: "Les meilleurs apprenants sont ceux qui acceptent de retravailler.",
+      reason:
+        "Les meilleurs apprenants sont ceux qui acceptent de retravailler.",
     };
     mood = "encouraging";
   }

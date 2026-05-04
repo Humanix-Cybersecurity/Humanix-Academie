@@ -24,7 +24,13 @@ type Props = {
   compact?: boolean;
 };
 
-export default function EmptyState({ icon, title, description, cta, compact }: Props) {
+export default function EmptyState({
+  icon,
+  title,
+  description,
+  cta,
+  compact,
+}: Props) {
   return (
     <div
       className={`text-center ${compact ? "py-6" : "py-12"} px-4 flex flex-col items-center gap-${compact ? "2" : "3"}`}
@@ -38,11 +44,15 @@ export default function EmptyState({ icon, title, description, cta, compact }: P
           {icon}
         </div>
       )}
-      <p className={`font-semibold text-gray-900 dark:text-gray-100 ${compact ? "text-sm" : "text-base"}`}>
+      <p
+        className={`font-semibold text-gray-900 dark:text-gray-100 ${compact ? "text-sm" : "text-base"}`}
+      >
         {title}
       </p>
       {description && (
-        <p className={`text-gray-500 dark:text-gray-400 max-w-md mx-auto ${compact ? "text-xs" : "text-sm"} leading-relaxed`}>
+        <p
+          className={`text-gray-500 dark:text-gray-400 max-w-md mx-auto ${compact ? "text-xs" : "text-sm"} leading-relaxed`}
+        >
           {description}
         </p>
       )}

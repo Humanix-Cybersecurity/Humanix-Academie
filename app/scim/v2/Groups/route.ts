@@ -22,7 +22,10 @@ function baseUrlOf(req: Request): string {
 
 function serviceToGroupId(service: string): string {
   // ID stable a partir du nom du service (slugifie)
-  return `svc-${service.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")}`;
+  return `svc-${service
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")}`;
 }
 
 export async function GET(req: Request) {
@@ -48,7 +51,13 @@ export async function GET(req: Request) {
   // Aggregation : services distincts du tenant + leurs membres
   const users = await db.user.findMany({
     where: { tenantId: auth.tenantId!, service: { not: null } },
-    select: { id: true, name: true, service: true, updatedAt: true, createdAt: true },
+    select: {
+      id: true,
+      name: true,
+      service: true,
+      updatedAt: true,
+      createdAt: true,
+    },
   });
 
   type Member = {
@@ -66,32 +75,34 @@ export async function GET(req: Request) {
   }
 
   const baseUrl = baseUrlOf(req);
-  const groups: ScimGroup[] = Object.entries(byService).map(([service, members]) => {
-    const lastModified = members.reduce(
-      (max: Date, m: Member) => (m.updatedAt > max ? m.updatedAt : max),
-      members[0].updatedAt,
-    );
-    const created = members.reduce(
-      (min: Date, m: Member) => (m.createdAt < min ? m.createdAt : min),
-      members[0].createdAt,
-    );
-    return {
-      schemas: [SCIM_SCHEMAS.GROUP],
-      id: serviceToGroupId(service),
-      displayName: service,
-      members: members.map((m: Member) => ({
-        value: m.id,
-        display: m.name ?? undefined,
-        type: "User",
-      })),
-      meta: {
-        resourceType: "Group",
-        created: created.toISOString(),
-        lastModified: lastModified.toISOString(),
-        location: `${baseUrl}/scim/v2/Groups/${serviceToGroupId(service)}`,
-      },
-    };
-  });
+  const groups: ScimGroup[] = Object.entries(byService).map(
+    ([service, members]) => {
+      const lastModified = members.reduce(
+        (max: Date, m: Member) => (m.updatedAt > max ? m.updatedAt : max),
+        members[0].updatedAt,
+      );
+      const created = members.reduce(
+        (min: Date, m: Member) => (m.createdAt < min ? m.createdAt : min),
+        members[0].createdAt,
+      );
+      return {
+        schemas: [SCIM_SCHEMAS.GROUP],
+        id: serviceToGroupId(service),
+        displayName: service,
+        members: members.map((m: Member) => ({
+          value: m.id,
+          display: m.name ?? undefined,
+          type: "User",
+        })),
+        meta: {
+          resourceType: "Group",
+          created: created.toISOString(),
+          lastModified: lastModified.toISOString(),
+          location: `${baseUrl}/scim/v2/Groups/${serviceToGroupId(service)}`,
+        },
+      };
+    },
+  );
 
   return NextResponse.json(
     {

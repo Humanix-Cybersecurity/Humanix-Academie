@@ -19,7 +19,11 @@ export default function BreachesFilters(props: Props) {
   );
 }
 
-function BreachesFiltersInner({ currentSource, currentQuery, statsBySource }: Props) {
+function BreachesFiltersInner({
+  currentSource,
+  currentQuery,
+  statsBySource,
+}: Props) {
   const router = useRouter();
   const params = useSearchParams();
   const [query, setQuery] = useState(currentQuery);
@@ -53,21 +57,29 @@ function BreachesFiltersInner({ currentSource, currentQuery, statsBySource }: Pr
 
   const totalAll = statsBySource.reduce((s, x) => s + x.count, 0);
   const countOf = (k: BreachSource | "ALL") =>
-    k === "ALL" ? totalAll : statsBySource.find((s) => s.source === k)?.count ?? 0;
+    k === "ALL"
+      ? totalAll
+      : (statsBySource.find((s) => s.source === k)?.count ?? 0);
 
   const selected = currentSource.toUpperCase() || "ALL";
 
   return (
     <div className="card mb-6 space-y-3">
       {/* Filtres source : pills horizontales */}
-      <div className="flex flex-wrap gap-2" role="group" aria-label="Filtre par source">
+      <div
+        className="flex flex-wrap gap-2"
+        role="group"
+        aria-label="Filtre par source"
+      >
         {SOURCES.map((s) => {
           const active = selected === s.key;
           return (
             <button
               key={s.key}
               type="button"
-              onClick={() => pushParams({ source: s.key === "ALL" ? undefined : s.key })}
+              onClick={() =>
+                pushParams({ source: s.key === "ALL" ? undefined : s.key })
+              }
               aria-pressed={active}
               className={`text-sm px-3 py-1.5 rounded-full border-2 transition ${
                 active
@@ -76,7 +88,9 @@ function BreachesFiltersInner({ currentSource, currentQuery, statsBySource }: Pr
               }`}
             >
               {s.label}{" "}
-              <span className="text-xs opacity-70 ml-1 tabular-nums">({countOf(s.key)})</span>
+              <span className="text-xs opacity-70 ml-1 tabular-nums">
+                ({countOf(s.key)})
+              </span>
             </button>
           );
         })}

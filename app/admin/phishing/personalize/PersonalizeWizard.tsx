@@ -6,10 +6,7 @@
 //   3. Generation -> resultats avec preview de chaque mail + signaux faibles
 
 import { useState, useTransition } from "react";
-import {
-  generatePersonalizedBatch,
-  type GenerateState,
-} from "./actions";
+import { generatePersonalizedBatch, type GenerateState } from "./actions";
 import type { PersonalizedPhishing } from "@/lib/phishing/personalized";
 
 type Employee = {
@@ -104,16 +101,17 @@ export default function PersonalizeWizard({
   // ============== STEP 1 : SELECTION DES CIBLES ==============
   if (step === 1) {
     return (
-      <section
-        aria-labelledby="step1-title"
-        className="card"
-      >
+      <section aria-labelledby="step1-title" className="card">
         <header className="mb-4">
-          <h2 id="step1-title" className="text-xl font-bold text-primary-500 dark:text-accent-300">
+          <h2
+            id="step1-title"
+            className="text-xl font-bold text-primary-500 dark:text-accent-300"
+          >
             1. Sélectionnez les employés à cibler
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-300">
-            {selectedIds.size} sur {employees.length} sélectionné(s) — max 50 par batch.
+            {selectedIds.size} sur {employees.length} sélectionné(s) — max 50
+            par batch.
           </p>
         </header>
 
@@ -123,14 +121,17 @@ export default function PersonalizeWizard({
             onClick={toggleAll}
             className="text-sm text-accent-600 dark:text-accent-300 hover:underline"
           >
-            {selectedIds.size === employees.length ? "Tout désélectionner" : "Tout sélectionner"}
+            {selectedIds.size === employees.length
+              ? "Tout désélectionner"
+              : "Tout sélectionner"}
           </button>
         </div>
 
         <div className="max-h-[400px] overflow-y-auto rounded-xl border border-gray-200 dark:border-slate-700 divide-y divide-gray-100 dark:divide-slate-700">
           {employees.length === 0 && (
             <p className="p-4 text-sm text-gray-500 italic">
-              Aucun employé actif. Importez des utilisateurs depuis l'écran « Utilisateurs ».
+              Aucun employé actif. Importez des utilisateurs depuis l'écran «
+              Utilisateurs ».
             </p>
           )}
           {employees.map((e) => {
@@ -174,22 +175,26 @@ export default function PersonalizeWizard({
   // ============== STEP 2 : CONFIGURATION ==============
   if (step === 2) {
     return (
-      <section
-        aria-labelledby="step2-title"
-        className="card"
-      >
+      <section aria-labelledby="step2-title" className="card">
         <header className="mb-4">
-          <h2 id="step2-title" className="text-xl font-bold text-primary-500 dark:text-accent-300">
+          <h2
+            id="step2-title"
+            className="text-xl font-bold text-primary-500 dark:text-accent-300"
+          >
             2. Configurez la campagne
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-300">
-            {selectedIds.size} employé(s) ciblé(s). L'IA va générer un mail unique pour chacun.
+            {selectedIds.size} employé(s) ciblé(s). L'IA va générer un mail
+            unique pour chacun.
           </p>
         </header>
 
         <div className="space-y-4">
           <div>
-            <label htmlFor="template" className="block text-sm font-medium mb-1">
+            <label
+              htmlFor="template"
+              className="block text-sm font-medium mb-1"
+            >
               Template de phishing *
             </label>
             <select
@@ -207,7 +212,10 @@ export default function PersonalizeWizard({
           </div>
 
           <div>
-            <label htmlFor="difficulty" className="block text-sm font-medium mb-1">
+            <label
+              htmlFor="difficulty"
+              className="block text-sm font-medium mb-1"
+            >
               Niveau de difficulté *
             </label>
             <select
@@ -225,7 +233,10 @@ export default function PersonalizeWizard({
           </div>
 
           <div>
-            <label htmlFor="attackerStyle" className="block text-sm font-medium mb-1">
+            <label
+              htmlFor="attackerStyle"
+              className="block text-sm font-medium mb-1"
+            >
               Ton de l'attaquant (optionnel)
             </label>
             <select
@@ -243,7 +254,10 @@ export default function PersonalizeWizard({
           </div>
 
           <div>
-            <label htmlFor="recentEvent" className="block text-sm font-medium mb-1">
+            <label
+              htmlFor="recentEvent"
+              className="block text-sm font-medium mb-1"
+            >
               Évènement contextuel récent (optionnel, augmente la crédibilité)
             </label>
             <input
@@ -266,9 +280,9 @@ export default function PersonalizeWizard({
                 Mode démo actif
               </p>
               <p className="text-amber-700 dark:text-amber-300">
-                Les contenus générés seront des fixtures pré-écrites (pas d'appel
-                Mistral réel). Configurez MISTRAL_API_KEY pour activer la
-                génération IA en production.
+                Les contenus générés seront des fixtures pré-écrites (pas
+                d'appel Mistral réel). Configurez MISTRAL_API_KEY pour activer
+                la génération IA en production.
               </p>
             </div>
           )}
@@ -288,7 +302,9 @@ export default function PersonalizeWizard({
             disabled={pending}
             className="btn-primary"
           >
-            {pending ? "Génération…" : `🚀 Générer ${selectedIds.size} mail(s) personnalisé(s)`}
+            {pending
+              ? "Génération…"
+              : `🚀 Générer ${selectedIds.size} mail(s) personnalisé(s)`}
           </button>
         </div>
       </section>
@@ -307,7 +323,8 @@ export default function PersonalizeWizard({
         </h2>
         {pending && (
           <div className="mt-2 p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-200 text-sm">
-            ⏳ {progressMsg || "En cours…"} — Patience, l'IA prend ~1-2 sec par mail.
+            ⏳ {progressMsg || "En cours…"} — Patience, l'IA prend ~1-2 sec par
+            mail.
           </div>
         )}
         {state?.ok === false && (
@@ -374,9 +391,7 @@ function PhishingPreview({ item }: { item: PersonalizedPhishing }) {
     <article className="card">
       <header className="flex items-center justify-between mb-3 flex-wrap gap-2">
         <div>
-          <p className="text-xs uppercase font-bold text-accent-500">
-            Cible
-          </p>
+          <p className="text-xs uppercase font-bold text-accent-500">Cible</p>
           <p className="font-bold">
             {item.targetEmail}
             {item.targetService ? ` · ${item.targetService}` : ""}
@@ -387,7 +402,8 @@ function PhishingPreview({ item }: { item: PersonalizedPhishing }) {
 
       <div className="mb-3 text-sm">
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          De : <strong>{item.generated.fromName}</strong> &lt;{item.generated.fromEmail}&gt;
+          De : <strong>{item.generated.fromName}</strong> &lt;
+          {item.generated.fromEmail}&gt;
         </p>
         <p className="font-bold mt-1">{item.generated.subject}</p>
       </div>

@@ -5,9 +5,16 @@
 import { useTransition } from "react";
 import { changeIncidentStatus } from "@/app/admin/incidents/actions";
 
-const NEXT_BY_STATUS: Record<string, { value: string; label: string; variant: "primary" | "secondary" }[]> = {
+const NEXT_BY_STATUS: Record<
+  string,
+  { value: string; label: string; variant: "primary" | "secondary" }[]
+> = {
   OPEN: [
-    { value: "IN_PROGRESS", label: "▶ Démarrer la réponse", variant: "primary" },
+    {
+      value: "IN_PROGRESS",
+      label: "▶ Démarrer la réponse",
+      variant: "primary",
+    },
   ],
   IN_PROGRESS: [
     { value: "CONTAINED", label: "🛡 Marquer contenu", variant: "primary" },

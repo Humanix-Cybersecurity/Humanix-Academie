@@ -162,7 +162,11 @@ function splitForTTS(text: string, maxLen = 200): string[] {
   return chunks;
 }
 
-export default function TTSButton({ text, className, label = "Écouter" }: Props) {
+export default function TTSButton({
+  text,
+  className,
+  label = "Écouter",
+}: Props) {
   const [supported, setSupported] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [playing, setPlaying] = useState(false);
@@ -416,7 +420,9 @@ export default function TTSButton({ text, className, label = "Écouter" }: Props
   // ETAT 1 : pas de lecture en cours -> bouton Écouter + reglages
   if (!playing) {
     return (
-      <div className={`relative inline-flex items-center gap-1 ${className ?? ""}`}>
+      <div
+        className={`relative inline-flex items-center gap-1 ${className ?? ""}`}
+      >
         <button
           onClick={onPlay}
           aria-label={

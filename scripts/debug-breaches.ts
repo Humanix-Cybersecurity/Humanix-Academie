@@ -45,14 +45,24 @@ async function main() {
 
     if (r.ok && r.bodyExcerpt) {
       // Détecte les patterns connus
-      const found = SIGNALS.filter((s) => s.re.test(r.bodyExcerpt)).map((s) => s.label);
-      console.log(`Signaux  : ${found.length > 0 ? found.join(", ") : "AUCUN PATTERN CONNU"}`);
+      const found = SIGNALS.filter((s) => s.re.test(r.bodyExcerpt)).map(
+        (s) => s.label,
+      );
+      console.log(
+        `Signaux  : ${found.length > 0 ? found.join(", ") : "AUCUN PATTERN CONNU"}`,
+      );
 
       // Headers HTML utiles : <title>, premier <h1>
-      const title = /<title[^>]*>([\s\S]{1,200}?)<\/title>/i.exec(r.bodyExcerpt)?.[1]?.trim();
-      if (title) console.log(`<title>  : ${title.replace(/\s+/g, " ").slice(0, 80)}`);
+      const title = /<title[^>]*>([\s\S]{1,200}?)<\/title>/i
+        .exec(r.bodyExcerpt)?.[1]
+        ?.trim();
+      if (title)
+        console.log(`<title>  : ${title.replace(/\s+/g, " ").slice(0, 80)}`);
 
-      const h1 = /<h1[^>]*>([\s\S]{1,200}?)<\/h1>/i.exec(r.bodyExcerpt)?.[1]?.replace(/<[^>]+>/g, "").trim();
+      const h1 = /<h1[^>]*>([\s\S]{1,200}?)<\/h1>/i
+        .exec(r.bodyExcerpt)?.[1]
+        ?.replace(/<[^>]+>/g, "")
+        .trim();
       if (h1) console.log(`<h1>     : ${h1.replace(/\s+/g, " ").slice(0, 80)}`);
 
       // Premiers liens (utile pour repérer la structure de listing)
@@ -61,7 +71,8 @@ async function main() {
       let m: RegExpExecArray | null;
       while ((m = linksRe.exec(r.bodyExcerpt)) !== null && links.length < 5) {
         const text = m[2].trim();
-        if (text.length >= 5) links.push({ href: m[1].slice(0, 80), text: text.slice(0, 60) });
+        if (text.length >= 5)
+          links.push({ href: m[1].slice(0, 80), text: text.slice(0, 60) });
       }
       if (links.length > 0) {
         console.log(`Liens    :`);
@@ -76,8 +87,12 @@ async function main() {
   }
 
   console.log(`${"=".repeat(72)}`);
-  console.log("\n💡 Colle ce log dans une issue ou un message support — j'adapterai");
-  console.log("   les regex parsers en fonction des structures réelles observées.");
+  console.log(
+    "\n💡 Colle ce log dans une issue ou un message support — j'adapterai",
+  );
+  console.log(
+    "   les regex parsers en fonction des structures réelles observées.",
+  );
   process.exit(0);
 }
 

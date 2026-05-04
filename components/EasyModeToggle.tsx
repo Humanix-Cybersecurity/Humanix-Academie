@@ -33,7 +33,11 @@ export default function EasyModeToggle() {
           : "border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-300 hover:border-accent-500"
       }`}
       aria-pressed={active}
-      aria-label={active ? "Désactiver le mode facile (texte plus grand)" : "Activer le mode facile (texte plus grand)"}
+      aria-label={
+        active
+          ? "Désactiver le mode facile (texte plus grand)"
+          : "Activer le mode facile (texte plus grand)"
+      }
     >
       <span className="text-xl">🔠</span>
       Mode facile {active ? "✓" : ""}

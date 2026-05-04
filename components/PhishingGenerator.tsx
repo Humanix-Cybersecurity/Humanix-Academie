@@ -25,7 +25,16 @@ const TEMPLATES = [
   { id: "free", label: "Libre (par contexte)", emoji: "✏️" },
 ] as const;
 
-const SERVICES = ["Direction", "Compta", "RH", "IT", "Commercial", "Production", "Achats", "Marketing"];
+const SERVICES = [
+  "Direction",
+  "Compta",
+  "RH",
+  "IT",
+  "Commercial",
+  "Production",
+  "Achats",
+  "Marketing",
+];
 
 export default function PhishingGenerator() {
   const [form, setForm] = useState<GeneratePhishingArgs>({
@@ -82,7 +91,9 @@ export default function PhishingGenerator() {
                 }`}
                 aria-pressed={form.template === t.id}
               >
-                <span className="text-xl" aria-hidden="true">{t.emoji}</span>
+                <span className="text-xl" aria-hidden="true">
+                  {t.emoji}
+                </span>
                 <span>{t.label}</span>
               </button>
             ))}
@@ -90,17 +101,24 @@ export default function PhishingGenerator() {
         </div>
 
         <div>
-          <label htmlFor="phish-service" className="block text-xs font-bold uppercase text-gray-500 mb-1">
+          <label
+            htmlFor="phish-service"
+            className="block text-xs font-bold uppercase text-gray-500 mb-1"
+          >
             Service cible
           </label>
           <select
             id="phish-service"
             value={form.service}
-            onChange={(e) => setForm((f) => ({ ...f, service: e.target.value }))}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, service: e.target.value }))
+            }
             className="input w-full"
           >
             {SERVICES.map((s) => (
-              <option key={s} value={s}>{s}</option>
+              <option key={s} value={s}>
+                {s}
+              </option>
             ))}
           </select>
         </div>
@@ -122,7 +140,11 @@ export default function PhishingGenerator() {
                 }`}
                 aria-pressed={form.difficulty === d}
               >
-                {d === "easy" ? "Facile" : d === "medium" ? "Moyen" : "Difficile"}
+                {d === "easy"
+                  ? "Facile"
+                  : d === "medium"
+                    ? "Moyen"
+                    : "Difficile"}
               </button>
             ))}
           </div>
@@ -132,13 +154,18 @@ export default function PhishingGenerator() {
         </div>
 
         <div>
-          <label htmlFor="phish-context" className="block text-xs font-bold uppercase text-gray-500 mb-1">
+          <label
+            htmlFor="phish-context"
+            className="block text-xs font-bold uppercase text-gray-500 mb-1"
+          >
             Contexte additionnel (optionnel)
           </label>
           <textarea
             id="phish-context"
             value={form.context ?? ""}
-            onChange={(e) => setForm((f) => ({ ...f, context: e.target.value.slice(0, 200) }))}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, context: e.target.value.slice(0, 200) }))
+            }
             placeholder="Ex : période de clôture annuelle, tension sur les délais fournisseurs"
             maxLength={200}
             rows={3}
@@ -166,7 +193,10 @@ export default function PhishingGenerator() {
         </button>
 
         {error && (
-          <div role="alert" className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl p-3">
+          <div
+            role="alert"
+            className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl p-3"
+          >
             <strong>Erreur :</strong> {error}
           </div>
         )}
@@ -178,13 +208,18 @@ export default function PhishingGenerator() {
 
         {!result ? (
           <div className="text-center text-sm text-gray-500 py-16">
-            <p className="text-5xl mb-3 opacity-40" aria-hidden="true">📧</p>
+            <p className="text-5xl mb-3 opacity-40" aria-hidden="true">
+              📧
+            </p>
             <p>Le mail apparaîtra ici une fois généré.</p>
           </div>
         ) : (
           <div>
             {/* Tabs */}
-            <div role="tablist" className="flex gap-1 mb-4 border-b border-gray-200 dark:border-slate-700">
+            <div
+              role="tablist"
+              className="flex gap-1 mb-4 border-b border-gray-200 dark:border-slate-700"
+            >
               {(["preview", "text", "redflags"] as const).map((t) => (
                 <button
                   key={t}
@@ -197,15 +232,26 @@ export default function PhishingGenerator() {
                       : "border-transparent text-gray-500 hover:text-primary-500"
                   }`}
                 >
-                  {t === "preview" ? "Aperçu HTML" : t === "text" ? "Texte brut" : "Signaux faibles"}
+                  {t === "preview"
+                    ? "Aperçu HTML"
+                    : t === "text"
+                      ? "Texte brut"
+                      : "Signaux faibles"}
                 </button>
               ))}
             </div>
 
             {/* Headers */}
             <div className="bg-gray-50 dark:bg-slate-800 rounded-xl p-3 mb-3 text-xs space-y-1">
-              <p><strong>De :</strong> <span className="font-mono text-red-600 dark:text-red-300">{result.fromName} &lt;{result.fromEmail}&gt;</span></p>
-              <p><strong>Sujet :</strong> {result.subject}</p>
+              <p>
+                <strong>De :</strong>{" "}
+                <span className="font-mono text-red-600 dark:text-red-300">
+                  {result.fromName} &lt;{result.fromEmail}&gt;
+                </span>
+              </p>
+              <p>
+                <strong>Sujet :</strong> {result.subject}
+              </p>
             </div>
 
             {/* Tab content */}
@@ -233,8 +279,15 @@ export default function PhishingGenerator() {
                       key={i}
                       className="flex items-start gap-2 p-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-xs"
                     >
-                      <span className="text-amber-600 mt-0.5" aria-hidden="true">⚠️</span>
-                      <span className="text-amber-900 dark:text-amber-200">{rf}</span>
+                      <span
+                        className="text-amber-600 mt-0.5"
+                        aria-hidden="true"
+                      >
+                        ⚠️
+                      </span>
+                      <span className="text-amber-900 dark:text-amber-200">
+                        {rf}
+                      </span>
                     </li>
                   ))}
                 </ul>

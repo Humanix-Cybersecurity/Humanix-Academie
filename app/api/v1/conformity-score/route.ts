@@ -10,7 +10,9 @@ export async function GET(req: Request) {
   if (!a.ok) return NextResponse.json({ error: a.error }, { status: a.status });
 
   const [users, saisons, allProgress] = await Promise.all([
-    db.user.findMany({ where: { tenantId: a.tenantId!, isActive: true, role: "LEARNER" } }),
+    db.user.findMany({
+      where: { tenantId: a.tenantId!, isActive: true, role: "LEARNER" },
+    }),
     // Multi-tenant : saisons globales + custom du tenant uniquement
     db.saison.findMany({
       where: {
@@ -27,9 +29,13 @@ export async function GET(req: Request) {
   const totalSeats = users.length;
   const totalEpisodes = saisons.reduce((s, sa) => s + sa.episodes.length, 0);
   const seenAtLeastOne = new Set(allProgress.map((p) => p.userId)).size;
-  const activationRate = totalSeats === 0 ? 0 : Math.round((seenAtLeastOne / totalSeats) * 100);
+  const activationRate =
+    totalSeats === 0 ? 0 : Math.round((seenAtLeastOne / totalSeats) * 100);
   const conformityScore = Math.round(
-    activationRate * 0.4 + (allProgress.length / Math.max(totalEpisodes * totalSeats, 1)) * 100 * 0.6,
+    activationRate * 0.4 +
+      (allProgress.length / Math.max(totalEpisodes * totalSeats, 1)) *
+        100 *
+        0.6,
   );
 
   return NextResponse.json({
@@ -40,7 +46,12 @@ export async function GET(req: Request) {
       activatedSeats: seenAtLeastOne,
       completedEpisodes: allProgress.length,
       totalEpisodes: totalEpisodes * totalSeats,
-      verdict: conformityScore >= 80 ? "EXCELLENT" : conformityScore >= 50 ? "CORRECT" : "À AMÉLIORER",
+      verdict:
+        conformityScore >= 80
+          ? "EXCELLENT"
+          : conformityScore >= 50
+            ? "CORRECT"
+            : "À AMÉLIORER",
       computedAt: new Date().toISOString(),
     },
     meta: { tenantId: a.tenantId },

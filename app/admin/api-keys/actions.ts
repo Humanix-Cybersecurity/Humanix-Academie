@@ -12,14 +12,22 @@ async function requireAdmin() {
   return { tenantId: session.user!.tenantId as string };
 }
 
-export async function createApiKey(formData: FormData): Promise<{ plain: string; prefix: string; name: string }> {
+export async function createApiKey(
+  formData: FormData,
+): Promise<{ plain: string; prefix: string; name: string }> {
   const { tenantId } = await requireAdmin();
   const name = (formData.get("name") as string) || "Sans nom";
   const scopes = (formData.get("scopes") as string) || "read";
-  const expiresInDays = parseInt((formData.get("expiresInDays") as string) || "0", 10);
+  const expiresInDays = parseInt(
+    (formData.get("expiresInDays") as string) || "0",
+    10,
+  );
 
   const { plain, prefix, hashed } = generateApiKey();
-  const expiresAt = expiresInDays > 0 ? new Date(Date.now() + expiresInDays * 24 * 3600 * 1000) : null;
+  const expiresAt =
+    expiresInDays > 0
+      ? new Date(Date.now() + expiresInDays * 24 * 3600 * 1000)
+      : null;
 
   await db.apiKey.create({
     data: { tenantId, name, prefix, hashedKey: hashed, scopes, expiresAt },

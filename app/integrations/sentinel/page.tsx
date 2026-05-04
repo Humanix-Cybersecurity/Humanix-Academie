@@ -75,112 +75,261 @@ export default function SentinelIntegrationPage() {
               <stop offset="0%" stopColor="#0078D4" />
               <stop offset="100%" stopColor="#50E6FF" />
             </linearGradient>
-            <marker id="arrowG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <marker
+              id="arrowG"
+              viewBox="0 0 10 10"
+              refX="9"
+              refY="5"
+              markerWidth="6"
+              markerHeight="6"
+              orient="auto"
+            >
               <path d="M 0 0 L 10 5 L 0 10 z" fill="#00A3A1" />
             </marker>
           </defs>
 
           {/* Humanix box */}
-          <rect x="10" y="80" width="160" height="60" rx="14" fill="url(#g-humanix)" />
-          <text x="90" y="115" textAnchor="middle" fontSize="14" fontWeight="800" fill="white">
+          <rect
+            x="10"
+            y="80"
+            width="160"
+            height="60"
+            rx="14"
+            fill="url(#g-humanix)"
+          />
+          <text
+            x="90"
+            y="115"
+            textAnchor="middle"
+            fontSize="14"
+            fontWeight="800"
+            fill="white"
+          >
             Humanix
           </text>
-          <text x="90" y="132" textAnchor="middle" fontSize="10" fill="white" opacity="0.85">
+          <text
+            x="90"
+            y="132"
+            textAnchor="middle"
+            fontSize="10"
+            fill="white"
+            opacity="0.85"
+          >
             (connecteur Python)
           </text>
 
           {/* DCE */}
-          <rect x="220" y="80" width="160" height="60" rx="14" fill="url(#g-azure)" />
-          <text x="300" y="110" textAnchor="middle" fontSize="13" fontWeight="800" fill="white">
+          <rect
+            x="220"
+            y="80"
+            width="160"
+            height="60"
+            rx="14"
+            fill="url(#g-azure)"
+          />
+          <text
+            x="300"
+            y="110"
+            textAnchor="middle"
+            fontSize="13"
+            fontWeight="800"
+            fill="white"
+          >
             Data Collection
           </text>
-          <text x="300" y="125" textAnchor="middle" fontSize="13" fontWeight="800" fill="white">
+          <text
+            x="300"
+            y="125"
+            textAnchor="middle"
+            fontSize="13"
+            fontWeight="800"
+            fill="white"
+          >
             Endpoint
           </text>
 
           {/* DCR */}
-          <rect x="430" y="80" width="160" height="60" rx="14" fill="url(#g-azure)" />
-          <text x="510" y="110" textAnchor="middle" fontSize="13" fontWeight="800" fill="white">
+          <rect
+            x="430"
+            y="80"
+            width="160"
+            height="60"
+            rx="14"
+            fill="url(#g-azure)"
+          />
+          <text
+            x="510"
+            y="110"
+            textAnchor="middle"
+            fontSize="13"
+            fontWeight="800"
+            fill="white"
+          >
             Data Collection
           </text>
-          <text x="510" y="125" textAnchor="middle" fontSize="13" fontWeight="800" fill="white">
+          <text
+            x="510"
+            y="125"
+            textAnchor="middle"
+            fontSize="13"
+            fontWeight="800"
+            fill="white"
+          >
             Rule (transform)
           </text>
 
           {/* Table */}
-          <rect x="640" y="80" width="150" height="60" rx="14" fill="url(#g-azure)" />
-          <text x="715" y="110" textAnchor="middle" fontSize="12" fontWeight="800" fill="white">
+          <rect
+            x="640"
+            y="80"
+            width="150"
+            height="60"
+            rx="14"
+            fill="url(#g-azure)"
+          />
+          <text
+            x="715"
+            y="110"
+            textAnchor="middle"
+            fontSize="12"
+            fontWeight="800"
+            fill="white"
+          >
             HumanixCompliance_CL
           </text>
-          <text x="715" y="128" textAnchor="middle" fontSize="10" fill="white" opacity="0.85">
+          <text
+            x="715"
+            y="128"
+            textAnchor="middle"
+            fontSize="10"
+            fill="white"
+            opacity="0.85"
+          >
             (Sentinel + Workbook)
           </text>
 
           {/* Fleches */}
-          <line x1="175" y1="110" x2="215" y2="110" stroke="#00A3A1" strokeWidth="2.5" markerEnd="url(#arrowG)" />
-          <line x1="385" y1="110" x2="425" y2="110" stroke="#00A3A1" strokeWidth="2.5" markerEnd="url(#arrowG)" />
-          <line x1="595" y1="110" x2="635" y2="110" stroke="#00A3A1" strokeWidth="2.5" markerEnd="url(#arrowG)" />
+          <line
+            x1="175"
+            y1="110"
+            x2="215"
+            y2="110"
+            stroke="#00A3A1"
+            strokeWidth="2.5"
+            markerEnd="url(#arrowG)"
+          />
+          <line
+            x1="385"
+            y1="110"
+            x2="425"
+            y2="110"
+            stroke="#00A3A1"
+            strokeWidth="2.5"
+            markerEnd="url(#arrowG)"
+          />
+          <line
+            x1="595"
+            y1="110"
+            x2="635"
+            y2="110"
+            stroke="#00A3A1"
+            strokeWidth="2.5"
+            markerEnd="url(#arrowG)"
+          />
 
-          <text x="195" y="100" textAnchor="middle" fontSize="9" fill="#555">POST</text>
-          <text x="405" y="100" textAnchor="middle" fontSize="9" fill="#555">stream</text>
-          <text x="615" y="100" textAnchor="middle" fontSize="9" fill="#555">ingest</text>
+          <text x="195" y="100" textAnchor="middle" fontSize="9" fill="#555">
+            POST
+          </text>
+          <text x="405" y="100" textAnchor="middle" fontSize="9" fill="#555">
+            stream
+          </text>
+          <text x="615" y="100" textAnchor="middle" fontSize="9" fill="#555">
+            ingest
+          </text>
 
           <text x="400" y="195" textAnchor="middle" fontSize="11" fill="#555">
-            Auth : OAuth2 client_credentials (Azure AD App Registration) · Role : Monitoring Metrics Publisher
+            Auth : OAuth2 client_credentials (Azure AD App Registration) · Role
+            : Monitoring Metrics Publisher
           </text>
         </svg>
       </section>
 
       {/* Setup */}
       <section aria-labelledby="setup-title" className="mb-10">
-        <h2 id="setup-title" className="text-2xl font-extrabold text-primary-500 mb-3">
+        <h2
+          id="setup-title"
+          className="text-2xl font-extrabold text-primary-500 mb-3"
+        >
           Setup Azure (10 min, à faire une fois)
         </h2>
         <ol className="space-y-3 text-sm list-decimal list-inside">
           <li>
-            <strong>Data Collection Endpoint</strong> : Azure Portal → DCE → Create. Notez l'ingestion endpoint URI.
+            <strong>Data Collection Endpoint</strong> : Azure Portal → DCE →
+            Create. Notez l'ingestion endpoint URI.
           </li>
           <li>
-            <strong>Custom Log Table</strong> : Log Analytics workspace → Tables → New custom log (DCR-based). Nom : <code>HumanixCompliance</code>. Schéma fourni dans le README du connecteur.
+            <strong>Custom Log Table</strong> : Log Analytics workspace → Tables
+            → New custom log (DCR-based). Nom : <code>HumanixCompliance</code>.
+            Schéma fourni dans le README du connecteur.
           </li>
           <li>
-            <strong>Data Collection Rule</strong> : créée automatiquement avec la table. Notez son <em>Immutable ID</em>.
+            <strong>Data Collection Rule</strong> : créée automatiquement avec
+            la table. Notez son <em>Immutable ID</em>.
           </li>
           <li>
-            <strong>App Registration</strong> : Azure AD → App registrations → New. Récupérez Tenant ID, Client ID, Client Secret. Ajoutez le rôle <code>Monitoring Metrics Publisher</code> sur la DCR.
+            <strong>App Registration</strong> : Azure AD → App registrations →
+            New. Récupérez Tenant ID, Client ID, Client Secret. Ajoutez le rôle{" "}
+            <code>Monitoring Metrics Publisher</code> sur la DCR.
           </li>
           <li>
-            <strong>Workbook</strong> : Sentinel → Workbooks → New → <code>&lt;/&gt;</code> → collez le contenu de <code>humanix-workbook.json</code> (fourni avec le connecteur).
+            <strong>Workbook</strong> : Sentinel → Workbooks → New →{" "}
+            <code>&lt;/&gt;</code> → collez le contenu de{" "}
+            <code>humanix-workbook.json</code> (fourni avec le connecteur).
           </li>
         </ol>
       </section>
 
       {/* KQL queries */}
       <section aria-labelledby="kql-title" className="mb-10">
-        <h2 id="kql-title" className="text-2xl font-extrabold text-primary-500 mb-3">
+        <h2
+          id="kql-title"
+          className="text-2xl font-extrabold text-primary-500 mb-3"
+        >
           Queries KQL prêtes à l'emploi
         </h2>
 
         <div className="space-y-6">
           <div>
-            <h3 className="font-bold mb-2 text-primary-500">Évolution du score moyen (chart)</h3>
+            <h3 className="font-bold mb-2 text-primary-500">
+              Évolution du score moyen (chart)
+            </h3>
             <CopyableSnippet code={KQL_SCORE} label="KQL score timechart" />
           </div>
           <div>
-            <h3 className="font-bold mb-2 text-primary-500">Contrôles non-conformes</h3>
-            <CopyableSnippet code={KQL_NON_COMPLIANT} label="KQL non-compliant" />
+            <h3 className="font-bold mb-2 text-primary-500">
+              Contrôles non-conformes
+            </h3>
+            <CopyableSnippet
+              code={KQL_NON_COMPLIANT}
+              label="KQL non-compliant"
+            />
           </div>
           <div>
-            <h3 className="font-bold mb-2 text-primary-500">Analytics Rule (déclenche un Incident)</h3>
+            <h3 className="font-bold mb-2 text-primary-500">
+              Analytics Rule (déclenche un Incident)
+            </h3>
             <CopyableSnippet code={KQL_ALERT} label="KQL analytics rule" />
           </div>
         </div>
       </section>
 
       <section className="card text-center bg-gradient-to-br from-primary-500 to-accent-500 text-white">
-        <h2 className="text-2xl font-extrabold mb-2">Prêt à brancher Sentinel ?</h2>
+        <h2 className="text-2xl font-extrabold mb-2">
+          Prêt à brancher Sentinel ?
+        </h2>
         <p className="opacity-90 mb-5">
-          Le connecteur Python (MIT) + le workbook JSON sont fournis dans le repo.
+          Le connecteur Python (MIT) + le workbook JSON sont fournis dans le
+          repo.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
           <Link

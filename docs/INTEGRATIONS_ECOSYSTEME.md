@@ -24,55 +24,55 @@ Bénéfice : on maintient 1 endpoint + 1 mapping GRC, on décline en 5-10 format
 
 Effort cumulé faible, ROI maximal car débloque des dizaines d'outils en aval.
 
-| # | Livrable | Statut |
-|---|---|---|
-| 1 | **`format=oscal-v1`** sur `/api/v1/evidence-export` (NIST 1.1.2 Assessment Results) | ✅ livré |
-| 2 | **Webhook outbound `evidence.exported`** signé HMAC-SHA256 + page de doc publique `/integrations/webhooks` | ✅ livré |
-| 3 | **SCIM v2 complet** (`/scim/v2/{ServiceProviderConfig,ResourceTypes,Users,Users/[id],Groups}`) + page de doc `/integrations/scim` | ✅ livré |
-| 4 | **Hub `/integrations`** — vue agrégée des connecteurs (livrés + roadmap, filtre par origine FR/UE/US/Standard) | ✅ livré |
+| #   | Livrable                                                                                                                          | Statut   |
+| --- | --------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| 1   | **`format=oscal-v1`** sur `/api/v1/evidence-export` (NIST 1.1.2 Assessment Results)                                               | ✅ livré |
+| 2   | **Webhook outbound `evidence.exported`** signé HMAC-SHA256 + page de doc publique `/integrations/webhooks`                        | ✅ livré |
+| 3   | **SCIM v2 complet** (`/scim/v2/{ServiceProviderConfig,ResourceTypes,Users,Users/[id],Groups}`) + page de doc `/integrations/scim` | ✅ livré |
+| 4   | **Hub `/integrations`** — vue agrégée des connecteurs (livrés + roadmap, filtre par origine FR/UE/US/Standard)                    | ✅ livré |
 
 ---
 
 ### ✅ Sprint 11 — Marché SIEM mainstream (LIVRÉ — mai 2026)
 
-| # | Livrable | Statut |
-|---|---|---|
-| 4 | **Microsoft Sentinel** : workbook clé en main + Logs Ingestion API + format CEF + page `/integrations/sentinel` | ✅ livré |
-| 5 | **Splunk HEC** : `format=splunk-cim-v1` (NDJSON) + connecteur Python + page `/integrations/splunk` + SPL queries | ✅ livré |
-| 5b | **Format CEF générique** : aussi compatible QRadar, Sekoia, Elastic Security, Wazuh, Graylog | ✅ bonus |
+| #   | Livrable                                                                                                         | Statut   |
+| --- | ---------------------------------------------------------------------------------------------------------------- | -------- |
+| 4   | **Microsoft Sentinel** : workbook clé en main + Logs Ingestion API + format CEF + page `/integrations/sentinel`  | ✅ livré |
+| 5   | **Splunk HEC** : `format=splunk-cim-v1` (NDJSON) + connecteur Python + page `/integrations/splunk` + SPL queries | ✅ livré |
+| 5b  | **Format CEF générique** : aussi compatible QRadar, Sekoia, Elastic Security, Wazuh, Graylog                     | ✅ bonus |
 
 ---
 
 ### ✅ Sprint 12 — Levier commercial PME française (LIVRÉ — mai 2026) 🇫🇷
 
-| # | Livrable | Statut |
-|---|---|---|
-| 6 | **Connecteur Lucca** — Python MIT, sync HR vers SCIM v2 + page `/integrations/lucca` | ✅ livré |
-| 7 | **Plugin GLPI** — bridge Python, webhooks signés → tickets GLPI 10.x + page `/integrations/glpi` | ✅ livré |
-| 8 | **CyberMalveillance.gouv.fr** — page liaison officielle + ressources intégrées + démarche de référencement en cours | ✅ livré |
+| #   | Livrable                                                                                                            | Statut   |
+| --- | ------------------------------------------------------------------------------------------------------------------- | -------- |
+| 6   | **Connecteur Lucca** — Python MIT, sync HR vers SCIM v2 + page `/integrations/lucca`                                | ✅ livré |
+| 7   | **Plugin GLPI** — bridge Python, webhooks signés → tickets GLPI 10.x + page `/integrations/glpi`                    | ✅ livré |
+| 8   | **CyberMalveillance.gouv.fr** — page liaison officielle + ressources intégrées + démarche de référencement en cours | ✅ livré |
 
 ---
 
 ### ✅ Sprint 13 — Souveraineté française (LIVRÉ — mai 2026) 🇫🇷
 
-| # | Livrable | Statut |
-|---|---|---|
-| 9 | **Sekoia.io** — connecteur Python push CEF vers Intake API + page `/integrations/sekoia` | ✅ livré |
-| 10 | **HarfangLab** — bridge bidirectionnel (push CEF + pull alertes pour campagnes ciblées) + page `/integrations/harfanglab` | ✅ livré |
-| 11 | **Mailinblack / Vade** — bridge HTTP webhook → campagne Humanix ciblée < 5 min + page `/integrations/mailinblack-vade` | ✅ livré |
+| #   | Livrable                                                                                                                  | Statut   |
+| --- | ------------------------------------------------------------------------------------------------------------------------- | -------- |
+| 9   | **Sekoia.io** — connecteur Python push CEF vers Intake API + page `/integrations/sekoia`                                  | ✅ livré |
+| 10  | **HarfangLab** — bridge bidirectionnel (push CEF + pull alertes pour campagnes ciblées) + page `/integrations/harfanglab` | ✅ livré |
+| 11  | **Mailinblack / Vade** — bridge HTTP webhook → campagne Humanix ciblée < 5 min + page `/integrations/mailinblack-vade`    | ✅ livré |
 
 ---
 
 ## Plan rythmé sur 12 mois (2026-2027)
 
-| Période | Sprint | Livrable | Cocorico | US | Standard |
-|---|---|---|---|---|---|
-| Mai 2026 | 9 ✅ | CISO Assistant (connecteur livré) | — | — | ✅ |
-| Juin 2026 | 10 | OSCAL + Webhook + SCIM | — | — | ✅✅✅ |
-| Juil 2026 | 11 | Sentinel + Splunk | — | ✅✅ | — |
-| Sept 2026 | 12 | Lucca + GLPI + CyberMalveillance | ✅✅✅ | — | — |
-| Nov 2026 | 13 | Sekoia + HarfangLab + Mailinblack/Vade | ✅✅✅ | — | — |
-| 2027 | 14+ | Élargissement opportuniste (Eramba, Vanta, Defender O365, Patrowl) | — | — | — |
+| Période   | Sprint | Livrable                                                           | Cocorico | US   | Standard |
+| --------- | ------ | ------------------------------------------------------------------ | -------- | ---- | -------- |
+| Mai 2026  | 9 ✅   | CISO Assistant (connecteur livré)                                  | —        | —    | ✅       |
+| Juin 2026 | 10     | OSCAL + Webhook + SCIM                                             | —        | —    | ✅✅✅   |
+| Juil 2026 | 11     | Sentinel + Splunk                                                  | —        | ✅✅ | —        |
+| Sept 2026 | 12     | Lucca + GLPI + CyberMalveillance                                   | ✅✅✅   | —    | —        |
+| Nov 2026  | 13     | Sekoia + HarfangLab + Mailinblack/Vade                             | ✅✅✅   | —    | —        |
+| 2027      | 14+    | Élargissement opportuniste (Eramba, Vanta, Defender O365, Patrowl) | —        | —    | —        |
 
 **Total fin 2026 : 11 connecteurs natifs livrés.** Aucun concurrent (KnowBe4, Mantra, Hoxhunt, Phished) n'en a plus de 3.
 
@@ -116,14 +116,14 @@ Cette politique permet de répondre à 100% des besoins sans s'engager à mainte
 
 - ✅ Connecteur GRC natif (CISO Assistant) — **Humanix gagne face à 4 concurrents**
 - 🟡 Format OSCAL-v1 standard NIST — **Humanix gagne**
-- 🟡 SCIM v2 auto-provisioning — *équivaut* concurrents grand compte, **Humanix gagne** vs Mantra/Phished
+- 🟡 SCIM v2 auto-provisioning — _équivaut_ concurrents grand compte, **Humanix gagne** vs Mantra/Phished
 - 🟡 Connecteur Sentinel + workbook clé en main — **Humanix gagne** (concurrents : doc PDF)
 - 🟡 Connecteur Lucca / PayFit / GLPI — **Humanix seul gagnant**
 - 🟡 Connecteur Sekoia / HarfangLab — **Humanix seul gagnant** (souveraineté)
 
 ### Argumentaire RSSI
 
-> *« Le seul outil de sensibilisation cyber qui s'intègre nativement à votre stack souveraine — Sekoia, HarfangLab, GLPI, Lucca, CISO Assistant — sans dev custom. »*
+> _« Le seul outil de sensibilisation cyber qui s'intègre nativement à votre stack souveraine — Sekoia, HarfangLab, GLPI, Lucca, CISO Assistant — sans dev custom. »_
 
 C'est un positionnement unique sur le marché européen.
 

@@ -23,7 +23,7 @@ import clsx from "clsx";
 type NavItem = {
   href: string;
   label: string;
-  icon: string;          // emoji simple (compat tous navigateurs, pas de lib)
+  icon: string; // emoji simple (compat tous navigateurs, pas de lib)
   gate?: "Essentielle+" | "Pro+";
 };
 
@@ -33,33 +33,58 @@ const SECTIONS: Section[] = [
   {
     title: "Pilotage",
     items: [
-      { href: "/admin",              label: "Tableau de bord",  icon: "📊" },
-      { href: "/admin/business",     label: "Impact business",  icon: "💼" },
-      { href: "/admin/utilisateurs", label: "Utilisateurs",     icon: "👥" },
+      { href: "/admin", label: "Tableau de bord", icon: "📊" },
+      { href: "/admin/business", label: "Impact business", icon: "💼" },
+      { href: "/admin/utilisateurs", label: "Utilisateurs", icon: "👥" },
     ],
   },
   {
     title: "Sensibilisation",
     items: [
-      { href: "/admin/modules",       label: "Modules",          icon: "📚" },
-      { href: "/admin/challenge",     label: "Challenges",       icon: "🏆", gate: "Pro+" },
-      { href: "/admin/phishing",      label: "Phishing",         icon: "🎣", gate: "Pro+" },
-      { href: "/admin/contributions", label: "Contributions",    icon: "✍️" },
+      { href: "/admin/modules", label: "Modules", icon: "📚" },
+      {
+        href: "/admin/challenge",
+        label: "Challenges",
+        icon: "🏆",
+        gate: "Pro+",
+      },
+      { href: "/admin/phishing", label: "Phishing", icon: "🎣", gate: "Pro+" },
+      { href: "/admin/contributions", label: "Contributions", icon: "✍️" },
     ],
   },
   {
     title: "Conformité",
     items: [
-      { href: "/admin/conformite-nis2", label: "Pack NIS2",       icon: "📋", gate: "Pro+" },
-      { href: "/admin/incidents",       label: "Cyber-Réflexe",   icon: "🚨", gate: "Pro+" },
-      { href: "/admin/etablissements",  label: "Établissements",  icon: "🏢", gate: "Pro+" },
+      {
+        href: "/admin/conformite-nis2",
+        label: "Pack NIS2",
+        icon: "📋",
+        gate: "Pro+",
+      },
+      {
+        href: "/admin/incidents",
+        label: "Cyber-Réflexe",
+        icon: "🚨",
+        gate: "Pro+",
+      },
+      {
+        href: "/admin/etablissements",
+        label: "Établissements",
+        icon: "🏢",
+        gate: "Pro+",
+      },
     ],
   },
   {
     title: "Intégrations",
     items: [
-      { href: "/admin/api-keys",     label: "API Keys",          icon: "🔑", gate: "Essentielle+" },
-      { href: "/admin/integrations", label: "Webhooks",          icon: "🔗" },
+      {
+        href: "/admin/api-keys",
+        label: "API Keys",
+        icon: "🔑",
+        gate: "Essentielle+",
+      },
+      { href: "/admin/integrations", label: "Webhooks", icon: "🔗" },
     ],
   },
 ];
@@ -69,7 +94,7 @@ const SUPERADMIN_SECTIONS: Section[] = [
     title: "Modération",
     items: [
       { href: "/admin/moderation", label: "Marketplace", icon: "⚖️" },
-      { href: "/admin/anecdotes",  label: "Anecdotes",   icon: "📅" },
+      { href: "/admin/anecdotes", label: "Anecdotes", icon: "📅" },
     ],
   },
 ];
@@ -87,19 +112,25 @@ export default function AdminSidebar() {
   const path = usePathname();
   const { data: session } = useSession();
   const isSuperAdmin = (session?.user as any)?.role === "SUPERADMIN";
-  const sections = isSuperAdmin ? [...SECTIONS, ...SUPERADMIN_SECTIONS] : SECTIONS;
+  const sections = isSuperAdmin
+    ? [...SECTIONS, ...SUPERADMIN_SECTIONS]
+    : SECTIONS;
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Fermeture drawer mobile : ESC + changement de route
   useEffect(() => {
     if (!drawerOpen) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setDrawerOpen(false); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setDrawerOpen(false);
+    };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [drawerOpen]);
 
-  useEffect(() => { setDrawerOpen(false); }, [path]);
+  useEffect(() => {
+    setDrawerOpen(false);
+  }, [path]);
 
   // Expose le toggle drawer mobile à la TopBar via window event
   useEffect(() => {
@@ -134,7 +165,10 @@ export default function AdminSidebar() {
           {sections.map((section, idx) => (
             <div key={section.title}>
               {idx > 0 && (
-                <div className="my-3 mx-3 border-t border-gray-100 dark:border-slate-800" aria-hidden="true" />
+                <div
+                  className="my-3 mx-3 border-t border-gray-100 dark:border-slate-800"
+                  aria-hidden="true"
+                />
               )}
               {/* Titre de section : visible seulement au hover */}
               <p className="px-4 pt-1 pb-1 text-[9px] uppercase tracking-widest font-bold text-gray-400 dark:text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-150 whitespace-nowrap overflow-hidden">
@@ -143,7 +177,10 @@ export default function AdminSidebar() {
               <ul className="space-y-0.5">
                 {section.items.map((item) => (
                   <li key={item.href}>
-                    <ExpandableNavLink item={item} active={isActive(path, item.href)} />
+                    <ExpandableNavLink
+                      item={item}
+                      active={isActive(path, item.href)}
+                    />
                   </li>
                 ))}
               </ul>
@@ -192,7 +229,10 @@ export default function AdminSidebar() {
                   <ul className="space-y-1">
                     {section.items.map((item) => (
                       <li key={item.href}>
-                        <WideNavLink item={item} active={isActive(path, item.href)} />
+                        <WideNavLink
+                          item={item}
+                          active={isActive(path, item.href)}
+                        />
                       </li>
                     ))}
                   </ul>
@@ -214,7 +254,13 @@ export default function AdminSidebar() {
  * ExpandableNavLink — icône toujours visible, label révélé quand le parent
  * .group (l'aside) est hover. L'item actif a une barre verticale à gauche.
  */
-function ExpandableNavLink({ item, active }: { item: NavItem; active: boolean }) {
+function ExpandableNavLink({
+  item,
+  active,
+}: {
+  item: NavItem;
+  active: boolean;
+}) {
   return (
     <Link
       href={item.href}
@@ -236,7 +282,9 @@ function ExpandableNavLink({ item, active }: { item: NavItem; active: boolean })
       )}
 
       {/* Icône (toujours visible) */}
-      <span aria-hidden="true" className="text-lg shrink-0 w-5 text-center">{item.icon}</span>
+      <span aria-hidden="true" className="text-lg shrink-0 w-5 text-center">
+        {item.icon}
+      </span>
 
       {/* Label (révélé au hover du parent .group sur l'aside) */}
       <span className="flex-1 min-w-0 text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150 truncate">
@@ -272,7 +320,9 @@ function WideNavLink({ item, active }: { item: NavItem; active: boolean }) {
           : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-primary-500 dark:hover:text-accent-300",
       )}
     >
-      <span aria-hidden="true" className="text-base shrink-0">{item.icon}</span>
+      <span aria-hidden="true" className="text-base shrink-0">
+        {item.icon}
+      </span>
       <span className="truncate flex-1">{item.label}</span>
       {item.gate && (
         <span

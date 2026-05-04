@@ -10,14 +10,14 @@ export default function PlanGateNis2({ plan }: { plan: PlanId }) {
         Disponible à partir de l'offre Pro
       </h2>
       <p className="text-sm text-amber-800 dark:text-amber-200 mb-3">
-        Le Pack Conformité NIS2 est inclus dans les offres <strong>Pro</strong> et{" "}
-        <strong>Enterprise</strong>. Votre offre actuelle est{" "}
+        Le Pack Conformité NIS2 est inclus dans les offres <strong>Pro</strong>{" "}
+        et <strong>Enterprise</strong>. Votre offre actuelle est{" "}
         <strong>{PLAN_LABEL[plan]}</strong>.
       </p>
       <p className="text-sm text-amber-800 dark:text-amber-200 mb-4">
         Pourquoi cette restriction : ce pack constitue une preuve documentaire
-        utilisée auprès d'assureurs cyber, d'auditeurs clients et de l'ANSSI.
-        Sa génération inclut des informations sensibles (nom dirigeant, contacts
+        utilisée auprès d'assureurs cyber, d'auditeurs clients et de l'ANSSI. Sa
+        génération inclut des informations sensibles (nom dirigeant, contacts
         crise) qui justifient un palier d'engagement supérieur.
       </p>
       <div className="flex flex-wrap gap-3">

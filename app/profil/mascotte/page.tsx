@@ -33,7 +33,10 @@ export default async function MascotChoosePage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 animate-fadeIn">
-      <Link href="/profil" className="text-sm text-gray-500 hover:text-primary-500 mb-3 inline-block">
+      <Link
+        href="/profil"
+        className="text-sm text-gray-500 hover:text-primary-500 mb-3 inline-block"
+      >
         ← Retour à mon profil
       </Link>
 
@@ -42,17 +45,21 @@ export default async function MascotChoosePage() {
       </h1>
       <p className="text-gray-600 mb-8">
         Choisis ton animal totem, ton humeur du jour, et même un emoji
-        complètement custom. Ta mascotte t'accompagne partout sur la
-        plateforme — qu'elle te ressemble.
+        complètement custom. Ta mascotte t'accompagne partout sur la plateforme
+        — qu'elle te ressemble.
       </p>
 
       {/* Choix de l'espece */}
       <section className="mb-12" aria-labelledby="species-title">
-        <h2 id="species-title" className="text-2xl font-bold text-primary-500 mb-3">
+        <h2
+          id="species-title"
+          className="text-2xl font-bold text-primary-500 mb-3"
+        >
           1. L'animal
         </h2>
         <p className="text-sm text-gray-500 mb-4">
-          16 mascottes disponibles. Plus tu progresses, plus tu débloques les rares.
+          16 mascottes disponibles. Plus tu progresses, plus tu débloques les
+          rares.
         </p>
         <MascotPicker
           currentMascotId={user.mascotSpecies}
@@ -64,7 +71,10 @@ export default async function MascotChoosePage() {
 
       {/* Humeur */}
       <section className="mb-12" aria-labelledby="mood-title">
-        <h2 id="mood-title" className="text-2xl font-bold text-primary-500 mb-3">
+        <h2
+          id="mood-title"
+          className="text-2xl font-bold text-primary-500 mb-3"
+        >
           2. L'humeur du moment
         </h2>
         <p className="text-sm text-gray-500 mb-4">
@@ -76,7 +86,10 @@ export default async function MascotChoosePage() {
 
       {/* Emoji custom */}
       <section className="mb-12" aria-labelledby="custom-title">
-        <h2 id="custom-title" className="text-2xl font-bold text-primary-500 mb-3">
+        <h2
+          id="custom-title"
+          className="text-2xl font-bold text-primary-500 mb-3"
+        >
           3. Emoji custom (optionnel)
         </h2>
         <p className="text-sm text-gray-500 mb-4">

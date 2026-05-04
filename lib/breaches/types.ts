@@ -3,7 +3,10 @@
 // FUITESINFOS reste dans le type pour rétrocompat (enum Prisma + items déjà
 // en BDD), mais ne figure plus dans SOURCE_META et n'est plus scrapé
 // (structure non-stable, retournait du contenu non exploitable).
-export type BreachSourceKey = "FRENCHBREACHES" | "BONJOURLAFUITE" | "FUITESINFOS";
+export type BreachSourceKey =
+  | "FRENCHBREACHES"
+  | "BONJOURLAFUITE"
+  | "FUITESINFOS";
 
 export type ScrapedBreach = {
   // Identifiant externe stable cote source. Si la source n'en propose pas,
@@ -36,13 +39,15 @@ export const SOURCE_META: Record<
   FRENCHBREACHES: {
     name: "FrenchBreaches",
     url: "https://frenchbreaches.com",
-    description: "Veille des fuites de données touchant des organisations françaises.",
+    description:
+      "Veille des fuites de données touchant des organisations françaises.",
     active: true,
   },
   BONJOURLAFUITE: {
     name: "Bonjour la Fuite",
     url: "https://bonjourlafuite.eu.org",
-    description: "Suivi indépendant des incidents de fuites de données en France.",
+    description:
+      "Suivi indépendant des incidents de fuites de données en France.",
     active: true,
   },
   // Source historique non scrapée — voir lib/breaches/parsers.ts pour la note.
@@ -56,9 +61,11 @@ export const SOURCE_META: Record<
 };
 
 // Liste des sources actives (pour les filtres UI et le scrape)
-export const ACTIVE_SOURCES: BreachSourceKey[] = (Object.entries(SOURCE_META) as [
-  BreachSourceKey,
-  (typeof SOURCE_META)[BreachSourceKey],
-][])
+export const ACTIVE_SOURCES: BreachSourceKey[] = (
+  Object.entries(SOURCE_META) as [
+    BreachSourceKey,
+    (typeof SOURCE_META)[BreachSourceKey],
+  ][]
+)
   .filter(([, meta]) => meta.active)
   .map(([key]) => key);

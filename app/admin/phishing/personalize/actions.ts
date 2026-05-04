@@ -28,7 +28,10 @@ const DIFFICULTIES = ["easy", "medium", "hard"] as const;
 const STYLES = ["urgent", "amical", "autoritaire", "discret"] as const;
 
 const Schema = z.object({
-  targetIds: z.array(z.string()).min(1, "Sélectionnez au moins 1 employé.").max(50, "Maximum 50 employés par batch."),
+  targetIds: z
+    .array(z.string())
+    .min(1, "Sélectionnez au moins 1 employé.")
+    .max(50, "Maximum 50 employés par batch."),
   template: z.enum(TEMPLATES),
   difficulty: z.enum(DIFFICULTIES),
   attackerStyle: z.enum(STYLES).optional(),
@@ -108,7 +111,11 @@ export async function generatePersonalizedBatch(
 export async function listEmployeeTargets(): Promise<EmployeeTarget[]> {
   const ctx = await requireAdminWithPlan();
   const employees = await db.user.findMany({
-    where: { tenantId: ctx.tenantId, isActive: true, role: { in: ["LEARNER", "MANAGER"] } },
+    where: {
+      tenantId: ctx.tenantId,
+      isActive: true,
+      role: { in: ["LEARNER", "MANAGER"] },
+    },
     select: { id: true, name: true, email: true, service: true },
     orderBy: { name: "asc" },
   });

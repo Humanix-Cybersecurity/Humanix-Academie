@@ -34,17 +34,45 @@ const COLORS = {
 };
 
 const styles = StyleSheet.create({
-  page: { padding: 50, fontSize: 11, fontFamily: "Helvetica", color: "#1A1A1A", lineHeight: 1.4 },
-  header: { marginBottom: 24, borderBottom: "2pt solid #0B3D91", paddingBottom: 12 },
+  page: {
+    padding: 50,
+    fontSize: 11,
+    fontFamily: "Helvetica",
+    color: "#1A1A1A",
+    lineHeight: 1.4,
+  },
+  header: {
+    marginBottom: 24,
+    borderBottom: "2pt solid #0B3D91",
+    paddingBottom: 12,
+  },
   brand: { fontSize: 16, fontWeight: "bold", color: COLORS.primary },
-  docTitle: { fontSize: 22, fontWeight: "bold", color: COLORS.primary, marginTop: 14, marginBottom: 18 },
+  docTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: COLORS.primary,
+    marginTop: 14,
+    marginBottom: 18,
+  },
   meta: { fontSize: 9, color: COLORS.gray, marginBottom: 20 },
-  h2: { fontSize: 13, fontWeight: "bold", color: COLORS.primary, marginTop: 18, marginBottom: 6 },
+  h2: {
+    fontSize: 13,
+    fontWeight: "bold",
+    color: COLORS.primary,
+    marginTop: 18,
+    marginBottom: 6,
+  },
   p: { marginBottom: 8 },
   table: { marginVertical: 8, border: "1pt solid #DDD", borderRadius: 3 },
   row: { flexDirection: "row", borderBottom: "0.5pt solid #DDD" },
   rowLast: { flexDirection: "row" },
-  cellLabel: { width: 160, padding: 6, fontWeight: "bold", backgroundColor: "#F8F9FA", fontSize: 10 },
+  cellLabel: {
+    width: 160,
+    padding: 6,
+    fontWeight: "bold",
+    backgroundColor: "#F8F9FA",
+    fontSize: 10,
+  },
   cellValue: { flex: 1, padding: 6, fontSize: 10 },
   warningBox: {
     backgroundColor: COLORS.cream,
@@ -77,7 +105,13 @@ function formatDateLong(d: Date): string {
   return d.toLocaleDateString("fr-FR", { dateStyle: "long" } as any);
 }
 
-function MetaTable({ tenant, incident }: { tenant: Tenant; incident: IncidentResponse }) {
+function MetaTable({
+  tenant,
+  incident,
+}: {
+  tenant: Tenant;
+  incident: IncidentResponse;
+}) {
   const typeMeta = INCIDENT_TYPE_LABELS[incident.type];
   return (
     <View style={styles.table}>
@@ -91,7 +125,9 @@ function MetaTable({ tenant, incident }: { tenant: Tenant; incident: IncidentRes
       </View>
       <View style={styles.row}>
         <Text style={styles.cellLabel}>Date de détection</Text>
-        <Text style={styles.cellValue}>{formatDateLong(incident.detectedAt)}</Text>
+        <Text style={styles.cellValue}>
+          {formatDateLong(incident.detectedAt)}
+        </Text>
       </View>
       <View style={styles.row}>
         <Text style={styles.cellLabel}>Type d'incident</Text>
@@ -119,12 +155,18 @@ function Footer({ generatedAt }: { generatedAt: Date }) {
 // ===========================================================================
 // 1. NOTIFICATION CNIL (RGPD ART. 33)
 // ===========================================================================
-export function NotificationCnilDoc({ incident, tenant, generatedAt }: DocProps): DocumentElement {
+export function NotificationCnilDoc({
+  incident,
+  tenant,
+  generatedAt,
+}: DocProps): DocumentElement {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
-          <Text style={styles.brand}>Humanix Académie — Module Cyber-Réflexe</Text>
+          <Text style={styles.brand}>
+            Humanix Académie — Module Cyber-Réflexe
+          </Text>
         </View>
 
         <Text style={styles.docTitle}>
@@ -136,9 +178,9 @@ export function NotificationCnilDoc({ incident, tenant, generatedAt }: DocProps)
 
         <View style={styles.warningBox}>
           <Text>
-            ATTENTION : Ce document est un brouillon généré automatiquement.
-            La notification CNIL doit être déposée via le téléservice CNIL.
-            Ce document sert de support de préparation et d'archivage interne.
+            ATTENTION : Ce document est un brouillon généré automatiquement. La
+            notification CNIL doit être déposée via le téléservice CNIL. Ce
+            document sert de support de préparation et d'archivage interne.
           </Text>
         </View>
 
@@ -150,10 +192,13 @@ export function NotificationCnilDoc({ incident, tenant, generatedAt }: DocProps)
 
         <Text style={styles.h2}>3. Catégories de données concernées</Text>
         <Text style={styles.p}>
-          {incident.dataConcerned ?? "À COMPLÉTER : nature des données personnelles touchées (état civil, contact, données sensibles, données bancaires, identifiants, etc.)."}
+          {incident.dataConcerned ??
+            "À COMPLÉTER : nature des données personnelles touchées (état civil, contact, données sensibles, données bancaires, identifiants, etc.)."}
         </Text>
 
-        <Text style={styles.h2}>4. Nombre approximatif de personnes concernées</Text>
+        <Text style={styles.h2}>
+          4. Nombre approximatif de personnes concernées
+        </Text>
         <Text style={styles.p}>
           {incident.affectedUsers
             ? `${incident.affectedUsers} personnes`
@@ -183,7 +228,9 @@ export function NotificationCnilDoc({ incident, tenant, generatedAt }: DocProps)
         </Text>
 
         <View style={styles.signature}>
-          <Text>Fait à _____________________, le {formatDateLong(generatedAt)}</Text>
+          <Text>
+            Fait à _____________________, le {formatDateLong(generatedAt)}
+          </Text>
           <Text>Signature : _____________________</Text>
         </View>
 
@@ -196,26 +243,33 @@ export function NotificationCnilDoc({ incident, tenant, generatedAt }: DocProps)
 // ===========================================================================
 // 2. NOTIFICATION ANSSI (NIS2)
 // ===========================================================================
-export function NotificationAnssiDoc({ incident, tenant, generatedAt }: DocProps): DocumentElement {
+export function NotificationAnssiDoc({
+  incident,
+  tenant,
+  generatedAt,
+}: DocProps): DocumentElement {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
-          <Text style={styles.brand}>Humanix Académie — Module Cyber-Réflexe</Text>
+          <Text style={styles.brand}>
+            Humanix Académie — Module Cyber-Réflexe
+          </Text>
         </View>
 
         <Text style={styles.docTitle}>
           Notification d'incident significatif (NIS2)
         </Text>
         <Text style={styles.meta}>
-          Directive NIS2 — Téléservice ANSSI : https://www.cert.ssi.gouv.fr/incident/
+          Directive NIS2 — Téléservice ANSSI :
+          https://www.cert.ssi.gouv.fr/incident/
         </Text>
 
         <View style={styles.warningBox}>
           <Text>
-            La directive NIS2 impose : (a) une alerte précoce sous 24h,
-            (b) une notification d'incident sous 72h, (c) un rapport final
-            sous 1 mois. Ce document peut être joint à votre déclaration.
+            La directive NIS2 impose : (a) une alerte précoce sous 24h, (b) une
+            notification d'incident sous 72h, (c) un rapport final sous 1 mois.
+            Ce document peut être joint à votre déclaration.
           </Text>
         </View>
 
@@ -249,7 +303,9 @@ export function NotificationAnssiDoc({ incident, tenant, generatedAt }: DocProps
         </Text>
 
         <View style={styles.signature}>
-          <Text>Fait à _____________________, le {formatDateLong(generatedAt)}</Text>
+          <Text>
+            Fait à _____________________, le {formatDateLong(generatedAt)}
+          </Text>
           <Text>Nom et fonction du déclarant : _____________________</Text>
         </View>
 
@@ -262,15 +318,23 @@ export function NotificationAnssiDoc({ incident, tenant, generatedAt }: DocProps
 // ===========================================================================
 // 3. COMMUNICATION INTERNE (BRIEF EQUIPE)
 // ===========================================================================
-export function CommunicationInterneDoc({ incident, tenant, generatedAt }: DocProps): DocumentElement {
+export function CommunicationInterneDoc({
+  incident,
+  tenant,
+  generatedAt,
+}: DocProps): DocumentElement {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
-          <Text style={styles.brand}>Humanix Académie — Module Cyber-Réflexe</Text>
+          <Text style={styles.brand}>
+            Humanix Académie — Module Cyber-Réflexe
+          </Text>
         </View>
 
-        <Text style={styles.docTitle}>Communication interne — incident en cours</Text>
+        <Text style={styles.docTitle}>
+          Communication interne — incident en cours
+        </Text>
         <Text style={styles.meta}>
           Modèle de message à diffuser aux collaborateurs. À adapter au ton de
           votre entreprise. Principe : factuel, transparent, sans alarmer.
@@ -292,12 +356,15 @@ export function CommunicationInterneDoc({ incident, tenant, generatedAt }: DocPr
         </Text>
         <Text style={styles.p}>
           Notre équipe IT et nos prestataires sont mobilisés pour résoudre la
-          situation. Aucune information confidentielle ne nous est connue
-          comme étant exposée à ce stade.
+          situation. Aucune information confidentielle ne nous est connue comme
+          étant exposée à ce stade.
         </Text>
         <Text style={styles.h2}>Ce que nous vous demandons</Text>
         <Text style={styles.p}>
-          1. {incident.affectedSystems ? `Ne plus utiliser temporairement : ${incident.affectedSystems}.` : "Suivre les consignes spécifiques qui vous seront communiquées par votre manager."}
+          1.{" "}
+          {incident.affectedSystems
+            ? `Ne plus utiliser temporairement : ${incident.affectedSystems}.`
+            : "Suivre les consignes spécifiques qui vous seront communiquées par votre manager."}
         </Text>
         <Text style={styles.p}>
           2. Signaler IMMÉDIATEMENT tout email, appel téléphonique ou
@@ -312,7 +379,9 @@ export function CommunicationInterneDoc({ incident, tenant, generatedAt }: DocPr
         <Text style={styles.p}>
           Contactez : __________________ (référent cyber désigné)
         </Text>
-        <Text style={styles.p}>Merci pour votre coopération et votre vigilance.</Text>
+        <Text style={styles.p}>
+          Merci pour votre coopération et votre vigilance.
+        </Text>
 
         <View style={styles.signature}>
           <Text>{tenant.name}</Text>
@@ -328,12 +397,18 @@ export function CommunicationInterneDoc({ incident, tenant, generatedAt }: DocPr
 // ===========================================================================
 // 4. COMMUNICATION EXTERNE (CLIENTS / PARTENAIRES)
 // ===========================================================================
-export function CommunicationExterneDoc({ incident, tenant, generatedAt }: DocProps): DocumentElement {
+export function CommunicationExterneDoc({
+  incident,
+  tenant,
+  generatedAt,
+}: DocProps): DocumentElement {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
-          <Text style={styles.brand}>Humanix Académie — Module Cyber-Réflexe</Text>
+          <Text style={styles.brand}>
+            Humanix Académie — Module Cyber-Réflexe
+          </Text>
         </View>
 
         <Text style={styles.docTitle}>
@@ -361,19 +436,21 @@ export function CommunicationExterneDoc({ incident, tenant, generatedAt }: DocPr
         </Text>
 
         <Text style={styles.h2}>Les mesures prises</Text>
-        <Text style={styles.p}>
-          Nous avons immédiatement :
-        </Text>
+        <Text style={styles.p}>Nous avons immédiatement :</Text>
         <Text style={styles.p}>- Isolé les systèmes concernés ;</Text>
-        <Text style={styles.p}>- Mobilisé une équipe d'experts pour analyser et corriger ;</Text>
-        <Text style={styles.p}>- Engagé les notifications légales (CNIL, autorités) ;</Text>
+        <Text style={styles.p}>
+          - Mobilisé une équipe d'experts pour analyser et corriger ;
+        </Text>
+        <Text style={styles.p}>
+          - Engagé les notifications légales (CNIL, autorités) ;
+        </Text>
         <Text style={styles.p}>- Renforcé nos mesures de sécurité.</Text>
 
         <Text style={styles.h2}>Nos recommandations</Text>
         <Text style={styles.p}>
-          À COMPLÉTER : recommandations spécifiques au destinataire (changer
-          son mot de passe, vérifier ses relevés bancaires, signaler les
-          phishings, etc.).
+          À COMPLÉTER : recommandations spécifiques au destinataire (changer son
+          mot de passe, vérifier ses relevés bancaires, signaler les phishings,
+          etc.).
         </Text>
 
         <Text style={styles.h2}>Pour nous contacter</Text>
@@ -396,12 +473,18 @@ export function CommunicationExterneDoc({ incident, tenant, generatedAt }: DocPr
 // ===========================================================================
 // 5. INFORMATION DIRECTE AUX PERSONNES (RGPD ART. 34)
 // ===========================================================================
-export function InformationPersonnesDoc({ incident, tenant, generatedAt }: DocProps): DocumentElement {
+export function InformationPersonnesDoc({
+  incident,
+  tenant,
+  generatedAt,
+}: DocProps): DocumentElement {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
-          <Text style={styles.brand}>Humanix Académie — Module Cyber-Réflexe</Text>
+          <Text style={styles.brand}>
+            Humanix Académie — Module Cyber-Réflexe
+          </Text>
         </View>
 
         <Text style={styles.docTitle}>
@@ -414,8 +497,8 @@ export function InformationPersonnesDoc({ incident, tenant, generatedAt }: DocPr
 
         <Text style={styles.p}>Madame, Monsieur,</Text>
         <Text style={styles.p}>
-          {tenant.name} a été victime d'un incident de sécurité le
-          {" "}{formatDateLong(incident.detectedAt)}. Conformément à la
+          {tenant.name} a été victime d'un incident de sécurité le{" "}
+          {formatDateLong(incident.detectedAt)}. Conformément à la
           réglementation européenne sur la protection des données (RGPD), nous
           avons l'obligation de vous en informer.
         </Text>
@@ -425,7 +508,8 @@ export function InformationPersonnesDoc({ incident, tenant, generatedAt }: DocPr
 
         <Text style={styles.h2}>Quelles données vous concernant ?</Text>
         <Text style={styles.p}>
-          {incident.dataConcerned ?? "À COMPLÉTER : préciser EXACTEMENT quelles données vous concernant ont été touchées."}
+          {incident.dataConcerned ??
+            "À COMPLÉTER : préciser EXACTEMENT quelles données vous concernant ont été touchées."}
         </Text>
 
         <Text style={styles.h2}>Quels risques pour vous ?</Text>
@@ -436,8 +520,8 @@ export function InformationPersonnesDoc({ incident, tenant, generatedAt }: DocPr
         <Text style={styles.h2}>Que vous recommandons-nous ?</Text>
         <Text style={styles.p}>
           À COMPLÉTER : changer vos mots de passe sur tous les services où vous
-          utilisez le même, surveiller vos relevés bancaires, ne pas répondre
-          à des emails ou appels prétendant provenir de nous, etc.
+          utilisez le même, surveiller vos relevés bancaires, ne pas répondre à
+          des emails ou appels prétendant provenir de nous, etc.
         </Text>
 
         <Text style={styles.h2}>Vos droits</Text>
@@ -482,7 +566,8 @@ export const DOCUMENT_REGISTRY: Record<
 > = {
   "notification-cnil": {
     label: "Notification CNIL (RGPD art. 33)",
-    description: "Brouillon pour le téléservice CNIL en cas de violation de DCP.",
+    description:
+      "Brouillon pour le téléservice CNIL en cas de violation de DCP.",
     component: NotificationCnilDoc,
   },
   "notification-anssi": {

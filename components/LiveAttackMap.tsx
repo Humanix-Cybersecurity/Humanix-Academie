@@ -31,15 +31,21 @@ const EVENT_META: Record<
   episode_completed: { emoji: "✅", label: "Module terminé", tone: "success" },
   saison_completed: { emoji: "🎓", label: "Saison terminée", tone: "success" },
   phishing_clicked: { emoji: "⚠️", label: "Clic phishing", tone: "danger" },
-  phishing_reported: { emoji: "🚨", label: "Phishing signalé", tone: "success" },
+  phishing_reported: {
+    emoji: "🚨",
+    label: "Phishing signalé",
+    tone: "success",
+  },
   shop_purchase: { emoji: "🛒", label: "Achat boutique", tone: "info" },
   level_up: { emoji: "🚀", label: "Level up", tone: "success" },
   user_invited: { emoji: "📩", label: "Utilisateur invité", tone: "info" },
 };
 
 const TONE_CLASS: Record<string, string> = {
-  danger: "border-red-300 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300",
-  success: "border-green-300 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300",
+  danger:
+    "border-red-300 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300",
+  success:
+    "border-green-300 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300",
   info: "border-cyan-300 bg-cyan-50 dark:bg-cyan-900/20 text-cyan-700 dark:text-cyan-300",
   warn: "border-amber-300 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300",
 };
@@ -67,12 +73,14 @@ export default function LiveAttackMap() {
         const data = JSON.parse(ev.data) as LiveEvent;
         setEvents((prev) => [data, ...prev].slice(0, 50));
         setCounts((c) => {
-          if (data.type === "episode_completed") return { ...c, completions: c.completions + 1 };
+          if (data.type === "episode_completed")
+            return { ...c, completions: c.completions + 1 };
           if (data.type === "phishing_clicked")
             return { ...c, phishingClicks: c.phishingClicks + 1 };
           if (data.type === "phishing_reported")
             return { ...c, phishingReports: c.phishingReports + 1 };
-          if (data.type === "level_up") return { ...c, levelUps: c.levelUps + 1 };
+          if (data.type === "level_up")
+            return { ...c, levelUps: c.levelUps + 1 };
           return c;
         });
       } catch (e) {
@@ -112,30 +120,59 @@ export default function LiveAttackMap() {
             </span>
           </h3>
           <p className="text-xs text-gray-500 mt-1">
-            Activité cyber temps réel de votre équipe — flux SSE chiffré, scoping tenant strict.
+            Activité cyber temps réel de votre équipe — flux SSE chiffré,
+            scoping tenant strict.
           </p>
         </div>
       </div>
 
       {/* Compteurs animes */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        <Counter emoji="✅" value={counts.completions} label="Modules" tone="success" />
-        <Counter emoji="🚨" value={counts.phishingReports} label="Signalés" tone="success" />
-        <Counter emoji="⚠️" value={counts.phishingClicks} label="Clics phish" tone="danger" />
-        <Counter emoji="🚀" value={counts.levelUps} label="Level up" tone="success" />
+        <Counter
+          emoji="✅"
+          value={counts.completions}
+          label="Modules"
+          tone="success"
+        />
+        <Counter
+          emoji="🚨"
+          value={counts.phishingReports}
+          label="Signalés"
+          tone="success"
+        />
+        <Counter
+          emoji="⚠️"
+          value={counts.phishingClicks}
+          label="Clics phish"
+          tone="danger"
+        />
+        <Counter
+          emoji="🚀"
+          value={counts.levelUps}
+          label="Level up"
+          tone="success"
+        />
       </div>
 
       {/* Timeline */}
       <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
         {events.length === 0 ? (
           <div className="text-center text-sm text-gray-500 py-12">
-            <p className="text-3xl mb-2 opacity-50" aria-hidden="true">📡</p>
+            <p className="text-3xl mb-2 opacity-50" aria-hidden="true">
+              📡
+            </p>
             <p>En attente d'activité…</p>
-            <p className="text-xs mt-1">Les évènements apparaîtront en direct.</p>
+            <p className="text-xs mt-1">
+              Les évènements apparaîtront en direct.
+            </p>
           </div>
         ) : (
           events.map((e, i) => {
-            const meta = EVENT_META[e.type] ?? { emoji: "•", label: e.type, tone: "info" as const };
+            const meta = EVENT_META[e.type] ?? {
+              emoji: "•",
+              label: e.type,
+              tone: "info" as const,
+            };
             return (
               <div
                 key={e.id}
@@ -146,7 +183,9 @@ export default function LiveAttackMap() {
                   i === 0 && "animate-pulse-once shadow-md",
                 )}
               >
-                <span className="text-2xl shrink-0" aria-hidden="true">{meta.emoji}</span>
+                <span className="text-2xl shrink-0" aria-hidden="true">
+                  {meta.emoji}
+                </span>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline justify-between gap-2 flex-wrap">
                     <strong className="text-sm">{meta.label}</strong>
@@ -160,10 +199,17 @@ export default function LiveAttackMap() {
                   {e.user && (
                     <p className="text-xs text-gray-600 dark:text-gray-300 truncate">
                       <strong>{e.user.name}</strong>
-                      {e.user.service && <span className="text-gray-500"> · {e.user.service}</span>}
+                      {e.user.service && (
+                        <span className="text-gray-500">
+                          {" "}
+                          · {e.user.service}
+                        </span>
+                      )}
                     </p>
                   )}
-                  {e.payload && <PayloadDetail type={e.type} payload={e.payload} />}
+                  {e.payload && (
+                    <PayloadDetail type={e.type} payload={e.payload} />
+                  )}
                 </div>
               </div>
             );
@@ -172,7 +218,8 @@ export default function LiveAttackMap() {
       </div>
 
       <p className="text-[10px] text-gray-400 text-center mt-4">
-        Mises à jour automatiques — connexion sécurisée, données scopées à votre organisation.
+        Mises à jour automatiques — connexion sécurisée, données scopées à votre
+        organisation.
       </p>
     </div>
   );
@@ -197,9 +244,13 @@ function Counter({
         value > 0 && "scale-100",
       )}
     >
-      <div className="text-2xl" aria-hidden="true">{emoji}</div>
+      <div className="text-2xl" aria-hidden="true">
+        {emoji}
+      </div>
       <div className="text-2xl font-extrabold tabular-nums">{value}</div>
-      <div className="text-[10px] uppercase tracking-wide opacity-80">{label}</div>
+      <div className="text-[10px] uppercase tracking-wide opacity-80">
+        {label}
+      </div>
     </div>
   );
 }
@@ -239,5 +290,8 @@ function formatRelativeTime(iso: string): string {
   if (diff < 60) return `il y a ${Math.floor(diff)} s`;
   if (diff < 3600) return `il y a ${Math.floor(diff / 60)} min`;
   if (diff < 86400) return `il y a ${Math.floor(diff / 3600)} h`;
-  return new Date(iso).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" });
+  return new Date(iso).toLocaleString("fr-FR", {
+    dateStyle: "short",
+    timeStyle: "short",
+  });
 }

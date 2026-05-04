@@ -158,8 +158,8 @@ export function computeTopRisks(answers: AuditAnswers): RiskItem[] {
       severity: (data.lost >= 5
         ? "critique"
         : data.lost >= 3
-        ? "important"
-        : "moyen") as "critique" | "important" | "moyen",
+          ? "important"
+          : "moyen") as "critique" | "important" | "moyen",
       recommendation: CATEGORY_RECOMMENDATION[category],
     }))
     .sort((a, b) => b.lostPoints - a.lostPoints)

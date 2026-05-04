@@ -4,7 +4,10 @@
 import Link from "next/link";
 import { PLAN_LABEL, PLAN_EMOJI, type PlanId, type Feature } from "@/lib/plans";
 
-const FEATURE_PITCH: Record<Feature, { title: string; benefits: string[]; emoji: string }> = {
+const FEATURE_PITCH: Record<
+  Feature,
+  { title: string; benefits: string[]; emoji: string }
+> = {
   api: {
     emoji: "🔌",
     title: "API REST publique",
@@ -103,18 +106,25 @@ export default function PlanGate({
       <div className="text-center mb-6">
         <div className="text-6xl mb-3">{pitch.emoji}</div>
         <p className="text-xs uppercase tracking-widest text-accent-500 font-bold mb-2">
-          Inclus à partir de l'offre {PLAN_LABEL[requiredPlan]} {PLAN_EMOJI[requiredPlan]}
+          Inclus à partir de l'offre {PLAN_LABEL[requiredPlan]}{" "}
+          {PLAN_EMOJI[requiredPlan]}
         </p>
-        <h1 className="text-3xl font-extrabold text-primary-500 mb-2">{pitch.title}</h1>
+        <h1 className="text-3xl font-extrabold text-primary-500 mb-2">
+          {pitch.title}
+        </h1>
         <p className="text-sm text-gray-600 dark:text-gray-300">
-          Ton offre actuelle : <strong>{PLAN_LABEL[currentPlan]}</strong>. Cette fonctionnalité
-          est disponible dès <strong>{PLAN_LABEL[requiredPlan]}</strong>.
+          Ton offre actuelle : <strong>{PLAN_LABEL[currentPlan]}</strong>. Cette
+          fonctionnalité est disponible dès{" "}
+          <strong>{PLAN_LABEL[requiredPlan]}</strong>.
         </p>
       </div>
 
       <ul className="space-y-2 mb-6">
         {pitch.benefits.map((b, i) => (
-          <li key={i} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200">
+          <li
+            key={i}
+            className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200"
+          >
             <span className="text-accent-500 mt-0.5">✓</span>
             <span>{b}</span>
           </li>
@@ -122,7 +132,10 @@ export default function PlanGate({
       </ul>
 
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
-        <Link href="/tarifs" className="btn-primary text-sm py-3 px-5 text-center">
+        <Link
+          href="/tarifs"
+          className="btn-primary text-sm py-3 px-5 text-center"
+        >
           Voir les tarifs détaillés
         </Link>
         <Link
@@ -134,7 +147,8 @@ export default function PlanGate({
       </div>
 
       <p className="text-center text-xs text-gray-500 mt-4 italic">
-        En mode démo : retourne sur /demo et choisis l'offre {PLAN_LABEL[requiredPlan]} pour débloquer.
+        En mode démo : retourne sur /demo et choisis l'offre{" "}
+        {PLAN_LABEL[requiredPlan]} pour débloquer.
       </p>
     </div>
   );

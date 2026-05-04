@@ -12,7 +12,9 @@ const VERDICT_BG: Record<string, string> = {
 export default function RiskScoreCard({ risk }: { risk: RiskFactors }) {
   const v = RISK_VERDICT_LABEL[risk.verdict];
   return (
-    <div className={`card bg-gradient-to-br ${VERDICT_BG[risk.verdict]} border-2`}>
+    <div
+      className={`card bg-gradient-to-br ${VERDICT_BG[risk.verdict]} border-2`}
+    >
       <div className="flex items-start justify-between mb-3">
         <div>
           <p className="text-xs uppercase tracking-wide text-gray-600 font-bold">
@@ -31,13 +33,19 @@ export default function RiskScoreCard({ risk }: { risk: RiskFactors }) {
 
       {risk.components.length > 0 && (
         <div className="border-t border-white/50 pt-3 mt-3">
-          <p className="text-xs font-bold text-gray-700 mb-2">Composantes du score</p>
+          <p className="text-xs font-bold text-gray-700 mb-2">
+            Composantes du score
+          </p>
           <ul className="space-y-1.5 text-xs">
             {risk.components.map((c, i) => (
               <li key={i} className="flex items-center gap-2">
                 <span
                   className={`text-xs font-bold px-1.5 py-0.5 rounded min-w-[40px] text-center ${
-                    c.delta > 0 ? "bg-success/20 text-success" : c.delta < 0 ? "bg-red-100 text-warn" : "bg-gray-100 text-gray-600"
+                    c.delta > 0
+                      ? "bg-success/20 text-success"
+                      : c.delta < 0
+                        ? "bg-red-100 text-warn"
+                        : "bg-gray-100 text-gray-600"
                   }`}
                 >
                   {c.delta > 0 ? "+" : ""}
@@ -57,10 +65,24 @@ function ScoreGauge({ value }: { value: number }) {
   const r = 32;
   const c = 2 * Math.PI * r;
   const offset = c - (value / 100) * c;
-  const color = value >= 80 ? "#2E8B57" : value >= 60 ? "#00A3A1" : value >= 40 ? "#F59E0B" : "#C0392B";
+  const color =
+    value >= 80
+      ? "#2E8B57"
+      : value >= 60
+        ? "#00A3A1"
+        : value >= 40
+          ? "#F59E0B"
+          : "#C0392B";
   return (
     <svg width="80" height="80" viewBox="0 0 80 80" className="rotate-[-90deg]">
-      <circle cx="40" cy="40" r={r} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="8" />
+      <circle
+        cx="40"
+        cy="40"
+        r={r}
+        fill="none"
+        stroke="rgba(0,0,0,0.06)"
+        strokeWidth="8"
+      />
       <circle
         cx="40"
         cy="40"

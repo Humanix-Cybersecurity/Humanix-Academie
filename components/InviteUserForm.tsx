@@ -4,7 +4,10 @@ import { inviteUser } from "@/app/admin/actions";
 
 export default function InviteUserForm() {
   const [pending, startTransition] = useTransition();
-  const [feedback, setFeedback] = useState<{ type: "ok" | "err"; msg: string } | null>(null);
+  const [feedback, setFeedback] = useState<{
+    type: "ok" | "err";
+    msg: string;
+  } | null>(null);
 
   const onSubmit = async (formData: FormData) => {
     setFeedback(null);
@@ -13,15 +16,17 @@ export default function InviteUserForm() {
         await inviteUser(formData);
         setFeedback({ type: "ok", msg: "Invitation envoyée avec succès." });
         // reset
-        const form = document.querySelector("#invite-form") as HTMLFormElement | null;
+        const form = document.querySelector(
+          "#invite-form",
+        ) as HTMLFormElement | null;
         form?.reset();
       } catch (e: any) {
         const msg =
           e?.message === "email_taken"
             ? "Cet email est déjà inscrit dans la PME."
             : e?.message === "invalid_email"
-            ? "Email invalide."
-            : "Impossible d'inviter cet utilisateur.";
+              ? "Email invalide."
+              : "Impossible d'inviter cet utilisateur.";
         setFeedback({ type: "err", msg });
       }
     });
@@ -39,7 +44,10 @@ export default function InviteUserForm() {
       </p>
 
       <div>
-        <label htmlFor="invite-name" className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">
+        <label
+          htmlFor="invite-name"
+          className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1"
+        >
           Prénom et nom
         </label>
         <input
@@ -52,8 +60,14 @@ export default function InviteUserForm() {
       </div>
 
       <div>
-        <label htmlFor="invite-email" className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">
-          Email professionnel <span className="text-warn" aria-hidden="true">*</span>
+        <label
+          htmlFor="invite-email"
+          className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1"
+        >
+          Email professionnel{" "}
+          <span className="text-warn" aria-hidden="true">
+            *
+          </span>
         </label>
         <input
           id="invite-email"
@@ -68,7 +82,10 @@ export default function InviteUserForm() {
       </div>
 
       <div>
-        <label htmlFor="invite-service" className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">
+        <label
+          htmlFor="invite-service"
+          className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1"
+        >
           Service
         </label>
         <input
@@ -81,7 +98,10 @@ export default function InviteUserForm() {
       </div>
 
       <div>
-        <label htmlFor="invite-role" className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">
+        <label
+          htmlFor="invite-role"
+          className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1"
+        >
           Rôle
         </label>
         <select
@@ -96,12 +116,22 @@ export default function InviteUserForm() {
         </select>
       </div>
 
-      <button type="submit" disabled={pending} aria-busy={pending} className="btn-primary w-full text-sm">
+      <button
+        type="submit"
+        disabled={pending}
+        aria-busy={pending}
+        className="btn-primary w-full text-sm"
+      >
         {pending ? "Envoi…" : "Envoyer l'invitation"}
       </button>
 
       {/* Feedback annoncé aux lecteurs d'écran (aria-live polite) */}
-      <div id="invite-feedback" role="status" aria-live="polite" aria-atomic="true">
+      <div
+        id="invite-feedback"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
         {feedback && (
           <p
             className={`text-sm text-center font-medium ${

@@ -46,11 +46,11 @@ Dans `/admin/integrations` → **Nouveau webhook** :
 
 ## Mapping events → tickets
 
-| Event Humanix | Ticket GLPI | Urgence |
-|---|---|---|
-| `phishing.reported` | "Phishing signalé par <user>" | Haute (2) |
-| `phishing.campaign_completed` | "Campagne phishing terminée" | Moyenne (3) |
-| `evidence.exported` | "Bundle GRC exporté" | Basse (4) |
+| Event Humanix                 | Ticket GLPI                   | Urgence     |
+| ----------------------------- | ----------------------------- | ----------- |
+| `phishing.reported`           | "Phishing signalé par <user>" | Haute (2)   |
+| `phishing.campaign_completed` | "Campagne phishing terminée"  | Moyenne (3) |
+| `evidence.exported`           | "Bundle GRC exporté"          | Basse (4)   |
 
 ## Sécurité
 

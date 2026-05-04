@@ -38,7 +38,11 @@ function fmt(d: string | null): string {
   });
 }
 
-export default function AnecdoteAdminTable({ anecdotes }: { anecdotes: Row[] }) {
+export default function AnecdoteAdminTable({
+  anecdotes,
+}: {
+  anecdotes: Row[];
+}) {
   const [pending, startTransition] = useTransition();
   const [feedback, setFeedback] = useState<string | null>(null);
 
@@ -90,12 +94,24 @@ export default function AnecdoteAdminTable({ anecdotes }: { anecdotes: Row[] }) 
         <table className="w-full text-sm">
           <thead className="bg-gray-50 dark:bg-slate-800">
             <tr className="text-left text-xs uppercase text-gray-500 dark:text-gray-400">
-              <th scope="col" className="px-4 py-3">Titre</th>
-              <th scope="col" className="px-4 py-3">Catégorie</th>
-              <th scope="col" className="px-4 py-3">Incident</th>
-              <th scope="col" className="px-4 py-3">Statut</th>
-              <th scope="col" className="px-4 py-3">Envois</th>
-              <th scope="col" className="px-4 py-3 text-right">Actions</th>
+              <th scope="col" className="px-4 py-3">
+                Titre
+              </th>
+              <th scope="col" className="px-4 py-3">
+                Catégorie
+              </th>
+              <th scope="col" className="px-4 py-3">
+                Incident
+              </th>
+              <th scope="col" className="px-4 py-3">
+                Statut
+              </th>
+              <th scope="col" className="px-4 py-3">
+                Envois
+              </th>
+              <th scope="col" className="px-4 py-3 text-right">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>

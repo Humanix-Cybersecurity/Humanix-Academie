@@ -90,24 +90,29 @@ export default function EpisodePlayer(props: {
     if (quizIndex + 1 < props.quiz.length) {
       setQuizIndex(quizIndex + 1);
     } else {
-      const totalXP = Math.max((choice?.points ?? 0) + quizScore * 10 + props.xpReward, 0);
+      const totalXP = Math.max(
+        (choice?.points ?? 0) + quizScore * 10 + props.xpReward,
+        0,
+      );
       // Pourcentage REEL de bonnes reponses au quiz (indicateur de maitrise).
       // Distinct de l'XP qui est de la gamification.
-      const quizScorePct = props.quiz.length === 0
-        ? 0
-        : Math.round((quizScore / props.quiz.length) * 100);
+      const quizScorePct =
+        props.quiz.length === 0
+          ? 0
+          : Math.round((quizScore / props.quiz.length) * 100);
       // Persistance backend
       if (!persisted) {
         setPersisted(true);
-        const isPerfectQuiz = props.quiz.length > 0 && quizScore === props.quiz.length;
+        const isPerfectQuiz =
+          props.quiz.length > 0 && quizScore === props.quiz.length;
         try {
           const res = await fetch("/api/progress", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               episodeId: props.episodeId,
-              score: totalXP,         // XP gamification (peut > 100)
-              quizScorePct,           // % maitrise (0-100)
+              score: totalXP, // XP gamification (peut > 100)
+              quizScorePct, // % maitrise (0-100)
               status: "COMPLETED",
               perfectQuiz: isPerfectQuiz,
             }),
@@ -128,8 +133,12 @@ export default function EpisodePlayer(props: {
     }
   };
 
-  const totalXPEarned = Math.max((choice?.points ?? 0) + quizScore * 10 + props.xpReward, 0);
-  const quizSuccessRate = props.quiz.length === 0 ? 0 : quizScore / props.quiz.length;
+  const totalXPEarned = Math.max(
+    (choice?.points ?? 0) + quizScore * 10 + props.xpReward,
+    0,
+  );
+  const quizSuccessRate =
+    props.quiz.length === 0 ? 0 : quizScore / props.quiz.length;
 
   return (
     <>
@@ -140,10 +149,17 @@ export default function EpisodePlayer(props: {
         {step === "scenario" && (
           <div className="animate-fadeIn">
             <div className="flex items-start gap-4 mb-6">
-              <HexMascotEvolved xp={0} size="md" mood="curious" species={species} />
+              <HexMascotEvolved
+                xp={0}
+                size="md"
+                mood="curious"
+                species={species}
+              />
               <div className="flex-1">
                 <p className="text-xs text-gray-500 mb-1">Mise en situation</p>
-                <h1 className="text-2xl sm:text-3xl font-bold text-primary-500">{props.title}</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-primary-500">
+                  {props.title}
+                </h1>
               </div>
             </div>
 
@@ -179,7 +195,13 @@ export default function EpisodePlayer(props: {
             <div className="flex items-start gap-4 mb-6">
               <HexMascotEvolved
                 xp={0}
-                mood={choice.outcome === "good" ? "happy" : choice.outcome === "bad" ? "sad" : "neutral"}
+                mood={
+                  choice.outcome === "good"
+                    ? "happy"
+                    : choice.outcome === "bad"
+                      ? "sad"
+                      : "neutral"
+                }
                 size="md"
                 animated
                 species={species}
@@ -189,17 +211,23 @@ export default function EpisodePlayer(props: {
                   choice.outcome === "good"
                     ? "bg-success"
                     : choice.outcome === "bad"
-                    ? "bg-warn"
-                    : "bg-gray-500"
+                      ? "bg-warn"
+                      : "bg-gray-500"
                 }`}
               >
                 <p className="font-bold mb-2 text-lg">
-                  {choice.outcome === "good" ? "✓ Bien joué !" : choice.outcome === "bad" ? "✗ Aïe…" : "→ Pas si simple"}
+                  {choice.outcome === "good"
+                    ? "✓ Bien joué !"
+                    : choice.outcome === "bad"
+                      ? "✗ Aïe…"
+                      : "→ Pas si simple"}
                 </p>
                 <p className="leading-relaxed">{choice.feedback}</p>
                 {choice.points !== 0 && (
                   <p className="mt-3 text-sm font-bold">
-                    {choice.points > 0 ? `+${choice.points} XP` : `${choice.points} XP`}
+                    {choice.points > 0
+                      ? `+${choice.points} XP`
+                      : `${choice.points} XP`}
                   </p>
                 )}
               </div>
@@ -207,15 +235,22 @@ export default function EpisodePlayer(props: {
 
             <div className="bg-gray-50 rounded-2xl p-5 mb-6 text-gray-700 leading-relaxed whitespace-pre-line border border-gray-200">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-xs text-gray-500 uppercase tracking-wide font-bold">Le débrief de Hex</p>
+                <p className="text-xs text-gray-500 uppercase tracking-wide font-bold">
+                  Le débrief de Hex
+                </p>
                 <TTSButton text={props.debrief} label="Écouter le débrief" />
               </div>
               {props.debrief}
             </div>
-            <button onClick={() => setStep("quiz")} className="btn-primary w-full text-lg">
+            <button
+              onClick={() => setStep("quiz")}
+              className="btn-primary w-full text-lg"
+            >
               Quiz éclair →
             </button>
-            <p className="text-xs text-gray-400 italic text-center mt-3">Astuce : appuie sur Entrée</p>
+            <p className="text-xs text-gray-400 italic text-center mt-3">
+              Astuce : appuie sur Entrée
+            </p>
           </div>
         )}
 
@@ -223,7 +258,8 @@ export default function EpisodePlayer(props: {
           <div className="animate-fadeIn">
             <div className="flex justify-between items-center mb-4">
               <p className="text-sm text-gray-700 dark:text-gray-300">
-                Question {quizIndex + 1} <span className="text-gray-400">/ {props.quiz.length}</span>
+                Question {quizIndex + 1}{" "}
+                <span className="text-gray-400">/ {props.quiz.length}</span>
               </p>
               <div
                 role="progressbar"
@@ -237,7 +273,11 @@ export default function EpisodePlayer(props: {
                   <span
                     key={i}
                     className={`h-1.5 w-6 rounded-full ${
-                      i < quizIndex ? "bg-success" : i === quizIndex ? "bg-accent-500" : "bg-gray-300 dark:bg-slate-600"
+                      i < quizIndex
+                        ? "bg-success"
+                        : i === quizIndex
+                          ? "bg-accent-500"
+                          : "bg-gray-300 dark:bg-slate-600"
                     }`}
                     aria-hidden="true"
                   />
@@ -254,9 +294,11 @@ export default function EpisodePlayer(props: {
                 const isAnswered = answered !== null;
                 const isThis = answered === c.id;
                 const isCorrect = c.correct;
-                let cls = "border-gray-200 hover:border-accent-500 hover:bg-primary-50 hover:scale-[1.01]";
+                let cls =
+                  "border-gray-200 hover:border-accent-500 hover:bg-primary-50 hover:scale-[1.01]";
                 if (isAnswered) {
-                  if (isCorrect) cls = "border-success bg-green-50 scale-[1.02]";
+                  if (isCorrect)
+                    cls = "border-success bg-green-50 scale-[1.02]";
                   else if (isThis) cls = "border-warn bg-red-50";
                   else cls = "border-gray-200 opacity-50";
                 }
@@ -270,9 +312,15 @@ export default function EpisodePlayer(props: {
                     <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-100 text-gray-500 font-bold flex items-center justify-center text-sm">
                       {i + 1}
                     </span>
-                    <span className="font-medium leading-relaxed">{c.label}</span>
-                    {isAnswered && isCorrect && <span className="ml-auto text-success text-xl">✓</span>}
-                    {isAnswered && isThis && !isCorrect && <span className="ml-auto text-warn text-xl">✗</span>}
+                    <span className="font-medium leading-relaxed">
+                      {c.label}
+                    </span>
+                    {isAnswered && isCorrect && (
+                      <span className="ml-auto text-success text-xl">✓</span>
+                    )}
+                    {isAnswered && isThis && !isCorrect && (
+                      <span className="ml-auto text-warn text-xl">✗</span>
+                    )}
                   </button>
                 );
               })}
@@ -281,11 +329,18 @@ export default function EpisodePlayer(props: {
             {answered && (
               <div className="animate-fadeIn">
                 <div className="bg-primary-50 rounded-2xl p-4 mb-4 text-sm leading-relaxed border-l-4 border-accent-500">
-                  <p className="font-bold text-accent-500 mb-1">💡 Hex t'explique</p>
+                  <p className="font-bold text-accent-500 mb-1">
+                    💡 Hex t'explique
+                  </p>
                   {props.quiz[quizIndex].explanation}
                 </div>
-                <button onClick={nextQuiz} className="btn-primary w-full text-lg">
-                  {quizIndex + 1 < props.quiz.length ? "Question suivante →" : "Voir mon résultat →"}
+                <button
+                  onClick={nextQuiz}
+                  className="btn-primary w-full text-lg"
+                >
+                  {quizIndex + 1 < props.quiz.length
+                    ? "Question suivante →"
+                    : "Voir mon résultat →"}
                 </button>
               </div>
             )}
@@ -295,7 +350,13 @@ export default function EpisodePlayer(props: {
         {step === "recap" && (
           <div className="animate-fadeIn text-center py-6">
             <div className="mb-6 flex justify-center">
-              <HexMascotEvolved xp={0} size="xl" mood="celebrate" animated species={species} />
+              <HexMascotEvolved
+                xp={0}
+                size="xl"
+                mood="celebrate"
+                animated
+                species={species}
+              />
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-primary-500 mb-2">
               Bravo, c'est dans la boîte !
@@ -304,9 +365,17 @@ export default function EpisodePlayer(props: {
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-xl mx-auto mb-8">
               <StatCard label="XP gagnés" value={`+${totalXPEarned}`} accent />
-              {coinsEarned > 0 && <StatCard label="Coins" value={`+${coinsEarned}`} amber />}
-              <StatCard label="Quiz" value={`${quizScore}/${props.quiz.length}`} />
-              <StatCard label="Réussite" value={`${Math.round(quizSuccessRate * 100)}%`} />
+              {coinsEarned > 0 && (
+                <StatCard label="Coins" value={`+${coinsEarned}`} amber />
+              )}
+              <StatCard
+                label="Quiz"
+                value={`${quizScore}/${props.quiz.length}`}
+              />
+              <StatCard
+                label="Réussite"
+                value={`${Math.round(quizSuccessRate * 100)}%`}
+              />
             </div>
 
             {quizSuccessRate === 1 && (
@@ -322,7 +391,9 @@ export default function EpisodePlayer(props: {
             {levelUp && (
               <div className="mb-6 animate-pulse-once">
                 <button
-                  onClick={() => {/* show overlay */}}
+                  onClick={() => {
+                    /* show overlay */
+                  }}
                   className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl px-5 py-3 font-bold shadow-lg"
                 >
                   ✨ Niveau {levelUp} débloqué — clique pour voir
@@ -344,7 +415,11 @@ export default function EpisodePlayer(props: {
 
       {/* Level-up overlay (apres le recap) */}
       {levelUp && step === "recap" && (
-        <LevelUpOverlay newLevelId={levelUp} onClose={() => setLevelUp(null)} species={species} />
+        <LevelUpOverlay
+          newLevelId={levelUp}
+          onClose={() => setLevelUp(null)}
+          species={species}
+        />
       )}
     </>
   );
@@ -352,7 +427,12 @@ export default function EpisodePlayer(props: {
 
 function ProgressDots({ step }: { step: Step }) {
   const steps: Step[] = ["scenario", "debrief", "quiz", "recap"];
-  const labels = { scenario: "Situation", debrief: "Débrief", quiz: "Quiz", recap: "Résultat" };
+  const labels = {
+    scenario: "Situation",
+    debrief: "Débrief",
+    quiz: "Quiz",
+    recap: "Résultat",
+  };
   return (
     <div className="flex justify-center items-center gap-2 mb-8">
       {steps.map((s, i) => {
@@ -361,8 +441,12 @@ function ProgressDots({ step }: { step: Step }) {
         return (
           <div key={s} className="flex items-center gap-2">
             <div className="flex flex-col items-center">
-              <span className={`h-2 w-10 sm:w-16 rounded-full transition-all ${reached ? "bg-accent-500" : "bg-gray-200"}`} />
-              <span className={`text-[10px] sm:text-xs mt-1 ${reached ? "text-accent-600 font-medium" : "text-gray-400"}`}>
+              <span
+                className={`h-2 w-10 sm:w-16 rounded-full transition-all ${reached ? "bg-accent-500" : "bg-gray-200"}`}
+              />
+              <span
+                className={`text-[10px] sm:text-xs mt-1 ${reached ? "text-accent-600 font-medium" : "text-gray-400"}`}
+              >
                 {labels[s]}
               </span>
             </div>
@@ -373,13 +457,31 @@ function ProgressDots({ step }: { step: Step }) {
   );
 }
 
-function StatCard({ label, value, accent, amber }: { label: string; value: string; accent?: boolean; amber?: boolean }) {
+function StatCard({
+  label,
+  value,
+  accent,
+  amber,
+}: {
+  label: string;
+  value: string;
+  accent?: boolean;
+  amber?: boolean;
+}) {
   return (
-    <div className={`rounded-2xl p-4 ${accent ? "bg-accent-500 text-white" : amber ? "bg-amber-100" : "bg-gray-50"}`}>
-      <p className={`text-2xl sm:text-3xl font-extrabold ${accent ? "text-white" : amber ? "text-amber-700" : "text-primary-500"}`}>
+    <div
+      className={`rounded-2xl p-4 ${accent ? "bg-accent-500 text-white" : amber ? "bg-amber-100" : "bg-gray-50"}`}
+    >
+      <p
+        className={`text-2xl sm:text-3xl font-extrabold ${accent ? "text-white" : amber ? "text-amber-700" : "text-primary-500"}`}
+      >
         {value}
       </p>
-      <p className={`text-xs ${accent ? "text-white/80" : amber ? "text-amber-700" : "text-gray-500"}`}>{label}</p>
+      <p
+        className={`text-xs ${accent ? "text-white/80" : amber ? "text-amber-700" : "text-gray-500"}`}
+      >
+        {label}
+      </p>
     </div>
   );
 }
@@ -398,8 +500,20 @@ function bigConfetti() {
   const duration = 2000;
   const end = Date.now() + duration;
   (function frame() {
-    confetti({ particleCount: 6, angle: 60, spread: 75, origin: { x: 0 }, colors });
-    confetti({ particleCount: 6, angle: 120, spread: 75, origin: { x: 1 }, colors });
+    confetti({
+      particleCount: 6,
+      angle: 60,
+      spread: 75,
+      origin: { x: 0 },
+      colors,
+    });
+    confetti({
+      particleCount: 6,
+      angle: 120,
+      spread: 75,
+      origin: { x: 1 },
+      colors,
+    });
     if (Date.now() < end) requestAnimationFrame(frame);
   })();
 }

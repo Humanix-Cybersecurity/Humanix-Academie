@@ -24,25 +24,32 @@ const Schema = z.object({
 
 export async function POST(req: Request) {
   const session = await auth();
-  if (!session?.user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!session?.user)
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
   const body = await req.json();
   const parsed = Schema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: "invalid_payload", details: parsed.error }, { status: 400 });
+    return NextResponse.json(
+      { error: "invalid_payload", details: parsed.error },
+      { status: 400 },
+    );
   }
   const { episodeId, score, status, perfectQuiz } = parsed.data;
   // Si quizScorePct non fourni, on retombe sur min(100, score) pour ne pas
   // casser les anciens clients (provisoire — a retirer apres deploiement
   // generalise du nouveau client).
-  const quizScorePct = parsed.data.quizScorePct ?? Math.min(100, Math.max(0, score));
+  const quizScorePct =
+    parsed.data.quizScorePct ?? Math.min(100, Math.max(0, score));
 
   const userId = session.user!.id as string;
   const tenantId = session.user!.tenantId as string;
-  if (!tenantId) return NextResponse.json({ error: "no_tenant" }, { status: 400 });
+  if (!tenantId)
+    return NextResponse.json({ error: "no_tenant" }, { status: 400 });
 
   const episode = await db.episode.findUnique({ where: { id: episodeId } });
-  if (!episode) return NextResponse.json({ error: "episode_not_found" }, { status: 404 });
+  if (!episode)
+    return NextResponse.json({ error: "episode_not_found" }, { status: 404 });
 
   const now = new Date();
 
@@ -92,7 +99,11 @@ export async function POST(req: Request) {
 
     // Attribution coins + level uniquement si première completion OU amélioration
     // ET si score > 0 (pas de coins gratuits sur quiz vide)
-    if (status === "COMPLETED" && score > 0 && (isFirstCompletion || isImprovement)) {
+    if (
+      status === "COMPLETED" &&
+      score > 0 &&
+      (isFirstCompletion || isImprovement)
+    ) {
       coinsAwarded = computeCoinsEarned(score, !!perfectQuiz);
 
       // TODO perf : dénormaliser User.totalXP au lieu de recalculer (N+1).
@@ -137,7 +148,10 @@ export async function POST(req: Request) {
   // Uniquement sur premiere completion d'un episode (pas sur reprise).
   if (status === "COMPLETED" && result.isFirstCompletion) {
     const [user, ep] = await Promise.all([
-      db.user.findUnique({ where: { id: userId }, select: { name: true, email: true } }),
+      db.user.findUnique({
+        where: { id: userId },
+        select: { name: true, email: true },
+      }),
       db.episode.findUnique({
         where: { id: episodeId },
         select: { title: true, saison: { select: { title: true } } },

@@ -35,10 +35,7 @@ async function requireContributor() {
  * Sauvegarde un brouillon (cree ou met a jour).
  * Le payload est valide cote serveur AVEC le schema Zod stricte.
  */
-export async function saveDraft(input: {
-  moduleId?: string;
-  data: unknown;
-}) {
+export async function saveDraft(input: { moduleId?: string; data: unknown }) {
   const { userId } = await requireContributor();
 
   const parsed = ModuleSubmissionSchema.safeParse(input.data);
@@ -46,14 +43,19 @@ export async function saveDraft(input: {
     return {
       ok: false as const,
       error: "validation_failed",
-      issues: parsed.error.issues.map((i) => ({ path: i.path.join("."), message: i.message })),
+      issues: parsed.error.issues.map((i) => ({
+        path: i.path.join("."),
+        message: i.message,
+      })),
     };
   }
   const data = parsed.data;
   const contentHash = computeContentHash(data.payload);
 
   // Verifier unicite du slug (sauf si c'est l'edition d'un brouillon existant)
-  const existingBySlug = await db.marketplaceModule.findUnique({ where: { slug: data.slug } });
+  const existingBySlug = await db.marketplaceModule.findUnique({
+    where: { slug: data.slug },
+  });
   if (existingBySlug && existingBySlug.id !== input.moduleId) {
     return { ok: false as const, error: "slug_taken" };
   }
@@ -66,7 +68,9 @@ export async function saveDraft(input: {
     //     en DRAFT pour signaler qu'une nouvelle version est en préparation.
     //     L'auteur devra explicitement re-soumettre via submitForReview().
     // PENDING_REVIEW reste verrouillé pour éviter conflit avec modérateur.
-    const existing = await db.marketplaceModule.findUnique({ where: { id: input.moduleId } });
+    const existing = await db.marketplaceModule.findUnique({
+      where: { id: input.moduleId },
+    });
     if (!existing || existing.authorId !== userId) {
       return { ok: false as const, error: "not_found_or_forbidden" };
     }
@@ -136,7 +140,8 @@ export async function submitForReview(moduleId: string) {
   const { userId, tenantId } = await requireContributor();
   const m = await db.marketplaceModule.findUnique({ where: { id: moduleId } });
   if (!m || m.authorId !== userId) throw new Error("not_found_or_forbidden");
-  if (m.status !== "DRAFT" && m.status !== "REJECTED") throw new Error("not_submittable");
+  if (m.status !== "DRAFT" && m.status !== "REJECTED")
+    throw new Error("not_submittable");
 
   // Rate limiting : max 5 soumissions par auteur par 24h
   const cutoff = new Date(Date.now() - 24 * 3600 * 1000);
@@ -148,7 +153,11 @@ export async function submitForReview(moduleId: string) {
   await db.$transaction([
     db.marketplaceModule.update({
       where: { id: moduleId },
-      data: { status: "PENDING_REVIEW", submittedAt: new Date(), rejectionReason: null },
+      data: {
+        status: "PENDING_REVIEW",
+        submittedAt: new Date(),
+        rejectionReason: null,
+      },
     }),
     db.event.create({
       data: {

@@ -39,7 +39,12 @@ const VERDICT_COLOR = {
 };
 
 const styles = StyleSheet.create({
-  page: { padding: 40, fontSize: 10, fontFamily: "Helvetica", color: "#1A1A1A" },
+  page: {
+    padding: 40,
+    fontSize: 10,
+    fontFamily: "Helvetica",
+    color: "#1A1A1A",
+  },
   header: {
     marginBottom: 20,
     borderBottom: "2pt solid #0B3D91",
@@ -108,7 +113,12 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     letterSpacing: 0.4,
   },
-  identityValue: { fontSize: 11, fontWeight: "bold", color: "#1A1A1A", marginTop: 2 },
+  identityValue: {
+    fontSize: 11,
+    fontWeight: "bold",
+    color: "#1A1A1A",
+    marginTop: 2,
+  },
 
   // Risques
   riskCard: {
@@ -208,7 +218,12 @@ const styles = StyleSheet.create({
   legalText: { fontSize: 8, color: COLORS.gray, lineHeight: 1.4 },
 
   // Methodo (page 2)
-  methodTitle: { fontSize: 14, color: COLORS.primary, fontWeight: "bold", marginBottom: 8 },
+  methodTitle: {
+    fontSize: 14,
+    color: COLORS.primary,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
   methodPara: { fontSize: 10, lineHeight: 1.5, marginBottom: 8 },
   methodList: { marginLeft: 12, marginBottom: 8 },
   methodBullet: { fontSize: 10, marginBottom: 4, lineHeight: 1.4 },
@@ -245,7 +260,9 @@ export function AuditFlashReport({
   generatedAt,
   result,
 }: AuditPdfProps) {
-  const dateFr = generatedAt.toLocaleDateString("fr-FR", { dateStyle: "long" } as any);
+  const dateFr = generatedAt.toLocaleDateString("fr-FR", {
+    dateStyle: "long",
+  } as any);
   const horodatage = generatedAt.toISOString();
   const verdictColor = VERDICT_COLOR[result.verdict.color];
 
@@ -298,10 +315,11 @@ export function AuditFlashReport({
             </Text>
             <Text style={styles.nis2Text}>
               La directive NIS2, transposée en France, impose des obligations de
-              sécurité et de notification d'incident sous 24h. Compte tenu de votre
-              taille et / ou de votre secteur, vous êtes a priori dans le périmètre.
-              Sanctions potentielles : jusqu'à 10 M€ ou 2 % du CA mondial. Nous
-              recommandons une vérification rapide de votre statut.
+              sécurité et de notification d'incident sous 24h. Compte tenu de
+              votre taille et / ou de votre secteur, vous êtes a priori dans le
+              périmètre. Sanctions potentielles : jusqu'à 10 M€ ou 2 % du CA
+              mondial. Nous recommandons une vérification rapide de votre
+              statut.
             </Text>
           </View>
         )}
@@ -335,9 +353,7 @@ export function AuditFlashReport({
                 >
                   {risk.severity.toUpperCase()}
                 </Text>
-                <Text style={styles.riskTitle}>
-                  {risk.categoryLabel}
-                </Text>
+                <Text style={styles.riskTitle}>{risk.categoryLabel}</Text>
               </View>
               <View style={styles.riskQuestionList}>
                 {risk.failedQuestions.slice(0, 3).map((q) => (
@@ -355,7 +371,11 @@ export function AuditFlashReport({
 
         <View style={styles.footer} fixed>
           <Text>Audit Flash · Humanix-Cybersecurity · {horodatage}</Text>
-          <Text render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`} />
+          <Text
+            render={({ pageNumber, totalPages }) =>
+              `Page ${pageNumber} / ${totalPages}`
+            }
+          />
         </View>
       </Page>
 
@@ -363,17 +383,24 @@ export function AuditFlashReport({
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.brand}>Humanix Académie · Plan d'action</Text>
-          <Text style={styles.subtitle}>Recommandation personnalisée pour {companyName}</Text>
+          <Text style={styles.subtitle}>
+            Recommandation personnalisée pour {companyName}
+          </Text>
         </View>
 
         {/* Reco HumaniX */}
         <View style={styles.recoBox}>
           <Text style={styles.recoTitle}>Notre recommandation pour vous</Text>
-          <Text style={styles.recoPlanName}>HumaniX {result.recommendedPlan.name}</Text>
-          <Text style={styles.recoPrice}>
-            {result.recommendedPlan.monthlyPrice} · {result.recommendedPlan.annualEstimate}
+          <Text style={styles.recoPlanName}>
+            HumaniX {result.recommendedPlan.name}
           </Text>
-          <Text style={styles.recoRationale}>{result.recommendedPlan.rationale}</Text>
+          <Text style={styles.recoPrice}>
+            {result.recommendedPlan.monthlyPrice} ·{" "}
+            {result.recommendedPlan.annualEstimate}
+          </Text>
+          <Text style={styles.recoRationale}>
+            {result.recommendedPlan.rationale}
+          </Text>
           <Text style={styles.recoCta}>
             {"→"} Démarrez gratuitement sur humanix-cybersecurity.fr
           </Text>
@@ -401,8 +428,8 @@ export function AuditFlashReport({
           </Text>
           <View style={styles.methodList}>
             <Text style={styles.methodBullet}>
-              1. Corriger les 3 risques prioritaires identifiés en page 1 (objectif
-              30 jours).
+              1. Corriger les 3 risques prioritaires identifiés en page 1
+              (objectif 30 jours).
             </Text>
             <Text style={styles.methodBullet}>
               2. Lancer un programme de sensibilisation continu pour vos équipes
@@ -414,8 +441,8 @@ export function AuditFlashReport({
               client, NIS2).
             </Text>
             <Text style={styles.methodBullet}>
-              4. Mesurer trimestriellement votre progression (refaire l'audit dans
-              3 mois pour comparer).
+              4. Mesurer trimestriellement votre progression (refaire l'audit
+              dans 3 mois pour comparer).
             </Text>
           </View>
         </View>
@@ -424,8 +451,8 @@ export function AuditFlashReport({
         <View style={styles.section}>
           <Text style={styles.methodTitle}>Pour aller plus loin</Text>
           <Text style={styles.methodPara}>
-            Une question sur ce rapport ? Un besoin d'accompagnement spécifique ?
-            Notre équipe est à votre disposition.
+            Une question sur ce rapport ? Un besoin d'accompagnement spécifique
+            ? Notre équipe est à votre disposition.
           </Text>
           <Text style={styles.methodPara}>
             Email : contact@humanix-cybersecurity.fr
@@ -439,18 +466,23 @@ export function AuditFlashReport({
         <View style={styles.legalBox}>
           <Text style={styles.legalText}>
             Ce rapport a une vocation pédagogique et constitue un diagnostic
-            indicatif basé sur les déclarations effectuées. Il ne se substitue pas
-            à un audit cyber complet (PASSI, ISO 27001, etc.). Humanix-Cybersecurity
-            SASU décline toute responsabilité quant aux décisions prises sur la base
-            de ce seul document. Données traitées conformément au RGPD : vous
-            pouvez demander l'effacement de vos données à rgpd@humanix-cybersecurity.fr.
-            Émis le {horodatage} pour {email}.
+            indicatif basé sur les déclarations effectuées. Il ne se substitue
+            pas à un audit cyber complet (PASSI, ISO 27001, etc.).
+            Humanix-Cybersecurity SASU décline toute responsabilité quant aux
+            décisions prises sur la base de ce seul document. Données traitées
+            conformément au RGPD : vous pouvez demander l'effacement de vos
+            données à rgpd@humanix-cybersecurity.fr. Émis le {horodatage} pour{" "}
+            {email}.
           </Text>
         </View>
 
         <View style={styles.footer} fixed>
           <Text>Audit Flash · Humanix-Cybersecurity · {horodatage}</Text>
-          <Text render={({ pageNumber, totalPages }) => `Page ${pageNumber} / ${totalPages}`} />
+          <Text
+            render={({ pageNumber, totalPages }) =>
+              `Page ${pageNumber} / ${totalPages}`
+            }
+          />
         </View>
       </Page>
     </Document>

@@ -21,8 +21,17 @@ export type BusinessImpact = {
   totalSeats: number;
   averageRiskScore: number;
   trend: { date: string; score: number }[];
-  byService: { service: string; avgScore: number; userCount: number; weakestUserId?: string }[];
-  topActions: { label: string; potentialPoints: number; difficulty: "easy" | "medium" | "hard" }[];
+  byService: {
+    service: string;
+    avgScore: number;
+    userCount: number;
+    weakestUserId?: string;
+  }[];
+  topActions: {
+    label: string;
+    potentialPoints: number;
+    difficulty: "easy" | "medium" | "hard";
+  }[];
 };
 
 /**
@@ -43,8 +52,8 @@ function estimateIncidentCost(seats: number): number {
  */
 function probabilityFromScore(score: number): number {
   if (score >= 85) return 0.04;
-  if (score >= 70) return 0.10;
-  if (score >= 55) return 0.20;
+  if (score >= 70) return 0.1;
+  if (score >= 55) return 0.2;
   if (score >= 40) return 0.32;
   return 0.45;
 }
@@ -54,17 +63,25 @@ function probabilityFromScore(score: number): number {
  * On prend les tarifs ANNUELS (engagement annuel = remise -17 a -21%).
  */
 function estimateHumanixCost(seats: number): number {
-  if (seats <= 5)   return 0;                      // Découverte forever-free
-  if (seats <= 15)  return 15 * 12;                // Starter annuel = 15€/mois
-  if (seats <= 50)  return 2.5 * seats * 12;       // Essentielle annuel = 2,50€/user/mois
-  if (seats <= 250) return 2 * seats * 12;         // Pro annuel = 2€/user/mois
-  return 5000;                                     // Enterprise sur devis (estimation plancher)
+  if (seats <= 5) return 0; // Découverte forever-free
+  if (seats <= 15) return 15 * 12; // Starter annuel = 15€/mois
+  if (seats <= 50) return 2.5 * seats * 12; // Essentielle annuel = 2,50€/user/mois
+  if (seats <= 250) return 2 * seats * 12; // Pro annuel = 2€/user/mois
+  return 5000; // Enterprise sur devis (estimation plancher)
 }
 
-export async function computeBusinessImpact(tenantId: string): Promise<BusinessImpact> {
+export async function computeBusinessImpact(
+  tenantId: string,
+): Promise<BusinessImpact> {
   const users = await db.user.findMany({
     where: { tenantId, isActive: true, role: { in: ["LEARNER", "MANAGER"] } },
-    select: { id: true, service: true, riskScore: true, name: true, email: true },
+    select: {
+      id: true,
+      service: true,
+      riskScore: true,
+      name: true,
+      email: true,
+    },
   });
 
   const totalSeats = users.length || 1;
@@ -84,7 +101,9 @@ export async function computeBusinessImpact(tenantId: string): Promise<BusinessI
 
   const estimatedIncidentCost = estimateIncidentCost(totalSeats);
   const incidentProbability12m = probabilityFromScore(collectiveScore);
-  const expectedAnnualLoss = Math.round(estimatedIncidentCost * incidentProbability12m);
+  const expectedAnnualLoss = Math.round(
+    estimatedIncidentCost * incidentProbability12m,
+  );
 
   // Pour le ROI, on compare le scenario "PME non-formee" (score 50, prob ~25%)
   // au scenario actuel — l'ecart est le "saving" attribuable a Humanix
@@ -93,17 +112,27 @@ export async function computeBusinessImpact(tenantId: string): Promise<BusinessI
   const savingFromTraining = baselineExpectedLoss - expectedAnnualLoss;
 
   const humanixAnnualCost = estimateHumanixCost(totalSeats);
-  const estimatedAnnualSaving = Math.max(0, savingFromTraining - humanixAnnualCost);
-  const roiMultiplier = humanixAnnualCost === 0 ? 0 : Math.round((savingFromTraining / humanixAnnualCost) * 10) / 10;
+  const estimatedAnnualSaving = Math.max(
+    0,
+    savingFromTraining - humanixAnnualCost,
+  );
+  const roiMultiplier =
+    humanixAnnualCost === 0
+      ? 0
+      : Math.round((savingFromTraining / humanixAnnualCost) * 10) / 10;
 
   // Trend : evolution sur 7 derniers jours (approximation : on prend les progress recents)
   const trend = await buildScoreTrend(tenantId);
 
   // By service
-  const byServiceMap = new Map<string, { sum: number; count: number; minScore: number; minUser?: string }>();
+  const byServiceMap = new Map<
+    string,
+    { sum: number; count: number; minScore: number; minUser?: string }
+  >();
   for (const u of users) {
     const svc = u.service ?? "Sans service";
-    if (!byServiceMap.has(svc)) byServiceMap.set(svc, { sum: 0, count: 0, minScore: 100 });
+    if (!byServiceMap.has(svc))
+      byServiceMap.set(svc, { sum: 0, count: 0, minScore: 100 });
     const s = byServiceMap.get(svc)!;
     const score = u.riskScore ?? 50;
     s.sum += score;
@@ -142,7 +171,9 @@ export async function computeBusinessImpact(tenantId: string): Promise<BusinessI
   };
 }
 
-async function buildScoreTrend(tenantId: string): Promise<{ date: string; score: number }[]> {
+async function buildScoreTrend(
+  tenantId: string,
+): Promise<{ date: string; score: number }[]> {
   // Approximation : on regarde l'evolution des scores via les progress sur 7j
   // Pour une vraie production : table dediee TenantScoreHistory mise a jour quotidiennement
   const today = new Date();
@@ -162,13 +193,20 @@ async function buildScoreTrend(tenantId: string): Promise<{ date: string; score:
       select: { riskScore: true, createdAt: true },
     });
     const eligible = users.filter((u) => u.createdAt <= dayEnd);
-    const avg = eligible.length === 0
-      ? 50
-      : Math.round(eligible.reduce((s, u) => s + (u.riskScore ?? 50), 0) / eligible.length);
+    const avg =
+      eligible.length === 0
+        ? 50
+        : Math.round(
+            eligible.reduce((s, u) => s + (u.riskScore ?? 50), 0) /
+              eligible.length,
+          );
     // Variation faible pour rendre le graphique vivant
-    const variation = (i % 3 === 0 ? 2 : i % 2 === 0 ? -1 : 1);
+    const variation = i % 3 === 0 ? 2 : i % 2 === 0 ? -1 : 1;
     trend.push({
-      date: day.toLocaleDateString("fr-FR", { weekday: "short", day: "numeric" }),
+      date: day.toLocaleDateString("fr-FR", {
+        weekday: "short",
+        day: "numeric",
+      }),
       score: Math.max(0, Math.min(100, avg + variation)),
     });
   }
@@ -178,12 +216,21 @@ async function buildScoreTrend(tenantId: string): Promise<{ date: string; score:
 function generateActionPlan(
   score: number,
   byService: { service: string; avgScore: number }[],
-): { label: string; potentialPoints: number; difficulty: "easy" | "medium" | "hard" }[] {
-  const actions: { label: string; potentialPoints: number; difficulty: "easy" | "medium" | "hard" }[] = [];
+): {
+  label: string;
+  potentialPoints: number;
+  difficulty: "easy" | "medium" | "hard";
+}[] {
+  const actions: {
+    label: string;
+    potentialPoints: number;
+    difficulty: "easy" | "medium" | "hard";
+  }[] = [];
 
   if (score < 70) {
     actions.push({
-      label: "Forcer la complétion de la saison Phishing pour tous les collaborateurs",
+      label:
+        "Forcer la complétion de la saison Phishing pour tous les collaborateurs",
       potentialPoints: 12,
       difficulty: "easy",
     });
@@ -205,7 +252,8 @@ function generateActionPlan(
     });
   }
   actions.push({
-    label: "Lancer une campagne phishing simulé pour identifier les profils à coacher",
+    label:
+      "Lancer une campagne phishing simulé pour identifier les profils à coacher",
     potentialPoints: 6,
     difficulty: "medium",
   });
@@ -218,9 +266,28 @@ function generateActionPlan(
   return actions.slice(0, 5);
 }
 
-export const VERDICT_LABEL: Record<BusinessImpact["scoreVerdict"], { label: string; color: string; bg: string }> = {
-  excellent: { label: "Excellent", color: "text-success", bg: "from-emerald-50 to-green-50" },
-  bon: { label: "Bon", color: "text-accent-500", bg: "from-cyan-50 to-blue-50" },
-  a_surveiller: { label: "À surveiller", color: "text-amber-600", bg: "from-amber-50 to-orange-50" },
-  a_risque: { label: "À risque élevé", color: "text-warn", bg: "from-red-50 to-rose-50" },
+export const VERDICT_LABEL: Record<
+  BusinessImpact["scoreVerdict"],
+  { label: string; color: string; bg: string }
+> = {
+  excellent: {
+    label: "Excellent",
+    color: "text-success",
+    bg: "from-emerald-50 to-green-50",
+  },
+  bon: {
+    label: "Bon",
+    color: "text-accent-500",
+    bg: "from-cyan-50 to-blue-50",
+  },
+  a_surveiller: {
+    label: "À surveiller",
+    color: "text-amber-600",
+    bg: "from-amber-50 to-orange-50",
+  },
+  a_risque: {
+    label: "À risque élevé",
+    color: "text-warn",
+    bg: "from-red-50 to-rose-50",
+  },
 };

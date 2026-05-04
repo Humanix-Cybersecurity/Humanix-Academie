@@ -15,7 +15,12 @@ import { getMascotById } from "@/lib/mascots";
 export default function HeaderBar() {
   const { data: session } = useSession();
   const user = session?.user as any;
-  const [stats, setStats] = useState<{ xp: number; coins: number; level: number; levelName: string } | null>(null);
+  const [stats, setStats] = useState<{
+    xp: number;
+    coins: number;
+    level: number;
+    levelName: string;
+  } | null>(null);
   const [mascotSpecies, setMascotSpecies] = useState<string>("fox");
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -27,7 +32,12 @@ export default function HeaderBar() {
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (!data) return;
-        setStats({ xp: data.xp, coins: data.coins, level: data.level, levelName: data.levelName });
+        setStats({
+          xp: data.xp,
+          coins: data.coins,
+          level: data.level,
+          levelName: data.levelName,
+        });
         if (data.mascotSpecies) setMascotSpecies(data.mascotSpecies);
       })
       .catch(() => {});
@@ -37,17 +47,22 @@ export default function HeaderBar() {
   useEffect(() => {
     if (!menuOpen) return;
     const onClick = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
+      if (menuRef.current && !menuRef.current.contains(e.target as Node))
+        setMenuOpen(false);
     };
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
   }, [menuOpen]);
 
-  const isAdmin = user?.role === "ADMIN" || user?.role === "MANAGER" || user?.role === "SUPERADMIN";
+  const isAdmin =
+    user?.role === "ADMIN" ||
+    user?.role === "MANAGER" ||
+    user?.role === "SUPERADMIN";
   const canMarketplace = user?.role === "ADMIN" || user?.role === "SUPERADMIN";
   const mascot = getMascotById(mascotSpecies);
   const pathname = usePathname();
-  const isActive = (href: string) => pathname === href || (href !== "/" && pathname?.startsWith(href + "/"));
+  const isActive = (href: string) =>
+    pathname === href || (href !== "/" && pathname?.startsWith(href + "/"));
 
   // ESC pour refermer le menu utilisateur
   useEffect(() => {
@@ -61,8 +76,14 @@ export default function HeaderBar() {
 
   return (
     <header className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur border-b border-gray-200 dark:border-slate-700">
-      <nav aria-label="Navigation principale" className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-        <Link href="/" className="flex items-center gap-2 font-bold text-primary-500 text-lg shrink-0">
+      <nav
+        aria-label="Navigation principale"
+        className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3"
+      >
+        <Link
+          href="/"
+          className="flex items-center gap-2 font-bold text-primary-500 text-lg shrink-0"
+        >
           <Image
             src="/logo-humanix-academie-192.png"
             alt="Humanix Académie"
@@ -73,7 +94,9 @@ export default function HeaderBar() {
           />
           <span className="hidden sm:flex flex-col leading-tight">
             <span className="text-base font-extrabold">Humanix Académie</span>
-            <span className="text-[10px] font-medium text-gray-600 dark:text-gray-300 -mt-0.5">par Humanix-Cybersecurity</span>
+            <span className="text-[10px] font-medium text-gray-600 dark:text-gray-300 -mt-0.5">
+              par Humanix-Cybersecurity
+            </span>
           </span>
         </Link>
 
@@ -111,8 +134,12 @@ export default function HeaderBar() {
                 className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-primary-50 to-cyan-50 dark:from-slate-800 dark:to-slate-700 rounded-2xl px-3 py-1.5 hover:scale-105 transition-transform border border-primary-100 dark:border-slate-600"
                 title={`Niveau ${stats.level} — ${stats.levelName} · ${stats.xp} XP`}
               >
-                <span className="text-xs font-bold text-primary-500">N{stats.level}</span>
-                <span className="text-xs font-bold text-amber-600">🪙{stats.coins}</span>
+                <span className="text-xs font-bold text-primary-500">
+                  N{stats.level}
+                </span>
+                <span className="text-xs font-bold text-amber-600">
+                  🪙{stats.coins}
+                </span>
               </Link>
             )}
 
@@ -127,11 +154,15 @@ export default function HeaderBar() {
                 aria-label={`Menu utilisateur de ${user.name ?? user.email}${menuOpen ? ", ouvert" : ", fermé"}`}
                 className="flex items-center gap-2 rounded-xl px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-slate-800 transition"
               >
-                <span className="text-2xl" aria-hidden="true">{mascot.emoji}</span>
+                <span className="text-2xl" aria-hidden="true">
+                  {mascot.emoji}
+                </span>
                 <span className="hidden lg:inline text-sm text-gray-700 dark:text-gray-200 max-w-[120px] truncate">
                   {user.name?.split(" ")[0] ?? "Moi"}
                 </span>
-                <span className="text-xs text-gray-400" aria-hidden="true">▾</span>
+                <span className="text-xs text-gray-400" aria-hidden="true">
+                  ▾
+                </span>
               </button>
 
               {menuOpen && (
@@ -140,25 +171,64 @@ export default function HeaderBar() {
                   className="absolute right-0 mt-2 w-60 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-200 dark:border-slate-700 py-2 animate-fadeIn"
                 >
                   <div className="px-4 py-2 border-b border-gray-100 dark:border-slate-700">
-                    <p className="text-sm font-bold text-primary-500">{user.name ?? user.email}</p>
+                    <p className="text-sm font-bold text-primary-500">
+                      {user.name ?? user.email}
+                    </p>
                     {stats && (
-                      <p className="text-xs text-gray-500">Niveau {stats.level} · {stats.levelName}</p>
+                      <p className="text-xs text-gray-500">
+                        Niveau {stats.level} · {stats.levelName}
+                      </p>
                     )}
                   </div>
 
-                  <MenuLink href="/profil" icon="👤" label="Mon profil" onClick={() => setMenuOpen(false)} />
-                  <MenuLink href="/boutique" icon="🛒" label="Boutique" onClick={() => setMenuOpen(false)} />
-                  <MenuLink href="/famille" icon="❤️" label="Cyber Famille" onClick={() => setMenuOpen(false)} />
+                  <MenuLink
+                    href="/profil"
+                    icon="👤"
+                    label="Mon profil"
+                    onClick={() => setMenuOpen(false)}
+                  />
+                  <MenuLink
+                    href="/boutique"
+                    icon="🛒"
+                    label="Boutique"
+                    onClick={() => setMenuOpen(false)}
+                  />
+                  <MenuLink
+                    href="/famille"
+                    icon="❤️"
+                    label="Cyber Famille"
+                    onClick={() => setMenuOpen(false)}
+                  />
                   {canMarketplace && (
-                    <MenuLink href="/marketplace" icon="🏛️" label="Marketplace" onClick={() => setMenuOpen(false)} />
+                    <MenuLink
+                      href="/marketplace"
+                      icon="🏛️"
+                      label="Marketplace"
+                      onClick={() => setMenuOpen(false)}
+                    />
                   )}
 
                   {/* Liens secondaires sur mobile (en double avec la nav md:) */}
                   <div className="md:hidden border-t border-gray-100 dark:border-slate-700 mt-1 pt-1">
-                    <MenuLink href="/apprendre" icon="🎯" label="Apprendre" onClick={() => setMenuOpen(false)} />
-                    <MenuLink href="/librairie" icon="📚" label="Librairie" onClick={() => setMenuOpen(false)} />
+                    <MenuLink
+                      href="/apprendre"
+                      icon="🎯"
+                      label="Apprendre"
+                      onClick={() => setMenuOpen(false)}
+                    />
+                    <MenuLink
+                      href="/librairie"
+                      icon="📚"
+                      label="Librairie"
+                      onClick={() => setMenuOpen(false)}
+                    />
                     {isAdmin && (
-                      <MenuLink href="/admin" icon="⚙️" label="Console admin" onClick={() => setMenuOpen(false)} />
+                      <MenuLink
+                        href="/admin"
+                        icon="⚙️"
+                        label="Console admin"
+                        onClick={() => setMenuOpen(false)}
+                      />
                     )}
                   </div>
 
