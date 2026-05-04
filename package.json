@@ -33,6 +33,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "validate:mdx": "tsx scripts/validate-mdx-catalog.ts",
+    "validate:mdx:strict": "tsx scripts/validate-mdx-catalog.ts --strict",
     "audit:env": "tsx scripts/audit-env-coverage.ts",
     "license:headers": "tsx scripts/add-license-headers.ts",
     "license:check": "tsx scripts/add-license-headers.ts --check",
