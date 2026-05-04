@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Formulaire CRUD anecdote - reutilise pour creation et edition.
 // Utilise une server action via prop pour soumettre.
 

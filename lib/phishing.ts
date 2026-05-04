@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Templates pre-ecrits de phishing simule (cadre ethique strict)
 // Ce fichier est SAFE cote client : pas d'import node:* ici.
 // Pour generer des tokens / hasher des cles, voir lib/crypto.ts (server-only).

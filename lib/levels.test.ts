@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Tests du système de niveaux + computeCoinsEarned.
 // Pas critique pour la facturation mais critique pour la gamification = engagement.
 

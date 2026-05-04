@@ -153,6 +153,21 @@ jobs:
   # Cf. scripts/validate-mdx-catalog.ts.
   mdx-catalog:
     name: Validation MDX <-> catalogue
+  # Job : Headers SPDX AGPL-3.0-or-later
+  # ---------------------------------------------------------------------------
+  # Verifie que tous les fichiers source TS/TSX ont un header SPDX. Bloque
+  # le merge si un nouveau fichier oublie de le mettre. Approche moderne
+  # (FSF + Linux kernel) : 1 ligne SPDX au lieu d'un boilerplate copyright.
+  # Cf. scripts/add-license-headers.ts (regen avec `npm run license:headers`).
+  license-headers:
+    name: Headers SPDX AGPL-3.0
+  # Job : Audit couverture .env.example
+  # ---------------------------------------------------------------------------
+  # Vérifie qu'aucune variable consommée par le code (process.env.X) ne manque
+  # dans .env.example. Garde-fou pré-launch OSS : un .env.example exhaustif
+  # évite qu'un dev hardcode un secret par flemme. Cf. scripts/audit-env-coverage.ts.
+  env-audit:
+    name: Couverture .env.example
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
@@ -206,6 +221,10 @@ jobs:
       - name: Tests
         working-directory: connectors/mcp-server
         run: npm test
+      - name: Verify SPDX headers on source files
+        run: npm run license:check
+      - name: Audit env coverage
+        run: npm run audit:env
 
   # ---------------------------------------------------------------------------
   # Job 4 : Vérification format Prettier

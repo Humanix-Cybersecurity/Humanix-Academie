@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Page publique "Bibliotheque d'experts" - annuaire des contributeurs marketplace.
 // Argumentaire commercial : c'est ICI qu'on prouve que la marketplace n'est pas
 // genereee en interne mais signee par de vrais professionnels francais.

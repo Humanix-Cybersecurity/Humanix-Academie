@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // CGV B2B — Conditions Générales de Vente
 // Couvre 3 lignes business : SaaS Humanix Académie, formation, audits cyber
 import Link from "next/link";

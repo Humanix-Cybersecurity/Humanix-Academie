@@ -1,5 +1,6 @@
 "use client";
 
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Mini barre de progression scroll en haut de page (signature subtile).
 // 2px, gradient HumaniX. Disparait en prefers-reduced-motion (bouge pas).
 //

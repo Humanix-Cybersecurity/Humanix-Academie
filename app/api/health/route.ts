@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Endpoint de health-check léger, utilisé par :
 //  - HAProxy (httpchk GET /api/health → expect 200)
 //  - Docker healthcheck éventuel

@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+// SPDX-License-Identifier: AGPL-3.0-or-later
 /**
  * Nettoyage des items pourris dans l'observatoire des fuites.
  *

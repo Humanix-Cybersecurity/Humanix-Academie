@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Catalogue de modules marketplace pré-seedés (community + officiels Humanix).
 // Chaque module = 1 épisode autonome (5-8 min). Format respectant
 // strictement lib/marketplace/schema.ts (pas de <, >, &, longueurs bornées).

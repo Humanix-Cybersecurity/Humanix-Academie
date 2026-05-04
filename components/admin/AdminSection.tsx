@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
 // AdminSection — Wrapper standard pour une section de page admin.
 //
