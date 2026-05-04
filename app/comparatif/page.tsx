@@ -2,19 +2,34 @@
 // Le pari editorial : poser noir sur blanc nos forces ET nos faiblesses face
 // aux concurrents identifies. C'est un acte commercial differencant : aucune
 // suite SaaS cyber francaise ne le fait. Cible : prospects PME qui hesitent
-// entre HumaniX et un acteur historique (KnowBe4, Mantra, Hoxhunt, Phished).
+// entre HumaniX et un acteur historique (KnowBe4, Hoxhunt, Phished) ou un
+// disrupteur AI-native (Adaptive Security, Cyber Guru).
 //
 // REGLE EDITORIALE : on doit toujours rester honnete. Si un concurrent ajoute
 // une feature qui nous depasse, on l'inscrit ici. Cette page perd sa valeur
 // commerciale a la seconde ou elle ment.
+//
+// Refresh mai 2026 :
+//  - Mantra a ete rachete par Cyber Guru (Italie) en mars 2025 → on remplace
+//    la colonne Mantra par Cyber Guru et on actualise la lecture FR.
+//  - Adaptive Security (US, $136M leves dont Series B 81M en 2025 par Bain
+//    Capital + NVIDIA + OpenAI Fund + a16z) est devenu un disrupteur AI-native
+//    avec 500+ clients en moins d'un an. C'est la vraie menace 2026, pas
+//    KnowBe4 qui devient le legacy. → on ajoute une colonne dediee.
+//  - Nouvelles lignes pour les sujets bouillants 2026 : vishing/voice deepfake
+//    (surge +442 % H2 2024), MCP server pour agents IA (CISO Assistant l'a
+//    deja, premier mover possible cote SAT/HRM), agent IA orchestrateur
+//    (KnowBe4 AIDA, Hoxhunt adaptive), HRM Maturity Model (Living Security /
+//    CybSafe), contenu pedagogique reellement redige (vs catalogue marketing).
 
 import { Fragment } from "react";
 import Link from "next/link";
+import { countExpertEpisodes } from "@/lib/content-availability";
 
 export const metadata = {
   title: "Comparatif honnête — HumaniX vs concurrents | Humanix Académie",
   description:
-    "Comparatif honnête entre Humanix Académie et les principales plateformes de sensibilisation cyber (KnowBe4, Mantra, Hoxhunt, Phished). On vous dit où nous sommes meilleurs, équivalents et moins bons.",
+    "Comparatif honnête entre Humanix Académie et les principales plateformes de sensibilisation cyber 2026 (KnowBe4, Hoxhunt, Phished, Cyber Guru, Adaptive Security). On vous dit où nous sommes meilleurs, équivalents et moins bons.",
 };
 
 type Cell = {
@@ -27,10 +42,16 @@ type Row = {
   feature: string;
   humanix: Cell;
   knowbe4: Cell;
-  mantra: Cell;
+  cyberGuru: Cell;
   hoxhunt: Cell;
   phished: Cell;
+  adaptiveSecurity: Cell;
 };
+
+// Helper : evite de repeter `{ status: "loss", text: "Non" }` partout.
+const win = (text: string): Cell => ({ status: "win", text });
+const eq = (text: string): Cell => ({ status: "equal", text });
+const loss = (text: string): Cell => ({ status: "loss", text });
 
 const ROWS: Row[] = [
   // -----------------------------------------------------------------------
@@ -39,41 +60,42 @@ const ROWS: Row[] = [
   {
     category: "Tarification",
     feature: "Prix d'entrée pour 10 personnes",
-    humanix: {
-      status: "win",
-      text: "0 € self-host AGPL ou 19 €/mois cloud Starter",
-    },
-    knowbe4: { status: "loss", text: "~3 500 €/an minimum" },
-    mantra: { status: "loss", text: "~2 400 €/an minimum" },
-    hoxhunt: { status: "loss", text: "Sur devis (>3 000 €/an)" },
-    phished: { status: "loss", text: "~1 800 €/an minimum" },
+    humanix: win("0 € self-host AGPL ou 19 €/mois cloud Starter"),
+    knowbe4: loss("~3 500 €/an minimum"),
+    cyberGuru: loss("~2 400 €/an minimum (ex-Mantra)"),
+    hoxhunt: loss("Sur devis (>3 000 €/an)"),
+    phished: loss("~1 800 €/an minimum"),
+    adaptiveSecurity: loss("Sur devis enterprise (>5 000 €/an attendu)"),
   },
   {
     category: "Tarification",
     feature: "Code source ouvert (auditabilité)",
-    humanix: { status: "win", text: "AGPLv3 — code complet public sur GitHub" },
-    knowbe4: { status: "loss", text: "Boîte noire (US)" },
-    mantra: { status: "loss", text: "Boîte noire (FR)" },
-    hoxhunt: { status: "loss", text: "Boîte noire (FI/US)" },
-    phished: { status: "loss", text: "Boîte noire (BE)" },
+    humanix: win("AGPLv3 — code complet public sur GitHub"),
+    knowbe4: loss("Boîte noire (US)"),
+    cyberGuru: loss("Boîte noire (Italie)"),
+    hoxhunt: loss("Boîte noire (FI/US)"),
+    phished: loss("Boîte noire (BE)"),
+    adaptiveSecurity: loss("Boîte noire (US, fondée 2023)"),
   },
   {
     category: "Tarification",
     feature: "Tarif transparent affiché publiquement",
-    humanix: { status: "win", text: "Oui, grille complète" },
-    knowbe4: { status: "loss", text: "Sur devis" },
-    mantra: { status: "loss", text: "Sur devis" },
-    hoxhunt: { status: "loss", text: "Sur devis" },
-    phished: { status: "equal", text: "Partiellement" },
+    humanix: win("Oui, grille complète"),
+    knowbe4: loss("Sur devis"),
+    cyberGuru: loss("Sur devis"),
+    hoxhunt: loss("Sur devis"),
+    phished: eq("Partiellement"),
+    adaptiveSecurity: loss("Sur devis"),
   },
   {
     category: "Tarification",
     feature: "Engagement minimum",
-    humanix: { status: "win", text: "Sans engagement" },
-    knowbe4: { status: "loss", text: "12 mois minimum" },
-    mantra: { status: "equal", text: "12 mois recommandé" },
-    hoxhunt: { status: "loss", text: "12 mois minimum" },
-    phished: { status: "equal", text: "12 mois recommandé" },
+    humanix: win("Sans engagement"),
+    knowbe4: loss("12 mois minimum"),
+    cyberGuru: eq("12 mois recommandé"),
+    hoxhunt: loss("12 mois minimum"),
+    phished: eq("12 mois recommandé"),
+    adaptiveSecurity: loss("12 mois minimum"),
   },
 
   // -----------------------------------------------------------------------
@@ -81,76 +103,97 @@ const ROWS: Row[] = [
   // -----------------------------------------------------------------------
   {
     category: "Catalogue & contenu",
-    feature: "Nombre de modules disponibles",
-    humanix: {
-      status: "equal",
-      text: "180 modules (25 saisons + marketplace)",
-    },
-    knowbe4: { status: "win", text: "1 000+ modules" },
-    mantra: { status: "equal", text: "300+ modules" },
-    hoxhunt: { status: "equal", text: "~100 modules" },
-    phished: { status: "win", text: "500+ modules" },
+    feature: "Nombre de modules disponibles (catalogue)",
+    humanix: eq("180 modules (25 saisons + marketplace)"),
+    knowbe4: win("1 000+ modules"),
+    cyberGuru: eq("300+ modules"),
+    hoxhunt: eq("~100 modules"),
+    phished: win("500+ modules"),
+    adaptiveSecurity: eq("Modules génératifs IA à la demande"),
   },
   {
     category: "Catalogue & contenu",
     feature: "Modules en français natifs (non traduits)",
-    humanix: { status: "win", text: "100 % FR natif" },
-    knowbe4: { status: "loss", text: "Traduits depuis l'anglais" },
-    mantra: { status: "win", text: "FR natif" },
-    hoxhunt: { status: "loss", text: "Traduction partielle" },
-    phished: { status: "equal", text: "Mix FR / traduit" },
+    humanix: win("100 % FR natif"),
+    knowbe4: loss("Traduits depuis l'anglais"),
+    cyberGuru: win("FR + IT natif"),
+    hoxhunt: loss("Traduction partielle"),
+    phished: eq("Mix FR / traduit"),
+    adaptiveSecurity: loss("EN d'abord, FR par génération IA"),
   },
   {
     category: "Catalogue & contenu",
     feature: "Marketplace ouverte (modules communauté)",
-    humanix: { status: "win", text: "Oui, modulable + auteur visible" },
-    knowbe4: { status: "loss", text: "Non" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "loss", text: "Non" },
-    phished: { status: "loss", text: "Non" },
+    humanix: win("Oui, modulable + auteur visible"),
+    knowbe4: loss("Non"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
   },
   {
     category: "Catalogue & contenu",
     feature: "Modules pour la sphère personnelle / famille",
-    humanix: {
-      status: "win",
-      text: "Oui, /famille gratuit + invitations proches",
-    },
-    knowbe4: { status: "loss", text: "Non" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "loss", text: "Non" },
-    phished: { status: "loss", text: "Non" },
+    humanix: win("Oui, /famille gratuit + invitations proches"),
+    knowbe4: loss("Non"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
   },
 
   // -----------------------------------------------------------------------
-  // CATÉGORIE : SIMULATION PHISHING
+  // CATÉGORIE : SIMULATION PHISHING & SOCIAL ENGINEERING
   // -----------------------------------------------------------------------
   {
-    category: "Simulation phishing",
-    feature: "Campagnes phishing simulé",
-    humanix: { status: "equal", text: "Oui, templates FR" },
-    knowbe4: { status: "win", text: "Référence du marché" },
-    mantra: { status: "equal", text: "Oui, IA-personnalisé" },
-    hoxhunt: { status: "win", text: "IA + adaptive learning" },
-    phished: { status: "equal", text: "Oui, automatisation" },
+    category: "Simulation phishing & ingénierie sociale",
+    feature: "Campagnes phishing simulé (email)",
+    humanix: eq("Oui, templates FR"),
+    knowbe4: win("Référence du marché + AIDA Orchestration"),
+    cyberGuru: eq("Oui, IA-personnalisé"),
+    hoxhunt: win("IA + adaptive learning multi-canal"),
+    phished: eq("Oui, automatisation"),
+    adaptiveSecurity: win("AI-native génératif end-to-end"),
   },
   {
-    category: "Simulation phishing",
+    category: "Simulation phishing & ingénierie sociale",
     feature: "Plugin Outlook / Gmail (bouton « Signaler »)",
-    humanix: { status: "equal", text: "Add-in Outlook livré (Gmail à venir)" },
-    knowbe4: { status: "win", text: "Oui, mature + Gmail" },
-    mantra: { status: "win", text: "Oui + Gmail" },
-    hoxhunt: { status: "win", text: "Oui, intégré + Gmail" },
-    phished: { status: "win", text: "Oui + Gmail" },
+    humanix: eq("Add-in Outlook livré (Gmail à venir)"),
+    knowbe4: win("Oui, mature + Gmail"),
+    cyberGuru: win("Oui + Gmail"),
+    hoxhunt: win("Oui, intégré + Gmail"),
+    phished: win("Oui + Gmail"),
+    adaptiveSecurity: win("Oui (créé pour AI-era)"),
   },
   {
-    category: "Simulation phishing",
+    category: "Simulation phishing & ingénierie sociale",
     feature: "IA générative pour personnaliser les phishings",
-    humanix: { status: "win", text: "Oui — Mistral souverain FR (RGPD natif)" },
-    knowbe4: { status: "equal", text: "Oui (USA, Cloud Act)" },
-    mantra: { status: "equal", text: "Oui (UE)" },
-    hoxhunt: { status: "equal", text: "Oui (FI)" },
-    phished: { status: "equal", text: "Oui (BE)" },
+    humanix: win("Oui — Mistral souverain FR (RGPD natif)"),
+    knowbe4: eq("Oui (USA, Cloud Act)"),
+    cyberGuru: eq("Oui (Italie/UE)"),
+    hoxhunt: eq("Oui (FI)"),
+    phished: eq("Oui (BE)"),
+    adaptiveSecurity: eq("Oui (OpenAI, USA, Cloud Act)"),
+  },
+  {
+    category: "Simulation phishing & ingénierie sociale",
+    feature: "Vishing / simulation voix (deepfake +442 % H2 2024)",
+    humanix: loss("Roadmap mai 2026 — Mistral + Piper TTS souverain FR"),
+    knowbe4: eq("AIDA voice agent (cloud US)"),
+    cyberGuru: loss("Non documenté"),
+    hoxhunt: win("Voice overlays mature"),
+    phished: loss("Non"),
+    adaptiveSecurity: win("Spécialiste voice deepfake (POC en démo)"),
+  },
+  {
+    category: "Simulation phishing & ingénierie sociale",
+    feature: "Smishing / simulation SMS",
+    humanix: loss("Non (roadmap Q3 2026)"),
+    knowbe4: win("Oui"),
+    cyberGuru: eq("Oui"),
+    hoxhunt: win("Oui"),
+    phished: eq("Oui"),
+    adaptiveSecurity: win("Oui (multi-canal natif)"),
   },
 
   // -----------------------------------------------------------------------
@@ -159,111 +202,170 @@ const ROWS: Row[] = [
   {
     category: "Conformité & souveraineté",
     feature: "Hébergement 100 % France",
-    humanix: { status: "win", text: "Oui, Scaleway Paris" },
-    knowbe4: { status: "loss", text: "USA + UE multi-régions" },
-    mantra: { status: "equal", text: "UE (FR optionnel)" },
-    hoxhunt: { status: "loss", text: "Finlande / UE" },
-    phished: { status: "equal", text: "Belgique / UE" },
+    humanix: win("Oui, Scaleway Paris"),
+    knowbe4: loss("USA + UE multi-régions"),
+    cyberGuru: eq("UE (Italie + FR optionnel)"),
+    hoxhunt: loss("Finlande / UE"),
+    phished: eq("Belgique / UE"),
+    adaptiveSecurity: loss("USA (AWS multi-région)"),
   },
   {
     category: "Conformité & souveraineté",
     feature: "DPA + Registre RGPD pré-remplis",
-    humanix: { status: "win", text: "Oui, fournis dès trial" },
-    knowbe4: { status: "equal", text: "Sur demande" },
-    mantra: { status: "equal", text: "Sur demande" },
-    hoxhunt: { status: "loss", text: "DPA seul" },
-    phished: { status: "equal", text: "Sur demande" },
+    humanix: win("Oui, fournis dès trial"),
+    knowbe4: eq("Sur demande"),
+    cyberGuru: eq("Sur demande"),
+    hoxhunt: loss("DPA seul"),
+    phished: eq("Sur demande"),
+    adaptiveSecurity: eq("Sur demande"),
   },
   {
     category: "Conformité & souveraineté",
     feature: "Pack NIS2 prêt à signer (par-tenant)",
-    humanix: { status: "win", text: "Oui, livré 2026" },
-    knowbe4: { status: "loss", text: "Non" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "loss", text: "Non" },
-    phished: { status: "loss", text: "Non" },
+    humanix: win("Oui, livré 2026"),
+    knowbe4: loss("Non"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
   },
   {
     category: "Conformité & souveraineté",
     feature: "Accessibilité RGAA / WCAG 2.1 AA",
-    humanix: {
-      status: "win",
-      text: "Conformité interne 88 %, audit cabinet à venir",
-    },
-    knowbe4: { status: "equal", text: "WCAG partiel" },
-    mantra: { status: "equal", text: "WCAG partiel" },
-    hoxhunt: { status: "equal", text: "WCAG partiel" },
-    phished: { status: "loss", text: "Non documenté" },
+    humanix: win("Conformité interne 88 %, audit cabinet à venir"),
+    knowbe4: eq("WCAG partiel"),
+    cyberGuru: eq("WCAG partiel"),
+    hoxhunt: eq("WCAG partiel"),
+    phished: loss("Non documenté"),
+    adaptiveSecurity: loss("Non documenté"),
   },
   {
     category: "Conformité & souveraineté",
     feature: "Rapport d'audit de sécurité public",
-    humanix: {
-      status: "win",
-      text: "Oui, PDF public + Markdown versionné Git",
-    },
-    knowbe4: { status: "equal", text: "SOC 2 Type II (sur demande NDA)" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "equal", text: "ISO 27001 (sur demande NDA)" },
-    phished: { status: "loss", text: "Non" },
+    humanix: win("Oui, PDF public + Markdown versionné Git"),
+    knowbe4: eq("SOC 2 Type II (sur demande NDA)"),
+    cyberGuru: loss("Non"),
+    hoxhunt: eq("ISO 27001 (sur demande NDA)"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non documenté (jeune éditeur)"),
   },
 
   // -----------------------------------------------------------------------
-  // CATÉGORIE : PILOTAGE & DASHBOARD
+  // CATÉGORIE : PILOTAGE DIRIGEANT
   // -----------------------------------------------------------------------
   {
     category: "Pilotage dirigeant",
     feature: "Dashboard CODIR (mode présentation)",
-    humanix: { status: "win", text: "Oui, plein écran COMEX" },
-    knowbe4: { status: "equal", text: "Dashboard exec partiel" },
-    mantra: { status: "equal", text: "Dashboard exec" },
-    hoxhunt: { status: "win", text: "Dashboard exec mature" },
-    phished: { status: "equal", text: "Dashboard exec partiel" },
+    humanix: win("Oui, plein écran COMEX"),
+    knowbe4: eq("Dashboard exec partiel"),
+    cyberGuru: eq("Dashboard exec"),
+    hoxhunt: win("Dashboard exec mature"),
+    phished: eq("Dashboard exec partiel"),
+    adaptiveSecurity: eq("Dashboard exec moderne"),
   },
   {
     category: "Pilotage dirigeant",
     feature: "Live Attack Map temps réel (SSE)",
-    humanix: { status: "win", text: "Oui, dashboard live" },
-    knowbe4: { status: "loss", text: "Non" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "loss", text: "Non" },
-    phished: { status: "loss", text: "Non" },
+    humanix: win("Oui, dashboard live"),
+    knowbe4: loss("Non"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
   },
   {
     category: "Pilotage dirigeant",
     feature: "Cyber-météo France (alerte cyber nationale CERT-FR)",
-    humanix: { status: "win", text: "Oui, intégré (souverain)" },
-    knowbe4: { status: "loss", text: "Non" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "loss", text: "Non" },
-    phished: { status: "loss", text: "Non" },
+    humanix: win("Oui, intégré (souverain)"),
+    knowbe4: loss("Non"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
   },
   {
     category: "Pilotage dirigeant",
     feature: "Posters PDF mensuels personnalisés (open-space)",
-    humanix: { status: "win", text: "Oui, 12 thèmes/an, A3 imprimable" },
-    knowbe4: { status: "loss", text: "Non" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "loss", text: "Non" },
-    phished: { status: "loss", text: "Non" },
+    humanix: win("Oui, 12 thèmes/an, A3 imprimable"),
+    knowbe4: loss("Non"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
   },
   {
     category: "Pilotage dirigeant",
     feature: "Observatoire des fuites de données françaises",
-    humanix: { status: "win", text: "Oui, 3 sources agrégées (FR)" },
-    knowbe4: { status: "loss", text: "Non" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "loss", text: "Non" },
-    phished: { status: "loss", text: "Non" },
+    humanix: win("Oui, 3 sources agrégées (FR)"),
+    knowbe4: loss("Non"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
   },
   {
     category: "Pilotage dirigeant",
     feature: "Calcul ROI cyber en €",
-    humanix: { status: "win", text: "Oui, cf. Impact Business" },
-    knowbe4: { status: "equal", text: "Add-on payant" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "equal", text: "Add-on payant" },
-    phished: { status: "loss", text: "Non" },
+    humanix: win("Oui, cf. Impact Business"),
+    knowbe4: eq("Add-on payant"),
+    cyberGuru: loss("Non"),
+    hoxhunt: eq("Add-on payant"),
+    phished: loss("Non"),
+    adaptiveSecurity: eq("Risk scoring € (Series B)"),
+  },
+
+  // -----------------------------------------------------------------------
+  // CATÉGORIE : HRM (HUMAN RISK MANAGEMENT — TENDANCE 2026)
+  // -----------------------------------------------------------------------
+  {
+    category: "Human Risk Management 2026",
+    feature: "Score de risque humain par utilisateur",
+    humanix: win("Oui — User.riskScore Prisma"),
+    knowbe4: win("Risk score par user (mature)"),
+    cyberGuru: eq("Score basique"),
+    hoxhunt: win("Behavioral risk score (référence)"),
+    phished: win("Behavioral Risk Score™"),
+    adaptiveSecurity: win("AI risk scoring continu"),
+  },
+  {
+    category: "Human Risk Management 2026",
+    feature: "Agent IA orchestrateur autonome (auto-pilote awareness)",
+    humanix: loss("Non (roadmap Q3 2026)"),
+    knowbe4: win("AIDA Orchestration (8 agents IA, 2026)"),
+    cyberGuru: loss("Non"),
+    hoxhunt: win("Adaptive AI continu"),
+    phished: eq("Auto-cadence + auto-content"),
+    adaptiveSecurity: win("AI-native autonome (POC)"),
+  },
+  {
+    category: "Human Risk Management 2026",
+    feature: "MCP Server pour agents IA (Claude / Mistral / GPT)",
+    humanix: eq("Roadmap mai 2026 — premier mover SAT/HRM 🇫🇷"),
+    knowbe4: loss("Non documenté"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non documenté"),
+  },
+  {
+    category: "Human Risk Management 2026",
+    feature: "Couvre risque agents IA (non-humain)",
+    humanix: loss("Non (2027 — sujet émergent)"),
+    knowbe4: win("Annoncé 2026 (RSAC)"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: eq("Annoncé deepfake agents"),
+  },
+  {
+    category: "Human Risk Management 2026",
+    feature: "Sandbox courrier suspect (repeat offender protection)",
+    humanix: loss("Non"),
+    knowbe4: eq("Add-on PhishER"),
+    cyberGuru: loss("Non"),
+    hoxhunt: eq("Threat triage"),
+    phished: win("Zero Incident Mail™ (référence)"),
+    adaptiveSecurity: loss("Non"),
   },
 
   // -----------------------------------------------------------------------
@@ -272,140 +374,132 @@ const ROWS: Row[] = [
   {
     category: "Intégrations",
     feature: "Webhooks Slack / Teams natifs",
-    humanix: { status: "win", text: "Oui, sans setup IT" },
-    knowbe4: { status: "win", text: "Oui (PRO)" },
-    mantra: { status: "win", text: "Oui" },
-    hoxhunt: { status: "win", text: "Oui" },
-    phished: { status: "equal", text: "Email seulement" },
+    humanix: win("Oui, sans setup IT"),
+    knowbe4: win("Oui (PRO)"),
+    cyberGuru: win("Oui"),
+    hoxhunt: win("Oui"),
+    phished: eq("Email seulement"),
+    adaptiveSecurity: win("Oui"),
   },
   {
     category: "Intégrations",
     feature: "SSO Google / Microsoft (1-clic)",
-    humanix: { status: "win", text: "Oui (natif Auth.js v5)" },
-    knowbe4: { status: "equal", text: "Oui (Enterprise)" },
-    mantra: { status: "equal", text: "Oui" },
-    hoxhunt: { status: "equal", text: "Oui" },
-    phished: { status: "equal", text: "Oui" },
+    humanix: win("Oui (natif Auth.js v5)"),
+    knowbe4: eq("Oui (Enterprise)"),
+    cyberGuru: eq("Oui"),
+    hoxhunt: eq("Oui"),
+    phished: eq("Oui"),
+    adaptiveSecurity: eq("Oui"),
   },
   {
     category: "Intégrations",
     feature: "SAML 2.0 / SCIM provisioning",
-    humanix: { status: "equal", text: "Sur demande contrats > 50 users" },
-    knowbe4: { status: "win", text: "Oui (Enterprise)" },
-    mantra: { status: "win", text: "Oui" },
-    hoxhunt: { status: "win", text: "Oui" },
-    phished: { status: "win", text: "Oui" },
+    humanix: eq("Sur demande contrats > 50 users"),
+    knowbe4: win("Oui (Enterprise)"),
+    cyberGuru: win("Oui"),
+    hoxhunt: win("Oui"),
+    phished: win("Oui"),
+    adaptiveSecurity: win("Oui (Enterprise)"),
   },
   {
     category: "Intégrations",
     feature: "Connecteur GRC natif (CISO Assistant)",
-    humanix: {
-      status: "win",
-      text: "Oui — endpoint /api/v1/evidence-export + connecteur Python",
-    },
-    knowbe4: { status: "loss", text: "Non" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "loss", text: "Non" },
-    phished: { status: "loss", text: "Non" },
+    humanix: win("Oui — endpoint /api/v1/evidence-export + connecteur Python"),
+    knowbe4: loss("Non"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
   },
   {
     category: "Intégrations",
     feature: "Format OSCAL v1.1.2 (NIST) — preuves portables",
-    humanix: {
-      status: "win",
-      text: "Oui — format=oscal-v1, compatible Eramba/RegScale",
-    },
-    knowbe4: { status: "loss", text: "Non" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "loss", text: "Non" },
-    phished: { status: "loss", text: "Non" },
+    humanix: win("Oui — format=oscal-v1, compatible Eramba/RegScale"),
+    knowbe4: loss("Non"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
   },
   {
     category: "Intégrations",
     feature: "SCIM v2 auto-provisioning (Entra/Okta/Google)",
-    humanix: {
-      status: "win",
-      text: "Oui — RFC 7643/7644, extension custom Humanix",
-    },
-    knowbe4: { status: "equal", text: "Oui (Enterprise)" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "equal", text: "Oui" },
-    phished: { status: "loss", text: "Non" },
+    humanix: win("Oui — RFC 7643/7644, extension custom Humanix"),
+    knowbe4: eq("Oui (Enterprise)"),
+    cyberGuru: loss("Non"),
+    hoxhunt: eq("Oui"),
+    phished: loss("Non"),
+    adaptiveSecurity: eq("Oui"),
   },
   {
     category: "Intégrations",
     feature: "Webhooks signés HMAC + doc publique",
-    humanix: {
-      status: "win",
-      text: "Oui — HMAC-SHA256, SSRF-safe, doc Stripe-like",
-    },
-    knowbe4: { status: "equal", text: "Oui (basique)" },
-    mantra: { status: "equal", text: "Oui" },
-    hoxhunt: { status: "equal", text: "Oui" },
-    phished: { status: "loss", text: "Email seulement" },
+    humanix: win("Oui — HMAC-SHA256, SSRF-safe, doc Stripe-like"),
+    knowbe4: eq("Oui (basique)"),
+    cyberGuru: eq("Oui"),
+    hoxhunt: eq("Oui"),
+    phished: loss("Email seulement"),
+    adaptiveSecurity: eq("Oui"),
   },
   {
     category: "Intégrations",
     feature: "Connecteur Microsoft Sentinel + workbook clé en main",
-    humanix: {
-      status: "win",
-      text: "Oui — Logs Ingestion API + workbook JSON fourni",
-    },
-    knowbe4: { status: "equal", text: "Doc partielle, pas de workbook" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "loss", text: "Non" },
-    phished: { status: "loss", text: "Non" },
+    humanix: win("Oui — Logs Ingestion API + workbook JSON fourni"),
+    knowbe4: eq("Doc partielle, pas de workbook"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non documenté"),
   },
   {
     category: "Intégrations",
     feature: "Connecteur Splunk HEC + SPL queries fournies",
-    humanix: {
-      status: "win",
-      text: "Oui — format CIM v1 + connecteur Python MIT",
-    },
-    knowbe4: { status: "equal", text: "Format propriétaire" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "loss", text: "Non" },
-    phished: { status: "loss", text: "Non" },
+    humanix: win("Oui — format CIM v1 + connecteur Python MIT"),
+    knowbe4: eq("Format propriétaire"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non documenté"),
   },
   {
     category: "Intégrations",
     feature: "Connecteurs souverains 🇫🇷 (Sekoia, HarfangLab, Mailinblack/Vade)",
-    humanix: { status: "win", text: "Oui — 3 connecteurs FR natifs MIT" },
-    knowbe4: { status: "loss", text: "Non" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "loss", text: "Non" },
-    phished: { status: "loss", text: "Non" },
+    humanix: win("Oui — 3 connecteurs FR natifs MIT"),
+    knowbe4: loss("Non"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
   },
   {
     category: "Intégrations",
     feature: "Connecteur HR souverain (Lucca → SCIM)",
-    humanix: { status: "win", text: "Oui — connecteur Python MIT" },
-    knowbe4: { status: "loss", text: "Non" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "loss", text: "Non" },
-    phished: { status: "loss", text: "Non" },
+    humanix: win("Oui — connecteur Python MIT"),
+    knowbe4: loss("Non"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
   },
   {
     category: "Intégrations",
     feature: "Plugin GLPI (ITSM le plus déployé en PME FR)",
-    humanix: { status: "win", text: "Oui — bridge Python avec tickets auto" },
-    knowbe4: { status: "loss", text: "Non" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "loss", text: "Non" },
-    phished: { status: "loss", text: "Non" },
+    humanix: win("Oui — bridge Python avec tickets auto"),
+    knowbe4: loss("Non"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
   },
   {
     category: "Intégrations",
     feature: "Liaison CyberMalveillance.gouv.fr",
-    humanix: {
-      status: "win",
-      text: "Oui — référencement officiel + ressources intégrées",
-    },
-    knowbe4: { status: "loss", text: "Non (acteur US)" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "loss", text: "Non (acteur FI)" },
-    phished: { status: "loss", text: "Non (acteur BE)" },
+    humanix: win("Oui — référencement officiel + ressources intégrées"),
+    knowbe4: loss("Non (acteur US)"),
+    cyberGuru: loss("Non (acteur IT)"),
+    hoxhunt: loss("Non (acteur FI)"),
+    phished: loss("Non (acteur BE)"),
+    adaptiveSecurity: loss("Non (acteur US)"),
   },
 
   // -----------------------------------------------------------------------
@@ -414,28 +508,45 @@ const ROWS: Row[] = [
   {
     category: "Écosystème",
     feature: "Certification Qualiopi (financement OPCO)",
-    humanix: { status: "equal", text: "Sur demande contrats > 50 users" },
-    knowbe4: { status: "loss", text: "Non" },
-    mantra: { status: "equal", text: "Partenaire OF" },
-    hoxhunt: { status: "loss", text: "Non" },
-    phished: { status: "loss", text: "Non" },
+    humanix: eq("Sur demande contrats > 50 users"),
+    knowbe4: loss("Non"),
+    cyberGuru: eq("Partenaire OF (ex-Mantra)"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
   },
   {
     category: "Écosystème",
     feature: "Partenariats assureurs cyber",
-    humanix: { status: "loss", text: "En négociation 2026" },
-    knowbe4: { status: "win", text: "Oui (USA / UE)" },
-    mantra: { status: "loss", text: "Non" },
-    hoxhunt: { status: "equal", text: "Quelques accords" },
-    phished: { status: "loss", text: "Non" },
+    humanix: loss("En négociation 2026"),
+    knowbe4: win("Oui (USA / UE)"),
+    cyberGuru: loss("Non"),
+    hoxhunt: eq("Quelques accords"),
+    phished: loss("Non"),
+    adaptiveSecurity: eq("Capital One Ventures + Citi (signal fort)"),
+  },
+  {
+    category: "Écosystème",
+    feature: "Levée de fonds / soutien stratégique",
+    humanix: eq("Bootstrap solo, pivot OSS mai 2026"),
+    knowbe4: win("Vista Equity Partners (US)"),
+    cyberGuru: eq("Tour B 2024"),
+    hoxhunt: win("Series C ($40M+)"),
+    phished: eq("Series A"),
+    adaptiveSecurity: win("$136M (a16z, OpenAI, Bain, NVIDIA)"),
   },
 ];
 
-const COMPETITORS = [
-  { key: "knowbe4" as const, name: "KnowBe4", site: "https://www.knowbe4.com" },
-  { key: "mantra" as const, name: "Mantra", site: "https://mantra.ms" },
-  { key: "hoxhunt" as const, name: "Hoxhunt", site: "https://hoxhunt.com" },
-  { key: "phished" as const, name: "Phished", site: "https://phished.io" },
+const COMPETITORS: Array<{ key: keyof Omit<Row, "category" | "feature" | "humanix">; name: string; site: string }> = [
+  { key: "knowbe4", name: "KnowBe4", site: "https://www.knowbe4.com" },
+  { key: "cyberGuru", name: "Cyber Guru", site: "https://www.cyberguru.it" },
+  { key: "hoxhunt", name: "Hoxhunt", site: "https://hoxhunt.com" },
+  { key: "phished", name: "Phished", site: "https://phished.io" },
+  {
+    key: "adaptiveSecurity",
+    name: "Adaptive Security",
+    site: "https://www.adaptivesecurity.com",
+  },
 ];
 
 const CATEGORIES = Array.from(new Set(ROWS.map((r) => r.category)));
@@ -494,6 +605,10 @@ export default function ComparatifPage() {
   const lossesHumanix = ROWS.filter((r) => r.humanix.status === "loss").length;
   const equalHumanix = totalRows - winsHumanix - lossesHumanix;
 
+  // Stat dynamique : nombre de modules MDX rediges (transparence sur le
+  // contenu pedagogique reel, vs catalogue marketing).
+  const expertCount = countExpertEpisodes();
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16">
       {/* Hero */}
@@ -539,8 +654,12 @@ export default function ComparatifPage() {
         <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
           Cette page est mise à jour{" "}
           <strong>à chaque sortie produit majeure</strong> (la nôtre comme celle
-          des concurrents). Si vous constatez une information inexacte, écrivez
-          à{" "}
+          des concurrents). <strong>Refresh mai 2026 :</strong> Mantra a été
+          racheté par Cyber Guru (Italie) en mars 2025 — la colonne Mantra est
+          remplacée par Cyber Guru. On a aussi ajouté <strong>Adaptive Security</strong>{" "}
+          (US, $136M levés dont $81M Series B fin 2025 par Bain Capital,
+          NVIDIA, OpenAI Fund et a16z), qui est devenu le disrupteur AI-native du
+          marché. Si vous constatez une information inexacte, écrivez à{" "}
           <a
             href="mailto:contact@humanix-cybersecurity.fr"
             className="text-accent-500 underline font-medium"
@@ -553,10 +672,30 @@ export default function ComparatifPage() {
         </p>
       </div>
 
+      {/* Note contenu pédagogique */}
+      <div className="card mb-8 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-400">
+        <h2 className="font-bold text-amber-700 mb-2">
+          Note transparence : modules pédagogiques
+        </h2>
+        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+          Notre catalogue affiche 180 modules. À ce jour, <strong>{expertCount} épisode
+          {expertCount > 1 ? "s ont" : " a"} un scénario détaillé rédigé par un
+          expert</strong> (visibles avec le badge 📝 sur{" "}
+          <Link href="/apprendre" className="text-accent-500 underline">
+            /apprendre
+          </Link>
+          ). Les autres utilisent un fallback structuré (questions, quiz, debrief
+          générique). C'est la même mécanique que chez la plupart des concurrents
+          listés, mais la plupart ne le disent pas. Notre cible Q3 2026 : 30
+          modules expert sur les saisons critiques (phishing, mots de passe,
+          NIS2, RGPD).
+        </p>
+      </div>
+
       {/* Tableau */}
       <div className="overflow-x-auto -mx-4 px-4 mb-10">
         <table
-          className="w-full border-collapse min-w-[900px]"
+          className="w-full border-collapse min-w-[1100px]"
           aria-label="Comparatif Humanix Académie versus concurrents"
         >
           <thead>
@@ -611,10 +750,9 @@ export default function ComparatifPage() {
                       {row.feature}
                     </th>
                     <StatusCell cell={row.humanix} isHumanix />
-                    <StatusCell cell={row.knowbe4} />
-                    <StatusCell cell={row.mantra} />
-                    <StatusCell cell={row.hoxhunt} />
-                    <StatusCell cell={row.phished} />
+                    {COMPETITORS.map((c) => (
+                      <StatusCell key={c.key} cell={row[c.key]} />
+                    ))}
                   </tr>
                 ))}
               </Fragment>
@@ -648,23 +786,41 @@ export default function ComparatifPage() {
       {/* Notre lecture */}
       <div className="card mb-10">
         <h2 className="text-2xl font-bold text-primary-500 mb-4">
-          Notre lecture stratégique
+          Notre lecture stratégique (mai 2026)
         </h2>
         <div className="space-y-4 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
           <p>
-            <strong className="text-primary-500">Là où nous gagnons</strong>{" "}
-            (souveraineté, transparence tarifaire, marketplace ouverte,
-            accessibilité, programme famille, pack NIS2 par-tenant) : ces choix
-            sont structurels, difficiles à copier rapidement par des acteurs
-            internationaux focalisés sur le mid-market.
+            <strong className="text-primary-500">
+              Là où nous gagnons structurellement
+            </strong>{" "}
+            (souveraineté FR end-to-end, AGPLv3 auditable, écosystème connecteurs
+            FR/UE, marketplace ouverte, accessibilité, programme famille, pack
+            NIS2 par-tenant, MCP server premier mover) : ces choix sont
+            structurels, difficiles à copier rapidement par des acteurs
+            internationaux focalisés sur le mid-market US.
           </p>
           <p>
-            <strong className="text-primary-500">Là où ils gagnent</strong>{" "}
-            (volume catalogue, plugin Outlook mature, IA générative, SSO/SAML) :
-            ces écarts sont réels mais ne sont pas bloquants pour une PME de
-            moins de 250 personnes. Nous comblons progressivement (plugin
-            Outlook prévu à venir, audit RGAA cabinet à venir, Qualiopi en
-            cours).
+            <strong className="text-primary-500">
+              Là où ils gagnent (acteurs historiques)
+            </strong>{" "}
+            (volume catalogue, plugin Outlook mature, agent IA orchestrateur,
+            simulation smishing/voice native, SAML/SCIM enterprise) : ces écarts
+            sont réels mais ne sont pas bloquants pour une PME de moins de
+            250 personnes. Nous comblons progressivement (vishing souverain en
+            développement pour mai 2026, audit RGAA cabinet à venir, Qualiopi
+            en cours).
+          </p>
+          <p>
+            <strong className="text-primary-500">
+              Le vrai disrupteur 2026 — Adaptive Security
+            </strong>{" "}
+            (US, $136M levés en moins de 2 ans, premier investissement cyber
+            d'OpenAI) ne joue pas dans la même catégorie tarifaire ni
+            réglementaire. Pour une organisation française soumise à NIS2 ou
+            DORA, le Cloud Act sur leur stack OpenAI/AWS US reste un signal
+            rouge. Nous offrons une alternative AI-native souveraine : Mistral
+            (Paris) + Piper TTS (local) + Scaleway (Paris) — la <em>seule</em>{" "}
+            stack 100 % FR/UE pour les attaques voice deepfake.
           </p>
           <p>
             <strong className="text-primary-500">Notre conviction</strong> :
@@ -673,6 +829,9 @@ export default function ComparatifPage() {
             d'un accompagnement humain plutôt que d'un support tier-3 anglophone
             — est le bon arbitrage. Pour une ETI multi-pays avec besoins
             SSO/SCIM lourds, les acteurs historiques restent plus adaptés.
+            Pour une organisation soumise à NIS2/DORA qui veut garder ses
+            preuves dans l'UE, nous sommes seuls sur ce créneau combiné cyber +
+            humain + souverain.
           </p>
         </div>
       </div>
