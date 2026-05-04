@@ -238,7 +238,7 @@ type AuditPdfProps = {
 
 export function AuditFlashReport({
   companyName,
-  contactName,
+  contactName: _contactName,
   email,
   size,
   sector,

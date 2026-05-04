@@ -10,9 +10,9 @@ import type { PhishingTemplate } from "@prisma/client";
 async function requireAdmin() {
   const session = await auth();
   if (!session?.user) throw new Error("unauthorized");
-  const role = (session.user as any).role;
+  const role = session.user!.role;
   if (role !== "ADMIN" && role !== "SUPERADMIN") throw new Error("forbidden");
-  return { tenantId: (session.user as any).tenantId as string };
+  return { tenantId: session.user!.tenantId as string };
 }
 
 export async function launchCampaign(formData: FormData) {

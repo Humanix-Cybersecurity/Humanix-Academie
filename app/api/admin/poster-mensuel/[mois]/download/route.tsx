@@ -19,11 +19,11 @@ export async function GET(
   if (!session?.user) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  const role = (session.user as any).role;
+  const role = session.user!.role;
   if (role !== "ADMIN" && role !== "MANAGER" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const tenantId = (session.user as any).tenantId as string;
+  const tenantId = session.user!.tenantId as string;
 
   const { mois } = await params;
   const month = parseInt(mois, 10);
@@ -56,7 +56,7 @@ export async function GET(
     .create({
       data: {
         tenantId,
-        userId: (session.user as any).id ?? null,
+        userId: session.user!.id ?? null,
         type: "poster_generated",
         payload: { month },
       },

@@ -11,7 +11,7 @@ import {
   getBreachStats,
   maybeTriggerLazyRefresh,
 } from "@/lib/breaches/repository";
-import { SOURCE_META, ACTIVE_SOURCES } from "@/lib/breaches/types";
+import { SOURCE_META } from "@/lib/breaches/types";
 import type { BreachSource } from "@prisma/client";
 import BreachesFilters from "@/components/BreachesFilters";
 
