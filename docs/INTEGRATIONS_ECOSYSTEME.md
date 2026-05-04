@@ -76,6 +76,14 @@ Effort cumulé faible, ROI maximal car débloque des dizaines d'outils en aval.
 
 **Total fin 2026 : 11 connecteurs natifs livrés.** Aucun concurrent (KnowBe4, Mantra, Hoxhunt, Phished) n'en a plus de 3.
 
+### 🇫🇷 Souveraineté de l'hébergement du code source
+
+Le repo Humanix Académie Community Edition est hébergé sur **GitHub** au launch (mai 2026) pour bénéficier de la visibilité de l'écosystème open source mondial et faciliter les premières contributions.
+
+**Migration prévue vers une forge souveraine française** (Forgejo auto-hébergé chez Scaleway ou plateforme communautaire FR équivalente type Codeberg-FR) une fois la communauté constituée. Git étant distribué par construction, la portabilité est garantie : l'historique complet, les tags, les branches et les contributions sont conservés à l'identique.
+
+Un miroir lecture-seule sur la forge française pourra être en place dès Q3 2026, avec bascule du dépôt principal lorsque la maturité communautaire le permettra (estimation : Q1-Q2 2027).
+
 ---
 
 ## Politique d'extension

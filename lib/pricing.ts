@@ -239,15 +239,24 @@ export const ADD_ONS: AddOn[] = [
     id: "formation-qualiopi",
     name: "Pack Formation Qualiopi",
     emoji: "🎓",
-    description: "Formation collective certifiante pour ton équipe (éligible CPF / OPCO).",
-    price: { display: "+ 1 800 €/session HT", details: "8 personnes max par session" },
+    description:
+      "Formation collective certifiante en cybersécurité humaine, animée par Humanix-Cybersecurity en partenariat avec Digital 113 (organisme de formation certifié Qualiopi). Éligible CPF, OPCO, plan de développement des compétences, FIFPL.",
+    price: {
+      display: "+ 1 800 €/session HT",
+      details:
+        "8 personnes max · hors frais déplacement, hôtel, restauration formateur (refacturés au coût réel sur justificatifs si présentiel hors visio)",
+    },
     features: [
-      "2 jours en présentiel ou visio",
-      "Maximum 8 participants par session",
-      "Support pédagogique imprimé fourni",
-      "Certificat individuel signé",
-      "Éligible CPF / OPCO (Qualiopi)",
-      "Programme adaptable à ton secteur",
+      "2 jours (14h) en présentiel ou visio synchrone",
+      "Maximum 8 participants par session (pour interactivité)",
+      "Programme co-construit avec Digital 113 — partenaire Qualiopi",
+      "Support pédagogique imprimé + versions numériques",
+      "Évaluations diagnostique / formative / sommative",
+      "Attestation Qualiopi + certificat individuel signé",
+      "Éligible CPF, OPCO, plan de formation, FIFPL",
+      "Convention de formation fournie en amont",
+      "Bilan pédagogique et financier post-session",
+      "Programme adaptable à ton secteur (BTP, santé, retail, services, industrie)",
     ],
   },
 ];
