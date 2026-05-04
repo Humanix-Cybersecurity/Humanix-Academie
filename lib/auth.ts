@@ -14,11 +14,12 @@ import Resend from "next-auth/providers/resend";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
+import type { Provider } from "next-auth/providers";
 import { db } from "@/lib/db";
 
 const isDemoMode = process.env.DEMO_MODE === "true";
 
-const providers: any[] = [];
+const providers: Provider[] = [];
 
 // SSO Google — actif si la config est presente
 if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
