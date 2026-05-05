@@ -1,0 +1,23 @@
+{
+  "_meta": {
+    "purpose": "FORMATION — fallback partenaire externe si l'API Mistral est indisponible",
+    "generated": "pre-baked sample, NOT live",
+    "template": "fake-direction",
+    "service": "Compta",
+    "difficulty": "medium",
+    "duration_seconds_estimated": 75
+  },
+  "openingLine": "Allo, bonjour, c'est la Direction generale, j'ai besoin de vous parler tres rapidement, c'est important.",
+  "body": "Je suis en deplacement avec un avocat conseil sur un dossier d'acquisition strictement confidentiel. Vous savez sans doute que nous travaillons sur quelque chose de sensible en ce moment. Pour finaliser, j'ai besoin que vous prepariez un virement de 47 000 euros vers le compte du cabinet d'avocats. Le RIB va arriver dans deux minutes par mail, preparez l'OV maintenant pour gagner du temps. Personne d'autre ne doit etre au courant — je compte sur votre discretion absolue.",
+  "callToAction": "Je dois retourner en reunion dans trois minutes. Validez l'OV des reception du RIB, c'est urgent et confidentiel. Si vous avez un doute, ne demandez surtout pas a un collegue, appelez-moi directement sur ce numero — je vous fais confiance.",
+  "attackerPersona": "Pseudo-dirigeant pressé, ton autoritaire et chaleureux. Demande la confidentialite totale (signal majeur). Reference a un dossier d'acquisition non verifiable. Numero affiche credible mais pas dans l'annuaire interne.",
+  "spoofedCallerId": "+33 1 XX XX XX 47 (numero brouillé, finit par les 2 derniers chiffres du montant — astuce de credibilite)",
+  "redFlags": [
+    "Demande de confidentialite absolue ('ne demandez surtout pas a un collegue') — un vrai dirigeant n'isole jamais son comptable",
+    "Pression temporelle ('je dois retourner en reunion dans trois minutes') — l'urgence artificielle est le levier #1 du social engineering",
+    "Reference vague a un dossier non verifiable ('acquisition strictement confidentielle') — si c'etait vrai, ce serait dans le calendrier partagé",
+    "Demande de virement vers un compte qui n'est pas dans la base fournisseurs",
+    "Refus implicite du double appel : 'appelez-moi directement sur ce numero' (un vrai dirigeant accepte la double validation)"
+  ],
+  "ttsScript": "Allo, bonjour, c'est la Direction generale, j'ai besoin de vous parler tres rapidement, c'est important. Je suis en deplacement avec un avocat conseil sur un dossier d'acquisition strictement confidentiel. Vous savez sans doute que nous travaillons sur quelque chose de sensible en ce moment. Pour finaliser, j'ai besoin que vous prepariez un virement de 47 000 euros vers le compte du cabinet d'avocats. Le RIB va arriver dans deux minutes par mail, preparez l'OV maintenant pour gagner du temps. Personne d'autre ne doit etre au courant. Je compte sur votre discretion absolue. Je dois retourner en reunion dans trois minutes. Validez l'OV des reception du RIB, c'est urgent et confidentiel. Si vous avez un doute, ne demandez surtout pas a un collegue, appelez-moi directement sur ce numero. Je vous fais confiance."
+}
