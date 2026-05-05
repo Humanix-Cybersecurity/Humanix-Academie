@@ -15,7 +15,6 @@
 // reste affichage seul — c'est deja une grande etape.
 
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { auth } from "@/lib/auth";
 import HexBackdrop from "@/components/HexBackdrop";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
