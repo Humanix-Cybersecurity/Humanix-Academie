@@ -1,9 +1,26 @@
 "use client";
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Player d'episode Duolingo-style — coeur de l'experience
-// 4 etapes : Scenario -> Debrief -> Quiz -> Recap (avec confettis)
+// Player d'episode — refonte cosy mai 2026.
+//
+// Brief : "experience, terrain, sensibilisation reelle, pas celle generee
+// par la peur — celle qui sent bon la maitrise et la confiance".
+//
+// 4 etapes : Scenario → Debrief → Quiz → Recap (avec confettis)
 // + Detection level-up via reponse API et overlay
+//
+// Toute la mecanique est preservee : keyboard shortcuts, LiveRegion a11y,
+// announce, persistance /api/progress, level-up overlay, confettis.
+// Cette refonte change uniquement la presentation pour incarner la
+// maitrise tranquille (couleurs douces, ton chaleureux, cascade
+// animations, citation finale signature).
+//
+// Changements editoriaux :
+//   "Mise en situation"     → "L'histoire du jour"
+//   "Que fais-tu ?"         → "Tu fais quoi ?"
+//   "✗ Aïe…" + bg-warn rouge → "🌿 Pas grave, on apprend" + amber chaud
+//   "Bravo, c'est dans la boite !" → "Bravo, tu en as fini avec celui-la"
+//   Ajout citation finale "Hex veille" sur le recap
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -16,6 +33,15 @@ import LiveRegion from "@/components/a11y/LiveRegion";
 import { useAnnouncer } from "@/lib/a11y";
 
 type Step = "scenario" | "debrief" | "quiz" | "recap";
+
+// Citations rotatives selon le score quiz — pas la meme philosophie selon
+// le niveau de maitrise atteint. Toutes chaleureuses, jamais jugeantes.
+const RECAP_CITATIONS = {
+  perfect: "« Tu n'as pas a etre expert. Tu as juste a etre averti une seconde avant le clic. C'est exactement ce que tu viens de faire. »",
+  good: "« La maitrise cyber, c'est moins une affaire d'expert qu'une habitude tranquille. Tu construis cette habitude. »",
+  partial: "« Le meilleur reflexe cyber, c'est de prendre 30 secondes avant d'agir. Tu en es deja capable. »",
+  low: "« Apprendre la cyber, c'est apprendre a se faire confiance. Hex t'accompagne, pas le contraire. »",
+};
 
 export default function EpisodePlayer(props: {
   saisonSlug: string;
@@ -65,9 +91,9 @@ export default function EpisodePlayer(props: {
     setStep("debrief");
     if (c.outcome === "good") {
       smallConfetti();
-      announce(`Bien joué. ${c.feedback}`);
+      announce(`Bien joue. ${c.feedback}`);
     } else if (c.outcome === "bad") {
-      announce(`Aïe. ${c.feedback}`);
+      announce(`On apprend. ${c.feedback}`);
     } else {
       announce(c.feedback);
     }
@@ -80,9 +106,9 @@ export default function EpisodePlayer(props: {
     if (correct) {
       setQuizScore((s) => s + 1);
       smallConfetti();
-      announce(`Bonne réponse ! ${q.explanation}`);
+      announce(`Bonne reponse. ${q.explanation}`);
     } else {
-      announce(`Mauvaise réponse. ${q.explanation}`);
+      announce(`Pas tout a fait. ${q.explanation}`);
     }
   };
 
@@ -129,7 +155,7 @@ export default function EpisodePlayer(props: {
       setStep("recap");
       bigConfetti();
       announce(
-        `Episode terminé. Score : ${Math.round((quizScore / Math.max(props.quiz.length, 1)) * 100)} pourcent. Tu as gagné ${totalXP} XP.`,
+        `Episode termine. Score : ${Math.round((quizScore / Math.max(props.quiz.length, 1)) * 100)} pour cent. Tu as gagne ${totalXP} XP.`,
       );
     }
   };
@@ -141,56 +167,84 @@ export default function EpisodePlayer(props: {
   const quizSuccessRate =
     props.quiz.length === 0 ? 0 : quizScore / props.quiz.length;
 
+  // Citation rotative selon le score
+  const citation =
+    quizSuccessRate === 1
+      ? RECAP_CITATIONS.perfect
+      : quizSuccessRate >= 0.7
+        ? RECAP_CITATIONS.good
+        : quizSuccessRate >= 0.4
+          ? RECAP_CITATIONS.partial
+          : RECAP_CITATIONS.low;
+
   return (
     <>
       <LiveRegion message={announcement} politeness="polite" />
       <div className="card animate-fadeIn relative overflow-hidden">
         <ProgressDots step={step} />
 
+        {/* ============================================================
+            STEP 1 — SCENARIO : l'histoire du jour
+            ============================================================ */}
         {step === "scenario" && (
           <div className="animate-fadeIn">
             <div className="flex items-start gap-4 mb-6">
-              <HexMascotEvolved
-                xp={0}
-                size="md"
-                mood="curious"
-                species={species}
-              />
+              <div className="animate-float">
+                <HexMascotEvolved
+                  xp={0}
+                  size="md"
+                  mood="curious"
+                  species={species}
+                />
+              </div>
               <div className="flex-1">
-                <p className="text-xs text-gray-500 mb-1">Mise en situation</p>
-                <h1 className="text-2xl sm:text-3xl font-bold text-primary-500">
+                <p className="text-xs sm:text-sm uppercase tracking-[0.25em] text-accent-500 font-bold mb-2">
+                  L'histoire du jour
+                </p>
+                <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 leading-tight">
                   {props.title}
                 </h1>
               </div>
             </div>
 
-            <div className="bg-primary-50 rounded-2xl p-5 mb-6 leading-relaxed whitespace-pre-line text-gray-800 border-l-4 border-accent-500 relative">
+            {/* Carte scenario : gradient soft cyan/blue, plus immersive */}
+            <div className="bg-gradient-to-br from-cyan-50 via-white to-blue-50 dark:from-cyan-950/30 dark:via-slate-900 dark:to-blue-950/30 rounded-2xl p-5 mb-6 leading-relaxed whitespace-pre-line text-gray-800 dark:text-gray-100 border-l-4 border-accent-500">
               {props.scenario}
-              <div className="mt-3 pt-3 border-t border-primary-200/40">
-                <TTSButton text={props.scenario} label="Écouter le scénario" />
+              <div className="mt-4 pt-3 border-t border-cyan-200/40 dark:border-cyan-900/40">
+                <TTSButton text={props.scenario} label="Ecouter le scenario" />
               </div>
             </div>
-            <p className="font-semibold text-primary-500 mb-3">Que fais-tu ?</p>
+
+            <p className="font-display font-bold text-primary-500 dark:text-accent-300 mb-4 text-lg">
+              Tu fais quoi ?
+            </p>
+
             <div className="grid gap-3">
               {props.choices.map((c, i) => (
                 <button
                   key={c.id}
                   onClick={() => handleChoice(c)}
-                  className="text-left p-4 rounded-2xl border-2 border-gray-200 hover:border-accent-500 hover:bg-primary-50 transition-all hover:scale-[1.01] focus:outline-none flex items-start gap-3 group"
+                  className="text-left p-4 rounded-2xl border-2 border-gray-200 dark:border-slate-700 hover:border-accent-500 hover:bg-accent-50/50 dark:hover:bg-accent-900/20 transition-all hover:scale-[1.01] hover:-translate-y-0.5 hover:shadow-md focus:outline-none flex items-start gap-3 group animate-slide-up"
+                  style={{ animationDelay: `${i * 80}ms` }}
                 >
-                  <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-100 group-hover:bg-accent-500 group-hover:text-white text-gray-500 font-bold flex items-center justify-center text-sm transition-colors">
+                  <span className="flex-shrink-0 w-9 h-9 rounded-xl bg-gray-100 dark:bg-slate-800 group-hover:bg-accent-500 group-hover:text-white text-gray-500 dark:text-gray-400 font-display font-extrabold flex items-center justify-center text-base transition-colors tabular-nums">
                     {i + 1}
                   </span>
-                  <span className="font-medium leading-relaxed">{c.label}</span>
+                  <span className="font-medium leading-relaxed text-gray-800 dark:text-gray-100">
+                    {c.label}
+                  </span>
                 </button>
               ))}
             </div>
-            <p className="text-xs text-gray-400 italic text-center mt-4">
-              Astuce : utilise les chiffres 1-4 du clavier
+            <p className="text-xs text-gray-400 dark:text-gray-500 italic text-center mt-5">
+              Astuce : tu peux utiliser les chiffres 1 a 4 du clavier
             </p>
           </div>
         )}
 
+        {/* ============================================================
+            STEP 2 — DEBRIEF : on apprend ensemble, sans jugement
+            ============================================================ */}
         {step === "debrief" && choice && (
           <div className="animate-fadeIn">
             <div className="flex items-start gap-4 mb-6">
@@ -200,7 +254,7 @@ export default function EpisodePlayer(props: {
                   choice.outcome === "good"
                     ? "happy"
                     : choice.outcome === "bad"
-                      ? "sad"
+                      ? "thinking"
                       : "neutral"
                 }
                 size="md"
@@ -208,24 +262,24 @@ export default function EpisodePlayer(props: {
                 species={species}
               />
               <div
-                className={`flex-1 rounded-2xl p-5 text-white ${
+                className={`flex-1 rounded-2xl p-5 border-2 ${
                   choice.outcome === "good"
-                    ? "bg-success"
+                    ? "bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/30 border-emerald-300 dark:border-emerald-800/60 text-emerald-900 dark:text-emerald-100"
                     : choice.outcome === "bad"
-                      ? "bg-warn"
-                      : "bg-gray-500"
+                      ? "bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/40 dark:to-orange-950/30 border-amber-300 dark:border-amber-800/60 text-amber-900 dark:text-amber-100"
+                      : "bg-gradient-to-br from-slate-50 to-gray-50 dark:from-slate-900 dark:to-gray-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100"
                 }`}
               >
-                <p className="font-bold mb-2 text-lg">
+                <p className="font-display font-extrabold mb-2 text-lg">
                   {choice.outcome === "good"
-                    ? "✓ Bien joué !"
+                    ? "✓ Bien joue"
                     : choice.outcome === "bad"
-                      ? "✗ Aïe…"
+                      ? "🌿 Pas grave, on apprend"
                       : "→ Pas si simple"}
                 </p>
                 <p className="leading-relaxed">{choice.feedback}</p>
                 {choice.points !== 0 && (
-                  <p className="mt-3 text-sm font-bold">
+                  <p className="mt-3 text-sm font-bold tabular-nums">
                     {choice.points > 0
                       ? `+${choice.points} XP`
                       : `${choice.points} XP`}
@@ -234,33 +288,38 @@ export default function EpisodePlayer(props: {
               </div>
             </div>
 
-            <div className="bg-gray-50 rounded-2xl p-5 mb-6 text-gray-700 leading-relaxed whitespace-pre-line border border-gray-200">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs text-gray-500 uppercase tracking-wide font-bold">
-                  Le débrief de Hex
+            <div className="bg-gradient-to-br from-cyan-50 via-white to-blue-50 dark:from-cyan-950/30 dark:via-slate-900 dark:to-blue-950/30 rounded-2xl p-5 mb-6 text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-line border border-cyan-200 dark:border-cyan-900/40">
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs uppercase tracking-[0.25em] text-accent-500 font-bold">
+                  Le debrief de Hex
                 </p>
-                <TTSButton text={props.debrief} label="Écouter le débrief" />
+                <TTSButton text={props.debrief} label="Ecouter le debrief" />
               </div>
               {props.debrief}
             </div>
             <button
               onClick={() => setStep("quiz")}
-              className="btn-primary w-full text-lg"
+              className="btn-primary w-full text-lg animate-glow"
             >
-              Quiz éclair →
+              Quiz eclair <span aria-hidden="true">→</span>
             </button>
-            <p className="text-xs text-gray-400 italic text-center mt-3">
-              Astuce : appuie sur Entrée
+            <p className="text-xs text-gray-400 dark:text-gray-500 italic text-center mt-4">
+              Astuce : appuie sur Entree
             </p>
           </div>
         )}
 
+        {/* ============================================================
+            STEP 3 — QUIZ : maitrise progressive
+            ============================================================ */}
         {step === "quiz" && (
           <div className="animate-fadeIn">
-            <div className="flex justify-between items-center mb-4">
-              <p className="text-sm text-gray-700 dark:text-gray-300">
+            <div className="flex justify-between items-center mb-6">
+              <p className="text-sm text-gray-700 dark:text-gray-300 tabular-nums">
                 Question {quizIndex + 1}{" "}
-                <span className="text-gray-400">/ {props.quiz.length}</span>
+                <span className="text-gray-400 dark:text-gray-500">
+                  / {props.quiz.length}
+                </span>
               </p>
               <div
                 role="progressbar"
@@ -268,17 +327,17 @@ export default function EpisodePlayer(props: {
                 aria-valuemin={1}
                 aria-valuemax={props.quiz.length}
                 aria-label={`Question ${quizIndex + 1} sur ${props.quiz.length}`}
-                className="flex gap-1"
+                className="flex gap-1.5"
               >
                 {props.quiz.map((_, i) => (
                   <span
                     key={i}
-                    className={`h-1.5 w-6 rounded-full ${
+                    className={`h-2 w-7 sm:w-9 rounded-full transition-all ${
                       i < quizIndex
-                        ? "bg-success"
+                        ? "bg-emerald-500"
                         : i === quizIndex
                           ? "bg-accent-500"
-                          : "bg-gray-300 dark:bg-slate-600"
+                          : "bg-gray-200 dark:bg-slate-700"
                     }`}
                     aria-hidden="true"
                   />
@@ -286,7 +345,7 @@ export default function EpisodePlayer(props: {
               </div>
             </div>
 
-            <h2 className="text-xl sm:text-2xl font-bold text-primary-500 mb-6">
+            <h2 className="font-display text-xl sm:text-2xl font-extrabold text-primary-500 dark:text-accent-300 mb-6 leading-tight">
               {props.quiz[quizIndex].question}
             </h2>
 
@@ -296,31 +355,45 @@ export default function EpisodePlayer(props: {
                 const isThis = answered === c.id;
                 const isCorrect = c.correct;
                 let cls =
-                  "border-gray-200 hover:border-accent-500 hover:bg-primary-50 hover:scale-[1.01]";
+                  "border-gray-200 dark:border-slate-700 hover:border-accent-500 hover:bg-accent-50/50 dark:hover:bg-accent-900/20 hover:scale-[1.01] hover:-translate-y-0.5";
                 if (isAnswered) {
                   if (isCorrect)
-                    cls = "border-success bg-green-50 scale-[1.02]";
-                  else if (isThis) cls = "border-warn bg-red-50";
-                  else cls = "border-gray-200 opacity-50";
+                    cls =
+                      "border-emerald-500 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/30 scale-[1.02] shadow-md";
+                  else if (isThis)
+                    cls =
+                      "border-amber-400 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/40 dark:to-orange-950/30";
+                  else cls = "border-gray-200 dark:border-slate-700 opacity-50";
                 }
                 return (
                   <button
                     key={c.id}
                     onClick={() => !isAnswered && handleQuizAnswer(c.id)}
                     disabled={isAnswered}
-                    className={`text-left p-4 rounded-2xl border-2 transition-all flex items-start gap-3 ${cls}`}
+                    className={`text-left p-4 rounded-2xl border-2 transition-all flex items-start gap-3 animate-slide-up ${cls}`}
+                    style={{ animationDelay: `${i * 60}ms` }}
                   >
-                    <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-gray-100 text-gray-500 font-bold flex items-center justify-center text-sm">
+                    <span className="flex-shrink-0 w-9 h-9 rounded-xl bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 font-display font-extrabold flex items-center justify-center text-base tabular-nums">
                       {i + 1}
                     </span>
-                    <span className="font-medium leading-relaxed">
+                    <span className="font-medium leading-relaxed text-gray-800 dark:text-gray-100">
                       {c.label}
                     </span>
                     {isAnswered && isCorrect && (
-                      <span className="ml-auto text-success text-xl">✓</span>
+                      <span
+                        className="ml-auto text-emerald-600 dark:text-emerald-400 text-xl"
+                        aria-hidden="true"
+                      >
+                        ✓
+                      </span>
                     )}
                     {isAnswered && isThis && !isCorrect && (
-                      <span className="ml-auto text-warn text-xl">✗</span>
+                      <span
+                        className="ml-auto text-amber-600 dark:text-amber-400 text-xl"
+                        aria-hidden="true"
+                      >
+                        ✗
+                      </span>
                     )}
                   </button>
                 );
@@ -329,11 +402,13 @@ export default function EpisodePlayer(props: {
 
             {answered && (
               <div className="animate-fadeIn">
-                <div className="bg-primary-50 rounded-2xl p-4 mb-4 text-sm leading-relaxed border-l-4 border-accent-500">
-                  <p className="font-bold text-accent-500 mb-1">
-                    💡 Hex t'explique
+                <div className="bg-gradient-to-br from-cyan-50 via-white to-blue-50 dark:from-cyan-950/30 dark:via-slate-900 dark:to-blue-950/30 rounded-2xl p-5 mb-4 text-sm leading-relaxed border-l-4 border-accent-500">
+                  <p className="font-display font-bold text-accent-600 dark:text-accent-300 mb-2 flex items-center gap-2">
+                    <span aria-hidden="true">💡</span> Hex t'eclaire
                   </p>
-                  {props.quiz[quizIndex].explanation}
+                  <p className="text-gray-700 dark:text-gray-200">
+                    {props.quiz[quizIndex].explanation}
+                  </p>
                 </div>
                 <button
                   onClick={nextQuiz}
@@ -341,50 +416,66 @@ export default function EpisodePlayer(props: {
                 >
                   {quizIndex + 1 < props.quiz.length
                     ? "Question suivante →"
-                    : "Voir mon résultat →"}
+                    : "Voir mon bilan →"}
                 </button>
               </div>
             )}
           </div>
         )}
 
+        {/* ============================================================
+            STEP 4 — RECAP : ton chaleureux, citation Hex veille
+            ============================================================ */}
         {step === "recap" && (
           <div className="animate-fadeIn text-center py-6">
             <div className="mb-6 flex justify-center">
-              <HexMascotEvolved
-                xp={0}
-                size="xl"
-                mood="celebrate"
-                animated
-                species={species}
-              />
+              <div className="animate-float">
+                <HexMascotEvolved
+                  xp={0}
+                  size="xl"
+                  mood="celebrate"
+                  animated
+                  species={species}
+                />
+              </div>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-primary-500 mb-2">
-              Bravo, c'est dans la boîte !
+            <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
+              Episode termine
+            </p>
+            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary-500 dark:text-accent-300 mb-2">
+              Bravo, tu en as fini avec celui-la.
             </h2>
-            <p className="text-gray-600 mb-8">Voici ton bilan de l'épisode :</p>
+            <p className="text-gray-600 dark:text-gray-300 mb-8 italic">
+              Voici ton bilan tranquille de l'episode.
+            </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-xl mx-auto mb-8">
-              <StatCard label="XP gagnés" value={`+${totalXPEarned}`} accent />
+              <BilanCard label="XP gagnes" value={`+${totalXPEarned}`} accent />
               {coinsEarned > 0 && (
-                <StatCard label="Coins" value={`+${coinsEarned}`} amber />
+                <BilanCard label="Coins" value={`+${coinsEarned}`} amber />
               )}
-              <StatCard
+              <BilanCard
                 label="Quiz"
                 value={`${quizScore}/${props.quiz.length}`}
               />
-              <StatCard
-                label="Réussite"
+              <BilanCard
+                label="Reussite"
                 value={`${Math.round(quizSuccessRate * 100)}%`}
               />
             </div>
 
             {quizSuccessRate === 1 && (
-              <div className="inline-flex items-center gap-3 bg-amber-50 border-2 border-amber-300 rounded-2xl px-5 py-3 mb-6 animate-bounce-once">
-                <span className="text-3xl">🏆</span>
+              <div className="inline-flex items-center gap-3 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-950/40 dark:to-yellow-950/30 border-2 border-amber-300 dark:border-amber-800/60 rounded-2xl px-5 py-3 mb-6 animate-bounce-once">
+                <span className="text-3xl" aria-hidden="true">
+                  🏆
+                </span>
                 <div className="text-left">
-                  <p className="font-bold text-amber-900">Sans-faute !</p>
-                  <p className="text-sm text-amber-800">+15 coins bonus</p>
+                  <p className="font-display font-extrabold text-amber-900 dark:text-amber-200">
+                    Sans-faute&nbsp;!
+                  </p>
+                  <p className="text-sm text-amber-800 dark:text-amber-300 tabular-nums">
+                    +15 coins bonus
+                  </p>
                 </div>
               </div>
             )}
@@ -395,20 +486,34 @@ export default function EpisodePlayer(props: {
                   onClick={() => {
                     /* show overlay */
                   }}
-                  className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl px-5 py-3 font-bold shadow-lg"
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 via-pink-500 to-amber-500 text-white rounded-2xl px-6 py-3 font-display font-extrabold shadow-lg animate-glow"
                 >
-                  ✨ Niveau {levelUp} débloqué — clique pour voir
+                  <span aria-hidden="true">✨</span> Niveau {levelUp} debloque
+                  — clique pour voir
                 </button>
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8">
               <Link href="/apprendre" className="btn-primary text-lg">
                 Continuer mon parcours →
               </Link>
               <Link href="/profil" className="btn-secondary text-lg">
                 Voir mon profil
               </Link>
+            </div>
+
+            {/* Respiration finale — citation Hex veille rotative selon le score */}
+            <div className="pt-6 border-t-2 border-dashed border-gray-200 dark:border-slate-700 max-w-2xl mx-auto">
+              <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+                {citation}
+              </blockquote>
+              <p
+                aria-hidden="true"
+                className="mt-3 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
+              >
+                — Hex veille
+              </p>
             </div>
           </div>
         )}
@@ -430,9 +535,9 @@ function ProgressDots({ step }: { step: Step }) {
   const steps: Step[] = ["scenario", "debrief", "quiz", "recap"];
   const labels = {
     scenario: "Situation",
-    debrief: "Débrief",
+    debrief: "Debrief",
     quiz: "Quiz",
-    recap: "Résultat",
+    recap: "Bilan",
   };
   return (
     <div className="flex justify-center items-center gap-2 mb-8">
@@ -443,10 +548,10 @@ function ProgressDots({ step }: { step: Step }) {
           <div key={s} className="flex items-center gap-2">
             <div className="flex flex-col items-center">
               <span
-                className={`h-2 w-10 sm:w-16 rounded-full transition-all ${reached ? "bg-accent-500" : "bg-gray-200"}`}
+                className={`h-2 w-10 sm:w-16 rounded-full transition-all ${reached ? "bg-gradient-to-r from-accent-500 to-primary-500" : "bg-gray-200 dark:bg-slate-700"}`}
               />
               <span
-                className={`text-[10px] sm:text-xs mt-1 ${reached ? "text-accent-600 font-medium" : "text-gray-400"}`}
+                className={`text-[10px] sm:text-xs mt-1.5 uppercase tracking-widest ${reached ? "text-accent-600 dark:text-accent-300 font-bold" : "text-gray-400 dark:text-gray-500"}`}
               >
                 {labels[s]}
               </span>
@@ -458,7 +563,7 @@ function ProgressDots({ step }: { step: Step }) {
   );
 }
 
-function StatCard({
+function BilanCard({
   label,
   value,
   accent,
@@ -471,15 +576,33 @@ function StatCard({
 }) {
   return (
     <div
-      className={`rounded-2xl p-4 ${accent ? "bg-accent-500 text-white" : amber ? "bg-amber-100" : "bg-gray-50"}`}
+      className={`rounded-2xl p-4 ${
+        accent
+          ? "bg-gradient-to-br from-accent-500 to-primary-500 text-white shadow-md"
+          : amber
+            ? "bg-gradient-to-br from-amber-100 to-yellow-100 dark:from-amber-950/40 dark:to-yellow-950/30"
+            : "bg-gradient-to-br from-gray-50 to-slate-50 dark:from-slate-800/60 dark:to-slate-900/60"
+      }`}
     >
       <p
-        className={`text-2xl sm:text-3xl font-extrabold ${accent ? "text-white" : amber ? "text-amber-700" : "text-primary-500"}`}
+        className={`font-display text-2xl sm:text-3xl font-extrabold tabular-nums ${
+          accent
+            ? "text-white"
+            : amber
+              ? "text-amber-700 dark:text-amber-200"
+              : "text-primary-500 dark:text-accent-300"
+        }`}
       >
         {value}
       </p>
       <p
-        className={`text-xs ${accent ? "text-white/80" : amber ? "text-amber-700" : "text-gray-500"}`}
+        className={`text-xs uppercase tracking-widest font-medium mt-1 ${
+          accent
+            ? "text-white/80"
+            : amber
+              ? "text-amber-700/80 dark:text-amber-200/80"
+              : "text-gray-500 dark:text-gray-400"
+        }`}
       >
         {label}
       </p>
