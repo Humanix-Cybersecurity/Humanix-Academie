@@ -1,9 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page publique "Observatoire des fuites de données".
+// Observatoire des fuites de données — refonte cosy mai 2026.
 //
-// Agrege 3 sources francaises (frenchbreaches, bonjourlafuite, fuitesinfos).
-// Donnees lues depuis la BDD locale (rapide, pas de scrape au chargement).
-// Lazy refresh fire-and-forget si BDD perimee (>24h).
+// Brief : "experience, terrain, sensibilisation reelle, pas celle generee
+// par la peur — celle qui sent bon la maitrise et la confiance".
+//
+// Sujet sensible : les fuites de donnees peuvent generer de la peur.
+// Avant, le bandeau "⚠️ Personne n'est a l'abri" + gradient primary/accent
+// jouait sur ce registre. On refond pour transformer la peur en pedagogie :
+// "Ce qu'on apprend des fuites — sans dramatiser".
+//
+// Logique metier preservee : queries Prisma, lazy refresh, pagination,
+// filtres source/query.
 
 import Link from "next/link";
 import { Suspense } from "react";
@@ -14,6 +21,7 @@ import {
 } from "@/lib/breaches/repository";
 import { SOURCE_META } from "@/lib/breaches/types";
 import type { BreachSource } from "@prisma/client";
+import HexBackdrop from "@/components/HexBackdrop";
 import BreachesFilters from "@/components/BreachesFilters";
 
 export const dynamic = "force-dynamic";
@@ -22,32 +30,39 @@ export const revalidate = 1800; // 30 min cote Next
 export const metadata = {
   title: "Observatoire des fuites de données | Humanix Académie",
   description:
-    "Recensement des fuites de données récentes en France, agrégé depuis FrenchBreaches, Bonjour la Fuite et Fuites Infos. Mise à jour quotidienne.",
+    "Recensement des fuites de données récentes en France, agrégé depuis FrenchBreaches, Bonjour la Fuite et Fuites Infos. Mise à jour quotidienne. Sans dramatiser.",
 };
 
+// Severite adoucie : pas de rouge alarmiste pour "critique" — amber chaud
+// + emoji explicite. La gravite est exprimee par les chiffres (records),
+// pas par une couleur qui fait peur.
 const SEVERITY_BADGE: Record<
   string,
-  { label: string; bg: string; text: string }
+  { label: string; bg: string; text: string; emoji: string }
 > = {
   critical: {
     label: "Critique",
-    bg: "bg-red-100 dark:bg-red-900/40",
-    text: "text-red-800 dark:text-red-200",
+    bg: "bg-rose-100 dark:bg-rose-900/40",
+    text: "text-rose-800 dark:text-rose-200",
+    emoji: "🔴",
   },
   high: {
     label: "Élevée",
-    bg: "bg-orange-100 dark:bg-orange-900/40",
-    text: "text-orange-800 dark:text-orange-200",
+    bg: "bg-amber-100 dark:bg-amber-900/40",
+    text: "text-amber-800 dark:text-amber-200",
+    emoji: "🟠",
   },
   medium: {
     label: "Modérée",
-    bg: "bg-amber-100 dark:bg-amber-900/40",
-    text: "text-amber-800 dark:text-amber-200",
+    bg: "bg-yellow-100 dark:bg-yellow-900/40",
+    text: "text-yellow-800 dark:text-yellow-200",
+    emoji: "🟡",
   },
   low: {
     label: "Faible",
-    bg: "bg-gray-100 dark:bg-slate-700",
-    text: "text-gray-700 dark:text-gray-300",
+    bg: "bg-emerald-100 dark:bg-emerald-900/40",
+    text: "text-emerald-800 dark:text-emerald-200",
+    emoji: "🟢",
   },
 };
 
@@ -102,283 +117,403 @@ export default async function ObservatoireFuitesPage({
   const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
-      {/* Hero */}
-      <div className="text-center mb-10 max-w-3xl mx-auto">
-        <p className="text-xs uppercase tracking-widest text-accent-500 font-bold mb-2">
-          Observatoire indépendant
-        </p>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-primary-500 leading-tight mb-4">
-          Les fuites de données françaises,
-          <br />
-          <span className="text-accent-500">agrégées en un seul endroit</span>.
-        </h1>
-        <p className="text-lg text-gray-700 dark:text-gray-300">
-          Recensement temps réel des fuites publiées par les 3 sources
-          francophones de référence. Mise à jour quotidienne, sources citées,
-          aucune publicité.
-        </p>
-      </div>
+    <main id="main-content" className="overflow-x-hidden animate-fadeIn">
+      {/* ============================================================
+          1. HERO — sobre, sans dramatiser
+          ============================================================ */}
+      <HexBackdrop intensity="soft" className="bg-humanix-soft">
+        <section
+          aria-labelledby="hero-title"
+          className="max-w-5xl mx-auto px-4 pt-12 pb-10 sm:pt-16 sm:pb-12 text-center"
+        >
+          <p className="inline-flex items-center gap-2 text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 bg-white/70 dark:bg-slate-800/60 backdrop-blur-sm border border-accent-500/30 px-4 py-2 rounded-full mb-8 shadow-sm">
+            <span aria-hidden="true">🔍</span> Observatoire indépendant ·
+            Mise à jour quotidienne
+          </p>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-        <StatCard label="Fuites recensées" value={stats.total.toString()} />
-        <StatCard
-          label="Sur 30 jours"
-          value={stats.last30d.toString()}
-          accent
-        />
-        <StatCard label="Sur 7 jours" value={stats.last7d.toString()} accent />
-        <StatCard
-          label="Dernière synchro"
-          value={stats.lastSync ? formatRelative(stats.lastSync) : "—"}
-        />
-      </div>
+          <h1
+            id="hero-title"
+            className="font-display text-4xl sm:text-6xl lg:text-7xl font-extrabold text-primary-500 dark:text-accent-300 leading-[1.05] mb-6 animate-slide-up"
+            style={{ animationDelay: "100ms" }}
+          >
+            Les fuites de données françaises,
+            <br />
+            <span className="bg-gradient-to-r from-accent-500 via-primary-500 to-accent-500 bg-clip-text text-transparent animate-gradient">
+              en un seul endroit.
+            </span>
+          </h1>
 
-      {/* Bandeau anti-déni : "personne n'est à l'abri" */}
-      <div className="card mb-8 bg-gradient-to-br from-primary-500 to-accent-500 text-white">
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="text-4xl" aria-hidden="true">
-            ⚠️
-          </div>
-          <div className="flex-1 min-w-0">
-            <h2 className="font-bold text-lg mb-1">Personne n'est à l'abri</h2>
-            <p className="text-sm opacity-90">
-              CHU, mairies, retailers, e-commerces, écoles, indépendants : les
-              fuites touchent toutes les tailles d'organisation. La
-              sensibilisation et la préparation sont la seule défense efficace.
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-2 shrink-0">
-            <Link
-              href="/audit-flash"
-              className="bg-white text-primary-500 font-bold px-4 py-2 rounded-xl text-sm hover:scale-105 transition"
-            >
-              🎯 Auditer ma PME
-            </Link>
-          </div>
-        </div>
-      </div>
+          <p
+            className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed animate-slide-up"
+            style={{ animationDelay: "220ms" }}
+          >
+            Recensement des incidents publiés par les 3 sources francophones de
+            référence. Pour rester informé·e — <strong>sans dramatiser</strong>,
+            sans publicité, sans tracker.
+          </p>
+        </section>
+      </HexBackdrop>
 
-      {/* Filtres */}
-      <BreachesFilters
-        currentSource={sp.source ?? ""}
-        currentQuery={sp.q ?? ""}
-        statsBySource={stats.bySource}
-      />
-
-      {/* Liste */}
-      <Suspense
-        fallback={
-          <p className="text-center text-sm text-gray-500 py-8">Chargement…</p>
-        }
-      >
-        {items.length === 0 ? (
-          <div className="card text-center py-12">
-            <p className="text-5xl mb-3 opacity-40" aria-hidden="true">
-              🌫️
-            </p>
-            <p className="text-gray-500 mb-2">
-              Aucune fuite trouvée pour ces filtres.
-            </p>
-            {stats.total === 0 && (
-              <p className="text-xs text-gray-400">
-                La synchronisation initiale est en cours. Revenez dans quelques
-                minutes.
-              </p>
-            )}
+      <div className="max-w-6xl mx-auto px-4 py-10 space-y-10">
+        {/* ============================================================
+            2. STATS — coup d'oeil rapide
+            ============================================================ */}
+        <section aria-labelledby="stats-title">
+          <h2 id="stats-title" className="sr-only">
+            Statistiques de l'observatoire
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <ObsStat
+              label="Fuites recensées"
+              value={stats.total.toString()}
+              delay={0}
+            />
+            <ObsStat
+              label="Sur 30 jours"
+              value={stats.last30d.toString()}
+              accent
+              delay={80}
+            />
+            <ObsStat
+              label="Sur 7 jours"
+              value={stats.last7d.toString()}
+              accent
+              delay={160}
+            />
+            <ObsStat
+              label="Dernière synchro"
+              value={stats.lastSync ? formatRelative(stats.lastSync) : "—"}
+              delay={240}
+            />
           </div>
-        ) : (
-          <div className="space-y-3">
-            {items.map((b) => {
-              const sev = SEVERITY_BADGE[b.severity] ?? SEVERITY_BADGE.medium;
-              return (
-                <article
-                  key={b.id}
-                  className="card hover:shadow-md transition-shadow"
+        </section>
+
+        {/* ============================================================
+            3. CE QU'ON APPREND — pedagogie au lieu de peur
+            ============================================================ */}
+        <section aria-labelledby="lesson-title">
+          <div className="rounded-3xl bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/30 border-2 border-emerald-200 dark:border-emerald-900/40 p-8 shadow-sm">
+            <div className="grid sm:grid-cols-[auto_1fr_auto] items-center gap-6">
+              <div
+                className="text-5xl shrink-0 animate-float"
+                aria-hidden="true"
+              >
+                💡
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-[0.25em] font-bold text-emerald-700 dark:text-emerald-300 mb-2">
+                  Ce qu'on apprend des fuites
+                </p>
+                <h2
+                  id="lesson-title"
+                  className="font-display text-xl sm:text-2xl font-extrabold text-primary-500 dark:text-emerald-200 mb-2"
                 >
-                  <div className="flex items-start justify-between gap-3 flex-wrap mb-2">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span
-                        className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${SOURCE_BADGE[b.source]}`}
+                  Toutes les organisations sont concernées — c'est une donnée,
+                  pas une malédiction.
+                </h2>
+                <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
+                  CHU, mairies, retailers, e-commerces, écoles, indépendants :
+                  les fuites touchent toutes les tailles d'organisation. Lire
+                  cet observatoire, c'est apprendre des erreurs des autres pour
+                  ne pas les répéter. La maîtrise, pas la panique.
+                </p>
+              </div>
+              <Link
+                href="/audit-flash"
+                className="btn-primary text-sm whitespace-nowrap shrink-0"
+              >
+                <span aria-hidden="true">🌿</span> Auditer ma PME
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ============================================================
+            4. FILTRES
+            ============================================================ */}
+        <BreachesFilters
+          currentSource={sp.source ?? ""}
+          currentQuery={sp.q ?? ""}
+          statsBySource={stats.bySource}
+        />
+
+        {/* ============================================================
+            5. LISTE DES FUITES
+            ============================================================ */}
+        <Suspense
+          fallback={
+            <p className="text-center text-sm text-gray-500 dark:text-gray-400 py-8 italic">
+              Chargement…
+            </p>
+          }
+        >
+          {items.length === 0 ? (
+            <div className="card text-center py-16 bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/30 border-emerald-200 dark:border-emerald-900/40">
+              <p
+                className="text-6xl mb-4 inline-block animate-float opacity-60"
+                aria-hidden="true"
+              >
+                🌫️
+              </p>
+              <h3 className="font-display text-xl font-extrabold text-primary-500 dark:text-accent-300 mb-2">
+                Aucune fuite trouvée pour ces filtres
+              </h3>
+              {stats.total === 0 ? (
+                <p className="text-sm text-gray-600 dark:text-gray-300 italic max-w-md mx-auto">
+                  La synchronisation initiale est en cours. Reviens nous voir
+                  dans quelques minutes.
+                </p>
+              ) : (
+                <p className="text-sm text-gray-600 dark:text-gray-300 italic max-w-md mx-auto">
+                  Essaie d'élargir tes filtres ou de rechercher un autre terme.
+                </p>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {items.map((b, idx) => {
+                const sev = SEVERITY_BADGE[b.severity] ?? SEVERITY_BADGE.medium;
+                return (
+                  <article
+                    key={b.id}
+                    className="card hover:shadow-md hover:-translate-y-0.5 transition-all animate-slide-up"
+                    style={{ animationDelay: `${Math.min(idx, 10) * 30}ms` }}
+                  >
+                    <div className="flex items-start justify-between gap-3 flex-wrap mb-2">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span
+                          className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${SOURCE_BADGE[b.source]}`}
+                        >
+                          {SOURCE_META[b.source as keyof typeof SOURCE_META]
+                            ?.name ?? b.source}
+                        </span>
+                        <span
+                          className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${sev.bg} ${sev.text} inline-flex items-center gap-1`}
+                        >
+                          <span aria-hidden="true">{sev.emoji}</span>{" "}
+                          {sev.label}
+                        </span>
+                        {b.organization && (
+                          <span className="text-xs text-gray-600 dark:text-gray-400">
+                            <span aria-hidden="true">🏢</span> {b.organization}
+                          </span>
+                        )}
+                      </div>
+                      <time
+                        className="text-xs text-gray-500 dark:text-gray-400 tabular-nums italic"
+                        dateTime={b.incidentDate.toISOString()}
                       >
-                        {SOURCE_META[b.source as keyof typeof SOURCE_META]
-                          ?.name ?? b.source}
-                      </span>
-                      <span
-                        className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${sev.bg} ${sev.text}`}
+                        {b.incidentDate.toLocaleDateString("fr-FR", {
+                          dateStyle: "medium",
+                        })}
+                      </time>
+                    </div>
+
+                    <h3 className="font-display text-base sm:text-lg font-extrabold text-primary-500 dark:text-accent-300 mb-2 leading-tight">
+                      <a
+                        href={b.sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline-offset-4 hover:underline"
                       >
-                        {sev.label}
-                      </span>
-                      {b.organization && (
-                        <span className="text-xs text-gray-600 dark:text-gray-400">
-                          🏢 {b.organization}
+                        {b.title}
+                        <span aria-hidden="true" className="text-xs ml-1">
+                          ↗
+                        </span>
+                        <span className="sr-only"> (nouvel onglet)</span>
+                      </a>
+                    </h3>
+
+                    {b.summary && (
+                      <p className="text-sm text-gray-700 dark:text-gray-200 line-clamp-3 leading-relaxed">
+                        {b.summary}
+                      </p>
+                    )}
+
+                    <div className="flex items-center gap-4 mt-3 pt-3 border-t border-gray-100 dark:border-slate-700 text-xs text-gray-500 dark:text-gray-400 flex-wrap">
+                      {b.recordsExposed != null && (
+                        <span>
+                          <span aria-hidden="true">🗂️</span>{" "}
+                          <strong className="text-primary-500 dark:text-accent-300 tabular-nums">
+                            {formatRecords(b.recordsExposed)}
+                          </strong>{" "}
+                          exposés
                         </span>
                       )}
+                      {b.dataTypes && (
+                        <span>
+                          <span aria-hidden="true">📋</span>{" "}
+                          {b.dataTypes.split(",").slice(0, 3).join(", ")}
+                        </span>
+                      )}
+                      <a
+                        href={b.sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ml-auto text-accent-700 dark:text-accent-300 underline-offset-4 hover:underline font-bold"
+                      >
+                        Source officielle{" "}
+                        <span aria-hidden="true">↗</span>
+                      </a>
                     </div>
-                    <time
-                      className="text-xs text-gray-500 tabular-nums"
-                      dateTime={b.incidentDate.toISOString()}
-                    >
-                      {b.incidentDate.toLocaleDateString("fr-FR", {
-                        dateStyle: "medium",
-                      })}
-                    </time>
-                  </div>
-
-                  <h3 className="text-base sm:text-lg font-bold text-primary-500 mb-1">
-                    <a
-                      href={b.sourceUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:underline"
-                    >
-                      {b.title}
-                    </a>
-                  </h3>
-
-                  {b.summary && (
-                    <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">
-                      {b.summary}
-                    </p>
-                  )}
-
-                  <div className="flex items-center gap-4 mt-3 pt-3 border-t border-gray-100 dark:border-slate-700 text-xs text-gray-500">
-                    {b.recordsExposed != null && (
-                      <span>
-                        🗂️{" "}
-                        <strong className="text-primary-500">
-                          {formatRecords(b.recordsExposed)}
-                        </strong>{" "}
-                        exposés
-                      </span>
-                    )}
-                    {b.dataTypes && (
-                      <span>
-                        📋 {b.dataTypes.split(",").slice(0, 3).join(", ")}
-                      </span>
-                    )}
-                    <a
-                      href={b.sourceUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="ml-auto text-accent-500 hover:underline font-medium"
-                    >
-                      Source officielle ↗
-                    </a>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        )}
-      </Suspense>
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <nav
-          className="flex justify-center gap-2 mt-8"
-          aria-label="Pagination des fuites"
-        >
-          {Array.from(
-            { length: Math.min(totalPages, 10) },
-            (_, i) => i + 1,
-          ).map((p) => (
-            <Link
-              key={p}
-              href={`/observatoire-fuites?${new URLSearchParams({
-                ...(filterSource ? { source: filterSource } : {}),
-                ...(sp.q ? { q: sp.q } : {}),
-                page: String(p),
-              }).toString()}`}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium ${
-                p === page
-                  ? "bg-accent-500 text-white"
-                  : "bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 hover:bg-accent-50"
-              }`}
-              aria-current={p === page ? "page" : undefined}
-            >
-              {p}
-            </Link>
-          ))}
-          {totalPages > 10 && (
-            <span className="text-sm text-gray-500 self-center">…</span>
+                  </article>
+                );
+              })}
+            </div>
           )}
-        </nav>
-      )}
+        </Suspense>
 
-      {/* Sources et methodologie */}
-      <section className="card mt-12 bg-gray-50 dark:bg-slate-800">
-        <h2 className="font-bold text-primary-500 mb-3">
-          Sources & méthodologie
-        </h2>
-        <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
-          Cet observatoire ne produit aucune information : il agrège et cite les
-          3 sources francophones de référence. Tous les contenus restent la
-          propriété de leurs auteurs. Cliquez sur le titre d'une fuite pour
-          consulter l'article original.
-        </p>
-        <div className="grid sm:grid-cols-3 gap-3 text-sm">
-          {(
-            Object.entries(SOURCE_META) as [
-              keyof typeof SOURCE_META,
-              (typeof SOURCE_META)[keyof typeof SOURCE_META],
-            ][]
-          )
-            .filter(([, meta]) => meta.active)
-            .map(([key, meta]) => (
-              <a
-                key={key}
-                href={meta.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block p-3 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-accent-500"
-              >
-                <p className="font-bold text-primary-500 mb-1">{meta.name} ↗</p>
-                <p className="text-xs text-gray-500 mb-2">{meta.url}</p>
-                <p className="text-xs text-gray-700 dark:text-gray-300">
-                  {meta.description}
-                </p>
-              </a>
-            ))}
-        </div>
-        <p className="text-xs text-gray-500 mt-4 italic">
-          Mise à jour automatique toutes les 6 heures. Pour signaler une erreur
-          ou demander le retrait d'une entrée :{" "}
-          <a
-            href="mailto:contact@humanix-cybersecurity.fr"
-            className="text-accent-500 underline"
+        {/* ============================================================
+            6. PAGINATION
+            ============================================================ */}
+        {totalPages > 1 && (
+          <nav
+            className="flex justify-center gap-2"
+            aria-label="Pagination des fuites"
           >
-            contact@humanix-cybersecurity.fr
-          </a>
-          .
-        </p>
-      </section>
-    </div>
+            {Array.from(
+              { length: Math.min(totalPages, 10) },
+              (_, i) => i + 1,
+            ).map((p) => (
+              <Link
+                key={p}
+                href={`/observatoire-fuites?${new URLSearchParams({
+                  ...(filterSource ? { source: filterSource } : {}),
+                  ...(sp.q ? { q: sp.q } : {}),
+                  page: String(p),
+                }).toString()}`}
+                className={`px-3 py-1.5 rounded-xl text-sm font-bold tabular-nums transition-all ${
+                  p === page
+                    ? "bg-primary-500 text-white shadow-sm"
+                    : "bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-700 hover:border-accent-500 hover:-translate-y-0.5"
+                }`}
+                aria-current={p === page ? "page" : undefined}
+              >
+                {p}
+              </Link>
+            ))}
+            {totalPages > 10 && (
+              <span className="text-sm text-gray-500 dark:text-gray-400 self-center">
+                …
+              </span>
+            )}
+          </nav>
+        )}
+
+        {/* ============================================================
+            7. SOURCES & METHODOLOGIE
+            ============================================================ */}
+        <section
+          aria-labelledby="sources-title"
+          className="rounded-3xl bg-gradient-to-br from-cyan-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-cyan-950/30 border-2 border-cyan-200 dark:border-cyan-900/40 p-8"
+        >
+          <p className="text-xs uppercase tracking-[0.25em] font-bold text-cyan-700 dark:text-cyan-300 mb-2">
+            Transparence radicale
+          </p>
+          <h2
+            id="sources-title"
+            className="font-display text-xl sm:text-2xl font-extrabold text-primary-500 dark:text-accent-300 mb-3"
+          >
+            Sources & méthodologie
+          </h2>
+          <p className="text-sm text-gray-700 dark:text-gray-200 mb-6 leading-relaxed">
+            Cet observatoire ne produit aucune information : il agrège et cite
+            les 3 sources francophones de référence. Tous les contenus restent
+            la propriété de leurs auteurs. Cliquez sur le titre d'une fuite
+            pour consulter l'article original.
+          </p>
+          <div className="grid sm:grid-cols-3 gap-3 text-sm">
+            {(
+              Object.entries(SOURCE_META) as [
+                keyof typeof SOURCE_META,
+                (typeof SOURCE_META)[keyof typeof SOURCE_META],
+              ][]
+            )
+              .filter(([, meta]) => meta.active)
+              .map(([key, meta]) => (
+                <a
+                  key={key}
+                  href={meta.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block p-4 rounded-2xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-accent-500 hover:-translate-y-0.5 hover:shadow-md transition-all group"
+                >
+                  <p className="font-display font-extrabold text-primary-500 dark:text-accent-300 mb-1 group-hover:underline underline-offset-4">
+                    {meta.name}
+                    <span aria-hidden="true" className="text-xs ml-1">
+                      ↗
+                    </span>
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 break-all">
+                    {meta.url}
+                  </p>
+                  <p className="text-xs text-gray-700 dark:text-gray-200 leading-relaxed">
+                    {meta.description}
+                  </p>
+                </a>
+              ))}
+          </div>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-6 italic leading-relaxed">
+            Mise à jour automatique toutes les 6 heures. Pour signaler une
+            erreur ou demander le retrait d'une entrée :{" "}
+            <a
+              href="mailto:contact@humanix-cybersecurity.fr"
+              className="text-accent-700 dark:text-accent-300 underline-offset-4 hover:underline font-bold"
+            >
+              contact@humanix-cybersecurity.fr
+            </a>
+            .
+          </p>
+        </section>
+
+        {/* ============================================================
+            8. RESPIRATION — citation finale
+            ============================================================ */}
+        <section className="text-center pt-4">
+          <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            « Connaître les fuites des autres, ce n'est pas céder à la peur —
+            c'est apprendre par procuration. »
+          </blockquote>
+          <p
+            aria-hidden="true"
+            className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
+          >
+            — Hex veille
+          </p>
+        </section>
+      </div>
+    </main>
   );
 }
 
-function StatCard({
+// ===========================================================================
+// SOUS-COMPOSANTS LOCAUX
+// ===========================================================================
+
+function ObsStat({
   label,
   value,
   accent,
+  delay,
 }: {
   label: string;
   value: string;
   accent?: boolean;
+  delay: number;
 }) {
   return (
     <div
-      className={`rounded-xl border-2 p-3 text-center ${
+      className={`rounded-2xl border-2 p-4 text-center animate-slide-up ${
         accent
-          ? "border-accent-500 bg-accent-50 dark:bg-accent-900/20"
+          ? "border-accent-500 bg-gradient-to-br from-accent-50 to-cyan-50 dark:from-accent-900/20 dark:to-cyan-950/30"
           : "border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900"
       }`}
+      style={{ animationDelay: `${delay}ms` }}
     >
-      <p className="text-2xl sm:text-3xl font-extrabold text-primary-500 tabular-nums">
+      <p className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 tabular-nums leading-none">
         {value}
       </p>
-      <p className="text-[10px] uppercase tracking-wide text-gray-500 mt-1">
+      <p className="text-[10px] uppercase tracking-widest text-gray-500 dark:text-gray-400 mt-2 font-medium">
         {label}
       </p>
     </div>
@@ -396,6 +531,6 @@ function formatRelative(date: Date): string {
   const diff = Date.now() - new Date(date).getTime();
   const h = Math.floor(diff / 3600_000);
   if (h < 1) return "à l'instant";
-  if (h < 24) return `il y a ${h}h`;
-  return `il y a ${Math.floor(h / 24)}j`;
+  if (h < 24) return `il y a ${h} h`;
+  return `il y a ${Math.floor(h / 24)} j`;
 }
