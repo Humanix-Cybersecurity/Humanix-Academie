@@ -1,0 +1,104 @@
+---
+title: "Construire une phrase de passe inviolable"
+durationMinutes: 5
+persona: "tous-collaborateurs"
+objective: "Apprendre la methode de la phrase de passe et l'appliquer aux 3 mots de passe critiques (gestionnaire, mail, MFA recovery)"
+xpReward: 50
+scenario: |
+  Lundi 9h. Tu installes Bitwarden (decision de la semaine derniere, cf. module
+  precedent). L'app te demande un **mot de passe maitre**. Celui-la, tu ne pourras
+  pas l'oublier — c'est la cle qui ouvre tous les autres.
+
+  Tu hesites entre :
+  - Ton chien + 2024 (Voltaire2024) — facile a retenir
+  - 8 caracteres aleatoires (Xk3$mP9z) — plus securise
+  - Une longue phrase (LesChatsAimentLesNuagesPlats!) — plus longue mais lisible
+
+  Le truc : si quelqu'un devine ce mot de passe, **toute ta vie cyber tombe**.
+  Y compris ta banque, ton mail pro, tout. Quelle methode tu choisis ?
+choices:
+  - id: "a"
+    label: "Mot court mais complexe (Xk3$mP9z)"
+    outcome: "bad"
+    feedback: "Mauvais reflexe. 8 caracteres = brute-forcable en moins d'1 jour avec du materiel grand public en 2026. Plus court = moins sur, peu importe les caracteres speciaux."
+    points: -5
+  - id: "b"
+    label: "Phrase longue et memorisable (LesChatsAimentLesNuagesPlats!)"
+    outcome: "good"
+    feedback: "Excellent reflexe. 28 caracteres = des milliards d'annees a brute-forcer. Memorisable = tu ne l'ecris pas sur un post-it. C'est la methode recommandee par l'ANSSI et le NIST."
+    points: 30
+  - id: "c"
+    label: "Voltaire2024"
+    outcome: "bad"
+    feedback: "Le pire choix possible. Nom propre + annee courante = 1ere combinaison testee par les attaquants. Crackable en quelques secondes, meme par un script de base."
+    points: -10
+  - id: "d"
+    label: "Le meme que celui de mon mail perso, comme ca je le retiens"
+    outcome: "bad"
+    feedback: "La pire methode. Reutiliser un mot de passe = si UNE seule des dizaines de bases ou il existe leak, l'attaquant a access a tout. C'est le credential stuffing."
+    points: -10
+debrief: |
+  La methode de la **phrase de passe** est la recommandation officielle de :
+  - **ANSSI** (Agence nationale de la securite des systemes d'information)
+  - **NIST** (National Institute of Standards and Technology, USA)
+  - **CNIL** (Commission nationale de l'informatique et des libertes)
+
+  **Pourquoi ca marche** : la securite d'un mot de passe est exponentielle avec sa
+  longueur, pas avec sa "complexite" en caracteres speciaux. 28 caracteres lisibles
+  > 8 caracteres exotiques.
+
+  **La methode XKCD** (du celebre webcomic) : prendre 4 a 5 mots aleatoires,
+  les coller, ajouter une majuscule et un chiffre/symbole pour la forme.
+
+  Exemples de phrases solides :
+  - `LeChatVoleAuClairDeLune7!`
+  - `MaTantePecheDansLaLagune2026`
+  - `PourquoiLesNuagesNeTombentPas?`
+
+  **Les 3 mots de passe critiques** (les seuls qu'il faut memoriser) :
+  1. **Le mot de passe maitre du gestionnaire** (tous les autres sont dedans)
+  2. **Le mot de passe du mail principal** (point de recuperation des autres)
+  3. **Le mot de passe / phrase de recuperation MFA** (si tu perds ton telephone)
+
+  Tous les autres mots de passe doivent etre **generes aleatoirement** par le
+  gestionnaire (20+ caracteres, jamais retenus a la main).
+
+  La regle universelle : **un mot de passe que tu peux retenir, c'est un mot de
+  passe que quelqu'un d'autre peut deviner**. Sauf s'il est tres long.
+quiz:
+  - question: "Qu'est-ce qui rend un mot de passe vraiment solide ?"
+    choices:
+      - { id: "a", label: "Beaucoup de caracteres speciaux ($, @, %, !)", correct: false }
+      - { id: "b", label: "La longueur — chaque caractere ajoute multiplie la difficulte", correct: true }
+      - { id: "c", label: "Le changer tous les 30 jours", correct: false }
+      - { id: "d", label: "Le rendre incomprehensible avec des chiffres a la place de lettres (l33t speak)", correct: false }
+    explanation: "ANSSI/NIST/CNIL sont d'accord : la longueur est exponentielle, la complexite est lineaire. 25 caracteres lisibles battent 8 caracteres exotiques."
+
+  - question: "Combien de mots de passe critiques faut-il memoriser ?"
+    choices:
+      - { id: "a", label: "Tous, sinon on est dependant du gestionnaire", correct: false }
+      - { id: "b", label: "3 : maitre du gestionnaire, mail principal, recuperation MFA", correct: true }
+      - { id: "c", label: "1 seul : le maitre du gestionnaire suffit", correct: false }
+      - { id: "d", label: "Aucun : tout dans le gestionnaire", correct: false }
+    explanation: "Le maitre + le mail (recuperation des autres comptes) + la phrase de recuperation MFA (si telephone perdu). Le reste est genere aleatoirement par le gestionnaire."
+
+  - question: "Quel est le pire choix pour un mot de passe ?"
+    choices:
+      - { id: "a", label: "Un mot de passe court mais complexe (Xk3$)", correct: false }
+      - { id: "b", label: "Reutiliser le meme mot de passe sur plusieurs sites", correct: true }
+      - { id: "c", label: "Un mot de passe avec des espaces", correct: false }
+      - { id: "d", label: "Un mot de passe entierement en majuscules", correct: false }
+    explanation: "Reutiliser = credential stuffing : si UNE seule des bases ou il existe leak, tous tes comptes tombent. C'est la 1ere methode des attaquants en 2026."
+
+  - question: "Une phrase de passe efficace, c'est combien de caracteres minimum ?"
+    choices:
+      - { id: "a", label: "8 caracteres", correct: false }
+      - { id: "b", label: "12 caracteres", correct: false }
+      - { id: "c", label: "Au moins 20 caracteres pour une phrase, 14 minimum pour un mot de passe genere", correct: true }
+      - { id: "d", label: "30 caracteres minimum", correct: false }
+    explanation: "Recommandation NIST 2026 : 20+ caracteres pour les phrases memorisees (longues mais lisibles), 14+ caracteres pour les mots de passe generes aleatoirement par le gestionnaire."
+---
+
+> 💡 **Pour aller plus loin** : utilise un generateur de phrase de passe diceware
+> (https://www.eff.org/dice) pour generer une phrase vraiment aleatoire — la
+> seule garantie qu'elle ne soit pas devinable par tes proches.
