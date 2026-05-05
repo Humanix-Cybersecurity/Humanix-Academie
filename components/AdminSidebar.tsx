@@ -92,6 +92,7 @@ const SECTIONS: Section[] = [
         gate: "Essentielle+",
       },
       { href: "/admin/integrations", label: "Webhooks", icon: "🔗" },
+      { href: "/admin/license", label: "Licence Ed25519", icon: "🔐" },
     ],
   },
 ];
