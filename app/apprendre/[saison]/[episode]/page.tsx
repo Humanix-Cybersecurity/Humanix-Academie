@@ -62,19 +62,26 @@ export default async function EpisodePage({
   const species = dbUser?.mascotSpecies ?? "fox";
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <main id="main-content" className="max-w-3xl mx-auto px-4 py-8">
       {isFallback && (
         <div
           role="note"
-          className="mb-4 p-3 rounded-xl border border-amber-300 bg-amber-50 dark:bg-amber-900/20 text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2"
+          className="mb-5 p-4 rounded-2xl border-2 border-amber-200 dark:border-amber-900/40 bg-gradient-to-br from-amber-50 via-white to-yellow-50 dark:from-amber-950/30 dark:via-slate-900 dark:to-yellow-950/20 text-sm text-amber-900 dark:text-amber-100 flex items-start gap-3 shadow-sm"
         >
-          <span aria-hidden="true">📝</span>
-          <span>
-            <strong>Module en cours d'enrichissement.</strong> Une version
-            détaillée par nos experts contributeurs sera bientôt disponible. En
-            attendant, voici la version pédagogique de base — vos points de
-            progression sont attribués normalement.
+          <span className="text-xl shrink-0" aria-hidden="true">
+            🌱
           </span>
+          <div>
+            <p className="font-display font-extrabold mb-1">
+              Une version pédagogique de base
+            </p>
+            <p className="leading-relaxed">
+              Cet épisode reçoit bientôt un scénario détaillé rédigé par un
+              expert humain. En attendant, voici la version de base — tes
+              points de progression sont attribués normalement, et tu peux y
+              revenir plus tard pour la version enrichie.
+            </p>
+          </div>
         </div>
       )}
 
@@ -90,6 +97,6 @@ export default async function EpisodePage({
         xpReward={content.meta.xpReward}
         species={species}
       />
-    </div>
+    </main>
   );
 }
