@@ -1,36 +1,37 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page publique "Comparatif honnête".
-// Le pari editorial : poser noir sur blanc nos forces ET nos faiblesses face
-// aux concurrents identifies. C'est un acte commercial differencant : aucune
-// suite SaaS cyber francaise ne le fait. Cible : prospects PME qui hesitent
-// entre HumaniX et un acteur historique (KnowBe4, Hoxhunt, Phished) ou un
-// disrupteur AI-native (Adaptive Security, Cyber Guru).
+// Page publique "Comparatif honnete" — refonte cosy mai 2026.
+//
+// Le pari editorial reste : poser noir sur blanc nos forces ET nos faiblesses
+// face aux concurrents. Aucune suite SaaS cyber francaise ne le fait.
 //
 // REGLE EDITORIALE : on doit toujours rester honnete. Si un concurrent ajoute
 // une feature qui nous depasse, on l'inscrit ici. Cette page perd sa valeur
 // commerciale a la seconde ou elle ment.
 //
-// Refresh mai 2026 :
-//  - Mantra a ete rachete par Cyber Guru (Italie) en mars 2025 → on remplace
-//    la colonne Mantra par Cyber Guru et on actualise la lecture FR.
-//  - Adaptive Security (US, $136M leves dont Series B 81M en 2025 par Bain
-//    Capital + NVIDIA + OpenAI Fund + a16z) est devenu un disrupteur AI-native
-//    avec 500+ clients en moins d'un an. C'est la vraie menace 2026, pas
-//    KnowBe4 qui devient le legacy. → on ajoute une colonne dediee.
-//  - Nouvelles lignes pour les sujets bouillants 2026 : vishing/voice deepfake
-//    (surge +442 % H2 2024), MCP server pour agents IA (CISO Assistant l'a
-//    deja, premier mover possible cote SAT/HRM), agent IA orchestrateur
-//    (KnowBe4 AIDA, Hoxhunt adaptive), HRM Maturity Model (Living Security /
-//    CybSafe), contenu pedagogique reellement redige (vs catalogue marketing).
+// Refonte mai 2026 (cosy / charmant / impactant) :
+//  - Hero invitation au voyage avec HexBackdrop (vs hero sec et chiffre)
+//  - Chapitres narratifs entre les categories (pourquoi cette categorie compte)
+//  - Palette cyclee par categorie (les 6 saisons : cyan/emerald/amber/purple/rose/indigo)
+//  - Vocabulaire transforme : "où ils sont meilleurs" → "ce qu'on apprend d'eux"
+//  - CTA final cosy : "habitude tranquille" pas "14 jours gratuits"
+//  - Citation finale signee "Hex veille"
+//  - Animation slide-up en cascade (idx * 60ms)
+//
+// Refresh mai 2026 (donnees) :
+//  - Mantra rachete par Cyber Guru (Italie) en mars 2025 → colonne Cyber Guru
+//  - Adaptive Security (US, $136M leves) ajoutee comme disrupteur AI-native
+//  - Lignes vishing (deepfake +442 % H2 2024), MCP server, agents IA
+//    orchestrateurs, HRM Maturity Model, contenu pedagogique reel.
 
 import { Fragment } from "react";
 import Link from "next/link";
 import { countExpertEpisodes } from "@/lib/content-availability";
+import HexBackdrop from "@/components/HexBackdrop";
 
 export const metadata = {
   title: "Comparatif honnête — HumaniX vs concurrents | Humanix Académie",
   description:
-    "Comparatif honnête entre Humanix Académie et les principales plateformes de sensibilisation cyber 2026 (KnowBe4, Hoxhunt, Phished, Cyber Guru, Adaptive Security). On vous dit où nous sommes meilleurs, équivalents et moins bons.",
+    "Comparatif honnête entre Humanix Académie et les principales plateformes de sensibilisation cyber 2026 (KnowBe4, Hoxhunt, Phished, Cyber Guru, Adaptive Security). On vous dit où nous sommes meilleurs, équivalents et ce qu'on apprend d'eux.",
 };
 
 type Cell = {
@@ -550,13 +551,122 @@ const COMPETITORS: Array<{ key: keyof Omit<Row, "category" | "feature" | "humani
   },
 ];
 
+// Palette par categorie : on cycle les 6 saisons (cosy series mai 2026)
+// pour donner une identite douce a chaque chapitre du voyage.
+type CategoryMeta = {
+  emoji: string;
+  intro: string;
+  palette: {
+    bg: string;
+    ring: string;
+    badge: string;
+    accent: string;
+  };
+};
+
+const CATEGORY_META: Record<string, CategoryMeta> = {
+  Tarification: {
+    emoji: "💶",
+    intro:
+      "Le portefeuille avant tout. La cyber doit etre accessible, pas reservee aux ETI qui peuvent payer 5 chiffres par an. Voici comment on s'aligne — et ou nos prix racontent une autre histoire.",
+    palette: {
+      bg: "from-cyan-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-cyan-950/40",
+      ring: "border-cyan-200 dark:border-cyan-900/40",
+      badge: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-200",
+      accent: "text-cyan-700 dark:text-cyan-300",
+    },
+  },
+  "Catalogue & contenu": {
+    emoji: "📚",
+    intro:
+      "Le contenu, c'est le coeur du metier. Beaucoup de modules ne fait pas tout : un module bien ecrit, en francais, qui s'adresse vraiment a l'apprenant, vaut dix modules traduits a la chaine.",
+    palette: {
+      bg: "from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-teal-950/40",
+      ring: "border-emerald-200 dark:border-emerald-900/40",
+      badge:
+        "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200",
+      accent: "text-emerald-700 dark:text-emerald-300",
+    },
+  },
+  "Simulation phishing & ingénierie sociale": {
+    emoji: "🎣",
+    intro:
+      "Le terrain de jeu prefere des attaquants. On simule pour entrainer, jamais pour piéger. La nuance se voit dans les details : le ton du debrief, la qualite des templates, la souverainete de l'IA derriere.",
+    palette: {
+      bg: "from-amber-50 via-white to-yellow-50 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/40",
+      ring: "border-amber-200 dark:border-amber-900/40",
+      badge: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200",
+      accent: "text-amber-700 dark:text-amber-300",
+    },
+  },
+  "Conformité & souveraineté": {
+    emoji: "🛡",
+    intro:
+      "NIS2, RGPD, DORA, Cloud Act — la conformite n'est pas un argument marketing, c'est un filet de securite pour le dirigeant. On joue cartes sur table sur ou s'arrete notre maturite et ou on excelle.",
+    palette: {
+      bg: "from-purple-50 via-white to-pink-50 dark:from-slate-900 dark:via-slate-900 dark:to-purple-950/40",
+      ring: "border-purple-200 dark:border-purple-900/40",
+      badge:
+        "bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200",
+      accent: "text-purple-700 dark:text-purple-300",
+    },
+  },
+  "Pilotage dirigeant": {
+    emoji: "📊",
+    intro:
+      "Un dirigeant n'a pas le temps de devenir analyste cyber. Il a besoin d'une photo claire de la maturite humaine de son organisation, et d'arguments concrets pour son COMEX. C'est notre obsession.",
+    palette: {
+      bg: "from-rose-50 via-white to-amber-50 dark:from-slate-900 dark:via-slate-900 dark:to-rose-950/40",
+      ring: "border-rose-200 dark:border-rose-900/40",
+      badge: "bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-200",
+      accent: "text-rose-700 dark:text-rose-300",
+    },
+  },
+  "Human Risk Management 2026": {
+    emoji: "🧭",
+    intro:
+      "Le marche bascule du Security Awareness Training (SAT) vers le Human Risk Management (HRM). Les concurrents sortent leurs agents IA — on a fait le choix d'un MCP server ouvert, premier mover en France.",
+    palette: {
+      bg: "from-indigo-50 via-white to-cyan-50 dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950/40",
+      ring: "border-indigo-200 dark:border-indigo-900/40",
+      badge:
+        "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-200",
+      accent: "text-indigo-700 dark:text-indigo-300",
+    },
+  },
+  Intégrations: {
+    emoji: "🔗",
+    intro:
+      "Sans integrations natives, une plateforme reste une ile. On a investi gros sur les connecteurs francais (Sekoia, HarfangLab, Lucca, GLPI, CISO Assistant) que les acteurs internationaux n'envisagent meme pas.",
+    palette: {
+      bg: "from-cyan-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-cyan-950/40",
+      ring: "border-cyan-200 dark:border-cyan-900/40",
+      badge: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-200",
+      accent: "text-cyan-700 dark:text-cyan-300",
+    },
+  },
+  Écosystème: {
+    emoji: "🌱",
+    intro:
+      "Une plateforme cyber ne vit pas seule. Elle s'inscrit dans un ecosysteme — financements, assureurs, partenaires. Voici ou nous en sommes, sans embellir.",
+    palette: {
+      bg: "from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-teal-950/40",
+      ring: "border-emerald-200 dark:border-emerald-900/40",
+      badge:
+        "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200",
+      accent: "text-emerald-700 dark:text-emerald-300",
+    },
+  },
+};
+
 const CATEGORIES = Array.from(new Set(ROWS.map((r) => r.category)));
 
 const STATUS_STYLE = {
-  win: "bg-green-50 text-green-800 border-green-200",
-  equal: "bg-amber-50 text-amber-800 border-amber-200",
-  loss: "bg-red-50 text-red-800 border-red-200",
-  na: "bg-gray-50 text-gray-500 border-gray-200",
+  win: "bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-200 dark:border-emerald-900/40",
+  equal:
+    "bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/40 dark:text-amber-200 dark:border-amber-900/40",
+  loss: "bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-950/40 dark:text-rose-200 dark:border-rose-900/40",
+  na: "bg-gray-50 text-gray-500 border-gray-200 dark:bg-slate-800/40 dark:text-gray-400 dark:border-slate-700",
 } as const;
 
 const STATUS_ICON = {
@@ -569,7 +679,7 @@ const STATUS_ICON = {
 const STATUS_LABEL = {
   win: "Avantage HumaniX",
   equal: "Équivalent",
-  loss: "Avantage concurrent",
+  loss: "Ce qu'on apprend d'eux",
   na: "Non applicable",
 } as const;
 
@@ -611,256 +721,413 @@ export default function ComparatifPage() {
   const expertCount = countExpertEpisodes();
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12 sm:py-16">
-      {/* Hero */}
-      <div className="text-center mb-10 max-w-3xl mx-auto">
-        <p className="text-xs uppercase tracking-widest text-accent-500 font-bold mb-2">
-          Transparence radicale
-        </p>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-primary-500 leading-tight mb-4">
-          Comparatif <span className="text-accent-500">honnête</span>.
-        </h1>
-        <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
-          On vous dit franchement ce qu'on fait mieux que nos concurrents, ce
-          qu'on fait équivalent, et ce qu'on ne sait pas (encore) faire aussi
-          bien qu'eux. Avec liens vers leurs sites pour que vous vérifiiez.
-        </p>
-        <div className="grid sm:grid-cols-3 gap-3 text-sm">
-          <div className="card bg-green-50 border-green-200">
-            <p className="text-3xl font-extrabold text-green-700">
-              {winsHumanix}
-            </p>
-            <p className="text-green-800 font-medium">avantages HumaniX</p>
-          </div>
-          <div className="card bg-amber-50 border-amber-200">
-            <p className="text-3xl font-extrabold text-amber-700">
-              {equalHumanix}
-            </p>
-            <p className="text-amber-800 font-medium">équivalences</p>
-          </div>
-          <div className="card bg-red-50 border-red-200">
-            <p className="text-3xl font-extrabold text-red-700">
-              {lossesHumanix}
-            </p>
-            <p className="text-red-800 font-medium">où ils sont meilleurs</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Engagement éditorial */}
-      <div className="card mb-8 bg-primary-50 dark:bg-primary-900/20 border-l-4 border-primary-500">
-        <h2 className="font-bold text-primary-500 mb-2">
-          Notre engagement éditorial
-        </h2>
-        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-          Cette page est mise à jour{" "}
-          <strong>à chaque sortie produit majeure</strong> (la nôtre comme celle
-          des concurrents). <strong>Refresh mai 2026 :</strong> Mantra a été
-          racheté par Cyber Guru (Italie) en mars 2025 — la colonne Mantra est
-          remplacée par Cyber Guru. On a aussi ajouté <strong>Adaptive Security</strong>{" "}
-          (US, $136M levés dont $81M Series B fin 2025 par Bain Capital,
-          NVIDIA, OpenAI Fund et a16z), qui est devenu le disrupteur AI-native du
-          marché. Si vous constatez une information inexacte, écrivez à{" "}
-          <a
-            href="mailto:contact@humanix-cybersecurity.fr"
-            className="text-accent-500 underline font-medium"
-          >
-            contact@humanix-cybersecurity.fr
-          </a>{" "}
-          : on corrige sous 7 jours et on cite votre signalement. Aucun
-          concurrent n'a été contacté pour valider cette page : c'est notre
-          lecture honnête, basée sur leurs sites publics et nos retours clients.
-        </p>
-      </div>
-
-      {/* Note contenu pédagogique */}
-      <div className="card mb-8 bg-amber-50 dark:bg-amber-900/20 border-l-4 border-amber-400">
-        <h2 className="font-bold text-amber-700 mb-2">
-          Note transparence : modules pédagogiques
-        </h2>
-        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-          Notre catalogue affiche 180 modules. À ce jour, <strong>{expertCount} épisode
-          {expertCount > 1 ? "s ont" : " a"} un scénario détaillé rédigé par un
-          expert</strong> (visibles avec le badge 📝 sur{" "}
-          <Link href="/apprendre" className="text-accent-500 underline">
-            /apprendre
-          </Link>
-          ). Les autres utilisent un fallback structuré (questions, quiz, debrief
-          générique). C'est la même mécanique que chez la plupart des concurrents
-          listés, mais la plupart ne le disent pas. Notre cible Q3 2026 : 30
-          modules expert sur les saisons critiques (phishing, mots de passe,
-          NIS2, RGPD).
-        </p>
-      </div>
-
-      {/* Tableau */}
-      <div className="overflow-x-auto -mx-4 px-4 mb-10">
-        <table
-          className="w-full border-collapse min-w-[1100px]"
-          aria-label="Comparatif Humanix Académie versus concurrents"
+    <main id="main-content" className="overflow-x-hidden animate-fadeIn">
+      {/* ============================================================
+          1. HERO — invitation a la comparaison transparente
+          ============================================================ */}
+      <HexBackdrop intensity="soft" className="bg-humanix-soft">
+        <section
+          aria-labelledby="hero-title"
+          className="max-w-5xl mx-auto px-4 pt-12 pb-10 sm:pt-16 sm:pb-12 text-center"
         >
-          <thead>
-            <tr>
-              <th className="bg-gray-50 dark:bg-slate-800 p-3 border text-left text-xs uppercase tracking-wide text-gray-600 dark:text-gray-300 sticky left-0 z-10">
-                Critère
-              </th>
-              <th className="bg-primary-500 text-white p-3 border text-sm">
-                Humanix Académie
-              </th>
-              {COMPETITORS.map((c) => (
-                <th
-                  key={c.key}
-                  className="bg-gray-50 dark:bg-slate-800 p-3 border text-sm"
+          <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
+            Transparence radicale · sans embellir
+          </p>
+          <h1
+            id="hero-title"
+            className="font-display text-4xl sm:text-6xl font-extrabold text-primary-500 dark:text-accent-300 leading-[1.05] mb-4 animate-slide-up"
+            style={{ animationDelay: "100ms" }}
+          >
+            Comparatif <span className="text-accent-500">honnête</span>.
+          </h1>
+          <p
+            className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed animate-slide-up"
+            style={{ animationDelay: "220ms" }}
+          >
+            On vous dit franchement ce qu'on fait mieux que nos concurrents,
+            ce qu'on fait équivalent, et ce qu'on apprend d'eux. Avec liens
+            vers leurs sites pour que vous vérifiiez par vous-même.
+          </p>
+
+          {/* Stats compactes (3 mini-cards animees) */}
+          <div className="grid sm:grid-cols-3 gap-3 max-w-3xl mx-auto mt-8 text-sm">
+            <div
+              className="rounded-2xl border-2 border-emerald-200 dark:border-emerald-900/40 bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/40 p-4 shadow-sm animate-slide-up"
+              style={{ animationDelay: "320ms" }}
+            >
+              <p className="text-3xl font-extrabold text-emerald-700 dark:text-emerald-300 tabular-nums">
+                {winsHumanix}
+              </p>
+              <p className="text-emerald-800 dark:text-emerald-200 font-medium">
+                avantages HumaniX
+              </p>
+            </div>
+            <div
+              className="rounded-2xl border-2 border-amber-200 dark:border-amber-900/40 bg-gradient-to-br from-amber-50 via-white to-yellow-50 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/40 p-4 shadow-sm animate-slide-up"
+              style={{ animationDelay: "420ms" }}
+            >
+              <p className="text-3xl font-extrabold text-amber-700 dark:text-amber-300 tabular-nums">
+                {equalHumanix}
+              </p>
+              <p className="text-amber-800 dark:text-amber-200 font-medium">
+                équivalences sereines
+              </p>
+            </div>
+            <div
+              className="rounded-2xl border-2 border-rose-200 dark:border-rose-900/40 bg-gradient-to-br from-rose-50 via-white to-amber-50 dark:from-slate-900 dark:via-slate-900 dark:to-rose-950/40 p-4 shadow-sm animate-slide-up"
+              style={{ animationDelay: "520ms" }}
+            >
+              <p className="text-3xl font-extrabold text-rose-700 dark:text-rose-300 tabular-nums">
+                {lossesHumanix}
+              </p>
+              <p className="text-rose-800 dark:text-rose-200 font-medium">
+                pistes d'amélioration assumées
+              </p>
+            </div>
+          </div>
+        </section>
+      </HexBackdrop>
+
+      <div className="max-w-7xl mx-auto px-4 py-10 space-y-10">
+        {/* ============================================================
+            2. ENGAGEMENT EDITORIAL + NOTE TRANSPARENCE
+            ============================================================ */}
+        <section className="grid md:grid-cols-2 gap-5">
+          <div
+            className="rounded-3xl border-2 border-primary-200 dark:border-primary-900/40 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-slate-900 dark:via-slate-900 dark:to-blue-950/40 p-6 shadow-sm animate-slide-up"
+            style={{ animationDelay: "100ms" }}
+          >
+            <h2 className="font-display text-xl font-extrabold text-primary-500 dark:text-accent-300 mb-2 flex items-center gap-2">
+              <span aria-hidden="true">📝</span>
+              <span>Notre engagement éditorial</span>
+            </h2>
+            <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
+              Cette page est mise à jour <strong>à chaque sortie produit majeure</strong>{" "}
+              — la nôtre comme celle des concurrents.{" "}
+              <strong>Refresh mai 2026 :</strong> Mantra a été racheté par Cyber
+              Guru (Italie) en mars 2025 — on a remplacé la colonne. On a aussi
+              ajouté <strong>Adaptive Security</strong> (US, $136M levés dont
+              Series B 81M en 2025 par Bain Capital, NVIDIA, OpenAI Fund, a16z),
+              le disrupteur AI-native du marché. Si vous voyez une information
+              inexacte, écrivez à{" "}
+              <a
+                href="mailto:contact@humanix-cybersecurity.fr"
+                className="text-accent-500 underline font-medium"
+              >
+                contact@humanix-cybersecurity.fr
+              </a>{" "}
+              : on corrige sous 7 jours et on cite votre signalement.
+            </p>
+          </div>
+
+          <div
+            className="rounded-3xl border-2 border-amber-200 dark:border-amber-900/40 bg-gradient-to-br from-amber-50 via-white to-yellow-50 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/40 p-6 shadow-sm animate-slide-up"
+            style={{ animationDelay: "200ms" }}
+          >
+            <h2 className="font-display text-xl font-extrabold text-amber-700 dark:text-amber-300 mb-2 flex items-center gap-2">
+              <span aria-hidden="true">🪟</span>
+              <span>Note transparence : modules pédagogiques</span>
+            </h2>
+            <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
+              Notre catalogue affiche 180 modules. À ce jour,{" "}
+              <strong>
+                {expertCount} épisode{expertCount > 1 ? "s ont" : " a"} un
+                scénario détaillé rédigé par un expert
+              </strong>{" "}
+              (badge 📝 sur{" "}
+              <Link href="/apprendre" className="text-accent-500 underline">
+                /apprendre
+              </Link>
+              ). Les autres utilisent un fallback structuré (questions, quiz,
+              débrief générique). C'est la même mécanique que chez la plupart
+              des concurrents listés, mais la plupart ne le disent pas. Cible
+              Q3 2026 : 30 modules expert sur les saisons critiques.
+            </p>
+          </div>
+        </section>
+
+        {/* ============================================================
+            3. LEGENDE — sereine et chaleureuse
+            ============================================================ */}
+        <section
+          aria-label="Légende des statuts"
+          className="grid sm:grid-cols-4 gap-3 text-xs"
+        >
+          {(
+            [
+              {
+                key: "win" as const,
+                label: "Avantage HumaniX",
+                hint: "On fait mieux que les concurrents listés.",
+              },
+              {
+                key: "equal" as const,
+                label: "Équivalent",
+                hint: "Performance comparable, choix sur d'autres critères.",
+              },
+              {
+                key: "loss" as const,
+                label: "Ce qu'on apprend d'eux",
+                hint: "Ils font mieux ici. On en tire des leviers d'amélioration.",
+              },
+              {
+                key: "na" as const,
+                label: "Non applicable",
+                hint: "Critère non pertinent ou non documenté.",
+              },
+            ] as const
+          ).map((legend, idx) => (
+            <div
+              key={legend.key}
+              className={`p-3 rounded-2xl border-2 ${STATUS_STYLE[legend.key]} animate-slide-up`}
+              style={{ animationDelay: `${idx * 60}ms` }}
+            >
+              <span className="font-bold flex items-center gap-1.5">
+                <span aria-hidden="true">{STATUS_ICON[legend.key]}</span>
+                <span>{legend.label}</span>
+              </span>
+              <p className="mt-1 leading-relaxed">{legend.hint}</p>
+            </div>
+          ))}
+        </section>
+
+        {/* ============================================================
+            4. CHAPITRES — chaque categorie devient un chapitre
+            avec son intro narratif et son tableau dedie.
+            ============================================================ */}
+        <section className="space-y-12 pt-2">
+          {CATEGORIES.map((cat, catIdx) => {
+            const meta = CATEGORY_META[cat];
+            const rows = ROWS.filter((r) => r.category === cat);
+            return (
+              <article
+                key={cat}
+                aria-labelledby={`cat-${catIdx}`}
+                className="animate-slide-up"
+                style={{ animationDelay: `${catIdx * 80}ms` }}
+              >
+                {/* En-tete chapitre */}
+                <div
+                  className={`rounded-3xl border-2 ${meta.palette.ring} bg-gradient-to-br ${meta.palette.bg} p-6 sm:p-8 shadow-sm mb-4`}
                 >
-                  <a
-                    href={c.site}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-accent-500 underline-offset-2 hover:underline"
-                  >
-                    {c.name}
-                    <span aria-hidden="true" className="text-xs ml-1">
-                      ↗
-                    </span>
-                    <span className="sr-only">
-                      {" "}
-                      (s'ouvre dans un nouvel onglet)
-                    </span>
-                  </a>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {CATEGORIES.map((cat) => (
-              <Fragment key={cat}>
-                <tr>
-                  <td
-                    colSpan={2 + COMPETITORS.length}
-                    className="bg-accent-50 dark:bg-accent-900/30 text-accent-700 dark:text-accent-300 font-bold text-xs uppercase tracking-wide p-2 border"
-                  >
-                    {cat}
-                  </td>
-                </tr>
-                {ROWS.filter((r) => r.category === cat).map((row, idx) => (
-                  <tr key={`${cat}-${idx}`}>
-                    <th
-                      scope="row"
-                      className="bg-white dark:bg-slate-900 p-3 border text-left text-sm font-medium text-gray-800 dark:text-gray-200 sticky left-0 z-10"
+                  <div className="flex items-start gap-4">
+                    <span
+                      aria-hidden="true"
+                      className="text-5xl sm:text-6xl shrink-0 select-none"
                     >
-                      {row.feature}
-                    </th>
-                    <StatusCell cell={row.humanix} isHumanix />
-                    {COMPETITORS.map((c) => (
-                      <StatusCell key={c.key} cell={row[c.key]} />
-                    ))}
-                  </tr>
-                ))}
-              </Fragment>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                      {meta.emoji}
+                    </span>
+                    <div className="flex-1">
+                      <p
+                        className={`text-[10px] uppercase tracking-[0.25em] font-bold ${meta.palette.accent} mb-1`}
+                      >
+                        Chapitre {catIdx + 1} · {rows.length} critère
+                        {rows.length > 1 ? "s" : ""}
+                      </p>
+                      <h2
+                        id={`cat-${catIdx}`}
+                        className={`font-display text-2xl sm:text-3xl font-extrabold ${meta.palette.accent} leading-tight mb-2`}
+                      >
+                        {cat}
+                      </h2>
+                      <p className="text-sm sm:text-base text-gray-700 dark:text-gray-200 leading-relaxed italic">
+                        {meta.intro}
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
-      {/* Légende */}
-      <div className="grid sm:grid-cols-4 gap-3 text-xs mb-12">
-        <div className={`p-3 rounded border ${STATUS_STYLE.win}`}>
-          <span className="font-bold">✓ Avantage HumaniX</span>
-          <p className="mt-1">On fait mieux que les concurrents listés.</p>
-        </div>
-        <div className={`p-3 rounded border ${STATUS_STYLE.equal}`}>
-          <span className="font-bold">≈ Équivalent</span>
-          <p className="mt-1">
-            Performance comparable, choix sur d'autres critères.
-          </p>
-        </div>
-        <div className={`p-3 rounded border ${STATUS_STYLE.loss}`}>
-          <span className="font-bold">− Avantage concurrent</span>
-          <p className="mt-1">On reconnait : ils font mieux sur ce point.</p>
-        </div>
-        <div className={`p-3 rounded border ${STATUS_STYLE.na}`}>
-          <span className="font-bold">· Non applicable</span>
-          <p className="mt-1">Critère non pertinent ou non documenté.</p>
-        </div>
-      </div>
+                {/* Tableau du chapitre */}
+                <div className="overflow-x-auto rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm">
+                  <table
+                    className="w-full border-collapse min-w-[1100px] bg-white dark:bg-slate-900"
+                    aria-label={`Comparatif Humanix Académie versus concurrents — ${cat}`}
+                  >
+                    <thead>
+                      <tr>
+                        <th className="bg-gray-50 dark:bg-slate-800 p-3 border text-left text-xs uppercase tracking-wide text-gray-600 dark:text-gray-300 sticky left-0 z-10">
+                          Critère
+                        </th>
+                        <th className="bg-primary-500 text-white p-3 border text-sm">
+                          Humanix Académie
+                        </th>
+                        {COMPETITORS.map((c) => (
+                          <th
+                            key={c.key}
+                            className="bg-gray-50 dark:bg-slate-800 p-3 border text-sm"
+                          >
+                            <a
+                              href={c.site}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="hover:text-accent-500 underline-offset-2 hover:underline"
+                            >
+                              {c.name}
+                              <span aria-hidden="true" className="text-xs ml-1">
+                                ↗
+                              </span>
+                              <span className="sr-only">
+                                {" "}
+                                (s'ouvre dans un nouvel onglet)
+                              </span>
+                            </a>
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <Fragment>
+                        {rows.map((row, idx) => (
+                          <tr key={`${cat}-${idx}`}>
+                            <th
+                              scope="row"
+                              className="bg-white dark:bg-slate-900 p-3 border text-left text-sm font-medium text-gray-800 dark:text-gray-200 sticky left-0 z-10"
+                            >
+                              {row.feature}
+                            </th>
+                            <StatusCell cell={row.humanix} isHumanix />
+                            {COMPETITORS.map((c) => (
+                              <StatusCell key={c.key} cell={row[c.key]} />
+                            ))}
+                          </tr>
+                        ))}
+                      </Fragment>
+                    </tbody>
+                  </table>
+                </div>
+              </article>
+            );
+          })}
+        </section>
 
-      {/* Notre lecture */}
-      <div className="card mb-10">
-        <h2 className="text-2xl font-bold text-primary-500 mb-4">
-          Notre lecture stratégique (mai 2026)
-        </h2>
-        <div className="space-y-4 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-          <p>
-            <strong className="text-primary-500">
-              Là où nous gagnons structurellement
-            </strong>{" "}
-            (souveraineté FR end-to-end, AGPLv3 auditable, écosystème connecteurs
-            FR/UE, marketplace ouverte, accessibilité, programme famille, pack
-            NIS2 par-tenant, MCP server premier mover) : ces choix sont
-            structurels, difficiles à copier rapidement par des acteurs
-            internationaux focalisés sur le mid-market US.
+        {/* ============================================================
+            5. NOTRE LECTURE STRATEGIQUE — version cosy
+            ============================================================ */}
+        <section
+          aria-labelledby="lecture-title"
+          className="rounded-3xl border-2 border-primary-200 dark:border-primary-900/40 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-slate-900 dark:via-slate-900 dark:to-blue-950/40 p-6 sm:p-10 shadow-sm animate-slide-up"
+          style={{ animationDelay: "100ms" }}
+        >
+          <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
+            Lecture stratégique · mai 2026
           </p>
-          <p>
-            <strong className="text-primary-500">
-              Là où ils gagnent (acteurs historiques)
-            </strong>{" "}
-            (volume catalogue, plugin Outlook mature, agent IA orchestrateur,
-            simulation smishing/voice native, SAML/SCIM enterprise) : ces écarts
-            sont réels mais ne sont pas bloquants pour une PME de moins de
-            250 personnes. Nous comblons progressivement (vishing souverain
-            MVP livré pour mai 2026 sur /admin/vishing, audit RGAA cabinet à
-            venir, Qualiopi en cours).
-          </p>
-          <p>
-            <strong className="text-primary-500">
-              Le vrai disrupteur 2026 — Adaptive Security
-            </strong>{" "}
-            (US, $136M levés en moins de 2 ans, premier investissement cyber
-            d'OpenAI) ne joue pas dans la même catégorie tarifaire ni
-            réglementaire. Pour une organisation française soumise à NIS2 ou
-            DORA, le Cloud Act sur leur stack OpenAI/AWS US reste un signal
-            rouge. Nous offrons une alternative AI-native souveraine : Mistral
-            (Paris) + Piper TTS (local) + Scaleway (Paris) — la <em>seule</em>{" "}
-            stack 100 % FR/UE pour les attaques voice deepfake.
-          </p>
-          <p>
-            <strong className="text-primary-500">Notre conviction</strong> :
-            pour une PME française qui démarre une démarche cyber, payer 5 à 10
-            fois moins cher pour 80 % des fonctionnalités utiles — et bénéficier
-            d'un accompagnement humain plutôt que d'un support tier-3 anglophone
-            — est le bon arbitrage. Pour une ETI multi-pays avec besoins
-            SSO/SCIM lourds, les acteurs historiques restent plus adaptés.
-            Pour une organisation soumise à NIS2/DORA qui veut garder ses
-            preuves dans l'UE, nous sommes seuls sur ce créneau combiné cyber +
-            humain + souverain.
-          </p>
-        </div>
-      </div>
-
-      {/* CTA */}
-      <div className="card bg-gradient-to-br from-primary-500 to-accent-500 text-white text-center">
-        <h2 className="text-2xl sm:text-3xl font-extrabold mb-3">
-          Pas convaincu·e par notre version ?
-        </h2>
-        <p className="opacity-90 mb-6 max-w-xl mx-auto">
-          Faites votre propre comparaison. Démarrez 14 jours gratuits, sans
-          carte bancaire, et confrontez Humanix Académie à vos critères réels.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link
-            href="/connexion"
-            className="bg-white text-primary-500 font-bold px-6 py-3 rounded-2xl hover:scale-105 transition shadow-lg"
+          <h2
+            id="lecture-title"
+            className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-5 leading-tight"
           >
-            Démarrer mes 14 jours gratuits
-          </Link>
-          <Link
-            href="/audit-flash"
-            className="bg-white/10 backdrop-blur border border-white/40 text-white font-bold px-6 py-3 rounded-2xl hover:bg-white/20 transition"
+            Ce que ces lignes racontent vraiment.
+          </h2>
+          <div className="space-y-4 text-sm sm:text-base text-gray-700 dark:text-gray-200 leading-relaxed">
+            <p>
+              <strong className="text-primary-500 dark:text-accent-300">
+                Là où nous gagnons structurellement
+              </strong>{" "}
+              — souveraineté FR end-to-end, AGPLv3 auditable, écosystème
+              connecteurs FR/UE, marketplace ouverte, accessibilité, programme
+              famille, pack NIS2 par-tenant, MCP server premier mover. Ces
+              choix sont structurels, difficiles à copier rapidement par des
+              acteurs internationaux focalisés sur le mid-market US.
+            </p>
+            <p>
+              <strong className="text-primary-500 dark:text-accent-300">
+                Ce qu'on apprend des acteurs historiques
+              </strong>{" "}
+              — volume catalogue, plugin Outlook mature, agent IA orchestrateur,
+              simulation smishing/voice native, SAML/SCIM enterprise. Ces
+              écarts sont réels mais ne sont pas bloquants pour une PME de
+              moins de 250 personnes. On comble progressivement (vishing
+              souverain MVP livré, audit RGAA cabinet à venir, Qualiopi en
+              cours).
+            </p>
+            <p>
+              <strong className="text-primary-500 dark:text-accent-300">
+                Le vrai disrupteur 2026 — Adaptive Security
+              </strong>{" "}
+              (US, $136M levés en moins de 2 ans, premier investissement cyber
+              d'OpenAI) ne joue pas dans la même catégorie tarifaire ni
+              réglementaire. Pour une organisation française soumise à NIS2 ou
+              DORA, le Cloud Act sur leur stack OpenAI/AWS US reste un signal
+              rouge. On offre une alternative AI-native souveraine : Mistral
+              (Paris) + Piper TTS (local) + Scaleway (Paris) — la <em>seule</em>{" "}
+              stack 100 % FR/UE pour les attaques voice deepfake.
+            </p>
+            <p>
+              <strong className="text-primary-500 dark:text-accent-300">
+                Notre conviction
+              </strong>{" "}
+              — pour une PME française qui démarre une démarche cyber, payer 5
+              à 10 fois moins cher pour 80 % des fonctionnalités utiles, et
+              bénéficier d'un accompagnement humain plutôt que d'un support
+              tier-3 anglophone, est le bon arbitrage. Pour une ETI multi-pays
+              avec besoins SSO/SCIM lourds, les acteurs historiques restent
+              plus adaptés. Pour une organisation soumise à NIS2/DORA qui veut
+              garder ses preuves dans l'UE, on est seuls sur ce créneau combiné
+              cyber + humain + souverain.
+            </p>
+          </div>
+        </section>
+
+        {/* ============================================================
+            6. CTA FINAL — invitation cosy (pas "14 jours gratuits")
+            ============================================================ */}
+        <section
+          aria-labelledby="cta-title"
+          className="relative rounded-3xl bg-gradient-to-br from-primary-500 via-primary-600 to-accent-500 text-white text-center p-8 sm:p-12 shadow-xl overflow-hidden animate-slide-up"
+          style={{ animationDelay: "100ms" }}
+        >
+          <div
+            aria-hidden="true"
+            className="absolute -top-12 -right-8 text-[180px] opacity-10 select-none pointer-events-none rotate-12"
           >
-            Faire l'audit flash gratuit (5 min)
-          </Link>
-        </div>
+            🔍
+          </div>
+          <p className="text-xs uppercase tracking-[0.25em] font-bold opacity-80 mb-2 relative">
+            À votre tour
+          </p>
+          <h2
+            id="cta-title"
+            className="font-display text-3xl sm:text-4xl font-extrabold mb-3 leading-tight relative"
+          >
+            Faites votre propre comparaison.
+          </h2>
+          <p className="opacity-90 mb-6 max-w-xl mx-auto text-base sm:text-lg leading-relaxed relative">
+            Aucun comparatif ne remplace votre intuition de terrain. Ouvrez
+            notre démo, regardez ce qui vous parle, confrontez avec vos
+            critères réels — et écrivez-nous si on s'est trompé quelque part.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center relative">
+            <Link
+              href="/connexion"
+              className="bg-white text-primary-500 font-bold px-6 py-3 rounded-2xl hover:scale-105 transition shadow-lg"
+            >
+              Ouvrir une démo (sans carte)
+            </Link>
+            <Link
+              href="/audit-flash"
+              className="bg-white/10 backdrop-blur border border-white/40 text-white font-bold px-6 py-3 rounded-2xl hover:bg-white/20 transition"
+            >
+              Photo claire de la maturité (5 min)
+            </Link>
+          </div>
+        </section>
+
+        {/* ============================================================
+            7. CITATION FINALE — signature cosy "Hex veille"
+            ============================================================ */}
+        <section className="text-center pt-8 pb-4">
+          <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            « La transparence n'est pas une faiblesse commerciale — c'est la
+            seule manière sérieuse de parler de cyber. On préfère perdre un
+            prospect honnêtement que le gagner sur un malentendu. »
+          </blockquote>
+          <p
+            aria-hidden="true"
+            className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
+          >
+            — Hex veille
+          </p>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }
