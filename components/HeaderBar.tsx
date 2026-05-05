@@ -252,6 +252,13 @@ export default function HeaderBar() {
         ) : (
           <div className="flex items-center gap-2">
             <Link
+              href="/urgence-cyber"
+              className="hidden md:inline text-sm text-amber-700 hover:text-amber-800 dark:text-amber-300 dark:hover:text-amber-200 font-medium"
+              title="Hub d'urgence cyber : que faire en cas d'incident"
+            >
+              🚨 Urgence
+            </Link>
+            <Link
               href="/famille"
               className="hidden sm:inline text-sm text-pink-600 hover:text-pink-700 font-medium"
             >
