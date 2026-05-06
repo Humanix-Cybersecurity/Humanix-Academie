@@ -1,0 +1,165 @@
+---
+title: "Detecter un texte/image genere par IA"
+durationMinutes: 7
+persona: "tous"
+objective: "Acquerir les reflexes de detection des contenus IA dans son flux quotidien"
+xpReward: 60
+scenario: |
+  Tu es responsable communication d'une PME. Tu recois sur LinkedIn un message direct d'un "ancien collegue" :
+
+  "Bonjour ! Ca fait des annees, j'espere que tu vas bien. Je travaille maintenant sur un projet passionnant et je pense que ton expertise serait precieuse. Je serais ravi qu'on echange autour d'un cafe la semaine prochaine. Es-tu disponible mardi a 14h ?"
+
+  Tu ne te souviens pas tres bien de cette personne, mais le message semble naturel. Le profil LinkedIn est complet (photo, parcours, 200+ connexions). Quels signaux te font dire "c'est peut-etre genere par IA" ?
+choices:
+  - id: "a"
+    label: "Aucun signal — le message a l'air totalement naturel"
+    outcome: "bad"
+    feedback: "Trop confiant. Plusieurs signaux discrets sont presents : lexique neutre/generique, absence de detail personnel concret, tournures parfaitement polies. Indices d'IA generative."
+    points: -10
+  - id: "b"
+    label: "Lexique trop neutre, absence de detail concret, ton uniformement poli — pattern classique d'un message genere par IA dans le cadre d'une attaque social engineering"
+    outcome: "good"
+    feedback: "Excellent. Tu as les bons reflexes : detection de la 'neutralite generique' typique des messages IA. Le test ultime : demander un detail specifique que seul le vrai ancien collegue saurait."
+    points: 30
+  - id: "c"
+    label: "Le profil a 200+ connexions, donc c'est legitime"
+    outcome: "bad"
+    feedback: "Le nombre de connexions LinkedIn ne prouve rien — les comptes deepfake / synthetiques ont souvent 200-500 connexions automatiques + photo IA. C'est devenu trivial a generer."
+    points: -10
+  - id: "d"
+    label: "Je reponds avec un detail volontairement faux (un evenement qui n'a pas eu lieu) pour voir si la personne corrige ou continue dans le flou"
+    outcome: "good"
+    feedback: "Reflexe excellent — le 'piege detail'. Une vraie personne corrige : 'Mais non, c'etait pas en 2019 c'etait 2018 !'. Une IA scammeur continue dans le flou : 'Ah oui, bons souvenirs !'."
+    points: 25
+debrief: |
+  Detecter un contenu genere par IA est devenu **un reflexe critique** en 2026. Que ce soit du texte (email, message), de l'image (photo profil), de l'audio (deepfake vocal) ou de la video (deepfake face) — l'IA generative a brouille les pistes.
+
+  **Detection texte — les signaux faibles :**
+
+  **1. Lexique trop neutre / generique**
+  Les LLM ont une distribution lexicale qui evite les extremes. Pas trop familier, pas trop technique. Comme un communique de presse.
+
+  ❌ "Ca fait des annees, j'espere que tu vas bien"
+  ✅ Vraie personne : "Putain ca fait combien ? 5 ans ? J'ai un peu honte de pas avoir donne signe..."
+
+  **2. Absence de detail concret / personnel**
+  Une IA n'invente pas de details (sauf si on lui demande explicitement). Les messages IA restent vagues sur les referentiels communs.
+
+  ❌ "Notre rencontre m'a beaucoup marque"
+  ✅ Vraie personne : "Je me souviens encore de cette presentation que tu avais faite en 2019 sur les microservices, j'en ai fait reusite avec mon equipe"
+
+  **3. Tournures uniformement polies / structurees**
+  Les IA aiment les structures parfaites : intro + corps + conclusion. Les humains font des typos, des relances, oublient le ".".
+
+  ❌ "Bonjour, [...] je serais ravi qu'on echange [...]. Es-tu disponible mardi a 14h ?"
+  ✅ Vraie personne : "Hey, t'aurais 30 min cette semaine ? J'ai un truc a te raconter, c'est rapide"
+
+  **4. Absence de typo, ponctuation parfaite**
+  Les IA generatives produisent un francais quasi-parfait. Les humains font des typos, surtout sur mobile.
+
+  **5. Introduction surcalibree**
+  Les LLM sont entraines a etre polis et structures. Ils ouvrent souvent par une formule generique et ferment de la meme facon.
+
+  **Le test du detail piege**
+
+  La meilleure facon de demasquer une IA dans une conversation : envoyer un detail volontairement faux ou ambigu et voir si l'autre corrige.
+
+  Toi : "Tiens je me souviens de toi, c'est bien toi qui etait au seminaire de Marseille en 2018 ?"
+
+  - Vraie personne (qui n'y etait pas) : "Hein ? Non c'etait pas moi, je n'ai jamais ete a Marseille pour le boulot"
+  - IA scammeur : "Ah oui ! Beaux souvenirs, c'etait une belle epoque" (continue dans le flou)
+
+  ---
+
+  **Detection image — les signaux faibles :**
+
+  **1. Yeux asymetriques, reflets etranges**
+  Les modeles d'image (StyleGAN, Stable Diffusion, DALL-E, Midjourney) ont fait des progres mais peuvent encore avoir des micro-imperfections sur les yeux : reflets differents, pupilles legerement dissymetriques.
+
+  **2. Mains, oreilles, dents**
+  Les "extremites" sont les plus difficiles a generer. Mains avec 6 doigts, oreilles fusionnees au visage, dents etrangement alignees.
+
+  **3. Bijoux et accessoires deformes**
+  Une chaine en or qui se coupe en deux, des lunettes asymetriques, un cordon de capuche qui disparait dans le cou.
+
+  **4. Arriere-plan absurde ou flouté de maniere uniforme**
+  Souvent flouté de maniere homogene (pas de profondeur de champ realiste). Parfois des objets qui n'ont pas de sens.
+
+  **5. Recherche image inversee (Google Images, TinEye)**
+  Si l'image n'apparait NULLE PART ailleurs sur le web, c'est suspect. Les vraies personnes ont des photos qui apparaissent sur des reseaux sociaux, des sites pro, etc.
+
+  ---
+
+  **Detection audio (vishing) — cf. saison fraude-president 04**
+
+  - Latence de 1-2 secondes avant la reponse
+  - Respiration absente ou robotique
+  - Bruit de fond trop propre ou inexistant
+  - Difficultes sur les questions imprevues
+  - Voir module dedie : `/saisons/fraude-president/04-deepfake-vocal`
+
+  ---
+
+  **Detection video (deepfake face)**
+
+  - Clignements anormaux (trop rares ou trop reguliers)
+  - Eclairage asymetrique entre visage et arriere-plan
+  - Bords du visage flous/glitchy en mouvement rapide
+  - Synchronisation labiale imparfaite sur certaines syllabes
+  - Cas Arup HK 25 M$ (fevrier 2024) : video deepfake sur DAF + collegues
+
+  ---
+
+  **Outils de detection (2026, etat de l'art)**
+
+  - **Hive Moderation**, **Reality Defender**, **Sensity AI** : detection multi-modale (texte/image/audio/video)
+  - **GPTZero**, **Originality.AI** : detection texte (plus fragile, beaucoup de faux positifs/negatifs)
+  - **C2PA** (Content Authenticity Initiative) : standard de provenance pour les medias — cherche le badge officiel sur les images legitimes
+
+  **Mais en 2026 :** aucun outil n'est fiable a 100 %. La defense reste **principalement humaine** : skepticisme, recoupement, verification multi-canal.
+quiz:
+  - question: "Le 'test du detail piege' consiste a :"
+    choices:
+      - id: "a"
+        label: "Envoyer un detail volontairement faux et voir si l'autre corrige (vrai humain) ou continue dans le flou (IA)"
+        correct: true
+      - id: "b"
+        label: "Demander un mot de passe partage"
+        correct: false
+      - id: "c"
+        label: "Poser une question philosophique"
+        correct: false
+    explanation: "Une IA generative continue dans le flou face a un detail invente ou faux. Une vraie personne corrige spontanement. C'est le test le plus fiable en conversation 2026."
+
+  - question: "Le signal le plus fiable pour detecter un message texte genere par IA est :"
+    choices:
+      - id: "a"
+        label: "L'absence de typo / ponctuation parfaite"
+        correct: false
+      - id: "b"
+        label: "L'absence de detail concret personnel + lexique uniformement neutre"
+        correct: true
+      - id: "c"
+        label: "La longueur du message"
+        correct: false
+    explanation: "Les LLM produisent un francais propre mais sans details concrets et avec un lexique neutre. Une vraie personne mentionne des elements specifiques (lieux, dates, anecdotes)."
+
+  - question: "Aucun outil de detection IA n'est fiable a 100 % en 2026 — la defense est :"
+    choices:
+      - id: "a"
+        label: "Principalement humaine : skepticisme, recoupement, verification multi-canal"
+        correct: true
+      - id: "b"
+        label: "Acheter un detecteur premium"
+        correct: false
+      - id: "c"
+        label: "Ne plus communiquer du tout"
+        correct: false
+    explanation: "Les outils de detection ont un taux d'erreur de 10-30 % en 2026. La defense durable reste humaine : poser des questions imprevues, verifier sur plusieurs canaux, demander des details specifiques."
+---
+
+## Pour aller plus loin
+
+L'IA generative a fait basculer un equilibre vieux de 30 ans : l'image et le texte etaient des preuves. Ce n'est plus le cas. La preuve devient la **chaine de provenance** (C2PA), la **verification multi-canal**, et le **scepticisme par defaut**. Ce n'est pas pessimiste — c'est lucide.
+
+> "Avant, on croyait ce qu'on voyait. Aujourd'hui, on verifie ce qu'on voit. Demain, on verifiera qu'on a bien verifie."
