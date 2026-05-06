@@ -1,17 +1,29 @@
 {
   "name": "Humanix Académie",
   "short_name": "Humanix",
-  "description": "Humanix Académie, par Humanix-Cybersecurity. Cybersécurité ludique pour PME : modules de 5 minutes, mascotte évolutive, librairie.",
+  "description": "Plateforme française open source AGPLv3 de cybersensibilisation pour PME. 48 modules pédagogiques experts, gamification, mascotte évolutive, hébergement souverain Paris.",
   "start_url": "/apprendre",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#000000",
+  "background_color": "#ffffff",
   "theme_color": "#0B3D91",
   "lang": "fr",
   "dir": "ltr",
-  "categories": ["education", "productivity", "business"],
+  "categories": ["education", "productivity", "business", "security"],
   "icons": [
+    {
+      "src": "/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
     {
       "src": "/logo-humanix-academie-192.png",
       "sizes": "192x192",
@@ -30,18 +42,53 @@
       "name": "Apprendre",
       "short_name": "Apprendre",
       "url": "/apprendre",
-      "description": "Reprendre mon parcours"
+      "description": "Reprendre mon parcours pédagogique",
+      "icons": [
+        {
+          "src": "/logo-humanix-academie-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     },
     {
       "name": "Librairie",
       "short_name": "Librairie",
       "url": "/librairie",
-      "description": "Articles micro-learning"
+      "description": "Articles micro-learning",
+      "icons": [
+        {
+          "src": "/logo-humanix-academie-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Démo",
+      "short_name": "Démo",
+      "url": "/demo",
+      "description": "Tester la plateforme sans inscription",
+      "icons": [
+        {
+          "src": "/logo-humanix-academie-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     },
     {
       "name": "Mon profil",
       "short_name": "Profil",
-      "url": "/profil"
+      "url": "/profil",
+      "icons": [
+        {
+          "src": "/logo-humanix-academie-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
-  ]
+  ],
+  "prefer_related_applications": false
 }
