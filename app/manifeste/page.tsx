@@ -305,7 +305,7 @@ export default function ManifestePage() {
               delay={80}
               emoji="🇫🇷"
               title="Souverain par défaut"
-              text="Scaleway Paris. Mistral. Resend UE. Piper TTS local. Aucune dépendance Cloud Act US. Conforme RGPD et NIS2 nativement."
+              text="Scaleway Paris. Mistral. Scaleway TEM UE. Piper TTS local. Aucune dépendance Cloud Act US. Conforme RGPD et NIS2 nativement."
             />
             <Pilier
               delay={160}

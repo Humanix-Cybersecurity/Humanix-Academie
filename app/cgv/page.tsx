@@ -507,7 +507,7 @@ export default function CGVPage() {
             facturation ;
           </li>
           <li>
-            <strong>Resend</strong> (UE, clauses contractuelles types) — emails
+            <strong>Scaleway TEM</strong> (UE, clauses contractuelles types) — emails
             transactionnels (lien magique de connexion, alertes système).
           </li>
         </ul>

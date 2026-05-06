@@ -89,14 +89,14 @@ function escapeHtml(s: string): string {
 }
 
 /**
- * Envoi via Resend ou simulation DEMO_MODE.
+ * Envoi via la facade lib/email (Scaleway TEM par defaut, FR).
  */
 export async function sendFamilyInviteEmail(args: {
   to: string;
   ctx: FamilyInviteEmailContext;
 }): Promise<{ ok: boolean; simulated?: boolean; error?: string }> {
-  const isDemo =
-    process.env.DEMO_MODE === "true" || !process.env.RESEND_API_KEY;
+  const { sendEmail, isEmailConfigured } = await import("@/lib/email");
+  const isDemo = process.env.DEMO_MODE === "true" || !isEmailConfigured();
   const fromEmail = process.env.EMAIL_FROM ?? "hex@humanix-cybersecurity.fr";
 
   const subject = buildFamilyInviteSubject(args.ctx);
@@ -108,15 +108,16 @@ export async function sendFamilyInviteEmail(args: {
   }
 
   try {
-    const { Resend } = await import("resend");
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    await resend.emails.send({
+    const sendRes = await sendEmail({
       from: fromEmail,
       to: args.to,
       subject,
       html,
       text,
     });
+    if (!sendRes.ok) {
+      return { ok: false, error: sendRes.reason };
+    }
     return { ok: true };
   } catch (e: any) {
     return { ok: false, error: String(e?.message ?? e).slice(0, 200) };
