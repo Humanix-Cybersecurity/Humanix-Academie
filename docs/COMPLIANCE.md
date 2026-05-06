@@ -52,12 +52,20 @@ guidée pour notifier la CNIL en 72h conformément à l'article 33.
 
 ### Sous-traitants (article 28)
 
-| Sous-traitant | Localisation | Données traitées |
-|---|---|---|
-| Resend (emails) | UE (Allemagne) | Email + nom des destinataires |
-| Stripe (paiement) | UE (Irlande) | Email facturation + nom organisation |
-| Mistral AI (IA) | France (Paris) | Contexte phishing/vishing (anonymisé) |
-| Postgres (BDD) | À la charge de l'opérateur self-host | Toutes les données utilisateur |
+Statut au démarrage : **aucun sous-traitant tiers** activé. Les modules
+ci-dessous sont disponibles dans le code mais désactivés tant que les
+variables d'env correspondantes ne sont pas posées.
+
+| Sous-traitant | Localisation | Données traitées | Statut |
+|---|---|---|---|
+| Payplug (paiement) | **France** (Paris, Natixis/BPCE) | Email facturation + nom organisation | activable via `PAYPLUG_SECRET_KEY` |
+| Resend (emails) | UE (Allemagne) | Email + nom des destinataires | activable via `RESEND_API_KEY` |
+| Mistral AI (IA) | France (Paris) | Contexte phishing/vishing (anonymisé) | activable via `MISTRAL_API_KEY` |
+| Postgres (BDD) | À la charge de l'opérateur self-host | Toutes les données utilisateur | requis |
+
+**Politique** : préférence pour les acteurs FR/UE. Avant l'activation
+de tout sous-traitant, signer son DPA (action A22) et mettre à jour
+`/confidentialite`.
 
 ## 2. NIS2
 
