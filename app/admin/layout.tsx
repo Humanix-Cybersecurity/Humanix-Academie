@@ -36,7 +36,12 @@ export default async function AdminLayout({
   const session = await auth();
   if (!session?.user) redirect("/connexion");
   const role = session.user!.role;
-  if (role !== "ADMIN" && role !== "MANAGER" && role !== "SUPERADMIN") {
+  if (
+    role !== "ADMIN" &&
+    role !== "MANAGER" &&
+    role !== "RSSI" &&
+    role !== "SUPERADMIN"
+  ) {
     redirect("/apprendre");
   }
 

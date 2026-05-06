@@ -2,13 +2,10 @@
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// UsersTable — Table de gestion des collaborateurs (refonte mai 2026).
-//
-// Modifications vs version précédente :
-//   - Suppression de la colonne avatar 1-lettre (visuellement bruyant pour rien)
-//   - Actions "Suspendre/Réactiver" et "Supprimer" remplacées par des icônes
-//     compactes (Pause/Play + Trash) avec tooltip + aria-label pour a11y
-//   - Hover row plus subtil (gray-50 au lieu de primary-50)
+// UsersTable — Table de gestion des collaborateurs.
+//   - Colonnes : nom/email, role (avec RSSI), service, groupes, 2FA, statut.
+//   - Actions : suspendre, supprimer, forcer 2FA, deverrouiller, reset 2FA,
+//               assigner aux groupes (drawer).
 // =============================================================================
 
 import { useTransition, useState } from "react";
@@ -17,7 +14,18 @@ import {
   toggleUserActive,
   changeUserRole,
   deleteUser,
+  forceUserMfa,
+  unlockUser,
+  adminResetUserMfa,
+  setUserGroups,
 } from "@/app/admin/actions";
+
+type GroupOpt = {
+  id: string;
+  name: string;
+  emoji: string;
+  color: string | null;
+};
 
 type U = {
   id: string;
@@ -32,27 +40,44 @@ type U = {
   totalEpisodes: number;
   xp: number;
   lastActivity: string | null;
+  mfaEnabled: boolean;
+  mfaForced: boolean;
+  isLocked: boolean;
+  hasPassword: boolean;
+  groupIds: string[];
+  groupBadges: GroupOpt[];
 };
 
 const ROLE_LABEL: Record<string, { label: string; emoji: string }> = {
   LEARNER: { label: "Apprenant", emoji: "🎓" },
   MANAGER: { label: "Manager", emoji: "👔" },
-  ADMIN: { label: "Admin", emoji: "🛡️" },
-  SUPERADMIN: { label: "Super-Admin", emoji: "⚙️" },
+  RSSI: { label: "RSSI", emoji: "🛡️" },
+  ADMIN: { label: "Admin", emoji: "⚙️" },
+  SUPERADMIN: { label: "Super-Admin", emoji: "⭐" },
 };
 
-export default function UsersTable({ users }: { users: U[] }) {
+export default function UsersTable({
+  users,
+  allGroups,
+}: {
+  users: U[];
+  allGroups: GroupOpt[];
+}) {
   const [pending, startTransition] = useTransition();
   const [busy, setBusy] = useState<string | null>(null);
   const [filter, setFilter] = useState("");
+  const [filterGroup, setFilterGroup] = useState<string>("");
+  const [groupDrawer, setGroupDrawer] = useState<U | null>(null);
 
   const filtered = users.filter((u) => {
+    if (filterGroup && !u.groupIds.includes(filterGroup)) return false;
     if (!filter) return true;
     const t = filter.toLowerCase();
     return (
       u.name.toLowerCase().includes(t) ||
       u.email.toLowerCase().includes(t) ||
-      (u.service ?? "").toLowerCase().includes(t)
+      (u.service ?? "").toLowerCase().includes(t) ||
+      u.groupBadges.some((g) => g.name.toLowerCase().includes(t))
     );
   });
 
@@ -111,16 +136,87 @@ export default function UsersTable({ users }: { users: U[] }) {
     });
   };
 
+  const onForceMfa = (u: U) => {
+    setBusy(u.id);
+    startTransition(async () => {
+      try {
+        await forceUserMfa(u.id, !u.mfaForced);
+      } catch {
+        alert("Action impossible.");
+      }
+      setBusy(null);
+    });
+  };
+
+  const onUnlock = (u: U) => {
+    setBusy(u.id);
+    startTransition(async () => {
+      try {
+        await unlockUser(u.id);
+      } catch {
+        alert("Action impossible.");
+      }
+      setBusy(null);
+    });
+  };
+
+  const onResetMfa = (u: U) => {
+    if (
+      !confirm(
+        `Réinitialiser la 2FA de ${u.name} ? Le secret et les codes de secours seront effacés ; l'utilisateur devra reconfigurer.`,
+      )
+    ) {
+      return;
+    }
+    setBusy(u.id);
+    startTransition(async () => {
+      try {
+        await adminResetUserMfa(u.id);
+      } catch {
+        alert("Action impossible.");
+      }
+      setBusy(null);
+    });
+  };
+
+  const onSaveGroups = (userId: string, groupIds: string[]) => {
+    setBusy(userId);
+    startTransition(async () => {
+      try {
+        await setUserGroups(userId, groupIds);
+        setGroupDrawer(null);
+      } catch {
+        alert("Action impossible.");
+      }
+      setBusy(null);
+    });
+  };
+
   return (
     <>
-      <div className="mb-4">
+      <div className="mb-4 grid sm:grid-cols-[1fr_auto] gap-2">
         <input
           type="search"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          placeholder="Rechercher par nom, email ou service…"
+          placeholder="Rechercher par nom, email, service ou groupe…"
           className="w-full rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 focus:border-accent-500 focus:outline-none transition text-sm"
         />
+        {allGroups.length > 0 && (
+          <select
+            value={filterGroup}
+            onChange={(e) => setFilterGroup(e.target.value)}
+            className="rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-sm"
+            aria-label="Filtrer par groupe"
+          >
+            <option value="">Tous les groupes</option>
+            {allGroups.map((g) => (
+              <option key={g.id} value={g.id}>
+                {g.emoji} {g.name}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
       <div className="overflow-x-auto">
@@ -134,7 +230,10 @@ export default function UsersTable({ users }: { users: U[] }) {
                 Rôle
               </th>
               <th scope="col" className="pb-2.5 font-medium text-xs">
-                Service
+                Groupes
+              </th>
+              <th scope="col" className="pb-2.5 font-medium text-xs">
+                Sécurité
               </th>
               <th scope="col" className="pb-2.5 font-medium text-xs">
                 Progression
@@ -166,7 +265,6 @@ export default function UsersTable({ users }: { users: U[] }) {
                       : "hover:bg-gray-50/60 dark:hover:bg-slate-800/30"
                   } ${!u.isActive ? "opacity-60" : ""}`}
                 >
-                  {/* Collaborateur — sans avatar 1-lettre, juste nom + email */}
                   <td className="py-3 pr-3 min-w-0">
                     <p className="font-semibold text-gray-900 dark:text-gray-100 truncate">
                       {u.name}
@@ -181,7 +279,6 @@ export default function UsersTable({ users }: { users: U[] }) {
                     </p>
                   </td>
 
-                  {/* Rôle */}
                   <td className="py-3 pr-3">
                     <select
                       value={u.role}
@@ -198,12 +295,74 @@ export default function UsersTable({ users }: { users: U[] }) {
                     </select>
                   </td>
 
-                  {/* Service */}
-                  <td className="py-3 pr-3 text-gray-600 dark:text-gray-400 truncate max-w-[140px]">
-                    {u.service ?? "—"}
+                  <td className="py-3 pr-3 max-w-[200px]">
+                    <div className="flex items-center gap-1 flex-wrap">
+                      {u.groupBadges.length === 0 && (
+                        <span className="text-xs text-gray-400 italic">
+                          aucun
+                        </span>
+                      )}
+                      {u.groupBadges.slice(0, 3).map((g) => (
+                        <span
+                          key={g.id}
+                          className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-medium"
+                          style={{
+                            background: g.color ? g.color + "22" : "#f3f4f6",
+                            color: g.color ?? "#374151",
+                          }}
+                          title={g.name}
+                        >
+                          <span aria-hidden="true">{g.emoji}</span>
+                          <span className="truncate max-w-[80px]">
+                            {g.name}
+                          </span>
+                        </span>
+                      ))}
+                      {u.groupBadges.length > 3 && (
+                        <span className="text-[10px] text-gray-500">
+                          +{u.groupBadges.length - 3}
+                        </span>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setGroupDrawer(u)}
+                        className="text-[10px] underline text-accent-700 ml-1"
+                      >
+                        Modifier
+                      </button>
+                    </div>
                   </td>
 
-                  {/* Progression */}
+                  <td className="py-3 pr-3">
+                    <div className="flex flex-col gap-0.5">
+                      <span
+                        className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-bold w-fit ${
+                          u.mfaEnabled
+                            ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                            : u.mfaForced
+                              ? "bg-amber-50 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300"
+                              : "bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-slate-300"
+                        }`}
+                      >
+                        {u.mfaEnabled
+                          ? "🛡️ 2FA"
+                          : u.mfaForced
+                            ? "⏳ 2FA forcée"
+                            : "🛡️ off"}
+                      </span>
+                      {u.isLocked && (
+                        <span className="text-[10px] text-rose-700 font-bold">
+                          🔒 verrouillé
+                        </span>
+                      )}
+                      {!u.hasPassword && (
+                        <span className="text-[10px] text-gray-500 italic">
+                          sans mdp
+                        </span>
+                      )}
+                    </div>
+                  </td>
+
                   <td className="py-3 pr-3 whitespace-nowrap">
                     <div className="flex items-center gap-2">
                       <div className="w-16 lg:w-20 h-1.5 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden shrink-0">
@@ -215,13 +374,9 @@ export default function UsersTable({ users }: { users: U[] }) {
                       <span className="text-xs text-gray-500 tabular-nums">
                         {u.completed}/{u.totalEpisodes}
                       </span>
-                      <span className="text-xs text-accent-600 font-bold tabular-nums">
-                        {u.xp}XP
-                      </span>
                     </div>
                   </td>
 
-                  {/* Statut */}
                   <td className="py-3 pr-3">
                     {u.isActive ? (
                       <span className="inline-flex items-center gap-1 text-xs bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 px-2 py-0.5 rounded-full font-bold">
@@ -236,36 +391,16 @@ export default function UsersTable({ users }: { users: U[] }) {
                     )}
                   </td>
 
-                  {/* Actions — icônes compactes au lieu de boutons texte */}
                   <td className="py-3 pl-2 text-right whitespace-nowrap">
-                    <div className="inline-flex items-center gap-1">
-                      <IconButton
-                        onClick={() => onToggleActive(u)}
-                        disabled={pending || u.isCurrent}
-                        title={
-                          u.isActive
-                            ? "Suspendre l'utilisateur"
-                            : "Réactiver l'utilisateur"
-                        }
-                        aria-label={
-                          u.isActive
-                            ? `Suspendre ${u.name}`
-                            : `Réactiver ${u.name}`
-                        }
-                        variant="default"
-                      >
-                        {u.isActive ? <PauseIcon /> : <PlayIcon />}
-                      </IconButton>
-                      <IconButton
-                        onClick={() => onDelete(u)}
-                        disabled={pending || u.isCurrent}
-                        title="Supprimer définitivement (RGPD)"
-                        aria-label={`Supprimer ${u.name}`}
-                        variant="danger"
-                      >
-                        <TrashIcon />
-                      </IconButton>
-                    </div>
+                    <UserMenu
+                      u={u}
+                      pending={pending}
+                      onToggleActive={() => onToggleActive(u)}
+                      onForceMfa={() => onForceMfa(u)}
+                      onUnlock={() => onUnlock(u)}
+                      onResetMfa={() => onResetMfa(u)}
+                      onDelete={() => onDelete(u)}
+                    />
                   </td>
                 </tr>
               );
@@ -278,91 +413,238 @@ export default function UsersTable({ users }: { users: U[] }) {
           </p>
         )}
       </div>
+
+      {groupDrawer && (
+        <GroupDrawer
+          user={groupDrawer}
+          allGroups={allGroups}
+          onCancel={() => setGroupDrawer(null)}
+          onSave={(ids) => onSaveGroups(groupDrawer.id, ids)}
+          pending={pending}
+        />
+      )}
     </>
   );
 }
 
-// =============================================================================
-// Sous-composants
-// =============================================================================
+function UserMenu({
+  u,
+  pending,
+  onToggleActive,
+  onForceMfa,
+  onUnlock,
+  onResetMfa,
+  onDelete,
+}: {
+  u: U;
+  pending: boolean;
+  onToggleActive: () => void;
+  onForceMfa: () => void;
+  onUnlock: () => void;
+  onResetMfa: () => void;
+  onDelete: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative inline-block text-left">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        disabled={pending}
+        className="text-xs px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 dark:hover:bg-slate-800 border border-gray-200 dark:border-slate-700"
+        aria-haspopup="true"
+        aria-expanded={open}
+      >
+        Actions ⌄
+      </button>
+      {open && (
+        <>
+          <div
+            className="fixed inset-0 z-10"
+            onClick={() => setOpen(false)}
+            aria-hidden="true"
+          />
+          <div className="absolute right-0 mt-1 w-56 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg shadow-lg z-20 text-sm overflow-hidden">
+            <MenuItem
+              onClick={() => {
+                setOpen(false);
+                onToggleActive();
+              }}
+              disabled={u.isCurrent}
+            >
+              {u.isActive ? "⏸ Suspendre" : "▶ Réactiver"}
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                setOpen(false);
+                onForceMfa();
+              }}
+            >
+              {u.mfaForced ? "🛡️ Ne plus forcer la 2FA" : "🛡️ Forcer la 2FA"}
+            </MenuItem>
+            {u.isLocked && (
+              <MenuItem
+                onClick={() => {
+                  setOpen(false);
+                  onUnlock();
+                }}
+              >
+                🔓 Déverrouiller
+              </MenuItem>
+            )}
+            {u.mfaEnabled && (
+              <MenuItem
+                onClick={() => {
+                  setOpen(false);
+                  onResetMfa();
+                }}
+              >
+                🔄 Réinitialiser la 2FA
+              </MenuItem>
+            )}
+            <div className="border-t border-gray-100 dark:border-slate-800" />
+            <MenuItem
+              onClick={() => {
+                setOpen(false);
+                onDelete();
+              }}
+              disabled={u.isCurrent}
+              danger
+            >
+              🗑 Supprimer (RGPD)
+            </MenuItem>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
-function IconButton({
+function MenuItem({
   children,
   onClick,
   disabled,
-  title,
-  "aria-label": ariaLabel,
-  variant,
+  danger,
 }: {
   children: React.ReactNode;
   onClick: () => void;
   disabled?: boolean;
-  title?: string;
-  "aria-label": string;
-  variant?: "default" | "danger";
+  danger?: boolean;
 }) {
-  const variantClass =
-    variant === "danger"
-      ? "text-gray-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 dark:hover:text-rose-400"
-      : "text-gray-500 hover:text-primary-500 hover:bg-gray-100 dark:hover:bg-slate-800 dark:hover:text-accent-300";
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={disabled}
-      title={title}
-      aria-label={ariaLabel}
-      className={`inline-flex items-center justify-center w-8 h-8 rounded-md transition disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-transparent disabled:hover:text-gray-500 ${variantClass}`}
+      className={`block w-full text-left px-3 py-2 disabled:opacity-30 disabled:cursor-not-allowed ${
+        danger
+          ? "text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-900/30"
+          : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-800"
+      }`}
     >
       {children}
     </button>
   );
 }
 
-// SVG inline pour ne pas ajouter de dépendance lucide-react.
-function PauseIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 16 16"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <rect x="4" y="3" width="3" height="10" rx="1" />
-      <rect x="9" y="3" width="3" height="10" rx="1" />
-    </svg>
+function GroupDrawer({
+  user,
+  allGroups,
+  onCancel,
+  onSave,
+  pending,
+}: {
+  user: U;
+  allGroups: GroupOpt[];
+  onCancel: () => void;
+  onSave: (ids: string[]) => void;
+  pending: boolean;
+}) {
+  const [selected, setSelected] = useState<Set<string>>(
+    new Set(user.groupIds),
   );
-}
-
-function PlayIcon() {
+  const toggle = (id: string) => {
+    const next = new Set(selected);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setSelected(next);
+  };
   return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 16 16"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M5 3v10l8-5z" />
-    </svg>
-  );
-}
-
-function TrashIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M2.5 4h11M5.5 4V2.5h5V4M4 4l1 9.5h6L12 4M6.5 7v4M9.5 7v4" />
-    </svg>
+    <>
+      <div
+        className="fixed inset-0 bg-black/50 z-40"
+        onClick={onCancel}
+        aria-hidden="true"
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Groupes de ${user.name}`}
+        className="fixed inset-y-0 right-0 z-50 w-full sm:w-96 bg-white dark:bg-slate-950 shadow-2xl overflow-y-auto"
+      >
+        <header className="sticky top-0 bg-white dark:bg-slate-950 border-b border-gray-200 dark:border-slate-800 p-4 flex items-center justify-between">
+          <div>
+            <h3 className="font-bold text-primary-500 dark:text-accent-300">
+              Groupes de {user.name}
+            </h3>
+            <p className="text-xs text-gray-500">{user.email}</p>
+          </div>
+          <button
+            type="button"
+            onClick={onCancel}
+            aria-label="Fermer"
+            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800"
+          >
+            ✕
+          </button>
+        </header>
+        <div className="p-4 space-y-2">
+          {allGroups.length === 0 && (
+            <p className="text-sm text-gray-500 italic">
+              Aucun groupe disponible. Créez-en un dans /admin/groupes.
+            </p>
+          )}
+          {allGroups.map((g) => (
+            <label
+              key={g.id}
+              className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800 cursor-pointer"
+            >
+              <input
+                type="checkbox"
+                checked={selected.has(g.id)}
+                onChange={() => toggle(g.id)}
+              />
+              <span
+                className="text-lg w-8 h-8 rounded-lg flex items-center justify-center"
+                style={{
+                  background: g.color ? g.color + "20" : "#f3f4f6",
+                  color: g.color ?? undefined,
+                }}
+              >
+                {g.emoji}
+              </span>
+              <span className="text-sm font-medium">{g.name}</span>
+            </label>
+          ))}
+        </div>
+        <footer className="sticky bottom-0 bg-white dark:bg-slate-950 border-t border-gray-200 dark:border-slate-800 p-4 flex gap-2">
+          <button
+            type="button"
+            disabled={pending}
+            onClick={() => onSave(Array.from(selected))}
+            className="btn-primary text-sm flex-1"
+          >
+            Enregistrer
+          </button>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="btn-secondary text-sm"
+          >
+            Annuler
+          </button>
+        </footer>
+      </div>
+    </>
   );
 }
