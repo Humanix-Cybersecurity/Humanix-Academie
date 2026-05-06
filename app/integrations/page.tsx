@@ -2,8 +2,15 @@
 // Page hub /integrations.
 // Vue d'ensemble visuelle de tous les connecteurs livres + a venir.
 // A11y RGAA AA, UI/UX différenciante (cartes filtrables, stamps statut FR/UE/US).
+//
+// Refonte cosy mai 2026 :
+//  - Hero HexBackdrop avec sous-titre "souverainete par defaut"
+//  - Stats bandeau en cards palette saisons (au lieu de Stat custom)
+//  - Citation finale "Hex veille" qui rappelle l'engagement ecosysteme
+//  - Cards integration inchangees (composant separe)
 
 import Link from "next/link";
+import HexBackdrop from "@/components/HexBackdrop";
 
 export const metadata = {
   title: "Connecteurs & intégrations — Humanix Académie",
@@ -302,22 +309,38 @@ export default function IntegrationsHubPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10 sm:py-14 animate-fadeIn">
-      <header className="text-center mb-10">
-        <p className="text-xs uppercase tracking-widest text-accent-500 font-bold mb-3">
-          Hub d'interopérabilité
-        </p>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-primary-500 leading-tight mb-4">
-          Connecteurs &{" "}
-          <span className="bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
-            intégrations
-          </span>
-        </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-          Humanix s'intègre nativement à votre écosystème RSSI. Hub-and-spoke
-          avec priorité souveraineté française et standards ouverts.
-        </p>
-      </header>
+    <main id="main-content" className="overflow-x-hidden animate-fadeIn">
+      {/* ================================================================
+          1. HERO — invitation au hub d'interoperabilite
+          ================================================================ */}
+      <HexBackdrop intensity="soft" className="bg-humanix-soft">
+        <header
+          aria-labelledby="hero-title"
+          className="max-w-5xl mx-auto px-4 pt-12 pb-10 sm:pt-16 sm:pb-12 text-center"
+        >
+          <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
+            Hub d'interoperabilite · souverainete par defaut
+          </p>
+          <h1
+            id="hero-title"
+            className="font-display text-4xl sm:text-6xl font-extrabold text-primary-500 dark:text-accent-300 leading-[1.05] mb-4 animate-slide-up"
+            style={{ animationDelay: "100ms" }}
+          >
+            Connecteurs &{" "}
+            <span className="text-accent-500">integrations.</span>
+          </h1>
+          <p
+            className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed animate-slide-up"
+            style={{ animationDelay: "220ms" }}
+          >
+            Humanix s'integre nativement a ton ecosysteme RSSI. Hub-and-spoke
+            avec priorite souverainete francaise et standards ouverts. Aucune
+            ile, aucun lock-in, aucune dependance hors UE par defaut.
+          </p>
+        </header>
+      </HexBackdrop>
+
+      <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
 
       {/* Stats bandeau */}
       <section
@@ -396,7 +419,26 @@ export default function IntegrationsHubPage() {
           </a>
         </div>
       </section>
-    </div>
+
+      {/* ================================================================
+          CITATION FINALE — signature cosy "Hex veille"
+          ================================================================ */}
+      <section className="text-center pt-10 pb-4">
+        <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          « Une plateforme cyber qui vit seule est une plateforme qui meurt
+          seule. On a investi gros sur les connecteurs francais (Sekoia,
+          HarfangLab, Lucca, GLPI, CISO Assistant) que les acteurs
+          internationaux n'envisagent meme pas. »
+        </blockquote>
+        <p
+          aria-hidden="true"
+          className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
+        >
+          — Hex veille
+        </p>
+      </section>
+      </div>
+    </main>
   );
 }
 
