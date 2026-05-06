@@ -215,11 +215,15 @@ function validateAndSanitize(s: VishingScript): VishingScript {
 // chiffres exotiques utilises pour leak un identifiant.
 function sanitizeCallerId(s: string): string {
   const digits = s.replace(/[^\d]/g, "").slice(0, 10);
-  if (digits.length !== 10) return "01 00 00 00 00";
+  // Format national FR attendu: 0 suivi d'un chiffre 1-9, puis 8 chiffres.
+  if (digits.length !== 10 || !/^0[1-9]\d{8}$/.test(digits)) return "01 00 00 00 00";
   return digits.replace(/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/, "$1 $2 $3 $4 $5");
 }
 
-function buildDemoFixture(args: VishingArgs): VishingScript {
+function buildDemoFixture({
+  template,
+  difficulty: _difficulty,
+}: VishingArgs): VishingScript {
   const fixtures: Record<VishingTemplate, VishingScript> = {
     "fake-support-it": {
       openingLine:
@@ -331,6 +335,5 @@ function buildDemoFixture(args: VishingArgs): VishingScript {
   // Si difficulty=easy, on aurait pu varier les fixtures. Pour le MVP, on
   // sert le meme fixture quelle que soit la difficulty (la difference se
   // ferait avec Mistral en production).
-  void args.difficulty;
-  return fixtures[args.template];
+  return fixtures[template];
 }
