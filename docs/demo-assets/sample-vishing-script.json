@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "purpose": "FORMATION — fallback partenaire externe si l'API Mistral est indisponible",
+    "purpose": "FORMATION — fallback demo si l'API Mistral est indisponible",
     "generated": "pre-baked sample, NOT live",
     "template": "fake-direction",
     "service": "Compta",
