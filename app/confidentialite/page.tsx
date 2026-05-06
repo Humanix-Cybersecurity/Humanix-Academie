@@ -262,7 +262,7 @@ export default function ConfidentialitePage() {
                 facturation
               </li>
               <li>
-                <strong>Resend</strong> (UE, sous Clauses Contractuelles Types
+                <strong>Scaleway TEM</strong> (UE, sous Clauses Contractuelles Types
                 CE 2021/914) — emails transactionnels (lien magique de
                 connexion, alertes)
               </li>

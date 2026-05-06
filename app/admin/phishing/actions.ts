@@ -61,7 +61,7 @@ export async function launchCampaign(formData: FormData) {
   );
 
   // En mode demo : on simule l'envoi (log dans Event)
-  // En prod : on enverrait via Resend ici (boucle sur les targets)
+  // En prod : on enverrait via Scaleway TEM ici (boucle sur les targets)
   await db.event.create({
     data: {
       tenantId,
