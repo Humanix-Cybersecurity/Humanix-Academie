@@ -99,6 +99,8 @@
   "overrides": {
     "next": {
       "postcss": "^8.5.10"
-    }
+    },
+    "esbuild": "^0.25.0",
+    "vite": "^6.4.2"
   }
 }
