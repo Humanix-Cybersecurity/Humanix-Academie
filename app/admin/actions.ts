@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import type { Role } from "@prisma/client";
+import { auditLog, AuditActions, AuditOutcomes } from "@/lib/audit";
 
 async function requireAdmin() {
   const session = await auth();
@@ -16,7 +17,12 @@ async function requireAdmin() {
   }
   const tenantId = session.user!.tenantId as string;
   if (!tenantId) throw new Error("no_tenant");
-  return { tenantId, userId: session.user!.id as string, role };
+  return {
+    tenantId,
+    userId: session.user!.id as string,
+    role,
+    email: session.user!.email as string | undefined,
+  };
 }
 
 // =====================================================
@@ -104,39 +110,59 @@ export async function resetSaisonsOrder() {
 // USERS
 // =====================================================
 export async function toggleUserActive(userId: string, isActive: boolean) {
-  const { tenantId, userId: currentUserId } = await requireAdmin();
-  if (userId === currentUserId) throw new Error("cannot_disable_self");
-  // Verifier que l'utilisateur appartient au meme tenant
+  const ctx = await requireAdmin();
+  if (userId === ctx.userId) throw new Error("cannot_disable_self");
   const target = await db.user.findUnique({ where: { id: userId } });
-  if (!target || target.tenantId !== tenantId) throw new Error("not_found");
+  if (!target || target.tenantId !== ctx.tenantId) throw new Error("not_found");
   await db.user.update({ where: { id: userId }, data: { isActive } });
+  await auditLog({
+    action: isActive ? AuditActions.USER_ACTIVATED : AuditActions.USER_SUSPENDED,
+    actor: { userId: ctx.userId, email: ctx.email, role: ctx.role },
+    tenantId: ctx.tenantId,
+    target: { type: "user", id: userId, label: target.email },
+  });
   revalidatePath("/admin/utilisateurs");
   return { ok: true };
 }
 
 export async function changeUserRole(userId: string, role: Role) {
-  const { tenantId, userId: currentUserId } = await requireAdmin();
-  if (userId === currentUserId) throw new Error("cannot_change_own_role");
+  const ctx = await requireAdmin();
+  if (userId === ctx.userId) throw new Error("cannot_change_own_role");
   const target = await db.user.findUnique({ where: { id: userId } });
-  if (!target || target.tenantId !== tenantId) throw new Error("not_found");
+  if (!target || target.tenantId !== ctx.tenantId) throw new Error("not_found");
+  const previousRole = target.role;
   await db.user.update({ where: { id: userId }, data: { role } });
+  await auditLog({
+    action: AuditActions.USER_ROLE_CHANGED,
+    actor: { userId: ctx.userId, email: ctx.email, role: ctx.role },
+    tenantId: ctx.tenantId,
+    target: { type: "user", id: userId, label: target.email },
+    message: `Role: ${previousRole} -> ${role}`,
+    metadata: { from: previousRole, to: role },
+  });
   revalidatePath("/admin/utilisateurs");
   return { ok: true };
 }
 
 export async function deleteUser(userId: string) {
-  const { tenantId, userId: currentUserId } = await requireAdmin();
-  if (userId === currentUserId) throw new Error("cannot_delete_self");
+  const ctx = await requireAdmin();
+  if (userId === ctx.userId) throw new Error("cannot_delete_self");
   const target = await db.user.findUnique({ where: { id: userId } });
-  if (!target || target.tenantId !== tenantId) throw new Error("not_found");
-  // Hard delete (cascade supprime progress / events / accounts / sessions)
+  if (!target || target.tenantId !== ctx.tenantId) throw new Error("not_found");
   await db.user.delete({ where: { id: userId } });
+  await auditLog({
+    action: AuditActions.USER_DELETED,
+    actor: { userId: ctx.userId, email: ctx.email, role: ctx.role },
+    tenantId: ctx.tenantId,
+    target: { type: "user", id: userId, label: target.email },
+    message: "Suppression admin (RGPD : cascade progress/events/sessions)",
+  });
   revalidatePath("/admin/utilisateurs");
   return { ok: true };
 }
 
 export async function inviteUser(formData: FormData) {
-  const { tenantId } = await requireAdmin();
+  const ctx = await requireAdmin();
   const email = formData.get("email") as string;
   const name = formData.get("name") as string;
   const service = formData.get("service") as string;
@@ -146,14 +172,21 @@ export async function inviteUser(formData: FormData) {
   const existing = await db.user.findUnique({ where: { email } });
   if (existing) throw new Error("email_taken");
 
-  await db.user.create({
+  const created = await db.user.create({
     data: {
-      tenantId,
+      tenantId: ctx.tenantId,
       email,
       name: name || null,
       service: service || null,
       role,
     },
+  });
+  await auditLog({
+    action: AuditActions.USER_INVITED,
+    actor: { userId: ctx.userId, email: ctx.email, role: ctx.role },
+    tenantId: ctx.tenantId,
+    target: { type: "user", id: created.id, label: created.email },
+    metadata: { role, service: service || null },
   });
   revalidatePath("/admin/utilisateurs");
   return { ok: true };
@@ -219,7 +252,8 @@ function slugify(input: string): string {
 }
 
 export async function createGroup(formData: FormData) {
-  const { tenantId } = await requireAdmin();
+  const ctx = await requireAdmin();
+  const tenantId = ctx.tenantId;
   const name = ((formData.get("name") as string) ?? "").trim();
   const description = ((formData.get("description") as string) ?? "").trim();
   const emoji = ((formData.get("emoji") as string) ?? "🏷️").slice(0, 4);
@@ -234,7 +268,7 @@ export async function createGroup(formData: FormData) {
   if (existing) {
     slug = slug + "-" + Math.random().toString(36).slice(2, 5);
   }
-  await db.group.create({
+  const created = await db.group.create({
     data: {
       tenantId,
       name,
@@ -244,13 +278,20 @@ export async function createGroup(formData: FormData) {
       description: description || null,
     },
   });
+  await auditLog({
+    action: AuditActions.GROUP_CREATED,
+    actor: { userId: ctx.userId, email: ctx.email, role: ctx.role },
+    tenantId,
+    target: { type: "group", id: created.id, label: created.name },
+  });
   revalidatePath("/admin/groupes");
   revalidatePath("/admin/utilisateurs");
   return { ok: true };
 }
 
 export async function updateGroup(groupId: string, formData: FormData) {
-  const { tenantId } = await requireAdmin();
+  const ctx = await requireAdmin();
+  const tenantId = ctx.tenantId;
   const target = await db.group.findUnique({ where: { id: groupId } });
   if (!target || target.tenantId !== tenantId) throw new Error("not_found");
   const name = ((formData.get("name") as string) ?? target.name).trim();
@@ -268,24 +309,39 @@ export async function updateGroup(groupId: string, formData: FormData) {
       isActive,
     },
   });
+  await auditLog({
+    action: AuditActions.GROUP_UPDATED,
+    actor: { userId: ctx.userId, email: ctx.email, role: ctx.role },
+    tenantId,
+    target: { type: "group", id: groupId, label: name },
+    metadata: { isActive },
+  });
   revalidatePath("/admin/groupes");
   revalidatePath("/admin/utilisateurs");
   return { ok: true };
 }
 
 export async function deleteGroup(groupId: string) {
-  const { tenantId } = await requireAdmin();
+  const ctx = await requireAdmin();
+  const tenantId = ctx.tenantId;
   const target = await db.group.findUnique({ where: { id: groupId } });
   if (!target || target.tenantId !== tenantId) throw new Error("not_found");
   if (target.isSystem) throw new Error("system_group_protected");
   await db.group.delete({ where: { id: groupId } });
+  await auditLog({
+    action: AuditActions.GROUP_DELETED,
+    actor: { userId: ctx.userId, email: ctx.email, role: ctx.role },
+    tenantId,
+    target: { type: "group", id: groupId, label: target.name },
+  });
   revalidatePath("/admin/groupes");
   revalidatePath("/admin/utilisateurs");
   return { ok: true };
 }
 
 export async function setUserGroups(userId: string, groupIds: string[]) {
-  const { tenantId } = await requireAdmin();
+  const ctx = await requireAdmin();
+  const tenantId = ctx.tenantId;
   const target = await db.user.findUnique({ where: { id: userId } });
   if (!target || target.tenantId !== tenantId) throw new Error("not_found");
   // Filtre les groupes qui appartiennent bien au tenant
@@ -301,6 +357,13 @@ export async function setUserGroups(userId: string, groupIds: string[]) {
       skipDuplicates: true,
     }),
   ]);
+  await auditLog({
+    action: AuditActions.USER_GROUPS_CHANGED,
+    actor: { userId: ctx.userId, email: ctx.email, role: ctx.role },
+    tenantId,
+    target: { type: "user", id: userId, label: target.email },
+    metadata: { groupIds: Array.from(validIds) },
+  });
   revalidatePath("/admin/utilisateurs");
   revalidatePath("/admin/groupes");
   return { ok: true };
@@ -326,37 +389,51 @@ export async function toggleGroupLead(
 // SECURITE : forcer 2FA, deverrouiller, declencher reset mdp
 // =====================================================
 export async function forceUserMfa(userId: string, force: boolean) {
-  const { tenantId, userId: currentUserId } = await requireAdmin();
-  if (userId === currentUserId && !force) {
-    // On peut s'auto-forcer mais pas s'auto-detendre.
+  const ctx = await requireAdmin();
+  if (userId === ctx.userId && !force) {
     throw new Error("cannot_unforce_self");
   }
   const target = await db.user.findUnique({ where: { id: userId } });
-  if (!target || target.tenantId !== tenantId) throw new Error("not_found");
+  if (!target || target.tenantId !== ctx.tenantId) throw new Error("not_found");
   await db.user.update({
     where: { id: userId },
     data: { mfaForced: force },
+  });
+  await auditLog({
+    action: AuditActions.USER_MFA_FORCED,
+    actor: { userId: ctx.userId, email: ctx.email, role: ctx.role },
+    tenantId: ctx.tenantId,
+    target: { type: "user", id: userId, label: target.email },
+    message: force ? "2FA forcee par admin" : "Levee de l'obligation 2FA",
+    metadata: { forced: force },
   });
   revalidatePath("/admin/utilisateurs");
   return { ok: true };
 }
 
 export async function unlockUser(userId: string) {
-  const { tenantId } = await requireAdmin();
+  const ctx = await requireAdmin();
   const target = await db.user.findUnique({ where: { id: userId } });
-  if (!target || target.tenantId !== tenantId) throw new Error("not_found");
+  if (!target || target.tenantId !== ctx.tenantId) throw new Error("not_found");
   await db.user.update({
     where: { id: userId },
     data: { failedLoginAttempts: 0, lockedUntil: null },
+  });
+  await auditLog({
+    action: AuditActions.USER_UNLOCKED,
+    actor: { userId: ctx.userId, email: ctx.email, role: ctx.role },
+    tenantId: ctx.tenantId,
+    target: { type: "user", id: userId, label: target.email },
+    message: "Deverrouillage manuel par admin",
   });
   revalidatePath("/admin/utilisateurs");
   return { ok: true };
 }
 
 export async function adminResetUserMfa(userId: string) {
-  const { tenantId } = await requireAdmin();
+  const ctx = await requireAdmin();
   const target = await db.user.findUnique({ where: { id: userId } });
-  if (!target || target.tenantId !== tenantId) throw new Error("not_found");
+  if (!target || target.tenantId !== ctx.tenantId) throw new Error("not_found");
   await db.user.update({
     where: { id: userId },
     data: {
@@ -365,6 +442,13 @@ export async function adminResetUserMfa(userId: string) {
       mfaEnabledAt: null,
       mfaBackupCodesHash: null,
     },
+  });
+  await auditLog({
+    action: AuditActions.USER_MFA_RESET_BY_ADMIN,
+    actor: { userId: ctx.userId, email: ctx.email, role: ctx.role },
+    tenantId: ctx.tenantId,
+    target: { type: "user", id: userId, label: target.email },
+    message: "Reset 2FA TOTP : secret + codes de secours effaces",
   });
   revalidatePath("/admin/utilisateurs");
   return { ok: true };

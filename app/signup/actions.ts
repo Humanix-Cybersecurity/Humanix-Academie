@@ -32,6 +32,7 @@ import {
   hasReceivedWelcome,
   logWelcomeSent,
 } from "@/lib/welcome-email";
+import { auditLog, AuditActions } from "@/lib/audit";
 
 const ALLOWED_SIGNUP_PLANS: PlanId[] = ["decouverte", "trial"];
 
@@ -206,6 +207,33 @@ export async function createDecouverteAccount(
       skipDuplicates: true,
     });
     return { tenant, user };
+  });
+
+  // ----------------------------
+  // 5a. Audit log
+  // ----------------------------
+  await auditLog({
+    action: AuditActions.TENANT_CREATED,
+    actor: { userId: created.user.id, email, role: "ADMIN" },
+    tenantId: created.tenant.id,
+    target: { type: "tenant", id: created.tenant.id, label: orgName },
+    metadata: { plan, source: "self_service_signup" },
+    ip,
+  });
+  await auditLog({
+    action: AuditActions.USER_CREATED,
+    actor: { userId: created.user.id, email, role: "ADMIN" },
+    tenantId: created.tenant.id,
+    target: { type: "user", id: created.user.id, label: email },
+    message: "Premier admin du tenant (signup self-service)",
+    ip,
+  });
+  await auditLog({
+    action: AuditActions.CONSENT_GIVEN,
+    actor: { userId: created.user.id, email, role: "ADMIN" },
+    tenantId: created.tenant.id,
+    message: "CGU + politique de confidentialite acceptees au signup",
+    ip,
   });
 
   // ----------------------------
