@@ -45,9 +45,9 @@ const CHAPTERS = [
       accent: "text-cyan-700 dark:text-cyan-300",
     },
     body: [
-      "Pendant dix ans, j'ai fait du pentest dans des PME francaises. A chaque mission, c'etait la meme histoire. Marie de la compta clique sur un faux RIB. Stephane du commercial recycle son mot de passe Netflix sur son compte pro. Le dirigeant ouvre une piece jointe d'un fournisseur inconnu a 23h, fatigue.",
-      "90 % des cyberattaques contre une PME francaise passent par un humain. Pas un firewall mal configure, pas une faille zero-day. Un humain pas forme.",
-      "Et le marche de la sensibilisation cyber, en 2026, ressemble a ca : Knowbe4 a 8 000 €/an minimum, Hoxhunt sur devis, Phished et Cyber Guru entre 2 000 et 3 000 €/an. Tous fermes. Trois quarts viennent des Etats-Unis.",
+      "Pendant dix ans, j'ai fait du pentest dans des PME françaises. À chaque mission, c'était la même histoire. Marie de la compta clique sur un faux RIB. Stéphane du commercial recycle son mot de passe Netflix sur son compte pro. Le dirigeant ouvre une pièce jointe d'un fournisseur inconnu à 23h, fatigué.",
+      "90 % des cyberattaques contre une PME française passent par un humain. Pas un firewall mal configuré, pas une faille zero-day. Un humain pas formé.",
+      "Et le marché de la sensibilisation cyber, en 2026, ressemble à ça : Knowbe4 à 8 000 €/an minimum, Hoxhunt sur devis, Phished et Cyber Guru entre 2 000 et 3 000 €/an. Tous fermés. Trois quarts viennent des États-Unis.",
     ],
   },
   {
