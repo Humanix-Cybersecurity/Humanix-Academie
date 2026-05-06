@@ -106,6 +106,9 @@ class GlpiClient:
                 timeout=10,
             )
         except requests.RequestException:
+            # Best-effort kill : si le serveur GLPI est inaccessible la session
+            # expirera d'elle-meme cote serveur (TTL par defaut 1h). Pas de
+            # raison de propager l'erreur au caller pendant un teardown.
             pass
 
     def _headers(self) -> dict[str, str]:
