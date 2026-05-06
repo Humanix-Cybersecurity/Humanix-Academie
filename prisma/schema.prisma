@@ -189,9 +189,45 @@ model User {
   expertProfile    ExpertProfile?
   passwordResets   PasswordResetToken[]
   groups           UserGroup[]
+  webauthnCredentials WebAuthnCredential[]
 
   @@index([tenantId])
   @@index([isActive])
+}
+
+// =====================================================
+// WEBAUTHN — clés de sécurité hardware (FIDO2)
+// Pour l'auth super-admin : clé Thales et-Fusion / YubiKey / Titan, etc.
+// Compatible passkeys synchronisees (iCloud Keychain, 1Password) si l'user
+// le souhaite, mais l'usage cible est cle USB hardware-only.
+// =====================================================
+model WebAuthnCredential {
+  id             String   @id @default(cuid())
+  userId         String
+  // Identifiant unique de la cle (b64url) - stable a vie pour cette cle.
+  credentialId   String   @unique
+  // Cle publique COSE de la cle hardware, encodee b64url. Verifiee a chaque
+  // login via @simplewebauthn/server.
+  publicKey      String   @db.Text
+  // Compteur signed (anti-replay). Augmente a chaque utilisation.
+  counter        BigInt   @default(0)
+  // Transports supportes (CSV : "usb,nfc,ble,internal")
+  transports     String?
+  // Nom convivial choisi par l'user ("Thales et-Fusion bureau")
+  deviceName     String
+  // AAGUID = identifiant du modele de la cle (utile si on veut whitelister)
+  aaguid         String?
+  // backupEligible/backedUp : true = passkey synchronisee (iCloud, 1Password)
+  // false = cle hardware-only (recommande pour SUPERADMIN)
+  backedUp       Boolean  @default(false)
+  // userVerified : true si la cle exige PIN/biometrie (= 2FA implicite)
+  userVerified   Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  lastUsedAt     DateTime?
+
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 // =====================================================
