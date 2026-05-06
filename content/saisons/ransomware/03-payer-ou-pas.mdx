@@ -1,0 +1,129 @@
+---
+title: "Faut-il payer la rancon ?"
+durationMinutes: 8
+persona: "tous"
+objective: "Comprendre l'ethique, le droit et la realite economique du paiement d'une rancon"
+xpReward: 70
+scenario: |
+  Tu es DG d'une PME de 80 personnes dans le secteur de la sante. Vendredi 16h, ton SI est entierement chiffre par un ransomware. Le rapport CERT-FR identifie le groupe LockBit. Demande de rancon : 200 000 € en Bitcoin sous 72h.
+
+  Ton DSI te dit : "Nos sauvegardes sont chiffrees aussi (synchronisation a chaud). On peut tenter de restaurer mais ca prendra 3 a 4 semaines. Pendant ce temps, on perd tous les rendez-vous patients, la facturation, la comptabilite."
+
+  Ton DAF : "L'arret prolonge va nous couter ~80 000 € par semaine, plus le risque RGPD. Payer 200 k€ et reprendre en 48h, ca semble rationnel."
+
+  Que decides-tu de PROPOSER au COMEX d'urgence ?
+choices:
+  - id: "a"
+    label: "Payer immediatement, c'est le moins cher"
+    outcome: "bad"
+    feedback: "Aïe. Plusieurs problemes legaux, ethiques et techniques. Article L. 12-10-1 du Code des assurances (depuis 2023) : tout paiement doit etre declare a l'autorite, sous peine de nullite de l'assurance cyber. ANSSI/CNIL deconseillent fortement."
+    points: -20
+  - id: "b"
+    label: "Activer la cellule de crise officielle (Cybermalveillance + ANSSI + CERT-FR + assureur cyber + avocat) AVANT toute decision"
+    outcome: "good"
+    feedback: "Exactement. La decision de paiement n'est jamais individuelle — c'est une decision strategique avec implications legales (LOPMI 2023), assurance, RGPD, communication. La cellule de crise doit etre activee dans les 4 premieres heures."
+    points: 35
+  - id: "c"
+    label: "Refuser absolument tout paiement — c'est une question de principe"
+    outcome: "neutral"
+    feedback: "Bonne posture ethique mais tu n'as pas evalue les alternatives. Le refus est valide MAIS apres avoir epuise les options de restauration et evalue l'impact business. Pas une decision a chaud."
+    points: 5
+  - id: "d"
+    label: "Negocier avec les attaquants pour obtenir un rabais a 80 k€"
+    outcome: "bad"
+    feedback: "Negocier directement = engagement legal supplementaire. Si decision de paiement il y a, elle passe par un negociateur cyber professionnel mandate par ton assureur, JAMAIS par toi en direct."
+    points: -10
+debrief: |
+  La decision de payer ou pas est l'une des plus difficiles d'une crise ransomware. Elle ne se prend JAMAIS sur le moment, JAMAIS seul, JAMAIS sous pression.
+
+  **Le cadre legal francais (LOPMI janvier 2023) :**
+
+  L'article L. 12-10-1 du Code des assurances impose que **tout paiement de rancon couvert par une assurance cyber doit etre declare aux autorites dans les 72h** (depot de plainte). Sans cette declaration, l'assurance ne paie pas. Cette loi vise a tracer les flux et a informer les autorites — pas a interdire absolument le paiement.
+
+  L'**ANSSI** et **Cybermalveillance** deconseillent fortement le paiement. La CNIL considere que payer ne dispense pas des obligations RGPD si fuite de donnees.
+
+  **Les arguments contre le paiement :**
+
+  1. **Pas de garantie** : 30 % des paiements n'aboutissent a aucune cle ou a une cle defectueuse (rapport Sophos 2024)
+  2. **Recidive** : les groupes qui recoivent paiement reviennent souvent (etiquettes "client previous victim")
+  3. **Financement du crime** : tu paies les futures attaques d'autres organisations
+  4. **Reputation** : le paiement peut entrainer des sanctions reputationnelles (cf. cas Colonial Pipeline US)
+  5. **Sanctions internationales** : certains groupes sont sur liste OFAC (US Treasury) — paiement = sanction federale americaine si tu as des liens US
+
+  **Les arguments en faveur du paiement (qui pesent en cellule de crise) :**
+
+  1. **Vies humaines** : hopital, secteur essentiel, perte de service vital
+  2. **Survie de l'entreprise** : impossible de restaurer dans un delai vivable
+  3. **Données sensibles deja exfiltrees** : double extorsion (cf. module 04)
+
+  **Le bon process en 4 etapes :**
+
+  **Etape 1 (heure 0 a 4) — Cellule de crise**
+  - Cybermalveillance (0 805 805 817), ANSSI, CERT-FR, assureur cyber, avocat specialise, DSI, RSSI, DG, DAF, DPO si donnees personnelles touchees
+
+  **Etape 2 (heure 4 a 24) — Evaluation des options**
+  - Cle disponible publiquement (NoMoreRansom.org) ?
+  - Sauvegardes immuables exploitables ?
+  - Estimation de la duree de restauration vs duree de paralysie acceptable
+  - Donnees exfiltrees ? Volume ? Nature ?
+
+  **Etape 3 (heure 24 a 72) — Decision strategique**
+  - Decision documentee, signee par le COMEX
+  - Si paiement : passage par un negociateur professionnel mandate par l'assureur
+  - Plainte deposee, autorites informees
+
+  **Etape 4 — Apres**
+  - Notification CNIL si donnees personnelles (article 33-34 RGPD)
+  - Communication interne et externe (transparence > omerta)
+  - Investigation post-mortem pour fermer les portes utilisees
+
+  **Ressources utiles (a connaitre AVANT la crise) :**
+  - **NoMoreRansom.org** : projet Europol qui distribue gratuitement des cles de dechiffrement pour ~150 ransomwares connus
+  - **Cybermalveillance.gouv.fr** : 0 805 805 817 + dispositif d'aide officiel
+  - **Liste OFAC sanctions** : verifier que le groupe attaquant n'est pas sanctionne avant paiement
+quiz:
+  - question: "En France, payer une rancon couverte par l'assurance cyber necessite :"
+    choices:
+      - id: "a"
+        label: "Aucune declaration particuliere"
+        correct: false
+      - id: "b"
+        label: "Une declaration aux autorites dans les 72h (LOPMI 2023, art. L. 12-10-1)"
+        correct: true
+      - id: "c"
+        label: "Une autorisation prealable du gouvernement"
+        correct: false
+    explanation: "LOPMI 2023 impose la declaration de paiement de rancon dans les 72h, faute de quoi l'assurance ne paie pas. C'est une obligation pour tracer les flux."
+
+  - question: "Quel est le projet officiel europeen qui distribue gratuitement des cles de dechiffrement ?"
+    choices:
+      - id: "a"
+        label: "ransomware-help.eu"
+        correct: false
+      - id: "b"
+        label: "NoMoreRansom.org (Europol + Police Pays-Bas + acteurs cyber)"
+        correct: true
+      - id: "c"
+        label: "Il n'y en a pas, chaque cle est privee"
+        correct: false
+    explanation: "NoMoreRansom.org est un projet Europol qui distribue les cles publiquement disponibles pour ~150 ransomwares connus. C'est ta 1ere verification avant tout paiement."
+
+  - question: "Le pourcentage de paiements de rancon qui n'aboutissent a AUCUNE cle ou a une cle defectueuse :"
+    choices:
+      - id: "a"
+        label: "Moins de 5 %"
+        correct: false
+      - id: "b"
+        label: "Environ 30 % (rapport Sophos 2024)"
+        correct: true
+      - id: "c"
+        label: "Plus de 80 %"
+        correct: false
+    explanation: "30 % des paiements n'aboutissent a rien — soit pas de cle, soit cle defectueuse. C'est une raison majeure de NE PAS PARIER sur le paiement comme strategie."
+---
+
+## Pour aller plus loin
+
+La meilleure strategie ransomware est de ne JAMAIS avoir a se poser la question du paiement. Cela passe par les sauvegardes immuables (saison `sauvegardes`), la sensibilisation (tout le catalogue Humanix), et un PCA / PRA documente. Si tu n'as pas ces 3 piliers, tu seras toujours en position de faiblesse face a l'attaquant.
+
+> "Decider de payer, c'est decider trop tard. La preparation, c'est decider a temps."

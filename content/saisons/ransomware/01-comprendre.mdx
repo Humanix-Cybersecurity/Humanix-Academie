@@ -1,0 +1,101 @@
+---
+title: "Comprendre un ransomware en 5 min"
+durationMinutes: 6
+persona: "tous"
+objective: "Saisir le mecanisme d'un rancongiciel sans jargon technique, pour reconnaitre les premiers signaux"
+xpReward: 40
+scenario: |
+  Lundi matin, 8h47. Tu allumes ton poste comme d'habitude. Au lieu de ton fond d'ecran, un message rouge : "VOS FICHIERS SONT CHIFFRES. Pour les recuperer, payez 0,5 BTC dans les 72 heures. Toute tentative de restauration entrainera la perte definitive."
+
+  Tu n'arrives plus a ouvrir tes documents Word, ton Excel, tes presentations. Le partage reseau est bloque. Tes collegues t'appellent : "T'arrives a ouvrir tes fichiers ? Moi non plus." Que se passe-t-il vraiment ?
+choices:
+  - id: "a"
+    label: "C'est un virus mais ca va se reparer en redemarrant"
+    outcome: "bad"
+    feedback: "Non. Un ransomware ne 'casse' pas un fichier — il le chiffre avec une cle dont SEUL l'attaquant a la copie. Redemarrer ne sert a rien, le chiffrement reste."
+    points: -10
+  - id: "b"
+    label: "Mes fichiers sont chiffres avec une cle que seul l'attaquant detient — il faut alerter l'IT IMMEDIATEMENT et NE RIEN faire d'autre"
+    outcome: "good"
+    feedback: "Exactement. Le rancongiciel est un kidnapping numerique : tes fichiers sont en otage. Le bon reflexe : isoler le poste (le couper du reseau) et alerter."
+    points: 30
+  - id: "c"
+    label: "Je vais payer rapidement pour eviter de perdre mes fichiers"
+    outcome: "bad"
+    feedback: "Aïe. Ne JAMAIS payer sans avoir epuise les autres options : paiement = financer le crime + 30 % de chance de ne JAMAIS recevoir la cle. Cf. module 03."
+    points: -20
+  - id: "d"
+    label: "Je tente d'ouvrir un fichier sain pour voir s'ils sont tous chiffres"
+    outcome: "bad"
+    feedback: "Manipuler le poste pendant l'attaque peut declencher la propagation aux partages reseau ou backups en ligne. Reflexe : ne pas toucher, isoler, alerter."
+    points: -10
+debrief: |
+  Un **ransomware** (ou **rancongiciel**) est un logiciel malveillant qui :
+
+  1. Penetre dans le systeme (par phishing, faille, identifiants voles — voir module 02)
+  2. **Chiffre tes fichiers** avec une cle cryptographique forte (AES-256 generalement)
+  3. Affiche une demande de rancon — souvent en cryptomonnaie (Bitcoin, Monero) pour rendre le paiement intracable
+  4. Promet (ne tient pas toujours) la cle de dechiffrement contre paiement
+
+  **Pourquoi c'est si efficace ?**
+
+  - **Asymetrie technique** : chiffrer prend 1 minute. Casser le chiffrement par force brute prendrait des millions d'annees.
+  - **Pression psychologique** : compteur de 72h, menace de doublement de la rancon, fuite de donnees publique (cf. module 04 sur la double extorsion).
+  - **Modele economique** mature : RaaS (Ransomware as a Service) — n'importe qui peut louer un ransomware sur le dark web pour 1 000 € et 30 % du butin.
+
+  **Le marche en France :**
+  - **Plus de 50 % des PME francaises** subiraient une tentative de ransomware par an (CESIN 2024)
+  - **Cout median par PME** : 250 000 € (Tracfin / Cybermalveillance)
+  - **Cas marquants** : CHU de Brest 2023 (3 semaines de paralysie), Saint-Nazaire 2020, Norsk Hydro 2019, Centre Hospitalier de Versailles 2022
+
+  **Le bon reflexe en 3 mots :** **isoler · alerter · ne rien toucher**.
+
+  - **Isoler** : couper le reseau du poste (debrancher le cable RJ45, desactiver le Wi-Fi). Eviter la propagation.
+  - **Alerter** : appeler l'IT, le RSSI ou Cybermalveillance (0 805 805 817, gratuit, 7j/7). Ne pas eteindre — la memoire vive contient des indices forensiques.
+  - **Ne rien toucher** : pas de tentative de reparation par soi-meme. La preservation des preuves est vitale pour la suite (assurance, plainte, recuperation).
+quiz:
+  - question: "Un ransomware fait quoi a tes fichiers ?"
+    choices:
+      - id: "a"
+        label: "Il les supprime definitivement"
+        correct: false
+      - id: "b"
+        label: "Il les chiffre avec une cle dont seul l'attaquant a la copie"
+        correct: true
+      - id: "c"
+        label: "Il les copie sur un serveur etranger"
+        correct: false
+    explanation: "Le ransomware chiffre — il ne supprime pas. La cle de dechiffrement est detenue par l'attaquant, qui la donne (parfois) contre paiement."
+
+  - question: "Quel est le tout premier reflexe en cas de message de rancon ?"
+    choices:
+      - id: "a"
+        label: "Eteindre le poste pour stopper l'attaque"
+        correct: false
+      - id: "b"
+        label: "Isoler le poste du reseau (debrancher) et alerter sans rien manipuler"
+        correct: true
+      - id: "c"
+        label: "Payer rapidement avant que la rancon double"
+        correct: false
+    explanation: "Eteindre detruit la memoire vive (preuves forensiques). Payer est tardif et risque. Isoler + alerter = bonne sequence."
+
+  - question: "Le numero de Cybermalveillance.gouv.fr est :"
+    choices:
+      - id: "a"
+        label: "0 805 805 817 (gratuit, 7j/7)"
+        correct: true
+      - id: "b"
+        label: "Il n'y en a pas, c'est un site internet seulement"
+        correct: false
+      - id: "c"
+        label: "Le 17 (police)"
+        correct: false
+    explanation: "Le 0 805 805 817 est gratuit, ouvert 7j/7. C'est le point d'entree officiel pour les particuliers et PME en cas d'incident cyber. Garde-le dans ton repertoire."
+---
+
+## Pour aller plus loin
+
+Le rancongiciel est le sujet cyber le plus mediatise en France depuis 2020. Mais sa banalite ne doit pas faire baisser la garde — chaque PME francaise a en moyenne 1 chance sur 2 d'en subir au moins une tentative cette annee. Connaitre le mecanisme, c'est deja diviser le risque par deux.
+
+> "Le ransomware n'est pas une catastrophe — c'est une crise. Et une crise, ca se prepare."
