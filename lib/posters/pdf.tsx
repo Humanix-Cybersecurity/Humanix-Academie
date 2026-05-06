@@ -5,7 +5,7 @@
 // risque (depuis lib/business-impact). Le poster est PRET A IMPRIMER
 // sur imprimante laser standard (A3, marges 1cm).
 //
-// Helvetica only (cf. note dans pdf-audit-flash.tsx) — pas d'emojis Unicode
+// Helvetica only (cf. note dans pdf-audit-flash.tsx) - pas d'emojis Unicode
 // dans le PDF. On utilise des symboles Latin-1 compatibles + le nom du
 // theme rendu textuellement.
 
@@ -192,7 +192,7 @@ export function MonthlyPoster(props: { variables: PosterVariables }) {
         {/* Fond couleur theme en haut */}
         <View style={[styles.bgBlock, { backgroundColor: C.bg }]} />
 
-        {/* Bandeau couleur — titre du poster */}
+        {/* Bandeau couleur - titre du poster */}
         <View style={styles.topStrip}>
           <Text style={styles.brandLine}>
             HUMANIX ACADÉMIE · POSTER DU MOIS

@@ -5,7 +5,7 @@ import Link from "next/link";
 import CopyableSnippet from "@/components/CopyableSnippet";
 
 export const metadata = {
-  title: "Connecteur Sekoia.io — Humanix Académie",
+  title: "Connecteur Sekoia.io - Humanix Académie",
   description:
     "Poussez les preuves de conformité Humanix vers Sekoia.io (SIEM/XDR souverain 🇫🇷) au format CEF. Connecteur Python MIT.",
 };
@@ -97,7 +97,7 @@ export default function SekoiaIntegrationPage() {
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-300">
               Toutes les preuves Humanix sont historisées dans Sekoia, avec les
-              événements de signalement phishing — preuve directe pour audit.
+              événements de signalement phishing - preuve directe pour audit.
             </p>
           </article>
           <article className="card">

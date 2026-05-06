@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// EmptyState — État vide standard (liste sans résultat, aucune donnée, etc.).
+// EmptyState - État vide standard (liste sans résultat, aucune donnée, etc.).
 //
 // Cohérent avec le pattern Linear : icône moyennement gros + titre clair +
 // description orientée action + CTA optionnel.

@@ -5,7 +5,7 @@ persona: "tous"
 objective: "Connaitre les signaux faibles de detection visuelle, sans s'y reposer comme defense unique"
 xpReward: 60
 scenario: |
-  Tu es responsable RH dans une PME. Lors d'un entretien d'embauche en visio, le candidat te semble "bizarre" — son visage est legerement flou en mouvement rapide, le clignement est trop regulier, et l'eclairage du visage ne correspond pas a celui de l'arriere-plan. Tu doutes mais tu n'es pas sure. Que fais-tu ?
+  Tu es responsable RH dans une PME. Lors d'un entretien d'embauche en visio, le candidat te semble "bizarre" - son visage est legerement flou en mouvement rapide, le clignement est trop regulier, et l'eclairage du visage ne correspond pas a celui de l'arriere-plan. Tu doutes mais tu n'es pas sure. Que fais-tu ?
 choices:
   - id: "a"
     label: "Je continue l'entretien, je ne suis pas une experte deepfake"
@@ -30,7 +30,7 @@ choices:
 debrief: |
   La **detection visuelle d'un deepfake video** est de moins en moins fiable. En 2024 c'etait facile (pas de clignement, peau plastifiee), en 2026 c'est devenu difficile, en 2027 ce sera quasiment impossible. Mais en attendant, voici les signaux faibles qui marchent encore en 2026.
 
-  **Niveau 1 — Signaux statiques (visage immobile)**
+  **Niveau 1 - Signaux statiques (visage immobile)**
 
   Encore fiables a 70 % en 2026 :
 
@@ -40,7 +40,7 @@ debrief: |
   - **Dents bizarres** quand la personne sourit (lignes irregulieres, dents qui apparaissent / disparaissent)
   - **Cheveux/oreilles fusionnes** au visage ou avec des artefacts
 
-  **Niveau 2 — Signaux dynamiques (en mouvement)**
+  **Niveau 2 - Signaux dynamiques (en mouvement)**
 
   Plus fiables que les signaux statiques :
 
@@ -49,7 +49,7 @@ debrief: |
   - **Glitches en mouvement rapide** : tourner la tête rapidement, parler vite, expression brutale
   - **Ombres incoherentes** quand la lumiere change (passage d'un nuage, deplacement)
 
-  **Niveau 3 — Signaux comportementaux (les plus fiables)**
+  **Niveau 3 - Signaux comportementaux (les plus fiables)**
 
   La technologie deepfake a fait des progres video, mais le **comportement humain authentique reste tres difficile a synthetiser** :
 
@@ -63,7 +63,7 @@ debrief: |
   - **"Mets ta main devant ton visage 2 secondes"** : occlusion + reapparition = artefacts probables
   - **"Tourne la tete completement a droite, puis a gauche"** : profil pur = difficulte deepfake
   - **"Tape 3 fois sur ton bureau"** : son + main visible = double check
-  - **Question de detail piege** : "On s'est croises au seminaire de Marseille en 2018, tu te souviens ?" — un vrai candidat dit "non, je n'y etais pas". Une IA continue dans le flou.
+  - **Question de detail piege** : "On s'est croises au seminaire de Marseille en 2018, tu te souviens ?" - un vrai candidat dit "non, je n'y etais pas". Une IA continue dans le flou.
 
   **Limite importante : ces astuces ont une duree de vie**
 
@@ -97,7 +97,7 @@ quiz:
         label: "Toujours fiable car les yeux humains sont superieurs"
         correct: false
       - id: "b"
-        label: "Probablement quasi-impossible — la defense de fond reste proceedurale"
+        label: "Probablement quasi-impossible - la defense de fond reste proceedurale"
         correct: true
       - id: "c"
         label: "Plus simple grace a des outils IA dedies"
@@ -122,4 +122,4 @@ quiz:
 
 La detection visuelle est utile **comme premier filtre**, pas comme defense unique. Si tu hesites encore apres 30 secondes d'observation, raccroche et appelle TON contact sur SON numero connu. C'est le seul test fiable a 100 %. Le reste est du complement.
 
-> "L'oeil humain est faillible. La procedure froide ne l'est pas — encore faut-il la mettre en place."
+> "L'oeil humain est faillible. La procedure froide ne l'est pas - encore faut-il la mettre en place."

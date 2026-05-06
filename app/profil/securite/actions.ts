@@ -94,7 +94,7 @@ export async function setPassword(formData: FormData) {
 }
 
 // ----------------------------------------------------
-// 2. SETUP 2FA — etape 1 : generer un secret + URI QR
+// 2. SETUP 2FA - etape 1 : generer un secret + URI QR
 // ----------------------------------------------------
 export async function startMfaEnrollment(): Promise<{
   ok: boolean;
@@ -118,7 +118,7 @@ export async function startMfaEnrollment(): Promise<{
 }
 
 // ----------------------------------------------------
-// 3. SETUP 2FA — etape 2 : verifier 1 code => activer + generer backup
+// 3. SETUP 2FA - etape 2 : verifier 1 code => activer + generer backup
 // ----------------------------------------------------
 export async function confirmMfaEnrollment(formData: FormData): Promise<{
   ok: boolean;
@@ -159,7 +159,7 @@ export async function confirmMfaEnrollment(formData: FormData): Promise<{
 }
 
 // ----------------------------------------------------
-// 4. DESACTIVER 2FA — exige le mdp actuel pour eviter cession de session
+// 4. DESACTIVER 2FA - exige le mdp actuel pour eviter cession de session
 // ----------------------------------------------------
 export async function disableMfa(formData: FormData): Promise<{
   ok: boolean;
@@ -229,7 +229,7 @@ export async function regenerateBackupCodes(): Promise<{
 }
 
 // ----------------------------------------------------
-// 6. FORGOT PASSWORD — public, sans auth
+// 6. FORGOT PASSWORD - public, sans auth
 // ----------------------------------------------------
 export async function requestPasswordReset(formData: FormData): Promise<{
   ok: boolean;
@@ -294,7 +294,7 @@ export async function requestPasswordReset(formData: FormData): Promise<{
 }
 
 // ----------------------------------------------------
-// 7. RESET PASSWORD — consomme le token recu par email
+// 7. RESET PASSWORD - consomme le token recu par email
 // ----------------------------------------------------
 export async function resetPasswordWithToken(formData: FormData): Promise<{
   ok: boolean;

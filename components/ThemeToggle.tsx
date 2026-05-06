@@ -68,7 +68,7 @@ export default function ThemeToggle({
     return (
       <button
         onClick={() => apply(next)}
-        title={`${label} — clique pour changer`}
+        title={`${label} - clique pour changer`}
         aria-label={`Theme actuel : ${label}. Cliquer pour passer au mode ${next}`}
         className="w-9 h-9 rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center hover:scale-110 transition"
       >

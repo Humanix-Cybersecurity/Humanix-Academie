@@ -2,7 +2,7 @@
 title: "Le spear phishing cible direction"
 durationMinutes: 8
 persona: "direction-comex"
-objective: "Reperer un spear phishing cible — l'attaque sur-mesure qui passe les filtres techniques"
+objective: "Reperer un spear phishing cible - l'attaque sur-mesure qui passe les filtres techniques"
 xpReward: 90
 scenario: |
   Lundi 8h54. Tu es directeur financier d'une PME industrielle de 87 personnes.
@@ -55,7 +55,7 @@ choices:
     feedback: "Excellent reflexe ! La DSI peut analyser le PDF en sandbox, verifier l'expediteur via les outils de threat intel, et te confirmer si c'est legitime. Tu protegeges l'entreprise."
     points: 50
 debrief: |
-  Cette attaque s'appelle le **spear phishing** — un phishing **cible**, conçu
+  Cette attaque s'appelle le **spear phishing** - un phishing **cible**, conçu
   spefiquement pour toi, avec de l'OSINT pousse et un scenario credible.
   Contrairement au phishing de masse, il **passe les filtres techniques** car :
   - Pas de domaine en blacklist : l'attaquant a achete un domaine credible
@@ -93,7 +93,7 @@ quiz:
   - question: "Quelle est la difference entre phishing classique et spear phishing ?"
     choices:
       - { id: "a", label: "Le spear phishing est en anglais", correct: false }
-      - { id: "b", label: "Le spear phishing est cible et personnalise — il passe les filtres techniques", correct: true }
+      - { id: "b", label: "Le spear phishing est cible et personnalise - il passe les filtres techniques", correct: true }
       - { id: "c", label: "Le spear phishing utilise toujours des deepfakes vocaux", correct: false }
       - { id: "d", label: "Aucune difference, c'est le meme mot", correct: false }
     explanation: "Le spear phishing (du verbe 'spear' = harponner) cible une personne specifique avec un message sur-mesure base sur de l'OSINT. Il passe les filtres anti-spam classiques car il n'a pas les marqueurs du phishing de masse."
@@ -104,7 +104,7 @@ quiz:
       - { id: "b", label: "Ne PAS ouvrir le PDF, transferer mail+SMS a la DSI pour analyse", correct: true }
       - { id: "c", label: "Ouvrir dans une VM jetable", correct: false }
       - { id: "d", label: "Repondre pour demander plus de contexte", correct: false }
-    explanation: "Un PDF protege par mot de passe contourne LES filtres anti-malware (qui ne peuvent pas le scanner). C'est l'inverse de 'safe' — c'est un signal d'alerte. La DSI peut l'analyser en sandbox sans risque."
+    explanation: "Un PDF protege par mot de passe contourne LES filtres anti-malware (qui ne peuvent pas le scanner). C'est l'inverse de 'safe' - c'est un signal d'alerte. La DSI peut l'analyser en sandbox sans risque."
 
   - question: "Pourquoi le spear phishing passe-t-il les filtres techniques ?"
     choices:
@@ -112,7 +112,7 @@ quiz:
       - { id: "b", label: "Parce que le mail n'a pas les marqueurs comportementaux du phishing de masse (pas de blacklist, pas de keywords, pas d'envoi en masse)", correct: true }
       - { id: "c", label: "Parce qu'il utilise SSL/TLS", correct: false }
       - { id: "d", label: "Parce qu'il vient d'un domaine .com", correct: false }
-    explanation: "Les filtres anti-phishing detectent surtout le phishing de masse via des heuristiques (reputation domaine, keywords, volume). Le spear phishing arrive en 1 exemplaire d'un domaine credible et 'warmed-up' — il passe sous le radar technique. Seule la vigilance humaine reste efficace."
+    explanation: "Les filtres anti-phishing detectent surtout le phishing de masse via des heuristiques (reputation domaine, keywords, volume). Le spear phishing arrive en 1 exemplaire d'un domaine credible et 'warmed-up' - il passe sous le radar technique. Seule la vigilance humaine reste efficace."
 
   - question: "Si tu as ouvert un PDF malveillant, quelle est l'action de PRIORITE 1 ?"
     choices:

@@ -1,7 +1,7 @@
 "use client";
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Live Attack Map — visualisation temps reel des evenements cyber du tenant.
+// Live Attack Map - visualisation temps reel des evenements cyber du tenant.
 // Connecte a /api/admin/live-events via EventSource (SSE).
 //
 // Effet en demo : un prospect voit un clic phishing arriver en live avec
@@ -121,7 +121,7 @@ export default function LiveAttackMap() {
             </span>
           </h3>
           <p className="text-xs text-gray-500 mt-1">
-            Activité cyber temps réel de votre équipe — flux SSE chiffré,
+            Activité cyber temps réel de votre équipe - flux SSE chiffré,
             scoping tenant strict.
           </p>
         </div>
@@ -219,7 +219,7 @@ export default function LiveAttackMap() {
       </div>
 
       <p className="text-[10px] text-gray-400 text-center mt-4">
-        Mises à jour automatiques — connexion sécurisée, données scopées à votre
+        Mises à jour automatiques - connexion sécurisée, données scopées à votre
         organisation.
       </p>
     </div>

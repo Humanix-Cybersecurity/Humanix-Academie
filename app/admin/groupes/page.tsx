@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// /admin/groupes — gestion des groupes metier (Compta, RH, Dev, etc.)
+// /admin/groupes - gestion des groupes metier (Compta, RH, Dev, etc.)
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";

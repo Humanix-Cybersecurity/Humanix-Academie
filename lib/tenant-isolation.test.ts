@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Tests d'isolation multi-tenant — invariant critique #1 d'un SaaS B2B.
+// Tests d'isolation multi-tenant - invariant critique #1 d'un SaaS B2B.
 //
 // Pour chaque server action admin tenant-scoped, on simule :
 //   - Un admin du tenant A authentifie (via mock auth())
@@ -122,7 +122,7 @@ beforeEach(() => {
 });
 
 // ----------------------------------------------------------------------------
-// TESTS — chaque action admin doit refuser un target d'un autre tenant
+// TESTS - chaque action admin doit refuser un target d'un autre tenant
 // ----------------------------------------------------------------------------
 describe("Isolation tenant : actions sur User cross-tenant", () => {
   it("toggleUserActive : refuse un user d'un autre tenant", async () => {

@@ -2,7 +2,7 @@
 title: "Le faux Microsoft 365"
 durationMinutes: 7
 persona: "tous-collaborateurs"
-objective: "Detecter une fausse alerte Microsoft 365 — la signature de l'urgence technique"
+objective: "Detecter une fausse alerte Microsoft 365 - la signature de l'urgence technique"
 xpReward: 60
 scenario: |
   Mardi 9h12, tu allumes ton poste avant la reunion d'equipe.
@@ -29,7 +29,7 @@ choices:
   - id: "a"
     label: "Je clique sur le lien et je rentre mes identifiants pour debloquer"
     outcome: "bad"
-    feedback: "Aïe — tu viens de donner tes identifiants Microsoft a un attaquant. Il a maintenant acces a toute ta boite mail, ton OneDrive, et peut envoyer des mails en ton nom."
+    feedback: "Aïe - tu viens de donner tes identifiants Microsoft a un attaquant. Il a maintenant acces a toute ta boite mail, ton OneDrive, et peut envoyer des mails en ton nom."
     points: -10
   - id: "b"
     label: "Je transfere le mail a la DSI / au support pour qu'ils gerent"
@@ -55,11 +55,11 @@ debrief: |
   Les 5 marqueurs typiques a reperer :
   - **Domaine d'envoi suspect** : "microsoft365-account.example" au lieu de
     "microsoft.com" ou "@accountprotection.microsoft.com" (les vrais domaines).
-  - **URL de destination decalee** : "login.microsoft365-secure.example" — un
+  - **URL de destination decalee** : "login.microsoft365-secure.example" - un
     sous-domaine creatif pour faire passer le filtre. Microsoft utilise toujours
     "login.microsoftonline.com" ou "account.microsoft.com".
   - **Urgence artificielle** : "24h", "suspension immediate", "action requise"
-    — la peur paralyse la verification.
+    - la peur paralyse la verification.
   - **Ton generique impersonnel** : pas de prenom, pas de nom d'entreprise,
     salutation passe-partout.
   - **Action demandee a haut risque** : clic sur lien externe pour saisir des

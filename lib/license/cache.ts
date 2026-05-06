@@ -3,7 +3,7 @@
 //
 // Pourquoi : Ed25519 verify coute ~1 ms par appel. Si on verifie a chaque
 // request HTTP (potentiellement 100+/sec en pic), on perd 100 ms/sec
-// CPU pour rien — la licence ne change qu'au demarrage ou via UI admin.
+// CPU pour rien - la licence ne change qu'au demarrage ou via UI admin.
 //
 // Strategie : on memorise le resultat pour 5 minutes. Ttl court pour que
 // l'expiration "naturelle" de licence soit detectee rapidement (sinon

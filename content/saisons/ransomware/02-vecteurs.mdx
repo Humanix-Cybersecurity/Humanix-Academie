@@ -10,12 +10,12 @@ scenario: |
   Avant de repondre, tu dois identifier la principale porte d'entree des ransomwares en PME francaise (2024-2026 selon ANSSI et CERT-FR). Ta lecture des stats te dit quoi ?
 choices:
   - id: "a"
-    label: "Les vulnerabilites zero-day sur les logiciels — il faut tout patcher 24/7"
+    label: "Les vulnerabilites zero-day sur les logiciels - il faut tout patcher 24/7"
     outcome: "bad"
     feedback: "Faux. Les zero-day sont rares (~5 % des intrusions). Ce sont les attaques targetting les grands groupes ou les Etats. Les PME francaises sont massivement attaquees par 3 vecteurs plus banaux."
     points: -5
   - id: "b"
-    label: "Le phishing email avec piece jointe ou lien malveillant — c'est de loin le vecteur #1 (~70 % des cas)"
+    label: "Le phishing email avec piece jointe ou lien malveillant - c'est de loin le vecteur #1 (~70 % des cas)"
     outcome: "good"
     feedback: "Exactement. La sensibilisation au phishing reste l'investissement #1 a ROI le plus eleve. Suivi par la double authentification (vol de credentials) et le patching des services exposes."
     points: 30
@@ -25,9 +25,9 @@ choices:
     feedback: "Cas marginal en France (~1 % des incidents). Tres mediatise mais non representatif du volume reel d'attaques."
     points: -5
   - id: "d"
-    label: "Les comptes utilisateurs voles via fuites de mots de passe non MFA — gros vecteur"
+    label: "Les comptes utilisateurs voles via fuites de mots de passe non MFA - gros vecteur"
     outcome: "good"
-    feedback: "Excellent. C'est le vecteur #2 (~20 % des cas), souvent en combinaison avec le phishing. Le MFA / passkeys reduit ce risque a quasi-zero — investissement bon ROI."
+    feedback: "Excellent. C'est le vecteur #2 (~20 % des cas), souvent en combinaison avec le phishing. Le MFA / passkeys reduit ce risque a quasi-zero - investissement bon ROI."
     points: 25
 debrief: |
   Selon les rapports **CERT-FR / ANSSI 2024** et **Cybermalveillance**, les ransomwares en France entrent par **3 portes principales** :
@@ -48,7 +48,7 @@ debrief: |
 
   **PORTE 2 (~20 %) : Identifiants voles + acces sans MFA**
 
-  Un attaquant achete tes identifiants sur le dark web (provenance : fuite tierce, phishing precedent, reuse de mot de passe). Il se connecte a ton VPN d'entreprise ou a ton bureau a distance — sans MFA, c'est ouvert.
+  Un attaquant achete tes identifiants sur le dark web (provenance : fuite tierce, phishing precedent, reuse de mot de passe). Il se connecte a ton VPN d'entreprise ou a ton bureau a distance - sans MFA, c'est ouvert.
 
   **Defenses :**
   - **MFA partout** sur tous les acces externes (VPN, RDP, mail, SaaS)
@@ -68,7 +68,7 @@ debrief: |
   1. Sensibilisation phishing (50 % du risque pour 5-10 k€/an)
   2. MFA partout (15 % du risque pour 0-5 k€/an)
   3. Patching discipline (10 % du risque pour le temps IT, gratuit)
-  4. Sauvegardes immuables (la derniere ligne de defense — voir saison `sauvegardes`)
+  4. Sauvegardes immuables (la derniere ligne de defense - voir saison `sauvegardes`)
 quiz:
   - question: "Quel est le vecteur d'infection ransomware #1 en PME francaise ?"
     choices:
@@ -89,7 +89,7 @@ quiz:
         label: "Tous les ransomwares"
         correct: false
       - id: "b"
-        label: "Le vecteur 'identifiants voles' (~20 % des cas) — il transforme un mot de passe vole en information inutile"
+        label: "Le vecteur 'identifiants voles' (~20 % des cas) - il transforme un mot de passe vole en information inutile"
         correct: true
       - id: "c"
         label: "Rien, le MFA est facilement contourne"
@@ -112,6 +112,6 @@ quiz:
 
 ## Pour aller plus loin
 
-L'ironie strategique du ransomware : 90 % des defenses reposent sur **3 disciplines simples** — sensibilisation phishing, MFA partout, patching mensuel. Ce sont des sujets organisationnels avant d'etre techniques. La PME qui les applique reduit son risque par 10. Celle qui investit dans les solutions miracles a 50 000 € sans appliquer ces bases ne reduit son risque que de moitie.
+L'ironie strategique du ransomware : 90 % des defenses reposent sur **3 disciplines simples** - sensibilisation phishing, MFA partout, patching mensuel. Ce sont des sujets organisationnels avant d'etre techniques. La PME qui les applique reduit son risque par 10. Celle qui investit dans les solutions miracles a 50 000 € sans appliquer ces bases ne reduit son risque que de moitie.
 
 > "Le ransomware tombe sur ceux qui n'ont pas fait les bases. Investis dans les bases."

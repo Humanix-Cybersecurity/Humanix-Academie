@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// ImpactKpisView — presentation des KPIs de benefices observes.
+// ImpactKpisView - presentation des KPIs de benefices observes.
 //
 // Public cible : DSI, RSSI, C-level qui veulent voir "ce que la
 // plateforme a fait evoluer dans ma boite". Format : cards avec gros
@@ -105,7 +105,7 @@ export default function ImpactKpisView({ kpis }: { kpis: ImpactKpis }) {
             delta={kpis.learning.riskScoreDelta}
             fromLabel={`Novices (${kpis.learning.novicesCount})`}
             toLabel={`Engagés (${kpis.learning.engagedCount})`}
-            help="Score moyen des collaborateurs qui n'ont fait aucun ou un seul module (novices) vs ceux qui en ont fait 5 ou plus (engagés). C'est un proxy avant/après — l'écart positif montre l'effet de la plateforme."
+            help="Score moyen des collaborateurs qui n'ont fait aucun ou un seul module (novices) vs ceux qui en ont fait 5 ou plus (engagés). C'est un proxy avant/après - l'écart positif montre l'effet de la plateforme."
           />
         </div>
       </Section>
@@ -221,9 +221,9 @@ export default function ImpactKpisView({ kpis }: { kpis: ImpactKpis }) {
         </p>
         <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
           Ces KPIs mesurent <strong>ce qui s'est passé chez toi</strong> grâce à
-          la plateforme — pas une projection théorique. Le delta "Effet
+          la plateforme - pas une projection théorique. Le delta "Effet
           plateforme" est un proxy avant/après basé sur la comparaison entre
-          collaborateurs novices (0-1 module) et engagés (5+ modules) — c'est
+          collaborateurs novices (0-1 module) et engagés (5+ modules) - c'est
           de la causalité statistique, pas absolue. Pour le ROI financier
           (économie €/an espérée), voir{" "}
           <Link

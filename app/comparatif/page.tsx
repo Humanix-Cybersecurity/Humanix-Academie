@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page publique "Comparatif honnete" — refonte cosy mai 2026.
+// Page publique "Comparatif honnete" - refonte cosy mai 2026.
 //
 // Le pari editorial reste : poser noir sur blanc nos forces ET nos faiblesses
 // face aux concurrents. Aucune suite SaaS cyber francaise ne le fait.
@@ -29,7 +29,7 @@ import { countExpertEpisodes } from "@/lib/content-availability";
 import HexBackdrop from "@/components/HexBackdrop";
 
 export const metadata = {
-  title: "Comparatif honnête — HumaniX vs concurrents | Humanix Académie",
+  title: "Comparatif honnête - HumaniX vs concurrents | Humanix Académie",
   description:
     "Comparatif honnête entre Humanix Académie et les principales plateformes de sensibilisation cyber 2026 (KnowBe4, Hoxhunt, Phished, Cyber Guru, Adaptive Security). On vous dit où nous sommes meilleurs, équivalents et ce qu'on apprend d'eux.",
 };
@@ -72,7 +72,7 @@ const ROWS: Row[] = [
   {
     category: "Tarification",
     feature: "Code source ouvert (auditabilité)",
-    humanix: win("AGPLv3 — code complet public sur GitHub"),
+    humanix: win("AGPLv3 - code complet public sur GitHub"),
     knowbe4: loss("Boîte noire (US)"),
     cyberGuru: loss("Boîte noire (Italie)"),
     hoxhunt: loss("Boîte noire (FI/US)"),
@@ -170,7 +170,7 @@ const ROWS: Row[] = [
   {
     category: "Simulation phishing & ingénierie sociale",
     feature: "IA générative pour personnaliser les phishings",
-    humanix: win("Oui — Mistral souverain FR (RGPD natif)"),
+    humanix: win("Oui - Mistral souverain FR (RGPD natif)"),
     knowbe4: eq("Oui (USA, Cloud Act)"),
     cyberGuru: eq("Oui (Italie/UE)"),
     hoxhunt: eq("Oui (FI)"),
@@ -180,7 +180,7 @@ const ROWS: Row[] = [
   {
     category: "Simulation phishing & ingénierie sociale",
     feature: "Vishing / simulation voix (deepfake +442 % H2 2024)",
-    humanix: eq("MVP livré — Mistral + Piper TTS 100 % souverain FR"),
+    humanix: eq("MVP livré - Mistral + Piper TTS 100 % souverain FR"),
     knowbe4: eq("AIDA voice agent (cloud US)"),
     cyberGuru: loss("Non documenté"),
     hoxhunt: win("Voice overlays mature"),
@@ -190,7 +190,7 @@ const ROWS: Row[] = [
   {
     category: "Simulation phishing & ingénierie sociale",
     feature: "Smishing / simulation SMS",
-    humanix: eq("MVP livré — Mistral 100 % souverain FR (génération SMS)"),
+    humanix: eq("MVP livré - Mistral 100 % souverain FR (génération SMS)"),
     knowbe4: win("Oui"),
     cyberGuru: eq("Oui"),
     hoxhunt: win("Oui"),
@@ -317,12 +317,12 @@ const ROWS: Row[] = [
   },
 
   // -----------------------------------------------------------------------
-  // CATÉGORIE : HRM (HUMAN RISK MANAGEMENT — TENDANCE 2026)
+  // CATÉGORIE : HRM (HUMAN RISK MANAGEMENT - TENDANCE 2026)
   // -----------------------------------------------------------------------
   {
     category: "Human Risk Management 2026",
     feature: "Score de risque humain par utilisateur",
-    humanix: win("Oui — User.riskScore Prisma"),
+    humanix: win("Oui - User.riskScore Prisma"),
     knowbe4: win("Risk score par user (mature)"),
     cyberGuru: eq("Score basique"),
     hoxhunt: win("Behavioral risk score (référence)"),
@@ -342,7 +342,7 @@ const ROWS: Row[] = [
   {
     category: "Human Risk Management 2026",
     feature: "MCP Server pour agents IA (Claude / Mistral / GPT)",
-    humanix: win("MVP livré — connectors/mcp-server, premier mover SAT/HRM 🇫🇷"),
+    humanix: win("MVP livré - connectors/mcp-server, premier mover SAT/HRM 🇫🇷"),
     knowbe4: loss("Non documenté"),
     cyberGuru: loss("Non"),
     hoxhunt: loss("Non"),
@@ -352,7 +352,7 @@ const ROWS: Row[] = [
   {
     category: "Human Risk Management 2026",
     feature: "Couvre risque agents IA (non-humain)",
-    humanix: loss("Non (2027 — sujet émergent)"),
+    humanix: loss("Non (2027 - sujet émergent)"),
     knowbe4: win("Annoncé 2026 (RSAC)"),
     cyberGuru: loss("Non"),
     hoxhunt: loss("Non"),
@@ -406,7 +406,7 @@ const ROWS: Row[] = [
   {
     category: "Intégrations",
     feature: "Connecteur GRC natif (CISO Assistant)",
-    humanix: win("Oui — endpoint /api/v1/evidence-export + connecteur Python"),
+    humanix: win("Oui - endpoint /api/v1/evidence-export + connecteur Python"),
     knowbe4: loss("Non"),
     cyberGuru: loss("Non"),
     hoxhunt: loss("Non"),
@@ -415,8 +415,8 @@ const ROWS: Row[] = [
   },
   {
     category: "Intégrations",
-    feature: "Format OSCAL v1.1.2 (NIST) — preuves portables",
-    humanix: win("Oui — format=oscal-v1, compatible Eramba/RegScale"),
+    feature: "Format OSCAL v1.1.2 (NIST) - preuves portables",
+    humanix: win("Oui - format=oscal-v1, compatible Eramba/RegScale"),
     knowbe4: loss("Non"),
     cyberGuru: loss("Non"),
     hoxhunt: loss("Non"),
@@ -426,7 +426,7 @@ const ROWS: Row[] = [
   {
     category: "Intégrations",
     feature: "SCIM v2 auto-provisioning (Entra/Okta/Google)",
-    humanix: win("Oui — RFC 7643/7644, extension custom Humanix"),
+    humanix: win("Oui - RFC 7643/7644, extension custom Humanix"),
     knowbe4: eq("Oui (Enterprise)"),
     cyberGuru: loss("Non"),
     hoxhunt: eq("Oui"),
@@ -436,7 +436,7 @@ const ROWS: Row[] = [
   {
     category: "Intégrations",
     feature: "Webhooks signés HMAC + doc publique",
-    humanix: win("Oui — HMAC-SHA256, SSRF-safe, doc Stripe-like"),
+    humanix: win("Oui - HMAC-SHA256, SSRF-safe, doc Stripe-like"),
     knowbe4: eq("Oui (basique)"),
     cyberGuru: eq("Oui"),
     hoxhunt: eq("Oui"),
@@ -446,7 +446,7 @@ const ROWS: Row[] = [
   {
     category: "Intégrations",
     feature: "Connecteur Microsoft Sentinel + workbook clé en main",
-    humanix: win("Oui — Logs Ingestion API + workbook JSON fourni"),
+    humanix: win("Oui - Logs Ingestion API + workbook JSON fourni"),
     knowbe4: eq("Doc partielle, pas de workbook"),
     cyberGuru: loss("Non"),
     hoxhunt: loss("Non"),
@@ -456,7 +456,7 @@ const ROWS: Row[] = [
   {
     category: "Intégrations",
     feature: "Connecteur Splunk HEC + SPL queries fournies",
-    humanix: win("Oui — format CIM v1 + connecteur Python MIT"),
+    humanix: win("Oui - format CIM v1 + connecteur Python MIT"),
     knowbe4: eq("Format propriétaire"),
     cyberGuru: loss("Non"),
     hoxhunt: loss("Non"),
@@ -466,7 +466,7 @@ const ROWS: Row[] = [
   {
     category: "Intégrations",
     feature: "Connecteurs souverains 🇫🇷 (Sekoia, HarfangLab, Mailinblack/Vade)",
-    humanix: win("Oui — 3 connecteurs FR natifs MIT"),
+    humanix: win("Oui - 3 connecteurs FR natifs MIT"),
     knowbe4: loss("Non"),
     cyberGuru: loss("Non"),
     hoxhunt: loss("Non"),
@@ -476,7 +476,7 @@ const ROWS: Row[] = [
   {
     category: "Intégrations",
     feature: "Connecteur HR souverain (Lucca → SCIM)",
-    humanix: win("Oui — connecteur Python MIT"),
+    humanix: win("Oui - connecteur Python MIT"),
     knowbe4: loss("Non"),
     cyberGuru: loss("Non"),
     hoxhunt: loss("Non"),
@@ -486,7 +486,7 @@ const ROWS: Row[] = [
   {
     category: "Intégrations",
     feature: "Plugin GLPI (ITSM le plus déployé en PME FR)",
-    humanix: win("Oui — bridge Python avec tickets auto"),
+    humanix: win("Oui - bridge Python avec tickets auto"),
     knowbe4: loss("Non"),
     cyberGuru: loss("Non"),
     hoxhunt: loss("Non"),
@@ -496,7 +496,7 @@ const ROWS: Row[] = [
   {
     category: "Intégrations",
     feature: "Liaison CyberMalveillance.gouv.fr",
-    humanix: win("Oui — référencement officiel + ressources intégrées"),
+    humanix: win("Oui - référencement officiel + ressources intégrées"),
     knowbe4: loss("Non (acteur US)"),
     cyberGuru: loss("Non (acteur IT)"),
     hoxhunt: loss("Non (acteur FI)"),
@@ -568,7 +568,7 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
   Tarification: {
     emoji: "💶",
     intro:
-      "Le portefeuille avant tout. La cyber doit etre accessible, pas reservee aux ETI qui peuvent payer 5 chiffres par an. Voici comment on s'aligne — et ou nos prix racontent une autre histoire.",
+      "Le portefeuille avant tout. La cyber doit etre accessible, pas reservee aux ETI qui peuvent payer 5 chiffres par an. Voici comment on s'aligne - et ou nos prix racontent une autre histoire.",
     palette: {
       bg: "from-cyan-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-cyan-950/40",
       ring: "border-cyan-200 dark:border-cyan-900/40",
@@ -602,7 +602,7 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
   "Conformité & souveraineté": {
     emoji: "🛡",
     intro:
-      "NIS2, RGPD, DORA, Cloud Act — la conformite n'est pas un argument marketing, c'est un filet de securite pour le dirigeant. On joue cartes sur table sur ou s'arrete notre maturite et ou on excelle.",
+      "NIS2, RGPD, DORA, Cloud Act - la conformite n'est pas un argument marketing, c'est un filet de securite pour le dirigeant. On joue cartes sur table sur ou s'arrete notre maturite et ou on excelle.",
     palette: {
       bg: "from-purple-50 via-white to-pink-50 dark:from-slate-900 dark:via-slate-900 dark:to-purple-950/40",
       ring: "border-purple-200 dark:border-purple-900/40",
@@ -625,7 +625,7 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
   "Human Risk Management 2026": {
     emoji: "🧭",
     intro:
-      "Le marche bascule du Security Awareness Training (SAT) vers le Human Risk Management (HRM). Les concurrents sortent leurs agents IA — on a fait le choix d'un MCP server ouvert, premier mover en France.",
+      "Le marche bascule du Security Awareness Training (SAT) vers le Human Risk Management (HRM). Les concurrents sortent leurs agents IA - on a fait le choix d'un MCP server ouvert, premier mover en France.",
     palette: {
       bg: "from-indigo-50 via-white to-cyan-50 dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950/40",
       ring: "border-indigo-200 dark:border-indigo-900/40",
@@ -648,7 +648,7 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
   Écosystème: {
     emoji: "🌱",
     intro:
-      "Une plateforme cyber ne vit pas seule. Elle s'inscrit dans un ecosysteme — financements, assureurs, partenaires. Voici ou nous en sommes, sans embellir.",
+      "Une plateforme cyber ne vit pas seule. Elle s'inscrit dans un ecosysteme - financements, assureurs, partenaires. Voici ou nous en sommes, sans embellir.",
     palette: {
       bg: "from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-teal-950/40",
       ring: "border-emerald-200 dark:border-emerald-900/40",
@@ -723,7 +723,7 @@ export default function ComparatifPage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* ============================================================
-          1. HERO — invitation a la comparaison transparente
+          1. HERO - invitation a la comparaison transparente
           ============================================================ */}
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
         <section
@@ -803,9 +803,9 @@ export default function ComparatifPage() {
             </h2>
             <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
               Cette page est mise à jour <strong>à chaque sortie produit majeure</strong>{" "}
-              — la nôtre comme celle des concurrents.{" "}
+              - la nôtre comme celle des concurrents.{" "}
               <strong>Refresh mai 2026 :</strong> Mantra a été racheté par Cyber
-              Guru (Italie) en mars 2025 — on a remplacé la colonne. On a aussi
+              Guru (Italie) en mars 2025 - on a remplacé la colonne. On a aussi
               ajouté <strong>Adaptive Security</strong> (US, $136M levés dont
               Series B 81M en 2025 par Bain Capital, NVIDIA, OpenAI Fund, a16z),
               le disrupteur AI-native du marché. Si vous voyez une information
@@ -847,7 +847,7 @@ export default function ComparatifPage() {
         </section>
 
         {/* ============================================================
-            3. LEGENDE — sereine et chaleureuse
+            3. LEGENDE - sereine et chaleureuse
             ============================================================ */}
         <section
           aria-label="Légende des statuts"
@@ -892,7 +892,7 @@ export default function ComparatifPage() {
         </section>
 
         {/* ============================================================
-            4. CHAPITRES — chaque categorie devient un chapitre
+            4. CHAPITRES - chaque categorie devient un chapitre
             avec son intro narratif et son tableau dedie.
             ============================================================ */}
         <section className="space-y-12 pt-2">
@@ -941,7 +941,7 @@ export default function ComparatifPage() {
                 <div className="overflow-x-auto rounded-2xl border border-gray-200 dark:border-slate-800 shadow-sm">
                   <table
                     className="w-full border-collapse min-w-[1100px] bg-white dark:bg-slate-900"
-                    aria-label={`Comparatif Humanix Académie versus concurrents — ${cat}`}
+                    aria-label={`Comparatif Humanix Académie versus concurrents - ${cat}`}
                   >
                     <thead>
                       <tr>
@@ -1001,7 +1001,7 @@ export default function ComparatifPage() {
         </section>
 
         {/* ============================================================
-            5. NOTRE LECTURE STRATEGIQUE — version cosy
+            5. NOTRE LECTURE STRATEGIQUE - version cosy
             ============================================================ */}
         <section
           aria-labelledby="lecture-title"
@@ -1022,7 +1022,7 @@ export default function ComparatifPage() {
               <strong className="text-primary-500 dark:text-accent-300">
                 Là où nous gagnons structurellement
               </strong>{" "}
-              — souveraineté FR end-to-end, AGPLv3 auditable, écosystème
+              - souveraineté FR end-to-end, AGPLv3 auditable, écosystème
               connecteurs FR/UE, marketplace ouverte, accessibilité, programme
               famille, pack NIS2 par-tenant, MCP server premier mover. Ces
               choix sont structurels, difficiles à copier rapidement par des
@@ -1032,7 +1032,7 @@ export default function ComparatifPage() {
               <strong className="text-primary-500 dark:text-accent-300">
                 Ce qu'on apprend des acteurs historiques
               </strong>{" "}
-              — volume catalogue, plugin Outlook mature, agent IA orchestrateur,
+              - volume catalogue, plugin Outlook mature, agent IA orchestrateur,
               SAML/SCIM enterprise. Ces écarts sont réels mais ne sont pas
               bloquants pour une PME de moins de 250 personnes. On comble
               progressivement (vishing et smishing souverains FR MVP livrés,
@@ -1040,21 +1040,21 @@ export default function ComparatifPage() {
             </p>
             <p>
               <strong className="text-primary-500 dark:text-accent-300">
-                Le vrai disrupteur 2026 — Adaptive Security
+                Le vrai disrupteur 2026 - Adaptive Security
               </strong>{" "}
               (US, $136M levés en moins de 2 ans, premier investissement cyber
               d'OpenAI) ne joue pas dans la même catégorie tarifaire ni
               réglementaire. Pour une organisation française soumise à NIS2 ou
               DORA, le Cloud Act sur leur stack OpenAI/AWS US reste un signal
               rouge. On offre une alternative AI-native souveraine : Mistral
-              (Paris) + Piper TTS (local) + Scaleway (Paris) — la <em>seule</em>{" "}
+              (Paris) + Piper TTS (local) + Scaleway (Paris) - la <em>seule</em>{" "}
               stack 100 % FR/UE pour les attaques voice deepfake.
             </p>
             <p>
               <strong className="text-primary-500 dark:text-accent-300">
                 Notre conviction
               </strong>{" "}
-              — pour une PME française qui démarre une démarche cyber, payer 5
+              - pour une PME française qui démarre une démarche cyber, payer 5
               à 10 fois moins cher pour 80 % des fonctionnalités utiles, et
               bénéficier d'un accompagnement humain plutôt que d'un support
               tier-3 anglophone, est le bon arbitrage. Pour une ETI multi-pays
@@ -1067,7 +1067,7 @@ export default function ComparatifPage() {
         </section>
 
         {/* ============================================================
-            6. CTA FINAL — invitation cosy (pas "14 jours gratuits")
+            6. CTA FINAL - invitation cosy (pas "14 jours gratuits")
             ============================================================ */}
         <section
           aria-labelledby="cta-title"
@@ -1092,7 +1092,7 @@ export default function ComparatifPage() {
           <p className="opacity-90 mb-6 max-w-xl mx-auto text-base sm:text-lg leading-relaxed relative">
             Aucun comparatif ne remplace votre intuition de terrain. Ouvrez
             notre démo, regardez ce qui vous parle, confrontez avec vos
-            critères réels — et écrivez-nous si on s'est trompé quelque part.
+            critères réels - et écrivez-nous si on s'est trompé quelque part.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center relative">
             <Link
@@ -1111,11 +1111,11 @@ export default function ComparatifPage() {
         </section>
 
         {/* ============================================================
-            7. CITATION FINALE — signature cosy "Hex veille"
+            7. CITATION FINALE - signature cosy "Hex veille"
             ============================================================ */}
         <section className="text-center pt-8 pb-4">
           <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            « La transparence n'est pas une faiblesse commerciale — c'est la
+            « La transparence n'est pas une faiblesse commerciale - c'est la
             seule manière sérieuse de parler de cyber. On préfère perdre un
             prospect honnêtement que le gagner sur un malentendu. »
           </blockquote>
@@ -1123,12 +1123,12 @@ export default function ComparatifPage() {
             aria-hidden="true"
             className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
           >
-            — Hex veille
+            - Hex veille
           </p>
         </section>
 
         {/* ============================================================
-            8. MENTIONS LEGALES — publicité comparative (L.122-1 et s.)
+            8. MENTIONS LEGALES - publicité comparative (L.122-1 et s.)
             ============================================================ */}
         <section
           aria-labelledby="comparatif-legal-title"
@@ -1138,7 +1138,7 @@ export default function ComparatifPage() {
             id="comparatif-legal-title"
             className="font-bold uppercase tracking-widest text-[10px] mb-2"
           >
-            Mentions légales — publicité comparative
+            Mentions légales - publicité comparative
           </h2>
           <p className="mb-2">
             Cette page constitue une <strong>publicité comparative</strong> au
