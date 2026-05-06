@@ -190,7 +190,7 @@ const ROWS: Row[] = [
   {
     category: "Simulation phishing & ingénierie sociale",
     feature: "Smishing / simulation SMS",
-    humanix: loss("Non (roadmap Q3 2026)"),
+    humanix: eq("MVP livré — Mistral 100 % souverain FR (génération SMS)"),
     knowbe4: win("Oui"),
     cyberGuru: eq("Oui"),
     hoxhunt: win("Oui"),
@@ -1033,11 +1033,10 @@ export default function ComparatifPage() {
                 Ce qu'on apprend des acteurs historiques
               </strong>{" "}
               — volume catalogue, plugin Outlook mature, agent IA orchestrateur,
-              simulation smishing/voice native, SAML/SCIM enterprise. Ces
-              écarts sont réels mais ne sont pas bloquants pour une PME de
-              moins de 250 personnes. On comble progressivement (vishing
-              souverain MVP livré, audit RGAA cabinet à venir, Qualiopi en
-              cours).
+              SAML/SCIM enterprise. Ces écarts sont réels mais ne sont pas
+              bloquants pour une PME de moins de 250 personnes. On comble
+              progressivement (vishing et smishing souverains FR MVP livrés,
+              audit RGAA cabinet à venir, Qualiopi en cours).
             </p>
             <p>
               <strong className="text-primary-500 dark:text-accent-300">

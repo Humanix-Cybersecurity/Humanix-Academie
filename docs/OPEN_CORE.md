@@ -79,6 +79,7 @@ Ces features sont **dans le même code source** mais le runtime applique un plan
 | Phishing simulé (campagnes)           | Pro           | Effort produit + responsabilité accrue                                   |
 | Phishing IA personnalisé (Mistral)    | Pro           | Coût d'inférence Mistral cloud                                            |
 | Vishing IA souverain (Mistral + Piper)| Pro           | Idem                                                                     |
+| Smishing IA souverain (Mistral SMS)   | Pro           | Idem                                                                     |
 | IA Coach Hex enrichi par LLM          | Pro           | Idem                                                                     |
 | Challenges d'équipe                   | Pro           | Effort produit                                                           |
 | Cyber-Réflexe (réponse à incident)    | Pro           | Effort produit + workflows critiques                                     |
