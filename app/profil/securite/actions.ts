@@ -23,7 +23,7 @@ import {
   consumePasswordResetToken,
   hashIp,
 } from "@/lib/password-reset";
-import { auditLog, AuditActions, AuditOutcomes } from "@/lib/audit";
+import { auditLog, AuditActions } from "@/lib/audit";
 
 const ISSUER = "Humanix Academie";
 
