@@ -45,9 +45,9 @@ const CHAPTERS = [
       accent: "text-cyan-700 dark:text-cyan-300",
     },
     body: [
-      "Pendant dix ans, j'ai fait du pentest dans des PME francaises. A chaque mission, c'etait la meme histoire. Marie de la compta clique sur un faux RIB. Stephane du commercial recycle son mot de passe Netflix sur son compte pro. Le dirigeant ouvre une piece jointe d'un fournisseur inconnu a 23h, fatigue.",
-      "90 % des cyberattaques contre une PME francaise passent par un humain. Pas un firewall mal configure, pas une faille zero-day. Un humain pas forme.",
-      "Et le marche de la sensibilisation cyber, en 2026, ressemble a ca : Knowbe4 a 8 000 €/an minimum, Hoxhunt sur devis, Phished et Cyber Guru entre 2 000 et 3 000 €/an. Tous fermes. Trois quarts viennent des Etats-Unis.",
+      "Pendant dix ans, j'ai fait du pentest dans des PME françaises. À chaque mission, c'était la même histoire. Marie de la compta clique sur un faux RIB. Stéphane du commercial recycle son mot de passe Netflix sur son compte pro. Le dirigeant ouvre une pièce jointe d'un fournisseur inconnu à 23h, fatigué.",
+      "90 % des cyberattaques contre une PME française passent par un humain. Pas un firewall mal configuré, pas une faille zero-day. Un humain pas formé.",
+      "Et le marché de la sensibilisation cyber, en 2026, ressemble à ça : Knowbe4 à 8 000 €/an minimum, Hoxhunt sur devis, Phished et Cyber Guru entre 2 000 et 3 000 €/an. Tous fermés. Trois quarts viennent des États-Unis.",
     ],
   },
   {
@@ -59,7 +59,7 @@ const CHAPTERS = [
       accent: "text-emerald-700 dark:text-emerald-300",
     },
     body: [
-      "L'ecosysteme open source cyber francais s'est structure pendant que j'etais tete dans le guidon. CISO Assistant (intuitem) couvre la gouvernance et la conformite. OpenCTI (Filigran) couvre la threat intelligence. Wazuh couvre la detection. Mais la couche humaine — la sensibilisation des collaborateurs — restait un trou beant.",
+      "L'écosystème open source cyber français s'est structuré pendant que j'étais tête dans le guidon. CISO Assistant (intuitem) couvre la gouvernance et la conformité. OpenCTI (Filigran) couvre la threat intelligence. Wazuh couvre la détection. Mais la couche humaine — la sensibilisation des collaborateurs — restait un trou béant.",
       "C'est exactement la que les attaques passent. Et personne ne fait du libre dessus.",
       "En etudiant comment intuitem, Filigran et Centreon font leur metier, j'ai vu le pattern : tu ne vends pas le code. Tu vends ton expertise. Tu publies en AGPLv3 un produit serieux. La communaute l'audite, l'adopte, le contribue. Tu deviens, par construction, l'expert mondial du produit que tu as ecrit. Et tu factures du conseil, de l'audit, de la formation.",
     ],
@@ -73,9 +73,9 @@ const CHAPTERS = [
       accent: "text-amber-700 dark:text-amber-300",
     },
     body: [
-      "Le 26 mai 2026, la plateforme Humanix Academie est publiee sur GitHub sous licence GNU AGPLv3. Le code complet, multi-tenant, audite. Tu peux l'installer chez toi en 10 minutes via Docker Compose. Tu peux l'auditer, le forker, le modifier, le deployer pour ta PME sans m'en demander la permission ni me payer un centime.",
+      "Le 26 mai 2026, la plateforme Humanix Academie est publiée sur GitHub sous licence GNU AGPLv3. Le code complet, multi-tenant, audité. Tu peux l'installer chez toi en 10 minutes via Docker Compose. Tu peux l'auditer, le forker, le modifier, le déployer pour ta PME sans m'en demander la permission ni me payer un centime.",
       "Inclus : moteur de gamification, mascotte evolutive, dashboard dirigeant, connecteur natif CISO Assistant, API REST, webhooks signes HMAC, exports OSCAL pour ton GRC, MCP server pour agents IA. Cinq saisons pedagogiques completes (phishing, mots de passe, donnees sensibles, teletravail, RGPD).",
-      "Ce qui reste paye : le cloud manage heberge en France, le catalogue avance de modules, la simulation de phishing avec IA Mistral souveraine, le Pack NIS2 turnkey, le SSO entreprise, et — surtout — l'expertise humaine qui paie mes factures (audit, gap analysis NIS2, formation Qualiopi, RSSI externalise).",
+      "Ce qui reste payé : le cloud managé hébergé en France, le catalogue avancé de modules, la simulation de phishing avec IA Mistral souveraine, le Pack NIS2 turnkey, le SSO entreprise, et — surtout — l'expertise humaine qui paie mes factures (audit, gap analysis NIS2, formation Qualiopi, RSSI externalisé).",
     ],
   },
   {
