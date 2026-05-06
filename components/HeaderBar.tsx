@@ -94,6 +94,12 @@ const SOLUTIONS_ITEMS: DropdownItem[] = [
     emoji: "🛡",
   },
   {
+    href: "/pour-les-daf",
+    label: "Pour les DAF",
+    description: "ROI €, Pack NIS2, fraude évitée — pas de jargon cyber",
+    emoji: "💼",
+  },
+  {
     href: "/lancement-oss",
     label: "Open source",
     description: "Lancement AGPLv3 — mardi 26 mai 2026",
