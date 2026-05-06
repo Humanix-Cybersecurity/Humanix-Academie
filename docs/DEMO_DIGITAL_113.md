@@ -1,6 +1,6 @@
 # Demo runbook — Digital 113 · 21 mai 2026
 
-> Document de scene. Imprimable, glissable dans la poche. 3 versions de demo
+> Document de scène. Imprimable, glissable dans la poche. 3 versions de demo
 > (5 / 10 / 20 minutes) selon le format alloue, plus le plan de repli si quelque
 > chose lache en live.
 
@@ -8,7 +8,7 @@
 
 ## TL;DR — la promesse a tenir
 
-Faire ressentir, en moins d'un quart d'heure, les **3 differenciateurs cles** :
+Faire ressentir, en moins d'un quart d'heure, les **3 différenciateurs clés** :
 
 1. **MCP server FR** — premier mover SAT/HRM (Claude Desktop parle a la plateforme en direct).
 2. **Vishing souverain** — Mistral (Paris) + Piper TTS (local), 100 % FR/UE, vs OpenAI/AWS US des concurrents.
@@ -21,9 +21,9 @@ Les autres atouts (RGAA, Pack NIS2, ecosysteme connecteurs FR) restent en reserv
 ## Pre-vol — checklist 60 minutes avant l'intervention
 
 - [ ] Connexion internet stable testee (4G operateur en backup, 1 Go disponible)
-- [ ] `npm run build` reussi sur la machine demo
+- [ ] `npm run build` réussi sur la machine démo
 - [ ] `npm run dev` lance, ports 3000 disponibles
-- [ ] Claude Desktop ouvert avec le MCP `humanix` connecte (verifier l'icone clef de bricolage 🔧 dans le composeur)
+- [ ] Claude Desktop ouvert avec le MCP `humanix` connecté (vérifier l'icône clé de bricolage 🔧 dans le composeur)
 - [ ] Tenant demo `tenant-d113` initialise avec les 7 utilisateurs fixtures (cf. `prisma/seed-tenant-d113.ts`)
 - [ ] Une cle API Humanix valide dans `~/Library/Application Support/Claude/claude_desktop_config.json`
 - [ ] Browser pret avec 4 onglets : `/lancement-oss`, `/admin`, `/admin/vishing`, [GitHub repo](https://github.com/Humanix-Cybersecurity/Humanix-Academie)
