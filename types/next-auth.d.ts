@@ -9,12 +9,14 @@
 
 import type { DefaultSession } from "next-auth";
 
+type HumanixRole = "LEARNER" | "MANAGER" | "RSSI" | "ADMIN" | "SUPERADMIN";
+
 declare module "next-auth" {
   interface Session {
     user: {
       id: string;
       tenantId: string;
-      role: "LEARNER" | "MANAGER" | "ADMIN" | "SUPERADMIN";
+      role: HumanixRole;
     } & DefaultSession["user"];
   }
 
@@ -22,7 +24,7 @@ declare module "next-auth" {
   interface User {
     id?: string;
     tenantId?: string;
-    role?: "LEARNER" | "MANAGER" | "ADMIN" | "SUPERADMIN";
+    role?: HumanixRole;
   }
 }
 
@@ -30,7 +32,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     uid?: string;
     tenantId?: string;
-    role?: "LEARNER" | "MANAGER" | "ADMIN" | "SUPERADMIN";
+    role?: HumanixRole;
     name?: string | null;
   }
 }

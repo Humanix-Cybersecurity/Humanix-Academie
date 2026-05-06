@@ -19,7 +19,7 @@ export async function GET(
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
   const role = session.user!.role;
-  if (role !== "ADMIN" && role !== "SUPERADMIN") {
+  if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
   const tenantId = session.user!.tenantId as string;
