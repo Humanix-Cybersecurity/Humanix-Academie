@@ -444,7 +444,7 @@ export function SecurityAuditReport() {
           ["Mots de passe", "AUCUN (zero-password)", "Aucune"],
           ["Tokens OAuth", "PostgreSQL chiffré", "Aucune"],
           ["Progression apprenant", "PostgreSQL", "Aucune"],
-          ["Contenu newsletter", "PostgreSQL", "Resend (envoi mail)"],
+          ["Contenu newsletter", "PostgreSQL", "Scaleway TEM"],
           ["Prompts Mistral", "RAM uniquement", "Mistral AI (Paris, FR)"],
           ["Audio TTS", "Cache disque sha256", "Aucune (interne)"],
           ["Logs système", "stdout (Docker)", "Aucune par défaut"],
@@ -478,7 +478,7 @@ export function SecurityAuditReport() {
           Zero-password par défaut : aucun mot de passe stocké côté HumaniX
         </Bullet>
         <Bullet>
-          3 modes : magic link Resend, SSO Google OAuth 2.0, SSO Microsoft Entra
+          3 modes : magic link Scaleway TEM, SSO Google OAuth 2.0, SSO Microsoft Entra
           OIDC
         </Bullet>
         <Bullet>
@@ -608,7 +608,7 @@ export function SecurityAuditReport() {
           CRON_SECRET : openssl rand -hex 32, comparaison timingSafeEqual
         </Bullet>
         <Bullet>
-          OAuth secrets, Resend API key, Mistral API key : env conteneur
+          OAuth secrets, Scaleway TEM token, Mistral API key : env conteneur
         </Bullet>
         <Bullet>Production : secret manager Scaleway / Vault recommandé</Bullet>
 
@@ -700,7 +700,7 @@ export function SecurityAuditReport() {
 
         <Text style={styles.h2}>6.4 Sous-traitants RGPD (art. 28)</Text>
         <Bullet>Scaleway (FR) — hébergement — DPA signé</Bullet>
-        <Bullet>Resend (UE Berlin/Dublin) — envoi mails — DPA signé</Bullet>
+        <Bullet>Scaleway TEM (Paris, FR) — envoi mails — DPA signé</Bullet>
         <Bullet>Mistral AI (FR Paris) — IA générative — DPA signé</Bullet>
         <Bullet>
           Google / Microsoft — SSO uniquement, AUCUNE donnée HumaniX transmise
@@ -841,7 +841,7 @@ export function SecurityAuditReport() {
           et ses sous-domaines, ou la plateforme Humanix Académie, est éligible.
         </Text>
         <Text style={styles.paragraph}>
-          Hors périmètre : sites tiers (Resend, Stripe, Mistral, etc.), social
+          Hors périmètre : sites tiers (Scaleway TEM, Payplug, Mistral, etc.), social
           engineering des employés, attaques DoS volumétriques.
         </Text>
 

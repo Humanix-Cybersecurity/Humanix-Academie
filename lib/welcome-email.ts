@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Email de bienvenue envoye apres signup ou apres souscription Stripe.
-// Contient les 3 prochaines etapes pour que le tenant ne reste pas
-// inactif (premier signe de churn dans le SaaS).
+// Email de bienvenue envoye apres signup ou apres souscription. Contient
+// les 3 prochaines etapes pour que le tenant ne reste pas inactif
+// (premier signe de churn dans le SaaS).
+//
+// Provider d'envoi : facade lib/email (Scaleway TEM par defaut, souverain FR).
 import { db } from "@/lib/db";
+import { sendEmail, isEmailConfigured } from "@/lib/email";
 
 export type WelcomeEmailContext = {
   toEmail: string;
@@ -15,27 +18,19 @@ export type WelcomeEmailContext = {
 export async function sendWelcomeEmail(
   ctx: WelcomeEmailContext,
 ): Promise<{ ok: boolean; reason?: string }> {
-  if (
-    !process.env.RESEND_API_KEY ||
-    process.env.RESEND_API_KEY === "demo-key-not-used-in-demo-mode" ||
-    !process.env.EMAIL_FROM
-  ) {
-    return { ok: false, reason: "resend_not_configured" };
+  if (!isEmailConfigured()) {
+    return { ok: false, reason: "email_provider_not_configured" };
   }
-  try {
-    const { Resend } = await import("resend");
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    await resend.emails.send({
-      from: process.env.EMAIL_FROM,
-      to: ctx.toEmail,
-      subject: `🦊 Bienvenue dans ${ctx.tenantName} sur Humanix Académie`,
-      html: buildHtml(ctx),
-    });
-    return { ok: true };
-  } catch (e) {
-    console.error("welcome email failed", e);
-    return { ok: false, reason: e instanceof Error ? e.message : "error" };
+  const res = await sendEmail({
+    to: ctx.toEmail,
+    subject: `🦊 Bienvenue dans ${ctx.tenantName} sur Humanix Académie`,
+    html: buildHtml(ctx),
+  });
+  if (!res.ok) {
+    console.error("welcome email failed", res);
+    return { ok: false, reason: res.reason };
   }
+  return { ok: true };
 }
 
 function buildHtml(ctx: WelcomeEmailContext): string {

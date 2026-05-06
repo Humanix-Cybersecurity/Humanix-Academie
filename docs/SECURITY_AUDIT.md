@@ -148,7 +148,7 @@ L'évaluation repose sur **4 sources de référence** :
 | Mots de passe             | Aucun (zero-password : magic link ou SSO) | Aucun                                                    | Aucune                     |
 | Tokens OAuth              | Provider Google/Microsoft                 | PostgreSQL (Account.access_token, chiffré au filesystem) | Aucune                     |
 | Progression apprenant     | Saisie via player                         | PostgreSQL                                               | Aucune                     |
-| Contenu Cyber-Anecdote    | Rédaction interne                         | PostgreSQL                                               | Resend (envoi mail)        |
+| Contenu Cyber-Anecdote    | Rédaction interne                         | PostgreSQL                                               | Scaleway TEM (envoi mail)        |
 | Prompts Mistral           | Saisie admin tenant                       | Mémoire vive uniquement                                  | Mistral AI (Paris, France) |
 | Audio TTS                 | Texte de modules                          | Cache disque hash sha256, TTL 30j                        | Aucune (service interne)   |
 | Webhooks                  | Événements tenant                         | Trigger sur Slack/Teams/URL custom                       | URL configurée par tenant  |
@@ -165,7 +165,7 @@ L'évaluation repose sur **4 sources de référence** :
 #### Choix de design
 
 - **Zero-password par défaut** : aucun mot de passe stocké côté HumaniX en mode production. Trois modes :
-  1. **Magic link** par email (Resend) — par défaut
+  1. **Magic link** par email (Scaleway TEM) — par défaut
   2. **SSO Google** (OAuth 2.0)
   3. **SSO Microsoft Entra ID** (OAuth 2.0 + OIDC)
 - **Mode démo** : Credentials provider sans mot de passe (1-clic) pour permettre les démos commerciales sans setup.
@@ -362,7 +362,7 @@ http-request deny deny_status 429 if is_abuser_req
 | `DATABASE_URL`                    | env conteneur (mot de passe DB inclus) | mot de passe fort, géré par opérateur |
 | `MISTRAL_API_KEY`                 | env conteneur                          | fournie par Mistral AI                |
 | OAuth secrets (Google, Microsoft) | env conteneur                          | fournis par provider                  |
-| Resend API key                    | env conteneur                          | fournie par Resend                    |
+| Scaleway TEM API key                    | env conteneur                          | fournie par Scaleway TEM                    |
 
 **Pratiques** :
 
@@ -421,7 +421,7 @@ http-request deny deny_status 429 if is_abuser_req
 | Sous-traitant             | Service                | Pays                            | DPA                                               |
 | ------------------------- | ---------------------- | ------------------------------- | ------------------------------------------------- |
 | Scaleway                  | Hébergement            | France 🇫🇷                       | DPA standard signé                                |
-| Resend                    | Envoi de mails         | UE 🇪🇺 (Berlin/Dublin)           | DPA standard signé                                |
+| Scaleway TEM                    | Envoi de mails         | UE 🇪🇺 (Berlin/Dublin)           | DPA standard signé                                |
 | Mistral AI                | IA générative phishing | France 🇫🇷                       | DPA standard signé                                |
 | Stripe (à venir)          | Paiements              | Irlande 🇮🇪 + USA (mais data EU) | DPA standard                                      |
 | Google (SSO optionnel)    | Authentification SSO   | USA 🇺🇸                          | OAuth uniquement, aucune donnée HumaniX transmise |
@@ -598,7 +598,7 @@ Toutes les actions admin sensibles sont loggées dans `Event`. En cas d'incident
 
 Toute découverte de vulnérabilité affectant **`humanix-cybersecurity.fr`** et ses sous-domaines, ou la plateforme Humanix Académie, est éligible.
 
-**Hors périmètre** : sites tiers (Resend, Stripe, Mistral, etc.), social engineering des employés, attaques DoS volumétriques.
+**Hors périmètre** : sites tiers (Scaleway TEM, Stripe, Mistral, etc.), social engineering des employés, attaques DoS volumétriques.
 
 ### 11.2 Comment signaler
 
