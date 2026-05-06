@@ -342,14 +342,16 @@
 .dark .legal-prose strong {
   color: rgb(125 211 252);
 }
-.legal-prose a {
+/* Lien standard dans le prose legal — exclut les boutons stylises
+   (btn-primary, btn-secondary) pour ne pas casser leur contraste. */
+.legal-prose a:not(.btn-primary):not(.btn-secondary) {
   color: rgb(0 163 161);
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
   font-weight: 500;
 }
-.legal-prose a:hover {
+.legal-prose a:not(.btn-primary):not(.btn-secondary):hover {
   color: rgb(11 61 145);
   text-decoration-thickness: 2px;
 }
