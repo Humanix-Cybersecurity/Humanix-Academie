@@ -198,6 +198,14 @@ export default function HeaderBar() {
                     label="Sécurité (mot de passe, 2FA)"
                     onClick={() => setMenuOpen(false)}
                   />
+                  {isAdmin && (
+                    <MenuLink
+                      href="/profil/facturation"
+                      icon="💳"
+                      label="Facturation"
+                      onClick={() => setMenuOpen(false)}
+                    />
+                  )}
                   <MenuLink
                     href="/boutique"
                     icon="🛒"
