@@ -60,6 +60,8 @@
     "@auth/prisma-adapter": "^2.7.0",
     "@prisma/client": "^5.22.0",
     "@react-pdf/renderer": "^4.1.5",
+    "@simplewebauthn/browser": "^10.0.0",
+    "@simplewebauthn/server": "^10.0.1",
     "canvas-confetti": "^1.9.3",
     "clsx": "^2.1.1",
     "gray-matter": "^4.0.3",
