@@ -6,7 +6,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Liaison CyberMalveillance.gouv.fr — Humanix Académie",
+  title: "Liaison CyberMalveillance.gouv.fr - Humanix Académie",
   description:
     "Humanix s'articule avec le dispositif national CyberMalveillance.gouv.fr : déclaration d'incidents, kit de communication, ressources officielles intégrées.",
 };
@@ -60,7 +60,7 @@ export default function CybermalveillanceIntegrationPage() {
             </a>
           </li>
           <li>
-            Suivez le diagnostic guidé (5 min) — il oriente vers les bons
+            Suivez le diagnostic guidé (5 min) - il oriente vers les bons
             réflexes.
           </li>
           <li>
@@ -161,7 +161,7 @@ export default function CybermalveillanceIntegrationPage() {
             >
               cybermalveillance.gouv.fr ↗
             </a>{" "}
-            — site officiel
+            - site officiel
           </li>
           <li>
             <a
@@ -172,7 +172,7 @@ export default function CybermalveillanceIntegrationPage() {
             >
               Diagnostic guidé ↗
             </a>{" "}
-            — premier réflexe en cas d'incident
+            - premier réflexe en cas d'incident
           </li>
           <li>
             <a
@@ -183,7 +183,7 @@ export default function CybermalveillanceIntegrationPage() {
             >
               Bibliothèque officielle ↗
             </a>{" "}
-            — fiches gratuites par thème
+            - fiches gratuites par thème
           </li>
           <li>
             <a
@@ -194,7 +194,7 @@ export default function CybermalveillanceIntegrationPage() {
             >
               Label ExpertCyber ↗
             </a>{" "}
-            — annuaire des prestataires labellisés
+            - annuaire des prestataires labellisés
           </li>
         </ul>
       </section>

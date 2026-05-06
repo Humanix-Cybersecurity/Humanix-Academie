@@ -36,7 +36,7 @@ const today = (v: PackNis2Variables) =>
 export function policyDocument(v: PackNis2Variables): Document {
   return {
     title: "Politique de sensibilisation à la cybersécurité",
-    subtitle: `${v.tenantName} — version du ${today(v)}`,
+    subtitle: `${v.tenantName} - version du ${today(v)}`,
     sections: [
       {
         heading: "1. Objet",
@@ -84,7 +84,7 @@ export function policyDocument(v: PackNis2Variables): Document {
         heading: "Signature",
         paragraphs: [
           `Fait à ${v.headquarterCity}, le ${today(v)}.`,
-          `Pour ${v.tenantName} : ${v.directeurName} — ${v.directeurTitle}.`,
+          `Pour ${v.tenantName} : ${v.directeurName} - ${v.directeurTitle}.`,
           "Signature : ____________________________",
         ],
       },
@@ -98,7 +98,7 @@ export function policyDocument(v: PackNis2Variables): Document {
 export function incidentDocument(v: PackNis2Variables): Document {
   return {
     title: "Procédure de déclaration d'incident cyber",
-    subtitle: `${v.tenantName} — version du ${today(v)}`,
+    subtitle: `${v.tenantName} - version du ${today(v)}`,
     sections: [
       {
         heading: "Objectif",
@@ -115,21 +115,21 @@ export function incidentDocument(v: PackNis2Variables): Document {
           "Pré-notification au CSIRT national : sous 24 heures après prise de connaissance",
           "Notification complète au CSIRT national : sous 72 heures",
           "Rapport final : sous 1 mois",
-          "(En complément, pour les violations de données personnelles : notification CNIL sous 72 heures — RGPD art. 33)",
+          "(En complément, pour les violations de données personnelles : notification CNIL sous 72 heures - RGPD art. 33)",
         ],
       },
       {
-        heading: "Étape 1 — Détection",
+        heading: "Étape 1 - Détection",
         paragraphs: [
           "Tout collaborateur qui détecte ou suspecte un incident (mail piégé cliqué, ransomware, accès anormal, fuite de données) prévient immédiatement :",
         ],
         bullets: [
-          `${v.contactCriseName ?? v.directeurName} — ${v.contactCriseEmail ?? v.directeurEmail}`,
+          `${v.contactCriseName ?? v.directeurName} - ${v.contactCriseEmail ?? v.directeurEmail}`,
           v.contactCriseTel ?? "Téléphone d'urgence : (à compléter)",
         ],
       },
       {
-        heading: "Étape 2 — Confinement immédiat",
+        heading: "Étape 2 - Confinement immédiat",
         paragraphs: [
           "Le contact crise prend les mesures de confinement les plus simples possibles AVANT toute communication :",
         ],
@@ -137,11 +137,11 @@ export function incidentDocument(v: PackNis2Variables): Document {
           "Déconnecter du réseau les postes/serveurs suspects (câble réseau / WiFi off)",
           "NE PAS éteindre les postes (préservation de la mémoire pour analyse forensique)",
           "Identifier le périmètre des données potentiellement exposées",
-          "Conserver les logs (mail, pare-feu, AD) — ne rien purger",
+          "Conserver les logs (mail, pare-feu, AD) - ne rien purger",
         ],
       },
       {
-        heading: "Étape 3 — Qualification",
+        heading: "Étape 3 - Qualification",
         paragraphs: [
           "Sous 4 heures, le contact crise qualifie l'incident pour décider de la déclaration externe : nature (ransomware, fuite, compromission de compte, défacement…), périmètre (nb de comptes, volume de données, services impactés), gravité (faible/modérée/grave/critique).",
           `En cas de doute, ${v.tenantName} peut s'appuyer sur :`,
@@ -153,7 +153,7 @@ export function incidentDocument(v: PackNis2Variables): Document {
         ],
       },
       {
-        heading: "Étape 4 — Notification réglementaire",
+        heading: "Étape 4 - Notification réglementaire",
         paragraphs: [
           "Si l'entreprise est concernée par NIS2 : notification CSIRT national sous 24h (pré-notification) puis 72h (rapport).",
           "Si des données personnelles sont concernées : notification CNIL sous 72h via notifications.cnil.fr.",
@@ -161,18 +161,18 @@ export function incidentDocument(v: PackNis2Variables): Document {
         ],
       },
       {
-        heading: "Étape 5 — Retour d'expérience (REX)",
+        heading: "Étape 5 - Retour d'expérience (REX)",
         paragraphs: [
           "Sous 30 jours après résolution, un REX est rédigé : chronologie des faits, mesures prises, leçons apprises, actions correctives. Le REX est conservé au minimum 5 ans.",
         ],
       },
       {
-        heading: "Annexe — Coordonnées utiles",
+        heading: "Annexe - Coordonnées utiles",
         paragraphs: [],
         bullets: [
-          "ANSSI / CERT-FR : cert-fr.cossi.defense.gouv.fr — 01 71 75 84 50",
+          "ANSSI / CERT-FR : cert-fr.cossi.defense.gouv.fr - 01 71 75 84 50",
           "CNIL : notifications.cnil.fr",
-          "Cybermalveillance.gouv.fr — 0 805 805 817",
+          "Cybermalveillance.gouv.fr - 0 805 805 817",
           "Police judiciaire : 17 ou pre-plainte-en-ligne.gouv.fr",
         ],
       },
@@ -181,12 +181,12 @@ export function incidentDocument(v: PackNis2Variables): Document {
 }
 
 // =============================================================================
-// 3. REGISTRE DES FORMATIONS (resume — l'export CSV/PDF est dynamique)
+// 3. REGISTRE DES FORMATIONS (resume - l'export CSV/PDF est dynamique)
 // =============================================================================
 export function trainingRegisterDocument(v: PackNis2Variables): Document {
   return {
     title: "Registre des actions de sensibilisation cyber",
-    subtitle: `${v.tenantName} — extrait du ${today(v)}`,
+    subtitle: `${v.tenantName} - extrait du ${today(v)}`,
     sections: [
       {
         heading: "Présentation",
@@ -227,7 +227,7 @@ export function trainingRegisterDocument(v: PackNis2Variables): Document {
 export function employeeChartDocument(v: PackNis2Variables): Document {
   return {
     title: "Engagement cyber du collaborateur",
-    subtitle: `${v.tenantName} — version du ${today(v)}`,
+    subtitle: `${v.tenantName} - version du ${today(v)}`,
     sections: [
       {
         paragraphs: [

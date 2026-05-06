@@ -7,7 +7,7 @@ import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
 export const metadata = {
-  title: "Page introuvable — Humanix Académie",
+  title: "Page introuvable - Humanix Académie",
   description:
     "Cette page n'existe pas (ou plus). Voici quelques chemins pour retrouver le tien.",
 };
@@ -40,7 +40,7 @@ const REBONDS = [
   {
     emoji: "🌱",
     label: "Lancement open source",
-    description: "Mardi 26 mai 2026 — compte à rebours",
+    description: "Mardi 26 mai 2026 - compte à rebours",
     href: "/lancement-oss",
   },
   {
@@ -113,7 +113,7 @@ export default function NotFound() {
             aria-hidden="true"
             className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
           >
-            — Hex veille
+            - Hex veille
           </p>
         </section>
       </div>

@@ -6,7 +6,7 @@
 
 ---
 
-## Principe directeur — hub-and-spoke
+## Principe directeur - hub-and-spoke
 
 Humanix Académie n'est pas une plateforme isolée. Notre rôle dans la stack du RSSI est d'être le **pilier facteur humain** qui s'intègre nativement à son écosystème (GRC, SIEM, IAM, ITSM, RH, CTI). Pour rester maintenable en solo, nous adoptons une logique **hub-and-spoke** :
 
@@ -20,7 +20,7 @@ Bénéfice : on maintient 1 endpoint + 1 mapping GRC, on décline en 5-10 format
 
 ## Les 10 intégrations validées
 
-### ✅ Sprint 10 — Standards pivots (LIVRÉ — mai 2026)
+### ✅ Sprint 10 - Standards pivots (LIVRÉ - mai 2026)
 
 Effort cumulé faible, ROI maximal car débloque des dizaines d'outils en aval.
 
@@ -29,11 +29,11 @@ Effort cumulé faible, ROI maximal car débloque des dizaines d'outils en aval.
 | 1   | **`format=oscal-v1`** sur `/api/v1/evidence-export` (NIST 1.1.2 Assessment Results)                                               | ✅ livré |
 | 2   | **Webhook outbound `evidence.exported`** signé HMAC-SHA256 + page de doc publique `/integrations/webhooks`                        | ✅ livré |
 | 3   | **SCIM v2 complet** (`/scim/v2/{ServiceProviderConfig,ResourceTypes,Users,Users/[id],Groups}`) + page de doc `/integrations/scim` | ✅ livré |
-| 4   | **Hub `/integrations`** — vue agrégée des connecteurs (livrés + roadmap, filtre par origine FR/UE/US/Standard)                    | ✅ livré |
+| 4   | **Hub `/integrations`** - vue agrégée des connecteurs (livrés + roadmap, filtre par origine FR/UE/US/Standard)                    | ✅ livré |
 
 ---
 
-### ✅ Sprint 11 — Marché SIEM mainstream (LIVRÉ — mai 2026)
+### ✅ Sprint 11 - Marché SIEM mainstream (LIVRÉ - mai 2026)
 
 | #   | Livrable                                                                                                         | Statut   |
 | --- | ---------------------------------------------------------------------------------------------------------------- | -------- |
@@ -43,23 +43,23 @@ Effort cumulé faible, ROI maximal car débloque des dizaines d'outils en aval.
 
 ---
 
-### ✅ Sprint 12 — Levier commercial PME française (LIVRÉ — mai 2026) 🇫🇷
+### ✅ Sprint 12 - Levier commercial PME française (LIVRÉ - mai 2026) 🇫🇷
 
 | #   | Livrable                                                                                                            | Statut   |
 | --- | ------------------------------------------------------------------------------------------------------------------- | -------- |
-| 6   | **Connecteur Lucca** — Python MIT, sync HR vers SCIM v2 + page `/integrations/lucca`                                | ✅ livré |
-| 7   | **Plugin GLPI** — bridge Python, webhooks signés → tickets GLPI 10.x + page `/integrations/glpi`                    | ✅ livré |
-| 8   | **CyberMalveillance.gouv.fr** — page liaison officielle + ressources intégrées + démarche de référencement en cours | ✅ livré |
+| 6   | **Connecteur Lucca** - Python MIT, sync HR vers SCIM v2 + page `/integrations/lucca`                                | ✅ livré |
+| 7   | **Plugin GLPI** - bridge Python, webhooks signés → tickets GLPI 10.x + page `/integrations/glpi`                    | ✅ livré |
+| 8   | **CyberMalveillance.gouv.fr** - page liaison officielle + ressources intégrées + démarche de référencement en cours | ✅ livré |
 
 ---
 
-### ✅ Sprint 13 — Souveraineté française (LIVRÉ — mai 2026) 🇫🇷
+### ✅ Sprint 13 - Souveraineté française (LIVRÉ - mai 2026) 🇫🇷
 
 | #   | Livrable                                                                                                                  | Statut   |
 | --- | ------------------------------------------------------------------------------------------------------------------------- | -------- |
-| 9   | **Sekoia.io** — connecteur Python push CEF vers Intake API + page `/integrations/sekoia`                                  | ✅ livré |
-| 10  | **HarfangLab** — bridge bidirectionnel (push CEF + pull alertes pour campagnes ciblées) + page `/integrations/harfanglab` | ✅ livré |
-| 11  | **Mailinblack / Vade** — bridge HTTP webhook → campagne Humanix ciblée < 5 min + page `/integrations/mailinblack-vade`    | ✅ livré |
+| 9   | **Sekoia.io** - connecteur Python push CEF vers Intake API + page `/integrations/sekoia`                                  | ✅ livré |
+| 10  | **HarfangLab** - bridge bidirectionnel (push CEF + pull alertes pour campagnes ciblées) + page `/integrations/harfanglab` | ✅ livré |
+| 11  | **Mailinblack / Vade** - bridge HTTP webhook → campagne Humanix ciblée < 5 min + page `/integrations/mailinblack-vade`    | ✅ livré |
 
 ---
 
@@ -67,12 +67,12 @@ Effort cumulé faible, ROI maximal car débloque des dizaines d'outils en aval.
 
 | Période   | Sprint | Livrable                                                           | Cocorico | US   | Standard |
 | --------- | ------ | ------------------------------------------------------------------ | -------- | ---- | -------- |
-| Mai 2026  | 9 ✅   | CISO Assistant (connecteur livré)                                  | —        | —    | ✅       |
-| Juin 2026 | 10     | OSCAL + Webhook + SCIM                                             | —        | —    | ✅✅✅   |
-| Juil 2026 | 11     | Sentinel + Splunk                                                  | —        | ✅✅ | —        |
-| Sept 2026 | 12     | Lucca + GLPI + CyberMalveillance                                   | ✅✅✅   | —    | —        |
-| Nov 2026  | 13     | Sekoia + HarfangLab + Mailinblack/Vade                             | ✅✅✅   | —    | —        |
-| 2027      | 14+    | Élargissement opportuniste (Eramba, Vanta, Defender O365, Patrowl) | —        | —    | —        |
+| Mai 2026  | 9 ✅   | CISO Assistant (connecteur livré)                                  | -        | -    | ✅       |
+| Juin 2026 | 10     | OSCAL + Webhook + SCIM                                             | -        | -    | ✅✅✅   |
+| Juil 2026 | 11     | Sentinel + Splunk                                                  | -        | ✅✅ | -        |
+| Sept 2026 | 12     | Lucca + GLPI + CyberMalveillance                                   | ✅✅✅   | -    | -        |
+| Nov 2026  | 13     | Sekoia + HarfangLab + Mailinblack/Vade                             | ✅✅✅   | -    | -        |
+| 2027      | 14+    | Élargissement opportuniste (Eramba, Vanta, Defender O365, Patrowl) | -        | -    | -        |
 
 **Total fin 2026 : 11 connecteurs natifs livrés.** Aucun concurrent (KnowBe4, Mantra, Hoxhunt, Phished) n'en a plus de 3.
 
@@ -114,16 +114,16 @@ Cette politique permet de répondre à 100% des besoins sans s'engager à mainte
 
 À ajouter ligne par ligne au fil des livraisons :
 
-- ✅ Connecteur GRC natif (CISO Assistant) — **Humanix gagne face à 4 concurrents**
-- 🟡 Format OSCAL-v1 standard NIST — **Humanix gagne**
-- 🟡 SCIM v2 auto-provisioning — _équivaut_ concurrents grand compte, **Humanix gagne** vs Mantra/Phished
-- 🟡 Connecteur Sentinel + workbook clé en main — **Humanix gagne** (concurrents : doc PDF)
-- 🟡 Connecteur Lucca / PayFit / GLPI — **Humanix seul gagnant**
-- 🟡 Connecteur Sekoia / HarfangLab — **Humanix seul gagnant** (souveraineté)
+- ✅ Connecteur GRC natif (CISO Assistant) - **Humanix gagne face à 4 concurrents**
+- 🟡 Format OSCAL-v1 standard NIST - **Humanix gagne**
+- 🟡 SCIM v2 auto-provisioning - _équivaut_ concurrents grand compte, **Humanix gagne** vs Mantra/Phished
+- 🟡 Connecteur Sentinel + workbook clé en main - **Humanix gagne** (concurrents : doc PDF)
+- 🟡 Connecteur Lucca / PayFit / GLPI - **Humanix seul gagnant**
+- 🟡 Connecteur Sekoia / HarfangLab - **Humanix seul gagnant** (souveraineté)
 
 ### Argumentaire RSSI
 
-> _« Le seul outil de sensibilisation cyber qui s'intègre nativement à votre stack souveraine — Sekoia, HarfangLab, GLPI, Lucca, CISO Assistant — sans dev custom. »_
+> _« Le seul outil de sensibilisation cyber qui s'intègre nativement à votre stack souveraine - Sekoia, HarfangLab, GLPI, Lucca, CISO Assistant - sans dev custom. »_
 
 C'est un positionnement unique sur le marché européen.
 
@@ -135,7 +135,7 @@ C'est un positionnement unique sur le marché européen.
 
 - `INTEGRATIONS_ECOSYSTEME.md` (ce fichier)
 - `ROADMAP_PRODUIT.md`
-- Page publique `/integrations` (à créer en sprint 10) — index visuel de tous les connecteurs disponibles
+- Page publique `/integrations` (à créer en sprint 10) - index visuel de tous les connecteurs disponibles
 - Ligne dédiée dans `/comparatif`
 
 ---

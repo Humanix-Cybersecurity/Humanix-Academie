@@ -5,14 +5,14 @@ persona: "tous"
 objective: "Maitriser le compte a rebours RGPD apres une fuite avec sang-froid"
 xpReward: 60
 scenario: |
-  Vendredi 18h. Un developpeur t'appelle, voix tendue : "On a un probleme. Une base contenant 12 000 emails de clients vient de tomber sur un repository GitHub public — c'etait une vieille sauvegarde, on a corrige en 10 minutes, mais elle a ete indexee par Google."
+  Vendredi 18h. Un developpeur t'appelle, voix tendue : "On a un probleme. Une base contenant 12 000 emails de clients vient de tomber sur un repository GitHub public - c'etait une vieille sauvegarde, on a corrige en 10 minutes, mais elle a ete indexee par Google."
 
   Tu es DPO de la PME. Le mail du collaborateur qui te previent est arrive il y a 7 minutes. Tu n'as pas encore averti la direction. Que decides-tu en premier ?
 choices:
   - id: "a"
     label: "J'attends lundi pour confirmer l'ampleur avec calme"
     outcome: "bad"
-    feedback: "Le compteur RGPD a deja demarre. 72h pour notifier la CNIL — chaque heure perdue compte. Le week-end n'arrete pas le delai."
+    feedback: "Le compteur RGPD a deja demarre. 72h pour notifier la CNIL - chaque heure perdue compte. Le week-end n'arrete pas le delai."
     points: -15
   - id: "b"
     label: "Je documente l'heure de decouverte (T0), j'alerte direction et IT, et je lance la qualification"

@@ -10,7 +10,7 @@ scenario: |
   Ta collegue te demande : "Tu as conscience que tu donnes nos infos commerciales a OpenAI ?". Que reponds-tu ?
 choices:
   - id: "a"
-    label: "Aucun probleme — c'est anonyme et ils ne lisent pas mes prompts"
+    label: "Aucun probleme - c'est anonyme et ils ne lisent pas mes prompts"
     outcome: "bad"
     feedback: "Faux. Sur le plan gratuit ChatGPT (et de nombreux concurrents), TES prompts sont utilises par defaut pour entrainer leurs modeles. Tes infos commerciales peuvent ressortir dans les reponses d'autres utilisateurs."
     points: -15
@@ -30,7 +30,7 @@ choices:
     feedback: "Aïe. La suppression d'un prompt cote utilisateur n'efface pas son utilisation pour entrainement. Le donnees sont peut-etre deja integrees dans le modele, et ne s'en sortent jamais."
     points: -10
 debrief: |
-  L'**IA generative** transforme la facon dont on travaille — mais elle introduit aussi une nouvelle classe de fuites de donnees : la **fuite par prompt**.
+  L'**IA generative** transforme la facon dont on travaille - mais elle introduit aussi une nouvelle classe de fuites de donnees : la **fuite par prompt**.
 
   **Comment ca marche concretement ?**
 
@@ -59,7 +59,7 @@ debrief: |
 
   Avant de taper un prompt, demande-toi : **"Si cette information apparaissait dans le journal demain, est-ce que ca poserait probleme ?"**.
 
-  Si oui — utilise une IA souveraine (Mistral, Voxia, llama.cpp local), une version Enterprise avec garantie contractuelle, ou ne mets PAS la donnee sensible (anonymise / paraphrase / decompose).
+  Si oui - utilise une IA souveraine (Mistral, Voxia, llama.cpp local), une version Enterprise avec garantie contractuelle, ou ne mets PAS la donnee sensible (anonymise / paraphrase / decompose).
 
   **Le test du nom :** ne mets jamais dans un prompt :
   - Noms de clients ou de prospects
@@ -111,6 +111,6 @@ quiz:
 
 ## Pour aller plus loin
 
-L'IA generative est l'outil le plus utile depuis l'arrivee d'internet en entreprise — mais elle est aussi le plus grand vecteur de fuite involontaire. Une charte IA d'1 page (cf. module 04 de cette saison) suffit a eviter 80 % des incidents.
+L'IA generative est l'outil le plus utile depuis l'arrivee d'internet en entreprise - mais elle est aussi le plus grand vecteur de fuite involontaire. Une charte IA d'1 page (cf. module 04 de cette saison) suffit a eviter 80 % des incidents.
 
 > "Ce que tu tapes, l'IA s'en souvient. Ce dont l'IA se souvient, n'est plus a toi."

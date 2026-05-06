@@ -2,7 +2,7 @@
 title: "Le coup de fil du faux support"
 durationMinutes: 6
 persona: "tous-collaborateurs"
-objective: "Detecter un appel vishing — l'attaquant cherche urgence, autorite, et acces a distance"
+objective: "Detecter un appel vishing - l'attaquant cherche urgence, autorite, et acces a distance"
 xpReward: 60
 scenario: |
   Mercredi 14h30. Tu sors de pause, ton telephone fixe sonne.
@@ -28,7 +28,7 @@ choices:
   - id: "a"
     label: "J'ouvre le lien et je donne le code, ca a l'air officiel"
     outcome: "bad"
-    feedback: "Aïe — tu viens de donner un acces a distance complet de ton poste a un attaquant. Il peut maintenant lire tes mails, voler tes documents, et pivoter sur le reseau de l'entreprise."
+    feedback: "Aïe - tu viens de donner un acces a distance complet de ton poste a un attaquant. Il peut maintenant lire tes mails, voler tes documents, et pivoter sur le reseau de l'entreprise."
     points: -10
   - id: "b"
     label: "Je raccroche et je rappelle le standard interne pour verifier"
@@ -54,13 +54,13 @@ debrief: |
 
   Les marqueurs typiques d'un appel vishing :
   - **Urgence artificielle** : "15 minutes", "avant que ca ne se propage", "tout
-    de suite" — la peur paralyse la verification.
+    de suite" - la peur paralyse la verification.
   - **Autorite pretendue** : "mandate par votre DSI", "agent de la CNIL", "votre
     banque". L'attaquant joue la legitimite institutionnelle.
   - **Demande d'acces a distance** : code OTP, lien a cliquer, partage d'ecran.
     AUCUN support legitime ne demandera un code OTP par telephone.
   - **Connaissance d'OSINT** : ton prenom, ton entreprise, le nom de ton RSSI.
-    Tout ca se trouve sur LinkedIn en 2 minutes — ne te laisse pas impressionner.
+    Tout ca se trouve sur LinkedIn en 2 minutes - ne te laisse pas impressionner.
   - **Pretextes techniques crediblbes** : "patch d'urgence", "activite suspecte",
     "mise a jour Microsoft". Le jargon est la pour rassurer.
 
@@ -78,7 +78,7 @@ quiz:
       - { id: "b", label: "Je raccroche immediatement, aucun support legitime ne demande de code OTP par telephone", correct: true }
       - { id: "c", label: "Je verifie d'abord son identite avec quelques questions", correct: false }
       - { id: "d", label: "Je le mets en attente le temps de demander a la DSI", correct: false }
-    explanation: "Un code OTP est une CLE. Aucun support n'a besoin de ton OTP pour t'aider — il a ses propres acces. Si on te le demande au telephone, c'est de la fraude a 100 %."
+    explanation: "Un code OTP est une CLE. Aucun support n'a besoin de ton OTP pour t'aider - il a ses propres acces. Si on te le demande au telephone, c'est de la fraude a 100 %."
 
   - question: "Quel est le 1er reflexe contre un appel suspect ?"
     choices:
