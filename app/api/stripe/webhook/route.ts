@@ -24,6 +24,7 @@ import { headers } from "next/headers";
 import type Stripe from "stripe";
 import { getStripe, planFromPriceId } from "@/lib/stripe";
 import { db } from "@/lib/db";
+import { auditLog, AuditActions } from "@/lib/audit";
 
 export const dynamic = "force-dynamic";
 
@@ -170,7 +171,7 @@ export async function POST(req: Request) {
     errorMessage = err instanceof Error ? err.message : String(err);
   }
 
-  // Audit trail
+  // Audit trail (BillingEvent — historique brut Stripe)
   await db.billingEvent.create({
     data: {
       stripeEventId: event.id,
@@ -182,6 +183,31 @@ export async function POST(req: Request) {
       stripeCreatedAt: new Date(event.created * 1000),
     },
   });
+
+  // AuditLog (vue conformite RGPD/NIS2)
+  if (status === "applied" && tenantId) {
+    const auditAction =
+      event.type === "checkout.session.completed" ||
+      event.type === "customer.subscription.created"
+        ? AuditActions.BILLING_SUBSCRIPTION_CREATED
+        : event.type === "customer.subscription.updated"
+          ? AuditActions.BILLING_SUBSCRIPTION_UPDATED
+          : event.type === "customer.subscription.deleted"
+            ? AuditActions.BILLING_SUBSCRIPTION_CANCELED
+            : event.type === "invoice.payment_failed"
+              ? AuditActions.BILLING_PAYMENT_FAILED
+              : null;
+    if (auditAction) {
+      await auditLog({
+        action: auditAction,
+        actor: { email: "stripe-webhook" },
+        tenantId,
+        target: { type: "subscription", id: tenantId, label: event.type },
+        message: `Stripe event ${event.type}`,
+        metadata: { stripeEventId: event.id },
+      });
+    }
+  }
 
   if (status === "error") {
     // On retourne 500 pour que Stripe retry. Si on retourne 200, l'event

@@ -5,11 +5,17 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { auditLog, AuditActions } from "@/lib/audit";
 
 async function requireAuth() {
   const session = await auth();
   if (!session?.user) throw new Error("unauthorized");
-  return { userId: session.user.id as string, role: session.user.role };
+  return {
+    userId: session.user.id as string,
+    role: session.user.role as string | undefined,
+    email: session.user.email as string | undefined,
+    tenantId: (session.user.tenantId as string) ?? null,
+  };
 }
 
 export async function renameWebauthnCredential(
@@ -49,6 +55,13 @@ export async function deleteWebauthnCredential(credentialDbId: string) {
     }
   }
   await db.webAuthnCredential.delete({ where: { id: credentialDbId } });
+  const ctx = await requireAuth();
+  await auditLog({
+    action: AuditActions.USER_WEBAUTHN_DELETED,
+    actor: { userId, email: ctx.email, role: ctx.role },
+    tenantId: ctx.tenantId,
+    target: { type: "webauthn_credential", id: credentialDbId, label: cred.deviceName },
+  });
   revalidatePath("/profil/securite");
   return { ok: true };
 }
