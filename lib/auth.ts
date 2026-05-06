@@ -175,6 +175,61 @@ if (!isDemoMode) {
   );
 }
 
+// =====================================================
+// WEBAUTHN PROVIDER
+// =====================================================
+// Pour finaliser une session NextAuth apres une auth FIDO2 reussie
+// (cf. /api/webauthn/login/verify qui a deja valide la cle et pose
+// le cookie wac_fresh).
+//
+// Le client appelle signIn("webauthn", { email }) APRES avoir confirme
+// la cle, en passant l'email + le freshToken signe (recu du verify).
+// On revalide ici cote server le freshToken pour eviter qu'un attaquant
+// court-circuite cette etape.
+import { verifyFreshAuth } from "@/lib/webauthn";
+
+if (!isDemoMode) {
+  providers.push(
+    Credentials({
+      id: "webauthn",
+      name: "Cle de securite",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        // Le token "fresh-auth" recu via cookie HTTPOnly est lu cote
+        // server dans le callback signIn. On expose l'email + un marker
+        // pour que ce provider fonctionne avec signIn().
+        marker: { label: "Marker", type: "text" },
+      },
+      async authorize(credentials: any, request: any) {
+        const email = String(credentials?.email ?? "").toLowerCase().trim();
+        if (!email) return null;
+        const user = await db.user.findUnique({ where: { email } });
+        if (!user || !user.isActive) return null;
+
+        // On lit le cookie fresh-auth a la main car ce provider est appele
+        // depuis le serveur (request.headers.cookie).
+        const cookieHeader =
+          (request?.headers?.get?.("cookie") as string | null) ?? "";
+        const match = cookieHeader.match(/wac_fresh=([^;]+)/);
+        const freshToken = match ? decodeURIComponent(match[1]) : "";
+        if (!freshToken || !verifyFreshAuth(freshToken, user.id)) {
+          return null;
+        }
+
+        await db.user.update({
+          where: { id: user.id },
+          data: {
+            failedLoginAttempts: 0,
+            lockedUntil: null,
+            lastLoginAt: new Date(),
+          },
+        });
+        return { id: user.id, email: user.email, name: user.name };
+      },
+    }),
+  );
+}
+
 async function registerFailedLogin(userId: string, current: number) {
   const next = current + 1;
   const data: { failedLoginAttempts: number; lockedUntil?: Date } = {
