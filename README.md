@@ -30,12 +30,16 @@ souverain, intégrée nativement à CISO Assistant.
 ## En 30 secondes
 
 - **Plateforme web Next.js** multi-tenant, gamifiée, mobile-first
-- **5 modules de base inclus** : mots de passe, MFA, phishing, sauvegarde, RGPD
+- **48 modules pédagogiques experts** sur **8 saisons complètes** (phishing, mots de passe, données sensibles, télétravail, fraude-président, ransomware, IA générative, DPO-quotidien) + 18 saisons supplémentaires en fallback structuré
 - **Gamification réelle** : XP, badges, mascotte évolutive, classements internes
 - **Console dirigeant** : score de risque humain, rapport de conformité PDF, actions recommandées
+- **Espace DPO dédié** : dashboard RGPD privé + générateur AIPD + page publique
+- **MCP Server** premier mover SAT/HRM (Claude Desktop / Mistral / GPT)
+- **Vishing souverain** Mistral (Paris) + Piper TTS local
 - **Connecteur natif CISO Assistant** : preuves de conformité exportées automatiquement
 - **Format OSCAL v1.1.2** (NIST) + CEF (Sentinel, Splunk, Sekoia, QRadar)
 - **API REST** + webhooks signés HMAC-SHA256
+- **Stack 100 % souveraine** : hébergement Scaleway Paris, email Scaleway TEM, paiement Payplug, IA Mistral
 - **Mode démo** intégré pour tester sans installer
 
 ---
@@ -63,7 +67,7 @@ modifier, tout casser sans crainte.
 
 ```bash
 # 1. Clone le repo
-git clone https://github.com/humanix-cybersecurity/humanix-academie.git
+git clone https://github.com/Humanix-Cybersecurity/Humanix-Academie.git
 cd humanix-academie
 
 # 2. Configure tes variables d'environnement
@@ -159,7 +163,20 @@ pédagogiques, retours d'expérience, signalements de vulnérabilité.
 - Avant de contribuer : lis [CONTRIBUTING.md](./CONTRIBUTING.md)
 - Code de conduite : [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
 - Vulnérabilités : [SECURITY.md](./SECURITY.md) — disclosure responsable
-- Discussions : [GitHub Discussions](https://github.com/humanix-cybersecurity/humanix-academie/discussions)
+- Discussions : [GitHub Discussions](https://github.com/Humanix-Cybersecurity/Humanix-Academie/discussions)
+- Page communauté publique : [humanix-cybersecurity.fr/communaute](https://humanix-cybersecurity.fr/communaute)
+
+### Ton premier PR — par où commencer
+
+Voici les contributions les plus accessibles, classées par effort croissant :
+
+1. **Typo / clarification doc** (10 min) — `README.md`, `docs/*.md`, ou un commentaire de code peu clair. PR directe, review légère.
+2. **Module MDX pédagogique** (1-2h) — il reste **18 saisons** au catalog (`prisma/catalog-saisons.ts`) sans contenu MDX. Tu suis la grammaire des saisons existantes (`content/saisons/phishing/01-mail-du-pdg.mdx` est un bon modèle), tu écris un scénario en 5-7 minutes de lecture. Frontmatter strict, 4 choix réalistes, débrief structuré, quiz 3 questions, citation finale.
+3. **Traduction** (1-3h) — les fichiers `messages/<locale>.json` sont prêts pour i18n. Anglais en priorité pour la diaspora francophone européenne.
+4. **Connecteur** (1-2 jours) — un éditeur GRC ou SIEM additionnel (Drata, Vanta, ServiceNow). Modèle dans `connectors/ciso-assistant/` ou `connectors/sentinel/`. Licence MIT pour faciliter l'adoption.
+5. **Module fonctionnel** (2-5 jours) — features marquées "roadmap" dans [issues GitHub](https://github.com/Humanix-Cybersecurity/Humanix-Academie/issues). RFC d'abord pour les gros morceaux.
+
+Issues marquées **`good first issue`** sur GitHub : les plus accessibles pour un premier PR. Discord communautaire ouvre après le launch OSS du 26 mai 2026.
 
 ### Tests unitaires
 
@@ -244,8 +261,8 @@ Humanix Cybersecurity propose un dual-licensing au cas par cas.
 
 | Sujet                     | Adresse                                                                                     |
 | ------------------------- | ------------------------------------------------------------------------------------------- |
-| Questions générales       | [GitHub Discussions](https://github.com/humanix-cybersecurity/humanix-academie/discussions) |
-| Bugs et features          | [GitHub Issues](https://github.com/humanix-cybersecurity/humanix-academie/issues)           |
+| Questions générales       | [GitHub Discussions](https://github.com/Humanix-Cybersecurity/Humanix-Academie/discussions) |
+| Bugs et features          | [GitHub Issues](https://github.com/Humanix-Cybersecurity/Humanix-Academie/issues)           |
 | Vulnérabilités sécurité   | security@humanix-cybersecurity.fr (voir [SECURITY.md](./SECURITY.md))                       |
 | Commercial / partenariats | contact@humanix-cybersecurity.fr                                                            |
 | Site web                  | https://humanix-cybersecurity.fr                                                            |
