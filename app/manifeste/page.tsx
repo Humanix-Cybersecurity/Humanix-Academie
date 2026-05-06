@@ -3,8 +3,8 @@
 //
 // Pourquoi cette page existe : la landing / est utilitaire (CTA inscription).
 // Le /comparatif est analytique. Le /tarifs est commercial. Mais aucune page
-// ne raconte QUI on est et POURQUOI on existe — un manque pour Digital 113
-// (21 mai) et le launch OSS du 26 mai.
+// ne raconte QUI on est et POURQUOI on existe — un manque comble en amont
+// du launch OSS du 26 mai.
 //
 // Cette page est un voyage narratif en 8 chapitres, conçu pour qu'un
 // visiteur RSSI / dirigeant PME / journaliste / contributeur curieux
