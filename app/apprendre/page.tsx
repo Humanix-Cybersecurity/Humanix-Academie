@@ -474,6 +474,19 @@ export default async function ApprendrePage() {
                 const expertCount = s.episodes.filter((e) =>
                   expertEpisodes.has(`${s.slug}/${e.slug}`),
                 ).length;
+                // Duree moyenne par episode = vraie valeur, pas un hardcode.
+                // On affichera ca en "~X min par episode" pour preserver la
+                // promesse "5 min par jour" (vs un total qui affiche 36 min
+                // et fait fuir les apprenants).
+                const avgMinutes =
+                  total === 0
+                    ? 0
+                    : Math.round(
+                        s.episodes.reduce(
+                          (acc, e) => acc + (e.durationMinutes ?? 6),
+                          0,
+                        ) / total,
+                      );
 
                 return (
                   <SaisonCard
@@ -487,6 +500,7 @@ export default async function ApprendrePage() {
                     isLocked={isLocked}
                     firstUndoneSlug={firstUndone?.slug ?? null}
                     expertCount={expertCount}
+                    avgMinutes={avgMinutes}
                   />
                 );
               })}
@@ -607,6 +621,7 @@ function SaisonCard({
   isLocked,
   firstUndoneSlug,
   expertCount,
+  avgMinutes,
 }: {
   idx: number;
   saison: {
@@ -624,6 +639,8 @@ function SaisonCard({
   isLocked: boolean;
   firstUndoneSlug: string | null;
   expertCount: number;
+  /** Duree moyenne reelle par episode, calculee depuis episodes.durationMinutes */
+  avgMinutes: number;
 }) {
   return (
     <article
@@ -710,9 +727,12 @@ function SaisonCard({
           </p>
         )}
 
-        {/* Meta info — naturelle, pas survendue */}
+        {/* Meta info — naturelle, pas survendue.
+            On affiche "~X min par episode" plutot que le total (qui ferait
+            36 min et casserait la promesse "5 minutes par jour"). */}
         <p className="text-xs text-gray-500 dark:text-gray-400 mt-4 text-center tabular-nums">
-          {total} episode{total > 1 ? "s" : ""} · {total * 6} min
+          {total} episode{total > 1 ? "s" : ""} · ~{avgMinutes} min par
+          episode
           {expertCount > 0 && (
             <>
               {" "}
