@@ -87,6 +87,32 @@ export default async function AdminPhishingPage() {
           </p>
         </article>
 
+        {/* Bandeau pricing — clair sur ce qui est inclus / pas inclus */}
+        <article className="rounded-xl border border-blue-200 dark:border-blue-900/50 bg-blue-50/60 dark:bg-blue-900/15 p-4">
+          <h3 className="font-bold text-blue-900 dark:text-blue-200 text-sm flex items-center gap-2">
+            <span aria-hidden="true">💶</span>
+            Génération gratuite, envoi à la charge du client
+          </h3>
+          <p className="text-xs text-blue-900/80 dark:text-blue-200/80 mt-2 leading-relaxed">
+            Humanix Académie génère gratuitement les <strong>templates</strong>{" "}
+            de phishing email pédagogiques. L&apos;<strong>envoi réel</strong>
+            {" "}aux collaborateurs n&apos;est <strong>pas inclus</strong> :
+            chaque email a un coût opérateur (provider transactionnel).
+          </p>
+          <p className="text-xs text-blue-900/80 dark:text-blue-200/80 mt-2 leading-relaxed">
+            Deux options : (1) vous envoyez via votre propre provider FR
+            (Brevo, Tipimail, Scaleway TEM, OVH) en collant le template,
+            ou (2){" "}
+            <a
+              href="mailto:contact@humanix-cybersecurity.fr?subject=Forfait+phishing+sur+mesure"
+              className="underline font-medium"
+            >
+              forfait sur mesure
+            </a>{" "}
+            avec exécution complète et traçabilité par Humanix.
+          </p>
+        </article>
+
         {/* Cross-sell IA Mistral — 2 cartes en grille au lieu de 2 bandeaux */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <CrossSellCard

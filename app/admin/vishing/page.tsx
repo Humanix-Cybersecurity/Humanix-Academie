@@ -79,6 +79,42 @@ export default async function AdminVishingPage() {
           </ul>
         </div>
 
+        {/* Bandeau pricing — clair sur ce qui est inclus / pas inclus */}
+        <div className="card bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700">
+          <h2 className="font-bold text-blue-900 dark:text-blue-200 mb-2 flex items-center gap-2">
+            💶 Génération gratuite, exécution à la charge du client
+          </h2>
+          <p className="text-sm text-blue-900 dark:text-blue-100 mb-2">
+            Humanix Académie génère gratuitement les <strong>scripts</strong>{" "}
+            de vishing pédagogiques. L&apos;<strong>exécution réelle</strong>{" "}
+            (appel téléphonique sortant avec lecture TTS, traçabilité de la
+            cible) n&apos;est <strong>pas incluse</strong> : un appel a un
+            coût opérateur réel et nécessite une infra SIP dédiée.
+          </p>
+          <p className="text-sm text-blue-900 dark:text-blue-100 mb-2">
+            Deux options :
+          </p>
+          <ul className="text-sm text-blue-900 dark:text-blue-100 space-y-1 list-disc list-inside">
+            <li>
+              <strong>Vous gérez l&apos;exécution</strong> : copiez le script
+              + écoutez la lecture Piper TTS, puis utilisez votre solution
+              téléphonique habituelle.
+            </li>
+            <li>
+              <strong>Forfait sur mesure</strong> : nous prenons en charge
+              l&apos;exécution complète (provider FR négocié, traçabilité,
+              débrief).{" "}
+              <a
+                href="mailto:contact@humanix-cybersecurity.fr?subject=Forfait+vishing+sur+mesure"
+                className="underline font-medium"
+              >
+                Contactez-nous
+              </a>{" "}
+              pour un devis selon votre volume.
+            </li>
+          </ul>
+        </div>
+
         {/* Générateur */}
         <VishingGeneratorClient />
 
