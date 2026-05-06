@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Audit que toutes les variables d'environnement utilisees par le code
 // sont documentees dans .env.example.
 //
@@ -19,10 +20,12 @@ const ROOT = process.cwd();
 const ENV_FILE = path.join(ROOT, ".env.example");
 
 // Variables consommees par des sous-projets autonomes (connectors/, etc.)
-// donc volontairement absentes du .env.example racine.
+// ou par des outils dev (license-tool), donc volontairement absentes du
+// .env.example racine.
 const WHITELIST = new Set([
   "HUMANIX_API_KEY",
   "HUMANIX_BASE_URL",
+  "HUMANIX_LICENSE_PRIVATE_KEY_FILE", // outil dev licensing:* uniquement
   "NODE_ENV", // Standard Node, jamais a documenter
   "VERCEL", // Plateforme runtime
   "VERCEL_URL",
