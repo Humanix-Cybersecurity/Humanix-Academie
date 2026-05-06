@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page publique /dpo — landing dediee aux Delegues a la Protection des
+// Page publique /dpo - landing dediee aux Delegues a la Protection des
 // Donnees (DPO).
 //
 // POURQUOI cette page existe :
@@ -33,7 +33,7 @@ import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
 export const metadata = {
-  title: "Espace DPO — Humanix Académie",
+  title: "Espace DPO - Humanix Académie",
   description:
     "Pour les Délégués à la Protection des Données : Humanix Académie est RGPD-by-design. Registre, DPA modèle, 72h pré-rempli, hébergement Scaleway Paris, audit log complet. Plateforme de sensibilisation cyber qu'un DPO peut auditer et déléguer.",
 };
@@ -47,7 +47,7 @@ const PROMESSES = [
       ring: "border-cyan-200 dark:border-cyan-900/40",
       accent: "text-cyan-700 dark:text-cyan-300",
     },
-    body: "Humanix Academie est un sous-traitant au sens RGPD. Tu recois des le trial : le registre des traitements de la plateforme (article 30), avec finalites, donnees, durees, garanties — pre-rempli, signe, exportable. Plus besoin de le faire toi-meme.",
+    body: "Humanix Academie est un sous-traitant au sens RGPD. Tu recois des le trial : le registre des traitements de la plateforme (article 30), avec finalites, donnees, durees, garanties - pre-rempli, signe, exportable. Plus besoin de le faire toi-meme.",
   },
   {
     emoji: "📜",
@@ -105,7 +105,7 @@ export default function DpoLandingPage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* ================================================================
-          1. HERO — invitation au DPO
+          1. HERO - invitation au DPO
           ================================================================ */}
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
         <section
@@ -137,7 +137,7 @@ export default function DpoLandingPage() {
 
       <div className="max-w-5xl mx-auto px-4 py-10 space-y-10">
         {/* ============================================================
-            2. PROMESSES — 6 cards palette saisons
+            2. PROMESSES - 6 cards palette saisons
             ============================================================ */}
         <section
           aria-labelledby="promesses-title"
@@ -178,7 +178,7 @@ export default function DpoLandingPage() {
         </section>
 
         {/* ============================================================
-            3. CAS D'USAGE — DPO de PME 80 personnes
+            3. CAS D'USAGE - DPO de PME 80 personnes
             ============================================================ */}
         <section
           aria-labelledby="usecase-title"
@@ -214,7 +214,7 @@ export default function DpoLandingPage() {
               annexer a ton dossier de sous-traitants. La plateforme propose
               elle-meme les modules pedagogiques pour former tes
               collaborateurs sur les sujets RGPD operationnels (regle des 3
-              questions, droit d'acces, registre, sous-traitants — saison{" "}
+              questions, droit d'acces, registre, sous-traitants - saison{" "}
               <Link
                 href="/apprendre"
                 className="text-accent-500 underline font-medium"
@@ -235,7 +235,7 @@ export default function DpoLandingPage() {
                 /admin
               </Link>{" "}
               au dirigeant, qui voit en temps reel le taux de completion. Plus
-              besoin d'envoyer un PDF mensuel — la preuve est consultable et
+              besoin d'envoyer un PDF mensuel - la preuve est consultable et
               exportable. La meteo cyber{" "}
               <Link
                 href="/cyber-meteo"
@@ -250,7 +250,7 @@ export default function DpoLandingPage() {
         </section>
 
         {/* ============================================================
-            4. ROADMAP DPO — ce qui arrive
+            4. ROADMAP DPO - ce qui arrive
             ============================================================ */}
         <section
           aria-labelledby="roadmap-title"
@@ -300,7 +300,7 @@ export default function DpoLandingPage() {
                   Modules MDX dedies DPO :
                 </strong>{" "}
                 AIPD, controle CNIL, transferts hors UE, profilage,
-                base juridique — pour former le DPO lui-meme et son entourage.
+                base juridique - pour former le DPO lui-meme et son entourage.
               </span>
             </li>
             <li className="flex items-start gap-3">
@@ -312,7 +312,7 @@ export default function DpoLandingPage() {
                   Connecteur GRC dedie DPO :
                 </strong>{" "}
                 push direct vers le module DPO de CISO Assistant ou Privacy
-                Tools — preuves de sensibilisation transferees automatiquement.
+                Tools - preuves de sensibilisation transferees automatiquement.
               </span>
             </li>
           </ul>
@@ -348,7 +348,7 @@ export default function DpoLandingPage() {
           </h2>
           <p className="opacity-90 mb-6 max-w-xl mx-auto text-base sm:text-lg leading-relaxed relative">
             Que tu sois interne dans une PME, mutualise sur plusieurs
-            structures, ou consultant independant — ta voix oriente la roadmap
+            structures, ou consultant independant - ta voix oriente la roadmap
             espace DPO. Demo dediee 30 min, sans pression commerciale.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center relative">
@@ -374,19 +374,19 @@ export default function DpoLandingPage() {
         </section>
 
         {/* ============================================================
-            6. CITATION FINALE — signature cosy "Hex veille"
+            6. CITATION FINALE - signature cosy "Hex veille"
             ============================================================ */}
         <section className="text-center pt-8 pb-4">
           <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
             « Un DPO ne devrait pas avoir a choisir entre un outil cyber utile
             et un outil cyber conforme. On a passe deux ans a construire
-            l'option qui est les deux a la fois — et qu'on peut auditer. »
+            l'option qui est les deux a la fois - et qu'on peut auditer. »
           </blockquote>
           <p
             aria-hidden="true"
             className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
           >
-            — Hex veille
+            - Hex veille
           </p>
         </section>
       </div>

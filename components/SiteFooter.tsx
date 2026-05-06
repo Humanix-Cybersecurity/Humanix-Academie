@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// SiteFooter — refonte pro mai 2026 (cible : credibilite "French Tech")
+// SiteFooter - refonte pro mai 2026 (cible : credibilite "French Tech")
 //
 // Probleme avant : 5 colonnes, melange aleatoire d'emojis (certains liens en
 // avaient, d'autres non), categorie "Outils gratuits" en accent qui rivalisait

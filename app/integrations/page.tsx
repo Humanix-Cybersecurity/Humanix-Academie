@@ -13,7 +13,7 @@ import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
 export const metadata = {
-  title: "Connecteurs & intégrations — Humanix Académie",
+  title: "Connecteurs & intégrations - Humanix Académie",
   description:
     "Tous les connecteurs natifs Humanix : GRC, SIEM, IAM, ITSM, RH. Hub-and-spoke avec priorité souveraineté française. Standards ouverts (OSCAL, SCIM, CEF, CIM, ECS).",
 };
@@ -209,7 +209,7 @@ const INTEGRATIONS: Integration[] = [
     status: "live",
     origin: "FR",
     description:
-      "EDR souverain — connecteur bidirectionnel. Push : preuves CEF. Pull : alertes EDR transformées en campagnes de sensibilisation ciblées Humanix.",
+      "EDR souverain - connecteur bidirectionnel. Push : preuves CEF. Pull : alertes EDR transformées en campagnes de sensibilisation ciblées Humanix.",
     href: "/integrations/harfanglab",
     releasedAt: "Mai 2026",
     emoji: "🇫🇷",
@@ -234,7 +234,7 @@ const INTEGRATIONS: Integration[] = [
     status: "on-demand",
     origin: "US",
     description:
-      "GRC US automatisé (SOC2, ISO 27001). Connecteur sur-mesure facturé en prestation séparée — ou consommation directe via format OSCAL existant.",
+      "GRC US automatisé (SOC2, ISO 27001). Connecteur sur-mesure facturé en prestation séparée - ou consommation directe via format OSCAL existant.",
     emoji: "🇺🇸",
   },
   {
@@ -263,7 +263,7 @@ const INTEGRATIONS: Integration[] = [
     status: "on-demand",
     origin: "EU",
     description:
-      "GRC open-source suisse. Compatible directement via format OSCAL v1.1.2 — aucun dev nécessaire côté Humanix.",
+      "GRC open-source suisse. Compatible directement via format OSCAL v1.1.2 - aucun dev nécessaire côté Humanix.",
     emoji: "🇪🇺",
   },
   {
@@ -283,7 +283,7 @@ const INTEGRATIONS: Integration[] = [
     status: "on-demand",
     origin: "US",
     description:
-      "SIEM grand compte. Format CEF v1 directement compatible — déploiement sur demande client.",
+      "SIEM grand compte. Format CEF v1 directement compatible - déploiement sur demande client.",
     emoji: "🇺🇸",
   },
 ];
@@ -311,7 +311,7 @@ export default function IntegrationsHubPage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* ================================================================
-          1. HERO — invitation au hub d'interoperabilite
+          1. HERO - invitation au hub d'interoperabilite
           ================================================================ */}
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
         <header
@@ -421,7 +421,7 @@ export default function IntegrationsHubPage() {
       </section>
 
       {/* ================================================================
-          CITATION FINALE — signature cosy "Hex veille"
+          CITATION FINALE - signature cosy "Hex veille"
           ================================================================ */}
       <section className="text-center pt-10 pb-4">
         <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
@@ -434,7 +434,7 @@ export default function IntegrationsHubPage() {
           aria-hidden="true"
           className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
         >
-          — Hex veille
+          - Hex veille
         </p>
       </section>
       </div>

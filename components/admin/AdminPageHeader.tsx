@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// AdminPageHeader — En-tête standard d'une page console (style Linear).
+// AdminPageHeader - En-tête standard d'une page console (style Linear).
 //
 // Pattern de référence : titre h1 sobre + description courte + zone d'actions
 // à droite. Cohérent avec le AdminTopBar (qui fournit déjà le breadcrumb).
@@ -8,7 +8,7 @@
 // Usage :
 //   <AdminPageHeader
 //     title="Impact business"
-//     description="Combien la cyber vous fait gagner — concret, en euros."
+//     description="Combien la cyber vous fait gagner - concret, en euros."
 //     actions={
 //       <a href="..." className="...">Action principale</a>
 //     }

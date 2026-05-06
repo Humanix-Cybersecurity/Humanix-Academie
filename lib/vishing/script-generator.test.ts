@@ -56,7 +56,7 @@ describe("isMistralEnabled", () => {
   });
 });
 
-describe("generateVishingScript — mode demo (sans cle Mistral)", () => {
+describe("generateVishingScript - mode demo (sans cle Mistral)", () => {
   it("rejette un contexte contenant un email", async () => {
     await expect(
       generateVishingScript({
@@ -147,7 +147,7 @@ describe("generateVishingScript — mode demo (sans cle Mistral)", () => {
   });
 });
 
-describe("generateVishingScript — appel Mistral mocke", () => {
+describe("generateVishingScript - appel Mistral mocke", () => {
   beforeEach(() => {
     process.env.MISTRAL_API_KEY = "key_live_xxx";
     delete process.env.DEMO_MODE;

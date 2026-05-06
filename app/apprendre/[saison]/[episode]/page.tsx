@@ -11,7 +11,7 @@
 // Pourquoi ce fallback : on a un catalogue de 180 modules pour le commerce, mais
 // le contenu MDX detaille (scenario, debrief, quiz custom par episode) est ecrit
 // progressivement par l'equipe / les experts contributeurs. Sans fallback,
-// 90% du catalogue retournerait 404 — inacceptable cote demo et UX.
+// 90% du catalogue retournerait 404 - inacceptable cote demo et UX.
 
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
@@ -52,7 +52,7 @@ export default async function EpisodePage({
       xpReward: dbEpisode.xpReward,
     });
 
-  // Mascotte choisie par l'user — propagée au player pour que les
+  // Mascotte choisie par l'user - propagée au player pour que les
   // animations affichent SA mascotte (pas le 🦊 par défaut)
   const userId = session.user!.id as string;
   const dbUser = await db.user.findUnique({
@@ -77,7 +77,7 @@ export default async function EpisodePage({
             </p>
             <p className="leading-relaxed">
               Cet épisode reçoit bientôt un scénario détaillé rédigé par un
-              expert humain. En attendant, voici la version de base — tes
+              expert humain. En attendant, voici la version de base - tes
               points de progression sont attribués normalement, et tu peux y
               revenir plus tard pour la version enrichie.
             </p>

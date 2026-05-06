@@ -1,6 +1,6 @@
-# Marketplace HumaniX Academy — Charte de sécurité et politique de contenu
+# Marketplace HumaniX Academy - Charte de sécurité et politique de contenu
 
-> Position de principe : la marketplace HumaniX **ne peut pas être moins exigeante** que le reste de la plateforme. Sur la cybersécurité, le moindre laxisme tue la crédibilité — et peut introduire de vraies vulnérabilités. Cette page documente nos garde-fous techniques et nos règles éditoriales.
+> Position de principe : la marketplace HumaniX **ne peut pas être moins exigeante** que le reste de la plateforme. Sur la cybersécurité, le moindre laxisme tue la crédibilité - et peut introduire de vraies vulnérabilités. Cette page documente nos garde-fous techniques et nos règles éditoriales.
 
 ## 🎯 Principes directeurs
 
@@ -59,7 +59,7 @@ Au moment de l'approbation, le modérateur recompute le hash et **rejette automa
 ### Rate limiting
 
 - **5 soumissions max par auteur par 24h.**
-- Les soumissions sont scopées par `userId`, pas IP — empêche les contournements simples.
+- Les soumissions sont scopées par `userId`, pas IP - empêche les contournements simples.
 - Limite vérifiée côté serveur dans `submitForReview`.
 
 ### Permissions

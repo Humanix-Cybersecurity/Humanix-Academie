@@ -89,7 +89,7 @@ async function main() {
 
   console.log(`${"=".repeat(72)}`);
   console.log(
-    "\n💡 Colle ce log dans une issue ou un message support — j'adapterai",
+    "\n💡 Colle ce log dans une issue ou un message support - j'adapterai",
   );
   console.log(
     "   les regex parsers en fonction des structures réelles observées.",

@@ -45,7 +45,7 @@ export const SOURCES: Source[] = [
     category: "etat",
   },
   {
-    name: "data.gouv.fr — cybersecurite",
+    name: "data.gouv.fr - cybersecurite",
     url: "https://www.data.gouv.fr/fr/topics/cybersecurite",
     description:
       "Donnees ouvertes publiques sur les incidents et les pratiques cyber.",
@@ -61,7 +61,7 @@ export const SOURCES: Source[] = [
     category: "europe",
   },
   {
-    name: "EUR-Lex — NIS2 Directive",
+    name: "EUR-Lex - NIS2 Directive",
     url: "https://eur-lex.europa.eu/eli/dir/2022/2555",
     description:
       "Texte officiel de la directive NIS2, en vigueur depuis le 17 octobre 2024 (transposition en droit francais en cours).",
@@ -84,7 +84,7 @@ export const SOURCES: Source[] = [
     category: "magazine",
   },
   {
-    name: "Le MagIT — Securite",
+    name: "Le MagIT - Securite",
     url: "https://www.lemagit.fr/securite",
     description:
       "Volet securite du magazine IT francais. Analyses de fond, decryptages techniques.",

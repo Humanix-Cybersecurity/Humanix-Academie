@@ -1,4 +1,4 @@
-# Isolation tenant — invariants et audit
+# Isolation tenant - invariants et audit
 
 > Document à lire **avant** d'écrire toute nouvelle route, server action ou
 > requête Prisma touchant des données scopées tenant.
@@ -6,14 +6,14 @@
 ## Pourquoi c'est critique
 
 Humanix Académie est multi-tenant : un seul code, un seul schéma, plusieurs
-clients dans la même base. Une régression silencieuse — une route qui oublie
-le filtre `tenantId` — = fuite massive entre clients. C'est le risque #1 d'un
+clients dans la même base. Une régression silencieuse - une route qui oublie
+le filtre `tenantId` - = fuite massive entre clients. C'est le risque #1 d'un
 SaaS B2B et il s'introduit en quelques caractères.
 
 ## L'invariant à respecter
 
 > **Toute requête Prisma sur un modèle `tenant-scoped` doit filtrer par
-> `tenantId` — soit dans le `where`, soit via une chaîne de relations
+> `tenantId` - soit dans le `where`, soit via une chaîne de relations
 > garantissant cette isolation.**
 
 Modèles tenant-scoped (cf. `prisma/schema.prisma`) :
@@ -76,7 +76,7 @@ if (!incident) return notFound();
 ```
 
 `findFirst` (et non `findUnique`) parce que `findUnique` n'accepte qu'une clé
-unique. Le compose `id + tenantId` n'est pas unique côté schéma — `findFirst`
+unique. Le compose `id + tenantId` n'est pas unique côté schéma - `findFirst`
 matche les deux.
 
 ### Routes API publiques avec API key

@@ -4,7 +4,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Connecteur Mailinblack / Vade — Humanix Académie",
+  title: "Connecteur Mailinblack / Vade - Humanix Académie",
   description:
     "Mail bloqué par Mailinblack ou Vade → campagne Humanix ciblée pour les destinataires concernés. Boucle anti-phishing souveraine 🇫🇷.",
 };
@@ -42,23 +42,23 @@ export default function AntiPhishingIntegrationPage() {
         </h2>
         <ol className="space-y-3 text-sm">
           <li>
-            <strong>10:32</strong> — un mail "Service RH urgent" arrive dans la
+            <strong>10:32</strong> - un mail "Service RH urgent" arrive dans la
             boîte de 12 collaborateurs.
           </li>
           <li>
-            <strong>10:32</strong> — Mailinblack/Vade détecte le phishing et le
+            <strong>10:32</strong> - Mailinblack/Vade détecte le phishing et le
             bloque.
           </li>
           <li>
-            <strong>10:33</strong> — webhook sortant → bridge Humanix → API.
+            <strong>10:33</strong> - webhook sortant → bridge Humanix → API.
           </li>
           <li>
-            <strong>10:35</strong> — les 12 collaborateurs reçoivent une
+            <strong>10:35</strong> - les 12 collaborateurs reçoivent une
             notification Humanix les invitant à compléter un module de 3 minutes
             sur "le faux mail RH".
           </li>
           <li>
-            <strong>Mois suivant</strong> — leur taux de signalement passe de 30
+            <strong>Mois suivant</strong> - leur taux de signalement passe de 30
             % à 75 % sur ce type d'attaque.
           </li>
         </ol>
@@ -120,7 +120,7 @@ export default function AntiPhishingIntegrationPage() {
           </li>
           <li>
             <strong>100 % souverain</strong> : Mailinblack (Marseille), Vade
-            (Hem), Humanix (Alès) — toute la chaîne est française.
+            (Hem), Humanix (Alès) - toute la chaîne est française.
           </li>
         </ul>
       </section>

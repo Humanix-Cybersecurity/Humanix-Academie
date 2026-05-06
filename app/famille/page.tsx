@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page publique "Cyber Famille" — refonte cosy mai 2026.
+// Page publique "Cyber Famille" - refonte cosy mai 2026.
 //
 // Brief : "experience, terrain, sensibilisation reelle, pas celle generee
-// par la peur — celle qui sent bon la maitrise et la confiance".
+// par la peur - celle qui sent bon la maitrise et la confiance".
 //
 // Cyber Famille est notre **differenciant unique mondial** (aucun
 // concurrent SAT/HRM ne le fait). Sujet par excellence emotionnel :
@@ -27,7 +27,7 @@ import { isEligibleToInvite, remainingInvitesFor } from "@/lib/family-invites";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Cyber Famille — Articles cyber gratuits, sans inscription",
+  title: "Cyber Famille - Articles cyber gratuits, sans inscription",
   description:
     "La cyber-protection de tes proches en cadeau. Articles courts (5-10 min), sans jargon, sans pub, sans inscription. Pour ta grand-mère, ton ado, tes parents, tes amis.",
 };
@@ -60,7 +60,7 @@ export default async function FamillePage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* ============================================================
-          1. HERO — émotionnel, constellation des proches
+          1. HERO - émotionnel, constellation des proches
           ============================================================ */}
       <HexBackdrop
         intensity="soft"
@@ -127,7 +127,7 @@ export default async function FamillePage() {
           >
             Tu apprends la cyber au boulot. Tes proches, eux, n'ont pas cette
             chance. Cette page leur est{" "}
-            <strong>offerte</strong> — articles courts, pas de jargon, pas
+            <strong>offerte</strong> - articles courts, pas de jargon, pas
             d'inscription. Comme une lampe qu'on laisse allumée, pour qu'ils
             sachent où aller s'ils ont un doute.
           </p>
@@ -151,7 +151,7 @@ export default async function FamillePage() {
 
       <div className="max-w-5xl mx-auto px-4 py-12 sm:py-16 space-y-16">
         {/* ============================================================
-            2. CTA INVITATION — pour les apprenants connectés éligibles
+            2. CTA INVITATION - pour les apprenants connectés éligibles
             ============================================================ */}
         {inviteCta?.eligible && inviteCta.remaining > 0 && (
           <section aria-labelledby="invite-cta-title">
@@ -192,7 +192,7 @@ export default async function FamillePage() {
         )}
 
         {/* ============================================================
-            3. MANIFESTE — pourquoi cette page existe
+            3. MANIFESTE - pourquoi cette page existe
             ============================================================ */}
         <section aria-labelledby="why-title">
           <div className="card bg-gradient-to-br from-amber-50 via-white to-rose-50/50 dark:from-amber-950/20 dark:via-slate-900 dark:to-rose-950/20 border-amber-200 dark:border-amber-900/40 p-8 sm:p-10">
@@ -218,9 +218,9 @@ export default async function FamillePage() {
                     pas être un privilège de salarié de grande entreprise.
                   </p>
                   <p>
-                    Si quelqu'un autour de toi s'est fait avoir récemment — un
+                    Si quelqu'un autour de toi s'est fait avoir récemment - un
                     faux SMS de livraison, un appel de "Microsoft", un mail
-                    bizarre du "fisc" — envoie-lui simplement le lien de cette
+                    bizarre du "fisc" - envoie-lui simplement le lien de cette
                     page. Pas de leçon, pas de sermon. Juste une lampe.
                   </p>
                   <p className="italic text-sm text-amber-700 dark:text-amber-200/80">
@@ -233,7 +233,7 @@ export default async function FamillePage() {
         </section>
 
         {/* ============================================================
-            4. POUR QUI — humanisation, 4 portraits
+            4. POUR QUI - humanisation, 4 portraits
             ============================================================ */}
         <section aria-labelledby="who-title">
           <div className="text-center mb-10">
@@ -277,7 +277,7 @@ export default async function FamillePage() {
         </section>
 
         {/* ============================================================
-            5. ARTICLES — gradient soft par audience
+            5. ARTICLES - gradient soft par audience
             ============================================================ */}
         <section aria-labelledby="articles-title">
           <div className="flex items-end justify-between gap-3 flex-wrap mb-8">
@@ -318,7 +318,7 @@ export default async function FamillePage() {
         </section>
 
         {/* ============================================================
-            6. COMMENT PARTAGER — 3 étapes simples
+            6. COMMENT PARTAGER - 3 étapes simples
             ============================================================ */}
         <section aria-labelledby="how-share-title">
           <div className="text-center mb-10">
@@ -359,7 +359,7 @@ export default async function FamillePage() {
         </section>
 
         {/* ============================================================
-            7. CE QUE CE N'EST PAS — transparence radicale
+            7. CE QUE CE N'EST PAS - transparence radicale
             ============================================================ */}
         <section aria-labelledby="not-title">
           <div className="rounded-3xl bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/30 border-2 border-emerald-200 dark:border-emerald-900/40 p-8 sm:p-10">
@@ -400,7 +400,7 @@ export default async function FamillePage() {
         </section>
 
         {/* ============================================================
-            8. CTA PME — pour le dirigeant qui découvre la page
+            8. CTA PME - pour le dirigeant qui découvre la page
             ============================================================ */}
         <section aria-labelledby="cta-pme-title">
           <div className="card-hero text-center relative overflow-hidden animate-glow">
@@ -418,7 +418,7 @@ export default async function FamillePage() {
                 id="cta-pme-title"
                 className="font-display text-2xl sm:text-3xl font-extrabold mb-4"
               >
-                Forme tes équipes — et offre-leur ce cadeau pour leurs proches.
+                Forme tes équipes - et offre-leur ce cadeau pour leurs proches.
               </h2>
               <p className="text-sm sm:text-base opacity-90 mb-6 leading-relaxed">
                 Plateforme open source AGPLv3, self-host gratuit ou cloud à
@@ -437,7 +437,7 @@ export default async function FamillePage() {
         </section>
 
         {/* ============================================================
-            9. RESPIRATION — citation finale chaleureuse
+            9. RESPIRATION - citation finale chaleureuse
             ============================================================ */}
         <section className="text-center pt-6 pb-2">
           <blockquote className="font-display italic text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
@@ -448,7 +448,7 @@ export default async function FamillePage() {
             aria-hidden="true"
             className="mt-4 text-xs uppercase tracking-[0.25em] text-rose-600/70 dark:text-rose-300/70 font-bold"
           >
-            — Hex veille
+            - Hex veille
           </p>
         </section>
       </div>

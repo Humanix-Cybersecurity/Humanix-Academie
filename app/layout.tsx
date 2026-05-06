@@ -13,7 +13,7 @@ import ScrollProgress from "@/components/ScrollProgress";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Humanix Académie — Cybersécurité ludique pour PME",
+  title: "Humanix Académie - Cybersécurité ludique pour PME",
   description:
     "Plateforme gamifiée de sensibilisation cybersécurité pour TPE et PME. Modules de 5 minutes, mises en situation, conformes RGPD.",
   metadataBase: new URL(

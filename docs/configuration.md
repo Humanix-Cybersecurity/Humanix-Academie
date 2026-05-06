@@ -1,4 +1,4 @@
-# Configuration — Référence complète des variables d'environnement
+# Configuration - Référence complète des variables d'environnement
 
 Ce document liste toutes les variables d'environnement supportées par
 Humanix Académie Community Edition, avec leur usage, leur valeur par défaut,
@@ -299,7 +299,7 @@ peuvent changer (renommage, déprécation). Voir [upgrade.md](./upgrade.md)
 section **Breaking changes** pour chaque release.
 
 Le fichier `.env.example` du repo est toujours à jour avec la dernière
-version — diff-le contre ton `.env` après chaque pull pour repérer les
+version - diff-le contre ton `.env` après chaque pull pour repérer les
 nouvelles variables.
 
 ```bash

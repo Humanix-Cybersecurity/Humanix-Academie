@@ -58,7 +58,7 @@ export function explainCollectiveScore(
     ],
     sources: [
       {
-        name: "ANSSI — Référentiel Hygiène Informatique 2024",
+        name: "ANSSI - Référentiel Hygiène Informatique 2024",
         detail:
           "Définit la sensibilisation comme indicateur n°1 de maturité humaine. La moyenne pondérée est conforme à l'esprit du référentiel (1 maillon faible = 1 vulnérabilité).",
       },
@@ -97,7 +97,7 @@ export function explainExpectedAnnualLoss(
     ],
     sources: [
       {
-        name: "Tracfin — Bilan cybercriminalité PME 2024",
+        name: "Tracfin - Bilan cybercriminalité PME 2024",
         detail:
           "Coût moyen d'une cyberattaque réussie en PME française : 35 000 € (rançon + chômage technique + remédiation + perte de données).",
         url: "https://www.economie.gouv.fr/tracfin",
@@ -108,7 +108,7 @@ export function explainExpectedAnnualLoss(
           "75% des PME victimes mettent plus de 2 jours à reprendre une activité normale. Coût moyen indirect : 14 000 € en plus.",
       },
       {
-        name: "ANSSI cert-fr — Panorama de la menace 2024",
+        name: "ANSSI cert-fr - Panorama de la menace 2024",
         detail:
           "1 PME sur 2 sans formation cyber a subi un incident significatif sur 12 mois. C'est la base de notre calibrage probabiliste.",
         url: "https://www.cert.ssi.gouv.fr",
@@ -165,12 +165,12 @@ export function explainRoi(impact: BusinessImpact): MetricExplanation {
           "La sensibilisation cyber réduit en moyenne le coût d'une violation de 232 000 USD (~210 k€), pour un coût programme moyen de 30 k€/an. ROI moyen observé : ×7.",
       },
       {
-        name: "Generali — Étude Sinistralité Cyber PME 2023",
+        name: "Generali - Étude Sinistralité Cyber PME 2023",
         detail:
           "Les PME formées affichent une sinistralité 4× moindre que les non-formées sur les 24 derniers mois.",
       },
     ],
-    comexPitch: `« Pour ${impact.humanixAnnualCost.toLocaleString("fr-FR")} € de programme cyber annuel, nous évitons statistiquement ${grossSaving.toLocaleString("fr-FR")} € de pertes attendues. Le ROI de ×${impact.roiMultiplier} est conservateur — Generali et IBM observent ×4 à ×7 sur des programmes structurés. »`,
+    comexPitch: `« Pour ${impact.humanixAnnualCost.toLocaleString("fr-FR")} € de programme cyber annuel, nous évitons statistiquement ${grossSaving.toLocaleString("fr-FR")} € de pertes attendues. Le ROI de ×${impact.roiMultiplier} est conservateur - Generali et IBM observent ×4 à ×7 sur des programmes structurés. »`,
   };
 }
 

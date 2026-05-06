@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Cle publique Humanix Cybersecurity pour la verification des licences.
 //
-// IMPORTANT — placeholder a remplacer avant le launch prod :
+// IMPORTANT - placeholder a remplacer avant le launch prod :
 //
 // 1. Generer une paire de cles avec :
 //      npm run licensing:keygen
@@ -21,7 +21,7 @@
 // PAS forger de licences.
 //
 // L'env HUMANIX_LICENSE_PUBLIC_KEY peut override cette valeur (utile pour
-// les forks self-host qui veulent operer leur propre PKI — l'AGPL le
+// les forks self-host qui veulent operer leur propre PKI - l'AGPL le
 // permet, c'est meme l'esprit).
 
 export const PUBLIC_KEY_PEM = `-----BEGIN PUBLIC KEY-----

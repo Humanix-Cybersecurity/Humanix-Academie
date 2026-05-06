@@ -274,7 +274,7 @@ export function AuditFlashReport({
         <View style={styles.header}>
           <Text style={styles.brand}>Humanix Académie · Audit Cyber Flash</Text>
           <Text style={styles.subtitle}>
-            Rapport personnalisé pour {companyName} — émis le {dateFr}
+            Rapport personnalisé pour {companyName} - émis le {dateFr}
           </Text>
         </View>
 
@@ -312,7 +312,7 @@ export function AuditFlashReport({
         {result.nis2Concerned && (
           <View style={styles.nis2Box}>
             <Text style={styles.nis2Title}>
-              ATTENTION NIS2 — Votre entreprise est probablement concernée
+              ATTENTION NIS2 - Votre entreprise est probablement concernée
             </Text>
             <Text style={styles.nis2Text}>
               La directive NIS2, transposée en France, impose des obligations de
@@ -434,7 +434,7 @@ export function AuditFlashReport({
             </Text>
             <Text style={styles.methodBullet}>
               2. Lancer un programme de sensibilisation continu pour vos équipes
-              (5 min / semaine suffisent — c'est la promesse HumaniX Académie).
+              (5 min / semaine suffisent - c'est la promesse HumaniX Académie).
             </Text>
             <Text style={styles.methodBullet}>
               3. Documenter votre démarche : registre RGPD, plan de réponse à

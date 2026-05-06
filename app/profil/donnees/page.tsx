@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// /profil/donnees — droits des personnes RGPD (articles 15 a 22).
+// /profil/donnees - droits des personnes RGPD (articles 15 a 22).
 //
 // Permet a l'utilisateur d'exercer ses droits :
 //  - Article 15 : droit d'acces (resume affiche + export complet)
@@ -70,7 +70,7 @@ export default async function DonneesPage() {
       <section className="rounded-2xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 space-y-3">
         <header>
           <p className="text-xs uppercase tracking-widest text-accent-500 font-bold">
-            Article 15 — Droit d'accès
+            Article 15 - Droit d'accès
           </p>
           <h2 className="font-display text-lg font-extrabold text-primary-500 dark:text-accent-300">
             Vue d'ensemble de vos données
@@ -124,7 +124,7 @@ export default async function DonneesPage() {
       <section className="rounded-2xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 space-y-3">
         <header>
           <p className="text-xs uppercase tracking-widest text-accent-500 font-bold">
-            Article 20 — Portabilité
+            Article 20 - Portabilité
           </p>
           <h2 className="font-display text-lg font-extrabold text-primary-500 dark:text-accent-300">
             Exporter mes données
@@ -149,7 +149,7 @@ export default async function DonneesPage() {
       <section className="rounded-2xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 space-y-3">
         <header>
           <p className="text-xs uppercase tracking-widest text-accent-500 font-bold">
-            Article 16 — Rectification
+            Article 16 - Rectification
           </p>
           <h2 className="font-display text-lg font-extrabold text-primary-500 dark:text-accent-300">
             Modifier mes informations
@@ -168,7 +168,7 @@ export default async function DonneesPage() {
       <section className="rounded-2xl border-2 border-rose-200 dark:border-rose-900/40 bg-rose-50/40 dark:bg-rose-900/15 p-5 space-y-3">
         <header>
           <p className="text-xs uppercase tracking-widest text-rose-700 dark:text-rose-300 font-bold">
-            Article 17 — Droit à l'oubli
+            Article 17 - Droit à l'oubli
           </p>
           <h2 className="font-display text-lg font-extrabold text-rose-900 dark:text-rose-200">
             Demander l'effacement

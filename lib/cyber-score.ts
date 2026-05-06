@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// lib/cyber-score.ts — Calcul du Cyberscore (refonte mai 2026, version sévère).
+// lib/cyber-score.ts - Calcul du Cyberscore (refonte mai 2026, version sévère).
 //
 // PHILOSOPHIE
 // -----------
@@ -32,7 +32,7 @@
 //
 // SEUILS DE QUALIFICATION
 // -----------------------
-//   85+  : Excellent          (rare — vraie maturité opérationnelle)
+//   85+  : Excellent          (rare - vraie maturité opérationnelle)
 //   70-84: Bon                 (cible standard pour PME engagée)
 //   55-69: Correct             (acceptable mais à améliorer)
 //   40-54: À surveiller        (action requise)
@@ -40,7 +40,7 @@
 // =============================================================================
 
 // -----------------------------------------------------------------------------
-// Types d'entrée — alignés sur les types passés à AdminDashboard
+// Types d'entrée - alignés sur les types passés à AdminDashboard
 // -----------------------------------------------------------------------------
 
 export type CyberscoreStats = {
@@ -76,7 +76,7 @@ export type CyberscoreTenantMeta = {
 };
 
 // -----------------------------------------------------------------------------
-// Types de sortie — détail pédagogique pour affichage UI
+// Types de sortie - détail pédagogique pour affichage UI
 // -----------------------------------------------------------------------------
 
 export type CyberscoreLevel =
@@ -111,7 +111,7 @@ export type CyberscoreBreakdown = {
 };
 
 // -----------------------------------------------------------------------------
-// Constantes — tunables
+// Constantes - tunables
 // -----------------------------------------------------------------------------
 
 /** Slugs des saisons considérées comme "fondamentales" pour le scoring. */
@@ -234,7 +234,7 @@ export function computeCyberscore(
     penalties.push({
       points: 10,
       label: "Maillon faible identifié",
-      reason: `Service « ${weakest.service} » à ${weakest.completionPct}% (${weakest.size} pers.) — un attaquant ciblerait ce périmètre.`,
+      reason: `Service « ${weakest.service} » à ${weakest.completionPct}% (${weakest.size} pers.) - un attaquant ciblerait ce périmètre.`,
     });
   }
 
@@ -246,7 +246,7 @@ export function computeCyberscore(
     penalties.push({
       points: 15,
       label: "Inactivité prolongée",
-      reason: `${dormantCount}/${team.length} collaborateurs sans activité depuis ${DORMANT_THRESHOLD_DAYS}j+ — la vigilance s'érode.`,
+      reason: `${dormantCount}/${team.length} collaborateurs sans activité depuis ${DORMANT_THRESHOLD_DAYS}j+ - la vigilance s'érode.`,
     });
   }
 
