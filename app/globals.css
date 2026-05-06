@@ -273,47 +273,6 @@
   to { background-position: 56px 100px; }
 }
 
-/* =============================================================
-   Animations Hex mascotte (V1 — SVG anime)
-   - breathe : respiration lente (corps scale 1 → 1.03)
-   - hex-blink : clignotement (paupières fermees ~150ms toutes les ~5s)
-   - hex-wave-hand : main qui salue (rotation 0 → 20° → 0)
-   - hex-wiggle-tail : queue qui frétille (rotation -5° → 5°)
-   ============================================================= */
-@keyframes breathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.025); }
-}
-@keyframes hex-blink {
-  /* 95 % du temps les yeux sont ouverts, 5 % fermés (clignotement court) */
-  0%, 92%, 100% { transform: scaleY(1); }
-  94%, 98% { transform: scaleY(0.05); }
-}
-@keyframes hex-wave-hand {
-  0%, 60%, 100% { transform: rotate(0deg); }
-  70% { transform: rotate(-15deg); }
-  80% { transform: rotate(20deg); }
-  90% { transform: rotate(-10deg); }
-}
-@keyframes hex-wiggle-tail {
-  0%, 100% { transform: rotate(-3deg); }
-  50% { transform: rotate(6deg); }
-}
-.animate-breathe { animation: breathe 4s ease-in-out infinite; transform-origin: center bottom; }
-.animate-hex-blink { animation: hex-blink 6s ease-in-out infinite; transform-origin: center; }
-.animate-hex-wave-hand { animation: hex-wave-hand 3.5s ease-in-out infinite; transform-origin: bottom center; }
-.animate-hex-wiggle-tail { animation: hex-wiggle-tail 2.5s ease-in-out infinite; transform-origin: bottom right; }
-
-/* prefers-reduced-motion : on respecte les préférences accessibilité */
-@media (prefers-reduced-motion: reduce) {
-  .animate-breathe,
-  .animate-hex-blink,
-  .animate-hex-wave-hand,
-  .animate-hex-wiggle-tail {
-    animation: none !important;
-  }
-}
-
 /* Scrollbar discrète pour la nav admin (qui scroll horizontalement
    sur écran moyen pour éviter le wrap sur 2 lignes). */
 .admin-nav-scroll {
