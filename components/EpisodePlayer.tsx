@@ -29,6 +29,7 @@ import type { Choice, QuizQuestion } from "@/lib/episodes";
 import HexMascotEvolved from "@/components/HexMascotEvolved";
 import LevelUpOverlay from "@/components/LevelUpOverlay";
 import TTSButton from "@/components/TTSButton";
+import FormattedText from "@/components/FormattedText";
 import LiveRegion from "@/components/a11y/LiveRegion";
 import { useAnnouncer } from "@/lib/a11y";
 
@@ -209,7 +210,7 @@ export default function EpisodePlayer(props: {
 
             {/* Carte scenario : gradient soft cyan/blue, plus immersive */}
             <div className="bg-gradient-to-br from-cyan-50 via-white to-blue-50 dark:from-cyan-950/30 dark:via-slate-900 dark:to-blue-950/30 rounded-2xl p-5 mb-6 leading-relaxed whitespace-pre-line text-gray-800 dark:text-gray-100 border-l-4 border-accent-500">
-              {props.scenario}
+              <FormattedText text={props.scenario} />
               <div className="mt-4 pt-3 border-t border-cyan-200/40 dark:border-cyan-900/40">
                 <TTSButton text={props.scenario} label="Ecouter le scenario" />
               </div>
@@ -277,7 +278,9 @@ export default function EpisodePlayer(props: {
                       ? "🌿 Pas grave, on apprend"
                       : "→ Pas si simple"}
                 </p>
-                <p className="leading-relaxed">{choice.feedback}</p>
+                <p className="leading-relaxed">
+                  <FormattedText text={choice.feedback} />
+                </p>
                 {choice.points !== 0 && (
                   <p className="mt-3 text-sm font-bold tabular-nums">
                     {choice.points > 0
@@ -295,7 +298,7 @@ export default function EpisodePlayer(props: {
                 </p>
                 <TTSButton text={props.debrief} label="Ecouter le debrief" />
               </div>
-              {props.debrief}
+              <FormattedText text={props.debrief} />
             </div>
             <button
               onClick={() => setStep("quiz")}
@@ -407,7 +410,7 @@ export default function EpisodePlayer(props: {
                     <span aria-hidden="true">💡</span> Hex t'eclaire
                   </p>
                   <p className="text-gray-700 dark:text-gray-200">
-                    {props.quiz[quizIndex].explanation}
+                    <FormattedText text={props.quiz[quizIndex].explanation} />
                   </p>
                 </div>
                 <button
