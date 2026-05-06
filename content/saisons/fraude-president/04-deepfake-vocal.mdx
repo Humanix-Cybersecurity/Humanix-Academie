@@ -1,0 +1,109 @@
+---
+title: "Le deepfake vocal du dirigeant"
+durationMinutes: 8
+persona: "compta"
+objective: "Reconnaitre une voix synthetique generee par IA et resister meme quand 'c'est sa voix'"
+xpReward: 70
+scenario: |
+  Jeudi 14h05. Tu finis ton dejeuner. Ton telephone sonne, numero masque. Au bout du fil :
+
+  "Allo Camille ? C'est Antoine [le PDG]. J'ai un probleme — je suis en plein deal de rachat, je dois transferer 230 000 € d'acompte au notaire avant 16h aujourd'hui pour ne pas perdre l'operation. Je viens de t'envoyer le RIB par mail. Tu peux le faire de toute urgence ? Et garde ca pour toi, c'est tres confidentiel pour l'instant."
+
+  C'est BIEN la voix d'Antoine. Le ton, l'accent leger du Sud, le tic verbal "tu sais". Il a deja fait des operations confidentielles auparavant. Tu connais cette voix depuis 6 ans.
+choices:
+  - id: "a"
+    label: "Je fais le virement — c'est bien lui, j'en suis sure a 100 %"
+    outcome: "bad"
+    feedback: "Aïe. En 2024-2026, les deepfakes vocaux a partir de 30 secondes d'audio public (LinkedIn, conference, podcast) sont a 99 % indetectables. Cas Arup Hong Kong 2024 : 25 M$ via deepfake video du DAF."
+    points: -25
+  - id: "b"
+    label: "Je raccroche poliment et le rappelle MOI sur son numero connu pour valider"
+    outcome: "good"
+    feedback: "Parfait. Le 'callback rule' est la seule defense fiable contre le deepfake vocal. Si c'est un vrai PDG, il comprend et te remercie."
+    points: 35
+  - id: "c"
+    label: "Je lui demande de me reveler une information que seul le vrai PDG connaitrait (mot de passe partage, anecdote)"
+    outcome: "good"
+    feedback: "Excellent. Le 'safe word' ou 'challenge phrase' partagee a l'avance entre dirigeants et compta est une autre defense valide. Mais mefiance : un attaquant prepare peut avoir recolte des infos publiques."
+    points: 25
+  - id: "d"
+    label: "Je lui dis 'OK, je m'en occupe' pour gagner du temps puis je verifie"
+    outcome: "neutral"
+    feedback: "Tu engages ta parole avec un attaquant. Mieux : raccrocher poliment ('je m'en occupe, je te rappelle dans 5 min') puis valider. Eviter tout engagement verbal."
+    points: 5
+debrief: |
+  Le **deepfake vocal** est l'evolution la plus dangereuse du FOVI en 2024-2026. Surge documentee : **+442 % des incidents au H2 2024** (Hoxhunt threat report). Les outils sont a la portee de tous (ElevenLabs, Tortoise, Coqui, Mistral + Piper).
+
+  **Comment ca marche ?**
+
+  1. L'attaquant trouve 30 a 60 secondes d'audio public du dirigeant
+     - Conferences enregistrees, podcasts, video LinkedIn, interview presse
+  2. Il entraine un modele vocal (15 minutes de processing sur un GPU classique)
+  3. Il appelle (ou laisse un message vocal) en synthetisant a la volee
+
+  **Cas reels documentes :**
+
+  - **Arup Hong Kong, fevrier 2024** : 25 millions de dollars vires apres une fausse visioconference deepfake video du DAF + plusieurs collegues
+  - **WPP UK, mai 2024** : tentative de deepfake video du CEO via WhatsApp
+  - **Cas francais** : plusieurs PME en 2025 (compteur officiel France-Inter Culture).
+
+  **Les 3 reflexes anti-deepfake-vocal :**
+
+  1. **Callback rule** : raccroche, rappelle TOI, sur le numero connu. Toujours. Sans exception. Meme si "c'est sa voix".
+  2. **Safe word partage** : convenir avec les dirigeants d'un mot ou phrase de validation pre-etabli ("le code de la cabane est…"). Si le mot est faux ou hesitant, c'est un fake.
+  3. **Procedure ecrite affichee** : "TOUTE DEMANDE DE VIREMENT > X € PAR TELEPHONE = JE RAPPELLE LE DIRIGEANT MOI-MEME". Imprime, colle au-dessus du bureau.
+
+  **Les signaux faibles d'un deepfake (rares mais a connaitre) :**
+
+  - **Latence inhabituelle** : 1 a 2 secondes de delai avant la reponse (le modele genere)
+  - **Respiration absente ou robotique** entre les phrases
+  - **Bruit de fond etrange ou trop propre** (vs un vrai bureau)
+  - **Difficultes sur les mots inattendus** : si tu poses une question imprevue, le modele hesite
+
+  **Mais en 2026, ces signaux disparaissent vite.** En 2027, ils seront indetectables. La seule defense durable reste la procedure froide : **callback rule, sans negociation possible**.
+quiz:
+  - question: "Combien de secondes d'audio public suffisent pour cloner une voix en 2026 ?"
+    choices:
+      - id: "a"
+        label: "30 a 60 secondes"
+        correct: true
+      - id: "b"
+        label: "Plusieurs heures"
+        correct: false
+      - id: "c"
+        label: "Au moins 24 heures"
+        correct: false
+    explanation: "30 a 60 secondes d'audio public (LinkedIn, podcast, conference) suffisent. Tout dirigeant qui a deja parle en ligne est cible potentielle."
+
+  - question: "Quelle est la SEULE defense fiable contre un deepfake vocal ?"
+    choices:
+      - id: "a"
+        label: "Reconnaitre la voix au son"
+        correct: false
+      - id: "b"
+        label: "Le callback rule : raccrocher, rappeler MOI sur le numero CONNU"
+        correct: true
+      - id: "c"
+        label: "Demander de parler plus fort"
+        correct: false
+    explanation: "Reconnaitre la voix au son n'est plus fiable depuis 2024. Le callback rule (rappeler soi-meme sur le numero connu) est la seule defense durable."
+
+  - question: "Cas Arup Hong Kong 2024 : combien a coute le deepfake ?"
+    choices:
+      - id: "a"
+        label: "25 millions de dollars (deepfake video du DAF + collegues)"
+        correct: true
+      - id: "b"
+        label: "100 000 dollars"
+        correct: false
+      - id: "c"
+        label: "Aucune perte, l'attaque a echoue"
+        correct: false
+    explanation: "25 M$ vires en plusieurs operations apres une fausse visioconference. Le comptable etait certain de parler avec son DAF et plusieurs collegues — tous etaient des deepfakes."
+---
+
+## Pour aller plus loin
+
+Le deepfake n'est pas une vulnerabilite technique, c'est une vulnerabilite humaine : ton cerveau est cable pour faire confiance a une voix familiere. La seule contre-mesure est cognitive : **automatiser le callback comme un reflexe culturel** dans la PME, pas une option.
+
+> "Si c'est sa voix au telephone, c'est peut-etre lui — ou peut-etre 30 secondes de son podcast."
