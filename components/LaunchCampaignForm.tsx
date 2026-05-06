@@ -139,7 +139,7 @@ export default function LaunchCampaignForm({
 
       <p className="text-xs text-gray-400 italic text-center">
         En mode démo, les emails ne sont pas réellement envoyés. En production,
-        ils partent via Resend avec liens trackés.
+        ils partent via Scaleway TEM avec liens trackés.
       </p>
     </form>
   );
