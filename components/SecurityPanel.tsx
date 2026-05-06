@@ -5,7 +5,8 @@
 // regenerer codes de secours. Toute la logique passe par les server actions
 // dans /app/profil/securite/actions.ts (defense en profondeur cote serveur).
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
+import QRCode from "qrcode";
 import {
   setPassword,
   startMfaEnrollment,
@@ -341,65 +342,11 @@ function MfaSection({
 
       {!mfaEnabled && enrolling && enrollment && (
         <div className="space-y-4">
-          <div className="bg-gray-50 dark:bg-slate-800 rounded-xl p-4 space-y-3">
-            <p className="text-sm font-bold">
-              1. Ajoutez ce compte à votre application d'authentification
-            </p>
-            <p className="text-xs text-gray-600 dark:text-gray-300">
-              Ouvrez Google Authenticator, Authy, 1Password, Microsoft
-              Authenticator ou FreeOTP, puis :
-            </p>
-            <ul className="text-xs space-y-2">
-              <li className="flex gap-2">
-                <strong className="shrink-0">Option A.</strong>
-                <span>
-                  Choisissez « Ajouter par lien » et collez l'URI ci-dessous.
-                </span>
-              </li>
-              <li className="flex gap-2">
-                <strong className="shrink-0">Option B.</strong>
-                <span>
-                  Choisissez « Saisie manuelle » avec le secret + le compte.
-                </span>
-              </li>
-            </ul>
-            <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded p-2 text-xs">
-              <p className="font-medium text-gray-500 mb-1">Secret (Base32)</p>
-              <p className="font-mono break-all select-all">
-                {enrollment.secret}
-              </p>
-              <button
-                type="button"
-                onClick={() => {
-                  navigator.clipboard.writeText(enrollment.secret);
-                }}
-                className="text-xs underline mt-1 text-accent-700"
-              >
-                📋 Copier le secret
-              </button>
-            </div>
-            <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded p-2 text-xs">
-              <p className="font-medium text-gray-500 mb-1">
-                URI otpauth (lien à coller)
-              </p>
-              <p className="font-mono break-all select-all">
-                {enrollment.otpauthUri}
-              </p>
-              <button
-                type="button"
-                onClick={() => {
-                  navigator.clipboard.writeText(enrollment.otpauthUri);
-                }}
-                className="text-xs underline mt-1 text-accent-700"
-              >
-                📋 Copier l'URI
-              </button>
-            </div>
-            <p className="text-xs text-gray-500">
-              Compte : <code>{email}</code> · Émetteur :{" "}
-              <code>Humanix Academie</code>
-            </p>
-          </div>
+          <TotpEnrollmentBox
+            secret={enrollment.secret}
+            otpauthUri={enrollment.otpauthUri}
+            email={email}
+          />
           <form onSubmit={onConfirm} className="space-y-2">
             <label className="block text-sm font-medium">
               2. Saisissez le code à 6 chiffres affiché par votre application
@@ -560,5 +507,139 @@ function MfaSection({
         </div>
       )}
     </section>
+  );
+}
+
+// ===========================================================================
+// TotpEnrollmentBox — QR code + URI + secret en saisie manuelle (fallback)
+// ===========================================================================
+function TotpEnrollmentBox({
+  secret,
+  otpauthUri,
+  email,
+}: {
+  secret: string;
+  otpauthUri: string;
+  email: string;
+}) {
+  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
+  const [qrError, setQrError] = useState<string | null>(null);
+
+  useEffect(() => {
+    QRCode.toDataURL(otpauthUri, {
+      errorCorrectionLevel: "M",
+      margin: 2,
+      width: 220,
+      color: { dark: "#0B3D91", light: "#FFFFFF" },
+    })
+      .then((url) => setQrDataUrl(url))
+      .catch((e: unknown) => {
+        const msg = e instanceof Error ? e.message : "QR error";
+        setQrError(msg);
+      });
+  }, [otpauthUri]);
+
+  return (
+    <div className="bg-gray-50 dark:bg-slate-800 rounded-xl p-4 space-y-3">
+      <p className="text-sm font-bold">
+        1. Ajoutez ce compte à votre application d&apos;authentification
+      </p>
+      <p className="text-xs text-gray-600 dark:text-gray-300">
+        Ouvrez Google Authenticator, Authy, 1Password, Microsoft Authenticator
+        ou FreeOTP et choisissez l&apos;une des 3 options ci-dessous.
+      </p>
+
+      {/* Option A — QR code (recommandé) */}
+      <div className="bg-white dark:bg-slate-900 border-2 border-accent-200 dark:border-accent-900/40 rounded-lg p-3 flex items-start gap-3">
+        <div className="shrink-0">
+          {qrDataUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={qrDataUrl}
+              alt="QR code de configuration 2FA"
+              width={140}
+              height={140}
+              className="block bg-white p-1 rounded"
+            />
+          ) : qrError ? (
+            <div className="w-[140px] h-[140px] flex items-center justify-center text-xs text-rose-700 bg-rose-50 rounded">
+              QR indisponible : {qrError}
+            </div>
+          ) : (
+            <div className="w-[140px] h-[140px] flex items-center justify-center text-xs text-gray-400 bg-gray-100 rounded animate-pulse">
+              Génération…
+            </div>
+          )}
+        </div>
+        <div className="text-xs space-y-1">
+          <p className="font-bold text-accent-700 dark:text-accent-300">
+            Option A · QR code (recommandé)
+          </p>
+          <p>
+            Dans votre app, choisissez « Scanner un QR code » et pointez la
+            caméra sur l&apos;image à gauche.
+          </p>
+        </div>
+      </div>
+
+      {/* Option B — Saisie manuelle (secret) */}
+      <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded p-2 text-xs">
+        <p className="font-bold text-gray-700 dark:text-gray-200 mb-1">
+          Option B · Saisie manuelle
+        </p>
+        <p className="text-gray-500 mb-1">
+          Si la caméra n&apos;est pas dispo. Choisissez « Saisir le code
+          manuellement » et entrez :
+        </p>
+        <ul className="space-y-1 mt-1">
+          <li>
+            <span className="text-gray-500">Compte :</span>{" "}
+            <code className="font-mono">{email}</code>
+          </li>
+          <li>
+            <span className="text-gray-500">Émetteur :</span>{" "}
+            <code className="font-mono">Humanix Academie</code>
+          </li>
+          <li>
+            <span className="text-gray-500">Secret (base32) :</span>
+          </li>
+        </ul>
+        <p className="font-mono break-all select-all mt-1 bg-gray-50 dark:bg-slate-800 p-1 rounded">
+          {secret}
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            navigator.clipboard.writeText(secret);
+          }}
+          className="text-xs underline mt-1 text-accent-700"
+        >
+          📋 Copier le secret
+        </button>
+      </div>
+
+      {/* Option C — URI otpauth (avancé, pour 1Password / passwordstate) */}
+      <details className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded p-2 text-xs">
+        <summary className="cursor-pointer font-bold text-gray-700 dark:text-gray-200">
+          Option C · URI otpauth (avancé)
+        </summary>
+        <p className="text-gray-500 mt-2">
+          Pour les apps qui acceptent un import par URI (1Password,
+          Bitwarden) — collez le lien ci-dessous.
+        </p>
+        <p className="font-mono break-all select-all mt-1 bg-gray-50 dark:bg-slate-800 p-1 rounded">
+          {otpauthUri}
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            navigator.clipboard.writeText(otpauthUri);
+          }}
+          className="text-xs underline mt-1 text-accent-700"
+        >
+          📋 Copier l&apos;URI
+        </button>
+      </details>
+    </div>
   );
 }

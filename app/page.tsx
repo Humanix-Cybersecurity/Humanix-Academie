@@ -80,18 +80,27 @@ export default async function HomePage() {
               style={{ animationDelay: "420ms" }}
             >
               <Link
-                href="/connexion"
+                href="/signup?plan=decouverte"
                 className="btn-primary text-lg px-8 py-4 animate-glow"
               >
-                Démarrer 14 jours, sans CB
+                Créer mon compte gratuit
               </Link>
               <Link
-                href="#voyage"
+                href="/signup?plan=trial"
                 className="btn-secondary text-lg px-8 py-4"
               >
-                Voir comment ça se passe
+                Essai 14 jours, sans CB
               </Link>
             </div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 italic text-center">
+              Déjà inscrit ?{" "}
+              <Link
+                href="/connexion"
+                className="underline text-accent-700 hover:text-accent-600"
+              >
+                Se connecter
+              </Link>
+            </p>
 
             <p
               className="text-sm text-gray-500 dark:text-gray-400 mt-4 italic animate-fadeIn"
