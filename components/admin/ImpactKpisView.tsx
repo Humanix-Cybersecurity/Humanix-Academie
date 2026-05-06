@@ -36,7 +36,7 @@ export default function ImpactKpisView({ kpis }: { kpis: ImpactKpis }) {
             help="L'engagement régulier est ce qui transforme une formation ponctuelle en réflexe ancré"
           />
           <KpiCard
-            label="Streak 4+ semaines"
+            label="Streak 2+ semaines"
             value={`${kpis.adoption.streakUsers}`}
             sublabel="collaborateurs réguliers"
             tone={ratingForCount(
@@ -44,7 +44,7 @@ export default function ImpactKpisView({ kpis }: { kpis: ImpactKpis }) {
               kpis.adoption.totalSeats,
               [0.1, 0.3],
             )}
-            help="Ont fait au moins 1 module chaque semaine sur les 4 dernières semaines"
+            help="Ont fait au moins 1 module chaque semaine sur les 2 dernières semaines (régularité = réflexe ancré)"
           />
           <KpiCard
             label="Cadence moyenne"
