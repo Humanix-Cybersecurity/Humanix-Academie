@@ -27,7 +27,7 @@ export type ImpactKpis = {
     activatedSeats: number; // au moins 1 module complete
     activationRate: number; // 0..1
     weeklyActiveRate: number; // 0..1, % de users actifs au moins 1 fois cette semaine
-    streakUsers: number; // users avec >= 4 semaines consecutives d'activite
+    streakUsers: number; // users avec >= 2 semaines consecutives d'activite
     avgModulesPerWeek: number; // sur les 4 dernieres semaines, par user actif
   };
 
@@ -141,9 +141,11 @@ export async function computeImpactKpis(tenantId: string): Promise<ImpactKpis> {
   const weeklyActiveRate =
     totalSeats === 0 ? 0 : weeklyActiveUsers.size / totalSeats;
 
-  // Streak >= 4 semaines : on regarde les 4 dernieres semaines, et compte les
-  // users qui ont au moins 1 module dans CHACUNE des 4 semaines.
-  const streakUsers = countStreakUsers(allProgress, 4);
+  // Streak >= 2 semaines : on regarde les 2 dernieres semaines, et compte
+  // les users qui ont au moins 1 module dans CHACUNE des 2 semaines.
+  // Seuil bas (2) volontaire — coherent avec la promesse "1 module / semaine"
+  // et detectable sur les tenants jeunes (< 1 mois).
+  const streakUsers = countStreakUsers(allProgress, 2);
 
   // Cadence sur les 4 dernieres semaines
   const fourWeeksAgo = new Date(Date.now() - 4 * ONE_WEEK_MS);
