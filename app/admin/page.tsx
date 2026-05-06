@@ -24,7 +24,7 @@ import HexBackdrop from "@/components/HexBackdrop";
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
-  // Auth garantie par app/admin/layout.tsx (defense-in-depth déjà appliquée).
+  // Auth garantie par app/admin/layout.tsx (défense en profondeur déjà appliquée).
   // On récupère juste session pour le tenantId et la salutation.
   const session = await auth();
   if (!session?.user || typeof session.user.tenantId !== "string") {
