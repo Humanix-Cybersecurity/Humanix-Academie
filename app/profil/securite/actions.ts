@@ -23,6 +23,7 @@ import {
   consumePasswordResetToken,
   hashIp,
 } from "@/lib/password-reset";
+import { auditLog, AuditActions, AuditOutcomes } from "@/lib/audit";
 
 const ISSUER = "Humanix Academie";
 
@@ -32,6 +33,8 @@ async function requireAuth() {
   return {
     userId: session.user!.id as string,
     email: session.user!.email as string,
+    tenantId: (session.user!.tenantId as string) ?? null,
+    role: (session.user!.role as string) ?? null,
   };
 }
 
@@ -69,6 +72,7 @@ export async function setPassword(formData: FormData) {
   }
 
   const hash = hashPassword(newPassword);
+  const ctx = await requireAuth();
   await db.user.update({
     where: { id: userId },
     data: {
@@ -77,6 +81,12 @@ export async function setPassword(formData: FormData) {
       failedLoginAttempts: 0,
       lockedUntil: null,
     },
+  });
+  await auditLog({
+    action: AuditActions.USER_PASSWORD_CHANGED,
+    actor: { userId, email: ctx.email, role: ctx.role },
+    tenantId: ctx.tenantId,
+    target: { type: "user", id: userId, label: ctx.email },
   });
   revalidatePath("/profil/securite");
   return { ok: true };
@@ -127,6 +137,7 @@ export async function confirmMfaEnrollment(formData: FormData): Promise<{
     return { ok: false, error: "Code invalide." };
   }
   const { plain, hashedJson } = generateBackupCodes(10);
+  const ctx = await requireAuth();
   await db.user.update({
     where: { id: userId },
     data: {
@@ -134,6 +145,13 @@ export async function confirmMfaEnrollment(formData: FormData): Promise<{
       mfaEnabledAt: new Date(),
       mfaBackupCodesHash: hashedJson,
     },
+  });
+  await auditLog({
+    action: AuditActions.USER_MFA_ENABLED,
+    actor: { userId, email: ctx.email, role: ctx.role },
+    tenantId: ctx.tenantId,
+    target: { type: "user", id: userId, label: ctx.email },
+    message: "Activation TOTP + 10 codes de secours generes",
   });
   revalidatePath("/profil/securite");
   return { ok: true, backupCodes: plain };
@@ -173,6 +191,13 @@ export async function disableMfa(formData: FormData): Promise<{
       mfaEnabledAt: null,
       mfaBackupCodesHash: null,
     },
+  });
+  const ctxDis = await requireAuth();
+  await auditLog({
+    action: AuditActions.USER_MFA_DISABLED,
+    actor: { userId, email: ctxDis.email, role: ctxDis.role },
+    tenantId: ctxDis.tenantId,
+    target: { type: "user", id: userId, label: ctxDis.email },
   });
   revalidatePath("/profil/securite");
   return { ok: true };
@@ -240,6 +265,13 @@ export async function requestPasswordReset(formData: FormData): Promise<{
       ipHash: hashIp(ip),
       userAgent: ua?.slice(0, 200) ?? null,
     });
+    await auditLog({
+      action: AuditActions.USER_PASSWORD_RESET_REQUESTED,
+      actor: { userId: user.id, email },
+      target: { type: "user", id: user.id, label: email },
+      ip,
+      userAgent: ua,
+    });
     // Envoi de l'email via Resend (mute en cas d'echec, toujours ok)
     try {
       if (
@@ -289,7 +321,7 @@ export async function resetPasswordWithToken(formData: FormData): Promise<{
     return { ok: false, error: "Lien expiré ou déjà utilisé." };
   }
   const hash = hashPassword(newPassword);
-  await db.user.update({
+  const updated = await db.user.update({
     where: { id: consumed.userId },
     data: {
       passwordHash: hash,
@@ -297,6 +329,14 @@ export async function resetPasswordWithToken(formData: FormData): Promise<{
       failedLoginAttempts: 0,
       lockedUntil: null,
     },
+    select: { email: true, tenantId: true },
+  });
+  await auditLog({
+    action: AuditActions.USER_PASSWORD_RESET_USED,
+    actor: { userId: consumed.userId, email: updated.email },
+    tenantId: updated.tenantId,
+    target: { type: "user", id: consumed.userId, label: updated.email },
+    message: "Reset effectue via email + token",
   });
   return { ok: true };
 }
