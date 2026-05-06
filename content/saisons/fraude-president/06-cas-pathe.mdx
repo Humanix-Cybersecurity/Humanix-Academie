@@ -1,0 +1,110 @@
+---
+title: "Cas reel : 19 millions chez Pathe"
+durationMinutes: 8
+persona: "compta"
+objective: "Comprendre comment 19 M€ ont disparu dans une PME bien tenue, et en tirer les lecons systemiques"
+xpReward: 70
+scenario: |
+  Tu es DAF chez une PME dans le secteur du divertissement / cinema. Janvier, retour des fetes. Tu lis un compte-rendu de l'incident Pathe Holding 2018 : 19 millions d'euros disparus en 3 semaines via un faux ordre de virement international.
+
+  Le scenario etait un faux Jerome Seydoux (PDG-fondateur), via emails et appels telephoniques pretendant negocier l'achat d'une chaine de cinema a Dubai. Plusieurs virements en cascade vers des comptes singapouriens et hongkongais.
+
+  En lisant ce cas, qu'est-ce qui te frappe le plus (la lecon principale a retenir pour ta PME) ?
+choices:
+  - id: "a"
+    label: "Les attaquants visaient une grande entreprise, donc ma petite PME n'est pas concernee"
+    outcome: "bad"
+    feedback: "Faux. Les FOVI touchent en proportion bien plus les PME que les grands groupes. La PME est moins protegee, n'a pas de service securite dedie, et les montants pour un attaquant sont quand meme tres rentables (10 a 200 k€)."
+    points: -20
+  - id: "b"
+    label: "Meme une PME bien tenue avec 6 000 collaborateurs et une procedure peut tomber, parce que la fraude exploite la culture d'autorite et l'urgence"
+    outcome: "good"
+    feedback: "Oui. C'est la lecon centrale. La taille de l'entreprise ne protege pas — la culture interne (peur du PDG, urgence, confidentialite) est le vecteur. Comprendre ca te donne le bon angle pour ta PME."
+    points: 30
+  - id: "c"
+    label: "Les Singapouriens et Hongkongais sont les fautifs"
+    outcome: "bad"
+    feedback: "Les comptes terminaux (Singapour, Hong Kong, Dubai) sont des relais de blanchiment. Le veritable fautif est le manque de procedure cross-border qui aurait du bloquer un virement de cette ampleur vers l'Asie sans validation renforcee."
+    points: -10
+  - id: "d"
+    label: "Il aurait suffit d'une procedure de callback obligatoire au-dessus de 100 000 € pour bloquer toute la cascade"
+    outcome: "good"
+    feedback: "Excellent. Une seule procedure simple (callback hors-canal sur les > 100 k€) aurait suffit a casser l'attaque a la 1ere transaction. C'est une lecon directement applicable a ta PME."
+    points: 25
+debrief: |
+  **Cas Pathe Holding — 19 M€ envoles (decouvert decembre 2018)**
+
+  **Contexte :** Pathe est un groupe francais centenaire, environ 6 000 employes, multi-pays (FR, NL, CH). Famille fondatrice Seydoux. Procedures financieres en place. Ce n'etait pas une boite mal tenue.
+
+  **Mecanisme :**
+
+  1. Plusieurs emails se faisant passer pour Jerome Seydoux (PDG) demandent a la directrice financiere de la filiale neerlandaise (Pathe Bioscopen) de preparer une operation strictement confidentielle : rachat d'une chaine de cinemas a Dubai.
+  2. Plusieurs appels telephoniques (probable deepfake vocal precoce ou imitation) renforcent la credibilite.
+  3. La directrice financiere se sent investie d'une mission strategique. L'urgence + la confidentialite l'isolent du circuit habituel.
+  4. **Premier virement** vers un compte HSBC Hong Kong : ~5 M€. Pas de validation hors-canal renforcee.
+  5. **Cascade de 7 virements supplementaires** sur 3 semaines, vers Hong Kong et Singapour. Total : 19 M€.
+  6. La fraude est detectee fin novembre 2018 quand la directrice cherche a confirmer l'avancement avec le vrai PDG. Procedure de cellule de crise activee.
+
+  **Recuperation :** environ 4 M€ recuperes via gel des comptes. **15 M€ definitivement perdus.**
+
+  **Les 4 lecons systemiques (a retenir pour ta PME) :**
+
+  **1. La taille ne protege pas, la procedure protege**
+  Pathe avait des procedures, mais elles etaient contournables sous pretexte d'urgence/confidentialite. Une procedure non-derogeable (callback hors-canal obligatoire au-dessus de 100 k€) aurait bloque l'attaque a la 1ere operation.
+
+  **2. La culture d'autorite est le vrai vecteur**
+  La directrice financiere n'avait pas envie de dire non au PDG-fondateur. La fraude exploite cette deference culturelle. Antidote : la procedure doit etre **plus forte que la deference**. Un PDG qui te demande de l'enfreindre n'est pas le PDG.
+
+  **3. L'isolement est volontaire**
+  L'attaquant impose la confidentialite pour t'isoler de tes collegues. Quand quelqu'un te demande de cacher une operation a tes pairs, c'est le signal #1. Casser le secret = casser l'attaque.
+
+  **4. Les flux internationaux >100 k€ doivent declencher une alerte automatique**
+  Hong Kong, Singapour, Dubai : ces destinations a forte opacite bancaire doivent declencher une revue manuelle ET un appel au beneficiaire ET une validation triple. Ta banque pro peut configurer ce niveau de protection — demande-le.
+
+  **L'ironie cruelle :** l'investissement dans une procedure anti-FOVI couterait moins de 20 000 € a une PME. La perte moyenne d'un FOVI reussi en France : 200 000 €. Le ROI est instant — encore faut-il le faire AVANT.
+quiz:
+  - question: "Combien Pathe a perdu en 2018 dans cette fraude ?"
+    choices:
+      - id: "a"
+        label: "Environ 19 millions d'euros (dont 15 definitivement perdus)"
+        correct: true
+      - id: "b"
+        label: "Environ 100 000 euros"
+        correct: false
+      - id: "c"
+        label: "Aucune perte, l'attaque a echoue"
+        correct: false
+    explanation: "19 M€ vires en 7 operations sur 3 semaines vers Hong Kong et Singapour. ~4 M€ recuperes, ~15 M€ perdus. C'est devenu le cas d'ecole francais du FOVI."
+
+  - question: "Quelle procedure SIMPLE aurait suffit a bloquer la cascade Pathe ?"
+    choices:
+      - id: "a"
+        label: "Aucune — c'est inevitable"
+        correct: false
+      - id: "b"
+        label: "Callback hors-canal obligatoire au-dessus d'un seuil (ex: 100 k€) avant tout virement international"
+        correct: true
+      - id: "c"
+        label: "Plus de signatures sur le bon de virement"
+        correct: false
+    explanation: "Un seul appel direct au PDG sur son numero connu aurait casse la 1ere transaction. Tout le reste etait amplification : la 1ere etait la cle de voute."
+
+  - question: "Une PME francaise est-elle plus ou moins exposee qu'un grand groupe au FOVI ?"
+    choices:
+      - id: "a"
+        label: "Moins exposee, les attaquants ne ciblent que les grands"
+        correct: false
+      - id: "b"
+        label: "Plus exposee proportionnellement, car moins de procedures, moins de RSSI, plus de proximite humaine exploitable"
+        correct: true
+      - id: "c"
+        label: "Exactement pareil"
+        correct: false
+    explanation: "Les PME sont la cible privilegiee des FOVI. Moins de procedures, pas de RSSI dedie, plus de proximite emotionnelle entre dirigeant et compta. C'est statistique : 2 FOVI sur 3 visent des PME francaises."
+---
+
+## Pour aller plus loin
+
+L'histoire de Pathe est devenue un cas d'ecole en France — Sciences Po, ESCP, et Polytechnique l'enseignent dans leurs cursus de risk management. Si tu es dirigeant d'une PME, fais le test cette semaine : envoie-toi a toi-meme un faux email FOVI, et regarde comment tes collaborateurs reagissent. La verite est dans l'experience, pas dans le poster.
+
+> "On ne se reveille jamais d'une fraude au president : on se reveille AVANT, ou trop tard."
