@@ -1,13 +1,22 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page tarifs publique — refonte mai 2026 (pivot open core service-led).
+// Page tarifs publique — refonte cosy mai 2026 (pivot open core service-led).
 // Cf. Pack_Lancement_Solo/05_Pivot_OSS_Mai_2026/05_PRICING_VOLUME.md
 //
 // 6 paliers : Community Edition (self-host) · Découverte (cloud free) ·
 // Starter · Essentielle ⭐ · Pro · Enterprise.
+//
+// Refonte cosy mai 2026 :
+//  - Hero HexBackdrop avec sous-titre "notre conviction tarifaire"
+//  - Section "Pourquoi" : palette 6 saisons cyclees sur les 9 cartes
+//  - Cards palette adoucie sur les paliers + cascade slide-up
+//  - Citation finale "Hex veille" qui resume le pari editorial
+//  - Vocabulaire transforme : "score" reste car c'est tabular, mais ROI
+//    perd "sans bullshit" pour "sans embellir" + pas d'urgence martelee
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { TIERS, ADD_ONS, type PricingTier } from "@/lib/pricing";
 import PricingSimulator from "@/components/PricingSimulator";
+import HexBackdrop from "@/components/HexBackdrop";
 
 export const metadata = {
   title: "Tarifs — Humanix Académie",
@@ -17,64 +26,90 @@ export const metadata = {
 
 export default function TarifsPage() {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10 sm:py-16 animate-fadeIn">
+    <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* =====================================================================
-          HERO — repositionné OSS souverain volume
+          1. HERO — invitation cosy a la lecture des prix
           ===================================================================== */}
-      <section className="text-center mb-12">
-        <p className="text-xs uppercase tracking-widest text-accent-500 font-bold mb-3">
-          Open Source · Souverain · Pour PME
-        </p>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-primary-500 leading-tight mb-4">
-          La cybersécurité accessible.
-          <br />
-          <span className="text-accent-500">
-            Self-host gratuit ou cloud à partir de 0 €.
-          </span>
-        </h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
-          Plateforme libre AGPLv3, hébergement souverain France, intégration
-          native CISO Assistant. Pas de tarif à 4 chiffres. Pas d'engagement
-          piège. Pas de jargon.
-        </p>
-        <div className="flex flex-wrap justify-center gap-2 text-xs">
-          <Trust>🇫🇷 Code open source AGPL</Trust>
-          <Trust>🛡️ RGPD-compliant native</Trust>
-          <Trust>📋 Aligné NIS2 et ANSSI</Trust>
-          <Trust>🌐 Connecteur CISO Assistant</Trust>
-          <Trust>♻️ Forever-free 5 sièges</Trust>
-        </div>
-      </section>
+      <HexBackdrop intensity="soft" className="bg-humanix-soft">
+        <section
+          aria-labelledby="hero-title"
+          className="max-w-5xl mx-auto px-4 pt-12 pb-10 sm:pt-16 sm:pb-12 text-center"
+        >
+          <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
+            Notre conviction tarifaire · sans embellir
+          </p>
+          <h1
+            id="hero-title"
+            className="font-display text-4xl sm:text-6xl font-extrabold text-primary-500 dark:text-accent-300 leading-[1.05] mb-4 animate-slide-up"
+            style={{ animationDelay: "100ms" }}
+          >
+            La cybersécurité,{" "}
+            <span className="text-accent-500">accessible.</span>
+          </h1>
+          <p
+            className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed animate-slide-up"
+            style={{ animationDelay: "220ms" }}
+          >
+            Self-host gratuit à vie sous AGPLv3, ou cloud souverain à partir de
+            0 €. Pas de tarif à quatre chiffres, pas d'engagement piège, pas de
+            jargon. Le prix est un choix politique — celui de ne laisser
+            personne au bord du chemin.
+          </p>
+          <div
+            className="flex flex-wrap justify-center gap-2 text-xs mt-6 animate-fadeIn"
+            style={{ animationDelay: "340ms" }}
+          >
+            <Trust>🇫🇷 Code open source AGPL</Trust>
+            <Trust>🛡️ RGPD-compliant native</Trust>
+            <Trust>📋 Aligné NIS2 et ANSSI</Trust>
+            <Trust>🌐 Connecteur CISO Assistant</Trust>
+            <Trust>♻️ Forever-free 5 sièges</Trust>
+          </div>
+        </section>
+      </HexBackdrop>
+
+      <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
 
       {/* =====================================================================
-          AUDIT FLASH CTA — gardé, c'est un excellent lead magnet
+          2. AUDIT FLASH CTA — invitation, pas urgence
           ===================================================================== */}
-      <section className="mb-12" aria-labelledby="audit-cta-title">
-        <div className="rounded-3xl bg-gradient-to-br from-accent-500 to-primary-500 text-white p-6 sm:p-10 shadow-xl">
-          <div className="flex flex-col sm:flex-row items-center gap-6">
+      <section
+        className="mb-12 animate-slide-up"
+        style={{ animationDelay: "100ms" }}
+        aria-labelledby="audit-cta-title"
+      >
+        <div className="rounded-3xl bg-gradient-to-br from-accent-500 to-primary-500 text-white p-6 sm:p-10 shadow-xl relative overflow-hidden">
+          <div
+            aria-hidden="true"
+            className="absolute -top-8 -right-6 text-[140px] opacity-10 select-none pointer-events-none rotate-12"
+          >
+            🌱
+          </div>
+          <div className="flex flex-col sm:flex-row items-center gap-6 relative">
             <div className="text-6xl" aria-hidden="true">
               🎯
             </div>
             <div className="flex-1 text-center sm:text-left">
-              <p className="text-xs uppercase tracking-widest opacity-80 font-bold mb-1">
-                100 % gratuit · 5 minutes
+              <p className="text-xs uppercase tracking-[0.25em] opacity-80 font-bold mb-1">
+                Photo claire · 5 minutes · gratuit
               </p>
               <h2
                 id="audit-cta-title"
-                className="text-2xl sm:text-3xl font-extrabold mb-2"
+                className="font-display text-2xl sm:text-3xl font-extrabold mb-2"
               >
-                Pas sûr de l'offre qu'il vous faut ?
+                Tu hesites entre nos offres ?
               </h2>
-              <p className="opacity-90 mb-4">
-                Faites notre <strong>audit cyber flash</strong> : 15 questions,
-                un rapport PDF avec votre score et notre recommandation
-                personnalisée.
+              <p className="opacity-90 mb-4 leading-relaxed">
+                Notre <strong>audit cyber flash</strong> donne une photo claire
+                de la maturite humaine de ton organisation, en 15 questions
+                bienveillantes. Rapport PDF a la fin, recommandation
+                personnalisee — sans pression.
               </p>
               <Link
                 href="/audit-flash"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white text-primary-500 font-bold hover:bg-gray-100 transition"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white text-primary-500 font-bold hover:scale-105 transition shadow-md"
               >
-                Démarrer l'audit gratuit →
+                Demarrer l'audit · 5 min →
               </Link>
             </div>
           </div>
@@ -169,61 +204,76 @@ export default function TarifsPage() {
       </section>
 
       {/* =====================================================================
-          POURQUOI HUMANIX — repositionné OSS souverain
+          POURQUOI HUMANIX — palette 6 saisons cyclees, animation cascade
           ===================================================================== */}
       <section className="mb-16">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-extrabold text-primary-500 mb-2">
+          <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
+            Notre lecture du marche
+          </p>
+          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary-500 dark:text-accent-300 mb-2 leading-tight">
             Pourquoi Humanix ?
           </h2>
-          <p className="text-gray-600">Notre positionnement face au marché.</p>
+          <p className="text-gray-600 dark:text-gray-300 max-w-xl mx-auto">
+            9 raisons structurelles, pas 9 arguments marketing.
+          </p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          <DiffCard
-            emoji="🌐"
-            title="Open source AGPLv3"
-            text="Code complet sur GitHub. Audite-le, fork-le, héberge-le. Zéro boîte noire, transparence totale."
-          />
-          <DiffCard
-            emoji="🇫🇷"
-            title="Souverain par défaut"
-            text="Conçu, hébergé et opéré en France. Conformité RGPD/NIS2 native. Pas de Patriot Act au menu."
-          />
-          <DiffCard
-            emoji="🤝"
-            title="Intégré à l'écosystème"
-            text="Connecteur natif CISO Assistant (intuitem). Format OSCAL standard. Webhooks Sentinel/Splunk/Sekoia."
-          />
-          <DiffCard
-            emoji="🎮"
-            title="Ludique pour de vrai"
-            text="Mascotte évolutive, boutique, challenges entre services, badges. Les collaborateurs reviennent par envie."
-          />
-          <DiffCard
-            emoji="⚡"
-            title="Déployable en 30 minutes"
-            text="Pas de chef de projet, pas de SSO obligatoire, pas de 3 semaines de mise en place. Import CSV, c'est parti."
-          />
-          <DiffCard
-            emoji="📊"
-            title="Score de risque humain"
-            text="Mesure objective, en temps réel, par collaborateur et par service. Ce que ton assureur cyber demande."
-          />
-          <DiffCard
-            emoji="🛒"
-            title="Marketplace communauté"
-            text="Tes pairs RSSI publient leurs modules, modérés par notre équipe. Effet de levier collectif."
-          />
-          <DiffCard
-            emoji="🦊"
-            title="Une mascotte qui te parle"
-            text="Hex t'accompagne, te coache, te félicite. Pas un chatbot froid. Un compagnon de progression."
-          />
-          <DiffCard
-            emoji="💰"
-            title="Volume plutôt que rente"
-            text="3 €/user/mois en Essentielle. 5 à 10x moins cher que les acteurs US. Volume > 30 grosses boîtes."
-          />
+          {[
+            {
+              emoji: "🌐",
+              title: "Open source AGPLv3",
+              text: "Code complet sur GitHub. Audite-le, fork-le, heberge-le. Zero boite noire, transparence totale.",
+            },
+            {
+              emoji: "🇫🇷",
+              title: "Souverain par defaut",
+              text: "Concu, heberge et opere en France. Conformite RGPD/NIS2 native. Pas de Cloud Act au menu.",
+            },
+            {
+              emoji: "🤝",
+              title: "Integre a l'ecosysteme",
+              text: "Connecteur natif CISO Assistant (intuitem). Format OSCAL standard. Webhooks Sentinel/Splunk/Sekoia.",
+            },
+            {
+              emoji: "🎮",
+              title: "Ludique pour de vrai",
+              text: "Mascotte evolutive, boutique, challenges entre services, badges. Les collaborateurs reviennent par envie.",
+            },
+            {
+              emoji: "⚡",
+              title: "Deployable en 30 minutes",
+              text: "Pas de chef de projet, pas de SSO obligatoire, pas de 3 semaines de mise en place. Import CSV, c'est parti.",
+            },
+            {
+              emoji: "📊",
+              title: "Score de risque humain",
+              text: "Mesure objective, en temps reel, par collaborateur et par service. Ce que ton assureur cyber demande.",
+            },
+            {
+              emoji: "🛒",
+              title: "Marketplace communaute",
+              text: "Tes pairs RSSI publient leurs modules, moderes par notre equipe. Effet de levier collectif.",
+            },
+            {
+              emoji: "🦊",
+              title: "Une mascotte qui te parle",
+              text: "Hex t'accompagne, te coache, te felicite. Pas un chatbot froid. Un compagnon de progression.",
+            },
+            {
+              emoji: "💰",
+              title: "Volume plutot que rente",
+              text: "3 €/user/mois en Essentielle. 5 a 10x moins cher que les acteurs US. Volume > 30 grosses boites.",
+            },
+          ].map((diff, idx) => (
+            <DiffCard
+              key={diff.title}
+              emoji={diff.emoji}
+              title={diff.title}
+              text={diff.text}
+              paletteIndex={idx}
+            />
+          ))}
         </div>
       </section>
 
@@ -414,15 +464,20 @@ export default function TarifsPage() {
       </section>
 
       {/* =====================================================================
-          ROI — repositionné
+          ROI — chiffres a froid, sans urgence
           ===================================================================== */}
       <section className="mb-16">
-        <div className="card bg-gradient-to-br from-emerald-50 to-cyan-50 border-2 border-emerald-300">
+        <div className="rounded-3xl border-2 border-emerald-200 dark:border-emerald-900/40 bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/40 p-6 sm:p-10 shadow-sm">
           <div className="grid sm:grid-cols-[auto_1fr] gap-6 items-start">
-            <div className="text-6xl">💡</div>
+            <div className="text-6xl" aria-hidden="true">
+              💡
+            </div>
             <div>
-              <h2 className="text-2xl font-extrabold text-primary-500 mb-3">
-                Le retour sur investissement, sans bullshit
+              <p className="text-xs uppercase tracking-[0.25em] font-bold text-emerald-700 dark:text-emerald-300 mb-2">
+                Retour sur investissement · sans embellir
+              </p>
+              <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-3 leading-tight">
+                Les chiffres, posés froidement.
               </h2>
               <ul className="space-y-2 text-gray-700">
                 <Roi
@@ -510,45 +565,79 @@ export default function TarifsPage() {
       </section>
 
       {/* =====================================================================
-          CTA FINAL
+          CTA FINAL — invitation cosy, pas urgence
           ===================================================================== */}
-      <section className="text-center bg-gradient-to-br from-primary-500 to-accent-500 rounded-3xl p-12 text-white">
-        <h2 className="text-3xl sm:text-4xl font-extrabold mb-3">
-          Prêt à commencer ?
-        </h2>
-        <p className="text-lg opacity-90 mb-8 max-w-xl mx-auto">
-          Self-host libre ou compte cloud gratuit en 2 minutes. Premier module
-          jouable immédiatement.
+      <section
+        aria-labelledby="cta-final"
+        className="relative text-center bg-gradient-to-br from-primary-500 via-primary-600 to-accent-500 rounded-3xl p-8 sm:p-12 text-white shadow-xl overflow-hidden"
+      >
+        <div
+          aria-hidden="true"
+          className="absolute -top-12 -right-8 text-[180px] opacity-10 select-none pointer-events-none rotate-12"
+        >
+          🌱
+        </div>
+        <p className="text-xs uppercase tracking-[0.3em] font-bold opacity-80 mb-2 relative">
+          A toi de jouer
         </p>
-        <div className="flex flex-wrap justify-center gap-3">
+        <h2
+          id="cta-final"
+          className="font-display text-3xl sm:text-4xl font-extrabold mb-3 relative leading-tight"
+        >
+          Prends une etoile, prends un compte, ou juste un cafe.
+        </h2>
+        <p className="text-lg opacity-90 mb-8 max-w-xl mx-auto leading-relaxed relative">
+          Self-host libre ou cloud gratuit en 2 minutes. Premier module jouable
+          immediatement. Pas de carte bancaire, pas de relance commerciale, pas
+          de pression.
+        </p>
+        <div className="flex flex-wrap justify-center gap-3 relative">
           <Link
             href="/demo"
             className="bg-white text-primary-500 font-bold px-6 sm:px-8 py-4 rounded-2xl hover:scale-105 transition shadow-lg"
           >
-            🎮 Tester la démo publique
+            🎮 Tester la demo publique
           </Link>
           <a
-            href="https://github.com/humanix-cybersecurity/humanix-ce"
+            href="https://github.com/Humanix-Cybersecurity/Humanix-Academie"
             target="_blank"
-            rel="noreferrer"
-            className="bg-white/10 backdrop-blur border-2 border-white text-white font-bold px-6 sm:px-8 py-4 rounded-2xl hover:bg-white/20 transition"
+            rel="noopener noreferrer"
+            className="bg-white/10 backdrop-blur border-2 border-white/70 text-white font-bold px-6 sm:px-8 py-4 rounded-2xl hover:bg-white/20 transition"
           >
-            🌐 Voir le code (GitHub)
+            ⭐ Voir le repo GitHub
+            <span className="sr-only"> (nouvel onglet)</span>
           </a>
           <a
             href="mailto:contact@humanix-cybersecurity.fr"
-            className="bg-white/10 backdrop-blur border-2 border-white text-white font-bold px-6 sm:px-8 py-4 rounded-2xl hover:bg-white/20 transition"
+            className="bg-white/10 backdrop-blur border-2 border-white/70 text-white font-bold px-6 sm:px-8 py-4 rounded-2xl hover:bg-white/20 transition"
           >
-            📞 Échanger avec un expert
+            📞 Echanger avec un expert
           </a>
         </div>
-        <p className="text-xs opacity-70 mt-6">
-          Une question ? Écris-nous à{" "}
-          <strong>contact@humanix-cybersecurity.fr</strong> — on répond sous 4h
-          ouvrées.
+        <p className="text-xs opacity-70 mt-6 relative">
+          Une question ? <strong>contact@humanix-cybersecurity.fr</strong> — on
+          repond sous 4 h ouvrees.
         </p>
       </section>
-    </div>
+
+      {/* =====================================================================
+          CITATION FINALE — signature cosy "Hex veille"
+          ===================================================================== */}
+      <section className="text-center pt-10 pb-4">
+        <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          « Le prix est un choix politique. On a choisi de ne laisser personne
+          au bord du chemin — pas par charite, par strategie. La cybersecurite
+          ne peut pas etre un luxe quand 90 % des attaques visent les humains. »
+        </blockquote>
+        <p
+          aria-hidden="true"
+          className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
+        >
+          — Hex veille
+        </p>
+      </section>
+      </div>
+    </main>
   );
 }
 
@@ -675,21 +764,71 @@ function Trust({ children }: { children: ReactNode }) {
   );
 }
 
+// Palette 6 saisons cyclees (cyan/emerald/amber/purple/rose/indigo) pour
+// donner du caractere aux 9 cartes "Pourquoi Humanix" — la grammaire
+// visuelle est partagee avec /comparatif, /librairie, /lancement-oss.
+const DIFF_PALETTES = [
+  {
+    bg: "from-cyan-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-cyan-950/40",
+    ring: "border-cyan-200 dark:border-cyan-900/40",
+    accent: "text-cyan-700 dark:text-cyan-300",
+  },
+  {
+    bg: "from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-teal-950/40",
+    ring: "border-emerald-200 dark:border-emerald-900/40",
+    accent: "text-emerald-700 dark:text-emerald-300",
+  },
+  {
+    bg: "from-amber-50 via-white to-yellow-50 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/40",
+    ring: "border-amber-200 dark:border-amber-900/40",
+    accent: "text-amber-700 dark:text-amber-300",
+  },
+  {
+    bg: "from-purple-50 via-white to-pink-50 dark:from-slate-900 dark:via-slate-900 dark:to-purple-950/40",
+    ring: "border-purple-200 dark:border-purple-900/40",
+    accent: "text-purple-700 dark:text-purple-300",
+  },
+  {
+    bg: "from-rose-50 via-white to-amber-50 dark:from-slate-900 dark:via-slate-900 dark:to-rose-950/40",
+    ring: "border-rose-200 dark:border-rose-900/40",
+    accent: "text-rose-700 dark:text-rose-300",
+  },
+  {
+    bg: "from-indigo-50 via-white to-cyan-50 dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950/40",
+    ring: "border-indigo-200 dark:border-indigo-900/40",
+    accent: "text-indigo-700 dark:text-indigo-300",
+  },
+];
+
 function DiffCard({
   emoji,
   title,
   text,
+  paletteIndex = 0,
 }: {
   emoji: string;
   title: string;
   text: string;
+  paletteIndex?: number;
 }) {
+  const palette = DIFF_PALETTES[paletteIndex % DIFF_PALETTES.length];
   return (
-    <div className="card hover:scale-[1.02] hover:shadow-md transition-all">
-      <div className="text-3xl mb-3">{emoji}</div>
-      <h3 className="font-bold text-primary-500 mb-2">{title}</h3>
-      <p className="text-sm text-gray-600 leading-relaxed">{text}</p>
-    </div>
+    <article
+      className={`rounded-3xl border-2 ${palette.ring} bg-gradient-to-br ${palette.bg} p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all animate-slide-up h-full`}
+      style={{ animationDelay: `${paletteIndex * 60}ms` }}
+    >
+      <div className="text-3xl mb-3" aria-hidden="true">
+        {emoji}
+      </div>
+      <h3
+        className={`font-display text-lg font-extrabold ${palette.accent} mb-2 leading-tight`}
+      >
+        {title}
+      </h3>
+      <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
+        {text}
+      </p>
+    </article>
   );
 }
 
