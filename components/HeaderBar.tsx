@@ -1,7 +1,7 @@
 "use client";
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// HeaderBar — refonte pro mai 2026 (cible : credibilite "French Tech")
+// HeaderBar - refonte pro mai 2026 (cible : credibilite "French Tech")
 //
 // Probleme avant : 8 liens inline pour le visiteur (Urgence, Famille, Manifeste,
 // Open source, DPO, Communaute, Tarifs, Connexion) + emojis melanges + CTA
@@ -96,13 +96,13 @@ const SOLUTIONS_ITEMS: DropdownItem[] = [
   {
     href: "/pour-les-daf",
     label: "Pour les DAF",
-    description: "ROI €, Pack NIS2, fraude évitée — pas de jargon cyber",
+    description: "ROI €, Pack NIS2, fraude évitée - pas de jargon cyber",
     emoji: "💼",
   },
   {
     href: "/lancement-oss",
     label: "Open source",
-    description: "Lancement AGPLv3 — mardi 26 mai 2026",
+    description: "Lancement AGPLv3 - mardi 26 mai 2026",
     emoji: "🌱",
   },
   {
@@ -120,7 +120,7 @@ const SOLUTIONS_ITEMS: DropdownItem[] = [
   {
     href: "/urgence-cyber",
     label: "Urgence cyber",
-    description: "Hub d'incident — que faire en 60 minutes",
+    description: "Hub d'incident - que faire en 60 minutes",
     emoji: "🚨",
   },
 ];
@@ -217,7 +217,7 @@ export default function HeaderBar() {
         <Link
           href="/"
           className="flex items-center gap-2.5 shrink-0 group"
-          aria-label="Humanix Académie — accueil"
+          aria-label="Humanix Académie - accueil"
         >
           <Image
             src="/logo-humanix-academie-192.png"
@@ -269,7 +269,7 @@ export default function HeaderBar() {
               <Link
                 href="/profil"
                 className="hidden sm:inline-flex items-center gap-1.5 bg-gradient-to-r from-primary-50 to-cyan-50 dark:from-slate-800 dark:to-slate-700 rounded-full pl-3 pr-3 py-1 hover:scale-[1.03] transition-transform border border-primary-100/80 dark:border-slate-600/80 ml-1"
-                title={`Niveau ${stats.level} — ${stats.levelName} · ${stats.xp} XP`}
+                title={`Niveau ${stats.level} - ${stats.levelName} · ${stats.xp} XP`}
               >
                 <span className="text-[11px] font-bold text-primary-500 dark:text-accent-300 tabular-nums">
                   N{stats.level}
@@ -476,7 +476,7 @@ export default function HeaderBar() {
                     href: "/communaute",
                     label: "Rejoindre",
                     description:
-                      "4 portes d'entrée — utilisateur, dev, contenu, écosystème",
+                      "4 portes d'entrée - utilisateur, dev, contenu, écosystème",
                     emoji: "🤝",
                   },
                 ]}

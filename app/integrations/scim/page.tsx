@@ -7,7 +7,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "SCIM v2 — Auto-provisioning utilisateurs · Humanix Académie",
+  title: "SCIM v2 - Auto-provisioning utilisateurs · Humanix Académie",
   description:
     "Provisioning automatique des utilisateurs depuis Microsoft Entra ID, Okta, Google Workspace, Keycloak via le standard SCIM v2 (RFC 7643/7644).",
 };
@@ -20,7 +20,7 @@ export default function ScimDocPage() {
           Intégration · Provisioning
         </p>
         <h1 className="text-4xl sm:text-5xl font-extrabold text-primary-500 leading-tight mb-4">
-          SCIM v2 —{" "}
+          SCIM v2 -{" "}
           <span className="bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
             zéro création manuelle
           </span>

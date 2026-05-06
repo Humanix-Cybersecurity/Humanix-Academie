@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// FormattedText — rendu inline du markdown minimal des champs MDX texte
+// FormattedText - rendu inline du markdown minimal des champs MDX texte
 // brut (scenario, debrief, feedback, explanation, body modules).
 //
 // Le contenu MDX est consomme via gray-matter qui retourne les chaines
@@ -15,7 +15,7 @@
 //
 // Il preserve les sauts de ligne (compatible avec whitespace-pre-line).
 //
-// Pas de dep markdown externe — on ne supporte volontairement que le
+// Pas de dep markdown externe - on ne supporte volontairement que le
 // gras `**...**`. Si on veut un jour de l'italique, du code inline ou des
 // liens, basculer sur react-markdown (~30 KB).
 

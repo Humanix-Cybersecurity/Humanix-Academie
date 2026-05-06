@@ -187,7 +187,7 @@ export async function createCheckoutSession(params: {
 // facturation qui :
 //   - affiche le statut actuel
 //   - propose "Mettre à jour ma carte" (re-checkout en mode payment_method
-//     update — TODO PAYPLUG-DOC)
+//     update - TODO PAYPLUG-DOC)
 //   - propose "Annuler mon abonnement" (POST /v1/subscriptions/{id}/cancel)
 //
 // Cette fonction renvoie l'URL d'update CB Payplug (ou null si feature

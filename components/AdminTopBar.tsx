@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// AdminTopBar — Barre supérieure de la console dirigeant.
+// AdminTopBar - Barre supérieure de la console dirigeant.
 //
 // Style Linear/Vercel : sticky top, hauteur compacte, breadcrumb dynamique.
 //
@@ -97,7 +97,7 @@ export default function AdminTopBar(_props: Props) {
         </span>
       </button>
 
-      {/* Breadcrumb — seul élément utile de cette barre */}
+      {/* Breadcrumb - seul élément utile de cette barre */}
       <Breadcrumb items={breadcrumb} />
     </header>
   );

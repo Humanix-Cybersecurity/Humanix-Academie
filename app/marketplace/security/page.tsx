@@ -13,7 +13,7 @@ export default function MarketplaceSecurityPage() {
       </Link>
 
       <h1 className="text-3xl sm:text-4xl font-extrabold text-primary-500 mb-2">
-        🛡️ Marketplace — Sécurité et politique de contenu
+        🛡️ Marketplace - Sécurité et politique de contenu
       </h1>
       <p className="text-gray-600 mb-8 italic">
         Sur la cybersécurité, le moindre laxisme tue la crédibilité. Voici nos
@@ -24,7 +24,7 @@ export default function MarketplaceSecurityPage() {
         <ol className="list-decimal pl-6 space-y-2 text-sm">
           <li>
             <strong>Zéro code exécutable côté communauté.</strong> Aucun HTML,
-            JS, MDX ou URL externe — uniquement du texte structuré.
+            JS, MDX ou URL externe - uniquement du texte structuré.
           </li>
           <li>
             <strong>Modération humaine obligatoire.</strong> Aucun module ne
@@ -94,29 +94,29 @@ export default function MarketplaceSecurityPage() {
         </p>
       </Section>
 
-      <Section title="📜 Politique de contenu — Critères d'approbation">
+      <Section title="📜 Politique de contenu - Critères d'approbation">
         <p className="text-sm mb-2">Un module est approuvé s'il respecte :</p>
         <ul className="text-sm list-disc pl-6 space-y-1">
           <li>
-            <strong>Exactitude technique cyber</strong> — pas d'information
+            <strong>Exactitude technique cyber</strong> - pas d'information
             erronée ou dangereuse
           </li>
           <li>
-            <strong>Pédagogie claire</strong> — scénario crédible, choix non
+            <strong>Pédagogie claire</strong> - scénario crédible, choix non
             triviaux, débrief de valeur
           </li>
           <li>
-            <strong>Pas de marketing déguisé</strong> — aucune promotion produit
+            <strong>Pas de marketing déguisé</strong> - aucune promotion produit
             / marque commerciale
           </li>
           <li>
             <strong>Pas de contenu discriminatoire</strong> ou caricatural
           </li>
           <li>
-            <strong>Originalité</strong> — contenu original ou cité avec source
+            <strong>Originalité</strong> - contenu original ou cité avec source
           </li>
           <li>
-            <strong>Format respecté</strong> — longueurs, langue française, pas
+            <strong>Format respecté</strong> - longueurs, langue française, pas
             de hors-sujet
           </li>
         </ul>

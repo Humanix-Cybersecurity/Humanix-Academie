@@ -22,7 +22,7 @@ export function formatSlackBlocks(
   const fields = renderKeyValuePairs(data).slice(0, 8); // max raisonnable
 
   return {
-    text: `Humanix Académie — ${eventLabel} chez ${tenantName}`,
+    text: `Humanix Académie - ${eventLabel} chez ${tenantName}`,
     blocks: [
       {
         type: "header",
@@ -89,7 +89,7 @@ export function formatTeamsCard(
   return {
     "@type": "MessageCard",
     "@context": "https://schema.org/extensions",
-    summary: `Humanix Académie — ${eventLabel}`,
+    summary: `Humanix Académie - ${eventLabel}`,
     themeColor: "0B3D91",
     title: `🛡️ ${eventLabel}`,
     sections: [
@@ -132,7 +132,7 @@ function renderSummary(
       const fromAddr = escapeSlack(String(data.fromAddress ?? "—"));
       const subject = escapeSlack(String(data.subject ?? ""));
       const source = String(data.source ?? "interne");
-      return `🚨 *${userName}* a signalé un mail suspect (${source}) : expéditeur \`${fromAddr}\` — _"${subject}"_.`;
+      return `🚨 *${userName}* a signalé un mail suspect (${source}) : expéditeur \`${fromAddr}\` - _"${subject}"_.`;
     }
     case "risk.degraded": {
       return `⚠️ Le score de risque est passé de *${num(data.previousScore)}* à *${num(data.currentScore)}* (${data.delta}). Cause probable : ${escapeSlack(String(data.cause ?? "—"))}.`;
@@ -147,7 +147,7 @@ function renderSummary(
       return `📩 Nouvel utilisateur invité : *${escapeSlack(String(data.email ?? ""))}*${data.invitedBy ? ` par ${escapeSlack(String(data.invitedBy))}` : ""}.`;
     }
     case "marketplace.module_installed": {
-      return `📦 Module installé : *${escapeSlack(String(data.moduleTitle ?? ""))}* — auteur : ${escapeSlack(String(data.author ?? "—"))}.`;
+      return `📦 Module installé : *${escapeSlack(String(data.moduleTitle ?? ""))}* - auteur : ${escapeSlack(String(data.author ?? "—"))}.`;
     }
     default:
       return "";

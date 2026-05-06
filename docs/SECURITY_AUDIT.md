@@ -1,6 +1,6 @@
-# Rapport d'audit de sécurité — Humanix Académie
+# Rapport d'audit de sécurité - Humanix Académie
 
-> **Édition** : v1.2 — 2026-05-05
+> **Édition** : v1.2 - 2026-05-05
 > **Périmètre** : plateforme Humanix Académie Community Edition + Cloud (production + infrastructure + processus + chaîne de développement)
 > **Émetteur** : Humanix-Cybersecurity
 > **Statut** : public, mis à jour à chaque évolution majeure (cf. §12.4 historique)
@@ -8,9 +8,9 @@
 
 ---
 
-## 📋 Préambule — pourquoi ce rapport est public
+## 📋 Préambule - pourquoi ce rapport est public
 
-Humanix-Cybersecurity vend de la sensibilisation à la cybersécurité. Il serait incohérent de prêcher la vigilance sans nous y soumettre nous-mêmes — et plus encore sans rendre nos pratiques inspectables.
+Humanix-Cybersecurity vend de la sensibilisation à la cybersécurité. Il serait incohérent de prêcher la vigilance sans nous y soumettre nous-mêmes - et plus encore sans rendre nos pratiques inspectables.
 
 Ce rapport n'est pas un document marketing. Il documente honnêtement :
 
@@ -74,24 +74,24 @@ Il est versionné dans Git, accessible publiquement, et mis à jour à chaque é
 
 | Composant                                       | Inclus        | Exclu                                                              |
 | ----------------------------------------------- | ------------- | ------------------------------------------------------------------ |
-| Plateforme web Humanix Académie                 | ✅            | —                                                                  |
-| API REST publique (`/api/v1/*`)                 | ✅            | —                                                                  |
-| Service TTS auto-hébergé (Piper)                | ✅            | —                                                                  |
-| Reverse proxy HAProxy                           | ✅            | —                                                                  |
-| Base de données PostgreSQL                      | ✅            | —                                                                  |
-| Plugin Outlook (squelette livré)                | ✅            | —                                                                  |
-| Endpoints cron (observatoire fuites, anecdotes) | ✅            | —                                                                  |
-| Postes de travail des collaborateurs            | —             | (couvert par charte interne hors scope rapport produit)            |
+| Plateforme web Humanix Académie                 | ✅            | -                                                                  |
+| API REST publique (`/api/v1/*`)                 | ✅            | -                                                                  |
+| Service TTS auto-hébergé (Piper)                | ✅            | -                                                                  |
+| Reverse proxy HAProxy                           | ✅            | -                                                                  |
+| Base de données PostgreSQL                      | ✅            | -                                                                  |
+| Plugin Outlook (squelette livré)                | ✅            | -                                                                  |
+| Endpoints cron (observatoire fuites, anecdotes) | ✅            | -                                                                  |
+| Postes de travail des collaborateurs            | -             | (couvert par charte interne hors scope rapport produit)            |
 | Code des modules Marketplace community          | Partiellement | (validation Zod + hash SHA-256, mais code non audité unitairement) |
 
 ### 2.2 Méthodologie d'évaluation
 
 L'évaluation repose sur **4 sources de référence** :
 
-1. **OWASP ASVS 4.0** (Application Security Verification Standard) — référentiel international des contrôles applicatifs.
-2. **Guide ANSSI "Sécurité numérique des PME"** — recommandations adaptées au contexte français.
-3. **CNIL — Référentiel de conformité RGPD** — particulièrement la partie minimisation et durées de conservation.
-4. **CIS Controls v8** (Center for Internet Security) — pour les aspects infrastructure et SDLC.
+1. **OWASP ASVS 4.0** (Application Security Verification Standard) - référentiel international des contrôles applicatifs.
+2. **Guide ANSSI "Sécurité numérique des PME"** - recommandations adaptées au contexte français.
+3. **CNIL - Référentiel de conformité RGPD** - particulièrement la partie minimisation et durées de conservation.
+4. **CIS Controls v8** (Center for Internet Security) - pour les aspects infrastructure et SDLC.
 
 ### 2.3 Tests effectués
 
@@ -103,7 +103,7 @@ L'évaluation repose sur **4 sources de référence** :
 | Test rate limiting                                   | Tentatives répétées sur endpoints sensibles (`/api/tts/synthesize`, `/api/admin/breaches/refresh`) | Limites respectées       |
 | Test isolation tenant                                | Tentative d'accès à une saison d'un autre tenant via manipulation de paramètres                    | Refus correct            |
 | Test échappement Prisma                              | Inputs avec backslashes, surrogate pairs, NULL bytes                                               | Sanitisation BDD validée |
-| Audit accessibilité interne                          | WCAG 2.1 AA / RGAA 4.1 — score interne 88 %                                                        | Cf. `/accessibilite`     |
+| Audit accessibilité interne                          | WCAG 2.1 AA / RGAA 4.1 - score interne 88 %                                                        | Cf. `/accessibilite`     |
 
 ### 2.4 Tests **non encore réalisés** (transparence)
 
@@ -165,18 +165,18 @@ L'évaluation repose sur **4 sources de référence** :
 #### Choix de design
 
 - **Zero-password par défaut** : aucun mot de passe stocké côté HumaniX en mode production. Trois modes :
-  1. **Magic link** par email (Scaleway TEM) — par défaut
+  1. **Magic link** par email (Scaleway TEM) - par défaut
   2. **SSO Google** (OAuth 2.0)
   3. **SSO Microsoft Entra ID** (OAuth 2.0 + OIDC)
 - **Mode démo** : Credentials provider sans mot de passe (1-clic) pour permettre les démos commerciales sans setup.
 
 #### Implémentation
 
-- **Auth.js v5** (anciennement NextAuth) — librairie auditée, base installée massive (>500K projets)
+- **Auth.js v5** (anciennement NextAuth) - librairie auditée, base installée massive (>500K projets)
 - **Prisma Adapter** pour persistance des sessions
 - **Sessions JWT** signées avec `AUTH_SECRET` (32 bytes minimum), strategy database en production
 - **`AUTH_TRUST_HOST`** activé (mandatory derrière HAProxy)
-- **Vérification `isActive`** dans `authorize()`, `signIn` callback, `jwt` callback et `session` callback — un compte suspendu n'a aucune voie d'authentification valide
+- **Vérification `isActive`** dans `authorize()`, `signIn` callback, `jwt` callback et `session` callback - un compte suspendu n'a aucune voie d'authentification valide
 
 #### Contrôles vérifiés
 
@@ -240,7 +240,7 @@ Résultat observé : ✅ Conforme (aucune fuite)
 | Attaque                    | Protection                                                                                                                                                                                                                                                                         |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **SQL Injection**          | Prisma ORM (queries paramétrées par nature). Aucun `$queryRawUnsafe` dans le code.                                                                                                                                                                                                 |
-| **XSS**                    | React échappe par défaut. Utilisation de `dangerouslySetInnerHTML` limitée à 2 cas auditables : (1) script anti-flash thème (CSS toggle) et (2) preview HTML phishing IA — ce dernier passe par `sanitizeHtml()` qui retire `<script>`, `<iframe>`, attributs `on*`, `javascript:` |
+| **XSS**                    | React échappe par défaut. Utilisation de `dangerouslySetInnerHTML` limitée à 2 cas auditables : (1) script anti-flash thème (CSS toggle) et (2) preview HTML phishing IA - ce dernier passe par `sanitizeHtml()` qui retire `<script>`, `<iframe>`, attributs `on*`, `javascript:` |
 | **CSRF**                   | Server Actions Next.js avec protection CSRF native (token automatique).                                                                                                                                                                                                            |
 | **SSRF (webhooks)**        | `isSafeWebhookUrl()` refuse : non-HTTPS, hostname `localhost` / `*.local` / `*.internal` / `*.lan`, IPv4 littéraux dans les ranges privées (10.x, 127.x, 169.254.x, 172.16-31.x, 192.168.x, 0.x).                                                                                  |
 | **Open redirect**          | Aucune redirection basée sur paramètre utilisateur non-whitelisté.                                                                                                                                                                                                                 |
@@ -259,7 +259,7 @@ En complément du rate limit HAProxy, certains endpoints ont leurs propres compt
 | `POST /api/tts/synthesize`         | 50 req/h/user                           | `Event` count |
 | `POST /api/phishing/report`        | 30 signalements/h/user                  | `Event` count |
 | `POST /api/admin/phishing/generer` | 10 générations/h/user                   | `Event` count |
-| `POST /api/cron/breaches-refresh`  | Rate non-applicatif (token CRON_SECRET) | —             |
+| `POST /api/cron/breaches-refresh`  | Rate non-applicatif (token CRON_SECRET) | -             |
 
 ### 4.6 Audit trail
 
@@ -276,7 +276,7 @@ Toutes les actions sensibles produisent un `Event` en BDD, avec :
 - Génération phishing IA : `phishing_generated` + template + service + difficulté + longueurs (jamais le contenu)
 - Refresh observatoire fuites : `breaches_refreshed` + compteurs
 
-**Conservation** : actuellement illimitée (à ajuster avec une politique de purge à 13 mois — RGPD norme courante — dans une prochaine version).
+**Conservation** : actuellement illimitée (à ajuster avec une politique de purge à 13 mois - RGPD norme courante - dans une prochaine version).
 
 ---
 
@@ -414,7 +414,7 @@ http-request deny deny_status 429 if is_abuser_req
 - **Minimisation** : nous ne collectons pas d'âge, de genre, de date de naissance, d'adresse postale, de photo. L'email pro est l'identifiant unique.
 - **IP hashées** : dans la table `AuditFlashSubmission` et `FamilyInvite`, l'IP est hachée SHA-256 avant stockage (anti-fingerprint).
 - **Newsletter** : opt-in actif, hash du texte de consentement stocké comme preuve.
-- **Audit logs** : payloads ne contiennent pas le contenu sensible (longueurs, types, hashes — pas le texte).
+- **Audit logs** : payloads ne contiennent pas le contenu sensible (longueurs, types, hashes - pas le texte).
 
 ### 6.4 Sous-traitants RGPD (art. 28)
 
@@ -474,8 +474,8 @@ Procédure :
 | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `npm audit` avant chaque release                               | ✅ Manuel + automatisé en CI (job dédié `npm audit (HIGH/CRITICAL)`)                                                                                                           |
 | **Dependabot configuré** (npm + pip + github-actions + docker) | ✅ Hebdo le lundi, groupes filtrés `minor + patch`, MAJORS bloquées sur les packages critiques (next, react, prisma, next-auth, zod, mdx-remote, tailwind, typescript, eslint) |
-| Audit licences dépendances vs AGPL                             | ✅ Documenté dans [`docs/LICENSES_AUDIT.md`](./LICENSES_AUDIT.md) — 549 packages scannés, 0 incompatibilité                                                                    |
-| Scan SCA (Snyk, Socket.dev)                                    | 🔲 Optionnel — Dependabot alerts couvre déjà les CVE                                                                                                                           |
+| Audit licences dépendances vs AGPL                             | ✅ Documenté dans [`docs/LICENSES_AUDIT.md`](./LICENSES_AUDIT.md) - 549 packages scannés, 0 incompatibilité                                                                    |
+| Scan SCA (Snyk, Socket.dev)                                    | 🔲 Optionnel - Dependabot alerts couvre déjà les CVE                                                                                                                           |
 | Pinning des versions                                           | ✅ `package-lock.json` versionné                                                                                                                                               |
 | Pas de `*` ni `^` non-borné                                    | ✅ `package.json` audité                                                                                                                                                       |
 
@@ -491,8 +491,8 @@ Procédure :
 
 | Élément                          | Statut                | Détail                                                                                                                               |
 | -------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| **GitHub Actions CI**            | ✅ Actif              | `.github/workflows/ci.yml` — lint + types + Prettier + audit npm + production build à chaque push et PR                              |
-| **CodeQL (SAST)**                | ✅ Actif              | `.github/workflows/codeql.yml` — analyse statique automatisée. Gratuit en repo public, premier run dès passage public le 26 mai 2026 |
+| **GitHub Actions CI**            | ✅ Actif              | `.github/workflows/ci.yml` - lint + types + Prettier + audit npm + production build à chaque push et PR                              |
+| **CodeQL (SAST)**                | ✅ Actif              | `.github/workflows/codeql.yml` - analyse statique automatisée. Gratuit en repo public, premier run dès passage public le 26 mai 2026 |
 | **DCO signed-off-by check**      | ✅ Actif              | Vérifie que chaque commit est signé `Signed-off-by:` (engagement DCO)                                                                |
 | **Dependabot version updates**   | ✅ Actif              | Cf. §7.3                                                                                                                             |
 | **Build Docker reproductible**   | ✅ Actif              | Dockerfile multi-stage avec lockfile pinné                                                                                           |
@@ -643,33 +643,33 @@ Email à **security@humanix-cybersecurity.fr** avec :
 | Terme            | Définition                                                                                         |
 | ---------------- | -------------------------------------------------------------------------------------------------- |
 | **MFA / 2FA**    | Authentification à plusieurs facteurs                                                              |
-| **SSO**          | Single Sign-On — connexion unique via Google, Microsoft, etc.                                      |
-| **RBAC**         | Role-Based Access Control — gestion d'accès par rôle                                               |
+| **SSO**          | Single Sign-On - connexion unique via Google, Microsoft, etc.                                      |
+| **RBAC**         | Role-Based Access Control - gestion d'accès par rôle                                               |
 | **Multi-tenant** | Architecture où plusieurs clients (tenants) partagent l'infrastructure tout en étant cloisonnés    |
-| **SSRF**         | Server-Side Request Forgery — attaque où un serveur fait des requêtes vers des ressources internes |
-| **CSRF**         | Cross-Site Request Forgery — attaque où un site malveillant déclenche des actions sur un autre     |
-| **XSS**          | Cross-Site Scripting — injection de code dans une page consultée par un autre utilisateur          |
+| **SSRF**         | Server-Side Request Forgery - attaque où un serveur fait des requêtes vers des ressources internes |
+| **CSRF**         | Cross-Site Request Forgery - attaque où un site malveillant déclenche des actions sur un autre     |
+| **XSS**          | Cross-Site Scripting - injection de code dans une page consultée par un autre utilisateur          |
 | **NIS2**         | Directive européenne 2022/2555 sur la cybersécurité                                                |
 | **RGPD**         | Règlement européen 2016/679 sur la protection des données                                          |
 | **RGAA**         | Référentiel Général d'Amélioration de l'Accessibilité                                              |
 | **PASSI**        | Prestataires d'Audit de la Sécurité des Systèmes d'Information (qualifiés ANSSI)                   |
-| **DPA**          | Data Processing Agreement — contrat de sous-traitance RGPD (art. 28)                               |
+| **DPA**          | Data Processing Agreement - contrat de sous-traitance RGPD (art. 28)                               |
 
 ### 12.2 Références utilisées
 
 - **OWASP ASVS 4.0** : https://owasp.org/www-project-application-security-verification-standard/
-- **ANSSI — Sécurité numérique des PME** : https://cyber.gouv.fr
-- **CNIL — Référentiel de conformité RGPD** : https://www.cnil.fr
+- **ANSSI - Sécurité numérique des PME** : https://cyber.gouv.fr
+- **CNIL - Référentiel de conformité RGPD** : https://www.cnil.fr
 - **CIS Controls v8** : https://www.cisecurity.org/controls
 - **Mozilla SSL Configuration Generator** : https://ssl-config.mozilla.org
 
 ### 12.3 Documents complémentaires publics
 
-- [`README.md`](./README.md) — documentation technique complète
-- [`/comparatif`](https://humanix-cybersecurity.fr/comparatif) — comparatif honnête vs concurrents
-- [`/securite`](https://humanix-cybersecurity.fr/securite) — Trust Center
-- [`/accessibilite`](https://humanix-cybersecurity.fr/accessibilite) — déclaration d'accessibilité RGAA
-- [`/confidentialite`](https://humanix-cybersecurity.fr/confidentialite) — politique de confidentialité
+- [`README.md`](./README.md) - documentation technique complète
+- [`/comparatif`](https://humanix-cybersecurity.fr/comparatif) - comparatif honnête vs concurrents
+- [`/securite`](https://humanix-cybersecurity.fr/securite) - Trust Center
+- [`/accessibilite`](https://humanix-cybersecurity.fr/accessibilite) - déclaration d'accessibilité RGAA
+- [`/confidentialite`](https://humanix-cybersecurity.fr/confidentialite) - politique de confidentialité
 
 ### 12.4 Historique des versions de ce rapport
 
@@ -683,13 +683,13 @@ Email à **security@humanix-cybersecurity.fr** avec :
 
 ## Pour conclure
 
-Ce rapport est **honnête par conception**. Il liste autant nos forces que nos lacunes, parce que la confiance se construit sur la transparence — pas sur l'autocélébration.
+Ce rapport est **honnête par conception**. Il liste autant nos forces que nos lacunes, parce que la confiance se construit sur la transparence - pas sur l'autocélébration.
 
 Si vous l'avez lu jusqu'ici, merci de votre attention. Si vous y voyez une erreur, une omission ou une amélioration possible, nous attendons votre retour à **security@humanix-cybersecurity.fr**.
 
 La cybersécurité n'est pas une destination, c'est une trajectoire. Nous vous tenons informés.
 
-— Florian DURANO, fondateur, Humanix-Cybersecurity.
+- Florian DURANO, fondateur, Humanix-Cybersecurity.
 
 **Humanix Académie** · La cyber souveraine, simple et accessible · 🇫🇷 Made in France
 

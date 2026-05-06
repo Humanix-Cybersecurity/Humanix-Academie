@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// /superadmin — vue d'ensemble cross-tenant : KPIs globaux + alertes.
+// /superadmin - vue d'ensemble cross-tenant : KPIs globaux + alertes.
 import Link from "next/link";
 import {
   listAllTenantsHealth,

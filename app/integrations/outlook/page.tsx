@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Plugin Outlook — Signaler un phishing en 1 clic | HumaniX Académie",
+  title: "Plugin Outlook - Signaler un phishing en 1 clic | HumaniX Académie",
   description:
     "Déployez en 5 minutes le bouton « Signaler un phishing » dans Outlook pour tous vos collaborateurs. Compatible Outlook Web, Desktop, Mobile. Gratuit, RGPD-compliant.",
   alternates: { canonical: "/integrations/outlook" },
@@ -61,7 +61,7 @@ export default function OutlookIntegrationPage() {
             {/* Option A */}
             <article className="card">
               <h3 className="text-xl font-bold text-primary-500 dark:text-accent-300 mb-2">
-                ✅ Option A — Déploiement entreprise (recommandé)
+                ✅ Option A - Déploiement entreprise (recommandé)
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
                 Pour déployer à toute l'entreprise en 5 minutes. Aucune action
@@ -121,7 +121,7 @@ export default function OutlookIntegrationPage() {
             {/* Option B */}
             <article className="card">
               <h3 className="text-xl font-bold text-primary-500 dark:text-accent-300 mb-2">
-                🧪 Option B — Test individuel (Outlook Web)
+                🧪 Option B - Test individuel (Outlook Web)
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
                 Pour tester sans déployer à toute l'entreprise. 2 minutes.
@@ -164,7 +164,7 @@ export default function OutlookIntegrationPage() {
             {/* Option C */}
             <article className="card">
               <h3 className="text-xl font-bold text-primary-500 dark:text-accent-300 mb-2">
-                💻 Option C — Outlook Desktop (Windows)
+                💻 Option C - Outlook Desktop (Windows)
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
                 Pour les développeurs ou tests avancés.

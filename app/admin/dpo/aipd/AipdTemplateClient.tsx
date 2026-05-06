@@ -7,12 +7,12 @@
 // qui necessite navigator.clipboard (cote browser).
 //
 // La logique reste minimale : afficher un <pre> avec le template, plus deux
-// actions (Copier / Telecharger en .md). Pas de stockage cote serveur — le
+// actions (Copier / Telecharger en .md). Pas de stockage cote serveur - le
 // DPO travaille dans son outil.
 
 import { useState } from "react";
 
-const AIPD_TEMPLATE = `# AIPD — [Nom du traitement]
+const AIPD_TEMPLATE = `# AIPD - [Nom du traitement]
 
 > Analyse d'Impact a la Protection des Donnees, conforme article 35 RGPD.
 >
@@ -27,7 +27,7 @@ const AIPD_TEMPLATE = `# AIPD — [Nom du traitement]
 ## 1. Description du traitement
 
 ### 1.1. Finalite(s) precise(s)
-[Decrire pourquoi ce traitement existe — pas en termes commerciaux mais en
+[Decrire pourquoi ce traitement existe - pas en termes commerciaux mais en
 termes RGPD. Exemple : "Scorer les prospects pour prioriser le commercial
 B2B" et non "Ameliorer le service client".]
 
@@ -154,7 +154,7 @@ de reponse ?]
 ### 5.3. AI Act (si applicable)
 - [ ] Hors champ AI Act
 - [ ] Risque limite (transparence)
-- [ ] Risque eleve (annexe III) — marquage CE requis
+- [ ] Risque eleve (annexe III) - marquage CE requis
 
 ---
 
@@ -188,7 +188,7 @@ de reponse ?]
 ---
 
 > AIPD redigee selon la methodologie CNIL (PIA Guide v2). Modele Humanix
-> Academie — open source AGPLv3, librement reutilisable et adaptable.
+> Academie - open source AGPLv3, librement reutilisable et adaptable.
 `;
 
 export default function AipdTemplateClient() {
