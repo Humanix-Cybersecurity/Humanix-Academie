@@ -543,9 +543,21 @@ model ApiKey {
 // PHISHING SIMULE
 // =====================================================
 enum PhishingTemplate {
+  // Email phishing
   FAKE_MICROSOFT
   FAKE_COLISSIMO
   FAKE_PRESIDENT
+  // SMS smishing
+  SMS_FAKE_LIVREUR     // "Votre colis La Poste / Chronopost — frais de livraison"
+  SMS_FAKE_BANQUE      // "Tentative de paiement detectee, validez via lien"
+  SMS_FAKE_IMPOTS      // "Trop-percu ANTS / Service Public — IBAN a verifier"
+  SMS_FAKE_2FA         // "Votre code 2FA est XXX, partagez-le si on vous demande"
+  SMS_FAKE_PRESIDENT   // "Operation confidentielle, urgent, repondez"
+}
+
+enum PhishingChannel {
+  EMAIL
+  SMS
 }
 
 enum PhishingStatus {
@@ -559,6 +571,12 @@ model PhishingCampaign {
   tenantId    String
   title       String
   template    PhishingTemplate
+  // Canal d'envoi : EMAIL (phishing classique) ou SMS (smishing).
+  // Le contenu pedagogique change selon le canal.
+  channel     PhishingChannel  @default(EMAIL)
+  // Corps du SMS si channel=SMS (max 160 chars + lien tracke ajoute).
+  // Pour le phishing email le corps est dans le template, pas ici.
+  smsBody     String?
   scheduledAt DateTime
   sentAt      DateTime?
   isActive    Boolean          @default(true)
@@ -569,6 +587,7 @@ model PhishingCampaign {
   results PhishingResult[]
 
   @@index([tenantId])
+  @@index([tenantId, channel])
 }
 
 model PhishingResult {

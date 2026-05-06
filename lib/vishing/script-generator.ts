@@ -102,9 +102,9 @@ const PII_PATTERNS = [
   /\b\d{14}\b/, // SIRET
   /\b\d{9}\b/, // SIREN
   // Numero de telephone FR : format national (0X XX XX XX XX) ou international
-  // (0033X XX XX XX XX, +33X XX XX XX XX). On accepte espaces, points et tirets
-  // comme separateurs.
-  /(?:\+33|0033|\b0)[1-9](?:[\s.-]?\d{2}){4}\b/,
+  // (0033X XX XX XX XX, +33X XX XX XX XX, +33 X XX XX XX XX). On accepte
+  // espaces, points et tirets comme separateurs, y compris apres le prefixe.
+  /(?:(?:\+33|0033)[\s.-]?[1-9]|\b0[1-9])(?:[\s.-]?\d{2}){4}\b/,
 ];
 
 export function detectPII(text: string): string | null {
