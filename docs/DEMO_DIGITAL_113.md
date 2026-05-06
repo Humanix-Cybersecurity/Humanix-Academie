@@ -8,7 +8,7 @@
 
 ## TL;DR — la promesse a tenir
 
-Faire ressentir, en moins d'un quart d'heure, les **3 differenciateurs cles** :
+Faire ressentir, en moins d'un quart d'heure, les **3 différenciateurs clés** :
 
 1. **MCP server FR** — premier mover SAT/HRM (Claude Desktop parle a la plateforme en direct).
 2. **Vishing souverain** — Mistral (Paris) + Piper TTS (local), 100 % FR/UE, vs OpenAI/AWS US des concurrents.
