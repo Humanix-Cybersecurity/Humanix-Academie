@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Auth.js v5 + Prisma adapter
 // Modes supportés :
-//  - Production : magic link via Resend (default) + login mot de passe
+//  - Production : magic link via Scaleway TEM (souverain FR) + login mot de passe
 //  - Demo (DEMO_MODE=true) : Credentials provider sans mot de passe (1-clic)
 //  - SSO Google : si AUTH_GOOGLE_ID + AUTH_GOOGLE_SECRET configurés
 //  - SSO Microsoft : si AUTH_MICROSOFT_ENTRA_ID_ID + ID_SECRET + ID_ISSUER
@@ -12,7 +12,7 @@
 // au prealable. Si on veut auto-create plus tard, c'est dans le callback signIn.
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import Resend from "next-auth/providers/resend";
+import EmailProvider from "next-auth/providers/nodemailer";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
@@ -22,6 +22,7 @@ import { verifyPassword } from "@/lib/password";
 import { verifyTotpCode } from "@/lib/totp";
 import { consumeBackupCode } from "@/lib/password";
 import { auditLog, AuditActions, AuditOutcomes } from "@/lib/audit";
+import { sendEmail, isEmailConfigured } from "@/lib/email";
 
 const isDemoMode = process.env.DEMO_MODE === "true";
 
@@ -285,33 +286,34 @@ async function registerFailedLogin(userId: string, current: number) {
   }
 }
 
-// Magic link en prod
-if (
-  process.env.RESEND_API_KEY &&
-  process.env.RESEND_API_KEY !== "demo-key-not-used-in-demo-mode" &&
-  process.env.EMAIL_FROM
-) {
+// Magic link en prod (envoi via Scaleway TEM, cf. lib/email/)
+// On utilise le provider Email "nodemailer" de NextAuth comme harness pour
+// les VerificationToken, mais on bypass le SMTP via sendVerificationRequest
+// custom qui appelle notre facade lib/email.
+if (isEmailConfigured()) {
   providers.push(
-    Resend({
-      from: process.env.EMAIL_FROM,
-      apiKey: process.env.RESEND_API_KEY!,
-      sendVerificationRequest: async (params: any) => {
-        const { identifier, url, provider } = params;
+    EmailProvider({
+      from: process.env.EMAIL_FROM!,
+      // server est requis par le typing mais jamais utilise puisqu'on
+      // overrides sendVerificationRequest. On passe un objet vide.
+      server: { host: "smtp.invalid", port: 25, auth: { user: "", pass: "" } },
+      sendVerificationRequest: async (params) => {
+        const { identifier, url } = params;
         // Verifier que l'utilisateur n'est pas suspendu avant l'envoi
         const u = await db.user.findUnique({ where: { email: identifier } });
         if (u && !u.isActive) {
           throw new Error("Compte suspendu : contactez votre administrateur.");
         }
-        const { Resend: ResendSDK } = await import("resend");
-        const resend = new ResendSDK(provider.apiKey as string);
-        await resend.emails.send({
-          from: provider.from as string,
+        const result = await sendEmail({
           to: identifier,
           subject: "🦊 Hex t'invite à entrer dans Humanix Académie",
           html: magicLinkEmailHTML(url),
         });
+        if (!result.ok) {
+          throw new Error(`magic_link_send_failed:${result.reason}`);
+        }
       },
-    }),
+    }) as Provider,
   );
 }
 

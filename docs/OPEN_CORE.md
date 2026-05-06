@@ -15,7 +15,7 @@ Ce document liste de manière transparente **ce qui est ouvert** et **ce qui req
 ### Plateforme
 - ✅ Application Next.js complète (front + back + API)
 - ✅ Schema Prisma multi-tenant complet
-- ✅ Système d'auth NextAuth (magic link Resend, SSO Google, SSO Microsoft)
+- ✅ Système d'auth NextAuth (magic link Scaleway TEM, SSO Google, SSO Microsoft)
 - ✅ Internationalisation prête (FR par défaut, structure i18n)
 - ✅ Mascotte Hex évolutive (level + boutique + customisation)
 - ✅ Rate limiting + audit trail + CSP stricte

@@ -122,7 +122,7 @@ export default function RapportAuditPage() {
           ✅ Ce qui est en place
         </h2>
         <div className="grid sm:grid-cols-2 gap-3 text-sm">
-          <Bullet text="Auth.js v5 + SSO Google/Microsoft + magic link Resend (zero-password)" />
+          <Bullet text="Auth.js v5 + SSO Google/Microsoft + magic link Scaleway TEM (zero-password)" />
           <Bullet text="Multi-tenant scoping strict sur tous les modèles Prisma" />
           <Bullet text="Plan-gating à 6 paliers (trial / decouverte / solo / essentielle / pro / premium)" />
           <Bullet text="HAProxy 2.9 frontend (TLS 1.2+, rate limit, ACL méthodes, anti-bots)" />
