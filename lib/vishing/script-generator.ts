@@ -101,7 +101,10 @@ const PII_PATTERNS = [
   /[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/, // email
   /\b\d{14}\b/, // SIRET
   /\b\d{9}\b/, // SIREN
-  /\b0[1-9](?:[\s.-]?\d{2}){4}\b/, // numero de telephone FR
+  // Numero de telephone FR : format national (0X XX XX XX XX) ou international
+  // (0033X XX XX XX XX, +33X XX XX XX XX). On accepte espaces, points et tirets
+  // comme separateurs.
+  /(?:\+33|0033|\b0)[1-9](?:[\s.-]?\d{2}){4}\b/,
 ];
 
 export function detectPII(text: string): string | null {
