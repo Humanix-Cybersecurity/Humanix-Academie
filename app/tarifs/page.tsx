@@ -625,8 +625,12 @@ function CtaButton({ tier: t }: { tier: PricingTier }) {
     );
   }
   if (t.cta.type === "trial") {
+    // Plans payants (Solo / Essentielle / Pro) : on redirige vers /signup
+    // qui cree un tenant en plan trial, puis l'admin peut souscrire le
+    // plan paye via Stripe depuis /profil/facturation.
+    // Pour les utilisateurs deja loges admin, le CTA Stripe est ailleurs.
     return (
-      <Link href="/demo" className={cls}>
+      <Link href={`/signup?plan=trial&target=${t.id}`} className={cls}>
         {t.cta.label}
       </Link>
     );
