@@ -15,6 +15,7 @@ import { Suspense, useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { startAuthentication } from "@simplewebauthn/browser";
+import { humanizeAuthError } from "@/lib/auth-errors";
 
 type SsoProviders = { google: boolean; microsoft: boolean };
 type Mode = "password" | "magic-link" | "webauthn";
@@ -92,26 +93,13 @@ function ConnexionInner() {
       router.push(res.url ?? "/apprendre");
       return;
     }
-    // Auth.js v5 retourne l'erreur dans res.error
+    // Auth.js v5 retourne l'erreur dans res.error.
+    // Le mapping anglais -> francais est centralise dans lib/auth-errors.
     const code = (res.error ?? "").toString();
-    if (code === "MfaRequired" || /MfaRequired/.test(code)) {
+    if (/MfaRequired/.test(code)) {
       setShowMfa(true);
-      setError(
-        "Cette adresse exige un code à 2 facteurs. Ouvrez votre application d'authentification.",
-      );
-      return;
     }
-    if (code === "MfaInvalid" || /MfaInvalid/.test(code)) {
-      setError("Code 2FA invalide.");
-      return;
-    }
-    if (code === "AccountLocked" || /AccountLocked/.test(code)) {
-      setError(
-        "Trop de tentatives. Compte verrouillé 15 minutes. Réessayez plus tard ou utilisez « Mot de passe oublié ».",
-      );
-      return;
-    }
-    setError("Identifiants invalides.");
+    setError(humanizeAuthError(code));
   };
 
   const onWebauthnSubmit = async (e: React.FormEvent) => {
@@ -158,15 +146,7 @@ function ConnexionInner() {
     } catch (e: unknown) {
       setSending(false);
       const msg = e instanceof Error ? e.message : "Erreur";
-      if (
-        msg.includes("AbortError") ||
-        msg.includes("NotAllowedError") ||
-        msg.includes("operation either timed out")
-      ) {
-        setError("Annulé. Réessayez en touchant la clé.");
-      } else {
-        setError(msg);
-      }
+      setError(humanizeAuthError(msg));
     }
   };
 
@@ -239,18 +219,7 @@ function ConnexionInner() {
           role="alert"
           className="card mb-4 bg-amber-50 border-amber-300 text-amber-900 text-sm"
         >
-          {errorCode === "NoAccount" && (
-            <p>
-              <strong>Aucun compte trouvé pour cette adresse.</strong> Demandez
-              à votre administrateur de vous inviter d'abord.
-            </p>
-          )}
-          {errorCode === "AccountSuspended" && (
-            <p>
-              <strong>Votre compte est suspendu.</strong> Contactez votre
-              administrateur.
-            </p>
-          )}
+          {errorCode && <p>{humanizeAuthError(errorCode)}</p>}
           {error && <p>{error}</p>}
         </div>
       )}
