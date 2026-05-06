@@ -1127,6 +1127,56 @@ export default function ComparatifPage() {
             — Hex veille
           </p>
         </section>
+
+        {/* ============================================================
+            8. MENTIONS LEGALES — publicité comparative (L.122-1 et s.)
+            ============================================================ */}
+        <section
+          aria-labelledby="comparatif-legal-title"
+          className="text-xs text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-slate-800 pt-6 mt-12 leading-relaxed"
+        >
+          <h2
+            id="comparatif-legal-title"
+            className="font-bold uppercase tracking-widest text-[10px] mb-2"
+          >
+            Mentions légales — publicité comparative
+          </h2>
+          <p className="mb-2">
+            Cette page constitue une <strong>publicité comparative</strong> au
+            sens des articles L.122-1 à L.122-7 du Code de la consommation et
+            de la directive 2006/114/CE. Elle compare des services répondant
+            aux mêmes besoins (sensibilisation cybersécurité humaine en B2B)
+            sur des caractéristiques objectives, pertinentes, vérifiables et
+            représentatives.
+          </p>
+          <p className="mb-2">
+            Les informations relatives aux concurrents sont issues de leurs
+            sites publics, communiqués de presse, fiches produits commerciales
+            et témoignages publics, à la date de dernière mise à jour
+            indiquée. Elles sont susceptibles d&apos;évoluer ; nous corrigeons
+            toute donnée erronée signalée à{" "}
+            <a
+              href="mailto:contact@humanix-cybersecurity.fr"
+              className="underline"
+            >
+              contact@humanix-cybersecurity.fr
+            </a>{" "}
+            sous 5 jours ouvrés.
+          </p>
+          <p className="mb-2">
+            <strong>Marques déposées</strong> : KnowBe4®, Hoxhunt®, Phished®,
+            Cyber Guru®, Adaptive Security®, Mantra® sont des marques de leurs
+            propriétaires respectifs, citées à seule fin d&apos;identification
+            dans le cadre de la comparaison. Aucune affiliation, partenariat
+            ou endossement par ces tiers n&apos;est suggéré.
+          </p>
+          <p>
+            Cette comparaison ne dispense pas l&apos;acheteur d&apos;une
+            évaluation personnelle des solutions sur la base de ses propres
+            critères et contexte. Pour toute contestation, le tribunal
+            compétent est celui du siège social d&apos;Humanix Cybersecurity.
+          </p>
+        </section>
       </div>
     </main>
   );
