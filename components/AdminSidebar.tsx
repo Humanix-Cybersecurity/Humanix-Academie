@@ -58,6 +58,12 @@ const SECTIONS: Section[] = [
         icon: "📞",
         gate: "Pro+",
       },
+      {
+        href: "/admin/smishing",
+        label: "Smishing 🇫🇷",
+        icon: "📱",
+        gate: "Pro+",
+      },
       { href: "/admin/contributions", label: "Contributions", icon: "✍️" },
     ],
   },
