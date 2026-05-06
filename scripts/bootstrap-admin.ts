@@ -102,7 +102,7 @@ async function main() {
     { slug: "direction", name: "Direction", emoji: "🎯", color: "#0B3D91" },
     { slug: "compta", name: "Comptabilite", emoji: "🧮", color: "#10B981" },
     { slug: "rh", name: "Ressources humaines", emoji: "👥", color: "#F59E0B" },
-    { slug: "dev", name: "Developpement", emoji: "💻", color: "#6366F1" },
+    { slug: "dev", name: "Développement", emoji: "💻", color: "#6366F1" },
     { slug: "commercial", name: "Commercial", emoji: "💼", color: "#EC4899" },
     { slug: "it", name: "IT / SI", emoji: "⚙️", color: "#0EA5E9" },
     { slug: "atelier", name: "Atelier / Production", emoji: "🏭", color: "#A855F7" },
