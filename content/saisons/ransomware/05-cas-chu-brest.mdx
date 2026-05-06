@@ -1,0 +1,126 @@
+---
+title: "Cas reel : CHU de Brest paralyse 3 semaines"
+durationMinutes: 9
+persona: "tous"
+objective: "Tirer les lecons du plus emblematique cas de ransomware hospitalier francais (mars 2023)"
+xpReward: 90
+scenario: |
+  Tu es DG d'une PME francaise dans le secteur de la sante (~150 salaries). Le DPO te tend un article de presse : "CHU de Brest victime d'un ransomware, 3 semaines de paralysie totale, 1 200 patients reportes ou redirigés".
+
+  Tu te dis : "Si un CHU avec son IT et ses budgets se fait avoir, ma PME a quoi se preparer ?". Quelle est la lecon principale a retenir pour TA PME (pas une grande structure publique) ?
+choices:
+  - id: "a"
+    label: "Ma PME est trop petite pour interesser les attaquants — pas de risque comparable"
+    outcome: "bad"
+    feedback: "Faux. Les groupes ransomware ne ciblent plus de maniere precise — ils scannent et frappent au volume. Une PME francaise de 80-200 personnes est dans la cible 'moyenne PME' la plus rentable (paiement statistiquement le plus eleve par victime)."
+    points: -15
+  - id: "b"
+    label: "Meme avec un IT serieux, sans procedure 'isole-alerte-prepare', l'organisation est paralysee. Ma PME doit avoir un PCA / PRA documente AVANT la crise."
+    outcome: "good"
+    feedback: "Excellent. Le CHU avait un IT et des budgets. Ce qui a manque etait la coordination de crise et le PCA pre-exerce. Une PME peut faire MIEUX avec moins parce que l'organisation est plus simple."
+    points: 30
+  - id: "c"
+    label: "Il faut une cyber-assurance, c'est ce qui a sauve le CHU"
+    outcome: "neutral"
+    feedback: "Une cyber-assurance aide mais ne suffit pas. Le CHU a survecu grace a sa preparation operationnelle, pas a son assurance. Ne fais pas l'inverse : t'assurer en negligeant la prevention."
+    points: 5
+  - id: "d"
+    label: "Le CHU a paye la rancon, c'est ce qui les a sauves"
+    outcome: "bad"
+    feedback: "Faux. Le CHU n'a PAS paye la rancon. Il a restaure progressivement ses systemes en 3 semaines, en s'appuyant sur l'aide de l'ANSSI et du CERT-FR. C'est un cas de NON-paiement reussi."
+    points: -20
+debrief: |
+  **CHU de Brest — Mars 2023 — Cas d'ecole francais**
+
+  **Faits :**
+  - Nuit du 9 au 10 mars 2023 : un ransomware (groupe non confirme officiellement, traces vers FIN12) chiffre une grande partie du SI hospitalier
+  - Le CHU bascule en mode degrade total : prise de notes papier, rendez-vous reportes, urgences redirigees vers Quimper et Morlaix
+  - **1 200 patients** voient leur prise en charge perturbee
+  - **3 semaines** pour retrouver un fonctionnement normal
+  - **Aucune rancon payee** (politique de l'Etat francais sur les services publics)
+  - Soutien actif de l'**ANSSI** et du **CERT-FR**
+
+  **Ce qui a fonctionne :**
+
+  1. **Pas de paiement** — le CHU s'est tenu a la position officielle francaise, malgre la pression operationnelle
+  2. **Activation de cellule de crise immediate** : les autorites (ARS, prefecture, ANSSI) ont ete prevenues dans l'heure
+  3. **Communication transparente** : conferences de presse regulieres, transparence sur l'avancement, peu de rumeurs
+  4. **Bascule en mode degrade** : papier-crayon, telephone — les soins critiques ont continue malgre l'absence d'IT
+  5. **Cooperation interhospitaliere** : Quimper, Morlaix, autres CHU ont absorbe la charge
+  6. **Investigation post-mortem** : analyse fine du vecteur d'entree, partage des IOC (Indicators of Compromise) avec d'autres CHU
+
+  **Ce qui a coute cher :**
+
+  1. **Pas de PCA / PRA prepare** au niveau du detail — beaucoup d'improvisation les premiers jours
+  2. **Sauvegardes partiellement chiffrees** car synchronisees a chaud avec le SI
+  3. **Cartographie des dependances IT** incomplete — surprise sur la cascade des systemes touches
+  4. **Comm interne** chaotique les premieres heures — rumeurs, panique chez les soignants
+
+  **Les 5 lecons systemiques pour TA PME :**
+
+  **Lecon 1 — Le PCA/PRA ne se fait pas pendant la crise**
+  Il faut documenter AVANT : qui appelle qui, dans quel ordre, avec quels moyens (telephone hors-IT, fax retro, papier). Pour une PME, un PCA tient sur 2 pages mais doit exister.
+
+  **Lecon 2 — Les sauvegardes synchronisees a chaud sont compromises**
+  La regle 3-2-1 : 3 copies, 2 supports differents, 1 hors-site. Au moins une copie immuable / hors-ligne. Les NAS Synology grand public connectes au reseau ne suffisent PAS.
+
+  **Lecon 3 — La transparence paie, l'omerta coute**
+  Le CHU de Brest a communique en clair toutes les semaines. La presse a ete clemente, les patients comprehensifs. Les organisations qui cachent finissent toujours par etre demasquees par fuite presse — et c'est pire.
+
+  **Lecon 4 — Le mode degrade doit etre exerce**
+  Une simulation annuelle de panne IT generale (1 demi-journee) revele les dependances cachees. C'est plus efficace que 100 audits theoriques.
+
+  **Lecon 5 — Les autorites sont des allies**
+  Cybermalveillance, ANSSI, CERT-FR, gendarmerie cyber : ils savent quoi faire et ils aident gratuitement. La reflexe doit etre de les appeler dans la 1ere heure.
+
+  **Ressources :**
+  - Rapport ANSSI / CERT-FR sur l'attaque (publique, anonymisee)
+  - **Cybermalveillance.gouv.fr** : 0 805 805 817 — gratuit, 7j/7
+  - **CSIRT regionaux** : aide directe en cas d'incident
+  - Modele de PCA simplifie PME : disponible sur le site de l'ANSSI
+quiz:
+  - question: "Le CHU de Brest a-t-il paye la rancon en mars 2023 ?"
+    choices:
+      - id: "a"
+        label: "Oui, c'est ce qui les a sauves"
+        correct: false
+      - id: "b"
+        label: "Non — recuperation par sauvegardes et aide ANSSI/CERT-FR sur 3 semaines"
+        correct: true
+      - id: "c"
+        label: "On ne sait pas"
+        correct: false
+    explanation: "Le CHU n'a PAS paye, conformement a la politique de l'Etat francais. La recuperation s'est faite par sauvegardes et accompagnement ANSSI/CERT-FR. Cas de reussite de la non-payment strategy."
+
+  - question: "Combien de temps a dure la perturbation au CHU de Brest ?"
+    choices:
+      - id: "a"
+        label: "3 jours"
+        correct: false
+      - id: "b"
+        label: "3 semaines"
+        correct: true
+      - id: "c"
+        label: "3 mois"
+        correct: false
+    explanation: "3 semaines de bascule en mode degrade. C'est le temps qu'il faut, sans paiement, avec une bonne preparation. Sans preparation, on parle de mois, voire jamais."
+
+  - question: "La regle 3-2-1 pour les sauvegardes signifie :"
+    choices:
+      - id: "a"
+        label: "3 sauvegardes par jour, 2 par semaine, 1 par mois"
+        correct: false
+      - id: "b"
+        label: "3 copies, sur 2 supports differents, dont 1 hors-site (idealement immuable / hors-ligne)"
+        correct: true
+      - id: "c"
+        label: "3 ans de retention, 2 niveaux d'acces, 1 administrateur"
+        correct: false
+    explanation: "3-2-1 = 3 copies, 2 supports differents (disques + bande, ou disques + cloud), 1 hors-site. C'est le standard ANSSI minimum. Au moins une copie doit etre IMMUABLE pour resister au ransomware."
+---
+
+## Pour aller plus loin
+
+Le CHU de Brest a fait ce qu'il fallait — meme imparfaitement. Le retour d'experience est public, l'ANSSI le distribue gratuitement, c'est devenu un cas d'ecole. Si tu es dirigeant de PME, lis ce REX (4 pages) avec ton DSI cette semaine. Identifie les 3 ecarts entre ton organisation et le CHU. Comble-en au moins un par mois.
+
+> "Le CHU de Brest n'a pas evite le ransomware. Mais il a evite le chaos. La preparation n'est pas une option — c'est la seule difference entre crise et catastrophe."
