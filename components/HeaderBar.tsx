@@ -207,6 +207,12 @@ export default function HeaderBar() {
                     />
                   )}
                   <MenuLink
+                    href="/profil/donnees"
+                    icon="⚖️"
+                    label="Mes données (RGPD)"
+                    onClick={() => setMenuOpen(false)}
+                  />
+                  <MenuLink
                     href="/boutique"
                     icon="🛒"
                     label="Boutique"
