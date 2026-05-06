@@ -71,6 +71,7 @@ const SECTIONS: Section[] = [
     title: "Conformité",
     items: [
       { href: "/admin/audit", label: "Journal d'audit", icon: "📜" },
+      { href: "/admin/dpo", label: "Espace DPO", icon: "🛡" },
       {
         href: "/admin/conformite-nis2",
         label: "Pack NIS2",
