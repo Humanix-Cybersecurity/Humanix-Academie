@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Mascotte Hex — emoji + reactions avec petite animation
+// Mascotte Hex - emoji + reactions avec petite animation
 type Mood = "neutral" | "happy" | "sad" | "curious" | "celebrate" | "thinking";
 type Size = "sm" | "md" | "lg" | "xl";
 

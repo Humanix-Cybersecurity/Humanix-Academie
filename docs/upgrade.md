@@ -1,4 +1,4 @@
-# Upgrade — Procédure de mise à jour
+# Upgrade - Procédure de mise à jour
 
 Ce guide t'accompagne dans la mise à jour de ton instance Humanix Académie
 self-hostée vers une nouvelle version.
@@ -36,7 +36,7 @@ v MAJOR . MINOR . PATCH
 
 ## Procédure standard (Docker Compose)
 
-### Étape 1 — Backup obligatoire
+### Étape 1 - Backup obligatoire
 
 **Ne JAMAIS** faire un upgrade sans backup. Procédure :
 
@@ -58,7 +58,7 @@ docker compose exec -T app tar czf - /app/storage \
 ls -lh /var/backups/humanix/ | tail -3
 ```
 
-### Étape 2 — Lis le CHANGELOG
+### Étape 2 - Lis le CHANGELOG
 
 ```bash
 git fetch --tags
@@ -70,7 +70,7 @@ git log $(git describe --tags --abbrev=0)..main --oneline
 Si la version cible contient un `BREAKING CHANGE:`, ARRÊTE-TOI ICI et lis
 la section **Migrations majeures** plus bas avant de continuer.
 
-### Étape 3 — Pull la nouvelle version
+### Étape 3 - Pull la nouvelle version
 
 ```bash
 # Récupère le code et les nouvelles images Docker
@@ -82,7 +82,7 @@ diff -u .env .env.example | grep "^[-+]"
 # Si nouvelles variables, ajoute-les à .env
 ```
 
-### Étape 4 — Applique l'upgrade
+### Étape 4 - Applique l'upgrade
 
 ```bash
 # Pull les images Docker mises à jour
@@ -96,7 +96,7 @@ docker compose logs -f app
 # Ctrl+C quand tu vois : "▲ Next.js ready on http://0.0.0.0:3000"
 ```
 
-### Étape 5 — Vérification post-upgrade
+### Étape 5 - Vérification post-upgrade
 
 ```bash
 # Healthcheck
@@ -111,7 +111,7 @@ docker compose exec app npx prisma migrate status
 # Attendu : "Database schema is up to date!"
 ```
 
-### Étape 6 — Cleanup (optionnel)
+### Étape 6 - Cleanup (optionnel)
 
 ```bash
 # Supprime les anciennes images Docker pour libérer du disque
@@ -188,8 +188,8 @@ curl http://localhost:3000/api/health
 
 | Version | Date              | Type                  | Guide |
 | ------- | ----------------- | --------------------- | ----- |
-| v1.0.0  | mai 2026          | Initial OSS release   | —     |
-| v1.1.0  | juin 2026 (prévu) | Helm chart Kubernetes | —     |
+| v1.0.0  | mai 2026          | Initial OSS release   | -     |
+| v1.1.0  | juin 2026 (prévu) | Helm chart Kubernetes | -     |
 | v2.0.0  | (à planifier)     | TBD                   | TBD   |
 
 ---

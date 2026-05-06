@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page Manifeste — l'expérience immersive d'identité Humanix.
+// Page Manifeste - l'expérience immersive d'identité Humanix.
 //
 // Pourquoi cette page existe : la landing / est utilitaire (CTA inscription).
 // Le /comparatif est analytique. Le /tarifs est commercial. Mais aucune page
-// ne raconte QUI on est et POURQUOI on existe — un manque comble en amont
+// ne raconte QUI on est et POURQUOI on existe - un manque comble en amont
 // du launch OSS du 26 mai.
 //
 // Cette page est un voyage narratif en 8 chapitres, conçu pour qu'un
@@ -33,7 +33,7 @@ import HexBackdrop from "@/components/HexBackdrop";
 import HexMascotEvolved from "@/components/HexMascotEvolved";
 
 export const metadata = {
-  title: "Manifeste — Humanix Académie",
+  title: "Manifeste - Humanix Académie",
   description:
     "Pourquoi Humanix existe. La cybersécurité humaine, française, libre. Une plateforme open source AGPLv3 pour que la PME française ne soit plus le maillon faible.",
 };
@@ -42,14 +42,14 @@ export default function ManifestePage() {
   return (
     <main id="main-content" className="overflow-x-hidden">
       {/* ============================================================
-          CHAPITRE 1 — HERO IMMERSIF
+          CHAPITRE 1 - HERO IMMERSIF
           Hex drift en fond, mascotte qui flotte, titre qui respire.
           ============================================================ */}
       <section
         aria-labelledby="manifeste-hero"
         className="relative isolate min-h-[88vh] flex items-center bg-humanix-soft"
       >
-        {/* Hex pattern qui drifte lentement (24s/cycle, 1px par seconde —
+        {/* Hex pattern qui drifte lentement (24s/cycle, 1px par seconde -
             quasi-imperceptible mais donne vie à la page) */}
         <div
           aria-hidden="true"
@@ -132,7 +132,7 @@ export default function ManifestePage() {
           </div>
 
           <p className="mt-4 text-xs text-gray-500 dark:text-gray-400 italic animate-fadeIn">
-            Hex t'accompagne. C'est notre mascotte — et bientôt, peut-être,
+            Hex t'accompagne. C'est notre mascotte - et bientôt, peut-être,
             celle de tes équipes.
           </p>
         </div>
@@ -147,7 +147,7 @@ export default function ManifestePage() {
       </section>
 
       {/* ============================================================
-          CHAPITRE 2 — LE PROBLÈME
+          CHAPITRE 2 - LE PROBLÈME
           Trois scènes courtes, en cascade. Style romanesque court.
           ============================================================ */}
       <section
@@ -169,14 +169,14 @@ export default function ManifestePage() {
               delay={0}
               emoji="🧾"
               who="Marie, comptable"
-              what="Elle clique sur un faux RIB envoyé en pleine charge de fin de mois. Le mail vient de « son fournisseur habituel » — sauf que le domaine a une lettre déplacée."
+              what="Elle clique sur un faux RIB envoyé en pleine charge de fin de mois. Le mail vient de « son fournisseur habituel » - sauf que le domaine a une lettre déplacée."
               loss="32 400 €"
             />
             <SceneCard
               delay={120}
               emoji="🔑"
               who="Stéphane, commercial"
-              what="Il recycle son mot de passe d'agence sur trois sites perso. Quand l'un d'eux fuit, l'attaquant teste — et entre dans le CRM en 4 secondes."
+              what="Il recycle son mot de passe d'agence sur trois sites perso. Quand l'un d'eux fuit, l'attaquant teste - et entre dans le CRM en 4 secondes."
               loss="Fichier client de 8 ans"
             />
             <SceneCard
@@ -199,7 +199,7 @@ export default function ManifestePage() {
       </section>
 
       {/* ============================================================
-          CHAPITRE 3 — LE CONSTAT
+          CHAPITRE 3 - LE CONSTAT
           Stat 90% géante + écosystème français. Fond gradient soft.
           ============================================================ */}
       <HexBackdrop intensity="medium" className="bg-humanix-soft">
@@ -273,7 +273,7 @@ export default function ManifestePage() {
       </HexBackdrop>
 
       {/* ============================================================
-          CHAPITRE 4 — CE QU'ON CONSTRUIT
+          CHAPITRE 4 - CE QU'ON CONSTRUIT
           Card-hero gradient avec promesse. Cinq piliers en card-feature.
           ============================================================ */}
       <section
@@ -336,7 +336,7 @@ export default function ManifestePage() {
       </section>
 
       {/* ============================================================
-          CHAPITRE 5 — LE CODE PARLE
+          CHAPITRE 5 - LE CODE PARLE
           3 captures conceptuelles : MCP, vishing souverain, OSCAL.
           ============================================================ */}
       <HexBackdrop className="bg-gray-50 dark:bg-slate-950/50">
@@ -464,7 +464,7 @@ export default function ManifestePage() {
       </HexBackdrop>
 
       {/* ============================================================
-          CHAPITRE 6 — LE MODÈLE
+          CHAPITRE 6 - LE MODÈLE
           Comment on gagne notre vie sans trahir l'open source.
           ============================================================ */}
       <section
@@ -476,7 +476,7 @@ export default function ManifestePage() {
 
           <div className="space-y-6 text-lg text-gray-700 dark:text-gray-200 leading-relaxed">
             <p className="animate-slide-up">
-              <em>« Et tu vis comment, alors ? »</em> — c'est la question qu'on
+              <em>« Et tu vis comment, alors ? »</em> - c'est la question qu'on
               nous pose dix fois par jour depuis qu'on a annoncé la bascule
               open source. Voici la réponse, sans détour.
             </p>
@@ -514,7 +514,7 @@ export default function ManifestePage() {
       </section>
 
       {/* ============================================================
-          CHAPITRE 7 — LA SIGNATURE
+          CHAPITRE 7 - LA SIGNATURE
           Le vrai manifeste. Italique. Solennel. Court.
           ============================================================ */}
       <section
@@ -551,13 +551,13 @@ export default function ManifestePage() {
             className="mt-12 text-sm uppercase tracking-[0.3em] font-bold opacity-80 animate-fadeIn"
             style={{ animationDelay: "400ms" }}
           >
-            — Florian Durano · Fondateur Humanix Cybersecurity · 26 mai 2026
+            - Florian Durano · Fondateur Humanix Cybersecurity · 26 mai 2026
           </p>
         </div>
       </section>
 
       {/* ============================================================
-          CHAPITRE 8 — LE VOYAGE
+          CHAPITRE 8 - LE VOYAGE
           3 portes : tester, self-host, discuter. Tone "tu".
           ============================================================ */}
       <section
@@ -603,14 +603,14 @@ export default function ManifestePage() {
               Et si tu connais un dirigeant, un RSSI, un journaliste, ou
               simplement quelqu'un qui se sent dépassé par la cyber : partage
               cette page. C'est comme ça qu'on construit une cyber souveraine
-              — un humain à la fois.
+              - un humain à la fois.
             </p>
           </div>
         </div>
       </section>
 
       {/* ============================================================
-          PIED DE PAGE — Hex qui veille
+          PIED DE PAGE - Hex qui veille
           ============================================================ */}
       <section
         aria-hidden="true"

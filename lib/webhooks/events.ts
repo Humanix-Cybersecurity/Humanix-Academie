@@ -10,7 +10,7 @@ export const WEBHOOK_EVENTS = {
     sample: {
       userName: "Alice Martin",
       userEmail: "alice@acme.fr",
-      saisonTitle: "Saison 1 — Phishing",
+      saisonTitle: "Saison 1 - Phishing",
       episodeTitle: "Reconnaitre un faux mail Microsoft",
       score: 92,
       bestScore: 92,
@@ -22,7 +22,7 @@ export const WEBHOOK_EVENTS = {
       "Envoye quand un user a complete tous les episodes d'une saison. Idempotent : 1 seul envoi par (user, saison).",
     sample: {
       userName: "Alice Martin",
-      saisonTitle: "Saison 1 — Phishing",
+      saisonTitle: "Saison 1 - Phishing",
       averageScore: 87,
       familyInvitesUnlocked: 3,
     },
@@ -32,7 +32,7 @@ export const WEBHOOK_EVENTS = {
     description:
       "Envoye quand le delai d'expiration d'une campagne est atteint. Resume : envoyes / cliques / signales.",
     sample: {
-      campaignTitle: "Faux Microsoft 365 — Mai 2026",
+      campaignTitle: "Faux Microsoft 365 - Mai 2026",
       sentTo: 42,
       clicked: 6,
       reported: 18,
@@ -42,7 +42,7 @@ export const WEBHOOK_EVENTS = {
   "phishing.reported": {
     label: "Un mail suspect a été signalé",
     description:
-      "Envoye quand un utilisateur signale un mail comme phishing (depuis l'add-in Outlook ou en interne). Le canal Slack/Teams reçoit l'alerte en temps reel — utile pour le SOC ou l'IT.",
+      "Envoye quand un utilisateur signale un mail comme phishing (depuis l'add-in Outlook ou en interne). Le canal Slack/Teams reçoit l'alerte en temps reel - utile pour le SOC ou l'IT.",
     sample: {
       userName: "Alice Martin",
       fromAddress: "noreply@suspect.example",
@@ -74,7 +74,7 @@ export const WEBHOOK_EVENTS = {
     label: "Un module marketplace a été installé",
     description: "Envoye quand un admin installe un module communautaire.",
     sample: {
-      moduleTitle: "Rancongiciels — comprendre, eviter, reagir",
+      moduleTitle: "Rancongiciels - comprendre, eviter, reagir",
       author: "Pierre Dupont (RSSI@CHU Cherbourg)",
       installedBy: "Charles Admin",
     },

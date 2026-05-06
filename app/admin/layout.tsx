@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// app/admin/layout.tsx — Layout console dirigeant
+// app/admin/layout.tsx - Layout console dirigeant
 //
 // Architecture Linear/Vercel-like :
 //   - Sidebar slim (icons-only, 56px) à gauche, fixed full-height
@@ -47,7 +47,7 @@ export default async function AdminLayout({
 
   return (
     <div className="min-h-[calc(100vh-5rem)] flex bg-gray-50/50 dark:bg-slate-900/50">
-      {/* Sidebar slim — icons-only desktop, drawer mobile */}
+      {/* Sidebar slim - icons-only desktop, drawer mobile */}
       <AdminSidebar />
 
       {/* Zone principale : top bar (breadcrumb seul) + content */}

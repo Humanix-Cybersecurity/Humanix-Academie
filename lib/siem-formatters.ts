@@ -180,7 +180,7 @@ export function buildSentinelCef(args: {
       cn1: String(Math.round((e.score ?? 0) * 100)),
       cn2Label: "artifactsCount",
       cn2: String(e.artifacts.length),
-      // Champs Humanix (custom CEF deviceCustomKeys) — visibles dans Sentinel
+      // Champs Humanix (custom CEF deviceCustomKeys) - visibles dans Sentinel
       // sous "AdditionalExtensions"
       humanixGeneratedAt: isoTime,
       humanixControlRef: e.control_ref,

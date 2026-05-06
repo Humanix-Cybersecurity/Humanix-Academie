@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Trust Center — refonte cosy mai 2026.
+// Trust Center - refonte cosy mai 2026.
 //
 // Brief : "experience, terrain, sensibilisation reelle, pas celle generee
-// par la peur — celle qui sent bon la maitrise et la confiance".
+// par la peur - celle qui sent bon la maitrise et la confiance".
 //
 // Registre different des autres refontes (apprendre/audit-flash/famille) :
 // ici la cible est **RSSI / DSI / dirigeant** qui scrute la maturite
@@ -19,14 +19,14 @@
 // - Bandeau audit public ameliore (animate-glow, emoji filigrane)
 // - Citation finale sobre et technique
 //
-// Aucun contenu factuel n'est modifie — un RSSI qui imprime la page
+// Aucun contenu factuel n'est modifie - un RSSI qui imprime la page
 // retrouve exactement les memes informations.
 
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
 export const metadata = {
-  title: "Sécurité & Conformité — Humanix Cybersecurity",
+  title: "Sécurité & Conformité - Humanix Cybersecurity",
   description:
     "Trust Center : hébergement souverain France, RGPD, gestion des secrets, sauvegardes, sous-traitants, audit public. La sécurité chez Humanix Cybersecurity, en transparence radicale.",
 };
@@ -60,7 +60,7 @@ export default function SecuritePage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* ============================================================
-          1. HERO SOBRE — gravité technique
+          1. HERO SOBRE - gravité technique
           ============================================================ */}
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
         <section
@@ -88,7 +88,7 @@ export default function SecuritePage() {
             style={{ animationDelay: "220ms" }}
           >
             On vous apprend la cyber. On l'applique aussi chez nous. Voici nos
-            engagements, les preuves derrière, et nos gaps assumés —{" "}
+            engagements, les preuves derrière, et nos gaps assumés -{" "}
             <strong>pas l'inverse</strong>.
           </p>
 
@@ -120,7 +120,7 @@ export default function SecuritePage() {
 
       <div className="max-w-4xl mx-auto px-4 py-12 sm:py-16 space-y-12">
         {/* ============================================================
-            2. KPIs — coup d'oeil rapide
+            2. KPIs - coup d'oeil rapide
             ============================================================ */}
         <section aria-labelledby="kpis-title">
           <div className="text-center mb-8">
@@ -149,7 +149,7 @@ export default function SecuritePage() {
         </section>
 
         {/* ============================================================
-            3. AUDIT PUBLIC — bandeau majeur, signature transparence
+            3. AUDIT PUBLIC - bandeau majeur, signature transparence
             ============================================================ */}
         <section aria-labelledby="audit-title">
           <div className="card-hero relative overflow-hidden animate-glow">
@@ -188,7 +188,7 @@ export default function SecuritePage() {
         </section>
 
         {/* ============================================================
-            4. SOMMAIRE — navigation interne
+            4. SOMMAIRE - navigation interne
             ============================================================ */}
         <section
           aria-labelledby="sommaire-title"
@@ -280,7 +280,7 @@ export default function SecuritePage() {
             </li>
             <li>
               <strong>Contrat de sous-traitance (DPA)</strong> systématiquement
-              signé avec chaque client SaaS — modèle aligné sur les clauses
+              signé avec chaque client SaaS - modèle aligné sur les clauses
               types CNIL
             </li>
             <li>
@@ -319,7 +319,7 @@ export default function SecuritePage() {
             </li>
             <li>
               <strong>Mots de passe</strong> : aucun mot de passe stocké côté
-              Humanix — authentification sans mot de passe
+              Humanix - authentification sans mot de passe
             </li>
             <li>
               <strong>API keys</strong> hashées en SHA-256 ; révocation 1-clic
@@ -348,7 +348,7 @@ export default function SecuritePage() {
         <Section n="04" emoji="🤐" title="Gestion des secrets" id="secrets">
           <ul>
             <li>
-              Aucun secret n'est commité dans le code source — vérifié par scan
+              Aucun secret n'est commité dans le code source - vérifié par scan
               automatisé en CI
             </li>
             <li>
@@ -450,7 +450,7 @@ export default function SecuritePage() {
         <Section n="07" emoji="👤" title="Engagement humain" id="humain">
           <ul>
             <li>
-              <strong>RC Pro Cybersécurité</strong> souscrite — coordonnées de
+              <strong>RC Pro Cybersécurité</strong> souscrite - coordonnées de
               l'assureur communiquées à la signature du contrat
             </li>
             <li>
@@ -484,11 +484,11 @@ export default function SecuritePage() {
               </strong>{" "}
               (Forgejo auto-hébergé chez Scaleway, ou plateforme communautaire
               FR équivalente). GitHub reste utilisé en attendant pour la
-              visibilité écosystème open source — la portabilité est garantie
+              visibilité écosystème open source - la portabilité est garantie
               par Git lui-même.
             </li>
             <li>
-              2027 : Étude qualification PASSI ANSSI (audits) — selon évolution
+              2027 : Étude qualification PASSI ANSSI (audits) - selon évolution
               business
             </li>
             <li>
@@ -517,7 +517,7 @@ export default function SecuritePage() {
         </Section>
 
         {/* ============================================================
-            14. CTA CONTACT — pour les RSSI qui veulent un dossier complet
+            14. CTA CONTACT - pour les RSSI qui veulent un dossier complet
             ============================================================ */}
         <section aria-labelledby="contact-title">
           <div className="rounded-3xl bg-gradient-to-br from-cyan-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-cyan-950/30 border-2 border-cyan-200 dark:border-cyan-900/40 p-8 sm:p-10 text-center">
@@ -545,7 +545,7 @@ export default function SecuritePage() {
         </section>
 
         {/* ============================================================
-            15. RESPIRATION — citation finale technique sobre
+            15. RESPIRATION - citation finale technique sobre
             ============================================================ */}
         <section className="text-center pt-4">
           <blockquote className="font-display italic text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
@@ -556,7 +556,7 @@ export default function SecuritePage() {
             aria-hidden="true"
             className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
           >
-            — Hex veille
+            - Hex veille
           </p>
           <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-8 italic">
             Page mise à jour à chaque évolution majeure. État au{" "}

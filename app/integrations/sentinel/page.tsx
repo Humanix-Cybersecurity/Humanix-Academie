@@ -7,7 +7,7 @@ import Link from "next/link";
 import CopyableSnippet from "@/components/CopyableSnippet";
 
 export const metadata = {
-  title: "Connecteur Microsoft Sentinel — Humanix Académie",
+  title: "Connecteur Microsoft Sentinel - Humanix Académie",
   description:
     "Workbook clé en main + Logs Ingestion API. Vos preuves de sensibilisation arrivent dans Sentinel comme table HumanixCompliance_CL. KQL queries fournies.",
 };

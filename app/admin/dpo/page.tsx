@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// /admin/dpo — Dashboard DPO interne.
+// /admin/dpo - Dashboard DPO interne.
 //
 // Concretise la roadmap promise sur la page publique /dpo.
 //
@@ -13,7 +13,7 @@
 //   - Liens vers les modules pedagogiques de la saison dpo-quotidien
 //
 // Roles autorises : ADMIN, RSSI, SUPERADMIN.
-// Note : on n'a pas encore de role "DPO" dedie dans le schema — un DPO
+// Note : on n'a pas encore de role "DPO" dedie dans le schema - un DPO
 // externe accede aujourd'hui via un compte ADMIN. Sujet a discuter en
 // follow-up (creer un Role.DPO ?).
 
@@ -165,7 +165,7 @@ export default async function AdminDpoPage() {
       />
 
       {/* ============================================================
-          1. Compteurs RGPD — 90 derniers jours
+          1. Compteurs RGPD - 90 derniers jours
           ============================================================ */}
       <AdminSection
         title="Vue d'ensemble · 90 derniers jours"
@@ -424,7 +424,7 @@ export default async function AdminDpoPage() {
           aria-hidden="true"
           className="mt-3 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
         >
-          — Hex veille
+          - Hex veille
         </p>
       </section>
     </div>

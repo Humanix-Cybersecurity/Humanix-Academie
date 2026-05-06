@@ -13,10 +13,10 @@ import AdminSection from "@/components/admin/AdminSection";
 export const dynamic = "force-dynamic";
 
 const SEVERITIES = [
-  { value: "LOW", label: "Mineur — suspicion ou contenu" },
-  { value: "MEDIUM", label: "Significatif — périmètre limité" },
-  { value: "HIGH", label: "Majeur — périmètre étendu" },
-  { value: "CRITICAL", label: "Critique — continuité menacée" },
+  { value: "LOW", label: "Mineur - suspicion ou contenu" },
+  { value: "MEDIUM", label: "Significatif - périmètre limité" },
+  { value: "HIGH", label: "Majeur - périmètre étendu" },
+  { value: "CRITICAL", label: "Critique - continuité menacée" },
 ];
 
 export default async function NewIncidentPage() {

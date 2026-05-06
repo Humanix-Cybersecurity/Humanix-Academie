@@ -18,7 +18,7 @@ const validChoice = {
   id: "a1",
   label: "Cliquer sur le lien sans vérifier",
   outcome: "bad" as const,
-  feedback: "Mauvaise idée — toujours vérifier l'expéditeur d'abord.",
+  feedback: "Mauvaise idée - toujours vérifier l'expéditeur d'abord.",
   points: -10,
 };
 
@@ -44,7 +44,7 @@ const validEpisode = {
       id: "a2",
       label: "Appeler le contact connu pour vérifier",
       outcome: "good" as const,
-      feedback: "Excellente démarche — la double vérification voix/écrit.",
+      feedback: "Excellente démarche - la double vérification voix/écrit.",
       points: 20,
     },
   ],
@@ -56,7 +56,7 @@ const validEpisode = {
 
 const validModule = {
   slug: "phishing-fournisseur-2026",
-  title: "Phishing fournisseur — cas réel 2026",
+  title: "Phishing fournisseur - cas réel 2026",
   description:
     "Module de sensibilisation à la fraude au RIB et à la fraude au président. Cas réel anonymisé issu d'un cabinet comptable francais.",
   emoji: "🎣",
@@ -248,7 +248,7 @@ describe("ModuleSubmissionSchema", () => {
     expect(
       ModuleSubmissionSchema.safeParse({
         ...validModule,
-        // & autorisé dans description (txt simple) — mais pas dans authorOrgName
+        // & autorisé dans description (txt simple) - mais pas dans authorOrgName
         authorOrgName: "Humanix & Co",
       }).success,
     ).toBe(false);

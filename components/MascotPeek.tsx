@@ -23,7 +23,7 @@ const MESSAGES: {
 }[] = [
   {
     match: (p) => p.startsWith("/audit-flash"),
-    text: "5 minutes pour savoir où vous en êtes — et un PDF brandé en sortie. Promis !",
+    text: "5 minutes pour savoir où vous en êtes - et un PDF brandé en sortie. Promis !",
   },
   {
     match: (p) => p.startsWith("/tarifs"),
@@ -48,7 +48,7 @@ const MESSAGES: {
   },
   {
     match: (p) => p === "/",
-    text: "Bienvenue ! Je suis Hex 🦊 — la mascotte HumaniX. Une question ?",
+    text: "Bienvenue ! Je suis Hex 🦊 - la mascotte HumaniX. Une question ?",
     cta: { label: "Voir la démo", href: "/demo" },
   },
 ];

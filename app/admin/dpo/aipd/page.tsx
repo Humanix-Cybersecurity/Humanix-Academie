@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// /admin/dpo/aipd — Generateur AIPD (Analyse d'Impact a la Protection des Donnees).
+// /admin/dpo/aipd - Generateur AIPD (Analyse d'Impact a la Protection des Donnees).
 //
 // Approche pragmatique : on ne reinvente pas le PIA Tool de la CNIL. On
 // fournit un MODELE Markdown pre-rempli avec toutes les sections attendues
 // (article 35 RGPD), que le DPO peut copier, completer et exporter.
 //
-// L'AIPD est un document evolutif — le DPO l'enregistre dans son outil de
+// L'AIPD est un document evolutif - le DPO l'enregistre dans son outil de
 // preference (Notion, OneDrive, GRC). Le modele Humanix sert de squelette
 // methodologique.
 //
@@ -25,7 +25,7 @@ import AipdTemplateClient from "./AipdTemplateClient";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Generateur AIPD — Console DPO | Humanix",
+  title: "Generateur AIPD - Console DPO | Humanix",
   description:
     "Modele d'Analyse d'Impact a la Protection des Donnees, conforme article 35 RGPD, exportable en Markdown. Squelette methodologique pour DPO interne ou mutualise.",
 };
@@ -96,7 +96,7 @@ export default async function AipdGeneratorPage() {
             >
               PIA Tool gratuit de la CNIL
             </a>{" "}
-            (Windows/Mac/Linux) est l'outil officiel — accepte par la CNIL en
+            (Windows/Mac/Linux) est l'outil officiel - accepte par la CNIL en
             cas de controle. Le modele ci-dessous est un squelette Markdown
             complementaire pour ceux qui preferent travailler dans Notion,
             OneDrive ou un GRC.

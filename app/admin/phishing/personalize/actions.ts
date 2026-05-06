@@ -96,7 +96,7 @@ export async function generatePersonalizedBatch(
   };
 
   // Generation sequentielle (1/sec). UI fera un timer cote client pour montrer
-  // une progression estimative — la version SSE-streaming est en TODO V2.
+  // une progression estimative - la version SSE-streaming est en TODO V2.
   const { results, errors } = await generateBatch(targets, campaign);
 
   return {

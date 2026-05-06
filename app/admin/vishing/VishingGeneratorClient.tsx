@@ -251,7 +251,7 @@ export default function VishingGeneratorClient() {
           <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
               <h2 className="font-bold text-primary-500">
-                Script genere — formation interne uniquement
+                Script genere - formation interne uniquement
               </h2>
               <p className="text-xs text-gray-500 mt-1">
                 Persona attaquant : {script.attackerPersona} · Numero affiche :{" "}

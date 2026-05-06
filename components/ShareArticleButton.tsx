@@ -60,7 +60,7 @@ export default function ShareArticleButton({
   const onEmail = () => {
     const subject = encodeURIComponent(`À lire : ${title}`);
     const body = encodeURIComponent(
-      `Je suis tombé sur cet article cyber, je pense qu'il peut t'être utile :\n\n${title}\n${description}\n\n${url}\n\n— Partagé via Humanix Académie`,
+      `Je suis tombé sur cet article cyber, je pense qu'il peut t'être utile :\n\n${title}\n${description}\n\n${url}\n\n- Partagé via Humanix Académie`,
     );
     window.location.href = `mailto:?subject=${subject}&body=${body}`;
     trackShare();

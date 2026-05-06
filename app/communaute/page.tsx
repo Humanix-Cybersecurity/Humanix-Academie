@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page publique /communaute — point d'entree des contributeurs et curieux
+// Page publique /communaute - point d'entree des contributeurs et curieux
 // post-launch OSS.
 //
 // Cible : developpeurs, RSSI, DPO, formateurs cyber qui ont vu Humanix
@@ -18,7 +18,7 @@ import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
 export const metadata = {
-  title: "Communaute — Humanix Academie",
+  title: "Communaute - Humanix Academie",
   description:
     "Rejoindre la communaute Humanix Academie : Discord, GitHub Discussions, contribuer un module MDX, un connecteur, ou simplement utiliser. Open source AGPLv3, ecosysteme cyber souverain francais.",
 };
@@ -32,7 +32,7 @@ const PORTES = [
       ring: "border-cyan-200 dark:border-cyan-900/40",
       accent: "text-cyan-700 dark:text-cyan-300",
     },
-    body: "Tu deploies Humanix dans ta PME, en self-host ou en cloud. Tu as des questions, des retours, des bugs a signaler. Bienvenue — c'est ton experience qui ameliore le produit.",
+    body: "Tu deploies Humanix dans ta PME, en self-host ou en cloud. Tu as des questions, des retours, des bugs a signaler. Bienvenue - c'est ton experience qui ameliore le produit.",
     actions: [
       {
         label: "GitHub Discussions",
@@ -118,7 +118,7 @@ export default function CommunautePage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* ================================================================
-          1. HERO — invitation chaleureuse
+          1. HERO - invitation chaleureuse
           ================================================================ */}
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
         <section
@@ -143,7 +143,7 @@ export default function CommunautePage() {
             Humanix Academie est un projet ouvert. Code AGPLv3, decisions en
             clair sur GitHub, modules signes par leurs auteurs. Que tu sois
             utilisatrice de PME, developpeur curieux, RSSI sur le terrain ou
-            partenaire editeur — il y a une porte d'entree pour toi.
+            partenaire editeur - il y a une porte d'entree pour toi.
           </p>
         </section>
       </HexBackdrop>
@@ -259,7 +259,7 @@ export default function CommunautePage() {
           </div>
           <p className="text-xs text-gray-600 dark:text-gray-400 italic mt-5 leading-relaxed">
             Pour les <strong>vulnerabilites de securite</strong>, ne pas
-            utiliser ces canaux publics — voir{" "}
+            utiliser ces canaux publics - voir{" "}
             <a
               href="https://github.com/Humanix-Cybersecurity/Humanix-Academie/blob/main/SECURITY.md"
               target="_blank"
@@ -298,7 +298,7 @@ export default function CommunautePage() {
                 <strong className="text-primary-500 dark:text-accent-300">
                   Code complet ouvert
                 </strong>{" "}
-                — aucun module cache, aucune brique fermee importante. AGPLv3
+                - aucun module cache, aucune brique fermee importante. AGPLv3
                 strict, audit ligne par ligne possible.
               </span>
             </li>
@@ -310,7 +310,7 @@ export default function CommunautePage() {
                 <strong className="text-primary-500 dark:text-accent-300">
                   Decisions en clair
                 </strong>{" "}
-                — roadmap, choix techniques majeurs, abandons : tout passe par
+                - roadmap, choix techniques majeurs, abandons : tout passe par
                 des issues publiques. Pas de roadmap secrete, pas de meeting
                 gouvernemental cache.
               </span>
@@ -323,7 +323,7 @@ export default function CommunautePage() {
                 <strong className="text-primary-500 dark:text-accent-300">
                   Reponse sous 7 jours
                 </strong>{" "}
-                — tout PR ou issue recoit un retour sous 7 jours ouvres.
+                - tout PR ou issue recoit un retour sous 7 jours ouvres.
                 Premiere review sous 3 jours pour les contributeurs reguliers.
               </span>
             </li>
@@ -335,7 +335,7 @@ export default function CommunautePage() {
                 <strong className="text-primary-500 dark:text-accent-300">
                   DCO simple, pas de CLA pesant
                 </strong>{" "}
-                — Developer Certificate of Origin = `git commit -s` suffit.
+                - Developer Certificate of Origin = `git commit -s` suffit.
                 Pas de paperasse a signer, pas de cession de droits abusive.
               </span>
             </li>
@@ -347,7 +347,7 @@ export default function CommunautePage() {
                 <strong className="text-primary-500 dark:text-accent-300">
                   Code of Conduct applique
                 </strong>{" "}
-                —{" "}
+                -{" "}
                 <a
                   href="https://github.com/Humanix-Cybersecurity/Humanix-Academie/blob/main/CODE_OF_CONDUCT.md"
                   target="_blank"
@@ -420,19 +420,19 @@ export default function CommunautePage() {
         </section>
 
         {/* ============================================================
-            6. CITATION FINALE — signature cosy "Hex veille"
+            6. CITATION FINALE - signature cosy "Hex veille"
             ============================================================ */}
         <section className="text-center pt-8 pb-4">
           <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
             « Une plateforme cyber qui vit seule meurt seule. La nouveaute de
             chaque saison, la qualite de chaque module, la stabilite de chaque
-            connecteur — tout cela vient de la communaute, ou ne vient pas. »
+            connecteur - tout cela vient de la communaute, ou ne vient pas. »
           </blockquote>
           <p
             aria-hidden="true"
             className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
           >
-            — Hex veille
+            - Hex veille
           </p>
         </section>
       </div>

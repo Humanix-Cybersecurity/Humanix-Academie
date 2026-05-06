@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// StatusBadge — Badge sémantique compact (succès / info / warning / danger).
+// StatusBadge - Badge sémantique compact (succès / info / warning / danger).
 //
 // Cohérent avec le système de couleurs du dashboard refondu (LEVEL_META).
 // Usage typique : afficher l'état d'une campagne, d'un module, d'un audit.

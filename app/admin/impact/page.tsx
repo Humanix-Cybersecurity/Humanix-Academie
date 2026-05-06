@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /admin/impact — Tableau de bord des benefices observes.
+// /admin/impact - Tableau de bord des benefices observes.
 //
 // Complementaire de /admin/business (exposition financiere). Ici on
 // montre ce que la plateforme a fait EVOLUER concretement chez le
