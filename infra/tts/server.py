@@ -20,12 +20,11 @@ import io
 import logging
 import os
 import subprocess
-import tempfile
 from pathlib import Path
 from typing import Optional
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import StreamingResponse, JSONResponse
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 from piper import PiperVoice
 
