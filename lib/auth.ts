@@ -21,6 +21,7 @@ import { db } from "@/lib/db";
 import { verifyPassword } from "@/lib/password";
 import { verifyTotpCode } from "@/lib/totp";
 import { consumeBackupCode } from "@/lib/password";
+import { auditLog, AuditActions, AuditOutcomes } from "@/lib/audit";
 
 const isDemoMode = process.env.DEMO_MODE === "true";
 
@@ -169,6 +170,18 @@ if (!isDemoMode) {
             lastLoginAt: new Date(),
           },
         });
+        await auditLog({
+          action: AuditActions.USER_LOGIN_SUCCESS,
+          outcome: AuditOutcomes.SUCCESS,
+          actor: {
+            userId: user.id,
+            email: user.email,
+            role: user.role,
+          },
+          tenantId: user.tenantId,
+          target: { type: "user", id: user.id, label: user.email },
+          message: `Connexion par mot de passe${user.mfaEnabled ? " + 2FA" : ""}`,
+        });
         return { id: user.id, email: user.email, name: user.name };
       },
     }),
@@ -224,6 +237,14 @@ if (!isDemoMode) {
             lastLoginAt: new Date(),
           },
         });
+        await auditLog({
+          action: AuditActions.USER_WEBAUTHN_LOGIN,
+          outcome: AuditOutcomes.SUCCESS,
+          actor: { userId: user.id, email: user.email, role: user.role },
+          tenantId: user.tenantId,
+          target: { type: "user", id: user.id, label: user.email },
+          message: "Connexion par cle FIDO2",
+        });
         return { id: user.id, email: user.email, name: user.name };
       },
     }),
@@ -235,10 +256,33 @@ async function registerFailedLogin(userId: string, current: number) {
   const data: { failedLoginAttempts: number; lockedUntil?: Date } = {
     failedLoginAttempts: next,
   };
-  if (next >= MAX_FAILED_ATTEMPTS) {
+  const willLock = next >= MAX_FAILED_ATTEMPTS;
+  if (willLock) {
     data.lockedUntil = new Date(Date.now() + LOCKOUT_MS);
   }
-  await db.user.update({ where: { id: userId }, data });
+  const updated = await db.user.update({
+    where: { id: userId },
+    data,
+    select: { email: true, tenantId: true },
+  });
+  await auditLog({
+    action: AuditActions.USER_LOGIN_FAILED,
+    outcome: AuditOutcomes.FAILURE,
+    actor: { userId, email: updated.email },
+    tenantId: updated.tenantId,
+    target: { type: "user", id: userId, label: updated.email },
+    message: `Tentative ${next}/${MAX_FAILED_ATTEMPTS}${willLock ? " — compte verrouillé" : ""}`,
+  });
+  if (willLock) {
+    await auditLog({
+      action: AuditActions.USER_LOCKED,
+      outcome: AuditOutcomes.SUCCESS,
+      actor: { userId, email: updated.email },
+      tenantId: updated.tenantId,
+      target: { type: "user", id: userId, label: updated.email },
+      message: `Verrouillage automatique apres ${MAX_FAILED_ATTEMPTS} echecs`,
+    });
+  }
 }
 
 // Magic link en prod
