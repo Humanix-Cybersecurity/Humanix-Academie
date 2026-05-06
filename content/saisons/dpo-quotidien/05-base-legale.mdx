@@ -1,0 +1,175 @@
+---
+title: "Choisir la bonne base legale (article 6)"
+durationMinutes: 6
+persona: "dpo"
+objective: "Identifier sans hesiter la base legale appropriee pour chaque traitement"
+xpReward: 50
+scenario: |
+  Tu es DPO. Le service marketing veut envoyer une newsletter mensuelle aux 12 000 prospects qui ont visite le site web (sans s'inscrire). Le commercial te dit : "On a leur IP, leur navigateur, leur parcours. Article 6.f legitime interet business — c'est legal."
+
+  Tu sais que la base legale est l'un des choix les plus structurants — un mauvais choix invalide tout le traitement. Que reponds-tu ?
+choices:
+  - id: "a"
+    label: "OK pour interet legitime, c'est le 'fourre-tout' du RGPD"
+    outcome: "bad"
+    feedback: "Faux. L'interet legitime n'est PAS un fourre-tout. La CNIL a sanctionne plusieurs fois des entreprises qui ont abuse de cette base. Pour la prospection commerciale electronique, c'est CONSENTEMENT explicite (article 6.a + ePrivacy)."
+    points: -20
+  - id: "b"
+    label: "Non. Pour la prospection commerciale BtoC par mail, c'est CONSENTEMENT EXPLICITE prealable (article 6.a + directive ePrivacy + L34-5 CPCE)"
+    outcome: "good"
+    feedback: "Parfait. La directive ePrivacy + le code des postes et communications electroniques imposent le consentement explicite pour le BtoC. L'interet legitime ne marche QUE pour le BtoB et avec restrictions."
+    points: 30
+  - id: "c"
+    label: "Aucune base legale n'est valable, le projet doit etre abandonne"
+    outcome: "neutral"
+    feedback: "Trop rigide. Le projet est faisable avec consentement explicite (case a cocher non pre-cochee, opt-in actif). Le DPO oriente vers la solution legale, ne bloque pas par principe."
+    points: 5
+  - id: "d"
+    label: "Je propose de basculer sur l'execution du contrat — les prospects ont 'accepte les CGU'"
+    outcome: "bad"
+    feedback: "Article 6.b ne s'applique qu'aux personnes parties a un contrat. Les prospects qui ont juste visite le site n'ont aucun contrat avec toi. Choisir une mauvaise base legale = traitement invalide."
+    points: -15
+debrief: |
+  **L'article 6 du RGPD** liste les **6 bases legales** possibles pour un traitement de donnees personnelles. Choisir la bonne est une decision structurante : une base inadaptee invalide tout le traitement.
+
+  **Les 6 bases legales (article 6.1) :**
+
+  ---
+
+  **a. Consentement** (article 6.1.a)
+
+  La personne a donne son accord libre, specifique, eclaire, univoque (article 7).
+
+  - **Cas typiques :** newsletter BtoC, cookies non-essentiels, marketing direct, profilage, traitement de donnees sensibles
+  - **Conditions strictes :**
+    - **Libre** : pas de chantage (acces a un service conditionne au consentement non lie)
+    - **Specifique** : un consentement par finalite distincte
+    - **Eclaire** : la personne sait ce a quoi elle consent
+    - **Univoque** : action positive (case decochee par defaut, opt-in actif)
+  - **Doit etre revocable** a tout moment, aussi facilement que donne
+  - **Doit etre tracable** (qui a consenti, quand, par quel canal)
+
+  ---
+
+  **b. Execution d'un contrat** (article 6.1.b)
+
+  Necessaire a l'execution d'un contrat avec la personne, ou aux mesures pre-contractuelles.
+
+  - **Cas typiques :** facturation client, livraison, gestion compte client, support apres-vente
+  - **Limite :** ne s'applique qu'aux donnees STRICTEMENT necessaires au contrat. Le profilage marketing n'est PAS necessaire a la livraison.
+  - **Tres souvent abusee** : "vous avez un compte chez nous, donc on peut tout faire avec vos donnees" — non.
+
+  ---
+
+  **c. Obligation legale** (article 6.1.c)
+
+  Le traitement est impose par une loi UE ou nationale.
+
+  - **Cas typiques :** comptabilite obligatoire (10 ans), declarations sociales (URSSAF), obligations fiscales, KYC bancaire
+  - **Avantage :** base solide, peu contestable
+  - **Limite :** la loi doit etre clairement identifiee — pas une obligation contractuelle deguisee
+
+  ---
+
+  **d. Sauvegarde des interets vitaux** (article 6.1.d)
+
+  Necessaire pour proteger la vie de la personne ou d'un tiers.
+
+  - **Cas typiques :** urgences medicales, transmission de donnees a un service de secours
+  - **Tres rare en entreprise** : reserve aux situations de crise vitale
+
+  ---
+
+  **e. Mission d'interet public** (article 6.1.e)
+
+  Necessaire a une mission d'interet public ou a l'autorite publique.
+
+  - **Cas typiques :** services publics, hopitaux publics, organismes de securite sociale
+  - **Pas applicable aux PME prive** generalement
+
+  ---
+
+  **f. Interets legitimes** (article 6.1.f)
+
+  Necessaire aux interets legitimes du responsable, sauf si les interets ou libertes de la personne prevalent.
+
+  - **Cas typiques :** prospection BtoB (B->B uniquement), securite informatique, prevention de fraude, controle interne
+  - **Test obligatoire (LIA — Legitimate Interest Assessment) :**
+    1. **Test de finalite** : l'interet est-il legitime ?
+    2. **Test de necessite** : le traitement est-il necessaire ?
+    3. **Test de balance** : les droits de la personne sont-ils respectes ?
+  - **Documente** dans l'AIPD ou un document specifique
+
+  **Important :** l'interet legitime n'est PAS valable pour :
+  - Traitement de donnees sensibles (sante, opinions, etc.)
+  - Donnees de mineurs (en general)
+  - Marketing BtoC par email (besoin consentement)
+  - Profilage agressif
+
+  ---
+
+  **Cas particuliers a connaitre :**
+
+  **Cookies (ePrivacy) :**
+  - Cookies essentiels : pas de consentement requis (base : execution du service)
+  - Cookies analytics non-essentiels : **CONSENTEMENT** prealable (RGPD + ePrivacy)
+  - Cookies marketing/publicitaires : **CONSENTEMENT** prealable
+
+  **Donnees salaries :**
+  - Gestion paie : **obligation legale** + **execution contrat**
+  - Surveillance des emails : **interet legitime** strictement encadre + information prealable + AIPD
+  - Photos sur l'intranet : **consentement** explicite (sauf decision exceptionnelle)
+
+  **Donnees clients en BtoC :**
+  - Gestion commande : **execution du contrat**
+  - Newsletter / marketing : **consentement** opt-in
+  - Cross-selling : **consentement** opt-in
+  - Surveillance/profilage : **consentement** + AIPD
+
+  **La regle d'or :** une base legale par finalite. Si tu en as deux, c'est qu'il y a deux traitements distincts. La consolidation des bases legales est l'erreur la plus frequente en PME.
+quiz:
+  - question: "Pour envoyer une newsletter marketing BtoC a des prospects, la base legale est :"
+    choices:
+      - id: "a"
+        label: "Interet legitime (article 6.f)"
+        correct: false
+      - id: "b"
+        label: "Consentement explicite (article 6.a + directive ePrivacy + L34-5 CPCE)"
+        correct: true
+      - id: "c"
+        label: "Execution du contrat (article 6.b)"
+        correct: false
+    explanation: "Le BtoC marketing par email impose un consentement explicite prealable (opt-in actif, case non pre-cochee). L'interet legitime ne marche QUE pour le BtoB et avec restrictions."
+
+  - question: "L'interet legitime (article 6.f) doit etre :"
+    choices:
+      - id: "a"
+        label: "Auto-declare par le responsable de traitement, sans formalisme"
+        correct: false
+      - id: "b"
+        label: "Documente avec un test (LIA) en 3 etapes : finalite, necessite, balance"
+        correct: true
+      - id: "c"
+        label: "Toujours valide pour le marketing"
+        correct: false
+    explanation: "Le LIA (Legitimate Interest Assessment) doit etre formalise et documente. La CNIL le demande en cas de controle. Sans LIA, l'interet legitime est juridiquement fragile."
+
+  - question: "Combien de bases legales possibles pour un meme traitement ?"
+    choices:
+      - id: "a"
+        label: "Plusieurs cumulables"
+        correct: false
+      - id: "b"
+        label: "Une seule par finalite — si tu en as deux, c'est qu'il y a deux traitements distincts"
+        correct: true
+      - id: "c"
+        label: "Aucun nombre defini"
+        correct: false
+    explanation: "Une base legale par finalite. Cumuler les bases pour 'se proteger' est une mauvaise pratique : ca cree de l'incertitude juridique et complique la gestion des droits."
+---
+
+## Pour aller plus loin
+
+La base legale est le choix structurant qui determine tout le reste : l'information a donner, les droits a respecter, la duree de conservation, les conditions de transfert. Une PME qui investit 2 heures par traitement pour bien choisir sa base legale evite des annees de contentieux.
+
+> "Mauvaise base legale, mauvais traitement. Bonne base legale, traitement defendable."
