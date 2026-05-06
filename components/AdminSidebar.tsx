@@ -35,6 +35,7 @@ const SECTIONS: Section[] = [
     title: "Pilotage",
     items: [
       { href: "/admin", label: "Tableau de bord", icon: "📊" },
+      { href: "/admin/onboarding", label: "Premiers pas", icon: "🚀" },
       { href: "/admin/business", label: "Impact business", icon: "💼" },
       { href: "/admin/utilisateurs", label: "Utilisateurs", icon: "👥" },
       { href: "/admin/groupes", label: "Groupes", icon: "🏷️" },
