@@ -223,6 +223,12 @@ export default function HeaderBar() {
                       label="Librairie"
                       onClick={() => setMenuOpen(false)}
                     />
+                    <MenuLink
+                      href="/lancement-oss"
+                      icon="🌱"
+                      label="Lancement OSS"
+                      onClick={() => setMenuOpen(false)}
+                    />
                     {isAdmin && (
                       <MenuLink
                         href="/admin"
@@ -269,6 +275,13 @@ export default function HeaderBar() {
               className="hidden md:inline text-sm text-gray-600 dark:text-gray-300 hover:text-primary-500 font-medium"
             >
               Manifeste
+            </Link>
+            <Link
+              href="/lancement-oss"
+              className="hidden md:inline text-sm text-emerald-600 dark:text-emerald-300 hover:text-emerald-700 dark:hover:text-emerald-200 font-medium"
+              title="Lancement open source — mardi 26 mai 2026"
+            >
+              🌱 Open source
             </Link>
             <Link
               href="/tarifs"
