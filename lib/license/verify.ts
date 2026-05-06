@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Verification de licence Ed25519 — utilise par l'app runtime.
+// Verification de licence Ed25519 - utilise par l'app runtime.
 //
 // Securite :
 //   - On ne fait JAMAIS confiance a la signature seule. On verifie aussi :
@@ -9,7 +9,7 @@
 //     - domaine match (si cluster-locked)
 //   - La cle publique est embarquee dans le code (lib/license/public-key.ts).
 //     Une env HUMANIX_LICENSE_PUBLIC_KEY peut override (utile pour tests
-//     ou self-host avec sa propre PKI — l'AGPL le permet).
+//     ou self-host avec sa propre PKI - l'AGPL le permet).
 //
 // Performance : le cache (cache.ts) memorise la derniere verification
 // pour eviter de recalculer Ed25519 a chaque request.

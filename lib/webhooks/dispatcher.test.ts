@@ -6,7 +6,7 @@
 import { describe, it, expect } from "vitest";
 import { signPayload, isSafeWebhookUrl } from "./dispatcher";
 
-describe("signPayload — HMAC SHA-256", () => {
+describe("signPayload - HMAC SHA-256", () => {
   it("produit une signature hex de 64 caractères", () => {
     const sig = signPayload("hello", "secret");
     expect(sig).toMatch(/^[a-f0-9]{64}$/);
@@ -48,7 +48,7 @@ describe("signPayload — HMAC SHA-256", () => {
   });
 });
 
-describe("isSafeWebhookUrl — SSRF protection", () => {
+describe("isSafeWebhookUrl - SSRF protection", () => {
   it("accepte les URLs HTTPS publiques", () => {
     expect(isSafeWebhookUrl("https://hooks.slack.com/services/T0/B0/x")).toBe(
       true,
@@ -95,7 +95,7 @@ describe("isSafeWebhookUrl — SSRF protection", () => {
     expect(isSafeWebhookUrl("https://127.42.42.42")).toBe(false);
   });
 
-  it("REFUSE les IPs link-local (169.254.x.x — AWS metadata)", () => {
+  it("REFUSE les IPs link-local (169.254.x.x - AWS metadata)", () => {
     expect(isSafeWebhookUrl("https://169.254.169.254")).toBe(false);
     expect(isSafeWebhookUrl("https://169.254.0.1")).toBe(false);
   });
@@ -120,7 +120,7 @@ describe("isSafeWebhookUrl — SSRF protection", () => {
   });
 
   it("ACCEPTE les IPs publiques", () => {
-    // 8.8.8.8 (Google DNS), 1.1.1.1 (Cloudflare DNS) — domaines publics
+    // 8.8.8.8 (Google DNS), 1.1.1.1 (Cloudflare DNS) - domaines publics
     expect(isSafeWebhookUrl("https://8.8.8.8")).toBe(true);
     expect(isSafeWebhookUrl("https://1.1.1.1")).toBe(true);
   });

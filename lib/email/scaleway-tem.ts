@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Scaleway Transactional Email (TEM) — provider email FR souverain.
+// Scaleway Transactional Email (TEM) - provider email FR souverain.
 //
 // API REST : POST /transactional-email/v1alpha1/regions/{region}/emails
 // Auth : header X-Auth-Token avec une cle secrete Scaleway IAM (scope

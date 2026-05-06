@@ -38,7 +38,7 @@ const COMMON_H0: PlaybookAction[] = [
     category: "confinement",
     title: "Isoler les systèmes touchés du réseau",
     description:
-      "Débrancher le câble réseau ou désactiver le Wi-Fi des postes/serveurs concernés. Ne PAS éteindre la machine — la mémoire vive contient des indices forensiques précieux.",
+      "Débrancher le câble réseau ou désactiver le Wi-Fi des postes/serveurs concernés. Ne PAS éteindre la machine - la mémoire vive contient des indices forensiques précieux.",
   },
   {
     phase: "h0",
@@ -319,9 +319,9 @@ export const INCIDENT_STATUS_LABELS = {
 };
 
 export const PHASE_LABELS = {
-  h0: { label: "H+0 — Première heure", emoji: "🚨" },
-  h24: { label: "H+24 — Premier jour", emoji: "🕐" },
-  h72: { label: "H+72 — Notifications légales", emoji: "📋" },
-  w1: { label: "Semaine 1 — Restauration", emoji: "🔧" },
-  retex: { label: "RetEx — Retour d'expérience", emoji: "📚" },
+  h0: { label: "H+0 - Première heure", emoji: "🚨" },
+  h24: { label: "H+24 - Premier jour", emoji: "🕐" },
+  h72: { label: "H+72 - Notifications légales", emoji: "📋" },
+  w1: { label: "Semaine 1 - Restauration", emoji: "🔧" },
+  retex: { label: "RetEx - Retour d'expérience", emoji: "📚" },
 };

@@ -21,7 +21,7 @@ export default async function ExpertsPage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* ================================================================
-          1. HERO — bibliotheque vivante, signature humaine
+          1. HERO - bibliotheque vivante, signature humaine
           ================================================================ */}
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
         <section
@@ -64,7 +64,7 @@ export default async function ExpertsPage() {
           La cybersecurite humaine ne se forme pas avec des slides recycles.
           Elle se forme avec des histoires vraies, racontees par des gens qui
           en ont vu passer. En valorisant nos experts contributeurs, on
-          construit un catalogue qui grandit avec la communaute francaise —
+          construit un catalogue qui grandit avec la communaute francaise -
           plutot qu'un produit cle-en-main fige. Chaque expert est librement
           contactable. Chaque module rappelle qui l'a ecrit.
         </p>
@@ -182,7 +182,7 @@ export default async function ExpertsPage() {
       </section>
 
       {/* ================================================================
-          CITATION FINALE — signature cosy "Hex veille"
+          CITATION FINALE - signature cosy "Hex veille"
           ================================================================ */}
       <section className="text-center pt-10 pb-4">
         <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
@@ -194,7 +194,7 @@ export default async function ExpertsPage() {
           aria-hidden="true"
           className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
         >
-          — Hex veille
+          - Hex veille
         </p>
       </section>
       </div>

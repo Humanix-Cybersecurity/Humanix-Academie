@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// /admin/utilisateurs — Gestion des collaborateurs (activer/désactiver, rôle,
+// /admin/utilisateurs - Gestion des collaborateurs (activer/désactiver, rôle,
 // invitation, import CSV, rappels, suppression RGPD).
 //
 // REFONTE MAI 2026 : aligné design system Linear (PageHeader, Section).
@@ -100,7 +100,7 @@ export default async function AdminUsersPage() {
       />
 
       <div className="space-y-6 min-w-0">
-        {/* KPI strip — 5 chiffres clés */}
+        {/* KPI strip - 5 chiffres clés */}
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
           <StatCard label="Utilisateurs" value={enriched.length} />
           <StatCard label="Actifs" value={activeCount} accent="emerald" />
@@ -148,7 +148,7 @@ export default async function AdminUsersPage() {
               <RemindersButton />
             </AdminSection>
 
-            {/* Notice RGPD — variante visuelle warning */}
+            {/* Notice RGPD - variante visuelle warning */}
             <article className="rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-900/15 p-4">
               <h3 className="font-bold text-amber-800 dark:text-amber-200 text-sm flex items-center gap-2">
                 <span aria-hidden="true">⚖️</span>
