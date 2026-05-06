@@ -1,0 +1,125 @@
+---
+title: "Reperer un deepfake en visio"
+durationMinutes: 7
+persona: "tous"
+objective: "Connaitre les signaux faibles de detection visuelle, sans s'y reposer comme defense unique"
+xpReward: 60
+scenario: |
+  Tu es responsable RH dans une PME. Lors d'un entretien d'embauche en visio, le candidat te semble "bizarre" — son visage est legerement flou en mouvement rapide, le clignement est trop regulier, et l'eclairage du visage ne correspond pas a celui de l'arriere-plan. Tu doutes mais tu n'es pas sure. Que fais-tu ?
+choices:
+  - id: "a"
+    label: "Je continue l'entretien, je ne suis pas une experte deepfake"
+    outcome: "bad"
+    feedback: "Tu as detecte 3 signaux faibles consistents. Continuer comme si de rien n'etait, c'est laisser passer un faux candidat (qui pourrait etre un infiltre cyber ou un fraudeur a l'embauche)."
+    points: -10
+  - id: "b"
+    label: "Je pose une question imprevue qui necessite une reponse spontanee, hors-script"
+    outcome: "good"
+    feedback: "Excellent. Le test 'detail piege' (cf. saison ia-generative 06) reste tres efficace. Une IA generative continue dans le flou ; un vrai humain corrige spontanement."
+    points: 30
+  - id: "c"
+    label: "Je demande au candidat de tourner la tete a 90° de chaque cote"
+    outcome: "good"
+    feedback: "Bonne idee. Les deepfake video 2026 ont encore du mal avec les angles extremes (profil pur, dos partiel). Le visage se deforme legerement en passage."
+    points: 25
+  - id: "d"
+    label: "Je demande au candidat de mettre sa main devant son visage et de l'enlever rapidement"
+    outcome: "good"
+    feedback: "Astuce de pro. L'occlusion brutale + reapparition met le modele deepfake en difficulte (artefacts visibles). Mais attention : les modeles 2026 progressent vite, ces astuces ont une duree de vie."
+    points: 25
+debrief: |
+  La **detection visuelle d'un deepfake video** est de moins en moins fiable. En 2024 c'etait facile (pas de clignement, peau plastifiee), en 2026 c'est devenu difficile, en 2027 ce sera quasiment impossible. Mais en attendant, voici les signaux faibles qui marchent encore en 2026.
+
+  **Niveau 1 — Signaux statiques (visage immobile)**
+
+  Encore fiables a 70 % en 2026 :
+
+  - **Bords du visage flous** ou differents de la nettete du corps
+  - **Eclairage incoherent** entre le visage et l'arriere-plan (visage trop lisse, fond avec micro-grains visibles)
+  - **Yeux asymetriques** : reflets differents dans les pupilles, taille legerement differente
+  - **Dents bizarres** quand la personne sourit (lignes irregulieres, dents qui apparaissent / disparaissent)
+  - **Cheveux/oreilles fusionnes** au visage ou avec des artefacts
+
+  **Niveau 2 — Signaux dynamiques (en mouvement)**
+
+  Plus fiables que les signaux statiques :
+
+  - **Clignement anormal** : trop regulier (toutes les 2-3 secondes exactement) ou trop rare (5-10 secondes)
+  - **Synchronisation labiale imparfaite** sur certaines syllabes (notamment "P", "B", "M")
+  - **Glitches en mouvement rapide** : tourner la tête rapidement, parler vite, expression brutale
+  - **Ombres incoherentes** quand la lumiere change (passage d'un nuage, deplacement)
+
+  **Niveau 3 — Signaux comportementaux (les plus fiables)**
+
+  La technologie deepfake a fait des progres video, mais le **comportement humain authentique reste tres difficile a synthetiser** :
+
+  - **Reaction a l'imprevu** : pose une question hors-sujet ("que penses-tu de la reforme du RSA ?"), un faux hesitera ou patinera
+  - **Microexpressions sur 2-3 secondes** : un sourire qui ne monte pas aux yeux, une grimace qui s'efface trop vite
+  - **Gestes spontanes** : bouger les mains, toucher son visage, replacer ses cheveux. Les deepfakes 2026 ne gerent toujours pas tres bien les mains
+  - **Reaction a un bruit** : si tu fais tomber quelque chose, regarde si l'autre tourne la tete
+
+  **Tests actifs (a utiliser sans abus)**
+
+  - **"Mets ta main devant ton visage 2 secondes"** : occlusion + reapparition = artefacts probables
+  - **"Tourne la tete completement a droite, puis a gauche"** : profil pur = difficulte deepfake
+  - **"Tape 3 fois sur ton bureau"** : son + main visible = double check
+  - **Question de detail piege** : "On s'est croises au seminaire de Marseille en 2018, tu te souviens ?" — un vrai candidat dit "non, je n'y etais pas". Une IA continue dans le flou.
+
+  **Limite importante : ces astuces ont une duree de vie**
+
+  En 2027, les modeles deepfake auront probablement tous ces problemes resolus. La detection visuelle ne sera plus une defense fiable. **C'est pour ca que la defense de fond reste procédurale, pas perceptuelle :**
+
+  - Mot-secret partage (cf. module 03)
+  - Validation hors-canal sur numero connu (callback frais)
+  - Procedure de double validation pour les decisions sensibles
+  - Contre-question imprevue dans le flow de conversation
+
+  **Le piege psychologique a eviter :**
+
+  Apres avoir lu ce module, tu vas peut-etre commencer a "tester" tes interlocuteurs en visio. **NE LE FAIS PAS DE FACON OFFENSIVE**. Une vraie personne qui se sent interrogee comme suspecte va se vexer. Les tests actifs s'utilisent UNIQUEMENT en cas de doute concret + dans un cadre professionnel ou ils sont legitimes (entretien embauche, validation d'identite a distance, transaction financiere sensible).
+quiz:
+  - question: "Quel signal de detection est le PLUS fiable en 2026 ?"
+    choices:
+      - id: "a"
+        label: "L'absence de clignement (signal d'ancienne generation)"
+        correct: false
+      - id: "b"
+        label: "La reaction a l'imprevu (microexpressions, hesitation sur question hors-sujet)"
+        correct: true
+      - id: "c"
+        label: "La couleur de la peau"
+        correct: false
+    explanation: "Les signaux comportementaux sont plus difficiles a synthetiser que les signaux visuels. Une question imprevue declenche soit une vraie reaction humaine, soit un patinage IA."
+
+  - question: "En 2027, la detection visuelle des deepfakes sera :"
+    choices:
+      - id: "a"
+        label: "Toujours fiable car les yeux humains sont superieurs"
+        correct: false
+      - id: "b"
+        label: "Probablement quasi-impossible — la defense de fond reste proceedurale"
+        correct: true
+      - id: "c"
+        label: "Plus simple grace a des outils IA dedies"
+        correct: false
+    explanation: "Course technologique : chaque annee les deepfakes progressent plus vite que les detecteurs. La defense durable n'est pas perceptuelle (oeil humain ou IA detecteur), elle est procédurale (callback, mot-secret, validation hors-canal)."
+
+  - question: "Tu suspectes un deepfake en visio. Quel est le meilleur reflexe ?"
+    choices:
+      - id: "a"
+        label: "Continuer l'echange comme si de rien n'etait pour ne pas vexer"
+        correct: false
+      - id: "b"
+        label: "Poser une question imprevue ou demander un test ('main devant le visage 2s')"
+        correct: true
+      - id: "c"
+        label: "Tout arreter brutalement"
+        correct: false
+    explanation: "Un test discret + une question hors-script donnent vite des signaux. Continuer comme si de rien n'etait laisse passer une eventuelle attaque. Couper brutalement est souvent inadapté si le doute est leger."
+---
+
+## Pour aller plus loin
+
+La detection visuelle est utile **comme premier filtre**, pas comme defense unique. Si tu hesites encore apres 30 secondes d'observation, raccroche et appelle TON contact sur SON numero connu. C'est le seul test fiable a 100 %. Le reste est du complement.
+
+> "L'oeil humain est faillible. La procedure froide ne l'est pas — encore faut-il la mettre en place."
