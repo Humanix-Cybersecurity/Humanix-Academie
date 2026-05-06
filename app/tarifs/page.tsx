@@ -322,12 +322,16 @@ export default function TarifsPage() {
                 cells={["—", "—", "—", "✓", "✓", "✓"]}
               />
               <FeatureRow
-                label="Phishing simulé"
-                cells={["—", "—", "—", "—", "Illimité", "Illimité"]}
+                label="Phishing email — génération templates"
+                cells={["—", "—", "—", "—", "Illimité*", "Illimité*"]}
               />
               <FeatureRow
-                label="Vishing IA souverain 🇫🇷 (Mistral + Piper)"
-                cells={["—", "—", "—", "—", "✓", "✓"]}
+                label="Vishing IA souverain 🇫🇷 (Mistral + Piper TTS)"
+                cells={["—", "—", "—", "—", "✓*", "✓*"]}
+              />
+              <FeatureRow
+                label="Smishing IA souverain 🇫🇷 (Mistral)"
+                cells={["—", "—", "—", "—", "✓*", "✓*"]}
               />
               <FeatureRow
                 label="MCP Server (agents IA Claude/Mistral/GPT)"
@@ -386,6 +390,26 @@ export default function TarifsPage() {
               />
             </tbody>
           </table>
+        </div>
+
+        {/* Footnote phishing/vishing/smishing — clarifier le modèle */}
+        <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-900/50 dark:bg-amber-900/15 p-4 text-sm text-amber-900 dark:text-amber-100">
+          <p>
+            <strong>* Phishing / Vishing / Smishing</strong> — Humanix génère
+            gratuitement les <strong>templates et scripts pédagogiques</strong>{" "}
+            via IA souveraine Mistral. L'<strong>envoi réel</strong> (emails,
+            SMS, appels téléphoniques) n'est <strong>pas inclus</strong> :
+            chaque message a un coût opérateur (provider transactionnel SMS,
+            email, ou SIP). Deux options : (1) vous gérez l'envoi via votre
+            propre provider FR, ou (2)
+            <a
+              href="mailto:contact@humanix-cybersecurity.fr?subject=Forfait+phishing+vishing+smishing+sur+mesure"
+              className="underline font-medium ml-1"
+            >
+              forfait sur mesure
+            </a>{" "}
+            avec exécution complète et traçabilité par Humanix.
+          </p>
         </div>
       </section>
 
