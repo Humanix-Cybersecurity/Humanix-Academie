@@ -46,24 +46,26 @@ export default async function ClassementPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 animate-fadeIn">
-      <div className="card mb-8 bg-gradient-to-br from-amber-100 via-orange-100 to-red-100 border-2 border-amber-400">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <span className="inline-block bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded-full mb-2">
-              CHALLENGE EN COURS
+      <div className="rounded-3xl border-2 border-amber-300 dark:border-amber-900/40 bg-gradient-to-br from-amber-50 via-yellow-50 to-rose-50 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/40 p-6 sm:p-8 mb-8 shadow-sm">
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+          <div className="min-w-0 flex-1">
+            <span className="inline-block bg-amber-500 text-white text-xs font-bold uppercase tracking-[0.25em] px-3 py-1 rounded-full mb-2">
+              🏆 Challenge en cours
             </span>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-primary-500">
+            <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-primary-500 dark:text-accent-300 leading-tight">
               {active.title}
             </h1>
             {active.description && (
-              <p className="text-gray-700 mt-2">{active.description}</p>
+              <p className="text-gray-700 dark:text-gray-200 mt-2 leading-relaxed">
+                {active.description}
+              </p>
             )}
           </div>
-          <div className="text-right">
-            <p className="text-5xl font-extrabold text-orange-600">
+          <div className="text-right shrink-0">
+            <p className="font-display text-5xl font-extrabold text-amber-600 dark:text-amber-400 tabular-nums">
               {daysLeft}
             </p>
-            <p className="text-xs uppercase text-gray-600">
+            <p className="text-xs uppercase tracking-widest text-gray-600 dark:text-gray-400">
               jour{daysLeft > 1 ? "s" : ""} restant{daysLeft > 1 ? "s" : ""}
             </p>
           </div>
