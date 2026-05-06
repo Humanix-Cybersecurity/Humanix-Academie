@@ -27,7 +27,10 @@ export default async function AdminPage() {
   // Auth garantie par app/admin/layout.tsx (defense-in-depth déjà appliquée).
   // On récupère juste session pour le tenantId et la salutation.
   const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  if (!session?.user || typeof session.user.tenantId !== "string") {
+    throw new Error("Unauthorized: missing tenant context");
+  }
+  const tenantId = session.user.tenantId;
 
   const [users, saisons, allProgress] = await Promise.all([
     db.user.findMany({ where: { tenantId, role: "LEARNER" } }),
