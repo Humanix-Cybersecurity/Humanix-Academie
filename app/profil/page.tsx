@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page profil utilisateur — refonte cosy mai 2026.
+// Page profil utilisateur - refonte cosy mai 2026.
 //
 // Brief : "experience, terrain, sensibilisation reelle, pas celle generee
-// par la peur — celle qui sent bon la maitrise et la confiance".
+// par la peur - celle qui sent bon la maitrise et la confiance".
 //
 // La page profil est l'espace personnel de l'apprenant. Avant, les
 // labels "A ameliorer" / "Refaire pour ameliorer" sonnaient comme des
@@ -93,7 +93,7 @@ export default async function ProfilPage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* ============================================================
-          1. HERO — espace personnel cosy
+          1. HERO - espace personnel cosy
           ============================================================ */}
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
         <section
@@ -210,7 +210,7 @@ export default async function ProfilPage() {
         <RiskScoreCard risk={risk} />
 
         {/* ============================================================
-            3. NEWSLETTER OPT-IN — chaleureux, pas insistant
+            3. NEWSLETTER OPT-IN - chaleureux, pas insistant
             ============================================================ */}
         {!isSubscribed && (
           <section
@@ -253,7 +253,7 @@ export default async function ProfilPage() {
         )}
 
         {/* ============================================================
-            4. POUR ALLER PLUS LOIN — episodes a polir
+            4. POUR ALLER PLUS LOIN - episodes a polir
             ============================================================ */}
         {toImproveEpisodes.length > 0 && (
           <section aria-labelledby="improve-title">
@@ -269,7 +269,7 @@ export default async function ProfilPage() {
                   À polir ({toImproveEpisodes.length})
                 </h2>
                 <p className="text-sm text-gray-600 dark:text-gray-300 italic mt-1">
-                  Pas un échec — juste des épisodes où il y a encore du
+                  Pas un échec - juste des épisodes où il y a encore du
                   terrain à gagner. À ton rythme.
                 </p>
               </div>
@@ -286,7 +286,7 @@ export default async function ProfilPage() {
         )}
 
         {/* ============================================================
-            5. TES PEPITES — top 3 reussites
+            5. TES PEPITES - top 3 reussites
             ============================================================ */}
         {topScores.length > 0 && (
           <section aria-labelledby="top-title">
@@ -333,7 +333,7 @@ export default async function ProfilPage() {
         )}
 
         {/* ============================================================
-            6. TOUS LES EPISODES — table complete
+            6. TOUS LES EPISODES - table complete
             ============================================================ */}
         <section aria-labelledby="all-title">
           <div className="text-center mb-6 sm:text-left">
@@ -360,7 +360,7 @@ export default async function ProfilPage() {
                 Ton voyage commence quand tu veux
               </h3>
               <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-md mx-auto">
-                Aucun épisode terminé pour le moment. Pas de pression — quand
+                Aucun épisode terminé pour le moment. Pas de pression - quand
                 tu te sens prêt·e, c'est par ici.
               </p>
               <Link href="/apprendre" className="btn-primary">
@@ -441,7 +441,7 @@ export default async function ProfilPage() {
         </section>
 
         {/* ============================================================
-            7. RESPIRATION — citation finale signature
+            7. RESPIRATION - citation finale signature
             ============================================================ */}
         <section className="text-center pt-4">
           <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
@@ -457,7 +457,7 @@ export default async function ProfilPage() {
             aria-hidden="true"
             className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
           >
-            — Hex veille
+            - Hex veille
           </p>
         </section>
       </div>

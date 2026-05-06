@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// TOTP (Time-based One-Time Password) — RFC 6238 + base32 RFC 4648.
+// TOTP (Time-based One-Time Password) - RFC 6238 + base32 RFC 4648.
 // Implementation locale, zero dependance externe. Compatible Google
 // Authenticator, Authy, 1Password, Microsoft Authenticator, FreeOTP.
 //

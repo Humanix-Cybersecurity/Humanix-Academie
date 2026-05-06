@@ -25,7 +25,7 @@ export default function PlanGateGeneric({
   return (
     <div className="card border-2 border-amber-300 bg-amber-50 dark:bg-amber-900/20 mt-6">
       <h2 className="font-bold text-amber-700 dark:text-amber-300 mb-2">
-        {featureLabel} — disponible à partir de l'offre {PLAN_LABEL[minPlan]}
+        {featureLabel} - disponible à partir de l'offre {PLAN_LABEL[minPlan]}
       </h2>
       <p className="text-sm text-amber-800 dark:text-amber-200 mb-3">
         Votre offre actuelle est <strong>{PLAN_LABEL[plan]}</strong>.

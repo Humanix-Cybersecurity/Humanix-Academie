@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// /admin/challenge — Cyber-Challenges (gate Pro+).
+// /admin/challenge - Cyber-Challenges (gate Pro+).
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getActiveChallenge, getChallengeRanking } from "@/lib/challenge";
@@ -142,7 +142,7 @@ export default async function AdminChallengePage() {
           </AdminSection>
         )}
 
-        {/* Pourquoi un challenge — variant highlight */}
+        {/* Pourquoi un challenge - variant highlight */}
         <article className="rounded-xl border border-primary-500/20 bg-primary-50/40 dark:bg-blue-900/10 p-5">
           <h3 className="font-bold text-primary-600 dark:text-accent-300 mb-3 flex items-center gap-2">
             <span aria-hidden="true">💡</span>

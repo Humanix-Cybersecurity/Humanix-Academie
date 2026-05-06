@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// AdminSidebar — Navigation console dirigeant (refonte mai 2026).
+// AdminSidebar - Navigation console dirigeant (refonte mai 2026).
 //
 // Design Linear/Vercel-like :
 //   - Desktop (lg+) : sidebar fixed slim 56px, icons-only, tooltip au hover
@@ -161,10 +161,10 @@ export default function AdminSidebar() {
   return (
     <>
       {/* =====================================================================
-          DESKTOP — sidebar slim 56px qui s'agrandit à 224px au hover.
+          DESKTOP - sidebar slim 56px qui s'agrandit à 224px au hover.
           Pattern Notion / Mattermost / Linear : icons-only par défaut, labels
           révélés au hover avec animation CSS fluide (200ms).
-          Le content principal reste offset de 56px (lg:pl-14 du layout) — la
+          Le content principal reste offset de 56px (lg:pl-14 du layout) - la
           sidebar s'élargit en overlay par-dessus, pas besoin de pousser le
           contenu (pattern moins disruptif).
           ===================================================================== */}
@@ -209,7 +209,7 @@ export default function AdminSidebar() {
       </aside>
 
       {/* =====================================================================
-          MOBILE — drawer plein écran
+          MOBILE - drawer plein écran
           ===================================================================== */}
       {drawerOpen && (
         <>
@@ -270,7 +270,7 @@ export default function AdminSidebar() {
 // =============================================================================
 
 /**
- * ExpandableNavLink — icône toujours visible, label révélé quand le parent
+ * ExpandableNavLink - icône toujours visible, label révélé quand le parent
  * .group (l'aside) est hover. L'item actif a une barre verticale à gauche.
  */
 function ExpandableNavLink({

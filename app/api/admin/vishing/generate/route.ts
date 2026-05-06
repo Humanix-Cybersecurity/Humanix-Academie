@@ -4,7 +4,7 @@
 // Securite :
 //  - Auth NextAuth obligatoire
 //  - Role ADMIN/MANAGER/SUPERADMIN requis
-//  - Plan-gating : feature "phishing_ia" (Pro+) — meme regle que phishing IA
+//  - Plan-gating : feature "phishing_ia" (Pro+) - meme regle que phishing IA
 //  - Rate limit : 20 req/heure par tenant (in-memory, sans Redis pour MVP)
 //  - Anti-PII : delegue au generateur (lib/vishing/script-generator.ts)
 //  - Aucun stockage : le script genere est retourne au client, pas persiste

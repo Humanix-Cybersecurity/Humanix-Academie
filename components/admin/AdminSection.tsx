@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// AdminSection — Wrapper standard pour une section de page admin.
+// AdminSection - Wrapper standard pour une section de page admin.
 //
 // Style : card avec border 0.5px subtile, fond blanc/slate, padding cohérent.
 // Cohérent avec les sections du dashboard refondu.

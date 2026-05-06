@@ -162,7 +162,7 @@ export function sanitizeForDb(s: string): string {
  * peut couper la paire en deux et laisser un surrogate orphelin invalide.
  *
  * Ce surrogate orphelin fait planter le marshalling JSON de Prisma avec
- * "unexpected end of hex escape" — le moteur de query Postgres reçoit du
+ * "unexpected end of hex escape" - le moteur de query Postgres reçoit du
  * JSON dont une string contient \uD8XX sans son partenaire \uDCXX.
  *
  * Cette fonction tronque proprement en évitant ce cas.
@@ -623,7 +623,7 @@ export async function scrapeBonjourLaFuite(
 }
 
 // =============================================================================
-// SCRAPER 3 : fuitesinfos.fr — RETIRÉ
+// SCRAPER 3 : fuitesinfos.fr - RETIRÉ
 // Le site WordPress + Yoast retournait un /feed/ HTML non parsable et une
 // API REST WP inaccessible / vide. Sans structure exploitable de manière
 // fiable, on a retiré la source plutôt que de polluer la BDD avec des
@@ -632,7 +632,7 @@ export async function scrapeBonjourLaFuite(
 // `DELETE FROM "DataBreach" WHERE source = 'FUITESINFOS';`).
 // =============================================================================
 
-// (fonction retirée — voir l'enum BreachSource côté Prisma)
+// (fonction retirée - voir l'enum BreachSource côté Prisma)
 
 // =============================================================================
 // EXPORT PUBLIC

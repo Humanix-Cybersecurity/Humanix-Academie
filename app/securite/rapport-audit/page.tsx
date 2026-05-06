@@ -5,7 +5,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Rapport d'audit de sécurité — Humanix Académie",
+  title: "Rapport d'audit de sécurité - Humanix Académie",
   description:
     "Rapport public d'audit de sécurité de la plateforme Humanix Académie. Contrôles en place, points d'amélioration, plan de remédiation à 6 mois.",
 };
@@ -25,7 +25,7 @@ export default function RapportAuditPage() {
         </h1>
         <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
           On vend de la sensibilisation à la cybersécurité. Le minimum
-          d'honnêteté est d'appliquer la règle à nous-mêmes — et de rendre nos
+          d'honnêteté est d'appliquer la règle à nous-mêmes - et de rendre nos
           pratiques inspectables par tous.
         </p>
       </div>
@@ -269,7 +269,7 @@ export default function RapportAuditPage() {
       {/* Footer signé */}
       <p className="text-center text-sm text-gray-500 italic">
         « La cybersécurité n'est pas une destination, c'est une trajectoire.
-        Nous vous tenons informés. »<br />— Florian DURANO, fondateur,
+        Nous vous tenons informés. »<br />- Florian DURANO, fondateur,
         Humanix-Cybersecurity.
       </p>
     </div>

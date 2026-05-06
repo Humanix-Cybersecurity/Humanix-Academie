@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Impact KPIs — calcul des benefices observes grace a la plateforme.
+// Impact KPIs - calcul des benefices observes grace a la plateforme.
 //
 // Complementaire de lib/business-impact.ts (qui calcule l'exposition
 // financiere). Ici on mesure les EVOLUTIONS CONCRETES observees dans
@@ -21,7 +21,7 @@ export type ImpactKpis = {
   tenantCreatedAt: Date;
   daysSinceCreation: number;
 
-  // Section 1 — Adoption
+  // Section 1 - Adoption
   adoption: {
     totalSeats: number;
     activatedSeats: number; // au moins 1 module complete
@@ -31,7 +31,7 @@ export type ImpactKpis = {
     avgModulesPerWeek: number; // sur les 4 dernieres semaines, par user actif
   };
 
-  // Section 2 — Apprentissage
+  // Section 2 - Apprentissage
   learning: {
     totalModulesCompleted: number;
     totalMinutesLearned: number; // somme durationMinutes des episodes completes
@@ -44,7 +44,7 @@ export type ImpactKpis = {
     riskScoreDelta: number; // engaged - novices (positif = la plateforme aide)
   };
 
-  // Section 3 — Couverture critique
+  // Section 3 - Couverture critique
   coverage: {
     criticalSaisons: {
       slug: string;
@@ -55,7 +55,7 @@ export type ImpactKpis = {
     averageCriticalCoverage: number; // moyenne sur les saisons critiques
   };
 
-  // Section 4 — Reflexes operationnels (dernier mois)
+  // Section 4 - Reflexes operationnels (dernier mois)
   reflexes: {
     modulesCompletedLast30d: number;
     activeUsersLast30d: number;
@@ -143,7 +143,7 @@ export async function computeImpactKpis(tenantId: string): Promise<ImpactKpis> {
 
   // Streak >= 2 semaines : on regarde les 2 dernieres semaines, et compte
   // les users qui ont au moins 1 module dans CHACUNE des 2 semaines.
-  // Seuil bas (2) volontaire — coherent avec la promesse "1 module / semaine"
+  // Seuil bas (2) volontaire - coherent avec la promesse "1 module / semaine"
   // et detectable sur les tenants jeunes (< 1 mois).
   const streakUsers = countStreakUsers(allProgress, 2);
 

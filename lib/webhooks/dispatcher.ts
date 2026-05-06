@@ -218,7 +218,7 @@ export async function fireWebhook(
           : {
               failureCount: { increment: 1 },
               lastFiredAt: new Date(),
-              lastError: `HTTP ${result.status}${result.error ? ` — ${result.error}` : ""}`,
+              lastError: `HTTP ${result.status}${result.error ? ` - ${result.error}` : ""}`,
             },
       });
     }),
@@ -275,7 +275,7 @@ export async function testWebhook(webhookId: string): Promise<{
         ? { successCount: { increment: 1 }, lastError: null }
         : {
             failureCount: { increment: 1 },
-            lastError: `HTTP ${result.status}${result.error ? ` — ${result.error}` : ""}`,
+            lastError: `HTTP ${result.status}${result.error ? ` - ${result.error}` : ""}`,
           }),
     },
   });
