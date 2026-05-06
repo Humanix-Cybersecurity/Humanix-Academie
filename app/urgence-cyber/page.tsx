@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Hub d'urgence cyber — page publique mai 2026.
+// Hub d'urgence cyber - page publique mai 2026.
 //
 // CONTEXTE
 // ========
@@ -20,7 +20,7 @@
 // ACCESSIBILITE PUBLIQUE
 // ======================
 // Page sans login. Un dirigeant en panique a 23h ne va pas creer un
-// compte — il va googler "que faire si je suis pirate" et atterrir ici.
+// compte - il va googler "que faire si je suis pirate" et atterrir ici.
 //
 // REGISTRE
 // ========
@@ -39,7 +39,7 @@ import {
 } from "@/lib/urgence-cyber/sources";
 
 export const metadata = {
-  title: "Urgence cyber — Que faire en cas d'incident | Humanix",
+  title: "Urgence cyber - Que faire en cas d'incident | Humanix",
   description:
     "Hub d'urgence cyber gratuit pour les PME françaises. Procédures pour rançongiciel, fuite de données, fraude au président, compte compromis, vol de matériel. Outils souverains, sources officielles, intervention curative par Humanix Cybersecurity.",
 };
@@ -55,7 +55,7 @@ export default function UrgenceCyberPage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* ============================================================
-          1. HERO — gravité technique, ton clair
+          1. HERO - gravité technique, ton clair
           ============================================================ */}
       <HexBackdrop
         intensity="soft"
@@ -78,7 +78,7 @@ export default function UrgenceCyberPage() {
             Vous suspectez un incident&nbsp;?
             <br />
             <span className="bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 bg-clip-text text-transparent animate-gradient">
-              Voici quoi faire — maintenant.
+              Voici quoi faire - maintenant.
             </span>
           </h1>
 
@@ -120,7 +120,7 @@ export default function UrgenceCyberPage() {
 
       <div className="max-w-5xl mx-auto px-4 py-12 sm:py-16 space-y-16">
         {/* ============================================================
-            2. PRÉAMBULE — 3 messages clés avant tout
+            2. PRÉAMBULE - 3 messages clés avant tout
             ============================================================ */}
         <section aria-labelledby="preamble-title">
           <div className="rounded-3xl bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/30 border-2 border-emerald-200 dark:border-emerald-900/40 p-8 sm:p-10">
@@ -144,14 +144,14 @@ export default function UrgenceCyberPage() {
               <PreambleItem
                 emoji="🤝"
                 title="Vous n'êtes pas seul·e"
-                text="CyberMalveillance.gouv.fr, votre cyber-assurance, l'ANSSI, votre prestataire — appelez. Personne n'est jugé."
+                text="CyberMalveillance.gouv.fr, votre cyber-assurance, l'ANSSI, votre prestataire - appelez. Personne n'est jugé."
               />
             </div>
           </div>
         </section>
 
         {/* ============================================================
-            3. INCIDENTS — les 5 fiches en cards
+            3. INCIDENTS - les 5 fiches en cards
             ============================================================ */}
         <section
           aria-labelledby="incidents-title"
@@ -234,7 +234,7 @@ export default function UrgenceCyberPage() {
         </section>
 
         {/* ============================================================
-            4. CONSERVATION DE LA PREUVE — réponse au point 4 CyberMalveillance
+            4. CONSERVATION DE LA PREUVE - réponse au point 4 CyberMalveillance
             ============================================================ */}
         <section
           aria-labelledby="preuve-title"
@@ -308,7 +308,7 @@ export default function UrgenceCyberPage() {
                   </ProofStep>
                   <ProofStep n="3">
                     <strong>Sauvegarder les logs de l'hyperviseur</strong>{" "}
-                    (vmware.log, libvirt journal) — souvent oubliés mais
+                    (vmware.log, libvirt journal) - souvent oubliés mais
                     précieux.
                   </ProofStep>
                   <ProofStep n="4">
@@ -328,14 +328,14 @@ export default function UrgenceCyberPage() {
               <p className="italic">
                 <strong>Règle d'or</strong> : tout acte sur les preuves doit
                 être tracé (qui, quand, pourquoi, hash avant/après). En cas de
-                doute, on n'agit pas — on appelle.
+                doute, on n'agit pas - on appelle.
               </p>
             </div>
           </div>
         </section>
 
         {/* ============================================================
-            5. SOURCES — réponse au point 3 CyberMalveillance
+            5. SOURCES - réponse au point 3 CyberMalveillance
             ============================================================ */}
         <section aria-labelledby="sources-title">
           <div className="text-center mb-10">
@@ -398,7 +398,7 @@ export default function UrgenceCyberPage() {
         </section>
 
         {/* ============================================================
-            6. SERVICES CURATIFS HUMANIX — réponse aux points 1+2
+            6. SERVICES CURATIFS HUMANIX - réponse aux points 1+2
             ============================================================ */}
         <section
           aria-labelledby="humanix-title"
@@ -425,7 +425,7 @@ export default function UrgenceCyberPage() {
               <p className="text-base sm:text-lg opacity-95 mb-8 max-w-3xl leading-relaxed">
                 Notre équipe intervient <strong>directement</strong> sur site
                 en métropole, sans sous-traitance. De la qualification
-                d'incident à la remédiation complète — humain, francophone,
+                d'incident à la remédiation complète - humain, francophone,
                 souverain.
               </p>
 
@@ -448,7 +448,7 @@ export default function UrgenceCyberPage() {
                 <ServiceCard
                   emoji="📜"
                   title="Accompagnement administratif"
-                  text="Notification CNIL, dépôt de plainte, signalement CyberMalveillance, dossier cyber-assurance — on rédige avec vous."
+                  text="Notification CNIL, dépôt de plainte, signalement CyberMalveillance, dossier cyber-assurance - on rédige avec vous."
                 />
                 <ServiceCard
                   emoji="🛡"
@@ -487,7 +487,7 @@ export default function UrgenceCyberPage() {
         </section>
 
         {/* ============================================================
-            7. PRESTATAIRES OFFICIELS — orientation neutre
+            7. PRESTATAIRES OFFICIELS - orientation neutre
             ============================================================ */}
         <section aria-labelledby="other-title">
           <div className="rounded-3xl bg-gradient-to-br from-slate-50 via-white to-gray-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800/50 border-2 border-gray-200 dark:border-slate-700 p-8 sm:p-10">
@@ -512,7 +512,7 @@ export default function UrgenceCyberPage() {
               />
               <OfficialPortal
                 emoji="🛡"
-                name="ANSSI — qualifiés PASSI"
+                name="ANSSI - qualifiés PASSI"
                 url="https://cyber.gouv.fr/produits-et-services-qualifies"
                 detail="Liste officielle des prestataires qualifiés ANSSI pour audit et réponse à incident (grandes structures)."
               />
@@ -527,7 +527,7 @@ export default function UrgenceCyberPage() {
         </section>
 
         {/* ============================================================
-            8. RESPIRATION — citation finale technique sobre
+            8. RESPIRATION - citation finale technique sobre
             ============================================================ */}
         <section className="text-center pt-4">
           <blockquote className="font-display italic text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
@@ -539,7 +539,7 @@ export default function UrgenceCyberPage() {
             aria-hidden="true"
             className="mt-4 text-xs uppercase tracking-[0.25em] text-amber-700/70 dark:text-amber-300/70 font-bold"
           >
-            — Hex veille
+            - Hex veille
           </p>
           <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-8 italic">
             Page publique, gratuite, sans inscription, sans cookies de

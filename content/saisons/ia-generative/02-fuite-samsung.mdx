@@ -7,10 +7,10 @@ xpReward: 60
 scenario: |
   Tu es CTO d'une PME francaise dans le secteur tech. Un de tes developpeurs te dit : "J'utilise ChatGPT pour debugger plus vite, c'est genial. Je colle des bouts de notre code et il trouve les erreurs en 10 secondes."
 
-  Tu te rappelles avoir lu un article sur Samsung en 2023 — fuite de code source via ChatGPT, interdiction interne. Que dis-tu a ton developpeur sans tomber dans l'interdiction sterile ?
+  Tu te rappelles avoir lu un article sur Samsung en 2023 - fuite de code source via ChatGPT, interdiction interne. Que dis-tu a ton developpeur sans tomber dans l'interdiction sterile ?
 choices:
   - id: "a"
-    label: "Je lui interdis ChatGPT — c'est trop risque"
+    label: "Je lui interdis ChatGPT - c'est trop risque"
     outcome: "bad"
     feedback: "Interdiction frontale = contournement immediat. Les devs trouveront un moyen, sur leur PC perso, en mode invisible. Tu perds le controle ET la productivite."
     points: -10
@@ -30,7 +30,7 @@ choices:
     feedback: "Bonne approche pedagogique. Charte courte = appliquee. Plus la charte est longue, moins elle est lue et appliquee. 5 lignes a coller au-dessus du clavier."
     points: 25
 debrief: |
-  **Cas Samsung 2023 — Le premier grand incident IA generative documente**
+  **Cas Samsung 2023 - Le premier grand incident IA generative documente**
 
   **Faits :**
   - **Mars-avril 2023** : 3 incidents de fuite de donnees via ChatGPT chez Samsung Semiconductor (filiale specialisee composants)
@@ -42,20 +42,20 @@ debrief: |
 
   **Pourquoi ce cas est emblematique ?**
 
-  1. **Volume** : 3 incidents en quelques semaines dans un seul service — pas un cas isole, un schema.
+  1. **Volume** : 3 incidents en quelques semaines dans un seul service - pas un cas isole, un schema.
   2. **Profil** : ingenieurs seniors, qualifies, conscients (pour la plupart) des enjeux de propriete intellectuelle. **L'IA defait la vigilance** par sa simplicite d'usage.
-  3. **Reaction** : interdiction immediate, mais aussi investissement dans une IA interne. Samsung a compris que **l'IA est une infrastructure strategique** — pas un gadget.
+  3. **Reaction** : interdiction immediate, mais aussi investissement dans une IA interne. Samsung a compris que **l'IA est une infrastructure strategique** - pas un gadget.
   4. **Effet boule de neige** : Apple, JPMorgan, Citigroup, Goldman Sachs, Verizon ont suivi avec des interdictions ou restrictions internes en quelques semaines.
 
   **Les 4 lecons systemiques pour une PME francaise :**
 
-  **Lecon 1 — La curiosite est le vecteur**
-  Les developpeurs Samsung n'etaient pas des espions, ils etaient curieux. Ils voulaient gagner du temps. **Cette intention positive est exactement ce que les attaquants exploitent.** Tu ne peux pas reprocher a quelqu'un de vouloir gagner du temps — tu dois lui donner une **alternative qui satisfait l'intention sans le risque**.
+  **Lecon 1 - La curiosite est le vecteur**
+  Les developpeurs Samsung n'etaient pas des espions, ils etaient curieux. Ils voulaient gagner du temps. **Cette intention positive est exactement ce que les attaquants exploitent.** Tu ne peux pas reprocher a quelqu'un de vouloir gagner du temps - tu dois lui donner une **alternative qui satisfait l'intention sans le risque**.
 
-  **Lecon 2 — L'interdiction sterile cree le shadow IT**
+  **Lecon 2 - L'interdiction sterile cree le shadow IT**
   Si tu interdit X sans proposer Y, X devient souterrain. Tes collaborateurs feront du ChatGPT depuis leur PC perso, sur le wifi de la cafeteria. Tu perds **toute** visibilite. La regle : **autorise un outil sous controle, encadre-le, et detecte les usages non-autorises**.
 
-  **Lecon 3 — La charte courte est la cle**
+  **Lecon 3 - La charte courte est la cle**
   La charte IA Samsung post-incident tient sur 5 lignes :
   1. Aucun code source proprietaire
   2. Aucune donnee client ou commerciale precise
@@ -65,7 +65,7 @@ debrief: |
 
   Charte courte = appliquee. Charte longue = ignoree.
 
-  **Lecon 4 — L'investissement dans une alternative souveraine est rentable**
+  **Lecon 4 - L'investissement dans une alternative souveraine est rentable**
   Samsung a investi dans une IA interne. Pour une PME francaise, l'equivalent est :
   - **Mistral Medium API** (Paris) avec garantie no-training : ~10 € par utilisateur par mois
   - **Mistral self-hosted** (sur ton serveur, ton GPU) : ~3 000 € one-shot + electricite
@@ -118,6 +118,6 @@ quiz:
 
 ## Pour aller plus loin
 
-Samsung est devenu un cas d'ecole non pas parce que la faute etait grave, mais parce que la reaction a ete exemplaire : interdiction temporaire + investissement dans une alternative + charte appliquee. Trois mois apres l'incident, Samsung utilisait l'IA plus que jamais — mais sous controle.
+Samsung est devenu un cas d'ecole non pas parce que la faute etait grave, mais parce que la reaction a ete exemplaire : interdiction temporaire + investissement dans une alternative + charte appliquee. Trois mois apres l'incident, Samsung utilisait l'IA plus que jamais - mais sous controle.
 
 > "L'IA n'est pas le probleme. L'IA sans politique est le probleme."

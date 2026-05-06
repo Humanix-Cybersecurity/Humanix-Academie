@@ -5,7 +5,7 @@ persona: "compta"
 objective: "Concevoir une procedure de double validation realiste qui ne paralyse pas l'entreprise"
 xpReward: 50
 scenario: |
-  Tu es DAF d'une PME de 60 personnes. Apres avoir vu Pathe se faire avoir pour 19 M€ et Vinci pour 4 M€, tu decides de mettre en place une double validation. Le PDG est d'accord sur le principe mais te dit : "OK, mais je ne veux pas que ca paralyse les operations courantes — on a 50 OV par mois minimum."
+  Tu es DAF d'une PME de 60 personnes. Apres avoir vu Pathe se faire avoir pour 19 M€ et Vinci pour 4 M€, tu decides de mettre en place une double validation. Le PDG est d'accord sur le principe mais te dit : "OK, mais je ne veux pas que ca paralyse les operations courantes - on a 50 OV par mois minimum."
 
   Tu dois proposer un design de procedure qui protege ET ne paralyse pas. Quelle approche choisis-tu ?
 choices:
@@ -34,19 +34,19 @@ debrief: |
 
   **Le design recommande pour une PME francaise (50-250 salaries) :**
 
-  **Niveau 1 — Virements simples (validation 1 personne)**
+  **Niveau 1 - Virements simples (validation 1 personne)**
   - Montant < 5 000 €
   - Beneficiaire deja en base depuis > 30 jours
   - Pas de modification de RIB
   - SEPA France ou zone euro
 
-  **Niveau 2 — Virements sensibles (double validation)**
+  **Niveau 2 - Virements sensibles (double validation)**
   - Montant >= 5 000 €
   - Nouveau beneficiaire ou modification de RIB recente
   - Virement international hors UE
   - Demande non recurrente
 
-  **Niveau 3 — Virements exceptionnels (triple validation + appel hors-canal)**
+  **Niveau 3 - Virements exceptionnels (triple validation + appel hors-canal)**
   - Montant >= 50 000 €
   - Demande "urgente" / "confidentielle"
   - Operation strategique presumee (acquisition, fusion)
@@ -61,7 +61,7 @@ debrief: |
 
   - **Le contournement par urgence** : "exception ce coup-ci" devient la regle. La procedure doit etre **anti-derogeable** par definition.
   - **Le single point of failure** : si la double validation repose sur 2 personnes en cascade, et que l'une est en vacances, prevoir un suppléant nomme.
-  - **L'illusion de la signature** : un email "ok pour le virement" du PDG n'est PAS une validation — il peut etre usurpe. La validation doit etre liee a un facteur fort (signature electronique, OTP, presence physique).
+  - **L'illusion de la signature** : un email "ok pour le virement" du PDG n'est PAS une validation - il peut etre usurpe. La validation doit etre liee a un facteur fort (signature electronique, OTP, presence physique).
 
   **Le test sentinelle (a faire 1 fois par an) :**
   Faire envoyer en interne (par le RSSI ou un consultant) un faux email simulant un FOVI. Mesurer combien de personnes detectent vs combien declenchent la procedure. C'est de la simulation phishing version FOVI.
@@ -90,7 +90,7 @@ quiz:
       - id: "c"
         label: "1 million d'euros minimum"
         correct: false
-    explanation: "5 000 € est un seuil pratique en PME — au-dela, double validation. 50 000 € : triple validation + appel hors-canal obligatoire. C'est le compromis efficacite/operabilite."
+    explanation: "5 000 € est un seuil pratique en PME - au-dela, double validation. 50 000 € : triple validation + appel hors-canal obligatoire. C'est le compromis efficacite/operabilite."
 
   - question: "Un test sentinelle FOVI dans une PME consiste a :"
     choices:
@@ -108,6 +108,6 @@ quiz:
 
 ## Pour aller plus loin
 
-La double validation parfaite est celle que les operationnels acceptent. Si tu rencontres une resistance, c'est souvent un signal que tu as place le seuil au mauvais endroit. Discuter, ajuster, mesurer — pas imposer une procedure absolue qui sera contournee dans le mois.
+La double validation parfaite est celle que les operationnels acceptent. Si tu rencontres une resistance, c'est souvent un signal que tu as place le seuil au mauvais endroit. Discuter, ajuster, mesurer - pas imposer une procedure absolue qui sera contournee dans le mois.
 
 > "La meilleure procedure, c'est celle qu'on applique vraiment."

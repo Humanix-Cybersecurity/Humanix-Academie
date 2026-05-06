@@ -12,10 +12,10 @@ choices:
   - id: "a"
     label: "C'est un virus mais ca va se reparer en redemarrant"
     outcome: "bad"
-    feedback: "Non. Un ransomware ne 'casse' pas un fichier — il le chiffre avec une cle dont SEUL l'attaquant a la copie. Redemarrer ne sert a rien, le chiffrement reste."
+    feedback: "Non. Un ransomware ne 'casse' pas un fichier - il le chiffre avec une cle dont SEUL l'attaquant a la copie. Redemarrer ne sert a rien, le chiffrement reste."
     points: -10
   - id: "b"
-    label: "Mes fichiers sont chiffres avec une cle que seul l'attaquant detient — il faut alerter l'IT IMMEDIATEMENT et NE RIEN faire d'autre"
+    label: "Mes fichiers sont chiffres avec une cle que seul l'attaquant detient - il faut alerter l'IT IMMEDIATEMENT et NE RIEN faire d'autre"
     outcome: "good"
     feedback: "Exactement. Le rancongiciel est un kidnapping numerique : tes fichiers sont en otage. Le bon reflexe : isoler le poste (le couper du reseau) et alerter."
     points: 30
@@ -32,16 +32,16 @@ choices:
 debrief: |
   Un **ransomware** (ou **rancongiciel**) est un logiciel malveillant qui :
 
-  1. Penetre dans le systeme (par phishing, faille, identifiants voles — voir module 02)
+  1. Penetre dans le systeme (par phishing, faille, identifiants voles - voir module 02)
   2. **Chiffre tes fichiers** avec une cle cryptographique forte (AES-256 generalement)
-  3. Affiche une demande de rancon — souvent en cryptomonnaie (Bitcoin, Monero) pour rendre le paiement intracable
+  3. Affiche une demande de rancon - souvent en cryptomonnaie (Bitcoin, Monero) pour rendre le paiement intracable
   4. Promet (ne tient pas toujours) la cle de dechiffrement contre paiement
 
   **Pourquoi c'est si efficace ?**
 
   - **Asymetrie technique** : chiffrer prend 1 minute. Casser le chiffrement par force brute prendrait des millions d'annees.
   - **Pression psychologique** : compteur de 72h, menace de doublement de la rancon, fuite de donnees publique (cf. module 04 sur la double extorsion).
-  - **Modele economique** mature : RaaS (Ransomware as a Service) — n'importe qui peut louer un ransomware sur le dark web pour 1 000 € et 30 % du butin.
+  - **Modele economique** mature : RaaS (Ransomware as a Service) - n'importe qui peut louer un ransomware sur le dark web pour 1 000 € et 30 % du butin.
 
   **Le marche en France :**
   - **Plus de 50 % des PME francaises** subiraient une tentative de ransomware par an (CESIN 2024)
@@ -51,7 +51,7 @@ debrief: |
   **Le bon reflexe en 3 mots :** **isoler · alerter · ne rien toucher**.
 
   - **Isoler** : couper le reseau du poste (debrancher le cable RJ45, desactiver le Wi-Fi). Eviter la propagation.
-  - **Alerter** : appeler l'IT, le RSSI ou Cybermalveillance (0 805 805 817, gratuit, 7j/7). Ne pas eteindre — la memoire vive contient des indices forensiques.
+  - **Alerter** : appeler l'IT, le RSSI ou Cybermalveillance (0 805 805 817, gratuit, 7j/7). Ne pas eteindre - la memoire vive contient des indices forensiques.
   - **Ne rien toucher** : pas de tentative de reparation par soi-meme. La preservation des preuves est vitale pour la suite (assurance, plainte, recuperation).
 quiz:
   - question: "Un ransomware fait quoi a tes fichiers ?"
@@ -65,7 +65,7 @@ quiz:
       - id: "c"
         label: "Il les copie sur un serveur etranger"
         correct: false
-    explanation: "Le ransomware chiffre — il ne supprime pas. La cle de dechiffrement est detenue par l'attaquant, qui la donne (parfois) contre paiement."
+    explanation: "Le ransomware chiffre - il ne supprime pas. La cle de dechiffrement est detenue par l'attaquant, qui la donne (parfois) contre paiement."
 
   - question: "Quel est le tout premier reflexe en cas de message de rancon ?"
     choices:
@@ -96,6 +96,6 @@ quiz:
 
 ## Pour aller plus loin
 
-Le rancongiciel est le sujet cyber le plus mediatise en France depuis 2020. Mais sa banalite ne doit pas faire baisser la garde — chaque PME francaise a en moyenne 1 chance sur 2 d'en subir au moins une tentative cette annee. Connaitre le mecanisme, c'est deja diviser le risque par deux.
+Le rancongiciel est le sujet cyber le plus mediatise en France depuis 2020. Mais sa banalite ne doit pas faire baisser la garde - chaque PME francaise a en moyenne 1 chance sur 2 d'en subir au moins une tentative cette annee. Connaitre le mecanisme, c'est deja diviser le risque par deux.
 
-> "Le ransomware n'est pas une catastrophe — c'est une crise. Et une crise, ca se prepare."
+> "Le ransomware n'est pas une catastrophe - c'est une crise. Et une crise, ca se prepare."

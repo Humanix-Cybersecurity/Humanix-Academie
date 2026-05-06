@@ -5,9 +5,9 @@ persona: "dpo"
 objective: "Identifier sans hesiter la base legale appropriee pour chaque traitement"
 xpReward: 50
 scenario: |
-  Tu es DPO. Le service marketing veut envoyer une newsletter mensuelle aux 12 000 prospects qui ont visite le site web (sans s'inscrire). Le commercial te dit : "On a leur IP, leur navigateur, leur parcours. Article 6.f legitime interet business — c'est legal."
+  Tu es DPO. Le service marketing veut envoyer une newsletter mensuelle aux 12 000 prospects qui ont visite le site web (sans s'inscrire). Le commercial te dit : "On a leur IP, leur navigateur, leur parcours. Article 6.f legitime interet business - c'est legal."
 
-  Tu sais que la base legale est l'un des choix les plus structurants — un mauvais choix invalide tout le traitement. Que reponds-tu ?
+  Tu sais que la base legale est l'un des choix les plus structurants - un mauvais choix invalide tout le traitement. Que reponds-tu ?
 choices:
   - id: "a"
     label: "OK pour interet legitime, c'est le 'fourre-tout' du RGPD"
@@ -25,7 +25,7 @@ choices:
     feedback: "Trop rigide. Le projet est faisable avec consentement explicite (case a cocher non pre-cochee, opt-in actif). Le DPO oriente vers la solution legale, ne bloque pas par principe."
     points: 5
   - id: "d"
-    label: "Je propose de basculer sur l'execution du contrat — les prospects ont 'accepte les CGU'"
+    label: "Je propose de basculer sur l'execution du contrat - les prospects ont 'accepte les CGU'"
     outcome: "bad"
     feedback: "Article 6.b ne s'applique qu'aux personnes parties a un contrat. Les prospects qui ont juste visite le site n'ont aucun contrat avec toi. Choisir une mauvaise base legale = traitement invalide."
     points: -15
@@ -57,7 +57,7 @@ debrief: |
 
   - **Cas typiques :** facturation client, livraison, gestion compte client, support apres-vente
   - **Limite :** ne s'applique qu'aux donnees STRICTEMENT necessaires au contrat. Le profilage marketing n'est PAS necessaire a la livraison.
-  - **Tres souvent abusee** : "vous avez un compte chez nous, donc on peut tout faire avec vos donnees" — non.
+  - **Tres souvent abusee** : "vous avez un compte chez nous, donc on peut tout faire avec vos donnees" - non.
 
   ---
 
@@ -67,7 +67,7 @@ debrief: |
 
   - **Cas typiques :** comptabilite obligatoire (10 ans), declarations sociales (URSSAF), obligations fiscales, KYC bancaire
   - **Avantage :** base solide, peu contestable
-  - **Limite :** la loi doit etre clairement identifiee — pas une obligation contractuelle deguisee
+  - **Limite :** la loi doit etre clairement identifiee - pas une obligation contractuelle deguisee
 
   ---
 
@@ -94,7 +94,7 @@ debrief: |
   Necessaire aux interets legitimes du responsable, sauf si les interets ou libertes de la personne prevalent.
 
   - **Cas typiques :** prospection BtoB (B->B uniquement), securite informatique, prevention de fraude, controle interne
-  - **Test obligatoire (LIA — Legitimate Interest Assessment) :**
+  - **Test obligatoire (LIA - Legitimate Interest Assessment) :**
     1. **Test de finalite** : l'interet est-il legitime ?
     2. **Test de necessite** : le traitement est-il necessaire ?
     3. **Test de balance** : les droits de la personne sont-ils respectes ?
@@ -160,7 +160,7 @@ quiz:
         label: "Plusieurs cumulables"
         correct: false
       - id: "b"
-        label: "Une seule par finalite — si tu en as deux, c'est qu'il y a deux traitements distincts"
+        label: "Une seule par finalite - si tu en as deux, c'est qu'il y a deux traitements distincts"
         correct: true
       - id: "c"
         label: "Aucun nombre defini"

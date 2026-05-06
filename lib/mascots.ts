@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Catalogue des mascottes disponibles
 // Chaque utilisateur peut choisir son animal totem ; le rendu (couleurs,
-// niveaux, items boutique) reste identique — seul l'emoji principal change.
+// niveaux, items boutique) reste identique - seul l'emoji principal change.
 
 export type MascotSpecies = {
   id: string;

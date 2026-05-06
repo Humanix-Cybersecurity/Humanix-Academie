@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page admin Smishing (SMS phishing) — generation de SMS pedagogiques
+// Page admin Smishing (SMS phishing) - generation de SMS pedagogiques
 // via Mistral souverain. L'envoi reel est a la charge du client (provider
 // SMS de son choix : OVH, Octopush, Brevo, etc.) ou en forfait sur mesure.
 
@@ -48,7 +48,7 @@ export default async function AdminSmishingPage() {
     <>
       <AdminPageHeader
         title="Smishing (SMS piégé) 🇫🇷"
-        description="Génération de SMS de smishing pédagogiques via IA souveraine Mistral. Stack 100 % FR/UE — pas de Cloud Act sur vos exercices de simulation."
+        description="Génération de SMS de smishing pédagogiques via IA souveraine Mistral. Stack 100 % FR/UE - pas de Cloud Act sur vos exercices de simulation."
         icon="📱"
       />
 
@@ -78,7 +78,7 @@ export default async function AdminSmishingPage() {
           </ul>
         </div>
 
-        {/* Bandeau pricing — clair sur ce qui est inclus / pas inclus */}
+        {/* Bandeau pricing - clair sur ce qui est inclus / pas inclus */}
         <div className="card bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700">
           <h2 className="font-bold text-blue-900 dark:text-blue-200 mb-2 flex items-center gap-2">
             💶 Génération gratuite, envoi à la charge du client
@@ -96,7 +96,7 @@ export default async function AdminSmishingPage() {
           <ul className="text-sm text-blue-900 dark:text-blue-100 space-y-1 list-disc list-inside">
             <li>
               <strong>Vous gérez l'envoi</strong> via votre propre fournisseur
-              SMS (OVHcloud SMS, Octopush, Brevo SMS, SMSFactor — préférer FR).
+              SMS (OVHcloud SMS, Octopush, Brevo SMS, SMSFactor - préférer FR).
               Copiez le SMS + lien tracké généré, puis envoyez depuis votre
               outil habituel.
             </li>

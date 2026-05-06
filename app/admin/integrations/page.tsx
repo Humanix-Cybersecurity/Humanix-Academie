@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page admin "Intégrations" — gestion des webhooks Slack/Teams/generiques.
+// Page admin "Intégrations" - gestion des webhooks Slack/Teams/generiques.
 // Acces : ADMIN, MANAGER, SUPERADMIN. Pas de gate plan.
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";

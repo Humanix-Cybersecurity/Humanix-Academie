@@ -10,7 +10,7 @@ scenario: |
   Le DG est en deplacement. Tu as 5 minutes pour decider ta posture. Que fais-tu ?
 choices:
   - id: "a"
-    label: "Je refuse l'acces — la CNIL doit prevenir avant"
+    label: "Je refuse l'acces - la CNIL doit prevenir avant"
     outcome: "bad"
     feedback: "Faux. La CNIL peut effectuer des controles inopinés (article 19 loi I&L modifiee). Refuser l'acces = obstruction = sanction aggravee. Le mieux est de cooperer en cadrant le perimetre."
     points: -25
@@ -27,10 +27,10 @@ choices:
   - id: "d"
     label: "J'appelle l'avocat RGPD du cabinet pendant que je leur sers un cafe"
     outcome: "good"
-    feedback: "Bon reflexe. Pas pour 'cacher' quoi que ce soit — pour avoir un conseil pendant le controle. La presence de l'avocat est tout a fait legale et bien percue par la CNIL si elle est sereine."
+    feedback: "Bon reflexe. Pas pour 'cacher' quoi que ce soit - pour avoir un conseil pendant le controle. La presence de l'avocat est tout a fait legale et bien percue par la CNIL si elle est sereine."
     points: 25
 debrief: |
-  Un **controle CNIL** est l'evenement le plus stressant pour un DPO — mais c'est aussi le plus instructif. Bien gere, c'est un audit gratuit qui ameliore la conformite. Mal gere, c'est une sanction aggravee.
+  Un **controle CNIL** est l'evenement le plus stressant pour un DPO - mais c'est aussi le plus instructif. Bien gere, c'est un audit gratuit qui ameliore la conformite. Mal gere, c'est une sanction aggravee.
 
   **Les 3 types de controles CNIL :**
 
@@ -73,7 +73,7 @@ debrief: |
   - Photo des points de controle physiques (avec autorisation)
 
   **5. Repondre factuellement**
-  - Ne pas inventer si tu ne sais pas — promesse de verification + delai
+  - Ne pas inventer si tu ne sais pas - promesse de verification + delai
   - Ne pas sur-livrer (perimetre de la mission strictement)
   - Ne pas mentir (sanctions aggravees pour declaration inexacte)
 
@@ -113,7 +113,7 @@ quiz:
       - id: "c"
         label: "Uniquement avec autorisation du juge"
         correct: false
-    explanation: "Les controles inopines sont autorises et frequents. C'est pour ca qu'il faut etre toujours pret — registre a jour, AIPD documentees, equipe formee."
+    explanation: "Les controles inopines sont autorises et frequents. C'est pour ca qu'il faut etre toujours pret - registre a jour, AIPD documentees, equipe formee."
 
   - question: "Quel est le montant maximal d'une amende RGPD ?"
     choices:
@@ -146,4 +146,4 @@ quiz:
 
 Faire un mock-controle CNIL une fois par an avec un consultant externe (3 a 5 k€) revele 80 % des lacunes en 1 demi-journee. C'est un investissement bien moindre qu'une amende, et ca prepare l'equipe au stress du jour J.
 
-> "Un controle CNIL n'est pas un proces. C'est un audit. Et un audit bien gere, c'est une opportunite de progresser — pas une sanction."
+> "Un controle CNIL n'est pas un proces. C'est un audit. Et un audit bien gere, c'est une opportunite de progresser - pas une sanction."

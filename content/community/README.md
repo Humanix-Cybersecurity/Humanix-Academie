@@ -85,7 +85,7 @@ Le contenu pédagogique (scénarios, quiz, debrief) est sous **CC BY-SA 4.0**. C
 - ⚠️ **Redistribution sous la même licence** (ShareAlike)
 - ⚠️ **Attribution obligatoire** (citer le contributeur original)
 
-Si tu n'es pas d'accord avec cette licence, ne contribue pas dans ce dossier — utilise plutôt ton propre repo et fais-en la promotion via les Discussions.
+Si tu n'es pas d'accord avec cette licence, ne contribue pas dans ce dossier - utilise plutôt ton propre repo et fais-en la promotion via les Discussions.
 
 ---
 

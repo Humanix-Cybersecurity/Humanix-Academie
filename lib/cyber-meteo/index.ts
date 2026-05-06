@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Cyber-météo France — niveau d'alerte cyber national agrégé.
+// Cyber-météo France - niveau d'alerte cyber national agrégé.
 //
 // SOURCE OFFICIELLE : feed RSS du CERT-FR (cert.ssi.gouv.fr).
 // Cache disque 1h pour éviter de marteler le flux et tenir la latence
@@ -111,7 +111,7 @@ async function fetchFeed(): Promise<FeedItem[]> {
 }
 
 /**
- * Parser RSS minimaliste — on évite une dépendance lourde.
+ * Parser RSS minimaliste - on évite une dépendance lourde.
  * Suffisant pour le format CERT-FR qui est un RSS 2.0 standard.
  */
 function parseRSS(xml: string): FeedItem[] {

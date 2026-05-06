@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Articles de micro-learning pre-rediges (seed)
-// Texte plein en markdown LIGHT (juste paragraphes et puces) — pas de HTML.
+// Texte plein en markdown LIGHT (juste paragraphes et puces) - pas de HTML.
 export type LibraryArticleSeed = {
   slug: string;
   title: string;
@@ -18,7 +18,7 @@ export const LIBRARY_ARTICLES: LibraryArticleSeed[] = [
     slug: "mfa-en-10-minutes",
     title: "Le MFA en 10 minutes",
     description:
-      "Comprendre et activer la double authentification sur tes outils du quotidien — sans rien casser.",
+      "Comprendre et activer la double authentification sur tes outils du quotidien - sans rien casser.",
     emoji: "🔐",
     category: "mots-de-passe",
     readTimeMinutes: 10,
@@ -45,7 +45,7 @@ Plus de 95 % des attaques réussies sur des comptes M365 ou Google ont un point 
 - **Notification push** : ton app demande "c'est bien toi ?", tu approuves. Très bonne expérience.
 - **Clé physique FIDO2** (YubiKey) : un objet physique branché en USB ou NFC. Inviolable contre le phishing. Le top.
 
-# Activer le MFA en 5 minutes — Microsoft 365
+# Activer le MFA en 5 minutes - Microsoft 365
 
 1. Va sur https://aka.ms/mfasetup
 2. Choisis "Microsoft Authenticator".
@@ -54,7 +54,7 @@ Plus de 95 % des attaques réussies sur des comptes M365 ou Google ont un point 
 5. Valide une notification de test.
 6. C'est fini.
 
-# Activer le MFA en 5 minutes — Google
+# Activer le MFA en 5 minutes - Google
 
 1. Va sur https://myaccount.google.com/security
 2. Active "Validation en deux étapes".
@@ -72,7 +72,7 @@ Sur tous les services qui tiennent un peu : MFA activé, sans exception. Mail pr
     slug: "reflexes-pour-ma-grand-mere",
     title: "Les réflexes cyber pour ma grand-mère",
     description:
-      "5 règles d'or qu'on peut expliquer à n'importe qui en 5 minutes — sans aucun jargon.",
+      "5 règles d'or qu'on peut expliquer à n'importe qui en 5 minutes - sans aucun jargon.",
     emoji: "👵",
     category: "grand-public",
     readTimeMinutes: 6,
@@ -82,27 +82,27 @@ Sur tous les services qui tiennent un peu : MFA activé, sans exception. Mail pr
 
 Tu connais quelqu'un qui n'est pas à l'aise avec l'informatique ? Voici 5 règles à lui transmettre. Pas de "MFA", pas de "VPN", juste du français.
 
-# Règle 1 — Si c'est urgent, c'est suspect
+# Règle 1 - Si c'est urgent, c'est suspect
 
 Quand un message dit "agis vite" ou "tu n'as que 24h", ralentis. Les vrais services importants (ta banque, l'État, La Poste) ne te mettent **jamais** la pression par mail. Si on te bouscule, c'est parce qu'on veut t'empêcher de réfléchir.
 
-# Règle 2 — Si on te demande un mot de passe ou un code, NON
+# Règle 2 - Si on te demande un mot de passe ou un code, NON
 
-Personne — ni ta banque, ni Microsoft, ni Apple, ni un "technicien" qui appelle — n'a le droit de te demander ton mot de passe ou ton code reçu par SMS. Si quelqu'un te le demande, c'est forcément un escroc. Sans exception.
+Personne - ni ta banque, ni Microsoft, ni Apple, ni un "technicien" qui appelle - n'a le droit de te demander ton mot de passe ou ton code reçu par SMS. Si quelqu'un te le demande, c'est forcément un escroc. Sans exception.
 
-# Règle 3 — Si c'est trop beau pour être vrai, c'est faux
+# Règle 3 - Si c'est trop beau pour être vrai, c'est faux
 
 Tu as gagné un iPhone alors que tu n'as rien tenté ? Une "fortune" t'attend en Afrique ? Quelqu'un veut te louer son appart à Paris pour 300 € ? Non.
 
-# Règle 4 — Vérifier, c'est jamais grossier
+# Règle 4 - Vérifier, c'est jamais grossier
 
 Reçu un mail bizarre de ta banque ? Ne réponds pas. Ferme le mail. Appelle ta banque sur son numéro habituel (celui sur ta carte bancaire, pas celui du mail). Trente secondes pour vérifier valent mieux que trois mois de galère.
 
-# Règle 5 — En cas de doute, demande à un proche
+# Règle 5 - En cas de doute, demande à un proche
 
 Tu n'es pas sûr ? Demande à ton fils, ta fille, ton voisin connecté, ton banquier. La cybersécurité, c'est comme la santé : on n'a pas à se débrouiller seul.
 
-# Bonus — le geste du jour
+# Bonus - le geste du jour
 
 Active la double sécurité sur ta boîte mail. C'est gratuit, ça prend 5 minutes, et ça multiplie par 100 ta sécurité. Demande à quelqu'un de t'aider à le faire.
 
@@ -110,7 +110,7 @@ Active la double sécurité sur ta boîte mail. C'est gratuit, ça prend 5 minut
 
 > "La cybersécurité, c'est trop technique pour moi."
 
-Faux. La cybersécurité, c'est **du bon sens**, comme fermer sa porte à clé. Tu sais déjà tout ce qu'il faut. Il manque juste le vocabulaire — et tu n'en as même pas besoin.`,
+Faux. La cybersécurité, c'est **du bon sens**, comme fermer sa porte à clé. Tu sais déjà tout ce qu'il faut. Il manque juste le vocabulaire - et tu n'en as même pas besoin.`,
   },
   {
     slug: "dangers-byod",
@@ -126,21 +126,21 @@ Faux. La cybersécurité, c'est **du bon sens**, comme fermer sa porte à clé. 
 
 BYOD = Bring Your Own Device. Concrètement : tu utilises ton smartphone, ton ordi perso, ta tablette, pour bosser. Mails pro sur ton iPhone perso, fichiers clients sur ton MacBook qui sert aussi le soir à regarder Netflix.
 
-C'est pratique. Mais ça mélange deux mondes — et ce mélange crée des risques.
+C'est pratique. Mais ça mélange deux mondes - et ce mélange crée des risques.
 
-# Le risque numéro 1 — Tu installes Candy Crush sur le device qui contient les données clients
+# Le risque numéro 1 - Tu installes Candy Crush sur le device qui contient les données clients
 
 Une appli gratuite, c'est rarement gratuit. Elle paie ses serveurs en collectant des données. Sur un appareil perso, c'est ton problème. Sur un appareil qui contient aussi ta boîte mail pro et tes fichiers clients, c'est le problème de toute ta PME.
 
-# Le risque numéro 2 — Tu prêtes ton appareil
+# Le risque numéro 2 - Tu prêtes ton appareil
 
 Tu prêtes ton iPhone à ton enfant pour qu'il joue dans la voiture. Ton enfant ne sait pas qu'il y a la boîte mail de ton dirigeant ouverte en arrière-plan. Il appuie sur un mail, supprime, transfert, qui sait. Ça arrive plus souvent que tu ne crois.
 
-# Le risque numéro 3 — Tu pars de l'entreprise
+# Le risque numéro 3 - Tu pars de l'entreprise
 
 Tu changes de job. Le matériel pro, tu le rends. Le matériel perso qui contient les données pro... reste avec toi. Tu deviens un risque ambulant.
 
-# Le risque numéro 4 — Le vol
+# Le risque numéro 4 - Le vol
 
 Ton smartphone perso est volé dans le métro. Le voleur pense avoir un Samsung à 600 €. Il a en fait accès à ta boîte mail M365, à ton OneDrive, à ton ERP... s'ils sont mal sécurisés.
 
@@ -232,7 +232,7 @@ Si la réponse est "non, c'est weird" : ne fais rien. Vérifie.`,
   },
   {
     slug: "donnees-personnelles-rgpd-quotidien",
-    title: "RGPD au quotidien — Le guide express",
+    title: "RGPD au quotidien - Le guide express",
     description:
       "Les 7 réflexes RGPD à avoir quand tu manipules des données clients ou collègues.",
     emoji: "📁",
@@ -325,7 +325,7 @@ Réalité plus nuancée :
 
 ## 1. L'evil twin
 
-Un attaquant monte un faux point d'accès "WIFI_HOTEL_GUEST" identique au vrai. Tu te connectes au sien (parfois automatiquement si ton smartphone l'a en mémoire). Il intercepte tout ton trafic — y compris si tu cliques OK sur des avertissements de certificat.
+Un attaquant monte un faux point d'accès "WIFI_HOTEL_GUEST" identique au vrai. Tu te connectes au sien (parfois automatiquement si ton smartphone l'a en mémoire). Il intercepte tout ton trafic - y compris si tu cliques OK sur des avertissements de certificat.
 
 ## 2. Le captive portal piégé
 
@@ -367,7 +367,7 @@ C'est tout.`,
   },
 
   // ===========================================================================
-  // EXTENSION CYBER FAMILLE — articles grand public
+  // EXTENSION CYBER FAMILLE - articles grand public
   // ===========================================================================
 
   {
@@ -411,7 +411,7 @@ Ces 3 leviers réunis désactivent la pensée rationnelle. Même des personnes t
 
 **3. Le numéro affiché peut être truqué.** Le spoofing téléphonique permet à l'attaquant d'afficher le vrai numéro de votre banque sur votre écran. Voir le bon numéro ne prouve rien.
 
-**4. La pression temporelle.** Toute personne qui vous met la pression pour aller vite — surtout sur de l'argent — ment.
+**4. La pression temporelle.** Toute personne qui vous met la pression pour aller vite - surtout sur de l'argent - ment.
 
 # Le bon réflexe en 30 secondes
 
@@ -464,7 +464,7 @@ La bonne nouvelle : **5 réglages bien faits sur leur smartphone bloquent l'écr
 - Paramètres → Écran de verrouillage → Configurer le déverrouillage par empreinte
 - Paramètres → Affichage → Mise en veille → 30 secondes
 
-Demandez aussi à la personne de **ne jamais désactiver le verrouillage** — même chez elle, même "parce que c'est plus pratique".
+Demandez aussi à la personne de **ne jamais désactiver le verrouillage** - même chez elle, même "parce que c'est plus pratique".
 
 # Réglage 2 : pas d'apps en dehors des stores officiels
 
@@ -563,7 +563,7 @@ L'escroc se présente avec :
 
 **5. La demande d'argent finit par arriver.** Toujours pour une raison "qui n'arrive qu'une fois" : taxes de douane sur un colis, frais médicaux d'urgence, virement bloqué qu'il faut "débloquer", prêt court pour un investissement génial. Dès qu'on parle d'argent, c'est ARNAQUE jusqu'à preuve du contraire.
 
-**6. La somme augmente progressivement.** L'escroc commence par 200 €, puis 800 €, puis 5 000 €. La méthode du "pied dans la porte" — chaque fois qu'on a déjà donné, c'est plus dur de dire stop.
+**6. La somme augmente progressivement.** L'escroc commence par 200 €, puis 800 €, puis 5 000 €. La méthode du "pied dans la porte" - chaque fois qu'on a déjà donné, c'est plus dur de dire stop.
 
 **7. Le sentiment de honte vous pousse à ne pas en parler.** C'est exactement ce que veut l'escroc. Tant que vous n'en parlez pas à un proche, il a le contrôle.
 
@@ -587,7 +587,7 @@ Si vous (ou un proche) avez déjà envoyé de l'argent :
 
 # Le mot de la fin
 
-Si quelqu'un de votre entourage tombe amoureux d'un inconnu rencontré sur internet et commence à parler de lui sans cesse — surtout si la personne refuse les visios — **ne moquez pas, n'accusez pas, posez juste une question** :
+Si quelqu'un de votre entourage tombe amoureux d'un inconnu rencontré sur internet et commence à parler de lui sans cesse - surtout si la personne refuse les visios - **ne moquez pas, n'accusez pas, posez juste une question** :
 
 > "Tu as essayé de chercher sa photo sur Google Images ? Juste pour être sûr·e ?"
 
@@ -677,7 +677,7 @@ Signes qu'un adulte mal intentionné approche votre enfant via un jeu :
 
 Si plusieurs de ces signes sont présents, c'est sérieux. Action immédiate :
 
-1. **Préservez les conversations** (ne supprimez pas le compte, le serveur, les messages — ce sont des preuves).
+1. **Préservez les conversations** (ne supprimez pas le compte, le serveur, les messages - ce sont des preuves).
 2. **Signalez sur** [pharos.interieur.gouv.fr](https://pharos.interieur.gouv.fr) (signalement officiel pour faits criminels en ligne).
 3. **Appelez le 119** (Allo Enfance en Danger, gratuit, 24/7) ou le **3018** (numéro contre les violences numériques).
 4. **Plainte** au commissariat ou en gendarmerie.
@@ -701,7 +701,7 @@ Plus vite vous agissez, moins l'incident sera coûteux. Selon une étude Wavesto
 
 C'est l'écart entre une journée chiante et une journée détruite.
 
-# Action 1 — Localiser à distance (5 minutes)
+# Action 1 - Localiser à distance (5 minutes)
 
 **iPhone :**
 1. Sur n'importe quel autre appareil → ouvrir [icloud.com/find](https://icloud.com/find)
@@ -715,7 +715,7 @@ C'est l'écart entre une journée chiante et une journée détruite.
 
 Si le téléphone est dans un endroit public où vous étiez (resto, gare), il y a 80 % de chances qu'il soit récupérable en y retournant. Si la carte montre un endroit inconnu, passez à l'action 2.
 
-# Action 2 — Bloquer le téléphone (3 minutes)
+# Action 2 - Bloquer le téléphone (3 minutes)
 
 Toujours depuis la même page web (icloud.com/find ou google.com/android/find) :
 
@@ -725,7 +725,7 @@ Toujours depuis la même page web (icloud.com/find ou google.com/android/find) :
 
 Si vous **ne retrouvez pas le téléphone dans la journée**, vous pourrez ensuite cliquer sur "Effacer l'appareil" pour le wiper à distance dès qu'il se rallume sur Internet.
 
-# Action 3 — Bloquer la SIM (5 minutes)
+# Action 3 - Bloquer la SIM (5 minutes)
 
 **Pourquoi :** un voleur qui a votre SIM peut recevoir vos SMS de double authentification (codes banque, codes mail) et donc se connecter à vos comptes.
 
@@ -742,18 +742,18 @@ Demandez : "Mon téléphone a été perdu/volé, je veux bloquer la ligne imméd
 
 L'opérateur peut aussi vous envoyer une nouvelle SIM en 48-72h.
 
-# Action 4 — Changer les mots de passe critiques (15 minutes)
+# Action 4 - Changer les mots de passe critiques (15 minutes)
 
 Depuis votre ordinateur, changer en priorité :
 
-1. **Compte mail** (Gmail, iCloud, Outlook) — c'est la porte d'entrée vers tout le reste
-2. **Compte bancaire** — voir aussi appel banque ci-dessous
+1. **Compte mail** (Gmail, iCloud, Outlook) - c'est la porte d'entrée vers tout le reste
+2. **Compte bancaire** - voir aussi appel banque ci-dessous
 3. **Comptes sociaux** (Facebook, Instagram, Twitter, LinkedIn)
 4. **Comptes de paiement** (PayPal, Stripe, services pro)
 
 Profitez-en pour activer le MFA partout où ce n'est pas déjà fait.
 
-# Action 5 — Prévenir banque et déposer plainte (15 minutes)
+# Action 5 - Prévenir banque et déposer plainte (15 minutes)
 
 **Banque :** appelez votre conseiller (numéro derrière la carte). Faites bloquer la carte virtuelle si elle existait sur le téléphone, demandez la surveillance des opérations sur 7 jours.
 
@@ -767,7 +767,7 @@ Pour que les 60 minutes soient efficaces le jour où ça arrive, faites **mainte
 
 ✅ **Vérifier que la localisation à distance est activée** (Réglages → [Nom] → Localiser sur iPhone, Paramètres → Sécurité → Localiser mon appareil sur Android).
 
-✅ **Sauvegarde automatique activée** (iCloud ou Google) — comme ça si vous wipez le téléphone à distance, vous ne perdez rien.
+✅ **Sauvegarde automatique activée** (iCloud ou Google) - comme ça si vous wipez le téléphone à distance, vous ne perdez rien.
 
 ✅ **Code de verrouillage à 6 chiffres** (pas 4) ou biométrie. Le 4 chiffres se craque en quelques heures.
 
@@ -884,7 +884,7 @@ Les vrais souvenirs : albums papier, vidéos privées, applications famille. Le 
     authorName: "Humanix",
     body: `# Le mythe vs la réalité
 
-Pendant 15 ans, on a entendu : "Le wifi public est dangereux, un hacker peut tout voir." En 2026, c'est en partie faux — et en partie pire.
+Pendant 15 ans, on a entendu : "Le wifi public est dangereux, un hacker peut tout voir." En 2026, c'est en partie faux - et en partie pire.
 
 **Ce qui a changé :** la quasi-totalité des sites web utilisent **HTTPS** (le petit cadenas dans la barre d'adresse). Cela signifie que même sur un wifi public, vos communications avec votre banque, vos mails, votre WhatsApp sont **chiffrées de bout en bout**. Le hacker au fond du café qui sniff le réseau ne voit que du jargon.
 
@@ -929,10 +929,10 @@ Pour 95 % des gens, voici la règle :
 |---|---|
 | Lire ses mails (Gmail, Outlook) | ✅ Oui (HTTPS) |
 | Consulter son compte bancaire | ✅ Oui (HTTPS + MFA) |
-| Faire un virement bancaire important | ⚠️ À éviter — préférez la 4G/5G perso |
+| Faire un virement bancaire important | ⚠️ À éviter - préférez la 4G/5G perso |
 | Acheter en ligne sur un site connu | ✅ Oui |
-| Acheter sur un site obscur | ❌ Non — pas de wifi public |
-| Visioconférence pro confidentielle | ❌ Non — partage de connexion |
+| Acheter sur un site obscur | ❌ Non - pas de wifi public |
+| Visioconférence pro confidentielle | ❌ Non - partage de connexion |
 | Logiciels de bureau pro (M365, Slack) | ✅ Oui (chiffré) |
 | Connexion à un service sans MFA | ❌ Si vous le faites, activez le MFA dès maintenant |
 
@@ -967,7 +967,7 @@ Si vous décédez demain, vos proches devront gérer votre **vie numérique** en
 
 Ce sujet n'est pas glauque : c'est un **acte d'amour pour ceux qui restent**. 30 minutes de votre temps maintenant = des semaines économisées plus tard. Voilà comment.
 
-# Étape 1 — Faire la liste de votre patrimoine numérique
+# Étape 1 - Faire la liste de votre patrimoine numérique
 
 Listez sur papier (ou dans votre gestionnaire de mots de passe) :
 
@@ -992,7 +992,7 @@ Listez sur papier (ou dans votre gestionnaire de mots de passe) :
 - Apps payantes (Apple One, Microsoft 365, Adobe)
 - Sites de presse, jeux en ligne, services divers
 
-# Étape 2 — Activer les "contacts héritiers" sur les grands services
+# Étape 2 - Activer les "contacts héritiers" sur les grands services
 
 Les principales plateformes proposent gratuitement un système de **contact héritier** : une personne désignée à qui l'accès est transmis à votre décès.
 
@@ -1012,15 +1012,15 @@ Les principales plateformes proposent gratuitement un système de **contact hér
 
 **Microsoft :** pas de système intégré. Solution : laisser les credentials dans un coffre numérique (cf. étape 4).
 
-# Étape 3 — Préparer le coffre-fort numérique
+# Étape 3 - Préparer le coffre-fort numérique
 
 Toutes les infos sensibles doivent être dans **UN SEUL endroit accessible à votre conjoint·e ou héritier·e principal·e**.
 
 **Solution recommandée : gestionnaire de mots de passe avec partage d'urgence**
 
-- **Bitwarden** (gratuit, open-source, basé en France via Eutopia) — fonction "Emergency Access"
-- **1Password** (15 €/mois famille, excellent UX) — fonction "Family Recovery"
-- **KeePass** (gratuit, local) — partage du fichier .kdbx + master password chez le notaire
+- **Bitwarden** (gratuit, open-source, basé en France via Eutopia) - fonction "Emergency Access"
+- **1Password** (15 €/mois famille, excellent UX) - fonction "Family Recovery"
+- **KeePass** (gratuit, local) - partage du fichier .kdbx + master password chez le notaire
 
 **Configuration "Emergency Access" :**
 1. Désigner votre conjoint·e ou un parent de confiance comme "contact d'urgence"
@@ -1029,7 +1029,7 @@ Toutes les infos sensibles doivent être dans **UN SEUL endroit accessible à vo
 
 **Si vous préférez le papier** (parfaitement valable) : une feuille avec vos identifiants principaux, scellée dans une enveloppe, déposée chez votre notaire avec votre testament.
 
-# Étape 4 — Écrire des instructions claires
+# Étape 4 - Écrire des instructions claires
 
 Joignez à votre testament (ou aux côtés du gestionnaire de mots de passe) un fichier "lettre numérique" avec :
 
@@ -1049,7 +1049,7 @@ Joignez à votre testament (ou aux côtés du gestionnaire de mots de passe) un 
 
 Cette feuille épargne **des semaines** de tâtonnement à vos proches.
 
-# Étape 5 — Le testament et la dimension légale
+# Étape 5 - Le testament et la dimension légale
 
 Pour les sujets qui ont une valeur juridique (cryptos, droits d'auteur sur du contenu en ligne, comptes pro avec valeur commerciale) :
 
@@ -1092,11 +1092,11 @@ Vous recevez un message de Facebook : "Quelqu'un s'est connecté à votre compte
 
 Pas de panique. **Dans 90 % des cas, le compte est récupérable** si vous agissez vite et dans le bon ordre.
 
-# Règle 1 — Ne pas paniquer, mais aller vite
+# Règle 1 - Ne pas paniquer, mais aller vite
 
 Plus l'attaquant a de temps, plus il fait de dégâts (escroqueries à vos contacts, suppression de données, exfiltration de photos). Mais pas besoin de courir partout : **30 minutes méthodiques** valent mieux que 2 heures de panique.
 
-# Cas 1 — Compte Gmail / Google piraté
+# Cas 1 - Compte Gmail / Google piraté
 
 **Pourquoi c'est prioritaire :** Gmail est la **clé maître** de tous vos autres comptes (la majorité des sites envoient les liens de réinitialisation par mail). Récupérer Gmail = récupérer tout le reste.
 
@@ -1118,7 +1118,7 @@ Plus l'attaquant a de temps, plus il fait de dégâts (escroqueries à vos conta
 - Vérifier les **applications connectées** et révoquer celles que vous ne reconnaissez pas
 - Vérifier les **filtres et redirections** (l'attaquant a peut-être configuré une redirection automatique de vos mails vers son adresse)
 
-# Cas 2 — Facebook / Instagram piraté
+# Cas 2 - Facebook / Instagram piraté
 
 **Procédure Facebook :**
 
@@ -1140,17 +1140,17 @@ Plus l'attaquant a de temps, plus il fait de dégâts (escroqueries à vos conta
 - Activer la **double authentification**
 - Prévenir vos contacts qu'un message frauduleux a peut-être circulé
 
-# Cas 3 — Compte bancaire compromis
+# Cas 3 - Compte bancaire compromis
 
 **Action immédiate, sans délai :**
 
 1. **Bloquer la carte** depuis l'app bancaire ou en appelant le numéro derrière votre carte
 2. **Faire opposition complète** sur le compte (la banque suspend toutes les opérations)
 3. **Lister les opérations frauduleuses** des 30 derniers jours
-4. **Plainte** sur [pre-plainte-en-ligne.gouv.fr](https://pre-plainte-en-ligne.gouv.fr) — vous pouvez le faire avant d'aller au commissariat
-5. **Demande de remboursement** auprès de la banque (formulaire L133-19 du Code monétaire et financier — la banque doit rembourser sous 1 jour ouvrable les opérations non autorisées, sauf preuve de négligence)
+4. **Plainte** sur [pre-plainte-en-ligne.gouv.fr](https://pre-plainte-en-ligne.gouv.fr) - vous pouvez le faire avant d'aller au commissariat
+5. **Demande de remboursement** auprès de la banque (formulaire L133-19 du Code monétaire et financier - la banque doit rembourser sous 1 jour ouvrable les opérations non autorisées, sauf preuve de négligence)
 
-# Cas 4 — Boîte mail OVH / Free / Orange / SFR piratée
+# Cas 4 - Boîte mail OVH / Free / Orange / SFR piratée
 
 Plus rare mais plus grave si la boîte est utilisée pour récupérer d'autres comptes.
 
@@ -1160,7 +1160,7 @@ Plus rare mais plus grave si la boîte est utilisée pour récupérer d'autres c
 2. Demander **réinitialisation forcée** du mot de passe (ils peuvent l'envoyer par courrier postal en 5-7 jours)
 3. En attendant, vérifier les comptes liés à cette adresse mail : changez les mots de passe en utilisant le numéro de téléphone comme méthode de récupération secondaire
 
-# Cas 5 — Compte Apple ID / Microsoft
+# Cas 5 - Compte Apple ID / Microsoft
 
 **Apple :** [iforgot.apple.com](https://iforgot.apple.com) → suivre les étapes. Si Apple bloque, appeler le support : 0805 540 003 (gratuit).
 

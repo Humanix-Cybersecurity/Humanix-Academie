@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Catalogue HumaniX Académie — 25 saisons × 6 épisodes = 150 modules officiels.
+// Catalogue HumaniX Académie - 25 saisons × 6 épisodes = 150 modules officiels.
 //
 // Ce catalogue alimente la BDD (table Saison + Episode) au seeding. Le contenu
 // pédagogique détaillé (scenario, choix, quiz) est dans `content/saisons/...`
@@ -46,7 +46,7 @@ export function rewardsFor(diff: CatalogEpisode["difficulty"]) {
 }
 
 // ============================================================================
-// 25 SAISONS THÉMATIQUES — 150 ÉPISODES
+// 25 SAISONS THÉMATIQUES - 150 ÉPISODES
 // ============================================================================
 export const CATALOG_SAISONS: CatalogSaison[] = [
   // --- Fondamentaux humains (saisons 1-5) ---
@@ -161,7 +161,7 @@ export const CATALOG_SAISONS: CatalogSaison[] = [
       },
       {
         slug: "02-rgpd-pratique",
-        title: "RGPD au quotidien — les 5 réflexes",
+        title: "RGPD au quotidien - les 5 réflexes",
         durationMinutes: 7,
         difficulty: "medium",
       },
@@ -1254,7 +1254,7 @@ export const CATALOG_SAISONS: CatalogSaison[] = [
       },
       {
         slug: "03-transferts-hors-ue",
-        title: "Transferts de données hors UE — TIA, BCR, DPF",
+        title: "Transferts de données hors UE - TIA, BCR, DPF",
         durationMinutes: 8,
         difficulty: "hard",
       },

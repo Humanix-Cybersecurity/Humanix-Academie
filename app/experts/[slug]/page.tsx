@@ -17,7 +17,7 @@ export async function generateMetadata({
   if (!expert) return { title: "Expert introuvable | Humanix Académie" };
   const name = expert.user.name ?? "Expert cyber";
   return {
-    title: `${name} — Bibliothèque d'experts | Humanix Académie`,
+    title: `${name} - Bibliothèque d'experts | Humanix Académie`,
     description: expert.bio.slice(0, 160),
   };
 }

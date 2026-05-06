@@ -12,29 +12,29 @@ scenario: |
   Tu ne te souviens pas tres bien de cette personne, mais le message semble naturel. Le profil LinkedIn est complet (photo, parcours, 200+ connexions). Quels signaux te font dire "c'est peut-etre genere par IA" ?
 choices:
   - id: "a"
-    label: "Aucun signal — le message a l'air totalement naturel"
+    label: "Aucun signal - le message a l'air totalement naturel"
     outcome: "bad"
     feedback: "Trop confiant. Plusieurs signaux discrets sont presents : lexique neutre/generique, absence de detail personnel concret, tournures parfaitement polies. Indices d'IA generative."
     points: -10
   - id: "b"
-    label: "Lexique trop neutre, absence de detail concret, ton uniformement poli — pattern classique d'un message genere par IA dans le cadre d'une attaque social engineering"
+    label: "Lexique trop neutre, absence de detail concret, ton uniformement poli - pattern classique d'un message genere par IA dans le cadre d'une attaque social engineering"
     outcome: "good"
     feedback: "Excellent. Tu as les bons reflexes : detection de la 'neutralite generique' typique des messages IA. Le test ultime : demander un detail specifique que seul le vrai ancien collegue saurait."
     points: 30
   - id: "c"
     label: "Le profil a 200+ connexions, donc c'est legitime"
     outcome: "bad"
-    feedback: "Le nombre de connexions LinkedIn ne prouve rien — les comptes deepfake / synthetiques ont souvent 200-500 connexions automatiques + photo IA. C'est devenu trivial a generer."
+    feedback: "Le nombre de connexions LinkedIn ne prouve rien - les comptes deepfake / synthetiques ont souvent 200-500 connexions automatiques + photo IA. C'est devenu trivial a generer."
     points: -10
   - id: "d"
     label: "Je reponds avec un detail volontairement faux (un evenement qui n'a pas eu lieu) pour voir si la personne corrige ou continue dans le flou"
     outcome: "good"
-    feedback: "Reflexe excellent — le 'piege detail'. Une vraie personne corrige : 'Mais non, c'etait pas en 2019 c'etait 2018 !'. Une IA scammeur continue dans le flou : 'Ah oui, bons souvenirs !'."
+    feedback: "Reflexe excellent - le 'piege detail'. Une vraie personne corrige : 'Mais non, c'etait pas en 2019 c'etait 2018 !'. Une IA scammeur continue dans le flou : 'Ah oui, bons souvenirs !'."
     points: 25
 debrief: |
-  Detecter un contenu genere par IA est devenu **un reflexe critique** en 2026. Que ce soit du texte (email, message), de l'image (photo profil), de l'audio (deepfake vocal) ou de la video (deepfake face) — l'IA generative a brouille les pistes.
+  Detecter un contenu genere par IA est devenu **un reflexe critique** en 2026. Que ce soit du texte (email, message), de l'image (photo profil), de l'audio (deepfake vocal) ou de la video (deepfake face) - l'IA generative a brouille les pistes.
 
-  **Detection texte — les signaux faibles :**
+  **Detection texte - les signaux faibles :**
 
   **1. Lexique trop neutre / generique**
   Les LLM ont une distribution lexicale qui evite les extremes. Pas trop familier, pas trop technique. Comme un communique de presse.
@@ -71,7 +71,7 @@ debrief: |
 
   ---
 
-  **Detection image — les signaux faibles :**
+  **Detection image - les signaux faibles :**
 
   **1. Yeux asymetriques, reflets etranges**
   Les modeles d'image (StyleGAN, Stable Diffusion, DALL-E, Midjourney) ont fait des progres mais peuvent encore avoir des micro-imperfections sur les yeux : reflets differents, pupilles legerement dissymetriques.
@@ -90,7 +90,7 @@ debrief: |
 
   ---
 
-  **Detection audio (vishing) — cf. saison fraude-president 04**
+  **Detection audio (vishing) - cf. saison fraude-president 04**
 
   - Latence de 1-2 secondes avant la reponse
   - Respiration absente ou robotique
@@ -114,7 +114,7 @@ debrief: |
 
   - **Hive Moderation**, **Reality Defender**, **Sensity AI** : detection multi-modale (texte/image/audio/video)
   - **GPTZero**, **Originality.AI** : detection texte (plus fragile, beaucoup de faux positifs/negatifs)
-  - **C2PA** (Content Authenticity Initiative) : standard de provenance pour les medias — cherche le badge officiel sur les images legitimes
+  - **C2PA** (Content Authenticity Initiative) : standard de provenance pour les medias - cherche le badge officiel sur les images legitimes
 
   **Mais en 2026 :** aucun outil n'est fiable a 100 %. La defense reste **principalement humaine** : skepticisme, recoupement, verification multi-canal.
 quiz:
@@ -144,7 +144,7 @@ quiz:
         correct: false
     explanation: "Les LLM produisent un francais propre mais sans details concrets et avec un lexique neutre. Une vraie personne mentionne des elements specifiques (lieux, dates, anecdotes)."
 
-  - question: "Aucun outil de detection IA n'est fiable a 100 % en 2026 — la defense est :"
+  - question: "Aucun outil de detection IA n'est fiable a 100 % en 2026 - la defense est :"
     choices:
       - id: "a"
         label: "Principalement humaine : skepticisme, recoupement, verification multi-canal"
@@ -160,6 +160,6 @@ quiz:
 
 ## Pour aller plus loin
 
-L'IA generative a fait basculer un equilibre vieux de 30 ans : l'image et le texte etaient des preuves. Ce n'est plus le cas. La preuve devient la **chaine de provenance** (C2PA), la **verification multi-canal**, et le **scepticisme par defaut**. Ce n'est pas pessimiste — c'est lucide.
+L'IA generative a fait basculer un equilibre vieux de 30 ans : l'image et le texte etaient des preuves. Ce n'est plus le cas. La preuve devient la **chaine de provenance** (C2PA), la **verification multi-canal**, et le **scepticisme par defaut**. Ce n'est pas pessimiste - c'est lucide.
 
 > "Avant, on croyait ce qu'on voyait. Aujourd'hui, on verifie ce qu'on voit. Demain, on verifiera qu'on a bien verifie."

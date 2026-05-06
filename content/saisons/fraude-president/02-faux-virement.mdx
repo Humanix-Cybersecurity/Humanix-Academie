@@ -7,12 +7,12 @@ xpReward: 50
 scenario: |
   Vendredi 17h45. Tu finalises tes ecritures avant le week-end. Mail d'urgence du DG :
 
-  "Sophie, situation critique. Notre prestataire informatique TECHCONNECT menace de couper notre serveur ce soir si on ne paie pas la facture en retard de 24 500 €. Le RIB a change recemment — voici le nouveau (en piece jointe). Vire avant 18h ou on perd toute la prod du week-end. Je suis en train conf, je ne peux pas appeler. Confirme par retour quand c'est fait."
+  "Sophie, situation critique. Notre prestataire informatique TECHCONNECT menace de couper notre serveur ce soir si on ne paie pas la facture en retard de 24 500 €. Le RIB a change recemment - voici le nouveau (en piece jointe). Vire avant 18h ou on perd toute la prod du week-end. Je suis en train conf, je ne peux pas appeler. Confirme par retour quand c'est fait."
 
   Tu connais TECHCONNECT, c'est bien votre prestataire IT. Les 24 500 € correspondent a peu pres au montant mensuel. Et tu sais que le DG est effectivement en deplacement aujourd'hui.
 choices:
   - id: "a"
-    label: "Je vire au nouveau RIB pour eviter la coupure prod — c'est crise"
+    label: "Je vire au nouveau RIB pour eviter la coupure prod - c'est crise"
     outcome: "bad"
     feedback: "Aïe. Tu viens de tomber dans une variante FOVI 'changement de RIB urgent'. Le nouveau RIB appartient a l'attaquant. Argent perdu, recuperation quasi-impossible (transferts internationaux en cascade)."
     points: -20
@@ -27,7 +27,7 @@ choices:
     feedback: "Le DG est 'en train' donc il ne pourra pas confirmer. Tu vas finir par cliquer sous pression. La preparation de l'OV t'engage psychologiquement."
     points: -10
   - id: "d"
-    label: "J'attends lundi pour valider — la prod du week-end peut tomber, c'est moins cher qu'une fraude"
+    label: "J'attends lundi pour valider - la prod du week-end peut tomber, c'est moins cher qu'une fraude"
     outcome: "good"
     feedback: "Excellent jugement. Le coût d'une coupure prod week-end (quelques heures de fix lundi) est bien inferieur a une fraude a 24 500 €. La regle : sous pression artificielle, on attend."
     points: 25
@@ -36,8 +36,8 @@ debrief: |
 
   **1. L'urgence artificielle**
   - "Avant 18h" / "vendredi soir" / "minuit dernier delai"
-  - L'attaquant choisit volontairement les fins de semaine ou les debuts de pont — tu n'as plus personne a appeler
-  - "Je suis en train" / "en avion" / "en reunion" — pour empecher la verification telephonique
+  - L'attaquant choisit volontairement les fins de semaine ou les debuts de pont - tu n'as plus personne a appeler
+  - "Je suis en train" / "en avion" / "en reunion" - pour empecher la verification telephonique
 
   **2. Le pretexte technique**
   - Une vraie facture d'un vrai fournisseur, juste avec un RIB modifie
@@ -46,7 +46,7 @@ debrief: |
 
   **3. Le canal asymetrique**
   - Il t'envoie un email, mais te demande de ne pas l'appeler
-  - Il evite la voix au telephone (ou recourt a un deepfake — voir module 04)
+  - Il evite la voix au telephone (ou recourt a un deepfake - voir module 04)
 
   **Le casse-tete du changement de RIB :**
   - Quand un fournisseur dit "on a change de RIB" : **toujours valider hors-canal**
@@ -88,7 +88,7 @@ quiz:
         label: "Respecter sa demande et faire le virement"
         correct: false
       - id: "b"
-        label: "Considerer cette demande de non-validation comme un signal de fraude — appeler quand meme ou attendre"
+        label: "Considerer cette demande de non-validation comme un signal de fraude - appeler quand meme ou attendre"
         correct: true
       - id: "c"
         label: "Lui envoyer un SMS pour ne pas le deranger"
@@ -98,6 +98,6 @@ quiz:
 
 ## Pour aller plus loin
 
-La pression sur la fin de semaine n'est pas un bug, c'est une feature de l'attaque. L'attaquant choisit le pire moment pour ta verification. Ton meilleur allie : la procedure ecrite affichee dans le bureau de la compta — "TOUT VIREMENT > 5 000 € : DOUBLE VALIDATION + RIB EN BASE".
+La pression sur la fin de semaine n'est pas un bug, c'est une feature de l'attaque. L'attaquant choisit le pire moment pour ta verification. Ton meilleur allie : la procedure ecrite affichee dans le bureau de la compta - "TOUT VIREMENT > 5 000 € : DOUBLE VALIDATION + RIB EN BASE".
 
 > "Sous pression, on ralentit. La crise, c'est l'attaquant qui te la fabrique."

@@ -14,17 +14,17 @@ scenario: |
   Quelle option recommandes-tu et pourquoi ?
 choices:
   - id: "a"
-    label: "ChatGPT Team — c'est le plus mature et utilise au monde"
+    label: "ChatGPT Team - c'est le plus mature et utilise au monde"
     outcome: "neutral"
     feedback: "Maturite OK mais : Cloud Act US + DPF fragile (Schrems III en cours) + transferts hors UE qui necessiteraient une AIPD. Pour une PME francaise, c'est ajouter de la complexite juridique."
     points: 5
   - id: "b"
-    label: "Mistral AI Premium — souverainete par defaut + meilleur rapport qualite/prix"
+    label: "Mistral AI Premium - souverainete par defaut + meilleur rapport qualite/prix"
     outcome: "good"
     feedback: "Excellent. Mistral est l'editeur francais leader, conforme NIS2/RGPD natif, avec garanties contractuelles. Pour une PME francaise, c'est l'option par defaut sauf besoin specifique."
     points: 30
   - id: "c"
-    label: "Mistral Self-hosted — 100 % chez nous, c'est le plus secure"
+    label: "Mistral Self-hosted - 100 % chez nous, c'est le plus secure"
     outcome: "good"
     feedback: "Tres bien si tu as les ressources IT pour maintenir l'infra. Pour 50 utilisateurs, le ROI est rapide (8 000 € one-shot vs 18 €/user/mois cloud). Mais necessite un GPU + maintenance."
     points: 25
@@ -36,27 +36,27 @@ choices:
 debrief: |
   L'**ecosysteme IA souveraine** a explose en France entre 2023 et 2026. Pour une PME francaise, plusieurs options serieuses existent maintenant.
 
-  **Mistral AI — l'editeur generaliste leader**
+  **Mistral AI - l'editeur generaliste leader**
 
   - **Siege** : Paris (rue de Lille)
   - **Fonde** : avril 2023 par Arthur Mensch (ex-DeepMind), Guillaume Lample, Timothee Lacroix (ex-Meta AI Paris)
   - **Levees de fonds** : ~1 milliard d'euros en 2 ans (Andreessen Horowitz, NVIDIA, Salesforce, BNP Paribas, Bpifrance)
   - **Modeles open-source** : Mistral 7B, Mixtral, Pixtral, Mistral Large 2
   - **Modeles fermes** : Mistral Large, Mistral Medium, Mistral Embed
-  - **Hosting** : Paris (Frankfurt en backup) — pas de Cloud Act
+  - **Hosting** : Paris (Frankfurt en backup) - pas de Cloud Act
   - **Conformite** : RGPD-by-design, NIS2 ready, certifie ISO 27001
   - **Garanties contractuelles** : pas d'utilisation des prompts pour entrainement (offre Premium et Enterprise)
   - **Prix** : 18 €/utilisateur/mois (Le Chat Pro), API a partir de 0,002 € / 1k tokens
-  - **Open source** : la majorite des modeles est en Apache 2.0 — tu peux les self-host
+  - **Open source** : la majorite des modeles est en Apache 2.0 - tu peux les self-host
 
-  **Voxia — la verticale voix souveraine**
+  **Voxia - la verticale voix souveraine**
 
   - **Siege** : Paris
   - **Specialite** : reconnaissance vocale (transcription) + synthese vocale (TTS) souveraine
   - **Cas d'usage** : centres d'appel, accessibilite, transcriptions juridiques, vishing simulation (cf. notre integration Mistral + Piper TTS sur /admin/vishing)
   - **Hosting** : France
 
-  **LightOn — concurrent francais Mistral, plus B2B**
+  **LightOn - concurrent francais Mistral, plus B2B**
 
   - **Siege** : Paris
   - **Modeles** : Paradigm (cible enterprises avec souverainete forte)
@@ -64,9 +64,9 @@ debrief: |
 
   **Les autres acteurs souverains europeens :**
 
-  - **Aleph Alpha** (Allemagne) — IA souveraine pour secteur public et industries reglementees
-  - **Helsing** — defense AI europeenne
-  - **Stability AI** (UK) — generation d'images open-source
+  - **Aleph Alpha** (Allemagne) - IA souveraine pour secteur public et industries reglementees
+  - **Helsing** - defense AI europeenne
+  - **Stability AI** (UK) - generation d'images open-source
 
   **Comparaison cloud vs self-host :**
 
@@ -93,10 +93,10 @@ debrief: |
   - Une **AIPD** (analyse d'impact) obligatoire pour le transfert hors UE
   - Une **TIA** (Transfer Impact Assessment) post-Schrems II
   - Des mesures complementaires (chiffrement bout-en-bout, anonymisation)
-  - Un risque latent (Schrems III en cours — DPF peut etre invalide)
+  - Un risque latent (Schrems III en cours - DPF peut etre invalide)
   - Une exposition Cloud Act (acces possible des autorites US)
 
-  Ces complications existent aussi pour Anthropic (Claude) et Google (Gemini) — qui hebergent aux US.
+  Ces complications existent aussi pour Anthropic (Claude) et Google (Gemini) - qui hebergent aux US.
 
   Mistral, lui, est conforme RGPD/NIS2 par defaut. Pas d'AIPD, pas de TIA, pas de Cloud Act. **Le chemin le plus court vers la conformite, c'est de rester en France.**
 
@@ -144,6 +144,6 @@ quiz:
 
 ## Pour aller plus loin
 
-Mistral AI a fait pour la France ce que CISO Assistant (intuitem) ou OpenCTI (Filigran) ont fait pour la cyber : creer un acteur souverain credible qui evite la dependance US. C'est une logique d'ecosysteme — Humanix Academie s'inscrit dans la meme demarche pour la sensibilisation. Choisir Mistral, c'est aussi voter pour cet ecosysteme.
+Mistral AI a fait pour la France ce que CISO Assistant (intuitem) ou OpenCTI (Filigran) ont fait pour la cyber : creer un acteur souverain credible qui evite la dependance US. C'est une logique d'ecosysteme - Humanix Academie s'inscrit dans la meme demarche pour la sensibilisation. Choisir Mistral, c'est aussi voter pour cet ecosysteme.
 
 > "La souverainete numerique, c'est la possibilite de continuer a vivre meme quand on n'est pas d'accord."

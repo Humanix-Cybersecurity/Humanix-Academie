@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// /superadmin/tenants — liste detaillee de tous les tenants avec leur sante.
+// /superadmin/tenants - liste detaillee de tous les tenants avec leur sante.
 import Link from "next/link";
 import { listAllTenantsHealth, type TenantHealth } from "@/lib/tenant-health";
 
