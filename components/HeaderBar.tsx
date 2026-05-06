@@ -259,6 +259,12 @@ export default function HeaderBar() {
                       label="Espace DPO"
                       onClick={() => setMenuOpen(false)}
                     />
+                    <MenuLink
+                      href="/communaute"
+                      icon="🤝"
+                      label="Communaute"
+                      onClick={() => setMenuOpen(false)}
+                    />
                     {isAdmin && (
                       <MenuLink
                         href="/admin"
@@ -319,6 +325,13 @@ export default function HeaderBar() {
               title="Espace DPO — Humanix RGPD-by-design"
             >
               🛡 DPO
+            </Link>
+            <Link
+              href="/communaute"
+              className="hidden lg:inline text-sm text-gray-600 dark:text-gray-300 hover:text-primary-500 font-medium"
+              title="Communaute — contribuer, suivre, echanger"
+            >
+              🤝 Communaute
             </Link>
             <Link
               href="/tarifs"
