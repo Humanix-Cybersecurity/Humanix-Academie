@@ -313,9 +313,18 @@ export default function HeaderBar() {
             >
               Tarifs
             </Link>
+            <Link
+              href="/connexion"
+              className="hidden sm:inline text-sm text-gray-600 dark:text-gray-300 hover:text-primary-500 font-medium"
+            >
+              Connexion
+            </Link>
             <ThemeToggle compact />
-            <Link href="/demo" className="btn-primary text-sm py-2 px-4">
-              Démo
+            <Link
+              href="/signup?plan=decouverte"
+              className="btn-primary text-sm py-2 px-4"
+            >
+              Créer un compte
             </Link>
           </div>
         )}
