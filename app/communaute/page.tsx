@@ -92,13 +92,13 @@ const PORTES = [
   },
   {
     emoji: "🤝",
-    title: "Tu es editeur ou partenaire",
+    title: "Tu es editeur d'outil cyber",
     palette: {
       bg: "from-purple-50 via-white to-pink-50 dark:from-slate-900 dark:via-slate-900 dark:to-purple-950/40",
       ring: "border-purple-200 dark:border-purple-900/40",
       accent: "text-purple-700 dark:text-purple-300",
     },
-    body: "Tu edites un outil cyber souverain (GRC, SIEM, EDR, IAM, ITSM). Tu veux integrer Humanix dans ton ecosysteme. CISO Assistant, Sekoia.io, HarfangLab, Lucca, GLPI sont deja partenaires.",
+    body: "Tu edites un outil cyber souverain (GRC, SIEM, EDR, IAM, ITSM). On a deja construit des connecteurs techniques vers CISO Assistant, Sekoia.io, HarfangLab, Lucca et GLPI. Echangeons sur l'integration et l'interoperabilite.",
     actions: [
       {
         label: "Voir les integrations",
@@ -106,8 +106,8 @@ const PORTES = [
         external: false,
       },
       {
-        label: "Discuter d'un partenariat",
-        href: "mailto:contact@humanix-cybersecurity.fr?subject=Partenariat+ecosysteme",
+        label: "Echanger sur l'ecosysteme",
+        href: "mailto:contact@humanix-cybersecurity.fr?subject=Integration+ecosysteme+cyber",
         external: true,
       },
     ],
