@@ -44,6 +44,7 @@ type DropdownItem = {
   href: string;
   label: string;
   description: string;
+  emoji: string;
 };
 
 const PRODUIT_ITEMS: DropdownItem[] = [
@@ -51,31 +52,37 @@ const PRODUIT_ITEMS: DropdownItem[] = [
     href: "/tarifs",
     label: "Tarifs",
     description: "Self-host gratuit ou cloud à partir de 0 €/mois",
+    emoji: "💶",
   },
   {
     href: "/demo",
     label: "Démo",
     description: "Tester en 2 minutes, sans inscription",
+    emoji: "🎮",
   },
   {
     href: "/comparatif",
     label: "Comparatif",
     description: "Notre lecture honnête face à 5 concurrents",
+    emoji: "⚖️",
   },
   {
     href: "/integrations",
     label: "Intégrations",
     description: "Connecteurs CISO Assistant, SIEM, IAM, RH",
+    emoji: "🔌",
   },
   {
     href: "/marketplace",
     label: "Marketplace",
     description: "Modules signés par des experts français",
+    emoji: "🏛",
   },
   {
     href: "/famille",
     label: "Cyber Famille",
     description: "Sphère personnelle gratuite, invitations proches",
+    emoji: "❤️",
   },
 ];
 
@@ -84,26 +91,31 @@ const SOLUTIONS_ITEMS: DropdownItem[] = [
     href: "/dpo",
     label: "Espace DPO",
     description: "RGPD-by-design, AIPD, registre fourni",
+    emoji: "🛡",
   },
   {
     href: "/lancement-oss",
     label: "Open source",
     description: "Lancement AGPLv3 — mardi 26 mai 2026",
+    emoji: "🌱",
   },
   {
     href: "/securite",
     label: "Trust Center",
     description: "Audit public, conformité, transparence",
+    emoji: "🔐",
   },
   {
     href: "/manifeste",
     label: "Manifeste",
     description: "Pourquoi Humanix existe",
+    emoji: "📜",
   },
   {
     href: "/urgence-cyber",
     label: "Urgence cyber",
     description: "Hub d'incident — que faire en 60 minutes",
+    emoji: "🚨",
   },
 ];
 
@@ -459,6 +471,7 @@ export default function HeaderBar() {
                     label: "Rejoindre",
                     description:
                       "4 portes d'entrée — utilisateur, dev, contenu, écosystème",
+                    emoji: "🤝",
                   },
                 ]}
               />
@@ -563,14 +576,22 @@ function NavDropdown({
                 key={item.href}
                 href={item.href}
                 role="menuitem"
-                className="block px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700/50 transition group"
+                className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700/50 transition group"
               >
-                <p className="text-sm font-bold text-primary-500 dark:text-accent-300 group-hover:underline-offset-4">
-                  {item.label}
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">
-                  {item.description}
-                </p>
+                <span
+                  aria-hidden="true"
+                  className="text-2xl shrink-0 leading-none mt-0.5 w-7 text-center"
+                >
+                  {item.emoji}
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-primary-500 dark:text-accent-300 group-hover:underline-offset-4">
+                    {item.label}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
               </Link>
             ))}
           </div>
@@ -597,14 +618,22 @@ function MobileSection({
           <li key={item.href}>
             <Link
               href={item.href}
-              className="block px-2 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800/50 transition"
+              className="flex items-start gap-3 px-2 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800/50 transition"
             >
-              <p className="text-base font-bold text-primary-500 dark:text-accent-300">
-                {item.label}
-              </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-                {item.description}
-              </p>
+              <span
+                aria-hidden="true"
+                className="text-2xl shrink-0 leading-none mt-0.5 w-7 text-center"
+              >
+                {item.emoji}
+              </span>
+              <div className="min-w-0">
+                <p className="text-base font-bold text-primary-500 dark:text-accent-300">
+                  {item.label}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
             </Link>
           </li>
         ))}
