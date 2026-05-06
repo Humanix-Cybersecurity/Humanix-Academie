@@ -18,7 +18,7 @@ const COLOR_BY_LEVEL: Record<string, string> = {
 };
 
 export default async function CyberMeteoTopBar() {
-  let level: string = "green";
+  let level: string;
   try {
     const meteo = await getCyberMeteo();
     // Normalise la cle 'level' qui peut varier selon l'implementation
