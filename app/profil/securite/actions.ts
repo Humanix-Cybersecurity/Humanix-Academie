@@ -24,6 +24,7 @@ import {
   hashIp,
 } from "@/lib/password-reset";
 import { auditLog, AuditActions } from "@/lib/audit";
+import { sendEmail, isEmailConfigured } from "@/lib/email";
 
 const ISSUER = "Humanix Academie";
 
@@ -272,19 +273,13 @@ export async function requestPasswordReset(formData: FormData): Promise<{
       ip,
       userAgent: ua,
     });
-    // Envoi de l'email via Resend (mute en cas d'echec, toujours ok)
+    // Envoi de l'email via Scaleway TEM (mute en cas d'echec, toujours ok
+    // pour eviter l'enumeration attaquant cote rate limit).
     try {
-      if (
-        process.env.RESEND_API_KEY &&
-        process.env.RESEND_API_KEY !== "demo-key-not-used-in-demo-mode" &&
-        process.env.EMAIL_FROM
-      ) {
+      if (isEmailConfigured()) {
         const baseUrl = process.env.AUTH_URL ?? "http://localhost:3000";
         const url = `${baseUrl}/connexion/reset/${plain}`;
-        const { Resend: ResendSDK } = await import("resend");
-        const resend = new ResendSDK(process.env.RESEND_API_KEY);
-        await resend.emails.send({
-          from: process.env.EMAIL_FROM,
+        await sendEmail({
           to: email,
           subject: "🔐 Réinitialisation de votre mot de passe Humanix",
           html: resetPasswordEmailHtml(url, user.name ?? null),
