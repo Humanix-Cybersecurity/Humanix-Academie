@@ -301,7 +301,9 @@ jobs:
       - name: Verify Signed-off-by on commits
         run: |
           BASE_SHA=$(git merge-base origin/main HEAD)
-          UNSIGNED=$(git log --format='%h %s' "${BASE_SHA}..HEAD" --invert-grep --grep='^Signed-off-by:' || true)
+          # --no-merges : exclut le merge commit synthetique pull/N/merge cree
+          # par actions/checkout en mode PR (qui n'est pas un commit utilisateur).
+          UNSIGNED=$(git log --format='%h %s' "${BASE_SHA}..HEAD" --no-merges --invert-grep --grep='^Signed-off-by:' || true)
           if [ -n "${UNSIGNED}" ]; then
             echo "Les commits suivants ne sont pas signés DCO :"
             echo "${UNSIGNED}"
