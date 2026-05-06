@@ -120,7 +120,7 @@ async function main() {
   console.log(`  bootstrap-admin: cree ${email} (ADMIN) pour ${tenant.name}`);
   if (!passwordHash) {
     console.log(
-      "  bootstrap-admin: aucun mot de passe defini, l'admin doit se connecter par magic link (Resend) ou SSO",
+      "  bootstrap-admin: aucun mot de passe defini, l'admin doit se connecter par magic link (Scaleway TEM) ou SSO",
     );
   } else {
     console.log(

@@ -58,7 +58,7 @@ DATABASE_URL=postgresql://humanix:CHANGEME@postgres:5432/humanix?schema=public
 AUTH_SECRET=remplace-moi-par-un-secret-genere
 
 # Email transactionnel (magic link, notifications)
-RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxx
+SCALEWAY_TEM_TOKEN=re_xxxxxxxxxxxxxxxxxxxxx
 SMTP_FROM=noreply@tonentreprise.fr
 ```
 
