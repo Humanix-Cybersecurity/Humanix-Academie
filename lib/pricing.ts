@@ -180,8 +180,9 @@ export const TIERS: PricingTier[] = [
     features: [
       "Tout l'offre Essentielle, et en plus :",
       "Challenges d'équipe inter-services",
-      "Phishing simulé illimité (3 templates)",
-      "Vishing IA souverain (Mistral + Piper TTS local) 🇫🇷",
+      "Phishing email — génération illimitée de templates (envoi à la charge du client ou forfait sur mesure)",
+      "Vishing IA souverain Mistral + Piper TTS local 🇫🇷 — génération illimitée de scripts (exécution à la charge du client ou forfait sur mesure)",
+      "Smishing IA souverain Mistral 🇫🇷 — génération illimitée de SMS (envoi à la charge du client ou forfait sur mesure)",
       "Marketplace de modules (officiels + communauté)",
       "Modules contributeurs (publication interne)",
       "API REST illimitée",
