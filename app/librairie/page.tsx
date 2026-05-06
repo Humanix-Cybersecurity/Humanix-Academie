@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Catalogue librairie micro-learning — refonte cosy mai 2026.
+// Catalogue librairie micro-learning - refonte cosy mai 2026.
 //
 // Brief : "experience, terrain, sensibilisation reelle, pas celle generee
-// par la peur — celle qui sent bon la maitrise et la confiance".
+// par la peur - celle qui sent bon la maitrise et la confiance".
 //
 // La librairie est l'espace de lecture libre : un endroit ou le visiteur
 // vient quand il a 5 a 10 minutes pour apprendre quelque chose, pas dans
@@ -86,7 +86,7 @@ export default async function LibrairiePage({
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* ============================================================
-          1. HERO — invitation a la lecture libre
+          1. HERO - invitation a la lecture libre
           ============================================================ */}
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
         <section
@@ -107,7 +107,7 @@ export default async function LibrairiePage({
             className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed animate-slide-up"
             style={{ animationDelay: "220ms" }}
           >
-            Articles courts et autonomes — 5 à 10 minutes par lecture.
+            Articles courts et autonomes - 5 à 10 minutes par lecture.
             Aucune obligation, juste une invitation à apprendre quand tu en
             as envie.
           </p>
@@ -160,7 +160,7 @@ export default async function LibrairiePage({
         )}
 
         {/* ============================================================
-            3. ARTICLES — cards magazine avec gradients soft cycles
+            3. ARTICLES - cards magazine avec gradients soft cycles
             ============================================================ */}
         {articles.length === 0 ? (
           <div className="card text-center py-16 bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/30 border-emerald-200 dark:border-emerald-900/40">
@@ -177,7 +177,7 @@ export default async function LibrairiePage({
             </h2>
             <p className="text-gray-600 dark:text-gray-300 max-w-md mx-auto italic">
               {category
-                ? "Reviens nous voir un peu plus tard — ou explore les autres catégories."
+                ? "Reviens nous voir un peu plus tard - ou explore les autres catégories."
                 : "On prend le temps d'écrire bien plutôt que beaucoup."}
             </p>
             {category && (
@@ -234,18 +234,18 @@ export default async function LibrairiePage({
         )}
 
         {/* ============================================================
-            4. RESPIRATION — citation finale signature
+            4. RESPIRATION - citation finale signature
             ============================================================ */}
         <section className="text-center pt-6">
           <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
             « Lire cinq minutes, c'est déjà construire un réflexe. La maîtrise
-            cyber se cultive comme un jardin — par petites touches régulières. »
+            cyber se cultive comme un jardin - par petites touches régulières. »
           </blockquote>
           <p
             aria-hidden="true"
             className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
           >
-            — Hex veille
+            - Hex veille
           </p>
         </section>
       </div>

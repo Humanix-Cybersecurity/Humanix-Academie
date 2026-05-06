@@ -340,7 +340,7 @@ async function main() {
       const saison = saisonRecords.get(saisonSlug);
       const score = Math.floor(40 + Math.random() * 50 * u.maturity);
       // Quiz score % derive de la maturite avec bruit realiste
-      // (45-95 %) — sans cela, l'admin /admin/impact affiche "Quiz moyen
+      // (45-95 %) - sans cela, l'admin /admin/impact affiche "Quiz moyen
       // 0 %" parce que bestQuizScorePct reste a sa valeur par defaut.
       const quizScorePct = Math.max(
         0,
@@ -349,7 +349,7 @@ async function main() {
           Math.round(45 + u.maturity * 45 + (Math.random() - 0.5) * 15),
         ),
       );
-      // Etale sur 28 jours (4 semaines) plutot que 14 — sinon impossible
+      // Etale sur 28 jours (4 semaines) plutot que 14 - sinon impossible
       // de detecter un streak >= 2 semaines, et la metrique /admin/impact
       // reste bloquee a 0.
       const daysAgo = Math.floor(Math.random() * 28);

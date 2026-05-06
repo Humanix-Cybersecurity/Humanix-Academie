@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Catalogue marketplace public — visible par tout admin connecte
+// Catalogue marketplace public - visible par tout admin connecte
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
@@ -52,7 +52,7 @@ export default async function MarketplacePage({
             🛒 Marketplace
           </h1>
           <p className="text-gray-600 mt-1">
-            Catalogue de modules de sensibilisation cyber — éditeur officiel +
+            Catalogue de modules de sensibilisation cyber - éditeur officiel +
             contributions communauté.
           </p>
         </div>

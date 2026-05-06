@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// GET /admin/audit/export — telecharge le journal d'audit du tenant en CSV.
+// GET /admin/audit/export - telecharge le journal d'audit du tenant en CSV.
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { listAuditLogs, toCsv } from "@/lib/audit-query";

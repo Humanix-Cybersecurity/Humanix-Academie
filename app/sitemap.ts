@@ -2,7 +2,7 @@
 // Generation auto du /sitemap.xml par Next.js App Router.
 // Cf. https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
 //
-// On liste les pages publiques marketing — celles qu'on veut faire indexer
+// On liste les pages publiques marketing - celles qu'on veut faire indexer
 // par Google / Bing / Qwant / Ecosia. Pas les zones logues (/admin, /apprendre,
 // /profil, etc.) qui sont deja en disallow dans robots.ts.
 //

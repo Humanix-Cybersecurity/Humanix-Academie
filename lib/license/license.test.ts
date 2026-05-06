@@ -94,7 +94,7 @@ describe("encode/decode round-trip", () => {
   });
 });
 
-describe("verifyLicenseString — happy path", () => {
+describe("verifyLicenseString - happy path", () => {
   it("valide une licence fraichement signee", () => {
     const payload = makePayload();
     const str = signLicense(payload, TEST_KEYS.privateKeyPem);
@@ -129,7 +129,7 @@ describe("verifyLicenseString — happy path", () => {
   });
 });
 
-describe("verifyLicenseString — rejets", () => {
+describe("verifyLicenseString - rejets", () => {
   it("rejette une licence vide", () => {
     const r = verifyLicenseString("");
     expect(r.valid).toBe(false);
@@ -284,7 +284,7 @@ describe("describeLicenseError", () => {
   });
 });
 
-describe("getEffectivePlan — combinaison licence + DB", () => {
+describe("getEffectivePlan - combinaison licence + DB", () => {
   it("priorise le plan licence quand la licence est valide", async () => {
     // Import dynamique pour reset module entre tests (la licence est lue
     // au moment de l'appel via process.env, pas a l'import).

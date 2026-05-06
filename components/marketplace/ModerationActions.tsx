@@ -50,7 +50,7 @@ export default function ModerationActions({ moduleId }: { moduleId: string }) {
         <textarea
           value={reason}
           onChange={(e) => setReason(e.target.value)}
-          placeholder="Motif du refus (10 caractères min — sera communiqué à l'auteur)"
+          placeholder="Motif du refus (10 caractères min - sera communiqué à l'auteur)"
           rows={2}
           maxLength={500}
           className="w-full sm:w-80 rounded-xl border-2 border-gray-200 p-2 text-sm focus:border-warn focus:outline-none"

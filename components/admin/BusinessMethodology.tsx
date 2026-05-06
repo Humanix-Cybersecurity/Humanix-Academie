@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// BusinessMethodology — Section pliable "Méthodologie & sources" pour le
+// BusinessMethodology - Section pliable "Méthodologie & sources" pour le
 // dashboard /admin/business.
 //
 // Objectif : transformer un dashboard "joli" en outil de pilotage CRÉDIBLE.
@@ -13,7 +13,7 @@
 //   - Phrase prête à reprendre en COMEX
 //
 // Le tout dans une zone pliable pour ne pas alourdir le hero, mais visible
-// au moindre clic — la transparence à la demande.
+// au moindre clic - la transparence à la demande.
 // =============================================================================
 
 import { useState } from "react";

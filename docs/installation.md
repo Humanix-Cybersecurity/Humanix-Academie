@@ -1,4 +1,4 @@
-# Installation — Humanix Académie Community Edition
+# Installation - Humanix Académie Community Edition
 
 Ce guide te permet d'installer Humanix Académie en self-host sur ton
 infrastructure. Trois modes sont supportés :
@@ -23,22 +23,22 @@ Temps estimé : **10 à 30 minutes** selon le mode et ton expérience.
 | **Docker Compose** (mode 1)     | v2.20+                                      | v2.27+           |
 | **Node.js** (mode 2)            | 20.10+                                      | 20.x LTS         |
 | **PostgreSQL** (mode 2)         | 14+                                         | 16               |
-| **Redis** (optionnel, sessions) | —                                           | 7.2              |
+| **Redis** (optionnel, sessions) | -                                           | 7.2              |
 
 ---
 
-## Mode 1 — Docker Compose (recommandé)
+## Mode 1 - Docker Compose (recommandé)
 
 C'est le mode le plus simple et le plus reproductible.
 
-### Étape 1 — Clone le repo
+### Étape 1 - Clone le repo
 
 ```bash
 git clone https://github.com/humanix-cybersecurity/humanix-academie.git
 cd humanix-academie
 ```
 
-### Étape 2 — Configure tes variables d'environnement
+### Étape 2 - Configure tes variables d'environnement
 
 ```bash
 cp .env.example .env
@@ -64,7 +64,7 @@ SMTP_FROM=noreply@tonentreprise.fr
 
 Pour la liste complète des variables, voir [configuration.md](./configuration.md).
 
-### Étape 3 — Démarre la stack
+### Étape 3 - Démarre la stack
 
 ```bash
 docker compose up -d
@@ -72,11 +72,11 @@ docker compose up -d
 
 Cela lance trois services :
 
-- `postgres` — base de données
-- `app` — application Next.js (port 3000)
-- `caddy` — reverse proxy avec TLS auto Let's Encrypt (ports 80 et 443)
+- `postgres` - base de données
+- `app` - application Next.js (port 3000)
+- `caddy` - reverse proxy avec TLS auto Let's Encrypt (ports 80 et 443)
 
-### Étape 4 — Initialise la base de données
+### Étape 4 - Initialise la base de données
 
 ```bash
 # Applique les migrations
@@ -86,7 +86,7 @@ docker compose exec app npx prisma migrate deploy
 docker compose exec app npx prisma db seed
 ```
 
-### Étape 5 — Premier accès
+### Étape 5 - Premier accès
 
 Ouvre `https://academie.tonentreprise.fr` (ou `http://localhost:3000` en local).
 
@@ -102,12 +102,12 @@ utilisateurs réels via `/admin/utilisateurs`.
 
 ---
 
-## Mode 2 — Bare-metal (Node + PostgreSQL natifs)
+## Mode 2 - Bare-metal (Node + PostgreSQL natifs)
 
 Pour les environnements où Docker n'est pas autorisé ou pour la performance
 maximale.
 
-### Étape 1 — Installe Node.js 20
+### Étape 1 - Installe Node.js 20
 
 ```bash
 # Ubuntu / Debian
@@ -119,7 +119,7 @@ node --version  # v20.x.x
 npm --version   # 10.x.x
 ```
 
-### Étape 2 — Installe PostgreSQL 16
+### Étape 2 - Installe PostgreSQL 16
 
 ```bash
 sudo apt-get install -y postgresql-16 postgresql-contrib-16
@@ -132,7 +132,7 @@ GRANT ALL PRIVILEGES ON DATABASE humanix TO humanix;
 EOF
 ```
 
-### Étape 3 — Clone et configure
+### Étape 3 - Clone et configure
 
 ```bash
 git clone https://github.com/humanix-cybersecurity/humanix-academie.git
@@ -141,7 +141,7 @@ cp .env.example .env
 # Édite .env (cf. Mode 1 étape 2)
 ```
 
-### Étape 4 — Installe les dépendances et build
+### Étape 4 - Installe les dépendances et build
 
 ```bash
 npm ci --omit=dev
@@ -150,7 +150,7 @@ npx prisma generate
 npm run build
 ```
 
-### Étape 5 — Démarre l'application
+### Étape 5 - Démarre l'application
 
 En production, utilise un superviseur de processus (`systemd`, `pm2`, etc.) :
 
@@ -186,7 +186,7 @@ sudo systemctl enable --now humanix
 sudo systemctl status humanix
 ```
 
-### Étape 6 — Reverse proxy (nginx ou Caddy)
+### Étape 6 - Reverse proxy (nginx ou Caddy)
 
 Pour exposer l'app sur le port 443 avec TLS :
 
@@ -220,7 +220,7 @@ server {
 
 ---
 
-## Mode 3 — Kubernetes (production multi-nœuds)
+## Mode 3 - Kubernetes (production multi-nœuds)
 
 Pour les déploiements production exigeants (haute dispo, scaling horizontal,
 multi-AZ).

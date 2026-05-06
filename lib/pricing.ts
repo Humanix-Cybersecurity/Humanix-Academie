@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Source de vérité de la grille tarifaire Humanix Académie.
-// Aligné sur le pivot mai 2026 — open core service-led, modèle volume.
+// Aligné sur le pivot mai 2026 - open core service-led, modèle volume.
 // Cf. Pack_Lancement_Solo/05_Pivot_OSS_Mai_2026/05_PRICING_VOLUME.md
 //
 // 6 paliers :
-//   0. Community Edition — self-host AGPL gratuit (n'a pas de tenant cloud)
-//   1. Découverte        — cloud forever-free, 5 sièges
-//   2. Starter (id: solo) — 19 €/mois forfait, 15 sièges
-//   3. Essentielle ⭐    — 3 €/user/mois (mini 16, max 50)
-//   4. Pro                — 2,50 €/user/mois (mini 51, max 250)
-//   5. Enterprise (id: premium) — sur devis (250+)
+//   0. Community Edition - self-host AGPL gratuit (n'a pas de tenant cloud)
+//   1. Découverte        - cloud forever-free, 5 sièges
+//   2. Starter (id: solo) - 19 €/mois forfait, 15 sièges
+//   3. Essentielle ⭐    - 3 €/user/mois (mini 16, max 50)
+//   4. Pro                - 2,50 €/user/mois (mini 51, max 250)
+//   5. Enterprise (id: premium) - sur devis (250+)
 
 import type { PlanId } from "@/lib/plans";
 
@@ -64,7 +64,7 @@ export const TIERS: PricingTier[] = [
       "Mascotte évolutive + console dirigeant",
       "Connecteur natif CISO Assistant + format OSCAL",
       "Webhooks compatibles Sentinel/Splunk/Sekoia",
-      "MCP Server pour agents IA (Claude Desktop, Mistral, GPT) — MIT autonome",
+      "MCP Server pour agents IA (Claude Desktop, Mistral, GPT) - MIT autonome",
       "Pack NIS2 lite (templates registres)",
       "Documentation utilisateur complète",
       "Communauté Discord + GitHub Discussions",
@@ -98,7 +98,7 @@ export const TIERS: PricingTier[] = [
   {
     id: "solo",
     name: "Starter",
-    tagline: "Pour TPE 5-15 personnes — pour le prix d'un café/semaine",
+    tagline: "Pour TPE 5-15 personnes - pour le prix d'un café/semaine",
     emoji: "⚡",
     pricing: {
       monthly: { display: "19 €/mois", amount: 19, unit: "forfait" },
@@ -128,7 +128,7 @@ export const TIERS: PricingTier[] = [
     id: "essentielle",
     name: "Essentielle",
     tagline:
-      "Le standard PME — tout le contenu, tous les connecteurs souverains",
+      "Le standard PME - tout le contenu, tous les connecteurs souverains",
     emoji: "✨",
     highlight: true,
     pricing: {
@@ -144,13 +144,13 @@ export const TIERS: PricingTier[] = [
     features: [
       "Tout le catalogue cyber (saisons + librairie)",
       "SSO Microsoft 365 et Google Workspace",
-      "SCIM v2 — provisioning auto Entra / Okta / Google",
+      "SCIM v2 - provisioning auto Entra / Okta / Google",
       "Console manager + dirigeant avec accès gradués",
       "Suivi individuel et par service",
       "Certificats individuels (PDF signé)",
       "Import CSV en masse",
       "Score de risque humain temps réel",
-      "API REST publique (lecture) — clé API tenant",
+      "API REST publique (lecture) - clé API tenant",
       "Webhooks signés HMAC-SHA256 (events temps réel)",
       "Connecteur GRC : CISO Assistant + format OSCAL v1.1.2 (NIST)",
       "Notifications de rappel automatiques",
@@ -161,7 +161,7 @@ export const TIERS: PricingTier[] = [
   {
     id: "pro",
     name: "Pro",
-    tagline: "Pour PME industrialisées — phishing, marketplace, IA, SIEM",
+    tagline: "Pour PME industrialisées - phishing, marketplace, IA, SIEM",
     emoji: "🚀",
     pricing: {
       monthly: {
@@ -180,14 +180,14 @@ export const TIERS: PricingTier[] = [
     features: [
       "Tout l'offre Essentielle, et en plus :",
       "Challenges d'équipe inter-services",
-      "Phishing email — génération illimitée de templates (envoi à la charge du client ou forfait sur mesure)",
-      "Vishing IA souverain Mistral + Piper TTS local 🇫🇷 — génération illimitée de scripts (exécution à la charge du client ou forfait sur mesure)",
-      "Smishing IA souverain Mistral 🇫🇷 — génération illimitée de SMS (envoi à la charge du client ou forfait sur mesure)",
+      "Phishing email - génération illimitée de templates (envoi à la charge du client ou forfait sur mesure)",
+      "Vishing IA souverain Mistral + Piper TTS local 🇫🇷 - génération illimitée de scripts (exécution à la charge du client ou forfait sur mesure)",
+      "Smishing IA souverain Mistral 🇫🇷 - génération illimitée de SMS (envoi à la charge du client ou forfait sur mesure)",
       "Marketplace de modules (officiels + communauté)",
       "Modules contributeurs (publication interne)",
       "API REST illimitée",
       "Connecteurs SIEM : Microsoft Sentinel + Splunk HEC (workbook & SPL fournis)",
-      "Format CEF v1 — compatible QRadar, Sekoia, Elastic, Wazuh, Graylog",
+      "Format CEF v1 - compatible QRadar, Sekoia, Elastic, Wazuh, Graylog",
       "Customer Success Manager dédié",
       "Kit CSE et charte d'usage prête à l'emploi",
       "IA Coach personnalisé par apprenant",

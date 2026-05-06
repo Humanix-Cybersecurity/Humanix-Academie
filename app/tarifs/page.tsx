@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page tarifs publique — refonte cosy mai 2026 (pivot open core service-led).
+// Page tarifs publique - refonte cosy mai 2026 (pivot open core service-led).
 // Cf. Pack_Lancement_Solo/05_Pivot_OSS_Mai_2026/05_PRICING_VOLUME.md
 //
 // 6 paliers : Community Edition (self-host) · Découverte (cloud free) ·
@@ -19,7 +19,7 @@ import PricingSimulator from "@/components/PricingSimulator";
 import HexBackdrop from "@/components/HexBackdrop";
 
 export const metadata = {
-  title: "Tarifs — Humanix Académie",
+  title: "Tarifs - Humanix Académie",
   description:
     "Cybersensibilisation française open source AGPL. Self-host gratuit à vie. Cloud à partir de 0 €/mois. 6 paliers, hébergement souverain France.",
 };
@@ -28,7 +28,7 @@ export default function TarifsPage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* =====================================================================
-          1. HERO — invitation cosy a la lecture des prix
+          1. HERO - invitation cosy a la lecture des prix
           ===================================================================== */}
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
         <section
@@ -52,7 +52,7 @@ export default function TarifsPage() {
           >
             Self-host gratuit à vie sous AGPLv3, ou cloud souverain à partir de
             0 €. Pas de tarif à quatre chiffres, pas d'engagement piège, pas de
-            jargon. Le prix est un choix politique — celui de ne laisser
+            jargon. Le prix est un choix politique - celui de ne laisser
             personne au bord du chemin.
           </p>
           <div
@@ -71,7 +71,7 @@ export default function TarifsPage() {
       <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
 
       {/* =====================================================================
-          2. AUDIT FLASH CTA — invitation, pas urgence
+          2. AUDIT FLASH CTA - invitation, pas urgence
           ===================================================================== */}
       <section
         className="mb-12 animate-slide-up"
@@ -103,7 +103,7 @@ export default function TarifsPage() {
                 Notre <strong>audit cyber flash</strong> donne une photo claire
                 de la maturite humaine de ton organisation, en 15 questions
                 bienveillantes. Rapport PDF a la fin, recommandation
-                personnalisee — sans pression.
+                personnalisee - sans pression.
               </p>
               <Link
                 href="/audit-flash"
@@ -117,7 +117,7 @@ export default function TarifsPage() {
       </section>
 
       {/* =====================================================================
-          SIMULATEUR — gardé, branché sur la nouvelle grille
+          SIMULATEUR - gardé, branché sur la nouvelle grille
           ===================================================================== */}
       <section className="mb-16">
         <div className="card bg-gradient-to-br from-primary-50 via-white to-cyan-50 border-2 border-accent-500/30">
@@ -130,7 +130,7 @@ export default function TarifsPage() {
           - Mobile : 1 col
           - md : 2 cols (3 lignes)
           - lg : 3 cols (2 lignes : free / cloud)
-          - xl : 6 cols (1 ligne) — uniquement sur très grand écran
+          - xl : 6 cols (1 ligne) - uniquement sur très grand écran
           ===================================================================== */}
       <section className="mb-16">
         <div className="text-center mb-8">
@@ -204,7 +204,7 @@ export default function TarifsPage() {
       </section>
 
       {/* =====================================================================
-          POURQUOI HUMANIX — palette 6 saisons cyclees, animation cascade
+          POURQUOI HUMANIX - palette 6 saisons cyclees, animation cascade
           ===================================================================== */}
       <section className="mb-16">
         <div className="text-center mb-8">
@@ -278,7 +278,7 @@ export default function TarifsPage() {
       </section>
 
       {/* =====================================================================
-          COMPARATIF DÉTAILLÉ — 6 paliers
+          COMPARATIF DÉTAILLÉ - 6 paliers
           ===================================================================== */}
       <section className="mb-16">
         <div className="text-center mb-8">
@@ -372,7 +372,7 @@ export default function TarifsPage() {
                 cells={["—", "—", "—", "✓", "✓", "✓"]}
               />
               <FeatureRow
-                label="Phishing email — génération templates"
+                label="Phishing email - génération templates"
                 cells={["—", "—", "—", "—", "Illimité*", "Illimité*"]}
               />
               <FeatureRow
@@ -442,10 +442,10 @@ export default function TarifsPage() {
           </table>
         </div>
 
-        {/* Footnote phishing/vishing/smishing — clarifier le modèle */}
+        {/* Footnote phishing/vishing/smishing - clarifier le modèle */}
         <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-900/50 dark:bg-amber-900/15 p-4 text-sm text-amber-900 dark:text-amber-100">
           <p>
-            <strong>* Phishing / Vishing / Smishing</strong> — Humanix génère
+            <strong>* Phishing / Vishing / Smishing</strong> - Humanix génère
             gratuitement les <strong>templates et scripts pédagogiques</strong>{" "}
             via IA souveraine Mistral. L'<strong>envoi réel</strong> (emails,
             SMS, appels téléphoniques) n'est <strong>pas inclus</strong> :
@@ -464,7 +464,7 @@ export default function TarifsPage() {
       </section>
 
       {/* =====================================================================
-          ROI — chiffres a froid, sans urgence
+          ROI - chiffres a froid, sans urgence
           ===================================================================== */}
       <section className="mb-16">
         <div className="rounded-3xl border-2 border-emerald-200 dark:border-emerald-900/40 bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/40 p-6 sm:p-10 shadow-sm">
@@ -499,7 +499,7 @@ export default function TarifsPage() {
               </ul>
               <p className="text-sm text-gray-600 mt-4 italic">
                 À 900 €/an, l'investissement est rentabilisé dès la première
-                attaque évitée — qui statistiquement arrive en 18 mois sur une
+                attaque évitée - qui statistiquement arrive en 18 mois sur une
                 PME non-formée.
               </p>
             </div>
@@ -565,7 +565,7 @@ export default function TarifsPage() {
       </section>
 
       {/* =====================================================================
-          CTA FINAL — invitation cosy, pas urgence
+          CTA FINAL - invitation cosy, pas urgence
           ===================================================================== */}
       <section
         aria-labelledby="cta-final"
@@ -615,25 +615,25 @@ export default function TarifsPage() {
           </a>
         </div>
         <p className="text-xs opacity-70 mt-6 relative">
-          Une question ? <strong>contact@humanix-cybersecurity.fr</strong> — on
+          Une question ? <strong>contact@humanix-cybersecurity.fr</strong> - on
           repond sous 4 h ouvrees.
         </p>
       </section>
 
       {/* =====================================================================
-          CITATION FINALE — signature cosy "Hex veille"
+          CITATION FINALE - signature cosy "Hex veille"
           ===================================================================== */}
       <section className="text-center pt-10 pb-4">
         <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
           « Le prix est un choix politique. On a choisi de ne laisser personne
-          au bord du chemin — pas par charite, par strategie. La cybersecurite
+          au bord du chemin - pas par charite, par strategie. La cybersecurite
           ne peut pas etre un luxe quand 90 % des attaques visent les humains. »
         </blockquote>
         <p
           aria-hidden="true"
           className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
         >
-          — Hex veille
+          - Hex veille
         </p>
       </section>
       </div>
@@ -694,7 +694,7 @@ function PricingCard({ tier: t }: { tier: PricingTier }) {
         )}
         <p className="text-xs text-gray-500 mt-2">
           {t.selfHostOnly
-            ? "Pas de limite — votre infra"
+            ? "Pas de limite - votre infra"
             : t.seats.max
               ? `${t.seats.min}–${t.seats.max} utilisateurs`
               : `${t.seats.min}+ utilisateurs`}
@@ -765,7 +765,7 @@ function Trust({ children }: { children: ReactNode }) {
 }
 
 // Palette 6 saisons cyclees (cyan/emerald/amber/purple/rose/indigo) pour
-// donner du caractere aux 9 cartes "Pourquoi Humanix" — la grammaire
+// donner du caractere aux 9 cartes "Pourquoi Humanix" - la grammaire
 // visuelle est partagee avec /comparatif, /librairie, /lancement-oss.
 const DIFF_PALETTES = [
   {

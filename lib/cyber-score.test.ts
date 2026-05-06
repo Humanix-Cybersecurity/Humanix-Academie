@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Tests du Cyberscore — composantes, pénalités, courbe concave.
+// Tests du Cyberscore - composantes, pénalités, courbe concave.
 // Critique : ce score apparaît sur le dashboard CODIR + rapports clients.
 // Une régression = perte de confiance immédiate (le RSSI compare aux mois précédents).
 
@@ -41,7 +41,7 @@ const baseTeam: CyberscoreTeam[] = Array.from({ length: 10 }, (_, i) => ({
   lastActivity: "il y a 2j",
 }));
 
-describe("computeCyberscore — cas dégénérés", () => {
+describe("computeCyberscore - cas dégénérés", () => {
   it("retourne score 0 / level danger si totalSeats = 0", () => {
     const out = computeCyberscore({ ...baseStats, totalSeats: 0 }, [], []);
     expect(out.score).toBe(0);
@@ -50,7 +50,7 @@ describe("computeCyberscore — cas dégénérés", () => {
   });
 });
 
-describe("computeCyberscore — composantes", () => {
+describe("computeCyberscore - composantes", () => {
   it("activation calculée sur les users actifs récemment, pas activatedSeats", () => {
     const allDormant = baseTeam.map((u) => ({ ...u, lastActivity: null }));
     const out = computeCyberscore(baseStats, baseSaisons, allDormant);
@@ -96,7 +96,7 @@ describe("computeCyberscore — composantes", () => {
   });
 });
 
-describe("computeCyberscore — pénalités", () => {
+describe("computeCyberscore - pénalités", () => {
   it("applique 'maillon faible' si un service a <40% complétion", () => {
     const team: CyberscoreTeam[] = [
       ...Array.from({ length: 5 }, (_, i) => ({
@@ -209,7 +209,7 @@ describe("computeCyberscore — pénalités", () => {
   });
 });
 
-describe("computeCyberscore — courbe concave + clamp", () => {
+describe("computeCyberscore - courbe concave + clamp", () => {
   it("score reste entre 0 et 100", () => {
     const out = computeCyberscore(baseStats, baseSaisons, baseTeam);
     expect(out.score).toBeGreaterThanOrEqual(0);

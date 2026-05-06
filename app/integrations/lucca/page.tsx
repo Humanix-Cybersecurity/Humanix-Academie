@@ -5,7 +5,7 @@ import Link from "next/link";
 import CopyableSnippet from "@/components/CopyableSnippet";
 
 export const metadata = {
-  title: "Connecteur Lucca — Humanix Académie",
+  title: "Connecteur Lucca - Humanix Académie",
   description:
     "Synchronisation HR auto : nouveau collaborateur dans Lucca → compte Humanix créé + onboarding cyber poussé. Connecteur Python souverain 🇫🇷.",
 };
@@ -47,25 +47,25 @@ export default function LuccaIntegrationPage() {
         </h2>
         <ol className="space-y-3 text-sm">
           <li>
-            <strong>1. Lucca</strong> — un nouveau collaborateur est créé par RH
+            <strong>1. Lucca</strong> - un nouveau collaborateur est créé par RH
             (ou import via API).
           </li>
           <li>
-            <strong>2. Connecteur Humanix</strong> — déclenché en cron horaire,
+            <strong>2. Connecteur Humanix</strong> - déclenché en cron horaire,
             pull les nouveaux users via <code>/api/v3/users</code>.
           </li>
           <li>
-            <strong>3. SCIM v2 Humanix</strong> — POST /scim/v2/Users → compte
+            <strong>3. SCIM v2 Humanix</strong> - POST /scim/v2/Users → compte
             créé avec <code>role=LEARNER</code> et{" "}
             <code>service=&lt;département Lucca&gt;</code>.
           </li>
           <li>
-            <strong>4. Magic link</strong> — Humanix envoie automatiquement le
+            <strong>4. Magic link</strong> - Humanix envoie automatiquement le
             lien d'accès au collaborateur, avec module onboarding cyber
             prioritaire.
           </li>
           <li>
-            <strong>5. Au départ</strong> — Lucca passe le user en{" "}
+            <strong>5. Au départ</strong> - Lucca passe le user en{" "}
             <code>isActive=false</code>, le connecteur le détecte, soft-delete
             côté Humanix (historique conservé pour audit).
           </li>

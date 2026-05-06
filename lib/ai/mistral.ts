@@ -2,7 +2,7 @@
 // Client Mistral pour la génération de contenu cyber pédagogique.
 //
 // POURQUOI MISTRAL :
-//  - Souverain français (Mistral AI, Paris) — RGPD natif
+//  - Souverain français (Mistral AI, Paris) - RGPD natif
 //  - API REST simple, format compatible OpenAI
 //  - Modèle "ministral-8b-latest" suffit largement pour générer un mail
 //    de phishing convaincant en français (latence ~2-4 s)
@@ -331,7 +331,7 @@ https://colissimo-suivi.test/payer
 Sans paiement sous 48h, le colis sera renvoyé.`,
         bodyHtml: `<p>Bonjour,</p><p>Votre colis n° <strong>CY1234567FR</strong> est bloqué en douane.</p><p>Pour finaliser la livraison, merci de régler les frais : <strong>1,98 €</strong>.</p><p><a href="https://colissimo-suivi.test/payer">Régler les frais et débloquer le colis →</a></p><p>Sans paiement sous 48h, le colis sera renvoyé.</p>`,
         redFlags: [
-          "Frais minuscules (1,98 €) pour ne pas méfier — le but est d'obtenir la CB",
+          "Frais minuscules (1,98 €) pour ne pas méfier - le but est d'obtenir la CB",
           "Domaine '.test' factice",
           "Numéro de colis fictif (vous n'attendez peut-être pas de colis)",
           "Pression temporelle (48h)",
@@ -339,7 +339,7 @@ Sans paiement sous 48h, le colis sera renvoyé.`,
         ],
       },
       free: {
-        subject: "Action requise — vérifiez votre compte",
+        subject: "Action requise - vérifiez votre compte",
         fromName: "Service Client",
         fromEmail: "noreply@service-client.example",
         bodyText: `Bonjour,\n\nUne vérification est requise sur votre compte. Cliquez ici pour la finaliser : https://verify.example.test/login\n\nCordialement.`,

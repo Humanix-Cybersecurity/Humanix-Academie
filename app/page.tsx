@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Landing publique — refonte cosy mai 2026.
+// Landing publique - refonte cosy mai 2026.
 //
 // Brief : "experience, terrain, sensibilisation reelle, pas celle generee
-// par la peur — celle qui sent bon la maitrise et la confiance".
+// par la peur - celle qui sent bon la maitrise et la confiance".
 //
 // Cette landing est le 1er contact. Avant, le ton etait commercial classique
 // ("14 jours gratuits", "effet realisme garanti", "argument marque
@@ -28,7 +28,7 @@ export default async function HomePage() {
   return (
     <main id="main-content" className="overflow-x-hidden">
       {/* ============================================================
-          1. HERO — accueil chaleureux, gradient text anime
+          1. HERO - accueil chaleureux, gradient text anime
           ============================================================ */}
       <HexBackdrop intensity="medium" className="bg-humanix-soft">
         <section
@@ -71,7 +71,7 @@ export default async function HomePage() {
               style={{ animationDelay: "300ms" }}
             >
               Pas un cours d'expert. Pas un kit anti-peur. Une habitude
-              tranquille. Conçue pour vos collaborateurs — y compris ceux qui ne
+              tranquille. Conçue pour vos collaborateurs - y compris ceux qui ne
               sont pas à l'aise avec l'informatique.
             </p>
 
@@ -125,7 +125,7 @@ export default async function HomePage() {
                 >
                   photo bienveillante de votre maturité cyber
                 </Link>{" "}
-                en 5 minutes — gratuit, sans email obligatoire.
+                en 5 minutes - gratuit, sans email obligatoire.
               </p>
             </div>
           </div>
@@ -133,7 +133,7 @@ export default async function HomePage() {
       </HexBackdrop>
 
       {/* ============================================================
-          2. CHIFFRES MARQUANTS — KPIs en cards-stat
+          2. CHIFFRES MARQUANTS - KPIs en cards-stat
           ============================================================ */}
       <section
         aria-labelledby="numbers-title"
@@ -171,7 +171,7 @@ export default async function HomePage() {
       </section>
 
       {/* ============================================================
-          3. COMMENT CA SE PASSE — voyage en 3 etapes
+          3. COMMENT CA SE PASSE - voyage en 3 etapes
           ============================================================ */}
       <section
         id="voyage"
@@ -207,7 +207,7 @@ export default async function HomePage() {
       </section>
 
       {/* ============================================================
-          4. CE QU'ON CONSTRUIT — 6 features avec ton de maitrise
+          4. CE QU'ON CONSTRUIT - 6 features avec ton de maitrise
           ============================================================ */}
       <section
         aria-labelledby="get-titre"
@@ -249,7 +249,7 @@ export default async function HomePage() {
           <FeaturePreview
             emoji="🎮"
             title="Hub apprenant"
-            text="Mascotte qui évolue, niveaux, badges, boutique. Vos équipes redemandent leurs 5 minutes — sans qu'on les supplie."
+            text="Mascotte qui évolue, niveaux, badges, boutique. Vos équipes redemandent leurs 5 minutes - sans qu'on les supplie."
             href="/demo"
             cta="Tester en démo"
             delay={160}
@@ -265,7 +265,7 @@ export default async function HomePage() {
           <FeaturePreview
             emoji="🤖"
             title="IA souveraine Mistral"
-            text="Phishing ciblé personnalisé, vishing voix générée localement par Piper TTS. Stack 100 % FR — pas de Cloud Act."
+            text="Phishing ciblé personnalisé, vishing voix générée localement par Piper TTS. Stack 100 % FR - pas de Cloud Act."
             href="/manifeste"
             cta="Lire le manifeste"
             delay={320}
@@ -282,7 +282,7 @@ export default async function HomePage() {
       </section>
 
       {/* ============================================================
-          5. POURQUOI NOUS — bandeau confiance, ton sobre
+          5. POURQUOI NOUS - bandeau confiance, ton sobre
           ============================================================ */}
       <section
         aria-labelledby="trust-title"
@@ -344,7 +344,7 @@ export default async function HomePage() {
       </section>
 
       {/* ============================================================
-          6. NEWSLETTER — Cyber-Anecdote, ton chaleureux
+          6. NEWSLETTER - Cyber-Anecdote, ton chaleureux
           ============================================================ */}
       <section
         aria-labelledby="anecdote-cta-title"
@@ -386,7 +386,7 @@ export default async function HomePage() {
       </section>
 
       {/* ============================================================
-          7. TARIFS — invitation tranquille
+          7. TARIFS - invitation tranquille
           ============================================================ */}
       <section className="max-w-4xl mx-auto px-4 mb-20">
         <div className="text-center bg-white dark:bg-slate-900 rounded-3xl p-10 border-2 border-accent-500/30 shadow-sm">
@@ -399,7 +399,7 @@ export default async function HomePage() {
           </h2>
           <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-xl mx-auto leading-relaxed">
             Pas de tarif à 4 chiffres. Pas d'engagement piège. Pas de jargon.
-            Six paliers limpides — Community, Découverte, Starter, Essentielle,
+            Six paliers limpides - Community, Découverte, Starter, Essentielle,
             Pro, Enterprise.
           </p>
           <Link
@@ -412,7 +412,7 @@ export default async function HomePage() {
       </section>
 
       {/* ============================================================
-          8. RESPIRATION — citation finale signature
+          8. RESPIRATION - citation finale signature
           ============================================================ */}
       <section className="text-center max-w-3xl mx-auto px-4 pb-20">
         <blockquote className="font-display italic text-lg sm:text-2xl text-gray-600 dark:text-gray-300 leading-relaxed">
@@ -423,7 +423,7 @@ export default async function HomePage() {
           aria-hidden="true"
           className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
         >
-          — Hex veille
+          - Hex veille
         </p>
       </section>
     </main>

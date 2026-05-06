@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page publique Cyber-météo France — accessible à tous (pas d'auth requise).
+// Page publique Cyber-météo France - accessible à tous (pas d'auth requise).
 // Sert de landing pour le badge en bandeau home, et de page éducative
 // "comprendre les niveaux d'alerte cyber".
 
@@ -14,7 +14,7 @@ export const revalidate = 3600;
 
 export const metadata = {
   title:
-    "Cyber-météo France — niveau d'alerte cyber national | Humanix Académie",
+    "Cyber-météo France - niveau d'alerte cyber national | Humanix Académie",
   description:
     "Niveau d'alerte cyber national en temps réel, calculé à partir du flux officiel CERT-FR. Souverain, gratuit, hébergé en France.",
 };
@@ -25,7 +25,7 @@ export default async function CyberMeteoPage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* ================================================================
-          1. HERO — invitation a la lecture, pas alarme
+          1. HERO - invitation a la lecture, pas alarme
           ================================================================ */}
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
         <section
@@ -49,7 +49,7 @@ export default async function CyberMeteoPage() {
           >
             Donnees officielles CERT-FR (cert.ssi.gouv.fr) agregees toutes les
             heures. Aucune telemetrie chez vous, aucune dependance hors UE,
-            aucune alarmisme — juste la lecture honnete du moment.
+            aucune alarmisme - juste la lecture honnete du moment.
           </p>
         </section>
       </HexBackdrop>
@@ -95,15 +95,15 @@ export default async function CyberMeteoPage() {
         </p>
         <ul className="list-disc pl-5 text-gray-700 dark:text-gray-300 space-y-1">
           <li>
-            <strong>Volume sur 7 jours</strong> — un nombre élevé d'alertes
+            <strong>Volume sur 7 jours</strong> - un nombre élevé d'alertes
             signe une période chaude
           </li>
           <li>
-            <strong>Pic sur 24h</strong> — déclenche un saut de niveau plus
+            <strong>Pic sur 24h</strong> - déclenche un saut de niveau plus
             agressif (signal d'événement en cours)
           </li>
           <li>
-            <strong>Thèmes dominants</strong> — extraits des titres pour
+            <strong>Thèmes dominants</strong> - extraits des titres pour
             contextualiser le résumé en cas d'alerte
           </li>
         </ul>
@@ -149,11 +149,11 @@ export default async function CyberMeteoPage() {
       </section>
 
       {/* ================================================================
-          CITATION FINALE — signature cosy "Hex veille"
+          CITATION FINALE - signature cosy "Hex veille"
           ================================================================ */}
       <section className="text-center pt-10 pb-4">
         <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-          « La meteo cyber n'est pas une alarme — c'est une lecture du ciel.
+          « La meteo cyber n'est pas une alarme - c'est une lecture du ciel.
           On observe, on prepare, on n'angoisse pas. La vigilance se cultive,
           la peur s'epuise. »
         </blockquote>
@@ -161,7 +161,7 @@ export default async function CyberMeteoPage() {
           aria-hidden="true"
           className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
         >
-          — Hex veille
+          - Hex veille
         </p>
       </section>
       </div>

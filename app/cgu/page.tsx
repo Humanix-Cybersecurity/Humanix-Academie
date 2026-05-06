@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// CGU SaaS — Conditions Générales d'Utilisation Humanix Académie
+// CGU SaaS - Conditions Générales d'Utilisation Humanix Académie
 import Link from "next/link";
 import LegalLayout, {
   LegalSection,
@@ -7,7 +7,7 @@ import LegalLayout, {
 } from "@/components/legal/LegalLayout";
 
 export const metadata = {
-  title: "CGU — Conditions Générales d'Utilisation — Humanix Académie",
+  title: "CGU - Conditions Générales d'Utilisation - Humanix Académie",
   description: "Règles d'utilisation de la plateforme Humanix Académie.",
 };
 
@@ -201,7 +201,7 @@ export default function CGUPage() {
           </li>
           <li>
             L'absence de balises HTML, scripts, ou liens externes vers des
-            contenus malveillants — Humanix-Cybersecurity se réserve le droit de
+            contenus malveillants - Humanix-Cybersecurity se réserve le droit de
             refuser tout module non conforme à la charte de sécurité de la
             marketplace.
           </li>
