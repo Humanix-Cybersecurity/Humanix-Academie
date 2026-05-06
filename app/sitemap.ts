@@ -41,6 +41,7 @@ const PAGES: SitemapEntry[] = [
   { path: "/comparatif", priority: 0.9, changeFrequency: "monthly" },
   { path: "/lancement-oss", priority: 0.9, changeFrequency: "daily" },
   { path: "/dpo", priority: 0.9, changeFrequency: "monthly" },
+  { path: "/pour-les-daf", priority: 0.9, changeFrequency: "monthly" },
 
   // Pages identite & valeurs
   { path: "/manifeste", priority: 0.8, changeFrequency: "monthly" },
