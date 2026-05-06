@@ -1120,6 +1120,118 @@ model DataBreach {
 }
 
 // =====================================================
+// AUDIT LOG — Journal de conformité
+//
+// Distinct du modèle Event (qui sert au business / gamification).
+// AuditLog trace les actions sensibles pour la conformité RGPD (accountability
+// art. 5.2), NIS2, ISO 27001 (A.12.4 Logging and monitoring), ANSSI.
+//
+// Principes :
+//  - Append-only (jamais d'UPDATE / DELETE en code applicatif)
+//  - Snapshot des identités (actorEmail, actorRole) pour résister à la
+//    suppression d'un compte ultérieurement.
+//  - IP hashée SHA-256 (RGPD-safe — réversible uniquement avec dictionnaire)
+//  - Conservation : 13 mois minimum (recommandation CNIL pour les logs
+//    sécurité, à aligner avec votre politique). Purge gérée par
+//    scripts/purge-old-audit-logs.ts.
+// =====================================================
+enum AuditAction {
+  // Authentification
+  USER_LOGIN_SUCCESS
+  USER_LOGIN_FAILED
+  USER_LOGOUT
+  USER_LOCKED
+  USER_UNLOCKED
+  USER_PASSWORD_CHANGED
+  USER_PASSWORD_RESET_REQUESTED
+  USER_PASSWORD_RESET_USED
+  USER_MFA_ENABLED
+  USER_MFA_DISABLED
+  USER_MFA_FORCED
+  USER_MFA_RESET_BY_ADMIN
+  USER_WEBAUTHN_REGISTERED
+  USER_WEBAUTHN_DELETED
+  USER_WEBAUTHN_LOGIN
+  // Lifecycle utilisateur
+  USER_INVITED
+  USER_CREATED
+  USER_UPDATED
+  USER_DELETED
+  USER_ACTIVATED
+  USER_SUSPENDED
+  USER_ROLE_CHANGED
+  USER_GROUPS_CHANGED
+  // Tenant
+  TENANT_CREATED
+  TENANT_UPDATED
+  TENANT_DELETED
+  // Groupes
+  GROUP_CREATED
+  GROUP_UPDATED
+  GROUP_DELETED
+  // Billing
+  BILLING_CHECKOUT_STARTED
+  BILLING_SUBSCRIPTION_CREATED
+  BILLING_SUBSCRIPTION_UPDATED
+  BILLING_SUBSCRIPTION_CANCELED
+  BILLING_PAYMENT_FAILED
+  BILLING_PORTAL_ACCESSED
+  // RGPD - Droits des personnes
+  DATA_ACCESSED          // art. 15 — l'user consulte ses donnees
+  DATA_EXPORTED          // art. 20 — portabilite (download JSON)
+  DATA_ERASURE_REQUESTED // art. 17 — demande d'effacement
+  DATA_ERASURE_COMPLETED // art. 17 — effacement effectue
+  CONSENT_GIVEN
+  CONSENT_WITHDRAWN
+  // Securite / divers
+  API_KEY_CREATED
+  API_KEY_REVOKED
+  EVIDENCE_BUNDLE_EXPORTED
+}
+
+enum AuditOutcome {
+  SUCCESS
+  FAILURE
+  DENIED      // refus d'autorisation (forbidden)
+}
+
+enum AuditSeverity {
+  INFO
+  NOTICE
+  WARNING
+  CRITICAL
+}
+
+model AuditLog {
+  id          String        @id @default(cuid())
+  tenantId    String?       // null pour les actions cross-tenant SUPERADMIN
+  // Acteur — snapshot pour resister a la suppression
+  actorUserId String?       // null si systeme / pre-auth (ex: login failed)
+  actorEmail  String?       // snapshot au moment du log
+  actorRole   String?       // snapshot
+  // Action
+  action      AuditAction
+  outcome     AuditOutcome
+  severity    AuditSeverity @default(INFO)
+  // Cible (optionnelle)
+  targetType  String?       // "user", "tenant", "group", "subscription", ...
+  targetId    String?
+  targetLabel String?       // snapshot lisible (email, nom, slug)
+  // Contexte technique
+  ipHash      String?       // SHA-256 hex (RGPD-safe)
+  userAgent   String?       @db.Text
+  message     String?       @db.Text
+  metadata    Json?
+
+  createdAt   DateTime      @default(now())
+
+  @@index([tenantId, createdAt])
+  @@index([actorUserId, createdAt])
+  @@index([action, createdAt])
+  @@index([severity, createdAt])
+}
+
+// =====================================================
 // EVENEMENTS
 // =====================================================
 model Event {
