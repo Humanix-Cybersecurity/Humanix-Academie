@@ -278,7 +278,7 @@ export const CATALOG_SAISONS: CatalogSaison[] = [
         difficulty: "medium",
       },
       {
-        slug: "06-cas-pathé",
+        slug: "06-cas-pathe",
         title: "Cas réel : 19 M€ chez Pathé",
         durationMinutes: 8,
         difficulty: "hard",
