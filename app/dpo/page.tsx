@@ -317,9 +317,9 @@ export default function DpoLandingPage() {
             </li>
           </ul>
           <p className="text-sm text-gray-600 dark:text-gray-300 mt-4 italic">
-            Ces fonctionnalites sont co-construites avec les premiers DPO
-            partenaires. Si tu veux participer au pilote, ecris-nous a
-            l'adresse ci-dessous.
+            Ces fonctionnalites sont co-construites avec les premiers DPO qui
+            voudront bien temoigner de leur quotidien. Si tu veux participer
+            au pilote, ecris-nous a l'adresse ci-dessous.
           </p>
         </section>
 
