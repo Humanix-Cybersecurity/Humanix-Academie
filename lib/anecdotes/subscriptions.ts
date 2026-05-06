@@ -83,6 +83,6 @@ function generateUnsubscribeToken(): string {
 }
 
 function isValidEmail(email: string): boolean {
-  // Volontairement permissif (validation finale par Resend)
+  // Volontairement permissif (validation finale par Scaleway TEM)
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 200;
 }
