@@ -23,50 +23,52 @@ import MadeInFranceStamp from "@/components/MadeInFranceStamp";
 type FooterLink = {
   href: string;
   label: string;
+  emoji: string;
   external?: boolean;
 };
 
 const PRODUIT: FooterLink[] = [
-  { href: "/tarifs", label: "Tarifs" },
-  { href: "/demo", label: "Démo en ligne" },
-  { href: "/comparatif", label: "Comparatif honnête" },
-  { href: "/integrations", label: "Connecteurs" },
-  { href: "/marketplace", label: "Marketplace" },
-  { href: "/famille", label: "Cyber Famille" },
-  { href: "/experts", label: "Bibliothèque d'experts" },
+  { href: "/tarifs", label: "Tarifs", emoji: "💶" },
+  { href: "/demo", label: "Démo en ligne", emoji: "🎮" },
+  { href: "/comparatif", label: "Comparatif honnête", emoji: "⚖️" },
+  { href: "/integrations", label: "Connecteurs", emoji: "🔌" },
+  { href: "/marketplace", label: "Marketplace", emoji: "🏛" },
+  { href: "/famille", label: "Cyber Famille", emoji: "❤️" },
+  { href: "/experts", label: "Bibliothèque d'experts", emoji: "✍️" },
 ];
 
 const SOLUTIONS: FooterLink[] = [
-  { href: "/dpo", label: "Espace DPO" },
-  { href: "/lancement-oss", label: "Lancement open source" },
-  { href: "/communaute", label: "Communauté" },
-  { href: "/manifeste", label: "Manifeste" },
-  { href: "/urgence-cyber", label: "Urgence cyber" },
-  { href: "/audit-flash", label: "Audit cyber gratuit" },
-  { href: "/cyber-meteo", label: "Cyber-météo France" },
-  { href: "/observatoire-fuites", label: "Observatoire fuites FR" },
-  { href: "/anecdotes", label: "Cyber-Anecdote du Lundi" },
+  { href: "/dpo", label: "Espace DPO", emoji: "🛡" },
+  { href: "/lancement-oss", label: "Lancement open source", emoji: "🌱" },
+  { href: "/communaute", label: "Communauté", emoji: "🤝" },
+  { href: "/manifeste", label: "Manifeste", emoji: "📜" },
+  { href: "/urgence-cyber", label: "Urgence cyber", emoji: "🚨" },
+  { href: "/audit-flash", label: "Audit cyber gratuit", emoji: "🎯" },
+  { href: "/cyber-meteo", label: "Cyber-météo France", emoji: "🇫🇷" },
+  { href: "/observatoire-fuites", label: "Observatoire fuites FR", emoji: "📊" },
+  { href: "/anecdotes", label: "Cyber-Anecdote du Lundi", emoji: "📅" },
 ];
 
 const CONFIANCE: FooterLink[] = [
-  { href: "/securite", label: "Trust Center" },
-  { href: "/securite/rapport-audit", label: "Rapport d'audit public" },
-  { href: "/accessibilite", label: "Accessibilité (RGAA)" },
-  { href: "/marketplace/security", label: "Charte Marketplace" },
-  { href: "/presse", label: "Espace presse" },
+  { href: "/securite", label: "Trust Center", emoji: "🔐" },
+  { href: "/securite/rapport-audit", label: "Rapport d'audit public", emoji: "📄" },
+  { href: "/accessibilite", label: "Accessibilité (RGAA)", emoji: "♿" },
+  { href: "/marketplace/security", label: "Charte Marketplace", emoji: "📋" },
+  { href: "/presse", label: "Espace presse", emoji: "📰" },
   {
     href: "https://github.com/Humanix-Cybersecurity/Humanix-Academie",
     label: "Code source (GitHub)",
+    emoji: "🐙",
     external: true,
   },
 ];
 
 const LEGAL: FooterLink[] = [
-  { href: "/mentions-legales", label: "Mentions légales" },
-  { href: "/confidentialite", label: "Confidentialité (RGPD)" },
-  { href: "/cookies", label: "Cookies" },
-  { href: "/cgv", label: "CGV" },
-  { href: "/cgu", label: "CGU" },
+  { href: "/mentions-legales", label: "Mentions légales", emoji: "📃" },
+  { href: "/confidentialite", label: "Confidentialité (RGPD)", emoji: "🔒" },
+  { href: "/cookies", label: "Cookies", emoji: "🍪" },
+  { href: "/cgv", label: "CGV", emoji: "📋" },
+  { href: "/cgu", label: "CGU", emoji: "📋" },
 ];
 
 function FooterColumn({
@@ -84,7 +86,18 @@ function FooterColumn({
       <ul className="space-y-2.5">
         {links.map((l) => {
           const className =
-            "text-sm text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-accent-300 transition-colors";
+            "text-sm text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-accent-300 transition-colors inline-flex items-baseline gap-2";
+          const inner = (
+            <>
+              <span
+                aria-hidden="true"
+                className="text-base shrink-0 w-5 text-center"
+              >
+                {l.emoji}
+              </span>
+              <span>{l.label}</span>
+            </>
+          );
           return (
             <li key={l.href}>
               {l.external ? (
@@ -94,12 +107,15 @@ function FooterColumn({
                   rel="noopener noreferrer"
                   className={className}
                 >
-                  {l.label}
-                  <span className="sr-only"> (s'ouvre dans un nouvel onglet)</span>
+                  {inner}
+                  <span className="sr-only">
+                    {" "}
+                    (s'ouvre dans un nouvel onglet)
+                  </span>
                 </a>
               ) : (
                 <Link href={l.href} className={className}>
-                  {l.label}
+                  {inner}
                 </Link>
               )}
             </li>
