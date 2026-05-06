@@ -1,19 +1,25 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Console dirigeant — vue agregee, KPIs, graphiques, suivi equipe.
 //
-// REFONTE MAI 2026 : ce composant ne gère PLUS le layout (sidebar, header,
-// breadcrumb, wrapper centré). Tout cela est désormais dans
-// `app/admin/layout.tsx` qui wrap automatiquement toutes les pages /admin/*.
+// REFONTE MAI 2026 (cosy / charmant / impactant) : la page wrap le dashboard
+// avec une intro chaleureuse facon "rituel matinal" :
+//   - Hero card HexBackdrop avec salutation contextuelle (Bonjour Florian)
+//   - Phrase d'accueil cosy "voici le rituel — ce qui demande l'attention,
+//     ce qui va bien" (vs "etat de maturite" un peu froid)
+//   - Citation finale "Hex veille" pour signer la page
+//   - Animations slide-up cascadees (idx * 80ms)
 //
-// Cette page se concentre uniquement sur :
-//   - le data fetching côté serveur (Prisma)
-//   - le rendu du dashboard métier (AdminDashboard)
+// Le dashboard metier (AdminDashboard) reste inchange — c'est l'outil de
+// pilotage avec recharts, KPIs, viz complexes. La cosy-fication s'opere
+// autour de lui, pas au sein.
 //
 // Plus de wrapper max-w-7xl, plus de sidebar importée localement :
 // layout natif Next.js dans app/admin/layout.tsx.
+import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import AdminDashboard from "@/components/AdminDashboard";
+import HexBackdrop from "@/components/HexBackdrop";
 
 export const dynamic = "force-dynamic";
 
@@ -158,30 +164,67 @@ export default async function AdminPage() {
           : "Bonsoir";
   const firstName = (session!.user?.name ?? "").split(" ")[0] ?? "";
 
-  return (
-    <>
-      {/* Header de page (le breadcrumb et l'avatar sont gérés par AdminTopBar
-          du layout). On garde juste la salutation chaleureuse + la date. */}
-      <header className="mb-6 flex flex-wrap items-end justify-between gap-3">
-        <div className="min-w-0">
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-gray-100 leading-tight">
-            {greeting}
-            {firstName ? `, ${firstName}` : ""} 👋
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm">
-            Voici l'état de la maturité cyber de ton équipe aujourd'hui.
-          </p>
-        </div>
-        <time className="text-xs text-gray-500 dark:text-gray-400 shrink-0 capitalize">
-          {new Date().toLocaleDateString("fr-FR", {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })}
-        </time>
-      </header>
+  // Phrase d'accueil contextualisee selon les stats — touche cosy
+  // (vs "voici l'etat de maturite" generique). On adapte au contexte reel.
+  const hint =
+    totalSeats === 0
+      ? "L'equipe n'est pas encore activee. Premiere etape sereine : inviter les premiers explorateurs."
+      : seenAtLeastOne === 0
+        ? "Personne n'a encore franchi la porte d'apprendre. Un petit message d'invitation peut declencher la dynamique."
+        : activationRate >= 80
+          ? "L'equipe est bien lancee. Aujourd'hui, c'est plus de polissage que d'urgence."
+          : activationRate >= 40
+            ? "La dynamique est lancee. Quelques personnes meritent un coup de main pour rejoindre le groupe."
+            : "Le decollage est encore timide. Une relance bienveillante peut reveiller les premiers reflexes.";
 
+  return (
+    <div className="animate-fadeIn space-y-8">
+      {/* ============================================================
+          1. HERO COSY — salutation + rituel matinal + date
+          ============================================================ */}
+      <HexBackdrop intensity="soft" className="rounded-3xl overflow-hidden">
+        <header className="relative px-6 sm:px-10 py-8 sm:py-10 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-slate-900 dark:via-slate-900 dark:to-blue-950/40 border-2 border-primary-200 dark:border-primary-900/40 rounded-3xl shadow-sm">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              <p
+                className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-2 animate-slide-up"
+                style={{ animationDelay: "60ms" }}
+              >
+                Console dirigeant · rituel du jour
+              </p>
+              <h1
+                className="font-display text-3xl sm:text-4xl font-extrabold text-primary-500 dark:text-accent-300 leading-tight animate-slide-up"
+                style={{ animationDelay: "140ms" }}
+              >
+                {greeting}
+                {firstName ? `, ${firstName}` : ""}{" "}
+                <span aria-hidden="true">👋</span>
+              </h1>
+              <p
+                className="text-base sm:text-lg text-gray-700 dark:text-gray-200 mt-3 max-w-2xl leading-relaxed animate-slide-up"
+                style={{ animationDelay: "240ms" }}
+              >
+                {hint}
+              </p>
+            </div>
+            <time
+              className="text-xs text-gray-500 dark:text-gray-400 shrink-0 capitalize tabular-nums animate-fadeIn rounded-full bg-white/80 dark:bg-slate-800/60 px-3 py-1.5 border border-gray-200 dark:border-slate-700"
+              style={{ animationDelay: "320ms" }}
+            >
+              {new Date().toLocaleDateString("fr-FR", {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
+            </time>
+          </div>
+        </header>
+      </HexBackdrop>
+
+      {/* ============================================================
+          2. DASHBOARD METIER — recharts + KPI + suivi equipe
+          ============================================================ */}
       <AdminDashboard
         stats={{
           totalSeats,
@@ -197,7 +240,34 @@ export default async function AdminPage() {
         teamProgress={teamProgress}
         weeklyActivity={weeklyActivity}
       />
-    </>
+
+      {/* ============================================================
+          3. CITATION FINALE — signature cosy "Hex veille"
+          ============================================================ */}
+      <section
+        aria-label="Mot du fondateur"
+        className="text-center pt-4 pb-2 animate-fadeIn"
+        style={{ animationDelay: "200ms" }}
+      >
+        <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          « Piloter une culture cyber, c'est moins une chasse aux failles
+          qu'une attention reguliere — comme entretenir un jardin. Aujourd'hui,
+          observe. Demain, arrose. »
+        </blockquote>
+        <p
+          aria-hidden="true"
+          className="mt-3 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
+        >
+          — Hex veille ·{" "}
+          <Link
+            href="/admin/business"
+            className="underline hover:text-accent-500"
+          >
+            voir l'impact business
+          </Link>
+        </p>
+      </section>
+    </div>
   );
 }
 
