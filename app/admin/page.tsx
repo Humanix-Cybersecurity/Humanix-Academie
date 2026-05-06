@@ -162,7 +162,7 @@ export default async function AdminPage() {
         : hour < 18
           ? "Bon après-midi"
           : "Bonsoir";
-  const firstName = (session!.user?.name ?? "").split(" ")[0] ?? "";
+  const firstName = (session!.user?.name ?? "").split(" ")[0];
 
   // Phrase d'accueil contextualisee selon les stats — touche cosy
   // (vs "voici l'etat de maturite" generique). On adapte au contexte reel.
