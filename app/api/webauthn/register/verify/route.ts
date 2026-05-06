@@ -10,6 +10,7 @@ import {
   verifyAndSaveRegistration,
   WEBAUTHN_REGISTER_COOKIE,
 } from "@/lib/webauthn";
+import { auditLog, AuditActions, AuditOutcomes } from "@/lib/audit";
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -47,6 +48,31 @@ export async function POST(req: Request) {
     response,
     deviceName,
   });
+
+  if (result.ok) {
+    await auditLog({
+      action: AuditActions.USER_WEBAUTHN_REGISTERED,
+      actor: {
+        userId,
+        email: session.user.email as string | undefined,
+        role: session.user.role,
+      },
+      tenantId: (session.user.tenantId as string) ?? null,
+      target: { type: "webauthn_credential", id: result.credentialId, label: deviceName },
+    });
+  } else {
+    await auditLog({
+      action: AuditActions.USER_WEBAUTHN_REGISTERED,
+      outcome: AuditOutcomes.FAILURE,
+      actor: {
+        userId,
+        email: session.user.email as string | undefined,
+        role: session.user.role,
+      },
+      tenantId: (session.user.tenantId as string) ?? null,
+      message: result.error ?? "verify_failed",
+    });
+  }
 
   const res = NextResponse.json(result);
   // On efface le cookie une fois consomme
