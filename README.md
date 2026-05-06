@@ -47,10 +47,11 @@ souverain, intégrée nativement à CISO Assistant.
 ## Démo en ligne
 
 Teste les 3 vues principales sans installation, sans inscription :
-**[demo.humanix.fr](https://demo.humanix.fr)**
+**[humanix-cybersecurity.fr/demo](https://humanix-cybersecurity.fr/demo)**
 
-La base est réinitialisée chaque nuit à 04h00 UTC — tu peux tout cliquer, tout
-modifier, tout casser sans crainte.
+La base de démonstration est réinitialisée régulièrement — tu peux tout
+cliquer, tout modifier, tout casser sans crainte. Comptes pré-remplis pour
+les rôles Apprenant, Manager et Admin.
 
 ---
 
