@@ -314,7 +314,7 @@ export default function SecuritePage() {
               X-Content-Type-Options, Referrer-Policy, Permissions-Policy
             </li>
             <li>
-              <strong>Authentification</strong> : magic link par email (Resend)
+              <strong>Authentification</strong> : magic link par email (Scaleway TEM)
               + sessions signées (Auth.js v5)
             </li>
             <li>
@@ -405,7 +405,7 @@ export default function SecuritePage() {
                   loc="France 🇫🇷"
                 />
                 <SubcontractorRow
-                  name="Resend"
+                  name="Scaleway TEM"
                   role="Emails transactionnels (magic links)"
                   loc="UE / clauses types"
                 />
