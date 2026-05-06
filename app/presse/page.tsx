@@ -29,7 +29,7 @@ const FAITS_CLES = [
   { label: "Licence", value: "GNU AGPLv3" },
   {
     label: "Repo public",
-    value: "github.com/humanix-cybersecurity/humanix-academie",
+    value: "github.com/Humanix-Cybersecurity/Humanix-Academie",
   },
   {
     label: "Tarif minimum cloud",
@@ -87,7 +87,7 @@ const FAQ_JOURNALISTES = [
   },
   {
     q: "Quels sont vos partenariats annoncés ?",
-    a: "Une alliance stratégique avec intuitem (CISO Assistant) pour le co-marketing et l'intégration native. Des partenariats techniques avec les acteurs souverains français : Sekoia.io, HarfangLab, Mailinblack, Vade Secure, Lucca. Et un référencement officiel en cours auprès de CyberMalveillance.gouv.fr (GIP ACYMA).",
+    a: "Aucun partenariat commercial signé à ce jour. Côté technique, Humanix Académie expose des connecteurs natifs vers plusieurs outils souverains français (CISO Assistant d'intuitem, Sekoia.io, HarfangLab, Mailinblack, Vade Secure, Lucca, GLPI). Ces connecteurs sont prêts à l'emploi côté Humanix — libre à chaque éditeur de les utiliser ou de discuter d'une intégration plus poussée. Référencement auprès de CyberMalveillance.gouv.fr (GIP ACYMA) à instruire après le launch.",
   },
   {
     q: "Combien de personnes derrière le projet ?",
