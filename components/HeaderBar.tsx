@@ -58,8 +58,12 @@ export default function HeaderBar() {
   const isAdmin =
     user?.role === "ADMIN" ||
     user?.role === "MANAGER" ||
+    user?.role === "RSSI" ||
     user?.role === "SUPERADMIN";
-  const canMarketplace = user?.role === "ADMIN" || user?.role === "SUPERADMIN";
+  const canMarketplace =
+    user?.role === "ADMIN" ||
+    user?.role === "RSSI" ||
+    user?.role === "SUPERADMIN";
   const mascot = getMascotById(mascotSpecies);
   const pathname = usePathname();
   const isActive = (href: string) =>
@@ -186,6 +190,12 @@ export default function HeaderBar() {
                     href="/profil"
                     icon="👤"
                     label="Mon profil"
+                    onClick={() => setMenuOpen(false)}
+                  />
+                  <MenuLink
+                    href="/profil/securite"
+                    icon="🔐"
+                    label="Sécurité (mot de passe, 2FA)"
                     onClick={() => setMenuOpen(false)}
                   />
                   <MenuLink

@@ -113,7 +113,8 @@ export default function InviteUserForm() {
         >
           <option value="LEARNER">🎓 Apprenant</option>
           <option value="MANAGER">👔 Manager</option>
-          <option value="ADMIN">🛡️ Admin</option>
+          <option value="RSSI">🛡️ RSSI</option>
+          <option value="ADMIN">⚙️ Admin</option>
         </select>
       </div>
 
