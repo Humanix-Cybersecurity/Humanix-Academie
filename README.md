@@ -138,10 +138,12 @@ Tarifs cloud : voir [humanix-cybersecurity.fr/tarifs](https://humanix-cybersecur
 
 ---
 
-## Écosystème — partenaires officiels
+## Écosystème — connecteurs techniques
 
 Humanix Académie s'inscrit dans l'écosystème open source cyber souverain
-français. Intégrations natives ou en cours :
+français. Connecteurs techniques disponibles ou en cours
+(aucun partenariat commercial signé à ce jour — les intégrations sont
+techniquement prêtes côté Humanix, libre à chaque éditeur de les utiliser) :
 
 | Outil                                                                  | Rôle                                  | Statut           |
 | ---------------------------------------------------------------------- | ------------------------------------- | ---------------- |
