@@ -14,9 +14,10 @@ import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { startAuthentication } from "@simplewebauthn/browser";
 
 type SsoProviders = { google: boolean; microsoft: boolean };
-type Mode = "password" | "magic-link";
+type Mode = "password" | "magic-link" | "webauthn";
 
 export default function ConnexionPage() {
   return (
@@ -41,8 +42,9 @@ function ConnexionInner() {
   const params = useSearchParams();
   const router = useRouter();
   const errorCode = params.get("error");
+  const stepUp = params.get("step-up") === "1";
 
-  const [mode, setMode] = useState<Mode>("password");
+  const [mode, setMode] = useState<Mode>(stepUp ? "webauthn" : "password");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mfaCode, setMfaCode] = useState("");
@@ -112,6 +114,62 @@ function ConnexionInner() {
     setError("Identifiants invalides.");
   };
 
+  const onWebauthnSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setSending(true);
+    try {
+      const optsRes = await fetch("/api/webauthn/login/options", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (!optsRes.ok) {
+        const data = await optsRes.json().catch(() => ({}));
+        throw new Error(
+          data.error ?? "Aucune clé enregistrée pour cet email.",
+        );
+      }
+      const options = await optsRes.json();
+      const auth = await startAuthentication(options);
+      const verifyRes = await fetch("/api/webauthn/login/verify", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email, response: auth }),
+      });
+      const data = await verifyRes.json();
+      if (!verifyRes.ok || !data.ok) {
+        throw new Error(data.error ?? "Vérification de la clé échouée.");
+      }
+      // signIn finalise la session NextAuth en s'appuyant sur le cookie
+      // wac_fresh pose par /verify
+      const res = await signIn("webauthn", {
+        email,
+        marker: "fido2",
+        redirect: false,
+        callbackUrl: "/apprendre",
+      });
+      setSending(false);
+      if (!res || res.error) {
+        setError("Connexion impossible après vérification de la clé.");
+        return;
+      }
+      router.push(res.url ?? "/apprendre");
+    } catch (e: unknown) {
+      setSending(false);
+      const msg = e instanceof Error ? e.message : "Erreur";
+      if (
+        msg.includes("AbortError") ||
+        msg.includes("NotAllowedError") ||
+        msg.includes("operation either timed out")
+      ) {
+        setError("Annulé. Réessayez en touchant la clé.");
+      } else {
+        setError(msg);
+      }
+    }
+  };
+
   const onMagicLinkSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -159,6 +217,21 @@ function ConnexionInner() {
           Choisis ta voie d'accès.
         </p>
       </div>
+
+      {/* Step-up requis pour /superadmin */}
+      {stepUp && (
+        <div
+          role="status"
+          className="card mb-4 bg-rose-50 border-rose-300 text-rose-900 text-sm"
+        >
+          <p className="font-bold">🔑 Authentification renforcée requise</p>
+          <p className="mt-1">
+            L'accès à la console super-admin exige une vérification par clé de
+            sécurité (Thales et-Fusion / YubiKey / passkey). Branchez votre
+            clé et utilisez l'onglet « Clé ».
+          </p>
+        </div>
+      )}
 
       {/* Erreur */}
       {(errorCode || error) && (
@@ -226,7 +299,7 @@ function ConnexionInner() {
       <div
         role="tablist"
         aria-label="Mode de connexion"
-        className="grid grid-cols-2 mb-3 rounded-xl border-2 border-gray-200 dark:border-slate-700 p-1 text-xs font-bold"
+        className="grid grid-cols-3 mb-3 rounded-xl border-2 border-gray-200 dark:border-slate-700 p-1 text-xs font-bold"
       >
         <button
           type="button"
@@ -247,6 +320,22 @@ function ConnexionInner() {
         <button
           type="button"
           role="tab"
+          aria-selected={mode === "webauthn"}
+          onClick={() => {
+            setMode("webauthn");
+            setError(null);
+          }}
+          className={`py-2 rounded-lg transition ${
+            mode === "webauthn"
+              ? "bg-primary-500 text-white"
+              : "text-gray-600 dark:text-gray-300"
+          }`}
+        >
+          🔑 Clé
+        </button>
+        <button
+          type="button"
+          role="tab"
           aria-selected={mode === "magic-link"}
           onClick={() => {
             setMode("magic-link");
@@ -262,7 +351,43 @@ function ConnexionInner() {
         </button>
       </div>
 
-      {mode === "password" ? (
+      {mode === "webauthn" ? (
+        <form onSubmit={onWebauthnSubmit} className="card space-y-4">
+          <div>
+            <label
+              htmlFor="connexion-email-fido"
+              className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
+            >
+              Email professionnel{" "}
+              <span className="text-warn" aria-hidden="true">
+                *
+              </span>
+            </label>
+            <input
+              id="connexion-email-fido"
+              type="email"
+              required
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none"
+              placeholder="prenom@masociete.fr"
+            />
+          </div>
+          <p className="text-xs text-gray-600 dark:text-gray-400">
+            Branchez votre clé de sécurité (Thales et-Fusion, YubiKey, etc.) puis cliquez
+            ci-dessous. Une dialogue navigateur vous demandera de la toucher.
+          </p>
+          <button
+            type="submit"
+            disabled={sending}
+            aria-busy={sending}
+            className="btn-primary w-full"
+          >
+            {sending ? "En attente de la clé…" : "Se connecter avec ma clé"}
+          </button>
+        </form>
+      ) : mode === "password" ? (
         <form onSubmit={onPasswordSubmit} className="card space-y-4">
           <div>
             <label
