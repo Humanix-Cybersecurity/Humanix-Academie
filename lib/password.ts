@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Hash de mot de passe — scrypt (Node natif, pas de dependance externe).
+// Hash de mot de passe - scrypt (Node natif, pas de dependance externe).
 // scrypt est resistant aux ASIC/GPU et standardise (RFC 7914).
 // Format de stockage : "scrypt$N$r$p$saltBase64$hashBase64" (auto-portant).
 //

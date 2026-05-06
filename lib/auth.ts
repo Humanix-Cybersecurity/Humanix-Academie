@@ -8,7 +8,7 @@
 //  - Login mot de passe + 2FA TOTP : actif des qu'un user a defini un mdp
 //
 // Le user qui se connecte via SSO doit deja exister en BDD (matche par email).
-// Cela evite la creation sauvage de comptes — l'admin doit avoir invite l'user
+// Cela evite la creation sauvage de comptes - l'admin doit avoir invite l'user
 // au prealable. Si on veut auto-create plus tard, c'est dans le callback signIn.
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
@@ -32,7 +32,7 @@ const LOCKOUT_MS = 15 * 60 * 1000;
 
 const providers: Provider[] = [];
 
-// SSO Google — actif si la config est presente
+// SSO Google - actif si la config est presente
 if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
   providers.push(
     Google({
@@ -46,7 +46,7 @@ if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
   );
 }
 
-// SSO Microsoft / Entra ID — actif si la config est presente
+// SSO Microsoft / Entra ID - actif si la config est presente
 if (
   process.env.AUTH_MICROSOFT_ENTRA_ID_ID &&
   process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET
@@ -272,7 +272,7 @@ async function registerFailedLogin(userId: string, current: number) {
     actor: { userId, email: updated.email },
     tenantId: updated.tenantId,
     target: { type: "user", id: userId, label: updated.email },
-    message: `Tentative ${next}/${MAX_FAILED_ATTEMPTS}${willLock ? " — compte verrouillé" : ""}`,
+    message: `Tentative ${next}/${MAX_FAILED_ATTEMPTS}${willLock ? " - compte verrouillé" : ""}`,
   });
   if (willLock) {
     await auditLog({

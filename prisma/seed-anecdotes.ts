@@ -44,7 +44,7 @@ const ANECDOTES: AnecdoteSeed[] = [
     lesson:
       "Un seul clic peut paralyser une organisation entière, même publique et bien dotée. Le vecteur d'entrée le plus courant reste le mail, et la première ligne de défense reste l'œil critique de chaque utilisateur, à tous les niveaux.",
     miniAction:
-      "Cette semaine, prends 2 minutes pour vérifier que tu sais où signaler un mail suspect dans ton entreprise. Si tu ne sais pas, demande à ton DSI ou à ton dirigeant — c'est le test que ton organisation est prête.",
+      "Cette semaine, prends 2 minutes pour vérifier que tu sais où signaler un mail suspect dans ton entreprise. Si tu ne sais pas, demande à ton DSI ou à ton dirigeant - c'est le test que ton organisation est prête.",
     sourceUrl:
       "https://www.cybermalveillance.gouv.fr/tous-nos-contenus/actualites/cyberattaque-armentieres-2024",
     sourceLabel: "CyberMalveillance.gouv.fr · 12 février 2024",
@@ -57,7 +57,7 @@ const ANECDOTES: AnecdoteSeed[] = [
     slug: "france-travail-fuite-43-millions",
     title: "France Travail : 43 millions de personnes touchées par une fuite",
     summary:
-      "Mars 2024, France Travail (ex-Pôle Emploi) annonce une fuite massive de données : nom, prénom, date de naissance, NIR (numéro de sécurité sociale), adresse, téléphone et email de 43 millions d'inscrits actuels et anciens. L'attaque exploite la compromission de comptes prestataires donnant un accès légitime au SI. Aucun mot de passe, aucune donnée bancaire concernés — mais l'identité de presque la moitié de la population française est exposée.",
+      "Mars 2024, France Travail (ex-Pôle Emploi) annonce une fuite massive de données : nom, prénom, date de naissance, NIR (numéro de sécurité sociale), adresse, téléphone et email de 43 millions d'inscrits actuels et anciens. L'attaque exploite la compromission de comptes prestataires donnant un accès légitime au SI. Aucun mot de passe, aucune donnée bancaire concernés - mais l'identité de presque la moitié de la population française est exposée.",
     lesson:
       "Les sous-traitants sont une porte d'entrée privilégiée par les attaquants. Quand on travaille avec un prestataire, sa cyber-hygiène devient la nôtre. La gestion des accès tiers (provisioning, MFA, expiration, contrôle régulier) est aussi critique que celle des employés directs.",
     miniAction:

@@ -41,7 +41,7 @@ export default async function FamilleInviterPage() {
     <div className="max-w-3xl mx-auto px-4 py-10">
       <div className="text-center mb-8">
         <p className="text-xs uppercase tracking-widest text-pink-600 font-bold mb-2">
-          Cyber Famille — programme ambassadeur
+          Cyber Famille - programme ambassadeur
         </p>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-primary-500 mb-3">
           Offrez Cyber Famille à 3 proches
@@ -162,7 +162,7 @@ export default async function FamilleInviterPage() {
           </div>
 
           <div className="text-xs text-gray-500 bg-gray-50 dark:bg-slate-800 p-3 rounded-xl">
-            <p className="font-bold mb-1">RGPD — engagement de loyauté</p>
+            <p className="font-bold mb-1">RGPD - engagement de loyauté</p>
             <p>
               En envoyant cette invitation, vous confirmez avoir une relation
               personnelle avec le destinataire et que celui-ci n'a pas exprimé
@@ -196,7 +196,7 @@ export default async function FamilleInviterPage() {
             >
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-primary-500 truncate">
-                  {h.inviteeFirstName ? `${h.inviteeFirstName} — ` : ""}
+                  {h.inviteeFirstName ? `${h.inviteeFirstName} - ` : ""}
                   {h.inviteeEmail}
                 </p>
                 <p className="text-xs text-gray-500 mt-0.5">

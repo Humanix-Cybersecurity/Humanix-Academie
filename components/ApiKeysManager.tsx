@@ -71,7 +71,7 @@ export default function ApiKeysManager({ keys }: { keys: Key[] }) {
             🎉 Clé "{newlyCreated.name}" créée
           </h3>
           <p className="text-sm text-gray-700 mb-3">
-            <strong>Copie-la maintenant</strong> — elle ne sera plus jamais
+            <strong>Copie-la maintenant</strong> - elle ne sera plus jamais
             affichée en clair.
           </p>
           <div className="bg-gray-900 text-green-400 rounded-lg p-3 font-mono text-sm break-all flex items-center gap-2">

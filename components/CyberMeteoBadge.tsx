@@ -3,7 +3,7 @@
 //   - "compact" : badge inline pour le bandeau home / header
 //   - "card" : carte détaillée pour le dashboard /admin/business
 //
-// Server Component pur (pas de "use client") — données pré-calculées par
+// Server Component pur (pas de "use client") - données pré-calculées par
 // la route appelante, on rend juste statiquement.
 
 import Link from "next/link";
@@ -111,7 +111,7 @@ export function CyberMeteoCard({ meteo }: { meteo: CyberMeteo }) {
                       month: "2-digit",
                     })}
                   </strong>{" "}
-                  — {a.title}
+                  - {a.title}
                 </a>
               </li>
             ))}

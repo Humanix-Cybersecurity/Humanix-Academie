@@ -23,7 +23,7 @@ async function main() {
   // Flag CLI : --deep parcourt les archives par année (utile pour la 1ère init)
   const deep = process.argv.includes("--deep");
   console.log(
-    `🔍 Scrape observatoire des fuites — démarrage…${deep ? " (mode DEEP : archives par année)" : ""}`,
+    `🔍 Scrape observatoire des fuites - démarrage…${deep ? " (mode DEEP : archives par année)" : ""}`,
   );
 
   try {

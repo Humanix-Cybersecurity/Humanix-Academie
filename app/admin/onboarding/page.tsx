@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// /admin/onboarding — checklist guidee pour les nouveaux tenants.
+// /admin/onboarding - checklist guidee pour les nouveaux tenants.
 //
 // Affiche les etapes restantes a un nouvel admin pour passer "actif" :
 //  1. Inviter au moins 1 utilisateur
@@ -71,7 +71,7 @@ export default async function OnboardingPage() {
       cta: {
         label:
           otherUsersCount > 0
-            ? `${otherUsersCount} utilisateur(s) — ajouter d'autres`
+            ? `${otherUsersCount} utilisateur(s) - ajouter d'autres`
             : "Inviter le premier collaborateur",
         href: "/admin/utilisateurs",
       },
@@ -85,7 +85,7 @@ export default async function OnboardingPage() {
       cta: {
         label:
           mandatorySaisonCount > 0
-            ? `${mandatorySaisonCount} saison(s) — ajuster`
+            ? `${mandatorySaisonCount} saison(s) - ajuster`
             : "Aller au catalogue",
         href: "/admin/modules",
       },

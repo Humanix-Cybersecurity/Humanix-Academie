@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// /profil/facturation — page de gestion de l'abonnement.
+// /profil/facturation - page de gestion de l'abonnement.
 //
 // Reservee aux ADMIN/RSSI/SUPERADMIN du tenant. Affiche le statut
 // d'abonnement courant et propose :
