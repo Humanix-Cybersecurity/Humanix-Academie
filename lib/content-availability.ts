@@ -9,14 +9,18 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const CONTENT_ROOT = path.join(process.cwd(), "content", "saisons");
+// Lazy : process.cwd() est appele a chaque invocation pour permettre aux
+// tests de mocker le cwd via vi.spyOn(process, "cwd").
+function contentRoot(): string {
+  return path.join(process.cwd(), "content", "saisons");
+}
 
 export function hasExpertContent(
   saisonSlug: string,
   episodeSlug: string,
 ): boolean {
   if (!isSafeSlug(saisonSlug) || !isSafeSlug(episodeSlug)) return false;
-  const file = path.join(CONTENT_ROOT, saisonSlug, `${episodeSlug}.mdx`);
+  const file = path.join(contentRoot(), saisonSlug, `${episodeSlug}.mdx`);
   try {
     return fs.statSync(file).isFile();
   } catch {
@@ -28,11 +32,12 @@ export function listExpertEpisodes(): Array<{
   saisonSlug: string;
   episodeSlug: string;
 }> {
-  if (!fs.existsSync(CONTENT_ROOT)) return [];
+  const root = contentRoot();
+  if (!fs.existsSync(root)) return [];
   const result: Array<{ saisonSlug: string; episodeSlug: string }> = [];
-  for (const saison of fs.readdirSync(CONTENT_ROOT, { withFileTypes: true })) {
+  for (const saison of fs.readdirSync(root, { withFileTypes: true })) {
     if (!saison.isDirectory()) continue;
-    const dir = path.join(CONTENT_ROOT, saison.name);
+    const dir = path.join(root, saison.name);
     for (const f of fs.readdirSync(dir)) {
       if (!f.endsWith(".mdx")) continue;
       result.push({
