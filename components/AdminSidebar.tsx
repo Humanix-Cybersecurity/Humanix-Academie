@@ -64,6 +64,7 @@ const SECTIONS: Section[] = [
   {
     title: "Conformité",
     items: [
+      { href: "/admin/audit", label: "Journal d'audit", icon: "📜" },
       {
         href: "/admin/conformite-nis2",
         label: "Pack NIS2",
