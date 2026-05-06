@@ -4,13 +4,14 @@
 // Reservee aux ADMIN/RSSI/SUPERADMIN du tenant. Affiche le statut
 // d'abonnement courant et propose :
 //  - Si pas de plan payant : CTA vers /tarifs
-//  - Si plan payant : bouton "Gerer mon abonnement" qui ouvre Stripe
-//    Customer Portal
+//  - Si plan payant : bouton "Mettre a jour mon moyen de paiement"
+//    qui ouvre le portail Payplug (ou affiche un fallback interne si
+//    Payplug ne supporte pas l'update CB hosted)
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { isStripeConfigured } from "@/lib/stripe";
+import { isPayplugConfigured } from "@/lib/payplug";
 import BillingActions from "@/components/BillingActions";
 
 export const dynamic = "force-dynamic";
@@ -45,8 +46,9 @@ export default async function FacturationPage({
     select: {
       name: true,
       plan: true,
-      stripeCustomerId: true,
-      stripeSubscriptionId: true,
+      paymentProvider: true,
+      paymentCustomerId: true,
+      paymentSubscriptionId: true,
       subscriptionStatus: true,
       currentPeriodEnd: true,
       seatCount: true,
@@ -55,8 +57,8 @@ export default async function FacturationPage({
   });
   if (!tenant) redirect("/profil");
 
-  const stripeReady = isStripeConfigured();
-  const hasSub = !!tenant.stripeSubscriptionId;
+  const paymentReady = isPayplugConfigured();
+  const hasSub = !!tenant.paymentSubscriptionId;
   const statusMeta = tenant.subscriptionStatus
     ? (STATUS_LABELS[tenant.subscriptionStatus] ?? {
         label: tenant.subscriptionStatus,
@@ -92,7 +94,7 @@ export default async function FacturationPage({
           <p className="font-bold">✓ Paiement réussi</p>
           <p className="text-sm mt-1">
             Votre abonnement est activé. Le statut peut prendre quelques
-            secondes à se mettre à jour ci-dessous (synchronisation Stripe).
+            secondes à se mettre à jour ci-dessous (synchronisation Payplug).
           </p>
         </div>
       )}
@@ -105,9 +107,9 @@ export default async function FacturationPage({
         </div>
       )}
 
-      {!stripeReady && (
+      {!paymentReady && (
         <div className="rounded-2xl border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-4 text-gray-700 dark:text-gray-300">
-          <p className="font-bold">Stripe n'est pas configuré.</p>
+          <p className="font-bold">Le module de paiement n&apos;est pas configuré.</p>
           <p className="text-sm mt-1">
             Contactez l'administrateur de la plateforme pour souscrire un plan
             payant. En attendant, le plan {tenant.plan} reste actif.
@@ -162,10 +164,10 @@ export default async function FacturationPage({
           )}
         </dl>
 
-        <BillingActions hasSubscription={hasSub} stripeReady={stripeReady} />
+        <BillingActions hasSubscription={hasSub} paymentReady={paymentReady} />
       </section>
 
-      {!hasSub && stripeReady && (
+      {!hasSub && paymentReady && (
         <section className="rounded-2xl border border-accent-200 dark:border-accent-900/40 bg-accent-50/40 dark:bg-accent-900/15 p-5">
           <p className="font-bold text-primary-500 dark:text-accent-300">
             Passer à un plan payant ?
