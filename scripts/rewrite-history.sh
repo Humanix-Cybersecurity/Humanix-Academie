@@ -4,7 +4,7 @@
 # rewrite-history.sh
 #
 # Reecrit l'historique git pour retirer les mentions de partenaires non
-# confirmes (partenaire externe, partenaire externe, etc.) avant de basculer le repo en public.
+# confirmes (Digital 113, Cyber'Occ, etc.) avant de basculer le repo en public.
 #
 # Operations effectuees :
 #  1. Backup mirror local du repo dans ../humanix-academie-backup-YYYYMMDD-HHMM
@@ -100,20 +100,20 @@ REPLACEMENTS_FILE=$(mktemp -t replacements.XXXXXX)
 # Patterns de remplacement pour les commit messages.
 # Format git-filter-repo : "ancien==>nouveau" (litteral) ou "regex:^…$==>nouveau"
 cat > "$REPLACEMENTS_FILE" <<'EOF'
-partenaire externe==>partenaire externe
-partenaire externe==>partenaire externe
-partenaire externe==>partenaire externe
-demo-runbook==>demo-runbook
-demo-demo-runbook==>demo-runbook
-partenaire externe==>partenaire externe
-partenaire externe==>partenaire externe
-partenaire externe==>partenaire externe
-partenaire externe==>partenaire externe
-partenaire externe==>partenaire externe
-tenant-demo==>tenant-demo
-seed-tenant-demo==>seed-tenant-demo
-screencast-demo==>screencast-demo
-printemps 2026==>printemps 2026
+Digital 113==>partenaire externe
+digital 113==>partenaire externe
+Digital113==>partenaire externe
+digital-113==>demo-runbook
+demo-digital-113==>demo-runbook
+Cyber'Occ==>partenaire externe
+Cyber-Occ==>partenaire externe
+CyberOcc==>partenaire externe
+cyber-occ==>partenaire externe
+cyberocc==>partenaire externe
+tenant-d113==>tenant-demo
+seed-tenant-d113==>seed-tenant-demo
+screencast-d113==>screencast-demo
+21 mai 2026==>printemps 2026
 EOF
 
 # Liste des PRs a renommer si --skip-pr-titles n'est pas pose
@@ -255,7 +255,7 @@ echo "=================================================================="
 echo
 echo "Verifications recommandees :"
 echo "  git log --all --pretty=format:'%h %s' | grep -i 'digital\\|cyber.occ' | head"
-echo "  gh pr list --repo $REPO --state all --search 'digital OR partenaire externe'"
+echo "  gh pr list --repo $REPO --state all --search 'digital OR cyber-occ'"
 echo
 echo "Si quelque chose a mal tourne, restaurer depuis le backup mirror :"
 echo "  cd $BACKUP_DIR && git push --mirror $ORIGIN_URL --force"
