@@ -45,6 +45,7 @@
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
     "db:seed": "tsx prisma/seed.ts",
+    "db:bootstrap-admin": "tsx scripts/bootstrap-admin.ts",
     "db:reset": "prisma migrate reset --force && npm run db:seed",
     "breaches:refresh": "tsx scripts/scrape-breaches.ts",
     "breaches:refresh:deep": "tsx scripts/scrape-breaches.ts --deep",

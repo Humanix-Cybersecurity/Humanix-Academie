@@ -202,6 +202,35 @@ async function main() {
     `  Saisons ✓ (${CATALOG_SAISONS.length} saisons / ${episodeRecords.size} episodes)`,
   );
 
+  // Groupes systeme par defaut (Compta, RH, Dev, Commercial, Direction,
+  // IT, Atelier, Communication). isSystem=true => non supprimables.
+  const SYSTEM_GROUPS = [
+    { slug: "direction", name: "Direction", emoji: "🎯", color: "#0B3D91" },
+    { slug: "compta", name: "Comptabilité", emoji: "🧮", color: "#10B981" },
+    { slug: "rh", name: "Ressources humaines", emoji: "👥", color: "#F59E0B" },
+    { slug: "dev", name: "Développement", emoji: "💻", color: "#6366F1" },
+    { slug: "commercial", name: "Commercial", emoji: "💼", color: "#EC4899" },
+    { slug: "it", name: "IT / SI", emoji: "⚙️", color: "#0EA5E9" },
+    { slug: "atelier", name: "Atelier / Production", emoji: "🏭", color: "#A855F7" },
+    { slug: "communication", name: "Communication", emoji: "🎨", color: "#EF4444" },
+    { slug: "agents", name: "Agents", emoji: "👤", color: "#64748B" },
+  ];
+  for (const g of SYSTEM_GROUPS) {
+    await prisma.group.upsert({
+      where: { tenantId_slug: { tenantId: tenant.id, slug: g.slug } },
+      update: { name: g.name, emoji: g.emoji, color: g.color, isSystem: true },
+      create: {
+        tenantId: tenant.id,
+        slug: g.slug,
+        name: g.name,
+        emoji: g.emoji,
+        color: g.color,
+        isSystem: true,
+      },
+    });
+  }
+  console.log(`  Groupes ✓ (${SYSTEM_GROUPS.length} groupes système)`);
+
   // Tenant config : phishing obligatoire
   await prisma.tenantSaisonConfig.upsert({
     where: {
@@ -267,6 +296,38 @@ async function main() {
         tenantId: tenant.id,
       },
     });
+
+    // Auto-assignation au groupe correspondant au service (best effort)
+    const serviceToSlug: Record<string, string> = {
+      Direction: "direction",
+      Compta: "compta",
+      Comptabilité: "compta",
+      RH: "rh",
+      Dev: "dev",
+      "Développement": "dev",
+      Commercial: "commercial",
+      IT: "it",
+      "IT / SI": "it",
+      Atelier: "atelier",
+      Production: "atelier",
+      Communication: "communication",
+      Agents: "agents",
+    };
+    const groupSlug = serviceToSlug[u.service ?? ""] ?? null;
+    if (groupSlug) {
+      const grp = await prisma.group.findUnique({
+        where: { tenantId_slug: { tenantId: tenant.id, slug: groupSlug } },
+      });
+      if (grp) {
+        await prisma.userGroup.upsert({
+          where: {
+            userId_groupId: { userId: dbUser.id, groupId: grp.id },
+          },
+          update: {},
+          create: { userId: dbUser.id, groupId: grp.id },
+        });
+      }
+    }
 
     const allEpisodes = [...episodeRecords.entries()];
     const targetCount = Math.floor(allEpisodes.length * u.maturity);

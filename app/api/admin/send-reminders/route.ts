@@ -42,7 +42,7 @@ export async function GET(req: Request) {
   if (!session?.user)
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const role = session.user!.role;
-  if (role !== "ADMIN" && role !== "SUPERADMIN") {
+  if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
   tenantId = session.user!.tenantId;
@@ -79,7 +79,7 @@ export async function POST(req: Request) {
   if (!session?.user)
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const role = session.user!.role;
-  if (role !== "ADMIN" && role !== "SUPERADMIN") {
+  if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
   tenantId = session.user!.tenantId;

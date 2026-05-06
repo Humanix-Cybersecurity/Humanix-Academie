@@ -17,7 +17,7 @@ export default async function PersonalizePhishingPage() {
   const session = await auth();
   if (!session?.user) redirect("/demo");
   const role = session.user!.role;
-  if (role !== "ADMIN" && role !== "SUPERADMIN") redirect("/apprendre");
+  if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") redirect("/apprendre");
   const tenantId = session.user!.tenantId as string;
   const plan = await getTenantPlan(tenantId);
 

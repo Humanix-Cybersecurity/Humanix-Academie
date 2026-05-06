@@ -24,7 +24,7 @@ async function requireContributor() {
   const session = await auth();
   if (!session?.user) throw new Error("unauthorized");
   const role = session.user!.role;
-  if (role !== "ADMIN" && role !== "SUPERADMIN") throw new Error("forbidden");
+  if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") throw new Error("forbidden");
   return {
     userId: session.user!.id as string,
     tenantId: session.user!.tenantId as string,

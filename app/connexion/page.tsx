@@ -1,19 +1,22 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page de connexion : 3 voies au choix
-//  1. SSO Google (1 clic, si compte deja invite)
-//  2. SSO Microsoft / Entra ID (1 clic, idem)
-//  3. Magic link email (fallback universel)
+// Page de connexion : 4 voies au choix
+//  1. Email + mot de passe (avec 2FA TOTP si activee)
+//  2. SSO Google (1 clic, si compte deja invite)
+//  3. SSO Microsoft / Entra ID (1 clic, idem)
+//  4. Magic link email (fallback universel)
 //
 // NEXT 15 SUSPENSE : useSearchParams() exige un <Suspense> boundary, sinon
 // la page n'est plus pre-renderable statiquement. On wrappe dans un
 // <Suspense> + on isole le contenu dans un sous-composant.
 "use client";
 
+import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type SsoProviders = { google: boolean; microsoft: boolean };
+type Mode = "password" | "magic-link";
 
 export default function ConnexionPage() {
   return (
@@ -35,18 +38,26 @@ function ConnexionFallback() {
 }
 
 function ConnexionInner() {
+  const params = useSearchParams();
+  const router = useRouter();
+  const errorCode = params.get("error");
+
+  const [mode, setMode] = useState<Mode>("password");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [mfaCode, setMfaCode] = useState("");
+  const [showMfa, setShowMfa] = useState(false);
+
   const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
+  const [magicSent, setMagicSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const [sso, setSso] = useState<SsoProviders>({
     google: false,
     microsoft: false,
   });
-  const params = useSearchParams();
-  const errorCode = params.get("error");
 
   // Detection runtime des providers SSO actifs (cf. lib/auth.ts).
-  // Auth.js expose /api/auth/providers qui liste les providers configures.
   useEffect(() => {
     fetch("/api/auth/providers")
       .then((r) => r.json())
@@ -59,19 +70,62 @@ function ConnexionInner() {
       .catch(() => setSso({ google: false, microsoft: false }));
   }, []);
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onPasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+    setSending(true);
+    const res = await signIn("password", {
+      email,
+      password,
+      mfaCode,
+      redirect: false,
+      callbackUrl: "/apprendre",
+    });
+    setSending(false);
+    if (!res) {
+      setError("Erreur réseau, réessayez.");
+      return;
+    }
+    if (res.ok && !res.error) {
+      router.push(res.url ?? "/apprendre");
+      return;
+    }
+    // Auth.js v5 retourne l'erreur dans res.error
+    const code = (res.error ?? "").toString();
+    if (code === "MfaRequired" || /MfaRequired/.test(code)) {
+      setShowMfa(true);
+      setError(
+        "Cette adresse exige un code à 2 facteurs. Ouvrez votre application d'authentification.",
+      );
+      return;
+    }
+    if (code === "MfaInvalid" || /MfaInvalid/.test(code)) {
+      setError("Code 2FA invalide.");
+      return;
+    }
+    if (code === "AccountLocked" || /AccountLocked/.test(code)) {
+      setError(
+        "Trop de tentatives. Compte verrouillé 15 minutes. Réessayez plus tard ou utilisez « Mot de passe oublié ».",
+      );
+      return;
+    }
+    setError("Identifiants invalides.");
+  };
+
+  const onMagicLinkSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
     setSending(true);
     await signIn("resend", {
       email,
       redirect: false,
       callbackUrl: "/apprendre",
     });
-    setSent(true);
+    setMagicSent(true);
     setSending(false);
   };
 
-  if (sent) {
+  if (magicSent) {
     return (
       <div className="max-w-md mx-auto px-4 py-20 text-center">
         <div className="text-6xl mb-4">📬</div>
@@ -90,7 +144,7 @@ function ConnexionInner() {
   }
 
   return (
-    <div className="max-w-md mx-auto px-4 py-20">
+    <div className="max-w-md mx-auto px-4 py-16">
       <div className="text-center mb-8">
         <div className="flex justify-center mb-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -101,13 +155,13 @@ function ConnexionInner() {
           />
         </div>
         <h1 className="text-3xl font-bold text-primary-500">Connexion</h1>
-        <p className="text-gray-600 mt-2">
-          Pas de mot de passe à créer : connexion SSO ou lien magique.
+        <p className="text-gray-600 mt-2 text-sm">
+          Choisis ta voie d'accès.
         </p>
       </div>
 
-      {/* Erreur SSO si applicable */}
-      {errorCode && (
+      {/* Erreur */}
+      {(errorCode || error) && (
         <div
           role="alert"
           className="card mb-4 bg-amber-50 border-amber-300 text-amber-900 text-sm"
@@ -124,15 +178,13 @@ function ConnexionInner() {
               administrateur.
             </p>
           )}
-          {!["NoAccount", "AccountSuspended"].includes(errorCode) && (
-            <p>Erreur de connexion : {errorCode}.</p>
-          )}
+          {error && <p>{error}</p>}
         </div>
       )}
 
       {/* Boutons SSO (visibles uniquement si configures) */}
       {(sso.google || sso.microsoft) && (
-        <div className="space-y-2 mb-6">
+        <div className="space-y-2 mb-5">
           {sso.microsoft && (
             <button
               type="button"
@@ -161,7 +213,7 @@ function ConnexionInner() {
       )}
 
       {(sso.google || sso.microsoft) && (
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center gap-3 mb-5">
           <div className="h-px flex-1 bg-gray-200 dark:bg-slate-700" />
           <span className="text-xs text-gray-500 uppercase tracking-wide">
             ou
@@ -170,51 +222,191 @@ function ConnexionInner() {
         </div>
       )}
 
-      {/* Magic link */}
-      <form
-        onSubmit={onSubmit}
-        className="card space-y-4"
-        aria-describedby="connexion-aide"
+      {/* Switch Password / Magic link */}
+      <div
+        role="tablist"
+        aria-label="Mode de connexion"
+        className="grid grid-cols-2 mb-3 rounded-xl border-2 border-gray-200 dark:border-slate-700 p-1 text-xs font-bold"
       >
-        <div>
-          <label
-            htmlFor="connexion-email"
-            className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
-          >
-            Ton email professionnel{" "}
-            <span className="text-warn" aria-hidden="true">
-              *
-            </span>
-          </label>
-          <input
-            id="connexion-email"
-            name="email"
-            type="email"
-            required
-            aria-required="true"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none"
-            placeholder="prenom@masociete.fr"
-            autoComplete="email"
-          />
-        </div>
-        <p
-          id="connexion-aide"
-          className="text-xs text-gray-600 dark:text-gray-400"
-        >
-          Champs marqués <span className="text-warn">*</span> obligatoires.
-          Aucun mot de passe ne te sera demandé.
-        </p>
         <button
-          type="submit"
-          disabled={sending}
-          aria-busy={sending}
-          className="btn-primary w-full"
+          type="button"
+          role="tab"
+          aria-selected={mode === "password"}
+          onClick={() => {
+            setMode("password");
+            setError(null);
+          }}
+          className={`py-2 rounded-lg transition ${
+            mode === "password"
+              ? "bg-primary-500 text-white"
+              : "text-gray-600 dark:text-gray-300"
+          }`}
         >
-          {sending ? "Envoi en cours…" : "Recevoir mon lien"}
+          🔐 Mot de passe
         </button>
-      </form>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={mode === "magic-link"}
+          onClick={() => {
+            setMode("magic-link");
+            setError(null);
+          }}
+          className={`py-2 rounded-lg transition ${
+            mode === "magic-link"
+              ? "bg-primary-500 text-white"
+              : "text-gray-600 dark:text-gray-300"
+          }`}
+        >
+          ✨ Lien magique
+        </button>
+      </div>
+
+      {mode === "password" ? (
+        <form onSubmit={onPasswordSubmit} className="card space-y-4">
+          <div>
+            <label
+              htmlFor="connexion-email"
+              className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
+            >
+              Email professionnel{" "}
+              <span className="text-warn" aria-hidden="true">
+                *
+              </span>
+            </label>
+            <input
+              id="connexion-email"
+              name="email"
+              type="email"
+              required
+              aria-required="true"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none"
+              placeholder="prenom@masociete.fr"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="connexion-password"
+              className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
+            >
+              Mot de passe{" "}
+              <span className="text-warn" aria-hidden="true">
+                *
+              </span>
+            </label>
+            <input
+              id="connexion-password"
+              name="password"
+              type="password"
+              required
+              aria-required="true"
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none"
+            />
+          </div>
+
+          {showMfa && (
+            <div>
+              <label
+                htmlFor="connexion-mfa"
+                className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
+              >
+                Code d'authentification (6 chiffres ou code de secours){" "}
+                <span className="text-warn" aria-hidden="true">
+                  *
+                </span>
+              </label>
+              <input
+                id="connexion-mfa"
+                name="mfaCode"
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                pattern="[0-9 A-Za-z\-]{6,11}"
+                required
+                value={mfaCode}
+                onChange={(e) => setMfaCode(e.target.value)}
+                placeholder="123 456"
+                className="block w-full rounded-xl border-2 border-accent-500 p-3 focus:border-accent-600 focus:outline-none tracking-widest text-center font-mono"
+                autoFocus
+              />
+              <p className="text-xs text-gray-500 mt-2">
+                Ouvrez Google Authenticator, Authy ou 1Password.
+              </p>
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={sending}
+            aria-busy={sending}
+            className="btn-primary w-full"
+          >
+            {sending ? "Connexion…" : "Se connecter"}
+          </button>
+
+          <div className="flex items-center justify-between text-xs">
+            <Link
+              href="/connexion/oubli"
+              className="text-accent-700 hover:underline"
+            >
+              Mot de passe oublié ?
+            </Link>
+            <span className="text-gray-400">
+              Pas encore de mot de passe ?{" "}
+              <button
+                type="button"
+                onClick={() => setMode("magic-link")}
+                className="text-accent-700 hover:underline"
+              >
+                Lien magique
+              </button>
+            </span>
+          </div>
+        </form>
+      ) : (
+        <form onSubmit={onMagicLinkSubmit} className="card space-y-4">
+          <div>
+            <label
+              htmlFor="connexion-email-ml"
+              className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2"
+            >
+              Email professionnel{" "}
+              <span className="text-warn" aria-hidden="true">
+                *
+              </span>
+            </label>
+            <input
+              id="connexion-email-ml"
+              name="email"
+              type="email"
+              required
+              aria-required="true"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none"
+              placeholder="prenom@masociete.fr"
+            />
+          </div>
+          <p className="text-xs text-gray-600 dark:text-gray-400">
+            Aucun mot de passe requis : tu reçois un lien à usage unique.
+          </p>
+          <button
+            type="submit"
+            disabled={sending}
+            aria-busy={sending}
+            className="btn-primary w-full"
+          >
+            {sending ? "Envoi en cours…" : "Recevoir mon lien"}
+          </button>
+        </form>
+      )}
     </div>
   );
 }

@@ -37,6 +37,7 @@ const SECTIONS: Section[] = [
       { href: "/admin", label: "Tableau de bord", icon: "📊" },
       { href: "/admin/business", label: "Impact business", icon: "💼" },
       { href: "/admin/utilisateurs", label: "Utilisateurs", icon: "👥" },
+      { href: "/admin/groupes", label: "Groupes", icon: "🏷️" },
     ],
   },
   {

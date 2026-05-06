@@ -52,10 +52,18 @@ model Tenant {
 
 // =====================================================
 // USER
+// Roles :
+//  - LEARNER  : utilisateur final (sensibilisation, parcours)
+//  - MANAGER  : peut consulter le reporting d'equipe (lecture seule sur /admin)
+//  - RSSI     : responsable securite. Gere users, groupes, audit, force 2FA
+//               et politiques de securite. Pas d'acces facturation/tenant.
+//  - ADMIN    : administrateur metier du tenant (RH/IT). Idem RSSI + facturation.
+//  - SUPERADMIN : exploitant plate-forme (HumaniX). Acces global, moderation.
 // =====================================================
 enum Role {
   LEARNER
   MANAGER
+  RSSI
   ADMIN
   SUPERADMIN
 }
@@ -67,8 +75,43 @@ model User {
   emailVerified DateTime?
   name          String?
   role          Role      @default(LEARNER)
+  // service = champ libre legacy, conserve pour compat (ex: import CSV).
+  // La gestion structuree est faite via les Group / UserGroup ci-dessous.
   service       String?
   isActive      Boolean   @default(true)
+
+  // ----------------------------------------------------
+  // AUTHENTIFICATION PAR MOT DE PASSE (optionnelle)
+  // ----------------------------------------------------
+  // Hash scrypt (cf. lib/password.ts). null = pas de mdp defini, l'user
+  // se connecte uniquement par magic link / SSO. Permet la coexistence
+  // des deux modes.
+  passwordHash       String?
+  passwordUpdatedAt  DateTime?
+  // Lockout anti-bruteforce : compteur d'echecs consecutifs et fenetre
+  // de blocage. Reset des qu'un login reussit.
+  failedLoginAttempts Int      @default(0)
+  lockedUntil         DateTime?
+  lastLoginAt         DateTime?
+  lastLoginIpHash     String?
+
+  // ----------------------------------------------------
+  // 2FA — TOTP (RFC 6238)
+  // ----------------------------------------------------
+  // mfaSecret = secret partage encode base32, chiffre cote app si AUTH_SECRET
+  // est dispo (sinon stocke en clair, c'est moins ideal mais standard NextAuth).
+  // mfaEnabled = true uniquement APRES verification d'un code (l'enrolment
+  // est en 2 temps : generate -> verify -> enable).
+  mfaSecret           String?
+  mfaEnabled          Boolean  @default(false)
+  mfaEnabledAt        DateTime?
+  // Codes de secours (10 a la creation), hash scrypt comme un mot de passe
+  // a usage unique. Stockes JSON-encoded array de hashes.
+  mfaBackupCodesHash  String?  @db.Text
+  // Si forced=true, l'user est OBLIGE de configurer 2FA au prochain login.
+  // Force par RSSI/ADMIN au niveau du user, ou par politique sur le role.
+  mfaForced           Boolean  @default(false)
+
   coins         Int       @default(0)
   level         Int       @default(1)
   riskScore     Int       @default(50) // 0 = très exposé, 100 = excellent
@@ -97,9 +140,88 @@ model User {
   reviewedModules  MarketplaceModule[] @relation("ReviewedModules")
   familyInvitesIssued FamilyInvite[] @relation("FamilyInviteSponsor")
   expertProfile    ExpertProfile?
+  passwordResets   PasswordResetToken[]
+  groups           UserGroup[]
 
   @@index([tenantId])
   @@index([isActive])
+}
+
+// =====================================================
+// PASSWORD RESET TOKEN
+// Token a usage unique pour la reinitialisation de mot de passe.
+// Le token n'est PAS stocke en clair : on stocke un hash sha256.
+// Expiration courte (1h) pour limiter l'exposition.
+// =====================================================
+model PasswordResetToken {
+  id         String   @id @default(cuid())
+  userId     String
+  // Hash SHA-256 du token envoye par email. On compare en hashant
+  // le token re-soumis (pas de fuite si la BDD est compromise).
+  tokenHash  String   @unique
+  expiresAt  DateTime
+  usedAt     DateTime?
+  // Trace forensic (RGPD) : IP hash + UA tronque
+  requestedIpHash String?
+  requestedUa     String? @db.Text
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// =====================================================
+// GROUPES METIER
+// Un groupe = un service / departement / equipe (ex: Compta, RH, Dev,
+// Commercial, Direction, IT, Atelier). Multi-tenant (chaque tenant a
+// ses propres groupes). Sert a :
+//  - Cibler les campagnes phishing par service
+//  - Differencier les modules obligatoires
+//  - Segmenter le reporting RSSI
+// Un user peut appartenir a plusieurs groupes (jonction UserGroup).
+// =====================================================
+model Group {
+  id          String   @id @default(cuid())
+  tenantId    String
+  // Nom affiche : "Comptabilite", "Ressources Humaines", etc.
+  name        String
+  // Slug technique stable pour ciblage (ex: "compta", "rh", "dev")
+  slug        String
+  // Emoji + description pour l'UI
+  emoji       String   @default("🏷️")
+  description String?
+  // Couleur hex pour les badges dans le reporting (ex: "#0B3D91")
+  color       String?
+  // isSystem : groupes seedes (Compta/RH/Dev/Commercial...) qu'on ne peut
+  // pas supprimer mais qu'on peut desactiver/renommer.
+  isSystem    Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members     UserGroup[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, isActive])
+}
+
+model UserGroup {
+  id        String   @id @default(cuid())
+  userId    String
+  groupId   String
+  // Si true, l'user est responsable du groupe (peut piloter les campagnes
+  // phishing dediees, recevoir le reporting). Pas un role auth, juste un
+  // marqueur metier.
+  isLead    Boolean  @default(false)
+  joinedAt  DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, groupId])
+  @@index([groupId])
 }
 
 model Account {

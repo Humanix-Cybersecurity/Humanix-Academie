@@ -23,18 +23,31 @@ export default async function AdminUsersPage() {
   const tenantId = session!.user.tenantId as string;
   const currentUserId = session!.user.id as string;
 
-  const users = await db.user.findMany({
-    where: { tenantId },
-    include: {
-      progress: { select: { score: true, status: true, completedAt: true } },
-    },
-    orderBy: [{ isActive: "desc" }, { name: "asc" }],
-  });
+  const [users, allGroups] = await Promise.all([
+    db.user.findMany({
+      where: { tenantId },
+      include: {
+        progress: { select: { score: true, status: true, completedAt: true } },
+        groups: {
+          include: {
+            group: { select: { id: true, name: true, emoji: true, color: true } },
+          },
+        },
+      },
+      orderBy: [{ isActive: "desc" }, { name: "asc" }],
+    }),
+    db.group.findMany({
+      where: { tenantId, isActive: true },
+      orderBy: { name: "asc" },
+      select: { id: true, name: true, emoji: true, color: true },
+    }),
+  ]);
 
   const totalEpisodes = await db.episode.count({
     where: { isPublished: true },
   });
 
+  const now = Date.now();
   const enriched = users.map((u) => {
     const completed = u.progress.filter((p) => p.status === "COMPLETED").length;
     const xp = u.progress.reduce((s, p) => s + (p.score || 0), 0);
@@ -57,13 +70,26 @@ export default async function AdminUsersPage() {
       totalEpisodes,
       xp,
       lastActivity: lastActivity ? formatRelative(lastActivity) : null,
+      mfaEnabled: u.mfaEnabled,
+      mfaForced: u.mfaForced,
+      isLocked: u.lockedUntil ? u.lockedUntil.getTime() > now : false,
+      hasPassword: !!u.passwordHash,
+      groupIds: u.groups.map((ug) => ug.group.id),
+      groupBadges: u.groups.map((ug) => ({
+        id: ug.group.id,
+        name: ug.group.name,
+        emoji: ug.group.emoji,
+        color: ug.group.color,
+      })),
     };
   });
 
   const activeCount = enriched.filter((u) => u.isActive).length;
   const adminCount = enriched.filter(
-    (u) => u.role === "ADMIN" || u.role === "SUPERADMIN",
+    (u) =>
+      u.role === "ADMIN" || u.role === "SUPERADMIN" || u.role === "RSSI",
   ).length;
+  const mfaCount = enriched.filter((u) => u.mfaEnabled).length;
   const suspendedCount = enriched.length - activeCount;
 
   return (
@@ -74,8 +100,8 @@ export default async function AdminUsersPage() {
       />
 
       <div className="space-y-6 min-w-0">
-        {/* KPI strip — 4 chiffres clés */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {/* KPI strip — 5 chiffres clés */}
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
           <StatCard label="Utilisateurs" value={enriched.length} />
           <StatCard label="Actifs" value={activeCount} accent="emerald" />
           <StatCard
@@ -83,7 +109,12 @@ export default async function AdminUsersPage() {
             value={suspendedCount}
             accent={suspendedCount > 0 ? "amber" : undefined}
           />
-          <StatCard label="Admins" value={adminCount} />
+          <StatCard label="Admins / RSSI" value={adminCount} />
+          <StatCard
+            label="2FA activée"
+            value={mfaCount}
+            accent={mfaCount === enriched.length ? "emerald" : undefined}
+          />
         </div>
 
         {/* Layout 2/3 + 1/3 : table principale + actions latérales */}
@@ -92,7 +123,7 @@ export default async function AdminUsersPage() {
             title="Tous mes collaborateurs"
             description={`${enriched.length} utilisateur${enriched.length > 1 ? "s" : ""} dans votre organisation`}
           >
-            <UsersTable users={enriched} />
+            <UsersTable users={enriched} allGroups={allGroups} />
           </AdminSection>
 
           <div className="space-y-4 min-w-0">
