@@ -15,6 +15,7 @@ import {
   renameWebauthnCredential,
   deleteWebauthnCredential,
 } from "@/app/profil/securite/webauthn-actions";
+import { humanizeAuthError } from "@/lib/auth-errors";
 
 export type WebAuthnCredentialItem = {
   id: string;
@@ -71,16 +72,8 @@ export default function WebAuthnPanel({
       // Reload pour afficher la nouvelle clé dans la liste
       setTimeout(() => window.location.reload(), 800);
     } catch (e: unknown) {
-      const msg =
-        e instanceof Error
-          ? e.message
-          : "Erreur. Vérifiez que votre clé est branchée et déverrouillée.";
-      // Cas particulier : l'utilisateur a annulé la dialog navigateur
-      if (msg.includes("operation either timed out") || msg.includes("AbortError") || msg.includes("NotAllowedError")) {
-        setError("Annulé. Réessayez en touchant la clé.");
-      } else {
-        setError(msg);
-      }
+      const msg = e instanceof Error ? e.message : "Erreur";
+      setError(humanizeAuthError(msg));
     } finally {
       setEnrolling(false);
     }
