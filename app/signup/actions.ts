@@ -27,6 +27,11 @@ import { checkRateLimit } from "@/lib/rate-limit";
 import { hashIp } from "@/lib/password-reset";
 import { signIn } from "@/lib/auth";
 import type { PlanId } from "@/lib/plans";
+import {
+  sendWelcomeEmail,
+  hasReceivedWelcome,
+  logWelcomeSent,
+} from "@/lib/welcome-email";
 
 const ALLOWED_SIGNUP_PLANS: PlanId[] = ["decouverte", "trial"];
 
@@ -173,11 +178,11 @@ export async function createDecouverteAccount(
   const passwordHash = hashPassword(password);
   const ipHash = hashIp(ip);
 
-  await db.$transaction(async (tx) => {
+  const created = await db.$transaction(async (tx) => {
     const tenant = await tx.tenant.create({
       data: { name: orgName, slug, plan },
     });
-    await tx.user.create({
+    const user = await tx.user.create({
       data: {
         tenantId: tenant.id,
         email,
@@ -200,7 +205,28 @@ export async function createDecouverteAccount(
       })),
       skipDuplicates: true,
     });
+    return { tenant, user };
   });
+
+  // ----------------------------
+  // 5b. Welcome email (best-effort, non bloquant)
+  // ----------------------------
+  const appUrl =
+    process.env.AUTH_URL ?? process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  if (!(await hasReceivedWelcome(created.user.id))) {
+    const res = await sendWelcomeEmail({
+      toEmail: email,
+      toName: adminName || null,
+      tenantName: orgName,
+      plan,
+      appUrl,
+    });
+    await logWelcomeSent(
+      created.tenant.id,
+      created.user.id,
+      res.ok ? "sent" : `skipped:${res.reason ?? "unknown"}`,
+    );
+  }
 
   // ----------------------------
   // 6. Connexion automatique
