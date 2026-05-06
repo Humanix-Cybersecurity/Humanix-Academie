@@ -9,7 +9,7 @@
 //   - Citation finale "Hex veille" pour signer la page
 //   - Animations slide-up cascadees (idx * 80ms)
 //
-// Le dashboard metier (AdminDashboard) reste inchange — c'est l'outil de
+// Le dashboard métier (AdminDashboard) reste inchangé — c'est l'outil de
 // pilotage avec recharts, KPIs, viz complexes. La cosy-fication s'opere
 // autour de lui, pas au sein.
 //
