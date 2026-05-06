@@ -147,32 +147,32 @@ export default function RapportAuditPage() {
         <div className="space-y-4 text-sm text-gray-700 dark:text-gray-300">
           <Backlog
             title="Pentest externe par cabinet PASSI"
-            when="à venir"
+            when="Q3 2026"
             why="Devis pris auprès de 3 cabinets (Wavestone, Devoteam, ou cabinet PASSI plus petit). Pentest boîte grise, ~5-7 jours."
           />
           <Backlog
             title="Audit RGAA externe"
-            when="à venir"
+            when="Q4 2026"
             why="Audit interne 88 % conformité déjà fait. Cabinet certifié ciblé (Atalan / Tanaguru / Access42). Budget identifié ~3 000 € HT."
           />
           <Backlog
             title="Dependabot / scan SCA en CI"
-            when="à venir"
+            when="post-launch OSS"
             why="Aujourd'hui : npm audit manuel mensuel. Demain : auto-PR à chaque CVE détectée."
           />
           <Backlog
             title="Scan SAST en CI (Semgrep / CodeQL)"
-            when="à venir"
+            when="post-launch OSS"
             why="Détection automatisée de patterns à risque dans le code. Ruleset OWASP par défaut."
           />
           <Backlog
             title="Tests E2E Playwright sur flows critiques"
-            when="à venir"
+            when="Q3 2026"
             why="Auth, achat boutique, génération phishing IA, téléchargement Pack NIS2, complétion épisode."
           />
           <Backlog
             title="Programme bug bounty formalisé"
-            when="à venir"
+            when="Q4 2026"
             why="Aujourd'hui : divulgation responsable via security@humanix-cybersecurity.fr (cf. plus bas). Demain : périmètre + récompenses formalisés."
           />
         </div>
