@@ -17,6 +17,11 @@ type Saison = {
   coverEmoji: string;
   baseOrder: number;
   episodesCount: number;
+  /** Duree totale reelle de la saison, en minutes (somme des durationMinutes
+   * de chaque episode). Calculee cote serveur dans /admin/modules.
+   * Avant fix : on affichait `episodesCount * 6` ce qui donnait toujours
+   * 36 min et cassait la promesse "5 min/episode". */
+  totalMinutes: number;
   isActive: boolean;
   isMandatory: boolean;
   customOrder: number | null;
@@ -109,8 +114,14 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
               </div>
               <p className="text-sm text-gray-600 truncate">{s.description}</p>
               <p className="text-xs text-gray-400 mt-1">
-                {s.episodesCount} épisode{s.episodesCount > 1 ? "s" : ""} ·{" "}
-                {s.episodesCount * 6} min total
+                {s.episodesCount} épisode{s.episodesCount > 1 ? "s" : ""}
+                {s.episodesCount > 0 && (
+                  <>
+                    {" "}
+                    · ~{Math.round(s.totalMinutes / s.episodesCount)} min /
+                    épisode
+                  </>
+                )}
               </p>
             </div>
 
