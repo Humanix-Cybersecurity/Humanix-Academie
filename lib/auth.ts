@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Auth.js v5 + Prisma adapter
 // Modes supportés :
-//  - Production : magic link via Resend (default)
+//  - Production : magic link via Resend (default) + login mot de passe
 //  - Demo (DEMO_MODE=true) : Credentials provider sans mot de passe (1-clic)
 //  - SSO Google : si AUTH_GOOGLE_ID + AUTH_GOOGLE_SECRET configurés
 //  - SSO Microsoft : si AUTH_MICROSOFT_ENTRA_ID_ID + ID_SECRET + ID_ISSUER
+//  - Login mot de passe + 2FA TOTP : actif des qu'un user a defini un mdp
 //
 // Le user qui se connecte via SSO doit deja exister en BDD (matche par email).
 // Cela evite la creation sauvage de comptes — l'admin doit avoir invite l'user
@@ -17,8 +18,15 @@ import Google from "next-auth/providers/google";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
 import type { Provider } from "next-auth/providers";
 import { db } from "@/lib/db";
+import { verifyPassword } from "@/lib/password";
+import { verifyTotpCode } from "@/lib/totp";
+import { consumeBackupCode } from "@/lib/password";
 
 const isDemoMode = process.env.DEMO_MODE === "true";
+
+// Lockout : 5 echecs en 15 min => verrouille 15 min
+const MAX_FAILED_ATTEMPTS = 5;
+const LOCKOUT_MS = 15 * 60 * 1000;
 
 const providers: Provider[] = [];
 
@@ -72,6 +80,110 @@ if (isDemoMode) {
       },
     }),
   );
+}
+
+// =====================================================
+// CREDENTIALS PROVIDER : login mot de passe + 2FA TOTP
+// =====================================================
+// Toujours actif (hors demo mode). N'authentifie que les users qui ont
+// effectivement defini un passwordHash. Ce provider est universellement
+// disponible : les autres voies (magic link, SSO) restent en parallele.
+//
+// Champ "mfaCode" (optionnel) pour la 2FA :
+//  - Si mfaEnabled=false → ignore
+//  - Si mfaEnabled=true → exige soit un code TOTP, soit un code de secours
+//
+// Lockout : on incremente failedLoginAttempts a chaque echec, on verrouille
+// 15 minutes apres MAX_FAILED_ATTEMPTS echecs consecutifs.
+if (!isDemoMode) {
+  providers.push(
+    Credentials({
+      id: "password",
+      name: "Email + mot de passe",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Mot de passe", type: "password" },
+        mfaCode: { label: "Code 2FA", type: "text" },
+      },
+      async authorize(credentials: any) {
+        const email = String(credentials?.email ?? "").toLowerCase().trim();
+        const password = String(credentials?.password ?? "");
+        const mfaCode = String(credentials?.mfaCode ?? "").trim();
+        if (!email || !password) return null;
+
+        const user = await db.user.findUnique({ where: { email } });
+        if (!user) return null;
+        if (!user.isActive) return null;
+        if (!user.passwordHash) return null;
+
+        // Lockout
+        const now = new Date();
+        if (user.lockedUntil && user.lockedUntil > now) {
+          throw new Error("AccountLocked");
+        }
+
+        const passwordOk = verifyPassword(password, user.passwordHash);
+        if (!passwordOk) {
+          await registerFailedLogin(user.id, user.failedLoginAttempts);
+          return null;
+        }
+
+        // Mot de passe OK. Maintenant la 2FA si activee.
+        if (user.mfaEnabled && user.mfaSecret) {
+          if (!mfaCode) {
+            // Premier passage : on signale au front qu'il faut un code 2FA.
+            // Auth.js retourne null = echec generique, on utilise une erreur
+            // dediee que l'UI saura interpreter.
+            throw new Error("MfaRequired");
+          }
+          const totpOk = verifyTotpCode(user.mfaSecret, mfaCode);
+          if (!totpOk) {
+            // Tentative code de secours (10 chars formattes XXXXX-XXXXX)
+            const isBackupShape = /^[0-9A-Z]{5}-?[0-9A-Z]{5}$/i.test(mfaCode);
+            if (isBackupShape && user.mfaBackupCodesHash) {
+              const consumed = consumeBackupCode(
+                mfaCode,
+                user.mfaBackupCodesHash,
+              );
+              if (!consumed) {
+                await registerFailedLogin(user.id, user.failedLoginAttempts);
+                throw new Error("MfaInvalid");
+              }
+              await db.user.update({
+                where: { id: user.id },
+                data: { mfaBackupCodesHash: consumed.newHashedJson },
+              });
+            } else {
+              await registerFailedLogin(user.id, user.failedLoginAttempts);
+              throw new Error("MfaInvalid");
+            }
+          }
+        }
+
+        // Succes : reset compteur + lastLogin
+        await db.user.update({
+          where: { id: user.id },
+          data: {
+            failedLoginAttempts: 0,
+            lockedUntil: null,
+            lastLoginAt: new Date(),
+          },
+        });
+        return { id: user.id, email: user.email, name: user.name };
+      },
+    }),
+  );
+}
+
+async function registerFailedLogin(userId: string, current: number) {
+  const next = current + 1;
+  const data: { failedLoginAttempts: number; lockedUntil?: Date } = {
+    failedLoginAttempts: next,
+  };
+  if (next >= MAX_FAILED_ATTEMPTS) {
+    data.lockedUntil = new Date(Date.now() + LOCKOUT_MS);
+  }
+  await db.user.update({ where: { id: userId }, data });
 }
 
 // Magic link en prod

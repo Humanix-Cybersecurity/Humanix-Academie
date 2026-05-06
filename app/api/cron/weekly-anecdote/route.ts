@@ -34,7 +34,7 @@ async function checkAuth(
   const session = await auth();
   if (!session?.user) return { authorized: false, reason: "unauthorized" };
   const role = session.user!.role;
-  if (role !== "ADMIN" && role !== "SUPERADMIN") {
+  if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     return { authorized: false, reason: "forbidden" };
   }
   return { authorized: true };

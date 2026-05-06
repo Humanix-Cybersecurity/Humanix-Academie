@@ -11,10 +11,12 @@ async function requireAdmin() {
   const session = await auth();
   if (!session?.user) throw new Error("unauthorized");
   const role = session.user!.role as string;
-  if (role !== "ADMIN" && role !== "SUPERADMIN") throw new Error("forbidden");
+  if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
+    throw new Error("forbidden");
+  }
   const tenantId = session.user!.tenantId as string;
   if (!tenantId) throw new Error("no_tenant");
-  return { tenantId, userId: session.user!.id as string };
+  return { tenantId, userId: session.user!.id as string, role };
 }
 
 // =====================================================
@@ -204,13 +206,178 @@ export async function stopChallenge(challengeId: string) {
 }
 
 // =====================================================
+// GROUPES METIER (Compta, RH, Dev, Commercial...)
+// =====================================================
+function slugify(input: string): string {
+  return input
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40);
+}
+
+export async function createGroup(formData: FormData) {
+  const { tenantId } = await requireAdmin();
+  const name = ((formData.get("name") as string) ?? "").trim();
+  const description = ((formData.get("description") as string) ?? "").trim();
+  const emoji = ((formData.get("emoji") as string) ?? "🏷️").slice(0, 4);
+  const color = ((formData.get("color") as string) ?? "").trim() || null;
+  if (!name) throw new Error("name_required");
+  let slug = slugify(name);
+  if (!slug) slug = "groupe-" + Math.random().toString(36).slice(2, 6);
+  // Eviter collision
+  const existing = await db.group.findUnique({
+    where: { tenantId_slug: { tenantId, slug } },
+  });
+  if (existing) {
+    slug = slug + "-" + Math.random().toString(36).slice(2, 5);
+  }
+  await db.group.create({
+    data: {
+      tenantId,
+      name,
+      slug,
+      emoji,
+      color,
+      description: description || null,
+    },
+  });
+  revalidatePath("/admin/groupes");
+  revalidatePath("/admin/utilisateurs");
+  return { ok: true };
+}
+
+export async function updateGroup(groupId: string, formData: FormData) {
+  const { tenantId } = await requireAdmin();
+  const target = await db.group.findUnique({ where: { id: groupId } });
+  if (!target || target.tenantId !== tenantId) throw new Error("not_found");
+  const name = ((formData.get("name") as string) ?? target.name).trim();
+  const description = ((formData.get("description") as string) ?? "").trim();
+  const emoji = ((formData.get("emoji") as string) ?? target.emoji).slice(0, 4);
+  const color = ((formData.get("color") as string) ?? "").trim() || null;
+  const isActive = formData.get("isActive") !== null;
+  await db.group.update({
+    where: { id: groupId },
+    data: {
+      name,
+      description: description || null,
+      emoji,
+      color,
+      isActive,
+    },
+  });
+  revalidatePath("/admin/groupes");
+  revalidatePath("/admin/utilisateurs");
+  return { ok: true };
+}
+
+export async function deleteGroup(groupId: string) {
+  const { tenantId } = await requireAdmin();
+  const target = await db.group.findUnique({ where: { id: groupId } });
+  if (!target || target.tenantId !== tenantId) throw new Error("not_found");
+  if (target.isSystem) throw new Error("system_group_protected");
+  await db.group.delete({ where: { id: groupId } });
+  revalidatePath("/admin/groupes");
+  revalidatePath("/admin/utilisateurs");
+  return { ok: true };
+}
+
+export async function setUserGroups(userId: string, groupIds: string[]) {
+  const { tenantId } = await requireAdmin();
+  const target = await db.user.findUnique({ where: { id: userId } });
+  if (!target || target.tenantId !== tenantId) throw new Error("not_found");
+  // Filtre les groupes qui appartiennent bien au tenant
+  const validGroups = await db.group.findMany({
+    where: { id: { in: groupIds }, tenantId },
+    select: { id: true },
+  });
+  const validIds = new Set(validGroups.map((g) => g.id));
+  await db.$transaction([
+    db.userGroup.deleteMany({ where: { userId } }),
+    db.userGroup.createMany({
+      data: Array.from(validIds).map((groupId) => ({ userId, groupId })),
+      skipDuplicates: true,
+    }),
+  ]);
+  revalidatePath("/admin/utilisateurs");
+  revalidatePath("/admin/groupes");
+  return { ok: true };
+}
+
+export async function toggleGroupLead(
+  userId: string,
+  groupId: string,
+  isLead: boolean,
+) {
+  const { tenantId } = await requireAdmin();
+  const group = await db.group.findUnique({ where: { id: groupId } });
+  if (!group || group.tenantId !== tenantId) throw new Error("not_found");
+  await db.userGroup.update({
+    where: { userId_groupId: { userId, groupId } },
+    data: { isLead },
+  });
+  revalidatePath("/admin/groupes");
+  return { ok: true };
+}
+
+// =====================================================
+// SECURITE : forcer 2FA, deverrouiller, declencher reset mdp
+// =====================================================
+export async function forceUserMfa(userId: string, force: boolean) {
+  const { tenantId, userId: currentUserId } = await requireAdmin();
+  if (userId === currentUserId && !force) {
+    // On peut s'auto-forcer mais pas s'auto-detendre.
+    throw new Error("cannot_unforce_self");
+  }
+  const target = await db.user.findUnique({ where: { id: userId } });
+  if (!target || target.tenantId !== tenantId) throw new Error("not_found");
+  await db.user.update({
+    where: { id: userId },
+    data: { mfaForced: force },
+  });
+  revalidatePath("/admin/utilisateurs");
+  return { ok: true };
+}
+
+export async function unlockUser(userId: string) {
+  const { tenantId } = await requireAdmin();
+  const target = await db.user.findUnique({ where: { id: userId } });
+  if (!target || target.tenantId !== tenantId) throw new Error("not_found");
+  await db.user.update({
+    where: { id: userId },
+    data: { failedLoginAttempts: 0, lockedUntil: null },
+  });
+  revalidatePath("/admin/utilisateurs");
+  return { ok: true };
+}
+
+export async function adminResetUserMfa(userId: string) {
+  const { tenantId } = await requireAdmin();
+  const target = await db.user.findUnique({ where: { id: userId } });
+  if (!target || target.tenantId !== tenantId) throw new Error("not_found");
+  await db.user.update({
+    where: { id: userId },
+    data: {
+      mfaSecret: null,
+      mfaEnabled: false,
+      mfaEnabledAt: null,
+      mfaBackupCodesHash: null,
+    },
+  });
+  revalidatePath("/admin/utilisateurs");
+  return { ok: true };
+}
+
+// =====================================================
 // IMPORT CSV
 // =====================================================
 type CsvRow = { email: string; name?: string; service?: string; role?: string };
 
 export async function bulkImportUsers(rows: CsvRow[]) {
   const { tenantId } = await requireAdmin();
-  const validRoles = ["LEARNER", "MANAGER", "ADMIN"];
+  const validRoles = ["LEARNER", "MANAGER", "RSSI", "ADMIN"];
 
   const result = { created: 0, skipped: 0, errors: [] as string[] };
 
