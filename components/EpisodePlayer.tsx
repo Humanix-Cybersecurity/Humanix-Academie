@@ -1,10 +1,10 @@
 "use client";
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Player d'episode — refonte cosy mai 2026.
+// Player d'episode - refonte cosy mai 2026.
 //
 // Brief : "experience, terrain, sensibilisation reelle, pas celle generee
-// par la peur — celle qui sent bon la maitrise et la confiance".
+// par la peur - celle qui sent bon la maitrise et la confiance".
 //
 // 4 etapes : Scenario → Debrief → Quiz → Recap (avec confettis)
 // + Detection level-up via reponse API et overlay
@@ -35,7 +35,7 @@ import { useAnnouncer } from "@/lib/a11y";
 
 type Step = "scenario" | "debrief" | "quiz" | "recap";
 
-// Citations rotatives selon le score quiz — pas la meme philosophie selon
+// Citations rotatives selon le score quiz - pas la meme philosophie selon
 // le niveau de maitrise atteint. Toutes chaleureuses, jamais jugeantes.
 const RECAP_CITATIONS = {
   perfect: "« Tu n'as pas a etre expert. Tu as juste a etre averti une seconde avant le clic. C'est exactement ce que tu viens de faire. »",
@@ -185,7 +185,7 @@ export default function EpisodePlayer(props: {
         <ProgressDots step={step} />
 
         {/* ============================================================
-            STEP 1 — SCENARIO : l'histoire du jour
+            STEP 1 - SCENARIO : l'histoire du jour
             ============================================================ */}
         {step === "scenario" && (
           <div className="animate-fadeIn">
@@ -244,7 +244,7 @@ export default function EpisodePlayer(props: {
         )}
 
         {/* ============================================================
-            STEP 2 — DEBRIEF : on apprend ensemble, sans jugement
+            STEP 2 - DEBRIEF : on apprend ensemble, sans jugement
             ============================================================ */}
         {step === "debrief" && choice && (
           <div className="animate-fadeIn">
@@ -313,7 +313,7 @@ export default function EpisodePlayer(props: {
         )}
 
         {/* ============================================================
-            STEP 3 — QUIZ : maitrise progressive
+            STEP 3 - QUIZ : maitrise progressive
             ============================================================ */}
         {step === "quiz" && (
           <div className="animate-fadeIn">
@@ -427,7 +427,7 @@ export default function EpisodePlayer(props: {
         )}
 
         {/* ============================================================
-            STEP 4 — RECAP : ton chaleureux, citation Hex veille
+            STEP 4 - RECAP : ton chaleureux, citation Hex veille
             ============================================================ */}
         {step === "recap" && (
           <div className="animate-fadeIn text-center py-6">
@@ -492,7 +492,7 @@ export default function EpisodePlayer(props: {
                   className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 via-pink-500 to-amber-500 text-white rounded-2xl px-6 py-3 font-display font-extrabold shadow-lg animate-glow"
                 >
                   <span aria-hidden="true">✨</span> Niveau {levelUp} debloque
-                  — clique pour voir
+                  - clique pour voir
                 </button>
               </div>
             )}
@@ -506,7 +506,7 @@ export default function EpisodePlayer(props: {
               </Link>
             </div>
 
-            {/* Respiration finale — citation Hex veille rotative selon le score */}
+            {/* Respiration finale - citation Hex veille rotative selon le score */}
             <div className="pt-6 border-t-2 border-dashed border-gray-200 dark:border-slate-700 max-w-2xl mx-auto">
               <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                 {citation}
@@ -515,7 +515,7 @@ export default function EpisodePlayer(props: {
                 aria-hidden="true"
                 className="mt-3 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
               >
-                — Hex veille
+                - Hex veille
               </p>
             </div>
           </div>

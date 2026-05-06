@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page Presse — kit journalistes pour le launch open source du 26 mai 2026.
+// Page Presse - kit journalistes pour le launch open source du 26 mai 2026.
 // A11y RGAA AA. UI/UX différenciante : pitchs en 3 longueurs, faits clés,
 // citation fondateur, screenshots, logos téléchargeables, FAQ journalistes.
 
@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 export const metadata = {
-  title: "Presse — Humanix Académie Community Edition",
+  title: "Presse - Humanix Académie Community Edition",
   description:
     "Kit presse Humanix Académie : pitch, faits clés, citation fondateur, screenshots, logos téléchargeables, contact dédié journalistes. Launch OSS 26 mai 2026.",
 };
@@ -22,7 +22,7 @@ Le 26 mai 2026, Humanix-Cybersecurity ouvre l'intégralité du code source de la
 
 Le modèle économique est inspiré des éditeurs OSS français rentables : la plateforme est libre, les revenus viennent des services à forte valeur ajoutée (audit cyber, formation Qualiopi, RSSI externalisé, hébergement managé, accompagnement NIS2). Cible 24 mois : 180 à 250 k€ de chiffre d'affaires en solo, 350 à 500 k€ avec un premier collaborateur.
 
-Humanix Académie se positionne comme la brique humaine indispensable de l'écosystème open source cyber souverain français — un écosystème qui s'est déjà structuré autour de CISO Assistant pour la gouvernance, OpenCTI pour la threat intelligence, Wazuh pour la détection, mais où la sensibilisation des collaborateurs restait un trou béant.`;
+Humanix Académie se positionne comme la brique humaine indispensable de l'écosystème open source cyber souverain français - un écosystème qui s'est déjà structuré autour de CISO Assistant pour la gouvernance, OpenCTI pour la threat intelligence, Wazuh pour la détection, mais où la sensibilisation des collaborateurs restait un trou béant.`;
 
 const FAITS_CLES = [
   { label: "Date de lancement OSS", value: "Mardi 26 mai 2026" },
@@ -64,7 +64,7 @@ const QUOTES = [
   },
   {
     author: "Florian DURANO, fondateur Humanix-Cybersecurity",
-    text: "L'open source est notre stratégie d'acquisition. Chaque téléchargement est un lead qualifié. Chaque audit est une preuve de valeur. La marge vient de l'expertise — l'audit, la formation, le RSSI externalisé — pas du hold-up sur les abonnements SaaS.",
+    text: "L'open source est notre stratégie d'acquisition. Chaque téléchargement est un lead qualifié. Chaque audit est une preuve de valeur. La marge vient de l'expertise - l'audit, la formation, le RSSI externalisé - pas du hold-up sur les abonnements SaaS.",
   },
 ];
 
@@ -87,7 +87,7 @@ const FAQ_JOURNALISTES = [
   },
   {
     q: "Quels sont vos partenariats annoncés ?",
-    a: "Aucun partenariat commercial signé à ce jour. Côté technique, Humanix Académie expose des connecteurs natifs vers plusieurs outils souverains français (CISO Assistant d'intuitem, Sekoia.io, HarfangLab, Mailinblack, Vade Secure, Lucca, GLPI). Ces connecteurs sont prêts à l'emploi côté Humanix — libre à chaque éditeur de les utiliser ou de discuter d'une intégration plus poussée. Référencement auprès de CyberMalveillance.gouv.fr (GIP ACYMA) à instruire après le launch.",
+    a: "Aucun partenariat commercial signé à ce jour. Côté technique, Humanix Académie expose des connecteurs natifs vers plusieurs outils souverains français (CISO Assistant d'intuitem, Sekoia.io, HarfangLab, Mailinblack, Vade Secure, Lucca, GLPI). Ces connecteurs sont prêts à l'emploi côté Humanix - libre à chaque éditeur de les utiliser ou de discuter d'une intégration plus poussée. Référencement auprès de CyberMalveillance.gouv.fr (GIP ACYMA) à instruire après le launch.",
   },
   {
     q: "Combien de personnes derrière le projet ?",
@@ -239,7 +239,7 @@ export default function PressePage() {
                 « {q.text} »
               </p>
               <footer className="text-sm text-gray-500 dark:text-gray-400 not-italic">
-                — {q.author}
+                - {q.author}
               </footer>
             </blockquote>
           ))}

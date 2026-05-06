@@ -29,7 +29,7 @@ export default function PackNis2Form({ tenantName }: Props) {
     >
       <h2 className="text-xl font-bold text-primary-500">Vos informations</h2>
       <p className="text-sm text-gray-500">
-        Saisissez ces informations une fois — elles seront injectées dans les 4
+        Saisissez ces informations une fois - elles seront injectées dans les 4
         documents PDF générés. Aucune information n'est stockée serveur côté
         Humanix au-delà de la requête.
       </p>

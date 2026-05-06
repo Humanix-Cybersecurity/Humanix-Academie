@@ -143,7 +143,7 @@ function PageHeader({
     <View style={styles.header} fixed>
       <Text style={styles.brand}>Humanix Académie · Pack Conformité NIS2</Text>
       <Text style={styles.subBrand}>
-        Préparé pour {tenantName} — émis le {dateFr}
+        Préparé pour {tenantName} - émis le {dateFr}
       </Text>
     </View>
   );

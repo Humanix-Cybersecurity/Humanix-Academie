@@ -73,7 +73,7 @@ model Tenant {
 }
 
 // =====================================================
-// BILLING — audit trail des events du prestataire de paiement
+// BILLING - audit trail des events du prestataire de paiement
 // Enregistre chaque webhook recu pour traçabilite (debug + RGPD).
 // Les events sont aussi appliques au Tenant en parallele (statut, period
 // end, seats), mais cette table garde l'historique brut.
@@ -151,7 +151,7 @@ model User {
   lastLoginIpHash     String?
 
   // ----------------------------------------------------
-  // 2FA — TOTP (RFC 6238)
+  // 2FA - TOTP (RFC 6238)
   // ----------------------------------------------------
   // mfaSecret = secret partage encode base32, chiffre cote app si AUTH_SECRET
   // est dispo (sinon stocke en clair, c'est moins ideal mais standard NextAuth).
@@ -204,7 +204,7 @@ model User {
 }
 
 // =====================================================
-// WEBAUTHN — clés de sécurité hardware (FIDO2)
+// WEBAUTHN - clés de sécurité hardware (FIDO2)
 // Pour l'auth super-admin : clé Thales et-Fusion / YubiKey / Titan, etc.
 // Compatible passkeys synchronisees (iCloud Keychain, 1Password) si l'user
 // le souhaite, mais l'usage cible est cle USB hardware-only.
@@ -548,9 +548,9 @@ enum PhishingTemplate {
   FAKE_COLISSIMO
   FAKE_PRESIDENT
   // SMS smishing
-  SMS_FAKE_LIVREUR     // "Votre colis La Poste / Chronopost — frais de livraison"
+  SMS_FAKE_LIVREUR     // "Votre colis La Poste / Chronopost - frais de livraison"
   SMS_FAKE_BANQUE      // "Tentative de paiement detectee, validez via lien"
-  SMS_FAKE_IMPOTS      // "Trop-percu ANTS / Service Public — IBAN a verifier"
+  SMS_FAKE_IMPOTS      // "Trop-percu ANTS / Service Public - IBAN a verifier"
   SMS_FAKE_2FA         // "Votre code 2FA est XXX, partagez-le si on vous demande"
   SMS_FAKE_PRESIDENT   // "Operation confidentielle, urgent, repondez"
 }
@@ -728,7 +728,7 @@ model LibraryArticle {
   description     String
   emoji           String   @default("📖")
   category        String   // mfa / phishing / mots-de-passe / byod / grand-public / etc.
-  audience        String   @default("pro") // pro / tous / famille — pour partage hors-pro
+  audience        String   @default("pro") // pro / tous / famille - pour partage hors-pro
   readTimeMinutes Int      @default(5)
   body            String   @db.Text // Markdown safe-rendered (geres cote app, pas de HTML brut)
   authorName      String?
@@ -1147,7 +1147,7 @@ model DataBreach {
 }
 
 // =====================================================
-// AUDIT LOG — Journal de conformité
+// AUDIT LOG - Journal de conformité
 //
 // Distinct du modèle Event (qui sert au business / gamification).
 // AuditLog trace les actions sensibles pour la conformité RGPD (accountability
@@ -1157,7 +1157,7 @@ model DataBreach {
 //  - Append-only (jamais d'UPDATE / DELETE en code applicatif)
 //  - Snapshot des identités (actorEmail, actorRole) pour résister à la
 //    suppression d'un compte ultérieurement.
-//  - IP hashée SHA-256 (RGPD-safe — réversible uniquement avec dictionnaire)
+//  - IP hashée SHA-256 (RGPD-safe - réversible uniquement avec dictionnaire)
 //  - Conservation : 13 mois minimum (recommandation CNIL pour les logs
 //    sécurité, à aligner avec votre politique). Purge gérée par
 //    scripts/purge-old-audit-logs.ts.
@@ -1204,10 +1204,10 @@ enum AuditAction {
   BILLING_PAYMENT_FAILED
   BILLING_PORTAL_ACCESSED
   // RGPD - Droits des personnes
-  DATA_ACCESSED          // art. 15 — l'user consulte ses donnees
-  DATA_EXPORTED          // art. 20 — portabilite (download JSON)
-  DATA_ERASURE_REQUESTED // art. 17 — demande d'effacement
-  DATA_ERASURE_COMPLETED // art. 17 — effacement effectue
+  DATA_ACCESSED          // art. 15 - l'user consulte ses donnees
+  DATA_EXPORTED          // art. 20 - portabilite (download JSON)
+  DATA_ERASURE_REQUESTED // art. 17 - demande d'effacement
+  DATA_ERASURE_COMPLETED // art. 17 - effacement effectue
   CONSENT_GIVEN
   CONSENT_WITHDRAWN
   // Securite / divers
@@ -1232,7 +1232,7 @@ enum AuditSeverity {
 model AuditLog {
   id          String        @id @default(cuid())
   tenantId    String?       // null pour les actions cross-tenant SUPERADMIN
-  // Acteur — snapshot pour resister a la suppression
+  // Acteur - snapshot pour resister a la suppression
   actorUserId String?       // null si systeme / pre-auth (ex: login failed)
   actorEmail  String?       // snapshot au moment du log
   actorRole   String?       // snapshot

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// GET /profil/donnees/export — RGPD article 20 : portabilite des donnees.
+// GET /profil/donnees/export - RGPD article 20 : portabilite des donnees.
 // Renvoie un JSON downloadable avec toutes les donnees personnelles de l'user.
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";

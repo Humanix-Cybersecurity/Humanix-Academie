@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Page publique /pour-les-daf — landing dediee aux Directeurs Administratifs
+// Page publique /pour-les-daf - landing dediee aux Directeurs Administratifs
 // et Financiers.
 //
 // POURQUOI cette page :
@@ -13,7 +13,7 @@
 //   - C'est souvent le declencheur d'achat dans les PMEs apres NIS2.
 //
 // CONTENU :
-//   - Hero : "Le risque humain en € — pas en jargon cyber"
+//   - Hero : "Le risque humain en € - pas en jargon cyber"
 //   - 5 promesses ciblees DAF (FOVI, NIS2 reporting, ROI €, audit trail,
 //     procedures pretes)
 //   - Cas d'usage concret "DAF de PME 80 personnes apres NIS2"
@@ -25,7 +25,7 @@ import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
 export const metadata = {
-  title: "Pour les DAF — Humanix Académie",
+  title: "Pour les DAF - Humanix Académie",
   description:
     "Pour les Directeurs Administratifs et Financiers : éviter les FOVI / deepfakes qui coûtent 200 k€ en moyenne, reporting NIS2/RGPD prêt pour COMEX, ROI calculé en €. La cybersécurité humaine en langage de directeur financier.",
 };
@@ -135,7 +135,7 @@ export default function DafLandingPage() {
 
       <div className="max-w-5xl mx-auto px-4 py-10 space-y-10">
         {/* ============================================================
-            2. PROMESSES — 6 cards palette saisons
+            2. PROMESSES - 6 cards palette saisons
             ============================================================ */}
         <section aria-labelledby="promesses-title" className="space-y-1">
           <div className="text-center mb-6">
@@ -370,7 +370,7 @@ export default function DafLandingPage() {
             aria-hidden="true"
             className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
           >
-            — Hex veille
+            - Hex veille
           </p>
         </section>
       </div>

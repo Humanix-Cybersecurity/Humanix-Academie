@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// WebAuthn / FIDO2 — wrapper autour de @simplewebauthn/server.
+// WebAuthn / FIDO2 - wrapper autour de @simplewebauthn/server.
 //
 // Architecture :
 //  - Le challenge est genere cote serveur, signe HMAC-SHA256 et passe en
@@ -119,7 +119,7 @@ export function verifyChallenge(token: string): ChallengeEnvelope | null {
 }
 
 // -----------------------------------------------------------------------------
-// REGISTER — generation des options pour enroller une nouvelle cle
+// REGISTER - generation des options pour enroller une nouvelle cle
 // -----------------------------------------------------------------------------
 export async function buildRegisterOptions(
   userId: string,
@@ -162,7 +162,7 @@ export async function buildRegisterOptions(
 }
 
 // -----------------------------------------------------------------------------
-// REGISTER — verification de la reponse de la cle et persistance
+// REGISTER - verification de la reponse de la cle et persistance
 // -----------------------------------------------------------------------------
 export async function verifyAndSaveRegistration(params: {
   userId: string;
@@ -211,7 +211,7 @@ export async function verifyAndSaveRegistration(params: {
 }
 
 // -----------------------------------------------------------------------------
-// LOGIN — generation des options
+// LOGIN - generation des options
 // -----------------------------------------------------------------------------
 export async function buildLoginOptions(userId: string): Promise<{
   options: PublicKeyCredentialRequestOptionsJSON;
@@ -241,7 +241,7 @@ export async function buildLoginOptions(userId: string): Promise<{
 }
 
 // -----------------------------------------------------------------------------
-// LOGIN — verification de la reponse
+// LOGIN - verification de la reponse
 // -----------------------------------------------------------------------------
 export async function verifyLogin(params: {
   userId: string;
@@ -292,7 +292,7 @@ export async function verifyLogin(params: {
 }
 
 // -----------------------------------------------------------------------------
-// FRESH AUTH — cookie signe pour le step-up super-admin
+// FRESH AUTH - cookie signe pour le step-up super-admin
 // -----------------------------------------------------------------------------
 export function signFreshAuth(userId: string): string {
   const env: ChallengeEnvelope = {
