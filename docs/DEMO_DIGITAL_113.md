@@ -21,7 +21,7 @@ Les autres atouts (RGAA, Pack NIS2, ecosysteme connecteurs FR) restent en reserv
 ## Pre-vol — checklist 60 minutes avant l'intervention
 
 - [ ] Connexion internet stable testee (4G operateur en backup, 1 Go disponible)
-- [ ] `npm run build` reussi sur la machine demo
+- [ ] `npm run build` réussi sur la machine démo
 - [ ] `npm run dev` lance, ports 3000 disponibles
 - [ ] Claude Desktop ouvert avec le MCP `humanix` connecté (vérifier l'icône clé de bricolage 🔧 dans le composeur)
 - [ ] Tenant demo `tenant-d113` initialise avec les 7 utilisateurs fixtures (cf. `prisma/seed-tenant-d113.ts`)
