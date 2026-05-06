@@ -4,7 +4,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Connecteur HarfangLab — Humanix Académie",
+  title: "Connecteur HarfangLab - Humanix Académie",
   description:
     "Bridge bidirectionnel HarfangLab (EDR souverain 🇫🇷) ↔ Humanix Académie. Corrélation EDR/sensibilisation + ciblage automatique de campagnes.",
 };

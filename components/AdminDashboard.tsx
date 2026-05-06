@@ -2,19 +2,19 @@
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// AdminDashboard — Console dirigeant v3 (mai 2026, refonte Linear/Vercel-like).
+// AdminDashboard - Console dirigeant v3 (mai 2026, refonte Linear/Vercel-like).
 //
 // Design principle : un DG non-tech doit comprendre l'état cyber de sa boîte
 // en 30 secondes, sans aucune doc, sans cliquer sur un tooltip.
 //
 // Hiérarchie de lecture (top-down) :
-//   1. Cyberscore HERO — le seul chiffre qui compte, énorme, contextualisé
-//   2. Actions urgentes — 3 max, avec verbe d'action et 1 clic pour résoudre
-//   3. KPI strip — 4 indicateurs avec sparklines (barres mini) inline
-//   4. Activité 7j — UN gros chart (pas 2 côte à côte qui se font la guerre)
-//   5. Couverture saisons — barres horizontales, scannable
-//   6. Top 3 + Engagement — sociale légère (pas top 5, on garde l'essentiel)
-//   7. Suivi équipe — table filtrable (déjà OK depuis refonte précédente)
+//   1. Cyberscore HERO - le seul chiffre qui compte, énorme, contextualisé
+//   2. Actions urgentes - 3 max, avec verbe d'action et 1 clic pour résoudre
+//   3. KPI strip - 4 indicateurs avec sparklines (barres mini) inline
+//   4. Activité 7j - UN gros chart (pas 2 côte à côte qui se font la guerre)
+//   5. Couverture saisons - barres horizontales, scannable
+//   6. Top 3 + Engagement - sociale légère (pas top 5, on garde l'essentiel)
+//   7. Suivi équipe - table filtrable (déjà OK depuis refonte précédente)
 //
 // Contrat de Props : INCHANGE (compatible avec app/admin/page.tsx existant).
 // =============================================================================
@@ -75,7 +75,7 @@ type Props = {
 };
 
 // =============================================================================
-// Helpers — statut couleur
+// Helpers - statut couleur
 // =============================================================================
 
 type Level = "excellent" | "ok" | "warning" | "danger";
@@ -137,7 +137,7 @@ export default function AdminDashboard({
   teamProgress,
   weeklyActivity,
 }: Props) {
-  // Cyberscore SÉVÈRE (mai 2026) — cf. lib/cyber-score.ts
+  // Cyberscore SÉVÈRE (mai 2026) - cf. lib/cyber-score.ts
   // Privilégie la sévérité pour ne jamais induire de fausse confiance.
   // 3 composantes (activation 25 + maîtrise 50 + fondamentaux 25) + pénalités
   // explicites + courbe concave. 100/100 mathématiquement quasi-impossible.
@@ -339,7 +339,7 @@ function CyberscoreHero({
         </div>
       </div>
 
-      {/* Détail pédagogique du score — pliable, transparent, sans condescendance */}
+      {/* Détail pédagogique du score - pliable, transparent, sans condescendance */}
       <ScoreBreakdownDetail breakdown={breakdown} />
     </section>
   );
@@ -373,7 +373,7 @@ function ScoreBreakdownDetail({
         <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed italic">
           En cyber, mieux vaut un score sévère qu'un score complaisant. Cette
           note intègre 3 composantes pondérées + des pénalités explicites pour
-          refléter le risque réel — pas le confort de lecture.
+          refléter le risque réel - pas le confort de lecture.
         </p>
 
         {/* Composantes */}

@@ -92,7 +92,7 @@ export default async function AnecdotesArchivePage() {
             <strong>1 incident cyber reel</strong>,{" "}
             <strong>1 lecon en 3 lignes</strong>, et{" "}
             <strong>1 mini-action</strong> a faire dans la semaine. Sans peur,
-            sans hyperbole — juste l'experience qui se transmet.
+            sans hyperbole - juste l'experience qui se transmet.
           </p>
         </header>
       </HexBackdrop>
@@ -177,19 +177,19 @@ export default async function AnecdotesArchivePage() {
         </section>
 
         {/* ================================================================
-            CITATION FINALE — signature cosy "Hex veille"
+            CITATION FINALE - signature cosy "Hex veille"
             ================================================================ */}
         <section className="text-center pt-10 pb-4">
           <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
             « Une histoire vraie raconte plus qu'un manuel entier. Chaque
-            lundi, on partage celle qui a marque la semaine — pour qu'a la
+            lundi, on partage celle qui a marque la semaine - pour qu'a la
             tienne, l'histoire ne se repete pas. »
           </blockquote>
           <p
             aria-hidden="true"
             className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
           >
-            — Hex veille
+            - Hex veille
           </p>
         </section>
       </div>

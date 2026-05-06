@@ -38,7 +38,7 @@ export async function POST(req: Request) {
   }
   const { episodeId, score, status, perfectQuiz } = parsed.data;
   // Si quizScorePct non fourni, on retombe sur min(100, score) pour ne pas
-  // casser les anciens clients (provisoire — a retirer apres deploiement
+  // casser les anciens clients (provisoire - a retirer apres deploiement
   // generalise du nouveau client).
   const quizScorePct =
     parsed.data.quizScorePct ?? Math.min(100, Math.max(0, score));

@@ -12,7 +12,7 @@
 //
 // IMPORTANT : ce systeme protege contre la falsification mais PAS contre
 // le bypass code-level (le client peut patcher verifyLicense() en self-host).
-// C'est conforme a l'esprit AGPLv3 — cf. docs/OPEN_CORE.md.
+// C'est conforme a l'esprit AGPLv3 - cf. docs/OPEN_CORE.md.
 
 import type { PlanId } from "@/lib/plans";
 

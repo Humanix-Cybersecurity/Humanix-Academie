@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page publique /contact — point d'entree unique pour toute demande externe.
+// Page publique /contact - point d'entree unique pour toute demande externe.
 //
 // On ne fait pas de form web (qui demanderait stockage + anti-spam + RGPD).
 // On oriente par sujet vers la bonne adresse mailto:, avec sujet pre-rempli.
@@ -12,7 +12,7 @@ import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
 export const metadata = {
-  title: "Contact — Humanix Académie",
+  title: "Contact - Humanix Académie",
   description:
     "Cinq adresses email selon ton sujet : commercial, sécurité, RGPD, support, contributeur expert. Réponse sous 4h ouvrées en moyenne.",
 };
@@ -51,7 +51,7 @@ const SUJETS = [
     description:
       "Tu as découvert une faille. Merci. Procédure de divulgation responsable détaillée dans SECURITY.md. Réponse sous 48h.",
     email: "security@humanix-cybersecurity.fr",
-    sujet: "Vulnérabilité — divulgation responsable",
+    sujet: "Vulnérabilité - divulgation responsable",
     palette: {
       bg: "from-rose-50 via-white to-amber-50 dark:from-slate-900 dark:via-slate-900 dark:to-rose-950/40",
       ring: "border-rose-200 dark:border-rose-900/40",
@@ -138,7 +138,7 @@ export default async function ContactPage({
             style={{ animationDelay: "220ms" }}
           >
             Pas de formulaire labyrinthe. Une adresse email par sujet, un sujet
-            pré-rempli, et une vraie personne qui répond — sous 4 heures
+            pré-rempli, et une vraie personne qui répond - sous 4 heures
             ouvrées en moyenne. Florian ou son équipe (l'équipe = Florian).
           </p>
         </section>
@@ -254,13 +254,13 @@ export default async function ContactPage({
         <section className="text-center pt-4 pb-2">
           <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
             « Les meilleurs supports clients sont ceux où on parle à un humain.
-            On garde ce principe — même quand on sera 5 ou 50. »
+            On garde ce principe - même quand on sera 5 ou 50. »
           </blockquote>
           <p
             aria-hidden="true"
             className="mt-3 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
           >
-            — Hex veille
+            - Hex veille
           </p>
         </section>
       </div>

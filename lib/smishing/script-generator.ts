@@ -75,7 +75,7 @@ CONTRAINTES STRICTES :
 - TOUJOURS repondre en JSON valide, sans markdown autour.
 - Le SMS commence OBLIGATOIREMENT par "${FORMATION_MARKER}" suivi du contenu pedagogique.
 - Le SMS doit etre REALISTE mais inclure des signaux faibles que l'apprenant doit apprendre a reperer.
-- AUCUNE donnee personnelle reelle (pas de vrai nom propre identifiable, pas de numero de telephone reel, pas de SIREN reel, pas d'IBAN reel — toujours fictifs).
+- AUCUNE donnee personnelle reelle (pas de vrai nom propre identifiable, pas de numero de telephone reel, pas de SIREN reel, pas d'IBAN reel - toujours fictifs).
 - AUCUN contenu malveillant exploitable.
 - "smsBody" : 160 chars max marqueur FORMATION inclus, en francais natif francophone.
 - "spoofedSender" : un sender ID fictif type 5 chiffres "37501" OU un pseudo-numero "+33 9 XX XX XX XX".
@@ -198,7 +198,7 @@ function buildDemoFixture(args: SmishingArgs): SmishingScript {
       smsBody: `${FORMATION_MARKER} Votre colis Chronoposte est bloque. 1.99€ de frais de re-livraison a payer : http://chrono-livraison-fr.top/payer Code suivi : CHR47832`,
       spoofedSender: "37501",
       attackerPersona:
-        "Faux service livreur — exploite l'attente d'un colis post-soldes / Black Friday pour pousser au clic.",
+        "Faux service livreur - exploite l'attente d'un colis post-soldes / Black Friday pour pousser au clic.",
       redFlags: [
         "Domaine .top inhabituel (jamais utilise par Chronopost)",
         "Faute Chronoposte (avec un e en plus)",
@@ -212,7 +212,7 @@ function buildDemoFixture(args: SmishingArgs): SmishingScript {
       smsBody: `${FORMATION_MARKER} BANQUE: Tentative de paiement 547€ chez AMAZON.UK. Si non reconnu, bloquer ici : https://bnp-secure-fr.xyz/stop`,
       spoofedSender: "BNP-SECU",
       attackerPersona:
-        "Faux service securite bancaire — joue sur la peur de fraude carte.",
+        "Faux service securite bancaire - joue sur la peur de fraude carte.",
       redFlags: [
         "Domaine .xyz suspect",
         "Pas de personnalisation (votre nom)",
@@ -227,7 +227,7 @@ function buildDemoFixture(args: SmishingArgs): SmishingScript {
       smsBody: `${FORMATION_MARKER} Service-Public.fr: Trop-percu de 213,40€ a vous remboursser. Confirmez votre IBAN : http://impots-rembours.eu/iban`,
       spoofedSender: "37500",
       attackerPersona:
-        "Faux service impots — exploite la confiance institutionnelle, surtout en mai-juin.",
+        "Faux service impots - exploite la confiance institutionnelle, surtout en mai-juin.",
       redFlags: [
         "Faute remboursser",
         "Domaine .eu non officiel (impots c'est .gouv.fr)",
@@ -254,7 +254,7 @@ function buildDemoFixture(args: SmishingArgs): SmishingScript {
       smsBody: `${FORMATION_MARKER} ${args.service ? `Bonjour ${args.service.split(",")[0]}, ` : ""}c'est la Direction. Operation confidentielle, repondez sur WhatsApp +33 6 12 34 56 78. Ne pas en parler aux autres.`,
       spoofedSender: "+33 6 11 22 33 44",
       attackerPersona:
-        "Faux dirigeant — pretexte une operation confidentielle pour basculer sur WhatsApp (hors traçabilite entreprise).",
+        "Faux dirigeant - pretexte une operation confidentielle pour basculer sur WhatsApp (hors traçabilite entreprise).",
       redFlags: [
         "Bascule WhatsApp (hors logs entreprise)",
         "Demande de discretion absolue",
