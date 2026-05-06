@@ -253,6 +253,12 @@ export default function HeaderBar() {
                       label="Lancement OSS"
                       onClick={() => setMenuOpen(false)}
                     />
+                    <MenuLink
+                      href="/dpo"
+                      icon="🛡"
+                      label="Espace DPO"
+                      onClick={() => setMenuOpen(false)}
+                    />
                     {isAdmin && (
                       <MenuLink
                         href="/admin"
@@ -306,6 +312,13 @@ export default function HeaderBar() {
               title="Lancement open source — mardi 26 mai 2026"
             >
               🌱 Open source
+            </Link>
+            <Link
+              href="/dpo"
+              className="hidden md:inline text-sm text-purple-600 dark:text-purple-300 hover:text-purple-700 dark:hover:text-purple-200 font-medium"
+              title="Espace DPO — Humanix RGPD-by-design"
+            >
+              🛡 DPO
             </Link>
             <Link
               href="/tarifs"
