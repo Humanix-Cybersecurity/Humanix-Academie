@@ -471,10 +471,14 @@ export default function SecuritePage() {
 
         <Section n="08" emoji="🗺️" title="Roadmap conformité" id="roadmap">
           <ul>
-            <li>à venir : Référencement CyberMalveillance.gouv.fr finalisé</li>
-            <li>à venir : Évaluation Label Cyber Expert AFNOR</li>
             <li>
-              à venir :{" "}
+              <strong>Q3 2026 :</strong> Référencement CyberMalveillance.gouv.fr finalisé
+            </li>
+            <li>
+              <strong>Q4 2026 :</strong> Évaluation Label Cyber Expert AFNOR
+            </li>
+            <li>
+              <strong>2027 :</strong>{" "}
               <strong>
                 Migration du code source vers une forge souveraine française
               </strong>{" "}
