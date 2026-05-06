@@ -75,7 +75,7 @@ const CHAPTERS = [
     body: [
       "Le 26 mai 2026, la plateforme Humanix Academie est publiee sur GitHub sous licence GNU AGPLv3. Le code complet, multi-tenant, audite. Tu peux l'installer chez toi en 10 minutes via Docker Compose. Tu peux l'auditer, le forker, le modifier, le deployer pour ta PME sans m'en demander la permission ni me payer un centime.",
       "Inclus : moteur de gamification, mascotte evolutive, dashboard dirigeant, connecteur natif CISO Assistant, API REST, webhooks signes HMAC, exports OSCAL pour ton GRC, MCP server pour agents IA. Cinq saisons pedagogiques completes (phishing, mots de passe, donnees sensibles, teletravail, RGPD).",
-      "Ce qui reste paye : le cloud manage heberge en France, le catalogue avance de modules, la simulation de phishing avec IA Mistral souveraine, le Pack NIS2 turnkey, le SSO entreprise, et — surtout — l'expertise humaine qui paie mes factures (audit, gap analysis NIS2, formation Qualiopi, RSSI externalise).",
+      "Ce qui reste payé : le cloud managé hébergé en France, le catalogue avancé de modules, la simulation de phishing avec IA Mistral souveraine, le Pack NIS2 turnkey, le SSO entreprise, et — surtout — l'expertise humaine qui paie mes factures (audit, gap analysis NIS2, formation Qualiopi, RSSI externalisé).",
     ],
   },
   {
