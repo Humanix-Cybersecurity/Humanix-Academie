@@ -1,15 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Mascotte evolutive — 5 paliers + customizations boutique + choix d'espece
 //
-// V1 mascotte vivante (mai 2026) : quand l'utilisateur a choisi l'espece
-// "fox" (par defaut Hex), on rend HexCharacter (SVG anime — respiration,
-// clignement, main qui salue, queue qui fretille). Pour les autres especes
-// (chat, panda, hibou, etc.), on garde le rendu emoji existant — la
-// declinaison SVG par espece sera traitee plus tard via Rive.
+// Note historique : un essai SVG anime (HexCharacter) avait ete tente en
+// mai 2026 pour donner du caractere a Hex le renard. Retour utilisateur :
+// "l'emoji etait mieux". On revient au rendu emoji uniforme pour toutes
+// les especes — c'est plus coherent et plus chaleureux.
 import { getLevel, getXPProgress, type LevelDef } from "@/lib/levels";
 import type { EquippedItems } from "@/lib/shop";
 import { getMascotById } from "@/lib/mascots";
-import HexCharacter, { type HexMood } from "@/components/HexCharacter";
 import clsx from "clsx";
 
 type Mood = "neutral" | "happy" | "sad" | "curious" | "celebrate" | "thinking";
@@ -22,8 +20,6 @@ const SIZES: Record<
     container: string;
     accessory: string;
     subAcc: string;
-    /** Taille (px) du SVG HexCharacter pour cette taille de mascotte. */
-    hexPx: number;
   }
 > = {
   sm: {
@@ -31,35 +27,30 @@ const SIZES: Record<
     container: "w-12 h-12",
     accessory: "text-sm",
     subAcc: "text-xs",
-    hexPx: 36,
   },
   md: {
     emoji: "text-4xl",
     container: "w-20 h-20",
     accessory: "text-base",
     subAcc: "text-sm",
-    hexPx: 64,
   },
   lg: {
     emoji: "text-6xl",
     container: "w-28 h-28",
     accessory: "text-2xl",
     subAcc: "text-base",
-    hexPx: 96,
   },
   xl: {
     emoji: "text-7xl",
     container: "w-36 h-36",
     accessory: "text-3xl",
     subAcc: "text-xl",
-    hexPx: 128,
   },
   hero: {
     emoji: "text-9xl",
     container: "w-48 h-48",
     accessory: "text-5xl",
     subAcc: "text-3xl",
-    hexPx: 176,
   },
 };
 
@@ -102,11 +93,6 @@ export default function HexMascotEvolved({
   // L'emoji affiche : custom > espece de la liste
   const displayedEmoji =
     customEmoji && customEmoji.trim().length > 0 ? customEmoji : mascot.emoji;
-  // Render SVG HexCharacter quand l'utilisateur a l'espece par defaut "fox"
-  // ET n'a pas surcharge avec un emoji custom. Pour les autres especes ou
-  // un customEmoji, on garde le rendu emoji standard (compatible avec tout
-  // ce qui existe deja).
-  const renderHexSvg = species === "fox" && !customEmoji;
 
   // Le chapeau equipe override l'accessoire de niveau (couronne/bouclier...)
   const hatToShow = equipped?.hat ?? level.accessory;
@@ -150,21 +136,13 @@ export default function HexMascotEvolved({
             animClass,
           )}
         >
-          {renderHexSvg ? (
-            <HexCharacter
-              mood={mood as HexMood}
-              size={sz.hexPx}
-              animated={animated}
-            />
-          ) : (
-            <span
-              className={sz.emoji}
-              role="img"
-              aria-label={`Mascotte ${mascot.name}, niveau ${level.id}`}
-            >
-              {displayedEmoji}
-            </span>
-          )}
+          <span
+            className={sz.emoji}
+            role="img"
+            aria-label={`Mascotte ${mascot.name}, niveau ${level.id}`}
+          >
+            {displayedEmoji}
+          </span>
 
           {/* Lunettes equipees - sur le visage */}
           {glassesToShow && (
