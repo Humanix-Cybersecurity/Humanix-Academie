@@ -18,6 +18,18 @@ export default async function SuperadminHomePage() {
     .sort((a, b) => (b.lastActivityDays ?? 9999) - (a.lastActivityDays ?? 9999))
     .slice(0, 5);
 
+  // Alertes "premiere journee" : tenants crees dans les 7 derniers jours qui
+  // n'ont pas demarre (aucun user supplementaire, aucune progression).
+  // Cible le moment ou un commercial / customer success doit appeler.
+  const ms7 = 7 * 24 * 3600 * 1000;
+  const now = Date.now();
+  const newWithoutStart = healths.filter(
+    (h) =>
+      now - h.createdAt.getTime() <= ms7 &&
+      h.totalUsers <= 1 &&
+      !h.hasProgress,
+  );
+
   return (
     <div className="space-y-8">
       <header>
@@ -94,6 +106,49 @@ export default async function SuperadminHomePage() {
           />
         </div>
       </section>
+
+      {/* Nouveaux tenants à activer */}
+      {newWithoutStart.length > 0 && (
+        <section>
+          <h2 className="font-display font-bold text-primary-500 dark:text-accent-300 mb-3 flex items-center gap-2">
+            🚀 À activer (signups récents sans démarrage)
+          </h2>
+          <ul className="space-y-2">
+            {newWithoutStart.slice(0, 8).map((h) => (
+              <li
+                key={h.tenantId}
+                className="rounded-xl border border-amber-200 dark:border-amber-900/40 bg-amber-50/60 dark:bg-amber-900/15 p-3"
+              >
+                <div className="flex items-start justify-between gap-3 flex-wrap">
+                  <div>
+                    <Link
+                      href={`/superadmin/tenants/${h.tenantId}`}
+                      className="font-bold text-amber-900 dark:text-amber-200 hover:underline"
+                    >
+                      {h.tenantName}
+                    </Link>
+                    <p className="text-[10px] uppercase tracking-widest text-amber-700 dark:text-amber-300 font-bold mt-1">
+                      {h.plan} · créé{" "}
+                      {Math.max(
+                        0,
+                        Math.floor(
+                          (Date.now() - h.createdAt.getTime()) /
+                            (24 * 3600 * 1000),
+                        ),
+                      )}{" "}
+                      j · {h.totalUsers} user(s)
+                    </p>
+                  </div>
+                </div>
+                <p className="text-xs text-amber-900 dark:text-amber-200 mt-2">
+                  💡 Bon moment pour un appel de bienvenue / aide à la
+                  prise en main.
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* Top 5 alertes */}
       <section>
