@@ -127,7 +127,10 @@ services:
       NEXT_PUBLIC_APP_NAME: "HumaniX Academy"
       DEMO_MODE: "true"
       EMAIL_FROM: "demo@humanix.local"
-      RESEND_API_KEY: "demo-key-not-used-in-demo-mode"
+      # Scaleway TEM — vide en demo, le code retombe en mode "simulated"
+      SCALEWAY_TEM_TOKEN: ""
+      SCALEWAY_TEM_PROJECT_ID: ""
+      SCALEWAY_TEM_REGION: "fr-par"
       NODE_ENV: "production"
       # === TTS premium serveur ===
       # URL du service TTS interne (réseau humanix_backend).
@@ -176,7 +179,7 @@ networks:
 
   # Réseau interne : app ↔ postgres, app ↔ tts
   # internal=true bloquerait toute sortie internet → on laisse à false pour
-  # que l'app puisse appeler Resend, Stripe, etc. en sortie.
+  # que l'app puisse appeler Scaleway TEM, Payplug, etc. en sortie.
   humanix_backend:
     driver: bridge
     name: humanix_backend
