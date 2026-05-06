@@ -1230,6 +1230,54 @@ export const CATALOG_SAISONS: CatalogSaison[] = [
       },
     ],
   },
+  // --- Saison dediee DPO (audience specialisee) ---
+  {
+    slug: "dpo-quotidien",
+    title: "Le quotidien du DPO",
+    description:
+      "AIPD, contrôle CNIL, transferts hors UE, profilage. Pour les DPO qui veulent passer du textuel à l'opérationnel.",
+    coverEmoji: "🛡",
+    order: 26,
+    audience: "dpo",
+    episodes: [
+      {
+        slug: "01-aipd",
+        title: "Mener une AIPD sans s'y noyer",
+        durationMinutes: 8,
+        difficulty: "medium",
+      },
+      {
+        slug: "02-controle-cnil",
+        title: "Le contrôle CNIL sonne à la porte",
+        durationMinutes: 7,
+        difficulty: "medium",
+      },
+      {
+        slug: "03-transferts-hors-ue",
+        title: "Transferts de données hors UE — TIA, BCR, DPF",
+        durationMinutes: 8,
+        difficulty: "hard",
+      },
+      {
+        slug: "04-profilage-decision-auto",
+        title: "Profilage et décisions automatisées (article 22)",
+        durationMinutes: 7,
+        difficulty: "medium",
+      },
+      {
+        slug: "05-base-legale",
+        title: "Choisir la bonne base légale (article 6)",
+        durationMinutes: 6,
+        difficulty: "medium",
+      },
+      {
+        slug: "06-mutualisation-pme",
+        title: "Le DPO mutualisé en PME : organiser sa pratique",
+        durationMinutes: 6,
+        difficulty: "easy",
+      },
+    ],
+  },
 ];
 
 /**

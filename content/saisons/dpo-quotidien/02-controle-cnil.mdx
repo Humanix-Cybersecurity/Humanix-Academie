@@ -1,0 +1,149 @@
+---
+title: "Le controle CNIL sonne a la porte"
+durationMinutes: 7
+persona: "dpo"
+objective: "Anticiper, preparer et gerer un controle CNIL avec serenite"
+xpReward: 60
+scenario: |
+  Mardi 9h45. Tu es DPO d'une PME francaise. Le standard t'appelle : "Bonjour, deux personnes de la CNIL sont a l'accueil avec un ordre de mission. Elles veulent rencontrer le DPO."
+
+  Le DG est en deplacement. Tu as 5 minutes pour decider ta posture. Que fais-tu ?
+choices:
+  - id: "a"
+    label: "Je refuse l'acces — la CNIL doit prevenir avant"
+    outcome: "bad"
+    feedback: "Faux. La CNIL peut effectuer des controles inopinés (article 19 loi I&L modifiee). Refuser l'acces = obstruction = sanction aggravee. Le mieux est de cooperer en cadrant le perimetre."
+    points: -25
+  - id: "b"
+    label: "Je verifie l'ordre de mission, demande les noms et l'identite des controleurs, prends note du perimetre, accueille avec professionnalisme"
+    outcome: "good"
+    feedback: "Excellent. Verification de la regularite (ordre de mission ecrit, identite verifiee), accueil cooperant, prise de notes systematique. Posture professionnelle = controle qui se passe bien."
+    points: 30
+  - id: "c"
+    label: "Je leur donne acces a tout le SI immediatement par transparence totale"
+    outcome: "bad"
+    feedback: "Cooperatif oui, mais sans cadrage : risque de leur donner acces a des donnees hors-perimetre. Il faut limiter au perimetre de l'ordre de mission."
+    points: -10
+  - id: "d"
+    label: "J'appelle l'avocat RGPD du cabinet pendant que je leur sers un cafe"
+    outcome: "good"
+    feedback: "Bon reflexe. Pas pour 'cacher' quoi que ce soit — pour avoir un conseil pendant le controle. La presence de l'avocat est tout a fait legale et bien percue par la CNIL si elle est sereine."
+    points: 25
+debrief: |
+  Un **controle CNIL** est l'evenement le plus stressant pour un DPO — mais c'est aussi le plus instructif. Bien gere, c'est un audit gratuit qui ameliore la conformite. Mal gere, c'est une sanction aggravee.
+
+  **Les 3 types de controles CNIL :**
+
+  **1. Controle sur place (le plus stressant)**
+  - Inopiné ou avec preavis (souvent inopiné pour les premiers controles)
+  - Equipe de 2 a 4 controleurs avec ordre de mission ecrit
+  - Duree : 1 demi-journee a 3 jours selon perimetre
+  - Acces aux locaux, aux personnes, aux systemes (dans le perimetre de la mission)
+
+  **2. Controle en ligne**
+  - Audit a distance des sites web, applications, formulaires
+  - Tests automatises de conformite (cookies, RGPD, accessibilite)
+  - Verifie souvent les mentions legales, politique cookies, formulaires de contact
+
+  **3. Controle sur convocation**
+  - Le DPO et/ou le DG sont convoques dans les locaux CNIL
+  - Plus rare, generalement pour les dossiers complexes ou les enquetes
+  - Toujours avec preavis (15 jours en general)
+
+  **Les 7 reflexes du controle CNIL bien gere :**
+
+  **1. Verifier la regularite (5 minutes)**
+  - Ordre de mission ecrit ? (oui obligatoire)
+  - Identite des controleurs (CNIL.fr publie la liste)
+  - Perimetre precis de la mission (objet du controle)
+
+  **2. Accueillir avec professionnalisme**
+  - Salle dediee, cafe/eau, materiel disponible
+  - Presenter l'organigramme, les locaux, les acteurs cles
+  - Ne pas faire patienter dans le hall
+
+  **3. Mobiliser la cellule controle**
+  - DPO (lead), DG, DSI, juridique, avocat externe si besoin
+  - Le DPO est le point d'entree unique des questions
+
+  **4. Documenter precisement**
+  - Heure d'arrivee, identite des controleurs, perimetre
+  - Toutes les questions posees + reponses fournies
+  - Documents demandes + remis (avec date et hash si possible)
+  - Photo des points de controle physiques (avec autorisation)
+
+  **5. Repondre factuellement**
+  - Ne pas inventer si tu ne sais pas — promesse de verification + delai
+  - Ne pas sur-livrer (perimetre de la mission strictement)
+  - Ne pas mentir (sanctions aggravees pour declaration inexacte)
+
+  **6. Conserver les preuves**
+  - Registre des traitements a portee de main (article 30)
+  - DPA des sous-traitants
+  - Politique de confidentialite et notes d'information
+  - Logs de demandes de droits traitees
+  - AIPD eventuelles
+
+  **7. Apres le controle**
+  - PV de fin de mission signe par les deux parties
+  - Lecture critique du PV avant signature
+  - Demande de copie immediate
+  - Phase de mise en conformite (si lacunes identifiees)
+  - Reponses ecrites dans les delais imposes (souvent 1 mois)
+
+  **Les sanctions possibles (par gradation CNIL) :**
+
+  1. **Rappel a l'ordre** (avertissement, le plus frequent)
+  2. **Mise en demeure** avec delai de mise en conformite (3 a 6 mois)
+  3. **Amende administrative** : jusqu'a **4 % du CA mondial** ou **20 M€**, le montant le plus eleve
+  4. **Publication** de la sanction (le plus mauvais effet reputationnel)
+  5. **Limitation ou interdiction du traitement**
+  6. **Transmission au procureur** si infraction penale
+
+  **La bonne nouvelle :** une PME avec un registre tenu, des AIPD documentees, une procedure de droits qui marche, et un DPO joignable s'en sort generalement avec un rappel a l'ordre. Les sanctions lourdes sont reservees aux organisations qui ont **menti** ou **refuse de cooperer**.
+quiz:
+  - question: "La CNIL peut-elle effectuer un controle SANS preavis ?"
+    choices:
+      - id: "a"
+        label: "Non, elle doit toujours prevenir 15 jours avant"
+        correct: false
+      - id: "b"
+        label: "Oui, les controles inopines sont legaux (article 19 loi I&L modifiee)"
+        correct: true
+      - id: "c"
+        label: "Uniquement avec autorisation du juge"
+        correct: false
+    explanation: "Les controles inopines sont autorises et frequents. C'est pour ca qu'il faut etre toujours pret — registre a jour, AIPD documentees, equipe formee."
+
+  - question: "Quel est le montant maximal d'une amende RGPD ?"
+    choices:
+      - id: "a"
+        label: "Jusqu'a 4 % du CA mondial OU 20 M€, le plus eleve"
+        correct: true
+      - id: "b"
+        label: "Maximum 100 000 €"
+        correct: false
+      - id: "c"
+        label: "Pas de plafond"
+        correct: false
+    explanation: "Article 83 RGPD : amendes administratives jusqu'a 4 % du CA mondial annuel total ou 20 M€, le montant le plus eleve. Pour les manquements graves."
+
+  - question: "Refuser l'acces aux locaux pendant un controle CNIL inopine est :"
+    choices:
+      - id: "a"
+        label: "Un droit du responsable"
+        correct: false
+      - id: "b"
+        label: "Une obstruction qui aggrave la sanction"
+        correct: true
+      - id: "c"
+        label: "Sans consequence si motive"
+        correct: false
+    explanation: "L'obstruction au controle est un facteur aggravant majeur dans la determination de la sanction. La CNIL peut aussi obtenir une autorisation judiciaire d'acces force."
+---
+
+## Pour aller plus loin
+
+Faire un mock-controle CNIL une fois par an avec un consultant externe (3 a 5 k€) revele 80 % des lacunes en 1 demi-journee. C'est un investissement bien moindre qu'une amende, et ca prepare l'equipe au stress du jour J.
+
+> "Un controle CNIL n'est pas un proces. C'est un audit. Et un audit bien gere, c'est une opportunite de progresser — pas une sanction."
