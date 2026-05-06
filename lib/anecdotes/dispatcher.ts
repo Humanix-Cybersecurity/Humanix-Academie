@@ -6,7 +6,7 @@
 //     - priorite : anecdote programmee pour aujourd'hui (scheduledFor = today)
 //     - sinon : prochaine anecdote active jamais publiee, par incidentDate desc
 //  2. Recuperer tous les abonnes actifs.
-//  3. Envoyer en batch (Resend supporte ~10 req/s, on rate-limit doucement).
+//  3. Envoyer en batch (Scaleway TEM rate-limit court, on temporise).
 //  4. Mettre a jour anecdote.publishedAt + sentCount + sub.lastSentAt.
 //
 // Idempotence :
@@ -14,7 +14,7 @@
 //    (evite les doublons en cas de double trigger cron).
 //
 // DEMO_MODE :
-//  - Si DEMO_MODE=true ou pas de RESEND_API_KEY : on simule (no-op + log).
+//  - Si DEMO_MODE=true ou pas de provider email configure : on simule (no-op).
 
 import { db } from "@/lib/db";
 import {
@@ -35,7 +35,7 @@ export type DispatchResult = {
   errorDetails?: { email: string; message: string }[];
 };
 
-const RATE_LIMIT_DELAY_MS = 120; // ~8 req/s, sous le quota Resend
+const RATE_LIMIT_DELAY_MS = 120; // ~8 req/s, sous le quota Scaleway TEM
 
 export async function dispatchWeeklyAnecdote(options?: {
   // Force le re-envoi (utile pour test admin)
@@ -102,17 +102,10 @@ export async function dispatchWeeklyAnecdote(options?: {
     return { ...result, ok: true, reason: "Aucun abonné actif." };
   }
 
-  const isDemo =
-    process.env.DEMO_MODE === "true" || !process.env.RESEND_API_KEY;
+  const { sendEmail, isEmailConfigured } = await import("@/lib/email");
+  const isDemo = process.env.DEMO_MODE === "true" || !isEmailConfigured();
   const fromEmail = process.env.EMAIL_FROM ?? "hex@humanix-cybersecurity.fr";
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-
-  // Lazy import Resend pour ne pas le charger en demo
-  let resend: any = null;
-  if (!isDemo) {
-    const { Resend } = await import("resend");
-    resend = new Resend(process.env.RESEND_API_KEY);
-  }
 
   // 4. Envoi batch sequentiel avec rate limit
   for (const sub of subs) {
@@ -129,7 +122,7 @@ export async function dispatchWeeklyAnecdote(options?: {
       if (isDemo) {
         result.simulated++;
       } else {
-        await resend.emails.send({
+        const sendRes = await sendEmail({
           from: fromEmail,
           to: sub.email,
           subject,
@@ -141,7 +134,15 @@ export async function dispatchWeeklyAnecdote(options?: {
             "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
           },
         });
-        result.sent++;
+        if (sendRes.ok) {
+          result.sent++;
+        } else {
+          result.errors++;
+          result.errorDetails?.push({
+            email: sub.email,
+            message: sendRes.reason,
+          });
+        }
       }
       // Update sub stats
       await db.anecdoteSubscription.update({
@@ -151,7 +152,7 @@ export async function dispatchWeeklyAnecdote(options?: {
           lastSentAt: new Date(),
         },
       });
-      // Petit delai pour respecter le quota Resend
+      // Petit delai pour respecter le quota provider
       if (!isDemo) await sleep(RATE_LIMIT_DELAY_MS);
     } catch (e: any) {
       result.errors++;
