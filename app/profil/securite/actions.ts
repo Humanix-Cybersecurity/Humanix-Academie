@@ -247,10 +247,7 @@ export async function requestPasswordReset(formData: FormData): Promise<{
         process.env.RESEND_API_KEY !== "demo-key-not-used-in-demo-mode" &&
         process.env.EMAIL_FROM
       ) {
-        const baseUrl =
-          process.env.NEXTAUTH_URL ??
-          process.env.AUTH_URL ??
-          "http://localhost:3000";
+        const baseUrl = process.env.AUTH_URL ?? "http://localhost:3000";
         const url = `${baseUrl}/connexion/reset/${plain}`;
         const { Resend: ResendSDK } = await import("resend");
         const resend = new ResendSDK(process.env.RESEND_API_KEY);

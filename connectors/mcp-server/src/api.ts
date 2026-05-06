@@ -106,7 +106,7 @@ async function getJson(cfg: HumanixConfig, path: string): Promise<unknown> {
           }
           try {
             resolve(JSON.parse(body));
-          } catch (err) {
+          } catch {
             reject(
               new HumanixApiError(
                 "Reponse non-JSON",
