@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import type { Role } from "@prisma/client";
-import { auditLog, AuditActions, AuditOutcomes } from "@/lib/audit";
+import { auditLog, AuditActions } from "@/lib/audit";
 
 async function requireAdmin() {
   const session = await auth();
