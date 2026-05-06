@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import AnecdoteSubscribeForm from "@/components/AnecdoteSubscribeForm";
+import HexBackdrop from "@/components/HexBackdrop";
 
 export const metadata: Metadata = {
   title: "La Cyber-Anecdote du Lundi | HumaniX Académie",
@@ -66,23 +67,37 @@ export default async function AnecdotesArchivePage() {
   });
 
   return (
-    <div className="bg-gradient-to-b from-primary-500/5 via-white to-white dark:from-slate-900 dark:via-slate-900 dark:to-slate-900">
-      <div className="max-w-5xl mx-auto px-4 py-12">
-        {/* Hero */}
-        <header className="text-center mb-12">
-          <p className="inline-block text-xs font-bold uppercase tracking-wider text-accent-500 bg-accent-50 dark:bg-accent-900/20 px-3 py-1 rounded-full mb-4">
-            📅 La newsletter cyber des PME françaises
+    <main id="main-content" className="overflow-x-hidden animate-fadeIn">
+      <HexBackdrop intensity="soft" className="bg-humanix-soft">
+        <header
+          aria-labelledby="hero-title"
+          className="max-w-5xl mx-auto px-4 pt-12 pb-10 sm:pt-16 sm:pb-12 text-center"
+        >
+          <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
+            📅 Cyber-Anecdote du Lundi · 5 min de lecture
           </p>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-primary-500 dark:text-accent-300 mb-4">
-            La Cyber-Anecdote du Lundi
+          <h1
+            id="hero-title"
+            className="font-display text-4xl sm:text-6xl font-extrabold text-primary-500 dark:text-accent-300 leading-[1.05] mb-4 animate-slide-up"
+            style={{ animationDelay: "100ms" }}
+          >
+            Une histoire vraie,{" "}
+            <span className="text-accent-500">tous les lundis.</span>
           </h1>
-          <p className="text-lg text-gray-700 dark:text-gray-200 max-w-2xl mx-auto">
-            Chaque lundi matin, dans votre boîte mail :{" "}
-            <strong>1 incident cyber réel</strong>,{" "}
-            <strong>1 leçon en 3 lignes</strong>, et{" "}
-            <strong>1 mini-action</strong> à faire dans la semaine.
+          <p
+            className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed animate-slide-up"
+            style={{ animationDelay: "220ms" }}
+          >
+            Chaque lundi matin, dans ta boite mail :{" "}
+            <strong>1 incident cyber reel</strong>,{" "}
+            <strong>1 lecon en 3 lignes</strong>, et{" "}
+            <strong>1 mini-action</strong> a faire dans la semaine. Sans peur,
+            sans hyperbole — juste l'experience qui se transmet.
           </p>
         </header>
+      </HexBackdrop>
+
+      <div className="max-w-5xl mx-auto px-4 py-10">
 
         {/* Form principal */}
         <section
@@ -160,7 +175,24 @@ export default async function AnecdotesArchivePage() {
             </div>
           )}
         </section>
+
+        {/* ================================================================
+            CITATION FINALE — signature cosy "Hex veille"
+            ================================================================ */}
+        <section className="text-center pt-10 pb-4">
+          <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            « Une histoire vraie raconte plus qu'un manuel entier. Chaque
+            lundi, on partage celle qui a marque la semaine — pour qu'a la
+            tienne, l'histoire ne se repete pas. »
+          </blockquote>
+          <p
+            aria-hidden="true"
+            className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
+          >
+            — Hex veille
+          </p>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }
