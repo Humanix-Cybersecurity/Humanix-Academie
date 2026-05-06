@@ -59,7 +59,7 @@ variables d'env correspondantes ne sont pas posées.
 | Sous-traitant | Localisation | Données traitées | Statut |
 |---|---|---|---|
 | Payplug (paiement) | **France** (Paris, Natixis/BPCE) | Email facturation + nom organisation | activable via `PAYPLUG_SECRET_KEY` |
-| Resend (emails) | UE (Allemagne) | Email + nom des destinataires | activable via `RESEND_API_KEY` |
+| Scaleway TEM (emails transactionnels) | **France** (Paris) | Email + nom des destinataires | activable via `SCALEWAY_TEM_TOKEN` |
 | Mistral AI (IA) | France (Paris) | Contexte phishing/vishing (anonymisé) | activable via `MISTRAL_API_KEY` |
 | Postgres (BDD) | À la charge de l'opérateur self-host | Toutes les données utilisateur | requis |
 
@@ -116,7 +116,8 @@ de tout sous-traitant, signer son DPA (action A22) et mettre à jour
 - [ ] Cron de purge `scripts/purge-old-audit-logs.ts` (13 mois par défaut)
 - [ ] Backups Postgres réguliers (chiffrés, hors-site)
 - [ ] Certificat TLS valide (Let's Encrypt minimum)
-- [ ] DPA (Data Processing Agreement) signé avec Stripe et Resend
+- [ ] DPA (Data Processing Agreement) signé avec chaque sous-traitant
+  activé (Payplug et/ou Scaleway TEM le moment venu)
 - [ ] DPO désigné si > 250 employés ou traitement à grande échelle
 - [ ] Politique de confidentialité publique à jour (`/confidentialite`)
 - [ ] Page Cookies (`/cookies`) à jour si tracking ajouté
