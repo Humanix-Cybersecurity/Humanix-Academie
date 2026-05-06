@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Console dirigeant — vue agregee, KPIs, graphiques, suivi equipe.
+// Console dirigeant — vue agrégée, KPIs, graphiques, suivi equipe.
 //
 // REFONTE MAI 2026 (cosy / charmant / impactant) : la page wrap le dashboard
 // avec une intro chaleureuse facon "rituel matinal" :
