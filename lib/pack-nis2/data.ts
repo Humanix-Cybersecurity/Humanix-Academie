@@ -41,7 +41,7 @@ export function policyDocument(v: PackNis2Variables): Document {
       {
         heading: "1. Objet",
         paragraphs: [
-          `La présente politique fixe les engagements de ${v.tenantName} en matière de sensibilisation à la cybersécurité de l'ensemble de ses collaborateurs, conformément aux exigences de l'article 21 de la directive NIS2 (transposée en France par la loi n° 2024-XXX) et du RGPD article 32.`,
+          `La présente politique fixe les engagements de ${v.tenantName} en matière de sensibilisation à la cybersécurité de l'ensemble de ses collaborateurs, conformément aux exigences de l'article 21 de la directive (UE) 2022/2555 du 14 décembre 2022 dite NIS2 (transposée en droit français par la loi de Résilience des Entités essentielles, dite loi REN, adoptée en 2025) et du RGPD article 32.`,
         ],
       },
       {
