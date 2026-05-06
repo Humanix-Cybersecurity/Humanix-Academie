@@ -1,6 +1,6 @@
 # Demo runbook — partenaire externe · printemps 2026
 
-> Document de scene. Imprimable, glissable dans la poche. 3 versions de demo
+> Document de scène. Imprimable, glissable dans la poche. 3 versions de demo
 > (5 / 10 / 20 minutes) selon le format alloue, plus le plan de repli si quelque
 > chose lache en live.
 
