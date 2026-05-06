@@ -277,7 +277,7 @@ export const ADD_ONS: AddOn[] = [
     name: "Pack Formation Qualiopi",
     emoji: "🎓",
     description:
-      "Formation collective certifiante en cybersécurité humaine, animée par Humanix-Cybersecurity en partenariat avec partenaire externe (organisme de formation certifié Qualiopi). Éligible CPF, OPCO, plan de développement des compétences, FIFPL.",
+      "Formation collective certifiante en cybersécurité humaine, animée par Humanix-Cybersecurity en partenariat avec un organisme de formation certifié Qualiopi. Éligible CPF, OPCO, plan de développement des compétences, FIFPL.",
     price: {
       display: "+ 1 800 €/session HT",
       details:
@@ -286,7 +286,7 @@ export const ADD_ONS: AddOn[] = [
     features: [
       "2 jours (14h) en présentiel ou visio synchrone",
       "Maximum 8 participants par session (pour interactivité)",
-      "Programme co-construit avec partenaire externe — partenaire Qualiopi",
+      "Programme co-construit avec un partenaire Qualiopi",
       "Support pédagogique imprimé + versions numériques",
       "Évaluations diagnostique / formative / sommative",
       "Attestation Qualiopi + certificat individuel signé",
