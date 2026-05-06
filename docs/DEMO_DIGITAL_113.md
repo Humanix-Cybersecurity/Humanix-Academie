@@ -23,7 +23,7 @@ Les autres atouts (RGAA, Pack NIS2, ecosysteme connecteurs FR) restent en reserv
 - [ ] Connexion internet stable testee (4G operateur en backup, 1 Go disponible)
 - [ ] `npm run build` reussi sur la machine demo
 - [ ] `npm run dev` lance, ports 3000 disponibles
-- [ ] Claude Desktop ouvert avec le MCP `humanix` connecte (verifier l'icone clef de bricolage 🔧 dans le composeur)
+- [ ] Claude Desktop ouvert avec le MCP `humanix` connecté (vérifier l'icône clé de bricolage 🔧 dans le composeur)
 - [ ] Tenant demo `tenant-d113` initialise avec les 7 utilisateurs fixtures (cf. `prisma/seed-tenant-d113.ts`)
 - [ ] Une cle API Humanix valide dans `~/Library/Application Support/Claude/claude_desktop_config.json`
 - [ ] Browser pret avec 4 onglets : `/lancement-oss`, `/admin`, `/admin/vishing`, [GitHub repo](https://github.com/Humanix-Cybersecurity/Humanix-Academie)
