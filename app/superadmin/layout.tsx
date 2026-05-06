@@ -6,8 +6,14 @@
 // de la plateforme, contrairement a /admin qui est scope au tenant courant.
 import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
+import { db } from "@/lib/db";
+import {
+  verifyFreshAuth,
+  WEBAUTHN_FRESH_COOKIE,
+} from "@/lib/webauthn";
 
 export const dynamic = "force-dynamic";
 
@@ -17,11 +23,26 @@ export default async function SuperadminLayout({
   children: ReactNode;
 }) {
   const session = await auth();
-  if (!session?.user) redirect("/connexion");
+  if (!session?.user) redirect("/connexion?step-up=1&next=/superadmin");
   const role = session.user.role;
   if (role !== "SUPERADMIN") {
     // Un admin metier ne doit pas voir cette section.
     redirect(role === "ADMIN" || role === "MANAGER" || role === "RSSI" ? "/admin" : "/apprendre");
+  }
+
+  // Step-up : exige une auth WebAuthn datant de moins de 30 minutes.
+  // Si l'user n'a aucune cle enrolee, on redirige vers /profil/securite
+  // pour qu'il en enregistre une (lockout preventif).
+  const userId = session.user.id as string;
+  const credCount = await db.webAuthnCredential.count({ where: { userId } });
+  if (credCount === 0) {
+    redirect("/profil/securite?force-webauthn=1");
+  }
+  const cookieStore = await cookies();
+  const fresh = cookieStore.get(WEBAUTHN_FRESH_COOKIE)?.value;
+  const isFresh = fresh ? verifyFreshAuth(fresh, userId) : false;
+  if (!isFresh) {
+    redirect(`/connexion?step-up=1&next=/superadmin`);
   }
 
   return (
