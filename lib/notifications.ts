@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Notifications email — rappels aux utilisateurs inactifs
 // En DEMO_MODE : log dans NotificationLog seulement (pas d'envoi reel)
-// En prod : envoi via Resend
+// En prod : envoi via la facade lib/email (Scaleway TEM par defaut, FR)
 import { db } from "@/lib/db";
+import { sendEmail, isEmailConfigured } from "@/lib/email";
 
 const INACTIVE_THRESHOLD_DAYS = 7;
 
@@ -84,16 +85,18 @@ export async function sendReminders(tenantId: string): Promise<ReminderResult> {
   for (const c of candidates) {
     const status = isDemo ? "simulated" : "sent";
     try {
-      if (!isDemo && process.env.RESEND_API_KEY) {
-        const { Resend } = await import("resend");
-        const resend = new Resend(process.env.RESEND_API_KEY);
-        await resend.emails.send({
-          from: fromEmail,
+      if (!isDemo && isEmailConfigured()) {
+        const sendRes = await sendEmail({
           to: c.user.email,
+          from: fromEmail,
           subject: "🦊 Hex t'attend pour ta dose cyber hebdomadaire",
           html: reminderEmailHTML(c.user.name ?? "", c.daysSince),
         });
-        result.sent++;
+        if (sendRes.ok) {
+          result.sent++;
+        } else {
+          result.errors++;
+        }
       } else {
         result.simulated++;
       }

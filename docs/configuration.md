@@ -99,13 +99,13 @@ NEXT_PUBLIC_APP_NAME="Humanix Académie"
 
 ## Variables fortement recommandées
 
-### `RESEND_API_KEY`
+### `SCALEWAY_TEM_TOKEN`
 
-Clé API du service [Resend](https://resend.com) pour envoyer les emails
+Clé API du service [Scaleway TEM](https://resend.com) pour envoyer les emails
 transactionnels (magic links, notifications, rapports).
 
 ```env
-RESEND_API_KEY="re_xxxxxxxxxxxxxxxxxxxxx"
+SCALEWAY_TEM_TOKEN="re_xxxxxxxxxxxxxxxxxxxxx"
 ```
 
 **Sans cette clé** :
@@ -127,7 +127,7 @@ EMAIL_FROM="noreply@academie.tonentreprise.fr"
 
 **Pré-requis** :
 
-- Domaine vérifié dans Resend (SPF + DKIM configurés)
+- Domaine vérifié dans Scaleway TEM (SPF + DKIM configurés)
 - Pour les domaines custom : configurer DMARC à `quarantine` minimum
 
 ---
