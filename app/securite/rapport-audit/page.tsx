@@ -38,7 +38,7 @@ export default function RapportAuditPage() {
           </div>
           <div>
             <p className="text-xs uppercase tracking-widest opacity-80 font-bold mb-1">
-              Édition v1.0 · 2 mai 2026
+              Édition v1.1 · 7 mai 2026 · pentest interne
             </p>
             <h2 className="text-xl font-bold">
               Rapport complet (PDF, ~12 pages)
@@ -60,9 +60,84 @@ export default function RapportAuditPage() {
 
       {/* Synthèse en chiffres */}
       <section className="grid grid-cols-3 gap-3 mb-10">
-        <Stat value="0" label="vulnérabilité critique connue" tone="success" />
+        <Stat value="0" label="vulnérabilité critique exploitée" tone="success" />
         <Stat value="100 %" label="hébergement France/UE" tone="info" />
-        <Stat value="6" label="actions de remédiation à 6 mois" tone="warn" />
+        <Stat value="3" label="findings high/medium à corriger" tone="warn" />
+      </section>
+
+      {/* Pentest interne v1.1 - résultats détaillés */}
+      <section className="card mb-10 border-l-4 border-primary-500">
+        <p className="text-xs uppercase tracking-widest text-accent-500 font-bold mb-2">
+          🎯 Pentest interne · 7 mai 2026
+        </p>
+        <h2 className="text-2xl font-bold text-primary-500 mb-3">
+          Pentest box-grise interne — résultats v1.1
+        </h2>
+        <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+          Test offensif réalisé depuis un container Exegol isolé, contre une
+          instance staging en docker-compose (HAProxy + Next.js + Postgres).
+          25+ vecteurs d'attaque testés (méthodes HTTP, header injection, path
+          traversal, SSRF, IDOR, XSS, SQLi, info disclosure, brute-force,
+          rate limit). Bilan : aucun bypass d'authentification, aucune fuite
+          de données, aucune exécution de code. <strong>3 findings non-critiques
+          documentés ci-dessous</strong>, déjà corrigés en code (déploiement à
+          rejouer).
+        </p>
+
+        <div className="space-y-3">
+          <Finding
+            severity="high"
+            title="Image Docker en production en retard sur les correctifs"
+            cvss="N/A (process)"
+            issue="L'image humanix-academie-app déployée a été buildée avant le merge des PRs #142 (CSP + middleware admin + alias /health), #133 (sanitization Mistral DOMPurify) et #150-#153 (a11y + typos). Vérifié en pentest : header Content-Security-Policy absent, /health renvoie 404, middleware edge-runtime absent du bundle."
+            fix="Reconstruire et redéployer l'image humanix-academie-app à partir de main:14d21f2 (incluant tous les correctifs). Mettre en place une CI/CD avec déclenchement auto au push sur main."
+            status="fixed-in-code-pending-deploy"
+          />
+          <Finding
+            severity="medium"
+            title="HAProxy stats interface (port 8404) sans authentification"
+            cvss="5.3 (CVSS 3.1, Network/Low/None/None/Unchanged/Low/None/None)"
+            issue="Le frontend stats HAProxy bind sur *:8404 sans stats auth. Bien que docker-compose limite l'exposition à 127.0.0.1 sur l'host, tout container partageant le réseau Docker peut accéder anonymement à la page (backends, débit, état des serveurs). Risque d'énumération si l'infra est partagée."
+            fix="Ajouter stats auth admin:<password fort> dans infra/haproxy/haproxy.cfg ligne 157 (le commentaire le mentionne déjà mais l'instruction n'est pas active). Stocker le mot de passe dans un secret Docker / variable d'env."
+            status="todo"
+          />
+          <Finding
+            severity="medium"
+            title="Rate limiting per-IP absent sur /api/auth/callback/credentials"
+            cvss="5.3 (CVSS 3.1, Network/Low/None/None/Unchanged/Low/None/None)"
+            issue="La protection lockout (5 échecs / 15 min) est par compte utilisateur (champ User.failedLoginAttempts). Pour des emails inexistants, aucun compteur n'est incrémenté. Conséquence : credential stuffing depuis une IP unique fonctionne à >7 req/s sans déclencher de blocage. Le track-sc0 HAProxy existe (stk_abuse) mais n'est pas appliqué en deny sur /api/auth."
+            fix="Ajouter dans infra/haproxy/haproxy.cfg une ACL http_req_rate(10s) gt 20 sur path_beg /api/auth/callback/, qui retourne 429. OU rate-limit applicatif sur l'IP depuis lib/rate-limit.ts dans la route handler."
+            status="todo"
+          />
+        </div>
+
+        <details className="mt-4">
+          <summary className="cursor-pointer text-sm font-bold text-primary-500 hover:text-accent-500">
+            Voir les contrôles validés en pentest (20+)
+          </summary>
+          <ul className="text-xs text-gray-700 dark:text-gray-300 mt-3 grid sm:grid-cols-2 gap-2 list-none">
+            <ValidationItem text="HSTS preload + max-age 2 ans : OK" />
+            <ValidationItem text="X-Frame-Options DENY + frame-ancestors 'none' : OK (clickjacking blocké)" />
+            <ValidationItem text="X-Content-Type-Options nosniff : OK" />
+            <ValidationItem text="Referrer-Policy strict-origin-when-cross-origin : OK" />
+            <ValidationItem text="Permissions-Policy camera/mic/geo désactivés : OK" />
+            <ValidationItem text="HAProxy filtre User-Agent (sqlmap/nikto/nmap/gobuster) → 403" />
+            <ValidationItem text="HAProxy ACL méthodes : seules GET/POST/PUT/PATCH/DELETE/OPTIONS/HEAD autorisées" />
+            <ValidationItem text="TRACE method bloquée → 405" />
+            <ValidationItem text="Pas de source map .js.map exposée" />
+            <ValidationItem text="Pas de .env, .git/config, package.json, schema.prisma exposés" />
+            <ValidationItem text="X-Powered-By stripped par HAProxy (fingerprint Next.js caché)" />
+            <ValidationItem text="Path traversal /sms/.., /famille/.. bloqués par Next.js URL norm" />
+            <ValidationItem text="Host header injection rejetée (NextAuth check)" />
+            <ValidationItem text="X-Forwarded-User / X-Real-IP ignorés pour bypass admin" />
+            <ValidationItem text="Email enumeration timing : pas de différence > 1ms (no oracle)" />
+            <ValidationItem text="/api/v1/users → 401 missing_token (auth strict)" />
+            <ValidationItem text="Reflected XSS via query string : pas de réflexion" />
+            <ValidationItem text="Token URL /sms/[token] /phishing/[token] : 404 anonymisé (pas d'oracle)" />
+            <ValidationItem text="robots.txt + sitemap.xml correctement configurés" />
+            <ValidationItem text="Vary headers cache séparation : OK" />
+          </ul>
+        </details>
       </section>
 
       {/* Synthèse niveaux */}
@@ -73,7 +148,7 @@ export default function RapportAuditPage() {
         <div className="space-y-2">
           <Maturity label="Authentification & autorisation" level="mature" />
           <Maturity
-            label="Sécurité applicative (validation, anti-XSS, anti-SSRF)"
+            label="Sécurité applicative (validation, anti-XSS DOMPurify, anti-SSRF)"
             level="mature"
           />
           <Maturity label="Sécurité réseau & infrastructure" level="mature" />
@@ -82,12 +157,20 @@ export default function RapportAuditPage() {
             level="mature"
           />
           <Maturity
-            label="SDLC sécurisé (TypeScript, ORM, CI)"
+            label="Headers HTTP (HSTS, X-Frame, Permissions-Policy, CSP en code)"
+            level="mature"
+          />
+          <Maturity
+            label="SDLC sécurisé (TypeScript strict, Prisma ORM, vitest 446 tests)"
             level="intermediate"
           />
-          <Maturity label="Gestion des incidents" level="intermediate" />
           <Maturity
-            label="Audit externe formel par cabinet tiers"
+            label="CI/CD : déploiement auto au push main"
+            level="todo"
+          />
+          <Maturity label="Gestion des incidents (Cyber-Réflexe)" level="intermediate" />
+          <Maturity
+            label="Audit externe formel par cabinet PASSI"
             level="todo"
           />
         </div>
@@ -145,6 +228,21 @@ export default function RapportAuditPage() {
           🔲 Ce qui est en backlog (et pourquoi)
         </h2>
         <div className="space-y-4 text-sm text-gray-700 dark:text-gray-300">
+          <Backlog
+            title="CI/CD avec redeploy automatique au push main"
+            when="Q2 2026 (avant launch)"
+            why="Pentest interne du 7 mai a montré qu'une image en prod peut diverger des correctifs de main (CSP, middleware, sanitization absents du build déployé). Pipeline GitHub Actions → registre Docker → pull + restart automatique."
+          />
+          <Backlog
+            title="/.well-known/security.txt (RFC 9116)"
+            when="Q2 2026"
+            why="Signal pour les chercheurs en sécurité : email security@, scope du programme de divulgation responsable, langues acceptées. 5 lignes de fichier statique, gros impact crédibilité."
+          />
+          <Backlog
+            title="HAProxy stats auth + rate limit /api/auth"
+            when="Q2 2026"
+            why="Findings du pentest interne : ajouter `stats auth admin:<pwd>` sur frontend stats (ligne 157 actuellement en commentaire), et ACL `http_req_rate(10s) gt 20` sur `path_beg /api/auth/callback/` pour anti-credential-stuffing."
+          />
           <Backlog
             title="Pentest externe par cabinet PASSI"
             when="Q3 2026"
@@ -373,5 +471,103 @@ function Backlog({
       </p>
       <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{why}</p>
     </div>
+  );
+}
+
+function Finding({
+  severity,
+  title,
+  cvss,
+  issue,
+  fix,
+  status,
+}: {
+  severity: "critical" | "high" | "medium" | "low";
+  title: string;
+  cvss: string;
+  issue: string;
+  fix: string;
+  status: "fixed-in-code-pending-deploy" | "todo" | "fixed";
+}) {
+  const sevMeta = {
+    critical: {
+      label: "Critique",
+      cls: "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-200",
+      border: "border-red-500",
+    },
+    high: {
+      label: "Élevée",
+      cls: "bg-orange-100 text-orange-800 dark:bg-orange-900/40 dark:text-orange-200",
+      border: "border-orange-500",
+    },
+    medium: {
+      label: "Moyenne",
+      cls: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200",
+      border: "border-amber-500",
+    },
+    low: {
+      label: "Faible",
+      cls: "bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-slate-300",
+      border: "border-gray-400",
+    },
+  }[severity];
+
+  const statusMeta = {
+    "fixed-in-code-pending-deploy": {
+      label: "Fix en code, redeploy attendu",
+      cls: "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200",
+    },
+    todo: {
+      label: "À traiter",
+      cls: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200",
+    },
+    fixed: {
+      label: "Corrigé",
+      cls: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200",
+    },
+  }[status];
+
+  return (
+    <article
+      className={`border-l-4 ${sevMeta.border} pl-4 py-2 bg-gray-50 dark:bg-slate-800 rounded-r-xl`}
+    >
+      <header className="flex flex-wrap items-center gap-2 mb-2">
+        <span
+          className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded ${sevMeta.cls}`}
+        >
+          {sevMeta.label}
+        </span>
+        <span className="text-[10px] font-mono text-gray-500 dark:text-gray-400">
+          CVSS {cvss}
+        </span>
+        <span
+          className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded ${statusMeta.cls}`}
+        >
+          {statusMeta.label}
+        </span>
+      </header>
+      <h3 className="font-bold text-primary-500 dark:text-accent-300 text-base mb-1">
+        {title}
+      </h3>
+      <p className="text-xs text-gray-700 dark:text-gray-300 mb-2 leading-relaxed">
+        <strong>Constat : </strong>
+        {issue}
+      </p>
+      <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+        <strong>Remédiation : </strong>
+        {fix}
+      </p>
+    </article>
+  );
+}
+
+function ValidationItem({ text }: { text: string }) {
+  return (
+    <li className="flex items-start gap-1.5">
+      <span className="text-emerald-600 mt-0.5 shrink-0" aria-hidden="true">
+        ✓
+      </span>
+      <span>{text}</span>
+    </li>
   );
 }
