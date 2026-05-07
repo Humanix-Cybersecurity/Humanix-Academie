@@ -372,7 +372,7 @@ export default async function ProfilPage() {
               <table className="w-full text-sm">
                 <caption className="sr-only">
                   Historique de votre progression pedagogique : episodes
-                  completes, saison d'origine, score quiz, date d'achevement
+                  completes, saison d'origine, score quiz, date d'achèvement
                 </caption>
                 <thead className="text-left text-gray-500 dark:text-gray-400 border-b-2 border-gray-200 dark:border-slate-700">
                   <tr>
