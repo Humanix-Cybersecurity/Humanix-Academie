@@ -1,0 +1,26 @@
+# =============================================================================
+# docker-compose.dev.yml — Override pour le mode developpement local TLS
+# -----------------------------------------------------------------------------
+# Ce fichier ajoute uniquement les ajustements specifiques au dev :
+#   - Port 443 expose sur l'host (HTTPS local via mkcert)
+#   - Mount du dossier infra/haproxy/certs (cert local genere par scripts/start.sh)
+#   - Utilise haproxy.dev.cfg qui active le frontend HTTPS sur 443
+#
+# Utilisation :
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+#   ou via :
+#   ./scripts/start.sh
+#
+# IMPORTANT : ce fichier n'est PAS pour la prod. La prod utilise un cert reel
+# (Let's Encrypt) monte selon la procedure documentee dans docs/installation.md.
+# =============================================================================
+
+services:
+  haproxy:
+    ports:
+      - "443:443"
+    volumes:
+      # Override : on remplace haproxy.cfg par haproxy.dev.cfg qui active TLS
+      - ./infra/haproxy/haproxy.dev.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+      # Mount du cert local genere par mkcert (cf. scripts/start.sh)
+      - ./infra/haproxy/certs:/etc/haproxy/certs:ro
