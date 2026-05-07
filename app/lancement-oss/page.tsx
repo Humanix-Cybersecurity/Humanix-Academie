@@ -68,7 +68,7 @@ const CHAPTERS = [
   },
   {
     emoji: "🌱",
-    title: "Le declic - ces gens qui font ce que je voudrais faire",
+    title: "Le déclic - ces gens qui font ce que je voudrais faire",
     palette: {
       bg: "from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-teal-950/40",
       ring: "border-emerald-200 dark:border-emerald-900/40",
