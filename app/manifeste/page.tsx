@@ -504,8 +504,8 @@ export default function ManifestePage() {
 
             <p className="animate-slide-up" style={{ animationDelay: "300ms" }}>
               La cible 24 mois est honnête :{" "}
-              <strong>180 à 250 k€ en solo bootstrap</strong>. Pas un
-              licorne, pas un IPO. Une activité qui paie ses factures, fait
+              <strong>180 à 250 k€ en solo bootstrap</strong>. Pas une
+              licorne, pas une IPO. Une activité qui paie ses factures, fait
               vivre son fondateur, et accompagne 200 PME françaises plutôt
               que 30 grosses boîtes.
             </p>

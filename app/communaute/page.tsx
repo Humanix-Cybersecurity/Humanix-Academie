@@ -48,7 +48,7 @@ const PORTES = [
   },
   {
     emoji: "💻",
-    title: "Tu veux contribuer du code",
+    title: "Tu souhaites contribuer au code ?",
     palette: {
       bg: "from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-teal-950/40",
       ring: "border-emerald-200 dark:border-emerald-900/40",
@@ -70,7 +70,7 @@ const PORTES = [
   },
   {
     emoji: "✍️",
-    title: "Tu veux contribuer du contenu",
+    title: "Tu souhaites contribuer au contenu ?",
     palette: {
       bg: "from-amber-50 via-white to-yellow-50 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/40",
       ring: "border-amber-200 dark:border-amber-900/40",
@@ -384,7 +384,7 @@ export default function CommunautePage() {
             id="cta-title"
             className="font-display text-3xl sm:text-4xl font-extrabold mb-3 relative leading-tight"
           >
-            Etoile le repo, ou viens dire bonjour.
+            Donne-nous une étoile, ou viens dire bonjour.
           </h2>
           <p className="opacity-90 mb-6 max-w-xl mx-auto text-base sm:text-lg leading-relaxed relative">
             La meilleure facon de soutenir un editeur OSS solo, c'est d'utiliser
