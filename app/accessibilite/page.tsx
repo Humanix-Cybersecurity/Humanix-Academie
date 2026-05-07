@@ -84,16 +84,26 @@ export default function AccessibilitePage() {
       <LegalSection id="conformite" num="2" title="État de conformité">
         <LegalHighlight variant="info">
           <strong>Humanix Académie est en conformité partielle</strong> avec le
-          RGAA 4.1 niveau AA - <strong>environ 90 %</strong> au regard du
+          RGAA 4.1 niveau AA - <strong>environ 82 %</strong> au regard du
           référentiel, à la date du {TODAY}. Audit externe par un cabinet
           certifié RGAA planifié à venir pour atteindre 95 %+ et obtenir une
           déclaration formelle.
         </LegalHighlight>
 
+        <LegalHighlight variant="info">
+          <strong>Honnêteté méthodologique</strong> : le score est passé de 90 %
+          (auto-audit initial) à 82 % (auto-audit approfondi {TODAY}). Cette
+          baisse ne reflète pas une régression de la plateforme - elle reflète
+          un audit plus rigoureux qui a relevé 3 zones structurelles à
+          consolider (contraste sur libellés secondaires, légendes de tableaux,
+          marquage explicite des landmarks). Plutôt que d'afficher un score
+          flatteur, on préfère la transparence sur ce qu'il reste à faire.
+        </LegalHighlight>
+
         <LegalSubsection title="Méthode d'évaluation">
           <p>
-            L'évaluation a été réalisée par auto-audit interne, en analysant le
-            code et les pages selon les 13 thématiques du RGAA 4.1 :
+            L'évaluation a été réalisée par auto-audit interne approfondi, en
+            analysant le code et les pages selon les 13 thématiques du RGAA 4.1 :
           </p>
           <ul>
             <li>
@@ -111,63 +121,121 @@ export default function AccessibilitePage() {
       </LegalSection>
 
       <LegalSection id="resultats" num="3" title="Résultats des tests">
-        <p>Synthèse des points de contrôle évalués au {TODAY} :</p>
+        <p>
+          Synthèse des points de contrôle évalués au {TODAY} sur les 13
+          thématiques du RGAA 4.1 :
+        </p>
         <LegalTable
-          headers={["Domaine", "Score estimé", "État"]}
+          headers={["Thématique RGAA", "Score", "État"]}
           rows={[
             [
-              "Structure sémantique (titres, landmarks)",
-              "95 %",
-              "Très bon - landmarks nav/main/footer ajoutés",
-            ],
-            ["Contrastes (WCAG 1.4.3)", "92 %", "Très bon"],
-            [
-              "Navigation clavier",
-              "98 %",
-              "Excellent - focus trap dans modales",
-            ],
-            ["Focus visible", "100 %", "Conforme"],
-            ["Formulaires (labels, erreurs)", "88 %", "Bon"],
-            [
-              "Tables (scope, caption)",
-              "92 %",
-              'Très bon - scope="col" partout',
-            ],
-            [
-              "ARIA & lecteurs d'écran",
-              "92 %",
-              "Très bon - LiveRegion sur changements dynamiques",
-            ],
-            [
-              "Couleur comme info unique",
-              "90 %",
-              "Bon - icônes + textes redondants",
-            ],
-            [
-              "Médias (audio TTS, transcriptions)",
+              "1. Images (alt, décoratives)",
               "85 %",
-              "Bon - TTS partout, sous-titres vidéos en V2",
+              "Bon - alt présent sur 99 % des images, à vérifier sur quelques modules MDX",
             ],
             [
-              "Mouvement / animations",
-              "100 %",
-              "Conforme (prefers-reduced-motion respecté)",
+              "2. Cadres (iframes)",
+              "95 %",
+              "Très bon - aucune iframe dans la plateforme",
             ],
-            ["Zoom 200 % sans perte", "95 %", "Très bon"],
-            ["Mobile / tap targets", "90 %", "Bon - cibles ≥ 44×44 px"],
-            ["aria-current sur navigation", "100 %", "Conforme"],
             [
-              "Modales (focus trap, ESC, return focus)",
-              "100 %",
-              "Conforme - composant AccessibleDialog",
+              "3. Couleurs et contrastes",
+              "65 %",
+              "À améliorer - 490+ usages de text-gray-500/400 sur fond clair, ratio ~3:1 sous le seuil 4.5:1 (WCAG 1.4.3)",
+            ],
+            [
+              "4. Multimédia (audio TTS)",
+              "90 %",
+              "Très bon - TTS Piper sur tous scénarios, transcriptions textuelles fournies",
+            ],
+            [
+              "5. Tableaux (caption, scope)",
+              "70 %",
+              'À améliorer - scope="col" présent partout, mais <caption> manquant sur ~10 tableaux admin',
+            ],
+            [
+              "6. Liens (nom accessible)",
+              "88 %",
+              "Bon - aria-label sur liens icône-only, pas de 'cliquez ici'",
+            ],
+            [
+              "7. Scripts ARIA (modales, dropdowns)",
+              "92 %",
+              "Très bon - aria-expanded/controls présents, focus trap modales",
+            ],
+            [
+              "8. Éléments obligatoires (lang, title, skip-link)",
+              "95 %",
+              "Très bon - <html lang='fr'>, page title unique, skip link en haut",
+            ],
+            [
+              "9. Structuration (h1-h6, landmarks)",
+              "72 %",
+              "À consolider - hiérarchie h1>h2>h3 OK la plupart du temps, role='navigation/banner/contentinfo' à expliciter",
+            ],
+            [
+              "10. Présentation (zoom 200 %, motion)",
+              "88 %",
+              "Très bon - zoom 200 % sans perte, prefers-reduced-motion respecté",
+            ],
+            [
+              "11. Formulaires (label, erreurs)",
+              "78 %",
+              "Bon - <label htmlFor> partout, role='alert' sur erreurs, quelques inputs admin à revoir",
+            ],
+            [
+              "12. Navigation (multiple méthodes, aria-current)",
+              "85 %",
+              "Bon - aria-current='page' partout, sitemap.xml présent, plan du site dédié à venir",
+            ],
+            [
+              "13. Consultation (limite temps, redirects)",
+              "90 %",
+              "Très bon - aucun mouvement obligatoire, aucune limite de temps imposée",
             ],
           ]}
         />
+        <p className="mt-4 text-sm text-gray-700 dark:text-gray-300">
+          <strong>Score global pondéré : ~82 %.</strong> Trois axes prioritaires
+          de consolidation avant audit externe : contraste sur libellés
+          secondaires (théma. 3), légendes de tableaux (théma. 5), marquage
+          explicite des landmarks (théma. 9).
+        </p>
       </LegalSection>
 
       <LegalSection id="non-conformes" num="4" title="Contenus non accessibles">
         <LegalSubsection title="Non-conformités résiduelles">
           <ul>
+            <li>
+              <strong>Contraste insuffisant sur libellés secondaires</strong>{" "}
+              (RGAA 3.2 / WCAG 1.4.3) : ~490 usages de classes Tailwind{" "}
+              <code>text-gray-500</code> / <code>text-gray-400</code> sur fond
+              clair offrent un ratio de contraste estimé à ~3:1, sous le seuil
+              4.5:1 requis pour le texte normal. Concerne principalement les
+              libellés annexes (timestamps, sources, notes de bas), pas le
+              contenu principal. Plan : remplacement par{" "}
+              <code>text-gray-700</code> dans une PR dédiée.
+            </li>
+            <li>
+              <strong>Légendes manquantes sur tableaux admin</strong> (RGAA
+              5.4) : les ~10 tableaux des pages <code>/admin/incidents</code>,{" "}
+              <code>/admin/dpo</code>, <code>/admin/audit</code>,{" "}
+              <code>/profil</code> ont leurs en-têtes corrects (
+              <code>scope="col"</code>) mais pas de <code>{`<caption>`}</code>{" "}
+              décrivant le contenu. Impact : un lecteur d'écran annonce le
+              tableau sans contexte. Plan : ajout de{" "}
+              <code>{`<caption className="sr-only">`}</code> par tableau.
+            </li>
+            <li>
+              <strong>Marquage explicite des landmarks</strong> (RGAA 9.1) : la
+              plateforme utilise les balises sémantiques HTML5 natives
+              (<code>{`<header>`}</code>, <code>{`<nav>`}</code>,{" "}
+              <code>{`<main>`}</code>, <code>{`<footer>`}</code>) qui exposent
+              déjà des landmarks ARIA implicites. Reste à expliciter{" "}
+              <code>role="navigation"</code> + <code>aria-label</code> sur la
+              barre principale et sur le footer pour distinguer les zones de
+              navigation multiples (en-tête, sidebar admin, pied de page).
+            </li>
             <li>
               <strong>Vidéos pédagogiques (V2 contenu)</strong> : les futurs
               contenus vidéos n'ont pas encore de sous-titres synchronisés. Une
@@ -201,6 +269,27 @@ export default function AccessibilitePage() {
 
         <LegalSubsection title="✓ Non-conformités résolues récemment">
           <ul>
+            <li>
+              <strong>ThemeToggle sur mobile</strong> : les boutons "Clair /
+              Sombre / Auto" cachaient leur libellé en classe{" "}
+              <code>hidden sm:inline</code>. Sur mobile, un lecteur d'écran
+              annonçait juste l'icône. Fix : <code>aria-label</code> explicite +{" "}
+              <code>aria-hidden</code> sur l'emoji pour éviter la double
+              annonce.
+            </li>
+            <li>
+              <strong>Bouton de fermeture du drawer admin</strong> (
+              <code>AdminSidebar</code>) : <code>aria-label</code> présent mais
+              le caractère ✕ n'était pas marqué <code>aria-hidden</code> →
+              double annonce ("X, fermer le menu"). Fix : wrap dans{" "}
+              <code>{`<span aria-hidden>`}</code>.
+            </li>
+            <li>
+              <strong>Bouton "Rechercher" observatoire fuites</strong> :
+              l'emoji 🔍 n'était pas marqué <code>aria-hidden</code> → annoncé
+              "loupe rechercher". Fix : <code>aria-hidden</code> sur l'emoji,
+              le texte "Rechercher" suffit.
+            </li>
             <li>
               <strong>Confettis et animations</strong> : annoncés via LiveRegion
               ARIA ("Bonne réponse !", "Niveau X débloqué"). Désactivés si{" "}
