@@ -163,17 +163,44 @@ pour les détails (hors repo public).
 
 Clé API [Mistral AI](https://mistral.ai) pour les features IA souveraines :
 
-- Phishing personnalisé par employé (palier Pro+)
-- IA Coach Hex (palier Pro+)
+- **Phishing email** personnalisé par employé (palier Pro+, feature `phishing_ia`)
+- **Vishing** : génération de scripts de voix piégée (palier Pro+, feature `vishing`)
+- **Smishing** : génération de SMS piégés (palier Pro+, feature `smishing`)
+- **IA Coach Hex** (palier Pro+)
 - Génération d'anecdotes cyber (admin)
 
 ```env
 MISTRAL_API_KEY="..."
-MISTRAL_MODEL="mistral-large-latest"  # par défaut
+MISTRAL_MODEL="ministral-8b-latest"  # par défaut, suffisant pour la génération
 ```
 
 **Sans cette clé** : ces features sont désactivées silencieusement (UI grisée
-avec message d'upsell).
+avec message d'upsell). En `DEMO_MODE=true`, les fixtures statiques sont
+utilisées pour la démo commerciale.
+
+**Sortie HTML sanitizée** : tout `bodyHtml` retourné par Mistral passe par
+DOMPurify (parseur HTML5, audit Cure53) avant rendu côté client. Whitelist
+stricte de balises (p, br, strong, em, a, ul/ol/li, h1-h6, code, blockquote,
+span, div). URLs `javascript:` / `data:` bloquées. Cf. `lib/ai/mistral.ts`.
+
+### `PAYPLUG_*` (paiement souverain FR)
+
+Clés API [Payplug](https://www.payplug.com) pour la facturation cloud SaaS.
+
+```env
+PAYPLUG_SECRET_KEY="sk_live_..."        # ou sk_test_... pour staging
+PAYPLUG_WEBHOOK_SECRET="whsec_..."       # CRITIQUE - sinon webhooks rejetés
+PAYPLUG_PLAN_SOLO="plan_solo_id"         # ID du plan Payplug pour Starter
+PAYPLUG_PLAN_ESSENTIELLE="plan_..."
+PAYPLUG_PLAN_PRO="plan_..."
+```
+
+**Diagnostic au boot** : la fonction `validatePayplugSetup()` exportée par
+`lib/payplug.ts` audite la configuration et logge les warnings au démarrage
+(plans manquants, secret webhook absent, endpoints non documentés).
+
+**Sans ces clés** : la facturation cloud est désactivée. Le mode self-host
+n'a pas besoin de Payplug.
 
 ### Connecteurs SSO (optionnels, palier Essentielle+)
 
