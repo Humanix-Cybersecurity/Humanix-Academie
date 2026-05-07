@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    // Ping DB minimaliste — vérifie que la connexion Prisma fonctionne
+    // Ping DB minimaliste - vérifie que la connexion Prisma fonctionne
     await db.$queryRaw`SELECT 1`;
     return NextResponse.json(
       { status: "ok" },

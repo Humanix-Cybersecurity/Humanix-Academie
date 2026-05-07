@@ -1,4 +1,4 @@
-# Configuration — Référence complète des variables d'environnement
+# Configuration - Référence complète des variables d'environnement
 
 Ce document liste toutes les variables d'environnement supportées par
 Humanix Académie Community Edition, avec leur usage, leur valeur par défaut,
@@ -145,13 +145,15 @@ DEMO_MODE="true"    # Démo / dev local
 
 **À NE JAMAIS activer en production** avec de vraies données utilisateurs.
 
-### `DEMO_PUBLIC` (à venir Sprint 4)
+### `DEMO_PUBLIC` (Q3 2026)
 
-Active le mode démo publique sans login (pour `demo.humanix.fr`).
+Active le mode démo publique sans login pour l'instance de démonstration
+dédiée. À **n'activer que sur l'instance de démo**, jamais en prod
+avec de vrais utilisateurs.
 
 ```env
-DEMO_PUBLIC="false"  # Défaut
-DEMO_PUBLIC="true"   # Pour l'instance demo.humanix.fr uniquement
+DEMO_PUBLIC="false"  # Défaut (production)
+DEMO_PUBLIC="true"   # Instance de démonstration uniquement
 ```
 
 Voir `00_Business_Strategie/05_Pivot_OSS_Mai_2026/04_DEMO_PUBLIQUE_SPEC.md`
@@ -297,7 +299,7 @@ peuvent changer (renommage, déprécation). Voir [upgrade.md](./upgrade.md)
 section **Breaking changes** pour chaque release.
 
 Le fichier `.env.example` du repo est toujours à jour avec la dernière
-version — diff-le contre ton `.env` après chaque pull pour repérer les
+version - diff-le contre ton `.env` après chaque pull pour repérer les
 nouvelles variables.
 
 ```bash

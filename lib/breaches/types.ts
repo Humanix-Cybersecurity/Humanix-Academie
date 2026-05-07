@@ -51,7 +51,7 @@ export const SOURCE_META: Record<
       "Suivi indépendant des incidents de fuites de données en France.",
     active: true,
   },
-  // Source historique non scrapée — voir lib/breaches/parsers.ts pour la note.
+  // Source historique non scrapée - voir lib/breaches/parsers.ts pour la note.
   // Les items déjà en BDD restent affichés (filtre côté UI : source.active).
   FUITESINFOS: {
     name: "Fuites Infos",

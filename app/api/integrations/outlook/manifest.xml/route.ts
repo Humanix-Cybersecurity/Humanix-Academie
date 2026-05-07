@@ -47,7 +47,7 @@ const INLINE_MANIFEST = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
   <Version>1.0.0.0</Version>
   <ProviderName>Humanix-Cybersecurity SASU</ProviderName>
   <DefaultLocale>fr-FR</DefaultLocale>
-  <DisplayName DefaultValue="Humanix — Signaler un phishing" />
+  <DisplayName DefaultValue="Humanix - Signaler un phishing" />
   <Description DefaultValue="Bouton 1-clic pour signaler un mail suspect" />
   <IconUrl DefaultValue="https://humanix-cybersecurity.fr/outlook/icon-64.png" />
   <SupportUrl DefaultValue="https://humanix-cybersecurity.fr/contact" />

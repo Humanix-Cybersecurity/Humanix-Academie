@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// /admin/phishing — Gestion des campagnes de phishing simulé (plan Pro+).
+// /admin/phishing - Gestion des campagnes de phishing simulé (plan Pro+).
 //
 // REFONTE MAI 2026 : aligné design system Linear (PageHeader, Section,
 // EmptyState, StatusBadge).
@@ -71,7 +71,7 @@ export default async function AdminPhishingPage() {
       />
 
       <div className="space-y-6 min-w-0">
-        {/* Cadre légal — variante warning */}
+        {/* Cadre légal - variante warning */}
         <article className="rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-900/15 p-4">
           <h3 className="font-bold text-amber-800 dark:text-amber-200 text-sm flex items-center gap-2">
             <span aria-hidden="true">⚖️</span>
@@ -87,7 +87,7 @@ export default async function AdminPhishingPage() {
           </p>
         </article>
 
-        {/* Bandeau pricing — clair sur ce qui est inclus / pas inclus */}
+        {/* Bandeau pricing - clair sur ce qui est inclus / pas inclus */}
         <article className="rounded-xl border border-blue-200 dark:border-blue-900/50 bg-blue-50/60 dark:bg-blue-900/15 p-4">
           <h3 className="font-bold text-blue-900 dark:text-blue-200 text-sm flex items-center gap-2">
             <span aria-hidden="true">💶</span>
@@ -113,12 +113,12 @@ export default async function AdminPhishingPage() {
           </p>
         </article>
 
-        {/* Cross-sell IA Mistral — 2 cartes en grille au lieu de 2 bandeaux */}
+        {/* Cross-sell IA Mistral - 2 cartes en grille au lieu de 2 bandeaux */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <CrossSellCard
             badge="🇫🇷 IA souveraine"
             title="Générer un mail sur-mesure en 5 secondes"
-            description="Décrivez votre cible — Mistral génère un mail crédible avec les signaux faibles à débriefer."
+            description="Décrivez votre cible - Mistral génère un mail crédible avec les signaux faibles à débriefer."
             cta="Ouvrir le générateur"
             href="/admin/phishing/generer"
             icon="🤖"

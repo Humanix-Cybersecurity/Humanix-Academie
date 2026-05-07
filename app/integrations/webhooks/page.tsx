@@ -10,7 +10,7 @@ import Link from "next/link";
 import { WEBHOOK_EVENTS } from "@/lib/webhooks/events";
 
 export const metadata = {
-  title: "Webhooks signés HMAC — Humanix Académie",
+  title: "Webhooks signés HMAC - Humanix Académie",
   description:
     "Recevez les événements Humanix en temps réel sur votre endpoint, signés HMAC-SHA256. Documentation complète + samples de vérification en Node, Python, Go.",
 };
@@ -119,7 +119,7 @@ export default function WebhooksDocPage() {
   "tenantId": "demo",
   "occurredAt": "2026-05-03T14:23:45Z",
   "data": {
-    /* propre à l'event — voir ci-dessous */
+    /* propre à l'event - voir ci-dessous */
   }
 }`}</code>
         </pre>
