@@ -301,7 +301,8 @@ export default function DafLandingPage() {
               source="Cas d'école mondial"
             />
             <Number
-              value="3 €/utilisateur/mois"
+              value="3 €"
+              unit="/user/mois"
               label="tarif Humanix Académie (Cloud Essentielle PME)"
               source="vs 30 €/user/mois acteurs anglo-saxons"
             />
@@ -382,15 +383,25 @@ function Number({
   value,
   label,
   source,
+  unit,
 }: {
   value: string;
   label: string;
   source: string;
+  /** Unite optionnelle affichee plus petite a cote de la valeur (ex: "/user/mois") */
+  unit?: string;
 }) {
   return (
     <li className="flex items-baseline gap-4 border-b border-emerald-200/60 dark:border-emerald-900/40 last:border-0 pb-2 last:pb-0">
-      <span className="font-display text-2xl sm:text-3xl font-extrabold text-emerald-700 dark:text-emerald-300 tabular-nums shrink-0 w-32">
-        {value}
+      <span className="shrink-0 w-32 text-emerald-700 dark:text-emerald-300 tabular-nums">
+        <span className="font-display text-2xl sm:text-3xl font-extrabold">
+          {value}
+        </span>
+        {unit ? (
+          <span className="block text-xs font-semibold opacity-80">
+            {unit}
+          </span>
+        ) : null}
       </span>
       <span className="flex-1">
         <span className="block">{label}</span>
