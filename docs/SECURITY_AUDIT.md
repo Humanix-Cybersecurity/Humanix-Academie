@@ -1,10 +1,12 @@
 # Rapport d'audit de sécurité - Humanix Académie
 
-> **Édition** : v1.2 - 2026-05-05
+> **Édition** : v1.3 - 2026-05-07 (post pentest interne)
 > **Périmètre** : plateforme Humanix Académie Community Edition + Cloud (production + infrastructure + processus + chaîne de développement)
 > **Émetteur** : Humanix-Cybersecurity
 > **Statut** : public, mis à jour à chaque évolution majeure (cf. §12.4 historique)
 > **Licence du rapport** : CC BY-SA 4.0 (réutilisable avec attribution)
+> **Version résumée publique** : [/securite/rapport-audit](https://humanix-cybersecurity.fr/securite/rapport-audit)
+> **Programme divulgation responsable** : [/.well-known/security.txt](https://humanix-cybersecurity.fr/.well-known/security.txt) (RFC 9116)
 
 ---
 
@@ -44,21 +46,24 @@ Il est versionné dans Git, accessible publiquement, et mis à jour à chaque é
 
 ### Niveau de maturité global
 
-| Domaine                          | Niveau           | Commentaire                                                 |
-| -------------------------------- | ---------------- | ----------------------------------------------------------- |
-| Authentification & autorisation  | 🟢 Mature        | Auth.js v5, MFA SSO, multi-tenant scoping strict            |
-| Sécurité applicative             | 🟢 Mature        | Validation Zod, sanitisation, anti-SSRF, anti-CSRF          |
-| Sécurité réseau & infrastructure | 🟢 Mature        | HAProxy + segmentation Docker + TLS 1.2+                    |
-| Protection des données (RGPD)    | 🟢 Mature        | DPA + registre + droits implémentés + souverain FR          |
-| SDLC sécurisé                    | 🟡 Intermédiaire | TypeScript strict, mais pas encore de scan automatisé en CI |
-| Gestion des incidents            | 🟡 Intermédiaire | Procédure documentée, mais sans drill annuel formel         |
-| Audit externe formel             | 🔴 À faire       | Aucun pentest externe à ce jour (programmé à venir)         |
+| Domaine                                              | Niveau           | Commentaire                                                                          |
+| ---------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------ |
+| Authentification & autorisation                      | 🟢 Mature        | Auth.js v5, MFA SSO, multi-tenant scoping strict                                     |
+| Sécurité applicative (XSS DOMPurify, anti-SSRF)      | 🟢 Mature        | Validation Zod, sanitisation HTML5, anti-SSRF whitelist, anti-PII Mistral            |
+| Sécurité réseau & infrastructure                     | 🟢 Mature        | HAProxy + segmentation Docker + TLS 1.2+ + middleware edge                           |
+| Headers HTTP (HSTS, X-Frame, CSP, Permissions-Policy)| 🟢 Mature        | CSP active depuis le 7 mai 2026 (PR #142), validé en pentest interne                 |
+| Protection des données (RGPD)                        | 🟢 Mature        | DPA + registre + droits implémentés + souverain FR + export portabilité complet      |
+| SDLC sécurisé                                        | 🟡 Intermédiaire | TypeScript strict, 446 tests vitest, mais pas encore de scan automatisé en CI        |
+| CI/CD : déploiement auto au push main                | 🔴 À faire       | Découvert en pentest 7 mai : image en prod peut diverger des correctifs main         |
+| Gestion des incidents                                | 🟡 Intermédiaire | Procédure documentée (Cyber-Réflexe), mais sans drill annuel formel                  |
+| Audit externe formel                                 | 🔴 À faire       | Pentest interne 7 mai 2026 OK, audit cabinet PASSI prévu Q3 2026                     |
 
 ### Synthèse en 3 chiffres
 
-- **0** vulnérabilité critique connue à la date de rédaction
-- **6** programmes en backlog (pentest externe, audit RGAA cabinet, scan dépendances CI, bug bounty formalisé, dashboard SOC interne, formation incident drill annuel)
+- **0** vulnérabilité critique exploitée (pentest interne du 7 mai 2026, 25+ vecteurs testés)
+- **3** findings non-critiques (1 HIGH process, 2 MEDIUM CVSS 5.3) - cf. §9
 - **100 %** des données sensibles traitées sur des hébergements français ou européens identifiables (zéro dépendance Cloud Act US)
+- **446** tests vitest sur les chemins critiques (auth, RGPD, audit log, plans, tenant isolation, webhooks SSRF, DOMPurify, errors)
 
 ### Position éditoriale assumée
 
@@ -99,18 +104,92 @@ L'évaluation repose sur **4 sources de référence** :
 | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------ |
 | Revue de code interne                                | Lecture systématique des routes API, des server actions et des helpers d'auth                      | Continue                 |
 | Test SSRF sur webhooks                               | URLs internes (10.x, 127.x, 192.168.x, .local, .internal) refusées par allowlist                   | Validé                   |
-| Test injection HTML / XSS sur générateur phishing IA | Sanitisation script/iframe/event handlers vérifiée                                                 | Validé                   |
+| Test injection HTML / XSS sur générateur phishing IA | Sanitisation DOMPurify (parseur HTML5, audit Cure53, OWASP) - whitelist stricte de balises         | Validé                   |
 | Test rate limiting                                   | Tentatives répétées sur endpoints sensibles (`/api/tts/synthesize`, `/api/admin/breaches/refresh`) | Limites respectées       |
 | Test isolation tenant                                | Tentative d'accès à une saison d'un autre tenant via manipulation de paramètres                    | Refus correct            |
 | Test échappement Prisma                              | Inputs avec backslashes, surrogate pairs, NULL bytes                                               | Sanitisation BDD validée |
-| Audit accessibilité interne                          | WCAG 2.1 AA / RGAA 4.1 - score interne 88 %                                                        | Cf. `/accessibilite`     |
+| Audit accessibilité interne (refonte 7 mai 2026)     | RGAA 4.1 / WCAG 2.1 AA - score interne 92 % après Pack I (contraste + caption + landmarks)         | Cf. `/accessibilite`     |
+| **Pentest interne v1.1**                             | **Box-grise depuis Exegol contre staging docker-compose - 25+ vecteurs (cf. §2.5)**                | **2026-05-07**           |
 
 ### 2.4 Tests **non encore réalisés** (transparence)
 
-- **Pentest externe** par cabinet tiers indépendant (programmé à venir)
-- **Audit RGAA externe** par cabinet certifié (programmé à venir, budget identifié ~3 000 € HT)
+- **Pentest externe** par cabinet PASSI tiers indépendant (programmé Q3 2026)
+- **Audit RGAA externe** par cabinet certifié (Atalan / Tanaguru / Access42, programmé Q4 2026, budget ~3 000 € HT)
 - **Test de charge** au-delà de 200 utilisateurs simultanés (à faire dès première grosse PME cliente)
 - **Audit cryptographique** des secrets de session (déjà repose sur Auth.js qui a été audité par tiers, mais pas par nous)
+
+### 2.5 Pentest interne v1.1 (7 mai 2026)
+
+#### Méthodologie
+
+Test offensif réalisé depuis un container Exegol-rootme isolé (Kali Linux
+spécialisé pentest), contre une instance staging docker-compose :
+HAProxy 2.9 + Next.js 15 + PostgreSQL 16 + TTS Piper. Outils utilisés :
+nmap, curl, wget, hydra, dirb, ncat, écriture de payloads custom.
+
+#### Vecteurs d'attaque testés (25+)
+
+**Reconnaissance** : nmap service detection, version fingerprinting, énumération de routes API, listing /well-known/, /.git/, /.env, sources maps.
+
+**Headers / TLS** : audit complet des security headers (HSTS, CSP, X-Frame, Permissions-Policy, Referrer-Policy), test ALPN, audit des Vary headers, cache poisoning.
+
+**Méthodes HTTP** : HEAD, OPTIONS, TRACE, PUT, DELETE, PATCH sur `/api/admin/*` et endpoints sensibles. Test request smuggling chunked.
+
+**Header injection** : Host header injection (Host: evil.example.com), X-Forwarded-User / X-Real-IP / X-Forwarded-For pour bypass admin, Transfer-Encoding chunked.
+
+**Path traversal** : `/sms/../etc/passwd`, `/famille/invitation/../../admin`, `/_next/../package.json`, `/.next/static/../package.json`.
+
+**IDOR / token oracle** : timing attacks sur `/sms/[token]`, `/phishing/[token]`, `/famille/invitation/[token]`, `/connexion/reset/[token]`. Mesure du temps de réponse pour détecter un oracle (token valide vs invalide).
+
+**Email enumeration** : timing attack sur `/api/auth/signin/email` et `/signup` pour distinguer compte existant vs inexistant.
+
+**Brute-force / credential stuffing** : 7 tentatives consécutives sur `/api/auth/callback/credentials` pour vérifier le rate limit per-IP.
+
+**Information disclosure** : test exposure de `.env`, `.git/config`, `package.json`, `next.config.mjs`, `prisma/schema.prisma`, source maps `.js.map`, headers leakant la stack (X-Powered-By).
+
+**Reflected XSS** : injection `<script>alert(1)</script>` via query string sur les pages publiques.
+
+**Network surface** : scan des ports docker network (HAProxy stats 8404, app 3000, postgres 5432) pour mesurer l'exposition latérale.
+
+**HAProxy bot blocking** : test du filtre User-Agent (sqlmap, nikto, nmap, gobuster, hydra, masscan, hakrawler).
+
+#### Résultats
+
+🟢 **Aucun bypass d'authentification**, **aucune fuite de données**, **aucune RCE**, **aucun XSS exploité**, **aucune injection SQL**, **aucun path traversal**, **aucun IDOR**.
+
+🟡 **3 findings non-critiques documentés** (cf. §9.4) :
+
+| # | Sévérité      | Titre                                                              | Statut                          |
+| - | ------------- | ------------------------------------------------------------------ | ------------------------------- |
+| 1 | HIGH (process) | Image Docker en prod en retard sur les correctifs (CSP, middleware…) | Corrigé (rebuild fait)          |
+| 2 | MEDIUM (5.3)  | HAProxy stats `:8404` sans authentification                        | Backlog Q2 2026                 |
+| 3 | MEDIUM (5.3)  | Rate limit per-IP absent sur `/api/auth/callback/credentials`      | Backlog Q2 2026                 |
+
+🟢 **20+ contrôles validés** :
+
+- HSTS preload + max-age 2 ans : OK
+- X-Frame-Options DENY + frame-ancestors 'none' : OK (clickjacking bloqué)
+- X-Content-Type-Options nosniff : OK
+- Referrer-Policy strict-origin-when-cross-origin : OK
+- Permissions-Policy camera/mic/geo désactivés : OK
+- **Content-Security-Policy** strict avec connect-src whitelist : OK
+- HAProxy filtre User-Agent (sqlmap/nikto/nmap/gobuster) → 403 : OK
+- HAProxy ACL méthodes : seules GET/POST/PUT/PATCH/DELETE/OPTIONS/HEAD : OK
+- TRACE method bloquée → 405 : OK
+- Pas de source map `.js.map` exposée : OK
+- Pas de `.env`, `.git/config`, `package.json`, `schema.prisma` exposés : OK
+- X-Powered-By stripped par HAProxy (fingerprint Next.js caché) : OK
+- Path traversal `/sms/..`, `/famille/..` bloqués par Next.js URL norm : OK
+- Host header injection rejetée par NextAuth : OK
+- X-Forwarded-User / X-Real-IP ignorés pour bypass admin : OK
+- Email enumeration timing : pas de différence > 1 ms (no oracle) : OK
+- `/api/v1/users` → 401 missing_token (auth strict) : OK
+- Reflected XSS via query string : pas de réflexion : OK
+- Token URL `/sms/[token]` `/phishing/[token]` : 404 anonymisé (pas d'oracle) : OK
+- `robots.txt` + `sitemap.xml` correctement configurés : OK
+- **Middleware edge sur /admin/** + /api/admin/** : OK (401 JSON sans cookie)
+- **`/health` alias rewrite** retourne 200 + `{"status":"ok"}` : OK
+- **`/.well-known/security.txt`** servi (RFC 9116) : OK
 
 ---
 
@@ -551,16 +630,87 @@ Toutes les actions admin sensibles sont loggées dans `Event`. En cas d'incident
 
 ### 9.2 Points d'amélioration (en backlog)
 
-| #   | Sujet                                    | Priorité | Échéance |
-| --- | ---------------------------------------- | -------- | -------- |
-| 1   | Pentest externe par cabinet tiers        | Haute    | à venir  |
-| 2   | Audit RGAA externe                       | Moyenne  | à venir  |
-| 3   | Dependabot / Renovate en CI              | Haute    | à venir  |
-| 4   | Scan SAST CI (Semgrep/CodeQL)            | Haute    | à venir  |
-| 5   | Tests E2E Playwright sur flows critiques | Moyenne  | à venir  |
-| 6   | Bug bounty formalisé (programme public)  | Moyenne  | à venir  |
-| 7   | Politique de purge des `Event` à 13 mois | Moyenne  | à venir  |
-| 8   | Drill incident annuel formel             | Basse    | 2027     |
+| #   | Sujet                                              | Priorité | Échéance        |
+| --- | -------------------------------------------------- | -------- | --------------- |
+| 1   | CI/CD avec redeploy automatique au push main       | Haute    | Q2 2026         |
+| 2   | HAProxy `stats auth` sur frontend stats 8404       | Haute    | Q2 2026         |
+| 3   | Rate limit per-IP sur `/api/auth/callback/*`       | Haute    | Q2 2026         |
+| 4   | Pentest externe par cabinet PASSI                  | Haute    | Q3 2026         |
+| 5   | Audit RGAA externe                                 | Moyenne  | Q4 2026         |
+| 6   | Dependabot / Renovate en CI                        | Haute    | Q2 2026         |
+| 7   | Scan SAST CI (Semgrep/CodeQL)                      | Haute    | Q3 2026         |
+| 8   | Tests E2E Playwright sur flows critiques           | Moyenne  | Q3 2026         |
+| 9   | Bug bounty formalisé (programme public)            | Moyenne  | Q4 2026         |
+| 10  | Politique de purge des `Event` à 13 mois           | Moyenne  | Q3 2026         |
+| 11  | Drill incident annuel formel                       | Basse    | 2027            |
+| 12  | CSP avec nonces (script-src strict, no unsafe-inline) | Basse | post-launch     |
+| 13  | Migration `catch (e: any)` restants vers `unknown` | Basse    | post-launch     |
+
+### 9.4 Findings du pentest interne v1.1 (7 mai 2026)
+
+#### Finding 1 — HIGH (process) : Image Docker en prod en retard sur les correctifs
+
+**Constat** : à la date du test (7 mai), l'image `humanix-academie-app` déployée
+avait été buildée avant le merge des PRs #142 (CSP + middleware admin + alias
+`/health`), #133 (sanitization Mistral DOMPurify) et #150-#153 (a11y + typos).
+
+Vérifié en pentest :
+- Header `Content-Security-Policy` absent en réponse
+- `/health` renvoie 404 au lieu du JSON `{"status":"ok"}`
+- `/api/admin/*` sans cookie session renvoie 404 HTML au lieu de 401 JSON
+  (preuve que le middleware edge-runtime est absent du bundle)
+
+**Impact** : tous les correctifs sécurité du jour étaient inactifs en prod.
+La défense en profondeur ajoutée par le middleware et la CSP ne protégeait
+personne tant que l'image n'était pas reconstruite.
+
+**Fix appliqué** (post-pentest) : `docker compose build humanix-app && docker compose up -d humanix-app`. Validé le même jour.
+
+**Mesure préventive** : ajout au backlog d'une **CI/CD avec déclenchement
+auto au push main** (item §9.2 #1). Pipeline GitHub Actions → registre
+Docker → pull + restart automatique.
+
+#### Finding 2 — MEDIUM (CVSS 5.3) : HAProxy stats sans authentification
+
+**Constat** : `infra/haproxy/haproxy.cfg` ligne 151-157 expose le frontend
+stats sur `*:8404` sans `stats auth`. Un commentaire explicite mentionne
+"En prod : ajouter `stats auth admin:...`" mais la ligne est en commentaire.
+
+**Vérification** : depuis le container Exegol, accès anonyme au stats
+HTML complet (backends, débit, état des serveurs, requêtes par seconde).
+
+**Impact** : information disclosure permettant d'énumérer la topologie
+backend. Bien que `docker-compose.yml` limite l'exposition à `127.0.0.1:8404`
+sur l'host, **tout container partageant le réseau Docker peut accéder
+anonymement** à la page stats. Risque réel si l'infra est partagée
+(VM mutualisée, ou compromission d'un container voisin).
+
+**CVSS 3.1** : `AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N` = 5.3 (Medium)
+
+**Fix prévu** (Q2 2026) : décommenter `stats auth admin:<password fort>`
+ligne 157, stocker le mot de passe dans un secret Docker ou variable
+d'env, restreindre `bind` à un network interne dédié.
+
+#### Finding 3 — MEDIUM (CVSS 5.3) : Rate limit per-IP absent sur /api/auth
+
+**Constat** : la protection lockout (5 échecs / 15 min) est par compte
+utilisateur (champ `User.failedLoginAttempts`). Pour des emails inexistants,
+aucun compteur n'est incrémenté.
+
+**Vérification** : 7 tentatives consécutives sur `/api/auth/callback/credentials`
+avec un email inexistant → toutes retournent 302 (NextAuth redirect erreur),
+aucun blocage. Test à plus de 7 req/s OK.
+
+**Impact** : credential stuffing depuis une IP unique fonctionne sans
+déclencher de blocage. Le `track-sc0` HAProxy existe (`stk_abuse`) mais
+n'est pas appliqué en `deny` sur les paths d'auth.
+
+**CVSS 3.1** : `AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N` = 5.3 (Medium)
+
+**Fix prévu** (Q2 2026) : ajouter dans `infra/haproxy/haproxy.cfg` une ACL
+`http_req_rate(10s) gt 20` sur `path_beg /api/auth/callback/`, qui retourne
+429. OU rate-limit applicatif sur l'IP depuis `lib/rate-limit.ts` dans
+le route handler.
 
 ### 9.3 Limites assumées par design
 
@@ -574,21 +724,27 @@ Toutes les actions admin sensibles sont loggées dans `Event`. En cas d'incident
 
 ## 10. Plan de remédiation à 6 mois
 
-### à venir (juillet–septembre)
+### Q2 2026 (avant le launch OSS du 26 mai)
 
-1. **Mise en place de Dependabot** sur le repo principal (Github Actions)
-2. **Scan SAST** intégré au build CI (Semgrep avec ruleset OWASP)
-3. **Politique de purge `Event`** à 13 mois (cron mensuel)
-4. **Formalisation du programme bug bounty** (page dédiée + perimeter clair + prime modeste)
-5. **Recrutement d'un cabinet pentest externe** (devis pris auprès de 3 acteurs FR : Devoteam, Wavestone, ou cabinet PASSI plus petit)
+1. **CI/CD avec redeploy automatique au push main** (réponse à Finding #1 du pentest interne)
+2. **HAProxy `stats auth` admin:<password fort>** sur frontend stats 8404 (réponse à Finding #2)
+3. **Rate limit per-IP** sur `/api/auth/callback/*` via ACL HAProxy ou app-level (réponse à Finding #3)
+4. **Mise en place de Dependabot** sur le repo principal (Github Actions)
+5. **/.well-known/security.txt** publié (RFC 9116, fait le 7 mai 2026)
 
-### à venir (octobre–décembre)
+### Q3 2026 (juillet–septembre)
 
-6. **Pentest externe** réalisé (boîte grise, ~5-7 jours)
-7. **Audit RGAA externe** par cabinet certifié (Atalan / Tanaguru / Access42)
-8. **Tests E2E Playwright** sur les 5 flows critiques (auth, achat boutique, génération phishing IA, téléchargement Pack NIS2, complétion épisode)
-9. **Mise à jour de ce rapport** post-pentest avec les findings et leur résolution
-10. **Publication d'un journal d'incidents** (vide à ce jour, mais transparent dès le 1er évent)
+6. **Scan SAST** intégré au build CI (Semgrep avec ruleset OWASP)
+7. **Politique de purge `Event`** à 13 mois (cron mensuel)
+8. **Pentest externe** par cabinet PASSI (devis pris auprès de 3 acteurs FR : Devoteam, Wavestone, ou cabinet PASSI plus petit). Boîte grise, ~5-7 jours.
+9. **Tests E2E Playwright** sur les 5 flows critiques (auth, achat boutique, génération phishing IA, téléchargement Pack NIS2, complétion épisode)
+
+### Q4 2026 (octobre–décembre)
+
+10. **Audit RGAA externe** par cabinet certifié (Atalan / Tanaguru / Access42)
+11. **Formalisation du programme bug bounty** (page dédiée + perimeter clair + prime modeste)
+12. **Mise à jour de ce rapport** post-pentest externe avec les findings et leur résolution
+13. **Publication d'un journal d'incidents** (vide à ce jour, mais transparent dès le 1er évent)
 
 ---
 
@@ -678,6 +834,7 @@ Email à **security@humanix-cybersecurity.fr** avec :
 | v1.0    | 2026-05-02 | Première édition publique                                                                                                                                                                                                                                                                                           |
 | v1.1    | 2026-05-04 | Pivot OSS AGPLv3 : LICENSE FSF officiel + NOTICE.md + TRADEMARK.md + CGU_SELFHOST.md + CLA.md. CGU/CGV/Confidentialité enrichies (mention Community Edition vs Cloud). 11 connecteurs livrés (CISO Assistant, OSCAL, SCIM v2, Sentinel, Splunk, Lucca, GLPI, Sekoia, HarfangLab, Mailinblack/Vade). Page `/presse`. |
 | v1.2    | 2026-05-05 | CI/CD durcie : GitHub Actions actif (CI + CodeQL + DCO check), Dependabot configuré (npm + pip + actions + docker, MAJORS bloquées sur paquets critiques), audit licences AGPL documenté. Roadmap migration vers forge souveraine FR mentionnée.                                                                    |
+| v1.3    | 2026-05-07 | **Hardening pre-launch + pentest interne**. Ajout CSP header global (PR #142) + middleware edge `/admin/**` + `/api/admin/**` + alias `/health` + DOMPurify pour sanitization Mistral (PR #133) + plan-gating dédié vishing/smishing + export RGPD complet + helper `lib/errors.ts`. **Pentest interne v1.1** réalisé depuis Exegol-rootme contre staging docker-compose : 25+ vecteurs, 0 critique exploité, 3 findings non-critiques (1 HIGH process, 2 MEDIUM CVSS 5.3). `/.well-known/security.txt` (RFC 9116) publié. Refonte page `/accessibilite` après audit RGAA approfondi (score honnête 82 % puis 92 % après Pack I : contraste WCAG, captions tableaux, landmarks). 446 tests vitest. |
 
 ---
 

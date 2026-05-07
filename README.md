@@ -39,7 +39,10 @@ souverain, intégrée nativement à CISO Assistant.
 - **Connecteur natif CISO Assistant** : preuves de conformité exportées automatiquement
 - **Format OSCAL v1.1.2** (NIST) + CEF (Sentinel, Splunk, Sekoia, QRadar)
 - **API REST** + webhooks signés HMAC-SHA256
+- **Vishing + Smishing souverains** Mistral (Paris) - templates SMS/voix illimités, anti-PII automatique
 - **Stack 100 % souveraine** : hébergement Scaleway Paris, email Scaleway TEM, paiement Payplug, IA Mistral
+- **Sécurité défense en profondeur** : CSP strict, middleware edge sur `/admin`, DOMPurify (audit Cure53), HSTS preload, anti-SSRF whitelist, anti-PII sur prompts. Pentest interne du 7 mai 2026 : 0 critique exploité (cf. [`docs/SECURITY_AUDIT.md`](./docs/SECURITY_AUDIT.md))
+- **Programme de divulgation responsable** : [`/.well-known/security.txt`](https://humanix-cybersecurity.fr/.well-known/security.txt) (RFC 9116)
 - **Mode démo** intégré pour tester sans installer
 
 ---
@@ -184,8 +187,9 @@ Issues marquées **`good first issue`** sur GitHub : les plus accessibles pour u
 ### Tests unitaires
 
 La logique critique (auth, plans, billing, marketplace integrity, scoring,
-SCIM, OSCAL, SIEM, webhooks HMAC, conformité GRC) est couverte par
-**279 tests unitaires Vitest** au coverage 97-100% par fichier.
+SCIM, OSCAL, SIEM, webhooks HMAC, conformité GRC, audit log, email,
+errors, sanitization HTML) est couverte par **446 tests unitaires Vitest**
+au coverage 97-100% par fichier.
 
 ```bash
 npm test                # Lance les tests une fois
