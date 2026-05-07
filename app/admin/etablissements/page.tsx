@@ -91,6 +91,11 @@ export default async function EtablissementsPage() {
           </h2>
           <div className="overflow-x-auto -mx-4 px-4">
             <table className="w-full border-collapse min-w-[700px]">
+              <caption className="sr-only">
+                Detail par etablissement (filiale ou site) du tenant : nom,
+                effectif, taux de completion modules, score de risque humain
+                moyen, nombre d'incidents recents
+              </caption>
               <thead>
                 <tr className="text-left text-xs uppercase tracking-wide text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-slate-700">
                   <th scope="col" className="p-3">
