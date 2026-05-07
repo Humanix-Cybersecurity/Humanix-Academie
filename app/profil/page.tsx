@@ -430,9 +430,26 @@ export default async function ProfilPage() {
                         <td className="py-3">
                           <Link
                             href={`/apprendre/${p.saison.slug}/${p.episode.slug}`}
-                            className={`text-xs font-bold underline-offset-4 hover:underline ${perfect ? "text-gray-500 dark:text-gray-400 hover:text-primary-500" : "text-accent-700 dark:text-accent-300 hover:text-accent-600"}`}
+                            className={`inline-flex items-center gap-1 text-xs font-bold px-2.5 py-1 rounded-full transition ${
+                              perfect
+                                ? "text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700"
+                                : "text-amber-800 dark:text-amber-200 bg-amber-100 dark:bg-amber-900/40 hover:bg-amber-200 dark:hover:bg-amber-900/60"
+                            }`}
+                            title={
+                              perfect
+                                ? "Refaire l'episode (par exemple pour le montrer a un collegue)"
+                                : `Ameliorer ton score actuel (${score} XP)`
+                            }
                           >
-                            {perfect ? "Y revenir" : "Y revenir →"}
+                            {perfect ? (
+                              <>
+                                <span aria-hidden="true">↻</span> Refaire
+                              </>
+                            ) : (
+                              <>
+                                <span aria-hidden="true">↑</span> Améliorer
+                              </>
+                            )}
                           </Link>
                         </td>
                       </tr>
@@ -527,7 +544,7 @@ function ImproveCard({
         {progress.episode.title}
       </h3>
       <div className="text-sm text-amber-700 dark:text-amber-300 font-bold flex items-center gap-1 underline-offset-4 hover:underline">
-        Y revenir tranquillement <span aria-hidden="true">→</span>
+        <span aria-hidden="true">↑</span> Améliorer mon score
       </div>
     </Link>
   );
