@@ -119,6 +119,8 @@ describe("planHasFeature", () => {
       challenges: ["pro", "premium"],
       incidents: ["pro", "premium"],
       phishing_ia: ["pro", "premium"],
+      vishing: ["pro", "premium"],
+      smishing: ["pro", "premium"],
       marketplace: ["pro", "premium"],
       sso_enterprise: ["premium"],
       multi_site: ["premium"],
