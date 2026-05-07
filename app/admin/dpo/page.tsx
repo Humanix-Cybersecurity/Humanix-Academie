@@ -237,6 +237,11 @@ export default async function AdminDpoPage() {
         ) : (
           <div className="overflow-x-auto -mx-4 px-4">
             <table className="w-full text-sm min-w-[600px]">
+              <caption className="sr-only">
+                Demandes d'effacement RGPD article 17 enregistrees dans les
+                90 derniers jours, avec personne concernee, date de demande,
+                etat de traitement et delai legal restant
+              </caption>
               <thead>
                 <tr className="border-b border-gray-200 dark:border-slate-700 text-left">
                   <th className="p-2 font-medium text-gray-700 dark:text-gray-300">

@@ -370,6 +370,10 @@ export default async function ProfilPage() {
           ) : (
             <div className="card overflow-x-auto">
               <table className="w-full text-sm">
+                <caption className="sr-only">
+                  Historique de votre progression pedagogique : episodes
+                  completes, saison d'origine, score quiz, date d'achevement
+                </caption>
                 <thead className="text-left text-gray-500 dark:text-gray-400 border-b-2 border-gray-200 dark:border-slate-700">
                   <tr>
                     <th className="pb-3 font-bold text-xs uppercase tracking-wider">
