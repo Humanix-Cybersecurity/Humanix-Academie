@@ -125,6 +125,11 @@ export default async function ModerationPage() {
         </h3>
         <div className="card overflow-x-auto">
           <table className="w-full text-sm">
+            <caption className="sr-only">
+              Historique recent des modules marketplace moderes : nom,
+              auteur, statut (publie/refuse/en attente), moderateur ayant
+              traite, date de la decision
+            </caption>
             <thead className="text-left text-gray-500 border-b">
               <tr>
                 <th className="pb-3">Module</th>
