@@ -629,7 +629,7 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
   "Pilotage dirigeant": {
     emoji: "📊",
     intro:
-      "Un dirigeant n'a pas le temps de devenir analyste cyber. Il a besoin d'une photo claire de la maturite humaine de son organisation, et d'arguments concrets pour son COMEX. C'est notre obsession.",
+      "Un dirigeant n'a pas le temps de devenir analyste cyber. Il a besoin d'une photo claire de la maturité humaine de son organisation, et d'arguments concrets pour son COMEX. C'est notre obsession.",
     palette: {
       bg: "from-rose-50 via-white to-amber-50 dark:from-slate-900 dark:via-slate-900 dark:to-rose-950/40",
       ring: "border-rose-200 dark:border-rose-900/40",
