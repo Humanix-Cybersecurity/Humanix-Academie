@@ -61,7 +61,7 @@ export default function AuthorBadge({
           {name}
         </span>
         {organization && (
-          <span className="text-gray-500"> — {organization}</span>
+          <span className="text-gray-500"> - {organization}</span>
         )}
         {isOfficial && (
           <span className="ml-1.5 text-[9px] font-bold uppercase bg-amber-100 text-amber-700 px-1 py-0.5 rounded">

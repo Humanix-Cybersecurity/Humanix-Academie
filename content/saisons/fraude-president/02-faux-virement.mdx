@@ -1,0 +1,103 @@
+---
+title: "Le faux virement urgent du DG"
+durationMinutes: 6
+persona: "compta"
+objective: "Detecter une demande de virement frauduleuse en utilisant la procedure froide"
+xpReward: 50
+scenario: |
+  Vendredi 17h45. Tu finalises tes ecritures avant le week-end. Mail d'urgence du DG :
+
+  "Sophie, situation critique. Notre prestataire informatique TECHCONNECT menace de couper notre serveur ce soir si on ne paie pas la facture en retard de 24 500 €. Le RIB a change recemment - voici le nouveau (en piece jointe). Vire avant 18h ou on perd toute la prod du week-end. Je suis en train conf, je ne peux pas appeler. Confirme par retour quand c'est fait."
+
+  Tu connais TECHCONNECT, c'est bien votre prestataire IT. Les 24 500 € correspondent a peu pres au montant mensuel. Et tu sais que le DG est effectivement en deplacement aujourd'hui.
+choices:
+  - id: "a"
+    label: "Je vire au nouveau RIB pour eviter la coupure prod - c'est crise"
+    outcome: "bad"
+    feedback: "Aïe. Tu viens de tomber dans une variante FOVI 'changement de RIB urgent'. Le nouveau RIB appartient a l'attaquant. Argent perdu, recuperation quasi-impossible (transferts internationaux en cascade)."
+    points: -20
+  - id: "b"
+    label: "J'appelle TECHCONNECT au numero de mon annuaire fournisseur pour verifier la facture ET le RIB"
+    outcome: "good"
+    feedback: "Excellent. Double validation : facture reelle ? + RIB officiel ? Tu casses la chaine FOVI sur le terrain."
+    points: 30
+  - id: "c"
+    label: "J'ecris au DG pour confirmation, en attendant je prepare l'OV"
+    outcome: "bad"
+    feedback: "Le DG est 'en train' donc il ne pourra pas confirmer. Tu vas finir par cliquer sous pression. La preparation de l'OV t'engage psychologiquement."
+    points: -10
+  - id: "d"
+    label: "J'attends lundi pour valider - la prod du week-end peut tomber, c'est moins cher qu'une fraude"
+    outcome: "good"
+    feedback: "Excellent jugement. Le coût d'une coupure prod week-end (quelques heures de fix lundi) est bien inferieur a une fraude a 24 500 €. La regle : sous pression artificielle, on attend."
+    points: 25
+debrief: |
+  Variante classique du FOVI : le **faux virement urgent** combine 3 leviers :
+
+  **1. L'urgence artificielle**
+  - "Avant 18h" / "vendredi soir" / "minuit dernier delai"
+  - L'attaquant choisit volontairement les fins de semaine ou les debuts de pont - tu n'as plus personne a appeler
+  - "Je suis en train" / "en avion" / "en reunion" - pour empecher la verification telephonique
+
+  **2. Le pretexte technique**
+  - Une vraie facture d'un vrai fournisseur, juste avec un RIB modifie
+  - L'attaquant a peut-etre eu acces a tes mails (vol de credentials, fuite supply chain) et connait le montant exact
+  - Le pretexte d'urgence (coupure prod, controle fiscal, audit) cree la peur de l'inaction
+
+  **3. Le canal asymetrique**
+  - Il t'envoie un email, mais te demande de ne pas l'appeler
+  - Il evite la voix au telephone (ou recourt a un deepfake - voir module 04)
+
+  **Le casse-tete du changement de RIB :**
+  - Quand un fournisseur dit "on a change de RIB" : **toujours valider hors-canal**
+  - Appeler le contact commercial habituel sur son numero connu
+  - Demander la confirmation ecrite sur papier en-tete
+  - Ne JAMAIS modifier le RIB en base sans cette double verification
+
+  **La regle d'or :** sous pression artificielle, ralentir au lieu d'accelerer. Une coupure prod du week-end coute moins cher qu'un virement frauduleux.
+quiz:
+  - question: "Pourquoi les FOVI ciblent-ils souvent vendredi 17h ou avant un pont ?"
+    choices:
+      - id: "a"
+        label: "C'est une coincidence statistique"
+        correct: false
+      - id: "b"
+        label: "L'urgence + l'absence de collegues a appeler maximise les chances de succes"
+        correct: true
+      - id: "c"
+        label: "Les banques sont ouvertes plus tard"
+        correct: false
+    explanation: "Vendredi 17h, debut de pont, veille de fete : moments ou personne ne peut etre joint pour valider. C'est calcule."
+
+  - question: "Un fournisseur connu m'ecrit 'nouveau RIB urgent'. Je :"
+    choices:
+      - id: "a"
+        label: "Mets a jour le RIB en base"
+        correct: false
+      - id: "b"
+        label: "Appelle le contact commercial habituel sur son numero connu pour confirmation"
+        correct: true
+      - id: "c"
+        label: "Repond au mail pour demander confirmation"
+        correct: false
+    explanation: "Le mail peut venir d'un compte compromis. Seul un appel sur un numero CONNU permet de valider. Et si le contact ne repond pas : tu attends."
+
+  - question: "Un DG urgent dit 'je suis en train, ne m'appelle pas'. Que faire ?"
+    choices:
+      - id: "a"
+        label: "Respecter sa demande et faire le virement"
+        correct: false
+      - id: "b"
+        label: "Considerer cette demande de non-validation comme un signal de fraude - appeler quand meme ou attendre"
+        correct: true
+      - id: "c"
+        label: "Lui envoyer un SMS pour ne pas le deranger"
+        correct: false
+    explanation: "Un dirigeant honnete sait qu'une procedure de virement exige validation. Te demander de ne pas l'appeler est en soi un marqueur FOVI."
+---
+
+## Pour aller plus loin
+
+La pression sur la fin de semaine n'est pas un bug, c'est une feature de l'attaque. L'attaquant choisit le pire moment pour ta verification. Ton meilleur allie : la procedure ecrite affichee dans le bureau de la compta - "TOUT VIREMENT > 5 000 € : DOUBLE VALIDATION + RIB EN BASE".
+
+> "Sous pression, on ralentit. La crise, c'est l'attaquant qui te la fabrique."

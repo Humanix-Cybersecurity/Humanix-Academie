@@ -1,0 +1,129 @@
+---
+title: "Mener une AIPD sans s'y noyer"
+durationMinutes: 8
+persona: "dpo"
+objective: "Conduire une analyse d'impact a la protection des donnees efficace et defendable"
+xpReward: 60
+scenario: |
+  Tu es DPO d'une PME de 80 personnes. Le DG annonce le deploiement d'un outil de scoring leads par IA generative (analyse de profils LinkedIn de prospects). Le commercial veut signer dans 10 jours pour avoir le tarif early-bird.
+
+  Tu sais qu'il y a transfert hors UE + profilage automatise + decision impactant des personnes. AIPD obligatoire. Mais tu n'as ni juriste, ni budget cabinet, ni 3 mois devant toi. Comment tu structures ton AIPD pour qu'elle soit defendable face a une CNIL sans te ruiner ?
+choices:
+  - id: "a"
+    label: "Je delegue tout a un cabinet specialise - c'est la seule facon serieuse"
+    outcome: "neutral"
+    feedback: "Pas faux mais cher (5 a 15 k€) et long. Une AIPD bien menee en interne avec methode est tout a fait defendable. Le cabinet peut intervenir en 2eme intention pour relire."
+    points: 5
+  - id: "b"
+    label: "J'utilise le modele AIPD CNIL (PIA Tool ou modele PDF officiel) + tableau de risques + decision documentee"
+    outcome: "good"
+    feedback: "Excellent. Le PIA Tool de la CNIL est gratuit, en francais, accepte par la CNIL en cas de controle. Avec methode, une AIPD interne est solide."
+    points: 30
+  - id: "c"
+    label: "Je dis 'pas d'AIPD necessaire' et signe le contrat - 80 personnes c'est petit"
+    outcome: "bad"
+    feedback: "Article 35 RGPD : AIPD obligatoire des qu'il y a profilage automatise + transfert hors UE. La taille de l'entreprise n'exempte de rien. Sanction CNIL possible jusqu'a 4 % CA mondial."
+    points: -25
+  - id: "d"
+    label: "Je refuse le projet sans AIPD prealable - pas de signature avant que ce soit fait"
+    outcome: "good"
+    feedback: "Position juridiquement parfaite. L'AIPD doit etre menee AVANT la mise en oeuvre du traitement (article 35.1). C'est ton role de DPO de poser cette regle."
+    points: 25
+debrief: |
+  L'**AIPD** (Analyse d'Impact a la Protection des Donnees) est obligatoire avant tout traitement susceptible d'engendrer un **risque eleve** pour les droits et libertes des personnes (article 35 RGPD).
+
+  **Quand une AIPD est OBLIGATOIRE (CNIL liste 2018, mise a jour 2023) :**
+
+  - Profilage et decisions automatisees ayant des effets significatifs (scoring credit, recrutement, assurance)
+  - Donnees dites "sensibles" a grande echelle (sante, biometriques, opinions)
+  - Surveillance systematique d'espaces accessibles au public (videosurveillance, analytics web invasifs)
+  - Donnees concernant des personnes vulnerables (mineurs, salaries, patients)
+  - Croisement de donnees entre fichiers ayant des finalites differentes
+  - Transferts hors UE de grande ampleur
+
+  **L'AIPD se fait AVANT :** "lorsqu'un type de traitement, [...], est susceptible d'engendrer un risque eleve". Pas apres l'incident - avant la mise en oeuvre.
+
+  **Les 4 piliers d'une AIPD defendable :**
+
+  **1. Description fine du traitement**
+  - Finalites precises (pas "ameliorer le service" - "scorer les prospects pour prioriser le commercial")
+  - Acteurs (responsable, sous-traitants, destinataires)
+  - Donnees collectees, sources, durees
+  - Schema de flux (qui pousse a qui, par quel canal)
+
+  **2. Necessite et proportionnalite**
+  - Le traitement est-il vraiment necessaire pour la finalite ? (test alternatives moins intrusives)
+  - Les donnees collectees sont-elles minimales ? (principle de minimisation)
+  - La duree de conservation est-elle proportionnee ?
+  - Base legale solide (article 6) ?
+
+  **3. Analyse de risques (le coeur de l'AIPD)**
+  - Identifier les **3 menaces majeures** : acces illegitime, modification non desiree, disparition des donnees
+  - Pour chaque menace : sources possibles (interne malveillant, externe, accidentel), gravite (1-4), vraisemblance (1-4)
+  - Mesures existantes ou prevues
+  - Risque residuel apres mesures (acceptable / inacceptable)
+
+  **4. Mesures de mitigation**
+  - Pour chaque risque inacceptable : mesure corrective avec responsable et delai
+  - Mesures techniques (chiffrement, controle d'acces, logs)
+  - Mesures organisationnelles (formation, procedure, audit)
+  - Plan de recouvrement / continuite
+
+  **L'outil gratuit de la CNIL : PIA Tool**
+
+  - Telechargeable sur cnil.fr (Windows/Mac/Linux)
+  - Interface guidee, en francais
+  - Genere un rapport PDF complet
+  - Accepte officiellement par la CNIL en cas de controle
+  - Gratuit, open source, sans tracking
+
+  **L'AIPD doit etre revue periodiquement** (recommandation : annuelle) ou des qu'il y a changement substantiel du traitement.
+
+  **AIPD et consultation prealable CNIL :**
+  Si l'AIPD revele un **risque residuel eleve malgre les mesures**, le responsable doit consulter la CNIL avant la mise en oeuvre (article 36). C'est rare mais existe pour les traitements vraiment sensibles.
+quiz:
+  - question: "Quand une AIPD doit-elle etre menee ?"
+    choices:
+      - id: "a"
+        label: "Apres l'incident, pour comprendre ce qui s'est passe"
+        correct: false
+      - id: "b"
+        label: "AVANT la mise en oeuvre du traitement, pour evaluer le risque par anticipation"
+        correct: true
+      - id: "c"
+        label: "Une fois par an, en revue annuelle"
+        correct: false
+    explanation: "Article 35.1 RGPD : 'lorsqu'un type de traitement [...] est susceptible d'engendrer un risque eleve, le responsable du traitement effectue, avant le traitement, une analyse'."
+
+  - question: "Quel outil gratuit officiel propose la CNIL pour mener une AIPD ?"
+    choices:
+      - id: "a"
+        label: "PIA Tool (telechargeable sur cnil.fr, multi-OS)"
+        correct: true
+      - id: "b"
+        label: "Aucun, il faut un cabinet specialise"
+        correct: false
+      - id: "c"
+        label: "Le navigateur RGPD du gouvernement"
+        correct: false
+    explanation: "PIA Tool est l'outil officiel CNIL, gratuit, open source, multi-plateforme. Genere un rapport PDF accepte en cas de controle."
+
+  - question: "Si l'AIPD revele un risque residuel eleve malgre les mesures, le responsable doit :"
+    choices:
+      - id: "a"
+        label: "Consulter la CNIL avant mise en oeuvre (article 36)"
+        correct: true
+      - id: "b"
+        label: "Lancer le traitement et voir si la CNIL reagit"
+        correct: false
+      - id: "c"
+        label: "Abandonner systematiquement le projet"
+        correct: false
+    explanation: "Article 36 RGPD : consultation prealable obligatoire de la CNIL si risque residuel eleve. La CNIL repond sous 8 semaines."
+---
+
+## Pour aller plus loin
+
+L'AIPD n'est pas un exercice administratif - c'est une discipline strategique qui force a se poser les bonnes questions AVANT que le traitement ne devienne un mur juridique. Une PME qui mene 3 ou 4 AIPD par an avec methode developpe un reflexe de "privacy by design" qui la differencie radicalement de ses concurrentes.
+
+> "Une AIPD bien menee, c'est 8 heures de DPO qui economisent 8 mois de contentieux."

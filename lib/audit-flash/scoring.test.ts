@@ -83,7 +83,7 @@ describe("computeScore", () => {
   });
 });
 
-describe("buildAuditResult — verdict via score", () => {
+describe("buildAuditResult - verdict via score", () => {
   it("score >= 80 → verdict 'Excellent' / vert", () => {
     const goodAnswers: AuditAnswers = {};
     for (const q of AUDIT_QUESTIONS)
@@ -238,7 +238,7 @@ describe("isNis2Concerned", () => {
   });
 });
 
-describe("buildAuditResult — intégration", () => {
+describe("buildAuditResult - intégration", () => {
   it("retourne tous les champs attendus", () => {
     const result = buildAuditResult(answersAll("yes"), "10-49", "services");
     expect(result).toHaveProperty("score");

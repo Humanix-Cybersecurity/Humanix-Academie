@@ -6,7 +6,7 @@
 // fraude-president, compte-compromis, vol-perte-materiel).
 //
 // Genere statiquement à la build via generateStaticParams pour
-// permettre le caching CDN — la page est publique, sans login.
+// permettre le caching CDN - la page est publique, sans login.
 
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -29,7 +29,7 @@ export async function generateMetadata({
   const incident = INCIDENTS_INDEX[slug as IncidentType];
   if (!incident) return { title: "Urgence cyber | Humanix" };
   return {
-    title: `${incident.title} — Que faire | Humanix`,
+    title: `${incident.title} - Que faire | Humanix`,
     description: `${incident.subtitle}. Réflexes immédiats, erreurs à éviter, actions sous 24h, outils, accompagnement.`,
   };
 }
@@ -46,7 +46,7 @@ export default async function IncidentPage({
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* ============================================================
-          HERO — gravité + emoji incident
+          HERO - gravité + emoji incident
           ============================================================ */}
       <HexBackdrop
         intensity="soft"
@@ -217,7 +217,7 @@ export default async function IncidentPage({
         </section>
 
         {/* ============================================================
-            NAV — autres fiches
+            NAV - autres fiches
             ============================================================ */}
         <section aria-labelledby="other-title" className="pt-6">
           <h2
@@ -261,7 +261,7 @@ export default async function IncidentPage({
             aria-hidden="true"
             className="mt-4 text-xs uppercase tracking-[0.25em] text-amber-700/70 dark:text-amber-300/70 font-bold"
           >
-            — Hex veille
+            - Hex veille
           </p>
         </section>
       </div>

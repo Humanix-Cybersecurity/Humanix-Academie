@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page Lancement OSS — annonce publique du passage en open source AGPLv3.
+// Page Lancement OSS - annonce publique du passage en open source AGPLv3.
 //
 // Date launch : mardi 26 mai 2026. Cette page est l'asset de comm web
-// principal pour Sprint 3 OSS — un recit fondateur cosy, accessible,
+// principal pour Sprint 3 OSS - un recit fondateur cosy, accessible,
 // avec compte a rebours bienveillant.
 //
 // Objectifs :
@@ -13,13 +13,13 @@
 //
 // Le compte a rebours est calcule cote serveur a chaque rendu (force-dynamic),
 // pas de drift client. Apres le 26 mai, le hero passe automatiquement en
-// mode "C'est lance — bienvenue".
+// mode "C'est lance - bienvenue".
 
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
 export const metadata = {
-  title: "Lancement OSS — Humanix Academie passe en AGPLv3 le 26 mai 2026",
+  title: "Lancement OSS - Humanix Academie passe en AGPLv3 le 26 mai 2026",
   description:
     "Recit du passage en open source de la plateforme Humanix Academie. AGPLv3, repo public, brique humaine de l'ecosysteme cyber souverain francais. Lancement mardi 26 mai 2026.",
 };
@@ -52,21 +52,21 @@ const CHAPTERS = [
   },
   {
     emoji: "🌱",
-    title: "Le declic — ces gens qui font ce que je voudrais faire",
+    title: "Le declic - ces gens qui font ce que je voudrais faire",
     palette: {
       bg: "from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-teal-950/40",
       ring: "border-emerald-200 dark:border-emerald-900/40",
       accent: "text-emerald-700 dark:text-emerald-300",
     },
     body: [
-      "L'écosystème open source cyber français s'est structuré pendant que j'étais tête dans le guidon. CISO Assistant (intuitem) couvre la gouvernance et la conformité. OpenCTI (Filigran) couvre la threat intelligence. Wazuh couvre la détection. Mais la couche humaine — la sensibilisation des collaborateurs — restait un trou béant.",
+      "L'écosystème open source cyber français s'est structuré pendant que j'étais tête dans le guidon. CISO Assistant (intuitem) couvre la gouvernance et la conformité. OpenCTI (Filigran) couvre la threat intelligence. Wazuh couvre la détection. Mais la couche humaine - la sensibilisation des collaborateurs - restait un trou béant.",
       "C'est exactement la que les attaques passent. Et personne ne fait du libre dessus.",
       "En etudiant comment intuitem, Filigran et Centreon font leur metier, j'ai vu le pattern : tu ne vends pas le code. Tu vends ton expertise. Tu publies en AGPLv3 un produit serieux. La communaute l'audite, l'adopte, le contribue. Tu deviens, par construction, l'expert mondial du produit que tu as ecrit. Et tu factures du conseil, de l'audit, de la formation.",
     ],
   },
   {
     emoji: "🎁",
-    title: "Ce qui devient libre — concretement",
+    title: "Ce qui devient libre - concretement",
     palette: {
       bg: "from-amber-50 via-white to-yellow-50 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/40",
       ring: "border-amber-200 dark:border-amber-900/40",
@@ -75,7 +75,7 @@ const CHAPTERS = [
     body: [
       "Le 26 mai 2026, la plateforme Humanix Academie est publiée sur GitHub sous licence GNU AGPLv3. Le code complet, multi-tenant, audité. Tu peux l'installer chez toi en 10 minutes via Docker Compose. Tu peux l'auditer, le forker, le modifier, le déployer pour ta PME sans m'en demander la permission ni me payer un centime.",
       "Inclus : moteur de gamification, mascotte evolutive, dashboard dirigeant, connecteur natif CISO Assistant, API REST, webhooks signes HMAC, exports OSCAL pour ton GRC, MCP server pour agents IA. Cinq saisons pedagogiques completes (phishing, mots de passe, donnees sensibles, teletravail, RGPD).",
-      "Ce qui reste payé : le cloud managé hébergé en France, le catalogue avancé de modules, la simulation de phishing avec IA Mistral souveraine, le Pack NIS2 turnkey, le SSO entreprise, et — surtout — l'expertise humaine qui paie mes factures (audit, gap analysis NIS2, formation Qualiopi, RSSI externalisé).",
+      "Ce qui reste payé : le cloud managé hébergé en France, le catalogue avancé de modules, la simulation de phishing avec IA Mistral souveraine, le Pack NIS2 turnkey, le SSO entreprise, et - surtout - l'expertise humaine qui paie mes factures (audit, gap analysis NIS2, formation Qualiopi, RSSI externalisé).",
     ],
   },
   {
@@ -88,7 +88,7 @@ const CHAPTERS = [
     },
     body: [
       "Je ne lance pas Humanix dans le vide. Je le branche dans une chaine existante.",
-      "CISO Assistant fait la conformite. Humanix lui pousse les preuves de sensibilisation par collaborateur via un connecteur natif (connectors/ciso-assistant/). OpenCTI fait la threat intel — connecteur prevu Q3 2026. Wazuh, Splunk, Sentinel, Sekoia recoivent les evenements Humanix au format CEF ou OSCAL.",
+      "CISO Assistant fait la conformite. Humanix lui pousse les preuves de sensibilisation par collaborateur via un connecteur natif (connectors/ciso-assistant/). OpenCTI fait la threat intel - connecteur prevu Q3 2026. Wazuh, Splunk, Sentinel, Sekoia recoivent les evenements Humanix au format CEF ou OSCAL.",
       "Cette logique d'ecosysteme est le vrai positionnement strategique. Je ne vends pas contre Knowbe4. Je vends avec l'ecosysteme open source cyber francais. Aux RSSI de PME, ce recit fait sens immediatement : 'on a un outil libre par couche, on peut tout auditer, on depend de zero editeur US'.",
     ],
   },
@@ -102,7 +102,7 @@ const CHAPTERS = [
     },
     body: [
       "Apres le 26 mai, on est a J0 d'un voyage long. Les premiers contributeurs, les premieres issues GitHub, les premiers self-hosters qui poussent une saison maison. Un Discord public ouvert, un canal #aide-self-host, un changelog public.",
-      "Sur 6 mois, je vise 200 etoiles GitHub, 5 contributions externes, 3 PMEs en self-host avec retour public. Sur 24 mois, 180 a 250 k€ de chiffre d'affaires en solo, 350 a 500 k€ avec un premier collaborateur — modele calque sur ce que font deja intuitem, Filigran, Centreon.",
+      "Sur 6 mois, je vise 200 etoiles GitHub, 5 contributions externes, 3 PMEs en self-host avec retour public. Sur 24 mois, 180 a 250 k€ de chiffre d'affaires en solo, 350 a 500 k€ avec un premier collaborateur - modele calque sur ce que font deja intuitem, Filigran, Centreon.",
       "Et chaque saison a venir, chaque module, chaque fonctionnalite : visible en clair sur GitHub, discutable dans les issues, accessible a tous. C'est le contrat.",
     ],
   },
@@ -115,7 +115,7 @@ export default function LancementOssPage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* ============================================================
-          1. HERO — compte a rebours bienveillant
+          1. HERO - compte a rebours bienveillant
           ============================================================ */}
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
         <section
@@ -141,11 +141,11 @@ export default function LancementOssPage() {
             style={{ animationDelay: "240ms" }}
           >
             {isLaunched
-              ? "Humanix Academie est desormais publie sous licence GNU AGPLv3. Audit complet, fork autorise, deploiement en 10 minutes — la brique humaine de l'ecosysteme cyber souverain francais est entre tes mains."
-              : "Humanix Academie passe en open source AGPLv3 mardi 26 mai 2026. Code complet, repo public, deploiement en 10 minutes — la brique humaine de l'ecosysteme cyber souverain francais devient libre."}
+              ? "Humanix Academie est desormais publie sous licence GNU AGPLv3. Audit complet, fork autorise, deploiement en 10 minutes - la brique humaine de l'ecosysteme cyber souverain francais est entre tes mains."
+              : "Humanix Academie passe en open source AGPLv3 mardi 26 mai 2026. Code complet, repo public, deploiement en 10 minutes - la brique humaine de l'ecosysteme cyber souverain francais devient libre."}
           </p>
 
-          {/* Compteur jours — visible avant launch, badge "lance" apres */}
+          {/* Compteur jours - visible avant launch, badge "lance" apres */}
           {isLaunched ? (
             <div
               className="inline-flex items-center gap-3 mt-8 rounded-full bg-emerald-100 dark:bg-emerald-900/40 border-2 border-emerald-300 dark:border-emerald-700 px-5 py-3 text-emerald-800 dark:text-emerald-200 font-bold animate-slide-up"
@@ -209,10 +209,10 @@ export default function LancementOssPage() {
 
       <div className="max-w-5xl mx-auto px-4 py-12 space-y-10">
         {/* ============================================================
-            2. CHAPITRES NARRATIFS — recit fondateur en 5 etapes
+            2. CHAPITRES NARRATIFS - recit fondateur en 5 etapes
             ============================================================ */}
         <section
-          aria-label="Recit fondateur — pourquoi ce passage en open source"
+          aria-label="Recit fondateur - pourquoi ce passage en open source"
           className="space-y-6"
         >
           {CHAPTERS.map((chapter, idx) => (
@@ -251,7 +251,7 @@ export default function LancementOssPage() {
         </section>
 
         {/* ============================================================
-            3. ENGAGEMENTS PUBLICS — 4 promesses tracables
+            3. ENGAGEMENTS PUBLICS - 4 promesses tracables
             ============================================================ */}
         <section
           aria-labelledby="engagements-title"
@@ -302,7 +302,7 @@ export default function LancementOssPage() {
                   Self-host pris au serieux :
                 </strong>{" "}
                 docker-compose teste, doc d'install verifiee, support communaute
-                via GitHub Discussions et Discord — sans condescendance.
+                via GitHub Discussions et Discord - sans condescendance.
               </span>
             </li>
             <li className="flex items-start gap-3">
@@ -321,7 +321,7 @@ export default function LancementOssPage() {
         </section>
 
         {/* ============================================================
-            4. CTA FINAL — invitation cosy
+            4. CTA FINAL - invitation cosy
             ============================================================ */}
         <section
           aria-labelledby="cta-title"
@@ -374,11 +374,11 @@ export default function LancementOssPage() {
         </section>
 
         {/* ============================================================
-            5. CITATION FINALE — signature cosy "Hex veille"
+            5. CITATION FINALE - signature cosy "Hex veille"
             ============================================================ */}
         <section className="text-center pt-8 pb-4">
           <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            « Liberer le code, ce n'est pas un sacrifice. C'est l'inverse —
+            « Liberer le code, ce n'est pas un sacrifice. C'est l'inverse -
             transformer deux ans de travail en un canal d'acquisition gratuit,
             qualifie, et impossible a copier par les acteurs US qui ne joueront
             jamais ce jeu. »
@@ -387,7 +387,7 @@ export default function LancementOssPage() {
             aria-hidden="true"
             className="mt-4 text-xs uppercase tracking-[0.3em] text-accent-500/70 font-bold"
           >
-            — Florian, fondateur · Hex veille
+            - Florian, fondateur · Hex veille
           </p>
         </section>
       </div>

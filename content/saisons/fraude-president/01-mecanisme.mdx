@@ -1,0 +1,97 @@
+---
+title: "Anatomie d'une fraude au president"
+durationMinutes: 7
+persona: "compta"
+objective: "Comprendre les rouages psychologiques de la fraude au president pour la detecter avant le clic"
+xpReward: 60
+scenario: |
+  Tu es comptable dans une PME francaise de 80 personnes. Mardi 10h12, tu recois un email du PDG sur ton adresse pro :
+
+  "Bonjour Mathilde, je suis en deplacement urgent a Bruxelles pour finaliser une acquisition strictement confidentielle. Je dois absolument verser 87 000 € au cabinet d'avocats DUMONT & ASSOCIES aujourd'hui avant 16h. Le RIB est en piece jointe. Personne d'autre dans l'equipe n'est au courant - je compte sur ta discretion absolue. Merci de confirmer la prise en charge des reception."
+
+  L'adresse de l'expediteur ressemble a celle du PDG. Le ton est plausible. Tu as deja vu Pathe se faire avoir pour 19 M€ il y a quelques annees.
+choices:
+  - id: "a"
+    label: "Je prepare le virement et confirme par retour de mail - c'est urgent"
+    outcome: "bad"
+    feedback: "Aïe. Tu viens de cocher tous les marqueurs FOVI : urgence + confidentialite + autorite + canal email. C'est la mecanique a 19 M€ chez Pathe."
+    points: -20
+  - id: "b"
+    label: "J'appelle le PDG sur son numero connu (annuaire interne, pas celui du mail) pour valider"
+    outcome: "good"
+    feedback: "Parfait. Validation hors-canal sur un numero connu = la seule defense fiable contre l'usurpation d'identite par email."
+    points: 30
+  - id: "c"
+    label: "Je transfere a mon manager financier sans repondre"
+    outcome: "neutral"
+    feedback: "Bon reflexe d'escalade, mais ton manager peut aussi tomber dans le piege. Mieux : appeler le PDG d'abord pour valider, puis informer ton manager."
+    points: 10
+  - id: "d"
+    label: "Je reponds au mail pour demander 'est-ce bien vous ?' "
+    outcome: "bad"
+    feedback: "L'attaquant repondra avec aplomb. Le canal mail est compromis - tout echange par mail valide la fraude au lieu de la detecter."
+    points: -10
+debrief: |
+  La **fraude au president** (FOVI : Faux Ordre de Virement International) est l'escroquerie qui coute le plus cher aux PME francaises. Cas emblematiques : **Vinci 4 M€ en 2016**, **Pathe 19 M€ en 2018**, **BNP Paribas 27 M€ en 2008**.
+
+  **Les 5 marqueurs systematiques (apprends-les par coeur) :**
+
+  1. **Urgence** : "aujourd'hui avant 16h", "operation a finaliser ce soir", "deadline imperative"
+  2. **Confidentialite** : "ne le dis a personne", "operation strictement confidentielle", "compte sur ta discretion"
+  3. **Autorite** : email d'un dirigeant haut place (PDG, DAF, DG)
+  4. **Canal email seulement** : pas d'appel telephonique, pas de signature physique, pas de reunion
+  5. **Pretexte plausible** : acquisition, fusion, controle fiscal, contrat international, audit
+
+  **Les 3 reflexes anti-FOVI :**
+
+  - **Validation hors-canal systematique** : appeler le dirigeant sur un numero CONNU (pas celui du mail). Toujours.
+  - **Casser le secret** : un dirigeant qui te dit "ne le dis a personne" enfreint sa propre procedure. C'est le signal.
+  - **Ne JAMAIS deroger a la procedure de virement** : double validation, plafond, RIB en base - meme pour le PDG.
+
+  **Pourquoi ca marche encore ?** L'attaquant exploite la peur de decevoir le dirigeant. Il sait que ton instinct est d'aider. Sa technique : transformer ton instinct positif en faille de securite. Le seul antidote : la procedure froide, appliquee meme sous pression.
+quiz:
+  - question: "Combien de marqueurs cles sont presents dans une fraude au president classique ?"
+    choices:
+      - id: "a"
+        label: "5 : urgence, confidentialite, autorite, canal email, pretexte plausible"
+        correct: true
+      - id: "b"
+        label: "2 : urgence et confidentialite"
+        correct: false
+      - id: "c"
+        label: "8 ou plus"
+        correct: false
+    explanation: "Les 5 marqueurs systematiques sont la signature universelle. Si tu en vois 4+, c'est une fraude - meme si le 5eme manque."
+
+  - question: "Pour valider l'authenticite d'une demande email du PDG, je dois :"
+    choices:
+      - id: "a"
+        label: "Repondre au mail pour demander confirmation"
+        correct: false
+      - id: "b"
+        label: "L'appeler sur un numero CONNU (annuaire interne, pas celui du mail)"
+        correct: true
+      - id: "c"
+        label: "Lui envoyer un SMS au numero indique dans le mail"
+        correct: false
+    explanation: "Validation HORS-CANAL avec un numero CONNU. Le mail et le SMS du mail sont compromis - ils ne valident rien."
+
+  - question: "Le PDG dit 'ne le dis a personne'. Que dois-tu en deduire ?"
+    choices:
+      - id: "a"
+        label: "C'est confidentiel, je respecte"
+        correct: false
+      - id: "b"
+        label: "Ce signal de confidentialite est suspect - un vrai dirigeant ne court-circuite pas la procedure"
+        correct: true
+      - id: "c"
+        label: "C'est normal pour les operations strategiques"
+        correct: false
+    explanation: "La confidentialite imposee est le signal #1 du FOVI. Un dirigeant honnete sait que la procedure protege l'entreprise - il ne l'enfreint jamais, meme pour une operation strategique."
+---
+
+## Pour aller plus loin
+
+La fraude au president n'utilise aucune competence technique. Pas de hacking, pas de vulnerabilite zero-day. Juste de la psychologie appliquee. C'est pour ca qu'aucun antivirus ne te protege - la seule defense, c'est ta procedure froide.
+
+> "Le PDG qui te demande de transgresser sa propre procedure n'est pas le PDG."

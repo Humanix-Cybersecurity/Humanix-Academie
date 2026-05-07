@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page admin /admin/license — affichage de la licence Ed25519 active.
+// Page admin /admin/license - affichage de la licence Ed25519 active.
 //
 // Ce qui est expose :
 // - Statut de la licence (valide / invalide / expiree / pas configuree)
@@ -12,7 +12,7 @@
 //
 // Roadmap 0.2 : ajouter un upload de licence depuis l'UI (form qui POST
 // vers /api/admin/license avec auth + plan-gating). Pour le MVP, on
-// reste affichage seul — c'est deja une grande etape.
+// reste affichage seul - c'est deja une grande etape.
 
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
@@ -79,7 +79,7 @@ export default async function AdminLicensePage() {
             </p>
             <p>
               <strong>Pour les utilisateurs cloud SaaS</strong>, la licence
-              n'est pas pertinente — le plan est géré par votre espace de
+              n'est pas pertinente - le plan est géré par votre espace de
               facturation Humanix.
             </p>
             <p>
@@ -98,7 +98,7 @@ export default async function AdminLicensePage() {
             <p className="italic text-gray-600 dark:text-gray-300">
               Transparence assumée : ce système n'est pas opposable légalement à
               un client AGPLv3 motivé qui patcherait la vérification. C'est
-              l'esprit de l'AGPL — la vraie protection commerciale vient du
+              l'esprit de l'AGPL - la vraie protection commerciale vient du
               service, du trademark et de l'expertise. Cf.{" "}
               <code className="px-1 py-0.5 bg-cyan-100 dark:bg-cyan-900/40 rounded text-cyan-800 dark:text-cyan-200 font-mono text-xs">
                 docs/OPEN_CORE.md
@@ -181,7 +181,7 @@ export default async function AdminLicensePage() {
             aria-hidden="true"
             className="mt-3 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
           >
-            — Hex veille
+            - Hex veille
           </p>
         </section>
       </div>
@@ -337,7 +337,7 @@ function ActiveLicensePanel({
 function InactiveLicensePanel({ error }: { error: LicenseError }) {
   const message = describeLicenseError(error);
 
-  // Si la licence n'est pas configuree, c'est un cas normal — pas une erreur.
+  // Si la licence n'est pas configuree, c'est un cas normal - pas une erreur.
   // Les licences sont optionnelles ; sans elles, l'app marche en plan trial.
   if (error === "missing") {
     return (

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Catalogue HumaniX Académie — 25 saisons × 6 épisodes = 150 modules officiels.
+// Catalogue HumaniX Académie - 25 saisons × 6 épisodes = 150 modules officiels.
 //
 // Ce catalogue alimente la BDD (table Saison + Episode) au seeding. Le contenu
 // pédagogique détaillé (scenario, choix, quiz) est dans `content/saisons/...`
@@ -46,7 +46,7 @@ export function rewardsFor(diff: CatalogEpisode["difficulty"]) {
 }
 
 // ============================================================================
-// 25 SAISONS THÉMATIQUES — 150 ÉPISODES
+// 25 SAISONS THÉMATIQUES - 150 ÉPISODES
 // ============================================================================
 export const CATALOG_SAISONS: CatalogSaison[] = [
   // --- Fondamentaux humains (saisons 1-5) ---
@@ -161,7 +161,7 @@ export const CATALOG_SAISONS: CatalogSaison[] = [
       },
       {
         slug: "02-rgpd-pratique",
-        title: "RGPD au quotidien — les 5 réflexes",
+        title: "RGPD au quotidien - les 5 réflexes",
         durationMinutes: 7,
         difficulty: "medium",
       },
@@ -278,7 +278,7 @@ export const CATALOG_SAISONS: CatalogSaison[] = [
         difficulty: "medium",
       },
       {
-        slug: "06-cas-pathé",
+        slug: "06-cas-pathe",
         title: "Cas réel : 19 M€ chez Pathé",
         durationMinutes: 8,
         difficulty: "hard",
@@ -1227,6 +1227,54 @@ export const CATALOG_SAISONS: CatalogSaison[] = [
         title: "Préparer son décès numérique pour ses proches",
         durationMinutes: 7,
         difficulty: "medium",
+      },
+    ],
+  },
+  // --- Saison dediee DPO (audience specialisee) ---
+  {
+    slug: "dpo-quotidien",
+    title: "Le quotidien du DPO",
+    description:
+      "AIPD, contrôle CNIL, transferts hors UE, profilage. Pour les DPO qui veulent passer du textuel à l'opérationnel.",
+    coverEmoji: "🛡",
+    order: 26,
+    audience: "dpo",
+    episodes: [
+      {
+        slug: "01-aipd",
+        title: "Mener une AIPD sans s'y noyer",
+        durationMinutes: 8,
+        difficulty: "medium",
+      },
+      {
+        slug: "02-controle-cnil",
+        title: "Le contrôle CNIL sonne à la porte",
+        durationMinutes: 7,
+        difficulty: "medium",
+      },
+      {
+        slug: "03-transferts-hors-ue",
+        title: "Transferts de données hors UE - TIA, BCR, DPF",
+        durationMinutes: 8,
+        difficulty: "hard",
+      },
+      {
+        slug: "04-profilage-decision-auto",
+        title: "Profilage et décisions automatisées (article 22)",
+        durationMinutes: 7,
+        difficulty: "medium",
+      },
+      {
+        slug: "05-base-legale",
+        title: "Choisir la bonne base légale (article 6)",
+        durationMinutes: 6,
+        difficulty: "medium",
+      },
+      {
+        slug: "06-mutualisation-pme",
+        title: "Le DPO mutualisé en PME : organiser sa pratique",
+        durationMinutes: 6,
+        difficulty: "easy",
       },
     ],
   },

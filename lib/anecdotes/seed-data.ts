@@ -28,7 +28,7 @@ export const ANECDOTES_SEED: SeedAnecdote[] = [
     summary:
       "En août 2022, le groupe LockBit chiffre les serveurs du CHU. 11 To de données exfiltrées, retour au papier pour les médecins, opérations reportées. Rançon demandée : 10 M$. L'hôpital a refusé de payer.",
     lesson:
-      "Aucun secteur n'est épargné. Les cybercriminels frappent là où l'arrêt fait mal — donc partout. La défense passe par : sauvegardes hors-ligne testées + plan de reprise écrit + équipes formées au phishing (vecteur d'entrée n°1).",
+      "Aucun secteur n'est épargné. Les cybercriminels frappent là où l'arrêt fait mal - donc partout. La défense passe par : sauvegardes hors-ligne testées + plan de reprise écrit + équipes formées au phishing (vecteur d'entrée n°1).",
     miniAction:
       "Demandez aujourd'hui à votre prestataire IT : « À quand remonte le dernier test de restauration de nos sauvegardes ? » Si la réponse est floue, c'est qu'il n'y en a pas eu.",
     sourceUrl:
@@ -43,7 +43,7 @@ export const ANECDOTES_SEED: SeedAnecdote[] = [
     summary:
       "Mars 2018. La directrice financière reçoit un email du « PDG » demandant un virement urgent et confidentiel pour une acquisition. Elle vire 19 M€ en plusieurs fois. Le PDG n'a jamais envoyé l'email.",
     lesson:
-      "La fraude au président ne dépend pas de la taille. Elle exploite l'autorité, l'urgence et la confidentialité. Aucun outil technique n'arrête ça — seul un process humain le fait : double validation hors-mail pour tout virement &gt; un seuil défini.",
+      "La fraude au président ne dépend pas de la taille. Elle exploite l'autorité, l'urgence et la confidentialité. Aucun outil technique n'arrête ça - seul un process humain le fait : double validation hors-mail pour tout virement &gt; un seuil défini.",
     miniAction:
       "Définissez aujourd'hui votre seuil de double validation (ex : 5 000 €) et votre canal de confirmation (appel téléphonique au numéro carnet d'adresses, JAMAIS celui de l'email). Communiquez-le à votre comptable et à votre banque.",
     sourceUrl:
@@ -85,7 +85,7 @@ export const ANECDOTES_SEED: SeedAnecdote[] = [
     slug: "france-travail-43m-fuite",
     title: "France Travail : 43 millions de personnes touchées par une fuite",
     summary:
-      "Mars 2024. France Travail (ex-Pôle Emploi) annonce qu'un de ses prestataires (Cap Gemini) a été compromis. Les données personnelles de 43 millions de Français — dont 10 ans de demandeurs d'emploi — sont dans la nature. Risque : phishing ciblé pendant des années.",
+      "Mars 2024. France Travail (ex-Pôle Emploi) annonce qu'un de ses prestataires (Cap Gemini) a été compromis. Les données personnelles de 43 millions de Français - dont 10 ans de demandeurs d'emploi - sont dans la nature. Risque : phishing ciblé pendant des années.",
     lesson:
       "Une fois les données fuitées, elles le sont POUR TOUJOURS. Elles servent à fabriquer des phishings ultra-crédibles (« Bonjour Jean, suite à votre dossier d'inscription du 14/03/2018... »). La seule défense : entraîner vos équipes à se méfier MÊME quand l'email semble parfaitement légitime.",
     miniAction:

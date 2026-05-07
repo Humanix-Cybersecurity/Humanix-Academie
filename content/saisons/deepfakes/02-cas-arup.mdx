@@ -1,0 +1,128 @@
+---
+title: "Cas reel : 25 millions chez Arup par deepfake visio"
+durationMinutes: 8
+persona: "tous"
+objective: "Tirer les lecons concretes du plus emblematique cas de fraude par deepfake video documente"
+xpReward: 90
+scenario: |
+  Tu es DAF d'une PME francaise. Le RSSI te tend un article de presse : "Arup (cabinet d'ingenierie britannique, 18 000 salaries) victime d'une fraude de 25 M$ par deepfake video en visio."
+
+  Tu te dis : "Si Arup avec leurs procedures et leur taille s'est fait avoir, ma PME a quoi se preparer ?". Quelle est la lecon principale a retenir ?
+choices:
+  - id: "a"
+    label: "C'est specifique aux grands groupes, ma PME est trop petite"
+    outcome: "bad"
+    feedback: "Faux. Les attaquants ne savent souvent pas la taille de leur cible avant de cloner. Et la procedure pour eviter le drame est UNIVERSELLE - peu importe la taille."
+    points: -15
+  - id: "b"
+    label: "Meme avec une visio multi-personnes, sans procedure de validation hors-canal, l'organisation est vulnerable"
+    outcome: "good"
+    feedback: "Excellent. La lecon Arup n'est pas 'evitez les visios'. C'est 'validez par un canal alternatif TOUTE demande de virement consequent, meme si vous voyez le DG en direct'."
+    points: 30
+  - id: "c"
+    label: "Il faut interdire les visios pour les decisions financieres"
+    outcome: "neutral"
+    feedback: "Reaction extreme qui paralyserait l'entreprise. La visio reste un outil legitime. Ce qui doit etre interdit : les decisions financieres SUR la base de la visio seule, sans validation hors-canal."
+    points: 5
+  - id: "d"
+    label: "C'est uniquement le compatable qui est responsable de ne pas avoir verifie"
+    outcome: "bad"
+    feedback: "Le compatable a vu son DAF ET plusieurs collegues en visio qui validaient l'operation. Sans procedure formelle, comment lui reprocher de ne pas avoir doute ? La faute est organisationnelle, pas individuelle."
+    points: -10
+debrief: |
+  **Cas Arup Hong Kong - janvier 2024 - Cas d'ecole mondial du deepfake video**
+
+  **Faits :**
+  - **Arup** : cabinet d'ingenierie britannique, 18 000 salaries, presence mondiale (Sydney Opera House, Centre Pompidou, etc.)
+  - **Janvier 2024, filiale de Hong Kong**
+  - Un comptable recoit un email du **DAF basé au Royaume-Uni** demandant un virement urgent et confidentiel pour une operation strategique
+  - Le comptable est mefiant - c'est un classique FOVI
+  - Une **visioconference** est organisee : il y voit le DAF + plusieurs collegues seniors qu'il connait, tous lui confirmant l'urgence
+  - Le comptable execute **15 transferts** sur 1 semaine, vers 5 comptes hongkongais distincts
+  - Total : **25 millions de dollars (200 millions HKD)**
+  - La fraude est decouverte quand le comptable cherche a confirmer la reception finale aupres du vrai DAF
+
+  **Le coup de force :**
+
+  Tous les visages en visio etaient des **deepfakes**. Pas un seul vrai humain dans la reunion, sauf le comptable lui-meme. L'attaquant avait :
+
+  1. Recolte des heures de video publique des cadres seniors d'Arup (LinkedIn, conferences, interviews YouTube)
+  2. Genere des modeles deepfake video en quelques jours
+  3. Orchestre une visio multi-faux avec interactions naturelles
+
+  Le comptable n'a vu **aucun signe** de l'attaque. Il a fait confiance a son experience visuelle et auditive - 100 000 ans d'evolution n'ont pas prepare le cerveau humain a la possibilite que **plusieurs personnes connues, en mouvement et en parole, soient toutes synthétiques**.
+
+  **Les 4 lecons systemiques pour TA PME :**
+
+  **1. Le multi-personnes en visio n'est PLUS une preuve d'authenticite**
+
+  Avant 2024, on pensait : "si je vois 3 personnes en visio, l'orchestration d'un faux serait trop complexe". Faux. L'IA generative a abaisse le cout de l'orchestration.
+
+  **2. La procedure de validation hors-canal est obligatoire**
+
+  Quel que soit ce que tu vois ou entends : tout virement > seuil declenche un appel vers un numero CONNU (pas le numero affiche, pas un mail, pas un SMS). Pas de "callback" : un APPEL FRAIS lance par toi.
+
+  **3. Le "safe word" partage est un excellent complement**
+
+  Convenir avec les dirigeants d'un mot-secret qu'ils donneront en cas d'operation strategique. Si la visio ne donne pas le mot, c'est faux. Cf. module 03 de cette saison.
+
+  **4. La visio peut etre annulee, le virement non**
+
+  Si quelqu'un dans une visio te met la pression pour valider rapidement, c'est plus suspect que rassurant. Une vraie operation strategique a TOUJOURS le temps d'attendre une validation hors-canal.
+
+  **Le coût psychologique :**
+
+  Le comptable d'Arup a quitte l'entreprise apres l'incident. Il etait expert, qualifié, sympathique. Il s'est fait piéger par une technologie qu'il n'a pas reconnue. **Aucune formation ne pourra jamais former le cerveau a "voir" un deepfake bien fait - la solution est procédurale, pas perceptuelle.**
+
+  **Cas similaires documentes apres Arup :**
+
+  - **WPP UK, mai 2024** : tentative de deepfake video du CEO via WhatsApp (echouee)
+  - **Ferrari, juillet 2024** : tentative de deepfake voix du CEO (detectée par un employé qui a posé une question imprévue)
+  - **Bangkok, decembre 2024** : 3 M$ via deepfake video d'un avocat
+  - **Plusieurs cas francais 2025** : details souvent non publics (CESIN bilan annuel)
+quiz:
+  - question: "Quel est le montant de la fraude Arup Hong Kong en 2024 ?"
+    choices:
+      - id: "a"
+        label: "25 millions de dollars (200 millions HKD)"
+        correct: true
+      - id: "b"
+        label: "100 000 dollars"
+        correct: false
+      - id: "c"
+        label: "Aucune perte, l'attaque a echoue"
+        correct: false
+    explanation: "25 M$ vires en 15 operations sur 1 semaine. C'est devenu le cas d'ecole mondial du deepfake video, cite dans tous les rapports de threat intelligence post-2024."
+
+  - question: "Le comptable d'Arup a vu en visio :"
+    choices:
+      - id: "a"
+        label: "Le vrai DAF avec un voile"
+        correct: false
+      - id: "b"
+        label: "Un seul attaquant masque"
+        correct: false
+      - id: "c"
+        label: "Plusieurs cadres seniors qu'il connaissait - tous des deepfakes"
+        correct: true
+    explanation: "L'attaquant a orchestre une visio multi-faux avec plusieurs visages familiers + interactions naturelles. Le comptable n'a vu aucun signe. Le multi-personnes n'est plus une preuve d'authenticite."
+
+  - question: "Quelle procedure aurait casse l'attaque Arup ?"
+    choices:
+      - id: "a"
+        label: "Un meilleur antivirus"
+        correct: false
+      - id: "b"
+        label: "Une validation hors-canal obligatoire au-dessus d'un seuil (callback frais sur numero connu)"
+        correct: true
+      - id: "c"
+        label: "Aucune procedure, c'est inevitable"
+        correct: false
+    explanation: "Un seul appel frais lance par le comptable au numero CONNU du DAF aurait reveille l'arnaque a la 1ere transaction. Tout le reste etait amplification - la 1ere etait la cle de voute."
+---
+
+## Pour aller plus loin
+
+L'histoire Arup est devenue un cas d'ecole en 2024-2025. Sciences Po, Polytechnique, ESCP, INSEAD l'enseignent dans les cursus de risk management. Les regulateurs (CFTC, AMF) ont publie des alertes specifiques. Et pourtant, en 2026, les fraudes deepfake video continuent - preuve que la conscience du risque ne suffit pas, il faut la **procedure froide**.
+
+> "On ne se reveille jamais d'une fraude par deepfake. On se prepare AVANT, ou jamais."

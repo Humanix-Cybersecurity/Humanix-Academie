@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Tests d'intégrité — computeContentHash, shortHash.
+// Tests d'intégrité - computeContentHash, shortHash.
 // Sécurité critique : un hash incorrect = injection de payload après modération.
 // Le hash DOIT être déterministe (même input → même output, peu importe l'ordre des clés)
 // et collision-resistant via SHA-256.
@@ -53,7 +53,7 @@ describe("computeContentHash", () => {
   });
 
   it("rejette undefined (limite connue : JSON.stringify(undefined) = undefined)", () => {
-    // DETTE TECHNIQUE — TODO post-launch : faire que computeContentHash(undefined)
+    // DETTE TECHNIQUE - TODO post-launch : faire que computeContentHash(undefined)
     // hash une valeur sentinelle plutôt que de crasher. Pour l'instant, le code
     // appelant ne doit jamais passer undefined (contrat documenté).
     expect(() => computeContentHash(undefined)).toThrow();
@@ -81,7 +81,7 @@ describe("computeContentHash", () => {
     expect(h1).not.toBe(h2); // confirme qu'on ne stocke pas une réf
   });
 
-  it("payload réaliste — module marketplace complet", () => {
+  it("payload réaliste - module marketplace complet", () => {
     const payload = {
       episodes: [
         {

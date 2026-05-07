@@ -29,7 +29,7 @@ export default function MadeInFranceStamp({
   return (
     <div
       role="img"
-      aria-label="Plateforme conçue, hébergée et opérée en France — conforme RGPD et NIS2"
+      aria-label="Plateforme conçue, hébergée et opérée en France - conforme RGPD et NIS2"
       className={`inline-block transition-transform duration-300 hover:scale-105 hover:-rotate-3 ${className ?? ""}`}
       style={{ width: dim, height: dim }}
     >

@@ -24,7 +24,7 @@ export default function CookieNotice() {
     try {
       if (!localStorage.getItem(STORAGE_KEY)) setShow(true);
     } catch {
-      // localStorage indisponible (mode privé strict) — on n'affiche pas
+      // localStorage indisponible (mode privé strict) - on n'affiche pas
     }
   }, []);
 

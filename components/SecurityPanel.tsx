@@ -391,7 +391,7 @@ function MfaSection({
       {shownBackupCodes && (
         <div className="mt-4 bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-300 dark:border-amber-700 rounded-xl p-4">
           <p className="font-bold text-amber-900 dark:text-amber-200 mb-2">
-            ⚠️ Codes de secours — copiez-les MAINTENANT
+            ⚠️ Codes de secours - copiez-les MAINTENANT
           </p>
           <p className="text-xs text-amber-800 dark:text-amber-300 mb-3">
             Ces codes ne seront plus jamais affichés. Stockez-les dans un
@@ -511,7 +511,7 @@ function MfaSection({
 }
 
 // ===========================================================================
-// TotpEnrollmentBox — QR code + URI + secret en saisie manuelle (fallback)
+// TotpEnrollmentBox - QR code + URI + secret en saisie manuelle (fallback)
 // ===========================================================================
 function TotpEnrollmentBox({
   secret,
@@ -549,7 +549,7 @@ function TotpEnrollmentBox({
         ou FreeOTP et choisissez l&apos;une des 3 options ci-dessous.
       </p>
 
-      {/* Option A — QR code (recommandé) */}
+      {/* Option A - QR code (recommandé) */}
       <div className="bg-white dark:bg-slate-900 border-2 border-accent-200 dark:border-accent-900/40 rounded-lg p-3 flex items-start gap-3">
         <div className="shrink-0">
           {qrDataUrl ? (
@@ -582,7 +582,7 @@ function TotpEnrollmentBox({
         </div>
       </div>
 
-      {/* Option B — Saisie manuelle (secret) */}
+      {/* Option B - Saisie manuelle (secret) */}
       <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded p-2 text-xs">
         <p className="font-bold text-gray-700 dark:text-gray-200 mb-1">
           Option B · Saisie manuelle
@@ -618,14 +618,14 @@ function TotpEnrollmentBox({
         </button>
       </div>
 
-      {/* Option C — URI otpauth (avancé, pour 1Password / passwordstate) */}
+      {/* Option C - URI otpauth (avancé, pour 1Password / passwordstate) */}
       <details className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded p-2 text-xs">
         <summary className="cursor-pointer font-bold text-gray-700 dark:text-gray-200">
           Option C · URI otpauth (avancé)
         </summary>
         <p className="text-gray-500 mt-2">
           Pour les apps qui acceptent un import par URI (1Password,
-          Bitwarden) — collez le lien ci-dessous.
+          Bitwarden) - collez le lien ci-dessous.
         </p>
         <p className="font-mono break-all select-all mt-1 bg-gray-50 dark:bg-slate-800 p-1 rounded">
           {otpauthUri}

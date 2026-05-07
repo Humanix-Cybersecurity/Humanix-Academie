@@ -26,7 +26,7 @@ Sur **549 packages** scannés (production + devDependencies + transitif) :
 | BlueOak-1.0.0 | 1      | ✅ Copyfree, équivalente MIT                                                                                                       |
 | 0BSD          | 1      | ✅ Public domain équivalent                                                                                                        |
 | MIT AND ISC   | 1      | ✅ Double licence permissive                                                                                                       |
-| UNLICENSED    | 1      | ℹ️ C'est notre propre projet (`humanix-academie@0.3.0`) — corrigé en ajoutant `"license": "AGPL-3.0-or-later"` dans `package.json` |
+| UNLICENSED    | 1      | ℹ️ C'est notre propre projet (`humanix-academie@0.3.0`) - corrigé en ajoutant `"license": "AGPL-3.0-or-later"` dans `package.json` |
 
 **Aucune dépendance** sous licence GPLv2/v3 stricte, AGPL, BUSL, SSPL, ou
 licence non-OSI qui poserait un problème de compatibilité.
@@ -35,17 +35,17 @@ licence non-OSI qui poserait un problème de compatibilité.
 
 ## Détail des dépendances notables
 
-### MPL-2.0 (2 packages — compat OK)
+### MPL-2.0 (2 packages - compat OK)
 
-- **`axe-core@4.11.3`** — moteur d'audit accessibilité (a11y testing)
-- **`next-mdx-remote@5.0.0`** — rendu MDX (modules pédagogiques)
+- **`axe-core@4.11.3`** - moteur d'audit accessibilité (a11y testing)
+- **`next-mdx-remote@5.0.0`** - rendu MDX (modules pédagogiques)
 
 La MPL-2.0 (Mozilla Public License) est explicitement compatible avec
 l'AGPLv3 selon la [FSF License List](https://www.gnu.org/licenses/license-list.html#MPL-2.0).
 Elle est "weak copyleft" : ne contamine que les fichiers MPL eux-mêmes,
 pas le projet entier.
 
-### Apache-2.0 (29 packages — compat OK)
+### Apache-2.0 (29 packages - compat OK)
 
 L'Apache-2.0 inclut un **patent grant** explicite, ce qui est positif pour
 nos contributeurs. Compatibilité AGPLv3 confirmée par la FSF.
@@ -100,7 +100,7 @@ Pour toute nouvelle dépendance ajoutée au projet (PR ou commit direct) :
 - **Commons Clause** : restriction commerciale non-OSS
 - **Elastic License v2** : pas open source au sens OSI
 - **Confluent Community License** : pas open source au sens OSI
-- **JSON License** : "shall be used for Good, not Evil" — ambigüe
+- **JSON License** : "shall be used for Good, not Evil" - ambigüe
 - **Tout proprietaire** : par définition incompatible
 
 ### En cas de doute
@@ -125,7 +125,7 @@ production + devDependencies + transitive. Il sera refait :
 
 ---
 
-## Annexe — fichier NOTICE (à venir)
+## Annexe - fichier NOTICE (à venir)
 
 Pour respecter l'esprit de la clause Apache-2.0 §4(d), un fichier `NOTICE`
 sera généré à chaque release majeure listant tous les composants tiers et
