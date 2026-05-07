@@ -35,7 +35,8 @@ souverain, intégrée nativement à CISO Assistant.
 - **Console dirigeant** : score de risque humain, rapport de conformité PDF, actions recommandées
 - **Espace DPO dédié** : dashboard RGPD privé + générateur AIPD + page publique
 - **MCP Server** premier mover SAT/HRM (Claude Desktop / Mistral / GPT)
-- **Vishing souverain** Mistral (Paris) + Piper TTS local
+- **Vishing souverain** Mistral (Paris) + TTS Voxtral (Marie 6 émotions FR) ou Piper local au choix
+- **Narration audio des modules** : cache MP3 pré-rendu via `npm run tts:build`, lecture instantanée côté apprenant
 - **Connecteur natif CISO Assistant** : preuves de conformité exportées automatiquement
 - **Format OSCAL v1.1.2** (NIST) + CEF (Sentinel, Splunk, Sekoia, QRadar)
 - **API REST** + webhooks signés HMAC-SHA256
@@ -115,6 +116,7 @@ Premier compte admin : voir le log `docker compose logs app | grep "Initial admi
 - [docs/configuration.md](./docs/configuration.md) — toutes les variables d'environnement
 - [docs/upgrade.md](./docs/upgrade.md) — procédure de mise à jour entre versions
 - [docs/faq.md](./docs/faq.md) — questions fréquentes self-host
+- [docs/TTS_VOXTRAL.md](./docs/TTS_VOXTRAL.md) — narration audio des modules (Voxtral SaaS ou Piper self-hosted)
 
 ---
 
