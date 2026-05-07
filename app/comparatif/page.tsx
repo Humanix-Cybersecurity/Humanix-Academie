@@ -617,7 +617,7 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
   "Conformité & souveraineté": {
     emoji: "🛡",
     intro:
-      "NIS2, RGPD, DORA, Cloud Act - la conformite n'est pas un argument marketing, c'est un filet de securite pour le dirigeant. On joue cartes sur table sur ou s'arrete notre maturite et ou on excelle.",
+      "NIS2, RGPD, DORA, Cloud Act - la conformité n'est pas un argument marketing, c'est un filet de sécurité pour le dirigeant. On joue cartes sur table sur où s'arrête notre maturité et où on excelle.",
     palette: {
       bg: "from-purple-50 via-white to-pink-50 dark:from-slate-900 dark:via-slate-900 dark:to-purple-950/40",
       ring: "border-purple-200 dark:border-purple-900/40",
