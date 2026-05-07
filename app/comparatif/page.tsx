@@ -583,7 +583,7 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
   Tarification: {
     emoji: "💶",
     intro:
-      "Le portefeuille avant tout. La cyber doit etre accessible, pas reservee aux ETI qui peuvent payer 5 chiffres par an. Voici comment on s'aligne - et ou nos prix racontent une autre histoire.",
+      "Le portefeuille avant tout. La cyber doit être accessible, pas réservée aux ETI qui peuvent payer 5 chiffres par an. Voici comment on s'aligne - et où nos prix racontent une autre histoire.",
     palette: {
       bg: "from-cyan-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-cyan-950/40",
       ring: "border-cyan-200 dark:border-cyan-900/40",
@@ -594,7 +594,7 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
   "Catalogue & contenu": {
     emoji: "📚",
     intro:
-      "Le contenu, c'est le coeur du metier. Beaucoup de modules ne fait pas tout : un module bien ecrit, en francais, qui s'adresse vraiment a l'apprenant, vaut dix modules traduits a la chaine.",
+      "Le contenu, c'est le cœur du métier. Beaucoup de modules ne fait pas tout : un module bien écrit, en français, qui s'adresse vraiment à l'apprenant, vaut dix modules traduits à la chaîne.",
     palette: {
       bg: "from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-teal-950/40",
       ring: "border-emerald-200 dark:border-emerald-900/40",
@@ -606,7 +606,7 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
   "Simulation phishing & ingénierie sociale": {
     emoji: "🎣",
     intro:
-      "Le terrain de jeu prefere des attaquants. On simule pour entrainer, jamais pour piéger. La nuance se voit dans les details : le ton du debrief, la qualite des templates, la souverainete de l'IA derriere.",
+      "Le terrain de jeu préféré des attaquants. On simule pour entraîner, jamais pour piéger. La nuance se voit dans les détails : le ton du débrief, la qualité des templates, la souveraineté de l'IA derrière.",
     palette: {
       bg: "from-amber-50 via-white to-yellow-50 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/40",
       ring: "border-amber-200 dark:border-amber-900/40",
@@ -617,7 +617,7 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
   "Conformité & souveraineté": {
     emoji: "🛡",
     intro:
-      "NIS2, RGPD, DORA, Cloud Act - la conformite n'est pas un argument marketing, c'est un filet de securite pour le dirigeant. On joue cartes sur table sur ou s'arrete notre maturite et ou on excelle.",
+      "NIS2, RGPD, DORA, Cloud Act - la conformité n'est pas un argument marketing, c'est un filet de sécurité pour le dirigeant. On joue cartes sur table sur où s'arrête notre maturité et où on excelle.",
     palette: {
       bg: "from-purple-50 via-white to-pink-50 dark:from-slate-900 dark:via-slate-900 dark:to-purple-950/40",
       ring: "border-purple-200 dark:border-purple-900/40",
@@ -629,7 +629,7 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
   "Pilotage dirigeant": {
     emoji: "📊",
     intro:
-      "Un dirigeant n'a pas le temps de devenir analyste cyber. Il a besoin d'une photo claire de la maturite humaine de son organisation, et d'arguments concrets pour son COMEX. C'est notre obsession.",
+      "Un dirigeant n'a pas le temps de devenir analyste cyber. Il a besoin d'une photo claire de la maturité humaine de son organisation, et d'arguments concrets pour son COMEX. C'est notre obsession.",
     palette: {
       bg: "from-rose-50 via-white to-amber-50 dark:from-slate-900 dark:via-slate-900 dark:to-rose-950/40",
       ring: "border-rose-200 dark:border-rose-900/40",
