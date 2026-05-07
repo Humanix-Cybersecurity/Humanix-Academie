@@ -112,6 +112,7 @@ Premier compte admin : voir le log `docker compose logs app | grep "Initial admi
 ### Documentation détaillée
 
 - [docs/installation.md](./docs/installation.md) — installation pas-à-pas (Docker, bare-metal, Kubernetes)
+- [docs/deploiement-ovh.md](./docs/deploiement-ovh.md) — runbook **zero-to-prod** sur serveur dédié OVH (45 min, testé sur Start-9-M)
 - [docs/configuration.md](./docs/configuration.md) — toutes les variables d'environnement
 - [docs/upgrade.md](./docs/upgrade.md) — procédure de mise à jour entre versions
 - [docs/faq.md](./docs/faq.md) — questions fréquentes self-host

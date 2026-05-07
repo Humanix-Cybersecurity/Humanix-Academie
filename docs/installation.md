@@ -88,6 +88,22 @@ Le script ne supporte pas PowerShell / cmd directement.
 
 ---
 
+## Déploiement prod sur serveur dédié OVH (45 minutes)
+
+Si ton objectif est la **mise en prod** sur un serveur dédié français (recommandé
+pour souveraineté + perf), on a un runbook step-by-step dédié :
+
+📘 **[docs/deploiement-ovh.md](./deploiement-ovh.md)** — testé sur Start-9-M
+(Ryzen 5 PRO 3600, 32 GB, 2×1 TB NVMe, 40 €/mois HT sans engagement).
+
+Couvre : provisioning OVH, hardening initial via `scripts/server-init.sh` (UFW
++ fail2ban + SSH durci + Docker + swap + unattended-upgrades), DNS + cert
+Let's Encrypt, déploiement Humanix, premier compte SUPERADMIN avec WebAuthn,
+backups Postgres chiffrés vers Scaleway Object Storage, monitoring uptime,
+checklist post-launch.
+
+---
+
 ## Mode 1 - Docker Compose (recommandé)
 
 C'est le mode le plus simple et le plus reproductible.
