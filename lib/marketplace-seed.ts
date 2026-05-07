@@ -884,7 +884,7 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
                 },
               ],
               explanation:
-                "ZKP empêche le fournisseur de lire tes données. Mais si TU perds ton mot de passe maître, personne ne peut t'aider — c'est le compromis assumé.",
+                "ZKP empêche le fournisseur de lire tes données. Mais si TU perds ton mot de passe maître, personne ne peut t'aider - c'est le compromis assumé.",
             },
           ],
           xpReward: 70,
@@ -1007,7 +1007,7 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
           title: "Tout chiffrer ou rien chiffrer",
           durationMinutes: 5,
           scenario:
-            "Ton patron te dit : 'Mets un mot de passe sur tous nos documents, comme ça on est sûr.' Tu te retrouves à protéger des fiches recettes de la cantine ET le contrat de cession de la société avec le même process — c'est ingérable.",
+            "Ton patron te dit : 'Mets un mot de passe sur tous nos documents, comme ça on est sûr.' Tu te retrouves à protéger des fiches recettes de la cantine ET le contrat de cession de la société avec le même process - c'est ingérable.",
           choices: [
             {
               id: "a",
@@ -1420,7 +1420,7 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
             },
           ],
           debrief:
-            "La mention 'Diffusion Restreinte' (DR) est une classification française non classifiée de défense, mais juridiquement opposable dans un contrat. En PME, on la rencontre dans : 1) les marchés publics sensibles ; 2) les contrats avec des grands groupes industriels ; 3) les opérateurs d'importance vitale (OIV) et essentielle (OSE). Règles à appliquer : 1) ne jamais transmettre à un tiers sans engagement de confidentialité signé ; 2) canal de transmission contrôlé (jamais de mail simple en clair) ; 3) traçabilité des accès et copies ; 4) destruction sécurisée en fin d'usage (broyeur, suppression chiffrée). Bonus : la mention est volontairement visible — son rôle est aussi pédagogique pour le destinataire.",
+            "La mention 'Diffusion Restreinte' (DR) est une classification française non classifiée de défense, mais juridiquement opposable dans un contrat. En PME, on la rencontre dans : 1) les marchés publics sensibles ; 2) les contrats avec des grands groupes industriels ; 3) les opérateurs d'importance vitale (OIV) et essentielle (OSE). Règles à appliquer : 1) ne jamais transmettre à un tiers sans engagement de confidentialité signé ; 2) canal de transmission contrôlé (jamais de mail simple en clair) ; 3) traçabilité des accès et copies ; 4) destruction sécurisée en fin d'usage (broyeur, suppression chiffrée). Bonus : la mention est volontairement visible - son rôle est aussi pédagogique pour le destinataire.",
           quiz: [
             {
               question: "La mention 'Diffusion Restreinte' couvre :",
@@ -1461,7 +1461,7 @@ export const MARKETPLACE_MODULES: MarketplaceSeed[] = [
   },
 
   // ===========================================================================
-  // EXTENSION CATALOGUE (V0.4) — 15 modules supplémentaires pour porter le
+  // EXTENSION CATALOGUE (V0.4) - 15 modules supplémentaires pour porter le
   // total marketplace à 30. Combiné aux 150 épisodes officiels (cf. catalog-
   // saisons.ts), on atteint 180 modules d'apprentissage visibles côté
   // catalogue. Payload condensé volontairement (1 épisode, 1 quiz par module)

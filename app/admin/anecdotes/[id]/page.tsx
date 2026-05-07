@@ -29,7 +29,7 @@ export default async function EditAnecdotePage({
   if (!a) notFound();
 
   const description = a.publishedAt
-    ? `Envoyée le ${a.publishedAt.toLocaleDateString("fr-FR")} — les modifications n'affecteront pas l'email déjà envoyé.`
+    ? `Envoyée le ${a.publishedAt.toLocaleDateString("fr-FR")} - les modifications n'affecteront pas l'email déjà envoyé.`
     : "Brouillon non envoyé.";
 
   return (

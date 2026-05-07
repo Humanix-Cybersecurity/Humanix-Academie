@@ -1,0 +1,123 @@
+---
+title: "Cas reel : la fuite de code chez Samsung"
+durationMinutes: 7
+persona: "tous"
+objective: "Tirer les lecons concretes de la fuite ChatGPT chez Samsung en 2023"
+xpReward: 60
+scenario: |
+  Tu es CTO d'une PME francaise dans le secteur tech. Un de tes developpeurs te dit : "J'utilise ChatGPT pour debugger plus vite, c'est genial. Je colle des bouts de notre code et il trouve les erreurs en 10 secondes."
+
+  Tu te rappelles avoir lu un article sur Samsung en 2023 - fuite de code source via ChatGPT, interdiction interne. Que dis-tu a ton developpeur sans tomber dans l'interdiction sterile ?
+choices:
+  - id: "a"
+    label: "Je lui interdis ChatGPT - c'est trop risque"
+    outcome: "bad"
+    feedback: "Interdiction frontale = contournement immediat. Les devs trouveront un moyen, sur leur PC perso, en mode invisible. Tu perds le controle ET la productivite."
+    points: -10
+  - id: "b"
+    label: "Je lui propose une alternative : Mistral on-premise pour le code, ou GitHub Copilot Business (politique no-training contractuelle)"
+    outcome: "good"
+    feedback: "Excellent. Tu reponds au besoin reel (productivite dev) avec une option qui garantit la non-fuite. C'est exactement ce que Samsung a fait apres l'incident : politique no-training + alternative sous controle."
+    points: 30
+  - id: "c"
+    label: "Je le laisse continuer, on n'a pas le temps de gerer ca"
+    outcome: "bad"
+    feedback: "Le risque est reel, documente, statistique. Une fuite de propriete intellectuelle peut couler une PME tech (cas Brave/Tor 2024). 'Pas le temps' est une dette technique qui se transformera en dette juridique."
+    points: -15
+  - id: "d"
+    label: "Je le sensibilise au probleme + on construit une charte IA d'equipe (5 lignes max)"
+    outcome: "good"
+    feedback: "Bonne approche pedagogique. Charte courte = appliquee. Plus la charte est longue, moins elle est lue et appliquee. 5 lignes a coller au-dessus du clavier."
+    points: 25
+debrief: |
+  **Cas Samsung 2023 - Le premier grand incident IA generative documente**
+
+  **Faits :**
+  - **Mars-avril 2023** : 3 incidents de fuite de donnees via ChatGPT chez Samsung Semiconductor (filiale specialisee composants)
+  - **Incident 1** : un ingenieur colle du code source confidentiel pour le debugger. Le code se retrouve dans la base d'entrainement OpenAI.
+  - **Incident 2** : un ingenieur colle des notes de reunion strategique pour les resumer. Memo confidentiel chez OpenAI.
+  - **Incident 3** : un ingenieur fait analyser un test pattern de circuit imprime. Donnees techniques avancees fuites.
+  - **Reaction Samsung (mai 2023)** : interdiction immediate de ChatGPT et de tous les outils d'IA generative grand public en interne.
+  - **Reaction long-terme** : developpement d'une IA interne (Samsung Gauss) sur infrastructure proprietaire.
+
+  **Pourquoi ce cas est emblematique ?**
+
+  1. **Volume** : 3 incidents en quelques semaines dans un seul service - pas un cas isole, un schema.
+  2. **Profil** : ingenieurs seniors, qualifies, conscients (pour la plupart) des enjeux de propriete intellectuelle. **L'IA defait la vigilance** par sa simplicite d'usage.
+  3. **Reaction** : interdiction immediate, mais aussi investissement dans une IA interne. Samsung a compris que **l'IA est une infrastructure strategique** - pas un gadget.
+  4. **Effet boule de neige** : Apple, JPMorgan, Citigroup, Goldman Sachs, Verizon ont suivi avec des interdictions ou restrictions internes en quelques semaines.
+
+  **Les 4 lecons systemiques pour une PME francaise :**
+
+  **Lecon 1 - La curiosite est le vecteur**
+  Les developpeurs Samsung n'etaient pas des espions, ils etaient curieux. Ils voulaient gagner du temps. **Cette intention positive est exactement ce que les attaquants exploitent.** Tu ne peux pas reprocher a quelqu'un de vouloir gagner du temps - tu dois lui donner une **alternative qui satisfait l'intention sans le risque**.
+
+  **Lecon 2 - L'interdiction sterile cree le shadow IT**
+  Si tu interdit X sans proposer Y, X devient souterrain. Tes collaborateurs feront du ChatGPT depuis leur PC perso, sur le wifi de la cafeteria. Tu perds **toute** visibilite. La regle : **autorise un outil sous controle, encadre-le, et detecte les usages non-autorises**.
+
+  **Lecon 3 - La charte courte est la cle**
+  La charte IA Samsung post-incident tient sur 5 lignes :
+  1. Aucun code source proprietaire
+  2. Aucune donnee client ou commerciale precise
+  3. Aucun mot de passe, token, ou information d'authentification
+  4. Aucune donnee personnelle nominale
+  5. En cas de doute, demande au manager OU utilise l'outil interne
+
+  Charte courte = appliquee. Charte longue = ignoree.
+
+  **Lecon 4 - L'investissement dans une alternative souveraine est rentable**
+  Samsung a investi dans une IA interne. Pour une PME francaise, l'equivalent est :
+  - **Mistral Medium API** (Paris) avec garantie no-training : ~10 € par utilisateur par mois
+  - **Mistral self-hosted** (sur ton serveur, ton GPU) : ~3 000 € one-shot + electricite
+  - **GitHub Copilot Business** pour les developpeurs (politique contractuelle no-training) : 19 USD/dev/mois
+
+  Le ROI est immediat : pour 10-50 € par employe par mois, tu garde la productivite IA tout en eliminant le risque de fuite.
+
+  **Le piege a eviter :**
+  Beaucoup de PME ont la reaction "Samsung etait grosse, on est petite, ca ne nous touchera pas". Faux. **C'est l'inverse :** une grosse boite peut absorber une fuite, une PME risque la mort. Le besoin de protection est inversement proportionnel a la taille.
+quiz:
+  - question: "Combien de temps a separe les 3 incidents de fuite chez Samsung ?"
+    choices:
+      - id: "a"
+        label: "Quelques semaines (mars-avril 2023)"
+        correct: true
+      - id: "b"
+        label: "Plusieurs annees"
+        correct: false
+      - id: "c"
+        label: "Un seul incident isole"
+        correct: false
+    explanation: "3 incidents en quelques semaines = ce n'est pas un cas isole, c'est un schema. La curiosite des collaborateurs cree des fuites repetees rapidement quand l'outil est libre d'usage."
+
+  - question: "La meilleure reponse au shadow IT autour de l'IA est :"
+    choices:
+      - id: "a"
+        label: "Interdiction frontale sans alternative"
+        correct: false
+      - id: "b"
+        label: "Autoriser un outil sous controle (Mistral, Copilot Business) + charte courte + detection des usages non-autorises"
+        correct: true
+      - id: "c"
+        label: "Laisser faire, c'est la nouvelle normalite"
+        correct: false
+    explanation: "Interdiction sterile cree le shadow. Laisser-faire cree la fuite. La voie pragmatique : alternative sous controle + charte appliquee + detection."
+
+  - question: "Une charte IA efficace tient idealement en :"
+    choices:
+      - id: "a"
+        label: "30 pages avec annexes juridiques"
+        correct: false
+      - id: "b"
+        label: "5 lignes maximum, collees au-dessus du clavier"
+        correct: true
+      - id: "c"
+        label: "Aucun document, c'est intuitif"
+        correct: false
+    explanation: "Charte courte = lue, comprise, appliquee. 5 lignes maximum, formulees positivement (ce qu'on peut faire) plutot que negativement (interdictions)."
+---
+
+## Pour aller plus loin
+
+Samsung est devenu un cas d'ecole non pas parce que la faute etait grave, mais parce que la reaction a ete exemplaire : interdiction temporaire + investissement dans une alternative + charte appliquee. Trois mois apres l'incident, Samsung utilisait l'IA plus que jamais - mais sous controle.
+
+> "L'IA n'est pas le probleme. L'IA sans politique est le probleme."

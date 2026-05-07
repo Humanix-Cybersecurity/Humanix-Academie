@@ -39,7 +39,7 @@ ${personal}
 <p style="font-size:13px;color:#555">C'est <strong>gratuit</strong>, <strong>sans inscription</strong>, et il n'y a <strong>aucune publicité</strong>. Aucune donnée personnelle n'est collectée.</p>
 </td></tr>
 <tr><td style="padding:24px;font-size:12px;color:#888;border-top:1px solid #EEE">
-Vous recevez ce mail car ${escapeHtml(ctx.sponsorUserName || "un proche")} vous a invité personnellement. Si vous ne souhaitez pas y donner suite, ignorez simplement ce message — l'invitation expirera automatiquement.
+Vous recevez ce mail car ${escapeHtml(ctx.sponsorUserName || "un proche")} vous a invité personnellement. Si vous ne souhaitez pas y donner suite, ignorez simplement ce message - l'invitation expirera automatiquement.
 <br><br>
 Humanix-Cybersecurity · 30340 Salindres · <a href="mailto:rgpd@humanix-cybersecurity.fr" style="color:#0B3D91">rgpd@humanix-cybersecurity.fr</a>
 </td></tr>
@@ -69,14 +69,14 @@ export function renderFamilyInviteText(ctx: FamilyInviteEmailContext): string {
     "",
     "Vous recevez ce mail uniquement parce qu'un proche vous a invité personnellement. Pour ignorer, ne faites rien.",
     "",
-    "Humanix-Cybersecurity — rgpd@humanix-cybersecurity.fr",
+    "Humanix-Cybersecurity - rgpd@humanix-cybersecurity.fr",
   ].join("\n");
 }
 
 export function buildFamilyInviteSubject(
   ctx: FamilyInviteEmailContext,
 ): string {
-  return `${ctx.sponsorUserName || "Un proche"} vous offre l'accès à Cyber Famille — Humanix`;
+  return `${ctx.sponsorUserName || "Un proche"} vous offre l'accès à Cyber Famille - Humanix`;
 }
 
 function escapeHtml(s: string): string {

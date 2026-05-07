@@ -1,0 +1,116 @@
+---
+title: "Ce que vous tapez dans ChatGPT n'est pas prive"
+durationMinutes: 6
+persona: "tous"
+objective: "Comprendre comment les requetes IA sont stockees, utilisees, et potentiellement reutilisees"
+xpReward: 40
+scenario: |
+  Tu es responsable commerciale dans une PME francaise. Pour gagner du temps, tu utilises ChatGPT (compte personnel gratuit) pour t'aider a rediger des emails complexes. Aujourd'hui, tu prepares une proposition commerciale pour un grand client : tu copies-colles le brief interne (incluant les marges, la strategie tarifaire, les noms des contacts cles) et demandes a ChatGPT de "faire un email professionnel".
+
+  Ta collegue te demande : "Tu as conscience que tu donnes nos infos commerciales a OpenAI ?". Que reponds-tu ?
+choices:
+  - id: "a"
+    label: "Aucun probleme - c'est anonyme et ils ne lisent pas mes prompts"
+    outcome: "bad"
+    feedback: "Faux. Sur le plan gratuit ChatGPT (et de nombreux concurrents), TES prompts sont utilises par defaut pour entrainer leurs modeles. Tes infos commerciales peuvent ressortir dans les reponses d'autres utilisateurs."
+    points: -15
+  - id: "b"
+    label: "Tu as raison. Je dois utiliser une version pro/entreprise OU une IA souveraine, et ne JAMAIS y mettre de donnees confidentielles"
+    outcome: "good"
+    feedback: "Excellent. Les versions Enterprise / API garantissent contractuellement la non-utilisation pour entrainement. Mistral en France ou Anthropic Enterprise offrent ces garanties."
+    points: 30
+  - id: "c"
+    label: "C'est uniquement un risque pour les grandes entreprises, ma PME est trop petite"
+    outcome: "bad"
+    feedback: "Faux. Le risque est sur les DONNEES, pas sur la taille de l'entreprise. Une fuite de strategie commerciale d'une PME peut etre fatale pour une affaire de 100 k€."
+    points: -10
+  - id: "d"
+    label: "Je supprime mes prompts apres usage, ils disparaissent"
+    outcome: "bad"
+    feedback: "Aïe. La suppression d'un prompt cote utilisateur n'efface pas son utilisation pour entrainement. Le donnees sont peut-etre deja integrees dans le modele, et ne s'en sortent jamais."
+    points: -10
+debrief: |
+  L'**IA generative** transforme la facon dont on travaille - mais elle introduit aussi une nouvelle classe de fuites de donnees : la **fuite par prompt**.
+
+  **Comment ca marche concretement ?**
+
+  Quand tu tapes un prompt dans ChatGPT, Copilot, Gemini, Claude (versions grand public), ton texte :
+  1. Est envoye sur les serveurs de l'editeur (souvent aux Etats-Unis)
+  2. Est traite par leurs systemes (logs, monitoring, securite)
+  3. Peut etre **utilise pour entrainer le prochain modele** (selon la version)
+  4. Reste stocke pendant 30 jours minimum (souvent plus pour audit/securite)
+
+  **Les 4 niveaux de "privacy" :**
+
+  | Niveau | Service | Privacy par defaut |
+  |---|---|---|
+  | 1 (le pire) | ChatGPT gratuit, Gemini gratuit | Prompts utilises pour entrainer le modele |
+  | 2 | ChatGPT Plus, Gemini Advanced | Prompts non utilises pour entrainement (par defaut), mais conserves |
+  | 3 | ChatGPT Team / Enterprise, API | Garantie contractuelle de non-utilisation, conservation limitee |
+  | 4 (le meilleur) | IA self-hosted (Mistral on-premise, llama.cpp local) | 100 % chez toi, aucune donnee ne sort |
+
+  **Cas reels documentes :**
+
+  - **Samsung 2023** : 3 incidents distincts de fuite de code source via ChatGPT en quelques semaines. Samsung a interdit l'usage.
+  - **Apple 2023** : interdiction interne preventive d'usage de ChatGPT.
+  - **JPMorgan, Citigroup, Goldman Sachs** : interdictions sectorielles dans le finance US.
+
+  **La regle d'or :**
+
+  Avant de taper un prompt, demande-toi : **"Si cette information apparaissait dans le journal demain, est-ce que ca poserait probleme ?"**.
+
+  Si oui - utilise une IA souveraine (Mistral, Voxia, llama.cpp local), une version Enterprise avec garantie contractuelle, ou ne mets PAS la donnee sensible (anonymise / paraphrase / decompose).
+
+  **Le test du nom :** ne mets jamais dans un prompt :
+  - Noms de clients ou de prospects
+  - Montants commerciaux precis
+  - Mots de passe, tokens, cles d'API
+  - Code source proprietaire
+  - Donnees personnelles (RGPD)
+  - Strategie / projet confidentiel
+quiz:
+  - question: "Sur le plan gratuit de ChatGPT, mes prompts sont :"
+    choices:
+      - id: "a"
+        label: "Anonymes et non-utilises"
+        correct: false
+      - id: "b"
+        label: "Utilises par defaut pour entrainer les futurs modeles"
+        correct: true
+      - id: "c"
+        label: "Effaces immediatement"
+        correct: false
+    explanation: "Plan gratuit ChatGPT, Gemini, et la plupart des IA grand public utilisent par defaut tes prompts pour l'entrainement. Lis les CGU avant de t'inscrire."
+
+  - question: "Quelle IA garantit que tes donnees ne quittent pas ta machine ?"
+    choices:
+      - id: "a"
+        label: "ChatGPT Plus"
+        correct: false
+      - id: "b"
+        label: "Une IA self-hosted (Mistral on-premise, llama.cpp local)"
+        correct: true
+      - id: "c"
+        label: "Toutes les IA cloud"
+        correct: false
+    explanation: "Seul le self-hosting garantit 100 % que les donnees ne sortent pas. Les versions Enterprise garantissent contractuellement, mais les donnees transitent quand meme par leurs serveurs."
+
+  - question: "La regle d'or avant de taper un prompt sensible est :"
+    choices:
+      - id: "a"
+        label: "Si cette info apparaissait dans le journal demain, est-ce que ca poserait probleme ?"
+        correct: true
+      - id: "b"
+        label: "Si je l'ai deja fait avant sans probleme, c'est OK"
+        correct: false
+      - id: "c"
+        label: "Si l'IA me jure qu'elle ne dira rien"
+        correct: false
+    explanation: "Le test du journal force a se poser la bonne question : suis-je pret a ce que cette info devienne publique ? Si non, ne la tape pas dans une IA cloud."
+---
+
+## Pour aller plus loin
+
+L'IA generative est l'outil le plus utile depuis l'arrivee d'internet en entreprise - mais elle est aussi le plus grand vecteur de fuite involontaire. Une charte IA d'1 page (cf. module 04 de cette saison) suffit a eviter 80 % des incidents.
+
+> "Ce que tu tapes, l'IA s'en souvient. Ce dont l'IA se souvient, n'est plus a toi."

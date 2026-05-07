@@ -5,22 +5,22 @@ persona: "tous"
 objective: "Utiliser le VPN sans le subir et comprendre quand il protege vraiment"
 xpReward: 50
 scenario: |
-  Tu es en deplacement professionnel a Madrid, hotel 4 etoiles. Tu ouvres ton laptop, le Wi-Fi de l'hotel demande ton numero de chambre. Tu te connectes pour repondre a quelques mails. Le VPN entreprise demande aussi ton identifiant — tu as la flemme, c'est un peu lent. Que fais-tu ?
+  Tu es en deplacement professionnel a Madrid, hotel 4 etoiles. Tu ouvres ton laptop, le Wi-Fi de l'hotel demande ton numero de chambre. Tu te connectes pour repondre a quelques mails. Le VPN entreprise demande aussi ton identifiant - tu as la flemme, c'est un peu lent. Que fais-tu ?
 choices:
   - id: "a"
-    label: "Je n'active pas le VPN — c'est juste pour des mails, le Wi-Fi de l'hotel suffit"
+    label: "Je n'active pas le VPN - c'est juste pour des mails, le Wi-Fi de l'hotel suffit"
     outcome: "bad"
     feedback: "Aïe. Sur un Wi-Fi public, tes identifiants emails peuvent etre captures par n'importe qui sur le reseau. Le VPN existe precisement pour ce cas."
     points: -10
   - id: "b"
     label: "J'active toujours le VPN avant tout usage professionnel sur un reseau non-controle"
     outcome: "good"
-    feedback: "Excellent. Le VPN chiffre ton trafic de bout en bout — peu importe que le Wi-Fi soit ouvert, hostile, ou compromis."
+    feedback: "Excellent. Le VPN chiffre ton trafic de bout en bout - peu importe que le Wi-Fi soit ouvert, hostile, ou compromis."
     points: 30
   - id: "c"
     label: "J'utilise un VPN gratuit telecharge sur internet, c'est plus rapide"
     outcome: "bad"
-    feedback: "Erreur grave. Un VPN gratuit non-audite peut journaliser ou revendre ton trafic. Un VPN entreprise est administre par ton IT — pas un service public."
+    feedback: "Erreur grave. Un VPN gratuit non-audite peut journaliser ou revendre ton trafic. Un VPN entreprise est administre par ton IT - pas un service public."
     points: -20
   - id: "d"
     label: "J'utilise mon partage de connexion 4G/5G a la place"
@@ -28,7 +28,7 @@ choices:
     feedback: "Excellente alternative. La 4G/5G operateur fournit deja un canal isole, sans besoin de VPN par-dessus. Surtout pour des sessions longues."
     points: 25
 debrief: |
-  Le **VPN** (Virtual Private Network) cree un tunnel chiffre entre ton laptop et le reseau de ton entreprise. Tout ton trafic passe par ce tunnel — invisible pour qui surveille le Wi-Fi public.
+  Le **VPN** (Virtual Private Network) cree un tunnel chiffre entre ton laptop et le reseau de ton entreprise. Tout ton trafic passe par ce tunnel - invisible pour qui surveille le Wi-Fi public.
 
   **Quand activer le VPN :**
 
@@ -98,6 +98,6 @@ quiz:
 
 ## Pour aller plus loin
 
-Le VPN d'entreprise n'est pas une corvee — c'est ton pass d'acces silencieux aux ressources de l'entreprise depuis n'importe ou. Une fois automatise au demarrage, il se fait oublier. Et le jour ou un attaquant ecoutait sur le Wi-Fi de la gare, c'est lui qui s'est fait oublier.
+Le VPN d'entreprise n'est pas une corvee - c'est ton pass d'acces silencieux aux ressources de l'entreprise depuis n'importe ou. Une fois automatise au demarrage, il se fait oublier. Et le jour ou un attaquant ecoutait sur le Wi-Fi de la gare, c'est lui qui s'est fait oublier.
 
 > "Le VPN, c'est l'invisibilite numerique : on ne le voit que quand il n'est pas la."

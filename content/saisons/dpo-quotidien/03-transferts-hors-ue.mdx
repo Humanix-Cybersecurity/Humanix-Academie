@@ -1,0 +1,153 @@
+---
+title: "Transferts de donnees hors UE - TIA, BCR, DPF"
+durationMinutes: 8
+persona: "dpo"
+objective: "Maitriser les outils legaux des transferts internationaux dans un contexte post-Schrems"
+xpReward: 70
+scenario: |
+  Tu es DPO d'une PME francaise. Le service marketing veut souscrire a un outil d'analyse predictive (HubSpot AI ou equivalent) heberge aux Etats-Unis. Le commercial te dit : "On est tous chez DPF (Data Privacy Framework), c'est officiel UE-US, donc c'est OK."
+
+  Mais tu te souviens que Schrems II a invalide Privacy Shield en 2020, et que DPF a ete adopte en 2023 mais reste fragile. Quelle est ta posture juridiquement defendable ?
+choices:
+  - id: "a"
+    label: "Le DPF est officiel donc je signe sans plus rien faire"
+    outcome: "bad"
+    feedback: "Trop simple. Le DPF est une decision d'adequation valide depuis 2023, mais (1) Schrems III est en cours de litige a la CJUE, (2) il faut quand meme une TIA (Transfer Impact Assessment) pour les donnees sensibles."
+    points: -10
+  - id: "b"
+    label: "Je verifie que le sous-traitant US est bien certifie DPF (dpf.gov), je realise une TIA, et je documente la decision avec mesures supplementaires si necessaire"
+    outcome: "good"
+    feedback: "Excellent. La verification certifie + la TIA documentee + les mesures complementaires (chiffrement, anonymisation) constituent la pratique recommandee CNIL/EDPB."
+    points: 30
+  - id: "c"
+    label: "Je refuse tout transfert hors UE par principe"
+    outcome: "bad"
+    feedback: "Position trop rigide. Le RGPD permet les transferts hors UE avec garanties appropriees. Refuser systematiquement bloquerait inutilement l'organisation. La nuance est dans les outils legaux."
+    points: -5
+  - id: "d"
+    label: "Je propose un fournisseur europeen equivalent (Sendinblue, Mailjet, etc.) pour eliminer le sujet"
+    outcome: "good"
+    feedback: "Strategie defensible - rester dans l'UE elimine le sujet legal. Mais ce n'est pas toujours possible. C'est le 1er reflexe a tester avant d'engager une TIA."
+    points: 25
+debrief: |
+  Les **transferts de donnees hors UE** sont l'un des sujets les plus complexes du RGPD post-2020 (arret Schrems II). Les DPO doivent maitriser plusieurs outils legaux en cascade.
+
+  **Cadre juridique des transferts (article 44-49 RGPD) :**
+
+  Tout transfert de donnees personnelles hors EEE (Espace Economique Europeen) est interdit par defaut, **sauf** si une des protections suivantes s'applique.
+
+  **1. Decision d'adequation (article 45)**
+
+  La Commission europeenne reconnait certains pays comme offrant une protection equivalente. Pas de demarche supplementaire, le transfert est autorise.
+
+  Liste actuelle (mai 2026) : Andorre, Argentine, Canada (commercial), Iles Feroe, Guernesey, Israel, Ile de Man, Japon, Jersey, Nouvelle-Zelande, Coree du Sud, Suisse, Royaume-Uni, Uruguay, **Etats-Unis (DPF)**.
+
+  **Le cas DPF (Data Privacy Framework) :**
+  - Adopte juillet 2023 par decision d'adequation Commission europeenne
+  - Successeur de Privacy Shield (invalide par Schrems II en 2020)
+  - **Limites importantes :**
+    - Seul un sous-traitant US **certifie DPF** (verifiable sur dpf.gov) est couvert
+    - Schrems III est en cours de litige a la CJUE - invalidation possible
+    - Ne couvre PAS les transferts hors entreprise certifiee (sous-traitants ulterieurs)
+
+  **2. Garanties appropriees (article 46)**
+
+  Quand pas de decision d'adequation, plusieurs outils :
+
+  **a. Clauses Contractuelles Types (CCT)** - les plus utilisees
+  - Modeles publies par la Commission europeenne (juin 2021)
+  - 4 modules selon le type de transfert (RT-RT, RT-ST, ST-ST, ST-RT)
+  - A signer entre l'exportateur (toi) et l'importateur (le sous-traitant hors UE)
+  - **Doivent etre completees par une TIA** (cf. ci-dessous)
+
+  **b. Regles d'Entreprise Contraignantes (BCR)**
+  - Pour les groupes multinationaux qui ont leur propre code de conduite RGPD
+  - Approuvees par la CNIL apres audit
+  - Lourd, reserve aux gros groupes
+
+  **c. Codes de conduite et certifications**
+  - Plus rare, en cours de developpement
+
+  **3. La TIA (Transfer Impact Assessment) - l'etape qui change tout**
+
+  Depuis Schrems II, les CCT ne suffisent plus seules. Il faut une **TIA documentee** qui evalue :
+
+  - **Le pays destinataire** : son cadre juridique respecte-t-il le niveau de protection UE ?
+  - **L'acces des autorites publiques** aux donnees (FISA 702 aux US, par exemple)
+  - **Les mesures supplementaires** que tu mets en place :
+    - **Chiffrement** des donnees en transit ET au repos avec cle non-accessible au sous-traitant
+    - **Pseudonymisation / anonymisation** quand possible
+    - **Minimisation** : ne transferer que le strict necessaire
+    - **Garanties contractuelles renforcees**
+
+  Sans TIA, ton transfert est juridiquement fragile meme avec CCT.
+
+  **Outil pratique : grille TIA simplifiee**
+
+  | Question | Reponse | Risque |
+  |---|---|---|
+  | Le pays a-t-il une decision d'adequation ? | Oui/Non | Bas/Eleve |
+  | Le sous-traitant est-il certifie DPF (US) ou autre ? | Oui/Non | Bas/Eleve |
+  | Le pays a-t-il des lois d'acces gouvernemental aux donnees ? | Oui/Non | Eleve/Bas |
+  | Les donnees sont-elles chiffrees avec cle non-accessible au sous-traitant ? | Oui/Non | Bas/Eleve |
+  | Les donnees sont-elles pseudonymisees / anonymisees ? | Oui/Non | Bas/Eleve |
+
+  Si majorite de risque eleve apres mesures supplementaires : abandonner le transfert ou consulter la CNIL.
+
+  **4. Derogations (article 49) - exceptionnelles**
+
+  Pour des cas tres specifiques (consentement explicite + informe, contrat avec la personne concernee, motifs importants d'interet public). A utiliser avec parcimonie, pas de maniere systematique.
+
+  **La regle d'or post-Schrems :**
+
+  Le DPF n'est pas un permis. C'est un outil legal qui demande **toujours** :
+  - Verification de la certification du sous-traitant precis
+  - TIA documentee
+  - Mesures supplementaires de mitigation
+  - Plan B si DPF est invalide (Schrems III en cours)
+quiz:
+  - question: "Le DPF (Data Privacy Framework) UE-US est :"
+    choices:
+      - id: "a"
+        label: "Une decision d'adequation valide depuis juillet 2023, fragile (Schrems III en cours)"
+        correct: true
+      - id: "b"
+        label: "Un cadre invalide depuis Schrems II en 2020"
+        correct: false
+      - id: "c"
+        label: "Sans rapport avec le RGPD"
+        correct: false
+    explanation: "Le DPF a remplace Privacy Shield (invalide en 2020). Il est valide depuis juillet 2023 mais Schrems III est en cours - invalidation possible. Garde toujours un plan B."
+
+  - question: "La TIA (Transfer Impact Assessment) est :"
+    choices:
+      - id: "a"
+        label: "Un document optionnel pour les transferts hors UE"
+        correct: false
+      - id: "b"
+        label: "Une analyse documentee des risques pays + mesures supplementaires, requise depuis Schrems II"
+        correct: true
+      - id: "c"
+        label: "Le nom francais de la CCT"
+        correct: false
+    explanation: "Depuis Schrems II (juillet 2020), les CCT seules ne suffisent plus. Il faut une TIA qui evalue le contexte juridique du pays + les mesures de mitigation. Documente, defendable face a la CNIL."
+
+  - question: "Le 1er reflexe avant d'engager une TIA est :"
+    choices:
+      - id: "a"
+        label: "Verifier qu'aucun fournisseur UE equivalent n'existe"
+        correct: true
+      - id: "b"
+        label: "Lancer immediatement une procedure d'autorisation CNIL"
+        correct: false
+      - id: "c"
+        label: "Signer en confiance"
+        correct: false
+    explanation: "Privilegier un fournisseur UE quand il existe elimine le sujet. C'est la pratique 'data localization by default' recommandee par la CNIL - moins de complexite juridique, conformite native."
+---
+
+## Pour aller plus loin
+
+Le sujet des transferts hors UE est l'illustration parfaite de la cybersecurite souveraine : choisir un fournisseur francais (Scaleway, OVHcloud) ou europeen (Hetzner, IONOS) elimine 80 % de la complexite juridique. Pour les 20 % restants ou il n'y a pas d'equivalent, la TIA + mesures supplementaires sont incontournables.
+
+> "Le chemin le plus court vers la conformite RGPD, c'est souvent de rester en Europe."

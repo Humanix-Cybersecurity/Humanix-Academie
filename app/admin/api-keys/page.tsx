@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// /admin/api-keys — Gestion des clés API publiques (Essentielle+).
+// /admin/api-keys - Gestion des clés API publiques (Essentielle+).
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import ApiKeysManager from "@/components/ApiKeysManager";
@@ -100,7 +100,7 @@ export default async function AdminApiKeysPage() {
           </details>
         </AdminSection>
 
-        {/* Sécurité — variant warning */}
+        {/* Sécurité - variant warning */}
         <article className="rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-900/15 p-4">
           <h3 className="font-bold text-amber-800 dark:text-amber-200 text-sm flex items-center gap-2">
             <span aria-hidden="true">🔒</span>
@@ -108,11 +108,11 @@ export default async function AdminApiKeysPage() {
           </h3>
           <ul className="text-xs text-amber-800/80 dark:text-amber-200/80 mt-2 space-y-1 list-disc pl-5 leading-relaxed">
             <li>
-              Les clés sont hashées en SHA-256 — la valeur en clair n'est
+              Les clés sont hashées en SHA-256 - la valeur en clair n'est
               affichée qu'une seule fois à la création.
             </li>
             <li>
-              Mode lecture seule par défaut — pas de risque de modification
+              Mode lecture seule par défaut - pas de risque de modification
               accidentelle.
             </li>
             <li>Révoque immédiatement toute clé compromise.</li>
@@ -145,7 +145,7 @@ function Endpoint({
         {path}
       </span>
       <span className="text-gray-600 dark:text-gray-400 font-sans flex-1">
-        — {desc}
+        - {desc}
       </span>
     </div>
   );

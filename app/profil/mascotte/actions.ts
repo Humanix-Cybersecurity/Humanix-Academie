@@ -74,7 +74,7 @@ export async function chooseMood(mood: string): Promise<{ ok: true }> {
 /**
  * Definit ou efface l'emoji custom de la mascotte. Validation stricte cote
  * server : 0 a 8 caracteres (assez pour les ZWJ sequences type 👨‍🚀).
- * On accepte n'importe quel caractere unicode visible — c'est le but.
+ * On accepte n'importe quel caractere unicode visible - c'est le but.
  */
 export async function setCustomMascotEmoji(
   emoji: string | null,
