@@ -14,7 +14,14 @@ export async function GET() {
   }
   const userId = session.user.id as string;
 
-  const [user, progress, events, notifications, webauthn] = await Promise.all([
+  const [
+    user,
+    progress,
+    events,
+    notifications,
+    webauthn,
+    phishingResults,
+  ] = await Promise.all([
     db.user.findUnique({
       where: { id: userId },
       select: {
@@ -85,6 +92,25 @@ export async function GET() {
         lastUsedAt: true,
       },
     }),
+    // Resultats des campagnes phishing/vishing/smishing (RGPD art. 20)
+    db.phishingResult.findMany({
+      where: { userId },
+      orderBy: { sentAt: "desc" },
+      select: {
+        status: true,
+        sentAt: true,
+        clickedAt: true,
+        reportedAt: true,
+        campaign: {
+          select: {
+            title: true,
+            template: true,
+            channel: true,
+            sentAt: true,
+          },
+        },
+      },
+    }),
   ]);
 
   if (!user) {
@@ -134,6 +160,19 @@ export async function GET() {
     progress,
     events,
     notifications,
+    // Simulations phishing/vishing/smishing auxquelles l'utilisateur a participe.
+    // Le canal (EMAIL/SMS) et le statut (SENT/CLICKED/REPORTED) sont inclus
+    // pour transparence pedagogique - aucune donnee disciplinaire n'est tracee.
+    phishingSimulations: phishingResults.map((r) => ({
+      campaignTitle: r.campaign.title,
+      template: r.campaign.template,
+      channel: r.campaign.channel,
+      status: r.status,
+      sentAt: r.sentAt,
+      clickedAt: r.clickedAt,
+      reportedAt: r.reportedAt,
+      campaignSentAt: r.campaign.sentAt,
+    })),
   };
 
   // Audit

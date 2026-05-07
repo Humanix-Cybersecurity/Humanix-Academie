@@ -54,6 +54,24 @@ const FEATURE_PITCH: Record<
       "IA française Mistral - aucune donnée hors UE. Signaux faibles à débriefer fournis.",
     ],
   },
+  vishing: {
+    emoji: "📞",
+    title: "Vishing IA souverain (voix piégée)",
+    benefits: [
+      "Génère des scripts de vishing pédagogiques avec Mistral (Paris) + lecture Piper TTS local.",
+      "Stack 100 % FR/UE : aucune donnée envoyée à OpenAI ou autre provider hors UE (Cloud Act).",
+      "Comble le gap face au +442 % d'attaques vishing observées au H2 2024 (Hoxhunt threat report).",
+    ],
+  },
+  smishing: {
+    emoji: "📱",
+    title: "Smishing IA souverain (SMS piégé)",
+    benefits: [
+      "Génère des SMS de smishing pédagogiques avec Mistral (Paris) - 5 templates (livreur, banque, impôts, 2FA, président).",
+      "Stack 100 % FR/UE : aucune donnée envoyée hors UE. Détection PII automatique en entrée.",
+      "Vecteur trop souvent oublié : SMS contourne les filtres email et bénéficie d'une confiance instinctive.",
+    ],
+  },
   marketplace: {
     emoji: "🛒",
     title: "Marketplace de modules contributeurs",
