@@ -111,7 +111,7 @@ export default function ModuleEditor(props: {
         if (r.error === "validation_failed") {
           setFeedback({
             type: "err",
-            msg: "Validation échouée — corrige les champs ci-dessous",
+            msg: "Validation échouée - corrige les champs ci-dessous",
             issues: r.issues,
           });
         } else if (r.error === "slug_taken") {
@@ -156,7 +156,7 @@ export default function ModuleEditor(props: {
         else
           setFeedback({
             type: "err",
-            msg: "Soumission impossible — sauvegarde d'abord.",
+            msg: "Soumission impossible - sauvegarde d'abord.",
           });
       }
     });
@@ -229,7 +229,7 @@ export default function ModuleEditor(props: {
             <ul className="text-xs text-red-800 mt-2 list-disc pl-5 space-y-0.5">
               {feedback.issues.map((iss, i) => (
                 <li key={i}>
-                  <code>{iss.path}</code> — {iss.message}
+                  <code>{iss.path}</code> - {iss.message}
                 </li>
               ))}
             </ul>

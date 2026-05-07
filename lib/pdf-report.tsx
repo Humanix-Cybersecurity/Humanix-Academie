@@ -283,7 +283,7 @@ export function ConformityReport({
           <Text style={styles.brand}>
             Humanix Académie · Rapport de Conformité Cyber
           </Text>
-          <Text style={styles.subtitle}>Détail équipe — {tenantName}</Text>
+          <Text style={styles.subtitle}>Détail équipe - {tenantName}</Text>
         </View>
 
         <Text style={styles.title}>Suivi équipe complet</Text>

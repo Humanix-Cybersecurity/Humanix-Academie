@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Calcul de l'impact business (financier) pour un tenant.
 // Sources : Tracfin, ANSSI cert-fr, etudes Hiscox / Generali sur sinistralite cyber PME.
-// Les chiffres sont des ordres de grandeur publics — la valeur ajoutee
+// Les chiffres sont des ordres de grandeur publics - la valeur ajoutee
 // pour le dirigeant est de RAPPORTER les efforts cyber a leur impact economique.
 import { db } from "@/lib/db";
 
@@ -60,7 +60,7 @@ function probabilityFromScore(score: number): number {
 }
 
 /**
- * Cout annuel Humanix selon la taille — grille mai 2026 (cf. lib/pricing.ts).
+ * Cout annuel Humanix selon la taille - grille mai 2026 (cf. lib/pricing.ts).
  * On prend les tarifs ANNUELS (engagement annuel = remise -17 a -21%).
  */
 function estimateHumanixCost(seats: number): number {
@@ -107,7 +107,7 @@ export async function computeBusinessImpact(
   );
 
   // Pour le ROI, on compare le scenario "PME non-formee" (score 50, prob ~25%)
-  // au scenario actuel — l'ecart est le "saving" attribuable a Humanix
+  // au scenario actuel - l'ecart est le "saving" attribuable a Humanix
   const baselineProb = 0.25;
   const baselineExpectedLoss = estimatedIncidentCost * baselineProb;
   const savingFromTraining = baselineExpectedLoss - expectedAnnualLoss;

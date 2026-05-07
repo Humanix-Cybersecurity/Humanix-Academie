@@ -10,7 +10,7 @@ import { redeemInvite, hashIp } from "@/lib/family-invites";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Bienvenue — Cyber Famille",
+  title: "Bienvenue - Cyber Famille",
   description: "Votre accès Cyber Famille offert par un proche.",
 };
 

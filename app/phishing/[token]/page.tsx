@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Landing pedagogique : "Tu as cliqué sur un mail piège — voici pourquoi"
+// Landing pedagogique : "Tu as cliqué sur un mail piège - voici pourquoi"
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { db } from "@/lib/db";
@@ -48,7 +48,7 @@ export default async function PhishingLandingPage({
           </h1>
           <p className="text-gray-600">
             Heureusement, c'était un test de sensibilisation Humanix. <br />
-            <strong>Aucune donnée n'a été compromise</strong> — mais la
+            <strong>Aucune donnée n'a été compromise</strong> - mais la
             prochaine fois pourrait être réelle.
           </p>
         </div>
@@ -102,7 +102,7 @@ export default async function PhishingLandingPage({
 
         <div className="text-center">
           <p className="text-sm text-gray-600 mb-4">
-            Ne te culpabilise pas — <strong>1 personne sur 3 clique</strong> sur
+            Ne te culpabilise pas - <strong>1 personne sur 3 clique</strong> sur
             ce type de mail. C'est exactement pour ça qu'on s'entraîne.
           </p>
           <Link href="/apprendre" className="btn-primary">
@@ -115,7 +115,7 @@ export default async function PhishingLandingPage({
         Test effectué dans le cadre du programme de sensibilisation cyber de ton
         entreprise.
         <br />
-        Aucun usage disciplinaire de ce résultat — c'est un exercice
+        Aucun usage disciplinaire de ce résultat - c'est un exercice
         pédagogique.
       </p>
     </div>

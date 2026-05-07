@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// /admin/business — Dashboard Impact Business (angle financier dirigeant).
+// /admin/business - Dashboard Impact Business (angle financier dirigeant).
 //
 // REFONTE MAI 2026 : aligné sur le design system Linear (PageHeader, Section,
 // StatusBadge). Plus de wrapper local max-w-7xl (le layout admin s'en charge).
@@ -69,7 +69,7 @@ export default async function AdminBusinessPage() {
     <>
       <AdminPageHeader
         title="Impact business"
-        description="Combien la cyber vous fait gagner — concret, en euros. Ce que votre assureur et votre COMEX veulent voir."
+        description="Combien la cyber vous fait gagner - concret, en euros. Ce que votre assureur et votre COMEX veulent voir."
         actions={
           <CodirMode
             collectiveScore={impact.collectiveScore}
@@ -89,7 +89,7 @@ export default async function AdminBusinessPage() {
       />
 
       <div className="space-y-6 min-w-0">
-        {/* HERO — Score + coût attendu + ROI */}
+        {/* HERO - Score + coût attendu + ROI */}
         <section
           aria-label="Vue financière d'ensemble"
           className={`rounded-2xl border-2 ${VERDICT_HERO_STYLES[impact.scoreVerdict]} p-5 sm:p-7`}
@@ -147,7 +147,7 @@ export default async function AdminBusinessPage() {
           </div>
         </section>
 
-        {/* Méthodologie & sources — placé tout de suite après le hero pour
+        {/* Méthodologie & sources - placé tout de suite après le hero pour
             que le DG / DAF puisse cliquer et comprendre d'où viennent les
             chiffres avant d'aller plus loin. C'est ce qui transforme un
             "joli dashboard" en "outil de pilotage adopté par le COMEX". */}
@@ -230,7 +230,7 @@ export default async function AdminBusinessPage() {
               </h3>
               <p className="text-sm text-amber-800/80 dark:text-amber-200/80 mt-1 leading-relaxed">
                 PDF A3 imprimable, personnalisé à votre nom et à votre service
-                le plus à risque. Affichez-le dans la salle de pause — votre
+                le plus à risque. Affichez-le dans la salle de pause - votre
                 équipe l'attendra chaque mois.
               </p>
             </div>

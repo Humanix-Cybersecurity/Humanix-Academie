@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// /admin/anecdotes — Pilotage de la Cyber-Anecdote du Lundi (SUPERADMIN).
+// /admin/anecdotes - Pilotage de la Cyber-Anecdote du Lundi (SUPERADMIN).
 // REFONTE MAI 2026 : design system Linear (PageHeader, Section).
 // =============================================================================
 

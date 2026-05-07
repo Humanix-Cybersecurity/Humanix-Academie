@@ -88,7 +88,7 @@ function buildVerdict(score: number): Verdict {
       label: "Excellent",
       color: "green",
       summary:
-        "Votre maturité cyber est solide. Vous avez les bons réflexes — l'enjeu sera de maintenir le niveau dans le temps face à une menace qui évolue chaque mois.",
+        "Votre maturité cyber est solide. Vous avez les bons réflexes - l'enjeu sera de maintenir le niveau dans le temps face à une menace qui évolue chaque mois.",
     };
   }
   if (score >= 60) {
@@ -104,7 +104,7 @@ function buildVerdict(score: number): Verdict {
       label: "Fragile",
       color: "orange",
       summary:
-        "Votre exposition est élevée. Plusieurs failles classiques sont présentes — un attaquant les trouvera. Plan d'action prioritaire requis dans les 30 jours.",
+        "Votre exposition est élevée. Plusieurs failles classiques sont présentes - un attaquant les trouvera. Plan d'action prioritaire requis dans les 30 jours.",
     };
   }
   return {

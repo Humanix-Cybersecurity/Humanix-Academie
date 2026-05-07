@@ -13,7 +13,7 @@ type RoleId = "learner" | "admin" | "moderator";
 
 // Note : les `id` restent les keys DB (rétro-compat tenants existants).
 // Les labels affichés (PLAN_LABEL) sont eux alignés sur la nouvelle grille
-// mai 2026 — `solo` -> Starter, `premium` -> Enterprise.
+// mai 2026 - `solo` -> Starter, `premium` -> Enterprise.
 const PLAN_OPTIONS: { id: PlanId; tagline: string; price: string }[] = [
   {
     id: "decouverte",
@@ -154,7 +154,7 @@ export default function DemoPage() {
         {/* ETAPE 1 : Selecteur d'offre */}
         <div className="mb-10">
           <p className="text-xs uppercase tracking-widest text-accent-500 font-bold mb-3 text-center">
-            Étape 1 — L'offre que tu veux tester
+            Étape 1 - L'offre que tu veux tester
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {PLAN_OPTIONS.map((p) => {
@@ -198,7 +198,7 @@ export default function DemoPage() {
         {/* ETAPE 2 : Choix du role */}
         <div className="mb-6">
           <p className="text-xs uppercase tracking-widest text-accent-500 font-bold mb-3 text-center">
-            Étape 2 — Le rôle que tu veux incarner
+            Étape 2 - Le rôle que tu veux incarner
           </p>
           <div className="grid sm:grid-cols-3 gap-4">
             {ROLES.map((r) => (

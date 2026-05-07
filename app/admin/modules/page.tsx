@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// /admin/modules — Catalogue des modules pédagogiques (activer/désactiver,
+// /admin/modules - Catalogue des modules pédagogiques (activer/désactiver,
 // réordonner, marquer obligatoire).
 //
 // REFONTE MAI 2026 : aligné design system Linear (PageHeader, Section).
@@ -38,6 +38,14 @@ export default async function AdminModulesPage() {
   const enriched = saisons
     .map((s) => {
       const cfg = configBySaison.get(s.id);
+      // Duree totale reelle = somme des durationMinutes de chaque episode.
+      // Avant fix : ModulesTable hardcodait `episodesCount * 6` ce qui
+      // donnait toujours "36 min total" pour 6 episodes - incoherent avec
+      // la promesse "5 min par jour" et avec les vraies durees (5-9 min).
+      const totalMinutes = s.episodes.reduce(
+        (acc, e) => acc + (e.durationMinutes ?? 6),
+        0,
+      );
       return {
         id: s.id,
         slug: s.slug,
@@ -46,6 +54,7 @@ export default async function AdminModulesPage() {
         coverEmoji: s.coverEmoji,
         baseOrder: s.order,
         episodesCount: s.episodes.length,
+        totalMinutes,
         isActive: cfg?.isActive ?? true,
         isMandatory: cfg?.isMandatory ?? false,
         customOrder: cfg?.customOrder ?? null,

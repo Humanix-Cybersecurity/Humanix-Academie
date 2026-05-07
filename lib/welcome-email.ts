@@ -47,9 +47,9 @@ function buildHtml(ctx: WelcomeEmailContext): string {
 
     <h2 style="color: #0B3D91; font-size: 18px; margin: 32px 0 12px;">Vos 3 prochaines étapes</h2>
     <ol style="color: #555; line-height: 1.7; padding-left: 20px;">
-      <li><strong>Inviter votre équipe</strong> — depuis <code>/admin/utilisateurs</code> (1 par 1 ou import CSV en masse).</li>
-      <li><strong>Choisir vos saisons obligatoires</strong> — depuis <code>/admin/modules</code> (Phishing est cochée par défaut).</li>
-      <li><strong>Activer la 2FA admin</strong> — depuis <code>/profil/securite</code> (recommandé pour la sécurité de votre tenant).</li>
+      <li><strong>Inviter votre équipe</strong> - depuis <code>/admin/utilisateurs</code> (1 par 1 ou import CSV en masse).</li>
+      <li><strong>Choisir vos saisons obligatoires</strong> - depuis <code>/admin/modules</code> (Phishing est cochée par défaut).</li>
+      <li><strong>Activer la 2FA admin</strong> - depuis <code>/profil/securite</code> (recommandé pour la sécurité de votre tenant).</li>
     </ol>
 
     <div style="text-align: center; margin: 32px 0;">

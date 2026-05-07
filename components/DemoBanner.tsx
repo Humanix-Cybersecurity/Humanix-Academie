@@ -29,7 +29,7 @@ export default async function DemoBanner() {
         )}
 
         <span className="text-xs opacity-80 hidden sm:inline">
-          Données fictives — aucune donnée envoyée à l'extérieur
+          Données fictives - aucune donnée envoyée à l'extérieur
         </span>
 
         <a

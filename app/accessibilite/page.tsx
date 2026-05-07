@@ -12,7 +12,7 @@ import LegalLayout, {
 } from "@/components/legal/LegalLayout";
 
 export const metadata = {
-  title: "Accessibilité — Déclaration RGAA — Humanix Académie",
+  title: "Accessibilité - Déclaration RGAA - Humanix Académie",
   description:
     "Déclaration d'accessibilité de la plateforme Humanix Académie, conforme RGAA 4.1 / WCAG 2.1 AA. Engagement, état de conformité, signalement.",
 };
@@ -84,7 +84,7 @@ export default function AccessibilitePage() {
       <LegalSection id="conformite" num="2" title="État de conformité">
         <LegalHighlight variant="info">
           <strong>Humanix Académie est en conformité partielle</strong> avec le
-          RGAA 4.1 niveau AA — <strong>environ 90 %</strong> au regard du
+          RGAA 4.1 niveau AA - <strong>environ 90 %</strong> au regard du
           référentiel, à la date du {TODAY}. Audit externe par un cabinet
           certifié RGAA planifié à venir pour atteindre 95 %+ et obtenir une
           déclaration formelle.
@@ -118,35 +118,35 @@ export default function AccessibilitePage() {
             [
               "Structure sémantique (titres, landmarks)",
               "95 %",
-              "Très bon — landmarks nav/main/footer ajoutés",
+              "Très bon - landmarks nav/main/footer ajoutés",
             ],
             ["Contrastes (WCAG 1.4.3)", "92 %", "Très bon"],
             [
               "Navigation clavier",
               "98 %",
-              "Excellent — focus trap dans modales",
+              "Excellent - focus trap dans modales",
             ],
             ["Focus visible", "100 %", "Conforme"],
             ["Formulaires (labels, erreurs)", "88 %", "Bon"],
             [
               "Tables (scope, caption)",
               "92 %",
-              'Très bon — scope="col" partout',
+              'Très bon - scope="col" partout',
             ],
             [
               "ARIA & lecteurs d'écran",
               "92 %",
-              "Très bon — LiveRegion sur changements dynamiques",
+              "Très bon - LiveRegion sur changements dynamiques",
             ],
             [
               "Couleur comme info unique",
               "90 %",
-              "Bon — icônes + textes redondants",
+              "Bon - icônes + textes redondants",
             ],
             [
               "Médias (audio TTS, transcriptions)",
               "85 %",
-              "Bon — TTS partout, sous-titres vidéos en V2",
+              "Bon - TTS partout, sous-titres vidéos en V2",
             ],
             [
               "Mouvement / animations",
@@ -154,12 +154,12 @@ export default function AccessibilitePage() {
               "Conforme (prefers-reduced-motion respecté)",
             ],
             ["Zoom 200 % sans perte", "95 %", "Très bon"],
-            ["Mobile / tap targets", "90 %", "Bon — cibles ≥ 44×44 px"],
+            ["Mobile / tap targets", "90 %", "Bon - cibles ≥ 44×44 px"],
             ["aria-current sur navigation", "100 %", "Conforme"],
             [
               "Modales (focus trap, ESC, return focus)",
               "100 %",
-              "Conforme — composant AccessibleDialog",
+              "Conforme - composant AccessibleDialog",
             ],
           ]}
         />
@@ -250,7 +250,7 @@ export default function AccessibilitePage() {
         <ul>
           <li>
             <strong>Lecture audio (TTS)</strong> sur tous les scénarios,
-            débriefs et articles librairie — bouton "Écouter l'article".
+            débriefs et articles librairie - bouton "Écouter l'article".
           </li>
           <li>
             <strong>Mode facile</strong> (texte agrandi, espacement augmenté)
@@ -286,14 +286,14 @@ export default function AccessibilitePage() {
         <p>L'application est testée et fonctionne avec :</p>
         <ul>
           <li>
-            <strong>NVDA</strong> (Windows) — lecteur d'écran open-source
+            <strong>NVDA</strong> (Windows) - lecteur d'écran open-source
           </li>
           <li>
-            <strong>VoiceOver</strong> (macOS / iOS) — lecteur d'écran natif
+            <strong>VoiceOver</strong> (macOS / iOS) - lecteur d'écran natif
             Apple
           </li>
           <li>
-            <strong>TalkBack</strong> (Android) — lecteur d'écran natif Google
+            <strong>TalkBack</strong> (Android) - lecteur d'écran natif Google
           </li>
           <li>
             <strong>Navigation clavier seule</strong> (Tab, Maj+Tab, Entrée,
@@ -305,7 +305,7 @@ export default function AccessibilitePage() {
           </li>
           <li>
             <strong>Reconnaissance vocale</strong> (Voice Control macOS, Dragon
-            NaturallySpeaking) — supportée pour les actions principales
+            NaturallySpeaking) - supportée pour les actions principales
           </li>
         </ul>
       </LegalSection>

@@ -98,7 +98,7 @@ function commandKeygen(): void {
         privateKeyPem: keys.privateKeyPem,
         generatedAt: new Date().toISOString(),
         notice:
-          "PRIVATE KEY — NE JAMAIS COMMITER. Stocker dans 1Password / Bitwarden / KeePass / HSM.",
+          "PRIVATE KEY - NE JAMAIS COMMITER. Stocker dans 1Password / Bitwarden / KeePass / HSM.",
       },
       null,
       2,
@@ -231,7 +231,7 @@ function commandVerify(): void {
 }
 
 function showHelp(): void {
-  console.log(`Humanix Cybersecurity — outil de gestion des licences signees Ed25519
+  console.log(`Humanix Cybersecurity - outil de gestion des licences signees Ed25519
 
 Commandes :
   keygen              Genere une paire de cles Ed25519 (1 fois par environnement)

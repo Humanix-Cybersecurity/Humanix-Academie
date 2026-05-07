@@ -1,5 +1,33 @@
 "use client";
 // SPDX-License-Identifier: AGPL-3.0-or-later
+//
+// HeaderBar - refonte pro mai 2026 (cible : credibilite "French Tech")
+//
+// Probleme avant : 8 liens inline pour le visiteur (Urgence, Famille, Manifeste,
+// Open source, DPO, Communaute, Tarifs, Connexion) + emojis melanges + CTA
+// dupliques (Connexion + Creer un compte). Donnait l'impression d'usine a
+// gaz, pas d'un editeur SaaS scalable.
+//
+// Refonte :
+//
+// VISITEUR :
+//   - Logo + brand (gauche)
+//   - 3 entrees nav : Produit ▾ · Solutions ▾ · Communaute (droite)
+//   - 1 CTA primaire : Demo (la conversion qui compte)
+//   - Connexion en lien discret + ThemeToggle
+//   - Mobile : burger → drawer plein-ecran avec sections groupees
+//
+// APPRENANT (logue) :
+//   - Logo + brand
+//   - Nav primaire : Apprendre · Librairie · (Admin Console si admin)
+//   - Stats compactes (level + coins) + ThemeToggle
+//   - Avatar dropdown : profil, securite, RGPD, boutique, famille, marketplace,
+//     quitter
+//
+// Inspiration design : Vercel, Linear, Stripe, Posthog. Pas d'emojis dans
+// la nav primaire (creent du bruit visuel pro). Emojis OK dans les dropdowns
+// pour aider l'identification rapide des items.
+
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -8,11 +36,99 @@ import { useSession, signOut } from "next-auth/react";
 import ThemeToggle from "@/components/ThemeToggle";
 import { getMascotById } from "@/lib/mascots";
 
-// HeaderBar simplifié :
-//  - Liens primaires visibles (md:) : Apprendre · Librairie · Console (si admin)
-//  - Menu utilisateur déroulant : Profil · Famille · Boutique · Marketplace · Quitter
-//  - Stats compactes (niveau + coins) cliquables → /profil
-//  - Sur mobile (sm:) : seul le menu utilisateur (avatar) reste visible
+// =============================================================================
+// Definitions des dropdowns visiteur (Produit, Solutions)
+// =============================================================================
+
+type DropdownItem = {
+  href: string;
+  label: string;
+  description: string;
+  emoji: string;
+};
+
+const PRODUIT_ITEMS: DropdownItem[] = [
+  {
+    href: "/tarifs",
+    label: "Tarifs",
+    description: "Self-host gratuit ou cloud à partir de 0 €/mois",
+    emoji: "💶",
+  },
+  {
+    href: "/demo",
+    label: "Démo",
+    description: "Tester en 2 minutes, sans inscription",
+    emoji: "🎮",
+  },
+  {
+    href: "/comparatif",
+    label: "Comparatif",
+    description: "Notre lecture honnête face à 5 concurrents",
+    emoji: "⚖️",
+  },
+  {
+    href: "/integrations",
+    label: "Intégrations",
+    description: "Connecteurs CISO Assistant, SIEM, IAM, RH",
+    emoji: "🔌",
+  },
+  {
+    href: "/marketplace",
+    label: "Marketplace",
+    description: "Modules signés par des experts français",
+    emoji: "🏛",
+  },
+  {
+    href: "/famille",
+    label: "Cyber Famille",
+    description: "Sphère personnelle gratuite, invitations proches",
+    emoji: "❤️",
+  },
+];
+
+const SOLUTIONS_ITEMS: DropdownItem[] = [
+  {
+    href: "/dpo",
+    label: "Espace DPO",
+    description: "RGPD-by-design, AIPD, registre fourni",
+    emoji: "🛡",
+  },
+  {
+    href: "/pour-les-daf",
+    label: "Pour les DAF",
+    description: "ROI €, Pack NIS2, fraude évitée - pas de jargon cyber",
+    emoji: "💼",
+  },
+  {
+    href: "/lancement-oss",
+    label: "Open source",
+    description: "Lancement AGPLv3 - mardi 26 mai 2026",
+    emoji: "🌱",
+  },
+  {
+    href: "/securite",
+    label: "Trust Center",
+    description: "Audit public, conformité, transparence",
+    emoji: "🔐",
+  },
+  {
+    href: "/manifeste",
+    label: "Manifeste",
+    description: "Pourquoi Humanix existe",
+    emoji: "📜",
+  },
+  {
+    href: "/urgence-cyber",
+    label: "Urgence cyber",
+    description: "Hub d'incident - que faire en 60 minutes",
+    emoji: "🚨",
+  },
+];
+
+// =============================================================================
+// Composant principal
+// =============================================================================
+
 export default function HeaderBar() {
   const { data: session } = useSession();
   const user = session?.user as any;
@@ -23,8 +139,13 @@ export default function HeaderBar() {
     levelName: string;
   } | null>(null);
   const [mascotSpecies, setMascotSpecies] = useState<string>("fox");
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+
+  const pathname = usePathname();
+  const isActive = (href: string) =>
+    pathname === href || (href !== "/" && pathname?.startsWith(href + "/"));
 
   // Charge stats + mascotte de l'user (1 seul fetch)
   useEffect(() => {
@@ -44,16 +165,36 @@ export default function HeaderBar() {
       .catch(() => {});
   }, [user?.id]);
 
-  // Click outside pour refermer le menu
+  // Click outside pour refermer le menu user
   useEffect(() => {
-    if (!menuOpen) return;
+    if (!userMenuOpen) return;
     const onClick = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node))
-        setMenuOpen(false);
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(e.target as Node)
+      )
+        setUserMenuOpen(false);
     };
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
-  }, [menuOpen]);
+  }, [userMenuOpen]);
+
+  // ESC pour refermer les menus + drawer
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setUserMenuOpen(false);
+        setMobileOpen(false);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Ferme le drawer mobile au changement de route
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   const isAdmin =
     user?.role === "ADMIN" ||
@@ -65,98 +206,90 @@ export default function HeaderBar() {
     user?.role === "RSSI" ||
     user?.role === "SUPERADMIN";
   const mascot = getMascotById(mascotSpecies);
-  const pathname = usePathname();
-  const isActive = (href: string) =>
-    pathname === href || (href !== "/" && pathname?.startsWith(href + "/"));
-
-  // ESC pour refermer le menu utilisateur
-  useEffect(() => {
-    if (!menuOpen) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMenuOpen(false);
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [menuOpen]);
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur border-b border-gray-200 dark:border-slate-700">
+    <header className="sticky top-0 z-40 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md border-b border-gray-200/80 dark:border-slate-800/80">
       <nav
         aria-label="Navigation principale"
-        className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3"
+        className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4"
       >
+        {/* ============ Brand ============ */}
         <Link
           href="/"
-          className="flex items-center gap-2 font-bold text-primary-500 text-lg shrink-0"
+          className="flex items-center gap-2.5 shrink-0 group"
+          aria-label="Humanix Académie - accueil"
         >
           <Image
             src="/logo-humanix-academie-192.png"
-            alt="Humanix Académie"
-            width={48}
-            height={72}
+            alt=""
+            width={40}
+            height={60}
             priority
-            className="shrink-0 h-12 w-auto"
+            className="shrink-0 h-9 w-auto group-hover:scale-105 transition-transform"
           />
           <span className="hidden sm:flex flex-col leading-tight">
-            <span className="text-base font-extrabold">Humanix Académie</span>
-            <span className="text-[10px] font-medium text-gray-600 dark:text-gray-300 -mt-0.5">
+            <span className="text-base font-extrabold text-primary-500 dark:text-accent-300 tracking-tight">
+              Humanix Académie
+            </span>
+            <span className="text-[10px] font-medium text-gray-500 dark:text-gray-400 -mt-0.5">
               par Humanix-Cybersecurity
             </span>
           </span>
         </Link>
 
+        {/* ============ Nav apprenant logue ============ */}
         {user ? (
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            {/* Liens primaires (desktop) */}
-            <Link
+          <div className="flex items-center gap-1 sm:gap-2">
+            <NavLink
               href="/apprendre"
-              aria-current={isActive("/apprendre") ? "page" : undefined}
-              className="hidden md:inline-block text-sm text-gray-600 dark:text-gray-300 hover:text-primary-500 font-medium px-2 py-1 aria-[current=page]:text-primary-500 aria-[current=page]:font-bold"
+              isActive={isActive("/apprendre")}
+              className="hidden md:inline-flex"
             >
               Apprendre
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               href="/librairie"
-              aria-current={isActive("/librairie") ? "page" : undefined}
-              className="hidden md:inline-block text-sm text-gray-600 dark:text-gray-300 hover:text-primary-500 font-medium px-2 py-1 aria-[current=page]:text-primary-500 aria-[current=page]:font-bold"
+              isActive={isActive("/librairie")}
+              className="hidden md:inline-flex"
             >
-              📚 Librairie
-            </Link>
+              Librairie
+            </NavLink>
             {isAdmin && (
-              <Link
+              <NavLink
                 href="/admin"
-                aria-current={isActive("/admin") ? "page" : undefined}
-                className="hidden md:inline-block text-sm text-gray-600 dark:text-gray-300 hover:text-primary-500 font-medium px-2 py-1 aria-[current=page]:text-primary-500 aria-[current=page]:font-bold"
+                isActive={isActive("/admin")}
+                className="hidden md:inline-flex"
               >
                 Console
-              </Link>
+              </NavLink>
             )}
 
-            {/* Stats compactes (niveau + coins) — XP retiré (redondant) */}
+            {/* Stats compactes (niveau + coins) */}
             {stats && (
               <Link
                 href="/profil"
-                className="hidden sm:flex items-center gap-2 bg-gradient-to-r from-primary-50 to-cyan-50 dark:from-slate-800 dark:to-slate-700 rounded-2xl px-3 py-1.5 hover:scale-105 transition-transform border border-primary-100 dark:border-slate-600"
-                title={`Niveau ${stats.level} — ${stats.levelName} · ${stats.xp} XP`}
+                className="hidden sm:inline-flex items-center gap-1.5 bg-gradient-to-r from-primary-50 to-cyan-50 dark:from-slate-800 dark:to-slate-700 rounded-full pl-3 pr-3 py-1 hover:scale-[1.03] transition-transform border border-primary-100/80 dark:border-slate-600/80 ml-1"
+                title={`Niveau ${stats.level} - ${stats.levelName} · ${stats.xp} XP`}
               >
-                <span className="text-xs font-bold text-primary-500">
+                <span className="text-[11px] font-bold text-primary-500 dark:text-accent-300 tabular-nums">
                   N{stats.level}
                 </span>
-                <span className="text-xs font-bold text-amber-600">
-                  🪙{stats.coins}
+                <span className="w-px h-3 bg-primary-200 dark:bg-slate-600" />
+                <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400 tabular-nums">
+                  🪙 {stats.coins}
                 </span>
               </Link>
             )}
 
             <ThemeToggle compact />
 
-            {/* Menu utilisateur déroulant */}
-            <div className="relative" ref={menuRef}>
+            {/* Avatar dropdown */}
+            <div className="relative" ref={userMenuRef}>
               <button
-                onClick={() => setMenuOpen((v) => !v)}
+                onClick={() => setUserMenuOpen((v) => !v)}
                 aria-haspopup="menu"
-                aria-expanded={menuOpen}
-                aria-label={`Menu utilisateur de ${user.name ?? user.email}${menuOpen ? ", ouvert" : ", fermé"}`}
+                aria-expanded={userMenuOpen}
+                aria-label={`Menu utilisateur de ${user.name ?? user.email}${userMenuOpen ? ", ouvert" : ", fermé"}`}
                 className="flex items-center gap-2 rounded-xl px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-slate-800 transition"
               >
                 <span className="text-2xl" aria-hidden="true">
@@ -170,95 +303,89 @@ export default function HeaderBar() {
                 </span>
               </button>
 
-              {menuOpen && (
+              {userMenuOpen && (
                 <div
                   role="menu"
-                  className="absolute right-0 mt-2 w-60 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-200 dark:border-slate-700 py-2 animate-fadeIn"
+                  className="absolute right-0 mt-2 w-64 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-200 dark:border-slate-700 py-2 animate-fadeIn"
                 >
                   <div className="px-4 py-2 border-b border-gray-100 dark:border-slate-700">
-                    <p className="text-sm font-bold text-primary-500">
+                    <p className="text-sm font-bold text-primary-500 dark:text-accent-300 truncate">
                       {user.name ?? user.email}
                     </p>
                     {stats && (
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         Niveau {stats.level} · {stats.levelName}
                       </p>
                     )}
                   </div>
 
-                  <MenuLink
+                  <UserMenuItem
                     href="/profil"
                     icon="👤"
                     label="Mon profil"
-                    onClick={() => setMenuOpen(false)}
+                    onClick={() => setUserMenuOpen(false)}
                   />
-                  <MenuLink
+                  <UserMenuItem
                     href="/profil/securite"
                     icon="🔐"
-                    label="Sécurité (mot de passe, 2FA)"
-                    onClick={() => setMenuOpen(false)}
+                    label="Sécurité (2FA, sessions)"
+                    onClick={() => setUserMenuOpen(false)}
                   />
                   {isAdmin && (
-                    <MenuLink
+                    <UserMenuItem
                       href="/profil/facturation"
                       icon="💳"
                       label="Facturation"
-                      onClick={() => setMenuOpen(false)}
+                      onClick={() => setUserMenuOpen(false)}
                     />
                   )}
-                  <MenuLink
+                  <UserMenuItem
                     href="/profil/donnees"
                     icon="⚖️"
                     label="Mes données (RGPD)"
-                    onClick={() => setMenuOpen(false)}
+                    onClick={() => setUserMenuOpen(false)}
                   />
-                  <MenuLink
+                  <UserMenuItem
                     href="/boutique"
                     icon="🛒"
                     label="Boutique"
-                    onClick={() => setMenuOpen(false)}
+                    onClick={() => setUserMenuOpen(false)}
                   />
-                  <MenuLink
+                  <UserMenuItem
                     href="/famille"
                     icon="❤️"
                     label="Cyber Famille"
-                    onClick={() => setMenuOpen(false)}
+                    onClick={() => setUserMenuOpen(false)}
                   />
                   {canMarketplace && (
-                    <MenuLink
+                    <UserMenuItem
                       href="/marketplace"
-                      icon="🏛️"
+                      icon="🏛"
                       label="Marketplace"
-                      onClick={() => setMenuOpen(false)}
+                      onClick={() => setUserMenuOpen(false)}
                     />
                   )}
 
                   {/* Liens secondaires sur mobile (en double avec la nav md:) */}
                   <div className="md:hidden border-t border-gray-100 dark:border-slate-700 mt-1 pt-1">
-                    <MenuLink
+                    <UserMenuItem
                       href="/apprendre"
                       icon="🎯"
                       label="Apprendre"
-                      onClick={() => setMenuOpen(false)}
+                      onClick={() => setUserMenuOpen(false)}
                     />
-                    <MenuLink
+                    <UserMenuItem
                       href="/librairie"
                       icon="📚"
                       label="Librairie"
-                      onClick={() => setMenuOpen(false)}
-                    />
-                    <MenuLink
-                      href="/lancement-oss"
-                      icon="🌱"
-                      label="Lancement OSS"
-                      onClick={() => setMenuOpen(false)}
+                      onClick={() => setUserMenuOpen(false)}
                     />
                     {isAdmin && (
-                      <MenuLink
+                      <UserMenuItem
                         href="/admin"
                         icon="⚙️"
                         label="Console admin"
-                        onClick={() => setMenuOpen(false)}
+                        onClick={() => setUserMenuOpen(false)}
                       />
                     )}
                   </div>
@@ -266,13 +393,13 @@ export default function HeaderBar() {
                   <div className="border-t border-gray-100 dark:border-slate-700 mt-1 pt-1">
                     <button
                       onClick={() => {
-                        setMenuOpen(false);
+                        setUserMenuOpen(false);
                         signOut({ callbackUrl: "/demo" });
                       }}
                       role="menuitem"
-                      className="w-full text-left px-4 py-2 text-sm text-warn hover:bg-red-50 dark:hover:bg-red-900/20"
+                      className="w-full text-left px-4 py-2 text-sm text-warn hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg mx-1"
                     >
-                      🚪 Quitter
+                      🚪 Se déconnecter
                     </button>
                   </div>
                 </div>
@@ -280,60 +407,248 @@ export default function HeaderBar() {
             </div>
           </div>
         ) : (
-          <div className="flex items-center gap-2">
-            <Link
-              href="/urgence-cyber"
-              className="hidden md:inline text-sm text-amber-700 hover:text-amber-800 dark:text-amber-300 dark:hover:text-amber-200 font-medium"
-              title="Hub d'urgence cyber : que faire en cas d'incident"
-            >
-              🚨 Urgence
-            </Link>
-            <Link
-              href="/famille"
-              className="hidden sm:inline text-sm text-pink-600 hover:text-pink-700 font-medium"
-            >
-              ❤️ Famille
-            </Link>
-            <Link
-              href="/manifeste"
-              className="hidden md:inline text-sm text-gray-600 dark:text-gray-300 hover:text-primary-500 font-medium"
-            >
-              Manifeste
-            </Link>
-            <Link
-              href="/lancement-oss"
-              className="hidden md:inline text-sm text-emerald-600 dark:text-emerald-300 hover:text-emerald-700 dark:hover:text-emerald-200 font-medium"
-              title="Lancement open source — mardi 26 mai 2026"
-            >
-              🌱 Open source
-            </Link>
-            <Link
-              href="/tarifs"
-              className="hidden sm:inline text-sm text-gray-600 dark:text-gray-300 hover:text-primary-500 font-medium"
-            >
-              Tarifs
-            </Link>
-            <Link
-              href="/connexion"
-              className="hidden sm:inline text-sm text-gray-600 dark:text-gray-300 hover:text-primary-500 font-medium"
-            >
-              Connexion
-            </Link>
-            <ThemeToggle compact />
-            <Link
-              href="/signup?plan=decouverte"
-              className="btn-primary text-sm py-2 px-4"
-            >
-              Créer un compte
-            </Link>
-          </div>
+          /* ============ Nav visiteur ============ */
+          <>
+            {/* Desktop nav (md+) */}
+            <div className="hidden md:flex items-center gap-1">
+              <NavDropdown label="Produit" items={PRODUIT_ITEMS} />
+              <NavDropdown label="Solutions" items={SOLUTIONS_ITEMS} />
+              <NavLink href="/communaute" isActive={isActive("/communaute")}>
+                Communauté
+              </NavLink>
+            </div>
+
+            <div className="hidden md:flex items-center gap-2">
+              <Link
+                href="/connexion"
+                className="text-sm text-gray-600 dark:text-gray-300 hover:text-primary-500 dark:hover:text-accent-300 font-medium px-3 py-2"
+              >
+                Connexion
+              </Link>
+              <ThemeToggle compact />
+              <Link
+                href="/demo"
+                className="bg-primary-500 hover:bg-primary-600 text-white text-sm font-bold px-4 py-2 rounded-xl transition shadow-sm hover:shadow-md"
+              >
+                Démo
+              </Link>
+            </div>
+
+            {/* Mobile burger */}
+            <div className="flex md:hidden items-center gap-2">
+              <ThemeToggle compact />
+              <button
+                onClick={() => setMobileOpen((v) => !v)}
+                aria-label={
+                  mobileOpen ? "Fermer le menu" : "Ouvrir le menu"
+                }
+                aria-expanded={mobileOpen}
+                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition"
+              >
+                <BurgerIcon open={mobileOpen} />
+              </button>
+            </div>
+          </>
         )}
       </nav>
+
+      {/* ============ Drawer mobile visiteur ============ */}
+      {!user && mobileOpen && (
+        <>
+          <div
+            className="md:hidden fixed inset-0 z-40 bg-black/30 backdrop-blur-sm animate-fadeIn"
+            onClick={() => setMobileOpen(false)}
+            aria-hidden="true"
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu de navigation"
+            className="md:hidden fixed top-16 inset-x-0 bottom-0 z-50 bg-white dark:bg-slate-900 overflow-y-auto animate-slide-up"
+          >
+            <div className="px-4 py-6 space-y-6">
+              <MobileSection title="Produit" items={PRODUIT_ITEMS} />
+              <MobileSection title="Solutions" items={SOLUTIONS_ITEMS} />
+              <MobileSection
+                title="Communauté"
+                items={[
+                  {
+                    href: "/communaute",
+                    label: "Rejoindre",
+                    description:
+                      "4 portes d'entrée - utilisateur, dev, contenu, écosystème",
+                    emoji: "🤝",
+                  },
+                ]}
+              />
+
+              <div className="pt-4 border-t border-gray-200 dark:border-slate-700 flex flex-col gap-3">
+                <Link
+                  href="/connexion"
+                  className="text-center px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-200 font-medium hover:border-primary-300"
+                >
+                  Connexion
+                </Link>
+                <Link
+                  href="/demo"
+                  className="text-center bg-primary-500 hover:bg-primary-600 text-white font-bold px-4 py-3 rounded-xl shadow-sm"
+                >
+                  Démarrer la démo
+                </Link>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </header>
   );
 }
 
-function MenuLink({
+// =============================================================================
+// Sous-composants
+// =============================================================================
+
+function NavLink({
+  href,
+  isActive,
+  className = "",
+  children,
+}: {
+  href: string;
+  isActive: boolean;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      aria-current={isActive ? "page" : undefined}
+      className={`${className} text-sm text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-accent-300 font-medium px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800/50 transition aria-[current=page]:text-primary-500 dark:aria-[current=page]:text-accent-300 aria-[current=page]:font-bold`}
+    >
+      {children}
+    </Link>
+  );
+}
+
+function NavDropdown({
+  label,
+  items,
+}: {
+  label: string;
+  items: DropdownItem[];
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
+    };
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, [open]);
+
+  return (
+    <div
+      className="relative"
+      ref={ref}
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
+      <button
+        onClick={() => setOpen((v) => !v)}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        className="text-sm text-gray-700 dark:text-gray-300 hover:text-primary-500 dark:hover:text-accent-300 font-medium px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800/50 transition inline-flex items-center gap-1"
+      >
+        {label}
+        <span
+          aria-hidden="true"
+          className={`text-[10px] transition-transform ${open ? "rotate-180" : ""}`}
+        >
+          ▾
+        </span>
+      </button>
+      {open && (
+        <div
+          role="menu"
+          className="absolute left-0 top-full pt-1.5 w-80 z-50"
+        >
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-200 dark:border-slate-700 p-2 animate-fadeIn">
+            {items.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                role="menuitem"
+                className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700/50 transition group"
+              >
+                <span
+                  aria-hidden="true"
+                  className="text-2xl shrink-0 leading-none mt-0.5 w-7 text-center"
+                >
+                  {item.emoji}
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-primary-500 dark:text-accent-300 group-hover:underline-offset-4">
+                    {item.label}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MobileSection({
+  title,
+  items,
+}: {
+  title: string;
+  items: DropdownItem[];
+}) {
+  return (
+    <section>
+      <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-accent-500 mb-2 px-2">
+        {title}
+      </h3>
+      <ul className="space-y-1">
+        {items.map((item) => (
+          <li key={item.href}>
+            <Link
+              href={item.href}
+              className="flex items-start gap-3 px-2 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800/50 transition"
+            >
+              <span
+                aria-hidden="true"
+                className="text-2xl shrink-0 leading-none mt-0.5 w-7 text-center"
+              >
+                {item.emoji}
+              </span>
+              <div className="min-w-0">
+                <p className="text-base font-bold text-primary-500 dark:text-accent-300">
+                  {item.label}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+function UserMenuItem({
   href,
   icon,
   label,
@@ -349,10 +664,56 @@ function MenuLink({
       href={href}
       onClick={onClick}
       role="menuitem"
-      className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700"
+      className="flex items-center gap-3 px-4 py-2 mx-1 rounded-lg text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700"
     >
-      <span className="text-base">{icon}</span>
+      <span className="text-base w-5 text-center" aria-hidden="true">
+        {icon}
+      </span>
       <span>{label}</span>
     </Link>
+  );
+}
+
+function BurgerIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 22 22"
+      fill="none"
+      aria-hidden="true"
+      className="text-gray-700 dark:text-gray-200"
+    >
+      <line
+        x1="3"
+        y1={open ? "11" : "6"}
+        x2="19"
+        y2={open ? "11" : "6"}
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        className={`transition-all ${open ? "rotate-45 origin-center" : ""}`}
+      />
+      <line
+        x1="3"
+        y1="11"
+        x2="19"
+        y2="11"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        className={`transition-opacity ${open ? "opacity-0" : ""}`}
+      />
+      <line
+        x1="3"
+        y1={open ? "11" : "16"}
+        x2="19"
+        y2={open ? "11" : "16"}
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        className={`transition-all ${open ? "-rotate-45 origin-center" : ""}`}
+      />
+    </svg>
   );
 }

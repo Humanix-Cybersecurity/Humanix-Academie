@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Console dirigeant — vue agrégée, KPIs, graphiques, suivi equipe.
+// Console dirigeant - vue agrégée, KPIs, graphiques, suivi equipe.
 //
 // REFONTE MAI 2026 (cosy / charmant / impactant) : la page wrap le dashboard
 // avec une intro chaleureuse facon "rituel matinal" :
 //   - Hero card HexBackdrop avec salutation contextuelle (Bonjour Florian)
-//   - Phrase d'accueil cosy "voici le rituel — ce qui demande l'attention,
+//   - Phrase d'accueil cosy "voici le rituel - ce qui demande l'attention,
 //     ce qui va bien" (vs "etat de maturite" un peu froid)
 //   - Citation finale "Hex veille" pour signer la page
 //   - Animations slide-up cascadees (idx * 80ms)
 //
-// Le dashboard métier (AdminDashboard) reste inchangé — c'est l'outil de
+// Le dashboard métier (AdminDashboard) reste inchangé - c'est l'outil de
 // pilotage avec recharts, KPIs, viz complexes. La cosy-fication s'opere
 // autour de lui, pas au sein.
 //
@@ -167,7 +167,7 @@ export default async function AdminPage() {
           : "Bonsoir";
   const firstName = (session!.user?.name ?? "").split(" ")[0];
 
-  // Phrase d'accueil contextualisee selon les stats — touche cosy
+  // Phrase d'accueil contextualisee selon les stats - touche cosy
   // (vs "voici l'etat de maturite" generique). On adapte au contexte reel.
   const hint =
     totalSeats === 0
@@ -183,7 +183,7 @@ export default async function AdminPage() {
   return (
     <div className="animate-fadeIn space-y-8">
       {/* ============================================================
-          1. HERO COSY — salutation + rituel matinal + date
+          1. HERO COSY - salutation + rituel matinal + date
           ============================================================ */}
       <HexBackdrop intensity="soft" className="rounded-3xl overflow-hidden">
         <header className="relative px-6 sm:px-10 py-8 sm:py-10 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-slate-900 dark:via-slate-900 dark:to-blue-950/40 border-2 border-primary-200 dark:border-primary-900/40 rounded-3xl shadow-sm">
@@ -226,7 +226,7 @@ export default async function AdminPage() {
       </HexBackdrop>
 
       {/* ============================================================
-          2. DASHBOARD METIER — recharts + KPI + suivi equipe
+          2. DASHBOARD METIER - recharts + KPI + suivi equipe
           ============================================================ */}
       <AdminDashboard
         stats={{
@@ -245,7 +245,7 @@ export default async function AdminPage() {
       />
 
       {/* ============================================================
-          3. CITATION FINALE — signature cosy "Hex veille"
+          3. CITATION FINALE - signature cosy "Hex veille"
           ============================================================ */}
       <section
         aria-label="Mot du fondateur"
@@ -254,14 +254,14 @@ export default async function AdminPage() {
       >
         <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
           « Piloter une culture cyber, c'est moins une chasse aux failles
-          qu'une attention reguliere — comme entretenir un jardin. Aujourd'hui,
+          qu'une attention reguliere - comme entretenir un jardin. Aujourd'hui,
           observe. Demain, arrose. »
         </blockquote>
         <p
           aria-hidden="true"
           className="mt-3 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
         >
-          — Hex veille ·{" "}
+          - Hex veille ·{" "}
           <Link
             href="/admin/business"
             className="underline hover:text-accent-500"

@@ -3,13 +3,13 @@
 // Aligné sur la grille tarifaire (cf. lib/pricing.ts).
 //
 // =============================================================================
-// PIVOT MAI 2026 — modèle volume + open core
+// PIVOT MAI 2026 - modèle volume + open core
 // =============================================================================
 //
 // Hiérarchie : trial < decouverte < solo (Starter) < essentielle < pro < premium (Enterprise).
 // Une feature est disponible si le plan du tenant >= au minimum requis.
 //
-// IMPORTANT — rétro-compat DB :
+// IMPORTANT - rétro-compat DB :
 // On garde les keys existantes (`trial`, `solo`, `essentielle`, `pro`, `premium`)
 // pour ne PAS casser les tenants déjà en base. Seuls les LIBELLÉS UI changent
 // pour refléter la nouvelle grille :
@@ -18,7 +18,7 @@
 // On AJOUTE `decouverte` (forever-free 5 sièges).
 //
 // Note open source : `community` (self-host AGPL gratuit) n'apparaît PAS comme
-// PlanId — par construction, ces installations n'ont pas de tenant cloud chez
+// PlanId - par construction, ces installations n'ont pas de tenant cloud chez
 // nous. Le palier "Community Edition" est purement présenté côté marketing
 // dans la page /tarifs.
 
@@ -54,6 +54,10 @@ export const FEATURE_MIN_PLAN = {
   incidents: "pro",
   // Phishing personnalise par employe via IA Mistral
   phishing_ia: "pro",
+  // Vishing IA souverain (Mistral + Piper TTS)
+  vishing: "pro",
+  // Smishing IA souverain (Mistral SMS)
+  smishing: "pro",
   // Marketplace de modules (officiels + communaute)
   marketplace: "pro",
   // SSO entreprise (SAML, SCIM)
@@ -104,7 +108,7 @@ export function planHasFeature(
  * Server Component ou un module utilitaire, et `lib/plans.ts` reste sans
  * dépendance Node-only. C'est nécessaire car certains "use client"
  * (cf. `app/demo/page.tsx`) importent ce fichier pour les constantes
- * `PLAN_LABEL` / `PLAN_EMOJI` — Webpack pré-bundle alors `lib/plans.ts`
+ * `PLAN_LABEL` / `PLAN_EMOJI` - Webpack pré-bundle alors `lib/plans.ts`
  * pour le browser, et tout import statique de `node:crypto` dans la
  * chaîne casse le build.
  *
@@ -126,7 +130,7 @@ export async function getTenantPlan(tenantId: string): Promise<PlanId> {
 }
 
 // =============================================================================
-// LIBELLÉS UI — alignés sur la nouvelle grille mai 2026
+// LIBELLÉS UI - alignés sur la nouvelle grille mai 2026
 // =============================================================================
 // Ces labels apparaissent partout dans l'app (bandeaux, upsell, factures...).
 // Ils peuvent évoluer sans toucher à la DB (les keys restent stables).

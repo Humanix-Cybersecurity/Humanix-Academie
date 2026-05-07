@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Renderer markdown ULTRA SIMPLE et SAFE — pas de HTML brut accepte.
+// Renderer markdown ULTRA SIMPLE et SAFE - pas de HTML brut accepte.
 // Sortie : tableau de blocks typed que React rendera proprement (pas de
 // dangerouslySetInnerHTML).
 // Couvre : H1, H2, H3, paragraphes, listes a puces, listes ordonnees, blockquotes.

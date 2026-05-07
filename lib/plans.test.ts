@@ -3,7 +3,7 @@
 // Critique : un bug ici = feature payante exposée gratuitement OU
 // utilisateur bloqué qui devrait avoir accès. Les deux cas = perte client.
 //
-// On NE teste PAS getTenantPlan car il dépend de Prisma — testé en e2e
+// On NE teste PAS getTenantPlan car il dépend de Prisma - testé en e2e
 // post-launch via Playwright.
 
 import { describe, it, expect } from "vitest";
@@ -112,13 +112,15 @@ describe("planHasFeature", () => {
   });
 
   it("matrice complète features × plans (régression)", () => {
-    // Snapshot du contrat actuel — tout changement doit être intentionnel
+    // Snapshot du contrat actuel - tout changement doit être intentionnel
     const matrix: Record<Feature, PlanId[]> = {
       api: ["essentielle", "pro", "premium"],
       phishing: ["pro", "premium"],
       challenges: ["pro", "premium"],
       incidents: ["pro", "premium"],
       phishing_ia: ["pro", "premium"],
+      vishing: ["pro", "premium"],
+      smishing: ["pro", "premium"],
       marketplace: ["pro", "premium"],
       sso_enterprise: ["premium"],
       multi_site: ["premium"],

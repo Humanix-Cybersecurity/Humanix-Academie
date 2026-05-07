@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Facade d'envoi d'email — provider-agnostique.
+// Facade d'envoi d'email - provider-agnostique.
 //
 // Pour l'instant un seul provider est implemente : Scaleway TEM (souverain
 // francais). L'architecture en facade permet d'ajouter d'autres providers

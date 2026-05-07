@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// /profil/securite — gestion mdp, 2FA, codes de secours.
+// /profil/securite - gestion mdp, 2FA, codes de secours.
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";

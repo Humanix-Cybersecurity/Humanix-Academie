@@ -40,11 +40,11 @@ const CATEGORIE_PROFILS: Record<
     persona: "Vous êtes collaborateur d'une PME française",
     objective: "Apprendre à repérer un message suspect avant de cliquer",
     scenarioTemplate: (t) =>
-      `Vous êtes au bureau, votre boîte mail vous notifie. Un message arrive — son contenu est lié au sujet : "${t}". Le message vous demande une action rapide. Vous regardez l'expéditeur, l'URL et le ton. Que faites-vous ?`,
+      `Vous êtes au bureau, votre boîte mail vous notifie. Un message arrive - son contenu est lié au sujet : "${t}". Le message vous demande une action rapide. Vous regardez l'expéditeur, l'URL et le ton. Que faites-vous ?`,
     choices: [
       {
         id: "click",
-        label: "Je clique sur le lien sans vérifier — c'est urgent.",
+        label: "Je clique sur le lien sans vérifier - c'est urgent.",
         outcome: "bad",
         feedback:
           "L'urgence est précisément le levier de manipulation des phishings. Toujours prendre 5 secondes.",

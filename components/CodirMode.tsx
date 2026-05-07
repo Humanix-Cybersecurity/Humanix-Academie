@@ -113,13 +113,13 @@ export default function CodirMode(props: CodirModeProps) {
             <header className="flex items-start justify-between mb-10">
               <div>
                 <p className="text-xs uppercase tracking-widest text-accent-500 font-bold">
-                  Tableau de bord cyber — Mode CODIR
+                  Tableau de bord cyber - Mode CODIR
                 </p>
                 <h2 className="text-3xl sm:text-4xl font-extrabold text-primary-500 mt-1">
                   {props.tenantName}
                 </h2>
                 <p className="text-sm text-gray-500 mt-1">
-                  {today} — Vue de pilotage executif
+                  {today} - Vue de pilotage executif
                 </p>
               </div>
               <button

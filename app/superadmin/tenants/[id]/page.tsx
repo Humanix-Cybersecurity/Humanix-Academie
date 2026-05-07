@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// /superadmin/tenants/[id] — fiche detaillee d'un tenant.
+// /superadmin/tenants/[id] - fiche detaillee d'un tenant.
 // Sert au support / commercial pour diagnostiquer rapidement un client.
 import Link from "next/link";
 import { notFound } from "next/navigation";

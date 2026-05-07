@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Catalogue des 12 posters mensuels — 1 thème par mois.
+// Catalogue des 12 posters mensuels - 1 thème par mois.
 //
 // PHILOSOPHIE : un poster = une accroche graphique + un message simple +
 // un appel à l'action. Format A3 portrait, imprimable en couleur sur
@@ -35,14 +35,14 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
     subtitle: "Les 3 résolutions qui changent tout.",
     bgColor: "#0B3D91",
     accentColor: "#00A3A1",
-    hook: "Sur 100 PME, 60 subiront un incident cyber cette année. Les autres 40 ont de meilleurs réflexes — pas plus de budget.",
+    hook: "Sur 100 PME, 60 subiront un incident cyber cette année. Les autres 40 ont de meilleurs réflexes - pas plus de budget.",
     actions: [
       "Activer la double authentification (MFA) sur tous mes comptes pro",
       "Vérifier mes sauvegardes : où ? quand ? testées ?",
       "Signaler les mails suspects à l'IT plutôt que de les ignorer",
     ],
     factOrQuote:
-      "« Le maillon faible n'est pas l'humain — c'est l'humain mal informé. »",
+      "« Le maillon faible n'est pas l'humain - c'est l'humain mal informé. »",
   },
   2: {
     month: 2,
@@ -59,7 +59,7 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
       "Ne JAMAIS partager de selfie ou document d'identité avec une rencontre numérique.",
     ],
     factOrQuote:
-      "« Les escrocs sentimentaux gagnent en moyenne 5 800 € par victime française. — ANSSI 2024 »",
+      "« Les escrocs sentimentaux gagnent en moyenne 5 800 € par victime française. - ANSSI 2024 »",
   },
   3: {
     month: 3,
@@ -69,14 +69,14 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
     subtitle: "Un gestionnaire, un MFA, et c'est plié.",
     bgColor: "#0B3D91",
     accentColor: "#7C3AED",
-    hook: "Le mot de passe parfait n'existe pas — sauf si vous n'avez pas à vous en souvenir.",
+    hook: "Le mot de passe parfait n'existe pas - sauf si vous n'avez pas à vous en souvenir.",
     actions: [
       "Installer un gestionnaire de mots de passe pro (Bitwarden, KeePass, 1Password)",
       "Activer le MFA sur les comptes critiques (mail, banque, ERP, paie)",
       "Bannir les mots de passe sur post-it, dans Excel, ou dans le bloc-notes",
     ],
     factOrQuote:
-      "« 81% des piratages d'entreprises commencent par un mot de passe faible ou réutilisé. — Verizon DBIR »",
+      "« 81% des piratages d'entreprises commencent par un mot de passe faible ou réutilisé. - Verizon DBIR »",
   },
   4: {
     month: 4,
@@ -99,7 +99,7 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
     month: 5,
     monthLabel: "Mai",
     emoji: "💻",
-    title: "Télétravail : la cyber suit\nle clavier — pas le bureau.",
+    title: "Télétravail : la cyber suit\nle clavier - pas le bureau.",
     subtitle: "Bonnes pratiques quand on bosse de chez soi.",
     bgColor: "#0B3D91",
     accentColor: "#00A3A1",
@@ -110,7 +110,7 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
       "Pas de visio confidentielle sur wifi public",
     ],
     factOrQuote:
-      "« 67% des fuites de données en télétravail viennent du wifi public. — IBM Security 2024 »",
+      "« 67% des fuites de données en télétravail viennent du wifi public. - IBM Security 2024 »",
   },
   6: {
     month: 6,
@@ -144,7 +144,7 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
       "Désigner un référent cyber joignable en cas d'incident pendant vos congés",
     ],
     factOrQuote:
-      "« Les attaques ransomware augmentent de 40% en juillet-août. Les attaquants ciblent les périodes creuses. — Cybermalveillance 2024 »",
+      "« Les attaques ransomware augmentent de 40% en juillet-août. Les attaquants ciblent les périodes creuses. - Cybermalveillance 2024 »",
   },
   8: {
     month: 8,
@@ -161,7 +161,7 @@ export const POSTER_THEMES: Record<number, PosterTheme> = {
       'Ne jamais accepter une demande de "faire confiance à cet ordinateur" depuis votre téléphone pro',
     ],
     factOrQuote:
-      "« 1 borne USB publique sur 100 a été modifiée pour voler des données. — étude Kaspersky 2023 »",
+      "« 1 borne USB publique sur 100 a été modifiée pour voler des données. - étude Kaspersky 2023 »",
   },
   9: {
     month: 9,

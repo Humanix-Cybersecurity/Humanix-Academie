@@ -4,7 +4,7 @@
 // markdown intégral (pertes de fidélité @react-pdf vs MD), on construit
 // directement la version structurée avec le contenu pédagogique.
 //
-// Helvetica only (cf. note dans pdf-audit-flash.tsx) — pas d'emojis Unicode.
+// Helvetica only (cf. note dans pdf-audit-flash.tsx) - pas d'emojis Unicode.
 
 import React from "react";
 import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
@@ -184,7 +184,7 @@ function PageHeader() {
         Humanix Académie · Rapport d'audit de sécurité
       </Text>
       <Text style={styles.brandSub}>
-        v1.0 — 2 mai 2026 · public · humanix-cybersecurity.fr
+        v1.0 - 2 mai 2026 · public · humanix-cybersecurity.fr
       </Text>
     </View>
   );
@@ -257,7 +257,7 @@ export function SecurityAuditReport() {
 
         <View style={styles.coverBlock}>
           <Text style={styles.coverLabel}>Édition</Text>
-          <Text style={styles.coverValue}>v1.0 — 2 mai 2026</Text>
+          <Text style={styles.coverValue}>v1.0 - 2 mai 2026</Text>
         </View>
 
         <View style={styles.coverBlock}>
@@ -287,7 +287,7 @@ export function SecurityAuditReport() {
           <Text style={styles.calloutText}>
             Humanix-Cybersecurity vend de la sensibilisation à la cybersécurité.
             Il serait incohérent de prêcher la vigilance sans nous y soumettre
-            nous-mêmes — et plus encore sans rendre nos pratiques inspectables.
+            nous-mêmes - et plus encore sans rendre nos pratiques inspectables.
             {"\n\n"}
             Ce rapport documente honnêtement ce que nous faisons bien, ce que
             nous n'avons pas encore fait et pourquoi, et notre plan de
@@ -368,30 +368,30 @@ export function SecurityAuditReport() {
           OWASP ASVS 4.0 (Application Security Verification Standard)
         </Bullet>
         <Bullet>Guide ANSSI "Sécurité numérique des PME"</Bullet>
-        <Bullet>CNIL — Référentiel de conformité RGPD</Bullet>
+        <Bullet>CNIL - Référentiel de conformité RGPD</Bullet>
         <Bullet>CIS Controls v8 (infrastructure et SDLC)</Bullet>
 
         <Text style={styles.h2}>2.3 Tests effectués</Text>
         <Bullet>
-          Revue de code interne (continue) — routes API, server actions, helpers
+          Revue de code interne (continue) - routes API, server actions, helpers
           d'auth
         </Bullet>
         <Bullet>
           Test SSRF webhooks : URLs internes (10.x, 127.x, 192.168.x, .local)
-          refusées — VALIDE
+          refusées - VALIDE
         </Bullet>
         <Bullet>
-          Test injection HTML/XSS sur générateur phishing IA — VALIDE
+          Test injection HTML/XSS sur générateur phishing IA - VALIDE
         </Bullet>
-        <Bullet>Test rate limiting sur endpoints sensibles — VALIDE</Bullet>
+        <Bullet>Test rate limiting sur endpoints sensibles - VALIDE</Bullet>
         <Bullet>
-          Test isolation tenant (manipulation paramètres) — REFUS CORRECT
-        </Bullet>
-        <Bullet>
-          Test échappement Prisma (backslashes, surrogates, NULL bytes) — VALIDE
+          Test isolation tenant (manipulation paramètres) - REFUS CORRECT
         </Bullet>
         <Bullet>
-          Audit accessibilité interne WCAG 2.1 AA / RGAA 4.1 — score 88 %
+          Test échappement Prisma (backslashes, surrogates, NULL bytes) - VALIDE
+        </Bullet>
+        <Bullet>
+          Audit accessibilité interne WCAG 2.1 AA / RGAA 4.1 - score 88 %
         </Bullet>
 
         <View style={styles.callout}>
@@ -420,12 +420,12 @@ export function SecurityAuditReport() {
           réseau stricte :
         </Text>
         <Bullet>
-          Réseau frontend (humanix_frontend) : haproxy {"↔"} app — seul HAProxy
+          Réseau frontend (humanix_frontend) : haproxy {"↔"} app - seul HAProxy
           y est exposé sur l'host
         </Bullet>
         <Bullet>
           Réseau backend (humanix_backend) : app {"↔"} postgres et app {"↔"} tts
-          — aucun service exposé sur l'host
+          - aucun service exposé sur l'host
         </Bullet>
         <Bullet>
           Postgres et TTS sont strictement internes : aucun mapping de port host
@@ -486,7 +486,7 @@ export function SecurityAuditReport() {
         </Bullet>
         <Bullet>
           Vérification isActive dans 4 callbacks (authorize, signIn, jwt,
-          session) — un compte suspendu n'a aucune voie d'accès valide
+          session) - un compte suspendu n'a aucune voie d'accès valide
         </Bullet>
         <Bullet>Magic link à usage unique avec TTL 1h</Bullet>
         <Bullet>
@@ -663,23 +663,23 @@ export function SecurityAuditReport() {
 
         <Text style={styles.h2}>6.2 Droits implémentés</Text>
         <Bullet>
-          Information (art. 13) — page /confidentialite exhaustive
+          Information (art. 13) - page /confidentialite exhaustive
         </Bullet>
         <Bullet>
-          Accès (art. 15) — sur demande à rgpd@humanix-cybersecurity.fr, {"<"}{" "}
+          Accès (art. 15) - sur demande à rgpd@humanix-cybersecurity.fr, {"<"}{" "}
           30 jours
         </Bullet>
-        <Bullet>Rectification (art. 16) — auto-service depuis /profil</Bullet>
+        <Bullet>Rectification (art. 16) - auto-service depuis /profil</Bullet>
         <Bullet>
-          Effacement (art. 17) — sur demande, traitement {"<"} 30 jours, cascade
+          Effacement (art. 17) - sur demande, traitement {"<"} 30 jours, cascade
           Prisma
         </Bullet>
-        <Bullet>Limitation (art. 18) — compte mis en isActive: false</Bullet>
+        <Bullet>Limitation (art. 18) - compte mis en isActive: false</Bullet>
         <Bullet>
-          Portabilité (art. 20) — export CSV partiel (zip complet en backlog)
+          Portabilité (art. 20) - export CSV partiel (zip complet en backlog)
         </Bullet>
         <Bullet>
-          Opposition (art. 21) — désinscription newsletter en 1 clic
+          Opposition (art. 21) - désinscription newsletter en 1 clic
         </Bullet>
 
         <Text style={styles.h2}>6.3 Privacy by design</Text>
@@ -699,11 +699,11 @@ export function SecurityAuditReport() {
         </Bullet>
 
         <Text style={styles.h2}>6.4 Sous-traitants RGPD (art. 28)</Text>
-        <Bullet>Scaleway (FR) — hébergement — DPA signé</Bullet>
-        <Bullet>Scaleway TEM (Paris, FR) — envoi mails — DPA signé</Bullet>
-        <Bullet>Mistral AI (FR Paris) — IA générative — DPA signé</Bullet>
+        <Bullet>Scaleway (FR) - hébergement - DPA signé</Bullet>
+        <Bullet>Scaleway TEM (Paris, FR) - envoi mails - DPA signé</Bullet>
+        <Bullet>Mistral AI (FR Paris) - IA générative - DPA signé</Bullet>
         <Bullet>
-          Google / Microsoft — SSO uniquement, AUCUNE donnée HumaniX transmise
+          Google / Microsoft - SSO uniquement, AUCUNE donnée HumaniX transmise
         </Bullet>
 
         <PageFooter />
@@ -715,11 +715,11 @@ export function SecurityAuditReport() {
         <Text style={styles.h1}>7. SDLC et gestion des incidents</Text>
 
         <Text style={styles.h2}>7.1 Stack technique</Text>
-        <Bullet>TypeScript strict — détection erreurs au build</Bullet>
-        <Bullet>Next.js 15 App Router — Server Components, CSRF natif</Bullet>
-        <Bullet>Prisma ORM — queries paramétrées (immune SQL injection)</Bullet>
-        <Bullet>Auth.js v5 — lib auditée, base installée massive</Bullet>
-        <Bullet>Zod — validation runtime systématique</Bullet>
+        <Bullet>TypeScript strict - détection erreurs au build</Bullet>
+        <Bullet>Next.js 15 App Router - Server Components, CSRF natif</Bullet>
+        <Bullet>Prisma ORM - queries paramétrées (immune SQL injection)</Bullet>
+        <Bullet>Auth.js v5 - lib auditée, base installée massive</Bullet>
+        <Bullet>Zod - validation runtime systématique</Bullet>
 
         <Text style={styles.h2}>7.2 Tests et CI</Text>
         <Bullet>tsc --noEmit + next lint au build (refus si erreurs)</Bullet>
@@ -779,19 +779,19 @@ export function SecurityAuditReport() {
 
         <Text style={styles.h2}>9.1 Points forts à conserver</Text>
         <Bullet>
-          Souveraineté FR/UE assumée — zéro Cloud Act US sur données client
+          Souveraineté FR/UE assumée - zéro Cloud Act US sur données client
         </Bullet>
         <Bullet>
-          Architecture multi-tenant solide — scoping strict, plan-gating
+          Architecture multi-tenant solide - scoping strict, plan-gating
         </Bullet>
         <Bullet>
-          SDLC moderne — TypeScript strict, ORM, validation Zod systématique
+          SDLC moderne - TypeScript strict, ORM, validation Zod systématique
         </Bullet>
         <Bullet>
-          Transparence éditoriale — /comparatif, /securite, ce rapport public
+          Transparence éditoriale - /comparatif, /securite, ce rapport public
         </Bullet>
         <Bullet>
-          RGPD natif et non bolt-on — DPA, registre, droits, IP hashées,
+          RGPD natif et non bolt-on - DPA, registre, droits, IP hashées,
           minimisation
         </Bullet>
 
@@ -878,9 +878,9 @@ export function SecurityAuditReport() {
           <Text style={styles.calloutText}>
             Ce rapport est honnête par conception. Il liste autant nos forces
             que nos lacunes, parce que la confiance se construit sur la
-            transparence — pas sur l'autocélébration.{"\n\n"}
+            transparence - pas sur l'autocélébration.{"\n\n"}
             La cybersécurité n'est pas une destination, c'est une trajectoire.
-            Nous vous tenons informés.{"\n\n"}— Florian DURANO, fondateur,
+            Nous vous tenons informés.{"\n\n"}- Florian DURANO, fondateur,
             Humanix-Cybersecurity.
           </Text>
         </View>

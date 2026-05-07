@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Landing publique de l'audit flash cyber — refonte cosy mai 2026.
+// Landing publique de l'audit flash cyber - refonte cosy mai 2026.
 //
 // Brief : "experience, terrain, sensibilisation reelle, pas celle generee
-// par la peur — celle qui sent bon la maitrise et la confiance".
+// par la peur - celle qui sent bon la maitrise et la confiance".
 //
-// Cette page est notre 1er contact public sans authentification — c'est
+// Cette page est notre 1er contact public sans authentification - c'est
 // notre machine a leads. La version anterieure etait correcte mais
 // utilisait du vocabulaire anxiogene ("score", "risques", "failles a
 // corriger"). On reformule en langage de **maitrise tranquille** :
@@ -12,7 +12,7 @@
 //   "risques prioritaires" → "leviers prioritaires"
 //   "plan d'action chiffre" → "feuille de route accessible"
 //
-// Le wizard interactif (./AuditWizard) reste inchange — c'est le
+// Le wizard interactif (./AuditWizard) reste inchange - c'est le
 // composant client qui fait la mecanique du quiz.
 //
 // SEO-friendly (server component) + a11y respectee (skip-link cible
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     "Faites le point sur votre cybersécurité PME en 5 minutes. 15 questions, un rapport PDF avec vos forces, vos 3 leviers prioritaires et une feuille de route concrète. 100 % gratuit, sans relance commerciale.",
   alternates: { canonical: "/audit-flash" },
   openGraph: {
-    title: "Audit Cyber Flash gratuit pour PME — HumaniX",
+    title: "Audit Cyber Flash gratuit pour PME - HumaniX",
     description:
       "Une photo bienveillante de votre maturité cyber. Score, leviers, feuille de route, conformité NIS2. En 5 minutes. Made in France.",
     type: "website",
@@ -39,7 +39,7 @@ export default function AuditFlashPage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* ============================================================
-          1. HERO — chaleureux, anti-pression
+          1. HERO - chaleureux, anti-pression
           ============================================================ */}
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
         <section
@@ -66,7 +66,7 @@ export default function AuditFlashPage() {
             style={{ animationDelay: "220ms" }}
           >
             Pas un examen. Une <strong>photo bienveillante</strong> de votre
-            cybersécurité actuelle, pour savoir par où commencer — sans
+            cybersécurité actuelle, pour savoir par où commencer - sans
             jargon, sans pression.
           </p>
 
@@ -85,7 +85,7 @@ export default function AuditFlashPage() {
 
       <div className="max-w-5xl mx-auto px-4 py-12 sm:py-16 space-y-16">
         {/* ============================================================
-            2. COMMENT ÇA MARCHE — 3 étapes pour rassurer
+            2. COMMENT ÇA MARCHE - 3 étapes pour rassurer
             ============================================================ */}
         <section aria-labelledby="how-title">
           <div className="text-center mb-10">
@@ -105,7 +105,7 @@ export default function AuditFlashPage() {
               n="1"
               emoji="✏️"
               title="Vous cochez ce qui vous parle"
-              text="15 questions simples, formulées comme on parle à un ami. Pas de jargon RSSI. Si vous ne savez pas, c'est aussi une réponse — et c'est OK."
+              text="15 questions simples, formulées comme on parle à un ami. Pas de jargon RSSI. Si vous ne savez pas, c'est aussi une réponse - et c'est OK."
               delay={0}
             />
             <StepCard
@@ -126,14 +126,14 @@ export default function AuditFlashPage() {
         </section>
 
         {/* ============================================================
-            3. WIZARD — composant client, garde tel quel
+            3. WIZARD - composant client, garde tel quel
             ============================================================ */}
         <section aria-label="Quiz audit cyber" className="scroll-mt-20" id="quiz">
           <AuditWizard />
         </section>
 
         {/* ============================================================
-            4. CE QUE VOUS EMPORTEZ — reformulé sans peur
+            4. CE QUE VOUS EMPORTEZ - reformulé sans peur
             ============================================================ */}
         <section aria-labelledby="value-title">
           <div className="text-center mb-10">
@@ -152,13 +152,13 @@ export default function AuditFlashPage() {
             <ValueCard
               icon="📷"
               title="Une photo claire"
-              text="Note globale de maturité cyber, calculée sur 5 domaines clés. Pas une note d'examen — un repère, pour savoir où vous en êtes."
+              text="Note globale de maturité cyber, calculée sur 5 domaines clés. Pas une note d'examen - un repère, pour savoir où vous en êtes."
               delay={0}
             />
             <ValueCard
               icon="🎯"
               title="Vos 3 leviers prioritaires"
-              text="Pas des « risques » à craindre — des actions à votre portée. Classés du plus impactant au plus accessoire, avec une recommandation actionnable."
+              text="Pas des « risques » à craindre - des actions à votre portée. Classés du plus impactant au plus accessoire, avec une recommandation actionnable."
               delay={120}
             />
             <ValueCard
@@ -171,7 +171,7 @@ export default function AuditFlashPage() {
         </section>
 
         {/* ============================================================
-            5. POURQUOI DIFFÉRENT — confiance, pas pression
+            5. POURQUOI DIFFÉRENT - confiance, pas pression
             ============================================================ */}
         <section aria-labelledby="trust-title">
           <div className="rounded-3xl bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/30 border-2 border-emerald-200 dark:border-emerald-900/40 p-8 sm:p-12 shadow-sm">
@@ -196,13 +196,13 @@ export default function AuditFlashPage() {
               <TrustItem title="Aligné sur la réalité 2026">
                 Inclut la conformité NIS2, les obligations RGPD et les
                 situations courantes (rançongiciel, fraude au président,
-                phishing ciblé) — formulées comme on les vit, pas comme on les
+                phishing ciblé) - formulées comme on les vit, pas comme on les
                 lit dans un audit officiel.
               </TrustItem>
               <TrustItem title="Aucun commercial ne vous appellera">
                 Vous recevez le rapport, vous décidez. Si vous voulez parler à
                 un humain, c'est <em>vous</em> qui nous écrivez. Notre métier,
-                c'est de vous accompagner — pas de vous harceler.
+                c'est de vous accompagner - pas de vous harceler.
               </TrustItem>
               <TrustItem title="Vos données sont en sécurité">
                 Hébergées en France (Scaleway Paris), jamais revendues,
@@ -220,7 +220,7 @@ export default function AuditFlashPage() {
         </section>
 
         {/* ============================================================
-            6. ET APRÈS — projection rassurante
+            6. ET APRÈS - projection rassurante
             ============================================================ */}
         <section aria-labelledby="after-title">
           <div className="card-hero relative overflow-hidden animate-glow text-center">
@@ -251,7 +251,7 @@ export default function AuditFlashPage() {
                 </li>
                 <li>
                   <strong>Score moyen ?</strong> C'est la majorité des PME
-                  françaises. Bienvenue dans la normalité — et dans le chemin
+                  françaises. Bienvenue dans la normalité - et dans le chemin
                   vers la maîtrise.
                 </li>
               </ul>
@@ -264,7 +264,7 @@ export default function AuditFlashPage() {
         </section>
 
         {/* ============================================================
-            7. MÉTHODOLOGIE — pour les RSSI / curieux
+            7. MÉTHODOLOGIE - pour les RSSI / curieux
             ============================================================ */}
         <section aria-labelledby="method-title">
           <details className="rounded-3xl bg-white dark:bg-slate-900 border-2 border-gray-200 dark:border-slate-700 overflow-hidden group">
@@ -292,7 +292,7 @@ export default function AuditFlashPage() {
               <p>
                 Chaque question est pondérée selon sa criticité (1 à 3 points).
                 Une réponse "OUI" rapporte les points, "NON" et "Je ne sais
-                pas" ne rapportent rien — en cybersécurité, ne pas savoir
+                pas" ne rapportent rien - en cybersécurité, ne pas savoir
                 équivaut à ne pas faire (ce n'est pas un jugement, juste une
                 réalité opérationnelle).
               </p>
@@ -305,7 +305,7 @@ export default function AuditFlashPage() {
               <p className="italic text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-200 dark:border-slate-700">
                 Cet audit est un diagnostic indicatif et bienveillant. Pour une
                 évaluation certifiée, consultez un prestataire qualifié PASSI
-                (référentiel ANSSI). On peut aussi vous y accompagner — c'est
+                (référentiel ANSSI). On peut aussi vous y accompagner - c'est
                 notre métier.
               </p>
             </div>
@@ -313,7 +313,7 @@ export default function AuditFlashPage() {
         </section>
 
         {/* ============================================================
-            8. RESPIRATION — citation finale chaleureuse
+            8. RESPIRATION - citation finale chaleureuse
             ============================================================ */}
         <section className="text-center pt-4">
           <blockquote className="font-display italic text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
@@ -324,7 +324,7 @@ export default function AuditFlashPage() {
             aria-hidden="true"
             className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
           >
-            — Hex veille
+            - Hex veille
           </p>
         </section>
       </div>

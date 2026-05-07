@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Humanix Académie — Système de niveaux & gamification
+// Humanix Académie - Système de niveaux & gamification
 // 5 paliers d'évolution de la mascotte Hex
 
 export type LevelDef = {

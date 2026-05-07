@@ -11,16 +11,55 @@ d'aller-retours.
 
 ## Sommaire
 
-1. [Code de conduite](#code-de-conduite)
-2. [Types de contributions acceptées](#types-de-contributions-acceptées)
-3. [Setup local](#setup-local)
-4. [Workflow de contribution](#workflow-de-contribution)
-5. [Conventions de code](#conventions-de-code)
-6. [Conventions de commit](#conventions-de-commit)
-7. [Conventions de PR](#conventions-de-pr)
-8. [Signature des commits (DCO)](#signature-des-commits-dco)
-9. [Programme Maintainer](#programme-maintainer)
-10. [Questions](#questions)
+1. [Mon premier PR — par où commencer](#mon-premier-pr--par-où-commencer)
+2. [Code de conduite](#code-de-conduite)
+3. [Types de contributions acceptées](#types-de-contributions-acceptées)
+4. [Contribuer un module MDX](#contribuer-un-module-mdx)
+5. [Setup local](#setup-local)
+6. [Workflow de contribution](#workflow-de-contribution)
+7. [Conventions de code](#conventions-de-code)
+8. [Conventions de commit](#conventions-de-commit)
+9. [Conventions de PR](#conventions-de-pr)
+10. [Signature des commits (DCO)](#signature-des-commits-dco)
+11. [Programme Maintainer](#programme-maintainer)
+12. [Questions](#questions)
+
+---
+
+## Mon premier PR — par où commencer
+
+Tu débarques, tu veux contribuer, tu ne sais pas où mettre les mains. Voici les
+3 portes d'entrée par effort croissant.
+
+### Porte 1 — La typo (10 minutes)
+
+La plus accessible. Tu lis le README ou un fichier docs et tu vois une faute,
+une formulation maladroite, un lien cassé. Tu fork, tu corriges, tu pousses.
+
+```bash
+git clone git@github.com:TON-USERNAME/Humanix-Academie.git
+cd Humanix-Academie
+# Tu corriges le fichier
+git commit -s -m "docs(readme): corrige typo dans la section Quickstart"
+git push origin main
+# Ouvre une PR
+```
+
+Pas besoin de tout setup. La review est rapide.
+
+### Porte 2 — Le module MDX pédagogique (1-2 heures)
+
+C'est la voie royale. Le catalog (`prisma/catalog-saisons.ts`) liste **26 saisons**
+de **6 épisodes chacune** = 156 modules attendus. Au moment de l'écriture,
+**8 saisons sont complètes en MDX expert** (48 modules) — il reste 108 modules
+à enrichir. Voir la section [Contribuer un module MDX](#contribuer-un-module-mdx).
+
+### Porte 3 — La feature ou le connecteur (1-5 jours)
+
+Pour les développeurs qui veulent contribuer du code. Issues marquées
+`good first issue` sur GitHub. Si tu veux ajouter un connecteur (Drata, Vanta,
+JumpCloud, ServiceNow), modèle dans `connectors/ciso-assistant/`. RFC d'abord
+pour toute feature de plus de 200 lignes.
 
 ---
 
@@ -51,6 +90,110 @@ qu'on devra refuser pour des raisons d'architecture.
 
 ---
 
+## Contribuer un module MDX
+
+Les modules pédagogiques sont au cœur de la valeur Humanix. Chaque module est
+un fichier MDX dans `content/saisons/<saison-slug>/<episode-slug>.mdx`.
+
+### 1. Choisir un slot vide
+
+Ouvre `prisma/catalog-saisons.ts` et trouve un episode dont le slug n'a pas
+encore de fichier MDX correspondant dans `content/saisons/`. Exemple : la
+saison `mobile-smartphone` (saison 8) ou `nis2-pme` (saison 19) sont
+intégralement vides.
+
+### 2. Étudier un modèle solide
+
+Avant de commencer, lis attentivement 2-3 modules existants pour absorber la
+grammaire :
+
+- `content/saisons/phishing/01-mail-du-pdg.mdx` — easy, narratif court
+- `content/saisons/fraude-president/06-cas-pathe.mdx` — hard, cas réel
+- `content/saisons/dpo-quotidien/01-aipd.mdx` — medium, juridique structuré
+
+### 3. Écrire le module
+
+Frontmatter strict :
+
+```yaml
+---
+title: "Titre du module (5-80 caractères, pas de < > &)"
+durationMinutes: 6   # 5-10 cible
+persona: "tous"      # "tous" / "compta" / "rh" / "dev" / "dpo" / etc.
+objective: "Objectif pédagogique en 1 ligne"
+xpReward: 60         # 40 (easy) / 60 (medium) / 90 (hard)
+scenario: |
+  Le scénario en 2-3 paragraphes. Concret, terrain, avec un personnage.
+  Doit aboutir à une question : "Que faites-vous ?"
+choices:
+  - id: "a"
+    label: "Choix réaliste 1 (5-240 caractères)"
+    outcome: "good" | "bad" | "neutral"
+    feedback: "Feedback de 10-500 caractères"
+    points: 30   # -30 à +50
+  # ... 2 à 4 choix au total, AU MOINS un "good"
+debrief: |
+  Le débrief structuré : 100-2500 caractères. Sections, listes, exemples.
+  C'est ici que se transmet le savoir.
+quiz:
+  - question: "Question (10-300 caractères)"
+    choices:
+      - id: "a"
+        label: "Réponse 1"
+        correct: true
+      - id: "b"
+        label: "Réponse 2"
+        correct: false
+    explanation: "Explication 10-600 caractères"
+  # ... 1 à 5 questions
+---
+
+## Pour aller plus loin
+
+[Section libre, ton conversationnel.]
+
+> "Citation marquante en une ligne."
+```
+
+### 4. Règles éditoriales Humanix
+
+- **Vocabulaire bienveillant** : "photo claire de la maturité" plutôt que "score de risque", "leviers à votre portée" plutôt que "failles à corriger". Pas de "OBLIGATOIRE", "URGENT", "CRITIQUE".
+- **Pas de peur martelée** : "voici 3 choses concrètes à faire" plutôt que "vous êtes en danger".
+- **Cas réel français privilégié** : Pathé, CHU de Brest, Samsung sont nos références. Évite les cas US sauf s'ils sont incontournables (Arup HK 25 M$, etc.).
+- **4 choix avec un "neutral"** : éviter les binaires. Un choix "ça dépend" enrichit la pédagogie.
+- **Citation finale signée** : tradition Humanix, marque la pause réflexive.
+
+### 5. Slug ASCII strict
+
+Le slug doit matcher `/^[a-z0-9](?:[a-z0-9-]{1,48}[a-z0-9])?$/` — pas d'accents,
+pas de caractères spéciaux. Le validateur CI (`npm run validate:mdx`) bloque
+sinon.
+
+### 6. Tester en local
+
+```bash
+npm run dev
+# Ouvre http://localhost:3000/saisons/<saison-slug>/<episode-slug>
+# Le module charge en mode expert (badge 📝) si le frontmatter est valide
+npm run validate:mdx   # Vérifie que slug + frontmatter matchent le catalog
+```
+
+### 7. Commit + PR
+
+```bash
+git checkout -b feat/mdx-mobile-smartphone-01
+git add content/saisons/mobile-smartphone/01-pin-faible.mdx
+git commit -s -m "feat(content): module mobile-smartphone 01-pin-faible"
+git push origin feat/mdx-mobile-smartphone-01
+# Ouvre PR
+```
+
+Le titre du PR mentionne la saison + l'épisode. La review pédagogique se fait
+en parallèle de la review technique. Compter 2-5 jours pour le merge selon
+charge.
+
+---
+
 ## Setup local
 
 ### Prérequis
@@ -68,7 +211,7 @@ git clone git@github.com:TON-USERNAME/humanix-academie.git
 cd humanix-academie
 
 # 2. Ajoute le repo upstream
-git remote add upstream https://github.com/humanix-cybersecurity/humanix-academie.git
+git remote add upstream https://github.com/Humanix-Cybersecurity/Humanix-Academie.git
 
 # 3. Installe les dépendances
 npm install
@@ -112,7 +255,7 @@ Avant chaque commit, lance au minimum `npm run check`.
 3. Code, teste, commit (cf. conventions ci-dessous)
 4. Pousse sur ton fork :
      git push origin feat/ma-super-feature
-5. Ouvre une Pull Request vers humanix-cybersecurity/humanix-academie:main
+5. Ouvre une Pull Request vers Humanix-Cybersecurity/Humanix-Academie:main
 6. Réponds aux retours de review
 7. Une fois approuvée, un mainteneur merge ta PR
 ```
@@ -321,9 +464,9 @@ Pour candidater, écris à `contact@humanix-cybersecurity.fr` ou ping
 
 | Type                             | Où aller                                                                                                             |
 | -------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Question d'usage / configuration | [GitHub Discussions · Q&A](https://github.com/humanix-cybersecurity/humanix-academie/discussions/categories/q-a)     |
-| Idée de feature à débattre       | [GitHub Discussions · Ideas](https://github.com/humanix-cybersecurity/humanix-academie/discussions/categories/ideas) |
-| Bug confirmé                     | [GitHub Issues](https://github.com/humanix-cybersecurity/humanix-academie/issues)                                    |
+| Question d'usage / configuration | [GitHub Discussions · Q&A](https://github.com/Humanix-Cybersecurity/Humanix-Academie/discussions/categories/q-a)     |
+| Idée de feature à débattre       | [GitHub Discussions · Ideas](https://github.com/Humanix-Cybersecurity/Humanix-Academie/discussions/categories/ideas) |
+| Bug confirmé                     | [GitHub Issues](https://github.com/Humanix-Cybersecurity/Humanix-Academie/issues)                                    |
 | Vulnérabilité sécurité           | security@humanix-cybersecurity.fr (voir [SECURITY.md](./SECURITY.md))                                                |
 | Discussion live                  | Discord (lien dans GitHub Discussions, accès libre)                                                                  |
 | Contact direct                   | contact@humanix-cybersecurity.fr                                                                                     |

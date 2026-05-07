@@ -100,7 +100,7 @@ sens de cette politique :
 
 - Absence de header HTTP `X-Frame-Options` (on utilise CSP `frame-ancestors`)
 - Cookie sans flag `Secure` en environnement de développement local
-- Tests sur https://demo.humanix.fr (c'est une démo, reset chaque nuit)
+- Tests sur l'instance de démonstration publique (réinitialisée régulièrement, vulnérabilités attendues à un environnement de démo)
 - Énumération d'utilisateurs sans impact (ex: réponse différenciée signup)
 - Vulnérabilités sur des dépendances dépréciées d'au moins 24 mois
 - Auto-XSS qui nécessitent que la victime colle elle-même du JS dans la console
