@@ -583,7 +583,7 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
   Tarification: {
     emoji: "💶",
     intro:
-      "Le portefeuille avant tout. La cyber doit etre accessible, pas reservee aux ETI qui peuvent payer 5 chiffres par an. Voici comment on s'aligne - et ou nos prix racontent une autre histoire.",
+      "Le portefeuille avant tout. La cyber doit être accessible, pas réservée aux ETI qui peuvent payer 5 chiffres par an. Voici comment on s'aligne - et où nos prix racontent une autre histoire.",
     palette: {
       bg: "from-cyan-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-cyan-950/40",
       ring: "border-cyan-200 dark:border-cyan-900/40",
