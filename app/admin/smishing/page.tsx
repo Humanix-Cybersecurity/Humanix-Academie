@@ -27,7 +27,7 @@ export default async function AdminSmishingPage() {
   const tenantId = session.user!.tenantId as string;
   const plan = await getTenantPlan(tenantId);
 
-  if (!planHasFeature(plan, "phishing_ia")) {
+  if (!planHasFeature(plan, "smishing")) {
     return (
       <>
         <AdminPageHeader
@@ -36,9 +36,9 @@ export default async function AdminSmishingPage() {
           icon="📱"
         />
         <PlanGate
-          feature="phishing_ia"
+          feature="smishing"
           currentPlan={plan}
-          requiredPlan={FEATURE_MIN_PLAN.phishing_ia}
+          requiredPlan={FEATURE_MIN_PLAN.smishing}
         />
       </>
     );
