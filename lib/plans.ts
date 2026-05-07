@@ -54,6 +54,10 @@ export const FEATURE_MIN_PLAN = {
   incidents: "pro",
   // Phishing personnalise par employe via IA Mistral
   phishing_ia: "pro",
+  // Vishing IA souverain (Mistral + Piper TTS)
+  vishing: "pro",
+  // Smishing IA souverain (Mistral SMS)
+  smishing: "pro",
   // Marketplace de modules (officiels + communaute)
   marketplace: "pro",
   // SSO entreprise (SAML, SCIM)
