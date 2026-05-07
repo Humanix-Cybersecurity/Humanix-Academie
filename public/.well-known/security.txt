@@ -1,0 +1,9 @@
+# Humanix Academie - security.txt (RFC 9116)
+# Programme de divulgation responsable - voir /securite/rapport-audit
+Contact: mailto:security@humanix-cybersecurity.fr
+Expires: 2027-05-07T00:00:00.000Z
+Encryption: https://humanix-cybersecurity.fr/.well-known/pgp-key.txt
+Acknowledgments: https://humanix-cybersecurity.fr/securite
+Preferred-Languages: fr, en
+Canonical: https://humanix-cybersecurity.fr/.well-known/security.txt
+Policy: https://humanix-cybersecurity.fr/securite/rapport-audit
