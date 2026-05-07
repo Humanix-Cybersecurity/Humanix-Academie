@@ -235,7 +235,7 @@ export default function AdminSidebar() {
                 aria-label="Fermer le menu"
                 className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800"
               >
-                ✕
+                <span aria-hidden="true">✕</span>
               </button>
             </header>
 

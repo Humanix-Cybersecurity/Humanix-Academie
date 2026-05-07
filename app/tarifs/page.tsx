@@ -18,10 +18,25 @@ import { TIERS, ADD_ONS, type PricingTier } from "@/lib/pricing";
 import PricingSimulator from "@/components/PricingSimulator";
 import HexBackdrop from "@/components/HexBackdrop";
 
+const META_TITLE = "Tarifs - Humanix Académie";
+const META_DESCRIPTION =
+  "Cybersensibilisation française open source AGPL. Self-host gratuit à vie. Cloud à partir de 0 €/mois. 6 paliers, hébergement souverain France.";
+
 export const metadata = {
-  title: "Tarifs - Humanix Académie",
-  description:
-    "Cybersensibilisation française open source AGPL. Self-host gratuit à vie. Cloud à partir de 0 €/mois. 6 paliers, hébergement souverain France.",
+  title: META_TITLE,
+  description: META_DESCRIPTION,
+  openGraph: {
+    title: META_TITLE,
+    description: META_DESCRIPTION,
+    type: "website",
+    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: META_TITLE,
+    description: META_DESCRIPTION,
+    images: ["/logo-humanix-academie-512.png"],
+  },
 };
 
 export default function TarifsPage() {
