@@ -18,10 +18,26 @@
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
+const META_TITLE =
+  "Lancement OSS - Humanix Academie passe en AGPLv3 le 26 mai 2026";
+const META_DESCRIPTION =
+  "Recit du passage en open source de la plateforme Humanix Academie. AGPLv3, repo public, brique humaine de l'ecosysteme cyber souverain francais. Lancement mardi 26 mai 2026.";
+
 export const metadata = {
-  title: "Lancement OSS - Humanix Academie passe en AGPLv3 le 26 mai 2026",
-  description:
-    "Recit du passage en open source de la plateforme Humanix Academie. AGPLv3, repo public, brique humaine de l'ecosysteme cyber souverain francais. Lancement mardi 26 mai 2026.",
+  title: META_TITLE,
+  description: META_DESCRIPTION,
+  openGraph: {
+    title: META_TITLE,
+    description: META_DESCRIPTION,
+    type: "article",
+    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: META_TITLE,
+    description: META_DESCRIPTION,
+    images: ["/logo-humanix-academie-512.png"],
+  },
 };
 
 // La page est dynamique pour recalculer le compte a rebours a chaque hit
