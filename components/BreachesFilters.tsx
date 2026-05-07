@@ -112,7 +112,7 @@ function BreachesFiltersInner({
           maxLength={120}
         />
         <button type="submit" className="btn-primary text-sm whitespace-nowrap">
-          🔍 Rechercher
+          <span aria-hidden="true">🔍</span> Rechercher
         </button>
         {currentQuery && (
           <button

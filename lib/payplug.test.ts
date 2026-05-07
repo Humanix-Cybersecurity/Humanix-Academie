@@ -9,6 +9,7 @@ import {
   isPlanBuyable,
   PAYPLUG_BUYABLE_PLANS,
   verifyWebhookSignature,
+  validatePayplugSetup,
 } from "./payplug";
 
 describe("Payplug helpers", () => {
@@ -118,6 +119,59 @@ describe("Payplug helpers", () => {
       const sig = createHmac("sha256", SECRET).update(BODY).digest("hex");
       const tampered = BODY.replace("subscription.updated", "subscription.created");
       expect(verifyWebhookSignature(tampered, sig)).toBe(false);
+    });
+  });
+
+  describe("validatePayplugSetup", () => {
+    it("enabled=false si pas de cle (pas d'avertissements)", () => {
+      delete process.env.PAYPLUG_SECRET_KEY;
+      delete process.env.PAYPLUG_WEBHOOK_SECRET;
+      const r = validatePayplugSetup();
+      expect(r.enabled).toBe(false);
+      expect(r.warnings).toHaveLength(0);
+    });
+
+    it("enabled=true, plansConfigured liste les tiers bindes", () => {
+      process.env.PAYPLUG_SECRET_KEY = "sk_test_xxx";
+      process.env.PAYPLUG_PLAN_SOLO = "plan_solo_xxx";
+      process.env.PAYPLUG_PLAN_ESSENTIELLE = "plan_ess_xxx";
+      process.env.PAYPLUG_PLAN_PRO = "plan_pro_xxx";
+      process.env.PAYPLUG_WEBHOOK_SECRET = "whsec_xxx";
+      const r = validatePayplugSetup();
+      expect(r.enabled).toBe(true);
+      expect(r.plansConfigured.sort()).toEqual(["essentielle", "pro", "solo"]);
+      expect(r.plansMissing).toHaveLength(0);
+      expect(r.webhookSecretSet).toBe(true);
+    });
+
+    it("warning si plan manquant", () => {
+      process.env.PAYPLUG_SECRET_KEY = "sk_test_xxx";
+      process.env.PAYPLUG_PLAN_SOLO = "plan_solo_xxx";
+      delete process.env.PAYPLUG_PLAN_ESSENTIELLE;
+      delete process.env.PAYPLUG_PLAN_PRO;
+      process.env.PAYPLUG_WEBHOOK_SECRET = "whsec_xxx";
+      const r = validatePayplugSetup();
+      expect(r.plansMissing.sort()).toEqual(["essentielle", "pro"]);
+      expect(r.warnings.some((w) => w.includes("non defini"))).toBe(true);
+    });
+
+    it("warning critique si webhook secret absent quand Payplug actif", () => {
+      process.env.PAYPLUG_SECRET_KEY = "sk_test_xxx";
+      delete process.env.PAYPLUG_WEBHOOK_SECRET;
+      const r = validatePayplugSetup();
+      expect(r.webhookSecretSet).toBe(false);
+      expect(r.warnings.some((w) => w.includes("webhook"))).toBe(true);
+    });
+
+    it("toujours un warning sur les endpoints non documentes quand Payplug actif", () => {
+      process.env.PAYPLUG_SECRET_KEY = "sk_test_xxx";
+      process.env.PAYPLUG_PLAN_SOLO = "plan_solo_xxx";
+      process.env.PAYPLUG_PLAN_ESSENTIELLE = "plan_ess_xxx";
+      process.env.PAYPLUG_PLAN_PRO = "plan_pro_xxx";
+      process.env.PAYPLUG_WEBHOOK_SECRET = "whsec_xxx";
+      const r = validatePayplugSetup();
+      // Setup nominal mais on rappelle quand meme la dette d'integration
+      expect(r.warnings.some((w) => w.includes("non documentes"))).toBe(true);
     });
   });
 });
