@@ -26,6 +26,7 @@ import {
   parseSubscribedEvents,
 } from "./events";
 import { formatSlackBlocks, formatTeamsCard } from "./formatters";
+import { getErrorMessage } from "@/lib/errors";
 
 const TIMEOUT_MS = 5000;
 const MAX_PAYLOAD_BYTES = 50 * 1024;
@@ -93,11 +94,11 @@ async function postWithTimeout(
       signal: ctrl.signal,
     });
     return { ok: res.ok, status: res.status };
-  } catch (e: any) {
+  } catch (e: unknown) {
     return {
       ok: false,
       status: 0,
-      error: String(e?.message ?? e).slice(0, 200),
+      error: getErrorMessage(e, 200),
     };
   } finally {
     clearTimeout(timer);

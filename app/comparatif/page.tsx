@@ -28,10 +28,25 @@ import Link from "next/link";
 import { countExpertEpisodes } from "@/lib/content-availability";
 import HexBackdrop from "@/components/HexBackdrop";
 
+const META_TITLE = "Comparatif honnête - HumaniX vs concurrents | Humanix Académie";
+const META_DESCRIPTION =
+  "Comparatif honnête entre Humanix Académie et les principales plateformes de sensibilisation cyber 2026 (KnowBe4, Hoxhunt, Phished, Cyber Guru, Adaptive Security). On vous dit où nous sommes meilleurs, équivalents et ce qu'on apprend d'eux.";
+
 export const metadata = {
-  title: "Comparatif honnête - HumaniX vs concurrents | Humanix Académie",
-  description:
-    "Comparatif honnête entre Humanix Académie et les principales plateformes de sensibilisation cyber 2026 (KnowBe4, Hoxhunt, Phished, Cyber Guru, Adaptive Security). On vous dit où nous sommes meilleurs, équivalents et ce qu'on apprend d'eux.",
+  title: META_TITLE,
+  description: META_DESCRIPTION,
+  openGraph: {
+    title: META_TITLE,
+    description: META_DESCRIPTION,
+    type: "website",
+    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: META_TITLE,
+    description: META_DESCRIPTION,
+    images: ["/logo-humanix-academie-512.png"],
+  },
 };
 
 type Cell = {
