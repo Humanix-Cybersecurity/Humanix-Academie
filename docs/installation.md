@@ -27,6 +27,67 @@ Temps estimé : **10 à 30 minutes** selon le mode et ton expérience.
 
 ---
 
+## Mode 0 - Quickstart dev avec HTTPS local (3 minutes) ⚡
+
+> Pour les développeurs qui veulent juste **lancer l'app localement** avec
+> un certificat TLS valide (pas de warning "site non sécurisé" dans le
+> browser, NextAuth fonctionne en HTTPS comme en prod).
+
+```bash
+git clone https://github.com/Humanix-Cybersecurity/Humanix-Academie.git
+cd humanix-academie
+./scripts/start.sh
+```
+
+C'est tout. Le script :
+
+1. **Détecte l'OS** (macOS / Linux)
+2. **Vérifie Docker** (OrbStack ou Docker Desktop sur Mac, Docker Engine sur
+   Linux). Propose l'installation via Homebrew / curl si manquant.
+3. **Installe `mkcert`** (pour le certificat local trust-safe)
+4. **Génère un cert TLS** signé par le CA local mkcert pour `humanix.local`
+   + `localhost` (cf. `infra/haproxy/certs/`)
+5. **Ajoute `127.0.0.1 humanix.local`** à `/etc/hosts` (avec sudo)
+6. **Crée un `.env` minimal** en `DEMO_MODE=true` avec `AUTH_URL=https://humanix.local`
+7. **Active la config HAProxy dev** (HTTPS sur 443 + redirect HTTP→HTTPS)
+8. **Lance `docker compose up -d`** (avec override `docker-compose.dev.yml`)
+
+À la fin, ouvre **`https://humanix.local`** dans ton browser. Aucune popup
+"site non sécurisé" : le CA mkcert a été ajouté au trust store OS.
+
+### Commandes utiles
+
+```bash
+./scripts/start.sh             # démarrage complet (idempotent)
+./scripts/start.sh --restart   # rebuild + restart
+./scripts/start.sh --stop      # arrête tous les containers
+./scripts/start.sh --logs      # tail des logs en direct
+./scripts/start.sh --reset     # ⚠️ détruit la BDD et redémarre from scratch
+```
+
+### Pourquoi HTTPS en dev ?
+
+NextAuth v5 utilise des cookies `__Secure-*` qui ne fonctionnent **que sur
+HTTPS**. Sans certificat valide, certains flows d'auth (magic link, OAuth
+Google/Microsoft) cassent silencieusement. Le script `start.sh` reproduit
+les conditions de prod (HTTPS + hostname dédié) avec un cert local trust-safe,
+ce qui évite des heures de debug "ça marche en prod, pas en local".
+
+### Notes par OS
+
+**macOS** : OrbStack est recommandé (plus léger que Docker Desktop, intégration
+native, ouverture instantanée). `brew install orbstack` puis lancer une fois
+l'app pour init.
+
+**Linux** : le script suppose Docker Engine + plugin Compose v2 (`docker compose`,
+pas `docker-compose`). `mkcert` doit être installé manuellement (cf. instructions
+affichées par le script).
+
+**Windows** : utilise WSL2 + Ubuntu, puis lance `./scripts/start.sh` dedans.
+Le script ne supporte pas PowerShell / cmd directement.
+
+---
+
 ## Mode 1 - Docker Compose (recommandé)
 
 C'est le mode le plus simple et le plus reproductible.
