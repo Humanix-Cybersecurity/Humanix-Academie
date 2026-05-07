@@ -12,10 +12,18 @@ import MascotPeek from "@/components/MascotPeek";
 import ScrollProgress from "@/components/ScrollProgress";
 import "./globals.css";
 
+const SITE_NAME = "Humanix Académie";
+const SITE_TITLE = "Humanix Académie - Cybersécurité ludique pour PME";
+const SITE_DESCRIPTION =
+  "Plateforme gamifiée de sensibilisation cybersécurité pour TPE et PME. Modules de 5 minutes, mises en situation, conformes RGPD.";
+// Image OG par defaut. Idealement remplacer par une image 1200x630 dediee
+// (TODO design). Le logo 512px est utilise en fallback pour ne pas avoir
+// de preview vide sur LinkedIn / Slack / Twitter.
+const SITE_OG_IMAGE = "/logo-humanix-academie-512.png";
+
 export const metadata: Metadata = {
-  title: "Humanix Académie - Cybersécurité ludique pour PME",
-  description:
-    "Plateforme gamifiée de sensibilisation cybersécurité pour TPE et PME. Modules de 5 minutes, mises en situation, conformes RGPD.",
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
   ),
@@ -41,6 +49,40 @@ export const metadata: Metadata = {
     apple: [{ url: "/logo-humanix-academie-512.png" }],
     shortcut: "/logo-humanix-academie-192.png",
   },
+  openGraph: {
+    type: "website",
+    locale: "fr_FR",
+    siteName: SITE_NAME,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [{ url: SITE_OG_IMAGE, width: 512, height: 512, alt: SITE_NAME }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [SITE_OG_IMAGE],
+  },
+};
+
+// Schema.org Organization - aide Google a comprendre que Humanix est une
+// app cybersecurite francaise. Permet rich snippets et knowledge panel.
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: SITE_NAME,
+  alternateName: "Humanix Cybersecurity",
+  url: process.env.NEXT_PUBLIC_APP_URL || "https://humanix-cybersecurity.fr",
+  logo: `${process.env.NEXT_PUBLIC_APP_URL || "https://humanix-cybersecurity.fr"}/logo-humanix-academie-512.png`,
+  description: SITE_DESCRIPTION,
+  contactPoint: {
+    "@type": "ContactPoint",
+    email: "contact@humanix-cybersecurity.fr",
+    contactType: "customer service",
+    areaServed: "FR",
+    availableLanguage: ["French"],
+  },
+  sameAs: ["https://github.com/Humanix-Cybersecurity/Humanix-Academie"],
 };
 
 export const viewport: Viewport = {
@@ -80,6 +122,13 @@ export default function RootLayout({
     <html lang="fr">
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        {/* JSON-LD Organization - SEO knowledge panel + rich snippets */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd),
+          }}
+        />
       </head>
       <body className="min-h-screen">
         <Providers>
