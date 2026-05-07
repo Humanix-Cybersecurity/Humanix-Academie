@@ -27,10 +27,57 @@ export default async function AdminModulesPage() {
         OR: [{ tenantId: null }, { tenantId }],
       },
       orderBy: { order: "asc" },
-      include: { episodes: { where: { isPublished: true } } },
+      include: {
+        episodes: {
+          where: { isPublished: true },
+          orderBy: { order: "asc" },
+          select: {
+            id: true,
+            slug: true,
+            title: true,
+            order: true,
+            durationMinutes: true,
+            xpReward: true,
+          },
+        },
+      },
     }),
     db.tenantSaisonConfig.findMany({ where: { tenantId } }),
   ]);
+
+  // Stats de completion par saison (limite a tenant courant) :
+  // pour chaque saison, on compte combien d'apprenants l'ont entamee/finie.
+  const allEpisodeIds = saisons.flatMap((s) => s.episodes.map((e) => e.id));
+  const progressStats = allEpisodeIds.length
+    ? await db.progress.groupBy({
+        by: ["episodeId", "status"],
+        where: {
+          episodeId: { in: allEpisodeIds },
+          user: { tenantId },
+        },
+        _count: { _all: true },
+        _avg: { score: true },
+      })
+    : [];
+  // Map<episodeId, { completed: number, started: number, avgScore: number|null }>
+  const statsByEpisode = new Map<
+    string,
+    { completed: number; started: number; avgScore: number | null }
+  >();
+  for (const row of progressStats) {
+    const cur = statsByEpisode.get(row.episodeId) ?? {
+      completed: 0,
+      started: 0,
+      avgScore: null,
+    };
+    if (row.status === "COMPLETED") {
+      cur.completed += row._count._all;
+      cur.avgScore = row._avg.score ?? cur.avgScore;
+    } else if (row.status === "IN_PROGRESS") {
+      cur.started += row._count._all;
+    }
+    statsByEpisode.set(row.episodeId, cur);
+  }
 
   const configBySaison = new Map(configs.map((c) => [c.saisonId, c]));
 
@@ -38,14 +85,28 @@ export default async function AdminModulesPage() {
   const enriched = saisons
     .map((s) => {
       const cfg = configBySaison.get(s.id);
-      // Duree totale reelle = somme des durationMinutes de chaque episode.
-      // Avant fix : ModulesTable hardcodait `episodesCount * 6` ce qui
-      // donnait toujours "36 min total" pour 6 episodes - incoherent avec
-      // la promesse "5 min par jour" et avec les vraies durees (5-9 min).
       const totalMinutes = s.episodes.reduce(
         (acc, e) => acc + (e.durationMinutes ?? 6),
         0,
       );
+      const totalXp = s.episodes.reduce(
+        (acc, e) => acc + (e.xpReward ?? 50),
+        0,
+      );
+      // Aggregation stats au niveau saison
+      const episodeStats = s.episodes.map((e) => statsByEpisode.get(e.id));
+      const completedSum = episodeStats.reduce(
+        (acc, st) => acc + (st?.completed ?? 0),
+        0,
+      );
+      const avgScores = episodeStats
+        .map((st) => st?.avgScore)
+        .filter((v): v is number => v !== null && v !== undefined);
+      const saisonAvgScore = avgScores.length
+        ? Math.round(
+            avgScores.reduce((a, b) => a + b, 0) / avgScores.length,
+          )
+        : null;
       return {
         id: s.id,
         slug: s.slug,
@@ -55,9 +116,19 @@ export default async function AdminModulesPage() {
         baseOrder: s.order,
         episodesCount: s.episodes.length,
         totalMinutes,
+        totalXp,
         isActive: cfg?.isActive ?? true,
         isMandatory: cfg?.isMandatory ?? false,
         customOrder: cfg?.customOrder ?? null,
+        episodes: s.episodes.map((e) => ({
+          slug: e.slug,
+          title: e.title,
+          order: e.order,
+          durationMinutes: e.durationMinutes,
+          xpReward: e.xpReward,
+        })),
+        completionsCount: completedSum,
+        avgScore: saisonAvgScore,
       };
     })
     .sort(
