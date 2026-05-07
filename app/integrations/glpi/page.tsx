@@ -4,7 +4,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Connecteur GLPI — Humanix Académie",
+  title: "Connecteur GLPI - Humanix Académie",
   description:
     "Phishing signalé dans Humanix → ticket GLPI auto sur la file Sécurité. Bridge open-source MIT, 100 % souverain 🇫🇷.",
 };

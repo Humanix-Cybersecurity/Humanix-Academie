@@ -64,7 +64,7 @@ function savePrefs(prefs: Prefs) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
   } catch {
-    // localStorage indisponible (mode prive, quota) — silencieux
+    // localStorage indisponible (mode prive, quota) - silencieux
   }
 }
 
@@ -200,7 +200,7 @@ export default function TTSButton({
     }
 
     // Sonde TTS serveur : route GET légère (pas d'audit log, pas d'appel
-    // au service TTS — juste auth + plan check). Si available=true, on
+    // au service TTS - juste auth + plan check). Si available=true, on
     // bascule automatiquement le bouton vers le mode premium serveur.
     let cancelled = false;
     (async () => {

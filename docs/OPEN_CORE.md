@@ -1,4 +1,4 @@
-# Modèle Open Core — Humanix Académie
+# Modèle Open Core - Humanix Académie
 
 > **Document de référence** · publié pour transparence avant le launch OSS du 26 mai 2026.
 
@@ -45,20 +45,20 @@ Ce document liste de manière transparente **ce qui est ouvert** et **ce qui req
 - ✅ Format OSCAL v1.1.2 (NIST Assessment Results)
 - ✅ Format ArcSight CEF v1 (Sentinel/QRadar/Sekoia compatible)
 - ✅ Format Splunk CIM v1 (HEC compatible)
-- ✅ SCIM v2 (RFC 7643/7644 — Entra/Okta/Google/Keycloak)
+- ✅ SCIM v2 (RFC 7643/7644 - Entra/Okta/Google/Keycloak)
 - ✅ Hub `/integrations` complet
-- ✅ MCP Server (Model Context Protocol) — `connectors/mcp-server/` MIT
+- ✅ MCP Server (Model Context Protocol) - `connectors/mcp-server/` MIT
 
 ### Connecteurs (sous-projets MIT autonomes)
-- ✅ CISO Assistant (intuitem) — `connectors/ciso-assistant/`
-- ✅ Microsoft Sentinel — `connectors/sentinel/` + workbook
-- ✅ Splunk HEC — `connectors/splunk/` + queries SPL
-- ✅ Sekoia.io — `connectors/sekoia/`
-- ✅ HarfangLab — `connectors/harfanglab/`
-- ✅ Mailinblack / Vade — `connectors/mailinblack-vade/`
-- ✅ Lucca (HR FR) — `connectors/lucca/`
-- ✅ GLPI (ITSM FR) — `connectors/glpi/`
-- ✅ MCP Server (premier mover SAT/HRM) — `connectors/mcp-server/`
+- ✅ CISO Assistant (intuitem) - `connectors/ciso-assistant/`
+- ✅ Microsoft Sentinel - `connectors/sentinel/` + workbook
+- ✅ Splunk HEC - `connectors/splunk/` + queries SPL
+- ✅ Sekoia.io - `connectors/sekoia/`
+- ✅ HarfangLab - `connectors/harfanglab/`
+- ✅ Mailinblack / Vade - `connectors/mailinblack-vade/`
+- ✅ Lucca (HR FR) - `connectors/lucca/`
+- ✅ GLPI (ITSM FR) - `connectors/glpi/`
+- ✅ MCP Server (premier mover SAT/HRM) - `connectors/mcp-server/`
 
 ### Marketplace
 - ✅ Le moteur de marketplace est dans le code
@@ -91,7 +91,7 @@ Ces features sont **dans le même code source** mais le runtime applique un plan
 
 **Important : en self-host AGPLv3, tu peux activer toutes ces features.** Le plan-gating est une convention commerciale du SaaS Humanix Académie, pas une restriction technique opposable. Il suffit de modifier `lib/plans.ts:FEATURE_MIN_PLAN` ou de désactiver la fonction `planHasFeature`. C'est l'esprit AGPL.
 
-Si tu veux héberger pour un client en marque blanche commercialement, c'est possible aussi — mais respecte l'AGPLv3 (publie tes modifs si tu sers le code en SaaS) ou contacte-nous pour un dual-licensing.
+Si tu veux héberger pour un client en marque blanche commercialement, c'est possible aussi - mais respecte l'AGPLv3 (publie tes modifs si tu sers le code en SaaS) ou contacte-nous pour un dual-licensing.
 
 ---
 
@@ -99,7 +99,7 @@ Si tu veux héberger pour un client en marque blanche commercialement, c'est pos
 
 | Source de revenus     | % cible 2026 | Description                                                                |
 | --------------------- | ------------ | -------------------------------------------------------------------------- |
-| Cloud managé          | 40 %         | `humanix-cybersecurity.fr/tarifs` — paliers Découverte / Solo / Essentielle / Pro / Premium |
+| Cloud managé          | 40 %         | `humanix-cybersecurity.fr/tarifs` - paliers Découverte / Solo / Essentielle / Pro / Premium |
 | Audit + formation     | 30 %         | Prestations menées par Humanix-Cybersecurity (RSSI externalisé, audit cyber, formation sur site) |
 | Pack NIS2 turnkey     | 15 %         | Service consulting + livraison documentaire pour passer NIS2 en 30 jours   |
 | Marketplace           | 10 %         | Revenue share avec contributeurs experts (50/50 sur les modules payants)   |
@@ -114,7 +114,7 @@ Cible 24 mois : **180 à 250 k€** en solo bootstrap.
 L'AGPLv3 protège contre le fork commercial fermé : si un acteur prend le code et l'héberge en SaaS commercial, il **doit** publier ses modifs sous AGPLv3.
 
 Ce qui n'est PAS protégé : un fork qui change le branding et propose la même chose en plus cher. Notre défense ici est :
-- **La marque** (`Humanix Académie` est protégée — cf. `TRADEMARK.md`)
+- **La marque** (`Humanix Académie` est protégée - cf. `TRADEMARK.md`)
 - **Le service** (audit, formation, RSSI externalisé sont notre vrai métier)
 - **L'écosystème** (être le partenaire FR de référence pour CISO Assistant et la stack souveraine)
 

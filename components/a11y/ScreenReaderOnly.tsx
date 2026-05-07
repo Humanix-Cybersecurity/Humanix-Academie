@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Texte invisible visuellement mais lu par les lecteurs d'écran.
-// Pattern WCAG standard "sr-only" — utile pour donner du contexte
+// Pattern WCAG standard "sr-only" - utile pour donner du contexte
 // (ex: "Mascotte, niveau 3, débloqué").
 import type { ReactNode, ElementType } from "react";
 

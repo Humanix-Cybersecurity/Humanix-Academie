@@ -146,7 +146,7 @@ function Footer({ generatedAt }: { generatedAt: Date }) {
   return (
     <View style={styles.footer} fixed>
       <Text>
-        Document généré par Humanix Académie — {generatedAt.toISOString()} —
+        Document généré par Humanix Académie - {generatedAt.toISOString()} -
         Document de travail à valider par votre RSSI/DPO avant envoi.
       </Text>
     </View>
@@ -166,7 +166,7 @@ export function NotificationCnilDoc({
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.brand}>
-            Humanix Académie — Module Cyber-Réflexe
+            Humanix Académie - Module Cyber-Réflexe
           </Text>
         </View>
 
@@ -174,7 +174,7 @@ export function NotificationCnilDoc({
           Notification de violation de données à caractère personnel
         </Text>
         <Text style={styles.meta}>
-          Article 33 du RGPD — À déposer sur https://notifications.cnil.fr
+          Article 33 du RGPD - À déposer sur https://notifications.cnil.fr
         </Text>
 
         <View style={styles.warningBox}>
@@ -254,7 +254,7 @@ export function NotificationAnssiDoc({
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.brand}>
-            Humanix Académie — Module Cyber-Réflexe
+            Humanix Académie - Module Cyber-Réflexe
           </Text>
         </View>
 
@@ -262,7 +262,7 @@ export function NotificationAnssiDoc({
           Notification d'incident significatif (NIS2)
         </Text>
         <Text style={styles.meta}>
-          Directive NIS2 — Téléservice ANSSI :
+          Directive NIS2 - Téléservice ANSSI :
           https://www.cert.ssi.gouv.fr/incident/
         </Text>
 
@@ -329,12 +329,12 @@ export function CommunicationInterneDoc({
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.brand}>
-            Humanix Académie — Module Cyber-Réflexe
+            Humanix Académie - Module Cyber-Réflexe
           </Text>
         </View>
 
         <Text style={styles.docTitle}>
-          Communication interne — incident en cours
+          Communication interne - incident en cours
         </Text>
         <Text style={styles.meta}>
           Modèle de message à diffuser aux collaborateurs. À adapter au ton de
@@ -343,7 +343,7 @@ export function CommunicationInterneDoc({
 
         <Text style={styles.h2}>Objet de l'email</Text>
         <Text style={styles.p}>
-          [Important] Information cybersécurité — Action requise
+          [Important] Information cybersécurité - Action requise
         </Text>
 
         <Text style={styles.h2}>Corps du message</Text>
@@ -408,12 +408,12 @@ export function CommunicationExterneDoc({
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.brand}>
-            Humanix Académie — Module Cyber-Réflexe
+            Humanix Académie - Module Cyber-Réflexe
           </Text>
         </View>
 
         <Text style={styles.docTitle}>
-          Communication externe — clients et partenaires
+          Communication externe - clients et partenaires
         </Text>
         <Text style={styles.meta}>
           Modèle à adapter. Principe : transparence, sans excès. Mentionner les
@@ -484,7 +484,7 @@ export function InformationPersonnesDoc({
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.brand}>
-            Humanix Académie — Module Cyber-Réflexe
+            Humanix Académie - Module Cyber-Réflexe
           </Text>
         </View>
 
@@ -492,7 +492,7 @@ export function InformationPersonnesDoc({
           Information aux personnes concernées
         </Text>
         <Text style={styles.meta}>
-          Article 34 du RGPD — Obligatoire si la violation présente un risque
+          Article 34 du RGPD - Obligatoire si la violation présente un risque
           ÉLEVÉ pour les droits et libertés des personnes.
         </Text>
 

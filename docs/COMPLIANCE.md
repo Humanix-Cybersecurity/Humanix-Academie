@@ -1,4 +1,4 @@
-# Conformité — RGPD, NIS2, ANSSI, ISO 27001
+# Conformité - RGPD, NIS2, ANSSI, ISO 27001
 
 > Récapitulatif des mesures en place et des points de contrôle pour les
 > auditeurs / DPO / RSSI.
@@ -21,19 +21,19 @@
 
 Tous accessibles depuis [/profil/donnees](app/profil/donnees/page.tsx) :
 
-- **Article 15 — Accès** : vue d'ensemble + export JSON
-- **Article 16 — Rectification** : auto-modif depuis `/profil`
-- **Article 17 — Effacement** : bouton confirmé par saisie de `EFFACER MON COMPTE`. Cascade BDD supprime profil + progress + events + sessions + webauthn. Refus si l'utilisateur est admin (transfert de gouvernance requis).
-- **Article 20 — Portabilité** : `/profil/donnees/export` (JSON structuré)
-- **Article 21 — Opposition** : à traiter ad-hoc avec le DPO
+- **Article 15 - Accès** : vue d'ensemble + export JSON
+- **Article 16 - Rectification** : auto-modif depuis `/profil`
+- **Article 17 - Effacement** : bouton confirmé par saisie de `EFFACER MON COMPTE`. Cascade BDD supprime profil + progress + events + sessions + webauthn. Refus si l'utilisateur est admin (transfert de gouvernance requis).
+- **Article 20 - Portabilité** : `/profil/donnees/export` (JSON structuré)
+- **Article 21 - Opposition** : à traiter ad-hoc avec le DPO
 
 Toutes les actions sont tracées dans `AuditLog`.
 
-### Article 30 — Registre des activités
+### Article 30 - Registre des activités
 
 Le **Pack NIS2** (`/admin/conformite-nis2`) génère le registre éditable.
 
-### Article 32 — Sécurité du traitement
+### Article 32 - Sécurité du traitement
 
 | Mesure | Implémentation |
 |---|---|
@@ -45,7 +45,7 @@ Le **Pack NIS2** (`/admin/conformite-nis2`) génère le registre éditable.
 | Logs d'accès | `AuditLog` exhaustif |
 | Tests réguliers | À la charge de l'opérateur (audit annuel recommandé) |
 
-### Article 33 — Notification de violation (72h)
+### Article 33 - Notification de violation (72h)
 
 Le module **Cyber-Réflexe** (`/admin/incidents`) propose une checklist
 guidée pour notifier la CNIL en 72h conformément à l'article 33.
@@ -79,13 +79,13 @@ de tout sous-traitant, signer son DPA (action A22) et mettre à jour
 | Logs d'accès | `AuditLog` |
 | Notification ANSSI 24h/72h | Cyber-Réflexe (champs ANSSI dans `IncidentResponse`) |
 
-## 3. ANSSI — recommandations
+## 3. ANSSI - recommandations
 
-- **R7 (mots de passe)** : politique 10+ chars, 3 classes parmi 4 — appliquée dans `validatePasswordPolicy`.
+- **R7 (mots de passe)** : politique 10+ chars, 3 classes parmi 4 - appliquée dans `validatePasswordPolicy`.
 - **R20 (journalisation)** : `AuditLog` couvre les événements d'authentification (succès/échec/lockout) et les actions sensibles, avec horodatage UTC.
 - **R23 (durée de rétention)** : 13 mois recommandés CNIL, applicable via `scripts/purge-old-audit-logs.ts`.
 
-## 4. ISO 27001 — Annexe A
+## 4. ISO 27001 - Annexe A
 
 | Contrôle | Couverture |
 |---|---|
@@ -95,7 +95,7 @@ de tout sous-traitant, signer son DPA (action A22) et mettre à jour
 | A.12.4 Logging and monitoring | `AuditLog` (append-only, exportable) |
 | A.18.1 Compliance | Ce document |
 
-## 5. Audit — pour un contrôleur
+## 5. Audit - pour un contrôleur
 
 ### Comment vérifier que tout est tracé
 

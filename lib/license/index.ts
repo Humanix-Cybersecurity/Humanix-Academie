@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// API publique du module licence — **server-only par construction**.
+// API publique du module licence - **server-only par construction**.
 //
 // Ce module importe `node:crypto` (cf. verify.ts). NE JAMAIS l'importer
-// depuis un fichier "use client" — le build Webpack/Next echouerait avec
+// depuis un fichier "use client" - le build Webpack/Next echouerait avec
 // UnhandledSchemeError sur "node:crypto".
 //
 // Cote app runtime (Server Components, Server Actions, route handlers),
@@ -14,7 +14,7 @@
 //   } from "@/lib/license";
 //
 // Sign.ts (signature) n'est PAS reexporte ici car il n'a rien a faire
-// dans le runtime de l'app — il est utilise uniquement par le CLI.
+// dans le runtime de l'app - il est utilise uniquement par le CLI.
 
 import { db } from "@/lib/db";
 import { normalizePlan, type PlanId } from "@/lib/plans";

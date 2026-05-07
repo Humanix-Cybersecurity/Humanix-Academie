@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Politique de confidentialité — RGPD art. 13 + 14
+// Politique de confidentialité - RGPD art. 13 + 14
 import Link from "next/link";
 import LegalLayout, {
   LegalSection,
@@ -9,7 +9,7 @@ import LegalLayout, {
 } from "@/components/legal/LegalLayout";
 
 export const metadata = {
-  title: "Politique de confidentialité — Humanix-Cybersecurity",
+  title: "Politique de confidentialité - Humanix-Cybersecurity",
   description:
     "Comment nous traitons vos données personnelles, en application du RGPD.",
 };
@@ -249,21 +249,21 @@ export default function ConfidentialitePage() {
             <strong>Sous-traitants techniques</strong> :
             <ul>
               <li>
-                <strong>Scaleway SAS</strong> (France 🇫🇷) — hébergement,
+                <strong>Scaleway SAS</strong> (France 🇫🇷) - hébergement,
                 sauvegardes, infrastructure
               </li>
               <li>
                 <strong>Olinda SAS</strong> exploitant le service{" "}
-                <strong>Qonto</strong> (France 🇫🇷) — compte de paiement
+                <strong>Qonto</strong> (France 🇫🇷) - compte de paiement
                 professionnel
               </li>
               <li>
-                <strong>Dougs SAS</strong> (France 🇫🇷) — expertise comptable,
+                <strong>Dougs SAS</strong> (France 🇫🇷) - expertise comptable,
                 facturation
               </li>
               <li>
                 <strong>Scaleway TEM</strong> (UE, sous Clauses Contractuelles Types
-                CE 2021/914) — emails transactionnels (lien magique de
+                CE 2021/914) - emails transactionnels (lien magique de
                 connexion, alertes)
               </li>
             </ul>
@@ -386,8 +386,8 @@ export default function ConfidentialitePage() {
         <p>
           Si vous estimez que vos droits ne sont pas respectés, vous pouvez
           introduire une réclamation auprès de la Commission nationale de
-          l'informatique et des libertés (CNIL), 3 Place de Fontenoy — TSA 80715
-          — 75334 PARIS CEDEX 07.{" "}
+          l'informatique et des libertés (CNIL), 3 Place de Fontenoy - TSA 80715
+          - 75334 PARIS CEDEX 07.{" "}
           <a
             href="https://www.cnil.fr"
             rel="noopener noreferrer"

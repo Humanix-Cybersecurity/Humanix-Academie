@@ -4,7 +4,7 @@
 // Securite :
 //  - Auth NextAuth obligatoire
 //  - Role ADMIN/MANAGER/RSSI/SUPERADMIN requis
-//  - Plan-gating : feature "phishing_ia" (Pro+)
+//  - Plan-gating : feature "smishing" (Pro+)
 //  - Rate limit : 20 req/heure par tenant
 //  - Anti-PII : delegue au generateur
 //  - Aucun stockage : le SMS retourne au client, pas persiste
@@ -52,12 +52,12 @@ export async function POST(req: Request) {
   }
 
   const plan = await getTenantPlan(tenantId);
-  if (!planHasFeature(plan, "phishing_ia")) {
+  if (!planHasFeature(plan, "smishing")) {
     return NextResponse.json(
       {
         error: "plan_too_low",
         message: "Cette feature requiert le plan Pro ou supérieur.",
-        feature: "phishing_ia",
+        feature: "smishing",
       },
       { status: 402 },
     );

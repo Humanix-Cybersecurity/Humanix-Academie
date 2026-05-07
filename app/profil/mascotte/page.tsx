@@ -47,7 +47,7 @@ export default async function MascotChoosePage() {
       <p className="text-gray-600 mb-8">
         Choisis ton animal totem, ton humeur du jour, et même un emoji
         complètement custom. Ta mascotte t'accompagne partout sur la plateforme
-        — qu'elle te ressemble.
+        - qu'elle te ressemble.
       </p>
 
       {/* Choix de l'espece */}

@@ -106,7 +106,7 @@ export function buildOscalAssessmentResults(args: {
 
   const findings = evidences.map((e, idx) => ({
     uuid: uuidFromKey(`${arUuid}-finding-${idx}`),
-    title: `${e.control_ref} — ${e.control_name}`,
+    title: `${e.control_ref} - ${e.control_name}`,
     description:
       e.scope_note ??
       `Evaluation automatique Humanix Academie pour le controle ${e.control_ref}.`,
@@ -161,7 +161,7 @@ export function buildOscalAssessmentResults(args: {
       results: [
         {
           uuid: resultUuid,
-          title: `Resultats d'evaluation — ${tenant.name}`,
+          title: `Resultats d'evaluation - ${tenant.name}`,
           description: `Resultats automatises generes par Humanix Academie pour le tenant ${tenant.name} sur le referentiel ${framework.ref}.`,
           start: generatedAt.toISOString(),
           end: generatedAt.toISOString(),

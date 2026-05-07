@@ -1,4 +1,4 @@
-# FAQ — Humanix Académie Community Edition
+# FAQ - Humanix Académie Community Edition
 
 Les 20 questions qui reviennent le plus souvent. Si la tienne n'y est pas,
 ouvre une [discussion Q&A](https://github.com/humanix-cybersecurity/humanix-academie/discussions/categories/q-a).
@@ -254,4 +254,4 @@ Trois options :
 
 ---
 
-_FAQ vivante — révisée à chaque release majeure._
+_FAQ vivante - révisée à chaque release majeure._

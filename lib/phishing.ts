@@ -61,7 +61,7 @@ export const PHISHING_TEMPLATES: PhishingTemplateDef[] = [
     emailSubject: "Colissimo : votre colis n'a pas pu être livré",
     emailFrom: "suivi@colissimo-livraison.fr",
     markers: [
-      'Domaine "colissimo-livraison.fr" — le vrai est "laposte.fr"',
+      'Domaine "colissimo-livraison.fr" - le vrai est "laposte.fr"',
       "Demande de paiement pour un service normalement gratuit",
       "URL raccourcie ou avec sous-domaine suspect",
       "Pas de référence au numéro de suivi exact",
@@ -102,7 +102,7 @@ export const PHISHING_TEMPLATES: PhishingTemplateDef[] = [
   <p>Bonjour ${firstName || ""},</p>
   <p>Je suis en pleine négociation et j'ai besoin de toi <strong>maintenant</strong>.</p>
   <p>Peux-tu effectuer un virement de <strong>28 400 €</strong> à un nouveau fournisseur ? RIB et instructions ci-joints.</p>
-  <p>Discrétion totale — je t'expliquerai lundi en interne. Compte sur toi.</p>
+  <p>Discrétion totale - je t'expliquerai lundi en interne. Compte sur toi.</p>
   <p style="margin: 24px 0;">
     <a href="${trackingUrl}" style="color: #0066cc;">Voir les instructions de virement</a>
   </p>

@@ -111,7 +111,7 @@ export default function PersonalizeWizard({
             1. Sélectionnez les employés à cibler
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-300">
-            {selectedIds.size} sur {employees.length} sélectionné(s) — max 50
+            {selectedIds.size} sur {employees.length} sélectionné(s) - max 50
             par batch.
           </p>
         </header>
@@ -271,7 +271,7 @@ export default function PersonalizeWizard({
               placeholder='Ex : "CSE du 15 mai", "Séminaire à Lyon", "Lancement du nouveau CRM"'
             />
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              ⚠ Pas de noms propres réels ni d'emails — l'IA refuse les PII.
+              ⚠ Pas de noms propres réels ni d'emails - l'IA refuse les PII.
             </p>
           </div>
 
@@ -324,7 +324,7 @@ export default function PersonalizeWizard({
         </h2>
         {pending && (
           <div className="mt-2 p-3 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-800 dark:text-blue-200 text-sm">
-            ⏳ {progressMsg || "En cours…"} — Patience, l'IA prend ~1-2 sec par
+            ⏳ {progressMsg || "En cours…"} - Patience, l'IA prend ~1-2 sec par
             mail.
           </div>
         )}
@@ -359,7 +359,7 @@ export default function PersonalizeWizard({
           <ul className="mt-3 space-y-1 text-sm">
             {state.errorDetails.map((e, idx) => (
               <li key={idx}>
-                <strong>{e.email}</strong> — {e.message}
+                <strong>{e.email}</strong> - {e.message}
               </li>
             ))}
           </ul>

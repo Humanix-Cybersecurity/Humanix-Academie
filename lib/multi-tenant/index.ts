@@ -8,7 +8,7 @@
 // (siege + sites). Architecture extensible si besoin (recursivite cote
 // requete).
 //
-// Securite : on ne JAMAIS faire confiance a un tenantId fourni cote client —
+// Securite : on ne JAMAIS faire confiance a un tenantId fourni cote client -
 // il faut TOUJOURS verifier que l'utilisateur courant a bien le droit de
 // voir ce tenant via canAccessTenant().
 

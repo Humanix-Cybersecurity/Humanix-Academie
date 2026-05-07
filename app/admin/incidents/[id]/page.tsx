@@ -344,7 +344,7 @@ export default async function IncidentDetailPage({
                 htmlFor="estimatedCost"
                 className="block text-sm font-medium mb-1"
               >
-                Coût estimé (€) — optionnel
+                Coût estimé (€) - optionnel
               </label>
               <input
                 id="estimatedCost"

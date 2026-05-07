@@ -6,19 +6,19 @@ blank_issues_enabled: false
 
 contact_links:
   - name: Question d'usage ou de configuration
-    url: https://github.com/humanix-cybersecurity/humanix-academie/discussions/categories/q-a
+    url: https://github.com/Humanix-Cybersecurity/Humanix-Academie/discussions/categories/q-a
     about: Pose ta question dans GitHub Discussions plutôt que dans une issue.
 
   - name: Idée de nouvelle feature à débattre
-    url: https://github.com/humanix-cybersecurity/humanix-academie/discussions/categories/ideas
+    url: https://github.com/Humanix-Cybersecurity/Humanix-Academie/discussions/categories/ideas
     about: Pour les grosses features, préfère une RFC dans Discussions.
 
   - name: Vulnérabilité de sécurité
-    url: https://github.com/humanix-cybersecurity/humanix-academie/blob/main/SECURITY.md
+    url: https://github.com/Humanix-Cybersecurity/Humanix-Academie/blob/main/SECURITY.md
     about: NE PAS ouvrir d'issue publique. Voir SECURITY.md pour la procédure de divulgation responsable.
 
   - name: Discuter avec la communauté
-    url: https://github.com/humanix-cybersecurity/humanix-academie/discussions
+    url: https://github.com/Humanix-Cybersecurity/Humanix-Academie/discussions
     about: Pour discuter en direct. Un Discord communautaire ouvrira après le launch OSS du 26 mai 2026.
 
   - name: Demander un devis ou une licence commerciale

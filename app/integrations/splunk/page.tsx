@@ -6,7 +6,7 @@ import Link from "next/link";
 import CopyableSnippet from "@/components/CopyableSnippet";
 
 export const metadata = {
-  title: "Connecteur Splunk HEC — Humanix Académie",
+  title: "Connecteur Splunk HEC - Humanix Académie",
   description:
     "Poussez les preuves de conformité Humanix vers votre Splunk via HEC. Format Splunk CIM v1, NDJSON, SPL queries fournies, dashboards prêts à l'emploi.",
 };

@@ -83,7 +83,7 @@ export default async function ModerationDetailPage({
         {payload.episodes.map((ep, i) => (
           <div key={i} className="card mb-3">
             <h3 className="font-bold text-primary-500 text-lg mb-2">
-              Épisode {i + 1} — {ep.title} ({ep.durationMinutes} min · +
+              Épisode {i + 1} - {ep.title} ({ep.durationMinutes} min · +
               {ep.xpReward} XP)
             </h3>
 

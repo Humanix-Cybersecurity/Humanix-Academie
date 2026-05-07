@@ -1,5 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Mascotte evolutive — 5 paliers + customizations boutique + choix d'espece
+// Mascotte evolutive - 5 paliers + customizations boutique + choix d'espece
+//
+// Note historique : un essai SVG anime (HexCharacter) avait ete tente en
+// mai 2026 pour donner du caractere a Hex le renard. Retour utilisateur :
+// "l'emoji etait mieux". On revient au rendu emoji uniforme pour toutes
+// les especes - c'est plus coherent et plus chaleureux.
 import { getLevel, getXPProgress, type LevelDef } from "@/lib/levels";
 import type { EquippedItems } from "@/lib/shop";
 import { getMascotById } from "@/lib/mascots";
@@ -10,7 +15,12 @@ type Size = "sm" | "md" | "lg" | "xl" | "hero";
 
 const SIZES: Record<
   Size,
-  { emoji: string; container: string; accessory: string; subAcc: string }
+  {
+    emoji: string;
+    container: string;
+    accessory: string;
+    subAcc: string;
+  }
 > = {
   sm: {
     emoji: "text-2xl",
