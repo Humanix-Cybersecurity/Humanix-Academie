@@ -135,15 +135,24 @@ Oui. La plateforme est en production interne chez Humanix Cybersecurity et
 chez plusieurs clients pilotes depuis fin 2025. Elle inclut :
 
 - Authentification multi-facteur (SSO + magic link)
-- Multi-tenant scoping strict (vérifié par tests)
-- Audit trail complet
+- Multi-tenant scoping strict (vérifié par 13 tests d'isolation Vitest)
+- Middleware edge sur `/admin/**` et `/api/admin/**` (rejet 401 si pas de session)
+- Audit trail complet (table `AuditLog` append-only, hashage IP RGPD)
 - Sauvegardes recommandées
-- Conformité RGPD native
+- Conformité RGPD native (export portabilité art. 20 incluant simulations phishing)
 - Chiffrement at-rest possible (config PostgreSQL)
-- Headers HTTP sécurité (CSP, HSTS, etc.)
+- Headers HTTP sécurité (**CSP strict** avec connect-src whitelist FR/UE,
+  HSTS preload, X-Frame DENY, frame-ancestors 'none', Permissions-Policy)
+- Sanitization HTML générée par Mistral via **DOMPurify** (audit Cure53)
+- Anti-SSRF whitelist (refus IP privées, `.local`, `.internal`)
+- 446 tests Vitest sur les chemins critiques
 
-Voir [docs/SECURITY_AUDIT.md](./SECURITY_AUDIT.md) pour le rapport d'audit
-interne complet.
+**Pentest interne v1.1 (7 mai 2026)** : 25+ vecteurs testés depuis Exegol-rootme,
+0 critique exploité. Voir [docs/SECURITY_AUDIT.md](./SECURITY_AUDIT.md) pour
+le rapport d'audit interne complet et la version résumée publique sur
+[/securite/rapport-audit](https://humanix-cybersecurity.fr/securite/rapport-audit).
+
+Programme de divulgation responsable : [/.well-known/security.txt](https://humanix-cybersecurity.fr/.well-known/security.txt) (RFC 9116).
 
 ### 12. Comment exposer en HTTPS sur Internet ?
 

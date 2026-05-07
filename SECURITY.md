@@ -23,6 +23,11 @@ majeure suivante. Au-delà, elle ne reçoit plus de patches sécurité — la mi
 
 ## Signaler une vulnérabilité
 
+### Canal principal (RFC 9116)
+
+Le fichier [/.well-known/security.txt](https://humanix-cybersecurity.fr/.well-known/security.txt)
+publie nos coordonnées de divulgation responsable conformément au RFC 9116.
+
 ### Ce qu'il faut faire
 
 Envoie un email **chiffré si possible** à :
@@ -122,17 +127,45 @@ responsable du patch.
 ## Audit de sécurité interne
 
 Humanix Cybersecurity réalise un **audit de sécurité interne** complet à
-chaque release majeure (cf. [docs/SECURITY_AUDIT.md](./docs/SECURITY_AUDIT.md))
-qui couvre :
+chaque release majeure (cf. [docs/SECURITY_AUDIT.md](./docs/SECURITY_AUDIT.md)
+et la page publique [/securite/rapport-audit](https://humanix-cybersecurity.fr/securite/rapport-audit)) qui couvre :
 
 - OWASP Top 10 (2021)
 - ANSSI Recommandations Sécurité Web
 - Tests d'authentification / autorisation
-- Tests de multi-tenant scoping
+- Tests de multi-tenant scoping (13 tests vitest dans `lib/tenant-isolation.test.ts`)
 - Audit des dépendances (`npm audit`, Snyk)
 - Static analysis (SonarQube ou Semgrep)
 
-Le rapport public d'audit est disponible dans `docs/SECURITY_AUDIT.md`.
+### Pentest interne v1.1 (7 mai 2026)
+
+Test offensif réalisé depuis un container Exegol isolé contre l'instance
+staging docker-compose. **25+ vecteurs d'attaque testés** (méthodes HTTP,
+header injection, path traversal, SSRF, IDOR, XSS, SQLi, info disclosure,
+brute-force, rate limit). Résultat :
+
+- 🟢 **Aucun bypass d'authentification, aucune fuite de données, aucune RCE**
+- 🟡 3 findings non-critiques documentés sur la page publique
+- 🟢 20+ contrôles validés (HSTS, CSP, frame-ancestors, nosniff, UA filter
+  sqlmap/nikto/nmap → 403, source maps protégés, host header injection
+  rejetée, X-Forwarded bypass impossible, timing oracle email indétectable…)
+
+Détails publics : [/securite/rapport-audit](https://humanix-cybersecurity.fr/securite/rapport-audit).
+
+### Stack de défense en profondeur
+
+- **Content-Security-Policy** strict (`default-src 'self'`, `connect-src`
+  whitelist providers FR/UE uniquement, `frame-ancestors 'none'`)
+- **Middleware edge** sur `/admin/**` et `/api/admin/**` (rejet 401 JSON
+  ou redirect `/connexion` si pas de cookie session)
+- **DOMPurify** pour la sanitization HTML générée par Mistral (audit Cure53,
+  whitelist stricte de balises)
+- **isSafeWebhookUrl()** anti-SSRF (refuse IP privées + `.local` + `.internal`)
+- **anti-PII** sur les prompts Mistral (regex email/SIRET/SIREN/téléphone)
+- **HSTS preload** + `Permissions-Policy` (camera/mic/geo désactivés)
+- **HAProxy** UA filter (sqlmap/nikto/nmap → 403), méthodes HTTP allowlistées
+- **Tests** : 446 tests vitest (auth, RGPD, audit log, plans, tenant
+  isolation, webhooks SSRF, sanitization, errors).
 
 ---
 
