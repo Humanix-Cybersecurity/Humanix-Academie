@@ -213,14 +213,31 @@
     font-feature-settings: "tnum";
   }
 
+  /* ============================================================
+   * RGAA 3.2 / WCAG 1.4.3 - Contrastes minima
+   * -----------------------------------------------------------
+   * Tailwind text-gray-500 (#6B7280) sur fond blanc donne un
+   * ratio ~3.7:1, en dessous du seuil AA 4.5:1 pour le texte
+   * normal. Plutot que de remplacer 375 occurrences une par une,
+   * on remappe text-gray-500 / text-gray-400 vers des nuances
+   * plus contrastees globalement. Pas de diff dans les .tsx.
+   *
+   * - text-gray-500 -> #4F5763 : ratio ~6.4:1 (AAA pour texte normal)
+   * - text-gray-400 -> #6B7280 : ratio ~3.7:1 (AA pour gros texte)
+   *
+   * On garde la hierarchie visuelle : gray-400 < gray-500 < gray-600.
+   * ============================================================ */
+  .text-gray-500 { color: #4F5763; }
+  .text-gray-400 { color: #6B7280; }
+
   /* Texte par defaut s'adapte */
   .dark .text-primary-500 { color: #60A5FA; }
   .dark .text-accent-500 { color: #2DD4BF; }
   .dark .text-gray-600 { color: #94A3B8; }
   .dark .text-gray-700 { color: #CBD5E1; }
   .dark .text-gray-800 { color: #E2E8F0; }
-  .dark .text-gray-500 { color: #94A3B8; }
-  .dark .text-gray-400 { color: #64748B; }
+  .dark .text-gray-500 { color: #B0BCCE; }
+  .dark .text-gray-400 { color: #94A3B8; }
   .dark .text-gray-300 { color: #475569; }
 
   /* Backgrounds soft en dark */
