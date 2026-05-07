@@ -48,7 +48,7 @@ export default function AuditFlashPage() {
         >
           <p className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold uppercase tracking-[0.25em] text-accent-500 bg-white/70 dark:bg-slate-800/60 backdrop-blur-sm border border-accent-500/30 px-4 py-2 rounded-full mb-8 shadow-sm">
             <span aria-hidden="true">🌿</span> Diagnostic offert · 5 minutes ·
-            sans email au début
+            rapport PDF par email
           </p>
           <h1
             id="hero-title"
