@@ -56,7 +56,7 @@ export const INCIDENTS: IncidentFiche[] = [
         why: "Pour stopper la propagation aux autres postes et serveurs.",
       },
       {
-        text: "Ne PAS eteindre la machine — la garder sous tension",
+        text: "Ne PAS eteindre la machine - la garder sous tension",
         why: "L'extinction detruit la memoire vive, qui contient des indices forensic precieux (cles de chiffrement parfois).",
       },
       {
@@ -128,7 +128,7 @@ export const INCIDENTS: IncidentFiche[] = [
         note: "Identification de la souche de ransomware par hash ou note de rançon",
       },
       {
-        name: "CyberMalveillance.gouv.fr — diagnostic gratuit",
+        name: "CyberMalveillance.gouv.fr - diagnostic gratuit",
         url: "https://www.cybermalveillance.gouv.fr/diagnostic",
         note: "Parcours guide officiel + mise en relation prestataires labellises",
       },
@@ -335,7 +335,7 @@ export const INCIDENTS: IncidentFiche[] = [
     subtitle:
       "Mot de passe vole, compte mail/CRM utilise par un tiers, MFA contourne",
     shortDesc:
-      "Quelqu'un d'autre a acces a un de vos comptes professionnels — emails sortants suspects, regles de transfert ajoutees, donnees consultees.",
+      "Quelqu'un d'autre a acces a un de vos comptes professionnels - emails sortants suspects, regles de transfert ajoutees, donnees consultees.",
     immediate: [
       {
         text: "Forcer la deconnexion de toutes les sessions actives",
@@ -409,12 +409,12 @@ export const INCIDENTS: IncidentFiche[] = [
         note: "Verifier si email + mot de passe sont leakes publiquement",
       },
       {
-        name: "Microsoft 365 — verifier connexions",
+        name: "Microsoft 365 - verifier connexions",
         url: "https://account.activedirectory.windowsazure.com/r#/profile",
         note: "Activite de connexion + applications tierces autorisees",
       },
       {
-        name: "Google Workspace — securite du compte",
+        name: "Google Workspace - securite du compte",
         url: "https://myaccount.google.com/security",
         note: "Connexions recentes + appareils + 2FA",
       },
@@ -430,7 +430,7 @@ export const INCIDENTS: IncidentFiche[] = [
     title: "Vol ou perte de materiel pro",
     subtitle: "Laptop, telephone, cle USB ou disque externe disparu",
     shortDesc:
-      "Le materiel contient des donnees pro (mails, fichiers, acces) — comportement immediat conditionne le risque RGPD et metier.",
+      "Le materiel contient des donnees pro (mails, fichiers, acces) - comportement immediat conditionne le risque RGPD et metier.",
     immediate: [
       {
         text: "Bloquer/effacer a distance via le MDM ou les outils du fournisseur",

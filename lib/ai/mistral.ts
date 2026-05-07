@@ -2,7 +2,7 @@
 // Client Mistral pour la génération de contenu cyber pédagogique.
 //
 // POURQUOI MISTRAL :
-//  - Souverain français (Mistral AI, Paris) — RGPD natif
+//  - Souverain français (Mistral AI, Paris) - RGPD natif
 //  - API REST simple, format compatible OpenAI
 //  - Modèle "ministral-8b-latest" suffit largement pour générer un mail
 //    de phishing convaincant en français (latence ~2-4 s)
@@ -15,6 +15,8 @@
 //    réel ou un email réel
 //  - Les prompts générés sont systématiquement encadrés "phishing simulé
 //    pour formation cyber, ne pas envoyer en production sans validation"
+
+import DOMPurify from "isomorphic-dompurify";
 
 const MISTRAL_API = "https://api.mistral.ai/v1/chat/completions";
 
@@ -209,19 +211,55 @@ function validateAndSanitize(g: GeneratedPhishing): GeneratedPhishing {
 }
 
 /**
- * Sanitisation HTML basique : on ne garde que les balises sûres pour un
- * preview de mail. Pas de script, pas d'iframe, pas d'attribut event.
+ * Sanitisation HTML robuste basée sur DOMPurify (parseur HTML5, pas regex).
+ *
+ * On reste tres restrictif sur la whitelist : pour un preview de mail
+ * pedagogique, seules quelques balises de mise en forme sont necessaires.
+ * Tout attribut event (on*), toute URL javascript:/data: est neutralise
+ * par DOMPurify, ainsi que les vecteurs <svg>, <math>, <iframe>, etc.
+ *
+ * Cf. CVE history : les sanitizers regex sont contournables (ex:
+ * <SCRIPT>, <svg/onload=...>, <img src=x onerror=...>). DOMPurify est
+ * la reference industrielle (audit Cure53, OWASP recommande).
  */
+
+const ALLOWED_TAGS = [
+  "p",
+  "br",
+  "strong",
+  "em",
+  "u",
+  "b",
+  "i",
+  "a",
+  "ul",
+  "ol",
+  "li",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "blockquote",
+  "code",
+  "pre",
+  "span",
+  "div",
+];
+
+const ALLOWED_ATTR = ["href", "title", "target", "rel"];
+
 function sanitizeHtml(html: string): string {
-  // Retire les balises script, iframe, object, embed, link, style, meta
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, "")
-    .replace(/<iframe[\s\S]*?<\/iframe>/gi, "")
-    .replace(/<(object|embed|link|meta|style)[^>]*>[\s\S]*?<\/\1>/gi, "")
-    .replace(/<(object|embed|link|meta)[^>]*\/?>/gi, "")
-    .replace(/\son\w+\s*=\s*"[^"]*"/gi, "") // onclick, onload, etc.
-    .replace(/\son\w+\s*=\s*'[^']*'/gi, "")
-    .replace(/javascript:/gi, "");
+  // ALLOWED_URI_REGEXP : autorise http(s) et mailto, exclut javascript:, data:, etc.
+  return DOMPurify.sanitize(html, {
+    ALLOWED_TAGS,
+    ALLOWED_ATTR,
+    ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i,
+    FORBID_TAGS: ["script", "iframe", "object", "embed", "style", "link", "meta", "svg", "math"],
+    FORBID_ATTR: ["style", "onerror", "onload", "onclick"],
+    KEEP_CONTENT: true,
+  });
 }
 
 /**
@@ -331,7 +369,7 @@ https://colissimo-suivi.test/payer
 Sans paiement sous 48h, le colis sera renvoyé.`,
         bodyHtml: `<p>Bonjour,</p><p>Votre colis n° <strong>CY1234567FR</strong> est bloqué en douane.</p><p>Pour finaliser la livraison, merci de régler les frais : <strong>1,98 €</strong>.</p><p><a href="https://colissimo-suivi.test/payer">Régler les frais et débloquer le colis →</a></p><p>Sans paiement sous 48h, le colis sera renvoyé.</p>`,
         redFlags: [
-          "Frais minuscules (1,98 €) pour ne pas méfier — le but est d'obtenir la CB",
+          "Frais minuscules (1,98 €) pour ne pas méfier - le but est d'obtenir la CB",
           "Domaine '.test' factice",
           "Numéro de colis fictif (vous n'attendez peut-être pas de colis)",
           "Pression temporelle (48h)",
@@ -339,7 +377,7 @@ Sans paiement sous 48h, le colis sera renvoyé.`,
         ],
       },
       free: {
-        subject: "Action requise — vérifiez votre compte",
+        subject: "Action requise - vérifiez votre compte",
         fromName: "Service Client",
         fromEmail: "noreply@service-client.example",
         bodyText: `Bonjour,\n\nUne vérification est requise sur votre compte. Cliquez ici pour la finaliser : https://verify.example.test/login\n\nCordialement.`,

@@ -102,19 +102,19 @@ export async function generateCoachAdvice(
   let recommendation: CoachAdvice["recommendation"] = null;
   let mood: CoachAdvice["mood"];
 
-  // PRIORITE 1 — Phishing recent cliqué (urgent)
+  // PRIORITE 1 - Phishing recent cliqué (urgent)
   if (recentPhishingClick) {
     primaryMessage =
-      "Tu as cliqué sur un mail piégé récemment. Pas grave — tout le monde clique au moins une fois. Mais on va revoir ensemble pourquoi tu t'es fait avoir.";
+      "Tu as cliqué sur un mail piégé récemment. Pas grave - tout le monde clique au moins une fois. Mais on va revoir ensemble pourquoi tu t'es fait avoir.";
     recommendation = {
       type: "library",
-      label: "Lire : Phishing — 5 signes en 5 secondes",
+      label: "Lire : Phishing - 5 signes en 5 secondes",
       href: "/librairie/phishing-detection-5-signes",
       reason: "Pour ne plus jamais retomber dans le piège.",
     };
     mood = "urgent";
   }
-  // PRIORITE 2 — Module obligatoire non fait
+  // PRIORITE 2 - Module obligatoire non fait
   else if (missingMandatory) {
     primaryMessage = `Le module "${missingMandatory.saison.title}" est obligatoire dans ta PME et tu ne l'as pas encore terminé. Quelques minutes suffisent.`;
     recommendation = {
@@ -125,7 +125,7 @@ export async function generateCoachAdvice(
     };
     mood = "urgent";
   }
-  // PRIORITE 3 — Inactivité > 14 jours
+  // PRIORITE 3 - Inactivité > 14 jours
   else if (daysSinceLastActivity > 14 || user.progress.length === 0) {
     primaryMessage =
       user.progress.length === 0
@@ -139,9 +139,9 @@ export async function generateCoachAdvice(
     };
     mood = "encouraging";
   }
-  // PRIORITE 4 — Episode avec score faible recent
+  // PRIORITE 4 - Episode avec score faible recent
   else if (recentLowScore) {
-    primaryMessage = `Tu as eu ${recentLowScore.score} XP sur "${recentLowScore.episode.title}". Tu peux le rejouer pour améliorer — la progression compte plus que la note.`;
+    primaryMessage = `Tu as eu ${recentLowScore.score} XP sur "${recentLowScore.episode.title}". Tu peux le rejouer pour améliorer - la progression compte plus que la note.`;
     recommendation = {
       type: "module",
       label: `Refaire "${recentLowScore.episode.title}"`,
@@ -151,7 +151,7 @@ export async function generateCoachAdvice(
     };
     mood = "encouraging";
   }
-  // PRIORITE 5 — Tout va bien : feliciter + suggerer librairie
+  // PRIORITE 5 - Tout va bien : feliciter + suggerer librairie
   else {
     primaryMessage =
       user.progress.length >= 5

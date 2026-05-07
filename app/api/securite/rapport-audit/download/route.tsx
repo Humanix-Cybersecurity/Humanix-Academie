@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Téléchargement public du rapport d'audit de sécurité.
-// Pas d'auth requise — l'audit est intégralement public dans une logique
+// Pas d'auth requise - l'audit est intégralement public dans une logique
 // de transparence radicale.
 //
 // On audit-log la consultation pour avoir une idée du volume de demandes,

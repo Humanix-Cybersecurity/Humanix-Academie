@@ -14,7 +14,7 @@ Ce document décrit le système de licences signées Ed25519 utilisé par Humani
 
 ## 2. Pourquoi des licences signées ?
 
-Humanix Académie est sous AGPLv3 — **le code complet est public**. Mais certaines features ont un coût opérationnel ou éditorial pour Humanix Cybersecurity (Pack NIS2 turnkey, IA Coach Mistral, marketplace modérée…). Le SaaS cloud les active selon le plan du tenant.
+Humanix Académie est sous AGPLv3 - **le code complet est public**. Mais certaines features ont un coût opérationnel ou éditorial pour Humanix Cybersecurity (Pack NIS2 turnkey, IA Coach Mistral, marketplace modérée…). Le SaaS cloud les active selon le plan du tenant.
 
 Pour le **self-host commercial** (Pro+ qui veulent héberger sur leur propre infra), on a besoin d'un mécanisme :
 
@@ -75,7 +75,7 @@ Champs :
 | `featuresOverride` | Whitelist explicite de features (vide = utilise le plan) |
 | `issuedAt` / `expiresAt` | ISO 8601 UTC |
 
-## 5. Côté Humanix Cybersecurity — émettre une licence
+## 5. Côté Humanix Cybersecurity - émettre une licence
 
 ### 5.1 Setup initial (une fois)
 
@@ -140,7 +140,7 @@ npm run licensing:inspect -- "HUMANIX-LICENSE-v1...."
 npm run licensing:verify -- "HUMANIX-LICENSE-v1...."
 ```
 
-## 6. Côté client — installer la licence
+## 6. Côté client - installer la licence
 
 ### 6.1 Self-host via Docker
 
@@ -196,7 +196,7 @@ Donc le système de licence **dissuade le bypass casual** mais ne **protège pas
 
 **La vraie protection commerciale** vient de :
 
-1. Le **service** (audit, formation, RSSI externalisé) — non-forkable
+1. Le **service** (audit, formation, RSSI externalisé) - non-forkable
 2. La **marque** (trademark déposé)
 3. L'**infra cloud souveraine** Scaleway (le client préférerait payer ton SaaS plutôt que opérer un fork)
 4. La **fraîcheur du contenu** pédagogique (modules avancés régulièrement actualisés par expert humain)
@@ -205,13 +205,13 @@ Cf. [`OPEN_CORE.md`](./OPEN_CORE.md) pour la philosophie complète.
 
 ## 8. Pour les forks AGPL : opérer ta propre PKI
 
-Si tu fork Humanix Académie pour ton propre usage commercial (en respectant l'AGPL — tu publies tes modifs si tu opères en SaaS), tu peux **remplacer la PKI Humanix par la tienne** :
+Si tu fork Humanix Académie pour ton propre usage commercial (en respectant l'AGPL - tu publies tes modifs si tu opères en SaaS), tu peux **remplacer la PKI Humanix par la tienne** :
 
 1. `npm run licensing:keygen` (ta paire de clés)
 2. Remplacer `PUBLIC_KEY_PEM` dans `lib/license/public-key.ts`
 3. Émettre tes propres licences avec `licensing:generate`
 
-OU plus simple : **désactiver la vérification** (modifier `getEffectivePlan` dans `lib/license/index.ts` pour qu'il retourne directement le plan DB sans regarder la licence). C'est ce que beaucoup de community forks font. AGPL te le permet — c'est même l'esprit.
+OU plus simple : **désactiver la vérification** (modifier `getEffectivePlan` dans `lib/license/index.ts` pour qu'il retourne directement le plan DB sans regarder la licence). C'est ce que beaucoup de community forks font. AGPL te le permet - c'est même l'esprit.
 
 ## 9. Implementation interne
 
@@ -227,7 +227,7 @@ OU plus simple : **désactiver la vérification** (modifier `getEffectivePlan` d
 | [`lib/license/license.test.ts`](../lib/license/license.test.ts) | Tests Vitest (signature, falsification, expiration, domain) |
 | [`scripts/license-tool.ts`](../scripts/license-tool.ts) | CLI keygen / generate / inspect / verify |
 | [`lib/license/index.ts`](../lib/license/index.ts) | API publique : `getActiveLicense()`, **`getEffectivePlan(tenantId)`** (licence override > DB), `isFeatureLicensed()` |
-| [`lib/plans.ts`](../lib/plans.ts) | `getTenantPlan(tenantId)` — pure DB, **client-safe** (pas de dépendance node:crypto) |
+| [`lib/plans.ts`](../lib/plans.ts) | `getTenantPlan(tenantId)` - pure DB, **client-safe** (pas de dépendance node:crypto) |
 
 ## 10. Roadmap
 

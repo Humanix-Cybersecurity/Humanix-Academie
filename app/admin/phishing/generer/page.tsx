@@ -81,7 +81,7 @@ export default async function PhishingGenererPage() {
             NIS2)
           </li>
           <li>
-            Pas de sanction individuelle suite à un clic — uniquement formation
+            Pas de sanction individuelle suite à un clic - uniquement formation
           </li>
           <li>Données de résultat anonymisables sur demande (cf. CSE)</li>
           <li>

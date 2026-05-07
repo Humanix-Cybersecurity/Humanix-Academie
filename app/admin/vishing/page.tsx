@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page admin Vishing (voice phishing) — generation de scripts pedagogiques
+// Page admin Vishing (voice phishing) - generation de scripts pedagogiques
 // via Mistral souverain + lecture Piper TTS local. Combler le gap face a
 // Adaptive Security et Hoxhunt avec une stack 100 % FR/UE.
 
@@ -27,7 +27,7 @@ export default async function AdminVishingPage() {
   const tenantId = session.user!.tenantId as string;
   const plan = await getTenantPlan(tenantId);
 
-  if (!planHasFeature(plan, "phishing_ia")) {
+  if (!planHasFeature(plan, "vishing")) {
     return (
       <>
         <AdminPageHeader
@@ -36,9 +36,9 @@ export default async function AdminVishingPage() {
           icon="📞"
         />
         <PlanGate
-          feature="phishing_ia"
+          feature="vishing"
           currentPlan={plan}
-          requiredPlan={FEATURE_MIN_PLAN.phishing_ia}
+          requiredPlan={FEATURE_MIN_PLAN.vishing}
         />
       </>
     );
@@ -48,7 +48,7 @@ export default async function AdminVishingPage() {
     <>
       <AdminPageHeader
         title="Vishing (voix piégée) 🇫🇷"
-        description="Génération de scripts de vishing pédagogiques via IA souveraine Mistral. Stack 100 % FR/UE — pas de Cloud Act sur vos exercices de simulation."
+        description="Génération de scripts de vishing pédagogiques via IA souveraine Mistral. Stack 100 % FR/UE - pas de Cloud Act sur vos exercices de simulation."
         icon="📞"
       />
 
@@ -79,7 +79,7 @@ export default async function AdminVishingPage() {
           </ul>
         </div>
 
-        {/* Bandeau pricing — clair sur ce qui est inclus / pas inclus */}
+        {/* Bandeau pricing - clair sur ce qui est inclus / pas inclus */}
         <div className="card bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700">
           <h2 className="font-bold text-blue-900 dark:text-blue-200 mb-2 flex items-center gap-2">
             💶 Génération gratuite, exécution à la charge du client

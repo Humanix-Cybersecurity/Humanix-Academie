@@ -71,7 +71,7 @@ export async function POST() {
     tenantId,
     message: url
       ? "Acces portail Payplug update CB"
-      : "Tentative portail Payplug — fallback interne",
+      : "Tentative portail Payplug - fallback interne",
   });
 
   if (url) {

@@ -49,7 +49,7 @@ export default async function EditContributionPage({
         {module_.status === "PENDING_REVIEW" && (
           <article className="rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-900/15 p-4">
             <p className="text-sm text-amber-800 dark:text-amber-200">
-              <strong>En attente de modération</strong> — l'édition est
+              <strong>En attente de modération</strong> - l'édition est
               temporairement verrouillée pour éviter les conflits avec le
               modérateur. Tu reçois une notification dès qu'un modérateur a
               tranché.
@@ -60,7 +60,7 @@ export default async function EditContributionPage({
         {module_.status === "APPROVED" && (
           <article className="rounded-xl border border-blue-200 dark:border-blue-900/50 bg-blue-50/60 dark:bg-blue-900/15 p-4">
             <p className="text-sm text-blue-800 dark:text-blue-200 mb-1">
-              <strong>Module publié — édition autorisée</strong>
+              <strong>Module publié - édition autorisée</strong>
             </p>
             <p className="text-xs text-blue-700 dark:text-blue-300">
               Tes modifications créeront une nouvelle version (le numéro de

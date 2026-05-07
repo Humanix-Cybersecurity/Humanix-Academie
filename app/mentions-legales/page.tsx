@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Mentions légales — obligation LCEN art. 6-III-1
+// Mentions légales - obligation LCEN art. 6-III-1
 import Link from "next/link";
 import LegalLayout, {
   LegalSection,
@@ -7,7 +7,7 @@ import LegalLayout, {
 } from "@/components/legal/LegalLayout";
 
 export const metadata = {
-  title: "Mentions légales — Humanix-Cybersecurity",
+  title: "Mentions légales - Humanix-Cybersecurity",
   description:
     "Informations légales relatives à l'éditeur du site et de la plateforme Humanix Académie.",
 };
@@ -47,11 +47,11 @@ export default function MentionsLegalesPage() {
           </li>
           <li>Capital social : 100,00 €</li>
           <li>Siège social : 16 Rue Joseph Loiret, 30100 Alès, France</li>
-          <li>SIREN : 103 901 799 — RCS Nîmes</li>
+          <li>SIREN : 103 901 799 - RCS Nîmes</li>
           <li>SIRET : 103 901 799 00017</li>
           <li>N° TVA intracommunautaire : FR 80 103 901 799</li>
           <li>
-            Code APE : 6202A — Conseil en systèmes et logiciels informatiques
+            Code APE : 6202A - Conseil en systèmes et logiciels informatiques
           </li>
           <li>Président et directeur de la publication : Florian Durano</li>
         </ul>
@@ -60,7 +60,7 @@ export default function MentionsLegalesPage() {
       <LegalSection id="contact" num="2" title="Contact">
         <ul>
           <li>
-            <strong>Directeur de la publication</strong> : Florian Durano —{" "}
+            <strong>Directeur de la publication</strong> : Florian Durano -{" "}
             <a href="mailto:contact@humanix-cybersecurity.fr">
               contact@humanix-cybersecurity.fr
             </a>

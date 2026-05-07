@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Observatoire des fuites de données — refonte cosy mai 2026.
+// Observatoire des fuites de données - refonte cosy mai 2026.
 //
 // Brief : "experience, terrain, sensibilisation reelle, pas celle generee
-// par la peur — celle qui sent bon la maitrise et la confiance".
+// par la peur - celle qui sent bon la maitrise et la confiance".
 //
 // Sujet sensible : les fuites de donnees peuvent generer de la peur.
 // Avant, le bandeau "⚠️ Personne n'est a l'abri" + gradient primary/accent
 // jouait sur ce registre. On refond pour transformer la peur en pedagogie :
-// "Ce qu'on apprend des fuites — sans dramatiser".
+// "Ce qu'on apprend des fuites - sans dramatiser".
 //
 // Logique metier preservee : queries Prisma, lazy refresh, pagination,
 // filtres source/query.
@@ -33,7 +33,7 @@ export const metadata = {
     "Recensement des fuites de données récentes en France, agrégé depuis FrenchBreaches, Bonjour la Fuite et Fuites Infos. Mise à jour quotidienne. Sans dramatiser.",
 };
 
-// Severite adoucie : pas de rouge alarmiste pour "critique" — amber chaud
+// Severite adoucie : pas de rouge alarmiste pour "critique" - amber chaud
 // + emoji explicite. La gravite est exprimee par les chiffres (records),
 // pas par une couleur qui fait peur.
 const SEVERITY_BADGE: Record<
@@ -119,7 +119,7 @@ export default async function ObservatoireFuitesPage({
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* ============================================================
-          1. HERO — sobre, sans dramatiser
+          1. HERO - sobre, sans dramatiser
           ============================================================ */}
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
         <section
@@ -148,7 +148,7 @@ export default async function ObservatoireFuitesPage({
             style={{ animationDelay: "220ms" }}
           >
             Recensement des incidents publiés par les 3 sources francophones de
-            référence. Pour rester informé·e — <strong>sans dramatiser</strong>,
+            référence. Pour rester informé·e - <strong>sans dramatiser</strong>,
             sans publicité, sans tracker.
           </p>
         </section>
@@ -156,7 +156,7 @@ export default async function ObservatoireFuitesPage({
 
       <div className="max-w-6xl mx-auto px-4 py-10 space-y-10">
         {/* ============================================================
-            2. STATS — coup d'oeil rapide
+            2. STATS - coup d'oeil rapide
             ============================================================ */}
         <section aria-labelledby="stats-title">
           <h2 id="stats-title" className="sr-only">
@@ -189,7 +189,7 @@ export default async function ObservatoireFuitesPage({
         </section>
 
         {/* ============================================================
-            3. CE QU'ON APPREND — pedagogie au lieu de peur
+            3. CE QU'ON APPREND - pedagogie au lieu de peur
             ============================================================ */}
         <section aria-labelledby="lesson-title">
           <div className="rounded-3xl bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/30 border-2 border-emerald-200 dark:border-emerald-900/40 p-8 shadow-sm">
@@ -208,7 +208,7 @@ export default async function ObservatoireFuitesPage({
                   id="lesson-title"
                   className="font-display text-xl sm:text-2xl font-extrabold text-primary-500 dark:text-emerald-200 mb-2"
                 >
-                  Toutes les organisations sont concernées — c'est une donnée,
+                  Toutes les organisations sont concernées - c'est une donnée,
                   pas une malédiction.
                 </h2>
                 <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
@@ -467,18 +467,18 @@ export default async function ObservatoireFuitesPage({
         </section>
 
         {/* ============================================================
-            8. RESPIRATION — citation finale
+            8. RESPIRATION - citation finale
             ============================================================ */}
         <section className="text-center pt-4">
           <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            « Connaître les fuites des autres, ce n'est pas céder à la peur —
+            « Connaître les fuites des autres, ce n'est pas céder à la peur -
             c'est apprendre par procuration. »
           </blockquote>
           <p
             aria-hidden="true"
             className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
           >
-            — Hex veille
+            - Hex veille
           </p>
         </section>
       </div>
