@@ -126,13 +126,14 @@ function ThemeBtn({
     <button
       onClick={onClick}
       aria-pressed={active}
+      aria-label={label}
       className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition ${
         active
           ? "bg-white dark:bg-slate-700 text-primary-500 shadow-sm"
           : "text-gray-500 hover:text-primary-500"
       }`}
     >
-      <span>{icon}</span>
+      <span aria-hidden="true">{icon}</span>
       <span className="hidden sm:inline">{label}</span>
     </button>
   );
