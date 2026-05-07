@@ -82,7 +82,7 @@ const CHAPTERS = [
   },
   {
     emoji: "🎁",
-    title: "Ce qui devient libre - concretement",
+    title: "Ce qui devient libre - concrètement",
     palette: {
       bg: "from-amber-50 via-white to-yellow-50 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/40",
       ring: "border-amber-200 dark:border-amber-900/40",
