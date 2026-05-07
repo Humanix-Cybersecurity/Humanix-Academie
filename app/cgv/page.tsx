@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// CGV B2B — Conditions Générales de Vente
+// CGV B2B - Conditions Générales de Vente
 // Couvre 3 lignes business : SaaS Humanix Académie, formation, audits cyber
 import Link from "next/link";
 import LegalLayout, {
@@ -9,7 +9,7 @@ import LegalLayout, {
 } from "@/components/legal/LegalLayout";
 
 export const metadata = {
-  title: "CGV — Conditions Générales de Vente — Humanix-Cybersecurity",
+  title: "CGV - Conditions Générales de Vente - Humanix-Cybersecurity",
   description:
     "CGV B2B applicables aux prestations Humanix-Cybersecurity (SaaS, formation, audit).",
 };
@@ -66,9 +66,9 @@ export default function CGVPage() {
         </p>
         <ul>
           <li>
-            <strong>Humanix-Cybersecurity</strong>, SASU au capital de 100 € —
-            siège social 16 Rue Joseph Loiret, 30100 Alès — RCS Nîmes 103 901
-            799 — TVA FR 80 103 901 799 (ci-après{" "}
+            <strong>Humanix-Cybersecurity</strong>, SASU au capital de 100 € -
+            siège social 16 Rue Joseph Loiret, 30100 Alès - RCS Nîmes 103 901
+            799 - TVA FR 80 103 901 799 (ci-après{" "}
             <strong>« Humanix-Cybersecurity »</strong> ou{" "}
             <strong>« le Prestataire »</strong>),
           </li>
@@ -495,19 +495,19 @@ export default function CGVPage() {
         </p>
         <ul>
           <li>
-            <strong>Scaleway SAS</strong> (France) — hébergement, sauvegardes,
+            <strong>Scaleway SAS</strong> (France) - hébergement, sauvegardes,
             infrastructure ;
           </li>
           <li>
-            <strong>Olinda SAS / Qonto</strong> (France) — compte de paiement
+            <strong>Olinda SAS / Qonto</strong> (France) - compte de paiement
             professionnel ;
           </li>
           <li>
-            <strong>Dougs SAS</strong> (France) — expertise comptable et
+            <strong>Dougs SAS</strong> (France) - expertise comptable et
             facturation ;
           </li>
           <li>
-            <strong>Scaleway TEM</strong> (UE, clauses contractuelles types) — emails
+            <strong>Scaleway TEM</strong> (UE, clauses contractuelles types) - emails
             transactionnels (lien magique de connexion, alertes système).
           </li>
         </ul>

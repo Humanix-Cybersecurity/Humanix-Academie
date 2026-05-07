@@ -10,7 +10,7 @@ import Link from "next/link";
 import CisoAssistantBridge from "@/components/CisoAssistantBridge";
 
 export const metadata = {
-  title: "Connecteur CISO Assistant — Humanix Academie",
+  title: "Connecteur CISO Assistant - Humanix Academie",
   description:
     "Le seul connecteur natif entre une plateforme française de sensibilisation cyber et CISO Assistant (intuitem). Vos preuves de sensibilisation alimentent automatiquement votre GRC.",
 };

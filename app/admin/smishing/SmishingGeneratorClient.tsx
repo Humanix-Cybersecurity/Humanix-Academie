@@ -193,7 +193,7 @@ export default function SmishingGeneratorClient() {
             className="block w-full rounded-lg border-2 border-gray-200 dark:border-slate-700 p-2 text-sm bg-white dark:bg-slate-950"
           />
           <p className="text-xs text-gray-500 mt-1">
-            Pas de données personnelles (email, téléphone, SIRET) — détecté et
+            Pas de données personnelles (email, téléphone, SIRET) - détecté et
             refusé automatiquement.
           </p>
         </div>

@@ -1,10 +1,10 @@
 "use client";
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Player d'episode — refonte cosy mai 2026.
+// Player d'episode - refonte cosy mai 2026.
 //
 // Brief : "experience, terrain, sensibilisation reelle, pas celle generee
-// par la peur — celle qui sent bon la maitrise et la confiance".
+// par la peur - celle qui sent bon la maitrise et la confiance".
 //
 // 4 etapes : Scenario → Debrief → Quiz → Recap (avec confettis)
 // + Detection level-up via reponse API et overlay
@@ -29,12 +29,13 @@ import type { Choice, QuizQuestion } from "@/lib/episodes";
 import HexMascotEvolved from "@/components/HexMascotEvolved";
 import LevelUpOverlay from "@/components/LevelUpOverlay";
 import TTSButton from "@/components/TTSButton";
+import FormattedText from "@/components/FormattedText";
 import LiveRegion from "@/components/a11y/LiveRegion";
 import { useAnnouncer } from "@/lib/a11y";
 
 type Step = "scenario" | "debrief" | "quiz" | "recap";
 
-// Citations rotatives selon le score quiz — pas la meme philosophie selon
+// Citations rotatives selon le score quiz - pas la meme philosophie selon
 // le niveau de maitrise atteint. Toutes chaleureuses, jamais jugeantes.
 const RECAP_CITATIONS = {
   perfect: "« Tu n'as pas a etre expert. Tu as juste a etre averti une seconde avant le clic. C'est exactement ce que tu viens de faire. »",
@@ -184,7 +185,7 @@ export default function EpisodePlayer(props: {
         <ProgressDots step={step} />
 
         {/* ============================================================
-            STEP 1 — SCENARIO : l'histoire du jour
+            STEP 1 - SCENARIO : l'histoire du jour
             ============================================================ */}
         {step === "scenario" && (
           <div className="animate-fadeIn">
@@ -209,7 +210,7 @@ export default function EpisodePlayer(props: {
 
             {/* Carte scenario : gradient soft cyan/blue, plus immersive */}
             <div className="bg-gradient-to-br from-cyan-50 via-white to-blue-50 dark:from-cyan-950/30 dark:via-slate-900 dark:to-blue-950/30 rounded-2xl p-5 mb-6 leading-relaxed whitespace-pre-line text-gray-800 dark:text-gray-100 border-l-4 border-accent-500">
-              {props.scenario}
+              <FormattedText text={props.scenario} />
               <div className="mt-4 pt-3 border-t border-cyan-200/40 dark:border-cyan-900/40">
                 <TTSButton text={props.scenario} label="Ecouter le scenario" />
               </div>
@@ -243,7 +244,7 @@ export default function EpisodePlayer(props: {
         )}
 
         {/* ============================================================
-            STEP 2 — DEBRIEF : on apprend ensemble, sans jugement
+            STEP 2 - DEBRIEF : on apprend ensemble, sans jugement
             ============================================================ */}
         {step === "debrief" && choice && (
           <div className="animate-fadeIn">
@@ -277,7 +278,9 @@ export default function EpisodePlayer(props: {
                       ? "🌿 Pas grave, on apprend"
                       : "→ Pas si simple"}
                 </p>
-                <p className="leading-relaxed">{choice.feedback}</p>
+                <p className="leading-relaxed">
+                  <FormattedText text={choice.feedback} />
+                </p>
                 {choice.points !== 0 && (
                   <p className="mt-3 text-sm font-bold tabular-nums">
                     {choice.points > 0
@@ -295,7 +298,7 @@ export default function EpisodePlayer(props: {
                 </p>
                 <TTSButton text={props.debrief} label="Ecouter le debrief" />
               </div>
-              {props.debrief}
+              <FormattedText text={props.debrief} />
             </div>
             <button
               onClick={() => setStep("quiz")}
@@ -310,7 +313,7 @@ export default function EpisodePlayer(props: {
         )}
 
         {/* ============================================================
-            STEP 3 — QUIZ : maitrise progressive
+            STEP 3 - QUIZ : maitrise progressive
             ============================================================ */}
         {step === "quiz" && (
           <div className="animate-fadeIn">
@@ -407,7 +410,7 @@ export default function EpisodePlayer(props: {
                     <span aria-hidden="true">💡</span> Hex t'eclaire
                   </p>
                   <p className="text-gray-700 dark:text-gray-200">
-                    {props.quiz[quizIndex].explanation}
+                    <FormattedText text={props.quiz[quizIndex].explanation} />
                   </p>
                 </div>
                 <button
@@ -424,7 +427,7 @@ export default function EpisodePlayer(props: {
         )}
 
         {/* ============================================================
-            STEP 4 — RECAP : ton chaleureux, citation Hex veille
+            STEP 4 - RECAP : ton chaleureux, citation Hex veille
             ============================================================ */}
         {step === "recap" && (
           <div className="animate-fadeIn text-center py-6">
@@ -489,7 +492,7 @@ export default function EpisodePlayer(props: {
                   className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 via-pink-500 to-amber-500 text-white rounded-2xl px-6 py-3 font-display font-extrabold shadow-lg animate-glow"
                 >
                   <span aria-hidden="true">✨</span> Niveau {levelUp} debloque
-                  — clique pour voir
+                  - clique pour voir
                 </button>
               </div>
             )}
@@ -503,7 +506,7 @@ export default function EpisodePlayer(props: {
               </Link>
             </div>
 
-            {/* Respiration finale — citation Hex veille rotative selon le score */}
+            {/* Respiration finale - citation Hex veille rotative selon le score */}
             <div className="pt-6 border-t-2 border-dashed border-gray-200 dark:border-slate-700 max-w-2xl mx-auto">
               <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
                 {citation}
@@ -512,7 +515,7 @@ export default function EpisodePlayer(props: {
                 aria-hidden="true"
                 className="mt-3 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
               >
-                — Hex veille
+                - Hex veille
               </p>
             </div>
           </div>

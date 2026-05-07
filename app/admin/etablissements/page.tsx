@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page admin "Multi-etablissements" — feature plan Pro+.
+// Page admin "Multi-etablissements" - feature plan Pro+.
 // Gestion des sites/agences/BU rattachees au tenant racine.
 // Vue consolidee + liste des etablissements + creation d'un nouveau site.
 
@@ -54,7 +54,7 @@ export default async function EtablissementsPage() {
         {/* Vue consolidee */}
         <section className="card mb-8">
           <h2 className="text-xl font-bold text-primary-500 mb-1">
-            📊 Vue consolidée — tous établissements
+            📊 Vue consolidée - tous établissements
           </h2>
           <p className="text-sm text-gray-500 mb-4">
             Indicateurs agrégés sur {stats.byEstablishment.length}{" "}
@@ -222,7 +222,7 @@ export default async function EtablissementsPage() {
                   name="establishmentType"
                   className="input w-full"
                 >
-                  <option value="">— Aucun —</option>
+                  <option value="">- Aucun -</option>
                   <option value="agence">Agence</option>
                   <option value="cabinet">Cabinet</option>
                   <option value="site">Site / Usine</option>
@@ -271,7 +271,7 @@ export default async function EtablissementsPage() {
             </li>
             <li>
               Limite V1 : 2 niveaux de hiérarchie. Pour des structures plus
-              complexes, contactez-nous —{" "}
+              complexes, contactez-nous -{" "}
               <Link href="/contact" className="text-accent-500 underline">
                 demande sur mesure
               </Link>

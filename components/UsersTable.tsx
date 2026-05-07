@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// UsersTable — Table de gestion des collaborateurs.
+// UsersTable - Table de gestion des collaborateurs.
 //   - Colonnes : nom/email, role (avec RSSI), service, groupes, 2FA, statut.
 //   - Actions : suspendre, supprimer, forcer 2FA, deverrouiller, reset 2FA,
 //               assigner aux groupes (drawer).
