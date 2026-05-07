@@ -89,7 +89,7 @@ export default function RapportAuditPage() {
             severity="high"
             title="Image Docker en production en retard sur les correctifs"
             cvss="N/A (process)"
-            issue="L'image humanix-academie-app déployée a été buildée avant le merge des PRs #142 (CSP + middleware admin + alias /health), #133 (sanitization Mistral DOMPurify) et #150-#153 (a11y + typos). Vérifié en pentest : header Content-Security-Policy absent, /health renvoie 404, middleware edge-runtime absent du bundle."
+            issue="L'image humanix-academie-app déployée a été construite avant le merge des PRs #142 (CSP + middleware admin + alias /health), #133 (sanitization Mistral DOMPurify) et #150-#153 (a11y + typos). Vérifié en pentest : header Content-Security-Policy absent, /health renvoie 404, middleware edge-runtime absent du bundle."
             fix="Reconstruire et redéployer l'image humanix-academie-app à partir de main:14d21f2 (incluant tous les correctifs). Mettre en place une CI/CD avec déclenchement auto au push sur main."
             status="fixed-in-code-pending-deploy"
           />
@@ -233,11 +233,7 @@ export default function RapportAuditPage() {
             when="Q2 2026 (avant launch)"
             why="Pentest interne du 7 mai a montré qu'une image en prod peut diverger des correctifs de main (CSP, middleware, sanitization absents du build déployé). Pipeline GitHub Actions → registre Docker → pull + restart automatique."
           />
-          <Backlog
-            title="/.well-known/security.txt (RFC 9116)"
-            when="Q2 2026"
-            why="Signal pour les chercheurs en sécurité : email security@, scope du programme de divulgation responsable, langues acceptées. 5 lignes de fichier statique, gros impact crédibilité."
-          />
+
           <Backlog
             title="HAProxy stats auth + rate limit /api/auth"
             when="Q2 2026"
