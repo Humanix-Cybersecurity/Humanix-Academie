@@ -58,6 +58,23 @@ les rôles Apprenant, Manager et Admin.
 
 ---
 
+## Quickstart dev local (3 minutes) ⚡
+
+```bash
+git clone https://github.com/Humanix-Cybersecurity/Humanix-Academie.git
+cd humanix-academie
+./scripts/start.sh
+```
+
+Le script `scripts/start.sh` détecte l'OS, installe Docker / mkcert si
+absents, génère un cert TLS local trust-safe (zéro warning "site non
+sécurisé"), prépare `/etc/hosts`, lance la stack en `DEMO_MODE=true`.
+Ouvre **`https://humanix.local`** quand c'est terminé.
+
+Détails : [docs/installation.md](./docs/installation.md#mode-0---quickstart-dev-avec-https-local-3-minutes-).
+
+---
+
 ## Quickstart self-host (10 minutes)
 
 ### Prérequis
