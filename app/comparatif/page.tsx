@@ -594,7 +594,7 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
   "Catalogue & contenu": {
     emoji: "📚",
     intro:
-      "Le contenu, c'est le coeur du metier. Beaucoup de modules ne fait pas tout : un module bien ecrit, en francais, qui s'adresse vraiment a l'apprenant, vaut dix modules traduits a la chaine.",
+      "Le contenu, c'est le cœur du métier. Beaucoup de modules ne fait pas tout : un module bien écrit, en français, qui s'adresse vraiment à l'apprenant, vaut dix modules traduits à la chaîne.",
     palette: {
       bg: "from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-teal-950/40",
       ring: "border-emerald-200 dark:border-emerald-900/40",
