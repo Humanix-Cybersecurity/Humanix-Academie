@@ -23,6 +23,7 @@ import {
   buildSubject,
   AnecdoteEmailContext,
 } from "./email-template";
+import { getErrorMessage } from "@/lib/errors";
 
 export type DispatchResult = {
   ok: boolean;
@@ -154,11 +155,11 @@ export async function dispatchWeeklyAnecdote(options?: {
       });
       // Petit delai pour respecter le quota provider
       if (!isDemo) await sleep(RATE_LIMIT_DELAY_MS);
-    } catch (e: any) {
+    } catch (e: unknown) {
       result.errors++;
       result.errorDetails?.push({
         email: sub.email,
-        message: String(e?.message ?? e).slice(0, 200),
+        message: getErrorMessage(e, 200),
       });
     }
   }

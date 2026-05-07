@@ -17,6 +17,7 @@
 //    pour formation cyber, ne pas envoyer en production sans validation"
 
 import DOMPurify from "isomorphic-dompurify";
+import { isAbortError } from "@/lib/errors";
 
 const MISTRAL_API = "https://api.mistral.ai/v1/chat/completions";
 
@@ -164,9 +165,9 @@ export async function generatePhishing(
       }),
       signal: ctrl.signal,
     });
-  } catch (e: any) {
+  } catch (e: unknown) {
     throw new Error(
-      e?.name === "AbortError" ? "mistral_timeout" : "mistral_unreachable",
+      isAbortError(e) ? "mistral_timeout" : "mistral_unreachable",
     );
   } finally {
     clearTimeout(timer);
