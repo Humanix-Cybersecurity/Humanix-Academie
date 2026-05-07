@@ -2,6 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =============================================================================
+   Cross-OS flag emoji rendering
+   -----------------------------------------------------------------------------
+   Probleme : sur Windows 10/11, la police systeme Segoe UI Emoji ne contient
+   pas les glyphs des drapeaux (🇫🇷 🇪🇺 🇺🇸 ...) - elle affiche les
+   regional indicators sous forme de paires de lettres (FR, EU, US). Sur Mac/
+   iOS/Android les drapeaux sont rendus correctement nativement.
+
+   Solution : on charge une police Twemoji Country Flags (78 KB woff2 self-
+   hosted, source : country-flag-emoji-polyfill v0.1) avec un unicode-range
+   restreint aux codepoints des drapeaux. La police N'EST CHARGEE QUE quand
+   un drapeau apparait dans le DOM (font-display: swap, unicode-range
+   declenche le download a la demande).
+
+   On l'ajoute en TETE de la font-family stack pour qu'elle prevaille sur les
+   polices systeme uniquement pour ces codepoints, sans toucher au texte
+   normal qui reste en Inter.
+
+   Conformite CSP : la police est en self-host (public/fonts/...woff2) donc
+   compatible avec font-src 'self' (cf. next.config.mjs).
+   ============================================================================= */
+@font-face {
+  font-family: "Twemoji Country Flags";
+  unicode-range: U+1F1E6-1F1FF, U+1F3F4, U+E0062-E0063, U+E0065, U+E0067,
+    U+E006C, U+E006E, U+E0073-E0074, U+E0077, U+E007F;
+  src: url("/fonts/TwemojiCountryFlags.woff2") format("woff2");
+  font-display: swap;
+}
+
 /* HumaniX Academy - Tokens design system + dark mode */
 @layer base {
   :root {
@@ -35,7 +64,10 @@
   html, body {
     background: var(--color-bg-soft);
     color: var(--color-fg);
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    /* "Twemoji Country Flags" en premier : grace a unicode-range, cette police
+       n'est appliquee QUE sur les codepoints flag emoji - le reste du texte
+       reste rendu par Inter (puis system-ui en fallback). */
+    font-family: 'Twemoji Country Flags', 'Inter', system-ui, -apple-system, sans-serif;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
   }
