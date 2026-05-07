@@ -4,7 +4,7 @@
 // Securite :
 //  - Auth NextAuth obligatoire
 //  - Role ADMIN/MANAGER/SUPERADMIN requis
-//  - Plan-gating : feature "phishing_ia" (Pro+) — meme regle que phishing IA
+//  - Plan-gating : feature "vishing" (Pro+)
 //  - Rate limit : 20 req/heure par tenant (in-memory, sans Redis pour MVP)
 //  - Anti-PII : delegue au generateur (lib/vishing/script-generator.ts)
 //  - Aucun stockage : le script genere est retourne au client, pas persiste
@@ -68,12 +68,12 @@ export async function POST(req: Request) {
   }
 
   const plan = await getTenantPlan(tenantId);
-  if (!planHasFeature(plan, "phishing_ia")) {
+  if (!planHasFeature(plan, "vishing")) {
     return NextResponse.json(
       {
         error: "plan_too_low",
         message: "Cette feature requiert le plan Pro ou superieur.",
-        feature: "phishing_ia",
+        feature: "vishing",
       },
       { status: 402 },
     );

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Tests de la grille tarifaire — calculateMonthlyPrice + structure TIERS.
+// Tests de la grille tarifaire - calculateMonthlyPrice + structure TIERS.
 // Critique : un bug de pricing = mauvaise facturation = litige client.
 //
 // Couvre les 6 paliers : Community (exclu cloud), Découverte (free 5),
@@ -34,7 +34,7 @@ describe("Structure TIERS", () => {
   it("la fonction calculateMonthlyPrice associe chaque taille à un palier sans gap", () => {
     // Note : les TIERS ont des plages qui SE CHEVAUCHENT volontairement
     // (ex: Starter min=1 max=15, Découverte min=1 max=5). Le matching
-    // se fait par "first wins" — Découverte est testé en premier.
+    // se fait par "first wins" - Découverte est testé en premier.
     // Ce qui compte c'est que CHAQUE taille trouve un palier.
     for (const seats of [1, 5, 6, 15, 16, 50, 51, 250, 251, 1000]) {
       const r = calculateMonthlyPrice(seats, "monthly");
@@ -59,7 +59,7 @@ describe("Structure TIERS", () => {
   });
 });
 
-describe("calculateMonthlyPrice — Découverte (1-5 sièges)", () => {
+describe("calculateMonthlyPrice - Découverte (1-5 sièges)", () => {
   it("1 siège → Découverte gratuit", () => {
     const r = calculateMonthlyPrice(1, "monthly");
     expect(r.tier.id).toBe("decouverte");
@@ -74,7 +74,7 @@ describe("calculateMonthlyPrice — Découverte (1-5 sièges)", () => {
   });
 });
 
-describe("calculateMonthlyPrice — Starter (6-15 sièges, forfait)", () => {
+describe("calculateMonthlyPrice - Starter (6-15 sièges, forfait)", () => {
   it("6 sièges → Starter forfait", () => {
     const r = calculateMonthlyPrice(6, "monthly");
     expect(r.tier.id).toBe("solo");
@@ -102,7 +102,7 @@ describe("calculateMonthlyPrice — Starter (6-15 sièges, forfait)", () => {
   });
 });
 
-describe("calculateMonthlyPrice — Essentielle (16-50 sièges, par utilisateur)", () => {
+describe("calculateMonthlyPrice - Essentielle (16-50 sièges, par utilisateur)", () => {
   it("16 sièges → Essentielle", () => {
     const r = calculateMonthlyPrice(16, "monthly");
     expect(r.tier.id).toBe("essentielle");
@@ -122,7 +122,7 @@ describe("calculateMonthlyPrice — Essentielle (16-50 sièges, par utilisateur)
   });
 });
 
-describe("calculateMonthlyPrice — Pro (51-250 sièges)", () => {
+describe("calculateMonthlyPrice - Pro (51-250 sièges)", () => {
   it("51 sièges → Pro", () => {
     expect(calculateMonthlyPrice(51, "monthly").tier.id).toBe("pro");
   });
@@ -138,7 +138,7 @@ describe("calculateMonthlyPrice — Pro (51-250 sièges)", () => {
   });
 });
 
-describe("calculateMonthlyPrice — Enterprise (250+, devis)", () => {
+describe("calculateMonthlyPrice - Enterprise (250+, devis)", () => {
   it("251 sièges → Enterprise", () => {
     const r = calculateMonthlyPrice(251, "monthly");
     expect(r.tier.id).toBe("premium");

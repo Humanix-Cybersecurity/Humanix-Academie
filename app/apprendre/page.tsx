@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Hub apprenant — refonte cosy mai 2026.
+// Hub apprenant - refonte cosy mai 2026.
 //
 // Brief : "magie, audace, professionalisme, animation, accessibilite,
 // cosy, charmant, impactant. L'utilisateur au coeur du voyage sans se
 // rendre compte qu'il est la pour apprendre. Sensibilisation reelle, pas
-// celle generee par la peur — celle qui sent bon la maitrise et la
+// celle generee par la peur - celle qui sent bon la maitrise et la
 // confiance."
 //
 // 8 sections narratives :
 //   1. Bandeau challenge (s'il y en a un, ton chaleureux et non urgent)
 //   2. Hero "Bonjour [prenom]" personnalise selon l'heure du jour
 //   3. Coach Hex (existait deja, garde)
-//   4. Ton prochain pas — l'action recommandee mise en valeur, cadeau
-//   5. Defi tranquille du jour — pas de pression, juste de la progression
-//   6. Tes saisons — cards magazine avec gradients doux par theme
-//   7. Tes acquis — badges valorisants + phrase chaleureuse
-//   8. Respiration — citation rassurante de fin
+//   4. Ton prochain pas - l'action recommandee mise en valeur, cadeau
+//   5. Defi tranquille du jour - pas de pression, juste de la progression
+//   6. Tes saisons - cards magazine avec gradients doux par theme
+//   7. Tes acquis - badges valorisants + phrase chaleureuse
+//   8. Respiration - citation rassurante de fin
 //
 // Logique metier (queries Prisma, calculs streak/level/progress)
 // **conservee a l'identique** par rapport a la version anterieure.
@@ -39,7 +39,7 @@ import { listExpertEpisodes } from "@/lib/content-availability";
 export const dynamic = "force-dynamic";
 
 // ===========================================================================
-// PALETTE DES SAISONS — 6 ambiances douces cyclees par index
+// PALETTE DES SAISONS - 6 ambiances douces cyclees par index
 // ===========================================================================
 // On evite tout rouge alarmiste / orange criard. Les saisons doivent
 // donner envie d'y entrer, pas mettre en garde.
@@ -84,9 +84,9 @@ const SAISON_PALETTES: Array<{
   },
 ];
 
-// Citations chaleureuses — affichees en bas de page, alternance aleatoire
+// Citations chaleureuses - affichees en bas de page, alternance aleatoire
 const CITATIONS = [
-  "La maitrise cyber, ce n'est pas un sommet — c'est un chemin. Cinq minutes par semaine suffisent.",
+  "La maitrise cyber, ce n'est pas un sommet - c'est un chemin. Cinq minutes par semaine suffisent.",
   "Tu n'as pas a etre expert. Tu as juste a etre averti une seconde avant le clic.",
   "Le meilleur reflexe cyber, c'est de prendre 30 secondes avant d'agir. Tu en es deja capable.",
   "Apprendre la cyber, c'est apprendre a se faire confiance. Hex t'accompagne, pas le contraire.",
@@ -232,7 +232,7 @@ export default async function ApprendrePage() {
   return (
     <main id="main-content" className="animate-fadeIn overflow-x-hidden">
       {/* ============================================================
-          1. CHALLENGE — bandeau discret, ton chaleureux non-urgent
+          1. CHALLENGE - bandeau discret, ton chaleureux non-urgent
           ============================================================ */}
       {activeChallenge && (
         <Link
@@ -273,7 +273,7 @@ export default async function ApprendrePage() {
       )}
 
       {/* ============================================================
-          2. HERO — voyage personnel
+          2. HERO - voyage personnel
           Salutation chaleureuse, mascotte qui flotte, niveau valorise.
           ============================================================ */}
       <section
@@ -345,7 +345,7 @@ export default async function ApprendrePage() {
 
       <div className="max-w-5xl mx-auto px-4 py-8 sm:py-10 space-y-8">
         {/* ============================================================
-            3. COACH HEX — guidage personnalise (existait deja)
+            3. COACH HEX - guidage personnalise (existait deja)
             ============================================================ */}
         <CoachCard
           advice={coachAdvice}
@@ -354,7 +354,7 @@ export default async function ApprendrePage() {
         />
 
         {/* ============================================================
-            4. TON PROCHAIN PAS — l'action prioritaire en valeur
+            4. TON PROCHAIN PAS - l'action prioritaire en valeur
             Card-hero gradient officiel + animate-glow + emoji float.
             ============================================================ */}
         {recommendedEpisode && recommendedSaison && (
@@ -380,7 +380,7 @@ export default async function ApprendrePage() {
                 <p className="opacity-90 mb-5">
                   Saison · {recommendedSaison.title} · environ{" "}
                   {recommendedEpisode.durationMinutes ?? 6} minutes. Aucune
-                  pression — c'est juste un moment pour toi.
+                  pression - c'est juste un moment pour toi.
                 </p>
                 <Link
                   href={`/apprendre/${recommendedSaison.slug}/${recommendedEpisode.slug}`}
@@ -395,7 +395,7 @@ export default async function ApprendrePage() {
         )}
 
         {/* ============================================================
-            5. DEFI TRANQUILLE — daily goal sans drama
+            5. DEFI TRANQUILLE - daily goal sans drama
             ============================================================ */}
         <section aria-labelledby="daily-title">
           <div className="card bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-emerald-950/30 dark:via-slate-900 dark:to-teal-950/20 border-emerald-200 dark:border-emerald-900/40">
@@ -433,7 +433,7 @@ export default async function ApprendrePage() {
         </section>
 
         {/* ============================================================
-            6. SAISONS — cards magazine, gradients doux par theme
+            6. SAISONS - cards magazine, gradients doux par theme
             ============================================================ */}
         {saisons.length === 0 ? (
           <EmptyState />
@@ -474,6 +474,19 @@ export default async function ApprendrePage() {
                 const expertCount = s.episodes.filter((e) =>
                   expertEpisodes.has(`${s.slug}/${e.slug}`),
                 ).length;
+                // Duree moyenne par episode = vraie valeur, pas un hardcode.
+                // On affichera ca en "~X min par episode" pour preserver la
+                // promesse "5 min par jour" (vs un total qui affiche 36 min
+                // et fait fuir les apprenants).
+                const avgMinutes =
+                  total === 0
+                    ? 0
+                    : Math.round(
+                        s.episodes.reduce(
+                          (acc, e) => acc + (e.durationMinutes ?? 6),
+                          0,
+                        ) / total,
+                      );
 
                 return (
                   <SaisonCard
@@ -487,6 +500,7 @@ export default async function ApprendrePage() {
                     isLocked={isLocked}
                     firstUndoneSlug={firstUndone?.slug ?? null}
                     expertCount={expertCount}
+                    avgMinutes={avgMinutes}
                   />
                 );
               })}
@@ -495,7 +509,7 @@ export default async function ApprendrePage() {
         )}
 
         {/* ============================================================
-            7. TES ACQUIS — badges + phrase chaleureuse de valorisation
+            7. TES ACQUIS - badges + phrase chaleureuse de valorisation
             ============================================================ */}
         <section aria-labelledby="acquis-title">
           <div className="flex items-end justify-between gap-3 flex-wrap mb-4">
@@ -543,7 +557,7 @@ export default async function ApprendrePage() {
               {completedCount === 0 && (
                 <p className="text-sm text-amber-900/70 dark:text-amber-100/70 italic">
                   Ton premier badge t'attend des le premier episode termine.
-                  Pas de pression — quand tu te sens pret.
+                  Pas de pression - quand tu te sens pret.
                 </p>
               )}
             </div>
@@ -551,7 +565,7 @@ export default async function ApprendrePage() {
         </section>
 
         {/* ============================================================
-            8. RESPIRATION — citation de fin, signature confiante
+            8. RESPIRATION - citation de fin, signature confiante
             ============================================================ */}
         <section aria-hidden={false} className="text-center pt-6 pb-2">
           <blockquote className="font-display text-lg sm:text-xl italic text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
@@ -561,7 +575,7 @@ export default async function ApprendrePage() {
             className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
             aria-hidden="true"
           >
-            — Hex veille
+            - Hex veille
           </p>
         </section>
       </div>
@@ -607,6 +621,7 @@ function SaisonCard({
   isLocked,
   firstUndoneSlug,
   expertCount,
+  avgMinutes,
 }: {
   idx: number;
   saison: {
@@ -624,6 +639,8 @@ function SaisonCard({
   isLocked: boolean;
   firstUndoneSlug: string | null;
   expertCount: number;
+  /** Duree moyenne reelle par episode, calculee depuis episodes.durationMinutes */
+  avgMinutes: number;
 }) {
   return (
     <article
@@ -663,7 +680,7 @@ function SaisonCard({
           {isLocked ? "🌒" : saison.coverEmoji}
         </div>
 
-        {/* Recommande par ton equipe — badge soft amber, pas rouge */}
+        {/* Recommande par ton equipe - badge soft amber, pas rouge */}
         {saison.isMandatory && pct < 100 && (
           <span className="inline-block mb-3 text-[10px] uppercase tracking-widest font-bold bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 px-2 py-1 rounded-full">
             Recommande par ton equipe
@@ -706,14 +723,17 @@ function SaisonCard({
             <span className="text-xl" aria-hidden="true">
               ✓
             </span>{" "}
-            Saison terminee — bravo
+            Saison terminee - bravo
           </p>
         )}
 
-        {/* Meta info — naturelle, pas survendue */}
+        {/* Meta info - naturelle, pas survendue.
+            On affiche "~X min par episode" plutot que le total (qui ferait
+            36 min et casserait la promesse "5 minutes par jour"). */}
         <p className="text-xs text-gray-500 dark:text-gray-400 mt-4 text-center tabular-nums">
-          {total} episode{total > 1 ? "s" : ""} · {total * 6} min
-          {expertCount > 0 && (
+          {total} episode{total > 1 ? "s" : ""} · ~{avgMinutes} min par
+          episode
+          {expertCount > 0 ? (
             <>
               {" "}
               ·{" "}
@@ -721,10 +741,23 @@ function SaisonCard({
                 className="text-accent-500 font-semibold"
                 title="Episodes avec scenario detaille redige par un expert humain"
               >
-                📝 {expertCount} expert{expertCount > 1 ? "s" : ""}
+                📝 {expertCount === total
+                  ? "tous experts"
+                  : `${expertCount} expert${expertCount > 1 ? "s" : ""}`}
               </span>
             </>
-          )}
+          ) : !isLocked ? (
+            <>
+              {" "}
+              ·{" "}
+              <span
+                className="text-amber-600 dark:text-amber-400 font-semibold"
+                title="Episodes en fallback structure (questions + quiz generiques). Enrichissement par expert prevu."
+              >
+                🔜 bientot enrichi
+              </span>
+            </>
+          ) : null}
         </p>
       </div>
     </article>
@@ -755,7 +788,7 @@ function EmptyState() {
       </h2>
       <p className="text-sm text-gray-600 dark:text-gray-300 max-w-md mx-auto">
         Aucune saison n'est encore active pour ton entreprise. Demande a ta
-        direction d'activer un module — c'est rapide.
+        direction d'activer un module - c'est rapide.
       </p>
     </section>
   );

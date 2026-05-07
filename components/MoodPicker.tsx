@@ -1,7 +1,7 @@
 "use client";
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Selecteur d'humeur — grille de 6 boutons, persistance via server action.
+// Selecteur d'humeur - grille de 6 boutons, persistance via server action.
 
 import { useTransition } from "react";
 import { chooseMood } from "@/app/profil/mascotte/actions";

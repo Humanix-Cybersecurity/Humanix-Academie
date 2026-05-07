@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// /admin/audit — journal d'audit du tenant.
+// /admin/audit - journal d'audit du tenant.
 // Reservé aux roles ADMIN/RSSI/SUPERADMIN. Affiche les actions sensibles
 // du tenant (login, gestion users, billing, RGPD).
 import { redirect } from "next/navigation";
@@ -38,7 +38,7 @@ export default async function AdminAuditPage() {
     <>
       <AdminPageHeader
         title="Journal d'audit"
-        description="Traçabilité des actions sensibles (RGPD art. 5.2 — accountability, NIS2, ISO 27001 A.12.4)."
+        description="Traçabilité des actions sensibles (RGPD art. 5.2 - accountability, NIS2, ISO 27001 A.12.4)."
       />
 
       <div className="space-y-4 min-w-0">

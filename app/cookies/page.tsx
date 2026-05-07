@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Politique cookies — recommandations CNIL
+// Politique cookies - recommandations CNIL
 import Link from "next/link";
 import LegalLayout, {
   LegalSection,
@@ -8,7 +8,7 @@ import LegalLayout, {
 } from "@/components/legal/LegalLayout";
 
 export const metadata = {
-  title: "Politique de cookies — Humanix-Cybersecurity",
+  title: "Politique de cookies - Humanix-Cybersecurity",
   description: "Quels cookies utilisons-nous, pourquoi, comment les refuser.",
 };
 
