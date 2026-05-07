@@ -89,7 +89,7 @@ export default function RapportAuditPage() {
             severity="high"
             title="Image Docker en production en retard sur les correctifs"
             cvss="N/A (process)"
-            issue="L'image humanix-academie-app déployée a été buildée avant le merge des PRs #142 (CSP + middleware admin + alias /health), #133 (sanitization Mistral DOMPurify) et #150-#153 (a11y + typos). Vérifié en pentest : header Content-Security-Policy absent, /health renvoie 404, middleware edge-runtime absent du bundle."
+            issue="L'image humanix-academie-app déployée a été construite avant le merge des PRs #142 (CSP + middleware admin + alias /health), #133 (sanitization Mistral DOMPurify) et #150-#153 (a11y + typos). Vérifié en pentest : header Content-Security-Policy absent, /health renvoie 404, middleware edge-runtime absent du bundle."
             fix="Reconstruire et redéployer l'image humanix-academie-app à partir de main:14d21f2 (incluant tous les correctifs). Mettre en place une CI/CD avec déclenchement auto au push sur main."
             status="fixed-in-code-pending-deploy"
           />
