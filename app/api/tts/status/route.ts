@@ -11,7 +11,8 @@ import {
   PLAN_RANK,
   type PlanId,
 } from "@/lib/plans";
-import { isTtsServerEnabled } from "@/lib/tts/server-client";
+import { getProvider, isTtsServerEnabled } from "@/lib/tts/server-client";
+import { VOXTRAL_VOICES } from "@/lib/tts/providers/voxtral";
 
 export const dynamic = "force-dynamic";
 
@@ -41,9 +42,12 @@ export async function GET() {
     });
   }
 
+  const provider = getProvider();
   return NextResponse.json({
     available: true,
     plan,
-    voice: "fr_FR-siwis-medium",
+    provider,
+    voice: provider === "voxtral" ? "fr_marie_neutral" : "fr_FR-siwis-medium",
+    voices: provider === "voxtral" ? VOXTRAL_VOICES : ["fr_FR-siwis-medium"],
   });
 }
