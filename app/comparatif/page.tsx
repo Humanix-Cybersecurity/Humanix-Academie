@@ -606,7 +606,7 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
   "Simulation phishing & ingénierie sociale": {
     emoji: "🎣",
     intro:
-      "Le terrain de jeu prefere des attaquants. On simule pour entrainer, jamais pour piéger. La nuance se voit dans les details : le ton du debrief, la qualite des templates, la souverainete de l'IA derriere.",
+      "Le terrain de jeu préféré des attaquants. On simule pour entraîner, jamais pour piéger. La nuance se voit dans les détails : le ton du débrief, la qualité des templates, la souveraineté de l'IA derrière.",
     palette: {
       bg: "from-amber-50 via-white to-yellow-50 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/40",
       ring: "border-amber-200 dark:border-amber-900/40",
