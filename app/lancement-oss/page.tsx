@@ -77,7 +77,7 @@ const CHAPTERS = [
     body: [
       "L'écosystème open source cyber français s'est structuré pendant que j'étais tête dans le guidon. CISO Assistant (intuitem) couvre la gouvernance et la conformité. OpenCTI (Filigran) couvre la threat intelligence. Wazuh couvre la détection. Mais la couche humaine - la sensibilisation des collaborateurs - restait un trou béant.",
       "C'est exactement la que les attaques passent. Et personne ne fait du libre dessus.",
-      "En etudiant comment intuitem, Filigran et Centreon font leur metier, j'ai vu le pattern : tu ne vends pas le code. Tu vends ton expertise. Tu publies en AGPLv3 un produit serieux. La communaute l'audite, l'adopte, le contribue. Tu deviens, par construction, l'expert mondial du produit que tu as ecrit. Et tu factures du conseil, de l'audit, de la formation.",
+      "En étudiant comment intuitem, Filigran et Centreon font leur métier, j'ai vu le pattern : tu ne vends pas le code. Tu vends ton expertise. Tu publies en AGPLv3 un produit sérieux. La communauté l'audite, l'adopte, le contribue. Tu deviens, par construction, l'expert mondial du produit que tu as écrit. Et tu factures du conseil, de l'audit, de la formation.",
     ],
   },
   {
