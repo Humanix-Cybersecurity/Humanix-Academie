@@ -1,4 +1,4 @@
-# Humanix Academie - security.txt (RFC 9116)
+# Humanix Académie - security.txt (RFC 9116)
 # Programme de divulgation responsable - voir /securite/rapport-audit
 Contact: mailto:security@humanix-cybersecurity.fr
 Expires: 2027-05-07T00:00:00.000Z
