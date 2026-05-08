@@ -93,6 +93,29 @@ export async function createCustomer(params: {
   });
 }
 
+/**
+ * Récupère un Customer Payplug par ID. Utile dans le webhook pour résoudre
+ * l'email d'un customer qui paye pour la 1re fois (= pas encore de tenant
+ * en BDD pointant vers ce customer_id).
+ *
+ * Retourne null en cas de 404 (customer supprimé / inconnu) plutôt que
+ * de throw, pour que le webhook puisse logger et continuer proprement.
+ */
+export async function getCustomer(
+  customerId: string,
+): Promise<PayplugCustomer | null> {
+  try {
+    return await payplugFetch<PayplugCustomer>(
+      `/v1/customers/${encodeURIComponent(customerId)}`,
+      { method: "GET" },
+    );
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    if (msg.includes("404")) return null;
+    throw e;
+  }
+}
+
 // ----------------------------------------------------------------------------
 // Mapping plans Humanix -> Payplug
 // Payplug ne propose pas une notion de "Price ID" comme Stripe. Soit on cree
