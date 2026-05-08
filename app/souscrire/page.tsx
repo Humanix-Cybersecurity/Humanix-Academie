@@ -16,7 +16,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import HexBackdrop from "@/components/HexBackdrop";
 import { TIERS } from "@/lib/pricing";
-import { isPayplugConfigured, isPlanBuyable } from "@/lib/payplug";
+import {
+  isPayplugConfigured,
+  PAYPLUG_BUYABLE_PLANS,
+} from "@/lib/payplug";
 import { isPlanId } from "@/lib/plans";
 import SouscrireForm from "./SouscrireForm";
 
@@ -47,8 +50,15 @@ export default async function SouscrirePage({
   const params = await searchParams;
   const planRaw = String(params.plan ?? "").trim();
 
-  // Plan inconnu ou non self-service → renvoyer vers /tarifs ou enterprise
-  if (!isPlanId(planRaw) || !isPlanBuyable(planRaw)) {
+  // Plan inconnu ou non self-service → renvoyer vers /tarifs ou enterprise.
+  //
+  // NB : on ne gate PAS sur `isPlanBuyable()` ici (qui exige PAYPLUG_PLAN_*
+  // en env). Sinon, sur une instance ou Payplug n'est pas encore configure,
+  // un click sur "Demarrer l'essai gratuit" depuis /tarifs boucle vers
+  // /tarifs (PR du bug : isPlanBuyable=false → redirect → user reclique).
+  // La page elle-meme gere le cas "Payplug pas pret" via le banner amber
+  // ci-dessous (cf. !payplugReady) avec un lien vers /demande-abonnement.
+  if (!isPlanId(planRaw) || !PAYPLUG_BUYABLE_PLANS.includes(planRaw)) {
     if (planRaw === "premium") {
       redirect("/demande-abonnement?type=enterprise");
     }
