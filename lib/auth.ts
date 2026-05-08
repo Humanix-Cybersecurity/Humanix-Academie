@@ -29,6 +29,7 @@ import {
   getCommunityTenant,
 } from "@/lib/tenant-community";
 import { readInscriptionIntent } from "@/lib/inscription-intent";
+import { isDevMode } from "@/lib/dev-mode";
 
 const isDemoMode = process.env.DEMO_MODE === "true";
 
@@ -113,6 +114,75 @@ if (isDemoMode) {
         // Refuse les comptes suspendus
         if (!user.isActive) return null;
         return { id: user.id, email: user.email, name: user.name };
+      },
+    }),
+  );
+}
+
+// Dev-bypass provider : utilise par les flows inscription / souscription
+// quand DEV_MODE=true (jamais en prod, cf. lib/dev-mode.ts). Permet de
+// simuler le clic sur le magic link sans envoyer d'email, et de finaliser
+// la souscription Payplug sans configurer de compte provider.
+//
+// SECURITE : la verification NODE_ENV != "production" est dans isDevMode().
+// Ici on rajoute un garde-fou de creation : un user ne peut etre cree par
+// ce provider que si le cookie d'intention d'inscription est valide
+// (community-learner). Sinon on refuse, exactement comme le PrismaAdapter
+// override pour les autres providers.
+if (isDevMode()) {
+  providers.push(
+    Credentials({
+      id: "dev-bypass",
+      name: "Dev bypass",
+      credentials: { email: { label: "Email", type: "email" } },
+      async authorize(credentials: any) {
+        const email = String(credentials?.email ?? "")
+          .toLowerCase()
+          .trim();
+        if (!email || !email.includes("@")) return null;
+
+        let user = await db.user.findUnique({ where: { email } });
+
+        if (!user) {
+          // User inconnu : on ne cree que dans le contexte d'une inscription
+          // explicite (cookie d'intention pose par /inscription). Pour une
+          // souscription Payplug en DEV_MODE, le tenant + admin sont crees
+          // par /api/payments/checkout/start AVANT signIn -> user existe deja.
+          const intent = await readInscriptionIntent();
+          if (intent !== "community-learner") {
+            console.warn(
+              "[dev-bypass] user inconnu sans cookie d'inscription → refus",
+            );
+            return null;
+          }
+          const community = await getCommunityTenant();
+          if (!community) {
+            console.error(
+              `[dev-bypass] Tenant '${COMMUNITY_TENANT_SLUG}' absent. Run npm run db:seed.`,
+            );
+            return null;
+          }
+          user = await db.user.create({
+            data: {
+              email,
+              tenantId: community.id,
+              role: "LEARNER",
+              isActive: true,
+              emailVerified: new Date(),
+            },
+          });
+          console.warn(
+            `[dev-bypass] user LEARNER cree pour ${email} (tenant Communaute)`,
+          );
+        } else if (!user.isActive) {
+          return null;
+        }
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+        };
       },
     }),
   );
@@ -394,9 +464,16 @@ const adapter: typeof baseAdapter = {
   },
 };
 
+// Session strategy : "database" en prod normale (revocation immediate via
+// suppression de la row Session). "jwt" en demo OU dev-bypass car les
+// providers Credentials d'Auth.js v5 sont incompatibles avec les sessions
+// DB (l'authorize callback ne reproduit pas le linkAccount + create
+// session row attendus par l'adapter).
+const useJwtSessions = isDemoMode || isDevMode();
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter,
-  session: { strategy: isDemoMode ? "jwt" : "database" },
+  session: { strategy: useJwtSessions ? "jwt" : "database" },
   trustHost: true,
   pages: {
     signIn: isDemoMode ? "/demo" : "/connexion",
@@ -421,6 +498,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       const { user, account } = params;
       // Demo mode : Credentials provider (déjà validé isActive dans authorize)
       if (account?.provider === "demo") {
+        return true;
+      }
+      // Dev-bypass : Credentials provider, validation deja faite dans authorize
+      if (account?.provider === "dev-bypass") {
         return true;
       }
 
