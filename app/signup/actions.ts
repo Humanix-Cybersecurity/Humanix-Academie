@@ -13,9 +13,9 @@
 // Limites V1 (assumees) :
 //  - Pas de double opt-in email (trust on signup, comme la plupart des SaaS
 //    en B2B). L'utilisateur peut reset son mdp s'il s'est trompe d'email.
-//  - Plans autorises a l'ouverture de compte : "decouverte" et "trial".
-//    Les autres plans (solo, essentielle, pro, premium) passent par
-//    le funnel commercial / paiement, hors scope de ce signup gratuit.
+//  - Seul le plan "decouverte" (forever-free) est autorise a l'ouverture
+//    de compte. Les autres plans (solo, essentielle, pro, premium) passent
+//    par le funnel commercial / paiement, hors scope de ce signup gratuit.
 "use server";
 
 import { headers } from "next/headers";
@@ -34,7 +34,7 @@ import {
 } from "@/lib/welcome-email";
 import { auditLog, AuditActions } from "@/lib/audit";
 
-const ALLOWED_SIGNUP_PLANS: PlanId[] = ["decouverte", "trial"];
+const ALLOWED_SIGNUP_PLANS: PlanId[] = ["decouverte"];
 
 const ORG_NAME_MIN = 2;
 const ORG_NAME_MAX = 100;
