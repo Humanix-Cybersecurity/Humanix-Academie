@@ -381,7 +381,6 @@ const adapter: typeof baseAdapter = {
       data: {
         email: data.email,
         name: data.name ?? null,
-        image: data.image ?? null,
         emailVerified: data.emailVerified ?? null,
         tenantId: community.id,
         role: "LEARNER",
