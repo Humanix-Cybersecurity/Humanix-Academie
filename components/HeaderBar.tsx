@@ -421,7 +421,9 @@ export default function HeaderBar({ demoMode = false }: { demoMode?: boolean }) 
                     <button
                       onClick={() => {
                         setUserMenuOpen(false);
-                        signOut({ callbackUrl: "/demo" });
+                        // Demo : retour au selecteur de comptes /demo.
+                        // Prod : retour a la home (le selecteur n'existe pas).
+                        signOut({ callbackUrl: demoMode ? "/demo" : "/" });
                       }}
                       role="menuitem"
                       className="w-full text-left px-4 py-2 text-sm text-warn hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg mx-1"
