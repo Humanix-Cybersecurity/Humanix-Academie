@@ -11,6 +11,8 @@ type Props = {
   planName: string;
   /** Nb max de sièges du tier (UI : limite haute du selecteur). Null = no cap. */
   maxSeats: number | null;
+  /** Cycle de facturation choisi sur /tarifs (mensuel sans engagement / annuel −X%). */
+  billing: "monthly" | "annual";
   /** Si true : copie adaptee (pas de paiement Payplug, auto-login direct). */
   devMode?: boolean;
 };
@@ -19,6 +21,7 @@ export default function SouscrireForm({
   planId,
   planName,
   maxSeats,
+  billing,
   devMode = false,
 }: Props) {
   const [email, setEmail] = useState("");
@@ -41,6 +44,7 @@ export default function SouscrireForm({
             email,
             organization,
             seats: seatsNum,
+            billing,
           }),
         });
         const data = (await res.json()) as { url?: string; error?: string };
@@ -65,9 +69,25 @@ export default function SouscrireForm({
       onSubmit={onSubmit}
       className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-gray-200 dark:border-slate-700 p-6 space-y-4"
     >
-      <h3 className="font-display text-lg font-extrabold text-primary-500 dark:text-accent-300">
-        Vos coordonnées
-      </h3>
+      <div className="flex items-center justify-between gap-3">
+        <h3 className="font-display text-lg font-extrabold text-primary-500 dark:text-accent-300">
+          Vos coordonnées
+        </h3>
+        <span
+          className={`text-[10px] uppercase tracking-wider font-extrabold px-2 py-1 rounded-full ${
+            billing === "annual"
+              ? "bg-success/10 text-success"
+              : "bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-gray-300"
+          }`}
+          aria-label={
+            billing === "annual"
+              ? "Cycle annuel - engagement 12 mois"
+              : "Cycle mensuel - sans engagement"
+          }
+        >
+          {billing === "annual" ? "Annuel · 12 mois" : "Mensuel · sans engagement"}
+        </span>
+      </div>
 
       <div>
         <label
@@ -164,7 +184,9 @@ export default function SouscrireForm({
       <p className="text-xs text-gray-500 text-center">
         {devMode
           ? "🛠️ DEV_MODE : tenant + ADMIN créés sans appel Payplug."
-          : "Paiement sécurisé Payplug 🇫🇷 · CB / SEPA · résiliable à tout moment."}
+          : billing === "annual"
+            ? "Paiement sécurisé Payplug 🇫🇷 · CB / SEPA · engagement 12 mois, prélèvement annuel."
+            : "Paiement sécurisé Payplug 🇫🇷 · CB / SEPA · résiliable à tout moment."}
       </p>
     </form>
   );
