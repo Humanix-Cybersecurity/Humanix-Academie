@@ -2,7 +2,7 @@
 // Page classement public visible pendant un challenge actif
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { auth } from "@/lib/auth";
+import { auth, getSignInPath } from "@/lib/auth";
 import {
   getActiveChallenge,
   getChallengeRanking,
@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 
 export default async function ClassementPage() {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
+  if (!session?.user) redirect(getSignInPath());
   const tenantId = session.user!.tenantId as string;
 
   const active = await getActiveChallenge(tenantId);

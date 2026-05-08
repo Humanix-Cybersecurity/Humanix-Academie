@@ -2,7 +2,7 @@
 // Page choix de mascotte + humeur + emoji custom.
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { auth } from "@/lib/auth";
+import { auth, getSignInPath } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { MASCOT_SPECIES } from "@/lib/mascots";
 import { getLevel } from "@/lib/levels";
@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 
 export default async function MascotChoosePage() {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
+  if (!session?.user) redirect(getSignInPath());
   const userId = session.user!.id as string;
 
   const user = await db.user.findUnique({
@@ -27,7 +27,7 @@ export default async function MascotChoosePage() {
       progress: { select: { score: true } },
     },
   });
-  if (!user) redirect("/demo");
+  if (!user) redirect(getSignInPath());
 
   const totalXP = user.progress.reduce((s, p) => s + (p.score || 0), 0);
   const level = getLevel(totalXP);

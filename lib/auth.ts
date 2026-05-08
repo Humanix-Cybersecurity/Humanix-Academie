@@ -26,6 +26,19 @@ import { sendEmail, isEmailConfigured } from "@/lib/email";
 
 const isDemoMode = process.env.DEMO_MODE === "true";
 
+/**
+ * Chemin vers la page de connexion adaptee a l'environnement.
+ * - DEMO_MODE=true  -> "/demo"     (selecteur de comptes fictifs)
+ * - DEMO_MODE=false -> "/connexion" (formulaire email/password reel)
+ *
+ * A utiliser dans les server components qui font `redirect(...)` quand
+ * la session est absente. NE JAMAIS hardcoder "/demo" : en prod
+ * commerciale (DEMO_MODE off), /demo renvoie 404 (cf. app/demo/layout.tsx).
+ */
+export function getSignInPath(): string {
+  return isDemoMode ? "/demo" : "/connexion";
+}
+
 // Lockout : 5 echecs en 15 min => verrouille 15 min
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCKOUT_MS = 15 * 60 * 1000;

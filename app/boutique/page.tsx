@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Page boutique : Hex se relooke avec les coins
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { auth, getSignInPath } from "@/lib/auth";
 import { db } from "@/lib/db";
 import HexMascotEvolved from "@/components/HexMascotEvolved";
 import { buildEquippedFromInventory, CATEGORY_LABEL } from "@/lib/shop";
@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 export default async function BoutiquePage() {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
+  if (!session?.user) redirect(getSignInPath());
   const userId = session.user!.id as string;
 
   const [user, items, inventory] = await Promise.all([
@@ -37,7 +37,7 @@ export default async function BoutiquePage() {
       include: { item: true },
     }),
   ]);
-  if (!user) redirect("/demo");
+  if (!user) redirect(getSignInPath());
 
   const totalXP = user.progress.reduce((s, p) => s + (p.score || 0), 0);
   const equipped = buildEquippedFromInventory(
