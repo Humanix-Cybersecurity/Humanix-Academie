@@ -20,6 +20,13 @@
 
 import { redirect } from "next/navigation";
 
+// force-dynamic : sinon Next prerendere ce layout au build, ou
+// DEMO_MODE / SIGNUP_ALLOW_SELF_SERVICE sont undefined (pas set par le
+// Dockerfile), ce qui fige le redirect vers /demande-abonnement dans le
+// HTML statique. Resultat : meme avec DEMO_MODE=true ou SIGNUP_ALLOW_SELF_SERVICE=true
+// a runtime, /signup serait inaccessible.
+export const dynamic = "force-dynamic";
+
 const isDemoMode = process.env.DEMO_MODE === "true";
 const allowSelfService = process.env.SIGNUP_ALLOW_SELF_SERVICE === "true";
 
