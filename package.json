@@ -53,6 +53,8 @@
     "db:seed": "tsx prisma/seed.ts",
     "db:bootstrap-admin": "tsx scripts/bootstrap-admin.ts",
     "db:reset": "prisma migrate reset --force && npm run db:seed",
+    "db:purge-demo": "tsx scripts/purge-demo-fixtures.ts",
+    "db:purge-demo:apply": "tsx scripts/purge-demo-fixtures.ts --apply",
     "breaches:refresh": "tsx scripts/scrape-breaches.ts",
     "breaches:refresh:deep": "tsx scripts/scrape-breaches.ts --deep",
     "breaches:debug": "tsx scripts/debug-breaches.ts",
