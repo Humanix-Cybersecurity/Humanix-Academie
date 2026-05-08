@@ -30,11 +30,15 @@ import { headers } from "next/headers";
 import {
   isPayplugConfigured,
   isPlanBuyable,
+  PAYPLUG_BUYABLE_PLANS,
   payplugPlanIdForTier,
   createCheckoutSession,
 } from "@/lib/payplug";
 import { isPlanId } from "@/lib/plans";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { isDevMode } from "@/lib/dev-mode";
+import { provisionTenantWithAdmin } from "@/lib/tenant-provisioning";
+import { signIn } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -46,7 +50,10 @@ type StartRequest = {
 };
 
 export async function POST(req: Request) {
-  if (!isPayplugConfigured()) {
+  // En DEV_MODE on shortcut Payplug (cf. lib/dev-mode.ts pour le rationale
+  // et le garde-fou NODE_ENV != "production"). Sinon on exige une config
+  // Payplug operationnelle pour ne pas creer de tenants payants fantomes.
+  if (!isPayplugConfigured() && !isDevMode()) {
     return NextResponse.json(
       {
         error:
@@ -98,6 +105,54 @@ export async function POST(req: Request) {
   if (!isPlanId(planRaw)) {
     return NextResponse.json({ error: "Plan invalide." }, { status: 400 });
   }
+  if (!PAYPLUG_BUYABLE_PLANS.includes(planRaw)) {
+    return NextResponse.json(
+      {
+        error:
+          "Ce plan n'est pas disponible en self-service. Utilisez /demande-abonnement pour les besoins enterprise (instance dédiée, +250 sièges).",
+      },
+      { status: 400 },
+    );
+  }
+
+  // === DEV_MODE : bypass Payplug, provisionnement immediat + auto-login ===
+  // Cf. lib/dev-mode.ts. Garde-fou NODE_ENV != "production" deja en place.
+  // On ne fait AUCUN appel Payplug : on cree directement tenant + ADMIN
+  // comme si subscription.created etait remonte du webhook, puis on pose
+  // le cookie de session via "dev-bypass" pour que l'admin atterrisse
+  // logue sur /admin.
+  if (isDevMode()) {
+    const result = await provisionTenantWithAdmin({
+      email,
+      organizationName: organization,
+      plan: planRaw,
+      paymentCustomerId: undefined,
+      paymentSubscriptionId: undefined,
+      subscriptionStatus: "active",
+      source: "dev-mode",
+    });
+    if (!result.ok) {
+      return NextResponse.json(
+        { error: `provisioning_failed:${result.reason}` },
+        { status: 500 },
+      );
+    }
+    try {
+      // signIn pose les cookies de session sur la response courante. Le
+      // client recevra ces cookies dans la reponse JSON et le redirect
+      // vers /admin se fera authentifie.
+      await signIn("dev-bypass", { email, redirect: false });
+    } catch (e) {
+      console.error("[checkout/start] dev-bypass signIn failed", e);
+      return NextResponse.json(
+        { error: "auto_login_failed" },
+        { status: 500 },
+      );
+    }
+    return NextResponse.json({ url: "/admin" });
+  }
+
+  // === Flow Payplug standard ===
   if (!isPlanBuyable(planRaw)) {
     return NextResponse.json(
       {
