@@ -11,7 +11,10 @@ import { signIn } from "@/lib/auth";
 import { setInscriptionIntent } from "@/lib/inscription-intent";
 
 const isDemoMode = process.env.DEMO_MODE === "true";
-const POST_INSCRIPTION_REDIRECT = "/apprendre";
+// /post-login redirige par rôle (LEARNER → /apprendre, ADMIN+ → /admin).
+// Les inscriptions communauté finissent toujours en LEARNER, donc /apprendre,
+// mais on passe par /post-login pour rester cohérent avec /connexion + webhook.
+const POST_INSCRIPTION_REDIRECT = "/post-login";
 
 function ensureInscriptionEnabled(): void {
   if (isDemoMode) {
