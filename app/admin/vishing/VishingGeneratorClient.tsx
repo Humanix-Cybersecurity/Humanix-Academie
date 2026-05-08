@@ -2,10 +2,29 @@
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Client component : formulaire de generation + preview du script + bouton
-// "Ecouter avec Piper TTS". Tout passe par l'endpoint /api/admin/vishing/generate
+// "Ecouter (TTS souverain)". Tout passe par l'endpoint /api/admin/vishing/generate
 // (server-side : auth, plan-gating, rate limit, anti-PII).
+//
+// Synthese vocale : POST /api/tts/synthesize. Selon `TTS_PROVIDER` :
+//   - voxtral (defaut prod) : voix Marie expressive (6 emotions FR Mistral)
+//   - piper (option self-host) : voix fr_FR-siwis-medium locale
+//   - "" : Web Speech API navigateur (fallback automatique)
+//
+// Pour le vishing pedagogique, on prefere par defaut la voix `fr_marie_angry`
+// (avec Voxtral) qui rend mieux l'urgence et la pression typique d'une
+// attaque vishing reelle. L'utilisateur peut switcher pour les autres voix.
 
 import { useState } from "react";
+
+// Voix Voxtral disponibles. En mode Piper le voice param est ignore (Piper a
+// une seule voix `fr_FR-siwis-medium`). En mode Web Speech le browser choisit
+// sa propre voix FR.
+const VISHING_VOICES: Array<{ slug: string; label: string; tag: string }> = [
+  { slug: "fr_marie_angry", label: "Marie - Pressante", tag: "🔥 cred. attaque" },
+  { slug: "fr_marie_neutral", label: "Marie - Posee", tag: "🎯 baseline" },
+  { slug: "fr_marie_curious", label: "Marie - Insistante", tag: "🤔 manipulation" },
+  { slug: "fr_marie_sad", label: "Marie - Plaintive", tag: "💔 pretexte detresse" },
+];
 
 type VishingScript = {
   openingLine: string;
@@ -74,6 +93,9 @@ export default function VishingGeneratorClient() {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [ttsLoading, setTtsLoading] = useState(false);
   const [ttsError, setTtsError] = useState<string | null>(null);
+  // Voix par defaut : `fr_marie_angry` (rendu pressant typique d'un appel
+  // vishing). L'utilisateur peut switcher avant ou apres une lecture.
+  const [voice, setVoice] = useState<string>("fr_marie_angry");
 
   async function handleGenerate(e: React.FormEvent) {
     e.preventDefault();
@@ -120,7 +142,9 @@ export default function VishingGeneratorClient() {
       const res = await fetch("/api/tts/synthesize", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ text: script.ttsScript }),
+        // Voix passee explicitement (defaut fr_marie_angry pour le vishing).
+        // Piper ignore le param et utilise sa voix unique fr_FR-siwis-medium.
+        body: JSON.stringify({ text: script.ttsScript, voice }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
@@ -128,7 +152,11 @@ export default function VishingGeneratorClient() {
           (data as { error?: string }).error ?? `Erreur TTS HTTP ${res.status}`;
         if (msg === "tts_server_disabled") {
           setTtsError(
-            "Piper TTS non configure cote serveur. Ajoutez TTS_SERVER_URL dans .env pour activer la lecture audio.",
+            "TTS premium non configure cote serveur. Active TTS_PROVIDER=voxtral + MISTRAL_API_KEY (ou TTS_PROVIDER=piper + TTS_SERVER_URL) dans le .env.",
+          );
+        } else if (msg === "plan_too_low") {
+          setTtsError(
+            "Le TTS premium necessite un plan Pro+ (cf. TTS_MIN_PLAN dans .env).",
           );
         } else {
           setTtsError(`TTS indisponible : ${msg}`);
@@ -260,16 +288,39 @@ export default function VishingGeneratorClient() {
                 </code>
               </p>
             </div>
-            <button
-              type="button"
-              onClick={handleTts}
-              disabled={ttsLoading}
-              className="btn-secondary text-sm whitespace-nowrap"
-            >
-              {ttsLoading
-                ? "Synthese..."
-                : "🔊 Ecouter avec Piper TTS (souverain FR)"}
-            </button>
+            <div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
+              {/* Selecteur de voix Voxtral (4 emotions Marie). Ignore en mode
+                  Piper. Nuance pedagogique : choisir la voix qui colle au
+                  scenario d'attaque rend le debrief apres-coup plus parlant. */}
+              <label className="flex items-center gap-2 text-xs">
+                <span className="text-gray-600 dark:text-gray-400 sr-only sm:not-sr-only">
+                  Voix
+                </span>
+                <select
+                  value={voice}
+                  onChange={(e) => setVoice(e.target.value)}
+                  disabled={ttsLoading}
+                  className="rounded-md text-xs border-gray-300 dark:border-slate-700 dark:bg-slate-800 focus:border-accent-500 focus:ring-accent-500"
+                  aria-label="Voix de synthese vocale"
+                >
+                  {VISHING_VOICES.map((v) => (
+                    <option key={v.slug} value={v.slug}>
+                      {v.label} {v.tag}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button
+                type="button"
+                onClick={handleTts}
+                disabled={ttsLoading}
+                className="btn-secondary text-sm whitespace-nowrap"
+              >
+                {ttsLoading
+                  ? "Synthese..."
+                  : "🔊 Ecouter (TTS souverain FR)"}
+              </button>
+            </div>
           </header>
 
           <div className="space-y-3">
@@ -294,8 +345,9 @@ export default function VishingGeneratorClient() {
           {audioUrl && (
             <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-3">
               <p className="text-xs text-blue-700 dark:text-blue-300 mb-2">
-                🔒 Synthese realisee localement par Piper TTS. Aucun audio n'a
-                quitte l'infrastructure souveraine.
+                🔒 TTS souverain FR (Mistral Voxtral en SaaS Paris, ou Piper
+                self-hosted selon `TTS_PROVIDER`). Aucun audio n'est conserve
+                cote provider — le buffer est cache en local pour reutilisation.
               </p>
               <audio
                 controls

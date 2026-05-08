@@ -22,6 +22,7 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import HexBackdrop from "@/components/HexBackdrop";
+import AudioPreviewButton from "@/components/AudioPreviewButton";
 import { isEligibleToInvite, remainingInvitesFor } from "@/lib/family-invites";
 
 export const dynamic = "force-dynamic";
@@ -566,10 +567,20 @@ function ArticleCard({
         <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed mb-4 flex-1 line-clamp-3">
           {article.description}
         </p>
-        <div className="flex items-center justify-between text-xs pt-3 border-t border-rose-200/50 dark:border-rose-900/40 tabular-nums">
+        <div className="flex items-center justify-between text-xs pt-3 border-t border-rose-200/50 dark:border-rose-900/40 tabular-nums gap-2">
           <span className="text-gray-500 dark:text-gray-400">
             ⏱ {article.readTimeMinutes} min
           </span>
+          {/* Mini-bouton apercu audio : lit titre + description (~10-30 mots).
+              Le `stopPropagation` empeche le click de remonter au <Link> parent
+              et d'ouvrir l'article. Voix Marie Neutral pour un ton chaleureux
+              adapte au contenu famille. */}
+          <AudioPreviewButton
+            text={`${article.title}. ${article.description}`}
+            voice="fr_marie_neutral"
+            ariaLabel={`Apercu audio : ${article.title}`}
+            hoverLabel="Apercu"
+          />
           <span
             className={`${isFamille ? "text-rose-700 dark:text-rose-300" : "text-cyan-700 dark:text-cyan-300"} font-bold`}
           >
