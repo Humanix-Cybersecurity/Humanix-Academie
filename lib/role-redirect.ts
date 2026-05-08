@@ -31,11 +31,11 @@ const ADMIN_ROLES: ReadonlySet<UserRoleString> = new Set<UserRoleString>([
  * - tout le reste (LEARNER ou rôle inconnu) → "/apprendre"
  */
 export function pathForRole(role: string | undefined | null): string {
-  if (role && ADMIN_ROLES.has(role)) return "/admin";
+  if (role && (ADMIN_ROLES as ReadonlySet<string>).has(role)) return "/admin";
   return "/apprendre";
 }
 
 /** True si le rôle a accès à `/admin/*`. */
 export function isAdminRole(role: string | undefined | null): boolean {
-  return !!role && ADMIN_ROLES.has(role);
+  return !!role && (ADMIN_ROLES as ReadonlySet<string>).has(role);
 }
