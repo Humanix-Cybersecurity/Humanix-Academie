@@ -116,7 +116,7 @@ export default function TarifsPage() {
               </h2>
               <p className="opacity-90 mb-4 leading-relaxed">
                 Notre <strong>audit cyber flash</strong> donne une photo claire
-                de la maturite humaine de ton organisation, en 15 questions
+                de la maturité humaine de ton organisation, en 15 questions
                 bienveillantes. Rapport PDF a la fin, recommandation
                 personnalisee - sans pression.
               </p>
