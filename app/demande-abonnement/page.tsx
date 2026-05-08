@@ -1,21 +1,24 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /demande-abonnement — flow manuel pour les organisations qui veulent
-// un tenant payant pendant la période de transition (J-Day → Payplug
-// auto branché). Phase 3a du plan d'accès 3-layer.
+// /demande-abonnement — VOIE EXCEPTIONNELLE pour les besoins qui ne
+// rentrent pas dans le self-service Payplug.
 //
-// Workflow :
-//   1. Le DSI/RSSI/DAF/DPO remplit le formulaire (email, organisation,
-//      taille, plan souhaité, message libre).
-//   2. Une notification email part vers contact@humanix-cybersecurity.fr
-//      (= founder).
-//   3. Le founder utilise /superadmin (ou un script CLI) pour appeler
-//      lib/tenant-provisioning.ts → provisionTenantWithAdmin(...) qui
-//      crée le tenant + l'admin + envoie le magic link de bienvenue.
+// CAS D'USAGE :
+//   - +250 sièges (au-delà du plan Pro)
+//   - Instance dédiée / isolée (pas multi-tenant SaaS)
+//   - Hébergement SecNumCloud, white-label, intégrations sur-mesure
+//   - Demandes spécifiques nécessitant un échange humain
 //
-// Phase 3b : Payplug Checkout remplacera ce flow manuel. Le webhook
-// payplug appellera provisionTenantWithAdmin automatiquement (cf.
-// app/api/payments/webhook/route.ts).
+// Pour TOUS les autres cas (Solo / Essentielle / Pro standards), le user
+// passe par /tarifs → /souscrire → Payplug Checkout → webhook qui
+// provisionne tenant + ADMIN automatiquement. Aucune action humaine.
+//
+// Workflow ici :
+//   1. Le DSI/RSSI/DAF/DPO remplit le formulaire avec son contexte.
+//   2. Notification email vers FOUNDER_NOTIFICATION_EMAIL.
+//   3. Le founder répond sous 24h ouvrées avec une proposition adaptée
+//      (devis, instance dédiée, etc.) et provisionne via /superadmin
+//      ou lib/tenant-provisioning.ts manuellement si besoin.
 
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
@@ -52,14 +55,20 @@ export default async function DemandeAbonnementPage({
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
         <section className="max-w-2xl mx-auto px-4 pt-12 pb-6 sm:pt-16 sm:pb-8 text-center">
           <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
-            🤝 Abonnement entreprise · Sur devis
+            👑 Enterprise · Sur devis
           </p>
           <h1 className="font-display text-4xl sm:text-5xl font-extrabold text-primary-500 dark:text-accent-300 leading-[1.05] mb-3">
-            Équipons vos équipes ensemble.
+            Au-delà du standard.
           </h1>
           <p className="text-base text-gray-700 dark:text-gray-200 leading-relaxed">
-            Décrivez votre contexte, nous revenons sous 24h ouvrées avec une
-            proposition adaptée. Pas de relance commerciale.
+            Pour <strong>+250 sièges</strong>,{" "}
+            <strong>instance dédiée</strong>, <strong>SecNumCloud</strong>,{" "}
+            white-label ou intégrations sur-mesure. Tous les autres besoins
+            sont self-service via{" "}
+            <Link href="/tarifs" className="text-accent-700 underline">
+              /tarifs
+            </Link>
+            .
           </p>
         </section>
       </HexBackdrop>
