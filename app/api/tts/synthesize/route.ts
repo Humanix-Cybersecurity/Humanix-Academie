@@ -87,9 +87,21 @@ export async function POST(req: NextRequest) {
   let result: { buffer: Buffer; format: string; cached: boolean };
   try {
     result = await synthesizeText({ text, voice, format });
-  } catch (e: any) {
-    const code = String(e?.message ?? "tts_failed");
+  } catch (e: unknown) {
+    const code = String((e as Error)?.message ?? "tts_failed");
+    console.error(`[tts/synthesize] failed: ${code} (textLen=${text.length})`);
     return NextResponse.json({ error: code }, { status: 502 });
+  }
+
+  // Defense en profondeur : si le buffer arrive vide / corrompu cote provider,
+  // on prefere un 502 explicite plutot qu'un 200 avec audio vide qui resterait
+  // silencieux dans le navigateur.
+  if (!result.buffer || result.buffer.length < 256) {
+    console.error(`[tts/synthesize] buffer suspicious : len=${result.buffer?.length ?? 0}`);
+    return NextResponse.json(
+      { error: "tts_empty_buffer", len: result.buffer?.length ?? 0 },
+      { status: 502 },
+    );
   }
 
   // Audit log (sans contenu)
@@ -104,6 +116,7 @@ export async function POST(req: NextRequest) {
           format,
           cached: result.cached,
           voice: voice ?? "default",
+          bytes: result.buffer.length,
         },
       },
     })
@@ -111,12 +124,22 @@ export async function POST(req: NextRequest) {
       // log best-effort, ne fait pas planter la requête
     });
 
-  return new NextResponse(result.buffer as any, {
+  // Copie le Buffer Node.js dans un ArrayBuffer "neuf" pour que les types
+  // Web standards l'acceptent sans broncher (les types Node 22+ font une
+  // distinction stricte entre Uint8Array<ArrayBufferLike> et
+  // Uint8Array<ArrayBuffer> qui pose probleme avec BodyInit).
+  const mime = result.format === "wav" ? "audio/wav" : "audio/mpeg";
+  const ab = new ArrayBuffer(result.buffer.byteLength);
+  new Uint8Array(ab).set(result.buffer);
+
+  return new Response(ab, {
     status: 200,
     headers: {
-      "content-type": result.format === "wav" ? "audio/wav" : "audio/mpeg",
+      "content-type": mime,
+      "content-length": String(ab.byteLength),
       "cache-control": "private, max-age=86400",
       "x-tts-cached": result.cached ? "1" : "0",
+      "x-tts-bytes": String(ab.byteLength),
     },
   });
 }

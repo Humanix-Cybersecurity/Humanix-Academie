@@ -300,10 +300,15 @@ export default function TTSButton({
     playingRef.current = true;
     setPlaying(true);
     try {
+      // On envoie le texte BRUT (pas cleanText) : le serveur applique sa
+      // propre sanitisation canonique (sanitizeForTTS) avant de hasher pour
+      // le cache. Ca garantit que le hash batch == hash runtime des qu'on
+      // part du meme texte source MDX -- sans dependre de quelles regex de
+      // nettoyage cleanForTTS applique cote client (abreviations, etc.).
       const res = await fetch("/api/tts/synthesize", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ text: cleanText, format: "mp3" }),
+        body: JSON.stringify({ text, format: "mp3" }),
       });
       if (!res.ok) throw new Error(`tts_${res.status}`);
       const blob = await res.blob();
