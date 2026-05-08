@@ -4,7 +4,7 @@
 
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { auth } from "@/lib/auth";
+import { auth, getSignInPath } from "@/lib/auth";
 import { listEmployeeTargets } from "./actions";
 import PersonalizeWizard from "./PersonalizeWizard";
 import PlanGate from "@/components/PlanGate";
@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 
 export default async function PersonalizePhishingPage() {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
+  if (!session?.user) redirect(getSignInPath());
   const role = session.user!.role;
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") redirect("/apprendre");
   const tenantId = session.user!.tenantId as string;

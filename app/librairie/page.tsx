@@ -11,7 +11,7 @@
 
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { auth, getSignInPath } from "@/lib/auth";
 import { db } from "@/lib/db";
 import HexBackdrop from "@/components/HexBackdrop";
 
@@ -62,7 +62,7 @@ export default async function LibrairiePage({
   searchParams: Promise<{ category?: string }>;
 }) {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
+  if (!session?.user) redirect(getSignInPath());
 
   const { category } = await searchParams;
 
