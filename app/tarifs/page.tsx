@@ -112,11 +112,11 @@ export default function TarifsPage() {
                 id="audit-cta-title"
                 className="font-display text-2xl sm:text-3xl font-extrabold mb-2"
               >
-                Tu hesites entre nos offres ?
+                Tu hésites entre nos offres ?
               </h2>
               <p className="opacity-90 mb-4 leading-relaxed">
                 Notre <strong>audit cyber flash</strong> donne une photo claire
-                de la maturite humaine de ton organisation, en 15 questions
+                de la maturité humaine de ton organisation, en 15 questions
                 bienveillantes. Rapport PDF a la fin, recommandation
                 personnalisee - sans pression.
               </p>
@@ -124,7 +124,7 @@ export default function TarifsPage() {
                 href="/audit-flash"
                 className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white text-primary-500 font-bold hover:scale-105 transition shadow-md"
               >
-                Demarrer l'audit · 5 min →
+                Démarrer l'audit · 5 min →
               </Link>
             </div>
           </div>
@@ -238,12 +238,12 @@ export default function TarifsPage() {
             {
               emoji: "🌐",
               title: "Open source AGPLv3",
-              text: "Code complet sur GitHub. Audite-le, fork-le, heberge-le. Zero boite noire, transparence totale.",
+              text: "Code complet sur GitHub. Audite-le, fork-le, héberge-le. Zéro boîte noire, transparence totale.",
             },
             {
               emoji: "🇫🇷",
               title: "Souverain par defaut",
-              text: "Concu, heberge et opere en France. Conformite RGPD/NIS2 native. Pas de Cloud Act au menu.",
+              text: "Conçu, hébergé et opéré en France. Conformité RGPD/NIS2 native. Pas de Cloud Act au menu.",
             },
             {
               emoji: "🤝",
