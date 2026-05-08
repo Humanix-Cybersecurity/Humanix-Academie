@@ -40,7 +40,7 @@ const PROMESSES = [
       accent: "text-rose-700 dark:text-rose-300",
     },
     body: "La fraude au président coûte en moyenne 200 k€ à une PME française. Le deepfake video amplifie : 25 M$ chez Arup en janvier 2024. Trois saisons MDX expert + un protocole de re-validation 3 niveaux livré clé-en-main.",
-    cta: { label: "Voir saison fraude-président", href: "/saisons/fraude-president/01-mecanisme" },
+    cta: { label: "Voir saison fraude-président", href: "/apprendre/fraude-president/01-mecanisme" },
   },
   {
     emoji: "📋",
