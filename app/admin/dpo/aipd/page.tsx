@@ -107,7 +107,7 @@ export default async function AipdGeneratorPage() {
             </strong>{" "}
             le module{" "}
             <Link
-              href="/saisons/dpo-quotidien/01-aipd"
+              href="/apprendre/dpo-quotidien/01-aipd"
               className="text-accent-500 underline font-medium"
             >
               "Mener une AIPD sans s'y noyer"
