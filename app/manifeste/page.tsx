@@ -305,7 +305,7 @@ export default function ManifestePage() {
               delay={80}
               emoji="🇫🇷"
               title="Souverain par défaut"
-              text="Scaleway Paris. Mistral. Scaleway TEM UE. Piper TTS local. Aucune dépendance Cloud Act US. Conforme RGPD et NIS2 nativement."
+              text="Scaleway Paris. Mistral Voxtral. Scaleway TEM UE. Aucune dépendance Cloud Act US. Conforme RGPD, NIS2 et Loi Sapin II Art. 17 (formation anti-corruption obligatoire) nativement."
             />
             <Pilier
               delay={160}
@@ -431,7 +431,8 @@ export default function ManifestePage() {
                       Format OSCAL v1.1.2 du NIST exporté sur un endpoint
                       simple. Compatible CISO Assistant, Eramba, RegScale.
                       Plus jamais de copier-coller manuel pour ton audit
-                      ISO 27001 ou NIS2.
+                      ISO 27001, NIS2 ou Sapin II (1 M€ d'amende encourue
+                      en cas de défaut de formation anti-corruption).
                     </p>
                   </div>
                   <div className="sm:col-span-2">
