@@ -124,7 +124,7 @@ export default function TarifsPage() {
                 href="/audit-flash"
                 className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white text-primary-500 font-bold hover:scale-105 transition shadow-md"
               >
-                Demarrer l'audit · 5 min →
+                Démarrer l'audit · 5 min →
               </Link>
             </div>
           </div>
