@@ -6,6 +6,7 @@
 // dans /app/profil/securite/actions.ts (defense en profondeur cote serveur).
 
 import { useEffect, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import QRCode from "qrcode";
 import {
   setPassword,
@@ -229,6 +230,7 @@ function MfaSection({
     null,
   );
   const [pending, startTransition] = useTransition();
+  const router = useRouter();
 
   // Desactivation
   const [disablePwd, setDisablePwd] = useState("");
@@ -297,7 +299,7 @@ function MfaSection({
           setDisabling(false);
           setDisablePwd("");
           // page sera revalidée par revalidatePath, refresh requis pour voir l'etat
-          window.location.reload();
+          router.refresh();
         } else {
           setError(res.error ?? "Erreur lors de la désactivation.");
         }
@@ -356,7 +358,7 @@ function MfaSection({
         </div>
       )}
 
-      {/* Enrolement */}
+      {/* Enrôlement */}
       {!mfaEnabled && !enrolling && (
         <button
           type="button"
@@ -427,7 +429,7 @@ function MfaSection({
         </div>
       )}
 
-      {/* Codes de secours fraichement generes */}
+      {/* Codes de secours fraîchement générés */}
       {shownBackupCodes && (
         <div className="mt-4 bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-300 dark:border-amber-700 rounded-xl p-4">
           <p className="font-bold text-amber-900 dark:text-amber-200 mb-2">
@@ -638,7 +640,7 @@ function TotpEnrollmentBox({
           </li>
           <li>
             <span className="text-gray-500">Émetteur :</span>{" "}
-            <code className="font-mono">Humanix Academie</code>
+            <code className="font-mono">Humanix Académie</code>
           </li>
           <li>
             <span className="text-gray-500">Secret (base32) :</span>
