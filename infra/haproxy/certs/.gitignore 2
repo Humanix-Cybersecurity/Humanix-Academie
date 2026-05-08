@@ -1,9 +1,0 @@
-# Certs locaux generes par mkcert via scripts/start.sh - JAMAIS commiter
-*.pem
-*.crt
-*.key
-*.cer
-*.p12
-*.pfx
-!.gitignore
-!README.md
