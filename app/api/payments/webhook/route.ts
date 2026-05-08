@@ -113,7 +113,7 @@ export async function POST(req: Request) {
                   await signIn("nodemailer", {
                     email,
                     redirect: false,
-                    redirectTo: "/admin",
+                    redirectTo: "/post-login",
                   });
                 } catch (e) {
                   // Non-bloquant : l'admin peut récupérer son accès via

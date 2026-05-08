@@ -274,15 +274,16 @@ export async function createDecouverteAccount(
   // ----------------------------
   // 6. Connexion automatique
   // ----------------------------
-  // signIn en provider "password" avec redirect vers /admin (l'user est
-  // ADMIN). Le rate limit est deja consume, donc cette connexion ne sera
-  // pas freinee par les anti-bruteforce.
+  // signIn en provider "password" avec redirect via /post-login (qui route
+  // par rôle : l'user fraîchement créé est ADMIN, donc /admin). Le rate
+  // limit est deja consume, donc cette connexion ne sera pas freinee par
+  // les anti-bruteforce.
   await signIn("password", {
     email,
     password,
-    redirectTo: "/admin",
+    redirectTo: "/post-login",
   });
 
   // signIn redirige : ce return est defensif (jamais atteint en pratique).
-  redirect("/admin");
+  redirect("/post-login");
 }
