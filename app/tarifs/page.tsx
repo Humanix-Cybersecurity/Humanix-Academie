@@ -744,7 +744,6 @@ function PricingCard({
   // Selectionne le prix a afficher selon le cycle. Pour les tiers gratuits
   // / sur devis on garde l'unique display existant.
   const activePricing = t.pricing[billing];
-  const altPricing = t.pricing[billing === "monthly" ? "annual" : "monthly"];
 
   return (
     <article
@@ -776,14 +775,14 @@ function PricingCard({
             <p className="text-2xl font-extrabold text-primary-500">
               {activePricing.display}
             </p>
-            {billing === "annual" && activePricing.saving && (
+            {billing === "annual" && t.pricing.annual.saving && (
               <p className="text-xs text-success font-bold mt-1">
-                {activePricing.saving}
+                {t.pricing.annual.saving}
               </p>
             )}
-            {billing === "monthly" && altPricing.saving && (
+            {billing === "monthly" && t.pricing.annual.saving && (
               <p className="text-xs text-gray-500 mt-1">
-                ou {altPricing.display} en annuel
+                ou {t.pricing.annual.display} en annuel
               </p>
             )}
           </>
