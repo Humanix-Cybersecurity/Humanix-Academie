@@ -128,3 +128,4 @@ data/tts-cache/[0-9a-f][0-9a-f]/
 # Ancien cache Piper (avant bascule Voxtral mai 2026)
 .tts-cache/
 
+.claude/
