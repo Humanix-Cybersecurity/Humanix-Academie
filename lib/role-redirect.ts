@@ -18,7 +18,7 @@ export type UserRoleString =
   | "ADMIN"
   | "SUPERADMIN";
 
-const ADMIN_ROLES: ReadonlySet<string> = new Set<UserRoleString>([
+const ADMIN_ROLES: ReadonlySet<UserRoleString> = new Set<UserRoleString>([
   "MANAGER",
   "RSSI",
   "ADMIN",
