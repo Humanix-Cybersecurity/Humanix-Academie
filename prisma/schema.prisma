@@ -21,7 +21,11 @@ model Tenant {
   id        String   @id @default(cuid())
   name      String
   slug      String   @unique
-  plan      String   @default("trial")
+  // Plan effectif du tenant (cf. lib/plans.ts pour les valeurs valides :
+  // decouverte, solo, essentielle, pro, premium).
+  // Default "decouverte" (forever-free 5 sieges) — plan le plus restrictif
+  // qui ne necessite ni paiement ni provisionnement special.
+  plan      String   @default("decouverte")
   // Multi-etablissements : un tenant peut avoir un parent (groupe / siege)
   parentTenantId String?
   // Type d'etablissement libre (ex : "siege", "agence", "site", "boutique")
@@ -37,7 +41,9 @@ model Tenant {
   // (Payplug : "cus_xxx", Stripe : "cus_xxx", interchangeables coté schema).
   paymentCustomerId     String?  @unique
   paymentSubscriptionId String?  @unique
-  // Statut normalise : trialing, active, past_due, canceled, incomplete, etc.
+  // Statut normalise : active, past_due, canceled, incomplete, unpaid.
+  // ("trialing" est un statut legacy retire en mai 2026 mais encore tolere
+  // par le state machine pour les anciens tenants — cf. lib/subscription-state.ts).
   // Source de verite = webhook du provider. Synchro a chaque event subscription.
   subscriptionStatus   String?
   // Fin de la periode de facturation courante (renouvellement automatique
@@ -46,8 +52,10 @@ model Tenant {
   // Numero de seats facturees (relevant pour Solo/Essentielle/Pro qui ont
   // un plafond). Null si plan flat-fee ou plan gratuit.
   seatCount            Int?
-  // Trial en cours : la fin (ne pas confondre avec le plan "trial" du
-  // catalogue lib/plans.ts).
+  // Champ legacy : date de fin de l'essai gratuit. Plus jamais ecrit depuis
+  // le retrait de l'essai gratuit (mai 2026, vente directe). Conserve dans
+  // le schema le temps de purger les anciennes valeurs en BDD via la
+  // migration ; sera retire dans une migration future.
   trialEndsAt          DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
