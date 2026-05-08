@@ -356,7 +356,7 @@ function MfaSection({
         </div>
       )}
 
-      {/* Enrolement */}
+      {/* Enrôlement */}
       {!mfaEnabled && !enrolling && (
         <button
           type="button"
