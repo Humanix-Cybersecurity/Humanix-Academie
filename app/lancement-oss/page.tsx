@@ -26,17 +26,16 @@ const META_DESCRIPTION =
 export const metadata = {
   title: META_TITLE,
   description: META_DESCRIPTION,
+  alternates: { canonical: "/lancement-oss" },
   openGraph: {
     title: META_TITLE,
     description: META_DESCRIPTION,
     type: "article",
-    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
   },
   twitter: {
     card: "summary_large_image",
     title: META_TITLE,
     description: META_DESCRIPTION,
-    images: ["/logo-humanix-academie-512.png"],
   },
 };
 
