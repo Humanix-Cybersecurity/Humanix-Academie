@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
+import { Inter, Atkinson_Hyperlegible } from "next/font/google";
 import Providers from "./providers";
 import HeaderBar from "@/components/HeaderBar";
 import PWAInstallButton from "@/components/PWAInstallButton";
@@ -12,13 +13,32 @@ import MascotPeek from "@/components/MascotPeek";
 import ScrollProgress from "@/components/ScrollProgress";
 import "./globals.css";
 
+// Polices brand self-hostées via next/font (CSS variables exposées à Tailwind).
+// Inter pour le corps, Atkinson Hyperlegible pour les titres (police accessible
+// conçue par le Braille Institute, AAA contrast & forte différenciation des
+// glyphs similaires p/q/b/d - cohérent avec notre approche cosy & a11y).
+const inter = Inter({
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+  variable: "--font-inter",
+  preload: true,
+});
+const atkinson = Atkinson_Hyperlegible({
+  subsets: ["latin", "latin-ext"],
+  display: "swap",
+  weight: ["400", "700"],
+  variable: "--font-atkinson",
+  preload: true,
+});
+
 const SITE_NAME = "Humanix Académie";
 const SITE_TITLE = "Humanix Académie - Cybersécurité ludique pour PME";
 const SITE_DESCRIPTION =
   "Plateforme gamifiée de sensibilisation cybersécurité pour TPE et PME. Modules de 5 minutes, mises en situation, conformes RGPD.";
-// Image OG par defaut. Idealement remplacer par une image 1200x630 dediee
-// (TODO design). Le logo 512px est utilise en fallback pour ne pas avoir
-// de preview vide sur LinkedIn / Slack / Twitter.
+// Image OG fallback pour les pages qui n'ont pas leur propre opengraph-image.tsx
+// (admin, profil, api...). Les pages publiques exposées au social ont une OG
+// card dédiée 1200×630 générée dynamiquement (cf. lib/og-card.tsx + chaque
+// app/<route>/opengraph-image.tsx).
 const SITE_OG_IMAGE = "/logo-humanix-academie-512.png";
 
 export const metadata: Metadata = {
@@ -119,7 +139,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr">
+    <html
+      lang="fr"
+      className={`${inter.variable} ${atkinson.variable}`}
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         {/* JSON-LD Organization - SEO knowledge panel + rich snippets */}
