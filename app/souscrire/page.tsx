@@ -37,10 +37,12 @@ export const metadata = {
 
 const isDemoMode = process.env.DEMO_MODE === "true";
 
+type BillingCycle = "monthly" | "annual";
+
 export default async function SouscrirePage({
   searchParams,
 }: {
-  searchParams: Promise<{ plan?: string }>;
+  searchParams: Promise<{ plan?: string; billing?: string }>;
 }) {
   if (isDemoMode) {
     // En démo, le checkout n'a pas de sens : on renvoie vers le sélecteur
@@ -50,6 +52,8 @@ export default async function SouscrirePage({
 
   const params = await searchParams;
   const planRaw = String(params.plan ?? "").trim();
+  const billing: BillingCycle =
+    params.billing === "annual" ? "annual" : "monthly";
 
   // Plan inconnu ou non self-service → renvoyer vers /tarifs ou enterprise.
   //
@@ -118,14 +122,57 @@ export default async function SouscrirePage({
               </li>
             ))}
           </ul>
-          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700 flex items-baseline justify-between">
-            <span className="text-sm text-gray-500">Prix mensuel</span>
-            <span className="font-display text-xl font-extrabold text-primary-500 dark:text-accent-300">
-              {tier.pricing.monthly.display}
-            </span>
+          {/* Toggle mensuel / annuel sur la page souscrire pour permettre
+              de changer de cycle apres avoir clique depuis /tarifs sans
+              repartir en arriere. */}
+          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700">
+            <div
+              role="tablist"
+              aria-label="Cycle de facturation"
+              className="inline-flex w-full items-center gap-1 rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-1"
+            >
+              <Link
+                role="tab"
+                aria-selected={billing === "monthly"}
+                href={`/souscrire?plan=${tier.id}&billing=monthly`}
+                scroll={false}
+                className={`flex-1 text-center px-3 py-2 rounded-lg text-xs font-bold transition-colors ${
+                  billing === "monthly"
+                    ? "bg-white dark:bg-slate-900 text-primary-500 shadow-sm"
+                    : "text-gray-600 dark:text-gray-300 hover:text-primary-500"
+                }`}
+              >
+                Mensuel · sans engagement
+              </Link>
+              <Link
+                role="tab"
+                aria-selected={billing === "annual"}
+                href={`/souscrire?plan=${tier.id}&billing=annual`}
+                scroll={false}
+                className={`flex-1 text-center px-3 py-2 rounded-lg text-xs font-bold transition-colors ${
+                  billing === "annual"
+                    ? "bg-white dark:bg-slate-900 text-primary-500 shadow-sm"
+                    : "text-gray-600 dark:text-gray-300 hover:text-primary-500"
+                }`}
+              >
+                Annuel · {tier.pricing.annual.saving ?? "remise"}
+              </Link>
+            </div>
+
+            <div className="mt-4 flex items-baseline justify-between">
+              <span className="text-sm text-gray-500">
+                {billing === "annual"
+                  ? "Prix annuel (engagement 12 mois)"
+                  : "Prix mensuel (sans engagement)"}
+              </span>
+              <span className="font-display text-xl font-extrabold text-primary-500 dark:text-accent-300">
+                {tier.pricing[billing].display}
+              </span>
+            </div>
           </div>
+
           {tier.seats?.max && (
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-gray-500 mt-3">
               Inclus jusqu&apos;à {tier.seats.max} sièges. Au-delà,{" "}
               <Link href="/demande-abonnement?type=enterprise" className="underline">
                 contactez-nous
@@ -164,6 +211,7 @@ export default async function SouscrirePage({
               planId={tier.id}
               planName={tier.name}
               maxSeats={tier.seats?.max ?? null}
+              billing={billing}
               devMode={isDevMode()}
             />
           </Suspense>
