@@ -638,7 +638,7 @@ function TotpEnrollmentBox({
           </li>
           <li>
             <span className="text-gray-500">Émetteur :</span>{" "}
-            <code className="font-mono">Humanix Academie</code>
+            <code className="font-mono">Humanix Académie</code>
           </li>
           <li>
             <span className="text-gray-500">Secret (base32) :</span>
