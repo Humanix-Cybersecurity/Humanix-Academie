@@ -112,7 +112,7 @@ export default function TarifsPage() {
                 id="audit-cta-title"
                 className="font-display text-2xl sm:text-3xl font-extrabold mb-2"
               >
-                Tu hesites entre nos offres ?
+                Tu hésites entre nos offres ?
               </h2>
               <p className="opacity-90 mb-4 leading-relaxed">
                 Notre <strong>audit cyber flash</strong> donne une photo claire
