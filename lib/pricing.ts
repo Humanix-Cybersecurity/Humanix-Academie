@@ -42,7 +42,10 @@ export type PricingTier = {
   seats: { min: number; max: number | null };
   highlight?: boolean;
   features: string[];
-  cta: { label: string; type: "trial" | "contact" | "github" | "signup-free" };
+  cta: {
+    label: string;
+    type: "subscribe" | "contact" | "github" | "signup-free";
+  };
 };
 
 export const TIERS: PricingTier[] = [
@@ -120,9 +123,9 @@ export const TIERS: PricingTier[] = [
       "Webhooks Slack / Teams / Email natifs",
       "Hébergement UE (RGPD-compliant)",
       "Support email (réponse < 48h ouvrées)",
-      "30 jours d'essai gratuit, sans CB",
+      "Sans engagement, résiliable à tout moment",
     ],
-    cta: { label: "Démarrer l'essai gratuit", type: "trial" },
+    cta: { label: "S'abonner", type: "subscribe" },
   },
   {
     id: "essentielle",
@@ -156,7 +159,7 @@ export const TIERS: PricingTier[] = [
       "Notifications de rappel automatiques",
       "Support 5j/5 par chat (réponse < 4h)",
     ],
-    cta: { label: "Démarrer l'essai gratuit", type: "trial" },
+    cta: { label: "S'abonner", type: "subscribe" },
   },
   {
     id: "pro",
@@ -196,7 +199,7 @@ export const TIERS: PricingTier[] = [
       "Pack NIS2 turnkey complet",
       "Onboarding 1h en visio inclus",
     ],
-    cta: { label: "Démarrer l'essai gratuit", type: "trial" },
+    cta: { label: "S'abonner", type: "subscribe" },
   },
   {
     id: "premium",

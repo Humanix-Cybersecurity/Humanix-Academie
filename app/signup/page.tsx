@@ -14,9 +14,14 @@ const PLAN_LABELS: Record<string, { label: string; tagline: string }> = {
     label: "Découverte",
     tagline: "Forever-free · 5 sièges · sans CB",
   },
+  // "trial" reste reference par le code legacy (lib/subscription-state.ts,
+  // license keys, prisma seed) mais ne fait plus partie de l'offre publique.
+  // /signup ne devrait normalement pas etre atteint avec ?plan=trial depuis
+  // les pages publiques (CTAs renvoient sur /souscrire). On garde une
+  // sortie de secours pour les anciens liens : meme tagline que decouverte.
   trial: {
-    label: "Essai gratuit",
-    tagline: "14 jours pour tester l'ensemble des modules",
+    label: "Découverte",
+    tagline: "Forever-free · 5 sièges · sans CB",
   },
 };
 
