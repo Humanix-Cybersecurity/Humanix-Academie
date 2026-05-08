@@ -160,7 +160,7 @@ export default function RootLayout({
           </Suspense>
           {/* Bandeau démo dynamique : montre l'offre active si l'user est connecté */}
           <DemoBanner />
-          <HeaderBar />
+          <HeaderBar demoMode={process.env.DEMO_MODE === "true"} />
           <ScrollProgress />
           <main id="main-content" tabIndex={-1} aria-label="Contenu principal">
             {children}
