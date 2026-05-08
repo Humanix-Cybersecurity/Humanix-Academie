@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import Providers from "./providers";
 import HeaderBar from "@/components/HeaderBar";
 import PWAInstallButton from "@/components/PWAInstallButton";
+import PlausibleScript from "@/components/PlausibleScript";
 import DemoBanner from "@/components/DemoBanner";
 import CookieNotice from "@/components/CookieNotice";
 import CyberMeteoTopBar from "@/components/CyberMeteoTopBar";
@@ -141,6 +142,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen">
+        <PlausibleScript />
         <Providers>
           <a href="#main-content" className="skip-link">
             Aller au contenu principal
