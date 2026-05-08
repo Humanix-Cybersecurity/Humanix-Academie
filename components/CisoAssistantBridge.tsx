@@ -54,6 +54,7 @@ const FRAMEWORK_LABELS: Record<FrameworkRef, { short: string; emoji: string }> =
     RGPD: { short: "RGPD", emoji: "📋" },
     "ANSSI-HG": { short: "ANSSI HG", emoji: "🇫🇷" },
     "NIST-CSF": { short: "NIST CSF", emoji: "🇺🇸" },
+    SAPIN2: { short: "Sapin II", emoji: "⚖️" },
   };
 
 export default function CisoAssistantBridge() {
