@@ -97,6 +97,17 @@ const PROMESSES = [
     body: "Toutes les actions sensibles tracées (login, gestion users, billing, droits RGPD, export preuves). Append-only, conservation 13 mois, IP hashée RGPD-safe. Côté COMEX : tu peux prouver tout, à n'importe quel moment.",
     cta: { label: "Voir Journal d'audit", href: "/admin/audit" },
   },
+  {
+    emoji: "⚖️",
+    title: "Loi Sapin II Art. 17 — formation anti-corruption",
+    palette: {
+      bg: "from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-blue-950/40",
+      ring: "border-blue-300 dark:border-blue-900/40",
+      accent: "text-blue-800 dark:text-blue-300",
+    },
+    body: "Si ta boîte fait >500 salariés ou >100 M€ de CA, tu es directement exposé à un contrôle AFA. Défaut de formation = 1 M€ d'amende personne morale. La saison Fraude au Président (6 modules : FOVI, RIB, deepfake vocal, cas Pathé, double validation) est exactement ce que l'AFA cherche en preuve. Export OSCAL framework=SAPIN2 dans CISO Assistant en 1 clic.",
+    cta: { label: "Voir mapping Sapin II", href: "/securite/sapin2" },
+  },
 ];
 
 export default function DafLandingPage() {
