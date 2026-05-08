@@ -6,6 +6,7 @@
 // dans /app/profil/securite/actions.ts (defense en profondeur cote serveur).
 
 import { useEffect, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import QRCode from "qrcode";
 import {
   setPassword,
@@ -229,6 +230,7 @@ function MfaSection({
     null,
   );
   const [pending, startTransition] = useTransition();
+  const router = useRouter();
 
   // Desactivation
   const [disablePwd, setDisablePwd] = useState("");
@@ -297,7 +299,7 @@ function MfaSection({
           setDisabling(false);
           setDisablePwd("");
           // page sera revalidée par revalidatePath, refresh requis pour voir l'etat
-          window.location.reload();
+          router.refresh();
         } else {
           setError(res.error ?? "Erreur lors de la désactivation.");
         }
