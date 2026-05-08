@@ -464,10 +464,10 @@ export default function HeaderBar({ demoMode = false }: { demoMode?: boolean }) 
                 </Link>
               ) : (
                 <Link
-                  href="/tarifs"
-                  className="bg-primary-500 hover:bg-primary-600 text-white text-sm font-bold px-4 py-2 rounded-xl transition shadow-sm hover:shadow-md"
+                  href="/inscription"
+                  className="bg-accent-500 hover:bg-accent-600 text-white text-sm font-bold px-4 py-2 rounded-xl transition shadow-sm hover:shadow-md"
                 >
-                  Voir les tarifs
+                  Inscription gratuite
                 </Link>
               )}
             </div>
@@ -544,10 +544,10 @@ export default function HeaderBar({ demoMode = false }: { demoMode?: boolean }) 
                   </Link>
                 ) : (
                   <Link
-                    href="/tarifs"
-                    className="text-center bg-primary-500 hover:bg-primary-600 text-white font-bold px-4 py-3 rounded-xl shadow-sm"
+                    href="/inscription"
+                    className="text-center bg-accent-500 hover:bg-accent-600 text-white font-bold px-4 py-3 rounded-xl shadow-sm"
                   >
-                    Voir les tarifs
+                    Inscription gratuite
                   </Link>
                 )}
               </div>

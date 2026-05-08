@@ -16,6 +16,7 @@ import EmailProvider from "next-auth/providers/nodemailer";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
+import Apple from "next-auth/providers/apple";
 import type { Provider } from "next-auth/providers";
 import { db } from "@/lib/db";
 import { verifyPassword } from "@/lib/password";
@@ -23,6 +24,11 @@ import { verifyTotpCode } from "@/lib/totp";
 import { consumeBackupCode } from "@/lib/password";
 import { auditLog, AuditActions, AuditOutcomes } from "@/lib/audit";
 import { sendEmail, isEmailConfigured } from "@/lib/email";
+import {
+  COMMUNITY_TENANT_SLUG,
+  getCommunityTenant,
+} from "@/lib/tenant-community";
+import { readInscriptionIntent } from "@/lib/inscription-intent";
 
 const isDemoMode = process.env.DEMO_MODE === "true";
 
@@ -73,6 +79,21 @@ if (
       issuer:
         process.env.AUTH_MICROSOFT_ENTRA_ID_ISSUER ??
         "https://login.microsoftonline.com/organizations/v2.0",
+    }),
+  );
+}
+
+// SSO Apple - actif si la config est presente.
+// Apple "Sign in with Apple" : la `clientSecret` est un JWT signé ES256 que
+// l'admin doit régénérer périodiquement (validité max 6 mois cf. Apple Dev
+// Portal). Soit on injecte un JWT pré-généré via AUTH_APPLE_SECRET, soit
+// on le calcule au runtime à partir de la clé .p8 — pour l'instant on
+// reste sur un JWT statique (cohérent avec Google/Microsoft).
+if (process.env.AUTH_APPLE_ID && process.env.AUTH_APPLE_SECRET) {
+  providers.push(
+    Apple({
+      clientId: process.env.AUTH_APPLE_ID,
+      clientSecret: process.env.AUTH_APPLE_SECRET,
     }),
   );
 }
@@ -330,8 +351,52 @@ if (isEmailConfigured()) {
   );
 }
 
+// PrismaAdapter override : injecte tenantId + role lors de l'auto-création
+// d'un user (SSO ou magic link inconnu).
+//
+// SECURITE :
+//   - Refuse l'auto-création si AUCUN cookie d'intention valide n'est posé.
+//     Ça maintient la sécurité existante : un employé ACME qui clique « Sign
+//     in with Google » sur /connexion sans avoir été invité reste rejeté.
+//   - Si cookie d'intention valide (posé par /inscription), l'user est
+//     créé sur le tenant Communauté avec role LEARNER (le seul niveau d'accès
+//     autorisé pour un signup non-payant).
+const baseAdapter = PrismaAdapter(db);
+const adapter: typeof baseAdapter = {
+  ...baseAdapter,
+  async createUser(data) {
+    const intent = await readInscriptionIntent();
+    if (intent !== "community-learner") {
+      throw new Error(
+        "Création de compte non autorisée sans flow d'inscription valide.",
+      );
+    }
+    const community = await getCommunityTenant();
+    if (!community) {
+      throw new Error(
+        `Tenant '${COMMUNITY_TENANT_SLUG}' absent. Exécute 'npm run db:seed'.`,
+      );
+    }
+    const created = await db.user.create({
+      data: {
+        email: data.email,
+        name: data.name ?? null,
+        image: data.image ?? null,
+        emailVerified: data.emailVerified ?? null,
+        tenantId: community.id,
+        role: "LEARNER",
+        isActive: true,
+      },
+    });
+    // Cast vers le type attendu par next-auth (notre User a des champs en plus
+    // que le type AdapterUser, et tenantId / role / isActive ne sont pas dans
+    // sa surface publique).
+    return created as unknown as Awaited<ReturnType<typeof baseAdapter.createUser>>;
+  },
+};
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(db),
+  adapter,
   session: { strategy: isDemoMode ? "jwt" : "database" },
   trustHost: true,
   pages: {
@@ -355,30 +420,42 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     // dans `.eslintrc.json` pour ce genre de cas légitime.
     async signIn(params: any) {
       const { user, account } = params;
-      // Demo mode + magic link : on laisse Auth.js gerer (Credentials a deja
-      // verifie isActive dans authorize, magic link n'a pas besoin)
-      if (account?.provider === "demo" || account?.provider === "resend") {
+      // Demo mode : Credentials provider (déjà validé isActive dans authorize)
+      if (account?.provider === "demo") {
         return true;
       }
 
-      // Providers SSO : on exige que l'email existe en BDD avec isActive=true
-      if (
+      // Providers SSO + magic link : si l'user existe et est actif → OK.
+      // Sinon, on regarde le cookie d'intention pour distinguer :
+      //   - Inscription (cookie valide) → autorise auto-create sur Communauté
+      //   - Connexion classique (pas de cookie) → refuse (employé ACME qui
+      //     tape /connexion sans invitation préalable)
+      const isExternalProvider =
         account?.provider === "google" ||
-        account?.provider === "microsoft-entra-id"
-      ) {
+        account?.provider === "microsoft-entra-id" ||
+        account?.provider === "apple" ||
+        account?.provider === "resend" ||
+        account?.provider === "nodemailer";
+
+      if (isExternalProvider) {
         if (!user.email) return false;
         const existing = await db.user.findUnique({
           where: { email: user.email.toLowerCase() },
           select: { id: true, isActive: true },
         });
-        if (!existing) {
-          // Pas de compte → refus avec redirection vers une page d'erreur
-          return "/connexion?error=NoAccount";
+        if (existing) {
+          if (!existing.isActive) {
+            return "/connexion?error=AccountSuspended";
+          }
+          return true;
         }
-        if (!existing.isActive) {
-          return "/connexion?error=AccountSuspended";
+        // User inconnu : autoriser uniquement si cookie d'intention valide
+        // (= passé par /inscription). Sinon redirect avec message clair.
+        const intent = await readInscriptionIntent();
+        if (intent === "community-learner") {
+          return true; // PrismaAdapter override fera la création
         }
-        return true;
+        return "/connexion?error=NoAccount";
       }
 
       return true;
