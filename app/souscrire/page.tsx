@@ -20,6 +20,10 @@ import { isPayplugConfigured, isPlanBuyable } from "@/lib/payplug";
 import { isPlanId } from "@/lib/plans";
 import SouscrireForm from "./SouscrireForm";
 
+// force-dynamic : DEMO_MODE n'est pas set au build → eviter le prerender
+// statique qui fige le redirect vers /demo (cf. /inscription, /demo/layout).
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Souscrire — Humanix Académie",
   description:
