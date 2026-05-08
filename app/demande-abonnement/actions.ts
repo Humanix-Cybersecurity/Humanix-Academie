@@ -108,7 +108,10 @@ export async function submitDemandeAbonnement(
         to: FOUNDER_EMAIL,
         subject: `[Humanix] Demande d'abonnement — ${organization}`,
         html,
-        replyTo: email,
+        // Permet au founder de répondre directement au demandeur en
+        // cliquant "Répondre" dans son client mail (sans copier-coller
+        // l'adresse depuis le corps du message).
+        headers: { "Reply-To": email },
       });
     } catch (e) {
       console.error("[demande-abonnement] email send failed", e);

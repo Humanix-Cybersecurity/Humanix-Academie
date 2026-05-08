@@ -44,6 +44,7 @@ export type ProvisionError =
   | "community_slug_collision"
   | "invalid_email"
   | "invalid_plan"
+  | "invalid_state"
   | "db_error";
 
 export type ProvisionInput = {
@@ -60,6 +61,10 @@ export type ProvisionInput = {
   /** Identifiants Payplug si l'origine est un webhook ou un checkout. */
   paymentCustomerId?: string;
   paymentSubscriptionId?: string;
+  /** État initial de la souscription. Utilisé par le webhook Payplug pour
+   * passer "active" sur subscription.created (le checkout a réussi).
+   * Pour un provisioning manuel sans paiement, "trialing" est le défaut. */
+  subscriptionStatus?: string;
   /** Provenance pour tracing/audit. */
   source: ProvisionSource;
 };
@@ -72,7 +77,8 @@ export type ProvisionInput = {
 async function buildUniqueSlug(name: string): Promise<string | null> {
   const base = name
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    // Remove Unicode combining diacritical marks (U+0300 to U+036F)
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
@@ -130,10 +136,17 @@ export async function provisionTenantWithAdmin(
       },
     });
     if (existing) {
+      const existingAdminId = existing.users[0]?.id;
+      if (!existingAdminId) {
+        console.error(
+          `[provisioning] incohérence: tenant ${existing.id} trouvé pour paymentCustomerId=${input.paymentCustomerId} sans ADMIN.`,
+        );
+        return { ok: false, reason: "invalid_state" };
+      }
       return {
         ok: true,
         tenantId: existing.id,
-        userId: existing.users[0]?.id ?? "",
+        userId: existingAdminId,
         created: false,
       };
     }
@@ -164,7 +177,7 @@ export async function provisionTenantWithAdmin(
           paymentProvider: input.paymentCustomerId ? "payplug" : null,
           paymentCustomerId: input.paymentCustomerId ?? null,
           paymentSubscriptionId: input.paymentSubscriptionId ?? null,
-          subscriptionStatus: input.paymentCustomerId ? "active" : "trialing",
+          subscriptionStatus: input.subscriptionStatus ?? "trialing",
         },
       });
       const user = await tx.user.create({
