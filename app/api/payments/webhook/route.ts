@@ -164,14 +164,16 @@ export async function POST(req: Request) {
       case "subscription.canceled":
       case "subscription.cancelled": {
         if (tenantId) {
+          // Quand un tenant resilie, on le rebascule sur Decouverte
+          // (forever-free 5 sieges) au lieu de couper l'acces brutalement.
+          // Ses donnees restent accessibles, il peut re-souscrire plus tard.
           await db.tenant.update({
             where: { id: tenantId },
             data: {
               subscriptionStatus: "canceled",
-              plan: "trial",
+              plan: "decouverte",
               paymentSubscriptionId: null,
               currentPeriodEnd: null,
-              trialEndsAt: null,
               seatCount: null,
             },
           });

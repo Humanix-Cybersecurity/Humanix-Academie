@@ -3,19 +3,18 @@
 // Aligné sur la grille tarifaire (cf. lib/pricing.ts).
 //
 // =============================================================================
-// PIVOT MAI 2026 - modèle volume + open core
+// PIVOT MAI 2026 - modèle volume + open core (vente directe sans essai)
 // =============================================================================
 //
-// Hiérarchie : trial < decouverte < solo (Starter) < essentielle < pro < premium (Enterprise).
+// Hiérarchie : decouverte < solo (Starter) < essentielle < pro < premium (Enterprise).
 // Une feature est disponible si le plan du tenant >= au minimum requis.
 //
-// IMPORTANT - rétro-compat DB :
-// On garde les keys existantes (`trial`, `solo`, `essentielle`, `pro`, `premium`)
-// pour ne PAS casser les tenants déjà en base. Seuls les LIBELLÉS UI changent
-// pour refléter la nouvelle grille :
-//   - `solo`    → affiché comme "Starter"
-//   - `premium` → affiché comme "Enterprise"
-// On AJOUTE `decouverte` (forever-free 5 sièges).
+// HISTORIQUE :
+// Le plan `"trial"` a existé dans une version antérieure (essai gratuit 30j),
+// retiré quand on est passé à la vente directe sans essai (cf. /demo + plan
+// Découverte forever-free remplissent ce rôle). Une migration Prisma rebascule
+// les anciens `Tenant.plan='trial'` vers `'decouverte'`. Tout code legacy qui
+// reçoit "trial" en string est gracieusement normalisé via normalizePlan().
 //
 // Note open source : `community` (self-host AGPL gratuit) n'apparaît PAS comme
 // PlanId - par construction, ces installations n'ont pas de tenant cloud chez
@@ -25,7 +24,6 @@
 import { db } from "@/lib/db";
 
 export type PlanId =
-  | "trial"
   | "decouverte"
   | "solo"
   | "essentielle"
@@ -33,12 +31,11 @@ export type PlanId =
   | "premium";
 
 export const PLAN_RANK: Record<PlanId, number> = {
-  trial: 0,
-  decouverte: 1,
-  solo: 2,
-  essentielle: 3,
-  pro: 4,
-  premium: 5,
+  decouverte: 0,
+  solo: 1,
+  essentielle: 2,
+  pro: 3,
+  premium: 4,
 };
 
 // Catalogue des features gated et leur plan minimum.
@@ -72,7 +69,6 @@ export type Feature = keyof typeof FEATURE_MIN_PLAN;
 
 // Plans valides (utilise pour parser un input non-typed)
 const VALID_PLANS = new Set<PlanId>([
-  "trial",
   "decouverte",
   "solo",
   "essentielle",
@@ -85,7 +81,10 @@ export function isPlanId(value: unknown): value is PlanId {
 }
 
 export function normalizePlan(value: unknown): PlanId {
-  return isPlanId(value) ? value : "trial";
+  // Plan legacy "trial" (retire mai 2026) -> bascule sur Decouverte.
+  // Toute autre valeur inconnue tombe aussi sur Decouverte (forever-free).
+  if (value === "trial") return "decouverte";
+  return isPlanId(value) ? value : "decouverte";
 }
 
 /**
@@ -119,7 +118,7 @@ export function planHasFeature(
  * Cf. `docs/LICENSE_KEY.md` pour le système de licence côté self-host
  * commercial.
  *
- * Retourne "trial" en fallback si tenant introuvable.
+ * Retourne "decouverte" en fallback si tenant introuvable.
  */
 export async function getTenantPlan(tenantId: string): Promise<PlanId> {
   const tenant = await db.tenant.findUnique({
@@ -136,7 +135,6 @@ export async function getTenantPlan(tenantId: string): Promise<PlanId> {
 // Ils peuvent évoluer sans toucher à la DB (les keys restent stables).
 
 export const PLAN_LABEL: Record<PlanId, string> = {
-  trial: "Essai gratuit",
   decouverte: "Découverte",
   solo: "Starter",
   essentielle: "Essentielle",
@@ -145,7 +143,6 @@ export const PLAN_LABEL: Record<PlanId, string> = {
 };
 
 export const PLAN_EMOJI: Record<PlanId, string> = {
-  trial: "🎁",
   decouverte: "🌱",
   solo: "⚡",
   essentielle: "✨",
@@ -167,11 +164,10 @@ export function featureMinPlanLabel(feature: Feature): string {
 // `Infinity` = illimite (Premium). En BDD, ne pas stocker Infinity ; le calcul
 // utilise PLAN_SEATS au moment de la verification.
 export const PLAN_SEATS: Record<PlanId, number> = {
-  trial: 5, // Decouverte 30j (auto-converted to "decouverte" forever-free apres trial)
   decouverte: 5, // Forever-free 5 sieges
-  solo: 10, // Starter PME individuelle
-  essentielle: 50, // PME 10-50
-  pro: 250, // PME/ETI 50-250
+  solo: 15, // Starter (forfait 19 €/mois, jusqu'a 15 utilisateurs)
+  essentielle: 50, // PME 16-50
+  pro: 250, // PME/ETI 51-250
   premium: Infinity, // Enterprise (negociation custom)
 };
 
@@ -181,7 +177,6 @@ export const PLAN_SEATS: Record<PlanId, number> = {
 // Source de verite des prix affiches sur /tarifs et factures Payplug.
 // Les vrais ID de plans Payplug sont dans .env (PAYPLUG_PLAN_*).
 export const PLAN_PRICE_EUR_MONTHLY: Record<PlanId, number | null> = {
-  trial: 0,
   decouverte: 0,
   solo: 29,
   essentielle: 89,
@@ -191,7 +186,6 @@ export const PLAN_PRICE_EUR_MONTHLY: Record<PlanId, number | null> = {
 
 // Prix annuel (avec ~17% de remise = 2 mois offerts)
 export const PLAN_PRICE_EUR_YEARLY: Record<PlanId, number | null> = {
-  trial: 0,
   decouverte: 0,
   solo: 290, // 29 * 10
   essentielle: 890, // 89 * 10
