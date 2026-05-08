@@ -19,6 +19,10 @@ const CSP_DIRECTIVES = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: https:",
   "font-src 'self' data:",
+  // media-src : pour la lecture audio TTS via TTSButton qui cree un blob:
+  // URL depuis le MP3 recu de /api/tts/synthesize. Sans 'blob:', l'element
+  // <audio> echoue silencieusement (CSP fallback sur default-src 'self').
+  "media-src 'self' blob:",
   "connect-src 'self' https://api.mistral.ai https://api.payplug.com https://secure.payplug.com https://api.scaleway.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",
