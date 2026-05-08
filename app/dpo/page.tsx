@@ -47,7 +47,7 @@ const PROMESSES = [
       ring: "border-cyan-200 dark:border-cyan-900/40",
       accent: "text-cyan-700 dark:text-cyan-300",
     },
-    body: "Humanix Academie est un sous-traitant au sens RGPD. Tu recois des le trial : le registre des traitements de la plateforme (article 30), avec finalites, donnees, durees, garanties - pre-rempli, signe, exportable. Plus besoin de le faire toi-meme.",
+    body: "Humanix Academie est un sous-traitant au sens RGPD. Tu recois des le plan Decouverte : le registre des traitements de la plateforme (article 30), avec finalites, donnees, durees, garanties - pre-rempli, signe, exportable. Plus besoin de le faire toi-meme.",
   },
   {
     emoji: "📜",

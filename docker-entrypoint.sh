@@ -27,6 +27,12 @@ echo "  -> Postgres pret"
 echo "[2/5] Synchronisation du schema Prisma..."
 npx prisma db push --skip-generate --accept-data-loss
 
+# Migration legacy : rebascule les tenants encore sur plan="trial" (retire
+# en mai 2026 avec le pivot vente directe). Idempotent, no-op apres le 1er
+# passage. Cf. scripts/migrate-legacy-trial.ts pour le rationale.
+echo "[2.5/5] Migration legacy plan=trial -> decouverte (idempotente)..."
+npx tsx scripts/migrate-legacy-trial.ts || echo "  -> migration legacy ignoree (non bloquante)"
+
 # Seed (idempotent grace aux upserts) — uniquement en mode demo, pour ne pas
 # polluer une vraie base prod avec les fake users de demonstration.
 echo "[3/5] Seed initial..."
