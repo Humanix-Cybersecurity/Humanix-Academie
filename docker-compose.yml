@@ -12,13 +12,13 @@
 #                          [app] (Next.js)
 #                              │
 #                              ▼ (réseau humanix_backend, isolé)
-#                       [postgres]  [tts]
+#                       [postgres]   (TTS = SaaS Mistral Voxtral, plus de container)
 #
 # Sécurité :
-#  - app, postgres, tts JAMAIS exposés sur l'host (ports retirés)
+#  - app et postgres JAMAIS exposés sur l'host (ports retirés)
 #  - Seul haproxy expose 80/443 sur l'host
-#  - 2 réseaux Docker : frontend (haproxy↔app) et backend (app↔db, app↔tts)
-#  - postgres n'a accès qu'à app (pas à tts ni haproxy)
+#  - 2 réseaux Docker : frontend (haproxy↔app) et backend (app↔db)
+#  - postgres n'a accès qu'à app (pas à haproxy)
 
 services:
   # =====================================================================
@@ -81,17 +81,26 @@ services:
       retries: 20
 
   # =====================================================================
-  # TTS — synthèse vocale neurale (Piper, CPU-friendly)
-  # Réseau backend uniquement, accessible par app via http://tts:5500
+  # TTS — Piper self-hosted (option OSS, depuis mai 2026 sous `--profile piper`)
+  # ---------------------------------------------------------------------
+  # Deux modes au choix selon `TTS_PROVIDER` dans l'env du service `app` :
+  #
+  #   1. TTS_PROVIDER=voxtral  Mistral Voxtral SaaS (defaut prod). Pas besoin
+  #                            de ce container. Pre-rendu via `npm run tts:build`.
+  #
+  #   2. TTS_PROVIDER=piper    Demarrer aussi ce container :
+  #                              docker compose --profile piper up -d
+  #                            Voix `fr_FR-siwis-medium` (Piper FR), zero appel
+  #                            externe, RGPD/AGPL-friendly. Container 200-500 Mo.
   # =====================================================================
   tts:
+    profiles: ["piper"]
     build:
       context: ./infra/tts
       dockerfile: Dockerfile
     image: humanix-tts:1.0.0
     container_name: humanix-tts
     restart: unless-stopped
-    # PAS de "ports" : usage strictement interne
     networks:
       - humanix_backend
     healthcheck:
@@ -100,7 +109,6 @@ services:
       timeout: 5s
       retries: 3
       start_period: 20s
-    # Limite de RAM : Piper avec voix FR consomme ~200 Mo, on plafonne à 512 Mo
     deploy:
       resources:
         limits:
@@ -133,16 +141,30 @@ services:
       SCALEWAY_TEM_REGION: "fr-par"
       NODE_ENV: "production"
       # === TTS premium serveur ===
-      # URL du service TTS interne (réseau humanix_backend).
-      # Si vide ou absent → fallback Web Speech API navigateur.
-      TTS_SERVER_URL: "http://tts:5500"
-      # Plan minimum requis pour bénéficier du TTS premium serveur.
-      # Aligné sur lib/plans.ts. Valeurs : trial / solo / essentielle / pro / premium
-      TTS_MIN_PLAN: "pro"
-      # === IA generative phishing (Mistral souverain FR) ===
-      # Si MISTRAL_API_KEY est vide, l'app sert des fixtures statiques en
-      # demo (UI fonctionnelle sans facturation Mistral).
-      MISTRAL_API_KEY: ""
+      # Choisis ton provider :
+      #   "voxtral" -> Mistral Voxtral SaaS (necessite MISTRAL_API_KEY plus bas)
+      #   "piper"   -> Container Piper local (lance avec --profile piper)
+      #   ""        -> pas de TTS serveur, fallback Web Speech API navigateur
+      # Si vide et MISTRAL_API_KEY est fourni, "voxtral" est utilise par defaut.
+      TTS_PROVIDER: "voxtral"
+      # Pour le mode Piper uniquement : URL du container TTS sur le reseau backend.
+      # Decommente cette ligne ET `TTS_PROVIDER: "piper"` ci-dessus.
+      # TTS_SERVER_URL: "http://tts:5500"
+      TTS_SERVER_URL: ""
+      # Plan minimum requis pour beneficier du TTS premium serveur.
+      # Aligne sur lib/plans.ts. Valeurs : trial / solo / essentielle / pro / premium
+      # En demo locale (DEMO_MODE=true) on baisse a "trial" pour que tout user
+      # demo ait acces au TTS et puisse tester la voix Marie. En prod, c'est
+      # remonte a "pro" via le `.env` Ansible (cf. ansible/templates/env.prod.j2).
+      TTS_MIN_PLAN: "trial"
+      # === IA generative + TTS Voxtral (Mistral souverain FR) ===
+      # MISTRAL_API_KEY DOIT venir de l'environnement / du .env, sinon
+      # `environment:` ecraserait `env_file:` et la cle disparaitrait dans
+      # le container. Avec ${VAR:-} on lit la variable depuis le shell
+      # (`MISTRAL_API_KEY=sk-... docker compose up`) ou depuis le fichier
+      # `.env` que docker compose charge automatiquement. Vide -> features
+      # IA et TTS Voxtral desactivees, l'app sert les fixtures statiques.
+      MISTRAL_API_KEY: "${MISTRAL_API_KEY:-}"
       MISTRAL_MODEL: "ministral-8b-latest"
       # === SSO Google + Microsoft ===
       # Si vide, les boutons SSO ne s'affichent pas (fallback magic link).
@@ -162,11 +184,21 @@ services:
     networks:
       - humanix_frontend
       - humanix_backend
+    volumes:
+      # Cache TTS : BIND MOUNT vers le dossier du repo en mode dev/demo OSS.
+      # On lie directement `./data/tts-cache/` (host) -> `/app/data/tts-cache/`
+      # (container). Avantages :
+      #   - les MP3 pre-generes par `npm run tts:build` cote host sont VISIBLES
+      #     immediatement par le container (pas besoin de copier dans un volume)
+      #   - tu peux modifier le manifest cote host et le voir cote container
+      #   - parfait pour le dev local et la demo en self-host
+      # En PROD (private compose Ansible), on utilise un volume Docker NOMME
+      # `humanix_prod_tts_cache` declare en `external: true` pour la persistance
+      # cross-deploys et la protection contre `docker compose down -v`.
+      - ./data/tts-cache:/app/data/tts-cache
     depends_on:
       postgres:
         condition: service_healthy
-      tts:
-        condition: service_started
 
 # =====================================================================
 # RÉSEAUX — segmentation L3
@@ -177,9 +209,9 @@ networks:
     driver: bridge
     name: humanix_frontend
 
-  # Réseau interne : app ↔ postgres, app ↔ tts
+  # Réseau interne : app ↔ postgres
   # internal=true bloquerait toute sortie internet → on laisse à false pour
-  # que l'app puisse appeler Scaleway TEM, Payplug, etc. en sortie.
+  # que l'app puisse appeler Scaleway TEM, Payplug, Mistral Voxtral, etc.
   humanix_backend:
     driver: bridge
     name: humanix_backend
@@ -188,3 +220,8 @@ networks:
 volumes:
   postgres_data:
     driver: local
+  # Le TTS utilise un BIND MOUNT en mode OSS local (cf. service `app` ci-dessus),
+  # pas un volume Docker nomme. Pour basculer sur volume nomme (= comportement
+  # prod-like), commenter le bind dans le service et decommenter le volume ici :
+  # tts_cache:
+  #   driver: local
