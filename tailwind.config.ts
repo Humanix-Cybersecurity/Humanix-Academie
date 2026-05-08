@@ -70,9 +70,17 @@ const config: Config = {
         warn: "#C0392B",
       },
       fontFamily: {
-        // Polices accessibles, gratuites et larges
-        sans: ["Inter", "system-ui", "sans-serif"],
-        display: ["Atkinson Hyperlegible", "Inter", "system-ui", "sans-serif"],
+        // Polices accessibles, gratuites et larges, self-host via next/font
+        // (variables CSS définies dans app/layout.tsx).
+        sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
+        display: [
+          "var(--font-atkinson)",
+          "Atkinson Hyperlegible",
+          "var(--font-inter)",
+          "Inter",
+          "system-ui",
+          "sans-serif",
+        ],
       },
       borderRadius: {
         xl: "1rem",
