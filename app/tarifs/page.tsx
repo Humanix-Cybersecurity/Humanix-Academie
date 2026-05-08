@@ -746,28 +746,36 @@ function CtaButton({ tier: t }: { tier: PricingTier }) {
     );
   }
   if (t.cta.type === "signup-free") {
+    // Decouverte = apprenant gratuit sur le tenant Communauté (LEARNER).
+    // Pas de création de tenant : on envoie sur /inscription qui pose le
+    // cookie d'intention et déclenche le SSO/magic link (Phase 2).
     return (
-      <Link href="/signup?plan=decouverte" className={cls}>
+      <Link href="/inscription" className={cls}>
         {t.cta.label}
       </Link>
     );
   }
   if (t.cta.type === "trial") {
-    // Plans payants (Solo / Essentielle / Pro) : on redirige vers /signup
-    // qui cree un tenant en plan trial, puis l'admin peut souscrire le
-    // plan paye via Stripe depuis /profil/facturation.
-    // Pour les utilisateurs deja loges admin, le CTA Stripe est ailleurs.
+    // Plans payants (Solo / Essentielle / Pro) self-service : flow Payplug
+    // automatisé. /souscrire collecte email + organisation puis crée la
+    // session Payplug. Le webhook back-end provisionne tenant + ADMIN +
+    // magic link à la confirmation du paiement (Phase 3b).
     return (
-      <Link href={`/signup?plan=trial&target=${t.id}`} className={cls}>
+      <Link href={`/souscrire?plan=${t.id}`} className={cls}>
         {t.cta.label}
       </Link>
     );
   }
-  // contact (Enterprise)
+  // contact (Enterprise) — instance dédiée, +250 sièges, sur-mesure.
+  // Géré manuellement via /demande-abonnement (founder valide les cas
+  // particuliers, le reste est self-service).
   return (
-    <a href="mailto:contact@humanix-cybersecurity.fr" className={cls}>
+    <Link
+      href={`/demande-abonnement?type=enterprise&plan=${t.id}`}
+      className={cls}
+    >
       {t.cta.label}
-    </a>
+    </Link>
   );
 }
 
