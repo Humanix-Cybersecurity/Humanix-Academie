@@ -139,6 +139,12 @@ services:
       # .env (precedence docker compose : `environment:` > `env_file:`), ce
       # qui forcait DEMO_MODE=true meme en testant le flow inscription prod.
       DEMO_MODE: "${DEMO_MODE:-true}"
+      # DEV_MODE : bypass des integrations externes (Payplug, email) pour
+      # tester le flow inscription/souscription en local. Cf. lib/dev-mode.ts.
+      # Default "false" pour ne pas changer le comportement historique.
+      # Le garde-fou AUTH_URL (localhost only) empeche l'activation accidentelle
+      # en prod meme si la variable fuite.
+      DEV_MODE: "${DEV_MODE:-false}"
       EMAIL_FROM: "demo@humanix.local"
       # Scaleway TEM — vide en demo, le code retombe en mode "simulated"
       SCALEWAY_TEM_TOKEN: ""

@@ -11,9 +11,16 @@ type Props = {
   planName: string;
   /** Nb max de sièges du tier (UI : limite haute du selecteur). Null = no cap. */
   maxSeats: number | null;
+  /** Si true : copie adaptee (pas de paiement Payplug, auto-login direct). */
+  devMode?: boolean;
 };
 
-export default function SouscrireForm({ planId, planName, maxSeats }: Props) {
+export default function SouscrireForm({
+  planId,
+  planName,
+  maxSeats,
+  devMode = false,
+}: Props) {
   const [email, setEmail] = useState("");
   const [organization, setOrganization] = useState("");
   const [seats, setSeats] = useState<string>("");
@@ -100,8 +107,9 @@ export default function SouscrireForm({ planId, planName, maxSeats }: Props) {
           className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none"
         />
         <p className="text-xs text-gray-500 mt-1">
-          Vous recevrez un lien magique sur cet email après paiement pour
-          accéder à votre console admin.
+          {devMode
+            ? "DEV_MODE actif : pas d'email envoyé, auto-login immédiat sur /admin."
+            : "Vous recevrez un lien magique sur cet email après paiement pour accéder à votre console admin."}
         </p>
       </div>
 
@@ -144,11 +152,19 @@ export default function SouscrireForm({ planId, planName, maxSeats }: Props) {
         disabled={pending || !email || !organization}
         className="btn-primary w-full"
       >
-        {pending ? "Préparation du paiement…" : "Continuer vers le paiement"}
+        {pending
+          ? devMode
+            ? "Provisioning…"
+            : "Préparation du paiement…"
+          : devMode
+            ? "Provisionner et entrer (DEV_MODE)"
+            : "Continuer vers le paiement"}
       </button>
 
       <p className="text-xs text-gray-500 text-center">
-        Paiement sécurisé Payplug 🇫🇷 · CB / SEPA · résiliable à tout moment.
+        {devMode
+          ? "🛠️ DEV_MODE : tenant + ADMIN créés sans appel Payplug."
+          : "Paiement sécurisé Payplug 🇫🇷 · CB / SEPA · résiliable à tout moment."}
       </p>
     </form>
   );
