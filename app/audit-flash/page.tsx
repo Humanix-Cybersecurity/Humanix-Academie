@@ -23,15 +23,21 @@ import HexBackdrop from "@/components/HexBackdrop";
 import AuditWizard from "./AuditWizard";
 
 export const metadata: Metadata = {
-  title: "Audit Cyber Flash gratuit en 5 minutes | HumaniX Académie",
+  title: "Audit Cyber Flash gratuit en 5 minutes | Humanix Académie",
   description:
     "Faites le point sur votre cybersécurité PME en 5 minutes. 15 questions, un rapport PDF avec vos forces, vos 3 leviers prioritaires et une feuille de route concrète. 100 % gratuit, sans relance commerciale.",
   alternates: { canonical: "/audit-flash" },
   openGraph: {
-    title: "Audit Cyber Flash gratuit pour PME - HumaniX",
+    title: "Audit Cyber Flash gratuit pour PME — Humanix",
     description:
       "Une photo bienveillante de votre maturité cyber. Score, leviers, feuille de route, conformité NIS2. En 5 minutes. Made in France.",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Audit Cyber Flash gratuit en 5 minutes — Humanix",
+    description:
+      "Pas un examen. Une photo bienveillante de votre maturité cyber, avec un PDF reçu par mail.",
   },
 };
 
