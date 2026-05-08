@@ -5,19 +5,22 @@
 // Objectif : centraliser la logique "que peut faire ce tenant aujourd'hui"
 // pour que UI + middleware + API repondent de facon coherente.
 //
-// MODELE HYBRIDE (decision projet, mai 2026) :
+// MODELE (mai 2026, vente directe sans essai gratuit) :
 //   active        Tenant paie, tout est ouvert
-//   trialing      En periode d'essai, tout est ouvert + countdown UI
-//   trial_expired Trial termine sans paiement -> read-only 30j puis suspend
 //   grace_period  Paiement echoue depuis < 7j -> tout est ouvert + warning
-//   read_only     Paiement echoue depuis 7j+ OU trial expire -> read-only 30j
+//   read_only     Paiement echoue depuis 7j+ -> read-only 30j
 //   suspended     > 30j de read-only sans renew -> login bloque, redirect /admin/billing
 //   none          Pas de subscription, tenant fraichement cree (rare, dev)
+//
+// HISTORIQUE :
+// Les etats `trialing` et `trial_expired` ont existe (essai gratuit 30j),
+// retires quand on est passe a la vente directe sans essai. Si un tenant
+// legacy a encore subscriptionStatus='trialing' en BDD, il est traite comme
+// 'active' (lecture defensive). La migration Prisma rebascule au passage.
 //
 // PERIODES :
 //   GRACE_PERIOD_DAYS = 7        (paiement echoue : tolere)
 //   READ_ONLY_PERIOD_DAYS = 30   (read-only : derniere chance avant suspend)
-//   TRIAL_DAYS = 30              (trial initial)
 
 import { db } from "@/lib/db";
 import { normalizePlan, type PlanId } from "@/lib/plans";
@@ -27,8 +30,6 @@ export const READ_ONLY_PERIOD_DAYS = 30;
 
 export type SubscriptionStateName =
   | "active"
-  | "trialing"
-  | "trial_expired"
   | "grace_period"
   | "read_only"
   | "suspended"
@@ -55,8 +56,6 @@ export type SubscriptionState = {
   cta: "renew" | "upgrade" | "contact_support" | null;
   /** Date de fin de periode courante (renouvellement / coupure). */
   currentPeriodEnd: Date | null;
-  /** Date de fin du trial. */
-  trialEndsAt: Date | null;
 };
 
 function daysBetween(from: Date, to: Date): number {
@@ -78,72 +77,29 @@ export async function getSubscriptionState(
       plan: true,
       subscriptionStatus: true,
       currentPeriodEnd: true,
-      trialEndsAt: true,
     },
   });
 
   if (!tenant) {
     return {
       state: "none",
-      plan: "trial",
+      plan: "decouverte",
       rawStatus: null,
       restriction: "blocked",
       daysLeft: null,
       cta: "contact_support",
       currentPeriodEnd: null,
-      trialEndsAt: null,
     };
   }
 
   const plan = normalizePlan(tenant.plan);
   const rawStatus = tenant.subscriptionStatus;
   const periodEnd = tenant.currentPeriodEnd;
-  const trialEnd = tenant.trialEndsAt;
 
-  // === 1. Trial actif ===
-  if (rawStatus === "trialing" || (plan === "trial" && trialEnd && trialEnd > now)) {
-    const daysLeft = trialEnd ? daysBetween(now, trialEnd) : null;
-    return {
-      state: "trialing",
-      plan,
-      rawStatus,
-      restriction: "none",
-      daysLeft,
-      cta: daysLeft !== null && daysLeft <= 7 ? "upgrade" : null,
-      currentPeriodEnd: periodEnd,
-      trialEndsAt: trialEnd,
-    };
-  }
-
-  // === 2. Trial expire (pas encore upgrade) ===
-  if (plan === "trial" && trialEnd && trialEnd <= now) {
-    const daysSinceExpired = daysBetween(trialEnd, now);
-    if (daysSinceExpired > READ_ONLY_PERIOD_DAYS) {
-      return {
-        state: "suspended",
-        plan,
-        rawStatus,
-        restriction: "blocked",
-        daysLeft: null,
-        cta: "upgrade",
-        currentPeriodEnd: periodEnd,
-        trialEndsAt: trialEnd,
-      };
-    }
-    return {
-      state: "trial_expired",
-      plan,
-      rawStatus,
-      restriction: "read_only",
-      daysLeft: READ_ONLY_PERIOD_DAYS - daysSinceExpired,
-      cta: "upgrade",
-      currentPeriodEnd: periodEnd,
-      trialEndsAt: trialEnd,
-    };
-  }
-
-  // === 3. Subscription active ===
-  if (rawStatus === "active") {
+  // === 1. Subscription active (et tolerance pour le legacy "trialing") ===
+  // Anciens tenants encore en status="trialing" : on les traite comme active.
+  // La migration les rebascule, mais ceinture + bretelles cote lecture.
+  if (rawStatus === "active" || rawStatus === "trialing") {
     const daysLeft = periodEnd ? daysBetween(now, periodEnd) : null;
     return {
       state: "active",
@@ -153,11 +109,10 @@ export async function getSubscriptionState(
       daysLeft,
       cta: null,
       currentPeriodEnd: periodEnd,
-      trialEndsAt: trialEnd,
     };
   }
 
-  // === 4. past_due / payment failed -> grace period 7j ===
+  // === 2. past_due / payment failed -> grace period 7j ===
   if (rawStatus === "past_due" || rawStatus === "incomplete") {
     if (!periodEnd) {
       return {
@@ -168,7 +123,6 @@ export async function getSubscriptionState(
         daysLeft: GRACE_PERIOD_DAYS,
         cta: "renew",
         currentPeriodEnd: periodEnd,
-        trialEndsAt: trialEnd,
       };
     }
     const daysSinceFailed = daysBetween(periodEnd, now);
@@ -181,7 +135,6 @@ export async function getSubscriptionState(
         daysLeft: GRACE_PERIOD_DAYS - daysSinceFailed,
         cta: "renew",
         currentPeriodEnd: periodEnd,
-        trialEndsAt: trialEnd,
       };
     }
     if (daysSinceFailed <= GRACE_PERIOD_DAYS + READ_ONLY_PERIOD_DAYS) {
@@ -194,7 +147,6 @@ export async function getSubscriptionState(
           GRACE_PERIOD_DAYS + READ_ONLY_PERIOD_DAYS - daysSinceFailed,
         cta: "renew",
         currentPeriodEnd: periodEnd,
-        trialEndsAt: trialEnd,
       };
     }
     return {
@@ -205,11 +157,10 @@ export async function getSubscriptionState(
       daysLeft: null,
       cta: "renew",
       currentPeriodEnd: periodEnd,
-      trialEndsAt: trialEnd,
     };
   }
 
-  // === 5. canceled / unpaid -> suspendu ===
+  // === 3. canceled / unpaid -> suspendu ===
   if (rawStatus === "canceled" || rawStatus === "unpaid") {
     return {
       state: "suspended",
@@ -219,11 +170,10 @@ export async function getSubscriptionState(
       daysLeft: null,
       cta: "renew",
       currentPeriodEnd: periodEnd,
-      trialEndsAt: trialEnd,
     };
   }
 
-  // === 6. Plan gratuit "decouverte" forever-free, pas de subscription Payplug ===
+  // === 4. Plan gratuit "decouverte" forever-free, pas de subscription Payplug ===
   if (plan === "decouverte" && !rawStatus) {
     return {
       state: "active",
@@ -233,11 +183,10 @@ export async function getSubscriptionState(
       daysLeft: null,
       cta: null,
       currentPeriodEnd: null,
-      trialEndsAt: null,
     };
   }
 
-  // === 7. Default fallback : tenant en etat inconnu, on warn ===
+  // === 5. Default fallback : tenant en etat inconnu, on warn ===
   return {
     state: "none",
     plan,
@@ -246,7 +195,6 @@ export async function getSubscriptionState(
     daysLeft: null,
     cta: "contact_support",
     currentPeriodEnd: periodEnd,
-    trialEndsAt: trialEnd,
   };
 }
 
