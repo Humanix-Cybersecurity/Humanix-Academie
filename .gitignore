@@ -80,10 +80,27 @@ __pycache__/
 # Runtime cache cyber-meteo (regenere a la demande)
 .meteo-cache/
 
+# TTS premium cache : MP3 generes par `npm run tts:build` (regenerable depuis
+# le manifest, ~50-100 Mo). Le manifest.json EST commit pour la prod.
+data/tts-cache/**/*.mp3
+data/tts-cache/[0-9a-f][0-9a-f]/
+
+# Ancien cache Piper (avant bascule Voxtral mai 2026) -- a supprimer si encore present
+.tts-cache/
+
 # node_modules dans workspaces nested
 **/node_modules
 
 # Cle privee Ed25519 pour licences (jamais commit)
 humanix-license-keypair.json
 *.private.pem
+
+# TTS cache : MP3 generes par `npm run tts:build` (regenerable depuis le
+# manifest, ~80-100 Mo). Le manifest.json EST commit pour la prod (texte
+# ~30 Ko, source de verite des hashes). Les MP3 eux-memes sont gitignored.
+data/tts-cache/**/*.mp3
+data/tts-cache/[0-9a-f][0-9a-f]/
+
+# Ancien cache Piper (avant bascule Voxtral mai 2026)
+.tts-cache/
 
