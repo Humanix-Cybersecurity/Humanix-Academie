@@ -33,7 +33,8 @@ import type { PlanId } from "@/lib/plans";
 export type ProvisionSource =
   | "payplug-webhook"
   | "superadmin-manual"
-  | "demande-abonnement";
+  | "demande-abonnement"
+  | "dev-mode";
 
 export type ProvisionResult =
   | { ok: true; tenantId: string; userId: string; created: boolean }
