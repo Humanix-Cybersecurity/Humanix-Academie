@@ -110,9 +110,9 @@ Effet : `/signup` redirige automatiquement vers `/demande-abonnement`. Les appre
 
 À chaque soumission de `/demande-abonnement`, un email arrive sur cette adresse avec toutes les infos + un rappel CLI pour provisionner.
 
-### D.3 — Configuration Payplug (pour Phase 3b automatisée)
+### D.3 — Configuration Payplug (self-service automatique)
 
-> Optionnel — peut attendre post-launch. Sans cette config, le flow reste manuel via `/demande-abonnement` + `/superadmin`.
+> **Recommandé pré-launch** — sans cette config, `/souscrire` affiche un fallback gracieux qui renvoie vers `/demande-abonnement` (manuel founder).
 
 - [ ] Compte Payplug Pro : https://www.payplug.com/
 - [ ] Récupérer la **Secret Key** (Settings → API keys)
@@ -130,11 +130,18 @@ Effet : `/signup` redirige automatiquement vers `/demande-abonnement`. Les appre
   PAYPLUG_PLAN_PRO="<plan_id>"
   ```
 
-Une fois ces variables posées :
-- Le webhook gère les events de souscription/résiliation.
-- **Cas paiement anonyme via `/tarifs`** (Phase 3b) : le webhook détecte qu'aucun tenant ne correspond au `customer_id`, fetche l'email via l'API Payplug, et provisionne un tenant + ADMIN automatiquement (cf. `lib/tenant-provisioning.ts`). Un magic link de bienvenue part vers le client.
+Une fois ces variables posées, **le flow self-service est entièrement automatique** :
 
-> **Phase 3b à câbler côté front** : la page `/tarifs` doit envoyer les CTAs "S'abonner" vers un endpoint anonyme `POST /api/payments/checkout/start` (à créer si pas déjà là). Tant que ce n'est pas fait, les paiements automatiques ne sont pas déclenchés et le manuel reste la seule voie.
+1. User sur `/tarifs` clique sur le CTA d'un plan (Solo / Essentielle / Pro).
+2. Page `/souscrire?plan=X` → form (email + organisation + sièges estimés).
+3. POST `/api/payments/checkout/start` → crée Payplug Customer + Subscription anonyme.
+4. User redirigé sur la page Payplug, paye.
+5. Webhook `subscription.created` → fetche l'email via API Payplug → `provisionTenantWithAdmin` crée tenant + ADMIN → magic link envoyé.
+6. User clic le lien dans son mail → atterrit sur `/admin`.
+
+**Aucune intervention humaine côté Humanix dans ce parcours.**
+
+`/demande-abonnement` reste la voie pour les cas particuliers : +250 sièges, instance dédiée, SecNumCloud, white-label.
 
 ---
 
@@ -246,8 +253,8 @@ psql $DATABASE_URL -c "SELECT email, role FROM \"User\" WHERE role='SUPERADMIN';
 
 ## J. À ajouter post-launch
 
-- [ ] Phase 3b : front-end `/tarifs` câblé sur `/api/payments/checkout/start` (anonymous Payplug Checkout)
 - [ ] Phase 4 : redirect post-login par rôle (LEARNER → `/apprendre`, ADMIN+ → `/admin`)
 - [ ] Phase 5 : transfert d'un LEARNER Communauté vers un tenant payant qui l'invite (UX : un click "Rejoindre l'équipe X")
 - [ ] Renouvellement automatique du JWT Apple (cron tous les 5 mois)
 - [ ] Job de purge `BillingEvent` > 13 mois (RGPD)
+- [ ] Per-seat billing fin (aujourd'hui : forfait par tier, le seat count saisi est en metadata pour reconciliation manuelle si débordement)
