@@ -77,6 +77,21 @@ export async function createDecouverteAccount(
     };
   }
 
+  // VERROU PHASE 3 — modèle d'accès 3-layer : un tenant n'est créé QUE
+  // pour une organisation qui souscrit un abonnement payant. Les apprenants
+  // gratuits passent par /inscription (tenant Communauté, role LEARNER).
+  // Les organisations qui veulent un tenant payant passent par
+  // /demande-abonnement (manuel pour l'instant, Payplug auto en Phase 3b).
+  // Cf. docs/DEPLOYMENT_RUNBOOK.md
+  if (process.env.SIGNUP_ALLOW_SELF_SERVICE !== "true") {
+    return {
+      ok: false,
+      error:
+        "L'inscription self-service avec création de tenant est désactivée. " +
+        "Pour apprendre gratuitement : /inscription. Pour un abonnement entreprise : /demande-abonnement.",
+    };
+  }
+
   // ----------------------------
   // 1. Honeypot anti-bot
   // ----------------------------

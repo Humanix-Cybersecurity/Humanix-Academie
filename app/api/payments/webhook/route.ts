@@ -15,8 +15,11 @@ import {
   verifyWebhookSignature,
   PAYPLUG_SIGNATURE_HEADER,
   tierFromPayplugPlanId,
+  getCustomer,
   type PayplugWebhookEvent,
 } from "@/lib/payplug";
+import { provisionTenantWithAdmin } from "@/lib/tenant-provisioning";
+import { signIn } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -65,11 +68,76 @@ export async function POST(req: Request) {
       case "subscription.created":
       case "subscription.updated":
       case "subscription.activated": {
+        const planId =
+          (obj?.subscription_plan_id as string | undefined) ??
+          (obj?.plan_id as string | undefined);
+        const newTier = planId ? tierFromPayplugPlanId(planId) : null;
+
+        // Cas Phase 3b : pas de tenant existant pour ce customer = paiement
+        // anonyme via /tarifs (Payplug Checkout sans auth préalable). On
+        // provisionne un tenant + ADMIN à la volée + magic link de bienvenue.
+        // Pré-requis : le payload contient customer_id ; on récupère l'email
+        // via Payplug API (les events webhook ne portent pas l'email).
+        if (
+          !tenantId &&
+          event.type === "subscription.created" &&
+          newTier &&
+          typeof obj?.customer_id === "string"
+        ) {
+          const customer = await getCustomer(obj.customer_id as string);
+          const email = customer?.email?.trim().toLowerCase();
+          // organization name : metadata > customer last_name > "Nouvelle entreprise"
+          const orgName =
+            metadata.organization ??
+            (customer?.last_name && customer?.first_name
+              ? `${customer.first_name} ${customer.last_name}`.trim()
+              : null) ??
+            "Nouvelle entreprise";
+          if (email) {
+            const result = await provisionTenantWithAdmin({
+              email,
+              organizationName: orgName,
+              plan: newTier,
+              adminName: customer?.first_name ?? undefined,
+              paymentCustomerId: obj.customer_id as string,
+              paymentSubscriptionId: (obj?.id as string) ?? undefined,
+              source: "payplug-webhook",
+            });
+            if (result.ok) {
+              tenantId = result.tenantId;
+              if (result.created) {
+                // Magic link de bienvenue : signIn nodemailer envoie
+                // l'email via Scaleway TEM. Le user click → atterrit sur
+                // /admin (post-login redirect par rôle, Phase 4).
+                try {
+                  await signIn("nodemailer", {
+                    email,
+                    redirect: false,
+                    redirectTo: "/admin",
+                  });
+                } catch (e) {
+                  // Non-bloquant : l'admin peut récupérer son accès via
+                  // /connexion → magic link manuel.
+                  console.error(
+                    "[webhook] welcome magic link send failed (non-blocking)",
+                    e,
+                  );
+                }
+              }
+              status = "applied";
+            } else {
+              errorMessage = `provisioning_failed:${result.reason}`;
+              status = "error";
+            }
+          } else {
+            errorMessage = "customer_email_unresolved";
+            status = "error";
+          }
+          break;
+        }
+
+        // Cas usuel : tenant existant, on met à jour l'état billing.
         if (tenantId) {
-          const planId =
-            (obj?.subscription_plan_id as string | undefined) ??
-            (obj?.plan_id as string | undefined);
-          const newTier = planId ? tierFromPayplugPlanId(planId) : null;
           await db.tenant.update({
             where: { id: tenantId },
             data: {
