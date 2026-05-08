@@ -29,6 +29,11 @@ import {
   startMagicLinkInscription,
 } from "./actions";
 
+// force-dynamic : meme rationale que /demo/layout.tsx. La decision
+// de rediriger vers /demo depend de DEMO_MODE qui n'est pas set au build,
+// donc on doit evaluer a runtime.
+export const dynamic = "force-dynamic";
+
 const isDemoMode = process.env.DEMO_MODE === "true";
 
 type InscriptionErrorCode = "invalid_email" | "invalid_provider";
