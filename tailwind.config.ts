@@ -70,13 +70,15 @@ const config: Config = {
         warn: "#C0392B",
       },
       fontFamily: {
-        // Polices accessibles, gratuites et larges, self-host via next/font
-        // (variables CSS définies dans app/layout.tsx).
-        sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
+        // Polices accessibles, gratuites et larges, self-host via Fontsource
+        // (CSS @font-face importés dans app/layout.tsx, woff2 dans node_modules).
+        // Les noms de famille référencent les declarations Fontsource :
+        //   - "Inter Variable" (poids 100-900 dans 1 fichier variable)
+        //   - "Atkinson Hyperlegible" (poids 400 + 700 statiques)
+        sans: ["Inter Variable", "Inter", "system-ui", "sans-serif"],
         display: [
-          "var(--font-atkinson)",
           "Atkinson Hyperlegible",
-          "var(--font-inter)",
+          "Inter Variable",
           "Inter",
           "system-ui",
           "sans-serif",
