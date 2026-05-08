@@ -102,19 +102,28 @@ export async function startMfaEnrollment(): Promise<{
   otpauthUri?: string;
   error?: string;
 }> {
-  const { userId, email } = await requireAuth();
-  const secret = generateTotpSecret();
-  // On stocke le secret en pending (mfaSecret set, mfaEnabled toujours false)
-  await db.user.update({
-    where: { id: userId },
-    data: { mfaSecret: secret, mfaEnabled: false },
-  });
-  const uri = buildOtpAuthUri({
-    secret,
-    accountName: email,
-    issuer: ISSUER,
-  });
-  return { ok: true, secret, otpauthUri: uri };
+  try {
+    const { userId, email } = await requireAuth();
+    const secret = generateTotpSecret();
+    // On stocke le secret en pending (mfaSecret set, mfaEnabled toujours false)
+    await db.user.update({
+      where: { id: userId },
+      data: { mfaSecret: secret, mfaEnabled: false },
+    });
+    const uri = buildOtpAuthUri({
+      secret,
+      accountName: email,
+      issuer: ISSUER,
+    });
+    return { ok: true, secret, otpauthUri: uri };
+  } catch (e) {
+    console.error("[mfa] startMfaEnrollment failed", e);
+    return {
+      ok: false,
+      error:
+        "Impossible de préparer la 2FA. Réessaye, ou contacte le support si ça persiste.",
+    };
+  }
 }
 
 // ----------------------------------------------------
@@ -125,37 +134,63 @@ export async function confirmMfaEnrollment(formData: FormData): Promise<{
   backupCodes?: string[];
   error?: string;
 }> {
-  const { userId } = await requireAuth();
-  const code = String(formData.get("code") ?? "").trim();
-  const user = await db.user.findUnique({
-    where: { id: userId },
-    select: { mfaSecret: true, mfaEnabled: true },
-  });
-  if (!user?.mfaSecret) {
-    return { ok: false, error: "Aucun enrôlement en cours." };
+  try {
+    const { userId, email, role, tenantId } = await requireAuth();
+    const code = String(formData.get("code") ?? "").trim();
+    if (!code) {
+      return { ok: false, error: "Saisissez le code à 6 chiffres." };
+    }
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      select: { mfaSecret: true, mfaEnabled: true },
+    });
+    if (!user?.mfaSecret) {
+      return {
+        ok: false,
+        error:
+          "Aucun enrôlement en cours. Cliquez à nouveau sur « Activer la 2FA » pour générer un QR code.",
+      };
+    }
+    if (!verifyTotpCode(user.mfaSecret, code)) {
+      return {
+        ok: false,
+        error:
+          "Code invalide. Vérifiez l'heure de votre téléphone (doit être synchronisée à ±1 min) puis réessayez.",
+      };
+    }
+    const { plain, hashedJson } = generateBackupCodes(10);
+    await db.user.update({
+      where: { id: userId },
+      data: {
+        mfaEnabled: true,
+        mfaEnabledAt: new Date(),
+        mfaBackupCodesHash: hashedJson,
+      },
+    });
+    // Audit log : la table est déjà résiliente (try/catch interne), mais on
+    // capture quand même pour ne JAMAIS laisser un échec de log faire échouer
+    // l'activation 2FA elle-même. Cf. lib/audit.ts.
+    try {
+      await auditLog({
+        action: AuditActions.USER_MFA_ENABLED,
+        actor: { userId, email, role },
+        tenantId,
+        target: { type: "user", id: userId, label: email },
+        message: "Activation TOTP + 10 codes de secours generes",
+      });
+    } catch (e) {
+      console.error("[mfa] audit log failed (non-blocking)", e);
+    }
+    revalidatePath("/profil/securite");
+    return { ok: true, backupCodes: plain };
+  } catch (e) {
+    console.error("[mfa] confirmMfaEnrollment failed", e);
+    return {
+      ok: false,
+      error:
+        "Échec de l'activation. Recharge la page et réessaye un nouveau code.",
+    };
   }
-  if (!verifyTotpCode(user.mfaSecret, code)) {
-    return { ok: false, error: "Code invalide." };
-  }
-  const { plain, hashedJson } = generateBackupCodes(10);
-  const ctx = await requireAuth();
-  await db.user.update({
-    where: { id: userId },
-    data: {
-      mfaEnabled: true,
-      mfaEnabledAt: new Date(),
-      mfaBackupCodesHash: hashedJson,
-    },
-  });
-  await auditLog({
-    action: AuditActions.USER_MFA_ENABLED,
-    actor: { userId, email: ctx.email, role: ctx.role },
-    tenantId: ctx.tenantId,
-    target: { type: "user", id: userId, label: ctx.email },
-    message: "Activation TOTP + 10 codes de secours generes",
-  });
-  revalidatePath("/profil/securite");
-  return { ok: true, backupCodes: plain };
 }
 
 // ----------------------------------------------------
@@ -165,43 +200,60 @@ export async function disableMfa(formData: FormData): Promise<{
   ok: boolean;
   error?: string;
 }> {
-  const { userId } = await requireAuth();
-  const password = String(formData.get("password") ?? "");
-  const user = await db.user.findUnique({
-    where: { id: userId },
-    select: { passwordHash: true, mfaForced: true },
-  });
-  if (!user) return { ok: false, error: "Compte introuvable." };
-  if (user.mfaForced) {
+  try {
+    const { userId, email, role, tenantId } = await requireAuth();
+    const password = String(formData.get("password") ?? "");
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      select: { passwordHash: true, mfaForced: true },
+    });
+    if (!user) return { ok: false, error: "Compte introuvable." };
+    if (user.mfaForced) {
+      return {
+        ok: false,
+        error:
+          "La 2FA est imposée par votre administrateur et ne peut pas être désactivée.",
+      };
+    }
+    // Si l'user a un mdp, on l'exige (anti-cession de session ouverte).
+    // Si l'user est SSO-only (passwordHash null), on accepte la désactivation
+    // sur simple confirmation : le canal d'auth (Google/Apple/Microsoft) a
+    // déjà son propre MFA côté provider, et il n'y a pas de "current password"
+    // à vérifier.
+    if (user.passwordHash) {
+      if (!verifyPassword(password, user.passwordHash)) {
+        return { ok: false, error: "Mot de passe incorrect." };
+      }
+    }
+    await db.user.update({
+      where: { id: userId },
+      data: {
+        mfaSecret: null,
+        mfaEnabled: false,
+        mfaEnabledAt: null,
+        mfaBackupCodesHash: null,
+      },
+    });
+    try {
+      await auditLog({
+        action: AuditActions.USER_MFA_DISABLED,
+        actor: { userId, email, role },
+        tenantId,
+        target: { type: "user", id: userId, label: email },
+      });
+    } catch (e) {
+      console.error("[mfa] audit log failed (non-blocking)", e);
+    }
+    revalidatePath("/profil/securite");
+    return { ok: true };
+  } catch (e) {
+    console.error("[mfa] disableMfa failed", e);
     return {
       ok: false,
       error:
-        "La 2FA est imposée par votre administrateur et ne peut pas être désactivée.",
+        "Échec de la désactivation. Recharge la page et réessaye, ou contacte le support.",
     };
   }
-  if (user.passwordHash) {
-    if (!verifyPassword(password, user.passwordHash)) {
-      return { ok: false, error: "Mot de passe incorrect." };
-    }
-  }
-  await db.user.update({
-    where: { id: userId },
-    data: {
-      mfaSecret: null,
-      mfaEnabled: false,
-      mfaEnabledAt: null,
-      mfaBackupCodesHash: null,
-    },
-  });
-  const ctxDis = await requireAuth();
-  await auditLog({
-    action: AuditActions.USER_MFA_DISABLED,
-    actor: { userId, email: ctxDis.email, role: ctxDis.role },
-    tenantId: ctxDis.tenantId,
-    target: { type: "user", id: userId, label: ctxDis.email },
-  });
-  revalidatePath("/profil/securite");
-  return { ok: true };
 }
 
 // ----------------------------------------------------
@@ -212,20 +264,29 @@ export async function regenerateBackupCodes(): Promise<{
   backupCodes?: string[];
   error?: string;
 }> {
-  const { userId } = await requireAuth();
-  const user = await db.user.findUnique({
-    where: { id: userId },
-    select: { mfaEnabled: true },
-  });
-  if (!user?.mfaEnabled) {
-    return { ok: false, error: "2FA non activée." };
+  try {
+    const { userId } = await requireAuth();
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      select: { mfaEnabled: true },
+    });
+    if (!user?.mfaEnabled) {
+      return { ok: false, error: "2FA non activée." };
+    }
+    const { plain, hashedJson } = generateBackupCodes(10);
+    await db.user.update({
+      where: { id: userId },
+      data: { mfaBackupCodesHash: hashedJson },
+    });
+    return { ok: true, backupCodes: plain };
+  } catch (e) {
+    console.error("[mfa] regenerateBackupCodes failed", e);
+    return {
+      ok: false,
+      error:
+        "Échec de la regénération des codes. Recharge la page et réessaye.",
+    };
   }
-  const { plain, hashedJson } = generateBackupCodes(10);
-  await db.user.update({
-    where: { id: userId },
-    data: { mfaBackupCodesHash: hashedJson },
-  });
-  return { ok: true, backupCodes: plain };
 }
 
 // ----------------------------------------------------
