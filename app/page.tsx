@@ -98,16 +98,16 @@ export default async function HomePage() {
               style={{ animationDelay: "420ms" }}
             >
               <Link
-                href="/signup?plan=decouverte"
+                href="/inscription"
                 className="btn-primary text-lg px-8 py-4 animate-glow"
               >
                 Créer mon compte gratuit
               </Link>
               <Link
-                href="/signup?plan=trial"
+                href="/tarifs"
                 className="btn-secondary text-lg px-8 py-4"
               >
-                Essai 14 jours, sans CB
+                Voir les offres payantes
               </Link>
             </div>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 italic text-center">

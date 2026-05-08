@@ -39,7 +39,17 @@ export const metadata = {
   },
 };
 
-export default function TarifsPage() {
+type BillingCycle = "monthly" | "annual";
+
+export default async function TarifsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ billing?: string }>;
+}) {
+  const params = await searchParams;
+  const billing: BillingCycle =
+    params.billing === "annual" ? "annual" : "monthly";
+
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* =====================================================================
@@ -148,7 +158,7 @@ export default function TarifsPage() {
           - xl : 6 cols (1 ligne) - uniquement sur très grand écran
           ===================================================================== */}
       <section className="mb-16">
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <h2 className="text-3xl font-extrabold text-primary-500 mb-2">
             Choisis ton offre
           </h2>
@@ -157,14 +167,61 @@ export default function TarifsPage() {
             pénalité.
           </p>
         </div>
+
+        {/* === Toggle mensuel / annuel === */}
+        <div className="flex justify-center mb-8">
+          <div
+            role="tablist"
+            aria-label="Choix de la facturation"
+            className="inline-flex items-center gap-1 rounded-2xl border-2 border-gray-200 bg-white p-1 shadow-sm"
+          >
+            <Link
+              role="tab"
+              aria-selected={billing === "monthly"}
+              href="/tarifs?billing=monthly"
+              scroll={false}
+              className={`px-4 sm:px-5 py-2 rounded-xl text-sm font-bold transition-colors ${
+                billing === "monthly"
+                  ? "bg-primary-500 text-white shadow-sm"
+                  : "text-gray-700 hover:text-primary-500"
+              }`}
+            >
+              Mensuel · sans engagement
+            </Link>
+            <Link
+              role="tab"
+              aria-selected={billing === "annual"}
+              href="/tarifs?billing=annual"
+              scroll={false}
+              className={`relative px-4 sm:px-5 py-2 rounded-xl text-sm font-bold transition-colors ${
+                billing === "annual"
+                  ? "bg-primary-500 text-white shadow-sm"
+                  : "text-gray-700 hover:text-primary-500"
+              }`}
+            >
+              Annuel
+              <span
+                className={`ml-1.5 inline-block rounded-full px-2 py-0.5 text-[10px] font-extrabold ${
+                  billing === "annual"
+                    ? "bg-white text-primary-600"
+                    : "bg-success/10 text-success"
+                }`}
+              >
+                jusqu&apos;à −21 %
+              </span>
+            </Link>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {TIERS.map((t) => (
-            <PricingCard key={t.id} tier={t} />
+            <PricingCard key={t.id} tier={t} billing={billing} />
           ))}
         </div>
         <p className="text-xs text-center text-gray-500 mt-6">
-          Tous les prix sont HT. Facturation mensuelle ou annuelle au choix. Pas
-          d'engagement minimum.
+          Tous les prix sont HT. Vente directe sans essai gratuit (la{" "}
+          <Link href="/demo" className="underline">démo</Link> remplit ce rôle).
+          Mensuel résiliable à tout moment, annuel = engagement 12 mois.
         </p>
       </section>
 
@@ -545,10 +602,18 @@ export default function TarifsPage() {
             service expert payant. Modèle éprouvé qui finance durablement le
             développement.
           </Faq>
-          <Faq question="Y a-t-il un essai gratuit du cloud payant ?">
-            Oui, 30 jours pour les paliers Starter, Essentielle et Pro. Pas de
-            carte bancaire à fournir, accès complet aux fonctionnalités. Tu
-            choisis ou non de continuer à la fin.
+          <Faq question="Comment tester avant de payer ?">
+            Pas d&apos;essai gratuit sur les paliers payants : la{" "}
+            <Link href="/demo" className="underline">
+              démo en ligne
+            </Link>{" "}
+            (comptes pré-remplis, données fictives) couvre déjà ce besoin.
+            Pour la version libre,{" "}
+            <Link href="/inscription" className="underline">
+              le plan Découverte
+            </Link>{" "}
+            est forever-free 5 sièges. Au-delà : vente directe (mensuel sans
+            engagement ou annuel −17 à −21 %).
           </Faq>
           <Faq question="Mes données sont-elles hébergées en France ?">
             Hébergement Union Européenne par défaut (Paris ou Roubaix selon
@@ -660,7 +725,13 @@ export default function TarifsPage() {
 // SOUS-COMPOSANTS
 // =============================================================================
 
-function PricingCard({ tier: t }: { tier: PricingTier }) {
+function PricingCard({
+  tier: t,
+  billing,
+}: {
+  tier: PricingTier;
+  billing: BillingCycle;
+}) {
   // Détermine la couleur du badge selon le type de tier
   const badge = t.selfHostOnly
     ? { label: "Open Source", color: "bg-purple-100 text-purple-700" }
@@ -669,6 +740,11 @@ function PricingCard({ tier: t }: { tier: PricingTier }) {
       : t.highlight
         ? { label: "⭐ Le plus populaire", color: "bg-accent-500 text-white" }
         : null;
+
+  // Selectionne le prix a afficher selon le cycle. Pour les tiers gratuits
+  // / sur devis on garde l'unique display existant.
+  const activePricing = t.pricing[billing];
+  const altPricing = t.pricing[billing === "monthly" ? "annual" : "monthly"];
 
   return (
     <article
@@ -693,16 +769,21 @@ function PricingCard({ tier: t }: { tier: PricingTier }) {
       </p>
 
       <div className="mb-4 pb-4 border-b border-gray-100">
-        {t.pricing.monthly.amount === null ? (
+        {activePricing.amount === null ? (
           <p className="text-2xl font-extrabold text-primary-500">Sur devis</p>
         ) : (
           <>
             <p className="text-2xl font-extrabold text-primary-500">
-              {t.pricing.monthly.display}
+              {activePricing.display}
             </p>
-            {t.pricing.annual.saving && (
+            {billing === "annual" && activePricing.saving && (
               <p className="text-xs text-success font-bold mt-1">
-                ou {t.pricing.annual.display} ({t.pricing.annual.saving})
+                {activePricing.saving}
+              </p>
+            )}
+            {billing === "monthly" && altPricing.saving && (
+              <p className="text-xs text-gray-500 mt-1">
+                ou {altPricing.display} en annuel
               </p>
             )}
           </>
@@ -725,12 +806,18 @@ function PricingCard({ tier: t }: { tier: PricingTier }) {
         ))}
       </ul>
 
-      <CtaButton tier={t} />
+      <CtaButton tier={t} billing={billing} />
     </article>
   );
 }
 
-function CtaButton({ tier: t }: { tier: PricingTier }) {
+function CtaButton({
+  tier: t,
+  billing,
+}: {
+  tier: PricingTier;
+  billing: BillingCycle;
+}) {
   const cls = t.highlight ? "btn-primary text-sm" : "btn-secondary text-sm";
 
   if (t.cta.type === "github") {
@@ -755,13 +842,18 @@ function CtaButton({ tier: t }: { tier: PricingTier }) {
       </Link>
     );
   }
-  if (t.cta.type === "trial") {
+  if (t.cta.type === "subscribe") {
     // Plans payants (Solo / Essentielle / Pro) self-service : flow Payplug
     // automatisé. /souscrire collecte email + organisation puis crée la
     // session Payplug. Le webhook back-end provisionne tenant + ADMIN +
     // magic link à la confirmation du paiement (Phase 3b).
+    // Le cycle (mensuel / annuel) est propage via la query string pour
+    // que /souscrire affiche la bonne offre et pousse au backend.
     return (
-      <Link href={`/souscrire?plan=${t.id}`} className={cls}>
+      <Link
+        href={`/souscrire?plan=${t.id}&billing=${billing}`}
+        className={cls}
+      >
         {t.cta.label}
       </Link>
     );
