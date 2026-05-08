@@ -15,7 +15,7 @@ import { readdir, readFile, stat } from "node:fs/promises";
 import { join } from "node:path";
 
 type Rule = {
-  /** Pattern regex à interdire dans les hrefs (sans les guillemets) */
+  /** Pattern regex à interdire (string-literal contenant l'URL) */
   pattern: RegExp;
   /** Description du problème pour l'erreur */
   reason: string;
@@ -25,7 +25,11 @@ type Rule = {
 
 const FORBIDDEN_PATTERNS: Rule[] = [
   {
-    pattern: /href=["']\/saisons\//,
+    // Matche "/saisons/..." dans n'importe quel string literal :
+    //   - href="/saisons/..."   (attribut JSX)
+    //   - href: "/saisons/..."  (propriété d'objet, ex: cta.href)
+    //   - any other string ref to a route that doesn't exist
+    pattern: /["'`]\/saisons\//,
     reason:
       '/saisons/ est le chemin du contenu source (content/saisons/), pas une route applicative.',
     fix: 'Remplacer "/saisons/" par "/apprendre/" (route Next.js : app/apprendre/[saison]/[episode]/page.tsx).',
@@ -34,6 +38,15 @@ const FORBIDDEN_PATTERNS: Rule[] = [
 
 const SCAN_DIRS = ["app", "components", "lib"];
 const FILE_EXT = /\.(tsx?|jsx?|mdx)$/;
+
+// Fichiers à exclure du scan : ils référencent légitimement des chemins
+// non-applicatifs (sitemap robots, redirections, etc.). Chemins relatifs
+// au project root, sensibles à la casse.
+const IGNORE_FILES = new Set<string>([
+  // robots.ts : Disallow /saisons/ pour empêcher les bots d'indexer cette URL
+  // qui n'existe pas comme route (légitime, c'est l'inverse du bug).
+  "app/robots.ts",
+]);
 
 type Hit = { file: string; line: number; snippet: string; rule: Rule };
 
@@ -62,6 +75,7 @@ async function main() {
       continue;
     }
     for (const file of files) {
+      if (IGNORE_FILES.has(file)) continue;
       const content = await readFile(file, "utf8");
       const lines = content.split("\n");
       lines.forEach((line, idx) => {
