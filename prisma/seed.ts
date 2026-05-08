@@ -132,18 +132,28 @@ const FAKE_USERS = [
 ];
 
 async function main() {
-  console.log("🌱 Seed Humanix Académie v0.3...");
+  // SECURITE : on isole strictement le contenu de demo (tenant demo-pme,
+  // 12 comptes fictifs sophie@/yanis@/..., progress, marketplace community)
+  // derriere le flag DEMO_MODE. En prod commerciale (DEMO_MODE != "true"),
+  // on seed UNIQUEMENT le contenu partage (saisons, shop, library, anecdotes).
+  // Cela evite que :
+  //   1. Un attaquant decouvre des comptes demo predictibles en prod (sophie@demo-pme.fr)
+  //   2. Une bdd de prod soit polluee par 12 fake users + tenant fictif
+  //   3. Le tenant "demo-pme" apparaisse dans les listes admin reelles
+  // Defense en profondeur :
+  //   - middleware.ts route les subdomains
+  //   - app/demo/layout.tsx renvoie 404 quand DEMO_MODE != "true"
+  //   - components/HeaderBar.tsx cache les CTAs demo
+  //   - app/demo/actions.ts assert DEMO_MODE
+  //   - prisma/seed.ts (ICI) skip les fixtures demo
+  const isDemoMode = process.env.DEMO_MODE === "true";
+  console.log(
+    `🌱 Seed Humanix Académie v0.3 (DEMO_MODE=${isDemoMode ? "ON" : "OFF"})...`,
+  );
 
-  // Plan initial : "essentielle" (le palier standard PME, montre la majorité
-  // des features sans verrou). L'utilisateur peut switcher en live depuis
-  // /demo pour tester Solo / Pro / Premium.
-  // En update on NE CHANGE PAS le plan : on respecte le dernier choix demo.
-  const tenant = await prisma.tenant.upsert({
-    where: { slug: "demo-pme" },
-    update: { name: "PME Démo" },
-    create: { slug: "demo-pme", name: "PME Démo", plan: "essentielle" },
-  });
-  console.log(`  Tenant ✓ (${tenant.slug})`);
+  // ====================================================================
+  // 1. CONTENU PARTAGE (toujours seede, demo ou prod)
+  // ====================================================================
 
   // Saisons + episodes : on charge tout depuis le catalogue externalise.
   // 25 saisons x ~6 episodes = 150 modules officiels.
@@ -202,6 +212,62 @@ async function main() {
     `  Saisons ✓ (${CATALOG_SAISONS.length} saisons / ${episodeRecords.size} episodes)`,
   );
 
+  // Catalogue boutique (global, pas de tenant -> partage par tous)
+  const shopItemsBySlug = new Map<string, any>();
+  for (const it of SHOP_CATALOG) {
+    const dbItem = await prisma.shopItem.upsert({
+      where: { slug: it.slug },
+      update: {
+        name: it.name,
+        emoji: it.emoji,
+        price: it.price,
+        minLevel: it.minLevel,
+        description: it.description,
+        rarity: it.rarity,
+      },
+      create: {
+        slug: it.slug,
+        name: it.name,
+        emoji: it.emoji,
+        category: it.category as ItemCategory,
+        price: it.price,
+        minLevel: it.minLevel,
+        description: it.description,
+        rarity: it.rarity,
+      },
+    });
+    shopItemsBySlug.set(it.slug, dbItem);
+  }
+  console.log(`  Boutique ✓ (${SHOP_CATALOG.length} items)`);
+
+  // Librairie micro-learning (contenu editorial public, pas de tenant)
+  await seedLibrary();
+
+  // Cyber-Anecdotes du Lundi (4 cas réels documentés, 3 publiées + 1 brouillon)
+  await seedAnecdotes(prisma);
+
+  // ====================================================================
+  // 2. CONTENU DEMO-ONLY (skip si DEMO_MODE != "true")
+  // ====================================================================
+  if (!isDemoMode) {
+    console.log(
+      "  ⊘ Skip fixtures demo (tenant demo-pme, 12 fake users, marketplace community)",
+    );
+    console.log("✅ Seed terminé (production mode, pas de donnees demo).");
+    return;
+  }
+
+  // Plan initial : "essentielle" (le palier standard PME, montre la majorité
+  // des features sans verrou). L'utilisateur peut switcher en live depuis
+  // /demo pour tester Solo / Pro / Premium.
+  // En update on NE CHANGE PAS le plan : on respecte le dernier choix demo.
+  const tenant = await prisma.tenant.upsert({
+    where: { slug: "demo-pme" },
+    update: { name: "PME Démo" },
+    create: { slug: "demo-pme", name: "PME Démo", plan: "essentielle" },
+  });
+  console.log(`  Tenant demo ✓ (${tenant.slug})`);
+
   // Groupes systeme par defaut (Compta, RH, Dev, Commercial, Direction,
   // IT, Atelier, Communication). isSystem=true => non supprimables.
   const SYSTEM_GROUPS = [
@@ -248,35 +314,7 @@ async function main() {
     },
   });
 
-  // Catalogue boutique
-  const shopItemsBySlug = new Map<string, any>();
-  for (const it of SHOP_CATALOG) {
-    const dbItem = await prisma.shopItem.upsert({
-      where: { slug: it.slug },
-      update: {
-        name: it.name,
-        emoji: it.emoji,
-        price: it.price,
-        minLevel: it.minLevel,
-        description: it.description,
-        rarity: it.rarity,
-      },
-      create: {
-        slug: it.slug,
-        name: it.name,
-        emoji: it.emoji,
-        category: it.category as ItemCategory,
-        price: it.price,
-        minLevel: it.minLevel,
-        description: it.description,
-        rarity: it.rarity,
-      },
-    });
-    shopItemsBySlug.set(it.slug, dbItem);
-  }
-  console.log(`  Boutique ✓ (${SHOP_CATALOG.length} items)`);
-
-  // Users + progressions
+  // Users + progressions (12 comptes fictifs demo)
   for (const u of FAKE_USERS) {
     const dbUser = await prisma.user.upsert({
       where: { email: u.email },
@@ -435,14 +473,9 @@ async function main() {
     });
   }
 
-  // Marketplace : 1 module officiel + 1 contribution communaute (deja approuves)
+  // Marketplace : 1 module officiel + 1 contribution communaute (deja approuves).
+  // Depend de FAKE_USERS (vincent/lea/sophie sont les auteurs) -> demo-only.
   await seedMarketplace();
-
-  // Librairie micro-learning
-  await seedLibrary();
-
-  // Cyber-Anecdotes du Lundi (4 cas réels documentés, 3 publiées + 1 brouillon)
-  await seedAnecdotes(prisma);
 
   console.log("✅ Seed terminé.");
   console.log("");
