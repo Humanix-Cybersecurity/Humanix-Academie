@@ -130,7 +130,15 @@ const SOLUTIONS_ITEMS: DropdownItem[] = [
 // Composant principal
 // =============================================================================
 
-export default function HeaderBar() {
+/**
+ * Props :
+ *   demoMode : passe `true` quand DEMO_MODE=true cote serveur. Quand `false`,
+ *              le CTA "Démo" et la section démo du drawer mobile sont caches
+ *              -- la prod commerciale ne doit pas exposer la page /demo aux
+ *              visiteurs. Defense en profondeur : la page /demo elle-meme
+ *              retourne 404 via app/demo/layout.tsx server side.
+ */
+export default function HeaderBar({ demoMode = false }: { demoMode?: boolean }) {
   const { data: session } = useSession();
   const user = session?.user as any;
   const [stats, setStats] = useState<{
@@ -430,8 +438,8 @@ export default function HeaderBar() {
           <>
             {/* Desktop nav (md+) */}
             <div className="hidden md:flex items-center gap-1">
-              <NavDropdown label="Produit" items={PRODUIT_ITEMS} />
-              <NavDropdown label="Solutions" items={SOLUTIONS_ITEMS} />
+              <NavDropdown label="Notre offre" items={PRODUIT_ITEMS} />
+              <NavDropdown label="Outils" items={SOLUTIONS_ITEMS} />
               <NavLink href="/communaute" isActive={isActive("/communaute")}>
                 Communauté
               </NavLink>
@@ -445,12 +453,21 @@ export default function HeaderBar() {
                 Connexion
               </Link>
               <ThemeToggle compact />
-              <Link
-                href="/demo"
-                className="bg-primary-500 hover:bg-primary-600 text-white text-sm font-bold px-4 py-2 rounded-xl transition shadow-sm hover:shadow-md"
-              >
-                Démo
-              </Link>
+              {demoMode ? (
+                <Link
+                  href="/demo"
+                  className="bg-primary-500 hover:bg-primary-600 text-white text-sm font-bold px-4 py-2 rounded-xl transition shadow-sm hover:shadow-md"
+                >
+                  Démo
+                </Link>
+              ) : (
+                <Link
+                  href="/tarifs"
+                  className="bg-primary-500 hover:bg-primary-600 text-white text-sm font-bold px-4 py-2 rounded-xl transition shadow-sm hover:shadow-md"
+                >
+                  Voir les tarifs
+                </Link>
+              )}
             </div>
 
             {/* Mobile burger */}
@@ -494,8 +511,8 @@ export default function HeaderBar() {
             className="fixed top-16 inset-x-0 bottom-0 z-[70] bg-white dark:bg-slate-900 overflow-y-auto animate-slide-up shadow-2xl"
           >
             <div className="px-4 py-6 space-y-6">
-              <MobileSection title="Produit" items={PRODUIT_ITEMS} />
-              <MobileSection title="Solutions" items={SOLUTIONS_ITEMS} />
+              <MobileSection title="Notre offre" items={PRODUIT_ITEMS} />
+              <MobileSection title="Outils" items={SOLUTIONS_ITEMS} />
               <MobileSection
                 title="Communauté"
                 items={[
@@ -516,12 +533,21 @@ export default function HeaderBar() {
                 >
                   Connexion
                 </Link>
-                <Link
-                  href="/demo"
-                  className="text-center bg-primary-500 hover:bg-primary-600 text-white font-bold px-4 py-3 rounded-xl shadow-sm"
-                >
-                  Démarrer la démo
-                </Link>
+                {demoMode ? (
+                  <Link
+                    href="/demo"
+                    className="text-center bg-primary-500 hover:bg-primary-600 text-white font-bold px-4 py-3 rounded-xl shadow-sm"
+                  >
+                    Démarrer la démo
+                  </Link>
+                ) : (
+                  <Link
+                    href="/tarifs"
+                    className="text-center bg-primary-500 hover:bg-primary-600 text-white font-bold px-4 py-3 rounded-xl shadow-sm"
+                  >
+                    Voir les tarifs
+                  </Link>
+                )}
               </div>
             </div>
           </div>
