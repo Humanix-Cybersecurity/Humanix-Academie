@@ -83,22 +83,31 @@ export async function renderOgCard(variant: OgVariant) {
           }}
         />
 
-        {/* Hexagones de fond (subtil, pattern Humanix) */}
-        <div
+        {/* Hexagones de fond (subtil, pattern Humanix) -- en SVG inline car
+            le glyph Unicode ⬡ (U+2B21) n'est dans aucune Google Font, ce qui
+            faisait pleuvoir des warnings "Failed to download dynamic font" au
+            build (-> Satori echoue silencieusement et n'affiche rien). Un
+            polygone SVG fait le job sans dependance de police. */}
+        <svg
+          width="700"
+          height="260"
+          viewBox="0 0 700 260"
           style={{
             position: "absolute",
-            inset: 0,
-            display: "flex",
+            right: "60px",
+            top: "50%",
+            transform: "translateY(-50%)",
             opacity: 0.06,
-            fontSize: "240px",
-            color: PRIMARY,
-            alignItems: "center",
-            justifyContent: "flex-end",
-            paddingRight: "60px",
           }}
         >
-          ⬡⬡⬡
-        </div>
+          {[120, 360, 600].map((cx) => (
+            <polygon
+              key={cx}
+              points={`${cx},20 ${cx + 104},80 ${cx + 104},180 ${cx},240 ${cx - 104},180 ${cx - 104},80`}
+              fill={PRIMARY}
+            />
+          ))}
+        </svg>
 
         {/* Contenu principal */}
         <div
