@@ -130,10 +130,17 @@ export async function provisionTenantWithAdmin(
       },
     });
     if (existing) {
+      const existingAdminId = existing.users[0]?.id;
+      if (!existingAdminId) {
+        console.error(
+          `[provisioning] incohérence: tenant ${existing.id} trouvé pour paymentCustomerId=${input.paymentCustomerId} sans ADMIN.`,
+        );
+        return { ok: false, reason: "invalid_state" };
+      }
       return {
         ok: true,
         tenantId: existing.id,
-        userId: existing.users[0]?.id ?? "",
+        userId: existingAdminId,
         created: false,
       };
     }
