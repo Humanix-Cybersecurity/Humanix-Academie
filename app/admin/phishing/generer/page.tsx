@@ -5,7 +5,7 @@
 // secondes plus tard il a un mail prêt à envoyer.
 
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { auth, getSignInPath } from "@/lib/auth";
 import { getTenantPlan } from "@/lib/plans";
 import PlanGateGeneric from "@/components/PlanGateGeneric";
 import PhishingGenerator from "@/components/PhishingGenerator";
@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 
 export default async function PhishingGenererPage() {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
+  if (!session?.user) redirect(getSignInPath());
   const role = session.user!.role;
   if (role !== "ADMIN" && role !== "MANAGER" && role !== "SUPERADMIN") {
     redirect("/apprendre");

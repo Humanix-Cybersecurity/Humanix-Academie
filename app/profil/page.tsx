@@ -13,7 +13,7 @@
 // abonnement Cyber-Anecdote.
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { auth, getSignInPath } from "@/lib/auth";
 import { db } from "@/lib/db";
 import HexBackdrop from "@/components/HexBackdrop";
 import HexMascotEvolved, {
@@ -29,7 +29,7 @@ export const dynamic = "force-dynamic";
 
 export default async function ProfilPage() {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
+  if (!session?.user) redirect(getSignInPath());
   const userId = session.user!.id as string;
 
   const user = await db.user.findUnique({
@@ -45,7 +45,7 @@ export default async function ProfilPage() {
       },
     },
   });
-  if (!user) redirect("/demo");
+  if (!user) redirect(getSignInPath());
 
   const equipped = buildEquippedFromInventory(
     user.inventory.map((i) => ({ item: i.item, isEquipped: i.isEquipped })),
