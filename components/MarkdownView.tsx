@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Rendu safe d'un contenu markdown : aucun dangerouslySetInnerHTML
-import { parseMarkdown, renderInlineBold } from "@/lib/markdown";
+// Rendu safe d'un contenu markdown : aucun dangerouslySetInnerHTML.
+// renderInline() gere : liens [texte](url) avec whitelist anti-XSS,
+// gras **texte**, italique *texte* / _texte_, code `inline`.
+import Link from "next/link";
+import { parseMarkdown, renderInline, type InlineToken } from "@/lib/markdown";
 
 export default function MarkdownView({
   content,
@@ -83,7 +86,47 @@ export default function MarkdownView({
 }
 
 function Inline(text: string) {
-  return renderInlineBold(text).map((part, i) =>
-    typeof part === "string" ? part : <strong key={i}>{part.bold}</strong>,
-  );
+  return renderInline(text).map((tok: InlineToken, i: number) => {
+    if (typeof tok === "string") return <span key={i}>{tok}</span>;
+    if ("bold" in tok) return <strong key={i}>{tok.bold}</strong>;
+    if ("italic" in tok) return <em key={i}>{tok.italic}</em>;
+    if ("code" in tok) {
+      return (
+        <code
+          key={i}
+          className="px-1 py-0.5 rounded bg-gray-100 dark:bg-slate-800 text-[0.9em] font-mono text-primary-600 dark:text-accent-300"
+        >
+          {tok.code}
+        </code>
+      );
+    }
+    if ("link" in tok) {
+      const { text: linkText, href } = tok.link;
+      const isExternal = /^https?:\/\//.test(href);
+      const className =
+        "text-accent-500 dark:text-accent-300 underline underline-offset-2 hover:text-accent-600 dark:hover:text-accent-200 transition-colors";
+      // Liens internes -> Next Link (preload + client transition)
+      // Liens externes -> <a target="_blank" rel="noopener noreferrer"> safe
+      // (whitelist deja appliquee cote renderInline -> javascript: rejete)
+      if (isExternal) {
+        return (
+          <a
+            key={i}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={className}
+          >
+            {linkText}
+          </a>
+        );
+      }
+      return (
+        <Link key={i} href={href} className={className}>
+          {linkText}
+        </Link>
+      );
+    }
+    return null;
+  });
 }
