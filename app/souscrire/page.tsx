@@ -21,6 +21,7 @@ import {
   PAYPLUG_BUYABLE_PLANS,
 } from "@/lib/payplug";
 import { isPlanId } from "@/lib/plans";
+import { isDevMode } from "@/lib/dev-mode";
 import SouscrireForm from "./SouscrireForm";
 
 // force-dynamic : DEMO_MODE n'est pas set au build → eviter le prerender
@@ -68,7 +69,10 @@ export default async function SouscrirePage({
   const tier = TIERS.find((t) => t.id === planRaw);
   if (!tier) redirect("/tarifs");
 
-  const payplugReady = isPayplugConfigured();
+  // En DEV_MODE, on affiche le formulaire reel : la POST sur
+  // /api/payments/checkout/start detecte DEV_MODE et provisionne sans
+  // appeler Payplug. Cf. lib/dev-mode.ts pour le rationale.
+  const payplugReady = isPayplugConfigured() || isDevMode();
 
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
@@ -156,7 +160,12 @@ export default async function SouscrirePage({
               </div>
             }
           >
-            <SouscrireForm planId={tier.id} planName={tier.name} maxSeats={tier.seats?.max ?? null} />
+            <SouscrireForm
+              planId={tier.id}
+              planName={tier.name}
+              maxSeats={tier.seats?.max ?? null}
+              devMode={isDevMode()}
+            />
           </Suspense>
         )}
 
