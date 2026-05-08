@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Mapping GRC : Humanix -> referentiels de conformite (ISO 27001, NIS2, RGPD, ANSSI HG)
+// Mapping GRC : Humanix -> referentiels de conformite
+// (ISO 27001, NIS2, RGPD, ANSSI HG, NIST CSF, Loi Sapin II Art. 17)
 // Utilise par /api/v1/evidence-export et le connecteur CISO Assistant.
 //
 // Philosophie : un mapping est un *contrat stable* entre nos donnees internes
@@ -14,7 +15,8 @@ export type FrameworkRef =
   | "NIS2"
   | "RGPD"
   | "ANSSI-HG"
-  | "NIST-CSF";
+  | "NIST-CSF"
+  | "SAPIN2";
 
 export type ArtifactType =
   | "metric" // chiffre cle (taux, score, count)
@@ -42,7 +44,8 @@ export type ArtifactSource = {
     | "dpa_pdf" // contrat DPA art. 28
     | "audit_trail" // logs Event filtres
     | "marketplace_modules" // modules deployes sur ce thème
-    | "incident_procedure"; // procedure incident du Pack NIS2
+    | "incident_procedure" // procedure incident du Pack NIS2
+    | "compliance_report"; // rapport conformite genere a la demande (Sapin II / NIS2 / etc.)
   // Description humaine pour l'auditeur
   label: string;
   // Filtres optionnels (ex : module slug, type d'evenement)
@@ -627,6 +630,135 @@ const NIST_CSF: FrameworkMapping = {
 };
 
 // ---------------------------------------------------------------------------
+// SAPIN II - Loi 2016-1691 du 9 decembre 2016 (anti-corruption)
+// Article 17 : 8 mesures obligatoires pour entreprises >500 salaries OU
+// CA > 100 M€. Humanix couvre le pilier formation/sensibilisation (mesure 6)
+// ainsi que tout l'aspect "fraude au president" / "faux fournisseur" / vishing
+// qui sont les vecteurs typiques de la corruption ciblee par la loi.
+//
+// Sanctions personne morale : jusqu'a 1 M€. Controles AFA (Agence francaise
+// anticorruption). Differenciant ENORME en France vs concurrents US.
+// ---------------------------------------------------------------------------
+const SAPIN2: FrameworkMapping = {
+  ref: "SAPIN2",
+  title: "Loi Sapin II - Article 17 (transparence, lutte anti-corruption)",
+  publisher: "Republique francaise",
+  url: "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000033558528/",
+  controls: [
+    {
+      ref: "art-17-II-3",
+      name: "Cartographie des risques de corruption (volet humain)",
+      category: "Mesure 3 - Cartographie risques",
+      artifacts: [
+        {
+          type: "metric",
+          source: "tenant_score",
+          label: "Score de risque humain - exposition fraude/corruption",
+        },
+        {
+          type: "report",
+          source: "compliance_report",
+          label: "Rapport conformite (cas fraude-president, vishing exec)",
+        },
+      ],
+      thresholdCompliant: 0.7,
+      thresholdPartial: 0.4,
+      scopeNote:
+        "Humanix mappe le volet humain (manipulation, ingenierie sociale, fraude au president). " +
+        "Le volet financier/comptable reste a la charge des outils GRC dedies (CISO Assistant, Eramba).",
+    },
+    {
+      ref: "art-17-II-6",
+      name: "Dispositif de formation des cadres et personnels exposes",
+      category: "Mesure 6 - Formation (PILIER HUMANIX)",
+      artifacts: [
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux de completion saison fraude-president",
+        },
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux de completion modules ingenierie sociale (phishing/vishing)",
+        },
+        {
+          type: "document",
+          source: "user_certificates",
+          label: "Certificats individuels de formation (preuve AFA)",
+        },
+        {
+          type: "event_log",
+          source: "audit_trail",
+          label: "Journal des completions par utilisateur expose",
+          filter: { type: "module.completed" },
+        },
+      ],
+      thresholdCompliant: 0.8,
+      thresholdPartial: 0.5,
+      scopeNote:
+        "ARTICLE CENTRAL POUR HUMANIX. La saison 'fraude-president' (6 modules : " +
+        "mecanisme, faux virement, changement RIB, deepfake vocal, double validation, " +
+        "cas Pathe) est le coeur du dispositif Sapin II cote sensibilisation. " +
+        "Modules complementaires : phishing cible exec, vishing 'fake CFO'.",
+    },
+    {
+      ref: "art-17-II-7",
+      name: "Regime disciplinaire (preuve de connaissance du regime)",
+      category: "Mesure 7 - Sanction disciplinaire",
+      artifacts: [
+        {
+          type: "document",
+          source: "user_certificates",
+          label: "Acceptation tracable de la charte cyber + fraude (timestamp + signature electronique)",
+        },
+      ],
+      scopeNote:
+        "Humanix fournit la trace tamper-proof que l'utilisateur a complete la formation et " +
+        "accepte le code de conduite. Element de preuve devant l'AFA en cas de contestation " +
+        "de sanction disciplinaire pour fraude.",
+    },
+    {
+      ref: "art-17-II-8",
+      name: "Dispositif de controle et evaluation interne des mesures",
+      category: "Mesure 8 - Controle interne",
+      artifacts: [
+        {
+          type: "metric",
+          source: "phishing_report_rate",
+          label: "Taux de signalement phishing (= efficacite de la formation)",
+        },
+        {
+          type: "report",
+          source: "compliance_report",
+          label: "Rapport tendance trimestriel (evolution du score d'exposition)",
+        },
+      ],
+      thresholdCompliant: 0.6,
+      thresholdPartial: 0.3,
+    },
+  ],
+  outOfScope: [
+    {
+      ref: "art-17-II-1",
+      reason: "Code de conduite : redaction juridique, hors scope SAT/HRM",
+    },
+    {
+      ref: "art-17-II-2",
+      reason: "Dispositif d'alerte interne (whistleblowing) : outils dedies (Whispli, etc.)",
+    },
+    {
+      ref: "art-17-II-4",
+      reason: "Procedure d'evaluation des tiers : outils KYC/KYS dedies",
+    },
+    {
+      ref: "art-17-II-5",
+      reason: "Controle comptable : ERP financier (SAP, Sage, etc.)",
+    },
+  ],
+};
+
+// ---------------------------------------------------------------------------
 // Registre principal
 // ---------------------------------------------------------------------------
 
@@ -636,6 +768,7 @@ export const FRAMEWORKS: Record<FrameworkRef, FrameworkMapping> = {
   RGPD,
   "ANSSI-HG": ANSSI_HG,
   "NIST-CSF": NIST_CSF,
+  SAPIN2,
 };
 
 export const SUPPORTED_FRAMEWORKS: FrameworkRef[] = [
@@ -644,6 +777,7 @@ export const SUPPORTED_FRAMEWORKS: FrameworkRef[] = [
   "RGPD",
   "ANSSI-HG",
   "NIST-CSF",
+  "SAPIN2",
 ];
 
 /**
