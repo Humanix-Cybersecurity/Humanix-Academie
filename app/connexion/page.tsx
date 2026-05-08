@@ -82,7 +82,7 @@ function ConnexionInner() {
       password,
       mfaCode,
       redirect: false,
-      callbackUrl: "/apprendre",
+      callbackUrl: "/post-login",
     });
     setSending(false);
     if (!res) {
@@ -135,7 +135,7 @@ function ConnexionInner() {
         email,
         marker: "fido2",
         redirect: false,
-        callbackUrl: "/apprendre",
+        callbackUrl: "/post-login",
       });
       setSending(false);
       if (!res || res.error) {
@@ -157,7 +157,7 @@ function ConnexionInner() {
     await signIn("resend", {
       email,
       redirect: false,
-      callbackUrl: "/apprendre",
+      callbackUrl: "/post-login",
     });
     setMagicSent(true);
     setSending(false);
@@ -231,7 +231,7 @@ function ConnexionInner() {
             <button
               type="button"
               onClick={() =>
-                signIn("microsoft-entra-id", { callbackUrl: "/apprendre" })
+                signIn("microsoft-entra-id", { callbackUrl: "/post-login" })
               }
               className="w-full flex items-center justify-center gap-3 p-3 rounded-xl border-2 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 transition font-medium text-sm"
               aria-label="Se connecter avec Microsoft"
@@ -243,7 +243,7 @@ function ConnexionInner() {
           {sso.google && (
             <button
               type="button"
-              onClick={() => signIn("google", { callbackUrl: "/apprendre" })}
+              onClick={() => signIn("google", { callbackUrl: "/post-login" })}
               className="w-full flex items-center justify-center gap-3 p-3 rounded-xl border-2 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 transition font-medium text-sm"
               aria-label="Se connecter avec Google"
             >
