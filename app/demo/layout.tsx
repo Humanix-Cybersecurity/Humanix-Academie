@@ -14,6 +14,12 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 
+// force-dynamic : sinon Next prerendere ce layout au build time, ou
+// `process.env.DEMO_MODE` est undefined (Dockerfile ne le set pas), ce
+// qui fige `notFound()` dans le HTML statique. Resultat : meme avec
+// DEMO_MODE=true a runtime, /demo sert un 404 baked-in.
+export const dynamic = "force-dynamic";
+
 const TITLE = "Démo live - Humanix Académie";
 const DESCRIPTION =
   "Tester l'application en 1 clic : choisis un palier (Découverte, Starter, Essentielle, Pro, Enterprise) et un rôle (apprenant, admin, modérateur). Aucune inscription, données fictives.";
