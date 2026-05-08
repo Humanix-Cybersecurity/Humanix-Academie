@@ -96,6 +96,7 @@ export function markdownToPlainText(src: string): string {
     .replace(/^>\s/gm, "") // quotes
     .replace(/^[-*]\s/gm, "• ") // listes
     .replace(/^\d+\.\s/gm, "")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // liens : [texte](url) -> texte
     .replace(/\*\*(.+?)\*\*/g, "$1") // gras
     .replace(/\*(.+?)\*/g, "$1") // italique
     .replace(/`([^`]+)`/g, "$1") // code inline
@@ -103,14 +104,101 @@ export function markdownToPlainText(src: string): string {
     .trim();
 }
 
-// Fonction helper pour rendre le **gras** dans React de maniere safe
+/**
+ * Token retourne par renderInline -- le rendu React est fait cote MarkdownView.
+ * On reste pure JS ici (testable, sans dependance React).
+ */
+export type InlineToken =
+  | string
+  | { bold: string }
+  | { italic: string }
+  | { code: string }
+  | { link: { text: string; href: string } };
+
+/**
+ * Whitelist de protocoles autorises pour les liens markdown.
+ * Interdit explicitement : javascript:, data:, vbscript:, file:, about:.
+ * SECURITE : applique avant toute creation de <a href> dans le rendu React.
+ */
+const ALLOWED_LINK_PROTOCOLS = new Set([
+  "http:",
+  "https:",
+  "mailto:",
+  "tel:",
+]);
+
+function isSafeLinkUrl(raw: string): boolean {
+  try {
+    // Url relatives (commencant par /) sont sures
+    if (raw.startsWith("/") && !raw.startsWith("//")) return true;
+    // Url protocole-relative //example.com -> on parse en https
+    const u = new URL(raw, "https://placeholder.invalid");
+    return ALLOWED_LINK_PROTOCOLS.has(u.protocol);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Tokenizer markdown inline. Reconnait dans cet ordre de priorite :
+ *   1. liens     : [texte](url)
+ *   2. code      : `code`
+ *   3. bold      : **texte**
+ *   4. italic    : *texte* ou _texte_
+ *   5. plain text reste
+ *
+ * Idempotent : tout pattern non reconnu reste en string brute.
+ * SAFE : les liens passent par isSafeLinkUrl() -- les liens malveillants
+ * (javascript:, data:, etc.) sont rendus en texte brut, pas en <a>.
+ */
+export function renderInline(text: string): InlineToken[] {
+  // Regex unifiee : capture les 4 patterns en ordre de priorite.
+  // Groupes : 1=link-text 2=link-url 3=code 4=bold 5=italic-* 6=italic-_
+  const re =
+    /\[([^\]]+)\]\(([^)]+)\)|`([^`]+)`|\*\*([^*]+)\*\*|\*([^*]+)\*|_([^_]+)_/g;
+
+  const tokens: InlineToken[] = [];
+  let lastIndex = 0;
+  let m: RegExpExecArray | null;
+
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > lastIndex) {
+      tokens.push(text.slice(lastIndex, m.index));
+    }
+    if (m[1] !== undefined && m[2] !== undefined) {
+      // Lien : si l'URL n'est pas safe, fallback en texte plain (m[0] = match
+      // original byte-exact, evite toute surprise sur les chars echappes/parenth)
+      const linkText = m[1];
+      const href = m[2].trim();
+      if (isSafeLinkUrl(href)) {
+        tokens.push({ link: { text: linkText, href } });
+      } else {
+        tokens.push(m[0]); // pas exploitable : reste juste du texte brut
+      }
+    } else if (m[3] !== undefined) {
+      tokens.push({ code: m[3] });
+    } else if (m[4] !== undefined) {
+      tokens.push({ bold: m[4] });
+    } else if (m[5] !== undefined) {
+      tokens.push({ italic: m[5] });
+    } else if (m[6] !== undefined) {
+      tokens.push({ italic: m[6] });
+    }
+    lastIndex = m.index + m[0].length;
+  }
+  if (lastIndex < text.length) {
+    tokens.push(text.slice(lastIndex));
+  }
+  return tokens;
+}
+
+/**
+ * @deprecated Utilise renderInline (gere bold + italic + code + links).
+ * Conserve pour retro-compat avec d'anciens consommateurs eventuels.
+ */
 export function renderInlineBold(text: string): (string | { bold: string })[] {
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
-  return parts
-    .filter(Boolean)
-    .map((part) =>
-      part.startsWith("**") && part.endsWith("**")
-        ? { bold: part.slice(2, -2) }
-        : part,
-    );
+  return renderInline(text).filter(
+    (t): t is string | { bold: string } =>
+      typeof t === "string" || (typeof t === "object" && "bold" in t),
+  );
 }
