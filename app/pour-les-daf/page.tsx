@@ -229,21 +229,21 @@ export default function DafLandingPage() {
               </strong>{" "}
               les saisons MDX{" "}
               <Link
-                href="/saisons/fraude-president/01-mecanisme"
+                href="/apprendre/fraude-president/01-mecanisme"
                 className="text-accent-500 underline font-medium"
               >
                 fraude-président
               </Link>
               {", "}
               <Link
-                href="/saisons/ransomware/01-comprendre"
+                href="/apprendre/ransomware/01-comprendre"
                 className="text-accent-500 underline font-medium"
               >
                 ransomware
               </Link>{" "}
               et{" "}
               <Link
-                href="/saisons/deepfakes/02-cas-arup"
+                href="/apprendre/deepfakes/02-cas-arup"
                 className="text-accent-500 underline font-medium"
               >
                 deepfakes
