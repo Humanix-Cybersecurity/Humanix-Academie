@@ -157,3 +157,81 @@ export const PLAN_EMOJI: Record<PlanId, string> = {
 export function featureMinPlanLabel(feature: Feature): string {
   return PLAN_LABEL[FEATURE_MIN_PLAN[feature]];
 }
+
+// =============================================================================
+// QUOTAS DE SIEGES par plan
+// =============================================================================
+// Limite le nombre d'utilisateurs (User) actifs par tenant. Verifie a chaque
+// invitation/creation d'user via lib/seats.ts -> enforceSeatQuota().
+//
+// `Infinity` = illimite (Premium). En BDD, ne pas stocker Infinity ; le calcul
+// utilise PLAN_SEATS au moment de la verification.
+export const PLAN_SEATS: Record<PlanId, number> = {
+  trial: 5, // Decouverte 30j (auto-converted to "decouverte" forever-free apres trial)
+  decouverte: 5, // Forever-free 5 sieges
+  solo: 10, // Starter PME individuelle
+  essentielle: 50, // PME 10-50
+  pro: 250, // PME/ETI 50-250
+  premium: Infinity, // Enterprise (negociation custom)
+};
+
+// =============================================================================
+// PRIX MENSUELS HT (€)
+// =============================================================================
+// Source de verite des prix affiches sur /tarifs et factures Payplug.
+// Les vrais ID de plans Payplug sont dans .env (PAYPLUG_PLAN_*).
+export const PLAN_PRICE_EUR_MONTHLY: Record<PlanId, number | null> = {
+  trial: 0,
+  decouverte: 0,
+  solo: 29,
+  essentielle: 89,
+  pro: 249,
+  premium: null, // sur devis
+};
+
+// Prix annuel (avec ~17% de remise = 2 mois offerts)
+export const PLAN_PRICE_EUR_YEARLY: Record<PlanId, number | null> = {
+  trial: 0,
+  decouverte: 0,
+  solo: 290, // 29 * 10
+  essentielle: 890, // 89 * 10
+  pro: 2490, // 249 * 10
+  premium: null,
+};
+
+// =============================================================================
+// COMPARAISONS DE PLAN (helpers commun upgrade/downgrade UI)
+// =============================================================================
+
+/**
+ * Retourne true si planA est strictement plus haut que planB.
+ * Utilise pour : "tu peux passer en Pro pour debloquer cette feature".
+ */
+export function isPlanUpgrade(from: PlanId, to: PlanId): boolean {
+  return PLAN_RANK[to] > PLAN_RANK[from];
+}
+
+/**
+ * Retourne true si planA est strictement plus bas que planB (downgrade).
+ */
+export function isPlanDowngrade(from: PlanId, to: PlanId): boolean {
+  return PLAN_RANK[to] < PLAN_RANK[from];
+}
+
+/**
+ * Plan immediatement superieur (pour CTA "Passer au plan suivant").
+ * Retourne null si deja sur le plan max (Premium).
+ */
+export function nextPlan(plan: PlanId): PlanId | null {
+  const order: PlanId[] = ["decouverte", "solo", "essentielle", "pro", "premium"];
+  const i = order.indexOf(plan);
+  if (i === -1 || i === order.length - 1) return null;
+  return order[i + 1];
+}
+
+/**
+ * Le tenant a-t-il un plan payant actif (vs trial / decouverte gratuit) ?
+ */
+export function isPaidPlan(plan: PlanId): boolean {
+  return PLAN_RANK[plan] >= PLAN_RANK.solo;
+}
