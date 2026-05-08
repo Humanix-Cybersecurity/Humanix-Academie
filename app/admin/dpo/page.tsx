@@ -384,25 +384,25 @@ export default async function AdminDpoPage() {
             description="Modele d'analyse d'impact pre-rempli, exportable en Markdown"
           />
           <ResourceLink
-            href="/saisons/dpo-quotidien/01-aipd"
+            href="/apprendre/dpo-quotidien/01-aipd"
             emoji="📚"
             title="Module AIPD"
             description="Mener une AIPD avec le PIA Tool CNIL, sans cabinet"
           />
           <ResourceLink
-            href="/saisons/dpo-quotidien/02-controle-cnil"
+            href="/apprendre/dpo-quotidien/02-controle-cnil"
             emoji="📚"
             title="Module Controle CNIL"
             description="7 reflexes du controle inopine + sanctions article 83"
           />
           <ResourceLink
-            href="/saisons/dpo-quotidien/03-transferts-hors-ue"
+            href="/apprendre/dpo-quotidien/03-transferts-hors-ue"
             emoji="📚"
             title="Module Transferts hors UE"
             description="DPF post-Schrems, TIA, CCT, BCR"
           />
           <ResourceLink
-            href="/saisons/dpo-quotidien/04-profilage-decision-auto"
+            href="/apprendre/dpo-quotidien/04-profilage-decision-auto"
             emoji="📚"
             title="Module Profilage et IA"
             description="Article 22 RGPD + AI Act risque eleve"
