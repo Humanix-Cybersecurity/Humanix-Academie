@@ -131,7 +131,7 @@ function commandGenerate(): void {
   const featuresStr = parseFlagOpt("features") ?? "";
   const licenseId = parseFlagOpt("id") ?? `lic_${Date.now().toString(36)}`;
 
-  const validPlans = ["trial", "decouverte", "solo", "essentielle", "pro", "premium"];
+  const validPlans = ["decouverte", "solo", "essentielle", "pro", "premium"];
   if (!validPlans.includes(plan)) {
     console.error(`ERREUR : plan invalide. Attendu : ${validPlans.join(", ")}`);
     process.exit(2);
@@ -248,7 +248,7 @@ Exemples :
 
 Flags pour generate :
   --tenant=...       (obligatoire) nom de l'organisation
-  --plan=...         (obligatoire) trial|decouverte|solo|essentielle|pro|premium
+  --plan=...         (obligatoire) decouverte|solo|essentielle|pro|premium
   --seats=N          nombre de sieges max (default : illimite)
   --years=N          duree en annees (default : 1, accepte les decimales)
   --domain=...       cluster-lock domain (optionnel)
