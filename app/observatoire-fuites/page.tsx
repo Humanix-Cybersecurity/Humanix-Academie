@@ -28,9 +28,22 @@ export const dynamic = "force-dynamic";
 export const revalidate = 1800; // 30 min cote Next
 
 export const metadata = {
-  title: "Observatoire des fuites de données | Humanix Académie",
+  title: "Observatoire des fuites de données françaises | Humanix Académie",
   description:
     "Recensement des fuites de données récentes en France, agrégé depuis FrenchBreaches, Bonjour la Fuite et Fuites Infos. Mise à jour quotidienne. Sans dramatiser.",
+  alternates: { canonical: "/observatoire-fuites" },
+  openGraph: {
+    title: "Les fuites de données françaises, en un seul endroit",
+    description:
+      "Sources francophones de référence. Sans dramatiser, sans publicité, sans tracker. Mis à jour chaque matin.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Observatoire des fuites de données FR",
+    description:
+      "🔍 3 sources francophones · 🚫 Zéro tracker · 🔓 Open data. Mis à jour chaque matin.",
+  },
 };
 
 // Severite adoucie : pas de rouge alarmiste pour "critique" - amber chaud
