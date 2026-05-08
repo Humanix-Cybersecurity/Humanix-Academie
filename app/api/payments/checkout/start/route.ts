@@ -47,6 +47,8 @@ type StartRequest = {
   email?: string;
   organization?: string;
   seats?: number;
+  /** Cycle de facturation choisi cote /tarifs : "monthly" (defaut) ou "annual". */
+  billing?: string;
 };
 
 export async function POST(req: Request) {
@@ -92,6 +94,8 @@ export async function POST(req: Request) {
     typeof body.seats === "number" && body.seats > 0
       ? Math.floor(body.seats)
       : null;
+  const billing: "monthly" | "annual" =
+    body.billing === "annual" ? "annual" : "monthly";
 
   if (!email || !email.includes("@") || email.length > 254) {
     return NextResponse.json({ error: "Email invalide." }, { status: 400 });
@@ -129,7 +133,7 @@ export async function POST(req: Request) {
       paymentCustomerId: undefined,
       paymentSubscriptionId: undefined,
       subscriptionStatus: "active",
-      source: "dev-mode",
+      source: `dev-mode:${billing}`,
     });
     if (!result.ok) {
       return NextResponse.json(
@@ -196,6 +200,11 @@ export async function POST(req: Request) {
         organization,
         email,
         seatsRequested: seats != null ? String(seats) : "",
+        // Cycle de facturation choisi par le client. Pour l'instant on n'a
+        // qu'un seul Subscription Plan Payplug par tier (cf. ENV_PLAN_BY_TIER
+        // dans lib/payplug.ts). TODO Phase 2 : mapper monthly / annual sur
+        // 2 plans Payplug distincts (PAYPLUG_PLAN_<TIER>_ANNUAL).
+        billingCycle: billing,
       },
     });
     return NextResponse.json({
