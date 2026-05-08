@@ -1,25 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Page d'inscription self-service pour le plan "decouverte" (forever-free
-// 5 sieges) ou "trial". Cree un Tenant + un User ADMIN puis logue
-// automatiquement l'utilisateur sur /admin.
+// 5 sieges). Cree un Tenant + un User ADMIN puis logue automatiquement
+// l'utilisateur sur /admin.
 "use client";
 
 import Link from "next/link";
 import { Suspense, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { createDecouverteAccount } from "./actions";
 
 const PLAN_LABELS: Record<string, { label: string; tagline: string }> = {
   decouverte: {
-    label: "Découverte",
-    tagline: "Forever-free · 5 sièges · sans CB",
-  },
-  // "trial" reste reference par le code legacy (lib/subscription-state.ts,
-  // license keys, prisma seed) mais ne fait plus partie de l'offre publique.
-  // /signup ne devrait normalement pas etre atteint avec ?plan=trial depuis
-  // les pages publiques (CTAs renvoient sur /souscrire). On garde une
-  // sortie de secours pour les anciens liens : meme tagline que decouverte.
-  trial: {
     label: "Découverte",
     tagline: "Forever-free · 5 sièges · sans CB",
   },
@@ -45,12 +35,10 @@ function SignupFallback() {
 }
 
 function SignupInner() {
-  const params = useSearchParams();
-  const planParam = params.get("plan");
-  const planKey =
-    planParam === "trial" || planParam === "decouverte"
-      ? planParam
-      : "decouverte";
+  // Plan toujours "decouverte" depuis le retrait de l'essai gratuit. Les
+  // anciens liens ?plan=trial sont donc gracieusement traites comme decouverte
+  // (meme offre, meme limite 5 sieges).
+  const planKey = "decouverte" as const;
   const planMeta = PLAN_LABELS[planKey];
 
   const [pending, setPending] = useState(false);

@@ -17,7 +17,10 @@ import BillingActions from "@/components/BillingActions";
 export const dynamic = "force-dynamic";
 
 const STATUS_LABELS: Record<string, { label: string; tone: string }> = {
-  trialing: { label: "Essai gratuit en cours", tone: "amber" },
+  // "trialing" est un status legacy (essai gratuit retire mai 2026). On
+  // l'affiche encore proprement pour les tenants historiques jusqu'a leur
+  // bascule vers active par la migration Prisma.
+  trialing: { label: "Actif (legacy)", tone: "emerald" },
   active: { label: "Actif", tone: "emerald" },
   past_due: { label: "Paiement en retard", tone: "rose" },
   canceled: { label: "Résilié", tone: "rose" },
@@ -52,7 +55,6 @@ export default async function FacturationPage({
       subscriptionStatus: true,
       currentPeriodEnd: true,
       seatCount: true,
-      trialEndsAt: true,
     },
   });
   if (!tenant) redirect("/profil");
@@ -145,14 +147,6 @@ export default async function FacturationPage({
               </dt>
               <dd className="font-semibold">
                 {tenant.currentPeriodEnd.toLocaleDateString("fr-FR")}
-              </dd>
-            </div>
-          )}
-          {tenant.trialEndsAt && (
-            <div>
-              <dt className="text-xs text-gray-500">Fin de l'essai</dt>
-              <dd className="font-semibold">
-                {tenant.trialEndsAt.toLocaleDateString("fr-FR")}
               </dd>
             </div>
           )}
