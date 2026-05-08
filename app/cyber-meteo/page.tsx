@@ -14,9 +14,22 @@ export const revalidate = 3600;
 
 export const metadata = {
   title:
-    "Cyber-météo France - niveau d'alerte cyber national | Humanix Académie",
+    "Cyber-météo France — niveau d'alerte cyber national | Humanix Académie",
   description:
     "Niveau d'alerte cyber national en temps réel, calculé à partir du flux officiel CERT-FR. Souverain, gratuit, hébergé en France.",
+  alternates: { canonical: "/cyber-meteo" },
+  openGraph: {
+    title: "Cyber-météo France — Le niveau d'alerte cyber, en clair",
+    description:
+      "Données officielles CERT-FR, agrégées toutes les heures. Aucune télémétrie, aucune dépendance hors UE, aucun alarmisme.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cyber-météo France — niveau d'alerte cyber",
+    description:
+      "🟢 Calme · 🟡 Vigilance · 🔴 Critique. Données CERT-FR temps réel.",
+  },
 };
 
 export default async function CyberMeteoPage() {
