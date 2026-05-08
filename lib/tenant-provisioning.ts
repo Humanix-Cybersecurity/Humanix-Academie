@@ -164,7 +164,7 @@ export async function provisionTenantWithAdmin(
           paymentProvider: input.paymentCustomerId ? "payplug" : null,
           paymentCustomerId: input.paymentCustomerId ?? null,
           paymentSubscriptionId: input.paymentSubscriptionId ?? null,
-          subscriptionStatus: input.paymentCustomerId ? "active" : "trialing",
+          subscriptionStatus: input.subscriptionStatus ?? "trialing",
         },
       });
       const user = await tx.user.create({
