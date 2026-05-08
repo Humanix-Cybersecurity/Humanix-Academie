@@ -9,6 +9,7 @@
 import { redirect } from "next/navigation";
 import { signIn } from "@/lib/auth";
 import { setInscriptionIntent } from "@/lib/inscription-intent";
+import { isDevMode } from "@/lib/dev-mode";
 
 const isDemoMode = process.env.DEMO_MODE === "true";
 // /post-login redirige par rôle (LEARNER → /apprendre, ADMIN+ → /admin).
@@ -47,6 +48,10 @@ export async function startSsoInscription(provider: string): Promise<void> {
  * Démarre l'inscription via magic link email. Pose le cookie d'intention,
  * envoie l'email via le provider nodemailer (Scaleway TEM en prod), puis
  * redirige vers /connexion/verification.
+ *
+ * En DEV_MODE (jamais en prod, cf. lib/dev-mode.ts), on shortcut le mail
+ * et on logue l'utilisateur directement via le provider "dev-bypass" comme
+ * s'il avait clique sur le magic link.
  */
 export async function startMagicLinkInscription(
   formData: FormData,
@@ -59,6 +64,18 @@ export async function startMagicLinkInscription(
     redirect("/inscription?error=invalid_email");
   }
   await setInscriptionIntent("community-learner");
+
+  if (isDevMode()) {
+    // Bypass email : on cree (ou retrouve) le user directement et on pose
+    // le cookie de session via le provider Credentials "dev-bypass". Le
+    // redirectTo pointe sur /post-login qui aiguille selon le role.
+    await signIn("dev-bypass", {
+      email,
+      redirectTo: POST_INSCRIPTION_REDIRECT,
+    });
+    return;
+  }
+
   // signIn nodemailer envoie l'email + redirige vers la page de vérification
   await signIn("nodemailer", {
     email,

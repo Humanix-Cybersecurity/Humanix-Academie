@@ -9,6 +9,7 @@
 //   import { sendEmail } from "@/lib/email";
 //   await sendEmail({ to: "user@x.fr", subject: "Hi", html: "<p>...</p>" });
 import { sendViaScalewayTem, isScalewayTemConfigured } from "./scaleway-tem";
+import { isDevMode } from "@/lib/dev-mode";
 
 export type SendEmailParams = {
   /** Adresse(s) destinataire */
@@ -30,11 +31,12 @@ export type SendEmailResult =
 
 /**
  * Renvoie true si au moins un provider email est configure et
- * fonctionnel cote env. False si DEMO_MODE est actif (pas d'envoi reel
- * en demo).
+ * fonctionnel cote env. False si DEMO_MODE ou DEV_MODE est actif (pas
+ * d'envoi reel en demo / dev — cf. lib/dev-mode.ts).
  */
 export function isEmailConfigured(): boolean {
   if (process.env.DEMO_MODE === "true") return false;
+  if (isDevMode()) return false;
   return isScalewayTemConfigured();
 }
 
@@ -48,6 +50,12 @@ export async function sendEmail(
 ): Promise<SendEmailResult> {
   if (process.env.DEMO_MODE === "true") {
     return { ok: false, reason: "demo_mode" };
+  }
+  if (isDevMode()) {
+    console.warn(
+      `[email/dev-mode] envoi simule vers ${params.to} (subject="${params.subject}")`,
+    );
+    return { ok: false, reason: "dev_mode" };
   }
   // Demain on pourra brancher un autre provider via EMAIL_PROVIDER.
   // Pour l'instant on a uniquement Scaleway TEM.
