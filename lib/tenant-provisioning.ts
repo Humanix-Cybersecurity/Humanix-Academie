@@ -72,7 +72,8 @@ export type ProvisionInput = {
 async function buildUniqueSlug(name: string): Promise<string | null> {
   const base = name
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    // Remove Unicode combining diacritical marks (U+0300 to U+036F)
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
@@ -130,10 +131,17 @@ export async function provisionTenantWithAdmin(
       },
     });
     if (existing) {
+      const existingAdminId = existing.users[0]?.id;
+      if (!existingAdminId) {
+        console.error(
+          `[provisioning] incohérence: tenant ${existing.id} trouvé pour paymentCustomerId=${input.paymentCustomerId} sans ADMIN.`,
+        );
+        return { ok: false, reason: "invalid_state" };
+      }
       return {
         ok: true,
         tenantId: existing.id,
-        userId: existing.users[0]?.id ?? "",
+        userId: existingAdminId,
         created: false,
       };
     }
@@ -164,7 +172,7 @@ export async function provisionTenantWithAdmin(
           paymentProvider: input.paymentCustomerId ? "payplug" : null,
           paymentCustomerId: input.paymentCustomerId ?? null,
           paymentSubscriptionId: input.paymentSubscriptionId ?? null,
-          subscriptionStatus: input.paymentCustomerId ? "active" : "trialing",
+          subscriptionStatus: input.subscriptionStatus ?? "trialing",
         },
       });
       const user = await tx.user.create({
