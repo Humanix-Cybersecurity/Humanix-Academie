@@ -31,6 +31,8 @@ import {
 
 const isDemoMode = process.env.DEMO_MODE === "true";
 
+type InscriptionErrorCode = "invalid_email" | "invalid_provider";
+
 type SsoEnabled = {
   google: boolean;
   microsoft: boolean;
@@ -72,7 +74,7 @@ export const metadata = {
 export default function InscriptionPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: InscriptionErrorCode }>;
 }) {
   if (isDemoMode) {
     // En démo, on n'ouvre pas l'inscription publique : les apprenants
@@ -85,7 +87,7 @@ export default function InscriptionPage({
 async function InscriptionInner({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: InscriptionErrorCode }>;
 }) {
   const sso = detectSsoEnabled();
   const params = await searchParams;
