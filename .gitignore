@@ -73,6 +73,30 @@ __pycache__/
 *.tmp
 *.orig
 
+# Duplicats macOS / iCloud / sync : ces fichiers apparaissent quand un editeur
+# ou Finder fait une copie automatique (espace + chiffre devant l'extension).
+# Ex : "og-card 2.tsx", "page (1).tsx". Ils polluent le repo et provoquent des
+# warnings au build (Next.js scanne TOUS les fichiers .ts/.tsx).
+* [0-9].ts
+* [0-9].tsx
+* [0-9].js
+* [0-9].jsx
+* [0-9].mjs
+* [0-9].cjs
+* [0-9].md
+* [0-9].mdx
+* [0-9].yml
+* [0-9].yaml
+* [0-9].json
+* [0-9].sh
+* [0-9].py
+* \([0-9]\).ts
+* \([0-9]\).tsx
+* \([0-9]\).js
+* \([0-9]\).jsx
+* \([0-9]\).md
+* \([0-9]\).mdx
+
 # build outputs additionnels
 /dist/
 .cache/
