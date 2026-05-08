@@ -2,7 +2,7 @@
 // Catalogue marketplace public - visible par tout admin connecte
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { auth, getSignInPath } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { ALLOWED_CATEGORIES } from "@/lib/marketplace/schema";
 
@@ -14,7 +14,7 @@ export default async function MarketplacePage({
   searchParams: Promise<{ source?: string; category?: string }>;
 }) {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
+  if (!session?.user) redirect(getSignInPath());
   const role = session.user!.role;
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") redirect("/apprendre");
   const tenantId = session.user!.tenantId as string;
