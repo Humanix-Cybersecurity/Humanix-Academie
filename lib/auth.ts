@@ -390,7 +390,7 @@ const adapter: typeof baseAdapter = {
     // Cast vers le type attendu par next-auth (notre User a des champs en plus
     // que le type AdapterUser, et tenantId / role / isActive ne sont pas dans
     // sa surface publique).
-    return created as unknown as Awaited<ReturnType<typeof baseAdapter.createUser>>;
+    return created as unknown as Awaited<ReturnType<NonNullable<typeof baseAdapter.createUser>>>;
   },
 };
 
