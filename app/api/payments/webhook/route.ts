@@ -101,6 +101,9 @@ export async function POST(req: Request) {
               adminName: customer?.first_name ?? undefined,
               paymentCustomerId: obj.customer_id as string,
               paymentSubscriptionId: (obj?.id as string) ?? undefined,
+              // Payplug a confirmé le paiement (subscription.created) =
+              // souscription active immédiatement, pas en trial.
+              subscriptionStatus: (obj?.status as string | undefined) ?? "active",
               source: "payplug-webhook",
             });
             if (result.ok) {
