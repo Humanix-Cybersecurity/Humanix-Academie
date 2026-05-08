@@ -4,7 +4,14 @@
 //
 // Standard OG : 1200x630 px, lisible jusqu'à 200x100 (preview LinkedIn mobile).
 // Donc : titre énorme, peu de mots, contraste fort, marge respirable.
+//
+// Le logo officiel (toque de diplômé + bouclier-H, public/logo-humanix-
+// academie-192.png) est embarqué en base64 dans la carte. Pas d'import URL
+// car ImageResponse ne fetch pas les chemins relatifs au runtime - on lit
+// le fichier au build/render via fs Node.
 
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
 export const OG_SIZE = { width: 1200, height: 630 };
@@ -33,10 +40,26 @@ export type OgVariant = {
   glyphColor?: string;
 };
 
-export function renderOgCard(variant: OgVariant) {
+// Cache du logo en base64 (évite la relecture disque à chaque render).
+let _logoDataUrl: string | null = null;
+async function getLogoDataUrl(): Promise<string | null> {
+  if (_logoDataUrl !== null) return _logoDataUrl;
+  try {
+    const buf = await readFile(
+      join(process.cwd(), "public", "logo-humanix-academie-192.png"),
+    );
+    _logoDataUrl = `data:image/png;base64,${buf.toString("base64")}`;
+    return _logoDataUrl;
+  } catch {
+    return null;
+  }
+}
+
+export async function renderOgCard(variant: OgVariant) {
   const accent = variant.accentColor ?? ACCENT;
   const glyph = variant.glyph ?? "";
   const glyphColor = variant.glyphColor ?? accent;
+  const logoDataUrl = await getLogoDataUrl();
 
   return new ImageResponse(
     (
@@ -99,24 +122,34 @@ export function renderOgCard(variant: OgVariant) {
                 gap: "16px",
               }}
             >
-              {/* Logo mark stylisé : H dans un bouclier */}
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "56px",
-                  height: "56px",
-                  background: PRIMARY,
-                  borderRadius: "12px",
-                  color: "white",
-                  fontSize: "32px",
-                  fontWeight: 800,
-                  letterSpacing: "-1px",
-                }}
-              >
-                H
-              </div>
+              {/* Logo officiel Humanix Académie (toque + bouclier-H) */}
+              {logoDataUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={logoDataUrl}
+                  alt=""
+                  width={68}
+                  height={68}
+                  style={{ display: "flex" }}
+                />
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "68px",
+                    height: "68px",
+                    background: PRIMARY,
+                    borderRadius: "12px",
+                    color: "white",
+                    fontSize: "36px",
+                    fontWeight: 800,
+                  }}
+                >
+                  H
+                </div>
+              )}
               <div
                 style={{
                   display: "flex",
@@ -126,7 +159,7 @@ export function renderOgCard(variant: OgVariant) {
               >
                 <div
                   style={{
-                    fontSize: "26px",
+                    fontSize: "30px",
                     fontWeight: 800,
                     color: PRIMARY,
                   }}
@@ -135,7 +168,7 @@ export function renderOgCard(variant: OgVariant) {
                 </div>
                 <div
                   style={{
-                    fontSize: "16px",
+                    fontSize: "17px",
                     color: MUTED,
                     fontWeight: 500,
                   }}
