@@ -22,7 +22,7 @@
 // Cette refonte est purement visuelle.
 
 import Link from "next/link";
-import { auth } from "@/lib/auth";
+import { auth, getSignInPath } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import HexBackdrop from "@/components/HexBackdrop";
@@ -99,7 +99,7 @@ const CITATIONS = [
 
 export default async function ApprendrePage() {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
+  if (!session?.user) redirect(getSignInPath());
   const userId = session.user!.id as string;
   const tenantId = session.user!.tenantId as string;
 
