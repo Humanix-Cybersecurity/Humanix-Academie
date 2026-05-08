@@ -2,7 +2,7 @@
 // Page detail d'un module marketplace
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { auth, getSignInPath } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { shortHash } from "@/lib/marketplace/integrity";
 import type { ModulePayload } from "@/lib/marketplace/schema";
@@ -22,7 +22,7 @@ export default async function ModuleDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const session = await auth();
-  if (!session?.user) redirect("/demo");
+  if (!session?.user) redirect(getSignInPath());
   const role = session.user!.role;
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") redirect("/apprendre");
   const tenantId = session.user!.tenantId as string;
