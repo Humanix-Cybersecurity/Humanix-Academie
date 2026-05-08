@@ -143,6 +143,42 @@ Premier compte admin : voir le log `docker compose logs app | grep "Initial admi
 | Charts       | **Recharts**                             | Composants React idiomatiques                    |
 | PDF          | **@react-pdf/renderer**                  | Rapports de conformité côté serveur              |
 | Container    | **Docker** + Compose                     | Déploiement reproductible                        |
+| TTS          | **Voxtral** (Mistral) ou **Piper** local | Narration audio des modules / vishing / articles |
+
+---
+
+## Narration audio (TTS) — guide express
+
+Humanix supporte 3 backends TTS au choix selon ton contexte :
+
+| Backend | Activation | Use case |
+|---|---|---|
+| **`voxtral`** (recommandé) | `TTS_PROVIDER=voxtral` + `MISTRAL_API_KEY` | Voix Marie 6 émotions FR Mistral, qualité quasi-humaine, ~$0.0001/mot |
+| **`piper`** (option AGPL pure) | `docker compose --profile piper up` + `TTS_PROVIDER=piper` | Self-host total, voix `fr_FR-siwis-medium`, gratuit, RGPD strict |
+| `""` (vide, défaut) | rien | Fallback Web Speech API navigateur (gratuit, qualité variable) |
+
+```bash
+# 1. Configurer (.env)
+echo 'MISTRAL_API_KEY=sk-...' >> .env       # console.mistral.ai
+echo 'TTS_PROVIDER=voxtral' >> .env
+
+# 2. Pré-rendre le catalogue (idempotent, ~10 min, ~$2.50 au premier run)
+docker compose exec app npm run tts:build         # 662 segments / 54 modules
+docker compose exec app npm run tts:build:dry     # liste sans appel API
+docker compose exec app npm run tts:build:force   # régénération totale (rare)
+
+# 3. Hygiène cache
+docker compose exec app npm run tts:prune:apply   # supprime les MP3 orphelins
+                                                  # (après modif d'un MDX)
+```
+
+Où l'audio apparaît dans l'UI :
+- 🔊 **Modules** (`/apprendre/<saison>/<episode>`) : bouton « Écouter le scénario / le débrief »
+- 🔊 **Articles librairie** (`/librairie/<slug>`) : bouton « Écouter l'article »
+- 🔊 **Cartes Cyber Famille** (`/famille`) : mini-bouton « 🔊 Aperçu » sur chaque carte
+- 🔊 **Vishing admin** (`/admin/vishing`) : sélecteur de voix (Pressante / Posée / Insistante / Plaintive) + lecture du script généré
+
+Runbook complet, voix dispo, debug : [docs/TTS_VOXTRAL.md](./docs/TTS_VOXTRAL.md).
 
 ---
 

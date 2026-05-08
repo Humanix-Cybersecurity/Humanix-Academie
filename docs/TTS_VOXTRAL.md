@@ -129,6 +129,24 @@ skippe instantanément.
 Hash batch == hash runtime → cache hit immédiat dès le premier clic
 sur un épisode pré-généré.
 
+## Où l'audio apparaît dans l'UI
+
+| Composant | Fichier | Use case | Voix par défaut |
+|---|---|---|---|
+| `<TTSButton>` | `components/TTSButton.tsx` | Bouton riche (play/pause/seek/vitesse/voix) sur les pages **détail** : module, article librairie | `fr_marie_neutral` |
+| `<AudioPreviewButton>` | `components/AudioPreviewButton.tsx` | Mini-bouton compact sur les **cartes** d'une grille (page liste). Lit titre + description, ~10-30 mots. Toggle play/pause | `fr_marie_neutral` |
+| Vishing admin | `app/admin/vishing/VishingGeneratorClient.tsx` | Lecture du script de phishing vocal généré, avec sélecteur de voix (Pressante / Posée / Insistante / Plaintive) | `fr_marie_angry` (rendu pressant typique d'attaque) |
+| EpisodePlayer | `components/EpisodePlayer.tsx` | Boutons « Écouter le scénario » et « Écouter le débrief » dans la lecture d'un module | `fr_marie_neutral` |
+
+Trois entrées principales pour l'apprenant final :
+
+1. **`/apprendre/<saison>/<episode>`** — `TTSButton` sur `props.scenario` et `props.debrief`
+2. **`/librairie/<slug>`** — `TTSButton` sur le `plainText` markdown→texte de l'article
+3. **`/famille`** — `AudioPreviewButton` sur chaque carte (titre + description)
+
+Côté admin / formation :
+- **`/admin/vishing`** — Sélecteur de 4 voix Voxtral pour générer un audio crédible du script de phishing vocal (utile pour le debrief avec les apprenants après une simulation)
+
 ## Voix Voxtral disponibles
 
 6 voix françaises Marie (femme, ~30 ans), différenciées par émotion :
