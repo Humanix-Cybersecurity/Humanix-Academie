@@ -133,7 +133,7 @@ export async function POST(req: Request) {
       paymentCustomerId: undefined,
       paymentSubscriptionId: undefined,
       subscriptionStatus: "active",
-      source: `dev-mode:${billing}`,
+      source: "dev-mode",
     });
     if (!result.ok) {
       return NextResponse.json(
