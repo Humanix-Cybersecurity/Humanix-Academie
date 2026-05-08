@@ -43,6 +43,7 @@ souverain, intégrée nativement à CISO Assistant.
 - **Vishing + Smishing souverains** Mistral (Paris) - templates SMS/voix illimités, anti-PII automatique
 - **Stack 100 % souveraine** : hébergement Scaleway Paris, email Scaleway TEM, paiement Payplug, IA Mistral
 - **Sécurité défense en profondeur** : CSP strict, middleware edge sur `/admin`, DOMPurify (audit Cure53), HSTS preload, anti-SSRF whitelist, anti-PII sur prompts. Pentest interne du 7 mai 2026 : 0 critique exploité (cf. [`docs/SECURITY_AUDIT.md`](./docs/SECURITY_AUDIT.md))
+- **Conformité multi-cadre** : RGPD · NIS2 · **Loi Sapin II Art. 17** (formation anti-corruption obligatoire pour les entreprises >500 salariés ou CA >100M€) · ISO 27001:2022 · ANSSI HG · NIST CSF. Mapping technique versionné dans [`lib/mapping-grc.ts`](./lib/mapping-grc.ts), export OSCAL pour CISO Assistant. Cf. [`docs/COMPLIANCE_SAPIN2.md`](./docs/COMPLIANCE_SAPIN2.md) pour le positionnement Sapin II spécifique
 - **Programme de divulgation responsable** : [`/.well-known/security.txt`](https://humanix-cybersecurity.fr/.well-known/security.txt) (RFC 9116)
 - **Mode démo** intégré pour tester sans installer
 
@@ -128,6 +129,7 @@ Premier compte admin : voir le log `docker compose logs app | grep "Initial admi
 - [docs/upgrade.md](./docs/upgrade.md) — procédure de mise à jour entre versions
 - [docs/faq.md](./docs/faq.md) — questions fréquentes self-host
 - [docs/TTS_VOXTRAL.md](./docs/TTS_VOXTRAL.md) — narration audio des modules (Voxtral SaaS ou Piper self-hosted)
+- [docs/COMPLIANCE_SAPIN2.md](./docs/COMPLIANCE_SAPIN2.md) — couverture loi Sapin II Art. 17 (formation anti-corruption obligatoire FR)
 
 ---
 
