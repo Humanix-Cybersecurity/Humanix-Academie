@@ -44,6 +44,7 @@ export type ProvisionError =
   | "community_slug_collision"
   | "invalid_email"
   | "invalid_plan"
+  | "invalid_state"
   | "db_error";
 
 export type ProvisionInput = {
@@ -60,6 +61,10 @@ export type ProvisionInput = {
   /** Identifiants Payplug si l'origine est un webhook ou un checkout. */
   paymentCustomerId?: string;
   paymentSubscriptionId?: string;
+  /** État initial de la souscription. Utilisé par le webhook Payplug pour
+   * passer "active" sur subscription.created (le checkout a réussi).
+   * Pour un provisioning manuel sans paiement, "trialing" est le défaut. */
+  subscriptionStatus?: string;
   /** Provenance pour tracing/audit. */
   source: ProvisionSource;
 };
