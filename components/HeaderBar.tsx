@@ -32,6 +32,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useSession, signOut } from "next-auth/react";
 import ThemeToggle from "@/components/ThemeToggle";
 import { getMascotById } from "@/lib/mascots";
@@ -141,6 +142,11 @@ export default function HeaderBar() {
   const [mascotSpecies, setMascotSpecies] = useState<string>("fox");
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  // mounted : evite hydration mismatch lors du portal vers document.body.
+  // Sans cela, React rend le portal cote SSR (innaccessible au document) et
+  // affiche un mismatch warning au mount + flash sur des navigateurs lents.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   const pathname = usePathname();
@@ -196,6 +202,18 @@ export default function HeaderBar() {
     setMobileOpen(false);
   }, [pathname]);
 
+  // Lock body scroll quand le drawer mobile est ouvert
+  // (sinon le contenu de la page scroll derriere -- comportement inattendu)
+  useEffect(() => {
+    if (mobileOpen) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [mobileOpen]);
+
   const isAdmin =
     user?.role === "ADMIN" ||
     user?.role === "MANAGER" ||
@@ -208,6 +226,7 @@ export default function HeaderBar() {
   const mascot = getMascotById(mascotSpecies);
 
   return (
+    <>
     <header className="sticky top-0 z-40 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md border-b border-gray-200/80 dark:border-slate-800/80">
       <nav
         aria-label="Navigation principale"
@@ -452,11 +471,19 @@ export default function HeaderBar() {
         )}
       </nav>
 
-      {/* ============ Drawer mobile visiteur ============ */}
-      {!user && mobileOpen && (
-        <>
+      {/* Le drawer mobile est rendu via un PORTAL hors du <header> --
+          voir le bloc createPortal plus bas. Sans ca, le `backdrop-blur-md`
+          du header crée un stacking context isole qui enferme le drawer
+          z-50 et le rend invisible au-dessus du contenu de la page. */}
+    </header>
+    {/* ============ Drawer mobile visiteur (portal) ============ */}
+    {mounted &&
+      !user &&
+      mobileOpen &&
+      createPortal(
+        <div className="md:hidden">
           <div
-            className="md:hidden fixed inset-0 z-40 bg-black/30 backdrop-blur-sm animate-fadeIn"
+            className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm animate-fadeIn"
             onClick={() => setMobileOpen(false)}
             aria-hidden="true"
           />
@@ -464,7 +491,7 @@ export default function HeaderBar() {
             role="dialog"
             aria-modal="true"
             aria-label="Menu de navigation"
-            className="md:hidden fixed top-16 inset-x-0 bottom-0 z-50 bg-white dark:bg-slate-900 overflow-y-auto animate-slide-up"
+            className="fixed top-16 inset-x-0 bottom-0 z-[70] bg-white dark:bg-slate-900 overflow-y-auto animate-slide-up shadow-2xl"
           >
             <div className="px-4 py-6 space-y-6">
               <MobileSection title="Produit" items={PRODUIT_ITEMS} />
@@ -498,9 +525,10 @@ export default function HeaderBar() {
               </div>
             </div>
           </div>
-        </>
+        </div>,
+        document.body,
       )}
-    </header>
+  </>
   );
 }
 
