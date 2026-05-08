@@ -15,12 +15,30 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
 import AnecdoteSubscribeForm from "@/components/AnecdoteSubscribeForm";
 import HexBackdrop from "@/components/HexBackdrop";
 import { getCyberMeteo } from "@/lib/cyber-meteo";
 import { CyberMeteoCompact } from "@/components/CyberMeteoBadge";
 
 export const revalidate = 3600;
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  openGraph: {
+    title:
+      "Humanix Académie — La cybersécurité de votre PME, en 5 minutes par semaine",
+    description:
+      "Pas un cours d'expert. Une habitude tranquille. Plateforme française open source de cybersensibilisation pour PME.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Humanix Académie — Cybersécurité PME",
+    description:
+      "5 minutes par semaine. RGPD-compliant. Bientôt open source AGPLv3.",
+  },
+};
 
 export default async function HomePage() {
   const meteo = await getCyberMeteo();

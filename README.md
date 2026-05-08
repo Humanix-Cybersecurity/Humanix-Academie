@@ -47,6 +47,17 @@ souverain, intégrée nativement à CISO Assistant.
 
 ---
 
+## Aperçu
+
+| | |
+|:---:|:---:|
+| **Audit Cyber Flash · 5 min**<br/>Diagnostic gratuit avec rapport PDF | **Cyber-météo France · CERT-FR**<br/>Niveau d'alerte national en temps réel |
+| <img src="./public/screenshots/audit-flash-desktop.png" alt="Page d'audit cyber flash" width="100%"> | <img src="./public/screenshots/cyber-meteo-desktop.png" alt="Page cyber-météo" width="100%"> |
+| **Observatoire des fuites FR**<br/>3 sources francophones agrégées | **Lancement OSS · J-19**<br/>Compte à rebours AGPLv3 |
+| <img src="./public/screenshots/observatoire-fuites-desktop.png" alt="Observatoire des fuites de données" width="100%"> | <img src="./public/screenshots/lancement-oss-desktop.png" alt="Page lancement open source" width="100%"> |
+
+---
+
 ## Démo en ligne
 
 Teste les 3 vues principales sans installation, sans inscription :
