@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
-import { Inter, Atkinson_Hyperlegible } from "next/font/google";
 import Providers from "./providers";
 import HeaderBar from "@/components/HeaderBar";
 import PWAInstallButton from "@/components/PWAInstallButton";
@@ -11,25 +10,16 @@ import CyberMeteoTopBar from "@/components/CyberMeteoTopBar";
 import SiteFooter from "@/components/SiteFooter";
 import MascotPeek from "@/components/MascotPeek";
 import ScrollProgress from "@/components/ScrollProgress";
+// Polices brand self-hostées via Fontsource (npm packages, woff2 dans node_modules).
+// On importe les CSS qui déclarent les @font-face — bundlés au build par Next.js,
+// aucun fetch externe au runtime ni au build (vs next/font/google qui dépend
+// de la connectivité fonts.gstatic.com côté CI).
+//   - Inter (variable, tous poids dans 1 fichier)
+//   - Atkinson Hyperlegible (poids 400 + 700, police accessible Braille Institute)
+import "@fontsource-variable/inter";
+import "@fontsource/atkinson-hyperlegible/400.css";
+import "@fontsource/atkinson-hyperlegible/700.css";
 import "./globals.css";
-
-// Polices brand self-hostées via next/font (CSS variables exposées à Tailwind).
-// Inter pour le corps, Atkinson Hyperlegible pour les titres (police accessible
-// conçue par le Braille Institute, AAA contrast & forte différenciation des
-// glyphs similaires p/q/b/d - cohérent avec notre approche cosy & a11y).
-const inter = Inter({
-  subsets: ["latin", "latin-ext"],
-  display: "swap",
-  variable: "--font-inter",
-  preload: true,
-});
-const atkinson = Atkinson_Hyperlegible({
-  subsets: ["latin", "latin-ext"],
-  display: "swap",
-  weight: ["400", "700"],
-  variable: "--font-atkinson",
-  preload: true,
-});
 
 const SITE_NAME = "Humanix Académie";
 const SITE_TITLE = "Humanix Académie - Cybersécurité ludique pour PME";
@@ -139,10 +129,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="fr"
-      className={`${inter.variable} ${atkinson.variable}`}
-    >
+    <html lang="fr">
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         {/* JSON-LD Organization - SEO knowledge panel + rich snippets */}
