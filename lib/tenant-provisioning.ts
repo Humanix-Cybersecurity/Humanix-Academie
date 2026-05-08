@@ -72,7 +72,8 @@ export type ProvisionInput = {
 async function buildUniqueSlug(name: string): Promise<string | null> {
   const base = name
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    // Remove Unicode combining diacritical marks (U+0300 to U+036F)
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
