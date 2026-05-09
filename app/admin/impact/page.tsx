@@ -20,6 +20,7 @@ import { auth } from "@/lib/auth";
 import { computeImpactKpis } from "@/lib/impact-kpis";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import ImpactKpisView from "@/components/admin/ImpactKpisView";
+import RiskTimeseriesChart from "@/components/admin/RiskTimeseriesChart";
 
 export const dynamic = "force-dynamic";
 
@@ -57,6 +58,13 @@ export default async function AdminImpactPage() {
       />
 
       <ImpactKpisView kpis={kpis} />
+
+      {/* Évolution du score humain agrégé sur 90 jours.
+          Lit la table RiskScoreSnapshot remplie chaque nuit par
+          /api/cron/risk-snapshot. Affiche moyenne + p10 + p90 pour avoir
+          la dispersion (et pas juste la moyenne qui peut masquer un gros
+          écart entre top et queue). */}
+      <RiskTimeseriesChart days={90} />
     </div>
   );
 }
