@@ -108,6 +108,7 @@ export async function sendViaScalewayTem(
         .catch(() => "[Unable to read error body]");
       return {
         ok: false,
+        reason: "scaleway_tem_api_error",
         details: errBody.slice(0, MAX_ERROR_BODY_LENGTH),
       };
     }
