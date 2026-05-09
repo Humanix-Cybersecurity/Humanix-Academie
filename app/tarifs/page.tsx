@@ -207,7 +207,7 @@ export default async function TarifsPage({
                     : "bg-success/10 text-success"
                 }`}
               >
-                jusqu&apos;à −21 %
+                jusqu'à −21 %
               </span>
             </Link>
           </div>
