@@ -304,7 +304,7 @@ export default async function TarifsPage({
             },
             {
               emoji: "🤝",
-              title: "Integre a l'ecosysteme",
+              title: "Intégré à l'écosystème",
               text: "Connecteur natif CISO Assistant (intuitem). Format OSCAL standard. Webhooks Sentinel/Splunk/Sekoia.",
             },
             {
