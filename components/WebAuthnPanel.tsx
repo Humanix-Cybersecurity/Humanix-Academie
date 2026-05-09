@@ -1,7 +1,7 @@
 "use client";
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Section "Cles de securite (FIDO2 / WebAuthn)" pour /profil/securite.
+// Section "Cles de sécurité (FIDO2 / WebAuthn)" pour /profil/sécurité.
 //
 // Permet d'enroller une nouvelle cle (Thales et-Fusion, YubiKey, passkey
 // iCloud / 1Password, etc.) et de gerer les cles existantes.
@@ -181,7 +181,7 @@ function CredentialRow({ cred }: { cred: WebAuthnCredentialItem }) {
         setEditing(false);
       } catch (e: unknown) {
         // Normalement on ne devrait pas tomber ici (l'action ne throw plus).
-        // Filet de securite si Next.js en mode prod throw silencieusement.
+        // Filet de sécurité si Next.js en mode prod throw silencieusement.
         setError(
           e instanceof Error
             ? e.message
@@ -206,7 +206,7 @@ function CredentialRow({ cred }: { cred: WebAuthnCredentialItem }) {
         // navigateur peut continuer a afficher la cle supprimee).
         window.location.reload();
       } catch (e: unknown) {
-        // Filet de securite : meme cas que rename ci-dessus.
+        // Filet de sécurité : même cas que rename ci-dessus.
         setError(
           e instanceof Error
             ? e.message

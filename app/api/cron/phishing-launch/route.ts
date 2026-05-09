@@ -2,9 +2,9 @@
 //
 // Endpoint cron : declenche les campagnes phishing programmees (scheduledAt
 // dans le passe, sentAt null, isActive=true). Idempotent : une campagne
-// deja "sent" ne sera pas reprocessee.
+// déjà "sent" ne sera pas reprocessee.
 //
-// Frequence cible : toutes les heures (a planifier dans le cron OS / Vercel
+// Fréquence cible : toutes les heures (a planifier dans le cron OS / Vercel
 // cron / GitHub Actions). Possible aussi de declencher manuellement par un
 // admin pour test.
 //
@@ -15,7 +15,7 @@
 // charge du client (Scaleway TEM ou provider tiers). Cette route ne fait
 // que :
 //   1. Marquer la campagne comme sentAt=now()
-//   2. Creer les rows PhishingResult (status SENT, trackToken unique)
+//   2. Créer les rows PhishingResult (status SENT, trackToken unique)
 //   3. Logger un audit event PHISHING_CAMPAIGN_SENT
 //
 // L'envoi technique des mails/SMS est dans /app/admin/phishing/actions.ts
@@ -81,7 +81,7 @@ async function processDueCampaigns(): Promise<ProcessResult> {
         select: { id: true, slug: true, name: true },
       },
     },
-    take: 50, // limite par tour de cron pour eviter de surcharger
+    take: 50, // limite par tour de cron pour éviter de surcharger
   });
 
   const result: ProcessResult = {
@@ -100,7 +100,7 @@ async function processDueCampaigns(): Promise<ProcessResult> {
     try {
       // Cible : tous les LEARNER + MANAGER actifs du tenant. Les ADMIN
       // sont exclus pour ne pas tester ceux qui ont concu la campagne.
-      // (l'admin peut creer une campagne separee s'il veut s'auto-tester).
+      // (l'admin peut créer une campagne separee s'il veut s'auto-tester).
       const targets = await db.user.findMany({
         where: {
           tenantId: campaign.tenantId,
@@ -111,7 +111,7 @@ async function processDueCampaigns(): Promise<ProcessResult> {
       });
 
       if (targets.length === 0) {
-        // Aucune cible -> on marque sentAt quand meme pour ne pas re-traiter
+        // Aucune cible -> on marque sentAt quand même pour ne pas re-traiter
         await db.phishingCampaign.update({
           where: { id: campaign.id },
           data: { sentAt: now },
@@ -119,7 +119,7 @@ async function processDueCampaigns(): Promise<ProcessResult> {
         continue;
       }
 
-      // Verifier que le SMTP du tenant est configure AVANT de creer les
+      // Verifier que le SMTP du tenant est configure AVANT de créer les
       // results. Si non configure, on saute la campagne (l'admin doit
       // aller sur /admin/smtp). On ne marque pas sentAt pour qu'elle soit
       // retentee au prochain tour de cron, dans l'eventualite ou l'admin
@@ -192,7 +192,7 @@ async function processDueCampaigns(): Promise<ProcessResult> {
         }
       }
 
-      // Marque sentAt apres traitement
+      // Marque sentAt après traitement
       await db.phishingCampaign.update({
         where: { id: campaign.id },
         data: { sentAt: now },

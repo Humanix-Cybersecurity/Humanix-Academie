@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// GET /api/v1/conformity-score - score global de conformite cyber humaine
+// GET /api/v1/conformity-score - score global de conformité cyber humaine
 import { NextResponse } from "next/server";
 import { authenticateApiKey } from "@/lib/api-auth";
 import { db } from "@/lib/db";

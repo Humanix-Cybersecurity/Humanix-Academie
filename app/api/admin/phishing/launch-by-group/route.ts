@@ -17,7 +17,7 @@
 // Reponse erreur : { ok: false, error: "...", message?: string }
 //
 // Auth : NextAuth, role ∈ {ADMIN, RSSI, SUPERADMIN}
-// Tenant scoping : groupSlugs filtres par tenantId pour eviter cross-tenant
+// Tenant scoping : groupSlugs filtres par tenantId pour éviter cross-tenant
 
 import { NextResponse } from "next/server";
 import { z } from "zod";

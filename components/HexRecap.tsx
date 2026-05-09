@@ -8,7 +8,7 @@
 //
 // UX :
 //   - Si l'user a fait un sans-faute : on n'affiche RIEN (pas d'IA inutile,
-//     le bilan visuel + badge "Sans-faute" parlent deja)
+//     le bilan visuel + badge "Sans-faute" parlent déjà)
 //   - Sinon : skeleton de chargement ~2-4s puis synthese affichee, avec
 //     mention discrete du persona utilise pour transparence
 //   - En cas d'erreur reseau ou IA : message poli, pas de blocage du flow
@@ -74,7 +74,7 @@ export default function HexRecap(props: Props) {
         }
 
         // Cas sans-faute renvoye par le serveur (defense en profondeur,
-        // normalement on a deja shortcut cote client avec props.perfect)
+        // normalement on a déjà shortcut cote client avec props.perfect)
         if (data.noMisses) {
           setState({ kind: "idle" });
           return;
@@ -107,7 +107,7 @@ export default function HexRecap(props: Props) {
     props.perfect,
     props.saisonSlug,
     props.episodeSlug,
-    // userAnswers : on serialize pour eviter de redeclencher si meme contenu
+    // userAnswers : on serialize pour éviter de redeclencher si même contenu
     JSON.stringify(props.userAnswers),
   ]);
 

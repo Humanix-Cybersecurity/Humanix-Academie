@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Server actions self-service securite : mdp + 2FA
+// Server actions self-service sécurité : mdp + 2FA
 "use server";
 
 import { revalidatePath } from "next/cache";
@@ -40,7 +40,7 @@ async function requireAuth() {
 }
 
 // ----------------------------------------------------
-// 1. SET / CHANGE PASSWORD (par l'user lui-meme)
+// 1. SET / CHANGE PASSWORD (par l'user lui-même)
 // ----------------------------------------------------
 export async function setPassword(formData: FormData) {
   const { userId } = await requireAuth();
@@ -62,7 +62,7 @@ export async function setPassword(formData: FormData) {
   });
   if (!user) return { ok: false, error: "Compte introuvable." };
 
-  // Si l'user a deja un mdp, on exige l'ancien
+  // Si l'user a déjà un mdp, on exige l'ancien
   if (user.passwordHash) {
     if (!currentPassword) {
       return { ok: false, error: "Mot de passe actuel requis." };
@@ -94,7 +94,7 @@ export async function setPassword(formData: FormData) {
 }
 
 // ----------------------------------------------------
-// 2. SETUP 2FA - etape 1 : generer un secret + URI QR
+// 2. SETUP 2FA - etape 1 : générer un secret + URI QR
 // ----------------------------------------------------
 export async function startMfaEnrollment(): Promise<{
   ok: boolean;
@@ -127,7 +127,7 @@ export async function startMfaEnrollment(): Promise<{
 }
 
 // ----------------------------------------------------
-// 3. SETUP 2FA - etape 2 : verifier 1 code => activer + generer backup
+// 3. SETUP 2FA - etape 2 : verifier 1 code => activer + générer backup
 // ----------------------------------------------------
 export async function confirmMfaEnrollment(formData: FormData): Promise<{
   ok: boolean;
@@ -194,7 +194,7 @@ export async function confirmMfaEnrollment(formData: FormData): Promise<{
 }
 
 // ----------------------------------------------------
-// 4. DESACTIVER 2FA - exige le mdp actuel pour eviter cession de session
+// 4. DESACTIVER 2FA - exige le mdp actuel pour éviter cession de session
 // ----------------------------------------------------
 export async function disableMfa(formData: FormData): Promise<{
   ok: boolean;
@@ -311,7 +311,7 @@ export async function requestPasswordReset(formData: FormData): Promise<{
   const rl1 = checkRateLimit(`pwreset:email:${email}`, 3, 15 * 60 * 1000);
   const rl2 = checkRateLimit(`pwreset:ip:${ip}`, 10, 15 * 60 * 1000);
   if (!rl1.ok || !rl2.ok) {
-    // On ne signale pas explicitement le rate limit pour eviter l'enumeration
+    // On ne signale pas explicitement le rate limit pour éviter l'enumeration
     return { ok: true };
   }
 
@@ -335,7 +335,7 @@ export async function requestPasswordReset(formData: FormData): Promise<{
       userAgent: ua,
     });
     // Envoi de l'email via Scaleway TEM (mute en cas d'echec, toujours ok
-    // pour eviter l'enumeration attaquant cote rate limit).
+    // pour éviter l'enumeration attaquant cote rate limit).
     try {
       if (isEmailConfigured()) {
         const baseUrl = process.env.AUTH_URL ?? "http://localhost:3000";

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Page mot de passe oublie : envoie un lien de reinitialisation par email.
-// Anti-enumeration : on repond toujours pareil, succes ou pas.
+// Anti-enumeration : on repond toujours pareil, succès ou pas.
 "use client";
 
 import { useState } from "react";

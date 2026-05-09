@@ -4,7 +4,7 @@
 //
 // Email NON modifiable : c'est l'identifiant unique pour Auth.js (pas de
 // password, magic link sur l'email) + protection anti-piratage. Si un user
-// veut changer d'email, il doit creer un nouveau compte (les progress ne
+// veut changer d'email, il doit créer un nouveau compte (les progress ne
 // suivent pas, c'est par design).
 
 import { redirect } from "next/navigation";

@@ -60,13 +60,13 @@ export default function MadeInFranceStamp({
             d="M 16,60 A 44,44 0 0 1 104,60"
             fill="none"
           />
-          {/* Arc BAS pour "RGPD · NIS2 · SOUVERAIN" -- meme rayon, lisible */}
+          {/* Arc BAS pour "RGPD · NIS2 · SOUVERAIN" -- même rayon, lisible */}
           <path
             id="mif-arc-bot"
             d="M 16,60 A 44,44 0 0 0 104,60"
             fill="none"
           />
-          {/* Filtre : grain papier/encre tres subtil */}
+          {/* Filtre : grain papier/encre très subtil */}
           <filter id="mif-grain" x="0" y="0" width="100%" height="100%">
             <feTurbulence
               type="fractalNoise"
@@ -162,7 +162,7 @@ export default function MadeInFranceStamp({
 
         {/* === DRAPEAU FR centre, ratio 2:3 (charte gouv) === */}
         <g transform="translate(40, 42)">
-          {/* Ombre portee tres legere -- effet "imprime sur papier" */}
+          {/* Ombre portee très legere -- effet "imprime sur papier" */}
           <rect
             x="0.6"
             y="0.6"

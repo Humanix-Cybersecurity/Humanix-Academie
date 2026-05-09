@@ -106,7 +106,7 @@ export default function OpsecPhishingPage() {
           title="Choix du domaine d'envoi"
           summary="Le domaine décide de la crédibilité ET de la réputation. Choisis-le bien : tu vas vivre avec longtemps."
           points={[
-            "Domaine de typosquat propre (acme-securite.fr quand ton vrai domaine est acme.fr) — ni trop éloigné (ne trompe personne), ni trop proche (ton anti-phishing va le bloquer).",
+            "Domaine de typosquat propre (acme-sécurité.fr quand ton vrai domaine est acme.fr) — ni trop éloigné (ne trompe personne), ni trop proche (ton anti-phishing va le bloquer).",
             "Réservé chez un registrar européen sérieux (OVH, Gandi, Scaleway). Pas de Namecheap / Hostinger pour du phishing même simulé.",
             "Whois public ou privé selon ta politique. Public = traçable légalement, privé = plus crédible si l'attaquant simulé est externe.",
             "Privilégie un domaine NEUF (>14 jours d'âge). Les SPAM filters Microsoft/Google pénalisent les domaines de moins de 7 jours.",

@@ -7,7 +7,7 @@
 // Cette landing est le 1er contact. Avant, le ton etait commercial classique
 // ("14 jours gratuits", "effet realisme garanti", "argument marque
 // employeur beton"). On reformule en langage de maitrise tranquille,
-// coherent avec /manifeste, /apprendre, /audit-flash, /famille, /securite,
+// coherent avec /manifeste, /apprendre, /audit-flash, /famille, /sécurité,
 // /urgence-cyber.
 //
 // Logique metier preservee : getCyberMeteo, AnecdoteSubscribeForm.

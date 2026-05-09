@@ -71,7 +71,7 @@ export default function AccessibleDialog({
     const dialog = dialogRef.current;
     if (!dialog) return;
 
-    // Focus le premier element focusable, sinon la modale elle-meme
+    // Focus le premier element focusable, sinon la modale elle-même
     const focusables = dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
     if (focusables.length > 0) {
       focusables[0].focus();

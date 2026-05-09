@@ -9,7 +9,7 @@
 //     d'input user qui descend dans le FS).
 //   - Pas d'auth : les MP3 sont du contenu pedagogique public, identiques
 //     pour tous les apprenants. Le hash etant base sur le contenu, ils ne
-//     fuitent rien que le frontend ne puisse deja deduire du manifest.
+//     fuitent rien que le frontend ne puisse déjà deduire du manifest.
 //
 // PERFORMANCE :
 //   - Le fichier est immuable (hash content-addressed) : Cache-Control 1 an
@@ -44,7 +44,7 @@ export async function GET(
     return NextResponse.json(
       {
         error: "not_cached",
-        hint: "Lance `npm run tts:build` pour pre-generer le cache.",
+        hint: "Lance `npm run tts:build` pour pre-générer le cache.",
       },
       { status: 404 },
     );

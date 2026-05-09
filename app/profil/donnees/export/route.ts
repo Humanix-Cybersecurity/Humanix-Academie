@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// GET /profil/donnees/export - RGPD article 20 : portabilite des donnees.
-// Renvoie un JSON downloadable avec toutes les donnees personnelles de l'user.
+// GET /profil/données/export - RGPD article 20 : portabilite des données.
+// Renvoie un JSON downloadable avec toutes les données personnelles de l'user.
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
@@ -121,7 +121,7 @@ export async function GET() {
     schemaVersion: 1,
     exportedAt: new Date().toISOString(),
     notice:
-      "Export RGPD article 20 (portabilite). Donnees personnelles stockees par Humanix Academie a propos de vous.",
+      "Export RGPD article 20 (portabilite). Données personnelles stockees par Humanix Academie a propos de vous.",
     profile: {
       id: user.id,
       email: user.email,

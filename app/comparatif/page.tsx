@@ -2,7 +2,7 @@
 // Page publique "Comparatif honnete" - refonte cosy mai 2026.
 //
 // Le pari editorial reste : poser noir sur blanc nos forces ET nos faiblesses
-// face aux concurrents. Aucune suite SaaS cyber francaise ne le fait.
+// face aux concurrents. Aucune suite SaaS cyber française ne le fait.
 //
 // REGLE EDITORIALE : on doit toujours rester honnete. Si un concurrent ajoute
 // une feature qui nous depasse, on l'inscrit ici. Cette page perd sa valeur
@@ -10,14 +10,14 @@
 //
 // Refonte mai 2026 (cosy / charmant / impactant) :
 //  - Hero invitation au voyage avec HexBackdrop (vs hero sec et chiffre)
-//  - Chapitres narratifs entre les categories (pourquoi cette categorie compte)
-//  - Palette cyclee par categorie (les 6 saisons : cyan/emerald/amber/purple/rose/indigo)
+//  - Chapitres narratifs entre les catégories (pourquoi cette catégorie compte)
+//  - Palette cyclee par catégorie (les 6 saisons : cyan/emerald/amber/purple/rose/indigo)
 //  - Vocabulaire transforme : "où ils sont meilleurs" → "ce qu'on apprend d'eux"
 //  - CTA final cosy : "habitude tranquille" pas "14 jours gratuits"
 //  - Citation finale signee "Hex veille"
 //  - Animation slide-up en cascade (idx * 60ms)
 //
-// Refresh mai 2026 (donnees) :
+// Refresh mai 2026 (données) :
 //  - Mantra rachete par Cyber Guru (Italie) en mars 2025 → colonne Cyber Guru
 //  - Adaptive Security (US, $136M leves) ajoutee comme disrupteur AI-native
 //  - Lignes vishing (deepfake +442 % H2 2024), MCP server, agents IA
@@ -566,7 +566,7 @@ const COMPETITORS: Array<{ key: keyof Omit<Row, "category" | "feature" | "humani
   },
 ];
 
-// Palette par categorie : on cycle les 6 saisons (cosy series mai 2026)
+// Palette par catégorie : on cycle les 6 saisons (cosy series mai 2026)
 // pour donner une identite douce a chaque chapitre du voyage.
 type CategoryMeta = {
   emoji: string;
@@ -652,7 +652,7 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
   Intégrations: {
     emoji: "🔗",
     intro:
-      "Sans integrations natives, une plateforme reste une ile. On a investi gros sur les connecteurs francais (Sekoia, HarfangLab, Lucca, GLPI, CISO Assistant) que les acteurs internationaux n'envisagent meme pas.",
+      "Sans integrations natives, une plateforme reste une ile. On a investi gros sur les connecteurs français (Sekoia, HarfangLab, Lucca, GLPI, CISO Assistant) que les acteurs internationaux n'envisagent même pas.",
     palette: {
       bg: "from-cyan-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-cyan-950/40",
       ring: "border-cyan-200 dark:border-cyan-900/40",
@@ -907,7 +907,7 @@ export default function ComparatifPage() {
         </section>
 
         {/* ============================================================
-            4. CHAPITRES - chaque categorie devient un chapitre
+            4. CHAPITRES - chaque catégorie devient un chapitre
             avec son intro narratif et son tableau dedie.
             ============================================================ */}
         <section className="space-y-12 pt-2">
