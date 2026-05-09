@@ -549,14 +549,11 @@ export default async function TarifsPage({
               <p className="text-xs uppercase tracking-[0.25em] font-bold text-emerald-700 dark:text-emerald-300 mb-2">
                 Retour sur investissement · sans embellir
               <h2
+              </p>
                 id="roi-stats-heading"
                 className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-3 leading-tight"
               >
               <h2
-                id="roi-stats-heading"
-              <div className="dark:text-gray-200">
-                <ul aria-labelledby="roi-stats-heading" className="space-y-2 text-gray-700">
-                  <Roi
                     label="Une attaque par phishing réussie en PME"
                     value="coûte en moyenne 35 000 € (Tracfin 2024)"
                   />
