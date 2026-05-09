@@ -16,6 +16,12 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
+type TrendVerdict =
+  | "improving"
+  | "stable"
+  | "degrading"
+  | "insufficient_data";
+
 type User = {
   id: string;
   name: string;
@@ -27,6 +33,9 @@ type User = {
   completedEpisodes: number;
   reason: "low_score" | "inactive" | "both";
   groupBadges: { name: string; emoji: string; color: string | null }[];
+  trend: TrendVerdict;
+  trendIndicator: number;
+  trendReasons: string[];
 };
 
 type Totals = {
@@ -251,6 +260,12 @@ export default function AtRiskUsersTable({
               <th className="p-3 text-right font-bold text-gray-700 dark:text-gray-300">
                 Score
               </th>
+              <th
+                className="p-3 text-center font-bold text-gray-700 dark:text-gray-300"
+                title="Tendance sur les 30 derniers jours (cf. lib/analytics/risk-trend.ts)"
+              >
+                Tendance
+              </th>
               <th className="p-3 text-right font-bold text-gray-700 dark:text-gray-300">
                 Inactif
               </th>
@@ -314,6 +329,13 @@ export default function AtRiskUsersTable({
                     {u.riskScore}
                   </span>
                 </td>
+                <td className="p-3 text-center">
+                  <TrendBadge
+                    verdict={u.trend}
+                    indicator={u.trendIndicator}
+                    reasons={u.trendReasons}
+                  />
+                </td>
                 <td className="p-3 text-right tabular-nums text-gray-600 dark:text-gray-400">
                   {u.daysSinceActivity === null
                     ? "—"
@@ -355,6 +377,57 @@ function SummaryCard({
         {label}
       </p>
     </div>
+  );
+}
+
+function TrendBadge({
+  verdict,
+  indicator,
+  reasons,
+}: {
+  verdict: TrendVerdict;
+  indicator: number;
+  reasons: string[];
+}) {
+  const map: Record<
+    TrendVerdict,
+    { label: string; arrow: string; cls: string }
+  > = {
+    improving: {
+      label: "Amélioration",
+      arrow: "↗",
+      cls: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300",
+    },
+    stable: {
+      label: "Stable",
+      arrow: "→",
+      cls: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300",
+    },
+    degrading: {
+      label: "Dégradation",
+      arrow: "↘",
+      cls: "bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300",
+    },
+    insufficient_data: {
+      label: "Données insuffisantes",
+      arrow: "?",
+      cls: "bg-gray-50 dark:bg-slate-800/50 text-gray-400 dark:text-gray-500",
+    },
+  };
+  const s = map[verdict];
+  // Tooltip natif via title : signe + composantes
+  const tooltip =
+    reasons.length === 0
+      ? `${s.label} (signal ${indicator.toFixed(2)})`
+      : `${s.label} (signal ${indicator.toFixed(2)}) — ${reasons.join(" · ")}`;
+  return (
+    <span
+      title={tooltip}
+      className={`inline-flex items-center gap-1 text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full ${s.cls}`}
+    >
+      <span aria-hidden="true">{s.arrow}</span>
+      <span className="hidden md:inline">{s.label}</span>
+    </span>
   );
 }
 
