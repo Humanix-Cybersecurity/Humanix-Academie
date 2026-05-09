@@ -35,7 +35,7 @@ export async function authenticateApiKey(req: Request): Promise<ApiAuthResult> {
     return { ok: false, error: "token_expired", status: 401 };
   }
 
-  // Plan-gating : l'API REST est reservee aux plans Essentielle+
+  // Plan-gating : l'API REST est reservee aux plans Pro+
   // Si le tenant a downgrade vers Solo, on refuse meme avec une cle valide.
   const tenantPlan = normalizePlan(key.tenant?.plan);
   if (!planHasFeature(tenantPlan, "api")) {

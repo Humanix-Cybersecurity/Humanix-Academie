@@ -92,7 +92,7 @@ export default function AntiPhishingIntegrationPage() {
             <Link href="/admin/api-keys" className="font-bold underline">
               générer une clé API
             </Link>{" "}
-            (Essentielle+).
+            (Pro+).
           </li>
         </ol>
       </section>
