@@ -1,32 +1,36 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Cachet rond style "tampon officiel" - signature souveraine Humanix.
 //
-// V3 (mai 2026) : refonte majeure pour resoudre les pbs visuels de la V2 :
-//   ✗ Etoiles laterales (9h/3h) collisionnaient avec l'arc texte bas
-//     -> "RGPD" tronque visuellement en "GPD" sur les petites tailles
-//   ✗ Drapeau central + "EST. 2026" + 2nd cercle se chevauchaient
-//   ✗ Hierarchie visuelle floue (tout au meme poids)
+// V4 (mai 2026) : pass de polish suite a feedback utilisateur.
+//   ✗ V3 : "RGPD" tronque en "GPD", "SOUVERAIN" tronque en "SOUVERAI"
+//     -> letterSpacing 3 etait trop large pour la longueur de l'arc bas
+//   ✗ V3 : "EST. 2026" se chevauchait avec le mini-hexagone signature
 //
-// V3 :
-//   ✓ Layout vertical en 4 zones lisibles (top arc / drapeau / signature / bot arc)
-//   ✓ Couronne de 6 etoiles or DANS les zones libres (entre les textes courbes)
-//     - aucune collision ni avec le texte ni avec le drapeau
-//   ✓ Mini-hexagone Humanix sous le drapeau = signature brand discrete
-//   ✓ Etoile centrale or au-dessus du drapeau = point focal heraldique
-//   ✓ Texte bas raccourci : "RGPD · NIS2 · SOUVERAIN" (lisible meme en sm)
-//   ✓ Charte gouv.fr respectee + un accent or `#D4A017` (heraldique Empire)
-//   ✓ Filtre grain "encre tampon" subtil pour donner du caractere
-//   ✓ Animation hover : tilt + scale legers
+// V4 :
+//   ✓ letterSpacing reduit a 1.5 pour le texte bas -> "RGPD · NIS2 ·
+//     SOUVERAIN" tient entierement dans l'arc avec une marge confortable
+//   ✓ "EST. 2026" supprime (le mini-hexagone signature suffit)
+//   ✓ Prop `certifications` pour customiser le texte du bas (cas
+//     "AGPLv3 · OPEN SOURCE" pour la version GitHub, ou autre)
+//   ✓ Reste : layout 4 zones, couronne 4 etoiles or, drapeau, hexagone signature
 //
 // A11y : role="img" + aria-label long descriptif (preserve V2).
-// Usage : `<MadeInFranceStamp size="sm|md|lg" />` ou via `className` custom.
+// Usage :
+//   <MadeInFranceStamp size="sm|md|lg" />
+//   <MadeInFranceStamp certifications="AGPLv3 · OPEN SOURCE" />
 
 export default function MadeInFranceStamp({
   size = "md",
   className,
+  certifications = "RGPD · NIS2 · SOUVERAIN",
 }: {
   size?: "sm" | "md" | "lg";
   className?: string;
+  /**
+   * Texte du bas du tampon. Defaut "RGPD · NIS2 · SOUVERAIN". Reste lisible
+   * jusqu'a ~26 caracteres (au-dela, reduire la taille de police).
+   */
+  certifications?: string;
 }) {
   const dim = size === "sm" ? 72 : size === "lg" ? 128 : 96;
 
@@ -117,17 +121,21 @@ export default function MadeInFranceStamp({
           </textPath>
         </text>
 
-        {/* === TEXTE COURBE BAS === */}
+        {/* === TEXTE COURBE BAS ===
+            Arc demi-cercle de rayon 44 = ~138 unites de longueur. Avec
+            fontSize 6.4 et letterSpacing 1.5, on tient ~28 caracteres avec
+            une marge respectable (V3 utilisait letterSpacing 3 -> debordait
+            -> "RGPD" devenait "GPD", "SOUVERAIN" devenait "SOUVERAI"). */}
         <text
           fontSize="6.4"
           fontWeight="700"
           fill={ENCRE}
-          letterSpacing="3"
+          letterSpacing="1.5"
           fontFamily="Inter, system-ui, sans-serif"
           opacity="0.88"
         >
           <textPath href="#mif-arc-bot" startOffset="50%" textAnchor="middle">
-            RGPD · NIS2 · SOUVERAIN
+            {certifications}
           </textPath>
         </text>
 
@@ -206,20 +214,8 @@ export default function MadeInFranceStamp({
           <circle cx="0" cy="0" r="0.7" fill={ENCRE} opacity="0.7" />
         </g>
 
-        {/* === MILLESIME "EST. 2026" === */}
-        <text
-          x="60"
-          y="96"
-          fontSize="4.6"
-          fontWeight="700"
-          fill={ENCRE}
-          textAnchor="middle"
-          letterSpacing="2.2"
-          fontFamily="Inter, system-ui, sans-serif"
-          opacity="0.7"
-        >
-          EST. 2026
-        </text>
+        {/* "EST. 2026" supprime en V4 (chevauchait le mini-hexagone
+            signature, peu lisible). Le mini-hexagone seul suffit. */}
 
         {/* === SEPARATEURS DECORATIFS aux extremites des arcs ===
             Petits losanges or qui marquent visuellement le debut/fin des arcs
