@@ -17,7 +17,6 @@ import type { SendEmailParams, SendEmailResult } from "./index";
 
 const DEFAULT_REGION = "fr-par";
 const MAX_ERROR_BODY_LENGTH = 500;
-const MAX_ERROR_BODY_LENGTH = 500;
 
 export function isScalewayTemConfigured(): boolean {
   return Boolean(
