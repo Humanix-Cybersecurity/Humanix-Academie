@@ -77,6 +77,46 @@ export default function MarkdownView({
                 {Inline(b.text)}
               </blockquote>
             );
+          case "table":
+            return (
+              <div
+                key={i}
+                className="overflow-x-auto rounded-2xl border border-gray-200 dark:border-slate-700 my-2"
+              >
+                <table className="w-full text-sm border-collapse">
+                  <thead className="bg-primary-50 dark:bg-slate-800/60">
+                    <tr>
+                      {b.headers.map((h, j) => (
+                        <th
+                          key={j}
+                          scope="col"
+                          className="text-left p-3 font-bold text-primary-500 dark:text-accent-300 border-b-2 border-primary-200 dark:border-slate-700"
+                        >
+                          {Inline(h)}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {b.rows.map((row, ri) => (
+                      <tr
+                        key={ri}
+                        className="border-b border-gray-100 dark:border-slate-800 last:border-0 hover:bg-primary-50/30 dark:hover:bg-slate-800/30"
+                      >
+                        {row.map((cell, ci) => (
+                          <td
+                            key={ci}
+                            className="p-3 text-gray-800 dark:text-gray-200 align-top"
+                          >
+                            {Inline(cell)}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            );
           default:
             return null;
         }
