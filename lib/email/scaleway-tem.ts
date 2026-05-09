@@ -112,9 +112,12 @@ export async function sendViaScalewayTem(
         details: errBody.slice(0, MAX_ERROR_BODY_LENGTH),
       };
     }
-    const data = (await res.json().catch(() => ({}))) as {
-      emails?: { id?: string }[];
-    };
+    let data: { emails?: { id?: string }[] } = {};
+    try {
+      data = (await res.json()) as { emails?: { id?: string }[] };
+    } catch (e: unknown) {
+      console.warn("[scaleway-tem] unable to parse success response JSON", e);
+    }
     return { ok: true, providerMessageId: data?.emails?.[0]?.id ?? null };
   } catch (e: unknown) {
     console.error("[scaleway-tem] send failed", e);
