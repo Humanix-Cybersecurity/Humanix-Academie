@@ -55,13 +55,13 @@ async function main() {
 
   if (planChange.count > 0) {
     console.log(
-      `[migrate-legacy-trial] ${planChange.count} tenant(s) rebasculé(s) plan=trial -> decouverte`,
+      `[migrate-legacy-trial] ${planChange.count} tenant(s) rebasculés plan=trial -> decouverte`,
     );
   }
 
   if (statusChange.count > 0) {
     console.log(
-      `[migrate-legacy-trial] ${statusChange.count} tenant(s) rebasculé(s) status=trialing -> active`,
+      `[migrate-legacy-trial] ${statusChange.count} tenant(s) rebasculés status=trialing -> active`,
     );
   }
 
