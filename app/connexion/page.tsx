@@ -16,6 +16,8 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { startAuthentication } from "@simplewebauthn/browser";
 import { humanizeAuthError } from "@/lib/auth-errors";
+import HexBackdrop from "@/components/HexBackdrop";
+import HexMascot from "@/components/HexMascot";
 
 type SsoProviders = { google: boolean; microsoft: boolean };
 type Mode = "password" | "magic-link" | "webauthn";
@@ -30,12 +32,17 @@ export default function ConnexionPage() {
 
 function ConnexionFallback() {
   return (
-    <div className="max-w-md mx-auto px-4 py-20 text-center">
-      <div className="text-4xl opacity-40 animate-pulse" aria-hidden="true">
-        🦊
+    <main className="min-h-[60vh] flex items-center justify-center px-4 py-20 text-center">
+      <div>
+        <div
+          className="text-5xl opacity-40 animate-pulse"
+          aria-hidden="true"
+        >
+          🦊
+        </div>
+        <p className="text-sm text-gray-500 mt-3">Chargement…</p>
       </div>
-      <p className="text-sm text-gray-500 mt-3">Chargement…</p>
-    </div>
+    </main>
   );
 }
 
@@ -165,38 +172,62 @@ function ConnexionInner() {
 
   if (magicSent) {
     return (
-      <div className="max-w-md mx-auto px-4 py-20 text-center">
-        <div className="text-6xl mb-4">📬</div>
-        <h1 className="text-2xl font-bold text-primary-500 mb-3">
-          Mail envoyé !
-        </h1>
-        <p className="text-gray-600">
-          On vient de t'envoyer un lien magique sur <strong>{email}</strong>.
-          Clique dessus pour entrer.
-        </p>
-        <p className="text-sm text-gray-400 mt-4">
-          (Pense à vérifier tes spams s'il n'arrive pas tout de suite.)
-        </p>
-      </div>
+      <main id="main-content" className="overflow-x-hidden animate-fadeIn">
+        <HexBackdrop intensity="soft" className="bg-humanix-soft">
+          <section className="max-w-md mx-auto px-4 pt-12 pb-16 sm:pt-20 sm:pb-24 text-center">
+            <div className="mb-4 flex justify-center">
+              <HexMascot mood="happy" size="lg" animated />
+            </div>
+            <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
+              ✉️ Mail envoyé
+            </p>
+            <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-primary-500 dark:text-accent-300 leading-tight mb-3">
+              Vérifie ta boîte mail
+            </h1>
+            <p className="text-base sm:text-lg text-gray-700 dark:text-gray-200 leading-relaxed mb-6">
+              Un lien magique vient d&apos;être envoyé à{" "}
+              <strong>{email}</strong>. Clique dessus depuis le même
+              appareil pour finaliser ta connexion.
+            </p>
+            <div className="bg-white/70 dark:bg-slate-900/60 border border-gray-200/80 dark:border-slate-700/80 rounded-2xl p-5 backdrop-blur-sm space-y-2 text-left text-sm text-gray-700 dark:text-gray-200">
+              <p>
+                <strong className="text-primary-500">⏱️ Validité :</strong>{" "}
+                lien à usage unique, valable 24h.
+              </p>
+              <p>
+                <strong className="text-primary-500">🔍 Pas reçu ?</strong>{" "}
+                Vérifie tes spams et le dossier &laquo;&nbsp;Promotions&nbsp;&raquo; (Gmail).
+              </p>
+            </div>
+          </section>
+        </HexBackdrop>
+      </main>
     );
   }
 
   return (
-    <div className="max-w-md mx-auto px-4 py-16">
-      <div className="text-center mb-8">
-        <div className="flex justify-center mb-4">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/logo-humanix-academie-192.png"
-            alt="Humanix Académie"
-            className="h-24 w-auto mx-auto"
-          />
-        </div>
-        <h1 className="text-3xl font-bold text-primary-500">Connexion</h1>
-        <p className="text-gray-600 mt-2 text-sm">
-          Choisis ta voie d'accès.
-        </p>
-      </div>
+    <main id="main-content" className="overflow-x-hidden animate-fadeIn">
+      {/* ==================== HERO ==================== */}
+      <HexBackdrop intensity="soft" className="bg-humanix-soft">
+        <section className="max-w-md mx-auto px-4 pt-10 pb-4 sm:pt-14 sm:pb-6 text-center">
+          <div className="mb-4 flex justify-center">
+            <HexMascot mood="neutral" size="lg" animated />
+          </div>
+          <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
+            🔐 Connexion · Humanix Académie
+          </p>
+          <h1 className="font-display text-4xl sm:text-5xl font-extrabold text-primary-500 dark:text-accent-300 leading-[1.05] mb-3">
+            Bon retour parmi nous.
+          </h1>
+          <p className="text-base sm:text-lg text-gray-700 dark:text-gray-200 leading-relaxed max-w-sm mx-auto">
+            Choisis ta voie d&apos;accès. Magic link, mot de passe, ou clé
+            de sécurité — comme tu préfères.
+          </p>
+        </section>
+      </HexBackdrop>
+
+      {/* ==================== AUTH CARD ==================== */}
+      <section className="max-w-md mx-auto px-4 pb-12 -mt-2">
 
       {/* Step-up requis pour /superadmin */}
       {stepUp && (
@@ -501,7 +532,21 @@ function ConnexionInner() {
           </button>
         </form>
       )}
-    </div>
+
+        {/* ==================== FOOTER LINKS ==================== */}
+        <div className="mt-6 space-y-3 text-center">
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            Pas encore de compte ?{" "}
+            <Link
+              href="/inscription"
+              className="text-accent-700 dark:text-accent-300 font-semibold hover:underline"
+            >
+              Inscription gratuite
+            </Link>
+          </p>
+        </div>
+      </section>
+    </main>
   );
 }
 
