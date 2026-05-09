@@ -151,16 +151,25 @@ export default async function AdminDpoPage() {
     <div className="space-y-8">
       <AdminPageHeader
         title="Espace DPO"
-        description="Demandes RGPD, journal d'audit, AIPD generator. Tout ce qu'un DPO interne ou mutualise consulte au quotidien."
+        description="Demandes RGPD, journal d'audit, AIPD generator, retention configurable. Tout ce qu'un DPO interne ou mutualise consulte au quotidien."
         icon="🛡"
         actions={
-          <Link
-            href="/admin/dpo/aipd"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary-500 text-white font-bold hover:bg-primary-600 transition shadow-sm"
-          >
-            <span aria-hidden="true">📝</span>
-            Generateur AIPD
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/admin/dpo/retention"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-700 dark:text-gray-200 text-sm font-bold hover:border-accent-500 transition shadow-sm"
+            >
+              <span aria-hidden="true">🗓</span>
+              Retention RGPD
+            </Link>
+            <Link
+              href="/admin/dpo/aipd"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary-500 text-white font-bold hover:bg-primary-600 transition shadow-sm"
+            >
+              <span aria-hidden="true">📝</span>
+              Generateur AIPD
+            </Link>
+          </div>
         }
       />
 
