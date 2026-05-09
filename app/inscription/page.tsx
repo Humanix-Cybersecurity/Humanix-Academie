@@ -104,9 +104,11 @@ async function InscriptionInner({
 
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
-      {/* ==================== HERO ==================== */}
+      {/* ==================== HERO ====================
+          pb-10 sm:pb-12 pour donner de l'air avant que les trust badges
+          + card AUTH commencent. */}
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
-        <section className="max-w-xl mx-auto px-4 pt-10 pb-4 sm:pt-14 sm:pb-6 text-center">
+        <section className="max-w-xl mx-auto px-4 pt-10 pb-10 sm:pt-14 sm:pb-12 text-center">
           <div className="mb-4 flex justify-center">
             <HexMascot mood="happy" size="lg" animated />
           </div>
