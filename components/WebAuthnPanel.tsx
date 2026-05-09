@@ -173,10 +173,20 @@ function CredentialRow({ cred }: { cred: WebAuthnCredentialItem }) {
     setError(null);
     startTransition(async () => {
       try {
-        await renameWebauthnCredential(cred.id, name);
+        const res = await renameWebauthnCredential(cred.id, name);
+        if (!res.ok) {
+          setError(res.error);
+          return;
+        }
         setEditing(false);
       } catch (e: unknown) {
-        setError(e instanceof Error ? e.message : "Erreur");
+        // Normalement on ne devrait pas tomber ici (l'action ne throw plus).
+        // Filet de securite si Next.js en mode prod throw silencieusement.
+        setError(
+          e instanceof Error
+            ? e.message
+            : "Erreur réseau ou serveur. Réessaye dans quelques instants.",
+        );
       }
     });
   };
@@ -186,17 +196,22 @@ function CredentialRow({ cred }: { cred: WebAuthnCredentialItem }) {
     setError(null);
     startTransition(async () => {
       try {
-        await deleteWebauthnCredential(cred.id);
+        const res = await deleteWebauthnCredential(cred.id);
+        if (!res.ok) {
+          setError(res.error);
+          return;
+        }
+        // Le revalidatePath a deja invalide le cache cote serveur.
+        // window.location.reload() force un fetch frais (sinon le hard-cache
+        // navigateur peut continuer a afficher la cle supprimee).
         window.location.reload();
       } catch (e: unknown) {
-        const msg = e instanceof Error ? e.message : "Erreur";
-        if (msg.includes("cannot_delete_last_key_for_superadmin")) {
-          setError(
-            "Impossible : vous devez garder au moins une clé active en tant que SUPERADMIN.",
-          );
-        } else {
-          setError(msg);
-        }
+        // Filet de securite : meme cas que rename ci-dessus.
+        setError(
+          e instanceof Error
+            ? e.message
+            : "Erreur réseau ou serveur. Réessaye dans quelques instants.",
+        );
       }
     });
   };
