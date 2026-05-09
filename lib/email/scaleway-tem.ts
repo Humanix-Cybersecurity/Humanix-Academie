@@ -17,6 +17,7 @@ import type { SendEmailParams, SendEmailResult } from "./index";
 
 const DEFAULT_REGION = "fr-par";
 const MAX_ERROR_BODY_LENGTH = 500;
+const MAX_ERROR_BODY_LENGTH = 500;
 
 export function isScalewayTemConfigured(): boolean {
   return Boolean(
@@ -109,7 +110,7 @@ export async function sendViaScalewayTem(
         .catch(() => "[Unable to read error body]");
       return {
         ok: false,
-        reason: `scaleway_tem_${res.status}`,
+        details: errBody.slice(0, MAX_ERROR_BODY_LENGTH),
         details: errBody.slice(0, MAX_ERROR_BODY_LENGTH),
       };
     }
