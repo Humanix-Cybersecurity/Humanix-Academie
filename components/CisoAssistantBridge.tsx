@@ -19,7 +19,7 @@ const SNIPPET_TEMPLATES = (framework: FrameworkRef): Snippet[] => [
     id: "curl",
     label: "curl",
     code: `curl -H "Authorization: Bearer hxa_VOTRE_CLE_API" \\
-  "https://academie.humanix-cybersecurity.fr/api/v1/evidence-export?framework=${framework}&format=ciso-assistant-v1"`,
+  "https://humanix-academie.fr/api/v1/evidence-export?framework=${framework}&format=ciso-assistant-v1"`,
   },
   {
     id: "python",
@@ -27,7 +27,7 @@ const SNIPPET_TEMPLATES = (framework: FrameworkRef): Snippet[] => [
     code: `import requests, os
 
 r = requests.get(
-    "https://academie.humanix-cybersecurity.fr/api/v1/evidence-export",
+    "https://humanix-academie.fr/api/v1/evidence-export",
     params={"framework": "${framework}", "format": "ciso-assistant-v1"},
     headers={"Authorization": f"Bearer {os.environ['HUMANIX_API_KEY']}"},
     timeout=30,
@@ -39,7 +39,7 @@ print(f"{bundle['summary']['compliant']}/{bundle['summary']['total_controls']} c
     id: "node",
     label: "Node.js",
     code: `const res = await fetch(
-  \`https://academie.humanix-cybersecurity.fr/api/v1/evidence-export?framework=${framework}\`,
+  \`https://humanix-academie.fr/api/v1/evidence-export?framework=${framework}\`,
   { headers: { Authorization: \`Bearer \${process.env.HUMANIX_API_KEY}\` } }
 );
 const bundle = await res.json();
