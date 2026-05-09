@@ -713,8 +713,7 @@ export default async function TarifsPage({
         >
           - Hex veille
         </cite>
-        </cite>
-      </div>
+      </section>
     </main>
   );
 }
