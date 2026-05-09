@@ -17,7 +17,6 @@ import type { SendEmailParams, SendEmailResult } from "./index";
 
 const DEFAULT_REGION = "fr-par";
 const MAX_ERROR_BODY_LENGTH = 500;
-
 export function isScalewayTemConfigured(): boolean {
   return Boolean(
     process.env.SCALEWAY_TEM_TOKEN &&
@@ -111,7 +110,6 @@ export async function sendViaScalewayTem(
         ok: false,
         details: errBody.slice(0, MAX_ERROR_BODY_LENGTH),
       };
-    }
     const data = (await res.json().catch(() => ({}))) as {
       emails?: { id?: string }[];
     };
