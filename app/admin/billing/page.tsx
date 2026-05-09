@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Page de facturation cote tenant (admin du tenant). Affiche :
-//   - Plan actuel + sieges utilises
+//   - Plan actuel + sièges utilises
 //   - Etat du subscription (active, past_due, canceled, etc.)
 //   - Prochain renouvellement / restriction d'accès si paiement KO
 //   - CTA upgrade / downgrade / annuler
