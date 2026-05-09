@@ -257,6 +257,31 @@ function PricingCard({
       <div className="mb-4 pb-4 border-b border-gray-100">
         {activePricing.amount === null ? (
           <p className="text-2xl font-extrabold text-primary-500">Sur devis</p>
+        ) : t.freeUnderSeats && activePricing.unit === "forfait" ? (
+          // Cas Starter : 2 lignes pour clarifier le sub-tier free <=N sieges,
+          // puis le forfait au-dela. Plus lisible qu'une phrase concatenee
+          // avec un middot. La ligne "Gratuit" en emerald, le forfait en
+          // primary (visuellement = "le prix que tu paies si tu grandis").
+          <>
+            <p className="text-base sm:text-lg font-bold text-emerald-700 dark:text-emerald-400">
+              Gratuit jusqu'à {t.freeUnderSeats} utilisateurs
+            </p>
+            <p className="text-2xl font-extrabold text-primary-500 mt-1">
+              Puis {activePricing.amount} €/mois au-delà
+            </p>
+            {billing === "annual" && t.pricing.annual.saving && (
+              <p className="text-xs text-success font-bold mt-1">
+                {t.pricing.annual.saving}
+              </p>
+            )}
+            {billing === "monthly" &&
+              t.pricing.annual.saving &&
+              t.pricing.annual.amount !== null && (
+                <p className="text-xs text-gray-500 mt-1">
+                  ou {t.pricing.annual.amount} €/mois au-delà en annuel
+                </p>
+              )}
+          </>
         ) : (
           <>
             <p className="text-2xl font-extrabold text-primary-500">
