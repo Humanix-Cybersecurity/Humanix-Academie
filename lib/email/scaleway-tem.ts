@@ -56,7 +56,7 @@ function detectMisconfiguredToken(token: string): string | null {
     return "SCALEWAY_TEM_TOKEN looks like an access key (SCW..., 20 chars). The TEM REST API requires the secret key (UUID, 36 chars). See .env.example.";
   }
 
-  return "SCALEWAY_TEM_TOKEN invalide. Vérifier qu'il s'agit du secret-key IAM Scaleway (UUID 36 chars), pas de l'access-key. Cf. .env.example.";
+  return "Invalid SCALEWAY_TEM_TOKEN. Verify that it is the Scaleway IAM secret key (UUID, 36 chars), not the access key. See .env.example.";
 }
 
 export async function sendViaScalewayTem(
