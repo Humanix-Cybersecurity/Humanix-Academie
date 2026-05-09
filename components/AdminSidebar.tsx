@@ -50,6 +50,7 @@ const SECTIONS: Section[] = [
       },
       { href: "/admin/utilisateurs", label: "Utilisateurs", icon: "👥" },
       { href: "/admin/groupes", label: "Groupes", icon: "🏷️" },
+      { href: "/admin/automations", label: "Automations", icon: "⚙️" },
     ],
   },
   {

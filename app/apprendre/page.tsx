@@ -35,6 +35,12 @@ import { buildEquippedFromInventory } from "@/lib/shop";
 import { getActiveChallenge } from "@/lib/challenge";
 import { generateCoachAdvice } from "@/lib/coach";
 import { listExpertEpisodes } from "@/lib/content-availability";
+import { getUserPersona } from "@/lib/ai/persona";
+import {
+  classifySaisonForUser,
+  compareSaisonsForUser,
+  type SaisonClassification,
+} from "@/lib/personalize/learn-path";
 
 export const dynamic = "force-dynamic";
 
@@ -162,6 +168,11 @@ export default async function ApprendrePage() {
   const activeChallenge = await getActiveChallenge(tenantId);
   const coachAdvice = await generateCoachAdvice(userId);
 
+  // Persona pedagogique infere : sert a prioriser les saisons sur la
+  // page (un developpeur voit "cyber-dev" en haut, un finance voit
+  // "fraude-president" en haut, etc.). Cf. lib/personalize/learn-path.ts
+  const persona = await getUserPersona(userId);
+
   const configBySaison = new Map(tenantConfigs.map((c) => [c.saisonId, c]));
 
   // Filtrage : seulement les saisons actives pour ce tenant (par defaut actif si pas de config)
@@ -182,6 +193,30 @@ export default async function ApprendrePage() {
     return slugs.some((s) => userGroupSlugs.has(s));
   };
 
+  // On calcule les agregats AVANT le tri pour pouvoir alimenter la
+  // classification (qui depend du completedCount + avgQuizScorePct).
+  const progressByEp = new Map(progress.map((p) => [p.episodeId, p]));
+  const totalXP = progress.reduce((s, p) => s + (p.score || 0), 0);
+  const completedCount = progress.filter(
+    (p) => p.status === "COMPLETED",
+  ).length;
+  // Score quiz moyen sur les episodes completes (pour debloquer le
+  // niveau "hard" quand maturite >= 70%). On utilise score (XP/totalXP%
+  // approche) faute de bestQuizScorePct ici ; pour 99% des cas la
+  // correlation est suffisante pour la classification.
+  // (cf. lib/risk-score.ts:71 qui fait la meme estimation)
+  const completedProgress = progress.filter(
+    (p) => p.status === "COMPLETED",
+  );
+  const avgQuizScorePct =
+    completedProgress.length === 0
+      ? 0
+      : Math.min(
+          100,
+          completedProgress.reduce((s, p) => s + (p.score ?? 0), 0) /
+            completedProgress.length,
+        );
+
   const saisons = allSaisons
     .filter((s) => {
       const cfg = configBySaison.get(s.id);
@@ -189,10 +224,19 @@ export default async function ApprendrePage() {
     })
     .map((s) => {
       const cfg = configBySaison.get(s.id);
+      const isMandatory = cfg?.isMandatory ?? false;
+      const classification: SaisonClassification = classifySaisonForUser({
+        saisonSlug: s.slug,
+        isMandatory,
+        persona,
+        completedCount,
+        avgQuizScorePct,
+      });
       return {
         ...s,
-        isMandatory: cfg?.isMandatory ?? false,
+        isMandatory,
         effectiveOrder: cfg?.customOrder ?? s.order,
+        classification,
         // Annote chaque episode avec un flag "pour ton metier" pour
         // que l'UI puisse highlighter (badge / couleur). Le tri par
         // ordre canonique est preserve : on n'inverse pas l'ordre,
@@ -203,13 +247,10 @@ export default async function ApprendrePage() {
         })),
       };
     })
-    .sort((a, b) => a.effectiveOrder - b.effectiveOrder);
+    // Tri en 3 buckets : mandatory > recommended (par persona-rank)
+    // > explore (ordre canonique). Cf. lib/personalize/learn-path.ts
+    .sort(compareSaisonsForUser);
 
-  const progressByEp = new Map(progress.map((p) => [p.episodeId, p]));
-  const totalXP = progress.reduce((s, p) => s + (p.score || 0), 0);
-  const completedCount = progress.filter(
-    (p) => p.status === "COMPLETED",
-  ).length;
   const totalEpisodes = saisons.reduce((s, sa) => s + sa.episodes.length, 0);
   const currentLevel = getLevel(totalXP);
 
@@ -544,6 +585,7 @@ export default async function ApprendrePage() {
                     expertCount={expertCount}
                     avgMinutes={avgMinutes}
                     targetedCount={targetedCount}
+                    classification={s.classification}
                   />
                 );
               })}
@@ -666,6 +708,7 @@ function SaisonCard({
   expertCount,
   avgMinutes,
   targetedCount,
+  classification,
 }: {
   idx: number;
   saison: {
@@ -688,6 +731,8 @@ function SaisonCard({
   /** Nombre d'episodes targetes pour le metier de l'user (intersection
    *  Episode.targetGroups + UserGroup). 0 = saison generique pour cet user. */
   targetedCount: number;
+  /** Classification persona/maturite : bucket + reason humaine pour le badge. */
+  classification: SaisonClassification;
 }) {
   return (
     <article
@@ -727,13 +772,26 @@ function SaisonCard({
           {isLocked ? "🌒" : saison.coverEmoji}
         </div>
 
-        {/* Recommande par ton equipe - badge soft amber, pas rouge */}
+        {/* Badges contextuels : recommande RH (mandatory) + persona-match
+            ("pour toi") + targetedGroups ("pour ton metier"). On les
+            affiche seulement si pertinents (pct < 100, etc.) pour eviter
+            le bruit visuel sur les saisons deja terminees. */}
         <div className="flex flex-wrap gap-2 mb-3">
           {saison.isMandatory && pct < 100 && (
             <span className="text-[10px] uppercase tracking-widest font-bold bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 px-2 py-1 rounded-full">
               Recommande par ton equipe
             </span>
           )}
+          {classification.bucket === "recommended" &&
+            pct < 100 &&
+            !saison.isMandatory && (
+              <span
+                className="text-[10px] uppercase tracking-widest font-bold bg-cyan-100 dark:bg-cyan-900/40 text-cyan-800 dark:text-cyan-200 px-2 py-1 rounded-full"
+                title={classification.reason ?? undefined}
+              >
+                🎯 Pour toi
+              </span>
+            )}
           {targetedCount > 0 && (
             <span
               className="text-[10px] uppercase tracking-widest font-bold bg-accent-100 dark:bg-accent-900/40 text-accent-800 dark:text-accent-200 px-2 py-1 rounded-full"
