@@ -324,7 +324,7 @@ export default async function TarifsPage({
             },
             {
               emoji: "🛒",
-              title: "Marketplace communaute",
+              title: "Marketplace communauté",
               text: "Tes pairs RSSI publient leurs modules, modérés par notre équipe. Effet de levier collectif.",
             },
             {
