@@ -20,6 +20,7 @@ import Apple from "next-auth/providers/apple";
 import type { Provider } from "next-auth/providers";
 import { db } from "@/lib/db";
 import { verifyPassword } from "@/lib/password";
+import { fireAndForgetAutoAssign } from "@/lib/onboarding/auto-assign";
 import { verifyTotpCode } from "@/lib/totp";
 import { consumeBackupCode } from "@/lib/password";
 import { auditLog, AuditActions, AuditOutcomes } from "@/lib/audit";
@@ -464,6 +465,9 @@ const adapter: typeof baseAdapter = {
         isActive: true,
       },
     });
+    // Auto-assignation parcours obligatoire (fire-and-forget : on ne
+    // bloque pas le signup public si l'auto-assign rate)
+    void fireAndForgetAutoAssign(created.id, community.id);
     // Cast vers le type attendu par next-auth (notre User a des champs en plus
     // que le type AdapterUser, et tenantId / role / isActive ne sont pas dans
     // sa surface publique).
