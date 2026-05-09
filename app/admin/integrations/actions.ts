@@ -25,7 +25,14 @@ async function requireAdminTenant(): Promise<{ tenantId: string }> {
   return { tenantId };
 }
 
-const TYPES: WebhookType[] = ["SLACK", "TEAMS", "GENERIC"];
+const TYPES: WebhookType[] = [
+  "SLACK",
+  "TEAMS",
+  "GENERIC",
+  "JIRA",
+  "SERVICENOW",
+  "PAGERDUTY",
+];
 
 const CreateSchema = z.object({
   label: z.string().min(2).max(120),
@@ -36,6 +43,13 @@ const CreateSchema = z.object({
     .max(1000)
     .refine((u) => u.startsWith("https://"), "URL HTTPS obligatoire"),
   events: z.array(z.string()).min(1, "Au moins un évènement requis"),
+  // Secret saisi par l'admin pour les types qui en ont besoin :
+  //   - JIRA       : base64(email:apitoken) (pas l'apitoken brut)
+  //   - SERVICENOW : base64(user:pass)
+  //   - PAGERDUTY  : routing_key (Integration Key, format hex 32 chars)
+  // Pour SLACK/TEAMS : auth via URL, secret ignore.
+  // Pour GENERIC : laisse vide, on en genere un aleatoirement.
+  secret: z.string().max(2000).optional(),
 });
 
 export async function createWebhook(formData: FormData) {
@@ -51,6 +65,7 @@ export async function createWebhook(formData: FormData) {
     type: formData.get("type"),
     url: formData.get("url"),
     events,
+    secret: formData.get("secret") || undefined,
   });
   if (!parsed.success) {
     throw new Error(parsed.error.issues[0]?.message ?? "Données invalides");
@@ -61,9 +76,26 @@ export async function createWebhook(formData: FormData) {
   const count = await db.tenantWebhook.count({ where: { tenantId } });
   if (count >= 10) throw new Error("Limite de 10 webhooks par tenant atteinte");
 
-  // Genere un secret aleatoire pour les GENERIC
-  const secret =
-    data.type === "GENERIC" ? crypto.randomBytes(32).toString("hex") : null;
+  // Resolution du secret selon le type :
+  //   - GENERIC : auto-genere si non fourni (32 octets hex pour HMAC)
+  //   - JIRA / SERVICENOW : secret saisi par l'admin (base64 d'auth Basic)
+  //   - PAGERDUTY : routing_key saisi par l'admin
+  //   - SLACK / TEAMS : pas de secret (auth via URL)
+  let secret: string | null = null;
+  if (data.type === "GENERIC") {
+    secret = data.secret ?? crypto.randomBytes(32).toString("hex");
+  } else if (
+    data.type === "JIRA" ||
+    data.type === "SERVICENOW" ||
+    data.type === "PAGERDUTY"
+  ) {
+    if (!data.secret || data.secret.length < 8) {
+      throw new Error(
+        `Le secret est requis pour les webhooks ${data.type} (auth Basic ou routing_key).`,
+      );
+    }
+    secret = data.secret;
+  }
 
   await db.tenantWebhook.create({
     data: {
