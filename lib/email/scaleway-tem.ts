@@ -115,9 +115,12 @@ export async function sendViaScalewayTem(
     };
     return { ok: true, providerMessageId: data?.emails?.[0]?.id ?? null };
   } catch (e: unknown) {
+    console.error("[scaleway-tem] send failed", e);
     return {
       ok: false,
-      reason: e instanceof Error ? e.message : "scaleway_tem_unknown_error",
+      reason: "scaleway_tem_send_failed",
+      details:
+        e instanceof Error ? `${e.name}: ${e.message}` : "Unknown thrown value",
     };
   }
 }
