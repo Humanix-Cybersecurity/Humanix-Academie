@@ -44,7 +44,7 @@ function getEndpoint(): string {
  */
 function detectMisconfiguredToken(token: string): string | null {
   // Format secret-key attendu : UUID v4 (8-4-4-4-12, 36 chars total)
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
     token,
   );
   if (isUuid) return null;
