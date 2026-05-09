@@ -119,6 +119,20 @@ export default async function SmtpConfigPage() {
             </Link>
           </li>
         </ol>
+        <div className="mt-4 pt-4 border-t border-primary-200/60 dark:border-primary-900/30">
+          <p className="text-sm text-gray-700 dark:text-gray-200">
+            🎯 <strong>Avant de configurer ton SMTP</strong>, lis notre
+            cadrage{" "}
+            <Link
+              href="/opsec-phishing"
+              className="text-accent-700 dark:text-accent-300 underline font-bold"
+            >
+              OPSEC du phishing simulé →
+            </Link>{" "}
+            (8 chantiers, 5 min de lecture). Tu sauras si tu es pret a
+            assumer ou s&apos;il vaut mieux nous deleguer ca.
+          </p>
+        </div>
       </section>
 
       {/* ===== STATUT ACTUEL ===== */}
