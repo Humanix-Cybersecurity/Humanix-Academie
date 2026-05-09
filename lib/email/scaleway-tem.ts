@@ -73,7 +73,7 @@ export async function sendViaScalewayTem(
   }
   const fromAddress = params.from ?? process.env.EMAIL_FROM!;
   const fromName =
-    params.fromName ?? process.env.NEXT_PUBLIC_APP_NAME ?? "Humanix Academie";
+    params.fromName ?? process.env.NEXT_PUBLIC_APP_NAME ?? "Humanix Académie";
 
   const recipients = (
     Array.isArray(params.to) ? params.to : [params.to]
