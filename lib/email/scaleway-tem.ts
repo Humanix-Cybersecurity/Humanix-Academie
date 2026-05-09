@@ -34,7 +34,7 @@ function getEndpoint(): string {
 }
 
 /**
- * Detecte le piege classique : utilisateur qui colle l'access-key (commence
+ * Detecte le piège classique : utilisateur qui colle l'access-key (commence
  * par "SCW", 20 chars) au lieu du secret-key (UUID 36 chars) dans la conf.
  * L'access-key sert au SDK Scaleway officiel mais pas a l'API REST TEM.
  *
