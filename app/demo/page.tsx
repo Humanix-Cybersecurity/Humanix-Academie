@@ -140,12 +140,16 @@ export default function DemoPage() {
           </p>
         </div>
 
-        {/* ETAPE 1 : Selecteur d'offre */}
+        {/* ETAPE 1 : Selecteur d'offre.
+            Aligne sur le layout de l'etape 2 (3 cards roles) :
+            grid-cols-1 mobile -> grid-cols-3 a partir de sm.
+            Avant : grid-cols-4 alors qu'on n'a plus que 3 plans -> 75% de
+            largeur seulement, blocs deequilibres. */}
         <div className="mb-10">
           <p className="text-xs uppercase tracking-widest text-accent-500 font-bold mb-3 text-center">
             Étape 1 - L'offre que tu veux tester
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 items-stretch">
             {PLAN_OPTIONS.map((p) => {
               const active = selectedPlan === p.id;
               return (
@@ -153,28 +157,30 @@ export default function DemoPage() {
                   key={p.id}
                   onClick={() => onPickPlan(p.id)}
                   disabled={planSyncing}
-                  className={`card text-left transition-all hover:scale-[1.02] disabled:opacity-50 ${
+                  className={`card text-left flex flex-col h-full transition-all hover:scale-[1.02] disabled:opacity-50 ${
                     active
                       ? "ring-4 ring-accent-500 border-accent-500 bg-gradient-to-br from-accent-50 to-cyan-50 dark:from-slate-800 dark:to-slate-700"
                       : "hover:ring-2 hover:ring-gray-300"
                   }`}
                   aria-pressed={active}
                 >
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-2xl">{PLAN_EMOJI[p.id]}</span>
-                    <span className="font-bold text-primary-500">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-3xl">{PLAN_EMOJI[p.id]}</span>
+                    <span className="font-bold text-primary-500 text-lg">
                       {PLAN_LABEL[p.id]}
                     </span>
                     {active && (
-                      <span className="ml-auto text-xs text-accent-500 font-bold">
+                      <span className="ml-auto text-base text-accent-500 font-bold">
                         ✓
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-600 dark:text-gray-300 mb-1">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-2 flex-1">
                     {p.tagline}
                   </p>
-                  <p className="text-xs font-medium text-gray-500">{p.price}</p>
+                  <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mt-auto">
+                    {p.price}
+                  </p>
                 </button>
               );
             })}
