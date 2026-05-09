@@ -1230,6 +1230,39 @@ export const CATALOG_SAISONS: CatalogSaison[] = [
       },
     ],
   },
+  // --- Saison de remediation FLASH (declenchee apres clic phishing simule)
+  // Episodes ultra-courts (2-3 min) qui verrouillent UN reflexe pour
+  // EVITER LA RECHUTE. Auto-assignee quand un user clique sur un mail
+  // piege (cf. /phishing/[token] -> redirect vers le bon flash).
+  {
+    slug: "remediation-flash",
+    title: "Remédiation flash post-phishing",
+    description:
+      "Modules ultra-courts (2 minutes) déclenchés automatiquement quand un collaborateur clique sur un phishing simulé. Le bon réflexe ancré dans la foulée.",
+    coverEmoji: "⚡",
+    order: 27,
+    audience: "tous",
+    episodes: [
+      {
+        slug: "01-microsoft-flash",
+        title: "Flash : éviter le faux Microsoft 365",
+        durationMinutes: 2,
+        difficulty: "easy",
+      },
+      {
+        slug: "02-livraison-flash",
+        title: "Flash : éviter le faux SMS de livraison",
+        durationMinutes: 2,
+        difficulty: "easy",
+      },
+      {
+        slug: "03-fraude-president-flash",
+        title: "Flash : éviter la fraude au président",
+        durationMinutes: 2,
+        difficulty: "easy",
+      },
+    ],
+  },
   // --- Saison dediee DPO (audience specialisee) ---
   {
     slug: "dpo-quotidien",
