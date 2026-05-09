@@ -7,7 +7,7 @@
 //
 // Refonte cosy mai 2026 :
 //  - Hero HexBackdrop avec sous-titre "notre conviction tarifaire"
-//  - Section "Pourquoi" : palette 6 saisons cyclees sur les 9 cartes
+//  - Section "Pourquoi" : palette 6 saisons cyclées sur les 9 cartes
 //  - Cards palette adoucie sur les paliers + cascade slide-up
 //  - Citation finale "Hex veille" qui resume le pari editorial
 //  - Vocabulaire transforme : "score" reste car c'est tabular, mais ROI
@@ -295,7 +295,7 @@ export default async function TarifsPage({
             {
               emoji: "🌐",
               title: "Open source AGPLv3",
-              text: "Code complet sur GitHub. Audite-le, fork-le, héberge-le. Zéro boîte noire, transparence totale.",
+              text: "Code complet sur GitHub. Audites-le, fork-le, héberge-le. Zéro boîte noire, transparence totale.",
             },
             {
               emoji: "🇫🇷",
@@ -335,7 +335,7 @@ export default async function TarifsPage({
             {
               emoji: "💰",
               title: "Volume plutot que rente",
-              text: "3 €/user/mois en Essentielle. 5 à 10x moins cher que les acteurs US. Volume > 30 grosses boites.",
+              text: "3 €/user/mois en Essentielle. 5 à 10x moins cher que les acteurs US. Volume > 30 grosses boîtes.",
             },
           ].map((diff, idx) => (
             <DiffCard
@@ -878,7 +878,7 @@ function Trust({ children }: { children: ReactNode }) {
   );
 }
 
-// Palette 6 saisons cyclees (cyan/emerald/amber/purple/rose/indigo) pour
+// Palette 6 saisons cyclées (cyan/emerald/amber/purple/rose/indigo) pour
 // donner du caractere aux 9 cartes "Pourquoi Humanix" - la grammaire
 // visuelle est partagee avec /comparatif, /librairie, /lancement-oss.
 const DIFF_PALETTES = [
