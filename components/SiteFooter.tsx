@@ -27,9 +27,30 @@ type FooterLink = {
   external?: boolean;
 };
 
+// Le lien "Demo en ligne" pointe :
+//   - en prod (DEMO_MODE=false) -> https://demo.humanix-academie.fr
+//     (subdomain dedie qui tourne en mode demo, separe de la prod
+//     commerciale pour eviter tout melange de donnees fictives /
+//     reelles).
+//   - en demo (DEMO_MODE=true)  -> /demo (route locale, l'app est
+//     deja en mode demo).
+//
+// Le subdomain demo en prod est traite comme lien externe (target=_blank
+// + rel noopener noreferrer) pour ne pas perdre la session de l'user
+// qui regarde le site commercial.
+const DEMO_LINK: FooterLink =
+  process.env.DEMO_MODE === "true"
+    ? { href: "/demo", label: "Démo en ligne", emoji: "🎮" }
+    : {
+        href: "https://demo.humanix-academie.fr",
+        label: "Démo en ligne",
+        emoji: "🎮",
+        external: true,
+      };
+
 const PRODUIT: FooterLink[] = [
   { href: "/tarifs", label: "Tarifs", emoji: "💶" },
-  { href: "/demo", label: "Démo en ligne", emoji: "🎮" },
+  DEMO_LINK,
   { href: "/comparatif", label: "Comparatif honnête", emoji: "⚖️" },
   { href: "/integrations", label: "Connecteurs", emoji: "🔌" },
   { href: "/marketplace", label: "Marketplace", emoji: "🏛" },
