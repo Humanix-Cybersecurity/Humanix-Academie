@@ -9,7 +9,7 @@ import { WEBHOOK_EVENTS, WebhookEventKey } from "@/lib/webhooks/events";
 type Row = {
   id: string;
   label: string;
-  type: "SLACK" | "TEAMS" | "GENERIC";
+  type: "SLACK" | "TEAMS" | "GENERIC" | "JIRA" | "SERVICENOW" | "PAGERDUTY";
   urlMasked: string;
   events: string[];
   isActive: boolean;
@@ -30,6 +30,9 @@ const TYPE_LABEL = {
   SLACK: { name: "Slack", emoji: "💬" },
   TEAMS: { name: "Teams", emoji: "🟦" },
   GENERIC: { name: "Générique", emoji: "🔌" },
+  JIRA: { name: "Jira", emoji: "🟦" },
+  SERVICENOW: { name: "ServiceNow", emoji: "🟩" },
+  PAGERDUTY: { name: "PagerDuty", emoji: "🟧" },
 } as const;
 
 export default function WebhookTable({

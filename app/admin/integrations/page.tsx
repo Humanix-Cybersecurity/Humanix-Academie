@@ -108,9 +108,16 @@ export default async function IntegrationsPage() {
                   required
                   className="input w-full"
                 >
-                  <option value="SLACK">Slack</option>
-                  <option value="TEAMS">Microsoft Teams</option>
-                  <option value="GENERIC">Générique (JSON POST signé)</option>
+                  <option value="SLACK">💬 Slack</option>
+                  <option value="TEAMS">🟦 Microsoft Teams</option>
+                  <option value="JIRA">🟦 Jira (créer un issue)</option>
+                  <option value="SERVICENOW">
+                    🟩 ServiceNow (créer un incident)
+                  </option>
+                  <option value="PAGERDUTY">
+                    🟧 PagerDuty (déclencher une alerte)
+                  </option>
+                  <option value="GENERIC">🔌 Générique (JSON signé HMAC)</option>
                 </select>
               </div>
             </div>
@@ -136,6 +143,71 @@ export default async function IntegrationsPage() {
                 Les URLs locales ou IPs privées sont automatiquement refusées
                 (anti-SSRF).
               </p>
+            </div>
+
+            {/* Secret / auth — requis pour Jira/ServiceNow/PagerDuty,
+                optionnel pour Generic (auto-genere si vide), inutile pour
+                Slack/Teams (auth via URL). */}
+            <div>
+              <label
+                htmlFor="webhook-secret"
+                className="block text-xs font-bold uppercase text-gray-500 mb-1"
+              >
+                Secret / authentification
+              </label>
+              <input
+                id="webhook-secret"
+                name="secret"
+                type="password"
+                autoComplete="off"
+                maxLength={2000}
+                placeholder="Selon le type (cf. aide ci-dessous)"
+                className="input w-full font-mono text-sm"
+                aria-describedby="webhook-secret-help"
+              />
+              <details
+                id="webhook-secret-help"
+                className="text-xs text-gray-500 mt-1"
+              >
+                <summary className="cursor-pointer hover:text-gray-700 dark:hover:text-gray-300">
+                  Quel secret pour quel type ?
+                </summary>
+                <ul className="mt-2 space-y-1 list-disc pl-5">
+                  <li>
+                    <strong>Slack / Teams</strong> : laisser vide. L&apos;auth
+                    est dans l&apos;URL du webhook.
+                  </li>
+                  <li>
+                    <strong>Jira</strong> : <code>base64(email:apitoken)</code>
+                    . Génère un API token sur{" "}
+                    <a
+                      href="https://id.atlassian.com/manage-profile/security/api-tokens"
+                      className="underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      id.atlassian.com
+                    </a>{" "}
+                    puis <code>echo -n &quot;email@xx:apitoken&quot; | base64</code>.
+                    URL avec <code>?projectKey=SEC</code> obligatoire.
+                  </li>
+                  <li>
+                    <strong>ServiceNow</strong> : <code>base64(user:pass)</code>.
+                    Crée un user d&apos;intégration dédié dans ServiceNow.
+                  </li>
+                  <li>
+                    <strong>PagerDuty</strong> :{" "}
+                    <code>routing_key</code> (Integration Key, 32 chars hex)
+                    fournie par PagerDuty quand tu crées un service Events
+                    API v2.
+                  </li>
+                  <li>
+                    <strong>Générique</strong> : auto-généré si vide (HMAC
+                    SHA-256 envoyé en header{" "}
+                    <code>x-humanix-signature</code>).
+                  </li>
+                </ul>
+              </details>
             </div>
 
             <fieldset>
