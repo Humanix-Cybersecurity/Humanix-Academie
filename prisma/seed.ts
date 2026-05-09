@@ -5,6 +5,7 @@ import {
   ProgressStatus,
   Role,
   ItemCategory,
+  PhishingStatus,
 } from "@prisma/client";
 import { getLevel, computeCoinsEarned } from "../lib/levels";
 import { SHOP_CATALOG } from "../lib/shop";
@@ -30,7 +31,23 @@ const prisma = new PrismaClient();
 // editable independamment du seed. 25 saisons x ~6 episodes = 150 modules
 // officiels. Combine avec la marketplace = 180 modules d'apprentissage.
 
-const FAKE_USERS = [
+// `riskProfile` permet de pre-cabler des cas de demo pour /admin/users/at-risk
+// + /admin/analytics/forecast :
+//   - "healthy"   : riskScore 70-90, dernieres activites recentes (defaut)
+//   - "low_score" : riskScore 25-40, mais user actif (vu < 14j)
+//   - "inactive"  : riskScore 55-65, mais silencieux > 70j
+//   - "both"      : riskScore < 35 ET silencieux > 80j (cas le plus rouge)
+type RiskProfile = "healthy" | "low_score" | "inactive" | "both";
+
+const FAKE_USERS: {
+  name: string;
+  email: string;
+  role: Role;
+  service: string;
+  maturity: number;
+  isActive: boolean;
+  riskProfile?: RiskProfile;
+}[] = [
   {
     name: "Sophie Martin",
     email: "sophie@demo-pme.fr",
@@ -46,6 +63,7 @@ const FAKE_USERS = [
     service: "Commercial",
     maturity: 0.4,
     isActive: true,
+    riskProfile: "low_score",
   },
   {
     name: "Christine Dubois",
@@ -78,6 +96,7 @@ const FAKE_USERS = [
     service: "Compta",
     maturity: 0.5,
     isActive: true,
+    riskProfile: "inactive",
   },
   {
     name: "Julie Moreau",
@@ -86,6 +105,7 @@ const FAKE_USERS = [
     service: "Commercial",
     maturity: 0.4,
     isActive: true,
+    riskProfile: "inactive",
   },
   {
     name: "Karim Amrani",
@@ -102,6 +122,7 @@ const FAKE_USERS = [
     service: "Direction",
     maturity: 0.3,
     isActive: true,
+    riskProfile: "both",
   },
   {
     name: "Olivier Roux",
@@ -118,6 +139,7 @@ const FAKE_USERS = [
     service: "Production",
     maturity: 0.25,
     isActive: true,
+    riskProfile: "low_score",
   },
   {
     name: "Antoine Vidal",
@@ -136,6 +158,31 @@ const FAKE_USERS = [
     isActive: true,
   },
 ];
+
+/**
+ * Renvoie le tuple {riskScore, lastSeenAt, completedDaysAgo} pour un profil
+ * de risque demo donne. Garantit des valeurs deterministes (pas de
+ * Math.random() ici) pour que la demo soit reproductible.
+ */
+function riskParamsFor(profile: RiskProfile | undefined): {
+  riskScore: number;
+  lastSeenDaysAgo: number;
+  /** Decale le completedAt des Progress de N jours pour rendre l'inactivite credible. */
+  completedShiftDays: number;
+} {
+  switch (profile) {
+    case "low_score":
+      return { riskScore: 32, lastSeenDaysAgo: 5, completedShiftDays: 0 };
+    case "inactive":
+      return { riskScore: 58, lastSeenDaysAgo: 75, completedShiftDays: 75 };
+    case "both":
+      return { riskScore: 28, lastSeenDaysAgo: 95, completedShiftDays: 95 };
+    case "healthy":
+    case undefined:
+    default:
+      return { riskScore: 78, lastSeenDaysAgo: 2, completedShiftDays: 0 };
+  }
+}
 
 async function main() {
   // SECURITE : on isole strictement le contenu de demo (tenant demo-pme,
@@ -394,6 +441,9 @@ async function main() {
 
   // Users + progressions (12 comptes fictifs demo)
   for (const u of FAKE_USERS) {
+    const risk = riskParamsFor(u.riskProfile);
+    const lastSeen = new Date();
+    lastSeen.setDate(lastSeen.getDate() - risk.lastSeenDaysAgo);
     const dbUser = await prisma.user.upsert({
       where: { email: u.email },
       update: {
@@ -402,6 +452,11 @@ async function main() {
         service: u.service,
         isActive: u.isActive,
         tenantId: tenant.id,
+        // Pre-cable la demo at-risk + forecast en variant riskScore et
+        // lastSeenAt selon le profil (cf. riskParamsFor).
+        riskScore: risk.riskScore,
+        lastSeenAt: lastSeen,
+        lastLoginAt: lastSeen,
       },
       create: {
         email: u.email,
@@ -410,6 +465,9 @@ async function main() {
         service: u.service,
         isActive: u.isActive,
         tenantId: tenant.id,
+        riskScore: risk.riskScore,
+        lastSeenAt: lastSeen,
+        lastLoginAt: lastSeen,
       },
     });
 
@@ -468,7 +526,11 @@ async function main() {
       // Etale sur 28 jours (4 semaines) plutot que 14 - sinon impossible
       // de detecter un streak >= 2 semaines, et la metrique /admin/impact
       // reste bloquee a 0.
-      const daysAgo = Math.floor(Math.random() * 28);
+      // Pour les profils "inactive" / "both", on decale tout de
+      // risk.completedShiftDays pour rendre l'inactivite credible cote
+      // /admin/users/at-risk (lastActivity = max(progress[0].completedAt,
+      // createdAt)).
+      const daysAgo = Math.floor(Math.random() * 28) + risk.completedShiftDays;
       const completedAt = new Date();
       completedAt.setDate(completedAt.getDate() - daysAgo);
 
@@ -549,6 +611,157 @@ async function main() {
         payload: { demo: true },
       },
     });
+  }
+
+  // RiskScoreSnapshot : 30 jours d'historique tenant pour alimenter
+  // /admin/analytics/forecast (regression lineaire J+30). Sans ces
+  // snapshots, la page affiche "donnees insuffisantes". On simule une
+  // legere amelioration (~+0.1 pt/j) pour donner un signal "improving"
+  // visible en demo.
+  {
+    const tenantUsers = await prisma.user.findMany({
+      where: {
+        tenantId: tenant.id,
+        isActive: true,
+        role: { in: [Role.LEARNER, Role.MANAGER] },
+      },
+      select: { riskScore: true },
+    });
+    const userCount = tenantUsers.length;
+    const targetAvg =
+      tenantUsers.length === 0
+        ? 60
+        : tenantUsers.reduce((s, u) => s + u.riskScore, 0) /
+          tenantUsers.length;
+    for (let d = 30; d >= 0; d--) {
+      const day = new Date();
+      day.setUTCHours(0, 0, 0, 0);
+      day.setUTCDate(day.getUTCDate() - d);
+      // Pente legerement positive : on partait de targetAvg-3 il y a 30j
+      // pour arriver a targetAvg aujourd'hui (lineaire + petit bruit).
+      const noise = ((d * 7919) % 11) / 10 - 0.5; // pseudo-rand deterministe
+      const avg = targetAvg - 3 + (3 / 30) * (30 - d) + noise;
+      await prisma.riskScoreSnapshot.upsert({
+        where: { tenantId_day: { tenantId: tenant.id, day } },
+        update: {
+          userCount,
+          avgScore: avg,
+          p10Score: Math.max(0, Math.round(avg - 25)),
+          p50Score: Math.round(avg),
+          p90Score: Math.min(100, Math.round(avg + 20)),
+          atRiskCount: Math.max(
+            0,
+            Math.round((40 - Math.min(40, avg)) / 5),
+          ),
+        },
+        create: {
+          tenantId: tenant.id,
+          day,
+          userCount,
+          avgScore: avg,
+          p10Score: Math.max(0, Math.round(avg - 25)),
+          p50Score: Math.round(avg),
+          p90Score: Math.min(100, Math.round(avg + 20)),
+          atRiskCount: Math.max(
+            0,
+            Math.round((40 - Math.min(40, avg)) / 5),
+          ),
+        },
+      });
+    }
+  }
+
+  // PhishingResult demo : alimente le calcul de trend (lib/analytics/risk-trend.ts)
+  // et donne du contenu a /admin/phishing. On cree une campagne simulee
+  // et 3 statuts par profil :
+  //   - Camille (both)        : 3 CLICKED -> trend degrading prononce
+  //   - Nadia (low_score)     : 2 CLICKED + 1 SENT
+  //   - Christine (healthy)   : 3 REPORTED (top user)
+  //   - Karim (healthy IT)    : 2 REPORTED + 1 SENT
+  {
+    const campaignSentAt = new Date();
+    campaignSentAt.setDate(campaignSentAt.getDate() - 14);
+    const campaign = await prisma.phishingCampaign.upsert({
+      where: { id: "demo-phishing-campaign" },
+      update: {
+        title: "Phishing simulé · Démo",
+        template: "FAKE_MICROSOFT",
+        sentAt: campaignSentAt,
+      },
+      create: {
+        id: "demo-phishing-campaign",
+        tenantId: tenant.id,
+        title: "Phishing simulé · Démo",
+        template: "FAKE_MICROSOFT",
+        channel: "EMAIL",
+        scheduledAt: campaignSentAt,
+        sentAt: campaignSentAt,
+      },
+    });
+    const phishingPlan: {
+      email: string;
+      results: PhishingStatus[];
+    }[] = [
+      {
+        email: "camille@demo-pme.fr",
+        results: [
+          PhishingStatus.CLICKED,
+          PhishingStatus.CLICKED,
+          PhishingStatus.CLICKED,
+        ],
+      },
+      {
+        email: "nadia@demo-pme.fr",
+        results: [PhishingStatus.CLICKED, PhishingStatus.CLICKED, PhishingStatus.SENT],
+      },
+      {
+        email: "yanis@demo-pme.fr",
+        results: [PhishingStatus.CLICKED, PhishingStatus.SENT, PhishingStatus.SENT],
+      },
+      {
+        email: "christine@demo-pme.fr",
+        results: [
+          PhishingStatus.REPORTED,
+          PhishingStatus.REPORTED,
+          PhishingStatus.REPORTED,
+        ],
+      },
+      {
+        email: "karim@demo-pme.fr",
+        results: [
+          PhishingStatus.REPORTED,
+          PhishingStatus.REPORTED,
+          PhishingStatus.SENT,
+        ],
+      },
+      {
+        email: "sophie@demo-pme.fr",
+        results: [PhishingStatus.REPORTED, PhishingStatus.SENT, PhishingStatus.SENT],
+      },
+    ];
+    for (const plan of phishingPlan) {
+      const u = await prisma.user.findUnique({
+        where: { email: plan.email },
+        select: { id: true },
+      });
+      if (!u) continue;
+      for (let i = 0; i < plan.results.length; i++) {
+        const trackToken = `demo-${plan.email}-${i}`;
+        const sentAt = new Date();
+        sentAt.setDate(sentAt.getDate() - (i * 20 + 5));
+        await prisma.phishingResult.upsert({
+          where: { trackToken },
+          update: { status: plan.results[i] as never, sentAt },
+          create: {
+            campaignId: campaign.id,
+            userId: u.id,
+            trackToken,
+            status: plan.results[i],
+            sentAt,
+          },
+        });
+      }
+    }
   }
 
   // Marketplace : 1 module officiel + 1 contribution communaute (deja approuves).
