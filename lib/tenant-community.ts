@@ -43,7 +43,7 @@ export const COMMUNITY_TENANT_NAME = "Humanix Communauté";
  * L'exception est portée par la logique seat-check (cf. lib/plans.ts
  * helper `seatCountFor()` lors d'une refonte ultérieure).
  */
-export const COMMUNITY_TENANT_PLAN = "decouverte";
+export const COMMUNITY_TENANT_PLAN = "starter";
 
 /** Type minimal pour les checks `isCommunityTenant`. */
 type WithSlug = { slug: string };
