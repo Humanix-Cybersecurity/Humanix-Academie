@@ -26,31 +26,45 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+const LEGACY_PLAN_ID = "trial";
+const TARGET_PLAN_ID = "decouverte";
+const LEGACY_SUBSCRIPTION_STATUS = "trialing";
+const TARGET_SUBSCRIPTION_STATUS = "active";
+
 async function main() {
-  const planChange = await prisma.tenant.updateMany({
-    where: { plan: "trial" },
-    data: { plan: "starter" },
-  });
+  const [planChange, statusChange, trialEndsCleared] = await prisma.$transaction(
+    async (tx) => {
+      const planChange = await tx.tenant.updateMany({
+        where: { plan: LEGACY_PLAN_ID },
+        data: { plan: TARGET_PLAN_ID },
+      });
+
+      const statusChange = await tx.tenant.updateMany({
+        where: { subscriptionStatus: LEGACY_SUBSCRIPTION_STATUS },
+        data: { subscriptionStatus: TARGET_SUBSCRIPTION_STATUS },
+      });
+
+      const trialEndsCleared = await tx.tenant.updateMany({
+        where: { trialEndsAt: { not: null } },
+        data: { trialEndsAt: null },
+      });
+
+      return [planChange, statusChange, trialEndsCleared] as const;
+    },
+  );
+
   if (planChange.count > 0) {
     console.log(
-      `[migrate-legacy-trial] ${planChange.count} tenant(s) rebasculé(s) plan=trial -> decouverte`,
+      `[migrate-legacy-trial] ${planChange.count} tenant(s) rebasculés plan=trial -> decouverte`,
     );
   }
 
-  const statusChange = await prisma.tenant.updateMany({
-    where: { subscriptionStatus: "trialing" },
-    data: { subscriptionStatus: "active" },
-  });
   if (statusChange.count > 0) {
     console.log(
-      `[migrate-legacy-trial] ${statusChange.count} tenant(s) rebasculé(s) status=trialing -> active`,
+      `[migrate-legacy-trial] ${statusChange.count} tenant(s) rebasculés status=trialing -> active`,
     );
   }
 
-  const trialEndsCleared = await prisma.tenant.updateMany({
-    where: { trialEndsAt: { not: null } },
-    data: { trialEndsAt: null },
-  });
   if (trialEndsCleared.count > 0) {
     console.log(
       `[migrate-legacy-trial] ${trialEndsCleared.count} tenant(s) trialEndsAt purgé`,
@@ -58,11 +72,13 @@ async function main() {
   }
 }
 
-main()
-  .catch((e) => {
+(async () => {
+  try {
+    await main();
+  } catch (e) {
     console.error("[migrate-legacy-trial] FAILED", e);
-    process.exit(1);
-  })
-  .finally(async () => {
+    process.exitCode = 1;
+  } finally {
     await prisma.$disconnect();
-  });
+  }
+})();
