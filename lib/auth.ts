@@ -5,7 +5,7 @@
 //  - Demo (DEMO_MODE=true) : Credentials provider sans mot de passe (1-clic)
 //  - SSO Google : si AUTH_GOOGLE_ID + AUTH_GOOGLE_SECRET configurés
 //  - SSO Microsoft : si AUTH_MICROSOFT_ENTRA_ID_ID + ID_SECRET + ID_ISSUER
-//  - Login mot de passe + 2FA TOTP : actif des qu'un user a defini un mdp
+//  - Login mot de passe + 2FA TOTP : actif dès qu'un user a defini un mdp
 //
 // Le user qui se connecte via SSO doit deja exister en BDD (matche par email).
 // Cela evite la creation sauvage de comptes - l'admin doit avoir invite l'user
