@@ -603,7 +603,7 @@ export default async function TarifsPage({
             développement.
           </Faq>
           <Faq question="Comment tester avant de payer ?">
-            Pas d&apos;essai gratuit sur les paliers payants : la{" "}
+            Pas d'essai gratuit sur les paliers payants : la{" "}
             <Link href="/demo" className="underline">
               démo en ligne
             </Link>{" "}
