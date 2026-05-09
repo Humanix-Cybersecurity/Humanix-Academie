@@ -11,33 +11,22 @@ import { PLAN_LABEL, PLAN_EMOJI, type PlanId } from "@/lib/plans";
 
 type RoleId = "learner" | "admin" | "moderator";
 
-// Note : les `id` restent les keys DB (rétro-compat tenants existants).
-// Les labels affichés (PLAN_LABEL) sont eux alignés sur la nouvelle grille
-// mai 2026 - `solo` -> Starter, `premium` -> Enterprise.
+// Aligne sur la nouvelle grille mai 2026 (3 paliers cloud + community).
+// Les `id` correspondent aux PlanId canoniques.
 const PLAN_OPTIONS: { id: PlanId; tagline: string; price: string }[] = [
   {
-    id: "decouverte",
-    tagline: "Cloud forever-free 5 sièges",
-    price: "0 €/mois",
-  },
-  {
-    id: "solo",
-    tagline: "TPE qui démarre (15 sièges max)",
-    price: "19 €/mois (forfait)",
-  },
-  {
-    id: "essentielle",
-    tagline: "Standard PME (16-50 sièges)",
-    price: "3 €/user/mois",
+    id: "starter",
+    tagline: "TPE 1-15 personnes (gratuit jusqu'à 5)",
+    price: "Gratuit ≤5 · 19 €/mois 6-15",
   },
   {
     id: "pro",
-    tagline: "PME industrialisée (51-250 sièges)",
-    price: "2,50 €/user/mois",
+    tagline: "PME industrialisée (16 à 250 sièges)",
+    price: "3 €/user/mois",
   },
   {
-    id: "premium",
-    tagline: "ETI / multi-sites / SecNumCloud",
+    id: "enterprise",
+    tagline: "ETI / multi-sites / secteur réglementé",
     price: "Sur devis",
   },
 ];
@@ -88,7 +77,7 @@ const ROLES: {
 ];
 
 export default function DemoPage() {
-  const [selectedPlan, setSelectedPlan] = useState<PlanId>("essentielle");
+  const [selectedPlan, setSelectedPlan] = useState<PlanId>("pro");
   const [loading, setLoading] = useState<RoleId | null>(null);
   const [planSyncing, setPlanSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);

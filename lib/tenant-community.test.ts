@@ -22,7 +22,7 @@ describe("constants tenant Communauté", () => {
   });
 
   it("le plan attaché est 'decouverte' (forever-free, cf. lib/plans.ts)", () => {
-    expect(COMMUNITY_TENANT_PLAN).toBe("decouverte");
+    expect(COMMUNITY_TENANT_PLAN).toBe("starter");
   });
 });
 
