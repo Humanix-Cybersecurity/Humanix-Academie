@@ -29,7 +29,7 @@ const prisma = new PrismaClient();
 async function main() {
   const planChange = await prisma.tenant.updateMany({
     where: { plan: "trial" },
-    data: { plan: "decouverte" },
+    data: { plan: "starter" },
   });
   if (planChange.count > 0) {
     console.log(

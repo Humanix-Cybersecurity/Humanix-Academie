@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Server actions pour le signup self-service du plan "decouverte" (gratuit
+// Server actions pour le signup self-service du plan "starter" (gratuit
 // 5 sieges). Cree un Tenant + un User ADMIN + les groupes systeme par defaut.
 //
 // Securite :
@@ -13,7 +13,7 @@
 // Limites V1 (assumees) :
 //  - Pas de double opt-in email (trust on signup, comme la plupart des SaaS
 //    en B2B). L'utilisateur peut reset son mdp s'il s'est trompe d'email.
-//  - Seul le plan "decouverte" (forever-free) est autorise a l'ouverture
+//  - Seul le plan "starter" (forever-free) est autorise a l'ouverture
 //    de compte. Les autres plans (solo, essentielle, pro, premium) passent
 //    par le funnel commercial / paiement, hors scope de ce signup gratuit.
 "use server";
@@ -34,7 +34,7 @@ import {
 } from "@/lib/welcome-email";
 import { auditLog, AuditActions } from "@/lib/audit";
 
-const ALLOWED_SIGNUP_PLANS: PlanId[] = ["decouverte"];
+const ALLOWED_SIGNUP_PLANS: PlanId[] = ["starter"];
 
 const ORG_NAME_MIN = 2;
 const ORG_NAME_MAX = 100;
@@ -125,10 +125,10 @@ export async function createDecouverteAccount(
   const orgName = String(formData.get("orgName") ?? "").trim();
   const adminName = String(formData.get("adminName") ?? "").trim();
   const consent = formData.get("consent");
-  const planRaw = String(formData.get("plan") ?? "decouverte");
+  const planRaw = String(formData.get("plan") ?? "starter");
   const plan: PlanId = ALLOWED_SIGNUP_PLANS.includes(planRaw as PlanId)
     ? (planRaw as PlanId)
-    : "decouverte";
+    : "starter";
 
   if (!email || !email.includes("@") || email.length > 200) {
     return { ok: false, error: "Email invalide." };

@@ -170,15 +170,15 @@ describe("computeTopRisks", () => {
 
 describe("recommendPlan", () => {
   it("TPE 1-9 → toujours plan Starter", () => {
-    expect(recommendPlan("1-9", 100).slug).toBe("solo");
-    expect(recommendPlan("1-9", 0).slug).toBe("solo");
-    expect(recommendPlan("1-9", 50).slug).toBe("solo");
+    expect(recommendPlan("1-9", 100).slug).toBe("starter");
+    expect(recommendPlan("1-9", 0).slug).toBe("starter");
+    expect(recommendPlan("1-9", 50).slug).toBe("starter");
   });
 
-  it("PME 10-49 → Essentielle si score correct, Pro si score < 50 (boost)", () => {
-    expect(recommendPlan("10-49", 80).slug).toBe("essentielle");
-    expect(recommendPlan("10-49", 60).slug).toBe("essentielle");
-    expect(recommendPlan("10-49", 50).slug).toBe("essentielle"); // limite
+  it("PME 10-49 → Starter si score correct, Pro si score < 50 (boost)", () => {
+    expect(recommendPlan("10-49", 80).slug).toBe("starter");
+    expect(recommendPlan("10-49", 60).slug).toBe("starter");
+    expect(recommendPlan("10-49", 50).slug).toBe("starter"); // limite
     expect(recommendPlan("10-49", 49).slug).toBe("pro"); // bascule needsBoost
     expect(recommendPlan("10-49", 0).slug).toBe("pro");
   });
@@ -188,9 +188,9 @@ describe("recommendPlan", () => {
     expect(recommendPlan("50-249", 0).slug).toBe("pro");
   });
 
-  it("ETI 250+ → plan Enterprise/premium", () => {
-    expect(recommendPlan("250+", 100).slug).toBe("premium");
-    expect(recommendPlan("250+", 0).slug).toBe("premium");
+  it("ETI 250+ → plan Enterprise", () => {
+    expect(recommendPlan("250+", 100).slug).toBe("enterprise");
+    expect(recommendPlan("250+", 0).slug).toBe("enterprise");
   });
 
   it("plan retourné contient toujours nom, prix et CTA", () => {

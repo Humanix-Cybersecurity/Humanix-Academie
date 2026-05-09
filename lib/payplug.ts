@@ -124,10 +124,9 @@ export async function getCustomer(
 // Subscription cote dashboard Payplug, et on stocke leurs IDs en env.
 // ----------------------------------------------------------------------------
 const ENV_PLAN_BY_TIER: Partial<Record<PlanId, string>> = {
-  solo: "PAYPLUG_PLAN_SOLO",
-  essentielle: "PAYPLUG_PLAN_ESSENTIELLE",
+  starter: "PAYPLUG_PLAN_STARTER",
   pro: "PAYPLUG_PLAN_PRO",
-  premium: "PAYPLUG_PLAN_PREMIUM",
+  // enterprise : pas de plan Payplug (sur devis, contrat manuel)
 };
 
 export function payplugPlanIdForTier(tier: PlanId): string | null {
@@ -144,7 +143,9 @@ export function tierFromPayplugPlanId(planId: string): PlanId | null {
   return null;
 }
 
-export const PAYPLUG_BUYABLE_PLANS: PlanId[] = ["solo", "essentielle", "pro"];
+// Plans achetables via le checkout Payplug self-service.
+// Enterprise est exclu : process commercial manuel (devis + contrat).
+export const PAYPLUG_BUYABLE_PLANS: PlanId[] = ["starter", "pro"];
 
 export function isPlanBuyable(plan: PlanId): boolean {
   return (
@@ -342,7 +343,7 @@ export type PayplugSetupReport = {
  */
 export function validatePayplugSetup(): PayplugSetupReport {
   const enabled = isPayplugConfigured();
-  const expectedPlans: PlanId[] = ["solo", "essentielle", "pro"];
+  const expectedPlans: PlanId[] = ["starter", "pro"];
   const plansConfigured: PlanId[] = [];
   const plansMissing: PlanId[] = [];
 

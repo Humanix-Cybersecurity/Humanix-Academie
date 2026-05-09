@@ -11,7 +11,7 @@
 //     un acte de souscription validé (paiement Payplug ou décision admin).
 //     Le premier user est ADMIN, peut ensuite inviter ses collègues.
 //
-// IDÉMPOTENT :
+// IDEMPOTENT :
 //   Si un tenant avec ce paymentCustomerId existe déjà, on retourne ce
 //   tenant existant. Pas de double création (anti-doublon webhook qui
 //   pourrait re-fire le même event).
@@ -54,8 +54,8 @@ export type ProvisionInput = {
   /** Nom de l'organisation (sert de Tenant.name + base du slug). */
   organizationName: string;
   /** Plan initial (cf. lib/plans.ts). Doit être un plan payant — pas
-   * "decouverte" qui est reserve aux LEARNERs sur le tenant Communaute
-   * et n'aboutit PAS sur un tenant payant. */
+   * "starter" qui est reserve aux LEARNERs sur le tenant Communaute
+   * et n'aboutit PAS sur un tenant payant (sub-tier free <=5 sieges). */
   plan: PlanId;
   /** Nom de l'admin (optionnel). */
   adminName?: string;
@@ -64,7 +64,7 @@ export type ProvisionInput = {
   paymentSubscriptionId?: string;
   /** État initial de la souscription. Utilisé par le webhook Payplug pour
    * passer "active" sur subscription.created (le checkout a réussi).
-   * Defaut "active" — il n'y a plus de phase trial depuis mai 2026. */
+   * Défaut "active" — il n'y a plus de phase trial depuis mai 2026. */
   subscriptionStatus?: string;
   /** Provenance pour tracing/audit. */
   source: ProvisionSource;
@@ -89,7 +89,7 @@ async function buildUniqueSlug(name: string): Promise<string | null> {
   if (base === COMMUNITY_TENANT_SLUG) return null; // anti-collision community
 
   for (let i = 0; i < 50; i++) {
-    const candidate = i === 0 ? base : `${base}-${i + 1}`;
+    const candidate = i === 0 ? base : `${base}-${i}`;
     const exists = await db.tenant.findUnique({
       where: { slug: candidate },
       select: { id: true },
@@ -111,10 +111,13 @@ export async function provisionTenantWithAdmin(
   input: ProvisionInput,
 ): Promise<ProvisionResult> {
   const email = input.email.trim().toLowerCase();
-  if (!email || !email.includes("@") || email.length > 254) {
+  // Validation pragmatique: exactement un '@', pas d'espaces,
+  // partie locale + domaine non vides, domaine avec TLD (x.y).
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if (!email || email.length > 254 || !emailPattern.test(email)) {
     return { ok: false, reason: "invalid_email" };
   }
-  if (input.plan === "decouverte") {
+  if (input.plan === "starter") {
     // Sécurité : on refuse de créer un tenant payant avec le plan gratuit.
     // L'erreur surface dans les logs pour qu'on s'en aperçoive vite.
     console.error(

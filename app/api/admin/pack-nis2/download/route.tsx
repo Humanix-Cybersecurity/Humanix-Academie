@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
   const tenantId = session.user!.tenantId as string;
 
   const plan = await getTenantPlan(tenantId);
-  if (!["pro", "premium"].includes(plan)) {
+  if (!["pro", "enterprise"].includes(plan)) {
     return NextResponse.json(
       { error: "plan_too_low", message: "Le pack NIS2 nécessite l'offre Pro." },
       { status: 402 },
