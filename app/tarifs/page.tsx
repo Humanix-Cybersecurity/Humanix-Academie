@@ -709,10 +709,7 @@ export default async function TarifsPage({
           au bord du chemin - pas par charité, par stratégie. La cybersécurité
           ne peut pas être un luxe quand 90 % des attaques visent les humains. »
         </blockquote>
-        <cite
-        >
-          - Hex veille
-        </cite>
+        <cite>- Hex veille</cite>
       </section>
     </main>
   );
