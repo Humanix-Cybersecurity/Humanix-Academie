@@ -80,11 +80,11 @@ export default async function AdminLayout({
 
   return (
     <div className="min-h-[calc(100vh-5rem)] flex bg-gray-50/50 dark:bg-slate-900/50">
-      {/* Sidebar slim - icons-only desktop, drawer mobile */}
+      {/* Sidebar fixe 240px desktop avec sections accordeon, drawer mobile */}
       <AdminSidebar />
 
       {/* Zone principale : top bar (breadcrumb seul) + content */}
-      <div className="flex-1 min-w-0 flex flex-col lg:pl-14">
+      <div className="flex-1 min-w-0 flex flex-col lg:pl-60">
         <AdminTopBar />
 
         {/* Bandeau de subscription si necessaire (warn/read_only/blocked) */}
