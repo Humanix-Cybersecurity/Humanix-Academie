@@ -2,7 +2,7 @@
 // Page de facturation cote tenant (admin du tenant). Affiche :
 //   - Plan actuel + sieges utilises
 //   - Etat du subscription (active, past_due, canceled, etc.)
-//   - Prochain renouvellement / restriction d'acces si paiement KO
+//   - Prochain renouvellement / restriction d'accès si paiement KO
 //   - CTA upgrade / downgrade / annuler
 //   - Lien portail Payplug self-service
 //
