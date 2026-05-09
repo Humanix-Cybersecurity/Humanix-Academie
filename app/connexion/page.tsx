@@ -226,133 +226,132 @@ function ConnexionInner() {
         </section>
       </HexBackdrop>
 
-      {/* ==================== AUTH CARD ==================== */}
-      <section className="max-w-md mx-auto px-4 pb-12 -mt-2">
+      {/* ==================== AUTH CARD UNIFIE ====================
+          Toute la machine d'auth (step-up message, erreurs, SSO, tabs,
+          form) est dans UN SEUL card visuel (relative + bg + border) pour
+          eviter l'effet "tabs flottants entre hero et form" signale par
+          l'utilisateur. -mt-6 leve la carte pour qu'elle "morde" sur le
+          backdrop : transition fluide. */}
+      <section className="max-w-md mx-auto px-4 pb-12 -mt-6 sm:-mt-8 relative z-10">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-gray-200 dark:border-slate-700 shadow-xl overflow-hidden">
 
-      {/* Step-up requis pour /superadmin */}
-      {stepUp && (
-        <div
-          role="status"
-          className="card mb-4 bg-rose-50 border-rose-300 text-rose-900 text-sm"
-        >
-          <p className="font-bold">🔑 Authentification renforcée requise</p>
-          <p className="mt-1">
-            L'accès à la console super-admin exige une vérification par clé de
-            sécurité (Thales et-Fusion / YubiKey / passkey). Branchez votre
-            clé et utilisez l'onglet « Clé ».
-          </p>
-        </div>
-      )}
-
-      {/* Erreur */}
-      {(errorCode || error) && (
-        <div
-          role="alert"
-          className="card mb-4 bg-amber-50 border-amber-300 text-amber-900 text-sm"
-        >
-          {errorCode && <p>{humanizeAuthError(errorCode)}</p>}
-          {error && <p>{error}</p>}
-        </div>
-      )}
-
-      {/* Boutons SSO (visibles uniquement si configures) */}
-      {(sso.google || sso.microsoft) && (
-        <div className="space-y-2 mb-5">
-          {sso.microsoft && (
-            <button
-              type="button"
-              onClick={() =>
-                signIn("microsoft-entra-id", { callbackUrl: "/post-login" })
-              }
-              className="w-full flex items-center justify-center gap-3 p-3 rounded-xl border-2 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 transition font-medium text-sm"
-              aria-label="Se connecter avec Microsoft"
-            >
-              <MicrosoftLogo />
-              Continuer avec Microsoft
-            </button>
-          )}
-          {sso.google && (
-            <button
-              type="button"
-              onClick={() => signIn("google", { callbackUrl: "/post-login" })}
-              className="w-full flex items-center justify-center gap-3 p-3 rounded-xl border-2 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 transition font-medium text-sm"
-              aria-label="Se connecter avec Google"
-            >
-              <GoogleLogo />
-              Continuer avec Google
-            </button>
-          )}
-        </div>
-      )}
-
-      {(sso.google || sso.microsoft) && (
-        <div className="flex items-center gap-3 mb-5">
-          <div className="h-px flex-1 bg-gray-200 dark:bg-slate-700" />
-          <span className="text-xs text-gray-500 uppercase tracking-wide">
-            ou
-          </span>
-          <div className="h-px flex-1 bg-gray-200 dark:bg-slate-700" />
-        </div>
-      )}
-
-      {/* Switch Password / Magic link */}
+      {/* ===== TABS : barre haute integree au card ===== */}
       <div
         role="tablist"
         aria-label="Mode de connexion"
-        className="grid grid-cols-3 mb-3 rounded-xl border-2 border-gray-200 dark:border-slate-700 p-1 text-xs font-bold"
+        className="grid grid-cols-3 border-b-2 border-gray-100 dark:border-slate-800 bg-gray-50/60 dark:bg-slate-800/40"
       >
-        <button
-          type="button"
-          role="tab"
-          aria-selected={mode === "password"}
+        <TabBtn
+          active={mode === "password"}
           onClick={() => {
             setMode("password");
             setError(null);
           }}
-          className={`py-2 rounded-lg transition ${
-            mode === "password"
-              ? "bg-primary-500 text-white"
-              : "text-gray-600 dark:text-gray-300"
-          }`}
-        >
-          🔐 Mot de passe
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={mode === "webauthn"}
+          icon="🔐"
+          label="Mot de passe"
+        />
+        <TabBtn
+          active={mode === "webauthn"}
           onClick={() => {
             setMode("webauthn");
             setError(null);
           }}
-          className={`py-2 rounded-lg transition ${
-            mode === "webauthn"
-              ? "bg-primary-500 text-white"
-              : "text-gray-600 dark:text-gray-300"
-          }`}
-        >
-          🔑 Clé
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={mode === "magic-link"}
+          icon="🔑"
+          label="Clé"
+        />
+        <TabBtn
+          active={mode === "magic-link"}
           onClick={() => {
             setMode("magic-link");
             setError(null);
           }}
-          className={`py-2 rounded-lg transition ${
-            mode === "magic-link"
-              ? "bg-primary-500 text-white"
-              : "text-gray-600 dark:text-gray-300"
-          }`}
-        >
-          ✨ Lien magique
-        </button>
+          icon="✨"
+          label="Lien magique"
+        />
       </div>
 
-      {mode === "webauthn" ? (
-        <form onSubmit={onWebauthnSubmit} className="card space-y-4">
+      {/* ===== CONTENU DU CARD (padding cohérent partout) ===== */}
+      <div className="p-5 sm:p-6 space-y-5">
+        {/* Step-up requis pour /superadmin */}
+        {stepUp && (
+          <div
+            role="status"
+            className="rounded-xl border border-rose-300 dark:border-rose-700 bg-rose-50 dark:bg-rose-900/20 text-rose-900 dark:text-rose-100 text-sm p-3"
+          >
+            <p className="font-bold flex items-center gap-2">
+              <span aria-hidden="true">🔑</span>
+              Authentification renforcée requise
+            </p>
+            <p className="mt-1">
+              L&apos;accès à la console super-admin exige une vérification
+              par clé de sécurité (Thales et-Fusion / YubiKey / passkey).
+              Branchez votre clé et utilisez l&apos;onglet «&nbsp;Clé&nbsp;».
+            </p>
+          </div>
+        )}
+
+        {/* Erreur */}
+        {(errorCode || error) && (
+          <div
+            role="alert"
+            className="rounded-xl border border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20 text-amber-900 dark:text-amber-100 text-sm p-3 flex items-start gap-2"
+          >
+            <span aria-hidden="true" className="shrink-0">
+              ⚠️
+            </span>
+            <div>
+              {errorCode && <p>{humanizeAuthError(errorCode)}</p>}
+              {error && <p>{error}</p>}
+            </div>
+          </div>
+        )}
+
+        {/* Boutons SSO (visibles uniquement si configures) */}
+        {(sso.google || sso.microsoft) && (
+          <>
+            <div className="space-y-2">
+              {sso.microsoft && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    signIn("microsoft-entra-id", {
+                      callbackUrl: "/post-login",
+                    })
+                  }
+                  className="w-full flex items-center justify-center gap-3 p-3 rounded-xl border-2 border-gray-200 dark:border-slate-700 hover:border-accent-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:-translate-y-px transition-all font-medium text-sm"
+                  aria-label="Se connecter avec Microsoft"
+                >
+                  <MicrosoftLogo />
+                  Continuer avec Microsoft
+                </button>
+              )}
+              {sso.google && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    signIn("google", { callbackUrl: "/post-login" })
+                  }
+                  className="w-full flex items-center justify-center gap-3 p-3 rounded-xl border-2 border-gray-200 dark:border-slate-700 hover:border-accent-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:-translate-y-px transition-all font-medium text-sm"
+                  aria-label="Se connecter avec Google"
+                >
+                  <GoogleLogo />
+                  Continuer avec Google
+                </button>
+              )}
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="h-px flex-1 bg-gray-200 dark:bg-slate-700" />
+              <span className="text-[11px] text-gray-500 uppercase tracking-wider font-semibold">
+                ou par email
+              </span>
+              <div className="h-px flex-1 bg-gray-200 dark:bg-slate-700" />
+            </div>
+          </>
+        )}
+
+        {/* ===== FORMS (un seul affiche selon `mode`) ===== */}
+        {mode === "webauthn" ? (
+          <form onSubmit={onWebauthnSubmit} className="space-y-4">
           <div>
             <label
               htmlFor="connexion-email-fido"
@@ -388,7 +387,7 @@ function ConnexionInner() {
           </button>
         </form>
       ) : mode === "password" ? (
-        <form onSubmit={onPasswordSubmit} className="card space-y-4">
+        <form onSubmit={onPasswordSubmit} className="space-y-4">
           <div>
             <label
               htmlFor="connexion-email"
@@ -475,27 +474,27 @@ function ConnexionInner() {
             {sending ? "Connexion…" : "Se connecter"}
           </button>
 
-          <div className="flex items-center justify-between text-xs">
+          {/* Footer du form password : Mot de passe oublie + bascule magic
+              link, en stack vertical pour eviter la cohabitation cramped
+              signalee par l'utilisateur. */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs pt-2 border-t border-gray-100 dark:border-slate-800">
             <Link
               href="/connexion/oubli"
-              className="text-accent-700 hover:underline"
+              className="text-accent-700 dark:text-accent-300 hover:underline font-medium"
             >
-              Mot de passe oublié ?
+              Mot de passe oublié&nbsp;?
             </Link>
-            <span className="text-gray-400">
-              Pas encore de mot de passe ?{" "}
-              <button
-                type="button"
-                onClick={() => setMode("magic-link")}
-                className="text-accent-700 hover:underline"
-              >
-                Lien magique
-              </button>
-            </span>
+            <button
+              type="button"
+              onClick={() => setMode("magic-link")}
+              className="text-gray-500 dark:text-gray-400 hover:text-accent-700 dark:hover:text-accent-300 transition"
+            >
+              Pas encore de mot de passe&nbsp;? Recevoir un lien magique →
+            </button>
           </div>
         </form>
       ) : (
-        <form onSubmit={onMagicLinkSubmit} className="card space-y-4">
+        <form onSubmit={onMagicLinkSubmit} className="space-y-4">
           <div>
             <label
               htmlFor="connexion-email-ml"
@@ -530,13 +529,21 @@ function ConnexionInner() {
           >
             {sending ? "Envoi en cours…" : "Recevoir mon lien"}
           </button>
+          <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+            <span aria-hidden="true">🔒</span> Lien à usage unique, valable
+            24&nbsp;h.
+          </p>
         </form>
       )}
+        </div>
+        {/* fin du contenu p-5 sm:p-6 */}
+        </div>
+        {/* fin du card AUTH englobant */}
 
-        {/* ==================== FOOTER LINKS ==================== */}
-        <div className="mt-6 space-y-3 text-center">
+        {/* ==================== FOOTER LINKS (hors card) ==================== */}
+        <div className="mt-6 space-y-2 text-center">
           <p className="text-sm text-gray-600 dark:text-gray-300">
-            Pas encore de compte ?{" "}
+            Pas encore de compte&nbsp;?{" "}
             <Link
               href="/inscription"
               className="text-accent-700 dark:text-accent-300 font-semibold hover:underline"
@@ -544,9 +551,66 @@ function ConnexionInner() {
               Inscription gratuite
             </Link>
           </p>
+          <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed">
+            En te connectant, tu acceptes nos{" "}
+            <Link
+              href="/cgu"
+              className="text-accent-700 dark:text-accent-300 hover:underline"
+            >
+              Conditions générales
+            </Link>{" "}
+            et notre{" "}
+            <Link
+              href="/confidentialite"
+              className="text-accent-700 dark:text-accent-300 hover:underline"
+            >
+              Politique de confidentialité
+            </Link>
+            .
+          </p>
         </div>
       </section>
     </main>
+  );
+}
+
+/**
+ * Bouton de tab integre a la barre haute du card (style "segmented control"
+ * deux fois plus generaux que les anciens tabs flottants). Active = primary
+ * solide en bas du tab + texte sombre. Inactive = texte grise + hover subtle.
+ */
+function TabBtn({
+  active,
+  onClick,
+  icon,
+  label,
+}: {
+  active: boolean;
+  onClick: () => void;
+  icon: string;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      role="tab"
+      aria-selected={active}
+      onClick={onClick}
+      className={`relative py-3 px-2 text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-1.5 ${
+        active
+          ? "text-primary-500 dark:text-accent-300 bg-white dark:bg-slate-900"
+          : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-white/50 dark:hover:bg-slate-900/50"
+      }`}
+    >
+      <span aria-hidden="true">{icon}</span>
+      <span>{label}</span>
+      {active && (
+        <span
+          aria-hidden="true"
+          className="absolute bottom-0 left-2 right-2 h-0.5 bg-primary-500 dark:bg-accent-300 rounded-full"
+        />
+      )}
+    </button>
   );
 }
 
