@@ -189,7 +189,10 @@ export default function DemoPage() {
           <p className="text-xs uppercase tracking-widest text-accent-500 font-bold mb-3 text-center">
             Étape 2 - Le rôle que tu veux incarner
           </p>
-          <div className="grid sm:grid-cols-3 gap-4">
+          {/* 3 col >=sm (3 roles -> 3 cards alignees), 1 col en mobile.
+              items-stretch + h-full sur les cards = hauteurs identiques meme
+              si descriptions de longueurs differentes. */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 items-stretch">
             {ROLES.map((r) => (
               <DemoCard
                 key={r.id}
@@ -245,25 +248,40 @@ function DemoCard({
       : color === "primary"
         ? "hover:ring-primary-500"
         : "hover:ring-amber-500";
+  const accentClass =
+    color === "accent"
+      ? "from-accent-50 to-white dark:from-accent-950/30 dark:to-slate-900"
+      : color === "primary"
+        ? "from-primary-50 to-white dark:from-primary-950/30 dark:to-slate-900"
+        : "from-amber-50 to-white dark:from-amber-950/30 dark:to-slate-900";
   const btnClass =
     color === "accent"
       ? "btn-primary"
       : color === "primary"
         ? "btn-secondary"
         : "btn-secondary border-amber-500 text-amber-700 hover:bg-amber-50";
+  // flex flex-col + h-full pour egaliser les hauteurs (sinon descriptions
+  // de longueurs differentes -> CTA mal alignes).
+  // mt-auto sur le CTA pour le coller au bas de la card.
   return (
     <button
       onClick={onClick}
       disabled={loading}
-      className={`card text-left transition-all hover:scale-[1.02] hover:ring-4 ${ringClass} disabled:opacity-50 disabled:cursor-wait`}
+      className={`card text-left flex flex-col h-full bg-gradient-to-br ${accentClass} transition-all hover:scale-[1.02] hover:ring-4 ${ringClass} disabled:opacity-50 disabled:cursor-wait`}
     >
-      <div className="text-5xl mb-4">{emoji}</div>
-      <h2 className="text-2xl font-bold text-primary-500 mb-1">{title}</h2>
+      <div className="text-5xl mb-3" aria-hidden="true">
+        {emoji}
+      </div>
+      <h2 className="text-xl sm:text-2xl font-bold text-primary-500 mb-1 leading-tight">
+        {title}
+      </h2>
       <p className="text-sm text-accent-500 font-medium mb-3">{who}</p>
-      <p className="text-gray-600 dark:text-gray-300 text-sm mb-6 leading-relaxed">
+      <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed flex-1 mb-5">
         {description}
       </p>
-      <div className={`${btnClass} w-full pointer-events-none`}>{cta}</div>
+      <div className={`${btnClass} w-full pointer-events-none mt-auto`}>
+        {cta}
+      </div>
     </button>
   );
 }
