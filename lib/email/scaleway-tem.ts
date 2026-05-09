@@ -103,13 +103,18 @@ export async function sendViaScalewayTem(
       body: JSON.stringify(body),
     });
     if (!res.ok) {
+      const statusDetails = `${res.status} ${res.statusText || "Unknown Status"}`;
       const errBody = await res
         .text()
-        .catch(() => "[Failed to read error response body from Scaleway TEM API]");
+        .catch(
+          () =>
+            `[Failed to read error response body from Scaleway TEM API] (HTTP ${statusDetails})`,
+        );
+      const details = `HTTP ${statusDetails}${errBody ? ` - ${errBody}` : ""}`;
       return {
         ok: false,
         reason: "scaleway_tem_api_error",
-        details: errBody.slice(0, MAX_ERROR_BODY_LENGTH),
+        details: details.slice(0, MAX_ERROR_BODY_LENGTH),
       };
     }
     let data: { emails?: { id?: string }[] } = {};
