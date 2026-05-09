@@ -36,12 +36,16 @@ export type HeatmapData = {
 };
 
 export async function computeHeatmap(tenantId: string): Promise<HeatmapData> {
-  // 1) Saisons publiees du tenant + count episodes publies
-  // On charge les episodes en sub-select pour pouvoir filtrer isPublished
-  // (Prisma _count avec where en sub-select n'est pas supporte sur toutes
-  // les versions ; cette forme est portable et le volume est faible).
+  // 1) Saisons publiees vues par le tenant + count episodes publies.
+  // Inclut le catalogue global (tenantId: null) ET les saisons custom du
+  // tenant (tenantId match). Sans le branch "tenantId: null" la heatmap
+  // restait vide car la quasi-totalite du contenu pedagogique est sur
+  // les saisons globales. Cf. /apprendre qui utilise le meme pattern.
   const saisonsRaw = await db.saison.findMany({
-    where: { tenantId, isPublished: true },
+    where: {
+      isPublished: true,
+      OR: [{ tenantId: null }, { tenantId }],
+    },
     select: {
       id: true,
       slug: true,
