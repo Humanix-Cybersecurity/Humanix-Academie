@@ -103,6 +103,8 @@ export default async function BillingPage() {
               {formatSeatUsage(usage)}
             </span>
           </div>
+          {/* `usage.max` can be non-finite (ex: Infinity) for plans without a hard seat cap.
+              We only render the progress bar when there is a finite limit to display. */}
           {Number.isFinite(usage.max) && (
             <div className="h-2 rounded-full bg-gray-200 dark:bg-slate-800 overflow-hidden">
               <div
