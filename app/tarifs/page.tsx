@@ -299,7 +299,7 @@ export default async function TarifsPage({
             },
             {
               emoji: "🇫🇷",
-              title: "Souverain par defaut",
+              title: "Souverain par défaut",
               text: "Conçu, hébergé et opéré en France. Conformité RGPD/NIS2 native. Pas de Cloud Act au menu.",
             },
             {
