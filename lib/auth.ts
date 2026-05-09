@@ -412,6 +412,13 @@ if (isEmailConfigured()) {
           to: identifier,
           subject: "🦊 Hex t'invite à entrer dans Humanix Académie",
           html: magicLinkEmailHTML(url),
+          // Le magic link est transactionnel (l'utilisateur l'a explicitement
+          // demande en se loguant ou en s'inscrivant). On injecte un header
+          // List-Unsubscribe avec un mailto: pour satisfaire les checks
+          // mail-tester / Gmail Postmaster sans casser la fonction (pas de
+          // one-click, l'user ne peut pas se "desinscrire" d'un mail
+          // d'authentification, sinon il ne pourrait plus se connecter).
+          unsubscribe: { kind: "transactional" },
         });
         if (!result.ok) {
           throw new Error(`magic_link_send_failed:${result.reason}`);
