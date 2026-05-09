@@ -21,7 +21,7 @@ export default async function AdminConformiteNis2Page() {
   const tenantId = session!.user.tenantId as string;
 
   const plan = await getTenantPlan(tenantId);
-  const isAllowed = ["pro", "premium"].includes(plan);
+  const isAllowed = ["pro", "enterprise"].includes(plan);
 
   const tenant = await db.tenant.findUnique({
     where: { id: tenantId },
