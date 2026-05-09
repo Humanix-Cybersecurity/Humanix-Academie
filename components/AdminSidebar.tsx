@@ -38,6 +38,16 @@ const SECTIONS: Section[] = [
       { href: "/admin/onboarding", label: "Premiers pas", icon: "🚀" },
       { href: "/admin/impact", label: "Impact mesuré", icon: "📈" },
       { href: "/admin/business", label: "Impact business", icon: "💼" },
+      {
+        href: "/admin/analytics/heatmap",
+        label: "Heatmap métier",
+        icon: "🔥",
+      },
+      {
+        href: "/admin/users/at-risk",
+        label: "Utilisateurs vulnérables",
+        icon: "⚠️",
+      },
       { href: "/admin/utilisateurs", label: "Utilisateurs", icon: "👥" },
       { href: "/admin/groupes", label: "Groupes", icon: "🏷️" },
     ],
