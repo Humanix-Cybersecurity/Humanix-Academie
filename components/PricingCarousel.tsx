@@ -128,8 +128,10 @@ export default function PricingCarousel({
             Chaque card a 33.33% de la largeur (on en voit 3 a la fois).
             Le track contient 4 cards donc fait 133% de large. La translation
             est calculee pour que selectedIdx soit a l'index visuel "1"
-            (centre des 3 visibles). */}
-        <div className="overflow-hidden px-12">
+            (centre des 3 visibles).
+            pt-6 / pb-2 : marge verticale pour que le badge -top-3 des cards
+            ne soit pas coupe par le overflow-hidden. */}
+        <div className="overflow-hidden px-12 pt-6 pb-2">
           <ul
             role="listbox"
             aria-label="Sélectionnez un palier"
