@@ -555,24 +555,26 @@ export default async function TarifsPage({
               >
               <h2
                 id="roi-stats-heading"
-              <ul aria-labelledby="roi-stats-heading" className="space-y-2 text-gray-700">
-              >
-                Les chiffres, posés froidement.
-              </h2>
-              <ul aria-labelledby="roi-stats-heading" className="space-y-2 text-gray-700">
-                <Roi
-                  label="Une attaque par phishing réussie en PME"
-                  value="coûte en moyenne 35 000 € (Tracfin 2024)"
-                />
-                <Roi
-                  label="Notre offre Essentielle pour 25 collaborateurs"
-                  value="coûte 900 €/an (75 €/mois)"
-                />
-                <Roi
-                  label="Réduction observée du taux de clic phishing après 6 mois"
-                  value="−60 % (cible standard du marché)"
-                />
-                <Roi
+              <div className="dark:text-gray-200">
+                <ul aria-labelledby="roi-stats-heading" className="space-y-2 text-gray-700">
+                  <Roi
+                    label="Une attaque par phishing réussie en PME"
+                    value="coûte en moyenne 35 000 € (Tracfin 2024)"
+                  />
+                  <Roi
+                    label="Notre offre Essentielle pour 25 collaborateurs"
+                    value="coûte 900 €/an (75 €/mois)"
+                  />
+                  <Roi
+                    label="Réduction observée du taux de clic phishing après 6 mois"
+                    value="−60 % (cible standard du marché)"
+                  />
+                  <Roi
+                    label="Réduction de la prime d'assurance cyber"
+                    value="5 à 15 % avec preuve de formation continue"
+                  />
+                </ul>
+              </div>
                   label="Réduction de la prime d'assurance cyber"
                   value="5 à 15 % avec preuve de formation continue"
                 />
