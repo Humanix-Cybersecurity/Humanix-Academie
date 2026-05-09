@@ -7,7 +7,7 @@
 // La librairie est l'espace de lecture libre : un endroit ou le visiteur
 // vient quand il a 5 a 10 minutes pour apprendre quelque chose, pas dans
 // un parcours impose. Le ton chaleureux et l'invitation a la lecture
-// importent autant que le catalogue lui-meme.
+// importent autant que le catalogue lui-même.
 
 import Link from "next/link";
 import { redirect } from "next/navigation";

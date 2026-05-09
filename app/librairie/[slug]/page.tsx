@@ -42,7 +42,7 @@ export default async function ArticleReadPage({
 
   const plainText = markdownToPlainText(article.body);
 
-  // Articles "connexes" : meme categorie
+  // Articles "connexes" : même catégorie
   const related = await db.libraryArticle.findMany({
     where: {
       isPublished: true,

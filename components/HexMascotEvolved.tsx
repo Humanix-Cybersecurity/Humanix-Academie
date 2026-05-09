@@ -94,12 +94,12 @@ export default function HexMascotEvolved({
   const displayedEmoji =
     customEmoji && customEmoji.trim().length > 0 ? customEmoji : mascot.emoji;
 
-  // Le chapeau equipe override l'accessoire de niveau (couronne/bouclier...)
+  // Le chapeau équipe override l'accessoire de niveau (couronne/bouclier...)
   const hatToShow = equipped?.hat ?? level.accessory;
   const glassesToShow = equipped?.glasses;
   const accessoryToShow = equipped?.accessory; // accessoire flottant additionnel
 
-  // Background : custom equipe override le gradient de niveau
+  // Background : custom équipe override le gradient de niveau
   const bgGradient = equipped?.background ?? level.bgGradient;
 
   return (
@@ -168,7 +168,7 @@ export default function HexMascotEvolved({
           </span>
         )}
 
-        {/* Accessoire flottant equipe (bottom-left) */}
+        {/* Accessoire flottant équipe (bottom-left) */}
         {accessoryToShow && (
           <span
             className={clsx(

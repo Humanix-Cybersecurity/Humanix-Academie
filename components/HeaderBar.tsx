@@ -5,7 +5,7 @@
 //
 // Probleme avant : 8 liens inline pour le visiteur (Urgence, Famille, Manifeste,
 // Open source, DPO, Communaute, Tarifs, Connexion) + emojis melanges + CTA
-// dupliques (Connexion + Creer un compte). Donnait l'impression d'usine a
+// dupliques (Connexion + Créer un compte). Donnait l'impression d'usine a
 // gaz, pas d'un editeur SaaS scalable.
 //
 // Refonte :
@@ -21,7 +21,7 @@
 //   - Logo + brand
 //   - Nav primaire : Apprendre · Librairie · (Admin Console si admin)
 //   - Stats compactes (level + coins) + ThemeToggle
-//   - Avatar dropdown : profil, securite, RGPD, boutique, famille, marketplace,
+//   - Avatar dropdown : profil, sécurité, RGPD, boutique, famille, marketplace,
 //     quitter
 //
 // Inspiration design : Vercel, Linear, Stripe, Posthog. Pas d'emojis dans
@@ -135,7 +135,7 @@ const SOLUTIONS_ITEMS: DropdownItem[] = [
  *   demoMode : passe `true` quand DEMO_MODE=true cote serveur. Quand `false`,
  *              le CTA "Démo" et la section démo du drawer mobile sont caches
  *              -- la prod commerciale ne doit pas exposer la page /demo aux
- *              visiteurs. Defense en profondeur : la page /demo elle-meme
+ *              visiteurs. Defense en profondeur : la page /demo elle-même
  *              retourne 404 via app/demo/layout.tsx server side.
  */
 export default function HeaderBar({ demoMode = false }: { demoMode?: boolean }) {

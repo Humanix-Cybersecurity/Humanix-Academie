@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Page d'attente apres l'envoi d'un magic link / email de verification.
+// Page d'attente après l'envoi d'un magic link / email de vérification.
 //
 // Configuree dans lib/auth.ts comme `pages.verifyRequest`. Auth.js redirige
-// automatiquement ici apres :
-//   - signIn("nodemailer", { email }) -> envoi du magic link de verification
+// automatiquement ici après :
+//   - signIn("nodemailer", { email }) -> envoi du magic link de vérification
 //   - signIn("resend", { email })      -> idem (alternate provider)
 //
 // Cette page n'a aucune logique : c'est juste un message de confirmation
@@ -12,7 +12,7 @@
 // mail le renverra ensuite vers /post-login qui aiguille selon son role.
 //
 // Pourquoi cette page existe :
-// Sans elle, Auth.js redirige vers /connexion/verification qui retournait
+// Sans elle, Auth.js redirige vers /connexion/vérification qui retournait
 // 404 -> l'utilisateur croit que l'inscription a echoue alors que le mail
 // a bien ete envoye.
 

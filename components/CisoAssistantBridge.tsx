@@ -108,7 +108,7 @@ export default function CisoAssistantBridge() {
         </h2>
         <div
           role="tablist"
-          aria-label="Referentiels de conformite supportes"
+          aria-label="Referentiels de conformité supportes"
           className="flex flex-wrap gap-2"
         >
           {SUPPORTED_FRAMEWORKS.map((ref) => {
@@ -220,7 +220,7 @@ export default function CisoAssistantBridge() {
             <span className="sr-only">Filtrer les controles</span>
             <input
               type="search"
-              placeholder="Filtrer (ref, nom, categorie)..."
+              placeholder="Filtrer (ref, nom, catégorie)..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-64 max-w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:border-accent-500 focus:outline-none"
@@ -231,7 +231,7 @@ export default function CisoAssistantBridge() {
         <div className="overflow-x-auto card p-0">
           <table className="w-full text-sm">
             <caption className="sr-only">
-              Mapping des controles {fw.title} vers les donnees Humanix
+              Mapping des controles {fw.title} vers les données Humanix
             </caption>
             <thead>
               <tr className="bg-gray-50 dark:bg-slate-800 text-left">
@@ -242,10 +242,10 @@ export default function CisoAssistantBridge() {
                   Controle
                 </th>
                 <th scope="col" className="p-3 font-bold">
-                  Categorie
+                  Catégorie
                 </th>
                 <th scope="col" className="p-3 font-bold">
-                  Donnees Humanix
+                  Données Humanix
                 </th>
                 <th scope="col" className="p-3 font-bold text-right">
                   Couverture

@@ -73,7 +73,7 @@ export default function PhishingGenerator() {
     <div className="grid lg:grid-cols-2 gap-6">
       {/* Formulaire */}
       <div className="card space-y-4">
-        <h2 className="text-xl font-bold text-primary-500">Paramètres</h2>
+        <h2 className="text-xl font-bold text-primary-500">Paramètrès</h2>
 
         <div>
           <label className="block text-xs font-bold uppercase text-gray-500 mb-2">

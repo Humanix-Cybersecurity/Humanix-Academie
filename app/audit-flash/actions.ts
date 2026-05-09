@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Server actions de l'audit flash : creation d'une soumission + scoring serveur.
-// Securite :
+// Sécurité :
 //  - validation Zod stricte cote serveur
 //  - hash SHA-256 de l'IP (anti-spam, RGPD-compatible)
 //  - rate limit basique (1 soumission / IP / 5 min)
@@ -68,7 +68,7 @@ export async function submitAuditFlash(input: unknown): Promise<SubmitState> {
   }
   const data = parsed.data;
 
-  // 2. Verification que toutes les questions ont une reponse
+  // 2. Vérification que toutes les questions ont une reponse
   const requiredIds = AUDIT_QUESTIONS.map((q) => q.id);
   const missing = requiredIds.filter((id) => !data.answers[id]);
   if (missing.length > 0) {

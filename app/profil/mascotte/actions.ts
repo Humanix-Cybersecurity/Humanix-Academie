@@ -52,7 +52,7 @@ export async function chooseMascot(mascotId: string) {
 
 /**
  * Met a jour l'humeur affichee de la mascotte. Validation stricte cote
- * server : seules les valeurs du Mood union sont acceptees (RGAA + securite).
+ * server : seules les valeurs du Mood union sont acceptees (RGAA + sécurité).
  */
 export async function chooseMood(mood: string): Promise<{ ok: true }> {
   const session = await auth();
@@ -86,7 +86,7 @@ export async function setCustomMascotEmoji(
   let toStore: string | null = null;
   if (emoji && emoji.trim().length > 0) {
     const trimmed = emoji.trim();
-    // Limite stricte de longueur pour eviter le cas ou l'utilisateur colle
+    // Limite stricte de longueur pour éviter le cas ou l'utilisateur colle
     // tout un texte. 8 caracteres suffisent pour les emojis composites.
     if (trimmed.length > 8) {
       throw new Error("emoji_trop_long");

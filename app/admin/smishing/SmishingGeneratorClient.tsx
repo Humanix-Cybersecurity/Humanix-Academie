@@ -110,7 +110,7 @@ export default function SmishingGeneratorClient() {
           id="smishing-form-title"
           className="font-bold text-primary-500 dark:text-accent-300"
         >
-          Paramètres du scénario
+          Paramètrès du scénario
         </h2>
 
         <div>

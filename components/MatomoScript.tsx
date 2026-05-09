@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Tracker analytics Matomo (origine francaise -- Matthieu Aubry, 2007).
+// Tracker analytics Matomo (origine française -- Matthieu Aubry, 2007).
 // -----------------------------------------------------------------------------
 // Matomo (ex-Piwik) est l'alternative europeenne historique a Google Analytics.
 // 23% de part de marche en France. Open source GPL-3.0, self-host first.

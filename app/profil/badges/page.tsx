@@ -5,7 +5,7 @@
 // Collection complete des badges du user : debloques (avec date) +
 // non debloques (description visible, sauf isSecret qui sont masques).
 //
-// Layout par categorie : progression / consistency / mastery / social
+// Layout par catégorie : progression / consistency / mastery / social
 // / special. Chaque badge a une carte avec couleur de rarete + state
 // debloque/non.
 //
@@ -94,7 +94,7 @@ export default async function ProfilBadgesPage() {
   ).reduce((s, a) => s + a.points, 0);
 
   // Group par category dans l'ordre canonique
-  const categories: AchievementCategory[] = [
+  const catégories: AchievementCategory[] = [
     "progression",
     "consistency",
     "mastery",
@@ -130,7 +130,7 @@ export default async function ProfilBadgesPage() {
       </header>
 
       <div className="space-y-10">
-        {categories.map((cat) => {
+        {catégories.map((cat) => {
           const items = ACHIEVEMENTS_CATALOG.filter((a) => a.category === cat);
           if (items.length === 0) return null;
           return (

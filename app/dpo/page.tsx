@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Page publique /dpo - landing dediee aux Delegues a la Protection des
-// Donnees (DPO).
+// Données (DPO).
 //
 // POURQUOI cette page existe :
-//   - Le DPO est un persona cible specifique : il combine cyber + juridique +
+//   - Le DPO est un persona cible spécifique : il combine cyber + juridique +
 //     organisationnel. Aucune plateforme SAT/HRM en France ne lui parle
 //     directement.
-//   - La promesse Humanix pour le DPO : la plateforme elle-meme est
-//     RGPD-by-design (registre fourni, DPA modele, 72h pre-rempli, hosting
+//   - La promesse Humanix pour le DPO : la plateforme elle-même est
+//     RGPD-by-design (registre fourni, DPA modèle, 72h pre-rempli, hosting
 //     Scaleway Paris, audit log RGPD complet). Le DPO peut auditer et
-//     deleguer la sensibilisation cyber sans craindre que l'outil lui-meme
+//     deleguer la sensibilisation cyber sans craindre que l'outil lui-même
 //     soit un trou.
 //   - Position commerciale : le DPO est souvent le declencheur d'achat dans
 //     les PME post-NIS2. Il faut lui donner un point d'entree qui parle son
@@ -19,7 +19,7 @@
 //   - Hero cosy avec invitation a la lecture DPO
 //   - 5 promesses tracables (registre, DPA, 72h, droits, audit log)
 //   - Cas d'usage concret "DPO de PME 80 personnes"
-//   - Liens vers /confidentialite, /securite, modules pedagogiques DPO
+//   - Liens vers /confidentialite, /sécurité, modules pedagogiques DPO
 //   - Citation finale "Hex veille"
 //
 // ROADMAP suite :
@@ -27,7 +27,7 @@
 //     demandes (article 15-22), AIPD generator (PR a venir)
 //   - Modules MDX dedies DPO : AIPD, controle CNIL, transferts hors UE
 //     (PR a venir)
-//   - Reference dans HeaderBar + footer (deja fait)
+//   - Reference dans HeaderBar + footer (déjà fait)
 
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
@@ -47,17 +47,17 @@ const PROMESSES = [
       ring: "border-cyan-200 dark:border-cyan-900/40",
       accent: "text-cyan-700 dark:text-cyan-300",
     },
-    body: "Humanix Academie est un sous-traitant au sens RGPD. Tu recois des le plan Decouverte : le registre des traitements de la plateforme (article 30), avec finalites, donnees, durees, garanties - pre-rempli, signe, exportable. Plus besoin de le faire toi-meme.",
+    body: "Humanix Academie est un sous-traitant au sens RGPD. Tu recois des le plan Découverte : le registre des traitements de la plateforme (article 30), avec finalites, données, durees, garanties - pre-rempli, signe, exportable. Plus besoin de le faire toi-même.",
   },
   {
     emoji: "📜",
-    title: "DPA modele en piece jointe",
+    title: "DPA modèle en piece jointe",
     palette: {
       bg: "from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-teal-950/40",
       ring: "border-emerald-200 dark:border-emerald-900/40",
       accent: "text-emerald-700 dark:text-emerald-300",
     },
-    body: "Data Processing Agreement (article 28 RGPD) deja redige selon les exigences CNIL et signables en 1 minute. Liste exhaustive des sous-traitants ulterieurs (Scaleway Paris pour l'hosting, Mistral Paris pour l'IA, Payplug pour le paiement). Aucune dependance Cloud Act par defaut.",
+    body: "Data Processing Agreement (article 28 RGPD) déjà redige selon les exigences CNIL et signables en 1 minute. Liste exhaustive des sous-traitants ulterieurs (Scaleway Paris pour l'hosting, Mistral Paris pour l'IA, Payplug pour le paiement). Aucune dependance Cloud Act par defaut.",
   },
   {
     emoji: "⏰",
@@ -67,7 +67,7 @@ const PROMESSES = [
       ring: "border-amber-200 dark:border-amber-900/40",
       accent: "text-amber-700 dark:text-amber-300",
     },
-    body: "En cas de fuite cote Humanix : runbook 72h documente, contact CNIL sur la liaison directe, formulaire pre-rempli. Cote tenant : module pedagogique 03-fuite-72h disponible pour former tes equipes a leur propre procedure.",
+    body: "En cas de fuite cote Humanix : runbook 72h documente, contact CNIL sur la liaison directe, formulaire pre-rempli. Cote tenant : module pedagogique 03-fuite-72h disponible pour former tes équipes a leur propre procedure.",
   },
   {
     emoji: "🔓",
@@ -77,7 +77,7 @@ const PROMESSES = [
       ring: "border-purple-200 dark:border-purple-900/40",
       accent: "text-purple-700 dark:text-purple-300",
     },
-    body: "Acces, rectification, effacement, portabilite (art. 15-22) implementes nativement dans /profil pour chaque apprenant. Audit log RGPD centralise (PR #88) trace toute action sur les donnees personnelles. Tu peux repondre a une demande de droit en 4 clics, avec preuve d'execution.",
+    body: "Acces, rectification, effacement, portabilite (art. 15-22) implementes nativement dans /profil pour chaque apprenant. Audit log RGPD centralise (PR #88) trace toute action sur les données personnelles. Tu peux repondre a une demande de droit en 4 clics, avec preuve d'execution.",
   },
   {
     emoji: "🇫🇷",
@@ -87,7 +87,7 @@ const PROMESSES = [
       ring: "border-rose-200 dark:border-rose-900/40",
       accent: "text-rose-700 dark:text-rose-300",
     },
-    body: "Donnees personnelles 100 % France. Email transactionnel via Scaleway TEM (PR #106), paiement via Payplug (PR #97), IA generative via Mistral Paris. Aucune donnee personnelle ne traverse le Cloud Act. Option SecNumCloud disponible en Enterprise.",
+    body: "Données personnelles 100 % France. Email transactionnel via Scaleway TEM (PR #106), paiement via Payplug (PR #97), IA generative via Mistral Paris. Aucune donnee personnelle ne traverse le Cloud Act. Option SecNumCloud disponible en Enterprise.",
   },
   {
     emoji: "🛡",
@@ -97,7 +97,7 @@ const PROMESSES = [
       ring: "border-indigo-200 dark:border-indigo-900/40",
       accent: "text-indigo-700 dark:text-indigo-300",
     },
-    body: "Plateforme open source AGPLv3. Tu peux auditer le code ligne par ligne, le forker, l'auto-heberger. Plus de boite noire a justifier au COMEX. Le rapport d'audit de securite est public (Markdown versionne Git, PDF a la demande).",
+    body: "Plateforme open source AGPLv3. Tu peux auditer le code ligne par ligne, le forker, l'auto-heberger. Plus de boite noire a justifier au COMEX. Le rapport d'audit de sécurité est public (Markdown versionne Git, PDF a la demande).",
   },
 ];
 
@@ -128,8 +128,8 @@ export default function DpoLandingPage() {
             style={{ animationDelay: "220ms" }}
           >
             Humanix Academie est un outil de sensibilisation cyber. Mais c'est
-            aussi un sous-traitant RGPD. On a fait le choix d'etre auditable
-            par construction : registre fourni, DPA modele, 72h pre-rempli,
+            aussi un sous-traitant RGPD. On a fait le choix d'être auditable
+            par construction : registre fourni, DPA modèle, 72h pre-rempli,
             hosting Scaleway Paris, audit log complet, code AGPLv3 public.
           </p>
         </section>
@@ -199,11 +199,11 @@ export default function DpoLandingPage() {
               <strong className="text-primary-500 dark:text-accent-300">
                 La situation :
               </strong>{" "}
-              tu es DPO mutualise (3 jours/semaine), tu pilotes la conformite
+              tu es DPO mutualise (3 jours/semaine), tu pilotes la conformité
               de plusieurs PME francaises. NIS2 est arrivee, tes dirigeants te
               demandent de prouver que les collaborateurs sont sensibilises a
               la cyber. Tu cherches une plateforme qui ne te rajoute pas
-              elle-meme une dette RGPD.
+              elle-même une dette RGPD.
             </p>
             <p>
               <strong className="text-primary-500 dark:text-accent-300">
@@ -212,14 +212,14 @@ export default function DpoLandingPage() {
               tu deploies le tenant en 30 minutes. Le registre, le DPA, la
               procedure 72h sont fournis dans /admin. Tu n'as plus qu'a les
               annexer a ton dossier de sous-traitants. La plateforme propose
-              elle-meme les modules pedagogiques pour former tes
+              elle-même les modules pedagogiques pour former tes
               collaborateurs sur les sujets RGPD operationnels (regle des 3
-              questions, droit d'acces, registre, sous-traitants - saison{" "}
+              questions, droit d'accès, registre, sous-traitants - saison{" "}
               <Link
                 href="/apprendre"
                 className="text-accent-500 underline font-medium"
               >
-                donnees-sensibles
+                données-sensibles
               </Link>{" "}
               complete 6/6).
             </p>
@@ -227,7 +227,7 @@ export default function DpoLandingPage() {
               <strong className="text-primary-500 dark:text-accent-300">
                 Le bonus :
               </strong>{" "}
-              tu peux donner acces a la console{" "}
+              tu peux donner accès a la console{" "}
               <Link
                 href="/admin"
                 className="text-accent-500 underline font-medium"
@@ -287,7 +287,7 @@ export default function DpoLandingPage() {
                 <strong className="text-primary-500 dark:text-accent-300">
                   AIPD generator :
                 </strong>{" "}
-                template d'analyse d'impact a la protection des donnees
+                template d'analyse d'impact a la protection des données
                 pre-rempli pour les nouveaux traitements de la PME.
               </span>
             </li>
@@ -300,7 +300,7 @@ export default function DpoLandingPage() {
                   Modules MDX dedies DPO :
                 </strong>{" "}
                 AIPD, controle CNIL, transferts hors UE, profilage,
-                base juridique - pour former le DPO lui-meme et son entourage.
+                base juridique - pour former le DPO lui-même et son entourage.
               </span>
             </li>
             <li className="flex items-start gap-3">

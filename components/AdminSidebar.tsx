@@ -94,7 +94,7 @@ const SECTIONS: Section[] = [
     ],
   },
   {
-    id: "conformite",
+    id: "conformité",
     title: "Conformité",
     icon: "🛡",
     items: [

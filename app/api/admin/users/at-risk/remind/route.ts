@@ -13,10 +13,10 @@
 //   { ok: true, sent, simulated, errors, total }
 //
 // Auth : ADMIN, RSSI, SUPERADMIN (MANAGER lit en read-only mais ne peut
-// pas declencher d'envoi - le formulaire UI le sait deja, defense en
+// pas declencher d'envoi - le formulaire UI le sait déjà, defense en
 // profondeur ici)
 //
-// Securite : tenant scope sur les userIds (un admin de tenant A ne peut
+// Sécurité : tenant scope sur les userIds (un admin de tenant A ne peut
 // PAS envoyer de rappel a des users du tenant B en bricolant l'array).
 
 import { NextResponse } from "next/server";

@@ -14,7 +14,7 @@
 //      moyenne tenant.
 //
 // Non-objectif :
-//   - Pas de modele ML opaque. Regression lineaire simple, transparente.
+//   - Pas de modèle ML opaque. Regression lineaire simple, transparente.
 //     L'admin doit pouvoir comprendre et challenger le calcul.
 //   - Le verdict est qualitatif ("degrading"), pas un score precis.
 

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /souscrire/succes — landing post-paiement Payplug.
+// /souscrire/succès — landing post-paiement Payplug.
 // Le webhook a (ou est en train de) provisionné le tenant + ADMIN +
 // envoyé un magic link. On rassure l'user pendant qu'il regarde sa
 // boîte mail. Pas d'auth requise (l'user n'a pas encore cliqué le lien).

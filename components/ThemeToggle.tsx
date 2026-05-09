@@ -1,7 +1,7 @@
 "use client";
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Toggle dark/light avec persistance localStorage et respect des preferences systeme.
+// Toggle dark/light avec persistance localStorage et respect des préférences systeme.
 // Pas de flash blanc au chargement : on applique le theme en pre-script (cf. layout).
 import { useEffect, useState } from "react";
 
@@ -50,7 +50,7 @@ export default function ThemeToggle({
   }, [theme]);
 
   if (!mounted) {
-    // Placeholder pour eviter mismatch SSR/hydration
+    // Placeholder pour éviter mismatch SSR/hydration
     return <div className="w-9 h-9" />;
   }
 

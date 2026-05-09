@@ -7,7 +7,7 @@
 // (@@unique [tenantId, eventSlug]). Si l'event est `autoChallenge`
 // (Cybermois), on cree aussi un TeamChallenge avec rewardCoins.
 //
-// Frequence recommandee : 1x/jour (apres minuit UTC). Idempotent
+// Fréquence recommandee : 1x/jour (après minuit UTC). Idempotent
 // donc on peut le re-jouer sans degat.
 
 import crypto from "node:crypto";
@@ -82,7 +82,7 @@ async function tick(): Promise<{
         });
 
         if (existing) {
-          continue; // deja active pour ce tenant
+          continue; // déjà active pour ce tenant
         }
 
         // Auto-challenge si activé (Cybermois)

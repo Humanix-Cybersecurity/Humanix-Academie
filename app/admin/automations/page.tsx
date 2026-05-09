@@ -2,7 +2,7 @@
 //
 // /admin/automations
 //
-// Configuration des automations de remediation declenchees apres le
+// Configuration des automations de remediation declenchees après le
 // clic sur un phishing simule. C'est de l'OPT-IN STRICTE : par defaut
 // rien n'est active, parce que ces actions ont des consequences
 // concretes pour l'user (forcer 2FA = il doit le configurer au prochain

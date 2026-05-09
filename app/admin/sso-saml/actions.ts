@@ -6,7 +6,7 @@
 //
 // Save / activate la config SAML par tenant. La validation X509 du
 // certificat IdP est rudimentaire (header BEGIN CERTIFICATE / END
-// CERTIFICATE, length raisonnable). La verification cryptographique
+// CERTIFICATE, length raisonnable). La vérification cryptographique
 // de la signature SAML est faite au runtime SAML (cf. /integrations/sso-saml
 // pour les voies d'implementation supportees).
 

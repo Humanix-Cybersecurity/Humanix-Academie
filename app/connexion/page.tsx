@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Page de connexion : 4 voies au choix
 //  1. Email + mot de passe (avec 2FA TOTP si activee)
-//  2. SSO Google (1 clic, si compte deja invite)
+//  2. SSO Google (1 clic, si compte déjà invite)
 //  3. SSO Microsoft / Entra ID (1 clic, idem)
 //  4. Magic link email (fallback universel)
 //
@@ -101,7 +101,7 @@ function ConnexionInner() {
       return;
     }
     // Auth.js v5 retourne l'erreur dans res.error.
-    // Le mapping anglais -> francais est centralise dans lib/auth-errors.
+    // Le mapping anglais -> français est centralise dans lib/auth-errors.
     const code = (res.error ?? "").toString();
     if (/MfaRequired/.test(code)) {
       setShowMfa(true);
@@ -233,7 +233,7 @@ function ConnexionInner() {
       {/* ==================== AUTH CARD UNIFIE ====================
           Toute la machine d'auth (step-up message, erreurs, SSO, tabs,
           form) est dans UN SEUL card visuel (relative + bg + border) pour
-          eviter l'effet "tabs flottants entre hero et form" signale par
+          éviter l'effet "tabs flottants entre hero et form" signale par
           l'utilisateur.
           IMPORTANT : pas de marge negative ! Une iteration precedente
           utilisait -mt-6 sm:-mt-8 pour faire "mordre" la card sur le
@@ -483,7 +483,7 @@ function ConnexionInner() {
           </button>
 
           {/* Footer du form password : Mot de passe oublie + bascule magic
-              link, en stack vertical pour eviter la cohabitation cramped
+              link, en stack vertical pour éviter la cohabitation cramped
               signalee par l'utilisateur. */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs pt-2 border-t border-gray-100 dark:border-slate-800">
             <Link

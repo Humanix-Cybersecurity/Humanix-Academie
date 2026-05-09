@@ -20,7 +20,7 @@
 //   }
 //
 // Auth : NextAuth + role ∈ {ADMIN, RSSI, MANAGER, SUPERADMIN}
-// (MANAGER lit en read-only, normal pour le reporting d'equipe)
+// (MANAGER lit en read-only, normal pour le reporting d'équipe)
 
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";

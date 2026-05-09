@@ -88,7 +88,7 @@ export default async function RetentionPage({
         description="Limitation de conservation RGPD (article 5.1.e). Configure pendant combien de temps les données personnelles sont gardées avant anonymisation / purge."
       />
 
-      {/* Bandeau de feedback (succes / erreur) renseigne par les server
+      {/* Bandeau de feedback (succès / erreur) renseigne par les server
           actions via redirect ?ok=1&msg=... ou ?error=... */}
       {flash && (
         <div
