@@ -29,11 +29,11 @@ const prisma = new PrismaClient();
 async function main() {
   const planChange = await prisma.tenant.updateMany({
     where: { plan: "trial" },
-    data: { plan: "starter" },
+    data: { plan: "decouverte" },
   });
   if (planChange.count > 0) {
     console.log(
-      `[migrate-legacy-trial] ${planChange.count} tenant(s) rebasculé(s) plan=trial -> starter`,
+      `[migrate-legacy-trial] ${planChange.count} tenant(s) rebasculé(s) plan=trial -> decouverte`,
     );
   }
 
