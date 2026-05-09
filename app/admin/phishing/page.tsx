@@ -45,7 +45,7 @@ export default async function AdminPhishingPage() {
     );
   }
 
-  const [services, campaigns, smtpCfg] = await Promise.all([
+  const [services, campaigns, smtpCfg, groupsRaw] = await Promise.all([
     db.user.findMany({
       where: { tenantId, isActive: true },
       select: { service: true },
@@ -63,6 +63,30 @@ export default async function AdminPhishingPage() {
       where: { tenantId },
       select: { id: true, isVerified: true, host: true, fromEmail: true },
     }),
+    // Groupes metier du tenant (mai 2026) : pour le ciblage structuré
+    // au lancement de campagne. On compte les membres actifs en parallèle
+    // pour afficher "RH (12)".
+    db.group.findMany({
+      where: { tenantId, isActive: true },
+      orderBy: { name: "asc" },
+      select: {
+        slug: true,
+        name: true,
+        emoji: true,
+        _count: {
+          select: {
+            members: {
+              where: {
+                user: {
+                  isActive: true,
+                  role: { in: ["LEARNER", "MANAGER"] },
+                },
+              },
+            },
+          },
+        },
+      },
+    }),
   ]);
   const smtpConfigured = !!smtpCfg;
   const smtpVerified = smtpCfg?.isVerified === true;
@@ -70,6 +94,17 @@ export default async function AdminPhishingPage() {
   const distinctServices = services
     .map((s) => s.service)
     .filter(Boolean) as string[];
+
+  // On masque les groupes vides (0 membre cible) du selecteur :
+  // l'admin ne peut rien en faire et ça encombre l'UI.
+  const groupOptions = groupsRaw
+    .filter((g) => g._count.members > 0)
+    .map((g) => ({
+      slug: g.slug,
+      name: g.name,
+      emoji: g.emoji,
+      memberCount: g._count.members,
+    }));
 
   return (
     <>
@@ -198,7 +233,10 @@ export default async function AdminPhishingPage() {
           title="Lancer une campagne"
           description="Choisissez un template prêt-à-l'emploi et une audience cible."
         >
-          <LaunchCampaignForm services={distinctServices} />
+          <LaunchCampaignForm
+            services={distinctServices}
+            groups={groupOptions}
+          />
         </AdminSection>
 
         {/* Campagnes récentes */}
