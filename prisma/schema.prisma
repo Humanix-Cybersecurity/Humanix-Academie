@@ -18,49 +18,66 @@ datasource db {
 // le reporting est consolide.
 // =====================================================
 model Tenant {
-  id                    String    @id @default(cuid())
-  name                  String
-  slug                  String    @unique
+  id                                  String    @id @default(cuid())
+  name                                String
+  slug                                String    @unique
   // Plan effectif du tenant (cf. lib/plans.ts pour les valeurs valides :
   // starter, pro, enterprise — depuis pivot 4 paliers mai 2026).
   // Default "starter" (forever-free <=5 sieges) — plan le plus restrictif
   // qui ne necessite ni paiement ni provisionnement special.
   // Anciennes valeurs (decouverte/solo/essentielle/premium/trial) sont
   // gracieusement normalisees par lib/plans.ts::normalizePlan().
-  plan                  String    @default("starter")
+  plan                                String    @default("starter")
   // Multi-etablissements : un tenant peut avoir un parent (groupe / siege)
-  parentTenantId        String?
+  parentTenantId                      String?
   // Type d'etablissement libre (ex : "siege", "agence", "site", "boutique")
   // Affiche dans le breadcrumb / dashboard. null pour les tenants racine.
-  establishmentType     String?
+  establishmentType                   String?
   // ----------------------------------------------------
   // BILLING (provider-agnostique : Payplug FR par defaut, possible Stripe)
   // ----------------------------------------------------
   // Identifie le prestataire de paiement actif pour ce tenant.
   // Valeurs : "payplug", "stripe", null (pas encore d'abonnement payant).
-  paymentProvider       String?
+  paymentProvider                     String?
   // Identifiants opaques chez le prestataire. Le format depend du provider
   // (Payplug : "cus_xxx", Stripe : "cus_xxx", interchangeables coté schema).
-  paymentCustomerId     String?   @unique
-  paymentSubscriptionId String?   @unique
+  paymentCustomerId                   String?   @unique
+  paymentSubscriptionId               String?   @unique
   // Statut normalise : active, past_due, canceled, incomplete, unpaid.
   // ("trialing" est un statut legacy retire en mai 2026 mais encore tolere
   // par le state machine pour les anciens tenants — cf. lib/subscription-state.ts).
   // Source de verite = webhook du provider. Synchro a chaque event subscription.
-  subscriptionStatus    String?
+  subscriptionStatus                  String?
   // Fin de la periode de facturation courante (renouvellement automatique
   // OU coupure du service si subscriptionStatus=canceled).
-  currentPeriodEnd      DateTime?
+  currentPeriodEnd                    DateTime?
   // Numero de seats facturees (relevant pour Solo/Essentielle/Pro qui ont
   // un plafond). Null si plan flat-fee ou plan gratuit.
-  seatCount             Int?
+  seatCount                           Int?
   // Champ legacy : date de fin de l'essai gratuit. Plus jamais ecrit depuis
   // le retrait de l'essai gratuit (mai 2026, vente directe). Conserve dans
   // le schema le temps de purger les anciennes valeurs en BDD via la
   // migration ; sera retire dans une migration future.
-  trialEndsAt           DateTime?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
+  trialEndsAt                         DateTime?
+  // ----------------------------------------------------
+  // AUTOMATIONS DE REMEDIATION (mai 2026)
+  // ----------------------------------------------------
+  // Flags opt-in (defaut false) configurables sur /admin/automations.
+  // Declenches automatiquement quand un user clique sur un phishing
+  // simule, en plus du mini-module flash auto-assigne. Permettent au
+  // RSSI de monter le niveau de remediation sans intervention manuelle.
+  //
+  // autoForce2FAAfterPhishingClick : marque User.mfaForced=true si
+  //   l'user n'a pas encore de 2FA. Au prochain login, il devra
+  //   configurer le 2FA pour pouvoir continuer.
+  // autoRevokeSessionAfterPhishingClick : supprime toutes les Session
+  //   actives du user (deconnexion forcee de tous les devices). Au
+  //   prochain acces, il devra se reconnecter (et configurer 2FA si
+  //   le flag precedent est aussi activé).
+  autoForce2FAAfterPhishingClick      Boolean   @default(false)
+  autoRevokeSessionAfterPhishingClick Boolean   @default(false)
+  createdAt                           DateTime  @default(now())
+  updatedAt                           DateTime  @updatedAt
 
   parent   Tenant?  @relation("TenantHierarchy", fields: [parentTenantId], references: [id], onDelete: SetNull)
   children Tenant[] @relation("TenantHierarchy")
