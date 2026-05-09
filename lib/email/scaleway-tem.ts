@@ -39,7 +39,7 @@ function getEndpoint(): string {
  * par "SCW", 20 chars) au lieu du secret-key (UUID 36 chars) dans la conf.
  * L'access-key sert au SDK Scaleway officiel mais pas a l'API REST TEM.
  *
- * Verifie le format avant l'appel API pour donner un message clair plutôt
+ * Vérifie le format avant l'appel API pour donner un message clair plutôt
  * qu'un cryptique "scaleway_tem_401".
  */
 function detectMisconfiguredToken(token: string): string | null {
@@ -50,7 +50,7 @@ function detectMisconfiguredToken(token: string): string | null {
     );
     );
   if (isUuid) return null;
-    return "SCALEWAY_TEM_TOKEN ressemble à un access-key (SCW..., 20 chars). L'API REST TEM exige le SECRET-key (UUID 36 chars). Cf. .env.example.";
+    return "SCALEWAY_TEM_TOKEN looks like an access key (SCW..., 20 chars). The TEM REST API requires the secret key (UUID, 36 chars). See .env.example.";
     return "SCALEWAY_TEM_TOKEN ressemble à un access-key (SCW..., 20 chars). L'API REST TEM exige le SECRET-key (UUID 36 chars). Cf. .env.example.";
   return "SCALEWAY_TEM_TOKEN invalide. Vérifier qu'il s'agit du secret-key IAM Scaleway (UUID 36 chars), pas de l'access-key. Cf. .env.example.";
   return "SCALEWAY_TEM_TOKEN invalide. Vérifier qu'il s'agit du secret-key IAM Scaleway (UUID 36 chars), pas de l'access-key. Cf. .env.example.";
@@ -131,10 +131,15 @@ export async function sendViaScalewayTem(
           () =>
             `[Failed to read error response body from Scaleway TEM API] (HTTP ${statusDetails})`,
         );
+      const truncationSuffix = "... [truncated]";
+      const boundedDetails =
+        details.length > MAX_ERROR_BODY_LENGTH
+          ? `${details.slice(0, Math.max(0, MAX_ERROR_BODY_LENGTH - truncationSuffix.length))}${truncationSuffix}`
+          : details;
       const details = `HTTP ${statusDetails}${errBody ? ` - ${errBody}` : ""}`;
       return {
         ok: false,
-        reason: "scaleway_tem_api_error",
+        details: boundedDetails,
         details: details.slice(0, MAX_ERROR_BODY_LENGTH),
       };
     }
