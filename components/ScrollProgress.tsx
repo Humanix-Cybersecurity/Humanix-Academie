@@ -5,7 +5,7 @@
 // 2px, gradient HumaniX. Disparait en prefers-reduced-motion (bouge pas).
 //
 // A11y : aria-hidden, purement decoratif. La progression scroll est
-// deja fournie par le navigateur.
+// déjà fournie par le navigateur.
 
 import { useEffect, useState } from "react";
 

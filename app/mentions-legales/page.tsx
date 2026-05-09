@@ -20,7 +20,7 @@ const TOC = [
   { id: "hebergement", label: "3. Hébergement" },
   { id: "propriete", label: "4. Propriété intellectuelle" },
   { id: "responsabilite", label: "5. Responsabilité" },
-  { id: "donnees", label: "6. Données personnelles" },
+  { id: "données", label: "6. Données personnelles" },
   { id: "cookies", label: "7. Cookies" },
   { id: "droit", label: "8. Droit applicable" },
   { id: "mediation", label: "9. Médiation" },

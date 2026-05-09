@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
 // Formulaire d'edition des infos personnelles. Client component pour gerer
-// l'etat pending / erreur / succes apres submit du server action.
+// l'etat pending / erreur / succès après submit du server action.
 
 "use client";
 
@@ -166,7 +166,7 @@ export default function ProfileInfoForm({
         </p>
       </div>
 
-      {/* Service / Equipe */}
+      {/* Service / Équipe */}
       <div>
         <label
           htmlFor="service"

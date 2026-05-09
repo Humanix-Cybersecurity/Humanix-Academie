@@ -2,11 +2,11 @@
 // Server actions pour le signup self-service du plan "starter" (gratuit
 // 5 sieges). Cree un Tenant + un User ADMIN + les groupes systeme par defaut.
 //
-// Securite :
+// Sécurité :
 //  - Rate limit par IP : 5 signups / heure / IP
 //  - Honeypot field (champ "website" qui doit rester vide)
 //  - Validation Zod-like manuelle (pas d'ajout de dep)
-//  - Email unique : on verifie qu'il n'existe pas deja en BDD
+//  - Email unique : on verifie qu'il n'existe pas déjà en BDD
 //  - Slug tenant unique (collision-safe via suffix random si besoin)
 //  - Pas de creation si DEMO_MODE=true (les comptes seedes prennent la place)
 //
@@ -98,7 +98,7 @@ export async function createStarterAccount(
   // ----------------------------
   const honeypot = String(formData.get("website") ?? "").trim();
   if (honeypot.length > 0) {
-    // Bot detecte. On retourne ok=true sans rien creer pour ne pas signaler
+    // Bot detecte. On retourne ok=true sans rien créer pour ne pas signaler
     // au bot que son comportement a ete reconnu.
     return { ok: true };
   }
@@ -168,7 +168,7 @@ export async function createStarterAccount(
   }
 
   // ----------------------------
-  // 4. Email deja pris ?
+  // 4. Email déjà pris ?
   // ----------------------------
   const existing = await db.user.findUnique({ where: { email } });
   if (existing) {
@@ -277,7 +277,7 @@ export async function createStarterAccount(
   // ----------------------------
   // signIn en provider "password" avec redirect via /post-login (qui route
   // par rôle : l'user fraîchement créé est ADMIN, donc /admin). Le rate
-  // limit est deja consume, donc cette connexion ne sera pas freinee par
+  // limit est déjà consume, donc cette connexion ne sera pas freinee par
   // les anti-bruteforce.
   await signIn("password", {
     email,

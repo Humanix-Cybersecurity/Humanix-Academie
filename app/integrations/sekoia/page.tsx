@@ -28,7 +28,7 @@ export default function SekoiaIntegrationPage() {
           </span>
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-          Vos preuves de sensibilisation atterrissent dans votre Operations
+          Vos preuves de sensibilisation atterrissent dans votre Opérations
           Center Sekoia. Corrélez le facteur humain (taux de complétion,
           signalements phishing) avec vos alertes EDR/réseau dans un seul outil
           souverain.
@@ -47,7 +47,7 @@ export default function SekoiaIntegrationPage() {
         </h2>
         <ol className="space-y-3 text-sm list-decimal list-inside">
           <li>
-            Sekoia → <strong>Operations Center → Intakes → Add Intake</strong> →
+            Sekoia → <strong>Opérations Center → Intakes → Add Intake</strong> →
             format <strong>ArcSight CEF</strong> (parser générique). Récupérez
             l'<strong>Intake Key</strong>.
           </li>

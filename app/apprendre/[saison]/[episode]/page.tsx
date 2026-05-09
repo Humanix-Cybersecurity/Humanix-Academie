@@ -6,11 +6,11 @@
 //  - Si l'episode existe en BDD mais PAS de MDX : on genere un contenu generique
 //    structure (cf. lib/episodes-fallback.ts). C'est le cas pour les ~150
 //    nouveaux episodes du catalogue (cf. prisma/catalog-saisons.ts).
-//  - Si l'episode n'existe meme pas en BDD : 404 (vraie erreur).
+//  - Si l'episode n'existe même pas en BDD : 404 (vraie erreur).
 //
 // Pourquoi ce fallback : on a un catalogue de 180 modules pour le commerce, mais
 // le contenu MDX detaille (scenario, debrief, quiz custom par episode) est ecrit
-// progressivement par l'equipe / les experts contributeurs. Sans fallback,
+// progressivement par l'équipe / les experts contributeurs. Sans fallback,
 // 90% du catalogue retournerait 404 - inacceptable cote demo et UX.
 
 import { notFound, redirect } from "next/navigation";

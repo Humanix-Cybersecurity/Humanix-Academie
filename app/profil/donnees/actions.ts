@@ -20,7 +20,7 @@ export type EraseResult = { ok: boolean; error?: string };
  *    progress / events / sessions / accounts / webauthn).
  *  - On loggue 2 entrees AuditLog : DATA_ERASURE_REQUESTED puis
  *    DATA_ERASURE_COMPLETED.
- *  - On force le sign-out apres effacement.
+ *  - On force le sign-out après effacement.
  *
  * Une trace anonymisee peut subsister dans NotificationLog (pour preuve
  * de formation suivie). C'est legitime au regard du RGPD si la base
@@ -85,7 +85,7 @@ export async function requestSelfErasure(
     ip,
   });
 
-  // Sign out apres effacement
+  // Sign out après effacement
   await signOut({ redirect: false });
   return { ok: true };
 }
