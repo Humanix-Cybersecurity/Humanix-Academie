@@ -55,17 +55,63 @@ export default function EpisodePlayer(props: {
   quiz: QuizQuestion[];
   xpReward: number;
   species?: string; // mascotte choisie par l'user (default fox)
+  /**
+   * Etat de reprise : si l'user a deja commence l'episode et l'a quitte
+   * en cours, on lui propose de reprendre la ou il etait. Provient du
+   * server component (page.tsx) qui lit Progress.{resumeStep, resumeQuizIndex,
+   * resumeChoiceId} en BDD. null = nouvelle session.
+   */
+  resume?: {
+    step: "scenario" | "debrief" | "quiz";
+    quizIndex: number;
+    choiceId: string | null;
+  } | null;
 }) {
   const species = props.species ?? "fox";
-  const [step, setStep] = useState<Step>("scenario");
-  const [choice, setChoice] = useState<Choice | null>(null);
-  const [quizIndex, setQuizIndex] = useState(0);
+
+  // Initialisation des states avec le resume si disponible. On retrouve le
+  // choice depuis l'id stocke (utile pour rejouer le bon debrief sans
+  // reposer la question scenario).
+  const initialStep: Step = props.resume?.step ?? "scenario";
+  const initialChoice: Choice | null =
+    props.resume?.choiceId
+      ? (props.choices.find((c) => c.id === props.resume!.choiceId) ?? null)
+      : null;
+  const initialQuizIndex = props.resume?.quizIndex ?? 0;
+
+  const [step, setStep] = useState<Step>(initialStep);
+  const [choice, setChoice] = useState<Choice | null>(initialChoice);
+  const [quizIndex, setQuizIndex] = useState(initialQuizIndex);
   const [quizScore, setQuizScore] = useState(0);
   const [answered, setAnswered] = useState<string | null>(null);
   const [persisted, setPersisted] = useState(false);
   const [coinsEarned, setCoinsEarned] = useState(0);
   const [levelUp, setLevelUp] = useState<number | null>(null);
   const { message: announcement, announce } = useAnnouncer();
+
+  /**
+   * Persiste l'etat de reprise a chaque transition de step. Best-effort :
+   * un echec reseau ne casse pas le flow utilisateur, l'episode continue.
+   * Le call est leger (juste un upsert sur la row Progress, pas de XP).
+   */
+  const persistResume = (
+    s: "scenario" | "debrief" | "quiz",
+    qIdx: number,
+    cId: string | null,
+  ) => {
+    void fetch("/api/progress/resume", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        episodeId: props.episodeId,
+        step: s,
+        quizIndex: qIdx,
+        choiceId: cId,
+      }),
+    }).catch(() => {
+      // silencieux : la reprise est un nice-to-have, pas un blocage
+    });
+  };
 
   // Keyboard shortcuts (1-4 pour choisir, Enter pour continuer)
   useEffect(() => {
@@ -79,7 +125,10 @@ export default function EpisodePlayer(props: {
         const idx = parseInt(e.key, 10) - 1;
         if (q.choices[idx]) handleQuizAnswer(q.choices[idx].id);
       }
-      if (step === "debrief" && e.key === "Enter") setStep("quiz");
+      if (step === "debrief" && e.key === "Enter") {
+        setStep("quiz");
+        persistResume("quiz", 0, choice?.id ?? null);
+      }
       if (step === "quiz" && e.key === "Enter" && answered) nextQuiz();
     };
     window.addEventListener("keydown", onKey);
@@ -90,6 +139,7 @@ export default function EpisodePlayer(props: {
   const handleChoice = (c: Choice) => {
     setChoice(c);
     setStep("debrief");
+    persistResume("debrief", 0, c.id);
     if (c.outcome === "good") {
       smallConfetti();
       announce(`Bien joue. ${c.feedback}`);
@@ -116,7 +166,9 @@ export default function EpisodePlayer(props: {
   const nextQuiz = async () => {
     setAnswered(null);
     if (quizIndex + 1 < props.quiz.length) {
-      setQuizIndex(quizIndex + 1);
+      const newIdx = quizIndex + 1;
+      setQuizIndex(newIdx);
+      persistResume("quiz", newIdx, choice?.id ?? null);
     } else {
       const totalXP = Math.max(
         (choice?.points ?? 0) + quizScore * 10 + props.xpReward,
@@ -301,7 +353,10 @@ export default function EpisodePlayer(props: {
               <FormattedText text={props.debrief} />
             </div>
             <button
-              onClick={() => setStep("quiz")}
+              onClick={() => {
+                setStep("quiz");
+                persistResume("quiz", 0, choice?.id ?? null);
+              }}
               className="btn-primary w-full text-lg animate-glow"
             >
               Quiz eclair <span aria-hidden="true">→</span>
