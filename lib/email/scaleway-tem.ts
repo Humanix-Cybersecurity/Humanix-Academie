@@ -48,11 +48,14 @@ function detectMisconfiguredToken(token: string): string | null {
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
       token,
     );
-    );
   if (isUuid) return null;
+
+  // Format access-key courant : "SCW" + 17 caracteres alphanumeriques (20 total)
+  const looksLikeAccessKey = /^SCW[A-Z0-9]{17}$/i.test(token);
+  if (looksLikeAccessKey) {
     return "SCALEWAY_TEM_TOKEN looks like an access key (SCW..., 20 chars). The TEM REST API requires the secret key (UUID, 36 chars). See .env.example.";
-    return "SCALEWAY_TEM_TOKEN ressemble à un access-key (SCW..., 20 chars). L'API REST TEM exige le SECRET-key (UUID 36 chars). Cf. .env.example.";
-  return "SCALEWAY_TEM_TOKEN invalide. Vérifier qu'il s'agit du secret-key IAM Scaleway (UUID 36 chars), pas de l'access-key. Cf. .env.example.";
+  }
+
   return "SCALEWAY_TEM_TOKEN invalide. Vérifier qu'il s'agit du secret-key IAM Scaleway (UUID 36 chars), pas de l'access-key. Cf. .env.example.";
 }
 
