@@ -124,17 +124,13 @@ function SubscriptionBanner({
   };
 
   const message =
-    state.state === "trialing" && state.daysLeft !== null && state.daysLeft <= 7
-      ? `Ton essai gratuit se termine dans ${state.daysLeft} jour${state.daysLeft > 1 ? "s" : ""}. Choisis un plan pour ne pas perdre tes données.`
-      : state.state === "trial_expired"
-        ? `Ton essai est terminé. Tu es en lecture seule pendant ${state.daysLeft ?? 30} jour${(state.daysLeft ?? 30) > 1 ? "s" : ""} avant suspension.`
-        : state.state === "grace_period"
-          ? `Ton dernier paiement n'a pas été honoré. Tu as ${state.daysLeft ?? 7} jour${(state.daysLeft ?? 7) > 1 ? "s" : ""} pour mettre à jour ta carte avant restriction.`
-          : state.state === "read_only"
-            ? `Accès en lecture seule (paiement en retard). Régularise pour réactiver l'écriture.`
-            : state.state === "suspended"
-              ? `Compte suspendu. Régularise sur la page facturation.`
-              : null;
+    state.state === "grace_period"
+      ? `Ton dernier paiement n'a pas été honoré. Tu as ${state.daysLeft ?? 7} jour${(state.daysLeft ?? 7) > 1 ? "s" : ""} pour mettre à jour ta carte avant restriction.`
+      : state.state === "read_only"
+        ? `Accès en lecture seule (paiement en retard). Régularise pour réactiver l'écriture.`
+        : state.state === "suspended"
+          ? `Compte suspendu. Régularise sur la page facturation.`
+          : null;
 
   if (!message) return null;
 
