@@ -324,7 +324,7 @@ export default async function TarifsPage({
             },
             {
               emoji: "🛒",
-              title: "Marketplace communaute",
+              title: "Marketplace communauté",
               text: "Tes pairs RSSI publient leurs modules, modérés par notre équipe. Effet de levier collectif.",
             },
             {
@@ -335,7 +335,7 @@ export default async function TarifsPage({
             {
               emoji: "💰",
               title: "Volume plutot que rente",
-              text: "3 €/user/mois en Essentielle. 5 a 10x moins cher que les acteurs US. Volume > 30 grosses boites.",
+              text: "3 €/user/mois en Essentielle. 5 à 10x moins cher que les acteurs US. Volume > 30 grosses boites.",
             },
           ].map((diff, idx) => (
             <DiffCard
@@ -691,7 +691,7 @@ export default async function TarifsPage({
             href="mailto:contact@humanix-cybersecurity.fr"
             className="bg-white/10 backdrop-blur border-2 border-white/70 text-white font-bold px-6 sm:px-8 py-4 rounded-2xl hover:bg-white/20 transition"
           >
-            📞 Echanger avec un expert
+            📞 Échanger avec un expert
           </a>
         </div>
         <p className="text-xs opacity-70 mt-6 relative">
@@ -707,7 +707,7 @@ export default async function TarifsPage({
         <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
           « Le prix est un choix politique. On a choisi de ne laisser personne
           au bord du chemin - pas par charité, par stratégie. La cybersécurité
-          ne peut pas etre un luxe quand 90 % des attaques visent les humains. »
+          ne peut pas être un luxe quand 90 % des attaques visent les humains. »
         </blockquote>
         <p
           aria-hidden="true"
