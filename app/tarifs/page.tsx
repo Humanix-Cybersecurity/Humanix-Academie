@@ -207,7 +207,7 @@ export default async function TarifsPage({
                     : "bg-success/10 text-success"
                 }`}
               >
-                jusqu&apos;à −21 %
+                jusqu'à −21 %
               </span>
             </Link>
           </div>
@@ -603,7 +603,7 @@ export default async function TarifsPage({
             développement.
           </Faq>
           <Faq question="Comment tester avant de payer ?">
-            Pas d&apos;essai gratuit sur les paliers payants : la{" "}
+            Pas d'essai gratuit sur les paliers payants : la{" "}
             <Link href="/demo" className="underline">
               démo en ligne
             </Link>{" "}
@@ -709,12 +709,11 @@ export default async function TarifsPage({
           au bord du chemin - pas par charité, par stratégie. La cybersécurité
           ne peut pas être un luxe quand 90 % des attaques visent les humains. »
         </blockquote>
-        <p
-          aria-hidden="true"
+        <cite
           className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
         >
           - Hex veille
-        </p>
+        </cite>
       </section>
       </div>
     </main>
@@ -822,7 +821,7 @@ function CtaButton({
   if (t.cta.type === "github") {
     return (
       <a
-        href="https://github.com/humanix-cybersecurity/humanix-ce"
+        href="https://github.com/Humanix-Cybersecurity/humanix-ce"
         target="_blank"
         rel="noreferrer"
         className={cls}
