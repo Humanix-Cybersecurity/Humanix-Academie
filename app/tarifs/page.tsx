@@ -676,7 +676,7 @@ export default async function TarifsPage({
             href="/demo"
             className="bg-white text-primary-500 font-bold px-6 sm:px-8 py-4 rounded-2xl hover:scale-105 transition shadow-lg"
           >
-            🎮 Tester la demo publique
+            🎮 Tester la démo publique
           </Link>
           <a
             href="https://github.com/Humanix-Cybersecurity/Humanix-Academie"
