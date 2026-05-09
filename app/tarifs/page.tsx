@@ -310,27 +310,27 @@ export default async function TarifsPage({
             {
               emoji: "🎮",
               title: "Ludique pour de vrai",
-              text: "Mascotte evolutive, boutique, challenges entre services, badges. Les collaborateurs reviennent par envie.",
+              text: "Mascotte évolutive, boutique, challenges entre services, badges. Les collaborateurs reviennent par envie.",
             },
             {
               emoji: "⚡",
-              title: "Deployable en 30 minutes",
+              title: "Déployable en 30 minutes",
               text: "Pas de chef de projet, pas de SSO obligatoire, pas de 3 semaines de mise en place. Import CSV, c'est parti.",
             },
             {
               emoji: "📊",
               title: "Score de risque humain",
-              text: "Mesure objective, en temps reel, par collaborateur et par service. Ce que ton assureur cyber demande.",
+              text: "Mesure objective, en temps réel, par collaborateur et par service. Ce que ton assureur cyber demande.",
             },
             {
               emoji: "🛒",
               title: "Marketplace communaute",
-              text: "Tes pairs RSSI publient leurs modules, moderes par notre equipe. Effet de levier collectif.",
+              text: "Tes pairs RSSI publient leurs modules, modérés par notre équipe. Effet de levier collectif.",
             },
             {
               emoji: "🦊",
               title: "Une mascotte qui te parle",
-              text: "Hex t'accompagne, te coache, te felicite. Pas un chatbot froid. Un compagnon de progression.",
+              text: "Hex t'accompagne, te coache, te félicite. Pas un chatbot froid. Un compagnon de progression.",
             },
             {
               emoji: "💰",
