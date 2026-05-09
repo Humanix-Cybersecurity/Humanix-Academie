@@ -18,52 +18,52 @@ datasource db {
 // le reporting est consolide.
 // =====================================================
 model Tenant {
-  id        String   @id @default(cuid())
-  name      String
-  slug      String   @unique
+  id                    String    @id @default(cuid())
+  name                  String
+  slug                  String    @unique
   // Plan effectif du tenant (cf. lib/plans.ts pour les valeurs valides :
   // starter, pro, enterprise — depuis pivot 4 paliers mai 2026).
   // Default "starter" (forever-free <=5 sieges) — plan le plus restrictif
   // qui ne necessite ni paiement ni provisionnement special.
   // Anciennes valeurs (decouverte/solo/essentielle/premium/trial) sont
   // gracieusement normalisees par lib/plans.ts::normalizePlan().
-  plan      String   @default("starter")
+  plan                  String    @default("starter")
   // Multi-etablissements : un tenant peut avoir un parent (groupe / siege)
-  parentTenantId String?
+  parentTenantId        String?
   // Type d'etablissement libre (ex : "siege", "agence", "site", "boutique")
   // Affiche dans le breadcrumb / dashboard. null pour les tenants racine.
-  establishmentType String?
+  establishmentType     String?
   // ----------------------------------------------------
   // BILLING (provider-agnostique : Payplug FR par defaut, possible Stripe)
   // ----------------------------------------------------
   // Identifie le prestataire de paiement actif pour ce tenant.
   // Valeurs : "payplug", "stripe", null (pas encore d'abonnement payant).
-  paymentProvider      String?
+  paymentProvider       String?
   // Identifiants opaques chez le prestataire. Le format depend du provider
   // (Payplug : "cus_xxx", Stripe : "cus_xxx", interchangeables coté schema).
-  paymentCustomerId     String?  @unique
-  paymentSubscriptionId String?  @unique
+  paymentCustomerId     String?   @unique
+  paymentSubscriptionId String?   @unique
   // Statut normalise : active, past_due, canceled, incomplete, unpaid.
   // ("trialing" est un statut legacy retire en mai 2026 mais encore tolere
   // par le state machine pour les anciens tenants — cf. lib/subscription-state.ts).
   // Source de verite = webhook du provider. Synchro a chaque event subscription.
-  subscriptionStatus   String?
+  subscriptionStatus    String?
   // Fin de la periode de facturation courante (renouvellement automatique
   // OU coupure du service si subscriptionStatus=canceled).
-  currentPeriodEnd     DateTime?
+  currentPeriodEnd      DateTime?
   // Numero de seats facturees (relevant pour Solo/Essentielle/Pro qui ont
   // un plafond). Null si plan flat-fee ou plan gratuit.
-  seatCount            Int?
+  seatCount             Int?
   // Champ legacy : date de fin de l'essai gratuit. Plus jamais ecrit depuis
   // le retrait de l'essai gratuit (mai 2026, vente directe). Conserve dans
   // le schema le temps de purger les anciennes valeurs en BDD via la
   // migration ; sera retire dans une migration future.
-  trialEndsAt          DateTime?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  trialEndsAt           DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
-  parent              Tenant?                   @relation("TenantHierarchy", fields: [parentTenantId], references: [id], onDelete: SetNull)
-  children            Tenant[]                  @relation("TenantHierarchy")
+  parent   Tenant?  @relation("TenantHierarchy", fields: [parentTenantId], references: [id], onDelete: SetNull)
+  children Tenant[] @relation("TenantHierarchy")
 
   users               User[]
   saisons             Saison[]                  @relation("TenantSaisons")
@@ -79,8 +79,43 @@ model Tenant {
   webhooks            TenantWebhook[]
   familyInvites       FamilyInvite[]
   incidents           IncidentResponse[]
+  riskScoreSnapshots  RiskScoreSnapshot[]
 
   @@index([parentTenantId])
+}
+
+// =====================================================
+// RISK SCORE SNAPSHOT - photo quotidienne du score de risque agrege
+// du tenant. Permet le graphe d'evolution 90j sur le dashboard RSSI.
+// Ecrit chaque jour par le cron /api/cron/risk-snapshot. Idempotent
+// via @@unique([tenantId, day]) : si on re-run le cron le meme jour,
+// on update la ligne existante.
+// =====================================================
+model RiskScoreSnapshot {
+  id          String   @id @default(cuid())
+  tenantId    String
+  // Date du snapshot, normalisee a 00:00 UTC pour grouper par jour.
+  // (On utilise pas DateTime.now() direct pour eviter d'avoir 2 lignes
+  // dans la meme journee si le cron est rejoue manuellement.)
+  day         DateTime
+  // Population : nb de users actifs (LEARNER + MANAGER) au moment du snapshot.
+  // Sert au denominateur pour les pourcentages affiches plus tard.
+  userCount   Int
+  // Distribution du riskScore (0-100) : moyenne + percentiles pour avoir
+  // la dispersion (pas juste la moyenne qui peut masquer un gros ecart).
+  avgScore    Float
+  p10Score    Int // 10% des users sont en dessous : "queue de gauche"
+  p50Score    Int // mediane (= "user typique")
+  p90Score    Int // 10% des users au-dessus : "best in class"
+  // Combien d'users en zone rouge (< 40) : visible dans la card "users
+  // vulnerables" du dashboard sans avoir a tout recalculer.
+  atRiskCount Int
+  createdAt   DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, day])
+  @@index([tenantId, day])
 }
 
 // =====================================================
@@ -91,25 +126,25 @@ model Tenant {
 // Provider-agnostique (payplug, stripe, ...).
 // =====================================================
 model BillingEvent {
-  id              String   @id @default(cuid())
+  id                String   @id @default(cuid())
   // Identifie le prestataire de paiement (payplug, stripe, ...).
-  provider        String   @default("payplug")
+  provider          String   @default("payplug")
   // Hash unique d'idempotence pour eviter de traiter 2 fois le meme webhook
   // (le provider peut renvoyer le meme event plusieurs fois). Format
   // dependant du provider (Payplug : payment ID + status, Stripe : event.id).
-  providerEventId String   @unique
-  type            String   // ex: subscription.updated, payment.paid
+  providerEventId   String   @unique
+  type              String // ex: subscription.updated, payment.paid
   // Le tenant cible (peut etre null si on ne reconnait pas encore le customer
   // au moment du webhook, par ex. checkout completed orphelin)
-  tenantId        String?
+  tenantId          String?
   // Snapshot du payload brut pour debug. Limite a 64 KB par Prisma.
-  payload         Json
+  payload           Json
   // Resultat du traitement : "applied", "ignored", "error"
-  status          String   @default("applied")
-  errorMessage    String?
+  status            String   @default("applied")
+  errorMessage      String?
   // Date provider de l'event (different de createdAt qui est notre reception)
   providerCreatedAt DateTime
-  createdAt       DateTime @default(now())
+  createdAt         DateTime @default(now())
 
   @@index([tenantId, createdAt])
   @@index([type])
@@ -152,11 +187,11 @@ model User {
   // Hash scrypt (cf. lib/password.ts). null = pas de mdp defini, l'user
   // se connecte uniquement par magic link / SSO. Permet la coexistence
   // des deux modes.
-  passwordHash       String?
-  passwordUpdatedAt  DateTime?
+  passwordHash        String?
+  passwordUpdatedAt   DateTime?
   // Lockout anti-bruteforce : compteur d'echecs consecutifs et fenetre
   // de blocage. Reset des qu'un login reussit.
-  failedLoginAttempts Int      @default(0)
+  failedLoginAttempts Int       @default(0)
   lockedUntil         DateTime?
   lastLoginAt         DateTime?
   lastLoginIpHash     String?
@@ -168,19 +203,19 @@ model User {
   // est dispo (sinon stocke en clair, c'est moins ideal mais standard NextAuth).
   // mfaEnabled = true uniquement APRES verification d'un code (l'enrolment
   // est en 2 temps : generate -> verify -> enable).
-  mfaSecret           String?
-  mfaEnabled          Boolean  @default(false)
-  mfaEnabledAt        DateTime?
+  mfaSecret          String?
+  mfaEnabled         Boolean   @default(false)
+  mfaEnabledAt       DateTime?
   // Codes de secours (10 a la creation), hash scrypt comme un mot de passe
   // a usage unique. Stockes JSON-encoded array de hashes.
-  mfaBackupCodesHash  String?  @db.Text
+  mfaBackupCodesHash String?   @db.Text
   // Si forced=true, l'user est OBLIGE de configurer 2FA au prochain login.
   // Force par RSSI/ADMIN au niveau du user, ou par politique sur le role.
-  mfaForced           Boolean  @default(false)
+  mfaForced          Boolean   @default(false)
 
-  coins         Int       @default(0)
-  level         Int       @default(1)
-  riskScore     Int       @default(50) // 0 = très exposé, 100 = excellent
+  coins             Int       @default(0)
+  level             Int       @default(1)
+  riskScore         Int       @default(50) // 0 = très exposé, 100 = excellent
   // ----------------------------------------------------
   // PERSONA PEDAGOGIQUE (ajout mai 2026)
   // ----------------------------------------------------
@@ -197,34 +232,34 @@ model User {
   // - finance   : fraude au president, virement, KYC, FATF
   // - hr        : ingenierie sociale, donnees personnelles, RGPD employes
   // - ops       : continuite, sauvegarde, ransomware impact metier
-  persona       String?
-  mascotSpecies String    @default("fox") // fox, cat, dog, hippo, shark, etc.
+  persona           String?
+  mascotSpecies     String    @default("fox") // fox, cat, dog, hippo, shark, etc.
   // Emoji libre qui override mascotSpecies si renseigne (1 caractere emoji).
   // Permet a l'utilisateur de choisir n'importe quel emoji (ex: 🚀, 🌈) sans
   // se limiter au catalogue MASCOT_SPECIES. null = utilise mascotSpecies.
   mascotEmojiCustom String? // null ou emoji unicode (max 8 chars pour ZWJ sequences)
   // Humeur affichee de la mascotte. Synchro avec HexMascotEvolved Mood type.
   // Valeurs : neutral / happy / sad / curious / celebrate / thinking
-  mood          String    @default("neutral")
-  shareCount    Int       @default(0) // Nombre d'articles partages (badge ambassadeur)
-  lastSeenAt    DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  mood              String    @default("neutral")
+  shareCount        Int       @default(0) // Nombre d'articles partages (badge ambassadeur)
+  lastSeenAt        DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
-  tenant           Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  progress         Progress[]
-  events           Event[]
-  accounts         Account[]
-  sessions         Session[]
-  inventory        UserInventory[]
-  phishingResults  PhishingResult[]
-  notificationLogs NotificationLog[]
-  authoredModules  MarketplaceModule[] @relation("AuthoredModules")
-  reviewedModules  MarketplaceModule[] @relation("ReviewedModules")
-  familyInvitesIssued FamilyInvite[] @relation("FamilyInviteSponsor")
-  expertProfile    ExpertProfile?
-  passwordResets   PasswordResetToken[]
-  groups           UserGroup[]
+  tenant              Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  progress            Progress[]
+  events              Event[]
+  accounts            Account[]
+  sessions            Session[]
+  inventory           UserInventory[]
+  phishingResults     PhishingResult[]
+  notificationLogs    NotificationLog[]
+  authoredModules     MarketplaceModule[]  @relation("AuthoredModules")
+  reviewedModules     MarketplaceModule[]  @relation("ReviewedModules")
+  familyInvitesIssued FamilyInvite[]       @relation("FamilyInviteSponsor")
+  expertProfile       ExpertProfile?
+  passwordResets      PasswordResetToken[]
+  groups              UserGroup[]
   webauthnCredentials WebAuthnCredential[]
 
   @@index([tenantId])
@@ -238,30 +273,30 @@ model User {
 // le souhaite, mais l'usage cible est cle USB hardware-only.
 // =====================================================
 model WebAuthnCredential {
-  id             String   @id @default(cuid())
-  userId         String
+  id           String    @id @default(cuid())
+  userId       String
   // Identifiant unique de la cle (b64url) - stable a vie pour cette cle.
-  credentialId   String   @unique
+  credentialId String    @unique
   // Cle publique COSE de la cle hardware, encodee b64url. Verifiee a chaque
   // login via @simplewebauthn/server.
-  publicKey      String   @db.Text
+  publicKey    String    @db.Text
   // Compteur signed (anti-replay). Augmente a chaque utilisation.
-  counter        BigInt   @default(0)
+  counter      BigInt    @default(0)
   // Transports supportes (CSV : "usb,nfc,ble,internal")
-  transports     String?
+  transports   String?
   // Nom convivial choisi par l'user ("Thales et-Fusion bureau")
-  deviceName     String
+  deviceName   String
   // AAGUID = identifiant du modele de la cle (utile si on veut whitelister)
-  aaguid         String?
+  aaguid       String?
   // backupEligible/backedUp : true = passkey synchronisee (iCloud, 1Password)
   // false = cle hardware-only (recommande pour SUPERADMIN)
-  backedUp       Boolean  @default(false)
+  backedUp     Boolean   @default(false)
   // userVerified : true si la cle exige PIN/biometrie (= 2FA implicite)
-  userVerified   Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  lastUsedAt     DateTime?
+  userVerified Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  lastUsedAt   DateTime?
 
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
@@ -273,19 +308,19 @@ model WebAuthnCredential {
 // Expiration courte (1h) pour limiter l'exposition.
 // =====================================================
 model PasswordResetToken {
-  id         String   @id @default(cuid())
-  userId     String
+  id              String    @id @default(cuid())
+  userId          String
   // Hash SHA-256 du token envoye par email. On compare en hashant
   // le token re-soumis (pas de fuite si la BDD est compromise).
-  tokenHash  String   @unique
-  expiresAt  DateTime
-  usedAt     DateTime?
+  tokenHash       String    @unique
+  expiresAt       DateTime
+  usedAt          DateTime?
   // Trace forensic (RGPD) : IP hash + UA tronque
   requestedIpHash String?
-  requestedUa     String? @db.Text
-  createdAt  DateTime @default(now())
+  requestedUa     String?   @db.Text
+  createdAt       DateTime  @default(now())
 
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([expiresAt])
@@ -320,24 +355,24 @@ model Group {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  members     UserGroup[]
+  members UserGroup[]
 
   @@unique([tenantId, slug])
   @@index([tenantId, isActive])
 }
 
 model UserGroup {
-  id        String   @id @default(cuid())
-  userId    String
-  groupId   String
+  id       String   @id @default(cuid())
+  userId   String
+  groupId  String
   // Si true, l'user est responsable du groupe (peut piloter les campagnes
   // phishing dediees, recevoir le reporting). Pas un role auth, juste un
   // marqueur metier.
-  isLead    Boolean  @default(false)
-  joinedAt  DateTime @default(now())
+  isLead   Boolean  @default(false)
+  joinedAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
   @@unique([userId, groupId])
   @@index([groupId])
@@ -382,22 +417,22 @@ model VerificationToken {
 // CATALOGUE
 // =====================================================
 model Saison {
-  id          String   @id @default(cuid())
-  slug        String   @unique
-  title       String
-  description String
-  coverEmoji  String   @default("🎯")
-  order       Int      @default(0)
-  isPublished Boolean  @default(true)
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  title          String
+  description    String
+  coverEmoji     String   @default("🎯")
+  order          Int      @default(0)
+  isPublished    Boolean  @default(true)
   // Saison globale = catalogue HumaniX (tenantId null, visible a tous).
   // Saison custom = clonee depuis un module marketplace ; visible uniquement
   // au tenant proprietaire.
-  tenantId    String?
+  tenantId       String?
   // Si la saison vient d'un module marketplace, on garde la trace pour
   // affichage badge + futures mises a jour
   sourceModuleId String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   tenant        Tenant?              @relation("TenantSaisons", fields: [tenantId], references: [id], onDelete: Cascade)
   sourceModule  MarketplaceModule?   @relation(fields: [sourceModuleId], references: [id], onDelete: SetNull)
@@ -486,34 +521,34 @@ model TenantSaisonConfig {
 //   - Audit log a chaque create/update/delete + chaque test.
 //   - Lecture restreinte ADMIN/RSSI/SUPERADMIN du tenant.
 model TenantSmtpConfig {
-  id           String   @id @default(cuid())
-  tenantId     String   @unique
+  id             String    @id @default(cuid())
+  tenantId       String    @unique
   // Adresse du serveur SMTP : smtp.gmail.com, smtp-mail.outlook.com,
   // smtp.scw-tem.cloud, mx.ovh.com, etc.
-  host         String
+  host           String
   // 587 STARTTLS standard, 465 SSL/TLS implicite, 25 plain (a eviter).
-  port         Int      @default(587)
+  port           Int       @default(587)
   // true = TLS/SSL implicite (port 465). false = STARTTLS (port 587).
-  secure       Boolean  @default(false)
+  secure         Boolean   @default(false)
   // Auth username : souvent l'email d'envoi ou un identifiant API.
-  username     String
+  username       String
   // Auth password CHIFFRE AES-256-GCM (cf. lib/smtp/encryption.ts).
   // Format stocke : base64(iv) + ":" + base64(ciphertext+tag).
-  passwordEnc  String   @db.Text
+  passwordEnc    String    @db.Text
   // From address par defaut pour les envois (e.g. "noreply@acme.fr").
   // Doit etre dans un domaine autorise par le SPF/DKIM/DMARC du SMTP.
-  fromEmail    String
+  fromEmail      String
   // Nom affiche dans le From ("Acme Cyber" -> "Acme Cyber <noreply@acme.fr>")
-  fromName     String?
+  fromName       String?
   // Statut du dernier test de connexion : null = jamais teste,
   // true = success, false = failure (lastError contient le detail).
-  isVerified   Boolean?
+  isVerified     Boolean?
   lastVerifiedAt DateTime?
-  lastError    String?  @db.Text
+  lastError      String?   @db.Text
   // Notes admin (optionnel, ex : "compte dedie phishing chez OVH")
-  notes        String?  @db.Text
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  notes          String?   @db.Text
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
@@ -530,24 +565,24 @@ enum ProgressStatus {
 }
 
 model Progress {
-  id          String         @id @default(cuid())
-  tenantId    String
-  userId      String
-  saisonId    String
-  episodeId   String
-  status      ProgressStatus @default(NOT_STARTED)
+  id               String         @id @default(cuid())
+  tenantId         String
+  userId           String
+  saisonId         String
+  episodeId        String
+  status           ProgressStatus @default(NOT_STARTED)
   // score = XP brute gagnee sur la tentative courante (gamification).
   // Peut depasser 100 (xpReward + bonus quiz + bonus scenario).
-  score       Int            @default(0)
+  score            Int            @default(0)
   // bestScore = meilleure XP jamais obtenue sur cet episode (pour le total).
-  bestScore   Int            @default(0)
+  bestScore        Int            @default(0)
   // quizScorePct = pourcentage de bonnes reponses au dernier quiz (0-100).
   // Utilise pour le calcul de maitrise dans risk-score.ts. Different du score
   // (XP) qui melange xpReward + bonus.
-  quizScorePct Int           @default(0)
+  quizScorePct     Int            @default(0)
   // bestQuizScorePct = meilleur pourcentage jamais atteint (pour reporting).
-  bestQuizScorePct Int       @default(0)
-  attempts    Int            @default(0)
+  bestQuizScorePct Int            @default(0)
+  attempts         Int            @default(0)
   // ----------------------------------------------------
   // REPRISE MID-EPISODE (ajout mai 2026)
   // ----------------------------------------------------
@@ -562,12 +597,12 @@ model Progress {
   //   utile uniquement quand resumeStep="quiz".
   // resumeChoiceId : choix scenario fait (si applicable, pour rejouer
   //   le bon debrief sans reposer la question).
-  resumeStep      String?
-  resumeQuizIndex Int       @default(0)
-  resumeChoiceId  String?
-  startedAt   DateTime?
-  completedAt DateTime?
-  updatedAt   DateTime       @updatedAt
+  resumeStep       String?
+  resumeQuizIndex  Int            @default(0)
+  resumeChoiceId   String?
+  startedAt        DateTime?
+  completedAt      DateTime?
+  updatedAt        DateTime       @updatedAt
 
   tenant  Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -668,23 +703,23 @@ enum PhishingTemplate {
   FAKE_COLISSIMO
   FAKE_PRESIDENT
   // SMS smishing
-  SMS_FAKE_LIVREUR     // "Votre colis La Poste / Chronopost - frais de livraison"
-  SMS_FAKE_BANQUE      // "Tentative de paiement detectee, validez via lien"
-  SMS_FAKE_IMPOTS      // "Trop-percu ANTS / Service Public - IBAN a verifier"
-  SMS_FAKE_2FA         // "Votre code 2FA est XXX, partagez-le si on vous demande"
-  SMS_FAKE_PRESIDENT   // "Operation confidentielle, urgent, repondez"
+  SMS_FAKE_LIVREUR // "Votre colis La Poste / Chronopost - frais de livraison"
+  SMS_FAKE_BANQUE // "Tentative de paiement detectee, validez via lien"
+  SMS_FAKE_IMPOTS // "Trop-percu ANTS / Service Public - IBAN a verifier"
+  SMS_FAKE_2FA // "Votre code 2FA est XXX, partagez-le si on vous demande"
+  SMS_FAKE_PRESIDENT // "Operation confidentielle, urgent, repondez"
   // QR code quishing (poster physique, table cafe, parking, courrier)
-  QR_FAKE_AMENDE       // Faux QR sur amende stationnement -> faux site ANTAI
-  QR_FAKE_WIFI         // Faux QR "WiFi gratuit" -> vol credentials / device
-  QR_FAKE_MENU         // Faux QR menu restaurant -> exfiltration CB
-  QR_FAKE_RH           // Faux QR sur affiche RH/CSE -> phishing intra
+  QR_FAKE_AMENDE // Faux QR sur amende stationnement -> faux site ANTAI
+  QR_FAKE_WIFI // Faux QR "WiFi gratuit" -> vol credentials / device
+  QR_FAKE_MENU // Faux QR menu restaurant -> exfiltration CB
+  QR_FAKE_RH // Faux QR sur affiche RH/CSE -> phishing intra
 }
 
 enum PhishingChannel {
   EMAIL
   SMS
-  QUISHING  // QR code physique : pas d'envoi technique, l'admin imprime
-            // l'affiche/etiquette et la pose sur le terrain (test physique)
+  QUISHING // QR code physique : pas d'envoi technique, l'admin imprime
+  // l'affiche/etiquette et la pose sur le terrain (test physique)
 }
 
 enum PhishingStatus {
@@ -778,51 +813,51 @@ enum MarketplaceStatus {
 }
 
 enum MarketplaceLicense {
-  CC_BY      // Creative Commons - Attribution
-  CC_BY_SA   // Creative Commons - Attribution + Partage dans les memes conditions
+  CC_BY // Creative Commons - Attribution
+  CC_BY_SA // Creative Commons - Attribution + Partage dans les memes conditions
   PROPRIETARY // Reserve aux modules officiels HumaniX
 }
 
 model MarketplaceModule {
-  id              String              @id @default(cuid())
-  slug            String              @unique
-  title           String
-  description     String
-  emoji           String              @default("🎯")
-  category        String              // phishing / mdp / donnees / teletravail / fraude / reseaux / crise
-  difficulty      String              @default("medium") // easy / medium / hard
-  language        String              @default("fr")
+  id          String @id @default(cuid())
+  slug        String @unique
+  title       String
+  description String
+  emoji       String @default("🎯")
+  category    String // phishing / mdp / donnees / teletravail / fraude / reseaux / crise
+  difficulty  String @default("medium") // easy / medium / hard
+  language    String @default("fr")
 
   // Auteur
-  authorId        String
-  authorOrgName   String?             // Nom de l'organisation de l'auteur (optionnel)
-  isOfficial      Boolean             @default(false) // true uniquement pour modules HumaniX
+  authorId      String
+  authorOrgName String? // Nom de l'organisation de l'auteur (optionnel)
+  isOfficial    Boolean @default(false) // true uniquement pour modules HumaniX
 
   // Versioning + integrite
-  version         String              @default("1.0.0")
-  contentHash     String              // SHA-256 du payload JSON normalise
-  payload         Json                // Contenu structure (cf. lib/marketplace/schema.ts)
+  version     String @default("1.0.0")
+  contentHash String // SHA-256 du payload JSON normalise
+  payload     Json // Contenu structure (cf. lib/marketplace/schema.ts)
 
   // Moderation
-  status          MarketplaceStatus   @default(DRAFT)
+  status          MarketplaceStatus @default(DRAFT)
   submittedAt     DateTime?
   reviewedAt      DateTime?
   reviewedById    String?
   rejectionReason String?
 
   // Legal
-  license         MarketplaceLicense  @default(CC_BY_SA)
+  license MarketplaceLicense @default(CC_BY_SA)
 
   // Stats
-  installCount    Int                 @default(0)
+  installCount Int @default(0)
 
-  createdAt       DateTime            @default(now())
-  updatedAt       DateTime            @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  author        User                       @relation("AuthoredModules", fields: [authorId], references: [id], onDelete: Cascade)
-  reviewedBy    User?                      @relation("ReviewedModules", fields: [reviewedById], references: [id], onDelete: SetNull)
+  author        User                      @relation("AuthoredModules", fields: [authorId], references: [id], onDelete: Cascade)
+  reviewedBy    User?                     @relation("ReviewedModules", fields: [reviewedById], references: [id], onDelete: SetNull)
   installations MarketplaceInstallation[]
-  saisons       Saison[]                   // Saisons clonees a partir de ce module
+  saisons       Saison[] // Saisons clonees a partir de ce module
 
   @@index([status])
   @@index([category])
@@ -830,13 +865,13 @@ model MarketplaceModule {
 }
 
 model MarketplaceInstallation {
-  id           String   @id @default(cuid())
-  tenantId     String
-  moduleId     String
-  saisonId     String?  // Saison clonee creee lors de l'installation
-  installedAt  DateTime @default(now())
-  installedById String  // userId de l'admin qui a installe
-  isActive     Boolean  @default(true)
+  id            String   @id @default(cuid())
+  tenantId      String
+  moduleId      String
+  saisonId      String? // Saison clonee creee lors de l'installation
+  installedAt   DateTime @default(now())
+  installedById String // userId de l'admin qui a installe
+  isActive      Boolean  @default(true)
 
   tenant Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   module MarketplaceModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
@@ -854,7 +889,7 @@ model LibraryArticle {
   title           String
   description     String
   emoji           String   @default("📖")
-  category        String   // mfa / phishing / mots-de-passe / byod / grand-public / etc.
+  category        String // mfa / phishing / mots-de-passe / byod / grand-public / etc.
   audience        String   @default("pro") // pro / tous / famille - pour partage hors-pro
   readTimeMinutes Int      @default(5)
   body            String   @db.Text // Markdown safe-rendered (geres cote app, pas de HTML brut)
@@ -877,69 +912,69 @@ model LibraryArticle {
 // Reserve aux plans Pro+.
 // =====================================================
 enum IncidentType {
-  RANSOMWARE       // Rançongiciel
-  DATA_LEAK        // Fuite / vol de donnees
-  PHISHING_VICTIM  // Compromission via phishing reussi
+  RANSOMWARE // Rançongiciel
+  DATA_LEAK // Fuite / vol de donnees
+  PHISHING_VICTIM // Compromission via phishing reussi
   FRAUDE_FINANCIERE // Fraude au president / faux fournisseur
   COMPTE_COMPROMIS // Prise de controle de compte (Microsoft 365, etc.)
-  INTRUSION        // Intrusion systeme / serveur
-  DDOS             // Deni de service
+  INTRUSION // Intrusion systeme / serveur
+  DDOS // Deni de service
   AUTRE
 }
 
 enum IncidentSeverity {
-  LOW              // Mineur (suspicion, contenu)
-  MEDIUM           // Significatif (perimetre limite)
-  HIGH             // Majeur (perimetre etendu)
-  CRITICAL         // Critique (continuite menacee, donnees sensibles)
+  LOW // Mineur (suspicion, contenu)
+  MEDIUM // Significatif (perimetre limite)
+  HIGH // Majeur (perimetre etendu)
+  CRITICAL // Critique (continuite menacee, donnees sensibles)
 }
 
 enum IncidentStatus {
-  OPEN             // Vient d'etre cree
-  IN_PROGRESS      // Reponse en cours
-  CONTAINED        // Contenu (l'attaquant n'a plus acces)
-  RESOLVED         // Resolu
-  CLOSED           // Cloture (RetEx fait)
+  OPEN // Vient d'etre cree
+  IN_PROGRESS // Reponse en cours
+  CONTAINED // Contenu (l'attaquant n'a plus acces)
+  RESOLVED // Resolu
+  CLOSED // Cloture (RetEx fait)
 }
 
 model IncidentResponse {
-  id                 String           @id @default(cuid())
-  tenantId           String
+  id              String           @id @default(cuid())
+  tenantId        String
   // Identification
-  reference          String           // Ex: "INC-2026-001" auto-genere
-  title              String           // Resume court (ex: "Compromission email DSI")
-  type               IncidentType
-  severity           IncidentSeverity @default(MEDIUM)
-  status             IncidentStatus   @default(OPEN)
+  reference       String // Ex: "INC-2026-001" auto-genere
+  title           String // Resume court (ex: "Compromission email DSI")
+  type            IncidentType
+  severity        IncidentSeverity @default(MEDIUM)
+  status          IncidentStatus   @default(OPEN)
   // Contexte
-  detectedAt         DateTime         // Quand l'incident a ete detecte
-  reportedById       String?          // userId de qui a leve l'alerte
-  description        String           @db.Text
-  affectedSystems    String?          @db.Text // Systemes / services touches
-  affectedUsers      Int?             // Estimation nombre d'utilisateurs touches
-  dataConcerned      String?          @db.Text // Categories de donnees concernees
+  detectedAt      DateTime // Quand l'incident a ete detecte
+  reportedById    String? // userId de qui a leve l'alerte
+  description     String           @db.Text
+  affectedSystems String?          @db.Text // Systemes / services touches
+  affectedUsers   Int? // Estimation nombre d'utilisateurs touches
+  dataConcerned   String?          @db.Text // Categories de donnees concernees
   // Notifications obligatoires
-  cnilNotified       Boolean          @default(false)
-  cnilNotifiedAt     DateTime?
-  cnilReference      String?          // Numero de telesignalement
-  anssiNotified      Boolean          @default(false)
-  anssiNotifiedAt    DateTime?
-  anssiReference     String?
+  cnilNotified    Boolean          @default(false)
+  cnilNotifiedAt  DateTime?
+  cnilReference   String? // Numero de telesignalement
+  anssiNotified   Boolean          @default(false)
+  anssiNotifiedAt DateTime?
+  anssiReference  String?
   // Resolution
-  containedAt        DateTime?
-  resolvedAt         DateTime?
-  closedAt           DateTime?
-  rootCause          String?          @db.Text // Cause racine identifiee
-  retexNotes         String?          @db.Text // Lecons apprises
+  containedAt     DateTime?
+  resolvedAt      DateTime?
+  closedAt        DateTime?
+  rootCause       String?          @db.Text // Cause racine identifiee
+  retexNotes      String?          @db.Text // Lecons apprises
   // Stats
-  estimatedCost      Int?             // Cout estime en euros
+  estimatedCost   Int? // Cout estime en euros
   // Meta
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 
-  tenant             Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  actions            IncidentAction[]
-  timeline           IncidentTimeline[]
+  tenant   Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  actions  IncidentAction[]
+  timeline IncidentTimeline[]
 
   @@unique([tenantId, reference])
   @@index([tenantId, status])
@@ -948,39 +983,39 @@ model IncidentResponse {
 
 // Action a executer (issue d'une checklist) ou ajoutee manuellement
 model IncidentAction {
-  id           String          @id @default(cuid())
+  id           String    @id @default(cuid())
   incidentId   String
   // Categorisation
-  phase        String          // h0 / h24 / h72 / w1 / retex
-  category     String          // confinement / notification / communication / forensic / retex
+  phase        String // h0 / h24 / h72 / w1 / retex
+  category     String // confinement / notification / communication / forensic / retex
   title        String
-  description  String?         @db.Text
+  description  String?   @db.Text
   // Etat
-  isDone       Boolean         @default(false)
+  isDone       Boolean   @default(false)
   doneAt       DateTime?
   doneById     String?
   // Ordre d'affichage
-  position     Int             @default(0)
+  position     Int       @default(0)
   // Lien vers un document genere (modele PDF/DOCX)
-  documentSlug String?         // ex: "notification-cnil"
+  documentSlug String? // ex: "notification-cnil"
 
-  incident     IncidentResponse @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  incident IncidentResponse @relation(fields: [incidentId], references: [id], onDelete: Cascade)
 
   @@index([incidentId, phase, position])
 }
 
 // Journal libre des evenements (decisions, communications, points cles)
 model IncidentTimeline {
-  id          String           @id @default(cuid())
-  incidentId  String
-  authorId    String?
-  authorName  String?          // Snapshot du nom au moment de l'ecriture
-  occurredAt  DateTime         @default(now())
-  kind        String           @default("note") // note / decision / external_comm / discovery
-  content     String           @db.Text
-  createdAt   DateTime         @default(now())
+  id         String   @id @default(cuid())
+  incidentId String
+  authorId   String?
+  authorName String? // Snapshot du nom au moment de l'ecriture
+  occurredAt DateTime @default(now())
+  kind       String   @default("note") // note / decision / external_comm / discovery
+  content    String   @db.Text
+  createdAt  DateTime @default(now())
 
-  incident    IncidentResponse @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  incident IncidentResponse @relation(fields: [incidentId], references: [id], onDelete: Cascade)
 
   @@index([incidentId, occurredAt])
 }
@@ -991,41 +1026,41 @@ model IncidentTimeline {
 // publics inscrits via la home). Installe une habitude de vigilance cyber.
 // =====================================================
 enum AnecdoteCategory {
-  RANSOMWARE        // Ransomware / extorsion
-  PHISHING          // Phishing / social engineering
-  FRAUDE            // Fraude au president, fraude bancaire
-  DATA_LEAK         // Fuite de donnees / RGPD
-  SUPPLY_CHAIN      // Chaine d'approvisionnement
-  HACKTIVISME       // Defacement / hacktivisme
-  IA_ABUS           // Abus IA / deepfake
+  RANSOMWARE // Ransomware / extorsion
+  PHISHING // Phishing / social engineering
+  FRAUDE // Fraude au president, fraude bancaire
+  DATA_LEAK // Fuite de donnees / RGPD
+  SUPPLY_CHAIN // Chaine d'approvisionnement
+  HACKTIVISME // Defacement / hacktivisme
+  IA_ABUS // Abus IA / deepfake
   AUTRE
 }
 
 model WeeklyAnecdote {
-  id            String           @id @default(cuid())
-  slug          String           @unique
-  title         String           // Ex: "Le CHU de Brest paralyse 3 semaines par un rancongiciel"
+  id           String           @id @default(cuid())
+  slug         String           @unique
+  title        String // Ex: "Le CHU de Brest paralyse 3 semaines par un rancongiciel"
   // Le "punch" - 3 lignes max qui resument ce qu'il s'est passe
-  summary       String           @db.Text
+  summary      String           @db.Text
   // L'enseignement metier - la lecon a tirer en 1-2 phrases
-  lesson        String           @db.Text
+  lesson       String           @db.Text
   // L'action concrete que le lecteur peut faire des aujourd'hui
-  miniAction    String           @db.Text
+  miniAction   String           @db.Text
   // Source presse / officielle
-  sourceUrl     String
-  sourceLabel   String           // Ex: "ZDNet, 15 mars 2026"
-  category      AnecdoteCategory @default(AUTRE)
+  sourceUrl    String
+  sourceLabel  String // Ex: "ZDNet, 15 mars 2026"
+  category     AnecdoteCategory @default(AUTRE)
   // Date de l'incident reel (pour tri chronologique)
-  incidentDate  DateTime
+  incidentDate DateTime
   // Programmation
-  scheduledFor  DateTime?        // Lundi cible d'envoi
-  publishedAt   DateTime?        // Date d'envoi effectif (null = brouillon)
-  isActive      Boolean          @default(true)
+  scheduledFor DateTime? // Lundi cible d'envoi
+  publishedAt  DateTime? // Date d'envoi effectif (null = brouillon)
+  isActive     Boolean          @default(true)
   // Stats
-  sentCount     Int              @default(0)
-  openCount     Int              @default(0)
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
+  sentCount    Int              @default(0)
+  openCount    Int              @default(0)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
 
   @@index([publishedAt])
   @@index([scheduledFor])
@@ -1033,24 +1068,24 @@ model WeeklyAnecdote {
 }
 
 model AnecdoteSubscription {
-  id               String   @id @default(cuid())
-  email            String   @unique
+  id               String    @id @default(cuid())
+  email            String    @unique
   // Source d'inscription : "homepage", "audit-flash", "tenant" (auto user), "footer"
-  source           String   @default("manual")
+  source           String    @default("manual")
   // Si abonnement lie a un tenant client, on garde la trace pour reporting
   tenantId         String?
   // Token unique pour desinscription one-click (RGPD)
-  unsubscribeToken String   @unique
-  isActive         Boolean  @default(true)
+  unsubscribeToken String    @unique
+  isActive         Boolean   @default(true)
   unsubscribedAt   DateTime?
   // Stats
-  emailsReceived   Int      @default(0)
+  emailsReceived   Int       @default(0)
   lastSentAt       DateTime?
   // RGPD
-  consentTextHash  String?  // Hash du texte de consentement au moment de l'inscription (preuve)
+  consentTextHash  String? // Hash du texte de consentement au moment de l'inscription (preuve)
   ipHash           String?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   @@index([isActive])
   @@index([tenantId])
@@ -1092,38 +1127,38 @@ model EmailOptOut {
 // Pas de tenantId : ce sont des leads anonymes / pre-clients.
 // =====================================================
 enum AuditLeadStatus {
-  NEW           // Vient d'etre soumis
-  CONTACTED     // Email/RDV envoye
-  QUALIFIED     // Lead qualifie (entreprise pertinente)
-  CONVERTED     // Devenu client
-  ARCHIVED      // Hors cible
+  NEW // Vient d'etre soumis
+  CONTACTED // Email/RDV envoye
+  QUALIFIED // Lead qualifie (entreprise pertinente)
+  CONVERTED // Devenu client
+  ARCHIVED // Hors cible
 }
 
 model AuditFlashSubmission {
-  id              String          @id @default(cuid())
+  id               String          @id @default(cuid())
   // Identite (declarative)
-  email           String
-  contactName     String?
-  companyName     String
-  size            String          // 1-9 / 10-49 / 50-249 / 250+
-  sector          String          // services / industrie / commerce / sante / finance / public / associatif / autre
+  email            String
+  contactName      String?
+  companyName      String
+  size             String // 1-9 / 10-49 / 50-249 / 250+
+  sector           String // services / industrie / commerce / sante / finance / public / associatif / autre
   // Resultat
-  answers         Json            // { questionId: "yes" | "no" | "unsure" }
-  score           Int             // 0-100
-  verdictLabel    String          // Excellent / Solide / Fragile / À risque
-  topRiskCats     String          // CSV des categories en top risques (ex: "humain,donnees,identite")
-  recommendedPlan String          // starter / pro / enterprise
-  nis2Concerned   Boolean         @default(false)
+  answers          Json // { questionId: "yes" | "no" | "unsure" }
+  score            Int // 0-100
+  verdictLabel     String // Excellent / Solide / Fragile / À risque
+  topRiskCats      String // CSV des categories en top risques (ex: "humain,donnees,identite")
+  recommendedPlan  String // starter / pro / enterprise
+  nis2Concerned    Boolean         @default(false)
   // CRM
-  leadStatus      AuditLeadStatus @default(NEW)
-  leadNotes       String?         @db.Text
+  leadStatus       AuditLeadStatus @default(NEW)
+  leadNotes        String?         @db.Text
   // RGPD
-  consentMarketing Boolean        @default(false)
+  consentMarketing Boolean         @default(false)
   // Meta
-  ipHash          String?         // Hash SHA-256 de l'IP (anti-spam, RGPD-compatible)
-  userAgent       String?         @db.Text
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  ipHash           String? // Hash SHA-256 de l'IP (anti-spam, RGPD-compatible)
+  userAgent        String?         @db.Text
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
 
   @@index([leadStatus])
   @@index([createdAt])
@@ -1136,29 +1171,29 @@ model AuditFlashSubmission {
 // lib/webhooks/* envoient des payloads adaptes au type cible.
 // =====================================================
 enum WebhookType {
-  SLACK     // URL https://hooks.slack.com/services/...
-  TEAMS     // URL Microsoft Teams Connector
-  GENERIC   // POST JSON simple (Zapier, n8n, custom...)
+  SLACK // URL https://hooks.slack.com/services/...
+  TEAMS // URL Microsoft Teams Connector
+  GENERIC // POST JSON simple (Zapier, n8n, custom...)
 }
 
 model TenantWebhook {
-  id          String      @id @default(cuid())
-  tenantId    String
-  label       String      // "Canal #cyber-team", "Webhook Zapier", etc.
-  type        WebhookType
-  url         String      @db.Text
+  id           String      @id @default(cuid())
+  tenantId     String
+  label        String // "Canal #cyber-team", "Webhook Zapier", etc.
+  type         WebhookType
+  url          String      @db.Text
   // Bitmask des evenements abonnes (cf. lib/webhooks/events.ts)
-  events      String      // CSV : "phishing.completed,risk.degraded,episode.completed"
+  events       String // CSV : "phishing.completed,risk.degraded,episode.completed"
   // Secret pour signature HMAC (uniquement type GENERIC)
-  secret      String?
-  isActive    Boolean     @default(true)
+  secret       String?
+  isActive     Boolean     @default(true)
   // Stats
-  successCount Int        @default(0)
-  failureCount Int        @default(0)
+  successCount Int         @default(0)
+  failureCount Int         @default(0)
   lastFiredAt  DateTime?
-  lastError    String?    @db.Text
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  lastError    String?     @db.Text
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
 
   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
@@ -1180,23 +1215,23 @@ enum FamilyInviteStatus {
 }
 
 model FamilyInvite {
-  id              String             @id @default(cuid())
+  id               String             @id @default(cuid())
   // Sponsor : l'employe du tenant qui offre l'invitation
-  sponsorUserId   String
-  sponsorTenantId String
+  sponsorUserId    String
+  sponsorTenantId  String
   // Destinataire (declaratif - on demande juste un email)
-  inviteeEmail    String
+  inviteeEmail     String
   inviteeFirstName String?
   // Token public unique pour activation par lien magique
-  token           String             @unique
-  status          FamilyInviteStatus @default(PENDING)
+  token            String             @unique
+  status           FamilyInviteStatus @default(PENDING)
   // Tracking
-  sentAt          DateTime           @default(now())
-  redeemedAt      DateTime?
-  redeemedIpHash  String?
-  expiresAt       DateTime           // sentAt + 90j
+  sentAt           DateTime           @default(now())
+  redeemedAt       DateTime?
+  redeemedIpHash   String?
+  expiresAt        DateTime // sentAt + 90j
   // Texte du message personnel ajoute par le sponsor (optionnel)
-  personalMessage String?            @db.Text
+  personalMessage  String?            @db.Text
 
   sponsor       User   @relation("FamilyInviteSponsor", fields: [sponsorUserId], references: [id], onDelete: Cascade)
   sponsorTenant Tenant @relation(fields: [sponsorTenantId], references: [id], onDelete: Cascade)
@@ -1215,30 +1250,30 @@ model FamilyInvite {
 // en interne par les concurrents).
 // =====================================================
 model ExpertProfile {
-  id              String   @id @default(cuid())
-  userId          String   @unique
+  id            String   @id @default(cuid())
+  userId        String   @unique
   // Identifiant public stable (pour /experts/:slug). Genere a la creation.
-  slug            String   @unique
+  slug          String   @unique
   // Bio publique (markdown safe-rendered cote app, pas de HTML brut)
-  headline        String   // titre court : "RSSI - Cabinet Dupont", "Gendarme retraite"
-  bio             String   @db.Text
-  organization    String?  // Organisation actuelle (CHU, ANSSI, cabinet, etc.)
+  headline      String // titre court : "RSSI - Cabinet Dupont", "Gendarme retraite"
+  bio           String   @db.Text
+  organization  String? // Organisation actuelle (CHU, ANSSI, cabinet, etc.)
   // Reseaux pro (optionnel)
-  linkedinUrl     String?
-  websiteUrl      String?
+  linkedinUrl   String?
+  websiteUrl    String?
   // Photo : URL d'avatar (uploaded ailleurs, on stocke juste le pointeur)
-  avatarUrl       String?
+  avatarUrl     String?
   // Domaines d'expertise : CSV (ex: "phishing,iam,nis2,sante")
-  expertiseTags   String   @default("")
+  expertiseTags String   @default("")
   // Visibilite : un profil peut etre cache temporairement (ex: l'expert quitte)
-  isPublished     Boolean  @default(true)
+  isPublished   Boolean  @default(true)
   // Distinctions (CSV) - libre. Ex: "ANSSI cert. RSSI", "OSCP", "20 ans terrain"
-  credentials     String   @default("")
+  credentials   String   @default("")
   // Stats : auto-calculees, denormalisees
-  modulesCount    Int      @default(0)  // nb de modules APPROVED publies
-  totalInstalls   Int      @default(0)  // somme des installations
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  modulesCount  Int      @default(0) // nb de modules APPROVED publies
+  totalInstalls Int      @default(0) // somme des installations
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -1257,10 +1292,10 @@ model ExpertProfile {
 // (organisation victime, date, type de donnees, source). RGPD-safe.
 // =====================================================
 enum BreachSource {
-  FRENCHBREACHES   // frenchbreaches.com
-  BONJOURLAFUITE   // bonjourlafuite.eu.org
-  FUITESINFOS      // fuitesinfos.fr
-  MANUAL           // saisie manuelle SUPERADMIN
+  FRENCHBREACHES // frenchbreaches.com
+  BONJOURLAFUITE // bonjourlafuite.eu.org
+  FUITESINFOS // fuitesinfos.fr
+  MANUAL // saisie manuelle SUPERADMIN
 }
 
 model DataBreach {
@@ -1294,8 +1329,8 @@ model DataBreach {
   // Visible dans l'observatoire public (false = caché par moderation)
   isPublished    Boolean      @default(true)
 
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Dedup forte : meme externalId par source = meme fuite
   @@unique([source, externalId])
@@ -1362,8 +1397,8 @@ enum AuditAction {
   BILLING_PAYMENT_FAILED
   BILLING_PORTAL_ACCESSED
   // RGPD - Droits des personnes
-  DATA_ACCESSED          // art. 15 - l'user consulte ses donnees
-  DATA_EXPORTED          // art. 20 - portabilite (download JSON)
+  DATA_ACCESSED // art. 15 - l'user consulte ses donnees
+  DATA_EXPORTED // art. 20 - portabilite (download JSON)
   DATA_ERASURE_REQUESTED // art. 17 - demande d'effacement
   DATA_ERASURE_COMPLETED // art. 17 - effacement effectue
   CONSENT_GIVEN
@@ -1374,18 +1409,18 @@ enum AuditAction {
   EVIDENCE_BUNDLE_EXPORTED
   // Phishing simulation (cron + reporting)
   PHISHING_CAMPAIGN_CREATED
-  PHISHING_CAMPAIGN_SENT      // Le cron a declenche l'envoi
-  PHISHING_REPORT_EXPORTED    // Admin a telecharge le CSV
+  PHISHING_CAMPAIGN_SENT // Le cron a declenche l'envoi
+  PHISHING_REPORT_EXPORTED // Admin a telecharge le CSV
   // SMTP tenant (config + tests + envois)
-  TENANT_SMTP_CONFIGURED      // Admin a sauve une config SMTP
-  TENANT_SMTP_TESTED          // Admin a teste la connexion (succes ou echec)
-  TENANT_SMTP_DELETED         // Admin a supprime la config (perte des credentials)
+  TENANT_SMTP_CONFIGURED // Admin a sauve une config SMTP
+  TENANT_SMTP_TESTED // Admin a teste la connexion (succes ou echec)
+  TENANT_SMTP_DELETED // Admin a supprime la config (perte des credentials)
 }
 
 enum AuditOutcome {
   SUCCESS
   FAILURE
-  DENIED      // refus d'autorisation (forbidden)
+  DENIED // refus d'autorisation (forbidden)
 }
 
 enum AuditSeverity {
@@ -1397,26 +1432,26 @@ enum AuditSeverity {
 
 model AuditLog {
   id          String        @id @default(cuid())
-  tenantId    String?       // null pour les actions cross-tenant SUPERADMIN
+  tenantId    String? // null pour les actions cross-tenant SUPERADMIN
   // Acteur - snapshot pour resister a la suppression
-  actorUserId String?       // null si systeme / pre-auth (ex: login failed)
-  actorEmail  String?       // snapshot au moment du log
-  actorRole   String?       // snapshot
+  actorUserId String? // null si systeme / pre-auth (ex: login failed)
+  actorEmail  String? // snapshot au moment du log
+  actorRole   String? // snapshot
   // Action
   action      AuditAction
   outcome     AuditOutcome
   severity    AuditSeverity @default(INFO)
   // Cible (optionnelle)
-  targetType  String?       // "user", "tenant", "group", "subscription", ...
+  targetType  String? // "user", "tenant", "group", "subscription", ...
   targetId    String?
-  targetLabel String?       // snapshot lisible (email, nom, slug)
+  targetLabel String? // snapshot lisible (email, nom, slug)
   // Contexte technique
-  ipHash      String?       // SHA-256 hex (RGPD-safe)
+  ipHash      String? // SHA-256 hex (RGPD-safe)
   userAgent   String?       @db.Text
   message     String?       @db.Text
   metadata    Json?
 
-  createdAt   DateTime      @default(now())
+  createdAt DateTime @default(now())
 
   @@index([tenantId, createdAt])
   @@index([actorUserId, createdAt])
