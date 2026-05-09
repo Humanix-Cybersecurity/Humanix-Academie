@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // POST /api/webauthn/register/options
-// Genere les options FIDO2 pour enroller une nouvelle cle de securite.
+// Genere les options FIDO2 pour enroller une nouvelle cle de sécurité.
 // Auth requise. Le challenge est passe en cookie HMAC-signe pour le verify.
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";

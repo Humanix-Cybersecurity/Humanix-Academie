@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// /admin/dpo/aipd - Generateur AIPD (Analyse d'Impact a la Protection des Donnees).
+// /admin/dpo/aipd - Generateur AIPD (Analyse d'Impact a la Protection des Données).
 //
 // Approche pragmatique : on ne reinvente pas le PIA Tool de la CNIL. On
 // fournit un MODELE Markdown pre-rempli avec toutes les sections attendues
 // (article 35 RGPD), que le DPO peut copier, completer et exporter.
 //
 // L'AIPD est un document evolutif - le DPO l'enregistre dans son outil de
-// preference (Notion, OneDrive, GRC). Le modele Humanix sert de squelette
+// préférence (Notion, OneDrive, GRC). Le modèle Humanix sert de squelette
 // methodologique.
 //
 // Pourquoi pas un formulaire web ? Parce que :
@@ -27,7 +27,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Generateur AIPD - Console DPO | Humanix",
   description:
-    "Modele d'Analyse d'Impact a la Protection des Donnees, conforme article 35 RGPD, exportable en Markdown. Squelette methodologique pour DPO interne ou mutualise.",
+    "Modèle d'Analyse d'Impact a la Protection des Données, conforme article 35 RGPD, exportable en Markdown. Squelette methodologique pour DPO interne ou mutualise.",
 };
 
 export default async function AipdGeneratorPage() {
@@ -42,7 +42,7 @@ export default async function AipdGeneratorPage() {
     <div className="space-y-8">
       <AdminPageHeader
         title="Generateur AIPD"
-        description="Modele d'Analyse d'Impact pre-rempli, conforme article 35 RGPD. Copie, complete, exporte."
+        description="Modèle d'Analyse d'Impact pre-rempli, conforme article 35 RGPD. Copie, complete, exporte."
         icon="📝"
         actions={
           <Link
@@ -69,9 +69,9 @@ export default async function AipdGeneratorPage() {
               Quand mener une AIPD ?
             </strong>{" "}
             Article 35.3 RGPD impose une AIPD pour les traitements a risque
-            eleve : profilage / decisions automatisees, donnees sensibles a
+            eleve : profilage / decisions automatisees, données sensibles a
             grande echelle, surveillance systematique d'espaces publics,
-            transferts hors UE de grande ampleur, donnees de personnes
+            transferts hors UE de grande ampleur, données de personnes
             vulnerables (mineurs, salaries).
           </p>
           <p>
@@ -81,7 +81,7 @@ export default async function AipdGeneratorPage() {
             Une AIPD bien menee prend 4 a 8 heures de DPO + 2 a 4 heures
             d'echanges avec le metier et l'IT. Au-dela, c'est qu'il y a un
             probleme de scoping (le projet est sans doute trop ambitieux et
-            doit etre decoupé).
+            doit être decoupé).
           </p>
           <p>
             <strong className="text-primary-500 dark:text-accent-300">
@@ -97,7 +97,7 @@ export default async function AipdGeneratorPage() {
               PIA Tool gratuit de la CNIL
             </a>{" "}
             (Windows/Mac/Linux) est l'outil officiel - accepte par la CNIL en
-            cas de controle. Le modele ci-dessous est un squelette Markdown
+            cas de controle. Le modèle ci-dessous est un squelette Markdown
             complementaire pour ceux qui preferent travailler dans Notion,
             OneDrive ou un GRC.
           </p>
@@ -121,7 +121,7 @@ export default async function AipdGeneratorPage() {
           2. Template AIPD interactif (client component pour le copy)
           ============================================================ */}
       <AdminSection
-        title="Modele Markdown"
+        title="Modèle Markdown"
         description="Copie le contenu, colle-le dans ton outil prefere, complete les zones [a remplir]."
       >
         <AipdTemplateClient />
@@ -140,7 +140,7 @@ export default async function AipdGeneratorPage() {
             <strong className="text-primary-500 dark:text-accent-300">
               Validation interne :
             </strong>{" "}
-            l'AIPD doit etre validee par le responsable de traitement (DG /
+            l'AIPD doit être validee par le responsable de traitement (DG /
             metier) ET le DPO. Trace ecrite de la validation.
           </li>
           <li>
@@ -155,14 +155,14 @@ export default async function AipdGeneratorPage() {
               Consultation prealable CNIL :
             </strong>{" "}
             si l'AIPD revele un risque residuel eleve malgre les mesures, la
-            CNIL doit etre consultee AVANT mise en oeuvre (article 36).
+            CNIL doit être consultee AVANT mise en oeuvre (article 36).
             Reponse sous 8 semaines.
           </li>
           <li>
             <strong className="text-primary-500 dark:text-accent-300">
               Revue periodique :
             </strong>{" "}
-            l'AIPD doit etre revue tous les ans ou des qu'il y a un changement
+            l'AIPD doit être revue tous les ans ou des qu'il y a un changement
             substantiel du traitement. Marque la date de prochaine revue dans
             ton calendrier DPO.
           </li>

@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Server actions cote public : inscription a la newsletter.
-// Securite : Zod + hash IP + rate-limit IP basique (1 inscription / IP / minute).
+// Sécurité : Zod + hash IP + rate-limit IP basique (1 inscription / IP / minute).
 
 import { headers } from "next/headers";
 import { createHash } from "node:crypto";

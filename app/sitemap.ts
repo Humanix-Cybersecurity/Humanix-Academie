@@ -4,12 +4,12 @@
 //
 // On liste les pages publiques marketing - celles qu'on veut faire indexer
 // par Google / Bing / Qwant / Ecosia. Pas les zones logues (/admin, /apprendre,
-// /profil, etc.) qui sont deja en disallow dans robots.ts.
+// /profil, etc.) qui sont déjà en disallow dans robots.ts.
 //
 // Priorites :
 //   - 1.0 : page d'accueil (la plus importante)
 //   - 0.9 : pages strategiques (tarifs, demo, comparatif, lancement-oss, dpo)
-//   - 0.7 : pages identite (manifeste, securite, communaute, presse)
+//   - 0.7 : pages identite (manifeste, sécurité, communaute, presse)
 //   - 0.5 : outils gratuits (audit-flash, cyber-meteo, anecdotes, observatoire)
 //   - 0.3 : pages legales (mentions, cgv, cgu, cookies, confidentialite)
 

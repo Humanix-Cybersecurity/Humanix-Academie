@@ -6,8 +6,8 @@
 //
 // Cyber Famille est notre **differenciant unique mondial** (aucun
 // concurrent SAT/HRM ne le fait). Sujet par excellence emotionnel :
-// proteger ses proches sans leur faire peur. La page existante etait
-// fonctionnelle mais ratait l'opportunite de creer un moment d'emotion.
+// protéger ses proches sans leur faire peur. La page existante etait
+// fonctionnelle mais ratait l'opportunite de créer un moment d'emotion.
 //
 // Cette refonte rend la page :
 // - plus humaine (silhouettes des proches qu'on protege)

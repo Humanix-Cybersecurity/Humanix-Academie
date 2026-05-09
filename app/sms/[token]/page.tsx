@@ -19,7 +19,7 @@ export default async function SmishingLandingPage({
     include: { campaign: true, user: true },
   });
   if (!result) notFound();
-  // Securite : on n'affiche cette landing que pour les campagnes SMS.
+  // Sécurité : on n'affiche cette landing que pour les campagnes SMS.
   // Si quelqu'un essaie de re-utiliser un token email phishing ici, on
   // renvoie sur la landing email (route /phishing/[token]).
   if (result.campaign.channel !== "SMS") notFound();

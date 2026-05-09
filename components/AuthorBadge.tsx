@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Badge auteur reutilisable. A poser sur :
 //  - cartes marketplace
-//  - vue saison clonee (rappelle la signature meme apres installation)
+//  - vue saison clonee (rappelle la signature même après installation)
 //  - vue episode si l'auteur a un profil expert (lien direct vers son profil)
 
 import Link from "next/link";

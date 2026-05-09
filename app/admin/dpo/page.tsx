@@ -3,8 +3,8 @@
 //
 // Concretise la roadmap promise sur la page publique /dpo.
 //
-// Donnees affichees (toutes derivees du modele AuditLog existant) :
-//   - Compteurs RGPD des 90 derniers jours (acces, exports, effacements,
+// Données affichees (toutes derivees du modèle AuditLog existant) :
+//   - Compteurs RGPD des 90 derniers jours (accès, exports, effacements,
 //     consentements donnes/retires)
 //   - Queue des demandes d'effacement (article 17) en cours, avec flag
 //     "en retard" si > 30 jours sans completion
@@ -15,7 +15,7 @@
 // Roles autorises : ADMIN, RSSI, SUPERADMIN.
 // Note : on n'a pas encore de role "DPO" dedie dans le schema - un DPO
 // externe accede aujourd'hui via un compte ADMIN. Sujet a discuter en
-// follow-up (creer un Role.DPO ?).
+// follow-up (créer un Role.DPO ?).
 
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -67,7 +67,7 @@ export default async function AdminDpoPage() {
 
   // 2. Queue des demandes d'effacement en attente
   // Pour un cas reel : on cherche les DATA_ERASURE_REQUESTED qui n'ont pas de
-  // DATA_ERASURE_COMPLETED ulterieur sur le meme targetId (utilisateur).
+  // DATA_ERASURE_COMPLETED ulterieur sur le même targetId (utilisateur).
   const erasureRequests = await db.auditLog.findMany({
     where: {
       tenantId,
@@ -183,7 +183,7 @@ export default async function AdminDpoPage() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
           <CounterCard
             emoji="👁"
-            label="Acces aux donnees"
+            label="Acces aux données"
             value={countsByAction.DATA_ACCESSED ?? 0}
             tone="info"
           />
@@ -321,7 +321,7 @@ export default async function AdminDpoPage() {
           ============================================================ */}
       <AdminSection
         title="Activite RGPD recente"
-        description={`${recent.length} derniere${recent.length > 1 ? "s" : ""} action${recent.length > 1 ? "s" : ""} sur les donnees personnelles`}
+        description={`${recent.length} derniere${recent.length > 1 ? "s" : ""} action${recent.length > 1 ? "s" : ""} sur les données personnelles`}
         action={
           <Link
             href="/admin/audit"
@@ -390,7 +390,7 @@ export default async function AdminDpoPage() {
             href="/admin/dpo/aipd"
             emoji="📝"
             title="Generateur AIPD"
-            description="Modele d'analyse d'impact pre-rempli, exportable en Markdown"
+            description="Modèle d'analyse d'impact pre-rempli, exportable en Markdown"
           />
           <ResourceLink
             href="/apprendre/dpo-quotidien/01-aipd"
@@ -527,8 +527,8 @@ const ACTION_EMOJI: Record<string, string> = {
 };
 
 const ACTION_LABEL: Record<string, string> = {
-  DATA_ACCESSED: "Acces aux donnees personnelles",
-  DATA_EXPORTED: "Export de donnees (article 20)",
+  DATA_ACCESSED: "Acces aux données personnelles",
+  DATA_EXPORTED: "Export de données (article 20)",
   DATA_ERASURE_REQUESTED: "Demande d'effacement (article 17)",
   DATA_ERASURE_COMPLETED: "Effacement effectue",
   CONSENT_GIVEN: "Consentement donne",
