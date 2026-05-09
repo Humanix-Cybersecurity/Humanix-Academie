@@ -190,9 +190,9 @@ Clés API [Payplug](https://www.payplug.com) pour la facturation cloud SaaS.
 ```env
 PAYPLUG_SECRET_KEY="sk_live_..."        # ou sk_test_... pour staging
 PAYPLUG_WEBHOOK_SECRET="whsec_..."       # CRITIQUE - sinon webhooks rejetés
-PAYPLUG_PLAN_SOLO="plan_solo_id"         # ID du plan Payplug pour Starter
-PAYPLUG_PLAN_ESSENTIELLE="plan_..."
-PAYPLUG_PLAN_PRO="plan_..."
+PAYPLUG_PLAN_STARTER="plan_starter_id"   # ID du plan Payplug Starter (forfait 19EUR/mois 6-15 sieges)
+PAYPLUG_PLAN_PRO="plan_pro_id"           # ID du plan Payplug Pro (3EUR/user/mois 16-250 sieges)
+# Enterprise : pas de plan Payplug self-service (process commercial manuel via /demande-abonnement)
 ```
 
 **Diagnostic au boot** : la fonction `validatePayplugSetup()` exportée par
@@ -202,7 +202,7 @@ PAYPLUG_PLAN_PRO="plan_..."
 **Sans ces clés** : la facturation cloud est désactivée. Le mode self-host
 n'a pas besoin de Payplug.
 
-### Connecteurs SSO (optionnels, palier Essentielle+)
+### Connecteurs SSO (optionnels, palier Pro+)
 
 ```env
 # Microsoft 365 / Entra ID
@@ -264,7 +264,7 @@ TTS_REGION="francecentral"
 TTS_MIN_PLAN="pro"       # paliers requis pour activer le TTS
 ```
 
-### Webhooks (palier Essentielle+)
+### Webhooks (palier Pro+)
 
 ```env
 # Secret de signature des webhooks sortants (HMAC-SHA256)

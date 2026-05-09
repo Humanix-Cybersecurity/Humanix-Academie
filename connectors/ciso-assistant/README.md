@@ -17,7 +17,7 @@ Plus de copier-coller manuel. Plus d'Excel partagé. Le score de conformité ref
 ## Pré-requis
 
 - Python 3.10+
-- Une clé API Humanix (plan Essentielle ou supérieur — voir `/admin/api-keys`)
+- Une clé API Humanix (plan Pro ou supérieur — voir `/admin/api-keys`)
 - Un compte CISO Assistant avec droits écriture sur les evidences
 
 ## Installation
