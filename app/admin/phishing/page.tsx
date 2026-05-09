@@ -45,7 +45,7 @@ export default async function AdminPhishingPage() {
     );
   }
 
-  const [services, campaigns] = await Promise.all([
+  const [services, campaigns, smtpCfg] = await Promise.all([
     db.user.findMany({
       where: { tenantId, isActive: true },
       select: { service: true },
@@ -57,7 +57,15 @@ export default async function AdminPhishingPage() {
       orderBy: { createdAt: "desc" },
       take: 10,
     }),
+    // SMTP du tenant : si non configure, on bloque le lancement de campagne
+    // et on affiche un CTA vers /admin/smtp.
+    db.tenantSmtpConfig.findUnique({
+      where: { tenantId },
+      select: { id: true, isVerified: true, host: true, fromEmail: true },
+    }),
   ]);
+  const smtpConfigured = !!smtpCfg;
+  const smtpVerified = smtpCfg?.isVerified === true;
 
   const distinctServices = services
     .map((s) => s.service)
@@ -87,31 +95,76 @@ export default async function AdminPhishingPage() {
           </p>
         </article>
 
-        {/* Bandeau pricing - clair sur ce qui est inclus / pas inclus */}
-        <article className="rounded-xl border border-blue-200 dark:border-blue-900/50 bg-blue-50/60 dark:bg-blue-900/15 p-4">
-          <h3 className="font-bold text-blue-900 dark:text-blue-200 text-sm flex items-center gap-2">
-            <span aria-hidden="true">💶</span>
-            Génération gratuite, envoi à la charge du client
-          </h3>
-          <p className="text-xs text-blue-900/80 dark:text-blue-200/80 mt-2 leading-relaxed">
-            Humanix Académie génère gratuitement les <strong>templates</strong>{" "}
-            de phishing email pédagogiques. L&apos;<strong>envoi réel</strong>
-            {" "}aux collaborateurs n&apos;est <strong>pas inclus</strong> :
-            chaque email a un coût opérateur (provider transactionnel).
-          </p>
-          <p className="text-xs text-blue-900/80 dark:text-blue-200/80 mt-2 leading-relaxed">
-            Deux options : (1) vous envoyez via votre propre provider FR
-            (Brevo, Tipimail, Scaleway TEM, OVH) en collant le template,
-            ou (2){" "}
-            <a
-              href="mailto:contact@humanix-cybersecurity.fr?subject=Forfait+phishing+sur+mesure"
-              className="underline font-medium"
-            >
-              forfait sur mesure
-            </a>{" "}
-            avec exécution complète et traçabilité par Humanix.
-          </p>
-        </article>
+        {/* Bandeau SMTP : statut + CTA selon configuration */}
+        {!smtpConfigured && (
+          <article className="rounded-xl border-2 border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20 p-4">
+            <h3 className="font-bold text-amber-900 dark:text-amber-100 text-sm flex items-center gap-2">
+              <span aria-hidden="true">📭</span>
+              SMTP non configuré — l&apos;envoi des phishing est bloqué
+            </h3>
+            <p className="text-xs text-amber-900/90 dark:text-amber-100/90 mt-2 leading-relaxed">
+              Humanix-Cybersecurity ne partage pas son serveur SMTP pour
+              les phishing simulés. Tu dois configurer{" "}
+              <strong>ton propre SMTP</strong> pour envoyer depuis ton
+              domaine (réputation IP, SPF, DKIM, DMARC à ta charge).
+            </p>
+            <p className="text-xs text-amber-900/90 dark:text-amber-100/90 mt-2 leading-relaxed">
+              <strong>3 options</strong> : (1) self-host (Postfix, M365 dédié),
+              (2) provider transactionnel (Brevo, Mailjet, Scaleway TEM client),
+              ou (3){" "}
+              <Link
+                href="/demande-abonnement?type=opsec"
+                className="underline font-bold"
+              >
+                prestation Humanix au forfait
+              </Link>{" "}
+              (mise en place + suivi réputation).
+            </p>
+            <p className="mt-3">
+              <Link
+                href="/admin/smtp"
+                className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition"
+              >
+                <span aria-hidden="true">⚙️</span>
+                Configurer mon SMTP →
+              </Link>
+            </p>
+          </article>
+        )}
+        {smtpConfigured && !smtpVerified && (
+          <article className="rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-900/15 p-4">
+            <h3 className="font-bold text-amber-900 dark:text-amber-100 text-sm flex items-center gap-2">
+              <span aria-hidden="true">⚠️</span>
+              SMTP configuré mais jamais vérifié (ou dernier test échoué)
+            </h3>
+            <p className="text-xs text-amber-900/90 dark:text-amber-100/90 mt-2 leading-relaxed">
+              <strong>{smtpCfg?.host}</strong> — l&apos;envoi peut échouer.
+              Va sur{" "}
+              <Link href="/admin/smtp" className="underline font-bold">
+                /admin/smtp
+              </Link>{" "}
+              et clique « Tester la connexion » pour valider avant de
+              lancer une campagne.
+            </p>
+          </article>
+        )}
+        {smtpConfigured && smtpVerified && (
+          <article className="rounded-xl border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50/60 dark:bg-emerald-900/15 p-4">
+            <p className="text-xs text-emerald-900 dark:text-emerald-100 leading-relaxed flex items-center gap-2">
+              <span aria-hidden="true">✅</span>
+              <span>
+                <strong>SMTP prêt</strong> — envois depuis{" "}
+                <code className="font-mono bg-white/60 dark:bg-slate-900/40 px-1.5 py-0.5 rounded">
+                  {smtpCfg?.fromEmail}
+                </code>{" "}
+                via <code className="font-mono">{smtpCfg?.host}</code>.{" "}
+                <Link href="/admin/smtp" className="underline">
+                  Modifier
+                </Link>
+              </span>
+            </p>
+          </article>
+        )}
 
         {/* Cross-sell IA Mistral - 2 cartes en grille au lieu de 2 bandeaux */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
