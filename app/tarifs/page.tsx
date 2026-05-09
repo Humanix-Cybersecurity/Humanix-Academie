@@ -713,8 +713,7 @@ export default async function TarifsPage({
         >
           - Hex veille
         </cite>
-        </cite>
-      </div>
+      </section>
     </main>
   );
 }
@@ -821,8 +820,8 @@ function CtaButton({
     return (
       <a
         href="https://github.com/Humanix-Cybersecurity/humanix-ce"
-        href="https://github.com/Humanix-Cybersecurity/humanix-ce"
-        rel="noreferrer"
+        target="_blank"
+        rel="noopener noreferrer"
         className={cls}
       >
         {t.cta.label} →
