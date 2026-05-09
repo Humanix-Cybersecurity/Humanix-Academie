@@ -131,10 +131,15 @@ export async function sendViaScalewayTem(
           () =>
             `[Failed to read error response body from Scaleway TEM API] (HTTP ${statusDetails})`,
         );
+      const truncationSuffix = "... [truncated]";
+      const boundedDetails =
+        details.length > MAX_ERROR_BODY_LENGTH
+          ? `${details.slice(0, Math.max(0, MAX_ERROR_BODY_LENGTH - truncationSuffix.length))}${truncationSuffix}`
+          : details;
       const details = `HTTP ${statusDetails}${errBody ? ` - ${errBody}` : ""}`;
       return {
         ok: false,
-        reason: "scaleway_tem_api_error",
+        details: boundedDetails,
         details: details.slice(0, MAX_ERROR_BODY_LENGTH),
       };
     }
