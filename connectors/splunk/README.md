@@ -14,7 +14,7 @@ Une fois déployé, votre Splunk reçoit en temps quasi-réel toutes les preuves
 
 - Python 3.10+
 - Splunk Enterprise / Cloud avec HEC activé
-- Une clé API Humanix (plan Essentielle ou supérieur)
+- Une clé API Humanix (plan Pro ou supérieur)
 
 ## Configuration côté Splunk
 

@@ -73,9 +73,9 @@ Ces features sont **dans le même code source** mais le runtime applique un plan
 
 | Feature                               | Plan minimum  | Pourquoi                                                                 |
 | ------------------------------------- | ------------- | ------------------------------------------------------------------------ |
-| API REST publique + clés API          | Essentielle   | Coût opérationnel (rate limit, audit, support)                           |
-| SCIM v2 auto-provisioning             | Essentielle   | Idem                                                                     |
-| Webhooks sortants signés              | Essentielle   | Idem                                                                     |
+| API REST publique + clés API          | Pro           | Coût opérationnel (rate limit, audit, support)                           |
+| SCIM v2 auto-provisioning             | Pro           | Idem                                                                     |
+| Webhooks sortants signés              | Pro           | Idem                                                                     |
 | Phishing simulé (campagnes)           | Pro           | Effort produit + responsabilité accrue                                   |
 | Phishing IA personnalisé (Mistral)    | Pro           | Coût d'inférence Mistral cloud                                            |
 | Vishing IA souverain (Mistral + Piper)| Pro           | Idem                                                                     |
@@ -99,7 +99,7 @@ Si tu veux héberger pour un client en marque blanche commercialement, c'est pos
 
 | Source de revenus     | % cible 2026 | Description                                                                |
 | --------------------- | ------------ | -------------------------------------------------------------------------- |
-| Cloud managé          | 40 %         | `humanix-cybersecurity.fr/tarifs` - paliers Découverte / Solo / Essentielle / Pro / Premium |
+| Cloud managé          | 40 %         | `humanix-cybersecurity.fr/tarifs` - paliers Starter / Pro / Enterprise |
 | Audit + formation     | 30 %         | Prestations menées par Humanix-Cybersecurity (RSSI externalisé, audit cyber, formation sur site) |
 | Pack NIS2 turnkey     | 15 %         | Service consulting + livraison documentaire pour passer NIS2 en 30 jours   |
 | Marketplace           | 10 %         | Revenue share avec contributeurs experts (50/50 sur les modules payants)   |

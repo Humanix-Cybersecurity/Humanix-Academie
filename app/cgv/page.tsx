@@ -100,9 +100,11 @@ export default function CGVPage() {
             accessible en mode <strong>SaaS</strong>. L'accès est consenti pour
             la durée d'abonnement souscrite, dans la limite du nombre de
             licences (sièges) commandées et selon les fonctionnalités du palier
-            choisi (Découverte, Starter, Essentielle, Pro, Enterprise). Le
-            palier Découverte est mis à disposition gracieusement, sans
-            engagement, dans la limite de cinq (5) licences.
+            choisi (Starter, Pro, Enterprise). Le
+            sous-palier Starter free est mis à disposition gracieusement, sans
+            engagement et sans CB, dans la limite de cinq (5) sièges actifs.
+            Au-delà, le palier Starter passe en forfait payant (19 €/mois HT
+            jusqu'à quinze sièges).
           </p>
         </LegalSubsection>
 
@@ -152,7 +154,7 @@ export default function CGVPage() {
         <LegalSubsection num="2.4" title="Connecteurs et intégrations">
           <p>
             La plateforme Humanix Académie expose, à partir de l'offre
-            Essentielle, un endpoint d'export de preuves de conformité (
+            Pro, un endpoint d'export de preuves de conformité (
             <code>/api/v1/evidence-export</code>) compatible avec plusieurs
             formats standards : <strong>OSCAL v1.1.2</strong> (NIST),{" "}
             <strong>Splunk CIM v1</strong>, <strong>ArcSight CEF v1</strong>,

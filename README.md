@@ -197,7 +197,7 @@ proposés en cloud managé ou via une licence commerciale.
 | 5 modules de base (mots de passe, MFA, phishing, sauvegarde, RGPD) | Open AGPLv3 (ce repo)                |
 | Gamification engine + mascotte                                     | Open AGPLv3 (ce repo)                |
 | Connecteur CISO Assistant + format OSCAL                           | Open AGPLv3 (ce repo)                |
-| Catalogue 30+ modules avancés                                      | Cloud Essentielle / Pro / Enterprise |
+| Catalogue 30+ modules avancés                                      | Cloud Pro / Pro / Enterprise |
 | Phishing simulé (templates + IA Mistral)                           | Cloud Pro / Enterprise               |
 | Pack NIS2 turnkey complet                                          | Cloud Pro / Enterprise               |
 | SSO SAML / SCIM enterprise                                         | Cloud Enterprise                     |
@@ -273,7 +273,7 @@ existants ou n'apporte pas de tests sur du code critique sera refusée.
 - `lib/audit-flash/scoring.ts` — moteur scoring audit-flash (100%)
 - `lib/marketplace/integrity.ts` — hash SHA-256 modules (100%)
 - `lib/marketplace/schema.ts` — validation Zod stricte (100%)
-- `lib/plans.ts` + `lib/pricing.ts` — plan-gating + 6 paliers (100%)
+- `lib/plans.ts` + `lib/pricing.ts` — plan-gating + 4 paliers (100%)
 - `lib/scim/mapper.ts` + `filter.ts` — RFC 7644 SCIM v2 (94-100%)
 - `lib/webhooks/dispatcher.ts` — HMAC + SSRF guard (helpers exposés)
 - `lib/webhooks/formatters.ts` — Slack/Teams payloads (97%)
@@ -296,7 +296,7 @@ La plateforme open source est **gratuite à vie** en self-host. Humanix
 Cybersecurity finance le développement par les services à forte valeur ajoutée
 qu'elle propose autour :
 
-- **Cloud managé** (à partir de 0 €/mois en Découverte, 19 €/mois en Starter)
+- **Cloud managé** (gratuit jusqu'à 5 sièges en Starter, puis 19 €/mois forfait jusqu'à 15)
 - **Audit cybersécurité** et gap analysis NIS2
 - **Formation professionnelle** (intra et inter-entreprise, éligible Qualiopi)
 - **RSSI externalisé** (forfait mensuel)
