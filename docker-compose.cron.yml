@@ -38,11 +38,6 @@ services:
         condition: service_started
     networks:
       - humanix_backend
-
-networks:
-  humanix_backend:
-    external: true
-    name: humanix_backend
     # Healthcheck simple : ofelia ne crash pas tout seul, on vérifie juste
     # qu'il tourne. Pour aller plus loin : exposer un /metrics Prometheus
     # via un sidecar ou utiliser le mode WebUI d'ofelia.
@@ -51,3 +46,8 @@ networks:
       interval: 30s
       timeout: 5s
       retries: 3
+
+networks:
+  humanix_backend:
+    external: true
+    name: humanix_backend
