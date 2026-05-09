@@ -185,18 +185,13 @@ export default function AdminSidebar() {
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // Set des sections ouvertes. Par defaut TOUTES sont ouvertes pour que
-  // l'admin voit tout son menu d'un coup d'oeil (visibilite > densite).
-  // Initialisation avec les IDs de SECTIONS + SUPERADMIN_SECTIONS : les
-  // entries inutilisees (cas non-SUPERADMIN) sont juste ignorees, pas de
-  // side effect. Click sur un header replie la section ; l'etat n'est
-  // pas persiste entre sessions (recharge = retour au tout-ouvert).
-  const [openSections, setOpenSections] = useState<Set<string>>(
-    () =>
-      new Set(
-        [...SECTIONS, ...SUPERADMIN_SECTIONS].map((s) => s.id),
-      ),
-  );
+  // Set des sections ouvertes. Par defaut on ouvre uniquement la section
+  // qui contient la page courante (les autres restent repliees, l'user
+  // les ouvre au besoin). Etat non persiste entre sessions.
+  const [openSections, setOpenSections] = useState<Set<string>>(() => {
+    const active = findActiveSectionId(path, sections);
+    return active ? new Set([active]) : new Set();
+  });
 
   // A chaque changement de route, on s'assure que la section active est
   // ouverte (cas ou l'user l'avait fermee manuellement et clique un lien
@@ -245,16 +240,23 @@ export default function AdminSidebar() {
   return (
     <>
       {/* =====================================================================
-          DESKTOP - sidebar fixe 240px avec sections accordeon.
+          DESKTOP - sidebar slim 56px qui s'agrandit a 240px au hover.
+          Pattern Linear / Notion : icones-only par defaut, labels +
+          chevrons + items reveles a l'hover (transition opacity 200ms).
+          La sidebar etant fixed, le contenu principal est offset de 56px
+          (lg:pl-14 du layout) et la version expanded passe par-dessus en
+          overlay -- pas besoin de pousser le contenu.
           ===================================================================== */}
       <aside
-        className="hidden lg:flex fixed top-20 left-0 bottom-0 z-30 w-60 flex-col bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-slate-800"
+        className="group hidden lg:flex fixed top-20 left-0 bottom-0 z-30 w-14 hover:w-60 flex-col bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-slate-800 transition-[width] duration-200 ease-out shadow-[2px_0_0_0_transparent] hover:shadow-[2px_0_8px_-2px_rgba(0,0,0,0.08)]"
         aria-label="Navigation console"
       >
-        <div className="px-4 pt-4 pb-2">
+        <div className="px-4 pt-4 pb-2 whitespace-nowrap overflow-hidden">
           <p className="text-[10px] uppercase tracking-widest font-bold text-accent-500 flex items-center gap-2">
             <span aria-hidden="true">🎛</span>
-            <span>Console</span>
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+              Console
+            </span>
           </p>
         </div>
 
@@ -347,6 +349,14 @@ function Accordion({
   // Section "active" si l'un de ses items matche le path courant (highlight).
   const sectionActive = section.items.some((i) => isActive(path, i.href));
 
+  // En mode desktop slim (parent .group non hover), on cache title et
+  // chevron via opacity + on neutralise les clicks (pointer-events). Le
+  // contenu accordeon (items) est aussi masque visuellement pour eviter
+  // qu'un section.isOpen ne fasse deborder en hauteur. La transition
+  // grid-template-rows fonctionne toujours quand on hover puis qu'on
+  // toggle manuellement.
+  const isDesktop = variant === "desktop";
+
   return (
     <div className="rounded-xl">
       <button
@@ -354,6 +364,7 @@ function Accordion({
         onClick={onToggle}
         aria-expanded={isOpen}
         aria-controls={`section-${section.id}`}
+        title={isDesktop ? section.title : undefined}
         className={clsx(
           "w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-colors",
           sectionActive
@@ -365,7 +376,13 @@ function Accordion({
         <span aria-hidden="true" className="text-base shrink-0 w-5 text-center">
           {section.icon}
         </span>
-        <span className="flex-1 text-left text-sm font-bold truncate">
+        <span
+          className={clsx(
+            "flex-1 text-left text-sm font-bold truncate whitespace-nowrap",
+            isDesktop &&
+              "opacity-0 group-hover:opacity-100 transition-opacity duration-150",
+          )}
+        >
           {section.title}
         </span>
         <span
@@ -373,6 +390,8 @@ function Accordion({
           className={clsx(
             "shrink-0 text-xs text-gray-400 dark:text-gray-500 transition-transform duration-200",
             isOpen ? "rotate-90" : "rotate-0",
+            isDesktop &&
+              "opacity-0 group-hover:opacity-100 transition-opacity duration-150",
           )}
         >
           ▶
@@ -380,12 +399,16 @@ function Accordion({
       </button>
 
       {/* Animation grid-template-rows : passe de 0fr a 1fr pour deplier
-          sans avoir besoin de connaitre la hauteur en pixels. */}
+          sans avoir besoin de connaitre la hauteur en pixels.
+          En mode desktop slim (sans hover) on force grid-rows-[0fr] pour
+          que les items des sections ouvertes ne debordent pas en hauteur
+          tant que l'user n'expand pas la sidebar. */}
       <div
         id={`section-${section.id}`}
         className={clsx(
           "grid transition-[grid-template-rows] duration-200 ease-out",
           isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+          isDesktop && isOpen && "grid-rows-[0fr] group-hover:grid-rows-[1fr]",
         )}
       >
         <div className="overflow-hidden">
@@ -419,10 +442,12 @@ function NavLink({
   active: boolean;
   variant: "desktop" | "mobile";
 }) {
+  const isDesktop = variant === "desktop";
   return (
     <Link
       href={item.href}
       aria-current={active ? "page" : undefined}
+      title={isDesktop ? item.label : undefined}
       className={clsx(
         "relative flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors",
         active
@@ -441,7 +466,15 @@ function NavLink({
       <span aria-hidden="true" className="text-base shrink-0 w-4 text-center">
         {item.icon}
       </span>
-      <span className="flex-1 truncate">{item.label}</span>
+      <span
+        className={clsx(
+          "flex-1 truncate whitespace-nowrap",
+          isDesktop &&
+            "opacity-0 group-hover:opacity-100 transition-opacity duration-150",
+        )}
+      >
+        {item.label}
+      </span>
       {item.gate && (
         <span
           className={clsx(
@@ -449,6 +482,8 @@ function NavLink({
             active && variant === "mobile"
               ? "bg-white/20 text-white"
               : "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
+            isDesktop &&
+              "opacity-0 group-hover:opacity-100 transition-opacity duration-150",
           )}
           title={`Inclus à partir de l'offre ${item.gate}`}
         >
