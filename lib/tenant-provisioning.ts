@@ -64,7 +64,7 @@ export type ProvisionInput = {
   paymentSubscriptionId?: string;
   /** État initial de la souscription. Utilisé par le webhook Payplug pour
    * passer "active" sur subscription.created (le checkout a réussi).
-   * Defaut "active" — il n'y a plus de phase trial depuis mai 2026. */
+   * Défaut "active" — il n'y a plus de phase trial depuis mai 2026. */
   subscriptionStatus?: string;
   /** Provenance pour tracing/audit. */
   source: ProvisionSource;
