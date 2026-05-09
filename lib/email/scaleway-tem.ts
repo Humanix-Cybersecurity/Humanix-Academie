@@ -73,7 +73,7 @@ export async function sendViaScalewayTem(
   }
   const fromAddress = params.from ?? process.env.EMAIL_FROM!;
   const fromName =
-    params.fromName ?? process.env.NEXT_PUBLIC_APP_NAME ?? "Humanix Academie";
+    params.fromName ?? process.env.NEXT_PUBLIC_APP_NAME ?? "Humanix Académie";
 
   const recipients = (
     Array.isArray(params.to) ? params.to : [params.to]
@@ -103,7 +103,9 @@ export async function sendViaScalewayTem(
       body: JSON.stringify(body),
     });
     if (!res.ok) {
-      const errBody = await res.text().catch(() => "");
+      const errBody = await res
+        .text()
+        .catch(() => "[Unable to read error body]");
       return {
         ok: false,
         reason: `scaleway_tem_${res.status}`,
@@ -115,9 +117,12 @@ export async function sendViaScalewayTem(
     };
     return { ok: true, providerMessageId: data?.emails?.[0]?.id ?? null };
   } catch (e: unknown) {
+    console.error("[scaleway-tem] send failed", e);
     return {
       ok: false,
-      reason: e instanceof Error ? e.message : "scaleway_tem_unknown_error",
+      reason: "scaleway_tem_send_failed",
+      details:
+        e instanceof Error ? `${e.name}: ${e.message}` : "Unknown thrown value",
     };
   }
 }
