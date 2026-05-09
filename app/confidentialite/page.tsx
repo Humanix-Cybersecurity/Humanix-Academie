@@ -250,21 +250,39 @@ export default function ConfidentialitePage() {
             <ul>
               <li>
                 <strong>Scaleway SAS</strong> (France 🇫🇷) - hébergement,
-                sauvegardes, infrastructure
+                sauvegardes, infrastructure cloud
+              </li>
+              <li>
+                <strong>Scaleway TEM</strong> (France 🇫🇷, Paris) - emails
+                transactionnels (lien magique de connexion, alertes,
+                newsletter Cyber-Anecdote du Lundi)
+              </li>
+              <li>
+                <strong>Payplug SA</strong> (France 🇫🇷, Paris) - prestataire
+                de paiement pour les abonnements. Traite les données de carte
+                bancaire en mode tokenisation conforme PCI-DSS niveau 1.
+                Humanix ne reçoit jamais ton numéro de carte ni ton CVV : nous
+                stockons uniquement un identifiant chiffré (token Payplug)
+                qui permet de représenter le moyen de paiement sans pouvoir
+                l&apos;utiliser hors de notre flow.
               </li>
               <li>
                 <strong>Olinda SAS</strong> exploitant le service{" "}
                 <strong>Qonto</strong> (France 🇫🇷) - compte de paiement
-                professionnel
+                professionnel pour la réception des virements
               </li>
               <li>
                 <strong>Dougs SAS</strong> (France 🇫🇷) - expertise comptable,
                 facturation
               </li>
               <li>
-                <strong>Scaleway TEM</strong> (UE, sous Clauses Contractuelles Types
-                CE 2021/914) - emails transactionnels (lien magique de
-                connexion, alertes)
+                <strong>Hiscox France</strong> (France 🇫🇷) - assureur
+                Responsabilité Civile Professionnelle. N&apos;a accès à
+                aucune donnée client en fonctionnement nominal ; un
+                partage limité ne survient qu&apos;en cas d&apos;incident
+                matériel indemnisé, et exclusivement avec les éléments
+                probants strictement nécessaires à l&apos;instruction du
+                sinistre.
               </li>
             </ul>
           </li>
