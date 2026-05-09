@@ -219,9 +219,10 @@ export default async function TarifsPage({
           ))}
         </div>
         <p className="text-xs text-center text-gray-500 mt-6">
-          Tous les prix sont HT. Vente directe sans essai gratuit (la{" "}
-          <Link href="/demo" className="underline">démo</Link> remplit ce rôle).
-          Mensuel résiliable à tout moment, annuel = engagement 12 mois.
+          Tous les prix sont HT.
+          {" "}Vente directe, sans essai gratuit&nbsp;: la{" "}
+          <Link href="/demo" className="underline">démo</Link> remplit ce rôle.
+          {" "}Mensuel résiliable à tout moment&nbsp;; annuel = engagement 12 mois.
         </p>
       </section>
 
@@ -548,10 +549,13 @@ export default async function TarifsPage({
               <p className="text-xs uppercase tracking-[0.25em] font-bold text-emerald-700 dark:text-emerald-300 mb-2">
                 Retour sur investissement · sans embellir
               </p>
-              <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-3 leading-tight">
+              <h2
+                id="roi-stats-heading"
+                className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-3 leading-tight"
+              >
                 Les chiffres, posés froidement.
               </h2>
-              <ul className="space-y-2 text-gray-700">
+              <ul aria-labelledby="roi-stats-heading" className="space-y-2 text-gray-700">
                 <Roi
                   label="Une attaque par phishing réussie en PME"
                   value="coûte en moyenne 35 000 € (Tracfin 2024)"
@@ -709,10 +713,7 @@ export default async function TarifsPage({
           au bord du chemin - pas par charité, par stratégie. La cybersécurité
           ne peut pas être un luxe quand 90 % des attaques visent les humains. »
         </blockquote>
-        <cite
-        >
-          - Hex veille
-        </cite>
+        <cite>- Hex veille</cite>
       </section>
     </main>
   );
