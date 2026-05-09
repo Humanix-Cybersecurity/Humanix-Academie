@@ -13,9 +13,9 @@
 // Limites V1 (assumees) :
 //  - Pas de double opt-in email (trust on signup, comme la plupart des SaaS
 //    en B2B). L'utilisateur peut reset son mdp s'il s'est trompe d'email.
-//  - Plans autorises a l'ouverture de compte : "decouverte" et "trial".
-//    Les autres plans (solo, essentielle, pro, premium) passent par
-//    le funnel commercial / paiement, hors scope de ce signup gratuit.
+//  - Seul le plan "decouverte" (forever-free) est autorise a l'ouverture
+//    de compte. Les autres plans (solo, essentielle, pro, premium) passent
+//    par le funnel commercial / paiement, hors scope de ce signup gratuit.
 "use server";
 
 import { headers } from "next/headers";
@@ -34,7 +34,7 @@ import {
 } from "@/lib/welcome-email";
 import { auditLog, AuditActions } from "@/lib/audit";
 
-const ALLOWED_SIGNUP_PLANS: PlanId[] = ["decouverte", "trial"];
+const ALLOWED_SIGNUP_PLANS: PlanId[] = ["decouverte"];
 
 const ORG_NAME_MIN = 2;
 const ORG_NAME_MAX = 100;
@@ -74,6 +74,21 @@ export async function createDecouverteAccount(
       ok: false,
       error:
         "Inscription désactivée en mode démo. Utilisez /demo pour explorer.",
+    };
+  }
+
+  // VERROU PHASE 3 — modèle d'accès 3-layer : un tenant n'est créé QUE
+  // pour une organisation qui souscrit un abonnement payant. Les apprenants
+  // gratuits passent par /inscription (tenant Communauté, role LEARNER).
+  // Les organisations qui veulent un tenant payant passent par
+  // /demande-abonnement (manuel pour l'instant, Payplug auto en Phase 3b).
+  // Cf. docs/DEPLOYMENT_RUNBOOK.md
+  if (process.env.SIGNUP_ALLOW_SELF_SERVICE !== "true") {
+    return {
+      ok: false,
+      error:
+        "L'inscription self-service avec création de tenant est désactivée. " +
+        "Pour apprendre gratuitement : /inscription. Pour un abonnement entreprise : /demande-abonnement.",
     };
   }
 
@@ -259,15 +274,16 @@ export async function createDecouverteAccount(
   // ----------------------------
   // 6. Connexion automatique
   // ----------------------------
-  // signIn en provider "password" avec redirect vers /admin (l'user est
-  // ADMIN). Le rate limit est deja consume, donc cette connexion ne sera
-  // pas freinee par les anti-bruteforce.
+  // signIn en provider "password" avec redirect via /post-login (qui route
+  // par rôle : l'user fraîchement créé est ADMIN, donc /admin). Le rate
+  // limit est deja consume, donc cette connexion ne sera pas freinee par
+  // les anti-bruteforce.
   await signIn("password", {
     email,
     password,
-    redirectTo: "/admin",
+    redirectTo: "/post-login",
   });
 
   // signIn redirige : ce return est defensif (jamais atteint en pratique).
-  redirect("/admin");
+  redirect("/post-login");
 }

@@ -16,6 +16,7 @@ import EmailProvider from "next-auth/providers/nodemailer";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import MicrosoftEntraID from "next-auth/providers/microsoft-entra-id";
+import Apple from "next-auth/providers/apple";
 import type { Provider } from "next-auth/providers";
 import { db } from "@/lib/db";
 import { verifyPassword } from "@/lib/password";
@@ -23,6 +24,12 @@ import { verifyTotpCode } from "@/lib/totp";
 import { consumeBackupCode } from "@/lib/password";
 import { auditLog, AuditActions, AuditOutcomes } from "@/lib/audit";
 import { sendEmail, isEmailConfigured } from "@/lib/email";
+import {
+  COMMUNITY_TENANT_SLUG,
+  getCommunityTenant,
+} from "@/lib/tenant-community";
+import { readInscriptionIntent } from "@/lib/inscription-intent";
+import { isDevMode } from "@/lib/dev-mode";
 
 const isDemoMode = process.env.DEMO_MODE === "true";
 
@@ -77,6 +84,21 @@ if (
   );
 }
 
+// SSO Apple - actif si la config est presente.
+// Apple "Sign in with Apple" : la `clientSecret` est un JWT signé ES256 que
+// l'admin doit régénérer périodiquement (validité max 6 mois cf. Apple Dev
+// Portal). Soit on injecte un JWT pré-généré via AUTH_APPLE_SECRET, soit
+// on le calcule au runtime à partir de la clé .p8 — pour l'instant on
+// reste sur un JWT statique (cohérent avec Google/Microsoft).
+if (process.env.AUTH_APPLE_ID && process.env.AUTH_APPLE_SECRET) {
+  providers.push(
+    Apple({
+      clientId: process.env.AUTH_APPLE_ID,
+      clientSecret: process.env.AUTH_APPLE_SECRET,
+    }),
+  );
+}
+
 // Demo provider : connecte sans mot de passe pour les démos live
 if (isDemoMode) {
   providers.push(
@@ -92,6 +114,75 @@ if (isDemoMode) {
         // Refuse les comptes suspendus
         if (!user.isActive) return null;
         return { id: user.id, email: user.email, name: user.name };
+      },
+    }),
+  );
+}
+
+// Dev-bypass provider : utilise par les flows inscription / souscription
+// quand DEV_MODE=true (jamais en prod, cf. lib/dev-mode.ts). Permet de
+// simuler le clic sur le magic link sans envoyer d'email, et de finaliser
+// la souscription Payplug sans configurer de compte provider.
+//
+// SECURITE : la verification NODE_ENV != "production" est dans isDevMode().
+// Ici on rajoute un garde-fou de creation : un user ne peut etre cree par
+// ce provider que si le cookie d'intention d'inscription est valide
+// (community-learner). Sinon on refuse, exactement comme le PrismaAdapter
+// override pour les autres providers.
+if (isDevMode()) {
+  providers.push(
+    Credentials({
+      id: "dev-bypass",
+      name: "Dev bypass",
+      credentials: { email: { label: "Email", type: "email" } },
+      async authorize(credentials: any) {
+        const email = String(credentials?.email ?? "")
+          .toLowerCase()
+          .trim();
+        if (!email || !email.includes("@")) return null;
+
+        let user = await db.user.findUnique({ where: { email } });
+
+        if (!user) {
+          // User inconnu : on ne cree que dans le contexte d'une inscription
+          // explicite (cookie d'intention pose par /inscription). Pour une
+          // souscription Payplug en DEV_MODE, le tenant + admin sont crees
+          // par /api/payments/checkout/start AVANT signIn -> user existe deja.
+          const intent = await readInscriptionIntent();
+          if (intent !== "community-learner") {
+            console.warn(
+              "[dev-bypass] user inconnu sans cookie d'inscription → refus",
+            );
+            return null;
+          }
+          const community = await getCommunityTenant();
+          if (!community) {
+            console.error(
+              `[dev-bypass] Tenant '${COMMUNITY_TENANT_SLUG}' absent. Run npm run db:seed.`,
+            );
+            return null;
+          }
+          user = await db.user.create({
+            data: {
+              email,
+              tenantId: community.id,
+              role: "LEARNER",
+              isActive: true,
+              emailVerified: new Date(),
+            },
+          });
+          console.warn(
+            `[dev-bypass] user LEARNER cree pour ${email} (tenant Communaute)`,
+          );
+        } else if (!user.isActive) {
+          return null;
+        }
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+        };
       },
     }),
   );
@@ -330,9 +421,59 @@ if (isEmailConfigured()) {
   );
 }
 
+// PrismaAdapter override : injecte tenantId + role lors de l'auto-création
+// d'un user (SSO ou magic link inconnu).
+//
+// SECURITE :
+//   - Refuse l'auto-création si AUCUN cookie d'intention valide n'est posé.
+//     Ça maintient la sécurité existante : un employé ACME qui clique « Sign
+//     in with Google » sur /connexion sans avoir été invité reste rejeté.
+//   - Si cookie d'intention valide (posé par /inscription), l'user est
+//     créé sur le tenant Communauté avec role LEARNER (le seul niveau d'accès
+//     autorisé pour un signup non-payant).
+const baseAdapter = PrismaAdapter(db);
+const adapter: typeof baseAdapter = {
+  ...baseAdapter,
+  async createUser(data) {
+    const intent = await readInscriptionIntent();
+    if (intent !== "community-learner") {
+      throw new Error(
+        "Création de compte non autorisée sans flow d'inscription valide.",
+      );
+    }
+    const community = await getCommunityTenant();
+    if (!community) {
+      throw new Error(
+        `Tenant '${COMMUNITY_TENANT_SLUG}' absent. Exécute 'npm run db:seed'.`,
+      );
+    }
+    const created = await db.user.create({
+      data: {
+        email: data.email,
+        name: data.name ?? null,
+        emailVerified: data.emailVerified ?? null,
+        tenantId: community.id,
+        role: "LEARNER",
+        isActive: true,
+      },
+    });
+    // Cast vers le type attendu par next-auth (notre User a des champs en plus
+    // que le type AdapterUser, et tenantId / role / isActive ne sont pas dans
+    // sa surface publique).
+    return created as unknown as Awaited<ReturnType<NonNullable<typeof baseAdapter.createUser>>>;
+  },
+};
+
+// Session strategy : "database" en prod normale (revocation immediate via
+// suppression de la row Session). "jwt" en demo OU dev-bypass car les
+// providers Credentials d'Auth.js v5 sont incompatibles avec les sessions
+// DB (l'authorize callback ne reproduit pas le linkAccount + create
+// session row attendus par l'adapter).
+const useJwtSessions = isDemoMode || isDevMode();
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(db),
-  session: { strategy: isDemoMode ? "jwt" : "database" },
+  adapter,
+  session: { strategy: useJwtSessions ? "jwt" : "database" },
   trustHost: true,
   pages: {
     signIn: isDemoMode ? "/demo" : "/connexion",
@@ -355,30 +496,46 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     // dans `.eslintrc.json` pour ce genre de cas légitime.
     async signIn(params: any) {
       const { user, account } = params;
-      // Demo mode + magic link : on laisse Auth.js gerer (Credentials a deja
-      // verifie isActive dans authorize, magic link n'a pas besoin)
-      if (account?.provider === "demo" || account?.provider === "resend") {
+      // Demo mode : Credentials provider (déjà validé isActive dans authorize)
+      if (account?.provider === "demo") {
+        return true;
+      }
+      // Dev-bypass : Credentials provider, validation deja faite dans authorize
+      if (account?.provider === "dev-bypass") {
         return true;
       }
 
-      // Providers SSO : on exige que l'email existe en BDD avec isActive=true
-      if (
+      // Providers SSO + magic link : si l'user existe et est actif → OK.
+      // Sinon, on regarde le cookie d'intention pour distinguer :
+      //   - Inscription (cookie valide) → autorise auto-create sur Communauté
+      //   - Connexion classique (pas de cookie) → refuse (employé ACME qui
+      //     tape /connexion sans invitation préalable)
+      const isExternalProvider =
         account?.provider === "google" ||
-        account?.provider === "microsoft-entra-id"
-      ) {
+        account?.provider === "microsoft-entra-id" ||
+        account?.provider === "apple" ||
+        account?.provider === "resend" ||
+        account?.provider === "nodemailer";
+
+      if (isExternalProvider) {
         if (!user.email) return false;
         const existing = await db.user.findUnique({
           where: { email: user.email.toLowerCase() },
           select: { id: true, isActive: true },
         });
-        if (!existing) {
-          // Pas de compte → refus avec redirection vers une page d'erreur
-          return "/connexion?error=NoAccount";
+        if (existing) {
+          if (!existing.isActive) {
+            return "/connexion?error=AccountSuspended";
+          }
+          return true;
         }
-        if (!existing.isActive) {
-          return "/connexion?error=AccountSuspended";
+        // User inconnu : autoriser uniquement si cookie d'intention valide
+        // (= passé par /inscription). Sinon redirect avec message clair.
+        const intent = await readInscriptionIntent();
+        if (intent === "community-learner") {
+          return true; // PrismaAdapter override fera la création
         }
-        return true;
+        return "/connexion?error=NoAccount";
       }
 
       return true;

@@ -39,7 +39,7 @@ export { verifyLicenseCached, resetLicenseCache } from "./cache";
  * Utilisation typique :
  *   const result = getActiveLicense();
  *   if (!result.valid) {
- *     // licence absente/invalide → fallback plan trial / decouverte
+ *     // licence absente/invalide → fallback plan decouverte
  *   } else {
  *     // result.license.plan, result.license.maxSeats, etc.
  *   }
