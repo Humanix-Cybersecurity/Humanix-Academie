@@ -16,6 +16,15 @@
 import type { SendEmailParams, SendEmailResult } from "./index";
 
 const DEFAULT_REGION = "fr-par";
+const MAX_ERROR_BODY_LENGTH = 500;
+const DEFAULT_FROM_NAME = "Humanix Académie";
+
+function truncateErrorMessage(message: string, maxLength: number): string {
+  const truncationSuffix = "... [truncated]";
+  if (message.length <= maxLength) return message;
+  const maxPrefixLength = Math.max(0, maxLength - truncationSuffix.length);
+  return `${message.slice(0, maxPrefixLength)}${truncationSuffix}`;
+}
 
 export function isScalewayTemConfigured(): boolean {
   return Boolean(
@@ -38,19 +47,24 @@ function getEndpoint(): string {
  * par "SCW", 20 chars) au lieu du secret-key (UUID 36 chars) dans la conf.
  * L'access-key sert au SDK Scaleway officiel mais pas a l'API REST TEM.
  *
- * Verifie le format avant l'appel API pour donner un message clair plutôt
+ * Vérifie le format avant l'appel API pour donner un message clair plutôt
  * qu'un cryptique "scaleway_tem_401".
  */
 function detectMisconfiguredToken(token: string): string | null {
-  // Format secret-key attendu : UUID v4 (8-4-4-4-12, 36 chars total)
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-    token,
-  );
+  // Format secret-key attendu : UUID (8-4-4-4-12, 36 chars total)
+  const isUuid =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      token,
+    );
   if (isUuid) return null;
-  if (token.startsWith("SCW") && token.length < 30) {
-    return "SCALEWAY_TEM_TOKEN ressemble a un access-key (SCW..., 20 chars). L'API REST TEM exige le SECRET-key (UUID 36 chars). Cf. .env.example.";
+
+  // Format access-key courant : "SCW" + 17 caracteres alphanumeriques (20 total)
+  const looksLikeAccessKey = /^SCW[A-Za-z0-9]{17}$/.test(token);
+  if (looksLikeAccessKey) {
+    return "SCALEWAY_TEM_TOKEN looks like an access key (SCW..., 20 chars). The TEM REST API requires the secret key (UUID, 36 chars). See .env.example.";
   }
-  return `SCALEWAY_TEM_TOKEN n'est pas un UUID 36 chars (recu ${token.length} chars). Verifier qu'il s'agit du secret-key IAM Scaleway, pas de l'access-key. Cf. .env.example.`;
+
+  return "Invalid SCALEWAY_TEM_TOKEN. Verify that it is the Scaleway IAM secret key (UUID, 36 chars), not the access key. See .env.example.";
 }
 
 export async function sendViaScalewayTem(
@@ -73,7 +87,25 @@ export async function sendViaScalewayTem(
   }
   const fromAddress = params.from ?? process.env.EMAIL_FROM!;
   const fromName =
-    params.fromName ?? process.env.NEXT_PUBLIC_APP_NAME ?? "Humanix Académie";
+    params.fromName ?? process.env.NEXT_PUBLIC_APP_NAME ?? DEFAULT_FROM_NAME;
+
+  const normalizedHtml =
+    typeof params.html === "string" && params.html.trim().length > 0
+      ? params.html
+      : undefined;
+  const normalizedText =
+    typeof params.text === "string" && params.text.trim().length > 0
+      ? params.text
+      : undefined;
+
+  if (!normalizedHtml && !normalizedText) {
+    return {
+      ok: false,
+      reason: "scaleway_tem_missing_content",
+      details:
+        "Either `html` or `text` content must be provided to send an email.",
+    };
+  }
 
   const recipients = (
     Array.isArray(params.to) ? params.to : [params.to]
@@ -87,8 +119,8 @@ export async function sendViaScalewayTem(
     from: { email: fromAddress, name: fromName },
     to: recipients,
     subject: params.subject,
-    html: params.html ?? undefined,
-    text: params.text ?? undefined,
+    html: normalizedHtml,
+    text: normalizedText,
     project_id: projectId,
     additional_headers: additionalHeaders,
   };
@@ -103,18 +135,24 @@ export async function sendViaScalewayTem(
       body: JSON.stringify(body),
     });
     if (!res.ok) {
-      const errBody = await res
-        .text()
-        .catch(() => "[Unable to read error body]");
+      const statusDetails = `${res.status} ${res.statusText || "Unknown Status"}`;
+      const rawErrBody = await res.text().catch(() => "");
+      const errBody =
+        rawErrBody || "[Failed to read error response body from Scaleway TEM API]";
+      const details = `HTTP ${statusDetails}${errBody ? ` - ${errBody}` : ""}`;
+      const boundedDetails = truncateErrorMessage(details, MAX_ERROR_BODY_LENGTH);
       return {
         ok: false,
-        reason: `scaleway_tem_${res.status}`,
-        details: errBody.slice(0, 500),
+        reason: "scaleway_tem_api_error",
+        details: boundedDetails,
       };
     }
-    const data = (await res.json().catch(() => ({}))) as {
-      emails?: { id?: string }[];
-    };
+    let data: { emails?: { id?: string }[] } = {};
+    try {
+      data = (await res.json()) as { emails?: { id?: string }[] };
+    } catch (e: unknown) {
+      console.warn("[scaleway-tem] unable to parse success response JSON", e);
+    }
     return { ok: true, providerMessageId: data?.emails?.[0]?.id ?? null };
   } catch (e: unknown) {
     console.error("[scaleway-tem] send failed", e);
@@ -122,7 +160,9 @@ export async function sendViaScalewayTem(
       ok: false,
       reason: "scaleway_tem_send_failed",
       details:
-        e instanceof Error ? `${e.name}: ${e.message}` : "Unknown thrown value",
+        e instanceof Error
+          ? `${e.name}: ${e.message}`
+          : "Unknown error type thrown during Scaleway TEM email send",
     };
   }
 }
