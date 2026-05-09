@@ -90,7 +90,7 @@ export default function LuccaIntegrationPage() {
             <Link href="/admin/api-keys" className="font-bold underline">
               générer une clé API
             </Link>{" "}
-            (plan Essentielle ou supérieur).
+            (plan Pro ou supérieur).
           </li>
           <li>
             Cloner{" "}

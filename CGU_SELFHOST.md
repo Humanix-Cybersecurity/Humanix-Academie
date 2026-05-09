@@ -144,7 +144,7 @@ Si vous avez besoin de :
 
 | Besoin                                       | Où aller                                                                                    |
 | -------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| Hébergement managé                           | [Cloud Humanix Découverte/Starter/Essentielle/Pro](https://humanix-cybersecurity.fr/tarifs) |
+| Hébergement managé                           | [Cloud Humanix Starter/Pro](https://humanix-cybersecurity.fr/tarifs) |
 | Modules pédagogiques avancés (catalogue 30+) | Plans Cloud payants                                                                         |
 | Phishing simulé avec infrastructure          | Plan Cloud Pro                                                                              |
 | Pack NIS2 turnkey clé en main                | Plan Cloud Pro                                                                              |
