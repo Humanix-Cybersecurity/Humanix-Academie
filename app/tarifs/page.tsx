@@ -696,7 +696,7 @@ export default async function TarifsPage({
         </div>
         <p className="text-xs opacity-70 mt-6 relative">
           Une question ? <strong>contact@humanix-cybersecurity.fr</strong> - on
-          repond sous 4 h ouvrees.
+          répond sous 4 h ouvrées.
         </p>
       </section>
 
