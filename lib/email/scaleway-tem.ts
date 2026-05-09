@@ -128,12 +128,10 @@ export async function sendViaScalewayTem(
     });
     if (!res.ok) {
       const statusDetails = `${res.status} ${res.statusText || "Unknown Status"}`;
-      const errBody = await res
-        .text()
-        .catch(
-          () =>
-            `[Failed to read error response body from Scaleway TEM API] (HTTP ${statusDetails})`,
-        );
+      const rawErrBody = await res.text().catch(() => "");
+      const errBody =
+        rawErrBody ||
+        `[Failed to read error response body from Scaleway TEM API] (HTTP ${statusDetails})`;
       const details = `HTTP ${statusDetails}${errBody ? ` - ${errBody}` : ""}`;
       const truncationSuffix = "... [truncated]";
       const boundedDetails =
