@@ -668,7 +668,7 @@ export default async function TarifsPage({
         </h2>
         <p className="text-lg opacity-90 mb-8 max-w-xl mx-auto leading-relaxed relative">
           Self-host libre ou cloud gratuit en 2 minutes. Premier module jouable
-          immediatement. Pas de carte bancaire, pas de relance commerciale, pas
+          immédiatement. Pas de carte bancaire, pas de relance commerciale, pas
           de pression.
         </p>
         <div className="flex flex-wrap justify-center gap-3 relative">
