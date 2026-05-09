@@ -9,6 +9,7 @@ import { checkRateLimit } from "@/lib/rate-limit";
 import { SCIM_SCHEMAS, scimError } from "@/lib/scim/types";
 import { prismaToScim, scimToPrismaCreate } from "@/lib/scim/mapper";
 import { parseScimFilter, filterToPrismaWhere } from "@/lib/scim/filter";
+import { fireAndForgetAutoAssign } from "@/lib/onboarding/auto-assign";
 
 export const dynamic = "force-dynamic";
 
@@ -213,6 +214,11 @@ export async function POST(req: Request) {
       },
     })
     .catch(() => {});
+
+  // Auto-assignation du parcours obligatoire (saisons isMandatory).
+  // Fire-and-forget : on ne bloque pas la reponse SCIM si l'auto-assign
+  // rate (le user est cree, c'est l'essentiel).
+  void fireAndForgetAutoAssign(created.id, tenantId);
 
   return NextResponse.json(prismaToScim(created, baseUrlOf(req)), {
     status: 201,

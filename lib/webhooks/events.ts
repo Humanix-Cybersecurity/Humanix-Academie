@@ -39,6 +39,19 @@ export const WEBHOOK_EVENTS = {
       reportRate: 0.43,
     },
   },
+  "phishing.user_clicked": {
+    label: "Un collaborateur a cliqué sur un phishing simulé",
+    description:
+      "Envoye en temps reel des qu'un user clique sur le lien d'un mail piege simule. Permet une alerte Slack/Teams au RSSI ou un trigger SOC pour declencher une remediation immediate. Inclut le mini-module flash auto-assigne.",
+    sample: {
+      userName: "Alice Martin",
+      userEmail: "alice@acme.fr",
+      campaignTitle: "Faux Microsoft 365 - Mai 2026",
+      template: "FAKE_MICROSOFT",
+      clickedAt: "2026-05-09T14:23:45Z",
+      remediationEpisode: "remediation-flash/01-microsoft-flash",
+    },
+  },
   "phishing.reported": {
     label: "Un mail suspect a été signalé",
     description:
