@@ -43,15 +43,16 @@ function getEndpoint(): string {
  * qu'un cryptique "scaleway_tem_401".
  */
 function detectMisconfiguredToken(token: string): string | null {
-  // Format secret-key attendu : UUID v4 (8-4-4-4-12, 36 chars total)
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
-    token,
-  );
+  // Format secret-key attendu : UUID (8-4-4-4-12, 36 chars total)
+  const isUuid =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      token,
+    );
   if (isUuid) return null;
   if (token.startsWith("SCW") && token.length < 30) {
-    return "SCALEWAY_TEM_TOKEN ressemble a un access-key (SCW..., 20 chars). L'API REST TEM exige le SECRET-key (UUID 36 chars). Cf. .env.example.";
+    return "SCALEWAY_TEM_TOKEN ressemble à un access-key (SCW..., 20 chars). L'API REST TEM exige le SECRET-key (UUID 36 chars). Cf. .env.example.";
   }
-  return "SCALEWAY_TEM_TOKEN invalide. Verifier qu'il s'agit du secret-key IAM Scaleway (UUID 36 chars), pas de l'access-key. Cf. .env.example.";
+  return "SCALEWAY_TEM_TOKEN invalide. Vérifier qu'il s'agit du secret-key IAM Scaleway (UUID 36 chars), pas de l'access-key. Cf. .env.example.";
 }
 
 export async function sendViaScalewayTem(
