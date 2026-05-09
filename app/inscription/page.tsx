@@ -126,10 +126,14 @@ async function InscriptionInner({
         </section>
       </HexBackdrop>
 
-      {/* ==================== TRUST SIGNALS ==================== */}
+      {/* ==================== TRUST SIGNALS ====================
+          mt-6 sm:mt-8 = aere visuellement entre le sous-titre du hero
+          ("Pas de carte bancaire, pas de mot de passe...") et les trust
+          badges. Iteration precedente avait -mt-2 qui faisait remonter
+          les badges DANS le hero -> badges colles au sous-titre. */}
       <section
         aria-label="Garanties"
-        className="max-w-3xl mx-auto px-4 -mt-2 mb-6"
+        className="max-w-3xl mx-auto px-4 mt-6 sm:mt-8 mb-6"
       >
         <ul className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 text-center">
           {TRUST_BADGES.map((b) => (
