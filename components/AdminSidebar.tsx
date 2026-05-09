@@ -221,6 +221,25 @@ export default function AdminSidebar() {
     });
   };
 
+  // === Sync de l'etat openSections avec le hover de la sidebar (desktop) ===
+  // Comportement souhaite :
+  //   - Souris quitte la sidebar (slim 56px) -> on referme TOUTES les
+  //     sections en state (les chevrons / items reapparaitront repliees
+  //     a la prochaine ouverture).
+  //   - Souris entre sur la sidebar (expand 240px) -> on auto-ouvre
+  //     UNIQUEMENT la section qui contient la page courante.
+  //
+  // Permet a l'utilisateur d'avoir un menu "frais" a chaque visite,
+  // sans perdre les togglages manuels qu'il fait pendant qu'il survole
+  // (l'etat est conserve tant qu'il reste dans la sidebar).
+  const handleSidebarEnter = () => {
+    const active = findActiveSectionId(path, sections);
+    setOpenSections(active ? new Set([active]) : new Set());
+  };
+  const handleSidebarLeave = () => {
+    setOpenSections(new Set());
+  };
+
   // Fermeture drawer mobile : ESC + changement de route
   useEffect(() => {
     if (!drawerOpen) return;
@@ -253,6 +272,8 @@ export default function AdminSidebar() {
           overlay -- pas besoin de pousser le contenu.
           ===================================================================== */}
       <aside
+        onMouseEnter={handleSidebarEnter}
+        onMouseLeave={handleSidebarLeave}
         className="group hidden lg:flex fixed top-20 left-0 bottom-0 z-30 w-14 hover:w-60 flex-col bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-slate-800 transition-[width] duration-200 ease-out shadow-[2px_0_0_0_transparent] hover:shadow-[2px_0_8px_-2px_rgba(0,0,0,0.08)]"
         aria-label="Navigation console"
       >
