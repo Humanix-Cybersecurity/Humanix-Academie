@@ -105,7 +105,7 @@ export default async function ApprendrePage() {
 
   // Saisons publiees + config tenant + inventaire pour customisations Hex
   // Filtrage : saisons globales (tenantId null) + saisons custom du tenant
-  const [allSaisons, tenantConfigs, progress, user, inventory] =
+  const [allSaisons, tenantConfigs, progress, user, inventory, userGroups] =
     await Promise.all([
       db.saison.findMany({
         where: {
@@ -142,7 +142,19 @@ export default async function ApprendrePage() {
         where: { userId, isEquipped: true },
         include: { item: true },
       }),
+      // Groupes (metiers / departements) auxquels l'user appartient.
+      // Sert pour l'highlight des episodes targetes (Episode.targetGroups).
+      db.userGroup.findMany({
+        where: { userId },
+        select: { group: { select: { slug: true } } },
+      }),
     ]);
+
+  // Set des slugs de groupes de l'user pour test rapide d'intersection
+  // avec Episode.targetGroups (CSV "compta,rh"). Empty set = user sans
+  // groupe = aucun episode targete pour lui (fallback OK : tous les
+  // episodes restent accessibles, juste pas de highlight).
+  const userGroupSlugs = new Set(userGroups.map((ug) => ug.group.slug));
 
   const equipped = buildEquippedFromInventory(
     inventory.map((i) => ({ item: i.item, isEquipped: i.isEquipped })),
@@ -154,6 +166,22 @@ export default async function ApprendrePage() {
 
   // Filtrage : seulement les saisons actives pour ce tenant (par defaut actif si pas de config)
   // + tri par customOrder si defini, sinon order par defaut
+  /**
+   * Compare les target groups d'un episode (CSV "compta,rh") avec les
+   * groupes de l'user. Si intersection non vide, l'episode est "targete"
+   * pour ce metier et merite un highlight visuel. Si l'episode n'a pas
+   * de target (null ou ""), il est generique = pas targete (mais reste
+   * accessible normalement).
+   */
+  const isTargetedForUser = (targetGroups: string | null): boolean => {
+    if (!targetGroups || userGroupSlugs.size === 0) return false;
+    const slugs = targetGroups
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    return slugs.some((s) => userGroupSlugs.has(s));
+  };
+
   const saisons = allSaisons
     .filter((s) => {
       const cfg = configBySaison.get(s.id);
@@ -165,6 +193,14 @@ export default async function ApprendrePage() {
         ...s,
         isMandatory: cfg?.isMandatory ?? false,
         effectiveOrder: cfg?.customOrder ?? s.order,
+        // Annote chaque episode avec un flag "pour ton metier" pour
+        // que l'UI puisse highlighter (badge / couleur). Le tri par
+        // ordre canonique est preserve : on n'inverse pas l'ordre,
+        // on signale juste visuellement.
+        episodes: s.episodes.map((e) => ({
+          ...e,
+          targetedForUser: isTargetedForUser(e.targetGroups),
+        })),
       };
     })
     .sort((a, b) => a.effectiveOrder - b.effectiveOrder);
@@ -474,6 +510,12 @@ export default async function ApprendrePage() {
                 const expertCount = s.episodes.filter((e) =>
                   expertEpisodes.has(`${s.slug}/${e.slug}`),
                 ).length;
+                // Episodes targetes pour le metier de l'user (cf.
+                // Episode.targetGroups + UserGroup). Affiche en badge
+                // sur la saison card si > 0.
+                const targetedCount = s.episodes.filter(
+                  (e) => e.targetedForUser,
+                ).length;
                 // Duree moyenne par episode = vraie valeur, pas un hardcode.
                 // On affichera ca en "~X min par episode" pour preserver la
                 // promesse "5 min par jour" (vs un total qui affiche 36 min
@@ -501,6 +543,7 @@ export default async function ApprendrePage() {
                     firstUndoneSlug={firstUndone?.slug ?? null}
                     expertCount={expertCount}
                     avgMinutes={avgMinutes}
+                    targetedCount={targetedCount}
                   />
                 );
               })}
@@ -622,6 +665,7 @@ function SaisonCard({
   firstUndoneSlug,
   expertCount,
   avgMinutes,
+  targetedCount,
 }: {
   idx: number;
   saison: {
@@ -641,6 +685,9 @@ function SaisonCard({
   expertCount: number;
   /** Duree moyenne reelle par episode, calculee depuis episodes.durationMinutes */
   avgMinutes: number;
+  /** Nombre d'episodes targetes pour le metier de l'user (intersection
+   *  Episode.targetGroups + UserGroup). 0 = saison generique pour cet user. */
+  targetedCount: number;
 }) {
   return (
     <article
@@ -681,11 +728,22 @@ function SaisonCard({
         </div>
 
         {/* Recommande par ton equipe - badge soft amber, pas rouge */}
-        {saison.isMandatory && pct < 100 && (
-          <span className="inline-block mb-3 text-[10px] uppercase tracking-widest font-bold bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 px-2 py-1 rounded-full">
-            Recommande par ton equipe
-          </span>
-        )}
+        <div className="flex flex-wrap gap-2 mb-3">
+          {saison.isMandatory && pct < 100 && (
+            <span className="text-[10px] uppercase tracking-widest font-bold bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 px-2 py-1 rounded-full">
+              Recommande par ton equipe
+            </span>
+          )}
+          {targetedCount > 0 && (
+            <span
+              className="text-[10px] uppercase tracking-widest font-bold bg-accent-100 dark:bg-accent-900/40 text-accent-800 dark:text-accent-200 px-2 py-1 rounded-full"
+              title={`${targetedCount} épisode${targetedCount > 1 ? "s" : ""} adapté${targetedCount > 1 ? "s" : ""} à ton métier`}
+            >
+              👤 {targetedCount} pour ton métier
+            </span>
+          )}
+        </div>
+
 
         <h3 className="font-display text-xl sm:text-2xl font-extrabold text-primary-500 dark:text-accent-300 mb-2 leading-tight">
           {saison.title}
