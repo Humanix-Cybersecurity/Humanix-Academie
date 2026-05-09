@@ -821,8 +821,8 @@ function CtaButton({
     return (
       <a
         href="https://github.com/Humanix-Cybersecurity/humanix-ce"
-        href="https://github.com/Humanix-Cybersecurity/humanix-ce"
-        rel="noreferrer"
+        target="_blank"
+        rel="noopener noreferrer"
         className={cls}
       >
         {t.cta.label} →
