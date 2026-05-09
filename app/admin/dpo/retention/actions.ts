@@ -4,7 +4,7 @@
 // Server actions de la page /admin/dpo/retention.
 //
 // Pattern de feedback : on retourne Promise<void> (compat directe avec
-// <form action={...}> de Next 15) et on communique le succes / l'erreur
+// <form action={...}> de Next 15) et on communique le succès / l'erreur
 // via redirect avec query string : ?ok=1&msg=... ou ?error=....
 // La page lit ces searchParams et affiche un bandeau ephemere.
 
@@ -45,7 +45,7 @@ async function requireAdminTenant(): Promise<AuthCtx> {
 
 /**
  * Encode un message dans l'URL. URL-encode le message pour qu'il soit
- * safe en query string, et le tronque a 240 chars pour eviter les URLs
+ * safe en query string, et le tronque a 240 chars pour éviter les URLs
  * monstrueuses.
  */
 function encodeFeedback(message: string): string {

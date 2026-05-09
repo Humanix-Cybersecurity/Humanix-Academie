@@ -320,7 +320,7 @@ export default function RapportAuditPage() {
           <li>
             Crédit public sur ce rapport et la page{" "}
             <Link href="/securite" className="text-accent-500 underline">
-              /securite
+              /sécurité
             </Link>{" "}
             (avec votre accord)
           </li>

@@ -64,7 +64,7 @@ export default async function MarketplacePage({
         </Link>
       </div>
 
-      {/* Bandeau securite */}
+      {/* Bandeau sécurité */}
       <div className="card mb-6 bg-primary-50 border-primary-500/30">
         <div className="flex items-start gap-3">
           <span className="text-2xl">🛡️</span>

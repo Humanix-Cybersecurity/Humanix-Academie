@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Endpoint admin : genere un SMS de smishing simule via Mistral souverain.
 //
-// Securite :
+// Sécurité :
 //  - Auth NextAuth obligatoire
 //  - Role ADMIN/MANAGER/RSSI/SUPERADMIN requis
 //  - Plan-gating : feature "smishing" (Pro+)
 //  - Rate limit : 20 req/heure par tenant
-//  - Anti-PII : delegue au generateur
+//  - Anti-PII : délégué au generateur
 //  - Aucun stockage : le SMS retourne au client, pas persiste
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
