@@ -464,12 +464,28 @@ const adapter: typeof baseAdapter = {
   },
 };
 
-// Session strategy : "database" en prod normale (revocation immediate via
-// suppression de la row Session). "jwt" en demo OU dev-bypass car les
-// providers Credentials d'Auth.js v5 sont incompatibles avec les sessions
-// DB (l'authorize callback ne reproduit pas le linkAccount + create
-// session row attendus par l'adapter).
-const useJwtSessions = isDemoMode || isDevMode();
+// Session strategy : "jwt" partout.
+//
+// HISTOIRE : on visait initialement "database" en prod (revocation immediate
+// via DELETE FROM Session WHERE id=...). MAIS le provider password
+// (Credentials) en prod est incompatible avec les sessions DB d'Auth.js v5 :
+// l'authorize callback retourne un user mais ne cree pas la row Session que
+// l'adapter attend. Resultat : login OK -> cookie JWE pose -> `auth()` cherche
+// une row Session -> rien -> session = null -> redirect /connexion.
+//
+// Symptome utilisateur : "le formulaire de login ne fait rien, je reviens
+// a /connexion sans message d'erreur".
+//
+// JWT partout est la solution propre tant qu'on a Credentials actif.
+//
+// TRADE-OFF : la revocation d'une seule session devient impossible avec
+// JWT (le token est self-contained, valide jusqu'a expiration meme si l'user
+// est deactive). Pour invalider une session compromise, deux options :
+//   - rotation AUTH_SECRET : invalide TOUTES les sessions de l'instance
+//   - reduire la duree de vie des JWT (cf. session.maxAge ci-dessous, defaut 30j)
+// Une amelioration future serait d'ajouter un check `isActive` dans le jwt
+// callback a chaque requete (cout : 1 query DB par request).
+const useJwtSessions = true;
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter,
