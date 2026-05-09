@@ -12,6 +12,22 @@ export type ShopItemSeed = {
   minLevel: number;
   description: string;
   rarity: "common" | "rare" | "epic" | "legendary";
+  /**
+   * SAISONNALITE (mai 2026) : si seasonalWindow est defini, l'item
+   * n'est dispo que dans cette fenetre annuelle (ex. Halloween =
+   * 15 octobre - 5 novembre). Le seed convertit ces deux entiers en
+   * DateTime relatifs a l'annee courante.
+   *
+   * Format : { fromMonth (1-12), fromDay (1-31), toMonth, toDay }
+   * Si toMonth < fromMonth, on accepte l'overflow d'annee (ex.
+   * 22 dec -> 7 jan).
+   */
+  seasonalWindow?: {
+    fromMonth: number;
+    fromDay: number;
+    toMonth: number;
+    toDay: number;
+  };
 };
 
 export const SHOP_CATALOG: ShopItemSeed[] = [
@@ -53,8 +69,53 @@ export const SHOP_CATALOG: ShopItemSeed[] = [
     category: "HAT",
     price: 60,
     minLevel: 1,
-    description: "Édition spéciale fin d'année.",
+    description: "Édition spéciale fin d'année — disponible 22 déc → 7 jan.",
     rarity: "rare",
+    seasonalWindow: { fromMonth: 12, fromDay: 22, toMonth: 1, toDay: 7 },
+  },
+  {
+    slug: "pumpkin-hat",
+    name: "Citrouille d'Halloween",
+    emoji: "🎃",
+    category: "HAT",
+    price: 80,
+    minLevel: 1,
+    description: "Édition Cybermois — disponible 15 oct → 5 nov.",
+    rarity: "rare",
+    seasonalWindow: { fromMonth: 10, fromDay: 15, toMonth: 11, toDay: 5 },
+  },
+  {
+    slug: "ghost-accessory",
+    name: "Petit fantôme",
+    emoji: "👻",
+    category: "ACCESSORY",
+    price: 100,
+    minLevel: 2,
+    description: "Compagnon discret pour le Cybermois.",
+    rarity: "epic",
+    seasonalWindow: { fromMonth: 10, fromDay: 15, toMonth: 11, toDay: 5 },
+  },
+  {
+    slug: "summer-palm",
+    name: "Décor plage",
+    emoji: "🌴",
+    category: "BACKGROUND",
+    price: 70,
+    minLevel: 1,
+    description: "Vibes d'été — disponible 1er juillet → 31 août.",
+    rarity: "rare",
+    seasonalWindow: { fromMonth: 7, fromDay: 1, toMonth: 8, toDay: 31 },
+  },
+  {
+    slug: "key-password-day",
+    name: "Clé numérique",
+    emoji: "🔐",
+    category: "ACCESSORY",
+    price: 50,
+    minLevel: 1,
+    description: "Édition World Password Day — disponible 1-7 mai.",
+    rarity: "rare",
+    seasonalWindow: { fromMonth: 5, fromDay: 1, toMonth: 5, toDay: 7 },
   },
   {
     slug: "crown-gold",
