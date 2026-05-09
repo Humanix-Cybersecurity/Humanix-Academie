@@ -17,7 +17,7 @@ const SCIM_HEADERS = { "Content-Type": "application/scim+json" };
 function baseUrlOf(req: Request): string {
   return (
     process.env.NEXT_PUBLIC_BASE_URL ??
-    `https://${req.headers.get("host") ?? "academie.humanix-cybersecurity.fr"}`
+    `https://${req.headers.get("host") ?? "humanix-academie.fr"}`
   );
 }
 

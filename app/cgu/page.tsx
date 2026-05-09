@@ -50,7 +50,7 @@ export default function CGUPage() {
           <li>
             <strong>Plateforme</strong> : le service Humanix Académie édité par
             Humanix-Cybersecurity SASU, accessible à l'adresse{" "}
-            <code>academie.humanix-cybersecurity.fr</code> (URL définitive
+            <code>humanix-academie.fr</code> (URL définitive
             communiquée à la souscription du Client).
           </li>
           <li>

@@ -89,7 +89,7 @@ export const WEBHOOK_EVENTS = {
       controls_count: 7,
       summary: { compliant: 5, partial: 1, non_compliant: 1 },
       bundle_url:
-        "https://academie.humanix-cybersecurity.fr/api/v1/evidence-export?framework=ISO27001:2022&format=oscal-v1",
+        "https://humanix-academie.fr/api/v1/evidence-export?framework=ISO27001:2022&format=oscal-v1",
       generated_at: "2026-05-03T14:23:45Z",
     },
   },
