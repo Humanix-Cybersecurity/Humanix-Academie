@@ -80,7 +80,7 @@ async function main() {
   const tenant = await prisma.tenant.upsert({
     where: { slug: tenantSlug },
     update: { name: tenantName },
-    create: { slug: tenantSlug, name: tenantName, plan: "essentielle" },
+    create: { slug: tenantSlug, name: tenantName, plan: "pro" },
   });
 
   const user = await prisma.user.create({

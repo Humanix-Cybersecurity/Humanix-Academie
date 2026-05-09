@@ -13,7 +13,7 @@ type Props = {
   plan: PlanId;
   featureLabel: string;
   featureExplain: string;
-  minPlan: "essentielle" | "pro" | "premium";
+  minPlan: "pro" | "enterprise";
 };
 
 export default function PlanGateGeneric({

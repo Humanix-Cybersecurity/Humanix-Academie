@@ -131,7 +131,7 @@ function commandGenerate(): void {
   const featuresStr = parseFlagOpt("features") ?? "";
   const licenseId = parseFlagOpt("id") ?? `lic_${Date.now().toString(36)}`;
 
-  const validPlans = ["decouverte", "solo", "essentielle", "pro", "premium"];
+  const validPlans = ["starter", "pro", "enterprise"];
   if (!validPlans.includes(plan)) {
     console.error(`ERREUR : plan invalide. Attendu : ${validPlans.join(", ")}`);
     process.exit(2);

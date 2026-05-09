@@ -44,7 +44,7 @@ describe("getSubscriptionState - trial", () => {
 
   it("trialing actif : state=trialing, restriction=none", async () => {
     dbMock.tenant.findUnique.mockResolvedValue({
-      plan: "trial",
+      plan: "starter",
       subscriptionStatus: "trialing",
       currentPeriodEnd: null,
       trialEndsAt: daysFromNow(20),
@@ -58,7 +58,7 @@ describe("getSubscriptionState - trial", () => {
 
   it("trialing avec moins de 7 jours : cta=upgrade", async () => {
     dbMock.tenant.findUnique.mockResolvedValue({
-      plan: "trial",
+      plan: "starter",
       subscriptionStatus: "trialing",
       currentPeriodEnd: null,
       trialEndsAt: daysFromNow(5),
@@ -69,7 +69,7 @@ describe("getSubscriptionState - trial", () => {
 
   it("trial expire depuis 5 jours -> read_only avec daysLeft=25", async () => {
     dbMock.tenant.findUnique.mockResolvedValue({
-      plan: "trial",
+      plan: "starter",
       subscriptionStatus: null,
       currentPeriodEnd: null,
       trialEndsAt: daysAgo(5),
@@ -83,7 +83,7 @@ describe("getSubscriptionState - trial", () => {
 
   it("trial expire depuis 35 jours (>30) -> suspended", async () => {
     dbMock.tenant.findUnique.mockResolvedValue({
-      plan: "trial",
+      plan: "starter",
       subscriptionStatus: null,
       currentPeriodEnd: null,
       trialEndsAt: daysAgo(35),
@@ -119,7 +119,7 @@ describe("getSubscriptionState - past_due / grace period", () => {
 
   it("past_due depuis 3 jours -> grace_period, restriction=warn", async () => {
     dbMock.tenant.findUnique.mockResolvedValue({
-      plan: "essentielle",
+      plan: "pro",
       subscriptionStatus: "past_due",
       currentPeriodEnd: daysAgo(3),
       trialEndsAt: null,
@@ -134,7 +134,7 @@ describe("getSubscriptionState - past_due / grace period", () => {
 
   it("past_due depuis 10 jours (apres grace 7j) -> read_only", async () => {
     dbMock.tenant.findUnique.mockResolvedValue({
-      plan: "essentielle",
+      plan: "pro",
       subscriptionStatus: "past_due",
       currentPeriodEnd: daysAgo(10),
       trialEndsAt: null,
@@ -147,7 +147,7 @@ describe("getSubscriptionState - past_due / grace period", () => {
 
   it("past_due depuis 50 jours (>7+30) -> suspended", async () => {
     dbMock.tenant.findUnique.mockResolvedValue({
-      plan: "essentielle",
+      plan: "pro",
       subscriptionStatus: "past_due",
       currentPeriodEnd: daysAgo(50),
       trialEndsAt: null,
@@ -180,7 +180,7 @@ describe("getSubscriptionState - decouverte forever-free", () => {
 
   it("plan=decouverte sans subscription -> active (forever-free)", async () => {
     dbMock.tenant.findUnique.mockResolvedValue({
-      plan: "decouverte",
+      plan: "starter",
       subscriptionStatus: null,
       currentPeriodEnd: null,
       trialEndsAt: null,

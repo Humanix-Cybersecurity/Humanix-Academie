@@ -48,5 +48,5 @@ export async function getDemoCurrentPlan(): Promise<PlanId> {
     where: { slug: DEMO_TENANT_SLUG },
     select: { plan: true },
   });
-  return isPlanId(tenant?.plan) ? (tenant!.plan as PlanId) : "essentielle";
+  return isPlanId(tenant?.plan) ? (tenant!.plan as PlanId) : "pro";
 }

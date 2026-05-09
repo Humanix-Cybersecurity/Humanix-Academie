@@ -10,7 +10,7 @@ function fakeHealth(overrides: Partial<TenantHealth>): TenantHealth {
     tenantId: "t1",
     tenantName: "Tenant",
     tenantSlug: "tenant",
-    plan: "decouverte",
+    plan: "starter",
     createdAt: new Date(),
     totalUsers: 0,
     activeUsers: 0,
@@ -41,14 +41,14 @@ describe("computeGlobalKpis", () => {
 
   it("aggrege les compteurs par plan, signal, et users", () => {
     const k = computeGlobalKpis([
-      fakeHealth({ plan: "decouverte", signal: "ok", totalUsers: 5, activeUsers: 4 }),
+      fakeHealth({ plan: "starter", signal: "ok", totalUsers: 5, activeUsers: 4 }),
       fakeHealth({ plan: "pro", signal: "warn", totalUsers: 25, activeUsers: 20 }),
       fakeHealth({ plan: "pro", signal: "error", totalUsers: 12, activeUsers: 0 }),
     ]);
     expect(k.totalTenants).toBe(3);
     expect(k.totalUsers).toBe(42);
     expect(k.totalActiveUsers).toBe(24);
-    expect(k.byPlan.decouverte).toBe(1);
+    expect(k.byPlan.starter).toBe(1);
     expect(k.byPlan.pro).toBe(2);
     expect(k.bySignal).toEqual({ ok: 1, warn: 1, error: 1 });
   });

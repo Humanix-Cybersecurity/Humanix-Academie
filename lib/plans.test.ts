@@ -3,8 +3,7 @@
 // Critique : un bug ici = feature payante exposée gratuitement OU
 // utilisateur bloqué qui devrait avoir accès. Les deux cas = perte client.
 //
-// On NE teste PAS getTenantPlan car il dépend de Prisma - testé en e2e
-// post-launch via Playwright.
+// Aligne sur la grille mai 2026 (3 paliers cloud : starter / pro / enterprise).
 
 import { describe, it, expect } from "vitest";
 import {
@@ -20,13 +19,20 @@ import {
 } from "./plans";
 
 describe("isPlanId", () => {
-  it("accepte les 6 plans valides", () => {
-    expect(isPlanId("trial")).toBe(true);
-    expect(isPlanId("decouverte")).toBe(true);
-    expect(isPlanId("solo")).toBe(true);
-    expect(isPlanId("essentielle")).toBe(true);
+  it("accepte les 3 plans valides", () => {
+    expect(isPlanId("starter")).toBe(true);
     expect(isPlanId("pro")).toBe(true);
-    expect(isPlanId("premium")).toBe(true);
+    expect(isPlanId("enterprise")).toBe(true);
+  });
+
+  it("rejette les anciens identifiants (decouverte, solo, essentielle, premium, trial)", () => {
+    // Ces values etaient valides avant le pivot mai 2026.
+    // Maintenant elles sont retro-compat via normalizePlan() mais isPlanId() les rejette.
+    expect(isPlanId("decouverte")).toBe(false);
+    expect(isPlanId("solo")).toBe(false);
+    expect(isPlanId("essentielle")).toBe(false);
+    expect(isPlanId("premium")).toBe(false);
+    expect(isPlanId("trial")).toBe(false);
   });
 
   it("rejette les valeurs invalides", () => {
@@ -42,103 +48,110 @@ describe("isPlanId", () => {
 
 describe("normalizePlan", () => {
   it("retourne le plan tel quel si valide", () => {
+    expect(normalizePlan("starter")).toBe("starter");
     expect(normalizePlan("pro")).toBe("pro");
-    expect(normalizePlan("premium")).toBe("premium");
+    expect(normalizePlan("enterprise")).toBe("enterprise");
   });
 
-  it("fallback à 'trial' si invalide", () => {
-    expect(normalizePlan("inconnu")).toBe("trial");
-    expect(normalizePlan(null)).toBe("trial");
-    expect(normalizePlan(undefined)).toBe("trial");
-    expect(normalizePlan("")).toBe("trial");
+  it("mappe les anciens identifiants vers les nouveaux (migration mai 2026)", () => {
+    expect(normalizePlan("decouverte")).toBe("starter");
+    expect(normalizePlan("solo")).toBe("starter");
+    expect(normalizePlan("essentielle")).toBe("pro");
+    expect(normalizePlan("premium")).toBe("enterprise");
+    expect(normalizePlan("trial")).toBe("starter");
+  });
+
+  it("fallback à 'starter' si invalide", () => {
+    expect(normalizePlan("inconnu")).toBe("starter");
+    expect(normalizePlan(null)).toBe("starter");
+    expect(normalizePlan(undefined)).toBe("starter");
+    expect(normalizePlan("")).toBe("starter");
   });
 });
 
 describe("PLAN_RANK", () => {
   it("est ordonné de manière strictement croissante", () => {
-    expect(PLAN_RANK.trial).toBeLessThan(PLAN_RANK.decouverte);
-    expect(PLAN_RANK.decouverte).toBeLessThan(PLAN_RANK.solo);
-    expect(PLAN_RANK.solo).toBeLessThan(PLAN_RANK.essentielle);
-    expect(PLAN_RANK.essentielle).toBeLessThan(PLAN_RANK.pro);
-    expect(PLAN_RANK.pro).toBeLessThan(PLAN_RANK.premium);
+    expect(PLAN_RANK.starter).toBeLessThan(PLAN_RANK.pro);
+    expect(PLAN_RANK.pro).toBeLessThan(PLAN_RANK.enterprise);
   });
 
-  it("contient exactement les 6 plans", () => {
-    expect(Object.keys(PLAN_RANK)).toHaveLength(6);
+  it("contient exactement les 3 plans", () => {
+    expect(Object.keys(PLAN_RANK)).toHaveLength(3);
   });
 });
 
 describe("planHasFeature", () => {
   it("Pro a accès au phishing simulé (requis Pro+)", () => {
     expect(planHasFeature("pro", "phishing")).toBe(true);
-    expect(planHasFeature("premium", "phishing")).toBe(true);
+    expect(planHasFeature("enterprise", "phishing")).toBe(true);
   });
 
-  it("Essentielle n'a PAS accès au phishing simulé", () => {
-    expect(planHasFeature("essentielle", "phishing")).toBe(false);
-    expect(planHasFeature("solo", "phishing")).toBe(false);
-    expect(planHasFeature("decouverte", "phishing")).toBe(false);
+  it("Starter n'a PAS accès au phishing simulé", () => {
+    expect(planHasFeature("starter", "phishing")).toBe(false);
   });
 
-  it("Essentielle a accès à l'API REST (requis Essentielle+)", () => {
-    expect(planHasFeature("essentielle", "api")).toBe(true);
+  it("Pro a accès à l'API REST (requis Pro+)", () => {
     expect(planHasFeature("pro", "api")).toBe(true);
-    expect(planHasFeature("premium", "api")).toBe(true);
+    expect(planHasFeature("enterprise", "api")).toBe(true);
   });
 
-  it("Solo (Starter) n'a PAS accès à l'API", () => {
-    expect(planHasFeature("solo", "api")).toBe(false);
+  it("Starter n'a PAS accès à l'API", () => {
+    expect(planHasFeature("starter", "api")).toBe(false);
   });
 
-  it("seul Premium a accès au SSO enterprise / multi-site / white-label", () => {
+  it("seul Enterprise a accès au SSO enterprise / multi-site / white-label", () => {
     expect(planHasFeature("pro", "sso_enterprise")).toBe(false);
     expect(planHasFeature("pro", "multi_site")).toBe(false);
     expect(planHasFeature("pro", "white_label")).toBe(false);
-    expect(planHasFeature("premium", "sso_enterprise")).toBe(true);
-    expect(planHasFeature("premium", "multi_site")).toBe(true);
-    expect(planHasFeature("premium", "white_label")).toBe(true);
+    expect(planHasFeature("enterprise", "sso_enterprise")).toBe(true);
+    expect(planHasFeature("enterprise", "multi_site")).toBe(true);
+    expect(planHasFeature("enterprise", "white_label")).toBe(true);
   });
 
-  it("trial n'a accès à AUCUNE feature gated", () => {
+  it("Starter n'a accès à AUCUNE feature gated", () => {
     for (const feature of Object.keys(FEATURE_MIN_PLAN) as Feature[]) {
-      expect(planHasFeature("trial", feature)).toBe(false);
+      expect(planHasFeature("starter", feature)).toBe(false);
     }
   });
 
-  it("plan invalide → traité comme trial (rien)", () => {
+  it("plan invalide → traité comme starter (rien de gated)", () => {
     expect(planHasFeature("foo", "phishing")).toBe(false);
     expect(planHasFeature(null, "phishing")).toBe(false);
     expect(planHasFeature(undefined, "phishing")).toBe(false);
   });
 
+  it("anciens plans normalises -> features correctes apres mapping", () => {
+    // decouverte/solo -> starter (rien de gated)
+    expect(planHasFeature("decouverte", "phishing")).toBe(false);
+    expect(planHasFeature("solo", "phishing")).toBe(false);
+    // essentielle -> pro (phishing OK, sso enterprise non)
+    expect(planHasFeature("essentielle", "phishing")).toBe(true);
+    expect(planHasFeature("essentielle", "sso_enterprise")).toBe(false);
+    // premium -> enterprise (tout)
+    expect(planHasFeature("premium", "sso_enterprise")).toBe(true);
+  });
+
   it("matrice complète features × plans (régression)", () => {
     // Snapshot du contrat actuel - tout changement doit être intentionnel
     const matrix: Record<Feature, PlanId[]> = {
-      api: ["essentielle", "pro", "premium"],
-      phishing: ["pro", "premium"],
-      challenges: ["pro", "premium"],
-      incidents: ["pro", "premium"],
-      phishing_ia: ["pro", "premium"],
-      vishing: ["pro", "premium"],
-      smishing: ["pro", "premium"],
-      marketplace: ["pro", "premium"],
-      sso_enterprise: ["premium"],
-      multi_site: ["premium"],
-      white_label: ["premium"],
+      api: ["pro", "enterprise"],
+      phishing: ["pro", "enterprise"],
+      challenges: ["pro", "enterprise"],
+      incidents: ["pro", "enterprise"],
+      phishing_ia: ["pro", "enterprise"],
+      vishing: ["pro", "enterprise"],
+      smishing: ["pro", "enterprise"],
+      marketplace: ["pro", "enterprise"],
+      sso_enterprise: ["enterprise"],
+      multi_site: ["enterprise"],
+      white_label: ["enterprise"],
     };
 
     for (const [feature, allowedPlans] of Object.entries(matrix) as [
       Feature,
       PlanId[],
     ][]) {
-      const allPlans: PlanId[] = [
-        "trial",
-        "decouverte",
-        "solo",
-        "essentielle",
-        "pro",
-        "premium",
-      ];
+      const allPlans: PlanId[] = ["starter", "pro", "enterprise"];
       for (const plan of allPlans) {
         const expected = allowedPlans.includes(plan);
         expect(
@@ -152,22 +165,15 @@ describe("planHasFeature", () => {
 
 describe("Labels UI", () => {
   it("PLAN_LABEL couvre tous les plans", () => {
-    const allPlans: PlanId[] = [
-      "trial",
-      "decouverte",
-      "solo",
-      "essentielle",
-      "pro",
-      "premium",
-    ];
+    const allPlans: PlanId[] = ["starter", "pro", "enterprise"];
     for (const p of allPlans) {
       expect(PLAN_LABEL[p]).toBeTruthy();
     }
   });
 
-  it("featureMinPlanLabel renvoie le libellé humain (Pro, Enterprise...)", () => {
+  it("featureMinPlanLabel renvoie le libellé humain", () => {
     expect(featureMinPlanLabel("phishing")).toBe("Pro");
     expect(featureMinPlanLabel("sso_enterprise")).toBe("Enterprise");
-    expect(featureMinPlanLabel("api")).toBe("Essentielle");
+    expect(featureMinPlanLabel("api")).toBe("Pro");
   });
 });

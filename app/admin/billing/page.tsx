@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Page de facturation cote tenant (admin du tenant). Affiche :
-//   - Plan actuel + sieges utilises
+//   - Plan actuel + sièges utilises
 //   - Etat du subscription (active, past_due, canceled, etc.)
-//   - Prochain renouvellement / restriction d'acces si paiement KO
+//   - Prochain renouvellement / restriction d'accès si paiement KO
 //   - CTA upgrade / downgrade / annuler
 //   - Lien portail Payplug self-service
 //
 // Defense en profondeur : layout admin/ verifie deja le role >= ADMIN.
 // On affiche cette page meme aux ADMIN qui n'auraient pas le droit de modifier
-// le plan -- l'action est gardee server-side dans actions.ts.
+// le plan -- l'action est gardée server-side dans actions.ts.
 
 import Link from "next/link";
 import { auth } from "@/lib/auth";

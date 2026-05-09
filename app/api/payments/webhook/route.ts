@@ -171,7 +171,7 @@ export async function POST(req: Request) {
             where: { id: tenantId },
             data: {
               subscriptionStatus: "canceled",
-              plan: "decouverte",
+              plan: "starter",
               paymentSubscriptionId: null,
               currentPeriodEnd: null,
               seatCount: null,
