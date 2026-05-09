@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Page de facturation cote tenant (admin du tenant). Affiche :
-//   - Plan actuel + sièges utilises
+//   - Plan actuel + sièges utilisés
 //   - Etat du subscription (active, past_due, canceled, etc.)
 //   - Prochain renouvellement / restriction d'accès si paiement KO
 //   - CTA upgrade / downgrade / annuler
 //   - Lien portail Payplug self-service
 //
 // Defense en profondeur : layout admin/ verifie deja le role >= ADMIN.
-// On affiche cette page meme aux ADMIN qui n'auraient pas le droit de modifier
+// On affiche cette page même aux ADMIN qui n'auraient pas le droit de modifier
 // le plan -- l'action est gardée server-side dans actions.ts.
 
 import Link from "next/link";
@@ -235,13 +235,15 @@ function StateBanner({
 
   const config = (() => {
     switch (state.state) {
-      case "grace_period":
+      case "grace_period": {
+        const daysLeft = state.daysLeft ?? 0;
         return {
           emoji: "💳",
           title: "Échec de paiement détecté",
-          message: `Ta dernière échéance n'a pas été honorée. Tu as ${state.daysLeft} jour${(state.daysLeft ?? 0) > 1 ? "s" : ""} pour mettre à jour ta carte avant restriction d'accès.`,
+          message: `Ta dernière échéance n'a pas été honorée. Tu as ${daysLeft} jour${daysLeft !== 1 ? "s" : ""} pour mettre à jour ta carte avant restriction d'accès.`,
           cta: { label: "Mettre à jour la carte", href: "/api/payments/portal" },
         };
+      }
       case "read_only":
         return {
           emoji: "🔒",
