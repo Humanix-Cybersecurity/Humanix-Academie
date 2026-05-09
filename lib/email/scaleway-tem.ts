@@ -110,6 +110,7 @@ export async function sendViaScalewayTem(
         ok: false,
         details: errBody.slice(0, MAX_ERROR_BODY_LENGTH),
       };
+    }
     const data = (await res.json().catch(() => ({}))) as {
       emails?: { id?: string }[];
     };
