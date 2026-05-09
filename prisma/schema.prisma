@@ -599,11 +599,18 @@ enum PhishingTemplate {
   SMS_FAKE_IMPOTS      // "Trop-percu ANTS / Service Public - IBAN a verifier"
   SMS_FAKE_2FA         // "Votre code 2FA est XXX, partagez-le si on vous demande"
   SMS_FAKE_PRESIDENT   // "Operation confidentielle, urgent, repondez"
+  // QR code quishing (poster physique, table cafe, parking, courrier)
+  QR_FAKE_AMENDE       // Faux QR sur amende stationnement -> faux site ANTAI
+  QR_FAKE_WIFI         // Faux QR "WiFi gratuit" -> vol credentials / device
+  QR_FAKE_MENU         // Faux QR menu restaurant -> exfiltration CB
+  QR_FAKE_RH           // Faux QR sur affiche RH/CSE -> phishing intra
 }
 
 enum PhishingChannel {
   EMAIL
   SMS
+  QUISHING  // QR code physique : pas d'envoi technique, l'admin imprime
+            // l'affiche/etiquette et la pose sur le terrain (test physique)
 }
 
 enum PhishingStatus {
@@ -1291,6 +1298,10 @@ enum AuditAction {
   API_KEY_CREATED
   API_KEY_REVOKED
   EVIDENCE_BUNDLE_EXPORTED
+  // Phishing simulation (cron + reporting)
+  PHISHING_CAMPAIGN_CREATED
+  PHISHING_CAMPAIGN_SENT      // Le cron a declenche l'envoi
+  PHISHING_REPORT_EXPORTED    // Admin a telecharge le CSV
 }
 
 enum AuditOutcome {
