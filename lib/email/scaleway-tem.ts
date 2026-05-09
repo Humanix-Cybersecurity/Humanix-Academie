@@ -38,7 +38,7 @@ function getEndpoint(): string {
  * par "SCW", 20 chars) au lieu du secret-key (UUID 36 chars) dans la conf.
  * L'access-key sert au SDK Scaleway officiel mais pas a l'API REST TEM.
  *
- * Verifie le format avant l'appel API pour donner un message clair plutot
+ * Verifie le format avant l'appel API pour donner un message clair plutôt
  * qu'un cryptique "scaleway_tem_401".
  */
 function detectMisconfiguredToken(token: string): string | null {
