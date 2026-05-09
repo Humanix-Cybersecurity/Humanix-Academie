@@ -385,7 +385,7 @@ async function registerFailedLogin(userId: string, current: number) {
       actor: { userId, email: updated.email },
       tenantId: updated.tenantId,
       target: { type: "user", id: userId, label: updated.email },
-      message: `Verrouillage automatique apres ${MAX_FAILED_ATTEMPTS} echecs`,
+      message: `Verrouillage automatique après ${MAX_FAILED_ATTEMPTS} échecs`,
     });
   }
 }
