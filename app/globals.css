@@ -466,14 +466,16 @@
   to { background-position: 56px 100px; }
 }
 
-/* Scrollbar discrète pour la nav admin (qui scroll horizontalement
-   sur écran moyen pour éviter le wrap sur 2 lignes). */
+/* Scrollbar discrète pour la nav admin (sidebar verticale 240px).
+   Avec scrollbar-gutter:stable cote inline-style, la scrollbar
+   n'a plus d'effet de decalage sur les items quand elle apparait. */
 .admin-nav-scroll {
   scrollbar-width: thin;
   scrollbar-color: rgb(203 213 225) transparent;
 }
 .admin-nav-scroll::-webkit-scrollbar {
-  height: 4px;
+  width: 6px;
+  height: 6px;
 }
 .admin-nav-scroll::-webkit-scrollbar-track {
   background: transparent;
@@ -482,18 +484,23 @@
   background-color: rgb(203 213 225);
   border-radius: 9999px;
 }
+.admin-nav-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(148 163 184);
+}
 .dark .admin-nav-scroll {
   scrollbar-color: rgb(71 85 105) transparent;
 }
 .dark .admin-nav-scroll::-webkit-scrollbar-thumb {
   background-color: rgb(71 85 105);
 }
+.dark .admin-nav-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(100 116 139);
+}
 
 /* =============================================================================
-   Console dirigeant - refonte mai 2026.
-   Le hack .has-admin-nav a ete supprime : le layout app/admin/layout.tsx
-   gere l'offset nativement via flex + padding-left lg:pl-14 (sidebar slim
-   56px). Aucun useEffect ni classe injectee n'est necessaire.
+   Console dirigeant - refonte juin 2026 (sidebar accordeon).
+   Le layout app/admin/layout.tsx gere l'offset via flex + padding-left
+   lg:pl-60 (sidebar fixe 240px). Aucun useEffect ni classe injectee.
    ============================================================================= */
 
 /* =============================================================================
