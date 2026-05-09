@@ -51,7 +51,7 @@ function detectMisconfiguredToken(token: string): string | null {
   if (isUuid) return null;
 
   // Format access-key courant : "SCW" + 17 caracteres alphanumeriques (20 total)
-  const looksLikeAccessKey = /^SCW[A-Za-z0-9]{17}$/i.test(token);
+  const looksLikeAccessKey = /^SCW[A-Za-z0-9]{17}$/.test(token);
   if (looksLikeAccessKey) {
     return "SCALEWAY_TEM_TOKEN looks like an access key (SCW..., 20 chars). The TEM REST API requires the secret key (UUID, 36 chars). See .env.example.";
   }
@@ -130,8 +130,7 @@ export async function sendViaScalewayTem(
       const statusDetails = `${res.status} ${res.statusText || "Unknown Status"}`;
       const rawErrBody = await res.text().catch(() => "");
       const errBody =
-        rawErrBody ||
-        `[Failed to read error response body from Scaleway TEM API] (HTTP ${statusDetails})`;
+        rawErrBody || "[Failed to read error response body from Scaleway TEM API]";
       const details = `HTTP ${statusDetails}${errBody ? ` - ${errBody}` : ""}`;
       const truncationSuffix = "... [truncated]";
       const boundedDetails =
