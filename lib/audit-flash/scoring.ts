@@ -48,7 +48,7 @@ export type Verdict = {
 };
 
 export type RecommendedPlan = {
-  slug: "solo" | "essentielle" | "pro" | "premium";
+  slug: "starter" | "pro" | "enterprise";
   name: string;
   monthlyPrice: string; // formate FR
   annualEstimate: string;
@@ -182,42 +182,42 @@ export function recommendPlan(
   switch (size) {
     case "1-9":
       return {
-        slug: "solo",
+        slug: "starter",
         name: "Starter",
-        monthlyPrice: "19 € HT / mois (forfait)",
-        annualEstimate: "228 € HT / an (180 € en annuel)",
+        monthlyPrice: "Gratuit ≤5 · 19 € HT / mois 6-15",
+        annualEstimate: "Gratuit ≤5 · ~190 € HT / an annuel sinon",
         rationale:
-          "Pour les TPE jusqu'à 15 collaborateurs : tout l'essentiel pour démarrer une démarche cyber sérieuse, pour le prix d'un café par semaine.",
-        ctaUrl: "/tarifs#solo",
+          "Pour les TPE jusqu'à 15 collaborateurs : démarrage gratuit jusqu'à 5 utilisateurs, puis forfait simple sans engagement.",
+        ctaUrl: "/tarifs#starter",
       };
     case "10-49":
       return {
-        slug: needsBoost ? "pro" : "essentielle",
-        name: needsBoost ? "Pro" : "Essentielle",
+        slug: needsBoost ? "pro" : "starter",
+        name: needsBoost ? "Pro" : "Starter",
         monthlyPrice: needsBoost
-          ? "2,50 € HT / utilisateur / mois"
-          : "3 € HT / utilisateur / mois",
+          ? "3 € HT / utilisateur / mois"
+          : "19 € HT / mois (forfait jusqu'à 15)",
         annualEstimate: needsBoost
-          ? "à partir de 1 530 € HT / an (51 sièges mini)"
-          : "à partir de 576 € HT / an (16 sièges mini)",
+          ? "à partir de 576 € HT / an (16 sièges mini)"
+          : "228 € HT / an (190 € en annuel)",
         rationale: needsBoost
-          ? "Votre score indique un besoin d'accompagnement structuré : l'offre Pro inclut le phishing simulé, les challenges d'équipe, l'IA Coach et le Pack NIS2 turnkey."
-          : "Pour les PME de 16 à 50 collaborateurs : couverture complète, SSO M365/Google, certificats individuels, connecteur CISO Assistant, conformité documentée.",
-        ctaUrl: needsBoost ? "/tarifs#pro" : "/tarifs#essentielle",
+          ? "Votre score indique un besoin d'accompagnement structuré : l'offre Pro inclut le phishing simulé, les challenges d'équipe, l'IA Coach, la marketplace et le Pack NIS2 turnkey."
+          : "Si votre équipe est ≤15, l'offre Starter suffit pour démarrer une démarche cyber sérieuse. Migration vers Pro à tout moment.",
+        ctaUrl: needsBoost ? "/tarifs#pro" : "/tarifs#starter",
       };
     case "50-249":
       return {
         slug: "pro",
         name: "Pro",
-        monthlyPrice: "2,50 € HT / utilisateur / mois",
-        annualEstimate: "à partir de 1 530 € HT / an",
+        monthlyPrice: "3 € HT / utilisateur / mois",
+        annualEstimate: "à partir de 576 € HT / an (16 sièges mini)",
         rationale:
-          "Pour les PME de 51 à 250 collaborateurs : phishing simulé illimité, marketplace de modules, IA Coach personnalisé, multi-établissements, Pack NIS2 turnkey, connecteurs SIEM (Sentinel/Splunk/Sekoia).",
+          "Pour les PME de 16 à 250 collaborateurs : tout le catalogue cyber, phishing simulé illimité, marketplace de modules, IA Coach personnalisé, multi-établissements, Pack NIS2 turnkey, connecteurs SIEM (Sentinel/Splunk/Sekoia).",
         ctaUrl: "/tarifs#pro",
       };
     case "250+":
       return {
-        slug: "premium",
+        slug: "enterprise",
         name: "Enterprise",
         monthlyPrice: "Sur devis",
         annualEstimate: "À partir de ~5 000 € HT / an",
