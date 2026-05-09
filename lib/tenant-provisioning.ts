@@ -54,7 +54,7 @@ export type ProvisionInput = {
   /** Nom de l'organisation (sert de Tenant.name + base du slug). */
   organizationName: string;
   /** Plan initial (cf. lib/plans.ts). Doit être un plan payant — pas
-   * "decouverte" qui est reserve aux LEARNERs sur le tenant Communaute
+   * "decouverte" qui est reserve aux LEARNERs sur le tenant Communauté
    * et n'aboutit PAS sur un tenant payant. */
   plan: PlanId;
   /** Nom de l'admin (optionnel). */
