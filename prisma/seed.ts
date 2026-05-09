@@ -8,6 +8,7 @@ import {
 } from "@prisma/client";
 import { getLevel, computeCoinsEarned } from "../lib/levels";
 import { SHOP_CATALOG } from "../lib/shop";
+import { ACHIEVEMENTS_CATALOG } from "../lib/achievements/catalog";
 import { computeContentHash } from "../lib/marketplace/integrity";
 import { LIBRARY_ARTICLES } from "../lib/library-seed";
 import { MARKETPLACE_MODULES } from "../lib/marketplace-seed";
@@ -218,8 +219,25 @@ async function main() {
   );
 
   // Catalogue boutique (global, pas de tenant -> partage par tous)
+  // Saisonnalite : si un item a un seasonalWindow, on convertit en
+  // availableFrom/availableUntil pour l'annee courante. Le cron de
+  // remise-a-jour annuelle (a faire) avancera l'annee chaque 1er jan.
   const shopItemsBySlug = new Map<string, any>();
+  const currentYear = new Date().getUTCFullYear();
   for (const it of SHOP_CATALOG) {
+    let availableFrom: Date | null = null;
+    let availableUntil: Date | null = null;
+    if (it.seasonalWindow) {
+      const w = it.seasonalWindow;
+      availableFrom = new Date(
+        Date.UTC(currentYear, w.fromMonth - 1, w.fromDay),
+      );
+      // Si la fenetre chevauche fin d'annee (ex. 22 dec -> 7 jan), on
+      // pousse l'annee de fin a +1 pour que la fenetre soit valide.
+      const yearTo =
+        w.toMonth < w.fromMonth ? currentYear + 1 : currentYear;
+      availableUntil = new Date(Date.UTC(yearTo, w.toMonth - 1, w.toDay + 1));
+    }
     const dbItem = await prisma.shopItem.upsert({
       where: { slug: it.slug },
       update: {
@@ -229,6 +247,8 @@ async function main() {
         minLevel: it.minLevel,
         description: it.description,
         rarity: it.rarity,
+        availableFrom,
+        availableUntil,
       },
       create: {
         slug: it.slug,
@@ -239,11 +259,45 @@ async function main() {
         minLevel: it.minLevel,
         description: it.description,
         rarity: it.rarity,
+        availableFrom,
+        availableUntil,
       },
     });
     shopItemsBySlug.set(it.slug, dbItem);
   }
   console.log(`  Boutique ✓ (${SHOP_CATALOG.length} items)`);
+
+  // Catalogue achievements (badges) — upserted depuis lib/achievements/catalog.ts
+  // Le slug est l'identifiant stable, le reste peut evoluer (tweak titres,
+  // nouveaux badges) sans casser les UserAchievement existants.
+  for (const a of ACHIEVEMENTS_CATALOG) {
+    await prisma.achievement.upsert({
+      where: { slug: a.slug },
+      update: {
+        title: a.title,
+        emoji: a.emoji,
+        description: a.description,
+        category: a.category,
+        rarity: a.rarity,
+        points: a.points,
+        isSecret: a.isSecret,
+        isActive: true,
+      },
+      create: {
+        slug: a.slug,
+        title: a.title,
+        emoji: a.emoji,
+        description: a.description,
+        category: a.category,
+        rarity: a.rarity,
+        points: a.points,
+        isSecret: a.isSecret,
+      },
+    });
+  }
+  console.log(
+    `  Achievements ✓ (${ACHIEVEMENTS_CATALOG.length} badges au catalogue)`,
+  );
 
   // Librairie micro-learning (contenu editorial public, pas de tenant)
   await seedLibrary();
