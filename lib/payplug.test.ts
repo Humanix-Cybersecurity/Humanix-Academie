@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Tests sur les helpers purs (mapping plans, signature webhook).
+// Aligne sur la grille mai 2026 (3 paliers : starter / pro / enterprise).
+// Seuls starter et pro sont buyable self-service ; enterprise est sur devis.
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { createHmac } from "node:crypto";
 import {
@@ -33,13 +35,12 @@ describe("Payplug helpers", () => {
   });
 
   describe("payplugPlanIdForTier", () => {
-    it("null pour les plans gratuits", () => {
-      expect(payplugPlanIdForTier("trial")).toBeNull();
-      expect(payplugPlanIdForTier("decouverte")).toBeNull();
+    it("null pour enterprise (sur devis, pas de plan Payplug)", () => {
+      expect(payplugPlanIdForTier("enterprise")).toBeNull();
     });
     it("null si env absente", () => {
-      delete process.env.PAYPLUG_PLAN_SOLO;
-      expect(payplugPlanIdForTier("solo")).toBeNull();
+      delete process.env.PAYPLUG_PLAN_STARTER;
+      expect(payplugPlanIdForTier("starter")).toBeNull();
     });
     it("retourne le plan ID Payplug quand configure", () => {
       process.env.PAYPLUG_PLAN_PRO = "pln_payplug_pro";
@@ -49,8 +50,8 @@ describe("Payplug helpers", () => {
 
   describe("tierFromPayplugPlanId", () => {
     it("retrouve le tier depuis l'ID Payplug", () => {
-      process.env.PAYPLUG_PLAN_ESSENTIELLE = "pln_essentielle";
-      expect(tierFromPayplugPlanId("pln_essentielle")).toBe("essentielle");
+      process.env.PAYPLUG_PLAN_STARTER = "pln_starter";
+      expect(tierFromPayplugPlanId("pln_starter")).toBe("starter");
     });
     it("null pour ID inconnu", () => {
       expect(tierFromPayplugPlanId("pln_unknown")).toBeNull();
@@ -59,32 +60,24 @@ describe("Payplug helpers", () => {
 
   describe("isPlanBuyable", () => {
     beforeEach(() => {
-      process.env.PAYPLUG_PLAN_SOLO = "pln_solo";
-      process.env.PAYPLUG_PLAN_ESSENTIELLE = "pln_essentielle";
+      process.env.PAYPLUG_PLAN_STARTER = "pln_starter";
       process.env.PAYPLUG_PLAN_PRO = "pln_pro";
     });
-    it("vrai pour les plans tier configures", () => {
-      expect(isPlanBuyable("solo")).toBe(true);
-      expect(isPlanBuyable("essentielle")).toBe(true);
+    it("vrai pour starter et pro (configures)", () => {
+      expect(isPlanBuyable("starter")).toBe(true);
       expect(isPlanBuyable("pro")).toBe(true);
     });
-    it("faux pour decouverte / trial", () => {
-      expect(isPlanBuyable("decouverte")).toBe(false);
-      expect(isPlanBuyable("trial")).toBe(false);
-    });
-    it("faux pour premium par defaut (sur devis)", () => {
-      delete process.env.PAYPLUG_PLAN_PREMIUM;
-      expect(isPlanBuyable("premium")).toBe(false);
+    it("faux pour enterprise (pas de plan Payplug, sur devis)", () => {
+      expect(isPlanBuyable("enterprise")).toBe(false);
     });
   });
 
   describe("PAYPLUG_BUYABLE_PLANS", () => {
-    it("inclut solo, essentielle, pro et exclut decouverte/trial", () => {
+    it("inclut starter et pro, exclut enterprise", () => {
       expect(PAYPLUG_BUYABLE_PLANS).toEqual(
-        expect.arrayContaining(["solo", "essentielle", "pro"]),
+        expect.arrayContaining(["starter", "pro"]),
       );
-      expect(PAYPLUG_BUYABLE_PLANS).not.toContain("decouverte");
-      expect(PAYPLUG_BUYABLE_PLANS).not.toContain("trial");
+      expect(PAYPLUG_BUYABLE_PLANS).not.toContain("enterprise");
     });
   });
 
@@ -133,25 +126,23 @@ describe("Payplug helpers", () => {
 
     it("enabled=true, plansConfigured liste les tiers bindes", () => {
       process.env.PAYPLUG_SECRET_KEY = "sk_test_xxx";
-      process.env.PAYPLUG_PLAN_SOLO = "plan_solo_xxx";
-      process.env.PAYPLUG_PLAN_ESSENTIELLE = "plan_ess_xxx";
+      process.env.PAYPLUG_PLAN_STARTER = "plan_starter_xxx";
       process.env.PAYPLUG_PLAN_PRO = "plan_pro_xxx";
       process.env.PAYPLUG_WEBHOOK_SECRET = "whsec_xxx";
       const r = validatePayplugSetup();
       expect(r.enabled).toBe(true);
-      expect(r.plansConfigured.sort()).toEqual(["essentielle", "pro", "solo"]);
+      expect(r.plansConfigured.sort()).toEqual(["pro", "starter"]);
       expect(r.plansMissing).toHaveLength(0);
       expect(r.webhookSecretSet).toBe(true);
     });
 
     it("warning si plan manquant", () => {
       process.env.PAYPLUG_SECRET_KEY = "sk_test_xxx";
-      process.env.PAYPLUG_PLAN_SOLO = "plan_solo_xxx";
-      delete process.env.PAYPLUG_PLAN_ESSENTIELLE;
+      process.env.PAYPLUG_PLAN_STARTER = "plan_starter_xxx";
       delete process.env.PAYPLUG_PLAN_PRO;
       process.env.PAYPLUG_WEBHOOK_SECRET = "whsec_xxx";
       const r = validatePayplugSetup();
-      expect(r.plansMissing.sort()).toEqual(["essentielle", "pro"]);
+      expect(r.plansMissing).toEqual(["pro"]);
       expect(r.warnings.some((w) => w.includes("non defini"))).toBe(true);
     });
 
@@ -165,8 +156,7 @@ describe("Payplug helpers", () => {
 
     it("toujours un warning sur les endpoints non documentes quand Payplug actif", () => {
       process.env.PAYPLUG_SECRET_KEY = "sk_test_xxx";
-      process.env.PAYPLUG_PLAN_SOLO = "plan_solo_xxx";
-      process.env.PAYPLUG_PLAN_ESSENTIELLE = "plan_ess_xxx";
+      process.env.PAYPLUG_PLAN_STARTER = "plan_starter_xxx";
       process.env.PAYPLUG_PLAN_PRO = "plan_pro_xxx";
       process.env.PAYPLUG_WEBHOOK_SECRET = "whsec_xxx";
       const r = validatePayplugSetup();
