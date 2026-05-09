@@ -710,11 +710,10 @@ export default async function TarifsPage({
           ne peut pas être un luxe quand 90 % des attaques visent les humains. »
         </blockquote>
         <cite
-          className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
         >
           - Hex veille
         </cite>
-      </section>
+        </cite>
       </div>
     </main>
   );
