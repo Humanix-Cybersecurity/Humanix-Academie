@@ -16,20 +16,25 @@ type ActionResult =
   | { ok: true; message?: string }
   | { ok: false; error: string };
 
-async function requireAdminTenant() {
+type AuthCtx =
+  | { ok: false; error: string }
+  | { ok: true; tenantId: string; email: string; role: string };
+
+async function requireAdminTenant(): Promise<AuthCtx> {
   const session = await auth();
   if (!session?.user) {
-    return { error: "Non authentifié." } as const;
+    return { ok: false, error: "Non authentifié." };
   }
   const role = session.user.role;
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
-    return { error: "Réservé aux ADMIN/RSSI." } as const;
+    return { ok: false, error: "Réservé aux ADMIN/RSSI." };
   }
   return {
+    ok: true,
     tenantId: session.user.tenantId as string,
     email: session.user.email ?? "unknown",
     role,
-  } as const;
+  };
 }
 
 /**
@@ -40,7 +45,7 @@ export async function saveRetentionConfig(
   formData: FormData,
 ): Promise<ActionResult> {
   const ctx = await requireAdminTenant();
-  if ("error" in ctx) return { ok: false, error: ctx.error };
+  if (!ctx.ok) return { ok: false, error: ctx.error };
 
   const raw = String(formData.get("retentionDays") ?? "").trim();
   let next: number | null;
@@ -89,7 +94,7 @@ export async function saveRetentionConfig(
  */
 export async function runPurgeNow(): Promise<ActionResult> {
   const ctx = await requireAdminTenant();
-  if ("error" in ctx) return { ok: false, error: ctx.error };
+  if (!ctx.ok) return { ok: false, error: ctx.error };
 
   const tenant = await db.tenant.findUnique({
     where: { id: ctx.tenantId },
