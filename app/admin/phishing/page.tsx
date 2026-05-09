@@ -120,13 +120,20 @@ export default async function AdminPhishingPage() {
               </Link>{" "}
               (mise en place + suivi réputation).
             </p>
-            <p className="mt-3">
+            <p className="mt-3 flex flex-wrap gap-2">
               <Link
                 href="/admin/smtp"
                 className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition"
               >
                 <span aria-hidden="true">⚙️</span>
                 Configurer mon SMTP →
+              </Link>
+              <Link
+                href="/opsec-phishing"
+                className="inline-flex items-center gap-2 bg-white dark:bg-slate-800 border border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-100 text-xs font-bold px-4 py-2 rounded-lg hover:bg-amber-50 dark:hover:bg-amber-900/30 transition"
+              >
+                <span aria-hidden="true">📚</span>
+                Lire le cadrage OPSEC (5 min)
               </Link>
             </p>
           </article>
