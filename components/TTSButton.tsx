@@ -293,38 +293,42 @@ export default function TTSButton({
   };
 
   /**
-   * Mode premium serveur : on demande le MP3 entier au serveur, on stream
-   * via <audio>. La vitesse est gerée nativement via audio.playbackRate.
+   * Mode premium serveur : on demande au serveur juste l'URL du MP3 dans
+   * le cache (POST /api/tts/prepare), puis on set audio.src dessus. Le
+   * navigateur stream progressivement le MP3 via Range requests -> playback
+   * demarre sous 100ms en cache hit, sans charger le blob complet en RAM.
+   *
+   * Si cache miss, /api/tts/prepare synthetise et persiste avant de retourner
+   * l'URL ; la duree depend de Voxtral (quelques secondes) mais c'est un
+   * one-shot : la 2e visite trouve le MP3 dans le cache.
+   *
+   * Le warmup massif via `npm run tts:build` rend les cache miss tres rares
+   * en prod.
    */
   const onPlayServer = async () => {
     playingRef.current = true;
     setPlaying(true);
     try {
-      // On envoie le texte BRUT (pas cleanText) : le serveur applique sa
-      // propre sanitisation canonique (sanitizeForTTS) avant de hasher pour
-      // le cache. Ca garantit que le hash batch == hash runtime des qu'on
-      // part du même texte source MDX -- sans dependre de quelles regex de
-      // nettoyage cleanForTTS applique cote client (abreviations, etc.).
-      const res = await fetch("/api/tts/synthesize", {
+      const res = await fetch("/api/tts/prepare", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ text, format: "mp3" }),
       });
       if (!res.ok) throw new Error(`tts_${res.status}`);
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const audio = new Audio(url);
+      const data = (await res.json()) as { url?: string };
+      if (!data.url) throw new Error("tts_no_url");
+
+      // <audio src="/api/tts/<hash>"> stream natif, le navigateur cache
+      // dur grace au Cache-Control: immutable du route handler [hash].
+      const audio = new Audio(data.url);
       audio.playbackRate = prefs.rate;
+      audio.preload = "auto";
       audio.onended = () => {
-        URL.revokeObjectURL(url);
         playingRef.current = false;
         setPlaying(false);
         setPaused(false);
       };
-      audio.onerror = () => {
-        URL.revokeObjectURL(url);
-        stop();
-      };
+      audio.onerror = () => stop();
       audioRef.current = audio;
       await audio.play();
     } catch (e) {
