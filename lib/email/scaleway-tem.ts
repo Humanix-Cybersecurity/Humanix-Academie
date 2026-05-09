@@ -103,7 +103,9 @@ export async function sendViaScalewayTem(
       body: JSON.stringify(body),
     });
     if (!res.ok) {
-      const errBody = await res.text().catch(() => "");
+      const errBody = await res
+        .text()
+        .catch(() => "[Unable to read error body]");
       return {
         ok: false,
         reason: `scaleway_tem_${res.status}`,
