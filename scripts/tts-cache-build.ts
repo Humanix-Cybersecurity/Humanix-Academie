@@ -27,6 +27,7 @@ import { join } from "node:path";
 
 import { listEpisodes, listSaisons, loadEpisode } from "../lib/episodes";
 import { extractSegments } from "../lib/tts/segments";
+import { extractAllExtraSegments } from "../lib/tts/warmup-extras";
 import {
   defaultCacheRoot,
   estimateDurationSec,
@@ -122,6 +123,27 @@ function buildJobList(): Job[] {
       }
     }
   }
+
+  // === Extras (library articles full body + teasers, etc.) ===
+  // On les warmup uniquement quand pas de --saison (le filtre cible les
+  // episodes). Cf. lib/tts/warmup-extras.ts pour la liste exhaustive.
+  if (!SAISON_FILTER) {
+    for (const seg of extractAllExtraSegments()) {
+      const hash = segmentHash(seg.text, seg.voice);
+      const cached = !FORCE && isCached(cacheRoot, hash);
+      // On loge ces extras comme "<source>/<bucket>/<id>" en saisonSlug
+      // pour reutiliser la meme tuyauterie de manifest sans en casser
+      // le format. Le seg.id porte deja "library/<slug>/full|teaser".
+      jobs.push({
+        saisonSlug: "_extras",
+        episodeSlug: seg.id.split("/")[0] || "misc",
+        segment: seg,
+        hash,
+        cached,
+      });
+    }
+  }
+
   return jobs;
 }
 
