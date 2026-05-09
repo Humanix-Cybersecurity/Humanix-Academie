@@ -103,6 +103,8 @@ export default async function BillingPage() {
               {formatSeatUsage(usage)}
             </span>
           </div>
+          {/* `usage.max` can be non-finite (ex: Infinity) for plans without a hard seat cap.
+              We only render the progress bar when there is a finite limit to display. */}
           {Number.isFinite(usage.max) && (
             <div className="h-2 rounded-full bg-gray-200 dark:bg-slate-800 overflow-hidden">
               <div
@@ -236,11 +238,14 @@ function StateBanner({
   const config = (() => {
     switch (state.state) {
       case "grace_period": {
-        const daysLeft = state.daysLeft ?? 0;
+        const daysLeft = state.daysLeft;
         return {
           emoji: "💳",
           title: "Échec de paiement détecté",
-          message: `Ta dernière échéance n'a pas été honorée. Tu as ${daysLeft} jour${daysLeft !== 1 ? "s" : ""} pour mettre à jour ta carte avant restriction d'accès.`,
+          message:
+            typeof daysLeft === "number"
+              ? `Ta dernière échéance n'a pas été honorée. Tu as ${daysLeft} jour${daysLeft !== 1 ? "s" : ""} pour mettre à jour ta carte avant restriction d'accès.`
+              : "Ta dernière échéance n'a pas été honorée. Le délai exact avant restriction d'accès est en cours de mise à jour.",
           cta: { label: "Mettre à jour la carte", href: "/api/payments/portal" },
         };
       }
@@ -248,7 +253,7 @@ function StateBanner({
         return {
           emoji: "🔒",
           title: "Accès en lecture seule",
-          message: `Tu peux consulter mais plus rien modifier. ${state.daysLeft ? `Tu as ${state.daysLeft} jour${state.daysLeft > 1 ? "s" : ""} avant suspension complète.` : ""}`,
+          message: `Tu peux consulter mais plus rien modifier. ${state.daysLeft ? `Tu as ${state.daysLeft} jour${state.daysLeft !== 1 ? "s" : ""} avant suspension complète.` : ""}`,
           cta: { label: "Régulariser maintenant", href: "/api/payments/portal" },
         };
       case "suspended":
