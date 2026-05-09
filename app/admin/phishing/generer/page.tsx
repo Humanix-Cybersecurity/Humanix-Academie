@@ -21,7 +21,7 @@ export default async function PhishingGenererPage() {
   }
   const tenantId = session.user!.tenantId as string;
   const plan = await getTenantPlan(tenantId);
-  const isAllowed = ["pro", "premium"].includes(plan);
+  const isAllowed = ["pro", "enterprise"].includes(plan);
 
   if (!isAllowed) {
     return (
