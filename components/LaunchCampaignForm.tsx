@@ -23,16 +23,45 @@ export default function LaunchCampaignForm({
     startTransition(async () => {
       try {
         const res = await launchCampaign(formData);
-        setFeedback({
-          type: "ok",
-          msg: `🚀 Campagne lancée vers ${res.targets} cible${res.targets > 1 ? "s" : ""}`,
-        });
-      } catch (e: any) {
-        const msg =
-          e?.message === "no_targets"
-            ? "Aucune cible trouvée."
-            : "Lancement impossible.";
-        setFeedback({ type: "err", msg });
+        if (!res.ok) {
+          // Mapping erreur -> message utilisateur clair
+          const msgByError: Record<string, string> = {
+            no_targets:
+              "Aucune cible trouvée. Vérifie ton service ciblé ou tes utilisateurs actifs.",
+            invalid_template: "Template invalide.",
+            smtp_not_configured:
+              "Aucun SMTP configuré pour ton tenant. Va sur /admin/smtp pour le paramétrer (ou nous contacter pour une prestation au forfait).",
+            smtp_decrypt_failed:
+              "Erreur de déchiffrement du password SMTP. Re-saisis-le dans /admin/smtp.",
+            unauthorized: "Session expirée, reconnecte-toi.",
+            forbidden: "Tu n'as pas les droits pour lancer une campagne.",
+          };
+          setFeedback({
+            type: "err",
+            msg: msgByError[res.error] ?? res.message ?? "Lancement impossible.",
+          });
+          return;
+        }
+        // Succes : message different selon mode demo / prod
+        if (res.simulated) {
+          setFeedback({
+            type: "ok",
+            msg: `🎭 Mode démo : campagne créée vers ${res.targets} cible${res.targets > 1 ? "s" : ""} (pas d'envoi réel).`,
+          });
+        } else if (res.failed > 0) {
+          setFeedback({
+            type: "ok",
+            msg: `🚀 Campagne lancée : ${res.sent}/${res.targets} envoyé(s), ${res.failed} échec(s). Vérifie /admin/smtp si beaucoup d'échecs.`,
+          });
+        } else {
+          setFeedback({
+            type: "ok",
+            msg: `🚀 Campagne lancée : ${res.sent} email${res.sent > 1 ? "s" : ""} envoyé${res.sent > 1 ? "s" : ""} via ton SMTP.`,
+          });
+        }
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : "Erreur inconnue.";
+        setFeedback({ type: "err", msg: `Erreur: ${msg}` });
       }
     });
   };
