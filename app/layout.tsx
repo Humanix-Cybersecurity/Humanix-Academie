@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
+import { headers } from "next/headers";
 import Providers from "./providers";
 import HeaderBar from "@/components/HeaderBar";
 import PWAInstallButton from "@/components/PWAInstallButton";
@@ -125,11 +126,22 @@ const themeInitScript = `
 })();
 `;
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Detection demo mode : combinaison de l'env var DEMO_MODE ET du host.
+  // Pourquoi le host : si le subdomain demo.humanix-academie.fr est mal
+  // configure cote env (oubli de DEMO_MODE=true au deploy), on fallback
+  // sur la detection par hostname pour que la UX reste coherente. Belt
+  // and suspenders.
+  const headersList = await headers();
+  const host = (headersList.get("host") ?? "").toLowerCase();
+  const isDemoByEnv = process.env.DEMO_MODE === "true";
+  const isDemoByHost = host.startsWith("demo.");
+  const isDemo = isDemoByEnv || isDemoByHost;
+
   return (
     <html lang="fr">
       <head>
@@ -160,7 +172,7 @@ export default function RootLayout({
           </Suspense>
           {/* Bandeau démo dynamique : montre l'offre active si l'user est connecté */}
           <DemoBanner />
-          <HeaderBar demoMode={process.env.DEMO_MODE === "true"} />
+          <HeaderBar demoMode={isDemo} />
           <ScrollProgress />
           <main id="main-content" tabIndex={-1} aria-label="Contenu principal">
             {children}
