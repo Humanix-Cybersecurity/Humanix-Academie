@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { getTemplate } from "@/lib/phishing";
+import AskHexExplain from "@/components/AskHexExplain";
 
 export const dynamic = "force-dynamic";
 
@@ -66,25 +67,48 @@ export default async function PhishingLandingPage({
         </div>
 
         {tpl && (
-          <div className="bg-primary-50 border-l-4 border-accent-500 rounded-r-xl p-5 mb-6">
-            <h2 className="font-bold text-primary-500 text-lg mb-3">
-              💡 Comment tu aurais pu détecter le piège ?
-            </h2>
-            <p className="text-sm text-gray-700 mb-3">
-              Voici les <strong>{tpl.markers.length} indices</strong> que ce
-              mail contenait :
-            </p>
-            <ul className="text-sm text-gray-700 space-y-2">
-              {tpl.markers.map((m, i) => (
-                <li key={i} className="flex items-start gap-2">
-                  <span className="bg-accent-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
-                    {i + 1}
-                  </span>
-                  <span>{m}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <>
+            <div className="bg-primary-50 border-l-4 border-accent-500 rounded-r-xl p-5 mb-6">
+              <h2 className="font-bold text-primary-500 text-lg mb-3">
+                💡 Comment tu aurais pu détecter le piège ?
+              </h2>
+              <p className="text-sm text-gray-700 mb-3">
+                Voici les <strong>{tpl.markers.length} indices</strong> que ce
+                mail contenait :
+              </p>
+              <ul className="text-sm text-gray-700 space-y-2">
+                {tpl.markers.map((m, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="bg-accent-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                      {i + 1}
+                    </span>
+                    <span>{m}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* IA pedagogique : bouton "Demande a Hex" qui appelle Mistral
+                pour expliquer un point precis (domaine / spoofing / IOC...)
+                adapte au persona de l'user. */}
+            <div className="mb-6">
+              <AskHexExplain
+                topic="phishing_email"
+                title="Une question sur ce piège ?"
+                suggestions={[
+                  "Pourquoi le domaine était suspect ?",
+                  "C'est quoi le spoofing ?",
+                  "Comment je vérifie un mail à l'avenir ?",
+                  "Ça aurait été grave si j'avais saisi mon mot de passe ?",
+                ]}
+                context={{
+                  templateName: tpl.name,
+                  redFlags: tpl.markers,
+                  fromDomain: tpl.emailFrom,
+                }}
+              />
+            </div>
+          </>
         )}
 
         <div className="bg-success/10 border-l-4 border-success rounded-r-xl p-5 mb-6">
