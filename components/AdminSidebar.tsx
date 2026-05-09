@@ -51,6 +51,11 @@ const SECTIONS: Section[] = [
         icon: "🔥",
       },
       {
+        href: "/admin/analytics/forecast",
+        label: "Forecast & trajectoires",
+        icon: "🔮",
+      },
+      {
         href: "/admin/users/at-risk",
         label: "Utilisateurs vulnérables",
         icon: "⚠️",
