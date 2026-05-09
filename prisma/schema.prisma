@@ -181,6 +181,23 @@ model User {
   coins         Int       @default(0)
   level         Int       @default(1)
   riskScore     Int       @default(50) // 0 = très exposé, 100 = excellent
+  // ----------------------------------------------------
+  // PERSONA PEDAGOGIQUE (ajout mai 2026)
+  // ----------------------------------------------------
+  // Adapte le ton et le niveau de detail des explications IA selon le
+  // profil de l'utilisateur. null = pas explicitement defini, on infere
+  // depuis le role + service + historique (cf. lib/ai/persona.ts).
+  //
+  // Valeurs : "beginner" | "technical" | "manager" | "developer"
+  //          | "finance" | "hr" | "ops"
+  // - beginner  : vocabulaire simple, analogies du quotidien
+  // - technical : vocabulaire technique, IOCs, references CVE/MITRE
+  // - manager   : vue strategique, ROI, conformite, vocabulaire COMEX
+  // - developer : exemples code, OWASP, CI/CD, supply chain
+  // - finance   : fraude au president, virement, KYC, FATF
+  // - hr        : ingenierie sociale, donnees personnelles, RGPD employes
+  // - ops       : continuite, sauvegarde, ransomware impact metier
+  persona       String?
   mascotSpecies String    @default("fox") // fox, cat, dog, hippo, shark, etc.
   // Emoji libre qui override mascotSpecies si renseigne (1 caractere emoji).
   // Permet a l'utilisateur de choisir n'importe quel emoji (ex: 🚀, 🌈) sans
