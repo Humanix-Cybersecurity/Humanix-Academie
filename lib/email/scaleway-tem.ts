@@ -10,7 +10,7 @@
 // Environnement requis :
 //   SCALEWAY_TEM_TOKEN       (clé secrète IAM)
 //   SCALEWAY_TEM_PROJECT_ID  (UUID du projet Scaleway)
-//   SCALEWAY_TEM_REGION      (defaut "fr-par")
+//   SCALEWAY_TEM_REGION      (défaut "fr-par")
 //   EMAIL_FROM               (adresse expéditrice, domaine vérifié dans
 //                             la console Scaleway TEM)
 import type { SendEmailParams, SendEmailResult } from "./index";
@@ -34,11 +34,11 @@ function getEndpoint(): string {
 }
 
 /**
- * Detecte le piege classique : utilisateur qui colle l'access-key (commence
+ * Detecte le piège classique : utilisateur qui colle l'access-key (commence
  * par "SCW", 20 chars) au lieu du secret-key (UUID 36 chars) dans la conf.
  * L'access-key sert au SDK Scaleway officiel mais pas a l'API REST TEM.
  *
- * Verifie le format avant l'appel API pour donner un message clair plutot
+ * Verifie le format avant l'appel API pour donner un message clair plutôt
  * qu'un cryptique "scaleway_tem_401".
  */
 function detectMisconfiguredToken(token: string): string | null {
@@ -73,7 +73,7 @@ export async function sendViaScalewayTem(
   }
   const fromAddress = params.from ?? process.env.EMAIL_FROM!;
   const fromName =
-    params.fromName ?? process.env.NEXT_PUBLIC_APP_NAME ?? "Humanix Academie";
+    params.fromName ?? process.env.NEXT_PUBLIC_APP_NAME ?? "Humanix Académie";
 
   const recipients = (
     Array.isArray(params.to) ? params.to : [params.to]
@@ -103,7 +103,9 @@ export async function sendViaScalewayTem(
       body: JSON.stringify(body),
     });
     if (!res.ok) {
-      const errBody = await res.text().catch(() => "");
+      const errBody = await res
+        .text()
+        .catch(() => "[Unable to read error body]");
       return {
         ok: false,
         reason: `scaleway_tem_${res.status}`,
@@ -115,9 +117,12 @@ export async function sendViaScalewayTem(
     };
     return { ok: true, providerMessageId: data?.emails?.[0]?.id ?? null };
   } catch (e: unknown) {
+    console.error("[scaleway-tem] send failed", e);
     return {
       ok: false,
-      reason: e instanceof Error ? e.message : "scaleway_tem_unknown_error",
+      reason: "scaleway_tem_send_failed",
+      details:
+        e instanceof Error ? `${e.name}: ${e.message}` : "Unknown thrown value",
     };
   }
 }

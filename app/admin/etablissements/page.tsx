@@ -22,7 +22,7 @@ export default async function EtablissementsPage() {
   const tenantId = session!.user.tenantId as string;
 
   const plan = await getTenantPlan(tenantId);
-  if (!["pro", "premium"].includes(plan)) {
+  if (!["pro", "enterprise"].includes(plan)) {
     return (
       <>
         <AdminPageHeader

@@ -127,8 +127,8 @@ export default async function TarifsPage({
               <p className="opacity-90 mb-4 leading-relaxed">
                 Notre <strong>audit cyber flash</strong> donne une photo claire
                 de la maturité humaine de ton organisation, en 15 questions
-                bienveillantes. Rapport PDF a la fin, recommandation
-                personnalisee - sans pression.
+                bienveillantes. Rapport PDF à la fin, recommandation
+                personnalisée - sans pression.
               </p>
               <Link
                 href="/audit-flash"
@@ -281,7 +281,7 @@ export default async function TarifsPage({
       <section className="mb-16">
         <div className="text-center mb-8">
           <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
-            Notre lecture du marche
+            Notre lecture du marché
           </p>
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary-500 dark:text-accent-300 mb-2 leading-tight">
             Pourquoi Humanix ?
@@ -299,38 +299,38 @@ export default async function TarifsPage({
             },
             {
               emoji: "🇫🇷",
-              title: "Souverain par defaut",
+              title: "Souverain par défaut",
               text: "Conçu, hébergé et opéré en France. Conformité RGPD/NIS2 native. Pas de Cloud Act au menu.",
             },
             {
               emoji: "🤝",
-              title: "Integre a l'ecosysteme",
+              title: "Intégré à l'écosystème",
               text: "Connecteur natif CISO Assistant (intuitem). Format OSCAL standard. Webhooks Sentinel/Splunk/Sekoia.",
             },
             {
               emoji: "🎮",
               title: "Ludique pour de vrai",
-              text: "Mascotte evolutive, boutique, challenges entre services, badges. Les collaborateurs reviennent par envie.",
+              text: "Mascotte évolutive, boutique, challenges entre services, badges. Les collaborateurs reviennent par envie.",
             },
             {
               emoji: "⚡",
-              title: "Deployable en 30 minutes",
+              title: "Déployable en 30 minutes",
               text: "Pas de chef de projet, pas de SSO obligatoire, pas de 3 semaines de mise en place. Import CSV, c'est parti.",
             },
             {
               emoji: "📊",
               title: "Score de risque humain",
-              text: "Mesure objective, en temps reel, par collaborateur et par service. Ce que ton assureur cyber demande.",
+              text: "Mesure objective, en temps réel, par collaborateur et par service. Ce que ton assureur cyber demande.",
             },
             {
               emoji: "🛒",
               title: "Marketplace communaute",
-              text: "Tes pairs RSSI publient leurs modules, moderes par notre equipe. Effet de levier collectif.",
+              text: "Tes pairs RSSI publient leurs modules, modérés par notre équipe. Effet de levier collectif.",
             },
             {
               emoji: "🦊",
               title: "Une mascotte qui te parle",
-              text: "Hex t'accompagne, te coache, te felicite. Pas un chatbot froid. Un compagnon de progression.",
+              text: "Hex t'accompagne, te coache, te félicite. Pas un chatbot froid. Un compagnon de progression.",
             },
             {
               emoji: "💰",
