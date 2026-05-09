@@ -111,7 +111,10 @@ export async function provisionTenantWithAdmin(
   input: ProvisionInput,
 ): Promise<ProvisionResult> {
   const email = input.email.trim().toLowerCase();
-  if (!email || !email.includes("@") || email.length > 254) {
+  // Validation pragmatique: exactement un '@', pas d'espaces,
+  // partie locale + domaine non vides, domaine avec TLD (x.y).
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if (!email || email.length > 254 || !emailPattern.test(email)) {
     return { ok: false, reason: "invalid_email" };
   }
   if (input.plan === "decouverte") {
