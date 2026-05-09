@@ -6,12 +6,12 @@
 
 import Link from "next/link";
 import { Suspense, useState } from "react";
-import { createDecouverteAccount } from "./actions";
+import { createStarterAccount } from "./actions";
 
 const PLAN_LABELS: Record<string, { label: string; tagline: string }> = {
-  decouverte: {
-    label: "Découverte",
-    tagline: "Forever-free · 5 sièges · sans CB",
+  starter: {
+    label: "Starter",
+    tagline: "Gratuit jusqu'à 5 sièges · sans CB · sans engagement",
   },
 };
 
@@ -36,8 +36,8 @@ function SignupFallback() {
 
 function SignupInner() {
   // Plan toujours "starter" depuis le retrait de l'essai gratuit. Les
-  // anciens liens ?plan=trial sont donc gracieusement traites comme decouverte
-  // (meme offre, meme limite 5 sieges).
+  // anciens liens ?plan=trial / ?plan=decouverte sont gracieusement traites
+  // comme starter (meme offre, meme limite 5 sieges gratuits).
   const planKey = "starter" as const;
   const planMeta = PLAN_LABELS[planKey];
 
@@ -51,7 +51,7 @@ function SignupInner() {
     const fd = new FormData(e.currentTarget);
     fd.set("plan", planKey);
     try {
-      const res = await createDecouverteAccount(fd);
+      const res = await createStarterAccount(fd);
       if (!res.ok) {
         setError(res.error);
         setPending(false);

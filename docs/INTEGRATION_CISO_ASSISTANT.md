@@ -37,7 +37,7 @@ Chaque contrôle est associé à un seuil de conformité explicite et à des art
 ## Sécurité
 
 - Authentification : clé API tenant SHA-256 (modèle `ApiKey`)
-- Plan-gating : `essentielle` minimum
+- Plan-gating : `pro` minimum (anciennement `essentielle`)
 - Rate limit : 10 req/h par tenant
 - Audit trail : event `evidence.exported` à chaque appel
 - Pas de PII brute : seulement liens vers artefacts + métriques agrégées

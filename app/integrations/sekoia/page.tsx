@@ -56,7 +56,7 @@ export default function SekoiaIntegrationPage() {
             <Link href="/admin/api-keys" className="font-bold underline">
               générer une clé API
             </Link>{" "}
-            (Essentielle+).
+            (Pro+).
           </li>
           <li>Cron quotidien :</li>
         </ol>
