@@ -23,7 +23,7 @@ Toutes les **actions manuelles** à exécuter au déploiement, par phase. Ne né
 npm run db:seed
 ```
 
-Cette commande crée le tenant DB `humanix-community` (slug réservé) avec plan `decouverte`. Tous les LEARNERs gratuits y seront rattachés automatiquement.
+Cette commande crée le tenant DB `humanix-community` (slug réservé) avec plan `starter`. Tous les LEARNERs gratuits y seront rattachés automatiquement.
 
 Vérification :
 
@@ -31,7 +31,7 @@ Vérification :
 psql $DATABASE_URL -c "SELECT slug, name, plan FROM \"Tenant\" WHERE slug='humanix-community';"
 ```
 
-Doit retourner `humanix-community | Humanix Communauté | decouverte`.
+Doit retourner `humanix-community | Humanix Communauté | starter`.
 
 Si tu vois plusieurs lignes ou un message vide : ne pas continuer Phase 2 tant que ce tenant n'existe pas.
 
@@ -116,7 +116,9 @@ Effet : `/signup` redirige automatiquement vers `/demande-abonnement`. Les appre
 
 - [ ] Compte Payplug Pro : https://www.payplug.com/
 - [ ] Récupérer la **Secret Key** (Settings → API keys)
-- [ ] Créer 3 **Subscription Plans** correspondant à `solo`, `essentielle`, `pro` (cf. lib/plans.ts pour la grille tarifaire)
+- [ ] Créer 2 **Subscription Plans** correspondant à `starter` et `pro` (cf. lib/plans.ts pour la grille). `enterprise` est manuel (devis), pas de plan Payplug self-service.
+  - **Starter** : forfait 19 €/mois (mensuel) ou 15 €/mois (annuel). Limite 15 sièges, mais Payplug ne gère pas le sub-tier free <=5 — c'est l'app qui ne déclenche pas le checkout tant que `activeUsers <= 5`.
+  - **Pro** : 3 €/utilisateur/mois (mensuel) ou 2,50 € (annuel). Volume 16-250 sièges.
 - [ ] Créer un **webhook** :
   - URL : `https://<ton-domaine>/api/payments/webhook`
   - Events : `subscription.created`, `subscription.updated`, `subscription.activated`, `subscription.canceled`, `subscription.payment_failed`, `subscription.payment_succeeded`, `payment.failed`, `payment.paid`
@@ -125,14 +127,14 @@ Effet : `/signup` redirige automatiquement vers `/demande-abonnement`. Les appre
   ```
   PAYPLUG_SECRET_KEY="..."
   PAYPLUG_WEBHOOK_SECRET="..."
-  PAYPLUG_PLAN_SOLO="<plan_id>"
-  PAYPLUG_PLAN_ESSENTIELLE="<plan_id>"
+  PAYPLUG_PLAN_STARTER="<plan_id>"
   PAYPLUG_PLAN_PRO="<plan_id>"
+  # Enterprise: pas de plan Payplug (process commercial manuel)
   ```
 
 Une fois ces variables posées, **le flow self-service est entièrement automatique** :
 
-1. User sur `/tarifs` clique sur le CTA d'un plan (Solo / Essentielle / Pro).
+1. User sur `/tarifs` clique sur le CTA d'un plan payant (Starter ou Pro).
 2. Page `/souscrire?plan=X` → form (email + organisation + sièges estimés).
 3. POST `/api/payments/checkout/start` → crée Payplug Customer + Subscription anonyme.
 4. User redirigé sur la page Payplug, paye.
@@ -141,7 +143,7 @@ Une fois ces variables posées, **le flow self-service est entièrement automati
 
 **Aucune intervention humaine côté Humanix dans ce parcours.**
 
-`/demande-abonnement` reste la voie pour les cas particuliers : +250 sièges, instance dédiée, SecNumCloud, white-label.
+`/demande-abonnement` reste la voie pour Enterprise (251+ sièges, instance dédiée, SecNumCloud, white-label) et tous les cas particuliers.
 
 ---
 
@@ -158,7 +160,7 @@ Pour répondre à une demande de `/demande-abonnement` ou pour bootstrapper un t
 npm run db:provision-tenant -- \
   --email="dsi@mapme.fr" \
   --org="Ma PME SAS" \
-  --plan="essentielle"
+  --plan="pro"
 ```
 
 Le script appelle `lib/tenant-provisioning.ts:provisionTenantWithAdmin()` qui :
@@ -176,7 +178,7 @@ import('./lib/tenant-provisioning.ts').then(async m => {
   const r = await m.provisionTenantWithAdmin({
     email: 'dsi@mapme.fr',
     organizationName: 'Ma PME SAS',
-    plan: 'essentielle',
+    plan: 'pro',
     source: 'superadmin-manual',
   });
   console.log(r);
