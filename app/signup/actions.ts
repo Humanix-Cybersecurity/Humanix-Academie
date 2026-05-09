@@ -13,9 +13,10 @@
 // Limites V1 (assumees) :
 //  - Pas de double opt-in email (trust on signup, comme la plupart des SaaS
 //    en B2B). L'utilisateur peut reset son mdp s'il s'est trompe d'email.
-//  - Seul le plan "starter" (forever-free) est autorise a l'ouverture
-//    de compte. Les autres plans (solo, essentielle, pro, premium) passent
-//    par le funnel commercial / paiement, hors scope de ce signup gratuit.
+//  - Seul le plan "starter" (gratuit jusqu'a 5 sieges) est autorise a
+//    l'ouverture de compte self-service. Les plans payants (Pro, Enterprise)
+//    passent par /souscrire (Payplug) ou /demande-abonnement (Enterprise),
+//    hors scope de ce signup gratuit.
 "use server";
 
 import { headers } from "next/headers";
@@ -66,7 +67,7 @@ export type SignupResult =
   | { ok: true }
   | { ok: false; error: string };
 
-export async function createDecouverteAccount(
+export async function createStarterAccount(
   formData: FormData,
 ): Promise<SignupResult> {
   if (process.env.DEMO_MODE === "true") {

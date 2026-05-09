@@ -53,7 +53,7 @@ Contact : `contact@humanix-cybersecurity.fr`
 
 ### 5. Quelle est la différence entre self-host gratuit et Cloud payant ?
 
-| Critère         | Self-host (Community)               | Cloud (Découverte/Starter/...) |
+| Critère         | Self-host (Community)               | Cloud (Starter) |
 | --------------- | ----------------------------------- | ------------------------------ |
 | Prix            | 0 €                                 | 0 € à sur devis                |
 | Installation    | Tu installes (Docker ou bare-metal) | Aucune, juste signup           |
@@ -63,7 +63,7 @@ Contact : `contact@humanix-cybersecurity.fr`
 | Support         | Communautaire (Discord, GitHub)     | Email/Chat selon palier        |
 | Modules         | 5 de base + connecteur GRC          | 5 → 30+ selon palier           |
 | Phishing simulé | Non inclus                          | Inclus dès Pro                 |
-| SSO entreprise  | Non inclus                          | Inclus dès Essentielle         |
+| SSO entreprise  | Non inclus                          | Inclus dès Pro         |
 | SecNumCloud     | Non                                 | Inclus dès Enterprise          |
 
 ### 6. Quel est le coût réel du self-host ?
@@ -78,7 +78,7 @@ Estimation honnête pour une PME de 30 collaborateurs sur 1 an :
 | Temps admin (install + maintenance) | 2j/an × ~600 € = 1 200 €/an |
 | **Total estimé**                    | **~1 350 €/an**             |
 
-Comparaison Cloud Essentielle pour 30 sièges :
+Comparaison Cloud Pro pour 30 sièges :
 
 - 30 × 3 €/mois × 12 = **1 080 €/an** (-20 %)
 

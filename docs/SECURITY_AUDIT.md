@@ -275,7 +275,7 @@ nmap, curl, wget, hydra, dirb, ncat, écriture de payloads custom.
 - **Multi-tenant logique** : tous les modèles sensibles ont un `tenantId String` obligatoire et indexé.
 - **Filtrage strict** dans toutes les requêtes Prisma : aucune query ne peut traverser les frontières tenant sans intention explicite.
 - **Hiérarchie de rôles** : `LEARNER < MANAGER < ADMIN < SUPERADMIN`.
-- **Plan-gating** : 6 paliers (`trial < decouverte < solo < essentielle < pro < premium`) avec catalogue de 9 features (`lib/plans.ts`).
+- **Plan-gating** : 3 paliers cloud (`starter < pro < enterprise`) avec catalogue de 11 features (`lib/plans.ts`). Anciens identifiants (`decouverte`, `solo`, `essentielle`, `premium`, `trial`) toujours acceptés en entrée et remappés gracieusement via `normalizePlan()`.
 
 #### Contrôles vérifiés
 

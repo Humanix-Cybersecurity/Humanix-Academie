@@ -55,9 +55,9 @@ Comment saurons-nous que cette feature est terminée et fonctionnelle ?
 Cette feature devrait-elle être disponible dans :
 
 - [ ] Community Edition (open source AGPL, gratuite)
-- [ ] Découverte (cloud forever-free)
+- [ ] Starter (sub-tier free, 5 sièges)
 - [ ] Starter (19 €/mois)
-- [ ] Essentielle (3 €/user)
+- [ ] Pro (3 €/user)
 - [ ] Pro (2,50 €/user)
 - [ ] Enterprise (sur devis)
 
