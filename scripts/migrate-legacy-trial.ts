@@ -26,10 +26,15 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+const LEGACY_PLAN_ID = "trial";
+const TARGET_PLAN_ID = "decouverte";
+const LEGACY_SUBSCRIPTION_STATUS = "trialing";
+const TARGET_SUBSCRIPTION_STATUS = "active";
+
 async function main() {
   const planChange = await prisma.tenant.updateMany({
-    where: { plan: "trial" },
-    data: { plan: "decouverte" },
+    where: { plan: LEGACY_PLAN_ID },
+    data: { plan: TARGET_PLAN_ID },
   });
   if (planChange.count > 0) {
     console.log(
@@ -38,8 +43,8 @@ async function main() {
   }
 
   const statusChange = await prisma.tenant.updateMany({
-    where: { subscriptionStatus: "trialing" },
-    data: { subscriptionStatus: "active" },
+    where: { subscriptionStatus: LEGACY_SUBSCRIPTION_STATUS },
+    data: { subscriptionStatus: TARGET_SUBSCRIPTION_STATUS },
   });
   if (statusChange.count > 0) {
     console.log(
