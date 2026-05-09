@@ -105,7 +105,7 @@ export async function sendViaScalewayTem(
     if (!res.ok) {
       const errBody = await res
         .text()
-        .catch(() => "[Unable to read error body]");
+        .catch(() => "[Failed to read error response body from Scaleway TEM API]");
       return {
         ok: false,
         reason: "scaleway_tem_api_error",
