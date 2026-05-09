@@ -587,6 +587,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           token.role = dbUser.role;
           token.name = dbUser.name;
         }
+      } else if (token.uid) {
+        const dbUser = await db.user.findUnique({
+          where: { id: token.uid },
+          select: {
+            id: true,
+            tenantId: true,
+            role: true,
+            name: true,
+            isActive: true,
+          },
+        });
+        if (!dbUser || !dbUser.isActive) {
+          delete token.uid;
+          delete token.tenantId;
+          delete token.role;
+          delete token.name;
+        } else {
+          token.uid = dbUser.id;
+          token.tenantId = dbUser.tenantId;
+          token.role = dbUser.role;
+          token.name = dbUser.name;
+        }
       }
       return token;
     },
