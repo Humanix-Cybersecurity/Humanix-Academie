@@ -76,6 +76,24 @@ export async function sendViaScalewayTem(
   const fromName =
     params.fromName ?? process.env.NEXT_PUBLIC_APP_NAME ?? DEFAULT_FROM_NAME;
 
+  const normalizedHtml =
+    typeof params.html === "string" && params.html.trim().length > 0
+      ? params.html
+      : undefined;
+  const normalizedText =
+    typeof params.text === "string" && params.text.trim().length > 0
+      ? params.text
+      : undefined;
+
+  if (!normalizedHtml && !normalizedText) {
+    return {
+      ok: false,
+      reason: "scaleway_tem_missing_content",
+      details:
+        "Either `html` or `text` content must be provided to send an email.",
+    };
+  }
+
   const recipients = (
     Array.isArray(params.to) ? params.to : [params.to]
   ).map((email) => ({ email }));
@@ -88,8 +106,8 @@ export async function sendViaScalewayTem(
     from: { email: fromAddress, name: fromName },
     to: recipients,
     subject: params.subject,
-    html: params.html ?? undefined,
-    text: params.text ?? undefined,
+    html: normalizedHtml,
+    text: normalizedText,
     project_id: projectId,
     additional_headers: additionalHeaders,
   };
