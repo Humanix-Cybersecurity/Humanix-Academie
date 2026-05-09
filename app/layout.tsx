@@ -79,7 +79,7 @@ export const metadata: Metadata = {
 };
 
 // Schema.org Organization - aide Google a comprendre que Humanix est une
-// app cybersecurite francaise. Permet rich snippets et knowledge panel.
+// app cybersecurite française. Permet rich snippets et knowledge panel.
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -108,7 +108,7 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-// Script anti-flash : applique le theme AVANT le render React pour eviter
+// Script anti-flash : applique le theme AVANT le render React pour éviter
 // un flash de couleur au chargement.
 // Defaut produit : MODE CLAIR. Le mode sombre s'active uniquement si
 // l'utilisateur l'a choisi explicitement (saved === 'dark') ou s'il a
