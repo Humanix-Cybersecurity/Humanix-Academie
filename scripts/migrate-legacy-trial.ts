@@ -33,7 +33,7 @@ async function main() {
   });
   if (planChange.count > 0) {
     console.log(
-      `[migrate-legacy-trial] ${planChange.count} tenant(s) rebasculé(s) plan=trial -> decouverte`,
+      `[migrate-legacy-trial] ${planChange.count} tenant(s) rebasculé(s) plan=trial -> starter`,
     );
   }
 
