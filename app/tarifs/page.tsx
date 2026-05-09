@@ -320,7 +320,7 @@ export default async function TarifsPage({
             {
               emoji: "📊",
               title: "Score de risque humain",
-              text: "Mesure objective, en temps reel, par collaborateur et par service. Ce que ton assureur cyber demande.",
+              text: "Mesure objective, en temps réel, par collaborateur et par service. Ce que ton assureur cyber demande.",
             },
             {
               emoji: "🛒",
