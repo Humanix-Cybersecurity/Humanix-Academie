@@ -710,11 +710,10 @@ export default async function TarifsPage({
           ne peut pas être un luxe quand 90 % des attaques visent les humains. »
         </blockquote>
         <cite
-          className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
         >
           - Hex veille
         </cite>
-      </section>
+        </cite>
       </div>
     </main>
   );
@@ -822,7 +821,7 @@ function CtaButton({
     return (
       <a
         href="https://github.com/Humanix-Cybersecurity/humanix-ce"
-        target="_blank"
+        href="https://github.com/Humanix-Cybersecurity/humanix-ce"
         rel="noreferrer"
         className={cls}
       >
