@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Console dirigeant - vue agrégée, KPIs, graphiques, suivi equipe.
+// Console dirigeant - vue agrégée, KPIs, graphiques, suivi équipe.
 //
 // REFONTE MAI 2026 (cosy / charmant / impactant) : la page wrap le dashboard
 // avec une intro chaleureuse facon "rituel matinal" :
@@ -72,7 +72,7 @@ export default async function AdminPage() {
   // Un episode peut rapporter ~50 (xpReward) + jusqu'a 50 (quiz parfait : 5 questions x 10pts)
   // + ~50 (choix optimal scenario), soit ~150 XP au total. C'est volontaire :
   // le champ est utilise pour la gamification (level up, classement).
-  // -> On affiche donc "XP moyens / episode" et NON "Score /100" pour eviter
+  // -> On affiche donc "XP moyens / episode" et NON "Score /100" pour éviter
   //    l'incoherence visuelle (ex: 132/100). La maitrise reelle du sujet est
   //    visible sur /admin/business via le User.riskScore (borne 0-100).
   const averageXpPerEpisode =
@@ -84,7 +84,7 @@ export default async function AdminPage() {
         );
   const totalXP = allProgress.reduce((s, p) => s + (p.score || 0), 0);
 
-  // Score "maitrise" agrege au niveau tenant : moyenne des riskScore deja borne
+  // Score "maitrise" agrege au niveau tenant : moyenne des riskScore déjà borne
   // dans lib/risk-score.ts (Math.max(0, Math.min(100, score))). C'est lui que
   // le dirigeant doit regarder en priorite, pas l'XP.
   const masteryAverage =
@@ -171,11 +171,11 @@ export default async function AdminPage() {
   // (vs "voici l'etat de maturite" generique). On adapte au contexte reel.
   const hint =
     totalSeats === 0
-      ? "L'equipe n'est pas encore activee. Premiere etape sereine : inviter les premiers explorateurs."
+      ? "L'équipe n'est pas encore activee. Premiere etape sereine : inviter les premiers explorateurs."
       : seenAtLeastOne === 0
         ? "Personne n'a encore franchi la porte d'apprendre. Un petit message d'invitation peut declencher la dynamique."
         : activationRate >= 80
-          ? "L'equipe est bien lancee. Aujourd'hui, c'est plus de polissage que d'urgence."
+          ? "L'équipe est bien lancee. Aujourd'hui, c'est plus de polissage que d'urgence."
           : activationRate >= 40
             ? "La dynamique est lancee. Quelques personnes meritent un coup de main pour rejoindre le groupe."
             : "Le decollage est encore timide. Une relance bienveillante peut reveiller les premiers reflexes.";
@@ -226,7 +226,7 @@ export default async function AdminPage() {
       </HexBackdrop>
 
       {/* ============================================================
-          2. DASHBOARD METIER - recharts + KPI + suivi equipe
+          2. DASHBOARD METIER - recharts + KPI + suivi équipe
           ============================================================ */}
       <AdminDashboard
         stats={{

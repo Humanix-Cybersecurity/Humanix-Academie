@@ -30,7 +30,7 @@ export default async function BoutiquePage() {
     }),
     // Filtre saisonnalite : on garde les items toujours dispo (window null)
     // ou dont la fenetre [availableFrom, availableUntil] contient la date
-    // courante. Les items hors saison ne sont meme pas retournes au client
+    // courante. Les items hors saison ne sont même pas retournes au client
     // (meilleure UX que de les afficher grises avec un "reviens en oct").
     db.shopItem.findMany({
       where: {
@@ -62,7 +62,7 @@ export default async function BoutiquePage() {
     inventory.filter((i) => i.isEquipped).map((i) => i.itemId),
   );
 
-  // Group items par categorie
+  // Group items par catégorie
   const grouped = {
     HAT: items.filter((i) => i.category === "HAT"),
     GLASSES: items.filter((i) => i.category === "GLASSES"),
@@ -125,7 +125,7 @@ export default async function BoutiquePage() {
         </div>
       </div>
 
-      {/* Sections par categorie */}
+      {/* Sections par catégorie */}
       {Object.entries(grouped).map(([cat, list]) => (
         <section key={cat} className="mb-10">
           <h2 className="text-2xl font-bold text-primary-500 mb-4 flex items-center gap-2">

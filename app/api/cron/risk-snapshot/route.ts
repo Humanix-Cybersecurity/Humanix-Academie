@@ -2,8 +2,8 @@
 //
 // Endpoint cron : photo quotidienne du score de risque agrege par tenant.
 //
-// Frequence recommandee : 1 fois par jour (idealement la nuit, ex 03:00
-// UTC pour eviter les pics d'activite).
+// Fréquence recommandee : 1 fois par jour (idealement la nuit, ex 03:00
+// UTC pour éviter les pics d'activite).
 //
 // Configuration cron exemple :
 //   - Vercel Cron (vercel.json) : "0 3 * * *"
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
 }
 
 // Support GET pour les services qui ne savent que faire des GET (cron-job.org gratuit).
-// Securite identique : verif du secret en query.
+// Sécurité identique : verif du secret en query.
 export async function GET(req: NextRequest) {
   const provided =
     req.headers.get("x-cron-secret") ??

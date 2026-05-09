@@ -4,7 +4,7 @@
 // + bouton telechargement PDF + CTA contact.
 //
 // L'URL est devinable (cuid), donc le contenu est volontairement neutre :
-// pas de donnees sensibles affichees au-dela de ce que le prospect a deja saisi.
+// pas de données sensibles affichees au-dela de ce que le prospect a déjà saisi.
 
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";

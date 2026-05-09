@@ -70,7 +70,7 @@ export default async function PhishingLandingPage({
 
     // 1) Auto-enrolement dans le mini-module flash adapte au template.
     // On cree une row Progress IN_PROGRESS (si l'episode existe en BDD).
-    // Si elle existe deja (re-clic ou autre), on ne touche pas (preserve
+    // Si elle existe déjà (re-clic ou autre), on ne touche pas (preserve
     // un eventuel COMPLETED). Best-effort : un echec ici ne bloque pas
     // l'affichage de la landing.
     if (tpl?.remediationEpisode) {
@@ -107,7 +107,7 @@ export default async function PhishingLandingPage({
     }
 
     // 2) Dispatch webhook temps reel (Slack/Teams admin)
-    // Permet l'alerte RSSI en quelques secondes apres le clic, et le
+    // Permet l'alerte RSSI en quelques secondes après le clic, et le
     // declenchement de procedures externes (SOAR, ticketing, etc.).
     try {
       await fireWebhook(result.campaign.tenantId, "phishing.user_clicked", {
@@ -121,12 +121,12 @@ export default async function PhishingLandingPage({
           : null,
       });
     } catch {
-      // best-effort (cf. fireWebhook deja fail-safe en interne)
+      // best-effort (cf. fireWebhook déjà fail-safe en interne)
     }
 
     // 3) Remediations auto opt-in (configurables /admin/automations).
     // On agit sur l'user pour limiter les degats d'un futur clic reel :
-    //   - Force 2FA : marque mfaForced=true si pas deja configure
+    //   - Force 2FA : marque mfaForced=true si pas déjà configure
     //   - Revoke sessions : deconnecte tous les devices
     // Best-effort : un echec ici ne bloque pas la landing.
     const tenantPolicy = result.campaign.tenant;
@@ -143,7 +143,7 @@ export default async function PhishingLandingPage({
     }
     if (tenantPolicy.autoRevokeSessionAfterPhishingClick) {
       try {
-        // Revoque toutes les sessions actives. Au prochain acces,
+        // Revoque toutes les sessions actives. Au prochain accès,
         // l'user devra se reconnecter (et configurer 2FA si force_2fa
         // est aussi actif).
         await db.session.deleteMany({ where: { userId: result.userId } });

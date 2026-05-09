@@ -113,7 +113,7 @@ export default function DemoPage() {
     try {
       await switchDemoPlan(selectedPlan);
     } catch {
-      // si ca foire, on continue quand meme avec le plan en place
+      // si ca foire, on continue quand même avec le plan en place
     }
     const res = await signIn("demo", {
       email,
@@ -196,7 +196,7 @@ export default function DemoPage() {
             Étape 2 - Le rôle que tu veux incarner
           </p>
           {/* 3 col >=sm (3 roles -> 3 cards alignees), 1 col en mobile.
-              items-stretch + h-full sur les cards = hauteurs identiques meme
+              items-stretch + h-full sur les cards = hauteurs identiques même
               si descriptions de longueurs differentes. */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 items-stretch">
             {ROLES.map((r) => (

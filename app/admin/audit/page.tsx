@@ -70,9 +70,9 @@ export default async function AdminAuditPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <caption className="sr-only">
-                Journal d'audit des actions sensibles tracees pour conformite
+                Journal d'audit des actions sensibles tracees pour conformité
                 RGPD / NIS2 / ISO 27001, triees par date decroissante : date,
-                severite, action, issue (succes/echec), acteur et cible
+                severite, action, issue (succès/echec), acteur et cible
               </caption>
               <thead className="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-slate-800">
                 <tr>

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Page de confirmation apres /api/unsubscribe. Affichee quand l'utilisateur
+// Page de confirmation après /api/unsubscribe. Affichee quand l'utilisateur
 // a clique sur le lien "Se desinscrire" classique dans un mail (pas one-click
 // Gmail). On confirme visuellement la prise en compte de la demande et on
 // donne un moyen de re-subscribe si c'etait par erreur.

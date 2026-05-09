@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Endpoint cron : envoie l'anecdote du lundi a tous les abonnes.
 // Protection : header X-Cron-Secret + timing-safe compare.
-// Frequence cible : tous les lundis a 8h00 (a planifier dans le cron OS / Vercel cron).
+// Fréquence cible : tous les lundis a 8h00 (a planifier dans le cron OS / Vercel cron).
 //
 // Auth alternative : un admin/superadmin authentifie peut aussi declencher (POST manuel).
 
