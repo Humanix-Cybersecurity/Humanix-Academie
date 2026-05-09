@@ -691,7 +691,7 @@ export default async function TarifsPage({
             href="mailto:contact@humanix-cybersecurity.fr"
             className="bg-white/10 backdrop-blur border-2 border-white/70 text-white font-bold px-6 sm:px-8 py-4 rounded-2xl hover:bg-white/20 transition"
           >
-            📞 Echanger avec un expert
+            📞 Échanger avec un expert
           </a>
         </div>
         <p className="text-xs opacity-70 mt-6 relative">
