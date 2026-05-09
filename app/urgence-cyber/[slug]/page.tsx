@@ -2,7 +2,7 @@
 // Fiche détaillée d'un type d'incident cyber.
 //
 // Une seule route paramétrée [slug] : sert toutes les fiches définies
-// dans lib/urgence-cyber/incidents.ts (ransomware, fuite-donnees,
+// dans lib/urgence-cyber/incidents.ts (ransomware, fuite-données,
 // fraude-president, compte-compromis, vol-perte-materiel).
 //
 // Genere statiquement à la build via generateStaticParams pour

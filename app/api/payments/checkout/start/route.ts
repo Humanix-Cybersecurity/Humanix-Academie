@@ -54,7 +54,7 @@ type StartRequest = {
 export async function POST(req: Request) {
   // En DEV_MODE on shortcut Payplug (cf. lib/dev-mode.ts pour le rationale
   // et le garde-fou NODE_ENV != "production"). Sinon on exige une config
-  // Payplug operationnelle pour ne pas creer de tenants payants fantomes.
+  // Payplug opérationnelle pour ne pas créer de tenants payants fantomes.
   if (!isPayplugConfigured() && !isDevMode()) {
     return NextResponse.json(
       {
@@ -120,7 +120,7 @@ export async function POST(req: Request) {
   }
 
   // === DEV_MODE : bypass Payplug, provisionnement immediat + auto-login ===
-  // Cf. lib/dev-mode.ts. Garde-fou NODE_ENV != "production" deja en place.
+  // Cf. lib/dev-mode.ts. Garde-fou NODE_ENV != "production" déjà en place.
   // On ne fait AUCUN appel Payplug : on cree directement tenant + ADMIN
   // comme si subscription.created etait remonte du webhook, puis on pose
   // le cookie de session via "dev-bypass" pour que l'admin atterrisse
@@ -192,7 +192,7 @@ export async function POST(req: Request) {
       planId,
       tenantId: "anonymous-inscription",
       appPlanId: planRaw,
-      successUrl: `${baseUrl}/souscrire/succes?plan=${encodeURIComponent(planRaw)}`,
+      successUrl: `${baseUrl}/souscrire/succès?plan=${encodeURIComponent(planRaw)}`,
       cancelUrl: `${baseUrl}/tarifs?canceled=1`,
       metadata: {
         mode: "anonymous-inscription",

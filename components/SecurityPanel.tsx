@@ -1,9 +1,9 @@
 "use client";
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Panel client pour /profil/securite : changer mdp, activer/desactiver 2FA,
+// Panel client pour /profil/sécurité : changer mdp, activer/desactiver 2FA,
 // regenerer codes de secours. Toute la logique passe par les server actions
-// dans /app/profil/securite/actions.ts (defense en profondeur cote serveur).
+// dans /app/profil/sécurité/actions.ts (defense en profondeur cote serveur).
 
 import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";

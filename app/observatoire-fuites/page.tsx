@@ -4,7 +4,7 @@
 // Brief : "experience, terrain, sensibilisation reelle, pas celle generee
 // par la peur - celle qui sent bon la maitrise et la confiance".
 //
-// Sujet sensible : les fuites de donnees peuvent generer de la peur.
+// Sujet sensible : les fuites de données peuvent générer de la peur.
 // Avant, le bandeau "⚠️ Personne n'est a l'abri" + gradient primary/accent
 // jouait sur ce registre. On refond pour transformer la peur en pedagogie :
 // "Ce qu'on apprend des fuites - sans dramatiser".
@@ -97,7 +97,7 @@ export default async function ObservatoireFuitesPage({
   searchParams: SearchParamsP;
 }) {
   // Lazy refresh non-bloquant : si la BDD est perimee, on lance le scrape
-  // en arriere-plan. La page se charge instantanement sur les donnees actuelles.
+  // en arriere-plan. La page se charge instantanement sur les données actuelles.
   maybeTriggerLazyRefresh();
 
   const sp = await searchParams;

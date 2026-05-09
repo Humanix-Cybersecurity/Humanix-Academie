@@ -3,7 +3,7 @@
 // Carousel des paliers tarifaires pour /tarifs.
 //
 // COMPORTEMENT :
-//   - 4 cards alignees sur une meme ligne (CE, Starter, Pro, Enterprise)
+//   - 4 cards alignees sur une même ligne (CE, Starter, Pro, Enterprise)
 //   - La card "selectionnee" est au centre, en pleine opacite, leger ring
 //   - Les cards adjacentes (distance 1) sont transparentes (opacity 0.45)
 //   - Les cards eloignees (distance 2+) sont quasi invisibles (opacity 0.1)

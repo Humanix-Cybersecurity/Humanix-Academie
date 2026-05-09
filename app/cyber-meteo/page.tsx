@@ -60,7 +60,7 @@ export default async function CyberMeteoPage() {
             className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed animate-slide-up"
             style={{ animationDelay: "220ms" }}
           >
-            Donnees officielles CERT-FR (cert.ssi.gouv.fr) agregees toutes les
+            Données officielles CERT-FR (cert.ssi.gouv.fr) agregees toutes les
             heures. Aucune telemetrie chez vous, aucune dependance hors UE,
             aucune alarmisme - juste la lecture honnete du moment.
           </p>
@@ -143,7 +143,7 @@ export default async function CyberMeteoPage() {
         <p className="opacity-90 mb-6 max-w-xl mx-auto leading-relaxed relative">
           Pour aller au-dela : photo claire de la maturite humaine de ton
           organisation en 5 minutes, ou demarrage d'un programme de
-          sensibilisation pour tes equipes.
+          sensibilisation pour tes équipes.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center relative">
           <Link

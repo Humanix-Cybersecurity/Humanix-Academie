@@ -248,7 +248,7 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
                   {(s.completionsCount > 0 || s.avgScore !== null) && (
                     <div>
                       <p className="text-[10px] uppercase tracking-widest font-bold text-accent-500 mb-2">
-                        Engagement de tes equipes
+                        Engagement de tes équipes
                       </p>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm">
                         <div className="rounded-lg bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 p-2.5">

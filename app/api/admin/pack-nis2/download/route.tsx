@@ -67,7 +67,7 @@ export async function GET(req: NextRequest) {
   const avgScore = Math.round(agg._avg.bestScore ?? 0);
 
   // Score de risque collectif (best-effort sans dependre de la lib qui peut
-  // etre lente). On prend la moyenne du riskScore user.
+  // être lente). On prend la moyenne du riskScore user.
   const usersAvg = await db.user.aggregate({
     where: { tenantId, isActive: true },
     _avg: { riskScore: true },

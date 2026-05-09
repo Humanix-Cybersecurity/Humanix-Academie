@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // POST /api/webauthn/register/verify
-// Recoit la reponse du navigateur apres interaction avec la cle FIDO2,
+// Recoit la reponse du navigateur après interaction avec la cle FIDO2,
 // verifie + persiste le credential.
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
@@ -24,7 +24,7 @@ export async function POST(req: Request) {
 
   const body = await req.json().catch(() => ({}));
   const response = body?.response;
-  const deviceName = String(body?.deviceName ?? "Cle de securite").slice(0, 100);
+  const deviceName = String(body?.deviceName ?? "Cle de sécurité").slice(0, 100);
   if (!response) {
     return NextResponse.json({ error: "Reponse manquante." }, { status: 400 });
   }

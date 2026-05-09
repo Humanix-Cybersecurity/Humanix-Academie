@@ -10,7 +10,7 @@
 // 8 sections narratives :
 //   1. Bandeau challenge (s'il y en a un, ton chaleureux et non urgent)
 //   2. Hero "Bonjour [prenom]" personnalise selon l'heure du jour
-//   3. Coach Hex (existait deja, garde)
+//   3. Coach Hex (existait déjà, garde)
 //   4. Ton prochain pas - l'action recommandee mise en valeur, cadeau
 //   5. Defi tranquille du jour - pas de pression, juste de la progression
 //   6. Tes saisons - cards magazine avec gradients doux par theme
@@ -94,10 +94,10 @@ const SAISON_PALETTES: Array<{
 // Citations chaleureuses - affichees en bas de page, alternance aleatoire
 const CITATIONS = [
   "La maitrise cyber, ce n'est pas un sommet - c'est un chemin. Cinq minutes par semaine suffisent.",
-  "Tu n'as pas a etre expert. Tu as juste a etre averti une seconde avant le clic.",
-  "Le meilleur reflexe cyber, c'est de prendre 30 secondes avant d'agir. Tu en es deja capable.",
+  "Tu n'as pas a être expert. Tu as juste a être averti une seconde avant le clic.",
+  "Le meilleur reflexe cyber, c'est de prendre 30 secondes avant d'agir. Tu en es déjà capable.",
   "Apprendre la cyber, c'est apprendre a se faire confiance. Hex t'accompagne, pas le contraire.",
-  "Chaque module fait baisser le risque pour toi, ton equipe, ta famille. Sans drame.",
+  "Chaque module fait baisser le risque pour toi, ton équipe, ta famille. Sans drame.",
 ];
 
 // ===========================================================================
@@ -205,7 +205,7 @@ export default async function ApprendrePage() {
   // niveau "hard" quand maturite >= 70%). On utilise score (XP/totalXP%
   // approche) faute de bestQuizScorePct ici ; pour 99% des cas la
   // correlation est suffisante pour la classification.
-  // (cf. lib/risk-score.ts:71 qui fait la meme estimation)
+  // (cf. lib/risk-score.ts:71 qui fait la même estimation)
   const completedProgress = progress.filter(
     (p) => p.status === "COMPLETED",
   );
@@ -284,7 +284,7 @@ export default async function ApprendrePage() {
       : hour < 12
         ? "Bonjour"
         : hour < 18
-          ? "Bel apres-midi"
+          ? "Bel après-midi"
           : "Bonsoir";
   const firstName = user?.name?.split(" ")[0] ?? "toi";
 
@@ -302,7 +302,7 @@ export default async function ApprendrePage() {
     recommendedEpisode &&
     progressByEp.get(recommendedEpisode.id)?.status === "IN_PROGRESS";
 
-  // Citation aleatoire de fin de page (deterministe par jour pour eviter
+  // Citation aleatoire de fin de page (deterministe par jour pour éviter
   // des sauts de placement entre rafraichissements)
   const citationIdx = today.getDate() % CITATIONS.length;
   const citation = CITATIONS[citationIdx];
@@ -330,7 +330,7 @@ export default async function ApprendrePage() {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-[10px] uppercase tracking-widest font-bold text-amber-700 dark:text-amber-200">
-                  Challenge en cours · entre equipes
+                  Challenge en cours · entre équipes
                 </p>
                 <p className="text-sm sm:text-base font-bold text-primary-500 dark:text-accent-300 truncate">
                   {activeChallenge.title}
@@ -429,7 +429,7 @@ export default async function ApprendrePage() {
 
       <div className="max-w-5xl mx-auto px-4 py-8 sm:py-10 space-y-8">
         {/* ============================================================
-            3. COACH HEX - guidage personnalise (existait deja)
+            3. COACH HEX - guidage personnalise (existait déjà)
             ============================================================ */}
         <CoachCard
           advice={coachAdvice}
@@ -616,7 +616,7 @@ export default async function ApprendrePage() {
                 {streak >= 3
                   ? `Tu construis du reflexe depuis ${streak} jours. C'est ca, la maitrise.`
                   : completedCount >= 5
-                    ? "Tu as deja un bagage solide. Continue d'aiguiser tes reflexes."
+                    ? "Tu as déjà un bagage solide. Continue d'aiguiser tes reflexes."
                     : "Chaque module ajoute une corde a ton arc. Sans drame."}
               </p>
             </div>
@@ -787,12 +787,12 @@ function SaisonCard({
 
         {/* Badges contextuels : recommande RH (mandatory) + persona-match
             ("pour toi") + targetedGroups ("pour ton metier"). On les
-            affiche seulement si pertinents (pct < 100, etc.) pour eviter
-            le bruit visuel sur les saisons deja terminees. */}
+            affiche seulement si pertinents (pct < 100, etc.) pour éviter
+            le bruit visuel sur les saisons déjà terminees. */}
         <div className="flex flex-wrap gap-2 mb-3">
           {saison.isMandatory && pct < 100 && (
             <span className="text-[10px] uppercase tracking-widest font-bold bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 px-2 py-1 rounded-full">
-              Recommande par ton equipe
+              Recommande par ton équipe
             </span>
           )}
           {classification.bucket === "recommended" &&

@@ -94,7 +94,7 @@ export default function VishingGeneratorClient() {
   const [ttsLoading, setTtsLoading] = useState(false);
   const [ttsError, setTtsError] = useState<string | null>(null);
   // Voix par defaut : `fr_marie_angry` (rendu pressant typique d'un appel
-  // vishing). L'utilisateur peut switcher avant ou apres une lecture.
+  // vishing). L'utilisateur peut switcher avant ou après une lecture.
   const [voice, setVoice] = useState<string>("fr_marie_angry");
 
   async function handleGenerate(e: React.FormEvent) {
@@ -261,7 +261,7 @@ export default function VishingGeneratorClient() {
           disabled={loading || !service.trim()}
           className="btn-primary"
         >
-          {loading ? "Generation en cours..." : "🎙️ Generer le script de vishing"}
+          {loading ? "Generation en cours..." : "🎙️ Générer le script de vishing"}
         </button>
 
         {error && (
@@ -291,7 +291,7 @@ export default function VishingGeneratorClient() {
             <div className="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
               {/* Selecteur de voix Voxtral (4 emotions Marie). Ignore en mode
                   Piper. Nuance pedagogique : choisir la voix qui colle au
-                  scenario d'attaque rend le debrief apres-coup plus parlant. */}
+                  scenario d'attaque rend le debrief après-coup plus parlant. */}
               <label className="flex items-center gap-2 text-xs">
                 <span className="text-gray-600 dark:text-gray-400 sr-only sm:not-sr-only">
                   Voix
@@ -332,7 +332,7 @@ export default function VishingGeneratorClient() {
           {script.redFlags.length > 0 && (
             <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md p-3">
               <h3 className="font-bold text-green-800 dark:text-green-200 mb-2 text-sm">
-                Signaux faibles a debriefer apres la simulation
+                Signaux faibles a debriefer après la simulation
               </h3>
               <ul className="text-sm space-y-1 list-disc list-inside text-green-900 dark:text-green-100">
                 {script.redFlags.map((f, i) => (

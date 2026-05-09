@@ -150,7 +150,7 @@ export async function fireTestWebhook(formData: FormData): Promise<void> {
   revalidatePath("/admin/integrations");
 }
 
-// Toutes les valeurs publiques d'evenements (pour validation cote client si besoin)
+// Toutes les valeurs publiques d'événements (pour validation cote client si besoin)
 export async function getAllWebhookEvents(): Promise<readonly string[]> {
   return ALL_WEBHOOK_EVENTS;
 }

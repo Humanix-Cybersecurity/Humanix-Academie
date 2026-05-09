@@ -268,7 +268,7 @@ export default async function IntegrationsPage() {
 }
 
 function maskUrl(url: string): string {
-  // On masque les segments apres /services/ ou /T*** pour eviter de leak
+  // On masque les segments après /services/ ou /T*** pour éviter de leak
   // les tokens en cas de capture d'ecran admin.
   try {
     const u = new URL(url);

@@ -14,7 +14,7 @@
 //   - Auth requise (pas d'usage anonyme : couts API + tracage)
 //   - Rate limit : 20 req/h/user (suffisant pour usage normal,
 //     bloque le abuse)
-//   - Pas de PII envoyee dans le prompt (deja garanti par buildPrompt)
+//   - Pas de PII envoyee dans le prompt (déjà garanti par buildPrompt)
 //   - Persona infere automatiquement (l'user ne peut pas se faire passer
 //     pour un autre niveau)
 
@@ -72,7 +72,7 @@ export async function POST(req: Request) {
     );
   }
 
-  // Le persona est infere du user : il ne peut pas etre triche cote client
+  // Le persona est infere du user : il ne peut pas être triche cote client
   // (sinon un user pourrait demander des reponses "developer" pour avoir
   // plus de details techniques). Source de verite = BDD + heuristique.
   const persona = await getUserPersona(userId);

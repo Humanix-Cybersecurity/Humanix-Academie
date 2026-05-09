@@ -47,7 +47,7 @@ export async function startSsoInscription(provider: string): Promise<void> {
 /**
  * Démarre l'inscription via magic link email. Pose le cookie d'intention,
  * envoie l'email via le provider nodemailer (Scaleway TEM en prod), puis
- * redirige vers /connexion/verification.
+ * redirige vers /connexion/vérification.
  *
  * En DEV_MODE (jamais en prod, cf. lib/dev-mode.ts), on shortcut le mail
  * et on logue l'utilisateur directement via le provider "dev-bypass" comme

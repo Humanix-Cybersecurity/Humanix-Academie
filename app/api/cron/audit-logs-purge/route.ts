@@ -11,7 +11,7 @@
 //     confondues) au-delà de 400j par défaut. C'est un filet de sécurité
 //     pour les tenants qui n'ont PAS configuré de rétention.
 //
-// Frequence recommandee : 1x/jour (apres 04:00 UTC, juste apres la
+// Fréquence recommandee : 1x/jour (après 04:00 UTC, juste après la
 // data-retention-purge tenant-level).
 //
 // Auth : header X-Cron-Secret == process.env.CRON_SECRET. Refus 403 sinon.

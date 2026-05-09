@@ -53,7 +53,7 @@ export async function POST(req: Request) {
   });
   if (!result.ok) {
     return NextResponse.json(
-      { error: result.error ?? "Verification echouee." },
+      { error: result.error ?? "Vérification echouee." },
       { status: 401 },
     );
   }

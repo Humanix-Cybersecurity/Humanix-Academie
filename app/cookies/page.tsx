@@ -100,7 +100,7 @@ export default function CookiesPage() {
           Les cookies de session sont{" "}
           <strong>indispensables au fonctionnement</strong> du service
           authentifié (impossible de rester connecté sans). Vous pouvez les
-          supprimer à tout moment via les paramètres de votre navigateur, mais
+          supprimer à tout moment via les paramètrès de votre navigateur, mais
           cela vous déconnectera de la plateforme.
         </p>
         <p>Liens utiles selon votre navigateur :</p>

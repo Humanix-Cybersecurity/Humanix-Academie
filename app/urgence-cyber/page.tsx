@@ -19,12 +19,12 @@
 //
 // ACCESSIBILITE PUBLIQUE
 // ======================
-// Page sans login. Un dirigeant en panique a 23h ne va pas creer un
+// Page sans login. Un dirigeant en panique a 23h ne va pas créer un
 // compte - il va googler "que faire si je suis pirate" et atterrir ici.
 //
 // REGISTRE
 // ========
-// Maitrise sobre comme /securite (RSSI), pas chaleur cosy comme
+// Maitrise sobre comme /sécurité (RSSI), pas chaleur cosy comme
 // /famille. Un incident cyber est serieux. On rassure par la clarte
 // d'action, pas par la tendresse.
 

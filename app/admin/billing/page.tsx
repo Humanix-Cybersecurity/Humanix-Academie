@@ -6,7 +6,7 @@
 //   - CTA upgrade / downgrade / annuler
 //   - Lien portail Payplug self-service
 //
-// Defense en profondeur : layout admin/ verifie deja le role >= ADMIN.
+// Defense en profondeur : layout admin/ verifie déjà le role >= ADMIN.
 // On affiche cette page même aux ADMIN qui n'auraient pas le droit de modifier
 // le plan -- l'action est gardée server-side dans actions.ts.
 

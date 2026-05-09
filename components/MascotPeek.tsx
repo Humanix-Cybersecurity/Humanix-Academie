@@ -94,7 +94,7 @@ export default function MascotPeek() {
     }
   };
 
-  // Pas afficher tant que pas mounted (eviter mismatch SSR)
+  // Pas afficher tant que pas mounted (éviter mismatch SSR)
   if (!mounted) return null;
   if (dismissed) return null;
 

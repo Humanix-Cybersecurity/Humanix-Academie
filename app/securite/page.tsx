@@ -10,7 +10,7 @@
 // chaleur. Palette navy/cyan/slate (pas de rose, pas d'amber).
 //
 // La page existante etait factuellement solide mais visuellement plate.
-// Cette refonte preserve TOUS les contenus (tres apprecies des RSSI) et
+// Cette refonte preserve TOUS les contenus (très apprecies des RSSI) et
 // ajoute :
 // - Hero avec signature de date precise (les RSSI veulent des dates)
 // - Section TL;DR : 6 KPIs en cards-stat pour un coup d'oeil rapide

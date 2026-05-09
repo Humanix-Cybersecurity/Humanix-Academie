@@ -1,7 +1,7 @@
 "use client";
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Composant client pour la section "Droit a l'oubli" sur /profil/donnees.
+// Composant client pour la section "Droit a l'oubli" sur /profil/données.
 
 import { useState, useTransition } from "react";
 import { requestSelfErasure } from "@/app/profil/donnees/actions";

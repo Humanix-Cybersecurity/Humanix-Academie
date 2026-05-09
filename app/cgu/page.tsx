@@ -20,7 +20,7 @@ const TOC = [
   { id: "usages", label: "4. Usages autorisés / interdits" },
   { id: "marketplace", label: "5. Marketplace et contributions" },
   { id: "disponibilite", label: "6. Disponibilité" },
-  { id: "donnees", label: "7. Données personnelles" },
+  { id: "données", label: "7. Données personnelles" },
   { id: "propriete", label: "8. Propriété intellectuelle" },
   { id: "fermeture", label: "9. Suspension du compte" },
   { id: "tiers", label: "10. Liens et services tiers" },
