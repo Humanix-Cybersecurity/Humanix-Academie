@@ -498,9 +498,11 @@
 }
 
 /* =============================================================================
-   Console dirigeant - refonte juin 2026 (sidebar accordeon).
-   Le layout app/admin/layout.tsx gere l'offset via flex + padding-left
-   lg:pl-60 (sidebar fixe 240px). Aucun useEffect ni classe injectee.
+   Console dirigeant - sidebar slim 56px qui expand a 240px au hover, avec
+   sections accordeon a l'interieur. Le layout app/admin/layout.tsx gere
+   l'offset via flex + padding-left lg:pl-14 (56px = largeur slim).
+   La version expanded passe en overlay au-dessus du contenu - pas de
+   push-on-hover qui ferait sauter la mise en page.
    ============================================================================= */
 
 /* =============================================================================
