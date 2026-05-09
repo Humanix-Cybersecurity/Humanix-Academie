@@ -548,10 +548,13 @@ export default async function TarifsPage({
             <div>
               <p className="text-xs uppercase tracking-[0.25em] font-bold text-emerald-700 dark:text-emerald-300 mb-2">
                 Retour sur investissement · sans embellir
-              </p>
               <h2
                 id="roi-stats-heading"
                 className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-3 leading-tight"
+              >
+              <h2
+                id="roi-stats-heading"
+              <ul aria-labelledby="roi-stats-heading" className="space-y-2 text-gray-700">
               >
                 Les chiffres, posés froidement.
               </h2>
