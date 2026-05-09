@@ -664,7 +664,7 @@ export default async function TarifsPage({
           id="cta-final"
           className="font-display text-3xl sm:text-4xl font-extrabold mb-3 relative leading-tight"
         >
-          Prends une etoile, prends un compte, ou juste un cafe.
+          Prends une étoile, prends un compte, ou juste un café.
         </h2>
         <p className="text-lg opacity-90 mb-8 max-w-xl mx-auto leading-relaxed relative">
           Self-host libre ou cloud gratuit en 2 minutes. Premier module jouable
