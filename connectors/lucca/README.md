@@ -12,7 +12,7 @@ Synchronise les utilisateurs **Lucca** (HR souverain français) vers **Humanix A
 
 - Python 3.10+
 - Compte Lucca avec API activée (Settings → API → générer une clé application)
-- Clé API Humanix (plan Essentielle ou supérieur)
+- Clé API Humanix (plan Pro ou supérieur)
 
 ## Installation
 

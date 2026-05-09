@@ -70,7 +70,7 @@ Champs :
 | `licenseId` | Identifiant unique pour audit / révocation |
 | `issuedTo` | Nom de l'organisation (texte libre, affiché dans UI) |
 | `domain` | Cluster-lock : la licence n'est valide que pour ce domaine + sous-domaines. `null` pour licence globale. |
-| `plan` | `trial` / `decouverte` / `solo` / `essentielle` / `pro` / `premium` |
+| `plan` | `starter` / `pro` / `enterprise` (anciens alias `decouverte`/`solo` → `starter`, `essentielle` → `pro`, `premium` → `enterprise`, `trial` → `starter` — normalisation gracieuse) |
 | `maxSeats` | Sièges max (null = illimité) |
 | `featuresOverride` | Whitelist explicite de features (vide = utilise le plan) |
 | `issuedAt` / `expiresAt` | ISO 8601 UTC |
@@ -120,7 +120,7 @@ npm run licensing:generate -- \
 Pour une licence **globale** (sans cluster-lock) :
 
 ```bash
-npm run licensing:generate -- --tenant="Beta SAS" --plan=premium --years=2
+npm run licensing:generate -- --tenant="Beta SAS" --plan=enterprise --years=2
 ```
 
 Pour des **features custom** (Enterprise atypique : "Pro + multi-site sans aller jusqu'à Premium") :
@@ -173,7 +173,7 @@ L'app expose (à venir, PR séparée) une page `/admin/license` qui affiche :
 - Domaine cluster-locked
 - Features débloquées
 
-Sans licence valide, l'app fonctionne en mode **trial / découverte** (5 sièges, features de base seulement).
+Sans licence valide, l'app fonctionne en mode **Starter sub-tier free** (5 sièges, features de base seulement).
 
 ### 6.4 Renouvellement
 
