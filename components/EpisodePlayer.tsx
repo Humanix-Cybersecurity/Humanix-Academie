@@ -31,6 +31,7 @@ import LevelUpOverlay from "@/components/LevelUpOverlay";
 import TTSButton from "@/components/TTSButton";
 import FormattedText from "@/components/FormattedText";
 import LiveRegion from "@/components/a11y/LiveRegion";
+import HexRecap from "@/components/HexRecap";
 import { useAnnouncer } from "@/lib/a11y";
 
 type Step = "scenario" | "debrief" | "quiz" | "recap";
@@ -84,6 +85,10 @@ export default function EpisodePlayer(props: {
   const [quizIndex, setQuizIndex] = useState(initialQuizIndex);
   const [quizScore, setQuizScore] = useState(0);
   const [answered, setAnswered] = useState<string | null>(null);
+  // Trace par-question des reponses de l'user (pour /api/ai/recap)
+  const [quizAnswers, setQuizAnswers] = useState<
+    { questionIndex: number; selectedChoiceId: string }[]
+  >([]);
   const [persisted, setPersisted] = useState(false);
   const [coinsEarned, setCoinsEarned] = useState(0);
   const [levelUp, setLevelUp] = useState<number | null>(null);
@@ -152,6 +157,12 @@ export default function EpisodePlayer(props: {
 
   const handleQuizAnswer = (id: string) => {
     setAnswered(id);
+    // Memorise la reponse pour le recap IA (un slot par question, idempotent
+    // si l'user revient sur une question)
+    setQuizAnswers((prev) => {
+      const filtered = prev.filter((a) => a.questionIndex !== quizIndex);
+      return [...filtered, { questionIndex: quizIndex, selectedChoiceId: id }];
+    });
     const q = props.quiz[quizIndex];
     const correct = q.choices.find((cc) => cc.correct)?.id === id;
     if (correct) {
@@ -521,6 +532,15 @@ export default function EpisodePlayer(props: {
                 value={`${Math.round(quizSuccessRate * 100)}%`}
               />
             </div>
+
+            {/* Recap IA personnalise (sauf sans-faute) : Hex synthetise les
+                questions ratees adapte au persona de l'user. */}
+            <HexRecap
+              saisonSlug={props.saisonSlug}
+              episodeSlug={props.episodeSlug}
+              userAnswers={quizAnswers}
+              perfect={quizSuccessRate === 1}
+            />
 
             {quizSuccessRate === 1 && (
               <div className="inline-flex items-center gap-3 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-950/40 dark:to-yellow-950/30 border-2 border-amber-300 dark:border-amber-800/60 rounded-2xl px-5 py-3 mb-6 animate-bounce-once">
