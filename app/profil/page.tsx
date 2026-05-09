@@ -163,6 +163,13 @@ export default async function ProfilPage() {
                       {user.service}
                     </span>
                   )}
+                  <Link
+                    href="/profil/infos"
+                    className="text-xs text-accent-700 dark:text-accent-300 hover:text-accent-600 font-medium underline-offset-4 hover:underline"
+                    title="Modifier mon nom et mon service"
+                  >
+                    ✎ Modifier
+                  </Link>
                 </div>
                 <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 mb-1">
                   Niveau {level.id}
