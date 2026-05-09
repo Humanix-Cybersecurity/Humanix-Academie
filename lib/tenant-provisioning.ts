@@ -89,7 +89,7 @@ async function buildUniqueSlug(name: string): Promise<string | null> {
   if (base === COMMUNITY_TENANT_SLUG) return null; // anti-collision community
 
   for (let i = 0; i < 50; i++) {
-    const candidate = i === 0 ? base : `${base}-${i + 1}`;
+    const candidate = i === 0 ? base : `${base}-${i}`;
     const exists = await db.tenant.findUnique({
       where: { slug: candidate },
       select: { id: true },
