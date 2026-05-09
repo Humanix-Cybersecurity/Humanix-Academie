@@ -86,10 +86,6 @@ export default async function AdminLicensePage() {
               <strong>Pour les self-host AGPLv3</strong>, sans licence
               configurée, l'app fonctionne en plan{" "}
               <code className="px-1.5 py-0.5 bg-cyan-100 dark:bg-cyan-900/40 rounded text-cyan-800 dark:text-cyan-200 font-mono">
-                trial
-              </code>{" "}
-              ou{" "}
-              <code className="px-1.5 py-0.5 bg-cyan-100 dark:bg-cyan-900/40 rounded text-cyan-800 dark:text-cyan-200 font-mono">
                 decouverte
               </code>{" "}
               avec les features de base. Pour activer le palier Pro ou
@@ -338,7 +334,8 @@ function InactiveLicensePanel({ error }: { error: LicenseError }) {
   const message = describeLicenseError(error);
 
   // Si la licence n'est pas configuree, c'est un cas normal - pas une erreur.
-  // Les licences sont optionnelles ; sans elles, l'app marche en plan trial.
+  // Les licences sont optionnelles ; sans elles, l'app marche en plan
+  // decouverte (forever-free 5 sieges).
   if (error === "missing") {
     return (
       <section
@@ -367,10 +364,6 @@ function InactiveLicensePanel({ error }: { error: LicenseError }) {
               n'est définie. C'est le comportement attendu pour les
               installations <strong>self-host AGPLv3</strong> sans contrat
               commercial : l'app fonctionne en plan{" "}
-              <code className="font-mono text-xs bg-gray-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
-                trial
-              </code>{" "}
-              ou{" "}
               <code className="font-mono text-xs bg-gray-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
                 decouverte
               </code>{" "}
@@ -413,7 +406,7 @@ function InactiveLicensePanel({ error }: { error: LicenseError }) {
               HUMANIX_LICENSE_KEY
             </code>{" "}
             n'a pas pu être validée. L'app fonctionne actuellement en plan
-            trial / découverte.
+            découverte.
           </p>
           <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
             Vérifiez que vous avez collé la string complète (commençant par{" "}

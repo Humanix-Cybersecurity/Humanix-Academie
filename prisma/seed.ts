@@ -17,6 +17,11 @@ import {
   validateCatalog,
 } from "./catalog-saisons";
 import { seedAnecdotes } from "./seed-anecdotes";
+import {
+  COMMUNITY_TENANT_SLUG,
+  COMMUNITY_TENANT_NAME,
+  COMMUNITY_TENANT_PLAN,
+} from "../lib/tenant-community";
 
 const prisma = new PrismaClient();
 
@@ -245,6 +250,25 @@ async function main() {
 
   // Cyber-Anecdotes du Lundi (4 cas réels documentés, 3 publiées + 1 brouillon)
   await seedAnecdotes(prisma);
+
+  // Tenant Communauté : unique tenant non-payant de la plateforme cloud,
+  // hébergeant tous les LEARNERs gratuits. Toujours seede (prod ET demo)
+  // car c'est le rattachement par défaut du flow signup gratuit.
+  // Cf. lib/tenant-community.ts pour le rationale architecture 3-layer.
+  const communityTenant = await prisma.tenant.upsert({
+    where: { slug: COMMUNITY_TENANT_SLUG },
+    update: {
+      name: COMMUNITY_TENANT_NAME,
+      // Pas de update du plan : si quelqu'un l'a modifié manuellement, on
+      // respecte la valeur en BDD pour éviter de casser un environnement.
+    },
+    create: {
+      slug: COMMUNITY_TENANT_SLUG,
+      name: COMMUNITY_TENANT_NAME,
+      plan: COMMUNITY_TENANT_PLAN,
+    },
+  });
+  console.log(`  Tenant Communauté ✓ (${communityTenant.slug})`);
 
   // ====================================================================
   // 2. CONTENU DEMO-ONLY (skip si DEMO_MODE != "true")
