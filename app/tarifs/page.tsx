@@ -127,8 +127,8 @@ export default async function TarifsPage({
               <p className="opacity-90 mb-4 leading-relaxed">
                 Notre <strong>audit cyber flash</strong> donne une photo claire
                 de la maturité humaine de ton organisation, en 15 questions
-                bienveillantes. Rapport PDF a la fin, recommandation
-                personnalisee - sans pression.
+                bienveillantes. Rapport PDF à la fin, recommandation
+                personnalisée - sans pression.
               </p>
               <Link
                 href="/audit-flash"
