@@ -14,6 +14,17 @@ export type PhishingTemplateDef = {
   emailHtml: (firstName: string, trackingUrl: string) => string;
   // Marqueurs pedagogiques mis en avant sur la landing post-clic
   markers: string[];
+  // Mini-module de remediation auto-assigne quand un user clique sur ce
+  // template (cf. /phishing/[token]). Format : "saison-slug/episode-slug".
+  // Ces modules font partie de la saison "remediation-flash" : 2-3 min
+  // chrono pour ancrer le bon reflexe dans la foulee du clic.
+  remediationEpisode: {
+    saisonSlug: string;
+    episodeSlug: string;
+    /** Resume affiche dans l'encart "Module flash X min" sur la landing */
+    label: string;
+    durationMinutes: number;
+  };
 };
 
 export const PHISHING_TEMPLATES: PhishingTemplateDef[] = [
@@ -33,6 +44,12 @@ export const PHISHING_TEMPLATES: PhishingTemplateDef[] = [
       "Lien direct vers une page de connexion (un vrai service ne fait jamais ça par mail)",
       "Ton générique sans personnalisation profonde",
     ],
+    remediationEpisode: {
+      saisonSlug: "remediation-flash",
+      episodeSlug: "01-microsoft-flash",
+      label: "Comment éviter ce faux Microsoft la prochaine fois",
+      durationMinutes: 2,
+    },
     emailHtml: (firstName, trackingUrl) => `
 <div style="font-family: Segoe UI, Arial, sans-serif; max-width: 600px;">
   <div style="background: #0078d4; padding: 20px; text-align: center;">
@@ -66,6 +83,12 @@ export const PHISHING_TEMPLATES: PhishingTemplateDef[] = [
       "URL raccourcie ou avec sous-domaine suspect",
       "Pas de référence au numéro de suivi exact",
     ],
+    remediationEpisode: {
+      saisonSlug: "remediation-flash",
+      episodeSlug: "02-livraison-flash",
+      label: "Comment éviter ce faux livreur la prochaine fois",
+      durationMinutes: 2,
+    },
     emailHtml: (firstName, trackingUrl) => `
 <div style="font-family: Arial, sans-serif; max-width: 600px;">
   <div style="background: #fcc003; padding: 16px; text-align: center;">
@@ -97,6 +120,12 @@ export const PHISHING_TEMPLATES: PhishingTemplateDef[] = [
       "Aucun moyen de vérifier autre que l'email lui-même",
       "Demande directe d'action financière sans procédure habituelle",
     ],
+    remediationEpisode: {
+      saisonSlug: "remediation-flash",
+      episodeSlug: "03-fraude-president-flash",
+      label: "Comment éviter cette fraude au président la prochaine fois",
+      durationMinutes: 2,
+    },
     emailHtml: (firstName, trackingUrl) => `
 <div style="font-family: Arial, sans-serif; max-width: 600px; padding: 24px;">
   <p>Bonjour ${firstName || ""},</p>
