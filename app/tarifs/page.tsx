@@ -713,7 +713,7 @@ export default async function TarifsPage({
           ===================================================================== */}
       <section className="text-center pt-10 pb-4">
         <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-        <cite>- Hex veille</cite>
+        <footer>- Hex veille</footer>
         <cite>- Hex veille</cite>
       </section>
     </main>
