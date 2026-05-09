@@ -22,7 +22,7 @@ const SCIM_RATE_WINDOW_MS = 60 * 1000;
 function baseUrlOf(req: Request): string {
   return (
     process.env.NEXT_PUBLIC_BASE_URL ??
-    `https://${req.headers.get("host") ?? "academie.humanix-cybersecurity.fr"}`
+    `https://${req.headers.get("host") ?? "humanix-academie.fr"}`
   );
 }
 
