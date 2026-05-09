@@ -70,7 +70,7 @@ export default function SplunkIntegrationPage() {
             <Link href="/admin/api-keys" className="font-bold underline">
               générez une clé API
             </Link>{" "}
-            (plan Essentielle ou supérieur).
+            (plan Pro ou supérieur).
           </li>
           <li>
             <strong>3.</strong> Lancez le connecteur Python (ou pipez{" "}

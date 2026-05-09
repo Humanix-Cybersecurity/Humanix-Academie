@@ -25,7 +25,7 @@ type NavItem = {
   href: string;
   label: string;
   icon: string; // emoji simple (compat tous navigateurs, pas de lib)
-  gate?: "Essentielle+" | "Pro+";
+  gate?: "Pro+";
 };
 
 type Section = { title: string; items: NavItem[] };
@@ -100,7 +100,7 @@ const SECTIONS: Section[] = [
         href: "/admin/api-keys",
         label: "API Keys",
         icon: "🔑",
-        gate: "Essentielle+",
+        gate: "Pro+",
       },
       { href: "/admin/integrations", label: "Webhooks", icon: "🔗" },
       { href: "/admin/license", label: "Licence Ed25519", icon: "🔐" },
