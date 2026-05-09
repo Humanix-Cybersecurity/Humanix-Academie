@@ -153,12 +153,12 @@ describe("verifyLicenseString - rejets", () => {
   });
 
   it("rejette un payload modifie (signature ne correspond plus)", () => {
-    const payload = makePayload({ plan: "trial" });
+    const payload = makePayload({ plan: "starter" });
     const str = signLicense(payload, TEST_KEYS.privateKeyPem);
     // Decode, modifie, re-encode (sans re-signer) → la signature devient invalide
     const decoded = decodeLicense(str)!;
     const tampered = encodeLicense(
-      { ...decoded, plan: "premium" } as LicensePayload,
+      { ...decoded, plan: "enterprise" } as LicensePayload,
       decoded.signature,
     );
     const r = verifyLicenseString(tampered, undefined, new Date("2026-06-01"));
@@ -289,17 +289,17 @@ describe("getEffectivePlan - combinaison licence + DB", () => {
     // Import dynamique pour reset module entre tests (la licence est lue
     // au moment de l'appel via process.env, pas a l'import).
     const { getEffectivePlan } = await import("./index");
-    const payload = makePayload({ plan: "premium" });
+    const payload = makePayload({ plan: "enterprise" });
     const str = signLicense(payload, TEST_KEYS.privateKeyPem);
     process.env.HUMANIX_LICENSE_KEY = str;
     resetLicenseCache();
 
     // mockTenantFindUnique ne devrait JAMAIS etre appele car la licence
     // valide court-circuite la requete DB.
-    mockTenantFindUnique.mockResolvedValue({ plan: "trial" });
+    mockTenantFindUnique.mockResolvedValue({ plan: "starter" });
 
     const plan = await getEffectivePlan("any-tenant-id");
-    expect(plan).toBe("premium");
+    expect(plan).toBe("enterprise");
     // Verification : la DB n'est pas touchee quand la licence est valide
     expect(mockTenantFindUnique).not.toHaveBeenCalled();
   });
@@ -308,10 +308,10 @@ describe("getEffectivePlan - combinaison licence + DB", () => {
     const { getEffectivePlan } = await import("./index");
     delete process.env.HUMANIX_LICENSE_KEY;
     resetLicenseCache();
-    mockTenantFindUnique.mockResolvedValue({ plan: "essentielle" });
+    mockTenantFindUnique.mockResolvedValue({ plan: "pro" });
 
     const plan = await getEffectivePlan("acme-tenant");
-    expect(plan).toBe("essentielle");
+    expect(plan).toBe("pro");
     expect(mockTenantFindUnique).toHaveBeenCalledWith({
       where: { id: "acme-tenant" },
       select: { plan: true },
@@ -323,25 +323,25 @@ describe("getEffectivePlan - combinaison licence + DB", () => {
     const payload = makePayload({
       issuedAt: "2025-01-01T00:00:00Z",
       expiresAt: "2025-12-31T00:00:00Z",
-      plan: "premium",
+      plan: "enterprise",
     });
     const str = signLicense(payload, TEST_KEYS.privateKeyPem);
     process.env.HUMANIX_LICENSE_KEY = str;
     resetLicenseCache();
-    mockTenantFindUnique.mockResolvedValue({ plan: "decouverte" });
+    mockTenantFindUnique.mockResolvedValue({ plan: "starter" });
 
     const plan = await getEffectivePlan("acme-tenant");
-    // Licence expiree → fallback DB → "decouverte"
-    expect(plan).toBe("decouverte");
+    // Licence expiree → fallback DB → "starter"
+    expect(plan).toBe("starter");
   });
 
-  it('retourne "trial" si tenant introuvable en DB', async () => {
+  it('retourne "starter" si tenant introuvable en DB', async () => {
     const { getEffectivePlan } = await import("./index");
     delete process.env.HUMANIX_LICENSE_KEY;
     resetLicenseCache();
     mockTenantFindUnique.mockResolvedValue(null);
 
     const plan = await getEffectivePlan("ghost-tenant");
-    expect(plan).toBe("trial");
+    expect(plan).toBe("starter");
   });
 });
