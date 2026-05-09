@@ -5,7 +5,7 @@
 //  - Demo (DEMO_MODE=true) : Credentials provider sans mot de passe (1-clic)
 //  - SSO Google : si AUTH_GOOGLE_ID + AUTH_GOOGLE_SECRET configurés
 //  - SSO Microsoft : si AUTH_MICROSOFT_ENTRA_ID_ID + ID_SECRET + ID_ISSUER
-//  - Login mot de passe + 2FA TOTP : actif des qu'un user a defini un mdp
+//  - Login mot de passe + 2FA TOTP : actif dès qu'un user a defini un mdp
 //
 // Le user qui se connecte via SSO doit deja exister en BDD (matche par email).
 // Cela evite la creation sauvage de comptes - l'admin doit avoir invite l'user
@@ -385,7 +385,7 @@ async function registerFailedLogin(userId: string, current: number) {
       actor: { userId, email: updated.email },
       tenantId: updated.tenantId,
       target: { type: "user", id: userId, label: updated.email },
-      message: `Verrouillage automatique apres ${MAX_FAILED_ATTEMPTS} echecs`,
+      message: `Verrouillage automatique après ${MAX_FAILED_ATTEMPTS} échecs`,
     });
   }
 }
@@ -582,6 +582,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           },
         });
         if (dbUser && dbUser.isActive) {
+          token.uid = dbUser.id;
+          token.tenantId = dbUser.tenantId;
+          token.role = dbUser.role;
+          token.name = dbUser.name;
+        }
+      } else if (token.uid) {
+        const dbUser = await db.user.findUnique({
+          where: { id: token.uid },
+          select: {
+            id: true,
+            tenantId: true,
+            role: true,
+            name: true,
+            isActive: true,
+          },
+        });
+        if (!dbUser || !dbUser.isActive) {
+          delete token.uid;
+          delete token.tenantId;
+          delete token.role;
+          delete token.name;
+        } else {
           token.uid = dbUser.id;
           token.tenantId = dbUser.tenantId;
           token.role = dbUser.role;
