@@ -63,11 +63,13 @@ async function main() {
   }
 }
 
-main()
-  .catch((e) => {
+(async () => {
+  try {
+    await main();
+  } catch (e) {
     console.error("[migrate-legacy-trial] FAILED", e);
-    process.exit(1);
-  })
-  .finally(async () => {
+    process.exitCode = 1;
+  } finally {
     await prisma.$disconnect();
-  });
+  }
+})();
