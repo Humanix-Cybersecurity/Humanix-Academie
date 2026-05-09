@@ -152,10 +152,11 @@ async function InscriptionInner({
       </section>
 
       {/* ==================== AUTH CARD ====================
-          Le card "mord" sur les trust badges au-dessus via -mt-2 + shadow-xl
-          pour donner un sentiment d'integration visuel forte (au lieu du
-          shadow-sm initial qui flottait dans le vide). */}
-      <section className="max-w-md mx-auto px-4 pb-12 relative z-10">
+          mt-4 sm:mt-6 = aere visuellement entre les trust badges et la card
+          AUTH. Sans cette marge, le card se collait aux badges (signal user
+          "il faut une marge en haut"). shadow-xl + rounded-3xl conservent
+          la presence visuelle forte du card. */}
+      <section className="max-w-md mx-auto px-4 pb-12 mt-4 sm:mt-6 relative z-10">
         {errorMsg && (
           <div
             role="alert"
