@@ -37,6 +37,13 @@ export async function computeRiskScore(userId: string): Promise<RiskFactors> {
         orderBy: { sentAt: "desc" },
         take: 10,
       },
+      // Groupes metier de l'user (compta, rh, dev, comex, ...) pour
+      // pondérer le scoring par metier (cf. composant 7).
+      groups: {
+        select: {
+          group: { select: { slug: true, isActive: true } },
+        },
+      },
       tenant: {
         select: {
           saisonConfigs: {
@@ -176,6 +183,83 @@ export async function computeRiskScore(userId: string): Promise<RiskFactors> {
       weight: "low",
     });
     score += 5;
+  }
+
+  // 7. Pondération MÉTIER (mai 2026)
+  //
+  // Un DAF qui complète "Fraude au virement" doit etre RECOMPENSE plus
+  // qu'un developpeur qui complete le meme module (c'est pile poil son
+  // risque metier). Inversement, un DAF qui IGNORE les modules cibles
+  // "compta/finance" doit etre PENALISE plus qu'un user generique.
+  //
+  // Logique :
+  //   - userGroupSlugs = groupes actifs de l'user (compta, rh, dev, etc.)
+  //   - Pour chaque episode du tenant ayant targetGroups ∩ userGroups,
+  //     on regarde s'il a ete complete ou non.
+  //   - Done : +2 par module metier maitrise (plafond +15)
+  //   - Missing : -5 par module metier non fait (plafond -25)
+  //
+  // Note : on ne touche PAS au component "completionBonus" existant qui
+  // compte tous les episodes (signal generique). Cette pondération est
+  // une COUCHE supplementaire qui reflete le risque metier specifique.
+  const userGroupSlugs = new Set(
+    user.groups
+      .filter((ug) => ug.group.isActive)
+      .map((ug) => ug.group.slug),
+  );
+
+  if (userGroupSlugs.size > 0) {
+    // On charge les episodes du tenant qui ciblent un des groupes metier
+    // de l'user. targetGroups est un CSV ("compta,rh,direction") ou null.
+    const tenantEpisodes = await db.episode.findMany({
+      where: {
+        saison: { tenantId: user.tenantId },
+        isPublished: true,
+        // On ne peut pas faire un IN sur une string CSV, donc on filtre
+        // en memoire apres. En pratique le volume est faible (<100 ep par
+        // tenant), donc c'est ok. Si un jour ca scale, normaliser en
+        // table de jointure EpisodeGroup.
+        targetGroups: { not: null },
+      },
+      select: { id: true, targetGroups: true },
+    });
+
+    const metierEpisodes = tenantEpisodes.filter((ep) => {
+      const slugs = (ep.targetGroups ?? "")
+        .split(",")
+        .map((s) => s.trim().toLowerCase())
+        .filter(Boolean);
+      return slugs.some((s) => userGroupSlugs.has(s));
+    });
+
+    if (metierEpisodes.length > 0) {
+      const completedEpisodeIds = new Set(
+        user.progress.map((p) => p.episodeId),
+      );
+      const metierDone = metierEpisodes.filter((ep) =>
+        completedEpisodeIds.has(ep.id),
+      ).length;
+      const metierMissing = metierEpisodes.length - metierDone;
+
+      if (metierDone > 0) {
+        const bonus = Math.min(15, metierDone * 2);
+        components.push({
+          label: `${metierDone} module${metierDone > 1 ? "s" : ""} métier maîtrisé${metierDone > 1 ? "s" : ""}`,
+          delta: bonus,
+          weight: "medium",
+        });
+        score += bonus;
+      }
+      if (metierMissing > 0) {
+        const malus = -Math.min(25, metierMissing * 5);
+        components.push({
+          label: `${metierMissing} module${metierMissing > 1 ? "s" : ""} métier non terminé${metierMissing > 1 ? "s" : ""}`,
+          delta: malus,
+          weight: "high",
+        });
+        score += malus;
+      }
+    }
   }
 
   // Borne 0-100
