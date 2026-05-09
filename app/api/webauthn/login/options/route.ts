@@ -33,7 +33,7 @@ export async function POST(req: Request) {
   });
   if (credCount === 0) {
     return NextResponse.json(
-      { error: "Aucune cle de securite enregistree pour ce compte." },
+      { error: "Aucune cle de sécurité enregistree pour ce compte." },
       { status: 404 },
     );
   }

@@ -3,7 +3,7 @@
 // SiteFooter - refonte pro mai 2026 (cible : credibilite "French Tech")
 //
 // Probleme avant : 5 colonnes, melange aleatoire d'emojis (certains liens en
-// avaient, d'autres non), categorie "Outils gratuits" en accent qui rivalisait
+// avaient, d'autres non), catégorie "Outils gratuits" en accent qui rivalisait
 // avec le reste, hierarchie visuelle confuse.
 //
 // Refonte :
@@ -30,10 +30,10 @@ type FooterLink = {
 // Le lien "Demo en ligne" pointe :
 //   - en prod (DEMO_MODE=false) -> https://demo.humanix-academie.fr
 //     (subdomain dedie qui tourne en mode demo, separe de la prod
-//     commerciale pour eviter tout melange de donnees fictives /
+//     commerciale pour éviter tout melange de données fictives /
 //     reelles).
 //   - en demo (DEMO_MODE=true)  -> /demo (route locale, l'app est
-//     deja en mode demo).
+//     déjà en mode demo).
 //
 // Le subdomain demo en prod est traite comme lien externe (target=_blank
 // + rel noopener noreferrer) pour ne pas perdre la session de l'user
@@ -154,7 +154,7 @@ export default function SiteFooter() {
       aria-label="Pied de page"
       className="relative mt-20 border-t border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900"
     >
-      {/* Motif Hex tres subtil */}
+      {/* Motif Hex très subtil */}
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-hex-pattern opacity-[0.4] pointer-events-none"

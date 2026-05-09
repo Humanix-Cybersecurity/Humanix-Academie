@@ -334,7 +334,7 @@ export default function IntegrationsHubPage() {
             style={{ animationDelay: "220ms" }}
           >
             Humanix s'integre nativement a ton ecosysteme RSSI. Hub-and-spoke
-            avec priorite souverainete francaise et standards ouverts. Aucune
+            avec priorite souverainete française et standards ouverts. Aucune
             ile, aucun lock-in, aucune dependance hors UE par defaut.
           </p>
         </header>
@@ -426,9 +426,9 @@ export default function IntegrationsHubPage() {
       <section className="text-center pt-10 pb-4">
         <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
           « Une plateforme cyber qui vit seule est une plateforme qui meurt
-          seule. On a investi gros sur les connecteurs francais (Sekoia,
+          seule. On a investi gros sur les connecteurs français (Sekoia,
           HarfangLab, Lucca, GLPI, CISO Assistant) que les acteurs
-          internationaux n'envisagent meme pas. »
+          internationaux n'envisagent même pas. »
         </blockquote>
         <p
           aria-hidden="true"

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Page publique "Bibliotheque d'experts" - annuaire des contributeurs marketplace.
 // Argumentaire commercial : c'est ICI qu'on prouve que la marketplace n'est pas
-// genereee en interne mais signee par de vrais professionnels francais.
+// genereee en interne mais signee par de vrais professionnels français.
 
 import Link from "next/link";
 import { listPublicExperts } from "@/lib/experts";
@@ -45,7 +45,7 @@ export default async function ExpertsPage() {
             style={{ animationDelay: "220ms" }}
           >
             Pas de catalogue genere en interne. Chaque module porte le nom d'un
-            professionnel francais qui en assume la signature : RSSI de PME,
+            professionnel français qui en assume la signature : RSSI de PME,
             consultants, gendarmes cyber, formateurs specialises.
           </p>
         </section>
@@ -64,7 +64,7 @@ export default async function ExpertsPage() {
           La cybersecurite humaine ne se forme pas avec des slides recycles.
           Elle se forme avec des histoires vraies, racontees par des gens qui
           en ont vu passer. En valorisant nos experts contributeurs, on
-          construit un catalogue qui grandit avec la communaute francaise -
+          construit un catalogue qui grandit avec la communaute française -
           plutot qu'un produit cle-en-main fige. Chaque expert est librement
           contactable. Chaque module rappelle qui l'a ecrit.
         </p>

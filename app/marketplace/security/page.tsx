@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page publique : politique de securite et de contenu de la marketplace
+// Page publique : politique de sécurité et de contenu de la marketplace
 import Link from "next/link";
 
 export default function MarketplaceSecurityPage() {

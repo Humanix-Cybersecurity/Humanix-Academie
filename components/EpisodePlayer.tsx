@@ -36,12 +36,12 @@ import { useAnnouncer } from "@/lib/a11y";
 
 type Step = "scenario" | "debrief" | "quiz" | "recap";
 
-// Citations rotatives selon le score quiz - pas la meme philosophie selon
+// Citations rotatives selon le score quiz - pas la même philosophie selon
 // le niveau de maitrise atteint. Toutes chaleureuses, jamais jugeantes.
 const RECAP_CITATIONS = {
-  perfect: "« Tu n'as pas a etre expert. Tu as juste a etre averti une seconde avant le clic. C'est exactement ce que tu viens de faire. »",
+  perfect: "« Tu n'as pas a être expert. Tu as juste a être averti une seconde avant le clic. C'est exactement ce que tu viens de faire. »",
   good: "« La maitrise cyber, c'est moins une affaire d'expert qu'une habitude tranquille. Tu construis cette habitude. »",
-  partial: "« Le meilleur reflexe cyber, c'est de prendre 30 secondes avant d'agir. Tu en es deja capable. »",
+  partial: "« Le meilleur reflexe cyber, c'est de prendre 30 secondes avant d'agir. Tu en es déjà capable. »",
   low: "« Apprendre la cyber, c'est apprendre a se faire confiance. Hex t'accompagne, pas le contraire. »",
 };
 
@@ -57,7 +57,7 @@ export default function EpisodePlayer(props: {
   xpReward: number;
   species?: string; // mascotte choisie par l'user (default fox)
   /**
-   * Etat de reprise : si l'user a deja commence l'episode et l'a quitte
+   * Etat de reprise : si l'user a déjà commence l'episode et l'a quitte
    * en cours, on lui propose de reprendre la ou il etait. Provient du
    * server component (page.tsx) qui lit Progress.{resumeStep, resumeQuizIndex,
    * resumeChoiceId} en BDD. null = nouvelle session.
@@ -597,7 +597,7 @@ export default function EpisodePlayer(props: {
         )}
       </div>
 
-      {/* Level-up overlay (apres le recap) */}
+      {/* Level-up overlay (après le recap) */}
       {levelUp && step === "recap" && (
         <LevelUpOverlay
           newLevelId={levelUp}
