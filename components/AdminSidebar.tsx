@@ -375,12 +375,11 @@ function Accordion({
   // Section "active" si l'un de ses items matche le path courant (highlight).
   const sectionActive = section.items.some((i) => isActive(path, i.href));
 
-  // En mode desktop slim (parent .group non hover), on cache title et
-  // chevron via opacity + on neutralise les clicks (pointer-events). Le
-  // contenu accordeon (items) est aussi masque visuellement pour eviter
-  // qu'un section.isOpen ne fasse deborder en hauteur. La transition
-  // grid-template-rows fonctionne toujours quand on hover puis qu'on
-  // toggle manuellement.
+  // En mode desktop slim (parent .group non hover), title et chevron sont
+  // mis en `hidden` (vraiment out-of-flow, pas juste opacity:0) pour que
+  // l'icone se centre proprement dans la sidebar 56px. Avec
+  // `justify-center` au repos et `justify-start` au hover, l'icone est
+  // pile au milieu en slim et alignee a gauche en mode large.
   const isDesktop = variant === "desktop";
 
   return (
@@ -397,6 +396,7 @@ function Accordion({
             ? "text-primary-500 dark:text-accent-300"
             : "text-gray-700 dark:text-gray-300",
           "hover:bg-gray-100 dark:hover:bg-slate-800/60",
+          isDesktop && "justify-center group-hover:justify-start",
         )}
       >
         <span aria-hidden="true" className="text-base shrink-0 w-5 text-center">
@@ -404,9 +404,8 @@ function Accordion({
         </span>
         <span
           className={clsx(
-            "flex-1 text-left text-sm font-bold truncate whitespace-nowrap",
-            isDesktop &&
-              "opacity-0 group-hover:opacity-100 transition-opacity duration-150",
+            "text-left text-sm font-bold truncate whitespace-nowrap",
+            isDesktop ? "hidden group-hover:block flex-1" : "flex-1",
           )}
         >
           {section.title}
@@ -416,8 +415,7 @@ function Accordion({
           className={clsx(
             "shrink-0 text-xs text-gray-400 dark:text-gray-500 transition-transform duration-200",
             isOpen ? "rotate-90" : "rotate-0",
-            isDesktop &&
-              "opacity-0 group-hover:opacity-100 transition-opacity duration-150",
+            isDesktop && "hidden group-hover:inline-block",
           )}
         >
           ▶
