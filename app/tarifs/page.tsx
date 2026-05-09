@@ -7,7 +7,7 @@
 //
 // Refonte cosy mai 2026 :
 //  - Hero HexBackdrop avec sous-titre "notre conviction tarifaire"
-//  - Section "Pourquoi" : palette 6 saisons cyclees sur les 9 cartes
+//  - Section "Pourquoi" : palette 6 saisons cyclées sur les 9 cartes
 //  - Cards palette adoucie sur les paliers + cascade slide-up
 //  - Citation finale "Hex veille" qui resume le pari editorial
 //  - Vocabulaire transforme : "score" reste car c'est tabular, mais ROI
