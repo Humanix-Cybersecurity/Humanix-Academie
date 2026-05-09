@@ -64,7 +64,7 @@ export default async function SouscrirePage({
   // La page elle-meme gere le cas "Payplug pas pret" via le banner amber
   // ci-dessous (cf. !payplugReady) avec un lien vers /demande-abonnement.
   if (!isPlanId(planRaw) || !PAYPLUG_BUYABLE_PLANS.includes(planRaw)) {
-    if (planRaw === "premium") {
+    if (planRaw === "enterprise") {
       redirect("/demande-abonnement?type=enterprise");
     }
     redirect("/tarifs");
