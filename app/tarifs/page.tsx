@@ -219,10 +219,9 @@ export default async function TarifsPage({
           ))}
         </div>
         <p className="text-xs text-center text-gray-500 mt-6">
-          Tous les prix sont HT.
-          {" "}Vente directe, sans essai gratuit&nbsp;: la{" "}
+          Tous les prix sont HT. Vente directe, sans essai gratuit : la{" "}
           <Link href="/demo" className="underline">démo</Link> remplit ce rôle.
-          {" "}Mensuel résiliable à tout moment&nbsp;; annuel = engagement 12 mois.
+          Mensuel résiliable à tout moment ; annuel = engagement 12 mois.
           {" "}Mensuel résiliable à tout moment&nbsp;; annuel = engagement 12 mois.
         </p>
       </section>
@@ -555,24 +554,26 @@ export default async function TarifsPage({
               >
               <h2
                 id="roi-stats-heading"
-              <ul aria-labelledby="roi-stats-heading" className="space-y-2 text-gray-700">
-              >
-                Les chiffres, posés froidement.
-              </h2>
-              <ul aria-labelledby="roi-stats-heading" className="space-y-2 text-gray-700">
-                <Roi
-                  label="Une attaque par phishing réussie en PME"
-                  value="coûte en moyenne 35 000 € (Tracfin 2024)"
-                />
-                <Roi
-                  label="Notre offre Essentielle pour 25 collaborateurs"
-                  value="coûte 900 €/an (75 €/mois)"
-                />
-                <Roi
-                  label="Réduction observée du taux de clic phishing après 6 mois"
-                  value="−60 % (cible standard du marché)"
-                />
-                <Roi
+              <div className="dark:text-gray-200">
+                <ul aria-labelledby="roi-stats-heading" className="space-y-2 text-gray-700">
+                  <Roi
+                    label="Une attaque par phishing réussie en PME"
+                    value="coûte en moyenne 35 000 € (Tracfin 2024)"
+                  />
+                  <Roi
+                    label="Notre offre Essentielle pour 25 collaborateurs"
+                    value="coûte 900 €/an (75 €/mois)"
+                  />
+                  <Roi
+                    label="Réduction observée du taux de clic phishing après 6 mois"
+                    value="−60 % (cible standard du marché)"
+                  />
+                  <Roi
+                    label="Réduction de la prime d'assurance cyber"
+                    value="5 à 15 % avec preuve de formation continue"
+                  />
+                </ul>
+              </div>
                   label="Réduction de la prime d'assurance cyber"
                   value="5 à 15 % avec preuve de formation continue"
                 />
@@ -713,7 +714,7 @@ export default async function TarifsPage({
           ===================================================================== */}
       <section className="text-center pt-10 pb-4">
         <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-        <cite>- Hex veille</cite>
+        <footer>- Hex veille</footer>
         <cite>- Hex veille</cite>
       </section>
     </main>
