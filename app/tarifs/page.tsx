@@ -330,7 +330,7 @@ export default async function TarifsPage({
             {
               emoji: "🦊",
               title: "Une mascotte qui te parle",
-              text: "Hex t'accompagne, te coache, te felicite. Pas un chatbot froid. Un compagnon de progression.",
+              text: "Hex t'accompagne, te coache, te félicite. Pas un chatbot froid. Un compagnon de progression.",
             },
             {
               emoji: "💰",
