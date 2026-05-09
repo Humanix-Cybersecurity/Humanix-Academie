@@ -185,15 +185,22 @@ export default function AdminSidebar() {
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // Set des sections ouvertes. Initialise avec la section de la page
-  // courante (ouverture automatique au chargement).
-  const [openSections, setOpenSections] = useState<Set<string>>(() => {
-    const active = findActiveSectionId(path, sections);
-    return active ? new Set([active]) : new Set();
-  });
+  // Set des sections ouvertes. Par defaut TOUTES sont ouvertes pour que
+  // l'admin voit tout son menu d'un coup d'oeil (visibilite > densite).
+  // Initialisation avec les IDs de SECTIONS + SUPERADMIN_SECTIONS : les
+  // entries inutilisees (cas non-SUPERADMIN) sont juste ignorees, pas de
+  // side effect. Click sur un header replie la section ; l'etat n'est
+  // pas persiste entre sessions (recharge = retour au tout-ouvert).
+  const [openSections, setOpenSections] = useState<Set<string>>(
+    () =>
+      new Set(
+        [...SECTIONS, ...SUPERADMIN_SECTIONS].map((s) => s.id),
+      ),
+  );
 
   // A chaque changement de route, on s'assure que la section active est
-  // ouverte (sans fermer celles que l'user a ouvertes manuellement).
+  // ouverte (cas ou l'user l'avait fermee manuellement et clique un lien
+  // vers une page de cette section).
   useEffect(() => {
     const active = findActiveSectionId(path, sections);
     if (!active) return;
