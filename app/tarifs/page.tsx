@@ -664,11 +664,11 @@ export default async function TarifsPage({
           id="cta-final"
           className="font-display text-3xl sm:text-4xl font-extrabold mb-3 relative leading-tight"
         >
-          Prends une etoile, prends un compte, ou juste un cafe.
+          Prends une étoile, prends un compte, ou juste un café.
         </h2>
         <p className="text-lg opacity-90 mb-8 max-w-xl mx-auto leading-relaxed relative">
           Self-host libre ou cloud gratuit en 2 minutes. Premier module jouable
-          immediatement. Pas de carte bancaire, pas de relance commerciale, pas
+          immédiatement. Pas de carte bancaire, pas de relance commerciale, pas
           de pression.
         </p>
         <div className="flex flex-wrap justify-center gap-3 relative">
@@ -676,7 +676,7 @@ export default async function TarifsPage({
             href="/demo"
             className="bg-white text-primary-500 font-bold px-6 sm:px-8 py-4 rounded-2xl hover:scale-105 transition shadow-lg"
           >
-            🎮 Tester la demo publique
+            🎮 Tester la démo publique
           </Link>
           <a
             href="https://github.com/Humanix-Cybersecurity/Humanix-Academie"
@@ -696,7 +696,7 @@ export default async function TarifsPage({
         </div>
         <p className="text-xs opacity-70 mt-6 relative">
           Une question ? <strong>contact@humanix-cybersecurity.fr</strong> - on
-          repond sous 4 h ouvrees.
+          répond sous 4 h ouvrées.
         </p>
       </section>
 
@@ -706,7 +706,7 @@ export default async function TarifsPage({
       <section className="text-center pt-10 pb-4">
         <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
           « Le prix est un choix politique. On a choisi de ne laisser personne
-          au bord du chemin - pas par charite, par strategie. La cybersecurite
+          au bord du chemin - pas par charité, par stratégie. La cybersécurité
           ne peut pas etre un luxe quand 90 % des attaques visent les humains. »
         </blockquote>
         <p
