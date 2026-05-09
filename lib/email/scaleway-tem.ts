@@ -33,6 +33,26 @@ function getEndpoint(): string {
   return `https://api.scaleway.com/transactional-email/v1alpha1/regions/${getRegion()}/emails`;
 }
 
+/**
+ * Detecte le piege classique : utilisateur qui colle l'access-key (commence
+ * par "SCW", 20 chars) au lieu du secret-key (UUID 36 chars) dans la conf.
+ * L'access-key sert au SDK Scaleway officiel mais pas a l'API REST TEM.
+ *
+ * Verifie le format avant l'appel API pour donner un message clair plutot
+ * qu'un cryptique "scaleway_tem_401".
+ */
+function detectMisconfiguredToken(token: string): string | null {
+  // Format secret-key attendu : UUID v4 (8-4-4-4-12, 36 chars total)
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+    token,
+  );
+  if (isUuid) return null;
+  if (token.startsWith("SCW") && token.length < 30) {
+    return "SCALEWAY_TEM_TOKEN ressemble a un access-key (SCW..., 20 chars). L'API REST TEM exige le SECRET-key (UUID 36 chars). Cf. .env.example.";
+  }
+  return `SCALEWAY_TEM_TOKEN n'est pas un UUID 36 chars (recu ${token.length} chars). Verifier qu'il s'agit du secret-key IAM Scaleway, pas de l'access-key. Cf. .env.example.`;
+}
+
 export async function sendViaScalewayTem(
   params: SendEmailParams,
 ): Promise<SendEmailResult> {
@@ -41,6 +61,16 @@ export async function sendViaScalewayTem(
   }
   const token = process.env.SCALEWAY_TEM_TOKEN!;
   const projectId = process.env.SCALEWAY_TEM_PROJECT_ID!;
+
+  const tokenIssue = detectMisconfiguredToken(token);
+  if (tokenIssue) {
+    console.error(`[scaleway-tem] ${tokenIssue}`);
+    return {
+      ok: false,
+      reason: "scaleway_tem_invalid_token_format",
+      details: tokenIssue,
+    };
+  }
   const fromAddress = params.from ?? process.env.EMAIL_FROM!;
   const fromName =
     params.fromName ?? process.env.NEXT_PUBLIC_APP_NAME ?? "Humanix Academie";
