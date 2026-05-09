@@ -3,7 +3,7 @@
 // Implementation pragmatique : un Group SCIM = un "service" Humanix (ex:
 // "Direction", "Compta", "IT"). Lecture seulement en v1 - la creation/mise
 // a jour de Groups via SCIM modifierait `User.service`, ce qu'on prefere
-// faire passer par la console admin Humanix pour eviter les incoherences.
+// faire passer par la console admin Humanix pour éviter les incoherences.
 
 import { NextResponse } from "next/server";
 import { authenticateApiKey } from "@/lib/api-auth";

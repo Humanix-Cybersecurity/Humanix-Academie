@@ -13,7 +13,7 @@
 //                                   se met en pause au prochain click ailleurs.
 //                                   Pour les CARTES dans une grille de listing.
 //
-// Le mini-bouton stoppe automatiquement les autres lectures de la meme page
+// Le mini-bouton stoppe automatiquement les autres lectures de la même page
 // (useAudioPreviewContext optionnel a venir si on veut une orchestration
 // globale ; pour l'instant chaque bouton gere son propre Audio element).
 

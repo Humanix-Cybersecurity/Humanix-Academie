@@ -19,12 +19,12 @@ const TODAY = new Date().toLocaleDateString("fr-FR");
 const TOC = [
   { id: "responsable", label: "1. Responsable du traitement" },
   { id: "collecte", label: "2. Quand collectons-nous ?" },
-  { id: "donnees", label: "3. Quelles données ?" },
-  { id: "acces", label: "4. Qui peut y accéder ?" },
+  { id: "données", label: "3. Quelles données ?" },
+  { id: "accès", label: "4. Qui peut y accéder ?" },
   { id: "conservation", label: "5. Durée de conservation" },
   { id: "droits", label: "6. Vos droits" },
   { id: "cnil", label: "7. Réclamation CNIL" },
-  { id: "securite", label: "8. Sécurité" },
+  { id: "sécurité", label: "8. Sécurité" },
   { id: "modifications", label: "9. Modifications" },
 ];
 

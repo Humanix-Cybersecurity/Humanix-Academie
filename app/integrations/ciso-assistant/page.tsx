@@ -60,7 +60,7 @@ export default function CisoAssistantIntegrationPage() {
           viewBox="0 0 700 220"
           className="w-full max-w-3xl mx-auto"
           role="img"
-          aria-label="Schema d'architecture : CISO Assistant interroge Humanix Academie via l'API REST evidence-export, qui retourne un bundle JSON de preuves de conformite."
+          aria-label="Schema d'architecture : CISO Assistant interroge Humanix Academie via l'API REST evidence-export, qui retourne un bundle JSON de preuves de conformité."
         >
           <defs>
             <linearGradient
@@ -283,7 +283,7 @@ export default function CisoAssistantIntegrationPage() {
               Non. Le format <code>ciso-assistant-v1</code> est documente et
               stable. N'importe quel outil GRC (Eramba, MetricStream, ServiceNow
               GRC, ou un script maison) peut consommer l'endpoint. Le format{" "}
-              <code>raw</code> donne acces aux donnees brutes.
+              <code>raw</code> donne accès aux données brutes.
             </p>
           </details>
           <details className="card">
@@ -299,10 +299,10 @@ export default function CisoAssistantIntegrationPage() {
           </details>
           <details className="card">
             <summary className="cursor-pointer font-bold text-primary-500">
-              Quelle est la frequence de rafraichissement ?
+              Quelle est la fréquence de rafraichissement ?
             </summary>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-              Vous controlez la frequence depuis votre cote. Un cron quotidien
+              Vous controlez la fréquence depuis votre cote. Un cron quotidien
               suffit pour la plupart des usages. Le rate limit est de 10 req/h
               par tenant.
             </p>
@@ -320,7 +320,7 @@ export default function CisoAssistantIntegrationPage() {
           </details>
           <details className="card">
             <summary className="cursor-pointer font-bold text-primary-500">
-              Et la conformite RGPD de l'export ?
+              Et la conformité RGPD de l'export ?
             </summary>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
               L'export ne contient pas de PII brute : les certificats sont
@@ -354,7 +354,7 @@ export default function CisoAssistantIntegrationPage() {
             Demander une demo
           </a>
           <Link href="/admin/api-keys" className="btn-secondary">
-            Generer ma cle API
+            Générer ma cle API
           </Link>
           <a
             href="https://github.com/intuitem/ciso-assistant-community"

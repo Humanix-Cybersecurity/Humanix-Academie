@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Generation et telechargement du rapport de conformite PDF
+// Generation et telechargement du rapport de conformité PDF
 import { NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { auth } from "@/lib/auth";
@@ -46,9 +46,9 @@ export async function GET() {
     totalSeats === 0 ? 0 : Math.round((seenAtLeastOne / totalSeats) * 100);
   const completedEpisodes = allProgress.length;
   const totalEpisodes = saisons.reduce((s, sa) => s + sa.episodes.length, 0);
-  // Sur le rapport NIS2/conformite : on utilise le score de MAITRISE (riskScore
+  // Sur le rapport NIS2/conformité : on utilise le score de MAITRISE (riskScore
   // moyen, borne 0..100) plutot que la moyenne des Progress.score qui est de
-  // l'XP brute (peut depasser 100, faux ami sur un PDF de conformite). L'XP
+  // l'XP brute (peut depasser 100, faux ami sur un PDF de conformité). L'XP
   // brute reste expose en "totalXP" pour la gamification.
   const averageScore =
     totalSeats === 0
@@ -122,7 +122,7 @@ export async function GET() {
     }),
   );
 
-  const filename = `humanix-conformite-${tenant.slug}-${new Date().toISOString().split("T")[0]}.pdf`;
+  const filename = `humanix-conformité-${tenant.slug}-${new Date().toISOString().split("T")[0]}.pdf`;
 
   return new NextResponse(buffer as any, {
     status: 200,

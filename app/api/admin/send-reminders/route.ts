@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Endpoint POST : envoi des rappels aux inactifs
-// Peut etre appele :
+// Peut être appele :
 //  - manuellement depuis la console (bouton)
 //  - automatiquement par un cron externe (header X-Cron-Secret)
 import { NextResponse } from "next/server";

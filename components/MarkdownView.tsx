@@ -147,7 +147,7 @@ function Inline(text: string) {
         "text-accent-500 dark:text-accent-300 underline underline-offset-2 hover:text-accent-600 dark:hover:text-accent-200 transition-colors";
       // Liens internes -> Next Link (preload + client transition)
       // Liens externes -> <a target="_blank" rel="noopener noreferrer"> safe
-      // (whitelist deja appliquee cote renderInline -> javascript: rejete)
+      // (whitelist déjà appliquee cote renderInline -> javascript: rejete)
       if (isExternal) {
         return (
           <a

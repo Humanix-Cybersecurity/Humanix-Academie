@@ -22,7 +22,7 @@ const TODAY = new Date().toLocaleDateString("fr-FR");
 const TOC = [
   { id: "reglages", label: "Réglages d'accessibilité" },
   { id: "engagement", label: "1. Notre engagement" },
-  { id: "conformite", label: "2. État de conformité" },
+  { id: "conformité", label: "2. État de conformité" },
   { id: "resultats", label: "3. Résultats des tests" },
   { id: "non-conformes", label: "4. Contenus non accessibles" },
   { id: "alternatives", label: "5. Alternatives proposées" },
@@ -50,7 +50,7 @@ export default function AccessibilitePage() {
           <span aria-hidden="true">⚙️</span> Tes réglages d'affichage
         </h2>
         <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
-          Active immédiatement les paramètres qui te rendent la lecture plus
+          Active immédiatement les paramètrès qui te rendent la lecture plus
           confortable. Ces réglages sont mémorisés sur ton navigateur.
         </p>
         <div className="flex flex-wrap gap-3">

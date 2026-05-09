@@ -12,7 +12,7 @@
 //
 // Roadmap 0.2 : ajouter un upload de licence depuis l'UI (form qui POST
 // vers /api/admin/license avec auth + plan-gating). Pour le MVP, on
-// reste affichage seul - c'est deja une grande etape.
+// reste affichage seul - c'est déjà une grande etape.
 
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";

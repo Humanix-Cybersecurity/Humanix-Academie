@@ -36,8 +36,8 @@ function SignupFallback() {
 
 function SignupInner() {
   // Plan toujours "starter" depuis le retrait de l'essai gratuit. Les
-  // anciens liens ?plan=trial / ?plan=decouverte sont gracieusement traites
-  // comme starter (meme offre, meme limite 5 sieges gratuits).
+  // anciens liens ?plan=trial / ?plan=découverte sont gracieusement traites
+  // comme starter (même offre, même limite 5 sieges gratuits).
   const planKey = "starter" as const;
   const planMeta = PLAN_LABELS[planKey];
 

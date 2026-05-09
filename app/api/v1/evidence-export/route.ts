@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // GET /api/v1/evidence-export
 //
-// Export de preuves de conformite (evidence) pour un framework GRC donne.
-// Concu pour etre consomme par CISO Assistant (intuitem) ou tout outil GRC
+// Export de preuves de conformité (evidence) pour un framework GRC donne.
+// Concu pour être consomme par CISO Assistant (intuitem) ou tout outil GRC
 // equivalent (Eramba, MetricStream, ServiceNow GRC).
 //
-// Authentification : API key tenant (modele ApiKey, hashe SHA-256).
+// Authentification : API key tenant (modèle ApiKey, hashe SHA-256).
 // Plan-gating : reservee aux plans `pro` et `enterprise` (anciennement
 // "essentielle+", remappee depuis le pivot 4 paliers mai 2026).
 // Rate limit : 10 req/h par tenant.
@@ -132,7 +132,7 @@ export async function GET(req: Request) {
     );
   }
 
-  // ----- 4. Donnees tenant + metriques -----
+  // ----- 4. Données tenant + metriques -----
   const tenant = await db.tenant.findUnique({
     where: { id: tenantId },
     select: { id: true, name: true, slug: true },

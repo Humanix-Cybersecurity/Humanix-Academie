@@ -30,7 +30,7 @@ import {
   startMagicLinkInscription,
 } from "./actions";
 
-// force-dynamic : meme rationale que /demo/layout.tsx. La decision
+// force-dynamic : même rationale que /demo/layout.tsx. La decision
 // de rediriger vers /demo depend de DEMO_MODE qui n'est pas set au build,
 // donc on doit evaluer a runtime.
 export const dynamic = "force-dynamic";

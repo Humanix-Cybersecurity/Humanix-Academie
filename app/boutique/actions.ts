@@ -69,7 +69,7 @@ export async function equipItem(itemId: string) {
   });
   if (!inventory) throw new Error("not_owned");
 
-  // Desequipe les autres items de meme categorie
+  // Desequipe les autres items de même catégorie
   await db.userInventory.updateMany({
     where: {
       userId,
@@ -79,7 +79,7 @@ export async function equipItem(itemId: string) {
     data: { isEquipped: false },
   });
 
-  // Equipe celui-ci
+  // Équipe celui-ci
   await db.userInventory.update({
     where: { id: inventory.id },
     data: { isEquipped: true },

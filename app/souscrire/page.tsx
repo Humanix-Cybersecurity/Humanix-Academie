@@ -24,7 +24,7 @@ import { isPlanId } from "@/lib/plans";
 import { isDevMode } from "@/lib/dev-mode";
 import SouscrireForm from "./SouscrireForm";
 
-// force-dynamic : DEMO_MODE n'est pas set au build → eviter le prerender
+// force-dynamic : DEMO_MODE n'est pas set au build → éviter le prerender
 // statique qui fige le redirect vers /demo (cf. /inscription, /demo/layout).
 export const dynamic = "force-dynamic";
 
@@ -61,7 +61,7 @@ export default async function SouscrirePage({
   // en env). Sinon, sur une instance ou Payplug n'est pas encore configure,
   // un click sur "Demarrer l'essai gratuit" depuis /tarifs boucle vers
   // /tarifs (PR du bug : isPlanBuyable=false → redirect → user reclique).
-  // La page elle-meme gere le cas "Payplug pas pret" via le banner amber
+  // La page elle-même gere le cas "Payplug pas pret" via le banner amber
   // ci-dessous (cf. !payplugReady) avec un lien vers /demande-abonnement.
   if (!isPlanId(planRaw) || !PAYPLUG_BUYABLE_PLANS.includes(planRaw)) {
     if (planRaw === "enterprise") {
@@ -123,7 +123,7 @@ export default async function SouscrirePage({
             ))}
           </ul>
           {/* Toggle mensuel / annuel sur la page souscrire pour permettre
-              de changer de cycle apres avoir clique depuis /tarifs sans
+              de changer de cycle après avoir clique depuis /tarifs sans
               repartir en arriere. */}
           <div className="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700">
             <div

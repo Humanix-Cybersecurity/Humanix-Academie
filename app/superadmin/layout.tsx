@@ -31,7 +31,7 @@ export default async function SuperadminLayout({
   }
 
   // Step-up : exige une auth WebAuthn datant de moins de 30 minutes.
-  // Si l'user n'a aucune cle enrolee, on redirige vers /profil/securite
+  // Si l'user n'a aucune cle enrolee, on redirige vers /profil/sécurité
   // pour qu'il en enregistre une (lockout preventif).
   const userId = session.user.id as string;
   const credCount = await db.webAuthnCredential.count({ where: { userId } });

@@ -12,7 +12,7 @@
 //     signalements aleatoires (effet "regarde les stats bouger")
 //
 // La logique d'envoi (creation BDD, boucle SMTP, log Event) est extraite
-// dans lib/phishing/launch.ts pour pouvoir etre reutilisee par d'autres
+// dans lib/phishing/launch.ts pour pouvoir être reutilisee par d'autres
 // entry points (API JSON, cron).
 
 import { revalidatePath } from "next/cache";
