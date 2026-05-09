@@ -1,0 +1,78 @@
+---
+title: "Flash : éviter le faux SMS de livraison"
+durationMinutes: 2
+persona: "tous-collaborateurs"
+objective: "Reflexer la signature du faux Colissimo / La Poste / DHL en 2 minutes"
+xpReward: 30
+scenario: |
+  Tu viens de cliquer sur un faux mail Colissimo. La bonne nouvelle :
+  c'etait un test. La moins bonne : si c'etait un vrai, tu venais de
+  donner ta carte bancaire pour "regulariser 1,99 €".
+
+  Le faux livraison joue sur 2 leviers :
+  - Tu attends peut-etre vraiment un colis (proba > 50% selon les semaines)
+  - 1,99 € c'est tellement peu que tu sortirais ta carte sans reflechir
+
+  Mais derriere, c'est ta CB qui part en CB-cloning ou en abonnement
+  cache mensuel.
+
+  Le mail mardi prochain dit : "Votre colis n'a pas pu etre livre, frais
+  de 1,99 €". Que fais-tu ?
+choices:
+  - id: "a"
+    label: "Je vais directement sur laposte.fr en tapant l'URL dans mon navigateur, je tracke moi-meme"
+    outcome: "good"
+    feedback: "Excellent. Aller a la source officielle = jamais piege. Tape l'URL toi-meme, jamais via un lien recu."
+    points: 30
+  - id: "b"
+    label: "Je clique sur le lien du mail pour payer rapidement et debloquer la livraison"
+    outcome: "bad"
+    feedback: "Et tu viens de donner ta CB a un attaquant. La Poste ne demande JAMAIS 1,99 € pour relivrer."
+    points: -10
+  - id: "c"
+    label: "Je supprime, je verifierai plus tard si je vois rien arriver"
+    outcome: "good"
+    feedback: "Acceptable. Tu evites le piege. Pour aller plus loin : signale-le a ta DSI au cas ou la campagne touche tes collegues."
+    points: 15
+debrief: |
+  Le reflexe a ancrer : un service de livraison **ne demande jamais d'argent
+  par mail/SMS** pour debloquer un colis. La regle est radicale.
+
+  - laposte.fr -> legitime (le vrai)
+  - colissimo-livraison.fr -> piege
+  - colis-laposte.example -> piege
+
+  La signature 100% du piege :
+  - Petit montant (1,99 € / 2,99 €) pour ne pas declencher de mefiance
+  - Ton "Colissimo" generique, pas de numero de suivi precis
+  - URL en sous-domaine creatif
+
+  Le bon reflexe : **tape l'URL officielle toi-meme** (laposte.fr,
+  ups.com, dhl.fr selon le service) et tracke avec le numero de suivi
+  qu'on t'a donne lors de la commande. Jamais via le lien du mail.
+quiz:
+  - question: "La Poste demande-t-elle 1,99 € pour relivrer un colis ?"
+    choices:
+      - { id: "a", label: "Oui c'est leur procedure standard", correct: false }
+      - { id: "b", label: "Non, c'est gratuit. Tout mail/SMS demandant un paiement = piege", correct: true }
+      - { id: "c", label: "Oui mais seulement le samedi", correct: false }
+    explanation: "Aucun service de livraison legitime ne demande de paiement par lien mail/SMS. La Poste, Colissimo, UPS, DHL : c'est gratuit ou facture sur le compte du commerçant."
+
+  - question: "Le bon reflexe pour tracker un colis quand on doute ?"
+    choices:
+      - { id: "a", label: "Cliquer sur le lien du SMS / mail recu", correct: false }
+      - { id: "b", label: "Aller sur laposte.fr en tapant l'URL soi-meme + numero de suivi de la commande", correct: true }
+      - { id: "c", label: "Repondre au SMS pour demander confirmation", correct: false }
+    explanation: "Tape l'URL officielle toi-meme. Le numero de suivi se trouve dans le mail de confirmation du commerçant, pas dans un SMS de relance."
+
+  - question: "Quel est le marqueur le plus facile a reperer dans un faux livraison ?"
+    choices:
+      - { id: "a", label: "L'absence d'emoji", correct: false }
+      - { id: "b", label: "La demande de paiement (meme petit montant) pour debloquer une livraison", correct: true }
+      - { id: "c", label: "La police d'ecriture", correct: false }
+    explanation: "Demande de paiement = signature 100% du faux livraison. Le montant est volontairement bas pour ne pas alerter."
+---
+
+> 🎯 **2 minutes pour ne plus jamais tomber dans le faux livraison.**
+> Regle d'or : si on te demande d'argent pour relivrer = poubelle. Tape
+> l'URL officielle toi-meme avec le numero de suivi de ta commande.

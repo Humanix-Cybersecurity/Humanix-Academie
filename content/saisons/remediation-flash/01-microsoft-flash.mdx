@@ -1,0 +1,74 @@
+---
+title: "Flash : éviter le faux Microsoft 365"
+durationMinutes: 2
+persona: "tous-collaborateurs"
+objective: "En 2 minutes, ancrer LE reflexe qui aurait evite ce piege la prochaine fois"
+xpReward: 30
+scenario: |
+  Tu viens de cliquer sur un faux mail Microsoft 365. Pas grave - on profite
+  des 2 prochaines minutes pour blinder le reflexe et eviter la rechute.
+
+  RAPPEL : un mail Microsoft legitime ne te demande JAMAIS de re-saisir tes
+  identifiants par un lien externe. Si Microsoft a un vrai souci avec ton
+  compte, tu le verras dans Outlook (bandeau in-app) ou dans le portail
+  admin de ta DSI. Point.
+
+  Mardi prochain, le meme mail t'arrive. Que fais-tu ?
+choices:
+  - id: "a"
+    label: "Je passe la souris sur le lien (sans cliquer) pour voir le domaine de destination"
+    outcome: "good"
+    feedback: "Excellent. Le domaine officiel Microsoft est login.microsoftonline.com. Tout autre domaine = poubelle direct."
+    points: 30
+  - id: "b"
+    label: "Je transfere le mail a la DSI pour qu'elle bloque la campagne pour tout le monde"
+    outcome: "good"
+    feedback: "Tres bien. En signalant, tu protege tes collegues et la DSI peut bloquer le domaine en amont."
+    points: 30
+  - id: "c"
+    label: "Je clique pour verifier (puisque j'ai un compte Microsoft 365)"
+    outcome: "bad"
+    feedback: "C'est exactement le piege qu'on veut eviter cette fois. Le lien externe = signal d'alarme, jamais une raison de cliquer."
+    points: -10
+debrief: |
+  Le reflexe a ancrer : devant un mail "Microsoft" qui demande de cliquer
+  pour deverrouiller / renouveler / confirmer un compte, **PASSE LA SOURIS**
+  sur le lien (sans cliquer) et regarde le domaine reel en bas de l'ecran.
+
+  - login.microsoftonline.com -> legitime (le seul officiel)
+  - login.microsoft365-secure.example -> piege
+  - microsoft365-account.example -> piege
+
+  Si t'as un doute, **transfere a la DSI**. C'est gratuit, c'est rapide, et
+  ca aide tout le monde.
+
+  Les vraies alertes Microsoft 365 apparaissent **dans Outlook** (bandeau)
+  ou dans le **portail admin** de ta DSI. Jamais par mail externe avec un
+  lien a cliquer.
+quiz:
+  - question: "Quel est le seul domaine officiel d'authentification Microsoft 365 ?"
+    choices:
+      - { id: "a", label: "login.microsoftonline.com", correct: true }
+      - { id: "b", label: "login.microsoft365.com", correct: false }
+      - { id: "c", label: "auth.microsoft365-secure.com", correct: false }
+    explanation: "Seul login.microsoftonline.com est officiel. Tous les autres - meme s'ils ressemblent - sont des fakes."
+
+  - question: "Le bon premier reflexe devant ce type de mail ?"
+    choices:
+      - { id: "a", label: "Cliquer pour verifier rapidement", correct: false }
+      - { id: "b", label: "Survoler le lien sans cliquer + transferer a la DSI", correct: true }
+      - { id: "c", label: "Supprimer sans rien dire", correct: false }
+    explanation: "Survoler montre le vrai domaine. Transferer protege tes collegues."
+
+  - question: "Microsoft envoie-t-il des liens externes pour re-saisir des identifiants ?"
+    choices:
+      - { id: "a", label: "Oui en cas d'incident", correct: false }
+      - { id: "b", label: "Non, jamais. Les alertes sont in-app ou via le portail admin DSI", correct: true }
+      - { id: "c", label: "Oui mais seulement avec un certificat", correct: false }
+    explanation: "Microsoft ne demande JAMAIS de re-saisir des identifiants par un lien dans un mail externe. C'est le marqueur n°1 du phishing."
+---
+
+> 🎯 **Ce flash de 2 minutes vaut un acces protege au prochain coup.**
+> La prochaine fois que tu vois un mail "Microsoft" avec un lien a cliquer
+> pour debloquer un compte : survol -> verifie le domaine -> si pas
+> login.microsoftonline.com -> transfere a la DSI. Voila.
