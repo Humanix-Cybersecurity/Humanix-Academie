@@ -10,7 +10,7 @@
 // Environnement requis :
 //   SCALEWAY_TEM_TOKEN       (clé secrète IAM)
 //   SCALEWAY_TEM_PROJECT_ID  (UUID du projet Scaleway)
-//   SCALEWAY_TEM_REGION      (defaut "fr-par")
+//   SCALEWAY_TEM_REGION      (défaut "fr-par")
 //   EMAIL_FROM               (adresse expéditrice, domaine vérifié dans
 //                             la console Scaleway TEM)
 import type { SendEmailParams, SendEmailResult } from "./index";
