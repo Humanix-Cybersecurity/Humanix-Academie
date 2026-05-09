@@ -14,7 +14,7 @@ import { useState } from "react";
 
 const AIPD_TEMPLATE = `# AIPD - [Nom du traitement]
 
-> Analyse d'Impact a la Protection des Donnees, conforme article 35 RGPD.
+> Analyse d'Impact a la Protection des Données, conforme article 35 RGPD.
 >
 > **Responsable de traitement :** [Nom organisation]
 > **DPO :** [Nom DPO]
@@ -35,21 +35,21 @@ B2B" et non "Ameliorer le service client".]
 - **Responsable de traitement :** [Organisation]
 - **Sous-traitants :** [Liste des sous-traitants directs avec localisation]
 - **Sous-traitants ulterieurs :** [Liste des sous-traitants des sous-traitants]
-- **Destinataires des donnees :** [Qui recoit les donnees ? Internes / externes]
+- **Destinataires des données :** [Qui recoit les données ? Internes / externes]
 
-### 1.3. Donnees traitees
-| Categorie | Donnees precises | Source | Sensibilite |
+### 1.3. Données traitees
+| Catégorie | Données precises | Source | Sensibilite |
 |---|---|---|---|
 | Identite | Nom, prenom, email | Formulaire site | Standard |
 | Comportement | Pages visitees, clics | Cookies analytics | Standard |
 | [a remplir] | [a remplir] | [a remplir] | [Standard / Sensible] |
 
-### 1.4. Flux de donnees
+### 1.4. Flux de données
 [Schema textuel ou diagramme : qui pousse a qui, par quel canal, avec quelle
-frequence]
+fréquence]
 
 ### 1.5. Duree de conservation
-[Pour chaque categorie de donnees : duree active + duree d'archivage +
+[Pour chaque catégorie de données : duree active + duree d'archivage +
 justification metier ou legale]
 
 ### 1.6. Base legale (article 6)
@@ -68,16 +68,16 @@ justification metier ou legale]
 [Le traitement est-il vraiment necessaire pour atteindre la finalite ? Quelle
 alternative moins intrusive a ete consideree ?]
 
-### 2.2. Test de proportionnalite (minimisation des donnees)
-[Toutes les donnees collectees sont-elles strictement necessaires ? Y a-t-il
-des champs "au cas ou" qui pourraient etre supprimes ?]
+### 2.2. Test de proportionnalite (minimisation des données)
+[Toutes les données collectees sont-elles strictement necessaires ? Y a-t-il
+des champs "au cas ou" qui pourraient être supprimes ?]
 
 ### 2.3. Information des personnes
 [Comment les personnes sont-elles informees du traitement ? Mention au
 formulaire ? Politique de confidentialite ? Notification individuelle ?]
 
 ### 2.4. Exercice des droits
-[Comment les personnes peuvent-elles exercer leurs droits (acces,
+[Comment les personnes peuvent-elles exercer leurs droits (accès,
 rectification, effacement, opposition, portabilite) ? Quel canal ? Quel delai
 de reponse ?]
 
@@ -88,19 +88,19 @@ de reponse ?]
 > Pour chaque menace, evaluer la **gravite** (1=negligeable a 4=maximale) et
 > la **vraisemblance** (1=peu probable a 4=quasi-certaine).
 
-### 3.1. Acces illegitime aux donnees
+### 3.1. Acces illegitime aux données
 **Sources possibles :** [interne malveillant, externe, accidentel]
 **Gravite :** [1-4]
 **Vraisemblance :** [1-4]
 **Impacts pour les personnes :** [Decrire concretement]
 
-### 3.2. Modification non desiree des donnees
+### 3.2. Modification non desiree des données
 **Sources possibles :** [interne, externe, accidentel]
 **Gravite :** [1-4]
 **Vraisemblance :** [1-4]
 **Impacts pour les personnes :** [Decrire concretement]
 
-### 3.3. Disparition / indisponibilite des donnees
+### 3.3. Disparition / indisponibilite des données
 **Sources possibles :** [panne, attaque, suppression accidentelle]
 **Gravite :** [1-4]
 **Vraisemblance :** [1-4]
@@ -111,10 +111,10 @@ de reponse ?]
 ## 4. Mesures de mitigation
 
 ### 4.1. Mesures techniques
-- [ ] Chiffrement des donnees au repos (AES-256 ou equivalent)
-- [ ] Chiffrement des donnees en transit (TLS 1.2+)
-- [ ] Controle d'acces par roles (least privilege)
-- [ ] Journalisation des acces (article 30 RGPD + ISO 27001 A.12.4)
+- [ ] Chiffrement des données au repos (AES-256 ou equivalent)
+- [ ] Chiffrement des données en transit (TLS 1.2+)
+- [ ] Controle d'accès par roles (least privilege)
+- [ ] Journalisation des accès (article 30 RGPD + ISO 27001 A.12.4)
 - [ ] Sauvegardes immuables / hors-ligne (3-2-1)
 - [ ] Pseudonymisation / anonymisation quand possible
 - [ ] Tests de penetration reguliers
@@ -129,7 +129,7 @@ de reponse ?]
 - [ ] Audit interne annuel
 - [ ] Revue periodique de l'AIPD
 
-### 4.3. Risque residuel apres mesures
+### 4.3. Risque residuel après mesures
 | Menace | Risque initial | Risque residuel | Acceptable ? |
 |---|---|---|---|
 | Acces illegitime | [G x V] | [G x V] | Oui / Non |
@@ -161,7 +161,7 @@ de reponse ?]
 ## 6. Validation
 
 ### 6.1. Avis du DPO
-[Avis circonstancie du DPO sur la conformite et l'opportunite du traitement]
+[Avis circonstancie du DPO sur la conformité et l'opportunite du traitement]
 
 ### 6.2. Decision du responsable de traitement
 - [ ] Mise en oeuvre approuvee
@@ -187,7 +187,7 @@ de reponse ?]
 
 ---
 
-> AIPD redigee selon la methodologie CNIL (PIA Guide v2). Modele Humanix
+> AIPD redigee selon la methodologie CNIL (PIA Guide v2). Modèle Humanix
 > Academie - open source AGPLv3, librement reutilisable et adaptable.
 `;
 

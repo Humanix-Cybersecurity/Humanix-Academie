@@ -3,7 +3,7 @@
 // Substitue progressivement les PlanGateNis2/PlanGateXXX dedies.
 //
 // MAJ mai 2026 : labels alignes sur la nouvelle grille (Pro reste, Premium
-// devient Enterprise). On reutilise PLAN_LABEL de lib/plans pour eviter toute
+// devient Enterprise). On reutilise PLAN_LABEL de lib/plans pour éviter toute
 // duplication / desynchronisation future.
 
 import Link from "next/link";

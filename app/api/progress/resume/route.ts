@@ -7,14 +7,14 @@
 // est lourd (XP, coins, level up, audit log, webhook).
 //
 // Appele par EpisodePlayer a chaque transition de step (scenario ->
-// debrief -> quiz q1 -> quiz q2 -> ...). Idempotent : meme requete deux
-// fois = meme effet.
+// debrief -> quiz q1 -> quiz q2 -> ...). Idempotent : même requete deux
+// fois = même effet.
 //
 // Pas d'attribution de XP / coins ici : juste un upsert minimal sur
 // Progress.{resumeStep, resumeQuizIndex, resumeChoiceId, status}.
 //
 // Status passe a IN_PROGRESS si NOT_STARTED. Si COMPLETED, on ne touche
-// rien (l'user a deja fini, pas besoin de reprise).
+// rien (l'user a déjà fini, pas besoin de reprise).
 
 import { NextResponse } from "next/server";
 import { z } from "zod";
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
   });
 
   if (existing?.status === "COMPLETED") {
-    // L'user reprend un episode deja termine pour le rejouer : on
+    // L'user reprend un episode déjà termine pour le rejouer : on
     // accepte mais on ne change pas le status (sinon on perd le
     // completedAt). Resume state utile uniquement si l'user reload
     // au milieu de la replay.

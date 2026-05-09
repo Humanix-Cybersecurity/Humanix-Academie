@@ -6,7 +6,7 @@
 // A11y : aria-hidden="true" car purement decoratif, l'info textuelle reste
 // disponible via /cyber-meteo et le composant CyberMeteoBadge.
 //
-// Server component pour eviter un fetch cote client a chaque page.
+// Server component pour éviter un fetch cote client a chaque page.
 
 import { getCyberMeteo } from "@/lib/cyber-meteo";
 
