@@ -125,7 +125,9 @@ export async function sendViaScalewayTem(
       ok: false,
       reason: "scaleway_tem_send_failed",
       details:
-        e instanceof Error ? `${e.name}: ${e.message}` : "Unknown thrown value",
+        e instanceof Error
+          ? `${e.name}: ${e.message}`
+          : "Unknown error type thrown during Scaleway TEM email send",
     };
   }
 }
