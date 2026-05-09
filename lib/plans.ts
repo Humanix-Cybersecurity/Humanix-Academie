@@ -3,46 +3,45 @@
 // Aligné sur la grille tarifaire (cf. lib/pricing.ts).
 //
 // =============================================================================
-// PIVOT MAI 2026 - modèle volume + open core (vente directe sans essai)
+// PIVOT MAI 2026 - Simplification a 3 paliers cloud (+ Community Edition)
 // =============================================================================
 //
-// Hiérarchie : decouverte < solo (Starter) < essentielle < pro < premium (Enterprise).
+// Hierarchie : starter < pro < enterprise.
 // Une feature est disponible si le plan du tenant >= au minimum requis.
 //
 // HISTORIQUE :
-// Le plan `"trial"` a existé dans une version antérieure (essai gratuit 30j),
-// retiré quand on est passé à la vente directe sans essai (cf. /demo + plan
-// Découverte forever-free remplissent ce rôle). Une migration Prisma rebascule
-// les anciens `Tenant.plan='trial'` vers `'decouverte'`. Tout code legacy qui
-// reçoit "trial" en string est gracieusement normalisé via normalizePlan().
+// La grille avait 5 paliers cloud (decouverte, solo, essentielle, pro, premium).
+// Elle a ete reduite a 3 en mai 2026 suite aux retours utilisateurs ("trop
+// complique de s'y retrouver"). Le mapping de migration :
+//   decouverte  -> starter (sub-tier free <=5 sieges)
+//   solo        -> starter (sub-tier paid 19EUR/mois 6-15 sieges)
+//   essentielle -> pro
+//   pro (old)   -> pro (avec nouvelle tarification 3EUR/user/mois)
+//   premium     -> enterprise
 //
-// Note open source : `community` (self-host AGPL gratuit) n'apparaît PAS comme
+// Le plan `"trial"` (essai gratuit 30j) a egalement existe avant le pivot vente
+// directe. Toute valeur legacy est gracieusement normalisee via normalizePlan().
+//
+// Note open source : `community` (self-host AGPL gratuit) n'apparait PAS comme
 // PlanId - par construction, ces installations n'ont pas de tenant cloud chez
-// nous. Le palier "Community Edition" est purement présenté côté marketing
+// nous. Le palier "Community Edition" est purement presente cote marketing
 // dans la page /tarifs.
 
 import { db } from "@/lib/db";
 
-export type PlanId =
-  | "decouverte"
-  | "solo"
-  | "essentielle"
-  | "pro"
-  | "premium";
+export type PlanId = "starter" | "pro" | "enterprise";
 
 export const PLAN_RANK: Record<PlanId, number> = {
-  decouverte: 0,
-  solo: 1,
-  essentielle: 2,
-  pro: 3,
-  premium: 4,
+  starter: 0,
+  pro: 1,
+  enterprise: 2,
 };
 
 // Catalogue des features gated et leur plan minimum.
 // Ajoute ici toute nouvelle feature payante.
 export const FEATURE_MIN_PLAN = {
   // Acces API REST publique (cles API + endpoints /api/v1/*)
-  api: "essentielle",
+  api: "pro",
   // Lancement de campagnes phishing simulees
   phishing: "pro",
   // Challenges d'equipe (competition interne)
@@ -58,38 +57,49 @@ export const FEATURE_MIN_PLAN = {
   // Marketplace de modules (officiels + communaute)
   marketplace: "pro",
   // SSO entreprise (SAML, SCIM)
-  sso_enterprise: "premium",
+  sso_enterprise: "enterprise",
   // Multi-tenant gestion par filiale ou site
-  multi_site: "premium",
+  multi_site: "enterprise",
   // White-label (logo + couleurs personnalises)
-  white_label: "premium",
+  white_label: "enterprise",
 } as const satisfies Record<string, PlanId>;
 
 export type Feature = keyof typeof FEATURE_MIN_PLAN;
 
 // Plans valides (utilise pour parser un input non-typed)
-const VALID_PLANS = new Set<PlanId>([
-  "decouverte",
-  "solo",
-  "essentielle",
-  "pro",
-  "premium",
-]);
+const VALID_PLANS = new Set<PlanId>(["starter", "pro", "enterprise"]);
+
+// Mapping de migration depuis les anciens identifiants (mai 2026 pivot 3 paliers).
+// Sert a normaliser gracieusement toute valeur legacy en BDD ou dans du code
+// pas encore migre. NE PAS ETENDRE ce mapping pour les nouveaux plans : si on
+// renomme dans le futur, ajouter une nouvelle migration dediee.
+const LEGACY_PLAN_MAP: Record<string, PlanId> = {
+  // Anciens 5 paliers -> 3 nouveaux
+  decouverte: "starter",
+  solo: "starter",
+  essentielle: "pro",
+  premium: "enterprise",
+  // Encore plus ancien (essai gratuit 30j supprime mai 2026)
+  trial: "starter",
+};
 
 export function isPlanId(value: unknown): value is PlanId {
   return typeof value === "string" && VALID_PLANS.has(value as PlanId);
 }
 
 export function normalizePlan(value: unknown): PlanId {
-  // Plan legacy "trial" (retire mai 2026) -> bascule sur Decouverte.
-  // Toute autre valeur inconnue tombe aussi sur Decouverte (forever-free).
-  if (value === "trial") return "decouverte";
-  return isPlanId(value) ? value : "decouverte";
+  if (typeof value === "string") {
+    if (VALID_PLANS.has(value as PlanId)) return value as PlanId;
+    const mapped = LEGACY_PLAN_MAP[value];
+    if (mapped) return mapped;
+  }
+  // Toute autre valeur inconnue tombe sur Starter (forever-free <=5 sieges).
+  return "starter";
 }
 
 /**
  * Le plan donné couvre-t-il la feature demandée ?
- * Exemple : planHasFeature("essentielle", "phishing") === false (phishing requiert pro+)
+ * Exemple : planHasFeature("starter", "phishing") === false (phishing requiert pro+)
  */
 export function planHasFeature(
   plan: PlanId | string | null | undefined,
@@ -118,7 +128,7 @@ export function planHasFeature(
  * Cf. `docs/LICENSE_KEY.md` pour le système de licence côté self-host
  * commercial.
  *
- * Retourne "decouverte" en fallback si tenant introuvable.
+ * Retourne "starter" en fallback si tenant introuvable (= plan le plus bas).
  */
 export async function getTenantPlan(tenantId: string): Promise<PlanId> {
   const tenant = await db.tenant.findUnique({
@@ -129,25 +139,21 @@ export async function getTenantPlan(tenantId: string): Promise<PlanId> {
 }
 
 // =============================================================================
-// LIBELLÉS UI - alignés sur la nouvelle grille mai 2026
+// LIBELLÉS UI - alignés sur la nouvelle grille mai 2026 (3 paliers)
 // =============================================================================
 // Ces labels apparaissent partout dans l'app (bandeaux, upsell, factures...).
 // Ils peuvent évoluer sans toucher à la DB (les keys restent stables).
 
 export const PLAN_LABEL: Record<PlanId, string> = {
-  decouverte: "Découverte",
-  solo: "Starter",
-  essentielle: "Essentielle",
+  starter: "Starter",
   pro: "Pro",
-  premium: "Enterprise",
+  enterprise: "Enterprise",
 };
 
 export const PLAN_EMOJI: Record<PlanId, string> = {
-  decouverte: "🌱",
-  solo: "⚡",
-  essentielle: "✨",
+  starter: "⚡",
   pro: "🚀",
-  premium: "👑",
+  enterprise: "👑",
 };
 
 // Plan minimum requis pour une feature, en libellé humain ("Pro")
@@ -161,14 +167,21 @@ export function featureMinPlanLabel(feature: Feature): string {
 // Limite le nombre d'utilisateurs (User) actifs par tenant. Verifie a chaque
 // invitation/creation d'user via lib/seats.ts -> enforceSeatQuota().
 //
-// `Infinity` = illimite (Premium). En BDD, ne pas stocker Infinity ; le calcul
-// utilise PLAN_SEATS au moment de la verification.
+// `Infinity` = illimite (Enterprise). En BDD, ne pas stocker Infinity ; le
+// calcul utilise PLAN_SEATS au moment de la verification.
 export const PLAN_SEATS: Record<PlanId, number> = {
-  decouverte: 5, // Forever-free 5 sieges
-  solo: 15, // Starter (forfait 19 €/mois, jusqu'a 15 utilisateurs)
-  essentielle: 50, // PME 16-50
-  pro: 250, // PME/ETI 51-250
-  premium: Infinity, // Enterprise (negociation custom)
+  starter: 15, // Starter : free <=5, paye 19EUR/mois 6-15
+  pro: 250, // Pro : 16-250 sieges, 3EUR/user/mois
+  enterprise: Infinity, // Enterprise : negociation custom
+};
+
+// Sub-tier free a l'interieur d'un plan : combien de sieges sont gratuits
+// avant de basculer sur la facturation. Permet d'avoir un Starter "free
+// jusqu'a 5 puis 19EUR".
+export const PLAN_FREE_SEATS: Record<PlanId, number> = {
+  starter: 5,
+  pro: 0,
+  enterprise: 0,
 };
 
 // =============================================================================
@@ -176,21 +189,34 @@ export const PLAN_SEATS: Record<PlanId, number> = {
 // =============================================================================
 // Source de verite des prix affiches sur /tarifs et factures Payplug.
 // Les vrais ID de plans Payplug sont dans .env (PAYPLUG_PLAN_*).
+//
+// `null` = pas de prix forfait (utilise PLAN_PRICE_PER_USER_EUR_MONTHLY a la
+// place) ou sur devis (Enterprise).
 export const PLAN_PRICE_EUR_MONTHLY: Record<PlanId, number | null> = {
-  decouverte: 0,
-  solo: 29,
-  essentielle: 89,
-  pro: 249,
-  premium: null, // sur devis
+  starter: 19, // Forfait 19EUR/mois quand seats > PLAN_FREE_SEATS.starter (=5)
+  pro: null, // Tarification au siege (cf. PLAN_PRICE_PER_USER_EUR_MONTHLY)
+  enterprise: null, // Sur devis
 };
 
 // Prix annuel (avec ~17% de remise = 2 mois offerts)
 export const PLAN_PRICE_EUR_YEARLY: Record<PlanId, number | null> = {
-  decouverte: 0,
-  solo: 290, // 29 * 10
-  essentielle: 890, // 89 * 10
-  pro: 2490, // 249 * 10
-  premium: null,
+  starter: 190, // 19 * 10 (vs 12 mensuel = -17%)
+  pro: null,
+  enterprise: null,
+};
+
+// Tarification au siege (€/user/mois). Utilise pour les plans facture au
+// volume. `null` = plan a forfait fixe ou sur devis.
+export const PLAN_PRICE_PER_USER_EUR_MONTHLY: Record<PlanId, number | null> = {
+  starter: null,
+  pro: 3, // 3EUR/user/mois pour 16-250 sieges
+  enterprise: null,
+};
+
+export const PLAN_PRICE_PER_USER_EUR_YEARLY: Record<PlanId, number | null> = {
+  starter: null,
+  pro: 2.5, // 2.50EUR/user/mois en engagement annuel (~17% remise)
+  enterprise: null,
 };
 
 // =============================================================================
@@ -214,18 +240,36 @@ export function isPlanDowngrade(from: PlanId, to: PlanId): boolean {
 
 /**
  * Plan immediatement superieur (pour CTA "Passer au plan suivant").
- * Retourne null si deja sur le plan max (Premium).
+ * Retourne null si deja sur le plan max (Enterprise).
  */
 export function nextPlan(plan: PlanId): PlanId | null {
-  const order: PlanId[] = ["decouverte", "solo", "essentielle", "pro", "premium"];
+  const order: PlanId[] = ["starter", "pro", "enterprise"];
   const i = order.indexOf(plan);
   if (i === -1 || i === order.length - 1) return null;
   return order[i + 1];
 }
 
 /**
- * Le tenant a-t-il un plan payant actif (vs trial / decouverte gratuit) ?
+ * Le tenant a-t-il un plan payant actif ?
+ *
+ * ATTENTION : Starter a deux sous-paliers (free <=5 sieges, paye au-dela).
+ * isPaidPlan('starter') retourne true en general (le plan EST payant si
+ * seats > 5), mais pour savoir si le tenant doit reellement payer maintenant
+ * il faut combiner avec son nombre de sieges actuels (cf. lib/seats.ts).
+ *
+ * Pour la logique de subscription / billing, utiliser plutot
+ * `isPaidUsage(plan, seats)` ci-dessous.
  */
 export function isPaidPlan(plan: PlanId): boolean {
-  return PLAN_RANK[plan] >= PLAN_RANK.solo;
+  return PLAN_RANK[plan] >= PLAN_RANK.starter; // tous les plans peuvent etre payants
+}
+
+/**
+ * Le tenant doit-il reellement payer maintenant, compte tenu de son plan
+ * et de son nombre de sieges actifs ? Utile pour decider si on declenche
+ * un checkout Payplug ou si on laisse en mode forever-free.
+ */
+export function isPaidUsage(plan: PlanId, activeSeats: number): boolean {
+  const freeSeats = PLAN_FREE_SEATS[plan];
+  return activeSeats > freeSeats;
 }

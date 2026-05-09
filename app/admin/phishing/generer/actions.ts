@@ -20,7 +20,7 @@ async function requirePro(): Promise<{ tenantId: string; userId: string }> {
   const tenantId = session.user!.tenantId as string;
   const userId = session.user!.id as string;
   const plan = await getTenantPlan(tenantId);
-  if (!["pro", "premium"].includes(plan)) {
+  if (!["pro", "enterprise"].includes(plan)) {
     throw new Error("plan_too_low:pro");
   }
   return { tenantId, userId };

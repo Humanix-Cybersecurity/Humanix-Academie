@@ -22,10 +22,12 @@ model Tenant {
   name      String
   slug      String   @unique
   // Plan effectif du tenant (cf. lib/plans.ts pour les valeurs valides :
-  // decouverte, solo, essentielle, pro, premium).
-  // Default "decouverte" (forever-free 5 sieges) — plan le plus restrictif
+  // starter, pro, enterprise — depuis pivot 4 paliers mai 2026).
+  // Default "starter" (forever-free <=5 sieges) — plan le plus restrictif
   // qui ne necessite ni paiement ni provisionnement special.
-  plan      String   @default("decouverte")
+  // Anciennes valeurs (decouverte/solo/essentielle/premium/trial) sont
+  // gracieusement normalisees par lib/plans.ts::normalizePlan().
+  plan      String   @default("starter")
   // Multi-etablissements : un tenant peut avoir un parent (groupe / siege)
   parentTenantId String?
   // Type d'etablissement libre (ex : "siege", "agence", "site", "boutique")
@@ -962,7 +964,7 @@ model AuditFlashSubmission {
   score           Int             // 0-100
   verdictLabel    String          // Excellent / Solide / Fragile / À risque
   topRiskCats     String          // CSV des categories en top risques (ex: "humain,donnees,identite")
-  recommendedPlan String          // solo / essentielle / pro / premium
+  recommendedPlan String          // starter / pro / enterprise
   nis2Concerned   Boolean         @default(false)
   // CRM
   leadStatus      AuditLeadStatus @default(NEW)

@@ -11,10 +11,9 @@ const FOUNDER_EMAIL =
   process.env.FOUNDER_NOTIFICATION_EMAIL ?? "contact@humanix-cybersecurity.fr";
 
 const VALID_PLANS = new Set([
-  "solo",
-  "essentielle",
+  "starter",
   "pro",
-  "premium",
+  "enterprise",
   "non-decide",
 ]);
 const VALID_SIZES = new Set(["", "1-9", "10-49", "50-249", "250+"]);

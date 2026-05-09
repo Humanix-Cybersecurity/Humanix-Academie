@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page d'inscription self-service pour le plan "decouverte" (forever-free
+// Page d'inscription self-service pour le plan "starter" (forever-free
 // 5 sieges). Cree un Tenant + un User ADMIN puis logue automatiquement
 // l'utilisateur sur /admin.
 "use client";
@@ -35,10 +35,10 @@ function SignupFallback() {
 }
 
 function SignupInner() {
-  // Plan toujours "decouverte" depuis le retrait de l'essai gratuit. Les
+  // Plan toujours "starter" depuis le retrait de l'essai gratuit. Les
   // anciens liens ?plan=trial sont donc gracieusement traites comme decouverte
   // (meme offre, meme limite 5 sieges).
-  const planKey = "decouverte" as const;
+  const planKey = "starter" as const;
   const planMeta = PLAN_LABELS[planKey];
 
   const [pending, setPending] = useState(false);
