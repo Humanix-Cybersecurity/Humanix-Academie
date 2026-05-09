@@ -50,7 +50,7 @@ function detectMisconfiguredToken(token: string): string | null {
   if (token.startsWith("SCW") && token.length < 30) {
     return "SCALEWAY_TEM_TOKEN ressemble a un access-key (SCW..., 20 chars). L'API REST TEM exige le SECRET-key (UUID 36 chars). Cf. .env.example.";
   }
-  return `SCALEWAY_TEM_TOKEN n'est pas un UUID 36 chars (recu ${token.length} chars). Verifier qu'il s'agit du secret-key IAM Scaleway, pas de l'access-key. Cf. .env.example.`;
+  return "SCALEWAY_TEM_TOKEN invalide. Verifier qu'il s'agit du secret-key IAM Scaleway (UUID 36 chars), pas de l'access-key. Cf. .env.example.";
 }
 
 export async function sendViaScalewayTem(
@@ -105,16 +105,19 @@ export async function sendViaScalewayTem(
     if (!res.ok) {
       const errBody = await res
         .text()
-        .catch(() => "[Unable to read error body]");
+        .catch(() => "[Failed to read error response body from Scaleway TEM API]");
       return {
         ok: false,
         reason: "scaleway_tem_api_error",
         details: errBody.slice(0, MAX_ERROR_BODY_LENGTH),
       };
     }
-    const data = (await res.json().catch(() => ({}))) as {
-      emails?: { id?: string }[];
-    };
+    let data: { emails?: { id?: string }[] } = {};
+    try {
+      data = (await res.json()) as { emails?: { id?: string }[] };
+    } catch (e: unknown) {
+      console.warn("[scaleway-tem] unable to parse success response JSON", e);
+    }
     return { ok: true, providerMessageId: data?.emails?.[0]?.id ?? null };
   } catch (e: unknown) {
     console.error("[scaleway-tem] send failed", e);
