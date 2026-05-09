@@ -235,13 +235,15 @@ function StateBanner({
 
   const config = (() => {
     switch (state.state) {
-      case "grace_period":
+      case "grace_period": {
+        const daysLeft = state.daysLeft ?? 0;
         return {
           emoji: "💳",
           title: "Échec de paiement détecté",
-          message: `Ta dernière échéance n'a pas été honorée. Tu as ${state.daysLeft} jour${(state.daysLeft ?? 0) > 1 ? "s" : ""} pour mettre à jour ta carte avant restriction d'accès.`,
+          message: `Ta dernière échéance n'a pas été honorée. Tu as ${daysLeft} jour${daysLeft !== 1 ? "s" : ""} pour mettre à jour ta carte avant restriction d'accès.`,
           cta: { label: "Mettre à jour la carte", href: "/api/payments/portal" },
         };
+      }
       case "read_only":
         return {
           emoji: "🔒",
