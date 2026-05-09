@@ -17,6 +17,7 @@ import type { SendEmailParams, SendEmailResult } from "./index";
 
 const DEFAULT_REGION = "fr-par";
 const MAX_ERROR_BODY_LENGTH = 500;
+const DEFAULT_FROM_NAME = "Humanix Académie";
 export function isScalewayTemConfigured(): boolean {
   return Boolean(
     process.env.SCALEWAY_TEM_TOKEN &&
@@ -73,7 +74,7 @@ export async function sendViaScalewayTem(
   }
   const fromAddress = params.from ?? process.env.EMAIL_FROM!;
   const fromName =
-    params.fromName ?? process.env.NEXT_PUBLIC_APP_NAME ?? "Humanix Académie";
+    params.fromName ?? process.env.NEXT_PUBLIC_APP_NAME ?? DEFAULT_FROM_NAME;
 
   const recipients = (
     Array.isArray(params.to) ? params.to : [params.to]
@@ -103,13 +104,18 @@ export async function sendViaScalewayTem(
       body: JSON.stringify(body),
     });
     if (!res.ok) {
+      const statusDetails = `${res.status} ${res.statusText || "Unknown Status"}`;
       const errBody = await res
         .text()
-        .catch(() => "[Failed to read error response body from Scaleway TEM API]");
+        .catch(
+          () =>
+            `[Failed to read error response body from Scaleway TEM API] (HTTP ${statusDetails})`,
+        );
+      const details = `HTTP ${statusDetails}${errBody ? ` - ${errBody}` : ""}`;
       return {
         ok: false,
         reason: "scaleway_tem_api_error",
-        details: errBody.slice(0, MAX_ERROR_BODY_LENGTH),
+        details: details.slice(0, MAX_ERROR_BODY_LENGTH),
       };
     }
     let data: { emails?: { id?: string }[] } = {};
@@ -125,7 +131,9 @@ export async function sendViaScalewayTem(
       ok: false,
       reason: "scaleway_tem_send_failed",
       details:
-        e instanceof Error ? `${e.name}: ${e.message}` : "Unknown thrown value",
+        e instanceof Error
+          ? `${e.name}: ${e.message}`
+          : "Unknown error type thrown during Scaleway TEM email send",
     };
   }
 }
