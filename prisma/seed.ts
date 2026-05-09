@@ -671,37 +671,56 @@ async function main() {
     }
   }
 
-  // PhishingResult demo : alimente le calcul de trend (lib/analytics/risk-trend.ts)
-  // et donne du contenu a /admin/phishing. On cree une campagne simulee
-  // et 3 statuts par profil :
-  //   - Camille (both)        : 3 CLICKED -> trend degrading prononce
-  //   - Nadia (low_score)     : 2 CLICKED + 1 SENT
-  //   - Christine (healthy)   : 3 REPORTED (top user)
-  //   - Karim (healthy IT)    : 2 REPORTED + 1 SENT
+  // PhishingResult demo : alimente /admin/phishing + le calcul de trend
+  // (lib/analytics/risk-trend.ts qui regarde 90j en glissant).
+  //
+  // Le modele PhishingResult a @@unique([campaignId, userId]) -> 1 result
+  // unique par (campagne, user). On cree donc 3 CAMPAGNES distinctes a 3
+  // dates differentes (-65j, -40j, -10j), et chaque user a 1 result par
+  // campagne avec son statut. Donne aussi du grain temporel realiste
+  // (3 simulations sur 2 mois).
   {
-    const campaignSentAt = new Date();
-    campaignSentAt.setDate(campaignSentAt.getDate() - 14);
-    const campaign = await prisma.phishingCampaign.upsert({
+    // Cleanup idempotent : l'ancien seed creait une seule "demo-phishing-campaign"
+    // qui aurait fait foirer le upsert ci-dessous (les trackTokens
+    // demo-{email}-0..2 pointaient vers cette ancienne campagne). On
+    // supprime la campagne legacy + ses results en cascade.
+    await prisma.phishingCampaign.deleteMany({
       where: { id: "demo-phishing-campaign" },
-      update: {
-        title: "Phishing simulé · Démo",
-        template: "FAKE_MICROSOFT",
-        sentAt: campaignSentAt,
-      },
-      create: {
-        id: "demo-phishing-campaign",
-        tenantId: tenant.id,
-        title: "Phishing simulé · Démo",
-        template: "FAKE_MICROSOFT",
-        channel: "EMAIL",
-        scheduledAt: campaignSentAt,
-        sentAt: campaignSentAt,
-      },
     });
-    const phishingPlan: {
-      email: string;
-      results: PhishingStatus[];
-    }[] = [
+
+    type CampaignSpec = {
+      id: string;
+      title: string;
+      daysAgo: number;
+    };
+    const campaigns: CampaignSpec[] = [
+      { id: "demo-phishing-1", title: "Phishing M365 · Démo (mois -2)", daysAgo: 65 },
+      { id: "demo-phishing-2", title: "Phishing M365 · Démo (mois -1)", daysAgo: 40 },
+      { id: "demo-phishing-3", title: "Phishing M365 · Démo (récent)", daysAgo: 10 },
+    ];
+    const dbCampaigns = await Promise.all(
+      campaigns.map((c) => {
+        const sentAt = new Date();
+        sentAt.setDate(sentAt.getDate() - c.daysAgo);
+        return prisma.phishingCampaign.upsert({
+          where: { id: c.id },
+          update: { title: c.title, template: "FAKE_MICROSOFT", sentAt },
+          create: {
+            id: c.id,
+            tenantId: tenant.id,
+            title: c.title,
+            template: "FAKE_MICROSOFT",
+            channel: "EMAIL",
+            scheduledAt: sentAt,
+            sentAt,
+          },
+        });
+      }),
+    );
+
+    // Pour chaque user, 3 statuts (1 par campagne, ordre chronologique).
+    const phishingPlan: { email: string; results: PhishingStatus[] }[] = [
+      // 3 CLICKED (trend degradation prononce)
       {
         email: "camille@demo-pme.fr",
         results: [
@@ -710,14 +729,21 @@ async function main() {
           PhishingStatus.CLICKED,
         ],
       },
+      // 2 CLICKED + 1 SENT
       {
         email: "nadia@demo-pme.fr",
-        results: [PhishingStatus.CLICKED, PhishingStatus.CLICKED, PhishingStatus.SENT],
+        results: [
+          PhishingStatus.CLICKED,
+          PhishingStatus.CLICKED,
+          PhishingStatus.SENT,
+        ],
       },
+      // 1 CLICKED + 2 SENT
       {
         email: "yanis@demo-pme.fr",
         results: [PhishingStatus.CLICKED, PhishingStatus.SENT, PhishingStatus.SENT],
       },
+      // 3 REPORTED (top user)
       {
         email: "christine@demo-pme.fr",
         results: [
@@ -726,6 +752,7 @@ async function main() {
           PhishingStatus.REPORTED,
         ],
       },
+      // 2 REPORTED + 1 SENT
       {
         email: "karim@demo-pme.fr",
         results: [
@@ -734,24 +761,27 @@ async function main() {
           PhishingStatus.SENT,
         ],
       },
+      // 1 REPORTED + 2 SENT (admin Sophie reporte au moins une fois)
       {
         email: "sophie@demo-pme.fr",
         results: [PhishingStatus.REPORTED, PhishingStatus.SENT, PhishingStatus.SENT],
       },
     ];
+
     for (const plan of phishingPlan) {
       const u = await prisma.user.findUnique({
         where: { email: plan.email },
         select: { id: true },
       });
       if (!u) continue;
-      for (let i = 0; i < plan.results.length; i++) {
+      for (let i = 0; i < plan.results.length && i < dbCampaigns.length; i++) {
+        const campaign = dbCampaigns[i];
         const trackToken = `demo-${plan.email}-${i}`;
         const sentAt = new Date();
-        sentAt.setDate(sentAt.getDate() - (i * 20 + 5));
+        sentAt.setDate(sentAt.getDate() - campaigns[i].daysAgo);
         await prisma.phishingResult.upsert({
           where: { trackToken },
-          update: { status: plan.results[i] as never, sentAt },
+          update: { status: plan.results[i], sentAt },
           create: {
             campaignId: campaign.id,
             userId: u.id,
