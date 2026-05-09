@@ -70,6 +70,7 @@ model Tenant {
   progress            Progress[]
   events              Event[]
   saisonConfigs       TenantSaisonConfig[]
+  smtpConfig          TenantSmtpConfig?
   challenges          TeamChallenge[]
   apiKeys             ApiKey[]
   phishingCampaigns   PhishingCampaign[]
@@ -443,6 +444,62 @@ model TenantSaisonConfig {
   saison Saison @relation(fields: [saisonId], references: [id], onDelete: Cascade)
 
   @@unique([tenantId, saisonId])
+  @@index([tenantId])
+}
+
+// =====================================================
+// SMTP TENANT - configuration d'envoi par tenant client
+// =====================================================
+// Pour les phishing simules (et futurs envois transactionnels custom),
+// chaque tenant configure SON PROPRE serveur SMTP. Humanix-Cybersecurity
+// ne partage PAS son SMTP : c'est a chaque client de :
+//   - faire son OPSEC (nom de domaine, IP, reputation, SPF, DKIM, DMARC)
+//   - assumer la responsabilite legale (envois identifies au domaine du
+//     client, pas au notre)
+//   - gerer la deliverabilite (les phishing simules deviennent un
+//     incident de reputation pour qui les envoie)
+//
+// Si le client ne veut pas configurer son SMTP, il contacte Humanix
+// pour une PRESTATION DE SERVICE FACTUREE AU FORFAIT (mise en place
+// d'un SMTP dedie + delegation de domaine + suivi reputation).
+//
+// SECURITE :
+//   - Le password est chiffre AES-256-GCM via une cle derivee de
+//     AUTH_SECRET (cf. lib/smtp/encryption.ts). Jamais stocke en clair.
+//   - Audit log a chaque create/update/delete + chaque test.
+//   - Lecture restreinte ADMIN/RSSI/SUPERADMIN du tenant.
+model TenantSmtpConfig {
+  id           String   @id @default(cuid())
+  tenantId     String   @unique
+  // Adresse du serveur SMTP : smtp.gmail.com, smtp-mail.outlook.com,
+  // smtp.scw-tem.cloud, mx.ovh.com, etc.
+  host         String
+  // 587 STARTTLS standard, 465 SSL/TLS implicite, 25 plain (a eviter).
+  port         Int      @default(587)
+  // true = TLS/SSL implicite (port 465). false = STARTTLS (port 587).
+  secure       Boolean  @default(false)
+  // Auth username : souvent l'email d'envoi ou un identifiant API.
+  username     String
+  // Auth password CHIFFRE AES-256-GCM (cf. lib/smtp/encryption.ts).
+  // Format stocke : base64(iv) + ":" + base64(ciphertext+tag).
+  passwordEnc  String   @db.Text
+  // From address par defaut pour les envois (e.g. "noreply@acme.fr").
+  // Doit etre dans un domaine autorise par le SPF/DKIM/DMARC du SMTP.
+  fromEmail    String
+  // Nom affiche dans le From ("Acme Cyber" -> "Acme Cyber <noreply@acme.fr>")
+  fromName     String?
+  // Statut du dernier test de connexion : null = jamais teste,
+  // true = success, false = failure (lastError contient le detail).
+  isVerified   Boolean?
+  lastVerifiedAt DateTime?
+  lastError    String?  @db.Text
+  // Notes admin (optionnel, ex : "compte dedie phishing chez OVH")
+  notes        String?  @db.Text
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
   @@index([tenantId])
 }
 
@@ -1302,6 +1359,10 @@ enum AuditAction {
   PHISHING_CAMPAIGN_CREATED
   PHISHING_CAMPAIGN_SENT      // Le cron a declenche l'envoi
   PHISHING_REPORT_EXPORTED    // Admin a telecharge le CSV
+  // SMTP tenant (config + tests + envois)
+  TENANT_SMTP_CONFIGURED      // Admin a sauve une config SMTP
+  TENANT_SMTP_TESTED          // Admin a teste la connexion (succes ou echec)
+  TENANT_SMTP_DELETED         // Admin a supprime la config (perte des credentials)
 }
 
 enum AuditOutcome {
