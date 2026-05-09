@@ -18,6 +18,14 @@ import type { SendEmailParams, SendEmailResult } from "./index";
 const DEFAULT_REGION = "fr-par";
 const MAX_ERROR_BODY_LENGTH = 500;
 const DEFAULT_FROM_NAME = "Humanix Académie";
+
+function truncateErrorMessage(message: string, maxLength: number): string {
+  const truncationSuffix = "... [truncated]";
+  if (message.length <= maxLength) return message;
+  const maxPrefixLength = Math.max(0, maxLength - truncationSuffix.length);
+  return `${message.slice(0, maxPrefixLength)}${truncationSuffix}`;
+}
+
 export function isScalewayTemConfigured(): boolean {
   return Boolean(
     process.env.SCALEWAY_TEM_TOKEN &&
@@ -132,11 +140,7 @@ export async function sendViaScalewayTem(
       const errBody =
         rawErrBody || "[Failed to read error response body from Scaleway TEM API]";
       const details = `HTTP ${statusDetails}${errBody ? ` - ${errBody}` : ""}`;
-      const truncationSuffix = "... [truncated]";
-      const boundedDetails =
-        details.length > MAX_ERROR_BODY_LENGTH
-          ? `${details.slice(0, Math.max(0, MAX_ERROR_BODY_LENGTH - truncationSuffix.length))}${truncationSuffix}`
-          : details;
+      const boundedDetails = truncateErrorMessage(details, MAX_ERROR_BODY_LENGTH);
       return {
         ok: false,
         reason: "scaleway_tem_api_error",
