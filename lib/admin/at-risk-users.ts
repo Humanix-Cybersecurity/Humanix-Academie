@@ -16,6 +16,10 @@
 //   - /api/admin/users/at-risk/remind : envoi rappel cible
 
 import { db } from "@/lib/db";
+import {
+  computeUserTrendsBatch,
+  type TrendVerdict,
+} from "@/lib/analytics/risk-trend";
 
 export type AtRiskOptions = {
   /** Seuil riskScore en dessous duquel l'user est considere vulnerable. Defaut 40. */
@@ -36,6 +40,12 @@ export type AtRiskUser = {
   /** Motif principal pour affichage en tete : "low_score" | "inactive" | "both" */
   reason: "low_score" | "inactive" | "both";
   groupBadges: { name: string; emoji: string; color: string | null }[];
+  /** Tendance (trajectoire). Calculee a partir des Progress + PhishingResults. */
+  trend: TrendVerdict;
+  /** Indicateur signe [-1, 1] : > 0 ameliore, < 0 degrade. */
+  trendIndicator: number;
+  /** Composantes textuelles ayant produit le verdict (explicabilite UI). */
+  trendReasons: string[];
 };
 
 export async function listAtRiskUsers(
@@ -86,7 +96,13 @@ export async function listAtRiskUsers(
     },
   });
 
-  const enriched = users.map((u) => {
+  // 1ere passe : on filtre les users en risque (sans le champ trend qu'on
+  // ajoutera apres dans une 2e passe batch).
+  type AtRiskUserPartial = Omit<
+    AtRiskUser,
+    "trend" | "trendIndicator" | "trendReasons"
+  >;
+  const enriched: (AtRiskUserPartial | null)[] = users.map((u) => {
     // Si jamais d'activite, on prend createdAt comme reference (un user
     // cree il y a 90j sans aucune action est "inactif depuis 90j").
     const lastActivity = u.progress[0]?.completedAt ?? u.createdAt;
@@ -101,7 +117,7 @@ export async function listAtRiskUsers(
     const reason: AtRiskUser["reason"] =
       lowScore && inactive ? "both" : lowScore ? "low_score" : "inactive";
 
-    const result: AtRiskUser = {
+    return {
       id: u.id,
       name: u.name ?? u.email.split("@")[0],
       email: u.email,
@@ -117,10 +133,27 @@ export async function listAtRiskUsers(
         color: ug.group.color,
       })),
     };
-    return result;
   });
 
-  const filtered = enriched.filter((u): u is AtRiskUser => u !== null);
+  const partial = enriched.filter(
+    (u): u is AtRiskUserPartial => u !== null,
+  );
+
+  // 2e passe : tendance par user (batch). Cf. lib/analytics/risk-trend.ts
+  const trends = await computeUserTrendsBatch(partial.map((u) => u.id));
+  const filtered: AtRiskUser[] = partial.map((u) => {
+    const t = trends.get(u.id) ?? {
+      verdict: "insufficient_data" as TrendVerdict,
+      indicator: 0,
+      reasons: [],
+    };
+    return {
+      ...u,
+      trend: t.verdict,
+      trendIndicator: t.indicator,
+      trendReasons: t.reasons,
+    };
+  });
 
   // Tri : "both" en premier (les pires), puis riskScore croissant
   const sorted = filtered.sort((a, b) => {
