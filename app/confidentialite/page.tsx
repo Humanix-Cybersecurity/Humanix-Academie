@@ -45,7 +45,7 @@ export default function ConfidentialitePage() {
         </p>
         <p>
           La présente politique s'applique uniquement aux services Cloud opérés
-          par Humanix-Cybersecurity (paliers Découverte, Starter, Essentielle,
+          par Humanix-Cybersecurity (paliers Starter,
           Pro, Enterprise). Les organisations qui déploient elles-mêmes{" "}
           <strong>Humanix Community Edition</strong> en self-host (à partir du
           code source publié sous licence GNU AGPL v3) deviennent{" "}
