@@ -17,6 +17,7 @@ import type { SendEmailParams, SendEmailResult } from "./index";
 
 const DEFAULT_REGION = "fr-par";
 const MAX_ERROR_BODY_LENGTH = 500;
+const DEFAULT_FROM_NAME = "Humanix Académie";
 export function isScalewayTemConfigured(): boolean {
   return Boolean(
     process.env.SCALEWAY_TEM_TOKEN &&
@@ -73,7 +74,7 @@ export async function sendViaScalewayTem(
   }
   const fromAddress = params.from ?? process.env.EMAIL_FROM!;
   const fromName =
-    params.fromName ?? process.env.NEXT_PUBLIC_APP_NAME ?? "Humanix Académie";
+    params.fromName ?? process.env.NEXT_PUBLIC_APP_NAME ?? DEFAULT_FROM_NAME;
 
   const recipients = (
     Array.isArray(params.to) ? params.to : [params.to]
