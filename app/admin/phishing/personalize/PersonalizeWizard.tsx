@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Wizard de generation de phishings personnalises :
 //   1. Selection des cibles (employes du tenant)
-//   2. Configuration : template + difficulte + ton + evenement contextuel
+//   2. Configuration : template + difficulte + ton + événement contextuel
 //   3. Generation -> resultats avec preview de chaque mail + signaux faibles
 
 import { useState, useTransition } from "react";

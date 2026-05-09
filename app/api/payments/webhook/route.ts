@@ -4,8 +4,8 @@
 // Recoit les events Payplug (subscription.*, payment.*) et synchronise
 // l'etat du Tenant en BDD. Idempotent via BillingEvent.providerEventId.
 //
-// Securite :
-//  - Verification HMAC-SHA256 de la signature Payplug
+// Sécurité :
+//  - Vérification HMAC-SHA256 de la signature Payplug
 //  - Pas d'auth user : c'est Payplug qui appelle
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
@@ -164,9 +164,9 @@ export async function POST(req: Request) {
       case "subscription.canceled":
       case "subscription.cancelled": {
         if (tenantId) {
-          // Quand un tenant resilie, on le rebascule sur Decouverte
-          // (forever-free 5 sieges) au lieu de couper l'acces brutalement.
-          // Ses donnees restent accessibles, il peut re-souscrire plus tard.
+          // Quand un tenant resilie, on le rebascule sur Découverte
+          // (forever-free 5 sieges) au lieu de couper l'accès brutalement.
+          // Ses données restent accessibles, il peut re-souscrire plus tard.
           await db.tenant.update({
             where: { id: tenantId },
             data: {
@@ -227,7 +227,7 @@ export async function POST(req: Request) {
     },
   });
 
-  // AuditLog conformite
+  // AuditLog conformité
   if (status === "applied" && tenantId) {
     const auditAction =
       event.type.startsWith("subscription.created") ||

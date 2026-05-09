@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   const buffer = await renderToBuffer(<SecurityAuditReport />);
   const date = new Date().toISOString().slice(0, 10);
-  const filename = `humanix-rapport-audit-securite-v1.0-${date}.pdf`;
+  const filename = `humanix-rapport-audit-sécurité-v1.0-${date}.pdf`;
 
   return new NextResponse(buffer as any, {
     headers: {

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Bandeau "evenement cyber actif" affiche en haut de /apprendre quand
+// Bandeau "événement cyber actif" affiche en haut de /apprendre quand
 // un event du calendrier est en cours (Cybermois, World Password Day,
 // etc.). Lien vers la saison highlightee.
 //

@@ -95,7 +95,7 @@ export async function GET(req: NextRequest) {
  *
  * RFC 8058 : Gmail/Outlook envoient un POST quand l'utilisateur clique sur
  * le bouton natif "Se desinscrire" affiche dans l'interface du client mail.
- * Le body peut etre `List-Unsubscribe=One-Click` (form-encoded) ou vide.
+ * Le body peut être `List-Unsubscribe=One-Click` (form-encoded) ou vide.
  * On accepte les deux. Repondre 200 OK suffit (pas besoin de body).
  */
 export async function POST(req: NextRequest) {
