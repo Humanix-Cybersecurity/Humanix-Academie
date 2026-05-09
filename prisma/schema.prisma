@@ -59,6 +59,26 @@ model Tenant {
   // le schema le temps de purger les anciennes valeurs en BDD via la
   // migration ; sera retire dans une migration future.
   trialEndsAt                         DateTime?
+
+  // ----------------------------------------------------
+  // RGPD - Retention configurable des donnees
+  // ----------------------------------------------------
+  // Nombre de jours apres lesquels les donnees personnelles sont purgees /
+  // anonymisees (RGPD art. 5.1.e - limitation de conservation). null =
+  // pas de purge automatique (ancien comportement, opt-in).
+  // Range valide en UI : 30-3650 (10 ans).
+  //
+  // Concretement, le cron /api/cron/data-retention-purge :
+  //   - DELETE Event > seuil
+  //   - DELETE AuditLog > seuil sauf actions critiques (cf. lib/data-retention.ts)
+  //   - ANONYMIZE User inactif > seuil (email/name/IP vides, ID conserve
+  //     pour integrite FK Progress / Event)
+  //
+  // Cf. lib/data-retention.ts pour la logique + dry-run.
+  dataRetentionDays                   Int?
+  // Dernier passage de la purge automatique (info UI + heuristique cron).
+  dataRetentionLastRunAt              DateTime?
+
   // ----------------------------------------------------
   // AUTOMATIONS DE REMEDIATION (mai 2026)
   // ----------------------------------------------------
@@ -1487,6 +1507,8 @@ enum AuditAction {
   DATA_EXPORTED // art. 20 - portabilite (download JSON)
   DATA_ERASURE_REQUESTED // art. 17 - demande d'effacement
   DATA_ERASURE_COMPLETED // art. 17 - effacement effectue
+  DATA_RETENTION_CONFIGURED // art. 5.1.e - admin a defini Tenant.dataRetentionDays
+  DATA_RETENTION_PURGED // art. 5.1.e - cron a purge des donnees > seuil
   CONSENT_GIVEN
   CONSENT_WITHDRAWN
   // Securite / divers
