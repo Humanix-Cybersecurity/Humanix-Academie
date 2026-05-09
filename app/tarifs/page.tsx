@@ -822,7 +822,7 @@ function CtaButton({
   if (t.cta.type === "github") {
     return (
       <a
-        href="https://github.com/humanix-cybersecurity/humanix-ce"
+        href="https://github.com/Humanix-Cybersecurity/humanix-ce"
         target="_blank"
         rel="noreferrer"
         className={cls}
