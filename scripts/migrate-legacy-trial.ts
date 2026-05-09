@@ -61,7 +61,7 @@ async function main() {
 
   if (statusChange.count > 0) {
     console.log(
-      `[migrate-legacy-trial] ${statusChange.count} tenant(s) rebasculé(s) status=trialing -> active`,
+      `[migrate-legacy-trial] ${statusChange.count} tenant(s) rebasculés status=trialing -> active`,
     );
   }
 
