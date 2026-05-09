@@ -281,14 +281,14 @@ async function main() {
     return;
   }
 
-  // Plan initial : "essentielle" (le palier standard PME, montre la majorité
+  // Plan initial : "pro" (le palier standard PME, montre la majorité
   // des features sans verrou). L'utilisateur peut switcher en live depuis
   // /demo pour tester Solo / Pro / Premium.
   // En update on NE CHANGE PAS le plan : on respecte le dernier choix demo.
   const tenant = await prisma.tenant.upsert({
     where: { slug: "demo-pme" },
     update: { name: "PME Démo" },
-    create: { slug: "demo-pme", name: "PME Démo", plan: "essentielle" },
+    create: { slug: "demo-pme", name: "PME Démo", plan: "pro" },
   });
   console.log(`  Tenant demo ✓ (${tenant.slug})`);
 
