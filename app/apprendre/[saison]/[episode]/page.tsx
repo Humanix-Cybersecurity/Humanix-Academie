@@ -61,6 +61,32 @@ export default async function EpisodePage({
   });
   const species = dbUser?.mascotSpecies ?? "fox";
 
+  // Etat de reprise mid-episode : si l'user a quitte l'episode au
+  // milieu (telephone, urgence, fatigue), on lui propose de reprendre
+  // exactement la ou il etait. resumeStep null = nouvelle session.
+  const dbProgress = await db.progress.findUnique({
+    where: { userId_episodeId: { userId, episodeId: dbEpisode.id } },
+    select: {
+      status: true,
+      resumeStep: true,
+      resumeQuizIndex: true,
+      resumeChoiceId: true,
+    },
+  });
+  const resume =
+    dbProgress &&
+    dbProgress.status !== "COMPLETED" &&
+    dbProgress.resumeStep &&
+    (dbProgress.resumeStep === "scenario" ||
+      dbProgress.resumeStep === "debrief" ||
+      dbProgress.resumeStep === "quiz")
+      ? {
+          step: dbProgress.resumeStep as "scenario" | "debrief" | "quiz",
+          quizIndex: dbProgress.resumeQuizIndex,
+          choiceId: dbProgress.resumeChoiceId,
+        }
+      : null;
+
   return (
     <main id="main-content" className="max-w-3xl mx-auto px-4 py-8">
       {isFallback && (
@@ -96,6 +122,7 @@ export default async function EpisodePage({
         quiz={content.meta.quiz}
         xpReward={content.meta.xpReward}
         species={species}
+        resume={resume}
       />
     </main>
   );
