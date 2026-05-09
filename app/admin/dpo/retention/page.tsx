@@ -28,7 +28,18 @@ import { saveRetentionConfig, runPurgeNow } from "./actions";
 
 export const dynamic = "force-dynamic";
 
-export default async function RetentionPage() {
+export default async function RetentionPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ ok?: string; msg?: string; error?: string }>;
+}) {
+  const sp = await searchParams;
+  const flash =
+    sp.error
+      ? { kind: "error" as const, text: sp.error }
+      : sp.ok && sp.msg
+        ? { kind: "ok" as const, text: sp.msg }
+        : null;
   const session = await auth();
   if (!session?.user) redirect("/connexion");
   const role = session.user.role;
@@ -76,6 +87,24 @@ export default async function RetentionPage() {
         title="Rétention des données"
         description="Limitation de conservation RGPD (article 5.1.e). Configure pendant combien de temps les données personnelles sont gardées avant anonymisation / purge."
       />
+
+      {/* Bandeau de feedback (succes / erreur) renseigne par les server
+          actions via redirect ?ok=1&msg=... ou ?error=... */}
+      {flash && (
+        <div
+          role="status"
+          className={`rounded-2xl border-2 p-3 text-sm flex items-start gap-2 ${
+            flash.kind === "ok"
+              ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50/60 dark:bg-emerald-900/30 text-emerald-900 dark:text-emerald-100"
+              : "border-rose-300 dark:border-rose-700 bg-rose-50/60 dark:bg-rose-900/30 text-rose-900 dark:text-rose-100"
+          }`}
+        >
+          <span aria-hidden="true">
+            {flash.kind === "ok" ? "✅" : "⚠️"}
+          </span>
+          <span>{flash.text}</span>
+        </div>
+      )}
 
       {/* === Statut === */}
       <AdminSection title="Statut">
