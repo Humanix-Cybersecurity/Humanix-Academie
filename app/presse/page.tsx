@@ -37,7 +37,7 @@ const FAITS_CLES = [
   },
   {
     label: "Tarif PME standard",
-    value: "3 €/utilisateur/mois (Cloud Essentielle)",
+    value: "3 €/utilisateur/mois (Cloud Pro)",
   },
   { label: "Hébergement", value: "France garantie (Scaleway Paris)" },
   { label: "IA utilisée", value: "Mistral AI (souverain français)" },
@@ -348,7 +348,7 @@ export default function PressePage() {
               href="/tarifs"
               className="font-bold text-accent-500 hover:underline"
             >
-              Grille tarifaire 6 paliers →
+              Grille tarifaire 4 paliers →
             </Link>
           </li>
           <li>

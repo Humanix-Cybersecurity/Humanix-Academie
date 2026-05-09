@@ -155,7 +155,7 @@ export default function CisoAssistantBridge() {
           <code className="text-xs bg-gray-100 dark:bg-slate-700 px-1.5 py-0.5 rounded">
             /admin/api-keys
           </code>{" "}
-          (plan Essentielle ou superieur).
+          (plan Pro ou superieur).
         </p>
 
         <div

@@ -26,7 +26,7 @@ Le serveur expose **4 outils read-only** :
 ## Pré-requis
 
 - Node.js 20+
-- Une clé API Humanix (plan Essentielle ou supérieur — `/admin/api-keys`)
+- Une clé API Humanix (plan Pro ou supérieur — `/admin/api-keys`)
 - Un client MCP : Claude Desktop, Cursor, mcp-cli, ou tout autre client compatible MCP 1.0
 
 ## Installation rapide

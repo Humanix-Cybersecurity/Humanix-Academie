@@ -5,7 +5,7 @@
 // Le paiement déclenche le webhook qui provisionne tenant + ADMIN +
 // envoie un magic link de bienvenue. Aucune action humaine côté Humanix.
 //
-// Pour les plans non self-service (premium, instance dédiée), on redirige
+// Pour les plans non self-service (enterprise, instance dédiée), on redirige
 // vers /demande-abonnement (workflow founder).
 //
 // Si Payplug n'est pas configuré (env vars absentes), on affiche une

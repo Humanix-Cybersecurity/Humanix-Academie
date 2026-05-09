@@ -229,7 +229,7 @@ const ROWS: Row[] = [
   {
     category: "Conformité & souveraineté",
     feature: "DPA + Registre RGPD pré-remplis",
-    humanix: win("Oui, fournis dès Découverte"),
+    humanix: win("Oui, fournis dès Starter"),
     knowbe4: eq("Sur demande"),
     cyberGuru: eq("Sur demande"),
     hoxhunt: loss("DPA seul"),

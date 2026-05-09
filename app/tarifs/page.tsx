@@ -2,8 +2,9 @@
 // Page tarifs publique - refonte cosy mai 2026 (pivot open core service-led).
 // Cf. Pack_Lancement_Solo/05_Pivot_OSS_Mai_2026/05_PRICING_VOLUME.md
 //
-// 6 paliers : Community Edition (self-host) · Découverte (cloud free) ·
-// Starter · Essentielle ⭐ · Pro · Enterprise.
+// 4 paliers : Community Edition (self-host) · Starter · Pro ⭐ · Enterprise.
+// Pivot vers 4 paliers en mai 2026 (avant : 6 paliers, jugés trop complexes
+// par les utilisateurs).
 //
 // Refonte cosy mai 2026 :
 //  - Hero HexBackdrop avec sous-titre "notre conviction tarifaire"
@@ -21,7 +22,7 @@ import PricingCarousel from "@/components/PricingCarousel";
 
 const META_TITLE = "Tarifs - Humanix Académie";
 const META_DESCRIPTION =
-  "Cybersensibilisation française open source AGPL. Self-host gratuit à vie. Cloud à partir de 0 €/mois. 6 paliers, hébergement souverain France.";
+  "Cybersensibilisation française open source AGPL. Self-host gratuit à vie. Cloud gratuit jusqu'à 5 utilisateurs, puis à partir de 19 €/mois. 4 paliers, hébergement souverain France.";
 
 export const metadata = {
   title: META_TITLE,
@@ -152,11 +153,11 @@ export default async function TarifsPage({
       </section>
 
       {/* =====================================================================
-          6 PALIERS
-          - Mobile : 1 col
-          - md : 2 cols (3 lignes)
-          - lg : 3 cols (2 lignes : free / cloud)
-          - xl : 6 cols (1 ligne) - uniquement sur très grand écran
+          4 PALIERS - rendu via PricingCarousel (client component)
+          - Mobile : stack vertical
+          - >= md  : carousel 3-visibles avec navigation arrows + dots
+          - Defaut : Starter au centre, CE / Pro en transparence laterale,
+            Enterprise hors ecran (accessible via fleche droite)
           ===================================================================== */}
       <section className="mb-16">
         <div className="text-center mb-6">
@@ -336,7 +337,7 @@ export default async function TarifsPage({
             {
               emoji: "💰",
               title: "Volume plutot que rente",
-              text: "3 €/user/mois en Essentielle. 5 a 10x moins cher que les acteurs US. Volume > 30 grosses boites.",
+              text: "3 €/user/mois en Pro. 5 a 10x moins cher que les acteurs US. Volume > 30 grosses boites.",
             },
           ].map((diff, idx) => (
             <DiffCard
@@ -351,7 +352,7 @@ export default async function TarifsPage({
       </section>
 
       {/* =====================================================================
-          COMPARATIF DÉTAILLÉ - 6 paliers
+          COMPARATIF DÉTAILLÉ - 4 paliers
           ===================================================================== */}
       <section className="mb-16">
         <div className="text-center mb-8">
@@ -578,8 +579,8 @@ export default async function TarifsPage({
                   value="coûte en moyenne 35 000 € (Tracfin 2024)"
                 />
                 <Roi
-                  label="Notre offre Essentielle pour 25 collaborateurs"
-                  value="coûte 900 €/an (75 €/mois)"
+                  label="Notre offre Pro pour 25 collaborateurs"
+                  value="coûte 750 €/an (63 €/mois en annuel) ou 900 €/an en mensuel"
                 />
                 <Roi
                   label="Réduction observée du taux de clic phishing après 6 mois"
@@ -629,12 +630,13 @@ export default async function TarifsPage({
               démo en ligne
             </Link>{" "}
             (comptes pré-remplis, données fictives) couvre déjà ce besoin.
-            Pour la version libre,{" "}
+            Le plan{" "}
             <Link href="/inscription" className="underline">
-              le plan Découverte
+              Starter
             </Link>{" "}
-            est forever-free 5 sièges. Au-delà : vente directe (mensuel sans
-            engagement ou annuel −17 à −21 %).
+            est gratuit jusqu&apos;à 5 sièges (forever-free, sans CB), puis
+            19 €/mois forfait jusqu&apos;à 15 sièges. Au-delà : Pro à
+            3 €/utilisateur/mois (mensuel sans engagement ou annuel −17 %).
           </Faq>
           <Faq question="Mes données sont-elles hébergées en France ?">
             Hébergement Union Européenne par défaut (Paris ou Roubaix selon
