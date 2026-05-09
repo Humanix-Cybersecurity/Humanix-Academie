@@ -8,7 +8,7 @@
 //  - Pour le step-up super-admin, on signe un cookie distinct "webauthn-fresh"
 //    apres login, valide 30 min.
 //
-// RP_ID : domaine effectif (ex: "academie.humanix-cybersecurity.fr").
+// RP_ID : domaine effectif (ex: "humanix-academie.fr").
 // On le derive de AUTH_URL pour eviter une variable d'env supplementaire,
 // mais on autorise WEBAUTHN_RP_ID en override (utile en dev local
 // avec localhost, ou si on veut couvrir un sous-domaine specifique).
