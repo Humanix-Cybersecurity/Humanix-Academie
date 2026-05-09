@@ -7,7 +7,7 @@
 //   - Lien portail Payplug self-service
 //
 // Defense en profondeur : layout admin/ verifie deja le role >= ADMIN.
-// On affiche cette page meme aux ADMIN qui n'auraient pas le droit de modifier
+// On affiche cette page même aux ADMIN qui n'auraient pas le droit de modifier
 // le plan -- l'action est gardée server-side dans actions.ts.
 
 import Link from "next/link";
