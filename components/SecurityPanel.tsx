@@ -6,6 +6,7 @@
 // dans /app/profil/securite/actions.ts (defense en profondeur cote serveur).
 
 import { useEffect, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import QRCode from "qrcode";
 import {
   setPassword,
@@ -229,20 +230,37 @@ function MfaSection({
     null,
   );
   const [pending, startTransition] = useTransition();
+  const router = useRouter();
 
   // Desactivation
   const [disablePwd, setDisablePwd] = useState("");
   const [disabling, setDisabling] = useState(false);
 
+  // Helper : surface tout throw du server action en message visible. Sans
+  // ce wrapper, un throw côté serveur (session expirée, DB transient, etc.)
+  // termine la transition silencieusement et l'UI semble bloquée.
+  const surfaceError = (err: unknown): string => {
+    if (err instanceof Error) {
+      // eslint-disable-next-line no-console
+      console.error("[mfa] server action threw:", err);
+      return `Erreur serveur : ${err.message}. Recharge la page si ça persiste.`;
+    }
+    return "Erreur serveur inconnue. Recharge la page si ça persiste.";
+  };
+
   const onStart = () => {
     setError(null);
     startTransition(async () => {
-      const res = await startMfaEnrollment();
-      if (res.ok && res.secret && res.otpauthUri) {
-        setEnrollment({ secret: res.secret, otpauthUri: res.otpauthUri });
-        setEnrolling(true);
-      } else {
-        setError(res.error ?? "Erreur");
+      try {
+        const res = await startMfaEnrollment();
+        if (res.ok && res.secret && res.otpauthUri) {
+          setEnrollment({ secret: res.secret, otpauthUri: res.otpauthUri });
+          setEnrolling(true);
+        } else {
+          setError(res.error ?? "Erreur lors de la préparation de la 2FA.");
+        }
+      } catch (err) {
+        setError(surfaceError(err));
       }
     });
   };
@@ -253,14 +271,18 @@ function MfaSection({
     const fd = new FormData();
     fd.set("code", code);
     startTransition(async () => {
-      const res = await confirmMfaEnrollment(fd);
-      if (res.ok && res.backupCodes) {
-        setShownBackupCodes(res.backupCodes);
-        setEnrolling(false);
-        setEnrollment(null);
-        setCode("");
-      } else {
-        setError(res.error ?? "Code invalide");
+      try {
+        const res = await confirmMfaEnrollment(fd);
+        if (res.ok && res.backupCodes) {
+          setShownBackupCodes(res.backupCodes);
+          setEnrolling(false);
+          setEnrollment(null);
+          setCode("");
+        } else {
+          setError(res.error ?? "Code invalide.");
+        }
+      } catch (err) {
+        setError(surfaceError(err));
       }
     });
   };
@@ -271,14 +293,18 @@ function MfaSection({
     const fd = new FormData();
     fd.set("password", disablePwd);
     startTransition(async () => {
-      const res = await disableMfa(fd);
-      if (res.ok) {
-        setDisabling(false);
-        setDisablePwd("");
-        // page sera revalidée par revalidatePath, refresh requis pour voir l'etat
-        window.location.reload();
-      } else {
-        setError(res.error ?? "Erreur");
+      try {
+        const res = await disableMfa(fd);
+        if (res.ok) {
+          setDisabling(false);
+          setDisablePwd("");
+          // page sera revalidée par revalidatePath, refresh requis pour voir l'etat
+          router.refresh();
+        } else {
+          setError(res.error ?? "Erreur lors de la désactivation.");
+        }
+      } catch (err) {
+        setError(surfaceError(err));
       }
     });
   };
@@ -286,11 +312,15 @@ function MfaSection({
   const onRegenerate = () => {
     setError(null);
     startTransition(async () => {
-      const res = await regenerateBackupCodes();
-      if (res.ok && res.backupCodes) {
-        setShownBackupCodes(res.backupCodes);
-      } else {
-        setError(res.error ?? "Erreur");
+      try {
+        const res = await regenerateBackupCodes();
+        if (res.ok && res.backupCodes) {
+          setShownBackupCodes(res.backupCodes);
+        } else {
+          setError(res.error ?? "Erreur lors de la regénération.");
+        }
+      } catch (err) {
+        setError(surfaceError(err));
       }
     });
   };
@@ -328,7 +358,7 @@ function MfaSection({
         </div>
       )}
 
-      {/* Enrolement */}
+      {/* Enrôlement */}
       {!mfaEnabled && !enrolling && (
         <button
           type="button"
@@ -348,21 +378,33 @@ function MfaSection({
             email={email}
           />
           <form onSubmit={onConfirm} className="space-y-2">
-            <label className="block text-sm font-medium">
+            <label
+              htmlFor="mfa-enroll-code"
+              className="block text-sm font-medium"
+            >
               2. Saisissez le code à 6 chiffres affiché par votre application
             </label>
             <input
+              id="mfa-enroll-code"
+              name="code"
               type="text"
               inputMode="numeric"
               autoComplete="one-time-code"
-              pattern="\d{6}"
+              pattern="[0-9]{6}"
               maxLength={6}
               required
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
               className="block w-full rounded-lg border-2 border-accent-500 p-2.5 text-center font-mono tracking-widest text-lg"
               autoFocus
+              aria-describedby="mfa-enroll-help"
             />
+            <p id="mfa-enroll-help" className="text-xs text-gray-500">
+              Le code change toutes les 30 secondes. Si l&apos;heure de votre
+              téléphone est désynchronisée de plus d&apos;une minute, le code
+              sera refusé : activez « heure réseau automatique » sur l&apos;OS
+              du téléphone.
+            </p>
             <div className="flex gap-2">
               <button
                 type="submit"
@@ -387,7 +429,7 @@ function MfaSection({
         </div>
       )}
 
-      {/* Codes de secours fraichement generes */}
+      {/* Codes de secours fraîchement générés */}
       {shownBackupCodes && (
         <div className="mt-4 bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-300 dark:border-amber-700 rounded-xl p-4">
           <p className="font-bold text-amber-900 dark:text-amber-200 mb-2">
@@ -598,7 +640,7 @@ function TotpEnrollmentBox({
           </li>
           <li>
             <span className="text-gray-500">Émetteur :</span>{" "}
-            <code className="font-mono">Humanix Academie</code>
+            <code className="font-mono">Humanix Académie</code>
           </li>
           <li>
             <span className="text-gray-500">Secret (base32) :</span>

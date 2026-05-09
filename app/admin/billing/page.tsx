@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Page de facturation cote tenant (admin du tenant). Affiche :
 //   - Plan actuel + sieges utilises
-//   - Etat du subscription (active, trialing, past_due, etc.)
-//   - Prochain renouvellement / fin de trial
+//   - Etat du subscription (active, past_due, canceled, etc.)
+//   - Prochain renouvellement / restriction d'acces si paiement KO
 //   - CTA upgrade / downgrade / annuler
 //   - Lien portail Payplug self-service
 //
@@ -79,14 +79,6 @@ export default async function BillingPage() {
                 Prochain renouvellement :{" "}
                 <strong className="text-gray-700 dark:text-gray-200">
                   {state.currentPeriodEnd.toLocaleDateString("fr-FR")}
-                </strong>
-              </p>
-            )}
-            {state.trialEndsAt && state.state === "trialing" && (
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                Fin du trial :{" "}
-                <strong className="text-amber-700 dark:text-amber-300">
-                  {state.trialEndsAt.toLocaleDateString("fr-FR")} ({state.daysLeft} j)
                 </strong>
               </p>
             )}
@@ -234,30 +226,15 @@ function StateBanner({
   state: Awaited<ReturnType<typeof getSubscriptionState>>;
 }) {
   const styles = {
-    none: "bg-gray-50 dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-200",
     warn: "bg-amber-50 dark:bg-amber-900/30 border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-200",
     read_only: "bg-orange-50 dark:bg-orange-900/30 border-orange-400 dark:border-orange-700 text-orange-900 dark:text-orange-200",
     blocked: "bg-red-50 dark:bg-red-900/30 border-red-400 dark:border-red-700 text-red-900 dark:text-red-200",
   } as const;
 
-  if (state.restriction === "none" && state.state !== "trialing") return null;
+  if (state.restriction === "none") return null;
 
   const config = (() => {
     switch (state.state) {
-      case "trialing":
-        return {
-          emoji: "🎁",
-          title: `Période d'essai en cours`,
-          message: `Il te reste ${state.daysLeft} jour${(state.daysLeft ?? 0) > 1 ? "s" : ""} avant la fin du trial. Pense à choisir ton plan.`,
-          cta: { label: "Voir les tarifs", href: "/tarifs" },
-        };
-      case "trial_expired":
-        return {
-          emoji: "⏰",
-          title: "Ton essai est terminé",
-          message: `Tu peux encore consulter tes données pendant ${state.daysLeft} jour${(state.daysLeft ?? 0) > 1 ? "s" : ""}, mais plus rien créer ni modifier.`,
-          cta: { label: "Choisir un plan", href: "/tarifs" },
-        };
       case "grace_period":
         return {
           emoji: "💳",
@@ -287,7 +264,10 @@ function StateBanner({
 
   if (!config) return null;
 
-  const styleKey = state.restriction === "none" ? "warn" : state.restriction;
+  // state.restriction !== "none" est garanti par le early-return en haut
+  // de la fonction, donc state.restriction est ici "warn" | "read_only"
+  // | "blocked" : on peut indexer styles directement.
+  const styleKey = state.restriction;
 
   return (
     <div role="status" className={`rounded-2xl border-2 p-4 ${styles[styleKey]}`}>
