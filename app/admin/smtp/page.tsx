@@ -5,7 +5,7 @@
 // Pourquoi c'est ici et pas inclus dans le SaaS Humanix :
 // Humanix-Cybersecurity NE PARTAGE PAS son SMTP (Scaleway TEM) pour les
 // envois phishing simules. C'est volontaire :
-//   - Les envois doivent etre identifies au domaine du client (anti-confusion)
+//   - Les envois doivent être identifies au domaine du client (anti-confusion)
 //   - Le client assume la responsabilite OPSEC (SPF/DKIM/DMARC, reputation IP)
 //   - Un phishing simule envoye depuis l'IP Humanix pourrait casser notre
 //     reputation pour les vrais envois transactionnels (magic links, etc.)
@@ -62,7 +62,7 @@ export default async function SmtpConfigPage() {
     <main className="max-w-3xl mx-auto px-4 py-8 space-y-6">
       <header>
         <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-1">
-          Paramètres tenant
+          Paramètrès tenant
         </p>
         <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-primary-500 dark:text-accent-300">
           Configuration SMTP

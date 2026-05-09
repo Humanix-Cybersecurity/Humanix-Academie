@@ -1,7 +1,7 @@
 "use client";
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Live Attack Map - visualisation temps reel des evenements cyber du tenant.
+// Live Attack Map - visualisation temps reel des événements cyber du tenant.
 // Connecte a /api/admin/live-events via EventSource (SSE).
 //
 // Effet en demo : un prospect voit un clic phishing arriver en live avec
@@ -9,8 +9,8 @@
 // commercial.
 //
 // UX :
-//  - Timeline verticale, evenements arrivent par le haut avec animation pulse
-//  - Compteurs animes par type d'evenement (clics phish, signalements, etc.)
+//  - Timeline verticale, événements arrivent par le haut avec animation pulse
+//  - Compteurs animes par type d'événement (clics phish, signalements, etc.)
 //  - Indicateur "● LIVE" pulsant quand connexion active
 //  - Auto-reconnect en cas de perte (EventSource le fait nativement)
 

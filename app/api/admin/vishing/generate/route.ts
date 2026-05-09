@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Endpoint admin : genere un script de vishing simule via Mistral souverain.
 //
-// Securite :
+// Sécurité :
 //  - Auth NextAuth obligatoire
 //  - Role ADMIN/MANAGER/SUPERADMIN requis
 //  - Plan-gating : feature "vishing" (Pro+)
 //  - Rate limit : 20 req/heure par tenant (in-memory, sans Redis pour MVP)
-//  - Anti-PII : delegue au generateur (lib/vishing/script-generator.ts)
+//  - Anti-PII : délégué au generateur (lib/vishing/script-generator.ts)
 //  - Aucun stockage : le script genere est retourne au client, pas persiste
 
 import { NextResponse } from "next/server";

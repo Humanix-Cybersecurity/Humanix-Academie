@@ -81,7 +81,7 @@ export default function OutlookIntegrationPage() {
                   avec un compte admin global.
                 </li>
                 <li>
-                  Menu : <strong>Paramètres</strong> →{" "}
+                  Menu : <strong>Paramètrès</strong> →{" "}
                   <strong>Applications intégrées</strong> →{" "}
                   <strong>Charger des applications personnalisées</strong>.
                 </li>
@@ -140,7 +140,7 @@ export default function OutlookIntegrationPage() {
                   .
                 </li>
                 <li>
-                  Cliquez sur l'icône <strong>Paramètres</strong> (⚙) en haut à
+                  Cliquez sur l'icône <strong>Paramètrès</strong> (⚙) en haut à
                   droite.
                 </li>
                 <li>

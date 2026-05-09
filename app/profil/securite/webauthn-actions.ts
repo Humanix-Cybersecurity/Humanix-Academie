@@ -113,8 +113,8 @@ export async function deleteWebauthnCredential(
 
     await db.webAuthnCredential.delete({ where: { id: credentialDbId } });
 
-    // Audit log : best-effort (auditLog wrap deja en try/catch interne, mais
-    // on protege nous-meme aussi pour ne JAMAIS faire planter le delete).
+    // Audit log : best-effort (auditLog wrap déjà en try/catch interne, mais
+    // on protege nous-même aussi pour ne JAMAIS faire planter le delete).
     try {
       await auditLog({
         action: AuditActions.USER_WEBAUTHN_DELETED,
