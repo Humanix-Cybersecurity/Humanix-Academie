@@ -940,6 +940,37 @@ model AnecdoteSubscription {
 }
 
 // =====================================================
+// OPT-OUT EMAIL UNIVERSEL
+// =====================================================
+// Stocke les desinscriptions per (email, liste). Utilise pour TOUS les types
+// de mails opt-in SAUF la newsletter Cyber-Anecdote qui a sa propre table
+// AnecdoteSubscription historique.
+//
+// Une row = "cet email refuse de recevoir les mails de la liste X". Le check
+// avant envoi se fait via lib/email/opt-out-check::isEmailOptedOut().
+//
+// list valeurs supportees (cf. lib/email/unsubscribe.ts::EmailListId) :
+//   - "transactional" : magic link, password reset (rarement opt-out, mais
+//     possible via mailto:)
+//   - "admin-alerts"  : notifs admin opt-in (alerte breach, deploy, etc.)
+//   - "marketing"     : nouveautes produit, conseils mensuels
+model EmailOptOut {
+  id        String   @id @default(cuid())
+  email     String
+  list      String
+  // Provenance de l'opt-out : "one-click" (RFC 8058 via Gmail/Outlook),
+  // "manual" (l'utilisateur clique le lien dans le mail), "preferences"
+  // (depuis les parametres de son compte), "support" (demande email).
+  source    String   @default("one-click")
+  // Hash IP pour l'audit RGPD (preuve que la demande est venue d'un humain).
+  ipHash    String?
+  createdAt DateTime @default(now())
+
+  @@unique([email, list])
+  @@index([email])
+}
+
+// =====================================================
 // AUDIT FLASH - Lead generation depuis le quiz public /audit-flash
 // Pas de tenantId : ce sont des leads anonymes / pre-clients.
 // =====================================================
