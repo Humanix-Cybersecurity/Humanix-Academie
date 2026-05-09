@@ -709,10 +709,7 @@ export default async function TarifsPage({
           ===================================================================== */}
       <section className="text-center pt-10 pb-4">
         <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-          « Le prix est un choix politique. On a choisi de ne laisser personne
-          au bord du chemin - pas par charité, par stratégie. La cybersécurité
-          ne peut pas être un luxe quand 90 % des attaques visent les humains. »
-        </blockquote>
+        <cite>- Hex veille</cite>
         <cite>- Hex veille</cite>
       </section>
     </main>
