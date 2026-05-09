@@ -28,8 +28,22 @@ export default async function BoutiquePage() {
         progress: { select: { score: true } },
       },
     }),
+    // Filtre saisonnalite : on garde les items toujours dispo (window null)
+    // ou dont la fenetre [availableFrom, availableUntil] contient la date
+    // courante. Les items hors saison ne sont meme pas retournes au client
+    // (meilleure UX que de les afficher grises avec un "reviens en oct").
     db.shopItem.findMany({
-      where: { isActive: true },
+      where: {
+        isActive: true,
+        AND: [
+          {
+            OR: [{ availableFrom: null }, { availableFrom: { lte: new Date() } }],
+          },
+          {
+            OR: [{ availableUntil: null }, { availableUntil: { gt: new Date() } }],
+          },
+        ],
+      },
       orderBy: [{ category: "asc" }, { price: "asc" }],
     }),
     db.userInventory.findMany({

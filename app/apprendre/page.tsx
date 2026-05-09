@@ -30,6 +30,7 @@ import HexMascotEvolved, {
   LevelProgressBar,
 } from "@/components/HexMascotEvolved";
 import CoachCard from "@/components/CoachCard";
+import CyberEventBanner from "@/components/CyberEventBanner";
 import { getLevel } from "@/lib/levels";
 import { buildEquippedFromInventory } from "@/lib/shop";
 import { getActiveChallenge } from "@/lib/challenge";
@@ -308,6 +309,12 @@ export default async function ApprendrePage() {
 
   return (
     <main id="main-content" className="animate-fadeIn overflow-x-hidden">
+      {/* ============================================================
+          0. EVENEMENT CYBER en cours (Cybermois, WPD, etc.)
+          Affiche seulement si la date courante tombe dans la fenetre.
+          ============================================================ */}
+      <CyberEventBanner />
+
       {/* ============================================================
           1. CHALLENGE - bandeau discret, ton chaleureux non-urgent
           ============================================================ */}
@@ -613,6 +620,12 @@ export default async function ApprendrePage() {
                     : "Chaque module ajoute une corde a ton arc. Sans drame."}
               </p>
             </div>
+            <Link
+              href="/profil/badges"
+              className="text-sm text-accent-500 hover:text-accent-600 font-semibold underline-offset-4 hover:underline"
+            >
+              Tous mes badges →
+            </Link>
           </div>
 
           <div className="card bg-gradient-to-br from-amber-50 via-white to-amber-50/50 dark:from-amber-950/20 dark:via-slate-900 dark:to-amber-950/10 border-amber-200 dark:border-amber-900/40">
