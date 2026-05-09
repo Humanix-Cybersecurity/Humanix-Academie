@@ -248,7 +248,7 @@ function StateBanner({
         return {
           emoji: "🔒",
           title: "Accès en lecture seule",
-          message: `Tu peux consulter mais plus rien modifier. ${state.daysLeft ? `Tu as ${state.daysLeft} jour${state.daysLeft > 1 ? "s" : ""} avant suspension complète.` : ""}`,
+          message: `Tu peux consulter mais plus rien modifier. ${state.daysLeft ? `Tu as ${state.daysLeft} jour${state.daysLeft !== 1 ? "s" : ""} avant suspension complète.` : ""}`,
           cta: { label: "Régulariser maintenant", href: "/api/payments/portal" },
         };
       case "suspended":
