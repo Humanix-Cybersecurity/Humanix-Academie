@@ -30,11 +30,26 @@ export default async function PhishingLandingPage({
 
   const result = await db.phishingResult.findUnique({
     where: { trackToken: token },
-    include: { campaign: true, user: true },
+    include: {
+      campaign: {
+        include: {
+          tenant: {
+            select: {
+              autoForce2FAAfterPhishingClick: true,
+              autoRevokeSessionAfterPhishingClick: true,
+            },
+          },
+        },
+      },
+      user: { select: { id: true, name: true, email: true, mfaEnabled: true } },
+    },
   });
   if (!result) notFound();
 
   const tpl = getTemplate(result.campaign.template);
+  // Trace les remediations auto declenchees pour pouvoir afficher un
+  // bandeau d'information honnete a l'user (transparence > surprise).
+  const remediationTriggered: string[] = [];
 
   // -------------------------------------------------------------------
   // Marquage CLICKED + automation (idempotent : on ne fait ca qu'une fois)
@@ -108,6 +123,35 @@ export default async function PhishingLandingPage({
     } catch {
       // best-effort (cf. fireWebhook deja fail-safe en interne)
     }
+
+    // 3) Remediations auto opt-in (configurables /admin/automations).
+    // On agit sur l'user pour limiter les degats d'un futur clic reel :
+    //   - Force 2FA : marque mfaForced=true si pas deja configure
+    //   - Revoke sessions : deconnecte tous les devices
+    // Best-effort : un echec ici ne bloque pas la landing.
+    const tenantPolicy = result.campaign.tenant;
+    if (tenantPolicy.autoForce2FAAfterPhishingClick && !result.user.mfaEnabled) {
+      try {
+        await db.user.update({
+          where: { id: result.userId },
+          data: { mfaForced: true },
+        });
+        remediationTriggered.push("force_2fa");
+      } catch {
+        // best-effort
+      }
+    }
+    if (tenantPolicy.autoRevokeSessionAfterPhishingClick) {
+      try {
+        // Revoque toutes les sessions actives. Au prochain acces,
+        // l'user devra se reconnecter (et configurer 2FA si force_2fa
+        // est aussi actif).
+        await db.session.deleteMany({ where: { userId: result.userId } });
+        remediationTriggered.push("revoke_sessions");
+      } catch {
+        // best-effort
+      }
+    }
   }
 
   return (
@@ -124,6 +168,37 @@ export default async function PhishingLandingPage({
             prochaine fois pourrait être réelle.
           </p>
         </div>
+
+        {/* Bandeau de transparence : si des remediations auto ont ete
+            declenchees, on previent honnetement l'user (pas de surprise
+            au prochain login). */}
+        {remediationTriggered.length > 0 && (
+          <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-400 dark:border-blue-700 rounded-r-xl p-4 mb-6">
+            <p className="font-bold text-blue-900 dark:text-blue-100 text-sm mb-2 flex items-center gap-2">
+              <span aria-hidden="true">🔒</span>
+              Mesures de protection automatiques appliquées
+            </p>
+            <ul className="text-xs text-blue-900/85 dark:text-blue-100/85 space-y-1 list-disc pl-5">
+              {remediationTriggered.includes("force_2fa") && (
+                <li>
+                  À ta prochaine connexion, tu devras configurer le{" "}
+                  <strong>2FA</strong> (2 minutes, on te guide).
+                </li>
+              )}
+              {remediationTriggered.includes("revoke_sessions") && (
+                <li>
+                  Tes sessions actives ont été{" "}
+                  <strong>déconnectées sur tous tes devices</strong>. Tu
+                  devras te reconnecter.
+                </li>
+              )}
+            </ul>
+            <p className="text-[11px] text-blue-900/60 dark:text-blue-100/60 italic mt-2">
+              Politique de sécurité de ton entreprise — pas une sanction,
+              une protection.
+            </p>
+          </div>
+        )}
 
         <div className="bg-amber-50 border-l-4 border-warn rounded-r-xl p-5 mb-6">
           <p className="font-bold text-amber-900 mb-2">
