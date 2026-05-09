@@ -46,13 +46,11 @@ export default function AudioPreviewButton({
     "idle",
   );
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const objectUrlRef = useRef<string | null>(null);
 
-  // Cleanup audio + blob URL au demontage
+  // Cleanup audio au demontage
   useEffect(() => {
     return () => {
       audioRef.current?.pause();
-      if (objectUrlRef.current) URL.revokeObjectURL(objectUrlRef.current);
     };
   }, []);
 
@@ -66,17 +64,16 @@ export default function AudioPreviewButton({
     if (state === "playing" && audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
-      if (objectUrlRef.current) {
-        URL.revokeObjectURL(objectUrlRef.current);
-        objectUrlRef.current = null;
-      }
       setState("idle");
       return;
     }
 
     setState("loading");
     try {
-      const res = await fetch("/api/tts/synthesize", {
+      // /api/tts/prepare retourne juste l'URL du MP3 dans le cache. Le
+      // navigateur stream ensuite via <audio src=...>, demarrage <100ms en
+      // cache hit (warmup batch via npm run tts:build).
+      const res = await fetch("/api/tts/prepare", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ text, voice, format: "mp3" }),
@@ -91,23 +88,23 @@ export default function AudioPreviewButton({
         return;
       }
 
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      objectUrlRef.current = url;
+      const data = (await res.json()) as { url?: string };
+      if (!data.url) {
+        setState("error");
+        setTimeout(() => setState("idle"), 1500);
+        return;
+      }
 
-      const audio = new Audio(url);
+      const audio = new Audio(data.url);
+      audio.preload = "auto";
       audioRef.current = audio;
 
       audio.onended = () => {
         setState("idle");
-        URL.revokeObjectURL(url);
-        objectUrlRef.current = null;
         audioRef.current = null;
       };
       audio.onerror = () => {
         setState("error");
-        URL.revokeObjectURL(url);
-        objectUrlRef.current = null;
         audioRef.current = null;
         setTimeout(() => setState("idle"), 1500);
       };
