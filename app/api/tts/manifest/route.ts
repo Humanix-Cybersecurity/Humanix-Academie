@@ -7,9 +7,9 @@
 // Le client utilise ce manifest pour resoudre les URLs MP3 a charger
 // (`/api/tts/<hash>`).
 //
-// Pour eviter les requetes inutiles cote client, ce endpoint est mis en cache
+// Pour éviter les requetes inutiles cote client, ce endpoint est mis en cache
 // par le navigateur. Le manifest etant petit (~30 Ko) et change rarement
-// (apres chaque `npm run tts:build`), un max-age=300 + s-maxage=3600 est OK.
+// (après chaque `npm run tts:build`), un max-age=300 + s-maxage=3600 est OK.
 
 import { NextResponse } from "next/server";
 import { defaultCacheRoot, loadManifest } from "@/lib/tts/cache";

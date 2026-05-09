@@ -32,7 +32,7 @@ export default function BillingActions({
         window.location.href = data.url;
         return;
       }
-      // Payplug n'a pas pu generer une URL hosted -> fallback : on affiche
+      // Payplug n'a pas pu générer une URL hosted -> fallback : on affiche
       // l'option d'annulation ci-dessous
       setFallback(true);
       setPending(false);

@@ -8,7 +8,7 @@
 //
 // SECURITE :
 //   - ADMIN/RSSI/SUPERADMIN du tenant uniquement
-//   - Le password n'est JAMAIS retourne en GET (meme chiffre). Le UI
+//   - Le password n'est JAMAIS retourne en GET (même chiffre). Le UI
 //     affiche un placeholder "•••••••••" et l'admin doit re-saisir
 //     pour modifier.
 //   - Audit log a chaque create/update/delete
@@ -73,7 +73,7 @@ export async function GET() {
       port: true,
       secure: true,
       username: true,
-      // SURTOUT PAS passwordEnc : on n'expose rien meme chiffre
+      // SURTOUT PAS passwordEnc : on n'expose rien même chiffre
       fromEmail: true,
       fromName: true,
       isVerified: true,
@@ -137,7 +137,7 @@ export async function PUT(req: Request) {
       fromEmail: data.fromEmail,
       fromName: data.fromName ?? null,
       notes: data.notes ?? null,
-      // Reset isVerified : la nouvelle config doit etre re-testee
+      // Reset isVerified : la nouvelle config doit être re-testee
       isVerified: null,
       lastVerifiedAt: null,
       lastError: null,

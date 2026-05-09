@@ -20,7 +20,7 @@ export default function PWAInstallButton() {
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    // Standalone deja active = installe
+    // Standalone déjà active = installe
     if (
       typeof window !== "undefined" &&
       window.matchMedia("(display-mode: standalone)").matches

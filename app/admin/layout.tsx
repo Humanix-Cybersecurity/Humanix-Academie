@@ -53,11 +53,11 @@ export default async function AdminLayout({
   // === SaaS multi-tenant : enforcement subscription status ===
   // Recupere l'etat du subscription du tenant courant. Selon `restriction` :
   //   none     -> tout fonctionne
-  //   warn     -> bandeau d'avertissement, mais acces complet
+  //   warn     -> bandeau d'avertissement, mais accès complet
   //   read_only -> bandeau + on bloque les mutations cote actions
   //                (lib/seats.ts + actions de modification verifient canMutate)
   //   blocked   -> redirect /admin/billing avec CTA renew
-  // SUPERADMIN ne subit jamais cette restriction (acces global Humanix interne).
+  // SUPERADMIN ne subit jamais cette restriction (accès global Humanix interne).
   const tenantId = session.user.tenantId;
   let subState: Awaited<ReturnType<typeof getSubscriptionState>> | null = null;
   if (typeof tenantId === "string" && role !== "SUPERADMIN") {
@@ -67,10 +67,10 @@ export default async function AdminLayout({
       // (sinon l'user est dans une nasse). Toutes les autres pages sont
       // bloquees -> redirect.
       // Note : on ne peut pas savoir le pathname dans le layout sans hook,
-      // donc on redirige inconditionnellement. Si l'user est deja sur
+      // donc on redirige inconditionnellement. Si l'user est déjà sur
       // /admin/billing, le redirect fait juste rebound (pas de boucle car
       // billing est dans /admin/* aussi -- le code suivant verifie).
-      // Pour eviter la boucle, on stocke le path souhaite via header lit
+      // Pour éviter la boucle, on stocke le path souhaite via header lit
       // dans la page billing (qui rendra alors le bandeau au lieu de redirect).
       // Approche pragmatique : on render un component d'avertissement plein
       // ecran au lieu de redirect, et la page billing cassera ce render.
