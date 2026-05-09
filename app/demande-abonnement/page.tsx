@@ -32,10 +32,9 @@ export const metadata = {
 };
 
 const PLAN_OPTIONS = [
-  { value: "solo", label: "Starter — 1 à 5 sièges" },
-  { value: "essentielle", label: "Essentielle — 5 à 50 sièges" },
-  { value: "pro", label: "Pro — 50 à 250 sièges" },
-  { value: "premium", label: "Enterprise — 250+ sièges / sur-mesure" },
+  { value: "starter", label: "Starter — 1 à 15 sièges (gratuit ≤5, 19 €/mois 6-15)" },
+  { value: "pro", label: "Pro — 16 à 250 sièges (3 €/utilisateur/mois)" },
+  { value: "enterprise", label: "Enterprise — 250+ sièges / sur-mesure" },
   { value: "non-decide", label: "Je n'ai pas encore décidé, conseillez-moi" },
 ];
 

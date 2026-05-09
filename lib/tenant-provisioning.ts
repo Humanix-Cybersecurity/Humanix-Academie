@@ -54,8 +54,8 @@ export type ProvisionInput = {
   /** Nom de l'organisation (sert de Tenant.name + base du slug). */
   organizationName: string;
   /** Plan initial (cf. lib/plans.ts). Doit être un plan payant — pas
-   * "decouverte" qui est reserve aux LEARNERs sur le tenant Communauté
-   * et n'aboutit PAS sur un tenant payant. */
+   * "starter" qui est reserve aux LEARNERs sur le tenant Communaute
+   * et n'aboutit PAS sur un tenant payant (sub-tier free <=5 sieges). */
   plan: PlanId;
   /** Nom de l'admin (optionnel). */
   adminName?: string;
@@ -117,7 +117,7 @@ export async function provisionTenantWithAdmin(
   if (!email || email.length > 254 || !emailPattern.test(email)) {
     return { ok: false, reason: "invalid_email" };
   }
-  if (input.plan === "decouverte") {
+  if (input.plan === "starter") {
     // Sécurité : on refuse de créer un tenant payant avec le plan gratuit.
     // L'erreur surface dans les logs pour qu'on s'en aperçoive vite.
     console.error(

@@ -260,11 +260,9 @@ export type GlobalKpis = {
 
 export function computeGlobalKpis(healths: TenantHealth[]): GlobalKpis {
   const byPlan: Record<PlanId, number> = {
-    decouverte: 0,
-    solo: 0,
-    essentielle: 0,
+    starter: 0,
     pro: 0,
-    premium: 0,
+    enterprise: 0,
   };
   const bySignal: Record<TenantHealthSignal, number> = {
     ok: 0,

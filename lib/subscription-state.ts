@@ -83,7 +83,7 @@ export async function getSubscriptionState(
   if (!tenant) {
     return {
       state: "none",
-      plan: "decouverte",
+      plan: "starter",
       rawStatus: null,
       restriction: "blocked",
       daysLeft: null,
@@ -173,8 +173,8 @@ export async function getSubscriptionState(
     };
   }
 
-  // === 4. Plan gratuit "decouverte" forever-free, pas de subscription Payplug ===
-  if (plan === "decouverte" && !rawStatus) {
+  // === 4. Plan gratuit "starter" forever-free, pas de subscription Payplug ===
+  if (plan === "starter" && !rawStatus) {
     return {
       state: "active",
       plan,

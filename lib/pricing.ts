@@ -1,17 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Source de vérité de la grille tarifaire Humanix Académie.
-// Aligné sur le pivot mai 2026 - open core service-led, modèle volume.
-// Cf. Pack_Lancement_Solo/05_Pivot_OSS_Mai_2026/05_PRICING_VOLUME.md
+// Aligné sur le pivot mai 2026 - simplification a 4 paliers.
 //
-// 6 paliers :
-//   0. Community Edition - self-host AGPL gratuit (n'a pas de tenant cloud)
-//   1. Découverte        - cloud forever-free, 5 sièges
-//   2. Starter (id: solo) - 19 €/mois forfait, 15 sièges
-//   3. Essentielle ⭐    - 3 €/user/mois (mini 16, max 50)
-//   4. Pro                - 2,50 €/user/mois (mini 51, max 250)
-//   5. Enterprise (id: premium) - sur devis (250+)
+// 4 paliers :
+//   0. Community Edition  - self-host AGPL gratuit (n'a pas de tenant cloud)
+//   1. Starter            - cloud, 0EUR free <=5 sieges, 19EUR/mois 6-15
+//   2. Pro ⭐             - 3EUR/user/mois (16 a 250 sieges)
+//   3. Enterprise         - sur devis (250+, multi-site, secteurs reglementes)
 
 import type { PlanId } from "@/lib/plans";
+import { PLAN_FREE_SEATS } from "@/lib/plans";
 
 // Le palier "community" (self-host) n'est pas un PlanId tenant.
 // On l'ajoute uniquement pour l'afficher dans la page /tarifs.
@@ -24,8 +22,10 @@ export type PricingTier = {
   emoji: string;
   /** Self-host AGPL : pas de tenant cloud, redirige vers GitHub */
   selfHostOnly?: boolean;
-  /** Forever-free cloud : pas de CB demandée */
+  /** Forever-free cloud : pas de CB demandée jusqu'a freeUnderSeats inclus */
   freeForever?: boolean;
+  /** Combien de sieges sont gratuits avant facturation (0 si plan paye des le 1er user) */
+  freeUnderSeats?: number;
   pricing: {
     monthly: {
       display: string;
@@ -77,36 +77,20 @@ export const TIERS: PricingTier[] = [
     cta: { label: "Voir le code sur GitHub", type: "github" },
   },
   {
-    id: "decouverte",
-    name: "Découverte",
-    tagline: "Cloud forever-free · 5 sièges · sans CB",
-    emoji: "🌱",
-    freeForever: true,
-    pricing: {
-      monthly: { display: "0 €/mois", amount: 0, unit: "free" },
-      annual: { display: "0 €/an", amount: 0, unit: "free" },
-    },
-    seats: { min: 1, max: 5 },
-    features: [
-      "Tout Community Edition + cloud SaaS",
-      "Hébergement France garanti (RGPD-compliant)",
-      "Mises à jour automatiques",
-      "Sauvegardes quotidiennes",
-      "Support communautaire (Discord)",
-      "Pas d'engagement, pas de CB requise",
-      "Migration possible vers payant à tout moment",
-    ],
-    cta: { label: "Créer mon compte gratuit", type: "signup-free" },
-  },
-  {
-    id: "solo",
+    id: "starter",
     name: "Starter",
-    tagline: "Pour TPE 5-15 personnes - pour le prix d'un café/semaine",
+    tagline: "TPE 1-15 personnes · gratuit jusqu'à 5 utilisateurs",
     emoji: "⚡",
+    freeForever: true,
+    freeUnderSeats: PLAN_FREE_SEATS.starter, // 5
     pricing: {
-      monthly: { display: "19 €/mois", amount: 19, unit: "forfait" },
+      monthly: {
+        display: "Gratuit jusqu'à 5 · puis 19 €/mois",
+        amount: 19,
+        unit: "forfait",
+      },
       annual: {
-        display: "15 €/mois",
+        display: "Gratuit jusqu'à 5 · puis 15 €/mois",
         amount: 15,
         unit: "forfait",
         saving: "−21 % engagement annuel",
@@ -114,25 +98,26 @@ export const TIERS: PricingTier[] = [
     },
     seats: { min: 1, max: 15 },
     features: [
-      "Jusqu'à 15 utilisateurs inclus",
+      "Gratuit pour les équipes de 1 à 5 personnes (sans engagement, sans CB)",
+      "Forfait 19 €/mois quand tu passes 6-15 utilisateurs",
       "4 saisons cyber complètes (phishing, MFA, données, télétravail)",
       "Librairie micro-learning incluse",
       "Mascotte évolutive + boutique",
       "Console dirigeant complète",
       "Export rapport de conformité PDF",
       "Webhooks Slack / Teams / Email natifs",
-      "Hébergement UE (RGPD-compliant)",
+      "Hébergement France (RGPD-compliant)",
       "Support email (réponse < 48h ouvrées)",
-      "Sans engagement, résiliable à tout moment",
+      "Migration possible vers Pro à tout moment",
     ],
-    cta: { label: "S'abonner", type: "subscribe" },
+    cta: { label: "Créer mon compte gratuit", type: "signup-free" },
   },
   {
-    id: "essentielle",
-    name: "Essentielle",
+    id: "pro",
+    name: "Pro",
     tagline:
-      "Le standard PME - tout le contenu, tous les connecteurs souverains",
-    emoji: "✨",
+      "Le standard PME — tout le contenu, tous les connecteurs souverains",
+    emoji: "🚀",
     highlight: true,
     pricing: {
       monthly: { display: "3 €/utilisateur/mois", amount: 3, unit: "user" },
@@ -143,54 +128,28 @@ export const TIERS: PricingTier[] = [
         saving: "−17 % engagement annuel",
       },
     },
-    seats: { min: 16, max: 50 },
+    seats: { min: 16, max: 250 },
     features: [
-      "Tout le catalogue cyber (saisons + librairie)",
+      "Tout le catalogue cyber (saisons + librairie + nouveautés mensuelles)",
       "SSO Microsoft 365 et Google Workspace",
-      "SCIM v2 - provisioning auto Entra / Okta / Google",
+      "SCIM v2 — provisioning auto Entra / Okta / Google",
       "Console manager + dirigeant avec accès gradués",
       "Suivi individuel et par service",
       "Certificats individuels (PDF signé)",
       "Import CSV en masse",
       "Score de risque humain temps réel",
-      "API REST publique (lecture) - clé API tenant",
+      "API REST publique illimitée — clé API tenant",
       "Webhooks signés HMAC-SHA256 (events temps réel)",
       "Connecteur GRC : CISO Assistant + format OSCAL v1.1.2 (NIST)",
       "Notifications de rappel automatiques",
-      "Support 5j/5 par chat (réponse < 4h)",
-    ],
-    cta: { label: "S'abonner", type: "subscribe" },
-  },
-  {
-    id: "pro",
-    name: "Pro",
-    tagline: "Pour PME industrialisées - phishing, marketplace, IA, SIEM",
-    emoji: "🚀",
-    pricing: {
-      monthly: {
-        display: "2,50 €/utilisateur/mois",
-        amount: 2.5,
-        unit: "user",
-      },
-      annual: {
-        display: "2 €/utilisateur/mois",
-        amount: 2,
-        unit: "user",
-        saving: "−20 % engagement annuel",
-      },
-    },
-    seats: { min: 51, max: 250 },
-    features: [
-      "Tout l'offre Essentielle, et en plus :",
       "Challenges d'équipe inter-services",
-      "Phishing email - génération illimitée de templates (envoi à la charge du client ou forfait sur mesure)",
-      "Vishing IA souverain Mistral + Piper TTS local 🇫🇷 - génération illimitée de scripts (exécution à la charge du client ou forfait sur mesure)",
-      "Smishing IA souverain Mistral 🇫🇷 - génération illimitée de SMS (envoi à la charge du client ou forfait sur mesure)",
+      "Phishing email — génération illimitée de templates",
+      "Vishing IA souverain Mistral + Piper TTS local 🇫🇷",
+      "Smishing IA souverain Mistral 🇫🇷",
       "Marketplace de modules (officiels + communauté)",
       "Modules contributeurs (publication interne)",
-      "API REST illimitée",
-      "Connecteurs SIEM : Microsoft Sentinel + Splunk HEC (workbook & SPL fournis)",
-      "Format CEF v1 - compatible QRadar, Sekoia, Elastic, Wazuh, Graylog",
+      "Connecteurs SIEM : Microsoft Sentinel + Splunk HEC",
+      "Format CEF v1 — compatible QRadar, Sekoia, Elastic, Wazuh, Graylog",
       "Customer Success Manager dédié",
       "Kit CSE et charte d'usage prête à l'emploi",
       "IA Coach personnalisé par apprenant",
@@ -198,13 +157,14 @@ export const TIERS: PricingTier[] = [
       "Multi-établissements light (gestion par site)",
       "Pack NIS2 turnkey complet",
       "Onboarding 1h en visio inclus",
+      "Support 5j/5 par chat (réponse < 4h)",
     ],
     cta: { label: "S'abonner", type: "subscribe" },
   },
   {
-    id: "premium",
+    id: "enterprise",
     name: "Enterprise",
-    tagline: "Multi-sites, secteur réglementé, exigences élevées",
+    tagline: "Multi-sites, secteurs réglementés, exigences élevées (250+)",
     emoji: "👑",
     pricing: {
       monthly: { display: "Sur devis", amount: null },
@@ -228,7 +188,7 @@ export const TIERS: PricingTier[] = [
       "Conformité ISO 27001 / NIS2 facilitée",
       "Accès direct fondateur",
     ],
-    cta: { label: "Demander un devis", type: "contact" },
+    cta: { label: "Nous contacter", type: "contact" },
   },
 ];
 
@@ -302,9 +262,12 @@ export const ADD_ONS: AddOn[] = [
   },
 ];
 
-// Calcul du prix mensuel attendu pour une équipe de N personnes.
-// Sélectionne le tier "cloud" approprié selon le volume.
-// Note : Community Edition est exclu (self-host, pas de prix cloud).
+/**
+ * Calcul du prix mensuel attendu pour une équipe de N personnes.
+ * Sélectionne le tier "cloud" approprié selon le volume.
+ *
+ * Cas particulier Starter : free jusqu'a 5 sieges, 19EUR forfait au-dela.
+ */
 export function calculateMonthlyPrice(
   seats: number,
   billing: "monthly" | "annual",
@@ -322,6 +285,11 @@ export function calculateMonthlyPrice(
       (t) =>
         seats >= t.seats.min && (t.seats.max === null || seats <= t.seats.max),
     ) ?? cloudTiers[cloudTiers.length - 1];
+
+  // Cas free-under-seats : Starter gratuit jusqu'a freeUnderSeats inclus.
+  if (tier.freeUnderSeats && seats <= tier.freeUnderSeats) {
+    return { tier, total: 0, perUser: 0, isQuote: false, isFree: true };
+  }
 
   const p = tier.pricing[billing];
   if (p.amount === null) {
