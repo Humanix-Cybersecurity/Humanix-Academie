@@ -144,7 +144,7 @@ export async function GET(req: Request) {
   const metrics = await computeGrcMetrics(tenantId);
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL ??
-    `https://${req.headers.get("host") ?? "academie.humanix-cybersecurity.fr"}`;
+    `https://${req.headers.get("host") ?? "humanix-academie.fr"}`;
 
   // ----- 5. Construction des evidences -----
   const evidences = framework.controls

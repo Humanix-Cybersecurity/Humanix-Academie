@@ -45,7 +45,7 @@ export default function ScimDocPage() {
           Endpoint à configurer
         </h2>
         <pre className="bg-slate-900 dark:bg-black text-slate-100 p-4 rounded-xl text-sm overflow-x-auto">
-          <code>https://academie.humanix-cybersecurity.fr/scim/v2/</code>
+          <code>https://humanix-academie.fr/scim/v2/</code>
         </pre>
         <p className="text-sm text-gray-600 dark:text-gray-300 mt-3">
           <strong>Authentification</strong> : OAuth Bearer Token. Utilisez une{" "}
@@ -93,7 +93,7 @@ export default function ScimDocPage() {
                   <li>
                     URL du locataire :{" "}
                     <code>
-                      https://academie.humanix-cybersecurity.fr/scim/v2
+                      https://humanix-academie.fr/scim/v2
                     </code>
                   </li>
                   <li>
@@ -135,7 +135,7 @@ export default function ScimDocPage() {
                   <li>
                     Base URL :{" "}
                     <code>
-                      https://academie.humanix-cybersecurity.fr/scim/v2
+                      https://humanix-academie.fr/scim/v2
                     </code>
                   </li>
                   <li>
