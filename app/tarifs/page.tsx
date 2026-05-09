@@ -127,8 +127,8 @@ export default async function TarifsPage({
               <p className="opacity-90 mb-4 leading-relaxed">
                 Notre <strong>audit cyber flash</strong> donne une photo claire
                 de la maturité humaine de ton organisation, en 15 questions
-                bienveillantes. Rapport PDF a la fin, recommandation
-                personnalisee - sans pression.
+                bienveillantes. Rapport PDF à la fin, recommandation
+                personnalisée - sans pression.
               </p>
               <Link
                 href="/audit-flash"
@@ -281,7 +281,7 @@ export default async function TarifsPage({
       <section className="mb-16">
         <div className="text-center mb-8">
           <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
-            Notre lecture du marche
+            Notre lecture du marché
           </p>
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary-500 dark:text-accent-300 mb-2 leading-tight">
             Pourquoi Humanix ?
@@ -299,12 +299,12 @@ export default async function TarifsPage({
             },
             {
               emoji: "🇫🇷",
-              title: "Souverain par defaut",
+              title: "Souverain par défaut",
               text: "Conçu, hébergé et opéré en France. Conformité RGPD/NIS2 native. Pas de Cloud Act au menu.",
             },
             {
               emoji: "🤝",
-              title: "Integre a l'ecosysteme",
+              title: "Intégré à l'écosystème",
               text: "Connecteur natif CISO Assistant (intuitem). Format OSCAL standard. Webhooks Sentinel/Splunk/Sekoia.",
             },
             {

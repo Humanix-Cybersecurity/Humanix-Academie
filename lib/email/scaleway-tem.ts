@@ -10,7 +10,7 @@
 // Environnement requis :
 //   SCALEWAY_TEM_TOKEN       (clé secrète IAM)
 //   SCALEWAY_TEM_PROJECT_ID  (UUID du projet Scaleway)
-//   SCALEWAY_TEM_REGION      (defaut "fr-par")
+//   SCALEWAY_TEM_REGION      (défaut "fr-par")
 //   EMAIL_FROM               (adresse expéditrice, domaine vérifié dans
 //                             la console Scaleway TEM)
 import type { SendEmailParams, SendEmailResult } from "./index";
@@ -34,11 +34,11 @@ function getEndpoint(): string {
 }
 
 /**
- * Detecte le piege classique : utilisateur qui colle l'access-key (commence
+ * Detecte le piège classique : utilisateur qui colle l'access-key (commence
  * par "SCW", 20 chars) au lieu du secret-key (UUID 36 chars) dans la conf.
  * L'access-key sert au SDK Scaleway officiel mais pas a l'API REST TEM.
  *
- * Verifie le format avant l'appel API pour donner un message clair plutot
+ * Verifie le format avant l'appel API pour donner un message clair plutôt
  * qu'un cryptique "scaleway_tem_401".
  */
 function detectMisconfiguredToken(token: string): string | null {
