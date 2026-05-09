@@ -97,6 +97,7 @@ model Tenant {
   familyInvites       FamilyInvite[]
   incidents           IncidentResponse[]
   riskScoreSnapshots  RiskScoreSnapshot[]
+  cyberEventInstances CyberEventInstance[]
 
   @@index([parentTenantId])
 }
@@ -278,6 +279,7 @@ model User {
   passwordResets      PasswordResetToken[]
   groups              UserGroup[]
   webauthnCredentials WebAuthnCredential[]
+  achievements        UserAchievement[]
 
   @@index([tenantId])
   @@index([isActive])
@@ -642,19 +644,28 @@ enum ItemCategory {
 }
 
 model ShopItem {
-  id          String       @id @default(cuid())
-  slug        String       @unique
-  name        String
-  emoji       String
-  category    ItemCategory
-  price       Int
-  minLevel    Int          @default(1)
-  description String?
-  rarity      String       @default("common")
-  isActive    Boolean      @default(true)
-  createdAt   DateTime     @default(now())
+  id             String       @id @default(cuid())
+  slug           String       @unique
+  name           String
+  emoji          String
+  category       ItemCategory
+  price          Int
+  minLevel       Int          @default(1)
+  description    String?
+  rarity         String       @default("common")
+  isActive       Boolean      @default(true)
+  // SAISONNALITE (mai 2026)
+  // Si availableFrom ou availableUntil sont definis, l'item n'est
+  // visible/achetable que dans la fenetre. Permet les items "Halloween",
+  // "Noel", "ete" qui apparaissent au bon moment et donnent envie. null
+  // sur les deux = toujours dispo (default).
+  availableFrom  DateTime?
+  availableUntil DateTime?
+  createdAt      DateTime     @default(now())
 
   inventory UserInventory[]
+
+  rewardForChallenges TeamChallenge[] @relation("ChallengeRewardItem")
 }
 
 model UserInventory {
@@ -675,19 +686,30 @@ model UserInventory {
 // CHALLENGE
 // =====================================================
 model TeamChallenge {
-  id          String   @id @default(cuid())
-  tenantId    String
-  title       String
-  description String?
-  startDate   DateTime
-  endDate     DateTime
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                   String    @id @default(cuid())
+  tenantId             String
+  title                String
+  description          String?
+  startDate            DateTime
+  endDate              DateTime
+  isActive             Boolean   @default(true)
+  // RECOMPENSES (mai 2026) — distribuees a la fin du challenge :
+  //   - rewardCoins : coins bonus aux Top 3 individuels (50% / 30% / 20%
+  //     du total). 0 = pas de reward coins.
+  //   - rewardItemId : item exclusif debloqué pour les Top 3 si defini.
+  //   - rewardsDistributedAt : null = pas encore fait, sinon date de
+  //     distribution (idempotence du cron).
+  rewardCoins          Int       @default(0)
+  rewardItemId         String?
+  rewardsDistributedAt DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 
-  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenant     Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  rewardItem ShopItem? @relation("ChallengeRewardItem", fields: [rewardItemId], references: [id], onDelete: SetNull)
 
   @@index([tenantId, isActive])
+  @@index([endDate, rewardsDistributedAt])
 }
 
 // =====================================================
@@ -1492,4 +1514,92 @@ model Event {
 
   @@index([tenantId, createdAt])
   @@index([type])
+}
+
+// =====================================================
+// ACHIEVEMENT - badges debloquables persistes en BDD (mai 2026)
+// =====================================================
+// Avant : les badges etaient hardcoded en React dans /apprendre/page.tsx
+// (12 badges, conditions inline, pas d'historique d'unlock).
+// Maintenant :
+//   - Achievement     = catalogue (slug + criteria definies en lib/)
+//   - UserAchievement = trace d'unlock par user (date + tenant pour
+//     scoping reporting RSSI)
+// Le catalogue est seedé depuis lib/achievements/catalog.ts au seed +
+// upserté a chaque deploy (CI) si on ajoute des nouveaux badges.
+// =====================================================
+model Achievement {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  emoji       String
+  description String
+  // Categorie pour grouper visuellement : "progression" (XP, niveaux),
+  // "consistency" (streak, regularite), "mastery" (sans-faute),
+  // "social" (partage, ambassadeur), "special" (events, saisons cyber)
+  category    String
+  // Rarete affichage : "common" / "rare" / "epic" / "legendary"
+  rarity      String   @default("common")
+  // Points de gloire (independants de l'XP gameplay) : sert au futur
+  // classement des collectionneurs de badges.
+  points      Int      @default(10)
+  // Si true, le badge est masque tant qu'il n'est pas debloque (pour
+  // creer la surprise sur les badges rares / events). Sinon visible
+  // dans la collection avec une silhouette grisee.
+  isSecret    Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  unlocks UserAchievement[]
+
+  @@index([category])
+}
+
+model UserAchievement {
+  id            String   @id @default(cuid())
+  userId        String
+  achievementId String
+  // tenantId denormalise pour reporting RSSI (top collectionneurs par
+  // tenant) sans JOIN. Source de verite = User.tenantId.
+  tenantId      String
+  unlockedAt    DateTime @default(now())
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+  @@index([userId])
+  @@index([tenantId, unlockedAt])
+}
+
+// =====================================================
+// CYBER EVENT INSTANCE - instances d'evenements cyber par tenant
+// =====================================================
+// Le CATALOGUE des evenements cyber (Cybermois, World Password Day, etc.)
+// est dans lib/events/calendar.ts (pas en BDD). Cette table store les
+// INSTANCES declenchees pour un tenant donne avec metadonnees :
+//   - dates effectives (calculees par event-type ex "1er jeudi de mai")
+//   - challengeId du TeamChallenge auto-cree pendant l'event (si app)
+//   - idempotence : un event donne ne se declenche qu'une fois par
+//     tenant par annee (@@unique([tenantId, eventSlug]))
+// =====================================================
+model CyberEventInstance {
+  id               String   @id @default(cuid())
+  tenantId         String
+  // Slug normalise avec annee : "world_password_day_2026",
+  // "cybermois_2026", "data_protection_day_2026"
+  eventSlug        String
+  startDate        DateTime
+  endDate          DateTime
+  // ID du TeamChallenge auto-cree pour cet event (si applicable).
+  // Permet de retrouver "le challenge Cybermois 2026 c'etait celui-la".
+  challengeId      String?
+  coinsDistributed Int      @default(0)
+  createdAt        DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, eventSlug])
+  @@index([tenantId, startDate])
 }
