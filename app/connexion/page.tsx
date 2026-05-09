@@ -207,9 +207,13 @@ function ConnexionInner() {
 
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
-      {/* ==================== HERO ==================== */}
+      {/* ==================== HERO ====================
+          pb-10 sm:pb-12 pour donner de l'air sous le sous-titre avant que
+          le card AUTH commence. Iteration precedente avait pb-4 sm:pb-6
+          + une marge negative sur le card qui chevauchait le texte du
+          hero. */}
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
-        <section className="max-w-md mx-auto px-4 pt-10 pb-4 sm:pt-14 sm:pb-6 text-center">
+        <section className="max-w-md mx-auto px-4 pt-10 pb-10 sm:pt-14 sm:pb-12 text-center">
           <div className="mb-4 flex justify-center">
             <HexMascot mood="neutral" size="lg" animated />
           </div>
@@ -230,9 +234,13 @@ function ConnexionInner() {
           Toute la machine d'auth (step-up message, erreurs, SSO, tabs,
           form) est dans UN SEUL card visuel (relative + bg + border) pour
           eviter l'effet "tabs flottants entre hero et form" signale par
-          l'utilisateur. -mt-6 leve la carte pour qu'elle "morde" sur le
-          backdrop : transition fluide. */}
-      <section className="max-w-md mx-auto px-4 pb-12 -mt-6 sm:-mt-8 relative z-10">
+          l'utilisateur.
+          IMPORTANT : pas de marge negative ! Une iteration precedente
+          utilisait -mt-6 sm:-mt-8 pour faire "mordre" la card sur le
+          backdrop, mais ca chevauchait le sous-titre du hero. Le card
+          se positionne donc proprement SOUS le hero avec une marge
+          positive qui le decolle visuellement. */}
+      <section className="max-w-md mx-auto px-4 pb-12 mt-6 sm:mt-8 relative z-10">
         <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-gray-200 dark:border-slate-700 shadow-xl overflow-hidden">
 
       {/* ===== TABS : barre haute integree au card ===== */}
