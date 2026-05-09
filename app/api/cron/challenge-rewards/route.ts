@@ -15,9 +15,9 @@
 //   - Top 3 : 20% des rewardCoins + rewardItem
 //
 // On marque rewardsDistributedAt pour idempotence : un challenge ne
-// peut etre recompense qu'une fois.
+// peut être récompense qu'une fois.
 //
-// Frequence recommandee : 1x/jour (apres minuit UTC).
+// Fréquence recommandee : 1x/jour (après minuit UTC).
 
 import crypto from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
@@ -50,7 +50,7 @@ async function distributeAllPending(): Promise<{
 }> {
   const now = new Date();
   // Seul les challenges termines + non encore recompenses + qui ont
-  // au moins une recompense definie
+  // au moins une récompense definie
   const pendingChallenges = await db.teamChallenge.findMany({
     where: {
       endDate: { lte: now },
@@ -124,7 +124,7 @@ async function distributeAllPending(): Promise<{
         }
 
         // Item exclusif : on cree une row UserInventory pour le top 3 si l'item
-        // n'est pas deja possede.
+        // n'est pas déjà possede.
         if (c.rewardItemId) {
           try {
             await db.userInventory.create({
@@ -135,7 +135,7 @@ async function distributeAllPending(): Promise<{
               },
             });
           } catch {
-            // Probable : l'user possede deja l'item (UNIQUE constraint).
+            // Probable : l'user possede déjà l'item (UNIQUE constraint).
             // Pas grave, on continue.
           }
         }

@@ -139,7 +139,7 @@ export async function POST(req: Request) {
   }
   const tenantId = auth.tenantId!;
 
-  // Rate limit specifique POST (creation : on est plus strict, 50/min)
+  // Rate limit spécifique POST (creation : on est plus strict, 50/min)
   const rl = checkRateLimit(
     `scim:users-post:${tenantId}`,
     50,

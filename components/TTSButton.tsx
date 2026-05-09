@@ -230,7 +230,7 @@ export default function TTSButton({
     };
   }, []);
 
-  // Texte nettoye (memoise pour eviter de recalculer a chaque render)
+  // Texte nettoye (memoise pour éviter de recalculer a chaque render)
   const cleanText = useMemo(() => cleanForTTS(text), [text]);
   const chunks = useMemo(() => splitForTTS(cleanText), [cleanText]);
 
@@ -303,7 +303,7 @@ export default function TTSButton({
       // On envoie le texte BRUT (pas cleanText) : le serveur applique sa
       // propre sanitisation canonique (sanitizeForTTS) avant de hasher pour
       // le cache. Ca garantit que le hash batch == hash runtime des qu'on
-      // part du meme texte source MDX -- sans dependre de quelles regex de
+      // part du même texte source MDX -- sans dependre de quelles regex de
       // nettoyage cleanForTTS applique cote client (abreviations, etc.).
       const res = await fetch("/api/tts/synthesize", {
         method: "POST",

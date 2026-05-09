@@ -37,7 +37,7 @@ async function loadScopedUser(req: Request, id: string, op: string) {
     };
   }
 
-  // Rate limit operation-specifique (read : 200/min, write : 100/min)
+  // Rate limit opération-spécifique (read : 200/min, write : 100/min)
   const limit = op === "get" ? 200 : SCIM_WRITE_LIMIT;
   const rl = checkRateLimit(
     `scim:users-${op}:${auth.tenantId}`,
@@ -136,7 +136,7 @@ export async function PATCH(
   const r = await loadScopedUser(req, id, "patch");
   if ("response" in r && !r.user) return r.response;
 
-  let body: { schemas?: string[]; Operations?: unknown[] };
+  let body: { schemas?: string[]; Opérations?: unknown[] };
   try {
     body = await req.json();
   } catch {
@@ -146,14 +146,14 @@ export async function PATCH(
     );
   }
 
-  if (!Array.isArray(body.Operations) || body.Operations.length === 0) {
+  if (!Array.isArray(body.Opérations) || body.Opérations.length === 0) {
     return NextResponse.json(
-      scimError(400, "Missing Operations array", "invalidSyntax"),
+      scimError(400, "Missing Opérations array", "invalidSyntax"),
       { status: 400, headers: SCIM_HEADERS },
     );
   }
 
-  const ops = body.Operations as {
+  const ops = body.Opérations as {
     op: string;
     path?: string;
     value?: unknown;

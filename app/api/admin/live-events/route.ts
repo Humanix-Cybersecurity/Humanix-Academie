@@ -5,10 +5,10 @@
 // SSE vers le client. Pas besoin de WebSocket / Redis pour le volume
 // PME (max ~100 events/heure).
 //
-// Securite :
+// Sécurité :
 //  - Auth ADMIN/MANAGER/SUPERADMIN uniquement
 //  - Scoping tenant strict
-//  - Heartbeat toutes les 25s pour eviter la fermeture proxy
+//  - Heartbeat toutes les 25s pour éviter la fermeture proxy
 
 import { NextRequest } from "next/server";
 import { auth } from "@/lib/auth";
