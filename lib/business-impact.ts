@@ -61,14 +61,15 @@ function probabilityFromScore(score: number): number {
 
 /**
  * Cout annuel Humanix selon la taille - grille mai 2026 (cf. lib/pricing.ts).
- * On prend les tarifs ANNUELS (engagement annuel = remise -17 a -21%).
+ * 3 paliers cloud : Starter (free <=5 / forfait 19EUR 6-15) -> Pro
+ * (3EUR/u/mois, 2,50EUR en annuel, 16-250) -> Enterprise (devis 250+).
+ * On prend les tarifs ANNUELS (engagement annuel = remise ~17%).
  */
 function estimateHumanixCost(seats: number): number {
-  if (seats <= 5) return 0; // Découverte forever-free
-  if (seats <= 15) return 15 * 12; // Starter annuel = 15€/mois
-  if (seats <= 50) return 2.5 * seats * 12; // Essentielle annuel = 2,50€/user/mois
-  if (seats <= 250) return 2 * seats * 12; // Pro annuel = 2€/user/mois
-  return 5000; // Enterprise sur devis (estimation plancher)
+  if (seats <= 5) return 0; // Starter sub-tier free (forever-free)
+  if (seats <= 15) return 15 * 12; // Starter annuel = 15EUR/mois forfait
+  if (seats <= 250) return 2.5 * seats * 12; // Pro annuel = 2,50EUR/user/mois
+  return 5000; // Enterprise sur devis (estimation plancher annuelle)
 }
 
 export async function computeBusinessImpact(

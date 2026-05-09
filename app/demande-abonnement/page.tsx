@@ -9,7 +9,7 @@
 //   - Hébergement SecNumCloud, white-label, intégrations sur-mesure
 //   - Demandes spécifiques nécessitant un échange humain
 //
-// Pour TOUS les autres cas (Solo / Essentielle / Pro standards), le user
+// Pour TOUS les autres cas (Starter / Pro standards), le user
 // passe par /tarifs → /souscrire → Payplug Checkout → webhook qui
 // provisionne tenant + ADMIN automatiquement. Aucune action humaine.
 //
