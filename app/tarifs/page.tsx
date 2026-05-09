@@ -295,7 +295,7 @@ export default async function TarifsPage({
             {
               emoji: "🌐",
               title: "Open source AGPLv3",
-              text: "Code complet sur GitHub. Audites-le, fork-le, héberge-le. Zéro boîte noire, transparence totale.",
+              text: "Code complet sur GitHub. Audite-le, fork-le, héberge-le. Zéro boîte noire, transparence totale.",
             },
             {
               emoji: "🇫🇷",
