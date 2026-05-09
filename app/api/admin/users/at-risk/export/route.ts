@@ -61,6 +61,13 @@ export async function GET(req: Request) {
     inactive: "Inactif",
   } as const;
 
+  const trendLabel = {
+    improving: "Amélioration",
+    stable: "Stable",
+    degrading: "Dégradation",
+    insufficient_data: "Données insuffisantes",
+  } as const;
+
   const header = [
     "Nom",
     "Email",
@@ -68,6 +75,9 @@ export async function GET(req: Request) {
     "Service",
     "Groupes",
     "RiskScore",
+    "Tendance",
+    "TendanceIndicateur",
+    "TendanceMotifs",
     "JoursSansActivite",
     "ModulesCompletes",
     "Motif",
@@ -81,6 +91,9 @@ export async function GET(req: Request) {
       csvEscape(u.service),
       csvEscape(u.groupBadges.map((g) => g.name).join("; ")),
       csvEscape(u.riskScore),
+      csvEscape(trendLabel[u.trend]),
+      csvEscape(u.trendIndicator.toFixed(2)),
+      csvEscape(u.trendReasons.join(" · ")),
       csvEscape(u.daysSinceActivity),
       csvEscape(u.completedEpisodes),
       csvEscape(reasonLabel[u.reason]),
