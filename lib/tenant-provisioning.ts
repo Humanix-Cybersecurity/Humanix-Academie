@@ -11,7 +11,7 @@
 //     un acte de souscription validé (paiement Payplug ou décision admin).
 //     Le premier user est ADMIN, peut ensuite inviter ses collègues.
 //
-// IDÉMPOTENT :
+// IDEMPOTENT :
 //   Si un tenant avec ce paymentCustomerId existe déjà, on retourne ce
 //   tenant existant. Pas de double création (anti-doublon webhook qui
 //   pourrait re-fire le même event).
