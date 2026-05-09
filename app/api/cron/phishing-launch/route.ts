@@ -26,6 +26,8 @@ import { timingSafeEqual, randomUUID } from "node:crypto";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
+import { sendMailViaTenantSmtp } from "@/lib/smtp/sender";
+import { getTemplate } from "@/lib/phishing";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -59,7 +61,10 @@ async function checkAuth(
 
 type ProcessResult = {
   campaignsLaunched: number;
+  campaignsSkippedNoSmtp: number;
   resultsCreated: number;
+  emailsSent: number;
+  emailsFailed: number;
   errors: string[];
 };
 
@@ -81,9 +86,15 @@ async function processDueCampaigns(): Promise<ProcessResult> {
 
   const result: ProcessResult = {
     campaignsLaunched: 0,
+    campaignsSkippedNoSmtp: 0,
     resultsCreated: 0,
+    emailsSent: 0,
+    emailsFailed: 0,
     errors: [],
   };
+
+  const baseUrl =
+    process.env.NEXT_PUBLIC_APP_URL ?? "https://humanix-academie.fr";
 
   for (const campaign of due) {
     try {
@@ -96,7 +107,7 @@ async function processDueCampaigns(): Promise<ProcessResult> {
           isActive: true,
           role: { in: ["LEARNER", "MANAGER"] },
         },
-        select: { id: true },
+        select: { id: true, email: true, name: true },
       });
 
       if (targets.length === 0) {
@@ -108,26 +119,84 @@ async function processDueCampaigns(): Promise<ProcessResult> {
         continue;
       }
 
+      // Verifier que le SMTP du tenant est configure AVANT de creer les
+      // results. Si non configure, on saute la campagne (l'admin doit
+      // aller sur /admin/smtp). On ne marque pas sentAt pour qu'elle soit
+      // retentee au prochain tour de cron, dans l'eventualite ou l'admin
+      // configure le SMTP entre-temps.
+      if (campaign.channel === "EMAIL") {
+        const smtpCfg = await db.tenantSmtpConfig.findUnique({
+          where: { tenantId: campaign.tenantId },
+          select: { id: true },
+        });
+        if (!smtpCfg) {
+          result.campaignsSkippedNoSmtp++;
+          result.errors.push(
+            `${campaign.id}: SMTP non configure pour tenant ${campaign.tenant.slug}`,
+          );
+          continue;
+        }
+      }
+
       // Creation atomique des results (transaction)
-      await db.$transaction(async (tx) => {
-        await tx.phishingResult.createMany({
-          data: targets.map((t) => ({
-            campaignId: campaign.id,
-            userId: t.id,
-            trackToken: randomUUID().replace(/-/g, ""),
-            status: "SENT" as const,
-            sentAt: now,
-          })),
-          skipDuplicates: true,
+      const created = await db.$transaction(async (tx) => {
+        const data = targets.map((t) => ({
+          campaignId: campaign.id,
+          userId: t.id,
+          trackToken: randomUUID().replace(/-/g, ""),
+          status: "SENT" as const,
+          sentAt: now,
+        }));
+        await tx.phishingResult.createMany({ data, skipDuplicates: true });
+        // Re-fetch pour avoir trackToken (createMany ne return rien sur SQLite)
+        const fresh = await tx.phishingResult.findMany({
+          where: { campaignId: campaign.id },
+          select: { id: true, userId: true, trackToken: true },
         });
-        await tx.phishingCampaign.update({
-          where: { id: campaign.id },
-          data: { sentAt: now },
-        });
+        return fresh;
       });
 
       result.campaignsLaunched++;
-      result.resultsCreated += targets.length;
+      result.resultsCreated += created.length;
+
+      // Envoi reel des emails via le SMTP du tenant (channel EMAIL only).
+      // Pour SMS / QUISHING : pas d'envoi technique automatique a ce stade
+      // (SMS via Octopush/Brevo client a brancher en V2, QUISHING = print physique).
+      if (campaign.channel === "EMAIL") {
+        const tpl = getTemplate(campaign.template);
+        if (!tpl) {
+          result.errors.push(
+            `${campaign.id}: template ${campaign.template} introuvable`,
+          );
+        } else {
+          for (const r of created) {
+            const target = targets.find((t) => t.id === r.userId);
+            if (!target) continue;
+            const firstName = (target.name?.split(" ")[0] ?? "").trim();
+            const trackingUrl = `${baseUrl.replace(/\/$/, "")}/phishing/${r.trackToken}`;
+            const html = tpl.emailHtml(firstName, trackingUrl);
+            const sendResult = await sendMailViaTenantSmtp(
+              campaign.tenantId,
+              {
+                to: target.email,
+                subject: tpl.emailSubject,
+                html,
+              },
+            );
+            if (sendResult.ok) {
+              result.emailsSent++;
+            } else {
+              result.emailsFailed++;
+            }
+          }
+        }
+      }
+
+      // Marque sentAt apres traitement
+      await db.phishingCampaign.update({
+        where: { id: campaign.id },
+        data: { sentAt: now },
+      });
 
       // Audit log : trace que la campagne a ete declenchee
       await auditLog({
