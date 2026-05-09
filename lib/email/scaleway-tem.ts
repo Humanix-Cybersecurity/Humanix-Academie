@@ -44,7 +44,7 @@ function getEndpoint(): string {
  */
 function detectMisconfiguredToken(token: string): string | null {
   // Format secret-key attendu : UUID v4 (8-4-4-4-12, 36 chars total)
-  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
     token,
   );
   if (isUuid) return null;
@@ -76,6 +76,24 @@ export async function sendViaScalewayTem(
   const fromName =
     params.fromName ?? process.env.NEXT_PUBLIC_APP_NAME ?? DEFAULT_FROM_NAME;
 
+  const normalizedHtml =
+    typeof params.html === "string" && params.html.trim().length > 0
+      ? params.html
+      : undefined;
+  const normalizedText =
+    typeof params.text === "string" && params.text.trim().length > 0
+      ? params.text
+      : undefined;
+
+  if (!normalizedHtml && !normalizedText) {
+    return {
+      ok: false,
+      reason: "scaleway_tem_missing_content",
+      details:
+        "Either `html` or `text` content must be provided to send an email.",
+    };
+  }
+
   const recipients = (
     Array.isArray(params.to) ? params.to : [params.to]
   ).map((email) => ({ email }));
@@ -88,8 +106,8 @@ export async function sendViaScalewayTem(
     from: { email: fromAddress, name: fromName },
     to: recipients,
     subject: params.subject,
-    html: params.html ?? undefined,
-    text: params.text ?? undefined,
+    html: normalizedHtml,
+    text: normalizedText,
     project_id: projectId,
     additional_headers: additionalHeaders,
   };
