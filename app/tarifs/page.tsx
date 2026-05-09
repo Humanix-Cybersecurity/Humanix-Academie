@@ -310,7 +310,7 @@ export default async function TarifsPage({
             {
               emoji: "🎮",
               title: "Ludique pour de vrai",
-              text: "Mascotte evolutive, boutique, challenges entre services, badges. Les collaborateurs reviennent par envie.",
+              text: "Mascotte évolutive, boutique, challenges entre services, badges. Les collaborateurs reviennent par envie.",
             },
             {
               emoji: "⚡",
