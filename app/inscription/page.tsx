@@ -149,8 +149,11 @@ async function InscriptionInner({
         </ul>
       </section>
 
-      {/* ==================== AUTH CARD ==================== */}
-      <section className="max-w-md mx-auto px-4 pb-12">
+      {/* ==================== AUTH CARD ====================
+          Le card "mord" sur les trust badges au-dessus via -mt-2 + shadow-xl
+          pour donner un sentiment d'integration visuel forte (au lieu du
+          shadow-sm initial qui flottait dans le vide). */}
+      <section className="max-w-md mx-auto px-4 pb-12 relative z-10">
         {errorMsg && (
           <div
             role="alert"
@@ -161,7 +164,7 @@ async function InscriptionInner({
           </div>
         )}
 
-        <div className="relative bg-white dark:bg-slate-900 rounded-2xl border-2 border-gray-200 dark:border-slate-700 shadow-sm p-5 sm:p-6 space-y-5">
+        <div className="relative bg-white dark:bg-slate-900 rounded-3xl border-2 border-gray-200 dark:border-slate-700 shadow-xl p-5 sm:p-6 space-y-5">
           {/* SSO providers — un par un, action server-side */}
           {anySso && (
             <div className="space-y-3">
