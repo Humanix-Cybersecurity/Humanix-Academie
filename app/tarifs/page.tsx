@@ -334,7 +334,7 @@ export default async function TarifsPage({
             },
             {
               emoji: "💰",
-              title: "Volume plutot que rente",
+              title: "Volume plutôt que rente",
               text: "3 €/user/mois en Essentielle. 5 à 10x moins cher que les acteurs US. Volume > 30 grosses boîtes.",
             },
           ].map((diff, idx) => (
