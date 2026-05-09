@@ -130,8 +130,7 @@ export async function sendViaScalewayTem(
       const statusDetails = `${res.status} ${res.statusText || "Unknown Status"}`;
       const rawErrBody = await res.text().catch(() => "");
       const errBody =
-        rawErrBody ||
-        `[Failed to read error response body from Scaleway TEM API] (HTTP ${statusDetails})`;
+        rawErrBody || "[Failed to read error response body from Scaleway TEM API]";
       const details = `HTTP ${statusDetails}${errBody ? ` - ${errBody}` : ""}`;
       const truncationSuffix = "... [truncated]";
       const boundedDetails =
