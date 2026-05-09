@@ -111,7 +111,6 @@ export async function sendViaScalewayTem(
       return {
         ok: false,
         details: errBody.slice(0, MAX_ERROR_BODY_LENGTH),
-        details: errBody.slice(0, MAX_ERROR_BODY_LENGTH),
       };
     }
     const data = (await res.json().catch(() => ({}))) as {
