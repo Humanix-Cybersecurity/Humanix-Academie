@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { computeCoinsEarned, getLevel } from "@/lib/levels";
 import { fireWebhook } from "@/lib/webhooks/dispatcher";
+import { evaluateAndUnlock } from "@/lib/achievements/evaluate";
 
 export const dynamic = "force-dynamic";
 
@@ -170,5 +171,23 @@ export async function POST(req: Request) {
     });
   }
 
-  return NextResponse.json({ ok: true, ...result });
+  // Evaluation des achievements (badges) : declenche aussi sur les
+  // updates non-first-completion (parce que le score peut s'ameliorer
+  // et debloquer "high_avg_score" / "perfect_5" / etc.). Best-effort,
+  // ne bloque pas la reponse client.
+  let newlyUnlockedAchievements: { slug: string; title: string; emoji: string }[] = [];
+  if (status === "COMPLETED") {
+    try {
+      const evalResult = await evaluateAndUnlock(userId);
+      newlyUnlockedAchievements = evalResult.newlyUnlocked;
+    } catch {
+      // best-effort
+    }
+  }
+
+  return NextResponse.json({
+    ok: true,
+    ...result,
+    newlyUnlockedAchievements,
+  });
 }
