@@ -7,6 +7,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import type { Role } from "@prisma/client";
 import { auditLog, AuditActions } from "@/lib/audit";
+import { fireAndForgetAutoAssign } from "@/lib/onboarding/auto-assign";
 
 async function requireAdmin() {
   const session = await auth();
@@ -188,6 +189,8 @@ export async function inviteUser(formData: FormData) {
     target: { type: "user", id: created.id, label: created.email },
     metadata: { role, service: service || null },
   });
+  // Auto-assignation parcours obligatoire (fire-and-forget)
+  void fireAndForgetAutoAssign(created.id, ctx.tenantId);
   revalidatePath("/admin/utilisateurs");
   return { ok: true };
 }
@@ -481,7 +484,7 @@ export async function bulkImportUsers(rows: CsvRow[]) {
       role = row.role.toUpperCase() as Role;
     }
     try {
-      await db.user.create({
+      const newUser = await db.user.create({
         data: {
           tenantId,
           email,
@@ -491,6 +494,9 @@ export async function bulkImportUsers(rows: CsvRow[]) {
         },
       });
       result.created++;
+      // Auto-assignation parcours obligatoire (fire-and-forget pour ne
+      // pas bloquer l'import de 200 lignes si une assign rate)
+      void fireAndForgetAutoAssign(newUser.id, tenantId);
     } catch (e: any) {
       result.errors.push(`Erreur pour ${email} : ${e?.message ?? "inconnue"}`);
     }
