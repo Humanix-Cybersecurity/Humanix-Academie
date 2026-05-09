@@ -114,6 +114,12 @@ const SECTIONS: Section[] = [
         gate: "Pro+",
       },
       { href: "/admin/integrations", label: "Webhooks", icon: "🔗" },
+      {
+        href: "/admin/sso-saml",
+        label: "SSO SAML",
+        icon: "🔐",
+        gate: "Pro+",
+      },
       { href: "/admin/license", label: "Licence Ed25519", icon: "🔐" },
     ],
   },
