@@ -2,22 +2,22 @@
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// AdminSidebar - Navigation console dirigeant (refonte mai 2026).
+// AdminSidebar - Navigation console dirigeant (refonte juin 2026).
 //
-// Design Linear/Vercel-like :
-//   - Desktop (lg+) : sidebar fixed slim 56px, icons-only, tooltip au hover
-//   - Mobile (< lg) : drawer plein écran déclenché par le burger de la TopBar
-//
-// Choix d'architecture (vs versions antérieures) :
-//   - Plus de float-left ni de hack scroll listener pour le footer
-//   - Plus de useEffect qui pose une classe sur <main>
-//   - Tooltips natifs au hover (pas de menu wide qui prend la moitié de l'écran)
-//   - Sections séparées par des dividers visuels discrets
+// Pattern : sidebar fixe 240px avec sections accordéon.
+//   - Chaque section est un bouton (icône + titre + chevron) cliquable.
+//   - Open / close fluide via grid-template-rows transition (pas de
+//     max-height fragile).
+//   - Multi-open : on peut garder plusieurs sections ouvertes.
+//   - Auto-open : la section qui contient la page courante est ouverte
+//     par défaut (à chaque changement de route).
+//   - Plus de slim icons-only / hover-expand (la barre de scroll qui
+//     décalait les icônes était une régression).
 // =============================================================================
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
 import clsx from "clsx";
 
@@ -28,11 +28,18 @@ type NavItem = {
   gate?: "Pro+";
 };
 
-type Section = { title: string; items: NavItem[] };
+type Section = {
+  id: string; // slug stable (pour la persistance des etats open/close)
+  title: string;
+  icon: string;
+  items: NavItem[];
+};
 
 const SECTIONS: Section[] = [
   {
+    id: "pilotage",
     title: "Pilotage",
+    icon: "📊",
     items: [
       { href: "/admin", label: "Tableau de bord", icon: "📊" },
       { href: "/admin/onboarding", label: "Premiers pas", icon: "🚀" },
@@ -54,7 +61,9 @@ const SECTIONS: Section[] = [
     ],
   },
   {
+    id: "sensibilisation",
     title: "Sensibilisation",
+    icon: "🎓",
     items: [
       { href: "/admin/modules", label: "Modules", icon: "📚" },
       {
@@ -80,7 +89,9 @@ const SECTIONS: Section[] = [
     ],
   },
   {
+    id: "conformite",
     title: "Conformité",
+    icon: "🛡",
     items: [
       { href: "/admin/audit", label: "Journal d'audit", icon: "📜" },
       { href: "/admin/dpo", label: "Espace DPO", icon: "🛡" },
@@ -105,7 +116,9 @@ const SECTIONS: Section[] = [
     ],
   },
   {
+    id: "integrations",
     title: "Intégrations",
+    icon: "🔗",
     items: [
       {
         href: "/admin/api-keys",
@@ -127,7 +140,9 @@ const SECTIONS: Section[] = [
 
 const SUPERADMIN_SECTIONS: Section[] = [
   {
+    id: "moderation",
     title: "Modération",
+    icon: "⚖️",
     items: [
       { href: "/admin/moderation", label: "Marketplace", icon: "⚖️" },
       { href: "/admin/anecdotes", label: "Anecdotes", icon: "📅" },
@@ -140,6 +155,21 @@ function isActive(path: string | null, href: string): boolean {
   return path === href || (href !== "/admin" && path.startsWith(href + "/"));
 }
 
+/**
+ * Trouve la section qui contient la page courante. Renvoie son id (ou null
+ * si aucun match -- cas /admin racine, qui matche le 1er item de Pilotage).
+ */
+function findActiveSectionId(
+  path: string | null,
+  sections: Section[],
+): string | null {
+  if (!path) return null;
+  for (const s of sections) {
+    if (s.items.some((i) => isActive(path, i.href))) return s.id;
+  }
+  return null;
+}
+
 // =============================================================================
 // Composant principal
 // =============================================================================
@@ -148,11 +178,41 @@ export default function AdminSidebar() {
   const path = usePathname();
   const { data: session } = useSession();
   const isSuperAdmin = (session?.user as any)?.role === "SUPERADMIN";
-  const sections = isSuperAdmin
-    ? [...SECTIONS, ...SUPERADMIN_SECTIONS]
-    : SECTIONS;
+  const sections = useMemo(
+    () => (isSuperAdmin ? [...SECTIONS, ...SUPERADMIN_SECTIONS] : SECTIONS),
+    [isSuperAdmin],
+  );
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Set des sections ouvertes. Initialise avec la section de la page
+  // courante (ouverture automatique au chargement).
+  const [openSections, setOpenSections] = useState<Set<string>>(() => {
+    const active = findActiveSectionId(path, sections);
+    return active ? new Set([active]) : new Set();
+  });
+
+  // A chaque changement de route, on s'assure que la section active est
+  // ouverte (sans fermer celles que l'user a ouvertes manuellement).
+  useEffect(() => {
+    const active = findActiveSectionId(path, sections);
+    if (!active) return;
+    setOpenSections((prev) => {
+      if (prev.has(active)) return prev;
+      const next = new Set(prev);
+      next.add(active);
+      return next;
+    });
+  }, [path, sections]);
+
+  const toggleSection = (id: string) => {
+    setOpenSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   // Fermeture drawer mobile : ESC + changement de route
   useEffect(() => {
@@ -178,55 +238,40 @@ export default function AdminSidebar() {
   return (
     <>
       {/* =====================================================================
-          DESKTOP - sidebar slim 56px qui s'agrandit à 224px au hover.
-          Pattern Notion / Mattermost / Linear : icons-only par défaut, labels
-          révélés au hover avec animation CSS fluide (200ms).
-          Le content principal reste offset de 56px (lg:pl-14 du layout) - la
-          sidebar s'élargit en overlay par-dessus, pas besoin de pousser le
-          contenu (pattern moins disruptif).
+          DESKTOP - sidebar fixe 240px avec sections accordeon.
           ===================================================================== */}
       <aside
-        className="group hidden lg:flex fixed top-20 left-0 bottom-0 z-30 w-14 hover:w-56 flex-col bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-slate-800 transition-[width] duration-200 ease-out shadow-[2px_0_0_0_transparent] hover:shadow-[2px_0_8px_-2px_rgba(0,0,0,0.08)]"
+        className="hidden lg:flex fixed top-20 left-0 bottom-0 z-30 w-60 flex-col bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-slate-800"
         aria-label="Navigation console"
       >
-        {/* Header (visible uniquement quand expanded) */}
-        <div className="px-4 pt-4 pb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-150 whitespace-nowrap overflow-hidden">
+        <div className="px-4 pt-4 pb-2">
           <p className="text-[10px] uppercase tracking-widest font-bold text-accent-500 flex items-center gap-2">
             <span aria-hidden="true">🎛</span>
             <span>Console</span>
           </p>
         </div>
 
-        <nav className="flex-1 overflow-y-auto overflow-x-hidden admin-nav-scroll py-2">
-          {sections.map((section, idx) => (
-            <div key={section.title}>
-              {idx > 0 && (
-                <div
-                  className="my-3 mx-3 border-t border-gray-100 dark:border-slate-800"
-                  aria-hidden="true"
-                />
-              )}
-              {/* Titre de section : visible seulement au hover */}
-              <p className="px-4 pt-1 pb-1 text-[9px] uppercase tracking-widest font-bold text-gray-400 dark:text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-150 whitespace-nowrap overflow-hidden">
-                {section.title}
-              </p>
-              <ul className="space-y-0.5">
-                {section.items.map((item) => (
-                  <li key={item.href}>
-                    <ExpandableNavLink
-                      item={item}
-                      active={isActive(path, item.href)}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
+        {/* La nav peut scroller si l'ensemble des sections ouvertes excede
+            la hauteur. scrollbar-gutter: stable evite le decalage des items
+            quand la scrollbar apparait/disparait. */}
+        <nav
+          className="flex-1 overflow-y-auto overflow-x-hidden admin-nav-scroll px-2 py-2 space-y-1"
+          style={{ scrollbarGutter: "stable" }}
+        >
+          {sections.map((section) => (
+            <Accordion
+              key={section.id}
+              section={section}
+              path={path}
+              isOpen={openSections.has(section.id)}
+              onToggle={() => toggleSection(section.id)}
+            />
           ))}
         </nav>
       </aside>
 
       {/* =====================================================================
-          MOBILE - drawer plein écran
+          MOBILE - drawer plein écran avec accordeon
           ===================================================================== */}
       {drawerOpen && (
         <>
@@ -241,7 +286,7 @@ export default function AdminSidebar() {
             aria-label="Menu console dirigeant"
             className="lg:hidden fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-slate-950 shadow-2xl overflow-y-auto animate-slide-up"
           >
-            <header className="sticky top-0 bg-white dark:bg-slate-950 border-b border-gray-200 dark:border-slate-800 p-4 flex items-center justify-between">
+            <header className="sticky top-0 bg-white dark:bg-slate-950 border-b border-gray-200 dark:border-slate-800 p-4 flex items-center justify-between z-10">
               <p className="font-bold text-primary-500 dark:text-accent-300 flex items-center gap-2">
                 <span aria-hidden="true">🎛</span>
                 <span>Console dirigeant</span>
@@ -256,23 +301,16 @@ export default function AdminSidebar() {
               </button>
             </header>
 
-            <nav className="p-4 space-y-5">
+            <nav className="p-2 space-y-1">
               {sections.map((section) => (
-                <div key={section.title}>
-                  <h3 className="text-[10px] uppercase tracking-widest font-bold text-gray-500 dark:text-gray-400 mb-2 px-3">
-                    {section.title}
-                  </h3>
-                  <ul className="space-y-1">
-                    {section.items.map((item) => (
-                      <li key={item.href}>
-                        <WideNavLink
-                          item={item}
-                          active={isActive(path, item.href)}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <Accordion
+                  key={section.id}
+                  section={section}
+                  path={path}
+                  isOpen={openSections.has(section.id)}
+                  onToggle={() => toggleSection(section.id)}
+                  variant="mobile"
+                />
               ))}
             </nav>
           </aside>
@@ -283,88 +321,125 @@ export default function AdminSidebar() {
 }
 
 // =============================================================================
-// Sous-composants : icône slim (desktop) + lien wide (drawer mobile)
+// Accordion section : header cliquable + liste d'items revelee a l'ouverture
 // =============================================================================
 
-/**
- * ExpandableNavLink - icône toujours visible, label révélé quand le parent
- * .group (l'aside) est hover. L'item actif a une barre verticale à gauche.
- */
-function ExpandableNavLink({
+function Accordion({
+  section,
+  path,
+  isOpen,
+  onToggle,
+  variant = "desktop",
+}: {
+  section: Section;
+  path: string | null;
+  isOpen: boolean;
+  onToggle: () => void;
+  variant?: "desktop" | "mobile";
+}) {
+  // Section "active" si l'un de ses items matche le path courant (highlight).
+  const sectionActive = section.items.some((i) => isActive(path, i.href));
+
+  return (
+    <div className="rounded-xl">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        aria-controls={`section-${section.id}`}
+        className={clsx(
+          "w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-colors",
+          sectionActive
+            ? "text-primary-500 dark:text-accent-300"
+            : "text-gray-700 dark:text-gray-300",
+          "hover:bg-gray-100 dark:hover:bg-slate-800/60",
+        )}
+      >
+        <span aria-hidden="true" className="text-base shrink-0 w-5 text-center">
+          {section.icon}
+        </span>
+        <span className="flex-1 text-left text-sm font-bold truncate">
+          {section.title}
+        </span>
+        <span
+          aria-hidden="true"
+          className={clsx(
+            "shrink-0 text-xs text-gray-400 dark:text-gray-500 transition-transform duration-200",
+            isOpen ? "rotate-90" : "rotate-0",
+          )}
+        >
+          ▶
+        </span>
+      </button>
+
+      {/* Animation grid-template-rows : passe de 0fr a 1fr pour deplier
+          sans avoir besoin de connaitre la hauteur en pixels. */}
+      <div
+        id={`section-${section.id}`}
+        className={clsx(
+          "grid transition-[grid-template-rows] duration-200 ease-out",
+          isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+        )}
+      >
+        <div className="overflow-hidden">
+          <ul className="pl-3 pr-1 pt-1 pb-2 space-y-0.5">
+            {section.items.map((item) => (
+              <li key={item.href}>
+                <NavLink
+                  item={item}
+                  active={isActive(path, item.href)}
+                  variant={variant}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
+// NavLink : item ordinaire dans une section
+// =============================================================================
+
+function NavLink({
   item,
   active,
+  variant,
 }: {
   item: NavItem;
   active: boolean;
+  variant: "desktop" | "mobile";
 }) {
   return (
     <Link
       href={item.href}
       aria-current={active ? "page" : undefined}
-      title={item.label}
       className={clsx(
-        "relative mx-2 flex items-center gap-3 h-10 px-2.5 rounded-lg transition-colors overflow-hidden",
+        "relative flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors",
         active
-          ? "bg-accent-500/10 text-accent-500 dark:bg-accent-500/15 dark:text-accent-300"
-          : "text-gray-600 hover:bg-gray-100 hover:text-primary-500 dark:text-gray-400 dark:hover:bg-slate-800 dark:hover:text-accent-300",
+          ? variant === "mobile"
+            ? "bg-accent-500 text-white font-bold shadow-sm"
+            : "bg-accent-500/10 text-accent-500 dark:bg-accent-500/15 dark:text-accent-300 font-semibold"
+          : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800/60 hover:text-primary-500 dark:hover:text-accent-300",
       )}
     >
-      {/* Indicateur barre verticale gauche pour l'item actif */}
-      {active && (
+      {active && variant === "desktop" && (
         <span
           aria-hidden="true"
-          className="absolute left-[-8px] top-2 bottom-2 w-1 rounded-r-full bg-accent-500"
+          className="absolute left-0 top-2 bottom-2 w-0.5 rounded-r-full bg-accent-500"
         />
       )}
-
-      {/* Icône (toujours visible) */}
-      <span aria-hidden="true" className="text-lg shrink-0 w-5 text-center">
+      <span aria-hidden="true" className="text-base shrink-0 w-4 text-center">
         {item.icon}
       </span>
-
-      {/* Label (révélé au hover du parent .group sur l'aside) */}
-      <span className="flex-1 min-w-0 text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-150 truncate">
-        {item.label}
-      </span>
-
-      {/* Badge gate (révélé au hover) */}
+      <span className="flex-1 truncate">{item.label}</span>
       {item.gate && (
         <span
           className={clsx(
-            "shrink-0 text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-150",
-            active
-              ? "bg-accent-500/20 text-accent-600 dark:text-accent-300"
-              : "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
-          )}
-        >
-          {item.gate}
-        </span>
-      )}
-    </Link>
-  );
-}
-
-function WideNavLink({ item, active }: { item: NavItem; active: boolean }) {
-  return (
-    <Link
-      href={item.href}
-      aria-current={active ? "page" : undefined}
-      className={clsx(
-        "flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all",
-        active
-          ? "bg-accent-500 text-white font-bold shadow-sm"
-          : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-primary-500 dark:hover:text-accent-300",
-      )}
-    >
-      <span aria-hidden="true" className="text-base shrink-0">
-        {item.icon}
-      </span>
-      <span className="truncate flex-1">{item.label}</span>
-      {item.gate && (
-        <span
-          className={clsx(
-            "text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full shrink-0",
-            active
+            "shrink-0 text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full",
+            active && variant === "mobile"
               ? "bg-white/20 text-white"
               : "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
           )}
