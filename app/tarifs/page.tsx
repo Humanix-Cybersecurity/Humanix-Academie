@@ -7,7 +7,7 @@
 //
 // Refonte cosy mai 2026 :
 //  - Hero HexBackdrop avec sous-titre "notre conviction tarifaire"
-//  - Section "Pourquoi" : palette 6 saisons cyclées sur les 9 cartes
+//  - Section "Pourquoi" : palette 6 saisons cyclees sur les 9 cartes
 //  - Cards palette adoucie sur les paliers + cascade slide-up
 //  - Citation finale "Hex veille" qui resume le pari editorial
 //  - Vocabulaire transforme : "score" reste car c'est tabular, mais ROI
@@ -127,8 +127,8 @@ export default async function TarifsPage({
               <p className="opacity-90 mb-4 leading-relaxed">
                 Notre <strong>audit cyber flash</strong> donne une photo claire
                 de la maturité humaine de ton organisation, en 15 questions
-                bienveillantes. Rapport PDF à la fin, recommandation
-                personnalisée - sans pression.
+                bienveillantes. Rapport PDF a la fin, recommandation
+                personnalisee - sans pression.
               </p>
               <Link
                 href="/audit-flash"
@@ -207,7 +207,7 @@ export default async function TarifsPage({
                     : "bg-success/10 text-success"
                 }`}
               >
-                jusqu'à −21 %
+                jusqu&apos;à −21 %
               </span>
             </Link>
           </div>
@@ -219,10 +219,10 @@ export default async function TarifsPage({
           ))}
         </div>
         <p className="text-xs text-center text-gray-500 mt-6">
-          Tous les prix sont HT. Vente directe, sans essai gratuit : la{" "}
-          <Link href="/demo" className="underline">démo</Link> remplit ce rôle.
-          Mensuel résiliable à tout moment ; annuel = engagement 12 mois.
-          {" "}Mensuel résiliable à tout moment&nbsp;; annuel = engagement 12 mois.
+          Tous les prix sont HT. Vente directe sans essai gratuit (la{" "}
+          <Link href="/demo" className="underline">démo</Link> remplit ce rôle).
+          Mensuel résiliable à tout moment, annuel = engagement 12 mois.
+        </p>
       </section>
 
       {/* =====================================================================
@@ -281,7 +281,7 @@ export default async function TarifsPage({
       <section className="mb-16">
         <div className="text-center mb-8">
           <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
-            Notre lecture du marché
+            Notre lecture du marche
           </p>
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary-500 dark:text-accent-300 mb-2 leading-tight">
             Pourquoi Humanix ?
@@ -299,43 +299,43 @@ export default async function TarifsPage({
             },
             {
               emoji: "🇫🇷",
-              title: "Souverain par défaut",
+              title: "Souverain par defaut",
               text: "Conçu, hébergé et opéré en France. Conformité RGPD/NIS2 native. Pas de Cloud Act au menu.",
             },
             {
               emoji: "🤝",
-              title: "Intégré à l'écosystème",
+              title: "Integre a l'ecosysteme",
               text: "Connecteur natif CISO Assistant (intuitem). Format OSCAL standard. Webhooks Sentinel/Splunk/Sekoia.",
             },
             {
               emoji: "🎮",
               title: "Ludique pour de vrai",
-              text: "Mascotte évolutive, boutique, challenges entre services, badges. Les collaborateurs reviennent par envie.",
+              text: "Mascotte evolutive, boutique, challenges entre services, badges. Les collaborateurs reviennent par envie.",
             },
             {
               emoji: "⚡",
-              title: "Déployable en 30 minutes",
+              title: "Deployable en 30 minutes",
               text: "Pas de chef de projet, pas de SSO obligatoire, pas de 3 semaines de mise en place. Import CSV, c'est parti.",
             },
             {
               emoji: "📊",
               title: "Score de risque humain",
-              text: "Mesure objective, en temps réel, par collaborateur et par service. Ce que ton assureur cyber demande.",
+              text: "Mesure objective, en temps reel, par collaborateur et par service. Ce que ton assureur cyber demande.",
             },
             {
               emoji: "🛒",
-              title: "Marketplace communauté",
-              text: "Tes pairs RSSI publient leurs modules, modérés par notre équipe. Effet de levier collectif.",
+              title: "Marketplace communaute",
+              text: "Tes pairs RSSI publient leurs modules, moderes par notre equipe. Effet de levier collectif.",
             },
             {
               emoji: "🦊",
               title: "Une mascotte qui te parle",
-              text: "Hex t'accompagne, te coache, te félicite. Pas un chatbot froid. Un compagnon de progression.",
+              text: "Hex t'accompagne, te coache, te felicite. Pas un chatbot froid. Un compagnon de progression.",
             },
             {
               emoji: "💰",
-              title: "Volume plutôt que rente",
-              text: "3 €/user/mois en Essentielle. 5 à 10x moins cher que les acteurs US. Volume > 30 grosses boîtes.",
+              title: "Volume plutot que rente",
+              text: "3 €/user/mois en Essentielle. 5 a 10x moins cher que les acteurs US. Volume > 30 grosses boites.",
             },
           ].map((diff, idx) => (
             <DiffCard
@@ -547,29 +547,24 @@ export default async function TarifsPage({
             <div>
               <p className="text-xs uppercase tracking-[0.25em] font-bold text-emerald-700 dark:text-emerald-300 mb-2">
                 Retour sur investissement · sans embellir
-              <h2
               </p>
-                id="roi-stats-heading"
-                className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-3 leading-tight"
-              >
-              <h2
-                    label="Une attaque par phishing réussie en PME"
-                    value="coûte en moyenne 35 000 € (Tracfin 2024)"
-                  />
-                  <Roi
-                    label="Notre offre Essentielle pour 25 collaborateurs"
-                    value="coûte 900 €/an (75 €/mois)"
-                  />
-                  <Roi
-                    label="Réduction observée du taux de clic phishing après 6 mois"
-                    value="−60 % (cible standard du marché)"
-                  />
-                  <Roi
-                    label="Réduction de la prime d'assurance cyber"
-                    value="5 à 15 % avec preuve de formation continue"
-                  />
-                </ul>
-              </div>
+              <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-3 leading-tight">
+                Les chiffres, posés froidement.
+              </h2>
+              <ul className="space-y-2 text-gray-700">
+                <Roi
+                  label="Une attaque par phishing réussie en PME"
+                  value="coûte en moyenne 35 000 € (Tracfin 2024)"
+                />
+                <Roi
+                  label="Notre offre Essentielle pour 25 collaborateurs"
+                  value="coûte 900 €/an (75 €/mois)"
+                />
+                <Roi
+                  label="Réduction observée du taux de clic phishing après 6 mois"
+                  value="−60 % (cible standard du marché)"
+                />
+                <Roi
                   label="Réduction de la prime d'assurance cyber"
                   value="5 à 15 % avec preuve de formation continue"
                 />
@@ -608,7 +603,7 @@ export default async function TarifsPage({
             développement.
           </Faq>
           <Faq question="Comment tester avant de payer ?">
-            Pas d'essai gratuit sur les paliers payants : la{" "}
+            Pas d&apos;essai gratuit sur les paliers payants : la{" "}
             <Link href="/demo" className="underline">
               démo en ligne
             </Link>{" "}
@@ -669,11 +664,11 @@ export default async function TarifsPage({
           id="cta-final"
           className="font-display text-3xl sm:text-4xl font-extrabold mb-3 relative leading-tight"
         >
-          Prends une étoile, prends un compte, ou juste un café.
+          Prends une etoile, prends un compte, ou juste un cafe.
         </h2>
         <p className="text-lg opacity-90 mb-8 max-w-xl mx-auto leading-relaxed relative">
           Self-host libre ou cloud gratuit en 2 minutes. Premier module jouable
-          immédiatement. Pas de carte bancaire, pas de relance commerciale, pas
+          immediatement. Pas de carte bancaire, pas de relance commerciale, pas
           de pression.
         </p>
         <div className="flex flex-wrap justify-center gap-3 relative">
@@ -681,7 +676,7 @@ export default async function TarifsPage({
             href="/demo"
             className="bg-white text-primary-500 font-bold px-6 sm:px-8 py-4 rounded-2xl hover:scale-105 transition shadow-lg"
           >
-            🎮 Tester la démo publique
+            🎮 Tester la demo publique
           </Link>
           <a
             href="https://github.com/Humanix-Cybersecurity/Humanix-Academie"
@@ -696,12 +691,12 @@ export default async function TarifsPage({
             href="mailto:contact@humanix-cybersecurity.fr"
             className="bg-white/10 backdrop-blur border-2 border-white/70 text-white font-bold px-6 sm:px-8 py-4 rounded-2xl hover:bg-white/20 transition"
           >
-            📞 Échanger avec un expert
+            📞 Echanger avec un expert
           </a>
         </div>
         <p className="text-xs opacity-70 mt-6 relative">
           Une question ? <strong>contact@humanix-cybersecurity.fr</strong> - on
-          répond sous 4 h ouvrées.
+          repond sous 4 h ouvrees.
         </p>
       </section>
 
@@ -709,11 +704,19 @@ export default async function TarifsPage({
           CITATION FINALE - signature cosy "Hex veille"
           ===================================================================== */}
       <section className="text-center pt-10 pb-4">
-          "Mieux vaut une progression régulière qu’un grand discours : la vigilance se cultive chaque jour."
-          <cite>- Hex veille</cite>
+        <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          « Le prix est un choix politique. On a choisi de ne laisser personne
+          au bord du chemin - pas par charite, par strategie. La cybersecurite
+          ne peut pas etre un luxe quand 90 % des attaques visent les humains. »
         </blockquote>
-        <cite>- Hex veille</cite>
+        <p
+          aria-hidden="true"
+          className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
+        >
+          - Hex veille
+        </p>
       </section>
+      </div>
     </main>
   );
 }
@@ -819,9 +822,9 @@ function CtaButton({
   if (t.cta.type === "github") {
     return (
       <a
-        href="https://github.com/Humanix-Cybersecurity/humanix-ce"
+        href="https://github.com/humanix-cybersecurity/humanix-ce"
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noreferrer"
         className={cls}
       >
         {t.cta.label} →
@@ -875,7 +878,7 @@ function Trust({ children }: { children: ReactNode }) {
   );
 }
 
-// Palette 6 saisons cyclées (cyan/emerald/amber/purple/rose/indigo) pour
+// Palette 6 saisons cyclees (cyan/emerald/amber/purple/rose/indigo) pour
 // donner du caractere aux 9 cartes "Pourquoi Humanix" - la grammaire
 // visuelle est partagee avec /comparatif, /librairie, /lancement-oss.
 const DIFF_PALETTES = [
