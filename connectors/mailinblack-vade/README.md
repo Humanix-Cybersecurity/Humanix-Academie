@@ -14,7 +14,7 @@ Bridge bidirectionnel entre **Mailinblack** / **Vade Secure** (anti-phishing sou
 ## Pré-requis
 
 - Mailinblack ou Vade Secure avec webhooks sortants activés
-- Clé API Humanix (Essentielle+)
+- Clé API Humanix (Pro+)
 - Endpoint Humanix `/api/integrations/edr-trigger` (à venir, MVP)
 
 ## Installation
