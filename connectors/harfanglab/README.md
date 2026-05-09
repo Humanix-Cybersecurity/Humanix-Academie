@@ -26,7 +26,7 @@ Récupère les alertes EDR des dernières heures, identifie les utilisateurs tou
 
 - HarfangLab Manager 2.x avec API REST
 - User HarfangLab avec scope `alerts:read`
-- Clé API Humanix (Essentielle+)
+- Clé API Humanix (Pro+)
 
 ## Setup
 

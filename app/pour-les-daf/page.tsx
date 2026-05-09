@@ -314,7 +314,7 @@ export default function DafLandingPage() {
             <Number
               value="3 €"
               unit="/user/mois"
-              label="tarif Humanix Académie (Cloud Essentielle PME)"
+              label="tarif Humanix Académie (Cloud Pro PME)"
               source="vs 30 €/user/mois acteurs anglo-saxons"
             />
           </ul>
