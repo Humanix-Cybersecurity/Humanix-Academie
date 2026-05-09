@@ -314,7 +314,7 @@ export default async function TarifsPage({
             },
             {
               emoji: "⚡",
-              title: "Deployable en 30 minutes",
+              title: "Déployable en 30 minutes",
               text: "Pas de chef de projet, pas de SSO obligatoire, pas de 3 semaines de mise en place. Import CSV, c'est parti.",
             },
             {
