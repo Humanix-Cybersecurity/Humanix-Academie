@@ -381,14 +381,16 @@ export default async function TarifsPage({
               </tr>
             </thead>
             <tbody>
-              {/* Convention :
+              {/* Convention de marquage (typographie laique uniquement) :
                   - "✓"        : disponible sans condition
                   - "—"        : non disponible
-                  - "✓*"       : disponible mais payant (> 5 sieges sur Starter,
-                                 ou cout opérateur supplementaire pour le
-                                 phishing/vishing/smishing). Cf. note de bas
-                                 de tableau.
-                  - une chaine : disponible avec un niveau (Lite, Avancée…) */}
+                  - "✓*"       : disponible en Starter mais payant >5 sieges
+                                 (renvoie a la note bleue de bas de tableau)
+                  - "✓**"      : disponible mais cout operateur additionnel
+                                 (phishing/vishing/smishing, renvoie a la
+                                 note ambre de bas de tableau)
+                  - une chaine : niveau (Lite, Avancée…), peut aussi etre
+                                 suffixee par * ou ** */}
               <FeatureRow
                 label="Code source AGPL"
                 cells={["✓", "—", "—", "—"]}
@@ -451,15 +453,15 @@ export default async function TarifsPage({
               />
               <FeatureRow
                 label="Phishing email — génération templates"
-                cells={["—", "—", "Illimité†", "Illimité†"]}
+                cells={["—", "—", "Illimité**", "Illimité**"]}
               />
               <FeatureRow
                 label="Vishing IA souverain 🇫🇷 (Mistral + Piper TTS)"
-                cells={["—", "—", "✓†", "✓†"]}
+                cells={["—", "—", "✓**", "✓**"]}
               />
               <FeatureRow
                 label="Smishing IA souverain 🇫🇷 (Mistral)"
-                cells={["—", "—", "✓†", "✓†"]}
+                cells={["—", "—", "✓**", "✓**"]}
               />
               <FeatureRow
                 label="MCP Server (agents IA Claude/Mistral/GPT)"
@@ -531,10 +533,10 @@ export default async function TarifsPage({
             </p>
           </div>
 
-          {/* Note † : phishing/vishing/smishing modele */}
+          {/* Note ** : phishing/vishing/smishing modele */}
           <div className="rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-900/50 dark:bg-amber-900/15 p-4 text-amber-900 dark:text-amber-100">
             <p>
-              <strong>† Phishing / Vishing / Smishing</strong> — Humanix génère
+              <strong>** Phishing / Vishing / Smishing</strong> — Humanix génère
               gratuitement les{" "}
               <strong>templates et scripts pédagogiques</strong> via IA
               souveraine Mistral. L'<strong>envoi réel</strong> (emails, SMS,
@@ -840,32 +842,37 @@ function FeatureRow({ label, cells }: { label: string; cells: string[] }) {
 /**
  * Rendu d'une case du tableau comparatif.
  *
- * Convention de marquage :
- *   ✓        : disponible sans condition  -> coche verte
- *   —        : non disponible              -> tiret gris
- *   ✓*       : disponible mais payant >5 sieges -> coche verte + asterisque
- *              bleu (renvoie a la note bleue de bas de tableau)
- *   ✓†       : disponible mais cout operateur additionnel -> coche verte +
- *              dague ambre (renvoie a la note ambre)
- *   "Texte*" : texte libre + asterisque payant
- *   "Texte†" : texte libre + dague (cout opérateur)
- *   "Texte"  : texte libre normal (Lite, Avancée, etc.)
+ * Convention de marquage (typographie laique, sans symbole religieux) :
+ *   ✓         : disponible sans condition  -> coche verte
+ *   —         : non disponible              -> tiret gris
+ *   ✓*        : dispo mais payant au-dela de 5 sieges (renvoie a la note
+ *               bleue de bas de tableau, marqueur asterisque simple)
+ *   ✓**       : dispo mais cout operateur additionnel pour l'envoi reel
+ *               (renvoie a la note ambre, marqueur double asterisque)
+ *   "Texte*"  : texte libre + asterisque simple (note bleue)
+ *   "Texte**" : texte libre + double asterisque (note ambre)
+ *   "Texte"   : texte libre normal (Lite, Avancée, etc.)
+ *
+ * On evite la dague (†) qui peut etre lue comme une croix latine, ce qui
+ * sort du registre purement typographique attendu sur une page commerciale.
  */
 function FeatureCell({ value }: { value: string }) {
-  // Detecte la presence de marqueurs et les style separement.
-  const hasStar = value.endsWith("*");
-  const hasDagger = value.endsWith("†");
-  const core = value.replace(/[*†]+$/, "");
+  // Detection : on regarde d'abord le double asterisque (plus specifique).
+  // L'ordre est critique : "Texte**".endsWith("*") === true aussi.
+  const hasDoubleStar = value.endsWith("**");
+  const hasSingleStar = !hasDoubleStar && value.endsWith("*");
+  // Strip tous les asterisques de fin pour extraire le contenu pur.
+  const core = value.replace(/\*+$/, "");
 
   if (core === "✓") {
     return (
       <span>
         <span className="text-success font-bold">✓</span>
-        {hasStar && (
+        {hasSingleStar && (
           <sup className="ml-0.5 text-primary-500 font-bold">*</sup>
         )}
-        {hasDagger && (
-          <sup className="ml-0.5 text-amber-600 font-bold">†</sup>
+        {hasDoubleStar && (
+          <sup className="ml-0.5 text-amber-600 font-bold">**</sup>
         )}
       </span>
     );
@@ -876,11 +883,11 @@ function FeatureCell({ value }: { value: string }) {
   return (
     <span className="text-xs font-medium text-gray-700">
       {core}
-      {hasStar && (
+      {hasSingleStar && (
         <sup className="ml-0.5 text-primary-500 font-bold">*</sup>
       )}
-      {hasDagger && (
-        <sup className="ml-0.5 text-amber-600 font-bold">†</sup>
+      {hasDoubleStar && (
+        <sup className="ml-0.5 text-amber-600 font-bold">**</sup>
       )}
     </span>
   );
