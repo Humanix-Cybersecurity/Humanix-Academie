@@ -497,20 +497,34 @@ export default function CGVPage() {
         </p>
         <ul>
           <li>
-            <strong>Scaleway SAS</strong> (France) - hébergement, sauvegardes,
-            infrastructure ;
+            <strong>Scaleway SAS</strong> (France 🇫🇷) - hébergement,
+            sauvegardes, infrastructure cloud ;
           </li>
           <li>
-            <strong>Olinda SAS / Qonto</strong> (France) - compte de paiement
-            professionnel ;
+            <strong>Scaleway TEM</strong> (France 🇫🇷, Paris) - emails
+            transactionnels (lien magique de connexion, alertes système,
+            newsletter Cyber-Anecdote du Lundi) ;
           </li>
           <li>
-            <strong>Dougs SAS</strong> (France) - expertise comptable et
-            facturation ;
+            <strong>Payplug SA</strong> (France 🇫🇷, Paris) - prestataire
+            de paiement pour les abonnements SaaS Humanix Académie. Traite
+            les données de carte bancaire en mode tokenisation conforme PCI-DSS
+            ; Humanix ne stocke jamais le PAN ni le CVV ;
           </li>
           <li>
-            <strong>Scaleway TEM</strong> (UE, clauses contractuelles types) - emails
-            transactionnels (lien magique de connexion, alertes système).
+            <strong>Olinda SAS / Qonto</strong> (France 🇫🇷) - compte de
+            paiement professionnel pour la réception des virements et la
+            tenue de compte ;
+          </li>
+          <li>
+            <strong>Dougs SAS</strong> (France 🇫🇷) - expertise comptable
+            et facturation ;
+          </li>
+          <li>
+            <strong>Hiscox France</strong> (France 🇫🇷) - assureur
+            Responsabilité Civile Professionnelle (RC Pro). Aucune donnée
+            client n'est partagée hors d'un cas d'incident matériel
+            indemnisé.
           </li>
         </ul>
         <p>

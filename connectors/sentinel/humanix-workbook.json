@@ -127,7 +127,7 @@
     {
       "type": 1,
       "content": {
-        "json": "---\n\n*Workbook fourni par [Humanix-Cybersecurity](https://academie.humanix-cybersecurity.fr/integrations/sentinel). Format de table : `HumanixCompliance_CL`. Connecteur Python : `humanix-sentinel-connector` (MIT).*"
+        "json": "---\n\n*Workbook fourni par [Humanix-Cybersecurity](https://humanix-academie.fr/integrations/sentinel). Format de table : `HumanixCompliance_CL`. Connecteur Python : `humanix-sentinel-connector` (MIT).*"
       },
       "name": "footer"
     }
