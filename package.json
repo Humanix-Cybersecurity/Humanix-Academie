@@ -30,6 +30,8 @@
     "start": "next start",
     "lint": "ESLINT_USE_FLAT_CONFIG=false eslint . --ext .ts,.tsx --ignore-pattern next-env.d.ts --ignore-pattern .next --ignore-pattern coverage --ignore-pattern node_modules && tsc --noEmit && tsx scripts/lint-routes.ts",
     "lint:routes": "tsx scripts/lint-routes.ts",
+    "typecheck": "tsc --noEmit",
+    "hooks:install": "git config core.hooksPath .githooks",
     "format": "prettier --write .",
     "test": "vitest run",
     "test:watch": "vitest",
