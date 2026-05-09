@@ -223,6 +223,7 @@ export default async function TarifsPage({
           {" "}Vente directe, sans essai gratuit&nbsp;: la{" "}
           <Link href="/demo" className="underline">démo</Link> remplit ce rôle.
           {" "}Mensuel résiliable à tout moment&nbsp;; annuel = engagement 12 mois.
+          {" "}Mensuel résiliable à tout moment&nbsp;; annuel = engagement 12 mois.
         </p>
       </section>
 
@@ -548,10 +549,13 @@ export default async function TarifsPage({
             <div>
               <p className="text-xs uppercase tracking-[0.25em] font-bold text-emerald-700 dark:text-emerald-300 mb-2">
                 Retour sur investissement · sans embellir
-              </p>
               <h2
                 id="roi-stats-heading"
                 className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-3 leading-tight"
+              >
+              <h2
+                id="roi-stats-heading"
+              <ul aria-labelledby="roi-stats-heading" className="space-y-2 text-gray-700">
               >
                 Les chiffres, posés froidement.
               </h2>
@@ -709,10 +713,7 @@ export default async function TarifsPage({
           ===================================================================== */}
       <section className="text-center pt-10 pb-4">
         <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-          « Le prix est un choix politique. On a choisi de ne laisser personne
-          au bord du chemin - pas par charité, par stratégie. La cybersécurité
-          ne peut pas être un luxe quand 90 % des attaques visent les humains. »
-        </blockquote>
+        <cite>- Hex veille</cite>
         <cite>- Hex veille</cite>
       </section>
     </main>
