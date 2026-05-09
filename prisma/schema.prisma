@@ -98,8 +98,51 @@ model Tenant {
   incidents           IncidentResponse[]
   riskScoreSnapshots  RiskScoreSnapshot[]
   cyberEventInstances CyberEventInstance[]
+  samlConfig          TenantSamlConfig?
 
   @@index([parentTenantId])
+}
+
+// =====================================================
+// TENANT SAML CONFIG - SSO SAML 2.0 par tenant (mai 2026)
+// =====================================================
+// Configuration SAML SP cote Humanix pour permettre aux grandes
+// entreprises avec ADFS / Okta SAML / Azure AD SAML legacy de se
+// federer.
+//
+// IMPLEMENTATION : 3 strategies disponibles (cf. /integrations/sso-saml) :
+//   1. SAML-Jackson sidecar (recommande, OSS, traduit SAML -> OIDC)
+//   2. Bridge Keycloak (le tenant deploie un Keycloak qui federe SAML
+//      upstream et expose OIDC a Humanix)
+//   3. Implementation native (a venir, requires @node-saml/node-saml)
+//
+// Cette table prepare la config a saisir cote admin /admin/sso-saml.
+// L'activation runtime depend de l'installation cote infra de la voie
+// choisie. L'admin telecharge les SP metadata pour les uploader chez
+// son IdP.
+// =====================================================
+model TenantSamlConfig {
+  id               String    @id @default(cuid())
+  tenantId         String    @unique
+  // Nom amical pour l'admin ("ADFS interne", "Okta production")
+  label            String
+  // SP Entity ID = identifiant unique de NOTRE service cote IdP.
+  // Defaut : https://humanix-academie.fr/api/auth/saml/<tenantSlug>/metadata
+  spEntityId       String
+  // IdP-side : recus de l'admin du tenant qui les copie depuis son IdP
+  idpEntityId      String
+  idpSsoUrl        String    @db.Text // URL de redirect SSO de l'IdP
+  idpCertificate   String    @db.Text // Cert X509 public (PEM) de l'IdP, pour valider signature
+  // Mapping des attributs SAML -> champs User Humanix (JSON config)
+  // Ex: { "email": "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress" }
+  attributeMapping Json      @default("{}")
+  isActive         Boolean   @default(false)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  lastTestedAt     DateTime?
+  lastTestStatus   String? // "ok" | "error: ..."
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 }
 
 // =====================================================
@@ -1213,6 +1256,10 @@ enum WebhookType {
   SLACK // URL https://hooks.slack.com/services/...
   TEAMS // URL Microsoft Teams Connector
   GENERIC // POST JSON simple (Zapier, n8n, custom...)
+  // Presets enterprises (mai 2026) :
+  JIRA // POST issue REST API ; URL = https://acme.atlassian.net/rest/api/3/issue ; secret = base64(email:apitoken)
+  SERVICENOW // POST table API ; URL = https://acme.service-now.com/api/now/table/incident ; secret = base64(user:pass)
+  PAGERDUTY // Events API v2 ; URL = https://events.pagerduty.com/v2/enqueue ; secret = routing_key
 }
 
 model TenantWebhook {
