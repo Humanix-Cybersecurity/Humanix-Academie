@@ -26,6 +26,11 @@ import {
   parseSubscribedEvents,
 } from "./events";
 import { formatSlackBlocks, formatTeamsCard } from "./formatters";
+import {
+  formatJiraIssue,
+  formatServiceNowIncident,
+  formatPagerDutyEvent,
+} from "./enterprise-formatters";
 import { getErrorMessage } from "@/lib/errors";
 
 const TIMEOUT_MS = 5000;
@@ -107,13 +112,24 @@ async function postWithTimeout(
 
 /**
  * Construit le payload selon le type de webhook.
+ *
+ * Pour les types enterprise (JIRA, SERVICENOW, PAGERDUTY), on a besoin
+ * du webhookUrl (pour parser projectKey de Jira) et du secret (routing
+ * key pour PagerDuty). On les passe en options.
  */
 function buildPayload(
-  type: "SLACK" | "TEAMS" | "GENERIC",
+  type:
+    | "SLACK"
+    | "TEAMS"
+    | "GENERIC"
+    | "JIRA"
+    | "SERVICENOW"
+    | "PAGERDUTY",
   event: WebhookEventKey,
   tenantId: string,
   tenantName: string,
   data: Record<string, unknown>,
+  opts?: { webhookUrl?: string; secret?: string | null },
 ): string {
   const meta = WEBHOOK_EVENTS[event];
   const occurredAt = new Date().toISOString();
@@ -125,6 +141,33 @@ function buildPayload(
   }
   if (type === "TEAMS") {
     return JSON.stringify(formatTeamsCard(event, meta.label, tenantName, data));
+  }
+  if (type === "JIRA") {
+    return JSON.stringify(
+      formatJiraIssue(
+        event,
+        meta.label,
+        tenantName,
+        data,
+        opts?.webhookUrl ?? "",
+      ),
+    );
+  }
+  if (type === "SERVICENOW") {
+    return JSON.stringify(
+      formatServiceNowIncident(event, meta.label, tenantName, data),
+    );
+  }
+  if (type === "PAGERDUTY") {
+    return JSON.stringify(
+      formatPagerDutyEvent(
+        event,
+        meta.label,
+        tenantName,
+        data,
+        opts?.secret ?? "",
+      ),
+    );
   }
   return JSON.stringify({
     event,
@@ -182,7 +225,14 @@ export async function fireWebhook(
         return;
       }
 
-      const payload = buildPayload(w.type, event, tenantId, tenant.name, data);
+      const payload = buildPayload(
+        w.type,
+        event,
+        tenantId,
+        tenant.name,
+        data,
+        { webhookUrl: w.url, secret: w.secret },
+      );
 
       if (Buffer.byteLength(payload) > MAX_PAYLOAD_BYTES) {
         await db.tenantWebhook.update({
@@ -198,13 +248,26 @@ export async function fireWebhook(
 
       const headers: Record<string, string> = {
         "user-agent": "HumanixWebhook/1.0",
+        "Content-Type": "application/json",
       };
 
-      // Signature pour les GENERIC uniquement (Slack/Teams ont leur propre auth via URL)
+      // Auth specifique au type :
+      //   - GENERIC : signature HMAC dans header (cf. doc)
+      //   - JIRA / SERVICENOW : header Authorization Basic (le secret
+      //     contient deja le base64(user:pass) ou base64(email:apitoken))
+      //   - PAGERDUTY : pas d'header (routing_key est dans le body)
+      //   - SLACK / TEAMS : auth via secret embed dans l'URL du webhook
       if (w.type === "GENERIC" && w.secret) {
         headers["x-humanix-signature"] = signPayload(payload, w.secret);
         headers["x-humanix-event"] = event;
+      } else if (w.type === "JIRA" && w.secret) {
+        headers["Authorization"] = `Basic ${w.secret}`;
+        headers["Accept"] = "application/json";
+      } else if (w.type === "SERVICENOW" && w.secret) {
+        headers["Authorization"] = `Basic ${w.secret}`;
+        headers["Accept"] = "application/json";
       }
+      // PAGERDUTY : pas d'header. routing_key est dans le payload.
 
       const result = await postWithTimeout(w.url, payload, headers);
 
@@ -256,14 +319,19 @@ export async function testWebhook(webhookId: string): Promise<{
     w.tenantId,
     tenant?.name ?? "Test",
     { ...WEBHOOK_EVENTS[event].sample, _test: true },
+    { webhookUrl: w.url, secret: w.secret },
   );
 
   const headers: Record<string, string> = {
     "user-agent": "HumanixWebhook/1.0 (test)",
+    "Content-Type": "application/json",
   };
   if (w.type === "GENERIC" && w.secret) {
     headers["x-humanix-signature"] = signPayload(payload, w.secret);
     headers["x-humanix-event"] = event;
+  } else if ((w.type === "JIRA" || w.type === "SERVICENOW") && w.secret) {
+    headers["Authorization"] = `Basic ${w.secret}`;
+    headers["Accept"] = "application/json";
   }
 
   const result = await postWithTimeout(w.url, payload, headers);
