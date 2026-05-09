@@ -1,0 +1,53 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Extension compose pour les tâches planifiées (cron) Humanix Académie.
+# Cf. docs/CRON.md pour le détail des jobs et leurs fréquences.
+#
+# USAGE :
+#   docker compose -f docker-compose.yml -f docker-compose.cron.yml up -d
+#
+# Le service ofelia tourne dans son propre container, lit infra/ofelia/config.ini,
+# et appelle les endpoints /api/cron/* du service "app" via le réseau interne
+# docker (`http://app:3000`). Aucune label à poser sur les containers métier —
+# meilleure séparation, isolation propre.
+#
+# Pour ajouter / modifier un job : édite infra/ofelia/config.ini puis
+#   docker compose -f docker-compose.yml -f docker-compose.cron.yml restart ofelia
+
+services:
+  ofelia:
+    image: mcuadros/ofelia:0.3
+    container_name: humanix-ofelia
+    restart: unless-stopped
+    # Le mode "daemon" lit /etc/ofelia/config.ini.
+    # --config explicite pour tracer dans les logs au démarrage.
+    command: daemon --config=/etc/ofelia/config.ini
+    environment:
+      # Variables propagées vers cron-runner.sh.
+      CRON_SECRET: "${CRON_SECRET:?CRON_SECRET non défini dans .env}"
+      APP_INTERNAL_URL: "http://app:3000"
+      # Timezone du scheduler. UTC par défaut pour reproductibilité.
+      TZ: "UTC"
+    volumes:
+      # Config jobs (read-only)
+      - ./infra/ofelia/config.ini:/etc/ofelia/config.ini:ro
+      # Helper script qui lance les curl + retries (lecture seule)
+      - ./scripts/cron-runner.sh:/scripts/cron-runner.sh:ro
+    depends_on:
+      app:
+        condition: service_started
+    networks:
+      - humanix_backend
+
+networks:
+  humanix_backend:
+    external: true
+    name: humanix_backend
+    # Healthcheck simple : ofelia ne crash pas tout seul, on vérifie juste
+    # qu'il tourne. Pour aller plus loin : exposer un /metrics Prometheus
+    # via un sidecar ou utiliser le mode WebUI d'ofelia.
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "ofelia"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
