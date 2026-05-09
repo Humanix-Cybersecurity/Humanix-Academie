@@ -14,9 +14,10 @@
 //    perd "sans bullshit" pour "sans embellir" + pas d'urgence martelee
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { TIERS, ADD_ONS, type PricingTier } from "@/lib/pricing";
+import { TIERS, ADD_ONS } from "@/lib/pricing";
 import PricingSimulator from "@/components/PricingSimulator";
 import HexBackdrop from "@/components/HexBackdrop";
+import PricingCarousel from "@/components/PricingCarousel";
 
 const META_TITLE = "Tarifs - Humanix Académie";
 const META_DESCRIPTION =
@@ -213,15 +214,15 @@ export default async function TarifsPage({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {TIERS.map((t) => (
-            <PricingCard key={t.id} tier={t} billing={billing} />
-          ))}
-        </div>
-        <p className="text-xs text-center text-gray-500 mt-6">
+        <PricingCarousel tiers={TIERS} billing={billing} />
+
+        <p className="text-xs text-center text-gray-500 mt-8">
           Tous les prix sont HT. Vente directe sans essai gratuit (la{" "}
           <Link href="/demo" className="underline">démo</Link> remplit ce rôle).
           Mensuel résiliable à tout moment, annuel = engagement 12 mois.
+        </p>
+        <p className="text-xs text-center text-gray-400 mt-2 hidden md:block">
+          Cliquez sur un palier ou utilisez les flèches ‹ › pour le mettre en avant.
         </p>
       </section>
 
@@ -380,133 +381,136 @@ export default async function TarifsPage({
               </tr>
             </thead>
             <tbody>
+              {/* Convention :
+                  - "✓"        : disponible sans condition
+                  - "—"        : non disponible
+                  - "✓*"       : disponible mais payant (> 5 sieges sur Starter,
+                                 ou cout opérateur supplementaire pour le
+                                 phishing/vishing/smishing). Cf. note de bas
+                                 de tableau.
+                  - une chaine : disponible avec un niveau (Lite, Avancée…) */}
               <FeatureRow
                 label="Code source AGPL"
-                cells={["✓", "—", "—", "—", "—", "—"]}
+                cells={["✓", "—", "—", "—"]}
               />
               <FeatureRow
                 label="Self-host"
-                cells={["✓", "—", "—", "—", "—", "✓"]}
+                cells={["✓", "—", "—", "✓"]}
               />
               <FeatureRow
                 label="Cloud SaaS hébergé France"
-                cells={["—", "✓", "✓", "✓", "✓", "✓"]}
+                cells={["—", "✓", "✓", "✓"]}
+              />
+              <FeatureRow
+                label="Gratuit jusqu'à 5 utilisateurs"
+                cells={["✓", "✓", "—", "—"]}
               />
               <FeatureRow
                 label="5 modules de base"
-                cells={["✓", "✓", "✓", "✓", "✓", "✓"]}
+                cells={["✓", "✓", "✓", "✓"]}
               />
               <FeatureRow
                 label="Catalogue complet"
-                cells={["—", "—", "Partiel", "✓", "✓", "✓"]}
+                cells={["—", "✓*", "✓", "✓"]}
               />
               <FeatureRow
                 label="Mascotte évolutive"
-                cells={["✓", "✓", "✓", "✓", "✓", "✓"]}
+                cells={["✓", "✓", "✓", "✓"]}
               />
               <FeatureRow
                 label="Console dirigeant"
-                cells={[
-                  "Basique",
-                  "Standard",
-                  "Standard",
-                  "Avancée",
-                  "Avancée",
-                  "Avancée",
-                ]}
+                cells={["Basique", "Standard", "Avancée", "Avancée"]}
               />
               <FeatureRow
                 label="Score de risque humain"
-                cells={["—", "—", "—", "✓", "✓", "✓"]}
+                cells={["—", "—", "✓", "✓"]}
               />
               <FeatureRow
                 label="SSO M365 / Google"
-                cells={["—", "—", "—", "✓", "✓", "✓"]}
+                cells={["—", "—", "✓", "✓"]}
               />
               <FeatureRow
                 label="SCIM v2 (Entra/Okta)"
-                cells={["—", "—", "—", "✓", "✓", "✓"]}
+                cells={["—", "—", "✓", "✓"]}
               />
               <FeatureRow
                 label="Certificats individuels PDF"
-                cells={["—", "—", "—", "✓", "✓", "✓"]}
+                cells={["—", "—", "✓", "✓"]}
               />
               <FeatureRow
                 label="API REST publique"
-                cells={["—", "—", "—", "Lecture", "Illimitée", "Illimitée"]}
+                cells={["—", "—", "Illimitée", "Illimitée"]}
               />
               <FeatureRow
                 label="Connecteur CISO Assistant"
-                cells={["✓", "—", "—", "✓", "✓", "✓"]}
+                cells={["✓", "—", "✓", "✓"]}
               />
               <FeatureRow
                 label="Webhooks signés HMAC"
-                cells={["—", "—", "—", "✓", "✓", "✓"]}
+                cells={["—", "—", "✓", "✓"]}
               />
               <FeatureRow
-                label="Phishing email - génération templates"
-                cells={["—", "—", "—", "—", "Illimité*", "Illimité*"]}
+                label="Phishing email — génération templates"
+                cells={["—", "—", "Illimité†", "Illimité†"]}
               />
               <FeatureRow
                 label="Vishing IA souverain 🇫🇷 (Mistral + Piper TTS)"
-                cells={["—", "—", "—", "—", "✓*", "✓*"]}
+                cells={["—", "—", "✓†", "✓†"]}
               />
               <FeatureRow
                 label="Smishing IA souverain 🇫🇷 (Mistral)"
-                cells={["—", "—", "—", "—", "✓*", "✓*"]}
+                cells={["—", "—", "✓†", "✓†"]}
               />
               <FeatureRow
                 label="MCP Server (agents IA Claude/Mistral/GPT)"
-                cells={["✓", "✓", "✓", "✓", "✓", "✓"]}
+                cells={["✓", "✓", "✓", "✓"]}
               />
               <FeatureRow
                 label="Challenges d'équipe"
-                cells={["—", "—", "—", "—", "✓", "✓"]}
+                cells={["—", "—", "✓", "✓"]}
               />
               <FeatureRow
                 label="Marketplace communauté"
-                cells={["—", "—", "—", "—", "✓", "✓"]}
+                cells={["—", "—", "✓", "✓"]}
               />
               <FeatureRow
                 label="IA Coach personnalisé"
-                cells={["—", "—", "—", "—", "✓", "✓"]}
+                cells={["—", "—", "✓", "✓"]}
               />
               <FeatureRow
                 label="Cyber-Réflexe (incidents)"
-                cells={["—", "—", "—", "—", "✓", "✓"]}
+                cells={["—", "—", "✓", "✓"]}
               />
               <FeatureRow
                 label="Pack NIS2 turnkey"
-                cells={["Lite", "Lite", "Lite", "Lite", "Complet", "Complet"]}
+                cells={["Lite", "Lite", "Complet", "Complet"]}
               />
               <FeatureRow
                 label="Multi-établissements"
-                cells={["—", "—", "—", "—", "Light", "Filiales"]}
+                cells={["—", "—", "Light", "Filiales"]}
               />
               <FeatureRow
                 label="Customer Success Manager"
-                cells={["—", "—", "—", "—", "Dédié", "Dédié + onsite"]}
+                cells={["—", "—", "Dédié", "Dédié + onsite"]}
               />
               <FeatureRow
                 label="SLA garanti"
-                cells={["—", "—", "—", "—", "—", "99,9 %"]}
+                cells={["—", "—", "—", "99,9 %"]}
               />
               <FeatureRow
                 label="Option SecNumCloud"
-                cells={["—", "—", "—", "—", "—", "✓"]}
+                cells={["—", "—", "—", "✓"]}
               />
               <FeatureRow
                 label="White-label"
-                cells={["—", "—", "—", "—", "—", "✓"]}
+                cells={["—", "—", "—", "✓"]}
               />
               <FeatureRow
                 label="Support"
                 cells={[
                   "Communauté",
-                  "Communauté",
-                  "Email 48h",
+                  "Email 48h*",
                   "Chat 4h",
-                  "CSM dédié",
                   "7j/7 + DPO",
                 ]}
               />
@@ -514,24 +518,39 @@ export default async function TarifsPage({
           </table>
         </div>
 
-        {/* Footnote phishing/vishing/smishing - clarifier le modèle */}
-        <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-900/50 dark:bg-amber-900/15 p-4 text-sm text-amber-900 dark:text-amber-100">
-          <p>
-            <strong>* Phishing / Vishing / Smishing</strong> - Humanix génère
-            gratuitement les <strong>templates et scripts pédagogiques</strong>{" "}
-            via IA souveraine Mistral. L'<strong>envoi réel</strong> (emails,
-            SMS, appels téléphoniques) n'est <strong>pas inclus</strong> :
-            chaque message a un coût opérateur (provider transactionnel SMS,
-            email, ou SIP). Deux options : (1) vous gérez l'envoi via votre
-            propre provider FR, ou (2)
-            <a
-              href="mailto:contact@humanix-cybersecurity.fr?subject=Forfait+phishing+vishing+smishing+sur+mesure"
-              className="underline font-medium ml-1"
-            >
-              forfait sur mesure
-            </a>{" "}
-            avec exécution complète et traçabilité par Humanix.
-          </p>
+        {/* Notes de bas de tableau */}
+        <div className="mt-4 space-y-3 text-sm">
+          {/* Note * : feature dispo en Starter mais payante >5 sieges */}
+          <div className="rounded-lg border border-primary-200 bg-primary-50 dark:border-primary-900/50 dark:bg-primary-900/15 p-4 text-primary-900 dark:text-primary-100">
+            <p>
+              <strong>*</strong> Disponible dans l'offre Starter, mais{" "}
+              <strong>uniquement payant au-delà de 5 utilisateurs</strong>{" "}
+              (forfait 19 €/mois 6-15 sièges). En-dessous de 5 sièges, c'est
+              gratuit pour toujours mais ces fonctions précises ne sont pas
+              activées — un signal pour faire grandir ton équipe avec nous.
+            </p>
+          </div>
+
+          {/* Note † : phishing/vishing/smishing modele */}
+          <div className="rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-900/50 dark:bg-amber-900/15 p-4 text-amber-900 dark:text-amber-100">
+            <p>
+              <strong>† Phishing / Vishing / Smishing</strong> — Humanix génère
+              gratuitement les{" "}
+              <strong>templates et scripts pédagogiques</strong> via IA
+              souveraine Mistral. L'<strong>envoi réel</strong> (emails, SMS,
+              appels téléphoniques) n'est <strong>pas inclus</strong> : chaque
+              message a un coût opérateur (provider transactionnel SMS, email,
+              ou SIP). Deux options : (1) vous gérez l'envoi via votre propre
+              provider FR, ou (2)
+              <a
+                href="mailto:contact@humanix-cybersecurity.fr?subject=Forfait+phishing+vishing+smishing+sur+mesure"
+                className="underline font-medium ml-1"
+              >
+                forfait sur mesure
+              </a>{" "}
+              avec exécution complète et traçabilité par Humanix.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -725,150 +744,9 @@ export default async function TarifsPage({
 // SOUS-COMPOSANTS
 // =============================================================================
 
-function PricingCard({
-  tier: t,
-  billing,
-}: {
-  tier: PricingTier;
-  billing: BillingCycle;
-}) {
-  // Détermine la couleur du badge selon le type de tier
-  const badge = t.selfHostOnly
-    ? { label: "Open Source", color: "bg-purple-100 text-purple-700" }
-    : t.freeForever
-      ? { label: "Forever Free", color: "bg-emerald-100 text-emerald-700" }
-      : t.highlight
-        ? { label: "⭐ Le plus populaire", color: "bg-accent-500 text-white" }
-        : null;
-
-  // Selectionne le prix a afficher selon le cycle. Pour les tiers gratuits
-  // / sur devis on garde l'unique display existant.
-  const activePricing = t.pricing[billing];
-
-  return (
-    <article
-      className={`card flex flex-col relative min-w-0 ${
-        t.highlight
-          ? "border-2 border-accent-500 shadow-xl ring-1 ring-accent-500/20"
-          : "border border-gray-200"
-      }`}
-    >
-      {badge && (
-        <span
-          className={`absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded-full whitespace-nowrap ${badge.color}`}
-        >
-          {badge.label}
-        </span>
-      )}
-
-      <div className="text-4xl mb-2">{t.emoji}</div>
-      <h3 className="text-xl font-bold text-primary-500 mb-1">{t.name}</h3>
-      <p className="text-xs text-gray-500 italic mb-3 min-h-[32px]">
-        {t.tagline}
-      </p>
-
-      <div className="mb-4 pb-4 border-b border-gray-100">
-        {activePricing.amount === null ? (
-          <p className="text-2xl font-extrabold text-primary-500">Sur devis</p>
-        ) : (
-          <>
-            <p className="text-2xl font-extrabold text-primary-500">
-              {activePricing.display}
-            </p>
-            {billing === "annual" && t.pricing.annual.saving && (
-              <p className="text-xs text-success font-bold mt-1">
-                {t.pricing.annual.saving}
-              </p>
-            )}
-            {billing === "monthly" && t.pricing.annual.saving && (
-              <p className="text-xs text-gray-500 mt-1">
-                ou {t.pricing.annual.display} en annuel
-              </p>
-            )}
-          </>
-        )}
-        <p className="text-xs text-gray-500 mt-2">
-          {t.selfHostOnly
-            ? "Pas de limite - votre infra"
-            : t.seats.max
-              ? `${t.seats.min}–${t.seats.max} utilisateurs`
-              : `${t.seats.min}+ utilisateurs`}
-        </p>
-      </div>
-
-      <ul className="space-y-2 text-sm flex-1 mb-5">
-        {t.features.map((f, i) => (
-          <li key={i} className="flex items-start gap-2">
-            <span className="text-success flex-shrink-0 mt-0.5">✓</span>
-            <span className="text-gray-700">{f}</span>
-          </li>
-        ))}
-      </ul>
-
-      <CtaButton tier={t} billing={billing} />
-    </article>
-  );
-}
-
-function CtaButton({
-  tier: t,
-  billing,
-}: {
-  tier: PricingTier;
-  billing: BillingCycle;
-}) {
-  const cls = t.highlight ? "btn-primary text-sm" : "btn-secondary text-sm";
-
-  if (t.cta.type === "github") {
-    return (
-      <a
-        href="https://github.com/humanix-cybersecurity/humanix-ce"
-        target="_blank"
-        rel="noreferrer"
-        className={cls}
-      >
-        {t.cta.label} →
-      </a>
-    );
-  }
-  if (t.cta.type === "signup-free") {
-    // Decouverte = apprenant gratuit sur le tenant Communauté (LEARNER).
-    // Pas de création de tenant : on envoie sur /inscription qui pose le
-    // cookie d'intention et déclenche le SSO/magic link (Phase 2).
-    return (
-      <Link href="/inscription" className={cls}>
-        {t.cta.label}
-      </Link>
-    );
-  }
-  if (t.cta.type === "subscribe") {
-    // Plans payants (Solo / Essentielle / Pro) self-service : flow Payplug
-    // automatisé. /souscrire collecte email + organisation puis crée la
-    // session Payplug. Le webhook back-end provisionne tenant + ADMIN +
-    // magic link à la confirmation du paiement (Phase 3b).
-    // Le cycle (mensuel / annuel) est propage via la query string pour
-    // que /souscrire affiche la bonne offre et pousse au backend.
-    return (
-      <Link
-        href={`/souscrire?plan=${t.id}&billing=${billing}`}
-        className={cls}
-      >
-        {t.cta.label}
-      </Link>
-    );
-  }
-  // contact (Enterprise) — instance dédiée, +250 sièges, sur-mesure.
-  // Géré manuellement via /demande-abonnement (founder valide les cas
-  // particuliers, le reste est self-service).
-  return (
-    <Link
-      href={`/demande-abonnement?type=enterprise&plan=${t.id}`}
-      className={cls}
-    >
-      {t.cta.label}
-    </Link>
-  );
-}
+// Le rendu des cards (PricingCard + CtaButton) a migre dans
+// components/PricingCarousel.tsx car il est devenu interactif.
+// Ce fichier reste un Server Component pour la metadata SEO.
 
 function Trust({ children }: { children: ReactNode }) {
   return (
@@ -952,16 +830,59 @@ function FeatureRow({ label, cells }: { label: string; cells: string[] }) {
       <td className="p-3 text-gray-700 sticky left-0 bg-white z-10">{label}</td>
       {cells.map((c, i) => (
         <td key={i} className="p-3 text-center">
-          {c === "✓" ? (
-            <span className="text-success font-bold">✓</span>
-          ) : c === "—" ? (
-            <span className="text-gray-300">—</span>
-          ) : (
-            <span className="text-xs font-medium text-gray-700">{c}</span>
-          )}
+          <FeatureCell value={c} />
         </td>
       ))}
     </tr>
+  );
+}
+
+/**
+ * Rendu d'une case du tableau comparatif.
+ *
+ * Convention de marquage :
+ *   ✓        : disponible sans condition  -> coche verte
+ *   —        : non disponible              -> tiret gris
+ *   ✓*       : disponible mais payant >5 sieges -> coche verte + asterisque
+ *              bleu (renvoie a la note bleue de bas de tableau)
+ *   ✓†       : disponible mais cout operateur additionnel -> coche verte +
+ *              dague ambre (renvoie a la note ambre)
+ *   "Texte*" : texte libre + asterisque payant
+ *   "Texte†" : texte libre + dague (cout opérateur)
+ *   "Texte"  : texte libre normal (Lite, Avancée, etc.)
+ */
+function FeatureCell({ value }: { value: string }) {
+  // Detecte la presence de marqueurs et les style separement.
+  const hasStar = value.endsWith("*");
+  const hasDagger = value.endsWith("†");
+  const core = value.replace(/[*†]+$/, "");
+
+  if (core === "✓") {
+    return (
+      <span>
+        <span className="text-success font-bold">✓</span>
+        {hasStar && (
+          <sup className="ml-0.5 text-primary-500 font-bold">*</sup>
+        )}
+        {hasDagger && (
+          <sup className="ml-0.5 text-amber-600 font-bold">†</sup>
+        )}
+      </span>
+    );
+  }
+  if (core === "—") {
+    return <span className="text-gray-300">—</span>;
+  }
+  return (
+    <span className="text-xs font-medium text-gray-700">
+      {core}
+      {hasStar && (
+        <sup className="ml-0.5 text-primary-500 font-bold">*</sup>
+      )}
+      {hasDagger && (
+        <sup className="ml-0.5 text-amber-600 font-bold">†</sup>
+      )}
+    </span>
   );
 }
 
