@@ -6,7 +6,8 @@
 // equivalent (Eramba, MetricStream, ServiceNow GRC).
 //
 // Authentification : API key tenant (modele ApiKey, hashe SHA-256).
-// Plan-gating : reservee aux plans `essentielle` et superieurs.
+// Plan-gating : reservee aux plans `pro` et `enterprise` (anciennement
+// "essentielle+", remappee depuis le pivot 4 paliers mai 2026).
 // Rate limit : 10 req/h par tenant.
 // Audit trail : event `evidence.exported` enregistre a chaque appel reussi.
 //

@@ -22,7 +22,7 @@ export const dynamic = "force-dynamic";
 
 const TITLE = "Démo live - Humanix Académie";
 const DESCRIPTION =
-  "Tester l'application en 1 clic : choisis un palier (Découverte, Starter, Essentielle, Pro, Enterprise) et un rôle (apprenant, admin, modérateur). Aucune inscription, données fictives.";
+  "Tester l'application en 1 clic : choisis un palier (Starter, Pro, Enterprise) et un rôle (apprenant, admin, modérateur). Aucune inscription, données fictives.";
 
 export const metadata: Metadata = {
   title: TITLE,

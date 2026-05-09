@@ -503,8 +503,8 @@ export function SecurityAuditReport() {
           Rôles : LEARNER {"<"} MANAGER {"<"} ADMIN {"<"} SUPERADMIN
         </Bullet>
         <Bullet>
-          Plan-gating à 5 paliers (decouverte / solo / essentielle / pro /
-          premium) sur les features payantes
+          Plan-gating à 3 paliers cloud (starter / pro / enterprise) +
+          Community Edition self-host, sur les features payantes
         </Bullet>
         <Bullet>
           Helper requireAdminTenant() réutilisé sur toutes les server actions

@@ -5,7 +5,7 @@
 // Endpoint ANONYME (pas d'auth requise) pour démarrer une souscription
 // Payplug avant la création du tenant. Workflow :
 //
-//   1. User sur /tarifs → choisit un plan payant (solo/essentielle/pro) et
+//   1. User sur /tarifs → choisit un plan payant (starter ou pro) et
 //      remplit email + organisation sur /souscrire.
 //   2. Le form POST ici → on crée un Payplug Customer (via createCustomer)
 //      puis une Subscription pour ce customer (createCheckoutSession).
@@ -20,7 +20,7 @@
 //   - Anonyme par design (l'auth n'a pas de sens avant l'inscription)
 //   - Rate limit par IP : 5 starts / heure
 //   - Validation des inputs côté serveur
-//   - Refuse les plans non buyable (premium → /demande-abonnement)
+//   - Refuse les plans non buyable (enterprise → /demande-abonnement)
 //   - Email écrasable côté Payplug si déjà customer (Payplug gère)
 //
 // Cf. docs/DEPLOYMENT_RUNBOOK.md section D pour la configuration.
