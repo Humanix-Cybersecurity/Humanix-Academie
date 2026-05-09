@@ -281,7 +281,7 @@ export default async function TarifsPage({
       <section className="mb-16">
         <div className="text-center mb-8">
           <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
-            Notre lecture du marche
+            Notre lecture du marché
           </p>
           <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary-500 dark:text-accent-300 mb-2 leading-tight">
             Pourquoi Humanix ?
