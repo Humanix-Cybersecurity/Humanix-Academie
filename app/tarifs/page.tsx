@@ -713,8 +713,9 @@ export default async function TarifsPage({
           CITATION FINALE - signature cosy "Hex veille"
           ===================================================================== */}
       <section className="text-center pt-10 pb-4">
-        <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-        <footer>- Hex veille</footer>
+          "Mieux vaut une progression régulière qu’un grand discours : la vigilance se cultive chaque jour."
+          <cite>- Hex veille</cite>
+        </blockquote>
         <cite>- Hex veille</cite>
       </section>
     </main>
