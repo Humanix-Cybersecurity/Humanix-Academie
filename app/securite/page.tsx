@@ -391,23 +391,33 @@ export default function SecuritePage() {
               <tbody>
                 <SubcontractorRow
                   name="Scaleway SAS"
-                  role="Hébergement"
-                  loc="France 🇫🇷"
-                />
-                <SubcontractorRow
-                  name="Olinda SAS (Qonto)"
-                  role="Compte de paiement"
-                  loc="France 🇫🇷"
-                />
-                <SubcontractorRow
-                  name="Dougs SAS"
-                  role="Expertise comptable"
+                  role="Hébergement, infra cloud, sauvegardes"
                   loc="France 🇫🇷"
                 />
                 <SubcontractorRow
                   name="Scaleway TEM"
-                  role="Emails transactionnels (magic links)"
-                  loc="UE / clauses types"
+                  role="Emails transactionnels (magic links, alertes, newsletter)"
+                  loc="France 🇫🇷 (Paris)"
+                />
+                <SubcontractorRow
+                  name="Payplug SA"
+                  role="Prestataire de paiement (PCI-DSS niveau 1, tokenisation CB)"
+                  loc="France 🇫🇷 (Paris)"
+                />
+                <SubcontractorRow
+                  name="Olinda SAS (Qonto)"
+                  role="Compte de paiement professionnel (réception virements)"
+                  loc="France 🇫🇷"
+                />
+                <SubcontractorRow
+                  name="Dougs SAS"
+                  role="Expertise comptable et facturation"
+                  loc="France 🇫🇷"
+                />
+                <SubcontractorRow
+                  name="Hiscox France"
+                  role="Assureur RC Pro (cas d'incident matériel uniquement)"
+                  loc="France 🇫🇷"
                 />
               </tbody>
             </table>
@@ -450,8 +460,10 @@ export default function SecuritePage() {
         <Section n="07" emoji="👤" title="Engagement humain" id="humain">
           <ul>
             <li>
-              <strong>RC Pro Cybersécurité</strong> souscrite - coordonnées de
-              l'assureur communiquées à la signature du contrat
+              <strong>RC Pro Cybersécurité</strong> souscrite chez{" "}
+              <strong>Hiscox France</strong> (assureur spécialisé en risques
+              cyber et professions du numérique). Numéro de police et montants
+              de garanties communiqués dans le DPA à la signature du contrat.
             </li>
             <li>
               <strong>Veille permanente</strong> sur les vulnérabilités (mise à

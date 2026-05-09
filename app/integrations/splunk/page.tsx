@@ -12,7 +12,7 @@ export const metadata = {
 };
 
 const CURL_SNIPPET = `curl -H "Authorization: Bearer hxa_VOTRE_CLE_API" \\
-  "https://academie.humanix-cybersecurity.fr/api/v1/evidence-export?framework=ISO27001:2022&format=splunk-cim-v1" \\
+  "https://humanix-academie.fr/api/v1/evidence-export?framework=ISO27001:2022&format=splunk-cim-v1" \\
   | curl -k "https://splunk.exemple.fr:8088/services/collector/event" \\
       -H "Authorization: Splunk YOUR_HEC_TOKEN" \\
       --data-binary @-`;
