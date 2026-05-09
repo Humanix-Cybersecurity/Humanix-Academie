@@ -6,17 +6,17 @@
 // SECURITE : ce layout est un SERVER COMPONENT qui retourne 404 (notFound)
 // quand DEMO_MODE != "true". Defense en profondeur :
 //   - HeaderBar cache les CTAs vers /demo (UX)
-//   - app/demo/layout.tsx (ICI) bloque l'acces a TOUTES les pages /demo/*
+//   - app/demo/layout.tsx (ICI) bloque l'accès a TOUTES les pages /demo/*
 //   - Les actions /api liees a la demo doivent aussi check DEMO_MODE
 // Empeche que sur la prod commerciale (DEMO_MODE=false), un visiteur tape
-// directement /demo/... et obtienne acces a un compte fictif.
+// directement /demo/... et obtienne accès a un compte fictif.
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 
 // force-dynamic : sinon Next prerendere ce layout au build time, ou
 // `process.env.DEMO_MODE` est undefined (Dockerfile ne le set pas), ce
-// qui fige `notFound()` dans le HTML statique. Resultat : meme avec
+// qui fige `notFound()` dans le HTML statique. Resultat : même avec
 // DEMO_MODE=true a runtime, /demo sert un 404 baked-in.
 export const dynamic = "force-dynamic";
 

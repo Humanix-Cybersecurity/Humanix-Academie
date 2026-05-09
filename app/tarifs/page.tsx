@@ -327,7 +327,7 @@ export default async function TarifsPage({
             {
               emoji: "🛒",
               title: "Marketplace communaute",
-              text: "Tes pairs RSSI publient leurs modules, moderes par notre equipe. Effet de levier collectif.",
+              text: "Tes pairs RSSI publient leurs modules, moderes par notre équipe. Effet de levier collectif.",
             },
             {
               emoji: "🦊",
@@ -390,7 +390,7 @@ export default async function TarifsPage({
                   - "✓**"      : disponible mais cout operateur additionnel
                                  (phishing/vishing/smishing, renvoie a la
                                  note ambre de bas de tableau)
-                  - une chaine : niveau (Lite, Avancée…), peut aussi etre
+                  - une chaine : niveau (Lite, Avancée…), peut aussi être
                                  suffixee par * ou ** */}
               <FeatureRow
                 label="Code source AGPL"
@@ -534,7 +534,7 @@ export default async function TarifsPage({
             </p>
           </div>
 
-          {/* Note ** : phishing/vishing/smishing modele */}
+          {/* Note ** : phishing/vishing/smishing modèle */}
           <div className="rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-900/50 dark:bg-amber-900/15 p-4 text-amber-900 dark:text-amber-100">
             <p>
               <strong>** Phishing / Vishing / Smishing</strong> — Humanix génère
@@ -730,7 +730,7 @@ export default async function TarifsPage({
         <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
           « Le prix est un choix politique. On a choisi de ne laisser personne
           au bord du chemin - pas par charite, par strategie. La cybersecurite
-          ne peut pas etre un luxe quand 90 % des attaques visent les humains. »
+          ne peut pas être un luxe quand 90 % des attaques visent les humains. »
         </blockquote>
         <p
           aria-hidden="true"
@@ -855,11 +855,11 @@ function FeatureRow({ label, cells }: { label: string; cells: string[] }) {
  *   "Texte**" : texte libre + double asterisque (note ambre)
  *   "Texte"   : texte libre normal (Lite, Avancée, etc.)
  *
- * On evite la dague (†) qui peut etre lue comme une croix latine, ce qui
+ * On evite la dague (†) qui peut être lue comme une croix latine, ce qui
  * sort du registre purement typographique attendu sur une page commerciale.
  */
 function FeatureCell({ value }: { value: string }) {
-  // Detection : on regarde d'abord le double asterisque (plus specifique).
+  // Detection : on regarde d'abord le double asterisque (plus spécifique).
   // L'ordre est critique : "Texte**".endsWith("*") === true aussi.
   const hasDoubleStar = value.endsWith("**");
   const hasSingleStar = !hasDoubleStar && value.endsWith("*");

@@ -4,19 +4,19 @@
 // et Financiers.
 //
 // POURQUOI cette page :
-//   - Le DAF est un persona tres specifique : il combine finance + risque +
-//     conformite + reporting. Aucune plateforme SAT francaise ne lui parle
+//   - Le DAF est un persona très spécifique : il combine finance + risque +
+//     conformité + reporting. Aucune plateforme SAT française ne lui parle
 //     directement.
-//   - La promesse Humanix pour le DAF : (1) eviter le FOVI / deepfake qui
+//   - La promesse Humanix pour le DAF : (1) éviter le FOVI / deepfake qui
 //     coute en moyenne 200 k€, (2) reporting compliance NIS2/RGPD pret pour
 //     COMEX, (3) ROI calcule en € pas en metriques cyber-jargon.
-//   - C'est souvent le declencheur d'achat dans les PMEs apres NIS2.
+//   - C'est souvent le declencheur d'achat dans les PMEs après NIS2.
 //
 // CONTENU :
 //   - Hero : "Le risque humain en € - pas en jargon cyber"
 //   - 5 promesses ciblees DAF (FOVI, NIS2 reporting, ROI €, audit trail,
 //     procedures pretes)
-//   - Cas d'usage concret "DAF de PME 80 personnes apres NIS2"
+//   - Cas d'usage concret "DAF de PME 80 personnes après NIS2"
 //   - Liens vers /admin/business (ROI €), /admin/impact (KPIs benefices),
 //     saisons fraude-president + ransomware + deepfakes
 //   - Citation finale "Hex veille"
@@ -33,7 +33,7 @@ export const metadata = {
 const PROMESSES = [
   {
     emoji: "🛡",
-    title: "Eviter le FOVI / deepfake",
+    title: "Éviter le FOVI / deepfake",
     palette: {
       bg: "from-rose-50 via-white to-amber-50 dark:from-slate-900 dark:via-slate-900 dark:to-rose-950/40",
       ring: "border-rose-200 dark:border-rose-900/40",

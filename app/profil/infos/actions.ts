@@ -8,19 +8,19 @@
 //     anti-piratage (changer l'email permettrait de voler un compte par
 //     un attaquant qui aurait la session)
 //   - Validation des longueurs cote serveur (defense en profondeur)
-//   - Audit log USER_UPDATED a chaque succes
+//   - Audit log USER_UPDATED a chaque succès
 //
 // Champs modifiables :
 //   - name    : nom complet / pseudo affiche partout (header, leaderboard,
 //               certificat, dirigeant view)
-//   - service : departement / equipe (texte libre, optionnel)
+//   - service : departement / équipe (texte libre, optionnel)
 //
 // Champs NON modifiables ici (geres ailleurs) :
-//   - email          : identifiant unique (cf. /profil/donnees pour suppression)
+//   - email          : identifiant unique (cf. /profil/données pour suppression)
 //   - role           : geree par admin via /admin/utilisateurs
 //   - tenantId       : pas de cross-tenant
 //   - mascotSpecies  : /profil/mascotte
-//   - password / mfa : /profil/securite
+//   - password / mfa : /profil/sécurité
 
 "use server";
 
@@ -73,7 +73,7 @@ export async function updateProfileInfo(
     };
   }
 
-  // Read l'etat actuel pour ne logger que les vrais changements (et eviter
+  // Read l'etat actuel pour ne logger que les vrais changements (et éviter
   // un USER_UPDATED bruyant a chaque clic Save).
   const before = await db.user.findUnique({
     where: { id: userId },
