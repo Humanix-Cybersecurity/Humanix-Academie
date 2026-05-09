@@ -219,10 +219,9 @@ export default async function TarifsPage({
           ))}
         </div>
         <p className="text-xs text-center text-gray-500 mt-6">
-          Tous les prix sont HT.
-          {" "}Vente directe, sans essai gratuit&nbsp;: la{" "}
+          Tous les prix sont HT. Vente directe, sans essai gratuit : la{" "}
           <Link href="/demo" className="underline">démo</Link> remplit ce rôle.
-          {" "}Mensuel résiliable à tout moment&nbsp;; annuel = engagement 12 mois.
+          Mensuel résiliable à tout moment ; annuel = engagement 12 mois.
           {" "}Mensuel résiliable à tout moment&nbsp;; annuel = engagement 12 mois.
         </p>
       </section>
