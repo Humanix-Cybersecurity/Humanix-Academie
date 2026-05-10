@@ -1,0 +1,346 @@
+---
+title: "Cyber et CSE : ce qu'il faut transmettre"
+durationMinutes: 6
+persona: "manager"
+objective: "Communiquer efficacement avec le CSE (Comite Social et Economique) sur les sujets cyber : information, consultation, prerogatives, transparence"
+xpReward: 60
+scenario: |
+  DRH d'une PME 80 personnes (CSE obligatoire car > 50 employes).
+  Le CSE te demande lors de la reunion mensuelle :
+
+  "Suite a l'incident phishing du mois dernier, nous voulons
+  comprendre ce qui s'est passe : combien d'employes touches,
+  quelles donnees, sanctions disciplinaires prevues, mesures
+  preventives. Nous demandons une consultation sur la nouvelle
+  politique de simulations phishing."
+
+  Tu reagis comment ?
+choices:
+  - id: "a"
+    label: "Je dis 'c'est confidentiel, ca ne vous concerne pas' et je passe"
+    outcome: "bad"
+    feedback: "INFRACTION. Le CSE a un droit d'information ET de consultation sur les conditions de travail (Code du travail L2312-8). Refus systematique = delit d'entrave (peut atteindre 7500 EUR amende + 1 an prison). Le CSE doit etre informe."
+    points: -25
+  - id: "b"
+    label: "Information transparente sur l'incident (statistiques, mesures) + consultation formelle CSE sur les nouvelles politiques + reponses ecrites aux questions. Documentation des echanges"
+    outcome: "good"
+    feedback: "Approche pro. Information + consultation + documentation = standard legal. Le CSE est un partenaire, pas un adversaire. Transparence = climat social positif + reduction du risque social."
+    points: 40
+  - id: "c"
+    label: "Je donne tous les noms des employes concernes pour qu'ils sachent"
+    outcome: "bad"
+    feedback: "VIOLATION RGPD. Donner les noms des employes concernes au CSE = donnees personnelles communiquees sans base legale. Sanction CNIL possible. Le CSE recoit des STATISTIQUES (anonymisees), pas les noms."
+    points: -20
+  - id: "d"
+    label: "Je propose un point d'information + consultation a la prochaine reunion CSE, avec un document de synthese prepare"
+    outcome: "good"
+    feedback: "Tres bonne approche. Point structure a l'ordre du jour CSE, document prepare = serieux + respect des prerogatives. Le CSE peut valider la politique en consultation, ce qui rend sa mise en oeuvre plus facile."
+    points: 35
+debrief: |
+  Le **CSE** (Comite Social et Economique) joue un role central
+  dans la cyber pour 3 raisons :
+
+  1. **Prerogatives legales** d'information et consultation
+  2. **Relais** vers les employes (acceptation des mesures)
+  3. **Detection** de mal-etre / risques psychosociaux lies a la
+    cyber
+
+  Ne pas l'inclure = mauvaise pratique sociale + risque
+  juridique.
+
+  **Cadre legal applicable :**
+
+  **Code du travail L2312-8 : Attributions generales du CSE**
+
+  Le CSE doit etre informe et consulte sur :
+  - **Conditions de travail** (incl. cyber)
+  - **Sante et securite** (incl. risques psychosociaux lies a
+    la cyber)
+  - **Introduction de nouvelles technologies** (article L2312-8)
+  - **Modifications importantes** (politique cyber, surveillance,
+    BYOD)
+
+  **Code du travail L2312-15 : Information**
+
+  Le CSE recoit :
+  - **Bilan annuel** sur la cyber (incidents, formations, plans)
+  - **Information sur tout incident significatif**
+  - **Modifications du reglement interieur** (charte
+    informatique inclue)
+
+  **Article L2317-1 : Delit d'entrave**
+
+  Refus de consulter / informer = delit d'entrave :
+  - **Amende** : 7500 EUR (personne physique) / 37500 EUR
+    (personne morale)
+  - **Prison** : jusqu'a 1 an pour le DG / DRH responsable
+  - **Tribunal correctionnel**
+
+  **Sujets cyber a traiter avec le CSE :**
+
+  **1. Charte informatique / cyber**
+
+  - **Modification** de la charte = consultation CSE obligatoire
+  - **Information** des employes apres validation CSE
+  - **Signature** par chaque employe (apres consultation)
+
+  Contenu typique :
+  - Usage acceptable des ressources (email, internet, telephone)
+  - Politique BYOD
+  - Politique de mots de passe
+  - Sanctions en cas de manquement
+  - **Surveillance** : transparence sur ce qui est monitore
+
+  **2. Politique de surveillance / monitoring**
+
+  - **Filtrage URL** : information CSE
+  - **Lecture des emails pro** : encadree (RGPD article 13 +
+    consultation CSE)
+  - **Geolocalisation** des materiels : encadree (information
+    CSE + CNIL)
+  - **Cameras de surveillance** : information CSE + CNIL +
+    information CSE
+  - **DLP** (Data Loss Prevention) : information CSE
+
+  Si la surveillance est mise en place sans information / 
+  consultation = **preuves illegales** + **delit d'entrave**.
+
+  **3. Politique de simulation phishing**
+
+  Sujet sensible. Le CSE veut savoir :
+  - **Frequence** des simulations
+  - **Resultats individuels** : qui voit quoi (RH ? manager ?
+    DG ?)
+  - **Sanctions** en cas d'echec (rien ! la simulation est
+    pedagogique)
+  - **Anonymisation** des statistiques publiques
+
+  Bonnes pratiques :
+  - **Pas de sanction** disciplinaire pour echec
+  - **Statistiques agregees** (pas individuelles) au CSE
+  - **Formation immediate** apres echec (cf saison
+    remediation-flash)
+  - **Volontariat** pour certains tests sensibles
+
+  **4. Reponse a un incident cyber**
+
+  Quand un incident touche les employes :
+  - **Information CSE** sous 7 jours apres l'incident (sans
+    details individuels)
+  - **Statistiques** : combien d'employes touches, type de
+    donnees
+  - **Mesures correctives** prises
+  - **Communication aux employes** coordonnee
+
+  Si le CSE est informe en derniere - genere un climat tres
+  negatif.
+
+  **5. Formation cyber**
+
+  - **Plan de formation annuel** : information CSE
+  - **Volume horaire** : compte dans le temps de formation
+    (pas du loisir)
+  - **Theme** : adaptes aux roles
+  - **Feedback** : enquete satisfaction
+
+  **6. Achat de nouveaux outils**
+
+  Introduction de nouvelles technologies (Code travail
+  L2312-8) :
+
+  - **Outil de visioconference** (Teams, Zoom) : information CSE
+  - **MDM** (Mobile Device Management) : information CSE
+  - **EDR** (Endpoint Detection Response) sur les postes :
+    information CSE
+  - **IA generative** dans les workflows : consultation CSE
+
+  **Procedure de consultation type :**
+
+  **Etape 1 : Preparation (J-15)**
+
+  - Document de synthese (5-10 pages)
+  - Description du projet
+  - Impacts pour les employes (positifs et negatifs)
+  - Mesures de protection (RGPD, vie privee)
+  - Calendrier de mise en oeuvre
+
+  **Etape 2 : Reunion de consultation (J0)**
+
+  - Inscription a l'ordre du jour officiel
+  - Presentation de 30-45 minutes
+  - Reponses aux questions
+  - **Avis du CSE** : favorable, defavorable, ou avec reserves
+  - **PV** redige et signe
+
+  **Etape 3 : Apres la consultation (J+30)**
+
+  - Communication aux employes
+  - Mise en oeuvre
+  - **Bilan a 6 mois** au CSE
+
+  **L'avis du CSE n'est PAS contraignant**
+
+  Important : meme si le CSE rend un avis defavorable,
+  l'employeur peut mettre en oeuvre. Mais :
+
+  - Documenter les raisons
+  - Repondre aux objections du CSE
+  - Risque social en cas de mise en oeuvre forcee
+
+  **Le piege "le cyber c'est trop technique pour le CSE" :**
+
+  FAUX et insultant pour les representants du personnel. Le
+  CSE comprend tres bien :
+
+  - Quand c'est explique simplement (pas en jargon)
+  - Quand on lui donne du temps (pas a la derniere minute)
+  - Quand on le respecte comme partenaire
+
+  Solution : presentation accessible (analogies, exemples
+  concrets), documentation dispo a l'avance, expert externe
+  invite si necessaire.
+
+  **Le piege "on s'en passe pour aller plus vite" :**
+
+  Mauvaise idee :
+  - **Delit d'entrave** = sanctions penales + amendes
+  - **Climat social** degrade pour des annees
+  - **Greve / contestation** possible
+  - **Reputation** publique (CSE peut alerter syndicats /
+    presse)
+
+  La consultation prend 1 mois, ne pas la faire = 1 an de
+  conflits.
+
+  **Le piege "donner les noms des employes concernes" :**
+
+  VIOLATION RGPD. Le CSE recoit :
+  - Des **statistiques** (combien)
+  - Des **categories** (quels services, quels types de donnees)
+  - Pas de **noms** ni d'**identifiants**
+
+  Si un employe individuel a des questions, il peut s'adresser
+  au CSE qui le redirige vers le DPO. Pas de transmission
+  directe de noms.
+
+  **Sujets ou le CSE est ALLIE de la cyber :**
+
+  - **Risques psychosociaux** lies a la cyberviolence (harcelement
+    en ligne, stress numerique)
+  - **Droit a la deconnexion** (Code travail L2242-17)
+  - **Charge mentale** liee aux notifications
+  - **Surveillance excessive** : le CSE protege les employes
+  - **Formation** : le CSE rappelle a l'employeur l'obligation
+    de former
+
+  Bien gere, le CSE est un **avocat** des bonnes pratiques cyber
+  (anti-surveillance abusive, pro-formation, pro-droit a
+  l'erreur).
+
+  **Information annuelle CSE sur la cyber (template) :**
+
+  Bilan annuel a presenter au CSE :
+
+  | Indicateur | Valeur 2024 | Tendance |
+  |---|---|---|
+  | Incidents cyber declares | 12 | -20% vs 2023 |
+  | Tentatives de phishing bloquees | 8500 | +30% |
+  | Taux de reussite simulations phishing | 78% | +10% |
+  | Employes formes cyber | 92% | +5% |
+  | Volume formation cyber (h) | 320h | +15% |
+  | Incidents lies a vie privee | 0 | = |
+  | Demandes de droits RGPD employes | 3 | = |
+
+  Pas de noms, pas d'individus.
+
+  **Cas reels :**
+
+  **Cas 1 - PME 80 employes 2023 (delit d'entrave)**
+
+  Le DRH a mis en place une politique de simulation phishing
+  sans en informer le CSE. Premier email simule mal calibre =
+  panique generale. Plainte au CSE. Inspection du travail
+  contactee.
+
+  Resultats :
+  - Inspection du travail : delit d'entrave constate
+  - Procedure correctionnelle
+  - Amende 7500 EUR (DRH) + 37500 EUR (entreprise)
+  - Politique annulee, refonte avec consultation CSE
+
+  Cout total : > 60K EUR + 6 mois de conflits.
+
+  **Cas 2 - ETI 200 employes 2024 (succes par consultation)**
+
+  Le DSI a mis en place EDR sur tous les postes. Procedure :
+  - Information CSE 30 jours avant
+  - Document explicatif (5 pages)
+  - Reunion d'information (45 min)
+  - Reponses aux questions ecrites
+  - Avis CSE favorable
+
+  Resultat : deploiement smooth + acceptation sociale +
+  protection juridique en cas d'incident futur.
+
+  **Cas 3 - PME 60 employes 2024 (incident bien gere)**
+
+  Phishing reussi sur 3 employes (clic sur lien malveillant).
+  Procedure :
+  - Information CSE sous 7 jours (statistiques anonymisees)
+  - Pas de sanction disciplinaire (politique humaniste)
+  - Formation flash (cf saison remediation-flash)
+  - Mesures techniques (DLP, MFA renforce)
+
+  Resultat : CSE allie, employes rassures, pas de mal-etre,
+  prevention efficace.
+
+  **Outils de communication CSE :**
+
+  - **Plateforme CSE** : MeetUp, Joint, Lucca CSE
+  - **Documents partages** : SharePoint dedie CSE
+  - **Notification** : email + affichage
+  - **PV** : signe et conserve 5 ans
+
+  **La regle d'or :**
+
+  > **Le CSE n'est pas un adversaire mais un partenaire.
+  > Information transparente + consultation prealable =
+  > obligation legale ET bonne pratique sociale. Statistiques
+  > anonymisees, jamais de noms. Politiques cyber acceptees =
+  > deploiement smooth. Refus = delit d'entrave + climat
+  > degrade.**
+quiz:
+  - question: "Le CSE n'est pas informe d'une nouvelle politique de surveillance, consequence ?"
+    choices:
+      - { id: "a", label: "Aucune", correct: false }
+      - { id: "b", label: "Delit d'entrave (Code travail L2317-1) : amende 7500 EUR (personne physique) / 37500 EUR (entreprise) + risque prison + preuves de surveillance INVALIDES", correct: true }
+      - { id: "c", label: "Bonus", correct: false }
+    explanation: "Code travail L2317-1 : delit d'entrave. Amende 7500/37500 EUR + prison possible. Preuves obtenues sans information CSE = invalides en justice (Cour de cassation). Plus risque social majeur."
+
+  - question: "Tu donnes au CSE les noms des 3 employes touches par phishing, OK ?"
+    choices:
+      - { id: "a", label: "Oui c'est transparent", correct: false }
+      - { id: "b", label: "NON - violation RGPD. Le CSE recoit STATISTIQUES anonymisees (combien, quel type), jamais noms ou identifiants", correct: true }
+      - { id: "c", label: "Optionnel", correct: false }
+    explanation: "RGPD : donnees personnelles communiquees sans base legale = violation. Le CSE recoit donnees AGGREGEES anonymes (statistiques, categories, services). Si questions individuelles : DPO. Sanction CNIL possible si transmission nominative."
+
+  - question: "Une simulation phishing avec sanction disciplinaire pour les 'cliqueurs' :"
+    choices:
+      - { id: "a", label: "Pratique courante", correct: false }
+      - { id: "b", label: "Mauvaise pratique - simulation = pedagogique. Sanction = climat de peur + droit a l'erreur. Standard : formation immediate au lieu de sanction", correct: true }
+      - { id: "c", label: "Recommande", correct: false }
+    explanation: "Simulation phishing = formation, pas sanction. Sanctioner = climat de peur + employes cachent les erreurs reelles. Standard : formation flash immediate apres clic (cf saison remediation-flash). Felicitation si signalement."
+
+  - question: "Quelle frequence d'information cyber du CSE recommandee ?"
+    choices:
+      - { id: "a", label: "Jamais", correct: false }
+      - { id: "b", label: "Bilan annuel + information ad-hoc apres incident significatif (sous 7 jours) + consultation pour modifications majeures", correct: true }
+      - { id: "c", label: "Tous les jours", correct: false }
+    explanation: "Frequence equilibree : bilan annuel (KPI cyber, formation, incidents), information ad-hoc apres incident (sous 7 jours, statistiques), consultation pour changements majeurs (politique, surveillance, IA). Pas trop, pas pas assez."
+---
+
+> 💡 **Pour aller plus loin** : **CSE.fr** publie des guides
+> gratuits cyber pour les representants. **DGT (Direction
+> Generale du Travail)** a un guide "Risques numeriques en
+> entreprise". **Lucca CSE** ou **MeetUp** facilitent la
+> communication CSE-direction.
