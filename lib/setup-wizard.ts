@@ -60,10 +60,6 @@ function hasTag(s: SaisonForSuggestion, tag: string): boolean {
   return s.tags.includes(tag);
 }
 
-function hasAnyTag(s: SaisonForSuggestion, tags: string[]): boolean {
-  return tags.some((t) => s.tags.includes(t));
-}
-
 // --- moteur principal ------------------------------------------------------
 
 /**
