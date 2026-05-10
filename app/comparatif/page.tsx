@@ -27,6 +27,7 @@ import { Fragment } from "react";
 import Link from "next/link";
 import { countExpertEpisodes } from "@/lib/content-availability";
 import HexBackdrop from "@/components/HexBackdrop";
+import { BreadcrumbJsonLd } from "@/lib/seo/jsonld";
 
 const META_TITLE = "Comparatif honnête - HumaniX vs concurrents | Humanix Académie";
 const META_DESCRIPTION =
@@ -35,9 +36,11 @@ const META_DESCRIPTION =
 export const metadata = {
   title: META_TITLE,
   description: META_DESCRIPTION,
+  alternates: { canonical: "/comparatif" },
   openGraph: {
     title: META_TITLE,
     description: META_DESCRIPTION,
+    url: "/comparatif",
     type: "website",
     images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
   },
@@ -737,6 +740,12 @@ export default function ComparatifPage() {
 
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", path: "/" },
+          { name: "Comparatif", path: "/comparatif" },
+        ]}
+      />
       {/* ============================================================
           1. HERO - invitation a la comparaison transparente
           ============================================================ */}

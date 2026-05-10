@@ -23,11 +23,29 @@
 
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
+import { BreadcrumbJsonLd } from "@/lib/seo/jsonld";
+
+const DAF_TITLE = "Pour les DAF — Éviter FOVI, reporting NIS2 prêt COMEX | Humanix Académie";
+const DAF_DESC =
+  "Pour les Directeurs Administratifs et Financiers : éviter les FOVI / deepfakes qui coûtent 200 k€ en moyenne, reporting NIS2/RGPD prêt pour COMEX, ROI calculé en €. La cybersécurité humaine en langage de directeur financier.";
 
 export const metadata = {
-  title: "Pour les DAF - Humanix Académie",
-  description:
-    "Pour les Directeurs Administratifs et Financiers : éviter les FOVI / deepfakes qui coûtent 200 k€ en moyenne, reporting NIS2/RGPD prêt pour COMEX, ROI calculé en €. La cybersécurité humaine en langage de directeur financier.",
+  title: DAF_TITLE,
+  description: DAF_DESC,
+  alternates: { canonical: "/pour-les-daf" },
+  openGraph: {
+    title: DAF_TITLE,
+    description: DAF_DESC,
+    type: "website",
+    url: "/pour-les-daf",
+    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cyber pour DAF — Éviter FOVI, reporting NIS2",
+    description: DAF_DESC,
+    images: ["/logo-humanix-academie-512.png"],
+  },
 };
 
 const PROMESSES = [
@@ -113,6 +131,12 @@ const PROMESSES = [
 export default function DafLandingPage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", path: "/" },
+          { name: "Pour les DAF", path: "/pour-les-daf" },
+        ]}
+      />
       {/* ================================================================
           1. HERO
           ================================================================ */}
