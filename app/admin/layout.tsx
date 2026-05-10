@@ -28,6 +28,7 @@ import {
 } from "@/lib/subscription-state";
 import AdminSidebar from "@/components/AdminSidebar";
 import AdminTopBar from "@/components/AdminTopBar";
+import AdminSearchBox from "@/components/admin/AdminSearchBox";
 
 export const dynamic = "force-dynamic";
 
@@ -83,6 +84,10 @@ export default async function AdminLayout({
       {/* Sidebar slim 56px desktop (expand 240px au hover) avec sections
           accordeon, drawer mobile. Cf. components/AdminSidebar.tsx. */}
       <AdminSidebar />
+
+      {/* Palette de commandes globale (ctrl/cmd+K). Rendue au niveau du
+          layout pour etre disponible sur toutes les pages /admin/*. */}
+      <AdminSearchBox />
 
       {/* Zone principale : top bar (breadcrumb seul) + content.
           Offset lg:pl-14 (56px) = largeur slim de la sidebar. La sidebar
