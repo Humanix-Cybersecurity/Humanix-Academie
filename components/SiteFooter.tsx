@@ -61,7 +61,7 @@ const PRODUIT: FooterLink[] = [
 const SOLUTIONS: FooterLink[] = [
   { href: "/dpo", label: "Espace DPO", emoji: "🛡" },
   { href: "/pour-les-daf", label: "Pour les DAF", emoji: "💼" },
-  { href: "/lancement-oss", label: "Lancement open source", emoji: "🌱" },
+  { href: "/ressources", label: "Ressources gratuites", emoji: "📂" },
   { href: "/communaute", label: "Communauté", emoji: "🤝" },
   { href: "/manifeste", label: "Manifeste", emoji: "📜" },
   { href: "/urgence-cyber", label: "Urgence cyber", emoji: "🚨" },

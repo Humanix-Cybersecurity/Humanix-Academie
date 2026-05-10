@@ -63,6 +63,23 @@ const nextConfig = {
   async rewrites() {
     return [{ source: "/health", destination: "/api/health" }];
   },
+
+  // Redirects 301 - kill list de pages publiques fusionnees / regroupees.
+  // Cf. ROADMAP-SIMPLICITE.md (Sprint 3a) : reduction de la surface
+  // editoriale pour clarifier l'experience visiteur.
+  async redirects() {
+    return [
+      {
+        // /lancement-oss etait une landing dediee au lancement open-source
+        // (mai 2026). Le contenu est maintenant integre dans /manifeste,
+        // qui couvre la mission + l'aspect open-source ensemble. On conserve
+        // le SEO via redirection permanente.
+        source: "/lancement-oss",
+        destination: "/manifeste",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

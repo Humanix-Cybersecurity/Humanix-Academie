@@ -101,10 +101,10 @@ const SOLUTIONS_ITEMS: DropdownItem[] = [
     emoji: "💼",
   },
   {
-    href: "/lancement-oss",
-    label: "Open source",
-    description: "Lancement AGPLv3 - mardi 26 mai 2026",
-    emoji: "🌱",
+    href: "/ressources",
+    label: "Ressources",
+    description: "Cyber-météo, observatoire fuites, audit flash, anecdotes",
+    emoji: "📂",
   },
   {
     href: "/securite",

@@ -762,7 +762,7 @@ function Trust({ children }: { children: ReactNode }) {
 
 // Palette 6 saisons cyclees (cyan/emerald/amber/purple/rose/indigo) pour
 // donner du caractere aux 9 cartes "Pourquoi Humanix" - la grammaire
-// visuelle est partagee avec /comparatif, /librairie, /lancement-oss.
+// visuelle est partagee avec /comparatif, /librairie, /manifeste.
 const DIFF_PALETTES = [
   {
     bg: "from-cyan-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-cyan-950/40",

@@ -38,10 +38,10 @@ const REBONDS = [
     href: "/manifeste",
   },
   {
-    emoji: "🌱",
-    label: "Lancement open source",
-    description: "Mardi 26 mai 2026 - compte à rebours",
-    href: "/lancement-oss",
+    emoji: "📂",
+    label: "Ressources gratuites",
+    description: "Cyber-météo, observatoire fuites, audit flash, anecdotes",
+    href: "/ressources",
   },
   {
     emoji: "💬",
