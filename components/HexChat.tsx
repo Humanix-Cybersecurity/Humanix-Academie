@@ -28,11 +28,30 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 
 type ChatRole = "user" | "assistant";
-type ChatMessage = { role: ChatRole; content: string };
+type Citation = {
+  title: string;
+  sourcePath: string;
+  url: string | null;
+  score: number;
+};
+type ChatMessage = {
+  role: ChatRole;
+  content: string;
+  citations?: Citation[];
+};
 
 const STORAGE_KEY = "humanix:hex:conversation";
 const FAB_DISMISSED_KEY = "humanix:hex:fab-tooltip-dismissed";
 const MAX_HISTORY = 20;
+
+// Extrait le slug d'episode quand l'user est sur une page module.
+// Pattern : /apprendre/<saison>/<episode>
+function extractCurrentModule(pathname: string | null): string | undefined {
+  if (!pathname) return undefined;
+  const m = pathname.match(/^\/apprendre\/([^/]+)\/([^/?#]+)/);
+  if (!m) return undefined;
+  return `${m[1]}/${m[2]}`;
+}
 
 const GREETING: ChatMessage = {
   role: "assistant",
@@ -152,7 +171,10 @@ export default function HexChat({ enabled }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: payloadMessages,
-          context: { currentRoute: pathname ?? undefined },
+          context: {
+            currentRoute: pathname ?? undefined,
+            currentModule: extractCurrentModule(pathname),
+          },
         }),
         signal: abortRef.current.signal,
       });
@@ -173,6 +195,7 @@ export default function HexChat({ enabled }: Props) {
       const decoder = new TextDecoder();
       let buffer = "";
       let assistantContent = "";
+      let assistantCitations: Citation[] | undefined;
 
       while (true) {
         const { done, value } = await reader.read();
@@ -191,14 +214,31 @@ export default function HexChat({ enabled }: Props) {
             const parsed = JSON.parse(payload) as {
               delta?: string;
               error?: string;
+              citations?: Citation[];
             };
             if (parsed.error) throw new Error(parsed.error);
+            if (parsed.citations) {
+              assistantCitations = parsed.citations;
+              setMessages((prev) => {
+                const next = prev.slice(0, -1);
+                next.push({
+                  role: "assistant",
+                  content: assistantContent,
+                  citations: assistantCitations,
+                });
+                return next;
+              });
+            }
             if (parsed.delta) {
               assistantContent += parsed.delta;
               setMessages((prev) => {
                 // Mise a jour de la derniere bulle assistant uniquement
                 const next = prev.slice(0, -1);
-                next.push({ role: "assistant", content: assistantContent });
+                next.push({
+                  role: "assistant",
+                  content: assistantContent,
+                  citations: assistantCitations,
+                });
                 return next;
               });
             }
@@ -380,7 +420,7 @@ export default function HexChat({ enabled }: Props) {
 function Bubble({ message }: { message: ChatMessage }) {
   const isUser = message.role === "user";
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+    <div className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}>
       <div
         className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap break-words ${
           isUser
@@ -390,6 +430,37 @@ function Bubble({ message }: { message: ChatMessage }) {
       >
         {message.content || (isUser ? "" : "…")}
       </div>
+      {/* Citations RAG (Phase 3) : sous la bulle Hex, badges des sources */}
+      {!isUser && message.citations && message.citations.length > 0 && (
+        <div className="mt-1.5 flex flex-wrap gap-1 max-w-[85%]">
+          <span
+            className="text-[10px] text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider mr-1"
+            aria-label="Sources Humanix"
+          >
+            📚 Sources :
+          </span>
+          {message.citations.slice(0, 5).map((c, i) =>
+            c.url ? (
+              <a
+                key={i}
+                href={c.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[10px] bg-accent-50 dark:bg-accent-950/40 text-accent-700 dark:text-accent-200 border border-accent-200 dark:border-accent-900 rounded-full px-2 py-0.5 hover:bg-accent-100 dark:hover:bg-accent-950/60 transition"
+              >
+                {c.title}
+              </a>
+            ) : (
+              <span
+                key={i}
+                className="text-[10px] bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 rounded-full px-2 py-0.5"
+              >
+                {c.title}
+              </span>
+            ),
+          )}
+        </div>
+      )}
     </div>
   );
 }

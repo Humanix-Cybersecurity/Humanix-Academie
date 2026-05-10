@@ -220,8 +220,32 @@ OLLAMA_BASE_URL=http://localhost:11434
 HEX_AI_MODEL=mistral:7b-instruct
 ```
 
-Roadmap des phases suivantes (RAG sur les 184 modules MDX, coach
-personnalisé, roleplay scénarios, voice, agentique) dans le document
+**RAG sur les 184 modules MDX** (Phase 3) : Hex cite les modules
+Humanix pertinents au lieu d'inventer. Repose sur PostgreSQL +
+extension `pgvector` + Mistral `mistral-embed`.
+
+```bash
+# Pré-requis : extension pgvector disponible sur la DB
+# (par défaut sur Scaleway PostgreSQL managé, à activer sinon)
+
+# Indexation initiale (~1000 chunks, ~$0.10 en cloud, ou gratuit via
+# free tier "Experiment" pour ce volume one-shot) :
+docker compose exec app npm run hex:reindex
+
+# Dry-run (liste les fichiers sans appel API) :
+docker compose exec app npm run hex:reindex:dry
+```
+
+Le RAG est **optionnel** : si pgvector n'est pas dispo, Hex marche
+quand même sans citations. Réindex à relancer après chaque ajout de
+module MDX (idempotent).
+
+Adaptation du ton automatique (Phase 2) : Hex repère ta progression
+(score quiz moyen 30 jours) et adapte son registre — encouragement
+si score < 50 %, challenge si ≥ 80 %.
+
+Roadmap des phases suivantes (coach personnalisé, roleplay scénarios,
+voice, agentique) dans le document
 `00_Business_Strategie/01_Roadmap_Produit/ROADMAP_HEX_IA.md`.
 
 ---
