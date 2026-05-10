@@ -107,6 +107,91 @@ export async function resetSaisonsOrder() {
   return { ok: true };
 }
 
+/**
+ * Bulk action sur plusieurs saisons en une fois (selection multiple cote UI).
+ *
+ * Permet a l'admin de cliquer "Activer toute la categorie RH" sans avoir a
+ * faire un toggle par saison. Une seule transaction logique cote BDD.
+ *
+ * Action :
+ *   - "activate"        : isActive = true
+ *   - "deactivate"      : isActive = false
+ *   - "make-mandatory"  : isMandatory = true (n'altere pas isActive)
+ *   - "drop-mandatory"  : isMandatory = false
+ */
+export async function bulkSaisonAction(
+  saisonIds: string[],
+  action:
+    | "activate"
+    | "deactivate"
+    | "make-mandatory"
+    | "drop-mandatory",
+) {
+  const { tenantId } = await requireAdmin();
+  if (!Array.isArray(saisonIds) || saisonIds.length === 0) {
+    return { ok: false, count: 0 };
+  }
+
+  // Map de l'action vers les patches BDD
+  const patch =
+    action === "activate"
+      ? { isActive: true }
+      : action === "deactivate"
+        ? { isActive: false }
+        : action === "make-mandatory"
+          ? { isMandatory: true }
+          : { isMandatory: false };
+
+  // On upsert chaque ligne pour garantir la creation si la config n'existait
+  // pas encore (saison globale jamais touchee = pas de TenantSaisonConfig).
+  await Promise.all(
+    saisonIds.map((saisonId) =>
+      db.tenantSaisonConfig.upsert({
+        where: { tenantId_saisonId: { tenantId, saisonId } },
+        create: { tenantId, saisonId, ...patch },
+        update: patch,
+      }),
+    ),
+  );
+
+  revalidatePath("/admin/modules");
+  revalidatePath("/apprendre");
+  return { ok: true, count: saisonIds.length };
+}
+
+/**
+ * Modifie les tags d'une saison. Reservee aux SUPERADMIN (les tags sont
+ * partages entre tous les tenants car ils servent au filtrage du catalogue
+ * global). Pour personnaliser cote tenant, utiliser bulkSaisonAction.
+ *
+ * Note : pour les saisons custom du tenant (tenantId match), un ADMIN du
+ * tenant peut modifier ses propres tags.
+ */
+export async function setSaisonTags(saisonId: string, tags: string[]) {
+  const ctx = await requireAdmin();
+  // Lookup pour decider du droit d'edition
+  const saison = await db.saison.findUnique({ where: { id: saisonId } });
+  if (!saison) throw new Error("saison_not_found");
+  const isCustomOwn = saison.tenantId === ctx.tenantId;
+  const isGlobal = saison.tenantId === null;
+  if (!isCustomOwn && !(isGlobal && ctx.role === "SUPERADMIN")) {
+    throw new Error("forbidden");
+  }
+  const cleaned = Array.from(
+    new Set(
+      (tags ?? [])
+        .map((t) => String(t).trim().toLowerCase())
+        .filter((t) => t.length > 0 && t.length <= 60),
+    ),
+  ).slice(0, 20); // garde-fous : max 20 tags, longueur max 60
+  await db.saison.update({
+    where: { id: saisonId },
+    data: { tags: cleaned },
+  });
+  revalidatePath("/admin/modules");
+  return { ok: true, tags: cleaned };
+}
+
 // =====================================================
 // USERS
 // =====================================================
