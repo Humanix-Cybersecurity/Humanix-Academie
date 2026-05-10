@@ -17,10 +17,27 @@
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
+const COMMU_TITLE = "Communauté — Rejoins l'écosystème cyber souverain | Humanix Académie";
+const COMMU_DESC =
+  "Rejoins la communauté Humanix Académie : Discord, GitHub Discussions, contribue un module MDX, un connecteur, ou simplement utilise. Open source AGPLv3, écosystème cyber souverain français.";
+
 export const metadata = {
-  title: "Communaute - Humanix Academie",
-  description:
-    "Rejoindre la communaute Humanix Academie : Discord, GitHub Discussions, contribuer un module MDX, un connecteur, ou simplement utiliser. Open source AGPLv3, ecosysteme cyber souverain francais.",
+  title: COMMU_TITLE,
+  description: COMMU_DESC,
+  alternates: { canonical: "/communaute" },
+  openGraph: {
+    title: COMMU_TITLE,
+    description: COMMU_DESC,
+    type: "website",
+    url: "/communaute",
+    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Communauté Humanix — Cyber souverain français",
+    description: COMMU_DESC,
+    images: ["/logo-humanix-academie-512.png"],
+  },
 };
 
 const PORTES = [

@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import AnecdoteSubscribeForm from "@/components/AnecdoteSubscribeForm";
+import { ArticleJsonLd, BreadcrumbJsonLd } from "@/lib/seo/jsonld";
 
 const CATEGORY_BADGES: Record<
   string,
@@ -90,6 +91,23 @@ export default async function AnecdoteDetailPage({
 
   return (
     <div className="bg-gradient-to-b from-primary-500/5 via-white to-white dark:from-slate-900 dark:via-slate-900 dark:to-slate-900">
+      {/* SEO: Article + BreadcrumbList JSON-LD. Active les rich results
+          NewsArticle/Article et le fil d'Ariane dans la SERP. */}
+      <ArticleJsonLd
+        headline={a.title}
+        description={a.summary.slice(0, 160)}
+        url={`/anecdotes/${a.slug}`}
+        datePublished={a.incidentDate.toISOString()}
+        dateModified={a.updatedAt?.toISOString() ?? a.incidentDate.toISOString()}
+        section={badge.label}
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", path: "/" },
+          { name: "Cyber-Anecdote du Lundi", path: "/anecdotes" },
+          { name: a.title, path: `/anecdotes/${a.slug}` },
+        ]}
+      />
       <article className="max-w-3xl mx-auto px-4 py-12">
         {/* Header */}
         <header className="mb-8">
