@@ -1,0 +1,377 @@
+---
+title: "Construire une gouvernance cyber legere"
+durationMinutes: 7
+persona: "manager"
+objective: "Etablir une gouvernance cyber adaptee aux PME : roles, comites, frequence, documentation, sans bureaucratie"
+xpReward: 60
+scenario: |
+  Tu es DG PME 80 personnes. NIS2 demande une gouvernance
+  cyber. Tu hesites entre :
+
+  - Comite cyber tous les jours (lourd)
+  - Aucune gouvernance formelle (risque)
+  - Gouvernance legere adaptee PME
+
+  Tu fais quoi ?
+choices:
+  - id: "a"
+    label: "Aucune formalisation, on gere au quotidien"
+    outcome: "bad"
+    feedback: "DANGER. NIS2 article 21 mesure 1 (politiques d'analyse risques). Sans gouvernance documentee : preuves inexistantes pour audit ANSSI. Plus : responsabilite article 20 non assumable sans traces."
+    points: -25
+  - id: "b"
+    label: "Gouvernance legere : comite cyber trimestriel + politique cyber 1 page + RSSI/DSI referent + reporting COMEX. Documentation simple. Standard NIS2 PME"
+    outcome: "good"
+    feedback: "Approche pro. Equilibre : structure documentee (audit-ready) + frequence raisonnable (pas bureaucratie) + roles clairs + reporting. Standard NIS2 article 21. Adapte PME 80 pers."
+    points: 40
+  - id: "c"
+    label: "Comite cyber hebdomadaire + 50 procedures detaillees"
+    outcome: "neutral"
+    feedback: "Trop bureaucratique pour PME 80. Equipes saturent, application difficile. Pour ETI/grand groupe : OK. Pour PME : gouvernance legere + adaptive."
+    points: 10
+  - id: "d"
+    label: "Je copie la gouvernance d'une grande entreprise"
+    outcome: "bad"
+    feedback: "INADAPTE. Grande entreprise = ressources et complexity. PME = besoin de simplicite + adaptation contexte. Gouvernance contextuelle = standard."
+    points: -10
+debrief: |
+  La **gouvernance cyber** est l'ensemble des structures,
+  roles, processus qui permettent de piloter la cyber dans
+  l'entreprise. NIS2 article 21 mesure 1 + ISO 27001 +
+  recommendation ANSSI.
+
+  Pour PME : gouvernance LEGERE mais EFFECTIVE.
+
+  **Les 4 piliers de la gouvernance cyber :**
+
+  **Pilier 1 : Politique de securite**
+
+  Document fondateur :
+
+  **Politique cyber 1 page** (PME, version courte) :
+  - **Engagement** direction (signature DG)
+  - **Objectifs** : conformite NIS2, RGPD, protection
+    business
+  - **Roles** : DG, RSSI, DSI, employes
+  - **Principes** : moindre privilege, defense en
+    profondeur, transparence
+  - **Revue** annuelle
+
+  **Politique cyber detaille** (5-10 pages, ETI / NIS2 essentiel) :
+  - Toutes les sections du 1 page +
+  - Referentiel applicable (NIS2, ISO 27001, NIST CSF)
+  - Periodicite des actions
+  - Procedures clefs (incident, audit)
+  - Annexes (charte, plans)
+
+  **Pilier 2 : Comite cyber (organe decisionnaire)**
+
+  **Composition** (PME 80 pers) :
+  - **DG** (decisionnaire final)
+  - **RSSI** (ou RSSI temps partage) - presidence operationnelle
+  - **DSI** (operations IT)
+  - **DAF** (budget + risk financier)
+  - **DRH** (formation + onboarding/offboarding)
+  - **DPO** (RGPD, si > 250 employes ou critique)
+  - **Representant metier** (rotation)
+
+  **Frequence** :
+  - **Trimestriel** : standard PME
+  - **Mensuel** : phase de mise en place ou crise
+  - **Hebdomadaire** : pendant incident majeur seulement
+
+  **Ordre du jour type** (1h trimestriel) :
+  - Indicateurs cyber (KPI)
+  - Incidents (depuis dernier comite)
+  - Avancement plan d'action
+  - Risques nouveaux
+  - Budgets / decisions
+  - Q&A
+
+  **PV signe** par les participants. Conservation 5 ans.
+
+  **Pilier 3 : Roles et responsabilites (RACI)**
+
+  | Activite | DG | RSSI | DSI | DAF | DRH | Manager |
+  |---|---|---|---|---|---|---|
+  | Politique cyber | A | R | C | C | C | I |
+  | Plan d'action | A | R | R | C | C | I |
+  | Budget cyber | A | R | C | A | I | I |
+  | Audit risques | A | R | C | I | I | C |
+  | Plan incident | A | R | R | I | C | C |
+  | Formation cyber | A | R | I | I | A | I |
+  | Charte informatique | A | C | C | I | R | I |
+  | Reporting COMEX | C | R | I | C | I | I |
+
+  R = Responsable / A = Approbateur / C = Consulte / I = Informe
+
+  **Pilier 4 : Reporting**
+
+  **Reporting trimestriel COMEX** :
+  - **Etat des lieux** KPI (1 slide)
+  - **Incidents** + lecons (1 slide)
+  - **Avancement** plan (1 slide)
+  - **Risques** & decisions (1 slide)
+  - **Budget** : depenses vs prevu
+
+  Format simple, 5-10 slides max, 30 minutes max (cf ep 01).
+
+  **Reporting annuel COMEX/Conseil** :
+  - Bilan annee (10-15 slides)
+  - Maturity cyber (echelle 1-5)
+  - Conformite (NIS2, RGPD, autres)
+  - Plan annee suivante
+  - Budget propose
+
+  **Reporting trimestriel CSE** :
+  - Statistiques anonymisees (incidents, formation)
+  - Sans donnees individuelles (cf cyber-rh ep 06)
+
+  **Documentation cyber complete (PME) :**
+
+  **Documents obligatoires** :
+
+  1. **Charte informatique** (employes signent)
+  2. **Politique de securite** (1-10 pages)
+  3. **Plan de reponse a incident** (5-15 pages)
+  4. **Plan de continuite (PCA)** (10-20 pages)
+  5. **Analyse des risques** (EBIOS RM ou simplifie)
+  6. **Registre RGPD** (article 30)
+  7. **Procedure de gestion des acces** (RBAC)
+  8. **Procedure offboarding**
+  9. **Plan de formation cyber**
+  10. **Procedure de gestion des fournisseurs**
+
+  **Volume** : 30-100 pages au total.
+
+  **Outil** : Notion / Confluence / SharePoint pour
+  centralisation.
+
+  **Documents d'audit** :
+  - PV de comites cyber
+  - Rapports d'incidents
+  - Tests de sauvegardes
+  - Audits internes
+  - Formations effectuees
+
+  **Conservation** : 5-10 ans (NIS2, RGPD, fiscal).
+
+  **Le piege "gouvernance = bureaucratie" :**
+
+  Faux si bien dimensionne. PME 80 pers :
+  - **1h trimestrielle** comite = 4h/an = 0.05% du temps
+  - **30 pages** doc = pas une bibliotheque
+  - **Reporting** existant a structurer
+
+  Mais bureaucratique si :
+  - Comite hebdomadaire (250h/an = 0.5 ETP)
+  - Procedures de 200 pages
+  - Formulaires partout
+
+  **Le piege "on n'a pas le temps" :**
+
+  Gouvernance cyber = **investissement** qui evite les
+  incidents (3-10x plus chronophages a gerer).
+
+  Sans gouvernance :
+  - Incidents non detectes
+  - Reaction chaotique
+  - Audit ANSSI : non-conforme = sanctions
+  - Cyber-assurance : exclusions
+
+  Avec gouvernance legere :
+  - Pilotage proactif
+  - Reaction structuree
+  - Conformite assuree
+
+  **Le piege "le RSSI fait tout, on s'en moque" :**
+
+  Faux. NIS2 article 20 : responsabilite **personnelle**
+  dirigeants. Le COMEX doit :
+  - **Approuver** politique
+  - **Superviser** mise en oeuvre
+  - **Suivre** efficacite
+  - **Se former** cyber
+
+  Sans implication COMEX = sanctions individuelles
+  possibles.
+
+  **Modele de politique cyber 1 page :**
+
+  ```
+  POLITIQUE DE CYBERSECURITE
+
+  ENGAGEMENT DE LA DIRECTION
+
+  Conscient des risques cyber, [Entreprise] s'engage a :
+
+  - Proteger les donnees de ses clients, employes et
+    partenaires
+  - Garantir la conformite NIS2, RGPD et autres reglementations
+    applicables
+  - Investir dans les mesures techniques et organisationnelles
+    appropriees
+  - Former continuellement ses equipes
+  - Reagir efficacement aux incidents
+
+  ROLES ET RESPONSABILITES
+
+  - Direction Generale : approbation et supervision
+  - RSSI : pilotage operationnel
+  - DSI : mise en oeuvre technique
+  - Tous les employes : application des bonnes pratiques
+
+  PRINCIPES
+
+  - Moindre privilege (acces minimum necessaire)
+  - Defense en profondeur (multiples couches)
+  - Transparence (signalement des incidents)
+  - Amelioration continue
+
+  GOUVERNANCE
+
+  - Comite cyber trimestriel
+  - Reporting annuel COMEX
+  - Audit periodique
+  - Revue de cette politique : annuelle
+
+  Signature DG : ___________ Date : ___________
+  ```
+
+  Une page suffit pour PME 80 pers. Conformite NIS2 +
+  ISO 27001 (au niveau gouvernance).
+
+  **Cas reels :**
+
+  **Cas 1 - PME 2024 (gouvernance reussie)**
+
+  PME 80 pers a mis en place :
+  - Politique cyber 1 page (signee DG)
+  - Comite trimestriel
+  - RSSI temps partage 1.5j/sem
+  - Reporting trimestriel
+
+  Apres 1 an :
+  - Audit ANSSI : conforme
+  - 0 incident majeur
+  - Cyber-assurance : couverture validee
+  - COMEX : confiant et engage
+
+  **Cas 2 - PME 2023 (echec sans gouvernance)**
+
+  PME 100 pers : aucune gouvernance formelle. RSSI fait
+  tout sans comite. Audit ANSSI :
+  - Pas de PV de comite cyber
+  - Pas de politique signee
+  - Pas de plan d'action documente
+  - Pas de reporting COMEX
+
+  Sanctions :
+  - Mise en demeure
+  - Audit obligatoire annuel 3 ans
+  - 50 K EUR amende
+  - Reputation degradee
+
+  Action post : gouvernance legere mise en place sous 6 mois.
+
+  **Cas 3 - PME 2024 (sur-bureaucratie)**
+
+  PME 60 pers a copie gouvernance grand groupe :
+  - Comite hebdo
+  - 10 sous-comites
+  - 200 pages procedures
+  - 5 ETP focalises gouvernance
+
+  Cout : 300K EUR/an de gouvernance. Cyber operationnelle
+  : neglagee. Incident majeur en 12 mois.
+
+  Lecon : adaptation au contexte > copie modele inadapte.
+
+  **Cas 4 - Hopital 2024 (gouvernance HDS)**
+
+  Hopital 200 pers (entite essentielle NIS2) : gouvernance
+  plus structuree :
+  - Comite cyber mensuel
+  - Politique 15 pages
+  - 30 procedures
+  - RSSI permanent + 2 specialistes
+  - Audit ANSSI annuel
+
+  Cout : 200K EUR/an gouvernance + cyber operationnelle.
+  Justifie par criticite (donnees patients).
+
+  **NIS2 - exigences gouvernance :**
+
+  Article 21 mesure 1 :
+  - **Politique d'analyse des risques**
+  - **Politique de securite des SI**
+
+  Article 21 mesure 6 :
+  - **Politiques** d'evaluation efficacite
+
+  Article 20 :
+  - **Approbation** par organes de direction
+  - **Supervision**
+  - **Formation continue** cyber
+
+  **Pour PME entite IMPORTANTE** : gouvernance legere
+  suffisante (proportionnee).
+
+  **Pour PME entite ESSENTIELLE** : gouvernance plus
+  structuree (audit annuel, RSSI dedie).
+
+  **Outils pour la gouvernance :**
+
+  - **CISO Assistant** (intuitem, OSS) : politique +
+    gouvernance + reporting integres
+  - **Notion / Confluence** : centralisation documentation
+  - **Powerpoint** : templates COMEX
+  - **Excel / Google Sheets** : registre RGPD, plans
+    d'action
+
+  Cout : 0-200 EUR/mois pour PME.
+
+  **La regle d'or :**
+
+  > **Gouvernance cyber legere mais effective. PME 80 pers :
+  > comite trimestriel + politique 1 page + RSSI referent
+  > + reporting COMEX. Documentation 30 pages max.
+  > Adaptation au contexte (proportionnee). Sans
+  > gouvernance : non-conforme NIS2 + responsabilite
+  > engagee. Avec gouvernance excessive : bureaucratie.**
+quiz:
+  - question: "Frequence comite cyber recommandee pour PME 80 pers ?"
+    choices:
+      - { id: "a", label: "Hebdomadaire", correct: false }
+      - { id: "b", label: "Trimestriel (4x/an, 1h chacun = 4h total/an). Mensuel pendant phase de mise en place ou crise. PV signe + conservation 5 ans", correct: true }
+      - { id: "c", label: "Annuel", correct: false }
+    explanation: "Standard PME : trimestriel (1h x 4 = 4h/an = 0.05% du temps). Mensuel pendant mise en place ou crise. Hebdomadaire = bureaucratie inutile pour PME 80 pers. Annuel = insuffisant pour piloter. PV signe par participants, conservation 5 ans (audit NIS2)."
+
+  - question: "Documentation cyber minimale obligatoire pour PME ?"
+    choices:
+      - { id: "a", label: "Aucune", correct: false }
+      - { id: "b", label: "Charte informatique + Politique cyber + Plan reponse incident + Plan continuite + Analyse risques + Registre RGPD. Total 30 pages typique", correct: true }
+      - { id: "c", label: "200 pages", correct: false }
+    explanation: "Documentation minimale PME : Charte informatique (employes signent), Politique cyber (1-10 pages), Plan reponse incident (5-15 pages), Plan continuite (10-20 pages), Analyse risques (EBIOS RM ou simplifie), Registre RGPD article 30. Total 30 pages typique. Volume bureaucratique > 100 pages pour PME 80 pers."
+
+  - question: "NIS2 article 20 demande quoi du COMEX ?"
+    choices:
+      - { id: "a", label: "Rien", correct: false }
+      - { id: "b", label: "Approbation politique cyber + supervision + suivi efficacite + formation continue cyber. Responsabilite PERSONNELLE des dirigeants", correct: true }
+      - { id: "c", label: "Que budget", correct: false }
+    explanation: "Article 20 NIS2 : 4 obligations COMEX = approbation des mesures, supervision mise en oeuvre, suivi efficacite, formation continue cyber. Responsabilite PERSONNELLE des dirigeants (sanctions individuelles : interdiction d'exercer). Sans implication COMEX = pas conforme + responsabilite engagee."
+
+  - question: "PME a copie gouvernance grand groupe (50 pages, hebdo, 5 ETP), consequence ?"
+    choices:
+      - { id: "a", label: "Tres pro", correct: false }
+      - { id: "b", label: "Sur-bureaucratie inadaptee : 300K EUR/an gouvernance, cyber operationnelle negligee, incident majeur en 12 mois. Adaptation au contexte = essentielle", correct: true }
+      - { id: "c", label: "Conforme", correct: false }
+    explanation: "Cas reel : copie modele grand groupe = 300K EUR/an de gouvernance, cyber operationnelle neglagee, incident majeur 12 mois apres. Adaptation au contexte = essentielle. PME 80 pers != grand groupe 5000 pers. Gouvernance LEGERE mais EFFECTIVE = bon equilibre."
+---
+
+> 💡 **Pour aller plus loin** : **CISO Assistant** (intuitem,
+> OSS) integre politique + gouvernance + reporting + audit.
+> **Notion / Confluence** pour centralisation. Templates
+> ANSSI cyber.gouv.fr. Adaptation au contexte > copie
+> modele. Comite trimestriel + politique 1 page + RSSI
+> referent = standard NIS2 PME.

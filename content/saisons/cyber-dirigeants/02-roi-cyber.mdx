@@ -1,0 +1,330 @@
+---
+title: "Calculer le ROI d'une demarche cyber"
+durationMinutes: 7
+persona: "manager"
+objective: "Calculer et presenter le ROI d'une demarche cybersecurite (cout / benefice / risque evite) avec methodologie claire"
+xpReward: 60
+scenario: |
+  Tu es DG d'une PME 80 personnes. Le RSSI demande 60K EUR
+  budget cyber pour 2025. Tu te demandes : ROI ?
+
+  Vous avez :
+  - 0 incident majeur en 5 ans
+  - CA 12M EUR
+  - Donnees clients 5K (RGPD)
+  - Pas de cyber-assurance
+  - Investissements cyber actuels : ~10K EUR/an
+
+  Comment evaluer le ROI ?
+choices:
+  - id: "a"
+    label: "Pas de ROI calcule, c'est juste une depense de plus"
+    outcome: "bad"
+    feedback: "FAUX. La cyber a un ROI calculable et favorable. Methode standard : cout investissement vs cout breach evite (probabilite x impact). Pour PME : ROI typique 5-20x sur 3-5 ans."
+    points: -20
+  - id: "b"
+    label: "Methodologie ALE (Annual Loss Expectancy) : probabilite breach x impact = perte annuelle attendue. Comparaison avec cout investissement. Standard NIST + assurance"
+    outcome: "good"
+    feedback: "Methode pro. ALE = SLE (Single Loss Expectancy) x ARO (Annual Rate of Occurrence). Compare avec investissement = ROI. Pour PME : breach probable 20-40%/an, impact 100-300K = ALE 30-100K. Investissement 60K = ROI positif."
+    points: 40
+  - id: "c"
+    label: "Je benchmarke : '0.5-1% CA pour cyber' donc 60K = 0.5%, c'est OK"
+    outcome: "neutral"
+    feedback: "Reference utile mais incomplete. Le benchmark sert pour positionner, mais le vrai ROI doit etre calcule selon TES specificites (data, secteur, conformite). Methodologie + benchmark = mieux."
+    points: 15
+  - id: "d"
+    label: "Je refuse, on n'a jamais eu d'incident donc inutile"
+    outcome: "bad"
+    feedback: "DESASTREUX. 'Pas d'incident' ne signifie pas 'pas de risque'. 60% PME francaises ont eu incident cyber en 2024. Statistiquement, c'est juste une question de temps. NIS2 + RGPD imposent des mesures."
+    points: -25
+debrief: |
+  Le **ROI cyber** est calculable mais necessite methodologie.
+  Sans ROI :
+  - **Difficile** d'arbitrer budget
+  - **Cyber percue** comme cout, pas investissement
+  - **Pas de** decisions eclairees
+
+  Avec ROI :
+  - **Decision** factuelle
+  - **Justification** au COMEX / conseil
+  - **Comparaison** avec autres investissements
+
+  **La methodologie ALE (Annual Loss Expectancy) :**
+
+  Standard NIST + assurance + audit.
+
+  **Formule** :
+
+  ALE = SLE × ARO
+
+  - **SLE** (Single Loss Expectancy) : cout d'1 incident
+  - **ARO** (Annual Rate of Occurrence) : probabilite/an
+
+  **Exemple PME 80 personnes (CA 12M, 5K clients RGPD)** :
+
+  **Risque 1 : Ransomware**
+  - SLE : 200K EUR (recovery + perte activite + amende)
+  - ARO : 0.20 (20% probabilite annuelle)
+  - **ALE** : 40K EUR/an
+
+  **Risque 2 : Fuite donnees clients (RGPD)**
+  - SLE : 100K EUR (notification + amende + reputation)
+  - ARO : 0.15 (15% probabilite)
+  - **ALE** : 15K EUR/an
+
+  **Risque 3 : Fraude au virement (FOVI)**
+  - SLE : 50K EUR (montant moyen)
+  - ARO : 0.30 (30% - tres frequent)
+  - **ALE** : 15K EUR/an
+
+  **Risque 4 : Indisponibilite ERP / mail**
+  - SLE : 30K EUR (perte activite)
+  - ARO : 0.50 (50% en 1 an)
+  - **ALE** : 15K EUR/an
+
+  **TOTAL ALE annuel** : 85K EUR
+
+  **Cout investissement cyber** : 60K EUR
+
+  **Reduction risque attendue** (avec investissement) :
+  - **30-50%** typique pour PME
+  - ALE residuel : 40-60K EUR
+  - **Economies** : 25-45K EUR/an
+
+  **ROI = (Economies - Investissement) / Investissement**
+
+  Premiere annee :
+  - Economies 30K - Investissement 60K = -30K (deficit)
+  - **ROI -50%**
+
+  Annee 2-5 (investissement amorti) :
+  - Economies 30K / Maintenance 20K = +10K
+  - Plus impact compose (probabilite reduit chaque annee)
+
+  **Sur 3-5 ans** : ROI positif, souvent 5-20x.
+
+  **Les 3 categories de couts a inclure :**
+
+  **Categorie 1 : Couts directs (faciles a chiffrer)**
+
+  - Recovery technique (forensic, restoration)
+  - Communication (clients, presse)
+  - Notification CNIL (procedural)
+  - Amendes (RGPD, NIS2)
+  - Cyber-assurance (deductibles, primes futures)
+
+  **Categorie 2 : Couts indirects (plus difficiles)**
+
+  - **Perte de clients** apres breach (-15-30% selon
+    secteur)
+  - **Reputation** (impact long-terme)
+  - **Productivite** baissee (employees stress, demoralisation)
+  - **Recrutement** rendu difficile (mauvaise reputation)
+  - **Innovation** ralentie (focus sur recovery)
+
+  **Categorie 3 : Couts strategiques**
+
+  - **Perte d'opportunites** business (clients exigeants
+    refusent)
+  - **Avantage** concurrent perdu
+  - **Investissement** rattrapage long
+  - **Confiance** marche degradee
+
+  **Statistiques pour calibrer (sources publics) :**
+
+  **IBM Cost of a Data Breach Report 2024** :
+  - Cout moyen breach mondial : 4.45 M USD
+  - Cout moyen breach PME : 250-500 K USD
+  - Duree de detection : 277 jours
+  - Cout par enregistrement : 165 USD
+
+  **CNIL France 2024** :
+  - Sanction moyenne PME : 30-200 K EUR
+  - Croissance sanctions x2 vs 2023
+
+  **ANSSI France 2024** :
+  - 60% PME ont eu incident cyber 2024
+  - Cout moyen ransomware PME : 80-300 K EUR
+  - Recovery moyen : 18-72 heures
+
+  **Verizon DBIR 2024** :
+  - 60% breaches incluent insider involvement
+  - 50% breaches via phishing
+  - 80% breaches PME
+
+  **Pour le COMEX - presentation ROI :**
+
+  Slide 1 : "Le risque cyber chez nous"
+  - ALE total : 85K EUR/an (SI rien fait)
+  - Top 3 risques + chiffres
+  - Sources statistiques
+
+  Slide 2 : "L'investissement propose"
+  - Plan d'action 3 phases
+  - 60K EUR an 1
+  - 30K EUR maintenance / an apres
+
+  Slide 3 : "Le ROI"
+  - Economies attendues : 30-45K EUR/an
+  - Break-even : 18-24 mois
+  - ROI 5 ans : 200-500%
+
+  Slide 4 : "Comparaison alternatives"
+  - **Sans cyber** : ALE 85K accumule
+  - **Avec cyber** : ALE 40-60K (reduit)
+  - **Cyber-assurance** : couvre une partie (deductibles)
+
+  Slide 5 : "Recommandation"
+  - Approuver budget Phase 1
+  - Investissement = ASSURANCE business
+  - Conformite NIS2 (obligation legale)
+
+  **Le piege "on n'a jamais eu d'incident, ROI = 0" :**
+
+  Faux raisonnement :
+  - **Probabilite** future != probabilite passee (statistiques)
+  - **Risque** s'accumule chaque annee (de toute facon
+    insurmontable a long-terme)
+  - **NIS2 + RGPD** : obligations legales (responsabilite
+    dirigeant)
+
+  Comme une assurance auto : tu ne paies pas pour rien
+  recevoir, tu paies pour eviter le sinistre catastrophique.
+
+  **Le piege "on prendra une cyber-assurance, plus simple" :**
+
+  La cyber-assurance complete mais ne **remplace pas** les
+  mesures :
+  - Assureurs **exigent** des mesures techniques pour
+    couvrir
+  - **Sans** mesures = refus assurance ou prime exorbitante
+  - **Avec** mesures = couverture + prime raisonnable
+
+  Cf ep 03 pour details.
+
+  **Le piege "trop cher, on fait minimum" :**
+
+  Le minimum :
+  - **Conformite** non garantie (NIS2 sanctions)
+  - **Couverture** assurance refusee
+  - **Risque** non maitrise
+
+  Equilibre : Phase 1 quick wins (13 K EUR) deja tres efficace
+  (couvre 50-70% des risques basiques).
+
+  **Cas reels :**
+
+  **Cas 1 - PME tech 2023 (ROI evident apres breach)**
+
+  PME 60 personnes refuse 40K EUR de budget cyber proposes.
+  Argument : "pas d'incident, pas besoin".
+
+  6 mois apres : ransomware. Cout :
+  - Recovery : 80K EUR
+  - Indisponibilite 5j : 40K EUR
+  - Perte clients : 30K EUR
+  - Cabinet juridique : 20K EUR
+  - **Total** : 170K EUR
+
+  Apres incident : budget cyber alloue immediatement (60K
+  EUR/an + cyber-assurance).
+
+  ROI lecon : 4x cout du budget refuse.
+
+  **Cas 2 - PME services 2024 (succes preventif)**
+
+  PME 80 personnes a investi 60K EUR/an cyber sur 3 ans.
+  Resultats :
+  - 0 breach majeur
+  - 5 incidents mineurs (tous geres rapidement)
+  - Conformite NIS2 + RGPD OK
+  - Clients exigeants attires (avantage concurrent)
+  - Recrutement facilite (image)
+
+  Calcul ROI :
+  - Economies estimees : 250K EUR / 3 ans
+  - Investissement : 180K EUR / 3 ans
+  - **ROI** : +40% (+ avantages business indirects)
+
+  **Cas 3 - Hopital prive 2024 (NIS2 audit)**
+
+  Hopital sous-investi en cyber (10K EUR/an au lieu de 100K).
+  Audit ANSSI : non-conforme NIS2 article 21.
+
+  Sanctions :
+  - Mise en demeure
+  - Amende : 200K EUR
+  - Audit annuel obligatoire 3 ans
+  - Reputation degradee
+
+  Cout sous-investissement : 600K+ EUR sur 3 ans = 6x ce qui
+  aurait ete le bon investissement initial.
+
+  **Outils de calcul ROI :**
+
+  - **CISO Assistant** (intuitem, OSS) : module ROI integre
+  - **FAIR Methodology** : cadre de quantification cyber-risk
+  - **NIST CSF** : reference de mesure
+  - **Excel template** : disponible chez ANSSI
+
+  **Approche graduelle pour decider :**
+
+  **Niveau 1 : Calcul rapide (10 minutes)**
+  - Top 3 risques + ALE estime
+  - Cout investissement
+  - ROI brut
+
+  **Niveau 2 : Analyse standard (1-3 jours)**
+  - EBIOS RM ou similaire
+  - Risques quantifies
+  - Plan d'action chiffre
+  - ROI 3-5 ans
+
+  **Niveau 3 : Analyse approfondie (consultant)**
+  - FAIR / NIST CSF / ISO 27005
+  - Quantification fine
+  - Scenarios (best / worst case)
+  - Pour decisions strategiques majeures
+
+  **La regle d'or :**
+
+  > **ROI cyber = ALE (probabilite x impact) - cout
+  > investissement. Pour PME : ROI typique 5-20x sur 3-5
+  > ans. Methodologie standard NIST. Statistiques publiques
+  > pour calibrer. Sans ROI : decision aveugle. Avec ROI :
+  > decision eclairee + justification COMEX.**
+quiz:
+  - question: "ALE (Annual Loss Expectancy) c'est quoi ?"
+    choices:
+      - { id: "a", label: "Antivirus", correct: false }
+      - { id: "b", label: "Cout annuel attendu = SLE (cout 1 incident) x ARO (probabilite/an). Standard NIST pour calculer ROI cyber", correct: true }
+      - { id: "c", label: "Audit", correct: false }
+    explanation: "ALE = Annual Loss Expectancy. Formule : SLE (cout 1 incident) x ARO (probabilite annuelle). Standard NIST + cyber-assurance. Pour PME : ALE total typique 50-150K EUR/an. Investissement reduit ALE de 30-50%. Compare = ROI."
+
+  - question: "Pour PME 80 pers (CA 12M), budget cyber typique ?"
+    choices:
+      - { id: "a", label: "1K EUR", correct: false }
+      - { id: "b", label: "60-120 K EUR/an (0.5-1% CA). Phase 1 quick wins : 13 K EUR (MFA, sauvegardes, plan incident, formation). ROI typique 5-20x sur 3-5 ans", correct: true }
+      - { id: "c", label: "1M EUR", correct: false }
+    explanation: "Budget cyber PME : 0.5-1% CA mondial. Pour PME 12M CA = 60-120 K EUR/an. Phase 1 quick wins (13 K EUR) deja tres efficace (couvre 50-70% risques basiques). ROI typique 5-20x sur 3-5 ans. Cas reel : refus 40K = breach 170K (4x)."
+
+  - question: "Argument 'on n'a jamais eu d'incident, donc pas besoin', valide ?"
+    choices:
+      - { id: "a", label: "Oui logique", correct: false }
+      - { id: "b", label: "Non. Probabilite future != passee. 60% PME francaises ont eu incident en 2024. Plus : NIS2 / RGPD = obligations legales (responsabilite dirigeant)", correct: true }
+      - { id: "c", label: "Si > 5 ans sans incident", correct: false }
+    explanation: "Argument errone. Statistiques : 60% PME francaises eu incident en 2024 (ANSSI). Probabilite future independante du passe. Plus : obligations legales (NIS2 article 20 = responsabilite personnelle dirigeant + RGPD article 32). 'Pas d'incident' != 'pas de risque'."
+
+  - question: "Cyber-assurance remplace les mesures techniques ?"
+    choices:
+      - { id: "a", label: "Oui, plus simple", correct: false }
+      - { id: "b", label: "Non. Assureurs exigent mesures techniques minimales pour couvrir. Sans mesures = refus / prime exorbitante. Cyber + assurance = complementaires", correct: true }
+      - { id: "c", label: "Que pour grandes entreprises", correct: false }
+    explanation: "Cyber-assurance complete les mesures techniques, ne les remplace pas. Assureurs (Hiscox, AIG, etc.) exigent : MFA, sauvegardes, formation, plan incident. Sans ces mesures = refus assurance OU prime exorbitante (10-50K/an pour PME). Avec mesures = couverture raisonnable. Cf ep 03."
+---
+
+> 💡 **Pour aller plus loin** : **CISO Assistant** (intuitem,
+> OSS) module ROI. **FAIR Methodology** quantification
+> cyber-risk. **IBM Cost of Data Breach Report** annuel
+> (gratuit, references). **EBIOS RM** (ANSSI) pour analyse
+> risques. ROI sur 3-5 ans = horizon approprie.
