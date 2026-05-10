@@ -2,18 +2,18 @@
 title: "Les photos perso sur le drive de l'entreprise"
 durationMinutes: 5
 persona: "tous-collaborateurs"
-objective: "Comprendre les regles de stockage de donnees personnelles sur les outils de l'entreprise (OneDrive, SharePoint, drives) et les bonnes pratiques"
+objective: "Comprendre les règles de stockage de données personnelles sur les outils de l'entreprise (OneDrive, SharePoint, drives) et les bonnes pratiques"
 xpReward: 50
 scenario: |
-  Tu es employe en PME. Tu as 200 photos perso (vacances 2023,
+  Tu es employé en PME. Tu as 200 photos perso (vacances 2023,
   anniversaire enfants, photos famille) sur ton OneDrive
   Business pro. Tu les as mises la "pour gagner de la place"
   sur ton iPhone perso.
 
-  Le DSI fait un audit des donnees stockees. Il decouvre :
+  Le DSI fait un audit des données stockees. Il decouvre :
   - 5 Go de photos perso dans ton OneDrive Business
   - Quelques fichiers personnels (CV perso, declaration
-    impots PDF)
+    impôts PDF)
   - Des emails persos archives dans ton Outlook pro
 
   Tu reagis comment ?
@@ -21,75 +21,75 @@ choices:
   - id: "a"
     label: "Pas grave, c'est mes affaires, ils n'ont pas a regarder"
     outcome: "bad"
-    feedback: "FAUX. OneDrive Business = espace de l'entreprise (pas le tien). L'entreprise PEUT auditer (apres information). Plus : RGPD violation (donnees personnelles sur outil pro), risque tu pars = donnees perdues, espace stockage paye par l'entreprise pour usages perso."
+    feedback: "FAUX. OneDrive Business = espace de l'entreprise (pas le tien). L'entreprise PEUT auditer (après information). Plus : RGPD violation (données personnelles sur outil pro), risque tu pars = données perdues, espace stockage paye par l'entreprise pour usages perso."
     points: -20
   - id: "b"
-    label: "Je migre les photos perso vers iCloud / Google Photos perso. Je supprime du OneDrive pro. Je sensibilise mes collegues"
+    label: "Je migre les photos perso vers iCloud / Google Photos perso. Je supprime du OneDrive pro. Je sensibilise mes collègues"
     outcome: "good"
     feedback: "Action correcte. Migration vers solution perso adaptee, suppression du pro, sensibilisation. Standard de bonne pratique. Separation perso/pro = base."
     points: 35
   - id: "c"
-    label: "Je telecharge tout sur une cle USB et je supprime"
+    label: "Je téléchargé tout sur une cle USB et je supprime"
     outcome: "neutral"
     feedback: "Pas optimal. Cle USB = perte facile + pas de sync. iCloud / Google Photos = solution plus pratique long-terme. Mais OK temporaire pour transferer."
     points: 15
   - id: "d"
-    label: "Je laisse, c'est OK ca ne derange personne"
+    label: "Je laisse, c'est OK ça ne derange personne"
     outcome: "bad"
     feedback: "FAUX. Si tu pars : entreprise garde / supprime tes photos perso = conflit. L'entreprise paye le stockage (cher). RGPD : usage detourne. Solution : separation perso/pro maintenant."
     points: -15
 debrief: |
-  Le **stockage de donnees personnelles** sur les outils de
+  Le **stockage de données personnelles** sur les outils de
   l'entreprise (OneDrive, SharePoint, Drive d'entreprise) est
-  une pratique tres frequente mais problematique :
+  une pratique très fréquente mais problematique :
 
-  - **Tres frequent** : 60% des employes ont au moins quelques
+  - **Très fréquent** : 60% des employés ont au moins quelques
     fichiers perso sur leur Drive pro (etude Gartner)
-  - **Tres problematique** : violation principe separation
+  - **Très problematique** : violation principe separation
     perso/pro
 
   **Pourquoi c'est problematique :**
 
-  **Probleme 1 : Espace de l'entreprise**
+  **Problème 1 : Espace de l'entreprise**
 
   - OneDrive Business = paye par l'entreprise (5-25 EUR/user/
     mois)
   - Tes 5 Go de photos perso = ressources facturees a
     l'entreprise
-  - Si tout le monde fait pareil : couts importants
+  - Si tout le monde fait pareil : coûts importants
 
-  **Probleme 2 : Tu n'es pas proprietaire**
+  **Problème 2 : Tu n'es pas propriétaire**
 
   - Si tu pars : OneDrive Business est ferme par l'entreprise
-  - Tes photos perso peuvent etre **perdues** si pas
+  - Tes photos perso peuvent être **perdues** si pas
     sauvegardees ailleurs
   - Conflit en cas de depart conflictuel
 
-  **Probleme 3 : RGPD**
+  **Problème 3 : RGPD**
 
   - L'entreprise a un **registre de traitement** (article 30
-    RGPD) qui ne couvre PAS tes donnees perso
-  - Stocker des donnees perso d'employes (par les employes
-    eux-memes) sur outil pro = traitement non-encadre
-  - **Risque** : non-conformite
+    RGPD) qui ne couvre PAS tes données perso
+  - Stocker des données perso d'employés (par les employés
+    eux-mêmes) sur outil pro = traitement non-encadre
+  - **Risque** : non-conformité
 
-  **Probleme 4 : Audit / decouverte**
+  **Problème 4 : Audit / decouverte**
 
   - L'entreprise peut auditer ses Drives (avec information)
-  - Tes photos perso peuvent etre vues par DSI / RSSI
+  - Tes photos perso peuvent être vues par DSI / RSSI
   - Photos sensibles (famille, sante) exposees
 
-  **Probleme 5 : Confusion**
+  **Problème 5 : Confusion**
 
-  - Tu copies-colles par erreur des donnees pro dans tes
+  - Tu copies-colles par erreur des données pro dans tes
     fichiers perso
   - Tu partages des fichiers pro pensant que c'est perso
-  - Donnees melangees = risque fuite
+  - Données melangees = risque fuite
 
-  **Probleme 6 : Securite**
+  **Problème 6 : Sécurité**
 
-  - Si ton compte pro est compromis = tes donnees perso aussi
-  - Si l'entreprise subit un incident = tes donnees perso
+  - Si ton compte pro est compromis = tes données perso aussi
+  - Si l'entreprise subit un incident = tes données perso
     affectees
   - Exposition non-souhaitee
 
@@ -99,7 +99,7 @@ debrief: |
 
   - Les fichiers / mails par defaut sur outils pro sont
     reputes professionnels
-  - L'employeur peut les consulter sans presence de l'employe
+  - L'employeur peut les consulter sans présence de l'employé
   - SAUF s'ils sont marques "personnel"
 
   **Donc** :
@@ -108,7 +108,7 @@ debrief: |
   - **Photos marquees "perso"** : protegees (sauf
     circonstances exceptionnelles)
 
-  Mais le marquage ne resout pas les **probleme 1, 2, 3, 4**
+  Mais le marquage ne resout pas les **problème 1, 2, 3, 4**
   ci-dessus.
 
   **Les bonnes pratiques :**
@@ -128,8 +128,8 @@ debrief: |
 
   **Pratique 2 : Separation stricte**
 
-  - **Compte perso** = donnees perso
-  - **Compte pro** = donnees pro
+  - **Compte perso** = données perso
+  - **Compte pro** = données pro
   - **JAMAIS** de melange
 
   **Pratique 3 : Charte d'entreprise**
@@ -137,7 +137,7 @@ debrief: |
   La charte informatique definit :
   - Tolerance de quelques fichiers perso temporaires
   - Quantite max acceptable
-  - Procedure si depart (recuperation des fichiers perso)
+  - Procédure si depart (recuperation des fichiers perso)
 
   Souvent : **tolerance** mais **pas droit acquis**.
 
@@ -147,13 +147,13 @@ debrief: |
   1. Audit : qu'est-ce qui est perso ?
   2. Migration : vers solution perso adaptee
   3. Suppression : du compte pro
-  4. **Verification** apres migration
+  4. **Vérification** après migration
 
   **Pratique 5 : Politique departement IT**
 
   L'entreprise peut :
   - **Tolerer** un peu (pragma)
-  - **Encadrer** (max 1 Go, suppression apres depart)
+  - **Encadrer** (max 1 Go, suppression après depart)
   - **Interdire** (politique stricte)
 
   **Selon contexte / culture / secteur.**
@@ -161,61 +161,61 @@ debrief: |
   **Le piege "j'ai paye mon abonnement Microsoft 365" :**
 
   Faux. C'est **l'entreprise** qui paye ton OneDrive Business
-  (compris dans la licence employe). Tu as un usage
+  (compris dans la licence employé). Tu as un usage
   professionnel, pas un droit de stockage personnel.
 
   **Le piege "je vais le marquer 'perso' et c'est OK" :**
 
-  Le marquage protege la confidentialite (l'employeur ne peut
+  Le marquage protege la confidentialité (l'employeur ne peut
   pas LIRE), mais pas :
   - Le **stockage** (l'entreprise paye)
   - Le **comportement de depart** (suppression possible)
-  - La **conformite RGPD** (usage detourne)
+  - La **conformité RGPD** (usage detourne)
 
   **Le piege "tout le monde le fait" :**
 
-  Pratique courante = pas pratique acceptable. La conformite
+  Pratique courante = pas pratique acceptable. La conformité
   RGPD + politique entreprise s'applique a tous.
 
-  **Le piege "ce sont mes photos famille, c'est ma vie privee" :**
+  **Le piege "ce sont mes photos famille, c'est ma vie privée" :**
 
-  Tu as DROIT a ta vie privee (Code travail). Mais tu n'as
+  Tu as DROIT a ta vie privée (Code travail). Mais tu n'as
   PAS droit d'utiliser les outils pro pour la stocker. Vie
-  privee != stockage perso sur outils pro.
+  privée != stockage perso sur outils pro.
 
-  **Cas frequent : depart d'employe**
+  **Cas fréquent : depart d'employé**
 
-  Quand un employe quitte :
-  1. Compte OneDrive ferme apres 30-90 jours
-  2. Donnees pro recuperees (cf saison cyber-rh ep 02)
-  3. **Donnees perso** : que faire ?
-     - Restituer ? (procedure complexe)
-     - Supprimer ? (perte pour l'employe)
-     - Donner option a l'employe avant fermeture ?
+  Quand un employé quitte :
+  1. Compte OneDrive ferme après 30-90 jours
+  2. Données pro recuperees (cf saison cyber-rh ep 02)
+  3. **Données perso** : que faire ?
+     - Restituer ? (procédure complexe)
+     - Supprimer ? (perte pour l'employé)
+     - Donner option a l'employé avant fermeture ?
 
-  Sans politique claire = conflits frequents.
+  Sans politique claire = conflits fréquents.
 
   **Politique recommandee :**
 
   Charte informatique d'entreprise type :
 
-  > **Article X - Donnees personnelles sur outils pro** :
+  > **Article X - Données personnelles sur outils pro** :
   > 
   > Les outils mis a disposition (OneDrive, SharePoint,
   > Outlook) sont destines a un usage professionnel. Un usage
   > personnel **occasionnel et modere** est tolere
   > (notifications, agenda mixte). Le stockage massif de
-  > donnees personnelles (photos, archives) est **deconseille**
+  > données personnelles (photos, archives) est **deconseille**
   > pour les raisons suivantes :
   > - Espace de stockage facturé a l'entreprise
-  > - Perte potentielle des donnees lors du depart
-  > - Confusion avec donnees professionnelles
+  > - Perte potentielle des données lors du depart
+  > - Confusion avec données professionnelles
   > 
-  > En cas de depart, l'employe a 30 jours pour migrer ses
-  > donnees personnelles vers une solution personnelle. Au-dela,
-  > le compte sera ferme et les donnees supprimees.
+  > En cas de depart, l'employé a 30 jours pour migrer ses
+  > données personnelles vers une solution personnelle. Au-dela,
+  > le compte sera ferme et les données supprimees.
 
-  Equilibre : tolerance + responsabilisation + procedure de
+  Equilibre : tolerance + responsabilisation + procédure de
   depart.
 
   **Cas reels :**
@@ -223,36 +223,36 @@ debrief: |
   **Cas 1 - PME 2023 (audit espace stockage)**
 
   Audit DSI : 30% du stockage Microsoft 365 est constitue de
-  donnees personnelles (photos, archives, fichiers privates).
+  données personnelles (photos, archives, fichiers privates).
   Cout : 5K EUR/mois sur 50K total.
 
   Action :
   - Communication interne (3 mois)
   - Migration accompagnee (tutoriels iCloud/Google Photos)
-  - Suppression apres delai
+  - Suppression après délai
 
-  Resultat : 80% du stockage perso retire. Cout reduit
+  Résultat : 80% du stockage perso retire. Cout reduit
   de 4K EUR/mois.
 
   **Cas 2 - Depart conflictuel 2024 (procès)**
 
-  Employe licencie en colere. Compte ferme apres 30 jours.
+  Employe licencie en colere. Compte ferme après 30 jours.
   Reclame ses photos famille (10 Go) qu'il avait sur OneDrive
-  pro. Pas de procedure de migration prevue.
+  pro. Pas de procédure de migration prévue.
 
   Conflit aux prud'hommes :
-  - Tribunal demande restitution des donnees perso
+  - Tribunal demande restitution des données perso
   - Entreprise doit reactiver compte temporairement
-  - **Cout** : 5K EUR de procedures + temps DSI
+  - **Cout** : 5K EUR de procédures + temps DSI
 
   Lecon : politique claire de fin d'emploi avec migration
   obligatoire.
 
   **Cas 3 - PME 2022 (RGPD)**
 
-  Audit RGPD interne : decouverte de 50 photos d'employes en
-  vacances stockees sur SharePoint d'equipe (mises par les
-  employes). Donnees perso sans base legale.
+  Audit RGPD interne : decouverte de 50 photos d'employés en
+  vacances stockees sur SharePoint d'équipe (mises par les
+  employés). Données perso sans base legale.
 
   Action :
   - Suppression imediate
@@ -264,7 +264,7 @@ debrief: |
 
   **Configuration recommandee :**
 
-  **Pour les employes** :
+  **Pour les employés** :
   - **iCloud / Google Photos perso** pour photos famille
   - **Dropbox / Google Drive perso** pour documents perso
   - **NAS perso** pour gros volumes
@@ -272,22 +272,22 @@ debrief: |
 
   **Pour l'entreprise** :
   - **Politique** claire dans la charte
-  - **Quota** raisonnable (par exemple 1 Go pour donnees mixed)
-  - **Procedure de depart** : 30 jours pour migrer le perso
-  - **Tutoriels** : aide aux employes pour migrer
+  - **Quota** raisonnable (par exemple 1 Go pour données mixed)
+  - **Procédure de depart** : 30 jours pour migrer le perso
+  - **Tutoriels** : aide aux employés pour migrer
   - **Audit** annuel des espaces
 
-  **Le mail Outlook : meme principe**
+  **Le mail Outlook : même principe**
 
-  - **Mails pro** dans la boite pro
+  - **Mails pro** dans la boîte pro
   - **Mails perso archives** : a transferer vers compte perso
   - **Limite** : usage occasionnel modere du mail pro pour
-    des urgences perso (medecin, banque) tolere
+    des urgences perso (médecin, banque) tolere
 
   **Outils de migration faciles :**
 
   **De OneDrive a iCloud** :
-  1. Telecharger photos vers PC (telecharger zip)
+  1. Telecharger photos vers PC (télécharger zip)
   2. Importer dans iCloud Photos via Mac/iPhone
   3. Supprimer du OneDrive
 
@@ -303,27 +303,27 @@ debrief: |
   - **Google One 100 Go** : 1.99 EUR/mois
   - **Amazon Prime** : 5.99 EUR/mois (avec photos illimitees)
 
-  **La regle d'or :**
+  **La règle d'or :**
 
-  > **Donnees perso = solution perso (iCloud, Google Photos,
-  > Dropbox perso). Donnees pro = outils pro (OneDrive
+  > **Données perso = solution perso (iCloud, Google Photos,
+  > Dropbox perso). Données pro = outils pro (OneDrive
   > Business, SharePoint). Separation stricte = simple +
   > legal + securise. Tolerance entreprise pour quelques
   > fichiers temporaires, pas droit a stockage massif.**
 quiz:
   - question: "Tes photos perso sur OneDrive Business, problematique ?"
     choices:
-      - { id: "a", label: "Aucun probleme", correct: false }
-      - { id: "b", label: "Plusieurs problemes : entreprise paye le stockage, perte si depart, RGPD non encadre, audit possible. Solution : iCloud/Google Photos perso", correct: true }
-      - { id: "c", label: "Que tres peu", correct: false }
-    explanation: "Problemes multiples : 1) entreprise paye le stockage (5-25 EUR/user/mois pour usage perso), 2) perte si depart (compte ferme apres 30-90j), 3) RGPD non encadre (registre traitement), 4) audit possible (DSI peut voir), 5) confusion pro/perso. Solution : iCloud/Google Photos perso (0.99-1.99 EUR/mois)."
+      - { id: "a", label: "Aucun problème", correct: false }
+      - { id: "b", label: "Plusieurs problèmes : entreprise paye le stockage, perte si depart, RGPD non encadre, audit possible. Solution : iCloud/Google Photos perso", correct: true }
+      - { id: "c", label: "Que très peu", correct: false }
+    explanation: "Problèmes multiples : 1) entreprise paye le stockage (5-25 EUR/user/mois pour usage perso), 2) perte si depart (compte ferme après 30-90j), 3) RGPD non encadre (registre traitement), 4) audit possible (DSI peut voir), 5) confusion pro/perso. Solution : iCloud/Google Photos perso (0.99-1.99 EUR/mois)."
 
   - question: "Marquer 'perso' un fichier sur OneDrive pro suffit ?"
     choices:
       - { id: "a", label: "Oui c'est protege", correct: false }
-      - { id: "b", label: "Protege le contenu (employeur ne peut lire) mais ne resout pas : stockage par l'entreprise, perte au depart, conformite RGPD", correct: true }
+      - { id: "b", label: "Protege le contenu (employeur ne peut lire) mais ne resout pas : stockage par l'entreprise, perte au depart, conformité RGPD", correct: true }
       - { id: "c", label: "Non aucune protection", correct: false }
-    explanation: "Marquage 'perso' : protege le CONTENU (Cour cassation : employeur ne peut lire). Mais ne resout PAS : entreprise paye le stockage, donnees perdues a fermeture compte, conformite RGPD (usage detourne), audit espace. Marquage = couche limitee."
+    explanation: "Marquage 'perso' : protege le CONTENU (Cour cassation : employeur ne peut lire). Mais ne resout PAS : entreprise paye le stockage, données perdues a fermeture compte, conformité RGPD (usage detourne), audit espace. Marquage = couche limitee."
 
   - question: "Solution simple pour tes photos perso ?"
     choices:
@@ -332,16 +332,16 @@ quiz:
       - { id: "c", label: "Cle USB seulement", correct: false }
     explanation: "Solutions perso adaptees : iCloud (0.99 EUR/mois 50 Go), Google Photos (1.99 EUR/mois 100 Go), Amazon Photos (Prime illimite). Cout marginal. Sync automatique smartphone. Pas de risque depart entreprise. Separation pro/perso effective."
 
-  - question: "Politique d'entreprise recommandee pour donnees perso sur outils pro ?"
+  - question: "Politique d'entreprise recommandee pour données perso sur outils pro ?"
     choices:
       - { id: "a", label: "Interdiction totale", correct: false }
-      - { id: "b", label: "Tolerance occasionnelle + procedure de depart claire (30 jours pour migrer) + tutoriels d'aide + audit annuel", correct: true }
+      - { id: "b", label: "Tolerance occasionnelle + procédure de depart claire (30 jours pour migrer) + tutoriels d'aide + audit annuel", correct: true }
       - { id: "c", label: "Aucune politique", correct: false }
-    explanation: "Equilibre : tolerance pragmatique (pas interdiction tot, illegal de toute facon) + procedure de depart claire (30j pour migrer) + tutoriels iCloud/Google Photos + audit annuel des espaces. Reduit le stockage perso sur outils pro de ~80%."
+    explanation: "Equilibre : tolerance pragmatique (pas interdiction tot, illegal de toute façon) + procédure de depart claire (30j pour migrer) + tutoriels iCloud/Google Photos + audit annuel des espaces. Reduit le stockage perso sur outils pro de ~80%."
 ---
 
 > 💡 **Pour aller plus loin** : **iCloud 50 Go a 0.99 EUR/
 > mois** ou **Google Photos** = solutions perso simples.
 > **Microsoft Mover** (gratuit) pour migrer entre clouds.
-> Charte d'entreprise avec procedure de depart claire +
+> Charte d'entreprise avec procédure de depart claire +
 > tutoriels = standard pro.

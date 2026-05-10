@@ -1,13 +1,13 @@
 ---
-title: "Construire une charte IA pour votre equipe"
+title: "Construire une charte IA pour votre équipe"
 durationMinutes: 7
 persona: "tous"
 objective: "Rediger une charte IA d'une page qui sera lue, comprise et appliquee"
 xpReward: 60
 scenario: |
-  Tu es DG d'une PME francaise (60 personnes). Tes collaborateurs commencent tous a utiliser ChatGPT ou Copilot pour gagner du temps. Tu veux mettre en place une charte d'usage. Le DRH te propose un document de 12 pages avec annexes juridiques. Le DSI propose un PDF de 30 pages avec listes de regles techniques.
+  Tu es DG d'une PME française (60 personnes). Tes collaborateurs commencent tous a utiliser ChatGPT ou Copilot pour gagner du temps. Tu veux mettre en place une charte d'usage. Le DRH te propose un document de 12 pages avec annexes juridiques. Le DSI propose un PDF de 30 pages avec listes de règles techniques.
 
-  Tu sais que ces formats ne marcheront pas - personne ne lira. Comment construis-tu une charte IA qui sera reellement appliquee ?
+  Tu sais que ces formats ne marcheront pas - personne ne lira. Comment construis-tu une charte IA qui sera réellement appliquee ?
 choices:
   - id: "a"
     label: "Je signe le document RH de 12 pages, c'est plus complet juridiquement"
@@ -15,28 +15,28 @@ choices:
     feedback: "12 pages = personne ne lit, donc personne n'applique. Tu auras une charte parfaite juridiquement et zero impact pratique. Le pire des deux mondes."
     points: -10
   - id: "b"
-    label: "Je redige une charte d'1 page max, en regles positives ('on peut faire X'), avec exemples concrets et alternatives proposees"
+    label: "Je redige une charte d'1 page max, en règles positives ('on peut faire X'), avec exemples concrets et alternatives proposees"
     outcome: "good"
-    feedback: "Excellent. Charte courte = appliquee. Regles positives = adoption. Alternatives proposees = on offre une voie au lieu d'interdire."
+    feedback: "Excellent. Charte courte = appliquee. Règles positives = adoption. Alternatives proposees = on offre une voie au lieu d'interdire."
     points: 30
   - id: "c"
-    label: "Je n'impose rien, c'est de la responsabilite individuelle"
+    label: "Je n'impose rien, c'est de la responsabilité individuelle"
     outcome: "bad"
-    feedback: "Faux. Sans cadre, chacun fait selon sa comprehension du risque - qui est tres heterogene. Le shadow IT IA s'installe en quelques semaines."
+    feedback: "Faux. Sans cadre, chacun fait selon sa comprehension du risque - qui est très heterogene. Le shadow IT IA s'installe en quelques semaines."
     points: -15
   - id: "d"
     label: "Je co-construis la charte en atelier avec un panel de 5-6 collaborateurs (devs, RH, commerce, manager)"
     outcome: "good"
-    feedback: "Tres bien. Co-construction = adoption naturelle. Les collaborateurs qui ont participe a la creation deviennent ambassadeurs. Methode ANSSI recommandee."
+    feedback: "Très bien. Co-construction = adoption naturelle. Les collaborateurs qui ont participe a la création deviennent ambassadeurs. Méthode ANSSI recommandee."
     points: 25
 debrief: |
-  Une **charte IA d'entreprise** efficace tient sur **une page** et obeit a **trois regles de design** :
+  Une **charte IA d'entreprise** efficace tient sur **une page** et obeit a **trois règles de design** :
 
   1. **Courte** : 1 page A4 max. Si plus long, personne ne lit.
-  2. **Positive** : "voici ce qu'on peut faire" plutot que "voici ce qui est interdit". L'humain s'engage mieux dans le positif.
+  2. **Positive** : "voici ce qu'on peut faire" plutôt que "voici ce qui est interdit". L'humain s'engage mieux dans le positif.
   3. **Operative** : alternatives proposees, exemples concrets, contact en cas de doute.
 
-  **Le modele Humanix de charte IA en 1 page :**
+  **Le modèle Humanix de charte IA en 1 page :**
 
   ---
 
@@ -47,26 +47,26 @@ debrief: |
   L'IA generative (ChatGPT, Copilot, Mistral, Claude...) est un outil utile que nous encourageons a utiliser dans le respect de quelques principes simples.
 
   ### Ce qu'on peut faire avec l'IA generative
-  - Brainstormer, reformuler, traduire des contenus generaux
-  - Generer du code non-proprietaire ou explorer des bibliotheques publiques
-  - Resumer des documents publics (presse, regles legales)
+  - Brainstormer, reformuler, traduire des contenus généraux
+  - Generer du code non-propriétaire ou explorer des bibliotheques publiques
+  - Resumer des documents publics (presse, règles legales)
   - Apprendre a utiliser un nouvel outil ou framework
 
   ### Ce qu'on ne met JAMAIS dans une IA cloud
-  1. **Donnees clients ou prospects nominatives** (noms, emails, telephones)
-  2. **Donnees commerciales precises** (montants, marges, strategies)
-  3. **Code source proprietaire** ou specifique a notre activite
+  1. **Données clients ou prospects nominatives** (noms, emails, téléphones)
+  2. **Données commerciales précises** (montants, marges, stratégies)
+  3. **Code source propriétaire** ou spécifique a notre activite
   4. **Mots de passe, tokens, cles API**
-  5. **Donnees personnelles** au sens RGPD (sante, opinions, salaires)
-  6. **Plans strategiques confidentiels** (acquisitions, recrutements sensibles)
+  5. **Données personnelles** au sens RGPD (sante, opinions, salaires)
+  6. **Plans stratégiques confidentiels** (acquisitions, recrutements sensibles)
 
   ### Quel outil pour quel usage
-  - **General / brainstorming** : ChatGPT Plus / Claude / Mistral (versions Pro)
+  - **Général / brainstorming** : ChatGPT Plus / Claude / Mistral (versions Pro)
   - **Code** : GitHub Copilot Business (no-training) ou Mistral on-premise
-  - **Donnees confidentielles** : **STOP**. Demande au DSI ou utilise [outil interne]
+  - **Données confidentielles** : **STOP**. Demande au DSI ou utilise [outil interne]
 
   ### En cas de doute
-  - 1 minute de reflexion : "si cette info etait dans le journal demain, est-ce un probleme ?"
+  - 1 minute de reflexion : "si cette info était dans le journal demain, est-ce un problème ?"
   - Si oui : ne mets pas la donnee, ou anonymise / paraphrase
   - Si tu hesites : pose la question a [DPO@email] ou sur [canal Slack]
 
@@ -79,34 +79,34 @@ debrief: |
 
   **Notes pour la mise en oeuvre :**
 
-  **1. La charte doit etre visible**
+  **1. La charte doit être visible**
   - Affichee dans la cuisine / open-space (poster A3)
   - Lien permanent dans l'intranet, accessible en 1 clic
   - Mention dans le contrat de travail des nouveaux entrants
   - Rappelee dans la signature email du DSI
 
-  **2. La charte doit etre vivante**
+  **2. La charte doit être vivante**
   - Revue tous les 6 mois (l'IA evolue vite)
   - Inclusion d'exemples reels rencontres dans l'organisation (anonymises)
   - Feedback bottom-up : un canal pour proposer des ajustements
 
-  **3. La charte doit etre formee**
-  - 30 minutes de presentation a tous les nouveaux collaborateurs
+  **3. La charte doit être formee**
+  - 30 minutes de présentation a tous les nouveaux collaborateurs
   - Module de sensibilisation (cf. cette saison Humanix : 6 episodes IA generative)
   - Mention dans le rapport NIS2 / RGPD comme mesure organisationnelle
 
-  **4. La charte doit etre soutenue par le top**
+  **4. La charte doit être soutenue par le top**
   - Le DG signe la charte le premier
   - Le DRH, DSI, DAF aussi
   - Trace ecrite de la signature des dirigeants pour montrer l'engagement
 
   **5. La charte doit avoir des outils alternatifs**
   C'est le point le plus oublie. Si tu interdit ChatGPT mais ne propose rien - shadow IT immediat. La charte doit s'accompagner :
-  - D'un compte d'equipe sur une IA pro (Mistral, Copilot Business)
-  - D'une procedure de demande d'acces simple
+  - D'un compte d'équipe sur une IA pro (Mistral, Copilot Business)
+  - D'une procédure de demande d'acces simple
   - D'un budget alloue (10-50 € par utilisateur par mois)
 
-  **Cas d'echec classique :** la PME qui interdit ChatGPT sans proposer d'alternative. 6 mois plus tard, tous les commerciaux utilisent ChatGPT depuis leur PC perso, sans aucun controle. C'est la pire des situations.
+  **Cas d'echec classique :** la PME qui interdit ChatGPT sans proposer d'alternative. 6 mois plus tard, tous les commerciaux utilisent ChatGPT depuis leur PC perso, sans aucun contrôle. C'est la pire des situations.
 
   **Cas de succes :** la PME qui propose Mistral AI pour tout le monde + charte claire + formation continue. Adoption volontaire, pas de shadow IT, productivite preservee.
 quiz:
@@ -116,7 +116,7 @@ quiz:
         label: "30 pages avec annexes juridiques"
         correct: false
       - id: "b"
-        label: "1 page A4, en regles positives, avec alternatives proposees"
+        label: "1 page A4, en règles positives, avec alternatives proposees"
         correct: true
       - id: "c"
         label: "Aucun document"
@@ -136,10 +136,10 @@ quiz:
         correct: false
     explanation: "Interdiction sans alternative = shadow IT immediat. Le besoin d'IA est reel, on ne peut pas le supprimer. La charte doit OFFRIR une voie, pas juste interdire."
 
-  - question: "Une charte IA doit etre revue :"
+  - question: "Une charte IA doit être revue :"
     choices:
       - id: "a"
-        label: "Tous les 6 mois (l'IA evolue vite, les regles aussi)"
+        label: "Tous les 6 mois (l'IA evolue vite, les règles aussi)"
         correct: true
       - id: "b"
         label: "Une fois pour toutes a la signature"
@@ -147,11 +147,11 @@ quiz:
       - id: "c"
         label: "Tous les 5 ans"
         correct: false
-    explanation: "L'IA evolue tous les mois (nouveaux modeles, nouveaux usages, nouvelles attaques). Une charte doit etre revue tous les 6 mois pour rester pertinente."
+    explanation: "L'IA evolue tous les mois (nouveaux modèles, nouveaux usages, nouvelles attaques). Une charte doit être revue tous les 6 mois pour rester pertinente."
 ---
 
 ## Pour aller plus loin
 
-Cette charte modele est librement utilisable et adaptable. Tu peux la copier, la transformer, l'enrichir avec tes specificites metier. La signature collective des dirigeants au lancement est cle - sans elle, la charte est percue comme "encore un truc des RH".
+Cette charte modèle est librement utilisable et adaptable. Tu peux la copier, la transformer, l'enrichir avec tes spécificités métier. La signature collective des dirigeants au lancement est cle - sans elle, la charte est percue comme "encore un truc des RH".
 
-> "La charte IA n'est pas un document juridique. C'est un manifeste d'usage. Et un manifeste, ca se vit."
+> "La charte IA n'est pas un document juridique. C'est un manifeste d'usage. Et un manifeste, ça se vit."

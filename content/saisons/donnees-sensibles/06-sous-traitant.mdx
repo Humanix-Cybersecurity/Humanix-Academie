@@ -1,21 +1,21 @@
 ---
-title: "Verifier un sous-traitant RGPD"
+title: "Vérifier un sous-traitant RGPD"
 durationMinutes: 6
 persona: "tous"
-objective: "Choisir un sous-traitant qui ne devienne pas un trou de conformite"
+objective: "Choisir un sous-traitant qui ne devienne pas un trou de conformité"
 xpReward: 50
 scenario: |
   Tu es DAF d'une PME. Le service marketing veut signer un nouvel outil de scoring leads (IA generative qui analyse les profils LinkedIn de prospects). Le commercial te dit : "On signe sous une semaine pour avoir le tarif early-bird."
 
-  Avant de signer le contrat, qu'est-ce que tu exiges de leur cote ?
+  Avant de signer le contrat, qu'est-ce que tu exiges de leur côté ?
 choices:
   - id: "a"
-    label: "Rien - c'est leur produit, leur responsabilite"
+    label: "Rien - c'est leur produit, leur responsabilité"
     outcome: "bad"
     feedback: "Erreur classique. En RGPD, le responsable du traitement (toi) reste responsable des actes de son sous-traitant. Si le scoring est non conforme, c'est TA sanction."
     points: -15
   - id: "b"
-    label: "Un DPA (Data Processing Agreement), des sous-traitants ulterieurs listes, l'hebergement precis, et la base legale du scoring IA"
+    label: "Un DPA (Data Processing Agreement), des sous-traitants ulterieurs listes, l'hebergement précis, et la base legale du scoring IA"
     outcome: "good"
     feedback: "Excellent. Tu coches les 4 obligations cles de l'article 28 RGPD. Si l'editeur ne peut pas fournir, c'est un signal d'alarme."
     points: 30
@@ -27,29 +27,29 @@ choices:
   - id: "d"
     label: "Une demonstration produit pour voir si l'outil est sympa"
     outcome: "neutral"
-    feedback: "Bonne idee fonctionnelle, mais tu n'as rien verifie cote conformite. La demo arrive APRES le check RGPD."
+    feedback: "Bonne idée fonctionnelle, mais tu n'as rien verifie côté conformité. La demo arrive APRES le check RGPD."
     points: 0
 debrief: |
-  L'**article 28 RGPD** definit les obligations du responsable de traitement (toi) vis-a-vis de ses sous-traitants. Quatre points a verifier systematiquement :
+  L'**article 28 RGPD** definit les obligations du responsable de traitement (toi) vis-à-vis de ses sous-traitants. Quatre points a vérifier systematiquement :
 
   **1. Le DPA (Data Processing Agreement)**
   - Document signe entre les deux parties
-  - Decrit les donnees traitees, finalites, duree, mesures de securite
+  - Decrit les données traitees, finalites, durée, mesures de sécurité
   - Engage le sous-traitant sur ses obligations RGPD
   - Permet au sous-traitant d'agir uniquement sur tes instructions documentees
 
   **2. La chaine de sous-traitance ulterieure**
-  - Liste exhaustive des sous-traitants ulterieurs (l'editeur SaaS lui-meme utilise AWS, Stripe, Sendgrid...)
+  - Liste exhaustive des sous-traitants ulterieurs (l'editeur SaaS lui-même utilise AWS, Stripe, Sendgrid...)
   - Notification 30 jours avant changement de sous-traitant
   - Responsabilite en cascade
 
   **3. L'hebergement physique**
   - Pays exact (UE ? USA ? Autre ?)
-  - Hebergeur precis (AWS Frankfurt vs AWS Virginia : tres different niveau Cloud Act)
+  - Hebergeur précis (AWS Frankfurt vs AWS Virginia : très différent niveau Cloud Act)
   - Garanties pour les transferts hors UE (clauses types, BCR)
 
-  **4. La base legale et la conformite metier**
-  - Le sous-traitant respecte-t-il lui-meme le RGPD ?
+  **4. La base legale et la conformité métier**
+  - Le sous-traitant respecte-t-il lui-même le RGPD ?
   - A-t-il un DPO ?
   - Peut-il fournir ses preuves (audits, certifications, registre) ?
 
@@ -57,12 +57,12 @@ debrief: |
   - "On n'a pas de DPA mais on est conformes"
   - Absence de DPO
   - Refus de communiquer la liste des sous-traitants ulterieurs
-  - Hebergement "cloud" sans precision pays
-  - Conditions generales en anglais uniquement
+  - Hebergement "cloud" sans précision pays
+  - Conditions générales en anglais uniquement
 
-  En cas de doute, invoque l'article 28 par ecrit. Un sous-traitant serieux te repondra dans la semaine. Un sous-traitant qui esquive… c'est ta reponse.
+  En cas de doute, invoque l'article 28 par ecrit. Un sous-traitant serieux te repondra dans la semaine. Un sous-traitant qui esquive… c'est ta réponse.
 quiz:
-  - question: "Si mon sous-traitant fait une fuite de donnees, qui est responsable face a la CNIL ?"
+  - question: "Si mon sous-traitant fait une fuite de données, qui est responsable face a la CNIL ?"
     choices:
       - id: "a"
         label: "Uniquement le sous-traitant"
@@ -73,12 +73,12 @@ quiz:
       - id: "c"
         label: "C'est partage 50-50 par defaut"
         correct: false
-    explanation: "Article 28 RGPD : tu restes responsable. C'est pour ca que le choix du sous-traitant et le DPA sont si importants. Sans DPA, ta responsabilite est aggravee."
+    explanation: "Article 28 RGPD : tu restes responsable. C'est pour ça que le choix du sous-traitant et le DPA sont si importants. Sans DPA, ta responsabilité est aggravee."
 
   - question: "Un editeur SaaS refuse de te fournir la liste de ses sous-traitants ulterieurs. Tu :"
     choices:
       - id: "a"
-        label: "Signes quand meme - c'est confidentiel"
+        label: "Signes quand même - c'est confidentiel"
         correct: false
       - id: "b"
         label: "N'avances pas avant d'avoir cette liste (article 28 l'impose)"
@@ -94,16 +94,16 @@ quiz:
         label: "Une garantie suffisante a vie"
         correct: false
       - id: "b"
-        label: "Un cadre temporaire qui peut etre invalide (cf. Schrems I et II)"
+        label: "Un cadre temporaire qui peut être invalide (cf. Schrems I et II)"
         correct: true
       - id: "c"
         label: "Sans rapport avec le RGPD"
         correct: false
-    explanation: "Le DPF a remplace Privacy Shield invalide en 2020. Il peut lui-meme etre invalide par la CJUE (Schrems III en cours). Garde une option de repli vers un sous-traitant UE."
+    explanation: "Le DPF a remplace Privacy Shield invalide en 2020. Il peut lui-même être invalide par la CJUE (Schrems III en cours). Garde une option de repli vers un sous-traitant UE."
 ---
 
 ## Pour aller plus loin
 
-Le sous-traitant le plus dangereux n'est pas le moins cher - c'est celui qui ne te donne pas les moyens de prouver ta conformite. Quand la CNIL frappe, le DPA et la liste des sous-traitants ulterieurs sont les deux premiers documents qu'on te demande.
+Le sous-traitant le plus dangereux n'est pas le moins cher - c'est celui qui ne te donne pas les moyens de prouver ta conformité. Quand la CNIL frappe, le DPA et la liste des sous-traitants ulterieurs sont les deux premiers documents qu'on te demande.
 
 > "Un bon DPA, c'est un papier ennuyeux qui sauve une grosse amende."

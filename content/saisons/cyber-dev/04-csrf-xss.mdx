@@ -19,33 +19,33 @@ scenario: |
   chez evil.com.
 
   **Trouvaille 2** - le pentester a fait visiter a un admin une page
-  evil.com pendant que l'admin etait connecte sur ton app. La page evil
+  evil.com pendant que l'admin était connecte sur ton app. La page evil
   contenait :
   ```html
   <form action="https://yourapp.com/api/users/promote" method="POST">
     <input name="userId" value="attacker-id"/>
-    <input name="role" value="ADMIN"/>
+    <input name="rôle" value="ADMIN"/>
   </form>
   <script>document.forms[0].submit()</script>
   ```
   L'admin a involontairement promu l'attaquant en ADMIN.
 
-  Tu corriges quoi en priorite ?
+  Tu corriges quoi en priorité ?
 choices:
   - id: "a"
-    label: "Trouvaille 1 (XSS) en priorite : un attaquant n'a meme pas besoin d'amener la victime sur evil.com - il poste juste un commentaire et n'importe quel visiteur est compromis"
+    label: "Trouvaille 1 (XSS) en priorité : un attaquant n'a même pas besoin d'amener la victime sur evil.com - il poste juste un commentaire et n'importe quel visiteur est compromis"
     outcome: "good"
-    feedback: "Excellent ranking. Le XSS stored est CRITIQUE car il s'execute sans interaction de la victime (juste visiter la page). Le CSRF necessite une interaction - victime sur un site tiers ET connectee a l'app cible. XSS = priorite 1."
+    feedback: "Excellent ranking. Le XSS stored est CRITIQUE car il s'execute sans interaction de la victime (juste visiter la page). Le CSRF nécessité une interaction - victime sur un site tiers ET connectee a l'app cible. XSS = priorité 1."
     points: 35
   - id: "b"
-    label: "Trouvaille 2 (CSRF) en priorite - elle a vraiment escalade un compte en prod"
+    label: "Trouvaille 2 (CSRF) en priorité - elle a vraiment escalade un compte en prod"
     outcome: "neutral"
-    feedback: "Reaction comprehensible (impact concret demontre) mais le XSS est plus dangereux a iso-effort de patching. XSS expose tous les visiteurs sans cooperation. CSRF necessite que la victime soit connectee ET visite un site tiers."
+    feedback: "Reaction comprehensible (impact concret demontre) mais le XSS est plus dangereux a iso-effort de patching. XSS expose tous les visiteurs sans cooperation. CSRF nécessité que la victime soit connectee ET visite un site tiers."
     points: 15
   - id: "c"
     label: "Les deux ensemble dans une seule PR pour aller vite"
     outcome: "neutral"
-    feedback: "Risque de regression. Mieux : 2 PR separees, XSS d'abord (impact plus large), puis CSRF. Permet de deployer en sequence et de revert independamment si bug."
+    feedback: "Risque de regression. Mieux : 2 PR separees, XSS d'abord (impact plus large), puis CSRF. Permet de déployer en sequence et de revert indépendamment si bug."
     points: 10
   - id: "d"
     label: "Le pentester se trompe - dangerouslySetInnerHTML est sur, c'est React qui escape"
@@ -53,7 +53,7 @@ choices:
     feedback: "FAUX. Le nom `dangerouslySetInnerHTML` existe pour une raison : React n'echappe pas le contenu, c'est literalement injecte dans le DOM. Le pentester a raison - c'est un XSS stored grave."
     points: -15
 debrief: |
-  XSS et CSRF sont les deux faces complementaires des attaques web :
+  XSS et CSRF sont les deux faces complémentaires des attaques web :
   XSS exploite la confiance du browser dans le serveur, CSRF exploite
   la confiance du serveur dans le browser. Les deux sont OWASP **A03
   + A05**.
@@ -63,7 +63,7 @@ debrief: |
   L'attaquant injecte du JavaScript qui s'execute dans le navigateur
   de la victime, dans le contexte de TON site. Donc avec acces a :
   - cookies de session (vol de session)
-  - localStorage / IndexedDB (tokens, donnees)
+  - localStorage / IndexedDB (tokens, données)
   - actions au nom de la victime (changer mot de passe, virer argent)
 
   **3 sous-types :**
@@ -76,13 +76,13 @@ debrief: |
      uniquement pour les visiteurs qui cliquent sur le lien malicieux.
      Vecteur : phishing avec lien arrange.
 
-  3. **DOM-based XSS** : le payload exploite du JS cote client qui
+  3. **DOM-based XSS** : le payload exploite du JS côté client qui
      manipule le DOM avec des inputs externes (location.hash,
      postMessage, etc.). Pas vu par le serveur.
 
-  **Defenses (par ordre de priorite) :**
+  **Defenses (par ordre de priorité) :**
 
-  1. **Output encoding** : echapper les caracteres speciaux a l'AFFICHAGE,
+  1. **Output encoding** : echapper les caracteres spéciaux a l'AFFICHAGE,
      selon le contexte.
      - HTML body : `<` `>` `&` `"` `'`
      - HTML attribute : encoder differemment selon quoted/unquoted
@@ -103,7 +103,7 @@ debrief: |
   3. **HttpOnly cookies** : cookie de session inaccessible au JS, donc
      pas vol par XSS (`document.cookie` ne le voit pas). **OBLIGATOIRE**.
 
-  4. **Sanitization** (en derniere ligne) : si tu DOIS afficher du HTML
+  4. **Sanitization** (en dernière ligne) : si tu DOIS afficher du HTML
      user (commentaires riches, markdown), utilise `DOMPurify` ou une
      allowlist stricte de tags.
 
@@ -111,13 +111,13 @@ debrief: |
 
   L'attaquant cree une page sur evil.com qui declenche une requete vers
   yourapp.com en utilisant les cookies de session de la victime
-  (envoyes automatiquement par le browser car meme origine).
+  (envoyes automatiquement par le browser car même origine).
 
   La victime est connectee a yourapp.com, visite evil.com, son browser
   envoie la requete avec les cookies, le serveur croit que c'est une
   action legitime.
 
-  **Defenses (par ordre de priorite) :**
+  **Defenses (par ordre de priorité) :**
 
   1. **Cookie SameSite (le plus important en 2026)** :
      ```
@@ -153,14 +153,14 @@ debrief: |
   - **SameSite=Lax** : empeche CSRF cross-origin
 
   Cette ligne, par defaut, dans tous tes apps. NextAuth/Express-session/
-  Django/Rails l'ont deja par defaut depuis ~2022. Verifie en prod.
+  Django/Rails l'ont déjà par defaut depuis ~2022. Verifie en prod.
 
   **Test en code review :**
 
   - Un `dangerouslySetInnerHTML` (React), `v-html` (Vue), `{@html}`
     (Svelte) ? **Stop, demande pourquoi c'est necessaire**.
   - Un cookie sans `SameSite` ? **Stop, ajoute Lax au minimum**.
-  - Une route POST qui change un etat important sans CSRF token et
+  - Une route POST qui change un état important sans CSRF token et
     sans `SameSite=Strict` ? **Stop, ajoute la defense**.
 quiz:
   - question: "Le XSS le plus dangereux est :"
@@ -175,14 +175,14 @@ quiz:
       - { id: "a", label: "Pour le HTTPS", correct: false }
       - { id: "b", label: "Pour empecher un XSS de voler le cookie via document.cookie", correct: true }
       - { id: "c", label: "Pour le RGPD", correct: false }
-    explanation: "HttpOnly rend le cookie invisible au JavaScript. Donc meme si un XSS s'execute dans le browser, il ne peut pas exfiltrer le cookie de session. C'est la defense la plus simple contre le vol de session."
+    explanation: "HttpOnly rend le cookie invisible au JavaScript. Donc même si un XSS s'execute dans le browser, il ne peut pas exfiltrer le cookie de session. C'est la defense la plus simple contre le vol de session."
 
   - question: "Quelle valeur de SameSite est devenue le DEFAULT moderne (Chrome 80+) ?"
     choices:
       - { id: "a", label: "None", correct: false }
       - { id: "b", label: "Lax", correct: true }
       - { id: "c", label: "Strict", correct: false }
-    explanation: "Depuis Chrome 80 (2020), les cookies sans SameSite explicite sont traites comme `Lax` par defaut. Lax bloque les cookies sur les POST cross-origin (defense CSRF suffisante pour la majorite des apps)."
+    explanation: "Depuis Chrome 80 (2020), les cookies sans SameSite explicite sont traites comme `Lax` par defaut. Lax bloque les cookies sur les POST cross-origin (defense CSRF suffisante pour la majorité des apps)."
 
   - question: "Tu vois `<div dangerouslySetInnerHTML={{ __html: userComment }} />`. C'est :"
     choices:
@@ -192,7 +192,7 @@ quiz:
     explanation: "`dangerouslySetInnerHTML` injecte le HTML brut dans le DOM, sans escape. Si userComment est du contenu utilisateur stocke en BDD, c'est un XSS stored. Defense : DOMPurify ou allowlist tags stricte."
 ---
 
-> 💡 **Pour aller plus loin** : OWASP **XSS Prevention Cheat Sheet** +
-> **CSRF Prevention Cheat Sheet** sont les references absolues. PortSwigger
-> Web Security Academy a 50+ labos XSS gratuits (debutant a expert), c'est
+> 💡 **Pour aller plus loin** : OWASP **XSS Prévention Cheat Sheet** +
+> **CSRF Prévention Cheat Sheet** sont les références absolues. PortSwigger
+> Web Security Academy a 50+ labos XSS gratuits (débutant a expert), c'est
 > le meilleur entrainement.

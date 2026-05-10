@@ -110,6 +110,23 @@ Premier compte admin :
 - Si `BOOTSTRAP_ADMIN_EMAIL` est configuré → le compte est créé au boot
 - Sinon : `docker compose exec app npx tsx scripts/bootstrap-admin.ts`
 
+Par défaut, le tout-premier compte est créé en `SUPERADMIN` (accès cross-tenant,
+modération plateforme). Surcharge via `BOOTSTRAP_ADMIN_ROLE` (valeurs :
+`SUPERADMIN | ADMIN | RSSI | MANAGER`).
+
+**Promouvoir un compte existant en SUPERADMIN** — si un déploiement antérieur
+avait provisionné votre compte avec un rôle inférieur (ex. ancienne version qui
+forçait `ADMIN`), réexécutez le bootstrap avec `BOOTSTRAP_ADMIN_EMAIL` pointant
+sur votre email :
+
+```bash
+docker compose exec app npx tsx scripts/bootstrap-admin.ts
+```
+
+Le script détecte que le compte existe déjà et le promeut au rôle demandé. Pas
+de modification DB manuelle nécessaire. L'opération est idempotente : un compte
+qui a déjà le rôle cible (ou supérieur) reste intact.
+
 ### Tâches planifiées (cron)
 
 Pour activer le forecast, les badges, l'observatoire breaches, etc. :
@@ -165,6 +182,71 @@ documenté dans [docs/CRON.md](./docs/CRON.md).
 | **Production** | les deux à `false` | Flow réel : email Scaleway TEM, paiement Payplug, magic links signés. |
 
 Garde-fou : `DEV_MODE` est ignoré quand `AUTH_URL` ne pointe pas sur localhost.
+
+---
+
+## Hex Chat — assistant cyber conversationnel
+
+🦊 Hex est un assistant cyber multi-tour, accessible via un FAB flottant
+sur toute l'app pour les utilisateurs connectés. Il sait :
+- répondre aux questions cyber (phishing, RGPD, NIS2, MFA, mots de passe)
+- guider l'utilisation d'Humanix (où trouver un module, exporter un
+  certificat, configurer la rétention RGPD)
+- refuser poliment les sujets hors-cyber
+
+**Providers supportés** (sélection via `HEX_AI_PROVIDER`) :
+
+| Provider | Coût | Recommandé pour |
+|---|---|---|
+| `mistral` (défaut) | Free tier Mistral "Experiment" (~1 req/s, 1 B tokens/mois) | Cloud Starter / Pro |
+| `ollama` | 0 € (self-host) | Community Edition AGPLv3 |
+| `disabled` | — | Désactive le chat (FAB invisible) |
+
+**Rate limit** (par utilisateur) : 12 msg/h en Starter, 60 msg/h en Pro,
+200 msg/h en Enterprise. Protège le free tier Mistral sans frustrer les
+plans payants.
+
+**Self-host avec Ollama** (gratuit infini, recommandé Community
+Edition) :
+
+```bash
+# Sidecar Ollama dans docker-compose, modèle Mistral 7B Instruct
+docker run -d --name ollama -p 11434:11434 ollama/ollama
+docker exec ollama ollama pull mistral:7b-instruct
+
+# Côté app :
+HEX_AI_PROVIDER=ollama
+OLLAMA_BASE_URL=http://localhost:11434
+HEX_AI_MODEL=mistral:7b-instruct
+```
+
+**RAG sur les 184 modules MDX** (Phase 3) : Hex cite les modules
+Humanix pertinents au lieu d'inventer. Repose sur PostgreSQL +
+extension `pgvector` + Mistral `mistral-embed`.
+
+```bash
+# Pré-requis : extension pgvector disponible sur la DB
+# (par défaut sur Scaleway PostgreSQL managé, à activer sinon)
+
+# Indexation initiale (~1000 chunks, ~$0.10 en cloud, ou gratuit via
+# free tier "Experiment" pour ce volume one-shot) :
+docker compose exec app npm run hex:reindex
+
+# Dry-run (liste les fichiers sans appel API) :
+docker compose exec app npm run hex:reindex:dry
+```
+
+Le RAG est **optionnel** : si pgvector n'est pas dispo, Hex marche
+quand même sans citations. Réindex à relancer après chaque ajout de
+module MDX (idempotent).
+
+Adaptation du ton automatique (Phase 2) : Hex repère ta progression
+(score quiz moyen 30 jours) et adapte son registre — encouragement
+si score < 50 %, challenge si ≥ 80 %.
+
+Roadmap des phases suivantes (coach personnalisé, roleplay scénarios,
+voice, agentique) dans le document
+`00_Business_Strategie/01_Roadmap_Produit/ROADMAP_HEX_IA.md`.
 
 ---
 

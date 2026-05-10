@@ -5,11 +5,11 @@ persona: "developer"
 objective: "Comprendre les 3 protocoles d'authentification email (SPF, DKIM, DMARC), savoir les configurer pour son domaine, lire un rapport DMARC, choisir entre p=none / quarantine / reject"
 xpReward: 90
 scenario: |
-  Mardi 14h, ton CEO recoit un appel paniqe d'un client : "On vient
+  Mardi 14h, ton CEO reçoit un appel paniqe d'un client : "On vient
   de me virer 50 000 EUR sur un nouveau RIB. Vous m'avez envoye un
-  email hier disant que vous avez change de banque. C'etait pas vous ?"
+  email hier disant que vous avez change de banque. C'était pas vous ?"
 
-  Tu enquetes. L'email envoye au client venait du CEO, depuis l'adresse
+  Tu enquêtes. L'email envoye au client venait du CEO, depuis l'adresse
   exacte `pdg@humanix-academie.fr`. Mais le CEO n'a rien envoye.
 
   Tu lances `dig humanix-academie.fr TXT` :
@@ -22,31 +22,31 @@ choices:
   - id: "a"
     label: "p=none = pas de protection. N'importe qui sur Internet peut envoyer un email avec `From: pdg@humanix-academie.fr` (spoofing)"
     outcome: "good"
-    feedback: "Exact diagnostic. p=none est le mode 'monitoring only' - DMARC envoie des rapports mais ne bloque rien. Un attaquant peut envoyer depuis n'importe quel SMTP en mettant ton domaine en From, les destinataires recoivent l'email sans alerte."
+    feedback: "Exact diagnostic. p=none est le mode 'monitoring only' - DMARC envoie des rapports mais ne bloque rien. Un attaquant peut envoyer depuis n'importe quel SMTP en mettant ton domaine en From, les destinataires reçoivent l'email sans alerte."
     points: 35
   - id: "b"
-    label: "DMARC est correctement configure - le SPF protege deja, p=none est suffisant"
+    label: "DMARC est correctement configure - le SPF protege déjà, p=none est suffisant"
     outcome: "bad"
-    feedback: "FAUX. p=none ne fait QUE collecter des rapports. Il NE BLOQUE PAS les emails frauduleux. Le SPF seul ne suffit pas si le domaine From peut etre falsifie. La vraie protection est DMARC en p=quarantine ou p=reject."
+    feedback: "FAUX. p=none ne fait QUE collecter des rapports. Il NE BLOQUE PAS les emails frauduleux. Le SPF seul ne suffit pas si le domaine From peut être falsifie. La vraie protection est DMARC en p=quarantine ou p=reject."
     points: -10
   - id: "c"
-    label: "Le client est responsable - il aurait du verifier le RIB"
+    label: "Le client est responsable - il aurait du vérifier le RIB"
     outcome: "bad"
-    feedback: "Pas la bonne reponse. Meme si le client a aussi une part de responsabilite, ton domaine est techniquement spoofable. Le tribunal peut considerer que tu as failli a 'mesures techniques de securite raisonnables' (RGPD article 32). C'est une vulnerabilite a corriger en priorite."
+    feedback: "Pas la bonne réponse. Même si le client a aussi une part de responsabilité, ton domaine est techniquement spoofable. Le tribunal peut considerer que tu as failli a 'mesures techniques de sécurité raisonnables' (RGPD article 32). C'est une vulnerabilite a corriger en priorité."
     points: -10
   - id: "d"
     label: "Je passe DMARC en p=quarantine immediate, monitor 30 jours, puis p=reject"
     outcome: "good"
-    feedback: "Procedure correcte. quarantine = les emails non-authentifies vont en spam. reject = les emails non-authentifies sont bloques par le serveur destinataire (ne sont jamais delivres). Migration progressive pour eviter de bloquer des emails legitimes oublies (newsletters, outils SaaS, etc.)."
+    feedback: "Procédure correcte. quarantine = les emails non-authentifies vont en spam. reject = les emails non-authentifies sont bloques par le serveur destinataire (ne sont jamais delivres). Migration progressive pour éviter de bloquer des emails legitimes oublies (newsletters, outils SaaS, etc.)."
     points: 35
 debrief: |
   L'authentification email est une defense **critique** mais souvent
-  ignoree. 3 protocoles complementaires : SPF, DKIM, DMARC.
+  ignoree. 3 protocoles complémentaires : SPF, DKIM, DMARC.
 
-  **Le probleme : SMTP autorise tout le monde a se faire passer pour
+  **Le problème : SMTP autorise tout le monde a se faire passer pour
   qui il veut**
 
-  Le protocole SMTP (1982) ne fait AUCUNE verification d'identite. Tu
+  Le protocole SMTP (1982) ne fait AUCUNE vérification d'identité. Tu
   peux envoyer un email avec `From: pdg@apple.com` depuis n'importe
   quel serveur si le destinataire ne verifie rien. C'est l'origine de
   90% du phishing.
@@ -74,7 +74,7 @@ debrief: |
   **Couche 2 - DKIM (DomainKeys Identified Mail, 2007)**
 
   Le serveur emetteur signe cryptographiquement l'email avec sa cle
-  privee. Le destinataire verifie la signature avec la cle publique
+  privée. Le destinataire verifie la signature avec la cle publique
   publiee dans le DNS.
 
   ```
@@ -121,7 +121,7 @@ debrief: |
 
   Chaque jour, les serveurs destinataires (Gmail, Microsoft, Yahoo)
   t'envoient un fichier XML avec les statistiques :
-  - Nb d'emails recus avec ton domaine en From
+  - Nb d'emails reçus avec ton domaine en From
   - Combien ont passe SPF / DKIM
   - IPs des emetteurs (legitimes ou attaquants)
 
@@ -130,23 +130,23 @@ debrief: |
   - **Postmark DMARC Digest** (gratuit)
   - **Valimail Monitor** (gratuit)
 
-  **Migration DMARC en 4 etapes (procedure recommandee) :**
+  **Migration DMARC en 4 étapes (procédure recommandee) :**
 
-  1. **Etape 0 (J)** : publier SPF (`~all`) et DKIM. Tester avec
+  1. **Étape 0 (J)** : publier SPF (`~all`) et DKIM. Tester avec
      `mail-tester.com` ou `mxtoolbox.com`.
 
-  2. **Etape 1 (J+0)** : publier `p=none` avec `rua=`. Recevoir les
+  2. **Étape 1 (J+0)** : publier `p=none` avec `rua=`. Recevoir les
      rapports pendant 2-4 semaines pour identifier tous les emetteurs
-     legitimes (CRM, marketing, ERP, employes individuels via Outlook
+     legitimes (CRM, marketing, ERP, employés individuels via Outlook
      externe...).
 
-  3. **Etape 2 (J+30)** : passer en `p=quarantine` avec `pct=10`
+  3. **Étape 2 (J+30)** : passer en `p=quarantine` avec `pct=10`
      (10% du trafic est mis en quarantaine, le reste est en p=none).
      Augmenter progressivement (`pct=25`, `pct=50`, `pct=100`) sur
      2-4 semaines.
 
-  4. **Etape 3 (J+90)** : passer en `p=reject; pct=100`. Defense
-     maximale. Les emails frauduleux sont bloques avant arrivee.
+  4. **Étape 3 (J+90)** : passer en `p=reject; pct=100`. Defense
+     maximale. Les emails frauduleux sont bloques avant arrivée.
 
   **Outils de diagnostic gratuits :**
 
@@ -162,7 +162,7 @@ debrief: |
 
   **Cas reel (anonymise) :**
 
-  PME francaise du BTP (50 employes), client Sage. Un attaquant
+  PME française du BTP (50 employés), client Sage. Un attaquant
   spoofe `directeur@sage-clientfr.example` (vrai domaine du client),
   envoie un email "le RIB du fournisseur a change" a la compta. Vir
   de 87 000 EUR. La compta verifie le From - tout semble legitime.
@@ -175,7 +175,7 @@ debrief: |
   **Pour ton domaine, AUJOURD'HUI :**
 
   1. Verifie : `dig TXT _dmarc.tondomaine.fr`. Si vide ou `p=none`
-     depuis plus de 30 jours = probleme.
+     depuis plus de 30 jours = problème.
   2. Si tu utilises Gmail/Microsoft 365 : leur admin documente comment
      publier SPF/DKIM/DMARC. ~10 minutes de setup.
   3. Active les rapports DMARC (`rua=`) vers une adresse dediee.
@@ -185,9 +185,9 @@ quiz:
       - { id: "a", label: "p=none", correct: false }
       - { id: "b", label: "p=reject (les serveurs destinataires rejettent les emails non-authentifies)", correct: true }
       - { id: "c", label: "p=monitor", correct: false }
-    explanation: "p=none = monitoring only (rapports mais aucun blocage). p=quarantine = en spam. p=reject = bloque a la livraison. Pour une defense effective contre le spoofing : viser p=reject apres une periode de monitoring."
+    explanation: "p=none = monitoring only (rapports mais aucun blocage). p=quarantine = en spam. p=reject = bloque a la livraison. Pour une defense effective contre le spoofing : viser p=reject après une période de monitoring."
 
-  - question: "Difference entre SPF et DKIM ?"
+  - question: "Différence entre SPF et DKIM ?"
     choices:
       - { id: "a", label: "Aucune", correct: false }
       - { id: "b", label: "SPF verifie l'IP emettrice ; DKIM signe cryptographiquement le contenu de l'email", correct: true }
@@ -199,7 +199,7 @@ quiz:
       - { id: "a", label: "C'est plus rapide", correct: false }
       - { id: "b", label: "p=none collecte des rapports pour identifier les emetteurs legitimes oublies (CRM, marketing) avant de bloquer", correct: true }
       - { id: "c", label: "C'est obligatoire RGPD", correct: false }
-    explanation: "Phase de monitoring (2-4 semaines en p=none avec rua=) pour decouvrir TOUS les emetteurs legitimes que ta boite n'a pas en tete : CRM, ERP, outils marketing, employes via clients tiers. Sinon p=reject direct = tu blockes du courant legitime."
+    explanation: "Phase de monitoring (2-4 semaines en p=none avec rua=) pour decouvrir TOUS les emetteurs legitimes que ta boîte n'a pas en tête : CRM, ERP, outils marketing, employés via clients tiers. Sinon p=reject direct = tu blockes du courant legitime."
 
   - question: "Tu publies p=reject. Que se passe-t-il pour un email spoofe avec ton domaine en From ?"
     choices:
@@ -213,4 +213,4 @@ quiz:
 > Pour le quotidien : **mxtoolbox.com** pour les checks, **dmarcian.com**
 > ou **valimail.com** pour les rapports DMARC mensuels. Cas reel et
 > approche pratique : **dmarc.org/wiki/FAQ**. La RFC 7489 (DMARC) est
-> lisible si tu veux comprendre les details.
+> lisible si tu veux comprendre les détails.

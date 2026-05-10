@@ -18,7 +18,7 @@ scenario: |
   });
   ```
 
-  Le junior te dit : "ca marche en local, regarde !". Il fait
+  Le junior te dit : "ça marche en local, regarde !". Il fait
   `curl /api/users/search?name=alice` et il a sa liste.
 
   Tu fais quoi ?
@@ -26,10 +26,10 @@ choices:
   - id: "a"
     label: "Je teste `?name=' OR 1=1 --` et je lui montre que le code expose toute la DB"
     outcome: "good"
-    feedback: "Excellent reflexe pedagogique. Le payload `' OR 1=1 --` retourne TOUS les users car le commentaire SQL `--` neutralise le `LIMIT 10`. Une fois la demonstration faite, le junior comprend instantanement le probleme."
+    feedback: "Excellent reflexe pedagogique. Le payload `' OR 1=1 --` retourne TOUS les users car le commentaire SQL `--` neutralise le `LIMIT 10`. Une fois la demonstration faite, le junior comprend instantanement le problème."
     points: 35
   - id: "b"
-    label: "Je merge - on patchera plus tard, ca passe les tests"
+    label: "Je merge - on patchera plus tard, ça passe les tests"
     outcome: "bad"
     feedback: "Catastrophique. C'est une SQL injection critique (CVSS 9.8 typique). En une requete, un attaquant peut dump toute la DB. Et 'on patchera plus tard' = le code part en prod, l'attaquant trouve, c'est trop tard."
     points: -10
@@ -41,7 +41,7 @@ choices:
   - id: "d"
     label: "Je remplace par une parametrized query : `db.user.findMany({ where: { name: { contains: q } }, take: 10 })`"
     outcome: "good"
-    feedback: "Solution propre. Prisma (et tout ORM serieux) fait des parametrized queries en interne - le `q` est passe en parametre bind, jamais concatene au SQL. Plus de surface d'injection."
+    feedback: "Solution propre. Prisma (et tout ORM serieux) fait des parametrized queries en interne - le `q` est passe en paramètre bind, jamais concatene au SQL. Plus de surface d'injection."
     points: 35
 debrief: |
   L'injection est **OWASP A03:2021** - reste dans le top 3 mondial des
@@ -53,7 +53,7 @@ debrief: |
   Le code construit une commande (SQL, shell, LDAP query, ...) en
   **concatenant** une chaine venant de l'utilisateur. L'attaquant
   envoie une chaine qui change la SEMANTIQUE de la commande au lieu
-  d'etre traitee comme donnee.
+  d'être traitee comme donnee.
 
   **Type 1 - SQL Injection (la plus connue)**
 
@@ -72,8 +72,8 @@ debrief: |
   - **Knex** : `knex("users").where("id", id)`
   - **Java JDBC** : `PreparedStatement` avec `?` placeholders
 
-  Ne JAMAIS concatener du SQL. Meme si "c'est juste un id numerique" -
-  un id peut etre un string, un objet, un payload encode.
+  Ne JAMAIS concatener du SQL. Même si "c'est juste un id numérique" -
+  un id peut être un string, un objet, un payload encode.
 
   **Type 2 - Command Injection (la plus destructrice)**
 
@@ -104,14 +104,14 @@ debrief: |
   ```
 
   Defense canonique :
-  - Utilise un client LDAP qui escape les caracteres speciaux
+  - Utilise un client LDAP qui escape les caracteres spéciaux
     (`(`, `)`, `*`, `\`, `\\u0000`).
   - **ldapjs** en Node fait l'escape via `Filter` builders.
   - Authentification : NE FAIS PAS de bind avec password concatene -
-    utilise le bind LDAP comme test (success/fail) plutot qu'extraire
+    utilise le bind LDAP comme test (success/fail) plutôt qu'extraire
     le password en clair.
 
-  **Les autres injections a connaitre :**
+  **Les autres injections a connaître :**
 
   - **NoSQL Injection** : MongoDB avec `$where`, payload `{"$gt": ""}`.
   - **XPath Injection** : si tu fais des queries XPath dans du XML.
@@ -119,28 +119,28 @@ debrief: |
     user input dans le template = RCE potentielle.
   - **HTTP header injection** : injection de `\r\n` dans les redirects.
 
-  **La regle d'or universelle :**
+  **La règle d'or universelle :**
 
   > **Separer DONNEES et CODE.**
   >
-  > Les donnees passent par des parametres bind (prepared statements,
+  > Les données passent par des paramètres bind (prepared statements,
   > placeholders, args arrays). Jamais par concatenation textuelle.
 
-  **Outils pour detecter avant la prod :**
+  **Outils pour détecter avant la prod :**
 
-  - **CodeQL** (GitHub, gratuit OSS) : detecte la majorite des injections
+  - **CodeQL** (GitHub, gratuit OSS) : detecte la majorité des injections
     a la PR.
-  - **Semgrep** (gratuit) : regles SAST custom.
-  - **Bearer** (FR, gratuit OSS) : focus securite + privacy.
+  - **Semgrep** (gratuit) : règles SAST custom.
+  - **Bearer** (FR, gratuit OSS) : focus sécurité + privacy.
   - **OWASP ZAP** : scanner runtime.
-  - **Linters ORM-aware** : `@typescript-eslint/no-unsafe-call` + regles
+  - **Linters ORM-aware** : `@typescript-eslint/no-unsafe-call` + règles
     custom contre `$queryRawUnsafe`.
 
   **Tests en code review :**
 
   Tu vois une concatenation de string qui finit dans une `query()`,
   `exec()`, ou un filter LDAP avec un input utilisateur ? **Stop, demande
-  une parametrized version.** C'est la regle la plus simple et la plus
+  une parametrized version.** C'est la règle la plus simple et la plus
   efficace.
 quiz:
   - question: "Quelle est la defense CANONIQUE contre la SQL injection ?"
@@ -149,14 +149,14 @@ quiz:
       - { id: "b", label: "Prepared statements / parametrized queries (placeholders bind)", correct: true }
       - { id: "c", label: "Whitelist regex sur l'input", correct: false }
       - { id: "d", label: "Encoder l'input en base64 avant de le passer a la query", correct: false }
-    explanation: "Les prepared statements separent SQL et donnees au niveau du driver/DB. C'est la SEULE defense robuste. L'escape manuel est bypassable. La whitelist est utile en complement, jamais en remplacement."
+    explanation: "Les prepared statements separent SQL et données au niveau du driver/DB. C'est la SEULE defense robuste. L'escape manuel est bypassable. La whitelist est utile en complement, jamais en remplacement."
 
   - question: "Le payload `?id=1 OR 1=1 --` injecte dans `WHERE id = ${id}` retourne quoi ?"
     choices:
       - { id: "a", label: "L'utilisateur d'id 1 seulement", correct: false }
       - { id: "b", label: "TOUS les utilisateurs (la condition `1=1` est toujours vraie + `--` commente la suite)", correct: true }
       - { id: "c", label: "Une erreur SQL", correct: false }
-    explanation: "`1=1` est une condition tautologique (toujours vraie), donc TOUS les rows matchent. Le `--` commente le reste de la query (LIMIT, AND, etc.). Resultat : dump complet de la table."
+    explanation: "`1=1` est une condition tautologique (toujours vraie), donc TOUS les rows matchent. Le `--` commente le reste de la query (LIMIT, AND, etc.). Résultat : dump complet de la table."
 
   - question: "Tu dois exec `ping HOST` ou HOST vient de l'utilisateur. Que faire ?"
     choices:
@@ -170,10 +170,10 @@ quiz:
       - { id: "a", label: "A03:2021 - Injection", correct: true }
       - { id: "b", label: "A07:2021 - Identification Failures", correct: false }
       - { id: "c", label: "A09:2021 - Logging Failures", correct: false }
-    explanation: "OWASP A03 (Injection) etait #1 en 2017 et 2013, est descendue a #3 en 2021 mais reste en top 3 depuis OWASP Top 10 a commence en 2003. C'est LA faille emblematique du backend."
+    explanation: "OWASP A03 (Injection) était #1 en 2017 et 2013, est descendue a #3 en 2021 mais reste en top 3 depuis OWASP Top 10 a commence en 2003. C'est LA faille emblematique du backend."
 ---
 
 > 💡 **Pour aller plus loin** : la cheat-sheet OWASP **Injection
-> Prevention** est la reference. PortSwigger Web Security Academy a un
+> Prévention** est la référence. PortSwigger Web Security Academy a un
 > labo gratuit de SQL injection (lab interactif, ~3h pour faire le
-> parcours debutant a expert).
+> parcours débutant a expert).

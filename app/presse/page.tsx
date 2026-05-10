@@ -6,10 +6,27 @@
 import Link from "next/link";
 import Image from "next/image";
 
+const PRESSE_TITLE = "Kit presse — Humanix Académie Community Edition";
+const PRESSE_DESC =
+  "Kit presse Humanix Académie : pitch (30 s / 2 min / 5 min), faits clés, citation fondateur, screenshots, logos téléchargeables, contact dédié journalistes. Launch open source AGPLv3 le 26 mai 2026.";
+
 export const metadata = {
-  title: "Presse - Humanix Académie Community Edition",
-  description:
-    "Kit presse Humanix Académie : pitch, faits clés, citation fondateur, screenshots, logos téléchargeables, contact dédié journalistes. Launch OSS 26 mai 2026.",
+  title: PRESSE_TITLE,
+  description: PRESSE_DESC,
+  alternates: { canonical: "/presse" },
+  openGraph: {
+    title: PRESSE_TITLE,
+    description: PRESSE_DESC,
+    type: "website",
+    url: "/presse",
+    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kit presse Humanix Académie — Launch OSS 26 mai 2026",
+    description: PRESSE_DESC,
+    images: ["/logo-humanix-academie-512.png"],
+  },
 };
 
 const PITCH_30S = `Humanix Académie est la première plateforme française open source de cybersensibilisation pour tous : particuliers, équipes, associations, organisations de toute taille. Distribuée sous licence AGPLv3, hébergée en France, conçue comme la brique humaine complémentaire de l'écosystème souverain (CISO Assistant, OpenCTI, Wazuh). Lancement le 26 mai 2026.`;

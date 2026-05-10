@@ -2,7 +2,7 @@
 title: "Monter une cellule de crise en 30 min"
 durationMinutes: 8
 persona: "manager"
-objective: "Savoir composer une cellule de crise cyber rapidement (qui inviter, qui pas inviter), definir les roles cles, etablir le canal de communication d'urgence"
+objective: "Savoir composer une cellule de crise cyber rapidement (qui inviter, qui pas inviter), définir les rôles cles, etablir le canal de communication d'urgence"
 xpReward: 90
 scenario: |
   Mardi 8h12. Tu es DSI d'une PME 200 personnes. Le CFO te confirme
@@ -19,38 +19,38 @@ choices:
   - id: "a"
     label: "CEO + DAF + DPO + RSSI/DSI + avocat externe + un communicant + chef de production - tout le monde concerne"
     outcome: "good"
-    feedback: "Composition correcte. Cellule restreinte (~7 personnes max), couvrant les axes : decision (CEO), finance (DAF), legal/RGPD (DPO + avocat), technique (RSSI/DSI), communication (interne+externe), continuite (production). Pas plus, pas moins."
+    feedback: "Composition correcte. Cellule restreinte (~7 personnes max), couvrant les axes : décision (CEO), finance (DAF), legal/RGPD (DPO + avocat), technique (RSSI/DSI), communication (interne+externe), continuite (production). Pas plus, pas moins."
     points: 35
   - id: "b"
     label: "Tout le COMEX + tous les chefs de service - on ne sait pas qui sera utile"
     outcome: "bad"
-    feedback: "TROP DE MONDE. Une cellule de crise efficace est restreinte (5-7 max). Au-dela = decisions paralysees, fuites d'info inevitables, gestion impossible. Les autres seront informes par cascading apres les decisions."
+    feedback: "TROP DE MONDE. Une cellule de crise efficace est restreinte (5-7 max). Au-dela = décisions paralysees, fuites d'info inevitables, gestion impossible. Les autres seront informes par cascading après les décisions."
     points: -15
   - id: "c"
-    label: "Juste le CEO - il decide, je gere apres"
+    label: "Juste le CEO - il decide, je gere après"
     outcome: "bad"
-    feedback: "TROP PEU. Un breach cyber implique simultanement : decisions financieres (DAF), notification CNIL 72h (DPO), legal (avocat), continuite metier (production), communication (com). Le CEO seul ne peut pas tout gerer en parallele."
+    feedback: "TROP PEU. Un breach cyber implique simultanement : décisions financieres (DAF), notification CNIL 72h (DPO), legal (avocat), continuite métier (production), communication (com). Le CEO seul ne peut pas tout gerer en parallele."
     points: -10
   - id: "d"
-    label: "Juste l'equipe technique IT - on resout le probleme avant d'impliquer la direction"
+    label: "Juste l'équipe technique IT - on resout le problème avant d'impliquer la direction"
     outcome: "bad"
-    feedback: "Erreur classique des techniciens. Un breach cyber n'est PAS qu'un probleme technique. Decisions financieres, juridiques, communication : tu ne peux pas les prendre seul. Et en RGPD, le DPO DOIT etre implique sous 72h - tu n'as pas le luxe d'attendre."
+    feedback: "Erreur classique des techniciens. Un breach cyber n'est PAS qu'un problème technique. Décisions financieres, juridiques, communication : tu ne peux pas les prendre seul. Et en RGPD, le DPO DOIT être implique sous 72h - tu n'as pas le luxe d'attendre."
     points: -15
 debrief: |
   La **cellule de crise cyber** est une instance temporaire qui
   rassemble les decideurs cles pour gerer un incident en cours.
-  Elle est differente d'une "team SOC" : pas que technique, pas que
-  decision, c'est l'organe qui ORCHESTRE tous les axes.
+  Elle est différente d'une "team SOC" : pas que technique, pas que
+  décision, c'est l'organe qui ORCHESTRE tous les axes.
 
   **Composition standard (5-7 personnes max) :**
 
-  **1. CEO ou Directeur General (decideur ultime)**
+  **1. CEO ou Directeur Général (decideur ultime)**
 
-  Pour les decisions strategiques :
-  - Acceptation de couts non-budgetes (audit forensic, avocat,
+  Pour les décisions stratégiques :
+  - Acceptation de coûts non-budgetes (audit forensic, avocat,
     consultants)
-  - Communication publique (statement, reseaux sociaux, presse)
-  - Decision "payer la rancon ou pas"
+  - Communication publique (statement, réseaux sociaux, presse)
+  - Décision "payer la rançon ou pas"
   - Communication aux actionnaires
 
   **2. DAF (CFO)**
@@ -59,14 +59,14 @@ debrief: |
   - Notification banque pour rappel des virements suspects (sous
     24h, recall possible si attaque recente)
   - Coordination avec assurance cyber
-  - Suivi des couts de remediation
+  - Suivi des coûts de remediation
 
-  **3. DPO ou referent RGPD**
+  **3. DPO ou référent RGPD**
 
-  - **Notification CNIL sous 72h** si donnees personnelles affectees
+  - **Notification CNIL sous 72h** si données personnelles affectees
     (RGPD article 33)
   - Communication aux personnes concernees (article 34) si risque
-    eleve
+    élève
   - Documentation dans le registre des violations
   - Conformite RGPD pendant la crise (les requetes Right To Be
     Forgotten arrivent souvent en parallele)
@@ -76,39 +76,39 @@ debrief: |
   - Coordination technique : isolation, investigation, remediation
   - Pilotage du SOC (interne ou externe)
   - Communication avec ANSSI / CERT-FR
-  - Decision technique : restaurer une sauvegarde, reformater, etc.
+  - Décision technique : restaurer une sauvegarde, reformater, etc.
 
   **5. Avocat (interne ou externe)**
 
-  - Conseils juridiques sur la communication (eviter
+  - Conseils juridiques sur la communication (éviter
     l'auto-incrimination)
-  - Plainte aupres des autorites (gendarmerie cyber, OCLCTIC)
+  - Plainte auprès des autorités (gendarmerie cyber, OCLCTIC)
   - Gestion contractuelle si le breach passe par un prestataire
   - Conseils si litiges clients potentiels
 
   **6. Responsable communication (interne + externe)**
 
   - Rediger le statement officiel (pour clients, partenaires, presse)
-  - Gerer les reseaux sociaux (anticiper les questions clients)
-  - Coordination avec le service client (script de reponse)
+  - Gerer les réseaux sociaux (anticiper les questions clients)
+  - Coordination avec le service client (script de réponse)
 
-  **7. Responsable metier impacte (operations, production)**
+  **7. Responsable métier impacte (opérations, production)**
 
   Pour les industries (sante, manufacturing, retail) :
-  - Decision continuite : on continue de produire/servir ou on
+  - Décision continuite : on continue de produire/servir ou on
     stoppe ?
   - Plan de reprise d'activite (PRA) si stoppe
-  - Communication aux equipes terrain
+  - Communication aux équipes terrain
 
   **Qui NE PAS inviter (les pieges) :**
 
-  ❌ **Tout le COMEX** : trop de monde, decisions paralysees, fuites
+  ❌ **Tout le COMEX** : trop de monde, décisions paralysees, fuites
   inevitable. Le CEO sera leur relais.
 
   ❌ **Les chefs de chaque service** : sera informe par cascading.
 
   ❌ **Le service client / sales** : ils auront un script a appliquer
-  apres les decisions de la cellule.
+  après les décisions de la cellule.
 
   ❌ **Le prestataire potentiellement compromis** : tant que tu n'as
   pas confirme qu'il n'est pas la source, tu ne lui partages PAS
@@ -116,7 +116,7 @@ debrief: |
 
   **Le canal de communication d'urgence :**
 
-  La regle d'or : **NE PAS utiliser les canaux potentiellement
+  La règle d'or : **NE PAS utiliser les canaux potentiellement
   compromis**. Si le breach affecte Microsoft 365 ou Slack, ne pas
   utiliser Teams ou Slack pour communiquer la crise (l'attaquant lit
   potentiellement).
@@ -124,18 +124,18 @@ debrief: |
   Solutions :
   - **Signal** (gratuit, chiffre, FR-friendly) : groupe dedie cellule
     de crise.
-  - **WhatsApp Business** : moins ideal mais souvent deja installe.
-  - **Telephone** : les premieres heures, c'est le canal le plus sur.
-  - **Reunion physique** dans une salle non-IT (pas de cameras
+  - **WhatsApp Business** : moins ideal mais souvent déjà installe.
+  - **Téléphone** : les premières heures, c'est le canal le plus sur.
+  - **Réunion physique** dans une salle non-IT (pas de caméras
     connectees, pas de visios).
 
-  Definir AVANT la crise :
-  - Numero de tel de chaque membre de la cellule
+  Définir AVANT la crise :
+  - Numéro de tel de chaque membre de la cellule
   - Groupe Signal pre-cree avec tous les membres
-  - Salle de reunion dediee (numerique : Signal video ; physique :
+  - Salle de réunion dediee (numérique : Signal video ; physique :
     salle "war room")
 
-  **Les 5 premieres minutes de la cellule :**
+  **Les 5 premières minutes de la cellule :**
 
   1. **Tour de table EXPRESS** : qu'est-ce qu'on sait factuellement ?
      (pas d'opinions, faits seulement)
@@ -143,9 +143,9 @@ debrief: |
      compromis
   3. **Designer un coordinateur** : 1 personne qui pilote (souvent
      le RSSI), maintient le timeline d'actions
-  4. **Frequence de reunion** : toutes les 1h initialement, espacement
-     des que la situation se stabilise
-  5. **Allocation des roles** : qui fait quoi dans l'heure qui vient
+  4. **Frequence de réunion** : toutes les 1h initialement, espacement
+     dès que la situation se stabilise
+  5. **Allocation des rôles** : qui fait quoi dans l'heure qui vient
 
   **Le timeline (le document central) :**
 
@@ -153,12 +153,12 @@ debrief: |
   - Heure UTC + heure locale
   - Action prise
   - Par qui
-  - Resultat
+  - Résultat
 
   Ce timeline est CRITIQUE pour :
-  - **CNIL / autorites** : prouver que tu as agi de maniere
+  - **CNIL / autorités** : prouver que tu as agi de manière
     appropriee
-  - **Assurance cyber** : justifier les couts
+  - **Assurance cyber** : justifier les coûts
   - **Forensic** : reconstruction des events
   - **REX** : apprendre pour la prochaine fois (cf. ep 06)
 
@@ -168,12 +168,12 @@ debrief: |
   **Cas reel - Norsk Hydro 2019 :**
 
   Norsk Hydro (aluminium norvegien) a subi un ransomware LockerGoga
-  qui a paralyse 22 000 employes dans 40 pays. Reponse exemplaire :
+  qui a paralyse 22 000 employés dans 40 pays. Réponse exemplaire :
   - Cellule de crise montee en 30 minutes
-  - CEO a refuse de payer la rancon (decision morale)
-  - Communication transparente meme aux actionnaires (cours d'action
+  - CEO a refuse de payer la rançon (décision morale)
+  - Communication transparente même aux actionnaires (cours d'action
     a perdu 2% au lieu de 20% chez d'autres)
-  - Operations restaurees manuellement en 1 semaine
+  - Opérations restaurees manuellement en 1 semaine
   - REX public partage avec tous (etudie comme cas d'ecole depuis)
 
   Cout final : ~75M EUR (recuperes via assurance + perte de
@@ -183,34 +183,34 @@ quiz:
   - question: "Combien de personnes idealement dans une cellule de crise cyber ?"
     choices:
       - { id: "a", label: "10-15 (tout le COMEX)", correct: false }
-      - { id: "b", label: "5-7 max (decideurs cles : CEO, DAF, DPO, RSSI, avocat, com, metier)", correct: true }
+      - { id: "b", label: "5-7 max (decideurs cles : CEO, DAF, DPO, RSSI, avocat, com, métier)", correct: true }
       - { id: "c", label: "1 (le CEO)", correct: false }
-    explanation: "5-7 max = couvrir tous les axes (decision, finance, legal/RGPD, technique, com, continuite) sans paralyser les decisions. Au-dela : trop lent, fuites inevitable. En-dessous : axes manquants."
+    explanation: "5-7 max = couvrir tous les axes (décision, finance, legal/RGPD, technique, com, continuite) sans paralyser les décisions. Au-dela : trop lent, fuites inevitable. En-dessous : axes manquants."
 
   - question: "Pourquoi NE PAS utiliser Teams/Slack pour la communication de cellule de crise ?"
     choices:
       - { id: "a", label: "Trop lent", correct: false }
       - { id: "b", label: "Si l'attaquant a compromis Microsoft 365 ou Slack, il lit potentiellement les communications de la cellule de crise", correct: true }
       - { id: "c", label: "Aucune raison", correct: false }
-    explanation: "Pendant un breach, ne pas utiliser les canaux compromis. Signal (chiffre E2E), telephone, ou reunion physique sont les options. Pre-creer un groupe Signal cellule de crise AVANT la crise."
+    explanation: "Pendant un breach, ne pas utiliser les canaux compromis. Signal (chiffre E2E), téléphone, ou réunion physique sont les options. Pre-créer un groupe Signal cellule de crise AVANT la crise."
 
-  - question: "Quel role est OBLIGATOIRE en cellule de crise cyber ?"
+  - question: "Quel rôle est OBLIGATOIRE en cellule de crise cyber ?"
     choices:
       - { id: "a", label: "Un consultant externe", correct: false }
       - { id: "b", label: "Le DPO (notification CNIL sous 72h, RGPD article 33)", correct: true }
       - { id: "c", label: "Un journaliste", correct: false }
-    explanation: "Si donnees personnelles affectees, le RGPD impose la notification CNIL sous 72h et au sujets concernes. Le DPO pilote ces obligations legales. Sans DPO en cellule = risque d'amendes (jusqu'a 4% CA)."
+    explanation: "Si données personnelles affectees, le RGPD impose la notification CNIL sous 72h et au sujets concernes. Le DPO pilote ces obligations legales. Sans DPO en cellule = risque d'amendes (jusqu'à 4% CA)."
 
   - question: "Norsk Hydro 2019 a perdu combien (avec gestion exemplaire) ?"
     choices:
       - { id: "a", label: "Quelques milliers EUR", correct: false }
       - { id: "b", label: "~75M EUR (vs 300-400M EUR potentiellement sans cellule de crise efficace)", correct: true }
       - { id: "c", label: "1 milliard", correct: false }
-    explanation: "Norsk Hydro = cas d'ecole de gestion de crise reussie. Cellule en 30 min, refus de payer la rancon, communication transparente. ~75M EUR au lieu de 300-400M EUR potentiellement (autres entreprises similaires non preparees)."
+    explanation: "Norsk Hydro = cas d'ecole de gestion de crise réussie. Cellule en 30 min, refus de payer la rançon, communication transparente. ~75M EUR au lieu de 300-400M EUR potentiellement (autres entreprises similaires non preparees)."
 ---
 
 > 💡 **Pour aller plus loin** : l'**ANSSI** publie un guide "Crise
 > d'origine cyber" (gratuit). Le **CERT-FR** offre un soutien gratuit
 > en cas de crise cyber pour les entites critiques. **Signal** doit
-> etre configure AVANT la crise (groupe dedie, numeros de tous les
+> être configure AVANT la crise (groupe dedie, numéros de tous les
 > membres).

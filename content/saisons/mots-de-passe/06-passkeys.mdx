@@ -2,7 +2,7 @@
 title: "Les passkeys : l'avenir sans mot de passe"
 durationMinutes: 6
 persona: "tous-collaborateurs"
-objective: "Comprendre les passkeys, les activer la ou c'est dispo, et savoir l'expliquer a ses collegues"
+objective: "Comprendre les passkeys, les activer la ou c'est dispo, et savoir l'expliquer a ses collègues"
 xpReward: 60
 scenario: |
   Mercredi 11h. Tu te connectes a ton compte Google sur un nouveau navigateur.
@@ -13,24 +13,24 @@ scenario: |
   Tu poses ton doigt. Tu es connecte. Pas de mot de passe a taper. Pas de SMS de
   code 6 chiffres. Pas de deuxieme facteur. **Une seule action**.
 
-  Ton collegue, qui te regarde, dit : "C'est quoi ce truc ?". Tu te rends compte
-  que tu utilises ce systeme depuis 6 mois sans vraiment savoir comment ca marche.
+  Ton collègue, qui te regarde, dit : "C'est quoi ce truc ?". Tu te rends compte
+  que tu utilises ce système depuis 6 mois sans vraiment savoir comment ça marche.
   Comment tu lui expliques ?
 choices:
   - id: "a"
-    label: "Une passkey, c'est juste un mot de passe stocke sur le telephone"
+    label: "Une passkey, c'est juste un mot de passe stocke sur le téléphone"
     outcome: "bad"
     feedback: "Faux et reducteur. Une passkey n'est PAS un mot de passe : c'est une cle cryptographique asymetrique. Aucun secret partage, aucun risque de phishing."
     points: -5
   - id: "b"
-    label: "C'est de la cryptographie asymetrique : ton appareil signe une demande, le site verifie. Pas de mot de passe transmis ni stocke cote serveur."
+    label: "C'est de la cryptographie asymetrique : ton appareil signe une demande, le site verifie. Pas de mot de passe transmis ni stocke côté serveur."
     outcome: "good"
-    feedback: "Excellente explication ! C'est exactement ca : pas de secret partage, pas de phishing possible, pas de fuite de mot de passe possible."
+    feedback: "Excellente explication ! C'est exactement ça : pas de secret partage, pas de phishing possible, pas de fuite de mot de passe possible."
     points: 30
   - id: "c"
     label: "C'est un truc Apple / Google que les vieux navigateurs ne peuvent pas faire"
     outcome: "neutral"
-    feedback: "Pas faux mais tres incomplet. Les passkeys sont un standard ouvert (FIDO2/WebAuthn) supporte par tous les navigateurs modernes (Chrome, Safari, Firefox, Edge) depuis 2023+."
+    feedback: "Pas faux mais très incomplet. Les passkeys sont un standard ouvert (FIDO2/WebAuthn) supporte par tous les navigateurs modernes (Chrome, Safari, Firefox, Edge) depuis 2023+."
     points: 5
   - id: "d"
     label: "C'est juste un mot de passe stocke par le navigateur (comme l'autofill Chrome)"
@@ -38,21 +38,21 @@ choices:
     feedback: "Confusion classique. L'autofill stocke un mot de passe (vulnerable au phishing si tu es sur un faux site). Une passkey est lie au domaine officiel et echoue silencieusement sur un faux site."
     points: -5
 debrief: |
-  **La passkey est la fin du mot de passe**. Cette transition, deja reelle pour
+  **La passkey est la fin du mot de passe**. Cette transition, déjà reelle pour
   des centaines de millions de personnes en 2026, va simplifier la vie cyber
-  de tous tes collegues.
+  de tous tes collègues.
 
   **Comment ça marche** (en simple) :
-  - Ton appareil (telephone, ordi) genere une **paire de cles** : une privee
+  - Ton appareil (téléphone, ordi) genere une **paire de cles** : une privée
     (qui reste sur l'appareil, jamais transmise) et une publique (envoyee au
     site).
   - Quand tu te connectes, le site envoie un **defi** que ton appareil signe
-    avec la cle privee. Le site verifie la signature avec la cle publique.
-  - **Aucun secret n'est jamais transmis**. Aucune base de donnees a leaker.
+    avec la cle privée. Le site verifie la signature avec la cle publique.
+  - **Aucun secret n'est jamais transmis**. Aucune base de données a leaker.
     Aucun phishing possible (la cle ne marche QUE sur le bon domaine).
 
   **Avantages concrets** :
-  - **Anti-phishing native** : meme si tu cliques sur un faux Microsoft 365
+  - **Anti-phishing native** : même si tu cliques sur un faux Microsoft 365
     parfaitement clone, ta passkey ne s'enverra pas. Le navigateur verifie
     le domaine.
   - **Anti credential stuffing** : aucun mot de passe a reutiliser. Une
@@ -65,15 +65,15 @@ debrief: |
   **Sites qui supportent les passkeys en 2026** :
   - Google, Apple, Microsoft, Amazon, PayPal, GitHub, GitLab, Adobe
   - LinkedIn, X, Reddit, Discord, Notion
-  - Banques : Revolut, N26, Boursorama (en cours pour la majorite)
+  - Banques : Revolut, N26, Boursorama (en cours pour la majorité)
   - Plateformes pro : 1Password, Bitwarden, Dashlane (toutes geres)
   - **Liste a jour** : https://www.passkeys.directory
 
-  **Comment activer une passkey** : aller dans les parametres securite du
-  compte, chercher "passkey" ou "cle de securite", cliquer "ajouter une
+  **Comment activer une passkey** : aller dans les paramètres sécurité du
+  compte, chercher "passkey" ou "cle de sécurité", cliquer "ajouter une
   passkey", utiliser Touch ID / Face ID / Windows Hello. C'est tout.
 
-  La regle universelle : **active une passkey partout ou c'est possible**.
+  La règle universelle : **active une passkey partout ou c'est possible**.
   C'est l'amelioration cyber la plus rapide a faire en 2026 - moins de 2
   minutes par site.
 quiz:
@@ -81,17 +81,17 @@ quiz:
     choices:
       - { id: "a", label: "Un mot de passe stocke par le navigateur", correct: false }
       - { id: "b", label: "Une cle cryptographique asymetrique liee au domaine et a l'appareil", correct: true }
-      - { id: "c", label: "Un code a 6 chiffres recu par SMS", correct: false }
-      - { id: "d", label: "Un truc proprietaire d'Apple", correct: false }
-    explanation: "FIDO2/WebAuthn : standard ouvert. Cle privee jamais transmise. Liee au domaine (anti-phishing) et a l'appareil. Sync via iCloud/Google Password Manager/Bitwarden."
+      - { id: "c", label: "Un code a 6 chiffres reçu par SMS", correct: false }
+      - { id: "d", label: "Un truc propriétaire d'Apple", correct: false }
+    explanation: "FIDO2/WebAuthn : standard ouvert. Cle privée jamais transmise. Liee au domaine (anti-phishing) et a l'appareil. Sync via iCloud/Google Password Manager/Bitwarden."
 
   - question: "Pourquoi une passkey est immunisee au phishing ?"
     choices:
-      - { id: "a", label: "Parce qu'elle est tres longue", correct: false }
+      - { id: "a", label: "Parce qu'elle est très longue", correct: false }
       - { id: "b", label: "Parce qu'elle est liee au domaine officiel - un faux site ne peut pas l'utiliser", correct: true }
       - { id: "c", label: "Parce que les navigateurs filtrent les sites suspects", correct: false }
       - { id: "d", label: "Parce qu'elle expire toutes les 5 minutes", correct: false }
-    explanation: "Le navigateur verifie le domaine avant d'utiliser la passkey. Sur un faux 'micr0soft.com', la passkey legitime ne s'envoie tout simplement pas. C'est la difference fondamentale avec un mot de passe."
+    explanation: "Le navigateur verifie le domaine avant d'utiliser la passkey. Sur un faux 'micr0soft.com', la passkey legitime ne s'envoie tout simplement pas. C'est la différence fondamentale avec un mot de passe."
 
   - question: "En 2026, je devrais activer une passkey :"
     choices:
@@ -101,17 +101,17 @@ quiz:
       - { id: "d", label: "Attendre 2027 que la techno mature", correct: false }
     explanation: "La techno est mature, supportee par Apple/Google/Microsoft/Bitwarden depuis 2023+. Plus tu actives tot, plus tu reduis ta surface de phishing. C'est gratuit et prend moins de 2 minutes par site."
 
-  - question: "Si je perds mon telephone (qui contient ma passkey), je suis bloque ?"
+  - question: "Si je perds mon téléphone (qui contient ma passkey), je suis bloque ?"
     choices:
       - { id: "a", label: "Oui, j'ai tout perdu, je dois recreer un compte", correct: false }
       - { id: "b", label: "Non, les passkeys sync via iCloud/Google/Bitwarden - accessible depuis un nouvel appareil", correct: true }
       - { id: "c", label: "Oui, sauf si j'ai imprime un code de secours", correct: false }
       - { id: "d", label: "Oui, c'est le principal defaut des passkeys", correct: false }
-    explanation: "iCloud Keychain (Apple), Google Password Manager (Android), Bitwarden (cross-platform) synchronisent les passkeys de maniere chiffree. Sur un nouveau telephone, tu te re-connectes a iCloud/Google/Bitwarden et tes passkeys reviennent."
+    explanation: "iCloud Keychain (Apple), Google Password Manager (Android), Bitwarden (cross-platform) synchronisent les passkeys de manière chiffree. Sur un nouveau téléphone, tu te re-connectes a iCloud/Google/Bitwarden et tes passkeys reviennent."
 ---
 
 > 💡 **Pour aller plus loin** : pour activer une passkey sur tes comptes pro,
 > commence par les 5 services les plus critiques (mail, banque, gestionnaire
 > de mots de passe, GitHub si tu codes, comptes cloud). 10 minutes au total.
-> Et la prochaine fois que ton telephone te demande "voulez-vous enregistrer
+> Et la prochaine fois que ton téléphone te demande "voulez-vous enregistrer
 > une passkey ?", dis OUI.

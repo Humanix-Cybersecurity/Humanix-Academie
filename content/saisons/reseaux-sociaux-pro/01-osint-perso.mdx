@@ -2,7 +2,7 @@
 title: "Tout ce qu'on trouve sur vous en 10 min (OSINT)"
 durationMinutes: 8
 persona: "tous-collaborateurs"
-objective: "Comprendre l'OSINT (Open Source Intelligence) - ce que les attaquants peuvent decouvrir sur toi en 10 min, et reduire ton empreinte numerique"
+objective: "Comprendre l'OSINT (Open Source Intelligence) - ce que les attaquants peuvent decouvrir sur toi en 10 min, et reduire ton empreinte numérique"
 xpReward: 70
 scenario: |
   Tu es chef de projet d'une PME 80 personnes. Tu acceptes un
@@ -10,7 +10,7 @@ scenario: |
   profil complet en 10 minutes via OSINT (sources publiques
   uniquement).
 
-  Apres 10 minutes, il te montre :
+  Après 10 minutes, il te montre :
   - Ton nom, prenom, age, ville
   - Ton CV complet (LinkedIn, sans connexion)
   - Tes 3 derniers postes + les noms de tes managers
@@ -18,15 +18,15 @@ scenario: |
   - Le nom de ton chien (Instagram)
   - Tes 5 derniers voyages (Facebook check-in)
   - Tes hobbies, opinions politiques (Twitter)
-  - 2 reponses de securite probables (mere maiden, premiere
+  - 2 réponses de sécurité probables (mère maiden, première
     ecole)
 
   Tu reagis comment ?
 choices:
   - id: "a"
-    label: "C'est ma vie, pas grave si on trouve ca"
+    label: "C'est ma vie, pas grave si on trouve ça"
     outcome: "bad"
-    feedback: "DANGEREUX. Cette information permet : phishing cible (spear phishing), reset de mot de passe (questions secretes), social engineering ('je suis un ancien collegue'), fraude au president (faire passer pour ton patron). 90% des attaques avancees commencent par OSINT."
+    feedback: "DANGEREUX. Cette information permet : phishing cible (spear phishing), reset de mot de passe (questions secretes), social engineering ('je suis un ancien collègue'), fraude au président (faire passer pour ton patron). 90% des attaques avancees commencent par OSINT."
     points: -20
   - id: "b"
     label: "Audit et reduction de mon empreinte : LinkedIn restreint, Facebook prive, Twitter cleanup, suppression Pages Jaunes, alertes Google sur mon nom"
@@ -36,35 +36,35 @@ choices:
   - id: "c"
     label: "Je supprime tous mes comptes sociaux"
     outcome: "neutral"
-    feedback: "Trop radical. Tu perds : reseau pro (LinkedIn essentiel), liens famille/amis. Approche graduee : profil pro public mais limit, perso prive. Plus pragmatique."
+    feedback: "Trop radical. Tu perds : réseau pro (LinkedIn essentiel), liens famille/amis. Approche graduee : profil pro public mais limit, perso prive. Plus pragmatique."
     points: 15
   - id: "d"
     label: "Je change de nom legal pour devenir anonyme"
     outcome: "bad"
-    feedback: "Disproportionne. L'OSINT vise ta surface attaquable, pas ton identite. Audit + reglages confidentialite = solution proportionnee."
+    feedback: "Disproportionne. L'OSINT vise ta surface attaquable, pas ton identité. Audit + reglages confidentialité = solution proportionnee."
     points: -10
 debrief: |
   L'**OSINT** (Open Source Intelligence) designe la collecte
   d'informations a partir de **sources publiques uniquement**.
-  C'est la premiere etape de quasi toutes les attaques ciblees
-  (spear phishing, fraude au president, social engineering).
+  C'est la première étape de quasi toutes les attaques ciblees
+  (spear phishing, fraude au président, social engineering).
 
-  En 10 minutes, un attaquant peut etablir un profil tres
+  En 10 minutes, un attaquant peut etablir un profil très
   complet de toi sans rien hacker, juste en cherchant.
 
   **Les sources principales d'OSINT :**
 
-  **1. Reseaux sociaux pros**
+  **1. Réseaux sociaux pros**
 
   - **LinkedIn** : CV complet, anciennete, postes, formations,
     competences, recommandations
   - **Viadeo** : encore utilise en France
   - **Xing** : pour profils internationaux
 
-  Souvent **publics par defaut** : meme sans etre connecte,
+  Souvent **publics par defaut** : même sans être connecte,
   acces partiel.
 
-  **2. Reseaux sociaux personnels**
+  **2. Réseaux sociaux personnels**
 
   - **Facebook** : famille, amis, voyages, opinions
   - **Instagram** : photos personnelles, geolocalisation,
@@ -76,14 +76,14 @@ debrief: |
 
   **3. Annuaires et sources officielles**
 
-  - **Pages Jaunes / Pages Blanches** : adresses, telephone
-  - **Annuaire telephonique inverse** : numero -> nom
-  - **Cadastre** : proprietes immobilieres
+  - **Pages Jaunes / Pages Blanches** : adresses, téléphone
+  - **Annuaire téléphonique inverse** : numéro -> nom
+  - **Cadastre** : propriétés immobilieres
   - **INPI** : entreprises, dirigeants
-  - **Societe.com** : comptes annuels d'entreprises
+  - **Société.com** : comptes annuels d'entreprises
   - **Verif.com** : profil entreprises + dirigeants
 
-  **4. Donnees fuitees (leaks)**
+  **4. Données fuitees (leaks)**
 
   - **Have I Been Pwned** : a quelles fuites tes emails
     appartiennent
@@ -94,13 +94,13 @@ debrief: |
   **5. Recherche image inversee**
 
   - **Google Images** : retrouver d'autres comptes avec la
-    meme photo
+    même photo
   - **TinEye** : version professionnelle
   - **Yandex** : meilleur sur les visages
 
   **6. Sites professionnels**
 
-  - **Site de l'entreprise** : equipe, contacts, projets
+  - **Site de l'entreprise** : équipe, contacts, projets
   - **Communiques de presse** : annonces, partenariats
   - **Blog d'entreprise** : auteurs, sujets
 
@@ -110,7 +110,7 @@ debrief: |
   - **Stack Overflow** : questions techniques (souvent revele
     le contexte de travail)
   - **Reddit** : opinions, hobbies
-  - **Forums specialises** : centres d'interet
+  - **Forums specialises** : centres d'intérêt
 
   **8. Geolocalisation**
 
@@ -118,7 +118,7 @@ debrief: |
   - **Check-in Facebook / Instagram**
   - **Strava** : trajets de course / velo (incident militaire
     US 2018)
-  - **Google Maps reviews** : restaurants frequentes
+  - **Google Maps reviews** : restaurants fréquentes
 
   **9. Sources techniques (pour devs)**
 
@@ -129,7 +129,7 @@ debrief: |
   **10. Wayback Machine**
 
   - Versions anciennes de sites web
-  - Permet de voir des informations supprimees recemment
+  - Permet de voir des informations supprimees récemment
 
   **Outils OSINT (legaux et utilises par redteamers) :**
 
@@ -148,8 +148,8 @@ debrief: |
   L'attaquant connait ton parcours, ton manager, tes projets
   recents. Il envoie un mail :
 
-  > "Salut [ton prenom], suite a notre echange chez Grand
-  > Cafe la semaine derniere [reel : il a vu ton check-in
+  > "Salut [ton prenom], suite a notre échange chez Grand
+  > Cafe la semaine dernière [reel : il a vu ton check-in
   > Instagram], je t'envoie le compte-rendu du projet [reel :
   > nom de projet sur LinkedIn]. Clique ici pour la version
   > finale."
@@ -159,13 +159,13 @@ debrief: |
   **Usage 2 : Reset de mot de passe**
 
   Beaucoup de sites demandent encore des "questions secretes" :
-  - Nom de jeune fille de la mere : facile (Facebook ta mere)
-  - Premiere ecole : LinkedIn / Facebook
+  - Nom de jeune fille de la mère : facile (Facebook ta mère)
+  - Première ecole : LinkedIn / Facebook
   - Nom de ton premier animal : Instagram
 
-  L'attaquant peut prendre le controle de comptes via reset.
+  L'attaquant peut prendre le contrôle de comptes via reset.
 
-  **Usage 3 : Fraude au president**
+  **Usage 3 : Fraude au président**
 
   L'attaquant connait :
   - Le nom du DG / DAF
@@ -178,97 +178,97 @@ debrief: |
   > "Je suis a Tokyo pour un deal urgent confidentiel, fais ce
   > virement de 80K EUR sur ce compte..."
 
-  Cf saison fraude-president.
+  Cf saison fraude-président.
 
-  **Usage 4 : Ingenierie sociale physique**
+  **Usage 4 : Ingénierie sociale physique**
 
   L'attaquant connait :
   - Les locaux (Google Maps, photos LinkedIn)
-  - Les noms des employes (LinkedIn de l'entreprise)
+  - Les noms des employés (LinkedIn de l'entreprise)
   - Les fournisseurs (page Web, communiques)
 
   Il se presente comme un faux technicien (cf saison
   acces-physiques ep 03) avec un context credible.
 
-  **Usage 5 : Vol d'identite**
+  **Usage 5 : Vol d'identité**
 
   Toutes les infos OSINT permettent :
   - Ouverture de comptes en banque (avec vol de papiers
-    complementaires)
+    complémentaires)
   - Souscription credits
   - Demarches administratives au nom de la victime
 
   **Reduire son empreinte OSINT (audit perso) :**
 
-  **Etape 1 : Auto-recherche**
+  **Étape 1 : Auto-recherche**
 
   Cherche-toi :
   - Google : "[Ton nom] [ta ville]"
-  - Bing : meme requete
+  - Bing : même requete
   - Sherlock (online) : ton username habituel
   - Have I Been Pwned : ton email
 
   Note ce qui sort.
 
-  **Etape 2 : LinkedIn**
+  **Étape 2 : LinkedIn**
 
-  Reglages a verifier :
+  Reglages a vérifier :
   - **Profile public** : limite a "votre nom et votre photo"
   - **Visibility of activity** : connexions seulement
   - **Recherche par moteurs** : desactiver
   - **Email associe** : pas perso (si possible)
   - **Photo profil** : OK mais pas trop revelateur
 
-  **Etape 3 : Facebook**
+  **Étape 3 : Facebook**
 
   - **Audience par defaut** : Amis (pas Public)
-  - **Recherche par email/telephone** : friends only
+  - **Recherche par email/téléphone** : friends only
   - **Photos taggees** : approbation manuelle
   - **Audit historique** : Facebook outil pour rendre prive
     les anciens posts
   - **Geolocalisation** : desactiver pour photos
 
-  **Etape 4 : Instagram**
+  **Étape 4 : Instagram**
 
   - **Compte prive** : recommande
   - **Geolocalisation** : desactiver
   - **Sharing automatique** vers Facebook : desactiver
   - **Stories** : seulement amis proches pour les sensibles
 
-  **Etape 5 : Twitter / X**
+  **Étape 5 : Twitter / X**
 
   - **Compte prive** ou cleanup des vieux tweets (TweetDelete,
     TweetEraser)
   - **Geolocalisation** : desactivee
   - **Email caches**
 
-  **Etape 6 : Donnees fuitees**
+  **Étape 6 : Données fuitees**
 
   - **Have I Been Pwned** : changer mots de passe pour comptes
     fuites
   - **MFA** sur tous les comptes critiques
   - **Mots de passe uniques** (gestionnaire)
 
-  **Etape 7 : Annuaires**
+  **Étape 7 : Annuaires**
 
   - **Pages Jaunes / Pages Blanches** : demander suppression
-  - **Verif.com / Societe.com** : difficile a faire enlever
-    (donnees publiques d'entreprises)
+  - **Verif.com / Société.com** : difficile a faire enlever
+    (données publiques d'entreprises)
 
-  **Etape 8 : Photos / metadata**
+  **Étape 8 : Photos / metadata**
 
   - **Avant publication** : supprimer EXIF (Photoshop, GIMP,
     Mac Preview)
-  - **Apres publication** : pas grand chose a faire (les
+  - **Après publication** : pas grand chose a faire (les
     plate-formes les retirent souvent)
 
-  **Etape 9 : Alertes**
+  **Étape 9 : Alertes**
 
   - **Google Alerts** : alerte "[Ton nom]" par email
-  - **Detection nouvelle apparition** rapide
+  - **Détection nouvelle apparition** rapide
   - **Reaction** rapide possible
 
-  **Etape 10 : Education famille**
+  **Étape 10 : Éducation famille**
 
   Ta famille / amis peuvent te tagguer / poster avec toi.
   Sensibiliser :
@@ -282,10 +282,10 @@ debrief: |
   - **Profil LinkedIn minimal** : nom + entreprise actuelle
     seulement
   - **Pas de Facebook public**
-  - **Pas de Twitter perso** (creer un alias)
+  - **Pas de Twitter perso** (créer un alias)
   - **VPN** systematique
   - **Email pro** pour actes engageants seulement
-  - **Telephone separe** perso / pro
+  - **Téléphone separe** perso / pro
 
   **Le piege "j'ai rien a cacher" :**
 
@@ -296,10 +296,10 @@ debrief: |
   - Plus on sait sur toi = plus le phishing est credible
   - Plus on sait sur toi = plus le reset de mot de passe est
     facile
-  - Plus on sait sur toi = plus la fraude au president est
+  - Plus on sait sur toi = plus la fraude au président est
     credible
 
-  Memes les "informations innocentes" peuvent etre exploitees.
+  Mêmes les "informations innocentes" peuvent être exploitees.
 
   **Le piege "Facebook c'est entre amis" :**
 
@@ -308,19 +308,19 @@ debrief: |
   - Sont des "faux amis" (faux profils) ?
   - Partagent les contenus avec leurs amis (cascade) ?
 
-  La reponse statistique : 5-10% des comptes Facebook sont
+  La réponse statistique : 5-10% des comptes Facebook sont
   compromis ou faux a un moment donne. Ton "espace prive"
   fuit constamment.
 
-  **Le piege "je suis trop petit pour etre une cible" :**
+  **Le piege "je suis trop petit pour être une cible" :**
 
   L'OSINT est **automatise**. Les attaquants scrapent
   massivement et choisissent leurs cibles parmi les profils
   exploitables. Tu peux devenir cible sans aucune raison
   particuliere.
 
-  Plus : si tu as acces a des donnees sensibles dans ton
-  travail (paie, IBAN, donnees clients), tu **es** une cible.
+  Plus : si tu as acces a des données sensibles dans ton
+  travail (paie, IBAN, données clients), tu **es** une cible.
 
   **Cas reels :**
 
@@ -336,50 +336,50 @@ debrief: |
   L'attaquant a fait OSINT sur le DG (LinkedIn -> deplacement
   Tokyo en cours). Faux email "DG depuis Tokyo, urgent
   paiement". Le comptable, n'ayant aucun moyen de douter
-  (l'OSINT etait bien fait), a paye.
+  (l'OSINT était bien fait), a paye.
 
-  **Cas 3 - Personne celebre 2024 (vol d'identite via OSINT)**
+  **Cas 3 - Personne celebre 2024 (vol d'identité via OSINT)**
 
-  Une personne moyennement connue a vu son identite usurpee
+  Une personne moyennement connue a vu son identité usurpee
   pour ouvrir 5 comptes bancaires. L'attaquant avait
-  reconstruit toute son identite via OSINT (date naissance,
-  nom mere, etc.).
+  reconstruit toute son identité via OSINT (date naissance,
+  nom mère, etc.).
 
-  **La regle d'or :**
+  **La règle d'or :**
 
-  > **L'OSINT est l'etape 1 de la plupart des attaques
+  > **L'OSINT est l'étape 1 de la plupart des attaques
   > ciblees. Reduction de l'empreinte = reduction du risque.
-  > Audit perso 1x/an + reglages confidentialite + alertes
-  > Google + education famille. L'objectif est PROPORTIONNE,
+  > Audit perso 1x/an + reglages confidentialité + alertes
+  > Google + éducation famille. L'objectif est PROPORTIONNE,
   > pas de devenir invisible.**
 quiz:
   - question: "L'OSINT (Open Source Intelligence) c'est quoi ?"
     choices:
       - { id: "a", label: "Une technique de hacking", correct: false }
-      - { id: "b", label: "Collecte d'informations a partir de sources publiques uniquement (LinkedIn, Facebook, Pages Jaunes, leaks). Etape 1 de la plupart des attaques ciblees", correct: true }
+      - { id: "b", label: "Collecte d'informations a partir de sources publiques uniquement (LinkedIn, Facebook, Pages Jaunes, leaks). Étape 1 de la plupart des attaques ciblees", correct: true }
       - { id: "c", label: "Un logiciel", correct: false }
-    explanation: "OSINT = sources PUBLIQUES uniquement, aucun hacking. LinkedIn, Facebook, Twitter, Pages Jaunes, leaks (Have I Been Pwned), GitHub, Wayback Machine, etc. 90% des attaques avancees commencent par OSINT (spear phishing, fraude president, social engineering)."
+    explanation: "OSINT = sources PUBLIQUES uniquement, aucun hacking. LinkedIn, Facebook, Twitter, Pages Jaunes, leaks (Have I Been Pwned), GitHub, Wayback Machine, etc. 90% des attaques avancees commencent par OSINT (spear phishing, fraude président, social engineering)."
 
   - question: "Quel pourcentage de l'OSINT est utilise dans les attaques avancees ?"
     choices:
       - { id: "a", label: "10%", correct: false }
       - { id: "b", label: "90% - les attaques ciblees commencent quasi systematiquement par phase OSINT pour personnaliser et rendre credible", correct: true }
       - { id: "c", label: "0%", correct: false }
-    explanation: "90% des attaques avancees commencent par OSINT. Phishing generique = ~3% taux clic. Spear phishing apres OSINT = >50% taux clic. La personnalisation issue d'OSINT (nom du manager, projet recent, deplacements) rend les attaques credibles."
+    explanation: "90% des attaques avancees commencent par OSINT. Phishing generique = ~3% taux clic. Spear phishing après OSINT = >50% taux clic. La personnalisation issue d'OSINT (nom du manager, projet recent, deplacements) rend les attaques credibles."
 
-  - question: "Tu fais l'audit de ton empreinte numerique, par quoi commences-tu ?"
+  - question: "Tu fais l'audit de ton empreinte numérique, par quoi commences-tu ?"
     choices:
       - { id: "a", label: "Supprimer tous mes comptes", correct: false }
       - { id: "b", label: "Auto-recherche (Google, Bing, Sherlock, Have I Been Pwned) pour voir ce qui sort. Puis reglages LinkedIn / Facebook / Instagram. Alertes Google.", correct: true }
       - { id: "c", label: "Changer de nom", correct: false }
-    explanation: "Etape 1 : auto-recherche pour voir ce qui sort. Etape 2 : reglages confidentialite reseaux. Etape 3 : alertes Google sur ton nom. Etape 4 : education famille. Approche graduee, proportionnee. Pas radical (suppression tout) ni naif (ne rien faire)."
+    explanation: "Étape 1 : auto-recherche pour voir ce qui sort. Étape 2 : reglages confidentialité réseaux. Étape 3 : alertes Google sur ton nom. Étape 4 : éducation famille. Approche graduee, proportionnee. Pas radical (suppression tout) ni naif (ne rien faire)."
 
   - question: "Tes photos Instagram contiennent un risque OSINT ?"
     choices:
       - { id: "a", label: "Aucun", correct: false }
       - { id: "b", label: "Oui : metadata EXIF GPS, reconnaissance des lieux, routines (cafe matinal), tag des amis (cascade), context personnel exploitable", correct: true }
       - { id: "c", label: "Seulement si visage visible", correct: false }
-    explanation: "Photos = riche source OSINT : metadata EXIF (GPS, date, modele appareil), reconnaissance lieux (cafe, gym, ecole enfants), routines exploitables, tags revelant relations. Solution : compte prive + desactiver geoloc + supprimer EXIF avant publication."
+    explanation: "Photos = riche source OSINT : metadata EXIF (GPS, date, modèle appareil), reconnaissance lieux (cafe, gym, ecole enfants), routines exploitables, tags revelant relations. Solution : compte prive + desactiver geoloc + supprimer EXIF avant publication."
 ---
 
 > 💡 **Pour aller plus loin** : **OSINT Framework**

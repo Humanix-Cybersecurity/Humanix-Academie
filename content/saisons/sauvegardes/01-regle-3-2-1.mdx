@@ -1,19 +1,19 @@
 ---
-title: "La regle 3-2-1 expliquee simplement"
+title: "La règle 3-2-1 expliquee simplement"
 durationMinutes: 6
 persona: "tous-collaborateurs"
-objective: "Comprendre et appliquer la regle 3-2-1 (3 copies, 2 supports, 1 off-site) pour les sauvegardes professionnelles et personnelles"
+objective: "Comprendre et appliquer la règle 3-2-1 (3 copies, 2 supports, 1 off-site) pour les sauvegardes professionnelles et personnelles"
 xpReward: 50
 scenario: |
-  Tu es responsable IT d'une PME 80 personnes. Etat des
+  Tu es responsable IT d'une PME 80 personnes. État des
   sauvegardes :
 
   - 1 sauvegarde quotidienne sur le NAS du bureau
   - Le NAS est dans la salle serveur (au sous-sol)
   - Aucune autre copie, ni cloud, ni externe
-  - Sauvegarde verifiee derniere fois en 2022
+  - Sauvegarde verifiee dernière fois en 2022
 
-  Le RSSI te dit : "Tu n'es PAS conforme a la regle 3-2-1.
+  Le RSSI te dit : "Tu n'es PAS conforme a la règle 3-2-1.
   Explique-moi pourquoi et corrige."
 
   Tu reagis comment ?
@@ -21,17 +21,17 @@ choices:
   - id: "a"
     label: "On a une sauvegarde, c'est l'essentiel"
     outcome: "bad"
-    feedback: "FAUX. 1 sauvegarde sur le meme site = 1 incident (ransomware, incendie, inondation, vol) = TOUT perdu. Standard ANSSI / NIS2 article 21 mesure 3 : sauvegardes 3-2-1. Une seule copie n'est PAS une sauvegarde."
+    feedback: "FAUX. 1 sauvegarde sur le même site = 1 incident (ransomware, incendie, inondation, vol) = TOUT perdu. Standard ANSSI / NIS2 article 21 mesure 3 : sauvegardes 3-2-1. Une seule copie n'est PAS une sauvegarde."
     points: -25
   - id: "b"
-    label: "Tu as raison : 1 seule copie + meme site + jamais testee = pas conforme. Je propose : sauvegarde quotidienne NAS + sauvegarde hebdomadaire cloud (Backblaze) + test mensuel restoration"
+    label: "Tu as raison : 1 seule copie + même site + jamais testee = pas conforme. Je propose : sauvegarde quotidienne NAS + sauvegarde hebdomadaire cloud (Backblaze) + test mensuel restoration"
     outcome: "good"
-    feedback: "Excellente correction. 3-2-1 : 3 copies (donnees primaires + NAS + cloud), 2 supports (disque local + cloud), 1 off-site (cloud). Tests mensuels = standard. Cout : 30-100 EUR/mois selon volume."
+    feedback: "Excellente correction. 3-2-1 : 3 copies (données primaires + NAS + cloud), 2 supports (disque local + cloud), 1 off-site (cloud). Tests mensuels = standard. Cout : 30-100 EUR/mois selon volume."
     points: 40
   - id: "c"
-    label: "Je rajoute une 2eme sauvegarde sur le meme NAS"
+    label: "Je rajoute une 2eme sauvegarde sur le même NAS"
     outcome: "bad"
-    feedback: "INSUFFISANT. 2 copies sur le meme NAS = 1 incident detruit les 2. Le 'site different' (off-site) est essentiel pour ransomware / incendie. Le NAS est dans la salle serveur du sous-sol = inondation possible."
+    feedback: "INSUFFISANT. 2 copies sur le même NAS = 1 incident detruit les 2. Le 'site différent' (off-site) est essentiel pour ransomware / incendie. Le NAS est dans la salle serveur du sous-sol = inondation possible."
     points: -10
   - id: "d"
     label: "Je fais une copie hebdomadaire sur cle USB que je garde chez moi"
@@ -39,33 +39,33 @@ choices:
     feedback: "Better mais incomplet. Une cle USB est une option off-site mais : risque de perte/vol, fiabilite limitee, pas de chiffrement par defaut. Mieux : cloud chiffre + politique formelle."
     points: 15
 debrief: |
-  La **regle 3-2-1** est le standard universel des sauvegardes
-  professionnelles. Etablie dans les annees 2000 par les pros
+  La **règle 3-2-1** est le standard universel des sauvegardes
+  professionnelles. Etablie dans les années 2000 par les pros
   IT, encore d'actualite et **renforcee** par les attaques
   ransomware modernes.
 
-  **La regle 3-2-1 :**
+  **La règle 3-2-1 :**
 
-  - **3** copies au total des donnees
-  - **2** supports differents
+  - **3** copies au total des données
+  - **2** supports différents
   - **1** copie off-site (hors du site physique)
 
   **Variante moderne 3-2-1-1-0** (anti-ransomware) :
 
   - **3** copies
-  - **2** supports differents
+  - **2** supports différents
   - **1** off-site
   - **1** copie immutable (read-only, anti-ransomware)
   - **0** erreur lors du test de restauration
 
-  **Pourquoi la regle 3-2-1 ?**
+  **Pourquoi la règle 3-2-1 ?**
 
   **3 copies** :
-  - 1 copie = les donnees originales (production)
+  - 1 copie = les données originales (production)
   - 2 copies = couvre la panne d'1 sauvegarde
   - 3 copies = couvre la corruption / perte de 2
 
-  **2 supports differents** :
+  **2 supports différents** :
   - HDD + SSD
   - Disque local + cloud
   - Bande + disque
@@ -77,7 +77,7 @@ debrief: |
     place, l'off-site est intact
   - **Anti-incendie / inondation** : sinistre du site
     n'affecte pas l'off-site
-  - **Anti-vol** : vol des materiels du site = off-site
+  - **Anti-vol** : vol des matériels du site = off-site
     intact
 
   **Implementation pour PME (80 personnes) :**
@@ -90,18 +90,18 @@ debrief: |
   | 2 | Sauvegarde locale | NAS Synology | Quotidien | 800 EUR/an (hardware) |
   | 3 | Off-site cloud | Backblaze B2 | Hebdo + temps-reel critique | 30-100 EUR/mois |
 
-  Total cout : **40-150 EUR/mois** pour PME 80 personnes (1-5
+  Total coût : **40-150 EUR/mois** pour PME 80 personnes (1-5
   To).
 
   **Implementation pour TPE (10 personnes) :**
 
   | # | Localisation | Support | Frequence | Cout/mois |
   |---|---|---|---|---|
-  | 1 | Production | PCs employes | Temps reel | inclus |
+  | 1 | Production | PCs employés | Temps reel | inclus |
   | 2 | Sauvegarde locale | Disque externe | Quotidien | 100 EUR (hardware) |
   | 3 | Off-site cloud | OneDrive Business | Sync auto | inclus M365 |
 
-  Total cout : **0-15 EUR/mois** (avec M365 deja paye).
+  Total coût : **0-15 EUR/mois** (avec M365 déjà paye).
 
   **Implementation pour particulier :**
 
@@ -111,7 +111,7 @@ debrief: |
   | 2 | Sauvegarde locale | Disque externe USB | Hebdo | 50-150 EUR (hardware) |
   | 3 | Off-site cloud | Google Drive / iCloud | Auto | 2-10 EUR/mois |
 
-  Total cout : **2-10 EUR/mois** + 100 EUR de hardware.
+  Total coût : **2-10 EUR/mois** + 100 EUR de hardware.
 
   **Les solutions cloud off-site :**
 
@@ -124,7 +124,7 @@ debrief: |
   **b) AWS S3 Glacier** (archivage)
   - 4 EUR / To / mois (archive)
   - Lent a recuperer (heures)
-  - Pour donnees rarement accedees
+  - Pour données rarement accedees
 
   **c) Wasabi**
   - 7 EUR / To / mois
@@ -154,36 +154,36 @@ debrief: |
   Solution :
   - Active la **conservation des versions** (OneDrive, Dropbox)
     : tu peux restaurer une version anterieure
-  - **Sauvegarde additionnelle** vers un cloud different
+  - **Sauvegarde additionnelle** vers un cloud différent
   - **Sauvegarde immutable** ideale (cf ep 03)
 
   **Le piege "1 sauvegarde sur disque externe = OK" :**
 
   Risques avec disque externe seul :
   - **Vol** : disque externe vole avec le PC
-  - **Incendie / inondation** : disque externe a cote du PC
+  - **Incendie / inondation** : disque externe a côté du PC
   - **Panne** : disque externe peut tomber en panne (10-20%
     sur 5 ans)
   - **Ransomware** : si connecte au PC pendant l'attaque,
     chiffre
 
   Solution : disque externe = OK pour la "copie 2 sur support
-  different", mais besoin d'une copie 3 off-site (cloud).
+  différent", mais besoin d'une copie 3 off-site (cloud).
 
-  **Le piege "off-site = au bureau d'a cote" :**
+  **Le piege "off-site = au bureau d'a côté" :**
 
   PRESQUE faux. Off-site = **localisation physique distincte**
-  pour eviter :
-  - Incendie / inondation de tout le batiment
+  pour éviter :
+  - Incendie / inondation de tout le bâtiment
   - Vol massif (cambriolage)
-  - Coupure electrique generale
+  - Coupure electrique générale
 
-  "Off-site" = ideallement different ville / region. Cloud
+  "Off-site" = ideallement différent ville / region. Cloud
   d'un fournisseur tiers = parfait off-site.
 
   **Frequence de sauvegarde :**
 
-  **Selon criticite des donnees** :
+  **Selon criticite des données** :
 
   | Criticite | RPO max | Frequence |
   |---|---|---|
@@ -192,8 +192,8 @@ debrief: |
   | **Standard** (documents, archives) | 7 jours | Hebdomadaire |
   | **Faible** (archives anciennes) | 30 jours | Mensuelle |
 
-  **RPO** (Recovery Point Objective) = duree max de perte de
-  donnees toleree.
+  **RPO** (Recovery Point Objective) = durée max de perte de
+  données toleree.
 
   **Versioning et retention :**
 
@@ -220,7 +220,7 @@ debrief: |
   **Outils gratuits / OSS pour PME :**
 
   **a) Veeam Backup Free**
-  - Gratuit jusqu'a quelques machines
+  - Gratuit jusqu'à quelques machines
   - Standard PME
   - Backup VMware / Hyper-V / physique
 
@@ -232,7 +232,7 @@ debrief: |
 
   **c) Borg Backup**
   - OSS gratuit
-  - Tres efficace deduplication
+  - Très efficace deduplication
   - Linux / Mac
 
   **d) Duplicati**
@@ -242,13 +242,13 @@ debrief: |
 
   **Cas reels :**
 
-  **Cas 1 - Hopital francais 2014 (inondation)**
+  **Cas 1 - Hôpital français 2014 (inondation)**
 
-  Hopital avec sauvegarde sur NAS dans la salle serveur du
+  Hôpital avec sauvegarde sur NAS dans la salle serveur du
   sous-sol. Inondation due a une rupture de plomberie. Tous
   les serveurs et le NAS detruits. **Aucune copie off-site**.
 
-  Resultats :
+  Résultats :
   - Perte de 6 mois de dossiers patients
   - 18h d'indisponibilite
   - Cout estime : 800 K EUR
@@ -258,11 +258,11 @@ debrief: |
 
   **Cas 2 - PME ransomware 2023 (sauvegardes chiffrees)**
 
-  PME avec sauvegarde sur NAS connecte au reseau. Ransomware
+  PME avec sauvegarde sur NAS connecte au réseau. Ransomware
   s'est propage du PC infecte vers le NAS et a chiffre **les
   sauvegardes**. Pas de copie off-site.
 
-  Resultat : paiement de 80 K EUR de rancon (ANSSI deconseille
+  Résultat : paiement de 80 K EUR de rançon (ANSSI deconseille
   fortement).
 
   Lecon : sauvegardes immuables ou off-site indispensables.
@@ -275,24 +275,24 @@ debrief: |
   - **Cloud Backblaze** (off-site, immutable)
 
   Restauration depuis Backblaze en 18h. **Pas de paiement de
-  rancon.** Cout total : 5K EUR (perte d'activite 18h) +
+  rançon.** Cout total : 5K EUR (perte d'activite 18h) +
   surcout ransomware 0 EUR.
 
-  ROI de la regle 3-2-1 : evident.
+  ROI de la règle 3-2-1 : évident.
 
-  **La regle d'or :**
+  **La règle d'or :**
 
-  > **3 copies, 2 supports, 1 off-site. Pas de negociation. Le
-  > sync N'est PAS une sauvegarde. Le 'meme site' n'est PAS
+  > **3 copies, 2 supports, 1 off-site. Pas de négociation. Le
+  > sync N'est PAS une sauvegarde. Le 'même site' n'est PAS
   > du off-site. Cout marginal : 30-100 EUR/mois pour PME. ROI
   > face a un ransomware : > 1000x.**
 quiz:
-  - question: "La regle 3-2-1 c'est quoi ?"
+  - question: "La règle 3-2-1 c'est quoi ?"
     choices:
       - { id: "a", label: "3 sauvegardes par jour", correct: false }
-      - { id: "b", label: "3 copies, 2 supports differents, 1 off-site (hors du site physique)", correct: true }
+      - { id: "b", label: "3 copies, 2 supports différents, 1 off-site (hors du site physique)", correct: true }
       - { id: "c", label: "Aucune importance", correct: false }
-    explanation: "Standard universel des sauvegardes : 3 copies (production + 2 sauvegardes), 2 supports differents (HDD + cloud par ex.), 1 off-site (autre localisation physique). Variante 3-2-1-1-0 ajoute : 1 immutable + 0 erreur de test."
+    explanation: "Standard universel des sauvegardes : 3 copies (production + 2 sauvegardes), 2 supports différents (HDD + cloud par ex.), 1 off-site (autre localisation physique). Variante 3-2-1-1-0 ajoute : 1 immutable + 0 erreur de test."
 
   - question: "OneDrive sync est-il une sauvegarde ?"
     choices:
@@ -303,17 +303,17 @@ quiz:
 
   - question: "Off-site signifie quoi ?"
     choices:
-      - { id: "a", label: "Le bureau d'a cote", correct: false }
+      - { id: "a", label: "Le bureau d'a côté", correct: false }
       - { id: "b", label: "Localisation physique distincte (autre ville idealement) - cloud d'un fournisseur tiers = parfait off-site", correct: true }
       - { id: "c", label: "Internet", correct: false }
-    explanation: "Off-site = localisation physique distincte pour eviter incendie/inondation/vol/coupure du site principal. Bureau d'a cote = pas off-site (incendie batiment). Cloud tiers (Backblaze, AWS, OVH) = parfait off-site avec replication geographique."
+    explanation: "Off-site = localisation physique distincte pour éviter incendie/inondation/vol/coupure du site principal. Bureau d'a côté = pas off-site (incendie bâtiment). Cloud tiers (Backblaze, AWS, OVH) = parfait off-site avec replication geographique."
 
   - question: "Cout typique de sauvegarde 3-2-1 pour PME 80 personnes (1-5 To) ?"
     choices:
       - { id: "a", label: "10 K EUR/mois", correct: false }
-      - { id: "b", label: "30-150 EUR/mois (NAS local 800 EUR/an + cloud Backblaze 30-100 EUR/mois). ROI tres eleve face ransomware/sinistre", correct: true }
+      - { id: "b", label: "30-150 EUR/mois (NAS local 800 EUR/an + cloud Backblaze 30-100 EUR/mois). ROI très élève face ransomware/sinistre", correct: true }
       - { id: "c", label: "Gratuit toujours", correct: false }
-    explanation: "Cout realiste PME : NAS Synology 800 EUR/an (sauvegarde locale) + Backblaze B2 30-100 EUR/mois (1-5 To off-site cloud). Total 30-150 EUR/mois. ROI : un ransomware = 50-500K EUR de perte. Investissement evident."
+    explanation: "Cout realiste PME : NAS Synology 800 EUR/an (sauvegarde locale) + Backblaze B2 30-100 EUR/mois (1-5 To off-site cloud). Total 30-150 EUR/mois. ROI : un ransomware = 50-500K EUR de perte. Investissement évident."
 ---
 
 > 💡 **Pour aller plus loin** : **Backblaze B2** (6 EUR/To/mois)

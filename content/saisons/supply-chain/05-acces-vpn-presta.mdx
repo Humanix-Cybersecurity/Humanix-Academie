@@ -2,17 +2,17 @@
 title: "Donner un accès VPN à un prestataire en sécurité"
 durationMinutes: 7
 persona: "developer"
-objective: "Configurer un acces prestataire qui suit le principe du moindre privilege : compte dedie, MFA, segmentation reseau, logs, expiration, jump server"
+objective: "Configurer un acces prestataire qui suit le principe du moindre privilège : compte dedie, MFA, segmentation réseau, logs, expiration, jump server"
 xpReward: 60
 scenario: |
   Lundi 11h, ton DSI te demande : "Notre prestataire de maintenance
   ERP (Sage) a besoin d'un acces a notre serveur ERP pendant 3 mois
-  pour faire la migration. Comment on configure ca ?"
+  pour faire la migration. Comment on configure ça ?"
 
   Le prestataire envoie ses besoins :
   - Acces SSH au serveur ERP (192.168.10.42)
   - Possibilite de copier des fichiers (SCP/SFTP)
-  - Mot de passe d'admin du compte `migration` que tu vas creer
+  - Mot de passe d'admin du compte `migration` que tu vas créer
   - Acces 24/7 pendant 3 mois pour gerer les windows de maintenance
 
   Tu fais quoi ?
@@ -23,14 +23,14 @@ choices:
     feedback: "CATASTROPHE. Port SSH expose internet = scan/brute force constant. Mot de passe par mail = potentiellement intercepte. Pas de MFA, pas de logs, pas d'expiration. Equivaut a donner les cles de la maison."
     points: -15
   - id: "b"
-    label: "Je configure : compte dedie, MFA TOTP, VPN entreprise (pas SSH direct), segmentation reseau (acces uniquement au serveur ERP), logs centralises, expiration 3 mois, mot de passe via gestionnaire securise"
+    label: "Je configure : compte dedie, MFA TOTP, VPN entreprise (pas SSH direct), segmentation réseau (acces uniquement au serveur ERP), logs centralises, expiration 3 mois, mot de passe via gestionnaire securise"
     outcome: "good"
-    feedback: "Setup professionnel. Tous les controles standards : moindre privilege (compte dedie), MFA, transit chiffre (VPN), segmentation (cloisonnement), audit (logs), revocation auto (expiration), credentials securises (gestionnaire)."
+    feedback: "Setup professionnel. Tous les contrôles standards : moindre privilège (compte dedie), MFA, transit chiffre (VPN), segmentation (cloisonnement), audit (logs), revocation auto (expiration), credentials securises (gestionnaire)."
     points: 40
   - id: "c"
     label: "Je donne mon compte admin perso au prestataire, c'est plus simple"
     outcome: "bad"
-    feedback: "Pire option possible. Ton compte admin = TES droits sur TOUT le reseau, tes mails, etc. Le prestataire a tes acces complets. Aucun audit possible (les actions du prestataire apparaissent comme TOI). Violation totale du moindre privilege."
+    feedback: "Pire option possible. Ton compte admin = TES droits sur TOUT le réseau, tes mails, etc. Le prestataire a tes acces complets. Aucun audit possible (les actions du prestataire apparaissent comme TOI). Violation totale du moindre privilège."
     points: -20
   - id: "d"
     label: "Je donne acces seulement au serveur ERP via un compte dedie + MFA, mais sans bastion (acces direct via VPN)"
@@ -39,11 +39,11 @@ choices:
     points: 15
 debrief: |
   Donner un acces a un prestataire est l'une des situations les plus
-  risquees en cybersecurite. Le breach de Target 2013 (110M cartes
+  risquees en cybersécurité. Le breach de Target 2013 (110M cartes
   bancaires volees) a commence par un acces VPN d'un fournisseur de
   climatisation mal securise.
 
-  **Les 8 controles a appliquer (la grille complete) :**
+  **Les 8 contrôles a appliquer (la grille complete) :**
 
   **1. Compte dedie + nominatif**
 
@@ -59,7 +59,7 @@ debrief: |
 
   - TOTP (Google Authenticator, Authy) : minimum acceptable.
   - **WebAuthn / FIDO2** : ideal (cle physique YubiKey, ou passkey).
-  - SMS : a eviter (interceptable par SIM swapping).
+  - SMS : a éviter (interceptable par SIM swapping).
 
   Sans MFA = compte compromettable par phishing/brute-force. Refuser.
 
@@ -91,7 +91,7 @@ debrief: |
   **5. Acces just-in-time (just-enough access)**
 
   - **Just-in-time** : le compte n'est actif que pendant les
-    fenetres prevues (ex : du lundi au vendredi 9h-18h, hors weekend).
+    fenêtres prévues (ex : du lundi au vendredi 9h-18h, hors weekend).
   - **Just-enough** : le compte n'a que les droits minimum
     necessaires pour la tache (pas root global, juste les binaires
     necessaires via sudo whitelist).
@@ -100,7 +100,7 @@ debrief: |
 
   **6. Logs centralises et audites**
 
-  Toutes les actions du prestataire doivent etre logguees :
+  Toutes les actions du prestataire doivent être logguees :
   - Connexion VPN (heure, IP source, succes/echec)
   - Sessions SSH (qui, quoi, quand, depuis ou)
   - Commandes executees (auditd Linux, ou shell history)
@@ -117,14 +117,14 @@ debrief: |
   - **Active Directory** : Account expires
   - **VPN** : tag d'expiration sur le compte
 
-  Apres la date, le compte est automatiquement disable. Pas
-  d'oublis qui creent des "comptes fantomes" actifs des annees apres.
+  Après la date, le compte est automatiquement disable. Pas
+  d'oublis qui creent des "comptes fantomes" actifs des années après.
 
   **8. Notification & approbation**
 
   Pour les acces les plus sensibles :
   - **Notification** : email automatique a 2 personnes en CC quand
-    le prestataire se connecte. Detection de connexions hors-fenetre.
+    le prestataire se connecte. Détection de connexions hors-fenêtre.
   - **Approbation** : pour acces a la prod, le prestataire doit
     demander un OTP a un humain qui l'approuve. Reduit le risque en
     cas de compte compromis.
@@ -132,11 +132,11 @@ debrief: |
   **Le piege "VPN d'entreprise = acces a tout"**
 
   Beaucoup d'entreprises ont un VPN unique qui donne acces a tout le
-  reseau (full network). Le prestataire qui s'y connecte peut scanner
+  réseau (full network). Le prestataire qui s'y connecte peut scanner
   / acceder a TOUTE l'infra.
 
   Solution : VPN avec **micro-segmentation** ou **ZTNA** (Zero Trust
-  Network Access) - chaque user/role a des regles d'acces specifiques
+  Network Access) - chaque user/rôle a des règles d'acces spécifiques
   basees sur la cible, pas un acces full network.
 
   Solutions ZTNA : Cloudflare Access, Tailscale (OSS), Twingate, ou
@@ -145,9 +145,9 @@ debrief: |
   **Cas Target 2013 (rappel) :**
 
   Le fournisseur de climatisation Fazio Mechanical avait un compte
-  VPN avec acces au reseau Target pour faire de la facturation
+  VPN avec acces au réseau Target pour faire de la facturation
   electronique. Pas de segmentation : depuis ce VPN, acces a TOUT le
-  reseau Target, y compris les caisses des magasins. Les attaquants
+  réseau Target, y compris les caisses des magasins. Les attaquants
   ont compromis Fazio (phishing), recupere les credentials VPN, et
   pivote vers les caisses. 110M de cartes bancaires volees.
 
@@ -158,13 +158,13 @@ debrief: |
 
   Si TU es le prestataire qui se connecte a un client :
   - Insiste pour avoir un compte nominatif (pas un compte partage)
-  - Demande l'MFA des le premier jour
+  - Demande l'MFA dès le premier jour
   - Documente toutes tes actions (commande, heure)
-  - Si le client n'a aucun de ces controles : signale-le a ton
+  - Si le client n'a aucun de ces contrôles : signale-le a ton
     manager, c'est un risque pour toi (en cas de breach, tu seras
-    accuse meme si tu n'es pour rien).
+    accuse même si tu n'es pour rien).
 quiz:
-  - question: "Tu donnes acces a un prestataire pour 3 mois. Premier controle ?"
+  - question: "Tu donnes acces a un prestataire pour 3 mois. Premier contrôle ?"
     choices:
       - { id: "a", label: "Donner ton compte admin perso", correct: false }
       - { id: "b", label: "Compte nominatif dedie + MFA + VPN segmente + expiration auto + logs", correct: true }
@@ -174,9 +174,9 @@ quiz:
   - question: "Le breach Target 2013 (110M cartes) est parti d'ou ?"
     choices:
       - { id: "a", label: "Une faille zero-day", correct: false }
-      - { id: "b", label: "Acces VPN d'un fournisseur de climatisation, compromis par phishing, sans segmentation reseau", correct: true }
+      - { id: "b", label: "Acces VPN d'un fournisseur de climatisation, compromis par phishing, sans segmentation réseau", correct: true }
       - { id: "c", label: "Insider", correct: false }
-    explanation: "Fournisseur HVAC avec acces VPN au reseau Target (pour facturation). Pas de segmentation = depuis ce VPN, acces a tout le reseau y compris les caisses. Attaquants ont phish le fournisseur, recupere creds VPN, pivote aux caisses."
+    explanation: "Fournisseur HVAC avec acces VPN au réseau Target (pour facturation). Pas de segmentation = depuis ce VPN, acces a tout le réseau y compris les caisses. Attaquants ont phish le fournisseur, recupere creds VPN, pivote aux caisses."
 
   - question: "A quoi sert un bastion / jump server ?"
     choices:
@@ -187,13 +187,13 @@ quiz:
 
   - question: "ZTNA (Zero Trust Network Access) signifie quoi ?"
     choices:
-      - { id: "a", label: "Pas de reseau", correct: false }
-      - { id: "b", label: "Aucune confiance par defaut, chaque acces user/role a des regles specifiques (pas un VPN full network)", correct: true }
+      - { id: "a", label: "Pas de réseau", correct: false }
+      - { id: "b", label: "Aucune confiance par defaut, chaque acces user/rôle a des règles spécifiques (pas un VPN full network)", correct: true }
       - { id: "c", label: "VPN gratuit", correct: false }
-    explanation: "ZTNA = abandon du VPN periphique unique. A la place : chaque user authentifie a des regles d'acces specifiques basees sur identite/role/contexte. Cloudflare Access, Tailscale, Twingate. Empeche les pivots lateraux type Target 2013."
+    explanation: "ZTNA = abandon du VPN periphique unique. A la place : chaque user authentifie a des règles d'acces spécifiques basees sur identité/rôle/contexte. Cloudflare Access, Tailscale, Twingate. Empeche les pivots lateraux type Target 2013."
 ---
 
 > 💡 **Pour aller plus loin** : **Teleport** (gratuit OSS, Apache 2.0)
 > est probablement le meilleur outil bastion / ZTNA gratuit. Reasonable
-> setup pour PME : 2-3 jours de mise en place, ROI eleve. Hashicorp
+> setup pour PME : 2-3 jours de mise en place, ROI élève. Hashicorp
 > **Boundary** est l'alternative.

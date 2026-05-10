@@ -8,59 +8,59 @@ scenario: |
   Tu es a l'aeroport, 1h d'attente avant ton vol. Tu dois traiter 30
   emails dont 5 avec piece jointe (factures fournisseurs).
 
-  Le WiFi gratuit de l'aeroport demande ton email + telephone + acceptation
+  Le WiFi gratuit de l'aeroport demande ton email + téléphone + acceptation
   pub. Le WiFi payant est a 14 EUR / heure.
 
-  Tu as un forfait mobile illimite chez un operateur FR (Orange / SFR /
+  Tu as un forfait mobile illimite chez un opérateur FR (Orange / SFR /
   Bouygues / Free). Tu as ton tel dans la poche.
 
-  Tu fais quoi pour bosser en securite pendant 1h ?
+  Tu fais quoi pour bosser en sécurité pendant 1h ?
 choices:
   - id: "a"
     label: "Je connecte mon laptop au WiFi gratuit, c'est plus simple"
     outcome: "bad"
-    feedback: "Risque eleve : Evil Twin possible (cf. ep 01), portail captif piege (ep 02), interception MitM. Pour 1h de bureau distant, le risque ne vaut pas la 'simplicite'."
+    feedback: "Risque élève : Evil Twin possible (cf. ep 01), portail captif piege (ep 02), interception MitM. Pour 1h de bureau distant, le risque ne vaut pas la 'simplicite'."
     points: -10
   - id: "b"
     label: "J'active le partage de connexion 4G/5G de mon tel et je connecte mon laptop dessus"
     outcome: "good"
-    feedback: "Solution optimale. Connexion via l'infra securisee de ton operateur (impossible a spoofer en local). Consommation data faible pour email + PJ : ~50-200 Mo/h."
+    feedback: "Solution optimale. Connexion via l'infra securisee de ton opérateur (impossible a spoofer en local). Consommation data faible pour email + PJ : ~50-200 Mo/h."
     points: 35
   - id: "c"
     label: "Je paie 14 EUR pour le WiFi - c'est plus rapide"
     outcome: "neutral"
-    feedback: "Le WiFi payant n'est pas necessairement plus sur que le gratuit (c'est juste un autre business model). Et c'est cher pour 1h de bureau distant. 4G/5G du tel reste l'option la plus sure ET la moins chere."
+    feedback: "Le WiFi payant n'est pas nécessairement plus sur que le gratuit (c'est juste un autre business model). Et c'est cher pour 1h de bureau distant. 4G/5G du tel reste l'option la plus sure ET la moins chère."
     points: 5
   - id: "d"
     label: "J'attends d'arriver a destination pour traiter les emails"
     outcome: "good"
-    feedback: "Approche prudente et legitime. Si tu n'as pas d'urgence, attendre un reseau de confiance (bureau, hotel reserve) est valable. Mais 4G/5G du tel offre la meme securite + tu avances ton boulot."
+    feedback: "Approche prudente et legitime. Si tu n'as pas d'urgence, attendre un réseau de confiance (bureau, hôtel reserve) est valable. Mais 4G/5G du tel offre la même sécurité + tu avances ton boulot."
     points: 15
 debrief: |
   Le partage de connexion mobile est **la defense la plus simple, la
-  plus efficace et la plus economique** en mobilite. Il est tellement
-  superieur aux WiFi publics qu'il devrait etre le DEFAUT mobile.
+  plus efficace et la plus économique** en mobilite. Il est tellement
+  supérieur aux WiFi publics qu'il devrait être le DEFAUT mobile.
 
   **Pourquoi c'est plus sur :**
 
-  - Ton operateur mobile (Orange, SFR, Bouygues, Free, MVNO) a une
+  - Ton opérateur mobile (Orange, SFR, Bouygues, Free, MVNO) a une
     infrastructure dediee. **Pas spoofable** par un attaquant local
     (qui ne peut pas se faire passer pour Orange).
-  - La connexion entre ton tel et le pylone operateur est **chiffree
+  - La connexion entre ton tel et le pylone opérateur est **chiffree
     par defaut** (LTE/5G). Personne ne peut sniffer entre les deux.
   - Pas de portail captif manipulable, pas de DNS hijack local.
 
-  **Comment activer (procedure) :**
+  **Comment activer (procédure) :**
 
   **iOS (iPhone) :**
   - Reglages > Cellulaire > Partage de connexion > "Autoriser
     d'autres utilisateurs"
-  - Mot de passe WiFi defini (a personnaliser, eviter le defaut auto-genere)
+  - Mot de passe WiFi defini (a personnaliser, éviter le defaut auto-genere)
   - Le hotspot apparait dans la liste WiFi de ton laptop avec le nom
     de ton tel ("iPhone de Florian")
 
   **Android :**
-  - Parametres > Reseau et Internet > Hotspot et partage de connexion
+  - Parametres > Réseau et Internet > Hotspot et partage de connexion
     > Hotspot WiFi
   - Personnalise le nom et le mot de passe
   - Active
@@ -76,7 +76,7 @@ debrief: |
   - **Bluetooth tethering** : plus lent, mais possible si le WiFi est
     sature.
 
-  **Combien ca consomme ?**
+  **Combien ça consomme ?**
 
   Estimations realistes :
   - **Email texte** : ~10 KB / email = 0.5 Mo pour 50 emails
@@ -93,24 +93,24 @@ debrief: |
   - Forfait base 5 GB / mois : suffisant pour 15-30h de bureau distant
     par mois, mais a surveiller.
   - Forfait 100 GB / mois (Free, RED, Sosh) : largement suffisant.
-  - Forfait illimite : aucun probleme (sauf fair-use a 200-300 GB chez
+  - Forfait illimite : aucun problème (sauf fair-use a 200-300 GB chez
     Free).
 
   **Optimisations data :**
 
-  - **Eviter visio/streaming** sur 4G partage si tu peux (consomme
+  - **Éviter visio/streaming** sur 4G partage si tu peux (consomme
     vite).
-  - **Activer mode economie data** sur Slack, Teams, Outlook (pas de
+  - **Activer mode économie data** sur Slack, Teams, Outlook (pas de
     download auto des PJ).
   - **Travailler offline** : retirer les PJ sur les emails que tu vas
-    traiter (Outlook a un mode "telecharger headers seulement").
+    traiter (Outlook a un mode "télécharger headers seulement").
 
-  **Cas particulier : roaming a l'etranger**
+  **Cas particulier : roaming a l'étranger**
 
-  - **UE/EEE** : "roam like at home" - meme tarif qu'en France. Pas
-    de probleme, partage de connexion comme en France.
-  - **Hors UE** : peut etre cher (5 a 10 EUR / Mo). Verifier le forfait
-    avant de partager. Souvent un pass voyage est plus economique.
+  - **UE/EEE** : "roam like at home" - même tarif qu'en France. Pas
+    de problème, partage de connexion comme en France.
+  - **Hors UE** : peut être cher (5 a 10 EUR / Mo). Vérifier le forfait
+    avant de partager. Souvent un pass voyage est plus économique.
 
   **Le piege : confondre partage et fonctionnalite**
 
@@ -120,20 +120,20 @@ debrief: |
   "Bouton WiFi du tel" = tu cherches un WiFi alentour pour t'y
   connecter. Pas sur (cf. ep 01-02).
 
-  Verifier que tu as bien active le PARTAGE (icone de chaine ou
+  Vérifier que tu as bien active le PARTAGE (icone de chaine ou
   cercles concentriques) et pas la SCAN WiFi.
 
   **Pour les PME : forfait dedie**
 
-  Pour un employe en mobilite (commercial, dev en client),
+  Pour un employé en mobilite (commercial, dev en client),
   l'employeur peut souscrire un **forfait data dedie** sur ton tel
   pro (200 GB pour ~30 EUR/mois). Cout faible vs un incident de
-  securite par WiFi public compromis.
+  sécurité par WiFi public compromis.
 quiz:
   - question: "Pourquoi le partage de connexion 4G/5G est plus sur qu'un WiFi public ?"
     choices:
-      - { id: "a", label: "Aucune difference", correct: false }
-      - { id: "b", label: "L'infra de l'operateur n'est pas spoofable en local + chiffrement LTE/5G par defaut", correct: true }
+      - { id: "a", label: "Aucune différence", correct: false }
+      - { id: "b", label: "L'infra de l'opérateur n'est pas spoofable en local + chiffrement LTE/5G par defaut", correct: true }
       - { id: "c", label: "C'est plus rapide", correct: false }
     explanation: "Pas de spoofing possible (l'attaquant local ne peut pas se faire passer pour Orange). Chiffrement de la liaison radio LTE/5G par defaut (impossible de sniffer entre tel et pylone)."
 
@@ -149,11 +149,11 @@ quiz:
       - { id: "a", label: "Plus rapide ET ne consomme pas la batterie du tel", correct: true }
       - { id: "b", label: "Plus securise", correct: false }
       - { id: "c", label: "Aucun", correct: false }
-    explanation: "USB tethering est plus rapide (pas de WiFi limite) et le tel se recharge pendant la session (le laptop alimente le tel via USB). Securite identique au WiFi hotspot."
+    explanation: "USB tethering est plus rapide (pas de WiFi limite) et le tel se recharge pendant la session (le laptop alimente le tel via USB). Sécurité identique au WiFi hotspot."
 ---
 
-> 💡 **Pour aller plus loin** : pour les pros tres mobiles, un
+> 💡 **Pour aller plus loin** : pour les pros très mobiles, un
 > **routeur 4G/5G dedie** (TP-Link Archer MR400, Huawei E5577) avec
 > sa propre carte SIM data est une option. Forfait dedie 100 GB pour
 > ~10 EUR/mois. Plus stable qu'un partage tel + ne vide pas la
-> batterie de ton telephone.
+> batterie de ton téléphone.

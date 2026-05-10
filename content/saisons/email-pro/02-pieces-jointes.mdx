@@ -8,7 +8,7 @@ scenario: |
   Mardi 15h32, tu recois un mail :
 
   > De : compta@fournisseur-vincent.fr
-  > Objet : Facture n°2024-FR-87412 (regle ce jour)
+  > Objet : Facture n°2024-FR-87412 (règle ce jour)
   > PJ : Facture_2024_FR_87412.pdf.exe
 
   Le contenu :
@@ -17,14 +17,14 @@ scenario: |
 
   Tu travailles a la compta justement. Tu attends quelques factures
   fournisseurs pour la cloture. Le nom de fichier est bizarre mais tu
-  as un peu la tete dans le guidon, c'est lundi qui revient mardi.
+  as un peu la tête dans le guidon, c'est lundi qui revient mardi.
 
   Tu fais quoi ?
 choices:
   - id: "a"
     label: "Je clique sur la PJ - c'est une facture, et notre antivirus me protegera"
     outcome: "bad"
-    feedback: "L'extension `.pdf.exe` est un signe d'alarme MAJEUR : c'est un fichier executable Windows deguise en PDF. Une fois lance, c'est un ransomware ou trojan installable en moins de 5 secondes. L'antivirus en attrape la majorite mais pas les 0-day."
+    feedback: "L'extension `.pdf.exe` est un signe d'alarme MAJEUR : c'est un fichier executable Windows deguise en PDF. Une fois lance, c'est un ransomware ou trojan installable en moins de 5 secondes. L'antivirus en attrape la majorité mais pas les 0-day."
     points: -15
   - id: "b"
     label: "Je verifie le nom du fichier complet en survolant - oh, c'est .pdf.exe, je n'ouvre pas"
@@ -34,12 +34,12 @@ choices:
   - id: "c"
     label: "J'envoie le fichier a la DSI/IT pour qu'ils l'analysent"
     outcome: "good"
-    feedback: "Bonne procedure. La DSI a des outils sandbox (CAPE, ANY.RUN, Joe Sandbox) pour analyser sans risque. Bonus : si c'est un malware, ils peuvent bloquer le sender pour TOUS tes collegues qui ont peut-etre recu le meme."
+    feedback: "Bonne procédure. La DSI a des outils sandbox (CAPE, ANY.RUN, Joe Sandbox) pour analyser sans risque. Bonus : si c'est un malware, ils peuvent bloquer le sender pour TOUS tes collègues qui ont peut-être reçu le même."
     points: 35
   - id: "d"
     label: "Je verifie que je connais 'fournisseur-vincent.fr' - jamais entendu - poubelle"
     outcome: "good"
-    feedback: "Reflexe solide. Si tu ne connais pas l'expediteur ET que ca arrive sans contexte (pas un appel/un meeting precedent), c'est suspect. Mais idealement : signaler quand meme a la DSI pour proteger les autres."
+    feedback: "Reflexe solide. Si tu ne connais pas l'expediteur ET que ça arrive sans contexte (pas un appel/un meeting précédent), c'est suspect. Mais idealement : signaler quand même a la DSI pour proteger les autres."
     points: 30
 debrief: |
   Les pieces jointes sont l'un des **vecteurs n°1** de malware en
@@ -50,15 +50,15 @@ debrief: |
 
   **1. J'attendais ce mail / cette PJ ?**
 
-  Si non, suspect par defaut. Meme si l'expediteur est legitime, il
-  peut etre compromis (compte hijacke). Si tu attendais une facture mais
-  le format/le montant est different : suspicion.
+  Si non, suspect par defaut. Même si l'expediteur est legitime, il
+  peut être compromis (compte hijacke). Si tu attendais une facture mais
+  le format/le montant est différent : suspicion.
 
   **2. Je connais l'expediteur ?**
 
-  Connais = j'ai deja interagi avec, je peux verifier son existence
-  (annuaire, site web, telephone). Pas connais = mefiance haute. Et
-  meme connu : verifie le domaine (`@fournisseur-vincent.fr` vs
+  Connais = j'ai déjà interagi avec, je peux vérifier son existence
+  (annuaire, site web, téléphone). Pas connais = méfiance haute. Et
+  même connu : verifie le domaine (`@fournisseur-vincent.fr` vs
   `@fournisseur-vincent.com` typosquat).
 
   **3. Le format est legitime ?**
@@ -93,20 +93,20 @@ debrief: |
   protection.
 
   Reflex : si Word/Excel te demande "Activer les macros", **NE PAS
-  ACTIVER** sans verification telephonique avec l'expediteur.
+  ACTIVER** sans vérification téléphonique avec l'expediteur.
 
   **Si tu as ouvert une PJ suspecte :**
 
-  1. **Deconnecte le PC du reseau** (cable Ethernet debranche, Wi-Fi
+  1. **Deconnecte le PC du réseau** (cable Ethernet debranche, Wi-Fi
      coupe). Limite la propagation laterale.
   2. **NE redemarre PAS** (les ransomwares utilisent souvent le reboot
      pour finaliser le chiffrement).
   3. **Appelle ton DSI/IT** sur leur ligne directe (pas via le PC
-     compromis qui peut etre ecoute).
+     compromis qui peut être écoute).
   4. **Documente** ce que tu as fait (heure, fichier, action) pour
      forensic.
 
-  **Les outils techniques de defense (cote DSI) :**
+  **Les outils techniques de defense (côté DSI) :**
 
   - **Sandbox email** : Mailinblack, Vade Secure (FR), Mimecast,
     Proofpoint. Detonne les PJ suspectes dans une VM avant livraison.
@@ -121,11 +121,11 @@ debrief: |
 
   Cas reel 2024 : ransomware Akira distribue par mail avec PJ
   "facture impayee" depuis un faux fournisseur. Cible : services
-  comptabilite des PME francaises. Plus de 200 entreprises
+  comptabilite des PME françaises. Plus de 200 entreprises
   victimes en France selon CERT-FR.
 
   Le reflexe qui sauve : **JAMAIS de paiement urgent demande par PJ
-  email sans validation hors-canal** (cf. saison Fraude au president
+  email sans validation hors-canal** (cf. saison Fraude au président
   pour la double validation).
 quiz:
   - question: "Quelle extension est presque toujours malveillante en piece jointe ?"
@@ -133,24 +133,24 @@ quiz:
       - { id: "a", label: ".pdf", correct: false }
       - { id: "b", label: ".exe ou .pdf.exe (double extension)", correct: true }
       - { id: "c", label: ".docx", correct: false }
-    explanation: ".exe = executable Windows. Aucun document legitime n'a besoin d'etre un .exe. La double extension `.pdf.exe` exploite le fait que Windows masque les extensions par defaut."
+    explanation: ".exe = executable Windows. Aucun document legitime n'a besoin d'être un .exe. La double extension `.pdf.exe` exploite le fait que Windows masque les extensions par defaut."
 
-  - question: "Word te demande 'Activer les macros' sur un document recu. Tu fais quoi ?"
+  - question: "Word te demande 'Activer les macros' sur un document reçu. Tu fais quoi ?"
     choices:
       - { id: "a", label: "J'active, c'est juste pour debloquer le contenu", correct: false }
-      - { id: "b", label: "Je n'active PAS - j'appelle l'expediteur sur un numero CONNU pour confirmer la legitimite", correct: true }
-      - { id: "c", label: "J'envoie le fichier a un collegue pour qu'il essaie", correct: false }
-    explanation: "Macros = code executable. Si tu actives, tu lances potentiellement un malware. Verification telephonique sur numero CONNU (pas un numero recu par email) avant activation."
+      - { id: "b", label: "Je n'active PAS - j'appelle l'expediteur sur un numéro CONNU pour confirmer la legitimite", correct: true }
+      - { id: "c", label: "J'envoie le fichier a un collègue pour qu'il essaie", correct: false }
+    explanation: "Macros = code executable. Si tu actives, tu lances potentiellement un malware. Vérification téléphonique sur numéro CONNU (pas un numéro reçu par email) avant activation."
 
   - question: "Tu as ouvert une PJ suspecte par accident. Premier reflexe ?"
     choices:
       - { id: "a", label: "Redemarrer le PC", correct: false }
-      - { id: "b", label: "Deconnecter du reseau (cable + WiFi off) puis appeler la DSI sur leur ligne directe", correct: true }
+      - { id: "b", label: "Deconnecter du réseau (cable + WiFi off) puis appeler la DSI sur leur ligne directe", correct: true }
       - { id: "c", label: "Lancer mon antivirus", correct: false }
-    explanation: "Deconnecter limite la propagation laterale. NE PAS redemarrer (les ransomwares finissent souvent leur chiffrement au reboot). Appeler DSI sur ligne directe (pas via le PC peut-etre ecoute)."
+    explanation: "Deconnecter limite la propagation laterale. NE PAS redemarrer (les ransomwares finissent souvent leur chiffrement au reboot). Appeler DSI sur ligne directe (pas via le PC peut-être écoute)."
 ---
 
-> 💡 **Pour aller plus loin** : le CERT-FR publie regulierement des
+> 💡 **Pour aller plus loin** : le CERT-FR publie régulièrement des
 > alertes sur les campagnes malware actives en France. Suivre @CERT_FR
 > sur Mastodon ou s'abonner aux bulletins. Pour analyser une PJ suspecte
 > sans la lancer : VirusTotal (gratuit, attention pas de fichiers

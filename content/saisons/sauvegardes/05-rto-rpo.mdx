@@ -2,19 +2,19 @@
 title: "RTO et RPO : les 2 chiffres a fixer avant tout"
 durationMinutes: 7
 persona: "tous-collaborateurs"
-objective: "Comprendre RTO (temps max d'indisponibilite tolere) et RPO (perte de donnees max toleree) pour dimensionner correctement les sauvegardes et la continuite"
+objective: "Comprendre RTO (temps max d'indisponibilite tolere) et RPO (perte de données max toleree) pour dimensionner correctement les sauvegardes et la continuite"
 xpReward: 60
 scenario: |
   Tu es DSI d'une PME 80 personnes. Le DG te demande :
 
   "Si on a un incident demain, combien de temps on est down ?
-  Combien de donnees on perd ?"
+  Combien de données on perd ?"
 
-  Tu reponds en 30 secondes : "Euh, 2-3 jours peut-etre, et
-  on perdrait quelques heures de donnees".
+  Tu réponds en 30 secondes : "Euh, 2-3 jours peut-être, et
+  on perdrait quelques heures de données".
 
   Le DG : "Ce n'est pas serieux. On a besoin de chiffres
-  precis et coherents avec nos besoins business. Tu as 1
+  précis et coherents avec nos besoins business. Tu as 1
   semaine pour me revenir avec un plan."
 
   Tu fais quoi ?
@@ -27,79 +27,79 @@ choices:
   - id: "b"
     label: "J'analyse business par business : RTO/RPO selon criticite (ERP : 4h/1h, mail : 24h/4h, archives : 72h/24h). Plan d'action pour atteindre les cibles. Documentation"
     outcome: "good"
-    feedback: "Demarche pro. RTO/RPO par service selon criticite (pas un chiffre global). Analyse business prealable. Plan pour atteindre les cibles (parfois ecart entre actuel et souhaite). Standard NIS2 article 21 mesure 3 + ISO 22301."
+    feedback: "Demarche pro. RTO/RPO par service selon criticite (pas un chiffre global). Analyse business préalable. Plan pour atteindre les cibles (parfois ecart entre actuel et souhaite). Standard NIS2 article 21 mesure 3 + ISO 22301."
     points: 40
   - id: "c"
     label: "Je copie les chiffres d'une autre entreprise"
     outcome: "bad"
-    feedback: "INADAPTE. Chaque entreprise a ses besoins propres : un cabinet d'avocats peut tolerer 24h, une banque seulement 1h. Analyse propre obligatoire. RTO/RPO sont specifiques au business."
+    feedback: "INADAPTE. Chaque entreprise a ses besoins propres : un cabinet d'avocats peut tolerer 24h, une banque seulement 1h. Analyse propre obligatoire. RTO/RPO sont spécifiques au business."
     points: -10
   - id: "d"
-    label: "Je propose RTO et RPO de 0 (continuite parfaite) pour etre safe"
+    label: "Je propose RTO et RPO de 0 (continuite parfaite) pour être safe"
     outcome: "neutral"
-    feedback: "Cher et inutile pour PME. RTO=0 implique replication temps-reel + standby actif = couts x10. Le RTO/RPO doit etre PROPORTIONNE au besoin business + cout. Pour PME : RTO 4-24h selon service, RPO 1-4h."
+    feedback: "Cher et inutile pour PME. RTO=0 implique replication temps-reel + standby actif = coûts x10. Le RTO/RPO doit être PROPORTIONNE au besoin business + coût. Pour PME : RTO 4-24h selon service, RPO 1-4h."
     points: 5
 debrief: |
   Le **RTO** et le **RPO** sont les 2 chiffres fondateurs de
-  la strategie de continuite d'activite. Sans eux, on ne sait
+  la stratégie de continuite d'activite. Sans eux, on ne sait
   pas combien dimensionner.
 
   **Definitions :**
 
   **RTO** (Recovery Time Objective)
-  = **duree maximum d'indisponibilite toleree** apres un
+  = **durée maximum d'indisponibilite toleree** après un
   incident.
 
   Exemples :
-  - RTO = 1 heure : le service doit etre back en 1h max
-  - RTO = 24 heures : tolerable d'etre down 24h
+  - RTO = 1 heure : le service doit être back en 1h max
+  - RTO = 24 heures : tolerable d'être down 24h
   - RTO = 1 semaine : pas critique
 
   **RPO** (Recovery Point Objective)
-  = **quantite maximum de donnees perdues** acceptable.
+  = **quantité maximum de données perdues** acceptable.
 
   Exemples :
-  - RPO = 0 : aucune perte de donnees toleree (replication
+  - RPO = 0 : aucune perte de données toleree (replication
     temps reel)
   - RPO = 1 heure : on tolere de perdre les modifications
-    de la derniere heure
-  - RPO = 24 heures : on accepte de perdre 1 jour de donnees
+    de la dernière heure
+  - RPO = 24 heures : on accepte de perdre 1 jour de données
 
-  **L'arbitrage RTO/RPO vs cout :**
+  **L'arbitrage RTO/RPO vs coût :**
 
   Plus les RTO/RPO sont courts, plus c'est cher :
 
   | RTO | RPO | Solution typique | Cout |
   |---|---|---|---|
   | **0 / 0** | Replication temps-reel + standby actif | x10 |
-  | **1h / 15min** | Replication async + sauvegarde frequente | x5 |
+  | **1h / 15min** | Replication async + sauvegarde fréquente | x5 |
   | **4h / 1h** | Sauvegarde horaire + restoration rapide | x3 |
   | **24h / 4h** | Sauvegarde quotidienne | x1 (baseline) |
   | **72h / 24h** | Sauvegarde hebdomadaire | x0.7 |
   | **1 semaine / 7 jours** | Sauvegarde hebdo, archive | x0.5 |
 
   Le defi : **trouver le bon compromis** entre besoin business
-  et cout.
+  et coût.
 
   **Methodologie de calcul :**
 
-  **Etape 1 : Cartographier les services**
+  **Étape 1 : Cartographier les services**
 
   Lister tous les services / applications de l'entreprise :
   - ERP / CRM
   - Email
   - Site web public
-  - Telephone (VoIP)
+  - Téléphone (VoIP)
   - Fichiers partages
   - BDD clients
   - Outils de production
   - Etc.
 
-  **Etape 2 : Evaluer la criticite business de chaque service**
+  **Étape 2 : Evaluer la criticite business de chaque service**
 
   Questions a poser :
   - Si ce service est down 1h, impact business ?
-  - Si on perd les donnees de la derniere heure, impact ?
+  - Si on perd les données de la dernière heure, impact ?
   - Combien d'utilisateurs sont impactes ?
   - Combien on perd par heure d'indisponibilite ?
 
@@ -113,11 +113,11 @@ debrief: |
   | **Tier 3 - Standard** | Peut attendre | 24-72h | 24h |
   | **Tier 4 - Faible** | Archives, peu utilise | 1 semaine | 1 semaine |
 
-  **Etape 3 : Calculer le cout d'indisponibilite**
+  **Étape 3 : Calculer le coût d'indisponibilite**
 
-  Cout d'1 heure d'arret :
+  Cout d'1 heure d'arrêt :
 
-  - Salaires perdus : (Nb employes affectes) × (Salaire moyen)
+  - Salaires perdus : (Nb employés affectes) × (Salaire moyen)
     / horaire
   - Chiffre d'affaires perdu : CA mensuel / 730h × heures
     affectees
@@ -132,9 +132,9 @@ debrief: |
     perdu si 24h+)
   - **Cout 1h ERP down** : ~3-5 K EUR
 
-  Si l'ERP doit etre down 24h : 75-120 K EUR de perte.
+  Si l'ERP doit être down 24h : 75-120 K EUR de perte.
 
-  **Etape 4 : Comparer aux RTO/RPO actuels**
+  **Étape 4 : Comparer aux RTO/RPO actuels**
 
   Pour chaque service, compare :
   - RTO **actuel** (mesure realiste avec sauvegardes
@@ -143,13 +143,13 @@ debrief: |
   - **Ecart** : RTO actuel > RTO souhaite ? Si oui,
     investissement necessaire.
 
-  **Etape 5 : Plan d'action**
+  **Étape 5 : Plan d'action**
 
   Selon les ecarts identifies, dimensionner les sauvegardes
   et la continuite :
 
-  - Si **ecart faible** : peut-etre juste optimisation
-    (procedure plus rapide, automation)
+  - Si **ecart faible** : peut-être juste optimisation
+    (procédure plus rapide, automation)
   - Si **ecart important** : investissement plus consequent
     (replication, standby)
 
@@ -174,7 +174,7 @@ debrief: |
   - Replication BDD site : +30 EUR/mois
   - **Total** : +280 EUR/mois pour atteindre les cibles
 
-  **Comparaison vs cout d'indisponibilite** :
+  **Comparaison vs coût d'indisponibilite** :
   - Cout 24h ERP down (sans amelioration) : 100K EUR (1
     incident/an = 100K EUR)
   - Cout amelioration : 3.4K EUR/an
@@ -183,17 +183,17 @@ debrief: |
   **Le piege "RTO 0 c'est toujours mieux" :**
 
   FAUX. RTO 0 implique :
-  - **Replication synchrone** : x5 le cout des serveurs
+  - **Replication synchrone** : x5 le coût des serveurs
   - **Standby actif** : x2 les licences
-  - **Operations** complexes (synchronisation, basculement)
+  - **Opérations** complexes (synchronisation, basculement)
   - **Maintenance** plus difficile
 
   Justifie uniquement pour services TIER 0 (banque, sante,
   defense). Pour PME standard, RTO 4h-24h est acceptable.
 
-  **Le piege "tous les services ont le meme RTO/RPO" :**
+  **Le piege "tous les services ont le même RTO/RPO" :**
 
-  FAUX. Differents services ont differentes criticites :
+  FAUX. Différents services ont différentes criticites :
   - L'ERP comptable : critique (RTO court)
   - Les archives : non critique (RTO long)
 
@@ -202,9 +202,9 @@ debrief: |
 
   **Le piege "le RPO se mesure en jours" :**
 
-  Pour donnees volatiles (BDD transactionnelle, ERP), RPO en
+  Pour données volatiles (BDD transactionnelle, ERP), RPO en
   jours = catastrophe (perte d'1 jour de transactions = perte
-  de credibilite + clients).
+  de crédibilité + clients).
 
   Pour archives statiques, RPO en jours acceptable.
 
@@ -218,7 +218,7 @@ debrief: |
   - **Cout** : x10 cost baseline
 
   **RTO 1h / RPO 15 min (haute disponibilite)**
-  - **Replication asynchrone** : copies frequentes
+  - **Replication asynchrone** : copies fréquentes
   - **Standby passif** : serveur eteint, demarre en cas de
     panne
   - **Failover automatique**
@@ -226,17 +226,17 @@ debrief: |
 
   **RTO 4h / RPO 1h (PME critique)**
   - **Sauvegarde horaire** + restoration rapide
-  - **Hot spare** : materiel pret a deployer
-  - **Procedure documentee + testee**
+  - **Hot spare** : matériel pret a déployer
+  - **Procédure documentee + testee**
   - **Cout** : x3 baseline
 
   **RTO 24h / RPO 4h (PME standard)**
   - **Sauvegarde quotidienne** ou plusieurs fois / jour
   - **Restoration en quelques heures**
-  - **Procedure documentee**
+  - **Procédure documentee**
   - **Cout** : x1 baseline (le standard)
 
-  **RTO 72h / RPO 24h (PME tres petite, archives)**
+  **RTO 72h / RPO 24h (PME très petite, archives)**
   - **Sauvegarde quotidienne** standard
   - **Restoration manuelle**
   - **Cout** : x0.7 baseline
@@ -253,27 +253,27 @@ debrief: |
 
   **Cas 1 - PME 2023 (analyse RTO/RPO bien faite)**
 
-  PME 100 employes a fait l'analyse complete RTO/RPO.
+  PME 100 employés a fait l'analyse complete RTO/RPO.
   Decouverte : ERP cible 4h mais reel 48h. Investissement :
   Veeam Replication = 5K EUR/an.
 
-  Resultat : ransomware 6 mois plus tard, ERP restaure en 3h.
-  ROI : evident (vs 100K EUR de perte si 48h down).
+  Résultat : ransomware 6 mois plus tard, ERP restaure en 3h.
+  ROI : évident (vs 100K EUR de perte si 48h down).
 
-  **Cas 2 - Hopital US 2022 (pas d'analyse)**
+  **Cas 2 - Hôpital US 2022 (pas d'analyse)**
 
-  Hopital n'avait pas d'objectif RTO documente. Ransomware =
+  Hôpital n'avait pas d'objectif RTO documente. Ransomware =
   72h de degradation (parts critiques) + 2 semaines de
-  retablissement total.
+  rétablissement total.
 
-  Cout : 1.5 M USD + reputation + procedures.
+  Cout : 1.5 M USD + reputation + procédures.
 
   Avec analyse + investissement (200K USD initial), aurait
-  ete RTO 8h max + RPO 1h.
+  été RTO 8h max + RPO 1h.
 
-  **Cas 3 - Banque francaise 2024 (analyse rigoureuse)**
+  **Cas 3 - Banque française 2024 (analyse rigoureuse)**
 
-  Banque avec analyse RTO/RPO precis :
+  Banque avec analyse RTO/RPO précis :
   - Tier 0 (paiements) : RTO 30 min, RPO 0 (replication
     synchrone)
   - Tier 1 (consultations) : RTO 4h, RPO 15 min
@@ -286,7 +286,7 @@ debrief: |
   **NIS2 et RTO/RPO :**
 
   L'article 21 mesure 3 (continuite des activites) impose :
-  - **Definition documentee** des RTO et RPO
+  - **Définition documentee** des RTO et RPO
   - **Plan de continuite** (PCA)
   - **Plan de reprise** (PRA)
   - **Tests** reguliers (cf ep 02)
@@ -301,37 +301,37 @@ debrief: |
     avec RTO/RPO
   - **EBIOS RM** (ANSSI) : analyse de risques avec impact
 
-  **La regle d'or :**
+  **La règle d'or :**
 
-  > **RTO et RPO sont specifiques a chaque service. Analyse
-  > business prealable obligatoire (criticite, cout
-  > indisponibilite). Solution dimensionnee en consequence
-  > (eviter sur ou sous-dimensionnement). Documentation NIS2.
+  > **RTO et RPO sont spécifiques a chaque service. Analyse
+  > business préalable obligatoire (criticite, coût
+  > indisponibilite). Solution dimensionnee en conséquence
+  > (éviter sur ou sous-dimensionnement). Documentation NIS2.
   > Tests reguliers (cf ep 02). RTO 0 = uniquement pour
-  > services vitaux (couts x10).**
+  > services vitaux (coûts x10).**
 quiz:
   - question: "RTO signifie quoi ?"
     choices:
-      - { id: "a", label: "Reseau Tor Oeil", correct: false }
-      - { id: "b", label: "Recovery Time Objective - duree max d'indisponibilite toleree apres incident", correct: true }
+      - { id: "a", label: "Réseau Tor Oeil", correct: false }
+      - { id: "b", label: "Recovery Time Objective - durée max d'indisponibilite toleree après incident", correct: true }
       - { id: "c", label: "Routeur Test Optionnel", correct: false }
-    explanation: "RTO = Recovery Time Objective. Duree max d'arret toleree avant retour a la normale. Exemple : RTO 4h = service doit etre back en 4h max apres incident. Specific a chaque service selon criticite business."
+    explanation: "RTO = Recovery Time Objective. Duree max d'arrêt toleree avant retour a la normale. Exemple : RTO 4h = service doit être back en 4h max après incident. Specific a chaque service selon criticite business."
 
   - question: "RPO signifie quoi ?"
     choices:
       - { id: "a", label: "Roman Pratique Online", correct: false }
-      - { id: "b", label: "Recovery Point Objective - quantite max de donnees perdues acceptable apres incident", correct: true }
-      - { id: "c", label: "Reseau Pro Optimise", correct: false }
-    explanation: "RPO = Recovery Point Objective. Quantite max de donnees perdues acceptable. Exemple : RPO 1h = on tolere de perdre les modifications de la derniere heure. Determine la frequence des sauvegardes (RPO 1h = sauvegarde horaire)."
+      - { id: "b", label: "Recovery Point Objective - quantité max de données perdues acceptable après incident", correct: true }
+      - { id: "c", label: "Réseau Pro Optimise", correct: false }
+    explanation: "RPO = Recovery Point Objective. Quantite max de données perdues acceptable. Exemple : RPO 1h = on tolere de perdre les modifications de la dernière heure. Determine la fréquence des sauvegardes (RPO 1h = sauvegarde horaire)."
 
   - question: "Pour PME standard, RTO/RPO recommande pour l'ERP comptable ?"
     choices:
       - { id: "a", label: "RTO 0, RPO 0", correct: false }
-      - { id: "b", label: "RTO 4h / RPO 1h - critique mais pas vital. Solution : sauvegarde horaire + restoration rapide + procedure documentee", correct: true }
+      - { id: "b", label: "RTO 4h / RPO 1h - critique mais pas vital. Solution : sauvegarde horaire + restoration rapide + procédure documentee", correct: true }
       - { id: "c", label: "RTO 1 semaine, RPO 1 semaine", correct: false }
-    explanation: "PME standard ERP : RTO 4h (services critiques mais pas vitaux), RPO 1h (perte 1h max acceptable). Solution : sauvegarde horaire + restoration rapide + Veeam Replication. Cout +200 EUR/mois. ROI evident face a indisponibilite."
+    explanation: "PME standard ERP : RTO 4h (services critiques mais pas vitaux), RPO 1h (perte 1h max acceptable). Solution : sauvegarde horaire + restoration rapide + Veeam Replication. Cout +200 EUR/mois. ROI évident face a indisponibilite."
 
-  - question: "Tous les services doivent-ils avoir le meme RTO/RPO ?"
+  - question: "Tous les services doivent-ils avoir le même RTO/RPO ?"
     choices:
       - { id: "a", label: "Oui pour simplicite", correct: false }
       - { id: "b", label: "NON. Chaque service selon sa criticite (Tier 0/1/2/3/4). ERP critique (RTO 4h), archives non-critique (RTO 1 semaine)", correct: true }

@@ -2,31 +2,31 @@
 title: "Quelqu'un m'enregistre a mon insu"
 durationMinutes: 6
 persona: "tous-collaborateurs"
-objective: "Comprendre la legalite des enregistrements (audio/video) en reunion / visio, tes droits, comment se proteger et que faire si enregistre a son insu"
+objective: "Comprendre la legalite des enregistrements (audio/video) en réunion / visio, tes droits, comment se proteger et que faire si enregistre a son insu"
 xpReward: 60
 scenario: |
-  Tu es manager en PME. Reunion en visio avec un fournisseur
-  (negociation contrat). Tu remarques un voyant rouge sur son
-  ecran : enregistrement actif. Mais aucune mention orale
+  Tu es manager en PME. Réunion en visio avec un fournisseur
+  (négociation contrat). Tu remarques un voyant rouge sur son
+  écran : enregistrement actif. Mais aucune mention orale
   du fournisseur, aucune notification dans Teams.
 
-  Apres la reunion, tu suspectes un enregistrement illicite.
+  Après la réunion, tu suspectes un enregistrement illicite.
   Tu fais quoi ?
 choices:
   - id: "a"
     label: "Pas grave, rien a cacher"
     outcome: "bad"
-    feedback: "FAUX. Enregistrement a ton insu = illegal en France (Code penal article 226-1) - 1 an prison + 45K EUR amende. Plus : utilisation peut nuire a tes interets (negociation, prud'hommes, presse). Recours possibles."
+    feedback: "FAUX. Enregistrement a ton insu = illegal en France (Code penal article 226-1) - 1 an prison + 45K EUR amende. Plus : utilisation peut nuire a tes intérêts (négociation, prud'hommes, presse). Recours possibles."
     points: -20
   - id: "b"
-    label: "Je demande explicitement : 'Vous nous enregistrez ?' Si oui non-consenti : je quitte la reunion + plainte CNIL/penal si necessaire"
+    label: "Je demande explicitement : 'Vous nous enregistrez ?' Si oui non-consenti : je quitte la réunion + plainte CNIL/penal si necessaire"
     outcome: "good"
-    feedback: "Reflexes pro. Demande explicite (non-reponse = present). Quitter immediatement la reunion = preservation interets. Plainte si confirmee = recours legal. Standard pour negociation sensible."
+    feedback: "Reflexes pro. Demande explicite (non-réponse = present). Quitter immédiatement la réunion = preservation intérêts. Plainte si confirmee = recours legal. Standard pour négociation sensible."
     points: 40
   - id: "c"
     label: "Je l'enregistre aussi pour 'me defendre'"
     outcome: "bad"
-    feedback: "DOUBLE FAUTE. Tu commet la meme infraction. Code penal 226-1 : enregistrement a l'insu sanctionne meme en defense. Plus : preuves obtenues illegalement = nulles en justice. Mauvaise approche."
+    feedback: "DOUBLE FAUTE. Tu commet la même infraction. Code penal 226-1 : enregistrement a l'insu sanctionne même en defense. Plus : preuves obtenues illegalement = nulles en justice. Mauvaise approche."
     points: -25
   - id: "d"
     label: "Je continue normalement, mais je ne dis rien d'engageant"
@@ -35,24 +35,24 @@ choices:
     points: 10
 debrief: |
   Les **enregistrements** (audio / video / visio) sont
-  encadres legalement en France. Beaucoup d'employes ignorent
+  encadres legalement en France. Beaucoup d'employés ignorent
   que :
 
   - Enregistrer une conversation **a l'insu** = penal
-  - Le **consentement** est obligatoire (sauf cas tres
+  - Le **consentement** est obligatoire (sauf cas très
     encadres)
   - La **preuve** illegalement obtenue est nulle en justice
   - Les **outils** modernes facilitent les enregistrements
     discrets
 
-  **Le cadre legal francais :**
+  **Le cadre legal français :**
 
   **Code penal article 226-1** :
 
   > "Est puni d'un an d'emprisonnement et de 45 000 euros
   > d'amende le fait, au moyen d'un procede quelconque,
   > volontairement de porter atteinte a l'intimite de la vie
-  > privee d'autrui :
+  > privée d'autrui :
   > 1° En captant, enregistrant ou transmettant, sans le
   > consentement de leur auteur, des paroles prononcees a
   > titre prive ou confidentiel..."
@@ -70,25 +70,25 @@ debrief: |
   participants : legal.
 
   Bonnes pratiques :
-  - Notification orale au debut : "Cette reunion sera
+  - Notification orale au début : "Cette réunion sera
     enregistree, etes-vous d'accord ?"
-  - Notification ecrite (mail prealable, agenda)
-  - Notification visuelle (Teams / Zoom : indication "reunion
+  - Notification ecrite (mail préalable, agenda)
+  - Notification visuelle (Teams / Zoom : indication "réunion
     enregistree")
   - Possibilite de **refuser** sans pression
 
   **Exception : enregistrement par un participant pour
   PROPRES besoins**
 
-  Cas frequent : un employe enregistre une reunion **dans
+  Cas fréquent : un employé enregistre une réunion **dans
   laquelle il participe** pour ses propres notes.
 
   **Jurisprudence** :
   - **Cour de cassation** : un participant peut enregistrer
     pour son usage personnel
   - **MAIS** : ne peut pas le **diffuser** sans consentement
-  - **MAIS** : la preuve peut etre rejetee en justice si
-    obtenue de maniere "deloyale"
+  - **MAIS** : la preuve peut être rejetee en justice si
+    obtenue de manière "deloyale"
 
   **Ambigu** : la zone grise est large. Solution sure : le
   dire.
@@ -96,11 +96,11 @@ debrief: |
   **Exception : surveillance en entreprise (encadree)**
 
   Un employeur peut enregistrer :
-  - Avec **information CSE** prealable
-  - Avec **information employes** (charte, panneaux)
+  - Avec **information CSE** préalable
+  - Avec **information employés** (charte, panneaux)
   - Avec **declaration CNIL** si necessaire
   - Pour des **finalites legitimes** (formation,
-    qualite)
+    qualité)
 
   Sans ces conditions = illegal.
 
@@ -109,13 +109,13 @@ debrief: |
   **1. Enregistrement direct visio (Teams / Zoom / Meet)**
 
   - **Notification standard** : Teams / Zoom indiquent
-    "Reunion enregistree"
+    "Réunion enregistree"
   - **Notification audio** : "L'enregistrement de cette
-    reunion a commence"
+    réunion a commence"
   - Mais : possible de **desactiver** dans certains plans /
     configs
 
-  **2. Capture ecran / video par logiciel tiers**
+  **2. Capture écran / video par logiciel tiers**
 
   - **OBS Studio** (gratuit) : capture invisible
   - **QuickTime Player** (Mac)
@@ -131,16 +131,16 @@ debrief: |
 
   **4. Enregistrement par hardware tiers**
 
-  - **Camera externe** capturant l'ecran
+  - **Caméra externe** capturant l'écran
   - **Microphone** dedie
   - **Hidden cam** (illegal)
 
-  **Comment detecter un enregistrement :**
+  **Comment détecter un enregistrement :**
 
   **Sur Teams / Zoom / Meet** :
 
   - **Indication visuelle** : icone d'enregistrement (rouge)
-  - **Notification audio** au debut
+  - **Notification audio** au début
   - **Notification dans le chat** : "X has started recording"
 
   Si tu vois ces indications : tu es prevenu = OK.
@@ -148,10 +148,10 @@ debrief: |
   **Si pas d'indication** :
 
   Indices d'enregistrement par tiers :
-  - **Voyant** sur l'ecran du participant (rouge / vert)
-  - **CPU** anormalement utilise (visible si camera
+  - **Voyant** sur l'écran du participant (rouge / vert)
+  - **CPU** anormalement utilise (visible si caméra
     activee)
-  - **Comportement** different (silences pour ne pas faire
+  - **Comportement** différent (silences pour ne pas faire
     de bruit, prise de notes intensive sans relance)
   - **Smartphone** pose visiblement sur le bureau du
     participant
@@ -160,49 +160,49 @@ debrief: |
 
   **Si tu suspectes :**
 
-  **Etape 1 : Demander explicitement**
+  **Étape 1 : Demander explicitement**
 
-  > "Pour information, est-ce que cette reunion est
-  > enregistree ? J'aimerais en etre informe."
+  > "Pour information, est-ce que cette réunion est
+  > enregistree ? J'aimerais en être informe."
 
-  Reponse :
+  Réponse :
   - **OUI** : tu peux choisir de continuer ou non (avec
     consentement)
-  - **NON** : tu peux quand meme suspecter et continuer
+  - **NON** : tu peux quand même suspecter et continuer
     avec prudence
   - **Esquive** : suspect, tu peux quitter
 
-  **Etape 2 : Proteger tes interets**
+  **Étape 2 : Proteger tes intérêts**
 
-  Pendant la reunion :
+  Pendant la réunion :
   - **Pas de declarations engageantes** sans confirmation
     ecrite
   - **Pas de mention** d'infos sensibles que tu ne veux pas
     voir reapparaitre
   - **Limite** au strict necessaire
 
-  **Etape 3 : Documentation post-reunion**
+  **Étape 3 : Documentation post-réunion**
 
-  - **Email de synthese** : "Suite a notre reunion, je
+  - **Email de synthese** : "Suite a notre réunion, je
     confirme par ecrit les points suivants..."
   - Cela cree une **preuve ecrite officielle** qui peut
     contredire un enregistrement extrait de contexte
 
-  **Etape 4 : Recours si enregistrement illicite confirme**
+  **Étape 4 : Recours si enregistrement illicite confirme**
 
   - **Plainte penale** (article 226-1) : 1 an prison + 45K
     EUR
-  - **Plainte CNIL** : si donnees personnelles (RGPD)
+  - **Plainte CNIL** : si données personnelles (RGPD)
   - **Demande judiciaire de destruction** : faire detruire
     l'enregistrement
-  - **Action civile** : dommages et interets
+  - **Action civile** : dommages et intérêts
 
   **Bonnes pratiques pour TOI (si tu enregistres) :**
 
-  Si tu veux enregistrer une reunion :
+  Si tu veux enregistrer une réunion :
 
   **1. Notification claire**
-  - Mention orale au debut : "La reunion sera enregistree
+  - Mention orale au début : "La réunion sera enregistree
     pour mes propres notes / usage interne / etc."
   - Mention ecrite si possible (mail invitation)
   - **Possibilite de refuser**
@@ -233,19 +233,19 @@ debrief: |
 
   Negociation contrat sensible. Le fournisseur enregistrait
   discrement (smartphone sur table) sans consentement.
-  Decouvert apres : il a partage l'enregistrement avec son
-  equipe pour preparer "armes" contre le client.
+  Decouvert après : il a partage l'enregistrement avec son
+  équipe pour preparer "armes" contre le client.
 
   Plainte penale + Tribunal :
   - Condamnation 4 mois prison avec sursis
   - 30K EUR d'amende
-  - Procedure deontologique (dans son secteur)
+  - Procédure deontologique (dans son secteur)
   - Resiliation du contrat
 
   **Cas 2 - Employe 2024 (enregistrement defense)**
 
   Employe pense que son manager le harcele. Enregistre les
-  reunions a son insu pour avoir des preuves.
+  réunions a son insu pour avoir des preuves.
 
   Tribunal :
   - **Preuves valides** dans certains cas (jurisprudence
@@ -253,14 +253,14 @@ debrief: |
   - **Si denominateur commun** : usage personnel + contexte
     de defense
 
-  Mais : zone grise, decision au cas par cas.
+  Mais : zone grise, décision au cas par cas.
 
-  **Cas 3 - PME 2022 (enregistrement par employe -
+  **Cas 3 - PME 2022 (enregistrement par employé -
   diffamation)**
 
-  Employe enregistre conversations avec collegues pour
+  Employe enregistre conversations avec collègues pour
   monter un dossier. Diffuse les enregistrements en interne.
-  Plusieurs collegues portent plainte.
+  Plusieurs collègues portent plainte.
 
   Tribunal :
   - Article 226-1 + 226-2 : utilisation et diffusion
@@ -269,16 +269,16 @@ debrief: |
 
   **Cas 4 - Politicien France 2024**
 
-  Conversation privee enregistree a l'insu, fuitee a la
-  presse. Enquete penale + procedure pour diffusion.
+  Conversation privée enregistree a l'insu, fuitee a la
+  presse. Enquete penale + procédure pour diffusion.
 
-  Plus de la responsabilite des journaux qui ont diffuse.
+  Plus de la responsabilité des journaux qui ont diffuse.
 
   **Le piege "dans le doute, j'enregistre tout" :**
 
   Tu commets une infraction. Code penal article 226-1 :
-  enregistrement de paroles privees / confidentielles a
-  l'insu = penal. Meme "pour ta defense".
+  enregistrement de paroles privées / confidentielles a
+  l'insu = penal. Même "pour ta defense".
 
   Bonne pratique : informer + obtenir consentement, OU
   ecrire un compte-rendu (legal, traçable).
@@ -300,11 +300,11 @@ debrief: |
 
   **Risques** :
   - **Consentement** des autres participants
-  - **Donnees** envoyees a fournisseur tiers (US souvent)
+  - **Données** envoyees a fournisseur tiers (US souvent)
   - **RGPD** : transfert hors-UE, base legale, registre
 
   Solutions :
-  - **Notification** prealable
+  - **Notification** préalable
   - **Choix d'outils** RGPD-compliant (Microsoft 365 Copilot
     plus encadre)
   - **Politique entreprise** claire
@@ -312,22 +312,22 @@ debrief: |
   **Cas particulier : Microsoft Copilot Recall (2024)**
 
   Microsoft Copilot Recall = enregistrement automatique de
-  TOUT ce qui est affiche sur ton ecran (capture toutes les 5
+  TOUT ce qui est affiche sur ton écran (capture toutes les 5
   sec).
 
   Risques :
-  - Donnees personnelles d'autres personnes
+  - Données personnelles d'autres personnes
   - RGPD violation potentiel
   - Polemique majeure en 2024 (delay de lancement)
 
   Solution : desactivation par defaut, opt-in volontaire.
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **Enregistrement a l'insu = penal (1 an prison + 45K
   > EUR). Demande systematique de consentement avant
-  > enregistrement. Si tu suspectes etre enregistre :
-  > demande + protege tes interets + plainte si confirme.
+  > enregistrement. Si tu suspectes être enregistre :
+  > demande + protege tes intérêts + plainte si confirme.
   > Apps modernes (transcription IA) = consentement
   > obligatoire + RGPD compliant. La traçabilite ecrite est
   > plus protectrice qu'enregistrement.**
@@ -337,33 +337,33 @@ quiz:
       - { id: "a", label: "OK pour preuve", correct: false }
       - { id: "b", label: "Penal (Code penal 226-1) : 1 an prison + 45K EUR amende. Aussi pour diffusion (226-2). Preuves nulles en justice", correct: true }
       - { id: "c", label: "Banal", correct: false }
-    explanation: "Code penal article 226-1 : enregistrement de paroles privees/confidentielles a l'insu = 1 an prison + 45K EUR. Article 226-2 : diffusion idem. Cas reel : fournisseur enregistre client = condamnation + perte contrat. Preuves obtenues illegalement nulles en justice."
+    explanation: "Code penal article 226-1 : enregistrement de paroles privées/confidentielles a l'insu = 1 an prison + 45K EUR. Article 226-2 : diffusion idem. Cas reel : fournisseur enregistre client = condamnation + perte contrat. Preuves obtenues illegalement nulles en justice."
 
-  - question: "Tu suspectes d'etre enregistre en visio, action ?"
+  - question: "Tu suspectes d'être enregistre en visio, action ?"
     choices:
       - { id: "a", label: "Continuer normalement", correct: false }
       - { id: "b", label: "Demander explicitement 'Etes-vous en train d'enregistrer ?'. Si esquive : quitter + plainte si confirme", correct: true }
       - { id: "c", label: "Enregistrer aussi", correct: false }
-    explanation: "Demande explicite : 'Cette reunion est-elle enregistree ?'. Reponse claire OUI/NON. Esquive = suspicion. Tu peux quitter. Si enregistrement illicite confirme : plainte penale + CNIL + demande judiciaire destruction. NE PAS enregistrer aussi (meme infraction)."
+    explanation: "Demande explicite : 'Cette réunion est-elle enregistree ?'. Réponse claire OUI/NON. Esquive = suspicion. Tu peux quitter. Si enregistrement illicite confirme : plainte penale + CNIL + demande judiciaire destruction. NE PAS enregistrer aussi (même infraction)."
 
-  - question: "Apps modernes (Otter.ai, Copilot) qui transcrivent les reunions, OK ?"
+  - question: "Apps modernes (Otter.ai, Copilot) qui transcrivent les réunions, OK ?"
     choices:
-      - { id: "a", label: "Oui sans probleme", correct: false }
-      - { id: "b", label: "Avec consentement explicite des autres + verification RGPD (transfert hors-UE, base legale, registre traitement). Sinon = enregistrement illicite", correct: true }
+      - { id: "a", label: "Oui sans problème", correct: false }
+      - { id: "b", label: "Avec consentement explicite des autres + vérification RGPD (transfert hors-UE, base legale, registre traitement). Sinon = enregistrement illicite", correct: true }
       - { id: "c", label: "Toujours interdit", correct: false }
-    explanation: "Apps de transcription IA (Otter.ai, Krisp, Read.ai, Copilot) : enregistrent + envoient a fournisseur (souvent US). Necessite consentement explicite participants + verification RGPD (transfert hors-UE, base legale, registre). Microsoft Copilot Recall 2024 : polemique majeure."
+    explanation: "Apps de transcription IA (Otter.ai, Krisp, Read.ai, Copilot) : enregistrent + envoient a fournisseur (souvent US). Necessite consentement explicite participants + vérification RGPD (transfert hors-UE, base legale, registre). Microsoft Copilot Recall 2024 : polemique majeure."
 
-  - question: "Pour proteger tes interets sans enregistrer, methode ?"
+  - question: "Pour proteger tes intérêts sans enregistrer, méthode ?"
     choices:
       - { id: "a", label: "Enregistrer a l'insu", correct: false }
-      - { id: "b", label: "Compte-rendu ecrit immediat post-reunion + email confirmation 'Je note nos echanges...' = preuve ecrite legale", correct: true }
-      - { id: "c", label: "Aucune methode", correct: false }
-    explanation: "Solution legale : compte-rendu ecrit immediat post-reunion + email officiel 'Je confirme par ecrit nos echanges : [points]'. Preuve ecrite legale (vs enregistrement illicite). Plus : chacun peut amender = traçabilite robuste. Standard juridique."
+      - { id: "b", label: "Compte-rendu ecrit immediat post-réunion + email confirmation 'Je note nos échanges...' = preuve ecrite legale", correct: true }
+      - { id: "c", label: "Aucune méthode", correct: false }
+    explanation: "Solution legale : compte-rendu ecrit immediat post-réunion + email officiel 'Je confirme par ecrit nos échanges : [points]'. Preuve ecrite legale (vs enregistrement illicite). Plus : chacun peut amender = traçabilite robuste. Standard juridique."
 ---
 
 > 💡 **Pour aller plus loin** : **Code penal article 226-1**
 > = base legale (1 an + 45K). **Cour de cassation
 > jurisprudence** evoluante sur enregistrement par
 > participant. Apps IA (Copilot, Otter) = consentement +
-> RGPD. **Compte-rendu ecrit** = methode legale et
+> RGPD. **Compte-rendu ecrit** = méthode legale et
 > protectrice (vs enregistrement illicite).

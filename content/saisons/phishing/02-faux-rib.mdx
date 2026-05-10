@@ -2,7 +2,7 @@
 title: "Le faux RIB fournisseur"
 durationMinutes: 6
 persona: "comptable"
-objective: "Detecter un changement de RIB malveillant"
+objective: "Détecter un changement de RIB malveillant"
 xpReward: 50
 scenario: |
   Tu es au service compta. Tu reçois ce mail :
@@ -21,22 +21,22 @@ choices:
   - id: "a"
     label: "Je mets a jour le RIB dans l'ERP"
     outcome: "bad"
-    feedback: "Mauvais reflexe - le mail provient d'un domaine PRESQUE identique mais different. Tu as ete piege."
+    feedback: "Mauvais reflexe - le mail provient d'un domaine PRESQUE identique mais différent. Tu as été piege."
     points: -10
   - id: "b"
-    label: "J'appelle Jean-Marc sur son numero habituel pour confirmer"
+    label: "J'appelle Jean-Marc sur son numéro habituel pour confirmer"
     outcome: "good"
-    feedback: "Parfait. Une verification orale = 30 secondes pour eviter 35 000 € de perte."
+    feedback: "Parfait. Une vérification orale = 30 secondes pour éviter 35 000 € de perte."
     points: 30
   - id: "c"
-    label: "Je reponds au mail pour confirmer"
+    label: "Je réponds au mail pour confirmer"
     outcome: "bad"
     feedback: "L'attaquant repondra avec aplomb. Le canal mail est compromis."
     points: -5
   - id: "d"
     label: "J'attends la prochaine facture pour voir"
     outcome: "neutral"
-    feedback: "Tu repousses le probleme - la prochaine facture portera le faux RIB et tu paieras."
+    feedback: "Tu repousses le problème - la prochaine facture portera le faux RIB et tu paieras."
     points: 0
 debrief: |
   Le piege : l'expediteur s'ecrit "compta@dupont-fournisseur-fr.com"
@@ -47,10 +47,10 @@ debrief: |
   PRESQUE identique a celui de la cible. L'œil ne le voit pas.
 
   Trois reflexes anti-faux-RIB :
-  - Toujours appeler sur le numero habituel (pas celui du mail)
+  - Toujours appeler sur le numéro habituel (pas celui du mail)
   - Examiner le domaine de l'expediteur lettre par lettre
-  - Mettre en place une procedure interne : tout changement de RIB
-    declenche un appel telephonique de validation
+  - Mettre en place une procédure interne : tout changement de RIB
+    declenche un appel téléphonique de validation
 quiz:
   - question: "Quel domaine est legitime ?"
     choices:
@@ -65,7 +65,7 @@ quiz:
         correct: false
     explanation: "Le domaine officiel est .fr et n'a pas de tirets : dupontfournisseur.fr."
 
-  - question: "Combien faut-il de temps pour verifier un changement de RIB par telephone ?"
+  - question: "Combien faut-il de temps pour vérifier un changement de RIB par téléphone ?"
     choices:
       - id: "a"
         label: "30 secondes"
@@ -74,7 +74,7 @@ quiz:
         label: "5 minutes"
         correct: false
       - id: "c"
-        label: "Une demi-journee"
+        label: "Une demi-journée"
         correct: false
     explanation: "30 secondes pour potentiellement sauver des dizaines de milliers d'euros. Ratio imbattable."
 
@@ -84,16 +84,16 @@ quiz:
         label: "Vrai"
         correct: false
       - id: "b"
-        label: "Faux - il doit y avoir verification systematique"
+        label: "Faux - il doit y avoir vérification systematique"
         correct: true
-    explanation: "Une procedure interne saine impose la verification telephonique de tout changement de RIB."
+    explanation: "Une procédure interne saine impose la vérification téléphonique de tout changement de RIB."
 ---
 
 ## Pour aller plus loin
 
-La parade definitive est **organisationnelle, pas technique** : ecrire dans
-ta procedure compta que **tout changement de RIB declenche un appel**
-sur le numero historique du fournisseur, sans exception.
+La parade définitive est **organisationnelle, pas technique** : ecrire dans
+ta procédure compta que **tout changement de RIB declenche un appel**
+sur le numéro historique du fournisseur, sans exception.
 
-Cette regle, simple et claire, doit etre connue par toute l'equipe compta.
-Elle protege meme les nouveaux arrivants qui ne connaissent pas tous les fournisseurs.
+Cette règle, simple et claire, doit être connue par toute l'équipe compta.
+Elle protege même les nouveaux arrivants qui ne connaissent pas tous les fournisseurs.
