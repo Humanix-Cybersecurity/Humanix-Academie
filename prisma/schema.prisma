@@ -506,6 +506,15 @@ model Saison {
   coverEmoji     String   @default("🎯")
   order          Int      @default(0)
   isPublished    Boolean  @default(true)
+  // Audience principale : "tous", "managers", "rh", "compta", "dev",
+  // "dirigeants", "dpo", etc. Source : prisma/catalog-saisons.ts.
+  // Sert au filtrage simple dans /admin/modules.
+  audience       String   @default("tous")
+  // Tags multi-positionnement pour /admin/modules. Une saison peut etre
+  // taggee a la fois "metier:rh" + "rgpd" + "fondamentaux" pour permettre
+  // un classement croise. Le seed (catalog-tags.ts) propose des tags par
+  // defaut bases sur le slug ; l'admin peut ajouter/retirer librement.
+  tags           String[] @default([])
   // Saison globale = catalogue HumaniX (tenantId null, visible a tous).
   // Saison custom = clonee depuis un module marketplace ; visible uniquement
   // au tenant proprietaire.
@@ -524,6 +533,7 @@ model Saison {
 
   @@index([tenantId])
   @@index([sourceModuleId])
+  @@index([audience])
 }
 
 model Episode {
