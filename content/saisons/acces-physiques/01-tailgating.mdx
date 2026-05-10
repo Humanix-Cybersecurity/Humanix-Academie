@@ -1,0 +1,163 @@
+---
+title: "Le tailgating à l'entrée des bureaux"
+durationMinutes: 5
+persona: "tous-collaborateurs"
+objective: "Reconnaitre le tailgating (suivre un collegue sans badger) et savoir poliment refuser, comprendre pourquoi c'est un vecteur d'attaque physique majeur"
+xpReward: 40
+scenario: |
+  Lundi 8h47, tu arrives au bureau. Tu badges devant la porte
+  vitree. Au moment ou tu ouvres, une personne souriante te dit :
+  "Bonjour ! Vous pouvez tenir la porte s'il vous plait, je suis
+  pressee, j'ai oublie mon badge".
+
+  La personne porte un costume, parle francais, semble professionnelle.
+  Tu ne la reconnais pas mais l'entreprise compte 200 personnes - tu
+  n'en connais pas un quart.
+
+  Tu fais quoi ?
+choices:
+  - id: "a"
+    label: "Je tiens la porte poliment, je serais embete a sa place"
+    outcome: "bad"
+    feedback: "C'est exactement ce que cherchait l'attaquant : exploiter ta politesse. Le tailgating est l'une des techniques d'intrusion physique les plus efficaces. Une fois dans les locaux, l'attaquant peut : voler des documents, brancher un keylogger USB, photographier des ecrans, voler du materiel."
+    points: -15
+  - id: "b"
+    label: "Je laisse la porte se refermer derriere moi en disant 'Vraiment desole, c'est la politique de securite, l'accueil pourra vous depanner'"
+    outcome: "good"
+    feedback: "Bonne reaction, polie et ferme. L'accueil peut verifier l'identite + delivrer un badge visiteur. Tu protege l'entreprise sans etre rude. Si la personne insiste / essaye de se justifier, c'est un signal d'alarme supplementaire."
+    points: 35
+  - id: "c"
+    label: "Je tiens la porte mais je l'accompagne jusqu'a son service pour verifier"
+    outcome: "neutral"
+    feedback: "Bonne intention mais risque : 1) tu n'es pas garde de securite, 2) tu peux etre manipule pour t'eloigner d'une zone sensible, 3) la personne peut te 'remercier' et disparaitre. Mieux : laisser la porte se fermer + diriger vers l'accueil."
+    points: 10
+  - id: "d"
+    label: "Je l'envoie balader, c'est forcement un voleur"
+    outcome: "neutral"
+    feedback: "Trop frontal sans certitude. Beaucoup de cas de tailgating involontaire (employe qui a vraiment oublie son badge). Etre poli mais ferme est plus efficace. La regle absolue : pas d'exception sur le badging, peu importe l'identite presumee."
+    points: 5
+debrief: |
+  Le **tailgating** (suivre quelqu'un dans une zone sans badger) est
+  l'une des techniques d'**ingenierie sociale physique** les plus
+  efficaces. Ne sous-estime pas : selon les rapports de pentests
+  physiques (Pwn the Network, BeyondTrust), le taux de reussite du
+  tailgating est de 70-90% en France.
+
+  **Pourquoi ca marche :**
+
+  Les humains sont cables pour la politesse. Tenir une porte est un
+  acte social automatique. Un attaquant en costume avec un sourire
+  exploite cette automaticite.
+
+  Variantes :
+  - Personne en uniforme (livreur, agent d'entretien) : encore plus
+    efficace
+  - Personne avec les bras charges (cartons, plateau cafes) : "vous
+    pouvez m'aider ?" = porte tenue
+  - Personne avec telephone collee a l'oreille en discussion intense :
+    pas le temps de la questionner
+
+  **Les degats possibles apres entree :**
+
+  Une fois dans les locaux, l'attaquant peut :
+  - **Photographier** les ecrans laisses ouverts (cf. ep 04 bureau
+    vide)
+  - **Brancher un keylogger USB** (5 secondes) sur un poste deverouille
+  - **Voler** du materiel (laptop, dossiers papier)
+  - **Installer** un Raspberry Pi pirate sur un port reseau
+  - **Acceder physiquement** a la salle serveur (cf. ep 06)
+  - **Fouiller les poubelles** pour des documents sensibles (ep 05)
+
+  Pour un attaquant motive, 30 minutes dans tes locaux suffisent
+  pour de gros degats.
+
+  **Comment refuser poliment :**
+
+  Tu n'as pas a etre desagreable. Phrases types :
+
+  - "Je suis vraiment desole mais c'est la politique securite, je ne
+    peux pas tenir la porte. L'accueil pourra vous depanner."
+  - "Je comprends, c'est embetant. L'accueil est juste la, ils ont
+    des badges visiteurs."
+  - "Notre charte ne permet pas, l'accueil va vous aider en 2 minutes."
+
+  Si la personne reagit mal (frustration, agressivite) : signal
+  d'alarme supplementaire. Une vraie personne qui a vraiment oublie
+  son badge comprend.
+
+  **La defense organisationnelle :**
+
+  La securite contre le tailgating ne peut pas reposer uniquement
+  sur la vigilance individuelle. Mesures techniques :
+
+  - **Sas a 1 personne** (mantrap) : sas qui ne laisse passer qu'une
+    seule personne a la fois. Tres efficace, plus cher.
+  - **Tourniquet** : impossible de passer 2 personnes simultanement.
+  - **Camera de surveillance** : detection visuelle automatique du
+    tailgating (IA video moderne).
+  - **Bipper sonore** : porte qui sonne si plus d'1 badge en 10
+    secondes (beep d'alarme).
+  - **Politique formalisee** : charte signee + sensibilisation
+    annuelle.
+
+  **Sensibilisation efficace :**
+
+  L'erreur classique : "merci de ne pas faire de tailgating" sur un
+  poster. Inefficace.
+
+  Mieux : exercice annuel ou des "intrus" testent l'entree
+  (consultants en pentest physique). Resultats partagés en interne :
+  "12 personnes ont tenu la porte ce mois-ci a un intrus, voici
+  pourquoi c'est risque". Apprentissage par l'experience.
+
+  **Cas reels :**
+
+  - **Pentests physiques** : ~80% de succès en moyenne au tailgating
+    en entreprises francaises (rapports Wavestone, Synacktiv).
+  - **2018 - Banque francaise** : pentest physique reussi via
+    tailgating, le pentester a passe 3h dans les locaux a installer
+    des Raspberry Pi pirates. Aucun employe n'a verifie son badge.
+  - **2014 - DefCon Black Badge** : un participant a reussi a entrer
+    dans la zone restricted en suivant un staff member. Symbolique
+    mais illustratif.
+
+  **La regle d'or :**
+
+  > **Pas d'exception sur le badging.** Peu importe que la personne
+  > semble legitime, soit en costume, ait des bras charges, soit
+  > pressee. Le badge est obligatoire. L'accueil est la pour les
+  > exceptions legitimes (badge oublie, visiteur).
+quiz:
+  - question: "Le taux de reussite du tailgating en pentests physiques en France est :"
+    choices:
+      - { id: "a", label: "10%", correct: false }
+      - { id: "b", label: "70-90% (les humains sont cables pour la politesse)", correct: true }
+      - { id: "c", label: "Inferieur a 5%", correct: false }
+    explanation: "Selon les rapports Wavestone, Synacktiv, Pwn the Network : 70-90% de reussite en moyenne. La politesse automatique est exploitee par l'ingenierie sociale. Sans formation specifique, c'est une faille evidente."
+
+  - question: "Comment refuser poliment de tenir la porte ?"
+    choices:
+      - { id: "a", label: "L'envoyer balader", correct: false }
+      - { id: "b", label: "'Desole, c'est la politique securite, l'accueil pourra vous depanner avec un badge visiteur'", correct: true }
+      - { id: "c", label: "Tenir la porte quand meme", correct: false }
+    explanation: "Phrasing poli mais ferme + redirection vers l'accueil = la bonne reponse. Etre courtois preserve les relations sans compromettre la securite. Si la personne reagit mal, c'est un signal d'alarme supplementaire."
+
+  - question: "Apres tailgating, en 30 min dans les locaux, l'attaquant peut :"
+    choices:
+      - { id: "a", label: "Pas grand chose", correct: false }
+      - { id: "b", label: "Brancher keylogger USB (5s), photographier ecrans, voler dossiers/laptop, installer Raspberry Pi sur reseau, acceder salle serveur", correct: true }
+      - { id: "c", label: "Juste regarder", correct: false }
+    explanation: "30 minutes = enormement de temps en pentesting physique. Keylogger USB (5s), photos ecrans laisses ouverts (1 min), Pi pirate sur port reseau (10s), vol laptop (1 min). Les degats sont rapides et severes."
+
+  - question: "Quelle defense technique est la plus efficace contre le tailgating ?"
+    choices:
+      - { id: "a", label: "Une charte signee", correct: false }
+      - { id: "b", label: "Sas a 1 personne (mantrap) ou tourniquet : impossibilite physique de passer 2 personnes simultanement", correct: true }
+      - { id: "c", label: "Une affiche", correct: false }
+    explanation: "Mesure technique > organisationnelle. Mantrap / tourniquet = impossibilite physique. Camera IA detection = 2eme couche. Bipper sonore (>1 badge en 10s) = 3eme couche. La charte seule est insuffisante."
+---
+
+> 💡 **Pour aller plus loin** : organiser un test de tailgating annuel
+> avec des consultants pentest physique (Wavestone, Synacktiv, Orange
+> Cyberdefense - 2-5K EUR par exercice). ROI eleve : detecter les
+> failles + sensibiliser par l'exemple.

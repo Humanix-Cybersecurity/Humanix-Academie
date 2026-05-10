@@ -1,0 +1,226 @@
+---
+title: "MDM ou BYOD : choisir intelligemment"
+durationMinutes: 8
+persona: "manager"
+objective: "Comprendre la difference MDM (tel pro fourni) vs BYOD (tel perso utilise au boulot), choisir l'approche adaptee a son contexte, eviter les pieges des deux modeles"
+xpReward: 90
+scenario: |
+  Tu es DRH d'une PME 80 personnes. Le DSI te propose 3 options pour
+  les telephones :
+
+  - **Option A** : tous les collaborateurs ont un telephone PRO
+    fourni (iPhone SE 200 EUR x 80 = 16 K EUR + forfait 15 EUR/mois
+    x 80 = 14 K EUR/an). Geres par MDM (Microsoft Intune).
+  
+  - **Option B** : BYOD pur. Chaque employe utilise son tel perso
+    pour le boulot (apps Outlook, Teams, ERP). Pas de MDM. 0 EUR
+    cout direct.
+  
+  - **Option C** : BYOD avec MDM "containerise" (Android Work Profile
+    / iOS Managed Apple ID). Apps pro dans un container isole sur le
+    tel perso. ~20 K EUR licences MDM/an pour 80 personnes.
+
+  Le DAF te dit "Option B est gratuite, on prend ca". Tu reagis ?
+choices:
+  - id: "a"
+    label: "Option B est faussement gratuite : impossible de garantir la securite des donnees pro sur un tel perso non controle. Risque RGPD majeur. Soit A (vrai pro), soit C (compromis)"
+    outcome: "good"
+    feedback: "Excellente analyse. BYOD pur sans MDM est un risque RGPD majeur : tu n'as aucun controle sur le device qui contient tes donnees pro. En cas de perte, l'employe ne peut pas reformer le tel sans perdre ses donnees perso. Article 32 RGPD = mesures de securite obligatoires. Option A ou C."
+    points: 35
+  - id: "b"
+    label: "Option B economique, on signe une charte avec les employes pour qu'ils protegent leur tel"
+    outcome: "bad"
+    feedback: "FAUX. Une charte ne te protege pas en cas de breach RGPD. Si un employe perd son tel perso avec des donnees clients dessus, c'est TON entreprise qui paie l'amende, pas l'employe. La charte sans MDM = securite organisationnelle insuffisante."
+    points: -10
+  - id: "c"
+    label: "Option A meme si plus chere - controle total = securite max"
+    outcome: "good"
+    feedback: "Approche prudente correcte. Tels pro fournis = controle total via MDM. Couts : 30 K EUR/an pour 80 personnes. C'est cher mais c'est l'option la plus sure. Adapte aux secteurs sensibles (sante, finance, defense)."
+    points: 30
+  - id: "d"
+    label: "Indifferent, le DAF decide"
+    outcome: "bad"
+    feedback: "C'est ta decision DRH x DSI, pas DAF seul. La decision implique : RGPD (DRH), securite (DSI), couts (DAF). Discussion necessaire entre les 3."
+    points: -10
+debrief: |
+  Le choix entre MDM (Mobile Device Management) et BYOD (Bring Your
+  Own Device) est l'une des decisions les plus structurantes en
+  cybersecurite mobile. Pas de bonne reponse universelle, mais des
+  bons compromis selon le contexte.
+
+  **MDM (Mobile Device Management) - tel pro fourni :**
+
+  L'employe recoit un telephone professionnel. La DSI le configure
+  via une plateforme MDM :
+  - Microsoft Intune (~6 EUR/user/mois)
+  - Jamf (Apple-only, ~5 EUR/user/mois)
+  - Hexnode, Hexnode UEM (FR, ~4 EUR/user/mois)
+  - VMware Workspace ONE
+  - Google Workspace MDM (gratuit basique avec Google Workspace)
+
+  Capacites typiques :
+  - Configuration WiFi entreprise, VPN, certificats
+  - Push d'apps obligatoires (Outlook, Teams, ERP)
+  - Politiques de mot de passe, biometrie obligatoire
+  - Chiffrement obligatoire
+  - Whitelist d'apps autorisees / blacklist
+  - **Effacement a distance** (wipe) en cas de perte/depart
+  - Audit des apps installees, conformite OS
+
+  **Avantages :**
+  - Controle total sur la securite
+  - Reset facile en cas de depart d'employe
+  - Conformite RGPD facilitee
+  - Meme experience pour tous les employes
+
+  **Inconvenients :**
+  - Cout : tel + forfait + license MDM (~400 EUR/an/employe)
+  - Employes ont 2 telephones (le pro et le perso)
+  - Politique parfois trop stricte ("pas d'apps perso") qui pousse
+    a utiliser le perso pour contourner
+
+  **BYOD pur (Bring Your Own Device) - tel perso au boulot :**
+
+  L'employe utilise son tel perso. Apps pro (Outlook, Teams,
+  Salesforce) sont installees mais pas controlees.
+
+  **Avantages :**
+  - Cout zero pour l'entreprise
+  - Pas de double tel
+  - L'employe choisit son OS prefere
+
+  **Inconvenients (graves) :**
+  - **Aucun controle securite** : tel perso peut etre Android 5
+    sans patches, sans PIN, jailbreak, etc.
+  - **RGPD risk** : si donnees client fuitent depuis tel perso, tu es
+    responsable (article 32 - mesures de securite appropriees).
+  - **Effacement impossible** : si l'employe part, tu ne peux pas
+    effacer tes donnees pro de SON tel perso (vie privee).
+  - **Investigation forensic impossible** : si breach, tu ne peux
+    pas saisir le tel perso pour analyse.
+
+  **BYOD pur est aujourd'hui considere comme inacceptable** dans
+  toute entreprise serieuse > 10 personnes. Sauf cas particuliers
+  (consultants externes 1 jour/semaine sans donnees sensibles).
+
+  **BYOD containerise (le compromis moderne) :**
+
+  L'employe utilise son tel perso, mais les apps pro sont installees
+  dans un **container isole** :
+  - **Android Work Profile** : icone "professionnel" dans le menu,
+    apps pro separees, donnees pro chiffrees independamment.
+  - **iOS Managed Apple ID** : isolation au niveau apps + donnees.
+
+  Capacites :
+  - DSI controle UNIQUEMENT le container pro (pas le perso)
+  - Effacement a distance UNIQUEMENT du container (pas le perso)
+  - Apps pro peuvent etre forcees, mais pas les apps perso
+  - Politique securite (PIN, biometrie) obligatoire pour le
+    container
+
+  **Avantages :**
+  - Cout reduit (pas de tel pro a fournir)
+  - Vie privee respectee (l'employe garde son tel)
+  - Securite RGPD-compatible
+  - Setup en 10 min par employe
+
+  **Inconvenients :**
+  - License MDM par employe (~5 EUR/mois)
+  - Compatibilite : iOS + Android, mais pas tous les modeles
+  - Si l'employe refuse de passer en Work Profile, blocage
+
+  **Tableau de decision :**
+
+  | Critere | MDM (tel pro) | BYOD pur | BYOD container |
+  |---|---|---|---|
+  | Cout | 30K/an pour 80 personnes | 0 | 5K/an pour 80 personnes |
+  | Controle | Total | Aucun | Container uniquement |
+  | RGPD | OK | RISK MAJEUR | OK |
+  | UX employe | 2 tels (lourd) | Idéal | Bon (1 tel, 2 zones) |
+  | Securite donnees pro | Maximum | Faible | Bonne |
+  | Effacement depart | Total | Impossible | Container uniquement |
+  | Approprie pour | Sante, defense, sensible | A eviter | PME/ETI standard |
+
+  **Le piege "MDM trop strict tue l'usage" :**
+
+  Erreur classique : le DSI configure le MDM en mode parano (pas
+  d'apps perso, screenshots interdits, photo blocked). Resultat :
+  les employes :
+  - Utilisent leur tel perso pour TOUT le travail (pour echapper
+    au MDM)
+  - Le tel pro reste dans le tiroir
+  - Securite contourne, productivite chute
+
+  La bonne approche : MDM avec restrictions raisonnables.
+  Bloquer les apps clairement risquees (TikTok, jeux gratuits
+  douteux), mais permettre les apps utiles (banque, transport,
+  loisir).
+
+  **La charte BYOD - obligatoire si BYOD :**
+
+  Si tu pars en BYOD (containerise ou non), une charte signee par
+  chaque employe :
+  - Conditions d'utilisation (apps autorisees, droits DSI)
+  - Procedure en cas de perte/vol (notification immediate)
+  - Reset des donnees pro a la fin du contrat
+  - Acces aux donnees pour audit eventuel
+  - Liability en cas de breach par l'employe
+
+  Modele de charte : ANSSI publie un guide gratuit "Charte
+  d'utilisation des moyens informatiques" + l'AFNOR.
+
+  **Cas reels :**
+
+  - **Sony Pictures 2014** : breach par mail piege sur tel BYOD
+    sans MDM. Cout : 100M USD + leak de films.
+  - **Anthem 2015** : 78M dossiers patients voles. Vecteur
+    initial : phishing sur tel BYOD avec acces email entreprise.
+
+  **Pour ta PME :**
+
+  - 1-10 personnes : BYOD acceptable avec charte simple si pas
+    de donnees sensibles.
+  - 10-50 personnes : BYOD containerise recommande.
+  - 50+ personnes ou secteur sensible (sante, finance, juridique)
+    : MDM tel pro fourni.
+
+  **Pour les NIS2 (entites essentielles/importantes) :**
+
+  L'article 21 NIS2 (mesures de gestion des risques) inclut la
+  securite des appareils. MDM ou BYOD containerise avec
+  configuration documentee = obligatoire. BYOD pur = potentiellement
+  non-conforme.
+quiz:
+  - question: "BYOD pur (tel perso sans MDM) pour une PME 80 personnes c'est :"
+    choices:
+      - { id: "a", label: "Economique et pratique", correct: false }
+      - { id: "b", label: "Risque RGPD majeur (impossibilite de controler la securite des donnees pro). A eviter", correct: true }
+      - { id: "c", label: "La meilleure option", correct: false }
+    explanation: "BYOD pur = aucun controle sur le tel qui contient des donnees pro. Article 32 RGPD = mesures de securite obligatoires. En cas de breach, l'entreprise est responsable, pas l'employe. Pour > 10 personnes : eviter."
+
+  - question: "Difference entre MDM tel pro et BYOD containerise ?"
+    choices:
+      - { id: "a", label: "Identique", correct: false }
+      - { id: "b", label: "MDM = tel pro fourni, controle total. BYOD containerise = tel perso avec container isole pour apps pro, controle UNIQUEMENT du container", correct: true }
+      - { id: "c", label: "BYOD containerise est moins sur", correct: false }
+    explanation: "MDM = double tel, controle total, ~400 EUR/an/employe. BYOD containerise = 1 tel avec zones pro/perso isolees, ~60 EUR/an/employe. Les deux sont RGPD-compatibles. BYOD containerise est le compromis moderne."
+
+  - question: "Une charte BYOD signee suffit-elle a couvrir l'entreprise en cas de breach ?"
+    choices:
+      - { id: "a", label: "Oui", correct: false }
+      - { id: "b", label: "NON. La charte est OBLIGATOIRE en BYOD mais ne remplace pas les mesures techniques (MDM, container). Article 32 RGPD = mesures techniques + organisationnelles", correct: true }
+      - { id: "c", label: "Indifferent", correct: false }
+    explanation: "RGPD article 32 demande mesures TECHNIQUES (MDM, container, chiffrement) ET ORGANISATIONNELLES (charte, formation). Une charte sans MDM = mesure organisationnelle uniquement = insuffisant en cas de breach. Les deux sont necessaires."
+
+  - question: "Pour une PME sante 50+ personnes, quel modele recommander ?"
+    choices:
+      - { id: "a", label: "BYOD pur", correct: false }
+      - { id: "b", label: "MDM tel pro fourni (donnees sante = sensibles, controle total necessaire)", correct: true }
+      - { id: "c", label: "Pas de mobile du tout", correct: false }
+    explanation: "Sante = donnees sensibles RGPD article 9 = exigences elevees. MDM tel pro fourni offre le controle total necessaire. Cout (~400 EUR/an/employe) acceptable face au risque (amendes RGPD jusqu'a 4% CA mondial)."
+---
+
+> 💡 **Pour aller plus loin** : pour evaluer le besoin MDM, faire un
+> RAA (Risk Assessment Approfondi) sur les donnees mobiles. **Hexnode**
+> et **Microsoft Intune** offrent des essais gratuits 30j. **ANSSI**
+> publie un guide "Securite des terminaux mobiles" gratuit.

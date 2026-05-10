@@ -1,0 +1,374 @@
+---
+title: "Que se passe-t-il si le CSIRT vous audite ?"
+durationMinutes: 7
+persona: "manager"
+objective: "Comprendre comment se deroule un audit CSIRT/ANSSI dans le cadre NIS2, ce qui est demande, comment se preparer, et comment gerer le jour J"
+xpReward: 60
+scenario: |
+  Mardi 10h, tu recois un email officiel ANSSI : "Dans le cadre
+  des activites de supervision de l'application de NIS2, nous
+  vous informons qu'un audit de conformite est planifie pour
+  votre entite. Premiere reunion le [J+15]. Documents a fournir
+  en amont en piece jointe."
+
+  Liste des documents demandes (12 elements) :
+  1. Politique de securite
+  2. Analyse de risques
+  3. Plan de reponse incident
+  4. Documentation MFA / acces
+  5. Documentation sauvegardes + tests
+  6. Inventaire fournisseurs critiques
+  7. Logs des 12 derniers mois
+  8. PV de formation cyber
+  9. Liste des incidents declares
+  10. Cartographie des actifs
+  11. PV reunions COMEX cyber
+  12. Plan de mise en conformite et son suivi
+
+  Tu reagis comment ?
+choices:
+  - id: "a"
+    label: "Panique : on a 3 documents sur 12. On va se faire demolir"
+    outcome: "neutral"
+    feedback: "Comprehensible mais pas optimal. L'objectif de l'audit n'est pas de demolir, mais d'evaluer la maturite. Mieux vaut etre transparent (3/12 + plan d'action documente) que falsifier. L'ANSSI sanctionne la mauvaise foi, pas l'imperfection."
+    points: 5
+  - id: "b"
+    label: "Cooperation totale : on prepare ce qu'on a, on documente honnetement les ecarts, on presente un plan de mise en conformite. La transparence est la cle"
+    outcome: "good"
+    feedback: "Excellente attitude. L'ANSSI valorise la cooperation et la demarche d'amelioration. Etre 'en cours' avec un plan concret + budget approuve = beaucoup mieux que de bluffer. La duree de la non-conformite est un facteur de sanction."
+    points: 40
+  - id: "c"
+    label: "On falsifie quelques documents pour faire bonne impression"
+    outcome: "bad"
+    feedback: "Tres mauvaise idee. La falsification de documents face a l'autorite = aggravation des sanctions + responsabilite penale du dirigeant. Les auditeurs sont formes a detecter les incoherences. La detection = sanctions doubles."
+    points: -25
+  - id: "d"
+    label: "On engage un consultant en urgence pour faire le travail dans 15 jours"
+    outcome: "neutral"
+    feedback: "Mieux que rien mais incomplet. Un consultant peut aider a structurer les documents existants et identifier les manques, mais ne peut pas creer de la conformite reelle en 15 jours. Honnetete + plan structure > facade."
+    points: 15
+debrief: |
+  L'**audit CSIRT/ANSSI** est l'une des etapes de supervision
+  prevues par NIS2. Il peut etre planifie ou suite a un incident.
+  Bien gere, c'est un exercice constructif. Mal gere, c'est
+  l'aggravation des sanctions.
+
+  **Qui peut auditer ? (article 32) :**
+
+  - **ANSSI** (autorite competente nationale en France)
+  - **CSIRT** (CERT-FR ou CSIRT regionaux)
+  - **Auditeurs externes designes** par l'ANSSI (cabinets agrees,
+    cf liste de confiance ANSSI)
+
+  **Types d'audit NIS2 :**
+
+  **1. Audit planifie (article 32.2)**
+
+  - Programme par l'ANSSI (echantillon ou choix specifique)
+  - Notification 15-30 jours avant
+  - Documents fournis en amont
+  - Reunions sur site ou a distance (1-3 jours typique)
+
+  **2. Audit suite a incident (article 32.3)**
+
+  - Apres une notification d'incident significatif
+  - Plus rapide (5-10 jours de preavis)
+  - Focus sur les mesures qui ont fait defaut
+  - Possible declenchement de sanctions
+
+  **3. Audit ad-hoc / "nez creux" (article 32.4)**
+
+  - Sur demande de l'ANSSI suite a alerte (whistleblower,
+    plainte client)
+  - Peut etre inopine pour les cas graves
+  - Plus rare mais possible
+
+  **4. Audit obligatoire post-sanction (article 32.5)**
+
+  - Si une sanction a ete prononcee, l'ANSSI peut imposer un
+    audit annuel pendant 3 ans
+  - Finance par l'entite (cout 5-50 K EUR)
+
+  **Le deroulement type d'un audit (15-30 jours) :**
+
+  **Semaine -2 : Notification**
+
+  - Email officiel + courrier recommande
+  - Liste de 10-15 documents a fournir
+  - **Periode de preparation** : 15-30 jours pour fournir les
+    documents
+
+  **Semaine -1 : Fourniture des documents**
+
+  - Documents envoyes via canal securise (boite chiffree, ou
+    SecNumCloud)
+  - Pre-analyse par les auditeurs
+  - Identification des points d'interet/preoccupation
+
+  **Jour J : Reunion d'ouverture**
+
+  - 1-2 heures
+  - Presentation de l'auditeur + scope
+  - Presentation de l'entite (organisation, perimetre cyber)
+  - Calendrier des entretiens
+  - **Tout est tracable** : signe-PV, demandes formelles
+
+  **J+1 a J+3 : Entretiens et verifications**
+
+  - Entretiens avec : DG, RSSI/DSI, DAF, RH, IT operationnel,
+    COMEX cyber referent
+  - **Verifications techniques** : configuration MFA, sauvegardes
+    (test live), logs, journalisation
+  - **Verifications documentaires** : politique, procedures, PV
+    COMEX
+  - **Verifications de coherence** : ce qui est dit vs ce qui est
+    fait
+
+  **J+4 : Reunion de cloture**
+
+  - Restitution des constats (ecarts, points conformes, points
+    d'amelioration)
+  - **Pre-rapport** discute avec l'entite
+  - **Possibilite de defense** : l'entite peut apporter des
+    elements complementaires
+
+  **J+10 a J+30 : Rapport final**
+
+  - Rapport ecrit detaille (20-50 pages)
+  - **Echelle de gravite** : conforme / non-conforme mineur /
+    non-conforme majeur / non-conforme grave
+  - **Plan d'action** demande pour les ecarts
+  - **Decision** : pas de sanction / warning / injonction /
+    sanction financiere
+
+  **Ce que demandent les auditeurs (les 12 incontournables) :**
+
+  **1. Politique de securite ecrite**
+  - Approuvee par la direction (PV)
+  - Datee et versionnee
+  - Revisable annuellement
+  - 3-10 pages typique pour PME
+
+  **2. Analyse de risques formalisee**
+  - Methodologie identifiee (EBIOS RM, ISO 27005)
+  - Liste des actifs critiques (5-10)
+  - Liste des risques majeurs (10-20)
+  - Plan de traitement des risques
+
+  **3. Plan de reponse a incident**
+  - Document de procedure (5-15 pages)
+  - **Test recent** (table-top exercise dans les 12 derniers
+    mois)
+  - **Hotline ANSSI/CSIRT** integree
+  - **Compte MonServiceSecurise** actif
+
+  **4. Documentation MFA / controle d'acces**
+  - Politique MFA (qui doit avoir, quand, comment)
+  - **Preuves techniques** : screenshots Azure AD, Google
+    Workspace, etc.
+  - Taux de couverture (KPI : 100% admins, X% utilisateurs)
+
+  **5. Documentation sauvegardes**
+  - Politique 3-2-1 documentee
+  - **Preuves de tests** de restauration (rapport mensuel ou
+    trimestriel)
+  - RTO/RPO definis
+  - Off-site verifie
+
+  **6. Inventaire des fournisseurs critiques**
+  - Liste des fournisseurs (10-50 selon entite)
+  - Classification critique / non-critique
+  - **Clauses cyber** dans les contrats
+  - **Questionnaires de securite** envoyes aux critiques
+
+  **7. Logs (12 derniers mois)**
+  - Logs reseau (firewall, VPN)
+  - Logs systeme (auth, admin)
+  - Logs applicatifs (acces apps critiques)
+  - **Centralisation** preferee (SIEM)
+  - **Conservation** : 6-24 mois selon criticite
+
+  **8. PV de formation cyber**
+  - Programme de formation (initial + recurrent)
+  - **Listes d'emargement** + scores
+  - **Formation specifique COMEX** (article 20.2)
+  - **Simulations phishing** mensuelles + resultats
+
+  **9. Liste des incidents declares**
+  - Tableau des incidents 12 derniers mois
+  - **Notifications** envoyees a ANSSI (preuves)
+  - Plans de remediation
+  - Lecons apprises
+
+  **10. Cartographie des actifs**
+  - Inventaire CMDB (serveurs, postes, comptes, services)
+  - Classification (critique / sensible / public)
+  - Topologie reseau
+  - Schemas de dependances
+
+  **11. PV reunions COMEX cyber**
+  - Au moins 4 PV/an (trimestriels)
+  - Sujets cyber traites + decisions
+  - **Approbation politique** (PV initial)
+  - **Revue indicateurs** (KPI)
+
+  **12. Plan de mise en conformite et suivi**
+  - Plan d'action initial (cf ep 05)
+  - **Etat d'avancement** documente (tableaux, courbes)
+  - Mises a jour periodiques
+
+  **Comment se preparer (3 mois avant) :**
+
+  **1. Assessment interne**
+  - Self-audit avec checklist NIS2
+  - Identification des ecarts
+  - Plan de remediation 3 mois
+
+  **2. Documentation a jour**
+  - Politiques datees, signees, versionnees
+  - Procedures actuelles
+  - Preuves de mise en oeuvre
+
+  **3. Preparation des entretiens**
+  - Brief des collaborateurs interviewes (DG, RSSI, IT, RH)
+  - **Coherence des reponses** : meme version chez tous
+  - Pas de bluff, mais presentation positive
+
+  **4. Tests techniques**
+  - Test de restauration sauvegarde (RECENT, < 3 mois)
+  - Verification MFA (couverture 100% admins)
+  - Test plan incident (table-top exercise)
+
+  **5. Documentation des decisions**
+  - PV COMEX cyber des 12 derniers mois
+  - Decisions de budget, de prioritisation
+  - Preuves de l'engagement de la direction (article 20)
+
+  **Le jour J : 5 regles d'or :**
+
+  **1. Cooperer pleinement**
+  - Repondre aux questions sans hesiter
+  - Fournir tous les documents demandes
+  - Acceder aux systemes pour verifications
+
+  **2. Etre transparent sur les ecarts**
+  - "On n'a pas encore fait X, mais on a planifie pour [date]"
+  - **NE JAMAIS FALSIFIER** un document ou une preuve
+  - Reconnaitre les manques + presenter les plans
+
+  **3. Documenter les preuves**
+  - Avoir tout pret : screenshots, PV, contrats, logs
+  - Format structure (binder physique ou Sharepoint dedie)
+  - Eviter de chercher des documents pendant l'audit
+
+  **4. Engager les bonnes personnes**
+  - DG present a l'ouverture/cloture
+  - RSSI/DSI sur les questions techniques
+  - DAF sur le budget cyber
+  - Pas le menage interroge sur le plan incident
+
+  **5. Capitaliser sur l'audit**
+  - Les retours ANSSI sont des CONSEILS
+  - Le plan d'action post-audit AMELIORE la cyber
+  - L'audit suivant sera plus facile
+
+  **Le piege "On falsifie pour faire bonne impression" :**
+
+  Tres mauvaise idee. Les auditeurs croisent :
+  - Documents internes (politique vs procedures vs preuves)
+  - Entretiens (coherence des reponses)
+  - Tests techniques (ce qui est documente vs reel)
+  - Logs (les events doivent correspondre)
+
+  Une falsification detectee = sanction doublee + responsabilite
+  penale du dirigeant. Pas la peine.
+
+  **Le piege "On va se faire demolir, on est pas prets" :**
+
+  L'ANSSI ne cherche pas a demolir. La sanction depend de :
+  - **Volonte** : bonne foi vs mauvaise foi
+  - **Cooperation** : ouverte vs obstructive
+  - **Plan d'action** : structure vs absent
+  - **Trajectoire** : amelioration vs stagnation
+
+  Une PME 30% conforme avec un plan d'action solide + budget
+  approuve = beaucoup mieux qu'une entite 80% conforme qui
+  ment.
+
+  **Sanctions possibles apres audit :**
+
+  | Constat | Sanction typique |
+  |---|---|
+  | Conforme + bonne demarche | Aucune sanction, recommandations |
+  | Non-conforme mineur + plan | Recommandations + suivi 6-12 mois |
+  | Non-conforme majeur + bonne foi | Injonction + delai 3-6 mois |
+  | Non-conforme grave + mauvaise foi | Sanction financiere + audit obligatoire |
+  | Falsification / obstruction | Sanction max + responsabilite penale |
+
+  **Cas reel (hypothetique typique) :**
+
+  PME 80 personnes, services TIC, audit ANSSI :
+  - **Documentation** : 8/12 elements presents, 4 partiels
+  - **Technique** : MFA OK 90% admins, sauvegardes OK mais pas
+    testees recemment, plan incident existant mais jamais teste
+  - **Posture** : transparente, plan d'action 90j en cours
+  - **Resultat** : non-conforme mineur sur 4 points,
+    recommandations + suivi 12 mois, **pas d'amende**
+
+  Vs meme entite avec attitude defensive / falsification :
+  - **Resultat** : sanction 50-100 K EUR + audit obligatoire 3 ans
+
+  Difference : l'attitude.
+
+  **Apres l'audit :**
+
+  - **Plan d'action** : transformation des ecarts en projets
+  - **Suivi ANSSI** : reporting periodique pendant 6-12 mois
+  - **Capitalisation interne** : amelioration de la maturite
+  - **Comm interne** : transparence avec les equipes
+  - **Comm externe** (si bons resultats) : argument commercial
+    (clients NIS2)
+
+  **La regle d'or :**
+
+  > **L'audit n'est pas l'ennemi. C'est un examen de fin
+  > d'annee : si tu as travaille toute l'annee, tu reussis. Si
+  > tu n'as pas travaille, tu redoubles - mais on ne te renvoie
+  > pas. La vraie sanction c'est de ne pas avoir construit la
+  > cyber.**
+quiz:
+  - question: "Qui peut auditer une entite NIS2 en France ?"
+    choices:
+      - { id: "a", label: "N'importe quel cabinet", correct: false }
+      - { id: "b", label: "ANSSI, CSIRT (CERT-FR / regionaux), ou auditeurs externes designes par l'ANSSI", correct: true }
+      - { id: "c", label: "Le proprietaire d'a cote", correct: false }
+    explanation: "Article 32 NIS2 : ANSSI = autorite competente nationale. Les CSIRT et les auditeurs externes designes par ANSSI peuvent egalement auditer. Liste de confiance ANSSI pour les cabinets agrees."
+
+  - question: "Combien de temps de preavis pour un audit planifie NIS2 ?"
+    choices:
+      - { id: "a", label: "Aucun", correct: false }
+      - { id: "b", label: "15-30 jours typiquement (notification + liste documents a fournir)", correct: true }
+      - { id: "c", label: "1 an", correct: false }
+    explanation: "Audit planifie = 15-30 jours de preavis. Audit post-incident = 5-10 jours. Audit ad-hoc / inopine pour cas graves : possible. La preparation se fait surtout en amont (continue), pas dans le creneau du preavis."
+
+  - question: "Si on falsifie un document pendant l'audit, sanction ?"
+    choices:
+      - { id: "a", label: "Aucune", correct: false }
+      - { id: "b", label: "Sanction max + responsabilite penale du dirigeant - les auditeurs detectent par croisement", correct: true }
+      - { id: "c", label: "Reduction de sanction", correct: false }
+    explanation: "Falsification = aggravation. Les auditeurs croisent docs / entretiens / tests / logs. Toute falsification detectee = sanction doublee + responsabilite penale (faux et usage de faux). Mauvais calcul."
+
+  - question: "Une PME a 30% conforme avec un plan d'action solide vs 80% sans plan, qui est mieux note ?"
+    choices:
+      - { id: "a", label: "L'entite a 80% sans plan", correct: false }
+      - { id: "b", label: "L'entite 30% avec plan d'action approuve COMEX + budget + suivi - la TRAJECTOIRE compte autant que l'etat", correct: true }
+      - { id: "c", label: "Aucune difference", correct: false }
+    explanation: "Article 34 NIS2 : 'mesures prises pour limiter le dommage' + 'cooperation' + 'antecedents' sont des criteres. Une trajectoire d'amelioration documentee = bonne foi reconnue. Conforme stagnant > non-conforme avec plan."
+---
+
+> 💡 **Pour aller plus loin** : ANSSI publie la grille d'audit
+> NIS2 sur cyber.gouv.fr. **CISO Assistant** (intuitem, OSS)
+> permet de pre-auditer son entite avec la grille officielle.
+> Liste de confiance des auditeurs cyber agrees ANSSI sur
+> cyber.gouv.fr/passi (pour audit externe volontaire avant
+> audit ANSSI).
