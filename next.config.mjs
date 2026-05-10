@@ -15,7 +15,10 @@
 //  - upgrade-insecure-requests : force HTTPS pour les sous-resources.
 const CSP_DIRECTIVES = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  // Plausible Analytics cloud : le script vit sur plausible.io, charge
+  // par PlausibleLoader uniquement si l'utilisateur a consenti (RGPD).
+  // Sans consent, aucun appel reseau cote client.
+  "script-src 'self' 'unsafe-inline' https://plausible.io",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: https:",
   "font-src 'self' data:",
@@ -23,7 +26,9 @@ const CSP_DIRECTIVES = [
   // URL depuis le MP3 recu de /api/tts/synthesize. Sans 'blob:', l'element
   // <audio> echoue silencieusement (CSP fallback sur default-src 'self').
   "media-src 'self' blob:",
-  "connect-src 'self' https://api.mistral.ai https://api.payplug.com https://secure.payplug.com https://api.scaleway.com",
+  // connect-src whitelist : seuls les providers FR/UE actuels.
+  // plausible.io ajoute pour les events analytics POST.
+  "connect-src 'self' https://api.mistral.ai https://api.payplug.com https://secure.payplug.com https://api.scaleway.com https://plausible.io",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
