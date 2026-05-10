@@ -59,7 +59,7 @@ export const LEVELS: LevelDef[] = [
     emoji: "🦊",
     minXP: 700,
     maxXP: 1500,
-    description: "Référent cyber dans ta PME.",
+    description: "Référent cyber de ton entourage.",
     bgGradient: "from-amber-50 to-orange-50",
     ringColor: "ring-amber-400",
     particles: true,
