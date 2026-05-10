@@ -14,6 +14,36 @@ RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+# ---------------------------------------------------------------------------
+# Build args pour les variables NEXT_PUBLIC_* — INDISPENSABLE pour Next.js.
+# ---------------------------------------------------------------------------
+# Pourquoi : Next.js inline les `process.env.NEXT_PUBLIC_*` dans le bundle JS
+# AU BUILD (next build), pas au runtime. Les passer dans `environment:` cote
+# docker-compose les rend visibles UNIQUEMENT au runtime du container — donc
+# invisibles dans le bundle deja construit.
+# Solution : declarer chaque var en ARG ici (avant `npm run build`) puis la
+# repromouvoir en ENV pour que `next build` la voie. Cote docker-compose,
+# elles sont passees via `build.args:` (cf. docker-compose.yml).
+# Defaut "" pour ne pas casser le build si une var n'est pas fournie.
+ARG NEXT_PUBLIC_APP_URL=""
+ARG NEXT_PUBLIC_APP_NAME=""
+ARG NEXT_PUBLIC_BASE_URL=""
+ARG NEXT_PUBLIC_PLAUSIBLE_DOMAIN=""
+ARG NEXT_PUBLIC_PLAUSIBLE_API_HOST=""
+ARG NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT=""
+ARG NEXT_PUBLIC_MATOMO_URL=""
+ARG NEXT_PUBLIC_MATOMO_SITE_ID=""
+
+ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
+ENV NEXT_PUBLIC_APP_NAME=$NEXT_PUBLIC_APP_NAME
+ENV NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
+ENV NEXT_PUBLIC_PLAUSIBLE_DOMAIN=$NEXT_PUBLIC_PLAUSIBLE_DOMAIN
+ENV NEXT_PUBLIC_PLAUSIBLE_API_HOST=$NEXT_PUBLIC_PLAUSIBLE_API_HOST
+ENV NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT=$NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT
+ENV NEXT_PUBLIC_MATOMO_URL=$NEXT_PUBLIC_MATOMO_URL
+ENV NEXT_PUBLIC_MATOMO_SITE_ID=$NEXT_PUBLIC_MATOMO_SITE_ID
+
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV SKIP_ENV_VALIDATION=1
 # DATABASE_URL fictif pour le build (Prisma client gen + build Next).
