@@ -6,18 +6,20 @@
 //
 // Style Linear/Vercel : sticky top, hauteur compacte, breadcrumb dynamique.
 //
-// Ce qu'on n'a PAS ici (intentionnellement) :
-//   - Pas de menu utilisateur (déjà dans HeaderBar global du site)
-//   - Pas de notifications (placeholder inutile, à voir Sprint 5 si pertinent)
-//   - Pas de barre de recherche globale (pareil, à voir Sprint 5)
-//   - Pas de theme toggle (déjà dans HeaderBar)
+// Contenu :
+//   - Burger mobile (ouvre le drawer sidebar via window event)
+//   - Breadcrumb contextuel
+//   - Trigger de la palette de commandes globale (ctrl/cmd+K)
 //
-// Le rôle unique de cette barre : burger mobile (ouvre la sidebar) +
-// breadcrumb contextuel pour situer l'utilisateur dans la console.
+// Ce qu'on n'a PAS (intentionnellement) :
+//   - Pas de menu utilisateur (déjà dans HeaderBar global du site)
+//   - Pas de notifications (placeholder inutile)
+//   - Pas de theme toggle (déjà dans HeaderBar)
 // =============================================================================
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { AdminSearchTrigger } from "@/components/admin/AdminSearchBox";
 
 type Props = {
   // Conservé dans la signature pour rétro-compat layout.tsx, mais non utilisé.
@@ -99,6 +101,13 @@ export default function AdminTopBar(_props: Props) {
 
       {/* Breadcrumb - seul élément utile de cette barre */}
       <Breadcrumb items={breadcrumb} />
+
+      {/* Spacer pour pousser le trigger SearchBox a droite */}
+      <div className="flex-1" />
+
+      {/* Trigger palette de commandes (ctrl/cmd+K).
+          Cache en mobile (le ctrl-K reste fonctionnel). */}
+      <AdminSearchTrigger />
     </header>
   );
 }
