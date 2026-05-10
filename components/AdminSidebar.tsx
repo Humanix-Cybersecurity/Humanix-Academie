@@ -35,6 +35,19 @@ type Section = {
   items: NavItem[];
 };
 
+// =============================================================================
+// SECTIONS DE NAVIGATION
+//
+// Refonte mai 2026 (Sprint 1 simplicite) :
+// On passe de 28 liens visibles a 12 (4 sections × 3 essentiels) + une
+// section "Avance" repliee par defaut qui contient le reste.
+//
+// Principe : un DG/RSSI non-tech a besoin d'une douzaine de liens evidents,
+// pas de 28. Les fonctions avancees (heatmap, forecast, licences Ed25519,
+// etablissements...) restent accessibles via la section Avance, mais ne
+// pesent pas sur la charge cognitive du quotidien.
+// =============================================================================
+
 const SECTIONS: Section[] = [
   {
     id: "pilotage",
@@ -42,6 +55,69 @@ const SECTIONS: Section[] = [
     icon: "📊",
     items: [
       { href: "/admin", label: "Tableau de bord", icon: "📊" },
+      { href: "/admin/utilisateurs", label: "Utilisateurs", icon: "👥" },
+      { href: "/admin/automations", label: "Automations", icon: "⚙️" },
+    ],
+  },
+  {
+    id: "sensibilisation",
+    title: "Apprendre",
+    icon: "🎓",
+    items: [
+      { href: "/admin/modules", label: "Modules", icon: "📚" },
+      { href: "/admin/phishing", label: "Phishing", icon: "🎣", gate: "Pro+" },
+      {
+        href: "/admin/challenge",
+        label: "Challenges",
+        icon: "🏆",
+        gate: "Pro+",
+      },
+    ],
+  },
+  {
+    id: "conformité",
+    title: "Conformité",
+    icon: "🛡",
+    items: [
+      {
+        href: "/admin/conformite-nis2",
+        label: "NIS2",
+        icon: "📋",
+        gate: "Pro+",
+      },
+      { href: "/admin/dpo", label: "Espace DPO", icon: "🛡" },
+      { href: "/admin/audit", label: "Journal d'audit", icon: "📜" },
+    ],
+  },
+  {
+    id: "integrations",
+    title: "Intégrations",
+    icon: "🔗",
+    items: [
+      { href: "/admin/integrations", label: "Webhooks", icon: "🔗" },
+      {
+        href: "/admin/sso-saml",
+        label: "SSO SAML",
+        icon: "🔐",
+        gate: "Pro+",
+      },
+      {
+        href: "/admin/api-keys",
+        label: "API Keys",
+        icon: "🔑",
+        gate: "Pro+",
+      },
+    ],
+  },
+  {
+    // Section "Avance" : tous les items secondaires regroupes ici. Repliee
+    // par defaut dans l'UI (l'accordion ne s'ouvre que sur clic explicite).
+    // Contient les fonctionnalites pointues (analytics avancees, simulations
+    // multi-canaux, licences cryptographiques, multi-etablissements).
+    id: "avance",
+    title: "Avancé",
+    icon: "🧰",
+    items: [
       { href: "/admin/onboarding", label: "Premiers pas", icon: "🚀" },
       { href: "/admin/impact", label: "Impact mesuré", icon: "📈" },
       { href: "/admin/business", label: "Impact business", icon: "💼" },
@@ -60,24 +136,7 @@ const SECTIONS: Section[] = [
         label: "Utilisateurs vulnérables",
         icon: "⚠️",
       },
-      { href: "/admin/utilisateurs", label: "Utilisateurs", icon: "👥" },
       { href: "/admin/groupes", label: "Groupes", icon: "🏷️" },
-      { href: "/admin/automations", label: "Automations", icon: "⚙️" },
-    ],
-  },
-  {
-    id: "sensibilisation",
-    title: "Sensibilisation",
-    icon: "🎓",
-    items: [
-      { href: "/admin/modules", label: "Modules", icon: "📚" },
-      {
-        href: "/admin/challenge",
-        label: "Challenges",
-        icon: "🏆",
-        gate: "Pro+",
-      },
-      { href: "/admin/phishing", label: "Phishing", icon: "🎣", gate: "Pro+" },
       {
         href: "/admin/vishing",
         label: "Vishing 🇫🇷",
@@ -97,21 +156,6 @@ const SECTIONS: Section[] = [
         gate: "Pro+",
       },
       { href: "/admin/contributions", label: "Contributions", icon: "✍️" },
-    ],
-  },
-  {
-    id: "conformité",
-    title: "Conformité",
-    icon: "🛡",
-    items: [
-      { href: "/admin/audit", label: "Journal d'audit", icon: "📜" },
-      { href: "/admin/dpo", label: "Espace DPO", icon: "🛡" },
-      {
-        href: "/admin/conformite-nis2",
-        label: "Pack NIS2",
-        icon: "📋",
-        gate: "Pro+",
-      },
       {
         href: "/admin/incidents",
         label: "Cyber-Réflexe",
@@ -122,26 +166,6 @@ const SECTIONS: Section[] = [
         href: "/admin/etablissements",
         label: "Établissements",
         icon: "🏢",
-        gate: "Pro+",
-      },
-    ],
-  },
-  {
-    id: "integrations",
-    title: "Intégrations",
-    icon: "🔗",
-    items: [
-      {
-        href: "/admin/api-keys",
-        label: "API Keys",
-        icon: "🔑",
-        gate: "Pro+",
-      },
-      { href: "/admin/integrations", label: "Webhooks", icon: "🔗" },
-      {
-        href: "/admin/sso-saml",
-        label: "SSO SAML",
-        icon: "🔐",
         gate: "Pro+",
       },
       { href: "/admin/license", label: "Licence Ed25519", icon: "🔐" },

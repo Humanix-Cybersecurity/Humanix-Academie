@@ -1,31 +1,29 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// /admin/onboarding - checklist guidee pour les nouveaux tenants.
+// =============================================================================
+// /admin/onboarding - Quick Setup Wizard.
 //
-// Affiche les etapes restantes a un nouvel admin pour passer "actif" :
-//  1. Inviter au moins 1 utilisateur
-//  2. Choisir une saison obligatoire
-//  3. Activer la 2FA admin
+// Refonte mai 2026 (Sprint 1 simplicite) : la page passe d'une checklist
+// statique 3 etapes a un vrai wizard interactif 4 ecrans qui :
+//   1. Profil tenant (taille / secteur / niveau cyber)
+//   2. Suggestions automatiques de modules (active + obligatoires)
+//   3. Invitation d'equipe en bulk (CSV-light, optionnel)
+//   4. Rituel hebdomadaire + simulation phishing optionnelle
 //
-// Chaque etape est cliquable -> redirige vers la page concernee.
-// Une fois toutes faites, la page propose de marquer l'onboarding comme
-// termine (et le menu n'affiche plus de notification "Onboarding 2/3").
+// Apres completion, on affiche un resume "tout est pret" avec liens vers
+// les sections cles. Si l'admin a deja invite des users + active des
+// saisons (= setup deja fait), on lui propose directement le resume +
+// option de re-lancer le wizard.
+// =============================================================================
+
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminSection from "@/components/admin/AdminSection";
+import QuickSetupWizard from "@/components/admin/QuickSetupWizard";
 
 export const dynamic = "force-dynamic";
-
-type StepStatus = "done" | "todo";
-type Step = {
-  id: string;
-  status: StepStatus;
-  title: string;
-  description: string;
-  cta: { label: string; href: string };
-};
 
 export default async function OnboardingPage() {
   const session = await auth();
@@ -37,7 +35,10 @@ export default async function OnboardingPage() {
   const tenantId = session.user.tenantId as string;
   const userId = session.user.id as string;
 
-  const [tenant, otherUsersCount, mandatorySaisonCount, currentUser] =
+  // Etat actuel du tenant : a-t-il deja amorce le setup ?
+  // Heuristique : 1 user invite + 1 saison active suffit a considerer
+  // que le tenant est "demarre". On affiche alors le resume + lien wizard.
+  const [tenant, otherUsersCount, activatedSaisonCount, currentUser] =
     await Promise.all([
       db.tenant.findUnique({
         where: { id: tenantId },
@@ -51,7 +52,7 @@ export default async function OnboardingPage() {
         },
       }),
       db.tenantSaisonConfig.count({
-        where: { tenantId, isMandatory: true },
+        where: { tenantId, isActive: true },
       }),
       db.user.findUnique({
         where: { id: userId },
@@ -61,160 +62,184 @@ export default async function OnboardingPage() {
 
   if (!tenant) redirect("/admin");
 
-  const steps: Step[] = [
-    {
-      id: "invite-users",
-      status: otherUsersCount > 0 ? "done" : "todo",
-      title: "Inviter votre équipe",
-      description:
-        "Au moins 1 collaborateur doit être invité pour commencer la sensibilisation.",
-      cta: {
-        label:
-          otherUsersCount > 0
-            ? `${otherUsersCount} utilisateur(s) - ajouter d'autres`
-            : "Inviter le premier collaborateur",
-        href: "/admin/utilisateurs",
-      },
-    },
-    {
-      id: "mandatory-saison",
-      status: mandatorySaisonCount > 0 ? "done" : "todo",
-      title: "Choisir une saison obligatoire",
-      description:
-        "Une saison cochée comme obligatoire devient prioritaire dans le parcours de chaque collaborateur.",
-      cta: {
-        label:
-          mandatorySaisonCount > 0
-            ? `${mandatorySaisonCount} saison(s) - ajuster`
-            : "Aller au catalogue",
-        href: "/admin/modules",
-      },
-    },
-    {
-      id: "admin-mfa",
-      status: currentUser?.mfaEnabled ? "done" : "todo",
-      title: "Activer la 2FA sur votre compte admin",
-      description:
-        "Compte admin = clé du tenant. La 2FA TOTP réduit drastiquement le risque de compromission.",
-      cta: {
-        label: currentUser?.mfaEnabled
-          ? "Gérer la 2FA"
-          : "Activer maintenant",
-        href: "/profil/securite",
-      },
-    },
-  ];
-
-  const doneCount = steps.filter((s) => s.status === "done").length;
-  const completed = doneCount === steps.length;
+  const isFreshTenant = otherUsersCount === 0 && activatedSaisonCount === 0;
 
   return (
     <>
       <AdminPageHeader
-        title="Bienvenue !"
-        description={`Premiers pas dans ${tenant.name}. Trois étapes pour activer votre programme.`}
+        title={isFreshTenant ? "Bienvenue !" : "Premiers pas"}
+        description={
+          isFreshTenant
+            ? `Activons votre programme dans ${tenant.name} en 4 minutes.`
+            : `Suivi de configuration de ${tenant.name}. Tout peut etre relance a tout moment.`
+        }
       />
 
-      <div className="space-y-6 min-w-0">
-        {/* Banner global */}
-        <article
-          className={`rounded-2xl border-2 p-5 ${
-            completed
-              ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/20"
-              : "border-accent-200 dark:border-accent-900/40 bg-accent-50/40 dark:bg-accent-900/15"
-          }`}
-        >
-          <div className="flex items-start gap-3">
-            <div className="text-3xl">{completed ? "🎉" : "🚀"}</div>
-            <div>
-              <p className="font-display font-extrabold text-primary-500 dark:text-accent-300 text-xl">
-                {completed
-                  ? "Tout est prêt !"
-                  : `${doneCount} / ${steps.length} étape(s) complétée(s)`}
-              </p>
-              <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">
-                {completed
-                  ? "Votre tenant est en ordre de marche. Vous pouvez aller au tableau de bord."
-                  : "Quelques minutes pour transformer un tenant vide en programme actif."}
-              </p>
-            </div>
-          </div>
-          {completed && (
-            <Link
-              href="/admin"
-              className="btn-primary text-sm mt-4 inline-block"
-            >
-              Aller au tableau de bord →
-            </Link>
-          )}
-        </article>
-
-        {/* Etapes */}
-        <AdminSection
-          title="Checklist"
-          description="Cochez en faisant. Chaque étape est cliquable."
-        >
-          <ol className="space-y-3">
-            {steps.map((s, idx) => (
-              <li
-                key={s.id}
-                className={`rounded-xl border-2 p-4 flex items-start gap-4 ${
-                  s.status === "done"
-                    ? "border-emerald-200 dark:border-emerald-900/40 bg-emerald-50/40 dark:bg-emerald-900/15"
-                    : "border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900"
-                }`}
-              >
-                <div
-                  className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-lg font-bold ${
-                    s.status === "done"
-                      ? "bg-emerald-500 text-white"
-                      : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300"
-                  }`}
-                >
-                  {s.status === "done" ? "✓" : idx + 1}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-display font-bold text-primary-500 dark:text-accent-300">
-                    {s.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                    {s.description}
+      <div className="space-y-6 min-w-0 max-w-3xl">
+        {isFreshTenant ? (
+          <QuickSetupWizard />
+        ) : (
+          <>
+            {/* Resume si tenant deja demarre */}
+            <article className="rounded-2xl border-2 border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/20 p-5">
+              <div className="flex items-start gap-3">
+                <div className="text-3xl">🎉</div>
+                <div>
+                  <p className="font-display font-extrabold text-primary-500 dark:text-accent-300 text-xl">
+                    Votre tenant est en route
                   </p>
-                  <Link
-                    href={s.cta.href}
-                    className="inline-block mt-2 text-sm text-accent-700 dark:text-accent-300 hover:underline font-medium"
-                  >
-                    {s.cta.label} →
-                  </Link>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">
+                    {otherUsersCount} collaborateur
+                    {otherUsersCount > 1 ? "s" : ""} actif
+                    {otherUsersCount > 1 ? "s" : ""} ·{" "}
+                    {activatedSaisonCount} module
+                    {activatedSaisonCount > 1 ? "s" : ""} active
+                    {activatedSaisonCount > 1 ? "s" : ""}.
+                  </p>
                 </div>
-              </li>
-            ))}
-          </ol>
-        </AdminSection>
+              </div>
+              <div className="flex flex-wrap gap-2 mt-4">
+                <Link
+                  href="/admin"
+                  className="px-3 py-1.5 rounded-lg bg-primary-500 text-white text-xs font-bold hover:bg-primary-600 transition"
+                >
+                  Aller au tableau de bord →
+                </Link>
+                <Link
+                  href="/admin/onboarding?reset=1"
+                  className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 text-xs font-medium hover:border-accent-500 transition"
+                >
+                  Re-lancer le wizard
+                </Link>
+              </div>
+            </article>
 
-        <AdminSection
-          title="Besoin d'aide ?"
-          description="Contactez-nous, on accompagne tous les nouveaux tenants la première semaine."
-        >
-          <ul className="text-sm space-y-2">
-            <li>
-              📚{" "}
-              <Link href="/securite" className="text-accent-700 hover:underline">
-                Trust Center / docs sécurité
-              </Link>
-            </li>
-            <li>
-              💬{" "}
-              <a
-                href="mailto:contact@humanix-cybersecurity.fr"
-                className="text-accent-700 hover:underline"
-              >
-                contact@humanix-cybersecurity.fr
-              </a>
-            </li>
-          </ul>
-        </AdminSection>
+            <AdminSection
+              title="Etapes recommandees"
+              description="Suivez ces 3 actions pour passer en mode plein."
+            >
+              <ol className="space-y-3">
+                <ChecklistItem
+                  done={otherUsersCount > 0}
+                  title="Inviter votre equipe"
+                  description={
+                    otherUsersCount > 0
+                      ? `${otherUsersCount} collaborateur${otherUsersCount > 1 ? "s" : ""} invite${otherUsersCount > 1 ? "s" : ""}.`
+                      : "Au moins 1 collaborateur a inviter."
+                  }
+                  href="/admin/utilisateurs"
+                  ctaLabel={
+                    otherUsersCount > 0
+                      ? "Ajouter d'autres"
+                      : "Inviter le premier"
+                  }
+                />
+                <ChecklistItem
+                  done={activatedSaisonCount > 0}
+                  title="Activer les modules adaptes"
+                  description={
+                    activatedSaisonCount > 0
+                      ? `${activatedSaisonCount} module${activatedSaisonCount > 1 ? "s" : ""} active${activatedSaisonCount > 1 ? "s" : ""}. Filtres et bulk actions disponibles.`
+                      : "Choisir les saisons pertinentes pour vos equipes."
+                  }
+                  href="/admin/modules"
+                  ctaLabel={
+                    activatedSaisonCount > 0
+                      ? "Ajuster"
+                      : "Aller au catalogue"
+                  }
+                />
+                <ChecklistItem
+                  done={!!currentUser?.mfaEnabled}
+                  title="Activer la 2FA admin"
+                  description="Compte admin = cle du tenant. La 2FA TOTP reduit drastiquement le risque de compromission."
+                  href="/profil/securite"
+                  ctaLabel={
+                    currentUser?.mfaEnabled
+                      ? "Gerer la 2FA"
+                      : "Activer maintenant"
+                  }
+                />
+              </ol>
+            </AdminSection>
+
+            <AdminSection
+              title="Besoin d'aide ?"
+              description="On accompagne tous les nouveaux tenants la premiere semaine."
+            >
+              <ul className="text-sm space-y-2">
+                <li>
+                  📚{" "}
+                  <Link href="/securite" className="text-accent-700 hover:underline">
+                    Trust Center / docs securite
+                  </Link>
+                </li>
+                <li>
+                  💬{" "}
+                  <a
+                    href="mailto:contact@humanix-cybersecurity.fr"
+                    className="text-accent-700 hover:underline"
+                  >
+                    contact@humanix-cybersecurity.fr
+                  </a>
+                </li>
+              </ul>
+            </AdminSection>
+          </>
+        )}
       </div>
     </>
+  );
+}
+
+// =============================================================================
+// Sous-composants
+// =============================================================================
+
+function ChecklistItem({
+  done,
+  title,
+  description,
+  href,
+  ctaLabel,
+}: {
+  done: boolean;
+  title: string;
+  description: string;
+  href: string;
+  ctaLabel: string;
+}) {
+  return (
+    <li
+      className={`rounded-xl border-2 p-4 flex items-start gap-4 ${
+        done
+          ? "border-emerald-200 dark:border-emerald-900/40 bg-emerald-50/40 dark:bg-emerald-900/15"
+          : "border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900"
+      }`}
+    >
+      <div
+        className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-lg font-bold ${
+          done
+            ? "bg-emerald-500 text-white"
+            : "bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300"
+        }`}
+      >
+        {done ? "✓" : "·"}
+      </div>
+      <div className="flex-1 min-w-0">
+        <h3 className="font-display font-bold text-primary-500 dark:text-accent-300">
+          {title}
+        </h3>
+        <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+          {description}
+        </p>
+        <Link
+          href={href}
+          className="inline-block mt-2 text-sm text-accent-700 dark:text-accent-300 hover:underline font-medium"
+        >
+          {ctaLabel} →
+        </Link>
+      </div>
+    </li>
   );
 }
