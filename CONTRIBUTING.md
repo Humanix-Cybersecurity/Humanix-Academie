@@ -307,6 +307,72 @@ git push origin main
 - Toute nouvelle feature DOIT avoir au moins 1 test (unitaire ou e2e)
 - Coverage cible : 70 % sur le code métier (`lib/`)
 
+### Sécurité — patterns à respecter
+
+Humanix Académie est un produit cyber : la posture sécurité du **code lui-même** doit refléter ce qu'on enseigne. Deux principes fondateurs : **Zero-Trust** et **Least Privilege**.
+
+**1. RBAC centralisé sur les routes API**
+
+Toute route API qui mute des données ou expose des données sensibles DOIT utiliser les helpers de `lib/api/require-role.ts` :
+
+```ts
+// ❌ Ne PAS faire (oubli facile, pas d'audit log automatique)
+const session = await auth();
+if (!session?.user) return NextResponse.json({error:...}, {status:401});
+if (session.user.role !== "ADMIN") return NextResponse.json({error:...}, {status:403});
+
+// ✅ Faire
+import { requireAdmin } from "@/lib/api/require-role";
+const guard = await requireAdmin(req);
+if ("response" in guard) return guard.response;
+const { session } = guard;
+```
+
+Variants disponibles :
+- `requireSession()` — user connecté quelconque
+- `requireAdmin(req?)` — ADMIN, RSSI, SUPERADMIN
+- `requireSuperadmin(req?)` — SUPERADMIN uniquement
+- `requireRole([...], req?)` — liste explicite
+- `requireTenantMember(tenantId, roles?, req?)` — anti cross-tenant
+
+Les refus produisent un audit log automatique (outcome=DENIED) → utilisable pour détecter les tentatives d'escalade.
+
+**2. Multi-tenant : toujours filtrer `tenantId`**
+
+Toute query Prisma sur une table contenant `tenantId` DOIT inclure le filtre. Si vous ajoutez une route qui prend un `tenantId` en URL/body, utilisez `requireTenantMember()` pour vérifier l'appartenance.
+
+Les tests `lib/tenant-isolation.test.ts` doivent passer après tout PR qui touche aux server actions.
+
+**3. PII : ne jamais transmettre à un tiers**
+
+Avant d'envoyer du texte libre à une API tierce (Mistral, OpenAI, etc.), utilisez `lib/security/pii-filter.ts` :
+
+```ts
+import { scanPii } from "@/lib/security/pii-filter";
+const { redacted, hits } = scanPii(userInput);
+// envoyer `redacted` à l'API tierce, pas `userInput`
+```
+
+Détecte : email, téléphone FR, IBAN (mod 97), SIREN, SIRET, NIR, CB (Luhn).
+
+**4. Secrets : jamais côté client**
+
+Tout `process.env.X` qui ne commence pas par `NEXT_PUBLIC_` est server-only. Ne jamais l'importer depuis un fichier `"use client"`. Le script `npm run audit:env` vérifie en CI.
+
+**5. Logs d'audit : actions sensibles**
+
+Les actions sensibles DOIVENT appeler `auditLog()` (cf. `lib/audit.ts`) :
+- Modifications de role (USER_ROLE_CHANGED)
+- Suppressions (USER_DELETED, TENANT_DELETED)
+- Billing (BILLING_*)
+- Exports RGPD (DATA_EXPORTED, DATA_ERASURE_*)
+
+L'IP est hashée SHA-256 (non-réversible). Snapshot d'identité (`actorEmail`, `actorRole`) pour survivre à la suppression de l'user.
+
+**6. Hex Chat / IA : system prompt server-side only**
+
+Le system prompt et le contexte enrichi sont construits côté serveur. Le client envoie uniquement `messages: [{role, content}]` + `context: {currentRoute, currentModule}`. Aucune instruction LLM ne provient du client. Cf. `app/api/ai/chat/route.ts`.
+
 ### Header de licence
 
 Tous les fichiers source TS/TSX dans `app/`, `lib/`, `components/`, `scripts/`, `prisma/`, et `middleware.ts` doivent porter en première ligne :
