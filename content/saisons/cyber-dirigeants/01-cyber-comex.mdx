@@ -1,0 +1,301 @@
+---
+title: "Presenter la cyber a son COMEX"
+durationMinutes: 8
+persona: "manager"
+objective: "Construire une presentation efficace de la cyber au COMEX (langage business, KPI, ROI, decisions)"
+xpReward: 70
+scenario: |
+  Tu es RSSI/DSI fraichement nomme dans une PME 80 personnes.
+  Le DG te demande : "Vendredi prochain, COMEX (DG + DAF + DRH +
+  3 metiers). Presentation cyber 30 min. Tu nous expliques ou
+  on en est, ce qu'on doit faire, et combien ca coute. Soit
+  clair, on n'est pas des experts."
+
+  Tu fais quoi ?
+choices:
+  - id: "a"
+    label: "Je presente nos pare-feux, EDR, SIEM, CVE, NIST 800-53..."
+    outcome: "bad"
+    feedback: "INADAPTE. Le COMEX ne comprend pas le langage technique. Resultat : tu perds leur attention, ils ne comprennent pas l'urgence, pas de budget alloue. Standard pro : langage business + risques + chiffres + decisions."
+    points: -25
+  - id: "b"
+    label: "Cadre business : 1) etat actuel (KPI cyber + risques majeurs), 2) ce que ca peut couter (sans cyber : breach moyen X K EUR), 3) plan d'action 12 mois avec budget chiffre, 4) decisions a prendre"
+    outcome: "good"
+    feedback: "Standard pro. Cadre business (langage adapte), KPI quantifies, ROI explicite, plan + budget, decisions concretes. Le COMEX peut DECIDER. Bonne presentation = budget alloue + soutien."
+    points: 40
+  - id: "c"
+    label: "Je rassure : 'tout va bien, on a un antivirus, pas besoin d'investir'"
+    outcome: "bad"
+    feedback: "DESASTREUX. Faux et trompeur. Le COMEX a la responsabilite NIS2 article 20 (responsabilite personnelle). En cas de breach, ils ne pourront pas dire 'on ne savait pas'. Honnetete + plan = standard."
+    points: -30
+  - id: "d"
+    label: "J'apporte un consultant cyber externe pour qu'il presente"
+    outcome: "neutral"
+    feedback: "Pas optimal. Le RSSI/DSI doit etre l'interlocuteur. Le consultant peut etre la pour appuyer / valider, mais c'est TOI qui doit incarner la cyber face au COMEX. Sinon : credibility nulle long-terme."
+    points: 5
+debrief: |
+  La **presentation au COMEX** est l'un des moments cles du
+  RSSI/DSI. Mal faite : pas de budget, pas de soutien, cyber
+  vue comme cout. Bien faite : alliance strategique + budget
+  + protection juridique.
+
+  **Le COMEX a 3 attentes :**
+
+  1. **Comprendre** la situation (en langage business)
+  2. **Decider** (budget, priorisation, recrutements)
+  3. **Etre rassure** sur leur **responsabilite NIS2**
+    (article 20 - personnelle)
+
+  **Structure recommandee (30 minutes) :**
+
+  **Section 1 : Etat des lieux (5 min)**
+
+  KPI quantifies :
+  - **Couverture MFA** : 70% (cible 100%)
+  - **Patches a jour** : 85% (cible 95%+)
+  - **Sauvegarde testee** : oui / non / quand
+  - **Formation cyber** : taux + frequence
+  - **Incidents 12 derniers mois** : nombre + nature
+
+  **Risques majeurs identifies** :
+  - **Top 5 risques** issus de l'analyse de risques (EBIOS RM)
+  - **Probabilite x Impact** chiffre
+  - **Comparaison** avec sector
+
+  **Section 2 : Pourquoi maintenant (5 min)**
+
+  Contexte :
+  - **NIS2** : entree en vigueur 17 oct 2024, sanctions
+    progressives
+  - **Statistiques** : 60% des PME francaises ont eu un
+    incident cyber en 2024
+  - **Couts** : breach moyen pour PME 80 pers = 80-300K EUR
+
+  Cas reels (sectoriels) :
+  - 2-3 cas de PME similaires (anonymes ou publics)
+  - Couts directs + indirects
+  - Lecons apprises
+
+  **Section 3 : Plan d'action (10 min)**
+
+  **Phase 1 (90 jours)** : Quick wins
+  - MFA partout : 5 K EUR + impact tres eleve
+  - Sauvegardes testees : 3 K EUR
+  - Plan de reponse incident : interne, 0 EUR
+  - Formation cyber : 5 K EUR
+  - **Total : 13 K EUR**
+
+  **Phase 2 (180 jours)** : Renforcement
+  - Pentest + correction : 10 K EUR
+  - EDR : 5 K EUR/an
+  - DLP / sensitivity labels : 0 EUR (M365 inclus)
+  - **Total** : 15 K EUR
+
+  **Phase 3 (12 mois)** : Maturite
+  - Audit ISO 27001 / cybersecurity assessment : 15 K EUR
+  - Roadmap NIS2 conformite : 10 K EUR
+  - Continuite : 10 K EUR
+  - **Total** : 35 K EUR
+
+  **Budget annuel cible** : ~60-80 K EUR (entre 0.5 et 1% CA
+  pour PME)
+
+  **Section 4 : Decisions a prendre (5 min)**
+
+  Slides "decisions" :
+  - **Approuver** budget Phase 1 : 13 K EUR
+  - **Designer** un membre COMEX referent cyber
+  - **Approuver** politique cyber 1 page
+  - **Mandate** : RSSI presente bilan trimestriel
+
+  **Section 5 : Q&A (5 min)**
+
+  Anticiper les questions :
+  - "On fait ca pour quoi finalement ?"
+  - "Qui est responsable en cas de probleme ?"
+  - "On fait pas trop ?"
+  - "Comment on mesure le succes ?"
+
+  **Le langage business cyber :**
+
+  **A EVITER** :
+  - Acronymes : MFA, EDR, SIEM, CVE, IDS, IPS, DLP
+  - Jargon : "endpoint", "perimeter", "kill chain"
+  - Technique : "patch management", "zero trust"
+
+  **A UTILISER** :
+  - "Authentification renforcee" (= MFA)
+  - "Surveillance des postes" (= EDR)
+  - "Detection d'intrusion" (= SIEM)
+  - "Faille corrigee" (= patch)
+  - "Mise a jour" (= update)
+
+  **Chiffrage business** :
+  - Cout d'un breach (vs cout de prevention) = ROI
+  - Couts directs (recovery) + indirects (perte clients,
+    reputation)
+  - Comparaison "police d'assurance" : on paye un peu pour
+    eviter le gros risque
+
+  **Les KPI a presenter :**
+
+  **KPI techniques** (resumes) :
+  - **Couverture MFA** (%)
+  - **Patches a jour** (%)
+  - **Formation cyber** (%)
+  - **Sauvegardes testees** (oui/non)
+
+  **KPI business** :
+  - **Incidents** (nombre)
+  - **Cout** des incidents
+  - **Conformite** (NIS2, RGPD, ISO 27001)
+  - **Maturity** (echelle 1-5)
+
+  **KPI de progression** :
+  - Trend sur 12 mois (graphiques)
+  - Comparaison sector
+  - Benchmark contre objectifs
+
+  **Erreurs courantes :**
+
+  **Erreur 1 : Trop technique**
+  - 50 slides avec architectures, schemas
+  - COMEX decroche en 5 minutes
+  - Solution : 8-12 slides max + langage business
+
+  **Erreur 2 : Trop alarmiste**
+  - "Si on ne fait rien, on est foutus"
+  - COMEX percoit comme manipulateur / alarmiste
+  - Solution : factuel, base sur statistiques sectoriellelle
+
+  **Erreur 3 : Trop minimisant**
+  - "Tout va bien, c'est sous controle"
+  - Faux + violation responsabilite NIS2
+  - Solution : honnete sur les ecarts + plan
+
+  **Erreur 4 : Pas de chiffres**
+  - Discours general sans chiffres
+  - COMEX ne peut pas decider
+  - Solution : tout chiffre (budget, risque, ROI)
+
+  **Erreur 5 : Pas de decisions**
+  - Presentation finie, "voila l'etat"
+  - COMEX se demande "et donc ?"
+  - Solution : 3-5 decisions specifiques a prendre
+
+  **Erreur 6 : Trop long**
+  - 1h de presentation
+  - COMEX a 30 min max
+  - Solution : 30 min + Q&A
+
+  **Erreur 7 : Pas d'alignement avec strategie**
+  - Cyber comme silo
+  - COMEX ne voit pas le lien
+  - Solution : "comment cyber soutient nos objectifs business"
+
+  **La responsabilite COMEX (NIS2 article 20) :**
+
+  Important a rappeler :
+
+  > "Article 20 NIS2 : les organes de direction sont
+  > **personnellement responsables** de :
+  > - Approbation des mesures de gestion des risques
+  > - Supervision de leur mise en oeuvre
+  > - Suivi de leur efficacite
+  > - Formation continue cyber
+  > 
+  > Sanctions individuelles possibles (interdiction d'exercer)."
+
+  Ce rappel = soutien au RSSI (le COMEX **doit** s'engager)
+  et protection juridique (le COMEX a ete informe).
+
+  **Cas reels :**
+
+  **Cas 1 - PME 2024 (presentation reussie)**
+
+  RSSI nouveau a presente au COMEX selon ce framework :
+  - Etat des lieux factuel
+  - Top 5 risques chiffres
+  - Plan 90j Phase 1 : 13K EUR
+  - 3 decisions specifiques a prendre
+
+  Resultat :
+  - Budget approuve 5 minutes apres presentation
+  - DAF designe referent cyber COMEX
+  - Bilan trimestriel : structure
+  - Apres 1 an : 0 incident majeur + audit NIS2 conforme
+
+  **Cas 2 - PME 2023 (echec par technique)**
+
+  RSSI a presente 60 slides avec ENISA, NIST 800-53, MITRE
+  ATT&CK. COMEX perdu apres 10 minutes. Conclusion :
+  "merci pour ces informations techniques, on en discutera".
+
+  Pas de budget alloue. RSSI demoralise. Demission 6 mois
+  apres.
+
+  **Cas 3 - PME 2024 (post-breach)**
+
+  Apres breach 200K EUR, le COMEX demande au RSSI : "on
+  aurait pu eviter ?". RSSI montre presentation faite 6 mois
+  avant : risques alors identifies + budget demande +
+  refuses.
+
+  Resultat :
+  - Procedure interne : "on n'avait pas ete avertis correctement"
+  - **MAIS** : preuve ecrite que RSSI avait alerte
+  - Responsabilite COMEX engagee
+  - Reorganisation cyber + budget significatif alloue
+
+  Lecon : presentation = traçabilite + protection juridique
+  RSSI.
+
+  **Templates / outils :**
+
+  - **CyberRSI / CISO Assistant** (intuitem, OSS) : tableau
+    de bord COMEX-ready
+  - **EBIOS RM** (ANSSI) : analyse de risques structures
+  - **Powerpoint COMEX cyber** : modeles publics ANSSI
+
+  **La regle d'or :**
+
+  > **COMEX cyber : langage business + chiffres + decisions.
+  > 30 min max + Q&A. Etat des lieux honnete + risques
+  > quantifies + plan chiffre + decisions a prendre. Eviter
+  > acronymes / alarmisme / minimisation. Rappeler
+  > responsabilite NIS2 article 20.**
+quiz:
+  - question: "Pour presenter la cyber au COMEX, langage approprie ?"
+    choices:
+      - { id: "a", label: "Technique avec acronymes", correct: false }
+      - { id: "b", label: "Business : 'authentification renforcee' (MFA), 'surveillance des postes' (EDR), chiffres business (cout breach vs prevention = ROI)", correct: true }
+      - { id: "c", label: "Tres technique pour montrer competence", correct: false }
+    explanation: "COMEX ≠ experts cyber. Langage business : 'authentification renforcee' (MFA), 'mise a jour' (patch), 'detection d'intrusion' (SIEM). Chiffres : cout breach (80-300K EUR PME) vs cout prevention. ROI explicite. Sinon : decroche en 5 min."
+
+  - question: "Structure recommandee de la presentation cyber COMEX ?"
+    choices:
+      - { id: "a", label: "60 slides techniques", correct: false }
+      - { id: "b", label: "30 min : etat des lieux KPI + pourquoi maintenant + plan chiffre + decisions a prendre + Q&A. 8-12 slides max", correct: true }
+      - { id: "c", label: "Discussion ouverte", correct: false }
+    explanation: "Standard COMEX : 30 min max + Q&A. Structure : 1) Etat des lieux KPI (5 min), 2) Pourquoi maintenant (5 min - NIS2 + cas), 3) Plan chiffre (10 min - 3 phases), 4) Decisions a prendre (5 min), 5) Q&A. 8-12 slides max."
+
+  - question: "Article 20 NIS2 dit quoi sur la responsabilite COMEX ?"
+    choices:
+      - { id: "a", label: "Rien", correct: false }
+      - { id: "b", label: "Responsabilite PERSONNELLE des dirigeants : approbation, supervision, formation cyber. Sanctions individuelles possibles", correct: true }
+      - { id: "c", label: "Que pour DG", correct: false }
+    explanation: "Article 20 NIS2 : organes de direction (COMEX, conseil) personnellement responsables. 4 obligations : approbation mesures, supervision, suivi efficacite, formation cyber. Sanctions individuelles possibles (interdiction d'exercer). Cf saison nis2-pme ep 04."
+
+  - question: "Budget cyber recommande pour PME (% CA) ?"
+    choices:
+      - { id: "a", label: "10% CA", correct: false }
+      - { id: "b", label: "0.5-1% CA pour PME (60-80 K EUR pour CA 12M). Phase 1 quick wins : 13 K EUR seulement", correct: true }
+      - { id: "c", label: "0%", correct: false }
+    explanation: "Budget cyber PME : 0.5-1% CA mondial typique. Pour PME 12M CA = 60-120 K EUR/an. Phase 1 quick wins : 13 K EUR (MFA, sauvegardes, plan incident, formation). ROI tres eleve face cout breach (80-300K). NIS2 entites essentielles : 1.5-3% CA."
+---
+
+> 💡 **Pour aller plus loin** : **CISO Assistant** (intuitem,
+> OSS) : tableaux de bord COMEX-ready. **EBIOS RM** (ANSSI)
+> pour analyse risques. Templates Powerpoint COMEX cyber sur
+> cyber.gouv.fr. Bilan trimestriel structure = traçabilite +
+> protection juridique RSSI.
