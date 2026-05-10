@@ -22,8 +22,8 @@
 
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { requireSession } from "@/lib/api/require-role";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { streamChat, getProviderKind } from "@/lib/ai/provider";
 import { buildSystemPrompt } from "@/lib/ai/hex/system-prompt";
@@ -32,6 +32,7 @@ import {
   buildToneAddendum,
 } from "@/lib/ai/hex/context";
 import { retrieveRagContext, formatRagContext } from "@/lib/ai/hex/rag";
+import { scanPii, describePiiHits } from "@/lib/security/pii-filter";
 import { normalizePlan, type PlanId } from "@/lib/plans";
 
 export const dynamic = "force-dynamic";
@@ -60,11 +61,10 @@ const RATE_LIMIT_PER_HOUR: Record<PlanId, number> = {
 };
 
 export async function POST(req: Request) {
-  // 1) Auth
-  const session = await auth();
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
-  }
+  // 1) Auth — RBAC central (cf. lib/api/require-role.ts)
+  const guard = await requireSession();
+  if ("response" in guard) return guard.response;
+  const { session } = guard;
   const userId = session.user.id;
   const tenantId = session.user.tenantId;
 
@@ -100,6 +100,23 @@ export async function POST(req: Request) {
       { error: "Le dernier message doit etre de role 'user'." },
       { status: 400 },
     );
+  }
+
+  // === PII filter (defense en profondeur Zero-Trust) ===
+  // L'humain peut copier-coller son IBAN / email perso / numero de
+  // tel par reflexe. On ne veut PAS envoyer ces donnees a l'API
+  // Mistral (mineur fournisseur tiers, RGPD oui mais minimisation
+  // = principe). On scan le dernier message + on substitue les PII
+  // par des placeholders AVANT d'envoyer au LLM. Le client recoit
+  // une notice en metadata pour afficher un warning UX.
+  const piiScan = scanPii(last.content);
+  let piiNotice: { detected: boolean; summary: string } | null = null;
+  if (piiScan.hasPii) {
+    last.content = piiScan.redacted;
+    piiNotice = {
+      detected: true,
+      summary: describePiiHits(piiScan.hits),
+    };
   }
 
   // 4) Rate limit par plan
@@ -183,11 +200,19 @@ export async function POST(req: Request) {
   }
 
   // 9) Encoder le stream texte en SSE pour le client
-  //    - 1er event : citations (si RAG a retrouve des chunks)
+  //    - 1er event : pii notice (si on a masque des donnees)
+  //    - 2e event : citations (si RAG a retrouve des chunks)
   //    - puis : delta par delta jusqu'au [DONE]
   const encoder = new TextEncoder();
   const sseStream = new ReadableStream<Uint8Array>({
     async start(controller) {
+      // PII notice : on previent l'user qu'on a masque des PII avant
+      // d'envoyer son message a Mistral. UX rassurante + transparence.
+      if (piiNotice) {
+        const piiEvent = `data: ${JSON.stringify({ pii: piiNotice })}\n\n`;
+        controller.enqueue(encoder.encode(piiEvent));
+      }
+
       // Citations metadata (consommees par HexChat.tsx pour afficher
       // les badges "📚 Source : <module>")
       if (ragResult.chunks.length > 0) {
