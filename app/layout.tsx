@@ -6,9 +6,10 @@ import Providers from "./providers";
 import HeaderBar from "@/components/HeaderBar";
 import PWAInstallButton from "@/components/PWAInstallButton";
 import PlausibleScript from "@/components/PlausibleScript";
+import PlausibleLoader from "@/components/PlausibleLoader";
 import MatomoScript from "@/components/MatomoScript";
 import DemoBanner from "@/components/DemoBanner";
-import CookieNotice from "@/components/CookieNotice";
+import CookieBanner from "@/components/CookieBanner";
 import CyberMeteoTopBar from "@/components/CyberMeteoTopBar";
 import SiteFooter from "@/components/SiteFooter";
 import MascotPeek from "@/components/MascotPeek";
@@ -161,7 +162,17 @@ export default async function RootLayout({
         />
       </head>
       <body className="min-h-screen">
+        {/* Analytics :
+            - PlausibleScript : self-host (active si NEXT_PUBLIC_PLAUSIBLE_DOMAIN
+              est defini, sous regime exemption CNIL recommandation 2020-091).
+            - PlausibleLoader : cloud (active SI consent explicite via le
+              CookieBanner, sinon aucun appel reseau).
+            - MatomoScript : self-host alternatif si configure.
+            Les 3 sont mutuellement compatibles : le Loader cloud se desactive
+            automatiquement si une instance self-host est detectee (cf.
+            HAS_SELFHOST dans PlausibleLoader). */}
         <PlausibleScript />
+        <PlausibleLoader />
         <MatomoScript />
         <Providers>
           <a href="#main-content" className="skip-link">
@@ -184,7 +195,11 @@ export default async function RootLayout({
             {children}
           </main>
           <PWAInstallButton />
-          <CookieNotice />
+          {/* CookieBanner : consentement explicite Accepter/Refuser pour
+              activer le tracking analytics (Plausible cloud notamment).
+              Conforme CNIL recommandation 2020-091 (parite stricte + pas
+              de pre-cochage). Modifiable depuis /confidentialite. */}
+          <CookieBanner />
           <MascotPeek />
           <SiteFooter />
         </Providers>
