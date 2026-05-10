@@ -5,7 +5,7 @@ persona: "developer"
 objective: "Acquerir les reflexes de code review pour reperer les vulnerabilites les plus communes (autorisation, validation input, secrets, log de PII), poser les bonnes questions au PR opener"
 xpReward: 60
 scenario: |
-  Lundi 11h30, ton collegue te demande une review sur sa PR :
+  Lundi 11h30, ton collègue te demande une review sur sa PR :
   "feat: endpoint d'export utilisateurs admin".
 
   Le code central :
@@ -33,32 +33,32 @@ scenario: |
   }
   ```
 
-  Tu vois 4 problemes. Lequel est le plus grave a souligner en review ?
+  Tu vois 4 problèmes. Lequel est le plus grave a souligner en review ?
 choices:
   - id: "a"
-    label: "Manque de role check : un LEARNER authentifie peut appeler cet endpoint admin"
+    label: "Manque de rôle check : un LEARNER authentifie peut appeler cet endpoint admin"
     outcome: "good"
     feedback: "Excellent. C'est l'OWASP A01:2021 - Broken Access Control (le #1 du top 10). Le code verifie 'authentifie' mais pas 'authorise'. Un user lambda peut dump toute la base."
     points: 35
   - id: "b"
     label: "Le tenantId vient de la query string, donc cross-tenant possible : un admin tenant A peut dump tenant B"
     outcome: "good"
-    feedback: "Critique aussi. Le tenantId DOIT venir de la session (`session.user.tenantId`), jamais d'un parametre. C'est une vulnerabilite IDOR (Insecure Direct Object Reference) classique."
+    feedback: "Critique aussi. Le tenantId DOIT venir de la session (`session.user.tenantId`), jamais d'un paramètre. C'est une vulnerabilite IDOR (Insecure Direct Object Reference) classique."
     points: 35
   - id: "c"
     label: "mfaSecret est dans le select - c'est une donnee secrete qui ne doit JAMAIS sortir d'une API"
     outcome: "good"
-    feedback: "Bug majeur. Le mfaSecret permet de generer les codes TOTP. Le retourner = donner les cles du 2FA a quiconque appelle l'export. Un select des champs sensibles doit etre explicite."
+    feedback: "Bug majeur. Le mfaSecret permet de generer les codes TOTP. Le retourner = donner les cles du 2FA a quiconque appelle l'export. Un select des champs sensibles doit être explicite."
     points: 35
   - id: "d"
     label: "Le log contient l'email - PII en clair dans les logs, RGPD violation potentielle"
     outcome: "neutral"
-    feedback: "Bon point a relever, mais moins prioritaire que les 3 autres (qui sont des vulnerabilites securite directes). Le log d'email est plus une question de RGPD/privacy qui se traite en parallele."
+    feedback: "Bon point a relever, mais moins prioritaire que les 3 autres (qui sont des vulnerabilites sécurité directes). Le log d'email est plus une question de RGPD/privacy qui se traite en parallele."
     points: 15
 debrief: |
-  La code review securite n'est pas un audit complet. C'est une grille
+  La code review sécurité n'est pas un audit complet. C'est une grille
   de **questions canoniques** que tu deroules sur chaque PR backend.
-  Avec de l'entrainement, ca devient instinctif (~5 min par PR).
+  Avec de l'entrainement, ça devient instinctif (~5 min par PR).
 
   **La grille en 7 points (a memoriser) :**
 
@@ -72,7 +72,7 @@ debrief: |
   // CORRECT
   const session = await auth();
   if (!session?.user) return 401;
-  if (session.user.role !== "ADMIN") return 403;
+  if (session.user.rôle !== "ADMIN") return 403;
   // ET tenantId scope
   const where = { tenantId: session.user.tenantId };
   ```
@@ -80,22 +80,22 @@ debrief: |
   Auth ≠ Autz. **Auth** = qui es-tu ? **Autz** = qu'as-tu le droit de
   faire ?
 
-  Reflexe : sur tout endpoint qui retourne des donnees, demande
-  "qui peut acceder a quoi" en parametrant par role + tenantId/orgId.
+  Reflexe : sur tout endpoint qui retourne des données, demande
+  "qui peut acceder a quoi" en parametrant par rôle + tenantId/orgId.
 
   **2. Inputs trustes vs untrustes**
 
   Tout ce qui vient du client est **untruste** :
   - `req.body`, `req.query`, `req.params`
-  - Headers (sauf `Authorization` valide cote serveur)
+  - Headers (sauf `Authorization` valide côté serveur)
   - Cookies (sauf signed/HttpOnly/Secure verifies)
-  - Donnees venant d'autres services qui ne sont pas authentifies
+  - Données venant d'autres services qui ne sont pas authentifies
 
   La session NextAuth est **trustee** (signee par AUTH_SECRET) - utilise
   `session.user.tenantId` pas `req.query.tenantId`.
 
-  Reflexe : "d'ou vient cette donnee ?" - si reponse = "client", elle
-  doit etre validee (Zod schema) ET autorisee (role/scope check).
+  Reflexe : "d'ou vient cette donnee ?" - si réponse = "client", elle
+  doit être validee (Zod schéma) ET autorisee (rôle/scope check).
 
   **3. Validation d'input (Zod / Joi / Yup)**
 
@@ -104,14 +104,14 @@ debrief: |
   const Schema = z.object({
     name: z.string().min(1).max(100),
     email: z.string().email(),
-    role: z.enum(["LEARNER", "MANAGER"]),
+    rôle: z.enum(["LEARNER", "MANAGER"]),
   });
   const parsed = Schema.safeParse(await req.json());
   if (!parsed.success) return 400;
   ```
 
   Reflexe : tout endpoint qui prend du body JSON DOIT avoir un
-  schema strict. Pas de `as any`, pas de "je suppose que c'est
+  schéma strict. Pas de `as any`, pas de "je suppose que c'est
   bien forme".
 
   **4. SELECT explicite des champs**
@@ -149,7 +149,7 @@ debrief: |
   Reflexe : si tu vois `user.email`, `req.body`, ou `req.headers`
   dans un `console.log` - flagge.
 
-  **6. Operations destructives = double check**
+  **6. Opérations destructives = double check**
 
   ```typescript
   // DANGEREUX
@@ -162,11 +162,11 @@ debrief: |
       tenantId: session.user.tenantId, // empeche cross-tenant
     },
   });
-  // + verifier qui peut delete (role)
+  // + vérifier qui peut delete (rôle)
   // + log audit (tracabilite RGPD article 30)
   ```
 
-  Pour `delete`, `update` de roles, `transfer` financier : auth + role
+  Pour `delete`, `update` de rôles, `transfer` financier : auth + rôle
   + scope + audit log obligatoires.
 
   **7. Erreurs : ne fuite pas le SQL/stack**
@@ -188,52 +188,52 @@ debrief: |
 
   - **Ne dis pas "c'est faux"**. Dis "qu'est-ce qui empeche que cet
     endpoint soit appele par un user d'un autre tenant ?"
-  - **Lien vers la doc OWASP** plutot que de re-expliquer (cheat sheet
+  - **Lien vers la doc OWASP** plutôt que de re-expliquer (cheat sheet
     OWASP est gold standard).
-  - **Suggere la fix** : pas juste "il faut un role check" mais
-    "ajoute `if (session.user.role !== 'ADMIN') return 403`".
+  - **Suggere la fix** : pas juste "il faut un rôle check" mais
+    "ajoute `if (session.user.rôle !== 'ADMIN') return 403`".
   - **Bloque le merge** sur les bugs critiques (auth, secrets, RCE).
     Approve avec commentaires sur les bugs mineurs (logs, naming).
 
-  **Ce qui n'est PAS de la code review securite :**
+  **Ce qui n'est PAS de la code review sécurité :**
 
   - Performance (autre review)
   - Style/lint (le linter le fait)
   - Tests (autre review)
 
-  Reste focus sur les vulnerabilites. ~5 min par PR backend, ca evite
+  Reste focus sur les vulnerabilites. ~5 min par PR backend, ça evite
   des incidents qui couteraient des semaines de remediation.
 quiz:
-  - question: "Tu vois `where: { tenantId: req.query.tenantId }`. Probleme ?"
+  - question: "Tu vois `where: { tenantId: req.query.tenantId }`. Problème ?"
     choices:
       - { id: "a", label: "Aucun, c'est une query Prisma normale", correct: false }
-      - { id: "b", label: "Cross-tenant : un user du tenant A peut acceder aux donnees du tenant B en passant tenantId=B", correct: true }
+      - { id: "b", label: "Cross-tenant : un user du tenant A peut acceder aux données du tenant B en passant tenantId=B", correct: true }
       - { id: "c", label: "Performance", correct: false }
-    explanation: "C'est un IDOR classique. Le tenantId DOIT venir de la session (signed/trusted), jamais d'un parametre client. Sinon n'importe quel user authentifie peut taper d'autres tenants."
+    explanation: "C'est un IDOR classique. Le tenantId DOIT venir de la session (signed/trusted), jamais d'un paramètre client. Sinon n'importe quel user authentifie peut taper d'autres tenants."
 
   - question: "Quel champ ne doit JAMAIS sortir d'une API ?"
     choices:
       - { id: "a", label: "user.email", correct: false }
       - { id: "b", label: "user.passwordHash, user.mfaSecret, user.resetToken", correct: true }
       - { id: "c", label: "user.createdAt", correct: false }
-    explanation: "passwordHash (utilisable pour brute-force offline), mfaSecret (genere les codes TOTP), resetToken (login bypass) sont des secrets qui n'ont AUCUN usage cote client. Toujours les exclure du select."
+    explanation: "passwordHash (utilisable pour brute-force offline), mfaSecret (genere les codes TOTP), resetToken (login bypass) sont des secrets qui n'ont AUCUN usage côté client. Toujours les exclure du select."
 
   - question: "Sur une PR de delete user, qu'est-ce qui est OBLIGATOIRE ?"
     choices:
-      - { id: "a", label: "Auth + role check + tenant scope + audit log", correct: true }
+      - { id: "a", label: "Auth + rôle check + tenant scope + audit log", correct: true }
       - { id: "b", label: "Juste auth, c'est bon", correct: false }
       - { id: "c", label: "Le delete est interdit", correct: false }
-    explanation: "Operations destructives = stack complete. Auth (qui ?), role (a-t-il le droit ?), scope (limite a son tenant), audit log (qui a fait quoi quand pour la RGPD/forensic). Ne jamais sauter une de ces couches."
+    explanation: "Opérations destructives = stack complete. Auth (qui ?), rôle (a-t-il le droit ?), scope (limite a son tenant), audit log (qui a fait quoi quand pour la RGPD/forensic). Ne jamais sauter une de ces couches."
 
   - question: "Quel est l'OWASP #1 du top 10 2021 ?"
     choices:
       - { id: "a", label: "A03 Injection", correct: false }
       - { id: "b", label: "A01 Broken Access Control", correct: true }
       - { id: "c", label: "A07 Identification Failures", correct: false }
-    explanation: "OWASP A01:2021 (Broken Access Control) est passe #1 en 2021 (etait #5 en 2017). C'est la vulnerabilite la plus exploitee : 94% des apps testees ont une faille d'autorisation. Reviewer en priorite."
+    explanation: "OWASP A01:2021 (Broken Access Control) est passe #1 en 2021 (était #5 en 2017). C'est la vulnerabilite la plus exploitee : 94% des apps testees ont une faille d'autorisation. Reviewer en priorité."
 ---
 
 > 💡 **Pour aller plus loin** : OWASP **Code Review Guide** (PDF gratuit)
-> est la reference complete. Pour automatiser, **Semgrep** (gratuit OSS),
+> est la référence complete. Pour automatiser, **Semgrep** (gratuit OSS),
 > **CodeQL** (GitHub gratuit OSS) et **Bearer** (FR, gratuit OSS) ajoutent
 > une couche statique en CI qui catch ~70% des bugs avant la review humaine.

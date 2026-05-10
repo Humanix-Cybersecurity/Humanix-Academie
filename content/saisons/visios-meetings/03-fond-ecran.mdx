@@ -1,56 +1,56 @@
 ---
-title: "Ce que votre fond d'ecran revele en visio"
+title: "Ce que votre fond d'écran revele en visio"
 durationMinutes: 5
 persona: "tous-collaborateurs"
-objective: "Eviter les fuites d'informations via le fond visible en visioconference (objets, papiers, photos, livres)"
+objective: "Éviter les fuites d'informations via le fond visible en visioconference (objets, papiers, photos, livres)"
 xpReward: 50
 scenario: |
   Tu es manager en PME. Visio Teams avec un client important
   (10 personnes), depuis ton bureau a la maison.
 
-  Apres la reunion, le client envoie un email :
+  Après la réunion, le client envoie un email :
 
   "Apparemment vous etes specialise dans les contrats avec
-  Acme Corp ? J'ai vu votre tableau strategique au mur dans
+  Acme Corp ? J'ai vu votre tableau stratégique au mur dans
   votre bureau pendant la visio."
 
   Tu realises : pendant 1h, ton fond montrait :
   - Un grand tableau avec organigramme de tes clients
     (visible au mur)
   - Des notes manuscrites sur les contrats en cours
-  - Une photo de famille (vie privee)
-  - Un livre "Strategie agressive : comment ecraser les
+  - Une photo de famille (vie privée)
+  - Un livre "Stratégie agressive : comment ecraser les
     concurrents" (mauvaise image)
 
-  Que tirer comme lecon ?
+  Que tirer comme leçon ?
 choices:
   - id: "a"
     label: "Pas grave, le client est sympa"
     outcome: "bad"
-    feedback: "FAUX. Cette fuite a ete remarquee = autres clients / participants futurs verront aussi. Plus : les ecrans peuvent etre captures / enregistres. Vie privee + secrets pro exposes a chaque visio. Solution : fond floutre ou virtuel."
+    feedback: "FAUX. Cette fuite a été remarquee = autres clients / participants futurs verront aussi. Plus : les écrans peuvent être captures / enregistres. Vie privée + secrets pro exposes a chaque visio. Solution : fond floutre ou virtuel."
     points: -20
   - id: "b"
-    label: "Audit de mon bureau (ce qui est visible) + activation fond floute / virtuel par defaut + verification avant chaque visio"
+    label: "Audit de mon bureau (ce qui est visible) + activation fond floute / virtuel par defaut + vérification avant chaque visio"
     outcome: "good"
-    feedback: "Reflexes pro. Audit (qu'est-ce qui est visible derriere moi ?) + fond floute / virtuel par defaut (Teams / Zoom le permettent) + check rapide avant chaque visio. Standard pour pros en teletravail."
+    feedback: "Reflexes pro. Audit (qu'est-ce qui est visible derrière moi ?) + fond floute / virtuel par defaut (Teams / Zoom le permettent) + check rapide avant chaque visio. Standard pour pros en télétravail."
     points: 40
   - id: "c"
-    label: "Je mets une bibliotheque derriere moi pour faire pro"
+    label: "Je mets une bibliotheque derrière moi pour faire pro"
     outcome: "neutral"
-    feedback: "Esthetique mais ne resout pas le probleme. Verifier ce qu'il y a sur la bibliotheque (livres revelateurs ?), pas de papiers / notes visibles. Mieux : fond floute systematique."
+    feedback: "Esthetique mais ne resout pas le problème. Vérifier ce qu'il y a sur la bibliotheque (livres revelateurs ?), pas de papiers / notes visibles. Mieux : fond floute systematique."
     points: 10
   - id: "d"
     label: "Je m'eclaire pour qu'on me voit pas trop"
     outcome: "bad"
-    feedback: "Mauvais : sombre = peu pro + camera ajuste l'expo automatiquement = on te voit quand meme. Fond floute / virtuel = solution propre."
+    feedback: "Mauvais : sombre = peu pro + caméra ajuste l'expo automatiquement = on te voit quand même. Fond floute / virtuel = solution propre."
     points: -10
 debrief: |
   Le **fond visible** en visio est l'une des sources de fuites
   les plus negligees. Pendant 1h de visio, des dizaines /
-  centaines d'objets peuvent etre vus / enregistres / captures
+  centaines d'objets peuvent être vus / enregistres / captures
   par les autres participants.
 
-  Etudes : 70% des employes en teletravail ne controlent pas
+  Etudes : 70% des employés en télétravail ne controlent pas
   systematiquement leur fond.
 
   **Ce qui peut leaker :**
@@ -65,7 +65,7 @@ debrief: |
   **2. Murs et tableaux**
 
   - Organigrammes
-  - Plannings strategie
+  - Plannings stratégie
   - Photos clients / projets
   - Cartes de territoires
 
@@ -73,24 +73,24 @@ debrief: |
 
   - Livres revelateurs (specialites, opinions, religion,
     politique)
-  - DVD / CD (interets perso)
+  - DVD / CD (intérêts perso)
   - Manuels techniques (revele competences, secteur)
 
   **4. Photos / objets personnels**
 
-  - Photos famille (donnees perso, RGPD)
+  - Photos famille (données perso, RGPD)
   - Religieux / politique
-  - Hobbies (peut creer biais social)
+  - Hobbies (peut créer biais social)
   - Diplomes / titres (vanite)
 
-  **5. Ecrans en arriere-plan**
+  **5. Écrans en arrière-plan**
 
   - Autre PC visible avec contenu sensible
   - TV / smart display
   - Tablettes
   - Telephones
 
-  **6. Fenetre / vue exterieure**
+  **6. Fenetre / vue extérieure**
 
   - Geolocalisation possible
   - Reconnaissance du quartier
@@ -101,31 +101,31 @@ debrief: |
   **Solution 1 : Fond floute (le plus simple)**
 
   Disponible sur :
-  - **Microsoft Teams** : "Effets d'arriere-plan" > Flou
+  - **Microsoft Teams** : "Effets d'arrière-plan" > Flou
   - **Zoom** : "Background Effect" > Blur
   - **Google Meet** : "Apply visual effects" > Blur
 
   Avantages :
   - **Gratuit**
   - **Active facilement**
-  - **Cache tout** ce qui est derriere
+  - **Cache tout** ce qui est derrière
   - **Pas d'identification** des objets
 
   Inconvenients :
   - **Mouvement detecte** : si tu bouges, peut "rater" le
     flou
   - **Decoupe imparfaite** : peut laisser passer brefs
-    apercus
+    aperçus
   - **Ressources** : un peu de CPU/GPU
 
   **Solution 2 : Fond virtuel**
 
-  Image / video remplace ton arriere-plan.
+  Image / video remplace ton arrière-plan.
 
   - **Image neutre** : bureau d'entreprise (vrai ou
     photo officielle)
   - **Image personnalisee** (logo entreprise)
-  - **Video animee** (a eviter, distrait)
+  - **Video animee** (a éviter, distrait)
 
   Avantages :
   - **Pas de fuite** d'objets reels
@@ -134,7 +134,7 @@ debrief: |
 
   Inconvenients :
   - **Decoupe imparfaite** parfois
-  - **Mouvement** peut creer des artefacts
+  - **Mouvement** peut créer des artefacts
   - **Eclairage** peu efficace si pas adapte
 
   **Solution 3 : Fond physique adapte**
@@ -142,7 +142,7 @@ debrief: |
   - **Mur uni** (peinture neutre)
   - **Photophobre / fond pliable** (Amazon : 30-100 EUR)
   - **Bibliotheque controlee** (livres choisis)
-  - **Chambre dediee** au teletravail
+  - **Chambre dediee** au télétravail
 
   Avantages :
   - **Naturel** (pas d'artefact decoupe)
@@ -157,46 +157,46 @@ debrief: |
 
   Si tu utilises ton fond reel :
 
-  - **Liste** des objets derriere toi
+  - **Liste** des objets derrière toi
   - **Identifier** ceux qui peuvent leaker
   - **Eloigner / cacher** les sensibles
-  - **Verification** avant chaque visio (1 min)
+  - **Vérification** avant chaque visio (1 min)
 
-  **Procedure recommandee :**
+  **Procédure recommandee :**
 
   **Setup permanent** :
 
   1. **Activer fond floute par defaut** dans Teams / Zoom /
     Meet
-  2. **Tester** en lancant une reunion test (avec collegue ou
-    soi-meme)
-  3. **Eclairage** : face / cote pour ne pas etre
+  2. **Tester** en lancant une réunion test (avec collègue ou
+    soi-même)
+  3. **Eclairage** : face / côté pour ne pas être
     contre-jour
-  4. **Camera** stable et a hauteur des yeux
+  4. **Caméra** stable et a hauteur des yeux
 
   **Avant chaque visio importante** :
 
   1. **Check rapide** (10 sec) : qu'est-ce qui est visible ?
-  2. **Si fond floute / virtuel** : verifier qu'il
+  2. **Si fond floute / virtuel** : vérifier qu'il
     fonctionne
-  3. **Verifier** : pas de papiers / notes sensibles a
-    portee
+  3. **Vérifier** : pas de papiers / notes sensibles a
+    portée
   4. **Verrouiller** la porte si environnement familial
 
-  **Lors d'une demo / partage d'ecran** :
+  **Lors d'une demo / partage d'écran** :
 
-  Toujours faire l'audit AUSSI de ton ecran (cf ep 05).
+  Toujours faire l'audit AUSSI de ton écran (cf ep 05).
 
   **Le piege "personne ne regarde mon fond" :**
 
   Faux :
   - **Curiosite humaine** : on regarde naturellement
-    l'arriere-plan
-  - **Capture** d'ecran possible (intentionnelle ou non)
-  - **Enregistrement** de la reunion (avec ton accord ou
+    l'arrière-plan
+  - **Capture** d'écran possible (intentionnelle ou non)
+  - **Enregistrement** de la réunion (avec ton accord ou
     pas)
   - **Reverse-engineering** : 1h de visio = beaucoup
-    d'apercus differents
+    d'aperçus différents
 
   **Le piege "fond virtuel = fait pro" :**
 
@@ -220,32 +220,32 @@ debrief: |
 
   DRH en visio recrutement (avec candidat externe). Au mur :
   organigramme detaille de l'entreprise (incluant noms +
-  salaires). Le candidat etait en realite un consultant du
-  concurrent qui prepare campagne de chasse de tetes.
+  salaires). Le candidat était en réalité un consultant du
+  concurrent qui prepare campagne de chasse de têtes.
 
-  Resultat : 6 mois apres, 5 cadres demarches par concurrent
-  (avec offres precises = noms + salaires connus).
+  Résultat : 6 mois après, 5 cadres démarches par concurrent
+  (avec offres précises = noms + salaires connus).
 
-  **Cas 2 - Avocat 2024 (donnees clients)**
+  **Cas 2 - Avocat 2024 (données clients)**
 
   Avocat en visio avec un client, dossier confidentiel.
-  Camera etendue revelait des dossiers d'autres clients sur
+  Caméra etendue revelait des dossiers d'autres clients sur
   son bureau. Photo capturee par hasard = client mecontent.
 
   Sanction Ordre des avocats + perte de 2 clients.
 
-  **Cas 3 - Manager 2024 (vie privee)**
+  **Cas 3 - Manager 2024 (vie privée)**
 
-  Photo familiale visible en visio recurrent avec equipe.
-  Apres divorce, tensions equipe (employes connaissent
+  Photo familiale visible en visio recurrent avec équipe.
+  Après divorce, tensions équipe (employés connaissent
   ex-conjoint, apprehensions). Frontiere pro/perso brouillee.
 
-  Solution preventive : fond floute pour eviter exposition
-  vie privee.
+  Solution préventive : fond floute pour éviter exposition
+  vie privée.
 
   **Configuration recommandee Teams :**
 
-  Settings > Devices > Camera & Background :
+  Settings > Devices > Caméra & Background :
   - **Background**: Blur (ou image pro)
   - **Always apply** : oui
   - **Auto-frame** : optionnel
@@ -257,39 +257,39 @@ debrief: |
   - **Apply by default** : oui
   - **Studio Effects** : eclairage / maquillage subtle
 
-  **Pour les pros en teletravail intensif :**
+  **Pour les pros en télétravail intensif :**
 
   Investissement utile :
   - **Photophore / fond pliable** : 30-100 EUR (Amazon)
   - **Eclairage LED** : 50-150 EUR (ring light, panneau)
-  - **Camera externe** : 100-300 EUR (Logitech Brio,
+  - **Caméra externe** : 100-300 EUR (Logitech Brio,
     Razer Kiyo)
   - **Microphone** : 50-200 EUR (Blue Yeti, Rode NT)
 
-  Total setup pro : 200-700 EUR. ROI eleve si visios
-  frequentes.
+  Total setup pro : 200-700 EUR. ROI élève si visios
+  fréquentes.
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **Visio = ton fond est public. Activation fond floute par
   > defaut (Teams / Zoom / Meet, gratuit, 30 sec). Audit
   > rapide avant chaque visio importante. Pour pros en
-  > teletravail intensif : setup dedie (mur, photophore,
-  > eclairage). Vie privee + secrets pro proteges.**
+  > télétravail intensif : setup dedie (mur, photophore,
+  > eclairage). Vie privée + secrets pro proteges.**
 quiz:
   - question: "Solution simple pour proteger ton fond en visio ?"
     choices:
-      - { id: "a", label: "Etre dans le noir", correct: false }
-      - { id: "b", label: "Activer fond floute par defaut (Teams / Zoom / Meet, gratuit, 30 sec). Cache tout ce qui est derriere", correct: true }
+      - { id: "a", label: "Être dans le noir", correct: false }
+      - { id: "b", label: "Activer fond floute par defaut (Teams / Zoom / Meet, gratuit, 30 sec). Cache tout ce qui est derrière", correct: true }
       - { id: "c", label: "Bouger pour camoufler", correct: false }
-    explanation: "Fond floute = activation 30 sec dans Teams (Effets arriere-plan), Zoom (Background Effect), Meet (Apply visual effects). Gratuit, automatique, cache tous les objets. Active 'Apply by default' = systematique. Solution la plus simple et efficace."
+    explanation: "Fond floute = activation 30 sec dans Teams (Effets arrière-plan), Zoom (Background Effect), Meet (Apply visual effects). Gratuit, automatique, cache tous les objets. Active 'Apply by default' = systematique. Solution la plus simple et efficace."
 
-  - question: "Que peut leaker ton arriere-plan en visio ?"
+  - question: "Que peut leaker ton arrière-plan en visio ?"
     choices:
       - { id: "a", label: "Rien", correct: false }
-      - { id: "b", label: "Papiers/notes, organigrammes au mur, livres revelateurs, photos perso (RGPD), ecrans en arriere-plan, fenetre (geoloc), photos famille", correct: true }
+      - { id: "b", label: "Papiers/notes, organigrammes au mur, livres revelateurs, photos perso (RGPD), écrans en arrière-plan, fenêtre (geoloc), photos famille", correct: true }
       - { id: "c", label: "Juste une vue", correct: false }
-    explanation: "Visio 1h = des dizaines d'apercus differents de ton fond. Risques : papiers sensibles, organigrammes, livres revelateurs (specialites, opinions), photos perso (RGPD), ecrans en arriere-plan, fenetre (geolocalisation). 70% des employes ne controlent pas systematiquement."
+    explanation: "Visio 1h = des dizaines d'aperçus différents de ton fond. Risques : papiers sensibles, organigrammes, livres revelateurs (specialites, opinions), photos perso (RGPD), écrans en arrière-plan, fenêtre (geolocalisation). 70% des employés ne controlent pas systematiquement."
 
   - question: "Le fond virtuel est-il toujours plus pro ?"
     choices:
@@ -298,16 +298,16 @@ quiz:
       - { id: "c", label: "Non jamais", correct: false }
     explanation: "Fond virtuel mal configure = peu pro (artefacts decoupe, eclairage incoherent, fantomes). Solutions plus propres : mur uni naturel + fond floute (decoupe parfaite), ou photophore physique (30-100 EUR). Si fond virtuel : image neutre / pro / branded."
 
-  - question: "Cas reel : DRH avec organigramme visible en visio recrutement, consequence ?"
+  - question: "Cas reel : DRH avec organigramme visible en visio recrutement, conséquence ?"
     choices:
-      - { id: "a", label: "Aucun probleme", correct: false }
-      - { id: "b", label: "Candidat etait consultant concurrent. 6 mois apres : 5 cadres demarches avec offres precises (noms + salaires connus). Vol info ressources humaines", correct: true }
+      - { id: "a", label: "Aucun problème", correct: false }
+      - { id: "b", label: "Candidat était consultant concurrent. 6 mois après : 5 cadres démarches avec offres précises (noms + salaires connus). Vol info ressources humaines", correct: true }
       - { id: "c", label: "Bonus visibilite", correct: false }
-    explanation: "Cas reel : organigramme + salaires visibles en visio recrutement, candidat = consultant concurrent (chasse cadre). 5 cadres demarches 6 mois apres avec offres precises. Vol systematique d'info RH par observation visio. Solution preventive : fond floute systematique + audit visuel."
+    explanation: "Cas reel : organigramme + salaires visibles en visio recrutement, candidat = consultant concurrent (chasse cadre). 5 cadres démarches 6 mois après avec offres précises. Vol systematique d'info RH par observation visio. Solution préventive : fond floute systematique + audit visuel."
 ---
 
 > 💡 **Pour aller plus loin** : **fond floute par defaut**
 > dans Teams / Zoom / Meet (30 sec a activer). Pour pros en
-> teletravail intensif : setup dedie 200-700 EUR (photophore,
-> eclairage, camera, micro). Verification avant chaque visio
+> télétravail intensif : setup dedie 200-700 EUR (photophore,
+> eclairage, caméra, micro). Vérification avant chaque visio
 > importante (10 sec).

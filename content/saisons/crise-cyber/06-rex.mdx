@@ -2,10 +2,10 @@
 title: "Le retour d'expérience qui évite la récidive"
 durationMinutes: 6
 persona: "manager"
-objective: "Mener un REX (retour d'experience) post-incident : blameless culture, focus systeme et pas individus, livrables actionnables, suivre la mise en oeuvre des recommandations"
+objective: "Mener un REX (retour d'expérience) post-incident : blameless culture, focus système et pas individus, livrables actionnables, suivre la mise en oeuvre des recommandations"
 xpReward: 60
 scenario: |
-  3 semaines apres l'incident (compromission M365 + 87 K€ fraude
+  3 semaines après l'incident (compromission M365 + 87 K€ fraude
   virement), l'urgence est passee. Le forensic est complet, les
   notifications faites, les clients informes.
 
@@ -17,28 +17,28 @@ choices:
   - id: "a"
     label: "REX **blameless** : on cherche les CAUSES SYSTEMES (process, outils, formation manquante), pas les COUPABLES (Marie qui a clique). Livrables : 5-10 actions concrete avec owner + deadline. Suivi mensuel"
     outcome: "good"
-    feedback: "Approche professionnelle. Le blameless REX (issu de la culture aviation et SRE) postule qu'un incident est rarement le fait d'1 personne mais d'un systeme defaillant. Identifier le systeme = pouvoir le corriger durablement. Identifier le coupable = effet de surface."
+    feedback: "Approche professionnelle. Le blameless REX (issu de la culture aviation et SRE) postule qu'un incident est rarement le fait d'1 personne mais d'un système defaillant. Identifier le système = pouvoir le corriger durablement. Identifier le coupable = effet de surface."
     points: 35
   - id: "b"
     label: "Audit RH : trouver QUI a clique sur le mail piege, le sanctionner pour l'exemple"
     outcome: "bad"
-    feedback: "Pire approche possible. La culture de la sanction tue toute remontee future d'incidents (les employes cachent au lieu de signaler). De plus, sanctionner un employe pour un phishing reussi = ignorer que la VRAIE faute est l'absence de formation/MFA/EDR/processus."
+    feedback: "Pire approche possible. La culture de la sanction tue toute remontee future d'incidents (les employés cachent au lieu de signaler). De plus, sanctionner un employé pour un phishing réussi = ignorer que la VRAIE faute est l'absence de formation/MFA/EDR/processus."
     points: -20
   - id: "c"
-    label: "Reunion d'1h, on revoit l'incident, on note quelques actions, on passe a autre chose"
+    label: "Réunion d'1h, on revoit l'incident, on note quelques actions, on passe a autre chose"
     outcome: "neutral"
-    feedback: "Trop court et superficiel. Un REX serieux demande 2-4h de reunion + preparation + livrable formel. Sans ca, tu vas reproduire les memes erreurs. Le REX est la PARTIE LA PLUS IMPORTANTE de la gestion d'incident (apres le confinement)."
+    feedback: "Trop court et superficiel. Un REX serieux demande 2-4h de réunion + preparation + livrable formel. Sans ça, tu vas reproduire les mêmes erreurs. Le REX est la PARTIE LA PLUS IMPORTANTE de la gestion d'incident (après le confinement)."
     points: 5
   - id: "d"
-    label: "On confie le REX au consultant cyber qui a fait le forensic - c'est leur metier"
+    label: "On confie le REX au consultant cyber qui a fait le forensic - c'est leur métier"
     outcome: "neutral"
-    feedback: "Le consultant peut faciliter (apporter de la methodo) MAIS le REX doit etre pilote en INTERNE. Le consultant ne connait pas ta culture, tes processes internes, tes contraintes. Il fait un audit, pas un REX. Combiner les deux est ideal."
+    feedback: "Le consultant peut faciliter (apporter de la methodo) MAIS le REX doit être pilote en INTERNE. Le consultant ne connait pas ta culture, tes processes internes, tes contraintes. Il fait un audit, pas un REX. Combiner les deux est ideal."
     points: 10
 debrief: |
-  Le **REX (Retour d'Experience)** est l'etape la plus importante de
+  Le **REX (Retour d'Expérience)** est l'étape la plus importante de
   la gestion d'incident, et celle qui est le plus souvent mal faite
-  ou completement zappee. Sans REX rigoureux, tu reproduiras les
-  memes erreurs.
+  ou complètement zappee. Sans REX rigoureux, tu reproduiras les
+  mêmes erreurs.
 
   **Les 4 principes du REX efficace :**
 
@@ -51,69 +51,69 @@ debrief: |
   Pourquoi blameless :
   - Les humains font des erreurs. Toujours. Sanctionner ne resout
     rien.
-  - Si on sanctionne, les employes cachent les futurs incidents
-    (peur des consequences) = on perd de la visibility.
+  - Si on sanctionne, les employés cachent les futurs incidents
+    (peur des conséquences) = on perd de la visibility.
   - Les vrais coupables sont les SYSTEMES qui n'ont pas detecte /
     bloque / mitigue l'erreur humaine.
 
   Application pratique :
   - Pas de noms dans le rapport REX (ou alors anonymises)
-  - Phrases au passif : "le mail a ete clique" pas "Marie a clique"
-  - Focus sur "qu'est-ce qui aurait du empecher ce clic d'etre
-    fatal" (= filtres email, isolation, MFA, sandbox PJ) plutot que
+  - Phrases au passif : "le mail a été clique" pas "Marie a clique"
+  - Focus sur "qu'est-ce qui aurait du empecher ce clic d'être
+    fatal" (= filtres email, isolation, MFA, sandbox PJ) plutôt que
     "Marie a fait une erreur"
 
-  **2. Methode des 5 pourquoi (5 Whys)**
+  **2. Méthode des 5 pourquoi (5 Whys)**
 
   Issue de Toyota. Pour chaque cause apparente, demander 5x
-  "pourquoi" pour creuser jusqu'a la cause systemique racine.
+  "pourquoi" pour creuser jusqu'à la cause systemique racine.
 
   Exemple :
-  - **Probleme** : 87 K€ partis chez fraudeur belge
+  - **Problème** : 87 K€ partis chez fraudeur belge
   - Pourquoi ? Le CFO a valide un virement vers un nouveau RIB
-  - Pourquoi ? Il a recu un mail qui semblait legitime du
+  - Pourquoi ? Il a reçu un mail qui semblait legitime du
     fournisseur
-  - Pourquoi ? Le compte M365 du fournisseur a ete compromis
+  - Pourquoi ? Le compte M365 du fournisseur a été compromis
   - Pourquoi ? Notre process n'incluait pas de double-validation
     hors-canal pour les changements de RIB
-  - Pourquoi ? Personne n'avait formalise ce process specifique
+  - Pourquoi ? Personne n'avait formalise ce process spécifique
 
   La cause racine n'est PAS "le CFO a clique" mais "absence de
   process double-validation hors-canal". Ce qui mene a une action
   CORRIGEABLE.
 
-  **3. Cause systeme vs cause individuelle**
+  **3. Cause système vs cause individuelle**
 
-  Le test : si la meme erreur arrivait a 10 collaborateurs differents,
-  l'incident se reproduirait-il ? Si OUI = cause systeme. Si NON
-  (specifique a 1 individu) = cause individuelle (rare).
+  Le test : si la même erreur arrivait a 10 collaborateurs différents,
+  l'incident se reproduirait-il ? Si OUI = cause système. Si NON
+  (spécifique a 1 individu) = cause individuelle (rare).
 
   Dans 95% des cas, c'est systemique. Solutions systemiques :
-  - **Process** : formaliser ce qui etait implicite
+  - **Process** : formaliser ce qui était implicite
   - **Outil** : MFA, EDR, sandbox email, monitoring
   - **Formation** : sensibilisation reguliere
-  - **Architecture** : segmentation, principle of least privilege
+  - **Architecture** : segmentation, principle of least privilège
   - **Culture** : encourager le signalement, blameless
 
   **4. Livrables concrets (pas un rapport de 50 pages)**
 
   Livrable cible du REX :
-  - **Resume executif** (1 page) : qu'est-ce qui s'est passe, cout,
+  - **Resume executif** (1 page) : qu'est-ce qui s'est passe, coût,
     cause racine, top 3 actions
-  - **Timeline detaille** : chronologie minute par minute (deja fait
+  - **Timeline detaille** : chronologie minute par minute (déjà fait
     pendant la crise, on le formalise)
   - **5 a 10 actions correctives** : owner + deadline + criteria
-    de reussite
+    de réussite
   - **Suivi des actions** : tableau de bord mensuel
 
   Ne PAS produire :
   - Un rapport de 50 pages que personne ne lira
-  - Des actions vagues type "ameliorer la securite"
+  - Des actions vagues type "ameliorer la sécurité"
   - Pas d'owners definis = personne ne fera
 
-  **Les 8 etapes d'un REX :**
+  **Les 8 étapes d'un REX :**
 
-  **1. Preparation (avant la reunion)**
+  **1. Preparation (avant la réunion)**
 
   - Compiler le timeline detaille de l'incident
   - Compiler le rapport forensic (technique)
@@ -129,13 +129,13 @@ debrief: |
   **3. Identification des moments critiques (30 min)**
 
   Sur le timeline, identifier les "moments charnieres" ou l'incident
-  aurait pu etre evite ou minimise :
+  aurait pu être evite ou minimise :
   - "A 9h17 si on avait detecte plus tot..."
   - "A 14h22 si on avait isole plus rapidement..."
 
   **4. 5 Whys sur chaque moment critique (60 min)**
 
-  Pour chacun, creuser jusqu'a la cause racine systemique.
+  Pour chacun, creuser jusqu'à la cause racine systemique.
 
   **5. Brainstorming actions correctives (30 min)**
 
@@ -143,25 +143,25 @@ debrief: |
 
   **6. Priorisation actions (30 min)**
 
-  Cadrant Impact (haut/bas) x Effort (faible/eleve) :
-  - **Quick wins** (haut impact, faible effort) : faire en priorite
-  - **Investments** (haut impact, effort eleve) : planifier
+  Cadrant Impact (haut/bas) x Effort (faible/élève) :
+  - **Quick wins** (haut impact, faible effort) : faire en priorité
+  - **Investments** (haut impact, effort élève) : planifier
   - **Fill-ins** (faible impact, faible effort) : faire si temps
-  - **Avoid** (faible impact, effort eleve) : abandonner
+  - **Avoid** (faible impact, effort élève) : abandonner
 
-  **7. Definition des owners et deadlines**
+  **7. Définition des owners et deadlines**
 
   Chaque action retenue :
   - **Owner** unique nommement designe (pas "l'IT", c'est "Pierre
     Dupont")
-  - **Deadline** chiffree (pas "des que possible", c'est "vendredi 14
+  - **Deadline** chiffree (pas "dès que possible", c'est "vendredi 14
     juin")
-  - **Criteria de reussite** : "MFA active sur 100% des comptes
-    M365" (pas "deployer le MFA")
+  - **Criteria de réussite** : "MFA active sur 100% des comptes
+    M365" (pas "déployer le MFA")
 
   **8. Suivi des actions**
 
-  - Reunion mensuelle de 30 min : status de chaque action
+  - Réunion mensuelle de 30 min : status de chaque action
   - Si retard, escalade au CEO/COMEX
   - Dashboard public (Notion, JIRA) avec status temps reel
 
@@ -169,21 +169,21 @@ debrief: |
 
   **Equifax 2017** : pas de REX serieux. Patches Apache Struts non
   appliques pendant 4 mois. Cause root : pas de process patch
-  management formalise. Depuis : equipe Patch Management dediee.
+  management formalise. Depuis : équipe Patch Management dediee.
 
   **Norsk Hydro 2019** : REX exemplaire. Rapport public de 48 pages
   partage avec la communaute. Devient cas d'ecole etudie partout.
   Recommandations integrees dans NIST CSF v2.
 
   **OVH incendie 2021** : REX rapide et public. Identifie le manque
-  de plan de reprise multi-site chez les clients. Lecon : meme un
+  de plan de reprise multi-site chez les clients. Lecon : même un
   hebergeur top a des limites - les clients doivent avoir leur PRA
   multi-region.
 
   **Le piege "On a fini, on passe a autre chose" :**
 
   L'erreur la plus courante : faire le REX, ecrire le rapport, le
-  classer dans un dossier partage, ne plus jamais y revenir. Resultat :
+  classer dans un dossier partage, ne plus jamais y revenir. Résultat :
   les actions ne sont pas faites, l'incident se reproduit dans 12-18
   mois.
 
@@ -193,43 +193,43 @@ debrief: |
 
   **Cybersafe culture (la finalite) :**
 
-  Apres plusieurs REX bien faits (1 par an minimum), la culture
+  Après plusieurs REX bien faits (1 par an minimum), la culture
   change :
-  - Les employes signalent plus facilement (pas peur d'etre punis)
+  - Les employés signalent plus facilement (pas peur d'être punis)
   - L'organisation apprend de ses erreurs au lieu de les cacher
   - Les actions correctives previennent les recidives
   - La maturite cyber augmente naturellement
 
-  C'est ca, l'objectif final du REX : **transformer un incident en
+  C'est ça, l'objectif final du REX : **transformer un incident en
   apprentissage organisationnel durable**.
 quiz:
   - question: "Le principe 'blameless' dans un REX signifie :"
     choices:
       - { id: "a", label: "Personne n'est responsable de rien", correct: false }
-      - { id: "b", label: "Chercher les causes SYSTEMIQUES (process, outils, formation) plutot que les COUPABLES individuels", correct: true }
+      - { id: "b", label: "Chercher les causes SYSTEMIQUES (process, outils, formation) plutôt que les COUPABLES individuels", correct: true }
       - { id: "c", label: "On ne fait rien", correct: false }
-    explanation: "Blameless = chercher 'qu'est-ce qui dans le SYSTEME a permis cette erreur ?' plutot que 'qui a fait l'erreur ?'. Origine : aviation (NTSB), SRE Google. Sanctionner = les employes cachent les futurs incidents = on perd de la visibility."
+    explanation: "Blameless = chercher 'qu'est-ce qui dans le SYSTEME a permis cette erreur ?' plutôt que 'qui a fait l'erreur ?'. Origine : aviation (NTSB), SRE Google. Sanctionner = les employés cachent les futurs incidents = on perd de la visibility."
 
-  - question: "Quelle methode systematique pour creuser jusqu'a la cause racine ?"
+  - question: "Quelle méthode systematique pour creuser jusqu'à la cause racine ?"
     choices:
       - { id: "a", label: "L'audit financier", correct: false }
-      - { id: "b", label: "Les 5 Whys (Toyota) : pour chaque cause apparente, demander 5x 'pourquoi' jusqu'a la cause systeme", correct: true }
+      - { id: "b", label: "Les 5 Whys (Toyota) : pour chaque cause apparente, demander 5x 'pourquoi' jusqu'à la cause système", correct: true }
       - { id: "c", label: "Le brainstorming", correct: false }
-    explanation: "5 Whys = methode Toyota. Pour chaque probleme, demander 5x 'pourquoi' creuse les causes superficielles pour atteindre la racine systemique (qui est CORRIGEABLE durablement)."
+    explanation: "5 Whys = méthode Toyota. Pour chaque problème, demander 5x 'pourquoi' creuse les causes superficielles pour atteindre la racine systemique (qui est CORRIGEABLE durablement)."
 
   - question: "Une action REX bien formulee a :"
     choices:
       - { id: "a", label: "Une description vague", correct: false }
-      - { id: "b", label: "Owner unique nomme + deadline chiffree + criteria de reussite mesurable", correct: true }
+      - { id: "b", label: "Owner unique nomme + deadline chiffree + criteria de réussite mesurable", correct: true }
       - { id: "c", label: "Juste un titre", correct: false }
     explanation: "Action SMART : 'MFA active sur 100% des comptes M365 d'ici le 14 juin, owner Pierre Dupont, criteria : audit M365 confirme 100% MFA'. Sans owner+deadline+criteria, l'action ne se fait pas."
 
-  - question: "Combien de temps apres l'incident faire le REX ?"
+  - question: "Combien de temps après l'incident faire le REX ?"
     choices:
       - { id: "a", label: "Le lendemain", correct: false }
-      - { id: "b", label: "2-4 semaines apres (urgence passee, forensic complete, recul minimal)", correct: true }
-      - { id: "c", label: "1 an apres", correct: false }
-    explanation: "Trop tot (lendemain) = pas de recul, emotions fortes. Trop tard (>3 mois) = details oublies. 2-4 semaines = sweet spot : urgence passee, forensic complete, recul suffisant pour analyse calme."
+      - { id: "b", label: "2-4 semaines après (urgence passee, forensic complete, recul minimal)", correct: true }
+      - { id: "c", label: "1 an après", correct: false }
+    explanation: "Trop tot (lendemain) = pas de recul, emotions fortes. Trop tard (>3 mois) = détails oublies. 2-4 semaines = sweet spot : urgence passee, forensic complete, recul suffisant pour analyse calme."
 ---
 
 > 💡 **Pour aller plus loin** : Google publie son **SRE Workbook**

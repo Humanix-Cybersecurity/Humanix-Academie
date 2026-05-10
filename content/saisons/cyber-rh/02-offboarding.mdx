@@ -2,7 +2,7 @@
 title: "Le offboarding sans laisser d'acces oublie"
 durationMinutes: 7
 persona: "manager"
-objective: "Etablir une checklist de offboarding RH/IT complete pour un employe qui part : acces, materiel, donnees, comptes, et NE rien oublier"
+objective: "Etablir une checklist de offboarding RH/IT complete pour un employé qui part : acces, matériel, données, comptes, et NE rien oublier"
 xpReward: 60
 scenario: |
   DRH d'une PME 80 personnes. Vendredi 17h, le commercial Alice
@@ -16,38 +16,38 @@ scenario: |
   - Slack / Teams
   - Acces aux dossiers SharePoint
   - Compte expense (Spendesk)
-  - Acces au telephone fournisseur (compte Orange Business)
+  - Acces au téléphone fournisseur (compte Orange Business)
   - Cles physiques bureau
-  - Badge entree
-  - Materiel : laptop + telephone
+  - Badge entrée
+  - Matériel : laptop + téléphone
 
   Tu fais quoi pour ne rien oublier ?
 choices:
   - id: "a"
     label: "Je note dans un email au DSI : 'couper les acces de Alice'. Il s'occupera"
     outcome: "bad"
-    feedback: "MAUVAIS. Risque tres eleve d'oubli. 60% des breaches insider partent d'un compte non-revoque selon Verizon DBIR. Une checklist exhaustive ecrite + traces = standard professionnel. Sans cela : compte fantome qui peut etre exploite des annees plus tard."
+    feedback: "MAUVAIS. Risque très élève d'oubli. 60% des breaches insider partent d'un compte non-revoque selon Verizon DBIR. Une checklist exhaustive ecrite + traces = standard professionnel. Sans cela : compte fantome qui peut être exploite des années plus tard."
     points: -15
   - id: "b"
-    label: "Checklist exhaustive (15-20 elements) avec dates : J-3 (preparation), J0 (revocation), J+30 (audit). Coordination RH-IT-comptable. Trace ecrite a chaque etape"
+    label: "Checklist exhaustive (15-20 éléments) avec dates : J-3 (preparation), J0 (revocation), J+30 (audit). Coordination RH-IT-comptable. Trace ecrite a chaque étape"
     outcome: "good"
-    feedback: "Demarche pro. Anticipation J-3, action J0, verification J+30. Coordination des 3 acteurs (RH, IT, finance). Chain of custody documentee. Protection juridique en cas de breach futur (preuve de mise en oeuvre)."
+    feedback: "Demarche pro. Anticipation J-3, action J0, vérification J+30. Coordination des 3 acteurs (RH, IT, finance). Chain of custody documentee. Protection juridique en cas de breach futur (preuve de mise en oeuvre)."
     points: 40
   - id: "c"
     label: "Je laisse les acces actifs encore 30 jours 'au cas ou' Alice aurait besoin de finir des dossiers"
     outcome: "bad"
-    feedback: "FAUX. Aucun cas legitime ne justifie de garder les acces apres le dernier jour de travail. Si Alice doit finir un dossier : transfert au successeur + acces lecture seule temporaire et tracable. JAMAIS un acces complet 'au cas ou'."
+    feedback: "FAUX. Aucun cas legitime ne justifie de garder les acces après le dernier jour de travail. Si Alice doit finir un dossier : transfert au successeur + acces lecture seule temporaire et tracable. JAMAIS un acces complet 'au cas ou'."
     points: -20
   - id: "d"
     label: "Je fais le minimum (email + AD) car Alice est sympa et ne ferait pas de mal"
     outcome: "bad"
-    feedback: "DANGEREUX. La revocation ne depend pas du caractere de l'ex-employe. Risques : 1) un attaquant peut compromettre le compte abandonne, 2) Alice peut etre approchee par un concurrent, 3) le ressentiment peut emerger plus tard (cas Tesla 2018). Procedure systematique."
+    feedback: "DANGEREUX. La revocation ne depend pas du caractere de l'ex-employé. Risques : 1) un attaquant peut compromettre le compte abandonne, 2) Alice peut être approchee par un concurrent, 3) le ressentiment peut emerger plus tard (cas Tesla 2018). Procédure systematique."
     points: -15
 debrief: |
-  Le **offboarding** d'un employe est l'etape la plus negligee
+  Le **offboarding** d'un employé est l'étape la plus negligee
   du cycle de vie RH/IT. Le contrat est termine, l'attention
   est ailleurs, et les acces techniques restent actifs pendant
-  des mois ou des annees.
+  des mois ou des années.
 
   Verizon DBIR : **60% des breaches insider** partent d'un
   compte non-revoque correctement.
@@ -56,15 +56,15 @@ debrief: |
 
   Un compte non-revoque peut :
 
-  1. **Etre compromis par un attaquant** : credentials sur le
+  1. **Être compromis par un attaquant** : credentials sur le
     dark web, brute force
-  2. **Etre exploite par l'ex-employe rancunier** (cas Tesla
-    2018, 300 Go exfiltres 6 mois apres depart)
-  3. **Etre utilise par un concurrent** qui aurait recrute
-    l'ex-employe
+  2. **Être exploite par l'ex-employé rancunier** (cas Tesla
+    2018, 300 Go exfiltres 6 mois après depart)
+  3. **Être utilise par un concurrent** qui aurait recrute
+    l'ex-employé
   4. **Servir de back-door** pour ransomware / espionnage
 
-  Sans procedure : risque persistant pendant des annees.
+  Sans procédure : risque persistant pendant des années.
 
   **La checklist exhaustive (20 points) :**
 
@@ -79,16 +79,16 @@ debrief: |
   - Documentation des projets en cours
   - **Knowledge transfer** : 1-2h avec successeur
 
-  **3. Inventaire materiel**
-  - Liste des materiels remis (laptop, telephone, badge,
+  **3. Inventaire matériel**
+  - Liste des matériels remis (laptop, téléphone, badge,
     cles, USB)
-  - Numeros de serie a verifier le J0
+  - Numeros de serie a vérifier le J0
 
   **4. Inventaire acces logiques**
   - Tous les comptes nominatifs (AD, SSO, apps SaaS)
   - Tous les comptes partages dont il connaitrait le mot de
     passe
-  - Toutes les apps tierces (CRM, ERP, outils metier)
+  - Toutes les apps tierces (CRM, ERP, outils métier)
 
   **Phase 2 : J0 (Dernier jour) - Action immediate**
 
@@ -100,10 +100,10 @@ debrief: |
   - **Email** : disable + redirection vers le successeur
     (politique 30j)
   - **VPN** : revocation certificat + compte
-  - **MFA** : suppression des dispositifs lies (telephone,
+  - **MFA** : suppression des dispositifs lies (téléphone,
     YubiKey)
 
-  **Action rapide** : la revocation doit etre faite **dans
+  **Action rapide** : la revocation doit être faite **dans
   l'heure** qui suit le depart effectif. Pas a la fin de la
   semaine.
 
@@ -113,45 +113,45 @@ debrief: |
   - Slack / Teams (avec exclusion des canaux prives)
   - Jira / Confluence / Notion (acces projets)
   - GitHub / GitLab (code source !)
-  - **Tous les outils metier** (liste a verifier)
+  - **Tous les outils métier** (liste a vérifier)
 
   **7. Mots de passe partages a changer**
 
-  Si l'employe avait acces a des comptes partages (rare mais
+  Si l'employé avait acces a des comptes partages (rare mais
   arrive en PME) :
   - Compte support fournisseur
-  - Compte reseaux sociaux entreprise
+  - Compte réseaux sociaux entreprise
   - Compte Wifi (WPA2 partage)
-  - **Tout mot de passe** que l'employe pourrait connaitre
+  - **Tout mot de passe** que l'employé pourrait connaître
 
-  **8. Recuperation materiel**
+  **8. Recuperation matériel**
 
   - Laptop (PV de remise)
-  - Telephone professionnel
-  - Badge d'entree (a desactiver immediatement)
+  - Téléphone professionnel
+  - Badge d'entrée (a desactiver immédiatement)
   - Cles physiques bureau
   - Cles USB / disques durs
-  - **Verifier que rien n'est manquant**
+  - **Vérifier que rien n'est manquant**
 
-  **9. Reset du materiel**
+  **9. Reset du matériel**
 
   - Wipe complet du laptop (re-image OS)
-  - Reset usine du telephone
-  - Sauvegarde des donnees pro avant wipe (selon politique)
+  - Reset usine du téléphone
+  - Sauvegarde des données pro avant wipe (selon politique)
 
   **10. Sortie escortee** (selon contexte)
 
   Pour les departures sensibles (licenciement, conflit) :
   - Sortie escortee par le manager
   - Acces aux locaux desactive avant sortie
-  - Pas de retour aux bureaux apres sortie
+  - Pas de retour aux bureaux après sortie
 
   **Phase 3 : J+1 a J+7 (Suivi proche)**
 
   **11. Audit des acces residuels**
 
   Verifications :
-  - Aucune connexion VPN apres le J0
+  - Aucune connexion VPN après le J0
   - Aucune connexion AD / SSO
   - Aucun email entrant/sortant
   - Aucun acces aux apps SaaS
@@ -169,21 +169,21 @@ debrief: |
   - Comptes test / dev / staging
   - Acces aux dashboards (analytics, BI)
 
-  **13. RGPD : donnees personnelles de l'ex-employe**
+  **13. RGPD : données personnelles de l'ex-employé**
 
-  - Verifier la duree de conservation des donnees employe
+  - Vérifier la durée de conservation des données employé
   - Bulletins paie : 50 ans (obligation)
-  - Dossier personnel : duree des droits + 5 ans
-  - **Anonymisation** des donnees au-dela de la duree
+  - Dossier personnel : durée des droits + 5 ans
+  - **Anonymisation** des données au-dela de la durée
 
   **Phase 4 : J+30 (Audit final)**
 
-  **14. Audit complet apres 30 jours**
+  **14. Audit complet après 30 jours**
 
-  Verification approfondie :
-  - Aucune connexion sur tous les systemes
+  Vérification approfondie :
+  - Aucune connexion sur tous les systèmes
   - Aucun acces actif (cumul J0 + comptes oublies J+7)
-  - Suppression definitive (pas seulement disable)
+  - Suppression définitive (pas seulement disable)
   - Documentation finale
 
   **15. Mise a jour de l'inventaire**
@@ -197,15 +197,15 @@ debrief: |
   **16. Audit trimestriel des comptes inactifs**
 
   - Liste des comptes sans connexion depuis 90 jours
-  - Verification : ils correspondent a des employes actifs ?
-  - Si ex-employe : revocation immediate
+  - Vérification : ils correspondent a des employés actifs ?
+  - Si ex-employé : revocation immediate
   - **Indicateur** : nombre de comptes fantomes detectes
 
   **17. Audit annuel exhaustif**
 
-  - Liste de tous les comptes vs liste des employes actifs
+  - Liste de tous les comptes vs liste des employés actifs
   - Pas d'ecart possible
-  - **NIS2 article 21 mesure 9** : controle des acces
+  - **NIS2 article 21 mesure 9** : contrôle des acces
 
   **18. Surveillance dark web**
 
@@ -213,26 +213,26 @@ debrief: |
   - Si credentials de l'entreprise apparaissent : alerte
   - Lien probable : compte non-revoque correctement
 
-  **Cas specifiques :**
+  **Cas spécifiques :**
 
   **a) Depart non-conflictuel (demission, retraite)**
 
-  Procedure standard ci-dessus. Pas d'urgence particuliere
-  mais respect des delais.
+  Procédure standard ci-dessus. Pas d'urgence particuliere
+  mais respect des délais.
 
   **b) Licenciement / depart conflictuel**
 
-  Procedure renforcee :
-  - **Revocation IMMEDIATE** des le moment de l'annonce (pas
+  Procédure renforcee :
+  - **Revocation IMMEDIATE** dès le moment de l'annonce (pas
     le J+7)
   - **Sortie escortee** des locaux
   - **Audit forensic** des actions des derniers jours/semaines
-  - **Surveillance** des donnees telechargees / emails envoyes
+  - **Surveillance** des données téléchargées / emails envoyes
   - **Plainte** si exfiltration detectee
 
   **c) Depart d'un dirigeant / RSSI / DAF**
 
-  - **Toutes** les procedures + **changement** des mots de
+  - **Toutes** les procédures + **changement** des mots de
     passe partages dont il connaitrait
   - **Notification** aux fournisseurs critiques (changement
     d'interlocuteur)
@@ -243,30 +243,30 @@ debrief: |
   - **Revocation Git/GitHub** : urgence (code source !)
   - **Audit** des commits recents
   - **Rotation** des secrets / cles d'API qu'il aurait pu voir
-  - **Verification** des branches publiees / tokens persons
+  - **Vérification** des branches publiees / tokens persons
 
   **Cas reel : Tesla 2018**
 
   Un sous-traitant Tesla, dont le contrat avait pris fin **6
   mois plus tot**, a utilise ses anciens credentials non-revoques
-  pour se connecter au reseau interne et exfiltrer **300 Go**
-  de donnees sensibles (code, plans, schemas). Decouvert
-  plusieurs semaines apres l'exfiltration.
+  pour se connecter au réseau interne et exfiltrer **300 Go**
+  de données sensibles (code, plans, schémas). Decouvert
+  plusieurs semaines après l'exfiltration.
 
   Cause : oubli de revocation lors de l'offboarding. Le
-  sous-traitant avait un acces VPN qui n'a jamais ete coupe.
+  sous-traitant avait un acces VPN qui n'a jamais été coupe.
 
-  Cout estime : > 100 M USD (perte propriete intellectuelle +
-  procedures legales).
+  Cout estime : > 100 M USD (perte propriété intellectuelle +
+  procédures legales).
 
   **Cas reel : Capital One 2019**
 
-  Un ex-employe d'AWS (qui hebergait Capital One) a utilise sa
+  Un ex-employé d'AWS (qui hebergait Capital One) a utilise sa
   connaissance interne pour exploiter une mauvaise configuration
-  apres son depart. **106 millions de comptes** clients exfiltres.
+  après son depart. **106 millions de comptes** clients exfiltres.
 
-  Cause : l'ex-employe avait conserve sa connaissance des
-  systemes mais aussi probablement quelques credentials non
+  Cause : l'ex-employé avait conserve sa connaissance des
+  systèmes mais aussi probablement quelques credentials non
   revoques.
 
   Cout : 80 M USD d'amende + reputation.
@@ -292,9 +292,9 @@ debrief: |
   Annuel :
   - **Nombre de breaches** lies a comptes non-revoques (cible
     : 0)
-  - **Audit comptes inactifs** : conformite
+  - **Audit comptes inactifs** : conformité
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **Le dernier jour est trop tard pour preparer. Anticipation
   > J-3, revocation IMMEDIATE J0 (dans l'heure), audit J+30.
@@ -304,27 +304,27 @@ quiz:
   - question: "Quel pourcentage des breaches insider partent d'un compte non-revoque (Verizon DBIR) ?"
     choices:
       - { id: "a", label: "5%", correct: false }
-      - { id: "b", label: "60% (compte fantome = vulnerabilite persistante des annees)", correct: true }
+      - { id: "b", label: "60% (compte fantome = vulnerabilite persistante des années)", correct: true }
       - { id: "c", label: "0%", correct: false }
-    explanation: "Verizon DBIR : 60% des breaches insider partent d'un compte non-revoque correctement. Cas Tesla 2018 (sous-traitant 6 mois apres) + Capital One 2019 + nombreux autres. La checklist exhaustive est non-negociable."
+    explanation: "Verizon DBIR : 60% des breaches insider partent d'un compte non-revoque correctement. Cas Tesla 2018 (sous-traitant 6 mois après) + Capital One 2019 + nombreux autres. La checklist exhaustive est non-negociable."
 
-  - function: "Le compte de l'ex-employe doit etre revoque :"
+  - function: "Le compte de l'ex-employé doit être revoque :"
     choices:
       - { id: "a", label: "Dans la semaine", correct: false }
-      - { id: "b", label: "Dans l'heure qui suit le depart effectif (J0). Pour licenciement : revocation immediate des l'annonce", correct: true }
+      - { id: "b", label: "Dans l'heure qui suit le depart effectif (J0). Pour licenciement : revocation immediate dès l'annonce", correct: true }
       - { id: "c", label: "Quand on y pense", correct: false }
-    explanation: "Action immediate J0 (dans l'heure). Pour licenciement / depart conflictuel : revocation immediate des l'annonce + sortie escortee. Tout delai = exposition. Microsoft Entra Lifecycle Workflows automatise."
+    explanation: "Action immediate J0 (dans l'heure). Pour licenciement / depart conflictuel : revocation immediate dès l'annonce + sortie escortee. Tout délai = exposition. Microsoft Entra Lifecycle Workflows automatise."
 
   - question: "Garder l'acces 'au cas ou Alice aurait besoin de finir des dossiers' :"
     choices:
-      - { id: "a", label: "Bonne idee", correct: false }
+      - { id: "a", label: "Bonne idée", correct: false }
       - { id: "b", label: "FAUX. Si dossier en cours : transfert au successeur + acces lecture seule temporaire tracable. Jamais acces complet 'au cas ou'", correct: true }
       - { id: "c", label: "Recommande", correct: false }
-    explanation: "Aucun cas legitime ne justifie acces complet apres depart. Solution si dossier inacheve : transfert au successeur + acces lecture seule temporaire (J+1 a J+7) + tracability. Pas d'acces ecriture, pas d'acces 'au cas ou'."
+    explanation: "Aucun cas legitime ne justifie acces complet après depart. Solution si dossier inacheve : transfert au successeur + acces lecture seule temporaire (J+1 a J+7) + tracability. Pas d'acces ecriture, pas d'acces 'au cas ou'."
 
-  - question: "Pour un developpeur qui part, quelle action specifique en plus ?"
+  - question: "Pour un developpeur qui part, quelle action spécifique en plus ?"
     choices:
-      - { id: "a", label: "Aucune action specifique", correct: false }
+      - { id: "a", label: "Aucune action spécifique", correct: false }
       - { id: "b", label: "Revocation Git/GitHub URGENT + audit commits recents + rotation des secrets/cles d'API qu'il aurait pu voir", correct: true }
       - { id: "c", label: "Le laisser garder son acces", correct: false }
     explanation: "Pour dev : revocation Git/GitHub urgente (code source !), audit commits recents (suspicion exfiltration), rotation des secrets/cles d'API qu'il aurait pu voir (vault, env vars). Pour RSSI/DAF : audit 6-12 mois actions sensibles."

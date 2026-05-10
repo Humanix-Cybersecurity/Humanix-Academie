@@ -2,7 +2,7 @@
 title: "Le faux CV piege en piece jointe"
 durationMinutes: 6
 persona: "manager"
-objective: "Detecter un CV piege (malware en piece jointe, infiltration via candidature) et adopter les bons reflexes pour le recrutement"
+objective: "Détecter un CV piege (malware en piece jointe, infiltration via candidature) et adopter les bons reflexes pour le recrutement"
 xpReward: 60
 scenario: |
   DRH d'une PME. Mardi 14h, tu recois 5 candidatures pour un
@@ -23,7 +23,7 @@ choices:
   - id: "a"
     label: "J'ouvre tout, j'active les macros, j'ai besoin du portfolio pour evaluer"
     outcome: "bad"
-    feedback: "CATASTROPHE. Tous les drapeaux rouges sont reunis : .docm (Word avec macros), demande explicite d'activer les macros, ZIP non-sollicite. C'est un dropper malware classique. Tres probablement ransomware ou keylogger qui se propagera dans le SI."
+    feedback: "CATASTROPHE. Tous les drapeaux rouges sont reunis : .docm (Word avec macros), demande explicite d'activer les macros, ZIP non-sollicite. C'est un dropper malware classique. Très probablement ransomware ou keylogger qui se propagera dans le SI."
     points: -25
   - id: "b"
     label: "J'ouvre le CV en visionneuse en ligne (Office Online ou Google Docs), je n'ouvre PAS le ZIP, je demande le portfolio en PDF ou via lien hosted (LinkedIn, GitHub)"
@@ -33,7 +33,7 @@ choices:
   - id: "c"
     label: "Je transfere a tous les managers pour avis"
     outcome: "bad"
-    feedback: "Tu propages le malware potentiel a 5 managers. La PJ piegee va infecter plusieurs postes avant d'etre detectee. Reflexe : analyser TOI-MEME les indices avant tout transfert."
+    feedback: "Tu propages le malware potentiel a 5 managers. La PJ piegee va infecter plusieurs postes avant d'être detectee. Reflexe : analyser TOI-MEME les indices avant tout transfert."
     points: -15
   - id: "d"
     label: "J'ignore cette candidature parce que c'est suspect"
@@ -42,9 +42,9 @@ choices:
     points: 5
 debrief: |
   Le **faux CV piege** est un vecteur d'attaque cible vers les
-  RH. Particulierement efficace car :
+  RH. Particulièrement efficace car :
 
-  - Les RH **ouvrent des PJ** en permanence (c'est leur metier)
+  - Les RH **ouvrent des PJ** en permanence (c'est leur métier)
   - Les CV sont souvent **legitimes** (Word, PDF)
   - L'attaquant peut faire passer un faux profil credible
   - La RH n'a pas toujours formation cyber poussee
@@ -65,18 +65,18 @@ debrief: |
   - **.lnk** (raccourci Windows) executant code distant
 
   **Objectif** : compromission du poste RH = acces aux
-  candidats + emails internes + souvent aux donnees paie.
+  candidats + emails internes + souvent aux données paie.
 
   **Type 2 : CV de "candidat" pour infiltration**
 
   L'attaquant postule veritablement avec un faux profil pour :
-  - Etre embauche et infiltrer l'entreprise (espionnage)
-  - Recolter des informations lors des entretiens (reseaux,
-    securite, processes)
+  - Être embauche et infiltrer l'entreprise (espionnage)
+  - Recolter des informations lors des entretiens (réseaux,
+    sécurité, processes)
   - Acceder au SI via le badge / acces de stagiaire
 
   **Cas reel** : 2024, plusieurs entreprises americaines
-  embauchent des "developpeurs" qui se reveleront etre des
+  embauchent des "developpeurs" qui se reveleront être des
   agents nord-coreens (rapport US Treasury).
 
   **Type 3 : Phishing par email de "candidat"**
@@ -113,7 +113,7 @@ debrief: |
 
   **4. Pas de profil verifiable en ligne**
 
-  - **LinkedIn** : pas de profil, ou profil tres recent (cree
+  - **LinkedIn** : pas de profil, ou profil très recent (cree
     pour l'occasion)
   - **GitHub** (pour devs) : pas de profil, ou profil vide
   - **Portfolio en ligne** : non fourni ou lien suspect
@@ -122,31 +122,31 @@ debrief: |
 
   - Photo qui ne correspond pas (recherche image inversee
     Google)
-  - **Anciennete impossible** (10 ans d'experience a 22 ans)
+  - **Anciennete impossible** (10 ans d'expérience a 22 ans)
   - **Diplomes etranges** ou mal orthographies
-  - **Langues : francais maternel** mais email plein de fautes
+  - **Langues : français maternel** mais email plein de fautes
 
   **6. Insistance / urgence**
 
-  - **Demande de reponse rapide** ("disponible cette semaine")
+  - **Demande de réponse rapide** ("disponible cette semaine")
   - **Plusieurs relances** rapprochees
   - **Pression** sur le manager pour acceler (suspect pour
     espionnage)
 
-  **Procedure de traitement securisee :**
+  **Procédure de traitement securisee :**
 
-  **Etape 1 : Pre-tri du mail**
+  **Étape 1 : Pre-tri du mail**
 
-  - Verification de l'expediteur (cf points 3, 4 ci-dessus)
+  - Vérification de l'expediteur (cf points 3, 4 ci-dessus)
   - Si suspect : pas d'ouverture, signalement RSSI
 
-  **Etape 2 : Visionneuse en ligne**
+  **Étape 2 : Visionneuse en ligne**
 
-  Pour les CV qui semblent legitimes mais a verifier :
+  Pour les CV qui semblent legitimes mais a vérifier :
 
   - **Office Online** : ouvre les .docx / .pdf sans risque
     local
-  - **Google Docs / Drive** : meme principe
+  - **Google Docs / Drive** : même principe
   - **Outlook Web** : preview integree
   - **VirusTotal.com** : upload PJ pour scan multi-antivirus
     (gratuit)
@@ -155,12 +155,12 @@ debrief: |
   dans le navigateur sandbox (limite considerablement
   l'impact).
 
-  **Etape 3 : Refus poli des formats suspects**
+  **Étape 3 : Refus poli des formats suspects**
 
-  Reponse type :
+  Réponse type :
 
   > "Bonjour, je vous remercie pour votre candidature. Pour des
-  > raisons de securite informatique, nous n'ouvrons pas les
+  > raisons de sécurité informatique, nous n'ouvrons pas les
   > fichiers .docm ni les archives ZIP. Pourriez-vous nous
   > envoyer votre CV en PDF et votre portfolio en lien
   > LinkedIn / GitHub ? Cordialement"
@@ -168,7 +168,7 @@ debrief: |
   Si le candidat refuse / insiste pour le format original :
   drapeau rouge confirme.
 
-  **Etape 4 : Verification du profil**
+  **Étape 4 : Vérification du profil**
 
   - **LinkedIn** : profil + connections + recommendations
   - **GitHub** (devs) : projets + contributions
@@ -176,12 +176,12 @@ debrief: |
   - **Recherche image inversee** : photo coherente avec autres
     profils ?
 
-  **Etape 5 : Verification telephonique avant entretien**
+  **Étape 5 : Vérification téléphonique avant entretien**
 
-  - Numero du candidat : appel rapide pour confirmer la
+  - Numéro du candidat : appel rapide pour confirmer la
     candidature
-  - Verification de coherence orale (langue, parcours)
-  - Detection de comportement suspect (refus de visio, voix
+  - Vérification de coherence orale (langue, parcours)
+  - Détection de comportement suspect (refus de visio, voix
     qui ne correspond pas)
 
   **Cas reel : campagne TA505 (2018-present)**
@@ -190,29 +190,29 @@ debrief: |
   candidatures. Mode operatoire :
 
   1. Email de candidature en .docm
-  2. Macro qui telecharge un dropper
+  2. Macro qui téléchargé un dropper
   3. Dropper installe **Get2** (downloader)
-  4. **Get2** telecharge **SDBbot** (RAT - acces complet a la
+  4. **Get2** téléchargé **SDBbot** (RAT - acces complet a la
     machine)
   5. **SDBbot** = vol identifiants + reconnaissance + propagation
 
   Cibles : RH de grandes entreprises et PME.
 
-  **Cas reel : embauche de fausses identites (US 2024)**
+  **Cas reel : embauche de fausses identités (US 2024)**
 
   Plusieurs entreprises tech US ont embauche en 2023-2024 des
-  "developpeurs" qui etaient en realite des agents
+  "developpeurs" qui étaient en réalité des agents
   nord-coreens (rapport Trezasury US). Mode operatoire :
 
   1. Faux profils LinkedIn avec photos generees IA
-  2. CV avec experience inventee (pas verifiable)
+  2. CV avec expérience inventee (pas verifiable)
   3. Entretiens en visio avec "deepfake live" ou personne
-    differente
+    différente
   4. Une fois embauche : exfiltration code, salaire detourne
     pour financer la Coree du Nord
 
-  **Lecons** : **verifier le profil**, **call video obligatoire**,
-  **verification background**, **monitoring** des employes
+  **Lecons** : **vérifier le profil**, **call video obligatoire**,
+  **vérification background**, **monitoring** des employés
   recents.
 
   **Configuration anti-malware pour les RH :**
@@ -223,113 +223,113 @@ debrief: |
     venant d'internet (Word/Excel)
   - **Microsoft 365 admin center** : protection macro activee
   - **Default deny** : macros bloquees, deblocage seulement
-    apres validation IT
+    après validation IT
 
   **b) Microsoft Defender for Office 365**
 
   - **Safe Attachments** : sandbox automatique des PJ avant
     ouverture
-  - **Safe Links** : verification des URLs en temps reel
-  - **Anti-phishing** : detection des emails frauduleux
+  - **Safe Links** : vérification des URLs en temps reel
+  - **Anti-phishing** : détection des emails frauduleux
 
   **c) EDR sur le poste RH**
 
-  - **Endpoint Detection Response** (Sentinel One, CrowdStrike,
+  - **Endpoint Détection Response** (Sentinel One, CrowdStrike,
     Microsoft Defender for Endpoint)
-  - **Detection comportementale** : si une macro lance un
+  - **Détection comportementale** : si une macro lance un
     powershell suspect, alerte
 
   **d) Politique BYOD restrictive**
 
   - Pas de candidatures sur ordinateur personnel (perte de
-    controle anti-malware)
+    contrôle anti-malware)
   - **Sandbox dediee** pour ouverture de PJ exotiques
 
   **Le piege "le candidat insiste, c'est qu'il est motive" :**
 
-  Tres mauvaise lecture. L'insistance, surtout combinee avec
+  Très mauvaise lecture. L'insistance, surtout combinee avec
   format suspect, est un drapeau rouge :
 
-  - **Vrai candidat** : envoie un CV PDF, attend la reponse,
-    rappelle 1x apres 2 semaines
+  - **Vrai candidat** : envoie un CV PDF, attend la réponse,
+    rappelle 1x après 2 semaines
   - **Faux candidat / attaquant** : insiste, presse, refuse de
     changer de format, multi-relances
 
   La motivation legitime ne s'exprime pas par la pression sur
   le format de fichier.
 
-  **Le piege "ce sont mes outils metier, je dois ouvrir" :**
+  **Le piege "ce sont mes outils métier, je dois ouvrir" :**
 
-  Le metier RH ouvre des PJ tous les jours, mais avec
-  **discernement**. La cybersecurite n'empeche pas le metier :
+  Le métier RH ouvre des PJ tous les jours, mais avec
+  **discernement**. La cybersécurité n'empeche pas le métier :
 
   - **PDF** : ouverture directe (faible risque)
   - **DOCX standard** : visionneuse en ligne (sans risque)
   - **Format suspect** : refus poli + demande PDF
 
-  Pas d'opposition entre "faire son metier" et "ne pas ouvrir
+  Pas d'opposition entre "faire son métier" et "ne pas ouvrir
   n'importe quoi".
 
   **Politique de recrutement cyber-aware :**
 
-  | Etape | Action cyber |
+  | Étape | Action cyber |
   |---|---|
   | Reception candidature | Pre-tri (email, format, profil) |
   | Lecture CV | Visionneuse en ligne (pas ouverture locale) |
-  | Pre-qualification | Verification profil LinkedIn / GitHub |
-  | Entretien telephonique | Verification orale (langue, parcours) |
-  | Entretien visio | Camera obligatoire + verification identite |
-  | Entretien sur site | Badge visiteur (pas badge employe) |
-  | Verification references | Appel telephonique au numero officiel (pas mail) |
-  | Verification diplomes | Vrai certificat ou attestation |
-  | Onboarding | Procedure cyber stricte (cf cyber-rh ep 01) |
+  | Pre-qualification | Vérification profil LinkedIn / GitHub |
+  | Entretien téléphonique | Vérification orale (langue, parcours) |
+  | Entretien visio | Caméra obligatoire + vérification identité |
+  | Entretien sur site | Badge visiteur (pas badge employé) |
+  | Vérification références | Appel téléphonique au numéro officiel (pas mail) |
+  | Vérification diplomes | Vrai certificat ou attestation |
+  | Onboarding | Procédure cyber stricte (cf cyber-rh ep 01) |
 
   **Indicateurs (KPI) :**
 
   - **Taux de candidatures suspectes** : 1-3% selon CCI
-  - **Taux d'ouvertures de PJ suspectes** : doit etre 0%
-  - **Nombre d'incidents** lies a candidature : doit etre 0
+  - **Taux d'ouvertures de PJ suspectes** : doit être 0%
+  - **Nombre d'incidents** lies a candidature : doit être 0
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **Une candidature avec demande d'activer les macros, format
   > exotique, ou pression sur le format = phishing potentiel.
   > Visionneuse en ligne pour les CV legitimes. Refus poli des
-  > formats suspects + demande PDF. Verification LinkedIn /
-  > GitHub avant entretien. Camera obligatoire en visio.**
+  > formats suspects + demande PDF. Vérification LinkedIn /
+  > GitHub avant entretien. Caméra obligatoire en visio.**
 quiz:
   - question: "Un CV en .docm avec demande d'activer les macros, c'est :"
     choices:
       - { id: "a", label: "Normal pour les portfolios animes", correct: false }
       - { id: "b", label: "Phishing - aucun CV legitime n'a besoin de macros. Refus poli + demande PDF", correct: true }
       - { id: "c", label: "Optionnel selon le poste", correct: false }
-    explanation: "Aucun CV legitime ne necessite de macros. .docm + demande d'activer = dropper malware classique (TA505 et autres). Refus poli + demande PDF. Si insistance : phishing confirme."
+    explanation: "Aucun CV legitime ne nécessité de macros. .docm + demande d'activer = dropper malware classique (TA505 et autres). Refus poli + demande PDF. Si insistance : phishing confirme."
 
-  - question: "Pour ouvrir un CV qui semble legitime sans risque, methode ?"
+  - question: "Pour ouvrir un CV qui semble legitime sans risque, méthode ?"
     choices:
       - { id: "a", label: "Ouverture directe sur le poste", correct: false }
       - { id: "b", label: "Visionneuse en ligne (Office Online, Google Docs) - sandbox navigateur, pas de risque local", correct: true }
       - { id: "c", label: "Imprimer", correct: false }
-    explanation: "Visionneuse en ligne (Office Online, Google Drive) = sandbox navigateur. Si CV piege : impact limite. Microsoft Defender Safe Attachments scanne automatiquement les PJ. EDR sur poste = protection complementaire."
+    explanation: "Visionneuse en ligne (Office Online, Google Drive) = sandbox navigateur. Si CV piege : impact limite. Microsoft Defender Safe Attachments scanne automatiquement les PJ. EDR sur poste = protection complémentaire."
 
-  - question: "Faux candidats embauches (cas US 2024 agents nord-coreens), comment detecter ?"
+  - question: "Faux candidats embauches (cas US 2024 agents nord-coreens), comment détecter ?"
     choices:
       - { id: "a", label: "Pas detectable", correct: false }
-      - { id: "b", label: "Camera obligatoire en visio + verification LinkedIn/GitHub + verification references par telephone (numero officiel) + verification diplomes", correct: true }
+      - { id: "b", label: "Caméra obligatoire en visio + vérification LinkedIn/GitHub + vérification références par téléphone (numéro officiel) + vérification diplomes", correct: true }
       - { id: "c", label: "Le CV suffit", correct: false }
-    explanation: "Cas faux candidats : camera obligatoire en visio (deepfake detection), verification LinkedIn (anciennete profil), verification GitHub (devs), verification references par appel au numero officiel (pas mail), background check."
+    explanation: "Cas faux candidats : caméra obligatoire en visio (deepfake détection), vérification LinkedIn (anciennete profil), vérification GitHub (devs), vérification références par appel au numéro officiel (pas mail), background check."
 
   - question: "Quel pourcentage des breaches PME partent d'une candidature piegee ?"
     choices:
       - { id: "a", label: "0%", correct: false }
-      - { id: "b", label: "5-8% (Verizon DBIR) - vecteur frequent car les RH ouvrent des PJ en permanence", correct: true }
+      - { id: "b", label: "5-8% (Verizon DBIR) - vecteur fréquent car les RH ouvrent des PJ en permanence", correct: true }
       - { id: "c", label: "100%", correct: false }
-    explanation: "Verizon DBIR : 5-8% des breaches PME partent d'une candidature piegee. Vecteur efficace : les RH ouvrent des PJ en permanence, manque souvent de formation cyber, contournent l'antivirus par utilite metier. Vigilance maximale."
+    explanation: "Verizon DBIR : 5-8% des breaches PME partent d'une candidature piegee. Vecteur efficace : les RH ouvrent des PJ en permanence, manque souvent de formation cyber, contournent l'antivirus par utilite métier. Vigilance maximale."
 ---
 
 > 💡 **Pour aller plus loin** : **Microsoft Defender for Office 365**
 > sandbox automatique des PJ. **VirusTotal** (gratuit) scan
 > multi-antivirus. **Politique GPO** macros desactivees par
-> defaut. Pour la verification profil candidat : **LinkedIn
+> defaut. Pour la vérification profil candidat : **LinkedIn
 > Sales Navigator** + **GitHub** + recherche image inversee
 > Google.

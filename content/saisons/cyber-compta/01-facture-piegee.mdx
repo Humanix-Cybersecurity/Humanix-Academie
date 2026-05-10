@@ -20,12 +20,12 @@ choices:
   - id: "a"
     label: "J'ouvre le PDF, j'active les macros, je paie"
     outcome: "bad"
-    feedback: "CATASTROPHE. 3 erreurs : 1) le domaine est usurpe (fourn1sseur avec 1 a la place de i), 2) un PDF ne demande JAMAIS d'activer des macros (c'est Excel/Word), 3) paiement sans verification = fraude au virement potentielle."
+    feedback: "CATASTROPHE. 3 erreurs : 1) le domaine est usurpe (fourn1sseur avec 1 a la place de i), 2) un PDF ne demande JAMAIS d'activer des macros (c'est Excel/Word), 3) paiement sans vérification = fraude au virement potentielle."
     points: -25
   - id: "b"
-    label: "Je verifie le domaine emetteur, je telephone au fournisseur via mes coordonnees connues, je n'ouvre pas la PJ tant que ce n'est pas confirme"
+    label: "Je verifie le domaine emetteur, je téléphone au fournisseur via mes coordonnees connues, je n'ouvre pas la PJ tant que ce n'est pas confirme"
     outcome: "good"
-    feedback: "Reflexes parfaits. Domaine usurpe = phishing. Verification hors-bande (telephone via numero connu, pas celui du mail) = standard FOVI. La PJ peut contenir un dropper malware - ne pas l'ouvrir avant confirmation."
+    feedback: "Reflexes parfaits. Domaine usurpe = phishing. Vérification hors-bande (téléphone via numéro connu, pas celui du mail) = standard FOVI. La PJ peut contenir un dropper malware - ne pas l'ouvrir avant confirmation."
     points: 40
   - id: "c"
     label: "J'ouvre le PDF en mode protege (sandbox) pour voir avant de decider"
@@ -35,7 +35,7 @@ choices:
   - id: "d"
     label: "Je transfere a mon DAF en disant 'urgent, a payer'"
     outcome: "bad"
-    feedback: "Mauvais reflexe. Tu propages le phishing en interne sans qualification. Le DAF est tout aussi vulnerable. Procedure : analyser TOI-MEME les indices (domaine, PJ, urgence) avant tout transfert."
+    feedback: "Mauvais reflexe. Tu propages le phishing en interne sans qualification. Le DAF est tout aussi vulnerable. Procédure : analyser TOI-MEME les indices (domaine, PJ, urgence) avant tout transfert."
     points: -10
 debrief: |
   La **facture piegee** est l'un des vecteurs preferes des
@@ -51,13 +51,13 @@ debrief: |
     `fournisseure.fr` (e final), `fournisseur-fr.com`
   - **Sous-domaine pirate** : `fournisseur.acme-paiement.fr` (le
     vrai serait `acme.fr`)
-  - **TLD different** : `.fr` au lieu de `.com`, ou inverse
-  - **Compte compromis** : meme le bon domaine peut etre detourne
-    si le fournisseur a ete piratte
+  - **TLD différent** : `.fr` au lieu de `.com`, ou inverse
+  - **Compte compromis** : même le bon domaine peut être detourne
+    si le fournisseur a été piratte
 
-  **Verification** : avant d'ouvrir, COPIE l'email expediteur,
-  COMPARE avec les emails precedents du fournisseur, en cas de
-  doute -> telephone au fournisseur via numero connu.
+  **Vérification** : avant d'ouvrir, COPIE l'email expediteur,
+  COMPARE avec les emails précédents du fournisseur, en cas de
+  doute -> téléphone au fournisseur via numéro connu.
 
   **2. Sentiment d'urgence injustifie**
 
@@ -72,14 +72,14 @@ debrief: |
   **3. Demande d'activation de macros (Word/Excel) ou de
   scripts**
 
-  - Un **PDF** n'a JAMAIS besoin de macros (c'est specifique a
+  - Un **PDF** n'a JAMAIS besoin de macros (c'est spécifique a
     Office)
   - Un fichier `.docx` ou `.xlsx` legitimes ne demande pas
     d'activer les macros pour s'afficher
   - "Cliquez ici pour debloquer le contenu" = piege
 
   **Action** : ne JAMAIS activer les macros sur un fichier
-  exterieur. Configuration recommandee : macros desactivees par
+  extérieur. Configuration recommandee : macros desactivees par
   defaut (politique GPO Microsoft 365).
 
   **4. Pieces jointes a extension suspecte**
@@ -88,7 +88,7 @@ debrief: |
     `.exe` par defaut)
   - **ZIP avec executable** : `Facture.zip` contenant
     `facture.exe`
-  - **Liens fictifs** : "Cliquer ici pour telecharger la facture"
+  - **Liens fictifs** : "Cliquer ici pour télécharger la facture"
     pointe vers un site pirate
 
   **Configuration utile** : afficher les extensions de fichier
@@ -97,11 +97,11 @@ debrief: |
 
   **5. Changement d'IBAN sans annonce**
 
-  - Une facture qui mentionne un nouvel IBAN sans email/telephone
-    prealable = TRES suspect
-  - Procedure : tout changement d'IBAN doit etre confirme **par
-    telephone via numero connu** avant tout virement (cf ep 02 et
-    saison fraude-president)
+  - Une facture qui mentionne un nouvel IBAN sans email/téléphone
+    préalable = TRES suspect
+  - Procédure : tout changement d'IBAN doit être confirme **par
+    téléphone via numéro connu** avant tout virement (cf ep 02 et
+    saison fraude-président)
 
   **Que peut contenir une facture piegee ?**
 
@@ -126,33 +126,33 @@ debrief: |
   **c) IBAN frauduleux**
 
   Le PDF est legitime visuellement mais l'IBAN dans le pied de
-  page a ete remplace par celui de l'attaquant. Le comptable
+  page a été remplace par celui de l'attaquant. Le comptable
   paie sur le mauvais compte.
 
-  **d) Exploit dans le PDF lui-meme**
+  **d) Exploit dans le PDF lui-même**
 
   Les anciens lecteurs PDF (Adobe Reader pas a jour) avaient des
   failles permettant l'execution de code par simple ouverture.
   Mise a jour Adobe Reader = mesure de base.
 
-  **Procedure de verification avant paiement (5 etapes) :**
+  **Procédure de vérification avant paiement (5 étapes) :**
 
-  **1. Verification emetteur (5 secondes)**
-  - Domaine = exact match avec les factures precedentes ?
+  **1. Vérification emetteur (5 secondes)**
+  - Domaine = exact match avec les factures précédentes ?
   - Email connu dans le carnet d'adresses ?
   - Si doute : grep dans les anciens mails pour confirmer
 
-  **2. Verification du contenu (10 secondes)**
-  - Numero de facture suit la sequence habituelle ?
+  **2. Vérification du contenu (10 secondes)**
+  - Numéro de facture suit la sequence habituelle ?
   - Montant coherent avec la commande passee ?
   - Date de facturation logique ?
 
-  **3. Verification IBAN (10 secondes)**
-  - IBAN identique aux factures precedentes ?
-  - Si nouveau : appel telephonique au fournisseur (numero
+  **3. Vérification IBAN (10 secondes)**
+  - IBAN identique aux factures précédentes ?
+  - Si nouveau : appel téléphonique au fournisseur (numéro
     connu, pas celui du mail) pour confirmer
 
-  **4. Verification PJ (10 secondes)**
+  **4. Vérification PJ (10 secondes)**
   - Extension du fichier (vraie .pdf, pas .pdf.exe)
   - Pas de demande d'activer macros / scripts
   - Visualisation en preview (sans ouverture complete) si
@@ -167,13 +167,13 @@ debrief: |
 
   Un PDF peut sembler 100% authentique visuellement (logo,
   format, mise en page) mais contenir un IBAN modifie ou un
-  lien pirate. La verification ne se fait pas a l'oeil, mais sur
-  les MEDONNEES (emetteur, IBAN, telephone).
+  lien pirate. La vérification ne se fait pas a l'oeil, mais sur
+  les MEDONNEES (emetteur, IBAN, téléphone).
 
   **Le piege "c'est urgent" :**
 
   L'urgence est SUSPECTE. Un fournisseur legitime sait qu'une
-  PME a des delais de paiement (30j-60j). Les vraies factures
+  PME a des délais de paiement (30j-60j). Les vraies factures
   ne menacent pas, ne pressent pas. Si "urgent" = doublement
   prudent.
 
@@ -181,8 +181,8 @@ debrief: |
 
   Pathe Hollande a perdu 19 M EUR via une fraude au virement
   initiee par une serie de factures piegees + emails de "DG".
-  Le directeur financier a paye 7 fois en 1 mois sans verifier
-  hors-bande. Voir saison fraude-president ep 06 pour le detail.
+  Le directeur financier a paye 7 fois en 1 mois sans vérifier
+  hors-bande. Voir saison fraude-président ep 06 pour le détail.
 
   **Outils utiles :**
 
@@ -197,44 +197,44 @@ debrief: |
   - **Outlook signal phishing** : bouton "Signaler comme
     phishing" qui envoie au RSSI/SOC
 
-  **La regle d'or :**
+  **La règle d'or :**
 
-  > **5 secondes de verification = 50000 EUR economises. Une
+  > **5 secondes de vérification = 50000 EUR economises. Une
   > facture qui presse, qui demande des macros, qui change
-  > l'IBAN sans annonce, est un piege. Telephone au
-  > fournisseur via numero connu = blindage.**
+  > l'IBAN sans annonce, est un piege. Téléphone au
+  > fournisseur via numéro connu = blindage.**
 quiz:
   - question: "Le domaine 'fourn1sseur-acme.fr' (avec un 1) est :"
     choices:
       - { id: "a", label: "Normal, c'est leur vraie adresse", correct: false }
       - { id: "b", label: "Du typosquatting (1 au lieu de i) - signe de phishing, ne pas ouvrir la PJ", correct: true }
       - { id: "c", label: "Une variante valide", correct: false }
-    explanation: "Typosquatting : remplacement d'une lettre par un caractere similaire (1/i, 0/o, l/I). Tres frequent pour usurper un fournisseur connu. Comparer caractere par caractere avec les anciens emails."
+    explanation: "Typosquatting : remplacement d'une lettre par un caractere similaire (1/i, 0/o, l/I). Très fréquent pour usurper un fournisseur connu. Comparer caractere par caractere avec les anciens emails."
 
   - question: "Un PDF te demande d'activer les macros, c'est :"
     choices:
       - { id: "a", label: "Normal pour les factures", correct: false }
-      - { id: "b", label: "Anormal - les macros sont specifiques a Word/Excel, pas aux PDF. Indicateur clair de piege", correct: true }
+      - { id: "b", label: "Anormal - les macros sont spécifiques a Word/Excel, pas aux PDF. Indicateur clair de piege", correct: true }
       - { id: "c", label: "Optionnel", correct: false }
     explanation: "Les macros n'existent que dans Office (Word, Excel). Un PDF qui demande d'activer des macros = soit ce n'est pas un PDF, soit le PDF tente de tromper. Dans les deux cas : phishing."
 
-  - question: "Une facture mentionne un nouvel IBAN sans annonce prealable, action ?"
+  - question: "Une facture mentionne un nouvel IBAN sans annonce préalable, action ?"
     choices:
       - { id: "a", label: "Payer rapidement", correct: false }
-      - { id: "b", label: "Telephoner au fournisseur via numero connu (pas celui du mail) pour confirmer le changement d'IBAN", correct: true }
+      - { id: "b", label: "Telephoner au fournisseur via numéro connu (pas celui du mail) pour confirmer le changement d'IBAN", correct: true }
       - { id: "c", label: "Demander confirmation par email", correct: false }
-    explanation: "Tout changement d'IBAN sans annonce = TRES suspect. Verification HORS-BANDE obligatoire (telephone au numero connu, pas celui du mail/facture qui peuvent etre piratees). 60% des FOVI commencent par changement d'IBAN."
+    explanation: "Tout changement d'IBAN sans annonce = TRES suspect. Vérification HORS-BANDE obligatoire (téléphone au numéro connu, pas celui du mail/facture qui peuvent être piratees). 60% des FOVI commencent par changement d'IBAN."
 
   - question: "Quel pourcentage des FOVI commence par une facture piegee ?"
     choices:
       - { id: "a", label: "5%", correct: false }
       - { id: "b", label: "Plus de 60% (vecteur principal pour cibler la comptabilite)", correct: true }
       - { id: "c", label: "0%", correct: false }
-    explanation: "60%+ des Fraudes Au Virement (FOVI) commencent par une facture piegee. C'est le point d'entree privilegie car la comptabilite ouvre des PJ tous les jours et a peu de temps pour analyser. Vigilance maximale."
+    explanation: "60%+ des Fraudes Au Virement (FOVI) commencent par une facture piegee. C'est le point d'entrée privilegie car la comptabilite ouvre des PJ tous les jours et a peu de temps pour analyser. Vigilance maximale."
 ---
 
 > 💡 **Pour aller plus loin** : **Microsoft 365 Defender for
 > Office** scanne automatiquement les PJ dans Outlook (Safe
 > Attachments). **Politique GPO** : macros desactivees par
 > defaut sur tous les postes. **Bouton "Signaler le phishing"**
-> a deployer dans Outlook (gratuit).
+> a déployer dans Outlook (gratuit).

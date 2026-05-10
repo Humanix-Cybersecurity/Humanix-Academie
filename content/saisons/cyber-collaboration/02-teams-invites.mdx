@@ -2,7 +2,7 @@
 title: "Inviter un externe dans Teams sans tout exposer"
 durationMinutes: 6
 persona: "tous-collaborateurs"
-objective: "Inviter des partenaires externes (clients, fournisseurs, consultants) dans Microsoft Teams en limitant leur acces aux donnees pertinentes"
+objective: "Inviter des partenaires externes (clients, fournisseurs, consultants) dans Microsoft Teams en limitant leur acces aux données pertinentes"
 xpReward: 60
 scenario: |
   Tu es chef de projet en PME. Tu dois inviter 3 personnes
@@ -15,24 +15,24 @@ scenario: |
   Tu fais quoi par defaut ?
 choices:
   - id: "a"
-    label: "Je les ajoute a l'equipe principale 'Direction generale' pour qu'ils voient tout"
+    label: "Je les ajoute a l'équipe principale 'Direction générale' pour qu'ils voient tout"
     outcome: "bad"
-    feedback: "CATASTROPHE. Equipe Direction generale = tous les canaux internes (strategie, finances, RH). Externes voient tout. Solutions : equipe dediee projet + acces specifique + onboarding cyber. Standard."
+    feedback: "CATASTROPHE. Équipe Direction générale = tous les canaux internes (stratégie, finances, RH). Externes voient tout. Solutions : équipe dediee projet + acces spécifique + onboarding cyber. Standard."
     points: -25
   - id: "b"
-    label: "Equipe dediee 'Projet X' (privee) avec invitations specifiques + permissions limites + offboarding programme + canal externe partagee"
+    label: "Équipe dediee 'Projet X' (privée) avec invitations spécifiques + permissions limites + offboarding programme + canal externe partagee"
     outcome: "good"
-    feedback: "Approche pro. Equipe privee dediee, invites avec permissions limitees, offboarding programme (revocation auto), canal partage pour fichiers seulement. Standard Microsoft Teams pour collaboration externe."
+    feedback: "Approche pro. Équipe privée dediee, invites avec permissions limitees, offboarding programme (revocation auto), canal partage pour fichiers seulement. Standard Microsoft Teams pour collaboration externe."
     points: 40
   - id: "c"
-    label: "Je leur cree des comptes Microsoft 365 'employes' temporaires"
+    label: "Je leur cree des comptes Microsoft 365 'employés' temporaires"
     outcome: "bad"
-    feedback: "CHER ET EXCESSIF. Compte employe = licence M365 (10-25 EUR/mois) + acces interne. Pour collaboration externe : Guest access (gratuit) ou Federation (cross-tenant). Plus simple + securise."
+    feedback: "CHER ET EXCESSIF. Compte employé = licence M365 (10-25 EUR/mois) + acces interne. Pour collaboration externe : Guest access (gratuit) ou Federation (cross-tenant). Plus simple + securise."
     points: -10
   - id: "d"
     label: "J'utilise un canal publique avec lien d'invitation public"
     outcome: "bad"
-    feedback: "DANGER. Lien public = quiconque peut rejoindre. Pas de controle. Solution : invitation nominative + acces controle."
+    feedback: "DANGER. Lien public = quiconque peut rejoindre. Pas de contrôle. Solution : invitation nominative + acces contrôle."
     points: -20
 debrief: |
   Microsoft Teams permet plusieurs **modes de collaboration
@@ -43,24 +43,24 @@ debrief: |
 
   **Mode 1 : Guest Access (le plus utilise)**
 
-  - Externe ajoute comme **invite** dans l'equipe
-  - **Acces** : equipe et ses canaux (selon permissions)
+  - Externe ajoute comme **invite** dans l'équipe
+  - **Acces** : équipe et ses canaux (selon permissions)
   - **Pas de licence** Microsoft 365 (gratuit)
   - **Authentification** : compte Microsoft externe (peut
-    etre cree gratuitement)
+    être cree gratuitement)
   - **Pour qui** : consultants, clients, fournisseurs
 
   Permissions configurables :
-  - Pas creation de canaux
+  - Pas création de canaux
   - Pas suppression de fichiers
-  - Pas ajout d'invites supplementaires
+  - Pas ajout d'invites supplémentaires
 
   **Mode 2 : External Access (Federation)**
 
   - **Federation** entre 2 organisations Microsoft 365
   - L'externe utilise SON propre tenant
   - **Communication** chat / appel possible
-  - **Pas d'acces** a tes equipes / fichiers
+  - **Pas d'acces** a tes équipes / fichiers
 
   Pour qui : partenaires reguliers avec leur propre Teams.
 
@@ -68,7 +68,7 @@ debrief: |
 
   - **Canal partage** entre organisations
   - **Externe** voit ce canal mais reste dans son tenant
-  - **Plus securise** que Guest Access (acces tres limite)
+  - **Plus securise** que Guest Access (acces très limite)
   - **Necessite** : tous parties sur Microsoft 365
 
   Disponible depuis 2022, recommande pour collaboration B2B.
@@ -76,40 +76,40 @@ debrief: |
   **Mode 4 : Anonymous / lien d'invitation**
 
   - **Lien** envoye, n'importe qui peut rejoindre
-  - **DANGEREUX** : pas de controle d'identite
-  - **Eviter** sauf reunions tres ouvertes (webinaires)
+  - **DANGEREUX** : pas de contrôle d'identité
+  - **Éviter** sauf réunions très ouvertes (webinaires)
 
   **Mode 5 : Compte M365 invite (rare)**
 
   - **Licence M365** payante pour l'externe
-  - **Acces** complet comme employe
+  - **Acces** complet comme employé
   - **Cher** et **excessif** dans la plupart des cas
 
-  Pour qui : consultants long-terme integres dans l'equipe.
+  Pour qui : consultants long-terme integres dans l'équipe.
 
   **Choisir le bon mode :**
 
   | Cas | Mode recommande |
   |---|---|
-  | **Client suivi projet 3 mois** | Guest Access (equipe privee) |
+  | **Client suivi projet 3 mois** | Guest Access (équipe privée) |
   | **Consultant SAP 6 mois** | Guest Access ou compte M365 |
   | **Fournisseur ponctuel** | Shared Channel ou Guest Access (limite) |
   | **Partenaire avec Teams** | External Access (federation) |
   | **Webinaire public** | Anonymous (lien public) |
 
-  **Procedure d'invitation securisee :**
+  **Procédure d'invitation securisee :**
 
-  **Etape 1 : Equipe dediee**
+  **Étape 1 : Équipe dediee**
 
   Pour chaque projet externe :
-  - **Cree une equipe** specifique
-  - **Equipe privee** (pas publique a l'organisation)
-  - **Pas la 'Direction generale' / equipe globale**
+  - **Cree une équipe** spécifique
+  - **Équipe privée** (pas publique a l'organisation)
+  - **Pas la 'Direction générale' / équipe globale**
 
-  **Etape 2 : Permissions externe**
+  **Étape 2 : Permissions externe**
 
   - **Member** : participation normale
-  - **Owner** : pas pour externes (sauf cas specifique)
+  - **Owner** : pas pour externes (sauf cas spécifique)
   - **Guest** : permissions reduites par defaut
 
   Reglages typiques pour Guest :
@@ -118,7 +118,7 @@ debrief: |
   - **Cannot add/remove apps**
   - **Cannot delete files**
 
-  **Etape 3 : Onboarding cyber externe**
+  **Étape 3 : Onboarding cyber externe**
 
   Avant d'envoyer l'invitation :
   - **NDA** signe (Non-Disclosure Agreement)
@@ -126,30 +126,30 @@ debrief: |
   - **Liste de canaux** auxquels il aura acces
   - **Date d'expiration** definie
 
-  **Etape 4 : Invitation nominative**
+  **Étape 4 : Invitation nominative**
 
   - **Email externe** valide
   - **Pas de lien generique**
   - **Compte Microsoft** que l'externe utilise
 
-  **Etape 5 : Configuration retention / DLP**
+  **Étape 5 : Configuration retention / DLP**
 
   - **Retention policy** : selon politique
-  - **DLP** : protection donnees sensibles
+  - **DLP** : protection données sensibles
   - **Sensitivity labels** : appliques aux fichiers
 
-  **Etape 6 : Suivi pendant la mission**
+  **Étape 6 : Suivi pendant la mission**
 
   - **Activite** auditable (logs)
   - **Comportement** anormal a surveiller
   - **Mise a jour** des acces si besoin
 
-  **Etape 7 : Offboarding (cf saison cyber-rh ep 02 et
+  **Étape 7 : Offboarding (cf saison cyber-rh ep 02 et
   supply-chain ep 06)**
 
-  Apres mission :
+  Après mission :
   - **Revocation** du Guest Access (jour J)
-  - **Suppression** apres 30 jours
+  - **Suppression** après 30 jours
   - **Audit** : aucun acces actif residual
   - **Documentation**
 
@@ -166,18 +166,18 @@ debrief: |
   - **Guest user permissions** : restrictives par defaut
   - **External collaboration restrictions**
 
-  **Les 6 erreurs frequentes :**
+  **Les 6 erreurs fréquentes :**
 
-  **Erreur 1 : Externe dans equipe globale**
+  **Erreur 1 : Externe dans équipe globale**
 
   - Voit tous les canaux internes
   - Strategies, RH, finances visibles
 
-  Solution : equipe dediee.
+  Solution : équipe dediee.
 
   **Erreur 2 : Pas de date d'expiration**
 
-  - Externe avec acces 5 ans apres mission
+  - Externe avec acces 5 ans après mission
   - Compte fantome
 
   Solution : expiration automatique + revue.
@@ -187,11 +187,11 @@ debrief: |
   - Pas de protection juridique
   - Fuite difficile a contrer legalement
 
-  Solution : NDA prealable systematique.
+  Solution : NDA préalable systematique.
 
   **Erreur 4 : Permissions excessives**
 
-  - Externe peut creer canaux / supprimer fichiers
+  - Externe peut créer canaux / supprimer fichiers
   - Risque sabotage / fuite
 
   Solution : permissions minimales (Guest restrictif).
@@ -201,11 +201,11 @@ debrief: |
   - Activite non surveillee
   - Comportements anormaux passent inaperçus
 
-  Solution : audit log periodique.
+  Solution : audit log périodique.
 
   **Erreur 6 : Offboarding oublie**
 
-  - Compte fantome apres mission
+  - Compte fantome après mission
   - Acces persistent
 
   Solution : offboarding programme et trace.
@@ -215,11 +215,11 @@ debrief: |
   **Cas 1 - PME 2024 (offboarding rate)**
 
   Consultant SAP ajoute a Teams pour 6 mois (Guest Access).
-  Mission terminee. Pas de revocation. 12 mois apres : audit
+  Mission terminee. Pas de revocation. 12 mois après : audit
   DSI revele guest toujours actif + connexion mensuelle.
 
-  Verification : consultant a vu informations confidentielles
-  pendant 12 mois sans probleme business (mais risque).
+  Vérification : consultant a vu informations confidentielles
+  pendant 12 mois sans problème business (mais risque).
 
   Action :
   - Revocation immediate
@@ -228,8 +228,8 @@ debrief: |
 
   **Cas 2 - Cabinet 2023 (NDA absent)**
 
-  Stagiaire 6 mois ajoute a Teams sans NDA. Apres stage :
-  expression d'interet pour concurrent. NDA absent =
+  Stagiaire 6 mois ajoute a Teams sans NDA. Après stage :
+  expression d'intérêt pour concurrent. NDA absent =
   protection juridique nulle.
 
   Couts : 30K EUR de business potentiellement compromise.
@@ -241,53 +241,53 @@ debrief: |
   Decouverte : 2 mois de degats accumulees.
 
   Solution post-incident : politique stricte d'attribution
-  des roles + revues mensuelles.
+  des rôles + revues mensuelles.
 
   **Cas 4 - PME 2024 (succes Shared Channels)**
 
   PME utilise Shared Channels pour partenaire. Acces
-  partenaire limite a 1 canal (echange documents seulement).
-  Pas d'acces aux autres equipes ni discussions internes.
+  partenaire limite a 1 canal (échange documents seulement).
+  Pas d'acces aux autres équipes ni discussions internes.
 
-  Resultat : collaboration efficace + securite preservee.
+  Résultat : collaboration efficace + sécurité preservee.
 
   **Pour le RSSI :**
 
   Politique de gestion des externes :
 
-  - **Categorie A - Stratégique** : NDA renforce + audit
+  - **Catégorie A - Stratégique** : NDA renforce + audit
     bi-mensuel + Shared Channels
-  - **Categorie B - Standard** : NDA standard + Guest
+  - **Catégorie B - Standard** : NDA standard + Guest
     Access + offboarding clair
-  - **Categorie C - Ponctuel** : External Access ou Anonymous
+  - **Catégorie C - Ponctuel** : External Access ou Anonymous
 
   Indicateurs :
   - Nombre d'externes actifs / mois
   - Temps moyen d'offboarding (cible : < 7 jours)
   - Audit acces externes (trimestriel)
 
-  **La regle d'or :**
+  **La règle d'or :**
 
-  > **Externes dans Teams : equipe dediee privee + Guest
+  > **Externes dans Teams : équipe dediee privée + Guest
   > Access avec permissions minimales + NDA signe + date
-  > expiration + offboarding programme + audit. Eviter
+  > expiration + offboarding programme + audit. Éviter
   > 'tout l'organisation' + 'sans expiration'. Shared
   > Channels = standard moderne pour partenaires Microsoft
   > 365.**
 quiz:
   - question: "Mode recommande pour ajouter un client externe a Teams ?"
     choices:
-      - { id: "a", label: "L'ajouter comme employe avec licence M365", correct: false }
-      - { id: "b", label: "Guest Access dans une equipe privee dediee + permissions limitees + date expiration + NDA prealable", correct: true }
+      - { id: "a", label: "L'ajouter comme employé avec licence M365", correct: false }
+      - { id: "b", label: "Guest Access dans une équipe privée dediee + permissions limitees + date expiration + NDA préalable", correct: true }
       - { id: "c", label: "Lien public", correct: false }
-    explanation: "Guest Access = mode standard pour externes : pas de licence M365 (gratuit), authentification compte externe, equipe dediee privee, permissions limitees (pas creation canaux / suppression). Plus : NDA prealable + date expiration. Eviter compte M365 employe (cher + excessif)."
+    explanation: "Guest Access = mode standard pour externes : pas de licence M365 (gratuit), authentification compte externe, équipe dediee privée, permissions limitees (pas création canaux / suppression). Plus : NDA préalable + date expiration. Éviter compte M365 employé (cher + excessif)."
 
   - question: "Shared Channels (Microsoft 365 Connect), avantage ?"
     choices:
       - { id: "a", label: "Aucun", correct: false }
-      - { id: "b", label: "Externe reste dans SON tenant. Acces tres limite (1 canal partage). Plus securise que Guest Access pour partenaires Microsoft 365", correct: true }
+      - { id: "b", label: "Externe reste dans SON tenant. Acces très limite (1 canal partage). Plus securise que Guest Access pour partenaires Microsoft 365", correct: true }
       - { id: "c", label: "Plus cher", correct: false }
-    explanation: "Shared Channels (depuis 2022) : externe ne quitte pas son tenant Microsoft 365. Acces tres limite (1 canal partage). Plus securise que Guest Access (qui necessite parfois ajout multi-equipes). Recommande pour partenaires reguliers Microsoft 365. Disponible Microsoft 365 Business+."
+    explanation: "Shared Channels (depuis 2022) : externe ne quitte pas son tenant Microsoft 365. Acces très limite (1 canal partage). Plus securise que Guest Access (qui nécessité parfois ajout multi-équipes). Recommande pour partenaires reguliers Microsoft 365. Disponible Microsoft 365 Business+."
 
   - question: "Externe ajoute il y a 1 an, mission terminee depuis 6 mois, action ?"
     choices:
@@ -301,11 +301,11 @@ quiz:
       - { id: "a", label: "Aucun", correct: false }
       - { id: "b", label: "NDA (Non-Disclosure Agreement) signe + charte cyber lue. Sans NDA = protection juridique nulle en cas fuite", correct: true }
       - { id: "c", label: "CV", correct: false }
-    explanation: "NDA prealable obligatoire : protection juridique en cas de fuite. Cas reel : stagiaire sans NDA quitte pour concurrent = protection juridique nulle = 30K EUR de business compromise. Plus : charte cyber lue + signature. Documentation = base juridique pour sanctions/recours futurs."
+    explanation: "NDA préalable obligatoire : protection juridique en cas de fuite. Cas reel : stagiaire sans NDA quitte pour concurrent = protection juridique nulle = 30K EUR de business compromise. Plus : charte cyber lue + signature. Documentation = base juridique pour sanctions/recours futurs."
 ---
 
 > 💡 **Pour aller plus loin** : **Shared Channels** =
 > standard moderne (depuis 2022). **Guest Access** = standard
 > pour la plupart des cas. **Microsoft Entra ID External
-> Identities** = configuration centralisee. NDA prealable +
+> Identities** = configuration centralisee. NDA préalable +
 > offboarding programme = essentiels.

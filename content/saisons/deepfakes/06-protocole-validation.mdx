@@ -5,103 +5,103 @@ persona: "tous"
 objective: "Construire un protocole de re-validation simple, applicable, qui resiste aux deepfakes"
 xpReward: 60
 scenario: |
-  Tu es DAF d'une PME francaise. Apres avoir lu les modules precedents, tu veux mettre en place un protocole formel de re-validation pour les decisions sensibles. Le DG approuve mais te dit : "OK, mais que ce soit simple, je n'ai pas le temps de signer 30 papiers par jour."
+  Tu es DAF d'une PME française. Après avoir lu les modules précédents, tu veux mettre en place un protocole formel de re-validation pour les décisions sensibles. Le DG approuve mais te dit : "OK, mais que ce soit simple, je n'ai pas le temps de signer 30 papiers par jour."
 
   Quel protocole proposes-tu ?
 choices:
   - id: "a"
-    label: "Toute decision >0 € passe par 3 validations independantes"
+    label: "Toute décision >0 € passe par 3 validations indépendantes"
     outcome: "bad"
-    feedback: "Bloquant. Le DG te demande explicitement la simplicite. 3 validations sur tout = la procedure est contournee dans 2 semaines. Mieux : un seuilage par enjeu."
+    feedback: "Bloquant. Le DG te demande explicitement la simplicite. 3 validations sur tout = la procédure est contournee dans 2 semaines. Mieux : un seuilage par enjeu."
     points: -10
   - id: "b"
     label: "Seuilage par montant + nature : >5 k€ ou nouveau RIB → callback frais + mot-secret. >50 k€ ou international → triple validation + meeting physique"
     outcome: "good"
-    feedback: "Excellent. Approche par risque, seuilage proportionne. Le quotidien continue de fonctionner, les decisions critiques sont protegees."
+    feedback: "Excellent. Approche par risque, seuilage proportionne. Le quotidien continue de fonctionner, les décisions critiques sont protegees."
     points: 30
   - id: "c"
     label: "On fait confiance au DG, pas besoin de protocole"
     outcome: "bad"
-    feedback: "C'est exactement ce que vise un attaquant deepfake : une organisation qui pense que la confiance vaut procedure. Apres une fraude, on regrette."
+    feedback: "C'est exactement ce que vise un attaquant deepfake : une organisation qui pense que la confiance vaut procédure. Après une fraude, on regrette."
     points: -20
   - id: "d"
     label: "Protocole 3 niveaux avec des couleurs (vert / orange / rouge) selon montant et nature"
     outcome: "good"
-    feedback: "Tres bien. La signaletique visuelle (bandeaux couleur sur les ordres de virement) facilite l'application. Cf. notre modele."
+    feedback: "Très bien. La signaletique visuelle (bandeaux couleur sur les ordres de virement) facilite l'application. Cf. notre modèle."
     points: 25
 debrief: |
-  Le **protocole de re-validation par canal alternatif** est la defense organisationnelle qui fait la difference entre une PME qui survit a un deepfake et une qui paye 25 millions. Voici un modele clair, applicable, deja teste en pratique.
+  Le **protocole de re-validation par canal alternatif** est la defense organisationnelle qui fait la différence entre une PME qui survit a un deepfake et une qui paye 25 millions. Voici un modèle clair, applicable, déjà teste en pratique.
 
   ---
 
   ## Modele Humanix : protocole 3 niveaux
 
-  ### Niveau 🟢 VERT - operations courantes
+  ### Niveau 🟢 VERT - opérations courantes
 
   **Seuils :**
   - Virement < 5 000 €
-  - Beneficiaire deja en base depuis > 30 jours
+  - Beneficiaire déjà en base depuis > 30 jours
   - Pas de modification de RIB
   - SEPA France ou zone euro
   - Frequence cohérente avec l'historique
 
   **Validation requise :**
   - 1 seule personne (le comptable habituel)
-  - Procedure standard : verification facture / bon de commande
+  - Procédure standard : vérification facture / bon de commande
   - Pas de callback obligatoire
 
-  ### Niveau 🟠 ORANGE - operations sensibles
+  ### Niveau 🟠 ORANGE - opérations sensibles
 
   **Seuils :**
   - Virement entre 5 000 € et 50 000 €
-  - Nouveau beneficiaire (< 30 jours en base)
+  - Nouveau bénéficiaire (< 30 jours en base)
   - Modification de RIB recente
   - Demande non recurrente
   - Pression temporelle ("urgent", "avant ce soir")
 
   **Validation requise :**
   - 2 personnes (comptable + DAF ou DG)
-  - **CALLBACK FRAIS** sur le numero connu (annuaire interne, pas le numero du mail) avant execution
+  - **CALLBACK FRAIS** sur le numéro connu (annuaire interne, pas le numéro du mail) avant execution
   - **MOT-SECRET** demande au demandeur (cf. module 03)
   - Documentation ecrite : qui a valide, quand, comment
 
-  ### Niveau 🔴 ROUGE - operations exceptionnelles
+  ### Niveau 🔴 ROUGE - opérations exceptionnelles
 
   **Seuils :**
   - Virement > 50 000 €
   - Beneficiaire international hors UE
-  - Operation strategique presumee (acquisition, fusion)
+  - Opération stratégique presumee (acquisition, fusion)
   - Demande "confidentielle" ou avec consigne d'isolation
 
   **Validation requise :**
   - 3 personnes (comptable + DAF + DG)
   - Callback frais OBLIGATOIRE
   - Mot-secret OBLIGATOIRE
-  - **Meeting physique** (au bureau) ou visio multi-points avec verification d'identite renforcee
-  - Delai minimum 24h pour reflexion ("attendre la nuit dessus")
+  - **Meeting physique** (au bureau) ou visio multi-points avec vérification d'identité renforcee
+  - Délai minimum 24h pour reflexion ("attendre la nuit dessus")
   - Notification CSE/Conseil si depassement seuils statutaires
 
   ---
 
-  ## Comment le mettre en place (3 etapes pratiques)
+  ## Comment le mettre en place (3 étapes pratiques)
 
-  **Etape 1 - Reunion de cadrage avec le DG (30 min)**
+  **Étape 1 - Réunion de cadrage avec le DG (30 min)**
 
-  Tu presentes le protocole 3 niveaux. Le DG approuve les seuils (peut etre adapte selon la taille de la PME : 1 k€ / 10 k€ / 100 k€ pour une TPE, par exemple).
+  Tu presentes le protocole 3 niveaux. Le DG approuve les seuils (peut être adapte selon la taille de la PME : 1 k€ / 10 k€ / 100 k€ pour une TPE, par exemple).
 
-  **Etape 2 - Documentation partagee (1 page A4)**
+  **Étape 2 - Documentation partagee (1 page A4)**
 
   Une feuille avec :
   - Les 3 niveaux et leurs criteres
   - La matrice "qui valide quoi"
-  - La phrase mot-secret (cf. module 03, NE PAS l'ecrire ici, juste indiquer "cf. memoire orale")
-  - Numero CNIL Cybermalveillance.gouv.fr (0 805 805 817) en cas de doute
+  - La phrase mot-secret (cf. module 03, NE PAS l'ecrire ici, juste indiquer "cf. mémoire orale")
+  - Numéro CNIL Cybermalveillance.gouv.fr (0 805 805 817) en cas de doute
 
-  Imprimer, plastifier, afficher au-dessus du bureau du comptable. **L'affichage matérialise la procedure**, c'est plus dur a contourner.
+  Imprimer, plastifier, afficher au-dessus du bureau du comptable. **L'affichage matérialise la procédure**, c'est plus dur a contourner.
 
-  **Etape 3 - Formation orale de l'equipe (15 min par personne)**
+  **Étape 3 - Formation orale de l'équipe (15 min par personne)**
 
-  Le DAF passe voir chaque personne concernée (compta, secretariat, DG) et explique le protocole. Inclut une mise en situation : "Je t'appelle demain en disant 'envoie 30 k€ urgent', que fais-tu ?" - la bonne reponse est "je te rappelle sur ton numero connu apres avoir verifie le mot-secret".
+  Le DAF passe voir chaque personne concernée (compta, secretariat, DG) et explique le protocole. Inclut une mise en situation : "Je t'appelle demain en disant 'envoie 30 k€ urgent', que fais-tu ?" - la bonne réponse est "je te rappelle sur ton numéro connu après avoir verifie le mot-secret".
 
   ---
 
@@ -113,29 +113,29 @@ debrief: |
   - Mesurer combien de personnes detectent et appliquent le protocole
   - Mesurer combien de personnes auraient cliqué
 
-  C'est l'equivalent du test phishing simule, version ordres de virement. Les resultats sont souvent humbling - meme apres formation, certains echouent. C'est exactement pour ca qu'il faut le test.
+  C'est l'equivalent du test phishing simule, version ordres de virement. Les résultats sont souvent humbling - même après formation, certains echouent. C'est exactement pour ça qu'il faut le test.
 
   ---
 
-  ## Erreurs a eviter
+  ## Erreurs a éviter
 
   **1. Ne pas cumuler les protocoles**
 
-  Si tu as deja un protocole double-validation banque (Qonto, BNP Pro, etc.), integre ton protocole anti-deepfake DEDANS, ne le cree pas en parallele. Sinon : confusion, contournement.
+  Si tu as déjà un protocole double-validation banque (Qonto, BNP Pro, etc.), integre ton protocole anti-deepfake DEDANS, ne le cree pas en parallele. Sinon : confusion, contournement.
 
   **2. Ne pas faire d'exception culturelle "j'ai confiance"**
 
-  La culture francaise PME est souvent "on se fait confiance, c'est une famille". Mais l'attaquant deepfake exploite EXACTEMENT cette confiance. La procedure n'est pas un manque de confiance, c'est un soutien a la confiance.
+  La culture française PME est souvent "on se fait confiance, c'est une famille". Mais l'attaquant deepfake exploite EXACTEMENT cette confiance. La procédure n'est pas un manque de confiance, c'est un soutien a la confiance.
 
   **3. Ne pas oublier le test sentinelle**
 
-  Une procedure non-testee est une procedure morte. Le test annuel revele les ecarts entre theorie et pratique.
+  Une procédure non-testee est une procédure morte. Le test annuel revele les ecarts entre théorie et pratique.
 
   **4. Ne pas s'arreter au premier niveau**
 
-  Beaucoup de PMEs mettent en place le niveau VERT/ORANGE sans le ROUGE. Or c'est le ROUGE qui evite les pertes massives type Arup. Le ROUGE est rare en frequence (5-10 fois par an) mais critique en impact.
+  Beaucoup de PMEs mettent en place le niveau VERT/ORANGE sans le ROUGE. Or c'est le ROUGE qui evite les pertes massives type Arup. Le ROUGE est rare en fréquence (5-10 fois par an) mais critique en impact.
 quiz:
-  - question: "A quel seuil declenche-t-on le niveau ORANGE (callback + mot-secret) selon ce modele ?"
+  - question: "A quel seuil declenche-t-on le niveau ORANGE (callback + mot-secret) selon ce modèle ?"
     choices:
       - id: "a"
         label: "5 000 € OU nouveau RIB OU pression temporelle"
@@ -154,12 +154,12 @@ quiz:
         label: "Auditer les comptes annuels"
         correct: false
       - id: "b"
-        label: "Reproduire en interne une fausse demande FOVI/deepfake et mesurer la reaction de l'equipe"
+        label: "Reproduire en interne une fausse demande FOVI/deepfake et mesurer la reaction de l'équipe"
         correct: true
       - id: "c"
         label: "Changer les mots de passe"
         correct: false
-    explanation: "Le test sentinelle est une simulation realiste qui revele les ecarts entre theorie et pratique. Une procedure non-testee est une procedure morte. Frequence : 1 fois par an minimum."
+    explanation: "Le test sentinelle est une simulation realiste qui revele les ecarts entre théorie et pratique. Une procédure non-testee est une procédure morte. Frequence : 1 fois par an minimum."
 
   - question: "Le niveau ROUGE (>50 k€ ou international) impose :"
     choices:
@@ -167,16 +167,16 @@ quiz:
         label: "1 seule validation par le DG"
         correct: false
       - id: "b"
-        label: "3 personnes + callback + mot-secret + meeting physique + delai 24h"
+        label: "3 personnes + callback + mot-secret + meeting physique + délai 24h"
         correct: true
       - id: "c"
-        label: "Aucune procedure additionnelle"
+        label: "Aucune procédure additionnelle"
         correct: false
-    explanation: "Pour les decisions exceptionnelles, on cumule les protections : 3 valideurs, validation hors-canal, mot-secret, meeting physique, delai de reflexion. C'est ce qui evite les pertes massives type Arup."
+    explanation: "Pour les décisions exceptionnelles, on cumule les protections : 3 valideurs, validation hors-canal, mot-secret, meeting physique, délai de reflexion. C'est ce qui evite les pertes massives type Arup."
 ---
 
 ## Pour aller plus loin
 
-Ce protocole 3 niveaux est librement reutilisable. Adapte les seuils a la taille de ta PME (TPE = 1 k€ / 10 k€ / 100 k€, ETI = 10 k€ / 100 k€ / 1 M€). Imprime, plastifie, affiche. Et **fais le test sentinelle**. Une procedure ecrite et jamais testee n'a aucune valeur.
+Ce protocole 3 niveaux est librement reutilisable. Adapte les seuils a la taille de ta PME (TPE = 1 k€ / 10 k€ / 100 k€, ETI = 10 k€ / 100 k€ / 1 M€). Imprime, plastifie, affiche. Et **fais le test sentinelle**. Une procédure ecrite et jamais testee n'a aucune valeur.
 
-> "La procedure froide ne remplace pas le bon sens. Elle le proteoge des moments ou il vacille."
+> "La procédure froide ne remplace pas le bon sens. Elle le proteoge des moments ou il vacille."

@@ -1,85 +1,85 @@
 ---
-title: "Le Zoom bombing en reunion strategique"
+title: "Le Zoom bombing en réunion stratégique"
 durationMinutes: 6
 persona: "tous-collaborateurs"
-objective: "Securiser une visioconference (Zoom, Teams, Meet) contre l'intrusion non-autorisee (zoom bombing) et proteger les reunions strategiques"
+objective: "Securiser une visioconference (Zoom, Teams, Meet) contre l'intrusion non-autorisee (zoom bombing) et proteger les réunions stratégiques"
 xpReward: 60
 scenario: |
-  Tu organises mardi une visio strategique : Comex de ta PME +
+  Tu organises mardi une visio stratégique : Comex de ta PME +
   conseil juridique externe pour discuter d'un dossier
   sensible. Tu envoies l'invitation Zoom dans le calendrier
   partage de l'entreprise.
 
-  Le jour J, en plein milieu de la reunion, 2 inconnus
-  apparaissent dans la visio (cameras eteintes, micros muets,
+  Le jour J, en plein milieu de la réunion, 2 inconnus
+  apparaissent dans la visio (caméras eteintes, micros muets,
   pseudos "anonymous123" et "intruder42"). Vous n'osez pas les
   expulser de peur que ce soit "le neveu d'un membre".
 
   Que faire ?
 choices:
   - id: "a"
-    label: "On continue, peut-etre que ce sont des collegues"
+    label: "On continue, peut-être que ce sont des collègues"
     outcome: "bad"
-    feedback: "DANGER. Inconnus dans une reunion strategique = ils peuvent ecouter / enregistrer / extraire informations. Toujours expulser les non-identifies + verifier comment ils sont entres. Reactivite essentielle."
+    feedback: "DANGER. Inconnus dans une réunion stratégique = ils peuvent ecouter / enregistrer / extraire informations. Toujours expulser les non-identifies + vérifier comment ils sont entres. Reactivite essentielle."
     points: -25
   - id: "b"
-    label: "Expulsion immediate des non-identifies + verification securite (mot de passe reunion ?), puis renvoi avec lien securise + waiting room"
+    label: "Expulsion immediate des non-identifies + vérification sécurité (mot de passe réunion ?), puis renvoi avec lien securise + waiting room"
     outcome: "good"
-    feedback: "Reflexes pro. Expulsion des inconnus, audit securite (lien fuite ? mot de passe ?), nouveau lien avec waiting room + mot de passe + identification. Standard reunion sensible."
+    feedback: "Reflexes pro. Expulsion des inconnus, audit sécurité (lien fuite ? mot de passe ?), nouveau lien avec waiting room + mot de passe + identification. Standard réunion sensible."
     points: 40
   - id: "c"
-    label: "Je termine la reunion immediatement et on reprendra plus tard"
+    label: "Je termine la réunion immédiatement et on reprendra plus tard"
     outcome: "neutral"
     feedback: "Bon reflexe pour proteger l'info, mais perte d'efficacite. Mieux : expulser + securiser + continuer. La fin precipitee perturbe les participants."
     points: 15
   - id: "d"
     label: "Je leur envoie un message prive 'qui etes-vous ?' et j'attends"
     outcome: "bad"
-    feedback: "PERTE DE TEMPS pendant qu'ils ecoutent. Pas le moment du dialogue. Expulser d'abord, identifier apres. Si erreur : renvoyer un lien."
+    feedback: "PERTE DE TEMPS pendant qu'ils ecoutent. Pas le moment du dialogue. Expulser d'abord, identifier après. Si erreur : renvoyer un lien."
     points: -10
 debrief: |
   Le **Zoom bombing** (intrusion dans visioconferences) a
   explose pendant le COVID-19. Selon FBI : ~500 incidents
-  signales par mois en 2020, encore frequents aujourd'hui.
+  signales par mois en 2020, encore fréquents aujourd'hui.
 
-  **Methodes d'intrusion :**
+  **Méthodes d'intrusion :**
 
   - **Lien partage publiquement** (LinkedIn, Slack ouvert,
     forums)
-  - **Devinage** d'IDs de reunion courts
+  - **Devinage** d'IDs de réunion courts
   - **Compte compromis** d'un participant legitime
-  - **Lien fuite** par capture d'ecran / forward
+  - **Lien fuite** par capture d'écran / forward
 
   **Cibles** :
-  - Reunions COMEX / strategiques
+  - Reunions COMEX / stratégiques
   - Reunions clients / partenaires
   - Webinaires publics (perturbation ou collecte)
-  - Entreprises en negociation
+  - Entreprises en négociation
 
   **Risques :**
 
   - **Ecoute** d'informations sensibles
-  - **Enregistrement** discret (audio capture systeme)
-  - **Capture** d'ecran pour OSINT
-  - **Vol** de slides, donnees affichees
-  - **Perturbation** (cri, partage ecran inapproprié)
+  - **Enregistrement** discret (audio capture système)
+  - **Capture** d'écran pour OSINT
+  - **Vol** de slides, données affichees
+  - **Perturbation** (cri, partage écran inapproprié)
   - **Chantage** (cf cas reels)
 
-  **Configuration securite Zoom :**
+  **Configuration sécurité Zoom :**
 
-  **Avant la reunion** :
+  **Avant la réunion** :
 
   - **Mot de passe** obligatoire (active par defaut depuis
     2020)
-  - **Waiting room** activee : tu autorises les entrees
+  - **Waiting room** activee : tu autorises les entrées
   - **Authentification** requise (login Zoom obligatoire)
   - **Identifiant** unique (pas le PMI personal qui circule)
 
-  **Pendant la reunion** :
+  **Pendant la réunion** :
 
-  - **Verrouiller la reunion** apres demarrage : Personne ne
+  - **Verrouiller la réunion** après demarrage : Personne ne
     peut plus rejoindre
-  - **Desactiver chat / partage ecran** pour les participants
+  - **Desactiver chat / partage écran** pour les participants
     (sauf besoin)
   - **Annuler audio / video** des participants si besoin
   - **Expulsion + bannissement** si inconnu
@@ -90,14 +90,14 @@ debrief: |
   - **Authentification** requise
   - **Mot de passe** sur le lien
 
-  **Procedure pour reunions ultra-sensibles :**
+  **Procédure pour réunions ultra-sensibles :**
 
-  - **Lien envoye 30 min avant** uniquement (limite fenetre)
-  - **Mot de passe** transmis HORS-BANDE (telephone)
+  - **Lien envoye 30 min avant** uniquement (limite fenêtre)
+  - **Mot de passe** transmis HORS-BANDE (téléphone)
   - **Liste participants** validee a l'avance
-  - **Chaque participant** confirme identite (camera ouverte,
+  - **Chaque participant** confirme identité (caméra ouverte,
     nom complet)
-  - **Verrouillage** des le debut
+  - **Verrouillage** dès le début
 
   **Le piege "c'est gere automatiquement" :**
 
@@ -111,52 +111,52 @@ debrief: |
   **Cas reels :**
 
   **Cas FBI 2020** : 500 incidents/mois. Cas notable :
-  reunion COMEX d'une grande entreprise interrompue par
-  intrus qui a ecoute 30 min avant detection. Strategie M&A
+  réunion COMEX d'une grande entreprise interrompue par
+  intrus qui a écoute 30 min avant détection. Stratégie M&A
   exposee a un concurrent.
 
-  **Cas PME 2023** : reunion strategique avec lien LinkedIn
+  **Cas PME 2023** : réunion stratégique avec lien LinkedIn
   partage par erreur. 3 inconnus presents pendant 1h. Plan
   produit exfiltre.
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **Reunions sensibles = waiting room + mot de passe HORS-BANDE
   > + verrouillage + identification stricte. Inconnu detecte =
   > expulsion immediate + audit cause. Configuration manuelle
-  > pour chaque reunion sensible.**
+  > pour chaque réunion sensible.**
 quiz:
-  - question: "Pour une reunion strategique sensible, configuration minimum ?"
+  - question: "Pour une réunion stratégique sensible, configuration minimum ?"
     choices:
       - { id: "a", label: "Lien Zoom standard", correct: false }
-      - { id: "b", label: "Waiting room + mot de passe HORS-BANDE + authentification + verrouillage apres demarrage + identification camera", correct: true }
+      - { id: "b", label: "Waiting room + mot de passe HORS-BANDE + authentification + verrouillage après demarrage + identification caméra", correct: true }
       - { id: "c", label: "Aucune", correct: false }
-    explanation: "Configuration sensible : Waiting room (admission manuelle), mot de passe transmis HORS-BANDE (telephone, pas dans le mail/calendrier), authentification (login Zoom requis), verrouillage apres demarrage, camera obligatoire pour identifier."
+    explanation: "Configuration sensible : Waiting room (admission manuelle), mot de passe transmis HORS-BANDE (téléphone, pas dans le mail/calendrier), authentification (login Zoom requis), verrouillage après demarrage, caméra obligatoire pour identifier."
 
-  - question: "Inconnu apparait dans ta reunion sensible, action ?"
+  - question: "Inconnu apparait dans ta réunion sensible, action ?"
     choices:
       - { id: "a", label: "Continuer", correct: false }
       - { id: "b", label: "Expulsion immediate + bannissement + audit (comment est-il entre) + nouveau lien securise pour les vrais participants", correct: true }
       - { id: "c", label: "Lui demander qui il est", correct: false }
-    explanation: "Inconnu = risque immediat (ecoute, enregistrement). Expulsion + bannissement + audit cause (lien fuite, mot de passe faible). Nouveau lien pour vrais participants. Pas de dialogue prealable (perte de temps pendant qu'il ecoute)."
+    explanation: "Inconnu = risque immediat (écoute, enregistrement). Expulsion + bannissement + audit cause (lien fuite, mot de passe faible). Nouveau lien pour vrais participants. Pas de dialogue préalable (perte de temps pendant qu'il écoute)."
 
   - question: "Le Personal Meeting ID (PMI) Zoom, faut-il l'utiliser ?"
     choices:
       - { id: "a", label: "Oui c'est pratique", correct: false }
-      - { id: "b", label: "Non - PMI fixe = peut etre devine, partage par erreur, fuite. Toujours generer ID unique par reunion sensible", correct: true }
-      - { id: "c", label: "Pas de difference", correct: false }
-    explanation: "PMI = Personal Meeting ID fixe = circule largement (anciens collegues, anciens clients, etc.). Pour reunions sensibles : ID unique genere a chaque fois. Expire avec la reunion. Plus securise."
+      - { id: "b", label: "Non - PMI fixe = peut être devine, partage par erreur, fuite. Toujours generer ID unique par réunion sensible", correct: true }
+      - { id: "c", label: "Pas de différence", correct: false }
+    explanation: "PMI = Personal Meeting ID fixe = circule largement (anciens collègues, anciens clients, etc.). Pour réunions sensibles : ID unique genere a chaque fois. Expire avec la réunion. Plus securise."
 
-  - question: "Qui peut etre cible de Zoom bombing ?"
+  - question: "Qui peut être cible de Zoom bombing ?"
     choices:
       - { id: "a", label: "Que les grandes entreprises", correct: false }
-      - { id: "b", label: "Toute reunion sensible : COMEX, clients, negociations, conseils. Aussi webinaires publics (perturbation ou collecte info)", correct: true }
+      - { id: "b", label: "Toute réunion sensible : COMEX, clients, négociations, conseils. Aussi webinaires publics (perturbation ou collecte info)", correct: true }
       - { id: "c", label: "Aucune", correct: false }
-    explanation: "Toute reunion sensible : COMEX, conseils administratifs, reunions clients/partenaires, negociations M&A, conseils juridiques. Aussi webinaires publics (perturbation, collecte info). 500 incidents/mois selon FBI. PME particulierement vulnerables (config par defaut)."
+    explanation: "Toute réunion sensible : COMEX, conseils administratifs, réunions clients/partenaires, négociations M&A, conseils juridiques. Aussi webinaires publics (perturbation, collecte info). 500 incidents/mois selon FBI. PME particulièrement vulnerables (config par defaut)."
 ---
 
 > 💡 **Pour aller plus loin** : configuration Zoom Pro / Teams /
-> Meet pour reunions sensibles obligatoire (security checklist).
-> **Mot de passe HORS-BANDE** par telephone. **Verrouillage**
-> systematique apres demarrage. Audit annuel des reunions
+> Meet pour réunions sensibles obligatoire (security checklist).
+> **Mot de passe HORS-BANDE** par téléphone. **Verrouillage**
+> systematique après demarrage. Audit annuel des réunions
 > sensibles.

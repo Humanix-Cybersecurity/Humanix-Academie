@@ -1,15 +1,15 @@
 ---
-title: "Le partage d'ecran qui leak un mot de passe"
+title: "Le partage d'écran qui leak un mot de passe"
 durationMinutes: 6
 persona: "tous-collaborateurs"
-objective: "Eviter les fuites lors du partage d'ecran en visio (notifications, mots de passe, autres fenetres, donnees sensibles)"
+objective: "Éviter les fuites lors du partage d'écran en visio (notifications, mots de passe, autres fenêtres, données sensibles)"
 xpReward: 60
 scenario: |
   Tu es chef de projet en PME. Visio Teams avec 8 personnes
-  (clients + collegues) pour presenter le planning. Tu cliques
-  "Partager mon ecran".
+  (clients + collègues) pour presenter le planning. Tu cliques
+  "Partager mon écran".
 
-  Pendant tes 30 minutes de presentation :
+  Pendant tes 30 minutes de présentation :
   - Une notification email apparait : "URGENT : virement
     50K EUR en attente de validation"
   - Une notification Slack : "Bob @PrivateChannel : Le DG
@@ -22,36 +22,36 @@ choices:
   - id: "a"
     label: "Aucune, c'est juste une notification"
     outcome: "bad"
-    feedback: "FAUX. 4 fuites majeures : virement (info financiere), licenciement (RH ultra-confidentiel), fichier (donnees inconnues), mot de passe (catastrophe). Tout est visible des participants + capture possible. Standard pour partager : preparation + mode 'partage seul'."
+    feedback: "FAUX. 4 fuites majeures : virement (info financiere), licenciement (RH ultra-confidentiel), fichier (données inconnues), mot de passe (catastrophe). Tout est visible des participants + capture possible. Standard pour partager : preparation + mode 'partage seul'."
     points: -25
   - id: "b"
-    label: "4 fuites : virement, licenciement, fichier ouvert, mot de passe. Action : revue config (notifications off, fenetre dediee, mode presentation), formation equipe, suivi avec RH/RSSI"
+    label: "4 fuites : virement, licenciement, fichier ouvert, mot de passe. Action : revue config (notifications off, fenêtre dediee, mode présentation), formation équipe, suivi avec RH/RSSI"
     outcome: "good"
-    feedback: "Identification correcte + action structuree. Mode 'partage fenetre seule' (pas tout l'ecran), notifications OFF avant partage, ecran nettoye, audit. Standard pro. Reaction post-incident : RH (licenciement leak), RSSI (MDP)."
+    feedback: "Identification correcte + action structuree. Mode 'partage fenêtre seule' (pas tout l'écran), notifications OFF avant partage, écran nettoye, audit. Standard pro. Reaction post-incident : RH (licenciement leak), RSSI (MDP)."
     points: 40
   - id: "c"
     label: "Je supprime les notifications une par une"
     outcome: "neutral"
-    feedback: "Reactif mais pas preventif. Mieux : configurer 'mode presentation' / 'ne pas deranger' AVANT partage. Notifications bloquees automatiquement. Une seule action prealable evite tous les futurs incidents."
+    feedback: "Reactif mais pas préventif. Mieux : configurer 'mode présentation' / 'ne pas deranger' AVANT partage. Notifications bloquees automatiquement. Une seule action préalable evite tous les futurs incidents."
     points: 10
   - id: "d"
-    label: "Pas grave, je continue, on parlera apres"
+    label: "Pas grave, je continue, on parlera après"
     outcome: "bad"
-    feedback: "MAUVAIS. Le licenciement leak peut creer chaos RH. Le MDP doit etre change. Action immediate sur les vraies fuites + preventive pour la suite. Pas de minimisation."
+    feedback: "MAUVAIS. Le licenciement leak peut créer chaos RH. Le MDP doit être change. Action immediate sur les vraies fuites + préventive pour la suite. Pas de minimisation."
     points: -15
 debrief: |
-  Le **partage d'ecran** en visio est l'une des sources de
-  fuites involontaires les plus frequentes. Quand tu partages,
+  Le **partage d'écran** en visio est l'une des sources de
+  fuites involontaires les plus fréquentes. Quand tu partages,
   tu exposes :
 
-  - **Tout l'ecran** ou la fenetre choisie
+  - **Tout l'écran** ou la fenêtre choisie
   - **Notifications** qui apparaissent
   - **Onglets** ouverts
   - **Documents** affiches par erreur
   - **Mots de passe** dans URLs / interfaces
 
-  **Etudes (Microsoft 2023)** : 25% des employes ont au moins
-  une fuite par mois lors de partages d'ecran.
+  **Etudes (Microsoft 2023)** : 25% des employés ont au moins
+  une fuite par mois lors de partages d'écran.
 
   **Les 6 types de fuites :**
 
@@ -65,13 +65,13 @@ debrief: |
   Solution : mode "ne pas deranger" / mode focus avant
   partage.
 
-  **2. Autres fenetres / onglets**
+  **2. Autres fenêtres / onglets**
 
   - **Fenetre ouverte par erreur** (Cmd+Tab)
-  - **Onglet Chrome avec donnees sensibles**
+  - **Onglet Chrome avec données sensibles**
   - **Aperçu de fichier** sur Mac (preview rapide)
 
-  Solution : partager **fenetre seule**, pas tout l'ecran.
+  Solution : partager **fenêtre seule**, pas tout l'écran.
 
   **3. Mots de passe / credentials**
 
@@ -80,10 +80,10 @@ debrief: |
   - **Postman** avec credentials
   - **Gestionnaire mots de passe** ouvert
 
-  Solution : verification systematique + mode incognito si
+  Solution : vérification systematique + mode incognito si
   necessaire.
 
-  **4. Donnees personnelles d'autres personnes**
+  **4. Données personnelles d'autres personnes**
 
   - **Liste contacts**
   - **Email reçu** d'une personne
@@ -101,16 +101,16 @@ debrief: |
 
   **6. Bookmarks / historique navigation**
 
-  - **Bookmarks** revele les sites frequemment visites
+  - **Bookmarks** revele les sites fréquemment visites
   - **Historique** revele les recherches recentes
   - **Onglets sauvegardes**
 
   **Configuration anti-fuite avant partage :**
 
-  **Etape 1 : Mode focus / ne pas deranger**
+  **Étape 1 : Mode focus / ne pas deranger**
 
   **Mac** :
-  - Centre de controle > Mode Focus > Activer
+  - Centre de contrôle > Mode Focus > Activer
   - Bloque toutes les notifications
 
   **Windows 11** :
@@ -118,7 +118,7 @@ debrief: |
 
   **iOS / Android** : mode "Ne pas deranger".
 
-  **Etape 2 : Fermer les apps sensibles**
+  **Étape 2 : Fermer les apps sensibles**
 
   Avant partage :
   - Fermer Slack / Teams / Signal / WhatsApp
@@ -126,58 +126,58 @@ debrief: |
   - Fermer Calendar (sauf si besoin)
   - Fermer gestionnaire mots de passe
 
-  **Etape 3 : Preparer le contenu**
+  **Étape 3 : Preparer le contenu**
 
   - Ouvrir SEULEMENT les fichiers a partager
   - Fermer les autres onglets / documents
-  - Verifier ce qui est dans l'ecran
+  - Vérifier ce qui est dans l'écran
 
-  **Etape 4 : Choisir mode partage approprie**
+  **Étape 4 : Choisir mode partage approprie**
 
   **Teams / Zoom / Meet** offrent plusieurs modes :
 
-  **Partage 'fenetre' (RECOMMANDE)** :
-  - Une seule fenetre choisie est partagee
+  **Partage 'fenêtre' (RECOMMANDE)** :
+  - Une seule fenêtre choisie est partagee
   - Les notifications globales ne sont pas visibles (sauf
-    dans la fenetre)
+    dans la fenêtre)
   - **Limite l'exposition**
 
-  **Partage 'tout l'ecran' (RISQUE)** :
+  **Partage 'tout l'écran' (RISQUE)** :
   - Tout est visible
   - Notifications, autres apps, etc.
-  - **Eviter** sauf besoin specifique
+  - **Éviter** sauf besoin spécifique
 
   **Partage 'navigateur'** :
-  - Un onglet specifique
-  - Tres limite
+  - Un onglet spécifique
+  - Très limite
 
-  **Partage 'Powerpoint mode presentation'** :
-  - Mode dedie a la presentation
+  **Partage 'Powerpoint mode présentation'** :
+  - Mode dedie a la présentation
   - Cache notifications
-  - **Ideal** pour presentations slides
+  - **Ideal** pour présentations slides
 
-  **Etape 5 : Verification avant partage**
+  **Étape 5 : Vérification avant partage**
 
   - **Aperçu** de ce qui sera partage (Teams/Zoom/Meet le
     montrent)
-  - **Verification** : pas de surprise
+  - **Vérification** : pas de surprise
 
-  **Etape 6 : Surveillance pendant partage**
+  **Étape 6 : Surveillance pendant partage**
 
   - **Garde un oeil** sur ce qui apparait
-  - **Si fuite** : arret immediat ("excusez-moi, un instant")
-  - **Reprise** apres correction
+  - **Si fuite** : arrêt immediat ("excusez-moi, un instant")
+  - **Reprise** après correction
 
-  **Le piege "je partage tout l'ecran, c'est plus simple" :**
+  **Le piege "je partage tout l'écran, c'est plus simple" :**
 
-  Risque eleve :
+  Risque élève :
   - Notifications visibles
   - Apps visibles
   - Switching d'apps revele tout
 
-  Solution : mode fenetre + preparation.
+  Solution : mode fenêtre + preparation.
 
-  **Le piege "personne n'a vu, ca a passe vite" :**
+  **Le piege "personne n'a vu, ça a passe vite" :**
 
   Faux :
   - 8-10 participants regardent attentivement
@@ -190,32 +190,32 @@ debrief: |
 
   Le sujet de la notification suffit a fuir :
   - "Email de Apple : votre commande de XXX EUR est confirmee"
-  - "Slack : Bob te repond sur #DG-secret-channel"
-  - "Calendar : reunion suivante 14h - Negociation Acme"
+  - "Slack : Bob te répond sur #DG-secret-channel"
+  - "Calendar : réunion suivante 14h - Negociation Acme"
 
-  Memes les sujets revelent.
+  Mêmes les sujets revelent.
 
   **Le piege "j'ai un secret PWD qui apparait" :**
 
   Si un mot de passe / token / cle apparait :
   - **Action immediate** : changer le mot de passe / revoke
     le token
-  - **Audit** : qui etait dans la visio ?
-  - **Notification RSSI** : peut etre breach
+  - **Audit** : qui était dans la visio ?
+  - **Notification RSSI** : peut être breach
   - **Documentation** de l'incident
 
   **Cas reels :**
 
   **Cas 1 - PME 2023 (notification licenciement)**
 
-  Manager partage ecran pour reunion d'equipe. Notification
+  Manager partage écran pour réunion d'équipe. Notification
   Slack : "Bob @PrivateChannel : Anne sera licenciee
   vendredi". Visible 5 sec dans la visio.
 
-  Consequences :
+  Conséquences :
   - Anne (presente !) au courant
-  - Climat equipe degrade
-  - Procedure RH compliquee
+  - Climat équipe degrade
+  - Procédure RH compliquee
   - Defi : qui a vu, qui a capture ?
 
   **Cas 2 - Developpeur 2024 (cle API leak)**
@@ -225,7 +225,7 @@ debrief: |
 
   Action :
   - Revocation immediate de l'API key
-  - Generation nouvelle cle
+  - Génération nouvelle cle
   - Audit logs pour acces non-authorise
 
   Cout : 4h de revocation/regeneration + 1 mois de monitoring.
@@ -239,15 +239,15 @@ debrief: |
   un mouvement financier suspect. Pas de fuite reelle (pas
   d'utilisation), mais risque potentiel.
 
-  **Cas 4 - Avocat 2023 (donnees client autre)**
+  **Cas 4 - Avocat 2023 (données client autre)**
 
-  Avocat partage ecran pour discuter d'un dossier client A.
-  Onglet ouvert avec dossier client B (donnees nominatives).
+  Avocat partage écran pour discuter d'un dossier client A.
+  Onglet ouvert avec dossier client B (données nominatives).
   Visible 3 sec.
 
   Plainte client B (RGPD) :
   - 25K EUR amende CNIL
-  - Procedure deontologique
+  - Procédure deontologique
   - Indemnisation client B
 
   **Configuration recommandee :**
@@ -257,84 +257,84 @@ debrief: |
   - **Profil 'Visio'** dedie sur l'ordinateur (sans email
     perso, sans Slack, sans apps non-pro)
   - **Browser dedie** (autre que perso)
-  - **Mode 'presentation'** active automatiquement quand
+  - **Mode 'présentation'** active automatiquement quand
     Teams/Zoom partage
 
   **Pour les visios sensibles :**
 
   - **Pre-flight checklist** avant chaque visio
-  - **Repetition** avec un collegue
-  - **Browser incognito** pour eviter histo / cookies
+  - **Repetition** avec un collègue
+  - **Browser incognito** pour éviter histo / cookies
 
   **Pour PowerPoint / Keynote :**
 
-  - **Mode presentateur** : tu vois les notes, eux voient les
+  - **Mode présentateur** : tu vois les notes, eux voient les
     slides
-  - **Cache** automatiquement le reste du systeme
-  - **Standard pour presentations longues**
+  - **Cache** automatiquement le reste du système
+  - **Standard pour présentations longues**
 
   **Outils utiles :**
 
   **Microsoft PowerPoint Live (Teams)** :
-  - Partage des slides directement (pas l'ecran)
+  - Partage des slides directement (pas l'écran)
   - Tu peux naviguer librement
   - Participants voient seulement les slides
 
   **Zoom Whiteboard / Miro** :
   - Outils dedies pour brainstorming
-  - Pas besoin de partager tout l'ecran
+  - Pas besoin de partager tout l'écran
 
   **OBS Studio** (gratuit) :
-  - Composer une "scene" partagee
+  - Composer une "scène" partagee
   - Cacher / montrer ce qu'on veut
 
   **Pour le RSSI / DSI :**
 
-  Procedure post-fuite mots de passe :
+  Procédure post-fuite mots de passe :
   - **Revocation** immediate
   - **Audit** logs
   - **Information** affecte
-  - **Sensibilisation** equipe
+  - **Sensibilisation** équipe
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **Avant de partager : mode focus / ne pas deranger +
-  > fermer apps sensibles + choisir 'fenetre seule' (pas
-  > tout l'ecran) + verification preview. Pendant : surveiller.
-  > Apres fuite MDP : revocation immediate. PowerPoint Live /
-  > mode presentateur = standard pro.**
+  > fermer apps sensibles + choisir 'fenêtre seule' (pas
+  > tout l'écran) + vérification preview. Pendant : surveiller.
+  > Après fuite MDP : revocation immediate. PowerPoint Live /
+  > mode présentateur = standard pro.**
 quiz:
-  - question: "Avant de partager ton ecran, action prealable la plus efficace ?"
+  - question: "Avant de partager ton écran, action préalable la plus efficace ?"
     choices:
       - { id: "a", label: "Mettre une jolie photo de bureau", correct: false }
-      - { id: "b", label: "Mode focus / ne pas deranger (bloque notifications) + fermer apps sensibles + choisir mode 'fenetre seule' (pas tout l'ecran)", correct: true }
+      - { id: "b", label: "Mode focus / ne pas deranger (bloque notifications) + fermer apps sensibles + choisir mode 'fenêtre seule' (pas tout l'écran)", correct: true }
       - { id: "c", label: "Aucune", correct: false }
-    explanation: "Setup recommande : 1) Mode focus (Mac / Windows 11 / iOS / Android) - bloque notifications, 2) Fermer Slack/Teams/email perso/Calendar/gestionnaire MDP, 3) Choisir mode 'partage fenetre' (pas tout l'ecran), 4) Preview avant valider partage. 1 minute de preparation = 0 fuite."
+    explanation: "Setup recommande : 1) Mode focus (Mac / Windows 11 / iOS / Android) - bloque notifications, 2) Fermer Slack/Teams/email perso/Calendar/gestionnaire MDP, 3) Choisir mode 'partage fenêtre' (pas tout l'écran), 4) Preview avant valider partage. 1 minute de preparation = 0 fuite."
 
   - question: "Mot de passe / API key visible 2 sec dans ton partage, action ?"
     choices:
       - { id: "a", label: "C'est passe vite, pas grave", correct: false }
       - { id: "b", label: "Revocation IMMEDIATE du mot de passe / token + audit logs + notification RSSI + documentation incident", correct: true }
       - { id: "c", label: "Attendre de voir si exploite", correct: false }
-    explanation: "Mot de passe / API key fuite = compromission immediate. Action : 1) Revocation IMMEDIATE (avant exploitation), 2) Generation nouveau credentials, 3) Audit logs (acces non-authorise ?), 4) Notification RSSI, 5) Documentation. Cas reel dev : 4h revocation + 1 mois monitoring."
+    explanation: "Mot de passe / API key fuite = compromission immediate. Action : 1) Revocation IMMEDIATE (avant exploitation), 2) Génération nouveau credentials, 3) Audit logs (acces non-authorise ?), 4) Notification RSSI, 5) Documentation. Cas reel dev : 4h revocation + 1 mois monitoring."
 
-  - question: "Mode 'partage fenetre seule' vs 'tout l'ecran', difference ?"
+  - question: "Mode 'partage fenêtre seule' vs 'tout l'écran', différence ?"
     choices:
       - { id: "a", label: "Aucune", correct: false }
-      - { id: "b", label: "Fenetre seule = limite a une app (notifications globales pas visibles). Tout l'ecran = tout visible (notifications, apps, switch)", correct: true }
-      - { id: "c", label: "Pareil avec un nom different", correct: false }
-    explanation: "Fenetre seule = partage limite a UNE app choisie. Notifications systeme (Mac/Windows) restent invisibles. Switch d'apps non visible. Tout l'ecran = tout visible. Standard pro : fenetre seule. Tout l'ecran SEULEMENT si justifie (demo multi-apps coordonees)."
+      - { id: "b", label: "Fenetre seule = limite a une app (notifications globales pas visibles). Tout l'écran = tout visible (notifications, apps, switch)", correct: true }
+      - { id: "c", label: "Pareil avec un nom différent", correct: false }
+    explanation: "Fenetre seule = partage limite a UNE app choisie. Notifications système (Mac/Windows) restent invisibles. Switch d'apps non visible. Tout l'écran = tout visible. Standard pro : fenêtre seule. Tout l'écran SEULEMENT si justifie (demo multi-apps coordonees)."
 
-  - question: "Pour presentations PowerPoint, mode optimal ?"
+  - question: "Pour présentations PowerPoint, mode optimal ?"
     choices:
-      - { id: "a", label: "Partager tout l'ecran", correct: false }
-      - { id: "b", label: "PowerPoint Live (Teams) ou mode presentateur - partage SLIDES directement, tu vois notes, eux voient slides, cache reste systeme", correct: true }
-      - { id: "c", label: "Camera de smartphone", correct: false }
-    explanation: "PowerPoint Live (Teams) ou mode presentateur PowerPoint/Keynote : partage les SLIDES seules (pas l'ecran). Tu vois tes notes + outils, eux voient juste les slides. Cache automatiquement reste du systeme. Standard pro pour presentations. Pas de fuite possible."
+      - { id: "a", label: "Partager tout l'écran", correct: false }
+      - { id: "b", label: "PowerPoint Live (Teams) ou mode présentateur - partage SLIDES directement, tu vois notes, eux voient slides, cache reste système", correct: true }
+      - { id: "c", label: "Caméra de smartphone", correct: false }
+    explanation: "PowerPoint Live (Teams) ou mode présentateur PowerPoint/Keynote : partage les SLIDES seules (pas l'écran). Tu vois tes notes + outils, eux voient juste les slides. Cache automatiquement reste du système. Standard pro pour présentations. Pas de fuite possible."
 ---
 
 > 💡 **Pour aller plus loin** : **Mode focus** (Mac/Windows
 > 11) avant partage. **PowerPoint Live** (Teams) pour
-> presentations. **Profil dedie** pour pros visios. Si fuite
+> présentations. **Profil dedie** pour pros visios. Si fuite
 > MDP : revocation immediate + audit + sensibilisation
-> equipe. Configuration prealable = preventif > correctif.
+> équipe. Configuration préalable = préventif > correctif.

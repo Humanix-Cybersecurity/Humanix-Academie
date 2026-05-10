@@ -2,16 +2,16 @@
 title: "Mon badge a été perdu"
 durationMinutes: 5
 persona: "tous-collaborateurs"
-objective: "Reagir correctement en cas de perte/vol de badge d'acces, comprendre l'urgence (acces aux locaux + bypass tailgating), procedures de remplacement"
+objective: "Reagir correctement en cas de perte/vol de badge d'acces, comprendre l'urgence (acces aux locaux + bypass tailgating), procédures de remplacement"
 xpReward: 40
 scenario: |
   Vendredi 18h17, tu rentres chez toi en metro. Arrive a la maison,
   tu cherches ton badge entreprise pour le remettre dans son etui.
-  Disparu. Ta derniere utilisation : ce matin 9h17 a l'arrivee au
+  Disparu. Ta dernière utilisation : ce matin 9h17 a l'arrivée au
   bureau.
 
   Le badge a :
-  - Acces tous les bureaux du batiment principal (incluant ton open
+  - Acces tous les bureaux du bâtiment principal (incluant ton open
     space)
   - Acces parking voiture (oui, geolocalisation possible)
   - PAS d'acces a la salle serveur (limite a la DSI)
@@ -20,29 +20,29 @@ scenario: |
   Tu fais quoi ce vendredi soir ? Le bureau est ferme, le DSI absent.
 choices:
   - id: "a"
-    label: "Je notifie immediatement par SMS le numero d'urgence du DSI/RSSI ou la societe de securite mentionne dans le livret accueil. Le badge doit etre desactive sans attendre lundi"
+    label: "Je notifie immédiatement par SMS le numéro d'urgence du DSI/RSSI ou la société de sécurité mentionne dans le livret accueil. Le badge doit être desactive sans attendre lundi"
     outcome: "good"
-    feedback: "Excellente reaction. Un badge perdu est une URGENCE securite : un voleur peut rentrer dans les locaux ce week-end. Le numero d'urgence doit etre dans ton telephone. Si pas de numero d'urgence : appeler la societe de securite du batiment qui contactera l'astreinte."
+    feedback: "Excellente reaction. Un badge perdu est une URGENCE sécurité : un voleur peut rentrer dans les locaux ce week-end. Le numéro d'urgence doit être dans ton téléphone. Si pas de numéro d'urgence : appeler la société de sécurité du bâtiment qui contactera l'astreinte."
     points: 35
   - id: "b"
     label: "J'attends lundi matin pour declarer la perte au DSI"
     outcome: "bad"
-    feedback: "ERREUR. 60 heures sans desactivation = un voleur (ou un trouveur curieux) peut entrer ce week-end dans tes locaux. Vol de materiel, photographies d'ecrans, intrusion dans la salle serveur, branchement de Raspberry Pi pirate possible. La fenetre est trop longue."
+    feedback: "ERREUR. 60 heures sans desactivation = un voleur (ou un trouveur curieux) peut entrer ce week-end dans tes locaux. Vol de matériel, photographies d'écrans, intrusion dans la salle serveur, branchement de Raspberry Pi pirate possible. La fenêtre est trop longue."
     points: -15
   - id: "c"
-    label: "Je n'en parle a personne, peut-etre que je le retrouverai dans le metro"
+    label: "Je n'en parle a personne, peut-être que je le retrouverai dans le metro"
     outcome: "bad"
-    feedback: "Aucune chance de retrouver un badge perdu dans le metro. Et chaque heure d'attente = risque accrus. La dissimulation peut aussi entrainer une sanction disciplinaire si decouverte (la charte demande generalement la declaration immediate)."
+    feedback: "Aucune chance de retrouver un badge perdu dans le metro. Et chaque heure d'attente = risque accrus. La dissimulation peut aussi entrainer une sanction disciplinaire si decouverte (la charte demande généralement la declaration immediate)."
     points: -15
   - id: "d"
-    label: "Je verifie mes affaires une derniere fois, et si introuvable, j'appelle l'astreinte ce soir"
+    label: "Je verifie mes affaires une dernière fois, et si introuvable, j'appelle l'astreinte ce soir"
     outcome: "good"
-    feedback: "Procedure raisonnable. Verification 2 minutes max (sac, manteau, voiture, bureau si pas trop tard) puis appel astreinte si introuvable. La rapidite d'action est essentielle."
+    feedback: "Procédure raisonnable. Vérification 2 minutes max (sac, manteau, voiture, bureau si pas trop tard) puis appel astreinte si introuvable. La rapidite d'action est essentielle."
     points: 30
 debrief: |
-  Un badge d'acces perdu est une **urgence securite** souvent
-  sous-estimee. Beaucoup d'employes attendent le lundi pour signaler
-  - pendant le week-end, le badge peut etre utilise par n'importe
+  Un badge d'acces perdu est une **urgence sécurité** souvent
+  sous-estimee. Beaucoup d'employés attendent le lundi pour signaler
+  - pendant le week-end, le badge peut être utilise par n'importe
   qui qui le trouve.
 
   **Pourquoi c'est urgent :**
@@ -56,83 +56,83 @@ debrief: |
   - Peut faire du tailgating + utiliser ton badge en bonus si
     quelqu'un le questionne
 
-  **2. Bypass des controles :**
+  **2. Bypass des contrôles :**
 
-  Le badge est souvent le seul element qui differencie un employe
+  Le badge est souvent le seul élément qui differencie un employé
   d'un visiteur. Sans desactivation rapide, l'attaquant peut :
   - Bypasser les sas a 1 personne (le badge fonctionne)
-  - Passer les portes inter-zones (open space, salle de reunion,
+  - Passer les portes inter-zones (open space, salle de réunion,
     photocopieuse)
   - Acceder au parking (vol de voitures)
 
   **3. Possibilite de cloner le badge :**
 
-  Les badges modernes (RFID 13.56 MHz, NFC) peuvent etre clones
+  Les badges modernes (RFID 13.56 MHz, NFC) peuvent être clones
   avec des outils a 30 EUR (Proxmark, Flipper Zero). Si ton badge
   reste 24-48h chez un attaquant motive, il peut le cloner et
-  ensuite utiliser le clone meme apres que tu as recupere
+  ensuite utiliser le clone même après que tu as recupere
   l'original.
 
-  **Procedure rapide :**
+  **Procédure rapide :**
 
-  **Etape 1 (immediate) - Verification 2 minutes**
+  **Étape 1 (immediate) - Vérification 2 minutes**
 
   Avant de paniquer, verifie :
   - Sac, poches, manteau, veste
-  - Voiture / appartement / endroits visites recemment
+  - Voiture / appartement / endroits visites récemment
   - Bureau (si tu peux y retourner facilement)
 
-  Si introuvable apres 2 minutes : passer a l'etape 2.
+  Si introuvable après 2 minutes : passer a l'étape 2.
 
-  **Etape 2 (15-30 minutes) - Notification urgente**
+  **Étape 2 (15-30 minutes) - Notification urgente**
 
-  - **Numero d'urgence DSI / RSSI** : doit etre dans ton tel
-  - **Societe de securite** du batiment (le gardien de nuit a un
-    numero)
+  - **Numéro d'urgence DSI / RSSI** : doit être dans ton tel
+  - **Société de sécurité** du bâtiment (le gardien de nuit a un
+    numéro)
   - **Astreinte HR** si pas d'autres options
 
   Donne :
   - Ton nom + service
-  - Numero du badge (souvent imprime au dos, sinon mentionne dans
+  - Numéro du badge (souvent imprime au dos, sinon mentionne dans
     ton onboarding)
-  - Heure et lieu de derniere utilisation
+  - Heure et lieu de dernière utilisation
   - Heure de constatation de la perte
 
-  L'astreinte desactive le badge en quelques minutes (operation
-  simple via le systeme de controle d'acces : Brivo, HID,
+  L'astreinte desactive le badge en quelques minutes (opération
+  simple via le système de contrôle d'acces : Brivo, HID,
   Stid, etc.).
 
-  **Etape 3 (lundi) - Replacement**
+  **Étape 3 (lundi) - Replacement**
 
   Lundi matin :
   - Confirmation de desactivation
   - Demande de nouveau badge (formulaire RH/DSI)
-  - Si vol confirme : depot de plainte police (necessaire pour
+  - Si vol confirme : dépôt de plainte police (necessaire pour
     assurance ou poursuite si l'attaquant utilise le badge)
 
-  Le nouveau badge te sera remis sous 1-2 jours en general
+  Le nouveau badge te sera remis sous 1-2 jours en général
   (impression, encodage).
 
-  **Le piege "le retrouver soi-meme" :**
+  **Le piege "le retrouver soi-même" :**
 
   Tentation : "je vais aller voir aux objets trouves de la RATP
-  d'abord, je signale apres". MAUVAISE IDEE. Le delai est exactement
+  d'abord, je signale après". MAUVAISE IDEE. Le délai est exactement
   ce que cherche un attaquant. Action n°1 = desactivation.
   Recherche en parallele = OK.
 
-  **Le piege "il est dans ma voiture forcement" :**
+  **Le piege "il est dans ma voiture forcément" :**
 
-  Tentation : "il est forcement dans ma voiture, je vais voir
+  Tentation : "il est forcément dans ma voiture, je vais voir
   demain". MAUVAISE IDEE. Si la voiture est sur un parking public
-  et a ete cambriolee, le badge est perdu en plus du reste. Action
-  n°1 = desactivation par precaution.
+  et a été cambriolee, le badge est perdu en plus du reste. Action
+  n°1 = desactivation par précaution.
 
-  **Mesures de securite preventive (cote employeur) :**
+  **Mesures de sécurité préventive (côté employeur) :**
 
-  - **Badges sans nom d'entreprise visible** : juste un numero +
+  - **Badges sans nom d'entreprise visible** : juste un numéro +
     photo (si trouve dans la rue, l'attaquant ne sait pas quelle
     entreprise)
-  - **Numero d'urgence imprime AU DOS** : "En cas de trouvaille,
+  - **Numéro d'urgence imprime AU DOS** : "En cas de trouvaille,
     appeler le 01 XX XX XX XX"
   - **Etui RFID-blocking** : empeche le clone par sniffing dans
     les transports
@@ -147,28 +147,28 @@ debrief: |
     forensic, le voleur avait le badge).
   - **2021 - PME industrielle** : badge clone via Flipper Zero
     pendant un trajet RER (proximity sniffing). 3 semaines plus
-    tard, intrusion massif avec le clone. L'original etait toujours
-    chez l'employee.
+    tard, intrusion massif avec le clone. L'original était toujours
+    chez l'employée.
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > Un badge perdu est une URGENCE qui se gere AUJOURD'HUI, pas
-  > LUNDI. Le numero d'urgence doit etre dans ton tel AVANT que tu
+  > LUNDI. Le numéro d'urgence doit être dans ton tel AVANT que tu
   > en aies besoin.
 
   **A configurer maintenant :**
 
-  - Numero d'urgence DSI/RSSI dans tes contacts
-  - Numero societe de securite du batiment dans tes contacts
-  - Photo du verso de ton badge (numero au cas ou tu l'oublies)
+  - Numéro d'urgence DSI/RSSI dans tes contacts
+  - Numéro société de sécurité du bâtiment dans tes contacts
+  - Photo du verso de ton badge (numéro au cas ou tu l'oublies)
   - Etui RFID-blocking (15-25 EUR)
 quiz:
   - question: "Tu perds ton badge un vendredi soir. Action ?"
     choices:
       - { id: "a", label: "J'attends lundi pour declarer", correct: false }
-      - { id: "b", label: "Notification immediate (numero d'urgence DSI/RSSI ou societe de securite). Le badge doit etre desactive sans attendre", correct: true }
+      - { id: "b", label: "Notification immediate (numéro d'urgence DSI/RSSI ou société de sécurité). Le badge doit être desactive sans attendre", correct: true }
       - { id: "c", label: "Je le cherche tout le week-end", correct: false }
-    explanation: "Le delai = la fenetre d'attaque. 60h d'attente = un voleur peut intruder + cloner le badge. Notification immediate = desactivation en quelques minutes par l'astreinte."
+    explanation: "Le délai = la fenêtre d'attaque. 60h d'attente = un voleur peut intruder + cloner le badge. Notification immediate = desactivation en quelques minutes par l'astreinte."
 
   - question: "Avec un Flipper Zero a 30 EUR, on peut :"
     choices:
@@ -180,19 +180,19 @@ quiz:
   - question: "Pourquoi le badge ne doit PAS afficher le nom de l'entreprise ?"
     choices:
       - { id: "a", label: "Pour la mode", correct: false }
-      - { id: "b", label: "Si trouve dans la rue, l'attaquant ne sait pas a quelle entreprise il donne acces. Mesure preventive en cas de perte", correct: true }
+      - { id: "b", label: "Si trouve dans la rue, l'attaquant ne sait pas a quelle entreprise il donne acces. Mesure préventive en cas de perte", correct: true }
       - { id: "c", label: "Aucune raison", correct: false }
     explanation: "Badge avec nom + entreprise + photo = trouvaille en or pour un attaquant. Sans le nom de l'entreprise, le badge perdu est inutile pour quelqu'un qui ne sait pas ou l'utiliser. Mesure ANSSI recommandee."
 
   - question: "Que doit-on configurer AVANT la perte ?"
     choices:
       - { id: "a", label: "Rien, on verra le moment venu", correct: false }
-      - { id: "b", label: "Numero d'urgence DSI/RSSI dans contacts + photo verso badge + etui RFID-blocking", correct: true }
+      - { id: "b", label: "Numéro d'urgence DSI/RSSI dans contacts + photo verso badge + etui RFID-blocking", correct: true }
       - { id: "c", label: "Un coffre-fort", correct: false }
-    explanation: "Preparation = action rapide possible. Numero d'urgence dans contacts (sinon tu paniques sans savoir qui appeler), photo du badge (numero), etui RFID (anti-clone). 30 secondes a configurer, gain enorme en cas de perte."
+    explanation: "Preparation = action rapide possible. Numéro d'urgence dans contacts (sinon tu paniques sans savoir qui appeler), photo du badge (numéro), etui RFID (anti-clone). 30 secondes a configurer, gain enorme en cas de perte."
 ---
 
-> 💡 **Pour aller plus loin** : configure MAINTENANT le numero
-> d'urgence DSI dans tes contacts. Demande a ton DSI le numero de la
-> societe de securite du batiment. Achete un etui RFID-blocking
+> 💡 **Pour aller plus loin** : configure MAINTENANT le numéro
+> d'urgence DSI dans tes contacts. Demande a ton DSI le numéro de la
+> société de sécurité du bâtiment. Achete un etui RFID-blocking
 > (~15 EUR sur Amazon : Mafini, Travando).

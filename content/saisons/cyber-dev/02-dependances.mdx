@@ -2,7 +2,7 @@
 title: "Dépendances : npm audit, Renovate, supply chain"
 durationMinutes: 8
 persona: "developer"
-objective: "Gerer le risque supply chain JavaScript/Python : detecter les CVEs, pinner correctement, automatiser les updates avec Renovate, repondre a un typosquatting"
+objective: "Gerer le risque supply chain JavaScript/Python : détecter les CVEs, pinner correctement, automatiser les updates avec Renovate, répondre a un typosquatting"
 xpReward: 90
 scenario: |
   Lundi 10h12, ton CI passe au rouge sur la branche main. Pas un test
@@ -22,20 +22,20 @@ scenario: |
   > Path : your-app > webpack > semver
 
   Tu vois aussi dans `package-lock.json` une ligne suspecte ajoutee
-  par un PR de la semaine derniere : `colourful-logs@1.0.4` (note le
+  par un PR de la semaine dernière : `colourful-logs@1.0.4` (note le
   "colour" UK, alors que vous utilisez normalement `colorful-logs` US).
 
-  Tu fais quoi en priorite ?
+  Tu fais quoi en priorité ?
 choices:
   - id: "a"
     label: "Je lance `npm audit fix --force` pour tout patcher d'un coup"
     outcome: "bad"
-    feedback: "Risque eleve. `--force` peut faire des bumps majors qui cassent ton API. C'est l'option de la flemme - elle marche dans 30% des cas et explose dans 70%. Toujours faire les bumps a la main pour les criticals."
+    feedback: "Risque élève. `--force` peut faire des bumps majors qui cassent ton API. C'est l'option de la flemme - elle marche dans 30% des cas et explose dans 70%. Toujours faire les bumps a la main pour les criticals."
     points: -10
   - id: "b"
-    label: "J'analyse `colourful-logs` en priorite (typosquatting suspect), puis je traite les CVEs lodash/semver une par une"
+    label: "J'analyse `colourful-logs` en priorité (typosquatting suspect), puis je traite les CVEs lodash/semver une par une"
     outcome: "good"
-    feedback: "Excellent reflexe. Le typosquatting (colour vs color) est un vecteur d'attaque CRITIQUE en supply chain - le package peut contenir un payload malicieux exfiltrant tes secrets ou installant un crypto-miner. CVE = priorite 2, typosquat = priorite 1."
+    feedback: "Excellent reflexe. Le typosquatting (colour vs color) est un vecteur d'attaque CRITIQUE en supply chain - le package peut contenir un payload malicieux exfiltrant tes secrets ou installant un crypto-miner. CVE = priorité 2, typosquat = priorité 1."
     points: 40
   - id: "c"
     label: "Je delete `package-lock.json` et je `npm install` propre - tout sera a jour"
@@ -45,7 +45,7 @@ choices:
   - id: "d"
     label: "Je cree un ticket Jira pour 'review supply chain' et je revert le PR qui a introduit colourful-logs"
     outcome: "good"
-    feedback: "Action propre. Revert immediat du PR suspect (limite l'exposition) + ticket pour analyse approfondie est une bonne procedure. Bonus si tu fais aussi `npm cache clean --force` au cas ou."
+    feedback: "Action propre. Revert immediat du PR suspect (limite l'exposition) + ticket pour analyse approfondie est une bonne procédure. Bonus si tu fais aussi `npm cache clean --force` au cas ou."
     points: 30
 debrief: |
   La supply chain JS est l'**OWASP A06:2021 - Vulnerable and Outdated
@@ -63,15 +63,15 @@ debrief: |
 
   **2. Typosquatting (supply chain)**
   - Un attaquant publie un package avec un nom proche d'un legitime :
-    `colourful-logs` (UK) vs `colorful-logs` (US), `react-native-camera`
+    `colourful-logs` (UK) vs `colorful-logs` (US), `react-native-caméra`
     vs `react-native-cam`, etc.
   - Cas reel : `eslint-scope@3.7.2` (octobre 2018) compromis avec un
     payload qui volait les npm tokens. Affecte 4500 packages downstream.
-  - Detection : audit manuel des nouveaux packages au PR review +
+  - Détection : audit manuel des nouveaux packages au PR review +
     outils comme `socket.dev` (gratuit) qui flagge les packages suspects.
 
   **3. Dependency confusion**
-  - L'attaquant publie sur npm public un package avec le meme nom qu'un
+  - L'attaquant publie sur npm public un package avec le même nom qu'un
     package interne de ton entreprise. Si ton tooling resout les
     dependances dans le mauvais ordre, il peut tirer le package public
     malicieux.
@@ -79,7 +79,7 @@ debrief: |
   - Defense : namespace tes packages internes (`@acme/utils` au lieu de
     `acme-utils`), configure ton `.npmrc` avec `registry=` interne.
 
-  **L'outillage moderne pour gerer ca :**
+  **L'outillage moderne pour gerer ça :**
 
   **GitHub Dependabot** (gratuit, integre)
   - PR automatiques pour les CVE patchables.
@@ -87,8 +87,8 @@ debrief: |
   - Active dans Settings > Code security and analysis.
 
   **Renovate** (open source, plus puissant)
-  - Comme Dependabot mais configurable a fond (regles de groupage,
-    cadences differentes par scope, automerge sur patches uniquement).
+  - Comme Dependabot mais configurable a fond (règles de groupage,
+    cadences différentes par scope, automerge sur patches uniquement).
   - YAML config dans `renovate.json` a la racine.
   - Recommande pour les projets serieux > 50 dependences.
 
@@ -101,7 +101,7 @@ debrief: |
   - Permet de whitelister des CVE acceptes (ex: faux positifs ou
     ReDoS dans une dep buildtime non exposee).
 
-  **La regle d'or 2026 :**
+  **La règle d'or 2026 :**
 
   Sur un projet en prod, en moyenne 60 a 80% de tes dependances sont
   des transitives (deps de tes deps). Tu ne peux pas les auditer toutes
@@ -114,14 +114,14 @@ debrief: |
   5. Lock file commit (package-lock.json, yarn.lock, pnpm-lock.yaml)
   6. Audit semestriel des deps obsoletes a degager
 
-  **Pour les projets souverains francais :** privilegier les deps
+  **Pour les projets souverains français :** privilegier les deps
   maintenues par des fondations (Apache, Linux Foundation, OpenJS) ou
-  des entreprises FR/EU. Eviter les packages mainteneurs solo non
+  des entreprises FR/EU. Éviter les packages mainteneurs solo non
   identifiables.
 quiz:
   - question: "Tu vois `colourful-logs@1.0.4` dans ton package.json (alors que vous utilisez `colorful-logs`). Que faire ?"
     choices:
-      - { id: "a", label: "Update vers la derniere version", correct: false }
+      - { id: "a", label: "Update vers la dernière version", correct: false }
       - { id: "b", label: "Revert le PR qui l'a introduit (typosquatting suspect) puis analyse", correct: true }
       - { id: "c", label: "npm audit fix", correct: false }
     explanation: "Typosquatting potentiel : un attaquant a publie un package avec un nom proche du legitime. Revert immediat = limite l'exposition. Audit ensuite (Socket.dev, npmjs.com history du mainteneur, etc.)."
@@ -130,7 +130,7 @@ quiz:
     choices:
       - { id: "a", label: "Il delete le package-lock", correct: false }
       - { id: "b", label: "Il peut faire des bumps de versions MAJEURES qui cassent ton API", correct: true }
-      - { id: "c", label: "Il faut etre root", correct: false }
+      - { id: "c", label: "Il faut être root", correct: false }
     explanation: "Le flag `--force` autorise les majors bumps, qui peuvent casser l'API publique de tes deps. C'est l'option flemmarde qui marche 30% du temps - prefere les fixes a la main pour les criticals."
 
   - question: "Quelle classe OWASP couvre les dependances vulnerables ?"
@@ -138,7 +138,7 @@ quiz:
       - { id: "a", label: "A03:2021 Injection", correct: false }
       - { id: "b", label: "A06:2021 Vulnerable and Outdated Components + A08:2021 Software and Data Integrity Failures", correct: true }
       - { id: "c", label: "A01:2021 Broken Access Control", correct: false }
-    explanation: "A06 couvre les versions de libs avec CVE non patches. A08 couvre la chain integrity (typosquatting, packages compromis, install scripts malicieux). Les deux sont liees et complementaires."
+    explanation: "A06 couvre les versions de libs avec CVE non patches. A08 couvre la chain integrity (typosquatting, packages compromis, install scripts malicieux). Les deux sont liees et complémentaires."
 
   - question: "Tu maintiens une lib interne `@acme/auth-utils` chez ton entreprise. Quelle protection contre la dependency confusion ?"
     choices:
