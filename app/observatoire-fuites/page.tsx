@@ -23,6 +23,7 @@ import { SOURCE_META } from "@/lib/breaches/types";
 import type { BreachSource } from "@prisma/client";
 import HexBackdrop from "@/components/HexBackdrop";
 import BreachesFilters from "@/components/BreachesFilters";
+import { BreadcrumbJsonLd } from "@/lib/seo/jsonld";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 1800; // 30 min cote Next
@@ -37,12 +38,15 @@ export const metadata = {
     description:
       "Sources francophones de référence. Sans dramatiser, sans publicité, sans tracker. Mis à jour chaque matin.",
     type: "website",
+    url: "/observatoire-fuites",
+    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Observatoire des fuites de données FR",
     description:
       "🔍 3 sources francophones · 🚫 Zéro tracker · 🔓 Open data. Mis à jour chaque matin.",
+    images: ["/logo-humanix-academie-512.png"],
   },
 };
 
@@ -131,6 +135,13 @@ export default async function ObservatoireFuitesPage({
 
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", path: "/" },
+          { name: "Ressources", path: "/ressources" },
+          { name: "Observatoire des fuites", path: "/observatoire-fuites" },
+        ]}
+      />
       {/* ============================================================
           1. HERO - sobre, sans dramatiser
           ============================================================ */}

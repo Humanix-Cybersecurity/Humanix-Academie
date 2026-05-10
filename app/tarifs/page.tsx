@@ -19,18 +19,25 @@ import { TIERS, ADD_ONS } from "@/lib/pricing";
 import PricingSimulator from "@/components/PricingSimulator";
 import HexBackdrop from "@/components/HexBackdrop";
 import PricingCarousel from "@/components/PricingCarousel";
+import {
+  SoftwareApplicationJsonLd,
+  FaqJsonLd,
+  BreadcrumbJsonLd,
+} from "@/lib/seo/jsonld";
 
-const META_TITLE = "Tarifs - Humanix Académie";
+const META_TITLE = "Tarifs cybersécurité 2026 — Humanix Académie";
 const META_DESCRIPTION =
-  "Cybersensibilisation française open source AGPL. Self-host gratuit à vie. Cloud gratuit jusqu'à 5 utilisateurs, puis à partir de 19 €/mois. 4 paliers, hébergement souverain France.";
+  "Sensibilisation cybersécurité française open source AGPL. Self-host gratuit à vie. Cloud souverain France gratuit jusqu'à 5 utilisateurs, puis 19 €/mois ou 3 €/utilisateur. 4 paliers sans engagement, RGPD-by-design, conforme NIS2.";
 
 export const metadata = {
   title: META_TITLE,
   description: META_DESCRIPTION,
+  alternates: { canonical: "/tarifs" },
   openGraph: {
     title: META_TITLE,
     description: META_DESCRIPTION,
     type: "website",
+    url: "/tarifs",
     images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
   },
   twitter: {
@@ -40,6 +47,83 @@ export const metadata = {
     images: ["/logo-humanix-academie-512.png"],
   },
 };
+
+// FAQ pour les rich snippets Google (FAQPage schema). Les questions/reponses
+// ci-dessous DOIVENT correspondre au contenu visible sur la page (section
+// "Questions frequentes" plus bas) — sinon Google flag pour spam. Cf.
+// https://developers.google.com/search/docs/appearance/structured-data/faqpage
+const PRICING_FAQ = [
+  {
+    question: "C'est trop pas cher, ça m'inspire pas confiance",
+    answer:
+      "Notre code est en open source sur GitHub, vous pouvez l'auditer ligne par ligne. Notre équipe vit de l'expertise et de l'accompagnement (audit, formation, RSSI externalisé), pas du hold-up sur les abonnements SaaS. Le prix bas est un choix politique : la cybersécurité ne doit pas être un luxe.",
+  },
+  {
+    question: "Pourquoi gratuit en self-host si vous êtes sérieux ?",
+    answer:
+      "C'est exactement le modèle de CISO Assistant (intuitem), OpenCTI (Filigran), Centreon, Wazuh. Open source = plateforme libre + service expert payant. Modèle éprouvé qui finance durablement le développement.",
+  },
+  {
+    question: "Comment tester avant de payer ?",
+    answer:
+      "Pas d'essai gratuit sur les paliers payants : la démo en ligne (comptes pré-remplis, données fictives) couvre déjà ce besoin. Le plan Starter est gratuit jusqu'à 5 sièges (forever-free, sans CB), puis 19 €/mois forfait jusqu'à 15 sièges. Au-delà : Pro à 3 €/utilisateur/mois (mensuel sans engagement ou annuel −17 %).",
+  },
+  {
+    question: "Mes données sont-elles hébergées en France ?",
+    answer:
+      "Hébergement Union Européenne par défaut (Paris ou Roubaix selon configuration). Hébergement français exclusif sur Pro et Enterprise. Option SecNumCloud disponible en Enterprise.",
+  },
+  {
+    question: "Que se passe-t-il en cas de désinstallation ?",
+    answer:
+      "Tes données restent accessibles 30 jours pour export complet (RGPD). Au-delà, suppression définitive avec attestation. Les certificats individuels déjà émis restent valables.",
+  },
+  {
+    question: "Y aura-t-il des hausses de prix dans 6 mois ?",
+    answer:
+      "La grille de mai 2026 est garantie pour 12 mois minimum. Les clients déjà inscrits gardent leur tarif lock-in à vie (grand-fathering). Toute évolution sera annoncée 60 jours en avance.",
+  },
+  {
+    question: "Quel est l'engagement contractuel ?",
+    answer:
+      "Aucun engagement minimum sur Cloud. Tu peux résilier à tout moment depuis ta console, prorata jour exact. Engagement annuel = remise −17 à −21 %, totalement optionnel.",
+  },
+  {
+    question: "Quelle différence avec votre concurrent intuitem (CISO Assistant) ?",
+    answer:
+      "Aucune, on est complémentaires. CISO Assistant fait la conformité (registres, contrôles, preuves). Humanix fait la sensibilisation humaine (modules, gamification, phishing). Notre intégration native exporte les preuves Humanix vers CISO Assistant.",
+  },
+];
+
+// Offres SoftwareApplication exposees a Google : permet l'affichage du
+// badge "Logiciel" + price range dans les SERPs.
+const PRICING_OFFERS = [
+  {
+    name: "Community Edition (self-host)",
+    priceCurrency: "EUR",
+    price: 0,
+    description: "AGPLv3, illimité, aucun appel maison.",
+  },
+  {
+    name: "Starter (cloud souverain)",
+    priceCurrency: "EUR",
+    price: 19,
+    description: "Forfait mensuel, jusqu'à 15 sièges (gratuit jusqu'à 5).",
+  },
+  {
+    name: "Pro (cloud souverain)",
+    priceCurrency: "EUR",
+    price: 3,
+    description:
+      "3 €/utilisateur/mois, 16 à 250 sièges, IA souveraine incluse.",
+  },
+  {
+    name: "Enterprise (instance dédiée)",
+    priceCurrency: "EUR",
+    price: 0,
+    description: "Sur devis : instance dédiée, SLA renforcé, SCIM/SAML.",
+  },
+];
 
 type BillingCycle = "monthly" | "annual";
 
@@ -54,6 +138,21 @@ export default async function TarifsPage({
 
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
+      {/* SEO : Schema.org markup pour Google. SoftwareApplication active le
+          badge "Logiciel" + l'affichage du price range. FAQPage genere
+          l'accordeon FAQ visible dans la SERP. BreadcrumbList remplace l'URL
+          brute par un fil d'Ariane. Cf. lib/seo/jsonld.tsx. */}
+      <SoftwareApplicationJsonLd
+        url="/tarifs"
+        offers={PRICING_OFFERS}
+      />
+      <FaqJsonLd items={PRICING_FAQ} />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", path: "/" },
+          { name: "Tarifs", path: "/tarifs" },
+        ]}
+      />
       {/* =====================================================================
           1. HERO - invitation cosy a la lecture des prix
           ===================================================================== */}
