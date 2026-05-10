@@ -26,10 +26,12 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { streamChat, getProviderKind } from "@/lib/ai/provider";
+import { buildSystemPrompt } from "@/lib/ai/hex/system-prompt";
 import {
-  buildSystemPrompt,
-  type HexChatContext,
-} from "@/lib/ai/hex/system-prompt";
+  buildEnrichedContext,
+  buildToneAddendum,
+} from "@/lib/ai/hex/context";
+import { retrieveRagContext, formatRagContext } from "@/lib/ai/hex/rag";
 import { normalizePlan, type PlanId } from "@/lib/plans";
 
 export const dynamic = "force-dynamic";
@@ -130,20 +132,37 @@ export async function POST(req: Request) {
     );
   }
 
-  // 5) Construction du system prompt avec contexte
-  const ctx: HexChatContext = {
-    userFirstName:
-      typeof session.user.name === "string"
-        ? session.user.name.split(/\s+/)[0]
-        : undefined,
+  // 5) Construction du contexte enrichi (Phase 2)
+  //    - lit Progress recents pour pointer "tu viens de finir X"
+  //    - calcule score moyen 30j pour adapter le ton (encouragement vs challenge)
+  const enrichedCtx = await buildEnrichedContext({
+    userId,
+    tenantId,
+    userName: session.user.name,
     userRole: session.user.role,
     userPlan: plan,
     currentRoute: body.context?.currentRoute,
     currentModule: body.context?.currentModule,
-  };
-  const systemPrompt = buildSystemPrompt(ctx);
+  });
 
-  // 6) Streaming Mistral / Ollama
+  // 6) RAG sur les modules MDX (Phase 3)
+  //    - embedding du dernier message user
+  //    - retrieve top-K chunks depuis pgvector
+  //    - injection en system addendum + retour des citations au client
+  const ragResult = await retrieveRagContext({
+    query: last.content,
+    topK: 4,
+  });
+
+  // 7) Construction du system prompt final
+  const basePrompt = buildSystemPrompt(enrichedCtx);
+  const toneAddendum = buildToneAddendum(enrichedCtx);
+  const ragAddendum = formatRagContext(ragResult.chunks);
+  const systemPrompt = [basePrompt, toneAddendum, ragAddendum]
+    .filter(Boolean)
+    .join("");
+
+  // 8) Streaming Mistral / Ollama
   let upstream: ReadableStream<string>;
   try {
     upstream = await streamChat({
@@ -163,10 +182,25 @@ export async function POST(req: Request) {
     );
   }
 
-  // 7) Encoder le stream texte en SSE pour le client
+  // 9) Encoder le stream texte en SSE pour le client
+  //    - 1er event : citations (si RAG a retrouve des chunks)
+  //    - puis : delta par delta jusqu'au [DONE]
   const encoder = new TextEncoder();
   const sseStream = new ReadableStream<Uint8Array>({
     async start(controller) {
+      // Citations metadata (consommees par HexChat.tsx pour afficher
+      // les badges "📚 Source : <module>")
+      if (ragResult.chunks.length > 0) {
+        const citations = ragResult.chunks.map((c) => ({
+          title: c.title,
+          sourcePath: c.sourcePath,
+          url: c.url,
+          score: Math.round(c.score * 100) / 100,
+        }));
+        const citationsEvent = `data: ${JSON.stringify({ citations })}\n\n`;
+        controller.enqueue(encoder.encode(citationsEvent));
+      }
+
       const reader = upstream.getReader();
       try {
         while (true) {
