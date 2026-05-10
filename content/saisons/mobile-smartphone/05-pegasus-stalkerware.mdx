@@ -1,0 +1,227 @@
+---
+title: "Pegasus, stalkerware : signes et défense"
+durationMinutes: 8
+persona: "tous-collaborateurs"
+objective: "Distinguer Pegasus (surveillance commerciale 0-day rare) du stalkerware (apps installees physiquement, plus frequent), reconnaitre les signes, savoir comment proteger les profils a risque"
+xpReward: 60
+scenario: |
+  Tu es journaliste freelance qui couvre la corruption politique en
+  Afrique du Nord. Recemment, tu observes des comportements bizarres
+  sur ton iPhone :
+  - Batterie qui tient 8h au lieu de 18h habituelles
+  - Tel chaud meme en mode veille
+  - Consommation data 4G de 3 GB/jour (au lieu de 200 Mo)
+  - Notifications push bizarres venant d'apps que tu n'as pas installees
+
+  Tu fais quoi ?
+choices:
+  - id: "a"
+    label: "Mes 4 symptomes correspondent a une infection. J'execute un check Pegasus avec les outils Citizen Lab + je contacte Amnesty International qui aide les journalistes / dissidents"
+    outcome: "good"
+    feedback: "Excellent reflexe. Citizen Lab (Toronto) + Amnesty International ont des outils gratuits pour detecter Pegasus (Mobile Verification Toolkit MVT). Pour les profils a risque (journalistes, dissidents, avocats), ils offrent une assistance gratuite confidentielle."
+    points: 35
+  - id: "b"
+    label: "Je redemarre le tel, ca devrait arranger le probleme"
+    outcome: "bad"
+    feedback: "Insuffisant. Si c'est un malware persistant (Pegasus ou stalkerware), il survit au reboot (sauf vieille variante zero-click qui peut etre purge par redemarrage selon Citizen Lab). Le diagnostic doit etre fait avec un outil specifique."
+    points: -5
+  - id: "c"
+    label: "Je formate completement le tel pour eradiquer le probleme"
+    outcome: "neutral"
+    feedback: "Solution radicale qui peut marcher mais pas optimale. Si tu es vraiment cible par Pegasus, formater = perdre les preuves forensic. Les chercheurs ont besoin de l'image disque pour analyser. Mieux : analyse d'abord, formattage ensuite."
+    points: 5
+  - id: "d"
+    label: "C'est juste mon iPhone qui vieillit"
+    outcome: "bad"
+    feedback: "Possible mais 4 symptomes simultanes (batterie + chaud + data + apps inconnues) = improbable que ce soit juste l'usure. Pour un profil a risque (journaliste corruption), le risque de surveillance est reel et croissant. A investiguer."
+    points: -10
+debrief: |
+  Pegasus et le stalkerware sont 2 categories tres differentes de
+  malwares mobiles, souvent confondus mais distincts.
+
+  **Pegasus (NSO Group, Israel) - surveillance commerciale haut de
+  gamme :**
+
+  - Vendu (cher, ~5M USD pour 50 cibles) a des etats clients de NSO
+    (souvent autoritaires)
+  - **0-click exploit** : pas besoin que la cible clique sur quoi que
+    ce soit. Un message iMessage suffit pour infecter.
+  - Capacites totales : lecture mails/messages, audio, video,
+    localisation, exfiltration apps (WhatsApp, Signal compris).
+  - Zero day exploits a disposition (Apple/Google patchent en
+    permanence, NSO trouve de nouveaux 0-day)
+  - Cibles confirmees : journalistes (Khashoggi avant assassinat,
+    plusieurs collaborateurs Le Monde, Mediapart), avocats des
+    droits humains, activistes, dissidents, dirigeants (chefs
+    d'etat europeens cibles dont Macron en 2021).
+
+  **Stalkerware - surveillance domestique installee physiquement :**
+
+  - Categorie d'apps "espion" vendues a tout consommateur ($30-300/an)
+  - Marques : mSpy, Cocospy, FlexiSpy, Spyzie, Highster Mobile,
+    Hoverwatch
+  - Necessite **acces physique** au tel cible pour installation
+    (5-15 min)
+  - Capacites variables : lecture SMS, calls, GPS, parfois apps
+    chiffrees
+  - Utilises principalement par : **conjoint suspicieux**, parent
+    "control parental" abusif, employeur abusif
+  - Souvent installe pendant que la cible dort/douche
+  - Tres present dans les contextes de violence conjugale : 30% des
+    victimes de violence ont du stalkerware sur leur tel selon
+    Avast 2023.
+
+  **Comment differencier :**
+
+  | Critere | Pegasus | Stalkerware |
+  |---|---|---|
+  | Vecteur d'infection | 0-click (iMessage, etc.) | Acces physique |
+  | Cible | Journalistes, activistes, decideurs | Tout le monde, conjoint/famille |
+  | Cout | 5M USD pour state actor | $30-300/an |
+  | Detection difficulte | Tres dur (camoufle) | Moyen (souvent une icone reste) |
+  | Persistence reboot | Variable | Oui (app installee) |
+  | Cible typique | < 1000 personnes par etat | Millions |
+
+  **Les signes (a surveiller) :**
+
+  **Signes COMMUNS (Pegasus + stalkerware) :**
+  - **Batterie qui tient moins** : malware tourne en fond
+  - **Tel chaud** : process en arriere-plan
+  - **Consommation data anormale** : exfiltration constante
+  - **Apps inconnues** : dans la liste des apps installees
+  - **Ralentissement** general
+
+  **Signes specifiques Pegasus :**
+  - **Apps qui crashent** sans raison (variantes Pegasus
+    instables) - notamment le navigateur, FaceTime
+  - **Notifications push de iMessage / WhatsApp** que tu ne
+    reconnais pas
+  - **Appareil qui semble communiquer** meme quand l'ecran est
+    eteint
+
+  **Signes specifiques stalkerware :**
+  - **Icone d'app etrange** dans le menu (souvent "System
+    Service", "WiFi Helper", "Battery Manager", icone discrete)
+  - **Permissions admin device** activees pour une app que tu
+    ne reconnais pas (Settings > Security > Device Admin)
+  - **Compte Google/Apple** non identifie connecte
+
+  **Comment detecter (les outils) :**
+
+  **Pour Pegasus - Mobile Verification Toolkit (MVT) :**
+
+  - Outil officiel **gratuit** developpe par Amnesty International
+    et Citizen Lab.
+  - Disponible sur GitHub : github.com/mvt-project/mvt
+  - Marche pour **iOS** (a partir d'une sauvegarde iTunes/Mac) et
+    **Android** (a partir du tel directement).
+  - Detecte les Indicators of Compromise (IOC) connus de Pegasus
+    (domaines, signatures, comportements).
+  - Necessite des compétences techniques (CLI Python). Pour les
+    non-techniques : Amnesty propose une assistance gratuite.
+
+  **Pour stalkerware :**
+
+  - **iOS** : tres difficile a installer (jailbreak necessaire pour
+    la plupart des stalkerware). Si ton iPhone est jailbreak sans
+    que tu le sache = signe rouge.
+  - **Android** : installation plus facile via APK sideloading.
+    - **MVT** detecte aussi certains stalkerware
+    - **Sticker (TinyCheck)** outil gratuit du CERT-FR pour
+      detecter le trafic de stalkerware
+    - **Antivirus** (Bitdefender, Kaspersky, Sophos) detectent les
+      stalkerware connus
+    - Verification manuelle : Settings > Apps > liste de toutes les
+      apps installees + permissions
+
+  **Comment se proteger :**
+
+  **Pour les profils a haut risque (journalistes, dissidents,
+  activistes) :**
+
+  1. **Mises a jour OS immediates** : iOS 18, Android 14+. Les
+     patches Apple/Google bouchent les 0-day Pegasus connus.
+  2. **iOS Lockdown Mode** : Reglages > Confidentialite et Securite
+     > Mode Lockdown. Reduit drastiquement la surface d'attaque
+     (desactive iMessage exotique, FaceTime non-contacts, etc.).
+     Apple a cree ce mode specifiquement pour les cibles Pegasus.
+  3. **Tel dedie** : un tel pro pour les contacts sensibles, un tel
+     perso pour le reste. Limiter les communications sensibles a
+     un seul appareil.
+  4. **Signal** au lieu de iMessage/WhatsApp pour les communications
+     sensibles.
+  5. **Reboot quotidien** : redemarrer le tel chaque nuit. Certaines
+     variantes Pegasus ne sont pas persistantes au reboot.
+  6. **Contact Amnesty Tech** ou **Reporters Without Borders** pour
+     audit confidentiel gratuit.
+
+  **Pour proteger contre le stalkerware (cas violence conjugale) :**
+
+  1. **Audit des apps installees** : si une app que tu ne reconnais
+     pas est presente, suspect.
+  2. **Verifier les Device Admin** sur Android : Settings > Security
+     > Device Admin. Aucune app inconnue ne devrait etre la.
+  3. **Verifier les comptes Google/Apple** connectes au tel.
+  4. **Hotline violences conjugales 3919** propose un soutien
+     specialise pour les victimes de stalkerware.
+  5. Si confirmation : **factory reset** (effacement total) du tel
+     + nouveau compte Google/Apple. Eviter de restaurer depuis
+     une sauvegarde (qui peut contenir le malware).
+
+  **Cas reels :**
+
+  - **Khashoggi 2018** : avant son assassinat, son entourage etait
+    sur Pegasus. Communications interceptees.
+  - **Le Monde / Mediapart 2021** : journalistes francais sur Pegasus
+    selon Forbidden Stories investigation.
+  - **Catalonian leaders 2022** : 65 dirigeants catalans cibles par
+    Pegasus operes depuis l'Espagne.
+  - **Macron 2021** : tel personnel cible par Pegasus marocain.
+  - **Domestic violence cases** : milliers de cas de stalkerware
+    dans le contexte de violences conjugales documentes par
+    Coalition Against Stalkerware.
+
+  **La regle d'or :**
+
+  > Pegasus = profile a haut risque (journaliste, activiste,
+  > dissident, decideur). Si tu n'es pas dans cette categorie, tres
+  > peu probable d'etre cible.
+  >
+  > Stalkerware = peut toucher tout le monde, surtout dans les
+  > contextes de violence conjugale ou de harcelement professionnel.
+  > Verifier regulierement les apps installees et les Device Admin.
+quiz:
+  - question: "Quelle est la principale difference entre Pegasus et le stalkerware ?"
+    choices:
+      - { id: "a", label: "Aucune", correct: false }
+      - { id: "b", label: "Pegasus = 0-click (etat acteur, journalistes/dissidents). Stalkerware = installation physique (conjoint, famille, employeur)", correct: true }
+      - { id: "c", label: "Le prix", correct: false }
+    explanation: "Pegasus = surveillance commerciale haut de gamme vendue a des etats, infection 0-click sans interaction de la cible. Stalkerware = apps consumer ($30-300) installees physiquement par un proche. Cibles et vecteurs differents."
+
+  - question: "Quel outil gratuit detecte Pegasus ?"
+    choices:
+      - { id: "a", label: "Aucun", correct: false }
+      - { id: "b", label: "Mobile Verification Toolkit (MVT) par Amnesty + Citizen Lab", correct: true }
+      - { id: "c", label: "Norton", correct: false }
+    explanation: "MVT = outil open source officiel d'Amnesty International + Citizen Lab. Sur GitHub. Pour iOS et Android. Detecte les IOC Pegasus connus. Necessite competences CLI Python ou aide d'Amnesty Tech."
+
+  - question: "Le iOS Lockdown Mode est :"
+    choices:
+      - { id: "a", label: "Un mode demo", correct: false }
+      - { id: "b", label: "Un mode special d'Apple qui reduit drastiquement la surface d'attaque (anti-Pegasus) pour les cibles a haut risque", correct: true }
+      - { id: "c", label: "Une option payante", correct: false }
+    explanation: "Apple Lockdown Mode (iOS 16+) = Reglages > Confidentialite > Mode Lockdown. Cree specifiquement pour les cibles Pegasus. Desactive les fonctionnalites les plus exploitees (iMessage exotique, FaceTime non-contacts, etc.). Gratuit."
+
+  - question: "Tu suspectes du stalkerware sur un tel apres violence conjugale. Action ?"
+    choices:
+      - { id: "a", label: "Restaurer une sauvegarde", correct: false }
+      - { id: "b", label: "Factory reset complet + nouveau compte Google/Apple + appel 3919 (hotline violences conjugales)", correct: true }
+      - { id: "c", label: "Continuer a utiliser le tel", correct: false }
+    explanation: "Factory reset complet = elimine le stalkerware. NE PAS restaurer la sauvegarde (peut contenir le malware). Nouveau compte Google/Apple (l'ancien peut etre compromis). Hotline 3919 propose soutien specialise + outils."
+---
+
+> 💡 **Pour aller plus loin** : Amnesty Tech offre une assistance
+> gratuite confidentielle pour profils a risque (journalistes,
+> activistes). Contact : amnesty.org/tech. CERT-FR a publie le
+> guide "Stalkerware" gratuit. Coalition Against Stalkerware
+> (stopstalkerware.org) liste les apps connues.

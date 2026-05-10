@@ -1,0 +1,248 @@
+---
+title: "Qui peut entrer dans la salle serveur ?"
+durationMinutes: 7
+persona: "developer"
+objective: "Etablir le controle d'acces approprié pour la salle serveur (ou le 'local technique' en PME) : badge specifique, journal d'acces, escort, climatisation, securite physique"
+xpReward: 60
+scenario: |
+  Tu es DSI d'une PME 80 personnes. Le local serveur est une piece
+  3x4m au fond du couloir, contenant :
+  - 1 baie 42U (4 serveurs Dell, switch, routeur)
+  - 1 NAS Synology (sauvegardes locales)
+  - 1 onduleur 3 kVA
+  - Climatiseur dedie
+
+  Le badge d'acces general entreprise ouvre cette piece. Aujourd'hui :
+  - Le DSI (toi)
+  - 2 admins systeme
+  - Le menage (pour l'aspirateur 2x/semaine)
+  - L'agent de maintenance climatisation (4x/an)
+  - Le DAF (parce qu'il est curieux et que son badge marche aussi)
+
+  Tu as l'occasion de revoir la securite. Tu fais quoi ?
+choices:
+  - id: "a"
+    label: "Limite acces aux 3 personnes IT (DSI + 2 admins) avec badge specifique + journal d'acces. Menage et maintenance accompagnes uniquement"
+    outcome: "good"
+    feedback: "Procedure correcte. La salle serveur est l'un des actifs les plus critiques (compromis = ransomware total possible). Acces limite au strict necessaire (principe du moindre privilege). Menage / maintenance = escort obligatoire."
+    points: 35
+  - id: "b"
+    label: "Tout le monde peut entrer, c'est plus pratique"
+    outcome: "bad"
+    feedback: "Catastrophique. Une intrusion physique dans la salle serveur = compromission totale possible : reset des serveurs en mode single user (acces root), branchement de USB pirate, deconnexion physique des sauvegardes (avant ransomware), destruction physique."
+    points: -20
+  - id: "c"
+    label: "Je laisse comme c'est, ca marche depuis des annees"
+    outcome: "bad"
+    feedback: "Attitude dangereuse. 'Ca marche' jusqu'au jour ou un employe mecontent / un menage corrompu / un faux technicien (cf. ep 03) fait un degat majeur. ANSSI considere le controle d'acces salle serveur comme une mesure de securite minimale."
+    points: -15
+  - id: "d"
+    label: "Limite mais avec aussi camera + journal + alarme + cle physique en backup. Ceinture + bretelles"
+    outcome: "good"
+    feedback: "Defense en profondeur exemplaire. Multi-couches : badge specifique + camera (preuve forensic) + journal (traçabilite) + alarme intrusion + cle physique backup (en cas de panne badge). Cout : 1-3 K EUR setup, ROI tres eleve."
+    points: 40
+debrief: |
+  La **salle serveur** (ou local technique en PME) est l'actif
+  physique le plus critique de l'entreprise. Compromis = perte de
+  controle complete (ransomware, vol de donnees, destruction).
+
+  **Pourquoi c'est l'actif #1 a proteger physiquement :**
+
+  Un acces physique a un serveur permet :
+
+  **1. Reset en mode single-user (Linux)** : a partir du grub, acces
+  root sans mot de passe. 30 secondes pour devenir admin de la
+  machine.
+
+  **2. Boot sur cle USB** : demarrer sur une cle Live Linux,
+  monter le disque, acceder/copier toutes les donnees. 5 minutes.
+
+  **3. Vol physique de disques** : sortir un disque dur et l'analyser
+  ailleurs. Si pas de chiffrement at-rest, toutes les donnees sont
+  accessibles.
+
+  **4. Branchement de devices** : keylogger USB sur la console,
+  Raspberry Pi sur un port reseau libre, sniffer reseau.
+
+  **5. Deconnexion des sauvegardes** : avant un ransomware, l'attaquant
+  peut deconnecter physiquement le NAS / la bande de sauvegarde =
+  pas de restauration possible.
+
+  **6. Destruction physique** : eteindre brutallement, debrancher,
+  voler. Indisponibilite immediate. Pour une attaque ciblee
+  (concurrent, employe rancunier), c'est le scenario du pire.
+
+  **Les 6 controles de base (ANSSI minimum) :**
+
+  **1. Acces limite par badge specifique**
+
+  Pas le badge general entreprise. Un badge **dedie salle serveur**
+  qui ne fonctionne que pour cette piece, donne uniquement aux
+  personnes habilitees (DSI + admin systeme).
+
+  Implementation :
+  - **Systeme de controle d'acces** moderne (Brivo, HID, Stid,
+    Salto) supporte les zones / badges multiples
+  - **Cout PME** : 800-2000 EUR pour 1 porte + 5 badges
+
+  **2. Journal d'acces (audit log)**
+
+  Toutes les entrees / sorties tracees :
+  - Date / heure
+  - Identifiant du badge (donc personne)
+  - Sens (entree / sortie)
+  - Anomalies (badge force, badge inconnu)
+
+  Conservation 3-12 mois. Permet l'investigation forensic en cas
+  d'incident.
+
+  **3. Camera de surveillance (orientee porte + interieur)**
+
+  - Camera IP avec enregistrement local + cloud (redondance)
+  - Resolution 1080p minimum
+  - Conservation : 30 jours minimum (RGPD : justifier la duree)
+  - Affichage discret pour dissuader (signalement d'enregistrement
+    obligatoire RGPD)
+
+  **4. Alarme intrusion**
+
+  Detecteur d'ouverture de porte + detecteur de mouvement
+  interieur. Connecte a une centrale d'alarme + notification SMS
+  immediate au DSI.
+
+  Si la porte s'ouvre hors heures normales sans badge autorise =
+  alerte.
+
+  **5. Climatisation et continuite electrique**
+
+  Pas un controle d'acces stricto sensu, mais essentiel :
+  - **Clim dedie** maintient < 25°C (au-dela : crash thermique des
+    serveurs, perte de donnees)
+  - **Onduleur** (UPS) : 30 min minimum d'autonomie pour shutdown
+    propre
+  - **Detection inondation / fumee** : alerte SMS + pompier auto
+
+  **6. Cle physique backup**
+
+  En cas de panne du systeme badge : une cle physique stockee dans
+  un coffre, accessible seulement par 2 personnes (DSI + DAF par
+  exemple, principe des 4 yeux).
+
+  **Pour les TPE / petites PME (< 30 personnes) :**
+
+  La "salle serveur" est souvent un placard avec 1-2 serveurs ou
+  un NAS. Mesures simplifiees :
+
+  - **Cadenas de porte** dedie (cle differente du reste)
+  - **Camera** simple (50-200 EUR sur Amazon)
+  - **Detecteur intrusion** integre a l'alarme generale entreprise
+  - **Limite l'acces** au DSI / freelance IT seulement
+
+  Cout total : 200-500 EUR. ROI eleve face aux risques.
+
+  **Pour les ETI / grandes entreprises :**
+
+  La salle serveur est generalement geree comme un **data center
+  miniature** :
+
+  - **Sas a 1 personne** (mantrap) avec carte d'acces + biometrie
+  - **Surveillance 24/7** par societe de gardiennage
+  - **Audit annuel ISO 27001** controle A.7.4 (zones securisees)
+  - **Tier 1-4** classification data center selon redondance
+    (clim, electrique, reseau)
+
+  **Pour le cloud (pas de salle serveur physique) :**
+
+  Si tu hebergez tout chez Scaleway / OVH / AWS / Azure : la
+  securite physique est leur responsabilite (et ils investissent
+  des millions). Tu n'as PAS de salle serveur a proteger
+  physiquement.
+
+  Mais : les **acces logiques** au cloud (consoles d'administration)
+  doivent etre proteges par MFA + IP whitelist + audit logs (cf.
+  saisons mots-de-passe + email-pro).
+
+  **Le piege "le menage a aussi acces" :**
+
+  Cas tres frequent en PME : le badge general entreprise du
+  prestataire menage ouvre TOUT, y compris la salle serveur. Il
+  passe l'aspirateur dedans 2x/semaine.
+
+  Risques :
+  - Le prestataire peut etre compromis (employe deteste son
+    employeur, paye par un concurrent)
+  - Le menage peut accidentellement debrancher des cables ou
+    renverser un liquide
+
+  Solution : badge menage SANS acces salle serveur. Pour le menage
+  effectif, escort par un IT 1x/semaine.
+
+  **Le piege "le DAF est curieux" :**
+
+  Cas : le DAF veut "voir comment c'est fait" / utilise son badge
+  general qui ouvre tout. Il prend des photos pour son COMEX.
+
+  Risques :
+  - Photos de la salle peuvent etre utilisees par un attaquant
+    (reconnaissance)
+  - DAF peut accidentellement debrancher / mal manipuler
+  - Pas de tracability des changements
+
+  Solution : DAF n'a PAS acces au badge salle serveur. Si visite
+  necessaire (jamais en pratique), escort par DSI.
+
+  **Cas reels :**
+
+  - **2019 - PME francaise** : intrusion physique par un faux
+    technicien fibre. Le faux technicien a passe 30 min dans la
+    salle serveur, branche un Raspberry Pi sur un port libre,
+    cree un acces persistant qui a permis d'exfiltrer 3 mois de
+    donnees clients. Decouvert lors d'un audit annuel.
+  - **2017 - Banque turque** : un employe rancunier qui partait a
+    eteint les serveurs principaux et detruit les sauvegardes
+    locales. Heureusement les sauvegardes off-site etaient intactes.
+    Indisponibilite : 18h. Cout : 2M EUR.
+  - **2014 - Hopital francais** : inondation salle serveur (panne
+    clim non detectee + fuite plomberie au-dessus). Perte de toutes
+    les donnees patients sur les serveurs principaux. Heureusement
+    les sauvegardes off-site etaient OK.
+
+  **La regle d'or :**
+
+  > **La salle serveur est l'actif #1. Acces limite au strict
+  > necessaire (3-5 personnes max), avec controle d'acces dedie,
+  > journal d'audit et camera. Sans exception.**
+quiz:
+  - question: "Acces physique a un serveur permet quoi en 5 minutes ?"
+    choices:
+      - { id: "a", label: "Rien", correct: false }
+      - { id: "b", label: "Reset en mode single-user (root sans mot de passe), boot sur USB Live (acces disques), branchement keylogger ou Raspberry Pi pirate", correct: true }
+      - { id: "c", label: "Juste regarder", correct: false }
+    explanation: "Acces physique = compromission totale possible. Linux : grub > single-user > root sans MDP en 30s. Boot USB Live = mount des disques = lecture/copy de tout. Raspberry Pi sur port libre = persistence."
+
+  - question: "Combien de personnes devraient avoir acces a la salle serveur d'une PME ?"
+    choices:
+      - { id: "a", label: "Tous les employes", correct: false }
+      - { id: "b", label: "3-5 max (DSI + 2-3 admins systeme). Menage et maintenance escortes", correct: true }
+      - { id: "c", label: "Personne", correct: false }
+    explanation: "Principe du moindre privilege. 3-5 personnes IT habilitees + escort obligatoire pour menage / techniciens / visiteurs. Pas le DAF, pas les RH, pas le CEO. La curiosite n'est pas un cas d'usage legitime."
+
+  - question: "Le badge menage qui ouvre la salle serveur c'est :"
+    choices:
+      - { id: "a", label: "Pratique pour le menage", correct: false }
+      - { id: "b", label: "Une faille majeure - le menage ne devrait acceder qu'avec escort IT", correct: true }
+      - { id: "c", label: "Necessaire", correct: false }
+    explanation: "Le prestataire menage peut etre compromis (employe deteste, paye par concurrent, errreur accidentelle). Badge sans acces salle serveur + escort 1x/semaine pour menage effectif = securite + entretien possible."
+
+  - question: "Pour une TPE 10 personnes avec 1 serveur dans un placard, mesures minimales ?"
+    choices:
+      - { id: "a", label: "Aucune", correct: false }
+      - { id: "b", label: "Cadenas dedie (cle differente) + camera simple + alarme intrusion liee + acces limite au DSI/freelance IT", correct: true }
+      - { id: "c", label: "Refaire toute l'infra", correct: false }
+    explanation: "Pour TPE : 200-500 EUR pour cadenas + camera Amazon + detecteur d'ouverture lie a l'alarme generale = securite raisonnable. ROI tres eleve face au risque (compromission de la TPE = potentiellement fatal economiquement)."
+---
+
+> 💡 **Pour aller plus loin** : pour les PME, **Brivo Cloud** ou
+> **Salto KS** offrent un controle d'acces moderne pour ~50 EUR/mois.
+> **HID** est le standard professionnel. ANSSI publie le guide
+> "Securite physique" gratuit sur les zones securisees.

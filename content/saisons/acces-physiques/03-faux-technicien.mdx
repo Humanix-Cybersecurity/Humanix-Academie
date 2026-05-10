@@ -1,0 +1,223 @@
+---
+title: "Le faux technicien climatisation"
+durationMinutes: 7
+persona: "tous-collaborateurs"
+objective: "Reconnaitre l'ingenierie sociale physique : faux technicien, faux livreur, faux auditeur. Verifier l'identite avant de laisser entrer dans les locaux ou de fournir des informations"
+xpReward: 60
+scenario: |
+  Mardi 10h32, tu es a l'accueil du bureau. Un homme en bleu de
+  travail entre :
+
+  > "Bonjour, technicien climatisation Cool-Air. On a une intervention
+  > d'urgence sur l'unite du 3eme etage, signalee par votre DSI hier
+  > soir. Vous pouvez me laisser passer ?"
+
+  Il a :
+  - Un badge "Cool-Air" suspendu au cou (semble pro)
+  - Une caisse a outils
+  - Un casque de chantier
+  - Un porte-documents avec un bon d'intervention imprime
+
+  Il est presse, semble agace par le retard. Tu fais quoi ?
+choices:
+  - id: "a"
+    label: "Je le laisse passer, l'identite semble verifiable, et le DSI a probablement organise"
+    outcome: "bad"
+    feedback: "Catastrophique. C'est exactement la pretexte d'ingenierie sociale physique. Le faux technicien obtient un acces total aux locaux, peut intervenir sur les serveurs (puisqu'il est cense gerer 'la clim' qui inclut souvent les locaux IT), photographier des ecrans, brancher des keyloggers."
+    points: -20
+  - id: "b"
+    label: "Je verifie : appel direct au DSI sur son numero (pas un numero donne par le visiteur) pour confirmer l'intervention. Si pas de confirmation : pas d'acces, point"
+    outcome: "good"
+    feedback: "Procedure correcte. Verification HORS-CANAL (numero DSI que tu as deja, pas un numero fourni par le visiteur). Si le DSI confirme = OK avec un escort. Si pas confirmation = porte fermee."
+    points: 35
+  - id: "c"
+    label: "Je le laisse passer apres avoir verifie son badge Cool-Air"
+    outcome: "bad"
+    feedback: "Le badge Cool-Air est trivialement contrefacable (impression couleur 5 minutes). Verifier le badge ne prouve RIEN. La verification doit etre faite cote ENTREPRISE (DSI / responsable), pas cote visiteur."
+    points: -10
+  - id: "d"
+    label: "Je le fais attendre a l'accueil, je verifie + je l'accompagne pendant l'intervention si confirmee"
+    outcome: "good"
+    feedback: "Procedure exemplaire. Attente accueil + verification + escort = securite maximale. Le vrai technicien n'a aucun probleme avec ca. Le faux technicien va probablement essayer de partir / se justifier."
+    points: 35
+debrief: |
+  L'**ingenierie sociale physique** est l'une des techniques les plus
+  efficaces des pentests et des vrais attaquants. Le taux de succes
+  des "faux technicien / livreur / auditeur" est de 80-95% en France
+  (rapports Wavestone, Synacktiv).
+
+  **Pourquoi ca marche :**
+
+  Les humains sont cables pour faire confiance aux apparences :
+  - Uniforme = professionnel (presupposition culturelle)
+  - Nom de societe affiche = legitimite
+  - Bon d'intervention papier = formalisme rassurant
+  - Pression temporelle = bypass de la reflexion
+
+  L'attaquant exploite **toutes ces presuppositions simultaneement**.
+
+  **Les 4 personnages classiques de l'ingenierie sociale physique :**
+
+  **1. Faux technicien (le plus frequent)**
+
+  - Climatisation, electricite, telecom, fibre, ascenseur
+  - Bleu de travail + caisse a outils + casque
+  - Pretexte : intervention urgente / preventive
+  - Capacites : acces locaux + souvent acces salle technique +
+    proximite des cables reseau
+
+  **2. Faux livreur**
+
+  - DHL, Chronopost, La Poste, FedEx
+  - Uniforme + colis + scanner
+  - Pretexte : "je dois remettre en main propre a quelqu'un du
+    service X"
+  - Capacites : visite des etages, identification des employes,
+    photographie des bureaux
+
+  **3. Faux auditeur / consultant**
+
+  - Costume + porte-documents + cheveux ranges
+  - Pretexte : "j'ai rendez-vous avec M. Dupont" (nom releve sur
+    LinkedIn)
+  - Capacites : entree avec autorite naturelle, acces salles de
+    reunion, conversations indiscretes
+
+  **4. Fausse equipe nettoyage (variante : equipe de menage du
+  weekend)**
+
+  - Tenue de menage + chariot + produits
+  - Pretexte : nettoyage en dehors des heures
+  - Capacites : acces tous les bureaux, fouille des poubelles
+    (cf. ep 05), branchement de devices sur ports reseau libres
+  - Particulierement efficace en weekend / soir tard
+
+  **La verification correcte (la procedure) :**
+
+  Quand un visiteur se presente :
+
+  **1. Identification :**
+  - "Je vais devoir verifier votre identite et votre intervention,
+    pouvez-vous patienter ici ?"
+  - Le visiteur reste a l'accueil. Pas d'avancee dans les locaux.
+
+  **2. Verification HORS-CANAL :**
+  - Appel direct au commanditaire interne (DSI, responsable
+    technique, manager) sur leur numero CONNU (pas un numero
+    fourni par le visiteur).
+  - Si le commanditaire dit "oui je l'ai commande, c'est X de
+    Cool-Air" : verification OK.
+  - Si le commanditaire dit "personne en intervention chez nous
+    aujourd'hui" : refuser l'acces poliment.
+
+  **3. Documentation :**
+  - Demander une piece d'identite (CNI ou passeport) du visiteur,
+    photo prise par l'accueil
+  - Bon de visite signe avec nom + heure + departement visite
+  - Badge visiteur appose
+
+  **4. Escort obligatoire :**
+  - Le visiteur ne se deplace JAMAIS seul dans les locaux
+  - Un employe l'accompagne a l'aller, attend pendant l'intervention,
+    accompagne au retour
+  - Pas d'exception (meme pour les techniciens "habitues")
+
+  **5. Recuperation :**
+  - Badge visiteur recupere a la sortie
+  - Heure de sortie notee
+
+  **Les phrases de l'attaquant (a reconnaitre) :**
+
+  ❌ "On m'a dit de venir, j'ai pas le numero exact, c'est urgent"
+     → Le vrai technicien a TOUJOURS le contact de la personne
+     qui l'a appele.
+
+  ❌ "Vous pouvez juste me laisser passer 5 minutes, je vais vite"
+     → Le vrai technicien accepte une verification de 5 minutes a
+     l'accueil. Le faux n'aime pas attendre.
+
+  ❌ "Mon RDV est avec Pierre Dupont, vous l'avez ?"
+     (mais ne sait pas son numero direct)
+     → Reconnaissance LinkedIn / annuaire public. Si Pierre
+     Dupont ne sait pas qu'il a un RDV : faux.
+
+  ❌ "Ne vous inquietez pas, je connais bien la maison"
+     → Tentative de creer une fausse familiarite. Toujours verifier
+     comme si c'etait la 1ere fois.
+
+  **Cas reels :**
+
+  - **2019 - Banque francaise** : pentest reussi avec faux technicien
+    fibre Orange. Le pentester a passe 2h dans les locaux, photo
+    d'ecrans non-vereouilles, identification du DSI, branchement
+    Raspberry Pi sur le reseau.
+  - **2017 - DGSI** : faux technicien dans une administration. Acces
+    a une salle d'archives, photographie de documents classes.
+    Investigation a duré 6 mois pour comprendre la fuite.
+  - **2014 - Fortune 500 US** : faux livreur Chronopost a remis un
+    "colis urgent" au CEO. Le colis contenait un Raspberry Pi qui
+    a ouvert un acces reseau interne pendant 3 semaines.
+
+  **Pour les employes lambda (pas que l'accueil) :**
+
+  Si dans ton bureau quelqu'un que tu ne connais pas se presente
+  et te dit "le technicien m'a dit de regarder votre PC" :
+  - **Refuser**, point.
+  - "Je vais appeler mon manager / la DSI pour confirmer, en
+    attendant je ne peux pas vous laisser acceder."
+  - Le vrai technicien sera escorte par quelqu'un que tu connais.
+
+  **La regle d'or :**
+
+  > **Aucun visiteur (technicien, livreur, consultant, auditeur) ne
+  > circule SEUL dans les locaux. Aucune exception.**
+  >
+  > La verification cote SI prend 5 minutes. Le risque sans
+  > verification est massif. Le ROI est evident.
+
+  **A configurer :**
+
+  - Procedure formalisee a l'accueil (documente)
+  - Liste des sous-traitants connus avec leur point de contact
+    interne (pour verification rapide)
+  - Numero d'urgence DSI / responsable technique pour les
+    accueils en heures non-bureau
+  - Badge visiteur visible (couleur differente du badge employe)
+  - Politique d'escort obligatoire
+
+  Sensibilisation annuelle des employes via exercice
+  "intrus pretexte" mene par un consultant pentest physique.
+quiz:
+  - question: "Un technicien arrive sans rendez-vous prealable. Action ?"
+    choices:
+      - { id: "a", label: "Le laisser passer, l'uniforme atteste", correct: false }
+      - { id: "b", label: "Appel HORS-CANAL au commanditaire interne (DSI / responsable) sur son numero CONNU. Si pas de confirmation : pas d'acces", correct: true }
+      - { id: "c", label: "Verifier son badge Cool-Air", correct: false }
+    explanation: "Verification HORS-CANAL (numero DSI deja connu, pas un numero fourni par le visiteur) = la seule veritable verification. Le badge / uniforme du visiteur peut etre contrefait. La confirmation doit venir de cote entreprise."
+
+  - question: "Le taux de reussite du 'faux technicien' en pentests francais est :"
+    choices:
+      - { id: "a", label: "5%", correct: false }
+      - { id: "b", label: "80-95% (les humains font confiance aux apparences professionnelles)", correct: true }
+      - { id: "c", label: "10%", correct: false }
+    explanation: "Selon Wavestone, Synacktiv : 80-95% de succes. Uniforme + caisse a outils + presse + bon papier = combinaison redoutable. Sans procedure formalisee, c'est une faille evidente."
+
+  - question: "Pourquoi escorter le visiteur en permanence ?"
+    choices:
+      - { id: "a", label: "Pour la convivialite", correct: false }
+      - { id: "b", label: "Empecher photographies, branchements pirates, fouille poubelles, vol materiel pendant qu'il est seul", correct: true }
+      - { id: "c", label: "Pour gagner du temps", correct: false }
+    explanation: "Le visiteur seul peut faire enormement de degats en 5 minutes (keylogger USB, photo ecrans, vol). Escort = protection physique des locaux. Vrai technicien n'est pas gene par l'escort."
+
+  - question: "Tu vois quelqu'un d'inconnu se presenter dans ton bureau pour 'regarder ton PC'. Action ?"
+    choices:
+      - { id: "a", label: "Le laisser faire, c'est forcement legitime", correct: false }
+      - { id: "b", label: "Refuser. Appeler ton manager / DSI pour confirmation. Le vrai technicien sera escorte par quelqu'un que tu connais", correct: true }
+      - { id: "c", label: "Lui donner mon mot de passe", correct: false }
+    explanation: "Une intervention legitime est ANNONCEE par ton manager ou DSI a l'avance. Si la personne arrive sans annonce + sans escort connu = signal d'alarme. Refuser poliment + verifier."
+---
+
+> 💡 **Pour aller plus loin** : exercice annuel "intrus pretexte"
+> avec consultants pentest physique (Wavestone, Synacktiv,
+> Lexsi/Orange Cyberdefense). 2-5K EUR par exercice. Resultats
+> partages en interne pour sensibiliser par l'experience.

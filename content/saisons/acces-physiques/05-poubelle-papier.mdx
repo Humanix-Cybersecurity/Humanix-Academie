@@ -1,0 +1,239 @@
+---
+title: "La benne à papier : trésor pour attaquant"
+durationMinutes: 6
+persona: "tous-collaborateurs"
+objective: "Comprendre le 'dumpster diving' (fouille de poubelles), savoir quels documents detruire (broyeur), comprendre la difference entre poubelle papier ordinaire et bac de destruction confidentiel"
+xpReward: 60
+scenario: |
+  Vendredi 19h, tu jettes dans la poubelle bureau (corbeille papier) :
+  - Ton ancien organigramme imprime (avec tous les noms et services)
+  - Une fiche de paie d'un collegue qu'il avait pose sur ton bureau
+    (et oublie)
+  - Un brouillon de mail "Negociation contrat fournisseur X - confidentiel"
+  - Une facture de carburant (CB partielle visible)
+  - Un post-it "appeler Claire 06 12 34 56 78"
+
+  Lundi matin, tu apprends que la societe de menage a sous-traite la
+  collecte le weekend a un nouveau prestataire. Les bacs ont ete
+  collectes par un camion exterieur.
+
+  Que peut faire un attaquant qui aurait achete ces papiers a un
+  employe du prestataire pour 50 EUR ?
+choices:
+  - id: "a"
+    label: "Beaucoup : organigramme = cibler les employes pour phishing, fiche de paie = chantage / fraude RIB, mail negociation = avantage commercial, facture CB = vol carte, post-it = numero perso de Claire"
+    outcome: "good"
+    feedback: "Excellente analyse. Chacun de ces documents est exploitable separement, et combines, ils donnent une carte complete de l'organisation. C'est exactement la valeur du 'dumpster diving' pour les attaquants."
+    points: 35
+  - id: "b"
+    label: "Pas grand chose, ce sont des papiers banals"
+    outcome: "bad"
+    feedback: "FAUX. Pour un attaquant, ces papiers sont une mine d'or. L'organigramme permet le phishing cible (spear phishing), la fiche de paie permet l'usurpation, etc. Le 'dumpster diving' est une technique de reconnaissance professionnelle utilisee depuis des decennies."
+    points: -15
+  - id: "c"
+    label: "Juste la facture CB - les autres ne donnent rien"
+    outcome: "neutral"
+    feedback: "La facture CB est en effet sensible (numero partiel exploitable). Mais les AUTRES documents sont aussi exploitables : organigramme = cibles phishing, fiche paie = chantage RH, mail = espionnage commercial. Tu sous-estimes le risque global."
+    points: 5
+  - id: "d"
+    label: "Rien, c'est dans la poubelle, c'est protege"
+    outcome: "bad"
+    feedback: "FAUX. Une fois jete, le papier sort de ton controle. Le menage, les sous-traitants, les passants peuvent acceder. La protection legale RGPD ne s'applique qu'au sein de l'entreprise - une fois jete, c'est dans le domaine public physiquement."
+    points: -15
+debrief: |
+  Le **dumpster diving** (fouille de poubelles) est une technique de
+  reconnaissance utilisee par les attaquants depuis l'epoque des
+  premiers hackers (annees 70-80). Pas glamour mais redoutablement
+  efficace. Beaucoup de breaches commencent par des informations
+  recoltees dans les poubelles.
+
+  **Les 6 categories de documents a NE JAMAIS jeter en poubelle
+  ordinaire :**
+
+  **1. Documents avec PII (donnees personnelles)**
+
+  - Fiches de paie (NIR, RIB, salaires)
+  - Bulletins de paie
+  - Listes d'employes / annuaire
+  - CVs de candidats
+  - Donnees clients (adresses, telephones)
+  - Donnees sante (arrets maladie, certificats)
+
+  RGPD article 5 : limitation de conservation. Mais la destruction
+  doit etre **securisee**, pas juste "jeter". Sinon = violation.
+
+  **2. Documents commerciaux confidentiels**
+
+  - Contrats fournisseurs / clients
+  - Documents de negociation (brouillons, marges, conditions)
+  - Strategie commerciale / plans 2026+
+  - Memos COMEX
+  - Resultats financiers non publies
+
+  Pour un concurrent, ces documents valent leur poids en or. Cas
+  d'espionnage industriel courants.
+
+  **3. Documents techniques / IT**
+
+  - Schemas reseau, plans des locaux
+  - Listes de mots de passe (meme barres / "anciens")
+  - Configurations de serveurs / equipements
+  - Listing de prestataires + accreditations
+  - Logs imprimes
+
+  Donne a un attaquant la carte de l'infrastructure.
+
+  **4. Documents financiers**
+
+  - Factures (numeros de carte / RIB partiels)
+  - Releves bancaires
+  - Cheques (meme barres ou annules)
+  - Notes de frais (avec donnees CB)
+  - Tickets de caisse pro
+
+  **5. Documents legaux / juridiques**
+
+  - Contrats avec partenaires
+  - Memos avocat
+  - Plaintes / procedures en cours
+  - Correspondance avec autorites (CNIL, fisc, Urssaf)
+
+  **6. Communication interne sensible**
+
+  - Mails imprimes "confidentiel"
+  - Notes de reunions stratégiques
+  - Brouillons de communication de crise
+  - Documents RH (recrutement, sanctions)
+
+  **Comment detruire correctement :**
+
+  **Niveau 1 - Broyeur (shredder) personnel**
+
+  Dans chaque bureau ou un broyeur (~30-50 EUR pour 5-10 feuilles)
+  pour usage quotidien. **Niveau de securite minimum requis : DIN
+  P-4** (cross-cut, particules de 4mm x 30mm max).
+
+  Les broyeurs "trop" basiques (DIN P-1, P-2) ne suffisent pas pour
+  les documents sensibles : les bandes peuvent etre reconstituees
+  manuellement (expert forensic capable de reconstituer 1 page en
+  plusieurs heures).
+
+  Pour les documents tres sensibles : DIN P-5 ou P-6 (particules
+  encore plus petites).
+
+  **Niveau 2 - Bac de destruction confidentielle**
+
+  Bacs verrouilles dans l'entreprise, vides par une societe
+  specialisee certifiee NF Z42-013 (norme francaise destruction
+  confidentielle).
+
+  Avantages :
+  - Volumes plus importants
+  - Certificat de destruction (preuve RGPD)
+  - Niveau de securite garanti (P-5 ou P-6)
+
+  Cout : 30-100 EUR/mois selon volume. Indispensable pour les
+  cabinets, RH, comptabilite.
+
+  **Niveau 3 - Destruction sur site**
+
+  Pour les documents ultra-sensibles (defense, sante, finance) : le
+  prestataire vient broyer SUR SITE devant le donneur d'ordre. Pas
+  de transport, pas de stockage exterieur.
+
+  Cout : 100-500 EUR par intervention.
+
+  **Niveau 4 - Incineration**
+
+  Pour les archives definitives : incineration en site agreee. Tres
+  cher mais securite maximale.
+
+  **La regle de classification :**
+
+  Idealement, ton entreprise a une politique de classification :
+  - **Public** : documents marketing, RA = poubelle ordinaire OK
+  - **Interne** : organigramme, plans = broyeur basic
+  - **Confidentiel** : RH, finance, commercial = broyeur P-4 minimum
+  - **Secret** : strategie, M&A, defense = bac certifie ou
+    destruction sur site
+
+  Sans politique : par defaut, **rien de "interne" en poubelle
+  ordinaire**.
+
+  **Cas reels :**
+
+  - **2017 - Compagnie aerienne francaise** : un ex-employe a
+    revendu pendant 2 ans des documents recuperes dans les
+    poubelles bureau (organigrammes, listes clients VIP) pour 200-500
+    EUR le batch. Decouvert lors d'un controle RH.
+  - **2014 - Banque suisse** : un journaliste a fouille les
+    poubelles d'une banque privee pour des donnees clients. A
+    publie un article. Banque condamnee par la FINMA (regulateur
+    suisse).
+  - **DEF CON history** : Kevin Mitnick (legendaire hacker) a
+    construit une grande partie de sa carriere sur le dumpster
+    diving + ingenierie sociale.
+
+  **Pour la maison aussi :**
+
+  Les particuliers sont aussi cibles :
+  - Releves bancaires papier
+  - Factures EDF / SFR (numero client utilisable pour SE)
+  - Courriers Urssaf / impots
+  - Ordonnances medicales
+
+  Un broyeur 30 EUR + utilisation systematique = elimine 90% du
+  risque domestique de fraude par dumpster diving.
+
+  **L'erreur classique : "barrer le numero CB"**
+
+  Tu reçois une facture avec ton numero CB partiel : 4567 XX XX
+  XX 1234. Tu barres au crayon les 4 derniers chiffres "1234" et
+  tu jettes.
+
+  Probleme : sous une lampe, le crayon est lisible. Ou en
+  recopiant : si tu as note les chiffres en barrant, ils sont dans
+  ton stylo / ta memoire. Pour la securite : broyer entierement.
+
+  **Pour les pros :**
+
+  Audit annuel des poubelles : pendant 1 jour, recuperer les bacs
+  poubelle papier ordinaires + faire l'inventaire des documents
+  trouves. Resultats partages avec le COMEX = sensibilisation par
+  l'experience.
+
+  C'est inconfortable mais tres efficace.
+quiz:
+  - question: "Une fiche de paie jetee en poubelle ordinaire c'est :"
+    choices:
+      - { id: "a", label: "OK c'est dans une poubelle", correct: false }
+      - { id: "b", label: "Une violation potentielle RGPD (NIR + RIB + salaires = donnees personnelles sensibles, destruction non securisee)", correct: true }
+      - { id: "c", label: "Anodin", correct: false }
+    explanation: "RGPD article 5 : limitation de conservation. La destruction doit etre SECURISEE, pas juste 'jeter'. Une fiche de paie jetee dans une poubelle ordinaire = sortie de controle, accessible au menage / sous-traitants / passants. Violation potentielle."
+
+  - question: "Niveau minimum de broyeur pour documents confidentiels ?"
+    choices:
+      - { id: "a", label: "DIN P-1 (bandes simples)", correct: false }
+      - { id: "b", label: "DIN P-4 minimum (cross-cut, particules 4x30mm) pour confidentiel. P-5 ou P-6 pour secret.", correct: true }
+      - { id: "c", label: "Aucun broyeur necessaire", correct: false }
+    explanation: "DIN P-1/P-2 (bandes) sont reconstituables manuellement. DIN P-4 cross-cut = standard pour documents confidentiels. P-5/P-6 (particules micro) pour donnees secrets/defense. Norme europeenne EN 15713 / DIN 66399."
+
+  - question: "Le dumpster diving c'est :"
+    choices:
+      - { id: "a", label: "Plonger dans une piscine", correct: false }
+      - { id: "b", label: "Fouille de poubelles pour recuperer des informations exploitables (organigrammes, mails, RIB, plans)", correct: true }
+      - { id: "c", label: "Une attaque cyber recente", correct: false }
+    explanation: "Dumpster diving = technique de reconnaissance utilisee depuis les annees 70-80. Pas glamour mais efficace. Kevin Mitnick (legend hacker) a construit sa carriere dessus. Toujours d'actualite."
+
+  - question: "Pour des documents tres sensibles, le niveau de destruction le plus haut est :"
+    choices:
+      - { id: "a", label: "Broyeur perso", correct: false }
+      - { id: "b", label: "Bac certifie NF Z42-013 ou destruction sur site par prestataire specialise", correct: true }
+      - { id: "c", label: "Poubelle bleue", correct: false }
+    explanation: "NF Z42-013 = norme francaise destruction confidentielle. Prestataires specialises (Veolia Recyclage, Suez, Paprec) avec certification ANSSI pour les niveaux les plus eleves. Destruction sur site = dispositif transportable qui broie chez le donneur d'ordre."
+---
+
+> 💡 **Pour aller plus loin** : audit annuel des poubelles bureau
+> (avec consentement RH + DPO) - inventaire des documents trouves +
+> sensibilisation par l'experience. Cout : 0 EUR. ROI : sensibilisation
+> immediate des employes par la realite de leurs propres jets.

@@ -1,0 +1,231 @@
+---
+title: "Smartphone perdu : les 4 premières heures"
+durationMinutes: 7
+persona: "tous-collaborateurs"
+objective: "Reagir correctement en cas de perte/vol de smartphone : les 4 actions critiques dans les 4 premieres heures pour limiter les degats"
+xpReward: 60
+scenario: |
+  Vendredi 19h47, tu sors du metro Saint-Lazare apres une longue
+  journee. Tu cherches ton smartphone dans ta poche. Rien. Tu te
+  retournes - le metro est deja parti.
+
+  Sur ton smartphone :
+  - L'application bancaire (avec biometrie connectee)
+  - Tes mails pro (Outlook avec 6 mois d'historique en cache)
+  - Photos perso (avec ton enfant)
+  - WhatsApp (groupe famille + groupe boulot avec infos clients)
+  - L'application de gestion de ton entreprise (acces au CRM)
+
+  Tu n'as pas dormi de la nuit, tu es a court de cafe. Que fais-tu en
+  PRIORITE dans les 30 prochaines minutes ?
+choices:
+  - id: "a"
+    label: "Je rentre chez moi a pied pour reflechir calmement"
+    outcome: "bad"
+    feedback: "Mauvaise priorisation. Tu rentres chez toi en 30 min - pendant ce temps, un voleur a peut-etre deja accede a tes apps. Le delai d'action est CRITIQUE dans les 30 premieres minutes."
+    points: -10
+  - id: "b"
+    label: "Je trouve un wifi public, je me connecte a mon compte iCloud/Google et j'active 'Localiser mon iPhone' OU je verrouille a distance + j'efface si necessaire"
+    outcome: "good"
+    feedback: "Excellent reflexe. iCloud / Google Find My Device permettent : localiser, faire sonner, verrouiller a distance avec message, ou effacer le contenu. Plus tu agis vite, plus tu limites les degats. Configurer ces services AVANT la perte est crucial."
+    points: 35
+  - id: "c"
+    label: "J'appelle mon operateur pour bloquer la SIM"
+    outcome: "good"
+    feedback: "Bonne action mais incomplete. Bloquer la SIM empeche les appels/SMS surtaxes mais NE bloque PAS l'acces aux apps (qui marchent en wifi). Combiner SIM block + verrouillage iCloud/Google."
+    points: 20
+  - id: "d"
+    label: "Je previens mon manager du boulot pour les apps pro"
+    outcome: "neutral"
+    feedback: "Etape importante mais pas la plus urgente dans les 30 premieres minutes. Plus efficace : agir d'abord (verrouillage iCloud/Google), notifier ensuite. Ton manager pourra demander a la DSI de revoquer ton acces SSO."
+    points: 10
+debrief: |
+  La perte ou le vol de smartphone est l'incident cyber le plus
+  frequent en mobilite. En France, ~600 000 smartphones sont perdus
+  ou voles chaque annee (donnees ARCEP 2024). Avec un smartphone
+  pro, les enjeux sont immediats.
+
+  **Les 4 actions critiques (4 premieres heures) :**
+
+  **Action 1 (0-15 min) : Localiser et verrouiller a distance**
+
+  C'est l'action la plus urgente. Necessite d'avoir configure CES
+  services AVANT la perte :
+
+  - **iPhone** : "Localiser" doit etre active dans Reglages > [Ton
+    nom] > Localiser. Acces depuis icloud.com/find ou un autre
+    appareil Apple connecte.
+  - **Android** : "Localiser mon appareil" doit etre active dans
+    Parametres > Securite. Acces depuis android.com/find avec ton
+    compte Google.
+
+  Actions disponibles a distance :
+  1. **Faire sonner** (au cas ou il est a cote)
+  2. **Verrouiller** avec un message ("Cet appareil est perdu,
+     contactez 06 XX XX XX XX")
+  3. **Effacer le contenu** (option finale, irreversible)
+
+  Le moindre wifi public ou hotspot ami suffit pour acceder a ces
+  outils.
+
+  **Action 2 (15-30 min) : Bloquer la SIM**
+
+  Appel a ton operateur :
+  - **Orange** : 0 800 100 740 (gratuit, 24/7)
+  - **SFR** : 1023 puis option vol/perte
+  - **Bouygues** : 614 puis 0
+  - **Free** : 1044
+  - **Operateur entreprise** : numero indique sur le site / dans
+    ton portail RH
+
+  Demande :
+  - Blocage immediat de la SIM (empeche appels/SMS surtaxes
+    international)
+  - **Blocage IMEI** : empeche d'utiliser le telephone meme avec une
+    autre SIM. Necessite l'IMEI de ton tel (note-le AVANT, ou
+    retrouvable sur la facture d'achat).
+
+  **Action 3 (30 min - 1h) : Revoquer les sessions des apps
+  critiques**
+
+  Meme si le tel est verrouille, certaines apps peuvent rester
+  connectees. Revoquer depuis un autre appareil :
+
+  - **Banque** : connexion site web > parametres > sessions actives
+    > tout fermer.
+  - **Outlook / Microsoft 365** : portal.office.com > Mon compte >
+    "Se deconnecter partout".
+  - **Google** : myaccount.google.com > Securite > Vos appareils >
+    "Se deconnecter".
+  - **WhatsApp / Signal** : sur un nouveau telephone, l'enregistrement
+    via SMS deconnectera automatiquement les autres devices. Sinon,
+    via web.whatsapp.com > deconnecter tout.
+  - **Apps pro entreprise** : alerter la DSI pour revoquer le SSO
+    et les comptes.
+
+  **Action 4 (1-4h) : Notifier**
+
+  - **Manager / DSI** : pour les apps pro. La DSI peut effacer a
+    distance via MDM (Mobile Device Management) si configure.
+  - **Banque** : si app bancaire, signaler par precaution (ils
+    surveilleront les transactions suspectes).
+  - **Police** (commissariat ou en ligne) : depot de plainte
+    obligatoire pour tout vol. Necessaire pour assurance et pour
+    blocage IMEI definitif.
+  - **DPO** : si donnees personnelles de tiers (clients, collegues)
+    etaient stockees - notification potentielle CNIL article 33.
+
+  **La preparation AVANT la perte (le plus important) :**
+
+  La plupart des actions ci-dessus ne sont possibles que si tu as
+  PREPARE en amont :
+
+  **1. Activer Localiser/Find My Device des l'achat**
+
+  C'est le tout premier reflexe a la mise en service du tel. Sans
+  ca, impossible de localiser/effacer apres perte.
+
+  **2. Code PIN/biometrie sur l'ecran de verrouillage**
+
+  Sans ecran de verrouillage : voleur a acces immediat a tout.
+  PIN minimum 6 chiffres OU biometrie + PIN de secours.
+
+  **3. Chiffrement complet de l'appareil**
+
+  - **iPhone** : chiffrement automatique des qu'un PIN est defini.
+  - **Android moderne (10+)** : chiffrement par defaut.
+
+  **4. Apps critiques avec auth a chaque ouverture**
+
+  Banque, gestionnaire de mots de passe, mails pro : configure-les
+  pour exiger biometrie OU PIN a chaque ouverture (pas juste a
+  l'ouverture initiale).
+
+  **5. Sauvegarde quotidienne**
+
+  iCloud / Google Drive backup automatique. En cas d'effacement
+  total, tu peux restaurer ton telephone a l'identique sur un nouveau
+  device.
+
+  **6. Note l'IMEI**
+
+  Le numero IMEI (15 chiffres) est imprime sur la boite ou
+  retrouvable en composant *#06# sur ton tel. Note-le SUR PAPIER
+  (pas dans le tel !) - tu en auras besoin pour le blocage operateur
+  et la plainte police.
+
+  **L'erreur classique : "j'ai juste perdu, je vais le retrouver"**
+
+  Beaucoup d'utilisateurs attendent 2-3 jours "au cas ou je
+  retrouve". Pendant ces 3 jours :
+  - Le voleur a explore tes apps
+  - Il a peut-etre fait des achats avec ta carte enregistree
+  - Il a peut-etre exfiltre tes mails
+  - Il peut avoir contacte tes proches en se faisant passer pour
+    toi (fraude au proche)
+
+  **REGLE D'OR** : si tu n'es pas SUR de pouvoir le retrouver dans
+  les 30 minutes (chez toi, dans la voiture), agis comme s'il etait
+  vole. Verrouille, bloque, notifie. Tu pourras toujours
+  deverrouiller si tu le retrouves.
+
+  **Le piege "j'ai un MDM, je suis tranquille"**
+
+  Le MDM (Mobile Device Management - cf. ep 04) permet a ta DSI
+  d'effacer a distance les donnees pro. Mais :
+  - Le MDM ne protege pas tes apps perso (banque, photos perso,
+    WhatsApp perso)
+  - Le MDM doit etre configure correctement (pas tous les MDM
+    permettent l'effacement automatique)
+  - Le MDM ne protege pas si le voleur reset le tel en mode usine
+    (sauf MDM avancé avec "Lock to Owner")
+
+  **Cas reel - cabinet d'avocats parisien 2023 :**
+
+  Une associee a perdu son iPhone dans un taxi. App "Localiser"
+  non activee. Le tel n'avait pas de PIN (deverrouillage facial
+  uniquement, qui peut echouer). Le voleur a accede a :
+  - Mails clients (donnees confidentielles)
+  - WhatsApp avec photos de documents legaux
+  - App banque pro
+
+  Cabinet poursuivi par 3 clients pour breach de confidentialite.
+  Cout estime : 80 000 EUR + reputation.
+
+  Cette histoire aurait pu etre evitee par 30 secondes de config a
+  l'achat du tel.
+quiz:
+  - question: "Tu perds ton smartphone. Action n°1 dans les 15 premieres minutes ?"
+    choices:
+      - { id: "a", label: "Rentrer chez moi pour reflechir", correct: false }
+      - { id: "b", label: "Localiser/verrouiller a distance via iCloud (iPhone) ou Find My Device (Android) depuis un autre appareil", correct: true }
+      - { id: "c", label: "Acheter un nouveau telephone", correct: false }
+    explanation: "Verrouillage a distance dans les 15 minutes = empeche le voleur d'acceder aux apps. Necessite d'avoir CONFIGURE 'Localiser/Find My' AVANT la perte. C'est l'action la plus urgente."
+
+  - question: "Bloquer la SIM uniquement suffit-il ?"
+    choices:
+      - { id: "a", label: "Oui, c'est suffisant", correct: false }
+      - { id: "b", label: "NON. Bloquer la SIM empeche appels/SMS mais les apps marchent en WiFi. Il faut combiner avec verrouillage iCloud/Google", correct: true }
+      - { id: "c", label: "Le SIM block bloque tout", correct: false }
+    explanation: "SIM block = stop appels/SMS surtaxes. Mais le tel se connecte en WiFi (gare, cafes, hotspots) - donc les apps continuent de fonctionner. Il faut combiner SIM block + verrouillage iCloud/Google."
+
+  - question: "Que faut-il PREPARER avant la perte pour pouvoir agir ?"
+    choices:
+      - { id: "a", label: "Rien, tout marche par defaut", correct: false }
+      - { id: "b", label: "Activer 'Localiser/Find My', mettre un PIN 6 chiffres + biometrie, noter l'IMEI sur papier", correct: true }
+      - { id: "c", label: "Acheter un coffre-fort", correct: false }
+    explanation: "Sans ces preparations : perte = catastrophe complete. Avec : 30 secondes de config a l'achat + IMEI note = perte gerable. La majorite des incidents arrivent par defaut de preparation."
+
+  - question: "Combien de smartphones sont perdus/voles en France chaque annee ?"
+    choices:
+      - { id: "a", label: "10 000", correct: false }
+      - { id: "b", label: "~600 000 (donnees ARCEP 2024)", correct: true }
+      - { id: "c", label: "1 million", correct: false }
+    explanation: "ARCEP 2024 : ~600 000 smartphones perdus/voles. C'est l'incident cyber le plus frequent. Tout le monde sera concerne au moins une fois dans sa vie. La preparation fait toute la difference."
+---
+
+> 💡 **Pour aller plus loin** : configure MAINTENANT Localiser
+> (iPhone) ou Find My Device (Android) si ce n'est pas fait. Note
+> l'IMEI de ton tel professionnel. Pour les pros mobiles : un MDM
+> entreprise (Microsoft Intune, Jamf, Hexnode) automatise la
+> protection.

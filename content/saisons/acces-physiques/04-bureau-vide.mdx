@@ -1,0 +1,228 @@
+---
+title: "Le bureau vide : 5 minutes, 1 fuite"
+durationMinutes: 5
+persona: "tous-collaborateurs"
+objective: "Verrouiller son ecran a chaque depart du bureau (meme 30 secondes), gerer son bureau pour eviter la fuite de documents sensibles, comprendre 'clean desk policy'"
+xpReward: 40
+scenario: |
+  Mardi 14h22, tu sors de ton bureau pour aller chercher un cafe. Tu
+  laisses :
+  - Ton PC ouvert (pas verrouille), avec un mail confidentiel client
+    affiche
+  - Un dossier "RIB clients prioritaires.xlsx" ouvert dans Excel
+  - Un post-it sur l'ecran avec ton mot de passe Outlook (oui, ca
+    arrive)
+  - Une pile de papiers "Resultats commerciaux 2026 confidentiels"
+    sur ton bureau
+
+  Tu reviens 5 minutes plus tard. Le cafe etait bon. Pendant ces
+  5 minutes, qui a pu :
+  - Voir ton ecran ? Tes collegues, le menage, un visiteur.
+  - Photographier ton ecran ? N'importe qui avec un smartphone.
+  - Voir le post-it mot de passe ? N'importe qui qui passe.
+  - Lire les papiers commerciaux ? N'importe qui qui s'attarde.
+
+  Quel est le plus grave ?
+choices:
+  - id: "a"
+    label: "Tous sont graves. La regle est : verrouiller l'ecran (Win+L ou Cmd+Ctrl+Q) chaque fois que tu quittes le poste, meme 30 secondes. Et ranger les papiers + ne JAMAIS noter un mot de passe"
+    outcome: "good"
+    feedback: "Excellente analyse. Chaque element est une fuite potentielle. La 'clean desk policy' (bureau range) + verrouillage automatique est l'une des regles de securite les plus simples ET les plus violees. Sensibilisation continue necessaire."
+    points: 35
+  - id: "b"
+    label: "Le post-it avec mot de passe - les autres sont moins graves"
+    outcome: "neutral"
+    feedback: "Le post-it est en effet le plus visible et grave (donne acces au compte = tous les mails, fichiers). MAIS l'ecran ouvert (avec mail confidentiel) ET les papiers commerciaux sont aussi des fuites. Il n'y a pas de hierarchie - tous violent la securite."
+    points: 10
+  - id: "c"
+    label: "Rien, c'est mon bureau prive et 5 minutes c'est court"
+    outcome: "bad"
+    feedback: "FAUX. 5 minutes suffisent a un visiteur, un menage, un collegue mal intentionne pour : photographier l'ecran, copier les RIB, prendre en photo les papiers commerciaux. Et tout cela peut leak n'importe ou. Aucune information confidentielle ne devrait etre visible quand tu quittes ton bureau."
+    points: -15
+  - id: "d"
+    label: "Les papiers commerciaux uniquement (donnees competitives)"
+    outcome: "neutral"
+    feedback: "Les papiers sont graves mais pas les seuls. Le mail confidentiel client (RGPD potentiel), les RIB clients (donnees personnelles + bancaires), le post-it password (acces au compte) sont aussi graves. Il faut adresser les 4 elements."
+    points: 10
+debrief: |
+  Le **bureau vide non securise** est l'une des fuites les plus
+  silencieuses et frequentes en entreprise. Pas de hacker, pas de
+  malware - juste une absence de discipline elementaire qui ouvre la
+  porte a l'observation, la photographie, le vol.
+
+  **La 'clean desk policy' (bureau range) :**
+
+  Norme ISO 27001 (controle A.7.7) impose une politique de bureau
+  range pour les organisations certifiees. Principe : quand tu
+  quittes ton poste (meme 5 minutes), aucune information sensible ne
+  doit etre visible.
+
+  **Les 4 categories d'information a securiser :**
+
+  **1. Ecran (le plus immediat)**
+
+  ❌ Ecran ouvert avec mails / docs / chat = lisible par tout passant.
+  ✅ Ecran verrouille (Windows : Win+L. macOS : Cmd+Ctrl+Q. Linux :
+     Super+L).
+
+  Le verrouillage prend < 1 seconde. Pas d'excuse.
+
+  **2. Documents papier**
+
+  ❌ Pile de "Resultats commerciaux 2026 confidentiels" sur le
+     bureau = lisible.
+  ✅ Documents ranges dans un tiroir ferme a cle, ou dans un
+     classeur avec couverture neutre.
+
+  Le menage / les visiteurs / les collegues curieux peuvent lire
+  rapidement (5-10 secondes par feuille en photo).
+
+  **3. Post-it / notes manuscrites**
+
+  ❌ Post-it sur l'ecran "mdp Outlook : Lille75!@" = donnez les
+     cles.
+  ✅ Mot de passe dans un gestionnaire de mots de passe
+     (Bitwarden, 1Password, KeePass), JAMAIS ecrit physiquement.
+
+  Si tu DOIS noter un mot de passe (rare cas) : dans un coffre-fort
+  ferme a cle, jamais visible.
+
+  **4. Materiel**
+
+  ❌ Cle USB sur le bureau, smartphone deverrouille pose, badge
+     visible.
+  ✅ Tout dans un sac ou tiroir ferme a cle pendant les pauses.
+
+  **Verrouillage automatique (le filet de securite) :**
+
+  Configure ton ordinateur pour verrouiller automatiquement apres
+  X minutes d'inactivite :
+
+  - **Windows** : Settings > Personalization > Lock Screen > Screen
+    timeout : 5 minutes max.
+  - **macOS** : Reglages > Ecran de verrouillage > "Demander le mot
+    de passe immediatement" + delai 5 minutes.
+  - **Linux** : depend du DE (GNOME, KDE), generalement Settings >
+    Privacy > Screen Lock.
+
+  En entreprise, le MDM (cf. saison mobile-smartphone) peut imposer
+  ce verrouillage automatique a tous les postes.
+
+  **La verrouillage manuel (l'habitude a creer) :**
+
+  Apprends-toi le raccourci :
+  - **Windows** : Win + L
+  - **macOS** : Cmd + Ctrl + Q
+  - **Chrome OS** : Search + L
+
+  En une seconde, l'ecran est verrouille. C'est plus rapide que de
+  prendre ton cafe.
+
+  **Le piege "je connais mes collegues, ils ne regardent pas" :**
+
+  FAUX dans 3 cas :
+  - **Visiteurs** : tu ne controles pas qui passe dans ton open-space.
+  - **Menage / techniciens** : peuvent voler / photographier sans
+    laisser de trace.
+  - **Collegues curieux ou malveillants** : la majorite est honnete,
+    mais 1 sur 100 a des problemes financiers / chantage / curiosite
+    excessive.
+
+  Pour les RH / DAF / DPO : tes documents sont legalement sensibles
+  (donnees personnelles employes, informations financieres). La
+  fuite par bureau ouvert peut etre une violation RGPD.
+
+  **Cas reels :**
+
+  - **2018 - Banque francaise** : un employe a laisse son ecran
+    ouvert avec une feuille Excel "Liste des dossiers en cours"
+    visible. Un visiteur (faux client) a photographie l'ecran.
+    Plainte client + amende interne.
+  - **2020 - Cabinet d'avocats** : un avocat avait un post-it avec
+    mot de passe collecte sur son ecran. Le menage a vu, l'a partage
+    avec un proche. 3 dossiers clients ont fuite. Cabinet poursuivi.
+  - **2022 - Hopital francais** : photo d'ecran d'un PC infirmier
+    laisse ouvert (avec donnees patients) postee sur Twitter par un
+    employe de menage (qui voulait illustrer son metier). Procedure
+    CNIL en cours.
+
+  **Le piege "je travaille tard, plus personne n'est la" :**
+
+  - 19h-7h : menage, securite, peut-etre des collegues qui
+    travaillent tard.
+  - Weekend : agents d'entretien, mainteneurs.
+  - Locaux ouverts 24/7 (centres de service) : encore plus
+    d'exposition.
+
+  Le bureau ferme a cle est rarement vraiment ferme. Considere
+  qu'il y a toujours quelqu'un qui peut passer.
+
+  **Cas particulier - les imprimantes :**
+
+  ❌ Imprimer un document confidentiel et oublier de le recuperer
+     immediatement.
+  ✅ Imprimer en mode "secure print" (PIN code) ou recuperer
+     immediatement.
+
+  Les imprimantes sont aussi des points de fuite : papiers laisses
+  empiles dans le bac peuvent etre vus / photographies par
+  n'importe qui.
+
+  **Pour un bureau partage / open-space :**
+
+  Sensibilisation visuelle :
+  - Affiche "Avant de partir : verrouille ton ecran (Win+L)" pres
+    des espaces communs
+  - Exercice "test de la photo d'ecran" : un volontaire (RSSI ou
+    consultant) prend en photo les ecrans non verrouilles pendant
+    une journee = sensibilisation par l'experience
+
+  **La regle d'or :**
+
+  > **Un bureau quitte = un bureau verrouille et range.** Meme 5
+  > minutes. Meme pour un cafe.
+  >
+  > Le verrouillage prend 1 seconde. Le rangement, 30 secondes. Le
+  > risque sans, c'est des donnees personnelles, des secrets
+  > commerciaux, des credentials. Le ROI est evident.
+
+  **Configurer maintenant :**
+
+  - Verrouillage auto 5 min sur tous tes appareils
+  - Apprendre le raccourci Win+L / Cmd+Ctrl+Q
+  - Gestionnaire de mots de passe (jeter tous tes post-it)
+  - Tiroir ferme a cle pour les documents sensibles
+quiz:
+  - question: "Tu quittes ton bureau pour 5 minutes. Action ?"
+    choices:
+      - { id: "a", label: "Rien, je reviens vite", correct: false }
+      - { id: "b", label: "Verrouiller l'ecran (Win+L) + ranger les documents sensibles + cacher le post-it password", correct: true }
+      - { id: "c", label: "Eteindre le PC", correct: false }
+    explanation: "Win+L (1 seconde) + rangement (30s) + pas de post-it password = la 'clean desk policy' standard. 5 minutes = enormement de temps pour un visiteur qui photographie ton ecran ou tes papiers."
+
+  - question: "Le raccourci pour verrouiller un ecran Windows ?"
+    choices:
+      - { id: "a", label: "Ctrl+Z", correct: false }
+      - { id: "b", label: "Win + L", correct: true }
+      - { id: "c", label: "Alt+F4", correct: false }
+    explanation: "Win + L verrouille l'ecran instantanement sur Windows. macOS : Cmd+Ctrl+Q. Linux/Chrome OS : Super+L. Apprends ce raccourci par coeur - c'est le geste le plus important de la cyber au quotidien."
+
+  - question: "Un post-it 'mdp Outlook : Lille75!@' colle sur l'ecran c'est :"
+    choices:
+      - { id: "a", label: "Pratique pour ne pas oublier", correct: false }
+      - { id: "b", label: "Une fuite catastrophique - donne acces au compte (mails, fichiers, partages). Utiliser un gestionnaire de mots de passe", correct: true }
+      - { id: "c", label: "Anodin", correct: false }
+    explanation: "Le post-it password est l'une des fuites les plus communes ET les plus graves. N'importe qui qui passe (collegue, menage, visiteur) peut prendre une photo. Solution : gestionnaire de mots de passe (Bitwarden gratuit, 1Password, KeePass)."
+
+  - question: "La 'clean desk policy' c'est :"
+    choices:
+      - { id: "a", label: "Une habitude amusante", correct: false }
+      - { id: "b", label: "Une politique formalisee (ISO 27001 controle A.7.7) qui impose un bureau range pour proteger les informations confidentielles", correct: true }
+      - { id: "c", label: "Une obligation menage", correct: false }
+    explanation: "ISO 27001 controle A.7.7 = politique de bureau range obligatoire pour les certifications. Au-dela : bonne pratique generale, applicable a toute entreprise serieuse. Combine ecran verrouille + documents ranges + pas de notes visibles."
+---
+
+> 💡 **Pour aller plus loin** : exercice "test de la photo d'ecran" -
+> un consultant photographie les ecrans non verrouilles d'un open-space
+> pendant 1 journee. Resultats partages en interne. Sensibilisation
+> par l'experience tres efficace.
