@@ -1,0 +1,199 @@
+---
+title: "Cas réel : SolarWinds et 18 000 victimes"
+durationMinutes: 8
+persona: "manager"
+objective: "Comprendre la chronologie technique de SolarWinds (2020-2021), apprendre des erreurs commises, deduire les controles a mettre en place pour eviter sa propre version"
+xpReward: 90
+scenario: |
+  Decembre 2020. Tu es DSI d'une PME de 200 personnes. Tu utilises
+  SolarWinds Orion pour monitorer ton infra (parc de 60 serveurs). Le
+  produit est present chez 33 000 entreprises et la plupart des
+  agences gouvernementales US.
+
+  Le 13 decembre, FireEye (cabinet cyber americain) annonce qu'ils ont
+  ete compromis. Quelques jours plus tard, l'investigation revele que
+  l'attaque a transite par une mise a jour officielle SolarWinds Orion
+  signee numeriquement (donc validee par les antivirus).
+
+  Le malware "SUNBURST" est deploye chez 18 000 clients SolarWinds.
+  Parmi les 250 victimes "selectionnees" pour exploitation : Microsoft,
+  US Treasury, NSA, Pentagone, Cisco, Intel, et environ 1500
+  entreprises europeennes.
+
+  Tu fais quoi en priorite quand l'info devient publique ?
+choices:
+  - id: "a"
+    label: "Je verifie immediatement si on utilise la version compromise (Orion 2019.4 -> 2020.2.1) et je deconnecte le serveur SolarWinds du reseau"
+    outcome: "good"
+    feedback: "Procedure correcte. Versions infectees : Orion 2019.4 HF5 (12 mars 2020) jusqu'a 2020.2.1 HF1 (4 nov 2020). Si tu as une de ces versions deployees pendant cette fenetre, tu as eu le malware actif. Deconnexion reseau = stop l'exfiltration en cours."
+    points: 35
+  - id: "b"
+    label: "J'attends les details du SANS / CERT-FR pour reagir"
+    outcome: "neutral"
+    feedback: "Comprehensible mais le temps joue contre toi : si tu es infecte, tu exfiltres des donnees en ce moment-meme. Mieux : isoler maintenant, comprendre apres."
+    points: 5
+  - id: "c"
+    label: "Je desinstalle SolarWinds completement par precaution"
+    outcome: "neutral"
+    feedback: "Reaction excessive avant verification. Si tu n'es pas dans la fenetre de versions infectees, pas besoin de desinstaller. Verifier d'abord, agir ensuite."
+    points: 10
+  - id: "d"
+    label: "Je previens mon CEO et je laisse le DSI gerer"
+    outcome: "bad"
+    feedback: "Le DSI N'EST PAS LA. C'est TOI le DSI dans ce scenario. Reponse fuite. La premiere heure de reaction est critique."
+    points: -10
+debrief: |
+  L'attaque SolarWinds (officiellement attribuee au groupe APT29 / Cozy
+  Bear, GRU/SVR russe) est l'attaque supply chain logicielle la plus
+  importante connue. Elle a redefini ce que le monde cyber considere
+  comme possible.
+
+  **Chronologie technique :**
+
+  **Septembre 2019** : les attaquants compromettent l'infrastructure
+  de developpement de SolarWinds (le pipeline de build Orion). Pas
+  d'acces aux donnees clients - juste au pipeline.
+
+  **Mars 2020** : ils injectent le malware "SUNBURST" (TEARDROP plus
+  tard) dans le code source d'Orion AVANT le build officiel. Le
+  binaire produit est signe numeriquement par SolarWinds avec le bon
+  certificat. Donc valide aux yeux de tous les antivirus et systemes
+  de verification.
+
+  **Avril-Octobre 2020** : la version compromise est diffusee comme
+  mise a jour officielle a tous les clients SolarWinds qui activent
+  l'auto-update. ~18 000 entreprises l'installent.
+
+  **Apres l'installation** : SUNBURST attend ~14 jours avant de
+  s'activer (pour eviter detection lors d'analyses sandbox initiales).
+  Ensuite, il fait un beacon DNS vers `avsvmcloud.com` toutes les
+  heures. Si l'attaquant le selectionne comme cible, il deploie une
+  charge utile secondaire (TEARDROP) qui ouvre une porte derobee.
+
+  **8 decembre 2020** : FireEye decouvre la compromission lors de
+  l'investigation interne d'un breach chez eux.
+
+  **13 decembre 2020** : annonce publique. CERT US (CISA) emet une
+  emergency directive demandant a TOUTES les agences federales de
+  deconnecter immediatement les serveurs Orion.
+
+  **Janvier 2021** : SolarWinds publie les patches. Investigation
+  forensic complete : ~250 entreprises ont ete "selectionnees" pour
+  exploitation active (les autres ont juste eu le bot dormant).
+
+  **Pourquoi c'etait si grave :**
+
+  1. **Signature numerique valide** : tous les outils de detection
+     (antivirus, EDR, code signing verification) ont laisse passer.
+
+  2. **Persistence privilegiee** : SolarWinds Orion tourne avec des
+     droits administrateur sur les serveurs surveilles. Donc le
+     malware avait acces admin partout.
+
+  3. **Confiance implicite** : SolarWinds est un editeur reconnu
+     depuis 1999, ses clients incluent les agences les plus sensibles.
+     Personne ne suspectait une mise a jour officielle.
+
+  4. **Selection silencieuse** : sur 18 000 victimes, seules 250 ont
+     ete activement exploitees. Le malware restait dormant chez les
+     autres - donc tres difficile a detecter.
+
+  5. **Exfiltration discrete** : les attaquants utilisaient des
+     domaines de commande qui imitaient des services legitimes
+     (avsvmcloud.com ressemble a Amazon AWS).
+
+  **Les 5 lecons pour TOUS les SI (pas que les victimes SolarWinds) :**
+
+  **1. La signature numerique n'est pas une garantie absolue**
+
+  Un editeur compromis peut signer du malware. La defense doit etre
+  en couches : signature + comportement + reputation.
+
+  **2. Les outils d'admin sont des cibles privilegiees**
+
+  Tout outil avec droits admin sur ton parc (monitoring, RMM,
+  endpoint management) doit etre :
+  - Cloisonne (subnet dedie, pas full network)
+  - Whitelisted (sortie internet limitee aux domaines necessaires)
+  - Logged (toutes les actions tracees)
+  - Reviewed (certifications de l'editeur, audit code si possible)
+
+  **3. L'auto-update est une lame a double tranchant**
+
+  Pro : tu patchs vite. Contra : un editeur compromis pousse du
+  malware sans ton accord.
+  Compromis : auto-update sur les outils peu critiques, manuel apres
+  validation sur les outils admin / sensibles.
+
+  **4. Network egress monitoring**
+
+  Un serveur de monitoring qui doit parler a `internal-mgmt.acme.fr`
+  ne devrait JAMAIS se connecter a `avsvmcloud.com` (domaine
+  inconnu). Mettre des regles firewall sortantes par defaut ferme,
+  open uniquement vers les destinations connues.
+
+  **5. Defense in depth, no trust**
+
+  Adopter le principe **Zero Trust** : ne jamais faire confiance,
+  toujours verifier. Meme aux outils internes signes par un editeur
+  reconnu.
+
+  **Suite (le precedent qui a tout change) :**
+
+  Apres SolarWinds, les Etats-Unis ont impose :
+  - **Executive Order 14028** (mai 2021) : tous les editeurs vendant
+    au gouvernement US doivent fournir un SBOM (Software Bill of
+    Materials).
+  - **CISA Binding Operational Directive 22-01** : audit obligatoire
+    de tous les systemes admin avec acces privilegie.
+  - **Programme SCRM-NIST 800-161** : framework de gestion supply
+    chain renforce.
+
+  Cote UE : **NIS2** (article 21) reprend ces principes avec
+  obligation de gerer la supply chain pour entites essentielles et
+  importantes.
+
+  **Le bilan financier :**
+
+  - SolarWinds (la societe) : ~75M$ de pertes directes, action en
+    bourse divise par 3.
+  - SolarWinds CISO (Tim Brown) : poursuivi en 2023 par la SEC pour
+    "negligence dans la divulgation des risques securite" (case en
+    cours).
+  - Microsoft : ~30K heures-homme d'investigation, plusieurs comptes
+    Azure compromis, code source de produits accede.
+  - Total estime des couts mondiaux : >100B$ selon Brookings (mais
+    estimation contestee).
+quiz:
+  - question: "Comment SolarWinds a contourne tous les antivirus ?"
+    choices:
+      - { id: "a", label: "Le malware etait crypte", correct: false }
+      - { id: "b", label: "Le malware etait integre dans le code source AVANT le build officiel SolarWinds, donc le binaire etait signe par SolarWinds = valide", correct: true }
+      - { id: "c", label: "Les antivirus avaient une faille", correct: false }
+    explanation: "Les attaquants ont compromis le pipeline de DEV de SolarWinds (avant build) - donc le binaire produit etait signe avec le vrai certificat SolarWinds. Aucun outil ne pouvait le distinguer d'une mise a jour legitime."
+
+  - question: "Combien de victimes ont ete activement exploitees vs juste infectees ?"
+    choices:
+      - { id: "a", label: "18 000 toutes activement exploitees", correct: false }
+      - { id: "b", label: "~250 sur 18 000 ont ete selectionnees pour exploitation active (les autres avaient le bot dormant)", correct: true }
+      - { id: "c", label: "Aucune", correct: false }
+    explanation: "18 000 entreprises ont eu le bot SUNBURST. Seules ~250 ont ete activement exploitees (les attaquants choisissaient leurs cibles parmi les bots dormants). C'est ce qui rendait l'attaque si difficile a detecter."
+
+  - question: "Quelle defense aurait pu detecter SolarWinds plus tot ?"
+    choices:
+      - { id: "a", label: "Un antivirus mis a jour", correct: false }
+      - { id: "b", label: "Network egress monitoring : un serveur de monitoring qui parle a un domaine externe inconnu = anomalie", correct: true }
+      - { id: "c", label: "Aucune defense possible", correct: false }
+    explanation: "L'egress monitoring (traffic sortant) aurait flag les requetes vers `avsvmcloud.com` (domaine inconnu de la baseline). C'est exactement comme ca qu'OD-Mandiant a ete identifie le breach FireEye a l'origine de la decouverte."
+
+  - question: "Quel framework US a ete impose suite a SolarWinds ?"
+    choices:
+      - { id: "a", label: "Aucun, c'etait deja existant", correct: false }
+      - { id: "b", label: "Executive Order 14028 + obligation de SBOM (Software Bill of Materials)", correct: true }
+      - { id: "c", label: "GDPR US", correct: false }
+    explanation: "EO 14028 (mai 2021) impose le SBOM : tous les editeurs vendant au gov US doivent fournir l'inventaire complet des composants logiciels. NIS2 cote UE prevoit des obligations similaires (article 21)."
+---
+
+> 💡 **Pour aller plus loin** : la chronologie complete SolarWinds est
+> documentee par CISA et CrowdStrike. Le rapport "STELLARPARTICLE
+> Activity" de Mandiant est l'investigation technique de reference.

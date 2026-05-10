@@ -1,0 +1,199 @@
+---
+title: "Les 5 clauses cyber à mettre dans tout contrat"
+durationMinutes: 7
+persona: "manager"
+objective: "Identifier les 5 clauses contractuelles cyber non-negociables avec un prestataire ayant acces a tes donnees ou ton SI : notification, audit, retrait, niveau de service, responsabilite"
+xpReward: 60
+scenario: |
+  Vendredi 16h, ton DAF te tend un contrat de prestation a signer
+  pour un nouveau CRM SaaS. 47 pages.
+
+  Tu lis la section "Securite et donnees" :
+
+  > Le Prestataire s'engage a mettre en oeuvre les mesures techniques
+  > et organisationnelles appropriees pour proteger les donnees
+  > confiees. En cas d'incident, le Prestataire informera le Client
+  > dans les meilleurs delais. La responsabilite du Prestataire est
+  > limitee au montant des derniers honoraires perceus (3 mois).
+
+  Tu trouves quelque chose de chaud ?
+choices:
+  - id: "a"
+    label: "Tout - 'meilleurs delais', responsabilite plafonnee a 3 mois honoraires, pas de droit d'audit, pas de PRA, pas de retrait des donnees... clauses CYBER absentes"
+    outcome: "good"
+    feedback: "Excellent oeil. Le contrat n'a AUCUNE des 5 clauses cyber essentielles. 'Meilleurs delais' = juridiquement vide (peut etre 6 mois). Plafond 3 mois honoraires = ridicule face a un breach RGPD (millions d'amende potentielle). A renegocier OBLIGATOIREMENT avant signature."
+    points: 35
+  - id: "b"
+    label: "C'est OK, c'est un contrat type, on ajustera plus tard"
+    outcome: "bad"
+    feedback: "FAUX. Une fois signe, tu n'ajustes JAMAIS. Le contrat est ton seul recours en cas de probleme. Des clauses faibles = tu perdras en cas de litige."
+    points: -15
+  - id: "c"
+    label: "Le DAF a deja valide juridiquement, je signe"
+    outcome: "bad"
+    feedback: "Le DAF voit le COUT et la conformite financiere. Toi tu vois le RISQUE CYBER. Les clauses cyber doivent etre validees par le DSI/RSSI/DPO, pas seulement le DAF."
+    points: -10
+  - id: "d"
+    label: "Je demande au juridique d'ajouter les 5 clauses cyber standard avant signature"
+    outcome: "good"
+    feedback: "Bonne procedure. Avant signature, demander au juridique d'inserer les clauses cyber standards (ANSSI, AFNOR, ENISA proposent des modeles). Le prestataire peut refuser - dans ce cas tu choisis un autre prestataire."
+    points: 35
+debrief: |
+  Un contrat cyber-saine n'est pas un contrat type avec une section
+  "securite" vague. Il contient explicitement les 5 clauses suivantes,
+  formulees precisement.
+
+  **Clause 1 - Notification d'incident sous N heures**
+
+  ❌ MAUVAIS : "Le Prestataire informera le Client dans les meilleurs
+  delais en cas d'incident."
+
+  ✅ BON :
+  > Le Prestataire notifiera le Client par ecrit (email + appel
+  > telephonique au RSSI mentionne en annexe) sous **24 heures**
+  > maximum apres detection de tout incident affectant la
+  > confidentialite, l'integrite, la disponibilite, ou la traçabilite
+  > des donnees ou systemes du Client. La notification contiendra
+  > au minimum : nature de l'incident, donnees concernees (categories,
+  > volumes), mesures prises, calendrier de remediation. Tout retard
+  > au-dela de 24h est sanctionne par une penalite de 5 000 EUR/jour.
+
+  Pourquoi ce delai precis : RGPD impose 72h au responsable de
+  traitement (toi) pour notifier la CNIL. Donc ton prestataire doit
+  te notifier sous 24h pour te laisser 48h pour analyser et notifier.
+
+  **Clause 2 - Droit d'audit annuel**
+
+  ❌ MAUVAIS : "Le Prestataire fournira sur demande des informations
+  sur sa securite."
+
+  ✅ BON :
+  > Le Client se reserve le droit d'auditer (audit sur site ou par
+  > tiers independant accredite ISO 27001) la securite du Prestataire,
+  > au maximum **une fois par an**, avec un preavis de 30 jours.
+  > Les frais sont a la charge du Client. Le Prestataire fournira les
+  > documents demandes (politiques, procedures, logs, certifications)
+  > sous 15 jours apres la demande. Tout refus injustifie d'audit
+  > constitue un manquement contractuel justifiant la resiliation
+  > immediate sans indemnite.
+
+  En pratique tu n'auditeras peut-etre pas, mais avoir le DROIT
+  d'auditer est une enorme garantie (le prestataire serieux applique
+  les regles "comme s'il etait audite").
+
+  **Clause 3 - Retrait des donnees a la fin du contrat**
+
+  ❌ MAUVAIS : "Les donnees seront restituees au Client en fin de
+  contrat."
+
+  ✅ BON :
+  > A la fin du contrat (resiliation ou non-renouvellement), le
+  > Prestataire :
+  > 1. Met a disposition l'ensemble des donnees du Client dans un
+  >    format ouvert et reutilisable (CSV, JSON, ou format documente)
+  >    sous **15 jours** maximum.
+  > 2. Procede a la **suppression definitive** de toutes les copies
+  >    (production, sauvegarde, archives) sous **30 jours** apres
+  >    la restitution.
+  > 3. Fournit un **certificat de destruction** signe par son DPO
+  >    et son CISO confirmant la suppression complete.
+  > 4. Toute conservation au-dela donne lieu a penalites de
+  >    1 000 EUR/jour.
+
+  Sans cette clause precise, tu peux te retrouver enferme chez ton
+  prestataire (lock-in) ou avec des copies fantomes 5 ans apres.
+
+  **Clause 4 - Niveau de service & continuite**
+
+  ❌ MAUVAIS : "Le Prestataire mettra ses meilleurs efforts pour
+  maintenir le service."
+
+  ✅ BON :
+  > Le Prestataire garantit un taux de disponibilite mensuel
+  > minimum de **99,5%** (mesure par tiers independant ou par les
+  > logs propres du Client). En cas de non-respect, penalites :
+  > 99,5% a 99,0% : 5% de remise sur la facture mensuelle
+  > 99,0% a 95% : 15% de remise
+  > < 95% : 50% de remise + droit de resiliation immediate
+  >
+  > Le Prestataire dispose d'un Plan de Reprise d'Activite (PRA)
+  > teste annuellement avec un RTO de **4h** et un RPO de **24h**.
+  > Le rapport de test PRA est communique au Client.
+
+  Le SLA chiffre est negociable selon ta criticite. Mais il doit
+  etre QUANTIFIE, pas en "best effort".
+
+  **Clause 5 - Responsabilite & garanties**
+
+  ❌ MAUVAIS : "La responsabilite est limitee au montant des
+  derniers honoraires perceus (3 mois)."
+
+  ✅ BON :
+  > La responsabilite du Prestataire pour tout dommage resultant
+  > d'une faute, d'une negligence ou d'un manquement aux obligations
+  > de securite est plafonnee a **5 fois** le montant annuel du
+  > contrat, sans plafond en cas de faute lourde, dol, ou violation
+  > du RGPD.
+  >
+  > Le Prestataire souscrit une assurance Responsabilite Civile
+  > Cyber d'un montant minimum de **2 millions d'EUR**, attestation
+  > fournie a la signature et a chaque renouvellement.
+
+  La cle : pas de plafond pour les fautes graves + assurance
+  obligatoire. Sans assurance, si le prestataire fait faillite suite
+  a un breach, tu n'as personne pour rembourser.
+
+  **Pour aller plus loin :**
+
+  En plus de ces 5 clauses, ajoute selon le contexte :
+  - **Localisation des donnees** (UE / France / pas de transfert)
+  - **Sub-processeurs** (liste exhaustive + droit de veto)
+  - **Conformite reglementaire** (RGPD, NIS2 si concerne)
+  - **Reversibilite** (procedure pour migrer ailleurs)
+
+  **Modeles de clauses gratuits :**
+
+  - **ANSSI Guide d'achat de produits SI sains** : modeles de
+    clauses cyber pour les prestations IT.
+  - **AFNOR NF Z90-001** : standard francais pour les contrats
+    SaaS (clauses securite incluses).
+  - **CCT (Clauses Contractuelles Types)** UE : pour les transferts
+    de donnees hors UE (obligatoires depuis l'arret Schrems II).
+
+  Si le prestataire refuse ces clauses ? **Choisis un autre
+  prestataire**. Les editeurs serieux acceptent les clauses standard
+  (ils en ont l'habitude). Refuser = signal d'alarme MAJEUR.
+quiz:
+  - question: "Quelle clause manque dans 'Le Prestataire informera le Client dans les meilleurs delais' ?"
+    choices:
+      - { id: "a", label: "Aucune", correct: false }
+      - { id: "b", label: "Un delai PRECIS chiffre (ex 24h) + sanction en cas de retard", correct: true }
+      - { id: "c", label: "La traduction anglaise", correct: false }
+    explanation: "'Meilleurs delais' est juridiquement vide. Pour qu'une obligation soit opposable, il faut un delai chiffre (24h max apres detection) + une sanction en cas de retard (penalites journalieres)."
+
+  - question: "Pourquoi le delai de notification d'un prestataire doit etre 24h ?"
+    choices:
+      - { id: "a", label: "Recommandation ANSSI", correct: false }
+      - { id: "b", label: "Pour laisser 48h restants au Client (responsable de traitement) pour notifier la CNIL sous 72h (RGPD article 33)", correct: true }
+      - { id: "c", label: "Pas de raison particuliere", correct: false }
+    explanation: "RGPD : le responsable de traitement (toi) notifie la CNIL sous 72h. Le sous-traitant (ton prestataire) doit te laisser le temps d'analyser. 24h pour lui + 48h pour toi = 72h. Si lui prend plus de 24h, tu es deja en retard."
+
+  - question: "Pourquoi un plafond de responsabilite a '3 mois honoraires' est ridicule ?"
+    choices:
+      - { id: "a", label: "C'est OK", correct: false }
+      - { id: "b", label: "Une amende RGPD peut atteindre 4% du CA mondial = des millions, vs 3 mois honoraires = quelques milliers", correct: true }
+      - { id: "c", label: "C'est trop cher", correct: false }
+    explanation: "Plafond 3 mois honoraires = ridicule face aux risques reels. Une amende CNIL peut etre 20M EUR ou 4% CA. Faut un plafond eleve (5x annuel) + pas de plafond pour fautes graves + assurance RC Cyber 2M minimum."
+
+  - question: "Le prestataire refuse les 5 clauses cyber standard. Tu fais quoi ?"
+    choices:
+      - { id: "a", label: "Je signe quand meme", correct: false }
+      - { id: "b", label: "Choisir un autre prestataire (les editeurs serieux acceptent ces clauses standard)", correct: true }
+      - { id: "c", label: "Negocier moins cher", correct: false }
+    explanation: "Refus des clauses cyber standard = signal d'alarme MAJEUR. Les editeurs serieux les acceptent (ils en ont l'habitude). Refus = soit ils ne sont pas matures, soit ils savent qu'ils ne peuvent pas les respecter. NO-GO."
+---
+
+> 💡 **Pour aller plus loin** : l'**ANSSI** publie un guide d'achat
+> avec modeles de clauses cyber. **AFNOR NF Z90-001** est le standard
+> francais SaaS. Pour transferts hors UE : les **Clauses
+> Contractuelles Types (CCT) UE** sont obligatoires depuis Schrems II.

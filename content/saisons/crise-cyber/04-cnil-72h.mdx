@@ -1,0 +1,225 @@
+---
+title: "Notification CNIL 72h : le mode d'emploi"
+durationMinutes: 7
+persona: "manager"
+objective: "Maitriser la procedure de notification CNIL article 33 RGPD : delai 72h, criteres pour notifier ou pas, contenu de la notification, suite (notification aux personnes article 34)"
+xpReward: 60
+scenario: |
+  Mardi 9h17. Apres 1h de cellule de crise, vous savez ce qui s'est
+  passe :
+  - Compromission de 3 comptes Microsoft 365 (CFO, DAF, comptable)
+  - Acces aux mails et fichiers SharePoint pendant 6 jours
+  - Donnees consultees / exfiltrees : 47 bulletins de paie de mai
+    (RIB, NIR, salaires), liste de 230 clients (nom, email,
+    adresse, montants commandes), 3 contrats fournisseurs
+
+  Le DPO te demande : "On notifie la CNIL sous 72h ?". L'incident
+  est detecte depuis 1h. Le breach a commence il y a 6 jours.
+
+  Que decide-t-on ?
+choices:
+  - id: "a"
+    label: "OUI, notification CNIL obligatoire sous 72h apres detection (donc avant vendredi 9h17). Risque significatif pour les personnes : NIR + salaires + RIB exfiltres = vol identite + fraude possibles"
+    outcome: "good"
+    feedback: "Diagnostic correct. NIR + salaires + RIB sont des donnees personnelles ET sensibles (categorie speciale RGPD article 9 pour le NIR). Le risque pour les personnes est CONFIRME : vol identite, fraude virement, usurpation. Notification CNIL obligatoire."
+    points: 35
+  - id: "b"
+    label: "Non, 47 + 230 = 277 personnes, c'est en dessous du seuil de 500 pour notifier"
+    outcome: "bad"
+    feedback: "FAUX. Il n'y a PAS de seuil chiffre dans le RGPD pour notifier la CNIL. Le critere est le RISQUE pour les personnes, pas le nombre. Une seule personne avec NIR + salaire fuit declenche la notification."
+    points: -15
+  - id: "c"
+    label: "On attend 1 semaine de voir si les donnees sont vraiment utilisees, on notifie apres si c'est confirme"
+    outcome: "bad"
+    feedback: "CATASTROPHIQUE. Le delai 72h court depuis la PRISE DE CONNAISSANCE du breach, pas depuis la confirmation d'usage malveillant. Attendre = manquement aux obligations RGPD = amende potentielle (jusqu'a 10M EUR ou 2% CA)."
+    points: -20
+  - id: "d"
+    label: "Le DPO notifie sous 72h. Pendant ce temps, on demarre la communication aux personnes affectees (article 34) car le risque est eleve"
+    outcome: "good"
+    feedback: "Excellente procedure. Article 33 (CNIL sous 72h) ET article 34 (personnes concernees si risque eleve) sont COMPLEMENTAIRES, pas alternatifs. Un risque eleve = les deux. Demarrer la communication aux personnes en parallele du DPO sur la CNIL."
+    points: 35
+debrief: |
+  La notification CNIL est l'une des obligations RGPD les plus
+  redoutees mais aussi les plus mal comprises. Demystifions.
+
+  **L'article 33 RGPD - notification a la CNIL :**
+
+  > En cas de violation de donnees a caractere personnel, le
+  > responsable du traitement notifie la violation a l'autorite de
+  > controle (la CNIL en France) dans un delai de **72 heures** apres
+  > en avoir pris connaissance, **a moins** que la violation ne soit
+  > pas susceptible d'engendrer un risque pour les droits et
+  > libertes des personnes physiques.
+
+  **Quand notifier ? Les 3 questions a se poser :**
+
+  **Q1 - Est-ce une violation de donnees personnelles ?**
+
+  RGPD article 4-12 : "violation entrainant, de maniere accidentelle
+  ou illicite, la destruction, la perte, l'alteration, la divulgation
+  non autorisee de donnees a caractere personnel, OU l'acces non
+  autorise a de telles donnees".
+
+  3 types :
+  - **Confidentialite** : acces non autorise / divulgation (notre
+    scenario)
+  - **Integrite** : modification non autorisee
+  - **Disponibilite** : perte d'acces aux donnees
+
+  **Q2 - Y a-t-il un risque pour les personnes ?**
+
+  Criteres :
+  - **Type de donnees** : noms/emails = risque limite ; NIR +
+    salaires + RIB = risque significatif ; donnees sante/sexuelles =
+    risque eleve.
+  - **Volume** : 1 personne = peut etre limite ; 1 000 personnes =
+    a notifier presque toujours.
+  - **Possibilite d'identification** : si pseudonymise/chiffre,
+    risque limite ; si donnees en clair, risque eleve.
+  - **Categorie de personnes** : enfants / patients / usagers
+    publics / etc. ont plus de protection.
+  - **Type de prejudice possible** : usurpation identite, fraude,
+    discrimination, atteinte reputation.
+
+  **Q3 - Le risque est il eleve (=> notifier aussi les personnes) ?**
+
+  Article 34 : "lorsque la violation est susceptible d'engendrer un
+  RISQUE ELEVE, le responsable du traitement communique la violation
+  a la personne concernee dans les meilleurs delais".
+
+  Risque eleve = consequences concretes possibles : fraude bancaire,
+  vol identite, harcelement, discrimination.
+
+  **Le delai 72h :**
+
+  Compte a partir de la **prise de connaissance** (= moment ou le
+  responsable de traitement, donc TOI, a l'information factuelle qu'il
+  y a eu une violation). PAS depuis :
+  - Le moment de la violation initiale (souvent inconnue)
+  - Le moment de confirmation finale par forensic
+  - Le moment de la decision en cellule de crise
+
+  Si tu detectes mardi 9h17, tu as jusqu'a vendredi 9h17 pour
+  notifier (incluant week-end).
+
+  Si > 72h impossible : notifier quand meme **avec justification du
+  retard** (art. 33-1).
+
+  **Comment notifier (procedure pratique) :**
+
+  La CNIL fournit un **formulaire en ligne** :
+  https://www.cnil.fr/fr/notifier-une-violation-de-donnees-personnelles
+
+  Information requise :
+  1. **Description de la violation** : nature, date approximative,
+     decouverte
+  2. **Categories de personnes concernees** : clients, employes,
+     candidats, etc.
+  3. **Volumes** : nombre approximatif de personnes (peut etre
+     "approximativement", pas besoin du chiffre exact des le J+0)
+  4. **Categories de donnees** : nom, email, NIR, sante, etc.
+  5. **Consequences possibles** : fraude, usurpation, discrimination
+  6. **Mesures prises** : isolation, reset credentials, audit
+     forensic en cours, communication aux personnes
+  7. **Mesures correctives prevues** : chiffrement at rest, MFA
+     obligatoire, formation, etc.
+  8. **Coordonnees DPO** : nom, email, telephone
+
+  Si certaines info manquent au J+0 (forensic en cours), notifier
+  avec ce que tu sais ET informer la CNIL que des informations
+  complementaires suivront.
+
+  **Notifier aux personnes (article 34) - quand & comment :**
+
+  Si risque eleve : communication aux personnes "dans les meilleurs
+  delais" (CNIL recommande sous quelques jours).
+
+  Communication directe a chaque personne :
+  - Email personnalise (pas un mail collectif a 230 personnes en Cc !)
+  - Si email impossible : courrier postal
+  - Si > 1 000 personnes : possibilite de "communication publique"
+    (annonce site web + mail collectif Cci)
+
+  Contenu obligatoire (article 34-2) :
+  - Nature de la violation
+  - Coordonnees DPO ou point de contact
+  - Consequences probables
+  - Mesures prises ou proposees pour limiter
+
+  Tone : factuel, sans paniquer, sans cacher. Evite le langage
+  juridique opaque. Propose des actions concretes (ex : "verifier
+  ses comptes bancaires, faire opposition a sa CB, signaler tout
+  email suspect").
+
+  **Quand NE PAS notifier ?**
+
+  Cas ou la notification N'EST PAS obligatoire :
+  - **Pas de risque** : les donnees etaient chiffrees fortement, et
+    la cle n'est pas compromise (ex : disque dur chiffre AES-256 vole,
+    cle non disponible).
+  - **Donnees pseudonymisees** : si l'attaquant ne peut pas
+    re-identifier les personnes.
+  - **Donnees deja publiques** : ex : breach d'un site qui ne contient
+    que des avis publics.
+
+  Mais : **documenter la decision de NE PAS notifier dans le registre
+  des violations** (article 33-5). En cas de controle, la CNIL peut
+  contester.
+
+  **Sanctions en cas de defaut de notification :**
+
+  - **Amende administrative** : jusqu'a 10M EUR ou 2% CA mondial
+    (article 83-4 RGPD).
+  - **Plus mediatique** : la CNIL publie souvent les noms des
+    entreprises sanctionnees (effet reputation).
+
+  Cas reels :
+  - **Carrefour 2020** : 2.25M EUR pour violation + defaut
+    d'information.
+  - **British Airways 2018** : 22M GBP (apres negociation, initialement
+    183M GBP) pour breach + retard de notification.
+
+  **Le piege "On a deja remediate, plus de risque" :**
+
+  La remediation NE supprime PAS l'obligation de notifier. Si les
+  donnees sont sorties (exfiltrees), elles sont sorties - peu importe
+  que tu aies isole le compte apres. Le risque persiste pour les
+  personnes (les attaquants ont les copies).
+
+  Toujours notifier si exfiltration confirmee, peu importe le succes
+  de la remediation.
+quiz:
+  - question: "Le delai de 72h CNIL court a partir de :"
+    choices:
+      - { id: "a", label: "Le moment de la violation initiale", correct: false }
+      - { id: "b", label: "La PRISE DE CONNAISSANCE par le responsable de traitement (= moment ou tu as l'info factuelle qu'il y a eu une violation)", correct: true }
+      - { id: "c", label: "Le moment de confirmation finale par forensic", correct: false }
+    explanation: "RGPD article 33 : 72h apres prise de connaissance. Si tu detectes mardi 9h, jusqu'a vendredi 9h pour notifier. NE PAS attendre la confirmation finale - notifier avec ce que tu sais, completer ensuite."
+
+  - question: "Y a-t-il un seuil chiffre (nb de personnes) pour notifier la CNIL ?"
+    choices:
+      - { id: "a", label: "Oui, > 500 personnes", correct: false }
+      - { id: "b", label: "NON, le critere est le RISQUE pour les personnes (qualitatif), pas le volume (quantitatif). 1 personne avec NIR + salaire = notifier", correct: true }
+      - { id: "c", label: "Oui, > 1000 personnes", correct: false }
+    explanation: "Pas de seuil chiffre dans le RGPD. Le critere est le RISQUE : type de donnees, possibilite d'identification, prejudice possible. Un breach de NIR + salaire d'1 seule personne = notifier."
+
+  - question: "Article 33 (CNIL) et article 34 (personnes) sont :"
+    choices:
+      - { id: "a", label: "Alternatifs - on choisit l'un OU l'autre", correct: false }
+      - { id: "b", label: "COMPLEMENTAIRES - si risque eleve, faire LES DEUX (notification CNIL ET communication aux personnes)", correct: true }
+      - { id: "c", label: "Identiques", correct: false }
+    explanation: "Article 33 = notification CNIL sous 72h (obligatoire si risque). Article 34 = communication aux personnes si risque ELEVE. Les deux sont complementaires : risque eleve = faire les deux en parallele."
+
+  - question: "Sanctions max RGPD pour defaut de notification ?"
+    choices:
+      - { id: "a", label: "1 000 EUR", correct: false }
+      - { id: "b", label: "Jusqu'a 10M EUR ou 2% CA mondial (article 83-4)", correct: true }
+      - { id: "c", label: "Aucune", correct: false }
+    explanation: "Article 83-4 RGPD : amendes administratives jusqu'a 10M EUR ou 2% CA mondial. La CNIL publie souvent les sanctions (effet reputation). Cas Carrefour 2020 : 2.25M EUR. Cas BA 2018 : 22M GBP."
+---
+
+> 💡 **Pour aller plus loin** : la **CNIL** publie un guide complet sur
+> les notifications de violation de donnees (cnil.fr/notifications). Le
+> formulaire en ligne prend 30-60 minutes a remplir. Pour les structures
+> sans DPO interne, **DPO mutualise** (FR : Lemon Privacy, Doctorum) est
+> une option a partir de quelques centaines EUR/mois.
