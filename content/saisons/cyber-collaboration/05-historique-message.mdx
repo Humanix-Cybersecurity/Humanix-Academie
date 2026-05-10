@@ -1,0 +1,373 @@
+---
+title: "Tout reste : penser a l'historique de chat"
+durationMinutes: 5
+persona: "tous-collaborateurs"
+objective: "Prendre conscience que les messages Slack/Teams restent (par defaut) indefiniment et appliquer les bonnes pratiques de retention"
+xpReward: 50
+scenario: |
+  Tu reprends la responsabilite IT d'une PME. Slack en place
+  depuis 5 ans avec 100 employes. Configuration retention :
+  par defaut (illimite avec Slack Pro).
+
+  Calculs :
+  - 100 employes × 50 messages/jour × 5 ans = 9 millions de
+    messages
+  - 100K fichiers partages
+  - Conversations sensibles : strategies, salaires, conflits,
+    licenciements, problemes clients
+
+  Audit : qui a acces ? Que peuvent voir les nouveaux admins ?
+  Conformite RGPD ?
+
+  Tu reagis comment ?
+choices:
+  - id: "a"
+    label: "Pas de probleme, ce sont nos donnees"
+    outcome: "bad"
+    feedback: "FAUX. 5 ans de chat = arsenal d'information sensible. Risques : compromission massive si breach, RGPD violation (durees conservation), audit ANSSI / NIS2, conflits internes (donnees personnelles employes anciens)."
+    points: -20
+  - id: "b"
+    label: "Politique de retention : 90 jours par defaut (canaux operationnels), 6 mois pour projets, 5+ ans pour juridique. Audit / suppression historique. Sensibilisation equipe."
+    outcome: "good"
+    feedback: "Approche pro. Politique de retention adaptee au contexte (90 jours operationnels, 6 mois projets, 5+ juridique). Conformite RGPD article 5 (limitation conservation). Reduit surface attaque + bilan informatique simplifie."
+    points: 40
+  - id: "c"
+    label: "Je supprime tout l'historique > 1 an immediatement"
+    outcome: "neutral"
+    feedback: "Trop drastique. Certains contenus juridiques / contractuels doivent etre conserves (5-10 ans). Approche par categorie : retention specifique selon type de canal."
+    points: 10
+  - id: "d"
+    label: "Je laisse, c'est notre histoire"
+    outcome: "bad"
+    feedback: "FAUX. La conservation excessive viole RGPD (article 5 : limitation duree). Plus : surface d'attaque enorme, breach catastrophique potentiel. Politique de retention obligatoire."
+    points: -15
+debrief: |
+  **L'historique des chats** (Slack, Teams, Discord, Mattermost,
+  Teams) est l'une des plus grandes "memoires d'entreprise"
+  numeriques. Souvent illimitee par defaut.
+
+  **Calcul typique pour PME 80 personnes** :
+  - 50 messages / jour / employe
+  - 80 × 50 × 365 = ~1.5M messages / an
+  - **5 ans** = ~7.5M messages
+
+  Tout est :
+  - **Recherchable** par les admins
+  - **Exportable** (export workspace)
+  - **Compromis** si breach
+  - **Soumis RGPD** (donnees personnelles)
+
+  **Pourquoi limiter l'historique :**
+
+  **Raison 1 : RGPD article 5 (1)(e)**
+
+  > "Les donnees personnelles doivent etre... conservees sous
+  > une forme permettant l'identification des personnes
+  > concernees pendant une duree n'excedant pas celle
+  > necessaire au regard des finalites pour lesquelles elles
+  > sont traitees."
+
+  Conservation au-dela du necessaire = non-conforme.
+
+  **Raison 2 : Surface d'attaque**
+
+  Plus l'historique est grand, plus :
+  - **Breach** est catastrophique (5 ans de conversations)
+  - **Investigation** post-incident complexe
+  - **Stockage** couteux (Slack facture par message en
+    plans payants)
+
+  **Raison 3 : Conflits internes**
+
+  - **Conversations RH** (licenciement, conflits)
+  - **Conversations privees** entre collegues
+  - **Discussions clients** sensibles
+
+  Apres 5 ans, beaucoup de gens sont **partis** mais leurs
+  conversations restent. Risque de fuite + impact climat.
+
+  **Raison 4 : Audit / conformite**
+
+  - **NIS2** : retention raisonnable
+  - **ISO 27001** : politique de conservation
+  - **SOC 2** : audit retention
+
+  **Raison 5 : Cout**
+
+  - **Slack Pro** : illimite (cher si beaucoup de stockage)
+  - **Teams** : selon plan (M365 Business / E3 / E5)
+  - **Reduction historique = reduction couts** indirects
+
+  **Politique de retention recommandee :**
+
+  Selon nature du canal / contenu :
+
+  | Type de canal | Retention recommandee | Justification |
+  |---|---|---|
+  | **Operations / casual** | 90 jours | Pas de valeur a long terme |
+  | **Projets clients** | 6 mois apres fin projet | Reference + offboarding |
+  | **Juridique / RH** | 5-10 ans | Obligation legale |
+  | **Strategie / COMEX** | 1-3 ans | Reference + evolution strategique |
+  | **Annonces / general** | 1 an | Memoire collective |
+  | **Random / lounge** | 30 jours | Conversations informelles |
+  | **Incidents / cyber** | 5 ans | Audit, forensic |
+
+  **Configuration Slack retention :**
+
+  Workspace settings > Settings > Retention :
+
+  Pour chaque canal :
+  - **Custom retention** : OUI
+  - **Duree** : selon politique
+  - **Suppression** automatique apres delai
+
+  Ou :
+  - **Default workspace retention** : 90 jours
+  - **Override** par canal pour exceptions
+
+  **Configuration Microsoft Teams retention :**
+
+  Microsoft 365 Compliance Center > Information governance
+  > Retention :
+
+  - **Politiques de retention** par equipe / canal
+  - **Labels de retention** sur messages
+  - **Aut suppression** ou **conservation forcee** selon
+    politique
+
+  Microsoft 365 retention etend a :
+  - Chats Teams
+  - Canaux
+  - Fichiers OneDrive / SharePoint (lies)
+
+  **Configuration Mattermost / Discord** :
+
+  - **Mattermost** : retention configurable par equipe
+  - **Discord** : limite par canal (preset)
+
+  **Procedure de mise en place :**
+
+  **Etape 1 : Audit existant**
+
+  - Volume de messages par canal
+  - Anciennete des donnees
+  - Categorisation des canaux
+
+  **Etape 2 : Politique de retention**
+
+  - **Document** ecrit (charte informatique)
+  - **Categories** + retention
+  - **Approbation** RSSI / DPO / juridique
+
+  **Etape 3 : Communication equipe**
+
+  - **Information** des employes (CSE consultation si
+    impact)
+  - **Sensibilisation** : "vos messages > X mois seront
+    supprimes"
+  - **Period transitoire** : 30-60 jours pour archiver
+    important
+
+  **Etape 4 : Configuration technique**
+
+  - **Application** politique dans Slack / Teams
+  - **Overrides** pour canaux specifiques (juridique, RH)
+  - **Audit log** pour traçer les suppressions
+
+  **Etape 5 : Suivi**
+
+  - **Indicateurs** : volume reduit
+  - **Audit annuel** : politique appliquee correctement
+  - **Mise a jour** : evolution besoin
+
+  **Cas particuliers :**
+
+  **Cas 1 : Donnees personnelles employes**
+
+  Conversations contenant donnees employes (paie, RH) :
+  - **Article 9 RGPD** : donnees sensibles (sante, opinions)
+  - **Retention** strictement limitee
+  - **Acces** restreint (RH + DPO)
+  - **Suppression** apres droits + 5 ans
+
+  **Cas 2 : Donnees clients**
+
+  Conversations sur clients :
+  - **Contractuel** : 5-10 ans (obligations comptables)
+  - **Strategique** : 1-3 ans
+  - **Operationnel** : 6 mois - 1 an
+
+  **Cas 3 : Litiges en cours**
+
+  Pendant litige (procedure) :
+  - **Conservation forcee** : pas de suppression
+  - **Mode "litigation hold"** dans Microsoft 365
+  - **Equivalent dans Slack** : retention etendue
+
+  **Cas 4 : Investigation interne**
+
+  En cas de soupçon (fraude, harcelement) :
+  - **Suspension** suppression sur canal concerne
+  - **Conservation** preuves
+  - **Acces** limite a investigateurs
+
+  **Le piege "on garde tout au cas ou" :**
+
+  Faux et risque :
+  - **RGPD** non-conforme (limitation duree)
+  - **Surface attaque** croissante
+  - **Cout** accumulé
+
+  Solution : politique de retention raisonnable + exceptions
+  documentees.
+
+  **Le piege "personne ne lit l'historique" :**
+
+  Faux :
+  - **Recherche** Slack / Teams indexe tout
+  - **Admins** peuvent exporter en 1 clic
+  - **Breach** = tout potentiellement exfiltre
+
+  Une fois compromis : 5 ans de conversation = 5 ans
+  d'attaques precises possibles.
+
+  **Le piege "Slack archive, c'est pas pareil" :**
+
+  L'archive Slack :
+  - **Garde tout** (plan Pro+)
+  - **Pas chiffre** au repos par defaut
+  - **Recherchable** par admins
+
+  Equivalent retention illimitee.
+
+  **Cas reels :**
+
+  **Cas 1 - PME 2023 (breach Slack)**
+
+  PME 100 personnes avec Slack 5 ans, retention illimitee.
+  Compte admin compromis (phishing). Attaquant a exfiltre
+  9 millions de messages.
+
+  Contenu compromis :
+  - Strategies clients
+  - Conversations RH (licenciements, salaires)
+  - Mots de passe partages dans DM
+  - Donnees personnelles
+
+  Cout :
+  - **Notification CNIL** : breach grave
+  - **Sanction CNIL** : 80 K EUR
+  - **Reputation** : presse locale + perte clients
+  - **Mitigation** : 6 mois de procedures
+
+  **Cas 2 - Cabinet 2024 (RGPD audit)**
+
+  CNIL audit du cabinet : retention conversations Slack 7
+  ans (illimitee). Donnees personnelles de clients +
+  employes anciens.
+
+  Sanctions :
+  - **Mise en demeure** : politique retention sous 3 mois
+  - **30 K EUR** d'amende
+  - **Audit** annuel obligatoire 3 ans
+
+  **Cas 3 - Startup 2024 (politique fonctionnelle)**
+
+  Startup 50 personnes a mis en place politique retention :
+  - **90 jours** par defaut
+  - **6 mois** projets
+  - **5 ans** juridique
+
+  Resultat 1 an :
+  - **70% reduction** volume Slack
+  - **Couts** reduits (plan Pro reduit a Free pour certains
+    canaux)
+  - **Conformite** RGPD facile
+  - **Aucun** impact business
+
+  **Cas 4 - PME 2022 (litigation hold mal gere)**
+
+  Conflit avec ex-employe. Procedure en cours = obligation
+  conservation messages. Mais retention 90 jours active =
+  messages cles supprimes automatiquement.
+
+  Consequence : preuves cles perdues. Cabinet juridique :
+  procedure compromise.
+
+  Solution : litigation hold systematique en cas de litige.
+
+  **Sensibilisation equipes :**
+
+  Communication a faire :
+
+  > **Politique retention messages**
+  > 
+  > Pour des raisons de conformite RGPD et de securite, les
+  > messages des canaux Slack/Teams seront automatiquement
+  > supprimes apres :
+  > - Canaux operationnels : 90 jours
+  > - Canaux projets : 6 mois apres fin projet
+  > - Canaux juridiques / RH : 5+ ans
+  > 
+  > Si vous avez besoin de conserver une information
+  > importante au-dela de cette periode, merci de :
+  > - L'archiver dans SharePoint / Drive
+  > - Documenter dans Confluence / Notion
+  > - Ne PAS le faire dans le chat (l'historique n'est pas
+  >   un cloud storage durable)
+  > 
+  > Cette politique entre en vigueur le [DATE]. La periode
+  > de transition est de 30 jours pour vous permettre
+  > d'archiver l'important.
+
+  **Pour le RSSI :**
+
+  KPI :
+  - **Volume historique total** (cible : reduire de 30-50%
+    avec politique)
+  - **Conformite** par canal
+  - **Suspension policy** (litigation holds actifs)
+
+  **La regle d'or :**
+
+  > **L'historique de chat n'est PAS un cloud storage
+  > durable. Politique de retention par categorie (90j -
+  > 5+ans). Conformite RGPD article 5. Reduction surface
+  > attaque. Documentation importante = SharePoint / Drive
+  > / Notion (pas chat).**
+quiz:
+  - question: "Quelle retention recommandee pour canaux operationnels Slack / Teams ?"
+    choices:
+      - { id: "a", label: "Illimite", correct: false }
+      - { id: "b", label: "90 jours par defaut. 6 mois pour projets clients. 5+ ans pour juridique/RH. Politique categorisee par type de canal", correct: true }
+      - { id: "c", label: "1 jour", correct: false }
+    explanation: "Politique recommandee par categorie : 90j operationnels (pas de valeur long terme), 6 mois projets clients (reference + offboarding), 5+ ans juridique/RH (obligation legale), 1-3 ans strategie/COMEX. Conformite RGPD article 5 (limitation duree). 70% reduction volume typique."
+
+  - question: "Risques de l'historique Slack / Teams illimite ?"
+    choices:
+      - { id: "a", label: "Aucun", correct: false }
+      - { id: "b", label: "RGPD non-conforme + surface d'attaque massive (5 ans = 7.5M messages exfiltrables) + couts + conflits internes (donnees ex-employes)", correct: true }
+      - { id: "c", label: "Que des donnees", correct: false }
+    explanation: "Illimite = 1) RGPD non-conforme (article 5 limitation duree, sanctions CNIL possibles), 2) Surface attaque massive (cas reel : 9M messages exfiltres = 80K EUR amende), 3) Cout stockage Slack Pro, 4) Conflits internes (donnees ex-employes, conversations RH). Politique retention obligatoire."
+
+  - question: "Conversations contenant donnees personnelles employes (paie, RH), retention ?"
+    choices:
+      - { id: "a", label: "Aucune limite", correct: false }
+      - { id: "b", label: "Article 9 RGPD (donnees sensibles) - retention strictement limitee + acces restreint (RH + DPO) + suppression apres droits + 5 ans", correct: true }
+      - { id: "c", label: "Tres long", correct: false }
+    explanation: "Donnees personnelles RH = article 9 RGPD (donnees sensibles si sante/opinions, sinon article 6+5). Retention strictement limitee selon obligation legale (paie : 5 ans + droits). Acces restreint RH + DPO. Pas dans Slack / Teams ideallement (mieux : SIRH dedie)."
+
+  - question: "Pendant un litige avec ex-employe, action sur retention ?"
+    choices:
+      - { id: "a", label: "Continuer la suppression auto", correct: false }
+      - { id: "b", label: "Litigation hold : SUSPENDRE la suppression auto sur canaux concernes. Conservation forcee preuves. Sinon : preuves perdues = procedure compromise", correct: true }
+      - { id: "c", label: "Supprimer plus vite", correct: false }
+    explanation: "Litige en cours = obligation conservation preuves. Litigation hold : suspendre suppression auto sur canaux concernes (cas reel PME : sans hold = preuves cles perdues = procedure compromise). Microsoft 365 a fonction native 'litigation hold'. Slack : retention etendue manuelle."
+---
+
+> 💡 **Pour aller plus loin** : **Slack workspace retention
+> settings** ou **Microsoft 365 Compliance Center**.
+> Politique categorisee (operationnel / projet / juridique).
+> **Litigation hold** en cas de litige. Sensibilisation
+> equipe : chat != cloud storage durable. Documentation
+> importante dans SharePoint / Drive / Notion.

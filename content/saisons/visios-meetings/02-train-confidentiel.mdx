@@ -1,0 +1,237 @@
+---
+title: "La conversation confidentielle dans le train"
+durationMinutes: 5
+persona: "tous-collaborateurs"
+objective: "Eviter les fuites d'informations en environnement public (train, cafe, aeroport) lors de conversations / appels / visios"
+xpReward: 50
+scenario: |
+  Tu es DAF d'une PME, en train Paris-Lyon. Le voisin a cote
+  de toi est un ado qui ecoute son telephone. Tu prends ton
+  appel client : "...donc on confirme l'acquisition de Beta
+  Corp pour 3.5M EUR avec closing prevu fin mars. C'est
+  confidentiel jusqu'a annonce officielle..."
+
+  L'ado a entendu. Il n'est pas malveillant. Mais 30 min plus
+  tard, un autre passager (pas vu) a ecoute aussi. Lui est
+  trader.
+
+  Le lendemain, le cours d'action de Beta Corp +15%.
+  L'AMF s'interesse a la coincidence.
+
+  Que tirer comme lecon ?
+choices:
+  - id: "a"
+    label: "Pas grave, j'ai parle vite, personne n'a vraiment ecoute"
+    outcome: "bad"
+    feedback: "DANGEREUX. La voix porte. Tout train, cafe, aeroport est un environnement public. Les gens autour ENTENDENT, intentionnellement ou non. Pour info sensible : cabinet client / domicile / bureau ferme."
+    points: -25
+  - id: "b"
+    label: "Aucune conversation confidentielle en environnement public. Wagon silencieux + ecouteurs + ne pas mentionner noms / montants / dates. Si urgence : SMS / mail chiffre"
+    outcome: "good"
+    feedback: "Reflexes pro. Public = pas de confidentialite. Solutions : differer + canaux ecrits chiffres + wagon silencieux + voix basse + pas de details sensibles. Standard pour cadres / dirigeants."
+    points: 35
+  - id: "c"
+    label: "Je m'eloigne dans le couloir pour ne pas etre entendu"
+    outcome: "neutral"
+    feedback: "Mieux que rien mais limite. Le couloir reste public, voix porte, capture audio possible. Pour info sensible : differer ou utiliser canal chiffre ecrit."
+    points: 10
+  - id: "d"
+    label: "Je rappelle plus tard, je n'ai pas le temps maintenant de prendre des precautions"
+    outcome: "good"
+    feedback: "Reflexe simple et efficace. Pas le bon moment, pas le bon endroit = on rappelle. Standard. Mieux qu'une fuite."
+    points: 30
+debrief: |
+  Les **environnements publics** (train, cafe, aeroport,
+  hotel, restaurant) sont des sources de fuites
+  d'informations majeures pour les pros. Plus que le hacking,
+  l'**ecoute discrete** est tres efficace et difficile a
+  detecter.
+
+  **Cas typique** : trader en train ecoute conversation DAF
+  sur acquisition -> delit d'initie potentiel + violation
+  confidentialite + sanctions AMF.
+
+  **Pourquoi c'est si frequent :**
+
+  - Pression : besoin de prendre l'appel maintenant
+  - Habitude : on s'habitue a etre dans le train
+  - Sentiment de "personne ne m'ecoute"
+  - Manque de sensibilisation
+
+  **Etudes (Trace International 2023)** : 47% des cadres ont
+  surpris involontairement des conversations sensibles dans
+  des environnements publics.
+
+  **Les risques par environnement :**
+
+  **Train** :
+  - Voisin direct entend tout
+  - Voyage de 2-3h = conversations longues
+  - Wagon silencieux contourne (peu d'utilisateurs)
+
+  **Cafe / coffee shop** :
+  - Tables proches
+  - Bruit ambiant masque pas la conversation a 1m
+  - Visios sans casque = tout le monde entend les 2 cotes
+
+  **Aeroport / lounge** :
+  - Salons d'affaires partages avec concurrents
+  - Espaces ouverts
+  - Capture audio par "voisins" ciblees
+
+  **Hotel** :
+  - Lobby / restaurant
+  - Couloirs
+  - Salles de petit-dejeuner (proximite)
+
+  **Restaurant** :
+  - Discussions business pendant repas
+  - Voisins proches
+  - Serveurs entendent tout
+
+  **Les bonnes pratiques :**
+
+  **Pratique 1 : Differer ce qui peut l'etre**
+
+  - Question : est-ce que cet appel peut attendre ?
+  - Si oui : differer au bureau / domicile
+  - Si urgence : SMS / mail crypte
+
+  **Pratique 2 : Canaux ecrits chiffres**
+
+  - **Signal / WhatsApp** : chiffrement bout-en-bout
+  - **Mail chiffre** : pour vraies info sensibles
+  - **Pas Slack** sur reseau public sans VPN
+
+  **Pratique 3 : Voix basse + langage code**
+
+  Si appel necessaire :
+  - **Voix basse** (pas chuchote, mais discret)
+  - **Pas de noms** : "le projet" au lieu de "Beta Corp"
+  - **Pas de montants** : "le chiffre annonce" au lieu de
+    "3.5 millions"
+  - **Pas de dates** precises
+  - **Casque** + micro casque (pas haut-parleur)
+
+  **Pratique 4 : Wagon silencieux**
+
+  - Reservation systematique pour les voyages business
+  - Le wagon silencieux a moins d'utilisateurs (on respecte
+    le silence)
+  - **MAIS** : voix porte quand meme. Mieux : pas d'appel
+    sensible meme la
+
+  **Pratique 5 : Espaces dedies**
+
+  - **Cabines telephoniques** dans certaines gares (Gare de
+    Lyon) / lounges / WeWork
+  - **Salle dediee** : conference rooms en aeroport, lounges
+    business
+  - **Voiture** (parking) : insonorisee, prive
+
+  **Pratique 6 : Prevoir avant**
+
+  - **Avant le voyage** : liste des appels prevus
+  - **Identifier** ceux qui sont sensibles
+  - **Differer** ou **trouver un endroit prive**
+
+  **Pratique 7 : Bruit blanc / chiffrement audio**
+
+  Solutions techniques (cas extremes) :
+  - **Inhibiteurs de micro** : interdit en France
+  - **Casques anti-bruit** : reduit l'ecoute des autres mais
+    pas la portee de TA voix
+  - **Apps "private mode"** : ne masquent pas la voix
+
+  Solution la plus simple : differer.
+
+  **Le piege "personne ne m'ecoute" :**
+
+  Faux. Etudes :
+  - **Effet cocktail party** : nous entendons toujours notre
+    nom / mots-cles
+  - **Voix porte** plus loin qu'on ne pense
+  - **Curiosite naturelle** : les gens ecoutent les
+    conversations interessantes
+
+  Plus : parmi 50 voyageurs proches, statistiquement il y a
+  des concurrents / journalistes / interesses.
+
+  **Le piege "le casque protege" :**
+
+  Le casque empeche TOI d'entendre les autres. Il N'EMPECHE
+  PAS les autres d'entendre TA voix. Effet inverse meme :
+  tu parles plus fort sans t'en rendre compte (acoustique
+  du casque).
+
+  Solution : voix basse + langage code + differer si
+  vraiment sensible.
+
+  **Le piege "delit d'initie / sanctions AMF" :**
+
+  Pour les entreprises cotees ou avant operations financieres :
+  - **Delit d'initie** : article L465-1 Code monetaire
+  - **Sanctions** : 5 ans prison + 100M EUR amende
+  - **AMF** investigue les coincidences suspectes
+
+  Une fuite involontaire dans un train peut declencher une
+  enquete AMF si correlation avec mouvements de marche.
+
+  **Cas reels :**
+
+  **Cas 2019 - DAF cabinet UK** : conversation acquisition
+  ecoutee dans un train par un trader. Mouvement boursier
+  suspect detecte par FCA (regulateur UK). Enquete + sanctions.
+
+  **Cas 2022 - PME francaise** : commerciale parle au telephone
+  d'un projet client (montants, planning). Voisin de cafe
+  prend des notes. C'etait un consultant du concurrent.
+  Negociation perdue.
+
+  **Cas 2024 - Avocat** : conversation strategique avocat /
+  client dans un avion. Stewart entend les details. Affaire
+  ulterieurement vendue. Procedure deontologique.
+
+  **La regle d'or :**
+
+  > **Public = pas de confidentialite. Differer ce qui peut
+  > l'etre, canaux ecrits chiffres pour le reste, voix basse +
+  > langage code si urgence absolue. Train / cafe / aeroport /
+  > hotel = environnement non-securise. Pour cadres : reflexe
+  > systematique.**
+quiz:
+  - question: "Conversation confidentielle dans un train, OK ?"
+    choices:
+      - { id: "a", label: "Si voix basse oui", correct: false }
+      - { id: "b", label: "NON. Voix porte, voisins entendent. Pour info sensible : differer + canaux ecrits chiffres + cabines dediees ou wagons silencieux", correct: true }
+      - { id: "c", label: "Toujours OK", correct: false }
+    explanation: "Public = pas de confidentialite. Train, cafe, aeroport, hotel = environnements non-securises. 47% des cadres surprennent involontairement des conversations sensibles (Trace International 2023). Solutions : differer, canaux ecrits chiffres, cabines dediees, wagon silencieux."
+
+  - question: "Solution simple pour info sensible en deplacement ?"
+    choices:
+      - { id: "a", label: "Parler tres vite", correct: false }
+      - { id: "b", label: "DIFFERER + canal ecrit chiffre (Signal, WhatsApp, mail crypte) + reprendre l'appel au bureau / domicile", correct: true }
+      - { id: "c", label: "Mettre des ecouteurs", correct: false }
+    explanation: "Differer = solution la plus simple et efficace. Pour la communication immediate : canaux ecrits chiffres (Signal, WhatsApp - chiffrement bout-en-bout). Le casque ne protege pas TA voix qui circule, juste TES oreilles."
+
+  - question: "Risque AMF / delit d'initie pour conversation entendue ?"
+    choices:
+      - { id: "a", label: "Aucun", correct: false }
+      - { id: "b", label: "Reel : enquete AMF si correlation mouvements de marche. Article L465-1 Code monetaire : 5 ans prison + 100M EUR amende", correct: true }
+      - { id: "c", label: "Que pour traders", correct: false }
+    explanation: "Article L465-1 Code monetaire : delit d'initie = 5 ans prison + 100M EUR amende. AMF investigue coincidences suspectes (cas reels : DAF en train -> trader -> mouvement boursier -> enquete). Cadres entreprises cotees particulierement exposes."
+
+  - question: "Le casque audio protege-t-il TA voix ?"
+    choices:
+      - { id: "a", label: "Oui", correct: false }
+      - { id: "b", label: "NON. Le casque empeche toi d'entendre les autres, pas l'inverse. Effet inverse : tu parles plus fort sans t'en rendre compte", correct: true }
+      - { id: "c", label: "Selon le modele", correct: false }
+    explanation: "Le casque audio = isolation TES oreilles, PAS TA voix. Effet inverse : acoustique du casque te fait parler plus fort. Solution : voix basse + langage code (pas de noms / montants / dates) + differer si vraiment sensible."
+---
+
+> 💡 **Pour aller plus loin** : reflexe **'public = pas
+> confidentiel'** systematique. **Signal / WhatsApp**
+> chiffrement bout-en-bout pour communications immediates.
+> **Cabines** dans certaines gares Gare de Lyon, lounges
+> business. **Wagon silencieux** systematique pour voyages
+> business mais pas suffisant pour info ultra-sensible.
