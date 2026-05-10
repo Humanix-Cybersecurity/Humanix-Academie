@@ -22,6 +22,14 @@ const STORAGE_KEY = "humanix-cookie-consent";
 
 type Consent = "granted" | "denied" | null;
 
+/**
+ * Memes regles que CookieBanner : pas de tracker cloud configure = pas
+ * de panneau (rien a consentir, donc rien a revoquer).
+ */
+const NEEDS_CONSENT =
+  typeof process !== "undefined" &&
+  !!process.env.NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT;
+
 export default function ConsentControl() {
   const [consent, setConsent] = useState<Consent>(null);
   const [mounted, setMounted] = useState(false);
@@ -65,6 +73,23 @@ export default function ConsentControl() {
     // Evite l'hydration mismatch : rien ne s'affiche tant qu'on n'a pas
     // lu le localStorage (cote client uniquement).
     return null;
+  }
+
+  if (!NEEDS_CONSENT) {
+    // Aucun traceur soumis a consentement n'est configure : on affiche un
+    // message neutre plutot que de masquer la section silencieusement.
+    return (
+      <div className="rounded-2xl border-2 border-emerald-500/30 bg-emerald-50/40 dark:bg-emerald-900/15 p-5 sm:p-6 my-6">
+        <p className="text-xs uppercase tracking-[0.25em] font-bold text-emerald-700 dark:text-emerald-300 mb-2">
+          Mesure d&apos;audience
+        </p>
+        <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
+          🔒 Cette instance n&apos;active aucun traceur soumis a consentement.
+          Aucun cookie analytics, aucun appel reseau vers un tiers — rien a
+          accepter ou refuser.
+        </p>
+      </div>
+    );
   }
 
   const statusLabel =
