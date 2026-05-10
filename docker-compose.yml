@@ -123,6 +123,20 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      # Build args : les NEXT_PUBLIC_* doivent etre passees a `next build`
+      # (le bundle JS les inline cote client). Sans cela, meme si la
+      # variable est dans `.env` et passee en `environment:`, elle n'est
+      # visible qu'au runtime serveur et JAMAIS dans le bundle client.
+      # docker compose substitue ${VAR} depuis le .env du repertoire courant.
+      args:
+        NEXT_PUBLIC_APP_URL: "${NEXT_PUBLIC_APP_URL:-http://localhost}"
+        NEXT_PUBLIC_APP_NAME: "${NEXT_PUBLIC_APP_NAME:-HumaniX Academy}"
+        NEXT_PUBLIC_BASE_URL: "${NEXT_PUBLIC_BASE_URL:-}"
+        NEXT_PUBLIC_PLAUSIBLE_DOMAIN: "${NEXT_PUBLIC_PLAUSIBLE_DOMAIN:-}"
+        NEXT_PUBLIC_PLAUSIBLE_API_HOST: "${NEXT_PUBLIC_PLAUSIBLE_API_HOST:-}"
+        NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT: "${NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT:-}"
+        NEXT_PUBLIC_MATOMO_URL: "${NEXT_PUBLIC_MATOMO_URL:-}"
+        NEXT_PUBLIC_MATOMO_SITE_ID: "${NEXT_PUBLIC_MATOMO_SITE_ID:-}"
     container_name: humanix-app
     restart: unless-stopped
     # PAS de "ports" : on passe systématiquement par haproxy
