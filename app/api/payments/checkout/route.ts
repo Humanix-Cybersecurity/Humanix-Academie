@@ -4,8 +4,8 @@
 // Cree une session de paiement chez le prestataire (Payplug FR par defaut).
 // Auth : ADMIN/RSSI/SUPERADMIN du tenant. Rate limit 5/h/tenant.
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { requireAdmin } from "@/lib/api/require-role";
 import { checkRateLimit } from "@/lib/rate-limit";
 import {
   isPayplugConfigured,
@@ -23,17 +23,11 @@ export async function POST(req: Request) {
     );
   }
 
-  const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: "Non authentifié." }, { status: 401 });
-  }
-  const role = session.user.role;
-  if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
-    return NextResponse.json(
-      { error: "Seul un administrateur peut souscrire un plan." },
-      { status: 403 },
-    );
-  }
+  // RBAC central : ADMIN / RSSI / SUPERADMIN seuls. Audit log auto
+  // sur tentative refusee. Cf. lib/api/require-role.ts.
+  const guard = await requireAdmin(req);
+  if ("response" in guard) return guard.response;
+  const { session } = guard;
   const tenantId = session.user.tenantId;
   const userEmail = session.user.email;
   if (!tenantId || !userEmail) {
