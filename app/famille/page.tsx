@@ -401,7 +401,9 @@ export default async function FamillePage() {
         </section>
 
         {/* ============================================================
-            8. CTA PME - pour le dirigeant qui découvre la page
+            8. CTA décideurs / leaders d'équipe - pour la personne qui
+            découvre la page et a une responsabilité sur d'autres
+            (dirigeant, manager, responsable d'association, élu local).
             ============================================================ */}
         <section aria-labelledby="cta-pme-title">
           <div className="card-hero text-center relative overflow-hidden animate-glow">
@@ -413,13 +415,13 @@ export default async function FamillePage() {
             </div>
             <div className="relative max-w-2xl mx-auto">
               <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold opacity-90 mb-3">
-                Tu diriges une PME ?
+                Tu as la charge d&apos;une équipe ?
               </p>
               <h2
                 id="cta-pme-title"
                 className="font-display text-2xl sm:text-3xl font-extrabold mb-4"
               >
-                Forme tes équipes - et offre-leur ce cadeau pour leurs proches.
+                Forme ton équipe - et offre-leur ce cadeau pour leurs proches.
               </h2>
               <p className="text-sm sm:text-base opacity-90 mb-6 leading-relaxed">
                 Plateforme open source AGPLv3, self-host gratuit ou cloud à

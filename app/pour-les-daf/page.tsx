@@ -288,12 +288,12 @@ export default function DafLandingPage() {
           <ul className="space-y-3 text-base text-gray-700 dark:text-gray-200 leading-relaxed">
             <Number
               value="90 %"
-              label="des cyberattaques contre une PME française passent par un humain"
+              label="des cyberattaques contre une organisation française passent par un humain"
               source="ANSSI 2024"
             />
             <Number
               value="200 k€"
-              label="coût moyen d'une fraude au président en PME française"
+              label="coût moyen d'une fraude au président (toutes tailles confondues)"
               source="Tracfin 2024"
             />
             <Number
@@ -314,7 +314,7 @@ export default function DafLandingPage() {
             <Number
               value="3 €"
               unit="/user/mois"
-              label="tarif Humanix Académie (Cloud Pro PME)"
+              label="tarif Humanix Académie (Cloud Pro standard)"
               source="vs 30 €/user/mois acteurs anglo-saxons"
             />
           </ul>
