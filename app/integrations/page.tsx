@@ -12,10 +12,27 @@
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
+const INT_TITLE = "Connecteurs & intégrations — Écosystème cyber souverain | Humanix Académie";
+const INT_DESC =
+  "Tous les connecteurs natifs Humanix : GRC, SIEM, IAM, ITSM, RH, anti-phishing. Hub-and-spoke avec priorité souveraineté française : Lucca, GLPI, Sekoia, HarfangLab, CISO Assistant, Mailinblack. Standards ouverts (OSCAL, SCIM, CEF, CIM, ECS).";
+
 export const metadata = {
-  title: "Connecteurs & intégrations - Humanix Académie",
-  description:
-    "Tous les connecteurs natifs Humanix : GRC, SIEM, IAM, ITSM, RH. Hub-and-spoke avec priorité souveraineté française. Standards ouverts (OSCAL, SCIM, CEF, CIM, ECS).",
+  title: INT_TITLE,
+  description: INT_DESC,
+  alternates: { canonical: "/integrations" },
+  openGraph: {
+    title: INT_TITLE,
+    description: INT_DESC,
+    type: "website",
+    url: "/integrations",
+    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Connecteurs Humanix — Écosystème cyber souverain",
+    description: INT_DESC,
+    images: ["/logo-humanix-academie-512.png"],
+  },
 };
 
 type IntegrationStatus = "live" | "beta" | "roadmap";
