@@ -60,9 +60,9 @@ const CHAPTERS = [
       accent: "text-cyan-700 dark:text-cyan-300",
     },
     body: [
-      "Pendant dix ans, j'ai fait du pentest dans des PME françaises. À chaque mission, c'était la même histoire. Marie de la compta clique sur un faux RIB. Stéphane du commercial recycle son mot de passe Netflix sur son compte pro. Le dirigeant ouvre une pièce jointe d'un fournisseur inconnu à 23h, fatigué.",
-      "90 % des cyberattaques contre une PME française passent par un humain. Pas un firewall mal configuré, pas une faille zero-day. Un humain pas formé.",
-      "Et le marché de la sensibilisation cyber, en 2026, ressemble à ça : Knowbe4 à 8 000 €/an minimum, Hoxhunt sur devis, Phished et Cyber Guru entre 2 000 et 3 000 €/an. Tous fermés. Trois quarts viennent des États-Unis.",
+      "Pendant dix ans, j'ai fait du pentest. PME, association, collectivité, particulier piégé qui m'appelle au secours un dimanche soir. À chaque mission, c'était la même histoire. Marie de la compta clique sur un faux RIB. Stéphane du commercial recycle son mot de passe Netflix sur son compte pro. Le dirigeant ouvre une pièce jointe d'un fournisseur inconnu à 23h, fatigué. Le grand-père clique sur le faux SMS impôts.",
+      "90 % des cyberattaques passent par un humain. Pas un firewall mal configuré, pas une faille zero-day. Un humain pas formé. Et ce humain peut être n'importe qui — du salarié au particulier.",
+      "Et le marché de la sensibilisation cyber, en 2026, ressemble à ça : Knowbe4 à 8 000 €/an minimum, Hoxhunt sur devis, Phished et Cyber Guru entre 2 000 et 3 000 €/an. Tous fermés, tous ciblés grands comptes. Trois quarts viennent des États-Unis. Le particulier ? Personne.",
     ],
   },
   {
@@ -88,7 +88,7 @@ const CHAPTERS = [
       accent: "text-amber-700 dark:text-amber-300",
     },
     body: [
-      "Le 26 mai 2026, la plateforme Humanix Academie est publiée sur GitHub sous licence GNU AGPLv3. Le code complet, multi-tenant, audité. Tu peux l'installer chez toi en 10 minutes via Docker Compose. Tu peux l'auditer, le forker, le modifier, le déployer pour ta PME sans m'en demander la permission ni me payer un centime.",
+      "Le 26 mai 2026, la plateforme Humanix Academie est publiée sur GitHub sous licence GNU AGPLv3. Le code complet, multi-tenant, audité. Tu peux l'installer chez toi en 10 minutes via Docker Compose. Tu peux l'auditer, le forker, le modifier, le déployer pour ta boîte, ton association, ta collectivité, ta famille — sans m'en demander la permission ni me payer un centime.",
       "Inclus : moteur de gamification, mascotte evolutive, dashboard dirigeant, connecteur natif CISO Assistant, API REST, webhooks signes HMAC, exports OSCAL pour ton GRC, MCP server pour agents IA. Cinq saisons pedagogiques completes (phishing, mots de passe, données sensibles, teletravail, RGPD).",
       "Ce qui reste payé : le cloud managé hébergé en France, le catalogue avancé de modules, la simulation de phishing avec IA Mistral souveraine, le Pack NIS2 turnkey, le SSO entreprise, et - surtout - l'expertise humaine qui paie mes factures (audit, gap analysis NIS2, formation Qualiopi, RSSI externalisé).",
     ],
@@ -104,7 +104,7 @@ const CHAPTERS = [
     body: [
       "Je ne lance pas Humanix dans le vide. Je le branche dans une chaine existante.",
       "CISO Assistant fait la conformité. Humanix lui pousse les preuves de sensibilisation par collaborateur via un connecteur natif (connectors/ciso-assistant/). OpenCTI fait la threat intel - connecteur prevu Q3 2026. Wazuh, Splunk, Sentinel, Sekoia recoivent les événements Humanix au format CEF ou OSCAL.",
-      "Cette logique d'ecosysteme est le vrai positionnement strategique. Je ne vends pas contre Knowbe4. Je vends avec l'ecosysteme open source cyber français. Aux RSSI de PME, ce recit fait sens immediatement : 'on a un outil libre par couche, on peut tout auditer, on depend de zero editeur US'.",
+      "Cette logique d'ecosysteme est le vrai positionnement strategique. Je ne vends pas contre Knowbe4. Je vends avec l'ecosysteme open source cyber français. Aux RSSI, aux DSI, aux dirigeants, aux DPO mutualises, aux particuliers curieux, ce recit fait sens immediatement : 'on a un outil libre par couche, on peut tout auditer, on depend de zero editeur US'.",
     ],
   },
   {
@@ -117,7 +117,7 @@ const CHAPTERS = [
     },
     body: [
       "Apres le 26 mai, on est a J0 d'un voyage long. Les premiers contributeurs, les premieres issues GitHub, les premiers self-hosters qui poussent une saison maison. Un Discord public ouvert, un canal #aide-self-host, un changelog public.",
-      "Sur 6 mois, je vise 200 etoiles GitHub, 5 contributions externes, 3 PMEs en self-host avec retour public. Sur 24 mois, 180 a 250 k€ de chiffre d'affaires en solo, 350 a 500 k€ avec un premier collaborateur - modèle calque sur ce que font déjà intuitem, Filigran, Centreon.",
+      "Sur 6 mois, je vise 200 etoiles GitHub, 5 contributions externes, 3 organisations en self-host avec retour public. Sur 24 mois, 180 a 250 k€ de chiffre d'affaires en solo, 350 a 500 k€ avec un premier collaborateur - modèle calque sur ce que font déjà intuitem, Filigran, Centreon.",
       "Et chaque saison a venir, chaque module, chaque fonctionnalite : visible en clair sur GitHub, discutable dans les issues, accessible a tous. C'est le contrat.",
     ],
   },

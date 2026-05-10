@@ -11,7 +11,7 @@ import HexBackdrop from "@/components/HexBackdrop";
 export const metadata: Metadata = {
   title: "La Cyber-Anecdote du Lundi | HumaniX Académie",
   description:
-    "Chaque lundi, 1 incident cyber réel + 1 leçon + 1 mini-action concrète. La newsletter cybersécurité PME française. Gratuit, désinscription en 1 clic.",
+    "Chaque lundi, 1 incident cyber réel + 1 leçon + 1 mini-action concrète. La newsletter cybersécurité française pour tous (particuliers, équipes, organisations). Gratuit, désinscription en 1 clic.",
   alternates: { canonical: "/anecdotes" },
 };
 

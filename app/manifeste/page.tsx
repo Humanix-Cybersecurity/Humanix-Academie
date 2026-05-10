@@ -35,7 +35,7 @@ import HexMascotEvolved from "@/components/HexMascotEvolved";
 export const metadata = {
   title: "Manifeste - Humanix Académie",
   description:
-    "Pourquoi Humanix existe. La cybersécurité humaine, française, libre. Une plateforme open source AGPLv3 pour que la PME française ne soit plus le maillon faible.",
+    "Pourquoi Humanix existe. La cybersécurité humaine, française, libre. Une plateforme open source AGPLv3 pour que personne — particulier, équipe, association, organisation — ne soit plus le maillon faible.",
 };
 
 export default function ManifestePage() {
@@ -159,9 +159,10 @@ export default function ManifestePage() {
           <ChapterHeader number="01" title="Le problème" eyebrow="On a tous vu ces scènes" id="ch2-title" />
 
           <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 leading-relaxed max-w-3xl mb-16 mx-auto text-center">
-            Dix ans en pentest. À chaque mission dans une PME, c'est la même
-            histoire qui se rejoue. Trois scènes, trois personnes, le même
-            point commun : <strong>personne ne les a formés</strong>.
+            Dix ans en pentest. À chaque mission — entreprise, collectivité,
+            association, particulier piégé — c'est la même histoire qui se
+            rejoue. Trois scènes, trois personnes, le même point commun :{" "}
+            <strong>personne ne les a formés</strong>.
           </p>
 
           <div className="grid sm:grid-cols-3 gap-6">
@@ -219,8 +220,8 @@ export default function ManifestePage() {
                   90<span className="text-7xl sm:text-9xl">%</span>
                 </p>
                 <p className="text-lg text-gray-700 dark:text-gray-200 mt-4">
-                  des cyberattaques contre une PME française passent par un
-                  humain.
+                  des cyberattaques — toutes structures confondues, du
+                  particulier au grand groupe — passent par un humain.
                 </p>
               </div>
               <div className="animate-slide-up" style={{ animationDelay: "120ms" }}>
@@ -329,7 +330,7 @@ export default function ManifestePage() {
               delay={400}
               emoji="🎓"
               title="Volume plutôt que rente"
-              text="3 € par utilisateur par mois. 5 à 10 fois moins cher que les acteurs US. Pour ouvrir l'accès à 150 000 TPE/PME françaises encore sans solution."
+              text="3 € par utilisateur par mois, gratuit pour les particuliers. 5 à 10 fois moins cher que les acteurs US. Pour ouvrir l'accès à toutes celles et ceux qui sont aujourd'hui sans solution."
             />
           </div>
         </div>
@@ -487,10 +488,10 @@ export default function ManifestePage() {
                 La plateforme est libre. L'expertise se monnaie.
               </strong>{" "}
               Audit de maturité cyber humaine, formation Qualiopi
-              certifiante, RSSI externalisé pour les PME qui n'en ont pas, hosting
-              cloud managé sur Scaleway Paris, et le Pack NIS2 turnkey
-              pour les organisations qui ont 30 jours pour passer la
-              directive.
+              certifiante, RSSI externalisé pour les organisations qui
+              n'en ont pas, hosting cloud managé sur Scaleway Paris, et le
+              Pack NIS2 turnkey pour les structures qui ont 30 jours pour
+              passer la directive.
             </p>
 
             <p className="animate-slide-up" style={{ animationDelay: "200ms" }}>
@@ -507,8 +508,9 @@ export default function ManifestePage() {
               La cible 24 mois est honnête :{" "}
               <strong>180 à 250 k€ en solo bootstrap</strong>. Pas une
               licorne, pas une IPO. Une activité qui paie ses factures, fait
-              vivre son fondateur, et accompagne 200 PME françaises plutôt
-              que 30 grosses boîtes.
+              vivre son fondateur, et accompagne <strong>tout le monde</strong>{" "}
+              — particuliers, équipes, organisations de toute taille — plutôt
+              que de courir après 30 grosses boîtes.
             </p>
           </div>
         </div>
@@ -539,13 +541,13 @@ export default function ManifestePage() {
           </h2>
           <blockquote className="font-display italic text-2xl sm:text-3xl lg:text-4xl leading-snug">
             <p className="animate-slide-up">
-              « En 2026, en France, la cybersécurité des PME ne se gagnera
-              pas avec un éditeur de plus.
+              « En 2026, en France, la cybersécurité du quotidien ne se
+              gagnera pas avec un éditeur de plus.
             </p>
             <p className="mt-6 animate-slide-up" style={{ animationDelay: "200ms" }}>
               Elle se gagnera avec un <strong className="not-italic text-accent-300">écosystème souverain</strong>,
-              libre, auditable, où chaque RSSI peut savoir exactement ce
-              qui tourne dans sa boîte. »
+              libre, auditable, où chacun — du particulier au RSSI — peut
+              savoir exactement ce qui tourne dans son outil. »
             </p>
           </blockquote>
           <p
