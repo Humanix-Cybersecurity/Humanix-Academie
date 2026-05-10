@@ -1,0 +1,425 @@
+---
+title: "Vos enfants tombent dans une arnaque : que faire"
+durationMinutes: 6
+persona: "tous-collaborateurs"
+objective: "Reagir efficacement quand un enfant / adolescent est victime d'arnaque cyber (phishing, sextorsion, achats abusifs, harcelement) - bons reflexes parents"
+xpReward: 60
+scenario: |
+  Vendredi soir. Ton fils de 14 ans est en pleurs : "Papa /
+  Maman, j'ai recu un message d'une fille sur Instagram qui
+  m'a demande des photos. J'en ai envoye une. Maintenant elle
+  me menace de tout publier si je ne lui envoie pas 200 EUR
+  en cartes Steam dans l'heure."
+
+  Le compte qui menace :
+  - 0 follower, cree il y a 1 mois
+  - Profil identique a celui de "Sophie" qui s'etait
+    presentee
+  - Ton fils ne connait pas physiquement cette personne
+
+  Tu reagis comment ?
+choices:
+  - id: "a"
+    label: "Je le gronde fort, je lui dis qu'il a fait une grosse betise"
+    outcome: "bad"
+    feedback: "TRES MAUVAIS. Premiere reaction : RASSURER l'enfant. Le gronder = il se ferme = aggravation (peut tenter de gerer seul, payer en cachette, deprimer). Standard Cybermalveillance.gouv.fr : ecoute + non-jugement avant tout."
+    points: -25
+  - id: "b"
+    label: "Je le rassure (c'est une arnaque classique, pas sa faute), je lui dis NE PAS PAYER, je preserve les preuves (captures), je signale a Pharos / Cybermalveillance, je vais a la gendarmerie"
+    outcome: "good"
+    feedback: "Reflexes parfaits. Sextorsion d'enfant = grave. Procedure : 1) rassurer (priorite absolue), 2) NE PAS payer (paiement = aggravation), 3) preserver preuves, 4) signaler (Pharos, Cybermalveillance), 5) plainte police. Standard parents."
+    points: 40
+  - id: "c"
+    label: "Je paye les 200 EUR pour que ca s'arrete vite"
+    outcome: "bad"
+    feedback: "DANGEREUX. Paiement = AGGRAVATION : 1) le criminel sait que ca marche -> demandera plus, 2) tu finances un crime, 3) les photos seront publiees quand meme dans 90% des cas (etude Internet Watch Foundation). NE JAMAIS PAYER."
+    points: -30
+  - id: "d"
+    label: "Je supprime son compte Instagram immediatement"
+    outcome: "neutral"
+    feedback: "Pas optimal. Supprimer le compte = perdre les preuves utiles a la plainte. Mieux : preserver preuves + signaler + bloquer le compte du criminel (pas le sien). Le compte de l'enfant peut etre garde et restreint ensuite."
+    points: 5
+debrief: |
+  Les **arnaques visant les enfants / adolescents** sont en
+  forte hausse. Les parents doivent connaitre :
+
+  - Les arnaques courantes
+  - Les bons reflexes (ne pas blamer, agir vite)
+  - Les ressources d'aide (Pharos, Cybermalveillance, e-Enfance)
+
+  **Statistiques alarmantes (Cybermalveillance 2024)** :
+
+  - **Sextorsion** : +200% en 2 ans
+  - **30% des adolescents** ont deja recu un message
+    inapproprié
+  - **5% des adolescents** ont deja envoye photos intimes
+    (etudes europeennes)
+  - **Achats sur Roblox / Fortnite** : 2-5K EUR moyen avant
+    detection
+
+  **Les 6 arnaques principales :**
+
+  **Arnaque 1 : Sextorsion (chantage aux photos)**
+
+  Mode operatoire :
+  - Faux profil seduisant (souvent fausse photo)
+  - Conversation amicale / flirt
+  - Demande de photos intimes
+  - **Apres reception** : menace de publier si pas paiement
+  - Souvent demande **cartes prepayees** (Steam, iTunes, Amazon)
+    plus difficiles a tracer
+
+  Cible : ados 12-17 ans (garcons et filles).
+
+  Action :
+  - **NE PAS PAYER** (paiement = aggravation)
+  - **NE PLUS REPONDRE** au criminel
+  - **PRESERVER** preuves (captures ecran, profil)
+  - **SIGNALER** (Pharos, e-Enfance)
+  - **PLAINTE** police / gendarmerie
+
+  **Arnaque 2 : Achats compulsifs in-game**
+
+  Mode operatoire :
+  - Enfant joue a Roblox, Fortnite, Minecraft, Brawl Stars
+  - Pression sociale : "ton ami a tel skin, tu dois aussi"
+  - Enfant utilise carte parent (memorisee, verre)
+  - Achats repetes 2-50 EUR
+  - **Decouverte** : 500-5000 EUR/mois sur le relevé
+
+  Action :
+  - **Verifier** carte memorisee dans App Store / Google Play
+  - **Demander remboursement** : possible si enfant mineur
+    (Apple, Google souvent acceptent)
+  - **Conseil parental** : limites achats, mot de passe pour
+    achats
+
+  **Arnaque 3 : Phishing classique**
+
+  - Faux message "Free Robux !"
+  - Faux email "Ton compte Steam sera suspendu"
+  - Vol de credentials du compte gaming
+
+  Action : changer mot de passe, MFA, education.
+
+  **Arnaque 4 : Cyberharcelement**
+
+  Mode operatoire :
+  - Insultes / menaces sur reseaux sociaux
+  - Coordonne par groupe ("escouade")
+  - Diffusion d'images compromettantes
+  - Stalking entre etablissements
+
+  Action :
+  - **PRESERVER** preuves (capture, sauvegarde profil
+    harceleur)
+  - **SIGNALER** plateforme + Pharos + Net Ecoute (3018)
+  - **3018** : numero national gratuit cyberharcelement
+  - **Plainte penale** si necessaire
+
+  **Arnaque 5 : Fausses promesses (concours, cadeaux)**
+
+  - "Gagnez un iPhone 15 ! Cliquez ici"
+  - Vol de donnees / credentials
+  - Souvent : porte d'entree pour autres arnaques
+
+  Action : education + filtrage URL + aucun "cadeau gratuit".
+
+  **Arnaque 6 : Faux amis**
+
+  - Adulte se faisant passer pour ado
+  - Cooptation lente (semaines, mois)
+  - But : abus sexuel / exploitation
+  - **Grooming** = nom officiel
+
+  Action : **vigilance maximum** + contact police si
+  comportement suspect (Pharos signalement). Crime grave.
+
+  **Les bons reflexes parents :**
+
+  **Reflexe 1 : ECOUTE sans jugement**
+
+  Quand l'enfant te raconte, ne pas :
+  - **Crier** / s'enerver
+  - **Blamer** ("tu aurais du savoir...")
+  - **Minimiser** ("c'est pas grave")
+  - **Sanctionner** la confiance
+
+  Faire :
+  - **Ecouter** entierement
+  - **Rassurer** : "Tu as bien fait de me le dire"
+  - **Felicitater** d'avoir parle
+  - **Calme** apparant (meme si tu paniques en interieur)
+
+  **Reflexe 2 : Ne PAS payer**
+
+  Quel que soit le montant demande :
+  - **Sextorsion** : criminels publient quand meme dans 90%
+    des cas (Internet Watch Foundation)
+  - **Achats in-game** : pas de paiement supplementaire
+  - **Phishing** : pas de credentials donnees
+  - **Faux concours** : pas de "frais"
+
+  Paiement = financement crime + aggravation.
+
+  **Reflexe 3 : Preserver les preuves**
+
+  - **Capture d'ecran** des messages
+  - **Capture du profil** harceleur
+  - **Conservation** du historique conversation
+  - **NE PAS** supprimer trop vite
+
+  Necessaire pour :
+  - Plainte police
+  - Signalement plateforme
+  - Action en justice
+
+  **Reflexe 4 : Bloquer le criminel**
+
+  - **Bloquer** le compte qui menace (Instagram, Snapchat,
+    Discord, etc.)
+  - **NE PAS** repondre
+  - **NE PAS** justifier
+
+  **Reflexe 5 : Signaler**
+
+  Plateformes officielles :
+
+  - **Pharos** (police nationale) : signalement
+    cybercriminalite. internet-signalement.gouv.fr
+  - **Cybermalveillance.gouv.fr** : aide victimes + dispositif
+    PEC (Prise En Charge)
+  - **e-Enfance / 3018** : aide aux jeunes (gratuit, 7j/7)
+  - **Plateforme**: signaler le compte (Instagram report,
+    etc.)
+
+  **Reflexe 6 : Police / gendarmerie**
+
+  Pour les cas graves :
+  - **Sextorsion** : plainte penale + procedure active
+  - **Cyberharcelement grave** : plainte + investigation
+  - **Grooming** : extreme urgence
+
+  **Brigade de protection de la famille** : equipe
+  specialisee dans chaque commissariat / gendarmerie.
+
+  **Les ressources d'aide :**
+
+  **3018 - Net Ecoute**
+
+  - **Numero gratuit national** (en metropole + DOM-TOM)
+  - **7j/7, 9h-22h**
+  - **Conseillers formes** cyberharcelement, sextorsion,
+    arnaques
+  - **Anonyme** si souhaite
+  - **Aide concrete** : signalement, demarches, soutien
+
+  **Pharos - Plateforme harmonisee d'analyse, de recoupement
+  et d'orientation des signalements**
+
+  - **internet-signalement.gouv.fr**
+  - **Police nationale**
+  - **Pour signaler** : pedopornographie, terrorisme,
+    arnaques en ligne
+  - **Suivi** des plaintes
+
+  **Cybermalveillance.gouv.fr**
+
+  - **Dispositif national** d'aide aux victimes cyber
+  - **Gratuit**
+  - **Diagnostic + recommandation + mise en relation
+    professionnels**
+  - **Particuliers + entreprises**
+
+  **e-Enfance / 3020 (specifique enfance)**
+
+  - **Numero gratuit anti-harcelement scolaire**
+  - **7j/7**
+  - **e-enfance.org** : ressources
+
+  **Prevention parentale :**
+
+  **Avant qu'il y ait probleme :**
+
+  **1. Dialogue ouvert**
+
+  - **Conversations regulieres** sur internet
+  - **Sans tabou** sur sexualite (sinon enfant cherche ailleurs)
+  - **Climat de confiance** : "Si quelque chose te derange,
+    parle-moi sans peur"
+  - **Pas d'espionnage** systematique (rapport de confiance
+    rompu)
+
+  **2. Education numerique**
+
+  - **Pas de photos intimes** : jamais, meme a un copain
+    "de confiance"
+  - **Pas de details perso** a des inconnus en ligne
+  - **Reconnaitre** les techniques de manipulation
+  - **Outils gratuits** : Net Ecoute Kids, e-Enfance, ANSSI
+
+  **3. Reglages techniques**
+
+  **Reseaux sociaux** :
+  - **Comptes prives** par defaut (Instagram, TikTok)
+  - **Pas de geolocalisation**
+  - **Friends only** pour publications
+  - **Verification d'age** (interdit < 13 ans selon plateformes)
+
+  **Smartphone** :
+  - **Time Limit** (iOS) / Family Link (Android)
+  - **Limites apps** (gaming, social media)
+  - **Achats avec mot de passe** parent
+
+  **Achats in-game** :
+  - **Pas de carte memorisee** sur compte enfant
+  - **Demande mot de passe** pour chaque achat
+  - **Limite mensuelle** (Family Sharing Apple, Google
+    Family)
+
+  **Ordinateur** :
+  - **Filtrage URL** (Microsoft Family Safety, OpenDNS Family
+    Shield)
+  - **Antivirus** active
+  - **Pas d'admin** pour enfant
+
+  **4. Logiciels de controle parental**
+
+  - **Microsoft Family Safety** : gratuit, integre Windows
+  - **Apple Screen Time + Family Sharing** : gratuit
+  - **Google Family Link** : gratuit Android
+  - **Qustodio, Norton Family** : payant, plus complet
+
+  Equilibre : controle pour proteger != surveillance abusive.
+
+  **Cas reels :**
+
+  **Cas 1 - Adolescent 14 ans 2023 (sextorsion bien geree)**
+
+  Ado contacte par "fille" sur Instagram. Apres echanges,
+  envoi photo intime. Menace : 200 EUR cartes Steam ou
+  publication.
+
+  Reaction parents :
+  - **Ecoute** sans gronder
+  - **NE PAS PAYER**
+  - **Preservation** preuves
+  - **Signalement** Pharos + Instagram
+  - **Plainte** au commissariat (Brigade protection famille)
+
+  Resultat : compte du criminel ferme par Instagram. Photos
+  pas publiees. Ado supportee psychologiquement.
+
+  **Cas 2 - Famille 2022 (achats in-game 4500 EUR)**
+
+  Enfant 11 ans avait fait 4500 EUR d'achats sur Fortnite
+  en 6 mois (carte de la maman memorisee). Decouverte sur
+  le relevé.
+
+  Reaction :
+  - **Apple** : remboursement 100% (procedure mineur)
+  - **Carte** retiree des comptes enfant
+  - **Family Sharing** active
+  - **Education** : limites mensuelles
+
+  Resultat : zero recidive + relation familiale preservee.
+
+  **Cas 3 - Adolescente 16 ans 2024 (cyberharcelement)**
+
+  Apres dispute scolaire, ado victime de harcelement massif
+  sur TikTok / Snap : photos modifiees, insultes, menaces.
+
+  Reaction parents :
+  - **3018** : conseil + procedure
+  - **Preservation** preuves
+  - **Plainte** police (cyberharcelement = delit penal)
+  - **Plateforme** : signalement comptes harceleurs
+  - **Etablissement** : intervention CPE
+
+  Resultat : 3 comptes harceleurs fermes. Procedure en cours.
+  Soutien psychologique pour l'ado.
+
+  **Cas 4 - Pere 2023 (paiement aggravant)**
+
+  Pere a paye 500 EUR pour sextorsion de son fils 15 ans.
+  3 jours apres : nouvelle demande 1500 EUR.
+
+  Realisation : paiement = sans fin. Action :
+  - **STOP** paiement
+  - **Plainte** police
+  - **Photos** publiees quand meme (90% des cas selon IWF)
+  - **Soutien psy** intensif
+
+  Lecon : NE JAMAIS PAYER.
+
+  **Le piege "il/elle aurait du savoir, c'est sa faute" :**
+
+  **TOUJOURS** la faute du criminel, jamais de l'enfant. Le
+  criminel exploite la naivete naturelle des enfants /
+  adolescents (developpement cerebral non termine, attente
+  affective, confiance...). 
+
+  Adultes peuvent aussi etre victimes de sextorsion ou
+  arnaques. Pas de jugement.
+
+  **Le piege "ca arrive aux autres, pas a mon enfant" :**
+
+  Statistiques :
+  - **30%** des ados recoivent message inapproprié
+  - **5-10%** envoyent photo intime
+  - **20%** subissent cyberharcelement
+
+  C'est presque obligatoire que TON enfant rencontre une
+  arnaque. Question : sera-t-il prepare ? Te parlera-t-il ?
+
+  **Le piege "il faut tout surveiller pour proteger" :**
+
+  Surveillance excessive = enfant cache son activite reelle.
+  Plus d'arnaques (qu'il ne montre pas), pas moins.
+
+  Equilibre : controle technique de base (filtrage, achats,
+  age limits) + dialogue + confiance.
+
+  **La regle d'or :**
+
+  > **Si ton enfant est victime d'arnaque cyber : ECOUTE
+  > sans jugement + NE PAS PAYER + PRESERVE preuves +
+  > SIGNALE (3018, Pharos, Cybermalveillance) + PLAINTE
+  > police pour cas graves. Prevention : dialogue ouvert +
+  > controle parental technique + education. Sans
+  > dialogue : enfant cache et aggravation.**
+quiz:
+  - question: "Ton enfant est victime de sextorsion (chantage photos), action immediate ?"
+    choices:
+      - { id: "a", label: "Payer pour que ca s'arrete vite", correct: false }
+      - { id: "b", label: "ECOUTE sans gronder + NE PAS PAYER + PRESERVER preuves + SIGNALER (Pharos, 3018) + PLAINTE police", correct: true }
+      - { id: "c", label: "Supprimer son Instagram", correct: false }
+    explanation: "5 reflexes parents : 1) ECOUTE non-jugeante (rassurer), 2) NE PAS PAYER (paiement = aggravation, photos publiees quand meme dans 90% cas selon IWF), 3) PRESERVER preuves (captures), 4) SIGNALER (Pharos, 3018, plateforme), 5) PLAINTE police (Brigade protection famille)."
+
+  - question: "Numero gratuit national pour cyberharcelement / arnaques jeunes ?"
+    choices:
+      - { id: "a", label: "112", correct: false }
+      - { id: "b", label: "3018 (Net Ecoute) - 7j/7, 9h-22h, gratuit, anonyme - aide concrete + procedures", correct: true }
+      - { id: "c", label: "0900...", correct: false }
+    explanation: "3018 = numero national anti-cyberharcelement / sextorsion / arnaques jeunes. Gratuit, 7j/7 9h-22h, anonyme. Conseillers formes. Aide concrete + procedures + soutien. e-Enfance.org pour ressources. Pour scolaire : 3020."
+
+  - question: "Achats in-game enfant (4500 EUR sur Fortnite), recours ?"
+    choices:
+      - { id: "a", label: "Aucun", correct: false }
+      - { id: "b", label: "Apple/Google : remboursement 100% souvent accepte (procedure mineur). Family Sharing pour eviter recidive. Pas de carte memorisee compte enfant", correct: true }
+      - { id: "c", label: "Police", correct: false }
+    explanation: "Apple Store / Google Play : procedure remboursement mineurs largement acceptee (cas reel : 4500 EUR rembourses). Solutions preventives : Family Sharing (Apple) / Family Link (Google), pas de carte memorisee compte enfant, mot de passe achats parent."
+
+  - question: "Pourquoi NE JAMAIS payer en sextorsion ?"
+    choices:
+      - { id: "a", label: "Ca aggrave", correct: false }
+      - { id: "b", label: "1) Photos publiees quand meme (90% des cas - IWF), 2) Demandes augmentent (cas reel : 500 EUR -> 1500 EUR 3j apres), 3) Tu finances un crime", correct: true }
+      - { id: "c", label: "C'est pas grave de payer", correct: false }
+    explanation: "Statistiques Internet Watch Foundation : photos publiees quand meme dans 90% des sextorsion meme apres paiement. Cas reel : pere paye 500 EUR, demande 1500 EUR 3 jours apres. Paiement = financement crime + cycle sans fin. Action : signalement + police + soutien psy."
+---
+
+> 💡 **Pour aller plus loin** : **3018** (Net Ecoute) numero
+> jeunes. **Pharos** (internet-signalement.gouv.fr).
+> **Cybermalveillance.gouv.fr**. **e-Enfance.org** ressources.
+> **Family Link / Family Sharing** controle parental gratuit.
+> Dialogue + education > surveillance abusive.

@@ -1,0 +1,330 @@
+---
+title: "Le check-in qui revele une reunion confidentielle"
+durationMinutes: 5
+persona: "tous-collaborateurs"
+objective: "Eviter les fuites de strategies / projets via les check-in et geolocalisations sur reseaux sociaux"
+xpReward: 50
+scenario: |
+  Lundi 9h. Tu vas a une reunion strategique chez un prospect
+  important (Banque Populaire). Tu fais un check-in Instagram
+  : "@banque_populaire_siege - Tres heureuse de cette
+  rencontre !".
+
+  Apres la reunion, tu apprends que :
+  1. Un concurrent a vu ton check-in et a appele Banque
+    Populaire pour proposer une offre concurrente
+  2. Le contrat n'est pas signe (LinkedIn de ton DG : il
+    annonce le prospect 1 mois plus tard)
+  3. Banque Populaire est mecontente : "On nous avait dit
+    que la negociation etait confidentielle"
+
+  Que tirer comme lecon ?
+choices:
+  - id: "a"
+    label: "C'est OK, j'ai juste partage que j'etais quelque part"
+    outcome: "bad"
+    feedback: "FAUX. Un check-in dans un context business = annonce publique d'une relation commerciale. Concurrents alertes, NDA potentiellement viole, client mecontent. La 'simple geolocalisation' a des consequences business serieuses."
+    points: -25
+  - id: "b"
+    label: "Aucun check-in en context professionnel sensible. Pas de 'photo prospect' avant signature contrat. Politique : silence = strategie commerciale"
+    outcome: "good"
+    feedback: "Reflexes pro. Confidentialite des relations commerciales = base. NDA souvent implicite ou explicite. Communiquer publiquement = apres signature ET avec accord du client. Standard commercial."
+    points: 40
+  - id: "c"
+    label: "Je supprime juste le check-in"
+    outcome: "neutral"
+    feedback: "Limite les degats mais : screenshots possibles, story view comptabilisee, concurrents potentiellement deja au courant. Mieux : ne jamais poster en premier lieu."
+    points: 10
+  - id: "d"
+    label: "Je continue, c'est important pour mon personal branding"
+    outcome: "bad"
+    feedback: "Mauvaise priorite. Le 'personal branding' ne justifie PAS le viol de confidentialite client. Ta reputation vraie se construit par : succes (signatures), pas par photos de rencontres non-conclues."
+    points: -20
+debrief: |
+  Le **check-in / geolocalisation** sur reseaux sociaux est
+  l'une des fuites involontaires les plus frequentes en
+  contexte professionnel.
+
+  Au-dela du fait d'etre "quelque part", il revele :
+
+  - **Relations commerciales** en cours
+  - **Strategies** d'entreprise
+  - **Voyages** d'affaires (deplacement = preparation deal)
+  - **Routines** exploitables
+  - **Confidentialite** de partenaires
+
+  **Les types de check-in problematiques :**
+
+  **1. Chez un prospect / client**
+
+  - "Reunion chez @MicrosoftFrance"
+  - "Hâte du rendez-vous chez @AcmeCorp"
+  - Photo dans le hall avec logo
+
+  Effet : l'industrie sait que tu negocies. Concurrents
+  peuvent intervenir.
+
+  **2. Salon professionnel sensible**
+
+  - "Salon defense IDEX - magnifique stand"
+  - "Conference cyber sensible - rencontres incroyables"
+
+  Effet : revele ton secteur d'activite + niveau hierarchique
+  + interets actuels.
+
+  **3. Restaurant / lieu avec un contact identifiable**
+
+  - "Lunch avec @JohnDoe @Starbucks Paris"
+  - Tag d'une personne professionnelle
+
+  Effet : revele relation sans consentement de la personne
+  taggee.
+
+  **4. Hotel / aeroport en deplacement**
+
+  - "Encore un voyage New York !"
+  - "Hotel a Tokyo"
+
+  Effet : revele duree du deplacement, destination, frequence.
+  Permet de cibler la fraude au president (DG en Tokyo ->
+  faux DG appelle le DAF a Paris).
+
+  **5. Bureau de l'entreprise en horaires inhabituelles**
+
+  - "Late at the office, big project incoming"
+  - "Au bureau un dimanche !"
+
+  Effet : revele un projet en cours important, deadline.
+
+  **6. Fournisseur sensible**
+
+  - "Visite chez notre nouveau fournisseur cyber"
+  - Tag du fournisseur
+
+  Effet : concurrents savent qui equipe ton entreprise,
+  attaquants peuvent cibler le fournisseur (supply chain).
+
+  **Les 4 niveaux de risque check-in :**
+
+  **Niveau 1 - Faible (OK)**
+  - Cafe / restaurant grand public sans context pro
+  - Lieux de tourisme
+  - Lieux personnels
+  - Bureau (en horaire normales, sans context particulier)
+
+  **Niveau 2 - Moyen (a eviter en pro)**
+  - Hotels professionnels (revelent voyages d'affaires)
+  - Aeroports
+  - Lieux de conferences / salons grand public
+  - Restaurants d'affaires connus
+
+  **Niveau 3 - Eleve (a eviter)**
+  - Locaux d'un prospect / client
+  - Salons sectoriels confidentiels
+  - Bureaux d'un partenaire strategique
+  - Lieux de conseil juridique / financier
+
+  **Niveau 4 - Critique (jamais)**
+  - Avant signature d'un contrat avec un prospect
+  - Pendant un litige / procedure
+  - Pendant negociation avec un fournisseur (impact prix)
+  - Lieux de sante (donnees sensibles personnelles)
+
+  **L'empilement de check-in :**
+
+  Memes sans 1 check-in problematique, l'historique combine
+  revele beaucoup :
+
+  - Tu es chez Microsoft mardi, IBM jeudi, salesforce vendredi
+    -> tu cherches un partenaire cloud
+  - Tu es au cabinet juridique X tous les mois -> tu prepares
+    un proces ou une operation M&A
+  - Tu es a Tokyo tous les 3 mois -> tu as des operations
+    asiatiques
+
+  Solution : **eviter les check-in pro systematiquement**.
+
+  **Procedures recommandees :**
+
+  **Pour le perso :**
+
+  - Geolocalisation desactivee par defaut sur reseaux
+  - Check-in OK pour lieux personnels (vacances, restaurants
+    grand public)
+  - Pas de check-in en temps reel pour vacances (cambriolage)
+
+  **Pour le pro :**
+
+  - **AUCUN** check-in en context pro sensible
+  - Photos sans geolocalisation (EXIF supprime)
+  - Communications post-signature avec accord client
+
+  **Pour les profils exposes (commerciaux, cadres,
+  dirigeants) :**
+
+  - **Profile prive** sur Instagram / Facebook
+  - **Pas de geolocalisation** sur Twitter / LinkedIn
+  - **Pas de check-in** en deplacement professionnel
+  - **Discretion** sur calendrier (pas de "today : meeting
+    with X")
+
+  **Stratégie communication client :**
+
+  Quand peut-on communiquer sur une relation client ?
+
+  **OK** :
+  - **Apres signature** + accord du client
+  - **Etudes de cas** validees client (avec relecture)
+  - **Logos partners** sur le site web (avec accord ecrit)
+  - **Communiques de presse** valides juridiquement
+
+  **NON OK** :
+  - **Avant signature** (peut faire echouer le deal)
+  - **Pendant negociation** (concurrents peuvent intervenir)
+  - **Sans accord client** explicite
+  - **Information non-publique** (deal financier, strategie)
+
+  **Configuration recommandee :**
+
+  **LinkedIn** :
+  - **Activity broadcast** : selectif (pas systematique)
+  - **Profile visibility** : limite si poste sensible
+  - **Pas de check-in** automatique
+
+  **Instagram** :
+  - **Compte prive** pour profils sensibles
+  - **Geolocalisation** desactivee par defaut
+  - **Stories** : limite a amis proches pour contenu pro
+
+  **Facebook** :
+  - **Audience par defaut** : Amis (pas Public)
+  - **Check-in** : approbation manuelle des tags
+
+  **Twitter / X** :
+  - **Geolocalisation** : desactivee
+  - **Compte separe** perso vs pro
+
+  **Le piege "ca aide mon personal branding" :**
+
+  Le personal branding moderne se construit par :
+  - **Expertise** (articles, talks, posts substantiels)
+  - **Resultats** (cas reels, succes, reconnaissance)
+  - **Reseau** (connections de qualite, recommandations)
+
+  **PAS** par :
+  - Check-in en serie
+  - Photos "lifestyle business"
+  - Selfies dans tous les lieux pro
+
+  Les recruteurs / clients **VRAIES** valorisent l'expertise,
+  pas la presence.
+
+  **Le piege "tout le monde le fait dans la tech" :**
+
+  L'effet de mode "instagrammable" en startup tech a effaceur
+  les regles de confidentialite. **MAIS** :
+
+  - Les clients enterprises (banques, sante, defense) attendent
+    une confidentialite stricte
+  - Les NDA sont contractuels, pas culturels
+  - Les fuites peuvent couler le deal
+
+  Solution : adaptation au context client. Pour clients
+  exigeants : silence pro. Pour clients startup-friendly :
+  communication apres validation.
+
+  **Le piege "c'est juste ma vie" :**
+
+  Pour un employe avec acces a des infos sensibles, ta vie pro
+  IS publique au sens ou les attaquants / concurrents
+  l'observent. Tu n'es pas un anonyme.
+
+  **Cas reels :**
+
+  **Cas 1 - 2018 (vente de strategie commerciale)**
+
+  Commerciale d'une PME tech a fait check-in regulier chez
+  prospects (Salesforce, Microsoft, AWS). Concurrent avait
+  un robot qui surveillait. A chaque check-in chez un
+  prospect, le concurrent appelait dans l'heure.
+
+  Resultat : 60% de win rate degrade. Decouvert apres 6 mois.
+
+  Cout : 200 K EUR de business perdu.
+
+  **Cas 2 - Cabinet conseil 2022 (NDA viole)**
+
+  Consultant a poste sur LinkedIn "Heureux de travailler
+  avec @ClientX sur leur transformation digitale". Mais le
+  contrat avait une clause confidentialite stricte. Client
+  furieux : 1) procedure pour violation NDA, 2) annulation
+  du contrat, 3) blacklisting.
+
+  Cout : 500 K EUR + reputation.
+
+  **Cas 3 - PME 2024 (fraude au president via check-in)**
+
+  Le DG a check-in regulier dans aeroports / hotels =
+  attaquants savent precisement quand il est en
+  deplacement. Faux email "DG depuis Tokyo, urgent virement"
+  envoye au DAF. Credibilite +++ grace a OSINT.
+
+  FOVI 80 K EUR.
+
+  **Configuration alternative pour les pros :**
+
+  Si tu veux montrer ton activite sans risquer la confidentialite
+  :
+
+  - **Articles substantiels** : "Comment j'ai ameliore X"
+    (sans nommer client)
+  - **Photos generiques** (parisien, paysage) sans lien direct
+    pro
+  - **Posts d'expertise** : ton avis sur tendance secteur
+  - **Etudes de cas validees** (apres signature + relecture)
+
+  Plus efficace pour le branding **et** plus respectueux de la
+  confidentialite.
+
+  **La regle d'or :**
+
+  > **Aucun check-in en context professionnel sensible. La
+  > confidentialite client est implicite (souvent contractuelle).
+  > La geolocalisation revele plus que la simple presence : 
+  > strategies, deals, deplacements. Communication
+  > post-signature uniquement, avec accord client.**
+quiz:
+  - question: "Tu fais un check-in chez ton prospect avant signature, quel risque ?"
+    choices:
+      - { id: "a", label: "Aucun", correct: false }
+      - { id: "b", label: "Concurrents alerts (peuvent intervenir avec offre concurrente), violation NDA possible, client mecontent (confidentialite), echec du deal", correct: true }
+      - { id: "c", label: "Bonus de personal branding", correct: false }
+    explanation: "Check-in chez prospect = annonce publique de relation commerciale. Concurrents intervenent (cas reel : 60% win rate degrade), NDA viole (cas reel : 500K EUR perdus), client furieux (cassure relation). Aucun check-in pro avant signature ET accord client."
+
+  - question: "Quels lieux de check-in sont 'critiques' (jamais) ?"
+    choices:
+      - { id: "a", label: "Tous", correct: false }
+      - { id: "b", label: "Locaux prospect/client avant signature, lieux negociation fournisseur, cabinet juridique en cours de procedure, lieux sante", correct: true }
+      - { id: "c", label: "Aucun", correct: false }
+    explanation: "Niveaux risque : faible (cafe public), moyen (hotels d'affaires), eleve (salons sectoriels), critique (avant signature contrat, pendant negociation, lieux de sante). Critique = jamais. Empilement check-in = revelation strategique cumulee."
+
+  - question: "L'empilement de check-in revele quoi ?"
+    choices:
+      - { id: "a", label: "Rien d'utile", correct: false }
+      - { id: "b", label: "Strategies cumulees : tu visites Microsoft + IBM + Salesforce = tu cherches partenaire cloud. Cabinet juridique mensuel = procedure ou M&A en cours", correct: true }
+      - { id: "c", label: "Tes hobbies", correct: false }
+    explanation: "L'historique combine est revelatrice : 1 check-in isole = peu d'info, 10 check-in cumules = strategie complete revelee. Visites partenaires successives = recherche fournisseur, cabinet juridique repete = operation M&A ou litige. Eviter = solution."
+
+  - question: "Comment communiquer sur une relation client de facon safe ?"
+    choices:
+      - { id: "a", label: "Check-in temps reel", correct: false }
+      - { id: "b", label: "Apres signature + accord ecrit du client. Etudes de cas validees. Logos sur site web avec accord. Communiques de presse juridiquement valides", correct: true }
+      - { id: "c", label: "Pas du tout", correct: false }
+    explanation: "Communication client safe : apres signature + accord ecrit du client. Etudes de cas avec relecture client. Logo sur site avec accord. Communiques de presse valides juridiquement. Pas de check-in temps reel ni de communication unilaterale."
+---
+
+> 💡 **Pour aller plus loin** : desactiver geolocalisation par
+> defaut sur tous les reseaux. Compte Instagram prive pour
+> profils sensibles. Charte reseaux sociaux entreprise (cf
+> ep 06) avec cas concrets. Pour commerciaux : focus contenu
+> expertise > check-in lifestyle.

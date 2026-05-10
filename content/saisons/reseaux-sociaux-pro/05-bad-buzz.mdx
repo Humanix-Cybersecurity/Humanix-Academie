@@ -1,0 +1,384 @@
+---
+title: "Desamorcer un bad buzz"
+durationMinutes: 7
+persona: "manager"
+objective: "Reagir efficacement a un bad buzz sur les reseaux sociaux : detection rapide, communication, gestion de crise"
+xpReward: 60
+scenario: |
+  Tu es DRH/Comm d'une PME 80 personnes. Lundi matin, tu
+  decouvres :
+
+  - Twitter : un employe a poste samedi soir un tweet
+    sarcastique sur un client, en mentionnant son nom.
+    Capture d'ecran fait le tour. 5K retweets.
+  - LinkedIn : 30 commentaires sur la "qualite" de votre
+    relation client.
+  - Le client a vu le tweet et menace de rompre le contrat
+    (200K EUR/an).
+
+  C'est dimanche soir, tu as 24h avant que ca devienne
+  ingerable. Que fais-tu ?
+choices:
+  - id: "a"
+    label: "Je prends mon temps, je reagis lundi matin tranquillement"
+    outcome: "bad"
+    feedback: "MAUVAIS. La reactivite est cruciale. En 24h, le bad buzz peut quadrupler. Reaction rapide (< 4h) limite les degats. Standard gestion de crise : 4-2-1 (4h pour decider, 2h pour communiquer, 1h pour acter)."
+    points: -25
+  - id: "b"
+    label: "Activation cellule crise (DG + comm + juridique). Suppression tweet + excuses publiques + appel client immediat. Sanction interne en parallele. Communication transparente lundi matin"
+    outcome: "good"
+    feedback: "Procedure crise. Activation cellule (4 yeux), action rapide (suppression + excuse), preservation client (appel direct), sanction interne, communication coherente. Standard gestion de crise PME."
+    points: 40
+  - id: "c"
+    label: "Je supprime le tweet + l'employe poste un erratum avec excuses"
+    outcome: "neutral"
+    feedback: "Bon debut mais incomplet. Le client n'est pas sécurise (peut quand meme rompre). L'entreprise n'est pas mobilisee (DG, juridique). Risque que ca empire si l'employe communique mal. Cellule de crise = standard."
+    points: 15
+  - id: "d"
+    label: "Je licencie l'employe immediatement et je communique sur ca"
+    outcome: "bad"
+    feedback: "Reaction excessive. Sanctioner avant analyse + communiquer = double erreur. 1) Procedure disciplinaire respectant Code travail, 2) Sanctioner ne reglera pas le client + peut sembler une fuite de responsabilite. Approche structuree."
+    points: -10
+debrief: |
+  Un **bad buzz** est une crise de reputation soudaine sur les
+  reseaux sociaux. Peut concerner :
+
+  - **Comportement** d'un employe (post controverse)
+  - **Produit / service** defaillant (plaintes massives)
+  - **Pratiques** d'entreprise (denonciation interne)
+  - **Comm** mal recue (publicite controversee)
+
+  **Statistiques** :
+  - 70% des bad buzz partent d'un seul tweet / post
+  - Duree moyenne : 5-7 jours d'attention mediatique
+  - Cout typique pour PME : 50-500 K EUR (clients perdus,
+    reputation, gestion crise)
+
+  **Les 4 phases d'un bad buzz :**
+
+  **Phase 1 : Emergence (0-24h)**
+
+  - 1 post initial qui pique
+  - Premiers retweets / partages
+  - Quelques commentaires
+  - **Action critique** : detection rapide
+
+  **Phase 2 : Amplification (24-72h)**
+
+  - Viralisation (retweet exponentiel)
+  - Influenceurs / journalistes commentent
+  - Articles de blog / presse
+  - **Action critique** : reaction rapide et coherente
+
+  **Phase 3 : Pic (72-120h)**
+
+  - Maximum d'attention mediatique
+  - Possible reprise par medias mainstream
+  - Pression maximum
+  - **Action critique** : message clair, transparent, factuel
+
+  **Phase 4 : Decrue (5+ jours)**
+
+  - L'attention diminue
+  - Persistance dans les memoires
+  - SEO impact (recherche "marque + scandale")
+  - **Action critique** : gestion long-terme, leçons apprises
+
+  **Procedure de reaction (les 4-2-1) :**
+
+  **4 heures pour DECIDER (Phase 1) :**
+
+  1. **Detection** : qui a vu, ou, ampleur ?
+  2. **Activation cellule de crise** :
+     - DG (decisionnaire)
+     - DRH (si employe implique)
+     - Comm (porte-parole)
+     - Juridique (cadrage)
+     - DSI (si dimension cyber/IT)
+  3. **Analyse** : que s'est-il passe ?
+  4. **Decision** : strategie de reponse
+
+  **2 heures pour COMMUNIQUER (Phase 1-2) :**
+
+  1. **Message clair** : excuses si appropriees, faits, mesures
+  2. **Canaux** : reseaux sociaux + site web + presse si
+    necessaire
+  3. **Coherence** : meme message partout
+  4. **Cible** : public + clients + employes
+
+  **1 heure pour ACTER (Phase 1-2) :**
+
+  1. **Suppression** du contenu litigieux (si possible)
+  2. **Mesures correctives** : si produit defaillant,
+    sanction interne, etc.
+  3. **Contact** des parties impliquees (clients, employes)
+  4. **Documentation** : timeline, decisions, actions
+
+  **Les principes de communication crise :**
+
+  **Principe 1 : Reactivite > perfection**
+
+  Mieux vaut une **communication imparfaite rapide** qu'une
+  **communication parfaite tardive**. Le silence est interprete
+  comme :
+  - Aveu de culpabilite
+  - Mepris pour le public
+  - Incapacite a gerer
+
+  Reaction sous 4h = signe de seriosite.
+
+  **Principe 2 : Transparence totale**
+
+  - Reconnaitre **les faits** averes
+  - Pas de denegation si pris en flagrant delit
+  - Pas de minimisation ("ce n'est pas si grave")
+  - **Excuse** sincere si appropriee
+
+  Mensonges / minimisation = aggravation par 10.
+
+  **Principe 3 : Responsabilisation**
+
+  - Reconnaitre la responsabilite de l'entreprise
+  - Pas de blame sur l'employe seul ("c'est lui, pas nous")
+  - **Action interne** visible (formation, processus, sanction
+    si necessaire)
+
+  **Principe 4 : Action visible**
+
+  La parole seule ne suffit pas. Demonter par :
+  - Sanctions (proportionnees, pas excessives)
+  - Changements de processus
+  - Formation reinforced
+  - Reparations concretes
+
+  **Principe 5 : Long-terme**
+
+  La gestion ne s'arrete pas a la decrue mediatique :
+  - Suivi 6-12 mois (rebondissements possibles)
+  - SEO management (cf debrief)
+  - Lecons apprises documentees
+  - Politique RH renforcee
+
+  **Templates de communication :**
+
+  **Si erreur d'un employe** :
+
+  > "Nous avons pris connaissance du tweet de [nom employe]
+  > publie samedi soir. Ce contenu ne reflète en aucune
+  > maniere les valeurs de [entreprise]. Nous prions [client]
+  > et nos clients de l'incident, qui n'aurait pas du se
+  > produire. Une procedure interne est en cours et nous
+  > renforcons immediatement nos formations sur l'usage
+  > responsable des reseaux sociaux. Nous restons a la
+  > disposition de [client] pour discuter."
+
+  **Si produit defaillant** :
+
+  > "Nous avons pris connaissance des incidents lies a [produit]
+  > rapportes ces dernieres heures. Nos equipes sont mobilisees
+  > pour identifier la cause et apporter une solution rapidement.
+  > Les clients concernes peuvent contacter notre support au
+  > [numero] pour une prise en charge immediate. Nous
+  > communiquerons un point d'avancement dans les 24h."
+
+  **Si pratique controversee** :
+
+  > "Nous avons pris connaissance des questions soulevees sur
+  > [pratique X]. Nous prenons ces preoccupations au serieux
+  > et lancons une revue interne de cette pratique. Un point
+  > complet sera communique sous 48h, incluant les changements
+  > qui s'imposent."
+
+  **Erreurs frequentes :**
+
+  **Erreur 1 : Silence prolonge**
+
+  Penser qu'en se taisant, ca passera. **FAUX**. Le silence
+  est interpreté negatif. Reaction sous 4-12h max.
+
+  **Erreur 2 : Communication legale froide**
+
+  "Nous reservons nos droits..." = vu comme arrogant. Privilegier
+  l'humain et l'excuse appropriee.
+
+  **Erreur 3 : Blame sur 1 personne**
+
+  "C'est M. X qui a publie cela individuellement..." = fuite de
+  responsabilite percue comme lache. Assumer + sanction interne
+  = plus credible.
+
+  **Erreur 4 : Suppression sans excuse**
+
+  Supprimer le post sans contextualiser = donne l'impression
+  qu'on cache. Mieux : suppression + post avec excuses.
+
+  **Erreur 5 : Surreaction**
+
+  Licenciement immediat (avant procedure) = peut etre vu comme
+  injuste / par precipitation. Procedure formelle (mise a
+  pied + entretien) = standard.
+
+  **Erreur 6 : Reaction publique a tous les commentaires**
+
+  Repondre individuellement a 5000 comments = perte de temps
+  + risque erreur. Communication officielle 1x suffisante.
+
+  **Le SEO management apres bad buzz :**
+
+  Apres la decrue, l'enjeu est la **memoire de Google** :
+
+  - Recherche "marque + scandale" peut afficher articles
+    negatifs des annees apres
+  - **Solutions** :
+    - Production de contenu positif (PR, interviews, blog
+      d'entreprise)
+    - SEO actif sur "marque + valeurs", "marque + responsabilite"
+    - **Right to be forgotten** RGPD (cas extremes)
+    - Patience (Google priorise plus le recent)
+
+  **Cas reels :**
+
+  **Cas 1 - United Airlines 2017 (passenger forcefully
+  removed)**
+
+  Video d'un passager force a quitter l'avion (overbooking).
+  Viralisee massivement.
+
+  Reaction de United :
+  - Communication initiale defensive
+  - PDG comme "il etait belligerent" (faux)
+  - Backlash mondial
+
+  Reaction corrective (apres 2 jours) :
+  - Excuses publiques sinceres
+  - Indemnisation passagers
+  - Changement de politique
+  - Long-terme : amelioration reputation
+
+  **Cout** : 1 milliard USD de capitalisation perdue
+  initialement (recuperee partiellement).
+
+  **Cas 2 - Tesla / Elon Musk regulier**
+
+  Tweets controverses regulierement = bad buzz frequents.
+  Strategie unique : **non-traditional approach** (pas
+  d'excuses, communication directe).
+
+  Risque : de plus en plus mal recu. Tesla ($) impacte par
+  les tweets.
+
+  Lecon : la "celebrite controversee" n'est pas une strategie
+  PME.
+
+  **Cas 3 - PME francaise 2023 (resolu en 24h)**
+
+  Stagiaire RH a poste sur Twitter une remarque sarcastique
+  sur un candidat refuse. Capture du candidat. Viralisee.
+
+  Reaction PME (en 8h) :
+  - Cellule crise activee
+  - Tweet supprime + excuses publiques
+  - Stagiaire mis a pied (procedure)
+  - Appel candidat avec excuses + dedommagement (cadeau
+    symbolique)
+  - Communication interne renforcee
+
+  Resultat : decrue rapide en 48h, pas d'impact long-terme.
+  Candidat satisfait de la prise en charge.
+
+  **Cas 4 - Cabinet d'avocats 2024 (escalade)**
+
+  Avocate a poste un commentaire sexiste sur le profil
+  LinkedIn d'une candidate. Premier message a tort, mais
+  reaction du cabinet :
+
+  - Negation publique : "ces propos n'engagent que leur
+    autrice"
+  - Pas de sanction interne immediate
+
+  Bad buzz a augmente : "le cabinet ne sanctionne pas".
+  Reprise medias mainstream.
+
+  Cout final : 5 perte de clients + ordre des avocats saisi.
+
+  Lecon : assumer + agir, pas se distancer.
+
+  **Politique anti-bad-buzz preventive :**
+
+  Pour eviter le bad buzz initial :
+
+  **1. Charte reseaux sociaux** (cf ep 06)
+  - Regles claires sur posts pro et perso
+  - Sensibilisation reguliere
+
+  **2. Approbation des comptes officiels**
+  - Tous les comptes au nom de l'entreprise valides comm
+  - Modele de validation pour posts sensibles
+
+  **3. Veille sociale**
+  - Outils : Mention, Brand24, Hootsuite
+  - Detection en quelques heures de mentions critiques
+  - Permet reaction rapide
+
+  **4. Cellule de crise pre-formee**
+  - Procedure deja documentee
+  - Rolodex de contacts (DG, juridique, comm)
+  - Templates de communication
+
+  **5. Formation gestion de crise**
+  - Pour le management
+  - Simulation 1x/an
+  - Lecons apprises documentees
+
+  **Outils utiles :**
+
+  - **Mention.com** : surveillance mention de marque
+  - **Hootsuite Insights** : analyse sociale
+  - **Talkwalker** : pro analyse + alerte
+  - **Brand24** : alertes en temps reel
+
+  Cout : 50-500 EUR/mois selon volume.
+
+  **La regle d'or :**
+
+  > **Bad buzz = reaction sous 4-12h. Cellule crise + 
+  > transparence + responsabilisation + action visible. Pas
+  > de silence, pas de blame individuel, pas de surreaction.
+  > Communication coherente sur tous canaux. Suivi
+  > long-terme + lecons apprises. Politique preventive
+  > (charte, formation, veille).**
+quiz:
+  - question: "Delai de reaction recommande pour un bad buzz ?"
+    choices:
+      - { id: "a", label: "1 semaine", correct: false }
+      - { id: "b", label: "Standard 4-2-1 : 4h pour decider, 2h pour communiquer, 1h pour agir. Sous 12h max. Le silence prolonge est interpreté negatif", correct: true }
+      - { id: "c", label: "Jamais", correct: false }
+    explanation: "Standard gestion crise : 4-2-1 (4h decide, 2h communique, 1h agit). Sous 12h max. Le silence prolonge = aveu, mepris, incapacite. Reactivite > perfection : communication rapide et imparfaite mieux que tardive et parfaite."
+
+  - question: "Composition cellule de crise pour bad buzz ?"
+    choices:
+      - { id: "a", label: "Le DG seul", correct: false }
+      - { id: "b", label: "DG (decision) + DRH (si employe) + Comm (porte-parole) + Juridique (cadrage) + DSI (si dimension cyber)", correct: true }
+      - { id: "c", label: "Tous les employes", correct: false }
+    explanation: "Cellule crise = 4-5 personnes : DG (decisionnaire final), DRH (si employe implique), Comm (porte-parole, message), Juridique (limites legales), DSI (si dimension cyber/IT). Pre-formee = procedure documentee + rolodex + templates."
+
+  - question: "Le silence prolonge pendant un bad buzz, consequence ?"
+    choices:
+      - { id: "a", label: "C'est passe", correct: false }
+      - { id: "b", label: "Interpreté negatif : aveu de culpabilite, mepris pour le public, incapacite a gerer. Bad buzz amplifie", correct: true }
+      - { id: "c", label: "Ca calme le buzz", correct: false }
+    explanation: "Silence = interprete negatif (aveu, mepris, incapacite). Le bad buzz s'amplifie (Phase 2-3). Reaction sous 4-12h limite l'amplification. Imperfection acceptee si rapide. Mensonges / minimisation = aggravation par 10."
+
+  - question: "Apres la decrue mediatique, l'enjeu c'est quoi ?"
+    choices:
+      - { id: "a", label: "Rien", correct: false }
+      - { id: "b", label: "SEO management (recherche 'marque + scandale' peut hanter des annees), suivi 6-12 mois, lecons apprises, prevention recidive", correct: true }
+      - { id: "c", label: "Refaire un buzz", correct: false }
+    explanation: "Apres decrue : SEO management (Google memorise), suivi 6-12 mois (rebondissements possibles), lecons apprises documentees, charte/formation renforcees. Production contenu positif pour 'noyer' les references negatives dans les recherches Google."
+---
+
+> 💡 **Pour aller plus loin** : **Mention.com / Brand24 /
+> Hootsuite Insights** pour veille sociale (50-500 EUR/mois).
+> Cellule crise pre-formee + procedure documentee. Simulation
+> 1x/an. Charte reseaux sociaux d'entreprise (cf ep 06) +
+> formation reguliere.
