@@ -1,0 +1,312 @@
+---
+title: "Construire un onboarding cyber qui tient la route"
+durationMinutes: 7
+persona: "manager"
+objective: "Mettre en place un onboarding cyber complet pour les nouveaux arrivants : comptes, formation, materiel, charte, sensibilisation initiale"
+xpReward: 60
+scenario: |
+  Tu es DRH d'une PME 80 personnes. Lundi matin, 3 nouveaux
+  arrivants : un commercial, un developpeur, un DAF. Ton
+  onboarding actuel est :
+
+  Jour J : remise du badge + clef USB de bienvenue + ordi
+  portable (config IT a l'arrivee)
+  J+1 : tour des bureaux + presentation equipe
+  J+7 : tu donnes son login Slack/Teams quand tu y penses
+  J+30 : signature de la charte informatique (en general)
+
+  Tu vois 5 ecarts cyber. Que proposes-tu ?
+choices:
+  - id: "a"
+    label: "C'est bon, on les met au boulot, ils apprendront en chemin"
+    outcome: "bad"
+    feedback: "DANGEREUX. Les 30 premiers jours sont la fenetre la plus risquee : nouveau arrivant + acces non-maitrise + pas de formation = breach potentiel. ANSSI : 40% des incidents impliquent des nouveaux arrivants des 90 premiers jours."
+    points: -15
+  - id: "b"
+    label: "Onboarding cyber structure : J-7 (charte signee), J0 (compte + MFA + materiel pre-configure), J+1 (formation cyber 1h), J+7 (simulation phishing), J+30 (revue acces + feedback)"
+    outcome: "good"
+    feedback: "Demarche pro. Anticipation J-7, accueil cyber J0, formation immediate, evaluation, suivi. Couvre toutes les bases : technique (acces, MFA), organisationnelle (charte), formation (sensibilisation), evaluation (phishing simule)."
+    points: 40
+  - id: "c"
+    label: "Je donne un PDF de 50 pages a lire le premier jour"
+    outcome: "bad"
+    feedback: "Personne ne lit. Le PDF de 50 pages = facade de conformite. Onboarding cyber efficace = formation interactive 1h + simulation + suivi a 30j. Le PDF reste utile en reference, pas en outil principal."
+    points: -10
+  - id: "d"
+    label: "Je m'occupe d'abord du DAF (sensible) puis des autres"
+    outcome: "neutral"
+    feedback: "Bon reflexe de priorisation pour les profils a risque (DAF, dev, RSSI), mais incomplet. TOUS les arrivants doivent avoir un onboarding cyber. Le commercial (qui clique sur les phishings) et le dev (acces code) sont aussi exposes que le DAF."
+    points: 15
+debrief: |
+  L'**onboarding cyber** est l'une des etapes les plus negligees
+  et les plus critiques. Les 30 premiers jours d'un nouvel
+  arrivant cumulent les risques :
+
+  - Acces accordes sans verification d'usage reel
+  - Pas de formation cyber initiale
+  - Charte signee tardivement (parfois jamais)
+  - Mots de passe par defaut non changes
+  - Materiel pas configure (BYOD risk)
+
+  ANSSI : **40% des incidents** impliquent un nouvel arrivant
+  des 90 premiers jours.
+
+  **Les 5 phases d'un onboarding cyber complet :**
+
+  **Phase 1 : J-7 a J-1 (Pre-arrivee)**
+
+  **a) Charte informatique signee AVANT l'arrivee**
+
+  - Document de 3-5 pages (pas 50)
+  - Engagement clair : usage des ressources, MFA, mots de passe,
+    BYOD, protection donnees
+  - **Signature electronique** (DocuSign, YouSign) pour traces
+  - **Annexe RGPD** : information sur le traitement des donnees
+    de l'employe (article 13 RGPD)
+
+  **b) Comptes pre-crees**
+
+  - Email professionnel (`prenom.nom@entreprise.fr`)
+  - Compte Active Directory / Microsoft Entra ID / Google
+    Workspace
+  - **Mot de passe initial complexe** envoye par canal securise
+    (pas dans l'email d'arrivee)
+  - Acces pre-configures selon **role/profil** (matrice RBAC)
+
+  **c) Materiel pre-configure**
+
+  - PC portable avec **chiffrement disque** (BitLocker, FileVault,
+    LUKS)
+  - **Antivirus** + **EDR** (Endpoint Detection Response) actifs
+  - **Politique GPO** appliquee (mots de passe, screensaver, USB
+    autoriise/non)
+  - **MDM** (Mobile Device Management) si BYOD ou mobile pro
+
+  **d) Acces logiciels prepares**
+
+  - Liste des applications metier necessaires (ERP, CRM, outils
+    spec.)
+  - Comptes crees (pas tous le jour J - pas de panique)
+  - **Principe du moindre privilege** : juste ce qu'il faut
+
+  **Phase 2 : J0 (Premier jour)**
+
+  **a) Accueil cyber 30 minutes**
+
+  - Presentation des outils (Microsoft 365 / Google Workspace,
+    Slack, etc.)
+  - Activation **MFA** : YubiKey ou TOTP en presence du nouveau
+  - **Premiere connexion** + changement du mot de passe initial
+  - **Politique mots de passe** + gestionnaire (Bitwarden,
+    1Password)
+
+  **b) Remise materiel formel**
+
+  - PV de remise (signature) : ordinateur, telephone, badge,
+    cle USB
+  - Numero de serie note dans CMDB
+  - **Politique** : retour des materiels en cas de depart
+
+  **c) Charte rappelee a l'oral**
+
+  - Pas juste signature : rappel des regles cles (5 minutes)
+  - Reponses aux questions
+  - Encourager a poser des questions ulterieurement
+
+  **Phase 3 : J+1 a J+7 (Premiere semaine)**
+
+  **a) Formation cyber initiale (1h interactive)**
+
+  Modules essentiels (selon profil) :
+  - Phishing : reconnaissance (cf saison phishing)
+  - Mots de passe + MFA
+  - BYOD et politique d'usage
+  - RGPD / donnees personnelles
+  - Que faire en cas d'incident (numero hotline RSSI)
+
+  **Formats** :
+  - Plateforme dediee (Humanix Academie, Cybrary, SANS)
+  - 30-60 minutes
+  - **Quiz** de validation pour confirmer comprehension
+
+  **b) Pairing avec un parrain cyber**
+
+  - Un collegue experimente designe
+  - Disponible pour les questions cyber des premieres semaines
+  - Reduit le risque "j'ose pas demander"
+
+  **Phase 4 : J+7 a J+30 (Premier mois)**
+
+  **a) Simulation de phishing**
+
+  - Test phishing **realiste** (pas trop facile, pas trop dur)
+  - Si clic : pas de sanction, mais module de formation
+    immediate (cf saison remediation-flash)
+  - Si signalement : felicitation publique
+
+  **b) Revue des acces (J+15)**
+
+  - Verification que les acces accordes sont bien utilises
+  - Suppression des acces non-utilises (principe moindre
+    privilege)
+  - Ajout des acces manquants
+
+  **c) Feedback bi-directionnel**
+
+  - L'employe : qu'est-ce qui manque ? qu'est-ce qui est trop ?
+  - Le RH/RSSI : comportement observe (compliance, incidents)
+
+  **Phase 5 : J+30 et au-dela (Suivi)**
+
+  **a) Formation recurrente**
+
+  - 1x/trimestre minimum (15-30 minutes par session)
+  - **Themes saisonniers** : fiscalite (mars), cloture (juin),
+    arnaques de Noel (decembre)
+  - Format adapte au profil (manager, dev, compta, RH, etc.)
+
+  **b) Suivi des indicateurs**
+
+  - **Score de phishing** individuel (cf simulations)
+  - **Score formation** (modules completes, quizzes)
+  - **Incidents** : nombre par employe (anonymise)
+
+  **Onboarding par profil (specialisation) :**
+
+  **a) Manager / dirigeant**
+  - Sensibilisation **fraude au president** (cf saison)
+  - **Politique cyber dirigeants** (cf saison)
+  - Hotline directe RSSI / DSI
+
+  **b) Developpeur**
+  - Acces code source : **secrets, vault, signing** (cf saison
+    cyber-dev)
+  - **Code review** obligatoire avant push prod
+  - **MFA obligatoire** pour Git / DevOps
+
+  **c) Comptable / DAF**
+  - Sensibilisation **FOVI** (cf saison cyber-compta)
+  - **Double validation** virement (cf cyber-compta ep 03)
+  - Hotline banque pour blocage urgent
+
+  **d) Commercial / sales**
+  - **Phishing cible** (les commerciaux sont la 1ere cible
+    selon Verizon DBIR)
+  - **CRM** : politique de protection donnees clients
+  - **Voyages** : risques wifi public / vol de laptop
+
+  **e) RH**
+  - **Donnees candidats** (cf cyber-rh ep 05)
+  - **Faux CV piegee** (cf cyber-rh ep 04)
+  - **Fuite paie** (cf cyber-rh ep 03)
+
+  **Erreurs courantes :**
+
+  **Erreur 1 : Tout donner le 1er jour**
+
+  Le nouveau est submerge. Resultat : il oublie tout. Solution
+  : etalement sur 30 jours, pas tout d'un coup.
+
+  **Erreur 2 : Charte signee avec 30 jours de retard**
+
+  Risque juridique : si l'employe fait une bourde dans les 30
+  premiers jours, l'absence de charte signee complique les
+  sanctions disciplinaires.
+
+  **Erreur 3 : "Tout le monde a le meme acces par defaut"**
+
+  Non-conforme principe du moindre privilege (NIS2 article 21).
+  Solution : matrice de droits par profil (RBAC = Role-Based
+  Access Control).
+
+  **Erreur 4 : Pas de simulation phishing avant J+90**
+
+  L'employe n'a pas eu d'occasion de pratiquer. Premier vrai
+  phishing = clic. Solution : simulation des J+7.
+
+  **Erreur 5 : Pas de retour sur les comportements**
+
+  L'employe ne sait pas s'il fait bien. Solution : feedback
+  bi-mensuel sur ses scores, simulations, formations.
+
+  **Outils utiles :**
+
+  - **Plateforme onboarding RH** : BambooHR, Personio, Lucca
+    (FR), Workday
+  - **Gestion des acces (IAM)** : Microsoft Entra Lifecycle
+    Workflows, Okta, JumpCloud
+  - **Formation cyber** : Humanix Academie (FR), Cybrary, SANS
+    OUCH!
+  - **Simulation phishing** : Knowbe4, GoPhish (OSS), Humanix
+    Academie
+
+  **Cas reel : PME Lyon 2023 - breach via nouvel arrivant**
+
+  Un nouveau commercial a recu son materiel le J0 sans
+  formation. J+3 : il recoit un email "Bienvenue chez
+  l'entreprise, voici tes outils, clique pour t'enregistrer".
+  Il clique. C'est un phishing cible. Mot de passe AD
+  compromis. L'attaquant accede au CRM, exfiltre 20K contacts
+  clients. Cout : 80K EUR (notifications RGPD + reputation).
+
+  Diagnostic : pas de formation cyber initiale + pas de
+  simulation = vulnerabilite des le J0.
+
+  **Calendrier ideal d'onboarding cyber (1 personne) :**
+
+  | Jour | Action | Responsable | Duree |
+  |---|---|---|---|
+  | J-7 | Charte signee electroniquement | RH | 5 min |
+  | J-3 | Comptes crees (AD, email, apps) | DSI | 30 min |
+  | J-1 | Materiel pre-configure | DSI | 1h |
+  | J0 | Accueil cyber 30 min + MFA active | RSSI | 30 min |
+  | J+1 | Formation cyber 1h + parrain | RSSI/parrain | 1h |
+  | J+7 | Simulation phishing | RSSI | auto |
+  | J+15 | Revue des acces | RH/DSI | 15 min |
+  | J+30 | Feedback + check final | RH | 30 min |
+
+  **Cout total : ~3h de temps cumule. Bénéfice : eviter un
+  breach a 80K EUR. ROI evident.**
+
+  **La regle d'or :**
+
+  > **Les 30 premiers jours d'un nouvel arrivant sont les plus
+  > risques. Onboarding cyber structure = preparation J-7,
+  > accueil J0 (MFA), formation J+1, simulation J+7, revue
+  > J+30. Documentation a chaque etape pour compliance NIS2 +
+  > RGPD.**
+quiz:
+  - question: "Quel pourcentage des incidents implique un nouvel arrivant des 90 premiers jours ?"
+    choices:
+      - { id: "a", label: "5%", correct: false }
+      - { id: "b", label: "~40% (selon ANSSI - vulnerabilite cumulee : nouveau + pas de formation + acces non-verifies)", correct: true }
+      - { id: "c", label: "0%", correct: false }
+    explanation: "ANSSI : 40% des incidents impliquent un nouveau dans les 90 premiers jours. Cumul de vulnerabilites : pas de formation, acces non-verifies, mots de passe par defaut, BYOD non-configure. D'ou l'importance de l'onboarding cyber structure."
+
+  - question: "La charte informatique doit etre signee :"
+    choices:
+      - { id: "a", label: "A J+30 quand on y pense", correct: false }
+      - { id: "b", label: "AVANT l'arrivee (J-7 ideal) - signature electronique. Sans charte signee = risque juridique en cas de bourde des 30 premiers jours", correct: true }
+      - { id: "c", label: "Jamais", correct: false }
+    explanation: "Charte signee avant l'arrivee = base juridique. Si bourde dans les 30 premiers jours et charte non-signee, sanctions disciplinaires complexes. Signature electronique (DocuSign, YouSign) en J-7 = standard pro."
+
+  - question: "Premiere simulation de phishing pour un nouveau, quand ?"
+    choices:
+      - { id: "a", label: "Jamais", correct: false }
+      - { id: "b", label: "J+7 (apres formation initiale, pour valider l'apprentissage et identifier les besoins de remediation)", correct: true }
+      - { id: "c", label: "J+365", correct: false }
+    explanation: "Simulation J+7 = juste apres formation initiale. Valide l'apprentissage. Si clic : pas de sanction mais module remediation immediate (saison remediation-flash). Si signalement : felicitation. Standard NIS2 mesure 7 (formation)."
+
+  - question: "Le moindre privilege en onboarding signifie :"
+    choices:
+      - { id: "a", label: "Tout le monde a tous les droits", correct: false }
+      - { id: "b", label: "Acces accordes uniquement selon le role (RBAC) - juste ce qu'il faut. Revue J+15 pour ajuster (suppression non-utilises)", correct: true }
+      - { id: "c", label: "Aucun acces", correct: false }
+    explanation: "Moindre privilege (NIS2 article 21 mesure 9) : matrice RBAC par profil. Le commercial a CRM mais pas l'ERP. Le dev a Git mais pas la paie. Revue J+15 : suppression des acces non-utilises, ajout des manquants."
+---
+
+> 💡 **Pour aller plus loin** : **Microsoft Entra ID Lifecycle
+> Workflows** automatise les phases (jour 0 : creation auto,
+> jour 30 : revue, jour 90 : audit). **Lucca** (FR) ou
+> **BambooHR** integrent onboarding RH + cyber. **Humanix
+> Academie** : modules onboarding 1h pretts a deployer.

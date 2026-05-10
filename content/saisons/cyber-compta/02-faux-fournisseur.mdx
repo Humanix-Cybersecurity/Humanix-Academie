@@ -1,0 +1,295 @@
+---
+title: "Le faux fournisseur qui change de RIB"
+durationMinutes: 7
+persona: "manager"
+objective: "Detecter et bloquer une fraude au changement d'IBAN par un faux fournisseur (variante FOVI)"
+xpReward: 60
+scenario: |
+  Mardi 11h, comptable d'une PME. Email de votre fournisseur
+  habituel (Acme SAS, 50K EUR/mois de prestations) :
+
+  De : compta@acme.fr (le vrai domaine)
+  Objet : Important - Nouveau RIB pour les paiements
+  "Bonjour, suite a un changement de banque, merci de mettre a
+  jour notre RIB en BDD. Notre nouveau IBAN : FR76 XXXX...
+  (different de l'ancien). Toutes les factures futures sont
+  payables sur ce compte. Cordialement."
+
+  Tu fais quoi ?
+choices:
+  - id: "a"
+    label: "Je mets a jour l'IBAN dans le logiciel compta, je paie sur le nouveau compte"
+    outcome: "bad"
+    feedback: "CATASTROPHE. C'est l'attaque la plus classique : compte fournisseur compromis OU usurpation. Le fournisseur peut ne pas savoir que des emails frauduleux partent de son nom (compte mail compromis) ou ne pas avoir change de banque du tout."
+    points: -25
+  - id: "b"
+    label: "Je telephone au fournisseur via le numero que j'ai (pas celui du mail) pour confirmer le changement, ET je demande une confirmation ecrite via courrier postal/document signe"
+    outcome: "good"
+    feedback: "Procedure parfaite. Verification HORS-BANDE par telephone au numero connu (pas celui du mail signature qui peut etre falsifie). Confirmation ecrite par courrier postal pour piste d'audit. Standard ANSSI/FFB."
+    points: 40
+  - id: "c"
+    label: "Je reponds au mail pour demander confirmation"
+    outcome: "bad"
+    feedback: "INUTILE. Si le compte mail est compromis, l'attaquant repondra 'oui c'est bien moi'. Repondre au mail meme expediteur = ne donne aucune garantie. Verification HORS-BANDE obligatoire."
+    points: -15
+  - id: "d"
+    label: "Je demande a mon manager directement, sans verification autre"
+    outcome: "neutral"
+    feedback: "Bon reflexe (4 yeux) mais incomplet. Le manager n'a pas plus d'info que toi. Il faut que QUELQU'UN telephone au fournisseur via numero connu. La double validation interne ne remplace pas la verification externe."
+    points: 10
+debrief: |
+  La **fraude au changement de RIB/IBAN** est l'une des
+  variantes les plus efficaces de la **FOVI** (Fraude Au
+  Virement). Elle cible la comptabilite et exploite la routine
+  des changements de coordonnees bancaires legitimes.
+
+  **3 mecanismes principaux :**
+
+  **Mecanisme 1 : Compte email du fournisseur compromis**
+
+  - L'attaquant a piratte le compte email d'un employe du
+    fournisseur (souvent par phishing)
+  - Il envoie un email **legitime** (vrai domaine, vraie
+    signature) demandant le changement d'IBAN
+  - Le RIB indique est celui du fraudeur
+  - **Le fournisseur lui-meme ne sait pas** que cela se passe
+    (jusqu'a ce qu'il s'apercoive de l'absence de paiement)
+
+  C'est le mecanisme **le plus dangereux** car le mail est
+  techniquement legitime (DKIM/SPF valides).
+
+  **Mecanisme 2 : Usurpation du nom de domaine (typosquatting)**
+
+  - L'attaquant cree un domaine similaire (ex. `acme-fr.com` au
+    lieu de `acme.fr`)
+  - Il envoie l'email depuis le faux domaine en imitant la
+    signature du fournisseur
+  - **Detection plus facile** : le domaine differe (a comparer
+    avec les anciens emails)
+
+  **Mecanisme 3 : Attaque "BEC" (Business Email Compromise) sur
+  ton COTE**
+
+  - L'attaquant a piratte TON propre email comptable
+  - Il intercepte les emails du fournisseur
+  - Il MODIFIE les factures (avec le RIB pirate) avant qu'elles
+    n'arrivent au DAF
+  - Le fournisseur n'est pas implique du tout
+
+  **Detection** : tres difficile, necessite EDR sur les postes
+  + analyse des regles email (forward suspect).
+
+  **Procedure de validation IBAN (le standard) :**
+
+  Tout changement d'IBAN d'un fournisseur DOIT passer par cette
+  procedure :
+
+  **Etape 1 : Reception de la demande**
+
+  - Email, courrier, ou nouveau bon de commande mentionnant un
+    nouvel IBAN
+  - **Ne PAS reagir immediatement** : noter la demande, ne pas
+    payer
+
+  **Etape 2 : Verification telephonique HORS-BANDE**
+
+  - Appeler le fournisseur **via le numero que tu as deja**
+    (numero deja note dans tes contacts, sur les anciennes
+    factures, sur le site web officiel)
+  - **Ne JAMAIS utiliser le numero indique dans le mail** (qui
+    peut etre falsifie)
+  - **Ne JAMAIS rappeler le numero qui appelle** (peut etre
+    spoofe)
+
+  Demander :
+  - Confirmation du changement de RIB
+  - Raison du changement (banque, restructuration)
+  - Date d'effet
+
+  **Etape 3 : Confirmation ecrite formelle**
+
+  - Demander une confirmation **ecrite officielle** :
+    - Courrier postal sur papier a en-tete
+    - Document signe par le directeur financier du fournisseur
+    - Nouveau RIB officiel (pas une simple ligne dans un mail)
+  - Conserver pour audit / piste de preuve
+
+  **Etape 4 : Mise a jour avec double validation**
+
+  - Mise a jour de l'IBAN dans le logiciel compta par UNE
+    personne
+  - Validation par UNE AUTRE personne (DAF, manager)
+  - Premier paiement de **petit montant** (10-100 EUR) pour
+    valider que le compte est bien celui du fournisseur (le
+    fournisseur confirme la reception)
+
+  **Etape 5 : Documentation**
+
+  - Trace ecrite de toute la procedure (email, telephone, lettre)
+  - Conservation 5 ans pour audit
+  - **Si fraude detectee** : depot de plainte + signalement
+    Cybermalveillance.gouv.fr
+
+  **Les 5 signaux d'alerte (red flags) :**
+
+  **1. Urgence injustifiee**
+  > "Merci de payer sur ce nouveau compte avant le 30, sinon
+  > penalites"
+
+  Une vraie banque change ne presse pas comme ca. Drapeau rouge.
+
+  **2. Argument "secret" ou "confidentiel"**
+  > "Cette operation est confidentielle, ne mentionnez pas a
+  > votre direction"
+
+  Aucune raison legitime de demander la confidentialite. C'est
+  exactement la signature d'une fraude.
+
+  **3. Pas d'historique cumule**
+
+  - Premier email d'un fournisseur que tu connais peu
+  - Aucun email passe avec ce contact
+  - Information bancaire sans contexte commercial
+
+  **4. Banque inhabituelle**
+
+  - IBAN d'une banque etrangere (Lituanie, Estonie, Hong Kong)
+    pour un fournisseur francais
+  - IBAN d'une "neobank" type N26, Revolut pour un fournisseur
+    industriel etabli
+  - Compte au nom d'un particulier au lieu de la societe
+
+  **5. Demande integration / petit changement**
+
+  - "Merci d'integrer mon nouveau RIB dans 4-5 fournisseurs en
+    meme temps" (escalade)
+  - "Petit changement, juste 2 chiffres" (test de credibilite)
+
+  **Cas reels :**
+
+  **Cas 1 - PME Lyon 2022 (FOVI 180K EUR)**
+
+  Un comptable a recu un email d'un fournisseur regulier
+  demandant un changement de RIB. Le mail venait du VRAI
+  domaine du fournisseur (compte compromis, mecanisme 1). Le
+  comptable a paye 180K EUR sur 2 mois sans verification
+  telephonique. Decouverte : le vrai fournisseur appelle pour
+  reclamer son du. Trop tard, l'argent etait dans un compte en
+  Lituanie.
+
+  **Cas 2 - Cabinet d'avocats Paris 2021 (FOVI 90K EUR)**
+
+  L'attaquant a usurpe le domaine du cabinet (typosquatting,
+  mecanisme 2). Les clients du cabinet ont paye sur un faux
+  compte. Le cabinet a du rembourser ses clients (responsabilite).
+
+  **Cas 3 - Hopital prive Marseille 2023 (FOVI 1.2M EUR)**
+
+  Compromission du compte mail du DAF (mecanisme 3). L'attaquant
+  a modifie 7 factures fournisseurs sur 3 mois pour rediriger
+  les paiements. Decouverte par audit fiscal.
+
+  **Le piege "le mail vient du vrai domaine" :**
+
+  C'est exactement le piege de la mecanisme 1. Un domaine
+  authentique ne garantit RIEN car le compte peut etre
+  compromis. Seule la verification HORS-BANDE est fiable.
+
+  **Le piege "le commercial est sympa, je le connais" :**
+
+  Tu connais le commercial, mais tu ne connais pas ses identifiants
+  ni s'il a clique sur un phishing hier. La proximite humaine
+  N'EXEMPTE PAS la procedure. Les FOVI les plus reussies
+  exploitent precisement la confiance.
+
+  **Le piege "verifier par mail, c'est plus rapide" :**
+
+  Un mail compromis ne peut pas s'auto-verifier. Si tu envoies
+  "tu confirmes ?", l'attaquant repondra "oui je confirme".
+  Verification HORS-BANDE obligatoire = telephone au numero
+  connu.
+
+  **Procedure de blocage si fraude detectee :**
+
+  Si tu realises QU'UN VIREMENT DEJA FAIT etait sur un compte
+  fraudeur :
+
+  **Heure 0 : Action immediate**
+  - **Telephone immediatement a ta banque** : demande blocage
+    en urgence du virement (si pas encore credite, possible
+    annulation)
+  - **Procedure SCT Inst** : annulation possible si declaree
+    sous 72h
+
+  **Heure 1-24 : Documentation**
+  - Conservation des emails + facture + RIB
+  - Capture d'ecran des emails
+  - Trace de toutes les actions
+
+  **Heure 24-72 : Signalement**
+  - **Plainte penale** au commissariat ou en ligne
+  - **Cybermalveillance.gouv.fr** : signalement
+  - **Banque** : declaration officielle pour activation de la
+    procedure SEPA chargeback
+
+  **Apres 72h : Recovery**
+  - Cooperation avec la banque (procedure inter-banques)
+  - Cooperation avec la police judiciaire
+  - Communication interne (eviter recidive)
+  - Audit du SI pour comprendre comment c'est arrive
+
+  Taux de recuperation moyen : **20-40%** si action sous 72h,
+  proche de **0%** au-dela.
+
+  **Outils et services utiles :**
+
+  - **CETSVERIF** (chequer IBAN) : verification de la coherence
+    IBAN/BIC (gratuit, banques le proposent)
+  - **Modulr / Mandate Verification** : services de verification
+    nom-de-compte (ex. Confirmation of Payee UK)
+  - **Politique d'entreprise** : tout changement IBAN > validation
+    obligatoire HORS-BANDE
+  - **Formation reguliere** : 70% des comptables francais ne
+    connaissent pas la procedure HORS-BANDE selon CCI
+
+  **La regle d'or :**
+
+  > **Aucun changement de RIB n'est confirme par mail. Telephone
+  > au fournisseur via numero connu + lettre signee + premier
+  > paiement de test. 5 minutes de procedure = 100K EUR
+  > economises.**
+quiz:
+  - question: "Email du fournisseur (vrai domaine) demande changement IBAN, premier reflexe ?"
+    choices:
+      - { id: "a", label: "Mettre a jour et payer", correct: false }
+      - { id: "b", label: "Telephoner au fournisseur via numero connu (pas celui du mail) pour confirmer", correct: true }
+      - { id: "c", label: "Repondre au mail pour confirmer", correct: false }
+    explanation: "Le compte mail peut etre compromis (mecanisme 1 de FOVI). Le mail meme du vrai domaine ne garantit rien. Verification HORS-BANDE = telephone au numero connu. Pas le numero dans le mail (peut etre falsifie)."
+
+  - question: "Un IBAN dans une banque inhabituelle (Lituanie pour fournisseur francais) c'est :"
+    choices:
+      - { id: "a", label: "Normal", correct: false }
+      - { id: "b", label: "Drapeau rouge - les FOVI utilisent souvent des comptes Europe de l'Est, neobanks ou comptes particuliers", correct: true }
+      - { id: "c", label: "Optimal pour la fiscalite", correct: false }
+    explanation: "Banque etrangere inhabituelle pour un fournisseur etabli en France = drapeau rouge. Les FOVI utilisent souvent Lituanie, Estonie, Hong Kong (recuperation difficile). Verification + appel obligatoire."
+
+  - question: "Si tu realises qu'un virement deja effectue est frauduleux, action immediate ?"
+    choices:
+      - { id: "a", label: "Attendre quelques jours", correct: false }
+      - { id: "b", label: "Telephone IMMEDIAT a la banque + plainte sous 72h pour activer chargeback SEPA (recuperation possible 20-40%)", correct: true }
+      - { id: "c", label: "Nouveau virement pour compenser", correct: false }
+    explanation: "Action immediate = banque (blocage si pas encore credite, ou chargeback SEPA sous 72h). Plainte penale + Cybermalveillance + audit interne. Apres 72h : recuperation proche de 0%."
+
+  - question: "Le mecanisme 1 de FOVI (compte fournisseur compromis) est detectable comment ?"
+    choices:
+      - { id: "a", label: "Facilement par DKIM", correct: false }
+      - { id: "b", label: "Difficilement - le mail est techniquement legitime. Seule la verification telephonique HORS-BANDE permet de detecter", correct: true }
+      - { id: "c", label: "Par la formule de politesse", correct: false }
+    explanation: "Mecanisme 1 = compte legitime compromis par phishing. DKIM/SPF/DMARC sont VALIDES (c'est le vrai domaine). Seule la verification HORS-BANDE par telephone au numero connu permet de detecter. C'est pourquoi cette procedure est OBLIGATOIRE."
+---
+
+> 💡 **Pour aller plus loin** : **CCI Francaise** propose un guide
+> "Anti-FOVI" gratuit pour PME. **France Num / Diag Cyber**
+> finance des audits. **Confirmation of Payee** (UK / Europe en
+> deploiement) verifie le nom du beneficiaire vs IBAN avant
+> virement (a venir en France).

@@ -1,0 +1,278 @@
+---
+title: "Cloture mensuelle : les pieges classiques"
+durationMinutes: 7
+persona: "manager"
+objective: "Anticiper et bloquer les fraudes/erreurs lors de la cloture mensuelle (rush, fatigue, contournements de procedure)"
+xpReward: 60
+scenario: |
+  Vendredi 31 mars, jour de cloture mensuelle, 18h30. Tu finis
+  les ecritures. Le DG passe en disant : "Il faut absolument
+  passer ce virement de 45K EUR avant minuit pour cloturer le
+  trimestre. C'est urgent, je viens de signer le contrat. Le
+  DAF est en deplacement, il a OK par SMS. RIB en piece jointe
+  du SMS."
+
+  Tu es seul(e), fatigue, tu as encore 30 ecritures.
+
+  Tu fais quoi ?
+choices:
+  - id: "a"
+    label: "Je passe le virement immediatement, le DG l'a demande"
+    outcome: "bad"
+    feedback: "CATASTROPHE. Tous les drapeaux rouges sont reunis : urgence, fin de mois, DAF absent, RIB par SMS, ordre verbal du DG. C'est exactement le scenario de la fraude au president. ANSSI : 60% des fraudes au president se font en fin de mois/trimestre."
+    points: -25
+  - id: "b"
+    label: "Je telephone immediatement au DG via le numero connu (pas celui du SMS) pour confirmer. Si confirme : j'attends le retour du DAF (Lundi) ou je propose validation par DAF adjoint"
+    outcome: "good"
+    feedback: "Reflexes parfaits. Verification HORS-BANDE du DG (numero connu, pas le SMS). Refus de la pression de fin de mois. Proposition de delegation officielle (DAF adjoint) qui respecte la procedure. Le 'cloture trimestre' n'est jamais une excuse pour court-circuiter."
+    points: 40
+  - id: "c"
+    label: "Je transfere le RIB du SMS dans l'ERP et je prepare le virement, je le validerai demain"
+    outcome: "neutral"
+    feedback: "Pas de paiement immediat (mieux), mais l'usage du RIB du SMS sans verification n'est pas safe. Le SMS peut etre spoofe ou le DG compromis. Le reflexe doit etre verification avant TOUTE action (meme la preparation)."
+    points: 10
+  - id: "d"
+    label: "Je decale le virement au lundi suivant, je communique au DG par telephone que la procedure ne le permet pas en l'absence du DAF"
+    outcome: "good"
+    feedback: "Tres bonne attitude. Refus net de contournement de procedure, communication transparente au DG. Si le DG insiste sans raison legitime = encore plus suspect. Documenter cette communication par mail (preuve)."
+    points: 35
+debrief: |
+  La **cloture mensuelle** est une periode a haut risque de
+  fraude pour 3 raisons :
+
+  1. **Pression temporelle** : tout doit etre fini ce jour
+  2. **Fatigue** : longues journees, attention reduite
+  3. **Volume** : 100-500 ecritures a passer en 1-2 jours
+
+  Les attaquants connaissent parfaitement ces fenetres et
+  ciblent **particulierement la fin de mois et de trimestre**.
+
+  **Les 7 pieges classiques de la cloture :**
+
+  **Piege 1 : Le faux DG en urgence**
+
+  Cas typique :
+  - Email/SMS du DG : "urgent, paiement avant cloture"
+  - DAF absent / en deplacement (souvent verifie par l'attaquant
+    via LinkedIn / OOO automatique)
+  - RIB inconnu / nouveau
+  - Demande de confidentialite
+
+  **Reflexe** : verification telephonique HORS-BANDE au numero
+  connu du DG. Pas de SMS, pas de mail.
+
+  **Piege 2 : La facture qui arrive le 31**
+
+  Cas typique :
+  - Une facture qui apparait "in extremis" en fin de mois
+  - Souvent un montant juste sous le seuil de double validation
+  - Demande de paiement immediat "pour passer dans le mois"
+
+  **Reflexe** : decaler au mois suivant si pas le temps de
+  verifier. Pas grave de comptabiliser un mois plus tard.
+  Beaucoup mieux que payer une fraude.
+
+  **Piege 3 : L'ecriture de regularisation "rapide"**
+
+  Cas typique :
+  - Un ecart de quelques milliers d'euros dans le grand livre
+  - Tentation de "passer une ecriture de regularisation" sans
+    investigation
+  - Souvent : la fraude se cache dans cet ecart
+
+  **Reflexe** : tracer l'ecart, ne pas le masquer. Si le DAF
+  insiste : trace ecrite + remontee.
+
+  **Piege 4 : La "semi-validation" verbale**
+
+  Cas typique :
+  - Le DAF dit "vas-y" oralement (porte ouverte de bureau)
+  - Mais ne valide pas dans le systeme par manque de temps
+  - Fin de mois = la procedure est court-circuitee
+
+  **Reflexe** : RIEN sans validation tracee electroniquement.
+  Si le DAF n'a pas le temps de cliquer, le virement attend.
+
+  **Piege 5 : Fatigue et erreur de saisie**
+
+  Cas typique :
+  - 22h, tu saisis le 250e virement
+  - Erreur d'IBAN (1 chiffre faux) qui envoie au mauvais
+    beneficiaire
+  - Erreur de montant (1500 au lieu de 150)
+
+  **Reflexe** : pause obligatoire toutes les 2h. Au-dela de 100
+  saisies / jour, qualite degradee = report.
+
+  **Piege 6 : Le "dossier confidentiel" hors process**
+
+  Cas typique :
+  - "Operation specifique confidentielle, ne mentionne pas dans
+    le journal"
+  - "Bonus exceptionnel, paiement direct sans facture"
+  - "Cadeau client, pas de justificatif"
+
+  **Reflexe** : aucun paiement sans justificatif. La
+  confidentialite n'exemple pas la trace comptable. Refus net.
+
+  **Piege 7 : Le contournement par le DG lui-meme**
+
+  Cas typique :
+  - Le DG a ses propres acces et fait des virements direct
+  - "Je gere mes operations, te derange pas"
+  - Pas de double validation, pas de trace
+
+  **Reflexe** : signaler par ecrit au DG que la procedure
+  s'applique a tous, y compris a lui. Si refus : signalement au
+  conseil d'administration / commissaire aux comptes.
+
+  **Procedure de cloture securisee :**
+
+  **J-7 : Anticipation**
+
+  - Liste des ecritures attendues (factures non recues,
+    virements prevus)
+  - Verification de la disponibilite des valideurs (DAF, DG)
+  - **Si DAF absent** : delegation officielle ecrite a un
+    successeur
+
+  **J-3 a J-1 : Gros du travail**
+
+  - Saisie progressive (pas tout au dernier moment)
+  - Verification IBAN pour tout nouveau fournisseur (HORS-BANDE)
+  - **Aucune urgence** sans justification ecrite
+
+  **J : Cloture**
+
+  - Saisie des dernieres ecritures
+  - **Pas de virement nouveau apres 17h** (cutoff banques)
+  - Verification rapprochement bancaire intermediaire
+  - **Aucun ordre verbal accepte** (tout doit etre ecrit)
+
+  **J+1 : Verification**
+
+  - Rapprochement complet
+  - Audit log : qui a fait quoi
+  - Signalement des anomalies au DAF
+
+  **Les KPI de cloture saine :**
+
+  - **Taux de virements > seuil sans double validation** : 0%
+  - **Nombre d'operations 'urgentes' > 10K EUR le 31 du mois** :
+    < 5% du total
+  - **Temps moyen de validation virements** : > 2 minutes (pas
+    de validation reflexe)
+  - **Nombre d'ecritures de regularisation non documentees** :
+    0
+
+  **Les outils anti-piege :**
+
+  **1. Cutoff automatique**
+
+  Configuration banque : aucun virement > X EUR ne peut etre
+  emis apres 17h. Force le virement le lendemain (et donc une
+  pause).
+
+  **2. Notification systematique au DG**
+
+  Tout virement > seuil declenche un SMS/email au DG. Permet
+  detection rapide d'une fraude (le DG voit "j'ai pas valide
+  ca").
+
+  **3. Liste blanche des beneficiaires**
+
+  Premier virement vers un nouveau beneficiaire = validation
+  manuelle DAF + 24h de delai. Empeche l'urgence FOVI.
+
+  **4. Mode "cloture renforcee"**
+
+  Politique : durant la semaine de cloture, validation
+  obligatoire par 2 personnes pour TOUS les virements (pas
+  seulement > seuil).
+
+  **Les exemples reels :**
+
+  **Cas 1 - PME Toulouse 2022 (FOVI 65 K EUR le 31 mars)**
+
+  Le DG en mission a Hong Kong. Faux email du DG le 31 mars
+  18h : "urgent, signez ce contrat, virement immediat". Le
+  comptable seul, pression de cloture, paye 65K EUR sur un
+  compte Lithuania. Decouverte 5 jours plus tard. Recuperation
+  partielle (15K EUR seulement) car > 72h.
+
+  Diagnostic : pas de procedure formalisee pour cloture,
+  validation orale du DAF par telephone (compte mail compromis
+  sur le DG mais le faux DG a aussi appelle le DAF en imitant
+  la voix).
+
+  **Cas 2 - Cabinet expert-comptable Paris 2023 (FOVI 28 K EUR)**
+
+  Cloture trimestrielle. Le partner a redirige des honoraires
+  clients vers son compte personnel via un faux fournisseur.
+  Decouverte par audit annuel (12 mois plus tard). Pas de
+  separation des taches : il faisait saisie + validation +
+  rapprochement.
+
+  **Le piege "ce sera plus rapide demain" :**
+
+  La cloture mensuelle n'est PAS une excuse pour contourner les
+  procedures. Si le respect de la procedure fait deborder d'un
+  jour, c'est ACCEPTABLE. Si la procedure est court-circuitee
+  pour finir le 31, c'est un risque inacceptable.
+
+  La fiscalite et la comptabilite francaise tolerent un retard
+  de quelques jours. Une fraude FOVI ne se "rattrape" pas.
+
+  **Le piege "le DAF n'est pas la, c'est moi qui valide" :**
+
+  Si le DAF est absent, son pouvoir de validation N'EST PAS
+  transferable a une personne sans **delegation officielle ecrite**.
+  Solutions :
+  - Delegation pre-signee par le DG : "En cas d'absence du DAF,
+    Mme X est habilitee a valider jusqu'a 25 K EUR"
+  - Le DAF reste joignable (telephone, signature electronique a
+    distance)
+  - Les virements > seuil **attendent** son retour
+
+  **La regle d'or :**
+
+  > **L'urgence et la cloture ne sont JAMAIS des excuses pour
+  > court-circuiter la procedure. Tout virement sans validation
+  > tracee = NON. Verification HORS-BANDE pour les ordres du
+  > DG/DAF, surtout en periode de stress. Mieux vaut un retard
+  > de 2 jours qu'une fraude de 50K EUR.**
+quiz:
+  - question: "Faux DG envoie un SMS le 31 du mois 'urgent paiement avant minuit', tu fais quoi ?"
+    choices:
+      - { id: "a", label: "Je paye, c'est urgent", correct: false }
+      - { id: "b", label: "Verification telephonique HORS-BANDE au numero connu du DG (pas celui du SMS) - tous les drapeaux rouges sont reunis (urgence + fin de mois + ordre verbal)", correct: true }
+      - { id: "c", label: "Je transfere au DAF qui n'est pas la", correct: false }
+    explanation: "Tous les indicateurs d'une fraude au president : urgence + cloture + ordre verbal SMS + DAF absent. ANSSI : 60% des fraudes au president se passent en fin de mois/trimestre. Verification HORS-BANDE imperative."
+
+  - question: "Quel pourcentage des fraudes au president se passe en fin de mois/trimestre ?"
+    choices:
+      - { id: "a", label: "10%", correct: false }
+      - { id: "b", label: "60%+ (selon ANSSI - les attaquants connaissent les fenetres de pression)", correct: true }
+      - { id: "c", label: "0%", correct: false }
+    explanation: "ANSSI : 60%+ des fraudes au president visent les fins de mois et de trimestre. Pression temporelle + fatigue + DAF parfois absent = conditions ideales pour court-circuiter les procedures."
+
+  - question: "Le DAF est en deplacement, qui peut valider ses virements ?"
+    choices:
+      - { id: "a", label: "Le comptable peut tout faire", correct: false }
+      - { id: "b", label: "Une personne avec delegation OFFICIELLE ECRITE pre-signee. Sinon les virements > seuil attendent son retour", correct: true }
+      - { id: "c", label: "Personne", correct: false }
+    explanation: "Pouvoir de signature non-transferable sans delegation officielle ecrite (signee par le DG). Solutions : delegation pre-signee, signature electronique a distance, ou virements > seuil attendent. JAMAIS le comptable seul."
+
+  - question: "Une ecriture de regularisation pour cacher un ecart, c'est :"
+    choices:
+      - { id: "a", label: "Pratique en fin de mois", correct: false }
+      - { id: "b", label: "Falsification comptable (penal). Tout ecart doit etre TRACE et investigue, jamais masque", correct: true }
+      - { id: "c", label: "Recommande", correct: false }
+    explanation: "Modifier ou regulariser pour cacher un ecart = falsification comptable = penal. Code de commerce + fraude fiscale. Tout ecart = trace ecrite + investigation. La fraude se cache souvent dans ces ecarts."
+---
+
+> 💡 **Pour aller plus loin** : configurez un **cutoff bancaire**
+> a 17h pour bloquer les virements urgents apres heures (force
+> le report). **Politique 'cloture renforcee'** : tous les
+> virements doublement valides la semaine de cloture. CCI
+> publie le guide "anti-fraude pour comptables PME" (gratuit).

@@ -1,0 +1,287 @@
+---
+title: "La double validation de virement (vraie ou faux semblant)"
+durationMinutes: 7
+persona: "manager"
+objective: "Mettre en place une vraie double validation des virements (4 yeux) qui ne soit pas contournable, et reconnaitre les fausses doubles validations"
+xpReward: 60
+scenario: |
+  Comptable d'une PME, le DAF te dit : "On a une politique de
+  double validation pour les virements > 10K EUR. Tu valides en
+  premier, je valide en second. Comme ca on est en regle."
+
+  Mais dans la realite :
+  - Le DAF est rarement disponible, donc tu valides en son nom
+    avec son mot de passe (qu'il t'a donne)
+  - Vous utilisez le meme PC partage
+  - Aucun journal n'est consulte
+  - La validation se fait souvent par "OK" oral
+
+  Tu reagis comment ?
+choices:
+  - id: "a"
+    label: "C'est suffisant, on a une procedure ecrite, c'est l'essentiel"
+    outcome: "bad"
+    feedback: "FAUX. La double validation 'sur papier' qui n'est pas appliquee = fausse securite. En cas de fraude, l'auditeur ANSSI ou l'assureur cyber refuseront la couverture (procedure non-effective)."
+    points: -20
+  - id: "b"
+    label: "Je propose : comptes nominatifs distincts (chacun son MDP), validation electronique tracee dans l'ERP/banque, audit log mensuel, formation aux signaux FOVI"
+    outcome: "good"
+    feedback: "Procedure correcte. La double validation EFFECTIVE necessite : 2 personnes physiquement distinctes, 2 comptes distincts (jamais partages), validation tracee electroniquement, audit periodique, formation. Standard recommande par FFB."
+    points: 40
+  - id: "c"
+    label: "On supprime la double validation, ca ralentit"
+    outcome: "bad"
+    feedback: "DESASTREUX. La double validation est une exigence reglementaire (NIS2 article 21 mesure 9, RGPD article 32, recommandation FFB) et une condition d'assurance cyber. Sa suppression engage la responsabilite penale du dirigeant en cas de FOVI."
+    points: -25
+  - id: "d"
+    label: "Je signale au DAF que la procedure ecrite n'est pas appliquee, et je propose des ameliorations concretes"
+    outcome: "good"
+    feedback: "Bonne demarche. Remontee au DAF, formalisation des ecarts, propositions concretes (comptes distincts, traces electroniques). Documenter cette remontee proteges le comptable en cas de fraude future (chain of custody)."
+    points: 35
+debrief: |
+  La **double validation** des virements (principe des "4 yeux"
+  - "four-eyes principle") est l'une des mesures les plus
+  efficaces contre les FOVI. Mais beaucoup de PME ont une
+  fausse double validation qui ne resiste pas a une fraude
+  avec ingenierie sociale.
+
+  **Ce qu'est la VRAIE double validation :**
+
+  **1. Deux personnes physiquement distinctes**
+
+  - **A** = la personne qui prepare le virement (comptable
+    typiquement)
+  - **B** = la personne qui le valide (DAF, dirigeant)
+  - **A ne peut PAS etre B** sous aucun pretexte
+  - **A ne connait PAS les credentials de B**
+
+  **2. Deux comptes utilisateurs distincts**
+
+  - Chacun a son propre login dans le logiciel comptable / la
+    banque en ligne
+  - Mots de passe NON partages
+  - **MFA obligatoire** sur les deux comptes
+  - Pas de "compte commun" partage
+
+  **3. Validation tracee electroniquement**
+
+  - Le logiciel enregistre :
+    - Qui a prepare (timestamp + identifiant)
+    - Qui a valide (timestamp + identifiant + IP)
+    - Le contenu du virement (montant, beneficiaire, IBAN)
+  - **Audit log immuable** : pas modifiable apres coup
+  - Conservation **5 ans** (obligation comptable)
+
+  **4. Validation effective (pas formelle)**
+
+  - **B doit reellement examiner** le virement (pas approuver
+    sans regarder)
+  - **Verification IBAN** systematique pour tout nouveau
+    fournisseur ou tout changement
+  - Possibilite de **refuser et demander correction**
+  - Pas de "validation par defaut" si pas de retour sous 24h
+
+  **5. Audit periodique**
+
+  - **Revue mensuelle** des virements valides : echantillon
+    aleatoire
+  - **Revue annuelle** complete : pas d'ecart entre procedure et
+    pratique
+  - **Indicateurs cles** : taux de virements valides en moins de
+    5 minutes (suspicion de validation hative)
+
+  **Les 5 fausses doubles validations courantes :**
+
+  **Faux 1 : "Validation orale"**
+
+  > "Le DAF passe a ton bureau et dit OK"
+
+  Probleme : aucune trace, contournable, exploite par ingenierie
+  sociale (faux DAF qui appelle pour dire OK). Solution :
+  validation electronique tracee.
+
+  **Faux 2 : "Comptes partages"**
+
+  > "On a un compte 'admin' utilise par 3 personnes"
+
+  Probleme : pas de tracability individuelle. En cas de fraude,
+  impossible de savoir qui a valide. Solution : 1 compte par
+  individu.
+
+  **Faux 3 : "Mot de passe transmis pour 'depanner'"**
+
+  > "Le DAF est en vacances, il m'a donne son MDP pour valider"
+
+  Probleme : il n'y a plus de double validation, tu fais les
+  deux. Solution : delegation officielle a une 3e personne, ou
+  les virements attendent.
+
+  **Faux 4 : "Validation systematique sans regarder"**
+
+  > "Le DAF clique 'OK' sur tous les virements en 3 minutes a la
+  > fin de la journee"
+
+  Probleme : la validation est procedurale, pas effective. Une
+  fraude passera inapercue. Solution : politique d'examen reel
+  + indicateur de temps de validation.
+
+  **Faux 5 : "Politique sur le papier mais pas en pratique"**
+
+  > "On a un document mais en realite, le DG signe tout"
+
+  Probleme : c'est l'absence de double validation deguisee. En
+  cas de fraude, l'auditeur le voit immediatement. Solution :
+  alignement procedure / pratique.
+
+  **Le standard FFB / ANSSI pour les PME :**
+
+  Recommandations Federation Francaise des Banques + ANSSI
+  pour les PME :
+
+  | Seuil | Validation | Verification IBAN |
+  |---|---|---|
+  | < 1 K EUR | 1 personne | Pas obligatoire |
+  | 1-10 K EUR | 1 personne + alerte hierarchique | IBAN connu |
+  | 10-50 K EUR | 2 personnes (4 yeux) | IBAN verifie HORS-BANDE si nouveau |
+  | > 50 K EUR | 2 personnes + DG en CC | IBAN verifie systematique |
+  | > 200 K EUR | DG + DAF + appel verbal | Verification + signature manuscrite |
+
+  **Configuration banque en ligne :**
+
+  La plupart des banques proposent la double validation native :
+
+  - **Credit Agricole / BNP / SG / etc.** : "Pouvoir de
+    signature" multi-utilisateurs
+  - **Configuration** : seuils, role A (preparateur) et B
+    (validateur)
+  - **Notification** : SMS au validateur quand un virement est
+    en attente
+  - **Validation** : en ligne (pas par email/SMS)
+  - **Audit log** : telechargeable mensuellement
+
+  Si ta banque ne propose pas, change de banque ou ajoute un
+  outil tiers (Spendesk, Pleo, Qonto pour PME).
+
+  **Outils utiles pour PME :**
+
+  - **Qonto Business** : double validation native + audit log
+    + integration ERP
+  - **Spendesk** : workflow d'approbation virements
+  - **Pennylane** : ERP comptable francais avec double validation
+  - **SAP Concur** : pour ETI/grandes entreprises
+
+  **Cout : 20-100 EUR/mois pour PME. ROI tres eleve face aux
+  FOVI.**
+
+  **L'audit log : la pierre angulaire :**
+
+  Chaque mois, le RSSI/DAF doit consulter :
+
+  - Liste de tous les virements > seuil de double validation
+  - Identifiant du preparateur + identifiant du validateur
+  - Temps ecoule entre preparation et validation (alerte si
+    < 30 secondes = pas examine)
+  - Anomalies : virement valide hors heures, depuis IP
+    inhabituelle, etc.
+
+  Indicateurs clefs (KPI) :
+  - **Taux de virements doublement valides** : doit etre 100%
+    pour les > seuil
+  - **Temps moyen de validation** : > 2 min ideal
+  - **Nombre de virements rejetes** : > 0 = la procedure
+    fonctionne
+  - **Nombre de virements > seuil avec un seul valideur** :
+    doit etre 0
+
+  **Cas reel : Pathe Hollande 2018 (19 M EUR perdus)**
+
+  Pathe a une **vraie politique de double validation**. Mais :
+  - Le DG (cible du faux DG) **savait court-circuiter la
+    procedure** pour les "operations confidentielles"
+  - Le DAF a accepte les ordres oraux du DG sans confirmation
+    ecrite
+  - 7 virements ont ete payes en 1 mois sur le meme compte
+    fraudeur sans que personne ne s'inquiete
+
+  Diagnostic : la double validation existait mais N'ETAIT PAS
+  APPLIQUEE pour le DG. La regle d'or : **personne n'est
+  au-dessus de la procedure**, surtout pas le DG (qui est la
+  cible n°1 des fraudes).
+
+  **Le piege "le DG demande de payer en urgence" :**
+
+  L'attaquant qui se fait passer pour le DG joue precisement
+  sur ce levier : "je suis ton patron, urgent, confidentiel, ne
+  consulte personne, paye". 
+
+  Reflexes :
+  - **JAMAIS d'ordre verbal** sans ecrit
+  - **TOUJOURS verifier** par appel telephonique au numero
+    connu du DG (pas celui du mail/SMS)
+  - **JAMAIS de "operation confidentielle"** qui contourne la
+    procedure
+  - **Le DG lui-meme** doit RESPECTER la procedure (sinon il
+    legitime le contournement)
+
+  **Le piege "ca ralentit le business" :**
+
+  Argument classique pour supprimer la double validation. La
+  realite :
+  - Une vraie double validation prend 1-2 minutes
+  - Elle ne ralentit pas les virements legitimes
+  - Elle bloque les virements frauduleux (ROI > 1000x)
+
+  Calcul : 5 minutes / virement = 50 minutes / 10 virements.
+  Vs un FOVI de 100K EUR. ROI evident.
+
+  **Mesures complementaires :**
+
+  - **Liste blanche de fournisseurs** : virements vers nouveaux
+    fournisseurs = validation manuelle DAF obligatoire
+  - **Limite quotidienne** : pas plus de X EUR / jour sans
+    validation DG
+  - **Notification SMS** : a chaque virement > seuil, SMS au DG
+  - **Verification post-virement** : confirmation par fournisseur
+    de la reception (premier virement)
+
+  **La regle d'or :**
+
+  > **Une politique non-appliquee est pire qu'une absence de
+  > politique. La double validation reelle = 2 personnes, 2
+  > comptes, validation tracee, examen effectif. Y compris pour
+  > le DG. Sans exception.**
+quiz:
+  - question: "Une vraie double validation necessite combien de personnes physiques ?"
+    choices:
+      - { id: "a", label: "1 (avec un compte admin)", correct: false }
+      - { id: "b", label: "2 personnes physiquement distinctes, avec 2 comptes utilisateurs distincts (jamais partages), validation electronique tracee", correct: true }
+      - { id: "c", label: "Aucune", correct: false }
+    explanation: "Principe des 4 yeux : 2 personnes distinctes (preparateur + validateur), 2 comptes (jamais partages), MFA, validation electronique tracee. Une seule personne avec 2 comptes ne suffit pas (pas de double regard reel)."
+
+  - question: "Le DAF te donne son MDP pour 'depanner' pendant ses vacances, OK ?"
+    choices:
+      - { id: "a", label: "Oui c'est pratique", correct: false }
+      - { id: "b", label: "NON. Tu fais alors les deux validations - ce n'est plus une double validation. Solution : delegation officielle a une 3e personne", correct: true }
+      - { id: "c", label: "Oui si on documente", correct: false }
+    explanation: "Si tu utilises le compte du DAF, tu fais les 2 validations a la fois = pas de double validation. Solution : delegation OFFICIELLE a une 3e personne avec son propre compte, ou les virements attendent le retour."
+
+  - question: "Pour un virement de 75 K EUR, validation requise ?"
+    choices:
+      - { id: "a", label: "Aucune", correct: false }
+      - { id: "b", label: "2 personnes (preparateur + validateur DAF) + DG en copie + verification IBAN HORS-BANDE systematique (standard FFB)", correct: true }
+      - { id: "c", label: "Validation orale", correct: false }
+    explanation: "Standard FFB pour > 50 K EUR : 2 personnes + DG en copie + verification IBAN systematique. Pas d'ordre oral. Validation electronique tracee. Au-dela de 200 K : signature manuscrite + appel verbal de validation."
+
+  - question: "Le DG demande de payer en urgence avec mention 'operation confidentielle', tu fais quoi ?"
+    choices:
+      - { id: "a", label: "Je paye, c'est le DG", correct: false }
+      - { id: "b", label: "Je verifie via appel telephonique au numero connu du DG. AUCUNE operation ne contourne la procedure - meme demandee par le DG", correct: true }
+      - { id: "c", label: "Je demande par email", correct: false }
+    explanation: "Cas Pathe (19 M EUR perdus) : le DG savait court-circuiter la procedure. Personne ne contourne la double validation, surtout pas le DG (cible n°1 des fraudes au president). Verification HORS-BANDE obligatoire."
+---
+
+> 💡 **Pour aller plus loin** : **Qonto Business**, **Spendesk**,
+> **Pennylane** offrent une double validation native + audit log
+> + workflow approval pour 20-100 EUR/mois. **FFB** publie un
+> guide anti-FOVI gratuit. **Bpifrance Diag Cyber** finance des
+> audits jusqu'a 50%.
