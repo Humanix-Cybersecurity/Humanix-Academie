@@ -24,11 +24,34 @@
 
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
+import {
+  ServiceJsonLd,
+  BreadcrumbJsonLd,
+} from "@/lib/seo/jsonld";
+
+const SEC_TITLE =
+  "Sécurité & Conformité — Trust Center souverain | Humanix Cybersecurity";
+const SEC_DESC =
+  "Trust Center Humanix : hébergement souverain France (Scaleway Paris), chiffrement AES-256, RGPD-by-design, conformité NIS2/DORA, audit public, sous-traitants déclarés, code source AGPLv3 auditable.";
 
 export const metadata = {
-  title: "Sécurité & Conformité - Humanix Cybersecurity",
-  description:
-    "Trust Center : hébergement souverain France, RGPD, gestion des secrets, sauvegardes, sous-traitants, audit public. La sécurité chez Humanix Cybersecurity, en transparence radicale.",
+  title: SEC_TITLE,
+  description: SEC_DESC,
+  alternates: { canonical: "/securite" },
+  openGraph: {
+    title: SEC_TITLE,
+    description: SEC_DESC,
+    type: "website",
+    url: "/securite",
+    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sécurité & Conformité — Trust Center souverain",
+    description:
+      "🇫🇷 Hébergement Paris · 🔒 AES-256 · ⚖️ RGPD/NIS2 · 📂 AGPLv3 · 📅 Audit public",
+    images: ["/logo-humanix-academie-512.png"],
+  },
 };
 
 const TRUST_KPIS = [
@@ -59,6 +82,19 @@ const TRUST_KPIS = [
 export default function SecuritePage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
+      <ServiceJsonLd
+        name="Plateforme de cybersensibilisation Humanix Académie"
+        description="Sensibilisation cybersécurité française, hébergée à Paris (Scaleway), chiffrée AES-256, conforme RGPD/NIS2/DORA, code source AGPLv3 auditable. Trust Center public."
+        url="/securite"
+        serviceType="Cybersecurity awareness training"
+        areaServed="FR"
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", path: "/" },
+          { name: "Sécurité & Conformité", path: "/securite" },
+        ]}
+      />
       {/* ============================================================
           1. HERO SOBRE - gravité technique
           ============================================================ */}

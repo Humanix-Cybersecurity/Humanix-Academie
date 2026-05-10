@@ -42,8 +42,58 @@ const SITE_DESCRIPTION =
 const SITE_OG_IMAGE = "/logo-humanix-academie-512.png";
 
 export const metadata: Metadata = {
-  title: SITE_TITLE,
+  // Title : chaque page marketing owns son propre `title` complet (avec son
+  // suffixe " — Humanix Académie" si elle veut). Pas de template ici car
+  // ~25 pages contiennent deja "Humanix" dans leur titre — un template
+  // produirait des suffixes dupliques. Le `default` couvre uniquement les
+  // routes qui ne definissent rien (rare, idealement aucun pour les pages
+  // indexables).
+  title: { default: SITE_TITLE },
   description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  authors: [{ name: "Humanix Cybersecurity", url: "https://humanix-cybersecurity.fr" }],
+  creator: "Humanix Cybersecurity",
+  publisher: "Humanix Cybersecurity",
+  generator: "Next.js",
+  // Mots-cles cibles (ignore par Google depuis 2009 mais lu par Bing, Qwant,
+  // Ecosia et certains agregateurs francais). Aucun cout, signal supplementaire.
+  keywords: [
+    "sensibilisation cybersécurité",
+    "formation cyber",
+    "phishing simulé",
+    "RGPD",
+    "NIS2",
+    "cybersécurité PME",
+    "cybersécurité française",
+    "plateforme open source",
+    "alternative française KnowBe4",
+    "hébergement souverain France",
+    "sensibilisation cyber gratuite",
+    "sensibilisation cyber entreprise",
+    "deepfake",
+    "fraude au président",
+    "cyber awareness français",
+  ],
+  category: "Cybersecurity",
+  // Indexation par defaut autorisee. Les pages back-office surchargent via
+  // leur propre metadata { robots: { index: false } }.
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
+  },
+  referrer: "strict-origin-when-cross-origin",
+  formatDetection: { email: false, address: false, telephone: false },
+  alternates: {
+    canonical: "/",
+    languages: { "fr-FR": "/", "x-default": "/" },
+  },
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
   ),
@@ -87,22 +137,75 @@ export const metadata: Metadata = {
 
 // Schema.org Organization - aide Google a comprendre que Humanix est une
 // app cybersecurite française. Permet rich snippets et knowledge panel.
+const SITE_URL_RUNTIME =
+  process.env.NEXT_PUBLIC_APP_URL || "https://humanix-cybersecurity.fr";
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": `${SITE_URL_RUNTIME}/#organization`,
+  name: SITE_NAME,
+  alternateName: ["Humanix Cybersecurity", "Humanix Academie", "Académie Humanix"],
+  url: SITE_URL_RUNTIME,
+  logo: {
+    "@type": "ImageObject",
+    url: `${SITE_URL_RUNTIME}/logo-humanix-academie-512.png`,
+    width: 512,
+    height: 512,
+  },
+  description: SITE_DESCRIPTION,
+  foundingDate: "2025",
+  founder: {
+    "@type": "Person",
+    name: "Florian Durano",
+  },
+  address: {
+    "@type": "PostalAddress",
+    addressCountry: "FR",
+  },
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      email: "contact@humanix-cybersecurity.fr",
+      contactType: "customer service",
+      areaServed: "FR",
+      availableLanguage: ["French"],
+    },
+    {
+      "@type": "ContactPoint",
+      email: "security@humanix-cybersecurity.fr",
+      contactType: "security",
+      areaServed: "FR",
+      availableLanguage: ["French"],
+    },
+  ],
+  knowsAbout: [
+    "Cybersecurity",
+    "Cyber awareness",
+    "Phishing simulation",
+    "GDPR compliance",
+    "NIS2 compliance",
+    "Open source software",
+    "Sensibilisation cybersécurité",
+    "Sécurité informatique",
+  ],
+  sameAs: [
+    "https://github.com/Humanix-Cybersecurity/Humanix-Academie",
+    "https://www.linkedin.com/company/humanix-cybersecurity",
+  ],
+};
+
+// Schema.org WebSite - declare le site lui-meme (different de l'Organization).
+// Inclut potentiellement une SearchAction si on expose un endpoint de recherche.
+const webSiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${SITE_URL_RUNTIME}/#website`,
+  url: SITE_URL_RUNTIME,
   name: SITE_NAME,
   alternateName: "Humanix Cybersecurity",
-  url: process.env.NEXT_PUBLIC_APP_URL || "https://humanix-cybersecurity.fr",
-  logo: `${process.env.NEXT_PUBLIC_APP_URL || "https://humanix-cybersecurity.fr"}/logo-humanix-academie-512.png`,
   description: SITE_DESCRIPTION,
-  contactPoint: {
-    "@type": "ContactPoint",
-    email: "contact@humanix-cybersecurity.fr",
-    contactType: "customer service",
-    areaServed: "FR",
-    availableLanguage: ["French"],
-  },
-  sameAs: ["https://github.com/Humanix-Cybersecurity/Humanix-Academie"],
+  inLanguage: "fr-FR",
+  publisher: { "@id": `${SITE_URL_RUNTIME}/#organization` },
 };
 
 export const viewport: Viewport = {
@@ -153,11 +256,18 @@ export default async function RootLayout({
     <html lang="fr">
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-        {/* JSON-LD Organization - SEO knowledge panel + rich snippets */}
+        {/* JSON-LD Organization + WebSite - SEO knowledge panel +
+            rich snippets + sitelinks searchbox eligible */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(organizationJsonLd),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(webSiteJsonLd),
           }}
         />
       </head>
