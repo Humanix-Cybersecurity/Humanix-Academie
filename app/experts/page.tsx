@@ -7,10 +7,27 @@ import Link from "next/link";
 import { listPublicExperts } from "@/lib/experts";
 import HexBackdrop from "@/components/HexBackdrop";
 
+const EXP_TITLE = "Bibliothèque d'experts cyber français | Humanix Académie";
+const EXP_DESC =
+  "Découvre les experts cyber français qui contribuent à la marketplace Humanix : RSSI, consultants, gendarmes cyber, formateurs. Signature humaine, expertise terrain.";
+
 export const metadata = {
-  title: "Bibliothèque d'experts | Humanix Académie",
-  description:
-    "Découvrez les experts cyber français qui contribuent à la marketplace Humanix : RSSI, consultants, gendarmes, formateurs.",
+  title: EXP_TITLE,
+  description: EXP_DESC,
+  alternates: { canonical: "/experts" },
+  openGraph: {
+    title: EXP_TITLE,
+    description: EXP_DESC,
+    type: "website",
+    url: "/experts",
+    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Bibliothèque d'experts cyber français",
+    description: EXP_DESC,
+    images: ["/logo-humanix-academie-512.png"],
+  },
 };
 
 export const dynamic = "force-dynamic";

@@ -32,10 +32,27 @@ import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 import HexMascotEvolved from "@/components/HexMascotEvolved";
 
+const MANIFESTE_TITLE = "Manifeste — La cybersécurité humaine, française, libre | Humanix Académie";
+const MANIFESTE_DESC =
+  "Pourquoi Humanix existe. La cybersécurité humaine, française, libre. Une plateforme open source AGPLv3 pour que personne — particulier, équipe, association, organisation — ne soit plus le maillon faible.";
+
 export const metadata = {
-  title: "Manifeste - Humanix Académie",
-  description:
-    "Pourquoi Humanix existe. La cybersécurité humaine, française, libre. Une plateforme open source AGPLv3 pour que personne — particulier, équipe, association, organisation — ne soit plus le maillon faible.",
+  title: MANIFESTE_TITLE,
+  description: MANIFESTE_DESC,
+  alternates: { canonical: "/manifeste" },
+  openGraph: {
+    title: MANIFESTE_TITLE,
+    description: MANIFESTE_DESC,
+    type: "article",
+    url: "/manifeste",
+    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Manifeste — La cybersécurité humaine, française, libre",
+    description: MANIFESTE_DESC,
+    images: ["/logo-humanix-academie-512.png"],
+  },
 };
 
 export default function ManifestePage() {
