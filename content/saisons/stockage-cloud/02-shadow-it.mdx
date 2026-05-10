@@ -1,0 +1,327 @@
+---
+title: "Shadow IT : le Drive perso pour bosser"
+durationMinutes: 6
+persona: "tous-collaborateurs"
+objective: "Comprendre les risques du Shadow IT (outils non-valides utilises pour le travail) et la procedure pour officialiser un outil"
+xpReward: 60
+scenario: |
+  Tu es chef de projet d'une PME 80 personnes. Pour gagner du
+  temps, tu utilises depuis 6 mois :
+
+  - Ton Google Drive perso pour stocker les fichiers projet
+  - Trello (compte gratuit perso) pour organiser les taches
+  - WhatsApp pour discuter avec 2 fournisseurs externes
+  - Notion (compte gratuit) pour les notes d'equipe
+
+  C'est plus rapide que les outils officiels (SharePoint lent,
+  Jira complique). Ton DSI te demande la liste de tes outils.
+
+  Tu reagis comment ?
+choices:
+  - id: "a"
+    label: "Je dis 'j'utilise les outils standards' et je cache le reste"
+    outcome: "bad"
+    feedback: "Mauvaise idee. La transparence est essentielle. Si breach via Trello / Drive perso = ta responsabilite engagee + decouverte tardive (l'attaquant garde l'acces). Le DSI peut t'aider a migrer proprement, pas te punir."
+    points: -20
+  - id: "b"
+    label: "Je liste honnetement tous mes outils + les raisons (gain de temps, frustration). Je propose une migration proprement guidee par le DSI"
+    outcome: "good"
+    feedback: "Excellente attitude. Transparence + analyse des causes (pourquoi le shadow IT) + proposition constructive. Le DSI peut soit officialiser ces outils (avec un contrat pro et un compte entreprise) soit migrer vers les outils standards en levant les blocages."
+    points: 40
+  - id: "c"
+    label: "Je supprime tout immediatement et je perds 6 mois d'historique"
+    outcome: "bad"
+    feedback: "Trop brutal. Tu perds des donnees professionnelles (legitimes mais mal stockees). Approche : extraire / migrer les donnees AVANT de supprimer + documenter pour conformite RGPD. Le DSI peut aider a la migration."
+    points: -10
+  - id: "d"
+    label: "Je continue, ce sont MES outils, ca regarde personne"
+    outcome: "bad"
+    feedback: "FAUX. Les donnees professionnelles que tu manipules appartiennent a l'entreprise. Les utiliser sur des outils non-valides = violation de la charte informatique + risque RGPD + potentielle faute professionnelle si breach."
+    points: -25
+debrief: |
+  Le **Shadow IT** designe l'usage d'outils numeriques NON
+  valides par le DSI / RSSI pour des fins professionnelles.
+  C'est un phenomene massif :
+
+  - **Gartner 2023** : 30-40% des depenses IT sont du Shadow IT
+  - **CISA** : 80% des employes utilisent au moins 1 outil
+    non-valide
+  - **Frequence** : Drive perso, Trello, WhatsApp, ChatGPT,
+    Notion
+
+  Causes typiques :
+  - Outils officiels lents / inadaptes
+  - Pas de formation aux outils existants
+  - Besoin de collaboration externe rapide
+  - Politique trop restrictive
+
+  **Les 5 risques majeurs du Shadow IT :**
+
+  **Risque 1 : Fuite de donnees**
+
+  Les outils perso n'ont pas le meme niveau de securite :
+
+  - **Compte perso compromis** (mot de passe reutilise) = fuite
+    de donnees pro
+  - **Pas de MFA** souvent
+  - **Pas d'audit log** pour traquer ce qui s'est passe
+  - **Pas de DLP** (Data Loss Prevention)
+
+  Si breach via le Drive perso d'un employe : la responsabilite
+  de l'entreprise est engagee (RGPD article 32 - mesures
+  techniques inadequates).
+
+  **Risque 2 : Non-conformite RGPD**
+
+  Le RGPD exige :
+  - **Contrat de sous-traitance** avec chaque outil tiers
+    (article 28)
+  - **Localisation des donnees** (UE preferable, hors UE
+    encadree)
+  - **Mesures de securite** documentees (article 32)
+  - **Registre des traitements** (article 30)
+
+  Avec Shadow IT :
+  - Pas de contrat (compte gratuit perso)
+  - Localisation inconnue (souvent US)
+  - Mesures non-documentees
+  - Pas dans le registre
+
+  **Sanctions possibles** : jusqu'a 4% CA mondial.
+
+  **Risque 3 : Perte de donnees**
+
+  - L'employe quitte : l'entreprise perd l'acces aux donnees
+    sur SON Drive perso
+  - L'outil ferme (ex. Wrike SMB ferme en 2023) : perte
+    potentielle
+  - Le compte est supprime : donnees perdues
+  - **Pas de sauvegarde** maitrisee par l'entreprise
+
+  **Risque 4 : Difficulte d'audit / conformite**
+
+  En cas d'audit (RGPD, NIS2, ISO 27001, SOC 2) :
+  - **Inventaire des actifs** incomplet
+  - **Cartographie des flux** de donnees impossible
+  - **Preuves de mesures de securite** absentes
+  - **Audit ANSSI / CNIL** : non-conformite manifeste
+
+  **Risque 5 : Dispersion / chaos**
+
+  - L'information est partout = nulle part
+  - **Knowledge management** impossible
+  - Onboarding des nouveaux : ne savent pas ou chercher
+  - Offboarding : ne sait pas tout couper
+
+  **Pourquoi les employes font du Shadow IT :**
+
+  Comprendre les causes pour les traiter :
+
+  **Cause 1 : Outils officiels inadaptes**
+  - SharePoint lent / interface complexe
+  - Pas de mobile / pas d'offline
+  - Limites de stockage / fonctionnalites
+
+  **Cause 2 : Manque de formation**
+  - L'outil officiel existe mais l'employe ne sait pas l'utiliser
+
+  **Cause 3 : Friction administrative**
+  - Demande de nouveau outil = 3 mois de validation
+  - L'employe contourne par necessite
+
+  **Cause 4 : Collaboration externe**
+  - Le client / fournisseur utilise X, l'entreprise utilise Y
+  - L'employe utilise X pour faciliter
+
+  **Cause 5 : Habitudes personnelles**
+  - L'employe utilise deja Notion / Trello dans sa vie perso
+  - Migre naturellement au travail
+
+  **Procedure pour officialiser ou bloquer un outil :**
+
+  **Etape 1 : Detection**
+
+  Outils :
+  - **CASB** (Cloud Access Security Broker) : detection
+    automatique des outils SaaS utilises (Microsoft Defender for
+    Cloud Apps, Netskope, Zscaler)
+  - **Scan reseau** : analyse des connexions sortantes
+  - **Audit financier** : remboursement des abonnements perso
+    par employes
+
+  **Etape 2 : Analyse**
+
+  Pour chaque outil detecte :
+  - **Usage** : qui, combien, pour quoi
+  - **Donnees concernees** : public / interne / confidentiel
+  - **Risque** : faible / moyen / eleve
+  - **Alternative officielle** existante ?
+
+  **Etape 3 : Decision**
+
+  3 options :
+
+  **Option A : Officialiser**
+  - Achat compte entreprise (Notion Team, Trello Business)
+  - Contrat de sous-traitance signe
+  - SSO + MFA active
+  - Backup / export configure
+  - Documentation registre RGPD
+
+  **Option B : Migrer vers l'outil officiel**
+  - Formation + migration des donnees existantes
+  - Levee des blocages (perfomance, fonctionnalites)
+  - Communication aux employes
+
+  **Option C : Bloquer**
+  - Si risque trop eleve / pas d'usage justifie
+  - Communication + accompagnement
+  - Politique technique (firewall, CASB)
+
+  **Etape 4 : Communication**
+
+  - Charte informatique mise a jour
+  - Liste des outils valides / interdits
+  - Procedure pour demander un nouvel outil
+
+  **Etape 5 : Audit periodique**
+
+  - Tous les 6 mois : detection des nouveaux outils
+  - Iteration : officialiser ou bloquer
+
+  **Liste typique d'outils officiels pour PME :**
+
+  | Categorie | Outil officiel | Cout typique |
+  |---|---|---|
+  | Productivite | Microsoft 365 / Google Workspace | 5-25 EUR/user/mois |
+  | Stockage | OneDrive / SharePoint / Drive | inclus |
+  | Communication | Teams / Slack / Google Chat | inclus |
+  | Notes / wiki | Notion Team / Confluence / OneNote | 8-20 EUR/user/mois |
+  | Tasks / projets | Jira / Asana / ClickUp / Monday | 8-15 EUR/user/mois |
+  | Visios | Teams / Zoom / Google Meet | inclus |
+  | CRM | HubSpot / Salesforce / Pipedrive | 25-150 EUR/user/mois |
+  | Comptable | Sage / Pennylane / Cegid | 50-200 EUR/mois |
+
+  **Le piege "j'utilise mon Drive perso, c'est plus pratique" :**
+
+  Comprehensible mais risque :
+  - Si tu meurs / quittes : entreprise perd les donnees
+  - Si ton compte est compromis : breach de l'entreprise
+  - **Tu** es responsable des donnees (faute professionnelle si
+    fuite)
+
+  Solution : demander un quota plus eleve sur le Drive
+  pro / migration des donnees.
+
+  **Le piege "je paye mes outils sur ma carte perso et je note
+  en frais" :**
+
+  Risque triple :
+  - Pas de contrat de sous-traitance (RGPD)
+  - Pas de SSO / MFA controle
+  - Si tu pars : abonnement continue (entreprise paye sans
+    savoir) ou s'arrete (entreprise perd les donnees)
+
+  Solution : passer par les achats officiels, meme si plus
+  long.
+
+  **Le piege "WhatsApp avec mes clients, c'est plus rapide" :**
+
+  Risques specifiques :
+  - **Donnees clients** sur compte perso WhatsApp = violation
+    RGPD
+  - Pas de archivage / preuve juridique
+  - Si tu pars : le client perd son interlocuteur (pas de
+    transfert)
+  - **WhatsApp Business** existe (officiel, professionnel,
+    archivage)
+
+  Solution : WhatsApp Business pour PME (gratuit) ou migration
+  vers Teams / Slack.
+
+  **Cas reels :**
+
+  **Cas 1 - PME 100 employes 2023 (breach via Drive perso)**
+
+  Un commercial avait son CRM client sur son Drive perso (5000
+  contacts). Compte Google compromis par phishing. Tous les
+  contacts revendus + utilises pour FOVI.
+
+  Sanctions :
+  - CNIL : 80 K EUR
+  - Reputation degradee
+  - Procedure interne : licenciement de l'employe
+
+  Cause : pas de detection Shadow IT + pas de SSO + pas de MFA
+  sur compte perso.
+
+  **Cas 2 - Cabinet conseil 50 employes 2024 (perte de donnees)**
+
+  L'equipe utilisait un Notion gratuit (compte cree par un
+  manager) pour la documentation client. Le manager a quitte =
+  l'equipe a perdu l'acces (le manager etait le admin).
+  Recovery : 3 semaines de procedures + 30 K EUR de cabinet
+  juridique.
+
+  **Cas 3 - PME tech 30 employes 2024 (succes par dialogue)**
+
+  Le DSI a fait un audit CASB et detecte 47 outils non-valides.
+  Au lieu de bloquer : dialogue avec les employes, comprehension
+  des causes (Jira trop lent, SharePoint complexe), migration
+  vers ClickUp (plus simple) + Notion Team. Resultat : 0 Shadow
+  IT detecte 6 mois apres + employes plus heureux.
+
+  **Outils CASB (detection Shadow IT) :**
+
+  - **Microsoft Defender for Cloud Apps** : inclus dans
+    Microsoft 365 E5 (ou 5 EUR/user/mois en standalone)
+  - **Netskope** : standard enterprise (50-100 EUR/user/mois)
+  - **Zscaler ZIA** : detection + bloquage temps reel
+  - **CrowdStrike Falcon** : avec module Cloud
+
+  Pour PME : Microsoft Defender for Cloud Apps suffit (inclus
+  dans M365 Business Premium ou E3).
+
+  **La regle d'or :**
+
+  > **Shadow IT = symptome d'un probleme : outils officiels
+  > inadaptes ou pas formes. La solution n'est pas de punir mais
+  > d'ecouter, officialiser ou migrer. Transparence des employes
+  > + dialogue avec DSI = situations gagnantes. Audit periodique
+  > obligatoire.**
+quiz:
+  - question: "Le Shadow IT (outils perso pour bosser) c'est :"
+    choices:
+      - { id: "a", label: "Pratique courante sans risque", correct: false }
+      - { id: "b", label: "Symptome d'outils inadaptes - cause des risques (fuite, RGPD, perte) mais reponse par dialogue / officialisation, pas punition", correct: true }
+      - { id: "c", label: "Interdit toujours", correct: false }
+    explanation: "Shadow IT = 30-40% des depenses IT (Gartner 2023). Pas un probleme moral, c'est un symptome (outils mal adaptes, pas de formation). Solution : detection (CASB) + dialogue + officialisation OU migration. Pas la punition aveugle."
+
+  - question: "Sanctions RGPD pour usage de Drive perso avec donnees clients ?"
+    choices:
+      - { id: "a", label: "Aucune", correct: false }
+      - { id: "b", label: "Jusqu'a 4% CA mondial (article 32 RGPD - mesures techniques inadequates) + responsabilite individuelle de l'employe", correct: true }
+      - { id: "c", label: "100 EUR", correct: false }
+    explanation: "RGPD article 32 (mesures techniques) + 28 (sous-traitance) + 30 (registre). Drive perso pour donnees clients = aucun de ces 3 articles respecte. Sanctions max 4% CA mondial + responsabilite penale individuelle si faute professionnelle."
+
+  - question: "Comment detecter le Shadow IT en PME ?"
+    choices:
+      - { id: "a", label: "Demander aux employes", correct: false }
+      - { id: "b", label: "CASB (Cloud Access Security Broker) - Microsoft Defender for Cloud Apps inclus dans M365 Business Premium = detection automatique", correct: true }
+      - { id: "c", label: "Impossible", correct: false }
+    explanation: "CASB (Cloud Access Security Broker) detecte automatiquement les outils SaaS utilises. Microsoft Defender for Cloud Apps = inclus dans M365 Business Premium. Detecte 100s de SaaS, mesure le risque, bloque/audit possible."
+
+  - question: "Tu utilises Trello perso pour le travail, le DSI le decouvre, comment reagir ?"
+    choices:
+      - { id: "a", label: "Cacher / minimiser", correct: false }
+      - { id: "b", label: "Transparence : lister tous les outils + raisons. Proposer migration ou officialisation. Le dialogue avec DSI = solution gagnante", correct: true }
+      - { id: "c", label: "Continuer en cachette", correct: false }
+    explanation: "Transparence = solution. Le DSI peut officialiser (achat Trello Business + SSO + MFA + contrat) OU aider a migrer vers outil standard. Cacher = breach decouvert tard + responsabilite personnelle. Dialogue toujours."
+---
+
+> 💡 **Pour aller plus loin** : **Microsoft Defender for Cloud
+> Apps** detection automatique des SaaS utilises (inclus M365
+> Business Premium). Approche **Sanctioned Apps** : liste claire
+> des outils valides + processus pour ajouter. **Notion Team
+> Plan** (8 EUR/user/mois) souvent moins cher que cumuler
+> licenses.

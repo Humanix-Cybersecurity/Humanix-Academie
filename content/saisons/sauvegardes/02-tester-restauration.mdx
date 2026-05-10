@@ -1,0 +1,339 @@
+---
+title: "Tester une restauration (la verite brutale)"
+durationMinutes: 7
+persona: "tous-collaborateurs"
+objective: "Etablir une procedure de test de restauration reguliere : ne pas se contenter de sauvegarder, mais valider qu'on peut REELLEMENT restaurer"
+xpReward: 60
+scenario: |
+  Tu reprends la responsabilite IT d'une PME. Etat des
+  sauvegardes :
+
+  - Sauvegarde quotidienne sur NAS depuis 4 ans
+  - Sauvegarde cloud hebdomadaire depuis 2 ans
+  - **Aucun test** de restauration depuis... jamais (4 ans)
+
+  Le DG dit : "On a des sauvegardes, on est tranquilles."
+
+  Tu reagis comment ?
+choices:
+  - id: "a"
+    label: "C'est OK, on a 2 sauvegardes, ca devrait marcher"
+    outcome: "bad"
+    feedback: "DANGER. Une sauvegarde non-testee != une sauvegarde. Etude Veeam 2023 : 30% des sauvegardes echouent au test de restauration (corruption, espace plein, software incompatible, mots de passe perdus). Sans test = surprise garantie en jour J."
+    points: -25
+  - id: "b"
+    label: "Je propose un calendrier de tests : restauration d'un fichier (mensuel), restauration d'un serveur (trimestriel), simulation incident complet (annuel). Documentation des resultats"
+    outcome: "good"
+    feedback: "Approche pro. Tests progressifs (fichier > serveur > complet) avec frequence appropriee. Documentation = preuve d'audit + amelioration continue. Standard NIS2 article 21 mesure 3 + ISO 27001 A.8.13."
+    points: 40
+  - id: "c"
+    label: "Je teste juste 1 fois pour valider et c'est fini"
+    outcome: "neutral"
+    feedback: "Mieux que rien mais insuffisant. Les sauvegardes evoluent (volumes augmentent, software change, equipes changent). Test reproductible pour s'assurer que ca fonctionne TOUJOURS. Frequence minimum : trimestrielle."
+    points: 15
+  - id: "d"
+    label: "Je restaure tout en production pour voir, comme ca on est sur"
+    outcome: "bad"
+    feedback: "DANGEREUX. Restaurer une sauvegarde anterieure en PRODUCTION = ecrase les donnees actuelles. Procedure : restauration en environnement TEST/STAGING separe pour validation, jamais directement en production."
+    points: -20
+debrief: |
+  La **verite brutale** des sauvegardes : **30% des sauvegardes
+  echouent au test de restauration** (etude Veeam 2023). Si tu
+  ne testes pas, tu ne sais pas si ta sauvegarde marche.
+
+  Le drame du jour J : "on a des sauvegardes" -> "ah les
+  sauvegardes sont corrompues / incomplete / ne fonctionnent
+  pas".
+
+  **Pourquoi les sauvegardes echouent souvent :**
+
+  **Cause 1 : Corruption silencieuse**
+
+  - Erreurs disque (bit rot)
+  - Erreurs de transfert non detectees
+  - Backup software bug
+  - Detectee uniquement au moment de restaurer
+
+  **Cause 2 : Espace insuffisant**
+
+  - La sauvegarde a echoue depuis X mois car disque plein
+  - Personne n'a verifie les alertes
+  - Sauvegarde incomplete
+
+  **Cause 3 : Mots de passe / credentials perdus**
+
+  - Mot de passe de l'archive chiffree perdu
+  - Compte cloud mort (employe parti)
+  - Cle de chiffrement perdue
+
+  **Cause 4 : Software incompatible**
+
+  - Sauvegarde faite sur Windows Server 2012
+  - Restauration tentee sur Windows Server 2022
+  - Format incompatible
+
+  **Cause 5 : Procedure non-documentee**
+
+  - Personne ne sait comment restaurer
+  - Le sysadmin qui savait est parti
+  - Aucune documentation
+
+  **Cause 6 : Sauvegarde mais pas tout**
+
+  - On sauvegardait C:\donnees mais pas D:\fichiers_clients
+  - Configurations / parametres pas sauvegardes
+  - Bases de donnees mal exportees
+
+  **Cause 7 : Sauvegarde compromise**
+
+  - Ransomware a chiffre les sauvegardes (cas 80% des
+    ransomware en 2023)
+  - Sauvegarde NAS connectee au reseau
+
+  **Tous ces cas** : detecte uniquement par test de
+  restauration. Aucun moyen de savoir avant.
+
+  **Le programme de tests recommande :**
+
+  **Test 1 : Restauration d'un fichier - MENSUEL**
+
+  Objectif : valider que les sauvegardes fonctionnent au niveau
+  fichier.
+
+  Procedure :
+  1. Choisir un fichier aleatoire dans la sauvegarde
+  2. Restaurer dans un dossier temporaire
+  3. Verifier l'integrite (ouvrir, comparer)
+  4. Documenter
+
+  **Duree** : 15-30 minutes
+  **Outils** : interface du logiciel de sauvegarde
+
+  **Test 2 : Restauration d'un serveur entier - TRIMESTRIEL**
+
+  Objectif : valider que la sauvegarde complete d'un serveur
+  fonctionne (boot, services, donnees).
+
+  Procedure :
+  1. Restaurer sur un serveur de test (VM dediee)
+  2. Booter
+  3. Verifier les services (BDD, web, fichiers)
+  4. Tester les acces utilisateurs
+  5. Documenter
+
+  **Duree** : 2-4 heures
+  **Outils** : logiciel sauvegarde + Hyper-V / VMware test
+
+  **Test 3 : Simulation d'incident complet - ANNUEL**
+
+  Objectif : valider la procedure de reprise d'activite (PRA).
+
+  Procedure :
+  1. Scenario : ransomware total (toutes les machines
+    chiffrees)
+  2. Restauration depuis off-site (cloud)
+  3. Tous les services retablis
+  4. Tous les utilisateurs peuvent travailler
+  5. Mesurer le RTO (temps de retour a la normale)
+  6. Mesurer le RPO (perte de donnees)
+
+  **Duree** : 1-3 jours (simulation, pas en prod)
+  **Implication** : equipe IT entiere + management
+
+  **Format** : weekend / soir pour ne pas perturber
+
+  **Documentation des tests :**
+
+  Pour chaque test :
+
+  | Element | Description |
+  |---|---|
+  | Date | YYYY-MM-DD |
+  | Type de test | Fichier / Serveur / Complet |
+  | Cible | Quel serveur / quelle BDD |
+  | Volume | Taille des donnees |
+  | Duree | Temps de restauration |
+  | Resultat | Succes / Echec |
+  | Anomalies | Description |
+  | Actions correctives | Si echec |
+
+  **Conservation** : 3 ans minimum (audit NIS2).
+
+  **Indicateurs cles (KPI) :**
+
+  - **Taux de succes des tests** : doit etre 100% (sinon
+    investigation)
+  - **RTO mesure** : duree de restauration (doit etre dans la
+    cible)
+  - **RPO mesure** : perte de donnees (doit etre dans la cible)
+  - **Frequence des tests** : conformite au calendrier
+
+  **Outils pour automatiser les tests :**
+
+  **a) Veeam SureBackup** (commercial)
+  - Test automatique mensuel
+  - Boot des VMs sauvegardees en sandbox
+  - Verification des services
+  - Rapport automatique
+
+  **b) Microsoft DPM / Azure Backup** (Microsoft)
+  - Tests de coherence automatiques
+  - Verification mensuelle
+
+  **c) Scripts maison** (gratuit)
+  - PowerShell / Bash pour tests basiques
+  - Restauration auto d'un fichier test
+  - Comparaison de hash
+
+  **d) Test "Chaos Engineering"**
+  - Netflix Chaos Monkey
+  - Tests volontaires de pannes en prod
+  - Pour les organisations matures
+
+  **Le piege "ca marche ailleurs, donc ca marche ici" :**
+
+  Chaque environnement est unique. Une sauvegarde qui marche
+  chez Acme Corp peut echouer chez Beta SAS pour des raisons
+  specifiques (firewall, credentials, version logiciels).
+
+  Solution : **tester DANS TON ENVIRONNEMENT**.
+
+  **Le piege "on a une assurance cyber, ca couvre" :**
+
+  L'assurance cyber peut **refuser de payer** si :
+  - Tu ne peux pas demontrer une procedure de sauvegarde
+    documentee
+  - Tu ne peux pas demontrer des tests reguliers
+  - Tu n'as pas conserve les preuves
+
+  Solution : test + documentation = condition d'application
+  de l'assurance.
+
+  **Le piege "on teste si on a le temps" :**
+
+  Le temps des tests **est** le temps de la cyber. Si tu n'as
+  pas le temps de tester :
+  - Tu n'as pas le temps de la cyber
+  - L'incident sera 1000x plus chronophage
+  - Sans tests, tu **ne sais pas** si tu peux restaurer
+
+  Allocation : 4-8 heures / mois pour les tests.
+
+  **Procedure d'urgence si test echoue :**
+
+  Si un test revele un echec :
+
+  **Etape 1 : Investigation immediate**
+  - Pourquoi ca a echoue ?
+  - Depuis quand ?
+  - Quelles donnees affectees ?
+
+  **Etape 2 : Remediation rapide**
+  - Restaurer depuis une autre sauvegarde (multi-versions)
+  - Reconfigurer le systeme de sauvegarde
+  - Lancer une nouvelle sauvegarde
+
+  **Etape 3 : Documentation**
+  - Cause racine
+  - Actions correctives
+  - Plan pour eviter recidive
+
+  **Etape 4 : Communication**
+  - Information au RSSI / DG
+  - Si donnees personnelles potentiellement perdues : peut
+    etre violation RGPD a notifier
+
+  **Cas reels :**
+
+  **Cas 1 - Maersk 2017 (NotPetya, $300M)**
+
+  Geant maritime victime du ransomware NotPetya. Tous les
+  systemes chiffres. Heureusement, **un seul** serveur sauvegarde
+  d'Active Directory etait offline a cause d'une coupure de
+  courant (Ghana). Restauration depuis ce serveur unique.
+
+  Diagnostic : avaient des sauvegardes mais aucun test
+  systematique. Ce serveur miracle a sauve l'entreprise.
+
+  Cout total : **300 M USD** + 10 jours d'arret.
+
+  Lecon : tester regulierement, pas compter sur la chance.
+
+  **Cas 2 - PME francaise 2022 (test reussi)**
+
+  PME 100 personnes victime ransomware. Sauvegardes :
+  - NAS local : chiffre par ransomware
+  - Cloud Backblaze : intact
+
+  Procedure de restauration documentee + tests trimestriels
+  -> restauration en 18h sans probleme.
+
+  **Pas de paiement** rancon. Cout : 5K EUR (perte d'activite).
+
+  ROI des tests : evident.
+
+  **Cas 3 - Hopital US 2018 (sauvegardes corrompues)**
+
+  Hopital pense avoir des sauvegardes pendant 6 mois. Ransomware
+  : besoin de restaurer. Decouverte : sauvegardes corrompues
+  depuis 5 mois (espace insuffisant, sauvegardes incompletes).
+
+  Resultat : paiement de 600 K USD de rancon + procedures
+  legales + reputation degradee.
+
+  Lecon : test mensuel aurait detecte 5 mois plus tot.
+
+  **Le calendrier modele pour PME :**
+
+  | Element | Frequence | Responsable | Duree |
+  |---|---|---|---|
+  | Restauration fichier | Mensuelle (1er lundi) | Admin IT | 30 min |
+  | Restauration serveur | Trimestrielle | Admin IT | 2-4h |
+  | Simulation incident | Annuelle (octobre) | Equipe + RSSI | 1-3 jours |
+  | Audit sauvegardes | Annuel | RSSI + auditeur externe | 5 jours |
+
+  **Documentation requise** : journal de tests, certificats,
+  plans d'action.
+
+  **La regle d'or :**
+
+  > **Une sauvegarde non-testee N'EST PAS une sauvegarde. 30%
+  > echouent au test (Veeam 2023). Tests progressifs : fichier
+  > mensuel, serveur trimestriel, complet annuel. Documentation
+  > obligatoire. Sans tests = Maersk 300M$. Avec tests = ROI
+  > evident.**
+quiz:
+  - question: "Quel pourcentage des sauvegardes echouent au test de restauration (Veeam 2023) ?"
+    choices:
+      - { id: "a", label: "5%", correct: false }
+      - { id: "b", label: "30% (corruption, espace plein, software incompatible, mots de passe perdus, etc.)", correct: true }
+      - { id: "c", label: "0%", correct: false }
+    explanation: "Etude Veeam 2023 : 30% des sauvegardes echouent au test de restauration. Causes : corruption silencieuse, espace insuffisant, software incompatible, credentials perdus, scope incomplet. Sans test = surprise garantie."
+
+  - question: "Frequence minimum de test de restauration ?"
+    choices:
+      - { id: "a", label: "Tous les 5 ans", correct: false }
+      - { id: "b", label: "Mensuelle (fichier) + trimestrielle (serveur) + annuelle (simulation incident complet)", correct: true }
+      - { id: "c", label: "Jamais", correct: false }
+    explanation: "Programme recommande : fichier mensuel (30 min), serveur trimestriel (2-4h), simulation incident complet annuelle (1-3 jours). Standard NIS2 article 21 mesure 3 + ISO 27001 A.8.13."
+
+  - question: "Tu testes la restauration en restaurant directement en production ?"
+    choices:
+      - { id: "a", label: "Oui c'est plus realiste", correct: false }
+      - { id: "b", label: "NON. Restauration en environnement TEST/STAGING separe (VM dediee). Restaurer en prod = ecrase donnees actuelles", correct: true }
+      - { id: "c", label: "Optionnel", correct: false }
+    explanation: "JAMAIS restaurer en production. Risque : ecraser les donnees actuelles avec une version anterieure (backup) = perte massive. Solution : VM de test dediee, environnement staging, sandbox. Veeam SureBackup automatise en sandbox."
+
+  - question: "Cas Maersk 2017 (NotPetya), comment ont-ils sauve l'entreprise ?"
+    choices:
+      - { id: "a", label: "Paiement de la rancon", correct: false }
+      - { id: "b", label: "Un serveur AD offline par chance (coupure courant Ghana) a permis la restauration. Lecon : ne pas compter sur la chance, tester regulierement", correct: true }
+      - { id: "c", label: "Reinstaller from scratch", correct: false }
+    explanation: "Maersk 2017 : sauvegardes presentes mais pas testees. Heureusement 1 serveur AD offline par coup de chance (coupure Ghana). Cout : 300 M USD + 10 jours d'arret. Lecon : avec tests systematiques, on aurait su que les sauvegardes fonctionnent (ou pas). Pas de chance = pas de strategie."
+---
+
+> 💡 **Pour aller plus loin** : **Veeam SureBackup** automatise
+> les tests mensuels en sandbox. **PowerShell scripts** pour
+> verifications basiques (gratuit). NIS2 article 21 mesure 3 +
+> ISO 27001 A.8.13 = obligation legale + reglementaire de
+> tester regulierement. Documentation 3 ans minimum.

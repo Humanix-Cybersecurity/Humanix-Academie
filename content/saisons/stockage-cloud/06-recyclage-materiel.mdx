@@ -1,0 +1,368 @@
+---
+title: "Recycler un PC ou un disque sans fuite"
+durationMinutes: 6
+persona: "tous-collaborateurs"
+objective: "Procedure pour recycler / revendre / jeter un PC ou un disque dur sans fuite de donnees (effacement securise, destruction physique)"
+xpReward: 60
+scenario: |
+  Tu es DSI d'une PME. 5 anciens PCs portables vont etre
+  recycles. Au-dessus du tas, tu vois aussi 2 disques durs
+  externes "perimes" (donnees client de 2018-2020, plus
+  utilisees mais jamais effacees).
+
+  Le DG dit : "Donne-les au prestataire de recyclage, ils ont
+  l'habitude. Ca nous fait du materiel a jeter en moins."
+
+  Tu reagis comment ?
+choices:
+  - id: "a"
+    label: "Je remets directement au prestataire de recyclage, ils s'occupent de tout"
+    outcome: "bad"
+    feedback: "DANGEREUX. 50% des PCs revendus sur eBay/Le Bon Coin contiennent des donnees recuperables (etude Avast 2019). Le prestataire de recyclage = pas un service de destruction des donnees. Procedure : effacement securise PAR TOI avant remise."
+    points: -25
+  - id: "b"
+    label: "Effacement securise sur chaque PC (Eraser, DBAN, Secure Erase) + destruction physique des disques durs externes (perceuse, broyeur). Certificat de destruction documente"
+    outcome: "good"
+    feedback: "Procedure correcte. Effacement securise (3 passes minimum) ou destruction physique = standard ANSSI / NIST 800-88. Certificat de destruction = preuve de conformite RGPD. Pour disques externes obsoletes : destruction physique recommandee."
+    points: 40
+  - id: "c"
+    label: "Je formate les disques (Quick format) avant de remettre"
+    outcome: "bad"
+    feedback: "Quick format ne supprime PAS les donnees, il efface juste l'index. Les donnees restent recuperables avec outils gratuits (Recuva, PhotoRec). Standard NIST 800-88 : 3 passes minimum (random + zero) ou destruction physique."
+    points: -15
+  - id: "d"
+    label: "Je supprime les fichiers a la corbeille puis je vide la corbeille"
+    outcome: "bad"
+    feedback: "INSUFFISANT. La corbeille videe = juste l'index supprime. Les donnees restent sur le disque physiquement et sont recuperables. Recuva (gratuit) recupere 90% des fichiers ainsi supprimes."
+    points: -20
+debrief: |
+  Le **recyclage de materiel informatique** sans procedure
+  d'effacement securise est l'une des sources les plus
+  importantes de fuite de donnees. Etude **Avast 2019** : 50%
+  des PCs achetes d'occasion sur eBay contiennent des donnees
+  recuperables (parfois sensibles).
+
+  **Pour les entreprises** : RGPD article 32 + ISO 27001 control
+  A.7.7 + NIST 800-88 = effacement securise OBLIGATOIRE avant
+  cession.
+
+  **Pourquoi le simple format ne suffit pas :**
+
+  **Quick format (formatage rapide)**
+  - Efface seulement la **table d'allocation** (index)
+  - Les donnees restent **physiquement** sur le disque
+  - Recuperation triviale avec Recuva (gratuit), PhotoRec, ou
+    outils forensic
+
+  **Full format (formatage complet, Windows)**
+  - Avant Windows Vista : meme chose que Quick format (juste
+    plus lent)
+  - Vista et apres : passe une fois en zeros
+  - **Pas suffisant** pour les standards de securite (1 passe
+    < 3 minimum)
+
+  **Suppression a la corbeille + vider corbeille**
+  - Identique a Quick format : index supprime, donnees restent
+  - **Recuperable a 90%** par outils gratuits
+
+  **Les 3 niveaux d'effacement securise :**
+
+  **Niveau 1 : Effacement logiciel (HDD classique)**
+
+  Reecriture multiples passes des bits :
+
+  **Standard DoD 5220.22-M** : 3 passes
+  - Pass 1 : zeros
+  - Pass 2 : uns
+  - Pass 3 : random
+
+  **Standard Gutmann** : 35 passes (paranoia, pas necessaire
+  pour disques modernes)
+
+  **Standard NIST 800-88** : 1 passe random (sufficient pour
+  HDD modernes apres 2001)
+
+  **Outils** :
+  - **DBAN** (Darik's Boot and Nuke) : OSS, bootable USB,
+    standard
+  - **Eraser** (Windows, OSS, gratuit)
+  - **HDDErase** : standard HP
+  - **Blancco Drive Eraser** : commercial, certifie
+
+  **Duree** : 1-3h pour 1 To (selon nombre de passes).
+
+  **Niveau 2 : Secure Erase (SSD / NVMe)**
+
+  Pour les **SSD**, les passes successives ne fonctionnent PAS
+  (wear leveling). Procedure specifique :
+
+  **ATA Secure Erase** : commande integree dans tous les SSD
+  modernes. Reset de tous les blocs en quelques secondes.
+
+  **Outils** :
+  - **HDD Erase** (utility constructeur)
+  - **Parted Magic** : OSS bootable
+  - **Samsung Magician**, **Crucial Storage Executive** :
+    outils constructeurs
+  - **hdparm --security-erase** (Linux)
+
+  **Pour NVMe** : `nvme format --ses=1 /dev/nvmeX` (Linux)
+
+  **Duree** : 30 secondes a 5 minutes (tres rapide).
+
+  **Niveau 3 : Destruction physique**
+
+  Pour les disques **tres sensibles** ou disques en panne :
+
+  **Methodes** :
+  - **Perceuse** : 3-5 trous traversant le disque
+  - **Demagnetiseur** (HDD seulement) : 1 minute, detruit les
+    donnees magnetiques
+  - **Broyeur industriel** : standard pour ETI / banques
+  - **Disque coupe en 4** par scie
+
+  **Pour SSD** : la perceuse n'est PAS suffisante (les puces
+  flash peuvent etre extraites). Broyage industriel obligatoire
+  ou Secure Erase + destruction physique.
+
+  **Cout destruction industriel** : 5-15 EUR par disque chez
+  prestataire certifie.
+
+  **Procedure complete pour un PC :**
+
+  **Etape 1 : Inventaire**
+
+  - Numero de serie du PC
+  - Capacity du disque
+  - Type (HDD ou SSD ou NVMe)
+
+  **Etape 2 : Sauvegarde si necessaire**
+
+  - Backup des donnees encore utiles vers serveur d'entreprise
+  - Verification que tout est sauvegarde
+
+  **Etape 3 : Effacement**
+
+  Selon le type :
+  - **HDD** : DBAN avec 3 passes (NIST 800-88) ou Eraser
+  - **SSD** : Secure Erase (ATA Secure Erase command)
+  - **NVMe** : nvme format avec --ses=1
+
+  **Etape 4 : Verification**
+
+  - Booter sur Linux Live USB
+  - Verifier que le disque est vraiment vide (pas de signatures
+    de partition, pas de fichiers recuperables)
+  - **Outils** : `photorec`, `testdisk`
+
+  **Etape 5 : Documentation**
+
+  - Certificat d'effacement (manuel ou outil)
+  - Date, heure, methode, operateur
+  - Numero de serie du disque
+  - **Conservation 3 ans minimum** pour audit
+
+  **Etape 6 : Destination**
+
+  - Si **revente / don** : OK apres effacement verifie
+  - Si **recyclage normal** : prestataire de recyclage
+    standard
+  - Si **disque sensible / panne** : destruction physique
+    prestataire certifie
+
+  **Cas specifiques :**
+
+  **Cas 1 : Disque dur en panne (ne demarre plus)**
+
+  Probleme : impossible d'utiliser un outil d'effacement
+  logiciel. Solutions :
+  - **Demagnetiseur** (HDD seulement) : detruit les donnees
+    magnetiques
+  - **Destruction physique** par prestataire (certificat)
+  - **Surtout pas** : remettre tel quel au recyclage
+
+  **Cas 2 : Telephone d'entreprise**
+
+  Procedure :
+  - **Reset usine** : standard
+  - **Verification** : verifier que les comptes sont desconnectes
+    (Apple ID, Google Account)
+  - **Sim** : retirer et conserver
+
+  Pour iPhone : Settings > General > Reset > Erase all content
+  and settings. Le secure enclave gere le chiffrement, donc
+  reset = effacement securise.
+
+  Pour Android : Settings > System > Reset > Factory data
+  reset. **PLUS** : crypter le telephone avant si pas deja fait.
+
+  **Cas 3 : Imprimante / scanner**
+
+  Beaucoup d'imprimantes ont un disque dur interne qui stocke
+  les copies / scans recents !
+
+  Procedure :
+  - **Vider la memoire** : la plupart des imprimantes pro ont
+    une fonction "vider la memoire"
+  - **Retirer le disque dur** si possible avant recyclage
+  - **Hard reset** : retour usine
+
+  Cas reel : un hopital US a vendu son ancienne imprimante,
+  l'acheteur a trouve 1500 dossiers patients dans la memoire
+  interne.
+
+  **Cas 4 : Cles USB**
+
+  Effacement :
+  - **Format complet** (pas Quick) + remplissage avec
+    fichiers aleatoires + reformat
+  - **CipherShed / VeraCrypt** : creer un volume chiffre puis
+    le supprimer
+  - **Destruction physique** : si donnees tres sensibles, casser
+    la cle (peu de matiere, simple)
+
+  **Cas 5 : Photocopieuse / multifonction**
+
+  Comme l'imprimante : disque dur interne. Procedure
+  constructeur ou destruction.
+
+  **Le piege "le prestataire s'occupe de tout" :**
+
+  Le prestataire de recyclage **standard** ne fait PAS
+  d'effacement securise. Il :
+  - Recupere les materiaux (cuivre, aluminium)
+  - **Revend** les PCs encore fonctionnels (apres "format
+    rapide" maximum)
+
+  Solution : si tu veux un service de **destruction certifie**,
+  il faut payer le supplement (5-20 EUR par disque). Verifier
+  que le prestataire fournit un **certificat de destruction**
+  conforme NIST 800-88 ou ISO 27001.
+
+  **Le piege "ce sont des donnees anciennes, pas important" :**
+
+  Donnees de 2018-2020 peuvent contenir :
+  - **Donnees personnelles** d'employes / clients (RGPD : pas
+    de duree de pertinence pour la fuite)
+  - **IBAN** encore valides
+  - **Strategies** d'entreprise toujours d'actualite
+  - **Mots de passe** memorises dans navigateur
+
+  Anciennete != banalite. Effacement obligatoire.
+
+  **Le piege "j'efface les fichiers visibles, ca suffit" :**
+
+  Beaucoup d'endroits cachent des donnees :
+  - **Cache du navigateur** : historique, mots de passe
+  - **Hibernation** (`hiberfil.sys`) : copie de la RAM, contient
+    parfois des donnees ouvertes
+  - **Pagefile** (`pagefile.sys`) : memoire temporaire, contient
+    des donnees diverses
+  - **Shadow copies** : versions anterieures des fichiers
+  - **Slack space** : espaces libres entre fichiers
+  - **Free space** : zones reutilisables qui contiennent encore
+    les anciennes donnees
+
+  Solution : effacement complet du disque (DBAN ou Secure
+  Erase), pas selectif.
+
+  **Cas reels :**
+
+  **Cas 1 - Avast 2019 (etude)**
+
+  Achat de 100 disques durs sur eBay. Resultats :
+  - 66% contenaient des donnees recuperables
+  - 24% contenaient des donnees sensibles (CV, photos privees,
+    documents pro)
+  - **Vendeurs** : entreprises, particuliers, prestataires de
+    recyclage
+
+  Conclusion : etude qui a fait beaucoup de bruit, base de
+  toutes les reglementations renforcees.
+
+  **Cas 2 - Hopital UK 2017 (5K dossiers patients)**
+
+  Hopital revend son ancienne photocopieuse a une societe de
+  reconditionnement. Le disque interne contenait 5000 scans
+  de dossiers patients. La societe les a trouves et notifies
+  l'hopital.
+
+  Sanctions : 200 K GBP (ICO) + procedures.
+
+  **Cas 3 - PME francaise 2023 (PCs revendus aux employes)**
+
+  PME revend ses anciens PCs aux employes pour 50 EUR (avantage
+  fiscal). Aucun effacement securise. Un employe revend son PC
+  6 mois plus tard, l'acheteur trouve les donnees client + plan
+  strategique sur les espaces "supprimes mais recuperables".
+
+  Sanctions : 50 K EUR (CNIL) + perte de contrat client.
+
+  **Outils gratuits / OSS :**
+
+  - **DBAN** (Darik's Boot and Nuke) : USB bootable, classique
+    HDD, gratuit
+  - **Eraser** (Windows, OSS) : effacement de fichiers
+    individuels ou disques
+  - **Parted Magic** : Linux Live avec outils d'effacement
+  - **GNU Shred** : commande Linux pour effacement de fichiers
+
+  Pour entreprises : **Blancco Drive Eraser** (commercial,
+  certifie NIST/ISO).
+
+  **Politique de recyclage entreprise :**
+
+  | Type | Action | Duree | Cout |
+  |---|---|---|---|
+  | PC fin de vie | DBAN ou Secure Erase + verification | 1-3h | 0 EUR |
+  | Disque externe peu sensible | Effacement logiciel | 1h | 0 EUR |
+  | Disque externe sensible | Destruction physique | quelques min | 5-15 EUR |
+  | Telephone | Reset usine + chiffrement verifie | 5 min | 0 EUR |
+  | Imprimante | Vider memoire + reset | 30 min | 0 EUR |
+
+  **Documentation obligatoire** : certificat d'effacement /
+  destruction par numero de serie, conserve 3 ans.
+
+  **La regle d'or :**
+
+  > **Aucun materiel ne quitte l'entreprise sans effacement
+  > securise prouve. DBAN / Secure Erase / destruction physique
+  > selon contexte. Format simple ou suppression de fichiers ne
+  > suffit JAMAIS. Certificat documente. NIST 800-88 = standard
+  > international.**
+quiz:
+  - question: "Pour effacer un PC avant recyclage, methode minimale ?"
+    choices:
+      - { id: "a", label: "Format rapide", correct: false }
+      - { id: "b", label: "DBAN (3 passes NIST 800-88) pour HDD, ou ATA Secure Erase pour SSD - effacement complet du disque, pas selectif", correct: true }
+      - { id: "c", label: "Vider la corbeille", correct: false }
+    explanation: "Format simple / corbeille = donnees recuperables a 90% (Recuva, PhotoRec). Effacement securise : DBAN pour HDD (3 passes NIST 800-88) ou ATA Secure Erase pour SSD (instantane). Verification post-effacement obligatoire."
+
+  - question: "Etude Avast 2019 - quel pourcentage de PCs achetes d'occasion contiennent des donnees recuperables ?"
+    choices:
+      - { id: "a", label: "5%", correct: false }
+      - { id: "b", label: "50%+ (66% donnees recuperables, 24% donnees sensibles) - source de fuites de donnees massive", correct: true }
+      - { id: "c", label: "0%", correct: false }
+    explanation: "Etude Avast 2019 : 100 disques durs achetes sur eBay, 66% contenaient des donnees recuperables, 24% sensibles. Etude qui a transforme les reglementations. Source : entreprises, particuliers, prestataires de recyclage."
+
+  - question: "Pour un disque dur en panne, comment l'effacer ?"
+    choices:
+      - { id: "a", label: "Le jeter directement", correct: false }
+      - { id: "b", label: "Destruction physique par prestataire certifie (broyage industriel) ou demagnetisseur HDD - aucun outil logiciel possible", correct: true }
+      - { id: "c", label: "Espérer qu'il marche encore", correct: false }
+    explanation: "Disque en panne = pas d'outil logiciel possible. Solutions : demagnetisseur (HDD seulement, 1 minute), destruction physique par prestataire certifie (broyage, 5-15 EUR/disque), perceuse (3-5 trous traversants). Certificat obligatoire."
+
+  - question: "Une imprimante / photocopieuse contient quoi en interne ?"
+    choices:
+      - { id: "a", label: "Rien de sensible", correct: false }
+      - { id: "b", label: "Disque dur interne avec copies/scans recents - vider la memoire + reset usine + retrait disque si possible avant recyclage", correct: true }
+      - { id: "c", label: "Que des marques de toner", correct: false }
+    explanation: "Imprimantes / photocopieuses pro ont un disque dur interne stockant les copies/scans (cas hopital UK 2017 : 5K dossiers patients trouves). Procedure : vider la memoire (fonction constructeur) + reset usine + retrait disque si possible."
+---
+
+> 💡 **Pour aller plus loin** : **NIST 800-88** = standard
+> international (gratuit). **DBAN** (gratuit OSS, bootable
+> USB) pour HDD. **Parted Magic** pour SSD/NVMe. Pour pros :
+> **Blancco Drive Eraser** (certifie). Prestataires
+> destruction certifies : Recylum, Veolia (cherchez certificat
+> NIST/ISO).

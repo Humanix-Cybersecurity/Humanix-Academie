@@ -1,0 +1,364 @@
+---
+title: "Restaurer apres une erreur humaine (file deletion)"
+durationMinutes: 6
+persona: "tous-collaborateurs"
+objective: "Reagir efficacement a une suppression accidentelle de fichiers / dossiers / BDD : techniques de restoration, droit a l'erreur, prevention"
+xpReward: 60
+scenario: |
+  Mardi 10h. Tu es chef de projet. Tu nettoyais le SharePoint
+  d'equipe et... tu as supprime PAR ERREUR le dossier "Projet
+  XYZ" qui contenait :
+
+  - 6 mois de documentation
+  - 50 fichiers Word/Excel
+  - Photos client
+  - Plans techniques
+
+  Tu te rends compte de ton erreur 5 minutes plus tard. Le
+  dossier n'est plus dans la corbeille SharePoint (pas verifie
+  encore). Tu paniques.
+
+  Que fais-tu ?
+choices:
+  - id: "a"
+    label: "Je me cache, j'espere que personne ne le remarquera"
+    outcome: "bad"
+    feedback: "DESASTRE. Sans action immediate, tu perds peut-etre la chance de restaurer (corbeille, versionning, sauvegarde). Plus le temps passe, plus la restauration est difficile. Honnetete + action = solution rapide."
+    points: -25
+  - id: "b"
+    label: "J'appelle immediatement le DSI (numero hotline) en signalant l'erreur. On va verifier corbeille SharePoint, conservation versions, sauvegardes en parallele"
+    outcome: "good"
+    feedback: "Reflexes parfaits. Action rapide + transparence + cooperation IT = restauration probable. SharePoint a corbeille (30 jours), versions (180 jours), sauvegarde Microsoft (60-90 jours retention). Plusieurs niveaux de chance."
+    points: 40
+  - id: "c"
+    label: "Je supprime aussi tous les autres dossiers pour 'cacher' la trace"
+    outcome: "bad"
+    feedback: "TRES MAUVAIS. Tu aggraves le probleme + ajoutes faute professionnelle. Les actions sont tracees dans audit log SharePoint. Honnetete = solution. Aggravation = sanctions disciplinaires."
+    points: -30
+  - id: "d"
+    label: "Je telecharge un outil de recovery sur ma machine pour tenter de retrouver les fichiers"
+    outcome: "neutral"
+    feedback: "Pas le bon reflexe. SharePoint est cloud-based, les outils de recovery local ne fonctionnent pas. Plus : tu peux installer du malware par accident. Solution : appel DSI immediat (ils ont les outils admin)."
+    points: 0
+debrief: |
+  L'**erreur humaine** est responsable de **40-60% des pertes
+  de donnees** en entreprise (statistique Gartner / ESG). Plus
+  que les ransomware ou les pannes hardware.
+
+  Causes typiques :
+  - Suppression accidentelle (dossier, fichier, ligne)
+  - Modification non-voulue (formules ecrasees, donnees
+    remplacees)
+  - Mauvaise destination (envoi a la mauvaise personne)
+  - Mauvais filtre (export incomplet)
+
+  **La bonne nouvelle** : la plupart des plateformes modernes
+  ont **plusieurs niveaux** de protection contre l'erreur
+  humaine.
+
+  **Les niveaux de restauration disponibles :**
+
+  **Niveau 1 : Corbeille (recycle bin) - 30 jours**
+
+  La premiere ligne de defense. Le fichier est dans la
+  corbeille, pas vraiment supprime.
+
+  **SharePoint / OneDrive** :
+  - Site Recycle Bin : 93 jours par defaut
+  - Site Collection Recycle Bin : second-stage recycle bin
+
+  **Google Drive** :
+  - Trash : 30 jours
+  - Restoration en 1 clic
+
+  **Dropbox** :
+  - Deleted files : 30 jours (Plus), 180 jours (Business)
+
+  **Action** : verifier la corbeille IMMEDIATEMENT. Souvent
+  le fichier y est encore.
+
+  **Niveau 2 : Conservation des versions - 180 jours**
+
+  Si le fichier a ete modifie / corrompu (pas supprime), tu
+  peux revenir a une version precedente.
+
+  **Microsoft 365** :
+  - **Versioning** : jusqu'a 500 versions / fichier
+  - Tab "Version History" dans Office
+
+  **Google Workspace** :
+  - Versioning automatique
+  - "File > Version history > See version history"
+
+  **Action** : si fichier modifie par erreur, revert a
+  version precedente.
+
+  **Niveau 3 : Sauvegarde Microsoft / Google - 60-90 jours**
+
+  Au-dela des corbeilles utilisateur, Microsoft et Google ont
+  des sauvegardes au niveau plate-forme.
+
+  **Microsoft 365** :
+  - SharePoint : sauvegarde 60 jours apres deletion definitive
+  - **Restoration via support Microsoft** (si dans la
+    fenetre)
+
+  **Google Workspace** :
+  - Vault (E5) : conservation prolongee
+  - Restoration via support Google si dans 25 jours
+    additionnels
+
+  **Action** : si non-trouve dans corbeille, contacter le
+  support.
+
+  **Niveau 4 : Sauvegarde tiers - jusqu'a 7 ans**
+
+  Solutions tierces de sauvegarde (independantes de Microsoft /
+  Google) :
+
+  - **Veeam Backup for Microsoft 365**
+  - **Acronis Cloud Backup**
+  - **Druva inSync**
+  - **Spanning** (Box, Microsoft, Google, Salesforce)
+
+  **Politique de retention typique** :
+  - Daily : 30 jours
+  - Weekly : 90 jours
+  - Monthly : 1 an
+  - Yearly : 7 ans
+
+  **Action** : si tout le reste a echoue, restoration via
+  l'outil de sauvegarde.
+
+  **Niveau 5 : Disaster recovery - duree de retention**
+
+  Sauvegarde longue duree (cf ep 04 - cloud backup). Pour les
+  archives critiques.
+
+  **Procedure ideale apres erreur humaine :**
+
+  **Heure 0 - 5 min : Action immediate**
+
+  1. **NE PAS** continuer a manipuler les fichiers (eviter
+    aggravation)
+  2. **Verifier la corbeille** rapidement
+  3. **Appeler le DSI** / hotline IT
+  4. **Documenter** : que s'est-il passe, quand, quels
+    fichiers
+
+  **Heure 0 - 30 min : Investigation**
+
+  1. **Audit log** SharePoint : qui a fait quoi quand
+  2. **Identifier exactement** ce qui a ete supprime
+  3. **Verifier les versions** disponibles
+
+  **Heure 30 min - 2h : Restauration**
+
+  1. **Restoration de la corbeille** si possible
+  2. **Sinon** : restoration depuis sauvegarde tiers
+  3. **Sinon** : support Microsoft / Google
+  4. **Verification** : tout est-il revenu ?
+
+  **Heure 2h - 24h : Validation**
+
+  1. **Test** des fichiers restaures (ouvrabilite, integrite)
+  2. **Communication** aux utilisateurs (peuvent-ils
+    travailler ?)
+  3. **Documentation** de l'incident
+
+  **Apres : Lessons learned**
+
+  1. **Pourquoi** est-ce arrive ?
+  2. **Comment** prevenir la recidive ?
+  3. **Mise a jour** des procedures / formation
+
+  **Le droit a l'erreur :**
+
+  Une bonne politique d'entreprise inclut le **droit a
+  l'erreur** :
+
+  - **Pas de sanction** disciplinaire pour erreur honnete
+  - **Encouragement** a signaler immediatement
+  - **Climat** de confiance pour ne pas cacher
+
+  Pourquoi : si l'employe craint la sanction, il :
+  - Cache l'erreur
+  - Tente de "reparer" lui-meme (souvent en aggravant)
+  - Le delai augmente, la restauration devient impossible
+
+  **A l'inverse** : sanctions seulement pour :
+  - Negligence repetee (apres formation)
+  - Faute volontaire / malveillance
+  - Cachement deliberé apres erreur
+
+  **Prevention de l'erreur humaine :**
+
+  **1. Formation**
+
+  - Formation initiale aux outils
+  - Formation reguliere (1x/an)
+  - Tutoriels accessibles
+
+  **2. Permissions appropriees**
+
+  - **Principe du moindre privilege** : tu ne peux supprimer
+    que ce que tu dois pouvoir supprimer
+  - **Lecture seule** par defaut pour la plupart des
+    utilisateurs
+  - **Permissions admin** : peu d'utilisateurs
+
+  **3. Confirmation / Double-check**
+
+  - **Pop-up de confirmation** pour suppressions
+  - **Mode "soft delete"** par defaut (pas de suppression
+    definitive immediate)
+  - **Validation par un tiers** pour actions critiques
+
+  **4. Backup automatique**
+
+  - **Sauvegarde automatique** transparente pour l'utilisateur
+  - **Versioning** auto active
+
+  **5. UX claire**
+
+  - Boutons "Supprimer" en couleur (rouge) pour attention
+  - **Loin** du bouton "Sauvegarder" (eviter mauvais clic)
+  - Pas de raccourci clavier pour suppression definitive
+
+  **Configuration SharePoint anti-erreur :**
+
+  Dans SharePoint admin center :
+
+  - **Versioning** : 500 versions max par fichier
+  - **Recycle bin retention** : 93 jours (max)
+  - **Soft delete retention** : 30 jours
+  - **Audit log** : conservation 180 jours min
+
+  **Plus** :
+  - **Sauvegarde tiers** (Veeam, Acronis) avec retention 1 an
+  - **Sensitivity labels** : protection des fichiers
+    confidentiels
+  - **DLP** : prevention de partage non-voulu
+
+  **Cas reels :**
+
+  **Cas 1 - PME 2024 (succes par signalement rapide)**
+
+  Comptable supprime accidentellement le fichier paie
+  (sauvegarde le mardi). Action immediate :
+  - 10 min apres : appel DSI
+  - 30 min apres : restauration depuis corbeille SharePoint
+  - 1h apres : tout est OK
+
+  Cout : 0 EUR + 1h de reaction. Aucune sanction (droit a
+  l'erreur).
+
+  **Cas 2 - PME 2023 (echec par cachement)**
+
+  Manager supprime des donnees client et tente de "reparer"
+  pendant 3 jours sans signaler. Au final, l'erreur est
+  decouverte par un autre employe.
+
+  - 3 jours = depasse la corbeille
+  - Sauvegarde tiers : oui mais incomplete
+  - Restauration partielle = 30% des donnees perdues
+
+  Cout : 50 K EUR (donnees client) + sanction disciplinaire
+  pour cachement (pas pour erreur).
+
+  **Cas 3 - Cabinet conseil 2022 (formule Excel ecrasee)**
+
+  Junior remplace par erreur des formules par des valeurs
+  fixes dans un fichier Excel client. Decouverte 2 semaines
+  plus tard.
+
+  - **Versioning Microsoft** : 30 versions disponibles
+  - Restoration de la version 14 jours auparavant
+  - Reapplication des modifications recentes manuelles
+
+  Cout : 4h de re-travail. Pas de perte de donnees client.
+
+  **Statistiques importantes :**
+
+  - **40-60% des pertes** sont dues a erreur humaine (Gartner)
+  - **80% des erreurs** sont detectees < 24h SI signalees
+    immediatement
+  - **Restauration** depuis corbeille : 95% reussite si
+    < 30 jours
+  - **Cachement** : multiplie par 10 le cout final
+
+  **Outils gratuits / OSS :**
+
+  - **Microsoft 365** : versioning + corbeille = inclus
+  - **PowerShell / Graph API** : pour bulk restoration
+  - **OneDrive Files Restore** : restauration de tout le
+    OneDrive a une date donnee
+
+  Pour les PME plus exposees : **Veeam Backup for Microsoft
+  365** (10-20 EUR/user/an) = sauvegarde tierce.
+
+  **Le piege "ce sera dans la corbeille" :**
+
+  La corbeille a **une duree limitee** (30-90 jours selon
+  plate-forme). Si tu te rends compte 6 mois plus tard, c'est
+  trop tard pour la corbeille.
+
+  Solution : sauvegarde tiers avec retention plus longue
+  (1-7 ans).
+
+  **Le piege "je vais recover moi-meme" :**
+
+  Tentations classiques :
+  - **Reinstaller** Windows / changer de PC : detruit les
+    donnees recuperables
+  - **Outils de recovery local** : malware potentiel + ne
+    fonctionne pas pour cloud
+  - **Demander a un collegue** : il peut aussi se tromper
+
+  Solution : appel IMMEDIAT au DSI/IT. Ils ont les outils + 
+  l'experience.
+
+  **La regle d'or :**
+
+  > **Erreur humaine = 40-60% des pertes de donnees. Action
+  > immediate (5 min) + transparence + appel DSI = restauration
+  > probable (95% si < 30 jours). Cachement = catastrophe.
+  > Droit a l'erreur dans la politique = signalement rapide.
+  > Plusieurs niveaux de defense (corbeille, versions,
+  > sauvegarde tiers).**
+quiz:
+  - question: "Quel pourcentage des pertes de donnees est du a l'erreur humaine ?"
+    choices:
+      - { id: "a", label: "5%", correct: false }
+      - { id: "b", label: "40-60% (Gartner / ESG) - plus que ransomware ou pannes hardware", correct: true }
+      - { id: "c", label: "0%", correct: false }
+    explanation: "40-60% des pertes de donnees viennent d'erreur humaine (Gartner, ESG). Plus que ransomware (~10-20%) ou pannes hardware (~10-15%). C'est pourquoi le 'droit a l'erreur' + procedure de restoration sont essentiels."
+
+  - question: "Tu supprimes par erreur un dossier important, premier reflexe ?"
+    choices:
+      - { id: "a", label: "Cacher / esperer que personne ne remarque", correct: false }
+      - { id: "b", label: "Action immediate : appel DSI + verification corbeille + documentation. Plus le temps passe, moins de chance de restaurer", correct: true }
+      - { id: "c", label: "Tenter recovery moi-meme avec outil tiers", correct: false }
+    explanation: "Action rapide + transparence = restauration probable (95% si < 30 jours). Cachement = corbeille expire = donnees definitivement perdues + sanction pour cachement. Cas reel : signalement immediat = 1h de resolution. Cachement 3 jours = 50K EUR perte."
+
+  - question: "Combien de temps les fichiers restent dans la corbeille SharePoint ?"
+    choices:
+      - { id: "a", label: "1 jour", correct: false }
+      - { id: "b", label: "93 jours par defaut (avec Site Collection Recycle Bin en deuxieme niveau)", correct: true }
+      - { id: "c", label: "1 an", correct: false }
+    explanation: "SharePoint : Site Recycle Bin 93 jours + Site Collection Recycle Bin (deuxieme niveau, admin). Au-dela : sauvegarde Microsoft 60 jours additionnels (via support). Au-dela encore : sauvegarde tiers (Veeam, Acronis 1-7 ans selon politique)."
+
+  - question: "Politique 'droit a l'erreur' signifie quoi ?"
+    choices:
+      - { id: "a", label: "Pas de regles", correct: false }
+      - { id: "b", label: "Pas de sanction pour erreur honnete signalee rapidement. Sanctions pour cachement deliberé ou negligence repetee", correct: true }
+      - { id: "c", label: "Sanctions pour tout", correct: false }
+    explanation: "Droit a l'erreur = pas de sanction pour erreur honnete + signalement rapide. Encourage la transparence (donc restoration possible). Sanctions reservees a : negligence repetee apres formation, faute volontaire, cachement delibere. Climat de confiance > climat de peur."
+---
+
+> 💡 **Pour aller plus loin** : **Microsoft 365 OneDrive Files
+> Restore** : restauration de tout l'OneDrive a une date
+> donnee (jusqu'a 30 jours). **Veeam Backup for Microsoft 365**
+> (10-20 EUR/user/an) pour sauvegarde tiers avec retention
+> 1-7 ans. Politique droit a l'erreur dans charte
+> informatique.
