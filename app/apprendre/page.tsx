@@ -1,34 +1,34 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Hub apprenant - refonte cosy mai 2026.
+// =============================================================================
+// Hub apprenant - refonte cosy mai 2026 + Sprint 4 (juin 2026).
 //
-// Brief : "magie, audace, professionalisme, animation, accessibilite,
-// cosy, charmant, impactant. L'utilisateur au coeur du voyage sans se
-// rendre compte qu'il est la pour apprendre. Sensibilisation reelle, pas
-// celle generee par la peur - celle qui sent bon la maitrise et la
-// confiance."
+// Refonte juin 2026 (Sprint 4 simplicite) : decoupage des 8 sections en
+// widgets composables sous components/learner/. La page reste server
+// component (queries Prisma + calculs) mais l'UI est externalisee.
 //
-// 8 sections narratives :
+// 8 sections narratives (preservees a l'identique) :
 //   1. Bandeau challenge (s'il y en a un, ton chaleureux et non urgent)
 //   2. Hero "Bonjour [prenom]" personnalise selon l'heure du jour
-//   3. Coach Hex (existait déjà, garde)
-//   4. Ton prochain pas - l'action recommandee mise en valeur, cadeau
-//   5. Defi tranquille du jour - pas de pression, juste de la progression
-//   6. Tes saisons - cards magazine avec gradients doux par theme
-//   7. Tes acquis - badges valorisants + phrase chaleureuse
+//   3. Coach Hex (composant existant)
+//   4. Ton prochain pas - l'action recommandee mise en valeur
+//   5. Defi tranquille du jour - pas de pression
+//   6. Tes saisons - cards magazine avec gradients doux
+//   7. Tes acquis - badges valorisants
 //   8. Respiration - citation rassurante de fin
 //
-// Logique metier (queries Prisma, calculs streak/level/progress)
-// **conservee a l'identique** par rapport a la version anterieure.
-// Cette refonte est purement visuelle.
+// Brief original conserve : "magie, audace, professionalisme, animation,
+// accessibilite, cosy, charmant, impactant. L'utilisateur au coeur du
+// voyage sans se rendre compte qu'il est la pour apprendre. Sensibilisation
+// reelle, pas celle generee par la peur - celle qui sent bon la maitrise
+// et la confiance."
+//
+// Logique metier (queries Prisma, calculs streak/level/progress) conservee
+// a l'identique.
+// =============================================================================
 
-import Link from "next/link";
 import { auth, getSignInPath } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import HexBackdrop from "@/components/HexBackdrop";
-import HexMascotEvolved, {
-  LevelProgressBar,
-} from "@/components/HexMascotEvolved";
 import CoachCard from "@/components/CoachCard";
 import CyberEventBanner from "@/components/CyberEventBanner";
 import { getLevel } from "@/lib/levels";
@@ -42,67 +42,19 @@ import {
   compareSaisonsForUser,
   type SaisonClassification,
 } from "@/lib/personalize/learn-path";
+import { computeStreak } from "@/lib/streak";
+
+import ChallengeBanner from "@/components/learner/ChallengeBanner";
+import LearnerHero from "@/components/learner/LearnerHero";
+import NextStepCard from "@/components/learner/NextStepCard";
+import DailyGoalCard from "@/components/learner/DailyGoalCard";
+import SaisonCard from "@/components/learner/SaisonCard";
+import AcquisSection from "@/components/learner/AcquisSection";
+import LearnerEmptyState from "@/components/learner/LearnerEmptyState";
+import CloseQuote from "@/components/learner/CloseQuote";
+import { SAISON_PALETTES, CITATIONS } from "@/components/learner/palettes";
 
 export const dynamic = "force-dynamic";
-
-// ===========================================================================
-// PALETTE DES SAISONS - 6 ambiances douces cyclees par index
-// ===========================================================================
-// On evite tout rouge alarmiste / orange criard. Les saisons doivent
-// donner envie d'y entrer, pas mettre en garde.
-const SAISON_PALETTES: Array<{
-  bg: string; // gradient de fond de la card
-  ring: string; // border de la card (subtle)
-  badge: string; // bg pour le badge progression %
-}> = [
-  {
-    bg: "from-cyan-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-blue-950/40",
-    ring: "border-cyan-200 dark:border-cyan-900/40",
-    badge: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-200",
-  },
-  {
-    bg: "from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-teal-950/40",
-    ring: "border-emerald-200 dark:border-emerald-900/40",
-    badge:
-      "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200",
-  },
-  {
-    bg: "from-amber-50 via-white to-yellow-50 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/40",
-    ring: "border-amber-200 dark:border-amber-900/40",
-    badge:
-      "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200",
-  },
-  {
-    bg: "from-purple-50 via-white to-pink-50 dark:from-slate-900 dark:via-slate-900 dark:to-purple-950/40",
-    ring: "border-purple-200 dark:border-purple-900/40",
-    badge:
-      "bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-200",
-  },
-  {
-    bg: "from-rose-50 via-white to-amber-50 dark:from-slate-900 dark:via-slate-900 dark:to-rose-950/40",
-    ring: "border-rose-200 dark:border-rose-900/40",
-    badge: "bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-200",
-  },
-  {
-    bg: "from-indigo-50 via-white to-cyan-50 dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950/40",
-    ring: "border-indigo-200 dark:border-indigo-900/40",
-    badge:
-      "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-200",
-  },
-];
-
-// Citations chaleureuses - affichees en bas de page, alternance aleatoire
-const CITATIONS = [
-  "La maitrise cyber, ce n'est pas un sommet - c'est un chemin. Cinq minutes par semaine suffisent.",
-  "Tu n'as pas a être expert. Tu as juste a être averti une seconde avant le clic.",
-  "Le meilleur reflexe cyber, c'est de prendre 30 secondes avant d'agir. Tu en es déjà capable.",
-  "Apprendre la cyber, c'est apprendre a se faire confiance. Hex t'accompagne, pas le contraire.",
-  "Chaque module fait baisser le risque pour toi, ton équipe, ta famille. Sans drame.",
-];
-
-// ===========================================================================
-// PAGE
-// ===========================================================================
 
 export default async function ApprendrePage() {
   const session = await auth();
@@ -159,8 +111,8 @@ export default async function ApprendrePage() {
 
   // Set des slugs de groupes de l'user pour test rapide d'intersection
   // avec Episode.targetGroups (CSV "compta,rh"). Empty set = user sans
-  // groupe = aucun episode targete pour lui (fallback OK : tous les
-  // episodes restent accessibles, juste pas de highlight).
+  // groupe = aucun episode targete (fallback OK : tous les episodes
+  // restent accessibles, juste pas de highlight).
   const userGroupSlugs = new Set(userGroups.map((ug) => ug.group.slug));
 
   const equipped = buildEquippedFromInventory(
@@ -169,21 +121,18 @@ export default async function ApprendrePage() {
   const activeChallenge = await getActiveChallenge(tenantId);
   const coachAdvice = await generateCoachAdvice(userId);
 
-  // Persona pedagogique infere : sert a prioriser les saisons sur la
-  // page (un developpeur voit "cyber-dev" en haut, un finance voit
-  // "fraude-president" en haut, etc.). Cf. lib/personalize/learn-path.ts
+  // Persona pedagogique infere : sert a prioriser les saisons sur la page
+  // (un developpeur voit "cyber-dev" en haut, un finance voit
+  // "fraude-president" en haut, etc.).
   const persona = await getUserPersona(userId);
 
   const configBySaison = new Map(tenantConfigs.map((c) => [c.saisonId, c]));
 
-  // Filtrage : seulement les saisons actives pour ce tenant (par defaut actif si pas de config)
-  // + tri par customOrder si defini, sinon order par defaut
   /**
    * Compare les target groups d'un episode (CSV "compta,rh") avec les
    * groupes de l'user. Si intersection non vide, l'episode est "targete"
-   * pour ce metier et merite un highlight visuel. Si l'episode n'a pas
-   * de target (null ou ""), il est generique = pas targete (mais reste
-   * accessible normalement).
+   * pour ce metier et merite un highlight visuel. Si pas de target ou pas
+   * de groupes user, episode generique (mais reste accessible).
    */
   const isTargetedForUser = (targetGroups: string | null): boolean => {
     if (!targetGroups || userGroupSlugs.size === 0) return false;
@@ -201,14 +150,11 @@ export default async function ApprendrePage() {
   const completedCount = progress.filter(
     (p) => p.status === "COMPLETED",
   ).length;
-  // Score quiz moyen sur les episodes completes (pour debloquer le
-  // niveau "hard" quand maturite >= 70%). On utilise score (XP/totalXP%
-  // approche) faute de bestQuizScorePct ici ; pour 99% des cas la
-  // correlation est suffisante pour la classification.
-  // (cf. lib/risk-score.ts:71 qui fait la même estimation)
-  const completedProgress = progress.filter(
-    (p) => p.status === "COMPLETED",
-  );
+  // Score quiz moyen sur les episodes completes (pour debloquer le niveau
+  // "hard" quand maturite >= 70%). On utilise score (XP/totalXP% approche)
+  // faute de bestQuizScorePct ici ; pour 99% des cas la correlation est
+  // suffisante pour la classification.
+  const completedProgress = progress.filter((p) => p.status === "COMPLETED");
   const avgQuizScorePct =
     completedProgress.length === 0
       ? 0
@@ -238,25 +184,25 @@ export default async function ApprendrePage() {
         isMandatory,
         effectiveOrder: cfg?.customOrder ?? s.order,
         classification,
-        // Annote chaque episode avec un flag "pour ton metier" pour
-        // que l'UI puisse highlighter (badge / couleur). Le tri par
-        // ordre canonique est preserve : on n'inverse pas l'ordre,
-        // on signale juste visuellement.
+        // Annote chaque episode avec un flag "pour ton metier" pour que
+        // l'UI puisse highlighter (badge / couleur). Le tri par ordre
+        // canonique est preserve : on n'inverse pas l'ordre, on signale
+        // juste visuellement.
         episodes: s.episodes.map((e) => ({
           ...e,
           targetedForUser: isTargetedForUser(e.targetGroups),
         })),
       };
     })
-    // Tri en 3 buckets : mandatory > recommended (par persona-rank)
-    // > explore (ordre canonique). Cf. lib/personalize/learn-path.ts
+    // Tri en 3 buckets : mandatory > recommended (par persona-rank) >
+    // explore (ordre canonique). Cf. lib/personalize/learn-path.ts
     .sort(compareSaisonsForUser);
 
   const totalEpisodes = saisons.reduce((s, sa) => s + sa.episodes.length, 0);
   const currentLevel = getLevel(totalXP);
 
-  // Episodes avec contenu MDX redige (vs fallback generique).
-  // Sert a afficher un compteur "Expert" subtil sur chaque saison.
+  // Episodes avec contenu MDX redige (vs fallback generique). Sert a
+  // afficher un compteur "Expert" subtil sur chaque saison.
   const expertEpisodes = new Set(
     listExpertEpisodes().map((e) => `${e.saisonSlug}/${e.episodeSlug}`),
   );
@@ -274,7 +220,6 @@ export default async function ApprendrePage() {
     (p) => p.completedAt && new Date(p.completedAt) >= today,
   ).length;
   const dailyGoal = 1;
-  const dailyPct = Math.min(100, (completedToday / dailyGoal) * 100);
 
   // Salutation contextuelle selon l'heure
   const hour = new Date().getHours();
@@ -291,236 +236,76 @@ export default async function ApprendrePage() {
   // L'action recommandee : premiere saison non completee, premier episode
   // non termine. C'est ce qu'on met en valeur dans "Ton prochain pas".
   const recommendedSaison = saisons.find((s) =>
-    s.episodes.some(
-      (e) => progressByEp.get(e.id)?.status !== "COMPLETED",
-    ),
+    s.episodes.some((e) => progressByEp.get(e.id)?.status !== "COMPLETED"),
   );
   const recommendedEpisode = recommendedSaison?.episodes.find(
     (e) => progressByEp.get(e.id)?.status !== "COMPLETED",
   );
   const recommendedIsResume =
-    recommendedEpisode &&
+    !!recommendedEpisode &&
     progressByEp.get(recommendedEpisode.id)?.status === "IN_PROGRESS";
 
-  // Citation aleatoire de fin de page (deterministe par jour pour éviter
-  // des sauts de placement entre rafraichissements)
+  // Citation deterministe par jour pour eviter les sauts de placement
+  // entre rafraichissements
   const citationIdx = today.getDate() % CITATIONS.length;
   const citation = CITATIONS[citationIdx];
 
   return (
     <main id="main-content" className="animate-fadeIn overflow-x-hidden">
-      {/* ============================================================
-          0. EVENEMENT CYBER en cours (Cybermois, WPD, etc.)
-          Affiche seulement si la date courante tombe dans la fenetre.
-          ============================================================ */}
+      {/* Evenement cyber en cours (Cybermois, WPD, etc.) */}
       <CyberEventBanner />
 
-      {/* ============================================================
-          1. CHALLENGE - bandeau discret, ton chaleureux non-urgent
-          ============================================================ */}
+      {/* Bandeau challenge - discret, ton chaleureux non-urgent */}
       {activeChallenge && (
-        <Link
-          href="/classement"
-          className="block mx-auto max-w-5xl mt-6 mb-2 px-4"
-        >
-          <div className="rounded-2xl p-4 sm:p-5 bg-gradient-to-r from-amber-100 via-amber-50 to-yellow-50 dark:from-amber-900/30 dark:via-amber-900/20 dark:to-yellow-900/20 border border-amber-200 dark:border-amber-800/50 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5">
-            <div className="flex items-center gap-4">
-              <div className="text-3xl animate-bounce-slow" aria-hidden="true">
-                🏆
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[10px] uppercase tracking-widest font-bold text-amber-700 dark:text-amber-200">
-                  Challenge en cours · entre équipes
-                </p>
-                <p className="text-sm sm:text-base font-bold text-primary-500 dark:text-accent-300 truncate">
-                  {activeChallenge.title}
-                </p>
-              </div>
-              <div className="text-right shrink-0">
-                <p className="font-display text-xl sm:text-2xl font-extrabold text-amber-700 dark:text-amber-200 tabular-nums">
-                  J–
-                  {Math.max(
-                    0,
-                    Math.ceil(
-                      (activeChallenge.endDate.getTime() - Date.now()) /
-                        (24 * 3600 * 1000),
-                    ),
-                  )}
-                </p>
-                <p className="text-[10px] uppercase tracking-widest text-amber-700/70 dark:text-amber-200/70">
-                  Voir →
-                </p>
-              </div>
-            </div>
-          </div>
-        </Link>
+        <ChallengeBanner
+          title={activeChallenge.title}
+          endDate={activeChallenge.endDate}
+        />
       )}
 
-      {/* ============================================================
-          2. HERO - voyage personnel
-          Salutation chaleureuse, mascotte qui flotte, niveau valorise.
-          ============================================================ */}
-      <section
-        aria-labelledby="hero-title"
-        className="relative bg-humanix-soft"
-      >
-        <HexBackdrop intensity="soft">
-          <div className="max-w-5xl mx-auto px-4 py-10 sm:py-14">
-            <div className="grid sm:grid-cols-[auto_1fr] gap-8 items-center">
-              {/* Mascotte qui flotte */}
-              <div className="flex justify-center sm:justify-start">
-                <div className="animate-float">
-                  <HexMascotEvolved
-                    xp={totalXP}
-                    size="xl"
-                    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-                    mood={(user?.mood ?? "happy") as any}
-                    showLevel
-                    animated
-                    equipped={equipped}
-                    species={user?.mascotSpecies ?? "fox"}
-                    customEmoji={user?.mascotEmojiCustom}
-                  />
-                </div>
-              </div>
-
-              <div className="text-center sm:text-left">
-                <p className="text-xs sm:text-sm uppercase tracking-[0.25em] text-accent-500 font-bold mb-2">
-                  Niveau {currentLevel.id} · {currentLevel.name}
-                </p>
-                <h1
-                  id="hero-title"
-                  className="font-display text-3xl sm:text-5xl font-extrabold text-primary-500 dark:text-accent-300 leading-tight mb-3"
-                >
-                  {greet}, {firstName}.
-                </h1>
-                <p className="italic text-base sm:text-lg text-gray-700 dark:text-gray-200 mb-5">
-                  « {currentLevel.description} »
-                </p>
-                <LevelProgressBar xp={totalXP} />
-
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
-                  <SoftStat
-                    emoji="⚡"
-                    value={totalXP.toString()}
-                    label="XP gagnes"
-                  />
-                  <SoftStat
-                    emoji="🪙"
-                    value={(user?.coins ?? 0).toString()}
-                    label="Coins"
-                  />
-                  <SoftStat
-                    emoji="🔥"
-                    value={streak.toString()}
-                    label={streak <= 1 ? "jour" : "jours"}
-                  />
-                  <SoftStat
-                    emoji="✓"
-                    value={`${completedCount}`}
-                    label={`/ ${totalEpisodes}`}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </HexBackdrop>
-      </section>
+      {/* Hero personnel : salutation + mascotte + niveau + stats */}
+      <LearnerHero
+        greet={greet}
+        firstName={firstName}
+        totalXP={totalXP}
+        coins={user?.coins ?? 0}
+        streak={streak}
+        completedCount={completedCount}
+        totalEpisodes={totalEpisodes}
+        currentLevel={currentLevel}
+        mood={user?.mood ?? undefined}
+        mascotSpecies={user?.mascotSpecies ?? undefined}
+        mascotEmojiCustom={user?.mascotEmojiCustom}
+        equipped={equipped}
+      />
 
       <div className="max-w-5xl mx-auto px-4 py-8 sm:py-10 space-y-8">
-        {/* ============================================================
-            3. COACH HEX - guidage personnalise (existait déjà)
-            ============================================================ */}
+        {/* Coach Hex - guidage personnalise (composant existant) */}
         <CoachCard
           advice={coachAdvice}
           xp={totalXP}
           species={user?.mascotSpecies ?? "fox"}
         />
 
-        {/* ============================================================
-            4. TON PROCHAIN PAS - l'action prioritaire en valeur
-            Card-hero gradient officiel + animate-glow + emoji float.
-            ============================================================ */}
+        {/* Ton prochain pas - l'action prioritaire en valeur */}
         {recommendedEpisode && recommendedSaison && (
-          <section aria-labelledby="next-step-title">
-            <div className="card-hero animate-glow relative overflow-hidden">
-              <div
-                aria-hidden="true"
-                className="absolute -top-12 -right-12 text-9xl opacity-15"
-              >
-                {recommendedSaison.coverEmoji}
-              </div>
-              <div className="relative">
-                <p className="text-xs uppercase tracking-[0.25em] font-bold opacity-90 mb-2">
-                  Ton prochain pas
-                </p>
-                <h2
-                  id="next-step-title"
-                  className="font-display text-2xl sm:text-3xl font-extrabold mb-2"
-                >
-                  {recommendedIsResume ? "Reprends" : "Demarre"} «{" "}
-                  {recommendedEpisode.title} »
-                </h2>
-                <p className="opacity-90 mb-5">
-                  Saison · {recommendedSaison.title} · environ{" "}
-                  {recommendedEpisode.durationMinutes ?? 6} minutes. Aucune
-                  pression - c'est juste un moment pour toi.
-                </p>
-                <Link
-                  href={`/apprendre/${recommendedSaison.slug}/${recommendedEpisode.slug}`}
-                  className="inline-flex items-center gap-2 bg-white text-primary-500 font-bold px-6 py-3 rounded-2xl shadow-md hover:scale-105 transition-transform"
-                >
-                  {recommendedIsResume ? "Continuer" : "Y aller"}
-                  <span aria-hidden="true">→</span>
-                </Link>
-              </div>
-            </div>
-          </section>
+          <NextStepCard
+            saisonSlug={recommendedSaison.slug}
+            saisonTitle={recommendedSaison.title}
+            saisonEmoji={recommendedSaison.coverEmoji}
+            episodeSlug={recommendedEpisode.slug}
+            episodeTitle={recommendedEpisode.title}
+            episodeMinutes={recommendedEpisode.durationMinutes ?? 6}
+            isResume={recommendedIsResume}
+          />
         )}
 
-        {/* ============================================================
-            5. DEFI TRANQUILLE - daily goal sans drama
-            ============================================================ */}
-        <section aria-labelledby="daily-title">
-          <div className="card bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-emerald-950/30 dark:via-slate-900 dark:to-teal-950/20 border-emerald-200 dark:border-emerald-900/40">
-            <div className="flex items-start gap-4">
-              <div className="text-3xl animate-bounce-slow" aria-hidden="true">
-                🌱
-              </div>
-              <div className="flex-1">
-                <h2
-                  id="daily-title"
-                  className="font-display text-lg font-bold text-emerald-800 dark:text-emerald-200"
-                >
-                  {completedToday >= dailyGoal
-                    ? "Ton defi du jour est valide"
-                    : "Ton defi tranquille du jour"}
-                </h2>
-                <p className="text-sm text-emerald-900/80 dark:text-emerald-100/80 mb-3">
-                  {completedToday >= dailyGoal
-                    ? "Tu as fait ton temps cyber aujourd'hui. La regularite vaut mille sprints."
-                    : "Un episode aujourd'hui, c'est cinq minutes pour toi. Pas plus, pas moins."}
-                </p>
-                <div className="w-full h-2 bg-emerald-200/50 dark:bg-emerald-900/40 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all"
-                    style={{ width: `${dailyPct}%` }}
-                  />
-                </div>
-                <p className="text-xs text-emerald-800/60 dark:text-emerald-200/60 mt-2 tabular-nums">
-                  {completedToday} / {dailyGoal} ·{" "}
-                  {completedToday >= dailyGoal && "objectif atteint"}
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Defi tranquille du jour */}
+        <DailyGoalCard completedToday={completedToday} dailyGoal={dailyGoal} />
 
-        {/* ============================================================
-            6. SAISONS - cards magazine, gradients doux par theme
-            ============================================================ */}
+        {/* Tes saisons - cards magazine */}
         {saisons.length === 0 ? (
-          <EmptyState />
+          <LearnerEmptyState />
         ) : (
           <section aria-labelledby="seasons-title">
             <div className="flex items-end justify-between gap-3 flex-wrap mb-6">
@@ -535,12 +320,12 @@ export default async function ApprendrePage() {
                   Chaque saison est un theme. Va a ton rythme.
                 </p>
               </div>
-              <Link
+              <a
                 href="/profil"
                 className="text-sm text-accent-500 hover:text-accent-600 font-semibold underline-offset-4 hover:underline"
               >
                 Mon profil →
-              </Link>
+              </a>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-5">
@@ -558,16 +343,12 @@ export default async function ApprendrePage() {
                 const expertCount = s.episodes.filter((e) =>
                   expertEpisodes.has(`${s.slug}/${e.slug}`),
                 ).length;
-                // Episodes targetes pour le metier de l'user (cf.
-                // Episode.targetGroups + UserGroup). Affiche en badge
-                // sur la saison card si > 0.
                 const targetedCount = s.episodes.filter(
                   (e) => e.targetedForUser,
                 ).length;
                 // Duree moyenne par episode = vraie valeur, pas un hardcode.
-                // On affichera ca en "~X min par episode" pour preserver la
-                // promesse "5 min par jour" (vs un total qui affiche 36 min
-                // et fait fuir les apprenants).
+                // On affichera "~X min par episode" pour preserver la
+                // promesse "5 min par jour".
                 const avgMinutes =
                   total === 0
                     ? 0
@@ -600,347 +381,18 @@ export default async function ApprendrePage() {
           </section>
         )}
 
-        {/* ============================================================
-            7. TES ACQUIS - badges + phrase chaleureuse de valorisation
-            ============================================================ */}
-        <section aria-labelledby="acquis-title">
-          <div className="flex items-end justify-between gap-3 flex-wrap mb-4">
-            <div>
-              <h2
-                id="acquis-title"
-                className="font-display text-2xl font-extrabold text-primary-500 dark:text-accent-300"
-              >
-                Tes acquis
-              </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-300 italic mt-1">
-                {streak >= 3
-                  ? `Tu construis du reflexe depuis ${streak} jours. C'est ca, la maitrise.`
-                  : completedCount >= 5
-                    ? "Tu as déjà un bagage solide. Continue d'aiguiser tes reflexes."
-                    : "Chaque module ajoute une corde a ton arc. Sans drame."}
-              </p>
-            </div>
-            <Link
-              href="/profil/badges"
-              className="text-sm text-accent-500 hover:text-accent-600 font-semibold underline-offset-4 hover:underline"
-            >
-              Tous mes badges →
-            </Link>
-          </div>
+        {/* Tes acquis - badges + phrase chaleureuse */}
+        <AcquisSection
+          completedCount={completedCount}
+          totalEpisodes={totalEpisodes}
+          streak={streak}
+          totalXP={totalXP}
+          shareCount={user?.shareCount ?? 0}
+        />
 
-          <div className="card bg-gradient-to-br from-amber-50 via-white to-amber-50/50 dark:from-amber-950/20 dark:via-slate-900 dark:to-amber-950/10 border-amber-200 dark:border-amber-900/40">
-            <div className="flex flex-wrap gap-3">
-              {completedCount >= 1 && (
-                <Acquis emoji="🎯" label="Premier pas" />
-              )}
-              {completedCount >= 3 && <Acquis emoji="🚀" label="3 episodes" />}
-              {completedCount >= 5 && <Acquis emoji="🌟" label="5 episodes" />}
-              {completedCount >= totalEpisodes && totalEpisodes > 0 && (
-                <Acquis emoji="👑" label="Toutes saisons" />
-              )}
-              {streak >= 3 && <Acquis emoji="🔥" label="3 jours d'affilee" />}
-              {streak >= 7 && <Acquis emoji="🌊" label="Une semaine" />}
-              {totalXP >= 100 && <Acquis emoji="💯" label="100 XP" />}
-              {totalXP >= 250 && <Acquis emoji="💎" label="250 XP" />}
-              {totalXP >= 500 && <Acquis emoji="🏅" label="500 XP" />}
-              {(user?.shareCount ?? 0) >= 1 && (
-                <Acquis emoji="📤" label="Partageur" />
-              )}
-              {(user?.shareCount ?? 0) >= 3 && (
-                <Acquis emoji="🎖️" label="Ambassadeur" />
-              )}
-              {(user?.shareCount ?? 0) >= 10 && (
-                <Acquis emoji="🌟" label="Evangeliste cyber" />
-              )}
-              {completedCount === 0 && (
-                <p className="text-sm text-amber-900/70 dark:text-amber-100/70 italic">
-                  Ton premier badge t'attend des le premier episode termine.
-                  Pas de pression - quand tu te sens pret.
-                </p>
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* ============================================================
-            8. RESPIRATION - citation de fin, signature confiante
-            ============================================================ */}
-        <section aria-hidden={false} className="text-center pt-6 pb-2">
-          <blockquote className="font-display text-lg sm:text-xl italic text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            « {citation} »
-          </blockquote>
-          <p
-            className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
-            aria-hidden="true"
-          >
-            - Hex veille
-          </p>
-        </section>
+        {/* Respiration - citation finale */}
+        <CloseQuote citation={citation} />
       </div>
     </main>
   );
-}
-
-// ===========================================================================
-// SOUS-COMPOSANTS LOCAUX
-// ===========================================================================
-
-function SoftStat({
-  emoji,
-  value,
-  label,
-}: {
-  emoji: string;
-  value: string;
-  label: string;
-}) {
-  return (
-    <div className="rounded-2xl bg-white/70 dark:bg-slate-800/60 backdrop-blur-sm border border-white/50 dark:border-slate-700/50 p-3 text-center shadow-sm">
-      <p className="text-base" aria-hidden="true">
-        {emoji}
-      </p>
-      <p className="font-display text-lg sm:text-xl font-extrabold text-primary-500 dark:text-accent-300 tabular-nums">
-        {value}
-      </p>
-      <p className="text-[10px] uppercase tracking-widest text-gray-500 dark:text-gray-400">
-        {label}
-      </p>
-    </div>
-  );
-}
-
-function SaisonCard({
-  idx,
-  saison,
-  palette,
-  pct,
-  done,
-  total,
-  isLocked,
-  firstUndoneSlug,
-  expertCount,
-  avgMinutes,
-  targetedCount,
-  classification,
-}: {
-  idx: number;
-  saison: {
-    id: string;
-    slug: string;
-    title: string;
-    description: string | null;
-    coverEmoji: string;
-    isMandatory: boolean;
-  };
-  palette: (typeof SAISON_PALETTES)[number];
-  pct: number;
-  done: number;
-  total: number;
-  isLocked: boolean;
-  firstUndoneSlug: string | null;
-  expertCount: number;
-  /** Duree moyenne reelle par episode, calculee depuis episodes.durationMinutes */
-  avgMinutes: number;
-  /** Nombre d'episodes targetes pour le metier de l'user (intersection
-   *  Episode.targetGroups + UserGroup). 0 = saison generique pour cet user. */
-  targetedCount: number;
-  /** Classification persona/maturite : bucket + reason humaine pour le badge. */
-  classification: SaisonClassification;
-}) {
-  return (
-    <article
-      className={`relative overflow-hidden rounded-3xl border-2 ${palette.ring} bg-gradient-to-br ${palette.bg} p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-slide-up ${
-        isLocked ? "opacity-60" : ""
-      }`}
-      style={{ animationDelay: `${idx * 60}ms` }}
-    >
-      {/* Emoji de cover en filigrane decoratif */}
-      <span
-        aria-hidden="true"
-        className="absolute -top-2 -right-4 text-8xl opacity-10 select-none"
-      >
-        {saison.coverEmoji}
-      </span>
-
-      {/* Badge progression % en haut a droite */}
-      {!isLocked && pct > 0 && pct < 100 && (
-        <span
-          className={`absolute top-4 right-4 ${palette.badge} text-xs font-bold px-3 py-1 rounded-full tabular-nums`}
-        >
-          {pct} %
-        </span>
-      )}
-      {!isLocked && pct === 100 && (
-        <span
-          aria-label="Saison terminee"
-          className="absolute top-4 right-4 text-3xl"
-        >
-          🏆
-        </span>
-      )}
-
-      <div className="relative">
-        {/* Cover emoji principal */}
-        <div className="text-5xl mb-4" aria-hidden="true">
-          {isLocked ? "🌒" : saison.coverEmoji}
-        </div>
-
-        {/* Badges contextuels : recommande RH (mandatory) + persona-match
-            ("pour toi") + targetedGroups ("pour ton metier"). On les
-            affiche seulement si pertinents (pct < 100, etc.) pour éviter
-            le bruit visuel sur les saisons déjà terminees. */}
-        <div className="flex flex-wrap gap-2 mb-3">
-          {saison.isMandatory && pct < 100 && (
-            <span className="text-[10px] uppercase tracking-widest font-bold bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 px-2 py-1 rounded-full">
-              Recommande par ton équipe
-            </span>
-          )}
-          {classification.bucket === "recommended" &&
-            pct < 100 &&
-            !saison.isMandatory && (
-              <span
-                className="text-[10px] uppercase tracking-widest font-bold bg-cyan-100 dark:bg-cyan-900/40 text-cyan-800 dark:text-cyan-200 px-2 py-1 rounded-full"
-                title={classification.reason ?? undefined}
-              >
-                🎯 Pour toi
-              </span>
-            )}
-          {targetedCount > 0 && (
-            <span
-              className="text-[10px] uppercase tracking-widest font-bold bg-accent-100 dark:bg-accent-900/40 text-accent-800 dark:text-accent-200 px-2 py-1 rounded-full"
-              title={`${targetedCount} épisode${targetedCount > 1 ? "s" : ""} adapté${targetedCount > 1 ? "s" : ""} à ton métier`}
-            >
-              👤 {targetedCount} pour ton métier
-            </span>
-          )}
-        </div>
-
-
-        <h3 className="font-display text-xl sm:text-2xl font-extrabold text-primary-500 dark:text-accent-300 mb-2 leading-tight">
-          {saison.title}
-        </h3>
-        {saison.description && (
-          <p className="text-sm text-gray-700 dark:text-gray-200 mb-5 leading-relaxed">
-            {saison.description}
-          </p>
-        )}
-
-        {/* Barre de progression */}
-        {!isLocked && (
-          <div className="w-full h-2 bg-white/60 dark:bg-slate-800/60 rounded-full overflow-hidden mb-5">
-            <div
-              className="h-full bg-gradient-to-r from-accent-500 to-primary-500 transition-all"
-              style={{ width: `${pct}%` }}
-            />
-          </div>
-        )}
-
-        {/* CTA */}
-        {isLocked ? (
-          <p className="text-sm italic text-gray-500 dark:text-gray-400">
-            Bientot disponible
-          </p>
-        ) : firstUndoneSlug ? (
-          <Link
-            href={`/apprendre/${saison.slug}/${firstUndoneSlug}`}
-            className="btn-primary w-full"
-          >
-            {done === 0 ? "Commencer" : "Continuer"}
-          </Link>
-        ) : (
-          <p className="text-sm font-bold text-emerald-700 dark:text-emerald-300 flex items-center justify-center gap-2">
-            <span className="text-xl" aria-hidden="true">
-              ✓
-            </span>{" "}
-            Saison terminee - bravo
-          </p>
-        )}
-
-        {/* Meta info - naturelle, pas survendue.
-            On affiche "~X min par episode" plutot que le total (qui ferait
-            36 min et casserait la promesse "5 minutes par jour"). */}
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-4 text-center tabular-nums">
-          {total} episode{total > 1 ? "s" : ""} · ~{avgMinutes} min par
-          episode
-          {expertCount > 0 ? (
-            <>
-              {" "}
-              ·{" "}
-              <span
-                className="text-accent-500 font-semibold"
-                title="Episodes avec scenario detaille redige par un expert humain"
-              >
-                📝 {expertCount === total
-                  ? "tous experts"
-                  : `${expertCount} expert${expertCount > 1 ? "s" : ""}`}
-              </span>
-            </>
-          ) : !isLocked ? (
-            <>
-              {" "}
-              ·{" "}
-              <span
-                className="text-amber-600 dark:text-amber-400 font-semibold"
-                title="Episodes en fallback structure (questions + quiz generiques). Enrichissement par expert prevu."
-              >
-                🔜 bientot enrichi
-              </span>
-            </>
-          ) : null}
-        </p>
-      </div>
-    </article>
-  );
-}
-
-function Acquis({ emoji, label }: { emoji: string; label: string }) {
-  return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl px-4 py-3 border-2 border-amber-200 dark:border-amber-900/50 flex items-center gap-2 shadow-sm hover:scale-105 hover:-translate-y-0.5 transition-all">
-      <span className="text-2xl" aria-hidden="true">
-        {emoji}
-      </span>
-      <span className="text-sm font-medium text-primary-500 dark:text-accent-300">
-        {label}
-      </span>
-    </div>
-  );
-}
-
-function EmptyState() {
-  return (
-    <section className="card text-center py-16 bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/30 border-emerald-200 dark:border-emerald-900/40">
-      <p className="text-6xl mb-4 animate-float" aria-hidden="true">
-        🌿
-      </p>
-      <h2 className="font-display text-xl font-bold text-primary-500 dark:text-accent-300 mb-2">
-        Ton voyage commencera bientot
-      </h2>
-      <p className="text-sm text-gray-600 dark:text-gray-300 max-w-md mx-auto">
-        Aucune saison n'est encore active pour ton entreprise. Demande a ta
-        direction d'activer un module - c'est rapide.
-      </p>
-    </section>
-  );
-}
-
-function computeStreak(dates: Date[]): number {
-  if (dates.length === 0) return 0;
-  const days = new Set(
-    dates.map((d) => {
-      const dd = new Date(d);
-      dd.setHours(0, 0, 0, 0);
-      return dd.getTime();
-    }),
-  );
-  let streak = 0;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  let cursor = today.getTime();
-  const ONE_DAY = 24 * 3600 * 1000;
-  if (!days.has(cursor)) cursor -= ONE_DAY;
-  while (days.has(cursor)) {
-    streak += 1;
-    cursor -= ONE_DAY;
-  }
-  return streak;
 }
