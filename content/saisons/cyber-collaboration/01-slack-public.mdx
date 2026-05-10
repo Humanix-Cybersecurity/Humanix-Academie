@@ -1,0 +1,300 @@
+---
+title: "Le canal public Slack qui leak un client"
+durationMinutes: 6
+persona: "tous-collaborateurs"
+objective: "Eviter les fuites d'informations dans les outils de collaboration (Slack, Teams) via canaux publics, partages, mentions"
+xpReward: 60
+scenario: |
+  Tu es chef de projet en PME. Slack avec 80 personnes,
+  organise en canaux. Pour un projet client (Acme Corp), tu
+  cree #acme-projet (canal public par defaut Slack).
+
+  Apres 3 mois :
+  - Le canal a 80 membres (toute l'entreprise)
+  - 2000 messages avec details Acme (montant contrat, etapes,
+    contacts cle)
+  - 50 fichiers partages (documents techniques, plans)
+  - 5 personnes externes (consultants temporaires) sont
+    aussi membres
+
+  Le client decouvre via une fuite externe. Procedure ouverte.
+
+  Que tirer ?
+choices:
+  - id: "a"
+    label: "Pas grave, ce sont mes collegues"
+    outcome: "bad"
+    feedback: "FAUX. Canal Slack public = toute l'entreprise + invites externes peuvent voir, telecharger, capturer. 2000 messages + 50 fichiers = arsenal d'information. Si un employe quitte (rancunier) ou un consultant externe = fuite massive. NDA client viole."
+    points: -25
+  - id: "b"
+    label: "Migration vers canal prive (acces restreint a l'equipe projet) + audit historique + suppression info sensible + politique : projets clients = canaux prives par defaut"
+    outcome: "good"
+    feedback: "Action structuree. Migration prive (limite acces), audit (qui a vu quoi), suppression info sensible, politique d'entreprise. Standard Slack / Teams pour projets clients. Configuration par defaut a revoir."
+    points: 40
+  - id: "c"
+    label: "Je supprime le canal entier"
+    outcome: "neutral"
+    feedback: "Trop drastique. Tu perds historique + connaissances. Mieux : transformer en prive + nettoyer info sensible + accuracy. Suppression = perte de propriete intellectuelle."
+    points: 15
+  - id: "d"
+    label: "Je continue mais en parle moins fort"
+    outcome: "bad"
+    feedback: "MAUVAIS. Le mal est deja fait (2000 msg + 50 fichiers). Action immediate : limiter exposition + audit + politique. Pas reduire les nouveaux messages dans un canal compromis."
+    points: -15
+debrief: |
+  Les **outils de collaboration** (Slack, Teams, Notion,
+  Discord, Mattermost) sont devenus essentiels mais
+  representent un risque majeur de fuites :
+
+  - **Volumes** : milliers de messages
+  - **Persistance** : tout reste (sauf retention configuree)
+  - **Acces** large par defaut (canaux publics)
+  - **Externes** invites
+  - **Mobile / desktop** : capture facile
+
+  Etudes Microsoft 2023 : 30% des breaches PME impliquent un
+  outil de collaboration mal configure.
+
+  **Slack par defaut : pieges classiques**
+
+  **Piege 1 : Canaux publics**
+
+  Quand tu crees un canal Slack, par **defaut** :
+  - **Public** : tous les membres de l'organisation y ont
+    acces
+  - **Visible** dans la liste de canaux
+  - **Recherche** dans tous les messages
+
+  **Beaucoup d'employes** ne savent pas comment changer en
+  prive (ou oublient).
+
+  **Piege 2 : Invites externes (guests)**
+
+  Slack permet d'inviter des consultants / clients comme
+  "guests". Mais :
+  - **Acces** souvent etendu par defaut
+  - **Permissions** mal granulaires
+  - **Oubli** de revoquer apres mission
+
+  **Piege 3 : Apps tiers (integrations)**
+
+  Slack a des centaines d'apps (Bots) :
+  - **GitHub bot** lit les messages
+  - **Jira bot** lit les messages
+  - **Apps tierces** lisent les messages
+  - **Souvent** : permissions excessives
+
+  **Piege 4 : DM (messages directs)**
+
+  Les DM sont **prives entre 2 personnes** mais :
+  - **Admins workspace** peuvent les exporter (cas Slack
+    Pro/Business+)
+  - **Recherche** par admin possible
+  - **Pas vraiment confidentiel**
+
+  **Piege 5 : Historique infini**
+
+  - Slack Free : 90 jours d'historique
+  - Slack Pro : illimite
+  - Tout reste = base de donnees attaquable
+
+  **Configuration recommandee :**
+
+  **Niveau 1 : Acces et roles**
+
+  - **Single Sign-On (SSO)** : authentification entreprise
+  - **MFA obligatoire**
+  - **Roles bien definis** : Admin / Member / Guest /
+    Single-channel guest
+
+  **Niveau 2 : Politique de canaux**
+
+  - **Canaux clients = PRIVES par defaut**
+  - **Canaux strategiques** = prives (DG, COMEX)
+  - **Canaux RH / juridique** = prives
+  - **Canaux generaux / annonces** = publics OK
+  - **Canaux 'Random'** = OK
+
+  **Niveau 3 : Gestion des invites externes**
+
+  - **Single-channel guest** : acces a 1 canal seulement
+  - **Multi-channel guest** : acces specifique (eviter
+    'all channels')
+  - **Date d'expiration** automatique (30-90 jours)
+  - **Revue trimestrielle** : qui sont les externes actifs ?
+
+  **Niveau 4 : Apps tiers**
+
+  - **Liste blanche** d'apps approuvees par RSSI
+  - **Permissions minimales** : just enough
+  - **Audit** annuel des apps
+
+  **Niveau 5 : Retention**
+
+  - **Configuration retention** : 30/90 jours pour la plupart
+    des canaux (sauf juridique)
+  - **Conservation legale** : 5-10 ans selon obligation
+  - **Suppression auto** = moins de risque historique
+
+  **Niveau 6 : DLP (Data Loss Prevention)**
+
+  Microsoft 365 / Slack Enterprise :
+  - **Detection** patterns sensibles (NIR, IBAN, CB)
+  - **Alerte** ou **bloquage** automatique
+  - **Audit log**
+
+  **Configuration Slack workspace recommandee :**
+
+  Admin Settings > Workspace :
+
+  - **Default channel** : restrict creation publique aux
+    admins
+  - **External sharing** : restrict
+  - **App approval** : requis
+  - **Retention policy** : 90 jours par defaut (override pour
+    canaux specifiques)
+
+  **Les 8 mauvaises pratiques courantes :**
+
+  **1. "Tout le monde est dans le canal"**
+  - Acces large par defaut
+  - Solution : prive sauf si justifie public
+
+  **2. "Documents partages dans le canal"**
+  - Slack n'est pas un cloud storage
+  - Solution : SharePoint / Drive avec partage controle
+
+  **3. "DM 'prive' avec mots de passe"**
+  - DM pas vraiment prives (admin peut acceder)
+  - Solution : gestionnaire mots de passe + canaux secures
+
+  **4. "Invites externes 'pour 1 mission' jamais retires"**
+  - Comptes fantomes
+  - Solution : expiration automatique
+
+  **5. "Slack notifications avec contenu sur ecran de
+  verrouillage"**
+  - Mots de passe / info sensible visibles
+  - Solution : notifications sans contenu
+
+  **6. "Connecte sur PC perso / public"**
+  - Donnees pro sur app perso
+  - Solution : usage strict pro / pro
+
+  **7. "Captures / forward sans precaution"**
+  - Slack screenshots exposes / shared
+  - Solution : sensibilisation + DLP
+
+  **8. "Canaux avec noms revelateurs"**
+  - "#acquisition-acme-2024" devine
+  - Solution : codes (ex: "#projet-X")
+
+  **Cas reels :**
+
+  **Cas 1 - PME 2023 (canal Slack public + ex-employe)**
+
+  Equipe projet client a #project-acme avec 80 membres
+  (tout le monde par defaut Slack public). Un ex-employe en
+  conflit (vue de la suite avec succes) a exfiltre toute
+  l'historique avant de partir.
+
+  Cout :
+  - **NDA viole** = procedure client
+  - **Information vendue** au concurrent (suppose)
+  - **15 K EUR** indemnisation client
+  - **Audit complet** Slack obligatoire
+
+  **Cas 2 - Editeur SaaS 2024 (DM compromis)**
+
+  Employe pense ses DM Slack proteges. Recoit un mot de
+  passe d'un collegue ("le SSH du serveur prod c'est
+  XXXXX"). Compte du collegue compromis -> admin Slack
+  exfiltre tous ses DMs -> mots de passe extraits.
+
+  Breach prod 2 semaines apres.
+
+  **Cas 3 - Cabinet conseil 2022 (consultant externe)**
+
+  Consultant externe ajoute a Slack pour 3 mois. Acces
+  multi-channel guest. Mission terminee, consultant
+  toujours dans Slack. 6 mois apres : consultant rejoint
+  concurrent + Slack toujours accessible.
+
+  Cout : information cliente vendue. Sanction : -50 K EUR.
+
+  **Cas 4 - PME 2024 (apps tierces excessives)**
+
+  Audit DSI : 75 apps tierces installees dans Slack
+  workspace. Beaucoup avec permissions "lire tous les
+  messages". Suspicion (non prouvee) que certaines
+  exfiltraient.
+
+  Action :
+  - **Liste blanche** d'apps approuvees (15)
+  - **Suppression** des autres
+  - **Politique** d'approbation pour nouvelles apps
+
+  **Microsoft Teams - configurations similaires :**
+
+  **Equipes / Canaux** :
+  - **Equipe privee** = canaux non visibles publiquement
+  - **Canal prive** dans equipe publique = acces restreint
+  - **Canal partage** : multi-tenant
+
+  **Invites** :
+  - **External access** (federation) : autres organisations
+  - **Guest access** : externe ajoute a une equipe
+  - **Permissions** configurables
+
+  **Notion - cas particulier :**
+
+  Notion a des permissions complexes :
+  - **Shared with everyone** : tout le workspace
+  - **Public to internet** : DANGEREUX (cf ep 03)
+  - **Specific people** : recommande
+
+  Audit regulier des pages "Public to internet" obligatoire.
+
+  **La regle d'or :**
+
+  > **Outils de collaboration = configuration prive par
+  > defaut + invites externes encadres + DLP + retention
+  > limitee + audit annuel apps tierces. Canaux clients =
+  > prives. Mots de passe = pas dans Slack/Teams. Captures
+  > sensibilises. Configuration workspace par RSSI/DSI.**
+quiz:
+  - question: "Canal Slack pour projet client, configuration recommandee ?"
+    choices:
+      - { id: "a", label: "Public par defaut", correct: false }
+      - { id: "b", label: "PRIVE - acces restreint a l'equipe projet seulement. Public = toute l'organisation + ex-employes / consultants externes acces", correct: true }
+      - { id: "c", label: "Pas de canal", correct: false }
+    explanation: "Canaux clients = prives obligatoirement (acces restreint a equipe). Canal public Slack = toute l'organisation + invites externes peuvent voir, telecharger, capturer 2000 messages + 50 fichiers. Cas reel : ex-employe exfiltre avant depart = NDA viole + 15K EUR indemnisation."
+
+  - question: "Les DM Slack sont-ils vraiment prives ?"
+    choices:
+      - { id: "a", label: "Oui completement", correct: false }
+      - { id: "b", label: "Non - admin workspace peut exporter (Slack Pro/Business+). Admins peuvent rechercher. Pas confidentiel pour mots de passe / info sensible", correct: true }
+      - { id: "c", label: "Selon le plan", correct: false }
+    explanation: "DM Slack pas vraiment prives. Admin workspace peut exporter (Slack Pro/Business+). Recherche par admin possible. Compte compromis -> admin -> exfiltration DMs. Pour mots de passe / info sensible : gestionnaire MDP, pas DM."
+
+  - function: "Invite externe Slack (consultant), bonne pratique ?"
+    choices:
+      - { id: "a", label: "Acces 'all channels'", correct: false }
+      - { id: "b", label: "Single-channel guest (1 canal) ou Multi-channel guest avec acces specifique. Date expiration automatique 30-90j. Revue trimestrielle", correct: true }
+      - { id: "c", label: "Compte member normal", correct: false }
+    explanation: "Invite externe = Single-channel guest (acces a 1 canal seulement) ou Multi-channel guest avec acces specifique (pas all channels). Date expiration automatique 30-90j (offboarding cf saison cyber-rh ep 02). Revue trimestrielle des externes actifs."
+
+  - question: "Apps tierces Slack avec permissions 'lire tous les messages', risque ?"
+    choices:
+      - { id: "a", label: "Aucun", correct: false }
+      - { id: "b", label: "Risque majeur - exfiltration possible. Liste blanche apps approuvees + permissions minimales + audit annuel obligatoire", correct: true }
+      - { id: "c", label: "Que pour grandes entreprises", correct: false }
+    explanation: "Apps tierces avec 'lire tous messages' = exfiltration potentielle. Cas reel : audit DSI revele 75 apps installees, certaines suspectes. Solution : liste blanche d'apps approuvees par RSSI, permissions minimales (just enough), audit annuel, processus d'approbation pour nouvelles apps."
+---
+
+> 💡 **Pour aller plus loin** : configuration **Slack /
+> Teams** par defaut a revoir (canaux prives, invites
+> encadres, apps liste blanche). **Microsoft Defender for
+> Cloud Apps** (CASB) detecte les outils non-conformes.
+> Politique entreprise : projets clients = canaux prives,
+> mots de passe pas dans chat.

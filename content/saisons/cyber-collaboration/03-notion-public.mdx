@@ -1,0 +1,331 @@
+---
+title: "La page Notion publique trouvee par Google"
+durationMinutes: 5
+persona: "tous-collaborateurs"
+objective: "Eviter les fuites massives via pages Notion / SharePoint / Confluence accidentellement publiques (indexees par Google)"
+xpReward: 50
+scenario: |
+  Tu es chef de projet en PME. Vendredi 18h, tu recois alerte
+  Google : ton nom apparait dans une page Notion. Tu la
+  trouves :
+
+  Page : "PME Cyber Roadmap 2025"
+  Statut : "Public to internet" (visible sur le web)
+  Indexee par : Google
+  Contenu : strategie complete cyber 2025 + budgets + noms
+    employes critiques + planning detaille
+
+  Tu es sur que personne n'a partage le lien... mais les
+  pages Notion publiques sont indexes.
+
+  Que faire ?
+choices:
+  - id: "a"
+    label: "Pas grave, c'est juste indexe"
+    outcome: "bad"
+    feedback: "FAUX. Indexation Google = visible par tous (concurrents, attaquants, journalists). Strategie cyber + budgets + noms revele a tout le monde. Action immediate : changer en prive + audit toutes pages publiques + signaler IT."
+    points: -25
+  - id: "b"
+    label: "Action immediate : page en prive + Google removal request + audit COMPLET de toutes pages publiques de l'espace + politique : pas de 'Public to internet' sans validation RSSI"
+    outcome: "good"
+    feedback: "Procedure pro. Reaction rapide (privatisation), removal request Google (limite indexation), audit complet (autres pages exposees ?), politique d'entreprise. Cas reel : decouverte de 50+ pages publiques en quelques minutes par DSI."
+    points: 40
+  - id: "c"
+    label: "Je supprime la page entierement"
+    outcome: "neutral"
+    feedback: "Action correcte mais incomplete. Suppression OK (mais perte de propriete intellectuelle). Mieux : privatiser + sauvegarder + audit complet espace + Google removal (page peut rester dans cache Google quelques semaines)."
+    points: 15
+  - id: "d"
+    label: "Je laisse, ca disparaitra avec le temps"
+    outcome: "bad"
+    feedback: "DANGER. Google indexe rapidement et ne 'oublie' pas vite. La page peut etre cache indexes des annees. Action immediate obligatoire."
+    points: -20
+debrief: |
+  **Notion**, **Confluence**, **SharePoint** et autres outils
+  de wiki / docs partages permettent de marquer une page
+  **publique sur internet**. Cette fonctionnalite tres
+  pratique cause des fuites massives quand mal utilisee.
+
+  **Google indexe automatiquement** les pages publiques.
+  Recherche "site:notion.so [nom entreprise]" peut reveler des
+  documents internes.
+
+  **Statistiques (Bitglass 2024)** : 7% des entreprises ont
+  au moins 1 page Notion / SharePoint / Confluence
+  accidentellement publique avec donnees sensibles.
+
+  **Comment ca arrive :**
+
+  **Cause 1 : Bouton "Share to web" mal compris**
+
+  Notion :
+  - **Share** > **Share to web** = active visibility publique
+  - **Beaucoup d'employes** activent par erreur
+  - **Lien partageable** semble interne mais c'est public
+
+  **Cause 2 : Heritage de permissions**
+
+  - Page parent publique = enfants publics
+  - Pas evident a l'oeil
+
+  **Cause 3 : Workspace public**
+
+  - Notion permet workspace entierement public
+  - Configure pour usage public initial puis oublie
+
+  **Cause 4 : "Easier to share" sentiment**
+
+  - Pour partager rapidement avec un externe : passe en
+    public au lieu d'inviter nominativement
+  - Apres : oublie de re-privatiser
+
+  **Comment Google trouve :**
+
+  - **Crawlers** scrutent le web en permanence
+  - **Sitemap** Notion publie automatiquement
+  - **Liens** depuis blogs, forums, autres sites
+  - **Domaine** notion.so, sharepoint.com, atlassian.net
+    indexable
+
+  Recherche typique d'attaquant :
+  - `site:notion.so "confidential" "[entreprise]"`
+  - `site:notion.so "strategie 2025"`
+  - `site:notion.so "salaires"`
+
+  **Procedure de detection :**
+
+  **Etape 1 : Recherche Google**
+
+  Pour ton entreprise :
+  - `site:notion.so "[nom entreprise]"`
+  - `site:atlassian.net "[nom entreprise]"`
+  - `site:sharepoint.com "[nom entreprise]"`
+
+  Si resultats sortent : alertes potentielles.
+
+  **Etape 2 : Audit dans Notion / Confluence / SharePoint**
+
+  **Notion** :
+  - Settings > Members > Sharing
+  - Liste des pages partagees publiquement
+  - **Workspace settings > Public sharing** : peut etre
+    desactive globalement
+
+  **Confluence** :
+  - Spaces > Permissions > Anonymous access
+  - Pages > Restrictions
+  - Audit anonymous access
+
+  **SharePoint** :
+  - SharePoint admin center > Sharing
+  - **External sharing** > Anyone with link
+  - Sites > Permissions
+
+  **Etape 3 : Google Search Console**
+
+  Pour ton domaine principal :
+  - Indexed pages
+  - URL inspection
+  - Removal requests possibles
+
+  **Procedure de remediation :**
+
+  **Action 1 : Privatiser la page**
+
+  Notion :
+  - Page > Share > Share to web > Off
+
+  Confluence :
+  - Page > Restrictions > Remove anonymous access
+
+  SharePoint :
+  - Page > Share > Stop sharing OR Permissions
+
+  **Action 2 : Google Removal**
+
+  Google Search Console :
+  - **Removal Tool** : demande de retrait
+  - **Outdated content** : si page changee
+  - **Delai** : 24-48h pour retirer du cache
+
+  Sans Search Console (cas d'une page sur notion.so) :
+  - **Public URL Removal Tool** : tinyurl.com/ggl-removal
+  - **Note** : seulement temporary cache removal (90 jours)
+
+  **Action 3 : Audit complet**
+
+  - **Liste exhaustive** des pages publiques
+  - **Categorisation** : sensitive / non-sensitive
+  - **Privatisation** des sensibles
+  - **Documentation** ce qui doit rester publique (rare)
+
+  **Action 4 : Politique d'entreprise**
+
+  - **Pas de 'Public to internet'** par defaut
+  - **Validation RSSI** obligatoire pour pages publiques
+  - **Audit trimestriel**
+  - **Sensibilisation** equipe
+
+  **Configuration recommandee :**
+
+  **Notion** :
+
+  Workspace settings > Sharing :
+  - **Public sharing** : Disabled (par defaut)
+  - **Workspace search** : Members only
+  - **Guest access** : Approved members only
+
+  Plus : sensitivity settings.
+
+  **Confluence** :
+
+  Space permissions :
+  - **Anonymous access** : Off
+  - **External users** : Strict approval
+
+  **SharePoint** :
+
+  External sharing settings :
+  - **Anyone with link** : Off (default Specific people)
+  - **Expiration** : 30 days
+  - **DLP** active
+
+  **Le piege "ce sera trouve par hasard" :**
+
+  Faux. **Sitemap automatique** + **crawlers Google** =
+  indexation systematique. Les pages publiques sont:
+
+  - **Indexees** dans 24-72h
+  - **Recherchables** via Google
+  - **Cachees** des annees (cache.google.com)
+
+  **Le piege "personne ne devine l'URL" :**
+
+  Faux :
+  - **Sitemap** liste publiquement les pages
+  - **Backlinks** depuis blogs, reseaux sociaux
+  - **Wayback Machine** archive
+  - **Deviners URL** pour pages avec slug previsible
+
+  L'URL "secrete" n'est PAS un secret.
+
+  **Le piege "j'ai supprime, c'est OK" :**
+
+  Suppression seule ne suffit pas :
+  - **Cache Google** persistante (~90 jours)
+  - **Wayback Machine** archive (peut conserver des
+    annees)
+  - **Backups** chez les autres
+  - **Captures** d'ecran possibles
+
+  Solution : suppression + Google removal + acceptation que
+  certains snapshots persistent.
+
+  **Cas reels :**
+
+  **Cas 1 - PME 2024 (50+ pages publiques)**
+
+  DSI lance audit Notion : decouverte de **50+ pages publiques**
+  par employes (chaque ouvrait "Share to web" sans s'en
+  rendre compte) :
+
+  - 5 strategies clientes
+  - 10 budgets / planning
+  - 15 documents techniques
+  - 20 docs RH (organigrammes, salaires)
+
+  Action :
+  - Privatisation immediate de toutes
+  - Removal Google
+  - Politique : 'Public to internet' = approbation RSSI
+  - Sensibilisation equipe
+
+  Resultat : 0 page publique 6 mois apres.
+
+  **Cas 2 - Startup 2023 (strategie volee)**
+
+  Page Notion "Roadmap produit 2024" partagee publiquement
+  par CPO. Concurrent decouvre via Google. Strategie
+  copiee.
+
+  Cout : 6 mois de retard + perte de competitivite.
+
+  **Cas 3 - Cabinet 2024 (donnees clients)**
+
+  Confluence avec page client par defaut anonymous access.
+  Donnees clients indexees Google. Plainte client + RGPD.
+
+  Sanctions :
+  - CNIL : 80K EUR
+  - Procedure deontologique
+  - Reputation degradee
+
+  **Cas 4 - Hopital 2023 (donnees medicales)**
+
+  SharePoint avec lien anyone-with-link partage par medecin
+  pour discuter d'un cas. Lien reposted sur forum medical.
+  Donnees patient identifiees.
+
+  Sanctions :
+  - CNIL : 200K EUR
+  - Notification patient + procedure
+  - Sanction medicale
+
+  **Pour le RSSI - plan d'action immediate :**
+
+  Si tu reprend une PME et tu suspectes des pages publiques :
+
+  1. **Audit Google** : `site:notion.so "[entreprise]"` etc.
+  2. **Audit interne** : workspace settings, list pages
+  3. **Categorisation** : critical / important / standard
+  4. **Privatisation** des critiques d'abord
+  5. **Removal Google** si necessaire
+  6. **Politique** d'approbation RSSI
+  7. **Sensibilisation** equipe
+  8. **Audit recurrent** (trimestriel)
+
+  Cout : 1-2 j/h DSI + 0 EUR. ROI immediat.
+
+  **La regle d'or :**
+
+  > **Pages 'Public to internet' = visibles par tous (Google,
+  > concurrents, attaquants). Audit immediat de tous tes
+  > workspaces (Notion / Confluence / SharePoint).
+  > Privatisation par defaut + approbation RSSI pour
+  > exceptions. Google Removal pour cas urgents. Politique +
+  > sensibilisation = preventif.**
+quiz:
+  - question: "Une page Notion 'Public to internet', c'est quoi ?"
+    choices:
+      - { id: "a", label: "Visible par mon equipe", correct: false }
+      - { id: "b", label: "Visible par TOUS sur internet (indexee Google) - concurrents, attaquants, journalists peuvent trouver via 'site:notion.so [entreprise]'", correct: true }
+      - { id: "c", label: "Pas accessible", correct: false }
+    explanation: "'Public to internet' = visible par tous (pas que ton equipe). Google indexe les pages publiques (sitemap automatique + crawlers). Recherche 'site:notion.so [entreprise]' peut reveler des documents internes. 7% des entreprises ont au moins 1 page accidentellement publique."
+
+  - question: "Decouverte d'une page sensible publique, action immediate ?"
+    choices:
+      - { id: "a", label: "Attendre", correct: false }
+      - { id: "b", label: "Privatisation immediate + Google Removal (Search Console) + audit COMPLET espace (souvent autres pages aussi) + politique RSSI", correct: true }
+      - { id: "c", label: "Supprimer simplement", correct: false }
+    explanation: "Action complete : 1) Privatisation immediate (Share to web > Off), 2) Google Removal (Search Console), 3) Audit COMPLET de l'espace (cas reel : 50+ pages publiques decouvertes), 4) Politique : 'Public' = approbation RSSI. Suppression seule ne suffit pas (cache Google ~90j, Wayback Machine)."
+
+  - question: "Comment chercher des pages publiques de mon entreprise sur Google ?"
+    choices:
+      - { id: "a", label: "Impossible", correct: false }
+      - { id: "b", label: "site:notion.so '[entreprise]', site:atlassian.net, site:sharepoint.com - audit basique pour detecter exposition", correct: true }
+      - { id: "c", label: "Pas legal", correct: false }
+    explanation: "Audit Google : `site:notion.so '[entreprise]'`, `site:atlassian.net '[entreprise]'`, `site:sharepoint.com '[entreprise]'`. Recherche basique pour detecter pages exposees. Plus : audit dans les outils (workspace settings). Standard du DSI / RSSI pour audit periodique."
+
+  - question: "Politique recommandee pour pages 'Public to internet' ?"
+    choices:
+      - { id: "a", label: "Aucune politique", correct: false }
+      - { id: "b", label: "Approbation RSSI obligatoire pour exceptions. Sensibilisation. Audit trimestriel. Default = prive. Pour pages vraiment publiques (blog, doc public) : URL personnalisee", correct: true }
+      - { id: "c", label: "Tout publier", correct: false }
+    explanation: "Politique standard : 1) Default privatisation, 2) 'Public' = approbation RSSI obligatoire, 3) Sensibilisation equipe (formation), 4) Audit trimestriel, 5) Pour pages reellement publiques (blog, doc, FAQ) : URL personnalisee + cas justifie. Configuration : Notion workspace settings, SharePoint admin, Confluence space."
+---
+
+> 💡 **Pour aller plus loin** : audit Google `site:notion.so
+> '[entreprise]'`. **Notion / Confluence / SharePoint admin
+> settings** : restreindre 'Public to internet'. **Google
+> Search Console Removal Tool** pour cas urgents.
+> Sensibilisation equipe + politique RSSI = preventif.

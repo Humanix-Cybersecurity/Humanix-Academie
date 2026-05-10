@@ -1,0 +1,334 @@
+---
+title: "Travailler en coffee-shop : posture et acoustique"
+durationMinutes: 5
+persona: "tous-collaborateurs"
+objective: "Securiser ton activite professionnelle quand tu travailles en cafe / coworking : visios, ecran, voix, reseau"
+xpReward: 50
+scenario: |
+  Tu es independant ou en teletravail flex. Cafe a 14h, tu
+  prends une visio Teams importante avec un client.
+
+  Setup actuel :
+  - Cafe pleins (15 personnes)
+  - Ton ordinateur ouvert sur la table
+  - Ton ecran face au reste de la salle
+  - Pas de casque, haut-parleurs
+  - Wifi public du cafe
+  - Discussion : projet sensible client
+  - Notes prises sur ecran (visible des voisins)
+
+  Combien de problemes ?
+choices:
+  - id: "a"
+    label: "Aucun, c'est classique"
+    outcome: "bad"
+    feedback: "FAUX. 6 problemes : ecran visible (donnees), pas de casque (audio expose), wifi public non-fiable (interception), conversation strategique en public, notes visibles, posture pas pro. ~20% des incidents teletravail viennent de cafes."
+    points: -25
+  - id: "b"
+    label: "Au moins 6 : ecran public, audio sans casque, wifi non-securise, conversation sensible publique, notes visibles, posture exposee. Solutions : casque + screen privacy filter + VPN + wagon silencieux ou cabine"
+    outcome: "good"
+    feedback: "Identification correcte + solutions structurees. Casque + filtre confidentialite ecran + VPN + voix basse + dos au mur = setup pro pour coffee-shop. Cas extrems : differer ou cabine."
+    points: 40
+  - id: "c"
+    label: "Je tourne mon ecran vers le mur"
+    outcome: "neutral"
+    feedback: "Bon debut. Mais reste : audio sans casque, wifi public, voix porte. Solutions plus completes : casque + VPN + voix basse. Mieux : ne pas faire visio sensible en cafe."
+    points: 15
+  - id: "d"
+    label: "Je continue, c'est exceptionnel"
+    outcome: "bad"
+    feedback: "MAUVAIS. Une seule visio mal protegee peut suffire pour breach. Cafe = environnement non-securise. Pour info sensible : differer + bureau / domicile / cabine."
+    points: -10
+debrief: |
+  Le **travail en cafe / coworking** est commun mais cree
+  multiples risques. Sans precautions :
+
+  - **Visualisation** ecran par voisins
+  - **Ecoute** des conversations / visios
+  - **Wifi public** non-fiable (intercept, fake AP)
+  - **Vol** materiel possible
+  - **Captures** photo / video par tiers
+
+  ANSSI 2024 : 20% des incidents teletravail proviennent de
+  cafes / lieux publics.
+
+  **Les 6 risques principaux :**
+
+  **Risque 1 : Visualisation ecran (Shoulder surfing)**
+
+  Voisins peuvent voir :
+  - Mots de passe tape
+  - Donnees affichees
+  - Conversations Slack / email
+  - Documents ouverts
+
+  Etude Ponemon 2023 : 63% des employes ont vu des
+  informations confidentielles d'un voisin dans un lieu
+  public.
+
+  **Risque 2 : Ecoute audio**
+
+  Visio sans casque = audio des deux cotes audible :
+  - **Toi** parlant haut pour etre entendu
+  - **Tes interlocuteurs** au micro pour 15 voisins
+
+  Voix porte 3-5 metres en intermediaire ambiance.
+
+  **Risque 3 : Wifi public non-fiable**
+
+  - **Fake AP** : faux wifi (cf saison wifi-reseaux)
+  - **Man-in-the-middle** : intercept des donnees
+  - **DNS hijack** : redirection vers sites pirates
+
+  Memes le wifi du Starbucks officiel n'est pas chiffre par
+  defaut.
+
+  **Risque 4 : Vol materiel**
+
+  - Laptop laisse sans surveillance pour aller aux WC
+  - Sac vole pendant la visio
+  - Vol "express" en passant
+
+  Cas frequent : 30 secondes d'inattention = laptop vole.
+
+  **Risque 5 : Captures par tiers**
+
+  - **Photos** discretes du screen
+  - **Videos** des comportements (ouverture coffre-fort
+    mots de passe par exemple)
+  - **Captures** de conversations
+
+  **Risque 6 : Posture / image**
+
+  - Cafe = pas environnement pro
+  - Bruit de fond audible par interlocuteurs
+  - Image degradee (perception de seriosité)
+
+  **Les solutions :**
+
+  **Solution 1 : Casque (essentiel)**
+
+  - **Reduit** la portee de ta voix (tu parles moins fort)
+  - **Empeche** les autres d'entendre tes interlocuteurs
+  - **Ameliore** la qualite audio
+  - **Standard** pro
+
+  **Cout** : 30-300 EUR (Apple AirPods, Bose, Sony, Sennheiser).
+
+  **Solution 2 : Screen privacy filter**
+
+  Film de confidentialite pour ecran :
+
+  - **Visualisation** seule de face (angle 60deg)
+  - **Personnes a cote** ne voient rien
+  - **Cout** : 15-50 EUR
+  - **Marque** : 3M, Targus, Kensington
+
+  Indispensable pour profils sensibles (DAF, RSSI, juriste,
+  RH).
+
+  **Solution 3 : VPN**
+
+  Sur reseau wifi public :
+  - **VPN** chiffre tout le trafic
+  - **Empeche** intercept man-in-the-middle
+  - **Solutions** : NordVPN, ExpressVPN, ProtonVPN, Mullvad
+  - **Cout** : 5-15 EUR/mois
+
+  Pour entreprise : VPN d'entreprise (souvent inclus).
+
+  **Solution 4 : Posture / placement**
+
+  - **Dos au mur** (rien ne passe derriere)
+  - **Coin de salle** (pas en plein milieu)
+  - **Vue limitee** : positionner ecran loin des passages
+
+  **Solution 5 : Voix basse + langage code**
+
+  Pour info sensible :
+  - **Voix basse** (pas chuchotements)
+  - **Pas de noms** : "le projet" au lieu de "Acme Corp"
+  - **Pas de montants**
+  - **Pas de dates** precises
+
+  **Solution 6 : Materiel anti-vol**
+
+  - **Cable cadenas** (Kensington Slot) : 10-30 EUR
+  - **Toujours sur la table en visite WC** (cable au pied de
+    table)
+  - **Sac** garde sur les genoux
+  - **AirTag / Tile** dans le sac
+
+  **Solution 7 : Differer si possible**
+
+  Pour visio strategique / negociation :
+  - **Bureau** / domicile prefere
+  - **Cabine** dans certains coworkings (50-200 EUR/mois)
+  - **Lounges** d'aeroport business
+  - **Hotels** (chambre / suite)
+
+  **Setup recommande pour pros nomades :**
+
+  - **Casque** Bluetooth ou filaire
+  - **Screen privacy filter** sur le laptop
+  - **VPN d'entreprise** active sur tout reseau public
+  - **Cable cadenas** pour le laptop
+  - **Sacoche** discrete (pas de "pro" visible)
+  - **Position** dos au mur
+
+  Cout total : 100-500 EUR initial + VPN abonnement.
+
+  **Configuration anti-vol urgent :**
+
+  Si laptop vole :
+  - **Find My** (Apple) ou **Find My Device** (Microsoft)
+  - **Effacement a distance** si configurable
+  - **Plainte** police rapidement
+  - **Notification** RSSI (donnees pro compromises)
+  - **Changement** mots de passe critiques
+
+  **BitLocker / FileVault** active = donnees chiffrees sur
+  disque vole.
+
+  **Le piege "personne ne s'interesse a moi" :**
+
+  Statistiquement faux. Dans 50 personnes presentes :
+  - Quelques concurrents possibles (selon secteur)
+  - Quelques journalistes / curieux
+  - Quelques opportunistes (mots de passe vu = revente
+    underground)
+
+  Ciblage souvent **opportuniste**, pas seulement deliberé.
+
+  **Le piege "Starbucks wifi est OK" :**
+
+  Faux. Tout wifi public = non-securise par defaut :
+  - **Pas de chiffrement** entre toi et le routeur (sauf VPN)
+  - **Fake AP** possible (someone names "Starbucks" pour pieger)
+  - **DNS hijack** possible
+
+  Solution : VPN systematique sur tout reseau public.
+
+  **Le piege "le casque me protege completement" :**
+
+  Le casque protege l'audio, pas l'ecran. Tu peux toujours
+  etre :
+  - Vu (ecran)
+  - Photographie
+  - Vole
+
+  Solution : casque + screen privacy filter + posture.
+
+  **Recommandations selon visio :**
+
+  **Visio standard interne** (equipe, info pas sensible) :
+  - Casque suffit
+  - Posture decente
+
+  **Visio client / partenaire** :
+  - Casque + screen privacy filter
+  - Posture pro (dos au mur, eclairage correct)
+
+  **Visio negociation / strategique** :
+  - DIFFERER si possible
+  - Sinon : tous les outils + VPN + cabine si possible
+
+  **Visio confidentielle** :
+  - **Cafe = NON**
+  - Bureau / domicile / cabine
+
+  **Cas reels :**
+
+  **Cas 1 - Manager 2023 (vol laptop)**
+
+  Manager prend un cafe en allant a une reunion. Laisse son
+  laptop sur la table 2 minutes pour aller aux WC. Vole.
+
+  Heureusement :
+  - **BitLocker** active : donnees chiffrees inaccessibles
+  - **Find My Device** : laptop localise (vole, mais en
+    Lithuania)
+  - **Effacement a distance** done
+
+  Cout : 1500 EUR materiel + 500 EUR procedures. Donnees pro
+  preservees grace au chiffrement.
+
+  **Cas 2 - Avocate 2024 (shoulder surfing)**
+
+  Avocate travaille dans un cafe sur un dossier client
+  sensible. Voisin curieux prend des photos discretes.
+  Photos partagees sur reseaux sociaux (drole !) = client
+  identifie + procedure ouverte.
+
+  Sanctions :
+  - Procedure deontologique
+  - Indemnisation client
+  - Resiliation du dossier
+
+  **Cas 3 - DAF 2022 (visio sensible cafe)**
+
+  DAF en cafe, visio negociation acquisition. Ecoute
+  discretement par concurrent en table voisine. Concurrent
+  reagit avec offre concurrente le lendemain.
+
+  Cout : 2 mois de retard + repositionnement strategique.
+
+  **Cas 4 - PME 2024 (vol info via fake AP)**
+
+  Employe se connecte a "Starbucks_Free" (faux AP). Toutes
+  ses donnees interceptees pendant 30 min. Credentials
+  Microsoft 365 voles. 2 jours apres : phishing cible
+  reussi sur 10 collegues.
+
+  Cout : 100 K EUR breach.
+
+  **Coworking comme alternative :**
+
+  Espaces de coworking (WeWork, Spaces, Mama Works) :
+  - **Plus securise** que cafe (acces controle, badges)
+  - **Cabines** pour visios sensibles
+  - **Wifi** generalement plus securise
+  - **Cout** : 200-500 EUR/mois (utilisateurs reguliers)
+
+  **La regle d'or :**
+
+  > **Cafe = environnement public. Setup minimum : casque +
+  > screen privacy filter + VPN + cable cadenas + posture
+  > (dos au mur). Pour visio strategique : differer ou
+  > cabine. Wifi public = VPN systematique. Vol materiel =
+  > BitLocker / FileVault active = donnees protegees.**
+quiz:
+  - question: "Setup minimum pour travail en cafe ?"
+    choices:
+      - { id: "a", label: "Juste un ordinateur", correct: false }
+      - { id: "b", label: "Casque + screen privacy filter + VPN + cable cadenas + posture (dos au mur). 100-500 EUR initial + VPN abonnement", correct: true }
+      - { id: "c", label: "Aucun setup", correct: false }
+    explanation: "Setup pro nomade : Casque (audio prive 30-300 EUR), screen privacy filter (15-50 EUR), VPN (5-15 EUR/mois), cable cadenas Kensington (10-30 EUR), posture (dos au mur). Investissement 100-500 EUR + VPN abonnement. Cas reels : breach evite avec setup correct."
+
+  - question: "Wifi public 'Starbucks_Free' est-il safe ?"
+    choices:
+      - { id: "a", label: "Oui c'est officiel", correct: false }
+      - { id: "b", label: "NON. Pas de chiffrement, fake AP possible (faux nom Starbucks), DNS hijack. Toujours VPN sur reseau public", correct: true }
+      - { id: "c", label: "Selon l'heure", correct: false }
+    explanation: "Tout wifi public = non-securise par defaut. Pas de chiffrement entre toi et routeur. Fake AP possible (faux 'Starbucks_Free'). DNS hijack. Cas reel PME 2024 : connexion fake AP, credentials voles, breach 100K EUR. Solution : VPN systematique."
+
+  - question: "Vol de laptop en cafe, donnees protegees comment ?"
+    choices:
+      - { id: "a", label: "Espoir", correct: false }
+      - { id: "b", label: "BitLocker (Windows) / FileVault (Mac) chiffrement disque active = donnees inaccessibles + Find My Device pour effacement distant", correct: true }
+      - { id: "c", label: "Mot de passe Windows", correct: false }
+    explanation: "Vol laptop : 1) BitLocker/FileVault chiffre tout le disque = donnees inaccessibles meme sortis du laptop. 2) Find My Device (Microsoft) / Find My (Apple) = localisation + effacement distant. 3) Plainte + RSSI. Mot de passe Windows seul ne suffit pas (extraction du disque possible)."
+
+  - question: "Pour visio strategique / negociation sensible, lieu approprie ?"
+    choices:
+      - { id: "a", label: "Cafe", correct: false }
+      - { id: "b", label: "Bureau / domicile / cabine coworking. Differer si possible. Cafe = NON pour confidentiel", correct: true }
+      - { id: "c", label: "Aeroport public", correct: false }
+    explanation: "Visio strategique / negociation = environnement controle obligatoire. Bureau / domicile (porte fermee) / cabine coworking (50-200 EUR/mois ou 5-20 EUR par creneau). Cafe = JAMAIS pour confidentiel. Differer si pas de lieu approprie. Aeroport public = cher casse."
+---
+
+> 💡 **Pour aller plus loin** : **Coworking premium** (WeWork,
+> Spaces) pour cabines visios. **Cable cadenas Kensington**
+> obligatoire (10-30 EUR). **BitLocker / FileVault** active
+> partout. VPN d'entreprise (NordLayer, etc.) ou perso
+> (NordVPN, ProtonVPN). Setup pro = 100-500 EUR initial.
