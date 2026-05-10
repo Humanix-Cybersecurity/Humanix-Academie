@@ -1,0 +1,216 @@
+---
+title: "SPF, DKIM, DMARC : ce que doit savoir un dirigeant"
+durationMinutes: 8
+persona: "developer"
+objective: "Comprendre les 3 protocoles d'authentification email (SPF, DKIM, DMARC), savoir les configurer pour son domaine, lire un rapport DMARC, choisir entre p=none / quarantine / reject"
+xpReward: 90
+scenario: |
+  Mardi 14h, ton CEO recoit un appel paniqe d'un client : "On vient
+  de me virer 50 000 EUR sur un nouveau RIB. Vous m'avez envoye un
+  email hier disant que vous avez change de banque. C'etait pas vous ?"
+
+  Tu enquetes. L'email envoye au client venait du CEO, depuis l'adresse
+  exacte `pdg@humanix-academie.fr`. Mais le CEO n'a rien envoye.
+
+  Tu lances `dig humanix-academie.fr TXT` :
+
+  > humanix-academie.fr.  300  IN TXT "v=spf1 include:_spf.google.com ~all"
+  > _dmarc.humanix-academie.fr. 300 IN TXT "v=DMARC1; p=none; rua=mailto:dmarc@humanix.fr"
+
+  Tu vois `p=none`. Quelle est la situation ?
+choices:
+  - id: "a"
+    label: "p=none = pas de protection. N'importe qui sur Internet peut envoyer un email avec `From: pdg@humanix-academie.fr` (spoofing)"
+    outcome: "good"
+    feedback: "Exact diagnostic. p=none est le mode 'monitoring only' - DMARC envoie des rapports mais ne bloque rien. Un attaquant peut envoyer depuis n'importe quel SMTP en mettant ton domaine en From, les destinataires recoivent l'email sans alerte."
+    points: 35
+  - id: "b"
+    label: "DMARC est correctement configure - le SPF protege deja, p=none est suffisant"
+    outcome: "bad"
+    feedback: "FAUX. p=none ne fait QUE collecter des rapports. Il NE BLOQUE PAS les emails frauduleux. Le SPF seul ne suffit pas si le domaine From peut etre falsifie. La vraie protection est DMARC en p=quarantine ou p=reject."
+    points: -10
+  - id: "c"
+    label: "Le client est responsable - il aurait du verifier le RIB"
+    outcome: "bad"
+    feedback: "Pas la bonne reponse. Meme si le client a aussi une part de responsabilite, ton domaine est techniquement spoofable. Le tribunal peut considerer que tu as failli a 'mesures techniques de securite raisonnables' (RGPD article 32). C'est une vulnerabilite a corriger en priorite."
+    points: -10
+  - id: "d"
+    label: "Je passe DMARC en p=quarantine immediate, monitor 30 jours, puis p=reject"
+    outcome: "good"
+    feedback: "Procedure correcte. quarantine = les emails non-authentifies vont en spam. reject = les emails non-authentifies sont bloques par le serveur destinataire (ne sont jamais delivres). Migration progressive pour eviter de bloquer des emails legitimes oublies (newsletters, outils SaaS, etc.)."
+    points: 35
+debrief: |
+  L'authentification email est une defense **critique** mais souvent
+  ignoree. 3 protocoles complementaires : SPF, DKIM, DMARC.
+
+  **Le probleme : SMTP autorise tout le monde a se faire passer pour
+  qui il veut**
+
+  Le protocole SMTP (1982) ne fait AUCUNE verification d'identite. Tu
+  peux envoyer un email avec `From: pdg@apple.com` depuis n'importe
+  quel serveur si le destinataire ne verifie rien. C'est l'origine de
+  90% du phishing.
+
+  **Couche 1 - SPF (Sender Policy Framework, 2006)**
+
+  Tu publis dans ton DNS la liste des IPs/serveurs autorises a envoyer
+  pour ton domaine. Le serveur destinataire verifie que l'email vient
+  bien d'une de ces IPs.
+
+  ```
+  humanix-academie.fr. IN TXT "v=spf1 include:_spf.google.com ~all"
+  ```
+
+  - `include:_spf.google.com` : autorise les serveurs Google Workspace.
+  - `~all` : tout le reste = soft fail (note suspect, mais delivre).
+  - `-all` : tout le reste = hard fail (rejette).
+
+  **Limites SPF** :
+  - Casse en cas de forwarding (forward email = email envoye depuis
+    le serveur du forwarder, plus le bon SPF).
+  - Verifie le `MAIL FROM` SMTP (envelope), pas le `From` visible
+    dans le client - donc spoof du `From` reste possible.
+
+  **Couche 2 - DKIM (DomainKeys Identified Mail, 2007)**
+
+  Le serveur emetteur signe cryptographiquement l'email avec sa cle
+  privee. Le destinataire verifie la signature avec la cle publique
+  publiee dans le DNS.
+
+  ```
+  default._domainkey.humanix-academie.fr. IN TXT "v=DKIM1; k=rsa; p=MIGfMA0..."
+  ```
+
+  L'email contient un header :
+  ```
+  DKIM-Signature: v=1; a=rsa-sha256; d=humanix-academie.fr;
+                  s=default; h=From:Subject:Date; b=ABC123...
+  ```
+
+  Avantages DKIM :
+  - Survit au forwarding (la signature reste valide).
+  - Garantit integrite (modification du contenu casse la signature).
+  - Verifie le `From` visible (header).
+
+  **Couche 3 - DMARC (Domain-based Message Authentication, 2012)**
+
+  C'est le chef d'orchestre. DMARC dit : "tu dois passer SPF OU DKIM
+  pour le domaine `From`, sinon voici ce qu'on fait".
+
+  ```
+  _dmarc.humanix-academie.fr. IN TXT "v=DMARC1; p=reject;
+                                       rua=mailto:dmarc@humanix.fr;
+                                       ruf=mailto:forensic@humanix.fr"
+  ```
+
+  Les 3 politiques `p=` :
+
+  - **`p=none`** : monitoring uniquement. Recoit les rapports
+    d'agregation (`rua=`) sur qui envoie quoi avec ton domaine. Aucun
+    blocage. **A utiliser SEULEMENT en phase de mise en place pour
+    decouvrir les emetteurs legitimes.**
+
+  - **`p=quarantine`** : les emails qui echouent SPF+DKIM vont en
+    spam. Defense raisonnable, ne casse pas trop si un emetteur legit
+    est oublie.
+
+  - **`p=reject`** : les emails qui echouent SPF+DKIM sont REJETES
+    par le serveur destinataire (jamais delivres). **Defense maximale.**
+
+  **Le rapport DMARC (rua=)**
+
+  Chaque jour, les serveurs destinataires (Gmail, Microsoft, Yahoo)
+  t'envoient un fichier XML avec les statistiques :
+  - Nb d'emails recus avec ton domaine en From
+  - Combien ont passe SPF / DKIM
+  - IPs des emetteurs (legitimes ou attaquants)
+
+  Outils pour les lire facilement :
+  - **dmarcian** (fr.dmarcian.com) : analyse + dashboard
+  - **Postmark DMARC Digest** (gratuit)
+  - **Valimail Monitor** (gratuit)
+
+  **Migration DMARC en 4 etapes (procedure recommandee) :**
+
+  1. **Etape 0 (J)** : publier SPF (`~all`) et DKIM. Tester avec
+     `mail-tester.com` ou `mxtoolbox.com`.
+
+  2. **Etape 1 (J+0)** : publier `p=none` avec `rua=`. Recevoir les
+     rapports pendant 2-4 semaines pour identifier tous les emetteurs
+     legitimes (CRM, marketing, ERP, employes individuels via Outlook
+     externe...).
+
+  3. **Etape 2 (J+30)** : passer en `p=quarantine` avec `pct=10`
+     (10% du trafic est mis en quarantaine, le reste est en p=none).
+     Augmenter progressivement (`pct=25`, `pct=50`, `pct=100`) sur
+     2-4 semaines.
+
+  4. **Etape 3 (J+90)** : passer en `p=reject; pct=100`. Defense
+     maximale. Les emails frauduleux sont bloques avant arrivee.
+
+  **Outils de diagnostic gratuits :**
+
+  - **mxtoolbox.com/dmarc** : verifie ta config
+  - **mail-tester.com** : envoie un email a une adresse, recois un
+    score complet (SPF, DKIM, DMARC, contenu, headers).
+  - **dmarcian** : analyse des rapports DMARC
+  - **dig** en CLI :
+    ```
+    dig +short TXT _dmarc.humanix-academie.fr
+    dig +short TXT humanix-academie.fr | grep spf1
+    ```
+
+  **Cas reel (anonymise) :**
+
+  PME francaise du BTP (50 employes), client Sage. Un attaquant
+  spoofe `directeur@sage-clientfr.example` (vrai domaine du client),
+  envoie un email "le RIB du fournisseur a change" a la compta. Vir
+  de 87 000 EUR. La compta verifie le From - tout semble legitime.
+
+  Investigation : SPF du client = inexistant. DMARC = inexistant.
+  N'importe quel SMTP au monde pouvait envoyer comme `directeur@`. Le
+  client a paye - juridiquement, c'est sa faute (il n'a pas mis en
+  place les mesures techniques attendues en 2024).
+
+  **Pour ton domaine, AUJOURD'HUI :**
+
+  1. Verifie : `dig TXT _dmarc.tondomaine.fr`. Si vide ou `p=none`
+     depuis plus de 30 jours = probleme.
+  2. Si tu utilises Gmail/Microsoft 365 : leur admin documente comment
+     publier SPF/DKIM/DMARC. ~10 minutes de setup.
+  3. Active les rapports DMARC (`rua=`) vers une adresse dediee.
+quiz:
+  - question: "Quelle politique DMARC bloque vraiment les emails frauduleux ?"
+    choices:
+      - { id: "a", label: "p=none", correct: false }
+      - { id: "b", label: "p=reject (les serveurs destinataires rejettent les emails non-authentifies)", correct: true }
+      - { id: "c", label: "p=monitor", correct: false }
+    explanation: "p=none = monitoring only (rapports mais aucun blocage). p=quarantine = en spam. p=reject = bloque a la livraison. Pour une defense effective contre le spoofing : viser p=reject apres une periode de monitoring."
+
+  - question: "Difference entre SPF et DKIM ?"
+    choices:
+      - { id: "a", label: "Aucune", correct: false }
+      - { id: "b", label: "SPF verifie l'IP emettrice ; DKIM signe cryptographiquement le contenu de l'email", correct: true }
+      - { id: "c", label: "SPF est plus recent", correct: false }
+    explanation: "SPF (2006) : whitelist d'IPs autorisees a envoyer. DKIM (2007) : signature cryptographique du contenu via cle publique DNS. Complementaires : DMARC (2012) les orchestre."
+
+  - question: "Pourquoi commencer par p=none avant p=reject ?"
+    choices:
+      - { id: "a", label: "C'est plus rapide", correct: false }
+      - { id: "b", label: "p=none collecte des rapports pour identifier les emetteurs legitimes oublies (CRM, marketing) avant de bloquer", correct: true }
+      - { id: "c", label: "C'est obligatoire RGPD", correct: false }
+    explanation: "Phase de monitoring (2-4 semaines en p=none avec rua=) pour decouvrir TOUS les emetteurs legitimes que ta boite n'a pas en tete : CRM, ERP, outils marketing, employes via clients tiers. Sinon p=reject direct = tu blockes du courant legitime."
+
+  - question: "Tu publies p=reject. Que se passe-t-il pour un email spoofe avec ton domaine en From ?"
+    choices:
+      - { id: "a", label: "Il est livre normalement", correct: false }
+      - { id: "b", label: "Le serveur destinataire (Gmail, Outlook) le rejette - il n'arrive jamais a destination", correct: true }
+      - { id: "c", label: "Il va en quarantine", correct: false }
+    explanation: "p=reject demande au serveur destinataire de rejeter l'email. Le destinataire ne le voit JAMAIS (pas en spam, pas du tout). C'est la defense maximale contre le spoofing."
+---
+
+> 💡 **Pour aller plus loin** : la doc **dmarc.org** est exhaustive.
+> Pour le quotidien : **mxtoolbox.com** pour les checks, **dmarcian.com**
+> ou **valimail.com** pour les rapports DMARC mensuels. Cas reel et
+> approche pratique : **dmarc.org/wiki/FAQ**. La RFC 7489 (DMARC) est
+> lisible si tu veux comprendre les details.
