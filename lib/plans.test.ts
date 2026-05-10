@@ -141,6 +141,7 @@ describe("planHasFeature", () => {
       phishing_ia: ["pro", "enterprise"],
       vishing: ["pro", "enterprise"],
       smishing: ["pro", "enterprise"],
+      quishing: ["pro", "enterprise"],
       marketplace: ["pro", "enterprise"],
       sso_enterprise: ["enterprise"],
       multi_site: ["enterprise"],

@@ -72,6 +72,15 @@ const FEATURE_PITCH: Record<
       "Vecteur trop souvent oublié : SMS contourne les filtres email et bénéficie d'une confiance instinctive.",
     ],
   },
+  quishing: {
+    emoji: "🔳",
+    title: "Quishing (QR code piégé physique)",
+    benefits: [
+      "4 templates d'affiches piégées prêts à imprimer : faux WiFi, faux menu, faux affichage RH/CSE, fausse amende ANTAI.",
+      "Génération PDF souveraine offline (lib qrcode + react-pdf, 0 service externe). Un QR unique trackable par destinataire.",
+      "Test physique unique : couvre la zone d'attaque la plus oubliée (parking, cafétéria, salles de réunion). Idéal pour le Cybermois ou avant une formation présentielle.",
+    ],
+  },
   marketplace: {
     emoji: "🛒",
     title: "Marketplace de modules contributeurs",
