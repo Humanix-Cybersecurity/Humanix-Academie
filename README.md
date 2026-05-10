@@ -110,6 +110,23 @@ Premier compte admin :
 - Si `BOOTSTRAP_ADMIN_EMAIL` est configuré → le compte est créé au boot
 - Sinon : `docker compose exec app npx tsx scripts/bootstrap-admin.ts`
 
+Par défaut, le tout-premier compte est créé en `SUPERADMIN` (accès cross-tenant,
+modération plateforme). Surcharge via `BOOTSTRAP_ADMIN_ROLE` (valeurs :
+`SUPERADMIN | ADMIN | RSSI | MANAGER`).
+
+**Promouvoir un compte existant en SUPERADMIN** — si un déploiement antérieur
+avait provisionné votre compte avec un rôle inférieur (ex. ancienne version qui
+forçait `ADMIN`), réexécutez le bootstrap avec `BOOTSTRAP_ADMIN_EMAIL` pointant
+sur votre email :
+
+```bash
+docker compose exec app npx tsx scripts/bootstrap-admin.ts
+```
+
+Le script détecte que le compte existe déjà et le promeut au rôle demandé. Pas
+de modification DB manuelle nécessaire. L'opération est idempotente : un compte
+qui a déjà le rôle cible (ou supérieur) reste intact.
+
 ### Tâches planifiées (cron)
 
 Pour activer le forecast, les badges, l'observatoire breaches, etc. :
