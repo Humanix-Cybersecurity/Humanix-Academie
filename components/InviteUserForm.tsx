@@ -24,7 +24,7 @@ export default function InviteUserForm() {
       } catch (e: any) {
         const msg =
           e?.message === "email_taken"
-            ? "Cet email est déjà inscrit dans la PME."
+            ? "Cet email est déjà inscrit dans l'organisation."
             : e?.message === "invalid_email"
               ? "Email invalide."
               : "Impossible d'inviter cet utilisateur.";

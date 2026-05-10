@@ -45,8 +45,8 @@ export default async function ExpertsPage() {
             style={{ animationDelay: "220ms" }}
           >
             Pas de catalogue genere en interne. Chaque module porte le nom d'un
-            professionnel français qui en assume la signature : RSSI de PME,
-            consultants, gendarmes cyber, formateurs specialises.
+            professionnel français qui en assume la signature : RSSI,
+            consultants en sécurité, gendarmes cyber, formateurs specialises.
           </p>
         </section>
       </HexBackdrop>
@@ -170,8 +170,9 @@ export default async function ExpertsPage() {
         </h2>
         <p className="opacity-90 mb-6 max-w-xl mx-auto leading-relaxed relative">
           Publie 1 module dans la marketplace, et fais partie d'une
-          bibliotheque vivante consultee par des milliers de PME francaises.
-          Visibilite, lien LinkedIn, badge auteur sur chaque module installe.
+          bibliotheque vivante consultee par des milliers d'apprenants
+          francais - particuliers, equipes, organisations. Visibilite,
+          lien LinkedIn, badge auteur sur chaque module installe.
         </p>
         <Link
           href="/contact?sujet=expert"
