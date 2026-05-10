@@ -1,0 +1,329 @@
+---
+title: "Le mail perso sur le poste pro"
+durationMinutes: 5
+persona: "tous-collaborateurs"
+objective: "Comprendre les regles d'usage du mail perso au bureau (RGPD, vie privee, separation pro/perso) et les bonnes pratiques"
+xpReward: 50
+scenario: |
+  Tu es employe en PME 80 personnes. Tu as ton Gmail perso
+  ouvert dans un onglet Chrome au bureau (pour gerer ta vie
+  privee : RDV medecin, banque, famille).
+
+  Le DSI annonce : "Nous allons mettre en place un EDR sur les
+  postes pour detecter les menaces. Nous voyons votre activite
+  reseau."
+
+  Tu paniques : "Mon mail perso va etre lu ? Mes RDV medecin
+  visibles ?"
+
+  Tu reagis comment ?
+choices:
+  - id: "a"
+    label: "Je continue a utiliser mon Gmail perso au bureau, je m'en moque"
+    outcome: "bad"
+    feedback: "Imprudent. Memes si la jurisprudence protege le mail prive, l'usage de Gmail au bureau cree des risques : phishing perso = compromission pro, donnees melangees, surveillance reseau peut voir les destinations (donc mediatricien)."
+    points: -15
+  - id: "b"
+    label: "Je passe mes activites perso sur mon telephone perso (4G), je separe strictement. Je verifie la charte informatique sur l'usage du mail perso au bureau"
+    outcome: "good"
+    feedback: "Excellente approche. Separation perso/pro = standard. Telephone perso (sans wifi pro) = pas de monitoring possible. Verification charte = comprendre les regles de TON entreprise. Pas d'inquietude excessive."
+    points: 35
+  - id: "c"
+    label: "Je supprime tous mes mails perso et je n'utilise plus que le pro"
+    outcome: "neutral"
+    feedback: "Trop radical. Tu as droit a une vie privee. Le mail perso reste autorise (jurisprudence Cour de cassation), mais a usage modere et hors poste pro idealement."
+    points: 5
+  - id: "d"
+    label: "Je porte plainte contre l'entreprise pour atteinte a vie privee"
+    outcome: "bad"
+    feedback: "FAUX. L'entreprise a le DROIT de monitoring son SI (avec information CSE et limites). Le ton doit etre dialogue, pas conflit. Lis la charte, pose des questions au DSI, applique la separation perso/pro."
+    points: -10
+debrief: |
+  L'usage du **mail perso au bureau** est un sujet sensible
+  qui melange :
+
+  - **Vie privee** de l'employe (Code du travail, jurisprudence)
+  - **Securite IT** de l'entreprise
+  - **Surveillance** legitime par l'employeur
+  - **RGPD** (donnees personnelles de l'employe)
+
+  La regle generale : **separation pro/perso** pour eviter
+  tous les risques.
+
+  **Le cadre juridique :**
+
+  **Cour de cassation 2001 - Arrêt Nikon**
+
+  Etablit que :
+  - L'employe a droit a la vie privee, **MEME** au bureau
+  - Les mails identifies "personnel" ne peuvent pas etre lus
+    par l'employeur (sauf circonstances exceptionnelles +
+    presence de l'employe + autorisation judiciaire)
+  - L'usage du mail PRO pour des affaires personnelles est
+    tolere mais encadre
+
+  **Cour de cassation 2018 - Arrêt SNCF**
+
+  Precise :
+  - Les fichiers / mails par defaut sont reputes professionnels
+  - L'employeur peut les consulter sans presence de l'employe
+  - SAUF s'ils sont marques "personnel"
+
+  **Donc** :
+  - **Mail perso (Gmail, Outlook perso)** : protege par la
+    vie privee
+  - **Mail pro avec mention "personnel"** : protege
+  - **Mail pro sans mention** : reputee pro, consultable
+
+  **Les risques d'utiliser le mail perso au bureau :**
+
+  **Risque 1 : Surveillance reseau (NON les contenus)**
+
+  Memes si l'employeur ne peut pas LIRE tes mails perso, il
+  peut **VOIR** :
+  - Les destinations (gmail.com, outlook.live.com)
+  - Les volumes de trafic
+  - Les heures d'usage
+  - **Pas le contenu** (HTTPS chiffre)
+
+  Conclusion : l'employeur sait que tu utilises Gmail mais ne
+  voit pas le contenu.
+
+  **Risque 2 : Phishing perso = compromission pro**
+
+  Tu cliques sur un phishing dans Gmail au bureau :
+  - Le malware se telecharge sur le poste PRO
+  - Acces au reseau pro de l'entreprise
+  - Compromission des donnees pro
+
+  **Frequence** : 5-10% des breaches PME viennent de ce vecteur.
+
+  **Risque 3 : Confusion / fuite**
+
+  - Tu copies-colles par erreur des donnees pro dans un mail
+    perso
+  - Tu partages des fichiers pro via ton Drive perso
+  - Donnees pro chez un tiers (Google) sans contrat
+
+  **Risque 4 : Distraction**
+
+  - Notifications constantes
+  - Productivite degradee
+  - Interruptions tout au long de la journee
+
+  **Risque 5 : Image / climat**
+
+  - Ton manager voit que tu passes 20% du temps sur Gmail
+  - Suspicion (justifiee ou non) sur ton implication
+
+  **Les bonnes pratiques :**
+
+  **Pratique 1 : Telephone perso (4G)**
+
+  - Tes affaires perso sur **ton telephone perso** avec **ta**
+    connexion 4G (pas le wifi pro)
+  - Aucun monitoring possible par l'entreprise
+  - Vie privee preservee
+
+  **Cout** : forfait 4G personnel (deja existant).
+
+  **Pratique 2 : Pause dediee perso**
+
+  - Pendant pauses cafe / dejeuner
+  - Hors heures de travail (avant/apres)
+  - **Pas pendant** la concentration pro
+
+  **Pratique 3 : Boite "perso vital"**
+
+  - Pour les vraies urgences (medecin, famille, banque)
+  - Acces rapide depuis le smartphone perso
+  - Ne pas tout consulter, juste les urgents
+
+  **Pratique 4 : Separation des comptes**
+
+  - **Compte Google pro** + **compte Google perso** :
+    differents
+  - **Pas de profile Chrome** partage entre pro et perso
+  - **Pas de sync auto** des bookmarks/passwords
+
+  **Pratique 5 : Configuration anti-fuite**
+
+  - Pas de copy/paste rapide entre fenetres
+  - Pas de "share to" entre apps perso et pro
+  - Verification mentale avant d'envoyer
+
+  **Que peut faire / ne pas faire l'employeur :**
+
+  **Peut faire** :
+  - **Surveillance reseau** (volumes, destinations, pas
+    contenu) avec information CSE
+  - **Filtrage URL** : bloquer Gmail / Facebook au bureau
+    (apres consultation CSE)
+  - **Logs d'acces** au SI pro
+  - **Charte informatique** definissant les usages
+  - **Consultation des mails pro** (sauf mention "personnel")
+
+  **Ne peut pas faire** :
+  - **Lire les mails perso** (Gmail, Outlook perso)
+  - **Decrypter le HTTPS** sans accord judiciaire
+  - **Surveillance massive** sans information CSE / CNIL
+  - **Acces aux comptes perso** (mot de passe vole)
+  - **Sanctionner** l'usage occasionnel modere du mail perso
+
+  **Exception : circonstances exceptionnelles**
+
+  En cas d'incident grave (suspicion de fuite, vol de donnees) :
+  - Acces aux mails perso possible avec autorisation judiciaire
+  - Presence de l'employe + huissier + IT
+  - Procedure tres encadree (Code travail + Code procedure
+    civile)
+
+  **Le piege "je peux tout faire chez moi" :**
+
+  Beaucoup d'employes pensent : "comme c'est ma vie privee,
+  je peux tout utiliser". MAIS :
+
+  - **Pas de monitoring** = pas de risque sanction directe
+  - **Mais risques techniques** (phishing, confusion, fuite)
+  - **Et image** : meme sans monitoring, le manager voit le
+    temps passe
+
+  Solution : usage modere, vraiment urgent.
+
+  **Le piege "le DSI lit mes mails perso" :**
+
+  Faux dans 99% des cas :
+  - **Techniquement** complique (HTTPS chiffre)
+  - **Juridiquement** interdit (sauf circonstance exceptionnelle)
+  - **Pratiquement** : le DSI a autre chose a faire
+
+  Ce que le DSI VOIT :
+  - Tu vas sur gmail.com (volume + duree)
+  - Tu telecharges des PJ
+  - Tu envoies / recois (volume seulement)
+
+  Pas le contenu.
+
+  **Le piege "je n'ai rien a cacher" :**
+
+  Argument tres frequent mais errone :
+  - **Ce n'est pas a l'entreprise** de decider ce qui doit
+    etre cache ou pas
+  - **Vie privee** = droit fondamental
+  - **Risques techniques** quand meme (phishing, confusion)
+
+  Solution : separer non pas par pudeur mais par hygiene.
+
+  **Configuration recommandee :**
+
+  **Sur ton telephone perso** :
+  - Mail perso (Gmail, Outlook perso)
+  - WhatsApp / Signal perso
+  - Banque perso
+  - Sante perso
+  - Connecte via **ta** 4G (pas le wifi pro)
+
+  **Sur ton ordinateur pro** :
+  - Mail pro
+  - Outils pro (CRM, ERP, Office)
+  - **Eventuellement** : mail perso pour vraies urgences,
+    via navigateur prive
+
+  **Sur ton ordinateur perso** :
+  - Tout perso
+  - Pas de donnees pro (Shadow IT, cf saison stockage-cloud
+    ep 02)
+
+  **La charte informatique :**
+
+  Verifie ce que dit ta charte :
+
+  - **Usage du mail perso** : autorise / restreint / interdit
+  - **Niveau de monitoring** : information requise CSE
+  - **Sanctions** en cas de manquement
+  - **Procedures** d'incident
+
+  **Cas reel : PME 2023 (compromission via Gmail perso)**
+
+  Comptable utilisait Gmail perso au bureau (pratique courante).
+  A clique sur un phishing dans son Gmail. Le malware s'est
+  installe sur le poste pro et a acces au reseau pro :
+  - Fuite de 5000 fichiers clients
+  - Notification CNIL + amende
+  - Cout total : 80 K EUR
+
+  Cause : usage de Gmail perso non securise au bureau.
+  Solution post-incident : Gmail bloque sur poste pro,
+  encouragement usage telephone perso pour perso.
+
+  **Cas reel : Cabinet 2022 (RGPD)**
+
+  Avocat envoyait des documents clients sensibles via son Gmail
+  perso (plus pratique). Compte Gmail compromis (mot de passe
+  reutilise). 200 dossiers clients exposes.
+
+  Sanctions :
+  - CNIL : 30 K EUR
+  - Ordre des avocats : sanction professionnelle
+  - Reputation : presse local
+
+  **Cas reel : Manager 2024 (sanction injustifiee annulee)**
+
+  Manager licencie pour "usage excessif du mail perso au
+  bureau". Recours aux prud'hommes : tribunal donne raison au
+  manager (usage modere, pas d'impact prouve sur son
+  travail).
+
+  Sanction annulee + dedommagement.
+
+  Lecon : la sanction n'est pas automatique. Doit etre
+  proportionnee + prouvee.
+
+  **Recommandation simple en 1 phrase :**
+
+  > "Mail perso = telephone perso + 4G perso. Mail pro =
+  > ordinateur pro + reseau pro. Si vraiment besoin d'un mail
+  > perso au bureau, modere et navigation privee."
+
+  **La regle d'or :**
+
+  > **Mail perso au bureau = autorise mais a risques techniques.
+  > Solution simple : telephone perso + 4G. Vie privee
+  > respectee + securite IT. La charte informatique encadre
+  > sans interdire totalement (illegal). Usage modere = pas
+  > de probleme.**
+quiz:
+  - question: "L'employeur peut-il lire tes mails Gmail perso au bureau ?"
+    choices:
+      - { id: "a", label: "Oui sans probleme", correct: false }
+      - { id: "b", label: "NON. Cour de cassation : vie privee protegee. L'employeur voit les destinations (gmail.com) mais pas le contenu (HTTPS). Sauf circonstance exceptionnelle + autorisation judiciaire", correct: true }
+      - { id: "c", label: "Oui car c'est sa machine", correct: false }
+    explanation: "Cour de cassation 2001 (Nikon) : vie privee protegee meme au bureau. Employeur voit destinations / volumes / heures (logs reseau) mais pas le contenu (HTTPS chiffre). Lecture du contenu = circonstance exceptionnelle + autorisation judiciaire + presence employe."
+
+  - question: "Tu cliques sur un phishing dans ton Gmail perso au bureau, consequence ?"
+    choices:
+      - { id: "a", label: "Aucune", correct: false }
+      - { id: "b", label: "Le malware s'installe sur le POSTE PRO et peut acceder au reseau pro = fuite donnees pro = breach. 5-10% des breaches PME viennent de ce vecteur", correct: true }
+      - { id: "c", label: "Le DSI te protege", correct: false }
+    explanation: "Phishing perso au bureau = malware sur poste PRO = compromission reseau pro. 5-10% des breaches PME viennent de ce vecteur (cas reel : 80K EUR). Le risque n'est pas surveillance par l'employeur mais compromission technique. Solution : separation telephone perso."
+
+  - question: "Solution simple pour separer pro et perso au bureau ?"
+    choices:
+      - { id: "a", label: "Tout sur le poste pro", correct: false }
+      - { id: "b", label: "Mail perso + activites perso = telephone perso + 4G perso (pas le wifi pro). Aucun monitoring possible + securite preservee", correct: true }
+      - { id: "c", label: "Tout sur l'ordinateur perso au bureau", correct: false }
+    explanation: "Solution simple : telephone perso (avec ta 4G) pour tout perso. Aucun monitoring possible (pas de wifi pro). Vie privee preservee. Securite poste pro preservee. Cout marginal : forfait 4G perso (deja existant)."
+
+  - question: "Une sanction pour 'usage excessif du mail perso' est-elle automatique ?"
+    choices:
+      - { id: "a", label: "Oui automatiquement", correct: false }
+      - { id: "b", label: "NON. Doit etre proportionnee + prouvee + impact reel sur le travail. Cas reel : sanction annulee aux prud'hommes pour usage modere", correct: true }
+      - { id: "c", label: "Toujours", correct: false }
+    explanation: "Sanction non automatique. Cour de cassation : usage modere du mail perso au bureau = tolere. Sanction doit etre proportionnee + prouvee + impact reel sur le travail. Cas reel : licenciement annule pour usage 'excessif' non prouve. Equilibre obligatoire."
+---
+
+> 💡 **Pour aller plus loin** : **Telephone perso + 4G perso**
+> = solution la plus simple et safe. Charte informatique de
+> ton entreprise definit les regles precises. **CNIL** :
+> guide "Vie privee au travail" gratuit. **Cour de cassation
+> Nikon 2001** : jurisprudence cle de la vie privee au bureau.
