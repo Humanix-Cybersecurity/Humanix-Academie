@@ -459,6 +459,11 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
                 meta={meta}
                 activeCount={activeCount}
                 totalCount={items.length}
+                // Replie par defaut pour une vue degagee. Si l'admin a une
+                // recherche / un filtre actif, on auto-deplie les familles
+                // qui contiennent des resultats — sinon il filtre et ne voit
+                // rien.
+                forceOpen={hasFilters}
                 onSelectAll={() =>
                   setSelected((prev) => {
                     const next = new Set(prev);
@@ -785,15 +790,26 @@ function FamilySection({
   activeCount,
   totalCount,
   onSelectAll,
+  forceOpen = false,
   children,
 }: {
   meta: { label: string; emoji: string; description: string };
   activeCount: number;
   totalCount: number;
   onSelectAll: () => void;
+  /** Si true, force la section ouverte (utile quand un filtre est actif).
+   * L'utilisateur garde la main pour la replier ensuite via le toggle. */
+  forceOpen?: boolean;
   children: React.ReactNode;
 }) {
-  const [collapsed, setCollapsed] = useState(false);
+  // Replie par defaut. Si forceOpen change a true (l'admin tape une
+  // recherche / active un filtre), on ouvre automatiquement pour montrer
+  // les resultats. On ne re-ferme pas quand forceOpen redevient false :
+  // l'admin garde le controle de son etat manuel.
+  const [collapsed, setCollapsed] = useState(!forceOpen);
+  useEffect(() => {
+    if (forceOpen) setCollapsed(false);
+  }, [forceOpen]);
   return (
     <section>
       <header className="mb-2 flex items-center gap-3 px-1">
