@@ -6,7 +6,7 @@
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Made in France](https://img.shields.io/badge/Made%20in-France-blue?labelColor=blue&color=red)](https://humanix-cybersecurity.fr)
-[![Stack](https://img.shields.io/badge/stack-Next.js%2014%20%C2%B7%20Prisma%20%C2%B7%20PostgreSQL-black)](https://nextjs.org)
+[![Stack](https://img.shields.io/badge/stack-Next.js%2015%20%C2%B7%20React%2019%20%C2%B7%20Prisma%20%C2%B7%20PostgreSQL-black)](https://nextjs.org)
 [![CISO Assistant](https://img.shields.io/badge/integrates-CISO%20Assistant-brightgreen)](https://github.com/intuitem/ciso-assistant-community)
 
 ---
@@ -29,34 +29,25 @@ souverain, intégrée nativement à CISO Assistant.
 
 ## En 30 secondes
 
-- **Plateforme web Next.js** multi-tenant, gamifiée, mobile-first
-- **48 modules pédagogiques experts** sur **8 saisons complètes** (phishing, mots de passe, données sensibles, télétravail, fraude-président, ransomware, IA générative, DPO-quotidien) + 18 saisons supplémentaires en fallback structuré
-- **Gamification réelle** : XP, badges, mascotte évolutive, classements internes
-- **Console dirigeant** : score de risque humain, rapport de conformité PDF, actions recommandées
-- **Espace DPO dédié** : dashboard RGPD privé + générateur AIPD + page publique
+- **Plateforme web Next.js 15 / React 19** multi-tenant, gamifiée, mobile-first
+- **27 saisons · 183 modules MDX experts** (phishing, vishing, smishing, quishing, mots de passe, MFA, données sensibles, télétravail, fraude-président, ransomware, IA générative, Cyber-RH, Cyber-Compta, Cyber-Dev, supply chain, NIS2, Sapin II, vie privée bureau, sauvegardes, réseaux Wi-Fi, mobile, visios, stockage cloud, crise cyber, DPO…)
+- **Gamification réelle** : XP, badges, mascotte évolutive Hex, classements internes, saisons en accordéon repliable
+- **Console dirigeant** dashboard temps-réel : score de risque humain, KPIs business, top performers, urgent actions, rapport conformité PDF, export OSCAL
+- **Forecast & analytics avancé** : régression linéaire J+30 sur le score tenant, top movers individuels, corrélation incidents ↔ sensibilisation
+- **Espace DPO** : dashboard RGPD interne, file d'effacement art. 17, générateur AIPD, rétention configurable par tenant (art. 5.1.e), counters 90j
+- **Quick Setup Wizard** : 4 écrans pour configurer un tenant fresh en <5 min
+- **AdminSearchBox** (`Ctrl+K`) : recherche transverse pages + utilisateurs + saisons
+- **Cookie consent CNIL-friendly** + Plausible Analytics (config self-host ou cloud)
 - **MCP Server** premier mover SAT/HRM (Claude Desktop / Mistral / GPT)
-- **Vishing souverain** Mistral (Paris) + TTS Voxtral (Marie 6 émotions FR) ou Piper local au choix
-- **Narration audio des modules** : cache MP3 pré-rendu via `npm run tts:build`, lecture instantanée côté apprenant
+- **Phishing simulé** + **Vishing** + **Smishing** + **Quishing** souverains, IA Mistral, anti-PII automatique
+- **Narration audio des modules** : cache MP3 pré-rendu Voxtral (`npm run tts:build`), streaming progressif natif `<audio>`, démarrage <100 ms en cache hit
 - **Connecteur natif CISO Assistant** : preuves de conformité exportées automatiquement
 - **Format OSCAL v1.1.2** (NIST) + CEF (Sentinel, Splunk, Sekoia, QRadar)
 - **API REST** + webhooks signés HMAC-SHA256
-- **Vishing + Smishing souverains** Mistral (Paris) - templates SMS/voix illimités, anti-PII automatique
 - **Stack 100 % souveraine** : hébergement Scaleway Paris, email Scaleway TEM, paiement Payplug, IA Mistral
-- **Sécurité défense en profondeur** : CSP strict, middleware edge sur `/admin`, DOMPurify (audit Cure53), HSTS preload, anti-SSRF whitelist, anti-PII sur prompts. Pentest interne du 7 mai 2026 : 0 critique exploité (cf. [`docs/SECURITY_AUDIT.md`](./docs/SECURITY_AUDIT.md))
-- **Conformité multi-cadre** : RGPD · NIS2 · **Loi Sapin II Art. 17** (formation anti-corruption obligatoire pour les entreprises >500 salariés ou CA >100M€) · ISO 27001:2022 · ANSSI HG · NIST CSF. Mapping technique versionné dans [`lib/mapping-grc.ts`](./lib/mapping-grc.ts), export OSCAL pour CISO Assistant. Cf. [`docs/COMPLIANCE_SAPIN2.md`](./docs/COMPLIANCE_SAPIN2.md) pour le positionnement Sapin II spécifique
-- **Programme de divulgation responsable** : [`/.well-known/security.txt`](https://humanix-cybersecurity.fr/.well-known/security.txt) (RFC 9116)
-- **Mode démo** intégré pour tester sans installer
-
----
-
-## Aperçu
-
-| | |
-|:---:|:---:|
-| **Audit Cyber Flash · 5 min**<br/>Diagnostic gratuit avec rapport PDF | **Cyber-météo France · CERT-FR**<br/>Niveau d'alerte national en temps réel |
-| <img src="./public/screenshots/audit-flash-desktop.png" alt="Page d'audit cyber flash" width="100%"> | <img src="./public/screenshots/cyber-meteo-desktop.png" alt="Page cyber-météo" width="100%"> |
-| **Observatoire des fuites FR**<br/>3 sources francophones agrégées | **Lancement OSS · J-19**<br/>Compte à rebours AGPLv3 |
-| <img src="./public/screenshots/observatoire-fuites-desktop.png" alt="Observatoire des fuites de données" width="100%"> | <img src="./public/screenshots/lancement-oss-desktop.png" alt="Page lancement open source" width="100%"> |
+- **Sécurité défense en profondeur** : CSP strict, middleware edge sur `/admin`, DOMPurify, HSTS preload, anti-SSRF whitelist, anti-PII sur prompts, scrypt + AES-256-GCM
+- **Conformité multi-cadre** : RGPD · NIS2 · **Loi Sapin II Art. 17** · ISO 27001:2022 · ANSSI HG · NIST CSF, mapping technique versionné dans [`lib/mapping-grc.ts`](./lib/mapping-grc.ts)
+- **Mode démo** + **Mode dev** (bypass Payplug/email) pour tester sans setup externe
 
 ---
 
@@ -67,7 +58,9 @@ Teste les 3 vues principales sans installation, sans inscription :
 
 La base de démonstration est réinitialisée régulièrement — tu peux tout
 cliquer, tout modifier, tout casser sans crainte. Comptes pré-remplis pour
-les rôles Apprenant, Manager et Admin.
+les rôles Apprenant, Manager et Admin, plus 5 utilisateurs profilés en
+vulnérables / inactifs / top performers pour exercer les vues at-risk et
+forecast.
 
 ---
 
@@ -79,9 +72,8 @@ cd humanix-academie
 ./scripts/start.sh
 ```
 
-Le script `scripts/start.sh` détecte l'OS, installe Docker / mkcert si
-absents, génère un cert TLS local trust-safe (zéro warning "site non
-sécurisé"), prépare `/etc/hosts`, lance la stack en `DEMO_MODE=true`.
+Le script détecte l'OS, installe Docker / mkcert si absents, génère un cert
+TLS local trust-safe, prépare `/etc/hosts`, lance la stack en `DEMO_MODE=true`.
 Ouvre **`https://humanix.local`** quand c'est terminé.
 
 Détails : [docs/installation.md](./docs/installation.md#mode-0---quickstart-dev-avec-https-local-3-minutes-).
@@ -100,36 +92,45 @@ Détails : [docs/installation.md](./docs/installation.md#mode-0---quickstart-dev
 ### Installation
 
 ```bash
-# 1. Clone le repo
 git clone https://github.com/Humanix-Cybersecurity/Humanix-Academie.git
 cd humanix-academie
 
-# 2. Configure tes variables d'environnement
 cp .env.example .env
-# Édite .env : DATABASE_URL, AUTH_SECRET, NEXT_PUBLIC_APP_URL, etc.
-# Génère un AUTH_SECRET solide :  openssl rand -base64 32
+# Édite .env : DATABASE_URL, AUTH_SECRET, AUTH_URL, etc.
+# AUTH_SECRET solide :  openssl rand -base64 32
 
-# 3. Démarre la stack (web + postgres + caddy reverse proxy)
 docker compose up -d
-
-# 4. Initialise la base de données
-docker compose exec app npx prisma migrate deploy
-docker compose exec app npx prisma db seed
-
-# 5. C'est prêt
-open http://localhost:3000
 ```
 
-Premier compte admin : voir le log `docker compose logs app | grep "Initial admin"`.
+L'entrypoint synchronise le schéma Prisma, applique la migration legacy plans
+(idempotente), seed les données si `DEMO_MODE=true`, bootstrap le 1er admin
+selon `BOOTSTRAP_ADMIN_*`, puis démarre Next.js.
+
+Premier compte admin :
+- Si `BOOTSTRAP_ADMIN_EMAIL` est configuré → le compte est créé au boot
+- Sinon : `docker compose exec app npx tsx scripts/bootstrap-admin.ts`
+
+### Tâches planifiées (cron)
+
+Pour activer le forecast, les badges, l'observatoire breaches, etc. :
+
+```bash
+echo "CRON_SECRET=$(openssl rand -hex 32)" >> .env
+docker compose -f docker-compose.yml -f docker-compose.cron.yml up -d ofelia
+```
+
+10 tâches HTTP planifiées via Ofelia. Path de migration vers Kubernetes
+documenté dans [docs/CRON.md](./docs/CRON.md).
 
 ### Documentation détaillée
 
 - [docs/installation.md](./docs/installation.md) — installation pas-à-pas (Docker, bare-metal, Kubernetes)
 - [docs/configuration.md](./docs/configuration.md) — toutes les variables d'environnement
 - [docs/upgrade.md](./docs/upgrade.md) — procédure de mise à jour entre versions
+- [docs/CRON.md](./docs/CRON.md) — tâches planifiées (Ofelia / k8s CronJob)
+- [docs/TTS_VOXTRAL.md](./docs/TTS_VOXTRAL.md) — narration audio (Voxtral SaaS ou Piper self-hosted)
+- [docs/COMPLIANCE_SAPIN2.md](./docs/COMPLIANCE_SAPIN2.md) — couverture loi Sapin II Art. 17
 - [docs/faq.md](./docs/faq.md) — questions fréquentes self-host
-- [docs/TTS_VOXTRAL.md](./docs/TTS_VOXTRAL.md) — narration audio des modules (Voxtral SaaS ou Piper self-hosted)
-- [docs/COMPLIANCE_SAPIN2.md](./docs/COMPLIANCE_SAPIN2.md) — couverture loi Sapin II Art. 17 (formation anti-corruption obligatoire FR)
 
 ---
 
@@ -137,21 +138,39 @@ Premier compte admin : voir le log `docker compose logs app | grep "Initial admi
 
 | Couche       | Technologie                              | Pourquoi                                         |
 | ------------ | ---------------------------------------- | ------------------------------------------------ |
-| Front + back | **Next.js 14** (App Router) + TypeScript | SSR + API routes dans un seul process            |
+| Front + back | **Next.js 15** (App Router) + React 19   | SSR + API routes + server actions                |
+| Langage      | **TypeScript** strict                    | Type-safe end-to-end                             |
 | Styling      | **Tailwind CSS**                         | Cohérence visuelle, performance, dark mode natif |
-| ORM          | **Prisma**                               | Schema-first, type-safe, migrations propres      |
+| ORM          | **Prisma 5**                             | Schema-first, type-safe, migrations propres      |
 | Base         | **PostgreSQL 16**                        | Multi-tenant scoping, indices fins, full-text    |
-| Auth         | **NextAuth.js v5**                       | SSO Google/Microsoft, magic link, RBAC           |
-| Charts       | **Recharts**                             | Composants React idiomatiques                    |
+| Auth         | **NextAuth.js v5**                       | SSO Google/Microsoft/Apple, magic link, RBAC, 2FA TOTP, WebAuthn |
+| Charts       | **Recharts** + SVG inline                | Composants React idiomatiques                    |
 | PDF          | **@react-pdf/renderer**                  | Rapports de conformité côté serveur              |
 | Container    | **Docker** + Compose                     | Déploiement reproductible                        |
-| TTS          | **Voxtral** (Mistral) ou **Piper** local | Narration audio des modules / vishing / articles |
+| Cron         | **Ofelia** (V1) → k8s CronJob (V2)       | Tâches planifiées portables                      |
+| TTS          | **Voxtral** (Mistral) ou **Piper** local | Narration audio cache content-addressed          |
+| Analytics    | **Plausible** (self-host ou cloud)       | RGPD-friendly, sans cookie tracker               |
+| Tests        | **Vitest**                               | Logique métier critique sous tests               |
+
+---
+
+## Modes de fonctionnement
+
+3 modes orthogonaux configurables via `.env` :
+
+| Mode | Activation | Effet |
+|---|---|---|
+| **DEMO_MODE** | `DEMO_MODE=true` | Comptes fictifs pré-seedés via `/demo`, sélecteur 1 clic. Pour démos commerciales / salons. |
+| **DEV_MODE** | `DEV_MODE=true` (avec `AUTH_URL` local) | Bypass Payplug + email : inscription auto-login direct, souscription instantanée. Pour tester le vrai flow sans config externe. |
+| **Production** | les deux à `false` | Flow réel : email Scaleway TEM, paiement Payplug, magic links signés. |
+
+Garde-fou : `DEV_MODE` est ignoré quand `AUTH_URL` ne pointe pas sur localhost.
 
 ---
 
 ## Narration audio (TTS) — guide express
 
-Humanix supporte 3 backends TTS au choix selon ton contexte :
+3 backends au choix selon le contexte :
 
 | Backend | Activation | Use case |
 |---|---|---|
@@ -160,60 +179,75 @@ Humanix supporte 3 backends TTS au choix selon ton contexte :
 | `""` (vide, défaut) | rien | Fallback Web Speech API navigateur (gratuit, qualité variable) |
 
 ```bash
-# 1. Configurer (.env)
-echo 'MISTRAL_API_KEY=sk-...' >> .env       # console.mistral.ai
-echo 'TTS_PROVIDER=voxtral' >> .env
-
-# 2. Pré-rendre le catalogue (idempotent, ~10 min, ~$2.50 au premier run)
-docker compose exec app npm run tts:build         # 662 segments / 54 modules
+# Pré-rendre tout le catalogue audio (idempotent, ~10 min, ~$2.50 au 1er run)
+docker compose exec app npm run tts:build         # episodes + library articles + teasers
 docker compose exec app npm run tts:build:dry     # liste sans appel API
 docker compose exec app npm run tts:build:force   # régénération totale (rare)
-
-# 3. Hygiène cache
 docker compose exec app npm run tts:prune:apply   # supprime les MP3 orphelins
-                                                  # (après modif d'un MDX)
 ```
 
-Où l'audio apparaît dans l'UI :
-- 🔊 **Modules** (`/apprendre/<saison>/<episode>`) : bouton « Écouter le scénario / le débrief »
-- 🔊 **Articles librairie** (`/librairie/<slug>`) : bouton « Écouter l'article »
-- 🔊 **Cartes Cyber Famille** (`/famille`) : mini-bouton « 🔊 Aperçu » sur chaque carte
-- 🔊 **Vishing admin** (`/admin/vishing`) : sélecteur de voix (Pressante / Posée / Insistante / Plaintive) + lecture du script généré
+Côté client : `POST /api/tts/prepare` retourne `{ url: "/api/tts/<hash>" }`
+content-addressed. Le navigateur stream via `<audio src=...>` avec Range
+requests + `Cache-Control: immutable max-age=1an` → **démarrage <100 ms en
+cache hit**, sans charger le fichier en RAM.
 
-Runbook complet, voix dispo, debug : [docs/TTS_VOXTRAL.md](./docs/TTS_VOXTRAL.md).
+Où l'audio apparaît :
+- 🔊 **Modules** (`/apprendre/<saison>/<episode>`) : « Écouter le scénario / le débrief »
+- 🔊 **Articles librairie** (`/librairie/<slug>`) : « Écouter l'article »
+- 🔊 **Cartes Cyber Famille** (`/famille`) : mini-bouton « 🔊 Aperçu »
+- 🔊 **Vishing admin** (`/admin/vishing`) : sélecteur 4 voix expressives
+
+Runbook : [docs/TTS_VOXTRAL.md](./docs/TTS_VOXTRAL.md).
 
 ---
 
 ## Open core — ce qui est dans ce repo, ce qui est ailleurs
 
-Humanix Académie suit un modèle **open core**. Le code de la plateforme et 5
-modules pédagogiques de base sont open source AGPLv3. Les modules pédagogiques
-avancés, le phishing simulé, le Pack NIS2 turnkey et le SSO entreprise sont
-proposés en cloud managé ou via une licence commerciale.
+Humanix Académie suit un modèle **open core**. La plateforme et un sous-ensemble
+de modules pédagogiques sont open source AGPLv3. Les modules avancés, le
+phishing simulé, le Pack NIS2 turnkey et le SSO entreprise sont proposés en
+cloud managé ou via une licence commerciale.
 
 | Composant                                                          | Statut                               |
 | ------------------------------------------------------------------ | ------------------------------------ |
-| Plateforme Next.js (engine, dashboard, API, multi-tenant)          | Open AGPLv3 (ce repo)                |
-| 5 modules de base (mots de passe, MFA, phishing, sauvegarde, RGPD) | Open AGPLv3 (ce repo)                |
-| Gamification engine + mascotte                                     | Open AGPLv3 (ce repo)                |
-| Connecteur CISO Assistant + format OSCAL                           | Open AGPLv3 (ce repo)                |
-| Catalogue 30+ modules avancés                                      | Cloud Pro / Pro / Enterprise |
+| Plateforme Next.js 15 (engine, dashboards, API, multi-tenant)      | Open AGPLv3 (ce repo)                |
+| Modules pédagogiques de base (~30 MDX experts)                     | Open AGPLv3 (ce repo)                |
+| Gamification engine + mascotte Hex                                 | Open AGPLv3 (ce repo)                |
+| Connecteur CISO Assistant + format OSCAL + CEF                     | Open AGPLv3 (ce repo)                |
+| Forecast + corrélation incidents (régression linéaire transparente)| Open AGPLv3 (ce repo)                |
+| Espace DPO + rétention configurable + AIPD                         | Open AGPLv3 (ce repo)                |
+| Quick Setup Wizard + AdminSearchBox                                | Open AGPLv3 (ce repo)                |
+| Catalogue 150+ modules avancés                                     | Cloud Pro / Enterprise               |
 | Phishing simulé (templates + IA Mistral)                           | Cloud Pro / Enterprise               |
+| Quishing campaigns + poster generator                              | Cloud Pro / Enterprise               |
 | Pack NIS2 turnkey complet                                          | Cloud Pro / Enterprise               |
 | SSO SAML / SCIM enterprise                                         | Cloud Enterprise                     |
 
 Tarifs cloud : voir [humanix-cybersecurity.fr/tarifs](https://humanix-cybersecurity.fr/tarifs).
 
-📖 **Document de référence détaillé** : [`docs/OPEN_CORE.md`](./docs/OPEN_CORE.md) liste exhaustivement ce qui est ouvert vs ce qui est plan-gated en cloud, avec la justification économique et la position sur le fork hostile.
+📖 **Document de référence détaillé** : [`docs/OPEN_CORE.md`](./docs/OPEN_CORE.md) liste exhaustivement ce qui est ouvert vs plan-gated en cloud.
 
-📝 **Tu veux contribuer un module pédagogique ?** Lis [`content/community/README.md`](./content/community/README.md) — frontmatter, workflow de review, licence CC BY-SA 4.0 sur le contenu.
+📝 **Contribuer un module pédagogique ?** [`content/community/README.md`](./content/community/README.md) — frontmatter, workflow de review, licence CC BY-SA 4.0.
+
+---
+
+## Tarifs cloud (4 paliers · vente directe sans essai gratuit)
+
+| Palier | Cible | Tarif mensuel | Tarif annuel (−17 à −21 %) |
+|---|---|---|---|
+| **Découverte** (Starter) | TPE 1-15 personnes | **Gratuit** jusqu'à 5 utilisateurs, puis 19 €/mois forfait | — |
+| **Pro** | PME industrialisée 16-250 personnes | 3 €/user/mois | 2,50 €/user/mois |
+| **Enterprise** | Multi-sites, secteur réglementé, SecNumCloud | Sur devis | Sur devis |
+| **Community Edition** (self-host) | Devs, ESN, RSSI autonomes | **Gratuit à vie** AGPLv3 | — |
+
+La démo en ligne (`/demo`) couvre déjà le besoin "tester avant de payer" —
+pas d'essai gratuit sur les paliers payants.
 
 ---
 
 ## Écosystème — connecteurs techniques
 
-Humanix Académie s'inscrit dans l'écosystème open source cyber souverain
-français. Connecteurs techniques disponibles ou en cours
+Connecteurs techniques disponibles ou en cours
 (aucun partenariat commercial signé à ce jour — les intégrations sont
 techniquement prêtes côté Humanix, libre à chaque éditeur de les utiliser) :
 
@@ -234,7 +268,7 @@ techniquement prêtes côté Humanix, libre à chaque éditeur de les utiliser) 
 Toute contribution est bienvenue : code, documentation, traductions, modules
 pédagogiques, retours d'expérience, signalements de vulnérabilité.
 
-- Avant de contribuer : lis [CONTRIBUTING.md](./CONTRIBUTING.md)
+- Avant de contribuer : [CONTRIBUTING.md](./CONTRIBUTING.md)
 - Code de conduite : [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
 - Vulnérabilités : [SECURITY.md](./SECURITY.md) — disclosure responsable
 - Discussions : [GitHub Discussions](https://github.com/Humanix-Cybersecurity/Humanix-Academie/discussions)
@@ -242,51 +276,27 @@ pédagogiques, retours d'expérience, signalements de vulnérabilité.
 
 ### Ton premier PR — par où commencer
 
-Voici les contributions les plus accessibles, classées par effort croissant :
+1. **Typo / clarification doc** (10 min) — `README.md`, `docs/*.md`. PR directe, review légère.
+2. **Module MDX pédagogique** (1-2 h) — il reste des saisons sans MDX expert dans `prisma/catalog-saisons.ts`. Modèle : `content/saisons/phishing/01-mail-du-pdg.mdx`.
+3. **Traduction** (1-3 h) — fichiers `messages/<locale>.json` prêts pour i18n.
+4. **Connecteur** (1-2 jours) — GRC ou SIEM additionnel (Drata, Vanta, ServiceNow). Modèle dans `connectors/`. Licence MIT.
+5. **Module fonctionnel** (2-5 jours) — issues marquées `good first issue` ou roadmap.
 
-1. **Typo / clarification doc** (10 min) — `README.md`, `docs/*.md`, ou un commentaire de code peu clair. PR directe, review légère.
-2. **Module MDX pédagogique** (1-2h) — il reste **18 saisons** au catalog (`prisma/catalog-saisons.ts`) sans contenu MDX. Tu suis la grammaire des saisons existantes (`content/saisons/phishing/01-mail-du-pdg.mdx` est un bon modèle), tu écris un scénario en 5-7 minutes de lecture. Frontmatter strict, 4 choix réalistes, débrief structuré, quiz 3 questions, citation finale.
-3. **Traduction** (1-3h) — les fichiers `messages/<locale>.json` sont prêts pour i18n. Anglais en priorité pour la diaspora francophone européenne.
-4. **Connecteur** (1-2 jours) — un éditeur GRC ou SIEM additionnel (Drata, Vanta, ServiceNow). Modèle dans `connectors/ciso-assistant/` ou `connectors/sentinel/`. Licence MIT pour faciliter l'adoption.
-5. **Module fonctionnel** (2-5 jours) — features marquées "roadmap" dans [issues GitHub](https://github.com/Humanix-Cybersecurity/Humanix-Academie/issues). RFC d'abord pour les gros morceaux.
-
-Issues marquées **`good first issue`** sur GitHub : les plus accessibles pour un premier PR. Discord communautaire ouvre après le launch OSS du 26 mai 2026.
-
-### Tests unitaires
-
-La logique critique (auth, plans, billing, marketplace integrity, scoring,
-SCIM, OSCAL, SIEM, webhooks HMAC, conformité GRC, audit log, email,
-errors, sanitization HTML) est couverte par **446 tests unitaires Vitest**
-au coverage 97-100% par fichier.
+### Tests + qualité
 
 ```bash
-npm test                # Lance les tests une fois
-npm run test:watch      # Mode watch (TDD)
-npm run test:coverage   # Coverage report HTML dans ./coverage/index.html
+npm run typecheck       # tsc --noEmit (rapide, hook pre-commit dispo)
+npm run hooks:install   # active le pre-commit hook typecheck
+npm run lint            # ESLint + typecheck + lint-routes
+npm test                # Vitest run
+npm run test:watch      # Mode watch
+npm run test:coverage   # HTML coverage dans ./coverage/index.html
 ```
 
-Les tests tournent en CI sur chaque push/PR. Toute PR qui casse les tests
-existants ou n'apporte pas de tests sur du code critique sera refusée.
-
-**Périmètre couvert (sprint 1)** :
-
-- `lib/audit-flash/scoring.ts` — moteur scoring audit-flash (100%)
-- `lib/marketplace/integrity.ts` — hash SHA-256 modules (100%)
-- `lib/marketplace/schema.ts` — validation Zod stricte (100%)
-- `lib/plans.ts` + `lib/pricing.ts` — plan-gating + 4 paliers (100%)
-- `lib/scim/mapper.ts` + `filter.ts` — RFC 7644 SCIM v2 (94-100%)
-- `lib/webhooks/dispatcher.ts` — HMAC + SSRF guard (helpers exposés)
-- `lib/webhooks/formatters.ts` — Slack/Teams payloads (97%)
-- `lib/siem-formatters.ts` — Splunk CIM + ArcSight CEF (100%)
-- `lib/oscal.ts` — NIST OSCAL v1.1.2 (100%)
-- `lib/mapping-grc.ts` — ISO 27001 / NIS2 / RGPD / ANSSI HG (100%)
-- `lib/crypto.ts` — API keys + HMAC + tokens (100%)
-- `lib/levels.ts` — gamification XP (100%)
-- `lib/cyber-score.ts` — score CODIR (100%)
-
-**À venir post-launch** : breaches/parsers, ai/mistral, anecdotes,
-business-impact, family-invites, incident-response, phishing/personalized,
-tts. Cible globale : 80% coverage Q3 2026.
+Test suite Vitest couvrant la logique critique : auth, plan-gating, billing,
+marketplace integrity, scoring CODIR, SCIM mapper, OSCAL, SIEM formatters,
+webhooks HMAC + SSRF guard, conformité GRC mapping, audit log, sanitization
+HTML, setup wizard. Tournée en CI sur chaque push/PR.
 
 ---
 
@@ -296,8 +306,8 @@ La plateforme open source est **gratuite à vie** en self-host. Humanix
 Cybersecurity finance le développement par les services à forte valeur ajoutée
 qu'elle propose autour :
 
-- **Cloud managé** (gratuit jusqu'à 5 sièges en Starter, puis 19 €/mois forfait jusqu'à 15)
-- **Audit cybersécurité** et gap analysis NIS2
+- **Cloud managé** (gratuit jusqu'à 5 sièges, puis 19 €/mois forfait jusqu'à 15)
+- **Audit cybersécurité** et gap analysis NIS2 / Sapin II
 - **Formation professionnelle** (intra et inter-entreprise, éligible Qualiopi)
 - **RSSI externalisé** (forfait mensuel)
 - **Pack NIS2 turnkey** + accompagnement à la conformité
@@ -306,9 +316,8 @@ qu'elle propose autour :
 C'est le modèle d'intuitem (CISO Assistant), Filigran (OpenCTI) et Centreon —
 éprouvé en France, qui finance durablement l'open source.
 
-**Sponsoring (à venir)** : un programme officiel via GitHub Sponsors et
-Open Collective sera lancé après le launch du 26 mai 2026. D'ici là, pour
-discuter d'un parrainage corporatif ou individuel, contacte
+**Sponsoring** : GitHub Sponsors et Open Collective ouverts après le launch
+OSS du 26 mai 2026. Pour discuter d'un parrainage corporatif ou individuel,
 `contact@humanix-cybersecurity.fr`.
 
 ---
