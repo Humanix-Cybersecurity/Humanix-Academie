@@ -18,6 +18,7 @@ import { db } from "@/lib/db";
 import { getTemplate } from "@/lib/phishing";
 import { fireWebhook } from "@/lib/webhooks/dispatcher";
 import AskHexExplain from "@/components/AskHexExplain";
+import { QUISHING_TEMPLATES } from "@/lib/phishing/qr-code";
 
 export const dynamic = "force-dynamic";
 
@@ -46,7 +47,20 @@ export default async function PhishingLandingPage({
   });
   if (!result) notFound();
 
-  const tpl = getTemplate(result.campaign.template);
+  // Le canal de la campagne change le ton de la landing : email, SMS ou
+  // QR physique (quishing). On charge le template adapte.
+  const channel = result.campaign.channel;
+  const tpl =
+    channel === "QUISHING"
+      ? null // quishing utilise QUISHING_TEMPLATES, pas le getTemplate email
+      : getTemplate(result.campaign.template);
+  const quishingTpl =
+    channel === "QUISHING"
+      ? QUISHING_TEMPLATES[
+          result.campaign.template as keyof typeof QUISHING_TEMPLATES
+        ] ?? null
+      : null;
+
   // Trace les remediations auto declenchees pour pouvoir afficher un
   // bandeau d'information honnete a l'user (transparence > surprise).
   const remediationTriggered: string[] = [];
@@ -158,9 +172,15 @@ export default async function PhishingLandingPage({
     <div className="max-w-3xl mx-auto px-4 py-10 sm:py-16 animate-fadeIn">
       <div className="card border-2 border-warn">
         <div className="text-center mb-6">
-          <div className="text-7xl mb-4">⚠️</div>
+          <div className="text-7xl mb-4">
+            {channel === "QUISHING" ? "🔳" : channel === "SMS" ? "📱" : "⚠️"}
+          </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold text-warn mb-2">
-            Tu viens de cliquer sur un mail piégé
+            {channel === "QUISHING"
+              ? "Tu viens de scanner un QR code piégé"
+              : channel === "SMS"
+                ? "Tu viens de cliquer sur un SMS piégé"
+                : "Tu viens de cliquer sur un mail piégé"}
           </h1>
           <p className="text-gray-600">
             Heureusement, c'était un test de sensibilisation Humanix. <br />
@@ -202,15 +222,60 @@ export default async function PhishingLandingPage({
 
         <div className="bg-amber-50 border-l-4 border-warn rounded-r-xl p-5 mb-6">
           <p className="font-bold text-amber-900 mb-2">
-            Si ce mail avait été réel, tu aurais peut-être :
+            {channel === "QUISHING"
+              ? "Si ce QR avait été réel, tu aurais peut-être :"
+              : channel === "SMS"
+                ? "Si ce SMS avait été réel, tu aurais peut-être :"
+                : "Si ce mail avait été réel, tu aurais peut-être :"}
           </p>
           <ul className="text-sm text-amber-800 space-y-1.5 list-disc pl-5">
-            <li>Donné ton mot de passe à un attaquant</li>
-            <li>Installé un malware sur ton poste</li>
-            <li>Effectué un virement à un faux fournisseur</li>
-            <li>Compromis toute l'entreprise via ta session</li>
+            {channel === "QUISHING" ? (
+              <>
+                <li>Donné ton login d&apos;entreprise à un attaquant</li>
+                <li>Installé un malware via une fausse app proposée</li>
+                <li>Saisi tes coordonnées bancaires sur un faux site</li>
+                <li>Connecté ton smartphone à un réseau hostile</li>
+              </>
+            ) : (
+              <>
+                <li>Donné ton mot de passe à un attaquant</li>
+                <li>Installé un malware sur ton poste</li>
+                <li>Effectué un virement à un faux fournisseur</li>
+                <li>Compromis toute l&apos;entreprise via ta session</li>
+              </>
+            )}
           </ul>
         </div>
+
+        {/* Bloc pedagogique adapte au canal QUISHING (le bloc tpl email
+            est plus bas et ne s'affiche que pour les phishings classiques) */}
+        {quishingTpl && (
+          <div className="bg-primary-50 border-l-4 border-accent-500 rounded-r-xl p-5 mb-6">
+            <h2 className="font-bold text-primary-500 text-lg mb-3">
+              💡 Comment tu aurais pu détecter le piège ?
+            </h2>
+            <p className="text-sm text-gray-700 mb-3">
+              Voici les{" "}
+              <strong>
+                {quishingTpl.pedagogicalMarkers.length} indices
+              </strong>{" "}
+              que ce QR aurait dû te mettre la puce à l&apos;oreille :
+            </p>
+            <ul className="text-sm text-gray-700 space-y-2">
+              {quishingTpl.pedagogicalMarkers.map((m, i) => (
+                <li key={i} className="flex items-start gap-2">
+                  <span className="bg-accent-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                    {i + 1}
+                  </span>
+                  <span>{m}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="text-xs text-gray-500 italic mt-3">
+              Contexte de l&apos;attaque : {quishingTpl.context}
+            </p>
+          </div>
+        )}
 
         {tpl && (
           <>

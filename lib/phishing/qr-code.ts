@@ -117,22 +117,34 @@ Scannez pour acceder au portail :`,
   };
 
 /**
- * Genere un QR code SVG (sans dependance externe : implementation pure
- * Reed-Solomon serait trop lourde pour un seul use case). On utilise un
- * service public d'encoding QR : api.qrserver.com (gratuit, sans tracking).
+ * Genere un QR code en data URL PNG (offline, souverain : utilise la
+ * lib npm `qrcode` qui implemente Reed-Solomon localement, aucun appel
+ * reseau).
  *
- * IMPORTANT : pour la prod entreprise / souverain, on POURRAIT remplacer
- * par une vraie lib npm qr-code-generator (offline). Pour l'instant on
- * utilise un fallback url-based.
+ * Le format `dataURL:image/png` est directement insertable dans un
+ * <img src=...> ou dans un <Image src=...> de @react-pdf/renderer
+ * pour la generation PDF.
  *
- * @returns URL d'image QR code (PNG ou SVG selon format)
+ * NOTE : la fonction est async parce que la lib qrcode utilise
+ * canvas/encoding asynchrone. Caller en server component ou server
+ * action.
  */
-export function buildQrCodeImageUrl(targetUrl: string, sizePx = 400): string {
-  const enc = encodeURIComponent(targetUrl);
-  // qrserver.com est un service public free (no tracking), mais une instance
-  // self-host (qrcode-monkey, ou lib npm) serait preferable en production
-  // souveraine. TODO : migrer vers la lib qrcode npm a la prochaine iteration.
-  return `https://api.qrserver.com/v1/create-qr-code/?data=${enc}&size=${sizePx}x${sizePx}&margin=10&format=svg`;
+export async function buildQrCodeDataUrl(
+  targetUrl: string,
+  sizePx = 400,
+): Promise<string> {
+  // Import dynamique pour eviter de bundler la lib cote client si la
+  // page importe accidentellement ce module (ex: types).
+  const QRCode = (await import("qrcode")).default;
+  return QRCode.toDataURL(targetUrl, {
+    width: sizePx,
+    margin: 2,
+    errorCorrectionLevel: "M",
+    color: {
+      dark: "#000000",
+      light: "#FFFFFF",
+    },
+  });
 }
 
 /**
