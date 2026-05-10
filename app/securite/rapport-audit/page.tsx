@@ -184,8 +184,8 @@ export default function RapportAuditPage() {
         <ul className="text-sm text-amber-900 dark:text-amber-100 space-y-2 list-disc pl-5">
           <li>
             Nous <strong>ne prétendons pas</strong> être ISO 27001 ni SOC 2. Ces
-            certifications sont disproportionnées pour notre segment (TPE/PME
-            françaises avec budget cyber &lt; 5 K€/an).
+            certifications sont disproportionnées pour notre cible (organisations
+            avec budget cyber limité &lt; 5 K€/an, particuliers, associations).
           </li>
           <li>
             Nous <strong>ne prétendons pas</strong> non plus être SecNumCloud.
@@ -193,8 +193,9 @@ export default function RapportAuditPage() {
           </li>
           <li>
             Nous <strong>revendiquons</strong> un niveau de sécurité{" "}
-            <strong>« ANSSI-PME ready »</strong> : robuste pour notre cible,
-            transparent dans ses limites, en amélioration continue.
+            <strong>« ANSSI-ready »</strong> : robuste pour la gouvernance cyber
+            française du quotidien, transparent dans ses limites, en
+            amélioration continue.
           </li>
         </ul>
       </section>
@@ -280,20 +281,21 @@ export default function RapportAuditPage() {
         <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-2 list-disc pl-5">
           <li>
             <strong>Pas de SAML 2.0 / SCIM enterprise</strong> par défaut. Focus
-            délibéré sur le segment TPE/PME. SSO Google + Microsoft Entra suffit
-            pour 95 % des prospects. SAML/SCIM disponible sur demande pour les
-            contrats &gt; 50 utilisateurs.
+            délibéré sur la cible standard (particuliers, équipes, organisations
+            de taille moyenne). SSO Google + Microsoft Entra suffit pour 95 % des
+            prospects. SAML/SCIM disponible sur demande pour les contrats
+            &gt; 50 utilisateurs.
           </li>
           <li>
             <strong>Pas de chiffrement applicatif au-delà du TLS</strong> : nos
             données ne sont pas considérées comme ultra-sensibles (pas de santé,
             pas de défense). Le chiffrement TLS bout en bout + chiffrement
-            filesystem Scaleway est jugé adapté au segment.
+            filesystem Scaleway est jugé adapté à notre cible.
           </li>
           <li>
-            <strong>Pas d'ISO 27001 ni SOC 2</strong> : disproportionné pour le
-            segment PME visé. À reconsidérer si nous montons en gamme vers le
-            mid-market.
+            <strong>Pas d'ISO 27001 ni SOC 2</strong> : disproportionné pour la
+            cible visée. À reconsidérer si nous montons en gamme vers le
+            mid-market et grands comptes.
           </li>
         </ul>
       </section>

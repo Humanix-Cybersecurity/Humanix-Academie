@@ -152,7 +152,7 @@ const INTEGRATIONS: Integration[] = [
     releasedAt: "Mai 2026",
     emoji: "📋",
   },
-  // ============ Sprint 12 - Cocorico PME 🇫🇷 (livre) ============
+  // ============ Sprint 12 - Cocorico FR 🇫🇷 (livre) ============
   {
     slug: "lucca",
     name: "Lucca",
@@ -172,7 +172,7 @@ const INTEGRATIONS: Integration[] = [
     status: "live",
     origin: "FR",
     description:
-      "Bridge Python qui transforme les webhooks signés Humanix en tickets GLPI 10.x sur la file Sécurité. ITSM le plus déployé en PME française.",
+      "Bridge Python qui transforme les webhooks signés Humanix en tickets GLPI 10.x sur la file Sécurité. ITSM open-source le plus déployé en France.",
     href: "/integrations/glpi",
     releasedAt: "Mai 2026",
     emoji: "🎫",
