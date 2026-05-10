@@ -185,6 +185,47 @@ Garde-fou : `DEV_MODE` est ignoré quand `AUTH_URL` ne pointe pas sur localhost.
 
 ---
 
+## Hex Chat — assistant cyber conversationnel
+
+🦊 Hex est un assistant cyber multi-tour, accessible via un FAB flottant
+sur toute l'app pour les utilisateurs connectés. Il sait :
+- répondre aux questions cyber (phishing, RGPD, NIS2, MFA, mots de passe)
+- guider l'utilisation d'Humanix (où trouver un module, exporter un
+  certificat, configurer la rétention RGPD)
+- refuser poliment les sujets hors-cyber
+
+**Providers supportés** (sélection via `HEX_AI_PROVIDER`) :
+
+| Provider | Coût | Recommandé pour |
+|---|---|---|
+| `mistral` (défaut) | Free tier Mistral "Experiment" (~1 req/s, 1 B tokens/mois) | Cloud Starter / Pro |
+| `ollama` | 0 € (self-host) | Community Edition AGPLv3 |
+| `disabled` | — | Désactive le chat (FAB invisible) |
+
+**Rate limit** (par utilisateur) : 12 msg/h en Starter, 60 msg/h en Pro,
+200 msg/h en Enterprise. Protège le free tier Mistral sans frustrer les
+plans payants.
+
+**Self-host avec Ollama** (gratuit infini, recommandé Community
+Edition) :
+
+```bash
+# Sidecar Ollama dans docker-compose, modèle Mistral 7B Instruct
+docker run -d --name ollama -p 11434:11434 ollama/ollama
+docker exec ollama ollama pull mistral:7b-instruct
+
+# Côté app :
+HEX_AI_PROVIDER=ollama
+OLLAMA_BASE_URL=http://localhost:11434
+HEX_AI_MODEL=mistral:7b-instruct
+```
+
+Roadmap des phases suivantes (RAG sur les 184 modules MDX, coach
+personnalisé, roleplay scénarios, voice, agentique) dans le document
+`00_Business_Strategie/01_Roadmap_Produit/ROADMAP_HEX_IA.md`.
+
+---
+
 ## Narration audio (TTS) — guide express
 
 3 backends au choix selon le contexte :

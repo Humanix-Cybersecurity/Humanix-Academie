@@ -13,7 +13,10 @@ import CookieBanner from "@/components/CookieBanner";
 import CyberMeteoTopBar from "@/components/CyberMeteoTopBar";
 import SiteFooter from "@/components/SiteFooter";
 import MascotPeek from "@/components/MascotPeek";
+import HexChat from "@/components/HexChat";
 import ScrollProgress from "@/components/ScrollProgress";
+import { isHexChatAvailable } from "@/lib/ai/provider";
+import { auth } from "@/lib/auth";
 // Polices brand self-hostées via Fontsource (npm packages, woff2 dans node_modules).
 // On importe les CSS qui déclarent les @font-face — bundlés au build par Next.js,
 // aucun fetch externe au runtime ni au build (vs next/font/google qui dépend
@@ -252,6 +255,14 @@ export default async function RootLayout({
   const isDemoByHost = host.startsWith("demo.");
   const isDemo = isDemoByEnv || isDemoByHost;
 
+  // Hex chat : on n'affiche le FAB qu'aux users connectes ET si un
+  // provider IA est configure cote serveur. Anonymous = pas de chat
+  // (coûts API + tracage). Mode demo : on autorise quand meme pour
+  // que la feature soit demontrable lors d'evenements.
+  const session = await auth();
+  const hexChatEnabled =
+    isHexChatAvailable() && (Boolean(session?.user?.id) || isDemo);
+
   return (
     <html lang="fr">
       <head>
@@ -305,6 +316,11 @@ export default async function RootLayout({
             {children}
           </main>
           <PWAInstallButton />
+          {/* HexChat : assistant cyber conversationnel (Phase 1 roadmap IA).
+              Affiche un FAB flottant + panneau de chat. N'apparaît que si
+              un provider Mistral ou Ollama est configure cote serveur ET
+              que l'user est authentifie (cf. lib/ai/provider.ts). */}
+          <HexChat enabled={hexChatEnabled} />
           {/* CookieBanner : consentement explicite Accepter/Refuser pour
               activer le tracking analytics (Plausible cloud notamment).
               Conforme CNIL recommandation 2020-091 (parite stricte + pas
