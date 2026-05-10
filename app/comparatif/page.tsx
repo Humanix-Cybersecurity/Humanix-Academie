@@ -1049,7 +1049,8 @@ export default function ComparatifPage() {
               </strong>{" "}
               - volume catalogue, plugin Outlook mature, agent IA orchestrateur,
               SAML/SCIM enterprise. Ces écarts sont réels mais ne sont pas
-              bloquants pour une PME de moins de 250 personnes. On comble
+              bloquants pour la majorité des structures (TPE, PME, ETI,
+              associations, collectivités, particuliers). On comble
               progressivement (vishing et smishing souverains FR MVP livrés,
               audit RGAA cabinet à venir, Qualiopi en cours).
             </p>
@@ -1069,14 +1070,15 @@ export default function ComparatifPage() {
               <strong className="text-primary-500 dark:text-accent-300">
                 Notre conviction
               </strong>{" "}
-              - pour une PME française qui démarre une démarche cyber, payer 5
-              à 10 fois moins cher pour 80 % des fonctionnalités utiles, et
-              bénéficier d'un accompagnement humain plutôt que d'un support
-              tier-3 anglophone, est le bon arbitrage. Pour une ETI multi-pays
-              avec besoins SSO/SCIM lourds, les acteurs historiques restent
-              plus adaptés. Pour une organisation soumise à NIS2/DORA qui veut
-              garder ses preuves dans l'UE, on est seuls sur ce créneau combiné
-              cyber + humain + souverain.
+              - pour une organisation française qui démarre une démarche cyber
+              (du particulier au mid-market), payer 5 à 10 fois moins cher
+              pour 80 % des fonctionnalités utiles, et bénéficier d'un
+              accompagnement humain plutôt que d'un support tier-3
+              anglophone, est le bon arbitrage. Pour une ETI multi-pays avec
+              besoins SSO/SCIM lourds, les acteurs historiques restent plus
+              adaptés. Pour une organisation soumise à NIS2/DORA qui veut
+              garder ses preuves dans l'UE, on est seuls sur ce créneau
+              combiné cyber + humain + souverain.
             </p>
           </div>
         </section>

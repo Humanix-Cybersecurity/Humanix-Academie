@@ -41,7 +41,7 @@ import {
 export const metadata = {
   title: "Urgence cyber - Que faire en cas d'incident | Humanix",
   description:
-    "Hub d'urgence cyber gratuit pour les PME françaises. Procédures pour rançongiciel, fuite de données, fraude au président, compte compromis, vol de matériel. Outils souverains, sources officielles, intervention curative par Humanix Cybersecurity.",
+    "Hub d'urgence cyber gratuit, accessible à tous (particuliers, équipes, organisations de toute taille). Procédures pour rançongiciel, fuite de données, fraude au président, compte compromis, vol de matériel. Outils souverains, sources officielles, intervention curative par Humanix Cybersecurity.",
 };
 
 const CATEGORIES_ORDER: SourceCategory[] = [
