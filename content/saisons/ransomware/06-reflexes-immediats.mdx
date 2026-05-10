@@ -1,49 +1,49 @@
 ---
-title: "Les 6 reflexes des 60 premieres minutes"
+title: "Les 6 reflexes des 60 premières minutes"
 durationMinutes: 8
 persona: "tous"
 objective: "Memoriser les 6 actions cles a executer dans la 1ere heure d'un ransomware confirme"
 xpReward: 90
 scenario: |
-  9h17 un mardi matin. Tu es DSI d'une PME de 100 personnes. Trois utilisateurs t'appellent en moins de 5 minutes : "Mes fichiers sont chiffres", "Y'a un message rouge bizarre", "Tout est bloque". Tu basculesle sur le partage reseau partage : deja chiffre.
+  9h17 un mardi matin. Tu es DSI d'une PME de 100 personnes. Trois utilisateurs t'appellent en moins de 5 minutes : "Mes fichiers sont chiffres", "Y'a un message rouge bizarre", "Tout est bloque". Tu basculesle sur le partage réseau partage : déjà chiffre.
 
   Le ransomware est confirme. Tu as 60 minutes critiques avant que la situation ne devienne catastrophique. Quelle est ta sequence d'action ?
 choices:
   - id: "a"
-    label: "Eteindre tous les serveurs immediatement pour stopper la propagation"
+    label: "Eteindre tous les serveurs immédiatement pour stopper la propagation"
     outcome: "bad"
-    feedback: "Eteindre brutalement detruit la memoire vive (preuves forensiques precieuses). Et ca ne stoppe pas un chiffrement deja en cours. Le bon reflexe = isoler reseau, pas eteindre."
+    feedback: "Eteindre brutalement detruit la mémoire vive (preuves forensiques précieuses). Et ça ne stoppe pas un chiffrement déjà en cours. Le bon reflexe = isoler réseau, pas eteindre."
     points: -15
   - id: "b"
-    label: "1) Isoler le reseau (couper internet, debrancher partages) 2) Activer cellule de crise 3) Appeler Cybermalveillance 4) Documenter heure T0 et faits 5) Preserver preuves (pas d'extinction) 6) Communiquer en interne"
+    label: "1) Isoler le réseau (couper internet, debrancher partages) 2) Activer cellule de crise 3) Appeler Cybermalveillance 4) Documenter heure T0 et faits 5) Preserver preuves (pas d'extinction) 6) Communiquer en interne"
     outcome: "good"
-    feedback: "Sequence parfaite. Les 6 reflexes des 60 premieres minutes. Si tu fais ces 6 actions dans cet ordre, tu maximises tes chances de recuperation et tu minimises l'impact legal/business."
+    feedback: "Sequence parfaite. Les 6 reflexes des 60 premières minutes. Si tu fais ces 6 actions dans cet ordre, tu maximises tes chances de recuperation et tu minimises l'impact legal/business."
     points: 40
   - id: "c"
     label: "Lancer une analyse antivirus complete sur tous les postes"
     outcome: "bad"
-    feedback: "L'antivirus arrive trop tard et risque d'effacer des indices. Pas la priorite des 60 premieres minutes. Action a faire APRES l'analyse forensique en phase 2."
+    feedback: "L'antivirus arrive trop tard et risque d'effacer des indices. Pas la priorité des 60 premières minutes. Action a faire APRES l'analyse forensique en phase 2."
     points: -10
   - id: "d"
-    label: "Informer immediatement la presse et les clients pour transparence maximale"
+    label: "Informer immédiatement la presse et les clients pour transparence maximale"
     outcome: "bad"
-    feedback: "La communication externe se fait apres qualification de l'incident, en coordination avec avocat et cellule de crise. Comm prematuree = panique injustifiee + erreurs RGPD."
+    feedback: "La communication externe se fait après qualification de l'incident, en coordination avec avocat et cellule de crise. Comm prematuree = panique injustifiee + erreurs RGPD."
     points: -15
 debrief: |
-  Les **60 premieres minutes** d'un ransomware sont le moment ou tu peux encore sauver quelque chose. Apres, le chiffrement progresse, les preuves se perdent, les decisions deviennent plus dures.
+  Les **60 premières minutes** d'un ransomware sont le moment ou tu peux encore sauver quelque chose. Après, le chiffrement progresse, les preuves se perdent, les décisions deviennent plus dures.
 
-  **Voici les 6 reflexes des 60 premieres minutes - a memoriser, afficher dans la salle IT, executer sans hesitation :**
+  **Voici les 6 reflexes des 60 premières minutes - a memoriser, afficher dans la salle IT, executer sans hesitation :**
 
   ---
 
   **REFLEXE 1 - ISOLER LE RESEAU (minutes 0 a 5)**
 
-  Couper la propagation est la priorite absolue.
+  Couper la propagation est la priorité absolue.
 
   - Couper l'acces internet (firewall en mode panique)
-  - Debrancher les partages reseau qui ne sont pas encore touches
+  - Debrancher les partages réseau qui ne sont pas encore touches
   - Desactiver le Wi-Fi sur les postes infectes
-  - **NE PAS ETEINDRE** les machines infectees (preserve la memoire vive pour le forensique)
+  - **NE PAS ETEINDRE** les machines infectees (preserve la mémoire vive pour le forensique)
 
   ---
 
@@ -51,20 +51,20 @@ debrief: |
 
   Les bonnes personnes au bon moment.
 
-  - **DG / DAF** : decision strategique, communication externe
+  - **DG / DAF** : décision stratégique, communication externe
   - **DSI / RSSI** : technique, isolation, restauration
-  - **DPO** : si donnees personnelles (notification CNIL)
+  - **DPO** : si données personnelles (notification CNIL)
   - **Avocat / juridique** : implications legales (LOPMI 2023, RGPD)
   - **Assureur cyber** : declenche la couverture, mandate les ressources
-  - **Communication** : pour eviter la panique interne et preparer l'externe
+  - **Communication** : pour éviter la panique interne et preparer l'externe
 
-  Liste des numeros DOIT etre disponible HORS du SI (papier dans le bureau, contact dans le mobile perso).
+  Liste des numéros DOIT être disponible HORS du SI (papier dans le bureau, contact dans le mobile perso).
 
   ---
 
   **REFLEXE 3 - APPELER CYBERMALVEILLANCE.GOUV.FR (minutes 15 a 20)**
 
-  Le 0 805 805 817 (gratuit, 7j/7) est ton point d'entree officiel. Ils :
+  Le 0 805 805 817 (gratuit, 7j/7) est ton point d'entrée officiel. Ils :
   - Activent un parcours d'aide
   - T'orientent vers le CSIRT regional
   - Si necessaire, mobilisent l'ANSSI
@@ -79,12 +79,12 @@ debrief: |
   Le journal d'incident commence ICI, pas plus tard.
 
   - **Heure precise de decouverte** (T0)
-  - **Premiers symptomes observes** : message de rancon, fichiers chiffres, services down
+  - **Premiers symptomes observes** : message de rançon, fichiers chiffres, services down
   - **Postes / serveurs concernes** : liste des hostnames, adresses IP
-  - **Actions deja prises** : isolation reseau, etc.
-  - **Personnes prevenues** : nom, heure, message echange
+  - **Actions déjà prises** : isolation réseau, etc.
+  - **Personnes prevenues** : nom, heure, message échange
 
-  Cette documentation servira a la cellule de crise, a Cybermalveillance, a l'assureur, au juge si plainte. Format : fichier texte sur un poste sain, ou papier - JAMAIS sur un systeme infecte.
+  Cette documentation servira a la cellule de crise, a Cybermalveillance, a l'assureur, au juge si plainte. Format : fichier texte sur un poste sain, ou papier - JAMAIS sur un système infecte.
 
   ---
 
@@ -95,22 +95,22 @@ debrief: |
   - **NE PAS** redemarrer les postes infectes
   - **NE PAS** lancer d'antivirus
   - **NE PAS** essayer de "reparer" en bricolant
-  - **OUI** : sauvegarder les logs systeme avant qu'ils tournent
-  - **OUI** : photographier les ecrans (smartphone) - capture de la demande de rancon
+  - **OUI** : sauvegarder les logs système avant qu'ils tournent
+  - **OUI** : photographier les écrans (smartphone) - capture de la demande de rançon
   - **OUI** : noter les processus suspects visibles
   - **OUI** : conserver l'email d'attaque s'il existe (sans l'ouvrir)
 
-  Si tu as un EDR (HarfangLab, CrowdStrike, Microsoft Defender for Endpoint), il a deja les telemetries - ne le desinstalle pas.
+  Si tu as un EDR (HarfangLab, CrowdStrike, Microsoft Defender for Endpoint), il a déjà les telemetries - ne le desinstalle pas.
 
   ---
 
   **REFLEXE 6 - COMMUNIQUER EN INTERNE (minutes 45 a 60)**
 
-  Les salaries vont savoir d'une maniere ou d'une autre. Mieux vaut etre la source.
+  Les salariés vont savoir d'une manière ou d'une autre. Mieux vaut être la source.
 
-  - **Message clair, court, factuel** : "Un incident cyber est en cours. Le SI est isole pour controle. Pas de cliquage sur les emails. Pas de partage public. On revient vers vous dans 2h."
-  - **Pas de panique** : ne pas donner de details techniques, ne pas accuser, ne pas commenter la rancon
-  - **Mode degrade** : indiquer ce qui marche encore (telephone, papier) et qui faire suivre
+  - **Message clair, court, factuel** : "Un incident cyber est en cours. Le SI est isole pour contrôle. Pas de cliquage sur les emails. Pas de partage public. On revient vers vous dans 2h."
+  - **Pas de panique** : ne pas donner de détails techniques, ne pas accuser, ne pas commenter la rançon
+  - **Mode degrade** : indiquer ce qui marche encore (téléphone, papier) et qui faire suivre
   - **Confidentialite** : pas de communication externe (clients, fournisseurs, presse) sans validation cellule de crise
 
   ---
@@ -119,14 +119,14 @@ debrief: |
 
   Tu rentres dans la phase de **gestion de crise** (heures 1 a 24) :
   - Qualification fine de l'attaque (groupe, ransomware, vecteur)
-  - Decision restauration vs paiement (cf. module 03)
-  - Notification CNIL si donnees personnelles touchees (sous 72h)
+  - Décision restauration vs paiement (cf. module 03)
+  - Notification CNIL si données personnelles touchees (sous 72h)
   - Communication externe controlee
   - Plan de bascule en mode degrade pour les services critiques
 
-  **L'investissement le plus rentable d'une PME en cybersecurite :** afficher les 6 reflexes dans la salle IT, les exercer une fois par an avec une simulation de panne, et identifier les 6 personnes a appeler avant la crise.
+  **L'investissement le plus rentable d'une PME en cybersécurité :** afficher les 6 reflexes dans la salle IT, les exercer une fois par an avec une simulation de panne, et identifier les 6 personnes a appeler avant la crise.
 
-  20 € de plastification + 1 demi-journee d'exercice annuelle = potentiellement 250 000 € economises le jour ou ca tombe.
+  20 € de plastification + 1 demi-journée d'exercice annuelle = potentiellement 250 000 € economises le jour ou ça tombe.
 quiz:
   - question: "Quel est le tout premier reflexe en cas de ransomware confirme ?"
     choices:
@@ -134,42 +134,42 @@ quiz:
         label: "Eteindre tous les serveurs"
         correct: false
       - id: "b"
-        label: "Isoler le reseau (couper internet + partages) sans eteindre les machines"
+        label: "Isoler le réseau (couper internet + partages) sans eteindre les machines"
         correct: true
       - id: "c"
         label: "Lancer une analyse antivirus complete"
         correct: false
-    explanation: "Isoler stoppe la propagation. Ne pas eteindre preserve la memoire vive (preuves). C'est la sequence systematique recommandee par l'ANSSI."
+    explanation: "Isoler stoppe la propagation. Ne pas eteindre preserve la mémoire vive (preuves). C'est la sequence systematique recommandee par l'ANSSI."
 
-  - question: "Le numero gratuit 7j/7 de Cybermalveillance.gouv.fr est :"
+  - question: "Le numéro gratuit 7j/7 de Cybermalveillance.gouv.fr est :"
     choices:
       - id: "a"
         label: "0 805 805 817"
         correct: true
       - id: "b"
-        label: "Le 17 (police) en priorite"
+        label: "Le 17 (police) en priorité"
         correct: false
       - id: "c"
         label: "Il n'y en a pas"
         correct: false
-    explanation: "0 805 805 817, gratuit, 7j/7, point d'entree officiel pour particuliers et PME. A inscrire dans ton repertoire AVANT la crise."
+    explanation: "0 805 805 817, gratuit, 7j/7, point d'entrée officiel pour particuliers et PME. A inscrire dans ton repertoire AVANT la crise."
 
-  - question: "Pendant les 60 premieres minutes, dois-tu communiquer aux clients ?"
+  - question: "Pendant les 60 premières minutes, dois-tu communiquer aux clients ?"
     choices:
       - id: "a"
         label: "Oui, transparence immediate"
         correct: false
       - id: "b"
-        label: "Non, comm externe uniquement apres validation cellule de crise + avocat (qualification + RGPD)"
+        label: "Non, comm externe uniquement après validation cellule de crise + avocat (qualification + RGPD)"
         correct: true
       - id: "c"
         label: "Oui, mais seulement par email"
         correct: false
-    explanation: "Comm externe prematuree = panique injustifiee + erreurs RGPD potentielles. La cellule de crise et l'avocat valident le message AVANT diffusion. Comm interne d'abord (factuelle, courte), externe apres."
+    explanation: "Comm externe prematuree = panique injustifiee + erreurs RGPD potentielles. La cellule de crise et l'avocat valident le message AVANT diffusion. Comm interne d'abord (factuelle, courte), externe après."
 ---
 
 ## Pour aller plus loin
 
-Imprime cette page, plastifie-la, accroche-la au mur de la salle IT et au-dessus du bureau du DG. C'est le poster qui te coutera 30 € et qui fera la difference entre crise et catastrophe le jour ou ca tombe. Et fais une fois par an l'exercice "panne IT generale 4h" pour tester la chaine.
+Imprime cette page, plastifie-la, accroche-la au mur de la salle IT et au-dessus du bureau du DG. C'est le poster qui te coutera 30 € et qui fera la différence entre crise et catastrophe le jour ou ça tombe. Et fais une fois par an l'exercice "panne IT générale 4h" pour tester la chaine.
 
-> "Les 60 premieres minutes ne se decouvrent pas. Elles s'apprennent par coeur. Apprends-les maintenant."
+> "Les 60 premières minutes ne se decouvrent pas. Elles s'apprennent par coeur. Apprends-les maintenant."

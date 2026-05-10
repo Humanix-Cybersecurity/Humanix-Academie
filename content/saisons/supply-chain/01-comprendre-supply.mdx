@@ -2,10 +2,10 @@
 title: "Comprendre une attaque supply chain"
 durationMinutes: 7
 persona: "manager"
-objective: "Saisir le mecanisme d'une attaque supply chain (compromission d'un prestataire pour atteindre ses clients), reconnaitre les 4 surfaces d'attaque (logiciel, hardware, prestataires, donnees)"
+objective: "Saisir le mecanisme d'une attaque supply chain (compromission d'un prestataire pour atteindre ses clients), reconnaître les 4 surfaces d'attaque (logiciel, hardware, prestataires, données)"
 xpReward: 60
 scenario: |
-  Lundi 9h, ton DSI te dit en reunion : "On vient d'apprendre que
+  Lundi 9h, ton DSI te dit en réunion : "On vient d'apprendre que
   notre prestataire de paie (40 personnes, basé a Lyon) a subi un
   ransomware ce week-end. Toute leur infra est cryptee."
 
@@ -16,32 +16,32 @@ scenario: |
   bulletins, RIB, NIR de tous nos collaborateurs. Et leurs comptes
   d'admin sont stockes chez nous via SSO."
 
-  Que fais-tu en priorite ?
+  Que fais-tu en priorité ?
 choices:
   - id: "a"
     label: "Je deconnecte tout de suite l'acces VPN du prestataire + je revoque ses comptes SSO + j'audit nos logs"
     outcome: "good"
-    feedback: "Excellent reflexe. C'est exactement la procedure : isoler le prestataire compromis (VPN/SSO/API) AVANT que les attaquants n'utilisent son acces pour pivoter chez toi. Audit logs en parallele pour voir s'ils sont deja entres."
+    feedback: "Excellent reflexe. C'est exactement la procédure : isoler le prestataire compromis (VPN/SSO/API) AVANT que les attaquants n'utilisent son acces pour pivoter chez toi. Audit logs en parallele pour voir s'ils sont déjà entres."
     points: 35
   - id: "b"
-    label: "J'attends les details du prestataire avant de paniquer"
+    label: "J'attends les détails du prestataire avant de paniquer"
     outcome: "bad"
-    feedback: "Le temps joue CONTRE toi. Si les attaquants ont les comptes du prestataire, ils ont peut-etre deja un pied chez toi via le VPN ou le SSO. Chaque minute d'inaction = plus de degats."
+    feedback: "Le temps joue CONTRE toi. Si les attaquants ont les comptes du prestataire, ils ont peut-être déjà un pied chez toi via le VPN ou le SSO. Chaque minute d'inaction = plus de degats."
     points: -15
   - id: "c"
-    label: "Je demande un audit a un cabinet exterieur, ca prend 3 semaines"
+    label: "Je demande un audit a un cabinet extérieur, ça prend 3 semaines"
     outcome: "bad"
-    feedback: "L'audit est utile MAIS il faut commencer par isoler le prestataire compromis IMMEDIATEMENT. L'audit complet vient apres, pas avant. 3 semaines d'attente = catastrophe garantie."
+    feedback: "L'audit est utile MAIS il faut commencer par isoler le prestataire compromis IMMEDIATEMENT. L'audit complet vient après, pas avant. 3 semaines d'attente = catastrophe garantie."
     points: -10
   - id: "d"
-    label: "Je verifie nos sauvegardes et je previens le DPO (donnees RH potentiellement fuit)"
+    label: "Je verifie nos sauvegardes et je préviens le DPO (données RH potentiellement fuit)"
     outcome: "good"
-    feedback: "Bon reflexe complementaire. Verification sauvegardes + notification DPO (RGPD article 33 - les donnees RH chez le prestataire SONT potentiellement compromises, donc reportable). A combiner avec l'isolation VPN/SSO."
+    feedback: "Bon reflexe complémentaire. Vérification sauvegardes + notification DPO (RGPD article 33 - les données RH chez le prestataire SONT potentiellement compromises, donc reportable). A combiner avec l'isolation VPN/SSO."
     points: 30
 debrief: |
   L'**attaque supply chain** (chaine d'approvisionnement) consiste a
   compromettre un acteur en passant par l'un de ses fournisseurs ou
-  partenaires plutot que de l'attaquer directement.
+  partenaires plutôt que de l'attaquer directement.
 
   C'est le vecteur d'attaque qui a la plus forte croissance depuis
   2020 selon ENISA (+431% en 5 ans). Pourquoi ? Parce que les
@@ -69,13 +69,13 @@ debrief: |
   **2. Materielle (rare mais devastatrice)**
 
   Compromission de hardware au stade fabrication ou distribution.
-  Tres difficile a detecter.
+  Très difficile a détecter.
   - **Bloomberg/Supermicro 2018** (allegations contestees) :
     chips espions chinois dans des serveurs.
   - **Cas avere Kapersky 2021** : firmware modifie sur des disques
     durs distribues.
 
-  **3. Prestataires & sous-traitants (la plus frequente)**
+  **3. Prestataires & sous-traitants (la plus fréquente)**
 
   Tu fais confiance a ton prestataire. Il est compromis. L'attaquant
   utilise son acces a ton SI pour entrer.
@@ -84,23 +84,23 @@ debrief: |
   - **Equifax 2017** : 147M dossiers via une faille dans une lib
     Apache Struts non patchee chez un prestataire.
 
-  **4. Donnees & API (la plus subtile)**
+  **4. Données & API (la plus subtile)**
 
-  Compromission d'un fournisseur de donnees (CRM, marketing, analytics)
-  qui te transmet des donnees enrichies via API.
+  Compromission d'un fournisseur de données (CRM, marketing, analytics)
+  qui te transmet des données enrichies via API.
   - **Capital One 2019** : 100M dossiers via un AWS S3 mal configure
-    cote prestataire.
-  - **Cloudflare 2017 (Cloudbleed)** : fuite de donnees clients
+    côté prestataire.
+  - **Cloudflare 2017 (Cloudbleed)** : fuite de données clients
     via un bug chez le CDN.
 
   **Pourquoi c'est si difficile a defendre :**
 
   - **Confiance implicite** : ton prestataire a souvent des acces
-    privilegies (admin VPN, comptes service, donnees RH) que tu lui
+    privilegies (admin VPN, comptes service, données RH) que tu lui
     as accordes pour qu'il fasse son boulot.
-  - **Asymetrie de maturite** : tu peux etre niveau ANSSI mais ton
+  - **Asymetrie de maturite** : tu peux être niveau ANSSI mais ton
     prestataire de paie 40 personnes ne l'est pas.
-  - **Cascade** : ton prestataire a lui-meme des sous-traitants. Tu
+  - **Cascade** : ton prestataire a lui-même des sous-traitants. Tu
     fais confiance par transitivite a des entites que tu ne connais
     pas (sub-sub-traitant).
   - **Visibility nulle** : tu ne sais pas quand un de tes 50
@@ -112,17 +112,17 @@ debrief: |
 
   Tenir un registre :
   - Qui (raison sociale, SIRET)
-  - Quoi (quelle service, quelles donnees, quel acces)
+  - Quoi (quelle service, quelles données, quel acces)
   - Niveau de criticite (impact si compromis)
-  - Conformite (questionnaire securite, certifications)
+  - Conformite (questionnaire sécurité, certifications)
 
-  Le RGPD article 30 oblige deja a tenir ce registre pour les
-  sous-traitants au sens RGPD (qui traitent des donnees personnelles
+  Le RGPD article 30 oblige déjà a tenir ce registre pour les
+  sous-traitants au sens RGPD (qui traitent des données personnelles
   pour ton compte).
 
   **Couche 2 - Acces minimal**
 
-  Principe du moindre privilege :
+  Principe du moindre privilège :
   - Compte service dedie (pas un compte humain partage)
   - VPN cloisonne (subnet dedie, pas full network)
   - MFA obligatoire sur tout acces
@@ -132,20 +132,20 @@ debrief: |
   **Couche 3 - Clauses contractuelles**
 
   Tout contrat avec un prestataire ayant acces a ton SI ou tes
-  donnees doit contenir :
+  données doit contenir :
   - Obligation de notification d'incident sous 24h
   - Droit d'audit annuel
-  - Niveau de securite minimum (ISO 27001, SOC 2, ou attestation)
+  - Niveau de sécurité minimum (ISO 27001, SOC 2, ou attestation)
   - Sanctions en cas de breach
   Cf. ep 04 de cette saison.
 
-  **Couche 4 - Plan de reponse incident (le scenario d'aujourd'hui)**
+  **Couche 4 - Plan de réponse incident (le scenario d'aujourd'hui)**
 
-  Procedure documentee : "Quand un prestataire nous notifie un
-  incident, on fait quoi dans la premiere heure ?".
-  - Isoler immediatement (VPN, SSO, API, comptes service)
+  Procédure documentee : "Quand un prestataire nous notifie un
+  incident, on fait quoi dans la première heure ?".
+  - Isoler immédiatement (VPN, SSO, API, comptes service)
   - Audit logs des 90 derniers jours
-  - Notifier DPO (RGPD article 33) si donnees personnelles
+  - Notifier DPO (RGPD article 33) si données personnelles
   - Notifier ANSSI/CNIL selon ampleur
 
   **Couche 5 - Plan de continuite**
@@ -156,11 +156,11 @@ debrief: |
 
   **NIS2 et supply chain :**
 
-  La directive NIS2 (entree en application en France octobre 2024)
-  impose explicitement la **maitrise de la supply chain** pour les
-  entites essentielles et importantes. Article 21.2(d) : "securite
+  La directive NIS2 (entrée en application en France octobre 2024)
+  impose explicitement la **maîtrise de la supply chain** pour les
+  entites essentielles et importantes. Article 21.2(d) : "sécurité
   de la chaine d'approvisionnement, y compris les aspects lies a la
-  securite des relations entre chaque entite et ses fournisseurs ou
+  sécurité des relations entre chaque entite et ses fournisseurs ou
   prestataires de services directs".
 
   Pour les entites concernees (la plupart des PME > 50 personnes
@@ -169,8 +169,8 @@ debrief: |
 quiz:
   - question: "Ton prestataire de paie est compromis par un ransomware. Action n°1 ?"
     choices:
-      - { id: "a", label: "Attendre les details", correct: false }
-      - { id: "b", label: "Isoler immediatement les acces du prestataire (VPN, SSO, API, comptes service) et auditer les logs", correct: true }
+      - { id: "a", label: "Attendre les détails", correct: false }
+      - { id: "b", label: "Isoler immédiatement les acces du prestataire (VPN, SSO, API, comptes service) et auditer les logs", correct: true }
       - { id: "c", label: "Lancer un audit complet 3 semaines", correct: false }
     explanation: "Time is critical. Si les attaquants ont les comptes du prestataire, ils peuvent pivoter chez toi via le VPN/SSO. Isoler en premier (5 min), auditer les logs ensuite (1h), audit complet plus tard (3 semaines)."
 
@@ -183,10 +183,10 @@ quiz:
 
   - question: "NIS2 article 21.2(d) impose quoi sur la supply chain ?"
     choices:
-      - { id: "a", label: "Rien de specifique", correct: false }
-      - { id: "b", label: "Maitrise de la chaine d'approvisionnement et securite des relations avec les prestataires directs", correct: true }
+      - { id: "a", label: "Rien de spécifique", correct: false }
+      - { id: "b", label: "Maitrise de la chaine d'approvisionnement et sécurité des relations avec les prestataires directs", correct: true }
       - { id: "c", label: "Internalisation de tous les prestataires", correct: false }
-    explanation: "NIS2 21.2(d) demande explicitement de gerer la securite de la supply chain (registre prestataires, clauses contractuelles, plan d'incident, audits). C'est une obligation legale pour les entites essentielles/importantes."
+    explanation: "NIS2 21.2(d) demande explicitement de gerer la sécurité de la supply chain (registre prestataires, clauses contractuelles, plan d'incident, audits). C'est une obligation legale pour les entites essentielles/importantes."
 
   - question: "Combien de croissance des attaques supply chain selon ENISA en 5 ans ?"
     choices:
@@ -196,6 +196,6 @@ quiz:
     explanation: "Selon le rapport ENISA Threat Landscape, la supply chain est l'attaque qui croit le plus vite. Raison : les grandes orgs sont bien defendues, donc attaquer un petit prestataire pour atteindre une grande org est plus efficace."
 ---
 
-> 💡 **Pour aller plus loin** : ENISA publie chaque annee son Threat
+> 💡 **Pour aller plus loin** : ENISA publie chaque année son Threat
 > Landscape Report (gratuit). NIST a publie un excellent guide
 > SP 800-161 sur la C-SCRM (Cyber Supply Chain Risk Management).

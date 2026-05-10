@@ -2,7 +2,7 @@
 title: "Le offboarding d'un prestataire : ne rien oublier"
 durationMinutes: 6
 persona: "manager"
-objective: "Etablir une checklist de offboarding complete pour un prestataire qui part : acces, donnees, comptes API, certificats, documentation, et NE rien oublier"
+objective: "Etablir une checklist de offboarding complete pour un prestataire qui part : acces, données, comptes API, certificats, documentation, et NE rien oublier"
 xpReward: 60
 scenario: |
   Vendredi 17h, le DAF te dit : "On vient de mettre fin au contrat
@@ -11,24 +11,24 @@ scenario: |
 
   Tu as 7 jours. MaintenanceCorp avait :
   - 3 comptes utilisateurs (Alice, Bob, Carlos)
-  - Un compte admin partage `maintenance-admin` (oui c'etait pas bien)
+  - Un compte admin partage `maintenance-admin` (oui c'était pas bien)
   - Acces VPN
   - Acces SSH a 4 serveurs
   - Token API de monitoring (genere il y a 2 ans)
   - Acces SSO Microsoft 365 (Teams, SharePoint)
-  - Une copie locale de notre base donnees clients (extraction backup
+  - Une copie locale de notre base données clients (extraction backup
     pour test fait il y a 8 mois)
   - Un certificat client TLS pour notre API (valide encore 18 mois)
   - Documentation technique sur leur Confluence (acces partages avec
     nous)
 
   Tu fais la liste de toutes les actions de cleanup. Combien
-  d'elements distinctifs ?
+  d'éléments distinctifs ?
 choices:
   - id: "a"
-    label: "9 elements (un pour chaque ligne ci-dessus)"
+    label: "9 éléments (un pour chaque ligne ci-dessus)"
     outcome: "good"
-    feedback: "Bonne base, mais en pratique il y en a souvent plus : DNS records, integrations Slack/Teams, abonnements, contrats restants, formations, donnees personnelles employes. La checklist exhaustive est de ~15 elements."
+    feedback: "Bonne base, mais en pratique il y en a souvent plus : DNS records, integrations Slack/Teams, abonnements, contrats restants, formations, données personnelles employés. La checklist exhaustive est de ~15 éléments."
     points: 25
   - id: "b"
     label: "Juste 3 - revoquer VPN, fermer SSO, demander suppression de la BDD"
@@ -36,19 +36,19 @@ choices:
     feedback: "Tu vas oublier : compte admin partage (a renommer ou desactiver), token API (a revoquer), certificat client (a revoquer), Confluence (a auditer), etc. Approche dangereuse car les comptes oublies = risque persistant."
     points: -15
   - id: "c"
-    label: "15+ elements en suivant une checklist complete : comptes individuels, comptes partages, token, certificats, donnees, documentation, integrations tierces..."
+    label: "15+ éléments en suivant une checklist complete : comptes individuels, comptes partages, token, certificats, données, documentation, integrations tierces..."
     outcome: "good"
-    feedback: "Approche professionnelle. La cle du offboarding reussi est une checklist exhaustive. Ne rien oublier = pas de surprise 6 mois plus tard quand un attaquant utilise un compte fantome."
+    feedback: "Approche professionnelle. La cle du offboarding réussi est une checklist exhaustive. Ne rien oublier = pas de surprise 6 mois plus tard quand un attaquant utilise un compte fantome."
     points: 35
   - id: "d"
-    label: "On verra apres, le contrat est termine donc plus de risque"
+    label: "On verra après, le contrat est termine donc plus de risque"
     outcome: "bad"
-    feedback: "FAUX. Le contrat termine ne supprime pas les acces techniques. Si tu n'agis pas, MaintenanceCorp (ou un attaquant qui les compromet) peut continuer a se connecter pendant des mois ou annees."
+    feedback: "FAUX. Le contrat termine ne supprime pas les acces techniques. Si tu n'agis pas, MaintenanceCorp (ou un attaquant qui les compromet) peut continuer a se connecter pendant des mois ou années."
     points: -15
 debrief: |
-  Le **offboarding** d'un prestataire est l'etape la plus negligee de
+  Le **offboarding** d'un prestataire est l'étape la plus negligee de
   la relation. Le contrat est termine, l'attention se relache, et des
-  acces techniques restent ouverts pendant des mois ou des annees -
+  acces techniques restent ouverts pendant des mois ou des années -
   c'est la source de nombreux breach par "compte fantome".
 
   **La checklist exhaustive en 15 points :**
@@ -57,27 +57,27 @@ debrief: |
 
   **1. Comptes nominatifs individuels**
   - Disable AD/Azure/SSO pour chaque user du prestataire
-  - Verifier que la connexion est effectivement bloquee (test)
+  - Vérifier que la connexion est effectivement bloquee (test)
   - Revoquer les tokens d'application persists (Office 365 OAuth
     tokens, MFA app passwords)
 
   **2. Comptes partages "maintenance" / "support"**
-  - Renommer ET changer le mot de passe immediatement
-  - Si plus utiles : desactiver puis supprimer apres 30 jours
+  - Renommer ET changer le mot de passe immédiatement
+  - Si plus utiles : desactiver puis supprimer après 30 jours
   - **Ne JAMAIS partager le nouveau mot de passe avec qui que ce
-    soit qui pourrait etre lie au prestataire**
+    soit qui pourrait être lie au prestataire**
 
   **3. Acces VPN**
   - Revoquer les certificats client VPN
   - Disable les comptes VPN nominatifs
-  - Auditer les logs VPN des 90 derniers jours pour detecter activite
+  - Auditer les logs VPN des 90 derniers jours pour détecter activite
     anormale
 
   **4. SSH / acces serveur**
   - Supprimer les cles SSH du prestataire des `~/.ssh/authorized_keys`
-  - Audit `auth.log` pour detecter dernieres connexions
+  - Audit `auth.log` pour détecter dernières connexions
   - Si compte partage type `maintenance` : changer le mot de passe
-    racine immediatement
+    racine immédiatement
 
   **Acces API et integrations (jour J + 1)**
 
@@ -90,7 +90,7 @@ debrief: |
 
   **6. Certificats clients TLS / mTLS**
   - Revoquer les certificats client (CRL ou OCSP)
-  - Verifier que les API qui utilisaient ces certs refusent les
+  - Vérifier que les API qui utilisaient ces certs refusent les
     connexions
 
   **7. Integrations tierces (Slack, Teams, Jira, Confluence)**
@@ -98,32 +98,32 @@ debrief: |
   - Revoquer les integrations
   - Auditer les guests/external members et les retirer
 
-  **Donnees (jour J + 7)**
+  **Données (jour J + 7)**
 
-  **8. Donnees stockees chez le prestataire**
+  **8. Données stockees chez le prestataire**
   - Demander preuve de suppression (cf. clause contractuelle ep 04)
-  - Si extraction de production a ete faite chez eux pour test :
+  - Si extraction de production a été faite chez eux pour test :
     demander confirmation de suppression de cette copie
-  - Recuperer la version finale des donnees au format export ouvert
+  - Recuperer la version finale des données au format export ouvert
 
   **9. Documentation technique chez le prestataire**
   - Recuperer copies de Confluence/Notion/SharePoint
-  - Demander suppression du Confluence apres recuperation
+  - Demander suppression du Confluence après recuperation
   - Si docs sensibles : audit des acces logs pour voir qui a
     consulte quoi
 
   **10. Backups & archives**
   - Demander preuve de suppression des backups (souvent oublies)
   - Politique de retention : si le prestataire doit conserver 1 an
-    pour conformite legale, en conserver les certificats de
+    pour conformité legale, en conserver les certificats de
     destruction differe
 
   **Infrastructure (jour J + 7)**
 
   **11. DNS records**
   - Si le prestataire avait des sous-domaines deleges (ex.
-    `monitoring.acme.fr` -> NS chez eux) : reprendre le controle
-  - Verifier les enregistrements MX/SPF/DKIM (s'il envoyait des mails
+    `monitoring.acme.fr` -> NS chez eux) : reprendre le contrôle
+  - Vérifier les enregistrements MX/SPF/DKIM (s'il envoyait des mails
     depuis ton domaine)
 
   **12. Comptes service & integrations applicatives**
@@ -141,30 +141,30 @@ debrief: |
   **14. Documentation & connaissance**
   - Recuperer les knowledge bases, scripts, runbooks crees par le
     prestataire
-  - Faire un transfert de competences avec leur equipe avant depart
-  - Documentation interne pour le successeur / equipe
+  - Faire un transfert de competences avec leur équipe avant depart
+  - Documentation interne pour le successeur / équipe
 
-  **15. RGPD - donnees personnelles employes prestataire**
-  - Si tu avais en BDD les noms/email des employes du prestataire
-    (annuaire, gestion d'acces) : verifier la politique de
+  **15. RGPD - données personnelles employés prestataire**
+  - Si tu avais en BDD les noms/email des employés du prestataire
+    (annuaire, gestion d'acces) : vérifier la politique de
     retention
-  - Anonymiser/supprimer apres la fin du contrat selon ta politique
+  - Anonymiser/supprimer après la fin du contrat selon ta politique
     de retention
 
   **Le piege "On garde une copie au cas ou"**
 
-  Tu peux etre tente de garder l'acces du prestataire "au cas ou
+  Tu peux être tente de garder l'acces du prestataire "au cas ou
   on aurait besoin de lui rappeler quelque chose pendant 1-2
   semaines". MAUVAISE IDEE.
 
   Solution : si vraiment besoin, garde un compte temporaire avec
   expiration **automatique** (pas "on coupera quand on aura le
-  temps"), MFA obligatoire, et logs surveilles. Mais l'experience
+  temps"), MFA obligatoire, et logs surveilles. Mais l'expérience
   montre que tu n'auras pas besoin de lui acceder.
 
   **Audit final (jour J + 30) :**
 
-  Apres 30 jours, faire un audit complet :
+  Après 30 jours, faire un audit complet :
   - Aucune connexion VPN du prestataire dans les logs
   - Aucun acces SSH avec leurs credentials
   - Aucun token API actif
@@ -177,41 +177,41 @@ debrief: |
 
   Un ancien sous-traitant Tesla, dont le contrat avait pris fin
   6 mois plus tot, a utilise des credentials non revoques pour se
-  connecter au reseau interne et exfiltrer 300 Go de donnees
-  sensibles (code, plans). L'incident a ete decouvert plusieurs
-  semaines apres l'exfiltration.
+  connecter au réseau interne et exfiltrer 300 Go de données
+  sensibles (code, plans). L'incident a été decouvert plusieurs
+  semaines après l'exfiltration.
 
   Cause : oubli de revocation lors de l'offboarding. Defense :
-  checklist exhaustive systematique, audit periodique des comptes
+  checklist exhaustive systematique, audit périodique des comptes
   fantomes.
 quiz:
-  - question: "Combien d'elements typique a auditer en offboarding prestataire ?"
+  - question: "Combien d'éléments typique a auditer en offboarding prestataire ?"
     choices:
       - { id: "a", label: "3 - VPN, SSO, BDD", correct: false }
-      - { id: "b", label: "~15 elements (comptes, tokens, certificats, donnees, integrations, DNS, webhooks, etc.)", correct: true }
+      - { id: "b", label: "~15 éléments (comptes, tokens, certificats, données, integrations, DNS, webhooks, etc.)", correct: true }
       - { id: "c", label: "1 - terminer le contrat", correct: false }
-    explanation: "La checklist exhaustive de offboarding contient ~15 elements distinctifs. Manquer un seul = compte fantome qui peut etre exploit pendant des mois."
+    explanation: "La checklist exhaustive de offboarding contient ~15 éléments distinctifs. Manquer un seul = compte fantome qui peut être exploit pendant des mois."
 
   - question: "Le breach Tesla 2018 est parti de quoi ?"
     choices:
       - { id: "a", label: "Une faille zero-day", correct: false }
-      - { id: "b", label: "Credentials non revoques d'un ancien sous-traitant 6 mois apres fin de contrat", correct: true }
+      - { id: "b", label: "Credentials non revoques d'un ancien sous-traitant 6 mois après fin de contrat", correct: true }
       - { id: "c", label: "Phishing", correct: false }
-    explanation: "Sous-traitant Tesla a utilise ses anciens credentials (non revoques lors de l'offboarding) pour exfiltrer 300 Go de donnees sensibles. Cas typique de comptes fantomes faute de checklist offboarding."
+    explanation: "Sous-traitant Tesla a utilise ses anciens credentials (non revoques lors de l'offboarding) pour exfiltrer 300 Go de données sensibles. Cas typique de comptes fantomes faute de checklist offboarding."
 
-  - question: "Le compte partage `maintenance-admin` doit etre traite comment ?"
+  - question: "Le compte partage `maintenance-admin` doit être traite comment ?"
     choices:
       - { id: "a", label: "Le supprimer", correct: false }
-      - { id: "b", label: "Renommer ET changer le mot de passe immediatement (jour J), puis decider apres si on le garde ou le supprime", correct: true }
+      - { id: "b", label: "Renommer ET changer le mot de passe immédiatement (jour J), puis decider après si on le garde ou le supprime", correct: true }
       - { id: "c", label: "Le laisser tel quel", correct: false }
-    explanation: "Renommer + changer mot de passe = neutralise immediate. Decider apres si le compte a encore une utilite (pour un autre prestataire) ou si on peut le supprimer (apres 30j de verification)."
+    explanation: "Renommer + changer mot de passe = neutralise immediate. Decider après si le compte a encore une utilite (pour un autre prestataire) ou si on peut le supprimer (après 30j de vérification)."
 
-  - question: "Apres l'offboarding, quel audit faire au jour J + 30 ?"
+  - question: "Après l'offboarding, quel audit faire au jour J + 30 ?"
     choices:
       - { id: "a", label: "Aucun", correct: false }
-      - { id: "b", label: "Verifier qu'aucune connexion VPN/SSH du prestataire n'apparait dans les logs ; aucun token API actif ; aucun email sortant", correct: true }
+      - { id: "b", label: "Vérifier qu'aucune connexion VPN/SSH du prestataire n'apparait dans les logs ; aucun token API actif ; aucun email sortant", correct: true }
       - { id: "c", label: "Audit financier", correct: false }
-    explanation: "Audit final apres 30 jours pour confirmer que la checklist a ete complete : aucun acces actif n'est detectable. Si une activite persiste, action immediate. Cette verification revele souvent des oublis."
+    explanation: "Audit final après 30 jours pour confirmer que la checklist a été complete : aucun acces actif n'est detectable. Si une activite persiste, action immediate. Cette vérification revele souvent des oublis."
 ---
 
 > 💡 **Pour aller plus loin** : **Microsoft Entra ID Lifecycle

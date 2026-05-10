@@ -2,10 +2,10 @@
 title: "Le SMS suspect"
 durationMinutes: 5
 persona: "tous"
-objective: "Reconnaitre une tentative de smishing"
+objective: "Reconnaître une tentative de smishing"
 xpReward: 50
 scenario: |
-  Tu es au volant. Ton telephone vibre. SMS :
+  Tu es au volant. Ton téléphone vibre. SMS :
 
   "Colissimo : votre colis n'a pas pu etre livre ce jour. Frais de redirection : 1,99 €. Confirmez ici : https://colissimo-redirect.fr/r/9k2x"
 
@@ -14,32 +14,32 @@ choices:
   - id: "a"
     label: "Je clique sur le lien et je paye les 1,99 €"
     outcome: "bad"
-    feedback: "Mauvais reflexe. Tu viens de donner ta carte bancaire a un faux site Colissimo. Le vrai colis n'existe meme pas."
+    feedback: "Mauvais reflexe. Tu viens de donner ta carte bancaire a un faux site Colissimo. Le vrai colis n'existe même pas."
     points: -10
   - id: "b"
-    label: "Je verifie sur le vrai site officiel laposte.fr avec mon numero de suivi"
+    label: "Je verifie sur le vrai site officiel laposte.fr avec mon numéro de suivi"
     outcome: "good"
     feedback: "Excellent. Tu contournes le canal SMS et tu utilises le canal officiel de l'expediteur."
     points: 30
   - id: "c"
-    label: "Je transfere le SMS a mon collegue pour avis"
+    label: "Je transfere le SMS a mon collègue pour avis"
     outcome: "neutral"
-    feedback: "Pas de degats personnels, mais tu deplaces le risque. Mieux vaut verifier toi-meme via le site officiel."
+    feedback: "Pas de degats personnels, mais tu deplaces le risque. Mieux vaut vérifier toi-même via le site officiel."
     points: 5
   - id: "d"
-    label: "Je reponds STOP au numero"
+    label: "Je réponds STOP au numéro"
     outcome: "bad"
-    feedback: "Repondre confirme que ton numero est actif. Tu vas en recevoir 10 fois plus."
+    feedback: "Repondre confirme que ton numéro est actif. Tu vas en recevoir 10 fois plus."
     points: -5
 debrief: |
-  Cette technique s'appelle le "smishing" (SMS phishing). Elle explose en France : le faux Colissimo, le faux Chronopost, le faux impot.gouv, la fausse Carte Vitale.
+  Cette technique s'appelle le "smishing" (SMS phishing). Elle explose en France : le faux Colissimo, le faux Chronopost, le faux impôt.gouv, la fausse Carte Vitale.
 
   Trois marqueurs d'un SMS pieges :
   - Une URL raccourcie ou avec un domaine bizarre (laposte-suivi.fr, colissimo-redirect.fr...)
-  - Une demande de paiement modique (1,99 €, 2,90 €) pour endormir la mefiance
+  - Une demande de paiement modique (1,99 €, 2,90 €) pour endormir la méfiance
   - Un sentiment d'urgence ou de raterait quelque chose
 
-  Le reflexe universel : ne JAMAIS cliquer sur un lien dans un SMS. Toujours passer par le site officiel, en tapant l'URL toi-meme dans le navigateur.
+  Le reflexe universel : ne JAMAIS cliquer sur un lien dans un SMS. Toujours passer par le site officiel, en tapant l'URL toi-même dans le navigateur.
 quiz:
   - question: "Quel est le marqueur principal d'un SMS de smishing ?"
     choices:
@@ -54,28 +54,28 @@ quiz:
         correct: false
     explanation: "Un service legitime ne t'envoie quasiment jamais un lien direct dans un SMS. C'est le marqueur le plus fiable."
 
-  - question: "Si tu attends vraiment un colis, comment verifier ?"
+  - question: "Si tu attends vraiment un colis, comment vérifier ?"
     choices:
       - id: "a"
         label: "Je clique sur le lien du SMS"
         correct: false
       - id: "b"
-        label: "Je vais sur laposte.fr et j'entre mon numero de suivi"
+        label: "Je vais sur laposte.fr et j'entre mon numéro de suivi"
         correct: true
       - id: "c"
-        label: "Je rappelle le numero qui m'a envoye le SMS"
+        label: "Je rappelle le numéro qui m'a envoye le SMS"
         correct: false
     explanation: "Tu utilises le canal officiel (le site web verifie), pas le canal qui t'a contacte (le SMS)."
 
-  - question: "Vrai ou faux : repondre STOP au SMS suspect resoud le probleme."
+  - question: "Vrai ou faux : répondre STOP au SMS suspect resoud le problème."
     choices:
       - id: "a"
         label: "Vrai"
         correct: false
       - id: "b"
-        label: "Faux - repondre confirme que ton numero est actif"
+        label: "Faux - répondre confirme que ton numéro est actif"
         correct: true
-    explanation: "C'est contre-intuitif mais vrai : repondre est un signal precieux pour les attaquants."
+    explanation: "C'est contre-intuitif mais vrai : répondre est un signal précieux pour les attaquants."
 ---
 
 ## Pour aller plus loin
@@ -86,4 +86,4 @@ Le smishing est encore plus dangereux que l'email phishing parce que :
 - Les liens sont raccourcis donc on ne voit pas le vrai domaine
 - L'autocompletion des navigateurs mobiles retient les fausses URL
 
-Reflexe definitif : **un SMS avec un lien = je clique pas. Point.**
+Reflexe définitif : **un SMS avec un lien = je clique pas. Point.**

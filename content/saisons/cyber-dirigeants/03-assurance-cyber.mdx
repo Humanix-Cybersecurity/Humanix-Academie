@@ -2,7 +2,7 @@
 title: "L'assurance cyber : ce qu'elle couvre vraiment"
 durationMinutes: 7
 persona: "manager"
-objective: "Comprendre ce qu'une cyber-assurance couvre / ne couvre pas, comment la negocier, et son role dans la strategie cyber d'une PME"
+objective: "Comprendre ce qu'une cyber-assurance couvre / ne couvre pas, comment la négocier, et son rôle dans la stratégie cyber d'une PME"
 xpReward: 60
 scenario: |
   Tu es DG d'une PME 80 personnes. Le DAF te dit : "Notre
@@ -13,53 +13,53 @@ scenario: |
   - Exclusion si : pas de MFA actif, pas de sauvegardes
     testees, pas de formation cyber
   - Deductible : 25K EUR par incident
-  - Periode d'attente : 24h pour notification
-  - Plafonds par categorie de breach
+  - Période d'attente : 24h pour notification
+  - Plafonds par catégorie de breach
 
   Tu fais quoi ?
 choices:
   - id: "a"
-    label: "Je signe sans verifier les conditions, c'est une couverture"
+    label: "Je signe sans vérifier les conditions, c'est une couverture"
     outcome: "bad"
-    feedback: "DANGER. Conditions = exclusions. Sans MFA actif au moment du breach = refus de paiement. Tu paies 8K/an pour rien. Verification prealable + mise en conformite avec conditions = essentielle."
+    feedback: "DANGER. Conditions = exclusions. Sans MFA actif au moment du breach = refus de paiement. Tu paies 8K/an pour rien. Vérification préalable + mise en conformité avec conditions = essentielle."
     points: -25
   - id: "b"
-    label: "J'audite la conformite aux conditions (MFA, sauvegardes, formation), je verifie limites/deductibles, je negocie/comparison avec autres assureurs, je signe SI couvre vraiment nos risques"
+    label: "J'audite la conformité aux conditions (MFA, sauvegardes, formation), je verifie limites/deductibles, je negocie/comparison avec autres assureurs, je signe SI couvre vraiment nos risques"
     outcome: "good"
-    feedback: "Approche pro. Verification conditions, conformite avant souscription, comparaison, decision basee sur couverture reelle. Standard pour PME. Sans audit = paiement pour couverture potentiellement non-applicable."
+    feedback: "Approche pro. Vérification conditions, conformité avant souscription, comparaison, décision basee sur couverture reelle. Standard pour PME. Sans audit = paiement pour couverture potentiellement non-applicable."
     points: 40
   - id: "c"
     label: "Je refuse, c'est trop cher"
     outcome: "neutral"
-    feedback: "Decision pas absurde mais incomplete. 8K/an pour couverture 500K = ratio raisonnable SI conditions respectees. Verification + negociation = mieux que refus systematique."
+    feedback: "Décision pas absurde mais incomplete. 8K/an pour couverture 500K = ratio raisonnable SI conditions respectees. Vérification + négociation = mieux que refus systematique."
     points: 10
   - id: "d"
     label: "Je signe et je verrai si c'est utile en cas d'incident"
     outcome: "bad"
-    feedback: "Dilettante. En cas de breach, decouvrir que tu n'es pas couvert = panique + sans plan B. Verification PREALABLE + conformite + plan d'action. L'assurance n'est PAS une excuse pour ne rien faire."
+    feedback: "Dilettante. En cas de breach, decouvrir que tu n'es pas couvert = panique + sans plan B. Vérification PREALABLE + conformité + plan d'action. L'assurance n'est PAS une excuse pour ne rien faire."
     points: -15
 debrief: |
   La **cyber-assurance** est devenue essentielle pour les PME
   (recommande NIS2, requise par certains clients enterprise).
   Mais c'est un produit complexe avec beaucoup d'exclusions.
 
-  **Le marche francais 2024** : 50+ assureurs proposent des
+  **Le marche français 2024** : 50+ assureurs proposent des
   contrats cyber. Primes en hausse (+30-50% en 2 ans) suite a
   l'augmentation des sinistres.
 
   **Ce que la cyber-assurance couvre (typiquement) :**
 
-  **Couverture 1 : Reponse a incident**
+  **Couverture 1 : Réponse a incident**
 
   - **Cabinet forensic** (audit cyber, IT)
-  - **Avocat specialise** (procedure)
+  - **Avocat specialise** (procédure)
   - **Communication crise** (relations publiques)
   - **Notification** (clients, partenaires)
   - **Cabinet juridique** (RGPD, NIS2)
 
   Cout typique : 50-200 K EUR pour un incident moyen.
 
-  **Couverture 2 : Recuperation des donnees**
+  **Couverture 2 : Recuperation des données**
 
   - **Recovery technique**
   - **Reconstruction** (si necessaire)
@@ -81,14 +81,14 @@ debrief: |
   - **Indemnites** clients impactes
   - **Frais** de defense en justice
   - **Sanctions** RGPD (rare, depend du contrat)
-  - **Plaintes** des employes / tiers
+  - **Plaintes** des employés / tiers
 
   Cout : 10-500 K EUR.
 
   **Couverture 5 : Rancons (cyber-extorsion)**
 
-  - **Frais** de negociation
-  - **Paiement** de rancon (si decide, generalement
+  - **Frais** de négociation
+  - **Paiement** de rançon (si decide, généralement
     deconseille par ANSSI)
   - **Bitcoin / crypto** (si paiement)
 
@@ -102,15 +102,15 @@ debrief: |
 
   Cout : 20-200 K EUR.
 
-  **Ce que la cyber-assurance ne couvre PAS (en general) :**
+  **Ce que la cyber-assurance ne couvre PAS (en général) :**
 
-  **Exclusion 1 : Acte de guerre / etat-nation**
+  **Exclusion 1 : Acte de guerre / état-nation**
 
-  - Attaque etat-nation (NSA, Mossad, Wagner, etc.)
+  - Attaque état-nation (NSA, Mossad, Wagner, etc.)
   - **Impact** : couverture refusee si l'attribution est
-    "etat"
-  - **Probleme** : 30%+ des attaques sont attribuees a des
-    etats
+    "état"
+  - **Problème** : 30%+ des attaques sont attribuees a des
+    états
 
   Compagnies d'assurance ont resserre cette exclusion en
   2024 (cas NotPetya 2017 : Mondelez vs Zurich, 100M USD
@@ -119,23 +119,23 @@ debrief: |
   **Exclusion 2 : Negligence manifeste**
 
   - **Pas de MFA** sur les comptes critiques
-  - **Pas de sauvegardes** testees recemment
+  - **Pas de sauvegardes** testees récemment
   - **Software obsolete** non patche depuis > 6 mois
-  - **Pas de formation** cyber des employes
+  - **Pas de formation** cyber des employés
 
   Si la cyber-assurance constate que tu n'as pas applique
   les mesures de base = refus de paiement.
 
   **Exclusion 3 : Insider rancunier**
 
-  - **Acte deliberé** d'un employe (rancunier, achete par
+  - **Acte deliberé** d'un employé (rancunier, achete par
     concurrent)
   - **Nuance** selon contrat
 
-  **Exclusion 4 : Atteinte a la propriete intellectuelle**
+  **Exclusion 4 : Atteinte a la propriété intellectuelle**
 
   - **Vol** de code source, designs, secrets industriels
-  - Generalement **non couvert** ou plafonne
+  - Généralement **non couvert** ou plafonne
 
   **Exclusion 5 : Sanctions RGPD / NIS2**
 
@@ -149,7 +149,7 @@ debrief: |
   - **Reputation**
   - **Avantage** concurrent
 
-  Difficiles a chiffrer, generalement pas couverts.
+  Difficiles a chiffrer, généralement pas couverts.
 
   **Exclusion 7 : Inflation cumulative**
 
@@ -169,7 +169,7 @@ debrief: |
 
   **Conditions organisationnelles** :
   - **Charte cyber** + formation
-  - **Plan de reponse incident** documente
+  - **Plan de réponse incident** documente
   - **CISO/RSSI** designe
   - **Audit annuel**
 
@@ -177,41 +177,41 @@ debrief: |
 
   **Comment choisir un assureur :**
 
-  **Etape 1 : Evaluer ses besoins**
+  **Étape 1 : Evaluer ses besoins**
 
   - **Risques** identifies (analyse EBIOS RM)
   - **ALE** annuelle calculee (cf ep 02)
   - **Niveau** de couverture souhaite
   - **Budget** disponible
 
-  **Etape 2 : Demander 3-5 devis**
+  **Étape 2 : Demander 3-5 devis**
 
   Assureurs principaux France :
   - **Hiscox** : leader PME, assez restrictif
   - **AIG** : enterprise, complet
-  - **AXA** : francais, accessible
+  - **AXA** : français, accessible
   - **Allianz** : international
-  - **Beazley** : specialiste cyber
+  - **Beazley** : spécialiste cyber
   - **Stoik** (FR) : neo-assureur cyber pour PME
 
-  **Etape 3 : Comparer les conditions**
+  **Étape 3 : Comparer les conditions**
 
   Pas seulement le prix :
-  - **Plafond** total et par categorie
+  - **Plafond** total et par catégorie
   - **Deductibles**
   - **Exclusions** (lire attentivement !)
-  - **Periode d'attente** notification
+  - **Période d'attente** notification
   - **Service** assistance (24/7 ?)
-  - **Reseau** experts mobilisables
+  - **Réseau** experts mobilisables
 
-  **Etape 4 : Negocier**
+  **Étape 4 : Négocier**
 
   - **Reduction** prime si bonne maturite cyber
-  - **Plafond** plus eleve
+  - **Plafond** plus élève
   - **Reduction** des exclusions
   - **Service** premium
 
-  **Etape 5 : Verifier conformite avant signature**
+  **Étape 5 : Vérifier conformité avant signature**
 
   Audit interne :
   - MFA actif partout
@@ -220,7 +220,7 @@ debrief: |
   - Patches a jour
   - Plan incident documente
 
-  Si non-conformite = conditions risquent d'etre violees =
+  Si non-conformité = conditions risquent d'être violees =
   refus paiement.
 
   **Cout typique d'une cyber-assurance :**
@@ -236,7 +236,7 @@ debrief: |
   **Le piege "j'ai une assurance, je suis tranquille" :**
 
   Faux :
-  - **Conditions** doivent etre respectees
+  - **Conditions** doivent être respectees
   - **Deductible** a payer (souvent 10-50K EUR)
   - **Exclusions** peuvent surprendre
   - **Plafond** depasse en cas d'incident majeur
@@ -250,15 +250,15 @@ debrief: |
   PME), l'assurance est rapidement amortie.
 
   Comparaison assurance multi-risques pro : 5-15 K EUR/an
-  pour locaux + responsabilite. Cyber est dans le meme ordre
+  pour locaux + responsabilité. Cyber est dans le même ordre
   de grandeur.
 
   **Le piege "je signe le moins cher" :**
 
-  Le moins cher = generalement le plus restrictif :
+  Le moins cher = généralement le plus restrictif :
   - **Exclusions** larges
   - **Plafond** bas
-  - **Deductible** eleve
+  - **Deductible** élève
   - **Service** minimal
 
   Comparer **prix vs valeur**.
@@ -277,7 +277,7 @@ debrief: |
   **Refus** de paiement (negligence manifeste). PME paye
   les 200K + 8K/an pour rien.
 
-  Lecon : verifier conformite AVANT souscription + maintenir.
+  Lecon : vérifier conformité AVANT souscription + maintenir.
 
   **Cas 2 - PME 2024 (succes par bonne maturite)**
 
@@ -287,9 +287,9 @@ debrief: |
   - Formation cyber annuelle
   - Plan incident documente
 
-  Subit breach (phishing reussi). Cout : 80K EUR.
+  Subit breach (phishing réussi). Cout : 80K EUR.
 
-  Assureur paye 55K EUR (apres 25K deductible).
+  Assureur paye 55K EUR (après 25K deductible).
   - PME paye 25K + prime 6K/an = 31K
   - Sans assurance : 80K
   - Economie : 49K + serenite
@@ -298,10 +298,10 @@ debrief: |
 
   Cabinet conseil victime d'un ransomware similaire a
   NotPetya. Assureur invoque "exclusion acte de guerre"
-  (etat russe suspecte).
+  (état russe suspecte).
 
   Litige juridique en cours. Lecon : exclusions
-  etat-nation a verifier en 2024+ (apres jurisprudence
+  état-nation a vérifier en 2024+ (après jurisprudence
   Mondelez).
 
   **Cas 4 - PME 2024 (refus assurance par manque maturite)**
@@ -318,11 +318,11 @@ debrief: |
   Lecon : assurance = encouragement a la maturite. Plus de
   maturite = plus assurable + prime reduite.
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **Cyber-assurance = complement, pas remplacement.
-  > Conditions doivent etre respectees pour garantir
-  > paiement. Audit conformite avant souscription. Comparer
+  > Conditions doivent être respectees pour garantir
+  > paiement. Audit conformité avant souscription. Comparer
   > 3-5 devis (pas seulement prix). Pour PME : 5-15 K EUR/an
   > couverture standard. Sans mesures cyber = refus paiement
   > ou refus souscription.**
@@ -330,35 +330,35 @@ quiz:
   - question: "Cyber-assurance, ce qu'elle couvre principalement ?"
     choices:
       - { id: "a", label: "Tout sans condition", correct: false }
-      - { id: "b", label: "Reponse incident (forensic, juridique, comm), recovery, perte exploitation, responsabilite civile, rancons. SOUMIS aux conditions (MFA, sauvegardes, formation)", correct: true }
+      - { id: "b", label: "Réponse incident (forensic, juridique, comm), recovery, perte exploitation, responsabilité civile, rançons. SOUMIS aux conditions (MFA, sauvegardes, formation)", correct: true }
       - { id: "c", label: "Seulement les amendes", correct: false }
-    explanation: "Cyber-assurance couvre : reponse incident (cabinet forensic, avocat, comm), recovery technique, perte exploitation, responsabilite civile, rancons (avec conditions). MAIS conditions strictes : MFA, sauvegardes testees, formation, EDR, plan incident documente. Sans = refus."
+    explanation: "Cyber-assurance couvre : réponse incident (cabinet forensic, avocat, comm), recovery technique, perte exploitation, responsabilité civile, rançons (avec conditions). MAIS conditions strictes : MFA, sauvegardes testees, formation, EDR, plan incident documente. Sans = refus."
 
   - question: "Si pas de MFA au moment du breach, l'assureur paye ?"
     choices:
       - { id: "a", label: "Oui c'est couvert", correct: false }
       - { id: "b", label: "NON typiquement. Negligence manifeste = exclusion. Cas reel PME 2023 : 200K dommages + assurance refuse paiement = perte 200K + 8K prime/an pour rien", correct: true }
       - { id: "c", label: "50-50", correct: false }
-    explanation: "Negligence manifeste (pas MFA, pas sauvegardes testees, software obsolete, pas formation) = exclusion typique. Cas reel : PME 200K dommages + refus paiement assurance = double peine. Verification + mise en conformite + maintien des conditions = essentielle."
+    explanation: "Negligence manifeste (pas MFA, pas sauvegardes testees, software obsolete, pas formation) = exclusion typique. Cas reel : PME 200K dommages + refus paiement assurance = double peine. Vérification + mise en conformité + maintien des conditions = essentielle."
 
   - question: "Cout typique cyber-assurance pour PME 80 pers (CA 12M) ?"
     choices:
       - { id: "a", label: "100K EUR/an", correct: false }
       - { id: "b", label: "5-15 K EUR/an pour couverture standard 500K (3-5K basique 250K, 15-30K premium 1M+). Reduction 30-50% si bonne maturite cyber", correct: true }
       - { id: "c", label: "Gratuit", correct: false }
-    explanation: "Cyber-assurance PME : 3-5K EUR/an basique (250K), 5-15K EUR/an standard (500K), 15-30K EUR/an premium (1M+). Comparable a assurance multi-risques pro. Reduction 30-50% si bonne maturite cyber (MFA, sauvegardes, formation, plan incident). Marche francais : Hiscox, AIG, AXA, Stoik, Beazley."
+    explanation: "Cyber-assurance PME : 3-5K EUR/an basique (250K), 5-15K EUR/an standard (500K), 15-30K EUR/an premium (1M+). Comparable a assurance multi-risques pro. Reduction 30-50% si bonne maturite cyber (MFA, sauvegardes, formation, plan incident). Marche français : Hiscox, AIG, AXA, Stoik, Beazley."
 
-  - question: "Exclusion 'acte de guerre / etat-nation', impact ?"
+  - question: "Exclusion 'acte de guerre / état-nation', impact ?"
     choices:
       - { id: "a", label: "Aucun", correct: false }
-      - { id: "b", label: "30%+ attaques sont etat-attribuees. Cas Mondelez vs Zurich (100M USD litige NotPetya) a fait jurisprudence. Verifier soigneusement clause en 2024+", correct: true }
+      - { id: "b", label: "30%+ attaques sont état-attribuees. Cas Mondelez vs Zurich (100M USD litige NotPetya) a fait jurisprudence. Vérifier soigneusement clause en 2024+", correct: true }
       - { id: "c", label: "Que pour les ETI", correct: false }
-    explanation: "Exclusion 'acte de guerre' : 30%+ des attaques sont etat-attribuees (Russie, Coree N, Iran, etc.). Cas Mondelez vs Zurich (100M USD litige NotPetya, 2017-2022, gagne par Mondelez) a fait jurisprudence. Assureurs ont resserre cette exclusion en 2024. Verifier soigneusement la clause."
+    explanation: "Exclusion 'acte de guerre' : 30%+ des attaques sont état-attribuees (Russie, Coree N, Iran, etc.). Cas Mondelez vs Zurich (100M USD litige NotPetya, 2017-2022, gagne par Mondelez) a fait jurisprudence. Assureurs ont resserre cette exclusion en 2024. Vérifier soigneusement la clause."
 ---
 
 > 💡 **Pour aller plus loin** : **Hiscox / AIG / AXA / Stoik
 > (FR neo-assureur)** : 3-5 devis comparatifs. **CISO
-> Assistant** (intuitem, OSS) : audit conformite avant
+> Assistant** (intuitem, OSS) : audit conformité avant
 > souscription. Audit interne MFA + sauvegardes + formation
 > + plan incident = condition essentielle. Maturity cyber =
 > -30-50% prime.

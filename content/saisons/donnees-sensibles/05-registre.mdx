@@ -5,77 +5,77 @@ persona: "tous"
 objective: "Comprendre l'utilite du registre RGPD et savoir l'alimenter au quotidien"
 xpReward: 50
 scenario: |
-  Tu es responsable RH dans une PME de 80 personnes. Une nouvelle outil de notation des candidats vient d'etre installe par le DAF - il s'agit d'un service en ligne hebergement Etats-Unis. Le DAF te dit : "Pas besoin d'embeter le DPO, c'est un outil RH classique." Tu es en charge du registre des traitements RGPD. Que fais-tu ?
+  Tu es responsable RH dans une PME de 80 personnes. Une nouvelle outil de notation des candidats vient d'être installe par le DAF - il s'agit d'un service en ligne hebergement États-Unis. Le DAF te dit : "Pas besoin d'embeter le DPO, c'est un outil RH classique." Tu es en charge du registre des traitements RGPD. Que fais-tu ?
 choices:
   - id: "a"
-    label: "Je laisse passer - c'est un outil tres utilise sur le marche"
+    label: "Je laisse passer - c'est un outil très utilise sur le marche"
     outcome: "bad"
-    feedback: "Mauvaise pioche. Tout nouveau traitement de donnees personnelles doit entrer dans le registre, surtout quand il y a transfert hors UE et evaluation de personnes."
+    feedback: "Mauvaise pioche. Tout nouveau traitement de données personnelles doit entrer dans le registre, surtout quand il y a transfert hors UE et evaluation de personnes."
     points: -10
   - id: "b"
-    label: "Je documente le traitement dans le registre AVANT son lancement (finalites, donnees, transfert hors UE, base legale)"
+    label: "Je documente le traitement dans le registre AVANT son lancement (finalites, données, transfert hors UE, base legale)"
     outcome: "good"
-    feedback: "Excellent. Le registre est ton tableau de bord RGPD : il pousse a se poser les bonnes questions AVANT, pas apres une plainte."
+    feedback: "Excellent. Le registre est ton tableau de bord RGPD : il pousse a se poser les bonnes questions AVANT, pas après une plainte."
     points: 30
   - id: "c"
     label: "Je transmets l'info au DPO sans toucher au registre"
     outcome: "neutral"
-    feedback: "Le DPO doit savoir, mais le registre est de la responsabilite du responsable du traitement (ici la fonction RH ou la direction). Le DPO conseille, il ne tient pas le registre seul."
+    feedback: "Le DPO doit savoir, mais le registre est de la responsabilité du responsable du traitement (ici la fonction RH ou la direction). Le DPO conseille, il ne tient pas le registre seul."
     points: 10
   - id: "d"
     label: "J'attends une plainte client pour reagir"
     outcome: "bad"
-    feedback: "Une AIPD (analyse d'impact) prealable est meme obligatoire ici : transfert hors UE + evaluation de personnes = double red flag."
+    feedback: "Une AIPD (analyse d'impact) préalable est même obligatoire ici : transfert hors UE + evaluation de personnes = double red flag."
     points: -20
 debrief: |
-  Le **registre des traitements** (article 30 RGPD) est OBLIGATOIRE pour toute organisation de plus de 250 salaries - et fortement recommande pour les autres des qu'il y a des traitements reguliers (RH, clients, prospection).
+  Le **registre des traitements** (article 30 RGPD) est OBLIGATOIRE pour toute organisation de plus de 250 salariés - et fortement recommande pour les autres des qu'il y a des traitements reguliers (RH, clients, prospection).
 
   **Ce qu'il contient pour chaque traitement :**
 
-  - **Finalite** (pourquoi on traite ces donnees ? "gestion paie", "prospection commerciale"...)
-  - **Categories de personnes** (salaries, clients, prospects, fournisseurs...)
-  - **Categories de donnees** (identite, coordonnees, sante, financier, biometrie...)
-  - **Destinataires** (qui a acces ? interne, sous-traitant, autorite...)
-  - **Transferts hors UE** + garanties (clauses contractuelles types ? regles BCR ?)
-  - **Duree de conservation** (combien de temps ? selon quelle regle ?)
-  - **Mesures de securite** (chiffrement, controle d'acces, journalisation...)
+  - **Finalite** (pourquoi on traite ces données ? "gestion paie", "prospection commerciale"...)
+  - **Categories de personnes** (salariés, clients, prospects, fournisseurs...)
+  - **Categories de données** (identité, coordonnees, sante, financier, biometrie...)
+  - **Destinataires** (qui a acces ? interne, sous-traitant, autorité...)
+  - **Transferts hors UE** + garanties (clauses contractuelles types ? règles BCR ?)
+  - **Duree de conservation** (combien de temps ? selon quelle règle ?)
+  - **Mesures de sécurité** (chiffrement, contrôle d'acces, journalisation...)
 
   **Pourquoi c'est utile en pratique :**
 
   1. **Outil de pilotage** : tu as une vision a vol d'oiseau de tous tes traitements (souvent une vraie surprise - on en a plus qu'on ne pense)
   2. **Bouclier en cas d'audit CNIL** : un registre tenu = signe de bonne foi
-  3. **Cle de la conformite** : sans registre, impossible de repondre a un droit d'acces ou a une AIPD
-  4. **Garde-fou cognitif** : le simple fait de remplir le registre te force a verifier la base legale, le minimal de donnees, le delai de conservation
+  3. **Cle de la conformité** : sans registre, impossible de répondre a un droit d'acces ou a une AIPD
+  4. **Garde-fou cognitif** : le simple fait de remplir le registre te force a vérifier la base legale, le minimal de données, le délai de conservation
 
-  Le format ? Un Excel suffit. Pas besoin d'outil GRC sophistique pour une PME. Mais il doit etre vivant : mis a jour a chaque nouveau traitement, jamais "fige" dans un dossier oublie.
+  Le format ? Un Excel suffit. Pas besoin d'outil GRC sophistique pour une PME. Mais il doit être vivant : mis a jour a chaque nouveau traitement, jamais "fige" dans un dossier oublie.
 quiz:
   - question: "Le registre des traitements est obligatoire :"
     choices:
       - id: "a"
-        label: "Pour les organisations de plus de 250 salaries"
+        label: "Pour les organisations de plus de 250 salariés"
         correct: true
       - id: "b"
-        label: "Uniquement pour les hopitaux et banques"
+        label: "Uniquement pour les hôpitaux et banques"
         correct: false
       - id: "c"
         label: "Jamais, c'est facultatif"
         correct: false
-    explanation: "Article 30 RGPD : obligatoire au-dela de 250 salaries OU des qu'il y a traitement systematique, donnees sensibles, ou risque pour les droits."
+    explanation: "Article 30 RGPD : obligatoire au-dela de 250 salariés OU des qu'il y a traitement systematique, données sensibles, ou risque pour les droits."
 
-  - question: "Combien de temps conserver les donnees clients pour la facturation ?"
+  - question: "Combien de temps conserver les données clients pour la facturation ?"
     choices:
       - id: "a"
         label: "Indefiniment, 'on ne sait jamais'"
         correct: false
       - id: "b"
-        label: "Selon la regle metier (ex: 10 ans pour facturation legale, puis effacement)"
+        label: "Selon la règle métier (ex: 10 ans pour facturation legale, puis effacement)"
         correct: true
       - id: "c"
         label: "Maximum 6 mois"
         correct: false
-    explanation: "Le RGPD impose un delai de conservation justifie. Pour la facturation, le code de commerce impose 10 ans. Apres : effacement ou archivage prouve."
+    explanation: "Le RGPD impose un délai de conservation justifie. Pour la facturation, le code de commerce impose 10 ans. Après : effacement ou archivage prouve."
 
-  - question: "Un nouveau traitement RH avec transfert vers les Etats-Unis necessite :"
+  - question: "Un nouveau traitement RH avec transfert vers les États-Unis nécessité :"
     choices:
       - id: "a"
         label: "Une simple inscription dans le registre"
@@ -86,11 +86,11 @@ quiz:
       - id: "c"
         label: "Rien, c'est un fournisseur reconnu"
         correct: false
-    explanation: "Transfert hors UE + donnees salaries = AIPD obligatoire (article 35 RGPD). Le DPF (Data Privacy Framework US-UE) doit etre verifie pour le sous-traitant precis."
+    explanation: "Transfert hors UE + données salariés = AIPD obligatoire (article 35 RGPD). Le DPF (Data Privacy Framework US-UE) doit être verifie pour le sous-traitant précis."
 ---
 
 ## Pour aller plus loin
 
-Le registre n'est pas un fichier qu'on "remplit pour la CNIL" - c'est un outil de management. Quand un dirigeant demande "qu'est-ce qu'on traite comme donnees personnelles dans cette boite ?", la reponse est dans le registre. Sinon, on improvise. Avec le RGPD, l'improvisation coute cher.
+Le registre n'est pas un fichier qu'on "remplit pour la CNIL" - c'est un outil de management. Quand un dirigeant demande "qu'est-ce qu'on traite comme données personnelles dans cette boîte ?", la réponse est dans le registre. Sinon, on improvise. Avec le RGPD, l'improvisation coûte cher.
 
 > "Un registre vivant vaut mieux qu'un classeur RGPD parfait sous le coude."

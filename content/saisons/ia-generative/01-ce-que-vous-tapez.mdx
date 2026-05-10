@@ -5,46 +5,46 @@ persona: "tous"
 objective: "Comprendre comment les requetes IA sont stockees, utilisees, et potentiellement reutilisees"
 xpReward: 40
 scenario: |
-  Tu es responsable commerciale dans une PME francaise. Pour gagner du temps, tu utilises ChatGPT (compte personnel gratuit) pour t'aider a rediger des emails complexes. Aujourd'hui, tu prepares une proposition commerciale pour un grand client : tu copies-colles le brief interne (incluant les marges, la strategie tarifaire, les noms des contacts cles) et demandes a ChatGPT de "faire un email professionnel".
+  Tu es responsable commerciale dans une PME française. Pour gagner du temps, tu utilises ChatGPT (compte personnel gratuit) pour t'aider a rediger des emails complexes. Aujourd'hui, tu prepares une proposition commerciale pour un grand client : tu copies-colles le brief interne (incluant les marges, la stratégie tarifaire, les noms des contacts cles) et demandes a ChatGPT de "faire un email professionnel".
 
-  Ta collegue te demande : "Tu as conscience que tu donnes nos infos commerciales a OpenAI ?". Que reponds-tu ?
+  Ta collègue te demande : "Tu as conscience que tu donnes nos infos commerciales a OpenAI ?". Que réponds-tu ?
 choices:
   - id: "a"
-    label: "Aucun probleme - c'est anonyme et ils ne lisent pas mes prompts"
+    label: "Aucun problème - c'est anonyme et ils ne lisent pas mes prompts"
     outcome: "bad"
-    feedback: "Faux. Sur le plan gratuit ChatGPT (et de nombreux concurrents), TES prompts sont utilises par defaut pour entrainer leurs modeles. Tes infos commerciales peuvent ressortir dans les reponses d'autres utilisateurs."
+    feedback: "Faux. Sur le plan gratuit ChatGPT (et de nombreux concurrents), TES prompts sont utilises par defaut pour entrainer leurs modèles. Tes infos commerciales peuvent ressortir dans les réponses d'autres utilisateurs."
     points: -15
   - id: "b"
-    label: "Tu as raison. Je dois utiliser une version pro/entreprise OU une IA souveraine, et ne JAMAIS y mettre de donnees confidentielles"
+    label: "Tu as raison. Je dois utiliser une version pro/entreprise OU une IA souveraine, et ne JAMAIS y mettre de données confidentielles"
     outcome: "good"
     feedback: "Excellent. Les versions Enterprise / API garantissent contractuellement la non-utilisation pour entrainement. Mistral en France ou Anthropic Enterprise offrent ces garanties."
     points: 30
   - id: "c"
     label: "C'est uniquement un risque pour les grandes entreprises, ma PME est trop petite"
     outcome: "bad"
-    feedback: "Faux. Le risque est sur les DONNEES, pas sur la taille de l'entreprise. Une fuite de strategie commerciale d'une PME peut etre fatale pour une affaire de 100 k€."
+    feedback: "Faux. Le risque est sur les DONNEES, pas sur la taille de l'entreprise. Une fuite de stratégie commerciale d'une PME peut être fatale pour une affaire de 100 k€."
     points: -10
   - id: "d"
-    label: "Je supprime mes prompts apres usage, ils disparaissent"
+    label: "Je supprime mes prompts après usage, ils disparaissent"
     outcome: "bad"
-    feedback: "Aïe. La suppression d'un prompt cote utilisateur n'efface pas son utilisation pour entrainement. Le donnees sont peut-etre deja integrees dans le modele, et ne s'en sortent jamais."
+    feedback: "Aïe. La suppression d'un prompt côté utilisateur n'efface pas son utilisation pour entrainement. Le données sont peut-être déjà integrees dans le modèle, et ne s'en sortent jamais."
     points: -10
 debrief: |
-  L'**IA generative** transforme la facon dont on travaille - mais elle introduit aussi une nouvelle classe de fuites de donnees : la **fuite par prompt**.
+  L'**IA generative** transforme la façon dont on travaille - mais elle introduit aussi une nouvelle classe de fuites de données : la **fuite par prompt**.
 
-  **Comment ca marche concretement ?**
+  **Comment ça marche concretement ?**
 
   Quand tu tapes un prompt dans ChatGPT, Copilot, Gemini, Claude (versions grand public), ton texte :
-  1. Est envoye sur les serveurs de l'editeur (souvent aux Etats-Unis)
-  2. Est traite par leurs systemes (logs, monitoring, securite)
-  3. Peut etre **utilise pour entrainer le prochain modele** (selon la version)
-  4. Reste stocke pendant 30 jours minimum (souvent plus pour audit/securite)
+  1. Est envoye sur les serveurs de l'editeur (souvent aux États-Unis)
+  2. Est traite par leurs systèmes (logs, monitoring, sécurité)
+  3. Peut être **utilise pour entrainer le prochain modèle** (selon la version)
+  4. Reste stocke pendant 30 jours minimum (souvent plus pour audit/sécurité)
 
   **Les 4 niveaux de "privacy" :**
 
   | Niveau | Service | Privacy par defaut |
   |---|---|---|
-  | 1 (le pire) | ChatGPT gratuit, Gemini gratuit | Prompts utilises pour entrainer le modele |
+  | 1 (le pire) | ChatGPT gratuit, Gemini gratuit | Prompts utilises pour entrainer le modèle |
   | 2 | ChatGPT Plus, Gemini Advanced | Prompts non utilises pour entrainement (par defaut), mais conserves |
   | 3 | ChatGPT Team / Enterprise, API | Garantie contractuelle de non-utilisation, conservation limitee |
   | 4 (le meilleur) | IA self-hosted (Mistral on-premise, llama.cpp local) | 100 % chez toi, aucune donnee ne sort |
@@ -52,22 +52,22 @@ debrief: |
   **Cas reels documentes :**
 
   - **Samsung 2023** : 3 incidents distincts de fuite de code source via ChatGPT en quelques semaines. Samsung a interdit l'usage.
-  - **Apple 2023** : interdiction interne preventive d'usage de ChatGPT.
+  - **Apple 2023** : interdiction interne préventive d'usage de ChatGPT.
   - **JPMorgan, Citigroup, Goldman Sachs** : interdictions sectorielles dans le finance US.
 
-  **La regle d'or :**
+  **La règle d'or :**
 
-  Avant de taper un prompt, demande-toi : **"Si cette information apparaissait dans le journal demain, est-ce que ca poserait probleme ?"**.
+  Avant de taper un prompt, demande-toi : **"Si cette information apparaissait dans le journal demain, est-ce que ça poserait problème ?"**.
 
   Si oui - utilise une IA souveraine (Mistral, Voxia, llama.cpp local), une version Enterprise avec garantie contractuelle, ou ne mets PAS la donnee sensible (anonymise / paraphrase / decompose).
 
   **Le test du nom :** ne mets jamais dans un prompt :
   - Noms de clients ou de prospects
-  - Montants commerciaux precis
+  - Montants commerciaux précis
   - Mots de passe, tokens, cles d'API
-  - Code source proprietaire
-  - Donnees personnelles (RGPD)
-  - Strategie / projet confidentiel
+  - Code source propriétaire
+  - Données personnelles (RGPD)
+  - Stratégie / projet confidentiel
 quiz:
   - question: "Sur le plan gratuit de ChatGPT, mes prompts sont :"
     choices:
@@ -75,14 +75,14 @@ quiz:
         label: "Anonymes et non-utilises"
         correct: false
       - id: "b"
-        label: "Utilises par defaut pour entrainer les futurs modeles"
+        label: "Utilises par defaut pour entrainer les futurs modèles"
         correct: true
       - id: "c"
-        label: "Effaces immediatement"
+        label: "Effaces immédiatement"
         correct: false
     explanation: "Plan gratuit ChatGPT, Gemini, et la plupart des IA grand public utilisent par defaut tes prompts pour l'entrainement. Lis les CGU avant de t'inscrire."
 
-  - question: "Quelle IA garantit que tes donnees ne quittent pas ta machine ?"
+  - question: "Quelle IA garantit que tes données ne quittent pas ta machine ?"
     choices:
       - id: "a"
         label: "ChatGPT Plus"
@@ -93,15 +93,15 @@ quiz:
       - id: "c"
         label: "Toutes les IA cloud"
         correct: false
-    explanation: "Seul le self-hosting garantit 100 % que les donnees ne sortent pas. Les versions Enterprise garantissent contractuellement, mais les donnees transitent quand meme par leurs serveurs."
+    explanation: "Seul le self-hosting garantit 100 % que les données ne sortent pas. Les versions Enterprise garantissent contractuellement, mais les données transitent quand même par leurs serveurs."
 
-  - question: "La regle d'or avant de taper un prompt sensible est :"
+  - question: "La règle d'or avant de taper un prompt sensible est :"
     choices:
       - id: "a"
-        label: "Si cette info apparaissait dans le journal demain, est-ce que ca poserait probleme ?"
+        label: "Si cette info apparaissait dans le journal demain, est-ce que ça poserait problème ?"
         correct: true
       - id: "b"
-        label: "Si je l'ai deja fait avant sans probleme, c'est OK"
+        label: "Si je l'ai déjà fait avant sans problème, c'est OK"
         correct: false
       - id: "c"
         label: "Si l'IA me jure qu'elle ne dira rien"
@@ -111,6 +111,6 @@ quiz:
 
 ## Pour aller plus loin
 
-L'IA generative est l'outil le plus utile depuis l'arrivee d'internet en entreprise - mais elle est aussi le plus grand vecteur de fuite involontaire. Une charte IA d'1 page (cf. module 04 de cette saison) suffit a eviter 80 % des incidents.
+L'IA generative est l'outil le plus utile depuis l'arrivée d'internet en entreprise - mais elle est aussi le plus grand vecteur de fuite involontaire. Une charte IA d'1 page (cf. module 04 de cette saison) suffit a éviter 80 % des incidents.
 
 > "Ce que tu tapes, l'IA s'en souvient. Ce dont l'IA se souvient, n'est plus a toi."

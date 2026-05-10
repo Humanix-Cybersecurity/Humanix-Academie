@@ -2,7 +2,7 @@
 title: "Suis-je concerné par NIS2 ?"
 durationMinutes: 6
 persona: "manager"
-objective: "Determiner si son entreprise est concernee par la directive NIS2 (entites essentielles, importantes, ou hors-perimetre), comprendre les seuils sectoriels et de taille"
+objective: "Déterminer si son entreprise est concernee par la directive NIS2 (entites essentielles, importantes, ou hors-perimetre), comprendre les seuils sectoriels et de taille"
 xpReward: 60
 scenario: |
   Lundi 9h, ton CEO te dit : "On vient de me parler de NIS2 a un dejeuner.
@@ -12,67 +12,67 @@ scenario: |
   Ton entreprise :
   - PME 80 personnes, CA 12 M EUR
   - Secteur : developpement logiciel B2B (ERP pour PME, ~200 clients)
-  - Pas de donnees sante / banque / energie
+  - Pas de données sante / banque / énergie
   - Quelques contrats avec administrations locales (mairies)
 
-  Tu reponds quoi ?
+  Tu réponds quoi ?
 choices:
   - id: "a"
-    label: "Probablement OUI : 'fournisseur de services numeriques' (annexe II) + plus de 50 personnes = entite IMPORTANTE. A verifier avec un audit specialise"
+    label: "Probablement OUI : 'fournisseur de services numériques' (annexe II) + plus de 50 personnes = entite IMPORTANTE. A vérifier avec un audit specialise"
     outcome: "good"
-    feedback: "Bonne intuition. Le secteur 'fournisseur de services numeriques' (services managés, places de marche en ligne, moteurs de recherche, services informatiques en nuage) est dans l'annexe II de NIS2. Avec 80 personnes et 12M de CA, vous etes au-dessus des seuils. Audit recommande pour confirmer."
+    feedback: "Bonne intuition. Le secteur 'fournisseur de services numériques' (services managés, places de marche en ligne, moteurs de recherche, services informatiques en nuage) est dans l'annexe II de NIS2. Avec 80 personnes et 12M de CA, vous etes au-dessus des seuils. Audit recommande pour confirmer."
     points: 35
   - id: "b"
-    label: "Non, NIS2 c'est pour les grands groupes industriels (energie, sante, transport)"
+    label: "Non, NIS2 c'est pour les grands groupes industriels (énergie, sante, transport)"
     outcome: "bad"
-    feedback: "FAUX. NIS2 elargit MASSIVEMENT le perimetre vs NIS1. Plus de 18 secteurs concernes (annexes I et II), incluant les fournisseurs de services numeriques. Les PME 50+ personnes ou 10M+ CA peuvent etre concernees. Verification necessaire."
+    feedback: "FAUX. NIS2 elargit MASSIVEMENT le perimetre vs NIS1. Plus de 18 secteurs concernes (annexes I et II), incluant les fournisseurs de services numériques. Les PME 50+ personnes ou 10M+ CA peuvent être concernees. Vérification necessaire."
     points: -15
   - id: "c"
     label: "Indifferent, NIS2 ne s'applique qu'en France a partir de 2026"
     outcome: "bad"
-    feedback: "FAUX. NIS2 est entree en application en France le 17 octobre 2024. Les obligations sont actives. Les sanctions seront appliquees progressivement mais l'attendrissement est limite."
+    feedback: "FAUX. NIS2 est entrée en application en France le 17 octobre 2024. Les obligations sont actives. Les sanctions seront appliquees progressivement mais l'attendrissement est limite."
     points: -15
   - id: "d"
     label: "Oui, vu nos contrats avec administrations - on est dans le perimetre"
     outcome: "neutral"
-    feedback: "Bon raisonnement mais incomplet. Tes contrats publics ne sont PAS le critere principal NIS2 - le critere est ton SECTEUR + TA TAILLE. Tu es probablement concerne via le secteur 'services numeriques' (annexe II). Audit + verification."
+    feedback: "Bon raisonnement mais incomplet. Tes contrats publics ne sont PAS le critere principal NIS2 - le critere est ton SECTEUR + TA TAILLE. Tu es probablement concerne via le secteur 'services numériques' (annexe II). Audit + vérification."
     points: 15
 debrief: |
   La directive **NIS2** (Network and Information Systems 2,
-  2022/2555) est l'evolution majeure de la reglementation cyber
-  europeenne. Entree en application en France le **17 octobre 2024**
+  2022/2555) est l'evolution majeure de la réglementation cyber
+  europeenne. Entrée en application en France le **17 octobre 2024**
   via la transposition (Loi n° 2024-XXX).
 
-  Beaucoup d'entreprises pensent ne pas etre concernees. La realite :
+  Beaucoup d'entreprises pensent ne pas être concernees. La réalité :
   ~150 000 entites en France sont dans le perimetre selon ANSSI,
   contre ~300 sous NIS1.
 
-  **Les 2 categories d'entites NIS2 :**
+  **Les 2 catégories d'entites NIS2 :**
 
   **Entites ESSENTIELLES (anciennement OSE - Operateur de Service
   Essentiel) :**
 
   Annexe I de la directive. Secteurs prioritaires :
-  - Energie (electricite, gaz, hydrogene, petrole)
+  - Énergie (electricite, gaz, hydrogene, petrole)
   - Transport (aerien, ferroviaire, maritime, routier)
   - Banque & finance (etablissements de credit, marche financiers)
-  - Sante (hopitaux, fabricants de medicaments, dispositifs medicaux)
+  - Sante (hôpitaux, fabricants de médicaments, dispositifs médicaux)
   - Eau (potable, eaux usees)
-  - Infrastructure numerique (DNS, cloud, data centers, IXP, CDN)
+  - Infrastructure numérique (DNS, cloud, data centers, IXP, CDN)
   - Administrations publiques
 
   Critere de taille : grandes entreprises (> 250 personnes ou >
-  50M EUR CA) **OU** designation specifique par l'Etat.
+  50M EUR CA) **OU** designation spécifique par l'État.
 
-  **Entites IMPORTANTES (categorie elargie NIS2) :**
+  **Entites IMPORTANTES (catégorie elargie NIS2) :**
 
   Annexe II. Secteurs additionnels :
-  - **Fournisseurs de services numeriques** (places de marche en
+  - **Fournisseurs de services numériques** (places de marche en
     ligne, moteurs de recherche, **services informatiques en nuage**)
   - Services postaux et de courrier
   - Gestion des dechets
   - Industrie chimique / agro-alimentaire
-  - Industrie manufacturiere (medical, electronique, vehicules,
+  - Industrie manufacturiere (médical, electronique, véhicules,
     transport)
   - Producteurs et distributeurs alimentaires
   - **Recherche et developpement**
@@ -82,30 +82,30 @@ debrief: |
 
   **Les seuils de taille :**
 
-  | Effectif | CA | Bilan | Categorie typique |
+  | Effectif | CA | Bilan | Catégorie typique |
   |---|---|---|---|
   | < 50 personnes | < 10M EUR | < 10M EUR | Micro/petite : exemptee |
   | 50-249 | 10-50M | 10-43M | Moyenne : importante (annexe II) |
   | >= 250 | > 50M | > 43M | Grande : essentielle (annexe I) |
 
-  Exception : meme une petite entreprise peut etre essentielle si
+  Exception : même une petite entreprise peut être essentielle si
   elle est **prestataire critique** d'une autre entite essentielle
-  (ex : sous-traitant unique d'un hopital).
+  (ex : sous-traitant unique d'un hôpital).
 
   **Liste des secteurs annexe I + II (synthese) :**
 
   | Annexe I (essentielles) | Annexe II (importantes) |
   |---|---|
-  | Energie | Postaux et courrier |
+  | Énergie | Postaux et courrier |
   | Transport | Dechets |
   | Banque/finance | Chimie |
   | Sante | Alimentation |
-  | Eau | Manufacture (electronique, medical, vehicules) |
-  | Infrastructure numerique | Fournisseurs services numeriques |
+  | Eau | Manufacture (electronique, médical, véhicules) |
+  | Infrastructure numérique | Fournisseurs services numériques |
   | Administrations publiques | Recherche |
   | Espace | |
 
-  **Ton entreprise est-elle concernee ? La grille de decision :**
+  **Ton entreprise est-elle concernee ? La grille de décision :**
 
   **Question 1 : Quelle est ton activite principale ?**
 
@@ -116,7 +116,7 @@ debrief: |
   **Question 2 : Quelle est ta taille ?**
 
   - < 50 personnes ET < 10M CA : **non concerne** (sauf designation
-    Etat ou sous-traitance critique)
+    État ou sous-traitance critique)
   - 50-249 personnes OU 10-50M CA : **entite importante** (annexe II)
   - >= 250 personnes OU > 50M CA : **entite essentielle**, dans la
     plupart des secteurs annexe I
@@ -124,38 +124,38 @@ debrief: |
   **Question 3 : Es-tu sous-traitant critique d'une entite
   essentielle ?**
 
-  Si oui (ex : tu maintiens le SI d'un hopital), tu peux etre
-  designe comme entite essentielle meme petit.
+  Si oui (ex : tu maintiens le SI d'un hôpital), tu peux être
+  designe comme entite essentielle même petit.
 
   **Cas pratiques (exemples) :**
 
   - **PME 80 personnes, dev logiciel B2B** : annexe II (services
-    numeriques) = entite IMPORTANTE
+    numériques) = entite IMPORTANTE
   - **TPE 15 personnes, dev mobile** : annexe II mais < 50 personnes
-    = NON concernee (sauf designation Etat)
-  - **Hopital prive 200 lits, 350 personnes** : annexe I (sante) +
+    = NON concernee (sauf designation État)
+  - **Hôpital prive 200 lits, 350 personnes** : annexe I (sante) +
     grande = entite ESSENTIELLE
   - **Cabinet d'avocats 50 personnes** : annexe ni I ni II = NON
     concerne
   - **Restaurant 30 personnes** : NON concerne
   - **Mairie 100 agents** : annexe I (administration) + grande = pour
-    determiner avec ANSSI / DGCL
+    déterminer avec ANSSI / DGCL
   - **Editeur SaaS 60 personnes** : annexe II + 50+ = IMPORTANTE
   - **Industrie pharmacie 500 personnes** : annexe I (sante) =
     ESSENTIELLE
   - **Cabinet RH 80 personnes** : NON concerne
 
-  **Procedure de verification :**
+  **Procédure de vérification :**
 
-  L'ANSSI (Agence Nationale de la Securite des Systemes
-  d'Information) est l'autorite competente en France. Outils :
+  L'ANSSI (Agence Nationale de la Sécurité des Systèmes
+  d'Information) est l'autorité competente en France. Outils :
 
   1. **Auto-declaration** : MonEntiteNIS2.fr (site officiel ANSSI,
-     en construction debut 2025). Reponses au quiz = decision auto.
-  2. **Procedure de notification** : si concerne, declaration
-     obligatoire aupres de l'ANSSI.
+     en construction début 2025). Reponses au quiz = décision auto.
+  2. **Procédure de notification** : si concerne, declaration
+     obligatoire auprès de l'ANSSI.
   3. **Liste publique** : ANSSI publiera une liste des entites
-     designees (a la maniere des OSE NIS1).
+     designees (a la manière des OSE NIS1).
 
   **Si tu n'es pas sur :**
 
@@ -166,25 +166,25 @@ debrief: |
 
   **Le piege "on est petit, on n'est pas concerne" :**
 
-  Beaucoup de PME 50-100 personnes pensent etre exemptees. FAUX
-  pour les secteurs annexe II (services numeriques, manufacture
+  Beaucoup de PME 50-100 personnes pensent être exemptees. FAUX
+  pour les secteurs annexe II (services numériques, manufacture
   electronique, agro-alim) - elles sont entites IMPORTANTES.
 
-  Verifier avant de conclure que tu n'es pas concerne.
+  Vérifier avant de conclure que tu n'es pas concerne.
 
-  **Le piege "on est grosse boite mais on n'est pas dans les
+  **Le piege "on est grosse boîte mais on n'est pas dans les
   secteurs cites" :**
 
   Vrai certains cas (cabinet d'avocats, conseil en gestion).
-  Mais : si tu sous-traites pour un client critique (hopital,
-  banque), tu peux etre designe par extension.
+  Mais : si tu sous-traites pour un client critique (hôpital,
+  banque), tu peux être designe par extension.
 
   **Suite de la saison nis2-pme :**
 
   - 02 : Article 21 - les 10 mesures de gestion des risques
   - 03 : Article 23 - notification d'incident
-  - 04 : Sanctions et responsabilites
-  - 05 : Roadmap de mise en conformite (90 jours)
+  - 04 : Sanctions et responsabilités
+  - 05 : Roadmap de mise en conformité (90 jours)
   - 06 : L'audit CSIRT (que se passe-t-il ?)
 quiz:
   - question: "NIS2 est entre en application en France quand ?"
@@ -192,28 +192,28 @@ quiz:
       - { id: "a", label: "Janvier 2026", correct: false }
       - { id: "b", label: "17 octobre 2024", correct: true }
       - { id: "c", label: "2030", correct: false }
-    explanation: "NIS2 est entree en application en France le 17 octobre 2024 via la loi de transposition. Les obligations sont actives. Les sanctions seront appliquees progressivement avec une phase d'attendrissement, mais l'obligation est legale aujourd'hui."
+    explanation: "NIS2 est entrée en application en France le 17 octobre 2024 via la loi de transposition. Les obligations sont actives. Les sanctions seront appliquees progressivement avec une phase d'attendrissement, mais l'obligation est legale aujourd'hui."
 
   - question: "Combien d'entites en France sont concernees par NIS2 ?"
     choices:
       - { id: "a", label: "300 (comme NIS1)", correct: false }
-      - { id: "b", label: "~150 000 (selon ANSSI) - elargissement massif vs NIS1", correct: true }
+      - { id: "b", label: "~150 000 (selon ANSSI) - élargissement massif vs NIS1", correct: true }
       - { id: "c", label: "10", correct: false }
     explanation: "NIS2 elargit massivement le perimetre. NIS1 = ~300 OSE. NIS2 = ~150 000 entites essentielles + importantes selon ANSSI. Inclut PME 50+ personnes dans plus de 18 secteurs. Beaucoup ne savent pas qu'elles sont concernees."
 
   - question: "Une PME 80 personnes editeur SaaS B2B est :"
     choices:
       - { id: "a", label: "Pas concernee, trop petite", correct: false }
-      - { id: "b", label: "Entite IMPORTANTE (annexe II - services numeriques + 50+ personnes)", correct: true }
+      - { id: "b", label: "Entite IMPORTANTE (annexe II - services numériques + 50+ personnes)", correct: true }
       - { id: "c", label: "Entite essentielle", correct: false }
-    explanation: "Annexe II inclut 'fournisseurs de services numeriques' (cloud, SaaS, places de marche). Avec 50-249 personnes ou 10-50M CA = entite IMPORTANTE. Les editeurs SaaS B2B sont systematiquement concernes."
+    explanation: "Annexe II inclut 'fournisseurs de services numériques' (cloud, SaaS, places de marche). Avec 50-249 personnes ou 10-50M CA = entite IMPORTANTE. Les editeurs SaaS B2B sont systematiquement concernes."
 
-  - question: "Si tu sous-traites pour un hopital, tu peux etre designe :"
+  - question: "Si tu sous-traites pour un hôpital, tu peux être designe :"
     choices:
       - { id: "a", label: "Jamais", correct: false }
-      - { id: "b", label: "Comme entite essentielle (sous-traitant critique d'une entite essentielle), meme si tu es petit", correct: true }
+      - { id: "b", label: "Comme entite essentielle (sous-traitant critique d'une entite essentielle), même si tu es petit", correct: true }
       - { id: "c", label: "Comme entite importante uniquement", correct: false }
-    explanation: "NIS2 prevoit la designation par extension : si tu es sous-traitant critique d'une entite essentielle (hopital, energie, banque), tu peux etre designe entite essentielle meme si ta taille / ton secteur ne te qualifient pas autrement."
+    explanation: "NIS2 prevoit la designation par extension : si tu es sous-traitant critique d'une entite essentielle (hôpital, énergie, banque), tu peux être designe entite essentielle même si ta taille / ton secteur ne te qualifient pas autrement."
 ---
 
 > 💡 **Pour aller plus loin** : ANSSI a un site dedie NIS2

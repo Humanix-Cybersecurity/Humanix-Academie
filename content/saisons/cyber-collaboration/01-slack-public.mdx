@@ -2,44 +2,44 @@
 title: "Le canal public Slack qui leak un client"
 durationMinutes: 6
 persona: "tous-collaborateurs"
-objective: "Eviter les fuites d'informations dans les outils de collaboration (Slack, Teams) via canaux publics, partages, mentions"
+objective: "Éviter les fuites d'informations dans les outils de collaboration (Slack, Teams) via canaux publics, partages, mentions"
 xpReward: 60
 scenario: |
   Tu es chef de projet en PME. Slack avec 80 personnes,
   organise en canaux. Pour un projet client (Acme Corp), tu
   cree #acme-projet (canal public par defaut Slack).
 
-  Apres 3 mois :
+  Après 3 mois :
   - Le canal a 80 membres (toute l'entreprise)
-  - 2000 messages avec details Acme (montant contrat, etapes,
+  - 2000 messages avec détails Acme (montant contrat, étapes,
     contacts cle)
   - 50 fichiers partages (documents techniques, plans)
   - 5 personnes externes (consultants temporaires) sont
     aussi membres
 
-  Le client decouvre via une fuite externe. Procedure ouverte.
+  Le client decouvre via une fuite externe. Procédure ouverte.
 
   Que tirer ?
 choices:
   - id: "a"
-    label: "Pas grave, ce sont mes collegues"
+    label: "Pas grave, ce sont mes collègues"
     outcome: "bad"
-    feedback: "FAUX. Canal Slack public = toute l'entreprise + invites externes peuvent voir, telecharger, capturer. 2000 messages + 50 fichiers = arsenal d'information. Si un employe quitte (rancunier) ou un consultant externe = fuite massive. NDA client viole."
+    feedback: "FAUX. Canal Slack public = toute l'entreprise + invites externes peuvent voir, télécharger, capturer. 2000 messages + 50 fichiers = arsenal d'information. Si un employé quitte (rancunier) ou un consultant externe = fuite massive. NDA client viole."
     points: -25
   - id: "b"
-    label: "Migration vers canal prive (acces restreint a l'equipe projet) + audit historique + suppression info sensible + politique : projets clients = canaux prives par defaut"
+    label: "Migration vers canal prive (acces restreint a l'équipe projet) + audit historique + suppression info sensible + politique : projets clients = canaux prives par defaut"
     outcome: "good"
     feedback: "Action structuree. Migration prive (limite acces), audit (qui a vu quoi), suppression info sensible, politique d'entreprise. Standard Slack / Teams pour projets clients. Configuration par defaut a revoir."
     points: 40
   - id: "c"
     label: "Je supprime le canal entier"
     outcome: "neutral"
-    feedback: "Trop drastique. Tu perds historique + connaissances. Mieux : transformer en prive + nettoyer info sensible + accuracy. Suppression = perte de propriete intellectuelle."
+    feedback: "Trop drastique. Tu perds historique + connaissances. Mieux : transformer en prive + nettoyer info sensible + accuracy. Suppression = perte de propriété intellectuelle."
     points: 15
   - id: "d"
     label: "Je continue mais en parle moins fort"
     outcome: "bad"
-    feedback: "MAUVAIS. Le mal est deja fait (2000 msg + 50 fichiers). Action immediate : limiter exposition + audit + politique. Pas reduire les nouveaux messages dans un canal compromis."
+    feedback: "MAUVAIS. Le mal est déjà fait (2000 msg + 50 fichiers). Action immediate : limiter exposition + audit + politique. Pas reduire les nouveaux messages dans un canal compromis."
     points: -15
 debrief: |
   Les **outils de collaboration** (Slack, Teams, Notion,
@@ -65,7 +65,7 @@ debrief: |
   - **Visible** dans la liste de canaux
   - **Recherche** dans tous les messages
 
-  **Beaucoup d'employes** ne savent pas comment changer en
+  **Beaucoup d'employés** ne savent pas comment changer en
   prive (ou oublient).
 
   **Piege 2 : Invites externes (guests)**
@@ -74,7 +74,7 @@ debrief: |
   "guests". Mais :
   - **Acces** souvent etendu par defaut
   - **Permissions** mal granulaires
-  - **Oubli** de revoquer apres mission
+  - **Oubli** de revoquer après mission
 
   **Piege 3 : Apps tiers (integrations)**
 
@@ -96,11 +96,11 @@ debrief: |
 
   - Slack Free : 90 jours d'historique
   - Slack Pro : illimite
-  - Tout reste = base de donnees attaquable
+  - Tout reste = base de données attaquable
 
   **Configuration recommandee :**
 
-  **Niveau 1 : Acces et roles**
+  **Niveau 1 : Acces et rôles**
 
   - **Single Sign-On (SSO)** : authentification entreprise
   - **MFA obligatoire**
@@ -110,15 +110,15 @@ debrief: |
   **Niveau 2 : Politique de canaux**
 
   - **Canaux clients = PRIVES par defaut**
-  - **Canaux strategiques** = prives (DG, COMEX)
+  - **Canaux stratégiques** = prives (DG, COMEX)
   - **Canaux RH / juridique** = prives
-  - **Canaux generaux / annonces** = publics OK
+  - **Canaux généraux / annonces** = publics OK
   - **Canaux 'Random'** = OK
 
   **Niveau 3 : Gestion des invites externes**
 
   - **Single-channel guest** : acces a 1 canal seulement
-  - **Multi-channel guest** : acces specifique (eviter
+  - **Multi-channel guest** : acces spécifique (éviter
     'all channels')
   - **Date d'expiration** automatique (30-90 jours)
   - **Revue trimestrielle** : qui sont les externes actifs ?
@@ -136,10 +136,10 @@ debrief: |
   - **Conservation legale** : 5-10 ans selon obligation
   - **Suppression auto** = moins de risque historique
 
-  **Niveau 6 : DLP (Data Loss Prevention)**
+  **Niveau 6 : DLP (Data Loss Prévention)**
 
   Microsoft 365 / Slack Enterprise :
-  - **Detection** patterns sensibles (NIR, IBAN, CB)
+  - **Détection** patterns sensibles (NIR, IBAN, CB)
   - **Alerte** ou **bloquage** automatique
   - **Audit log**
 
@@ -147,12 +147,12 @@ debrief: |
 
   Admin Settings > Workspace :
 
-  - **Default channel** : restrict creation publique aux
+  - **Default channel** : restrict création publique aux
     admins
   - **External sharing** : restrict
   - **App approval** : requis
   - **Retention policy** : 90 jours par defaut (override pour
-    canaux specifiques)
+    canaux spécifiques)
 
   **Les 8 mauvaises pratiques courantes :**
 
@@ -162,7 +162,7 @@ debrief: |
 
   **2. "Documents partages dans le canal"**
   - Slack n'est pas un cloud storage
-  - Solution : SharePoint / Drive avec partage controle
+  - Solution : SharePoint / Drive avec partage contrôle
 
   **3. "DM 'prive' avec mots de passe"**
   - DM pas vraiment prives (admin peut acceder)
@@ -172,16 +172,16 @@ debrief: |
   - Comptes fantomes
   - Solution : expiration automatique
 
-  **5. "Slack notifications avec contenu sur ecran de
+  **5. "Slack notifications avec contenu sur écran de
   verrouillage"**
   - Mots de passe / info sensible visibles
   - Solution : notifications sans contenu
 
   **6. "Connecte sur PC perso / public"**
-  - Donnees pro sur app perso
+  - Données pro sur app perso
   - Solution : usage strict pro / pro
 
-  **7. "Captures / forward sans precaution"**
+  **7. "Captures / forward sans précaution"**
   - Slack screenshots exposes / shared
   - Solution : sensibilisation + DLP
 
@@ -191,15 +191,15 @@ debrief: |
 
   **Cas reels :**
 
-  **Cas 1 - PME 2023 (canal Slack public + ex-employe)**
+  **Cas 1 - PME 2023 (canal Slack public + ex-employé)**
 
-  Equipe projet client a #project-acme avec 80 membres
-  (tout le monde par defaut Slack public). Un ex-employe en
+  Équipe projet client a #project-acme avec 80 membres
+  (tout le monde par defaut Slack public). Un ex-employé en
   conflit (vue de la suite avec succes) a exfiltre toute
   l'historique avant de partir.
 
   Cout :
-  - **NDA viole** = procedure client
+  - **NDA viole** = procédure client
   - **Information vendue** au concurrent (suppose)
   - **15 K EUR** indemnisation client
   - **Audit complet** Slack obligatoire
@@ -207,17 +207,17 @@ debrief: |
   **Cas 2 - Editeur SaaS 2024 (DM compromis)**
 
   Employe pense ses DM Slack proteges. Recoit un mot de
-  passe d'un collegue ("le SSH du serveur prod c'est
-  XXXXX"). Compte du collegue compromis -> admin Slack
+  passe d'un collègue ("le SSH du serveur prod c'est
+  XXXXX"). Compte du collègue compromis -> admin Slack
   exfiltre tous ses DMs -> mots de passe extraits.
 
-  Breach prod 2 semaines apres.
+  Breach prod 2 semaines après.
 
   **Cas 3 - Cabinet conseil 2022 (consultant externe)**
 
   Consultant externe ajoute a Slack pour 3 mois. Acces
   multi-channel guest. Mission terminee, consultant
-  toujours dans Slack. 6 mois apres : consultant rejoint
+  toujours dans Slack. 6 mois après : consultant rejoint
   concurrent + Slack toujours accessible.
 
   Cout : information cliente vendue. Sanction : -50 K EUR.
@@ -236,14 +236,14 @@ debrief: |
 
   **Microsoft Teams - configurations similaires :**
 
-  **Equipes / Canaux** :
-  - **Equipe privee** = canaux non visibles publiquement
-  - **Canal prive** dans equipe publique = acces restreint
+  **Équipes / Canaux** :
+  - **Équipe privée** = canaux non visibles publiquement
+  - **Canal prive** dans équipe publique = acces restreint
   - **Canal partage** : multi-tenant
 
   **Invites** :
   - **External access** (federation) : autres organisations
-  - **Guest access** : externe ajoute a une equipe
+  - **Guest access** : externe ajoute a une équipe
   - **Permissions** configurables
 
   **Notion - cas particulier :**
@@ -255,7 +255,7 @@ debrief: |
 
   Audit regulier des pages "Public to internet" obligatoire.
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **Outils de collaboration = configuration prive par
   > defaut + invites externes encadres + DLP + retention
@@ -266,13 +266,13 @@ quiz:
   - question: "Canal Slack pour projet client, configuration recommandee ?"
     choices:
       - { id: "a", label: "Public par defaut", correct: false }
-      - { id: "b", label: "PRIVE - acces restreint a l'equipe projet seulement. Public = toute l'organisation + ex-employes / consultants externes acces", correct: true }
+      - { id: "b", label: "PRIVE - acces restreint a l'équipe projet seulement. Public = toute l'organisation + ex-employés / consultants externes acces", correct: true }
       - { id: "c", label: "Pas de canal", correct: false }
-    explanation: "Canaux clients = prives obligatoirement (acces restreint a equipe). Canal public Slack = toute l'organisation + invites externes peuvent voir, telecharger, capturer 2000 messages + 50 fichiers. Cas reel : ex-employe exfiltre avant depart = NDA viole + 15K EUR indemnisation."
+    explanation: "Canaux clients = prives obligatoirement (acces restreint a équipe). Canal public Slack = toute l'organisation + invites externes peuvent voir, télécharger, capturer 2000 messages + 50 fichiers. Cas reel : ex-employé exfiltre avant depart = NDA viole + 15K EUR indemnisation."
 
   - question: "Les DM Slack sont-ils vraiment prives ?"
     choices:
-      - { id: "a", label: "Oui completement", correct: false }
+      - { id: "a", label: "Oui complètement", correct: false }
       - { id: "b", label: "Non - admin workspace peut exporter (Slack Pro/Business+). Admins peuvent rechercher. Pas confidentiel pour mots de passe / info sensible", correct: true }
       - { id: "c", label: "Selon le plan", correct: false }
     explanation: "DM Slack pas vraiment prives. Admin workspace peut exporter (Slack Pro/Business+). Recherche par admin possible. Compte compromis -> admin -> exfiltration DMs. Pour mots de passe / info sensible : gestionnaire MDP, pas DM."
@@ -280,9 +280,9 @@ quiz:
   - function: "Invite externe Slack (consultant), bonne pratique ?"
     choices:
       - { id: "a", label: "Acces 'all channels'", correct: false }
-      - { id: "b", label: "Single-channel guest (1 canal) ou Multi-channel guest avec acces specifique. Date expiration automatique 30-90j. Revue trimestrielle", correct: true }
+      - { id: "b", label: "Single-channel guest (1 canal) ou Multi-channel guest avec acces spécifique. Date expiration automatique 30-90j. Revue trimestrielle", correct: true }
       - { id: "c", label: "Compte member normal", correct: false }
-    explanation: "Invite externe = Single-channel guest (acces a 1 canal seulement) ou Multi-channel guest avec acces specifique (pas all channels). Date expiration automatique 30-90j (offboarding cf saison cyber-rh ep 02). Revue trimestrielle des externes actifs."
+    explanation: "Invite externe = Single-channel guest (acces a 1 canal seulement) ou Multi-channel guest avec acces spécifique (pas all channels). Date expiration automatique 30-90j (offboarding cf saison cyber-rh ep 02). Revue trimestrielle des externes actifs."
 
   - question: "Apps tierces Slack avec permissions 'lire tous les messages', risque ?"
     choices:

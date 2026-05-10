@@ -1,5 +1,5 @@
 ---
-title: "La regle des 3 questions"
+title: "La règle des 3 questions"
 durationMinutes: 6
 persona: "tous"
 objective: "Adopter le reflexe de validation avant tout partage de donnee sensible"
@@ -7,45 +7,45 @@ xpReward: 50
 scenario: |
   Tu es comptable. Un mail arrive de "Mickael DURAND - Cabinet d'expertise". Il dit :
 
-  "Bonjour, dans le cadre de votre mission audit 2025, merci de m'envoyer la liste complete des salaires bruts annuels de l'effectif, format Excel. Reponse souhaitee aujourd'hui."
+  "Bonjour, dans le cadre de votre mission audit 2025, merci de m'envoyer la liste complete des salaires bruts annuels de l'effectif, format Excel. Réponse souhaitee aujourd'hui."
 
   Le cabinet d'expertise existe bien et travaille avec ta PME. Tu connais Mickael de nom.
 choices:
   - id: "a"
     label: "Je prepare le fichier et je l'envoie en piece jointe"
     outcome: "bad"
-    feedback: "Aïe. Tu n'as ni verifie l'expediteur, ni la justification, ni le canal. Trois questions = trois trous de securite."
+    feedback: "Aïe. Tu n'as ni verifie l'expediteur, ni la justification, ni le canal. Trois questions = trois trous de sécurité."
     points: -10
   - id: "b"
-    label: "Je l'appelle au numero du cabinet (pas celui du mail) pour valider 'qui me demande quoi pourquoi par quel canal'"
+    label: "Je l'appelle au numéro du cabinet (pas celui du mail) pour valider 'qui me demande quoi pourquoi par quel canal'"
     outcome: "good"
-    feedback: "Parfait. La regle des 3 questions sauvee, validation hors-canal, donnee sensible protegee."
+    feedback: "Parfait. La règle des 3 questions sauvee, validation hors-canal, donnee sensible protegee."
     points: 30
   - id: "c"
-    label: "Je reponds au mail : 'pouvez-vous confirmer ?'"
+    label: "Je réponds au mail : 'pouvez-vous confirmer ?'"
     outcome: "bad"
     feedback: "L'attaquant repondra avec aplomb. Le canal mail est compromis."
     points: -5
   - id: "d"
-    label: "Je transfere a mon dirigeant pour decision"
+    label: "Je transfere a mon dirigeant pour décision"
     outcome: "neutral"
     feedback: "Ok mais tu deplaces le risque. Mieux : appeler Mickael avant pour valider."
     points: 5
 debrief: |
-  La "regle des 3 questions" est ta sauvegarde mentale avant tout partage de donnee sensible :
+  La "règle des 3 questions" est ta sauvegarde mentale avant tout partage de donnee sensible :
 
-  1. **QUI me demande ca ?** Est-ce vraiment cette personne ? (verifier hors-canal)
-  2. **POURQUOI ?** Cette demande a-t-elle une justification metier identifiee ?
-  3. **PAR QUEL CANAL ?** Le canal utilise est-il legitime ? (un mail pour des donnees RH = louche)
+  1. **QUI me demande ça ?** Est-ce vraiment cette personne ? (vérifier hors-canal)
+  2. **POURQUOI ?** Cette demande a-t-elle une justification métier identifiee ?
+  3. **PAR QUEL CANAL ?** Le canal utilise est-il legitime ? (un mail pour des données RH = louche)
 
-  Cette regle protege contre :
-  - L'usurpation d'identite (un attaquant qui se fait passer pour qqn de connu)
+  Cette règle protege contre :
+  - L'usurpation d'identité (un attaquant qui se fait passer pour qqn de connu)
   - L'engineering social (manipulation pour obtenir une donnee)
   - Le data exfiltration banal mais devastateur
 
-  En 30 secondes de coup de fil, tu reponds aux 3 questions. C'est tout.
+  En 30 secondes de coup de fil, tu réponds aux 3 questions. C'est tout.
 quiz:
-  - question: "Quelle est la regle des 3 questions ?"
+  - question: "Quelle est la règle des 3 questions ?"
     choices:
       - id: "a"
         label: "Qui / Pourquoi / Par quel canal"
@@ -61,17 +61,17 @@ quiz:
   - question: "Avant d'envoyer une donnee sensible par mail, je dois :"
     choices:
       - id: "a"
-        label: "Verifier mon orthographe"
+        label: "Vérifier mon orthographe"
         correct: false
       - id: "b"
-        label: "Valider hors-canal (telephone) qui me la demande et pourquoi"
+        label: "Valider hors-canal (téléphone) qui me la demande et pourquoi"
         correct: true
       - id: "c"
         label: "L'envoyer en mode prive"
         correct: false
-    explanation: "Verifier hors-canal est le seul moyen de detecter une usurpation d'identite."
+    explanation: "Vérifier hors-canal est le seul moyen de détecter une usurpation d'identité."
 
-  - question: "Vrai ou faux : un canal mail pour echanger des donnees RH est normal."
+  - question: "Vrai ou faux : un canal mail pour echanger des données RH est normal."
     choices:
       - id: "a"
         label: "Vrai"
@@ -79,12 +79,12 @@ quiz:
       - id: "b"
         label: "Faux - un canal RH dedie ou un partage securise est attendu"
         correct: true
-    explanation: "Mail = canal en clair. Pour les donnees RH, prefere SharePoint, OneDrive avec partage limite, ou outil RH dedie."
+    explanation: "Mail = canal en clair. Pour les données RH, prefere SharePoint, OneDrive avec partage limite, ou outil RH dedie."
 ---
 
 ## Pour aller plus loin
 
-La regle des 3 questions tient dans une carte de visite. Tu peux la coller a ton ecran. C'est aussi simple que ça.
+La règle des 3 questions tient dans une carte de visite. Tu peux la coller a ton écran. C'est aussi simple que ça.
 
 > "Aurais-je donne ça en main propre a un inconnu dans la rue ?
 > Non ? Alors je verifie d'abord."

@@ -2,46 +2,46 @@
 title: "L'Evil Twin du salon professionnel"
 durationMinutes: 7
 persona: "tous-collaborateurs"
-objective: "Reconnaitre une attaque Evil Twin (faux WiFi qui imite le legitime), savoir verifier le BSSID, utiliser les networks de confiance"
+objective: "Reconnaître une attaque Evil Twin (faux WiFi qui imite le legitime), savoir vérifier le BSSID, utiliser les networks de confiance"
 xpReward: 60
 scenario: |
   Mardi 11h, salon professionnel a la Porte de Versailles. Tu poses ton
   laptop sur la table de ton stand. Le WiFi du salon s'appelle officiellement
   "ParisExpo-Visiteurs", mot de passe au verso du badge : `paris2026`.
 
-  Tu vois 2 reseaux dans la liste WiFi de ton laptop :
+  Tu vois 2 réseaux dans la liste WiFi de ton laptop :
 
   - "ParisExpo-Visiteurs" (force du signal : 2 barres)
   - "Paris-Expo-Visiteurs" (force du signal : 4 barres - un tiret en plus)
 
   Le second a une meilleure connexion. Et il accepte exactement le
-  meme mot de passe `paris2026`. Tu te connectes au plus fort signal.
+  même mot de passe `paris2026`. Tu te connectes au plus fort signal.
 
   Tu fais quoi ?
 choices:
   - id: "a"
-    label: "Je me connecte au plus fort signal pour aller plus vite, c'est le meme mot de passe"
+    label: "Je me connecte au plus fort signal pour aller plus vite, c'est le même mot de passe"
     outcome: "bad"
     feedback: "ATTAQUE EVIL TWIN ACTIVE. L'attaquant a configure un access point clandestin avec un nom proche (tiret en plus) et le bon mot de passe (qu'il a vu au verso du badge). Tout ton trafic passe par sa machine - il peut intercepter, modifier, injecter."
     points: -15
   - id: "b"
-    label: "Je verifie le nom EXACT du WiFi officiel (pas de tiret) et je me connecte uniquement a celui-ci, meme si le signal est faible"
+    label: "Je verifie le nom EXACT du WiFi officiel (pas de tiret) et je me connecte uniquement a celui-ci, même si le signal est faible"
     outcome: "good"
     feedback: "Excellent reflexe. Le typosquatting WiFi (tiret en plus, lettre swap) est la signature classique de l'Evil Twin. Le signal plus fort de l'attaquant est artificiel : il est literalement plus pres de toi qu'un vrai AP du salon."
     points: 35
   - id: "c"
-    label: "Je deconnecte le WiFi et j'utilise mon partage de connexion 4G/5G du telephone"
+    label: "Je deconnecte le WiFi et j'utilise mon partage de connexion 4G/5G du téléphone"
     outcome: "good"
-    feedback: "Defense maximale en environnement non-trust. Ton operateur mobile (Orange, SFR, Bouygues, Free) a une infra securisee qu'aucun attaquant local ne peut spoof. Plus lent peut-etre, mais SAFE. Cf. episode 03 de cette saison."
+    feedback: "Defense maximale en environnement non-trust. Ton opérateur mobile (Orange, SFR, Bouygues, Free) a une infra securisee qu'aucun attaquant local ne peut spoof. Plus lent peut-être, mais SAFE. Cf. episode 03 de cette saison."
     points: 35
   - id: "d"
     label: "Je demande a mon voisin de stand quel WiFi il utilise"
     outcome: "neutral"
-    feedback: "Pas mauvais mais ton voisin peut deja etre sur le mauvais. La verite est sur ton badge officiel ou affichee a l'accueil du salon. En cas de doute, partage de connexion 4G/5G."
+    feedback: "Pas mauvais mais ton voisin peut déjà être sur le mauvais. La vérité est sur ton badge officiel ou affichee a l'accueil du salon. En cas de doute, partage de connexion 4G/5G."
     points: 5
 debrief: |
   L'**Evil Twin** est l'attaque WiFi la plus repandue en environnement
-  public. Le materiel pour la mener coute moins de 50 EUR (Pineapple
+  public. Le matériel pour la mener coûte moins de 50 EUR (Pineapple
   WiFi) et tient dans une poche.
 
   **Le mecanisme :**
@@ -75,15 +75,15 @@ debrief: |
 
   **3. Pas de captive portal alors qu'il devrait y en avoir un**
 
-  Sur un WiFi de salon/hotel/cafe legitime, tu as souvent un portail
+  Sur un WiFi de salon/hôtel/cafe legitime, tu as souvent un portail
   captif (page de login). Si tu te connectes et que tu es directement
   sur Internet sans portail, suspect.
 
-  **Defenses (par ordre de priorite) :**
+  **Defenses (par ordre de priorité) :**
 
   **Defense 1 - Partage de connexion mobile (LA defense ultime)**
 
-  Ton operateur mobile (Orange, SFR, Free, Bouygues) ne peut PAS etre
+  Ton opérateur mobile (Orange, SFR, Free, Bouygues) ne peut PAS être
   spoof par un attaquant local. C'est l'option la plus sure.
 
   Cout : ~10-100 Mo de data 4G/5G pour l'usage navigation/email
@@ -92,17 +92,17 @@ debrief: |
   **Defense 2 - VPN d'entreprise**
 
   Si ton employeur fournit un VPN, **active-le AVANT de te connecter
-  au WiFi public**. Le VPN chiffre tout le trafic - meme si l'attaquant
+  au WiFi public**. Le VPN chiffre tout le trafic - même si l'attaquant
   intercepte, il ne voit que du chiffre opaque.
 
   Attention : pas n'importe quel VPN. Les "VPN gratuits" (Hola, etc.)
-  sont eux-memes des cibles ou des attaquants. Cf. episode 04.
+  sont eux-mêmes des cibles ou des attaquants. Cf. episode 04.
 
-  **Defense 3 - Verifier le BSSID**
+  **Defense 3 - Vérifier le BSSID**
 
   Le BSSID est l'adresse MAC de l'AP. Le legitime est imprime sur le
   manuel ou affiche a l'accueil du salon (au format `AA:BB:CC:DD:EE:FF`).
-  Tu peux le voir dans les details de connexion WiFi.
+  Tu peux le voir dans les détails de connexion WiFi.
 
   Si le BSSID ne correspond pas a celui affiche : mauvais AP.
 
@@ -114,26 +114,26 @@ debrief: |
 
   **Defense 5 - Pas d'authentification sensible sur WiFi public**
 
-  Meme avec VPN. Les sessions sensibles (banque, RH, admin email)
-  doivent se faire en 4G/5G ou sur un reseau de confiance (bureau,
+  Même avec VPN. Les sessions sensibles (banque, RH, admin email)
+  doivent se faire en 4G/5G ou sur un réseau de confiance (bureau,
   domicile).
 
   **Cas reel :**
 
-  DEF CON 2018 : pendant la conference de cybersecurite, plus de
-  35 reseaux WiFi malicieux ont ete detectes simultanement (par les
-  organisateurs eux-memes pour l'exercice). Plusieurs participants
-  - meme experts - se sont fait voler des credentials.
+  DEF CON 2018 : pendant la conference de cybersécurité, plus de
+  35 réseaux WiFi malicieux ont été detectes simultanement (par les
+  organisateurs eux-mêmes pour l'exercice). Plusieurs participants
+  - même experts - se sont fait voler des credentials.
 
   **Le KARMA attack :**
 
-  Variante de l'Evil Twin : ton telephone se souvient de tous les
-  WiFi auxquels tu t'es connecte (Starbucks, hotel, ami...). Il
-  cherche EN PERMANENCE ces reseaux. Un attaquant peut configurer un
-  AP qui se nomme "Starbucks" - ton telephone se connecte
+  Variante de l'Evil Twin : ton téléphone se souvient de tous les
+  WiFi auxquels tu t'es connecte (Starbucks, hôtel, ami...). Il
+  cherche EN PERMANENCE ces réseaux. Un attaquant peut configurer un
+  AP qui se nomme "Starbucks" - ton téléphone se connecte
   automatiquement, sans que tu cliques.
 
-  Defense : "Forget" les reseaux WiFi anciens. Ne garde que ceux que
+  Defense : "Forget" les réseaux WiFi anciens. Ne garde que ceux que
   tu utilises souvent.
 quiz:
   - question: "Tu vois 2 WiFi 'ParisExpo-Visiteurs' et 'Paris-Expo-Visiteurs' (tiret en plus). Tu fais quoi ?"
@@ -141,28 +141,28 @@ quiz:
       - { id: "a", label: "Je me connecte au plus fort signal", correct: false }
       - { id: "b", label: "Je verifie le nom EXACT sur mon badge officiel et je me connecte uniquement au bon (sinon : 4G/5G partage)", correct: true }
       - { id: "c", label: "Les deux fonctionnent surement", correct: false }
-    explanation: "Typosquatting WiFi = signature Evil Twin. Le tiret en plus est volontaire de l'attaquant. Toujours verifier le nom EXACT (badge, accueil, manuel) avant de se connecter."
+    explanation: "Typosquatting WiFi = signature Evil Twin. Le tiret en plus est volontaire de l'attaquant. Toujours vérifier le nom EXACT (badge, accueil, manuel) avant de se connecter."
 
   - question: "Quelle est la defense la PLUS SURE en WiFi public ?"
     choices:
-      - { id: "a", label: "Partage de connexion 4G/5G du telephone (operateur mobile non spoofable)", correct: true }
+      - { id: "a", label: "Partage de connexion 4G/5G du téléphone (opérateur mobile non spoofable)", correct: true }
       - { id: "b", label: "Activer un VPN gratuit", correct: false }
       - { id: "c", label: "Mettre un mot de passe fort sur ses comptes", correct: false }
-    explanation: "Le partage de connexion mobile passe par l'infra securisee de ton operateur (impossible a spoofer en local). Les VPN gratuits sont eux-memes suspects (cf. ep 04 de cette saison)."
+    explanation: "Le partage de connexion mobile passe par l'infra securisee de ton opérateur (impossible a spoofer en local). Les VPN gratuits sont eux-mêmes suspects (cf. ep 04 de cette saison)."
 
   - question: "Le BSSID c'est quoi ?"
     choices:
       - { id: "a", label: "Le mot de passe WiFi", correct: false }
       - { id: "b", label: "L'adresse MAC physique de l'access point (unique par AP)", correct: true }
-      - { id: "c", label: "Le nom du reseau", correct: false }
-    explanation: "BSSID = adresse MAC du AP, unique. Le SSID (nom) peut etre clone, le BSSID ne peut pas (theoriquement). Compare le BSSID affiche a celui imprime sur le manuel/accueil officiel."
+      - { id: "c", label: "Le nom du réseau", correct: false }
+    explanation: "BSSID = adresse MAC du AP, unique. Le SSID (nom) peut être clone, le BSSID ne peut pas (theoriquement). Compare le BSSID affiche a celui imprime sur le manuel/accueil officiel."
 
   - question: "Qu'est-ce que le KARMA attack ?"
     choices:
       - { id: "a", label: "Un cryptominer", correct: false }
-      - { id: "b", label: "Un AP malicieux qui se nomme comme un WiFi en memoire de ton tel - tel se connecte automatiquement sans clic", correct: true }
+      - { id: "b", label: "Un AP malicieux qui se nomme comme un WiFi en mémoire de ton tel - tel se connecte automatiquement sans clic", correct: true }
       - { id: "c", label: "Un type de virus", correct: false }
-    explanation: "Ton tel cherche en permanence les WiFi memorises (Starbucks, hotel, amis). Un attaquant configure un AP avec ce nom = connexion auto sans aucun clic. Defense : 'forget' les WiFi anciens."
+    explanation: "Ton tel cherche en permanence les WiFi memorises (Starbucks, hôtel, amis). Un attaquant configure un AP avec ce nom = connexion auto sans aucun clic. Defense : 'forget' les WiFi anciens."
 ---
 
 > 💡 **Pour aller plus loin** : pour les paranoides, l'app

@@ -2,17 +2,17 @@
 title: "Repérer une app piégée sur les stores"
 durationMinutes: 6
 persona: "tous-collaborateurs"
-objective: "Detecter les signaux d'alerte d'une app malveillante sur Google Play / App Store, eviter les apps qui demandent trop de permissions, comprendre ce qu'est le sideloading"
+objective: "Détecter les signaux d'alerte d'une app malveillante sur Google Play / App Store, éviter les apps qui demandent trop de permissions, comprendre ce qu'est le sideloading"
 xpReward: 60
 scenario: |
   Tu cherches une lampe torche pour ton smartphone. Le Play Store
   te propose 5 applications "Lampe torche LED" gratuites. Tu en
   choisis une au hasard, "Super LED Flashlight Pro", 4.5 etoiles,
-  10M+ telechargements.
+  10M+ téléchargements.
 
   Tu cliques "Installer". Avant de lancer, l'app demande les
   permissions suivantes :
-  - Camera (la lampe est sur la cam, ok)
+  - Caméra (la lampe est sur la cam, ok)
   - Localisation precise (heu... pourquoi ?)
   - Acces aux contacts (??)
   - SMS et appels (?!?)
@@ -21,9 +21,9 @@ scenario: |
   Tu fais quoi ?
 choices:
   - id: "a"
-    label: "Cancel l'installation immediatement - ces permissions ne sont PAS necessaires pour une lampe torche, c'est suspect"
+    label: "Cancel l'installation immédiatement - ces permissions ne sont PAS necessaires pour une lampe torche, c'est suspect"
     outcome: "good"
-    feedback: "Excellent reflexe. Une lampe torche a besoin uniquement de la camera (le flash). Localisation, contacts, SMS, micro = collecte de donnees pour revente publicitaire au minimum, ou malware au pire. Cancel + chercher une app qui demande UNIQUEMENT camera."
+    feedback: "Excellent reflexe. Une lampe torche a besoin uniquement de la caméra (le flash). Localisation, contacts, SMS, micro = collecte de données pour revente publicitaire au minimum, ou malware au pire. Cancel + chercher une app qui demande UNIQUEMENT caméra."
     points: 35
   - id: "b"
     label: "J'accepte, l'app est sur le Play Store officiel donc c'est valide par Google"
@@ -33,55 +33,55 @@ choices:
   - id: "c"
     label: "J'accepte mais je revoque ensuite les permissions inutiles"
     outcome: "neutral"
-    feedback: "Approche prudente mais limitee. Au moment ou l'app a tous les permissions, elle peut deja avoir exfiltre tes contacts/SMS dans les premieres secondes. Mieux : refuser AVANT d'accepter."
+    feedback: "Approche prudente mais limitee. Au moment ou l'app a tous les permissions, elle peut déjà avoir exfiltre tes contacts/SMS dans les premières secondes. Mieux : refuser AVANT d'accepter."
     points: 5
   - id: "d"
-    label: "J'attends quelques jours pour voir si d'autres utilisateurs signalent un probleme"
+    label: "J'attends quelques jours pour voir si d'autres utilisateurs signalent un problème"
     outcome: "neutral"
-    feedback: "Pas mauvais mais lent. Pendant ce temps, tu n'as pas de lampe torche et l'app reste presente. Mieux : choisir directement une app avec permissions minimales (la fonction lampe torche est integree au systeme iOS et Android moderne, pas besoin d'app)."
+    feedback: "Pas mauvais mais lent. Pendant ce temps, tu n'as pas de lampe torche et l'app reste presente. Mieux : choisir directement une app avec permissions minimales (la fonction lampe torche est integree au système iOS et Android moderne, pas besoin d'app)."
     points: 10
 debrief: |
   Le marche des apps mobiles est un eldorado pour les attaquants.
   En 2024, **30% des apps gratuites** sur Google Play contenaient
-  au moins un comportement suspect (donnees personnelles vendues a
+  au moins un comportement suspect (données personnelles vendues a
   des courtiers, telemetrie excessive, ads invasifs).
 
   **Les 5 signaux d'alarme avant installer une app :**
 
   **1. Permissions demandees disproportionnees**
 
-  La regle : "ai-je BESOIN de cette permission pour la fonction
+  La règle : "ai-je BESOIN de cette permission pour la fonction
   attendue ?"
 
   Exemples :
-  - Lampe torche -> uniquement Camera (pour le flash)
-  - Calculatrice -> aucune permission systeme
+  - Lampe torche -> uniquement Caméra (pour le flash)
+  - Calculatrice -> aucune permission système
   - App meteo -> Localisation (logique)
-  - App photo -> Camera + Stockage (logique)
-  - App "scan de QR" -> Camera (suffit)
+  - App photo -> Caméra + Stockage (logique)
+  - App "scan de QR" -> Caméra (suffit)
   - **App lampe torche qui demande contacts** = ROUGE ABSOLU
 
   Pour iOS, les permissions sont visibles dans Reglages > [App].
   Pour Android, dans Parametres > Apps > [App] > Permissions.
 
-  Refuser AVANT acceptation est plus sur que revoquer apres.
+  Refuser AVANT acceptation est plus sur que revoquer après.
 
   **2. Editeur peu connu / sans site web**
 
   - Editeur connu (Google, Microsoft, Spotify, La Poste, banque
-    francaise) = generalement sur.
+    française) = généralement sur.
   - Editeur "FunApps Studio" ou nom genere aleatoirement = suspect.
   - Pas de site web officiel referencible = suspect.
 
   Cliquer sur le nom de l'editeur sur le store ouvre la liste de ses
-  autres apps. Beaucoup d'apps avec noms types "Selfie Camera Beauty
+  autres apps. Beaucoup d'apps avec noms types "Selfie Caméra Beauty
   Pro v2" = ferme de bots probablement.
 
   **3. Avis suspects**
 
-  - Trop d'avis 5 etoiles tres courts ("Great app!", "Love it!"),
-    posts dans la meme semaine = bots.
-  - Avis 1 etoile detailles = la verite (les vrais utilisateurs
+  - Trop d'avis 5 etoiles très courts ("Great app!", "Love it!"),
+    posts dans la même semaine = bots.
+  - Avis 1 etoile detailles = la vérité (les vrais utilisateurs
     decoivent prennent le temps d'expliquer).
   - **Mots-cles a chercher dans les avis 1 etoile** : "ads",
     "permissions", "spy", "drain battery", "data", "popup".
@@ -90,31 +90,31 @@ debrief: |
 
   - App gratuite avec fonctionnalites premium "gratuites" (lampe
     torche avec compass, podometre, meteo, scanner...) = collecte
-    de donnees pour monetisation.
-  - "Free VPN" qui propose "tres haute vitesse" = vend ta bande
+    de données pour monetisation.
+  - "Free VPN" qui propose "très haute vitesse" = vend ta bande
     passante (cas Hola 2015).
   - "Antivirus gratuit Android" = souvent un faux qui te demande
     plus de permissions que les vrais virus.
 
   **5. Telechargements anormaux**
 
-  - 5 000 telechargements pour une app de banque = suspect (pas
+  - 5 000 téléchargements pour une app de banque = suspect (pas
     assez d'utilisateurs pour une vraie banque).
-  - 10M+ telechargements pour une lampe torche = peut-etre
-    legitime, peut-etre une longue histoire de collecte de donnees.
+  - 10M+ téléchargements pour une lampe torche = peut-être
+    legitime, peut-être une longue histoire de collecte de données.
 
   **Les signaux ROUGES (a NE JAMAIS installer) :**
 
   - App qui demande **droits accessibilite** (sauf si vraiment
-    necessaire : assistance, lecture d'ecran). Ces droits permettent
-    de lire l'ecran ET de simuler des touches = malware potentiel
+    necessaire : assistance, lecture d'écran). Ces droits permettent
+    de lire l'écran ET de simuler des touches = malware potentiel
     (bypass MFA, extraction de credentials).
   - App qui demande **droits administrateur device** (ou "Device
     Admin" sur Android). Ces droits permettent de chiffrer le tel
     (ransomware) ou empecher la desinstallation.
   - App "anti-virus" qui n'est pas dans la liste connue (Bitdefender,
     Kaspersky, Sophos, ESET, Norton). Beaucoup d'apps "antivirus"
-    sont elles-memes des malwares.
+    sont elles-mêmes des malwares.
   - App **financiere** non issue de l'editeur officiel de la banque.
     Les fausses apps de banque (avec interface clonee) sont en
     croissance. Toujours installer depuis le **lien officiel sur le
@@ -123,7 +123,7 @@ debrief: |
   **Les apps "pre-installees" (bloatware) :**
 
   Certains constructeurs (Samsung, Xiaomi, Huawei) installent des
-  apps tierces de partenaires commerciaux. Elles peuvent etre
+  apps tierces de partenaires commerciaux. Elles peuvent être
   desinstallees ou desactivees :
   - **Android** : Settings > Apps > [App] > Disable.
   - Si pas desinstallable, la disable reduit son impact.
@@ -132,11 +132,11 @@ debrief: |
 
   - **iPhone** : impossible sans jailbreak (sauf depuis EU 2024
     avec App Sideloading limite).
-  - **Android** : possible via APK telecharge (un fichier .apk
+  - **Android** : possible via APK téléchargé (un fichier .apk
     qu'on lance pour installer).
 
-  Le sideloading contourne les controles des stores. **A NE JAMAIS
-  FAIRE** sauf dans des cas tres particuliers (devs, jeux limites
+  Le sideloading contourne les contrôles des stores. **A NE JAMAIS
+  FAIRE** sauf dans des cas très particuliers (devs, jeux limites
   geographiquement).
 
   Le piege classique : un site web te dit "votre Android n'est pas
@@ -147,7 +147,7 @@ debrief: |
 
   Tu vois un site qui propose des apps payantes (Photoshop, etc.)
   gratuitement en APK = APK certainement modifie pour inclure un
-  malware. Le piratage mobile a des consequences cyber concretes :
+  malware. Le piratage mobile a des conséquences cyber concretes :
   - Vol de credentials
   - Cryptominer (ralentit le tel, vide la batterie)
   - Backdoor pour les attaquants
@@ -157,21 +157,21 @@ debrief: |
   - **Joker malware (2019-2024)** : famille de malwares Android
     qui s'inscrivent a des services premium WAP-billing (factures
     mobiles surtaxees). Plus de 1 700 apps Joker detectees sur
-    Play Store, plusieurs milliards de telechargements cumules.
+    Play Store, plusieurs milliards de téléchargements cumules.
   - **Anatsa banking trojan (2023)** : se cache dans des apps de
     "PDF reader" anodines. Une fois installe, vol des credentials
     bancaires de 600+ banques.
   - **Pegasus** : surveillance commerciale. Pas via store mais via
     0-day. Cf. ep 05.
 
-  **La regle d'or : moins c'est mieux**
+  **La règle d'or : moins c'est mieux**
 
   Un smartphone propre = moins d'apps. Audit annuel :
   - Quelles apps n'ai-je pas utilisees depuis 6 mois ? **Desinstalle.**
   - Quelles apps ont des permissions excessives ? **Revoque ou
     desinstalle.**
-  - Quelles apps gratuites pourraient etre remplacees par les
-    fonctions natives (notes Apple/Google, lampe torche systeme) ?
+  - Quelles apps gratuites pourraient être remplacees par les
+    fonctions natives (notes Apple/Google, lampe torche système) ?
     **Remplace.**
 quiz:
   - question: "Une lampe torche demande l'acces aux contacts. C'est :"
@@ -179,32 +179,32 @@ quiz:
       - { id: "a", label: "Normal pour partager via SMS", correct: false }
       - { id: "b", label: "Suspect - une lampe torche n'a aucune raison d'acceder aux contacts. Cancel l'installation", correct: true }
       - { id: "c", label: "Standard sur Android", correct: false }
-    explanation: "Permissions disproportionnees = signal d'alerte rouge. Lampe torche = besoin uniquement de la camera (flash). Toute permission supplementaire (contacts, SMS, micro, localisation) = collecte de donnees minimum, malware au pire."
+    explanation: "Permissions disproportionnees = signal d'alerte rouge. Lampe torche = besoin uniquement de la caméra (flash). Toute permission supplémentaire (contacts, SMS, micro, localisation) = collecte de données minimum, malware au pire."
 
   - question: "Quel droit Android est le plus dangereux a accorder a une app ?"
     choices:
-      - { id: "a", label: "Camera", correct: false }
-      - { id: "b", label: "Droits accessibilite ou Device Admin (lire ecran + simuler touches + empecher desinstallation)", correct: true }
+      - { id: "a", label: "Caméra", correct: false }
+      - { id: "b", label: "Droits accessibilite ou Device Admin (lire écran + simuler touches + empecher desinstallation)", correct: true }
       - { id: "c", label: "Stockage", correct: false }
-    explanation: "Accessibilite = lecture/manipulation de l'ecran complet (bypass MFA, extraction credentials). Device Admin = empeche la desinstallation, peut chiffrer le tel. Ces droits sont legitimes pour ~5 apps (lecteur d'ecran, MDM) - sinon = signal rouge."
+    explanation: "Accessibilite = lecture/manipulation de l'écran complet (bypass MFA, extraction credentials). Device Admin = empeche la desinstallation, peut chiffrer le tel. Ces droits sont legitimes pour ~5 apps (lecteur d'écran, MDM) - sinon = signal rouge."
 
   - question: "Le sideloading sur Android (installer un APK hors Play Store) c'est :"
     choices:
       - { id: "a", label: "Une bonne pratique", correct: false }
-      - { id: "b", label: "A eviter sauf cas particulier (dev, jeux limites geographiquement). Contourne les controles store", correct: true }
+      - { id: "b", label: "A éviter sauf cas particulier (dev, jeux limites geographiquement). Contourne les contrôles store", correct: true }
       - { id: "c", label: "Obligatoire", correct: false }
-    explanation: "Sideloading = installer une app qui n'a pas passe les controles du Play Store. Sauf devs / jeux geo-restreints, c'est a eviter. Tres frequent vecteur de malware (app pretend etre une 'mise a jour' ou un 'app premium gratuit')."
+    explanation: "Sideloading = installer une app qui n'a pas passe les contrôles du Play Store. Sauf devs / jeux geo-restreints, c'est a éviter. Très fréquent vecteur de malware (app pretend être une 'mise a jour' ou un 'app premium gratuit')."
 
   - question: "Le malware Joker (2019-2024) faisait quoi ?"
     choices:
       - { id: "a", label: "Ralentissait le tel", correct: false }
       - { id: "b", label: "Inscrivait les utilisateurs a des services premium WAP-billing surtaxes (factures mobile)", correct: true }
       - { id: "c", label: "Volait les photos", correct: false }
-    explanation: "Joker = famille de malwares Android. 1700+ apps detectees sur Play Store, milliards de telechargements. Inscription automatique a des services premium = factures de telephone gonflees. Un des malwares les plus persistants 2019-2024."
+    explanation: "Joker = famille de malwares Android. 1700+ apps detectees sur Play Store, milliards de téléchargements. Inscription automatique a des services premium = factures de téléphone gonflees. Un des malwares les plus persistants 2019-2024."
 ---
 
 > 💡 **Pour aller plus loin** : audit annuel des apps installees. Sur
 > Android : **Bouncer** (gratuit, desactive les permissions
-> automatiquement apres usage). Sur iOS : **App Privacy Report**
+> automatiquement après usage). Sur iOS : **App Privacy Report**
 > (Reglages > Confidentialite > App Privacy Report) montre quelles
 > apps ont accede a quoi.

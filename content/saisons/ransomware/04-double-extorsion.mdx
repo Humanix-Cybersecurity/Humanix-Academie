@@ -5,77 +5,77 @@ persona: "tous"
 objective: "Comprendre l'evolution moderne du ransomware vers la double et triple extorsion"
 xpReward: 60
 scenario: |
-  Tu es DPO d'une PME francaise dans le secteur des services. Le ransomware LockBit a chiffre votre SI hier soir. Le RSSI te dit "bonne nouvelle, on a des sauvegardes immuables, on peut tout restaurer en 36h sans payer la rancon."
+  Tu es DPO d'une PME française dans le secteur des services. Le ransomware LockBit a chiffre votre SI hier soir. Le RSSI te dit "bonne nouvelle, on a des sauvegardes immuables, on peut tout restaurer en 36h sans payer la rançon."
 
-  Mais ce matin, tu recois un email du groupe d'attaquants : "Nous detenons 47 Go de donnees exfiltrees AVANT le chiffrement : fichiers RH (paie, contrats), donnees clients (CRM complet), comptabilite. Si vous ne payez pas dans 96 heures, nous publions tout sur notre site de fuite. Voici un echantillon (capture d'ecran de 5 fichiers reels)."
+  Mais ce matin, tu recois un email du groupe d'attaquants : "Nous detenons 47 Go de données exfiltrees AVANT le chiffrement : fichiers RH (paie, contrats), données clients (CRM complet), comptabilite. Si vous ne payez pas dans 96 heures, nous publions tout sur notre site de fuite. Voici un echantillon (capture d'écran de 5 fichiers reels)."
 
-  Que dois-tu faire en priorite ?
+  Que dois-tu faire en priorité ?
 choices:
   - id: "a"
     label: "Restaurer les sauvegardes et ignorer la menace de publication"
     outcome: "bad"
-    feedback: "Ignorer la menace de publication = exposer 47 Go de donnees personnelles + secret commercial sur le dark web. Cette strategie ne suffit plus depuis 2020."
+    feedback: "Ignorer la menace de publication = exposer 47 Go de données personnelles + secret commercial sur le dark web. Cette stratégie ne suffit plus depuis 2020."
     points: -15
   - id: "b"
-    label: "Notifier la CNIL sous 72h pour fuite de donnees personnelles ET activer la cellule de crise pour decider de la suite"
+    label: "Notifier la CNIL sous 72h pour fuite de données personnelles ET activer la cellule de crise pour decider de la suite"
     outcome: "good"
-    feedback: "Excellent. La double extorsion impose une 2eme decision (publication/fuite) en plus de la chiffrement. La CNIL doit etre notifiee sous 72h, et la cellule de crise doit gerer la communication client."
+    feedback: "Excellent. La double extorsion impose une 2eme décision (publication/fuite) en plus de la chiffrement. La CNIL doit être notifiee sous 72h, et la cellule de crise doit gerer la communication client."
     points: 35
   - id: "c"
-    label: "Payer immediatement pour eviter la publication"
+    label: "Payer immédiatement pour éviter la publication"
     outcome: "bad"
-    feedback: "Comme module 03 : pas de decision a chaud. De plus, payer ne garantit AUCUN engagement de non-publication - les groupes mentent, conservent les donnees ou les revendent quand meme."
+    feedback: "Comme module 03 : pas de décision a chaud. De plus, payer ne garantit AUCUN engagement de non-publication - les groupes mentent, conservent les données ou les revendent quand même."
     points: -20
   - id: "d"
-    label: "Communiquer immediatement aux clients pour leur permettre de se proteger"
+    label: "Communiquer immédiatement aux clients pour leur permettre de se proteger"
     outcome: "good"
-    feedback: "Bon reflexe RGPD : article 34 impose la notification individuelle si risque eleve. A faire en coordination avec l'avocat et la CNIL pour eviter de creer une panique injustifiee."
+    feedback: "Bon reflexe RGPD : article 34 impose la notification individuelle si risque élève. A faire en coordination avec l'avocat et la CNIL pour éviter de créer une panique injustifiee."
     points: 25
 debrief: |
-  La **double extorsion** est l'evolution majeure du ransomware depuis 2019-2020. Avant : on chiffre tes fichiers, tu paies pour la cle. Aujourd'hui : on chiffre + on a deja vole les donnees + on publie si tu ne paies pas.
+  La **double extorsion** est l'evolution majeure du ransomware depuis 2019-2020. Avant : on chiffre tes fichiers, tu paies pour la cle. Aujourd'hui : on chiffre + on a déjà vole les données + on publie si tu ne paies pas.
 
   **Pourquoi cette evolution ?**
 
   Les sauvegardes immuables / hors-ligne ont reduit l'efficacite du simple chiffrement. Les attaquants ont evolue :
 
   1. **Phase 1** (avant 2019) - chiffrement seul
-  2. **Phase 2** (2019-2022) - double extorsion : chiffrement + menace de publication des donnees exfiltrees
+  2. **Phase 2** (2019-2022) - double extorsion : chiffrement + menace de publication des données exfiltrees
   3. **Phase 3** (2022-2024) - triple extorsion : ajoute des **DDoS** sur les services qui restent en ligne pour amplifier la pression
-  4. **Phase 4** (2024+) - quadruple : ajoute le **harcelement direct** des clients de la victime ("vos donnees sont compromises chez X, faites pression sur eux pour qu'ils paient")
+  4. **Phase 4** (2024+) - quadruple : ajoute le **harcelement direct** des clients de la victime ("vos données sont compromises chez X, faites pression sur eux pour qu'ils paient")
 
   **Les groupes connus pour la double/triple extorsion :**
-  - **LockBit** (jusqu'a sa neutralisation partielle en 2024 par Op. Cronos)
+  - **LockBit** (jusqu'à sa neutralisation partielle en 2024 par Op. Cronos)
   - **Conti** (dissout 2022, fragments dans plusieurs groupes successeurs)
   - **REvil / Sodinokibi**
   - **BlackCat / ALPHV**
   - **8Base**, **Akira**, **Cl0p**, **Royal**
 
-  Tous ont des **sites de fuite** (sur Tor) ou ils publient les donnees des victimes refractaires. **Cybermalveillance.gouv.fr** maintient une liste publique a jour.
+  Tous ont des **sites de fuite** (sur Tor) ou ils publient les données des victimes refractaires. **Cybermalveillance.gouv.fr** maintient une liste publique a jour.
 
-  **Les implications strategiques :**
+  **Les implications stratégiques :**
 
   **1. Les sauvegardes ne suffisent plus.**
-  Une bonne politique de sauvegarde te permet de restaurer le SI, mais ne te protege pas de la fuite des donnees deja exfiltrees. Il te faut une **strategie de prevention de l'exfiltration** :
-  - Chiffrement des donnees au repos sur les partages reseau
-  - Detection des transferts sortants anormaux (DLP - Data Loss Prevention)
-  - Segmentation reseau pour limiter le perimetre accessible une fois entre
+  Une bonne politique de sauvegarde te permet de restaurer le SI, mais ne te protege pas de la fuite des données déjà exfiltrees. Il te faut une **stratégie de prévention de l'exfiltration** :
+  - Chiffrement des données au repos sur les partages réseau
+  - Détection des transferts sortants anormaux (DLP - Data Loss Prévention)
+  - Segmentation réseau pour limiter le perimetre accessible une fois entre
 
   **2. Le RGPD impose des obligations.**
-  La fuite de donnees personnelles est un **incident RGPD article 33** (notification CNIL sous 72h) et possiblement **article 34** (notification aux personnes concernees si risque eleve).
+  La fuite de données personnelles est un **incident RGPD article 33** (notification CNIL sous 72h) et possiblement **article 34** (notification aux personnes concernees si risque élève).
 
   Ne JAMAIS minimiser dans la notification : la CNIL apprecie la transparence et la rapidite. Une PME qui se conforme a 100 % avec rapidite a souvent moins de sanctions que celle qui essaie de cacher.
 
   **3. La gestion de crise est multi-dimensionnelle.**
   Il ne s'agit plus de restaurer le SI. Il faut :
   - Coordonner DPO + RSSI + DG + DAF + avocat + comm + assureur
-  - Communiquer aux clients (RGPD article 34 si risque eleve)
-  - Communiquer en interne (les salaries lisent la presse, mieux vaut etre source)
+  - Communiquer aux clients (RGPD article 34 si risque élève)
+  - Communiquer en interne (les salariés lisent la presse, mieux vaut être source)
   - Communiquer publiquement avec sobriete (cf. cas CHU de Brest, transparence assumee)
 
   **4. Le paiement ne protege pas de la publication.**
-  Plusieurs cas documentes ou les attaquants ont publie quand meme apres paiement (Cas Colonial Pipeline US 2021, plusieurs cas francais 2023-2024). Le paiement n'achete que la **promesse** de ne pas publier - promesse non-engageante, non-tracable, non-recourable.
+  Plusieurs cas documentes ou les attaquants ont publie quand même après paiement (Cas Colonial Pipeline US 2021, plusieurs cas français 2023-2024). Le paiement n'achete que la **promesse** de ne pas publier - promesse non-engageante, non-tracable, non-recourable.
 
-  **La meilleure strategie reste donc :** prevenir l'exfiltration, restaurer rapidement, notifier transparente, refuser de payer si possible.
+  **La meilleure stratégie reste donc :** prévenir l'exfiltration, restaurer rapidement, notifier transparente, refuser de payer si possible.
 quiz:
   - question: "Une bonne politique de sauvegardes immuables protege contre :"
     choices:
@@ -83,14 +83,14 @@ quiz:
         label: "La totalite du risque ransomware"
         correct: false
       - id: "b"
-        label: "Le chiffrement des fichiers - mais PAS la publication des donnees deja exfiltrees"
+        label: "Le chiffrement des fichiers - mais PAS la publication des données déjà exfiltrees"
         correct: true
       - id: "c"
         label: "Rien"
         correct: false
-    explanation: "Les sauvegardes te permettent de restaurer le SI sans payer. Mais elles ne protegent pas contre la fuite des donnees qui ont deja quitte ton SI avant le chiffrement."
+    explanation: "Les sauvegardes te permettent de restaurer le SI sans payer. Mais elles ne protegent pas contre la fuite des données qui ont déjà quitte ton SI avant le chiffrement."
 
-  - question: "Apres une fuite confirmee de donnees personnelles, le delai de notification a la CNIL est :"
+  - question: "Après une fuite confirmee de données personnelles, le délai de notification a la CNIL est :"
     choices:
       - id: "a"
         label: "72 heures (article 33 RGPD)"
@@ -101,24 +101,24 @@ quiz:
       - id: "c"
         label: "Aucun, c'est facultatif"
         correct: false
-    explanation: "Article 33 RGPD : notification CNIL sous 72h apres connaissance de la fuite. Si risque eleve, notification aux personnes concernees aussi (article 34)."
+    explanation: "Article 33 RGPD : notification CNIL sous 72h après connaissance de la fuite. Si risque élève, notification aux personnes concernees aussi (article 34)."
 
-  - question: "Payer la rancon protege-t-il de la publication des donnees ?"
+  - question: "Payer la rançon protege-t-il de la publication des données ?"
     choices:
       - id: "a"
         label: "Oui, c'est garanti contractuellement"
         correct: false
       - id: "b"
-        label: "Non, c'est une promesse non-tracable, non-recourable. Plusieurs cas documentes de publication apres paiement."
+        label: "Non, c'est une promesse non-tracable, non-recourable. Plusieurs cas documentes de publication après paiement."
         correct: true
       - id: "c"
         label: "Oui, mais seulement pour les groupes serieux"
         correct: false
-    explanation: "Aucun engagement contractuel ne peut etre exige d'un groupe criminel. Plusieurs cas documentes : paiement effectue, donnees publiees quand meme. Acheter le silence d'un criminel n'est pas une strategie."
+    explanation: "Aucun engagement contractuel ne peut être exige d'un groupe criminel. Plusieurs cas documentes : paiement effectue, données publiees quand même. Acheter le silence d'un criminel n'est pas une stratégie."
 ---
 
 ## Pour aller plus loin
 
-La double extorsion change la nature de la cyber-assurance. Beaucoup de polices excluent desormais le paiement de rancon ou imposent des conditions strictes. Verifie la tienne. Et investis dans la **prevention de l'exfiltration** (DLP, segmentation, chiffrement au repos) - c'est aujourd'hui le terrain de jeu cle.
+La double extorsion change la nature de la cyber-assurance. Beaucoup de polices excluent desormais le paiement de rançon ou imposent des conditions strictes. Verifie la tienne. Et investis dans la **prévention de l'exfiltration** (DLP, segmentation, chiffrement au repos) - c'est aujourd'hui le terrain de jeu cle.
 
 > "On ne paie pas pour effacer une fuite. On paie pour acheter la promesse d'un criminel."

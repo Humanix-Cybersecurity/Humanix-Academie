@@ -1,8 +1,8 @@
 ---
-title: "Dropbox vs OneDrive vs Drive : regles d'usage"
+title: "Dropbox vs OneDrive vs Drive : règles d'usage"
 durationMinutes: 6
 persona: "tous-collaborateurs"
-objective: "Choisir le bon outil de stockage cloud selon le contexte (perso, pro, sensible) et appliquer les bonnes regles d'usage"
+objective: "Choisir le bon outil de stockage cloud selon le contexte (perso, pro, sensible) et appliquer les bonnes règles d'usage"
 xpReward: 60
 scenario: |
   Tu travailles dans une PME equipee de Microsoft 365 (donc
@@ -11,35 +11,35 @@ scenario: |
   - Tu as Dropbox perso (compte cree il y a 5 ans)
   - Tu as Google Drive perso (lie a Gmail perso)
   - L'entreprise n'a pas Dropbox pro
-  - Tu echanges parfois avec des clients qui utilisent Dropbox
+  - Tu échanges parfois avec des clients qui utilisent Dropbox
 
   Le DSI te demande de structurer tes pratiques. Que fais-tu ?
 choices:
   - id: "a"
     label: "Je continue a melanger les 3 outils selon le contexte, c'est plus pratique"
     outcome: "bad"
-    feedback: "Risque eleve. Melanger perso et pro = Shadow IT (cf ep 02) + risque RGPD + risque de fuite. Politique : separer strictement perso/pro, utiliser uniquement les outils valides par le DSI."
+    feedback: "Risque élève. Melanger perso et pro = Shadow IT (cf ep 02) + risque RGPD + risque de fuite. Politique : separer strictement perso/pro, utiliser uniquement les outils valides par le DSI."
     points: -20
   - id: "b"
-    label: "Je sepere strictement : OneDrive pro pour le travail, perso (Dropbox/Drive perso) pour les choses personnelles. Je n'utilise pas mon perso pour le pro. Je demande au DSI une solution officielle pour les echanges Dropbox client"
+    label: "Je sepere strictement : OneDrive pro pour le travail, perso (Dropbox/Drive perso) pour les choses personnelles. Je n'utilise pas mon perso pour le pro. Je demande au DSI une solution officielle pour les échanges Dropbox client"
     outcome: "good"
-    feedback: "Excellente approche. Separation perso/pro = base de la cybersecurite professionnelle. Pour les besoins clients (Dropbox) : demande au DSI = soit Dropbox Business, soit alternative (lien externe partageable depuis OneDrive)."
+    feedback: "Excellente approche. Separation perso/pro = base de la cybersécurité professionnelle. Pour les besoins clients (Dropbox) : demande au DSI = soit Dropbox Business, soit alternative (lien externe partageable depuis OneDrive)."
     points: 40
   - id: "c"
-    label: "Je supprime tous mes comptes perso, par precaution"
+    label: "Je supprime tous mes comptes perso, par précaution"
     outcome: "neutral"
-    feedback: "Pas necessaire. Le perso n'est pas le probleme - c'est le melange. Tu peux garder ton Dropbox perso pour les photos de famille, du moment que tu n'y mets PAS de donnees pro."
+    feedback: "Pas necessaire. Le perso n'est pas le problème - c'est le melange. Tu peux garder ton Dropbox perso pour les photos de famille, du moment que tu n'y mets PAS de données pro."
     points: 10
   - id: "d"
     label: "J'utilise tout mon Dropbox perso pour le travail, c'est plus pratique que OneDrive lent"
     outcome: "bad"
-    feedback: "FAUX. Donnees pro sur compte perso = RGPD violation + perte de propriete (si tu pars, l'entreprise perd l'acces). Si OneDrive est lent : signaler au DSI pour resolution, pas contourner avec compte perso."
+    feedback: "FAUX. Données pro sur compte perso = RGPD violation + perte de propriété (si tu pars, l'entreprise perd l'acces). Si OneDrive est lent : signaler au DSI pour resolution, pas contourner avec compte perso."
     points: -25
 debrief: |
   Les **services de cloud storage** sont aujourd'hui omnipresents
   (Dropbox, Google Drive, OneDrive, iCloud, Box). Mais leurs
-  usages doivent etre clairs pour eviter Shadow IT, fuites RGPD
-  et perte de donnees.
+  usages doivent être clairs pour éviter Shadow IT, fuites RGPD
+  et perte de données.
 
   **Comparatif des services principaux :**
 
@@ -49,36 +49,36 @@ debrief: |
   | **Google Drive** (Workspace) | Pro (Google) | Collaboration temps reel, recherche IA | Search > storage |
   | **Dropbox Business** | Pro | Sync cross-platform robuste | Cher pour vol important |
   | **Tresorit** | Pro chiffre | Chiffrement bout-en-bout, GDPR native | Cher |
-  | **Sealit / Whaller** (FR) | Pro FR | Hebergement FR, conformite | Communaute plus petite |
+  | **Sealit / Whaller** (FR) | Pro FR | Hebergement FR, conformité | Communaute plus petite |
   | **iCloud** | Perso (Apple) | Integration native Apple | Pas pro-ready |
   | **Dropbox** (free) | Perso | 2 Go gratuit, simple | Pas pro |
   | **Drive** (free, Gmail) | Perso | 15 Go gratuit | Pas pro |
 
-  **Regle 1 : Separation stricte perso / pro**
+  **Règle 1 : Separation stricte perso / pro**
 
   **Pour le pro** :
   - Compte d'entreprise (OneDrive Business, Google Workspace,
     Dropbox Business)
   - SSO / MFA configure par le DSI
-  - Acces depuis materiel pro
+  - Acces depuis matériel pro
   - **Conformite** : audit log, retention, DLP
 
   **Pour le perso** :
   - Comptes perso (gratuits ou payants individuels)
   - Photos famille, documents prives
-  - **JAMAIS** de donnees pro
+  - **JAMAIS** de données pro
 
   **Pourquoi cette separation est essentielle :**
 
-  1. **RGPD** : donnees pro doivent etre sur outils valides
+  1. **RGPD** : données pro doivent être sur outils valides
     par l'entreprise (article 32 - mesures techniques)
   2. **Propriete** : si tu pars, l'entreprise perd l'acces a
-    tes donnees pro si elles sont chez toi
-  3. **Securite** : le pro a souvent MFA + DLP, le perso
+    tes données pro si elles sont chez toi
+  3. **Sécurité** : le pro a souvent MFA + DLP, le perso
     rarement
   4. **Audit** : impossible d'auditer ce qui est sur ton perso
 
-  **Regle 2 : Le bon outil pour le bon usage**
+  **Règle 2 : Le bon outil pour le bon usage**
 
   **a) Documents Office (Word, Excel, PowerPoint)**
   - **Microsoft 365** : OneDrive / SharePoint = ideal
@@ -86,47 +86,47 @@ debrief: |
 
   **b) Documents Google (Docs, Sheets, Slides)**
   - **Google Workspace** : Drive = ideal
-  - Recherche IA, collaboration tres fluide
+  - Recherche IA, collaboration très fluide
 
   **c) Fichiers volumineux (videos, gros datasets)**
   - **OneDrive Business** : 1-5 To inclus
   - **Dropbox Business** : illimite sur Advanced
   - **Google Workspace Enterprise** : illimite
 
-  **d) Donnees ultra-sensibles**
+  **d) Données ultra-sensibles**
   - **Tresorit** : chiffrement bout-en-bout
   - **Microsoft 365 Sensitivity Labels** : etiquetage + chiffrement
   - **Cryptomator** par-dessus le cloud existant
 
-  **e) Echange avec clients qui utilisent un autre cloud**
+  **e) Échange avec clients qui utilisent un autre cloud**
   - **Dropbox client** : Dropbox Business invitation OU upload
     sur OneDrive et partage de lien
   - **Drive client** : pareil
-  - **Politique** : pas de creation de compte perso pour
+  - **Politique** : pas de création de compte perso pour
     "depanner"
 
-  **Regle 3 : Configuration de securite**
+  **Règle 3 : Configuration de sécurité**
 
   **Pour le pro (OneDrive Business / Google Drive Workspace) :**
 
   - **MFA obligatoire** sur tous les comptes
   - **SSO** configure (Microsoft Entra ID / Google Identity)
   - **Audit log** active et consulte mensuellement
-  - **DLP** (Data Loss Prevention) configure pour donnees
+  - **DLP** (Data Loss Prévention) configure pour données
     sensibles
   - **Politique de partage** : nominatif par defaut, expiration
     30j (cf ep 03)
   - **Retention** : politique definie (RGPD)
-  - **Backup** : verifier que c'est sauvegarde en plus
+  - **Backup** : vérifier que c'est sauvegarde en plus
 
   **Pour le perso :**
 
-  - MFA active (meme sur compte perso, par precaution)
+  - MFA active (même sur compte perso, par précaution)
   - Mot de passe fort + unique
   - Pas de partage public sauf vraiment public
   - Sauvegarde locale (cf saison sauvegardes)
 
-  **Regle 4 : Politique d'entreprise claire**
+  **Règle 4 : Politique d'entreprise claire**
 
   Une bonne politique d'usage definit :
 
@@ -134,8 +134,8 @@ debrief: |
     (M365 par exemple)
   - **Outils tolere** : selon contexte (Google Drive si
     travailler avec Google Workspace clients)
-  - **Outils interdits** : usage perso pour donnees pro
-  - **Procedure** pour demander un nouvel outil
+  - **Outils interdits** : usage perso pour données pro
+  - **Procédure** pour demander un nouvel outil
 
   **Format** : 2-3 pages, simple, claire, dans l'intranet ou
   charte informatique.
@@ -151,7 +151,7 @@ debrief: |
   - **Expiration** : 30 days
   - **Sensitivity labels** : actives pour Confidentiel /
     Hautement Confidentiel
-  - **DLP** : detection donnees personnelles (NIR, IBAN, CB)
+  - **DLP** : détection données personnelles (NIR, IBAN, CB)
 
   **Configuration recommandee Google Workspace :**
 
@@ -168,22 +168,22 @@ debrief: |
 
   Solutions :
   - **OneDrive partage externe** : invite le client, il accede
-    sans creer compte Dropbox de ton cote
+    sans créer compte Dropbox de ton côté
   - **Service tiers** : envoi via WeTransfer Pro, Smash, Tresorit
-  - **Dropbox Business** : si echanges frequents, demander a
+  - **Dropbox Business** : si échanges fréquents, demander a
     l'entreprise
 
-  **PAS** : creer un compte Dropbox perso pour stocker les
+  **PAS** : créer un compte Dropbox perso pour stocker les
   documents client.
 
   **Cas 2 : "OneDrive est trop lent pour mes gros fichiers
   videos"**
 
   Solutions :
-  - **Verifier la connexion** : VPN active ralentit OneDrive
+  - **Vérifier la connexion** : VPN active ralentit OneDrive
   - **Microsoft 365 Stream** : pour videos, plus optimise
   - **Compression** : reduire la taille avant upload
-  - **Demander au DSI** : si vraiment limitatif, peut-etre
+  - **Demander au DSI** : si vraiment limitatif, peut-être
     upgrade plan
 
   **PAS** : utiliser Dropbox perso pour les videos pro.
@@ -197,23 +197,23 @@ debrief: |
   - **Microsoft Authenticator** : MFA depuis iPhone perso
   - **Politique BYOD** : si l'entreprise l'accepte, OK
 
-  **PAS** : telecharger les fichiers pro dans iCloud perso.
+  **PAS** : télécharger les fichiers pro dans iCloud perso.
 
-  **Cas 4 : "Je veux partager une photo de l'evenement equipe
+  **Cas 4 : "Je veux partager une photo de l'événement équipe
   avec tous"**
 
   Solutions :
   - **OneDrive partage interne** : tous dans l'organisation
   - **Microsoft Stream** : pour videos
-  - **SharePoint site evenement** : centralise
+  - **SharePoint site événement** : centralise
 
   **PAS** : Drive perso "anyone with link".
 
-  **Risques specifiques :**
+  **Risques spécifiques :**
 
   **Risque 1 : Sync automatique perso**
 
-  - L'employe a Dropbox perso installe sur son PC pro
+  - L'employé a Dropbox perso installe sur son PC pro
   - Il fait un copy-paste d'un fichier client dans Dropbox
     perso "par habitude"
   - Le fichier se sync automatiquement chez lui
@@ -233,14 +233,14 @@ debrief: |
   **Risque 3 : Compte perso reutilise pour pro**
 
   - Dropbox perso cree il y a 5 ans, mot de passe 'azerty'
-  - L'employe a melange perso/pro
+  - L'employé a melange perso/pro
   - Compte compromis = fuite pro
 
   Solution : separation stricte + MFA partout.
 
   **Cas reels :**
 
-  **Cas 1 - Cabinet conseil 2023 (perte de donnees)**
+  **Cas 1 - Cabinet conseil 2023 (perte de données)**
 
   Un consultant utilisait son Dropbox perso pour stocker les
   livrables clients. Il quitte l'entreprise. L'entreprise n'a
@@ -256,7 +256,7 @@ debrief: |
   habitude". Compte perso compromis (mot de passe reutilise
   d'une autre fuite). Fichier paie expose.
 
-  Sanctions : 30 K EUR (CNIL) + procedure interne.
+  Sanctions : 30 K EUR (CNIL) + procédure interne.
 
   **Cas 3 - Startup tech 2024 (succes par politique claire)**
 
@@ -265,10 +265,10 @@ debrief: |
   installations non-conformes. Politique claire = 0 incident
   en 18 mois.
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **Separation stricte perso/pro. Le compte perso est pour
-  > la vie privee, pas le travail. Pour echanges externes :
+  > la vie privée, pas le travail. Pour échanges externes :
   > toujours via les outils pro (OneDrive partage externe,
   > services dedies). MFA + audit log + politique claire =
   > standard.**
@@ -276,16 +276,16 @@ quiz:
   - question: "Tu utilises ton Dropbox perso pour stocker des fichiers clients, OK ?"
     choices:
       - { id: "a", label: "Oui c'est pratique", correct: false }
-      - { id: "b", label: "NON. Donnees pro sur compte perso = RGPD violation + perte de propriete (si tu pars) + risque fuite (compte perso souvent moins securise)", correct: true }
+      - { id: "b", label: "NON. Données pro sur compte perso = RGPD violation + perte de propriété (si tu pars) + risque fuite (compte perso souvent moins securise)", correct: true }
       - { id: "c", label: "Si MFA active", correct: false }
-    explanation: "Donnees pro = outils valides par l'entreprise uniquement. RGPD article 32 (mesures techniques). Si tu pars, l'entreprise perd l'acces. Si compte perso compromis (souvent reutilise), fuite. Solution : OneDrive Business / Drive Workspace."
+    explanation: "Données pro = outils valides par l'entreprise uniquement. RGPD article 32 (mesures techniques). Si tu pars, l'entreprise perd l'acces. Si compte perso compromis (souvent reutilise), fuite. Solution : OneDrive Business / Drive Workspace."
 
   - question: "Ton client utilise Dropbox, toi OneDrive, comment echanger ?"
     choices:
-      - { id: "a", label: "Creer un compte Dropbox perso", correct: false }
-      - { id: "b", label: "Partage externe OneDrive (invitation client) ou service tiers (WeTransfer Pro, Tresorit). Demander Dropbox Business si echanges frequents", correct: true }
+      - { id: "a", label: "Créer un compte Dropbox perso", correct: false }
+      - { id: "b", label: "Partage externe OneDrive (invitation client) ou service tiers (WeTransfer Pro, Tresorit). Demander Dropbox Business si échanges fréquents", correct: true }
       - { id: "c", label: "Email avec PJ", correct: false }
-    explanation: "Solution : partage externe OneDrive (le client accede sans creer compte Dropbox), services dedies (WeTransfer Pro, Tresorit), ou Dropbox Business si echanges frequents. PAS de creation compte perso pour 'depanner'."
+    explanation: "Solution : partage externe OneDrive (le client accede sans créer compte Dropbox), services dedies (WeTransfer Pro, Tresorit), ou Dropbox Business si échanges fréquents. PAS de création compte perso pour 'depanner'."
 
   - question: "Tu installes Dropbox perso sur ton PC pro, risque ?"
     choices:
@@ -297,9 +297,9 @@ quiz:
   - question: "OneDrive est trop lent, je passe sur Dropbox perso ?"
     choices:
       - { id: "a", label: "Oui, plus pratique", correct: false }
-      - { id: "b", label: "Non - signaler au DSI le probleme. Causes possibles : VPN, compression, plan limite. Solutions : optimisation, ou demande d'upgrade", correct: true }
+      - { id: "b", label: "Non - signaler au DSI le problème. Causes possibles : VPN, compression, plan limite. Solutions : optimisation, ou demande d'upgrade", correct: true }
       - { id: "c", label: "Continuer", correct: false }
-    explanation: "Probleme de performance = remontee au DSI, pas contournement. Causes typiques : VPN actif, gros fichiers a compresser, plan basique. Le DSI peut optimiser ou upgrader. Pas de Shadow IT en reponse a un probleme technique."
+    explanation: "Problème de performance = remontee au DSI, pas contournement. Causes typiques : VPN actif, gros fichiers a compresser, plan basique. Le DSI peut optimiser ou upgrader. Pas de Shadow IT en réponse a un problème technique."
 ---
 
 > 💡 **Pour aller plus loin** : **Microsoft Defender for Cloud

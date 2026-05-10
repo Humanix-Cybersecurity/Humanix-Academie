@@ -13,30 +13,30 @@ scenario: |
   > [Accepter] [Refuser]
 
   Tu n'as PAS demande cette photo. Quelqu'un proche de toi (dans le
-  meme wagon RER) utilise AirDrop pour envoyer des photos a tous
+  même wagon RER) utilise AirDrop pour envoyer des photos a tous
   les iPhones aux alentours.
 
   Tu fais quoi ?
 choices:
   - id: "a"
-    label: "Refuser l'AirDrop + reconfigurer 'AirDrop : Contacts uniquement' immediatement, signaler aux autorites RATP / police (cyberflashing)"
+    label: "Refuser l'AirDrop + reconfigurer 'AirDrop : Contacts uniquement' immédiatement, signaler aux autorités RATP / police (cyberflashing)"
     outcome: "good"
-    feedback: "Excellente reaction. Le cyberflashing (envoi non sollicite de photos intimes) est puni par la loi (article 222-32 du Code penal francais : exhibition sexuelle, jusqu'a 1 an de prison). 'AirDrop Contacts uniquement' empeche les envois de strangers."
+    feedback: "Excellente reaction. Le cyberflashing (envoi non sollicite de photos intimes) est puni par la loi (article 222-32 du Code penal français : exhibition sexuelle, jusqu'à 1 an de prison). 'AirDrop Contacts uniquement' empeche les envois de strangers."
     points: 35
   - id: "b"
     label: "Accepter pour voir ce que c'est"
     outcome: "bad"
-    feedback: "Ne JAMAIS accepter un AirDrop venant d'un inconnu. Le contenu peut etre : photos illicites (exposition criminelle), liens phishing, malware (sur Android via Bluetooth file transfer)."
+    feedback: "Ne JAMAIS accepter un AirDrop venant d'un inconnu. Le contenu peut être : photos illicites (exposition criminelle), liens phishing, malware (sur Android via Bluetooth file transfer)."
     points: -15
   - id: "c"
-    label: "Ignorer, ca passera"
+    label: "Ignorer, ça passera"
     outcome: "neutral"
     feedback: "Ignorer l'attaque est OK mais incomplet : 1) tu restes vulnerable aux prochaines, 2) la personne continue d'envoyer aux autres voyageurs, 3) si c'est du contenu illicite, tu n'as pas signale. Reconfigurer + signaler est mieux."
     points: 5
   - id: "d"
-    label: "Eteindre completement le tel"
+    label: "Eteindre complètement le tel"
     outcome: "neutral"
-    feedback: "Reaction excessive et inefficace : eteindre le tel resoud le probleme immediat mais ne configure pas la protection durable. Tu rallumes plus tard, le probleme revient. La bonne action est de reconfigurer AirDrop."
+    feedback: "Reaction excessive et inefficace : eteindre le tel resoud le problème immediat mais ne configure pas la protection durable. Tu rallumes plus tard, le problème revient. La bonne action est de reconfigurer AirDrop."
     points: 0
 debrief: |
   Bluetooth et AirDrop (Apple) / Quick Share (Android) sont des
@@ -47,33 +47,33 @@ debrief: |
 
   **1. Cyberflashing (envoi non sollicite de contenu)**
 
-  Le cas du scenario. Quelqu'un a portee Bluetooth/AirDrop envoie
+  Le cas du scenario. Quelqu'un a portée Bluetooth/AirDrop envoie
   des photos sexuelles, des liens phishing, ou simplement des
   fichiers genants a toutes les personnes alentour.
 
-  Particulierement frequent dans :
+  Particulièrement fréquent dans :
   - Transports publics bondes (RER, metro, train)
   - Concerts / festivals
   - Conferences
-  - Endroits ou les gens ont leur tel a portee
+  - Endroits ou les gens ont leur tel a portée
 
   En France : article 222-32 du Code penal (exhibition sexuelle)
-  jusqu'a 1 an de prison + 15 000 EUR d'amende. Loi etendue en
+  jusqu'à 1 an de prison + 15 000 EUR d'amende. Loi etendue en
   2023 pour couvrir explicitement le cyberflashing.
 
   **2. Acceptation accidentelle de fichier malveillant**
 
   Tu acceptes un AirDrop "image_amusante.png" - en realite c'est
-  une image avec exploit (rare sur iOS recent, frequent sur
+  une image avec exploit (rare sur iOS recent, fréquent sur
   Android plus permissif).
 
   Defense : ne jamais accepter d'AirDrop/Bluetooth d'un inconnu,
-  meme si le nom de fichier semble innocent.
+  même si le nom de fichier semble innocent.
 
   **3. Fingerprinting et tracking**
 
   Bluetooth diffuse en permanence un identifiant unique (BLE
-  advertising). Des entreprises de tracking utilisent ca pour :
+  advertising). Des entreprises de tracking utilisent ça pour :
   - Suivre tes deplacements en magasin (ou tu vas, combien de
     temps tu restes).
   - Te re-identifier d'un magasin a l'autre.
@@ -84,38 +84,38 @@ debrief: |
 
   **4. AirTags / trackers utilises pour stalking**
 
-  Apple AirTag ou Tile peuvent etre glissees dans un sac/voiture
+  Apple AirTag ou Tile peuvent être glissees dans un sac/voiture
   pour tracker une personne. C'est devenu un vecteur de stalking
   reel.
 
   iOS et Android moderne detectent automatiquement les AirTags
-  d'un autre proprietaire qui te suivent (notification "Cet AirTag
-  vous suit"). Activer cette detection est important.
+  d'un autre propriétaire qui te suivent (notification "Cet AirTag
+  vous suit"). Activer cette détection est important.
 
   **Configuration de protection (5 minutes) :**
 
   **iPhone - AirDrop :**
 
-  Reglages > General > AirDrop :
+  Reglages > Général > AirDrop :
   - **Reception desactivee** : aucun AirDrop accepte (le plus sur)
   - **Contacts uniquement** : seuls tes contacts peuvent envoyer
     (recommande pour usage normal)
-  - **Tout le monde** : a NE PAS utiliser sauf cas specifique
-    (rapide echange entre inconnus, fermer apres)
+  - **Tout le monde** : a NE PAS utiliser sauf cas spécifique
+    (rapide échange entre inconnus, fermer après)
 
   Astuce iOS 16.2+ : "Tout le monde" se desactive automatiquement
-  apres 10 minutes (mesure anti-cyberflashing imposee par la
+  après 10 minutes (mesure anti-cyberflashing imposee par la
   Chine puis Apple-wide).
 
   **iPhone - Bluetooth :**
 
   Reglages > Bluetooth :
-  - Off quand non utilise (economie batterie + securite)
-  - Verifier les "appareils connectes" et oublier ceux non utilises
+  - Off quand non utilise (économie batterie + sécurité)
+  - Vérifier les "appareils connectes" et oublier ceux non utilises
 
-  **iPhone - Detection AirTag :**
+  **iPhone - Détection AirTag :**
 
-  Reglages > Confidentialite et Securite > Localisation > Ouvrir
+  Reglages > Confidentialite et Sécurité > Localisation > Ouvrir
   l'app "Localiser" et activer les notifications AirTag inconnu.
 
   **Android - Quick Share :**
@@ -123,37 +123,37 @@ debrief: |
   Parametres > Devices connectees > Quick Share :
   - **Personne** : aucun fichier accepte (le plus sur)
   - **Contacts** : seuls les contacts peuvent envoyer
-  - **Tout le monde** : a NE PAS utiliser sauf cas specifique
+  - **Tout le monde** : a NE PAS utiliser sauf cas spécifique
 
   **Android - Bluetooth :**
 
   Parametres > Connexions > Bluetooth :
   - Off quand non utilise
-  - Verifier les "appareils paires" et oublier les inconnus
+  - Vérifier les "appareils paires" et oublier les inconnus
 
-  **Android - Detection trackers :**
+  **Android - Détection trackers :**
 
-  Android 12+ detecte les AirTags d'un autre proprietaire qui te
-  suivent. App "Tracker Detect" (Apple, gratuite) propose la meme
-  detection sur Android pour les AirTags Apple.
+  Android 12+ detecte les AirTags d'un autre propriétaire qui te
+  suivent. App "Tracker Detect" (Apple, gratuite) propose la même
+  détection sur Android pour les AirTags Apple.
 
   **Le piege "Bluetooth low energy" (BLE) :**
 
-  Le BLE est une variante du Bluetooth qui consomme tres peu
-  d'energie. Il est utilise par :
+  Le BLE est une variante du Bluetooth qui consomme très peu
+  d'énergie. Il est utilise par :
   - Apps de proximite (paiements sans contact, trackers)
   - Beacons commerciaux (boutiques)
   - AirTags
 
-  Quand tu desactives le Bluetooth dans le centre de controle iOS
-  (l'icone bleue), le BLE reste actif pour les services systeme
+  Quand tu desactives le Bluetooth dans le centre de contrôle iOS
+  (l'icone bleue), le BLE reste actif pour les services système
   (Apple Watch, AirDrop). Pour vraiment desactiver Bluetooth, va
   dans Reglages > Bluetooth > Off.
 
   **Le piege "Bluesnarfing" :**
 
-  Vieille attaque (annees 2000-2010) qui exploitait des failles
-  Bluetooth pour aspirer les donnees du tel cible. Largement
+  Vieille attaque (années 2000-2010) qui exploitait des failles
+  Bluetooth pour aspirer les données du tel cible. Largement
   patchee sur les tels modernes mais toujours possible sur les
   vieux Android non a jour.
 
@@ -161,19 +161,19 @@ debrief: |
 
   **Cas reel - cyberflashing en train :**
 
-  Royaume-Uni, 2022 : une femme de 32 ans en train recoit 50+
+  Royaume-Uni, 2022 : une femme de 32 ans en train reçoit 50+
   AirDrops de photos intimes pendant un trajet de 2h. L'attaquant
-  utilisait un iPhone avec un nom anonymise. Apres signalement
+  utilisait un iPhone avec un nom anonymise. Après signalement
   British Transport Police, condamnation a 18 mois de prison.
 
   Premier cas judiciaire de cyberflashing AirDrop en UK. France a
   des affaires similaires en cours.
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > Bluetooth et AirDrop : **par defaut OFF** ou **Contacts
   > uniquement**. Activer "Tout le monde" uniquement pendant
-  > l'echange specifique, desactiver immediatement apres.
+  > l'échange spécifique, desactiver immédiatement après.
 
   Pour une PME : sensibiliser les collaborateurs en mobilite a
   cette config. Une charte mobile peut imposer "AirDrop
@@ -184,30 +184,30 @@ quiz:
       - { id: "a", label: "Accepter pour voir", correct: false }
       - { id: "b", label: "Refuser + reconfigurer 'AirDrop Contacts uniquement' + signaler si contenu illicite", correct: true }
       - { id: "c", label: "Ignorer", correct: false }
-    explanation: "Ne jamais accepter d'AirDrop d'un inconnu (peut etre cyberflashing illegal, malware, phishing). Reconfigurer 'Contacts uniquement' protege durablement. Signaler aux autorites si le contenu est illegal (article 222-32 Code penal)."
+    explanation: "Ne jamais accepter d'AirDrop d'un inconnu (peut être cyberflashing illegal, malware, phishing). Reconfigurer 'Contacts uniquement' protege durablement. Signaler aux autorités si le contenu est illegal (article 222-32 Code penal)."
 
   - question: "Le cyberflashing en France est puni de combien ?"
     choices:
       - { id: "a", label: "Une amende symbolique", correct: false }
-      - { id: "b", label: "Jusqu'a 1 an de prison + 15 000 EUR d'amende (article 222-32 Code penal)", correct: true }
+      - { id: "b", label: "Jusqu'à 1 an de prison + 15 000 EUR d'amende (article 222-32 Code penal)", correct: true }
       - { id: "c", label: "Rien", correct: false }
-    explanation: "Article 222-32 (exhibition sexuelle) couvre desormais explicitement le cyberflashing depuis 2023. Jusqu'a 1 an de prison + 15 000 EUR. Loi britannique similaire (Online Safety Act 2023) avec premieres condamnations en 2022-2023."
+    explanation: "Article 222-32 (exhibition sexuelle) couvre desormais explicitement le cyberflashing depuis 2023. Jusqu'à 1 an de prison + 15 000 EUR. Loi britannique similaire (Online Safety Act 2023) avec premières condamnations en 2022-2023."
 
   - question: "Comment proteger son AirDrop iPhone ?"
     choices:
       - { id: "a", label: "Ne rien changer", correct: false }
-      - { id: "b", label: "Reglages > General > AirDrop > 'Reception desactivee' OU 'Contacts uniquement' (jamais 'Tout le monde')", correct: true }
+      - { id: "b", label: "Reglages > Général > AirDrop > 'Reception desactivee' OU 'Contacts uniquement' (jamais 'Tout le monde')", correct: true }
       - { id: "c", label: "Acheter un Android", correct: false }
-    explanation: "Configuration AirDrop : 'Tout le monde' = vulnerable aux cyberflashing/malware. 'Contacts uniquement' = bon equilibre. 'Reception desactivee' = max securite. iOS 16.2+ desactive auto 'Tout le monde' apres 10 min."
+    explanation: "Configuration AirDrop : 'Tout le monde' = vulnerable aux cyberflashing/malware. 'Contacts uniquement' = bon equilibre. 'Reception desactivee' = max sécurité. iOS 16.2+ desactive auto 'Tout le monde' après 10 min."
 
-  - question: "AirTag glisse dans ton sac par un inconnu. Comment detecter ?"
+  - question: "AirTag glisse dans ton sac par un inconnu. Comment détecter ?"
     choices:
       - { id: "a", label: "Impossible", correct: false }
-      - { id: "b", label: "iOS 14.5+ et Android 12+ detectent automatiquement les AirTags d'un autre proprietaire qui te suivent (notification)", correct: true }
+      - { id: "b", label: "iOS 14.5+ et Android 12+ detectent automatiquement les AirTags d'un autre propriétaire qui te suivent (notification)", correct: true }
       - { id: "c", label: "Seulement avec un detecteur de metaux", correct: false }
-    explanation: "Apple a integre la detection d'AirTags inconnus depuis iOS 14.5 (notification 'Cet AirTag vous suit'). Android 12+ a la meme detection. App 'Tracker Detect' (Apple, gratuite) pour Android plus anciens."
+    explanation: "Apple a integre la détection d'AirTags inconnus depuis iOS 14.5 (notification 'Cet AirTag vous suit'). Android 12+ a la même détection. App 'Tracker Detect' (Apple, gratuite) pour Android plus anciens."
 ---
 
 > 💡 **Pour aller plus loin** : configure MAINTENANT ton AirDrop /
 > Quick Share. Active les notifications AirTag inconnu. Pour les pros
-> en mobilite : MDM peut imposer ces parametres au niveau organisation.
+> en mobilite : MDM peut imposer ces paramètres au niveau organisation.

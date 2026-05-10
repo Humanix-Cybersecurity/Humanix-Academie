@@ -2,18 +2,18 @@
 title: "Article 23 : la notification d'incident"
 durationMinutes: 7
 persona: "manager"
-objective: "Maitriser la procedure de notification d'incident NIS2 (24h alerte initiale, 72h notification, 1 mois rapport final), savoir quoi declarer et a qui"
+objective: "Maitriser la procédure de notification d'incident NIS2 (24h alerte initiale, 72h notification, 1 mois rapport final), savoir quoi declarer et a qui"
 xpReward: 60
 scenario: |
-  Mardi 14h, ton equipe IT t'alerte : "On a detecte un ransomware
+  Mardi 14h, ton équipe IT t'alerte : "On a detecte un ransomware
   sur 3 serveurs. Production probablement impactee. Quelqu'un nous
-  a envoye une demande de rancon en bitcoin. On fait quoi vis-a-vis
+  a envoye une demande de rançon en bitcoin. On fait quoi vis-à-vis
   de NIS2 ?"
 
   Ton entreprise est entite IMPORTANTE NIS2 (PME 80 personnes,
-  services numeriques B2B).
+  services numériques B2B).
 
-  Tu reponds quoi ?
+  Tu réponds quoi ?
 choices:
   - id: "a"
     label: "On gere d'abord en interne, on declarera plus tard si necessaire"
@@ -21,31 +21,31 @@ choices:
     feedback: "FAUX. NIS2 article 23 impose une alerte INITIALE sous 24h. Au-dela, sanctions possibles. La declaration ne ralentit pas le traitement, elle permet a l'ANSSI/CSIRT de t'aider et d'alerter d'autres victimes potentielles."
     points: -20
   - id: "b"
-    label: "Alerte initiale CSIRT/ANSSI sous 24h, notification detaillee sous 72h, rapport final sous 1 mois. Activation du plan reponse incident en parallele"
+    label: "Alerte initiale CSIRT/ANSSI sous 24h, notification detaillee sous 72h, rapport final sous 1 mois. Activation du plan réponse incident en parallele"
     outcome: "good"
-    feedback: "Procedure exacte. Article 23 NIS2 = 3 etapes : alerte (24h), notification (72h), rapport (1 mois). En parallele : reponse technique (containment, eradication, recovery). Plateforme officielle : MonServiceSecurise (ANSSI)."
+    feedback: "Procédure exacte. Article 23 NIS2 = 3 étapes : alerte (24h), notification (72h), rapport (1 mois). En parallele : réponse technique (containment, eradication, recovery). Plateforme officielle : MonServiceSecurise (ANSSI)."
     points: 40
   - id: "c"
-    label: "On paye la rancon pour aller vite, ca nous evite la declaration"
+    label: "On paye la rançon pour aller vite, ça nous evite la declaration"
     outcome: "bad"
-    feedback: "DOUBLE FAUX. Le paiement de rancon n'a aucun impact sur l'obligation de declarer (NIS2 article 23 + RGPD article 33 si donnees personnelles). De plus, l'ANSSI deconseille fortement le paiement (finance le crime, pas de garantie de retour des donnees)."
+    feedback: "DOUBLE FAUX. Le paiement de rançon n'a aucun impact sur l'obligation de declarer (NIS2 article 23 + RGPD article 33 si données personnelles). De plus, l'ANSSI deconseille fortement le paiement (finance le crime, pas de garantie de retour des données)."
     points: -20
   - id: "d"
-    label: "Declaration sous 24h CSIRT, mais on attend confirmation avant la notification 72h pour eviter les fausses alertes"
+    label: "Declaration sous 24h CSIRT, mais on attend confirmation avant la notification 72h pour éviter les fausses alertes"
     outcome: "neutral"
-    feedback: "Compromis comprehensible mais incomplet. La notification 72h est obligatoire meme avec des informations partielles. NIS2 prefere une notification mise a jour qu'une notification tardive. La crainte de la 'fausse alerte' n'est pas un motif legal d'attente."
+    feedback: "Compromis comprehensible mais incomplet. La notification 72h est obligatoire même avec des informations partielles. NIS2 prefere une notification mise a jour qu'une notification tardive. La crainte de la 'fausse alerte' n'est pas un motif legal d'attente."
     points: 15
 debrief: |
   L'**article 23** de NIS2 impose une **obligation de notification**
-  des incidents aux autorites competentes. C'est l'une des
-  evolutions majeures vs NIS1 (delais raccourcis, perimetre elargi).
+  des incidents aux autorités competentes. C'est l'une des
+  evolutions majeures vs NIS1 (délais raccourcis, perimetre elargi).
 
-  **Les 3 etapes de notification (article 23.4) :**
+  **Les 3 étapes de notification (article 23.4) :**
 
-  **Etape 1 : Alerte initiale (Early warning) - sous 24h**
+  **Étape 1 : Alerte initiale (Early warning) - sous 24h**
 
-  Des que l'incident est suspecte/confirme (pas besoin de tout
-  savoir), une **alerte initiale** doit etre envoyee.
+  Dès que l'incident est suspecte/confirme (pas besoin de tout
+  savoir), une **alerte initiale** doit être envoyee.
 
   Contenu minimum :
   - Nature suspectee de l'incident (ransomware, DDoS, intrusion,
@@ -56,39 +56,39 @@ debrief: |
   Format : court (5-10 lignes), via plateforme officielle ou
   formulaire CSIRT.
 
-  **Etape 2 : Notification d'incident - sous 72h**
+  **Étape 2 : Notification d'incident - sous 72h**
 
   Notification detaillee, avec mise a jour de l'alerte initiale.
 
   Contenu :
   - Description detaillee de l'incident
-  - Impacts (utilisateurs touches, donnees compromises, services
+  - Impacts (utilisateurs touches, données compromises, services
     indisponibles)
   - Mesures prises et planifiees
   - Indicateurs de compromission (IOC)
-  - Premiere analyse causale
+  - Première analyse causale
   - Communication aux personnes affectees (ou planifiee)
 
-  **Etape 3 : Rapport final - sous 1 mois**
+  **Étape 3 : Rapport final - sous 1 mois**
 
-  Apres la fin de l'incident, un **rapport final** detaille :
+  Après la fin de l'incident, un **rapport final** detaille :
 
   - Description complete de l'incident (timeline, vecteur,
     technique d'attaque)
   - Evaluation de la severite et de l'impact
   - Indicateurs de compromission complets
   - Mesures correctives mises en place
-  - Actions pour eviter la repetition
+  - Actions pour éviter la repetition
   - Lecons apprises
 
   **Qui notifier ? (en France) :**
 
-  **Autorite competente NIS2 = ANSSI**
+  **Autorité competente NIS2 = ANSSI**
 
   Plateforme officielle : **MonServiceSecurise.gouv.fr** (ANSSI)
 
   Le **CSIRT national** (CERT-FR pour entites essentielles, CSIRT
-  regional pour PME parfois) recoit les notifications et fournit
+  regional pour PME parfois) reçoit les notifications et fournit
   l'assistance.
 
   **Communication aux destinataires (article 23.5) :**
@@ -96,12 +96,12 @@ debrief: |
   Si l'incident peut **impacter les destinataires de tes services**
   (clients, utilisateurs), tu dois les informer :
 
-  - **Sans retard injustifie** des l'incident connu
+  - **Sans retard injustifie** dès l'incident connu
   - **Mesures qu'ils peuvent prendre** pour se proteger
-  - **Etat de l'incident** et de la resolution
+  - **État de l'incident** et de la resolution
 
   C'est cumulable avec l'obligation **RGPD article 34** si
-  donnees personnelles.
+  données personnelles.
 
   **Obligation de notifier aussi le CSIRT/CERT (article 23.6) :**
 
@@ -115,41 +115,41 @@ debrief: |
   Article 23.3 : un incident est a notifier s'il a un **impact
   significatif**, c'est-a-dire :
 
-  - **Causant ou pouvant causer une perturbation operationnelle
+  - **Causant ou pouvant causer une perturbation opérationnelle
     grave** des services
   - **Causant ou pouvant causer une perte financiere
     consequente**
   - **Affectant ou pouvant affecter d'autres personnes** par des
-    pertes materielles ou immaterielles consequentes
+    pertes matérielles ou immaterielles consequentes
 
   Concretement, a NOTIFIER :
-  - Ransomware (meme reussi sur quelques machines)
+  - Ransomware (même réussi sur quelques machines)
   - Intrusion confirmee
-  - Vol de donnees (clients, employes)
+  - Vol de données (clients, employés)
   - Indisponibilite > 4h d'un service critique
   - Defacement de site public
   - Compromission d'admin / RSSI
-  - Exfiltration suspectee de propriete intellectuelle
+  - Exfiltration suspectee de propriété intellectuelle
 
   **NON obligatoire** (mais recommande) :
   - Tentatives bloquees par firewall/antivirus (sauf si
     persistance)
-  - Phishing recu sans clic
+  - Phishing reçu sans clic
   - Scans automatises classiques
 
-  **Le piege "on traite d'abord, on declare apres" :**
+  **Le piege "on traite d'abord, on declare après" :**
 
   Beaucoup d'entreprises gerent l'incident en interne pendant
   72h-1 semaine avant de declarer. PROBLEME :
-  - Sanction NIS2 possible (jusqu'a 7M EUR ou 1.4% CA pour
+  - Sanction NIS2 possible (jusqu'à 7M EUR ou 1.4% CA pour
     importantes)
   - Perte de l'aide CSIRT (qui aurait pu acclerer la resolution)
   - Aggravation de l'incident
 
-  Solution : declaration EN PARALLELE de la reponse technique.
+  Solution : declaration EN PARALLELE de la réponse technique.
   L'alerte 24h ne demande pas une analyse complete.
 
-  **Le piege "ca va nous nuire publiquement" :**
+  **Le piege "ça va nous nuire publiquement" :**
 
   Les entites craignent que la notification ANSSI = publication.
   FAUX. Les notifications NIS2 sont **confidentielles** (sauf si
@@ -161,7 +161,7 @@ debrief: |
 
   **Cas pratique : ransomware sur PME :**
 
-  **Lundi 9h** : detection ransomware sur 5 serveurs. Activation
+  **Lundi 9h** : détection ransomware sur 5 serveurs. Activation
   PRA.
 
   **Lundi 10h** : containment (isolation des serveurs touches).
@@ -170,25 +170,25 @@ debrief: |
 
   **Lundi 17h** : ALERTE INITIALE envoyee a CSIRT via
   MonServiceSecurise (5 lignes, "ransomware suspecte sur PME
-  services numeriques, 5 serveurs touches, demande rancon BTC").
+  services numériques, 5 serveurs touches, demande rançon BTC").
 
-  **Mardi-Mercredi** : reponse technique (eradication, recovery
+  **Mardi-Mercredi** : réponse technique (eradication, recovery
   depuis sauvegardes).
 
   **Jeudi** : NOTIFICATION 72h envoyee (description detaillee,
   impacts, mesures prises).
 
   **Mois suivant** : RAPPORT FINAL (analyse complete, IOC,
-  lecons).
+  leçons).
 
   **Communication clients (parallele) :**
 
-  Si vos services sont indisponibles ou si des donnees clients
-  ont ete potentiellement compromises :
+  Si vos services sont indisponibles ou si des données clients
+  ont été potentiellement compromises :
 
-  - **Email aux clients** des le jour 1 (transparence)
+  - **Email aux clients** dès le jour 1 (transparence)
   - **Page de status** publique (status.ton-domaine.com)
-  - **FAQ** pour les questions frequentes
+  - **FAQ** pour les questions fréquentes
   - **Hotline** dediee si besoin
 
   Ne pas mentir, ne pas minimiser. La transparence = capital
@@ -196,7 +196,7 @@ debrief: |
 
   **Notification cumulative avec RGPD :**
 
-  Si l'incident inclut des **donnees personnelles compromises** :
+  Si l'incident inclut des **données personnelles compromises** :
   - **CNIL** sous 72h (article 33 RGPD)
   - **ANSSI** sous 24h/72h (article 23 NIS2)
   - **Personnes concernees** sans retard injustifie (article 34
@@ -208,15 +208,15 @@ debrief: |
   **Sanctions en cas de non-notification :**
 
   Article 34 NIS2 :
-  - **Entites essentielles** : jusqu'a **10M EUR ou 2% CA mondial**
-  - **Entites importantes** : jusqu'a **7M EUR ou 1.4% CA mondial**
+  - **Entites essentielles** : jusqu'à **10M EUR ou 2% CA mondial**
+  - **Entites importantes** : jusqu'à **7M EUR ou 1.4% CA mondial**
 
   Sanctions cumulables avec RGPD (qui peut atteindre 4% CA).
 
   **Les bonnes pratiques :**
 
-  1. **Plan de reponse incident** documente (cf article 21.2)
-  2. **Numero ANSSI/CSIRT en hotline** avant l'incident
+  1. **Plan de réponse incident** documente (cf article 21.2)
+  2. **Numéro ANSSI/CSIRT en hotline** avant l'incident
   3. **Template de notification** prepare (gain de temps)
   4. **Compte MonServiceSecurise** cree et teste a froid
   5. **Exercices table-top** annuels (simuler une notification)
@@ -230,37 +230,37 @@ debrief: |
     Aquitaine, etc.)
   - **Template ANSSI** : guide "Notification d'incident NIS2"
 quiz:
-  - question: "Quel est le delai pour l'alerte initiale d'incident NIS2 ?"
+  - question: "Quel est le délai pour l'alerte initiale d'incident NIS2 ?"
     choices:
       - { id: "a", label: "1 semaine", correct: false }
-      - { id: "b", label: "24h apres detection (alerte initiale courte)", correct: true }
-      - { id: "c", label: "Pas de delai", correct: false }
+      - { id: "b", label: "24h après détection (alerte initiale courte)", correct: true }
+      - { id: "c", label: "Pas de délai", correct: false }
     explanation: "Article 23.4(a) NIS2 : alerte initiale sous 24h. Court (5-10 lignes), nature suspectee. Pas besoin d'analyse complete - l'objectif est l'information rapide pour permettre l'aide CSIRT."
 
-  - question: "Apres l'alerte 24h, quel est le delai pour la notification detaillee ?"
+  - question: "Après l'alerte 24h, quel est le délai pour la notification detaillee ?"
     choices:
       - { id: "a", label: "Jamais", correct: false }
       - { id: "b", label: "72h pour la notification detaillee, puis 1 mois pour le rapport final", correct: true }
       - { id: "c", label: "1 an", correct: false }
-    explanation: "Article 23.4 NIS2 : 3 etapes - alerte 24h, notification 72h, rapport final 1 mois. Format progressif : on apprend l'incident au fur et a mesure."
+    explanation: "Article 23.4 NIS2 : 3 étapes - alerte 24h, notification 72h, rapport final 1 mois. Format progressif : on apprend l'incident au fur et a mesure."
 
   - question: "Quelle plateforme utilise-t-on pour notifier en France ?"
     choices:
       - { id: "a", label: "Email au prefet", correct: false }
       - { id: "b", label: "MonServiceSecurise.gouv.fr (ANSSI), avec acces aux CSIRT et integration RGPD", correct: true }
       - { id: "c", label: "Twitter", correct: false }
-    explanation: "MonServiceSecurise est la plateforme officielle ANSSI pour les notifications NIS2. Integre aussi RGPD article 33 (CNIL). Compte a creer a froid (avant tout incident)."
+    explanation: "MonServiceSecurise est la plateforme officielle ANSSI pour les notifications NIS2. Integre aussi RGPD article 33 (CNIL). Compte a créer a froid (avant tout incident)."
 
   - question: "Si je suis entite IMPORTANTE et je n'ai pas notifie un ransomware, sanction max ?"
     choices:
       - { id: "a", label: "100 EUR", correct: false }
-      - { id: "b", label: "Jusqu'a 7M EUR ou 1.4% du CA mondial (le plus eleve), cumulable avec RGPD", correct: true }
+      - { id: "b", label: "Jusqu'à 7M EUR ou 1.4% du CA mondial (le plus élève), cumulable avec RGPD", correct: true }
       - { id: "c", label: "Aucune", correct: false }
-    explanation: "Article 34 NIS2 : entites importantes = max 7M EUR ou 1.4% CA mondial. Cumulable avec RGPD (4% CA) si donnees personnelles. Pour entites essentielles : 10M EUR ou 2%."
+    explanation: "Article 34 NIS2 : entites importantes = max 7M EUR ou 1.4% CA mondial. Cumulable avec RGPD (4% CA) si données personnelles. Pour entites essentielles : 10M EUR ou 2%."
 ---
 
-> 💡 **Pour aller plus loin** : creer son compte
+> 💡 **Pour aller plus loin** : créer son compte
 > **MonServiceSecurise.gouv.fr** AVANT tout incident (gratuit).
 > Preparer le template de notification (5 minutes le jour J vs
 > 2h sans template). Faire un exercice table-top notification
-> 1x/an avec son equipe IT + RH + comm.
+> 1x/an avec son équipe IT + RH + comm.

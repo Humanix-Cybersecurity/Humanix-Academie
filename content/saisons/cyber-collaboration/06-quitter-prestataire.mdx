@@ -7,10 +7,10 @@ xpReward: 60
 scenario: |
   Vendredi 17h, le DAF te dit : "On vient de mettre fin au
   contrat avec MaintenanceCorp. Le dernier jour est vendredi
-  prochain. Le consultant Bob etait dans :
+  prochain. Le consultant Bob était dans :
 
   - Notre Slack (3 canaux)
-  - Notre Teams (1 equipe)
+  - Notre Teams (1 équipe)
   - Notre Notion (acces lecture)
   - Notre SharePoint (1 site)
   - Notre GitHub (1 repo)
@@ -22,12 +22,12 @@ choices:
   - id: "a"
     label: "Je note dans un email au DSI : 'couper les acces de Bob', il s'occupera"
     outcome: "bad"
-    feedback: "MAUVAIS. Risque eleve d'oubli. Standard offboarding (cf saison cyber-rh ep 02 et supply-chain ep 06) : checklist exhaustive + traces + audit J+30. Compte fantome chat = vulnerabilite persistante."
+    feedback: "MAUVAIS. Risque élève d'oubli. Standard offboarding (cf saison cyber-rh ep 02 et supply-chain ep 06) : checklist exhaustive + traces + audit J+30. Compte fantome chat = vulnerabilite persistante."
     points: -15
   - id: "b"
-    label: "Checklist offboarding chat exhaustive : Slack canaux + Teams equipes + Notion acces + SharePoint + GitHub. Date J0 revocation + audit J+30. Documentation"
+    label: "Checklist offboarding chat exhaustive : Slack canaux + Teams équipes + Notion acces + SharePoint + GitHub. Date J0 revocation + audit J+30. Documentation"
     outcome: "good"
-    feedback: "Procedure pro. Checklist exhaustive (10+ outils potentiels), date J0 + audit J+30, documentation. Standard pour offboarding prestataire chat. Pas de compte fantome."
+    feedback: "Procédure pro. Checklist exhaustive (10+ outils potentiels), date J0 + audit J+30, documentation. Standard pour offboarding prestataire chat. Pas de compte fantome."
     points: 40
   - id: "c"
     label: "Je revoque juste Slack, le reste plus tard"
@@ -35,17 +35,17 @@ choices:
     feedback: "INCOMPLET. Bob garde acces a Teams + Notion + SharePoint + GitHub pendant des semaines = compte fantome. Risque : utilisation par concurrent qui le recrute, ou compromission tierce."
     points: -15
   - id: "d"
-    label: "Je laisse, on verra apres son depart"
+    label: "Je laisse, on verra après son depart"
     outcome: "bad"
-    feedback: "DESASTREUX. Cas Tesla 2018 : sous-traitant avec acces 6 mois apres fin contrat = 300 Go exfiltres. Action immediate J0 obligatoire (cf saison cyber-rh ep 02)."
+    feedback: "DESASTREUX. Cas Tesla 2018 : sous-traitant avec acces 6 mois après fin contrat = 300 Go exfiltres. Action immediate J0 obligatoire (cf saison cyber-rh ep 02)."
     points: -25
 debrief: |
   L'**offboarding des prestataires des outils de collaboration**
-  est une etape cruciale souvent negligee.
+  est une étape cruciale souvent negligee.
 
   Verizon DBIR : 60% des breaches insider partent d'un compte
   non-revoque correctement. Les outils de collaboration sont
-  parmi les plus oublies (a cote de VPN, AD, SaaS).
+  parmi les plus oublies (a côté de VPN, AD, SaaS).
 
   **Pourquoi c'est critique :**
 
@@ -53,7 +53,7 @@ debrief: |
 
   - **Voir** les conversations en cours
   - **Telecharger** fichiers historiques
-  - **Etre exploite** par un attaquant qui compromet son
+  - **Être exploite** par un attaquant qui compromet son
     compte
   - **Fournir info** au concurrent qui le recrute (cf saison
     cyber-rh ep 04)
@@ -68,12 +68,12 @@ debrief: |
   - Liste canaux ou Bob est membre
   - **Workspace** : remove from workspace
   - **Sortie** : tous les channels
-  - **DMs** : peuvent rester (mais l'autre cote n'a plus
+  - **DMs** : peuvent rester (mais l'autre côté n'a plus
     contact)
-  - **Audit log** : derniere connexion
+  - **Audit log** : dernière connexion
 
   **2. Microsoft Teams**
-  - Liste equipes / canaux
+  - Liste équipes / canaux
   - **Guest Access** : remove
   - **External access** (federation) : remove
   - **Audit log** Teams
@@ -122,15 +122,15 @@ debrief: |
   **12. Outils marketing**
   - Mailchimp, Brevo, Sendinblue
 
-  **Procedure d'offboarding chat :**
+  **Procédure d'offboarding chat :**
 
-  **Etape 1 : Pre-departure (J-7)**
+  **Étape 1 : Pre-departure (J-7)**
 
   - **Inventaire** des acces du prestataire
   - **Coordination** avec son manager
-  - **Liste de canaux/equipes** ou il etait
+  - **Liste de canaux/équipes** ou il était
 
-  **Etape 2 : Jour J (depart effectif)**
+  **Étape 2 : Jour J (depart effectif)**
 
   Action **dans l'heure** suivant le depart :
 
@@ -141,13 +141,13 @@ debrief: |
   - **GitHub** : remove from organization
   - **Tous autres outils** identifies
 
-  **Etape 3 : J+1 a J+7 (audit proche)**
+  **Étape 3 : J+1 a J+7 (audit proche)**
 
-  - **Verification** : aucune connexion residuelle
+  - **Vérification** : aucune connexion residuelle
   - **Logs Slack / Teams** : analyse
-  - **Comptes fantomes** : detection
+  - **Comptes fantomes** : détection
 
-  **Etape 4 : J+30 (audit final)**
+  **Étape 4 : J+30 (audit final)**
 
   - **Audit complet** : aucun acces actif sur aucun outil
   - **Documentation** finale
@@ -157,19 +157,19 @@ debrief: |
 
   **Cas 1 : Slack DMs**
 
-  Apres revocation Slack :
-  - **DMs** historiques restent visibles cote
-    employe interne (l'autre cote)
+  Après revocation Slack :
+  - **DMs** historiques restent visibles côté
+    employé interne (l'autre côté)
   - **Bob** ne peut plus envoyer / recevoir
   - **Information sensible** dans DMs : reste visible
 
-  Action : sensibilisation equipe (pas de mots de passe / info
+  Action : sensibilisation équipe (pas de mots de passe / info
   sensible dans DMs).
 
   **Cas 2 : Fichiers partages "Anyone with link"**
 
   - Si Bob a cree des liens "anyone with link" : ils restent
-    actifs apres son depart
+    actifs après son depart
   - **Audit** : identifier ces liens
   - **Revocation** explicite
 
@@ -177,7 +177,7 @@ debrief: |
 
   - Apps Slack qu'il a personnellement installees peuvent
     rester
-  - **Audit** : verifier les apps de la liste blanche
+  - **Audit** : vérifier les apps de la liste blanche
   - **Suppression** des apps zombie
 
   **Cas 4 : Bots avec ses credentials**
@@ -189,9 +189,9 @@ debrief: |
   **Cas 5 : Contenu cree par Bob**
 
   - Pages Notion, fichiers SharePoint, repos GitHub
-  - **Restent** apres son depart (en general)
-  - **Audit** : identifier proprietes
-  - **Transfert** ownership a un employe interne
+  - **Restent** après son depart (en général)
+  - **Audit** : identifier propriétés
+  - **Transfert** ownership a un employé interne
 
   **Outils d'aide :**
 
@@ -207,7 +207,7 @@ debrief: |
   **JumpCloud / Okta** :
   - **IAM unifie** : suppression dans 1 endroit propage
     partout
-  - Pour PME : tres efficace
+  - Pour PME : très efficace
 
   **Configuration Slack admin** :
 
@@ -219,21 +219,21 @@ debrief: |
 
   Teams admin center > External access :
   - **Guests** : audit
-  - **Federation** : verifier domaines actifs
+  - **Federation** : vérifier domaines actifs
 
   **Le piege "il est sympa, on le laisse encore un peu" :**
 
-  La sympathie n'est pas un critere de securite. Risques :
+  La sympathie n'est pas un critere de sécurité. Risques :
   - **Concurrent** le recrute -> info entreprise donnee
   - **Compte compromis** -> attaquant utilise
   - **Curiosite** humaine -> consultation post-depart
 
-  Procedure systematique = pas de favoritisme.
+  Procédure systematique = pas de favoritisme.
 
   **Le piege "il a juste lecture, pas dangereux" :**
 
   Lecture = exfiltration possible :
-  - **Capture ecran** des conversations
+  - **Capture écran** des conversations
   - **Telecharger** fichiers
   - **Memorisation** infos
 
@@ -245,7 +245,7 @@ debrief: |
   - **Acces temporaire** strictement limite a UN canal
   - **Date d'expiration** stricte (max 7 jours)
   - **Documentation** justification
-  - **Audit** apres
+  - **Audit** après
 
   **PAS** un acces complet "au cas ou".
 
@@ -254,7 +254,7 @@ debrief: |
   **Cas 1 - Cabinet conseil 2024 (Slack guest oublie)**
 
   Consultant 6 mois ajoute a Slack workspace. Mission
-  terminee. Pas de revocation. 12 mois apres : audit
+  terminee. Pas de revocation. 12 mois après : audit
   decouvre :
   - Guest toujours actif
   - **45 connexions** detectees pendant 12 mois
@@ -268,18 +268,18 @@ debrief: |
   **Cas 2 - PME 2023 (Notion guest exploit)**
 
   Consultant fini mission. Slack revoque, mais Notion oubliee
-  (workspace different gestion).
+  (workspace différent gestion).
 
-  6 mois apres : compte Notion du consultant compromis
+  6 mois après : compte Notion du consultant compromis
   (mot de passe reutilise, dehashed leak). Attaquant a
   acces a Notion de la PME via le consultant.
 
-  Cout : 30 K EUR breach donnees clients.
+  Cout : 30 K EUR breach données clients.
 
   **Cas 3 - Tesla 2018 (rappel)**
 
-  Sous-traitant avec acces VPN + outils 6 mois apres fin de
-  contrat = 300 Go exfiltres. Pas une PME mais lecons
+  Sous-traitant avec acces VPN + outils 6 mois après fin de
+  contrat = 300 Go exfiltres. Pas une PME mais leçons
   applicables : checklist offboarding exhaustive.
 
   **Cas 4 - PME 2024 (succes par Lifecycle Workflows)**
@@ -288,7 +288,7 @@ debrief: |
   automatisation offboarding J0 + suppression J+30. Plus
   150 outils SaaS connectes (SCIM).
 
-  Resultat : 0 compte fantome detecte sur 18 mois + audit
+  Résultat : 0 compte fantome detecte sur 18 mois + audit
   ANSSI conforme.
 
   **Politique d'entreprise template :**
@@ -313,7 +313,7 @@ debrief: |
   > **Tools** : Microsoft Entra Lifecycle Workflows /
   > JumpCloud / Okta automatisent.
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **Offboarding prestataire chat = checklist exhaustive +
   > revocation J0 (dans l'heure) + audit J+30. Slack, Teams,
@@ -321,7 +321,7 @@ debrief: |
   > via Lifecycle Workflows / IAM. Pas de favoritisme.
   > Documentation pour audit.**
 quiz:
-  - question: "Offboarding chat prestataire, delai d'action ?"
+  - question: "Offboarding chat prestataire, délai d'action ?"
     choices:
       - { id: "a", label: "Dans la semaine", correct: false }
       - { id: "b", label: "Dans l'heure J0 (fin contrat). Audit J+30. Standard cyber-rh ep 02 + supply-chain ep 06", correct: true }
@@ -333,14 +333,14 @@ quiz:
       - { id: "a", label: "1-2", correct: false }
       - { id: "b", label: "10-15+ : Slack, Teams, Notion, SharePoint, OneDrive, Confluence, Jira, GitHub, AWS, CRM, marketing, dev tools, etc.", correct: true }
       - { id: "c", label: "Aucun", correct: false }
-    explanation: "Liste exhaustive : Slack + Teams + Notion + SharePoint/OneDrive + Confluence + Jira + GitHub/GitLab + Google Workspace + Asana/Trello + AWS/Azure (si dev) + CRM (Hubspot/Salesforce) + Marketing (Mailchimp) + apps tierces installees. 10-15+ outils typique. D'ou interet checklist + automatisation."
+    explanation: "Liste exhaustive : Slack + Teams + Notion + SharePoint/OneDrive + Confluence + Jira + GitHub/GitLab + Google Workspace + Asana/Trello + AWS/Azure (si dev) + CRM (Hubspot/Salesforce) + Marketing (Mailchimp) + apps tierces installees. 10-15+ outils typique. D'ou intérêt checklist + automatisation."
 
   - question: "Le prestataire avait juste lecture seule, dangereux ?"
     choices:
       - { id: "a", label: "Non", correct: false }
-      - { id: "b", label: "OUI - lecture = exfiltration possible (capture ecran, telechargement, memorisation). Revocation systematique meme pour lecture seule", correct: true }
+      - { id: "b", label: "OUI - lecture = exfiltration possible (capture écran, téléchargement, memorisation). Revocation systematique même pour lecture seule", correct: true }
       - { id: "c", label: "Selon", correct: false }
-    explanation: "Lecture seule != safe. Possibilites : capture ecran, telechargement fichiers, memorisation infos, partage avec tiers. Cas reel cabinet : Slack guest oublie 12 mois = 45 connexions + 23 telechargements detectes. Revocation systematique meme pour lecture seule."
+    explanation: "Lecture seule != safe. Possibilites : capture écran, téléchargement fichiers, memorisation infos, partage avec tiers. Cas reel cabinet : Slack guest oublie 12 mois = 45 connexions + 23 téléchargements detectes. Revocation systematique même pour lecture seule."
 
   - question: "Outil pour automatiser l'offboarding multi-SaaS ?"
     choices:
@@ -353,5 +353,5 @@ quiz:
 > 💡 **Pour aller plus loin** : **Microsoft Entra ID Lifecycle
 > Workflows** (M365 inclus). **JumpCloud** / **Okta** pour
 > IAM. Politique d'entreprise documentee. Audit J+30
-> obligatoire. Cas Tesla 2018 = lecon : meme apres fin
+> obligatoire. Cas Tesla 2018 = leçon : même après fin
 > contrat, surveillance des comptes fantomes essentielle.

@@ -2,7 +2,7 @@
 title: "Le piège de la borne de recharge USB"
 durationMinutes: 5
 persona: "tous-collaborateurs"
-objective: "Comprendre le juice jacking (vol de donnees via borne USB publique compromise), savoir s'en proteger avec un cable data-blocker ou une batterie externe"
+objective: "Comprendre le juice jacking (vol de données via borne USB publique compromise), savoir s'en proteger avec un cable data-blocker ou une batterie externe"
 xpReward: 40
 scenario: |
   Aeroport de Roissy CDG, 18h. Tu as 2h d'attente avant ton vol et
@@ -17,50 +17,50 @@ choices:
   - id: "a"
     label: "Je branche mon iPhone sur le cable Lightning - c'est gratuit et urgent, je dois pouvoir recevoir des appels"
     outcome: "bad"
-    feedback: "RISQUE de juice jacking. Une borne USB compromise peut : 1) installer un malware via le cable, 2) extraire des donnees du tel, 3) injecter du firmware malicieux. C'est rare mais documente. Pour 1h d'attente, achete un cable + chargeur dans la boutique aeroport."
+    feedback: "RISQUE de juice jacking. Une borne USB compromise peut : 1) installer un malware via le cable, 2) extraire des données du tel, 3) injecter du firmware malicieux. C'est rare mais documente. Pour 1h d'attente, achete un cable + chargeur dans la boutique aeroport."
     points: -10
   - id: "b"
     label: "J'achete un cable + chargeur dans la boutique aeroport (15-25 EUR) ou j'utilise une batterie externe que j'ai dans mon sac"
     outcome: "good"
-    feedback: "Solution propre. 15-25 EUR pour eviter un risque concret est un investissement raisonnable. Une batterie externe (10 000 mAh, 25 EUR) charge ton tel partout, sans dependre de bornes inconnues. A avoir avec toi en mobilite."
+    feedback: "Solution propre. 15-25 EUR pour éviter un risque concret est un investissement raisonnable. Une batterie externe (10 000 mAh, 25 EUR) charge ton tel partout, sans dependre de bornes inconnues. A avoir avec toi en mobilite."
     points: 35
   - id: "c"
     label: "J'utilise un cable 'data-blocker' (USB Condom) que j'ai dans mon sac"
     outcome: "good"
-    feedback: "Excellent reflexe pour les voyageurs frequents. Un USB Condom (10-15 EUR) est un adaptateur qui bloque les broches data du USB et ne laisse passer QUE l'alimentation. Branchement sur n'importe quelle borne USB sans risque de transfert de donnees."
+    feedback: "Excellent reflexe pour les voyageurs fréquents. Un USB Condom (10-15 EUR) est un adaptateur qui bloque les broches data du USB et ne laisse passer QUE l'alimentation. Branchement sur n'importe quelle borne USB sans risque de transfert de données."
     points: 35
   - id: "d"
     label: "Je pose mon tel sur la table en off et je laisse mourir la batterie"
     outcome: "neutral"
-    feedback: "Solution radicale qui resout le risque cyber mais te laisse sans tel. Si tu ne peux vraiment pas charger autrement, c'est mieux que de prendre le risque. Mais avoir une batterie externe ou un USB Condom = etre pret pour ces situations."
+    feedback: "Solution radicale qui resout le risque cyber mais te laisse sans tel. Si tu ne peux vraiment pas charger autrement, c'est mieux que de prendre le risque. Mais avoir une batterie externe ou un USB Condom = être pret pour ces situations."
     points: 5
 debrief: |
   Le **juice jacking** (vol via charge USB) est un risque souvent
-  ignore mais reel, particulierement dans les bornes publiques.
+  ignore mais reel, particulièrement dans les bornes publiques.
 
   **Le mecanisme :**
 
   Le port USB transporte 2 choses simultanement : alimentation
-  electrique ET donnees. Quand tu connectes ton tel a un PC, il peut
-  charger ET transferer des fichiers. C'est la meme chose sur une
+  electrique ET données. Quand tu connectes ton tel a un PC, il peut
+  charger ET transferer des fichiers. C'est la même chose sur une
   borne USB publique compromise.
 
   Si la borne est :
   - Configuree par un attaquant qui a l'a piratee
   - Le cable est modifie (cable malicieux qui simule un PC)
 
-  Le tel peut etre :
+  Le tel peut être :
   - **Lu** : extraction de photos, contacts, documents
   - **Infecte** : installation de malware
   - **Pris en otage** : attaque "OS Modification" rare mais
     documentee
 
-  **Les 3 categories de risque :**
+  **Les 3 catégories de risque :**
 
   **1. Borne USB malveillante (juice jacking pur)**
 
   L'attaquant installe une borne dans un lieu public ou pirate
-  une borne legitime. Quand tu te branches, son systeme tente
+  une borne legitime. Quand tu te branches, son système tente
   une connexion data en plus de l'alimentation.
 
   Cas reel : DEF CON 2011 a installé "Wall of Sheep" pour
@@ -71,7 +71,7 @@ debrief: |
 
   Plus subtil : le cable LUI-MEME est piege (microcontroleur
   cache). Vendu dans des marketplaces (Hak5 O.MG Cable a 180 USD)
-  ou abandonne dans des lieux strategiques.
+  ou abandonne dans des lieux stratégiques.
 
   Capacites :
   - Simule un clavier USB (HID injection) : tape commands sur ton
@@ -95,14 +95,14 @@ debrief: |
   tel 2-3 fois sans dependre d'aucune borne. C'est l'option la
   plus simple et la plus sure.
 
-  Marques fiables : Anker, Xiaomi, RAVPower. Eviter les marques
-  no-name a 5 EUR (qualite douteuse + pas de protection
+  Marques fiables : Anker, Xiaomi, RAVPower. Éviter les marques
+  no-name a 5 EUR (qualité douteuse + pas de protection
   surtension).
 
   **Defense 2 - Cable data-blocker / USB Condom**
 
   Adaptateur USB qui ne laisse passer QUE l'alimentation, pas les
-  donnees. Brancher sur n'importe quelle borne sans risque.
+  données. Brancher sur n'importe quelle borne sans risque.
 
   Modeles : PortaPow USB Data Blocker (10-15 EUR), Plugable USB
   Data Blocker. A garder dans son sac de voyage.
@@ -112,7 +112,7 @@ debrief: |
   Si la borne expose une prise murale (pas seulement des cables
   USB), c'est plus sur. Tu utilises ton propre chargeur + cable
   USB propre. Les prises murales (220V France) ne peuvent pas
-  faire de transfert de donnees.
+  faire de transfert de données.
 
   **Defense 4 - Refuser le partage data sur le tel**
 
@@ -124,30 +124,30 @@ debrief: |
     "Transferer fichiers" ou "MTP").
 
   Si la popup n'apparait pas (Android plus ancien) : le tel est
-  peut-etre deja en mode transfert par defaut. Verifier dans les
-  parametres.
+  peut-être déjà en mode transfert par defaut. Vérifier dans les
+  paramètres.
 
-  **Defense 5 - Mode avion + ecran verrouille**
+  **Defense 5 - Mode avion + écran verrouille**
 
-  Pendant la charge, mettre le tel en mode avion + ecran
+  Pendant la charge, mettre le tel en mode avion + écran
   verrouille. Reduit les surfaces d'attaque (BLE, WiFi
-  malveillant a portee, etc.).
+  malveillant a portée, etc.).
 
   **Le piege "cable trouvé"**
 
   Tu trouves un cable USB Lightning / USB-C "abandonne" dans
-  un cafe / bureau / aeroport. Reflexe naturel : le prendre, ca
+  un cafe / bureau / aeroport. Reflexe naturel : le prendre, ça
   va depanner.
 
   **NE JAMAIS UTILISER UN CABLE TROUVE**. Vecteur d'attaque
-  classique. Le cable peut etre :
+  classique. Le cable peut être :
   - O.MG Cable (cable HID injection vendu sur le web)
   - BadUSB cable (firmware modifie)
 
-  Solution : poubelle, ou si suspicieux, signaler a la securite
+  Solution : poubelle, ou si suspicieux, signaler a la sécurité
   du lieu.
 
-  **La regle d'or pour les voyageurs :**
+  **La règle d'or pour les voyageurs :**
 
   > Sac de voyage cyber-safe :
   > - **Batterie externe 10 000 mAh** (25 EUR, charge 2-3 fois)
@@ -157,24 +157,24 @@ debrief: |
   > - **Chargeur secteur compact** pour prises murales
   > - **Adaptateur prise UK/US** si voyage international
 
-  Cout total : ~80 EUR. ROI tres eleve quand tu evites un
+  Cout total : ~80 EUR. ROI très élève quand tu evites un
   juice jacking ou un cable BadUSB.
 
   **Cas reels :**
 
   - **Los Angeles District Attorney 2019** : alerte officielle aux
     voyageurs sur le juice jacking dans les aeroports US.
-  - **Chicago O'Hare 2023** : enquete federale sur des bornes
+  - **Chicago O'Hare 2023** : enquête federale sur des bornes
     USB piegees dans certains terminals.
   - **DEF CON Wall of Sheep** (annuel depuis 2011) : illustre
     publiquement le risque.
 
   Le risque reel reste statistiquement faible (estime < 0.1% des
-  bornes publiques compromises selon FTC), mais les consequences
-  d'une infection (malware persistant, exfiltration de donnees)
+  bornes publiques compromises selon FTC), mais les conséquences
+  d'une infection (malware persistant, exfiltration de données)
   sont severes.
 
-  **Pour les pros tres mobiles :**
+  **Pour les pros très mobiles :**
 
   Une politique BYOD/MDM peut interdire le branchement sur
   bornes USB inconnues et imposer batterie externe + cable
@@ -187,9 +187,9 @@ quiz:
   - question: "Le juice jacking c'est :"
     choices:
       - { id: "a", label: "Voler du jus de fruit", correct: false }
-      - { id: "b", label: "Compromettre un tel via une borne USB publique malveillante (transfert de donnees + alimentation)", correct: true }
-      - { id: "c", label: "Une operation chirurgicale", correct: false }
-    explanation: "Juice jacking = exploitation des bornes USB publiques compromises. Le port USB transporte alimentation + donnees - une borne piratee peut extraire/injecter en plus de charger. Risque rare mais documente."
+      - { id: "b", label: "Compromettre un tel via une borne USB publique malveillante (transfert de données + alimentation)", correct: true }
+      - { id: "c", label: "Une opération chirurgicale", correct: false }
+    explanation: "Juice jacking = exploitation des bornes USB publiques compromises. Le port USB transporte alimentation + données - une borne piratee peut extraire/injecter en plus de charger. Risque rare mais documente."
 
   - question: "Comment se proteger sur une borne USB publique inconnue ?"
     choices:
@@ -200,20 +200,20 @@ quiz:
 
   - question: "Tu trouves un cable USB Lightning abandonne dans un cafe. Tu fais quoi ?"
     choices:
-      - { id: "a", label: "Je l'utilise, ca depanne", correct: false }
+      - { id: "a", label: "Je l'utilise, ça depanne", correct: false }
       - { id: "b", label: "Poubelle. Vecteur d'attaque classique (BadUSB, O.MG Cable)", correct: true }
       - { id: "c", label: "Je le revends sur Le Bon Coin", correct: false }
-    explanation: "Cable trouve = potentiellement BadUSB ou O.MG Cable (vendu sur web pour ~180 USD). Modifie pour faire HID injection ou exfiltration. JAMAIS utiliser. Si suspicieux : signaler a la securite du lieu."
+    explanation: "Cable trouve = potentiellement BadUSB ou O.MG Cable (vendu sur web pour ~180 USD). Modifie pour faire HID injection ou exfiltration. JAMAIS utiliser. Si suspicieux : signaler a la sécurité du lieu."
 
   - question: "Le risque reel d'une borne USB compromise est :"
     choices:
       - { id: "a", label: "0%, c'est un mythe", correct: false }
-      - { id: "b", label: "Faible statistiquement (~0.1% selon FTC) mais consequences severes en cas d'infection. Vaut mieux se proteger pour 25 EUR", correct: true }
+      - { id: "b", label: "Faible statistiquement (~0.1% selon FTC) mais conséquences severes en cas d'infection. Vaut mieux se proteger pour 25 EUR", correct: true }
       - { id: "c", label: "100% des bornes sont compromises", correct: false }
-    explanation: "Le risque est statistiquement faible (FTC estime <0.1%) mais les consequences d'une infection (malware persistant, exfiltration) sont severes. Investissement de 25 EUR (batterie externe) pour eliminer le risque = ROI tres eleve."
+    explanation: "Le risque est statistiquement faible (FTC estime <0.1%) mais les conséquences d'une infection (malware persistant, exfiltration) sont severes. Investissement de 25 EUR (batterie externe) pour eliminer le risque = ROI très élève."
 ---
 
-> 💡 **Pour aller plus loin** : pour les voyageurs frequents, kit
+> 💡 **Pour aller plus loin** : pour les voyageurs fréquents, kit
 > cyber-safe : batterie externe Anker 10 000 mAh (~25 EUR) + USB Data
 > Blocker PortaPow (~15 EUR) + tes propres cables/chargeurs. Total
 > ~80 EUR pour eliminer 95% des risques de mobilite USB.

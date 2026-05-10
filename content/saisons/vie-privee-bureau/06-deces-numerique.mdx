@@ -1,14 +1,14 @@
 ---
-title: "Preparer son deces numerique pour ses proches"
+title: "Preparer son deces numérique pour ses proches"
 durationMinutes: 7
 persona: "tous-collaborateurs"
-objective: "Organiser la transmission de ses comptes / donnees numeriques en cas de deces, pour soulager les proches et eviter la perte de donnees importantes"
+objective: "Organiser la transmission de ses comptes / données numériques en cas de deces, pour soulager les proches et éviter la perte de données importantes"
 xpReward: 60
 scenario: |
-  Tu as un cousin qui vient de perdre son pere. Au-dela du
-  drame humain, le cousin est completement perdu :
+  Tu as un cousin qui vient de perdre son père. Au-dela du
+  drame humain, le cousin est complètement perdu :
 
-  - Boite mail Gmail du pere : accessible ?
+  - Boîte mail Gmail du père : accessible ?
   - Comptes bancaires en ligne : credentials inconnus
   - 10 ans de photos sur iCloud : recuperables ?
   - Compte Facebook : que faire ?
@@ -17,17 +17,17 @@ scenario: |
   - Carrieres LinkedIn : laisser ouvert ?
 
   Le cousin te demande conseil pour preparer SA propre
-  succession numerique. Tu lui dis quoi ?
+  succession numérique. Tu lui dis quoi ?
 choices:
   - id: "a"
-    label: "On verra ca quand on sera plus age, pas urgent"
+    label: "On verra ça quand on sera plus age, pas urgent"
     outcome: "bad"
-    feedback: "FAUX. Les decces inattendus arrivent (accidents, maladies). 70% des familles francaises font face a un drame numerique apres deces (donnees inaccessibles, comptes orphelins). Preparation = soulagement. ANSSI / CNIL recommandent."
+    feedback: "FAUX. Les decces inattendus arrivent (accidents, maladies). 70% des familles françaises font face a un drame numérique après deces (données inaccessibles, comptes orphelins). Preparation = soulagement. ANSSI / CNIL recommandent."
     points: -20
   - id: "b"
-    label: "Inventaire des comptes + gestionnaire de mots de passe + designation 'contact heritier' + testament numerique notarial + instructions ecrites pour les proches"
+    label: "Inventaire des comptes + gestionnaire de mots de passe + designation 'contact heritier' + testament numérique notarial + instructions ecrites pour les proches"
     outcome: "good"
-    feedback: "Approche complete. Inventaire (savoir quoi transmettre), gestionnaire de mots de passe avec emergency access (ex: 1Password), heritier numerique (Apple, Google, Facebook permettent), testament notarial pour gros enjeux (cryptos), instructions ecrites pour le quotidien."
+    feedback: "Approche complete. Inventaire (savoir quoi transmettre), gestionnaire de mots de passe avec emergency access (ex: 1Password), heritier numérique (Apple, Google, Facebook permettent), testament notarial pour gros enjeux (cryptos), instructions ecrites pour le quotidien."
     points: 40
   - id: "c"
     label: "J'ecris tous mes mots de passe sur un papier dans ma table de chevet"
@@ -37,17 +37,17 @@ choices:
   - id: "d"
     label: "Je note tout dans un email a ma femme"
     outcome: "bad"
-    feedback: "DANGER. Mot de passe par email = boite mail compromise -> tous les comptes compromis. Plus : si tu es indisponible mais pas decede (coma, AVC), elle a tous les acces (peut etre voulu ou non). Solutions plus structurees existent."
+    feedback: "DANGER. Mot de passe par email = boîte mail compromise -> tous les comptes compromis. Plus : si tu es indisponible mais pas decede (coma, AVC), elle a tous les acces (peut être voulu ou non). Solutions plus structurees existent."
     points: -10
 debrief: |
-  Le **deces numerique** est un sujet trop souvent neglige.
+  Le **deces numérique** est un sujet trop souvent neglige.
   Les statistiques (Cybermalveillance / CNIL 2024) :
 
-  - **70% des familles** font face a un drame numerique apres
+  - **70% des familles** font face a un drame numérique après
     deces
-  - **Donnees perdues** : photos, documents, archives
-  - **Comptes orphelins** : non fermes pendant des annees
-    (risque vol identite)
+  - **Données perdues** : photos, documents, archives
+  - **Comptes orphelins** : non fermes pendant des années
+    (risque vol identité)
   - **Cryptomonnaies** : ~20% des Bitcoin perdus a jamais
     (cles decedees)
   - **Conflits familiaux** : qui peut acceder a quoi ?
@@ -55,15 +55,15 @@ debrief: |
   **Pourquoi preparer maintenant :**
 
   - **Deces inattendus** : accidents, maladie subite
-  - **Soulagement** des proches dans une periode difficile
-  - **Conservation** du patrimoine numerique (financier,
+  - **Soulagement** des proches dans une période difficile
+  - **Conservation** du patrimoine numérique (financier,
     sentimental)
   - **Gestion** des comptes (fermeture, transmission)
   - **Volontes** respectees (que faire de chaque chose)
 
-  **Les 6 categories d'actifs numeriques :**
+  **Les 6 catégories d'actifs numériques :**
 
-  **Categorie 1 : Comptes financiers**
+  **Catégorie 1 : Comptes financiers**
 
   - **Banque en ligne** : LCL, BNP, Boursorama
   - **Investissements** : Yomoni, Linxea, Boursorama Vie
@@ -74,17 +74,17 @@ debrief: |
 
   **Risque** : sans acces, perte totale (cryptos surtout).
 
-  **Categorie 2 : Comptes courriers**
+  **Catégorie 2 : Comptes courriers**
 
   - **Gmail / Outlook / Apple Mail**
-  - **Boites secondaires**
+  - **Boîtes secondaires**
   - **Facteur** : reception courriers administratifs
     importants
 
   **Risque** : impossible de gerer la succession sans acces
   email (banques, administrations).
 
-  **Categorie 3 : Stockage / fichiers**
+  **Catégorie 3 : Stockage / fichiers**
 
   - **Photos** : iCloud, Google Photos, Amazon Photos
   - **Documents** : Dropbox, OneDrive, Drive
@@ -93,16 +93,16 @@ debrief: |
   **Risque** : photos famille perdues, documents importants
   inaccessibles.
 
-  **Categorie 4 : Reseaux sociaux**
+  **Catégorie 4 : Réseaux sociaux**
 
   - **Facebook, Instagram, LinkedIn**
   - **Twitter / X**
   - **Snapchat, TikTok**
 
   **Risque** : comptes orphelins exploites par usurpateurs
-  (vol identite posthume), comptes "in memoriam" non geres.
+  (vol identité posthume), comptes "in memoriam" non geres.
 
-  **Categorie 5 : Abonnements**
+  **Catégorie 5 : Abonnements**
 
   - **Streaming** : Netflix, Spotify, Apple Music
   - **Cloud / SaaS** : iCloud, Microsoft 365, Adobe
@@ -112,11 +112,11 @@ debrief: |
   **Risque** : prelevements automatiques continuent (a
   identifier et arreter).
 
-  **Categorie 6 : Pro (si independant / dirigeant)**
+  **Catégorie 6 : Pro (si indépendant / dirigeant)**
 
   - **Comptes pro** : LinkedIn, Twitter pro
-  - **Outils metier** : Slack, Trello, Notion
-  - **Donnees clients** : si independant
+  - **Outils métier** : Slack, Trello, Notion
+  - **Données clients** : si indépendant
   - **Acces SI** : si dirigeant PME
 
   **Risque** : continuite d'activite + obligations RGPD/
@@ -136,53 +136,53 @@ debrief: |
 
   **Bitwarden** :
   - **Emergency access** : designation d'une personne
-  - Apres delai (7-30 jours sans connexion), acces accorde
+  - Après délai (7-30 jours sans connexion), acces accorde
   - Gratuit en version Premium personnelle
 
   **Dashlane** :
   - **Plan d'urgence** : designation contact
-  - Procedure post-mortem documentee
+  - Procédure post-mortem documentee
 
   **Cout** : 30-100 EUR/an pour les versions familiales.
 
-  **Outil 2 : Designation "Heritier numerique" sur les
+  **Outil 2 : Designation "Heritier numérique" sur les
   plateformes**
 
   Plusieurs plateformes proposent designation officielle :
 
   **Apple - Legacy Contact (iOS 15.2+)** :
   - Reglages > Apple ID > Legacy Contact
-  - Designer 1+ contact qui pourra acceder a iCloud apres
+  - Designer 1+ contact qui pourra acceder a iCloud après
     deces
-  - **Apres deces** : Apple verifie + donne acces
+  - **Après deces** : Apple verifie + donne acces
 
   **Google - Inactive Account Manager** :
   - myaccount.google.com > Inactive Account Manager
-  - Apres X mois sans connexion : alerte aux contacts
+  - Après X mois sans connexion : alerte aux contacts
     designes
-  - Ils peuvent telecharger les donnees ou supprimer le compte
+  - Ils peuvent télécharger les données ou supprimer le compte
 
   **Facebook - Contact Heritier** :
   - Reglages > Contact heritier
-  - Apres "memorialisation" : peut gerer (pas tout, mais
+  - Après "memorialisation" : peut gerer (pas tout, mais
     fermer / commemorer)
 
   **Microsoft 365 - Contacts d'urgence** : permet acces
-  apres procedures.
+  après procédures.
 
   **Outil 3 : Testament notarial**
 
   Pour les enjeux importants (cryptos, gros patrimoine) :
 
   - **Testament olographe** (manuscrit) ou **notarial**
-  - **Mention specifique** des actifs numeriques
+  - **Mention spécifique** des actifs numériques
   - **Cles** stockees chez le notaire (sceau scelle)
-  - **Coffre-fort numerique notarial** : nouveaute (plusieurs
+  - **Coffre-fort numérique notarial** : nouveaute (plusieurs
     notaires proposent)
 
   Cout : 100-500 EUR pour un testament basique.
 
-  **Outil 4 : Coffre-fort numerique succession**
+  **Outil 4 : Coffre-fort numérique succession**
 
   Solutions specialisees :
 
@@ -196,7 +196,7 @@ debrief: |
   Document simple (5-10 pages) qui inclut :
 
   - **Liste** des comptes (sans mots de passe directement)
-  - **Procedure** pour acceder (gestionnaire MDP +
+  - **Procédure** pour acceder (gestionnaire MDP +
     emergency access)
   - **Volontes** : que faire de chaque compte (fermer,
     memoriser, transmettre)
@@ -207,108 +207,108 @@ debrief: |
   **Lieu** : connu par 1-2 proches de confiance + copie au
   notaire.
 
-  **Procedure complete recommandee :**
+  **Procédure complete recommandee :**
 
-  **Etape 1 : Inventaire (1 weekend)**
+  **Étape 1 : Inventaire (1 weekend)**
 
   Liste **TOUS** tes comptes :
   - Email pro / perso
   - Banques (compte courant, livret, assurance vie)
   - Cryptos (Binance, Coinbase, hardware wallets)
   - Stockage (iCloud, Drive, Dropbox)
-  - Reseaux sociaux
+  - Réseaux sociaux
   - Abonnements (Netflix, Spotify, Amazon Prime, etc.)
   - Services pro (LinkedIn, GitHub, Slack)
   - Sites e-commerce (Amazon, etc.)
 
   **Outils** : tableur Excel, document Notion, papier.
 
-  **Etape 2 : Categorisation**
+  **Étape 2 : Categorisation**
 
   Pour chaque compte :
-  - **Categorie** (banque, social, etc.)
+  - **Catégorie** (banque, social, etc.)
   - **Importance** : critique / important / secondaire
   - **Volonte** : transmettre / fermer / memoriser
 
-  **Etape 3 : Securisation**
+  **Étape 3 : Securisation**
 
   - **Gestionnaire de mots de passe** unique pour tous
     (1Password, Bitwarden, Dashlane)
   - **MFA** active sur les critiques
   - **Mots de passe forts** + uniques
 
-  **Etape 4 : Designation des heritiers numeriques**
+  **Étape 4 : Designation des heritiers numériques**
 
   - **Apple Legacy Contact** : configurer
   - **Google Inactive Account Manager** : configurer
   - **Facebook Contact heritier** : configurer
   - **1Password / Bitwarden** : Emergency access
 
-  **Etape 5 : Documentation pour les proches**
+  **Étape 5 : Documentation pour les proches**
 
   Document de 5-10 pages :
   - Liste comptes (sans mots de passe directement)
-  - Procedure d'acces
+  - Procédure d'acces
   - Volontes par compte
   - Contacts importants
 
-  **Etape 6 : Testament notarial (si besoin)**
+  **Étape 6 : Testament notarial (si besoin)**
 
-  Pour patrimoine numerique important :
-  - Mention specifique des cryptomonnaies
+  Pour patrimoine numérique important :
+  - Mention spécifique des cryptomonnaies
   - Cles ou seed phrases
-  - Volontes precises
+  - Volontes précises
 
-  **Etape 7 : Communication aux proches**
+  **Étape 7 : Communication aux proches**
 
   - **2-3 personnes de confiance** informees
   - **Localisation** des documents
-  - **Procedures** d'acces
+  - **Procédures** d'acces
 
-  **Etape 8 : Mise a jour annuelle**
+  **Étape 8 : Mise a jour annuelle**
 
   - **Revue annuelle** : nouveaux comptes, departs
-  - **Tests** : verifier que les emergency contacts marchent
+  - **Tests** : vérifier que les emergency contacts marchent
   - **Mise a jour** des volontes
 
-  **Procedure post-deces (pour les proches) :**
+  **Procédure post-deces (pour les proches) :**
 
   Si un proche decede et il n'avait rien prepare :
 
   **Heure 0 - Jour 7 :**
   - Acte de deces (mairie)
-  - Notification banque (souvent 24-48h apres acte)
+  - Notification banque (souvent 24-48h après acte)
   - Informer assureurs (assurance vie, sante)
 
   **Jour 7 - 30 :**
   - Inventaire des comptes connus
-  - Demande d'acces aux plateformes (procedure souvent
+  - Demande d'acces aux plateformes (procédure souvent
     longue)
   - Notaire : gestion succession
 
   **Mois 1-3 :**
-  - Recuperation des donnees (si possible)
+  - Recuperation des données (si possible)
   - Fermeture des comptes
-  - Memorisation des reseaux sociaux (Facebook, Instagram)
+  - Memorisation des réseaux sociaux (Facebook, Instagram)
 
   **Mois 3-12 :**
   - Suite de la succession (notaire)
-  - Gestion patrimoine numerique
+  - Gestion patrimoine numérique
   - Cryptomonnaies (souvent perdues si pas de seed)
 
-  **Quelques procedures specifiques :**
+  **Quelques procédures spécifiques :**
 
   **Apple iCloud post-mortem :**
 
   Si Legacy Contact pas designe :
-  - Demande aupres d'Apple avec acte de deces
-  - Procedure judiciaire si necessaire
+  - Demande auprès d'Apple avec acte de deces
+  - Procédure judiciaire si necessaire
   - **6-12 mois** typique
   - Souvent : refus si protections renforcees
 
   **Google :**
-  - Procedure "Demande pour un proche decede"
-  - Telechargement des donnees possible
+  - Procédure "Demande pour un proche decede"
+  - Telechargement des données possible
   - **Mois** typique
 
   **Facebook :**
@@ -317,13 +317,13 @@ debrief: |
   - **Suppression** possible aussi
   - Demande proches via formulaire
 
-  **Banque francaise :**
+  **Banque française :**
   - **Acte de deces** = blocage du compte
   - **Notaire** gere la succession
-  - **Heritiers** recoivent les fonds
+  - **Heritiers** reçoivent les fonds
 
   **Cryptomonnaies (cas le plus difficile) :**
-  - **Binance / Coinbase** : procedure judiciaire complexe
+  - **Binance / Coinbase** : procédure judiciaire complexe
   - **Hardware wallets (Ledger, Trezor)** : si pas de seed,
     fonds **perdus a jamais**
   - **Solution** : seed phrase chez notaire ou en testament
@@ -338,13 +338,13 @@ debrief: |
   - Facebook contact heritier
   - Document instructions chez notaire
 
-  Deces accidentel. Apres 1 mois :
+  Deces accidentel. Après 1 mois :
   - Epouse a acces a tous les comptes
   - Photos famille recuperees (iCloud)
   - Comptes geres (fermer / memoriser)
   - Cryptos transferees (cles dans testament)
 
-  Pas de drame numerique. Famille soulagee.
+  Pas de drame numérique. Famille soulagee.
 
   **Cas 2 - Famille 2022 (cryptos perdues)**
 
@@ -358,27 +358,27 @@ debrief: |
 
   Lecon : seed phrase = chez notaire ou en testament.
 
-  **Cas 3 - PME independant 2024 (continuite affaires)**
+  **Cas 3 - PME indépendant 2024 (continuite affaires)**
 
   Independant 60 ans (consultant) :
   - 50 clients actifs
-  - Donnees clients sur OneDrive / Dropbox
+  - Données clients sur OneDrive / Dropbox
   - GitHub avec code
 
-  Deces. Aucune preparation numerique :
+  Deces. Aucune preparation numérique :
   - Clients perdus (impossible de transferer dossiers)
   - Code GitHub : compromis (pas d'acces)
-  - Famille en difficulte (revenus zero)
+  - Famille en difficulté (revenus zero)
 
   Cout : -100K EUR de patrimoine + chaos administratif.
 
-  Solution preventive : delegation officielle a un confrere
+  Solution préventive : delegation officielle a un confrere
   + emergency access aux comptes pro.
 
-  **Cas 4 - Reseaux sociaux post-mortem (cas frequent)**
+  **Cas 4 - Réseaux sociaux post-mortem (cas fréquent)**
 
   Sans designation de heritier :
-  - Facebook actif des annees apres deces
+  - Facebook actif des années après deces
   - **Faux comptes** crees au nom du defunt
   - **Souvenirs** de proches mal geres
   - **Spam / hacking** du compte orphelin
@@ -394,7 +394,7 @@ debrief: |
   - Mots de passe stockes dans ton navigateur (sync iPhone) :
     inaccessibles sans ton iPhone deverouille
   - Cryptos / hardware wallets : seed phrase rarement partagee
-  - Procedures variees selon plateformes
+  - Procédures variees selon plateformes
 
   Solution : gestionnaire de mots de passe + emergency access
   + documentation.
@@ -404,9 +404,9 @@ debrief: |
   Limites :
   - **Pas de mises a jour** automatiques
   - **Perte / destruction** possible
-  - **Acces non-controle** par tiers (entree dans la
+  - **Acces non-contrôle** par tiers (entrée dans la
     chambre)
-  - **Pas de procedure** post-mortem claire
+  - **Pas de procédure** post-mortem claire
 
   Mieux : gestionnaire mots de passe + papier en backup chez
   notaire.
@@ -414,10 +414,10 @@ debrief: |
   **Le piege "je n'ai pas envie d'y penser" :**
 
   Comprehensible mais :
-  - **Soulage** les proches dans une periode difficile
+  - **Soulage** les proches dans une période difficile
   - **Preserve** le patrimoine
   - **Respect** des volontes
-  - **Eviter** les conflits familiaux
+  - **Éviter** les conflits familiaux
 
   C'est un acte de **consideration pour les proches**.
 
@@ -428,51 +428,51 @@ debrief: |
   - **Apple/Google Legacy Contact** : gratuit
   - **Document instructions** : gratuit
 
-  Total : ~150 EUR initial + 60 EUR/an. Tres faible vs
+  Total : ~150 EUR initial + 60 EUR/an. Très faible vs
   l'impact pour les proches.
 
-  **La regle d'or :**
+  **La règle d'or :**
 
-  > **Le deces numerique est inevitable. Preparation = acte
+  > **Le deces numérique est inevitable. Preparation = acte
   > de soin pour les proches. Inventaire + gestionnaire MDP
-  > avec emergency access + designation heritiers numeriques
+  > avec emergency access + designation heritiers numériques
   > (Apple, Google, Facebook) + testament notarial pour gros
   > enjeux + instructions ecrites. Cout : ~150 EUR initial.
   > Soulage drastiquement la famille en cas de deces.**
 quiz:
-  - question: "Tes cryptomonnaies sur Ledger Nano, sans seed phrase transmise, consequence post-mortem ?"
+  - question: "Tes cryptomonnaies sur Ledger Nano, sans seed phrase transmise, conséquence post-mortem ?"
     choices:
-      - { id: "a", label: "Recuperables par procedure", correct: false }
-      - { id: "b", label: "PERDUES A JAMAIS. Sans seed phrase / PIN, aucune procedure ne peut recuperer. ~20% des Bitcoin sont perdus de cette maniere", correct: true }
+      - { id: "a", label: "Recuperables par procédure", correct: false }
+      - { id: "b", label: "PERDUES A JAMAIS. Sans seed phrase / PIN, aucune procédure ne peut recuperer. ~20% des Bitcoin sont perdus de cette manière", correct: true }
       - { id: "c", label: "Reembursees par Ledger", correct: false }
-    explanation: "Hardware wallets (Ledger, Trezor) : sans seed phrase / PIN, fonds PERDUS A JAMAIS. Aucune procedure judiciaire ne peut les recuperer. ~20% des Bitcoin sont perdus de cette maniere selon estimations. Solution : seed phrase chez notaire ou testament."
+    explanation: "Hardware wallets (Ledger, Trezor) : sans seed phrase / PIN, fonds PERDUS A JAMAIS. Aucune procédure judiciaire ne peut les recuperer. ~20% des Bitcoin sont perdus de cette manière selon estimations. Solution : seed phrase chez notaire ou testament."
 
   - question: "Quel outil simple pour preparer la transmission post-mortem ?"
     choices:
       - { id: "a", label: "Email a sa femme", correct: false }
-      - { id: "b", label: "Gestionnaire de mots de passe avec Emergency Access (1Password Family, Bitwarden, Dashlane) - 60-100 EUR/an, designation contact, acces apres delai", correct: true }
+      - { id: "b", label: "Gestionnaire de mots de passe avec Emergency Access (1Password Family, Bitwarden, Dashlane) - 60-100 EUR/an, designation contact, acces après délai", correct: true }
       - { id: "c", label: "Papier dans la table de chevet", correct: false }
-    explanation: "Gestionnaire MDP avec Emergency Access : 1Password Family / Bitwarden / Dashlane. Tu designes 1 contact qui apres delai (7-30j sans connexion) recoit acces au coffre. Plus : Apple Legacy Contact, Google Inactive Account Manager, Facebook contact heritier. Cout : 60-100 EUR/an."
+    explanation: "Gestionnaire MDP avec Emergency Access : 1Password Family / Bitwarden / Dashlane. Tu designes 1 contact qui après délai (7-30j sans connexion) reçoit acces au coffre. Plus : Apple Legacy Contact, Google Inactive Account Manager, Facebook contact heritier. Cout : 60-100 EUR/an."
 
-  - question: "Apres deces, sans preparation, recuperer les photos iCloud ?"
+  - question: "Après deces, sans preparation, recuperer les photos iCloud ?"
     choices:
       - { id: "a", label: "Facile", correct: false }
-      - { id: "b", label: "Difficile : 6-12 mois de procedure avec Apple, parfois refus. Solution preventive : Apple Legacy Contact (iOS 15.2+, gratuit, en 5 min)", correct: true }
+      - { id: "b", label: "Difficile : 6-12 mois de procédure avec Apple, parfois refus. Solution préventive : Apple Legacy Contact (iOS 15.2+, gratuit, en 5 min)", correct: true }
       - { id: "c", label: "Impossible", correct: false }
-    explanation: "Apple post-mortem sans Legacy Contact : procedure 6-12 mois avec acte deces, parfois refus pour protections renforcees. Solution preventive simple : Reglages > Apple ID > Legacy Contact (iOS 15.2+, 5 min, gratuit). Designer 1+ contact qui aura acces apres deces."
+    explanation: "Apple post-mortem sans Legacy Contact : procédure 6-12 mois avec acte deces, parfois refus pour protections renforcees. Solution préventive simple : Reglages > Apple ID > Legacy Contact (iOS 15.2+, 5 min, gratuit). Designer 1+ contact qui aura acces après deces."
 
-  - question: "Cout typique de preparer son deces numerique ?"
+  - question: "Cout typique de preparer son deces numérique ?"
     choices:
       - { id: "a", label: "Plusieurs milliers d'EUR", correct: false }
-      - { id: "b", label: "~150 EUR initial (testament notarial) + 60 EUR/an (1Password Family). Faible cout pour soulagement famille proche", correct: true }
+      - { id: "b", label: "~150 EUR initial (testament notarial) + 60 EUR/an (1Password Family). Faible coût pour soulagement famille proche", correct: true }
       - { id: "c", label: "Gratuit", correct: false }
-    explanation: "Cout total : 1Password Family 60-90 EUR/an + testament notarial basique 100-300 EUR (one-shot) + Legacy Contact Apple/Google/Facebook (gratuit). Total ~150 EUR initial + 60 EUR/an. Tres faible vs impact pour les proches (cas reels : familles ruinees pour ne pas avoir prepare)."
+    explanation: "Cout total : 1Password Family 60-90 EUR/an + testament notarial basique 100-300 EUR (one-shot) + Legacy Contact Apple/Google/Facebook (gratuit). Total ~150 EUR initial + 60 EUR/an. Très faible vs impact pour les proches (cas reels : familles ruinees pour ne pas avoir prepare)."
 ---
 
 > 💡 **Pour aller plus loin** : **1Password Family** /
 > **Bitwarden** Emergency Access. **Apple Legacy Contact**
 > (iOS 15.2+) + **Google Inactive Account Manager** +
 > **Facebook Contact heritier** = gratuits, 15 min total.
-> **Notaire** pour testament numerique. Document
+> **Notaire** pour testament numérique. Document
 > instructions chez 2-3 proches de confiance. Mise a jour
 > annuelle.

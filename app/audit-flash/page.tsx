@@ -21,6 +21,7 @@
 import type { Metadata } from "next";
 import HexBackdrop from "@/components/HexBackdrop";
 import AuditWizard from "./AuditWizard";
+import { ServiceJsonLd, BreadcrumbJsonLd } from "@/lib/seo/jsonld";
 
 export const metadata: Metadata = {
   title: "Audit Cyber Flash gratuit en 5 minutes | Humanix Académie",
@@ -44,6 +45,19 @@ export const metadata: Metadata = {
 export default function AuditFlashPage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
+      <ServiceJsonLd
+        name="Audit Cyber Flash gratuit"
+        description="Auto-évaluation de la maturité cyber en 5 minutes, 15 questions, rapport PDF envoyé par email. 100 % gratuit, sans relance commerciale, RGPD-compliant."
+        url="/audit-flash"
+        serviceType="Cybersecurity self-assessment"
+        offers={{ price: "0", priceCurrency: "EUR", description: "Gratuit, rapport PDF envoyé par email" }}
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", path: "/" },
+          { name: "Audit Cyber Flash", path: "/audit-flash" },
+        ]}
+      />
       {/* ============================================================
           1. HERO - chaleureux, anti-pression
           ============================================================ */}

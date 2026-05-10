@@ -5,56 +5,56 @@ persona: "tous"
 objective: "Travailler en espace partage sans laisser de trace exploitable"
 xpReward: 50
 scenario: |
-  Tu arrives dans un espace de coworking parisien. Tu prends un cafe et t'installes. Lundi 9h, salle commune, 15 inconnus autour de toi. Quelles sont les premieres choses que tu fais avant d'ouvrir ta session ?
+  Tu arrives dans un espace de coworking parisien. Tu prends un cafe et t'installes. Lundi 9h, salle commune, 15 inconnus autour de toi. Quelles sont les premières choses que tu fais avant d'ouvrir ta session ?
 choices:
   - id: "a"
-    label: "Je m'installe dos a un mur ou avec un ecran de protection (privacy filter), je verrouille mon ecran a chaque pause"
+    label: "Je m'installe dos a un mur ou avec un écran de protection (privacy filter), je verrouille mon écran a chaque pause"
     outcome: "good"
-    feedback: "Excellent. Tu protege le shoulder-surfing et l'opportunisme. Le privacy filter coute 30 € - moins qu'une fuite client."
+    feedback: "Excellent. Tu protege le shoulder-surfing et l'opportunisme. Le privacy filter coûte 30 € - moins qu'une fuite client."
     points: 30
   - id: "b"
-    label: "Je m'installe dos a la salle, ecran face a tout le monde - c'est plus convivial"
+    label: "Je m'installe dos a la salle, écran face a tout le monde - c'est plus convivial"
     outcome: "bad"
     feedback: "Aïe. N'importe qui peut lire tes emails, tes contrats, tes mots de passe en regardant par-dessus ton epaule."
     points: -10
   - id: "c"
     label: "Je laisse mon laptop ouvert pour aller chercher un autre cafe"
     outcome: "bad"
-    feedback: "Erreur classique. Laisser un laptop deverrouille = donner les cles de ta session a quiconque passe. Verrouille meme pour 30 secondes."
+    feedback: "Erreur classique. Laisser un laptop deverrouille = donner les cles de ta session a quiconque passe. Verrouille même pour 30 secondes."
     points: -15
   - id: "d"
     label: "Je connecte mon ordi au Wi-Fi 'CoworkFreeGuest' pour gagner du temps"
     outcome: "neutral"
-    feedback: "Ce reseau peut etre legitime ou un pot de miel. Mieux : verifier le nom exact a la reception ou utiliser le 4G/5G pour les actions sensibles."
+    feedback: "Ce réseau peut être legitime ou un pot de miel. Mieux : vérifier le nom exact a la reception ou utiliser le 4G/5G pour les actions sensibles."
     points: 0
 debrief: |
-  Le coworking est un environnement merveilleux pour la creativite et le reseau, mais c'est un cauchemar pour la securite si on n'a pas les bons reflexes :
+  Le coworking est un environnement merveilleux pour la creativite et le réseau, mais c'est un cauchemar pour la sécurité si on n'a pas les bons reflexes :
 
   **Le contexte risque :**
   - 10 a 100 inconnus partagent l'espace chaque jour
   - Beaucoup ont des competences techniques (developpeurs, freelances IT...)
   - Le Wi-Fi est partage avec tous
-  - Imprimantes, ecrans, papiers : tout traine
+  - Imprimantes, écrans, papiers : tout traine
   - Pauses cafe : laptops abandonnes 5 min
 
   **Les 6 reflexes du coworker cyber :**
 
-  1. **Privacy filter** sur l'ecran (3M ou similaire, 30 €). Plus personne ne peut lire en oblique.
-  2. **Verrouiller a chaque pause** : `Win+L` (Windows) ou `Cmd+Ctrl+Q` (Mac). Meme pour 30 secondes.
+  1. **Privacy filter** sur l'écran (3M ou similaire, 30 €). Plus personne ne peut lire en oblique.
+  2. **Verrouiller a chaque pause** : `Win+L` (Windows) ou `Cmd+Ctrl+Q` (Mac). Même pour 30 secondes.
   3. **Ne jamais laisser** documents papier ou laptop sur le bureau en pause cafe. Range, sac ferme.
-  4. **VPN entreprise** active des que tu touches a des donnees professionnelles.
-  5. **Privilegier le 4G/5G** pour les actions vraiment sensibles (paiements, mots de passe maitres).
-  6. **Imprimante partagee** : recuperer immediatement, ne JAMAIS imprimer de documents confidentiels.
+  4. **VPN entreprise** active dès que tu touches a des données professionnelles.
+  5. **Privilegier le 4G/5G** pour les actions vraiment sensibles (paiements, mots de passe maîtres).
+  6. **Imprimante partagee** : recuperer immédiatement, ne JAMAIS imprimer de documents confidentiels.
 
   Au coworking, comme dans un avion ou dans un train : tu n'es jamais vraiment seul. Travaille comme si quelqu'un te regardait - parce que c'est statistiquement le cas.
 quiz:
-  - question: "Quel est le reflexe de base avant de quitter mon poste, meme 30 secondes ?"
+  - question: "Quel est le reflexe de base avant de quitter mon poste, même 30 secondes ?"
     choices:
       - id: "a"
-        label: "Eteindre completement le laptop"
+        label: "Eteindre complètement le laptop"
         correct: false
       - id: "b"
-        label: "Verrouiller l'ecran (Win+L / Cmd+Ctrl+Q)"
+        label: "Verrouiller l'écran (Win+L / Cmd+Ctrl+Q)"
         correct: true
       - id: "c"
         label: "Faire confiance a mes voisins de coworking"
@@ -67,14 +67,14 @@ quiz:
         label: "Reduire la fatigue oculaire"
         correct: false
       - id: "b"
-        label: "Empecher la lecture de l'ecran depuis un angle de 45° ou plus"
+        label: "Empecher la lecture de l'écran depuis un angle de 45° ou plus"
         correct: true
       - id: "c"
         label: "Bloquer les virus"
         correct: false
-    explanation: "Le privacy filter (filtre de confidentialite) noircit l'ecran vu de cote. Investissement de 30 € qui protege contre le shoulder-surfing au quotidien."
+    explanation: "Le privacy filter (filtre de confidentialité) noircit l'écran vu de côté. Investissement de 30 € qui protege contre le shoulder-surfing au quotidien."
 
-  - question: "Pour une action vraiment sensible (paiement, change de mot de passe maitre), je prefere :"
+  - question: "Pour une action vraiment sensible (paiement, change de mot de passe maître), je prefere :"
     choices:
       - id: "a"
         label: "Le Wi-Fi du coworking - c'est le plus rapide"
@@ -83,9 +83,9 @@ quiz:
         label: "Mon partage de connexion 4G/5G personnel"
         correct: true
       - id: "c"
-        label: "N'importe quel reseau ouvert"
+        label: "N'importe quel réseau ouvert"
         correct: false
-    explanation: "La 4G/5G operateur passe par un reseau cellulaire isole. Le Wi-Fi public, meme legitime, partage le segment reseau avec tous les autres utilisateurs."
+    explanation: "La 4G/5G opérateur passe par un réseau cellulaire isole. Le Wi-Fi public, même legitime, partage le segment réseau avec tous les autres utilisateurs."
 ---
 
 ## Pour aller plus loin

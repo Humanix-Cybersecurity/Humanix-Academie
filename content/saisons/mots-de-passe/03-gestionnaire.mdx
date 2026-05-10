@@ -7,30 +7,30 @@ xpReward: 60
 scenario: |
   Mardi 14h. Sophie, RH, te demande : "On entend partout qu'il faut un gestionnaire
   de mots de passe. Bitwarden, 1Password, Dashlane, KeePass... lequel je prends pour
-  moi et pour mon equipe ?"
+  moi et pour mon équipe ?"
 
   Tu ouvres ton ordi, tu cherches "meilleur gestionnaire mot de passe". 247 articles
   s'ouvrent, tous avec des liens d'affiliation. Tu n'as pas envie d'en lire 10.
 
-  Sophie ajoute : "On a 18 personnes dans la boite. Budget : pas plus de 5 €/personne/mois.
+  Sophie ajoute : "On a 18 personnes dans la boîte. Budget : pas plus de 5 €/personne/mois.
   Et on prefere un acteur europeen si possible."
 
   Tu te dis qu'il faut bien finir par trancher.
 choices:
   - id: "a"
-    label: "Tout le monde sur le meme : Bitwarden Business (open source, FR/UE)"
+    label: "Tout le monde sur le même : Bitwarden Business (open source, FR/UE)"
     outcome: "good"
     feedback: "Excellent choix. Bitwarden Business : 4 €/user/mois, open source AGPL, possibilite de self-host, conforme RGPD. C'est le standard 2026 pour les PME."
     points: 30
   - id: "b"
     label: "Chacun choisit le sien - un excel partage suffira"
     outcome: "bad"
-    feedback: "Tres mauvaise idee. Un excel partage = mots de passe en clair, indexable, sans audit, sans rotation. C'est le scenario type de la fuite massive."
+    feedback: "Très mauvaise idée. Un excel partage = mots de passe en clair, indexable, sans audit, sans rotation. C'est le scenario type de la fuite massive."
     points: -10
   - id: "c"
     label: "1Password Business - le plus connu, donc le plus sur"
     outcome: "neutral"
-    feedback: "Choix viable mais 8 USD/user/mois (au-dessus du budget) et hebergement US. Pas la priorite face a la contrainte budget + souverainete."
+    feedback: "Choix viable mais 8 USD/user/mois (au-dessus du budget) et hebergement US. Pas la priorité face a la contrainte budget + souverainete."
     points: 5
   - id: "d"
     label: "KeePass + cloud OneDrive partage"
@@ -40,11 +40,11 @@ choices:
 debrief: |
   Un gestionnaire de mots de passe, c'est l'investissement cyber a plus haut ROI
   pour une PME : **5 €/user/mois pour stopper environ 80 % des compromissions
-  par credential stuffing** (la 1ere methode des attaquants).
+  par credential stuffing** (la 1ere méthode des attaquants).
 
   Les 4 criteres pour choisir en 2026 :
 
-  1. **Multi-user / equipe** : capacite a creer des coffres partages par service,
+  1. **Multi-user / équipe** : capacité a créer des coffres partages par service,
      droits granulaires, onboarding/offboarding propres. Eliminer les solutions
      "perso" pour un usage pro.
 
@@ -52,20 +52,20 @@ debrief: |
      hebergement UE (RGPD natif, pas de Cloud Act). Bitwarden gagne sur ces
      deux criteres.
 
-  3. **MFA et passkeys** : doit supporter le MFA pour acceder au coffre lui-meme,
+  3. **MFA et passkeys** : doit supporter le MFA pour acceder au coffre lui-même,
      et stocker des passkeys (cf. module 06) pour preparer l'avenir sans mot
      de passe.
 
-  4. **Audit & alertes** : doit detecter les mots de passe faibles, reutilises,
+  4. **Audit & alertes** : doit détecter les mots de passe faibles, reutilises,
      leakes (HaveIBeenPwned integre), et alerter sur les fuites publiques
      concernant le domaine de l'entreprise.
 
-  **Le top 3 pour PME francaise en 2026** :
+  **Le top 3 pour PME française en 2026** :
   - **Bitwarden Business** (4 €/user/mois, open source, hebergement UE possible)
-  - **Dashlane Business** (5,75 €/user/mois, francais)
+  - **Dashlane Business** (5,75 €/user/mois, français)
   - **Proton Pass Business** (4 €/user/mois, suisse, integre a Proton Mail)
 
-  La regle universelle : peu importe celui que tu choisis, le pire choix c'est
+  La règle universelle : peu importe celui que tu choisis, le pire choix c'est
   de **ne pas en avoir**. Un mauvais gestionnaire vaut mille fois un excel.
 quiz:
   - question: "Quel est l'investissement cyber a plus haut ROI pour une PME ?"
@@ -80,22 +80,22 @@ quiz:
     choices:
       - { id: "a", label: "Parce que c'est moins beau", correct: false }
       - { id: "b", label: "Mots de passe en clair, indexable, sans audit, sans rotation", correct: true }
-      - { id: "c", label: "Parce que ca prend trop de place", correct: false }
+      - { id: "c", label: "Parce que ça prend trop de place", correct: false }
       - { id: "d", label: "Parce que les commerciaux n'aiment pas excel", correct: false }
-    explanation: "Un excel partage : tout est en clair, n'importe quelle indexation cloud peut leaker, aucun audit possible, aucune rotation, aucune protection MFA. C'est exactement ce qu'il faut eviter."
+    explanation: "Un excel partage : tout est en clair, n'importe quelle indexation cloud peut leaker, aucun audit possible, aucune rotation, aucune protection MFA. C'est exactement ce qu'il faut éviter."
 
   - question: "Pourquoi privilegier un gestionnaire open source comme Bitwarden ?"
     choices:
       - { id: "a", label: "Parce que c'est gratuit", correct: false }
       - { id: "b", label: "Auditabilite du code + hebergement UE possible (RGPD/Cloud Act)", correct: true }
       - { id: "c", label: "Parce que c'est plus rapide", correct: false }
-      - { id: "d", label: "Parce que c'est dans une langue francaise", correct: false }
-    explanation: "Open source = code auditable par n'importe qui (notamment l'ANSSI a deja audite Bitwarden). Hebergement UE = pas de Cloud Act US. Ce sont les 2 criteres souverainete + transparence."
+      - { id: "d", label: "Parce que c'est dans une langue française", correct: false }
+    explanation: "Open source = code auditable par n'importe qui (notamment l'ANSSI a déjà audite Bitwarden). Hebergement UE = pas de Cloud Act US. Ce sont les 2 criteres souverainete + transparence."
 
-  - question: "Quelle est la regle universelle quand on hesite entre plusieurs gestionnaires ?"
+  - question: "Quelle est la règle universelle quand on hesite entre plusieurs gestionnaires ?"
     choices:
       - { id: "a", label: "Choisir le plus cher pour avoir le meilleur", correct: false }
-      - { id: "b", label: "Le pire choix c'est de ne pas en avoir - meme un mauvais vaut mieux qu'un excel", correct: true }
+      - { id: "b", label: "Le pire choix c'est de ne pas en avoir - même un mauvais vaut mieux qu'un excel", correct: true }
       - { id: "c", label: "Attendre la version finale", correct: false }
       - { id: "d", label: "Demander a son banquier", correct: false }
     explanation: "Tous les gestionnaires reconnus sont meilleurs qu'un excel partage. L'objectif est d'agir, pas de comparer pendant 6 mois pendant que les credentials fuient."

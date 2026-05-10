@@ -1,5 +1,5 @@
 ---
-title: "Les 3 portes d'entree d'un ransomware"
+title: "Les 3 portes d'entrée d'un ransomware"
 durationMinutes: 7
 persona: "tous"
 objective: "Identifier les 3 vecteurs d'infection majeurs et les bonnes pratiques pour chacun"
@@ -7,22 +7,22 @@ xpReward: 60
 scenario: |
   Tu es RSSI dans une PME de 120 personnes. Le dernier scan de risque montre 3 chantiers prioritaires pour reduire le risque ransomware. Le DAF te demande : "Si on ne peut investir que dans UN sujet ce trimestre, lequel a le meilleur ROI ?"
 
-  Avant de repondre, tu dois identifier la principale porte d'entree des ransomwares en PME francaise (2024-2026 selon ANSSI et CERT-FR). Ta lecture des stats te dit quoi ?
+  Avant de répondre, tu dois identifier la principale porte d'entrée des ransomwares en PME française (2024-2026 selon ANSSI et CERT-FR). Ta lecture des stats te dit quoi ?
 choices:
   - id: "a"
     label: "Les vulnerabilites zero-day sur les logiciels - il faut tout patcher 24/7"
     outcome: "bad"
-    feedback: "Faux. Les zero-day sont rares (~5 % des intrusions). Ce sont les attaques targetting les grands groupes ou les Etats. Les PME francaises sont massivement attaquees par 3 vecteurs plus banaux."
+    feedback: "Faux. Les zero-day sont rares (~5 % des intrusions). Ce sont les attaques targetting les grands groupes ou les États. Les PME françaises sont massivement attaquees par 3 vecteurs plus banaux."
     points: -5
   - id: "b"
     label: "Le phishing email avec piece jointe ou lien malveillant - c'est de loin le vecteur #1 (~70 % des cas)"
     outcome: "good"
-    feedback: "Exactement. La sensibilisation au phishing reste l'investissement #1 a ROI le plus eleve. Suivi par la double authentification (vol de credentials) et le patching des services exposes."
+    feedback: "Exactement. La sensibilisation au phishing reste l'investissement #1 a ROI le plus élève. Suivi par la double authentification (vol de credentials) et le patching des services exposes."
     points: 30
   - id: "c"
     label: "Les attaques physiques (cle USB perdue dans le parking)"
     outcome: "bad"
-    feedback: "Cas marginal en France (~1 % des incidents). Tres mediatise mais non representatif du volume reel d'attaques."
+    feedback: "Cas marginal en France (~1 % des incidents). Très mediatise mais non representatif du volume reel d'attaques."
     points: -5
   - id: "d"
     label: "Les comptes utilisateurs voles via fuites de mots de passe non MFA - gros vecteur"
@@ -34,11 +34,11 @@ debrief: |
 
   **PORTE 1 (~70 %) : Phishing email**
 
-  Un collaborateur recoit un email avec :
+  Un collaborateur reçoit un email avec :
   - Une **piece jointe piegee** (Word/Excel avec macro malveillante, PDF avec exploit, ZIP avec executable)
   - Un **lien vers une fausse page** (de connexion, de paiement, de partage de document)
 
-  Le clic suffit dans certains cas, mais le plus souvent il faut une **action utilisateur** (activer les macros, saisir ses credentials, telecharger un fichier).
+  Le clic suffit dans certains cas, mais le plus souvent il faut une **action utilisateur** (activer les macros, saisir ses credentials, télécharger un fichier).
 
   **Defenses :**
   - Sensibilisation phishing (saison `phishing` 6/6 dans Humanix)
@@ -48,11 +48,11 @@ debrief: |
 
   **PORTE 2 (~20 %) : Identifiants voles + acces sans MFA**
 
-  Un attaquant achete tes identifiants sur le dark web (provenance : fuite tierce, phishing precedent, reuse de mot de passe). Il se connecte a ton VPN d'entreprise ou a ton bureau a distance - sans MFA, c'est ouvert.
+  Un attaquant achete tes identifiants sur le dark web (provenance : fuite tierce, phishing précédent, reuse de mot de passe). Il se connecte a ton VPN d'entreprise ou a ton bureau a distance - sans MFA, c'est ouvert.
 
   **Defenses :**
   - **MFA partout** sur tous les acces externes (VPN, RDP, mail, SaaS)
-  - Detection de connexions atypiques (geo-localisation, horaires)
+  - Détection de connexions atypiques (geo-localisation, horaires)
   - Surveillance des fuites de credentials (HaveIBeenPwned, observatoire Humanix)
 
   **PORTE 3 (~10 %) : Services exposes non patches**
@@ -61,16 +61,16 @@ debrief: |
 
   **Defenses :**
   - **Patching mensuel discipline** (jamais > 30 jours sur un service expose)
-  - **Surface d'attaque minimale** : ne pas exposer ce qui n'a pas besoin de l'etre
+  - **Surface d'attaque minimale** : ne pas exposer ce qui n'a pas besoin de l'être
   - **Bastion / passerelle** pour acces distant (jamais RDP direct sur internet)
 
-  **Le vrai ROI des investissements securite ransomware :**
+  **Le vrai ROI des investissements sécurité ransomware :**
   1. Sensibilisation phishing (50 % du risque pour 5-10 k€/an)
   2. MFA partout (15 % du risque pour 0-5 k€/an)
   3. Patching discipline (10 % du risque pour le temps IT, gratuit)
-  4. Sauvegardes immuables (la derniere ligne de defense - voir saison `sauvegardes`)
+  4. Sauvegardes immuables (la dernière ligne de defense - voir saison `sauvegardes`)
 quiz:
-  - question: "Quel est le vecteur d'infection ransomware #1 en PME francaise ?"
+  - question: "Quel est le vecteur d'infection ransomware #1 en PME française ?"
     choices:
       - id: "a"
         label: "Le phishing email (~70 % des cas)"
@@ -81,7 +81,7 @@ quiz:
       - id: "c"
         label: "Les cles USB malveillantes"
         correct: false
-    explanation: "Le phishing represente environ 70 % des intrusions ransomware en France. C'est pour ca que la sensibilisation reste l'investissement #1."
+    explanation: "Le phishing represente environ 70 % des intrusions ransomware en France. C'est pour ça que la sensibilisation reste l'investissement #1."
 
   - question: "Le MFA (double authentification) protege contre :"
     choices:
@@ -102,16 +102,16 @@ quiz:
         label: "Une sauvegarde locale sur disque dur connecte au PC"
         correct: false
       - id: "b"
-        label: "Une sauvegarde immuable / hors-ligne / 3-2-1 (3 copies, 2 supports differents, 1 hors-site)"
+        label: "Une sauvegarde immuable / hors-ligne / 3-2-1 (3 copies, 2 supports différents, 1 hors-site)"
         correct: true
       - id: "c"
         label: "La synchronisation OneDrive / Google Drive"
         correct: false
-    explanation: "Le ransomware chiffre les disques connectes ET les sauvegardes synchronisees. La regle 3-2-1 (3 copies, 2 supports, 1 hors-site) avec immutabilite resiste."
+    explanation: "Le ransomware chiffre les disques connectes ET les sauvegardes synchronisees. La règle 3-2-1 (3 copies, 2 supports, 1 hors-site) avec immutabilite resiste."
 ---
 
 ## Pour aller plus loin
 
-L'ironie strategique du ransomware : 90 % des defenses reposent sur **3 disciplines simples** - sensibilisation phishing, MFA partout, patching mensuel. Ce sont des sujets organisationnels avant d'etre techniques. La PME qui les applique reduit son risque par 10. Celle qui investit dans les solutions miracles a 50 000 € sans appliquer ces bases ne reduit son risque que de moitie.
+L'ironie stratégique du ransomware : 90 % des defenses reposent sur **3 disciplines simples** - sensibilisation phishing, MFA partout, patching mensuel. Ce sont des sujets organisationnels avant d'être techniques. La PME qui les applique reduit son risque par 10. Celle qui investit dans les solutions miracles a 50 000 € sans appliquer ces bases ne reduit son risque que de moitie.
 
 > "Le ransomware tombe sur ceux qui n'ont pas fait les bases. Investis dans les bases."
