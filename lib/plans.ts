@@ -54,6 +54,8 @@ export const FEATURE_MIN_PLAN = {
   vishing: "pro",
   // Smishing IA souverain (Mistral SMS)
   smishing: "pro",
+  // Quishing (QR code phishing physique : posters imprimables)
+  quishing: "pro",
   // Marketplace de modules (officiels + communaute)
   marketplace: "pro",
   // SSO entreprise (SAML, SCIM)
