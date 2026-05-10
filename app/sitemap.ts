@@ -6,14 +6,21 @@
 // par Google / Bing / Qwant / Ecosia. Pas les zones logues (/admin, /apprendre,
 // /profil, etc.) qui sont déjà en disallow dans robots.ts.
 //
+// Le sitemap est COMPLETE dynamiquement avec :
+//   - Les anecdotes publiees (/anecdotes/[slug]) -> dernieres news
+//   - Les experts publics (/experts/[slug]) -> profils contributeurs
+//   - Les incidents urgence-cyber (/urgence-cyber/[slug]) -> hub d'urgence
+//
 // Priorites :
 //   - 1.0 : page d'accueil (la plus importante)
-//   - 0.9 : pages strategiques (tarifs, demo, comparatif, lancement-oss, dpo)
+//   - 0.9 : pages strategiques (tarifs, demo, comparatif, dpo)
 //   - 0.7 : pages identite (manifeste, sécurité, communaute, presse)
 //   - 0.5 : outils gratuits (audit-flash, cyber-meteo, anecdotes, observatoire)
 //   - 0.3 : pages legales (mentions, cgv, cgu, cookies, confidentialite)
 
 import type { MetadataRoute } from "next";
+import { db } from "@/lib/db";
+import { INCIDENTS } from "@/lib/urgence-cyber/incidents";
 
 const PROD_URL =
   process.env.NEXT_PUBLIC_APP_URL ?? "https://humanix-cybersecurity.fr";
@@ -74,12 +81,68 @@ const PAGES: SitemapEntry[] = [
   { path: "/accessibilite", priority: 0.3, changeFrequency: "yearly" },
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+// La fonction est async pour autoriser les requetes Prisma (anecdotes,
+// experts). En cas de DB down au moment de la generation, on degrade
+// gracieusement vers la liste statique sans planter la build.
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
-  return PAGES.map((p) => ({
+  const staticEntries: MetadataRoute.Sitemap = PAGES.map((p) => ({
     url: `${PROD_URL}${p.path}`,
     lastModified: now,
     changeFrequency: p.changeFrequency,
     priority: p.priority,
   }));
+
+  // Incidents urgence-cyber (statiques en code, pas en DB)
+  const urgenceEntries: MetadataRoute.Sitemap = INCIDENTS.map((i) => ({
+    url: `${PROD_URL}/urgence-cyber/${i.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.5,
+  }));
+
+  // Anecdotes publiees (dynamiques, depuis DB)
+  let anecdoteEntries: MetadataRoute.Sitemap = [];
+  try {
+    const anecdotes = await db.weeklyAnecdote.findMany({
+      where: { isActive: true, publishedAt: { not: null } },
+      select: { slug: true, updatedAt: true, publishedAt: true },
+      orderBy: { publishedAt: "desc" },
+      take: 200,
+    });
+    anecdoteEntries = anecdotes.map((a) => ({
+      url: `${PROD_URL}/anecdotes/${a.slug}`,
+      lastModified: a.updatedAt,
+      changeFrequency: "yearly" as const,
+      priority: 0.5,
+    }));
+  } catch (err) {
+    // DB down ou ENV manquant a la generation : on degrade sans planter.
+    console.warn("sitemap: anecdotes lookup failed, skipping", err);
+  }
+
+  // Experts publics (profils marketplace)
+  let expertEntries: MetadataRoute.Sitemap = [];
+  try {
+    const experts = await db.expertProfile.findMany({
+      where: { isPublished: true },
+      select: { slug: true, updatedAt: true },
+      take: 200,
+    });
+    expertEntries = experts.map((e) => ({
+      url: `${PROD_URL}/experts/${e.slug}`,
+      lastModified: e.updatedAt,
+      changeFrequency: "monthly" as const,
+      priority: 0.4,
+    }));
+  } catch (err) {
+    console.warn("sitemap: experts lookup failed, skipping", err);
+  }
+
+  return [
+    ...staticEntries,
+    ...urgenceEntries,
+    ...anecdoteEntries,
+    ...expertEntries,
+  ];
 }

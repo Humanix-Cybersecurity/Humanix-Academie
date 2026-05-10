@@ -31,11 +31,30 @@
 
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
+import { BreadcrumbJsonLd } from "@/lib/seo/jsonld";
+
+const DPO_TITLE = "Espace DPO — Sensibilisation RGPD-by-design | Humanix Académie";
+const DPO_DESC =
+  "Pour les Délégués à la Protection des Données : Humanix Académie est RGPD-by-design. Registre des traitements fourni, DPA modèle pré-signé, procédure 72 h CNIL pré-remplie, hébergement Scaleway Paris, audit log complet. Sensibilisation cyber qu'un DPO peut auditer et déléguer.";
 
 export const metadata = {
-  title: "Espace DPO - Humanix Académie",
-  description:
-    "Pour les Délégués à la Protection des Données : Humanix Académie est RGPD-by-design. Registre, DPA modèle, 72h pré-rempli, hébergement Scaleway Paris, audit log complet. Plateforme de sensibilisation cyber qu'un DPO peut auditer et déléguer.",
+  title: DPO_TITLE,
+  description: DPO_DESC,
+  alternates: { canonical: "/dpo" },
+  openGraph: {
+    title: DPO_TITLE,
+    description: DPO_DESC,
+    type: "website",
+    url: "/dpo",
+    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Espace DPO — Sensibilisation RGPD-by-design",
+    description:
+      "Registre des traitements, DPA modèle, procédure 72 h pré-remplie. Plateforme cyber qu'un DPO peut auditer.",
+    images: ["/logo-humanix-academie-512.png"],
+  },
 };
 
 const PROMESSES = [
@@ -104,6 +123,12 @@ const PROMESSES = [
 export default function DpoLandingPage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", path: "/" },
+          { name: "Espace DPO", path: "/dpo" },
+        ]}
+      />
       {/* ================================================================
           1. HERO - invitation au DPO
           ================================================================ */}
