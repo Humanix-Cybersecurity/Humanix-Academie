@@ -292,7 +292,7 @@ async function InscriptionInner({
             <span className="font-semibold text-gray-700 dark:text-gray-200">
               🏢 Pour ton organisation ?
             </span>{" "}
-            Pack PME, Enterprise, SecNumCloud :{" "}
+            Pack Pro, Enterprise, SecNumCloud :{" "}
             <Link
               href="/contact?sujet=abonnement"
               className="text-accent-700 dark:text-accent-300 font-semibold hover:underline"

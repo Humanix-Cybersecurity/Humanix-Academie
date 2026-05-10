@@ -128,7 +128,7 @@ export default async function DemandeAbonnementPage({
                   type="text"
                   required
                   maxLength={120}
-                  placeholder="Ma PME SAS"
+                  placeholder="Mon organisation"
                   className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none"
                 />
               </div>
