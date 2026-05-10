@@ -22,6 +22,8 @@ import {
   isPaidPlan,
   type PlanId,
 } from "@/lib/plans";
+import { PAYPLUG_BUYABLE_PLANS } from "@/lib/payplug";
+import PlanUpgradeOptions from "@/components/PlanUpgradeOptions";
 
 export const dynamic = "force-dynamic";
 
@@ -134,29 +136,35 @@ export default async function BillingPage() {
         </div>
       </section>
 
+      {/* === UPGRADE — paliers supérieurs au plan courant === */}
+      {upgradePlan && (
+        <section
+          aria-labelledby="upgrade-title"
+          className="space-y-3"
+        >
+          <h2
+            id="upgrade-title"
+            className="font-display text-xl font-extrabold text-primary-500 dark:text-accent-300"
+          >
+            Faire évoluer ton plan
+          </h2>
+          <p className="text-sm text-gray-600 dark:text-gray-300">
+            Tu peux changer de palier à tout moment. Le checkout Payplug
+            calcule le prorata, et ton accès passe au plan supérieur dès
+            confirmation du paiement.
+          </p>
+          <PlanUpgradeOptions
+            currentPlan={state.plan}
+            buyablePlans={PAYPLUG_BUYABLE_PLANS}
+          />
+        </section>
+      )}
+
       {/* === ACTIONS === */}
       <section aria-labelledby="actions-title" className="grid sm:grid-cols-2 gap-4">
         <h2 id="actions-title" className="sr-only">
           Actions disponibles
         </h2>
-
-        {/* Upgrade */}
-        {upgradePlan && (
-          <Link
-            href="/tarifs"
-            className="card hover:shadow-lg transition-shadow border-cyan-200 dark:border-cyan-900/40 bg-gradient-to-br from-cyan-50 to-white dark:from-cyan-950/30 dark:to-slate-900"
-          >
-            <p className="text-xs uppercase tracking-widest text-cyan-700 dark:text-cyan-300 font-bold mb-1">
-              Faire évoluer
-            </p>
-            <h3 className="font-display text-lg font-extrabold text-cyan-800 dark:text-cyan-200 mb-2">
-              ↗ Passer en {PLAN_EMOJI[upgradePlan]} {PLAN_LABEL[upgradePlan]}
-            </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300">
-              Plus de sièges, plus de fonctionnalités. {priceLine(upgradePlan)}
-            </p>
-          </Link>
-        )}
 
         {/* Portail Payplug self-service */}
         {isPaidPlan(state.plan) && (
