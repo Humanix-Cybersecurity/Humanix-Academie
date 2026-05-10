@@ -27,16 +27,16 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: {
     title:
-      "Humanix Académie — La cybersécurité de votre PME, en 5 minutes par semaine",
+      "Humanix Académie — La cyber pour tous, à partir de 5 minutes par semaine",
     description:
-      "Pas un cours d'expert. Une habitude tranquille. Plateforme française open source de cybersensibilisation pour PME.",
+      "Pas un cours d'expert. Une habitude tranquille. Plateforme française open source de cybersensibilisation pour particuliers, équipes et organisations de toute taille.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Humanix Académie — Cybersécurité PME",
+    title: "Humanix Académie — La cyber pour tous",
     description:
-      "5 minutes par semaine. RGPD-compliant. Bientôt open source AGPLv3.",
+      "À partir de 5 minutes par semaine. RGPD-compliant. Open source AGPLv3.",
   },
 };
 
@@ -77,10 +77,10 @@ export default async function HomePage() {
               className="font-display text-4xl sm:text-6xl lg:text-7xl font-extrabold text-primary-500 dark:text-accent-300 leading-[1.05] mb-6 animate-slide-up"
               style={{ animationDelay: "180ms" }}
             >
-              La cybersécurité de votre PME,
+              La cyber pour tous,
               <br />
               <span className="bg-gradient-to-r from-accent-500 via-primary-500 to-accent-500 bg-clip-text text-transparent animate-gradient">
-                en cinq minutes par semaine.
+                à partir de cinq minutes par semaine.
               </span>
             </h1>
 
@@ -89,8 +89,9 @@ export default async function HomePage() {
               style={{ animationDelay: "300ms" }}
             >
               Pas un cours d'expert. Pas un kit anti-peur. Une habitude
-              tranquille. Conçue pour vos collaborateurs - y compris ceux qui ne
-              sont pas à l'aise avec l'informatique.
+              tranquille. Pour toi, ton équipe, ta famille, ton association,
+              ta boîte — quelle que soit sa taille, et même si tu n'es pas
+              à l'aise avec l'informatique.
             </p>
 
             <div
@@ -433,7 +434,7 @@ export default async function HomePage() {
           ============================================================ */}
       <section className="text-center max-w-3xl mx-auto px-4 pb-20">
         <blockquote className="font-display italic text-lg sm:text-2xl text-gray-600 dark:text-gray-300 leading-relaxed">
-          « La cybersécurité d'une PME, c'est moins une affaire d'expert qu'une
+          « La cybersécurité, c'est moins une affaire d'expert qu'une
           habitude tranquille. »
         </blockquote>
         <p

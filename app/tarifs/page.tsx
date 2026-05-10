@@ -575,7 +575,7 @@ export default async function TarifsPage({
               </h2>
               <ul className="space-y-2 text-gray-700">
                 <Roi
-                  label="Une attaque par phishing réussie en PME"
+                  label="Une attaque par phishing réussie chez une organisation française"
                   value="coûte en moyenne 35 000 € (Tracfin 2024)"
                 />
                 <Roi
@@ -593,8 +593,8 @@ export default async function TarifsPage({
               </ul>
               <p className="text-sm text-gray-600 mt-4 italic">
                 À 900 €/an, l'investissement est rentabilisé dès la première
-                attaque évitée - qui statistiquement arrive en 18 mois sur une
-                PME non-formée.
+                attaque évitée — qui statistiquement arrive en 18 mois pour une
+                équipe non-formée.
               </p>
             </div>
           </div>
