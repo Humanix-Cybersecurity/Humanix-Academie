@@ -116,7 +116,7 @@ export async function generateCoachAdvice(
   }
   // PRIORITE 2 - Module obligatoire non fait
   else if (missingMandatory) {
-    primaryMessage = `Le module "${missingMandatory.saison.title}" est obligatoire dans ta PME et tu ne l'as pas encore terminé. Quelques minutes suffisent.`;
+    primaryMessage = `Le module "${missingMandatory.saison.title}" est obligatoire dans ton organisation et tu ne l'as pas encore terminé. Quelques minutes suffisent.`;
     recommendation = {
       type: "module",
       label: `Continuer "${missingMandatory.saison.title}"`,
@@ -156,7 +156,7 @@ export async function generateCoachAdvice(
     primaryMessage =
       user.progress.length >= 5
         ? `Tu déchires. Ton score de risque est solide. Garde le cap.`
-        : `Tu progresses bien. Continue ce rythme et tu vas devenir une référence cyber dans ta PME.`;
+        : `Tu progresses bien. Continue ce rythme et tu vas devenir une référence cyber autour de toi.`;
     recommendation = {
       type: "library",
       label: "Découvrir un article : MFA en 10 minutes",

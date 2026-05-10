@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Page publique CyberMalveillance.gouv.fr.
-// A11y RGAA AA + UI/UX différenciante. Cible : RSSI / dirigeant PME qui veut
-// savoir comment Humanix s'articule avec le dispositif officiel français.
+// A11y RGAA AA + UI/UX différenciante. Cible : RSSI, dirigeant, responsable
+// de sécurité, ou particulier curieux qui veut savoir comment Humanix
+// s'articule avec le dispositif officiel français.
 
 import Link from "next/link";
 
@@ -125,7 +126,7 @@ export default function CybermalveillanceIntegrationPage() {
                 cyber-anecdote du lundi
               </Link>{" "}
               relaie chaque mois une alerte officielle CyberMalveillance auprès
-              des dirigeants PME abonnés.
+              de tous les abonnés (dirigeants, RSSI, particuliers).
             </p>
           </article>
 

@@ -32,7 +32,7 @@ const PORTES = [
       ring: "border-cyan-200 dark:border-cyan-900/40",
       accent: "text-cyan-700 dark:text-cyan-300",
     },
-    body: "Tu deploies Humanix dans ta PME, en self-host ou en cloud. Tu as des questions, des retours, des bugs a signaler. Bienvenue - c'est ton experience qui ameliore le produit.",
+    body: "Tu deploies Humanix dans ta structure - boite, association, collectivite, ou en perso - en self-host ou en cloud. Tu as des questions, des retours, des bugs a signaler. Bienvenue - c'est ton experience qui ameliore le produit.",
     actions: [
       {
         label: "GitHub Discussions",
@@ -142,8 +142,9 @@ export default function CommunautePage() {
           >
             Humanix Academie est un projet ouvert. Code AGPLv3, decisions en
             clair sur GitHub, modules signes par leurs auteurs. Que tu sois
-            utilisatrice de PME, developpeur curieux, RSSI sur le terrain ou
-            partenaire editeur - il y a une porte d'entree pour toi.
+            apprenante en perso, utilisatrice en entreprise, developpeuse
+            curieuse, RSSI sur le terrain ou partenaire editeur - il y a une
+            porte d'entree pour toi.
           </p>
         </section>
       </HexBackdrop>

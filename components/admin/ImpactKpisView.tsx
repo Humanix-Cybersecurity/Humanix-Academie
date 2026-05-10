@@ -115,7 +115,7 @@ export default function ImpactKpisView({ kpis }: { kpis: ImpactKpis }) {
           ============================================================ */}
       <Section
         title="Couverture des sujets critiques"
-        subtitle="Les saisons qui couvrent les attaques les plus coûteuses pour une PME française"
+        subtitle="Les saisons qui couvrent les vecteurs d'attaque les plus courants côté humain"
         emoji="🛡"
       >
         <div className="rounded-3xl border-2 border-primary-200 dark:border-primary-900/40 bg-white dark:bg-slate-900 p-6 shadow-sm">

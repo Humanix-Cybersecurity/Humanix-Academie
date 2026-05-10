@@ -296,8 +296,8 @@ export default function GlpiIntegrationPage() {
           100 % open-source, 100 % souverain 🇫🇷
         </h2>
         <p className="opacity-90 mb-5">
-          GLPI est l'ITSM le plus déployé en PME française. Humanix s'y branche
-          nativement, sans dépendre d'un éditeur tiers.
+          GLPI est l'ITSM open-source le plus déployé en France. Humanix s'y
+          branche nativement, sans dépendre d'un éditeur tiers.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
           <Link

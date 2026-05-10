@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Generation PDF du rapport de conformite cyber pour la PME
+// Generation PDF du rapport de conformite cyber d'une organisation
 // Utilise @react-pdf/renderer (rendu serveur, pas besoin de browser)
 import React from "react";
 import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
