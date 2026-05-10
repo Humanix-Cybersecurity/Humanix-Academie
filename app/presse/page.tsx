@@ -12,17 +12,17 @@ export const metadata = {
     "Kit presse Humanix Académie : pitch, faits clés, citation fondateur, screenshots, logos téléchargeables, contact dédié journalistes. Launch OSS 26 mai 2026.",
 };
 
-const PITCH_30S = `Humanix Académie est la première plateforme française open source de cybersensibilisation pour PME. Distribuée sous licence AGPLv3, hébergée en France, conçue comme la brique humaine complémentaire de l'écosystème souverain (CISO Assistant, OpenCTI, Wazuh). Lancement le 26 mai 2026.`;
+const PITCH_30S = `Humanix Académie est la première plateforme française open source de cybersensibilisation pour tous : particuliers, équipes, associations, organisations de toute taille. Distribuée sous licence AGPLv3, hébergée en France, conçue comme la brique humaine complémentaire de l'écosystème souverain (CISO Assistant, OpenCTI, Wazuh). Lancement le 26 mai 2026.`;
 
-const PITCH_2MIN = `90 % des cyberattaques contre une PME française passent par un humain. 90 % des outils pour former cet humain viennent des États-Unis et coûtent 8 000 € à 30 000 € par an, hors de portée des TPE/PME.
+const PITCH_2MIN = `90 % des cyberattaques passent par un humain — peu importe la taille de la structure visée, du particulier piégé au grand groupe. 90 % des outils pour former cet humain viennent des États-Unis et coûtent 8 000 € à 30 000 € par an, hors de portée de l'écrasante majorité.
 
-Humanix Académie comble ce vide. C'est une plateforme de cybersensibilisation 100 % française, pensée pour les contraintes réelles des PME : modules de 5 minutes, gamification, mascotte évolutive, contenu en français, intégrations natives avec les outils français du quotidien (Lucca pour le HR, GLPI pour l'ITSM, Sekoia.io pour le SIEM, HarfangLab pour l'EDR, Mailinblack et Vade pour l'anti-phishing).
+Humanix Académie comble ce vide. C'est une plateforme de cybersensibilisation 100 % française, pensée pour s'adapter à tout contexte : un particulier qui veut protéger sa famille, une association qui débute, une équipe de 15 personnes, une PME, une collectivité, un grand groupe. Modules de 5 minutes, gamification, mascotte évolutive, contenu en français, intégrations natives avec les outils français du quotidien (Lucca pour le HR, GLPI pour l'ITSM, Sekoia.io pour le SIEM, HarfangLab pour l'EDR, Mailinblack et Vade pour l'anti-phishing).
 
-Le 26 mai 2026, Humanix-Cybersecurity ouvre l'intégralité du code source de la plateforme sous licence GNU AGPLv3, sur le modèle de CISO Assistant (intuitem) et OpenCTI (Filigran). La plateforme devient gratuite en self-host pour toute organisation qui souhaite l'héberger elle-même. Une offre cloud souveraine reste disponible à partir de 0 € par mois (forever-free, 5 utilisateurs), 19 € par mois (TPE 15 utilisateurs), ou 3 € par utilisateur par mois (PME standard) pour les organisations qui préfèrent que Humanix gère l'infrastructure.
+Le 26 mai 2026, Humanix-Cybersecurity ouvre l'intégralité du code source de la plateforme sous licence GNU AGPLv3, sur le modèle de CISO Assistant (intuitem) et OpenCTI (Filigran). La plateforme devient gratuite en self-host pour toute organisation qui souhaite l'héberger elle-même. Une offre cloud souveraine reste disponible à partir de 0 € par mois (forever-free, 5 utilisateurs), 19 € par mois (15 utilisateurs), ou 3 € par utilisateur par mois (Pro standard) pour les structures qui préfèrent que Humanix gère l'infrastructure.
 
 Le modèle économique est inspiré des éditeurs OSS français rentables : la plateforme est libre, les revenus viennent des services à forte valeur ajoutée (audit cyber, formation Qualiopi, RSSI externalisé, hébergement managé, accompagnement NIS2). Cible 24 mois : 180 à 250 k€ de chiffre d'affaires en solo, 350 à 500 k€ avec un premier collaborateur.
 
-Humanix Académie se positionne comme la brique humaine indispensable de l'écosystème open source cyber souverain français - un écosystème qui s'est déjà structuré autour de CISO Assistant pour la gouvernance, OpenCTI pour la threat intelligence, Wazuh pour la détection, mais où la sensibilisation des collaborateurs restait un trou béant.`;
+Humanix Académie se positionne comme la brique humaine indispensable de l'écosystème open source cyber souverain français — un écosystème qui s'est déjà structuré autour de CISO Assistant pour la gouvernance, OpenCTI pour la threat intelligence, Wazuh pour la détection, mais où la sensibilisation des collaborateurs et des particuliers restait un trou béant.`;
 
 const FAITS_CLES = [
   { label: "Date de lancement OSS", value: "Mardi 26 mai 2026" },
@@ -36,7 +36,7 @@ const FAITS_CLES = [
     value: "0 €/mois (forever-free, 5 utilisateurs)",
   },
   {
-    label: "Tarif PME standard",
+    label: "Tarif Pro standard",
     value: "3 €/utilisateur/mois (Cloud Pro)",
   },
   { label: "Hébergement", value: "France garantie (Scaleway Paris)" },
@@ -60,7 +60,7 @@ const FAITS_CLES = [
 const QUOTES = [
   {
     author: "Florian DURANO, fondateur Humanix-Cybersecurity",
-    text: "La cybersécurité ne doit pas être un luxe réservé aux grands comptes. Quand 90 % des attaques contre les PME passent par l'humain et que 90 % des outils pour former cet humain coûtent une fortune et viennent d'outre-Atlantique, il y a un problème politique. Notre réponse : un outil libre, souverain, accessible.",
+    text: "La cybersécurité ne doit pas être un luxe réservé aux grands comptes ni aux geeks. Quand 90 % des attaques passent par l'humain — particulier comme salarié — et que 90 % des outils pour former cet humain coûtent une fortune et viennent d'outre-Atlantique, il y a un problème politique. Notre réponse : un outil libre, souverain, accessible à tous.",
   },
   {
     author: "Florian DURANO, fondateur Humanix-Cybersecurity",
@@ -71,7 +71,7 @@ const QUOTES = [
 const FAQ_JOURNALISTES = [
   {
     q: "Pourquoi passer en open source maintenant ?",
-    a: "Trois raisons convergentes : NIS2 entrée en application en octobre 2024 met les PME sous pression, le retour de Trump 2 et les tensions géopolitiques rendent la souveraineté numérique européenne stratégique, et le modèle SaaS pur place Humanix en concurrence directe avec KnowBe4 et consorts sur leur terrain. L'open source retourne la situation.",
+    a: "Trois raisons convergentes : NIS2 entrée en application en octobre 2024 met les organisations sous pression, le retour de Trump 2 et les tensions géopolitiques rendent la souveraineté numérique européenne stratégique, et le modèle SaaS pur place Humanix en concurrence directe avec KnowBe4 et consorts sur leur terrain. L'open source retourne la situation.",
   },
   {
     q: "Comment Humanix gagne sa vie si le code est gratuit ?",
@@ -83,7 +83,7 @@ const FAQ_JOURNALISTES = [
   },
   {
     q: "Quelle est la cible utilisateur principale ?",
-    a: "Les TPE et PME françaises de 5 à 250 collaborateurs (cible primaire), les ESN cyber qui cherchent à équiper leurs clients PME (cible secondaire), et les collectivités locales soumises à NIS2 (cible tertiaire). Total marché adressable : ~150 000 entreprises en France.",
+    a: "Cible volontairement large : particuliers et familles (gratuit), équipes et organisations de toute taille — de 5 à plusieurs milliers de collaborateurs — associations, collectivités, ESN cyber qui équipent leurs clients. Total marché adressable potentiel : tous les actifs français + les particuliers connectés. Notre conviction : la cyber n'est pas un luxe d'entreprise, c'est une compétence de base de toute personne qui touche un clavier.",
   },
   {
     q: "Quels sont vos partenariats annoncés ?",
@@ -114,9 +114,10 @@ export default function PressePage() {
           </span>
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-          La première plateforme française de cybersensibilisation pour PME
-          passe en AGPLv3 le mardi 26 mai 2026. Voici tout ce dont vous avez
-          besoin pour en parler.
+          La première plateforme française de cybersensibilisation pour
+          tous — particuliers, équipes, organisations de toute taille —
+          passe en AGPLv3 le mardi 26 mai 2026. Voici tout ce dont vous
+          avez besoin pour en parler.
         </p>
       </header>
 
@@ -156,7 +157,8 @@ export default function PressePage() {
         </h2>
         <blockquote className="card border-l-4 border-primary-500 italic text-lg">
           Humanix Académie, c'est CISO Assistant pour le facteur humain : open
-          source AGPLv3, souverain français, accessible aux PME.
+          source AGPLv3, souverain français, accessible à tous (du
+          particulier au grand groupe).
         </blockquote>
       </section>
 

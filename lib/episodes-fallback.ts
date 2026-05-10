@@ -37,7 +37,7 @@ const CATEGORIE_PROFILS: Record<
 > = {
   // ==== Phishing & ingenierie sociale ====
   phishing: {
-    persona: "Vous êtes collaborateur d'une PME française",
+    persona: "Vous êtes collaborateur d'une organisation française",
     objective: "Apprendre à repérer un message suspect avant de cliquer",
     scenarioTemplate: (t) =>
       `Vous êtes au bureau, votre boîte mail vous notifie. Un message arrive - son contenu est lié au sujet : "${t}". Le message vous demande une action rapide. Vous regardez l'expéditeur, l'URL et le ton. Que faites-vous ?`,
@@ -77,7 +77,7 @@ const CATEGORIE_PROFILS: Record<
       "Transférer le mail à toute l'équipe pour avoir leur avis",
     ],
     quizExplanation:
-      "La vérification de l'expéditeur réel + le signalement IT sont les 2 actions qui protègent la PME. Cliquer ou transférer largement = amplifier le risque.",
+      "La vérification de l'expéditeur réel + le signalement IT sont les 2 actions qui protègent l'organisation. Cliquer ou transférer largement = amplifier le risque.",
   },
 
   // ==== Mots de passe ====
@@ -172,7 +172,7 @@ const CATEGORIE_PROFILS: Record<
   // ==== IA generative ====
   "ia-generative": {
     persona:
-      "Vous êtes collaborateur PME utilisant ChatGPT/Mistral au quotidien",
+      "Vous êtes collaborateur utilisant ChatGPT/Mistral au quotidien",
     objective: "Utiliser l'IA générative sans fuiter de données sensibles",
     scenarioTemplate: (t) =>
       `Vous utilisez une IA pour gagner du temps. Sujet : "${t}". Vous êtes sur le point de coller du contenu pro dans le prompt. Que faites-vous ?`,
@@ -219,8 +219,8 @@ const CATEGORIE_PROFILS: Record<
 
   // ==== NIS2 ====
   "nis2-pme": {
-    persona: "Vous êtes dirigeant·e ou RSSI d'une PME française",
-    objective: "Comprendre l'impact NIS2 sur votre PME",
+    persona: "Vous êtes dirigeant·e ou RSSI d'une organisation française",
+    objective: "Comprendre l'impact NIS2 sur votre organisation",
     scenarioTemplate: (t) =>
       `Votre entreprise est potentiellement concernée par la directive NIS2. Sujet du jour : "${t}". Vous devez prendre une décision de gouvernance.`,
     choices: [
@@ -265,7 +265,7 @@ const CATEGORIE_PROFILS: Record<
 
   // ==== Default fallback (catégorie inconnue) ====
   default: {
-    persona: "Vous êtes collaborateur d'une PME",
+    persona: "Vous êtes collaborateur d'une organisation",
     objective: "Adopter le bon réflexe cyber",
     scenarioTemplate: (t) =>
       `Vous êtes confronté à une situation cyber concrète sur le sujet : "${t}". Vous devez réagir vite, mais bien. Quelle posture adopter ?`,
