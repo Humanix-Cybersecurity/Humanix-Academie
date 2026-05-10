@@ -16,6 +16,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import MarkdownView from "@/components/MarkdownView";
 
 type Props = {
   saisonSlug: string;
@@ -141,8 +142,12 @@ export default function HexRecap(props: Props) {
 
       {state.kind === "answer" && (
         <>
-          <div className="rounded-xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-4 text-sm text-gray-800 dark:text-gray-100 leading-relaxed whitespace-pre-line">
-            {state.recap}
+          {/* Le contenu Mistral arrive en Markdown (gras **texte**, listes,
+              parfois liens et tables). On le passe a MarkdownView qui rend
+              en composants React natifs (pas de dangerouslySetInnerHTML),
+              avec whitelist anti-XSS sur les liens. */}
+          <div className="rounded-xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-4 text-sm text-gray-800 dark:text-gray-100">
+            <MarkdownView content={state.recap} />
           </div>
           <p className="text-[11px] text-gray-500 dark:text-gray-400 italic mt-3">
             Synthèse adaptée {personaLabel(state.persona)} sur les{" "}
