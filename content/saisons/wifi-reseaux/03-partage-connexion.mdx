@@ -1,0 +1,159 @@
+---
+title: "Le partage de connexion mobile (la solution)"
+durationMinutes: 4
+persona: "tous-collaborateurs"
+objective: "Configurer le partage de connexion 4G/5G iOS/Android, comprendre pourquoi c'est plus sur que tout WiFi public, evaluer la consommation data"
+xpReward: 30
+scenario: |
+  Tu es a l'aeroport, 1h d'attente avant ton vol. Tu dois traiter 30
+  emails dont 5 avec piece jointe (factures fournisseurs).
+
+  Le WiFi gratuit de l'aeroport demande ton email + telephone + acceptation
+  pub. Le WiFi payant est a 14 EUR / heure.
+
+  Tu as un forfait mobile illimite chez un operateur FR (Orange / SFR /
+  Bouygues / Free). Tu as ton tel dans la poche.
+
+  Tu fais quoi pour bosser en securite pendant 1h ?
+choices:
+  - id: "a"
+    label: "Je connecte mon laptop au WiFi gratuit, c'est plus simple"
+    outcome: "bad"
+    feedback: "Risque eleve : Evil Twin possible (cf. ep 01), portail captif piege (ep 02), interception MitM. Pour 1h de bureau distant, le risque ne vaut pas la 'simplicite'."
+    points: -10
+  - id: "b"
+    label: "J'active le partage de connexion 4G/5G de mon tel et je connecte mon laptop dessus"
+    outcome: "good"
+    feedback: "Solution optimale. Connexion via l'infra securisee de ton operateur (impossible a spoofer en local). Consommation data faible pour email + PJ : ~50-200 Mo/h."
+    points: 35
+  - id: "c"
+    label: "Je paie 14 EUR pour le WiFi - c'est plus rapide"
+    outcome: "neutral"
+    feedback: "Le WiFi payant n'est pas necessairement plus sur que le gratuit (c'est juste un autre business model). Et c'est cher pour 1h de bureau distant. 4G/5G du tel reste l'option la plus sure ET la moins chere."
+    points: 5
+  - id: "d"
+    label: "J'attends d'arriver a destination pour traiter les emails"
+    outcome: "good"
+    feedback: "Approche prudente et legitime. Si tu n'as pas d'urgence, attendre un reseau de confiance (bureau, hotel reserve) est valable. Mais 4G/5G du tel offre la meme securite + tu avances ton boulot."
+    points: 15
+debrief: |
+  Le partage de connexion mobile est **la defense la plus simple, la
+  plus efficace et la plus economique** en mobilite. Il est tellement
+  superieur aux WiFi publics qu'il devrait etre le DEFAUT mobile.
+
+  **Pourquoi c'est plus sur :**
+
+  - Ton operateur mobile (Orange, SFR, Bouygues, Free, MVNO) a une
+    infrastructure dediee. **Pas spoofable** par un attaquant local
+    (qui ne peut pas se faire passer pour Orange).
+  - La connexion entre ton tel et le pylone operateur est **chiffree
+    par defaut** (LTE/5G). Personne ne peut sniffer entre les deux.
+  - Pas de portail captif manipulable, pas de DNS hijack local.
+
+  **Comment activer (procedure) :**
+
+  **iOS (iPhone) :**
+  - Reglages > Cellulaire > Partage de connexion > "Autoriser
+    d'autres utilisateurs"
+  - Mot de passe WiFi defini (a personnaliser, eviter le defaut auto-genere)
+  - Le hotspot apparait dans la liste WiFi de ton laptop avec le nom
+    de ton tel ("iPhone de Florian")
+
+  **Android :**
+  - Parametres > Reseau et Internet > Hotspot et partage de connexion
+    > Hotspot WiFi
+  - Personnalise le nom et le mot de passe
+  - Active
+
+  **Connexion :**
+  - Sur ton laptop : choisir le hotspot dans la liste WiFi
+  - Saisir le mot de passe
+  - C'est tout
+
+  **Variantes :**
+  - **USB tethering** : cable USB tel-laptop. Plus rapide que WiFi, ne
+    consomme pas de batterie tel.
+  - **Bluetooth tethering** : plus lent, mais possible si le WiFi est
+    sature.
+
+  **Combien ca consomme ?**
+
+  Estimations realistes :
+  - **Email texte** : ~10 KB / email = 0.5 Mo pour 50 emails
+  - **Email + PJ moyenne (5 Mo)** : 5 Mo / email
+  - **Pages web texte** : 1-3 Mo / page
+  - **YouTube 480p** : ~250 Mo / heure
+  - **Visio Zoom/Teams** : ~600 Mo / heure
+  - **Telechargement gros fichier** : selon taille
+
+  Pour une session bureau distant typique (email, web, 1-2 docs) :
+  **100-300 Mo / heure**.
+
+  Forfait mobile FR moderne :
+  - Forfait base 5 GB / mois : suffisant pour 15-30h de bureau distant
+    par mois, mais a surveiller.
+  - Forfait 100 GB / mois (Free, RED, Sosh) : largement suffisant.
+  - Forfait illimite : aucun probleme (sauf fair-use a 200-300 GB chez
+    Free).
+
+  **Optimisations data :**
+
+  - **Eviter visio/streaming** sur 4G partage si tu peux (consomme
+    vite).
+  - **Activer mode economie data** sur Slack, Teams, Outlook (pas de
+    download auto des PJ).
+  - **Travailler offline** : retirer les PJ sur les emails que tu vas
+    traiter (Outlook a un mode "telecharger headers seulement").
+
+  **Cas particulier : roaming a l'etranger**
+
+  - **UE/EEE** : "roam like at home" - meme tarif qu'en France. Pas
+    de probleme, partage de connexion comme en France.
+  - **Hors UE** : peut etre cher (5 a 10 EUR / Mo). Verifier le forfait
+    avant de partager. Souvent un pass voyage est plus economique.
+
+  **Le piege : confondre partage et fonctionnalite**
+
+  "Partage de connexion" = 4G/5G de ton tel partage avec d'autres
+  appareils. C'est sur.
+
+  "Bouton WiFi du tel" = tu cherches un WiFi alentour pour t'y
+  connecter. Pas sur (cf. ep 01-02).
+
+  Verifier que tu as bien active le PARTAGE (icone de chaine ou
+  cercles concentriques) et pas la SCAN WiFi.
+
+  **Pour les PME : forfait dedie**
+
+  Pour un employe en mobilite (commercial, dev en client),
+  l'employeur peut souscrire un **forfait data dedie** sur ton tel
+  pro (200 GB pour ~30 EUR/mois). Cout faible vs un incident de
+  securite par WiFi public compromis.
+quiz:
+  - question: "Pourquoi le partage de connexion 4G/5G est plus sur qu'un WiFi public ?"
+    choices:
+      - { id: "a", label: "Aucune difference", correct: false }
+      - { id: "b", label: "L'infra de l'operateur n'est pas spoofable en local + chiffrement LTE/5G par defaut", correct: true }
+      - { id: "c", label: "C'est plus rapide", correct: false }
+    explanation: "Pas de spoofing possible (l'attaquant local ne peut pas se faire passer pour Orange). Chiffrement de la liaison radio LTE/5G par defaut (impossible de sniffer entre tel et pylone)."
+
+  - question: "Pour 1h de bureau distant (email + 5 PJ), partage 4G/5G consomme environ :"
+    choices:
+      - { id: "a", label: "10 GB", correct: false }
+      - { id: "b", label: "100-300 Mo (negligeable sur un forfait moderne)", correct: true }
+      - { id: "c", label: "Plusieurs GB", correct: false }
+    explanation: "Email texte = ~10 KB. PJ moyenne = ~5 Mo. Web bureau = 1-3 Mo/page. Total realiste : 100-300 Mo/h. Negligeable sur un forfait 5+ GB."
+
+  - question: "USB tethering vs WiFi hotspot, avantage USB ?"
+    choices:
+      - { id: "a", label: "Plus rapide ET ne consomme pas la batterie du tel", correct: true }
+      - { id: "b", label: "Plus securise", correct: false }
+      - { id: "c", label: "Aucun", correct: false }
+    explanation: "USB tethering est plus rapide (pas de WiFi limite) et le tel se recharge pendant la session (le laptop alimente le tel via USB). Securite identique au WiFi hotspot."
+---
+
+> 💡 **Pour aller plus loin** : pour les pros tres mobiles, un
+> **routeur 4G/5G dedie** (TP-Link Archer MR400, Huawei E5577) avec
+> sa propre carte SIM data est une option. Forfait dedie 100 GB pour
+> ~10 EUR/mois. Plus stable qu'un partage tel + ne vide pas la
+> batterie de ton telephone.

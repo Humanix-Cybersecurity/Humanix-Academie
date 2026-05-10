@@ -1,0 +1,150 @@
+---
+title: "Wi-Fi d'hôtel et de conférence"
+durationMinutes: 5
+persona: "tous-collaborateurs"
+objective: "Naviguer en securite sur les WiFi hotel/conference, distinguer les reseaux 'guest' multi-utilisateurs vs prive, comprendre la separation reseau hotel typique"
+xpReward: 40
+scenario: |
+  Tu arrives dans ton hotel pour 2 nuits a Lyon - conference cyber. Tu
+  vois 4 reseaux WiFi disponibles dans ta chambre :
+
+  - "Hotel-Mercure-Guest" (le WiFi affiche dans ta chambre)
+  - "Hotel-Mercure-Staff" (sans password visible)
+  - "Mercure-Lyon-Premium" (badge gold/silver members)
+  - "Conference-Cyber2026" (le wifi du salon professionnel)
+
+  Pour ton acces email (basique) + acces au VPN entreprise (Cisco
+  AnyConnect) + une visio Teams importante demain matin, lequel
+  utiliser ?
+choices:
+  - id: "a"
+    label: "Hotel-Mercure-Guest avec VPN entreprise active dessus = compromis raisonnable hotel + securite"
+    outcome: "good"
+    feedback: "Pragmatique. Le WiFi guest hotel est multi-utilisateurs (donc spoofable, sniffable par les autres clients), mais avec VPN entreprise par-dessus, tu chiffres tout ton trafic SI vers ton entreprise. Les sites externes (web personnel) restent visibles cote hotel - acceptable."
+    points: 35
+  - id: "b"
+    label: "Hotel-Mercure-Staff parce que pas de password = plus libre"
+    outcome: "bad"
+    feedback: "PAS POUR TOI. Le WiFi 'Staff' est reserve au personnel hotel. T'y connecter (meme sans password apparent) sans autorisation = intrusion technique (article 323 Code penal possible). Et tu seras immediatement detecte par leur monitoring."
+    points: -15
+  - id: "c"
+    label: "Conference-Cyber2026 - c'est mon evenement"
+    outcome: "neutral"
+    feedback: "Le WiFi de conference cyber est NOTOIREMENT cible par les attaquants (DEF CON 2018 : 35 reseaux malveillants simultanes). Pour faire du teletravail bancaire, c'est l'environnement le plus hostile possible."
+    points: 5
+  - id: "d"
+    label: "4G/5G partage tel + VPN entreprise par-dessus pour la visio (besoin d'un debit stable)"
+    outcome: "good"
+    feedback: "Defense maximale. Si ton forfait te le permet, c'est le top. Une visio Teams 1h consomme ~600 Mo - acceptable sur un forfait moderne. Aucun risque de spoofing local."
+    points: 35
+debrief: |
+  Les WiFi d'hotel et de conference sont des environnements **hostiles
+  par defaut** : multi-utilisateurs, partages avec des inconnus, souvent
+  cibles d'attaquants opportunistes.
+
+  **Comprendre la separation reseau hotel typique :**
+
+  - **Guest WiFi** : isole du backend hotel (PMS reservation, paiement,
+    cle digitale). Multi-utilisateurs - tu es sur le meme reseau que
+    300 autres clients. Risque de **lateral movement** entre clients
+    (un client malicieux scan les ports des autres).
+  - **Staff WiFi** : reseau interne hotel (PMS, gestion clefs, etc.).
+    Tres restreint. JAMAIS pour un client.
+  - **Premium / Business** : variant du Guest, parfois isole en VLAN
+    par chambre. Plus sur que le Guest standard.
+  - **Conference** : reseau dedie a un evenement. Souvent peu securise
+    (UX > security). Cibles privilegiees d'attaquants.
+
+  **Risques reels sur un Guest WiFi hotel :**
+
+  1. **Sniffing par autre client** : sur certains hotels, le Guest WiFi
+     n'isole pas les clients (Same VLAN, meme broadcast). Un client
+     malicieux peut sniffer le trafic non-chiffre des autres.
+  2. **Evil Twin** : un attaquant dans le hall configure un AP
+     "Hotel-Mercure-Guest" plus puissant.
+  3. **Captive portal piege** : faux portail demandant tes credentials
+     d'autre service (cf. ep 02).
+  4. **DNS hijack** : l'attaquant resoud `mabanque.fr` vers son IP au
+     lieu de la vraie.
+
+  **Defense en couches (a appliquer ensemble) :**
+
+  **Couche 1 - Eviter le WiFi public si possible**
+  - Visio importante : 4G/5G partage si forfait le permet
+  - Email simple : 4G/5G ou Guest WiFi est OK (peu de risque)
+
+  **Couche 2 - VPN entreprise OBLIGATOIRE**
+  Si tu accedes au SI de l'entreprise depuis hotel, le VPN
+  entreprise est une obligation (politique + reglementaire dans
+  banque/sante/defense). Active-le DES la connexion WiFi.
+
+  **Couche 3 - HTTPS partout + DNS sur DoH**
+  - Active "HTTPS-Only" dans le browser
+  - DNS over HTTPS (Firefox/Chrome) = ton DNS n'est pas spoofable
+    par l'hotel
+
+  **Couche 4 - Firewall personnel actif**
+  Sur Mac/Windows, le firewall doit etre ON. Ca empeche les autres
+  clients hotel de scanner / se connecter a tes ports ouverts.
+
+  **Couche 5 - Pas d'auth sensible sur WiFi hotel sans VPN**
+  Banque, RH, admin email pro = via VPN entreprise ou 4G/5G
+  uniquement.
+
+  **Le piege du WiFi conference :**
+
+  Conferences cyber/tech (DEF CON, Black Hat, FIC, Cybermois...) sont
+  des environnements **extra-hostiles** :
+  - Beaucoup d'attaquants curieux qui pratiquent leur metier
+  - Honeypots officiels deployes par les organisateurs (pour exercice)
+  - WiFi pirates malveillants
+
+  **DEF CON Wall of Sheep** : un mur public qui affiche tous les
+  credentials interceptes en clair sur le WiFi conference (anonymises
+  partiellement). Plus de 1 000 victimes par edition.
+
+  **Procedure pour conferences :**
+  1. **Tel mode avion** + 4G/5G uniquement
+  2. **Pas de Bluetooth** (vol via Bluestack)
+  3. **VPN active 24/7**
+  4. **Pas d'usage perso sur appareil pro**
+  5. **Au retour** : changer mots de passe critiques (par precaution)
+
+  **Cas specifiques :**
+
+  **Suite executive avec WiFi prive** : certains hotels haut de gamme
+  offrent un VLAN dedie a la chambre. Plus sur, mais reste un WiFi
+  public au sens reseau (pas de garantie absolue). VPN entreprise
+  toujours obligatoire pour le SI.
+
+  **WiFi 6E / WPA3** : technologie plus recente avec chiffrement
+  individuel par client (impossible de sniffer les autres). Marche
+  uniquement si TOUS les clients supportent WPA3 - rare dans un
+  hotel.
+quiz:
+  - question: "Tu vois 'Hotel-Mercure-Staff' sans password visible. Tu fais quoi ?"
+    choices:
+      - { id: "a", label: "Je me connecte, peut-etre que c'est ouvert", correct: false }
+      - { id: "b", label: "JAMAIS - reseau staff = personnel uniquement, intrusion technique potentielle (Code penal)", correct: true }
+      - { id: "c", label: "Je demande le password a la reception", correct: false }
+    explanation: "Le reseau staff hotel est ferme aux clients. T'y connecter, meme sans password apparent (peut-etre WPS faible), peut etre considere comme intrusion (article 323 Code penal). Reseau guest uniquement pour les clients."
+
+  - question: "Pour une visio Teams importante depuis ta chambre d'hotel, le mieux est :"
+    choices:
+      - { id: "a", label: "WiFi guest sans VPN", correct: false }
+      - { id: "b", label: "4G/5G partage (debit stable, securite max) ou WiFi guest + VPN entreprise", correct: true }
+      - { id: "c", label: "WiFi de la chambre voisine", correct: false }
+    explanation: "4G/5G = securite max + debit stable (visio = ~600 Mo/h). WiFi guest acceptable SI VPN entreprise actif. Sans VPN = risque de fuite credentials/donnees."
+
+  - question: "Le 'DEF CON Wall of Sheep' c'est :"
+    choices:
+      - { id: "a", label: "Un site web", correct: false }
+      - { id: "b", label: "Un mur affichant les credentials interceptes en clair sur le WiFi conference - illustre les risques", correct: true }
+      - { id: "c", label: "Une marque de moutons", correct: false }
+    explanation: "Wall of Sheep est une tradition DEF CON : ils affichent (anonymises) les credentials qu'ils ont snife sur le WiFi conference, pour illustrer les risques. Plus de 1000 victimes par edition - meme parmi les pros cyber."
+---
+
+> 💡 **Pour aller plus loin** : pour les voyageurs frequents,
+> investir dans un **routeur de voyage** (GL.iNet Beryl ~80 EUR) qui
+> cree ton propre WiFi prive (avec VPN integre) en se connectant
+> au WiFi hotel. Plus simple que de configurer chaque appareil.

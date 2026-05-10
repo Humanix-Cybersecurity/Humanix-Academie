@@ -1,0 +1,174 @@
+---
+title: "Envoyé au mauvais destinataire : que faire"
+durationMinutes: 6
+persona: "tous-collaborateurs"
+objective: "Reagir correctement a un email envoye au mauvais destinataire (procedure RGPD), eviter l'autocomplete piege, mettre en place un delay-send"
+xpReward: 60
+scenario: |
+  Mardi 11h47, tu envoies les bulletins de paie de juin a ton equipe
+  RH. Mais l'autocomplete Outlook a remplace `paie@humanix.fr` (interne)
+  par `paie@humanika.fr` - un fournisseur exterieur qui n'a rien a voir.
+
+  L'email est parti il y a 35 secondes. Il contient :
+  - 47 bulletins de paie en PJ (PDF nommes par nom + matricule)
+  - Adresses postales de 47 collaborateurs en clair dans le corps
+  - Le corps mentionne 2 augmentations de salaire prevues
+
+  Tu fais quoi MAINTENANT ?
+choices:
+  - id: "a"
+    label: "Je tente le rappel Outlook + j'envoie un email au destinataire externe demandant la suppression + je notifie le DPO + je conserve les preuves"
+    outcome: "good"
+    feedback: "Procedure RGPD complete. Rappel (souvent inefficace mais a tenter), email de demande de suppression au destinataire externe (preuve documentee), notification DPO (article 33 - le DPO evalue si reportable a la CNIL sous 72h), conservation preuves pour le registre des violations."
+    points: 35
+  - id: "b"
+    label: "Je tente le rappel Outlook et si ca rate, j'oublie - personne ne verra"
+    outcome: "bad"
+    feedback: "Catastrophique. C'est une fuite RGPD massive (47 bulletins de paie + augmentations = donnees PII et financieres sensibles). La dissimulation est un manquement supplementaire (article 5 transparence + article 33 notification). On encourt jusqu'a 4% du CA mondial."
+    points: -15
+  - id: "c"
+    label: "Je supprime l'email de mon dossier Envoyes pour effacer les traces"
+    outcome: "bad"
+    feedback: "INUTILE et NUISIBLE. L'email est deja chez le destinataire externe (peu importe ce que tu fais cote Outlook). Et tu detruis les preuves dont tu as besoin pour le registre des violations RGPD."
+    points: -10
+  - id: "d"
+    label: "Je previens d'abord ma direction avant d'agir"
+    outcome: "neutral"
+    feedback: "Approche prudente mais le temps est CRITIQUE en RGPD : 72h pour notifier la CNIL si reportable. Mieux vaut declencher la procedure (DPO + email destinataire) en parallele de prevenir ta direction."
+    points: 10
+debrief: |
+  L'envoi au mauvais destinataire est l'erreur RGPD la plus commune en
+  entreprise. La CNIL a sanctionne plusieurs fois ce cas (Doctolib en
+  2021 pour une fuite de 19 000 fichiers patient envoyes au mauvais
+  destinataire = 2 200 € d'amende publique pour exemple).
+
+  **Procedure RGPD en 4 etapes (a memoriser) :**
+
+  **Etape 1 - Tenter de rappeler (immediate, 30s)**
+  - Outlook : Actions > Recall this message. Marche si destinataire
+    interne ET pas encore lu.
+  - Gmail : "Annuler l'envoi" sous 30 secondes maximum.
+  - Apres : trop tard, l'email est chez le destinataire.
+
+  **Etape 2 - Demander la suppression au destinataire (5-10 min)**
+
+  Email immediat (en CCI le DPO) :
+
+  > Bonjour,
+  > J'ai envoye par erreur a votre adresse un email a 11:47
+  > destine a une autre personne.
+  > Je vous demande de le supprimer immediatement et de ne pas
+  > consulter ni utiliser son contenu.
+  > Merci de me confirmer la suppression.
+  > Cordialement,
+  > [Vos coordonnees]
+
+  Conserver la reponse (preuve de la demande de suppression).
+
+  **Etape 3 - Notification DPO + decision CNIL (sous 72h)**
+
+  Le DPO (ou DPD - Delegue a la Protection des Donnees) evalue
+  selon les criteres RGPD article 33 :
+  - Type de donnees fuit (PII basiques, sante, financier...)
+  - Nombre de personnes concernees
+  - Risque pour les personnes (vol identite, fraude...)
+
+  Decision :
+  - **Risque limite** : on documente dans le registre interne, pas
+    de notification CNIL.
+  - **Risque eleve** : notification CNIL sous 72h via le formulaire
+    en ligne (cnil.fr/notifications).
+  - **Risque tres eleve** : notification CNIL ET communication aux
+    personnes affectees (article 34).
+
+  **Etape 4 - Documentation registre des violations**
+
+  Article 33-5 RGPD : meme si pas reporte a la CNIL, l'incident
+  DOIT etre documente dans le registre des violations interne.
+  Champs minimums :
+  - Date/heure de l'incident
+  - Nature (mauvais destinataire, fuite cyber, perte materielle...)
+  - Categories et nombre de personnes
+  - Categories et nombre de donnees
+  - Mesures prises pour limiter l'impact
+  - Mesures pour eviter recidive
+
+  Ce registre est presentable a la CNIL en cas de controle.
+
+  **Eviter l'erreur en amont (les 5 garde-fous) :**
+
+  **Garde-fou 1 - Delay-send 30 secondes**
+
+  Outlook > File > Options > Mail > Send messages > "Defer delivery
+  by N minutes" (regle). Une regle qui retarde TOUS les envois de
+  30 secondes. Ca te laisse le temps de relire / annuler.
+
+  Gmail : Settings > General > Send and Archive > Undo Send : 30s
+  (max).
+
+  **Garde-fou 2 - Confirmation des destinataires externes**
+
+  Plugin Outlook ou Gmail qui alerte si tu envoies a un domaine
+  externe : "Tu vas envoyer a un domaine HORS organisation
+  (humanika.fr). Confirmer ?". Add-ins gratuits comme "MailWarden"
+  ou via politique Exchange.
+
+  **Garde-fou 3 - Disable l'autocomplete (le plus efficace)**
+
+  L'autocomplete est le piege n°1. Disable-le sur les sujets
+  sensibles ou apprends a TAPER COMPLETEMENT le destinataire.
+
+  **Garde-fou 4 - Distribution lists nommees**
+
+  Au lieu de copier-coller 47 emails, cree une distribution list
+  Outlook nommee "Equipe Paie" qui contient les 47 emails. Tu
+  envoies a "Equipe Paie", aucune confusion possible.
+
+  **Garde-fou 5 - Process pour les bulletins de paie / docs RH**
+
+  Pour les docs sensibles (paie, contrats, donnees sante) :
+  - Ne pas les envoyer en PJ (utiliser un coffre-fort numerique :
+    Lucca, PayFit, Personio).
+  - Si email obligatoire : chiffrement (PGP, S/MIME) ou ZIP avec
+    mot de passe envoye separement par SMS.
+
+  **Cas pedagogique : autocomplete ne pardonne pas**
+
+  L'erreur classique : tu ecris `paie` dans le champ A, l'autocomplete
+  suggere "paie@humanika.fr" (un fournisseur que tu as contacte
+  une fois en 2022). Tu cliques tab pour valider, tu envoies.
+
+  Le fournisseur recoit 47 bulletins de paie. C'est arrive a la
+  CGT en 2024 - 800 bulletins envoyes au mauvais destinataire.
+
+  Discipliner l'autocomplete : taper l'adresse complete pour les
+  destinataires sensibles, ne JAMAIS faire confiance a l'autocomplete
+  pour les RH/paie/finance.
+quiz:
+  - question: "Tu envoies des bulletins de paie au mauvais destinataire externe. 1ere action ?"
+    choices:
+      - { id: "a", label: "Effacer ses traces", correct: false }
+      - { id: "b", label: "Tenter le rappel + email demandant suppression au destinataire + notifier DPO", correct: true }
+      - { id: "c", label: "Attendre que personne ne reponde", correct: false }
+    explanation: "Procedure RGPD : rappel (peu efficace mais a tenter), email de demande de suppression (documente), notification DPO sous 72h. Pas de dissimulation - l'article 5 RGPD exige la transparence."
+
+  - question: "Le delay-send Outlook fait quoi ?"
+    choices:
+      - { id: "a", label: "Il chiffre les emails", correct: false }
+      - { id: "b", label: "Il retarde l'envoi de N minutes apres clic sur Send, te laissant le temps d'annuler", correct: true }
+      - { id: "c", label: "Il rappelle les emails deja envoyes", correct: false }
+    explanation: "Une regle Outlook qui differe l'envoi de 30s a quelques minutes. Pendant ce delai, l'email est dans la boite d'envoi (Outbox) - tu peux l'annuler ou le modifier. C'est le garde-fou le plus efficace contre les erreurs."
+
+  - question: "Quand notifier la CNIL pour une violation de donnees ?"
+    choices:
+      - { id: "a", label: "Toujours, des qu'il y a une fuite", correct: false }
+      - { id: "b", label: "Sous 72h SI le DPO evalue qu'il y a un risque pour les personnes (article 33 RGPD)", correct: true }
+      - { id: "c", label: "Jamais, c'est confidentiel", correct: false }
+    explanation: "Article 33 RGPD : notification CNIL sous 72h si risque eleve. Le DPO (ou DPD) evalue. Risque limite = pas de notification mais documentation interne obligatoire (registre). Tres eleve = notification + communication aux personnes (article 34)."
+---
+
+> 💡 **Pour aller plus loin** : configurer un delay-send de 60 secondes
+> Outlook prend 2 minutes (File > Manage Rules > New Rule > "Defer
+> delivery"). C'est une mesure organisationnelle RGPD obligatoire pour
+> les services traitant des donnees sensibles (article 32 - mesures
+> techniques et organisationnelles).
