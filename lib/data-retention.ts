@@ -85,7 +85,17 @@ export function isValidRetentionDays(days: number): boolean {
   );
 }
 
-function cutoffFromRetention(days: number, now: Date = new Date()): Date {
+/**
+ * Calcule la date "cutoff" = (now - days). Tout enregistrement avec
+ * createdAt/updatedAt strictement anterieur a cette date sera purge.
+ *
+ * UTC : on travaille en UTC pour eviter les decalages horaires entre
+ * la JVM/Node host et la DB Postgres. Une retention de "30 jours"
+ * signifie 30×24h = 720h exactement, peu importe le DST.
+ *
+ * Exporte pour testabilite (cf. data-retention.test.ts).
+ */
+export function cutoffFromRetention(days: number, now: Date = new Date()): Date {
   const cutoff = new Date(now);
   cutoff.setUTCDate(cutoff.getUTCDate() - days);
   return cutoff;
@@ -95,8 +105,11 @@ function cutoffFromRetention(days: number, now: Date = new Date()): Date {
  * Detecte les users qu'on peut anonymiser sans risque : inactifs depuis
  * plus longtemps que la retention ET pas deja anonymises (l'email contient
  * "@anonymized.local" est notre signal).
+ *
+ * Exporte pour testabilite et reutilisation par d'autres modules RGPD
+ * (cf. lib/data-erasure.ts, app/api/cron/data-retention-purge).
  */
-function isAnonymizedEmail(email: string): boolean {
+export function isAnonymizedEmail(email: string): boolean {
   return email.endsWith("@anonymized.local");
 }
 

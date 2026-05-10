@@ -32,43 +32,17 @@
 // déploiement qui aurait initialement provisionné un ADMIN au lieu d'un
 // SUPERADMIN, ou de promouvoir manuellement sans toucher à la DB.
 
-import { PrismaClient, Role } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import {
   hashPassword,
   validatePasswordPolicy,
 } from "../lib/password";
+import {
+  parseBootstrapRole,
+  shouldPromote,
+} from "../lib/admin/bootstrap-role";
 
 const prisma = new PrismaClient();
-
-// Hiérarchie des rôles : un rôle plus haut a tous les droits du rôle inférieur.
-// Aligné sur prisma/schema.prisma (enum Role, ligne 245).
-const ROLE_RANK: Record<Role, number> = {
-  LEARNER: 0,
-  MANAGER: 1,
-  RSSI: 2,
-  ADMIN: 3,
-  SUPERADMIN: 4,
-};
-
-// Rôles autorisés pour le bootstrap (on ne crée jamais un LEARNER en
-// bootstrap : ce serait inutile, le premier user doit pouvoir administrer).
-const BOOTSTRAP_ROLES: ReadonlySet<Role> = new Set<Role>([
-  "MANAGER",
-  "RSSI",
-  "ADMIN",
-  "SUPERADMIN",
-]);
-
-function parseBootstrapRole(raw: string | undefined): Role {
-  const upper = (raw ?? "").trim().toUpperCase();
-  if (BOOTSTRAP_ROLES.has(upper as Role)) {
-    return upper as Role;
-  }
-  // Défaut : SUPERADMIN. Le tout-premier compte est l'exploitant de
-  // l'instance, il doit pouvoir tout faire (créer d'autres tenants,
-  // modérer, etc.).
-  return "SUPERADMIN";
-}
 
 async function main() {
   const email = (process.env.BOOTSTRAP_ADMIN_EMAIL ?? "").trim().toLowerCase();
@@ -108,7 +82,7 @@ async function main() {
     select: { id: true, role: true, email: true },
   });
   if (existing) {
-    if (ROLE_RANK[existing.role] < ROLE_RANK[role]) {
+    if (shouldPromote(existing.role, role)) {
       await prisma.user.update({
         where: { id: existing.id },
         data: { role },
