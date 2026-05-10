@@ -1,21 +1,20 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
+// =============================================================================
 // /admin/dpo - Dashboard DPO interne.
 //
-// Concretise la roadmap promise sur la page publique /dpo.
+// Refonte juin 2026 (Sprint 2 bis) : decoupage des sous-composants visuels
+// dans components/admin/dpo/. La page reste server component, charge les
+// donnees via Prisma, et delegue l'affichage aux widgets.
 //
 // Données affichees (toutes derivees du modèle AuditLog existant) :
-//   - Compteurs RGPD des 90 derniers jours (accès, exports, effacements,
-//     consentements donnes/retires)
-//   - Queue des demandes d'effacement (article 17) en cours, avec flag
-//     "en retard" si > 30 jours sans completion
-//   - Activite RGPD recente (50 dernieres actions)
-//   - Lien vers le generateur AIPD (sous-page /admin/dpo/aipd)
-//   - Liens vers les modules pedagogiques de la saison dpo-quotidien
+//   - Compteurs RGPD des 90 derniers jours
+//   - Queue des demandes d'effacement (article 17) avec flag "en retard"
+//   - Activite RGPD recente (30 dernieres actions)
+//   - Lien vers le generateur AIPD
+//   - Liens vers les modules pedagogiques
 //
 // Roles autorises : ADMIN, RSSI, SUPERADMIN.
-// Note : on n'a pas encore de role "DPO" dedie dans le schema - un DPO
-// externe accede aujourd'hui via un compte ADMIN. Sujet a discuter en
-// follow-up (créer un Role.DPO ?).
+// =============================================================================
 
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -23,11 +22,30 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminSection from "@/components/admin/AdminSection";
+import ComplianceCounters, {
+  type ComplianceCounts,
+} from "@/components/admin/dpo/ComplianceCounters";
+import ErasureQueue, {
+  type QueueRow,
+} from "@/components/admin/dpo/ErasureQueue";
+import RecentActivity, {
+  type RecentEntry,
+} from "@/components/admin/dpo/RecentActivity";
+import DpoResources from "@/components/admin/dpo/DpoResources";
 
 export const dynamic = "force-dynamic";
 
 const NINETY_DAYS_MS = 90 * 24 * 3600 * 1000;
 const THIRTY_DAYS_MS = 30 * 24 * 3600 * 1000;
+
+const RGPD_ACTIONS = [
+  "DATA_ACCESSED",
+  "DATA_EXPORTED",
+  "DATA_ERASURE_REQUESTED",
+  "DATA_ERASURE_COMPLETED",
+  "CONSENT_GIVEN",
+  "CONSENT_WITHDRAWN",
+] as const;
 
 export default async function AdminDpoPage() {
   const session = await auth();
@@ -46,28 +64,19 @@ export default async function AdminDpoPage() {
     where: {
       tenantId,
       createdAt: { gte: since },
-      action: {
-        in: [
-          "DATA_ACCESSED",
-          "DATA_EXPORTED",
-          "DATA_ERASURE_REQUESTED",
-          "DATA_ERASURE_COMPLETED",
-          "CONSENT_GIVEN",
-          "CONSENT_WITHDRAWN",
-        ],
-      },
+      action: { in: [...RGPD_ACTIONS] },
     },
     _count: { _all: true },
   });
 
-  const countsByAction: Record<string, number> = {};
+  const countsByAction: ComplianceCounts = {};
   for (const c of counts) {
-    countsByAction[c.action] = c._count._all;
+    (countsByAction as Record<string, number>)[c.action] = c._count._all;
   }
 
   // 2. Queue des demandes d'effacement en attente
-  // Pour un cas reel : on cherche les DATA_ERASURE_REQUESTED qui n'ont pas de
-  // DATA_ERASURE_COMPLETED ulterieur sur le même targetId (utilisateur).
+  // Pour chaque DATA_ERASURE_REQUESTED, on cherche un DATA_ERASURE_COMPLETED
+  // ulterieur sur le meme targetId (utilisateur) pour determiner l'etat.
   const erasureRequests = await db.auditLog.findMany({
     where: {
       tenantId,
@@ -96,15 +105,6 @@ export default async function AdminDpoPage() {
     }
   }
 
-  type QueueRow = {
-    id: string;
-    targetLabel: string | null;
-    targetId: string | null;
-    requestedAt: Date;
-    completedAt: Date | null;
-    isLate: boolean;
-    daysSince: number;
-  };
   const now = Date.now();
   const queue: QueueRow[] = erasureRequests.map((r) => {
     const completedAt =
@@ -129,23 +129,21 @@ export default async function AdminDpoPage() {
   const lateCount = queue.filter((q) => q.isLate).length;
 
   // 3. Activite RGPD recente
-  const recent = await db.auditLog.findMany({
+  const recentRows = await db.auditLog.findMany({
     where: {
       tenantId,
-      action: {
-        in: [
-          "DATA_ACCESSED",
-          "DATA_EXPORTED",
-          "DATA_ERASURE_REQUESTED",
-          "DATA_ERASURE_COMPLETED",
-          "CONSENT_GIVEN",
-          "CONSENT_WITHDRAWN",
-        ],
-      },
+      action: { in: [...RGPD_ACTIONS] },
     },
     orderBy: { createdAt: "desc" },
     take: 30,
   });
+  const recent: RecentEntry[] = recentRows.map((r) => ({
+    id: r.id,
+    action: r.action,
+    targetLabel: r.targetLabel,
+    actorEmail: r.actorEmail,
+    createdAt: r.createdAt,
+  }));
 
   return (
     <div className="space-y-8">
@@ -173,56 +171,13 @@ export default async function AdminDpoPage() {
         }
       />
 
-      {/* ============================================================
-          1. Compteurs RGPD - 90 derniers jours
-          ============================================================ */}
       <AdminSection
         title="Vue d'ensemble · 90 derniers jours"
         description="Activite RGPD globale du tenant. Source : AuditLog."
       >
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-          <CounterCard
-            emoji="👁"
-            label="Acces aux données"
-            value={countsByAction.DATA_ACCESSED ?? 0}
-            tone="info"
-          />
-          <CounterCard
-            emoji="📤"
-            label="Exports (article 20)"
-            value={countsByAction.DATA_EXPORTED ?? 0}
-            tone="info"
-          />
-          <CounterCard
-            emoji="🗑"
-            label="Effacements demandes"
-            value={countsByAction.DATA_ERASURE_REQUESTED ?? 0}
-            tone="warning"
-          />
-          <CounterCard
-            emoji="✅"
-            label="Effacements termines"
-            value={countsByAction.DATA_ERASURE_COMPLETED ?? 0}
-            tone="success"
-          />
-          <CounterCard
-            emoji="✓"
-            label="Consentements donnes"
-            value={countsByAction.CONSENT_GIVEN ?? 0}
-            tone="success"
-          />
-          <CounterCard
-            emoji="✗"
-            label="Consentements retires"
-            value={countsByAction.CONSENT_WITHDRAWN ?? 0}
-            tone="warning"
-          />
-        </div>
+        <ComplianceCounters counts={countsByAction} />
       </AdminSection>
 
-      {/* ============================================================
-          2. Queue demandes d'effacement
-          ============================================================ */}
       <AdminSection
         title="Queue des demandes d'effacement (article 17)"
         description={
@@ -239,86 +194,9 @@ export default async function AdminDpoPage() {
           </Link>
         }
       >
-        {queue.length === 0 ? (
-          <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-            Aucune demande d'effacement enregistree dans les 90 derniers jours.
-          </p>
-        ) : (
-          <div className="overflow-x-auto -mx-4 px-4">
-            <table className="w-full text-sm min-w-[600px]">
-              <caption className="sr-only">
-                Demandes d'effacement RGPD article 17 enregistrees dans les
-                90 derniers jours, avec personne concernee, date de demande,
-                etat de traitement et delai legal restant
-              </caption>
-              <thead>
-                <tr className="border-b border-gray-200 dark:border-slate-700 text-left">
-                  <th className="p-2 font-medium text-gray-700 dark:text-gray-300">
-                    Personne concernee
-                  </th>
-                  <th className="p-2 font-medium text-gray-700 dark:text-gray-300">
-                    Demande recue
-                  </th>
-                  <th className="p-2 font-medium text-gray-700 dark:text-gray-300">
-                    Etat
-                  </th>
-                  <th className="p-2 font-medium text-gray-700 dark:text-gray-300">
-                    Delai
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {queue.map((q) => (
-                  <tr
-                    key={q.id}
-                    className="border-b border-gray-100 dark:border-slate-800"
-                  >
-                    <td className="p-2 text-gray-800 dark:text-gray-200">
-                      {q.targetLabel ?? q.targetId ?? "—"}
-                    </td>
-                    <td className="p-2 text-gray-600 dark:text-gray-400 tabular-nums">
-                      {q.requestedAt.toLocaleDateString("fr-FR", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })}
-                    </td>
-                    <td className="p-2">
-                      {q.completedAt ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs font-medium">
-                          <span aria-hidden="true">✅</span>
-                          Termine le{" "}
-                          {q.completedAt.toLocaleDateString("fr-FR", {
-                            day: "numeric",
-                            month: "short",
-                          })}
-                        </span>
-                      ) : q.isLate ? (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 text-xs font-bold">
-                          <span aria-hidden="true">⚠</span>
-                          En retard
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 text-xs font-medium">
-                          <span aria-hidden="true">⏳</span>
-                          En cours
-                        </span>
-                      )}
-                    </td>
-                    <td className="p-2 text-gray-600 dark:text-gray-400 tabular-nums">
-                      {q.daysSince} j
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <ErasureQueue queue={queue} />
       </AdminSection>
 
-      {/* ============================================================
-          3. Activite RGPD recente
-          ============================================================ */}
       <AdminSection
         title="Activite RGPD recente"
         description={`${recent.length} derniere${recent.length > 1 ? "s" : ""} action${recent.length > 1 ? "s" : ""} sur les données personnelles`}
@@ -331,103 +209,17 @@ export default async function AdminDpoPage() {
           </Link>
         }
       >
-        {recent.length === 0 ? (
-          <p className="text-sm text-gray-500 dark:text-gray-400 italic">
-            Aucune activite RGPD enregistree.
-          </p>
-        ) : (
-          <ul className="space-y-2">
-            {recent.map((r) => (
-              <li
-                key={r.id}
-                className="flex items-start gap-3 text-sm border-b border-gray-100 dark:border-slate-800 last:border-0 pb-2"
-              >
-                <span className="text-lg shrink-0" aria-hidden="true">
-                  {ACTION_EMOJI[r.action] ?? "•"}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-gray-800 dark:text-gray-200">
-                    <span className="font-medium">
-                      {ACTION_LABEL[r.action] ?? r.action}
-                    </span>
-                    {r.targetLabel && (
-                      <>
-                        {" "}
-                        ·{" "}
-                        <span className="text-gray-600 dark:text-gray-400">
-                          {r.targetLabel}
-                        </span>
-                      </>
-                    )}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 tabular-nums">
-                    {r.createdAt.toLocaleString("fr-FR", {
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                    {r.actorEmail && ` · ${r.actorEmail}`}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+        <RecentActivity entries={recent} />
       </AdminSection>
 
-      {/* ============================================================
-          4. Ressources DPO
-          ============================================================ */}
       <AdminSection
         title="Ressources DPO"
         description="Modules pedagogiques et outils pour le quotidien du DPO"
         variant="muted"
       >
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          <ResourceLink
-            href="/admin/dpo/aipd"
-            emoji="📝"
-            title="Generateur AIPD"
-            description="Modèle d'analyse d'impact pre-rempli, exportable en Markdown"
-          />
-          <ResourceLink
-            href="/apprendre/dpo-quotidien/01-aipd"
-            emoji="📚"
-            title="Module AIPD"
-            description="Mener une AIPD avec le PIA Tool CNIL, sans cabinet"
-          />
-          <ResourceLink
-            href="/apprendre/dpo-quotidien/02-controle-cnil"
-            emoji="📚"
-            title="Module Controle CNIL"
-            description="7 reflexes du controle inopine + sanctions article 83"
-          />
-          <ResourceLink
-            href="/apprendre/dpo-quotidien/03-transferts-hors-ue"
-            emoji="📚"
-            title="Module Transferts hors UE"
-            description="DPF post-Schrems, TIA, CCT, BCR"
-          />
-          <ResourceLink
-            href="/apprendre/dpo-quotidien/04-profilage-decision-auto"
-            emoji="📚"
-            title="Module Profilage et IA"
-            description="Article 22 RGPD + AI Act risque eleve"
-          />
-          <ResourceLink
-            href="/dpo"
-            emoji="🌐"
-            title="Page publique /dpo"
-            description="6 promesses tracables a partager avec la direction"
-          />
-        </div>
+        <DpoResources />
       </AdminSection>
 
-      {/* ============================================================
-          5. Citation finale Hex veille
-          ============================================================ */}
       <section className="text-center pt-4 pb-2">
         <blockquote className="font-display italic text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
           « Un DPO ne devrait pas avoir a choisir entre un outil cyber utile
@@ -444,93 +236,3 @@ export default async function AdminDpoPage() {
     </div>
   );
 }
-
-// ============================================================================
-// SOUS-COMPOSANTS
-// ============================================================================
-
-function CounterCard({
-  emoji,
-  label,
-  value,
-  tone,
-}: {
-  emoji: string;
-  label: string;
-  value: number;
-  tone: "info" | "success" | "warning";
-}) {
-  const toneClass: Record<typeof tone, string> = {
-    info: "border-blue-200 dark:border-blue-900/40 bg-blue-50/50 dark:bg-blue-950/20",
-    success:
-      "border-emerald-200 dark:border-emerald-900/40 bg-emerald-50/50 dark:bg-emerald-950/20",
-    warning:
-      "border-amber-200 dark:border-amber-900/40 bg-amber-50/50 dark:bg-amber-950/20",
-  };
-  return (
-    <div
-      className={`rounded-2xl border ${toneClass[tone]} p-4 text-center transition-all hover:scale-[1.02]`}
-    >
-      <div className="text-2xl mb-1" aria-hidden="true">
-        {emoji}
-      </div>
-      <p className="text-3xl font-extrabold text-gray-900 dark:text-gray-100 tabular-nums">
-        {value}
-      </p>
-      <p className="text-[10px] uppercase tracking-widest font-medium text-gray-600 dark:text-gray-400 mt-1">
-        {label}
-      </p>
-    </div>
-  );
-}
-
-function ResourceLink({
-  href,
-  emoji,
-  title,
-  description,
-}: {
-  href: string;
-  emoji: string;
-  title: string;
-  description: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className="block rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 hover:shadow-md hover:-translate-y-0.5 transition-all"
-    >
-      <div className="flex items-start gap-3">
-        <span className="text-2xl shrink-0" aria-hidden="true">
-          {emoji}
-        </span>
-        <div className="min-w-0">
-          <p className="font-bold text-primary-500 dark:text-accent-300 text-sm leading-tight">
-            {title}
-          </p>
-          <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
-            {description}
-          </p>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
-const ACTION_EMOJI: Record<string, string> = {
-  DATA_ACCESSED: "👁",
-  DATA_EXPORTED: "📤",
-  DATA_ERASURE_REQUESTED: "🗑",
-  DATA_ERASURE_COMPLETED: "✅",
-  CONSENT_GIVEN: "✓",
-  CONSENT_WITHDRAWN: "✗",
-};
-
-const ACTION_LABEL: Record<string, string> = {
-  DATA_ACCESSED: "Acces aux données personnelles",
-  DATA_EXPORTED: "Export de données (article 20)",
-  DATA_ERASURE_REQUESTED: "Demande d'effacement (article 17)",
-  DATA_ERASURE_COMPLETED: "Effacement effectue",
-  CONSENT_GIVEN: "Consentement donne",
-  CONSENT_WITHDRAWN: "Consentement retire",
-};
