@@ -412,10 +412,10 @@ export default function CommunautePage() {
               <span className="sr-only"> (nouvel onglet)</span>
             </a>
             <Link
-              href="/lancement-oss"
+              href="/manifeste"
               className="bg-white/10 backdrop-blur border border-white/40 text-white font-bold px-6 py-3 rounded-2xl hover:bg-white/20 transition"
             >
-              Voir le lancement OSS
+              Notre manifeste
             </Link>
           </div>
         </section>

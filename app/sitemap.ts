@@ -39,7 +39,7 @@ const PAGES: SitemapEntry[] = [
   { path: "/tarifs", priority: 0.9, changeFrequency: "monthly" },
   { path: "/demo", priority: 0.9, changeFrequency: "monthly" },
   { path: "/comparatif", priority: 0.9, changeFrequency: "monthly" },
-  { path: "/lancement-oss", priority: 0.9, changeFrequency: "daily" },
+  { path: "/ressources", priority: 0.9, changeFrequency: "weekly" },
   { path: "/dpo", priority: 0.9, changeFrequency: "monthly" },
   { path: "/pour-les-daf", priority: 0.9, changeFrequency: "monthly" },
 
