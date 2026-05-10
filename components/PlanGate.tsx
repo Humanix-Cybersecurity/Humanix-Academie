@@ -104,7 +104,7 @@ const FEATURE_PITCH: Record<
     title: "White-label (marque blanche complète)",
     benefits: [
       "Logo, couleurs, typographie et nom de domaine personnalisés (academie.tonentreprise.fr).",
-      "Idéal pour les ESN qui revendent à leurs clients PME (programme Certified Partner).",
+      "Idéal pour les ESN qui revendent à leurs clients (programme Certified Partner).",
       "Idéal pour les groupes qui veulent une plateforme à leur image - interne ou externe.",
     ],
   },

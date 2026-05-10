@@ -260,8 +260,9 @@ export default function CisoAssistantIntegrationPage() {
             vivantes (score, certificats, taux de signalement).
           </li>
           <li>
-            <strong>Pour le dirigeant PME en NIS2</strong> : le score NIS2
-            affiche dans CISO Assistant integre desormais le facteur humain.
+            <strong>Pour le dirigeant en conformite NIS2</strong> : le score
+            NIS2 affiche dans CISO Assistant integre desormais le facteur
+            humain.
           </li>
         </ul>
       </section>
