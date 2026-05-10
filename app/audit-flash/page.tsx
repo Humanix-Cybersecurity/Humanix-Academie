@@ -25,10 +25,10 @@ import AuditWizard from "./AuditWizard";
 export const metadata: Metadata = {
   title: "Audit Cyber Flash gratuit en 5 minutes | Humanix Académie",
   description:
-    "Faites le point sur votre cybersécurité PME en 5 minutes. 15 questions, un rapport PDF avec vos forces, vos 3 leviers prioritaires et une feuille de route concrète. 100 % gratuit, sans relance commerciale.",
+    "Faites le point sur votre cybersécurité en 5 minutes. 15 questions, un rapport PDF avec vos forces, vos 3 leviers prioritaires et une feuille de route concrète. Pour particuliers, équipes et organisations de toute taille. 100 % gratuit, sans relance commerciale.",
   alternates: { canonical: "/audit-flash" },
   openGraph: {
-    title: "Audit Cyber Flash gratuit pour PME — Humanix",
+    title: "Audit Cyber Flash gratuit en 5 minutes — Humanix",
     description:
       "Une photo bienveillante de votre maturité cyber. Score, leviers, feuille de route, conformité NIS2. En 5 minutes. Made in France.",
     type: "website",
@@ -194,10 +194,11 @@ export default function AuditFlashPage() {
             </div>
 
             <ul className="space-y-5 text-gray-700 dark:text-gray-200 max-w-3xl mx-auto">
-              <TrustItem title="Conçu pour les PME françaises">
+              <TrustItem title="Conçu pour la réalité française">
                 Pas un copier-coller d'un questionnaire ISO 27001 inadapté à
-                votre réalité. Chaque question vise un sujet concret pour votre
-                TPE / PME.
+                votre réalité. Chaque question vise un sujet concret —
+                quelle que soit la taille de votre structure (du
+                particulier au grand groupe).
               </TrustItem>
               <TrustItem title="Aligné sur la réalité 2026">
                 Inclut la conformité NIS2, les obligations RGPD et les
@@ -256,9 +257,9 @@ export default function AuditFlashPage() {
                   par où commencer. Et c'est exactement ce dont vous avez besoin.
                 </li>
                 <li>
-                  <strong>Score moyen ?</strong> C'est la majorité des PME
-                  françaises. Bienvenue dans la normalité - et dans le chemin
-                  vers la maîtrise.
+                  <strong>Score moyen ?</strong> C'est la majorité des
+                  organisations françaises. Bienvenue dans la normalité —
+                  et dans le chemin vers la maîtrise.
                 </li>
               </ul>
               <p className="text-sm italic opacity-80 mt-6">
@@ -323,8 +324,8 @@ export default function AuditFlashPage() {
             ============================================================ */}
         <section className="text-center pt-4">
           <blockquote className="font-display italic text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            « La cybersécurité d'une PME, c'est moins une affaire d'expert
-            qu'une habitude tranquille. »
+            « La cybersécurité, c'est moins une affaire d'expert qu'une
+            habitude tranquille. »
           </blockquote>
           <p
             aria-hidden="true"

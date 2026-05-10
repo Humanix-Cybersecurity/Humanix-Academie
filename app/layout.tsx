@@ -25,9 +25,15 @@ import "@fontsource/atkinson-hyperlegible/700.css";
 import "./globals.css";
 
 const SITE_NAME = "Humanix Académie";
-const SITE_TITLE = "Humanix Académie - Cybersécurité ludique pour PME";
+// Repositionnement mai 2026 : on quitte le ciblage TPE/PME exclusif pour
+// adresser TOUT LE MONDE (particuliers, équipes, indépendants, collectivités,
+// associations, entreprises de toute taille). Le différenciateur reste la
+// promesse temporelle : 5 minutes par semaine suffisent pour ancrer les
+// bons réflexes cyber. Cf. /manifeste pour le positionnement détaillé.
+const SITE_TITLE =
+  "Humanix Académie - La cyber pour tous, à partir de 5 minutes par semaine";
 const SITE_DESCRIPTION =
-  "Plateforme gamifiée de sensibilisation cybersécurité pour TPE et PME. Modules de 5 minutes, mises en situation, conformes RGPD.";
+  "Plateforme française gamifiée de sensibilisation cybersécurité, pour particuliers, équipes et organisations de toute taille. Modules de 5 minutes, mises en situation, conformes RGPD. Open source AGPLv3.";
 // Image OG fallback pour les pages qui n'ont pas leur propre opengraph-image.tsx
 // (admin, profil, api...). Les pages publiques exposées au social ont une OG
 // card dédiée 1200×630 générée dynamiquement (cf. lib/og-card.tsx + chaque
