@@ -6,6 +6,7 @@ import LegalLayout, {
   LegalTable,
   LegalHighlight,
 } from "@/components/legal/LegalLayout";
+import ConsentControl from "@/components/ConsentControl";
 
 export const metadata = {
   title: "Politique de cookies - Humanix-Cybersecurity",
@@ -18,8 +19,8 @@ const TOC = [
   { id: "definition", label: "1. Qu'est-ce qu'un cookie ?" },
   { id: "approche", label: "2. Notre approche" },
   { id: "liste", label: "3. Liste des cookies" },
-  { id: "refus", label: "4. Refuser ou supprimer" },
-  { id: "evolutions", label: "5. Évolutions futures" },
+  { id: "audience", label: "4. Mesure d'audience" },
+  { id: "refus", label: "5. Refuser ou supprimer" },
   { id: "plus", label: "6. Plus d'informations" },
 ];
 
@@ -52,11 +53,18 @@ export default function CookiesPage() {
             aucun cookie publicitaire, aucun cookie de suivi tiers, aucun pixel
             de réseaux sociaux
           </strong>
-          . Nous n'utilisons que les cookies strictement nécessaires au
-          fonctionnement du service, qui ne nécessitent donc pas votre
-          consentement préalable au sens de l'article 82 de la loi Informatique
-          et Libertés.
+          . Les cookies strictement nécessaires au fonctionnement du service ne
+          nécessitent pas votre consentement préalable (article 82 de la loi
+          Informatique et Libertés).
         </LegalHighlight>
+        <p>
+          Pour la mesure d'audience anonyme (Plausible Analytics), nous{" "}
+          <strong>recueillons votre consentement explicite</strong> via une
+          bannière conforme à la recommandation CNIL n° 2020-091 (parité stricte
+          entre « Accepter » et « Refuser », aucune case pré-cochée). Vous
+          pouvez modifier votre choix à tout moment depuis la{" "}
+          <a href="#audience">section 4</a> de cette page.
+        </p>
       </LegalSection>
 
       <LegalSection id="liste" num="3" title="Liste des cookies utilisés">
@@ -82,9 +90,9 @@ export default function CookiesPage() {
               "Préférence",
             ],
             [
-              "humanix-cookie-notice-dismissed (localStorage)",
-              "Mémorisation de la fermeture du bandeau d'information",
-              "Persistant",
+              "humanix-cookie-consent (localStorage)",
+              "Mémorisation de votre choix de consentement à la mesure d'audience (« granted » / « denied »)",
+              "Persistant tant que non supprimé",
               "Préférence",
             ],
           ]}
@@ -92,8 +100,40 @@ export default function CookiesPage() {
       </LegalSection>
 
       <LegalSection
-        id="refus"
+        id="audience"
         num="4"
+        title="Mesure d'audience anonyme"
+      >
+        <p>
+          Lorsque l'opérateur de cette instance active une mesure d'audience
+          via{" "}
+          <a
+            href="https://plausible.io/privacy-focused-web-analytics"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Plausible Analytics
+          </a>{" "}
+          (cloud), un outil <strong>respectueux de la vie privée</strong>{" "}
+          hébergé en Europe est utilisé. Il ne dépose{" "}
+          <strong>aucun cookie</strong>, ne suit pas les utilisateurs entre les
+          sites, et ne collecte ni adresse IP brute ni identifiant personnel —
+          uniquement des statistiques agrégées (pages vues, pays, navigateur).
+        </p>
+        <p>
+          Conformément à la recommandation CNIL n° 2020-091, son chargement
+          n'intervient qu'après votre consentement explicite. Vous pouvez le
+          revoir, l'accepter ou le refuser à tout moment ci-dessous —{" "}
+          <strong>aussi facilement que vous l'avez donné</strong> (article 7.3
+          du RGPD). Si l'opérateur n'a configuré aucun traceur, le panneau
+          ci-dessous l'indiquera et il n'y a rien à accepter ou refuser.
+        </p>
+        <ConsentControl />
+      </LegalSection>
+
+      <LegalSection
+        id="refus"
+        num="5"
         title="Comment refuser ou supprimer les cookies"
       >
         <p>
@@ -142,16 +182,6 @@ export default function CookiesPage() {
             </a>
           </li>
         </ul>
-      </LegalSection>
-
-      <LegalSection id="evolutions" num="5" title="Évolutions futures">
-        <p>
-          Si nous devions un jour intégrer un outil de mesure d'audience (Matomo
-          en mode anonymisé par exemple) ou tout autre traceur soumis à
-          consentement, nous publierions une bannière de consentement conforme
-          aux recommandations CNIL avec un bouton « Refuser » aussi visible et
-          simple à activer que le bouton « Accepter ».
-        </p>
       </LegalSection>
 
       <LegalSection id="plus" num="6" title="Plus d'informations">
