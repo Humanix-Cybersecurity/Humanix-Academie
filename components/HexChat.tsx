@@ -34,10 +34,16 @@ type Citation = {
   url: string | null;
   score: number;
 };
+type PiiNotice = {
+  detected: boolean;
+  summary: string;
+};
 type ChatMessage = {
   role: ChatRole;
   content: string;
   citations?: Citation[];
+  /** Notice si des PII ont ete masquees avant l'envoi a Mistral. */
+  piiNotice?: PiiNotice;
 };
 
 const STORAGE_KEY = "humanix:hex:conversation";
@@ -196,6 +202,7 @@ export default function HexChat({ enabled }: Props) {
       let buffer = "";
       let assistantContent = "";
       let assistantCitations: Citation[] | undefined;
+      let assistantPiiNotice: PiiNotice | undefined;
 
       while (true) {
         const { done, value } = await reader.read();
@@ -215,8 +222,22 @@ export default function HexChat({ enabled }: Props) {
               delta?: string;
               error?: string;
               citations?: Citation[];
+              pii?: PiiNotice;
             };
             if (parsed.error) throw new Error(parsed.error);
+            if (parsed.pii) {
+              assistantPiiNotice = parsed.pii;
+              setMessages((prev) => {
+                const next = prev.slice(0, -1);
+                next.push({
+                  role: "assistant",
+                  content: assistantContent,
+                  citations: assistantCitations,
+                  piiNotice: assistantPiiNotice,
+                });
+                return next;
+              });
+            }
             if (parsed.citations) {
               assistantCitations = parsed.citations;
               setMessages((prev) => {
@@ -225,6 +246,7 @@ export default function HexChat({ enabled }: Props) {
                   role: "assistant",
                   content: assistantContent,
                   citations: assistantCitations,
+                  piiNotice: assistantPiiNotice,
                 });
                 return next;
               });
@@ -238,6 +260,7 @@ export default function HexChat({ enabled }: Props) {
                   role: "assistant",
                   content: assistantContent,
                   citations: assistantCitations,
+                  piiNotice: assistantPiiNotice,
                 });
                 return next;
               });
@@ -430,6 +453,18 @@ function Bubble({ message }: { message: ChatMessage }) {
       >
         {message.content || (isUser ? "" : "…")}
       </div>
+      {/* Notice PII : Hex a masque des donnees sensibles avant envoi
+          a Mistral. Affichage discret mais explicite (transparence Zero-Trust). */}
+      {!isUser && message.piiNotice?.detected && (
+        <div className="mt-1.5 max-w-[85%] bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-900/50 rounded-xl px-2.5 py-1.5 text-[10px] text-amber-800 dark:text-amber-200 flex items-start gap-1.5">
+          <span aria-hidden="true">🛡</span>
+          <span>
+            <strong>Hex a masqué {message.piiNotice.summary}</strong> avant
+            d'envoyer ton message à l'IA. C'est volontaire — on ne transmet
+            jamais tes données personnelles aux fournisseurs tiers.
+          </span>
+        </div>
+      )}
       {/* Citations RAG (Phase 3) : sous la bulle Hex, badges des sources */}
       {!isUser && message.citations && message.citations.length > 0 && (
         <div className="mt-1.5 flex flex-wrap gap-1 max-w-[85%]">
