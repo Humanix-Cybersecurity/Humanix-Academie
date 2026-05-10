@@ -22,9 +22,15 @@
 //   - Choix re-modifiable depuis /confidentialite (lien dans le footer).
 //
 // Le CookieBanner s'affiche uniquement si :
-//   - localStorage 'humanix-cookie-consent' n'a aucune valeur
+//   - un traceur necessitant consentement est configure (Plausible cloud via
+//     NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT) — sinon il n'y a rien a consentir
+//   - ET localStorage 'humanix-cookie-consent' n'a aucune valeur
 //   - ET on n'est pas sur les pages legales (cgu, cgv, mentions, confidentialite,
 //     cookies) — eviter de masquer le contenu pendant que l'utilisateur lit.
+//
+// Pourquoi conditionnel : Humanix Academie est AGPL v3. Un fork qui n'utilise
+// pas Plausible cloud (mais Matomo ou Plausible self-host en mode CNIL-exempt,
+// ou rien) ne doit pas afficher de banniere de consentement inutile.
 //
 // Le composant <PlausibleLoader /> (separe) ecoute les changements de consent
 // et charge le script Plausible UNIQUEMENT si consent === "granted".
@@ -35,6 +41,17 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 const STORAGE_KEY = "humanix-cookie-consent";
+
+/**
+ * Indique si un traceur soumis a consentement est configure cote operateur.
+ * Aujourd'hui : uniquement Plausible cloud (le self-host et Matomo sont
+ * consideres exemptes par defaut sous regime CNIL recommandation 2020-091
+ * — c'est a l'operateur de verifier que sa config respecte bien les criteres
+ * d'exemption : anonymisation IP, pas de cross-site, conservation limitee).
+ */
+const NEEDS_CONSENT =
+  typeof process !== "undefined" &&
+  !!process.env.NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT;
 
 export type ConsentValue = "granted" | "denied" | null;
 
@@ -91,6 +108,12 @@ export default function CookieBanner() {
 
   useEffect(() => {
     setMounted(true);
+    // Pas de traceur soumis a consentement => pas de banniere (cas des forks
+    // OSS qui n'utilisent pas Plausible cloud).
+    if (!NEEDS_CONSENT) {
+      setVisible(false);
+      return;
+    }
     if (LEGAL_PATHS.has(pathname)) {
       // Page legale = on n'affiche pas la banniere par-dessus le contenu
       setVisible(false);
