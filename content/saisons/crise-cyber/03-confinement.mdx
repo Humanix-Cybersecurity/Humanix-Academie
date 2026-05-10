@@ -1,0 +1,209 @@
+---
+title: "Confinement immédiat sans perdre les preuves"
+durationMinutes: 7
+persona: "developer"
+objective: "Confiner un incident en cours (isoler les machines compromises, couper l'exfiltration) tout en preservant les preuves pour le forensic ulterieur. Eviter le 'reboot reflexe' qui detruit la RAM"
+xpReward: 60
+scenario: |
+  Mardi 8h45. Tu es admin systeme. Le SOC a confirme : compromission
+  active sur 4 machines.
+
+  - PC du CFO (Win 11) : process suspect en RAM, exfiltration en cours
+    vers une IP russe, ~2 GB deja partis
+  - Serveur ERP (Linux Debian 12) : 3 nouveaux comptes admin crees
+    cette nuit, qq logs ont ete effaces
+  - Serveur backup (Windows Server 2022) : tentatives de chiffrement
+    ransomware en cours sur 12 fichiers
+  - Poste comptable (Mac) : webshell detecte dans `/Applications/`
+
+  Tu as 30 minutes pour confiner avant que ca s'aggrave. Action n°1 ?
+choices:
+  - id: "a"
+    label: "Je redemarre toutes les machines pour stopper les process malicieux"
+    outcome: "bad"
+    feedback: "ERREUR FATALE classique. Le redemarrage : 1) detruit le contenu RAM (perte des preuves cles pour l'investigation), 2) declenche la phase finale du ransomware (chiffrement complet au boot), 3) peut effacer les logs en memoire. Ne JAMAIS redemarrer en cours d'incident."
+    points: -20
+  - id: "b"
+    label: "Je deconnecte du RESEAU les 4 machines (cable ethernet debranche, WiFi off) sans les eteindre + dump de la RAM avant tout cleanup"
+    outcome: "good"
+    feedback: "Procedure exemplaire. Deconnexion reseau = stop l'exfiltration et le lateral movement, sans detruire les preuves. RAM dump (volatility, FTK Imager) = capture la memoire vive avec les processes malicieux pour analyse. Puis investigation calme."
+    points: 40
+  - id: "c"
+    label: "Je formate immediatement les 4 machines pour eradiquer le malware"
+    outcome: "bad"
+    feedback: "DETRUIT TOUTES LES PREUVES. Formater = impossibilite de comprendre comment l'attaquant est entre, ce qu'il a fait, qui d'autre est compromis. Et tu n'as aucune garantie que le malware n'est pas dans les sauvegardes."
+    points: -20
+  - id: "d"
+    label: "J'eteins les machines, ca coupera le malware"
+    outcome: "bad"
+    feedback: "Mauvaise option mais moins pire que le redemarrage. Eteindre = arreter l'exfiltration mais detruire la RAM (preuves perdues). Pour le ransomware : eteindre AVANT le chiffrement complet est une option de derniere chance, mais deconnecter du reseau est mieux."
+    points: -10
+debrief: |
+  Le **confinement** est l'etape la plus critique d'une reponse a
+  incident. Mal fait = degats massifs ou perte definitive des preuves
+  pour comprendre / prouver / poursuivre.
+
+  **Les 3 objectifs simultanes du confinement :**
+
+  1. **STOP l'attaque en cours** : couper l'exfiltration, le lateral
+     movement, le ransomware encore en chiffrement.
+  2. **PRESERVE les preuves** : ne pas detruire la RAM, les logs, les
+     fichiers temporaires - tout ce qui permet de reconstituer
+     l'attaque.
+  3. **NE PAS aggraver** : eviter de declencher des comportements
+     defensifs du malware (auto-destruction, chiffrement final).
+
+  **Les 4 erreurs classiques (a NE PAS faire) :**
+
+  ❌ **Redemarrer la machine**
+  - Detruit la RAM (preuves)
+  - Peut declencher chiffrement final ransomware
+  - Peut effacer les logs en cours d'ecriture
+
+  ❌ **Eteindre brutalement**
+  - Detruit la RAM (preuves)
+  - Peut corrompre les filesystems (perte de donnees secondaires)
+  - Reaction stress, pas reflexion
+
+  ❌ **Formater / re-imager**
+  - Detruit toutes les preuves
+  - Pas d'investigation possible
+  - Tu ne sais pas si le malware persiste ailleurs
+
+  ❌ **Continuer a utiliser la machine "doucement"**
+  - L'attaquant continue son boulot
+  - Le ransomware finit son chiffrement
+  - L'exfiltration continue
+
+  **La procedure correcte (par type d'incident) :**
+
+  **Cas 1 - Compromission de poste utilisateur (PC CFO)**
+
+  1. **Deconnecter du reseau** (cable Ethernet debranche + WiFi
+     desactive + Bluetooth off). NE PAS eteindre.
+  2. **Si possible : RAM dump** (FTK Imager, DumpIt) sur cle USB
+     externe. Capture l'image memoire.
+  3. **Disk image** : creer une image bit-a-bit du disque (dd,
+     ddrescue, FTK Imager) pour analyse forensic.
+  4. **Reset des credentials** depuis un AUTRE poste : mot de passe,
+     MFA, cookies de session OAuth (revoke tokens M365/Google).
+  5. **Mettre la machine en quarantaine** physique (etiquette "ne pas
+     utiliser - investigation en cours").
+
+  **Cas 2 - Compromission de serveur (ERP Linux)**
+
+  1. **Snapshot de la VM** (si virtualisee : VMware, Proxmox, AWS).
+     C'est l'equivalent du dump RAM + disk pour les VMs.
+  2. **Isoler du reseau** : firewall rule pour bloquer toutes les
+     connexions sortantes ET entrantes (sauf admin pour
+     investigation).
+  3. **Auditer les comptes nouveaux** : `lastlog`, `/etc/passwd`,
+     `/etc/sudoers.d/`, `~/.ssh/authorized_keys` de tous les users.
+  4. **Verifier les logs** AVANT remediation : `journalctl`,
+     `/var/log/auth.log`, `~/.bash_history` (peut etre delete par
+     l'attaquant).
+  5. **NE PAS DELETE les comptes malicieux** tant que l'investigation
+     n'est pas faite. Juste les disable (`usermod -L`).
+
+  **Cas 3 - Ransomware en cours de chiffrement (serveur backup)**
+
+  C'est le seul cas ou eteindre IMMEDIATEMENT peut etre justifie :
+  - Si l'attaquant est en train de chiffrer activement, chaque
+    seconde de plus = plus de fichiers perdus
+  - Eteindre brutallement (hard shutdown) = perdre la RAM mais sauver
+    les fichiers non encore chiffres
+  - Ensuite : analyse forensic depuis l'image disque (RAM perdue
+    mais c'etait le moindre mal)
+
+  Sequence : 1) deconnecter du reseau, 2) si chiffrement actif a
+  haute vitesse : eteindre brutallement, 3) image du disque, 4)
+  investigation.
+
+  **Cas 4 - Webshell sur serveur web (Mac compta)**
+
+  1. **Isoler du reseau** (deconnecter Ethernet + WiFi)
+  2. **NE PAS DELETE le webshell** tant que pas analyse - capture sa
+     fonctionnalite (quels endpoints, quelles capacites).
+  3. **Audit complet** des fichiers crees/modifies recemment (find
+     -mtime -7).
+  4. **Reset les credentials** de tout compte qui aurait pu etre
+     vole via le webshell.
+  5. **Re-image** le serveur a partir d'une sauvegarde verifiee
+     saine.
+
+  **Outils forensic gratuits :**
+
+  - **FTK Imager** : capture RAM + disk, gratuit
+  - **DumpIt** : RAM dump Windows minimaliste, gratuit
+  - **Volatility 3** : analyse RAM (open source)
+  - **GRR Rapid Response** : forensic distribue (Google OSS)
+  - **Velociraptor** : monitoring + forensic (open source)
+  - **Wireshark** : analyse trafic reseau
+
+  **Le piege "j'ai un EDR, je m'en remets a lui" :**
+
+  Les EDR (Microsoft Defender, CrowdStrike, SentinelOne, HarfangLab)
+  peuvent isoler une machine via leur console. Pratique mais :
+  - Verifie que l'isolation a bien fonctionne (test ping)
+  - Si l'EDR est lui-meme compromis (rare mais possible), il peut
+    cacher l'incident
+  - Combiner EDR isolation + deconnexion reseau physique pour les
+    cas les plus critiques
+
+  **Le timeline forensic :**
+
+  Pendant le confinement, NOTER :
+  - Heure exacte de detection
+  - Heure exacte de chaque action (deconnexion, dump, etc.)
+  - Quelle action sur quelle machine
+  - Etat avant/apres
+
+  Ce timeline servira a :
+  - Recreer la chronologie (forensic)
+  - Justifier les actions devant CNIL/avocats
+  - REX pour la prochaine fois
+
+  **Note legale : contacter les autorites**
+
+  Pour les attaques significatives, signaler a :
+  - **Gendarmerie cyber (C3N)** : pour plainte penale
+  - **ANSSI / CERT-FR** : pour conseil et alerte de la communaute
+  - **CNIL** : si donnees personnelles affectees (cf. ep 04)
+
+  Ces signalements n'empechent pas l'investigation interne, mais
+  peuvent apporter expertise + traçabilite.
+quiz:
+  - question: "Tu vois un ransomware en cours de chiffrement sur un serveur. Action n°1 ?"
+    choices:
+      - { id: "a", label: "Redemarrer le serveur", correct: false }
+      - { id: "b", label: "Deconnecter du reseau immediatement (puis si chiffrement haute vitesse, eteindre brutallement pour sauver les fichiers non encore chiffres)", correct: true }
+      - { id: "c", label: "Lancer un antivirus", correct: false }
+    explanation: "Deconnecter du reseau = stop le C&C, l'exfiltration. Si le chiffrement est actif a haute vitesse : eteindre brutallement (hard shutdown) sauve les fichiers non encore chiffres. NE PAS redemarrer = declenche souvent la phase finale du ransomware."
+
+  - question: "Pourquoi NE JAMAIS redemarrer une machine en cours d'incident ?"
+    choices:
+      - { id: "a", label: "Aucune raison", correct: false }
+      - { id: "b", label: "Detruit la RAM (preuves cles), peut declencher la phase finale du ransomware, peut effacer les logs", correct: true }
+      - { id: "c", label: "C'est plus rapide", correct: false }
+    explanation: "Reboot = perte de la RAM (processes malicieux, secrets, payload), peut activer le chiffrement final ransomware, peut effacer les logs en cours d'ecriture. Pour preserver les preuves : deconnecter du reseau SANS eteindre."
+
+  - question: "Quel outil gratuit fait du RAM dump ?"
+    choices:
+      - { id: "a", label: "Microsoft Word", correct: false }
+      - { id: "b", label: "FTK Imager ou DumpIt (Windows) + Volatility 3 pour analyse", correct: true }
+      - { id: "c", label: "Excel", correct: false }
+    explanation: "FTK Imager (gratuit) capture RAM + disk. DumpIt (gratuit Windows) capture la RAM minimaliste. Volatility 3 (open source) analyse les dumps RAM. Standards forensic."
+
+  - question: "Tu as confine une machine. Que faire AVANT de la 'remediate' ?"
+    choices:
+      - { id: "a", label: "Formater immediatement", correct: false }
+      - { id: "b", label: "Investigation forensic complete (qui, quoi, quand, comment) puis remediation", correct: true }
+      - { id: "c", label: "Rien", correct: false }
+    explanation: "Confinement -> investigation -> remediation. Formater avant l'investigation = impossibilite de comprendre l'attaque, ses extensions (autres machines compromises ?), donc risque eleve de re-compromission. Toujours investiguer d'abord."
+---
+
+> 💡 **Pour aller plus loin** : l'**ANSSI** publie un guide "Reagir
+> a un incident de securite informatique" (gratuit). **GRR**, 
+> **Velociraptor**, **Volatility 3** sont les outils forensic
+> open source de reference. Le **CERT-FR** offre un soutien
+> gratuit aux structures critiques.

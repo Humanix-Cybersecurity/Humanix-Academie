@@ -1,0 +1,189 @@
+---
+title: "Détecter qu'on est attaqué (signaux faibles)"
+durationMinutes: 7
+persona: "manager"
+objective: "Reconnaitre les signaux faibles d'une attaque en cours (anomalies de logs, comportements utilisateurs, alertes EDR), distinguer signal du bruit, declencher une investigation"
+xpReward: 60
+scenario: |
+  Mardi 7h42, ton tel sonne. C'est ton CFO :
+
+  > "Florian, j'ai un truc bizarre. Mon mail de hier soir a 23h27 est
+  > 'envoye' mais je ne l'ai pas envoye. C'est une demande de virement
+  > a notre fournisseur Belge - 87 000 EUR sur un nouveau RIB. Je n'ai
+  > rien tape hier soir. C'est quoi ce truc ?"
+
+  Tu prends ton cafe. Le CFO continue :
+
+  > "Et tiens, mon Outlook est lent ce matin. Et les regles de tri
+  > ont change - j'ai une regle 'archive automatique' que je n'ai
+  > pas creee."
+
+  Tu fais quoi ?
+choices:
+  - id: "a"
+    label: "Ce sont 3 signaux d'une compromission de compte (mail envoye sans toi, regle de tri non creee, lenteur). Tu deconnectes le CFO de tout, change les MOT DE PASSE depuis un AUTRE poste, et declenches l'investigation"
+    outcome: "good"
+    feedback: "Diagnostic correct. Les 3 signaux convergents pointent vers une compromission de compte (account takeover). Action immediate : isoler, changer les credentials, demarrer le forensic. Et ALERTER le fournisseur belge AVANT qu'il ne paie."
+    points: 35
+  - id: "b"
+    label: "Le CFO a peut-etre confondu, je le rassure et je verifie le mail"
+    outcome: "bad"
+    feedback: "Tu MINIMISES un incident potentiel. 3 signaux concordants ne sont jamais une coincidence. Le delai d'action est CRITIQUE en compromission de compte - chaque heure additionnelle = plus d'exfiltration ou de fraude executee."
+    points: -15
+  - id: "c"
+    label: "Je lance un scan antivirus complet sur le poste du CFO"
+    outcome: "neutral"
+    feedback: "Pas inutile mais a froid : un scan AV detecte les malwares connus, pas les compromissions de compte cloud (Office 365). Le mail 'envoye sans toi' indique que l'attaquant est dans le COMPTE M365, pas forcement sur le POSTE."
+    points: 5
+  - id: "d"
+    label: "Je previens le DSI et je laisse faire"
+    outcome: "neutral"
+    feedback: "Bonne reaction (escalade) mais incomplete. Le DSI ne peut pas tout faire seul - dans les 30 minutes qui suivent, l'isolation du compte CFO + alerte au fournisseur belge sont CRITIQUES. Multi-tasking necessaire."
+    points: 10
+debrief: |
+  La detection est la **premiere ligne de defense apres compromission**.
+  Plus l'attaque est detectee tot, moins les degats sont eleves.
+
+  Statistique IBM Cost of Data Breach 2024 : un breach detecte sous
+  200 jours coute en moyenne 1.4M EUR ; au-dela = 4.5M EUR. Donc
+  detecter en 1 mois plutot qu'en 1 an peut sauver des millions.
+
+  **Les 3 categories de signaux faibles :**
+
+  **1. Signaux LOGS (techniques)**
+
+  Anomalies dans les logs systeme/reseau/application :
+
+  - **Connexions a des heures inhabituelles** : connexion VPN a 3h du
+    matin alors que l'employe est en France et le service ouvre a 9h.
+  - **Connexions depuis des IPs inhabituelles** : login depuis une IP
+    russe pour un user qui n'a jamais voyage.
+  - **Pic de trafic sortant** : un serveur qui exfiltre normalement
+    100 Mo/jour sort soudainement 50 Go.
+  - **Multiples echec d'auth puis succes** : pattern classique de
+    brute force / credential stuffing.
+  - **Modifications de regles email** (Outlook, Gmail) : "tous les
+    mails de banque -> dossier archive" = signature d'un attaquant
+    qui veut cacher les notifications.
+  - **Nouveaux process / services demarres** : services Windows
+    inconnus, processus avec noms ressemblant a des legitimes
+    (svchosst.exe au lieu de svchost.exe).
+
+  **2. Signaux UTILISATEUR (humains)**
+
+  Indices que les utilisateurs eux-memes peuvent reporter :
+
+  - **Mails 'envoyes' qu'ils n'ont pas envoyes** (cas du scenario).
+  - **Lenteur inhabituelle** du poste.
+  - **Pop-ups bizarres**, browser qui se redirige vers des sites
+    inconnus.
+  - **Alertes "votre mot de passe a ete change"** d'un service auquel
+    l'utilisateur n'a pas touche.
+  - **Demandes de paiement urgentes** d'un collegue (fraude au
+    president variant, cf. saison fraude-president).
+
+  Ces signaux sont souvent ignores ("c'est lent, c'est normal mon PC
+  est vieux") - alors qu'ils peuvent indiquer une compromission.
+
+  **3. Signaux EXTERNES**
+
+  - **Notifications de breach prestataire** (cf. saison supply-chain).
+  - **Have I Been Pwned** : leaks de credentials reportes.
+  - **Alerte EDR / antivirus** : detection de malware actif.
+  - **Plainte client** : "je viens de recevoir un mail suspect de
+    votre boite avec un lien bizarre".
+  - **Surveillance dark web** : tes credentials/donnees leak en
+    vente.
+
+  **Distinguer signal du bruit :**
+
+  Tous les jours, des centaines d'alertes mineures se produisent
+  dans une organisation. La cle est la **convergence** :
+  - Un seul signal = probablement bruit (faux positif, maintenance,
+    erreur user)
+  - Deux signaux concordants = a investiguer
+  - Trois signaux concordants = haute probabilite d'incident reel
+
+  Dans le scenario : mail envoye sans toi + regle de tri non creee
+  + lenteur = **3 signaux convergents** = compromission de compte
+  hautement probable. Action immediate.
+
+  **Outils de detection (par tier de maturite) :**
+
+  **Tier 1 - Gratuit / facile (PME starter)**
+  - **Microsoft 365 Audit Log** : detecte les modifications de regles,
+    les connexions inhabituelles. A activer.
+  - **Azure AD sign-in logs** : geolocalisation des connexions, MFA
+    failures.
+  - **Windows Event Log** : evenements 4624 (login), 4625 (login
+    failed), 4720 (compte cree).
+  - **Gmail Activity** : connexions actives, IPs, devices.
+
+  **Tier 2 - Investissement modere (PME mature)**
+  - **EDR/XDR** : Microsoft Defender, CrowdStrike, SentinelOne,
+    HarfangLab (FR). Detecte les comportements suspects sur les
+    postes.
+  - **SIEM** : Sekoia.io (FR), Wazuh (gratuit OSS), Elastic Security.
+    Centralise et correle les logs.
+
+  **Tier 3 - Mature / grands comptes**
+  - **SOC interne ou outsource** (24/7) : surveillance humaine +
+    automatisee.
+  - **Threat Intelligence** : OpenCTI (FR OSS) pour anticiper les
+    menaces.
+
+  **Pour la PME : la regle des 5 minutes**
+
+  Sans EDR/SIEM, les utilisateurs sont tes capteurs. Il faut une
+  procedure simple :
+  1. Si tu observes un comportement anormal, **5 minutes** pour
+     verifier.
+  2. Si confirmation = appel direct au DSI/RSSI (pas mail, pas chat).
+  3. Le DSI/RSSI declenche le runbook incident (cf. ep 02 cellule
+     de crise).
+
+  Sensibilise les utilisateurs : "en cas de doute, appelle". Mieux
+  vaut 10 faux positifs que 1 incident detecte 6 mois trop tard.
+
+  **Cas reel - Equifax 2017 :**
+
+  Equifax a ete compromis en mars 2017. Detecte... fin juillet 2017.
+  4 mois pour detecter une exfiltration de 147M de dossiers
+  personnels. Cause : signaux d'alerte ignores par l'equipe SOC,
+  patches Apache Struts non appliques, pas de SIEM correle.
+
+  Cout final : 1.4 milliards $ (amendes + class actions + remediation).
+quiz:
+  - question: "Le CFO recoit un mail 'envoye par lui' qu'il n'a pas envoye + regle Outlook qu'il n'a pas creee + lenteur. C'est :"
+    choices:
+      - { id: "a", label: "Une coincidence", correct: false }
+      - { id: "b", label: "3 signaux convergents = compromission de compte (account takeover) hautement probable, action immediate", correct: true }
+      - { id: "c", label: "Un faux positif", correct: false }
+    explanation: "3 signaux concordants ne sont jamais une coincidence. Account takeover signature : l'attaquant utilise le compte (mail), cache ses traces (regle de tri), et le poste rame (process malicieux). Action en moins de 5 minutes."
+
+  - question: "Selon IBM 2024, combien coute en moyenne un breach detecte en moins de 200 jours vs plus ?"
+    choices:
+      - { id: "a", label: "1.4M EUR vs 4.5M EUR", correct: true }
+      - { id: "b", label: "Identique", correct: false }
+      - { id: "c", label: "Detecter rapidement coute plus cher", correct: false }
+    explanation: "Le rapport IBM Cost of Data Breach montre une difference massive selon le delai de detection. Detecter rapidement = limiter exfiltration, fraude, lateral movement. C'est le meilleur ROI cyber possible."
+
+  - question: "Quel signal est le plus facile a detecter pour un user lambda ?"
+    choices:
+      - { id: "a", label: "Anomalies de logs reseau", correct: false }
+      - { id: "b", label: "Mails 'envoyes' qu'il n'a pas envoyes + regles Outlook qu'il n'a pas creees", correct: true }
+      - { id: "c", label: "Nouveau process Windows", correct: false }
+    explanation: "Les signaux observable par un user (mails, regles, lenteur, pop-ups) sont les plus accessibles. Les logs techniques demandent un EDR/SIEM. Sensibiliser les users = elargir tes capteurs de detection."
+
+  - question: "Equifax 2017 : combien de temps entre compromission et detection ?"
+    choices:
+      - { id: "a", label: "Meme jour", correct: false }
+      - { id: "b", label: "4 mois (mars-juillet 2017)", correct: true }
+      - { id: "c", label: "1 an", correct: false }
+    explanation: "Equifax n'a detecte que 4 mois apres l'intrusion initiale. Cause : signaux ignores, pas de SIEM correle, patches Apache Struts non appliques. Cout : 1.4 milliards $ - illustre le cout enorme d'une detection tardive."
+---
+
+> 💡 **Pour aller plus loin** : Wazuh (gratuit OSS) est un bon SIEM de
+> demarrage pour PME. Sekoia.io (FR commercial) propose un SOC managé
+> a partir de quelques centaines d'EUR/mois pour la PME. Le projet OSS
+> **OpenCTI** (Filigran, FR) est la reference threat intelligence.

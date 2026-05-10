@@ -1,0 +1,216 @@
+---
+title: "Monter une cellule de crise en 30 min"
+durationMinutes: 8
+persona: "manager"
+objective: "Savoir composer une cellule de crise cyber rapidement (qui inviter, qui pas inviter), definir les roles cles, etablir le canal de communication d'urgence"
+xpReward: 90
+scenario: |
+  Mardi 8h12. Tu es DSI d'une PME 200 personnes. Le CFO te confirme
+  qu'il a detecte une fraude au RIB hier soir - 87 000 EUR sont
+  potentiellement parti chez un fournisseur belge.
+
+  Le SOC externalise vient de t'appeler : "On voit aussi des connexions
+  suspectes depuis hier sur 3 comptes Microsoft 365 (CFO, DAF,
+  comptable). C'est un breach actif en cours."
+
+  Tu as 30 minutes pour reunir une cellule de crise efficace. Qui
+  appelles-tu ?
+choices:
+  - id: "a"
+    label: "CEO + DAF + DPO + RSSI/DSI + avocat externe + un communicant + chef de production - tout le monde concerne"
+    outcome: "good"
+    feedback: "Composition correcte. Cellule restreinte (~7 personnes max), couvrant les axes : decision (CEO), finance (DAF), legal/RGPD (DPO + avocat), technique (RSSI/DSI), communication (interne+externe), continuite (production). Pas plus, pas moins."
+    points: 35
+  - id: "b"
+    label: "Tout le COMEX + tous les chefs de service - on ne sait pas qui sera utile"
+    outcome: "bad"
+    feedback: "TROP DE MONDE. Une cellule de crise efficace est restreinte (5-7 max). Au-dela = decisions paralysees, fuites d'info inevitables, gestion impossible. Les autres seront informes par cascading apres les decisions."
+    points: -15
+  - id: "c"
+    label: "Juste le CEO - il decide, je gere apres"
+    outcome: "bad"
+    feedback: "TROP PEU. Un breach cyber implique simultanement : decisions financieres (DAF), notification CNIL 72h (DPO), legal (avocat), continuite metier (production), communication (com). Le CEO seul ne peut pas tout gerer en parallele."
+    points: -10
+  - id: "d"
+    label: "Juste l'equipe technique IT - on resout le probleme avant d'impliquer la direction"
+    outcome: "bad"
+    feedback: "Erreur classique des techniciens. Un breach cyber n'est PAS qu'un probleme technique. Decisions financieres, juridiques, communication : tu ne peux pas les prendre seul. Et en RGPD, le DPO DOIT etre implique sous 72h - tu n'as pas le luxe d'attendre."
+    points: -15
+debrief: |
+  La **cellule de crise cyber** est une instance temporaire qui
+  rassemble les decideurs cles pour gerer un incident en cours.
+  Elle est differente d'une "team SOC" : pas que technique, pas que
+  decision, c'est l'organe qui ORCHESTRE tous les axes.
+
+  **Composition standard (5-7 personnes max) :**
+
+  **1. CEO ou Directeur General (decideur ultime)**
+
+  Pour les decisions strategiques :
+  - Acceptation de couts non-budgetes (audit forensic, avocat,
+    consultants)
+  - Communication publique (statement, reseaux sociaux, presse)
+  - Decision "payer la rancon ou pas"
+  - Communication aux actionnaires
+
+  **2. DAF (CFO)**
+
+  - Stop des virements en cours / a venir
+  - Notification banque pour rappel des virements suspects (sous
+    24h, recall possible si attaque recente)
+  - Coordination avec assurance cyber
+  - Suivi des couts de remediation
+
+  **3. DPO ou referent RGPD**
+
+  - **Notification CNIL sous 72h** si donnees personnelles affectees
+    (RGPD article 33)
+  - Communication aux personnes concernees (article 34) si risque
+    eleve
+  - Documentation dans le registre des violations
+  - Conformite RGPD pendant la crise (les requetes Right To Be
+    Forgotten arrivent souvent en parallele)
+
+  **4. RSSI ou DSI**
+
+  - Coordination technique : isolation, investigation, remediation
+  - Pilotage du SOC (interne ou externe)
+  - Communication avec ANSSI / CERT-FR
+  - Decision technique : restaurer une sauvegarde, reformater, etc.
+
+  **5. Avocat (interne ou externe)**
+
+  - Conseils juridiques sur la communication (eviter
+    l'auto-incrimination)
+  - Plainte aupres des autorites (gendarmerie cyber, OCLCTIC)
+  - Gestion contractuelle si le breach passe par un prestataire
+  - Conseils si litiges clients potentiels
+
+  **6. Responsable communication (interne + externe)**
+
+  - Rediger le statement officiel (pour clients, partenaires, presse)
+  - Gerer les reseaux sociaux (anticiper les questions clients)
+  - Coordination avec le service client (script de reponse)
+
+  **7. Responsable metier impacte (operations, production)**
+
+  Pour les industries (sante, manufacturing, retail) :
+  - Decision continuite : on continue de produire/servir ou on
+    stoppe ?
+  - Plan de reprise d'activite (PRA) si stoppe
+  - Communication aux equipes terrain
+
+  **Qui NE PAS inviter (les pieges) :**
+
+  ❌ **Tout le COMEX** : trop de monde, decisions paralysees, fuites
+  inevitable. Le CEO sera leur relais.
+
+  ❌ **Les chefs de chaque service** : sera informe par cascading.
+
+  ❌ **Le service client / sales** : ils auront un script a appliquer
+  apres les decisions de la cellule.
+
+  ❌ **Le prestataire potentiellement compromis** : tant que tu n'as
+  pas confirme qu'il n'est pas la source, tu ne lui partages PAS
+  les informations sur l'incident.
+
+  **Le canal de communication d'urgence :**
+
+  La regle d'or : **NE PAS utiliser les canaux potentiellement
+  compromis**. Si le breach affecte Microsoft 365 ou Slack, ne pas
+  utiliser Teams ou Slack pour communiquer la crise (l'attaquant lit
+  potentiellement).
+
+  Solutions :
+  - **Signal** (gratuit, chiffre, FR-friendly) : groupe dedie cellule
+    de crise.
+  - **WhatsApp Business** : moins ideal mais souvent deja installe.
+  - **Telephone** : les premieres heures, c'est le canal le plus sur.
+  - **Reunion physique** dans une salle non-IT (pas de cameras
+    connectees, pas de visios).
+
+  Definir AVANT la crise :
+  - Numero de tel de chaque membre de la cellule
+  - Groupe Signal pre-cree avec tous les membres
+  - Salle de reunion dediee (numerique : Signal video ; physique :
+    salle "war room")
+
+  **Les 5 premieres minutes de la cellule :**
+
+  1. **Tour de table EXPRESS** : qu'est-ce qu'on sait factuellement ?
+     (pas d'opinions, faits seulement)
+  2. **Premiers actions immediates** : isolation des comptes/services
+     compromis
+  3. **Designer un coordinateur** : 1 personne qui pilote (souvent
+     le RSSI), maintient le timeline d'actions
+  4. **Frequence de reunion** : toutes les 1h initialement, espacement
+     des que la situation se stabilise
+  5. **Allocation des roles** : qui fait quoi dans l'heure qui vient
+
+  **Le timeline (le document central) :**
+
+  Pendant la crise, MAINTENIR un timeline detaille :
+  - Heure UTC + heure locale
+  - Action prise
+  - Par qui
+  - Resultat
+
+  Ce timeline est CRITIQUE pour :
+  - **CNIL / autorites** : prouver que tu as agi de maniere
+    appropriee
+  - **Assurance cyber** : justifier les couts
+  - **Forensic** : reconstruction des events
+  - **REX** : apprendre pour la prochaine fois (cf. ep 06)
+
+  Outil simple : un Google Doc / Notion partage avec la cellule.
+  Append-only, pas de modifications retro.
+
+  **Cas reel - Norsk Hydro 2019 :**
+
+  Norsk Hydro (aluminium norvegien) a subi un ransomware LockerGoga
+  qui a paralyse 22 000 employes dans 40 pays. Reponse exemplaire :
+  - Cellule de crise montee en 30 minutes
+  - CEO a refuse de payer la rancon (decision morale)
+  - Communication transparente meme aux actionnaires (cours d'action
+    a perdu 2% au lieu de 20% chez d'autres)
+  - Operations restaurees manuellement en 1 semaine
+  - REX public partage avec tous (etudie comme cas d'ecole depuis)
+
+  Cout final : ~75M EUR (recuperes via assurance + perte de
+  productivite). Sans cellule de crise efficace : facilement
+  300-400M EUR.
+quiz:
+  - question: "Combien de personnes idealement dans une cellule de crise cyber ?"
+    choices:
+      - { id: "a", label: "10-15 (tout le COMEX)", correct: false }
+      - { id: "b", label: "5-7 max (decideurs cles : CEO, DAF, DPO, RSSI, avocat, com, metier)", correct: true }
+      - { id: "c", label: "1 (le CEO)", correct: false }
+    explanation: "5-7 max = couvrir tous les axes (decision, finance, legal/RGPD, technique, com, continuite) sans paralyser les decisions. Au-dela : trop lent, fuites inevitable. En-dessous : axes manquants."
+
+  - question: "Pourquoi NE PAS utiliser Teams/Slack pour la communication de cellule de crise ?"
+    choices:
+      - { id: "a", label: "Trop lent", correct: false }
+      - { id: "b", label: "Si l'attaquant a compromis Microsoft 365 ou Slack, il lit potentiellement les communications de la cellule de crise", correct: true }
+      - { id: "c", label: "Aucune raison", correct: false }
+    explanation: "Pendant un breach, ne pas utiliser les canaux compromis. Signal (chiffre E2E), telephone, ou reunion physique sont les options. Pre-creer un groupe Signal cellule de crise AVANT la crise."
+
+  - question: "Quel role est OBLIGATOIRE en cellule de crise cyber ?"
+    choices:
+      - { id: "a", label: "Un consultant externe", correct: false }
+      - { id: "b", label: "Le DPO (notification CNIL sous 72h, RGPD article 33)", correct: true }
+      - { id: "c", label: "Un journaliste", correct: false }
+    explanation: "Si donnees personnelles affectees, le RGPD impose la notification CNIL sous 72h et au sujets concernes. Le DPO pilote ces obligations legales. Sans DPO en cellule = risque d'amendes (jusqu'a 4% CA)."
+
+  - question: "Norsk Hydro 2019 a perdu combien (avec gestion exemplaire) ?"
+    choices:
+      - { id: "a", label: "Quelques milliers EUR", correct: false }
+      - { id: "b", label: "~75M EUR (vs 300-400M EUR potentiellement sans cellule de crise efficace)", correct: true }
+      - { id: "c", label: "1 milliard", correct: false }
+    explanation: "Norsk Hydro = cas d'ecole de gestion de crise reussie. Cellule en 30 min, refus de payer la rancon, communication transparente. ~75M EUR au lieu de 300-400M EUR potentiellement (autres entreprises similaires non preparees)."
+---
+
+> 💡 **Pour aller plus loin** : l'**ANSSI** publie un guide "Crise
+> d'origine cyber" (gratuit). Le **CERT-FR** offre un soutien gratuit
+> en cas de crise cyber pour les entites critiques. **Signal** doit
+> etre configure AVANT la crise (groupe dedie, numeros de tous les
+> membres).
