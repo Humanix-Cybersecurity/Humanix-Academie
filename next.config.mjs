@@ -13,9 +13,35 @@
 //  - connect-src whitelist : seuls les providers FR/UE actuels.
 //  - frame-ancestors 'none' : double-securite avec X-Frame-Options DENY.
 //  - upgrade-insecure-requests : force HTTPS pour les sous-resources.
+
+/**
+ * Origine Plausible cloud, deduit dynamiquement de l'env var pour ne PAS
+ * hardcoder plausible.io dans le CSP : un fork peut utiliser un proxy
+ * (ex: analytics.example.com qui forward vers Plausible) ou une instance
+ * Plausible self-host avec CDN. Si non defini, l'origine reste vide et
+ * la CSP n'autorise rien d'externe pour Plausible (default-deny).
+ */
+function plausibleOrigin() {
+  const url = process.env.NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT;
+  if (!url) return "";
+  try {
+    return new URL(url).origin;
+  } catch {
+    return "";
+  }
+}
+
+const PLAUSIBLE_ORIGIN = plausibleOrigin();
+
 const CSP_DIRECTIVES = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  // script-src : 'unsafe-inline' pour le theme init script inline dans
+  // app/layout.tsx. Plausible cloud ajoute SEULEMENT si l'operateur a
+  // configure NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT (sinon CSP plus stricte
+  // par defaut pour les forks OSS).
+  ["script-src 'self' 'unsafe-inline'", PLAUSIBLE_ORIGIN]
+    .filter(Boolean)
+    .join(" "),
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: https:",
   "font-src 'self' data:",
@@ -23,7 +49,18 @@ const CSP_DIRECTIVES = [
   // URL depuis le MP3 recu de /api/tts/synthesize. Sans 'blob:', l'element
   // <audio> echoue silencieusement (CSP fallback sur default-src 'self').
   "media-src 'self' blob:",
-  "connect-src 'self' https://api.mistral.ai https://api.payplug.com https://secure.payplug.com https://api.scaleway.com",
+  // connect-src whitelist : seuls les providers FR/UE actuels + l'origine
+  // Plausible cloud (pour les events POST) si configuree.
+  [
+    "connect-src 'self'",
+    "https://api.mistral.ai",
+    "https://api.payplug.com",
+    "https://secure.payplug.com",
+    "https://api.scaleway.com",
+    PLAUSIBLE_ORIGIN,
+  ]
+    .filter(Boolean)
+    .join(" "),
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
