@@ -196,8 +196,13 @@ export async function deleteChunksFromSource(sourcePath: string): Promise<void> 
  * Convertit un number[] en literal pgvector "[0.1,0.2,...]".
  * Valide que chaque element est un nombre fini (pas d'injection possible
  * meme si l'input est compromis).
+ *
+ * Exporte pour testabilite : la validation est notre seule defense
+ * contre l'injection SQL puisque le vector literal est concatene
+ * directement dans la requete (Prisma ne supporte pas le type vector
+ * dans les params typed). Cf. pgvector.test.ts.
  */
-function toVectorLiteral(v: number[]): string {
+export function toVectorLiteral(v: number[]): string {
   for (const x of v) {
     if (typeof x !== "number" || !Number.isFinite(x)) {
       throw new Error("vector contient une valeur non-numerique");
