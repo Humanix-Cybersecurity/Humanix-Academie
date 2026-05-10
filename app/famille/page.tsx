@@ -27,10 +27,27 @@ import { isEligibleToInvite, remainingInvitesFor } from "@/lib/family-invites";
 
 export const dynamic = "force-dynamic";
 
+const FAM_TITLE = "Cyber Famille — Articles cyber gratuits sans inscription | Humanix Académie";
+const FAM_DESC =
+  "La cyber-protection de tes proches en cadeau. Articles courts (5-10 min), sans jargon, sans pub, sans inscription. Pour ta grand-mère, ton ado, tes parents, tes amis. Made in France.";
+
 export const metadata = {
-  title: "Cyber Famille - Articles cyber gratuits, sans inscription",
-  description:
-    "La cyber-protection de tes proches en cadeau. Articles courts (5-10 min), sans jargon, sans pub, sans inscription. Pour ta grand-mère, ton ado, tes parents, tes amis.",
+  title: FAM_TITLE,
+  description: FAM_DESC,
+  alternates: { canonical: "/famille" },
+  openGraph: {
+    title: FAM_TITLE,
+    description: FAM_DESC,
+    type: "website",
+    url: "/famille",
+    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cyber Famille — Articles cyber gratuits",
+    description: FAM_DESC,
+    images: ["/logo-humanix-academie-512.png"],
+  },
 };
 
 export default async function FamillePage() {

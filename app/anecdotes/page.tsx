@@ -8,11 +8,27 @@ import { db } from "@/lib/db";
 import AnecdoteSubscribeForm from "@/components/AnecdoteSubscribeForm";
 import HexBackdrop from "@/components/HexBackdrop";
 
+const ANEC_TITLE = "La Cyber-Anecdote du Lundi | Humanix Académie";
+const ANEC_DESC =
+  "Chaque lundi, 1 incident cyber réel + 1 leçon + 1 mini-action concrète. La newsletter cybersécurité française pour tous (particuliers, équipes, organisations). Gratuit, désinscription en 1 clic, RGPD-compliant.";
+
 export const metadata: Metadata = {
-  title: "La Cyber-Anecdote du Lundi | HumaniX Académie",
-  description:
-    "Chaque lundi, 1 incident cyber réel + 1 leçon + 1 mini-action concrète. La newsletter cybersécurité française pour tous (particuliers, équipes, organisations). Gratuit, désinscription en 1 clic.",
+  title: ANEC_TITLE,
+  description: ANEC_DESC,
   alternates: { canonical: "/anecdotes" },
+  openGraph: {
+    title: ANEC_TITLE,
+    description: ANEC_DESC,
+    type: "website",
+    url: "/anecdotes",
+    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cyber-Anecdote du Lundi — 1 incident, 1 leçon",
+    description: ANEC_DESC,
+    images: ["/logo-humanix-academie-512.png"],
+  },
 };
 
 const CATEGORY_BADGES: Record<
