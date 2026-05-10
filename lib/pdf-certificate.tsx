@@ -230,7 +230,7 @@ export function CertificateOfCompletion(props: Props) {
             <View>
               <Text style={styles.brandName}>HUMANIX ACADÉMIE</Text>
               <Text style={styles.brandTagline}>
-                Cybersécurité humaine pour PME
+                La cyber humaine pour tous
               </Text>
 
               <Text style={styles.certificateTitle}>

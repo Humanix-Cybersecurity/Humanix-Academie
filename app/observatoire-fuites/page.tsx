@@ -235,7 +235,7 @@ export default async function ObservatoireFuitesPage({
                 href="/audit-flash"
                 className="btn-primary text-sm whitespace-nowrap shrink-0"
               >
-                <span aria-hidden="true">🌿</span> Auditer ma PME
+                <span aria-hidden="true">🌿</span> Faire un audit flash
               </Link>
             </div>
           </div>
