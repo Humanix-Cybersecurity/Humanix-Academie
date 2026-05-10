@@ -2,19 +2,19 @@
 title: "Le faux candidat a l'embauche par visio"
 durationMinutes: 7
 persona: "rh"
-objective: "Comprendre l'attaque par faux candidat deepfake et batir une procedure d'embauche resistante"
+objective: "Comprendre l'attaque par faux candidat deepfake et batir une procédure d'embauche résistante"
 xpReward: 60
 scenario: |
-  Tu es DRH d'une PME tech. Tu cherches un developpeur senior. Le profil "Lucas Martin" a un CV impeccable, un GitHub actif depuis 5 ans, un LinkedIn nettoyé. Tu fais 2 entretiens en visio - il maitrise techniquement. L'embauche est validee, contrat signe, debut prevu dans 2 semaines.
+  Tu es DRH d'une PME tech. Tu cherches un developpeur senior. Le profil "Lucas Martin" a un CV impeccable, un GitHub actif depuis 5 ans, un LinkedIn nettoyé. Tu fais 2 entretiens en visio - il maîtrise techniquement. L'embauche est validee, contrat signe, début prévu dans 2 semaines.
 
-  Le jour J, "Lucas" ne se presente pas physiquement. Il "preferre teletravailler les premieres semaines, problemes de logement". Il accede aux codes via le VPN. Quelques jours plus tard, des donnees client commencent a fuiter sur le dark web.
+  Le jour J, "Lucas" ne se presente pas physiquement. Il "preferre teletravailler les premières semaines, problèmes de logement". Il accede aux codes via le VPN. Quelques jours plus tard, des données client commencent a fuiter sur le dark web.
 
-  Avec le recul, qu'est-ce qui aurait du eveiller un soupcon ?
+  Avec le recul, qu'est-ce qui aurait du eveiller un soupçon ?
 choices:
   - id: "a"
-    label: "L'absence de presence physique pendant 2 semaines"
+    label: "L'absence de présence physique pendant 2 semaines"
     outcome: "good"
-    feedback: "Bonne intuition. Le teletravail integral des le premier jour, sans rencontre physique, est un drapeau jaune en 2026 (era post-deepfake). Il faut au minimum une visio approfondie ou un onboarding initial sur site."
+    feedback: "Bonne intuition. Le télétravail integral dès le premier jour, sans rencontre physique, est un drapeau jaune en 2026 (era post-deepfake). Il faut au minimum une visio approfondie ou un onboarding initial sur site."
     points: 25
   - id: "b"
     label: "Le CV trop parfait et le GitHub trop nettoyé"
@@ -22,21 +22,21 @@ choices:
     feedback: "Excellent. Un GitHub authentique a des commits irreguliers, des projets abandonnes, des bugs dans des issues. Un GitHub 'genere' a souvent un pattern trop lisse, trop coherent."
     points: 25
   - id: "c"
-    label: "Aucun signal - c'etait inevitable"
+    label: "Aucun signal - c'était inevitable"
     outcome: "bad"
-    feedback: "Plusieurs signaux etaient presents : pas de rencontre physique, absence de references croisees, GitHub trop lisse, urgence du teletravail. Une procedure d'embauche moderne doit chercher ces signaux."
+    feedback: "Plusieurs signaux étaient presents : pas de rencontre physique, absence de références croisees, GitHub trop lisse, urgence du télétravail. Une procédure d'embauche moderne doit chercher ces signaux."
     points: -15
   - id: "d"
-    label: "L'absence de references professionnelles verifiees par appel direct"
+    label: "L'absence de références professionnelles verifiees par appel direct"
     outcome: "good"
-    feedback: "Tres bon. Appeler les anciens employeurs sur leur numero officiel (annuaire, pas le numero indique par le candidat) reste la verification la plus fiable. C'etait la pratique avant l'IA, ca le redevient."
+    feedback: "Très bon. Appeler les anciens employeurs sur leur numéro officiel (annuaire, pas le numéro indique par le candidat) reste la vérification la plus fiable. C'était la pratique avant l'IA, ça le redevient."
     points: 30
 debrief: |
-  Le **faux candidat deepfake** est une menace emergente en 2024-2026, particulierement ciblee contre les **PMEs tech** qui embauchent en remote. Il y a deux variantes :
+  Le **faux candidat deepfake** est une menace emergente en 2024-2026, particulièrement ciblee contre les **PMEs tech** qui embauchent en remote. Il y a deux variantes :
 
   **Variante 1 - Le faux candidat IT pour acces interne**
 
-  Un acteur (souvent etat-nation, cf. cas Coree du Nord 2023-2024) cree une identite fictive avec :
+  Un acteur (souvent état-nation, cf. cas Coree du Nord 2023-2024) cree une identité fictive avec :
   - CV detaille et plausible
   - Profil LinkedIn nettoyé
   - Compte GitHub genere artificiellement (parfois avec contributions reelles d'un developpeur asiatique en sous-marin)
@@ -44,42 +44,42 @@ debrief: |
 
   Une fois embauche, l'acteur :
   - Travaille en remote uniquement (excuse : "logement", "famille")
-  - Acces aux codes / credentials / donnees clients
-  - Exfiltre des donnees pendant 3-6 mois
+  - Acces aux codes / credentials / données clients
+  - Exfiltre des données pendant 3-6 mois
   - Disparait avec les data, ou les vend / extorque
 
   **Cas reels documentes** :
-  - **Coree du Nord 2024** : DOJ US a inculpe plusieurs developpeurs nord-coreens qui s'etaient infiltres dans 300+ entreprises americaines via faux profils
-  - **2024 KnowBe4** : KnowBe4 elle-meme a embauche un faux profil qui s'est avere etre un agent nord-coreen - la fraude a ete detectee par les outils EDR au 2eme jour
-  - **2025 plusieurs cas francais** : l'ANSSI a publie un avis sur les profils synthetiques infiltres
+  - **Coree du Nord 2024** : DOJ US a inculpe plusieurs developpeurs nord-coreens qui s'étaient infiltres dans 300+ entreprises americaines via faux profils
+  - **2024 KnowBe4** : KnowBe4 elle-même a embauche un faux profil qui s'est avere être un agent nord-coreen - la fraude a été detectee par les outils EDR au 2eme jour
+  - **2025 plusieurs cas français** : l'ANSSI a publie un avis sur les profils synthetiques infiltres
 
   **Variante 2 - Le candidat fantome pour escroquer la PME**
 
-  Plus rare mais documentee : un acteur se fait embaucher pour collecter le bonus de signature (parfois plusieurs milliers d'euros), puis disparait apres avoir touche le 1er salaire. Combine avec deepfake pour multiplier les "candidats" avec le meme acteur derriere.
+  Plus rare mais documentee : un acteur se fait embaucher pour collecter le bonus de signature (parfois plusieurs milliers d'euros), puis disparaît après avoir touche le 1er salaire. Combine avec deepfake pour multiplier les "candidats" avec le même acteur derrière.
 
-  **Les 6 controles a integrer dans ta procedure d'embauche moderne :**
+  **Les 6 contrôles a integrer dans ta procédure d'embauche moderne :**
 
   **1. Au moins 1 rencontre physique**
-  Avant signature, obligatoire pour les postes sensibles (acces code, donnees clients, finances). Pour les remote-first, organiser un onboarding initial sur site (1-2 jours).
+  Avant signature, obligatoire pour les postes sensibles (acces code, données clients, finances). Pour les remote-first, organiser un onboarding initial sur site (1-2 jours).
 
-  **2. Verification des references croisees**
-  Appeler les anciens employeurs sur leur **numero officiel** (annuaire, site de l'entreprise - PAS le numero donne par le candidat). Recouper avec LinkedIn employees actuels.
+  **2. Vérification des références croisees**
+  Appeler les anciens employeurs sur leur **numéro officiel** (annuaire, site de l'entreprise - PAS le numéro donne par le candidat). Recouper avec LinkedIn employées actuels.
 
   **3. Test technique en live + cam ouverte**
-  Pour les postes IT : exercice de code en live, micro + cam ouverts, partage d'ecran obligatoire. Un faux profil bot peut esquiver mais a du mal a justifier ses choix techniques.
+  Pour les postes IT : exercice de code en live, micro + cam ouverts, partage d'écran obligatoire. Un faux profil bot peut esquiver mais a du mal a justifier ses choix techniques.
 
-  **4. Question de detail piege en entretien**
-  "Tu as travaille chez X de 2020 a 2022 ? Tu te souviens du seminaire de Lyon en mars 2021 ?" - Une vraie personne dit "non, je n'y etais pas / oui c'etait genial". Un fake hesite ou ment platement.
+  **4. Question de détail piege en entretien**
+  "Tu as travaille chez X de 2020 a 2022 ? Tu te souviens du seminaire de Lyon en mars 2021 ?" - Une vraie personne dit "non, je n'y étais pas / oui c'était genial". Un fake hesite ou ment platement.
 
-  **5. Verification du badge id formelle**
-  Demander une copie de la piece d'identite + un selfie tenant la piece (anti-fraude bancaire classique). Verifier la coherence visage selfie / visage entretien / piece.
+  **5. Vérification du badge id formelle**
+  Demander une copie de la piece d'identité + un selfie tenant la piece (anti-fraude bancaire classique). Vérifier la coherence visage selfie / visage entretien / piece.
 
   **6. Onboarding progressif**
-  Acces aux ressources critiques (code source, prod, donnees clients) granule sur 3-6 mois selon performance et integration. Pas de "tout-acces des le jour 1".
+  Acces aux ressources critiques (code source, prod, données clients) granule sur 3-6 mois selon performance et integration. Pas de "tout-acces dès le jour 1".
 
-  **Le piege specifique aux PMEs :**
+  **Le piege spécifique aux PMEs :**
 
-  Beaucoup de PMEs n'ont pas de service RH dedie - l'embauche se fait par le DG ou un manager pris dans le quotidien. C'est l'attaquant qui en profite. **L'investissement dans une procedure d'embauche formelle, meme legere (1 page de checklist), reduit drastiquement le risque** pour un cout marginal.
+  Beaucoup de PMEs n'ont pas de service RH dedie - l'embauche se fait par le DG ou un manager pris dans le quotidien. C'est l'attaquant qui en profite. **L'investissement dans une procédure d'embauche formelle, même legere (1 page de checklist), reduit drastiquement le risque** pour un coût marginal.
 quiz:
   - question: "Quel pays a documente le plus grand nombre de cas d'infiltration par faux candidat IT ?"
     choices:
@@ -92,22 +92,22 @@ quiz:
       - id: "c"
         label: "Aucun acteur etatique impliqué"
         correct: false
-    explanation: "Le DOJ US a inculpe plusieurs developpeurs nord-coreens en 2024 dans le cadre d'une operation d'infiltration massive. KnowBe4 elle-meme a ete victime."
+    explanation: "Le DOJ US a inculpe plusieurs developpeurs nord-coreens en 2024 dans le cadre d'une opération d'infiltration massive. KnowBe4 elle-même a été victime."
 
-  - question: "Quel est le controle le plus fiable pour verifier l'identite d'un candidat remote ?"
+  - question: "Quel est le contrôle le plus fiable pour vérifier l'identité d'un candidat remote ?"
     choices:
       - id: "a"
         label: "Lui demander son CV en PDF"
         correct: false
       - id: "b"
-        label: "Appeler les anciens employeurs sur leur numero officiel (annuaire, pas le numero du candidat)"
+        label: "Appeler les anciens employeurs sur leur numéro officiel (annuaire, pas le numéro du candidat)"
         correct: true
       - id: "c"
-        label: "Verifier ses 5 dernieres pieces d'identite"
+        label: "Vérifier ses 5 dernières pieces d'identité"
         correct: false
-    explanation: "L'appel aux anciens employeurs sur leur numero officiel est la verification la plus fiable. Le numero donne par le candidat peut etre spoofe ou pointer vers un complice."
+    explanation: "L'appel aux anciens employeurs sur leur numéro officiel est la vérification la plus fiable. Le numéro donne par le candidat peut être spoofe ou pointer vers un complice."
 
-  - question: "Pour un poste tech sensible (acces code, donnees clients), il faut idealement :"
+  - question: "Pour un poste tech sensible (acces code, données clients), il faut idealement :"
     choices:
       - id: "a"
         label: "Au moins 1 rencontre physique avant signature"
@@ -118,11 +118,11 @@ quiz:
       - id: "c"
         label: "Un test technique automatise"
         correct: false
-    explanation: "La rencontre physique reste la verification ultime contre le faux candidat deepfake. Pour le remote-first, organiser un onboarding initial sur site (1-2 jours) est un compromis acceptable."
+    explanation: "La rencontre physique reste la vérification ultime contre le faux candidat deepfake. Pour le remote-first, organiser un onboarding initial sur site (1-2 jours) est un compromis acceptable."
 ---
 
 ## Pour aller plus loin
 
-Le faux candidat IT est devenu un sujet RH/RSSI critique en 2025. La CNIL et l'ANSSI ont publie des recommandations communes en avril 2025. Si tu embauches en remote, integre ces 6 controles dans ta procedure - ils ne t'empecheront pas de signer un bon profil, ils detecteront un fake.
+Le faux candidat IT est devenu un sujet RH/RSSI critique en 2025. La CNIL et l'ANSSI ont publie des recommandations communes en avril 2025. Si tu embauches en remote, integre ces 6 contrôles dans ta procédure - ils ne t'empecheront pas de signer un bon profil, ils detecteront un fake.
 
 > "L'embauche c'est la 1ere ligne de defense interne. La rendre robuste vaut autant qu'un firewall."

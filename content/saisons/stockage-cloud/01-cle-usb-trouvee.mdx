@@ -2,11 +2,11 @@
 title: "La cle USB trouvee sur le parking"
 durationMinutes: 5
 persona: "tous-collaborateurs"
-objective: "Reconnaitre l'attaque par 'USB drop' (cle USB volontairement abandonnee) et adopter le bon reflexe"
+objective: "Reconnaître l'attaque par 'USB drop' (cle USB volontairement abandonnee) et adopter le bon reflexe"
 xpReward: 50
 scenario: |
   Tu arrives au bureau lundi matin. Sur le parking, devant
-  l'entree, tu ramasses une cle USB tombee. Etiquette manuscrite
+  l'entrée, tu ramasses une cle USB tombee. Etiquette manuscrite
   : "Salaires 2024 - confidentiel".
 
   Curiosite humaine activee. Tu fais quoi ?
@@ -24,35 +24,35 @@ choices:
   - id: "c"
     label: "Je la branche sur le PC public d'accueil pour 'voir'"
     outcome: "bad"
-    feedback: "Tu propages le malware sur un poste partage. Si ce poste a acces au reseau (souvent), tout le SI est expose. Memes regles partout : USB inconnue = jamais branchee."
+    feedback: "Tu propages le malware sur un poste partage. Si ce poste a acces au réseau (souvent), tout le SI est expose. Mêmes règles partout : USB inconnue = jamais branchee."
     points: -20
   - id: "d"
     label: "Je la jette a la poubelle, c'est pas mes affaires"
     outcome: "neutral"
-    feedback: "Mieux que de la brancher mais pas optimal. Le DSI veut savoir : c'est un signal d'alerte (tentative d'attaque sur l'entreprise). Cela peut declencher d'autres mesures (fouille parking pour autres cles, surveillance camera, alerte employes)."
+    feedback: "Mieux que de la brancher mais pas optimal. Le DSI veut savoir : c'est un signal d'alerte (tentative d'attaque sur l'entreprise). Cela peut declencher d'autres mesures (fouille parking pour autres cles, surveillance caméra, alerte employés)."
     points: 10
 debrief: |
   L'**USB drop attack** est l'une des attaques les plus simples
   et les plus efficaces. L'attaquant abandonne volontairement
   des cles USB autour d'une entreprise (parking, hall, cafetaria,
-  toilettes) en esperant qu'un employe les branche par curiosite.
+  toilettes) en esperant qu'un employé les branche par curiosite.
 
   **Etudes academiques :**
 
   - **Blackhat 2016** (etude University of Illinois) : 297 cles
     USB abandonnees, 98% ramassees, 45% branchees, 50% executent
     du code (clic sur un fichier d'etiquette ou similaire).
-  - **Google 2019** : 30% des employes branchent une USB trouvee
-    selon experiences internes.
+  - **Google 2019** : 30% des employés branchent une USB trouvee
+    selon expériences internes.
   - **CompTIA 2023** : 60% des PME ont subi au moins 1 USB drop
     attack.
 
-  **Pourquoi ca marche si bien :**
+  **Pourquoi ça marche si bien :**
 
   - **Curiosite humaine** : "qu'est-ce qu'il y a dessus ?"
   - **Etiquette tentante** : "salaires", "confidentiel", "photo
     soirée", "concours"
-  - **Empathie** : "il faut la rendre au proprietaire"
+  - **Empathie** : "il faut la rendre au propriétaire"
   - **Convenance** : "j'en avais besoin d'une cle USB"
 
   **Ce qu'une cle USB malveillante peut faire :**
@@ -82,16 +82,16 @@ debrief: |
   **4. USB Killer**
 
   Cle USB qui envoie une **decharge electrique haute tension**
-  qui detruit physiquement le port USB et parfois la carte mere
+  qui detruit physiquement le port USB et parfois la carte mère
   (50-200 EUR de degats).
 
   Cas reels : 2018, etudiant a New York a detruit 66 ordinateurs
-  d'une universite avec un USB killer (condamnation).
+  d'une université avec un USB killer (condamnation).
 
-  **5. Implant materiel**
+  **5. Implant matériel**
 
-  La cle est en realite un **point d'acces wifi pirate** ou un
-  **dispositif d'ecoute audio** dissimule.
+  La cle est en réalité un **point d'acces wifi pirate** ou un
+  **dispositif d'écoute audio** dissimule.
 
   **Le bon reflexe : ne JAMAIS brancher**
 
@@ -99,39 +99,39 @@ debrief: |
 
   **1. Ne pas la brancher**
 
-  Aucune curiosite ne justifie le risque. Meme un petit pourcentage
+  Aucune curiosite ne justifie le risque. Même un petit pourcentage
   de risque sur 10000 actions / an = breach garanti.
 
   **2. La porter au RSSI / DSI**
 
   Le service IT a les moyens de :
   - L'examiner sur un poste isole (sandbox / VM)
-  - L'analyser pour determiner s'il y a code malveillant
+  - L'analyser pour déterminer s'il y a code malveillant
   - Decider de la suite (poubelle, signalement police si attaque)
 
   **3. Signaler la decouverte**
 
   Cle trouvee = signal d'attaque potentielle. Le DSI peut :
-  - Verifier les cameras (qui l'a deposee ?)
-  - Alerter les employes (campagne de sensibilisation)
+  - Vérifier les caméras (qui l'a deposee ?)
+  - Alerter les employés (campagne de sensibilisation)
   - Renforcer la surveillance
 
-  **4. Ne pas en parler aux collegues avant le RSSI**
+  **4. Ne pas en parler aux collègues avant le RSSI**
 
-  Pour eviter qu'un autre employe la branche par curiosite (s'il
+  Pour éviter qu'un autre employé la branche par curiosite (s'il
   l'a vue avant toi).
 
   **Politique d'entreprise sur l'USB :**
 
   **Niveau 1 : Sensibilisation**
 
-  - Tous les employes formes : cle inconnue = ne pas brancher
+  - Tous les employés formes : cle inconnue = ne pas brancher
   - Affichage dans les zones de passage
 
   **Niveau 2 : Politique technique**
 
   - **GPO Windows** : autorun desactive par defaut
-  - **EDR / Antivirus** : detection des USB malveillantes
+  - **EDR / Antivirus** : détection des USB malveillantes
   - **Politique BYOD USB** : seules les cles de l'entreprise
     autorisees
 
@@ -141,7 +141,7 @@ debrief: |
   - **GPO** : USB en lecture seule sauf pour cles d'entreprise
     chiffrees
   - **Hardware** : ports USB physiquement bloques (caches)
-  - **Logiciel DLP** (Data Loss Prevention) : detection
+  - **Logiciel DLP** (Data Loss Prévention) : détection
     d'exfiltration
 
   **Niveau 4 : Tout chiffrer**
@@ -149,7 +149,7 @@ debrief: |
   Pour les cles d'entreprise autorisees :
   - **BitLocker To Go** (Windows)
   - **VeraCrypt** (multi-OS, OSS)
-  - **Cles materielles chiffrees** : Kingston IronKey, Apricorn
+  - **Cles matérielles chiffrees** : Kingston IronKey, Apricorn
 
   **Cas reels :**
 
@@ -157,33 +157,33 @@ debrief: |
 
   L'attaque la plus celebre par USB. Une cle USB infectee
   introduit le malware Stuxnet dans les centrifugeuses
-  d'enrichissement d'uranium iraniennes (reseau air-gap).
-  Resultat : sabotage de centaines de centrifugeuses.
+  d'enrichissement d'uranium iraniennes (réseau air-gap).
+  Résultat : sabotage de centaines de centrifugeuses.
 
-  Lecon : meme un reseau air-gap (sans internet) peut etre
+  Lecon : même un réseau air-gap (sans internet) peut être
   compromis par USB.
 
-  **Cas 2 - Hopital UK 2017**
+  **Cas 2 - Hôpital UK 2017**
 
-  Un employe a branche une cle USB trouvee dans le parking. La
+  Un employé a branche une cle USB trouvee dans le parking. La
   cle contenait un dropper qui a deploye un ransomware sur les
-  serveurs. 4 hopitaux paralyses pendant 48h.
+  serveurs. 4 hôpitaux paralyses pendant 48h.
 
-  **Cas 3 - PME francaise 2022**
+  **Cas 3 - PME française 2022**
 
-  Audit interne : une "cle USB" laissee dans le hall a ete
-  branchee par 4 employes en 2 jours (avant que le DSI ne la
-  recupere). C'etait une simulation interne. 4 alertes auraient
-  pu etre 4 breaches.
+  Audit interne : une "cle USB" laissee dans le hall a été
+  branchee par 4 employés en 2 jours (avant que le DSI ne la
+  recupere). C'était une simulation interne. 4 alertes auraient
+  pu être 4 breaches.
 
-  **Variantes a connaitre :**
+  **Variantes a connaître :**
 
   **a) Cable USB pirate**
 
-  Un cable USB-C ou Lightning peut etre **modifie pour pirater**
+  Un cable USB-C ou Lightning peut être **modifie pour pirater**
   (O.MG cable, 100 EUR sur le marche). Apparence : identique
   a un cable Apple/Anker. Fonction : enregistrer les frappes,
-  telecharger malware.
+  télécharger malware.
 
   Reflexe : utiliser uniquement TES cables (jamais ceux trouves
   ou pretes).
@@ -197,13 +197,13 @@ debrief: |
 
   L'attaquant fait imprimer des cles USB **avec ton logo
   d'entreprise** et les distribue (salon, conferences).
-  L'employe pense que c'est un cadeau officiel.
+  L'employé pense que c'est un cadeau officiel.
 
-  Reflexe : se mefier des goodies USB, meme avec logo.
+  Reflexe : se méfier des goodies USB, même avec logo.
 
   **Pour la maison :**
 
-  Les memes regles s'appliquent :
+  Les mêmes règles s'appliquent :
   - Cle USB trouvee dans la rue = poubelle
   - Cle prete par un ami = branche sur un PC dedie / VM
   - Cle d'un magasin (cadeau, photo) = scanner avec antivirus
@@ -214,7 +214,7 @@ debrief: |
   - **VirusTotal.com** : upload des fichiers de la cle pour
     scan multi-antivirus
   - **MalwareBytes** (gratuit) : scanne specifiquement les
-    medias amovibles
+    médias amovibles
   - **VM Linux dedie** : VirtualBox + Ubuntu = environnement
     jetable pour examiner
 
@@ -230,11 +230,11 @@ debrief: |
 
   L'apparence n'est PAS une garantie.
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **Une cle USB inconnue est une menace potentielle. JAMAIS
-  > la brancher, meme par curiosite. Toujours la porter au
-  > DSI / RSSI. Ce reflexe protege l'entreprise et toi-meme.
+  > la brancher, même par curiosite. Toujours la porter au
+  > DSI / RSSI. Ce reflexe protege l'entreprise et toi-même.
   > L'attaque la plus simple est aussi la plus efficace.**
 quiz:
   - question: "Tu trouves une cle USB sur le parking, premier reflexe ?"
@@ -247,23 +247,23 @@ quiz:
   - question: "Une cle USB peut faire quoi de dangereux ?"
     choices:
       - { id: "a", label: "Rien", correct: false }
-      - { id: "b", label: "Autorun malware, BadUSB (faux clavier), fichier piege macros, USB killer (decharge electrique), implant materiel", correct: true }
-      - { id: "c", label: "Charger un telephone", correct: false }
-    explanation: "5 attaques principales : autorun (parc avec autorun off), BadUSB (cle se fait passer pour clavier, tape commandes), fichier piege (macros), USB killer (detruit physiquement le PC), implant (wifi pirate, ecoute)."
+      - { id: "b", label: "Autorun malware, BadUSB (faux clavier), fichier piege macros, USB killer (decharge electrique), implant matériel", correct: true }
+      - { id: "c", label: "Charger un téléphone", correct: false }
+    explanation: "5 attaques principales : autorun (parc avec autorun off), BadUSB (cle se fait passer pour clavier, tape commandes), fichier piege (macros), USB killer (detruit physiquement le PC), implant (wifi pirate, écoute)."
 
-  - question: "Pour une cle USB d'entreprise legitime, mesure de securite minimum ?"
+  - question: "Pour une cle USB d'entreprise legitime, mesure de sécurité minimum ?"
     choices:
       - { id: "a", label: "Aucune", correct: false }
-      - { id: "b", label: "Chiffrement (BitLocker To Go, VeraCrypt, ou cle materielle chiffree type Kingston IronKey)", correct: true }
+      - { id: "b", label: "Chiffrement (BitLocker To Go, VeraCrypt, ou cle matérielle chiffree type Kingston IronKey)", correct: true }
       - { id: "c", label: "Mot de passe sur la cle", correct: false }
-    explanation: "Cle d'entreprise = chiffree obligatoirement (perte = pas de fuite). BitLocker To Go (Windows), VeraCrypt (OSS multi-OS), ou cles materielles chiffrees (Kingston IronKey, Apricorn 50-200 EUR). RGPD : mesure technique exigee."
+    explanation: "Cle d'entreprise = chiffree obligatoirement (perte = pas de fuite). BitLocker To Go (Windows), VeraCrypt (OSS multi-OS), ou cles matérielles chiffrees (Kingston IronKey, Apricorn 50-200 EUR). RGPD : mesure technique exigee."
 
-  - question: "L'attaque Stuxnet (Iran 2010) est entree comment ?"
+  - question: "L'attaque Stuxnet (Iran 2010) est entrée comment ?"
     choices:
       - { id: "a", label: "Internet", correct: false }
-      - { id: "b", label: "Cle USB - centrifugeuses sur reseau air-gap (sans internet) compromises par cle USB infectee", correct: true }
+      - { id: "b", label: "Cle USB - centrifugeuses sur réseau air-gap (sans internet) compromises par cle USB infectee", correct: true }
       - { id: "c", label: "Phishing", correct: false }
-    explanation: "Stuxnet 2010 = USB attack la plus celebre. Cibles : centrifugeuses iraniennes sur reseau air-gap (sans internet). Compromission par cle USB infectee. Demontre que l'air-gap ne suffit pas - politique USB stricte obligatoire."
+    explanation: "Stuxnet 2010 = USB attack la plus celebre. Cibles : centrifugeuses iraniennes sur réseau air-gap (sans internet). Compromission par cle USB infectee. Demontre que l'air-gap ne suffit pas - politique USB stricte obligatoire."
 ---
 
 > 💡 **Pour aller plus loin** : **GPO Windows** desactive l'autorun

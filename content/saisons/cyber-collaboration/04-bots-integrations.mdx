@@ -2,7 +2,7 @@
 title: "Les bots et integrations : qui lit quoi"
 durationMinutes: 7
 persona: "tous-collaborateurs"
-objective: "Auditer et controler les bots / apps tierces / integrations dans Slack/Teams/Notion (qui a acces a quoi, permissions, RGPD)"
+objective: "Auditer et contrôler les bots / apps tierces / integrations dans Slack/Teams/Notion (qui a acces a quoi, permissions, RGPD)"
 xpReward: 60
 scenario: |
   Tu es DSI d'une PME 80 personnes. Audit Slack workspace :
@@ -12,7 +12,7 @@ scenario: |
     Asana, Hubspot, Gmelius, Zapier, etc.
   - Permissions souvent "lire tous les messages", "lire
     fichiers", "lire utilisateurs"
-  - Beaucoup installees par des employes individuellement
+  - Beaucoup installees par des employés individuellement
   - Aucune politique d'approbation
 
   Le RSSI te dit : "Audit ASAP. On ne sait pas quelles apps
@@ -23,10 +23,10 @@ choices:
   - id: "a"
     label: "Pas grave, ce sont des apps populaires"
     outcome: "bad"
-    feedback: "FAUX. Apps populaires != safe. Beaucoup ont permissions excessives. Risques : exfiltration donnees, incident chez l'app provider (cf MOVEit 2023, Slack supply chain), insider chez le provider. Audit obligatoire."
+    feedback: "FAUX. Apps populaires != safe. Beaucoup ont permissions excessives. Risques : exfiltration données, incident chez l'app provider (cf MOVEit 2023, Slack supply chain), insider chez le provider. Audit obligatoire."
     points: -25
   - id: "b"
-    label: "Audit complet : liste apps, permissions, justification metier. Liste blanche RSSI-approved. Suppression non-essentielles. Politique d'approbation pour nouvelles. RGPD compliance"
+    label: "Audit complet : liste apps, permissions, justification métier. Liste blanche RSSI-approved. Suppression non-essentielles. Politique d'approbation pour nouvelles. RGPD compliance"
     outcome: "good"
     feedback: "Standard pro. Audit + categorisation + liste blanche + suppression + politique = approche complete. Reduit drastiquement la surface d'attaque + clarifie RGPD (registre, base legale)."
     points: 40
@@ -61,10 +61,10 @@ debrief: |
 
   Souvent **plus que necessaire** pour leur fonction reelle.
 
-  **Risque 2 : Securite chez le tiers**
+  **Risque 2 : Sécurité chez le tiers**
 
   Si l'app provider est compromis (breach):
-  - **Toutes les donnees** que l'app a lu sont compromises
+  - **Toutes les données** que l'app a lu sont compromises
   - **Token API** vole = acces a TON workspace par
     l'attaquant
 
@@ -75,7 +75,7 @@ debrief: |
   **Risque 3 : Insider chez le provider**
 
   Employe rancunier de l'app provider peut :
-  - Acceder aux donnees clients
+  - Acceder aux données clients
   - Exfiltrer
   - Vendre
 
@@ -84,8 +84,8 @@ debrief: |
   Chaque app tierce = sous-traitant RGPD :
   - **Article 28** : contrat de sous-traitance obligatoire
   - **Registre traitements** : declarer
-  - **Hebergement** : verifier (UE / Cloud Act)
-  - **Securite** : verifier conformite
+  - **Hebergement** : vérifier (UE / Cloud Act)
+  - **Sécurité** : vérifier conformité
 
   Souvent **non-respecte** dans les PME.
 
@@ -96,9 +96,9 @@ debrief: |
   - **Acces toujours actif**
   - **Compte fantome** equivalent
 
-  **Procedure d'audit :**
+  **Procédure d'audit :**
 
-  **Etape 1 : Inventaire complet**
+  **Étape 1 : Inventaire complet**
 
   **Slack** :
   - Workspace settings > Apps
@@ -113,18 +113,18 @@ debrief: |
   **Notion** :
   - Settings > Connected accounts / Integrations
 
-  **Etape 2 : Categorisation**
+  **Étape 2 : Categorisation**
 
   Pour chaque app :
 
   | Critere | Question |
   |---|---|
-  | **Utilite metier** | Activement utilisee ? |
+  | **Utilite métier** | Activement utilisee ? |
   | **Permissions** | Excessives ? Justifiees ? |
   | **Provider** | Reputation ? Conformite ? |
   | **RGPD** | Contrat sous-traitance ? Registre ? |
   | **Hebergement** | UE / hors-UE ? Cloud Act ? |
-  | **Securite** | Audit / certif (SOC 2, ISO 27001) ? |
+  | **Sécurité** | Audit / certif (SOC 2, ISO 27001) ? |
   | **Activite** | Derniere utilisation ? |
 
   Categories :
@@ -133,27 +133,27 @@ debrief: |
   - **Non-approuvee** : evaluation
   - **Risquee** : suppression immediate
 
-  **Etape 3 : Liste blanche**
+  **Étape 3 : Liste blanche**
 
-  Apres audit, etablir liste **approuvee** :
-  - **Categorie** (collaboration, analytics, dev, etc.)
+  Après audit, etablir liste **approuvee** :
+  - **Catégorie** (collaboration, analytics, dev, etc.)
   - **Permissions** minimales
   - **Documentation** justification
   - **Renouvellement** annuel
 
-  **Etape 4 : Suppression apps non-essentielles**
+  **Étape 4 : Suppression apps non-essentielles**
 
-  - **Notification** equipes utilisateurs
+  - **Notification** équipes utilisateurs
   - **Migration** vers alternatives si necessaire
   - **Suppression** apps obsoletes
   - **Documentation** : pourquoi suppression
 
-  **Etape 5 : Politique d'approbation**
+  **Étape 5 : Politique d'approbation**
 
   Pour nouvelles apps :
   - **Demande formelle** au RSSI / DSI
-  - **Justification** metier
-  - **Verification** RGPD + securite
+  - **Justification** métier
+  - **Vérification** RGPD + sécurité
   - **Permissions** minimales
   - **Approbation** ou refus motive
 
@@ -161,23 +161,23 @@ debrief: |
 
   **Faible risque (often OK)** :
   - **Polly / Polldaddy** : sondages
-  - **Giphy** : GIFs (usage social, pas donnees critiques)
+  - **Giphy** : GIFs (usage social, pas données critiques)
   - **Calendly** : planification (acces calendrier seulement)
 
-  **Moyen risque (verification)** :
-  - **GitHub bot** : acces code source (necessite contrat
+  **Moyen risque (vérification)** :
+  - **GitHub bot** : acces code source (nécessité contrat
     sous-traitance + RGPD)
   - **Jira / Trello** : gestion tickets
-  - **Hubspot / Salesforce** : CRM (donnees clients)
+  - **Hubspot / Salesforce** : CRM (données clients)
 
-  **Risque eleve (audit minutieux)** :
+  **Risque élève (audit minutieux)** :
   - **Gmelius / Front** : email (lit beaucoup de messages)
   - **Zapier / IFTTT** : automatisation (acces multi-app)
   - **OpenAI ChatGPT integration** : envoi a OpenAI
 
-  **Risque tres eleve (eviter par defaut)** :
+  **Risque très élève (éviter par defaut)** :
   - **Apps inconnues / obscures** : potentielles malveillantes
-  - **Apps avec permissions tres larges** sans justification
+  - **Apps avec permissions très larges** sans justification
 
   **Configuration Slack admin recommandee :**
 
@@ -195,20 +195,20 @@ debrief: |
 
   - **Default policy** : restrictive (Microsoft apps + custom
     only, no 3rd-party)
-  - **Custom policy** : pour utilisateurs specifiques
+  - **Custom policy** : pour utilisateurs spécifiques
 
-  **Le piege "c'est gere par mon equipe IT" :**
+  **Le piege "c'est gere par mon équipe IT" :**
 
-  Souvent FAUX. Beaucoup d'employes installent eux-memes
-  des apps Slack / Teams (Self-Service). DSI ne sait meme pas.
+  Souvent FAUX. Beaucoup d'employés installent eux-mêmes
+  des apps Slack / Teams (Self-Service). DSI ne sait même pas.
 
   Solution : politique d'approbation centrale + audit
-  periodique.
+  périodique.
 
   **Le piege "l'app est gratuite, donc safe" :**
 
   Faux. Apps gratuites :
-  - **Modele economique** : monetisation des donnees ?
+  - **Modele économique** : monetisation des données ?
   - **Permissions** parfois excessives
   - **Hebergement** : pas verifie
 
@@ -222,7 +222,7 @@ debrief: |
   - **Marketplace** : apps tierces validees mais pas
     auditees
   - **Validation Slack/Microsoft** : technique, pas
-    securite/RGPD complete
+    sécurité/RGPD complete
 
   Audit interne necessaire.
 
@@ -242,14 +242,14 @@ debrief: |
   - Politique d'approbation
   - Audit annuel
 
-  Resultat : -60% surface attaque + 100% RGPD compliance.
+  Résultat : -60% surface attaque + 100% RGPD compliance.
 
   **Cas 2 - Cabinet conseil 2022 (MOVEit breach)**
 
   Cabinet utilisait MOVEit pour transferts. Faille MOVEit
   2023 (CVE-2023-34362) = compromission massive.
 
-  Cabinet : 5 mois de donnees clients exfiltrees + 200 K EUR
+  Cabinet : 5 mois de données clients exfiltrees + 200 K EUR
   incident response + reputation degradee.
 
   Lecon : audit reguliere des apps + monitoring breaches
@@ -258,13 +258,13 @@ debrief: |
   **Cas 3 - Startup 2024 (OpenAI integration)**
 
   Startup avait integration ChatGPT dans Slack pour aide aux
-  employes. Conversations avec ChatGPT envoyees a OpenAI
+  employés. Conversations avec ChatGPT envoyees a OpenAI
   (US) sans :
   - Contrat sous-traitance RGPD
-  - Information employes
+  - Information employés
   - Registre traitement
 
-  Audit interne RGPD : non-conformite. Action : politique
+  Audit interne RGPD : non-conformité. Action : politique
   d'usage IA + contrat OpenAI Enterprise + information.
 
   **Cas 4 - PME 2022 (insider Slack provider)**
@@ -286,13 +286,13 @@ debrief: |
 
   Risques :
   - **Acces large** par defaut
-  - **Donnees envoyees** a fournisseur IA (US souvent)
+  - **Données envoyees** a fournisseur IA (US souvent)
   - **Comportement** parfois imprevisible
   - **RGPD** complexe
 
   Recommandation :
-  - **Apps MCP / IA** = approbation specifique RSSI
-  - **Donnees** classees avant integration
+  - **Apps MCP / IA** = approbation spécifique RSSI
+  - **Données** classees avant integration
   - **Sensitivity labels** appliquees
   - **Audit** intensif
 
@@ -306,7 +306,7 @@ debrief: |
   - **Apps non-RGPD-compliant** (cible : 0)
   - **Demandes d'approbation** (volume + acceptees / refusees)
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **Apps tierces = surface d'attaque souvent oubliee. Audit
   > complet (60% des PME ont 50+ apps). Liste blanche
@@ -320,14 +320,14 @@ quiz:
       - { id: "a", label: "Tout autoriser", correct: false }
       - { id: "b", label: "Liste blanche RSSI-approved + permissions minimales + suppression zombies + politique d'approbation pour nouvelles + audit annuel", correct: true }
       - { id: "c", label: "Tout interdire", correct: false }
-    explanation: "Approche graduelle : 1) Audit complet (souvent 50+ apps installees), 2) Liste blanche RSSI-approved (categories : utilite metier, permissions, RGPD), 3) Suppression apps zombies / excessives, 4) Politique d'approbation pour nouvelles, 5) Audit annuel. -60% surface attaque typique."
+    explanation: "Approche graduelle : 1) Audit complet (souvent 50+ apps installees), 2) Liste blanche RSSI-approved (catégories : utilite métier, permissions, RGPD), 3) Suppression apps zombies / excessives, 4) Politique d'approbation pour nouvelles, 5) Audit annuel. -60% surface attaque typique."
 
   - question: "Permissions Slack 'lire tous les messages' pour une app, OK ?"
     choices:
       - { id: "a", label: "Si l'app est populaire", correct: false }
-      - { id: "b", label: "A questionner. Souvent excessif. Verifier : utile metier reel ? Permissions minimales ? Si exfiltration provider = tous tes messages compromis", correct: true }
+      - { id: "b", label: "A questionner. Souvent excessif. Vérifier : utile métier reel ? Permissions minimales ? Si exfiltration provider = tous tes messages compromis", correct: true }
       - { id: "c", label: "Toujours OK", correct: false }
-    explanation: "Permissions excessives = risque maximum. Si le provider est compromis ou insider rancunier = tous tes messages exfiltres (cas reel MOVEit 2023, ou insider Slack provider). Solution : permissions MINIMALES (just enough), justification metier, contrat sous-traitance RGPD."
+    explanation: "Permissions excessives = risque maximum. Si le provider est compromis ou insider rancunier = tous tes messages exfiltres (cas reel MOVEit 2023, ou insider Slack provider). Solution : permissions MINIMALES (just enough), justification métier, contrat sous-traitance RGPD."
 
   - question: "App Slack non-utilisee depuis 6 mois (zombie), action ?"
     choices:
@@ -339,9 +339,9 @@ quiz:
   - question: "Integration ChatGPT / OpenAI dans Slack / Teams, exigences RGPD ?"
     choices:
       - { id: "a", label: "Aucune", correct: false }
-      - { id: "b", label: "Contrat sous-traitance RGPD (article 28), information employes (transfert hors-UE), registre traitement, sensitivity labels donnees", correct: true }
+      - { id: "b", label: "Contrat sous-traitance RGPD (article 28), information employés (transfert hors-UE), registre traitement, sensitivity labels données", correct: true }
       - { id: "c", label: "Que info CSE", correct: false }
-    explanation: "OpenAI = prestataire US. Cloud Act + transfert hors-UE = obligations RGPD : 1) Contrat sous-traitance article 28 (OpenAI Enterprise propose DPA), 2) Information employes (article 13), 3) Registre traitements article 30, 4) Sensitivity labels (pas de donnees confidentielles a ChatGPT public), 5) Politique usage IA."
+    explanation: "OpenAI = prestataire US. Cloud Act + transfert hors-UE = obligations RGPD : 1) Contrat sous-traitance article 28 (OpenAI Enterprise propose DPA), 2) Information employés (article 13), 3) Registre traitements article 30, 4) Sensitivity labels (pas de données confidentielles a ChatGPT public), 5) Politique usage IA."
 ---
 
 > 💡 **Pour aller plus loin** : **CASB** (Microsoft Defender

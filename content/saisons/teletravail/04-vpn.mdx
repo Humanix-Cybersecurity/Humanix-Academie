@@ -5,58 +5,58 @@ persona: "tous"
 objective: "Utiliser le VPN sans le subir et comprendre quand il protege vraiment"
 xpReward: 50
 scenario: |
-  Tu es en deplacement professionnel a Madrid, hotel 4 etoiles. Tu ouvres ton laptop, le Wi-Fi de l'hotel demande ton numero de chambre. Tu te connectes pour repondre a quelques mails. Le VPN entreprise demande aussi ton identifiant - tu as la flemme, c'est un peu lent. Que fais-tu ?
+  Tu es en deplacement professionnel a Madrid, hôtel 4 etoiles. Tu ouvres ton laptop, le Wi-Fi de l'hôtel demande ton numéro de chambre. Tu te connectes pour répondre a quelques mails. Le VPN entreprise demande aussi ton identifiant - tu as la flemme, c'est un peu lent. Que fais-tu ?
 choices:
   - id: "a"
-    label: "Je n'active pas le VPN - c'est juste pour des mails, le Wi-Fi de l'hotel suffit"
+    label: "Je n'active pas le VPN - c'est juste pour des mails, le Wi-Fi de l'hôtel suffit"
     outcome: "bad"
-    feedback: "Aïe. Sur un Wi-Fi public, tes identifiants emails peuvent etre captures par n'importe qui sur le reseau. Le VPN existe precisement pour ce cas."
+    feedback: "Aïe. Sur un Wi-Fi public, tes identifiants emails peuvent être captures par n'importe qui sur le réseau. Le VPN existe précisément pour ce cas."
     points: -10
   - id: "b"
-    label: "J'active toujours le VPN avant tout usage professionnel sur un reseau non-controle"
+    label: "J'active toujours le VPN avant tout usage professionnel sur un réseau non-contrôle"
     outcome: "good"
     feedback: "Excellent. Le VPN chiffre ton trafic de bout en bout - peu importe que le Wi-Fi soit ouvert, hostile, ou compromis."
     points: 30
   - id: "c"
-    label: "J'utilise un VPN gratuit telecharge sur internet, c'est plus rapide"
+    label: "J'utilise un VPN gratuit téléchargé sur internet, c'est plus rapide"
     outcome: "bad"
     feedback: "Erreur grave. Un VPN gratuit non-audite peut journaliser ou revendre ton trafic. Un VPN entreprise est administre par ton IT - pas un service public."
     points: -20
   - id: "d"
     label: "J'utilise mon partage de connexion 4G/5G a la place"
     outcome: "good"
-    feedback: "Excellente alternative. La 4G/5G operateur fournit deja un canal isole, sans besoin de VPN par-dessus. Surtout pour des sessions longues."
+    feedback: "Excellente alternative. La 4G/5G opérateur fournit déjà un canal isole, sans besoin de VPN par-dessus. Surtout pour des sessions longues."
     points: 25
 debrief: |
-  Le **VPN** (Virtual Private Network) cree un tunnel chiffre entre ton laptop et le reseau de ton entreprise. Tout ton trafic passe par ce tunnel - invisible pour qui surveille le Wi-Fi public.
+  Le **VPN** (Virtual Private Network) cree un tunnel chiffre entre ton laptop et le réseau de ton entreprise. Tout ton trafic passe par ce tunnel - invisible pour qui surveille le Wi-Fi public.
 
   **Quand activer le VPN :**
 
-  - Sur tout reseau Wi-Fi non-controle (hotel, gare, aeroport, cafe)
-  - Avant d'acceder aux ressources internes de l'entreprise (intranet, fichiers reseau)
-  - Avant tout usage professionnel sensible (mails, mots de passe, donnees client)
+  - Sur tout réseau Wi-Fi non-contrôle (hôtel, gare, aeroport, cafe)
+  - Avant d'acceder aux ressources internes de l'entreprise (intranet, fichiers réseau)
+  - Avant tout usage professionnel sensible (mails, mots de passe, données client)
   - Dans un pays a risque (Chine, Russie, certains pays surveillent le trafic)
 
   **Quand le VPN n'est PAS necessaire :**
 
-  - Sur ton reseau domestique fiable (WPA2/WPA3, mot de passe fort)
-  - En partage de connexion 4G/5G operateur
+  - Sur ton réseau domestique fiable (WPA2/WPA3, mot de passe fort)
+  - En partage de connexion 4G/5G opérateur
   - Pour de la consultation publique non-pro (recherche meteo, achat perso)
 
-  **Les 4 verites du VPN :**
+  **Les 4 vérités du VPN :**
 
-  1. **Un VPN entreprise est audite et configure** par ton IT. C'est tres different d'un VPN grand public (NordVPN, ProtonVPN) qui n'a rien a voir avec ton reseau pro.
-  2. **Le VPN n'est pas un anti-virus.** Il chiffre ton trafic, mais ne protege pas contre un malware deja sur ton laptop.
+  1. **Un VPN entreprise est audite et configure** par ton IT. C'est très différent d'un VPN grand public (NordVPN, ProtonVPN) qui n'a rien a voir avec ton réseau pro.
+  2. **Le VPN n'est pas un anti-virus.** Il chiffre ton trafic, mais ne protege pas contre un malware déjà sur ton laptop.
   3. **Le VPN n'est pas magique** : si tu te fais phisher et donnes ton mot de passe, le VPN ne t'aide pas.
-  4. **Le VPN ralentit un peu** la connexion (chiffrement + detour par le siege). C'est normal et accepte.
+  4. **Le VPN ralentit un peu** la connexion (chiffrement + detour par le siège). C'est normal et accepte.
 
   **Les pieges classiques :**
 
-  - "VPN gratuit" telecharge sur le web : potentiellement un mouchard
-  - VPN active mais clive uniquement (split tunneling) : verifier que tu es bien dans le bon mode
-  - Oubli de relancer le VPN apres reveil de mise en veille : automatiser le demarrage
+  - "VPN gratuit" téléchargé sur le web : potentiellement un mouchard
+  - VPN active mais clive uniquement (split tunneling) : vérifier que tu es bien dans le bon mode
+  - Oubli de relancer le VPN après reveil de mise en veille : automatiser le demarrage
 quiz:
-  - question: "Sur le Wi-Fi public d'un hotel, le VPN entreprise est :"
+  - question: "Sur le Wi-Fi public d'un hôtel, le VPN entreprise est :"
     choices:
       - id: "a"
         label: "Optionnel pour de simples mails"
@@ -65,9 +65,9 @@ quiz:
         label: "Indispensable pour tout usage professionnel"
         correct: true
       - id: "c"
-        label: "Inutile si l'hotel demande un mot de passe"
+        label: "Inutile si l'hôtel demande un mot de passe"
         correct: false
-    explanation: "Le mot de passe Wi-Fi de l'hotel ne chiffre rien entre toi et les autres clients. Le VPN ajoute la couche de chiffrement manquante."
+    explanation: "Le mot de passe Wi-Fi de l'hôtel ne chiffre rien entre toi et les autres clients. Le VPN ajoute la couche de chiffrement manquante."
 
   - question: "Un VPN entreprise et un VPN grand public (NordVPN) :"
     choices:
@@ -80,7 +80,7 @@ quiz:
       - id: "c"
         label: "Le grand public est plus securise"
         correct: false
-    explanation: "VPN entreprise = porte d'entree aux ressources internes + chiffrement. VPN grand public = juste chiffrement vers une sortie internet anonyme. Roles tres differents."
+    explanation: "VPN entreprise = porte d'entrée aux ressources internes + chiffrement. VPN grand public = juste chiffrement vers une sortie internet anonyme. Roles très différents."
 
   - question: "Quand le VPN entreprise n'apporte rien de plus :"
     choices:
@@ -93,11 +93,11 @@ quiz:
       - id: "c"
         label: "Sur le Wi-Fi 'GuestFreeAirport'"
         correct: false
-    explanation: "La 4G/5G operateur fournit deja un canal cellulaire isole. Sur Wi-Fi public, le VPN reste indispensable."
+    explanation: "La 4G/5G opérateur fournit déjà un canal cellulaire isole. Sur Wi-Fi public, le VPN reste indispensable."
 ---
 
 ## Pour aller plus loin
 
 Le VPN d'entreprise n'est pas une corvee - c'est ton pass d'acces silencieux aux ressources de l'entreprise depuis n'importe ou. Une fois automatise au demarrage, il se fait oublier. Et le jour ou un attaquant ecoutait sur le Wi-Fi de la gare, c'est lui qui s'est fait oublier.
 
-> "Le VPN, c'est l'invisibilite numerique : on ne le voit que quand il n'est pas la."
+> "Le VPN, c'est l'invisibilite numérique : on ne le voit que quand il n'est pas la."

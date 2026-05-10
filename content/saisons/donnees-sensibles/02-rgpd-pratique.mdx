@@ -2,44 +2,44 @@
 title: "RGPD au quotidien"
 durationMinutes: 6
 persona: "tous"
-objective: "Comprendre les bons reflexes RGPD operationnels"
+objective: "Comprendre les bons reflexes RGPD opérationnels"
 xpReward: 50
 scenario: |
-  Un client te demande par mail : "Bonjour, pouvez-vous me confirmer combien de fois j'ai commande chez vous, mes derniers numeros de carte bancaire utilises, et l'adresse mail de mon collegue Pierre que j'ai oubliee ?"
+  Un client te demande par mail : "Bonjour, pouvez-vous me confirmer combien de fois j'ai commande chez vous, mes derniers numéros de carte bancaire utilises, et l'adresse mail de mon collègue Pierre que j'ai oubliee ?"
 
   Que fais-tu ?
 choices:
   - id: "a"
-    label: "Je reponds avec toutes les informations demandees"
+    label: "Je réponds avec toutes les informations demandees"
     outcome: "bad"
-    feedback: "Triple violation RGPD : carte bancaire jamais en clair, donnee de tiers (Pierre) jamais sans son consentement, et tu n'as pas verifie l'identite du demandeur."
+    feedback: "Triple violation RGPD : carte bancaire jamais en clair, donnee de tiers (Pierre) jamais sans son consentement, et tu n'as pas verifie l'identité du demandeur."
     points: -15
   - id: "b"
-    label: "Je l'invite a passer par notre formulaire de droit d'acces RGPD apres verification d'identite"
+    label: "Je l'invite a passer par notre formulaire de droit d'acces RGPD après vérification d'identité"
     outcome: "good"
-    feedback: "Excellent. Tu respectes la procedure RGPD : droit d'acces personnel, identification du demandeur, refus pour les donnees de tiers."
+    feedback: "Excellent. Tu respectes la procédure RGPD : droit d'acces personnel, identification du demandeur, refus pour les données de tiers."
     points: 30
   - id: "c"
     label: "Je donne uniquement les commandes (le reste je refuse)"
     outcome: "neutral"
-    feedback: "Bonne intention mais tu n'as pas verifie son identite. Il pourrait usurper l'identite d'un client legitime."
+    feedback: "Bonne intention mais tu n'as pas verifie son identité. Il pourrait usurper l'identité d'un client legitime."
     points: 10
   - id: "d"
-    label: "Je transfere a mon DPO sans repondre"
+    label: "Je transfere a mon DPO sans répondre"
     outcome: "good"
     feedback: "Bon reflexe aussi. Le DPO est le point de contact officiel pour ces demandes."
     points: 25
 debrief: |
   Le RGPD donne 6 droits aux personnes : acces, rectification, effacement, portabilite, limitation, opposition. Mais ces droits :
 
-  - S'appliquent uniquement aux **donnees personnelles de la personne elle-meme** (pas celles d'un tiers !)
-  - Necessitent une **verification d'identite** avant reponse
-  - **Ne donnent JAMAIS acces** aux donnees techniques sensibles (carte bancaire, mots de passe)
+  - S'appliquent uniquement aux **données personnelles de la personne elle-même** (pas celles d'un tiers !)
+  - Necessitent une **vérification d'identité** avant réponse
+  - **Ne donnent JAMAIS acces** aux données techniques sensibles (carte bancaire, mots de passe)
 
   Trois reflexes RGPD au quotidien :
 
   1. **Aucune donnee personnelle dans un mail non chiffre.** Utiliser les outils dedies (CRM, espace client, partage securise).
-  2. **Aucune reponse sans verification d'identite.** Demander une copie de piece d'identite ou un appel sur un numero connu.
+  2. **Aucune réponse sans vérification d'identité.** Demander une copie de piece d'identité ou un appel sur un numéro connu.
   3. **Aucune donnee de tiers sans son consentement explicite.**
 quiz:
   - question: "Un client demande l'adresse mail d'un autre client. Que fais-tu ?"
@@ -50,7 +50,7 @@ quiz:
       - id: "b"
         label: "Je refuse et j'explique que c'est une donnee de tiers"
         correct: true
-    explanation: "Tu n'as JAMAIS le droit de divulguer une donnee personnelle d'un tiers, meme a un autre client."
+    explanation: "Tu n'as JAMAIS le droit de divulguer une donnee personnelle d'un tiers, même a un autre client."
 
   - question: "Un mail demande des informations clients sensibles. Premier reflexe ?"
     choices:
@@ -58,12 +58,12 @@ quiz:
         label: "Repondre vite si la demande semble legitime"
         correct: false
       - id: "b"
-        label: "Verifier l'identite de l'expediteur hors-canal"
+        label: "Vérifier l'identité de l'expediteur hors-canal"
         correct: true
       - id: "c"
         label: "Ignorer le mail"
         correct: false
-    explanation: "Verifier l'identite par appel telephonique sur un numero connu, jamais celui du mail."
+    explanation: "Vérifier l'identité par appel téléphonique sur un numéro connu, jamais celui du mail."
 
   - question: "Une carte bancaire complete (16 chiffres + cryptogramme) peut-elle figurer dans un mail ?"
     choices:
@@ -78,9 +78,9 @@ quiz:
 
 ## Pour aller plus loin
 
-Quand un client demande l'exercice de ses droits RGPD, ta procedure type :
+Quand un client demande l'exercice de ses droits RGPD, ta procédure type :
 1. Confirmer reception sous 3 jours ouvres
-2. Verifier l'identite du demandeur (CNI, ou recoupement avec donnees client)
+2. Vérifier l'identité du demandeur (CNI, ou recoupement avec données client)
 3. Repondre sous 1 mois (extensible a 3 mois si demande complexe)
 4. Garder une trace ecrite (registre des demandes RGPD)
 

@@ -2,16 +2,16 @@
 title: "Le faux recruteur sur LinkedIn"
 durationMinutes: 7
 persona: "tous-collaborateurs"
-objective: "Detecter un faux recruteur sur LinkedIn et eviter les pieges (phishing, ingenierie sociale, vol d'identite)"
+objective: "Détecter un faux recruteur sur LinkedIn et éviter les pieges (phishing, ingénierie sociale, vol d'identité)"
 xpReward: 60
 scenario: |
   Mardi 14h, tu recois un message LinkedIn :
 
   "Bonjour [ton prenom], je suis recruteur senior chez TechCorp.
-  Suite a votre profil tres interessant, j'ai un poste de [ton
+  Suite a votre profil très interessant, j'ai un poste de [ton
   poste actuel] a vous proposer : 90K EUR + remote total +
   startup en croissance. Pourriez-vous m'envoyer votre CV +
-  copie de votre carte d'identite + RIB pour preparer votre
+  copie de votre carte d'identité + RIB pour preparer votre
   contrat ?"
 
   Le profil LinkedIn du recruteur :
@@ -25,32 +25,32 @@ choices:
   - id: "a"
     label: "J'envoie tout, c'est une opportunite genial"
     outcome: "bad"
-    feedback: "CATASTROPHE. Les drapeaux rouges sont evidents : RIB et carte d'identite avant TOUT entretien = vol d'identite imminent. Aucun recruteur legitime ne demande ces documents avant entretien. Faux profil + appat salaire."
+    feedback: "CATASTROPHE. Les drapeaux rouges sont évidents : RIB et carte d'identité avant TOUT entretien = vol d'identité imminent. Aucun recruteur legitime ne demande ces documents avant entretien. Faux profil + appat salaire."
     points: -25
   - id: "b"
-    label: "Je verifie : profil ancien (>3 ans + activite reguliere), TechCorp est une vraie boite, je demande un entretien telephonique d'abord, je ne fournis JAMAIS RIB/CI avant signature contrat"
+    label: "Je verifie : profil ancien (>3 ans + activite reguliere), TechCorp est une vraie boîte, je demande un entretien téléphonique d'abord, je ne fournis JAMAIS RIB/CI avant signature contrat"
     outcome: "good"
-    feedback: "Reflexes parfaits. Verification historique du profil + appel hors-bande + jamais de docs sensibles avant signature. Standard pro. Si recruteur insiste pour RIB/CI immediats : c'est confirme une fraude."
+    feedback: "Reflexes parfaits. Vérification historique du profil + appel hors-bande + jamais de docs sensibles avant signature. Standard pro. Si recruteur insiste pour RIB/CI immediats : c'est confirme une fraude."
     points: 40
   - id: "c"
-    label: "Je reponds 'non merci' et je ne donne aucune info"
+    label: "Je réponds 'non merci' et je ne donne aucune info"
     outcome: "neutral"
-    feedback: "Pas le pire, mais tu peux louper de vraies opportunites. Reponse equilibree : verifier le profil ET demander un entretien telephonique avant decision. Si profil suspect : ignore."
+    feedback: "Pas le pire, mais tu peux louper de vraies opportunites. Réponse equilibree : vérifier le profil ET demander un entretien téléphonique avant décision. Si profil suspect : ignore."
     points: 10
   - id: "d"
-    label: "J'accepte la connexion, je vois bien apres"
+    label: "J'accepte la connexion, je vois bien après"
     outcome: "bad"
-    feedback: "Risque. Accepter une connexion sans verification = donner acces a ton 1er degre LinkedIn (collegues, hierarchie). Le faux recruteur peut ensuite cibler ton manager / DG ('un ami de [toi] m'a recommande...')."
+    feedback: "Risque. Accepter une connexion sans vérification = donner acces a ton 1er degre LinkedIn (collègues, hierarchie). Le faux recruteur peut ensuite cibler ton manager / DG ('un ami de [toi] m'a recommande...')."
     points: -15
 debrief: |
   Le **faux recruteur sur LinkedIn** est l'une des techniques
-  d'ingenierie sociale les plus repandues. Cible :
+  d'ingénierie sociale les plus repandues. Cible :
 
-  - **Vol d'identite** (RIB, carte d'identite, CV)
-  - **Vol de propriete intellectuelle** (CV detaille, projets)
+  - **Vol d'identité** (RIB, carte d'identité, CV)
+  - **Vol de propriété intellectuelle** (CV detaille, projets)
   - **Cartographie d'entreprise** (qui fait quoi, hierarchie)
   - **Phishing avance** (faux entretien, faux site)
-  - **Recrutement de "taupe"** (employe convaincu de
+  - **Recrutement de "taupe"** (employé convaincu de
     travailler pour le concurrent)
 
   **LinkedIn 2024** : ~10 millions de faux profils detectes
@@ -60,19 +60,19 @@ debrief: |
 
   **1. Profil recent ou peu actif**
 
-  - **Date de creation** : moins de 6 mois (alerte)
+  - **Date de création** : moins de 6 mois (alerte)
   - **Posts** : peu nombreux, generiques, copies/colles
   - **Activite** : likes / comments rares
   - **Connexions** : croissance soudaine et massive
 
-  **Verification** : timeline d'activite + premier post.
+  **Vérification** : timeline d'activite + premier post.
 
   **2. Photo de profil suspecte**
 
   - **Photo trop pro** (mannequin, photo banque images)
   - **Recherche image inversee** (Google Images / Yandex) :
     si elle apparait dans plusieurs profils, fake
-  - **Photos generees par IA** : detection difficile mais
+  - **Photos generees par IA** : détection difficile mais
     parfois imperfections (asymetrie yeux, oreilles)
 
   **3. Description generique**
@@ -89,7 +89,7 @@ debrief: |
 
   - **TechCorp**, **Global Solutions**, **Strategy Partners** :
     noms generiques alarmants
-  - **Verification** : site web legitime ? Numero SIRET en
+  - **Vérification** : site web legitime ? Numéro SIRET en
     France ? LinkedIn entreprise serieux ?
 
   **5. Salaire / conditions trop attractifs**
@@ -99,22 +99,22 @@ debrief: |
     "tout, partout"
   - **Postes senior** sans entretien preliminaire
 
-  Si trop beau pour etre vrai = c'est faux.
+  Si trop beau pour être vrai = c'est faux.
 
   **6. Demande de documents sensibles avant entretien**
 
   - **RIB** : aucune raison legitime AVANT signature contrat
-  - **Carte d'identite / passeport** : ne se demande qu'a la
+  - **Carte d'identité / passeport** : ne se demande qu'a la
     signature, pas avant
-  - **Numero securite sociale** : jamais avant l'embauche
+  - **Numéro sécurité sociale** : jamais avant l'embauche
   - **Mot de passe** : jamais (vraie alerte si demande)
-  - **Acces aux systemes actuels** : aucun recruteur n'en a
+  - **Acces aux systèmes actuels** : aucun recruteur n'en a
     besoin
 
   **7. Pression / urgence**
 
-  - **"Decision sous 24h"**
-  - **"Plusieurs candidats"** alors que c'etait un message non
+  - **"Décision sous 24h"**
+  - **"Plusieurs candidats"** alors que c'était un message non
     sollicite
   - **"Je ne peux pas attendre"**
 
@@ -124,42 +124,42 @@ debrief: |
 
   - **WhatsApp / Telegram** demande rapidement
   - **Email perso** au lieu d'email d'entreprise
-  - **Sortir de LinkedIn** des le premier message
+  - **Sortir de LinkedIn** dès le premier message
 
   Vrais recruteurs : restent sur LinkedIn / email pro
   d'entreprise.
 
-  **Comment verifier un recruteur :**
+  **Comment vérifier un recruteur :**
 
-  **Etape 1 : Profil LinkedIn**
+  **Étape 1 : Profil LinkedIn**
 
-  - Date de creation (avant message d'introduction)
+  - Date de création (avant message d'introduction)
   - Activite reguliere (posts, comments, likes sur >1 an)
-  - Cohérence experience / formations
-  - Recommandations recues / donnees
+  - Cohérence expérience / formations
+  - Recommandations reçues / données
 
-  **Etape 2 : Entreprise**
+  **Étape 2 : Entreprise**
 
-  - Site web (verifier authenticite, age du domaine via WHOIS)
-  - Numero SIREN / RCS (societe.com pour France)
-  - LinkedIn entreprise (anciennete, employes actuels)
+  - Site web (vérifier authenticite, age du domaine via WHOIS)
+  - Numéro SIREN / RCS (société.com pour France)
+  - LinkedIn entreprise (anciennete, employés actuels)
   - Glassdoor / Indeed reviews
   - Google search "entreprise X scam" / "entreprise X arnaque"
 
-  **Etape 3 : Profil croise**
+  **Étape 3 : Profil croise**
 
   - Connexions communes (qui peut me parler de cette personne)
-  - Recommandations validables (anciens collegues)
+  - Recommandations validables (anciens collègues)
   - Cohérence parcours / poste actuel
 
-  **Etape 4 : Demande d'entretien telephonique**
+  **Étape 4 : Demande d'entretien téléphonique**
 
   - "Avant tout document, pourrions-nous avoir un entretien
-    telephonique ?"
+    téléphonique ?"
   - **Vrai recruteur** : accepte volontiers
   - **Faux recruteur** : esquive, redirige vers email / WhatsApp
 
-  **Etape 5 : Verification recursive**
+  **Étape 5 : Vérification recursive**
 
   Si tout passe :
   - Demande nom de votre futur manager
@@ -170,33 +170,33 @@ debrief: |
 
   **Que peut faire un faux recruteur :**
 
-  **a) Vol d'identite directe**
+  **a) Vol d'identité directe**
 
-  - RIB + carte d'identite + adresse = ouverture comptes
+  - RIB + carte d'identité + adresse = ouverture comptes
     bancaires
   - Souscription credits
   - Demarches administratives au nom de la victime
 
-  **Cout typique** : 5-50K EUR + 1-3 ans de procedures.
+  **Cout typique** : 5-50K EUR + 1-3 ans de procédures.
 
   **b) Phishing avance / faux entretien**
 
   - "Telechargez notre app pour l'entretien video"
   - L'app contient un malware
-  - Acces complet a ton telephone / PC
+  - Acces complet a ton téléphone / PC
 
   **c) Recrutement de "taupe"**
 
   - "Vous etes super, on aimerait que vous restiez chez votre
     employeur actuel mais nous donnez quelques infos
-    interieures"
+    intérieures"
   - "Bonus mensuel pour info confidentielle"
   - C'est de l'**espionnage industriel**, illegal.
 
-  **d) Vol de propriete intellectuelle**
+  **d) Vol de propriété intellectuelle**
 
   - "Envoyez-nous un exemple de votre travail"
-  - "Vos meilleures realisations en detail"
+  - "Vos meilleures realisations en détail"
   - Le faux recruteur revend ces infos a un concurrent.
 
   **e) Cartographie d'entreprise**
@@ -206,35 +206,35 @@ debrief: |
   - "Combien de personnes sur le sujet Y ?"
   - Servira pour spear phishing futur.
 
-  **f) Reseau de relations**
+  **f) Réseau de relations**
 
-  - "Pourriez-vous me presenter quelques collegues que vous
+  - "Pourriez-vous me presenter quelques collègues que vous
     estimez ?"
-  - Le faux recruteur agrandit son reseau de cibles.
+  - Le faux recruteur agrandit son réseau de cibles.
 
-  **Cas specifiques :**
+  **Cas spécifiques :**
 
   **Cas 1 : Faux recruteur agence**
 
   L'attaquant se fait passer pour un cabinet de chasseur de
-  tete (ex. "Spencer Stuart", "Heidrick Struggles" - vrais
+  tête (ex. "Spencer Stuart", "Heidrick Struggles" - vrais
   cabinets connus). Mais :
   - Email perso (pas spencerstuart.com)
-  - Numero perso
+  - Numéro perso
   - Demandes inhabituelles
 
-  Solution : appel a la vraie agence pour verifier l'identite
+  Solution : appel a la vraie agence pour vérifier l'identité
   du recruteur.
 
   **Cas 2 : Faux recruteur interne**
 
   L'attaquant se fait passer pour le RH **interne** de ton
-  entreprise actuelle pour ajouter de la credibilite. Email
+  entreprise actuelle pour ajouter de la crédibilité. Email
   type "alice.dupont@ton-entreprise-fr.com" (typosquatting)
   ou compte LinkedIn genere.
 
-  Solution : verifier en intern (Slack, Teams, telephone
-  bureau) avant de repondre.
+  Solution : vérifier en intern (Slack, Teams, téléphone
+  bureau) avant de répondre.
 
   **Cas 3 : Faux recruteur startup tech**
 
@@ -242,25 +242,25 @@ debrief: |
   talents for the next unicorn", recommendation par d'autres
   faux profils.
 
-  Solution : verification societe + entretien telephonique
+  Solution : vérification société + entretien téléphonique
   en premier.
 
   **Cas 4 : Faux recruteur "intelligence agency"**
 
   L'attaquant se fait passer pour un recruteur d'une agence
-  de renseignement (DGSE, MI6, CIA). Demande tres specifique :
-  ton experience cyber + ton acces actuel.
+  de renseignement (DGSE, MI6, CIA). Demande très spécifique :
+  ton expérience cyber + ton acces actuel.
 
   Solution : ces agences ne recrutent JAMAIS via LinkedIn
   cold message. Si interest reel : approche via parcours
   formel (concours, candidature spontanee).
 
-  **Procedure de signalement si suspect :**
+  **Procédure de signalement si suspect :**
 
-  1. **Capture d'ecran** du message + profil
+  1. **Capture d'écran** du message + profil
   2. **Signaler** sur LinkedIn (bouton "Signaler")
   3. **Bloquer** le profil
-  4. **Si vol identite** : plainte penale + Cybermalveillance.
+  4. **Si vol identité** : plainte penale + Cybermalveillance.
     gouv.fr
   5. **Informer ton manager / RSSI** : peut faire partie d'une
     campagne ciblant ton entreprise
@@ -278,7 +278,7 @@ debrief: |
 
   **Le piege "j'aurais reconnu un faux profil" :**
 
-  Etudes : meme les pros cyber se font avoir 10-15% du temps
+  Etudes : même les pros cyber se font avoir 10-15% du temps
   (tests internes). Les attaquants soignent leurs profils.
   Ne pas se baser sur l'intuition = methodologie rigoureuse.
 
@@ -290,66 +290,66 @@ debrief: |
 
   **Cas reel : LinkedIn 2024 (campagne nord-coreenne)**
 
-  Operation **DREAM JOB** (rapport US Treasury 2024) :
-  - Faux recruteurs nord-coreens ciblant des employes IT
+  Opération **DREAM JOB** (rapport US Treasury 2024) :
+  - Faux recruteurs nord-coreens ciblant des employés IT
   - Salaires attractifs proposes
   - Faux entretiens video avec deepfake
-  - Resultat : embauche d'agents nord-coreens dans entreprises
+  - Résultat : embauche d'agents nord-coreens dans entreprises
     US (cf saison cyber-rh ep 04)
 
-  Et : **DREAM JOB cible** ciblant des employes existants pour
+  Et : **DREAM JOB cible** ciblant des employés existants pour
   les recruter comme taupes (vol code source, exfiltration
-  donnees).
+  données).
 
-  **Cas reel : PME francaise 2023 (vol d'identite)**
+  **Cas reel : PME française 2023 (vol d'identité)**
 
-  Cadre IT a recu message d'un "recruteur chez Capgemini".
+  Cadre IT a reçu message d'un "recruteur chez Capgemini".
   Profil convaincant, salaire +30%. A envoye RIB + CI pour
   "preparer son contrat". Ouverture frauduleuse de 3 comptes
   bancaires + souscription credits.
 
-  Cout : 25K EUR + 2 ans de procedures.
+  Cout : 25K EUR + 2 ans de procédures.
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **Aucun recruteur legitime ne demande RIB / CI / mot de
-  > passe AVANT signature contrat. Verification systematique :
+  > passe AVANT signature contrat. Vérification systematique :
   > profil ancien + entreprise reelle + entretien
-  > telephonique. Pression / urgence = signal d'alerte. En cas
+  > téléphonique. Pression / urgence = signal d'alerte. En cas
   > de doute : ignorer ou signaler.**
 quiz:
   - question: "Un recruteur LinkedIn te demande RIB + CI avant entretien, action ?"
     choices:
       - { id: "a", label: "Envoyer rapidement", correct: false }
-      - { id: "b", label: "REFUSER. Aucun recruteur legitime ne demande RIB / CI avant signature contrat. C'est une fraude au vol d'identite. Signaler + bloquer.", correct: true }
+      - { id: "b", label: "REFUSER. Aucun recruteur legitime ne demande RIB / CI avant signature contrat. C'est une fraude au vol d'identité. Signaler + bloquer.", correct: true }
       - { id: "c", label: "Envoyer juste le RIB", correct: false }
-    explanation: "Vrais recruteurs : RIB / CI demandes UNIQUEMENT a la signature du contrat (pas avant). Demande precoce = vol d'identite imminent. Solution : refuser + verifier profil + signaler LinkedIn + bloquer. Si vol effectue : plainte + Cybermalveillance."
+    explanation: "Vrais recruteurs : RIB / CI demandes UNIQUEMENT a la signature du contrat (pas avant). Demande precoce = vol d'identité imminent. Solution : refuser + vérifier profil + signaler LinkedIn + bloquer. Si vol effectue : plainte + Cybermalveillance."
 
-  - question: "Comment verifier qu'un recruteur LinkedIn est legitime ?"
+  - question: "Comment vérifier qu'un recruteur LinkedIn est legitime ?"
     choices:
       - { id: "a", label: "Sa photo est jolie", correct: false }
-      - { id: "b", label: "Profil ancien (>1 an, activite reguliere), entreprise reelle (site, SIREN, LinkedIn entreprise serieux), entretien telephonique d'abord, connexions communes", correct: true }
+      - { id: "b", label: "Profil ancien (>1 an, activite reguliere), entreprise reelle (site, SIREN, LinkedIn entreprise serieux), entretien téléphonique d'abord, connexions communes", correct: true }
       - { id: "c", label: "Il a 500+ connexions", correct: false }
-    explanation: "Methode rigoureuse : 1) profil ancien avec activite reguliere (>1 an), 2) entreprise reelle (site, SIREN societe.com, LinkedIn entreprise), 3) entretien telephonique avant tout document, 4) connexions communes pour reference. Pas l'intuition."
+    explanation: "Méthode rigoureuse : 1) profil ancien avec activite reguliere (>1 an), 2) entreprise reelle (site, SIREN société.com, LinkedIn entreprise), 3) entretien téléphonique avant tout document, 4) connexions communes pour référence. Pas l'intuition."
 
-  - question: "Operation DREAM JOB (2024) c'etait quoi ?"
+  - question: "Opération DREAM JOB (2024) c'était quoi ?"
     choices:
       - { id: "a", label: "Une campagne marketing", correct: false }
       - { id: "b", label: "Faux recruteurs nord-coreens via LinkedIn pour faire embaucher des agents dans entreprises US (et recruter des taupes existantes)", correct: true }
       - { id: "c", label: "Un film", correct: false }
-    explanation: "DREAM JOB (rapport US Treasury 2024) : agents nord-coreens via faux recruteurs LinkedIn. 2 modes : 1) faire embaucher leurs agents dans entreprises US (deepfake video entretien), 2) recruter taupes existantes pour vol code source / donnees. Demonstrate sophistication."
+    explanation: "DREAM JOB (rapport US Treasury 2024) : agents nord-coreens via faux recruteurs LinkedIn. 2 modes : 1) faire embaucher leurs agents dans entreprises US (deepfake video entretien), 2) recruter taupes existantes pour vol code source / données. Demonstrate sophistication."
 
   - question: "Salaire propose +50% sans entretien preliminaire, signal ?"
     choices:
       - { id: "a", label: "Bonne opportunite", correct: false }
-      - { id: "b", label: "Drapeau rouge - 'trop beau pour etre vrai' = c'est faux. L'appat financier exploit l'attrait emotionnel. Vrai recruteur : process methodique", correct: true }
+      - { id: "b", label: "Drapeau rouge - 'trop beau pour être vrai' = c'est faux. L'appat financier exploit l'attrait emotionnel. Vrai recruteur : process methodique", correct: true }
       - { id: "c", label: "Standard", correct: false }
-    explanation: "Salaire +50% sans entretien preliminaire = drapeau rouge. Vrais recruteurs : process methodique (preselection, entretien tel, entretien sur site, references). Salaire negocie en fin de process. L'appat financier exploit emotion = manipulation classique."
+    explanation: "Salaire +50% sans entretien preliminaire = drapeau rouge. Vrais recruteurs : process methodique (preselection, entretien tel, entretien sur site, références). Salaire negocie en fin de process. L'appat financier exploit emotion = manipulation classique."
 ---
 
 > 💡 **Pour aller plus loin** : LinkedIn detecte ~10M faux
-> profils/mois mais beaucoup passent. Verification : **TineEye
-> / Yandex** pour image inversee photo profil. **Societe.com**
+> profils/mois mais beaucoup passent. Vérification : **TineEye
+> / Yandex** pour image inversee photo profil. **Société.com**
 > pour SIREN entreprise FR. **Glassdoor / Indeed** pour
 > reviews entreprise. Configuration LinkedIn defensive :
 > contact info masquee + connexions only.

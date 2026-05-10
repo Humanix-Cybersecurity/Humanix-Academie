@@ -2,102 +2,102 @@
 title: "Le changement de RIB en pleine paie"
 durationMinutes: 7
 persona: "rh"
-objective: "Detecter une fausse demande de changement de RIB salarie ou fournisseur"
+objective: "Détecter une fausse demande de changement de RIB salarié ou fournisseur"
 xpReward: 50
 scenario: |
   Mardi 22 du mois, 11h30. Tu prepares les ecritures de paie pour le 25. Mail de Sebastien MARTIN, technicien chez vous depuis 3 ans :
 
   "Bonjour, j'ai change de banque ce mois-ci suite a un demenagement. Pourrais-tu mettre a jour mon RIB pour le salaire de fin de mois ? Voici le nouveau (en piece jointe). Merci d'avance, Sebastien."
 
-  L'email vient bien de l'adresse pro de Sebastien (sebastien.martin@tonentreprise.fr). Le RIB est un IBAN francais d'une vraie banque (Boursorama). Le ton est habituel.
+  L'email vient bien de l'adresse pro de Sebastien (sebastien.martin@tonentreprise.fr). Le RIB est un IBAN français d'une vraie banque (Boursorama). Le ton est habituel.
 choices:
   - id: "a"
     label: "Je mets a jour le RIB et envoie un mail de confirmation a Sebastien"
     outcome: "bad"
-    feedback: "Le compte de Sebastien a peut-etre ete compromis (mot de passe vole, phishing reussi). Sans validation hors-canal, tu vires son salaire au pirate."
+    feedback: "Le compte de Sebastien a peut-être été compromis (mot de passe vole, phishing réussi). Sans validation hors-canal, tu vires son salaire au pirate."
     points: -15
   - id: "b"
-    label: "J'attrape Sebastien dans le couloir / au telephone interne / en visio pour valider de vive voix"
+    label: "J'attrape Sebastien dans le couloir / au téléphone interne / en visio pour valider de vive voix"
     outcome: "good"
     feedback: "Parfait. La validation par un canal humain (voix, visio, en personne) detecte instantanement une usurpation."
     points: 30
   - id: "c"
-    label: "Je reponds au mail pour demander la copie de la piece d'identite"
+    label: "Je réponds au mail pour demander la copie de la piece d'identité"
     outcome: "neutral"
-    feedback: "Bon reflexe de durcissement, mais si le compte est compromis, l'attaquant peut envoyer une piece d'identite scannee volee. Mieux : valider de vive voix."
+    feedback: "Bon reflexe de durcissement, mais si le compte est compromis, l'attaquant peut envoyer une piece d'identité scannee volee. Mieux : valider de vive voix."
     points: 10
   - id: "d"
     label: "Je consulte le SIRH pour voir s'il y a une demande RH officielle parallele"
     outcome: "good"
-    feedback: "Tres bon reflexe RH : un changement de RIB legitime passe normalement par le SIRH ou un formulaire ecrit. L'absence de trace officielle est un signal."
+    feedback: "Très bon reflexe RH : un changement de RIB legitime passe normalement par le SIRH ou un formulaire ecrit. L'absence de trace officielle est un signal."
     points: 25
 debrief: |
-  Le **changement de RIB salarie** est une variante FOVI emergente, particulierement insidieuse car :
+  Le **changement de RIB salarié** est une variante FOVI emergente, particulièrement insidieuse car :
 
   - Le montant est plus faible (1 salaire = 2 000 a 4 000 €) - sous le seuil d'alerte habituel
-  - L'expediteur est un collegue connu - pas de peur d'autorite
+  - L'expediteur est un collègue connu - pas de peur d'autorité
   - La demande est plausible (demenagement, changement de banque)
-  - Repete sur 50 salaries d'une PME = jusqu'a 200 000 € pour l'attaquant
+  - Repete sur 50 salariés d'une PME = jusqu'à 200 000 € pour l'attaquant
 
-  **Comment ca arrive ?**
+  **Comment ça arrive ?**
 
-  - L'attaquant a vole les credentials d'un salarie via phishing
+  - L'attaquant a vole les credentials d'un salarié via phishing
   - Il s'introduit dans son mail pro (pas son poste, juste son compte mail)
-  - Il lit ses derniers echanges pour mimer le ton
+  - Il lit ses derniers échanges pour mimer le ton
   - Il envoie a la RH ou la compta une demande de changement de RIB
-  - Il configure une regle de filtrage pour cacher les reponses au salarie reel
+  - Il configure une règle de filtrage pour cacher les réponses au salarié reel
 
   **Les 4 reflexes anti-changement-RIB :**
 
-  1. **Validation de vive voix** - couloir, telephone interne, visio. Pas de mail.
-  2. **Piece d'identite recente** - exiger une piece d'identite scannee + selfie tenant la piece (anti-fraude classique des banques).
+  1. **Validation de vive voix** - couloir, téléphone interne, visio. Pas de mail.
+  2. **Piece d'identité recente** - exiger une piece d'identité scannee + selfie tenant la piece (anti-fraude classique des banques).
   3. **Trace SIRH** - toute modification de coordonnees bancaires doit passer par le SIRH ou un formulaire ecrit.
-  4. **Periode de carence** - appliquer le nouveau RIB seulement le mois suivant la demande, pour laisser le temps a une fraude d'etre decouverte.
+  4. **Période de carence** - appliquer le nouveau RIB seulement le mois suivant la demande, pour laisser le temps a une fraude d'être decouverte.
 
-  **Cas tres pratique pour les PME francaises** : si tu as un SIRH de type Lucca, PayFit, Silae - exige que toute modification IBAN passe par leur workflow officiel, pas par un mail. Cette discipline coute 0 € et evite des mois de prejudice.
+  **Cas très pratique pour les PME françaises** : si tu as un SIRH de type Lucca, PayFit, Silae - exige que toute modification IBAN passe par leur workflow officiel, pas par un mail. Cette discipline coûte 0 € et evite des mois de préjudice.
 quiz:
-  - question: "Quelle validation est la plus fiable pour un changement de RIB salarie ?"
+  - question: "Quelle validation est la plus fiable pour un changement de RIB salarié ?"
     choices:
       - id: "a"
-        label: "Reponse par mail confirmant"
+        label: "Réponse par mail confirmant"
         correct: false
       - id: "b"
-        label: "Validation de vive voix (couloir, telephone interne, visio)"
+        label: "Validation de vive voix (couloir, téléphone interne, visio)"
         correct: true
       - id: "c"
-        label: "SMS sur le numero indique dans le mail"
+        label: "SMS sur le numéro indique dans le mail"
         correct: false
     explanation: "La voix humaine detecte instantanement une usurpation de compte mail. Mail ou SMS du mail = compromis, ne validence rien."
 
   - question: "Pourquoi les changements de RIB sont-ils une cible privilegiee ?"
     choices:
       - id: "a"
-        label: "Montants faibles, pas d'alerte d'autorite, demande plausible"
+        label: "Montants faibles, pas d'alerte d'autorité, demande plausible"
         correct: true
       - id: "b"
         label: "Les banques ne verifient jamais"
         correct: false
       - id: "c"
-        label: "C'est tres rare donc personne ne s'y attend"
+        label: "C'est très rare donc personne ne s'y attend"
         correct: false
-    explanation: "Sous le radar des controles classiques (montants en dessous du seuil) + plausibilite (demenagement) + expediteur 'connu' = combo gagnant pour l'attaquant."
+    explanation: "Sous le radar des contrôles classiques (montants en dessous du seuil) + plausibilite (demenagement) + expediteur 'connu' = combo gagnant pour l'attaquant."
 
-  - question: "Une bonne procedure RH pour les changements de RIB :"
+  - question: "Une bonne procédure RH pour les changements de RIB :"
     choices:
       - id: "a"
         label: "Acceptation immediate par mail"
         correct: false
       - id: "b"
-        label: "Workflow SIRH + validation orale + periode de carence (effet le mois suivant)"
+        label: "Workflow SIRH + validation orale + période de carence (effet le mois suivant)"
         correct: true
       - id: "c"
-        label: "Modification telephonique"
+        label: "Modification téléphonique"
         correct: false
     explanation: "Workflow ecrit (SIRH) + validation humaine + carence d'1 mois = 3 verrous. Si l'attaquant en passe 1, les 2 autres bloquent. La defense en profondeur sauve la paie."
 ---
 
 ## Pour aller plus loin
 
-Les fraudes au changement de RIB touchent en general plusieurs salaries dans la meme PME, en cascade sur 1 a 2 mois. Si tu detectes une demande douteuse, regarde les 30 derniers jours : il y en a peut-etre d'autres deja passees inapercues.
+Les fraudes au changement de RIB touchent en général plusieurs salariés dans la même PME, en cascade sur 1 a 2 mois. Si tu detectes une demande douteuse, regarde les 30 derniers jours : il y en a peut-être d'autres déjà passees inapercues.
 
-> "Une procedure froide en RH protege mieux que dix antivirus."
+> "Une procédure froide en RH protege mieux que dix antivirus."

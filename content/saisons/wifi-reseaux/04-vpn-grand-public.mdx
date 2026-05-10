@@ -2,31 +2,31 @@
 title: "Les VPN grand public : utiles ou pas ?"
 durationMinutes: 6
 persona: "tous-collaborateurs"
-objective: "Distinguer VPN d'entreprise et VPN grand public, comprendre leurs limites reelles, eviter les VPN gratuits qui sont eux-memes des outils d'attaquants"
+objective: "Distinguer VPN d'entreprise et VPN grand public, comprendre leurs limites reelles, éviter les VPN gratuits qui sont eux-mêmes des outils d'attaquants"
 xpReward: 60
 scenario: |
-  Lundi soir, ton frere te dit : "j'ai pris NordVPN parce que c'est dans
-  toutes les pubs YouTube, ca protege quand je suis sur le WiFi du cafe".
+  Lundi soir, ton frère te dit : "j'ai pris NordVPN parce que c'est dans
+  toutes les pubs YouTube, ça protege quand je suis sur le WiFi du cafe".
 
   Il te montre l'app, le cadenas qui dit "Connecte - Pays-Bas".
 
   Tu sais que :
-  - Ton frere bosse en banque (donnees client confidentielles)
-  - Il fait souvent du teletravail depuis cafes / coworkings
+  - Ton frère bosse en banque (données client confidentielles)
+  - Il fait souvent du télétravail depuis cafes / coworkings
   - Sa banque a une politique "VPN entreprise obligatoire pour acces SI"
     qu'il n'utilise pas ("trop lent")
 
-  Que dis-tu a ton frere ?
+  Que dis-tu a ton frère ?
 choices:
   - id: "a"
-    label: "NordVPN c'est tres bien, t'es protege contre tout"
+    label: "NordVPN c'est très bien, t'es protege contre tout"
     outcome: "bad"
     feedback: "Erreur conceptuelle commune. Un VPN grand public chiffre la liaison entre toi et le serveur VPN, mais il ne protege pas contre : phishing, malware, fuite via apps non-VPN, et surtout il ne remplace PAS le VPN entreprise pour le travail."
     points: -10
   - id: "b"
-    label: "Pour ton perso (Netflix, navigation generale), NordVPN est OK. Pour ton boulot banque, tu DOIS utiliser le VPN entreprise (politique + securite)"
+    label: "Pour ton perso (Netflix, navigation générale), NordVPN est OK. Pour ton boulot banque, tu DOIS utiliser le VPN entreprise (politique + sécurité)"
     outcome: "good"
-    feedback: "Distinction correcte. VPN grand public = anonymat / contournement geo / chiffrement WiFi public pour usage perso. VPN entreprise = obligation pour acceder au SI (politique + traçabilite + reglementaire dans la banque)."
+    feedback: "Distinction correcte. VPN grand public = anonymat / contournement geo / chiffrement WiFi public pour usage perso. VPN entreprise = obligation pour acceder au SI (politique + traçabilite + réglementaire dans la banque)."
     points: 35
   - id: "c"
     label: "Tous les VPN sont des arnaques, prefere Tor"
@@ -34,13 +34,13 @@ choices:
     feedback: "Tor est encore plus lent et inadapte au travail bancaire. Les VPN grand public ont leur usage (geo-spoofing pour streaming, anonymat basique navigation), mais pas pour la banque pro."
     points: -5
   - id: "d"
-    label: "Suggere de prendre 'ProtonVPN gratuit' pour eviter de payer NordVPN"
+    label: "Suggere de prendre 'ProtonVPN gratuit' pour éviter de payer NordVPN"
     outcome: "bad"
-    feedback: "ProtonVPN gratuit est un des moins pires (Suisse, audite), mais limite (3 pays, vitesse reduite). Et le probleme principal n'est pas le payant vs gratuit, c'est qu'il ne remplace PAS le VPN entreprise pour la banque."
+    feedback: "ProtonVPN gratuit est un des moins pires (Suisse, audite), mais limite (3 pays, vitesse reduite). Et le problème principal n'est pas le payant vs gratuit, c'est qu'il ne remplace PAS le VPN entreprise pour la banque."
     points: -5
 debrief: |
   Les VPN sont massivement marketes par les YouTubers et leur efficacite
-  reelle est tres mal comprise du grand public. Demystifions.
+  reelle est très mal comprise du grand public. Demystifions.
 
   **Ce que fait un VPN grand public (NordVPN, Surfshark, Mullvad,
   ProtonVPN, ExpressVPN, etc.) :**
@@ -55,7 +55,7 @@ debrief: |
   - **Le site que tu visites** (Google, banque) voit l'IP du serveur
     VPN, pas la tienne
 
-  **Ce que ca PROTEGE :**
+  **Ce que ça PROTEGE :**
 
   1. **Snooping local** : sur un Evil Twin / WiFi cafe, l'attaquant
      ne voit que du trafic chiffre VPN, pas tes URLs.
@@ -63,44 +63,44 @@ debrief: |
      Levallois (il voit juste un serveur VPN aux Pays-Bas).
   3. **Geo-spoofing** : acces a Netflix US depuis France, etc.
 
-  **Ce que ca NE PROTEGE PAS (la liste qui surprend) :**
+  **Ce que ça NE PROTEGE PAS (la liste qui surprend) :**
 
   1. **Le phishing** : un VPN n'empeche pas de cliquer sur un mail
      piege.
   2. **Les malwares** : un VPN ne scan pas les fichiers que tu
-     telecharges.
+     téléchargés.
   3. **La fuite via cookies** : si tu te connectes a Google avec ton
      compte, Google sait que c'est toi (peu importe ton IP).
   4. **Les apps non-VPN** : sur tel, certaines apps peuvent contourner
      le VPN (rare mais arrive).
-  5. **Le VPN provider lui-meme** : tu fais confiance au VPN. Il voit
-     **TOUT** ton trafic en clair (cote sortant). Sa politique "no logs"
+  5. **Le VPN provider lui-même** : tu fais confiance au VPN. Il voit
+     **TOUT** ton trafic en clair (côté sortant). Sa politique "no logs"
      est un acte de foi.
 
   **Les VPN grand public sont-ils dignes de confiance ?**
 
   Le marche est trouble :
   - **NordVPN, ExpressVPN, Surfshark** : payants, marketing massif,
-    audites par tiers. Generalement OK pour usage perso.
-  - **Mullvad** (Suede) : payant, pas de compte (juste un numero),
+    audites par tiers. Généralement OK pour usage perso.
+  - **Mullvad** (Suede) : payant, pas de compte (juste un numéro),
     audite. Probablement le plus respectueux.
   - **ProtonVPN** (Suisse) : payant + plan gratuit limite, audite,
     juridiction suisse (favorable).
-  - **VPN gratuits sponsors par pubs** : eviter. Si c'est gratuit,
-    le produit c'est toi (ou tes donnees).
+  - **VPN gratuits sponsors par pubs** : éviter. Si c'est gratuit,
+    le produit c'est toi (ou tes données).
   - **Hola VPN** (Israelien, gratuit) : LITERALEMENT vendait la
     bande passante des utilisateurs comme botnet (cas reel 2015).
-  - **VPN chinois, russes, iraniens gratuits** : eviter sauf si tu
+  - **VPN chinois, russes, iraniens gratuits** : éviter sauf si tu
     veux que ces gouvernements voient ton trafic.
 
-  **La regle d'or pour les VPN grand public :**
+  **La règle d'or pour les VPN grand public :**
 
   > Tu fais confiance a TON VPN PROVIDER comme tu ferais confiance
   > a ton ISP. Pas plus.
 
   Si tu n'as pas de raison particuliere (pays restrictif, ISP
   malveillant, anonymat journalistique), un VPN grand public ajoute
-  peu de securite reelle pour la majorite des usages domestiques.
+  peu de sécurité reelle pour la majorité des usages domestiques.
 
   **VPN d'entreprise vs grand public (LA distinction critique) :**
 
@@ -109,7 +109,7 @@ debrief: |
   | But | Anonymat / WiFi public | Acces au SI prive |
   | Auth | Login simple | Identite forte (LDAP/SSO/MFA) |
   | Chiffrement | OpenVPN/WireGuard standard | Idem + tunneling |
-  | Audit | Aucun cote utilisateur | Toutes les actions logs |
+  | Audit | Aucun côté utilisateur | Toutes les actions logs |
   | Ressources accessibles | Internet | Internet + intranet entreprise |
 
   **Pour ton boulot pro :**
@@ -117,12 +117,12 @@ debrief: |
   - **Si ton entreprise a un VPN** (Cisco AnyConnect, Pulse Secure,
     OpenVPN, WireGuard d'entreprise, ZTNA Zero-Trust) : **OBLIGATION**
     de l'utiliser pour acceder au SI. C'est :
-    - Une politique de securite (charte interne)
-    - Souvent une obligation reglementaire (banque, sante, defense)
+    - Une politique de sécurité (charte interne)
+    - Souvent une obligation réglementaire (banque, sante, defense)
     - Le seul moyen d'avoir des logs d'access en cas d'incident
 
   - **VPN grand public (NordVPN etc.) ne remplace PAS le VPN
-    entreprise**. Tu peux meme avoir les deux actifs
+    entreprise**. Tu peux même avoir les deux actifs
     simultanement (VPN entreprise par-dessus VPN grand public,
     technique : "double-hop").
 
@@ -143,23 +143,23 @@ quiz:
       - { id: "c", label: "Tout", correct: false }
     explanation: "Le VPN chiffre la liaison vers le serveur VPN. Il ne lit pas tes mails, ne scan pas tes fichiers, ne bloque pas les cookies de session. C'est UN outil parmi d'autres, pas la silver bullet."
 
-  - question: "Ton entreprise impose un VPN entreprise mais c'est lent. Tu utilises NordVPN a la place car plus rapide. Bonne idee ?"
+  - question: "Ton entreprise impose un VPN entreprise mais c'est lent. Tu utilises NordVPN a la place car plus rapide. Bonne idée ?"
     choices:
       - { id: "a", label: "Oui, c'est juste un VPN qui remplace l'autre", correct: false }
       - { id: "b", label: "NON. VPN entreprise = obligation politique + acces au SI prive + traçabilite. NordVPN ne donne PAS acces a l'intranet et tu violes la charte", correct: true }
       - { id: "c", label: "Indifferent", correct: false }
-    explanation: "VPN entreprise et VPN grand public n'ont PAS le meme but. Le VPN entreprise donne acces aux ressources internes ET a une auth forte ET des logs (forensic). NordVPN ne fait rien de tout ca."
+    explanation: "VPN entreprise et VPN grand public n'ont PAS le même but. Le VPN entreprise donne acces aux ressources internes ET a une auth forte ET des logs (forensic). NordVPN ne fait rien de tout ça."
 
   - question: "Pourquoi un VPN gratuit est suspect ?"
     choices:
       - { id: "a", label: "Aucune raison", correct: false }
-      - { id: "b", label: "Le provider doit gagner sa vie - il vend tes donnees, ta bande passante (cas Hola), ou injecte des pubs", correct: true }
+      - { id: "b", label: "Le provider doit gagner sa vie - il vend tes données, ta bande passante (cas Hola), ou injecte des pubs", correct: true }
       - { id: "c", label: "Trop lent", correct: false }
-    explanation: "Hola VPN (gratuit) vendait la bande passante des utilisateurs comme botnet (proxy resale). D'autres injectent des pubs ou collectent les DNS queries. Si gratuit = tu es le produit. ProtonVPN gratuit (limite mais transparent) est l'exception qui confirme la regle."
+    explanation: "Hola VPN (gratuit) vendait la bande passante des utilisateurs comme botnet (proxy resale). D'autres injectent des pubs ou collectent les DNS queries. Si gratuit = tu es le produit. ProtonVPN gratuit (limite mais transparent) est l'exception qui confirme la règle."
 ---
 
 > 💡 **Pour aller plus loin** : pour les paranoides, **Mullvad VPN**
-> (Suede, ~5 EUR/mois) ne demande aucun compte (juste un numero), est
+> (Suede, ~5 EUR/mois) ne demande aucun compte (juste un numéro), est
 > audite par les Big4, et son code client est open source. Pour de
-> l'anonymat reel, **Tor** reste superieur a tout VPN (mais bcp plus
+> l'anonymat reel, **Tor** reste supérieur a tout VPN (mais bcp plus
 > lent et incompatible avec la banque).

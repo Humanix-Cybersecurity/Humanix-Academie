@@ -2,52 +2,52 @@
 title: "Securiser son ERP / logiciel comptable"
 durationMinutes: 7
 persona: "manager"
-objective: "Mettre en place les controles de securite de base sur l'ERP / logiciel comptable (Sage, Cegid, Pennylane, SAP) : MFA, comptes nominatifs, audit log, sauvegardes, RGPD"
+objective: "Mettre en place les contrôles de sécurité de base sur l'ERP / logiciel comptable (Sage, Cegid, Pennylane, SAP) : MFA, comptes nominatifs, audit log, sauvegardes, RGPD"
 xpReward: 60
 scenario: |
   Tu reprends la cloture comptable d'une PME 80 personnes.
-  L'ERP utilise est Sage 100c. Etat des lieux :
+  L'ERP utilise est Sage 100c. État des lieux :
   - 1 compte 'admin' partage par 5 personnes (DAF + 4 comptables)
   - Mot de passe : 'Sage2024' (pas change depuis 2 ans)
   - Pas de MFA
-  - Sauvegarde quotidienne sur le meme serveur (pas off-site)
+  - Sauvegarde quotidienne sur le même serveur (pas off-site)
   - Aucun audit log consulte
   - Acces depuis n'importe quel poste (y compris perso BYOD)
 
-  Tu vois 6 problemes. Lesquels priorises-tu ?
+  Tu vois 6 problèmes. Lesquels priorises-tu ?
 choices:
   - id: "a"
     label: "C'est OK, on a la version pro de Sage, c'est securise par defaut"
     outcome: "bad"
-    feedback: "FAUX. Sage est un produit, pas une procedure. La securite vient de la configuration et des pratiques. Avec un compte partage + pas de MFA + pas de sauvegarde off-site, vous etes vulnerables a tout : ransomware, fraude interne, exfiltration."
+    feedback: "FAUX. Sage est un produit, pas une procédure. La sécurité vient de la configuration et des pratiques. Avec un compte partage + pas de MFA + pas de sauvegarde off-site, vous etes vulnerables a tout : ransomware, fraude interne, exfiltration."
     points: -20
   - id: "b"
     label: "Priorite 1 : comptes nominatifs + MFA. Priorite 2 : sauvegarde off-site + audit log mensuel. Priorite 3 : restriction acces (postes pro uniquement) + politique BYOD"
     outcome: "good"
-    feedback: "Excellente priorisation. Comptes nominatifs + MFA = bloque 99% des fraudes internes/externes. Off-site = anti-ransomware. Audit log = detection. Restriction = surface d'attaque reduite. Plan en phases respectables."
+    feedback: "Excellente priorisation. Comptes nominatifs + MFA = bloque 99% des fraudes internes/externes. Off-site = anti-ransomware. Audit log = détection. Restriction = surface d'attaque reduite. Plan en phases respectables."
     points: 40
   - id: "c"
-    label: "On change tout en meme temps demain"
+    label: "On change tout en même temps demain"
     outcome: "neutral"
     feedback: "Risque. Tout changer en parallele peut casser la production (les comptables ne peuvent plus saisir). Demarche progressive sur 2-4 semaines : plus efficace, plus accepte par les utilisateurs."
     points: 15
   - id: "d"
     label: "Je signale au DAF avec plan d'action priorise et budget estime"
     outcome: "good"
-    feedback: "Bonne approche pro. Diagnostic + priorisation + budget = decision facile pour le DAF. Documentation des risques (en cas de breach futur, preuve que tu avais alerte = protection juridique)."
+    feedback: "Bonne approche pro. Diagnostic + priorisation + budget = décision facile pour le DAF. Documentation des risques (en cas de breach futur, preuve que tu avais alerte = protection juridique)."
     points: 35
 debrief: |
   L'**ERP / logiciel comptable** (Sage, Cegid, Pennylane,
   Quickbooks, SAP, Oracle) est l'un des actifs les plus critiques
   de l'entreprise. Il contient :
 
-  - Toutes les donnees financieres
+  - Toutes les données financieres
   - Tous les RIB fournisseurs/clients
-  - Les donnees de paie (donnees sensibles RGPD)
+  - Les données de paie (données sensibles RGPD)
   - L'historique de toutes les transactions
   - Les acces au logiciel = acces a la tresorerie
 
-  Compromis = perte de controle financier total.
+  Compromis = perte de contrôle financier total.
 
   **Les 8 mesures de securisation essentielles :**
 
@@ -56,14 +56,14 @@ debrief: |
   - **NON** : compte 'admin' partage entre 5 personnes
   - **OUI** : 1 compte par personne (`alice.dupont`, `bob.martin`)
   - **Avantage** : tracability individuelle (qui a fait quoi ?)
-  - **Avantage** : revocation immediate si depart d'un employe
+  - **Avantage** : revocation immediate si depart d'un employé
   - **Avantage** : pas de risque "le mot de passe a fuite"
     (chacun gere le sien)
 
   **Implementation** :
-  - Creer 1 compte par utilisateur
+  - Créer 1 compte par utilisateur
   - **Supprimer** ou **renommer** le compte partage admin
-  - Migration des donnees / ecritures historiques sur les
+  - Migration des données / ecritures historiques sur les
     nouveaux comptes (la plupart des ERP le permettent)
 
   **2. MFA obligatoire**
@@ -80,7 +80,7 @@ debrief: |
   **3. Mots de passe forts + rotation**
 
   - **Politique** : 14 caracteres minimum, complexes
-  - **Pas de partage** entre employes
+  - **Pas de partage** entre employés
   - **Gestionnaire de mots de passe** (Bitwarden, 1Password,
     Dashlane)
   - **Rotation** : tous les 6-12 mois pour comptes admin
@@ -93,8 +93,8 @@ debrief: |
   - Saisie d'ecriture
   - Modification d'IBAN fournisseur
   - Validation virement
-  - Export de donnees
-  - Acces aux donnees sensibles (paie)
+  - Export de données
+  - Acces aux données sensibles (paie)
 
   **Conservation** : 5 ans (obligation comptable + RGPD article
   30).
@@ -102,47 +102,47 @@ debrief: |
   **Revue mensuelle** par DAF + RSSI :
   - Connexions hors heures (3h du matin = suspect)
   - Modifications d'IBAN (cf ep 02)
-  - Exports massifs (peut etre exfiltration)
+  - Exports massifs (peut être exfiltration)
   - Tentatives de connexion echouees (brute force ?)
 
   **5. Sauvegardes 3-2-1**
 
   - **3** copies (BDD principale + 2 sauvegardes)
-  - **2** supports differents (disque local + cloud / NAS)
+  - **2** supports différents (disque local + cloud / NAS)
   - **1** off-site (au moins 1 sauvegarde hors du site
     physique = anti-ransomware)
   - **Tests reguliers** de restauration (mensuels)
 
   **Pour Sage / Cegid / Pennylane** :
   - Sauvegarde automatique quotidienne (par defaut chez les SaaS)
-  - Off-site : verifier que c'est bien sur un autre datacenter
+  - Off-site : vérifier que c'est bien sur un autre datacenter
   - Conservation : 30-90 jours minimum
 
   **6. Restriction d'acces**
 
   - **Acces depuis postes professionnels uniquement** (pas
     perso BYOD pour l'ERP)
-  - **Acces depuis IPs autorisees** (whitelist : siege + VPN)
-  - **Pas d'acces depuis l'etranger** sauf justifie + MFA
+  - **Acces depuis IPs autorisees** (whitelist : siège + VPN)
+  - **Pas d'acces depuis l'étranger** sauf justifie + MFA
     renforce
-  - **Pas de partage d'ecran** sur Teams/Zoom avec l'ERP visible
-  - **Bloquer copy/paste** des donnees sensibles si possible
+  - **Pas de partage d'écran** sur Teams/Zoom avec l'ERP visible
+  - **Bloquer copy/paste** des données sensibles si possible
     (DLP)
 
   **7. Mise a jour reguliere**
 
-  - **Patch immediat** des correctifs de securite (CVE)
+  - **Patch immediat** des correctifs de sécurité (CVE)
   - **Version supportee** (Sage 100c < 5 ans, Cegid... )
   - **Notifications** des fournisseurs ERP : abonner le RSSI
-    aux newsletters securite
+    aux newsletters sécurité
 
   **Risque sur ERP non maintenu** : exemple SAP HANA 2019, faille
   permettant l'execution de code distant. Patch dispo, mais 30%
-  des installations toujours vulnerables 1 an apres.
+  des installations toujours vulnerables 1 an après.
 
   **8. RGPD : registre de traitement**
 
-  L'ERP traite des donnees personnelles (employes, candidats,
+  L'ERP traite des données personnelles (employés, candidats,
   clients, fournisseurs).
 
   Obligations RGPD :
@@ -152,7 +152,7 @@ debrief: |
     (paie)
   - **Droits des personnes** : acces, rectification, effacement
     (article 15-22)
-  - **Notification breach** : sous 72h CNIL si fuite de donnees
+  - **Notification breach** : sous 72h CNIL si fuite de données
 
   **Le piege "Sage Cloud est securise par defaut" :**
 
@@ -163,23 +163,23 @@ debrief: |
   - **Configuration des comptes** (nominatifs, MFA, droits)
   - **Politique de mots de passe**
   - **Revue audit log**
-  - **Politique RGPD** (registre, duree, droits des personnes)
+  - **Politique RGPD** (registre, durée, droits des personnes)
   - **Politique d'acces** (qui, depuis ou)
 
-  Modele de **responsabilite partagee** (Shared Responsibility
+  Modele de **responsabilité partagee** (Shared Responsibility
   Model). Le SaaS te donne les outils, toi tu les configures.
 
   **Le piege "le compte admin partage est plus pratique" :**
 
-  C'est le piege le plus frequent. Avantages percus :
+  C'est le piege le plus fréquent. Avantages percus :
   - Plus simple a memoriser
-  - Tout le monde a les memes droits
+  - Tout le monde a les mêmes droits
   - Pas de gestion de comptes
 
   Inconvenients reels :
   - Aucune tracability (qui a fait quoi ?)
   - Si une personne fuit le mot de passe, tous compromis
-  - Si une personne quitte, le mot de passe doit etre change
+  - Si une personne quitte, le mot de passe doit être change
     pour tous (rarement fait)
   - **Non-conforme** RGPD article 32 (mesures techniques) +
     NIS2 article 21 (mesure 9)
@@ -187,13 +187,13 @@ debrief: |
   Solution : 1 compte / personne, gestionnaire de mots de
   passe pour la simplicite.
 
-  **Le piege "on a un firewall, ca suffit" :**
+  **Le piege "on a un firewall, ça suffit" :**
 
   Le firewall protege le perimetre, pas l'ERP en interne.
   Risques NON couverts :
   - Compte compromis (phishing) : l'attaquant entre via VPN /
     web
-  - Insider (employe rancunier) : acces deja legitime
+  - Insider (employé rancunier) : acces déjà legitime
   - Ransomware via email : passe le firewall
   - SQL injection si appli web mal codee : passe le firewall
 
@@ -201,25 +201,25 @@ debrief: |
 
   **Cas reels :**
 
-  **Cas 1 - PME Bordeaux 2022 (vol donnees fournisseurs)**
+  **Cas 1 - PME Bordeaux 2022 (vol données fournisseurs)**
 
   Compte admin Sage partage entre 6 personnes. Un comptable a
-  ete piratte par phishing (mot de passe identique partout). Le
-  pirate a accedes a 12 mois de donnees fournisseurs (RIB
-  inclus) qui ont ete revendues. Les fournisseurs ont ete
+  été piratte par phishing (mot de passe identique partout). Le
+  pirate a accedes a 12 mois de données fournisseurs (RIB
+  inclus) qui ont été revendues. Les fournisseurs ont été
   victimes de FOVI les mois suivants. La PME a paye 50K EUR de
-  remboursements + procedures.
+  remboursements + procédures.
 
-  **Cas 2 - Hopital prive Lyon 2023 (ransomware via ERP)**
+  **Cas 2 - Hôpital prive Lyon 2023 (ransomware via ERP)**
 
   ERP Cegid pas patche depuis 3 ans (CVE 2021 exploitee). Le
-  pirate a chiffre l'ERP + sauvegardes (sur meme serveur). 18h
+  pirate a chiffre l'ERP + sauvegardes (sur même serveur). 18h
   d'indisponibilite. Cout : 800K EUR (recovery + perte
-  d'activite + amende RGPD pour fuite de donnees patients).
+  d'activite + amende RGPD pour fuite de données patients).
 
   **Cas 3 - Editeur SaaS Paris 2024 (insider)**
 
-  Un comptable rancunier (en periode de preavis) a exporte la
+  Un comptable rancunier (en période de préavis) a exporte la
   base entiere des fournisseurs (5000 RIBs) avant de partir.
   Aucun audit log consulte. Decouverte 6 mois plus tard quand
   les fournisseurs ont commence a recevoir du phishing cible.
@@ -229,7 +229,7 @@ debrief: |
   | Semaine | Action | Cout |
   |---|---|---|
   | S1 | Inventaire des comptes existants + identification compte partage | 0 |
-  | S1 | Creation comptes nominatifs (1/personne) | 0 |
+  | S1 | Création comptes nominatifs (1/personne) | 0 |
   | S2 | Migration des utilisateurs vers comptes nominatifs | 0 |
   | S2 | Activation MFA (TOTP) sur tous comptes | 0 |
   | S3 | Configuration audit log + revue mensuelle | 0 |
@@ -237,7 +237,7 @@ debrief: |
   | S4 | Politique d'acces (postes pro uniquement) + IP whitelist | 0 |
   | S4 | Documentation + formation utilisateurs | 0 |
 
-  **Cout total : 50-200 EUR/mois. ROI tres eleve.**
+  **Cout total : 50-200 EUR/mois. ROI très élève.**
 
   **Outils gratuits / OSS pour s'aider :**
 
@@ -253,19 +253,19 @@ debrief: |
   **Indicateurs de pilotage (KPI) :**
 
   Mensuel :
-  - **Pourcentage de comptes nominatifs** : doit etre 100%
-  - **Pourcentage de comptes avec MFA** : doit etre 100%
-  - **Comptes inactifs > 90 jours** : doit etre 0 (revoque)
+  - **Pourcentage de comptes nominatifs** : doit être 100%
+  - **Pourcentage de comptes avec MFA** : doit être 100%
+  - **Comptes inactifs > 90 jours** : doit être 0 (revoque)
   - **Tentatives de connexion echouees** : moins de 5 par
     compte/mois (sinon brute force)
   - **Modifications IBAN tracees** : 100% revues par DAF
 
   Annuel :
-  - **Test de restauration sauvegarde** : reussi
-  - **Audit acces** : conformite a la politique
+  - **Test de restauration sauvegarde** : réussi
+  - **Audit acces** : conformité a la politique
   - **Mise a jour ERP** : version supportee
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **L'ERP est l'actif financier le plus critique. Comptes
   > nominatifs + MFA + audit log + sauvegardes off-site sont
@@ -282,15 +282,15 @@ quiz:
 
   - question: "Sage Cloud est securise par defaut, je peux me reposer dessus ?"
     choices:
-      - { id: "a", label: "Oui completement", correct: false }
-      - { id: "b", label: "Modele de responsabilite partagee : Sage gere infra, TU geres comptes / MFA / acces / RGPD. Sans configuration cote client, vulnerable", correct: true }
+      - { id: "a", label: "Oui complètement", correct: false }
+      - { id: "b", label: "Modele de responsabilité partagee : Sage gere infra, TU geres comptes / MFA / acces / RGPD. Sans configuration côté client, vulnerable", correct: true }
       - { id: "c", label: "Non, le SaaS n'est pas safe", correct: false }
-    explanation: "SaaS = responsabilite partagee. Sage / Cegid / Pennylane gerent l'infra (datacenter, patches OS). Le client gere comptes nominatifs, MFA, mots de passe, droits, audit log. Sans config = vulnerable malgre SaaS."
+    explanation: "SaaS = responsabilité partagee. Sage / Cegid / Pennylane gerent l'infra (datacenter, patches OS). Le client gere comptes nominatifs, MFA, mots de passe, droits, audit log. Sans config = vulnerable malgre SaaS."
 
   - question: "Sauvegarde 3-2-1 signifie quoi ?"
     choices:
       - { id: "a", label: "3 jours", correct: false }
-      - { id: "b", label: "3 copies, 2 supports differents, 1 off-site (au moins 1 hors du site physique = anti-ransomware)", correct: true }
+      - { id: "b", label: "3 copies, 2 supports différents, 1 off-site (au moins 1 hors du site physique = anti-ransomware)", correct: true }
       - { id: "c", label: "1 sauvegarde par mois", correct: false }
     explanation: "Standard ANSSI sauvegarde 3-2-1 : 3 copies (BDD + 2 sauvegardes), 2 supports (disque + cloud), 1 off-site. Le off-site est anti-ransomware : si l'attaquant chiffre tout sur place, le off-site reste intact."
 
@@ -299,11 +299,11 @@ quiz:
       - { id: "a", label: "100 K EUR", correct: false }
       - { id: "b", label: "50-200 EUR/mois (sauvegarde off-site cloud) + 0 EUR pour comptes nominatifs/MFA/audit (inclus)", correct: true }
       - { id: "c", label: "Gratuit complet", correct: false }
-    explanation: "Cout reel tres faible : 50-200 EUR/mois pour sauvegarde off-site cloud (Backblaze, Wasabi). Comptes nominatifs, MFA TOTP, audit log = inclus dans Sage/Cegid/Pennylane. ROI > 100x face aux risques (FOVI, ransomware, vol donnees)."
+    explanation: "Cout reel très faible : 50-200 EUR/mois pour sauvegarde off-site cloud (Backblaze, Wasabi). Comptes nominatifs, MFA TOTP, audit log = inclus dans Sage/Cegid/Pennylane. ROI > 100x face aux risques (FOVI, ransomware, vol données)."
 ---
 
 > 💡 **Pour aller plus loin** : **Bpifrance Diag Cyber** finance
-> jusqu'a 50% de l'audit ERP. **CISO Assistant** (intuitem,
+> jusqu'à 50% de l'audit ERP. **CISO Assistant** (intuitem,
 > OSS) inclut un module audit ERP. Pour les TPE : **Pennylane**
 > (FR, ~50 EUR/mois) inclut MFA + audit log + sauvegarde
 > nativement.

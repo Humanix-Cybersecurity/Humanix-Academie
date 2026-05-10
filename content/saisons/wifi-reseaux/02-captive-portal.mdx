@@ -2,14 +2,14 @@
 title: "Les portails captifs piégés"
 durationMinutes: 6
 persona: "tous-collaborateurs"
-objective: "Reconnaitre un portail captif legitime vs piege, eviter les redirections HTTP suspectes, comprendre pourquoi le portail captif n'est PAS du chiffrement"
+objective: "Reconnaître un portail captif legitime vs piege, éviter les redirections HTTP suspectes, comprendre pourquoi le portail captif n'est PAS du chiffrement"
 xpReward: 60
 scenario: |
-  Tu es a l'hotel, tu te connectes au WiFi `Hilton-Guests`. Une page
+  Tu es a l'hôtel, tu te connectes au WiFi `Hilton-Guests`. Une page
   s'ouvre dans ton navigateur :
 
   > Hilton Hotels Worldwide - Guest WiFi
-  > Pour acceder au reseau, connectez-vous avec votre Hilton Honors :
+  > Pour acceder au réseau, connectez-vous avec votre Hilton Honors :
   > [Email]  [Mot de passe Hilton Honors]
   > [Connexion]
 
@@ -18,30 +18,30 @@ scenario: |
   Tu fais quoi ?
 choices:
   - id: "a"
-    label: "Je tape mon Hilton Honors - apres tout c'est leur portail captif"
+    label: "Je tape mon Hilton Honors - après tout c'est leur portail captif"
     outcome: "bad"
     feedback: "PHISHING via portail captif. Le domaine `.cn` (Chine) et le pattern `hilton-honors-login.example.cn` ne sont pas Hilton. Tu donnes ton Hilton Honors (acces miles, paiements lies) a un attaquant."
     points: -15
   - id: "b"
     label: "Je verifie l'URL : pas hilton.com. Je ferme et j'utilise mon partage 4G/5G"
     outcome: "good"
-    feedback: "Excellent reflexe. Hilton vrai = domaine `hilton.com` ou `hilton-honors.com`. Tout autre domaine sur un portail captif = phishing. La bonne reaction : 4G/5G ou demander a la reception un code reseau."
+    feedback: "Excellent reflexe. Hilton vrai = domaine `hilton.com` ou `hilton-honors.com`. Tout autre domaine sur un portail captif = phishing. La bonne reaction : 4G/5G ou demander a la reception un code réseau."
     points: 35
   - id: "c"
     label: "Je tape un faux email/mot de passe pour voir ce qui se passe"
     outcome: "bad"
-    feedback: "Inutile et risque. Meme un faux mot de passe te connecte (le portail s'en fiche : son but est de te faire saisir, pas valider). Ensuite, le portail tente d'installer un malware via 'Veuillez accepter ce certificat' - tu peux te faire piquer juste par la presence de la page."
+    feedback: "Inutile et risque. Même un faux mot de passe te connecte (le portail s'en fiche : son but est de te faire saisir, pas valider). Ensuite, le portail tente d'installer un malware via 'Veuillez accepter ce certificat' - tu peux te faire piquer juste par la présence de la page."
     points: -10
   - id: "d"
-    label: "Je demande a la reception le bon URL ou le code reseau direct"
+    label: "Je demande a la reception le bon URL ou le code réseau direct"
     outcome: "good"
     feedback: "Solution officielle. Vraie reception Hilton aura soit un code WiFi simple (sans login Honors), soit un domaine officiel verifiable. Demander en personne = elimine l'incertitude."
     points: 30
 debrief: |
   Le **portail captif** (captive portal) est cette page qui s'ouvre
-  automatiquement quand tu te connectes a un WiFi public (hotel,
+  automatiquement quand tu te connectes a un WiFi public (hôtel,
   cafe, aeroport). C'est un mecanisme legitime d'authentification
-  reseau, mais c'est aussi un vecteur de phishing classique.
+  réseau, mais c'est aussi un vecteur de phishing classique.
 
   **Comment fonctionne un portail captif legitime :**
 
@@ -49,18 +49,18 @@ debrief: |
   2. Le routeur te donne une IP mais bloque tout trafic Internet.
   3. Quand tu tentes une URL HTTP, le routeur te redirige vers la page
      de login (le portail captif).
-  4. Tu valides (CGU, login Hilton, code reseau).
+  4. Tu valides (CGU, login Hilton, code réseau).
   5. Le routeur autorise ton trafic Internet.
 
   **Pourquoi c'est piegeable :**
 
-  - Le portail captif n'a PAS BESOIN d'etre HTTPS pour fonctionner -
+  - Le portail captif n'a PAS BESOIN d'être HTTPS pour fonctionner -
     et beaucoup ne le sont pas.
   - Tu as l'habitude de voir ces pages s'ouvrir, donc tu y fais peu
     attention.
-  - Les domaines varient selon les hotels (pas toujours hilton.com -
+  - Les domaines varient selon les hôtels (pas toujours hilton.com -
     parfois `wifi.hilton-paris.com`, `auth.cloud-wifi.eu`, etc.) - donc
-    tu n'as pas de reference fixe.
+    tu n'as pas de référence fixe.
 
   **Les 4 signaux d'alarme sur un portail captif :**
 
@@ -68,23 +68,23 @@ debrief: |
 
   - hilton.com, marriott.com = OK
   - hilton-secure-login.example.com = phishing
-  - hotel-wifi-auth-server.tk = phishing
+  - hôtel-wifi-auth-server.tk = phishing
   - free-wifi.cn = phishing
 
   Reflexe : si le domaine ne te dit rien et que ce n'est pas le nom
-  de l'hotel/entreprise telle qu'affichee a l'accueil, mefiance.
+  de l'hôtel/entreprise telle qu'affichee a l'accueil, méfiance.
 
   **2. Demande de credentials sensibles**
 
   Un portail captif legitime demande :
   - Acceptation des CGU (case a cocher)
   - Email simple (pour newsletter / marketing)
-  - Code reseau imprime sur le badge ou la facture
+  - Code réseau imprime sur le badge ou la facture
 
   Un portail captif legitime ne demande PAS :
   - Mot de passe d'un autre service (Google, Hilton Honors, banque)
-  - Numero de carte bancaire pour "verifier le compte"
-  - Numero de securite sociale
+  - Numéro de carte bancaire pour "vérifier le compte"
+  - Numéro de sécurité sociale
 
   Si on te demande un mot de passe d'un autre service ou un paiement
   pour un WiFi annonce gratuit : phishing.
@@ -93,8 +93,8 @@ debrief: |
 
   "Pour acceder au WiFi, veuillez installer ce certificat / cette
   application" - jamais legitime sur un WiFi public moderne. Si
-  l'hotel veut absolument du HTTPS via leur portail, le certificat
-  est deja signe par une autorite reconnue.
+  l'hôtel veut absolument du HTTPS via leur portail, le certificat
+  est déjà signe par une autorité reconnue.
 
   Installer un certificat tiers = donner a l'attaquant la possibilite
   d'intercepter TOUT ton HTTPS futur.
@@ -102,13 +102,13 @@ debrief: |
   **4. URL HTTPS sans cadenas**
 
   Le portail captif HTTP est commun (acceptable). Mais s'il pretend
-  etre HTTPS et que tu vois "Connexion non securisee" dans la barre
-  d'URL, c'est un certificat invalide = mefiance maximale.
+  être HTTPS et que tu vois "Connexion non securisee" dans la barre
+  d'URL, c'est un certificat invalide = méfiance maximale.
 
   **Defense ligne par ligne :**
 
   - Coche les CGU si demande, mais NE TAPE AUCUN PASSWORD existant
-    (creer un mot de passe local jetable si necessaire).
+    (créer un mot de passe local jetable si necessaire).
   - Si on te demande un code WiFi, le mettre. Si on te demande
     Hilton Honors / Marriott Bonvoy / autre, REFUSER.
   - Pour aller vite : 4G/5G partage de connexion. Toujours.
@@ -117,14 +117,14 @@ debrief: |
 
   Beaucoup d'aeroports facturent le WiFi (15 EUR / heure typique).
   Un attaquant configure un AP "FreeAirportWiFi" gratuit. Tu te
-  connectes pour eviter de payer. Le portail captif te demande email
-  + mot de passe Google "pour verifier que tu es humain". Tu donnes.
+  connectes pour éviter de payer. Le portail captif te demande email
+  + mot de passe Google "pour vérifier que tu es humain". Tu donnes.
 
   Defense : si le WiFi de l'aeroport est paye, c'est paye. Pas de
   shortcut "gratuit" sur un WiFi public dans un environnement non
   trust.
 quiz:
-  - question: "Un portail captif d'hotel te demande ton mot de passe Hilton Honors. C'est :"
+  - question: "Un portail captif d'hôtel te demande ton mot de passe Hilton Honors. C'est :"
     choices:
       - { id: "a", label: "Normal pour les clients fideles", correct: false }
       - { id: "b", label: "Du phishing - aucun portail captif legitime ne demande un compte d'un autre service", correct: true }
@@ -135,18 +135,18 @@ quiz:
     choices:
       - { id: "a", label: "J'installe pour debloquer la connexion", correct: false }
       - { id: "b", label: "JAMAIS - installer un certificat tiers donne acces a TOUT ton HTTPS futur a l'attaquant", correct: true }
-      - { id: "c", label: "J'installe puis je le supprime apres", correct: false }
-    explanation: "Un certificat tiers installe = MitM possible sur TOUT ton trafic HTTPS futur. Aucun WiFi legitime moderne ne demande ca. C'est un signal d'alarme MAJEUR."
+      - { id: "c", label: "J'installe puis je le supprime après", correct: false }
+    explanation: "Un certificat tiers installe = MitM possible sur TOUT ton trafic HTTPS futur. Aucun WiFi legitime moderne ne demande ça. C'est un signal d'alarme MAJEUR."
 
   - question: "URL `wifi.hilton-honors-login.example.cn` sur un portail Hilton. C'est :"
     choices:
       - { id: "a", label: "Un sous-domaine Hilton", correct: false }
       - { id: "b", label: "Phishing - le vrai domaine Hilton est hilton.com (pas .cn)", correct: true }
       - { id: "c", label: "Un mirror officiel", correct: false }
-    explanation: "Hilton legitime = `hilton.com` ou `hilton-honors.com`. Le `.cn` (Chine) sur un hotel americain est suspect. Le pattern complexe (hilton-honors-login) est typo classique de phishing."
+    explanation: "Hilton legitime = `hilton.com` ou `hilton-honors.com`. Le `.cn` (Chine) sur un hôtel americain est suspect. Le pattern complexe (hilton-honors-login) est typo classique de phishing."
 ---
 
 > 💡 **Pour aller plus loin** : si tu voyages beaucoup, configure ton
 > tel pour bloquer les connexions auto aux WiFi non trust. iOS :
 > "Demander a se connecter" (Settings > WiFi). Android : "Notification
-> de reseau ouvert" desactivee.
+> de réseau ouvert" desactivee.

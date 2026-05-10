@@ -2,7 +2,7 @@
 title: "Le lien Google Drive public oublie"
 durationMinutes: 5
 persona: "tous-collaborateurs"
-objective: "Eviter les fuites de donnees par lien public oublie sur Google Drive / OneDrive / SharePoint et configurer correctement les partages"
+objective: "Éviter les fuites de données par lien public oublie sur Google Drive / OneDrive / SharePoint et configurer correctement les partages"
 xpReward: 50
 scenario: |
   Tu partages un document avec un client externe (Sophie chez
@@ -11,35 +11,35 @@ scenario: |
   3 mois plus tard, le RSSI te dit :
 
   "Audit interne. On a fait scan des partages Google Drive
-  publics. Ton document 'Plan strategique 2024' est encore en
+  publics. Ton document 'Plan stratégique 2024' est encore en
   partage public. Sophie a quitte AcmeCorp depuis 2 mois. Le
   lien est sur le dark web."
 
   Tu reagis comment ?
 choices:
   - id: "a"
-    label: "Pas grave, c'est juste accessible avec le lien, faut connaitre le lien"
+    label: "Pas grave, c'est juste accessible avec le lien, faut connaître le lien"
     outcome: "bad"
     feedback: "FAUX. 'Avec le lien' = public sur internet. Les liens fuitent constamment (mail forwarde, screenshots, dark web, scrapers). Etude UCLA 2022 : 30% des liens publics Google Drive sont indexes par Google sous 30 jours."
     points: -20
   - id: "b"
-    label: "Je revoque immediatement le lien, j'audite mes autres partages, je passe en partage nominatif (a Sophie@xxx) avec expiration 30 jours"
+    label: "Je revoque immédiatement le lien, j'audite mes autres partages, je passe en partage nominatif (a Sophie@xxx) avec expiration 30 jours"
     outcome: "good"
-    feedback: "Action correcte. Revocation immediate + audit + partage nominatif + expiration = procedure pro. Standard Google Workspace / Microsoft 365 : eviter les liens publics sauf cas tres specifiques."
+    feedback: "Action correcte. Revocation immediate + audit + partage nominatif + expiration = procédure pro. Standard Google Workspace / Microsoft 365 : éviter les liens publics sauf cas très spécifiques."
     points: 40
   - id: "c"
-    label: "Je supprime le document, comme ca c'est regle"
+    label: "Je supprime le document, comme ça c'est règle"
     outcome: "neutral"
-    feedback: "Stoppe l'exposition mais pas suffisant. Le lien etant deja sur le dark web, le mal est fait : copie possible faite. Mieux : revocation + audit + analyse forensic (qui a accede ? quand ?) + notification CNIL si donnees personnelles."
+    feedback: "Stoppe l'exposition mais pas suffisant. Le lien etant déjà sur le dark web, le mal est fait : copie possible faite. Mieux : revocation + audit + analyse forensic (qui a accede ? quand ?) + notification CNIL si données personnelles."
     points: 10
   - id: "d"
     label: "Je laisse, c'est le RSSI qui exagere"
     outcome: "bad"
-    feedback: "MAUVAIS. Le RSSI fait son travail. Plan strategique sur le dark web = avantage concurrent + risque legal (insider trading si entreprise cotee). Action immediate + cooperation avec RSSI = professionnalisme."
+    feedback: "MAUVAIS. Le RSSI fait son travail. Plan stratégique sur le dark web = avantage concurrent + risque legal (insider trading si entreprise cotee). Action immediate + cooperation avec RSSI = professionnalisme."
     points: -25
 debrief: |
   Le **lien public oublie** est l'une des causes principales de
-  fuite de donnees en entreprise. Cumule plusieurs problemes :
+  fuite de données en entreprise. Cumule plusieurs problèmes :
 
   - Facilite d'usage (1 clic pour partager)
   - Pas d'expiration par defaut
@@ -59,27 +59,27 @@ debrief: |
   - Si le document contient certains mots cles, Google peut
     l'indexer
   - Recherche `site:drive.google.com "confidentiel"` = milliers
-    de resultats
+    de résultats
   - Bots qui crawlent les services cloud
 
   **2. Forward d'email**
 
   - Tu envoies le lien a Sophie
-  - Sophie forward a Bob (collegue interne ou externe)
+  - Sophie forward a Bob (collègue interne ou externe)
   - Bob l'enregistre dans ses bookmarks
   - Bob quitte son entreprise, ses bookmarks sont synchronises
     sur son Mac perso
   - **Le lien circule de plus en plus**
 
-  **3. Capture d'ecran / partage dans messagerie**
+  **3. Capture d'écran / partage dans messagerie**
 
   - L'utilisateur partage le lien sur Slack / WhatsApp
-  - Capture d'ecran sur Twitter / LinkedIn
+  - Capture d'écran sur Twitter / LinkedIn
   - **Visibilite exponentielle**
 
   **4. Compromission d'un compte intermediaire**
 
-  - Sophie a recu le lien
+  - Sophie a reçu le lien
   - Compte de Sophie est piratte
   - Le pirate trouve le lien dans ses emails
   - **Acces sans alerte chez toi**
@@ -109,12 +109,12 @@ debrief: |
 
   - Tous les comptes du tenant Google Workspace / Microsoft 365
     de l'entreprise
-  - **Mais** tres rapidement large (250 employes = 250 acces
+  - **Mais** très rapidement large (250 employés = 250 acces
     potentiels)
-  - **Risque** : compte employe compromis = fuite
+  - **Risque** : compte employé compromis = fuite
 
   Recommandation : utiliser pour les documents non-sensibles
-  uniquement (procedures, organigrammes generaux). Pas pour les
+  uniquement (procédures, organigrammes généraux). Pas pour les
   documents confidentiels.
 
   **Niveau 3 : Anyone with the link (DANGEREUX)**
@@ -133,7 +133,7 @@ debrief: |
 
   - Indexable par les moteurs de recherche
   - Aucune restriction
-  - **Eviter absolument**
+  - **Éviter absolument**
 
   **Bonnes pratiques de partage :**
 
@@ -155,7 +155,7 @@ debrief: |
 
   - **Lecture seule** par defaut (pas commentaire, pas
     modification)
-  - Permission a relire que si necessite professionnelle
+  - Permission a relire que si nécessité professionnelle
   - **Pas de "owner"** ou "editor" externe sauf cas particulier
 
   **4. Notifications**
@@ -165,12 +165,12 @@ debrief: |
     sensibles)
   - **Audit mensuel** des partages externes
 
-  **5. Audit periodique**
+  **5. Audit périodique**
 
   - **Tous les 3 mois** : revue des partages externes actifs
   - Outils : Google Workspace audit, Microsoft Purview, ou
     scripts admin
-  - **Indicateur** : nombre de partages externes / employe
+  - **Indicateur** : nombre de partages externes / employé
 
   **Configuration Google Workspace recommandee :**
 
@@ -200,26 +200,26 @@ debrief: |
   **a) Google Workspace Investigation Tool**
 
   - Audit complet des partages externes
-  - Filtres : date, domaine, sensibilite
+  - Filtres : date, domaine, sensibilité
   - Export CSV
 
   **b) Microsoft Purview**
 
-  - Detection des partages sensibles
+  - Détection des partages sensibles
   - Politiques DLP
   - Alertes en temps reel
 
   **c) CASB (Cloud Access Security Broker)**
 
   - **Microsoft Defender for Cloud Apps** : inclus M365 E5
-  - Detection des partages sensibles auto
+  - Détection des partages sensibles auto
   - Bloquage des partages externes risques
 
   **Cas reels :**
 
-  **Cas 1 - PME francaise 2023 (plan strategique fuite)**
+  **Cas 1 - PME française 2023 (plan stratégique fuite)**
 
-  Un commercial a partage le plan strategique 2024 avec un
+  Un commercial a partage le plan stratégique 2024 avec un
   prospect via Google Drive "Anyone with link". Le prospect
   l'a transferre a un concurrent. Le concurrent a utilise les
   informations pour soumissions / pricing.
@@ -229,29 +229,29 @@ debrief: |
 
   **Cas 2 - Cabinet d'avocats Paris 2024 (RGPD)**
 
-  Document client (donnees personnelles) partage en "Anyone
+  Document client (données personnelles) partage en "Anyone
   with link" par erreur. Le lien indexe par Google. Decouvert
   par le client (recherche Google de son nom).
 
   Sanctions :
   - CNIL : 25 K EUR
   - Reputation : -2 etoiles sur Google
-  - Perte du client + procedure judiciaire
+  - Perte du client + procédure judiciaire
 
-  **Cas 3 - Hopital prive 2022 (donnees patients)**
+  **Cas 3 - Hôpital prive 2022 (données patients)**
 
   SharePoint avec lien "Anyone in organization" + utilisateur
-  externe ajoute par erreur. Donnees patients (1500 dossiers)
+  externe ajoute par erreur. Données patients (1500 dossiers)
   accessibles publiquement pendant 6 mois. Decouvert par
   recherche Google.
 
   Sanctions :
   - CNIL : 200 K EUR
   - Notification 1500 patients
-  - Procedures judiciaires en cours
-  - Reputation tres degradee
+  - Procédures judiciaires en cours
+  - Reputation très degradee
 
-  **Le piege "le lien est trop long pour etre devine" :**
+  **Le piege "le lien est trop long pour être devine" :**
 
   FAUX. Les liens Google Drive ressemblent a :
   `https://drive.google.com/file/d/1ABc234XYZ.../view`
@@ -267,7 +267,7 @@ debrief: |
   **Le piege "c'est juste pour 1 personne" :**
 
   Mais cette personne :
-  - Forward a ses collegues
+  - Forward a ses collègues
   - Enregistre dans son navigateur (synchro perso)
   - Partage sur Slack / WhatsApp
   - Pourra acceder pour TOUJOURS si pas de revocation
@@ -281,16 +281,16 @@ debrief: |
   de retracer 6 mois de partages.
 
   Solution :
-  - Audit periodique trimestriel
+  - Audit périodique trimestriel
   - Outil DLP qui notifie les nouveaux partages
   - Politique : tout partage externe documente dans un tracker
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **Le partage 'Anyone with link' est equivalent a 'public sur
   > internet'. Toujours nominatif + expiration + lecture seule.
   > Audit trimestriel. CASB pour automatisation. Si fuite : 
-  > revocation immediate + audit + notification CNIL si donnees
+  > revocation immediate + audit + notification CNIL si données
   > personnelles.**
 quiz:
   - question: "Quel pourcentage des liens publics Google Drive sont indexes par Google sous 30 jours ?"
@@ -298,7 +298,7 @@ quiz:
       - { id: "a", label: "0%", correct: false }
       - { id: "b", label: "30% (etude UCLA 2022) - 'Anyone with link' = public sur internet", correct: true }
       - { id: "c", label: "100%", correct: false }
-    explanation: "Etude UCLA 2022 : 30% des liens publics Google Drive sont indexes par Google sous 30 jours. 'Anyone with link' = public sur internet, indexable, partageable infiniment. JAMAIS pour donnees sensibles."
+    explanation: "Etude UCLA 2022 : 30% des liens publics Google Drive sont indexes par Google sous 30 jours. 'Anyone with link' = public sur internet, indexable, partageable infiniment. JAMAIS pour données sensibles."
 
   - question: "Quel niveau de partage par defaut pour un document interne ?"
     choices:
@@ -310,9 +310,9 @@ quiz:
   - question: "Tu apprends qu'un de tes liens est sur le dark web, action ?"
     choices:
       - { id: "a", label: "Le supprimer simplement", correct: false }
-      - { id: "b", label: "Revocation immediate + audit complet de TOUS tes partages + notification CNIL si donnees personnelles + analyse forensic (qui a accede)", correct: true }
+      - { id: "b", label: "Revocation immediate + audit complet de TOUS tes partages + notification CNIL si données personnelles + analyse forensic (qui a accede)", correct: true }
       - { id: "c", label: "Ignorer", correct: false }
-    explanation: "Action complete : 1) revocation immediate du lien specifique, 2) audit de TOUS tes partages externes (peut-etre d'autres exposes), 3) notification CNIL sous 72h si donnees personnelles (RGPD article 33), 4) forensic pour comprendre."
+    explanation: "Action complete : 1) revocation immediate du lien spécifique, 2) audit de TOUS tes partages externes (peut-être d'autres exposes), 3) notification CNIL sous 72h si données personnelles (RGPD article 33), 4) forensic pour comprendre."
 
   - question: "Pour un partage externe, quelle expiration recommandee ?"
     choices:

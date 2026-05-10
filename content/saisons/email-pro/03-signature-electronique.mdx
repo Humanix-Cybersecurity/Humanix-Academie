@@ -2,7 +2,7 @@
 title: "Signature électronique vs simple PDF signé"
 durationMinutes: 7
 persona: "tous-collaborateurs"
-objective: "Distinguer signature electronique reglementaire (eIDAS niveaux simple/avancee/qualifiee) du PDF avec image scannee, savoir laquelle utiliser quand"
+objective: "Distinguer signature electronique réglementaire (eIDAS niveaux simple/avancee/qualifiee) du PDF avec image scannee, savoir laquelle utiliser quand"
 xpReward: 60
 scenario: |
   Lundi 14h, ton CEO te demande : "fais signer ce contrat de prestation
@@ -18,36 +18,36 @@ scenario: |
     "signature scannee.png" du CEO, tu envoies par mail.
 
   Option C : tu utilises DocuSign, Yousign (FR) ou Universign (FR) qui
-    font signer chacun avec verification d'identite (SMS / lecteur
+    font signer chacun avec vérification d'identité (SMS / lecteur
     carte ID), et qui produisent un fichier signe horodate.
 
   Le DAF te demande : laquelle a la meilleure valeur juridique en cas
   de litige avec le fournisseur ?
 choices:
   - id: "a"
-    label: "Option C - signature electronique avec DocuSign/Yousign (verification d'identite + horodatage + non-repudiation)"
+    label: "Option C - signature electronique avec DocuSign/Yousign (vérification d'identité + horodatage + non-repudiation)"
     outcome: "good"
-    feedback: "Excellente reponse. Au sens du reglement eIDAS (UE), C est une signature electronique avancee ou qualifiee, equivalente juridiquement a une signature manuscrite avec presomption de validite. A et B sont des signatures simples, faibles juridiquement."
+    feedback: "Excellente réponse. Au sens du règlement eIDAS (UE), C est une signature electronique avancee ou qualifiee, equivalente juridiquement a une signature manuscrite avec presomption de validite. A et B sont des signatures simples, faibles juridiquement."
     points: 35
   - id: "b"
     label: "Option A - papier puis scan, c'est la signature traditionnelle reconnue partout"
     outcome: "neutral"
-    feedback: "A est juridiquement valable mais en cas de litige, tu dois prouver que c'est bien le CEO qui a signe (le scan ne le prouve pas). C reste superieure car la non-repudiation est cryptographiquement garantie."
+    feedback: "A est juridiquement valable mais en cas de litige, tu dois prouver que c'est bien le CEO qui a signe (le scan ne le prouve pas). C reste supérieure car la non-repudiation est cryptographiquement garantie."
     points: 10
   - id: "c"
     label: "Option B - PDF avec image de signature, c'est un PDF qui fait foi"
     outcome: "bad"
-    feedback: "Option B est la plus FAIBLE juridiquement. L'image peut etre coupee-collee depuis n'importe ou. Si le fournisseur conteste, tu n'as aucune preuve d'integrite ni d'identite. La CJUE et les tribunaux francais l'ont rejete plusieurs fois."
+    feedback: "Option B est la plus FAIBLE juridiquement. L'image peut être coupee-collee depuis n'importe ou. Si le fournisseur conteste, tu n'as aucune preuve d'integrite ni d'identité. La CJUE et les tribunaux français l'ont rejete plusieurs fois."
     points: -10
   - id: "d"
     label: "Toutes les options se valent juridiquement"
     outcome: "bad"
-    feedback: "Faux. Le reglement eIDAS (UE 910/2014) distingue 3 niveaux de signature electronique avec des poids juridiques differents. A, B et C ne sont PAS equivalentes. C est la plus forte."
+    feedback: "Faux. Le règlement eIDAS (UE 910/2014) distingue 3 niveaux de signature electronique avec des poids juridiques différents. A, B et C ne sont PAS equivalentes. C est la plus forte."
     points: -10
 debrief: |
-  Le reglement **eIDAS** (UE 910/2014, en vigueur depuis 2016) defini
+  Le règlement **eIDAS** (UE 910/2014, en vigueur depuis 2016) defini
   3 niveaux de signature electronique avec leur valeur juridique
-  associee. C'est essentiel a connaitre pour eviter de signer un
+  associee. C'est essentiel a connaître pour éviter de signer un
   contrat avec une signature qui ne tiendra pas en cas de litige.
 
   **Niveau 1 - Signature Electronique Simple (SES)**
@@ -66,18 +66,18 @@ debrief: |
   **Niveau 2 - Signature Electronique Avancee (SEA)**
 
   Repond a 4 exigences eIDAS :
-  1. Lien univoque avec le signataire (cle privee specifique)
-  2. Verification d'identite forte (KYC : carte ID, SMS, video)
-  3. Sous controle exclusif du signataire (double facteur)
-  4. Detection de toute modification ulterieure (hash + horodatage)
+  1. Lien univoque avec le signataire (cle privée spécifique)
+  2. Vérification d'identité forte (KYC : carte ID, SMS, video)
+  3. Sous contrôle exclusif du signataire (double facteur)
+  4. Détection de toute modification ulterieure (hash + horodatage)
 
   Outils typiques : DocuSign, Yousign (FR), Adobe Sign, HelloSign.
 
   Valeur juridique : forte. Equivalente juridiquement a une signature
   manuscrite (article 1367 Code civil + eIDAS art. 26).
 
-  Usages OK : contrats commerciaux jusqu'a quelques centaines de K€,
-  bons de commande, NDA, contrats de travail (sauf cas specifiques).
+  Usages OK : contrats commerciaux jusqu'à quelques centaines de K€,
+  bons de commande, NDA, contrats de travail (sauf cas spécifiques).
 
   **Niveau 3 - Signature Electronique Qualifiee (SEQ)**
 
@@ -85,7 +85,7 @@ debrief: |
   Confiance Qualifie (PSCo Qualifie) accredite eIDAS, par exemple
   Certinomis (FR), ChamberSign (FR), DigitalDocs.
 
-  Le signataire utilise generalement une cle physique (token USB)
+  Le signataire utilise généralement une cle physique (token USB)
   ou une carte avec PIN.
 
   Valeur juridique : maximale. Presume equivalente a une signature
@@ -99,27 +99,27 @@ debrief: |
 
   **Piege n°1 : "Je signe avec ma cle PGP, c'est cryptographique"**
   PGP est une SES si pas integre a un service eIDAS-compliant. Ta
-  cle PGP n'est pas adossee a un certificat d'identite reglementaire.
-  Ca ne suffit pas pour SEA.
+  cle PGP n'est pas adossee a un certificat d'identité réglementaire.
+  Ça ne suffit pas pour SEA.
 
   **Piege n°2 : "DocuSign + signature simple = SEA"**
   DocuSign permet plusieurs niveaux. Si tu n'actives pas la
-  verification d'identite (SMS, carte ID, KBA) c'est seulement SES.
-  Verifier le niveau de plan choisi.
+  vérification d'identité (SMS, carte ID, KBA) c'est seulement SES.
+  Vérifier le niveau de plan choisi.
 
   **Piege n°3 : "Le fournisseur me dit que sa signature e-mail
   vaut signature"**
   Un email signe avec une signature graphique en pied de mail = SES
-  faible. Repondre "ok" ou "valide" par email = SES tres faible.
+  faible. Repondre "ok" ou "valide" par email = SES très faible.
   Pour un contrat 450 K€, demande SEA explicite.
 
   **Piege n°4 : "Le contrat dit qu'on peut signer par email"**
   Si la clause de signature accepte le simple email, alors juridiquement
-  ca tient. Mais en cas de litige, prouver que tu as bien recu le mail
-  (que l'email n'etait pas spoofe) est difficile (cf. saison email-pro
+  ça tient. Mais en cas de litige, prouver que tu as bien reçu le mail
+  (que l'email n'était pas spoofe) est difficile (cf. saison email-pro
   episode 06 sur SPF/DKIM/DMARC).
 
-  **La regle d'or pour les decisions de signature :**
+  **La règle d'or pour les décisions de signature :**
 
   - **Contrats < 5 K€** : SES suffit (DocuSign basic, scan-sign).
   - **Contrats 5 K€ - 500 K€** : SEA recommandee (Yousign, DocuSign
@@ -129,7 +129,7 @@ debrief: |
   - **Documents personnels (RH, sante)** : SEA ou SEQ selon politique.
   - **Acte authentique notarial** : signature qualifiee uniquement.
 
-  **Souverainete : prefere les PSCO francais**
+  **Souverainete : prefere les PSCO français**
 
   Yousign, Universign, Certinomis, ChamberSign sont des PSCO
   qualifies eIDAS bases en France. DocuSign / Adobe Sign sont
@@ -143,14 +143,14 @@ quiz:
       - { id: "a", label: "Signature electronique qualifiee (SEQ)", correct: false }
       - { id: "b", label: "Signature electronique simple (SES) - faible juridiquement", correct: true }
       - { id: "c", label: "Equivalente a une signature manuscrite", correct: false }
-    explanation: "L'image scannee est SES (la plus faible). En cas de litige, tu ne peux pas prouver que c'est bien le bon signataire (l'image se copie-colle facilement). SEA exige verification d'identite + non-repudiation cryptographique."
+    explanation: "L'image scannee est SES (la plus faible). En cas de litige, tu ne peux pas prouver que c'est bien le bon signataire (l'image se copie-colle facilement). SEA exige vérification d'identité + non-repudiation cryptographique."
 
   - question: "Pour un contrat de prestation 450 K€, quel niveau de signature recommande ?"
     choices:
       - { id: "a", label: "SES (PDF + image)", correct: false }
-      - { id: "b", label: "SEA (DocuSign/Yousign avec verification d'identite SMS ou KBA)", correct: true }
+      - { id: "b", label: "SEA (DocuSign/Yousign avec vérification d'identité SMS ou KBA)", correct: true }
       - { id: "c", label: "Pas de signature, un email 'OK' suffit", correct: false }
-    explanation: "SEA pour les montants 5K-500K. Verification d'identite + horodatage + non-repudiation. Yousign FR ou DocuSign avec plan KYC. Pour > 500 K€, passer en SEQ."
+    explanation: "SEA pour les montants 5K-500K. Vérification d'identité + horodatage + non-repudiation. Yousign FR ou DocuSign avec plan KYC. Pour > 500 K€, passer en SEQ."
 
   - question: "Quel est l'avantage juridique d'une SEQ vs SEA ?"
     choices:
@@ -159,12 +159,12 @@ quiz:
       - { id: "c", label: "SEQ est plus rapide", correct: false }
     explanation: "Article 25 eIDAS : SEQ a 'l'effet juridique d'une signature manuscrite'. SEA est forte mais theoriquement contestable. SEQ pour marches publics, immobilier, actes notaries."
 
-  - question: "Qui sont les Prestataires de Services de Confiance Qualifies francais ?"
+  - question: "Qui sont les Prestataires de Services de Confiance Qualifies français ?"
     choices:
       - { id: "a", label: "DocuSign et Adobe Sign", correct: false }
       - { id: "b", label: "Certinomis, ChamberSign, Universign (FR)", correct: true }
       - { id: "c", label: "Aucun en France, tout vient des US", correct: false }
-    explanation: "Certinomis (Docaposte/La Poste), ChamberSign (CCI France), Universign (FR), Cryptolog/Idenum (FR) sont qualifies eIDAS et bases en France. Pour eviter le Cloud Act sur tes contrats sensibles."
+    explanation: "Certinomis (Docaposte/La Poste), ChamberSign (CCI France), Universign (FR), Cryptolog/Idenum (FR) sont qualifies eIDAS et bases en France. Pour éviter le Cloud Act sur tes contrats sensibles."
 ---
 
 > 💡 **Pour aller plus loin** : le site **www.tslist.eu** liste tous

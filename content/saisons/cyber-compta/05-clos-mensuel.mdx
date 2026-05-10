@@ -2,7 +2,7 @@
 title: "Cloture mensuelle : les pieges classiques"
 durationMinutes: 7
 persona: "manager"
-objective: "Anticiper et bloquer les fraudes/erreurs lors de la cloture mensuelle (rush, fatigue, contournements de procedure)"
+objective: "Anticiper et bloquer les fraudes/erreurs lors de la cloture mensuelle (rush, fatigue, contournements de procédure)"
 xpReward: 60
 scenario: |
   Vendredi 31 mars, jour de cloture mensuelle, 18h30. Tu finis
@@ -17,35 +17,35 @@ scenario: |
   Tu fais quoi ?
 choices:
   - id: "a"
-    label: "Je passe le virement immediatement, le DG l'a demande"
+    label: "Je passe le virement immédiatement, le DG l'a demande"
     outcome: "bad"
-    feedback: "CATASTROPHE. Tous les drapeaux rouges sont reunis : urgence, fin de mois, DAF absent, RIB par SMS, ordre verbal du DG. C'est exactement le scenario de la fraude au president. ANSSI : 60% des fraudes au president se font en fin de mois/trimestre."
+    feedback: "CATASTROPHE. Tous les drapeaux rouges sont reunis : urgence, fin de mois, DAF absent, RIB par SMS, ordre verbal du DG. C'est exactement le scenario de la fraude au président. ANSSI : 60% des fraudes au président se font en fin de mois/trimestre."
     points: -25
   - id: "b"
-    label: "Je telephone immediatement au DG via le numero connu (pas celui du SMS) pour confirmer. Si confirme : j'attends le retour du DAF (Lundi) ou je propose validation par DAF adjoint"
+    label: "Je téléphone immédiatement au DG via le numéro connu (pas celui du SMS) pour confirmer. Si confirme : j'attends le retour du DAF (Lundi) ou je propose validation par DAF adjoint"
     outcome: "good"
-    feedback: "Reflexes parfaits. Verification HORS-BANDE du DG (numero connu, pas le SMS). Refus de la pression de fin de mois. Proposition de delegation officielle (DAF adjoint) qui respecte la procedure. Le 'cloture trimestre' n'est jamais une excuse pour court-circuiter."
+    feedback: "Reflexes parfaits. Vérification HORS-BANDE du DG (numéro connu, pas le SMS). Refus de la pression de fin de mois. Proposition de delegation officielle (DAF adjoint) qui respecte la procédure. Le 'cloture trimestre' n'est jamais une excuse pour court-circuiter."
     points: 40
   - id: "c"
     label: "Je transfere le RIB du SMS dans l'ERP et je prepare le virement, je le validerai demain"
     outcome: "neutral"
-    feedback: "Pas de paiement immediat (mieux), mais l'usage du RIB du SMS sans verification n'est pas safe. Le SMS peut etre spoofe ou le DG compromis. Le reflexe doit etre verification avant TOUTE action (meme la preparation)."
+    feedback: "Pas de paiement immediat (mieux), mais l'usage du RIB du SMS sans vérification n'est pas safe. Le SMS peut être spoofe ou le DG compromis. Le reflexe doit être vérification avant TOUTE action (même la preparation)."
     points: 10
   - id: "d"
-    label: "Je decale le virement au lundi suivant, je communique au DG par telephone que la procedure ne le permet pas en l'absence du DAF"
+    label: "Je decale le virement au lundi suivant, je communique au DG par téléphone que la procédure ne le permet pas en l'absence du DAF"
     outcome: "good"
-    feedback: "Tres bonne attitude. Refus net de contournement de procedure, communication transparente au DG. Si le DG insiste sans raison legitime = encore plus suspect. Documenter cette communication par mail (preuve)."
+    feedback: "Très bonne attitude. Refus net de contournement de procédure, communication transparente au DG. Si le DG insiste sans raison legitime = encore plus suspect. Documenter cette communication par mail (preuve)."
     points: 35
 debrief: |
-  La **cloture mensuelle** est une periode a haut risque de
+  La **cloture mensuelle** est une période a haut risque de
   fraude pour 3 raisons :
 
-  1. **Pression temporelle** : tout doit etre fini ce jour
-  2. **Fatigue** : longues journees, attention reduite
+  1. **Pression temporelle** : tout doit être fini ce jour
+  2. **Fatigue** : longues journées, attention reduite
   3. **Volume** : 100-500 ecritures a passer en 1-2 jours
 
-  Les attaquants connaissent parfaitement ces fenetres et
-  ciblent **particulierement la fin de mois et de trimestre**.
+  Les attaquants connaissent parfaitement ces fenêtres et
+  ciblent **particulièrement la fin de mois et de trimestre**.
 
   **Les 7 pieges classiques de la cloture :**
 
@@ -56,9 +56,9 @@ debrief: |
   - DAF absent / en deplacement (souvent verifie par l'attaquant
     via LinkedIn / OOO automatique)
   - RIB inconnu / nouveau
-  - Demande de confidentialite
+  - Demande de confidentialité
 
-  **Reflexe** : verification telephonique HORS-BANDE au numero
+  **Reflexe** : vérification téléphonique HORS-BANDE au numéro
   connu du DG. Pas de SMS, pas de mail.
 
   **Piege 2 : La facture qui arrive le 31**
@@ -69,7 +69,7 @@ debrief: |
   - Demande de paiement immediat "pour passer dans le mois"
 
   **Reflexe** : decaler au mois suivant si pas le temps de
-  verifier. Pas grave de comptabiliser un mois plus tard.
+  vérifier. Pas grave de comptabiliser un mois plus tard.
   Beaucoup mieux que payer une fraude.
 
   **Piege 3 : L'ecriture de regularisation "rapide"**
@@ -87,8 +87,8 @@ debrief: |
 
   Cas typique :
   - Le DAF dit "vas-y" oralement (porte ouverte de bureau)
-  - Mais ne valide pas dans le systeme par manque de temps
-  - Fin de mois = la procedure est court-circuitee
+  - Mais ne valide pas dans le système par manque de temps
+  - Fin de mois = la procédure est court-circuitee
 
   **Reflexe** : RIEN sans validation tracee electroniquement.
   Si le DAF n'a pas le temps de cliquer, le virement attend.
@@ -98,58 +98,58 @@ debrief: |
   Cas typique :
   - 22h, tu saisis le 250e virement
   - Erreur d'IBAN (1 chiffre faux) qui envoie au mauvais
-    beneficiaire
+    bénéficiaire
   - Erreur de montant (1500 au lieu de 150)
 
   **Reflexe** : pause obligatoire toutes les 2h. Au-dela de 100
-  saisies / jour, qualite degradee = report.
+  saisies / jour, qualité degradee = report.
 
   **Piege 6 : Le "dossier confidentiel" hors process**
 
   Cas typique :
-  - "Operation specifique confidentielle, ne mentionne pas dans
+  - "Opération spécifique confidentielle, ne mentionne pas dans
     le journal"
   - "Bonus exceptionnel, paiement direct sans facture"
   - "Cadeau client, pas de justificatif"
 
   **Reflexe** : aucun paiement sans justificatif. La
-  confidentialite n'exemple pas la trace comptable. Refus net.
+  confidentialité n'exemple pas la trace comptable. Refus net.
 
-  **Piege 7 : Le contournement par le DG lui-meme**
+  **Piege 7 : Le contournement par le DG lui-même**
 
   Cas typique :
   - Le DG a ses propres acces et fait des virements direct
-  - "Je gere mes operations, te derange pas"
+  - "Je gere mes opérations, te derange pas"
   - Pas de double validation, pas de trace
 
-  **Reflexe** : signaler par ecrit au DG que la procedure
+  **Reflexe** : signaler par ecrit au DG que la procédure
   s'applique a tous, y compris a lui. Si refus : signalement au
   conseil d'administration / commissaire aux comptes.
 
-  **Procedure de cloture securisee :**
+  **Procédure de cloture securisee :**
 
   **J-7 : Anticipation**
 
-  - Liste des ecritures attendues (factures non recues,
-    virements prevus)
-  - Verification de la disponibilite des valideurs (DAF, DG)
+  - Liste des ecritures attendues (factures non reçues,
+    virements prévus)
+  - Vérification de la disponibilite des valideurs (DAF, DG)
   - **Si DAF absent** : delegation officielle ecrite a un
     successeur
 
   **J-3 a J-1 : Gros du travail**
 
   - Saisie progressive (pas tout au dernier moment)
-  - Verification IBAN pour tout nouveau fournisseur (HORS-BANDE)
+  - Vérification IBAN pour tout nouveau fournisseur (HORS-BANDE)
   - **Aucune urgence** sans justification ecrite
 
   **J : Cloture**
 
-  - Saisie des dernieres ecritures
-  - **Pas de virement nouveau apres 17h** (cutoff banques)
-  - Verification rapprochement bancaire intermediaire
-  - **Aucun ordre verbal accepte** (tout doit etre ecrit)
+  - Saisie des dernières ecritures
+  - **Pas de virement nouveau après 17h** (cutoff banques)
+  - Vérification rapprochement bancaire intermediaire
+  - **Aucun ordre verbal accepte** (tout doit être ecrit)
 
-  **J+1 : Verification**
+  **J+1 : Vérification**
 
   - Rapprochement complet
   - Audit log : qui a fait quoi
@@ -158,7 +158,7 @@ debrief: |
   **Les KPI de cloture saine :**
 
   - **Taux de virements > seuil sans double validation** : 0%
-  - **Nombre d'operations 'urgentes' > 10K EUR le 31 du mois** :
+  - **Nombre d'opérations 'urgentes' > 10K EUR le 31 du mois** :
     < 5% du total
   - **Temps moyen de validation virements** : > 2 minutes (pas
     de validation reflexe)
@@ -169,20 +169,20 @@ debrief: |
 
   **1. Cutoff automatique**
 
-  Configuration banque : aucun virement > X EUR ne peut etre
-  emis apres 17h. Force le virement le lendemain (et donc une
+  Configuration banque : aucun virement > X EUR ne peut être
+  emis après 17h. Force le virement le lendemain (et donc une
   pause).
 
   **2. Notification systematique au DG**
 
   Tout virement > seuil declenche un SMS/email au DG. Permet
-  detection rapide d'une fraude (le DG voit "j'ai pas valide
-  ca").
+  détection rapide d'une fraude (le DG voit "j'ai pas valide
+  ça").
 
-  **3. Liste blanche des beneficiaires**
+  **3. Liste blanche des bénéficiaires**
 
-  Premier virement vers un nouveau beneficiaire = validation
-  manuelle DAF + 24h de delai. Empeche l'urgence FOVI.
+  Premier virement vers un nouveau bénéficiaire = validation
+  manuelle DAF + 24h de délai. Empeche l'urgence FOVI.
 
   **4. Mode "cloture renforcee"**
 
@@ -200,8 +200,8 @@ debrief: |
   compte Lithuania. Decouverte 5 jours plus tard. Recuperation
   partielle (15K EUR seulement) car > 72h.
 
-  Diagnostic : pas de procedure formalisee pour cloture,
-  validation orale du DAF par telephone (compte mail compromis
+  Diagnostic : pas de procédure formalisee pour cloture,
+  validation orale du DAF par téléphone (compte mail compromis
   sur le DG mais le faux DG a aussi appelle le DAF en imitant
   la voix).
 
@@ -216,11 +216,11 @@ debrief: |
   **Le piege "ce sera plus rapide demain" :**
 
   La cloture mensuelle n'est PAS une excuse pour contourner les
-  procedures. Si le respect de la procedure fait deborder d'un
-  jour, c'est ACCEPTABLE. Si la procedure est court-circuitee
+  procédures. Si le respect de la procédure fait deborder d'un
+  jour, c'est ACCEPTABLE. Si la procédure est court-circuitee
   pour finir le 31, c'est un risque inacceptable.
 
-  La fiscalite et la comptabilite francaise tolerent un retard
+  La fiscalite et la comptabilite française tolerent un retard
   de quelques jours. Une fraude FOVI ne se "rattrape" pas.
 
   **Le piege "le DAF n'est pas la, c'est moi qui valide" :**
@@ -229,32 +229,32 @@ debrief: |
   transferable a une personne sans **delegation officielle ecrite**.
   Solutions :
   - Delegation pre-signee par le DG : "En cas d'absence du DAF,
-    Mme X est habilitee a valider jusqu'a 25 K EUR"
-  - Le DAF reste joignable (telephone, signature electronique a
+    Mme X est habilitee a valider jusqu'à 25 K EUR"
+  - Le DAF reste joignable (téléphone, signature electronique a
     distance)
   - Les virements > seuil **attendent** son retour
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **L'urgence et la cloture ne sont JAMAIS des excuses pour
-  > court-circuiter la procedure. Tout virement sans validation
-  > tracee = NON. Verification HORS-BANDE pour les ordres du
-  > DG/DAF, surtout en periode de stress. Mieux vaut un retard
+  > court-circuiter la procédure. Tout virement sans validation
+  > tracee = NON. Vérification HORS-BANDE pour les ordres du
+  > DG/DAF, surtout en période de stress. Mieux vaut un retard
   > de 2 jours qu'une fraude de 50K EUR.**
 quiz:
   - question: "Faux DG envoie un SMS le 31 du mois 'urgent paiement avant minuit', tu fais quoi ?"
     choices:
       - { id: "a", label: "Je paye, c'est urgent", correct: false }
-      - { id: "b", label: "Verification telephonique HORS-BANDE au numero connu du DG (pas celui du SMS) - tous les drapeaux rouges sont reunis (urgence + fin de mois + ordre verbal)", correct: true }
+      - { id: "b", label: "Vérification téléphonique HORS-BANDE au numéro connu du DG (pas celui du SMS) - tous les drapeaux rouges sont reunis (urgence + fin de mois + ordre verbal)", correct: true }
       - { id: "c", label: "Je transfere au DAF qui n'est pas la", correct: false }
-    explanation: "Tous les indicateurs d'une fraude au president : urgence + cloture + ordre verbal SMS + DAF absent. ANSSI : 60% des fraudes au president se passent en fin de mois/trimestre. Verification HORS-BANDE imperative."
+    explanation: "Tous les indicateurs d'une fraude au président : urgence + cloture + ordre verbal SMS + DAF absent. ANSSI : 60% des fraudes au président se passent en fin de mois/trimestre. Vérification HORS-BANDE imperative."
 
-  - question: "Quel pourcentage des fraudes au president se passe en fin de mois/trimestre ?"
+  - question: "Quel pourcentage des fraudes au président se passe en fin de mois/trimestre ?"
     choices:
       - { id: "a", label: "10%", correct: false }
-      - { id: "b", label: "60%+ (selon ANSSI - les attaquants connaissent les fenetres de pression)", correct: true }
+      - { id: "b", label: "60%+ (selon ANSSI - les attaquants connaissent les fenêtres de pression)", correct: true }
       - { id: "c", label: "0%", correct: false }
-    explanation: "ANSSI : 60%+ des fraudes au president visent les fins de mois et de trimestre. Pression temporelle + fatigue + DAF parfois absent = conditions ideales pour court-circuiter les procedures."
+    explanation: "ANSSI : 60%+ des fraudes au président visent les fins de mois et de trimestre. Pression temporelle + fatigue + DAF parfois absent = conditions ideales pour court-circuiter les procédures."
 
   - question: "Le DAF est en deplacement, qui peut valider ses virements ?"
     choices:
@@ -266,13 +266,13 @@ quiz:
   - question: "Une ecriture de regularisation pour cacher un ecart, c'est :"
     choices:
       - { id: "a", label: "Pratique en fin de mois", correct: false }
-      - { id: "b", label: "Falsification comptable (penal). Tout ecart doit etre TRACE et investigue, jamais masque", correct: true }
+      - { id: "b", label: "Falsification comptable (penal). Tout ecart doit être TRACE et investigue, jamais masque", correct: true }
       - { id: "c", label: "Recommande", correct: false }
     explanation: "Modifier ou regulariser pour cacher un ecart = falsification comptable = penal. Code de commerce + fraude fiscale. Tout ecart = trace ecrite + investigation. La fraude se cache souvent dans ces ecarts."
 ---
 
 > 💡 **Pour aller plus loin** : configurez un **cutoff bancaire**
-> a 17h pour bloquer les virements urgents apres heures (force
+> a 17h pour bloquer les virements urgents après heures (force
 > le report). **Politique 'cloture renforcee'** : tous les
 > virements doublement valides la semaine de cloture. CCI
 > publie le guide "anti-fraude pour comptables PME" (gratuit).

@@ -5,40 +5,40 @@ persona: "tous-collaborateurs"
 objective: "Mettre en place des sauvegardes immuables (immutable) qui resistent au ransomware moderne, qui cible justement les sauvegardes"
 xpReward: 60
 scenario: |
-  DSI d'une PME 80 personnes. Tu as la regle 3-2-1 implementee
+  DSI d'une PME 80 personnes. Tu as la règle 3-2-1 implementee
   (cf ep 01) : production + NAS local + cloud Backblaze.
 
   Lundi : un cas similaire dans une autre PME. Le ransomware
   a chiffre :
   - Les serveurs (production)
-  - Le NAS local (etait connecte au reseau)
+  - Le NAS local (était connecte au réseau)
   - Le cloud (compte Backblaze compromis - mot de passe vole
     par un keylogger sur le PC du admin)
 
-  Resultat : 80% des donnees perdues, paiement rancon force.
+  Résultat : 80% des données perdues, paiement rançon force.
 
   Tu te demandes : ma sauvegarde Backblaze est-elle vraiment
   protegee ? Que faire ?
 choices:
   - id: "a"
-    label: "Mon Backblaze est dans le cloud, c'est forcement protege"
+    label: "Mon Backblaze est dans le cloud, c'est forcément protege"
     outcome: "bad"
     feedback: "FAUX. Si le compte est compromis, l'attaquant peut SUPPRIMER les sauvegardes (mode admin). Le ransomware moderne (Conti, BlackCat, LockBit) cherche specifiquement les credentials cloud pour detruire les sauvegardes avant chiffrement local."
     points: -20
   - id: "b"
-    label: "J'active le mode 'Object Lock' sur Backblaze (immutable backup) : les fichiers ne peuvent etre supprimes pendant X jours, MEME par admin avec credentials. + MFA sur le compte"
+    label: "J'active le mode 'Object Lock' sur Backblaze (immutable backup) : les fichiers ne peuvent être supprimes pendant X jours, MEME par admin avec credentials. + MFA sur le compte"
     outcome: "good"
-    feedback: "Reponse parfaite. Object Lock = immutable backup = anti-ransomware ultime. Meme compromis, l'attaquant ne peut pas supprimer pendant la periode de retention. Standard moderne. Disponible Backblaze, AWS S3, Wasabi."
+    feedback: "Réponse parfaite. Object Lock = immutable backup = anti-ransomware ultime. Même compromis, l'attaquant ne peut pas supprimer pendant la période de retention. Standard moderne. Disponible Backblaze, AWS S3, Wasabi."
     points: 40
   - id: "c"
-    label: "Je passe a un cloud souverain francais (OVH)"
+    label: "Je passe a un cloud souverain français (OVH)"
     outcome: "neutral"
-    feedback: "OK pour la souverainete + RGPD, mais ne resout PAS le probleme principal. Si le compte OVH est compromis, meme probleme. Solution : immutable + MFA + segmentation acces (cf debrief). La souverainete est un bonus, pas la solution centrale."
+    feedback: "OK pour la souverainete + RGPD, mais ne resout PAS le problème principal. Si le compte OVH est compromis, même problème. Solution : immutable + MFA + segmentation acces (cf debrief). La souverainete est un bonus, pas la solution centrale."
     points: 15
   - id: "d"
     label: "Je rajoute encore 2 sauvegardes pour avoir 5 copies"
     outcome: "neutral"
-    feedback: "Plus de copies != plus de securite si toutes sont accessibles depuis le meme compte / reseau. Mieux : 3-2-1 avec immutable sur 1 copie + segmentation des credentials + MFA partout."
+    feedback: "Plus de copies != plus de sécurité si toutes sont accessibles depuis le même compte / réseau. Mieux : 3-2-1 avec immutable sur 1 copie + segmentation des credentials + MFA partout."
     points: 10
 debrief: |
   Le **ransomware moderne** ne se contente plus de chiffrer
@@ -50,16 +50,16 @@ debrief: |
 
   **Comment le ransomware compromet les sauvegardes :**
 
-  **Methode 1 : Sauvegarde sur disque connecte**
+  **Méthode 1 : Sauvegarde sur disque connecte**
 
-  - NAS connecte au reseau via SMB/NFS
+  - NAS connecte au réseau via SMB/NFS
   - Disque externe USB connecte au PC infecte
   - Le ransomware se propage et chiffre TOUT ce qui est
     accessible
 
   Defense : immutable backup ou disque deconnecte ("air-gap")
 
-  **Methode 2 : Compromission du compte cloud**
+  **Méthode 2 : Compromission du compte cloud**
 
   - Keylogger sur PC du DSI
   - Phishing du DSI
@@ -70,15 +70,15 @@ debrief: |
 
   Defense : MFA + immutable backup + segmentation acces
 
-  **Methode 3 : Attaque sur le software de sauvegarde**
+  **Méthode 3 : Attaque sur le software de sauvegarde**
 
   - Veeam, Acronis ont eu des failles 0-day exploitees
-  - L'attaquant prend le controle du serveur de sauvegarde
+  - L'attaquant prend le contrôle du serveur de sauvegarde
   - Suppression / modification des sauvegardes
 
   Defense : patches, segmentation, MFA
 
-  **Methode 4 : Insider rancunier**
+  **Méthode 4 : Insider rancunier**
 
   - Employe IT qui veut nuire
   - Compte admin actif
@@ -88,22 +88,22 @@ debrief: |
 
   **L'immutable backup : la defense ultime**
 
-  **Definition** : sauvegarde **non modifiable et non
-  supprimable** pendant une duree definie, MEME par un
+  **Définition** : sauvegarde **non modifiable et non
+  supprimable** pendant une durée definie, MEME par un
   administrateur compromis.
 
   Technologie typique : **WORM** (Write Once Read Many) -
-  l'objet est ecrit une fois, ne peut etre modifie.
+  l'objet est ecrit une fois, ne peut être modifie.
 
-  **Comment ca marche :**
+  **Comment ça marche :**
 
   - Tu sauvegardes le fichier X avec retention 30 jours
   - Pendant 30 jours :
-    - Le fichier ne peut PAS etre modifie
-    - Le fichier ne peut PAS etre supprime
-    - Meme avec credentials admin
-    - Meme avec attaque API
-  - Apres 30 jours : le fichier expire et peut etre
+    - Le fichier ne peut PAS être modifie
+    - Le fichier ne peut PAS être supprime
+    - Même avec credentials admin
+    - Même avec attaque API
+  - Après 30 jours : le fichier expire et peut être
     supprime / archive
 
   **Implementations principales :**
@@ -117,10 +117,10 @@ debrief: |
   - **OVH Object Storage** : disponible
 
   **2 modes** :
-  - **Compliance Mode** : aucune suppression possible (meme
-    par root) jusqu'a expiration
+  - **Compliance Mode** : aucune suppression possible (même
+    par root) jusqu'à expiration
   - **Governance Mode** : suppression possible avec
-    permissions speciales
+    permissions spéciales
 
   Pour anti-ransomware : **Compliance Mode** OBLIGATOIRE.
 
@@ -130,12 +130,12 @@ debrief: |
   - **QNAP** : Snapshot Vault
   - **TrueNAS** : ZFS snapshots immutables
 
-  Le NAS lui-meme protege les snapshots de la suppression.
+  Le NAS lui-même protege les snapshots de la suppression.
 
   **c) Bandes magnetiques offline**
 
   - LTO-8 / LTO-9 (12-18 To par bande)
-  - Stockees physiquement separees du systeme
+  - Stockees physiquement separees du système
   - **Air-gap** absolu : pas connecte = pas accessible
   - Solution preferee des grandes entreprises (banques)
 
@@ -155,9 +155,9 @@ debrief: |
   ```
 
   Une fois configure, **MEME** :
-  - L'admin Backblaze (cote utilisateur)
+  - L'admin Backblaze (côté utilisateur)
   - Backblaze support
-  - Une attaque qui prend le controle complete
+  - Une attaque qui prend le contrôle complete
 
   ne peut **PAS** supprimer les sauvegardes pendant 30 jours.
 
@@ -175,17 +175,17 @@ debrief: |
   | Monthly | 12 mois | 12 mois |
   | Yearly archive | 5 ans | 7 ans |
 
-  La **retention immutable** est la duree pendant laquelle
+  La **retention immutable** est la durée pendant laquelle
   AUCUNE suppression n'est possible. La **retention totale**
-  inclut la possibilite de purge apres expiration.
+  inclut la possibilite de purge après expiration.
 
   **Le piege "le NAS Synology a des snapshots, c'est OK" :**
 
-  Les snapshots Synology par defaut peuvent etre **supprimes
+  Les snapshots Synology par defaut peuvent être **supprimes
   par admin**. Pour immutable :
 
   - Activer **Snapshot Replication** avec lock
-  - **Mot de passe** different du compte admin principal
+  - **Mot de passe** différent du compte admin principal
   - **MFA** sur le compte
   - **Retention** definie (impossible de raccourcir)
 
@@ -209,7 +209,7 @@ debrief: |
   - **Bypass MFA** : SIM swap, social engineering, malware
     qui vole le token
   - **API key** : peut bypass MFA dans certains cas
-  - **Insider** : si l'admin lui-meme veut nuire
+  - **Insider** : si l'admin lui-même veut nuire
 
   Solution : MFA + Object Lock + audit log = defense en
   profondeur.
@@ -218,7 +218,7 @@ debrief: |
 
   **Cas 1 - PME US 2023 (succes par immutable)**
 
-  PME 50 employes attaquee par ransomware Conti. Le ransomware
+  PME 50 employés attaquee par ransomware Conti. Le ransomware
   a :
   - Chiffre tous les serveurs
   - Chiffre le NAS local
@@ -229,16 +229,16 @@ debrief: |
   Restauration en 24h depuis Backblaze. **Pas de paiement.**
   Cout : 10 K USD (perte d'activite).
 
-  **Cas 2 - Hopital US 2022 (echec sans immutable)**
+  **Cas 2 - Hôpital US 2022 (echec sans immutable)**
 
   Sauvegardes Veeam stockees sur serveur dedies, pas
   d'immutable. Ransomware compromis le compte admin Veeam,
   supprimes toutes les sauvegardes avant chiffrement local.
 
-  **600 K USD** de rancon paye + 6 semaines de degradation +
+  **600 K USD** de rançon paye + 6 semaines de degradation +
   poursuites legales.
 
-  **Cas 3 - Banque francaise 2024 (defense en profondeur)**
+  **Cas 3 - Banque française 2024 (defense en profondeur)**
 
   Banque avec triple defense :
   - Sauvegardes Veeam locale
@@ -248,7 +248,7 @@ debrief: |
   Attaque ransomware : tout chiffre sauf bandes LTO. Restauration
   depuis bandes en 72h.
 
-  **Cout total minimal**, conformite assurance cyber maintenue.
+  **Cout total minimal**, conformité assurance cyber maintenue.
 
   **Recommandations selon taille :**
 
@@ -302,16 +302,16 @@ debrief: |
   restic -r b2:my-immutable-bucket:/backups init
   restic -r b2:my-immutable-bucket:/backups backup /data
   
-  # Backblaze configuration cote console:
+  # Backblaze configuration côté console:
   # Bucket > Settings > Object Lock > Enable
   # Default retention: 30 days
   # Mode: Compliance
   ```
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **80% des ransomware ciblent les sauvegardes. Object Lock
-  > / immutable backup = defense ultime. Meme avec compte
+  > / immutable backup = defense ultime. Même avec compte
   > compromis, suppression impossible. Cout marginal : 0-50%
   > de plus que sauvegarde standard. Standard NIS2.**
 quiz:
@@ -320,21 +320,21 @@ quiz:
       - { id: "a", label: "5%", correct: false }
       - { id: "b", label: "80% (Sophos 2023) - le ransomware moderne cherche specifiquement a detruire les sauvegardes pour forcer le paiement", correct: true }
       - { id: "c", label: "0%", correct: false }
-    explanation: "Sophos 2023 : 80% des attaques ransomware ciblent les sauvegardes. Conti, BlackCat, LockBit cherchent specifiquement credentials cloud, NAS, software de backup. Sans defense specifique = sauvegardes detruites avant chiffrement local."
+    explanation: "Sophos 2023 : 80% des attaques ransomware ciblent les sauvegardes. Conti, BlackCat, LockBit cherchent specifiquement credentials cloud, NAS, software de backup. Sans defense spécifique = sauvegardes detruites avant chiffrement local."
 
   - question: "Object Lock / immutable backup, c'est quoi ?"
     choices:
       - { id: "a", label: "Cle USB", correct: false }
       - { id: "b", label: "Sauvegarde non modifiable / non supprimable pendant X jours, MEME par admin avec credentials. WORM technology (S3, B2, Wasabi)", correct: true }
       - { id: "c", label: "Antivirus", correct: false }
-    explanation: "Immutable backup = WORM (Write Once Read Many). Sauvegarde verouillee pendant duree de retention. Aucune modification ni suppression possible, meme par admin. Disponible AWS S3, Backblaze B2, Wasabi (Compliance Mode), NAS Synology/QNAP avec config."
+    explanation: "Immutable backup = WORM (Write Once Read Many). Sauvegarde verouillee pendant durée de retention. Aucune modification ni suppression possible, même par admin. Disponible AWS S3, Backblaze B2, Wasabi (Compliance Mode), NAS Synology/QNAP avec config."
 
   - question: "Sans immutable, quel risque pour mes sauvegardes cloud ?"
     choices:
       - { id: "a", label: "Aucun risque", correct: false }
       - { id: "b", label: "Compte compromis (keylogger, phishing, MDP reutilise) = attaquant supprime les sauvegardes manuellement avant chiffrement local", correct: true }
       - { id: "c", label: "Lent", correct: false }
-    explanation: "Sans immutable : compte cloud compromis = attaquant peut supprimer toutes les sauvegardes via console / API. Cas reels nombreux. Solution : Object Lock force la retention, MEME compte compromis ne peut pas supprimer pendant duree."
+    explanation: "Sans immutable : compte cloud compromis = attaquant peut supprimer toutes les sauvegardes via console / API. Cas reels nombreux. Solution : Object Lock force la retention, MEME compte compromis ne peut pas supprimer pendant durée."
 
   - question: "Solution recommandee PME pour sauvegardes anti-ransomware ?"
     choices:
@@ -347,5 +347,5 @@ quiz:
 > 💡 **Pour aller plus loin** : **Backblaze B2 Object Lock**
 > (gratuit en sus du stockage de base) ou **Wasabi Compliance
 > Mode**. **Restic** OSS + B2 Object Lock = solution gratuite/
-> peu chere. NIS2 article 21 mesure 3 = obligation de resilience
+> peu chère. NIS2 article 21 mesure 3 = obligation de resilience
 > au ransomware. Veeam Hardened Repository pour ETI.

@@ -2,7 +2,7 @@
 title: "Rapprochement bancaire : reperer une fraude"
 durationMinutes: 6
 persona: "manager"
-objective: "Utiliser le rapprochement bancaire mensuel pour detecter les fraudes (FOVI, virements frauduleux, debits anormaux) avant qu'elles ne s'accumulent"
+objective: "Utiliser le rapprochement bancaire mensuel pour détecter les fraudes (FOVI, virements frauduleux, debits anormaux) avant qu'elles ne s'accumulent"
 xpReward: 60
 scenario: |
   Premier vendredi du mois, tu fais le rapprochement bancaire
@@ -15,34 +15,34 @@ scenario: |
      reconnais pas
   2. Un debit recurrent de 45 EUR/mois pour 'ABO CYBER
      PROTECT' qui dure depuis 6 mois
-  3. Un montant de 1250 EUR debite 2 fois pour la meme facture
+  3. Un montant de 1250 EUR debite 2 fois pour la même facture
 
   Tu fais quoi ?
 choices:
   - id: "a"
-    label: "Je passe sur les anomalies, ca arrive"
+    label: "Je passe sur les anomalies, ça arrive"
     outcome: "bad"
-    feedback: "MAUVAIS. Le rapprochement bancaire est l'OUTIL DE DETECTION DE FRAUDE par excellence. Chaque anomalie doit etre tracee (qui, quoi, quand) sinon les fraudes s'accumulent (cf cas reels FOVI 6-12 mois)."
+    feedback: "MAUVAIS. Le rapprochement bancaire est l'OUTIL DE DETECTION DE FRAUDE par excellence. Chaque anomalie doit être tracee (qui, quoi, quand) sinon les fraudes s'accumulent (cf cas reels FOVI 6-12 mois)."
     points: -20
   - id: "b"
-    label: "Je trace chaque anomalie : verification commande/facture pour INVENTECH, identification de l'abonnement non-autorise, reclamation pour le double debit. Si ecart non resolu = remontee DAF + plainte"
+    label: "Je trace chaque anomalie : vérification commande/facture pour INVENTECH, identification de l'abonnement non-autorise, reclamation pour le double debit. Si ecart non resolu = remontee DAF + plainte"
     outcome: "good"
     feedback: "Demarche d'auditeur. Le rapprochement bancaire detecte 30-40% des fraudes selon ACFE. Trace ecrite de chaque anomalie + investigation systematique = standard professionnel. Si fraude confirmee = plainte sous 72h pour chargeback SEPA."
     points: 40
   - id: "c"
-    label: "Je modifie le grand livre pour faire correspondre au releve, comme ca tout cadre"
+    label: "Je modifie le grand livre pour faire correspondre au releve, comme ça tout cadre"
     outcome: "bad"
     feedback: "FAUX et POTENTIELLEMENT PENAL. Modifier la comptabilite pour cacher les anomalies = falsification, fraude fiscale, infraction au Code de commerce. Sanction : prison + amende. Toujours tracer les anomalies, ne jamais les masquer."
     points: -30
   - id: "d"
-    label: "Je signale les 3 anomalies au DAF par email avec captures d'ecran et propose un plan d'investigation"
+    label: "Je signale les 3 anomalies au DAF par email avec captures d'écran et propose un plan d'investigation"
     outcome: "good"
-    feedback: "Excellente attitude. Trace ecrite, captures, plan d'action. Protege le comptable en cas de fraude future (chain of custody). Le DAF prend la decision (verification, plainte, suspension automatic payments)."
+    feedback: "Excellente attitude. Trace ecrite, captures, plan d'action. Protege le comptable en cas de fraude future (chain of custody). Le DAF prend la décision (vérification, plainte, suspension automatic payments)."
     points: 35
 debrief: |
-  Le **rapprochement bancaire** est l'une des controles
+  Le **rapprochement bancaire** est l'une des contrôles
   comptables les plus efficaces. Au-dela de l'aspect comptable,
-  c'est l'outil de **detection de fraude** par excellence pour
+  c'est l'outil de **détection de fraude** par excellence pour
   les PME.
 
   **Pourquoi le rapprochement detecte les fraudes :**
@@ -53,26 +53,26 @@ debrief: |
 
   - Chaque virement frauduleux **apparait sur le releve**
   - S'il y a divergence avec le grand livre = signal
-  - Le rapprochement mensuel = **filet de detection a 30 jours
+  - Le rapprochement mensuel = **filet de détection a 30 jours
     max**
 
   Selon l'ACFE (Association of Certified Fraud Examiners) :
   - **30-40% des fraudes** sont detectees par rapprochement
     bancaire
   - **Duree moyenne d'une fraude non-detectee** : 14 mois
-  - **Avec rapprochement mensuel** : detection en 1 mois max
+  - **Avec rapprochement mensuel** : détection en 1 mois max
 
-  ROI evident.
+  ROI évident.
 
   **Les 8 anomalies a chercher :**
 
-  **1. Virements vers beneficiaires inconnus**
+  **1. Virements vers bénéficiaires inconnus**
 
   - Nom non present dans le carnet d'adresses fournisseurs
   - Pas de bon de commande / facture associee
-  - Premiere fois que ce beneficiaire apparait
+  - Première fois que ce bénéficiaire apparait
 
-  **Action** : tracer immediatement. Verifier qui a saisi le
+  **Action** : tracer immédiatement. Vérifier qui a saisi le
   virement (audit log) et avec quelle justification.
 
   **2. Abonnements / debits recurrents non identifies**
@@ -82,7 +82,7 @@ debrief: |
   - Souvent : test card, mini-abonnement (45-95 EUR/mois) que
     personne ne remarque
 
-  **Cas typique** : un employe a souscrit un service en mettant
+  **Cas typique** : un employé a souscrit un service en mettant
   la CB de l'entreprise, puis a oublie. Ou : fraude par carte
   CB compromise (test petits montants).
 
@@ -91,9 +91,9 @@ debrief: |
 
   **3. Debits doubles ou triples**
 
-  - Meme facture debitee 2 fois (peut etre une erreur fournisseur,
+  - Même facture debitee 2 fois (peut être une erreur fournisseur,
     ou une fraude double debit)
-  - Verification : reclamation au fournisseur pour
+  - Vérification : reclamation au fournisseur pour
     remboursement
 
   **4. Virements aux montants ronds inhabituels**
@@ -104,11 +104,11 @@ debrief: |
     validation)
 
   Les fraudeurs utilisent souvent des montants ronds pour
-  faciliter le decoupage. Patron a verifier.
+  faciliter le decoupage. Patron a vérifier.
 
-  **5. Virements vers IBAN etranger (ou neobank)**
+  **5. Virements vers IBAN étranger (ou neobank)**
 
-  - Premier virement vers compte etranger : drapeau rouge
+  - Premier virement vers compte étranger : drapeau rouge
   - Lituanie, Estonie, Hong Kong, EAU = recurrents dans les
     fraudes
   - Neobanks (N26, Revolut) sans historique commercial = suspect
@@ -116,7 +116,7 @@ debrief: |
   **6. Virements en weekend / fin de mois**
 
   - Virements valides un dimanche soir = valide par qui ?
-    (verifier audit log)
+    (vérifier audit log)
   - Concentration de virements le 31 du mois (rush avant
     cloture, propice aux erreurs)
 
@@ -124,44 +124,44 @@ debrief: |
 
   - Le grand livre dit X, le releve dit Y
   - Soit erreur de saisie (a corriger)
-  - Soit fraude masquee (saisie altere apres coup)
+  - Soit fraude masquee (saisie altere après coup)
   - Soit virement non comptabilise (oubli ou intentionnel)
 
   **8. Solde anormal a une date precise**
 
-  - Compte en negatif pour la premiere fois depuis 2 ans
+  - Compte en negatif pour la première fois depuis 2 ans
   - Trou inexplicable de 50K EUR sur 1 jour
-  - Solde tres bas avant un grand virement attendu
+  - Solde très bas avant un grand virement attendu
 
-  **Procedure de rapprochement professionnelle :**
+  **Procédure de rapprochement professionnelle :**
 
-  **Etape 1 : Telechargement releve banque**
+  **Étape 1 : Telechargement releve banque**
 
-  - Tous les comptes (courant, livrets, devises etrangeres)
+  - Tous les comptes (courant, livrets, devises étrangères)
   - Format CSV/Excel ideal pour traitement automatique
   - Frequence : **mensuelle minimum**, hebdomadaire ideale pour
     PME exposees
 
-  **Etape 2 : Import dans le logiciel comptable**
+  **Étape 2 : Import dans le logiciel comptable**
 
   - Sage, Cegid, Pennylane, Quickbooks, etc.
   - Module "rapprochement bancaire" automatique
 
-  **Etape 3 : Reconciliation automatique**
+  **Étape 3 : Reconciliation automatique**
 
-  - Le logiciel matche releve <-> grand livre par numero / montant
+  - Le logiciel matche releve <-> grand livre par numéro / montant
     / date
   - Affichage des **non-matches** (la zone interessante)
 
-  **Etape 4 : Investigation des non-matches**
+  **Étape 4 : Investigation des non-matches**
 
   Pour chaque ecart :
-  - **Trace ecrite** (capture d'ecran, note)
-  - **Source** : qui a saisi ? quelle reference ?
+  - **Trace ecrite** (capture d'écran, note)
+  - **Source** : qui a saisi ? quelle référence ?
   - **Justificatif** : facture, bon de commande, contrat
-  - **Decision** : a comptabiliser, a corriger, a contester
+  - **Décision** : a comptabiliser, a corriger, a contester
 
-  **Etape 5 : Documentation finale**
+  **Étape 5 : Documentation finale**
 
   - Rapport de rapprochement signe (papier ou electronique)
   - Conservation 5 ans (code de commerce)
@@ -172,7 +172,7 @@ debrief: |
   - **Sage 50 / Sage 100** : rapprochement bancaire automatique,
     standard PME
   - **Pennylane** (FR, SaaS) : rapprochement automatique +
-    detection d'anomalies par IA
+    détection d'anomalies par IA
   - **QuickBooks Online** : pour TPE / petites PME
   - **Excel / Google Sheets** : possible mais lourd au-dela de
     50 transactions/mois
@@ -197,7 +197,7 @@ debrief: |
   - **Echantillon aleatoire** mensuel revue par DAF (3-5
     transactions)
   - **Indicateurs** : nombre d'anomalies tracees / mois (si 0 :
-    suspect que rien n'a ete cherche)
+    suspect que rien n'a été cherche)
   - **Rotation** : changement de personne en charge tous les
     6-12 mois
 
@@ -207,22 +207,22 @@ debrief: |
   bonne approche est :
   - Tracer l'ecart
   - Identifier la cause (erreur ou fraude)
-  - Documenter la decision (correction motivee, ou plainte)
+  - Documenter la décision (correction motivee, ou plainte)
   - **JAMAIS** modifier sans laisser trace
 
   **Cas reel : Crelan Bank (Belgique) 2016 - 70 M EUR**
 
   Le DAF a fraude pendant 5 ans en faisant des virements vers
   un compte personnel (FOVI interne). Le rapprochement bancaire
-  etait fait... mais par lui-meme. Personne n'a controle son
+  était fait... mais par lui-même. Personne n'a contrôle son
   travail. Diagnostic : pas de **separation des taches**.
 
   Lecons :
-  - Le rapprochement bancaire ne doit pas etre fait par celui
+  - Le rapprochement bancaire ne doit pas être fait par celui
     qui a accees aux virements (separation des taches)
   - **Audit interne** : revue par DG ou commissaire aux comptes
     annuelle
-  - **Rotation** des roles tous les 6-12 mois
+  - **Rotation** des rôles tous les 6-12 mois
 
   **La separation des taches (segregation of duties - SoD) :**
 
@@ -235,14 +235,14 @@ debrief: |
   | Rapprochement | NON | NON (3e personne) |
   | Audit final | NON | NON (DG / DAF distincts) |
 
-  Idealement 3 personnes minimum. En PME tres petite : DG +
+  Idealement 3 personnes minimum. En PME très petite : DG +
   comptable + expert-comptable externe = SoD acceptable.
 
-  **Le piege "le rapprochement est un detail comptable" :**
+  **Le piege "le rapprochement est un détail comptable" :**
 
-  En realite, c'est un controle anti-fraude majeur. NIS2 article
+  En réalité, c'est un contrôle anti-fraude majeur. NIS2 article
   21 (mesure 6 - efficacite des mesures) le considere comme
-  indicateur clef. Une PME sans rapprochement = risque eleve
+  indicateur clef. Une PME sans rapprochement = risque élève
   (FOVI non-detectes pendant 12+ mois).
 
   **Indicateurs de pilotage (a presenter au DAF) :**
@@ -255,36 +255,36 @@ debrief: |
 
   Annuel :
   - Pourcentage de fraudes detectees / fraudes totales
-  - Temps moyen de detection
+  - Temps moyen de détection
   - Resolution (% des anomalies expliquees)
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **Le rapprochement bancaire n'est pas une corvee
   > administrative, c'est ton meilleur detecteur de fraude.
   > Anomalie = tracee + investiguee + documentee. Jamais
-  > masquer une difference. Separation des taches obligatoire.**
+  > masquer une différence. Separation des taches obligatoire.**
 quiz:
   - question: "Quelle proportion des fraudes est detectee par rapprochement bancaire (selon ACFE) ?"
     choices:
       - { id: "a", label: "5%", correct: false }
-      - { id: "b", label: "30-40% (l'outil de detection le plus efficace pour PME)", correct: true }
+      - { id: "b", label: "30-40% (l'outil de détection le plus efficace pour PME)", correct: true }
       - { id: "c", label: "100%", correct: false }
-    explanation: "ACFE (Association of Certified Fraud Examiners) : 30-40% des fraudes detectees par rapprochement bancaire. Duree moyenne fraude non-detectee : 14 mois. Avec rapprochement mensuel : detection en 1 mois max."
+    explanation: "ACFE (Association of Certified Fraud Examiners) : 30-40% des fraudes detectees par rapprochement bancaire. Duree moyenne fraude non-detectee : 14 mois. Avec rapprochement mensuel : détection en 1 mois max."
 
   - question: "Tu trouves un debit recurrent de 45 EUR/mois inconnu, action ?"
     choices:
       - { id: "a", label: "Je laisse passer", correct: false }
       - { id: "b", label: "Tracer l'ecart, remonter aux 12 derniers mois, identifier la source, opposition si fraude (souvent test card / abo non-autorise)", correct: true }
       - { id: "c", label: "Je modifie le grand livre", correct: false }
-    explanation: "Debit recurrent inconnu = abo non-autorise (employe oublie) ou test fraude par CB compromise (45-95 EUR pour passer sous radar). Investigation systematique + opposition si fraude. JAMAIS modifier le grand livre."
+    explanation: "Debit recurrent inconnu = abo non-autorise (employé oublie) ou test fraude par CB compromise (45-95 EUR pour passer sous radar). Investigation systematique + opposition si fraude. JAMAIS modifier le grand livre."
 
   - question: "La separation des taches (SoD) signifie quoi ?"
     choices:
       - { id: "a", label: "Tout le monde fait tout", correct: false }
-      - { id: "b", label: "Saisie / validation / rapprochement = 3 personnes distinctes (eviter le cas Crelan = DAF qui fraudait en se controlant lui-meme)", correct: true }
+      - { id: "b", label: "Saisie / validation / rapprochement = 3 personnes distinctes (éviter le cas Crelan = DAF qui fraudait en se controlant lui-même)", correct: true }
       - { id: "c", label: "Une seule personne", correct: false }
-    explanation: "Segregation of Duties (SoD) : 3 personnes minimum. Saisie facture (A), validation virement (B), rapprochement (C). Cas Crelan 2016 : 70 M EUR fraude par DAF qui se controlait lui-meme = absence de SoD."
+    explanation: "Segregation of Duties (SoD) : 3 personnes minimum. Saisie facture (A), validation virement (B), rapprochement (C). Cas Crelan 2016 : 70 M EUR fraude par DAF qui se controlait lui-même = absence de SoD."
 
   - question: "Modifier le grand livre pour cacher un ecart, c'est :"
     choices:
@@ -295,7 +295,7 @@ quiz:
 ---
 
 > 💡 **Pour aller plus loin** : **Pennylane** (FR, SaaS) propose
-> rapprochement automatique + IA detection anomalies pour 30-50
+> rapprochement automatique + IA détection anomalies pour 30-50
 > EUR/mois. **Sage 100c** standard PME. ACFE publie le rapport
 > annuel "Report to the Nations" sur les fraudes (gratuit,
-> reference internationale).
+> référence internationale).

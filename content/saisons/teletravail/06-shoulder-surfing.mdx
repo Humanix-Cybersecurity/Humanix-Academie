@@ -1,16 +1,16 @@
 ---
-title: "Le voisin de TGV qui regarde l'ecran"
+title: "Le voisin de TGV qui regarde l'écran"
 durationMinutes: 5
 persona: "tous"
-objective: "Detecter et bloquer le shoulder-surfing dans les transports et lieux publics"
+objective: "Détecter et bloquer le shoulder-surfing dans les transports et lieux publics"
 xpReward: 50
 scenario: |
-  Tu prends le TGV Paris-Lyon, places voiture-bar bondee. Tu es assise cote couloir, ton voisin est un homme en costume qui semble travailler aussi. Tu ouvres ton laptop et commences a rediger un mail confidentiel a ton DG sur une affaire de fusion en cours. Tu remarques que ton voisin tourne tres legerement la tete vers ton ecran toutes les 30 secondes. Que fais-tu ?
+  Tu prends le TGV Paris-Lyon, places voiture-bar bondee. Tu es assise côté couloir, ton voisin est un homme en costume qui semble travailler aussi. Tu ouvres ton laptop et commences a rediger un mail confidentiel a ton DG sur une affaire de fusion en cours. Tu remarques que ton voisin tourne très légèrement la tête vers ton écran toutes les 30 secondes. Que fais-tu ?
 choices:
   - id: "a"
     label: "Je continue - il est probablement juste curieux, ce n'est pas grave"
     outcome: "bad"
-    feedback: "Aïe. Le shoulder-surfing dans le TGV est une realite documentee - chasseurs de tetes, journalistes, concurrents. Une affaire de fusion lue dans un train peut couler une operation."
+    feedback: "Aïe. Le shoulder-surfing dans le TGV est une réalité documentee - chasseurs de têtes, journalistes, concurrents. Une affaire de fusion lue dans un train peut couler une opération."
     points: -15
   - id: "b"
     label: "Je ferme le laptop, change de place si possible, ou pose un privacy filter"
@@ -20,39 +20,39 @@ choices:
   - id: "c"
     label: "Je l'apostrophe pour qu'il arrete de regarder"
     outcome: "neutral"
-    feedback: "Reaction comprehensible mais peut creer une situation tendue dans un espace clos. Mieux : retirer le risque silencieusement, sans confrontation."
+    feedback: "Reaction comprehensible mais peut créer une situation tendue dans un espace clos. Mieux : retirer le risque silencieusement, sans confrontation."
     points: 5
   - id: "d"
-    label: "Je deplace ma fenetre du mail dans un coin, plus petite, ca devrait suffire"
+    label: "Je deplace ma fenêtre du mail dans un coin, plus petite, ça devrait suffire"
     outcome: "bad"
-    feedback: "Reduire la taille n'empeche pas la lecture par un oeil entraine. Le shoulder-surfing est etonnamment efficace : un developpeur web a 30 cm peut lire ton ecran sans probleme."
+    feedback: "Reduire la taille n'empeche pas la lecture par un oeil entraine. Le shoulder-surfing est etonnamment efficace : un developpeur web a 30 cm peut lire ton écran sans problème."
     points: -5
 debrief: |
   Le **shoulder-surfing** (ou "lecture par-dessus l'epaule") est l'attaque la plus simple et la plus sous-estimee du teletravailleur mobile. Pas besoin de hacking : juste un regard discret pendant 30 secondes peut suffire a capturer un mot de passe, un montant, un nom de client.
 
   **Les contextes a haut risque :**
 
-  - **TGV / avions / autocars** : 4h cote a cote avec un inconnu
-  - **Salles d'attente** (medecin, garage, prefecture) : ennui propice a l'observation
-  - **Cafes** : table partagee, table d'a cote tres proche
-  - **Coworking** : on l'a vu dans la lecon precedente
-  - **Hall d'hotel / lobby** : passage permanent dans le dos
+  - **TGV / avions / autocars** : 4h côté a côté avec un inconnu
+  - **Salles d'attente** (médecin, garage, prefecture) : ennui propice a l'observation
+  - **Cafes** : table partagee, table d'a côté très proche
+  - **Coworking** : on l'a vu dans la leçon précédente
+  - **Hall d'hôtel / lobby** : passage permanent dans le dos
 
   **Les 5 reflexes anti shoulder-surfing :**
 
-  1. **Privacy filter** sur le laptop (3M, 30 €). Investissement le plus rentable. L'ecran est noir vu de cote ou par-dessus l'epaule.
-  2. **Choisir la place** : dos a un mur ou a une cloison. Eviter la place couloir si possible. Dans le train, premiere classe avec sieges fixes peut etre plus sain qu'en bondee.
-  3. **Reduire la luminosite** au strict minimum lisible : un ecran moins lumineux est moins visible de loin.
+  1. **Privacy filter** sur le laptop (3M, 30 €). Investissement le plus rentable. L'écran est noir vu de côté ou par-dessus l'epaule.
+  2. **Choisir la place** : dos a un mur ou a une cloison. Éviter la place couloir si possible. Dans le train, première classe avec sièges fixes peut être plus sain qu'en bondee.
+  3. **Reduire la luminosite** au strict minimum lisible : un écran moins lumineux est moins visible de loin.
   4. **Verrouiller systematiquement** quand on s'absente : controleur SNCF, toilettes, chercher un cafe.
-  5. **Reporter les actions sensibles** : un mot de passe maitre, une signature de contrat, une lecture d'email confidentiel attendent que tu sois dans un environnement controle.
+  5. **Reporter les actions sensibles** : un mot de passe maître, une signature de contrat, une lecture d'email confidentiel attendent que tu sois dans un environnement contrôle.
 
   **Le test simple :**
   Avant d'ouvrir un document confidentiel, regarde discretement autour de toi pendant 5 secondes :
-  - Combien de personnes pourraient lire mon ecran si elles tournaient la tete ?
-  - Y a-t-il un tableau / camera / miroir reflechissant ?
-  - Ai-je une pause prevue dans les 10 minutes (laptop a verrouiller) ?
+  - Combien de personnes pourraient lire mon écran si elles tournaient la tête ?
+  - Y a-t-il un tableau / caméra / miroir reflechissant ?
+  - Ai-je une pause prévue dans les 10 minutes (laptop a verrouiller) ?
 
-  Si une seule reponse est genante, change de place ou attend.
+  Si une seule réponse est genante, change de place ou attend.
 quiz:
   - question: "L'investissement le plus rentable contre le shoulder-surfing :"
     choices:
@@ -60,12 +60,12 @@ quiz:
         label: "Un VPN entreprise"
         correct: false
       - id: "b"
-        label: "Un privacy filter (filtre de confidentialite) a 30 €"
+        label: "Un privacy filter (filtre de confidentialité) a 30 €"
         correct: true
       - id: "c"
         label: "Un casque audio"
         correct: false
-    explanation: "Le privacy filter rend l'ecran noir vu de cote au-dela de 30°. C'est passif, ne ralentit pas le travail, et bloque 99 % des shoulder-surfings opportunistes."
+    explanation: "Le privacy filter rend l'écran noir vu de côté au-dela de 30°. C'est passif, ne ralentit pas le travail, et bloque 99 % des shoulder-surfings opportunistes."
 
   - question: "Je dois aller chercher un cafe pendant 2 minutes. Mon laptop reste a la table. Je :"
     choices:
@@ -78,7 +78,7 @@ quiz:
       - id: "c"
         label: "Demande au voisin inconnu de surveiller"
         correct: false
-    explanation: "Verrouiller protege l'ecran. Mais 2 min suffisent pour subtiliser un laptop entier - preferer le mettre dans le sac. Et le voisin inconnu n'est pas une garantie."
+    explanation: "Verrouiller protege l'écran. Mais 2 min suffisent pour subtiliser un laptop entier - preferer le mettre dans le sac. Et le voisin inconnu n'est pas une garantie."
 
   - question: "Pour ouvrir un email confidentiel pendant un long trajet TGV :"
     choices:
@@ -91,11 +91,11 @@ quiz:
       - id: "c"
         label: "Je l'imprime pour le lire plus discretement"
         correct: false
-    explanation: "L'imprime peut etre vu, perdu, ou photographie. La lecture en TGV n'est jamais sereine - privacy filter + place adaptee + reporter si necessaire est le bon mix."
+    explanation: "L'imprime peut être vu, perdu, ou photographie. La lecture en TGV n'est jamais sereine - privacy filter + place adaptee + reporter si necessaire est le bon mix."
 ---
 
 ## Pour aller plus loin
 
-Le shoulder-surfing est la cybersecurite analogique : pas de cle USB, pas de virus, juste un cerveau humain qui lit ce qui defile sous ses yeux. Le privacy filter est la version contemporaine du "cache-cahier" qu'on mettait a l'ecole pour proteger sa redac de l'oeil curieux du voisin.
+Le shoulder-surfing est la cybersécurité analogique : pas de cle USB, pas de virus, juste un cerveau humain qui lit ce qui defile sous ses yeux. Le privacy filter est la version contemporaine du "cache-cahier" qu'on mettait a l'ecole pour proteger sa redac de l'oeil curieux du voisin.
 
-> "Ton ecran public, c'est ton porte-monnaie public. Tu ne le laisses pas ouvert dans un train - pourquoi le ferais-tu de tes donnees ?"
+> "Ton écran public, c'est ton porte-monnaie public. Tu ne le laisses pas ouvert dans un train - pourquoi le ferais-tu de tes données ?"

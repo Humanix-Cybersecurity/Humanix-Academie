@@ -2,13 +2,13 @@
 title: "Ce que l'employeur a le droit de surveiller"
 durationMinutes: 7
 persona: "tous-collaborateurs"
-objective: "Comprendre les limites legales de la surveillance des employes par l'employeur (Code travail, RGPD, jurisprudence) et tes droits"
+objective: "Comprendre les limites legales de la surveillance des employés par l'employeur (Code travail, RGPD, jurisprudence) et tes droits"
 xpReward: 60
 scenario: |
-  Tu es employe en PME 80 personnes. Le DSI annonce :
+  Tu es employé en PME 80 personnes. Le DSI annonce :
 
-  "Nous installons un nouveau systeme de monitoring sur les
-  postes : capture d'ecran toutes les 5 minutes, log des sites
+  "Nous installons un nouveau système de monitoring sur les
+  postes : capture d'écran toutes les 5 minutes, log des sites
   visites, log des frappes clavier, et videoprotection sur
   les open-spaces."
 
@@ -18,17 +18,17 @@ choices:
   - id: "a"
     label: "C'est leur droit, ils paient mon poste"
     outcome: "bad"
-    feedback: "FAUX. Le droit du travail + RGPD encadrent strictement la surveillance. Capture ecran 5 min + keylogger + videoprotection systematique = tres probablement illegal sans conditions strictes (information CSE, CNIL, proportionnalite)."
+    feedback: "FAUX. Le droit du travail + RGPD encadrent strictement la surveillance. Capture écran 5 min + keylogger + videoprotection systematique = très probablement illegal sans conditions strictes (information CSE, CNIL, proportionnalite)."
     points: -15
   - id: "b"
-    label: "Je verifie si information CSE / CNIL prealable. Je m'informe sur mes droits (Code travail, jurisprudence). Si exces : recours via CSE / Inspection du travail / CNIL"
+    label: "Je verifie si information CSE / CNIL préalable. Je m'informe sur mes droits (Code travail, jurisprudence). Si exces : recours via CSE / Inspection du travail / CNIL"
     outcome: "good"
-    feedback: "Approche pro. Verification des prealables legaux (CSE, CNIL), connaissance droits, voies de recours. Code travail + RGPD encadrent strictement. Surveillance excessive = preuves illegales + sanctions employeur."
+    feedback: "Approche pro. Vérification des préalables legaux (CSE, CNIL), connaissance droits, voies de recours. Code travail + RGPD encadrent strictement. Surveillance excessive = preuves illegales + sanctions employeur."
     points: 40
   - id: "c"
-    label: "Je porte plainte penale immediatement"
+    label: "Je porte plainte penale immédiatement"
     outcome: "neutral"
-    feedback: "Trop precoce. Approche graduee : 1) verifier si surveillance legalement encadree, 2) dialogue interne (DRH, CSE), 3) recours administratif (CNIL, Inspection travail), 4) penal en dernier recours."
+    feedback: "Trop precoce. Approche graduee : 1) vérifier si surveillance legalement encadree, 2) dialogue interne (DRH, CSE), 3) recours administratif (CNIL, Inspection travail), 4) penal en dernier recours."
     points: 5
   - id: "d"
     label: "Je quitte l'entreprise"
@@ -36,71 +36,71 @@ choices:
     feedback: "Excessif et inutile. La surveillance excessive est illegale, tu as des recours. L'evitement n'est pas la solution. Defendre ses droits via les canaux appropries."
     points: -10
 debrief: |
-  La **surveillance des employes** par l'employeur est un
-  sujet tres encadre juridiquement. Le Code du travail, le
-  RGPD et la jurisprudence definissent precisement ce qui est
+  La **surveillance des employés** par l'employeur est un
+  sujet très encadre juridiquement. Le Code du travail, le
+  RGPD et la jurisprudence definissent précisément ce qui est
   autorise et ce qui ne l'est pas.
 
-  **Le principe general :**
+  **Le principe général :**
 
   **Code du travail L1121-1** :
 
   > "Nul ne peut apporter aux droits des personnes et aux
-  > libertes individuelles et collectives de restrictions qui
+  > libertés individuelles et collectives de restrictions qui
   > ne seraient pas justifiees par la nature de la tache a
   > accomplir ni proportionnees au but recherche."
 
   Donc : surveillance autorisee SI :
-  1. **Justifiee** (objectif legitime : securite, fraude,
+  1. **Justifiee** (objectif legitime : sécurité, fraude,
     productivite)
   2. **Proportionnee** (pas excessive)
-  3. **Information prealable** (CSE + employes + CNIL si
+  3. **Information préalable** (CSE + employés + CNIL si
     necessaire)
   4. **Conformite RGPD** (registre, base legale, droits)
 
-  **Ce qui est generalement AUTORISE :**
+  **Ce qui est généralement AUTORISE :**
 
-  **1. Logs reseau (volumetrie, destinations)**
+  **1. Logs réseau (volumetrie, destinations)**
 
   - Volumes de trafic
   - Sites web visites (URLs)
   - Heures de connexion
   - **Pas le contenu** (HTTPS chiffre)
 
-  Pas besoin d'autorisation specifique mais **information
+  Pas besoin d'autorisation spécifique mais **information
   CSE** + charte informatique.
 
   **2. Filtrage URL**
 
-  - Bloquer sites sensibles (porn, jeux, social media...)
-  - Information CSE prealable
-  - Information employes (charte)
+  - Bloquer sites sensibles (porn, jeux, social média...)
+  - Information CSE préalable
+  - Information employés (charte)
   - Pas pour surveiller individuellement
 
   **3. Antivirus / EDR**
 
-  - Detection menaces sur les postes
-  - **Pas pour surveiller** activite employes
+  - Détection menaces sur les postes
+  - **Pas pour surveiller** activite employés
   - Information CSE / RGPD
 
   **4. Cameras de videosurveillance**
 
-  - **Aux entrees** (securite)
-  - **Caisses, depots** (securite biens)
+  - **Aux entrées** (sécurité)
+  - **Caisses, dépôts** (sécurité biens)
   - **Pas en open-space** systematique (sauf justification
     forte type centre de tri)
-  - **Information employes** + signalisation visible
-  - Declaration CNIL si donnees personnelles
+  - **Information employés** + signalisation visible
+  - Declaration CNIL si données personnelles
   - Conservation : 30 jours max sauf incident
 
-  **5. Geolocalisation des vehicules**
+  **5. Geolocalisation des véhicules**
 
-  - Pour vehicules de fonction utilises a titre pro
-  - Information employe + CSE + CNIL
+  - Pour véhicules de fonction utilises a titre pro
+  - Information employé + CSE + CNIL
   - **Desactivation hors horaires** obligatoire
   - Conservation limite (1 an max)
 
-  **6. Logs systeme et acces**
+  **6. Logs système et acces**
 
   - Connexion / deconnexion
   - Acces aux applications
@@ -109,36 +109,36 @@ debrief: |
 
   **7. Mails pro**
 
-  - **Boite mail pro** : acces possible (sauf marque "personnel")
+  - **Boîte mail pro** : acces possible (sauf marque "personnel")
   - **Cour de cassation 2018** : mail pro = repute pro
-  - Acces sans presence employe possible si non-marque
+  - Acces sans présence employé possible si non-marque
 
-  **Ce qui est generalement INTERDIT (ou tres encadre) :**
+  **Ce qui est généralement INTERDIT (ou très encadre) :**
 
-  **1. Capture d'ecran systematique**
+  **1. Capture d'écran systematique**
 
   - **Disproportionnee** dans la plupart des cas
-  - **Interdit** sauf justification tres specifique (centre
-    appel pour qualite par ex.)
-  - **Information prealable** + consultation CSE + declaration
+  - **Interdit** sauf justification très spécifique (centre
+    appel pour qualité par ex.)
+  - **Information préalable** + consultation CSE + declaration
     CNIL obligatoires
 
   **CNIL 2018** : sanction d'une entreprise pour capture
-  ecran toutes les 30 secondes. 30K EUR.
+  écran toutes les 30 secondes. 30K EUR.
 
   **2. Keylogger (enregistrement frappes clavier)**
 
   - **Interdit** sauf circonstances exceptionnelles (suspicion
     fraude prouvee)
   - **Disproportionne** par defaut
-  - **Atteinte vie privee** majeure
+  - **Atteinte vie privée** majeure
 
   **CNIL** : sanctions repetees pour usage non-conforme.
 
   **3. Cameras dans bureaux individuels / WC / cafeteria**
 
   - **Interdit absolument**
-  - Atteinte vie privee
+  - Atteinte vie privée
   - Sanction penale possible
 
   **4. Lecture des mails personnels**
@@ -148,28 +148,28 @@ debrief: |
   - Sauf circonstances exceptionnelles + autorisation
     judiciaire
 
-  **5. Surveillance des communications privees**
+  **5. Surveillance des communications privées**
 
-  - **Telephone perso** : aucune surveillance
+  - **Téléphone perso** : aucune surveillance
   - **Mails perso** : interdit
   - **Teams privates / WhatsApp** : interdit
 
   **6. Geolocalisation 24/7**
 
   - **Hors horaires de travail** : interdit
-  - **Vehicule perso** : interdit (sauf cas extreme)
-  - **Telephone perso** : interdit
+  - **Véhicule perso** : interdit (sauf cas extreme)
+  - **Téléphone perso** : interdit
 
   **7. Reconnaissance faciale / biometrie**
 
-  - **Tres encadree** par CNIL
+  - **Très encadree** par CNIL
   - **Necessite proportionnee** (acces zones sensibles)
   - **Consentement** si possible / alternative
 
   **8. Surveillance comportementale / IA**
 
-  - **Etat emotionnel** : interdit
-  - **Productivite par IA** : tres controverse
+  - **État emotionnel** : interdit
+  - **Productivite par IA** : très controverse
   - **Profilage** : encadre RGPD article 22
 
   **Les obligations de l'employeur :**
@@ -178,12 +178,12 @@ debrief: |
 
   **1. Information CSE**
 
-  - **Comite Social Economique** doit etre informe / consulte
+  - **Comite Social Economique** doit être informe / consulte
   - **Pas obligatoire d'avoir l'accord** mais consultation
   - **PV signe**
   - **Article L2312-8** Code travail
 
-  **2. Information employes**
+  **2. Information employés**
 
   - **Charte informatique** ou note de service
   - **Description claire** : quoi, comment, pourquoi
@@ -193,16 +193,16 @@ debrief: |
 
   - **Registre des traitements** mis a jour
   - **DPIA** (analyse d'impact) si traitement risque
-  - **Information CNIL** si declaration prealable necessaire
+  - **Information CNIL** si declaration préalable necessaire
 
   **4. Conformite RGPD**
 
-  - **Base legale** (interet legitime, obligation legale)
+  - **Base legale** (intérêt legitime, obligation legale)
   - **Finalite** clairement definie
   - **Duree de conservation** limitee
   - **Droits** des personnes (acces, suppression)
 
-  **Tes droits en tant qu'employe :**
+  **Tes droits en tant qu'employé :**
 
   **1. Droit a l'information**
 
@@ -212,8 +212,8 @@ debrief: |
 
   **2. Droit d'acces (RGPD article 15)**
 
-  - Demander quelles donnees l'entreprise detient sur toi
-  - Reponse sous 30 jours, gratuite
+  - Demander quelles données l'entreprise detient sur toi
+  - Réponse sous 30 jours, gratuite
   - Adresser au DPO
 
   **3. Droit de rectification (article 16)**
@@ -222,47 +222,47 @@ debrief: |
 
   **4. Droit a l'effacement (article 17)**
 
-  - Apres depart : suppression apres durees legales
+  - Après depart : suppression après durées legales
 
   **5. Droit d'opposition (article 21)**
 
-  - Pour traitement fonde sur interet legitime
+  - Pour traitement fonde sur intérêt legitime
   - Justification requise
 
   **6. Droit de saisine CSE / Inspection du travail / CNIL**
 
   - **CSE** : pour signaler atteinte
-  - **Inspection du travail** : pour controle
+  - **Inspection du travail** : pour contrôle
   - **CNIL** : plainte possible (gratuit, en ligne)
   - **Tribunal prud'hommes** : recours individuel
 
-  **Procedure de recours en cas de surveillance excessive :**
+  **Procédure de recours en cas de surveillance excessive :**
 
-  **Etape 1 : Verification**
+  **Étape 1 : Vérification**
 
   - Lis la charte informatique
   - Demande au DPO la base legale
-  - Verifie l'information CSE prealable
+  - Verifie l'information CSE préalable
 
-  **Etape 2 : Dialogue**
+  **Étape 2 : Dialogue**
 
   - Manager / DRH / DSI
   - Pose des questions, demande des explications
   - **Trace ecrite** (email)
 
-  **Etape 3 : CSE**
+  **Étape 3 : CSE**
 
   - Saisine du CSE
   - Le CSE peut consulter, alerter, mediater
   - **Article L2312-9** : alerte sociale
 
-  **Etape 4 : Recours administratif**
+  **Étape 4 : Recours administratif**
 
   - **CNIL** : plainte en ligne (gratuit) si violation RGPD
-  - **Inspection du travail** : controle si suspicion
+  - **Inspection du travail** : contrôle si suspicion
     illegalite
 
-  **Etape 5 : Recours juridique (si necessaire)**
+  **Étape 5 : Recours juridique (si necessaire)**
 
   - **Prud'hommes** : individuel
   - **Tribunal correctionnel** : penal si grave
@@ -270,11 +270,11 @@ debrief: |
   **Sanctions pour l'employeur en cas de surveillance
   illegale :**
 
-  - **CNIL** : jusqu'a 4% CA mondial (cas reels : 50K - 1M
+  - **CNIL** : jusqu'à 4% CA mondial (cas reels : 50K - 1M
     EUR)
   - **Code travail** : delit d'entrave si CSE non consulte
-  - **Penal** : si atteinte vie privee (article 226-1 Code
-    penal) - jusqu'a 1 an prison + 45K EUR
+  - **Penal** : si atteinte vie privée (article 226-1 Code
+    penal) - jusqu'à 1 an prison + 45K EUR
   - **Preuves** : si surveillance illegale, **preuves nulles**
     (jurisprudence Cour de cassation)
 
@@ -283,85 +283,85 @@ debrief: |
   **Cas 1 - Amazon France 2024 (CNIL 32M EUR)**
 
   CNIL a sanctionne Amazon France pour surveillance excessive
-  des salaries dans entrepots :
+  des salariés dans entrepots :
   - Tracking continu de l'inactivite (30 secondes)
   - Quasi-permanent de la productivite
-  - Information employes incomplete
+  - Information employés incomplete
   - Conservation excessive
 
-  Sanction : **32 millions EUR** (decision CNIL).
+  Sanction : **32 millions EUR** (décision CNIL).
 
   **Cas 2 - PME 2022 (sanction CNIL 30K EUR)**
 
   PME 100 personnes avait :
-  - Capture ecran toutes les 30 secondes
+  - Capture écran toutes les 30 secondes
   - Pas d'information CSE
-  - Pas d'information employes detaillee
+  - Pas d'information employés detaillee
   - Conservation 1 an
 
-  Sanction CNIL : 30K EUR + ordre arret immediat.
+  Sanction CNIL : 30K EUR + ordre arrêt immediat.
 
   **Cas 3 - Cabinet 2023 (preuves nulles)**
 
-  Avocat employeur avait surveille le mail pro d'un employe
+  Avocat employeur avait surveille le mail pro d'un employé
   (sans mention "personnel") et detecte fraude. Licenciement
-  + procedure penale.
+  + procédure penale.
 
   Tribunal :
   - **Mail pro consultable** = OK
-  - **MAIS** absence d'information CSE prealable = preuves
+  - **MAIS** absence d'information CSE préalable = preuves
     nulles
   - Licenciement sans cause reelle
-  - **Indemnite** importante a l'employe
+  - **Indemnite** importante a l'employé
 
-  Lecon : meme surveillance "legitime" peut etre nulle si
-  procedure non respectee.
+  Lecon : même surveillance "legitime" peut être nulle si
+  procédure non respectee.
 
   **Cas 4 - PME 2024 (succes par dialogue)**
 
   PME a propose monitoring (filtrage URL + EDR) :
   - Information CSE complete
   - Charte mise a jour
-  - Sensibilisation employes
-  - **Pas** de capture ecran ni keylogger
+  - Sensibilisation employés
+  - **Pas** de capture écran ni keylogger
 
-  Resultat : acceptation collective + securite renforcee +
+  Résultat : acceptation collective + sécurité renforcee +
   pas de conflit.
 
   **Le piege "ils ont tous les droits car c'est leur
-  materiel" :**
+  matériel" :**
 
-  FAUX. Memes sur materiel d'entreprise :
-  - **Vie privee** preservee (jurisprudence Nikon)
+  FAUX. Mêmes sur matériel d'entreprise :
+  - **Vie privée** preservee (jurisprudence Nikon)
   - **Mails perso** intouchables
   - **Surveillance** strictement encadree
 
-  Le materiel appartient a l'entreprise. Les **droits du
-  salarie** sont independants.
+  Le matériel appartient a l'entreprise. Les **droits du
+  salarié** sont indépendants.
 
   **Le piege "il faut accepter pour garder mon emploi" :**
 
   Subir une surveillance illegale n'est pas obligatoire :
   - Recours possible sans risque (sanction interdite pour
     avoir saisi CNIL / Inspection du travail)
-  - **Article L1132-3** : protection des salaries qui
-    saisissent autorites
+  - **Article L1132-3** : protection des salariés qui
+    saisissent autorités
   - Si tu es sanctionne pour avoir denonce : recours +
     indemnites
 
   **Le piege "je n'ai rien a cacher" :**
 
-  Argument frequent. Mais :
-  - Vie privee = droit fondamental, pas une question de
+  Argument fréquent. Mais :
+  - Vie privée = droit fondamental, pas une question de
     "cacher"
   - Surveillance excessive = epuisement, demoralisation,
-    methode contraire au respect humain
-  - **Climat de defiance** = mauvaise productivite a long
+    méthode contraire au respect humain
+  - **Climat de défiance** = mauvaise productivite a long
     terme
 
-  **Recommandations selon role :**
+  **Recommandations selon rôle :**
 
-  **Pour les employes :**
+  **Pour les employés :**
   - Connaitre tes droits (RGPD + Code travail)
   - Lire la charte informatique
   - Saisir CSE / DPO en cas de doute
@@ -378,16 +378,16 @@ debrief: |
   - Proportionnalite des mesures
 
   **Pour le DRH :**
-  - Mediation employes / employeur
+  - Mediation employés / employeur
   - Sensibilisation managers
   - Charte conforme
 
-  **La regle d'or :**
+  **La règle d'or :**
 
   > **La surveillance est encadree (Code travail + RGPD).
-  > Information CSE + employes + CNIL prealable. Proportionnalite
-  > obligatoire. Capture ecran systematique / keylogger /
-  > cameras open-space = generalement illegal. Tes droits :
+  > Information CSE + employés + CNIL préalable. Proportionnalite
+  > obligatoire. Capture écran systematique / keylogger /
+  > caméras open-space = généralement illegal. Tes droits :
   > acces, opposition, saisine CSE / CNIL / Inspection travail.
   > Surveillance illegale = preuves nulles + sanction
   > employeur.**
@@ -395,34 +395,34 @@ quiz:
   - question: "L'employeur peut-il installer un keylogger sur ton poste ?"
     choices:
       - { id: "a", label: "Oui, c'est son poste", correct: false }
-      - { id: "b", label: "INTERDIT par defaut. Disproportionne. Sauf circonstances exceptionnelles (suspicion fraude prouvee) avec procedure stricte. CNIL sanctionne regulierement", correct: true }
+      - { id: "b", label: "INTERDIT par defaut. Disproportionne. Sauf circonstances exceptionnelles (suspicion fraude prouvee) avec procédure stricte. CNIL sanctionne régulièrement", correct: true }
       - { id: "c", label: "Optionnel", correct: false }
-    explanation: "Keylogger = atteinte majeure a vie privee. Disproportionne dans la plupart des cas. Interdit par defaut sauf circonstances exceptionnelles (suspicion fraude prouvee) avec procedure stricte (CSE, CNIL, autorisation judiciaire). CNIL sanctionne regulierement les usages illegaux."
+    explanation: "Keylogger = atteinte majeure a vie privée. Disproportionne dans la plupart des cas. Interdit par defaut sauf circonstances exceptionnelles (suspicion fraude prouvee) avec procédure stricte (CSE, CNIL, autorisation judiciaire). CNIL sanctionne régulièrement les usages illegaux."
 
   - question: "Sanction CNIL maximale pour surveillance excessive ?"
     choices:
       - { id: "a", label: "100 EUR", correct: false }
-      - { id: "b", label: "Jusqu'a 4% CA mondial (RGPD article 83) - cas reel Amazon France 2024 : 32 M EUR de sanction", correct: true }
+      - { id: "b", label: "Jusqu'à 4% CA mondial (RGPD article 83) - cas reel Amazon France 2024 : 32 M EUR de sanction", correct: true }
       - { id: "c", label: "Aucune", correct: false }
-    explanation: "RGPD article 83 : sanctions max 4% CA mondial. Cas reel Amazon France 2024 : 32 M EUR pour tracking continu employes entrepots + information incomplete. Pour PME : sanctions realistes 30K - 500K EUR (precedents CNIL)."
+    explanation: "RGPD article 83 : sanctions max 4% CA mondial. Cas reel Amazon France 2024 : 32 M EUR pour tracking continu employés entrepots + information incomplete. Pour PME : sanctions realistes 30K - 500K EUR (précédents CNIL)."
 
   - question: "Avant mise en place de surveillance, obligations de l'employeur ?"
     choices:
       - { id: "a", label: "Aucune", correct: false }
-      - { id: "b", label: "Information CSE (consultation) + information employes + DPIA RGPD si risque + registre traitement + charte informatique", correct: true }
+      - { id: "b", label: "Information CSE (consultation) + information employés + DPIA RGPD si risque + registre traitement + charte informatique", correct: true }
       - { id: "c", label: "Que CSE", correct: false }
-    explanation: "Prealables obligatoires : 1) Consultation CSE (Code travail L2312-8), 2) Information employes (charte / note service), 3) DPIA RGPD si traitement risque (article 35), 4) Registre traitement mis a jour, 5) Si applicable : declaration CNIL. Sans ca = preuves nulles + sanctions."
+    explanation: "Prealables obligatoires : 1) Consultation CSE (Code travail L2312-8), 2) Information employés (charte / note service), 3) DPIA RGPD si traitement risque (article 35), 4) Registre traitement mis a jour, 5) Si applicable : declaration CNIL. Sans ça = preuves nulles + sanctions."
 
   - question: "Tu suspectes une surveillance illegale, voies de recours ?"
     choices:
       - { id: "a", label: "Aucune", correct: false }
       - { id: "b", label: "Dialogue DRH/DPO -> CSE -> CNIL (gratuit en ligne) / Inspection du travail -> Prud'hommes / penal en dernier recours", correct: true }
       - { id: "c", label: "Que prud'hommes", correct: false }
-    explanation: "Procedure graduee : 1) Dialogue DRH/DPO (premier reflexe), 2) CSE (saisine), 3) CNIL (plainte en ligne gratuite, RGPD), 4) Inspection du travail (Code travail), 5) Prud'hommes (individuel), 6) Penal (cas graves, article 226-1 Code penal). Article L1132-3 : protection contre sanctions."
+    explanation: "Procédure graduee : 1) Dialogue DRH/DPO (premier reflexe), 2) CSE (saisine), 3) CNIL (plainte en ligne gratuite, RGPD), 4) Inspection du travail (Code travail), 5) Prud'hommes (individuel), 6) Penal (cas graves, article 226-1 Code penal). Article L1132-3 : protection contre sanctions."
 ---
 
 > 💡 **Pour aller plus loin** : **CNIL** (cnil.fr) plateforme
 > de plainte en ligne gratuite. **Inspection du travail**
-> via numero vert. **CSE** = premiere instance. **Article
-> 226-1 Code penal** : atteinte vie privee = 1 an prison +
+> via numéro vert. **CSE** = première instance. **Article
+> 226-1 Code penal** : atteinte vie privée = 1 an prison +
 > 45K EUR. Cas reel Amazon France 2024 : 32M EUR sanction.
