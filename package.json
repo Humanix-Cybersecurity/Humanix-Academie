@@ -43,6 +43,8 @@
     "tts:build:force": "tsx scripts/tts-cache-build.ts --force",
     "tts:prune": "tsx scripts/tts-cache-prune.ts",
     "tts:prune:apply": "tsx scripts/tts-cache-prune.ts --apply",
+    "hex:reindex": "tsx scripts/hex-reindex.ts",
+    "hex:reindex:dry": "tsx scripts/hex-reindex.ts --dry",
     "audit:env": "tsx scripts/audit-env-coverage.ts",
     "license:headers": "tsx scripts/add-license-headers.ts",
     "license:check": "tsx scripts/add-license-headers.ts --check",
