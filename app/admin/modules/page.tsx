@@ -11,6 +11,7 @@ import { db } from "@/lib/db";
 import ModulesTable from "@/components/ModulesTable";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminSection from "@/components/admin/AdminSection";
+import { tagsForSaison } from "@/prisma/catalog-tags";
 
 export const dynamic = "force-dynamic";
 
@@ -107,6 +108,11 @@ export default async function AdminModulesPage() {
             avgScores.reduce((a, b) => a + b, 0) / avgScores.length,
           )
         : null;
+      // Fallback : si la BDD n'a pas encore ete reseed avec les tags
+      // (migration recente), on prend les tags par defaut depuis le
+      // catalog statique. Ca garantit que la fonctionnalite est utilisable
+      // immediatement, meme avant le passage de seed.
+      const tags = s.tags && s.tags.length > 0 ? s.tags : tagsForSaison(s.slug);
       return {
         id: s.id,
         slug: s.slug,
@@ -129,6 +135,8 @@ export default async function AdminModulesPage() {
         })),
         completionsCount: completedSum,
         avgScore: saisonAvgScore,
+        tags,
+        audience: s.audience ?? "tous",
       };
     })
     .sort(
