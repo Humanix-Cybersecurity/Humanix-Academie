@@ -18,6 +18,7 @@ import {
   rewardsFor,
   validateCatalog,
 } from "./catalog-saisons";
+import { tagsForSaison } from "./catalog-tags";
 import { seedAnecdotes } from "./seed-anecdotes";
 import {
   COMMUNITY_TENANT_SLUG,
@@ -218,6 +219,7 @@ async function main() {
   const saisonRecords = new Map<string, any>();
   const episodeRecords = new Map<string, any>();
   for (const s of CATALOG_SAISONS) {
+    const tags = tagsForSaison(s.slug);
     const dbS = await prisma.saison.upsert({
       where: { slug: s.slug },
       update: {
@@ -225,6 +227,8 @@ async function main() {
         description: s.description,
         coverEmoji: s.coverEmoji,
         order: s.order,
+        audience: s.audience,
+        tags,
       },
       create: {
         slug: s.slug,
@@ -232,6 +236,8 @@ async function main() {
         description: s.description,
         coverEmoji: s.coverEmoji,
         order: s.order,
+        audience: s.audience,
+        tags,
       },
     });
     saisonRecords.set(s.slug, dbS);
