@@ -37,11 +37,29 @@ import {
   CATEGORY_EMOJI,
   type SourceCategory,
 } from "@/lib/urgence-cyber/sources";
+import { BreadcrumbJsonLd, ServiceJsonLd } from "@/lib/seo/jsonld";
+
+const URG_TITLE = "Urgence cyber — Que faire en cas d'incident | Humanix";
+const URG_DESC =
+  "Hub d'urgence cyber gratuit, accessible à tous (particuliers, équipes, organisations de toute taille). Procédures pour rançongiciel, fuite de données, fraude au président, compte compromis, vol de matériel. Outils souverains, sources officielles, intervention curative par Humanix Cybersecurity.";
 
 export const metadata = {
-  title: "Urgence cyber - Que faire en cas d'incident | Humanix",
-  description:
-    "Hub d'urgence cyber gratuit, accessible à tous (particuliers, équipes, organisations de toute taille). Procédures pour rançongiciel, fuite de données, fraude au président, compte compromis, vol de matériel. Outils souverains, sources officielles, intervention curative par Humanix Cybersecurity.",
+  title: URG_TITLE,
+  description: URG_DESC,
+  alternates: { canonical: "/urgence-cyber" },
+  openGraph: {
+    title: URG_TITLE,
+    description: URG_DESC,
+    type: "website",
+    url: "/urgence-cyber",
+    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Urgence cyber — Que faire en cas d'incident",
+    description: URG_DESC,
+    images: ["/logo-humanix-academie-512.png"],
+  },
 };
 
 const CATEGORIES_ORDER: SourceCategory[] = [
@@ -54,6 +72,19 @@ const CATEGORIES_ORDER: SourceCategory[] = [
 export default function UrgenceCyberPage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
+      <ServiceJsonLd
+        name="Hub d'urgence cyber gratuit"
+        description="Procédures publiques pour rançongiciel, fuite de données, fraude au président, compte compromis, vol de matériel. Sources officielles, intervention curative par Humanix Cybersecurity."
+        url="/urgence-cyber"
+        serviceType="Cyber incident response guidance"
+        offers={{ price: "0", priceCurrency: "EUR", description: "Hub gratuit, sans inscription" }}
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", path: "/" },
+          { name: "Urgence cyber", path: "/urgence-cyber" },
+        ]}
+      />
       {/* ============================================================
           1. HERO - gravité technique, ton clair
           ============================================================ */}

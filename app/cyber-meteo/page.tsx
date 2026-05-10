@@ -7,6 +7,7 @@ import Link from "next/link";
 import { getCyberMeteo } from "@/lib/cyber-meteo";
 import { CyberMeteoCard } from "@/components/CyberMeteoBadge";
 import HexBackdrop from "@/components/HexBackdrop";
+import { BreadcrumbJsonLd } from "@/lib/seo/jsonld";
 
 export const dynamic = "force-dynamic";
 // Revalidation côté serveur (Next.js) : toutes les heures
@@ -37,6 +38,13 @@ export default async function CyberMeteoPage() {
 
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Accueil", path: "/" },
+          { name: "Ressources", path: "/ressources" },
+          { name: "Cyber-météo France", path: "/cyber-meteo" },
+        ]}
+      />
       {/* ================================================================
           1. HERO - invitation a la lecture, pas alarme
           ================================================================ */}
