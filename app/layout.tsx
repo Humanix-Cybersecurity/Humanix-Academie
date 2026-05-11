@@ -48,10 +48,14 @@ export const metadata: Metadata = {
   // Title : chaque page marketing owns son propre `title` complet (avec son
   // suffixe " — Humanix Académie" si elle veut). Pas de template ici car
   // ~25 pages contiennent deja "Humanix" dans leur titre — un template
-  // produirait des suffixes dupliques. Le `default` couvre uniquement les
-  // routes qui ne definissent rien (rare, idealement aucun pour les pages
-  // indexables).
-  title: { default: SITE_TITLE },
+  // produirait des suffixes dupliques. Le titre ci-dessous est le fallback
+  // utilise quand une page ne definit rien (rare, ideallement aucun pour
+  // les pages indexables).
+  //
+  // NB : on utilise une string plate plutot que `{ default: ... }` car
+  // l'API Next.js Metadata exige `template` ou `absolute` avec `default`.
+  // Le fallback est aussi simple comme ca.
+  title: SITE_TITLE,
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
   authors: [{ name: "Humanix Cybersecurity", url: "https://humanix-cybersecurity.fr" }],
