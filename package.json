@@ -74,7 +74,7 @@
     "@fontsource/atkinson-hyperlegible": "^5.1.1",
     "@prisma/client": "^5.22.0",
     "@react-pdf/renderer": "^4.1.5",
-    "@simplewebauthn/browser": "^10.0.0",
+    "@simplewebauthn/browser": "^13.3.0",
     "@simplewebauthn/server": "^10.0.1",
     "@types/nodemailer": "^8.0.0",
     "@types/qrcode": "^1.5.6",
