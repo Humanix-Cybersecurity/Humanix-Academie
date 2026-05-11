@@ -148,6 +148,50 @@ export default function GlobalError({
               Code de référence : <span style={{ userSelect: "all" }}>{error.digest}</span>
             </p>
           )}
+
+          {/* DIAGNOSTIC : surface le message + stack pour pouvoir
+              debugger sans avoir acces aux logs serveur. Volontairement
+              en details/summary pour rester discret en UI. */}
+          <details
+            style={{
+              marginTop: 24,
+              textAlign: "left",
+              background: "#F8FAFC",
+              border: "1px solid #E2E8F0",
+              borderRadius: 12,
+              padding: "12px 16px",
+            }}
+          >
+            <summary
+              style={{
+                cursor: "pointer",
+                fontSize: 12,
+                fontWeight: 700,
+                color: "#475569",
+                userSelect: "none",
+              }}
+            >
+              Détails techniques (à copier-coller pour support)
+            </summary>
+            <pre
+              style={{
+                marginTop: 12,
+                fontSize: 11,
+                lineHeight: 1.5,
+                color: "#334155",
+                fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-word",
+                userSelect: "all",
+              }}
+            >
+{`name:    ${error.name || "(unknown)"}
+message: ${error.message || "(empty)"}
+digest:  ${error.digest || "(none)"}
+stack:
+${error.stack || "(no stack)"}`}
+            </pre>
+          </details>
         </div>
       </body>
     </html>
