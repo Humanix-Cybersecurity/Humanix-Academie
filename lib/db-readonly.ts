@@ -61,8 +61,12 @@ function buildClient(): PrismaClient {
     return db;
   }
 
+  // Prisma 5.2+ : on prefere `datasourceUrl` (singulier) au lieu de
+  // l'ancien `datasources: { db: { url } }`. La nouvelle API est plus
+  // simple et stable a travers les majors v5 -> v6 -> v7.
+  // Cf. https://www.prisma.io/docs/orm/reference/prisma-client-reference#datasourceurl
   return new PrismaClient({
-    datasources: { db: { url } },
+    datasourceUrl: url,
     log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
   });
 }
