@@ -150,6 +150,7 @@ export default function GroupsManager({ groups }: { groups: G[] }) {
 
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
+          <caption className="sr-only">Groupes d'utilisateurs du tenant</caption>
           <thead className="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-slate-800">
             <tr>
               <th className="pb-2 font-medium text-xs">Groupe</th>
@@ -178,7 +179,7 @@ export default function GroupsManager({ groups }: { groups: G[] }) {
               <tr>
                 <td
                   colSpan={5}
-                  className="text-center py-8 text-gray-400 italic"
+                  className="text-center py-8 text-gray-500 italic"
                 >
                   Aucun groupe pour le moment.
                 </td>

@@ -112,6 +112,7 @@ export default async function TenantDetailPage({
         </h2>
         <div className="overflow-x-auto bg-white dark:bg-slate-900 rounded-xl border border-gray-200 dark:border-slate-800">
           <table className="w-full text-sm">
+            <caption className="sr-only">Details du tenant selectionne</caption>
             <thead className="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-slate-800">
               <tr>
                 <th className="px-4 py-2 text-xs">Email / Nom</th>

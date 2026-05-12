@@ -78,7 +78,7 @@ export default async function ClassementPage() {
             🏛️ Classement par service
           </h2>
           {byService.length === 0 ? (
-            <div className="card text-center py-8 text-gray-400 italic">
+            <div className="card text-center py-8 text-gray-500 italic">
               Sois le premier à marquer des points !
             </div>
           ) : (
@@ -115,7 +115,7 @@ export default async function ClassementPage() {
             ⚡ Top 10 individuel
           </h2>
           {top10.length === 0 ? (
-            <div className="card text-center py-8 text-gray-400 italic">
+            <div className="card text-center py-8 text-gray-500 italic">
               Personne au tableau pour l'instant.
             </div>
           ) : (

@@ -236,7 +236,7 @@ export default function RiskTimeseriesChart({
         </LineChart>
       </ResponsiveContainer>
 
-      <p className="text-[11px] text-gray-400 dark:text-gray-500 italic mt-2 text-center">
+      <p className="text-[11px] text-gray-500 dark:text-gray-500 italic mt-2 text-center">
         🟦 Score moyen · 🟢 Top 10% (best-in-class) · 🟡 Bottom 10% (les plus
         exposés)
       </p>

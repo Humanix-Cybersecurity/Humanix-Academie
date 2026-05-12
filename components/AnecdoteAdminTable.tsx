@@ -93,6 +93,7 @@ export default function AnecdoteAdminTable({
       )}
       <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-slate-700">
         <table className="w-full text-sm">
+          <caption className="sr-only">Anecdotes de la newsletter et leur statut</caption>
           <thead className="bg-gray-50 dark:bg-slate-800">
             <tr className="text-left text-xs uppercase text-gray-500 dark:text-gray-400">
               <th scope="col" className="px-4 py-3">

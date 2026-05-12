@@ -160,7 +160,7 @@ export default function ShopGrid({
             ) : !canLevel ? (
               <button
                 disabled
-                className="w-full text-xs font-bold bg-gray-100 text-gray-400 rounded-xl py-2 cursor-not-allowed"
+                className="w-full text-xs font-bold bg-gray-100 text-gray-500 rounded-xl py-2 cursor-not-allowed"
               >
                 🔒 Niveau {item.minLevel} requis
               </button>
@@ -172,7 +172,7 @@ export default function ShopGrid({
                   "w-full text-xs font-bold rounded-xl py-2 transition disabled:cursor-not-allowed",
                   canAfford
                     ? "bg-amber-500 text-white hover:bg-amber-600"
-                    : "bg-gray-100 text-gray-400",
+                    : "bg-gray-100 text-gray-500",
                 )}
               >
                 🪙 {item.price} {canAfford ? "" : "(insuffisant)"}

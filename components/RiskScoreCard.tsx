@@ -23,7 +23,7 @@ export default function RiskScoreCard({ risk }: { risk: RiskFactors }) {
           </p>
           <p className="text-4xl sm:text-5xl font-extrabold text-primary-500 mt-1">
             {risk.finalScore}
-            <span className="text-xl text-gray-400">/100</span>
+            <span className="text-xl text-gray-500">/100</span>
           </p>
           <p className={`text-sm font-bold ${v.color} mt-1`}>{v.label}</p>
         </div>
