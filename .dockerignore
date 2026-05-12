@@ -14,3 +14,50 @@ DEMO_SCRIPT.md
 .idea
 coverage
 prisma/migrations/dev.db*
+
+# Duplicats macOS / iCloud / sync : Finder copie automatiquement avec un
+# suffixe " 2", " 3", ou " (1)" devant l'extension. Ces fichiers polluent
+# le COPY . . du Dockerfile et font planter `next build` qui les type-check.
+#
+# Cf. patterns equivalents dans .gitignore lignes 76+.
+* [0-9].ts
+* [0-9].tsx
+* [0-9].js
+* [0-9].jsx
+* [0-9].mjs
+* [0-9].cjs
+* [0-9].md
+* [0-9].mdx
+* [0-9].yml
+* [0-9].yaml
+* [0-9].json
+* [0-9].sh
+* [0-9].py
+* (1).ts
+* (1).tsx
+* (1).js
+* (1).jsx
+* (1).md
+* (1).mdx
+
+# Worktrees Claude (non-deploy-relevant)
+.claude/
+
+# Tests, doc, scripts dev-only (le runtime n'en a pas besoin)
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+vitest.config.ts
+vitest.setup.ts
+CONTRIBUTING.md
+docs/
+.github/
+
+# Working copies / backups
+*.bak
+*.bak2
+*.tmp
+*.orig
+*.swp
+*.swo
