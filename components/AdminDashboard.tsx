@@ -104,7 +104,7 @@ export default function AdminDashboard({
       <details className="group rounded-xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 px-4 py-3 text-sm">
         <summary className="cursor-pointer font-medium text-gray-600 dark:text-gray-400 list-none flex items-center gap-2 hover:text-primary-500 dark:hover:text-accent-300">
           <span
-            className="text-gray-400 group-open:rotate-90 transition-transform"
+            className="text-gray-500 group-open:rotate-90 transition-transform"
             aria-hidden="true"
           >
             ▸

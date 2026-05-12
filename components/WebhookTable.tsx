@@ -53,6 +53,7 @@ export default function WebhookTable({
   return (
     <div className="overflow-x-auto -mx-4 px-4">
       <table className="w-full border-collapse min-w-[800px]">
+        <caption className="sr-only">Webhooks configures pour ce tenant</caption>
         <thead>
           <tr className="text-left text-xs uppercase tracking-wide text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-slate-700">
             <th scope="col" className="p-3">
@@ -122,7 +123,7 @@ export default function WebhookTable({
                 <p className="text-green-700">✓ {w.successCount} succès</p>
                 <p
                   className={
-                    w.failureCount > 0 ? "text-red-600" : "text-gray-400"
+                    w.failureCount > 0 ? "text-red-600" : "text-gray-500"
                   }
                 >
                   ✕ {w.failureCount} échecs

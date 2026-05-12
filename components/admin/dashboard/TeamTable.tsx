@@ -83,7 +83,7 @@ export default function TeamTable({ rows }: { rows: TeamRow[] }) {
             <span className="sr-only">Rechercher</span>
             <span
               aria-hidden="true"
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm pointer-events-none"
             >
               🔎
             </span>
@@ -113,6 +113,8 @@ export default function TeamTable({ rows }: { rows: TeamRow[] }) {
       </header>
 
       <table className="w-full text-sm table-auto">
+
+        <caption className="sr-only">Equipe : utilisateurs et leur progression</caption>
         <thead className="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-slate-800">
           <tr>
             <Th
@@ -160,7 +162,7 @@ export default function TeamTable({ rows }: { rows: TeamRow[] }) {
             <tr>
               <td
                 colSpan={5}
-                className="py-10 text-center text-gray-400 italic"
+                className="py-10 text-center text-gray-500 italic"
               >
                 Aucun résultat.
               </td>
@@ -195,7 +197,7 @@ export default function TeamTable({ rows }: { rows: TeamRow[] }) {
                       )}
                     </span>
                   </div>
-                  <div className="hidden md:block xl:hidden mt-0.5 text-[11px] text-gray-400 truncate">
+                  <div className="hidden md:block xl:hidden mt-0.5 text-[11px] text-gray-500 truncate">
                     {u.lastActivity ?? (
                       <span className="italic">Pas connecté</span>
                     )}
@@ -222,7 +224,7 @@ export default function TeamTable({ rows }: { rows: TeamRow[] }) {
                 </td>
                 <td className="hidden xl:table-cell py-3 pl-3 text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
                   {u.lastActivity ?? (
-                    <span className="italic text-gray-400">Pas encore</span>
+                    <span className="italic text-gray-500">Pas encore</span>
                   )}
                 </td>
               </tr>

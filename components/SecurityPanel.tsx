@@ -608,7 +608,7 @@ function TotpEnrollmentBox({
               QR indisponible : {qrError}
             </div>
           ) : (
-            <div className="w-[140px] h-[140px] flex items-center justify-center text-xs text-gray-400 bg-gray-100 rounded animate-pulse">
+            <div className="w-[140px] h-[140px] flex items-center justify-center text-xs text-gray-500 bg-gray-100 rounded animate-pulse">
               Génération…
             </div>
           )}
