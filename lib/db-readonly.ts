@@ -37,6 +37,7 @@
 // un client different qui se connecte avec une URL different.
 
 import { PrismaClient } from "@prisma/client";
+import { db as defaultDb } from "./db";
 
 const globalForPrisma = global as unknown as {
   prismaReadOnly?: PrismaClient;
@@ -53,12 +54,13 @@ export function hasDedicatedReadonlyDb(): boolean {
 function buildClient(): PrismaClient {
   const url = process.env.DATABASE_URL_READONLY;
   if (!url) {
-    // Fallback : on retourne le client principal pour ne rien casser.
-    // Le module `@/lib/db` est resolu de maniere lazy pour eviter une
-    // dependance circulaire au moment du build.
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { db } = require("@/lib/db") as { db: PrismaClient };
-    return db;
+    // Fallback : on retourne le client principal `defaultDb` (singleton
+    // de ./db.ts) pour ne rien casser. L'ancien code utilisait un
+    // `require("@/lib/db")` lazy en pretendant eviter une dep circulaire,
+    // mais ce concern etait theorique (./db n'importe pas ./db-readonly)
+    // et faisait planter lib/db-readonly.test.ts au load (vitest ne resout
+    // pas le `@/` alias dans un CommonJS require runtime).
+    return defaultDb;
   }
 
   // Prisma 5.2+ : on prefere `datasourceUrl` (singulier) au lieu de

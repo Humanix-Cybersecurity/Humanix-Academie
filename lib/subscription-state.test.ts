@@ -39,59 +39,47 @@ describe("getSubscriptionState - tenant introuvable", () => {
   });
 });
 
-describe("getSubscriptionState - trial", () => {
+// Le pivot mai 2026 (vente directe sans essai gratuit) a supprime les etats
+// `trialing` et `trial_expired`. Les tenants legacy qui auraient encore
+// subscriptionStatus='trialing' en BDD doivent etre lus DEFENSIVEMENT comme
+// 'active' (le code de subscription-state le fait pour eviter qu'un legacy
+// se retrouve coince en suspended a cause d'un status obsolete).
+describe("getSubscriptionState - legacy trial defensive read", () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it("trialing actif : state=trialing, restriction=none", async () => {
+  it("trialing en BDD -> traite comme active (lecture defensive)", async () => {
     dbMock.tenant.findUnique.mockResolvedValue({
       plan: "starter",
       subscriptionStatus: "trialing",
-      currentPeriodEnd: null,
+      currentPeriodEnd: daysFromNow(20),
       trialEndsAt: daysFromNow(20),
     });
     const s = await getSubscriptionState("t1", NOW);
-    expect(s.state).toBe("trialing");
+    expect(s.state).toBe("active");
     expect(s.restriction).toBe("none");
-    expect(s.daysLeft).toBe(20);
-    expect(s.cta).toBe(null);
   });
 
-  it("trialing avec moins de 7 jours : cta=upgrade", async () => {
+  it("trialing avec trialEndsAt passe -> reste active (pivot vente directe)", async () => {
+    // Avant pivot : ce cas aurait declenche read_only. Apres pivot : le
+    // status legacy n'est plus interprete comme expiration ; seul un
+    // subscriptionStatus='past_due' / 'canceled' provoque restriction.
     dbMock.tenant.findUnique.mockResolvedValue({
       plan: "starter",
       subscriptionStatus: "trialing",
-      currentPeriodEnd: null,
-      trialEndsAt: daysFromNow(5),
-    });
-    const s = await getSubscriptionState("t1", NOW);
-    expect(s.cta).toBe("upgrade");
-  });
-
-  it("trial expire depuis 5 jours -> read_only avec daysLeft=25", async () => {
-    dbMock.tenant.findUnique.mockResolvedValue({
-      plan: "starter",
-      subscriptionStatus: null,
-      currentPeriodEnd: null,
+      currentPeriodEnd: daysFromNow(15),
       trialEndsAt: daysAgo(5),
     });
     const s = await getSubscriptionState("t1", NOW);
-    expect(s.state).toBe("trial_expired");
-    expect(s.restriction).toBe("read_only");
-    expect(s.daysLeft).toBe(READ_ONLY_PERIOD_DAYS - 5);
-    expect(s.cta).toBe("upgrade");
+    expect(s.state).toBe("active");
+    expect(s.restriction).toBe("none");
   });
+});
 
-  it("trial expire depuis 35 jours (>30) -> suspended", async () => {
-    dbMock.tenant.findUnique.mockResolvedValue({
-      plan: "starter",
-      subscriptionStatus: null,
-      currentPeriodEnd: null,
-      trialEndsAt: daysAgo(35),
-    });
-    const s = await getSubscriptionState("t1", NOW);
-    expect(s.state).toBe("suspended");
-    expect(s.restriction).toBe("blocked");
-    expect(s.cta).toBe("upgrade");
+// Sanity: la constante existe toujours, on l'utilise pour past_due > 7j.
+// (importee plus haut, on s'assure juste qu'elle n'a pas ete renommee)
+describe("READ_ONLY_PERIOD_DAYS constante", () => {
+  it("vaut 30 jours par defaut (cf. doc subscription-state.ts)", () => {
+    expect(READ_ONLY_PERIOD_DAYS).toBe(30);
   });
 });
 
