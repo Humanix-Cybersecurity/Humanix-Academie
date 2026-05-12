@@ -175,3 +175,17 @@ Puis on reste sur Prisma 5.22 en attendant qu'on planifie la migration v7 + driv
 |---|---|---|
 | 2026-05-11 | Florian + Claude | Tentative migration 5.22 → 7.8 — bloqué par breaking `url` in schema |
 | 2026-05-11 | Florian + Claude | Pivot : migration 5.22 → 6.16 (stable, sans driver adapter) |
+| 2026-05-12 | Florian + Claude | **2e tentative Prisma 7 — bloquée par Turbopack/Next 16** : driver adapter `@prisma/adapter-pg` pull `pg` qui require `dns`/`net`/`tls`/`fs`. Turbopack en Next 16 ne respecte pas `serverExternalPackages` pour les transitives natives (`pg-connection-string`, `pgpass`). Pas de flag pour désactiver Turbopack en build Next 16 (`--no-turbo` n'existe pas). **Bloqué tant que** : (a) Turbopack supporte les externals natifs correctement, OU (b) un adapter Prisma 7 alternatif Worker-compatible existe pour Postgres self-host. Cf. issue upstream. |
+
+## 9. Pourquoi ce bloqueur n'a pas été anticipé en § 0
+
+La doc § 0 (mai 2026) parlait du breaking `url` in schema. À l'époque, le projet utilisait encore Next 15 + webpack. Avec ce stack, `serverExternalPackages` aurait fonctionné et la migration aurait été faisable en ~1 semaine d'effort.
+
+**Le changement de contexte de mai 2026 (Phase 5c — Next 16 + Turbopack default)** a transformé un problème d'effort en un **vrai bloqueur d'écosystème**. Tant que Turbopack v16 ne supporte pas les externals natifs comme webpack le fait, Prisma 7 + `@prisma/adapter-pg` + self-host Postgres est inutilisable.
+
+## 10. Pistes pour débloquer
+
+- Surveiller la sortie de **Next 16.3+ ou 17** : Turbopack peut résoudre les externals natifs.
+- Évaluer **`@prisma/adapter-pg-worker`** s'il sort (compatibilité fetch/Worker → pas de `dns`/`net`).
+- Évaluer **Neon serverless** (cloud Postgres compatible fetch) — implique migration infra.
+- **Rester sur Prisma 6.x** indéfiniment : pas de breaking, support long terme tant que Prisma 6 reçoit des patches sécu.
