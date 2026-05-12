@@ -97,11 +97,10 @@ export function middleware(req: NextRequest) {
 //   - _next/image  (Next image optimizer)
 //   - favicon.ico
 //   - api/health   (UptimeRobot, monitoring -- ne doit pas dependre du tenant)
-//   - api/debug    (diagnostic temporaire -- a supprimer une fois bug fixe)
 //   - api/payments/webhook (Payplug, signature externe -- pas de host check)
 //   - .well-known  (security.txt, ACME challenges)
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|api/health|api/debug|api/payments/webhook|\\.well-known).*)",
+    "/((?!_next/static|_next/image|favicon.ico|api/health|api/payments/webhook|\\.well-known).*)",
   ],
 };
