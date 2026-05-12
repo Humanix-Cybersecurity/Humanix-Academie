@@ -2,13 +2,13 @@
 //
 // SiteFooter - refonte pro mai 2026 (cible : credibilite "French Tech")
 //
-// Probleme avant : 5 colonnes, melange aleatoire d'emojis (certains liens en
-// avaient, d'autres non), catégorie "Outils gratuits" en accent qui rivalisait
-// avec le reste, hierarchie visuelle confuse.
-//
 // Refonte :
-//   - 4 colonnes equilibrees (Produit / Solutions / Confiance / Legal)
-//   - Aucun emoji dans les listes de liens (cree du bruit visuel)
+//   - 4 colonnes equilibrees (Notre offre / Outils / Confiance / Legal)
+//   - Les 2 premieres colonnes refletent strictement la nav header
+//     (HeaderBar.tsx -> PRODUIT_ITEMS et SOLUTIONS_ITEMS). Memes labels,
+//     memes regroupements -- pas de "Cyber-meteo / Observatoire fuites /
+//     Anecdotes" en footer puisqu'au header ils sont regroupes sous
+//     "Ressources" (page /ressources). Footer = sitemap aligne au header.
 //   - Bandeau identite haut : logo + tagline + Made in France
 //   - Bandeau bas : copyright + identite legale + 3 trust badges
 //     (FR / RGPD / RGAA) en pills coherentes
@@ -40,35 +40,35 @@ type FooterLink = {
 // qui regarde le site commercial.
 const DEMO_LINK: FooterLink =
   process.env.DEMO_MODE === "true"
-    ? { href: "/demo", label: "Démo en ligne", emoji: "🎮" }
+    ? { href: "/demo", label: "Démo", emoji: "🎮" }
     : {
         href: "https://demo.humanix-academie.fr",
-        label: "Démo en ligne",
+        label: "Démo",
         emoji: "🎮",
         external: true,
       };
 
-const PRODUIT: FooterLink[] = [
+// Colonne "Notre offre" -- miroir strict de PRODUIT_ITEMS dans HeaderBar.tsx
+const NOTRE_OFFRE: FooterLink[] = [
   { href: "/tarifs", label: "Tarifs", emoji: "💶" },
   DEMO_LINK,
-  { href: "/comparatif", label: "Comparatif honnête", emoji: "⚖️" },
-  { href: "/integrations", label: "Connecteurs", emoji: "🔌" },
+  { href: "/comparatif", label: "Comparatif", emoji: "⚖️" },
+  { href: "/integrations", label: "Intégrations", emoji: "🔌" },
   { href: "/marketplace", label: "Marketplace", emoji: "🏛" },
   { href: "/famille", label: "Cyber Famille", emoji: "❤️" },
-  { href: "/experts", label: "Bibliothèque d'experts", emoji: "✍️" },
 ];
 
-const SOLUTIONS: FooterLink[] = [
+// Colonne "Outils" -- miroir strict de SOLUTIONS_ITEMS dans HeaderBar.tsx,
+// + "Communauté" (entree de nav header de meme niveau).
+// /ressources regroupe cyber-meteo, observatoire-fuites, audit-flash, anecdotes.
+const OUTILS: FooterLink[] = [
   { href: "/dpo", label: "Espace DPO", emoji: "🛡" },
   { href: "/pour-les-daf", label: "Pour les DAF", emoji: "💼" },
-  { href: "/ressources", label: "Ressources gratuites", emoji: "📂" },
-  { href: "/communaute", label: "Communauté", emoji: "🤝" },
+  { href: "/ressources", label: "Ressources", emoji: "📂" },
+  { href: "/securite", label: "Trust Center", emoji: "🔐" },
   { href: "/manifeste", label: "Manifeste", emoji: "📜" },
   { href: "/urgence-cyber", label: "Urgence cyber", emoji: "🚨" },
-  { href: "/audit-flash", label: "Audit cyber gratuit", emoji: "🎯" },
-  { href: "/cyber-meteo", label: "Cyber-météo France", emoji: "🇫🇷" },
-  { href: "/observatoire-fuites", label: "Observatoire fuites FR", emoji: "📊" },
-  { href: "/anecdotes", label: "Cyber-Anecdote du Lundi", emoji: "📅" },
+  { href: "/communaute", label: "Communauté", emoji: "🤝" },
 ];
 
 const CONFIANCE: FooterLink[] = [
@@ -191,8 +191,8 @@ export default function SiteFooter() {
 
         {/* ============ Grille 4 colonnes ============ */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 mb-10">
-          <FooterColumn title="Produit" links={PRODUIT} />
-          <FooterColumn title="Solutions" links={SOLUTIONS} />
+          <FooterColumn title="Notre offre" links={NOTRE_OFFRE} />
+          <FooterColumn title="Outils" links={OUTILS} />
           <FooterColumn title="Confiance" links={CONFIANCE} />
           <FooterColumn title="Légal" links={LEGAL} />
         </div>
