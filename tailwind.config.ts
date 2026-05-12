@@ -1,6 +1,16 @@
 import type { Config } from "tailwindcss";
 
-const config: Config = {
+// Tailwind v4 : le type `Config` ne declare plus la propriete `safelist`
+// (la voie moderne est `@source inline()` en CSS). Mais le mode compat
+// charge par la directive `@config` dans globals.css continue de respecter
+// la safelist du fichier JS. On etend donc le type pour permettre la
+// declaration. Quand on fera la migration CSS-first complete (PR ulterieure),
+// les safelist passeront en `@source inline()` et ce cast disparaitra.
+type ConfigWithSafelist = Config & {
+  safelist?: Array<string | { pattern: RegExp; variants?: string[] }>;
+};
+
+const config: ConfigWithSafelist = {
   darkMode: "class",
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",

@@ -1,6 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind v4 : un seul import remplace les 3 directives @tailwind v3.
+   La directive @config reutilise notre tailwind.config.ts existant
+   (safelist + colors HumaniX + fontFamily) — migration CSS-first
+   (avec @theme blocks) deferee a une PR ulterieure. */
+@import "tailwindcss";
+@config "../tailwind.config.ts";
 
 /* =============================================================================
    Cross-OS flag emoji rendering
@@ -263,9 +266,13 @@
     box-shadow: none;
   }
 
-  /* Card hero : carte premium avec gradient HumaniX (pour CTA majeurs) */
+  /* Card hero : carte premium avec gradient HumaniX (pour CTA majeurs).
+     Tailwind v4 : @apply ne peut plus referencer une classe custom definie
+     dans le meme @layer. On inline le gradient ici (meme valeur que la
+     classe .bg-humanix-hero ci-dessous, qui reste utilisable cote JSX). */
   .card-hero {
-    @apply rounded-3xl bg-humanix-hero text-white p-8 shadow-xl;
+    @apply rounded-3xl text-white p-8 shadow-xl;
+    background-image: linear-gradient(135deg, #0B3D91 0%, #00A3A1 100%);
   }
   /* MD2 : hero garde son gradient mais shadow attenuee en dark */
   .dark .card-hero {
