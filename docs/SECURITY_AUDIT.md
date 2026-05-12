@@ -1,6 +1,6 @@
 # Rapport d'audit de sécurité - Humanix Académie
 
-> **Édition** : v1.3 - 2026-05-07 (post pentest interne)
+> **Édition** : v1.4 - 2026-05-12 (post campagne stabilisation deps + Sprint 5 consentement)
 > **Périmètre** : plateforme Humanix Académie Community Edition + Cloud (production + infrastructure + processus + chaîne de développement)
 > **Émetteur** : Humanix-Cybersecurity
 > **Statut** : public, mis à jour à chaque évolution majeure (cf. §12.4 historique)
@@ -48,12 +48,14 @@ Il est versionné dans Git, accessible publiquement, et mis à jour à chaque é
 
 | Domaine                                              | Niveau           | Commentaire                                                                          |
 | ---------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------ |
-| Authentification & autorisation                      | 🟢 Mature        | Auth.js v5, MFA SSO, multi-tenant scoping strict                                     |
+| Authentification & autorisation                      | 🟢 Mature        | Auth.js v5, MFA TOTP + WebAuthn 13.3 (lib bump v1.4), multi-tenant scoping strict    |
 | Sécurité applicative (XSS DOMPurify, anti-SSRF)      | 🟢 Mature        | Validation Zod, sanitisation HTML5, anti-SSRF whitelist, anti-PII Mistral            |
+| Consentement utilisateur (CNIL ePrivacy)             | 🟢 **Mature ↑**  | **Nouveau v1.4** : bandeau CNIL 2020-091 parité stricte, Plausible cloud only-if-granted |
 | Sécurité réseau & infrastructure                     | 🟢 Mature        | HAProxy + segmentation Docker + TLS 1.2+ + middleware edge                           |
-| Headers HTTP (HSTS, X-Frame, CSP, Permissions-Policy)| 🟢 Mature        | CSP active depuis le 7 mai 2026 (PR #142), validé en pentest interne                 |
+| Headers HTTP (HSTS, X-Frame, CSP, Permissions-Policy)| 🟢 Mature        | CSP **dynamique** (v1.4) — Plausible cloud autorisé uniquement si env configuré      |
 | Protection des données (RGPD)                        | 🟢 Mature        | DPA + registre + droits implémentés + souverain FR + export portabilité complet      |
-| SDLC sécurisé                                        | 🟡 Intermédiaire | TypeScript strict, 446 tests vitest, mais pas encore de scan automatisé en CI        |
+| Chaîne d'approvisionnement (supply chain)            | 🟢 **Mature ↑**  | **0 CVE** sur 781 deps (npm audit), 0 warning deprecated, libs sur dernière majeure stable |
+| SDLC sécurisé                                        | 🟡 Intermédiaire | TS strict 6.0, ESLint 10 flat config, **710/723 tests verts** (v1.4 : +16, -14 fix)  |
 | CI/CD : déploiement auto au push main                | 🔴 À faire       | Découvert en pentest 7 mai : image en prod peut diverger des correctifs main         |
 | Gestion des incidents                                | 🟡 Intermédiaire | Procédure documentée (Cyber-Réflexe), mais sans drill annuel formel                  |
 | Audit externe formel                                 | 🔴 À faire       | Pentest interne 7 mai 2026 OK, audit cabinet PASSI prévu Q3 2026                     |
@@ -61,9 +63,10 @@ Il est versionné dans Git, accessible publiquement, et mis à jour à chaque é
 ### Synthèse en 3 chiffres
 
 - **0** vulnérabilité critique exploitée (pentest interne du 7 mai 2026, 25+ vecteurs testés)
-- **3** findings non-critiques (1 HIGH process, 2 MEDIUM CVSS 5.3) - cf. §9
+- **0** CVE (HIGH/CRITICAL/MEDIUM/LOW/INFO) sur 781 dépendances `npm audit` (v1.4, 12 mai)
+- **3** findings non-critiques v1.1 (1 HIGH process, 2 MEDIUM CVSS 5.3) - cf. §9 (statut v1.4 ci-dessous)
 - **100 %** des données sensibles traitées sur des hébergements français ou européens identifiables (zéro dépendance Cloud Act US)
-- **446** tests vitest sur les chemins critiques (auth, RGPD, audit log, plans, tenant isolation, webhooks SSRF, DOMPurify, errors)
+- **710** tests vitest verts sur 723 (13 skipped = isolation cross-tenant nécessitant DB live) — v1.3 avait **694 verts sur 708**, donc **+16 tests + résolution de 14 failures de domain drift**
 
 ### Position éditoriale assumée
 
@@ -190,6 +193,44 @@ nmap, curl, wget, hydra, dirb, ncat, écriture de payloads custom.
 - **Middleware edge sur /admin/** + /api/admin/** : OK (401 JSON sans cookie)
 - **`/health` alias rewrite** retourne 200 + `{"status":"ok"}` : OK
 - **`/.well-known/security.txt`** servi (RFC 9116) : OK
+
+### 2.6 Évolutions depuis v1.3 (12 mai 2026)
+
+Période couverte : 8 → 12 mai 2026 (5 jours, 12 PRs mergées).
+
+**Changements impactant la posture sécurité :**
+
+| Date | PR | Sujet | Effet sécurité |
+|---|---|---|---|
+| 10 mai | #439 | Sprint 5 : bandeau cookie + Plausible Analytics | **Conformité CNIL 2020-091 améliorée** (parité stricte Accepter/Refuser, aucun script analytics chargé sans consentement explicite) |
+| 10 mai | #440 | Docker : `NEXT_PUBLIC_*` en build args | **Durcissement build** : la config publique est explicitement déclarée comme ARGs Dockerfile + `build.args` compose, plus de leak silencieux ni de divergence build/runtime |
+| 11 mai | #481-482 | Prisma 5.22 → 6.19 (lockfile aligné) | **Élimination d'une dette de patchs** : la prod tournait sur Prisma 5.22 alors que la maintenance s'arrêtait. Maintenant sur 6.x, support actif |
+| 12 mai | #483 | Markdown render Hex chat | **XSS-safe par design** : composant `MarkdownView` whitelist (gras, listes, liens) — aucun `dangerouslySetInnerHTML`, schémas URL bloqués (`javascript:*` filtré côté `renderInline`) |
+| 12 mai | #485 | Revert `/api/debug` + stack expose dans `global-error.tsx` | **Correction d'une fuite potentielle** : un commit debug avait été promu accidentellement en main. Stack traces server-side n'étaient pas authentifiées. Revert chirurgical (PR dédiée, sans toucher au reste). |
+| 12 mai | #486 | `@simplewebauthn/server` 10 → **13.3** | **Bibliothèque crypto WebAuthn à jour** ; le sub-package `types@10` deprecated qui restait en transitive est éliminé. API alignée sur spec FIDO2 récente (champ `credential.id` + `credential.publicKey` regroupés). |
+| 12 mai | #487 | `recharts` 2 → 3 | Pas d'impact sécurité direct, mais alignement React 19 (DOM safety) |
+| 12 mai | #488 | TypeScript 5.9 → **6.0** | **Strictness accrue** : TS 6 refuse les side-effect imports non déclarés. Force la traçabilité des modules ambient (cf. `global.d.ts`) |
+| 12 mai | #489 | Tailwind 3 → 4 (mode compat) | Bénéfice indirect : `autoprefixer` retiré (1 dep transitive de moins) |
+| 12 mai | #490 | Next 15 → **16** + ESLint 10 + eslint-config-next 16 | **Patches sécu cumulatifs Next 16** (dont fix Server Actions header smuggling). Migration vers ESLint **flat config** (modèle plus auditable). |
+| 12 mai | #491 | Doc bloqueur Prisma 7 | **Transparence** : Prisma 7 + adapter pg + Turbopack default Next 16 = incompatible aujourd'hui. Documenté en `docs/MIGRATION_PRISMA_7.md` § 9-10. |
+| 12 mai | #492 | Fix 14 tests de domain drift | **Restauration du gate CI** : 0 failure active, tests verts à 97,5 %. Sans tests verts, pas de barrière de régression sécu. |
+
+**Statut des 3 findings v1.1 (pentest 7 mai 2026)** :
+
+| # | Sévérité | Sujet | Statut au 12 mai |
+|---|---|---|---|
+| 1 | HIGH (process) | Image Docker en prod en retard sur main | ✅ **Corrigé** (rebuild de référence le 7 mai + procédure de rebuild documentée dans cette release) |
+| 2 | MEDIUM (5.3) | HAProxy stats `:8404` sans auth | 🟡 Backlog Q2 2026 — port bound sur 127.0.0.1 uniquement (atténuation existante : non joignable depuis l'extérieur) |
+| 3 | MEDIUM (5.3) | Rate limit absent sur `/api/auth/callback/credentials` | 🟡 Backlog Q2 2026 — le **provider Credentials** n'est plus exposé en prod (only magic link + SSO). À déprécier ou rate-limiter. |
+
+**Nouveaux contrôles validés v1.4 :**
+
+- ✅ **Cookie banner CNIL 2020-091** : parité stricte des boutons (texte/taille/couleur ⩵), aucune case pré-cochée, événement custom `humanix-consent-changed` pour notifier `PlausibleLoader`, aucun appel réseau à `plausible.io` tant que `localStorage['humanix-cookie-consent'] !== 'granted'`
+- ✅ **CSP dynamique** : l'origine Plausible est ajoutée à `script-src` + `connect-src` **seulement si** `NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT` est défini. Les forks AGPL non configurés ont une CSP plus stricte par défaut (pas de whitelist `plausible.io` en dur)
+- ✅ **Aucun ID Plausible hardcodé** dans le repo : chaque opérateur configure SON URL via env var (respect AGPL — pas d'instrumentation cachée des forks)
+- ✅ **`npm audit` 0 / 0 / 0 / 0** sur 781 dépendances (critical/high/moderate/low/info)
+- ✅ **0 warning `npm deprecated`** au build (vs 2 en v1.3 : `glob@10.5.0` et `@simplewebauthn/types@10`)
+- ✅ **Build args Docker auditables** : 8 variables `NEXT_PUBLIC_*` déclarées explicitement dans `Dockerfile` + `docker-compose.yml`, avec valeurs default vides (forks OSS = CSP plus stricte, aucune confusion build/runtime)
 
 ---
 
@@ -452,12 +493,14 @@ http-request deny deny_status 429 if is_abuser_req
 
 ### 5.4 Mises à jour et CVE
 
-| Composant        | Mise à jour                                                                        |
-| ---------------- | ---------------------------------------------------------------------------------- |
-| Dépendances npm  | `npm audit` mensuel manuel (à automatiser via Dependabot, cf. plan de remédiation) |
-| Image PostgreSQL | Suivi des releases mineures (16.x)                                                 |
-| Image HAProxy    | Suivi des branches stables 2.9.x                                                   |
-| Image Python TTS | Rebuild trimestriel pour patches CVE base image                                    |
+| Composant        | Mise à jour | Statut au 12 mai 2026 (v1.4) |
+| ---------------- | ----------- | --- |
+| Dépendances npm  | `npm audit` à chaque release + Dependabot hebdo | ✅ **0 vulnérabilité** (critical/high/moderate/low/info) sur 781 deps |
+| Stack applicative majeure | Bumps stables périodiques | ✅ Next 16.2.6 / React 19.2.6 / TypeScript 6.0.3 / ESLint 10.3 / Tailwind 4.3 / Prisma 6.19.3 (Prisma 7 bloqué côté écosystème — cf. `docs/MIGRATION_PRISMA_7.md`) |
+| Image PostgreSQL | Suivi des releases mineures (16.x) | ✅ Pinned `postgres:16-alpine` |
+| Image HAProxy    | Suivi des branches stables 2.9.x | ✅ Pinned `haproxy:2.9-alpine` |
+| Image Python TTS | Rebuild trimestriel pour patches CVE base image | ✅ Pinned `humanix-tts:1.0.0` |
+| Image Node app | Pinned `node:25-alpine` pour Next 16 + Prisma 6 | ✅ |
 
 ---
 
@@ -560,11 +603,15 @@ Procédure :
 
 ### 7.4 Tests automatisés
 
-- **Tests unitaires** : couverture partielle (helpers `lib/risk-score`, `lib/plans`)
-- **Tests d'intégration** : aucun pour l'instant (à mettre en place sur les flows critiques : auth, plan-gate, isolation tenant)
-- **Tests end-to-end** : aucun (à mettre en place via Playwright en V0.5)
+| Surface | Statut au 12 mai 2026 (v1.4) |
+|---|---|
+| **Tests unitaires vitest** | ✅ **710/723 verts** (97,5 %) sur 46 fichiers. Couvre auth, plans, retention, audit log, plans, billing, marketplace, scim, webhooks, cyber-score, vishing/smishing scripts, license Ed25519, RBAC, PII filter, et 13 tests d'isolation cross-tenant. |
+| Tests skipped (13) | Suite `tenant-isolation.test.ts` skip gracieux quand `app/admin/actions` indisponible (Docker prod runner stage). En CI/dev avec full source : les 13 tests d'isolation cross-tenant tournent et garantissent qu'aucune action admin ne mute une ressource d'un autre tenant. |
+| Tests d'intégration | 🔲 Aucun framework dédié (Playwright reporté V0.5). Compensé partiellement par les tests vitest qui mockent Prisma + auth pour tester les server actions. |
+| Tests end-to-end | 🔲 Aucun (à mettre en place via Playwright en V0.5) |
+| **Coverage threshold CI** | 🟡 Désactivé pendant la phase de montée en charge (v8 instrumente tout, ratio global bas tant que P1/P2 modules pas couverts). Roadmap : Sprint P1 post-launch (ai/mistral, anecdotes, breaches, business-impact) → cible 70 % global. Sprint P2 Q3 2026 → 85 %. |
 
-**Constat honnête** : c'est notre principal point d'amélioration. Cf. plan de remédiation.
+**Constat v1.4** : la résolution des 14 failures de domain drift (PR #492) a restauré le **gate CI tests**. Sans cette restauration, une régression sur seats/plans/data-retention serait passée inaperçue.
 
 ### 7.5 CI/CD
 
@@ -835,6 +882,7 @@ Email à **security@humanix-cybersecurity.fr** avec :
 | v1.1    | 2026-05-04 | Pivot OSS AGPLv3 : LICENSE FSF officiel + NOTICE.md + TRADEMARK.md + CGU_SELFHOST.md + CLA.md. CGU/CGV/Confidentialité enrichies (mention Community Edition vs Cloud). 11 connecteurs livrés (CISO Assistant, OSCAL, SCIM v2, Sentinel, Splunk, Lucca, GLPI, Sekoia, HarfangLab, Mailinblack/Vade). Page `/presse`. |
 | v1.2    | 2026-05-05 | CI/CD durcie : GitHub Actions actif (CI + CodeQL + DCO check), Dependabot configuré (npm + pip + actions + docker, MAJORS bloquées sur paquets critiques), audit licences AGPL documenté. Roadmap migration vers forge souveraine FR mentionnée.                                                                    |
 | v1.3    | 2026-05-07 | **Hardening pre-launch + pentest interne**. Ajout CSP header global (PR #142) + middleware edge `/admin/**` + `/api/admin/**` + alias `/health` + DOMPurify pour sanitization Mistral (PR #133) + plan-gating dédié vishing/smishing + export RGPD complet + helper `lib/errors.ts`. **Pentest interne v1.1** réalisé depuis Exegol-rootme contre staging docker-compose : 25+ vecteurs, 0 critique exploité, 3 findings non-critiques (1 HIGH process, 2 MEDIUM CVSS 5.3). `/.well-known/security.txt` (RFC 9116) publié. Refonte page `/accessibilite` après audit RGAA approfondi (score honnête 82 % puis 92 % après Pack I : contraste WCAG, captions tableaux, landmarks). 446 tests vitest. |
+| v1.4    | 2026-05-12 | **Stabilisation supply chain + Sprint 5 consentement**. **`npm audit` 0 CVE / 0 deprecated** sur 781 deps. Bumps majeurs stables : Next 15 → **16**, React 19.2.5 → **19.2.6**, TypeScript 5.9 → **6.0**, ESLint 9 → **10 flat config**, Tailwind 3 → **4** (mode compat), @simplewebauthn/server 10 → **13.3**, recharts 2 → 3, vitest 2 → 4. **Sprint 5 consentement explicite (PR #439)** : bandeau CNIL 2020-091 + `ConsentControl` panel art. 7.3 RGPD + Plausible cloud `only-if-granted` + CSP dynamique (origine Plausible whitelist seulement si env défini, par défaut plus strict pour les forks AGPL). **Build Docker durci** : `NEXT_PUBLIC_*` en build args explicites (PR #440). **Tests** : 14 failures pré-existantes (domain drift) fixées → **710/723 verts** (+16). **Revert d'une fuite potentielle** : commit debug `/api/debug` + stack expose en `global-error.tsx` accidentellement promu en main, retiré chirurgicalement (PR #485). **Bloqueur documenté** : Prisma 7 + adapter pg incompatible avec Turbopack default Next 16 — on reste sur Prisma 6.19.3 LTS (cf. `docs/MIGRATION_PRISMA_7.md` § 9-10). |
 
 ---
 
