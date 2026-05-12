@@ -177,16 +177,38 @@ Au seeding, le log indique la source :
 
 **Étape 2 — Migrer le contenu commercial** :
 
+Note importante sur la structure cible : on copie **le contenu** de `content/saisons/` (les slugs de saisons) directement sous `content-pro/content/`, sans niveau `saisons/` intermédiaire. Ça simplifie l'arborescence du repo privé (qui n'a qu'un seul type de contenu) et le symlink côté public devient plus court.
+
 ```bash
 # Copier (PAS déplacer) vers le repo privé
-cp -r content/saisons ~/humanix-content-pro/content/
+# Le glob copie les sous-dossiers de saisons/ directement sous content-pro/content/
+cp -r content/saisons/* ~/humanix-content-pro/content/
 cp prisma/catalog-saisons.ts ~/humanix-content-pro/prisma/
 cp lib/library-seed.ts ~/humanix-content-pro/lib/
 cp lib/marketplace-seed.ts ~/humanix-content-pro/lib/
-cp -r lib/anecdotes/seed-data.ts ~/humanix-content-pro/lib/anecdotes/
+mkdir -p ~/humanix-content-pro/lib/anecdotes
+cp lib/anecdotes/seed-data.ts ~/humanix-content-pro/lib/anecdotes/
+```
+
+Arbo finale du repo privé :
+```
+humanix-content-pro/
+├── content/
+│   ├── phishing/          ← saisons directement, PAS sous saisons/
+│   ├── mots-de-passe/
+│   └── ... (27 saisons)
+├── prisma/
+│   └── catalog-saisons.ts
+└── lib/
+    ├── library-seed.ts
+    ├── marketplace-seed.ts
+    └── anecdotes/
+        └── seed-data.ts
 ```
 
 **Étape 3 — Activer le `.gitignore` Open Core dans le repo public** (décommenter le bloc dédié, cf. `.gitignore`).
+
+⚠️ La règle pour `content/saisons` doit être **sans slash final** (`/content/saisons`, pas `/content/saisons/`). Avec slash final, git ne matche que les dossiers, alors qu'après l'étape 5 c'est un symlink — donc un fichier pour git.
 
 **Étape 4 — Retirer du tracking git** (les fichiers restent sur le disque) :
 
@@ -199,10 +221,37 @@ git rm --cached lib/anecdotes/seed-data.ts
 git commit -m "open core: split commercial content to private repo"
 ```
 
-**Étape 5 — Monter le contenu privé en prod** (au choix) :
-- **Submodule git** : `git submodule add git@github.com:Humanix-Cybersecurity/humanix-content-pro.git content-pro` + symlinks
-- **Copie au déploiement** : `rsync` du repo privé vers le serveur prod
-- **Volume Docker** : monter le contenu via un volume au runtime
+**Étape 5 — Monter le contenu privé en prod via submodule + symlinks** :
+
+```bash
+# 1. Déclarer le submodule (clone le repo privé sous content-pro/)
+git submodule add git@github.com:Humanix-Cybersecurity/humanix-content-pro.git content-pro
+
+# 2. Créer les 5 symlinks qui ré-aiguillent les chemins attendus par l'app
+#    vers le contenu du submodule. ATTENTION aux chemins relatifs : la cible
+#    d'un symlink se résout depuis le dossier qui CONTIENT le symlink.
+ln -s ../content-pro/content              content/saisons
+ln -s ../content-pro/prisma/catalog-saisons.ts   prisma/catalog-saisons.ts
+ln -s ../content-pro/lib/library-seed.ts         lib/library-seed.ts
+ln -s ../content-pro/lib/marketplace-seed.ts     lib/marketplace-seed.ts
+ln -s ../../content-pro/lib/anecdotes/seed-data.ts lib/anecdotes/seed-data.ts
+
+# 3. Vérification (chaque ligne doit afficher un chemin existant)
+readlink -f content/saisons \
+            prisma/catalog-saisons.ts \
+            lib/library-seed.ts \
+            lib/marketplace-seed.ts \
+            lib/anecdotes/seed-data.ts
+```
+
+⚠️ Pièges constatés à éviter :
+1. **Le 1er symlink pointe vers `../content-pro/content`** (pas `../content-pro/content/saisons`) parce que le repo privé n'a pas de niveau `saisons/` intermédiaire (cf. Étape 2).
+2. **Le préfixe est `../`** (remonter d'un niveau), pas `content-pro/...` direct — sinon la cible se résout vers `content/content-pro/...` qui n'existe pas.
+3. **Pour `lib/anecdotes/seed-data.ts`, c'est `../../`** (deux niveaux à remonter) puisque le symlink vit à deux niveaux de profondeur.
+
+Alternatives au submodule :
+- **rsync au déploiement** : `rsync -av ~/humanix-content-pro/ ./content-pro/` puis mêmes symlinks
+- **Volume Docker** : monter le contenu commercial via un volume au runtime (`-v $HOME/humanix-content-pro:/app/content-pro:ro`)
 
 ### Ce qui change pour qui
 
@@ -211,7 +260,7 @@ git commit -m "open core: split commercial content to private repo"
 | **Toi (Humanix)** | 1 repo monolithique privé | 2 repos : public (code) + privé (contenu). Submodule pour la prod. |
 | **Fork OSS** | N/A (repo privé) | Clone le repo public, obtient **2 saisons démo CC BY-SA**, plateforme fonctionnelle |
 | **Client Cloud SaaS** | catalogue complet via `humanix-cybersecurity.fr` | **Inchangé** : tu sers le contenu commercial complet |
-| **Client self-host Enterprise** | (cas spécifique) | Tu peux livrer le contenu via un tarball signé ou un accès lecture au repo privé selon contrat |
+| **Client self-host Enterprise** | (cas spécifique) | Contrat + licence Ed25519 → accès au content-pro via submodule, tarball signé ou image Docker (cf. section *Obtenir le content-pro*) |
 
 ### Surface technique modifiée
 
@@ -243,6 +292,55 @@ docker compose build --no-cache && docker compose up -d
 # → log seed : "Catalogue (commercial) : 27 saisons / 159 episodes"
 # → /apprendre affiche le catalogue complet
 ```
+
+---
+
+## Obtenir le content-pro (clients Enterprise / self-host sous contrat)
+
+Le repo `Humanix-Cybersecurity/humanix-content-pro` est **privé** : il contient l'asset commercial principal (27 saisons × 6 épisodes + librairie + marketplace + anecdotes). Trois cas se présentent :
+
+### Cas 1 — Cloud SaaS sur `humanix-cybersecurity.fr` (zero action)
+Tu n'as rien à faire : le contenu commercial est servi par l'instance gérée. Le repo privé n'est même pas exposé — c'est Humanix qui opère.
+
+### Cas 2 — Fork OSS pur (zero action)
+Tu clones uniquement le repo public. La plateforme tourne avec les **2 saisons démo CC BY-SA** livrées dans `content/saisons-demo/`. Aucune licence ni démarche requise. Tu peux développer **ton propre catalogue** sous `content/saisons/` (l'app le détectera automatiquement et l'utilisera à la place des démos).
+
+### Cas 3 — Self-host Enterprise avec contenu Humanix complet
+Tu veux héberger la plateforme **chez toi** mais avec le catalogue Humanix complet (par exemple : groupe avec contraintes de souveraineté, secteur défense, OPEX critique). C'est un cas **commercial sous contrat** :
+
+1. **Souscription** : tu signes un contrat de licence Humanix Enterprise (`contact@humanix-cybersecurity.fr`). Le contrat précise la durée, le nombre d'utilisateurs et les conditions de mise à jour du contenu.
+
+2. **Émission d'une licence Ed25519** : Humanix te délivre un fichier `license.key` signé avec sa clé privée Ed25519. La clé publique correspondante est embarquée dans le code public (cf. `lib/license.ts`). Cette licence est :
+   - **Vérifiable hors-ligne** : pas d'appel réseau à Humanix au démarrage de ton instance.
+   - **Liée à ton tenant** : le payload contient ton domaine, ta période de validité, et un quota d'utilisateurs.
+   - **Sans télémétrie** : aucune donnée ne nous remonte.
+
+3. **Accès au content-pro** : selon ce qui est négocié au contrat, **au choix** :
+
+   | Mécanisme | Comment | Quand le choisir |
+   |---|---|---|
+   | **Accès lecture GitHub** | Humanix ajoute ton compte/SSH key en collaborateur lecture sur `humanix-content-pro` | Tu veux les mises à jour automatiques via `git submodule update --remote` |
+   | **Tarball signé** | Humanix livre périodiquement `humanix-content-pro-vX.Y.Z.tar.gz` + signature Ed25519 détachée | Réseau air-gapped, infra interdite d'accès GitHub.com |
+   | **Volume Docker monté** | Humanix livre une image OCI `humanix/content-pro:vX.Y.Z` à monter en `/app/content-pro:ro` | Stack Docker Swarm/Kubernetes, séparation immutable code/contenu |
+
+4. **Mise en place côté infrastructure** : que tu reçoives le contenu via submodule, tarball ou image OCI, le code attend toujours les **mêmes chemins** au runtime (cf. Étape 5 du workflow opérateur). Les 5 symlinks sont identiques quel que soit le mode de livraison.
+
+5. **Vérification de la licence au démarrage** : au boot de l'app, `lib/license.ts:verifyLicense()` :
+   - Lit `LICENSE_KEY` (variable d'env) ou `/etc/humanix/license.key`.
+   - Vérifie la signature Ed25519 contre la clé publique embarquée.
+   - Vérifie la période de validité et le quota d'utilisateurs.
+   - Si la licence est invalide ou absente **mais que le content-pro est présent**, l'app log un warning mais ne bloque pas (mode "self-host non-commercial", l'AGPL te le permet). C'est notre engagement : pas de DRM agressif, juste un mécanisme de preuve commerciale.
+
+### Lien licence ↔ content-pro
+
+| État de la licence | État du content-pro | Comportement attendu |
+|---|---|---|
+| Présente et valide | Présent (commercial) | Mode commercial Enterprise, log `Catalogue (commercial) : 27 saisons` |
+| Absente | Présent (commercial) | App fonctionne, warning licence dans les logs, header `X-Humanix-License: missing` sur les responses internes |
+| Présente et valide | Absent | App fonctionne en mode démo (`Catalogue (demo) : 2 saisons`), warning content-pro |
+| Absente | Absent | Fork OSS standard, mode démo, aucune mention licence |
+
+> **Pour les ayants droit potentiels** : envoie un mail à `contact@humanix-cybersecurity.fr` avec ton cas d'usage. Réponse sous 48h ouvrées avec devis et conditions.
 
 ---
 

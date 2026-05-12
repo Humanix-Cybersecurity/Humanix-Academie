@@ -311,6 +311,18 @@ Tarifs cloud : voir [humanix-cybersecurity.fr/tarifs](https://humanix-cybersecur
 
 📝 **Contribuer un module pédagogique ?** [`content/community/README.md`](./content/community/README.md) — frontmatter, workflow de review, licence CC BY-SA 4.0.
 
+### Catalogue complet en self-host
+
+Au démarrage, l'app détecte automatiquement quelle source de contenu utiliser :
+
+| Tu as cloné ce repo et... | L'app charge | Source |
+|---|---|---|
+| ...tu n'as rien fait | **2 saisons démo CC BY-SA** (6 modules) | `content/saisons-demo/` |
+| ...tu as ajouté **tes propres** saisons sous `content/saisons/` | **Ton catalogue** | `content/saisons/` |
+| ...tu as souscrit un contrat Humanix Enterprise | **27 saisons commerciales** (159 modules) | Repo privé `humanix-content-pro` monté en submodule |
+
+Le 3e cas (contenu commercial Humanix complet en self-host) nécessite une licence Ed25519 signée par Humanix. Procédure détaillée dans [`docs/OPEN_CORE.md`](./docs/OPEN_CORE.md#obtenir-le-content-pro-clients-enterprise--self-host-sous-contrat). Premier contact : `contact@humanix-cybersecurity.fr`.
+
 ---
 
 ## Tarifs cloud (4 paliers · vente directe sans essai gratuit)

@@ -90,8 +90,9 @@ export function loadMarketplaceModules(): any[] {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function loadAnecdoteSeeds(): any[] {
   const pro = tryRequire("../lib/anecdotes/seed-data");
+  if (pro && Array.isArray(pro.ANECDOTES_SEED)) return pro.ANECDOTES_SEED;
+  // Tolere d'anciens noms d'export pour compat fork
   if (pro && Array.isArray(pro.ANECDOTE_SEEDS)) return pro.ANECDOTE_SEEDS;
-  // Certains projets exportent sous un nom different
   if (pro && Array.isArray(pro.SEED_ANECDOTES)) return pro.SEED_ANECDOTES;
   return [];
 }
