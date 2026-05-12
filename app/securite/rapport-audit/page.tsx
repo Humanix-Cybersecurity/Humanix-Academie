@@ -38,14 +38,15 @@ export default function RapportAuditPage() {
           </div>
           <div>
             <p className="text-xs uppercase tracking-widest opacity-80 font-bold mb-1">
-              Édition v1.1 · 7 mai 2026 · pentest interne
+              Édition v1.4 · 12 mai 2026 · stabilisation supply chain
             </p>
             <h2 className="text-xl font-bold">
-              Rapport complet (PDF, ~12 pages)
+              Rapport complet (~14 pages)
             </h2>
             <p className="text-sm opacity-90 mt-1">
               Méthodologie, périmètre, contrôles vérifiés, gaps assumés, plan de
-              remédiation à 6 mois.
+              remédiation à 6 mois — avec mise à jour post-Sprint 5 (consentement
+              CNIL 2020-091) et 12 PRs de stabilisation deps.
             </p>
           </div>
           <a
@@ -59,10 +60,11 @@ export default function RapportAuditPage() {
       </div>
 
       {/* Synthèse en chiffres */}
-      <section className="grid grid-cols-3 gap-3 mb-10">
+      <section className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
         <Stat value="0" label="vulnérabilité critique exploitée" tone="success" />
+        <Stat value="0" label="CVE npm audit (781 deps scannées)" tone="success" />
         <Stat value="100 %" label="hébergement France/UE" tone="info" />
-        <Stat value="3" label="findings high/medium à corriger" tone="warn" />
+        <Stat value="710" label="tests vitest verts (97,5 %)" tone="info" />
       </section>
 
       {/* Pentest interne v1.1 - résultats détaillés */}
@@ -90,8 +92,8 @@ export default function RapportAuditPage() {
             title="Image Docker en production en retard sur les correctifs"
             cvss="N/A (process)"
             issue="L'image humanix-academie-app déployée a été construite avant le merge des PRs #142 (CSP + middleware admin + alias /health), #133 (sanitization Mistral DOMPurify) et #150-#153 (a11y + typos). Vérifié en pentest : header Content-Security-Policy absent, /health renvoie 404, middleware edge-runtime absent du bundle."
-            fix="Reconstruire et redéployer l'image humanix-academie-app à partir de main:14d21f2 (incluant tous les correctifs). Mettre en place une CI/CD avec déclenchement auto au push sur main."
-            status="fixed-in-code-pending-deploy"
+            fix="Reconstruire et redéployer l'image humanix-academie-app à partir de main. Mettre en place une CI/CD avec déclenchement auto au push sur main. ✅ Rebuild effectué le 7 mai 2026. Procédure documentée pour la rotation. CI/CD auto reste TODO Q3 (cf. § 10)."
+            status="fixed"
           />
           <Finding
             severity="medium"
@@ -140,6 +142,123 @@ export default function RapportAuditPage() {
         </details>
       </section>
 
+      {/* Evolutions v1.4 */}
+      <section className="card mb-10 border-l-4 border-accent-500">
+        <p className="text-xs uppercase tracking-widest text-accent-500 font-bold mb-2">
+          🔁 Évolutions · 8 → 12 mai 2026 (12 PRs)
+        </p>
+        <h2 className="text-2xl font-bold text-primary-500 mb-3">
+          Ce qui a changé depuis l'édition v1.3
+        </h2>
+        <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+          Période de stabilisation supply chain (12 PRs, bumps stables majeurs)
+          et déploiement du <strong>consentement explicite CNIL 2020-091</strong>.
+          Aucune régression sécurité, plusieurs durcissements.
+        </p>
+        <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-2 list-none">
+          <li className="flex items-start gap-2">
+            <span aria-hidden="true">✅</span>
+            <span>
+              <strong>Bandeau cookie CNIL 2020-091</strong> en parité stricte
+              (texte/taille/couleur identiques pour Accepter et Refuser, aucune
+              case pré-cochée). Plausible Analytics chargé{" "}
+              <strong>uniquement</strong> si consentement explicite. Article 7.3
+              RGPD : panneau de révocation sur <Link href="/cookies" className="underline">/cookies</Link>.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span aria-hidden="true">✅</span>
+            <span>
+              <strong>Aucun ID Plausible hardcodé</strong> dans le repo AGPL :
+              chaque opérateur configure le SIEN via{" "}
+              <code className="px-1 py-0.5 rounded bg-gray-100 dark:bg-slate-800 text-xs">
+                NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT
+              </code>
+              . Pas d'instrumentation cachée des forks.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span aria-hidden="true">✅</span>
+            <span>
+              <strong>CSP dynamique</strong> : l'origine Plausible n'est ajoutée
+              à <code className="text-xs">script-src</code> +{" "}
+              <code className="text-xs">connect-src</code> que si l'env est
+              configurée. CSP par défaut <strong>plus stricte</strong> pour les
+              forks AGPL non configurés.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span aria-hidden="true">✅</span>
+            <span>
+              <strong>0 CVE</strong> (toutes sévérités confondues) sur{" "}
+              <strong>781 dépendances</strong> npm — vérification automatisée à
+              chaque release + Dependabot hebdo.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span aria-hidden="true">✅</span>
+            <span>
+              <strong>0 warning &laquo; deprecated &raquo;</strong> au build
+              (vs 2 en v1.3 : <code className="text-xs">glob@10.5.0</code> et{" "}
+              <code className="text-xs">@simplewebauthn/types@10</code>).
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span aria-hidden="true">✅</span>
+            <span>
+              <strong>WebAuthn lib bumpée 10 → 13.3</strong> (latest stable FIDO2).
+              <strong> TypeScript 6.0</strong> (strictness accrue, side-effect
+              imports désormais explicites). <strong>Next.js 16.2</strong> +
+              <strong> ESLint 10 flat config</strong>.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span aria-hidden="true">✅</span>
+            <span>
+              <strong>Build Docker durci</strong> : 8 variables{" "}
+              <code className="text-xs">NEXT_PUBLIC_*</code> en build args
+              explicites (Dockerfile + docker-compose). Plus de divergence
+              build/runtime silencieuse.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span aria-hidden="true">✅</span>
+            <span>
+              <strong>Tests CI restaurés</strong> : 14 failures préexistantes
+              (domain drift mai 2026) fixées. Suite à 710/723 verts (13 skipped
+              attendus en runtime constraint). Gate de régression sécurité actif.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span aria-hidden="true">✅</span>
+            <span>
+              <strong>Correction d'une fuite potentielle</strong> :{" "}
+              <code className="text-xs">/api/debug</code> + stack expose en{" "}
+              <code className="text-xs">global-error.tsx</code> accidentellement
+              promu en main lors d'un bump deps, retiré chirurgicalement (PR
+              dédiée).
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span aria-hidden="true">📋</span>
+            <span>
+              <strong>Transparence supply chain</strong> : Prisma 7 + adapter pg
+              est documenté comme bloqué par Turbopack default Next 16. On reste
+              sur Prisma 6.19.3 LTS (cf.{" "}
+              <Link
+                href="https://github.com/Humanix-Cybersecurity/Humanix-Academie/blob/main/docs/MIGRATION_PRISMA_7.md"
+                className="underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                docs/MIGRATION_PRISMA_7.md
+              </Link>
+              ).
+            </span>
+          </li>
+        </ul>
+      </section>
+
       {/* Synthèse niveaux */}
       <section className="card mb-10">
         <h2 className="text-2xl font-bold text-primary-500 mb-4">
@@ -161,7 +280,7 @@ export default function RapportAuditPage() {
             level="mature"
           />
           <Maturity
-            label="SDLC sécurisé (TypeScript strict, Prisma ORM, vitest 446 tests)"
+            label="SDLC sécurisé (TypeScript 6 strict, Prisma ORM, vitest 710 tests verts)"
             level="intermediate"
           />
           <Maturity
