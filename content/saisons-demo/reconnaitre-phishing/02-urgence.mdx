@@ -1,0 +1,82 @@
+---
+title: "Le levier d'urgence"
+durationMinutes: 5
+persona: "tous"
+objective: "Reconnaitre la manipulation par urgence et savoir prendre 30 secondes pour verifier"
+xpReward: 40
+scenario: |
+  Le directeur financier recoit un email de "son" directeur general :
+  "Je suis en RDV client important. URGENT : peux-tu virer 47 000 EUR
+  sur ce compte ce matin ? Confidentiel, ne deranger personne. Merci."
+  L'email vient de "dg-humanix@gmail.com" et est signe "Patrick".
+  Que faire ?
+choices:
+  - id: "a"
+    label: "Faire le virement immediatement, le DG fait confiance"
+    outcome: "bad"
+    feedback: "Piege classique de fraude au president. L'urgence + secret + autorite = signaux d'alerte cumules."
+    points: -20
+  - id: "b"
+    label: "Appeler le DG sur son numero professionnel pour confirmer (PAS le numero indique dans l'email)"
+    outcome: "good"
+    feedback: "Bonne reaction. Verification par canal alternatif. Le DG n'utiliserait jamais Gmail pour un virement urgent."
+    points: 25
+  - id: "c"
+    label: "Repondre a l'email en demandant les details du destinataire"
+    outcome: "bad"
+    feedback: "Mauvaise idee. Tu rentres dans le dialogue avec l'attaquant qui va te rassurer et accelerer l'urgence."
+    points: -10
+quizCorrectAnswer: "b"
+takeaway: |
+  Urgence + secret + autorite = arnaque dans 99 % des cas. Prendre 30
+  secondes pour verifier par un canal alternatif coute beaucoup moins
+  cher qu'un virement perdu.
+licence: "CC BY-SA 4.0 — Humanix Academie Community Edition"
+---
+
+# Le levier d'urgence
+
+L'urgence est l'**arme psychologique principale** du phishing. Elle court-
+circuite la reflexion en activant le mode "reaction immediate". Couplee
+a l'**autorite** (faux DG, DSI, banquier) et au **secret** ("ne deranger
+personne, c'est confidentiel"), le combo est devastateur.
+
+## Les signaux qui doivent declencher une alerte
+
+| Signal | Pourquoi c'est suspect |
+|---|---|
+| **Delai court** ("dans l'heure", "avant 18h", "tres urgent") | Empeche la verification |
+| **Heure inhabituelle** (vendredi 17h, weekend, ferie) | Bypass les controles |
+| **Secret demande** ("confidentiel", "ne deranger personne") | Empeche les contre-verifications |
+| **Source inhabituelle** (Gmail/Outlook perso, telephone perso, WhatsApp) | Le DG officiel n'utilise pas ces canaux |
+| **Demande de virement / d'achat / de code 2FA** | Cible directe de l'attaque |
+| **Ton emotionnel** ("Je compte sur toi", "Ne me decois pas") | Manipulation affective |
+
+## La regle d'or des 30 secondes
+
+Avant toute action sensible :
+1. **Pause** : aucune urgence reelle ne justifie de sauter la verification
+2. **Verification par canal alternatif** :
+   - Appeler le numero pro (annuaire interne, pas celui de l'email)
+   - Passer dans le bureau si c'est interne
+   - Demander une confirmation Slack/Teams pro
+3. **Si confirmation impossible** : escalader au superieur ou au RSSI
+
+## Fraude au president : un cas reel
+
+Le cas FACC Operations (2016) : 50 millions EUR transferes via phishing
+de DG. Le directeur financier a virer 50 fois car le "DG" lui demandait
+de faire des paiements urgents "confidentiels". Au 51e virement, il a
+appele : c'etait un faux email depuis 6 mois.
+
+## Pour aller plus loin
+
+Cette demo Open Core couvre les bases. Le catalogue complet inclut :
+- Fraude au president avancee (deepfake audio/video du DG)
+- BEC (Business Email Compromise)
+- Procedures de double validation pour les virements
+- Simulation realiste avec votre vrai DG (avec son accord)
+- Reponse a incident post-virement frauduleux
+- Coordination avec la banque (rappel de fonds, signalement Tracfin)
+
+Souscrivez a l'offre Cloud Humanix Academie.

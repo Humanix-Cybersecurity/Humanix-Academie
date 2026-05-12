@@ -1,0 +1,95 @@
+---
+title: "Signaler un phishing"
+durationMinutes: 4
+persona: "tous"
+objective: "Savoir signaler un phishing pour proteger ses collegues et alimenter la defense collective"
+xpReward: 40
+scenario: |
+  Un collaborateur recoit un phishing convaincant. Il NE clique PAS,
+  il a bien identifie le piege. Quelle est la meilleure action SUIVANTE ?
+choices:
+  - id: "a"
+    label: "Supprimer l'email et passer a autre chose"
+    outcome: "bad"
+    feedback: "Insuffisant. Le meme email est probablement arrive a 50 autres collegues. Sans signalement, certains vont cliquer."
+    points: -5
+  - id: "b"
+    label: "Transferer l'email au RSSI / au support IT en mentionnant qu'il s'agit d'un phishing"
+    outcome: "good"
+    feedback: "Bonne reaction. L'equipe IT peut bloquer l'expediteur cote serveur de mail et alerter les autres collegues."
+    points: 20
+  - id: "c"
+    label: "Repondre 'arrete ton phishing' a l'expediteur"
+    outcome: "bad"
+    feedback: "Mauvaise idee. Tu confirmes que l'adresse est active et tu donnes une accroche pour la prochaine attaque."
+    points: -10
+quizCorrectAnswer: "b"
+takeaway: |
+  Signaler un phishing = proteger toute l'equipe. Le RSSI peut bloquer
+  l'expediteur a la source et eviter des dizaines de clics potentiels.
+licence: "CC BY-SA 4.0 — Humanix Academie Community Edition"
+---
+
+# Signaler un phishing
+
+Un phishing envoye a une entreprise touche en general **plusieurs dizaines
+de collaborateurs simultanement**. Si tu l'identifies, **signale-le**.
+Tes collegues vont en beneficier directement.
+
+## Pourquoi le signalement est crucial
+
+### Effet "defense collective"
+
+Quand un phishing arrive, il y a typiquement :
+- 5-10 % qui ne le voient meme pas (filtre anti-spam, archive, etc.)
+- 70-80 % qui le voient mais l'ignorent
+- 10-15 % qui le voient et **doutent**
+- 1-5 % qui cliquent
+
+Les 10-15 % qui doutent **ont besoin d'un signal** pour confirmer leur
+doute. Si tu signales l'attaque, le RSSI peut :
+1. Bloquer l'expediteur (filtrage mail au niveau du serveur)
+2. Envoyer une alerte interne ("Phishing en cours, voici les signaux")
+3. Eduquer ceux qui ont clique discretement
+
+## Comment signaler
+
+### En interne
+
+- **Outlook** : bouton "Signaler" (souvent personnalise par l'IT pour
+  envoyer directement au RSSI)
+- **Gmail** : 3 points → "Signaler comme phishing"
+- **Forward** : transferer l'email au RSSI avec mention "phishing
+  suspecte" et ne PAS cliquer sur le lien dans le forward
+
+### En externe (France)
+
+- **Signal Spam** (signal-spam.fr) : plateforme officielle
+- **Phishing Initiative** (phishing-initiative.fr) : pour les URLs
+  malveillantes
+- **Pharos** (internet-signalement.gouv.fr) : pour les contenus illegaux
+- **CERT-FR** (cert.ssi.gouv.fr) : pour les incidents critiques
+
+## Et si on a deja clique ?
+
+C'est **MIEUX de le dire** qu'essayer de cacher. Le RSSI peut :
+- Revoquer les sessions actives
+- Forcer le changement de mot de passe
+- Inspecter les logs pour evaluer l'impact
+- Bloquer les acces si besoin
+
+**Aucune sanction interne ne devrait punir un signalement honnete.** Une
+culture de la honte produit le silence, et le silence produit des
+ransomwares non detectes pendant des semaines.
+
+## Pour aller plus loin
+
+Cette demo Open Core couvre les bases. Le catalogue complet inclut :
+- Procedure formalisee de signalement (avec workflow et SLA)
+- Integration avec un SIEM (Splunk, Sentinel, Sekoia)
+- Plan de reponse a incident post-clic (CERT-FR templates)
+- Communication de crise interne et externe
+- Coordination avec l'autorite (CNIL si fuite RGPD, ANSSI si OSE NIS2)
+- Module dedie aux administrateurs pour gerer le signalement
+
+Souscrivez a l'offre Cloud Humanix Academie.

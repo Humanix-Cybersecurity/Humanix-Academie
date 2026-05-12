@@ -1,0 +1,69 @@
+---
+title: "Ne JAMAIS reutiliser"
+durationMinutes: 5
+persona: "tous"
+objective: "Comprendre le risque du credential stuffing (reutilisation de mot de passe)"
+xpReward: 40
+scenario: |
+  Une fuite de donnees touche un forum dont un collaborateur etait membre.
+  Son email + mot de passe sont publies sur un forum cybercriminel.
+  Que peut faire l'attaquant ensuite ?
+choices:
+  - id: "a"
+    label: "Rien, c'est juste son compte du forum"
+    outcome: "bad"
+    feedback: "Faux. Si le collaborateur a reutilise ce mot de passe ailleurs (boite mail pro, intranet...), tous ces comptes tombent."
+    points: -10
+  - id: "b"
+    label: "Tester le couple email/mot de passe sur 500 autres services (Gmail, Office 365, banques, RH...)"
+    outcome: "good"
+    feedback: "Oui. C'est le credential stuffing, l'attaque la plus rentable du moment. 70 % des employes reutilisent leurs mots de passe."
+    points: 15
+  - id: "c"
+    label: "Demander une rancon au forum pour qu'il efface les donnees"
+    outcome: "bad"
+    feedback: "Non, les donnees sont deja diffusees publiquement. La rancon ne marche que sur de nouvelles cibles."
+    points: -5
+quizCorrectAnswer: "b"
+takeaway: |
+  Un mot de passe = un service. Si vous reutilisez, une seule fuite ouvre
+  tous vos comptes. Le gestionnaire de mots de passe rend cette regle facile.
+licence: "CC BY-SA 4.0 — Humanix Academie Community Edition"
+---
+
+# Ne JAMAIS reutiliser
+
+Le **credential stuffing** est l'attaque numero 1 mondiale en 2024-2026.
+Principe : prendre une base de credentials fuitee (il y en a des milliards
+en circulation), et tester chaque couple email+mdp sur des centaines de
+services populaires en automatise.
+
+## Pourquoi c'est si efficace
+
+Selon plusieurs etudes publiques (Verizon DBIR, Have I Been Pwned), entre
+**60 % et 70 %** des utilisateurs reutilisent leurs mots de passe entre
+au moins 2 services. Pour les attaquants, c'est de l'argent gratuit.
+
+## Comment savoir si on est touche
+
+Le service **Have I Been Pwned** (gratuit, fonde par Troy Hunt, expert
+securite australien) permet de tester si un email apparait dans une fuite
+connue. Tres recommande.
+
+## Solution : un gestionnaire de mots de passe
+
+Au lieu de retenir 50 mots de passe, on en retient UN seul (le master
+password du gestionnaire) qui debloque tous les autres. Le gestionnaire
+genere automatiquement des mots de passe uniques et complexes pour chaque
+service.
+
+Options open source recommandees :
+- **Bitwarden** : gratuit, audit de securite, multi-plateforme
+- **KeePass** / **KeePassXC** : 100 % offline, base SQLite chiffree
+
+## Pour aller plus loin
+
+Cette demo Open Core couvre les bases. Le catalogue complet inclut :
+deploiement de gestionnaire en equipe, politique de rotation, gestion
+des credentials critiques, audit des fuites par tenant... Souscrivez
+a l'offre Cloud Humanix Academie.

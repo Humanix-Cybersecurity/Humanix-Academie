@@ -129,3 +129,24 @@ data/tts-cache/[0-9a-f][0-9a-f]/
 .tts-cache/
 
 .claude/
+
+# =============================================================================
+# Open Core - contenu commercial prive (cf. docs/OPEN_CORE.md)
+# -----------------------------------------------------------------------------
+# Ces fichiers sont l'asset commercial principal de Humanix Cybersecurity :
+# 159 modules MDX + 5500 lignes de catalogues/seeds. Ils doivent rester dans
+# le repo prive `humanix-content-pro` et NE PAS apparaitre dans le repo public.
+#
+# DECOMMENTER ce bloc AVANT le passage public du repo (planifie 26 mai 2026).
+# Cf. docs/OPEN_CORE.md section "Workflow operateur" pour la procedure de
+# migration complete (cp -r + git rm --cached + submodule).
+#
+# Le code est prepare pour un fallback gracieux : si ces fichiers sont absents,
+# l'app bascule automatiquement sur les saisons demo CC BY-SA livrees en OSS
+# (cf. content/saisons-demo/ + prisma/catalog-saisons-demo.ts).
+# =============================================================================
+# /content/saisons/
+# /prisma/catalog-saisons.ts
+# /lib/library-seed.ts
+# /lib/marketplace-seed.ts
+# /lib/anecdotes/seed-data.ts
