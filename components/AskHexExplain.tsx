@@ -18,6 +18,7 @@
 "use client";
 
 import { useState } from "react";
+import MarkdownView from "@/components/MarkdownView";
 
 type Topic = "phishing_email" | "phishing_indicator" | "concept" | "ioc";
 
@@ -184,8 +185,13 @@ export default function AskHexExplain({
               {state.question}
             </em>
           </p>
-          <div className="rounded-xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-4 text-sm text-gray-800 dark:text-gray-100 leading-relaxed whitespace-pre-line">
-            {state.explanation}
+          <div className="rounded-xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-4 text-sm text-gray-800 dark:text-gray-100 leading-relaxed">
+            {/* Markdown render : gras, liens, listes, code, tables.
+                Meme composant XSS-safe que HexChat / HexRecap (PR #434). */}
+            <MarkdownView
+              content={state.explanation}
+              className="[&_p]:!text-gray-800 [&_p]:dark:!text-gray-100"
+            />
           </div>
           <p className="text-[11px] text-gray-500 dark:text-gray-400 italic">
             Hex t&apos;a répondu en mode <strong>{personaLabel(state.persona)}</strong>.{" "}
