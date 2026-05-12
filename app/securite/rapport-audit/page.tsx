@@ -63,8 +63,8 @@ export default function RapportAuditPage() {
       <section className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
         <Stat value="0" label="vulnérabilité critique exploitée" tone="success" />
         <Stat value="0" label="CVE npm audit (781 deps scannées)" tone="success" />
+        <Stat value="0" label="finding pentest non résolu" tone="success" />
         <Stat value="100 %" label="hébergement France/UE" tone="info" />
-        <Stat value="1" label="finding medium restant (stats auth)" tone="warn" />
       </section>
 
       {/* Pentest interne v1.1 - résultats détaillés */}
@@ -100,8 +100,8 @@ export default function RapportAuditPage() {
             title="HAProxy stats interface (port 8404) sans authentification"
             cvss="5.3 (CVSS 3.1, Network/Low/None/None/Unchanged/Low/None/None)"
             issue="Le frontend stats HAProxy bind sur *:8404 sans stats auth. Bien que docker-compose limite l'exposition à 127.0.0.1 sur l'host, tout container partageant le réseau Docker peut accéder anonymement à la page (backends, débit, état des serveurs). Risque d'énumération si l'infra est partagée."
-            fix="Statut au 12 mai 2026 : directive stats auth toujours commentée dans haproxy.cfg ligne 177. Atténuation 127.0.0.1 active (port non joignable de l'extérieur). À activer prochainement avec password en variable d'env."
-            status="todo"
+            fix="Statut au 12 mai 2026 : Basic Auth activée — stats auth admin:${HAPROXY_STATS_PASSWORD} dans haproxy.cfg + haproxy.dev.cfg. Password en variable d'env injectée par docker-compose. stats hide-version ajouté en bonus anti-fingerprint. Healthcheck Docker adapté pour passer les credentials. Verifié : 401 sans auth, 200 avec auth correcte."
+            status="fixed"
           />
           <Finding
             severity="medium"

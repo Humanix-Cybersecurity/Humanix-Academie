@@ -64,7 +64,7 @@ Il est versionné dans Git, accessible publiquement, et mis à jour à chaque é
 
 - **0** vulnérabilité critique exploitée (pentest interne du 7 mai 2026, 25+ vecteurs testés)
 - **0** CVE (HIGH/CRITICAL/MEDIUM/LOW/INFO) sur 781 dépendances `npm audit` (v1.4, 12 mai)
-- **3** findings non-critiques v1.1 (1 HIGH process, 2 MEDIUM CVSS 5.3) - cf. §9 (statut v1.4 ci-dessous)
+- **3 / 3** findings non-critiques v1.1 résolus en v1.4 (1 HIGH process ✅, 2 MEDIUM CVSS 5.3 ✅) - cf. §9.4
 - **100 %** des données sensibles traitées sur des hébergements français ou européens identifiables (zéro dépendance Cloud Act US)
 - **710** tests vitest verts sur 723 (13 skipped = isolation cross-tenant nécessitant DB live) — v1.3 avait **694 verts sur 708**, donc **+16 tests + résolution de 14 failures de domain drift**
 
@@ -734,17 +734,39 @@ anonymement** à la page stats. Risque réel si l'infra est partagée
 
 **CVSS 3.1** : `AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N` = 5.3 (Medium)
 
-**Statut au 12 mai 2026 (v1.4)** : **encore ouvert**. Le commentaire ligne 177
-de `infra/haproxy/haproxy.cfg` mentionne toujours `# En prod : ajouter "stats
-auth admin:..."` sans que l'instruction soit active. **Atténuation existante** :
-`docker-compose.yml` bind explicitement sur `127.0.0.1:8404` sur l'host, donc
-le port stats N'EST PAS joignable de l'extérieur ni d'un autre container hors
-du réseau Docker `humanix_frontend`. Le risque résiduel reste : compromission
-d'un container partageant le réseau (postgres, tts, ou app lui-même via RCE).
+**Statut au 12 mai 2026 (v1.4)** : ✅ **RÉSOLU**. Mis en place dans
+`infra/haproxy/haproxy.cfg` (et le pendant `haproxy.dev.cfg`) :
 
-**Fix prévu** : décommenter `stats auth admin:<password fort>` ligne 177,
-stocker le mot de passe dans une variable d'env (`HAPROXY_STATS_PASSWORD`).
-Effort estimé : 30 min.
+```
+frontend stats
+    bind *:8404
+    stats enable
+    stats uri /
+    stats refresh 10s
+    stats admin if FALSE
+    stats auth admin:"${HAPROXY_STATS_PASSWORD}"
+    stats realm   Humanix\ HAProxy\ Stats
+    stats hide-version
+```
+
+Le password vient de la variable d'env `HAPROXY_STATS_PASSWORD`, déclarée
+dans `docker-compose.yml#haproxy.environment` avec un default `humanix-stats-
+change-me` (à override en prod via `.env`, cf. `.env.example`). HAProxy
+interpole la variable au chargement du fichier de config.
+
+**Vérification** :
+- `curl http://127.0.0.1:8404/` sans auth → **401 Unauthorized** ✅
+- `curl -u admin:wrong http://127.0.0.1:8404/` → **401** ✅
+- `curl -u admin:humanix-stats-change-me http://127.0.0.1:8404/` → **200** ✅
+
+**Effet collatéral corrigé** : le healthcheck Docker du container HAProxy
+(qui pingait `/` sur 8404 anonymement) a été adapté pour passer les
+credentials via l'URL syntax `http://admin:$HAPROXY_STATS_PASSWORD@127.0.0.1:8404/`
+(BusyBox wget ne supportant pas `--user/--password`). Healthcheck `healthy`
+confirmé après restart.
+
+**Bonus sécurité** : `stats hide-version` ajouté pour éviter le fingerprint
+de la version HAProxy depuis la page stats.
 
 #### Finding 3 — MEDIUM (CVSS 5.3) : Rate limit per-IP absent sur /api/auth
 
@@ -803,7 +825,7 @@ auront été migrés.
 ### Q2 2026 (avant le launch OSS du 26 mai)
 
 1. ⏳ **CI/CD avec redeploy automatique au push main** (réponse à Finding #1 du pentest interne). **Reporté Q3 2026** : pas de budget runners GitHub Actions à la date du 12 mai 2026 (compte facturation bloqué). Mise en place dès résolution. En attendant : procédure manuelle de rebuild documentée + procédure de rollback testée.
-2. ⏳ **HAProxy `stats auth`** sur frontend stats 8404 (Finding #2). **Encore TODO au 12 mai** : commentaire en place mais directive inactive. Atténuation : bind `127.0.0.1:8404` côté docker-compose (port non joignable de l'extérieur).
+2. ✅ **HAProxy `stats auth`** sur frontend stats 8404 (Finding #2) — **livré le 12 mai 2026 (v1.4)**. Directive `stats auth admin:"${HAPROXY_STATS_PASSWORD}"` active dans `haproxy.cfg` + `haproxy.dev.cfg`, password injecté via env var docker-compose (default `humanix-stats-change-me` à override en prod). Healthcheck Docker adapté pour passer les credentials. `stats hide-version` ajouté en bonus anti-fingerprint.
 3. ✅ **Rate limit per-IP** : **considéré résolu de facto** au 12 mai 2026 — HAProxy `stk_abuse` rate-limit globalement à 400 req/10s + 80 erreurs/10s. Le credential provider est par ailleurs progressivement déprécié (magic link + SSO recommandés).
 4. ✅ **Dependabot** sur le repo principal — actif depuis le 5 mai 2026 (cf. v1.2). `npm audit` confirme **0 CVE** sur 781 deps au 12 mai.
 5. ✅ **/.well-known/security.txt** publié (RFC 9116, fait le 7 mai 2026)
