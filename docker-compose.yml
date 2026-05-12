@@ -28,6 +28,14 @@ services:
     image: haproxy:2.9-alpine
     container_name: humanix-haproxy
     restart: unless-stopped
+    environment:
+      # Password Basic Auth pour l'interface stats HAProxy (port 8404).
+      # En dev local : la valeur par defaut suffit (port bind sur 127.0.0.1
+      # uniquement, pas accessible de l'exterieur).
+      # En prod : DOIT etre override avec un password genere aleatoirement
+      # (cf. .env.example). HAProxy refuse de demarrer si la directive est
+      # vide, donc on a un default pour ne jamais bloquer le boot.
+      HAPROXY_STATS_PASSWORD: "${HAPROXY_STATS_PASSWORD:-humanix-stats-change-me}"
     ports:
       # Seul service exposé publiquement
       - "80:80"
@@ -46,12 +54,19 @@ services:
       app:
         condition: service_started
     healthcheck:
+      # Note : depuis l'ajout de `stats auth admin:...` sur le port 8404,
+      # le healthcheck DOIT passer les credentials sinon il recoit 401.
+      # BusyBox wget (image Alpine) ne supporte pas --user/--password, mais
+      # accepte le format URL `http://user:pass@host`. 127.0.0.1 explicite
+      # pour eviter le piege IPv6 dans BusyBox wget.
+      # $$HAPROXY_STATS_PASSWORD : $$ echape l'interpolation docker-compose
+      # pour que le shell du container expand l'env var au runtime.
       test:
         [
           "CMD",
           "sh",
           "-c",
-          "wget -qO- http://localhost:8404/ | grep -q 'Statistics Report'",
+          "wget -qO- \"http://admin:$$HAPROXY_STATS_PASSWORD@127.0.0.1:8404/\" | grep -q 'Statistics Report'",
         ]
       interval: 10s
       timeout: 3s
