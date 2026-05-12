@@ -77,7 +77,12 @@ describe("cutoffFromRetention", () => {
     const cutoff = cutoffFromRetention(730, now);
     expect(cutoff.getUTCFullYear()).toBe(2024);
     expect(cutoff.getUTCMonth()).toBe(4); // mai
-    expect(cutoff.getUTCDate()).toBe(11); // 2024 etait bissextile, 730 = ~2 ans + 1j
+    // 730 = exactement 2 ans pour cette fenetre. Le 29 fevrier 2024 etait
+    // AVANT le 10 mai 2024 (notre anchor de retour), donc PAS dans la
+    // fenetre [2024-05-10 ; 2026-05-10]. Donc 365 + 365 = 730 pile.
+    // (L'ancien commentaire "730 = ~2 ans + 1j" etait une erreur de
+    // raisonnement sur la position de Feb 29 dans la fenetre.)
+    expect(cutoff.getUTCDate()).toBe(10);
   });
 
   it("preserve l'heure (pas de truncation a minuit)", () => {
