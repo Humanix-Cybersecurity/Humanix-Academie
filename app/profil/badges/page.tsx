@@ -197,7 +197,7 @@ function BadgeCard({
         <p className="font-bold text-sm text-gray-500 dark:text-gray-400">
           Badge secret
         </p>
-        <p className="text-[11px] text-gray-400 italic mt-1">
+        <p className="text-[11px] text-gray-500 italic mt-1">
           Continue ton parcours pour le découvrir.
         </p>
       </article>

@@ -143,7 +143,7 @@ export default function CodirMode(props: CodirModeProps) {
                 </p>
                 <p className="text-7xl sm:text-8xl font-extrabold text-primary-500 leading-none mt-3">
                   {props.collectiveScore}
-                  <span className="text-2xl text-gray-400">/100</span>
+                  <span className="text-2xl text-gray-500">/100</span>
                 </p>
                 <p
                   className={`text-2xl font-bold mt-3 ${VERDICT_TEXT_COLOR[props.scoreVerdictColor]}`}
@@ -241,7 +241,7 @@ export default function CodirMode(props: CodirModeProps) {
             </section>
 
             {/* Pied de page */}
-            <footer className="mt-10 text-xs text-gray-400 text-center">
+            <footer className="mt-10 text-xs text-gray-500 text-center">
               Données extraites en temps réel · Humanix Académie ·{" "}
               <span className="font-mono">{today}</span>
               <br />
