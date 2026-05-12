@@ -18,13 +18,17 @@ import {
   verifyRegistrationResponse,
   verifyAuthenticationResponse,
 } from "@simplewebauthn/server";
+// SimpleWebAuthn v11+ : le package `@simplewebauthn/types` a ete merge dans
+// `@simplewebauthn/server` (et `/browser`). On importe donc les types
+// directement depuis `/server`. Ref :
+// https://simplewebauthn.dev/docs/advanced/server-changelog#v1100
 import type {
   PublicKeyCredentialCreationOptionsJSON,
   PublicKeyCredentialRequestOptionsJSON,
   AuthenticatorTransportFuture,
   RegistrationResponseJSON,
   AuthenticationResponseJSON,
-} from "@simplewebauthn/types";
+} from "@simplewebauthn/server";
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { db } from "@/lib/db";
 
@@ -186,11 +190,16 @@ export async function verifyAndSaveRegistration(params: {
     return { ok: false, error: "not_verified" };
   }
   const info = verification.registrationInfo;
-  // SimpleWebAuthn v10 : credentialID est string b64url, credentialPublicKey
-  // est Uint8Array.
-  const credentialId = info.credentialID;
-  const publicKey = Buffer.from(info.credentialPublicKey).toString("base64url");
-  const counter = info.counter ?? 0;
+  // SimpleWebAuthn v12+ : les champs `credentialID`, `credentialPublicKey`
+  // et `counter` qui etaient a la racine de `registrationInfo` sont
+  // desormais regroupes dans `registrationInfo.credential`. Les champs
+  // `aaguid`, `userVerified` et `credentialBackedUp` restent a la racine.
+  // Ref : https://simplewebauthn.dev/docs/advanced/server-changelog#v1200
+  const credentialId = info.credential.id;
+  const publicKey = Buffer.from(info.credential.publicKey).toString(
+    "base64url",
+  );
+  const counter = info.credential.counter ?? 0;
   const aaguid = info.aaguid ?? null;
   const backedUp = info.credentialBackedUp ?? false;
 
@@ -265,9 +274,12 @@ export async function verifyLogin(params: {
       expectedChallenge: params.expectedChallenge,
       expectedOrigin: getOrigin(),
       expectedRPID: getRpId(),
-      authenticator: {
-        credentialID: credential.credentialId,
-        credentialPublicKey: Buffer.from(credential.publicKey, "base64url"),
+      // SimpleWebAuthn v12+ : le parametre `authenticator` est renomme en
+      // `credential` et utilise les noms canoniques WebAuthn (`id`,
+      // `publicKey`) au lieu de `credentialID`/`credentialPublicKey`.
+      credential: {
+        id: credential.credentialId,
+        publicKey: Buffer.from(credential.publicKey, "base64url"),
         counter: Number(credential.counter),
         transports: parseTransports(credential.transports),
       },
