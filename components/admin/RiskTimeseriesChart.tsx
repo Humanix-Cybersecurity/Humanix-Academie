@@ -186,9 +186,11 @@ export default function RiskTimeseriesChart({
               borderRadius: "8px",
               border: "1px solid #e5e7eb",
             }}
-            formatter={(value: number, name: string) => [
-              typeof value === "number" ? value.toFixed(1) : value,
-              labelByKey(name),
+            // recharts v3 : signature 5-args (value, name, item, index, payload).
+            // On laisse TS inferer ; cast vers string pour labelByKey.
+            formatter={(value, name) => [
+              typeof value === "number" ? value.toFixed(1) : String(value),
+              labelByKey(String(name)),
             ]}
             labelFormatter={(l) => `Jour : ${l}`}
           />
