@@ -1,0 +1,82 @@
+---
+title: "Verifier le domaine"
+durationMinutes: 5
+persona: "tous"
+objective: "Apprendre a identifier un domaine d'expediteur frauduleux"
+xpReward: 40
+scenario: |
+  Un email arrive dans la boite pro. Expediteur affiche :
+  "Microsoft Office 365 <security@m1crosoft-support.com>".
+  Le sujet : "Votre compte sera suspendu dans 24 h - cliquez ici."
+  Que faut-il faire ?
+choices:
+  - id: "a"
+    label: "Cliquer pour eviter la suspension - le delai est court"
+    outcome: "bad"
+    feedback: "Piege. L'urgence est le levier numero 1 du phishing. Toujours prendre 30 secondes pour verifier avant d'agir."
+    points: -15
+  - id: "b"
+    label: "Verifier l'orthographe du domaine (m1crosoft avec un 1 au lieu de l'i) puis signaler en interne"
+    outcome: "good"
+    feedback: "Bingo. m1crosoft-support.com n'appartient pas a Microsoft. C'est un homoglyphe typique du phishing."
+    points: 20
+  - id: "c"
+    label: "Repondre a l'email en demandant confirmation"
+    outcome: "bad"
+    feedback: "Mauvaise idee. Repondre confirme l'attaquant que l'adresse est active. Et il peut envoyer un nouveau piege en reponse."
+    points: -5
+quizCorrectAnswer: "b"
+takeaway: |
+  Avant tout clic : 1) verifier l'orthographe du domaine 2) verifier le
+  ton (urgence, peur) 3) en cas de doute, contacter par un canal alternatif.
+licence: "CC BY-SA 4.0 — Humanix Academie Community Edition"
+---
+
+# Verifier le domaine
+
+Le **phishing** (hameconnage) est la porte d'entree de plus de 80 % des
+cyberattaques en entreprise (source : Verizon DBIR 2024). L'attaquant
+imite une marque de confiance pour soutirer un mot de passe ou de
+l'argent.
+
+## Les 4 trucages de domaine les plus courants
+
+### 1. Homoglyphes
+Remplacer une lettre par un caractere similaire :
+- `microsoft.com` → `m1crosoft.com` (1 au lieu de i)
+- `paypal.com` → `paypa1.com`
+- `google.com` → `gooogle.com` (3 o)
+- `humanix-cybersecurity.fr` → `humanix-cybersecunty.fr` (rt sans le i)
+
+### 2. Sous-domaine trompeur
+Le vrai domaine est a droite. Exemple :
+- **microsoft.support-securite.com** : le vrai domaine est
+  `support-securite.com`, PAS `microsoft.com`. C'est juste un sous-domaine
+  nomme `microsoft`.
+- Regle : lire de droite a gauche, le domaine est ce qui precede
+  immediatement `.com` / `.fr` / `.org` etc.
+
+### 3. TLD different
+- `microsoft.com` (officiel) vs `microsoft.co` (suspect) vs `microsoft.support` (suspect)
+- Si vous connaissez le domaine officiel (`.com`, `.fr`...), tout autre TLD est suspect.
+
+### 4. Caracteres Unicode (IDN)
+Domaines comme `аррlе.com` qui utilisent des lettres cyrilliques (а р р) visuellement
+identiques aux latines (a p p). Les navigateurs modernes affichent un
+warning, mais pas tous.
+
+## Verifier en 10 secondes
+
+1. **Survoler le lien** (sans cliquer) → l'URL reelle s'affiche en bas
+2. **Lire l'URL de droite a gauche** pour identifier le vrai domaine
+3. **Chercher les fautes** d'orthographe dans le domaine
+4. **En cas de doute** : ne pas cliquer, ouvrir un nouvel onglet et taper
+   l'URL officielle manuellement
+
+## Pour aller plus loin
+
+Cette demo Open Core couvre les bases. Le catalogue complet inclut :
+spear phishing par persona metier, fraude au president, deepfakes audio,
+simulation de campagne phishing personnalisee par metier, vishing
+(phishing telephonique), smishing (SMS), quishing (QR code), reponse a
+incident apres clic... Souscrivez a l'offre Cloud Humanix Academie.
