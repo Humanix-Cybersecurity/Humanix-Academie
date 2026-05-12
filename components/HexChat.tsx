@@ -26,6 +26,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import MarkdownView from "@/components/MarkdownView";
 
 type ChatRole = "user" | "assistant";
 type Citation = {
@@ -442,16 +443,32 @@ export default function HexChat({ enabled }: Props) {
 
 function Bubble({ message }: { message: ChatMessage }) {
   const isUser = message.role === "user";
+  // User : texte brut (whitespace-pre-wrap preserve les sauts de ligne tapes).
+  // Assistant : markdown render (gras / liens / listes / code / tables) via
+  // MarkdownView — meme composant que /apprendre/recap (PR #434), donc XSS-safe
+  // par construction (whitelist + pas de dangerouslySetInnerHTML).
+  // Pendant le streaming, le markdown partiel s'affiche degrade (les `**` en
+  // attente de fermeture restent textuels), c'est acceptable et resout des
+  // que le delta suivant ferme la balise.
   return (
     <div className={`flex flex-col ${isUser ? "items-end" : "items-start"}`}>
       <div
-        className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap break-words ${
+        className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed break-words ${
           isUser
-            ? "bg-primary-500 text-white"
+            ? "bg-primary-500 text-white whitespace-pre-wrap"
             : "bg-white dark:bg-slate-800 text-gray-800 dark:text-gray-100 border border-gray-200 dark:border-slate-700"
         }`}
       >
-        {message.content || (isUser ? "" : "…")}
+        {isUser ? (
+          message.content
+        ) : message.content ? (
+          <MarkdownView
+            content={message.content}
+            className="!space-y-2 [&_p]:!text-gray-800 [&_p]:dark:!text-gray-100 [&_p]:!my-0"
+          />
+        ) : (
+          "…"
+        )}
       </div>
       {/* Notice PII : Hex a masque des donnees sensibles avant envoi
           a Mistral. Affichage discret mais explicite (transparence Zero-Trust). */}
