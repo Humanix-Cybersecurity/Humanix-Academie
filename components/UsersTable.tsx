@@ -221,6 +221,7 @@ export default function UsersTable({
 
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
+          <caption className="sr-only">Utilisateurs du tenant</caption>
           <thead className="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-slate-800">
             <tr>
               <th scope="col" className="pb-2.5 font-medium text-xs">
@@ -298,7 +299,7 @@ export default function UsersTable({
                   <td className="py-3 pr-3 max-w-[200px]">
                     <div className="flex items-center gap-1 flex-wrap">
                       {u.groupBadges.length === 0 && (
-                        <span className="text-xs text-gray-400 italic">
+                        <span className="text-xs text-gray-500 italic">
                           aucun
                         </span>
                       )}
@@ -408,7 +409,7 @@ export default function UsersTable({
           </tbody>
         </table>
         {filtered.length === 0 && (
-          <p className="text-center text-gray-400 py-8 italic text-sm">
+          <p className="text-center text-gray-500 py-8 italic text-sm">
             Aucun utilisateur trouvé
           </p>
         )}

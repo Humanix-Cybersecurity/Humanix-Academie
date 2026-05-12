@@ -33,7 +33,7 @@ export default function OubliPage() {
           …vous allez recevoir un email avec un lien pour réinitialiser votre
           mot de passe. Vérifiez aussi vos spams.
         </p>
-        <p className="text-sm text-gray-400 mt-4">
+        <p className="text-sm text-gray-500 mt-4">
           Le lien est valable 1 heure et utilisable une seule fois.
         </p>
         <Link

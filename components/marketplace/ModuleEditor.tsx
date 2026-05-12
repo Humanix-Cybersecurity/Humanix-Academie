@@ -448,7 +448,7 @@ function Textarea(props: {
         rows={props.rows ?? 3}
         className="w-full rounded-xl border-2 border-gray-200 p-2.5 text-sm focus:border-accent-500 focus:outline-none disabled:bg-gray-50 resize-y"
       />
-      <span className="text-[10px] text-gray-400">
+      <span className="text-[10px] text-gray-500">
         {props.value.length} caractères
       </span>
     </label>

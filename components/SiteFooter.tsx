@@ -208,7 +208,7 @@ export default function SiteFooter() {
                 href="mailto:contact@humanix-cybersecurity.fr"
                 className="text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-accent-300 transition-colors"
               >
-                <span className="text-gray-400 dark:text-gray-500 mr-1.5">
+                <span className="text-gray-500 dark:text-gray-500 mr-1.5">
                   Général
                 </span>
                 contact@humanix-cybersecurity.fr
@@ -219,7 +219,7 @@ export default function SiteFooter() {
                 href="mailto:rgpd@humanix-cybersecurity.fr"
                 className="text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-accent-300 transition-colors"
               >
-                <span className="text-gray-400 dark:text-gray-500 mr-1.5">
+                <span className="text-gray-500 dark:text-gray-500 mr-1.5">
                   RGPD
                 </span>
                 rgpd@humanix-cybersecurity.fr
@@ -230,7 +230,7 @@ export default function SiteFooter() {
                 href="mailto:support@humanix-cybersecurity.fr"
                 className="text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-accent-300 transition-colors"
               >
-                <span className="text-gray-400 dark:text-gray-500 mr-1.5">
+                <span className="text-gray-500 dark:text-gray-500 mr-1.5">
                   Support
                 </span>
                 support@humanix-cybersecurity.fr
@@ -241,7 +241,7 @@ export default function SiteFooter() {
                 href="mailto:security@humanix-cybersecurity.fr"
                 className="text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-accent-300 transition-colors"
               >
-                <span className="text-gray-400 dark:text-gray-500 mr-1.5">
+                <span className="text-gray-500 dark:text-gray-500 mr-1.5">
                   Sécurité
                 </span>
                 security@humanix-cybersecurity.fr

@@ -399,7 +399,7 @@ export default function AdminSearchBox() {
         className="w-full max-w-xl rounded-2xl bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 shadow-2xl overflow-hidden"
       >
         <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100 dark:border-slate-800">
-          <span aria-hidden="true" className="text-gray-400">
+          <span aria-hidden="true" className="text-gray-500">
             🔍
           </span>
           <input
@@ -409,7 +409,7 @@ export default function AdminSearchBox() {
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onInputKey}
             placeholder="Aller à... (page, fonction, raccourci)"
-            className="flex-1 bg-transparent outline-none text-sm placeholder:text-gray-400"
+            className="flex-1 bg-transparent outline-none text-sm placeholder:text-gray-500"
           />
           <kbd className="hidden sm:inline-block text-[10px] bg-gray-100 dark:bg-slate-800 text-gray-500 px-1.5 py-0.5 rounded font-mono">
             ESC
@@ -438,7 +438,7 @@ export default function AdminSearchBox() {
                 const items = grouped.get(g)!;
                 return (
                   <div key={g}>
-                    <p className="text-[10px] uppercase tracking-widest font-bold text-gray-400 px-4 pt-3 pb-1">
+                    <p className="text-[10px] uppercase tracking-widest font-bold text-gray-500 px-4 pt-3 pb-1">
                       {g}
                     </p>
                     <ul>
@@ -467,7 +467,7 @@ export default function AdminSearchBox() {
                                 {t.label}
                               </span>
                               {t.hint && (
-                                <span className="text-xs text-gray-400 dark:text-gray-500 shrink-0 font-mono">
+                                <span className="text-xs text-gray-500 dark:text-gray-500 shrink-0 font-mono">
                                   {t.hint}
                                 </span>
                               )}
@@ -483,7 +483,7 @@ export default function AdminSearchBox() {
           )}
         </div>
 
-        <footer className="px-4 py-2 border-t border-gray-100 dark:border-slate-800 flex items-center gap-3 text-[11px] text-gray-400 bg-gray-50 dark:bg-slate-800/40">
+        <footer className="px-4 py-2 border-t border-gray-100 dark:border-slate-800 flex items-center gap-3 text-[11px] text-gray-500 bg-gray-50 dark:bg-slate-800/40">
           <span>
             <kbd className="font-mono px-1 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded">
               ↑

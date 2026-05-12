@@ -102,7 +102,7 @@ export default async function AdminHeatmapPage() {
                 >
                   <div className="flex flex-col items-center gap-1">
                     <span className="line-clamp-2">{s.title}</span>
-                    <span className="text-[10px] font-normal text-gray-400">
+                    <span className="text-[10px] font-normal text-gray-500">
                       {s.episodeCount} ép.
                     </span>
                   </div>
@@ -139,7 +139,7 @@ export default async function AdminHeatmapPage() {
                   <span className="inline-flex items-center gap-2">
                     <span aria-hidden="true">{g.emoji}</span>
                     <span>{g.name}</span>
-                    <span className="text-[10px] text-gray-400 tabular-nums">
+                    <span className="text-[10px] text-gray-500 tabular-nums">
                       ({g.userCount})
                     </span>
                   </span>
@@ -195,7 +195,7 @@ export default async function AdminHeatmapPage() {
         </div>
       </section>
 
-      <p className="text-[11px] text-gray-400 italic text-center">
+      <p className="text-[11px] text-gray-500 italic text-center">
         Lecture : chaque cellule = % de Progress COMPLETED par les membres
         actifs (LEARNER + MANAGER) du groupe sur tous les épisodes publiés
         de la saison. Une cellule sur 100% = chaque membre a fini chaque

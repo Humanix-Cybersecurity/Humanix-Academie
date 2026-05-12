@@ -325,7 +325,7 @@ export default function HeaderBar({ demoMode = false }: { demoMode?: boolean }) 
                 <span className="hidden lg:inline text-sm text-gray-700 dark:text-gray-200 max-w-[120px] truncate">
                   {user.name?.split(" ")[0] ?? "Moi"}
                 </span>
-                <span className="text-xs text-gray-400" aria-hidden="true">
+                <span className="text-xs text-gray-500" aria-hidden="true">
                   ▾
                 </span>
               </button>
