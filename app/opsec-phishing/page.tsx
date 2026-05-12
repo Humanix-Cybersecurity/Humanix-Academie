@@ -387,7 +387,7 @@ function Chapter({
           >
             {emoji}
           </span>
-          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mt-1">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mt-1">
             #{String(n).padStart(2, "0")}
           </span>
         </div>

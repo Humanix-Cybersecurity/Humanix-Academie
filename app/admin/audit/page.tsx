@@ -121,7 +121,7 @@ export default async function AdminAuditPage() {
                           )}
                         </>
                       ) : (
-                        <span className="text-gray-400 italic">système</span>
+                        <span className="text-gray-500 italic">système</span>
                       )}
                     </td>
                     <td className="px-2 py-2 max-w-[200px] truncate text-gray-600 dark:text-gray-300">
@@ -136,7 +136,7 @@ export default async function AdminAuditPage() {
                   <tr>
                     <td
                       colSpan={7}
-                      className="text-center py-8 italic text-gray-400"
+                      className="text-center py-8 italic text-gray-500"
                     >
                       Aucune entrée pour ce tenant.
                     </td>

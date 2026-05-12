@@ -45,7 +45,7 @@ export default function BusinessMethodology({
             Comment chaque chiffre est calculé. À reprendre tel quel en COMEX.
           </p>
         </div>
-        <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400">
+        <span className="text-[10px] uppercase tracking-widest font-bold text-gray-500">
           Transparence à la demande
         </span>
       </header>
@@ -68,7 +68,7 @@ export default function BusinessMethodology({
                 <div className="flex items-center gap-3 min-w-0">
                   <span
                     aria-hidden="true"
-                    className={`text-gray-400 transition-transform shrink-0 ${isOpen ? "rotate-90" : ""}`}
+                    className={`text-gray-500 transition-transform shrink-0 ${isOpen ? "rotate-90" : ""}`}
                   >
                     ▸
                   </span>
@@ -131,7 +131,7 @@ export default function BusinessMethodology({
                         >
                           <span
                             aria-hidden="true"
-                            className="text-gray-400 shrink-0"
+                            className="text-gray-500 shrink-0"
                           >
                             📚
                           </span>
@@ -181,7 +181,7 @@ export default function BusinessMethodology({
         <summary className="cursor-pointer text-xs font-semibold text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-accent-300 list-none flex items-center gap-2">
           <span
             aria-hidden="true"
-            className="text-gray-400 group-open:rotate-90 transition-transform"
+            className="text-gray-500 group-open:rotate-90 transition-transform"
           >
             ▸
           </span>

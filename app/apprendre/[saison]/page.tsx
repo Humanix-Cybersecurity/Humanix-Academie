@@ -187,7 +187,7 @@ export default async function SaisonPage({
                           ? "text-emerald-700 dark:text-emerald-300"
                           : isInProgress
                             ? "text-amber-700 dark:text-amber-300"
-                            : "text-gray-400 dark:text-gray-500"
+                            : "text-gray-500 dark:text-gray-500"
                       }`}
                     >
                       {isDone ? "✓ Fini" : isInProgress ? "En cours" : "À faire"}

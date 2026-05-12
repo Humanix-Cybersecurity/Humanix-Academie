@@ -223,7 +223,7 @@ export default function LaunchCampaignForm({
               </option>
             ))}
           </select>
-          <p className="text-xs text-gray-400 italic mt-1">
+          <p className="text-xs text-gray-500 italic mt-1">
             Le champ service est libre (saisi en CSV import). Pour un
             ciblage structuré, utilise les groupes ci-dessus.
           </p>
@@ -264,7 +264,7 @@ export default function LaunchCampaignForm({
         </p>
       )}
 
-      <p className="text-xs text-gray-400 italic text-center">
+      <p className="text-xs text-gray-500 italic text-center">
         En mode démo, les emails ne sont pas réellement envoyés. En production,
         ils partent via le SMTP configuré dans /admin/smtp avec liens trackés.
       </p>

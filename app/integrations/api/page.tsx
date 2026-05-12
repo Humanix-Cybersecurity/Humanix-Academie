@@ -293,7 +293,7 @@ function Endpoint({
         <code className="text-sm font-mono text-gray-900 dark:text-gray-100">
           {path}
         </code>
-        <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400 ml-auto">
+        <span className="text-[10px] uppercase tracking-widest font-bold text-gray-500 ml-auto">
           {tag}
         </span>
       </header>

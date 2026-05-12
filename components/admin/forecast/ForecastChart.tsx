@@ -48,7 +48,7 @@ export default function ForecastChart({
     <div className="overflow-x-auto">
       <svg
         viewBox={`0 0 ${W} ${H}`}
-        className="w-full max-w-[800px] text-gray-400 dark:text-gray-500"
+        className="w-full max-w-[800px] text-gray-500 dark:text-gray-500"
         role="img"
         aria-label="Graphique de projection du score de risque tenant"
       >
