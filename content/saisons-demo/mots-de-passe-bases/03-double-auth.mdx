@@ -1,0 +1,78 @@
+---
+title: "La double authentification"
+durationMinutes: 6
+persona: "tous"
+objective: "Activer la double authentification pour empecher les acces meme si le mot de passe fuit"
+xpReward: 50
+scenario: |
+  Le mot de passe pro d'un collaborateur a fuite. L'attaquant tente de se
+  connecter a Office 365. Que se passe-t-il si la double authentification
+  est activee ?
+choices:
+  - id: "a"
+    label: "L'attaquant entre, la 2FA ne sert a rien si le mdp est correct"
+    outcome: "bad"
+    feedback: "Faux. La 2FA exige un second facteur (telephone, cle FIDO2). Sans ce facteur, meme avec le bon mdp, l'attaquant est bloque."
+    points: -10
+  - id: "b"
+    label: "L'attaquant est bloque - il faudrait aussi le telephone du collaborateur"
+    outcome: "good"
+    feedback: "Oui. La 2FA empeche 99 % des compromissions de compte selon Microsoft. C'est la mesure de securite numero 1 en 2026."
+    points: 20
+  - id: "c"
+    label: "La 2FA envoie un email, il suffit de hacker l'email"
+    outcome: "bad"
+    feedback: "La 2FA moderne n'utilise pas l'email (faible). Elle utilise une app TOTP (Authy, Google Authenticator) ou une cle FIDO2."
+    points: -5
+quizCorrectAnswer: "b"
+takeaway: |
+  La double authentification (2FA) est la mesure la plus efficace contre
+  le piratage de compte. Active-la partout : email, banque, reseaux sociaux,
+  outils pro.
+licence: "CC BY-SA 4.0 — Humanix Academie Community Edition"
+---
+
+# La double authentification
+
+Aussi appelee **2FA** (Two-Factor Authentication) ou **MFA**
+(Multi-Factor Authentication). Principe : pour se connecter, il faut
+**quelque chose qu'on sait** (le mot de passe) **ET quelque chose qu'on a**
+(un telephone, une cle physique).
+
+## Pourquoi c'est crucial
+
+Microsoft a publie en 2019 une etude qui a fait date : la 2FA bloque
+**99,9 %** des compromissions de compte. Meme si le mot de passe est
+faible ou fuit, l'attaquant ne peut pas se connecter sans le second
+facteur.
+
+## Les 3 types de 2FA, du moins securise au plus securise
+
+### 1. SMS — A EVITER
+Code envoye par SMS. Vulnerable au "SIM swapping" (l'attaquant convainc
+l'operateur de transferer le numero sur sa propre carte SIM). NIST
+deconseille depuis 2017.
+
+### 2. TOTP (app authenticator) — TRES RECOMMANDE
+Une app sur le telephone (Authy, Google Authenticator, Microsoft
+Authenticator) genere un code a 6 chiffres toutes les 30 secondes,
+calcule localement avec une cle partagee a l'inscription. Pas de
+reseau requis, pas de SIM swapping.
+
+### 3. FIDO2 / Passkey — IDEAL
+Cle physique (YubiKey) ou cle embarquee (Windows Hello, Touch ID,
+Android). Impossible a hameconner : la cle ne fonctionne que sur le
+vrai site, jamais sur un site de phishing.
+
+## Pour aller plus loin
+
+Cette demo Open Core couvre les bases. Le catalogue complet inclut :
+- Deploiement de TOTP en equipe (par groupe AD)
+- Politique de cles FIDO2 (achat, distribution, recuperation)
+- Gestion des cas de perte de telephone
+- WebAuthn (passkeys synchronisees Apple/Google/Microsoft)
+- Step-up authentication pour les actions sensibles
+- Quiz/scenarios specifiques par metier
+
+Souscrivez a l'offre Cloud Humanix Academie pour le catalogue complet
+(27 saisons, 159 modules).

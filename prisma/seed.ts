@@ -11,13 +11,17 @@ import { getLevel, computeCoinsEarned } from "../lib/levels";
 import { SHOP_CATALOG } from "../lib/shop";
 import { ACHIEVEMENTS_CATALOG } from "../lib/achievements/catalog";
 import { computeContentHash } from "../lib/marketplace/integrity";
-import { LIBRARY_ARTICLES } from "../lib/library-seed";
-import { MARKETPLACE_MODULES } from "../lib/marketplace-seed";
+// Open Core : on charge les seeds via le loader qui resout dynamiquement
+// la source (catalog commercial complet OU catalog demo OSS). Si les
+// modules privés (library-seed, marketplace-seed, catalog-saisons.ts,
+// anecdotes/seed-data) ne sont pas presents dans le repo (cas fork OSS),
+// le loader retourne des fallbacks vides ou demo. Cf. docs/OPEN_CORE.md.
 import {
-  CATALOG_SAISONS,
-  rewardsFor,
-  validateCatalog,
-} from "./catalog-saisons";
+  loadCatalogSaisons,
+  loadLibraryArticles,
+  loadMarketplaceModules,
+} from "./seed-data-loader";
+import { rewardsFor, validateCatalog } from "./catalog-saisons-shared";
 import { tagsForSaison } from "./catalog-tags";
 import { seedAnecdotes } from "./seed-anecdotes";
 import {
@@ -209,16 +213,18 @@ async function main() {
   // 1. CONTENU PARTAGE (toujours seede, demo ou prod)
   // ====================================================================
 
-  // Saisons + episodes : on charge tout depuis le catalogue externalise.
-  // 25 saisons x ~6 episodes = 150 modules officiels.
-  const integrity = validateCatalog();
+  // Saisons + episodes : on charge le catalog via le loader Open Core,
+  // qui resout dynamiquement la source (commercial complet ou demo OSS).
+  // Cf. prisma/seed-data-loader.ts + docs/OPEN_CORE.md.
+  const { saisons: catalogSaisons, source: catalogSource } = loadCatalogSaisons();
+  const integrity = validateCatalog(catalogSaisons);
   console.log(
-    `  Catalogue : ${integrity.totalSaisons} saisons / ${integrity.totalEpisodes} episodes`,
+    `  Catalogue (${catalogSource}) : ${integrity.totalSaisons} saisons / ${integrity.totalEpisodes} episodes`,
   );
 
   const saisonRecords = new Map<string, any>();
   const episodeRecords = new Map<string, any>();
-  for (const s of CATALOG_SAISONS) {
+  for (const s of catalogSaisons) {
     const tags = tagsForSaison(s.slug);
     const dbS = await prisma.saison.upsert({
       where: { slug: s.slug },
@@ -268,7 +274,7 @@ async function main() {
     }
   }
   console.log(
-    `  Saisons ✓ (${CATALOG_SAISONS.length} saisons / ${episodeRecords.size} episodes)`,
+    `  Saisons ✓ (${catalogSaisons.length} saisons / ${episodeRecords.size} episodes)`,
   );
 
   // Catalogue boutique (global, pas de tenant -> partage par tous)
@@ -1136,7 +1142,12 @@ async function seedMarketplace() {
   };
   let createdCount = 0;
   let pendingCount = 0;
-  for (const m of MARKETPLACE_MODULES) {
+  // Open Core : marketplace modules charges via le loader (tableau vide si
+  // module marketplace-seed non disponible sur ce fork OSS). Le type est
+  // `any[]` parce que le loader resout dynamiquement le module — on cast
+  // localement les champs utilises pour satisfaire le typecheck strict TS 6.
+  const marketplaceModules = loadMarketplaceModules();
+  for (const m of marketplaceModules) {
     const isPending = m.status === "PENDING_REVIEW";
     if (isPending) pendingCount++;
     else createdCount++;
@@ -1151,7 +1162,7 @@ async function seedMarketplace() {
         category: m.category,
         difficulty: m.difficulty,
         language: "fr",
-        authorId: authorMap[m.author],
+        authorId: authorMap[m.author as keyof typeof authorMap],
         authorOrgName: m.authorOrgName,
         isOfficial: m.isOfficial,
         version: "1.0.0",
@@ -1172,7 +1183,10 @@ async function seedMarketplace() {
 }
 
 async function seedLibrary() {
-  for (const a of LIBRARY_ARTICLES) {
+  // Open Core : articles charges via le loader (tableau vide si
+  // library-seed.ts non disponible sur ce fork OSS).
+  const articles = loadLibraryArticles();
+  for (const a of articles) {
     await prisma.libraryArticle.upsert({
       where: { slug: a.slug },
       update: {
@@ -1199,7 +1213,7 @@ async function seedLibrary() {
       },
     });
   }
-  console.log(`  Librairie ✓ (${LIBRARY_ARTICLES.length} articles)`);
+  console.log(`  Librairie ✓ (${articles.length} articles)`);
 }
 
 async function equipForUser(

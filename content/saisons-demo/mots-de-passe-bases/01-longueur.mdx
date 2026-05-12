@@ -1,0 +1,65 @@
+---
+title: "La longueur compte"
+durationMinutes: 5
+persona: "tous"
+objective: "Comprendre pourquoi un mot de passe long est plus solide qu'un mot de passe complexe"
+xpReward: 40
+scenario: |
+  Un collaborateur doit creer un mot de passe pour acceder a un outil interne.
+  L'interface propose 3 options de complexite. Laquelle est la plus solide
+  face a une attaque par force brute moderne ?
+choices:
+  - id: "a"
+    label: "P@ssw0rd!  (8 caracteres avec symboles)"
+    outcome: "bad"
+    feedback: "8 caracteres, meme avec symboles, se casse en quelques heures avec un GPU moderne. La complexite seule ne suffit pas."
+    points: -5
+  - id: "b"
+    label: "correct horse battery staple  (28 caracteres, mots simples)"
+    outcome: "good"
+    feedback: "28 caracteres meme avec des mots du dictionnaire = des siecles a casser. La longueur prime sur la complexite."
+    points: 15
+  - id: "c"
+    label: "Jean-Dupont1985  (date de naissance + nom)"
+    outcome: "bad"
+    feedback: "Information publique (LinkedIn, Facebook). Un attaquant teste cette combinaison en premier."
+    points: -10
+quizCorrectAnswer: "b"
+takeaway: |
+  Privilegier la longueur (16+ caracteres) sur la complexite. Une phrase de
+  passe simple a memoriser est plus solide qu'un mot de passe complexe court.
+licence: "CC BY-SA 4.0 — Humanix Academie Community Edition"
+---
+
+# La longueur compte
+
+Avant les annees 2010, les attaques par force brute prenaient des semaines
+pour casser un mot de passe de 8 caracteres complexes. Aujourd'hui, avec
+les GPUs grand public, c'est l'affaire de **quelques heures**.
+
+Source publique : recommandations ANSSI 2021 sur les mots de passe.
+
+## Pourquoi la longueur prime
+
+Chaque caractere supplementaire multiplie le nombre de combinaisons par
+~80 (alphabet + chiffres + symboles courants). Passer de 8 a 12 caracteres
+multiplie le temps de craquage par 40 millions.
+
+En pratique :
+- 8 caracteres complexes : quelques heures
+- 12 caracteres complexes : quelques mois
+- 16 caracteres meme simples : des annees
+- 20+ caracteres : siecles
+
+## Phrase de passe
+
+Une phrase de passe (passphrase) combine longueur ET memorisation. Exemple :
+"chien-rouge-table-2025" est plus long qu'un "P@ssw0rd!" et infiniment plus
+facile a retenir.
+
+## Pour aller plus loin
+
+Cette demo Open Core couvre les bases. Pour le catalogue complet
+(gestionnaire de mots de passe, fuites de credentials, passkeys, double
+authentification, 2FA TOTP, WebAuthn...), souscrivez a l'offre Cloud
+Humanix Academie.
