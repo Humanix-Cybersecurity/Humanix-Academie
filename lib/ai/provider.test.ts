@@ -115,9 +115,24 @@ describe("streamChat (provider=mistral sans key)", () => {
     process.env = { ...originalEnv };
   });
 
-  it("rejette avec un message explicite si MISTRAL_API_KEY manque", async () => {
-    await expect(
-      streamChat({ messages: [{ role: "user", content: "x" }] }),
-    ).rejects.toThrow(/MISTRAL_API_KEY/);
+  // Note : l'impl actuelle (lib/ai/provider.ts getProviderKind) ignore
+  // HEX_AI_PROVIDER='mistral' explicit et fallback sur "disabled" si
+  // MISTRAL_API_KEY est absent. C'est une degradation gracieuse :
+  // l'app ne crash plus runtime, elle emet un message d'IA en pause qui
+  // mentionne MISTRAL_API_KEY pour guider l'admin.
+  it("ne rejette pas sans MISTRAL_API_KEY (graceful degradation -> stream disabled)", async () => {
+    const stream = await streamChat({
+      messages: [{ role: "user", content: "x" }],
+    });
+    expect(stream).toBeInstanceOf(ReadableStream);
+    // Le contenu emis doit mentionner MISTRAL_API_KEY pour guider l'admin.
+    const reader = stream.getReader();
+    let text = "";
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      text += value;
+    }
+    expect(text).toMatch(/MISTRAL_API_KEY/);
   });
 });

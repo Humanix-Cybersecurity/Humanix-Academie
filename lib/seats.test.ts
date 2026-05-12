@@ -31,26 +31,27 @@ describe("getSeatUsage", () => {
     vi.clearAllMocks();
   });
 
-  it("retourne 5/10 a 50% pour un tenant Solo avec 5 users", async () => {
+  it("retourne 5/15 a 33% pour un tenant Starter avec 5 users", async () => {
+    // Starter (pivot 4-tiers mai 2026) : 15 sieges max (free <=5, paye 6-15).
     dbMock.tenant.findUnique.mockResolvedValue({ plan: "starter" });
     dbMock.user.count.mockResolvedValue(5);
 
     const u = await getSeatUsage("t1");
     expect(u).toMatchObject({
       used: 5,
-      max: 10,
+      max: 15,
       plan: "starter",
-      percent: 50,
+      percent: 33,
       canAdd: true,
-      remaining: 5,
+      remaining: 10,
       approaching: false,
       atLimit: false,
     });
   });
 
-  it("flag approaching=true a 80%+ (8/10)", async () => {
+  it("flag approaching=true a 80%+ (12/15)", async () => {
     dbMock.tenant.findUnique.mockResolvedValue({ plan: "starter" });
-    dbMock.user.count.mockResolvedValue(8);
+    dbMock.user.count.mockResolvedValue(12);
 
     const u = await getSeatUsage("t1");
     expect(u.approaching).toBe(true);
@@ -58,9 +59,9 @@ describe("getSeatUsage", () => {
     expect(u.canAdd).toBe(true);
   });
 
-  it("flag atLimit=true et canAdd=false a 100% (10/10)", async () => {
+  it("flag atLimit=true et canAdd=false a 100% (15/15)", async () => {
     dbMock.tenant.findUnique.mockResolvedValue({ plan: "starter" });
-    dbMock.user.count.mockResolvedValue(10);
+    dbMock.user.count.mockResolvedValue(15);
 
     const u = await getSeatUsage("t1");
     expect(u.atLimit).toBe(true);
@@ -79,13 +80,15 @@ describe("getSeatUsage", () => {
     expect(u.percent).toBe(0);
   });
 
-  it("tenant introuvable -> fallback plan trial (5 sieges)", async () => {
+  it("tenant introuvable -> fallback plan starter (15 sieges)", async () => {
+    // Pivot 4-tiers mai 2026 : "trial" supprime, le fallback `normalizePlan(null)`
+    // tombe sur "starter". PLAN_SEATS.starter = 15 (cf. lib/plans.ts).
     dbMock.tenant.findUnique.mockResolvedValue(null);
     dbMock.user.count.mockResolvedValue(0);
 
     const u = await getSeatUsage("nope");
     expect(u.plan).toBe("starter");
-    expect(u.max).toBe(5);
+    expect(u.max).toBe(15);
   });
 });
 
@@ -102,23 +105,23 @@ describe("enforceSeatQuota", () => {
 
   it("lance SeatQuotaError quand on est deja au max", async () => {
     dbMock.tenant.findUnique.mockResolvedValue({ plan: "starter" });
-    dbMock.user.count.mockResolvedValue(10);
+    dbMock.user.count.mockResolvedValue(15);
 
     await expect(enforceSeatQuota("t1")).rejects.toThrow(SeatQuotaError);
     await expect(enforceSeatQuota("t1")).rejects.toMatchObject({
-      used: 10,
-      max: 10,
+      used: 15,
+      max: 15,
       plan: "starter",
     });
   });
 
   it("supporte un count > 1 (import CSV)", async () => {
     dbMock.tenant.findUnique.mockResolvedValue({ plan: "starter" });
-    dbMock.user.count.mockResolvedValue(7);
+    dbMock.user.count.mockResolvedValue(12);
 
-    // 7 + 3 = 10 -> OK
+    // 12 + 3 = 15 -> OK (juste au plafond)
     await expect(enforceSeatQuota("t1", 3)).resolves.toBeUndefined();
-    // 7 + 4 = 11 -> KO
+    // 12 + 4 = 16 -> KO (depasse)
     await expect(enforceSeatQuota("t1", 4)).rejects.toThrow(SeatQuotaError);
   });
 

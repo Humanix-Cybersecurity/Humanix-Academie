@@ -23,12 +23,22 @@ describe("buildToneAddendum", () => {
   });
 
   it("limite la liste a 3 modules meme si on en passe plus", () => {
+    // Names distinctifs pour eviter les false positives sur les lettres
+    // simples qui matchent du texte autour (ex: "d" matche "de progression",
+    // "e" matche "récemment"). Cette erreur a fait croire au test de
+    // regresser, alors que l'impl etait correcte.
     const out = buildToneAddendum({
-      recentModules: ["a", "b", "c", "d", "e"],
+      recentModules: [
+        "mod-alpha",
+        "mod-bravo",
+        "mod-charlie",
+        "mod-delta",
+        "mod-echo",
+      ],
     });
-    expect(out).toContain("a, b, c");
-    expect(out).not.toContain("d");
-    expect(out).not.toContain("e");
+    expect(out).toContain("mod-alpha, mod-bravo, mod-charlie");
+    expect(out).not.toContain("mod-delta");
+    expect(out).not.toContain("mod-echo");
   });
 
   it("inclut le score moyen quand fourni", () => {
