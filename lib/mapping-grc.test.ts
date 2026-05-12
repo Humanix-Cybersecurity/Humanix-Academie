@@ -13,13 +13,16 @@ import {
 } from "./mapping-grc";
 
 describe("FRAMEWORKS catalog", () => {
-  it("expose les 5 référentiels supportés", () => {
+  it("expose les 6 référentiels supportés", () => {
+    // SAPIN2 (loi anti-corruption FR) ajoute apres la redaction initiale
+    // du test. Liste a maintenir synchronisee avec lib/mapping-grc.ts.
     expect(SUPPORTED_FRAMEWORKS).toEqual([
       "ISO27001:2022",
       "NIS2",
       "RGPD",
       "ANSSI-HG",
       "NIST-CSF",
+      "SAPIN2",
     ]);
   });
 
