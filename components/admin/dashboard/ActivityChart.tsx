@@ -73,8 +73,11 @@ export default function ActivityChart({
                 border: "1px solid #e5e7eb",
                 fontSize: 11,
               }}
-              formatter={(v: number) => [
-                `${v} épisode${v > 1 ? "s" : ""}`,
+              // recharts v3 : Tooltip.formatter a une signature 5-args
+              // (value, name, item, index, payload). On laisse TS inferer
+              // les types depuis les Bar (number) plutot que de tout typer.
+              formatter={(v) => [
+                `${Number(v)} épisode${Number(v) > 1 ? "s" : ""}`,
                 "Complétions",
               ]}
             />
