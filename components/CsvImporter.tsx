@@ -117,6 +117,7 @@ christine@masociete.fr,Christine Dubois,Compta,LEARNER`}
 
           <div className="overflow-x-auto bg-white border rounded-xl">
             <table className="w-full text-xs">
+              <caption className="sr-only">Apercu des donnees a importer depuis le CSV</caption>
               <thead className="bg-gray-50 text-gray-600">
                 <tr>
                   <th className="px-3 py-2 text-left">Email</th>
@@ -138,7 +139,7 @@ christine@masociete.fr,Christine Dubois,Compta,LEARNER`}
                   <tr>
                     <td
                       colSpan={4}
-                      className="px-3 py-2 text-gray-400 text-center italic"
+                      className="px-3 py-2 text-gray-500 text-center italic"
                     >
                       … et {rows.length - 5} de plus
                     </td>

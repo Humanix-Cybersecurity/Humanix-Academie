@@ -26,7 +26,7 @@ export default function SaisonsCoverage({
         </p>
       </header>
       {data.length === 0 ? (
-        <p className="text-sm text-gray-400 italic text-center py-8">
+        <p className="text-sm text-gray-500 italic text-center py-8">
           Aucune saison publiée.
         </p>
       ) : (

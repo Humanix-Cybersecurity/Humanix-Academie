@@ -411,6 +411,7 @@ export default function SecuritePage() {
           </p>
           <div className="overflow-x-auto -mx-2 px-2 mt-3">
             <table className="w-full text-sm border-collapse">
+              <caption className="sr-only">Mesures de securite techniques de la plateforme</caption>
               <thead>
                 <tr>
                   <th className="text-left p-3 bg-primary-500 text-white font-bold rounded-tl-xl">
