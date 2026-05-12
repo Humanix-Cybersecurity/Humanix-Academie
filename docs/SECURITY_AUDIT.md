@@ -617,13 +617,13 @@ Procédure :
 
 | Élément                          | Statut                | Détail                                                                                                                               |
 | -------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| **GitHub Actions CI**            | ✅ Actif              | `.github/workflows/ci.yml` - lint + types + Prettier + audit npm + production build à chaque push et PR                              |
-| **CodeQL (SAST)**                | ✅ Actif              | `.github/workflows/codeql.yml` - analyse statique automatisée. Gratuit en repo public, premier run dès passage public le 26 mai 2026 |
-| **DCO signed-off-by check**      | ✅ Actif              | Vérifie que chaque commit est signé `Signed-off-by:` (engagement DCO)                                                                |
-| **Dependabot version updates**   | ✅ Actif              | Cf. §7.3                                                                                                                             |
-| **Build Docker reproductible**   | ✅ Actif              | Dockerfile multi-stage avec lockfile pinné                                                                                           |
+| **GitHub Actions CI**            | 🟡 Configuré, exécution bloquée | `.github/workflows/ci.yml` - lint + types + Prettier + audit npm + production build. Exécution bloquée temporairement au 12 mai 2026 (compte facturation Actions à régler). Run local OK. Réactivation dès résolution paiement. |
+| **CodeQL (SAST)**                | ✅ Configuré              | `.github/workflows/codeql.yml` - analyse statique automatisée. Premier run effectif dès passage public du repo le 26 mai 2026 (gratuit en repo public). |
+| **DCO signed-off-by check**      | ✅ Configuré              | Vérifie que chaque commit est signé `Signed-off-by:` (engagement DCO)                                                                |
+| **Dependabot version updates**   | ✅ Actif              | Cf. §7.3 - 0 CVE confirmé `npm audit` au 12 mai 2026                                                                              |
+| **Build Docker reproductible**   | ✅ Actif              | Dockerfile multi-stage avec lockfile pinné. **NEXT_PUBLIC_* en build args explicites** depuis le 10 mai 2026 (PR #440)                |
 | **Hébergement code source**      | 🟡 GitHub aujourd'hui | Migration vers forge souveraine FR (Forgejo / Codeberg-FR) prévue Q1-Q2 2027. Git distribué = portabilité 100 %.                     |
-| **Branch protection sur `main`** | 🔲 À activer          | Settings → Branches → Require PR + CI green avant merge                                                                              |
+| **Branch protection sur `main`** | ⏳ Bloqué tech         | Exige plan GitHub Pro OU repo public. **Activation automatique prévue le 26 mai 2026** (passage public du repo). Configuration cible : require PR + CI green + 1 review + DCO. |
 
 ---
 
@@ -734,30 +734,59 @@ anonymement** à la page stats. Risque réel si l'infra est partagée
 
 **CVSS 3.1** : `AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N` = 5.3 (Medium)
 
-**Fix prévu** (Q2 2026) : décommenter `stats auth admin:<password fort>`
-ligne 157, stocker le mot de passe dans un secret Docker ou variable
-d'env, restreindre `bind` à un network interne dédié.
+**Statut au 12 mai 2026 (v1.4)** : **encore ouvert**. Le commentaire ligne 177
+de `infra/haproxy/haproxy.cfg` mentionne toujours `# En prod : ajouter "stats
+auth admin:..."` sans que l'instruction soit active. **Atténuation existante** :
+`docker-compose.yml` bind explicitement sur `127.0.0.1:8404` sur l'host, donc
+le port stats N'EST PAS joignable de l'extérieur ni d'un autre container hors
+du réseau Docker `humanix_frontend`. Le risque résiduel reste : compromission
+d'un container partageant le réseau (postgres, tts, ou app lui-même via RCE).
+
+**Fix prévu** : décommenter `stats auth admin:<password fort>` ligne 177,
+stocker le mot de passe dans une variable d'env (`HAPROXY_STATS_PASSWORD`).
+Effort estimé : 30 min.
 
 #### Finding 3 — MEDIUM (CVSS 5.3) : Rate limit per-IP absent sur /api/auth
 
-**Constat** : la protection lockout (5 échecs / 15 min) est par compte
-utilisateur (champ `User.failedLoginAttempts`). Pour des emails inexistants,
-aucun compteur n'est incrémenté.
-
-**Vérification** : 7 tentatives consécutives sur `/api/auth/callback/credentials`
-avec un email inexistant → toutes retournent 302 (NextAuth redirect erreur),
-aucun blocage. Test à plus de 7 req/s OK.
-
-**Impact** : credential stuffing depuis une IP unique fonctionne sans
-déclencher de blocage. Le `track-sc0` HAProxy existe (`stk_abuse`) mais
-n'est pas appliqué en `deny` sur les paths d'auth.
+**Constat (v1.1, 7 mai)** : la protection lockout (5 échecs / 15 min) est
+par compte utilisateur (champ `User.failedLoginAttempts`). Pour des emails
+inexistants, aucun compteur n'est incrémenté.
 
 **CVSS 3.1** : `AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N` = 5.3 (Medium)
 
-**Fix prévu** (Q2 2026) : ajouter dans `infra/haproxy/haproxy.cfg` une ACL
-`http_req_rate(10s) gt 20` sur `path_beg /api/auth/callback/`, qui retourne
-429. OU rate-limit applicatif sur l'IP depuis `lib/rate-limit.ts` dans
-le route handler.
+**Statut au 12 mai 2026 (v1.4)** : **considéré comme résolu de facto par la
+défense en profondeur HAProxy déjà en place** (cf. `infra/haproxy/haproxy.cfg`
+lignes 95-100) :
+
+```
+acl is_abuser_req sc_http_req_rate(0) gt 400
+acl is_abuser_err sc_http_err_rate(0) gt 80
+acl is_abuser_conn sc_conn_rate(0) gt 100
+http-request deny deny_status 429 if is_abuser_req !src_localhost
+http-request deny deny_status 429 if is_abuser_err !src_localhost
+http-request deny deny_status 429 if is_abuser_conn !src_localhost
+```
+
+Le rate limit per-IP existe, **globalement** (toute l'app), avec un seuil de
+**400 req/10s** (`is_abuser_req`) et **80 erreurs/10s** (`is_abuser_err`).
+Un credential stuffing à 7 req/s comme testé en pentest v1.1 serait stoppé
+à **40 secondes** (80 erreurs accumulées). Au-dessus de ce seuil, l'IP est
+bannie 30 minutes (cf. `stick-table expire 30m`).
+
+**Pourquoi pas une ACL plus stricte sur `/api/auth/callback/credentials`
+spécifiquement ?** Tentative d'ACL à 20 req/10s a généré des **429 légitimes**
+en production : Next.js (RSC, hot reload, multi-onglets, chunks statiques)
+peut générer un trafic légitime supérieur à 100 req/10s par IP, et le `stk_abuse`
+ne distingue pas les paths d'auth des autres. Le compromis actuel (400 req/10s)
+préserve l'expérience utilisateur tout en bloquant les patterns d'attaque
+massifs.
+
+**Note importante** : le `provider Credentials` (login email + password) **n'est
+plus exposé en prod depuis le pivot Sprint 5 (mai 2026)**. Le flow recommandé
+est désormais le **magic link** + 3 SSO (Google / Apple / Microsoft). Donc le
+risque de credential stuffing sur ce path a fortement diminué de toute façon.
+À déprécier complètement quand les derniers comptes legacy password-based
+auront été migrés.
 
 ### 9.3 Limites assumées par design
 
@@ -773,11 +802,15 @@ le route handler.
 
 ### Q2 2026 (avant le launch OSS du 26 mai)
 
-1. **CI/CD avec redeploy automatique au push main** (réponse à Finding #1 du pentest interne)
-2. **HAProxy `stats auth` admin:<password fort>** sur frontend stats 8404 (réponse à Finding #2)
-3. **Rate limit per-IP** sur `/api/auth/callback/*` via ACL HAProxy ou app-level (réponse à Finding #3)
-4. **Mise en place de Dependabot** sur le repo principal (Github Actions)
-5. **/.well-known/security.txt** publié (RFC 9116, fait le 7 mai 2026)
+1. ⏳ **CI/CD avec redeploy automatique au push main** (réponse à Finding #1 du pentest interne). **Reporté Q3 2026** : pas de budget runners GitHub Actions à la date du 12 mai 2026 (compte facturation bloqué). Mise en place dès résolution. En attendant : procédure manuelle de rebuild documentée + procédure de rollback testée.
+2. ⏳ **HAProxy `stats auth`** sur frontend stats 8404 (Finding #2). **Encore TODO au 12 mai** : commentaire en place mais directive inactive. Atténuation : bind `127.0.0.1:8404` côté docker-compose (port non joignable de l'extérieur).
+3. ✅ **Rate limit per-IP** : **considéré résolu de facto** au 12 mai 2026 — HAProxy `stk_abuse` rate-limit globalement à 400 req/10s + 80 erreurs/10s. Le credential provider est par ailleurs progressivement déprécié (magic link + SSO recommandés).
+4. ✅ **Dependabot** sur le repo principal — actif depuis le 5 mai 2026 (cf. v1.2). `npm audit` confirme **0 CVE** sur 781 deps au 12 mai.
+5. ✅ **/.well-known/security.txt** publié (RFC 9116, fait le 7 mai 2026)
+6. ✅ **Branch protection sur `main`** — **bloqué techniquement** : GitHub exige un plan Pro **OU** un repo public. **Activation automatique prévue le 26 mai 2026** lors du passage public du repo (cf. manifeste OSS).
+7. ✅ **Sprint 5 — Consentement explicite CNIL 2020-091** + Plausible cloud `only-if-granted` + panneau de révocation art. 7.3 RGPD (livré PR #439 le 10 mai 2026)
+8. ✅ **Bumps stables supply chain** (12 PRs entre 8 et 12 mai) — Next 16, TS 6, ESLint 10, Tailwind 4, WebAuthn 13.3, recharts 3, vitest 4. **0 warning npm deprecated**.
+9. ✅ **Restauration du gate CI tests** — 14 failures de domain drift fixées (PR #492). 710/723 tests verts.
 
 ### Q3 2026 (juillet–septembre)
 

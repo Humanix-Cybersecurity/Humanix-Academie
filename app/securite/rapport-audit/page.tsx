@@ -64,7 +64,7 @@ export default function RapportAuditPage() {
         <Stat value="0" label="vulnérabilité critique exploitée" tone="success" />
         <Stat value="0" label="CVE npm audit (781 deps scannées)" tone="success" />
         <Stat value="100 %" label="hébergement France/UE" tone="info" />
-        <Stat value="710" label="tests vitest verts (97,5 %)" tone="info" />
+        <Stat value="1" label="finding medium restant (stats auth)" tone="warn" />
       </section>
 
       {/* Pentest interne v1.1 - résultats détaillés */}
@@ -100,16 +100,16 @@ export default function RapportAuditPage() {
             title="HAProxy stats interface (port 8404) sans authentification"
             cvss="5.3 (CVSS 3.1, Network/Low/None/None/Unchanged/Low/None/None)"
             issue="Le frontend stats HAProxy bind sur *:8404 sans stats auth. Bien que docker-compose limite l'exposition à 127.0.0.1 sur l'host, tout container partageant le réseau Docker peut accéder anonymement à la page (backends, débit, état des serveurs). Risque d'énumération si l'infra est partagée."
-            fix="Ajouter stats auth admin:<password fort> dans infra/haproxy/haproxy.cfg ligne 157 (le commentaire le mentionne déjà mais l'instruction n'est pas active). Stocker le mot de passe dans un secret Docker / variable d'env."
+            fix="Statut au 12 mai 2026 : directive stats auth toujours commentée dans haproxy.cfg ligne 177. Atténuation 127.0.0.1 active (port non joignable de l'extérieur). À activer prochainement avec password en variable d'env."
             status="todo"
           />
           <Finding
             severity="medium"
             title="Rate limiting per-IP absent sur /api/auth/callback/credentials"
             cvss="5.3 (CVSS 3.1, Network/Low/None/None/Unchanged/Low/None/None)"
-            issue="La protection lockout (5 échecs / 15 min) est par compte utilisateur (champ User.failedLoginAttempts). Pour des emails inexistants, aucun compteur n'est incrémenté. Conséquence : credential stuffing depuis une IP unique fonctionne à >7 req/s sans déclencher de blocage. Le track-sc0 HAProxy existe (stk_abuse) mais n'est pas appliqué en deny sur /api/auth."
-            fix="Ajouter dans infra/haproxy/haproxy.cfg une ACL http_req_rate(10s) gt 20 sur path_beg /api/auth/callback/, qui retourne 429. OU rate-limit applicatif sur l'IP depuis lib/rate-limit.ts dans la route handler."
-            status="todo"
+            issue="La protection lockout (5 échecs / 15 min) est par compte utilisateur (champ User.failedLoginAttempts). Pour des emails inexistants, aucun compteur n'est incrémenté. Le test pentest 7 mai : 7 req/s sur /api/auth/callback/credentials avec email inexistant n'a pas déclenché de blocage applicatif."
+            fix="Statut au 12 mai 2026 : considéré résolu de facto par le rate-limit HAProxy global (stk_abuse) - 400 req/10s + 80 erreurs/10s par IP, bannissement 30 min. Un credential stuffing à 7 req/s serait stoppé en ~40s. Le provider Credentials est par ailleurs progressivement déprécié au profit du magic link + SSO (Google/Apple/Microsoft)."
+            status="fixed"
           />
         </div>
 
