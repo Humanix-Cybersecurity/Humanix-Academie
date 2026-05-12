@@ -1,0 +1,3 @@
+[submodule "content-pro"]
+	path = content-pro
+	url = git@github.com:Humanix-Cybersecurity/humanix-content-pro.git
