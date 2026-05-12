@@ -384,7 +384,7 @@ export default async function PhishingLandingPage({
         </p>
       </div>
 
-      <p className="text-xs text-center text-gray-400 italic mt-6">
+      <p className="text-xs text-center text-gray-500 italic mt-6">
         Test effectué dans le cadre du programme de sensibilisation cyber de ton
         entreprise.
         <br />

@@ -292,7 +292,7 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
               aria-label="Rechercher un module"
             />
             <span
-              className="absolute left-3 top-2.5 text-gray-400 text-sm"
+              className="absolute left-3 top-2.5 text-gray-500 text-sm"
               aria-hidden="true"
             >
               🔍
@@ -505,7 +505,7 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
                           <button
                             onClick={() => onMove(s.id, "up")}
                             disabled={absIdx === 0 || pending}
-                            className="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-primary-500 disabled:opacity-20 disabled:cursor-not-allowed text-xs"
+                            className="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-primary-500 disabled:opacity-20 disabled:cursor-not-allowed text-xs"
                             aria-label="Monter"
                           >
                             ▲
@@ -516,7 +516,7 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
                           <button
                             onClick={() => onMove(s.id, "down")}
                             disabled={absIdx === saisons.length - 1 || pending}
-                            className="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-primary-500 disabled:opacity-20 disabled:cursor-not-allowed text-xs"
+                            className="w-6 h-6 flex items-center justify-center text-gray-500 hover:text-primary-500 disabled:opacity-20 disabled:cursor-not-allowed text-xs"
                             aria-label="Descendre"
                           >
                             ▼
@@ -549,7 +549,7 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
                               </span>
                             )}
                             <span
-                              className={`ml-auto text-xs text-gray-400 transition-transform shrink-0 ${
+                              className={`ml-auto text-xs text-gray-500 transition-transform shrink-0 ${
                                 isExpanded ? "rotate-180" : ""
                               }`}
                               aria-hidden="true"
@@ -560,7 +560,7 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
                           <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
                             {s.description}
                           </p>
-                          <p className="text-xs text-gray-400 mt-1">
+                          <p className="text-xs text-gray-500 mt-1">
                             {s.episodesCount} episode
                             {s.episodesCount > 1 ? "s" : ""}
                             {s.episodesCount > 0 && (
@@ -647,7 +647,7 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
                                     key={ep.slug}
                                     className="flex items-center gap-3 text-sm py-1"
                                   >
-                                    <span className="font-mono text-xs text-gray-400 tabular-nums shrink-0 w-6">
+                                    <span className="font-mono text-xs text-gray-500 tabular-nums shrink-0 w-6">
                                       {String(epIdx + 1).padStart(2, "0")}
                                     </span>
                                     <span className="font-medium text-gray-900 dark:text-gray-100 flex-1 min-w-0 truncate">
@@ -820,7 +820,7 @@ function FamilySection({
           aria-expanded={!collapsed}
         >
           <span
-            className={`text-gray-400 group-hover:text-primary-500 transition-transform text-xs ${
+            className={`text-gray-500 group-hover:text-primary-500 transition-transform text-xs ${
               collapsed ? "" : "rotate-90"
             }`}
             aria-hidden="true"

@@ -398,7 +398,7 @@ function PhishingPreview({ item }: { item: PersonalizedPhishing }) {
             {item.targetService ? ` · ${item.targetService}` : ""}
           </p>
         </div>
-        <code className="text-xs text-gray-400">{item.promptHash}</code>
+        <code className="text-xs text-gray-500">{item.promptHash}</code>
       </header>
 
       <div className="mb-3 text-sm">

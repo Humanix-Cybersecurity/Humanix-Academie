@@ -124,7 +124,7 @@ export default async function AdminChallengePage() {
                       <p className="text-xl font-extrabold text-accent-500 tabular-nums">
                         {r.xp}
                       </p>
-                      <p className="text-[10px] text-gray-400 uppercase tracking-wide">
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wide">
                         XP totaux
                       </p>
                     </div>

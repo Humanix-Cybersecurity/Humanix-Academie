@@ -57,7 +57,7 @@ export default function BusinessHero({
         >
           <p className="text-5xl sm:text-6xl font-extrabold leading-none tabular-nums">
             {collectiveScore}
-            <span className="text-2xl text-gray-400">/100</span>
+            <span className="text-2xl text-gray-500">/100</span>
           </p>
           <p
             className={`text-base font-bold mt-2 ${VERDICT_TEXT_STYLES[scoreVerdict]}`}

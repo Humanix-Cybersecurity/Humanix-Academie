@@ -218,7 +218,7 @@ export default function LiveAttackMap() {
         )}
       </div>
 
-      <p className="text-[10px] text-gray-400 text-center mt-4">
+      <p className="text-[10px] text-gray-500 text-center mt-4">
         Mises à jour automatiques - connexion sécurisée, données scopées à votre
         organisation.
       </p>

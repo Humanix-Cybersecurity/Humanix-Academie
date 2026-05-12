@@ -47,7 +47,7 @@ export default function PricingSimulator() {
             onChange={(e) => setSeats(parseInt(e.target.value))}
             className="w-full accent-accent-500"
           />
-          <div className="flex justify-between text-[10px] text-gray-400 mt-1">
+          <div className="flex justify-between text-[10px] text-gray-500 mt-1">
             <span>1</span>
             <span>50</span>
             <span>100</span>

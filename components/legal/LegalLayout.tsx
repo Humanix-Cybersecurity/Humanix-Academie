@@ -181,7 +181,7 @@ export function LegalSubsection({
   return (
     <div className="mt-6 mb-4">
       <h3 className="text-base sm:text-lg font-bold text-accent-500 mb-2 flex items-baseline gap-2">
-        {num && <span className="text-xs font-mono text-gray-400">{num}</span>}
+        {num && <span className="text-xs font-mono text-gray-500">{num}</span>}
         {title}
       </h3>
       <div className="legal-prose">{children}</div>
@@ -202,6 +202,7 @@ export function LegalTable({
   return (
     <div className="overflow-x-auto -mx-2 sm:mx-0 my-4">
       <table className="w-full text-sm border-collapse">
+        <caption className="sr-only">Tableau de donnees recapitulatif</caption>
         <thead>
           <tr className="bg-primary-500 text-white">
             {headers.map((h, i) => (
