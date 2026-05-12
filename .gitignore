@@ -145,8 +145,8 @@ data/tts-cache/[0-9a-f][0-9a-f]/
 # l'app bascule automatiquement sur les saisons demo CC BY-SA livrees en OSS
 # (cf. content/saisons-demo/ + prisma/catalog-saisons-demo.ts).
 # =============================================================================
-# /content/saisons/
-# /prisma/catalog-saisons.ts
-# /lib/library-seed.ts
-# /lib/marketplace-seed.ts
-# /lib/anecdotes/seed-data.ts
+/content/saisons
+/prisma/catalog-saisons.ts
+/lib/library-seed.ts
+/lib/marketplace-seed.ts
+/lib/anecdotes/seed-data.ts
