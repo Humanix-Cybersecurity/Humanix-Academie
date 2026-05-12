@@ -410,7 +410,7 @@ export default function UrgenceCyberPage() {
                           {s.name}
                           <span
                             aria-hidden="true"
-                            className="text-xs text-gray-400 group-hover:text-accent-500"
+                            className="text-xs text-gray-500 group-hover:text-accent-500"
                           >
                             ↗
                           </span>

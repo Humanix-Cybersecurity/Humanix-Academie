@@ -236,6 +236,7 @@ export default function AtRiskUsersTable({
       {/* Table */}
       <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-slate-700">
         <table className="w-full text-sm">
+          <caption className="sr-only">Utilisateurs identifies comme a risque cyber</caption>
           <thead className="bg-gray-50 dark:bg-slate-800/40">
             <tr>
               {canAct && (
@@ -301,7 +302,7 @@ export default function AtRiskUsersTable({
                 </td>
                 <td className="p-3 hidden md:table-cell">
                   {u.groupBadges.length === 0 ? (
-                    <span className="text-xs text-gray-400">—</span>
+                    <span className="text-xs text-gray-500">—</span>
                   ) : (
                     <div className="flex flex-wrap gap-1">
                       {u.groupBadges.map((g, i) => (
@@ -411,7 +412,7 @@ function TrendBadge({
     insufficient_data: {
       label: "Données insuffisantes",
       arrow: "?",
-      cls: "bg-gray-50 dark:bg-slate-800/50 text-gray-400 dark:text-gray-500",
+      cls: "bg-gray-50 dark:bg-slate-800/50 text-gray-500 dark:text-gray-500",
     },
   };
   const s = map[verdict];

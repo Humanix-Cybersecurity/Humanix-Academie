@@ -64,7 +64,7 @@ export default function CyberscoreHero({
               <span className="text-3xl sm:text-4xl font-extrabold tabular-nums text-gray-900 dark:text-gray-100">
                 {breakdown.score}
               </span>
-              <span className="text-[10px] uppercase tracking-widest text-gray-400 mt-0.5">
+              <span className="text-[10px] uppercase tracking-widest text-gray-500 mt-0.5">
                 / 100
               </span>
             </div>
@@ -131,12 +131,12 @@ function ScoreBreakdownDetail({
       <summary className="cursor-pointer flex items-center gap-2 text-xs font-semibold text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-accent-300 list-none">
         <span
           aria-hidden="true"
-          className="text-gray-400 group-open:rotate-90 transition-transform"
+          className="text-gray-500 group-open:rotate-90 transition-transform"
         >
           ▸
         </span>
         <span>Comment ce score est calculé&nbsp;?</span>
-        <span className="ml-auto text-gray-400 italic">
+        <span className="ml-auto text-gray-500 italic">
           Note de sévérité&nbsp;: élevée
         </span>
       </summary>
@@ -269,7 +269,7 @@ function ScoreComponent({
           </span>
           <span className="text-xs font-bold tabular-nums text-gray-900 dark:text-gray-100 shrink-0">
             {score}
-            <span className="text-gray-400 font-normal">/{max}</span>
+            <span className="text-gray-500 font-normal">/{max}</span>
           </span>
         </div>
         <div className="h-1 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">

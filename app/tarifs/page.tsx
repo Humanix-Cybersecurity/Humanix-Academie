@@ -321,7 +321,7 @@ export default async function TarifsPage({
           <Link href="/demo" className="underline">démo</Link> remplit ce rôle).
           Mensuel résiliable à tout moment, annuel = engagement 12 mois.
         </p>
-        <p className="text-xs text-center text-gray-400 mt-2 hidden md:block">
+        <p className="text-xs text-center text-gray-500 mt-2 hidden md:block">
           Cliquez sur un palier ou utilisez les flèches ‹ › pour le mettre en avant.
         </p>
       </section>
@@ -464,6 +464,7 @@ export default async function TarifsPage({
         </div>
         <div className="overflow-x-auto card p-0">
           <table className="w-full text-sm">
+            <caption className="sr-only">Comparaison detaillee des paliers tarifaires</caption>
             <thead>
               <tr className="border-b border-gray-200 bg-gray-50">
                 <th className="text-left p-4 font-bold text-primary-500 sticky left-0 bg-gray-50 z-10">

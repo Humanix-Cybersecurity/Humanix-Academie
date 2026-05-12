@@ -431,7 +431,7 @@ export default function HexChat({ enabled }: Props) {
                 </button>
               )}
             </div>
-            <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-1.5 text-center">
+            <p className="text-[10px] text-gray-500 dark:text-gray-500 mt-1.5 text-center">
               Hex peut se tromper. Pas de PII (mot de passe, IBAN, vrais noms).
             </p>
           </div>

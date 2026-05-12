@@ -20,12 +20,12 @@ export default function TopPerformers({
         <h3 className="font-bold text-gray-900 dark:text-gray-100 text-sm">
           Top 3 collaborateurs
         </h3>
-        <p className="text-[10px] text-gray-400 italic uppercase tracking-wide">
+        <p className="text-[10px] text-gray-500 italic uppercase tracking-wide">
           Visible dirigeant
         </p>
       </header>
       {team.length === 0 ? (
-        <p className="text-sm text-gray-400 italic text-center py-4">
+        <p className="text-sm text-gray-500 italic text-center py-4">
           Aucun collaborateur actif.
         </p>
       ) : (
@@ -59,7 +59,7 @@ export default function TopPerformers({
                 <p className="font-extrabold text-accent-500 tabular-nums text-sm">
                   {u.xp}
                 </p>
-                <p className="text-[9px] text-gray-400 uppercase tracking-wide leading-none">
+                <p className="text-[9px] text-gray-500 uppercase tracking-wide leading-none">
                   XP
                 </p>
               </div>

@@ -320,6 +320,7 @@ export default function AdminSidebar() {
             la hauteur. scrollbar-gutter: stable evite le decalage des items
             quand la scrollbar apparait/disparait. */}
         <nav
+          aria-label="Sections console admin"
           className="flex-1 overflow-y-auto overflow-x-hidden admin-nav-scroll px-2 py-2 space-y-1"
           style={{ scrollbarGutter: "stable" }}
         >
@@ -443,7 +444,7 @@ function Accordion({
         <span
           aria-hidden="true"
           className={clsx(
-            "shrink-0 text-xs text-gray-400 dark:text-gray-500 transition-transform duration-200",
+            "shrink-0 text-xs text-gray-500 dark:text-gray-500 transition-transform duration-200",
             isOpen ? "rotate-90" : "rotate-0",
             isDesktop && "hidden group-hover:inline-block",
           )}

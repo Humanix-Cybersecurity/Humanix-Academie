@@ -300,7 +300,7 @@ export default function EpisodePlayer(props: {
                 </button>
               ))}
             </div>
-            <p className="text-xs text-gray-400 dark:text-gray-500 italic text-center mt-5">
+            <p className="text-xs text-gray-500 dark:text-gray-500 italic text-center mt-5">
               Astuce : tu peux utiliser les chiffres 1 a 4 du clavier
             </p>
           </div>
@@ -372,7 +372,7 @@ export default function EpisodePlayer(props: {
             >
               Quiz eclair <span aria-hidden="true">→</span>
             </button>
-            <p className="text-xs text-gray-400 dark:text-gray-500 italic text-center mt-4">
+            <p className="text-xs text-gray-500 dark:text-gray-500 italic text-center mt-4">
               Astuce : appuie sur Entree
             </p>
           </div>
@@ -386,7 +386,7 @@ export default function EpisodePlayer(props: {
             <div className="flex justify-between items-center mb-6">
               <p className="text-sm text-gray-700 dark:text-gray-300 tabular-nums">
                 Question {quizIndex + 1}{" "}
-                <span className="text-gray-400 dark:text-gray-500">
+                <span className="text-gray-500 dark:text-gray-500">
                   / {props.quiz.length}
                 </span>
               </p>
@@ -629,7 +629,7 @@ function ProgressDots({ step }: { step: Step }) {
                 className={`h-2 w-10 sm:w-16 rounded-full transition-all ${reached ? "bg-gradient-to-r from-accent-500 to-primary-500" : "bg-gray-200 dark:bg-slate-700"}`}
               />
               <span
-                className={`text-[10px] sm:text-xs mt-1.5 uppercase tracking-widest ${reached ? "text-accent-600 dark:text-accent-300 font-bold" : "text-gray-400 dark:text-gray-500"}`}
+                className={`text-[10px] sm:text-xs mt-1.5 uppercase tracking-widest ${reached ? "text-accent-600 dark:text-accent-300 font-bold" : "text-gray-500 dark:text-gray-500"}`}
               >
                 {labels[s]}
               </span>

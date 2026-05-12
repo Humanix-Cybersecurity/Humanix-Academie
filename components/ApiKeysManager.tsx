@@ -133,12 +133,13 @@ export default function ApiKeysManager({ keys }: { keys: Key[] }) {
       </div>
 
       {keys.length === 0 ? (
-        <div className="card text-center py-8 text-gray-400 italic">
+        <div className="card text-center py-8 text-gray-500 italic">
           Aucune clé pour l'instant. Crée ta première clé ci-dessus.
         </div>
       ) : (
         <div className="card">
           <table className="w-full text-sm">
+            <caption className="sr-only">Cles API actives sur le tenant</caption>
             <thead className="text-left text-gray-500 border-b">
               <tr>
                 <th scope="col" className="pb-3">

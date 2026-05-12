@@ -45,7 +45,7 @@ export default function ActionPlan({ actions }: { actions: Action[] }) {
             <p className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 tabular-nums">
               +{a.potentialPoints}
             </p>
-            <p className="text-[10px] uppercase text-gray-400 tracking-wide">
+            <p className="text-[10px] uppercase text-gray-500 tracking-wide">
               pts/score
             </p>
           </div>

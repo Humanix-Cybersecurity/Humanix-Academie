@@ -967,6 +967,7 @@ export default function ComparatifPage() {
                     className="w-full border-collapse min-w-[1100px] bg-white dark:bg-slate-900"
                     aria-label={`Comparatif Humanix Académie versus concurrents - ${cat}`}
                   >
+                    <caption className="sr-only">Comparatif fonctionnel : Humanix vs concurrents</caption>
                     <thead>
                       <tr>
                         <th className="bg-gray-50 dark:bg-slate-800 p-3 border text-left text-xs uppercase tracking-wide text-gray-600 dark:text-gray-300 sticky left-0 z-10">

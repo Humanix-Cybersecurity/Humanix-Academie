@@ -245,7 +245,7 @@ export function LevelProgressBar({ xp }: { xp: number }) {
           style={{ width: `${pct}%` }}
         />
       </div>
-      <p className="text-[10px] text-gray-400 mt-1 text-center">
+      <p className="text-[10px] text-gray-500 mt-1 text-center">
         {xpInLevel} XP gagnés dans ce niveau
       </p>
     </div>

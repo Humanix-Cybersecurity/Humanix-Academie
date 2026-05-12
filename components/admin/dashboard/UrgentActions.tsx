@@ -101,7 +101,7 @@ export default function UrgentActions({ actions }: { actions: Action[] }) {
         <h2 className="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 flex items-center gap-2">
           <span aria-hidden="true">⚠️</span>À faire maintenant
         </h2>
-        <span className="text-[11px] text-gray-400 tabular-nums">
+        <span className="text-[11px] text-gray-500 tabular-nums">
           {actions.length} action{actions.length > 1 ? "s" : ""}
         </span>
       </div>

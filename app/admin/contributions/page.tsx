@@ -108,7 +108,7 @@ export default async function ContributionsPage() {
                     <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-1 mt-0.5">
                       {m.description}
                     </p>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-gray-500 mt-1">
                       v{m.version} · {m.category} · maj{" "}
                       {m.updatedAt.toLocaleDateString("fr-FR")}
                     </p>
@@ -118,7 +118,7 @@ export default async function ContributionsPage() {
                       </p>
                     )}
                   </div>
-                  <span className="text-gray-400 shrink-0" aria-hidden="true">
+                  <span className="text-gray-500 shrink-0" aria-hidden="true">
                     →
                   </span>
                 </Link>

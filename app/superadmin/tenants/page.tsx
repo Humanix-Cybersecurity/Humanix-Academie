@@ -60,6 +60,7 @@ export default async function SuperadminTenantsPage({
 
       <div className="overflow-x-auto bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-800">
         <table className="w-full text-sm">
+          <caption className="sr-only">Liste de tous les tenants de la plateforme</caption>
           <thead className="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-slate-800">
             <tr>
               <th className="px-4 py-3 font-medium text-xs uppercase tracking-wider">
@@ -133,7 +134,7 @@ export default async function SuperadminTenantsPage({
               <tr>
                 <td
                   colSpan={7}
-                  className="text-center py-8 text-gray-400 italic"
+                  className="text-center py-8 text-gray-500 italic"
                 >
                   Aucun tenant ne correspond aux filtres.
                 </td>

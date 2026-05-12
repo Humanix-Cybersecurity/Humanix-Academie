@@ -227,7 +227,7 @@ export default function LaunchQuishingForm({
         </div>
       )}
 
-      <p className="text-xs text-gray-400 dark:text-gray-500 italic text-center">
+      <p className="text-xs text-gray-500 dark:text-gray-500 italic text-center">
         Aucun envoi technique : tu reçois un PDF, tu imprimes, tu colles. Le
         QR code de chaque affiche est unique et trackable.
       </p>

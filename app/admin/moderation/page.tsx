@@ -69,7 +69,7 @@ export default async function ModerationPage() {
           🕒 En attente ({queue.length})
         </h3>
         {queue.length === 0 ? (
-          <div className="card text-center py-8 text-gray-400 italic">
+          <div className="card text-center py-8 text-gray-500 italic">
             Aucun module en attente. Bonne tasse de café ☕.
           </div>
         ) : (
@@ -162,7 +162,7 @@ export default async function ModerationPage() {
                   <td className="py-3 text-gray-500 text-xs">
                     {m.reviewedBy?.name ?? "—"}
                   </td>
-                  <td className="py-3 text-gray-400 text-xs">
+                  <td className="py-3 text-gray-500 text-xs">
                     {m.reviewedAt?.toLocaleDateString("fr-FR")}
                   </td>
                 </tr>
@@ -170,7 +170,7 @@ export default async function ModerationPage() {
             </tbody>
           </table>
           {recent.length === 0 && (
-            <p className="text-center text-gray-400 italic py-4">
+            <p className="text-center text-gray-500 italic py-4">
               Pas encore d'historique.
             </p>
           )}
