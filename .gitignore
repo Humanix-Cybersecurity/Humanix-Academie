@@ -16,6 +16,11 @@
 # misc
 .DS_Store
 *.pem
+# Exception : Next.js route folders dont le nom termine par .pem
+# (utilises pour servir un endpoint avec extension stable dans l'URL,
+# ex: /.well-known/humanix-pdf-pubkey.pem)
+!app/**/*.pem/
+!app/**/*.pem/**
 .idea
 .vscode
 
