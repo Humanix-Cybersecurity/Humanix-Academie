@@ -51,16 +51,17 @@ export default function CisoAssistantIntegrationPage() {
           Comment ça marche ?
         </h2>
         <p className="text-center text-sm text-gray-600 dark:text-gray-300 mb-6">
-          Approche <strong>Pull</strong> : votre instance CISO Assistant
-          interroge l'API Humanix, recupere les preuves vivantes, les attache
-          automatiquement aux controles. Aucun couplage fort.
+          Approche <strong>Push</strong> : Humanix Académie pousse les preuves
+          vivantes (statut + score + PDF signé Ed25519) vers votre instance
+          CISO Assistant via son API REST publique. Aucune modification requise
+          côté intuitem — Humanix s'adapte à leur schéma.
         </p>
 
         <svg
           viewBox="0 0 700 220"
           className="w-full max-w-3xl mx-auto"
           role="img"
-          aria-label="Schema d'architecture : CISO Assistant interroge Humanix Academie via l'API REST evidence-export, qui retourne un bundle JSON de preuves de conformité."
+          aria-label="Schema d'architecture : Humanix Academie pousse les evidences et PDFs signés Ed25519 vers CISO Assistant via REST + auth Knox."
         >
           <defs>
             <linearGradient
@@ -101,49 +102,9 @@ export default function CisoAssistantIntegrationPage() {
             </marker>
           </defs>
 
-          {/* CISO Assistant box (gauche) */}
+          {/* Humanix box (gauche - source du push) */}
           <rect
             x="20"
-            y="60"
-            width="200"
-            height="100"
-            rx="16"
-            fill="url(#grad-ciso)"
-          />
-          <text
-            x="120"
-            y="100"
-            textAnchor="middle"
-            fontSize="16"
-            fontWeight="800"
-            fill="white"
-          >
-            CISO Assistant
-          </text>
-          <text
-            x="120"
-            y="122"
-            textAnchor="middle"
-            fontSize="11"
-            fill="white"
-            opacity="0.85"
-          >
-            (RSSI / GRC)
-          </text>
-          <text
-            x="120"
-            y="140"
-            textAnchor="middle"
-            fontSize="10"
-            fill="white"
-            opacity="0.7"
-          >
-            ISO 27001 · NIS2 · RGPD
-          </text>
-
-          {/* Humanix box (droite) */}
-          <rect
-            x="480"
             y="60"
             width="200"
             height="100"
@@ -151,7 +112,7 @@ export default function CisoAssistantIntegrationPage() {
             fill="url(#grad-humanix)"
           />
           <text
-            x="580"
+            x="120"
             y="100"
             textAnchor="middle"
             fontSize="16"
@@ -161,7 +122,7 @@ export default function CisoAssistantIntegrationPage() {
             Humanix Academie
           </text>
           <text
-            x="580"
+            x="120"
             y="122"
             textAnchor="middle"
             fontSize="11"
@@ -171,6 +132,46 @@ export default function CisoAssistantIntegrationPage() {
             (sensibilisation)
           </text>
           <text
+            x="120"
+            y="140"
+            textAnchor="middle"
+            fontSize="10"
+            fill="white"
+            opacity="0.7"
+          >
+            score · certificats · PDF signe
+          </text>
+
+          {/* CISO Assistant box (droite - destination du push) */}
+          <rect
+            x="480"
+            y="60"
+            width="200"
+            height="100"
+            rx="16"
+            fill="url(#grad-ciso)"
+          />
+          <text
+            x="580"
+            y="100"
+            textAnchor="middle"
+            fontSize="16"
+            fontWeight="800"
+            fill="white"
+          >
+            CISO Assistant
+          </text>
+          <text
+            x="580"
+            y="122"
+            textAnchor="middle"
+            fontSize="11"
+            fill="white"
+            opacity="0.85"
+          >
+            (RSSI / GRC)
+          </text>
+          <text
             x="580"
             y="140"
             textAnchor="middle"
@@ -178,49 +179,49 @@ export default function CisoAssistantIntegrationPage() {
             fill="white"
             opacity="0.7"
           >
-            score · certificats · NIS2
+            ISO 27001 · NIS2 · RGPD
           </text>
 
-          {/* Fleche aller : CISO -> Humanix */}
+          {/* Fleche aller : Humanix -> CISO (push principal) */}
           <line
             x1="225"
             y1="95"
             x2="475"
             y2="95"
-            stroke="#7C3AED"
-            strokeWidth="2.5"
-            markerEnd="url(#arrow-l)"
-          />
-          <text
-            x="350"
-            y="86"
-            textAnchor="middle"
-            fontSize="10"
-            fill="#7C3AED"
-            fontWeight="700"
-          >
-            GET /api/v1/evidence-export
-          </text>
-
-          {/* Fleche retour : Humanix -> CISO */}
-          <line
-            x1="475"
-            y1="125"
-            x2="225"
-            y2="125"
             stroke="#00A3A1"
             strokeWidth="2.5"
             markerEnd="url(#arrow-r)"
           />
           <text
             x="350"
-            y="142"
+            y="86"
             textAnchor="middle"
             fontSize="10"
             fill="#00A3A1"
             fontWeight="700"
           >
-            bundle JSON (preuves vivantes)
+            POST /api/evidences/ + upload PDF Ed25519
+          </text>
+
+          {/* Fleche retour : CISO -> Humanix (auth Knox) */}
+          <line
+            x1="475"
+            y1="125"
+            x2="225"
+            y2="125"
+            stroke="#7C3AED"
+            strokeWidth="2.5"
+            markerEnd="url(#arrow-l)"
+          />
+          <text
+            x="350"
+            y="142"
+            textAnchor="middle"
+            fontSize="10"
+            fill="#7C3AED"
+            fontWeight="700"
+          >
+            token Knox (POST /api/iam/login/)
           </text>
 
           {/* Bandeau bas */}
@@ -231,8 +232,8 @@ export default function CisoAssistantIntegrationPage() {
             fontSize="11"
             fill="#555555"
           >
-            Auth : API key tenant · Rate limit : 10 req/h · Audit trail : event
-            evidence.exported
+            Idempotent (GET-by-name → PATCH ou POST) · PDF signe Ed25519 ·
+            verifiable hors-ligne (OpenSSL)
           </text>
         </svg>
       </section>
@@ -377,20 +378,33 @@ export default function CisoAssistantIntegrationPage() {
               Quelle est la fréquence de rafraichissement ?
             </summary>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-              Vous controlez la fréquence depuis votre cote. Un cron quotidien
-              suffit pour la plupart des usages. Le rate limit est de 10 req/h
-              par tenant.
+              Vous contrôlez la fréquence côté Humanix. Trois modes :
+              déclenchement manuel via la console admin (bouton{" "}
+              <em>Synchroniser maintenant</em>), cron quotidien automatique
+              via le connecteur Python autonome, ou push évènementiel à chaque
+              completion de module / changement de score (planifié v1.3).
             </p>
           </details>
           <details className="card">
             <summary className="cursor-pointer font-bold text-primary-500">
-              Et le mode push (webhook) ?
+              Et la vérification d'intégrité des preuves ?
             </summary>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-              Prevu en v1.1 : un webhook outbound <code>evidence.created</code>{" "}
-              signe HMAC-SHA256 sera disponible pour pousser les preuves en
-              temps reel a chaque generation de certificat ou changement de
-              score.
+              Chaque PDF de preuve uploadé dans CISO Assistant contient un
+              manifeste d'intégrité signé Ed25519 en page 2 (algorithme,
+              empreinte clé publique, hash SHA-256, signature base64url,
+              payload JSON canonical, procédure de vérification OpenSSL). La
+              clé publique est servie sur{" "}
+              <a
+                href="/.well-known/humanix-pdf-pubkey.pem"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent-500 underline"
+              >
+                /.well-known/humanix-pdf-pubkey.pem
+              </a>
+              . Un auditeur peut re-vérifier une preuve 5 ans après son émission
+              sans aucune dépendance Humanix runtime.
             </p>
           </details>
           <details className="card">

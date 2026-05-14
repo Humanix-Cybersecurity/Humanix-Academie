@@ -265,7 +265,11 @@ async function executeSync(
           framework,
           audit: auditMeta,
         });
-        const filename = `humanix-${framework}-${evidence.control_ref}.pdf`;
+        // Sanitize : Django FileUploadParser parse le filename via regex
+        // sur Content-Disposition. Caracteres ":", "/" et espaces peuvent
+        // casser le parsing -> upload silencieusement vide.
+        const safeName = (s: string) => s.replace(/[^A-Za-z0-9._-]/g, "_");
+        const filename = `humanix-${safeName(framework)}-${safeName(evidence.control_ref)}.pdf`;
         const up = await client.uploadAttachment(result.id, filename, pdf);
         if (up.ok) {
           await appendLog(
