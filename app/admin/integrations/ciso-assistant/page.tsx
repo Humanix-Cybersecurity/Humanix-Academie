@@ -102,6 +102,8 @@ export default async function CisoAssistantAdminPage() {
                 folderName: connection.folderName,
                 ownerEmail: connection.ownerEmail,
                 verifySSL: connection.verifySSL,
+                createAppliedControls: connection.createAppliedControls,
+                createFindings: connection.createFindings,
                 lastTestedAt: connection.lastTestedAt?.toISOString() ?? null,
                 lastTestStatus: connection.lastTestStatus,
                 lastTestError: connection.lastTestError,
