@@ -27,31 +27,20 @@ type FooterLink = {
   external?: boolean;
 };
 
-// Le lien "Demo en ligne" pointe :
-//   - en prod (DEMO_MODE=false) -> https://demo.humanix-academie.fr
-//     (subdomain dedie qui tourne en mode demo, separe de la prod
-//     commerciale pour éviter tout melange de données fictives /
-//     reelles).
-//   - en demo (DEMO_MODE=true)  -> /demo (route locale, l'app est
-//     déjà en mode demo).
-//
-// Le subdomain demo en prod est traite comme lien externe (target=_blank
-// + rel noopener noreferrer) pour ne pas perdre la session de l'user
-// qui regarde le site commercial.
-const DEMO_LINK: FooterLink =
-  process.env.DEMO_MODE === "true"
-    ? { href: "/demo", label: "Démo", emoji: "🎮" }
-    : {
-        href: "https://demo.humanix-academie.fr",
-        label: "Démo",
-        emoji: "🎮",
-        external: true,
-      };
+// Le lien "Démo" du footer suit la même règle que le header : présent
+// UNIQUEMENT en DEMO_MODE. En prod commerciale, aucune mention de la démo
+// (ni route locale /demo, ni subdomain externe) pour éviter qu'un visiteur
+// se retrouve sur des données fictives en croyant être sur le SaaS. La
+// page /demo retourne 404 server-side en prod (cf. app/demo/layout.tsx).
+const IS_DEMO_MODE = process.env.DEMO_MODE === "true";
+const DEMO_LINK: FooterLink | null = IS_DEMO_MODE
+  ? { href: "/demo", label: "Démo", emoji: "🎮" }
+  : null;
 
 // Colonne "Notre offre" -- miroir strict de PRODUIT_ITEMS dans HeaderBar.tsx
 const NOTRE_OFFRE: FooterLink[] = [
   { href: "/tarifs", label: "Tarifs", emoji: "💶" },
-  DEMO_LINK,
+  ...(DEMO_LINK ? [DEMO_LINK] : []),
   { href: "/comparatif", label: "Comparatif", emoji: "⚖️" },
   { href: "/integrations", label: "Intégrations", emoji: "🔌" },
   { href: "/marketplace", label: "Marketplace", emoji: "🏛" },
