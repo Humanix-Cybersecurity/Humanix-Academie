@@ -1,6 +1,6 @@
 # Intégration CISO Assistant ↔ Humanix Académie
 
-> **Statut** : livré (sprint 9, mai 2026).
+> **Statut** : connecteur validé bout-en-bout contre CISO Assistant Community (mai 2026).
 > **Page publique** : [`/integrations/ciso-assistant`](./app/integrations/ciso-assistant/page.tsx)
 > **Connecteur** : [`connectors/ciso-assistant/`](./connectors/ciso-assistant/)
 
@@ -8,9 +8,21 @@
 
 [CISO Assistant](https://github.com/intuitem/ciso-assistant-community) (intuitem, AGPL, 🇫🇷) est l'outil GRC open-source en croissance chez les RSSI PME/ETI. Il couvre la conformité (ISO 27001, NIS2, RGPD, ANSSI) mais **pas le facteur humain**. Humanix le complète sans empiéter - co-marketing plutôt que concurrence.
 
+## Principe d'intégration : zero modification côté CISO Assistant
+
+Humanix s'adapte 100% à l'API existante de CISO Assistant Community. Aucun
+code à écrire, aucune dépendance à ajouter, aucun endpoint à exposer côté
+intuitem. Le connecteur Python d'Humanix pull les preuves chez Humanix,
+résout les écarts sémantiques, et POST/PATCH sur l'API REST publique de
+CISO Assistant.
+
 ## Architecture en place
 
-Approche **Pull** : CISO Assistant interroge `/api/v1/evidence-export` avec une clé API tenant Humanix, reçoit un bundle JSON de preuves vivantes (statut + score + artefacts par contrôle).
+Connecteur Python autonome qui :
+1. Pull `/api/v1/evidence-export` côté Humanix (bundle JSON multi-framework)
+2. Auth Knox côté CISO Assistant (`POST /api/iam/login/`)
+3. Crée ou récupère un folder `"Humanix Académie"` (`GET/POST /api/folders/`)
+4. Pour chaque contrôle : upsert idempotent (`GET /api/evidences/?folder=...` → `PATCH` si name match, sinon `POST`)
 
 ## Endpoint - formats supportés
 
@@ -44,7 +56,41 @@ Chaque contrôle est associé à un seuil de conformité explicite et à des art
 
 ## Connecteur Python (MIT)
 
-`connectors/ciso-assistant/humanix_ciso_connector.py` - pull bundle Humanix, push vers `/api/evidences/` de CISO Assistant. Mode dry-run, support cron, gestion d'erreurs.
+`connectors/ciso-assistant/humanix_ciso_connector.py` - pull bundle Humanix, push vers `/api/evidences/` de CISO Assistant. Mode dry-run, support cron, gestion d'erreurs, **upsert idempotent** (run quotidien sans doublon).
+
+### Écarts schéma absorbés côté Humanix (zero impact intuitem)
+
+Découverts en validant le connecteur contre CISO Assistant Community v2.x. Tous résolus côté connecteur Python :
+
+| Champ | Humanix natif | CISO Assistant attend | Adaptation |
+|---|---|---|---|
+| Statut | `compliant`/`partial`/`non_compliant`/`not_assessed` (conformité) | `draft`/`missing`/`in_review`/`approved`/`rejected`/`expired` (workflow document) | Mapping : compliant→approved, partial→in_review, non_compliant→rejected, not_assessed→draft |
+| `folder` (FK) | Inexistant | Requis sur Evidence | Connecteur crée/retrouve un folder "Humanix Académie" au boot |
+| `link` (URL) | Renvoyé comme URL relative (`/api/...`) | URLField Django : exige absolue | Connecteur préfixe avec `HUMANIX_BASE_URL` |
+| `metadata` (JSON libre) | Bundle riche envoyé | Inexistant côté CISO Assistant | Embeddé dans `description` en markdown lisible |
+| Unicité `name` par scope | Pas de contrainte | Une seule evidence par name+folder | Connecteur GET-by-name puis PATCH si existe, POST sinon |
+
+### Authentification
+
+Auth Knox standard côté CISO Assistant : `POST /api/iam/login/` avec `{username, password}` → token. Header subsequent `Authorization: Token <hash>`. Compatible Knox 4.x et 5.x.
+
+### Test bout-en-bout
+
+Validé contre CISO Assistant Community lancé via `bash docker-compose.sh` (HTTPS 8443, backend Django + Caddy + Qdrant + Huey). Un run typique :
+
+```
+Bundle reçu : 7 contrôles, 6 compliants, 0 non-évalués
+Folder Humanix trouvé : 3a16f5af-8c88-49ca-8f7b-cb73ab169380
+Cache evidences : 7 entries existantes
+OK PATCH A.5.1   -> evidence 511ae193-5f71-4652-88c1-4dee3c8e03d6
+OK PATCH A.5.24  -> evidence e00b4c3e-119d-44ae-93d5-a6a8c545bcfd
+OK PATCH A.6.3   -> evidence b5624c3b-19f2-4738-bbab-44221b4898bf
+OK PATCH A.6.6   -> evidence 0900357c-9e27-4049-a30f-735657a7586b
+OK PATCH A.6.8   -> evidence 1e5bb182-d1b3-4c6b-816f-2ef31a9d5c58
+OK PATCH A.7.7   -> evidence 55ed380a-8ae9-4b00-b0d7-26de77b75325
+OK PATCH A.8.7   -> evidence 2b255a86-2b26-4a0f-a9f3-54087ea71af0
+Synchronisés : 7 / Échecs : 0
+```
 
 ## Webhook outbound (push v1.1)
 
