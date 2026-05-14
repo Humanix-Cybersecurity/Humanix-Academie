@@ -48,18 +48,23 @@ type DropdownItem = {
   emoji: string;
 };
 
-const PRODUIT_ITEMS: DropdownItem[] = [
+// "Démo" est UNIQUEMENT exposé en mode démo (DEMO_MODE=true côté serveur).
+// En prod commerciale, retire complètement l'entrée du dropdown "Notre
+// offre" pour éviter qu'un visiteur arrive sur des données fictives en
+// croyant être sur le SaaS. Defense en profondeur : la page /demo elle-
+// même retourne 404 via app/demo/layout.tsx côté serveur en prod.
+const DEMO_DROPDOWN_ITEM: DropdownItem = {
+  href: "/demo",
+  label: "Démo",
+  description: "Tester en 2 minutes, sans inscription",
+  emoji: "🎮",
+};
+const PRODUIT_ITEMS_BASE: DropdownItem[] = [
   {
     href: "/tarifs",
     label: "Tarifs",
     description: "Self-host gratuit ou cloud à partir de 0 €/mois",
     emoji: "💶",
-  },
-  {
-    href: "/demo",
-    label: "Démo",
-    description: "Tester en 2 minutes, sans inscription",
-    emoji: "🎮",
   },
   {
     href: "/comparatif",
@@ -86,6 +91,13 @@ const PRODUIT_ITEMS: DropdownItem[] = [
     emoji: "❤️",
   },
 ];
+function buildProduitItems(demoMode: boolean): DropdownItem[] {
+  // En mode démo : insérer "Démo" en 2e position (après "Tarifs"),
+  // ordre historique. En prod : aucune mention de la démo.
+  return demoMode
+    ? [PRODUIT_ITEMS_BASE[0], DEMO_DROPDOWN_ITEM, ...PRODUIT_ITEMS_BASE.slice(1)]
+    : PRODUIT_ITEMS_BASE;
+}
 
 const SOLUTIONS_ITEMS: DropdownItem[] = [
   {
@@ -440,7 +452,10 @@ export default function HeaderBar({ demoMode = false }: { demoMode?: boolean }) 
           <>
             {/* Desktop nav (md+) */}
             <div className="hidden md:flex items-center gap-1">
-              <NavDropdown label="Notre offre" items={PRODUIT_ITEMS} />
+              <NavDropdown
+                label="Notre offre"
+                items={buildProduitItems(demoMode)}
+              />
               <NavDropdown label="Outils" items={SOLUTIONS_ITEMS} />
               <NavLink href="/communaute" isActive={isActive("/communaute")}>
                 Communauté
@@ -513,7 +528,10 @@ export default function HeaderBar({ demoMode = false }: { demoMode?: boolean }) 
             className="fixed top-16 inset-x-0 bottom-0 z-[70] bg-white dark:bg-slate-900 overflow-y-auto animate-slide-up shadow-2xl"
           >
             <div className="px-4 py-6 space-y-6">
-              <MobileSection title="Notre offre" items={PRODUIT_ITEMS} />
+              <MobileSection
+                title="Notre offre"
+                items={buildProduitItems(demoMode)}
+              />
               <MobileSection title="Outils" items={SOLUTIONS_ITEMS} />
               <MobileSection
                 title="Communauté"
