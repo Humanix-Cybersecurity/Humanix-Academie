@@ -1,0 +1,160 @@
+convert_library_version: 'v2 ; Compat Mode: [0] {[v2.1] (DEFAULT) Don''t use any Compatibility Mode}'
+urn: urn:humanix:risk:library:mapping-humanix-awareness-to-iso27001-2022
+locale: fr
+ref_id: mapping-humanix-awareness-to-iso27001-2022
+name: Humanix Académie ↔ ISO/IEC 27001:2022
+description: |-
+  Mapping entre le catalogue de modules de sensibilisation cyber
+  Humanix Académie et le standard international ISO/IEC 27001:2022.
+  Permet à un RSSI d'identifier instantanément, depuis CISO Assistant,
+  quels modules Humanix couvrent quels contrôles ISO 27001.
+
+  Relation utilisée : "intersect" — un module Humanix couvre partiellement
+  un contrôle ISO (la couche humaine). Les contrôles techniques associés
+  (chiffrement, segmentation réseau, etc.) restent à couvrir par d'autres
+  mesures.
+copyright: |-
+  © Humanix-Cybersecurity SASU. Mapping publié sous licence CC BY-SA 4.0.
+  Reuse autorisé avec attribution.
+version: 1
+publication_date: 2026-05-15
+provider: Humanix-Cybersecurity SASU
+packager: Humanix-Cybersecurity
+dependencies:
+  - urn:humanix:risk:library:humanix-awareness-catalog-v1
+  - urn:intuitem:risk:library:iso27001-2022
+objects:
+  requirement_mapping_sets:
+    - urn: urn:humanix:risk:req_mapping_set:mapping-humanix-awareness-to-iso27001-2022
+      ref_id: mapping-humanix-awareness-to-iso27001-2022
+      name: Humanix Académie ↔ ISO/IEC 27001:2022
+      description: |-
+        Lie les modules de sensibilisation Humanix aux contrôles ISO 27001:2022
+        Annex A. La relation "intersect" signifie qu'un module Humanix couvre
+        la dimension humaine du contrôle mais ne suffit pas seul.
+      source_framework_urn: urn:humanix:risk:framework:humanix-awareness-catalog-v1
+      target_framework_urn: urn:intuitem:risk:framework:iso27001-2022
+      requirement_mappings:
+        # A.5.1 Politiques de sécurité de l'information
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:donnees-sensibles
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:5.1
+          relationship: intersect
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:nis2-pme
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:5.1
+          relationship: intersect
+
+        # A.5.24 Planification et préparation des incidents
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:crise-cyber
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:5.24
+          relationship: intersect
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:remediation-flash
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:5.24
+          relationship: intersect
+
+        # A.5.7 Threat Intelligence (sensibilisation aux menaces actuelles)
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:phishing
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:5.7
+          relationship: intersect
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:deepfakes
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:5.7
+          relationship: intersect
+
+        # A.5.34 Privacy and protection of PII
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:dpo-quotidien
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:5.34
+          relationship: intersect
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:vie-privee-bureau
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:5.34
+          relationship: intersect
+
+        # A.6.3 Sensibilisation, formation et entrainement (cœur Humanix)
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:phishing
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:6.3
+          relationship: equal
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:mots-de-passe
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:6.3
+          relationship: equal
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:donnees-sensibles
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:6.3
+          relationship: equal
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:teletravail
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:6.3
+          relationship: equal
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:cyber-dirigeants
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:6.3
+          relationship: equal
+
+        # A.6.6 Engagements de confidentialité ou de non-divulgation
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:donnees-sensibles
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:6.6
+          relationship: intersect
+
+        # A.6.8 Signalement des évènements de sécurité (cœur Humanix)
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:phishing
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:6.8
+          relationship: equal
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:fraude-president
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:6.8
+          relationship: equal
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:remediation-flash
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:6.8
+          relationship: equal
+
+        # A.7.4 Surveillance de la sécurité physique
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:acces-physiques
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:7.4
+          relationship: intersect
+
+        # A.7.7 Bureau propre et écran propre
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:vie-privee-bureau
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:7.7
+          relationship: equal
+
+        # A.7.9 Sécurité des actifs hors site
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:teletravail
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:7.9
+          relationship: equal
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:mobile-smartphone
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:7.9
+          relationship: equal
+
+        # A.8.1 Terminaux de l'utilisateur final
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:mobile-smartphone
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:8.1
+          relationship: intersect
+
+        # A.8.7 Protection contre les logiciels malveillants
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:ransomware
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:8.7
+          relationship: intersect
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:phishing
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:8.7
+          relationship: intersect
+
+        # A.8.13 Sauvegarde des informations
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:ransomware
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:8.13
+          relationship: intersect
+
+        # A.8.20 Sécurité des réseaux
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:wifi-reseaux
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:8.20
+          relationship: intersect
+
+        # A.8.24 Cryptographie & A.8.5 MFA — abordés par mots-de-passe
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:mots-de-passe
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:8.5
+          relationship: intersect
+
+        # A.5.21 Gestion de la sécurité info dans la chaîne d'approvisionnement
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:supply-chain
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:5.21
+          relationship: intersect
+
+        # A.5.23 Sécurité info dans l'utilisation des services cloud
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:stockage-cloud
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:5.23
+          relationship: intersect
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:ia-generative
+          target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:5.23
+          relationship: intersect
