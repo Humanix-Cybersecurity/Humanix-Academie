@@ -328,6 +328,166 @@ export class CisoAssistantClient {
     };
   }
 
+  // =========================================================================
+  // v1.3 - Extensions optionnelles (AppliedControl + FindingsAssessment +
+  // Findings). Chaque methode est independante : echec non bloquant pour la
+  // sync principale (cf. sync.ts ou les appels sont wrappes en try/catch).
+  // =========================================================================
+
+  /**
+   * Cree ou retrouve un AppliedControl "Programme sensibilisation Humanix"
+   * scope au folder Humanix. Idempotent par name.
+   */
+  async ensureAppliedControl(framework: string): Promise<string | null> {
+    if (!this.folderId) return null;
+    const name = `Programme de sensibilisation Humanix Académie · ${framework}`.slice(0, 255);
+    const description =
+      `Contrôle appliqué synthétisant la couverture Humanix Académie ` +
+      `pour le référentiel ${framework}. Les evidences attachées proviennent ` +
+      `de la sync automatique Humanix. Owner : RSSI/DPO du tenant.`;
+    // Lister existants pour idempotence
+    const list = await this.request(
+      "GET",
+      `/api/applied-controls/?folder=${encodeURIComponent(this.folderId)}`,
+    );
+    if (list.status === 200) {
+      const data = (await list.json()) as any;
+      const items = data.results ?? (Array.isArray(data) ? data : []);
+      for (const c of items) {
+        if (c.name === name) return c.id;
+      }
+    }
+    // Creer
+    const r = await this.request("POST", "/api/applied-controls/", {
+      name,
+      description,
+      folder: this.folderId,
+      status: "active",
+      category: "process",
+    });
+    if (![200, 201].includes(r.status)) return null;
+    const created = (await r.json()) as { id: string };
+    return created.id;
+  }
+
+  /**
+   * Lier les evidences a un AppliedControl. Update via PATCH applied-control
+   * avec la liste M2M complete (pattern DRF standard).
+   */
+  async linkEvidencesToAppliedControl(
+    appliedControlId: string,
+    evidenceIds: string[],
+  ): Promise<boolean> {
+    const r = await this.request(
+      "PATCH",
+      `/api/applied-controls/${appliedControlId}/`,
+      { evidences: evidenceIds },
+    );
+    return [200, 201].includes(r.status);
+  }
+
+  /**
+   * Cree ou retrouve un FindingsAssessment "Audit sensibilisation Humanix"
+   * pour le tenant + framework. Idempotent.
+   */
+  async ensureFindingsAssessment(framework: string): Promise<string | null> {
+    if (!this.folderId) return null;
+    const name = `Audit sensibilisation Humanix Académie · ${framework}`.slice(0, 255);
+    const list = await this.request(
+      "GET",
+      `/api/findings-assessments/?folder=${encodeURIComponent(this.folderId)}`,
+    );
+    if (list.status === 200) {
+      const data = (await list.json()) as any;
+      const items = data.results ?? (Array.isArray(data) ? data : []);
+      for (const fa of items) if (fa.name === name) return fa.id;
+    }
+    const r = await this.request("POST", "/api/findings-assessments/", {
+      name,
+      description:
+        `Suivi des constats issus de la couverture Humanix Académie pour ` +
+        `${framework}. Renouvelé à chaque sync automatique. ` +
+        `Catégorie : self_identified.`,
+      folder: this.folderId,
+      category: "self_identified",
+      status: "in_progress",
+    });
+    if (![200, 201].includes(r.status)) return null;
+    const created = (await r.json()) as { id: string };
+    return created.id;
+  }
+
+  /**
+   * Cree ou met a jour un Finding pour un controle en partial / non_compliant.
+   * Idempotent par name (Finding = "[<controlRef>] <controlName>").
+   * Lie au FindingsAssessment + AppliedControl s'ils sont fournis.
+   */
+  async upsertFinding(args: {
+    findingsAssessmentId: string;
+    controlRef: string;
+    controlName: string;
+    status: string; // statut conformite Humanix (compliant/partial/non_compliant)
+    score: number | null | undefined;
+    appliedControlId?: string | null;
+    etaDate: string; // YYYY-MM-DD
+  }): Promise<{ ok: boolean; action?: "POST" | "PATCH"; id?: string }> {
+    if (!this.folderId) return { ok: false };
+    const name = `[${args.controlRef}] ${args.controlName}`.slice(0, 255);
+    const priority = args.status === "non_compliant" ? 1 : 2; // P1 ou P2
+    const findingStatus =
+      args.status === "non_compliant" ? "confirmed" : "identified";
+    const description =
+      `Contrôle Humanix Académie ${args.controlRef} en statut "${args.status}".\n` +
+      `Score Humanix : ${args.score != null ? Math.round(args.score * 1000) / 10 + "/100" : "non évalué"}.\n` +
+      `Action attendue : examiner la couverture sensibilisation et planifier ` +
+      `un programme correctif (campagne phishing simulé, refresher formation, ` +
+      `top-up modules) avant l'ETA.`;
+
+    const payload: Record<string, unknown> = {
+      name,
+      description,
+      findings_assessment: args.findingsAssessmentId,
+      folder: this.folderId,
+      status: findingStatus,
+      priority,
+      eta: args.etaDate,
+      due_date: args.etaDate,
+      ...(args.appliedControlId && {
+        applied_controls: [args.appliedControlId],
+      }),
+    };
+
+    // GET findings du folder/assessment puis match by name
+    const list = await this.request(
+      "GET",
+      `/api/findings/?findings_assessment=${encodeURIComponent(args.findingsAssessmentId)}`,
+    );
+    let existing: { id: string } | undefined;
+    if (list.status === 200) {
+      const data = (await list.json()) as any;
+      const items = data.results ?? (Array.isArray(data) ? data : []);
+      existing = items.find((f: any) => f.name === name);
+    }
+
+    if (existing) {
+      const r = await this.request(
+        "PATCH",
+        `/api/findings/${existing.id}/`,
+        payload,
+      );
+      if ([200, 201].includes(r.status)) {
+        return { ok: true, action: "PATCH", id: existing.id };
+      }
+      return { ok: false };
+    }
+    const r = await this.request("POST", "/api/findings/", payload);
+    if ([200, 201].includes(r.status)) {
+      const created = (await r.json()) as { id: string };
+      return { ok: true, action: "POST", id: created.id };
+    }
+    return { ok: false };
+  }
+
   /**
    * Upload un PDF comme attachment de l'evidence donnee. CISO Assistant
    * cree automatiquement une EvidenceRevision si necessaire (cf.

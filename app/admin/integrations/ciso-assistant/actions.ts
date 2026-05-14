@@ -58,6 +58,8 @@ export async function saveConnection(formData: FormData): Promise<{
     String(formData.get("folderName") ?? "").trim() || "Humanix Académie";
   const ownerEmail = String(formData.get("ownerEmail") ?? "").trim() || null;
   const verifySSL = formData.get("verifySSL") === "on";
+  const createAppliedControls = formData.get("createAppliedControls") === "on";
+  const createFindings = formData.get("createFindings") === "on";
 
   if (!baseUrl || !username) {
     throw new Error("Base URL et username obligatoires");
@@ -93,8 +95,19 @@ export async function saveConnection(formData: FormData): Promise<{
       folderName,
       ownerEmail,
       verifySSL,
+      createAppliedControls,
+      createFindings,
     },
-    update: { baseUrl, username, passwordEnc, folderName, ownerEmail, verifySSL },
+    update: {
+      baseUrl,
+      username,
+      passwordEnc,
+      folderName,
+      ownerEmail,
+      verifySSL,
+      createAppliedControls,
+      createFindings,
+    },
   });
 
   await auditLog({
