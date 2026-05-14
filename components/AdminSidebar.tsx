@@ -96,6 +96,11 @@ const SECTIONS: Section[] = [
     items: [
       { href: "/admin/integrations", label: "Webhooks", icon: "🔗" },
       {
+        href: "/admin/integrations/ciso-assistant",
+        label: "CISO Assistant",
+        icon: "🛡",
+      },
+      {
         href: "/admin/sso-saml",
         label: "SSO SAML",
         icon: "🔐",
@@ -220,27 +225,14 @@ export default function AdminSidebar() {
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  // Set des sections ouvertes. Par defaut on ouvre uniquement la section
-  // qui contient la page courante (les autres restent repliees, l'user
-  // les ouvre au besoin). Etat non persiste entre sessions.
-  const [openSections, setOpenSections] = useState<Set<string>>(() => {
-    const active = findActiveSectionId(path, sections);
-    return active ? new Set([active]) : new Set();
-  });
-
-  // A chaque changement de route, on s'assure que la section active est
-  // ouverte (cas ou l'user l'avait fermee manuellement et clique un lien
-  // vers une page de cette section).
-  useEffect(() => {
-    const active = findActiveSectionId(path, sections);
-    if (!active) return;
-    setOpenSections((prev) => {
-      if (prev.has(active)) return prev;
-      const next = new Set(prev);
-      next.add(active);
-      return next;
-    });
-  }, [path, sections]);
+  // Set des sections ouvertes. Comportement : a l'arrivee sur la console
+  // (et a chaque changement de route), TOUTES les sections sont repliees.
+  // L'auto-ouverture se fait uniquement au hover desktop (cf.
+  // handleSidebarEnter) ou par clic explicite de l'utilisateur. Cela donne
+  // une console visuellement calme au premier coup d'oeil.
+  const [openSections, setOpenSections] = useState<Set<string>>(
+    () => new Set(),
+  );
 
   const toggleSection = (id: string) => {
     setOpenSections((prev) => {

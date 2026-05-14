@@ -178,21 +178,27 @@ export function resolveMetricValue(
 export function resolveArtifactUrl(
   artifact: ArtifactSource,
   baseUrl: string,
-  tenantId: string,
+  _tenantId: string,
 ): string | null {
+  // Les URLs renvoyees sont des PAGES DE CONSOLE (UI) destinees a etre
+  // ouvertes par un humain depuis CISO Assistant / Eramba / Splunk metadata.
+  // Le tenant est implicite via la session : le RSSI qui clique le lien
+  // est deja authentifie sur son tenant. Si on a besoin d'un endpoint API
+  // machine-to-machine (avec ?tenant=), c'est un autre code path (cf.
+  // app/api/me/certificate, app/api/admin/pack-nis2/download).
   switch (artifact.source) {
     case "user_certificates":
-      return `${baseUrl}/api/me/certificate?tenant=${tenantId}&bulk=true`;
+      return `${baseUrl}/admin/utilisateurs`;
     case "pack_nis2_pdf":
-      return `${baseUrl}/api/admin/pack-nis2/download?tenant=${tenantId}`;
+      return `${baseUrl}/admin/conformite-nis2`;
     case "registre_traitements_pdf":
       return `${baseUrl}/registre-traitements`;
     case "dpa_pdf":
       return `${baseUrl}/dpa`;
     case "audit_trail":
-      return `${baseUrl}/api/admin/audit-trail?tenant=${tenantId}`;
+      return `${baseUrl}/admin/audit`;
     case "incident_procedure":
-      return `${baseUrl}/api/admin/pack-nis2/download?tenant=${tenantId}#incident`;
+      return `${baseUrl}/admin/incidents`;
     default:
       return null;
   }
