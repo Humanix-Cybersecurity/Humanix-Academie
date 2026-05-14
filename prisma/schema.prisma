@@ -1724,6 +1724,23 @@ model CisoAssistantConnection {
   //   ETA +30j).
   createAppliedControls Boolean @default(false)
   createFindings        Boolean @default(false)
+  // v1.4 toggle : si tenant_score < 0.4 OU phishingReportRate < 0.2,
+  // genere un RiskScenario "Risque humain eleve" sous un RiskAssessment
+  // dedie Humanix. Necessite qu'une RiskMatrix soit chargee cote CISO
+  // Assistant (sinon WARN + skip). Cf. lib/ciso-assistant/sync.ts.
+  createRiskScenarios   Boolean @default(false)
+  // v1.5 toggle : si l'ownerEmail est defini, crée le User correspondant
+  // dans CISO Assistant (s'il n'existe pas) puis assigne son Actor comme
+  // owner sur les evidences, findings et risk scenarios poussés. Permet
+  // d'avoir un responsable nommé côté GRC. Necessite permissions admin
+  // sur l'instance CISO Assistant.
+  syncOwnerAsActor      Boolean @default(false)
+  // v1.6 toggle : ouvre un Incident côté CISO Assistant si au moins
+  // un contrôle est non_compliant sur le panel. Severite par defaut
+  // SEV3 (Moderate). Sert d'alerte proactive type NIS2 §23 pour le
+  // RSSI : "ta couverture humaine présente un signal d'alerte".
+  // Idempotent par ref_id = "humanix-{framework}-{date YYYY-MM-DD}".
+  createIncidents       Boolean @default(false)
   verifySSL     Boolean @default(true)
   // Dernier resultat du bouton "Tester la connexion".
   lastTestedAt  DateTime?

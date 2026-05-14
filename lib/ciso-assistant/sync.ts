@@ -124,6 +124,9 @@ async function executeSync(
     ownerEmail: string | null;
     createAppliedControls: boolean;
     createFindings: boolean;
+    createRiskScenarios: boolean;
+    syncOwnerAsActor: boolean;
+    createIncidents: boolean;
   },
   actor: { userId: string; email: string; role: string },
 ): Promise<void> {
@@ -237,6 +240,36 @@ async function executeSync(
           `Clé de signature PDF persistante — empreinte ${pubkey.fingerprint.slice(0, 23)}…`,
         ),
       );
+    }
+
+    // v1.5 : sync owner -> User CISO Assistant + Actor. Si actif et ownerEmail
+    // defini, le client.ownerActorId sera renseigne et inclus dans tous les
+    // payloads downstream (Evidence.owner, Finding.owner, etc.).
+    if (conn.syncOwnerAsActor && conn.ownerEmail) {
+      try {
+        const actorId = await client.resolveOwnerActor(conn.ownerEmail);
+        if (actorId) {
+          client.ownerActorId = actorId;
+          await appendLog(
+            runId,
+            nowLine(
+              "OK",
+              `Owner ${conn.ownerEmail} → Actor ${actorId} (assigné sur tous les artefacts)`,
+            ),
+          );
+        } else {
+          await appendLog(
+            runId,
+            nowLine(
+              "WARN",
+              `Owner ${conn.ownerEmail} non résolu côté CISO Assistant (permissions insuffisantes ?)`,
+            ),
+          );
+        }
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        await appendLog(runId, nowLine("WARN", `Sync owner: ${msg}`));
+      }
     }
 
     // v1.3 hooks optionnels : AppliedControl + FindingsAssessment.
@@ -383,6 +416,150 @@ async function executeSync(
           runId,
           nowLine("WARN", `PDF échec ${result.controlRef} : ${msg}`),
         );
+      }
+    }
+
+    // v1.4 RiskScenario : si les triggers Humanix sont franchis, on cree
+    // un scenario "Compromission via couche humaine sous-formee" cote CISO
+    // Assistant. Fire-and-forget : un echec ne casse rien.
+    // Triggers : evidences non_compliant > 30% du panel OU plusieurs partials.
+    if (conn.createRiskScenarios) {
+      try {
+        const nbNonCompliant = bundle.evidences.filter(
+          (e) => e.status === "non_compliant",
+        ).length;
+        const nbPartial = bundle.evidences.filter(
+          (e) => e.status === "partial",
+        ).length;
+        const nbTotal = bundle.evidences.length;
+        const ratioNonCompliant = nbTotal > 0 ? nbNonCompliant / nbTotal : 0;
+        const triggers: string[] = [];
+        // Trigger fort : > 30% du panel en non-conformite
+        if (ratioNonCompliant > 0.3) {
+          triggers.push(
+            `${nbNonCompliant}/${nbTotal} contrôles non conformes (>30% du panel)`,
+          );
+        }
+        // Trigger fort : 2+ controles en partial
+        if (nbPartial >= 2) {
+          triggers.push(`${nbPartial} contrôles en couverture partielle`);
+        }
+        // Trigger declenchement precoce : 2+ controles affaiblis (partial OU
+        // non_compliant). Une organisation qui veut etre proactive cherche
+        // a anticiper plutot que reagir aux seuils stricts.
+        if (
+          triggers.length === 0 &&
+          nbPartial + nbNonCompliant >= 2
+        ) {
+          triggers.push(
+            `${nbPartial + nbNonCompliant} contrôles affaiblis (déclenchement précoce)`,
+          );
+        }
+        if (triggers.length === 0) {
+          await appendLog(
+            runId,
+            nowLine(
+              "INFO",
+              "RiskScenario : aucun trigger franchi (couverture satisfaisante)",
+            ),
+          );
+        } else {
+          const matrixId = await client.getFirstRiskMatrix();
+          if (!matrixId) {
+            await appendLog(
+              runId,
+              nowLine(
+                "WARN",
+                "RiskScenario non créé : aucune RiskMatrix disponible côté CISO Assistant (charger une library risk-matrix d'abord)",
+              ),
+            );
+          } else {
+            const raId = await client.ensureRiskAssessment(framework, matrixId);
+            if (raId) {
+              await appendLog(
+                runId,
+                nowLine("OK", `RiskAssessment prêt (id ${raId})`),
+              );
+              const rs = await client.upsertRiskScenario({
+                riskAssessmentId: raId,
+                framework,
+                triggers,
+              });
+              if (rs.ok) {
+                await appendLog(
+                  runId,
+                  nowLine(
+                    "OK",
+                    `RiskScenario ${rs.action} — triggers : ${triggers.join(" / ")}`,
+                  ),
+                );
+              } else {
+                await appendLog(
+                  runId,
+                  nowLine("WARN", "RiskScenario non créé (erreur API)"),
+                );
+              }
+            } else {
+              await appendLog(
+                runId,
+                nowLine("WARN", "RiskAssessment Humanix non créé"),
+              );
+            }
+          }
+        }
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        await appendLog(runId, nowLine("WARN", `RiskScenario échec : ${msg}`));
+      }
+    }
+
+    // v1.6 Incident : si >=1 controle non_compliant, on ouvre un incident
+    // SEV3 "Risque humain critique" cote CISO Assistant. Idempotent par
+    // ref_id (humanix-<framework>-<YYYY-MM-DD>). Permet de tracer les
+    // ecarts dans l'historique incident NIS2 du tenant.
+    if (conn.createIncidents) {
+      try {
+        const nbNonCompliant = bundle.evidences.filter(
+          (e) => e.status === "non_compliant",
+        ).length;
+        const nbPartial = bundle.evidences.filter(
+          (e) => e.status === "partial",
+        ).length;
+        if (nbNonCompliant >= 1) {
+          const refDate = now.toISOString().slice(0, 10);
+          const inc = await client.upsertIncident({
+            framework,
+            nbNonCompliant,
+            nbPartial,
+            nbTotal: bundle.evidences.length,
+            refDate,
+          });
+          if (inc.ok) {
+            await appendLog(
+              runId,
+              nowLine(
+                "OK",
+                `Incident ${inc.action} (SEV3, ref humanix-${framework}-${refDate})`,
+              ),
+            );
+          } else {
+            await appendLog(
+              runId,
+              nowLine("WARN", "Incident non créé (erreur API)"),
+            );
+          }
+        } else {
+          await appendLog(
+            runId,
+            nowLine(
+              "INFO",
+              "Incident : aucun trigger (0 contrôle non_compliant)",
+            ),
+          );
+        }
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        await appendLog(runId, nowLine("WARN", `Incident échec : ${msg}`));
       }
     }
 
