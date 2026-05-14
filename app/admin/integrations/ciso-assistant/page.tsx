@@ -211,6 +211,21 @@ export default async function CisoAssistantAdminPage() {
           Le password CISO Assistant est chiffré AES-256-GCM avec une clé
           dérivée par HKDF de <code>AUTH_SECRET</code>.
         </p>
+        <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">
+          Chaque preuve uploadée dans CISO Assistant est accompagnée d'un{" "}
+          <strong>PDF signé Ed25519</strong> (manifeste d'intégrité en page 2)
+          vérifiable hors-ligne avec la clé publique exposée sur{" "}
+          <a
+            href="/.well-known/humanix-pdf-pubkey.pem"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary-500 dark:text-accent-300 underline"
+          >
+            /.well-known/humanix-pdf-pubkey.pem
+          </a>
+          . Procédure de vérification : OpenSSL standard (cf. dernière page de
+          chaque PDF).
+        </p>
       </section>
     </div>
   );
