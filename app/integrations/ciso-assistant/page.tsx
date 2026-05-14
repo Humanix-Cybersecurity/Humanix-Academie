@@ -240,6 +240,80 @@ export default function CisoAssistantIntegrationPage() {
       {/* ===== COMPOSANT CLIENT (onglets framework, snippets, mapping) ===== */}
       <CisoAssistantBridge />
 
+      {/* ===== SYNC 1-CLIC DEPUIS L'ADMIN HUMANIX ===== */}
+      <section
+        aria-labelledby="admin-console-title"
+        className="card mb-10 mt-12 border-2 border-accent-500/30 bg-accent-50/40 dark:bg-accent-900/10"
+      >
+        <div className="flex items-start gap-3 mb-3">
+          <span
+            aria-hidden="true"
+            className="text-3xl shrink-0 leading-none"
+          >
+            🖱️
+          </span>
+          <div>
+            <h2
+              id="admin-console-title"
+              className="text-2xl font-extrabold text-primary-500 dark:text-accent-300"
+            >
+              Sync 1-clic depuis la console admin (sans Python)
+            </h2>
+            <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+              Pour les RSSI, DAF et C-Level qui ne veulent pas toucher au
+              terminal : Humanix embarque une console admin dédiée. Vous
+              renseignez vos credentials CISO Assistant <strong>une fois</strong>,
+              et vous synchronisez en un clic, avec un terminal live façon
+              GitLab CI.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid sm:grid-cols-3 gap-3 mt-4 text-sm">
+          <div className="bg-white dark:bg-slate-800 rounded-lg p-3 border border-gray-200 dark:border-slate-700">
+            <p className="font-bold text-primary-500 dark:text-accent-300 mb-1">
+              1. Configurer
+            </p>
+            <p className="text-gray-600 dark:text-gray-400">
+              Base URL, compte, password (chiffré AES-256-GCM). Bouton "Tester
+              la connexion" pour valider en 2s.
+            </p>
+          </div>
+          <div className="bg-white dark:bg-slate-800 rounded-lg p-3 border border-gray-200 dark:border-slate-700">
+            <p className="font-bold text-primary-500 dark:text-accent-300 mb-1">
+              2. Synchroniser
+            </p>
+            <p className="text-gray-600 dark:text-gray-400">
+              Sélectionnez un framework (ISO27001, NIS2, RGPD, ANSSI HG, NIST
+              CSF) et cliquez. Terminal live, badge final OK / partiel / échec.
+            </p>
+          </div>
+          <div className="bg-white dark:bg-slate-800 rounded-lg p-3 border border-gray-200 dark:border-slate-700">
+            <p className="font-bold text-primary-500 dark:text-accent-300 mb-1">
+              3. Auditer
+            </p>
+            <p className="text-gray-600 dark:text-gray-400">
+              Chaque action (config, test, sync) est tracée dans{" "}
+              <code className="text-xs">/admin/audit</code> (RGPD/NIS2-ready).
+              Historique des 20 derniers runs visible.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-5 flex flex-wrap gap-3">
+          <a
+            href="/admin/integrations/ciso-assistant"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-accent-500 hover:bg-accent-600 text-white text-sm font-bold shadow-sm transition"
+          >
+            Ouvrir la console admin
+            <span aria-hidden="true">→</span>
+          </a>
+          <p className="text-xs text-gray-500 dark:text-gray-400 self-center">
+            Réservé aux rôles ADMIN, RSSI et SUPERADMIN du tenant.
+          </p>
+        </div>
+      </section>
+
       {/* ===== POURQUOI ===== */}
       <section
         aria-labelledby="why-title"
