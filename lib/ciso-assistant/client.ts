@@ -99,6 +99,9 @@ export class CisoAssistantClient {
   private token: string | null = null;
   private folderId: string | null = null;
   private existingByName: Map<string, { id: string }> | null = null;
+  /** Actor.id de l'owner (RSSI/DPO) resolu via resolveOwnerActor(). Si
+   * defini, est inclus comme owner sur tous les artefacts crees. */
+  public ownerActorId: string | null = null;
 
   constructor(conn: CisoConnectionInput) {
     this.conn = { ...conn, baseUrl: conn.baseUrl.replace(/\/+$/, "") };
@@ -294,6 +297,7 @@ export class CisoAssistantClient {
       folder: this.folderId,
       expiry_date: audit.expiryDate,
       ...(link && { link }),
+      ...(this.ownerActorId && { owner: [this.ownerActorId] }),
     };
 
     const existing = this.existingByName.get(name);
@@ -455,6 +459,7 @@ export class CisoAssistantClient {
       ...(args.appliedControlId && {
         applied_controls: [args.appliedControlId],
       }),
+      ...(this.ownerActorId && { owner: [this.ownerActorId] }),
     };
 
     // GET findings du folder/assessment puis match by name
@@ -481,6 +486,266 @@ export class CisoAssistantClient {
       return { ok: false };
     }
     const r = await this.request("POST", "/api/findings/", payload);
+    if ([200, 201].includes(r.status)) {
+      const created = (await r.json()) as { id: string };
+      return { ok: true, action: "POST", id: created.id };
+    }
+    return { ok: false };
+  }
+
+  // =========================================================================
+  // v1.5 - Actor sync. Resout (et cree si necessaire) un User CISO Assistant
+  // pour l'ownerEmail configure, retrouve son Actor associe, et expose son
+  // id pour assignation owner sur evidences/findings/scenarios.
+  // =========================================================================
+
+  /**
+   * Resout l'Actor.id du user owner configure (ownerEmail). Si le User
+   * CISO Assistant n'existe pas, on le cree (necessite permissions admin
+   * sur le token courant). Retourne null en cas d'echec - les appels
+   * upsertEvidence/Finding/Scenario fonctionnent sans owner aussi.
+   */
+  async resolveOwnerActor(ownerEmail: string): Promise<string | null> {
+    // 1. Trouver le User par email
+    const userList = await this.request(
+      "GET",
+      `/api/users/?email=${encodeURIComponent(ownerEmail)}`,
+    );
+    let userId: string | null = null;
+    if (userList.status === 200) {
+      const data = (await userList.json()) as any;
+      const items = data.results ?? (Array.isArray(data) ? data : []);
+      const exact = items.find(
+        (u: any) =>
+          (u.email ?? "").toLowerCase() === ownerEmail.toLowerCase(),
+      );
+      if (exact) userId = exact.id;
+    }
+    // 2. Creer le User si absent
+    if (!userId) {
+      const create = await this.request("POST", "/api/users/", {
+        email: ownerEmail,
+        is_active: true,
+        is_third_party: false,
+      });
+      if (![200, 201].includes(create.status)) {
+        return null; // permissions insuffisantes, instance fermee, etc.
+      }
+      const created = (await create.json()) as { id: string };
+      userId = created.id;
+    }
+    // 3. Recuperer l'Actor lie a ce User (auto-cree par User.save() cote
+    //    Django via OneToOneField). Note : l'API actors/ filtre par
+    //    specific._id (user.id) -- on doit lister et matcher.
+    const actorList = await this.request("GET", `/api/actors/`);
+    if (actorList.status !== 200) return null;
+    const data = (await actorList.json()) as any;
+    const items = data.results ?? (Array.isArray(data) ? data : []);
+    const match = items.find(
+      (a: any) =>
+        a.type === "user" &&
+        (a.specific?.id === userId || a.specific?.str === ownerEmail),
+    );
+    return match?.id ?? null;
+  }
+
+  // =========================================================================
+  // v1.4 - RiskScenario hooks. Necessite une RiskMatrix prechargee cote
+  // CISO Assistant (via stored-libraries). Si aucune dispo, on skip
+  // gracieusement avec un WARN.
+  // =========================================================================
+
+  /** Retourne l'id de la 1ere RiskMatrix dispo cote CISO Assistant, ou null. */
+  async getFirstRiskMatrix(): Promise<string | null> {
+    const r = await this.request("GET", "/api/risk-matrices/");
+    if (r.status !== 200) return null;
+    const data = (await r.json()) as any;
+    const items = data.results ?? (Array.isArray(data) ? data : []);
+    return items[0]?.id ?? null;
+  }
+
+  /**
+   * Cree ou retrouve un RiskAssessment "Audit risque humain Humanix
+   * Académie · <framework>". Idempotent par name. Lie a une RiskMatrix
+   * (passe en param).
+   */
+  async ensureRiskAssessment(
+    framework: string,
+    riskMatrixId: string,
+  ): Promise<string | null> {
+    if (!this.folderId) return null;
+    const name = `Audit risque humain Humanix Académie · ${framework}`.slice(0, 255);
+    const list = await this.request(
+      "GET",
+      `/api/risk-assessments/?folder=${encodeURIComponent(this.folderId)}`,
+    );
+    if (list.status === 200) {
+      const data = (await list.json()) as any;
+      const items = data.results ?? (Array.isArray(data) ? data : []);
+      for (const ra of items) if (ra.name === name) return ra.id;
+    }
+    const r = await this.request("POST", "/api/risk-assessments/", {
+      name,
+      description:
+        `Évaluation du risque humain mis en évidence par la sync Humanix Académie ` +
+        `pour le référentiel ${framework}. Renouvelée automatiquement.`,
+      folder: this.folderId,
+      risk_matrix: riskMatrixId,
+      status: "in_progress",
+    });
+    if (![200, 201].includes(r.status)) return null;
+    const created = (await r.json()) as { id: string };
+    return created.id;
+  }
+
+  /**
+   * Cree ou met a jour un RiskScenario sous le RiskAssessment Humanix.
+   * Idempotent par name. Likelihood/Impact a 3 (medium-high) par defaut,
+   * traitement "mitigate" (formation correctrice attendue).
+   */
+  async upsertRiskScenario(args: {
+    riskAssessmentId: string;
+    framework: string;
+    triggers: string[]; // descriptions des seuils franchis
+  }): Promise<{ ok: boolean; action?: "POST" | "PATCH"; id?: string }> {
+    if (!this.folderId) return { ok: false };
+    const name = `Compromission via couche humaine sous-formée · ${args.framework}`.slice(0, 255);
+    const description =
+      `Scénario généré automatiquement par Humanix Académie suite aux ` +
+      `triggers suivants :\n${args.triggers.map((t) => "  - " + t).join("\n")}\n\n` +
+      `Likelihood élevée car la sensibilisation est en deçà du seuil ` +
+      `compliance. Impact élevé car l'ingénierie sociale reste le 1er ` +
+      `vecteur de compromission cyber.\n\n` +
+      `Traitement recommandé : campagne de remédiation (phishing simulé ` +
+      `répété + refresher formation ciblé) suivie d'une nouvelle sync ` +
+      `Humanix pour vérifier la remontée du score.`;
+
+    const payload: Record<string, unknown> = {
+      name,
+      description,
+      risk_assessment: args.riskAssessmentId,
+      folder: this.folderId,
+      treatment: "mitigate",
+      // Likelihood / Impact : indices 0..N-1 selon la taille de la
+      // RiskMatrix utilisee. Sur une matrice 3x3 (Low/Medium/High =
+      // 0/1/2), on cible 2 (= High) pour les 2 axes. Sur 5x5 ce sera
+      // 4 (= Very High). Pour le moment on cible 2 -> compatible 3x3
+      // et 5x5 puisque c'est dans la plage des deux. Le RSSI ajuste
+      // au cas par cas.
+      current_proba: 2,
+      current_impact: 2,
+    };
+
+    const list = await this.request(
+      "GET",
+      `/api/risk-scenarios/?risk_assessment=${encodeURIComponent(args.riskAssessmentId)}`,
+    );
+    let existing: { id: string } | undefined;
+    if (list.status === 200) {
+      const data = (await list.json()) as any;
+      const items = data.results ?? (Array.isArray(data) ? data : []);
+      existing = items.find((s: any) => s.name === name);
+    }
+
+    if (existing) {
+      const r = await this.request(
+        "PATCH",
+        `/api/risk-scenarios/${existing.id}/`,
+        payload,
+      );
+      if ([200, 201].includes(r.status))
+        return { ok: true, action: "PATCH", id: existing.id };
+      // Debug : log l'erreur API pour pinpoint le champ rejete
+      console.error(
+        "[ciso-client] RiskScenario PATCH failed",
+        r.status,
+        (await r.text()).slice(0, 300),
+        "payload=",
+        JSON.stringify(payload).slice(0, 300),
+      );
+      return { ok: false };
+    }
+    const r = await this.request("POST", "/api/risk-scenarios/", payload);
+    if ([200, 201].includes(r.status)) {
+      const created = (await r.json()) as { id: string };
+      return { ok: true, action: "POST", id: created.id };
+    }
+    console.error(
+      "[ciso-client] RiskScenario POST failed",
+      r.status,
+      (await r.text()).slice(0, 300),
+      "payload=",
+      JSON.stringify(payload).slice(0, 300),
+    );
+    return { ok: false };
+  }
+
+  // =========================================================================
+  // v1.6 - Incident hooks. Quand >=1 controle est non_compliant sur le panel
+  // d'evidences, on cree un Incident SEV3 "Risque humain critique" cote CISO
+  // Assistant. Idempotent par ref_id = humanix-<framework>-<YYYY-MM-DD>.
+  // Sert d'alerte proactive type NIS2 §23 -- pas une declaration formelle
+  // d'incident mais une trace pour l'audit.
+  // =========================================================================
+
+  async upsertIncident(args: {
+    framework: string;
+    nbNonCompliant: number;
+    nbPartial: number;
+    nbTotal: number;
+    refDate: string; // YYYY-MM-DD
+  }): Promise<{ ok: boolean; action?: "POST" | "PATCH"; id?: string }> {
+    if (!this.folderId) return { ok: false };
+    const refId = `humanix-${args.framework}-${args.refDate}`.slice(0, 100);
+    const name =
+      `Risque humain : ${args.nbNonCompliant} contrôle(s) non conforme(s) sur ${args.framework}`.slice(0, 255);
+    const description =
+      `Détection automatique Humanix Académie.\n` +
+      `Référentiel : ${args.framework}\n` +
+      `Date de détection : ${args.refDate}\n` +
+      `Couverture du panel :\n` +
+      `  - ${args.nbNonCompliant} non conforme(s) / ${args.nbTotal}\n` +
+      `  - ${args.nbPartial} partiel(s) / ${args.nbTotal}\n\n` +
+      `Action recommandée : revue trimestrielle du programme de sensibilisation, ` +
+      `lancement d'une campagne phishing simulé ciblée, validation du plan ` +
+      `de remédiation par le RSSI / DPO.\n\n` +
+      `Ce signalement est un constat d'écart automatique pour traçabilité ` +
+      `audit (ISO 27001 §10.1 / NIS2 §21.2.g). Il ne préjuge PAS d'une ` +
+      `compromission effective.`;
+
+    const payload: Record<string, unknown> = {
+      ref_id: refId,
+      name,
+      description,
+      folder: this.folderId,
+      status: "new",
+      severity: 3, // SEV3 Moderate
+      detection: "internally_detected",
+      ...(this.ownerActorId && { owner: [this.ownerActorId] }),
+    };
+
+    const list = await this.request(
+      "GET",
+      `/api/incidents/?folder=${encodeURIComponent(this.folderId)}`,
+    );
+    let existing: { id: string } | undefined;
+    if (list.status === 200) {
+      const data = (await list.json()) as any;
+      const items = data.results ?? (Array.isArray(data) ? data : []);
+      existing = items.find((i: any) => i.ref_id === refId);
+    }
+
+    if (existing) {
+      const r = await this.request(
+        "PATCH",
+        `/api/incidents/${existing.id}/`,
+        payload,
+      );
+      if ([200, 201].includes(r.status))
+        return { ok: true, action: "PATCH", id: existing.id };
+      return { ok: false };
+    }
+    const r = await this.request("POST", "/api/incidents/", payload);
     if ([200, 201].includes(r.status)) {
       const created = (await r.json()) as { id: string };
       return { ok: true, action: "POST", id: created.id };
