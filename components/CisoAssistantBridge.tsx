@@ -47,13 +47,18 @@ console.log(\`\${bundle.summary.compliant}/\${bundle.summary.total_controls} com
   },
 ];
 
+// NB: on evite les emojis drapeau (sequences de Regional Indicator type
+// `🇫🇷`) car certaines fonts emoji (Safari/macOS
+// notamment) appliquent un anti-aliasing qui debordent sur le texte
+// adjacent et le rendent quasi invisible. Pictogrammes neutres a la
+// place -- meme code que les autres referentiels.
 const FRAMEWORK_LABELS: Record<FrameworkRef, { short: string; emoji: string }> =
   {
     "ISO27001:2022": { short: "ISO 27001", emoji: "🌍" },
-    NIS2: { short: "NIS2", emoji: "🇪🇺" },
+    NIS2: { short: "NIS2", emoji: "🛡" },
     RGPD: { short: "RGPD", emoji: "📋" },
-    "ANSSI-HG": { short: "ANSSI HG", emoji: "🇫🇷" },
-    "NIST-CSF": { short: "NIST CSF", emoji: "🇺🇸" },
+    "ANSSI-HG": { short: "ANSSI HG", emoji: "🏛" },
+    "NIST-CSF": { short: "NIST CSF", emoji: "📐" },
     SAPIN2: { short: "Sapin II", emoji: "⚖️" },
   };
 
@@ -122,16 +127,22 @@ export default function CisoAssistantBridge() {
                 aria-controls={`framework-panel-${ref}`}
                 id={`framework-tab-${ref}`}
                 onClick={() => setFramework(ref)}
-                className={`px-4 py-2 rounded-full font-semibold text-sm transition-all border-2 ${
+                className={`px-4 py-2 rounded-full font-semibold text-sm transition-all border-2 inline-flex items-center gap-1.5 ${
                   selected
                     ? "bg-primary-500 text-white border-primary-500 shadow-md"
                     : "bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-200 hover:border-primary-500"
                 }`}
               >
-                <span aria-hidden="true" className="mr-1">
-                  {meta.emoji}
+                <span aria-hidden="true">{meta.emoji}</span>
+                {/* span dedie pour le label : isole la couleur d'eventuels
+                    debordements de rendu emoji adjacents */}
+                <span
+                  className={
+                    selected ? "text-white" : "text-gray-700 dark:text-gray-200"
+                  }
+                >
+                  {meta.short}
                 </span>
-                {meta.short}
               </button>
             );
           })}
