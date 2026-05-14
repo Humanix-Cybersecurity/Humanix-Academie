@@ -323,7 +323,10 @@ function EvidenceDoc({
           <View style={styles.row}>
             <Text style={styles.label}>Score Humanix</Text>
             <Text style={styles.value}>
-              {evidence.score != null ? `${evidence.score}/100` : "non évalué"}
+              {/* Le score est un ratio 0-1, on l'affiche en pourcentage */}
+              {evidence.score != null
+                ? `${Math.round(evidence.score * 1000) / 10}/100`
+                : "non évalué"}
             </Text>
           </View>
           {evidence.scope_note && (
