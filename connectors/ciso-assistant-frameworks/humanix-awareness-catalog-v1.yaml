@@ -1,0 +1,270 @@
+convert_library_version: 'v2 ; Compat Mode: [0] {[v2.1] (DEFAULT) Don''t use any Compatibility Mode}'
+urn: urn:humanix:risk:library:humanix-awareness-catalog-v1
+locale: fr
+ref_id: humanix-awareness-catalog-v1
+name: Humanix Académie — Catalogue de sensibilisation cyber
+description: |-
+  Catalogue des modules de sensibilisation cybersécurité Humanix Académie.
+  Chaque "requirement" représente un module pédagogique opérationnel
+  (épisodes interactifs + quiz + scoring). Conçu pour être chargé dans
+  CISO Assistant et lié aux frameworks ISO 27001, NIS2, RGPD, ANSSI HG,
+  NIST CSF via les mappings publiés séparément (cf. mapping-humanix-*.yaml).
+
+  Couche humaine de l'écosystème cyber souverain français.
+copyright: |-
+  © Humanix-Cybersecurity SASU. Catalogue publié sous licence CC BY-SA 4.0
+  (https://creativecommons.org/licenses/by-sa/4.0/). Le contenu pédagogique
+  intégral des modules reste propriétaire Humanix mais ce catalogue
+  (références, descriptions courtes, mappings) est libre.
+version: 1
+publication_date: 2026-05-15
+provider: Humanix-Cybersecurity SASU
+packager: Humanix-Cybersecurity
+translations:
+  en:
+    name: Humanix Académie — Cybersecurity Awareness Catalog
+    description: |-
+      Catalog of cybersecurity awareness modules from Humanix Académie.
+      Each requirement is a runnable training module (interactive episodes
+      + quiz + scoring). Designed to be loaded in CISO Assistant and
+      mapped against ISO 27001, NIS2, GDPR, ANSSI HG, NIST CSF via the
+      mapping libraries published separately.
+    copyright: |-
+      © Humanix-Cybersecurity SASU. Catalog published under CC BY-SA 4.0
+      license. Pedagogical content remains Humanix-owned; this catalog
+      (references, short descriptions, mappings) is free.
+objects:
+  framework:
+    urn: urn:humanix:risk:framework:humanix-awareness-catalog-v1
+    ref_id: HUMANIX-AWARENESS-V1
+    name: Humanix Académie — Catalogue de sensibilisation cyber
+    description: |-
+      27 modules de sensibilisation cyber Humanix Académie, indexés par
+      thème métier (RH, compta, dirigeants, dev, DPO...) et par typologie
+      de menace (phishing, ransomware, fraude au président, etc.).
+    min_score: 0
+    max_score: 100
+    requirement_nodes:
+      # ============ Catégorie : Menaces directes ============
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:phishing
+        assessable: true
+        depth: 1
+        ref_id: phishing
+        name: Phishing & ingénierie sociale
+        description: |-
+          6 épisodes interactifs : reconnaître mails/SMS/appels piégés en
+          5 secondes, cas réels français. Couvre les variantes spear
+          phishing, BEC, smishing, vishing.
+        translations:
+          en:
+            name: Phishing & social engineering
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:fraude-president
+        assessable: true
+        depth: 1
+        ref_id: fraude-president
+        name: Fraude au président & FOVI
+        description: |-
+          Cas Vinci, Pathé, BNP. L'escroquerie qui coûte le plus cher
+          aux PME françaises. Procédure de vérification à 2 canaux.
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:ransomware
+        assessable: true
+        depth: 1
+        ref_id: ransomware
+        name: Ransomware & continuité
+        description: |-
+          Réflexes en cas de chiffrement : isoler, alerter, ne pas
+          payer. Importance des sauvegardes 3-2-1 testées.
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:deepfakes
+        assessable: true
+        depth: 1
+        ref_id: deepfakes
+        name: Deepfakes & IA générative malveillante
+        description: |-
+          Cas Arup (25 M$ extorqués via deepfake video CFO). Procédure
+          d'authentification audio/vidéo des dirigeants en distanciel.
+
+      # ============ Catégorie : Hygiène quotidienne ============
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:mots-de-passe
+        assessable: true
+        depth: 1
+        ref_id: mots-de-passe
+        name: Mots de passe & double authentification
+        description: |-
+          Politique mdp ANSSI : phrases de passe 14 chars min, gestionnaire,
+          MFA partout. Pourquoi le "renouvellement périodique" est obsolète.
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:email-pro
+        assessable: true
+        depth: 1
+        ref_id: email-pro
+        name: Bonnes pratiques email pro
+        description: |-
+          Listes de diffusion, pièces jointes, signatures, archives. Le
+          canal n°1 de l'attaque mérite des règles fortes.
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:acces-physiques
+        assessable: true
+        depth: 1
+        ref_id: acces-physiques
+        name: Sécurité des accès physiques
+        description: |-
+          Badge, tailgating, visiteurs, salle serveur, vestiaire. Le
+          périmètre physique reste le 1er rempart.
+
+      # ============ Catégorie : Environnements modernes ============
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:teletravail
+        assessable: true
+        depth: 1
+        ref_id: teletravail
+        name: Sécurité en télétravail
+        description: |-
+          Wifi domestique, VPN, environnement physique partagé, écran
+          visible. Hors du périmètre LAN, l'humain est le périmètre.
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:wifi-reseaux
+        assessable: true
+        depth: 1
+        ref_id: wifi-reseaux
+        name: Wifi public & réseaux ouverts
+        description: |-
+          Hôtel, aéroport, café : risques d'evil twin et MITM. Quand
+          utiliser le hotspot mobile plutôt que le wifi gratuit.
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:mobile-smartphone
+        assessable: true
+        depth: 1
+        ref_id: mobile-smartphone
+        name: Smartphone & mobilité
+        description: |-
+          Apps métier sur device personnel, autorisations système,
+          mises à jour, chargeurs publics (juice jacking).
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:stockage-cloud
+        assessable: true
+        depth: 1
+        ref_id: stockage-cloud
+        name: Stockage cloud & shadow IT
+        description: |-
+          Dropbox/Drive personnels, partage de liens, données sensibles
+          hors SI. Cadre légal et alternatives souveraines.
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:visios-meetings
+        assessable: true
+        depth: 1
+        ref_id: visios-meetings
+        name: Visios & meetings sécurisés
+        description: |-
+          Zoom-bombing, partages d'écran involontaires, enregistrements
+          non consentis. Hygiène collaborative.
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:reseaux-sociaux-pro
+        assessable: true
+        depth: 1
+        ref_id: reseaux-sociaux-pro
+        name: Réseaux sociaux pro
+        description: |-
+          LinkedIn, X : profils faux, demandes de connexion piégées,
+          fuite involontaire d'OSINT (orga, projets, voyages).
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:ia-generative
+        assessable: true
+        depth: 1
+        ref_id: ia-generative
+        name: IA générative & confidentialité
+        description: |-
+          ChatGPT, Copilot, Le Chat : que peut-on coller, que ne doit-on
+          pas. Approche souveraine et alternatives France/UE.
+
+      # ============ Catégorie : Conformité & gouvernance ============
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:donnees-sensibles
+        assessable: true
+        depth: 1
+        ref_id: donnees-sensibles
+        name: Données sensibles & classification
+        description: |-
+          C0/C1/C2/C3 : qui voit quoi, où ça vit, comment ça part.
+          RGPD art. 32 — la sécurité commence par savoir ce qu'on protège.
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:vie-privee-bureau
+        assessable: true
+        depth: 1
+        ref_id: vie-privee-bureau
+        name: Vie privée au bureau
+        description: |-
+          Conversations, écrans, post-it, imprimantes. Le bruit ambiant
+          d'un open space est une mine pour qui sait écouter.
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:dpo-quotidien
+        assessable: true
+        depth: 1
+        ref_id: dpo-quotidien
+        name: DPO au quotidien
+        description: |-
+          Module dédié DPO : registre, AIPD, exercice des droits,
+          notifications CNIL. RGPD opérationnel.
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:nis2-pme
+        assessable: true
+        depth: 1
+        ref_id: nis2-pme
+        name: NIS2 pour PME
+        description: |-
+          Vulgarisation NIS2 pour dirigeants et RSSI PME : seuils,
+          obligations, sanctions, plan 30 jours.
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:supply-chain
+        assessable: true
+        depth: 1
+        ref_id: supply-chain
+        name: Sécurité chaîne d'approvisionnement
+        description: |-
+          Cas SolarWinds, Log4j, MOVEit. Comment auditer ses fournisseurs
+          cyber sans tomber dans la paperasse stérile.
+
+      # ============ Catégorie : Réponse à incident ============
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:crise-cyber
+        assessable: true
+        depth: 1
+        ref_id: crise-cyber
+        name: Gestion de crise cyber
+        description: |-
+          Cellule de crise, communication interne/externe, décisions
+          24h. Exercice type cybermalveillance.gouv.fr.
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:remediation-flash
+        assessable: true
+        depth: 1
+        ref_id: remediation-flash
+        name: Remédiation flash
+        description: |-
+          Découverte d'incident en 1ère ligne : 60 minutes pour ne
+          pas amplifier les dégâts.
+
+      # ============ Catégorie : Verticaux métiers ============
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:cyber-dirigeants
+        assessable: true
+        depth: 1
+        ref_id: cyber-dirigeants
+        name: Cyber pour dirigeants
+        description: |-
+          Module COMEX : compréhension stratégique sans jargon. ROI
+          cyber, transfert de risque, gouvernance.
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:cyber-rh
+        assessable: true
+        depth: 1
+        ref_id: cyber-rh
+        name: Cyber pour les RH
+        description: |-
+          Onboarding, offboarding, données salariés, paie. La RH manipule
+          les données les plus sensibles de l'entreprise.
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:cyber-compta
+        assessable: true
+        depth: 1
+        ref_id: cyber-compta
+        name: Cyber pour la comptabilité
+        description: |-
+          Virements, fraude au président, fournisseurs piégés. Le
+          service le plus ciblé après les dirigeants.
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:cyber-dev
+        assessable: true
+        depth: 1
+        ref_id: cyber-dev
+        name: Cyber pour les développeurs
+        description: |-
+          Secrets en clair, dépendances vulnérables, supply chain dev.
+          OWASP Top 10 vulgarisé.
+      - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:cyber-collaboration
+        assessable: true
+        depth: 1
+        ref_id: cyber-collaboration
+        name: Collaboration sécurisée
+        description: |-
+          Slack, Teams, partage de fichiers, gestion de droits. Quand
+          la productivité crée de la dette de sécurité.

@@ -1,7 +1,7 @@
 {
   "name": "humanix-mcp-server",
   "version": "0.1.0",
-  "description": "Serveur MCP (Model Context Protocol) pour exposer les donnees Humanix Academie aux agents IA (Claude Desktop, Mistral, GPT). Premier MCP server du marche SAT/HRM.",
+  "description": "Serveur MCP (Model Context Protocol) pour exposer les donnees Humanix Academie aux agents IA souverains : Mistral, LM Studio, Anything LLM, Ollama (via passerelle). ChatGPT, Claude et Gemini supportes en option. Premier MCP server du marche SAT/HRM.",
   "license": "MIT",
   "author": "Humanix-Cybersecurity <contact@humanix-cybersecurity.fr>",
   "homepage": "https://humanix-cybersecurity.fr",

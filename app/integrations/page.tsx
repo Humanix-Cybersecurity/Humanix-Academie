@@ -122,12 +122,12 @@ const INTEGRATIONS: Integration[] = [
   // ============ MCP Server (premier mover SAT/HRM) ============
   {
     slug: "mcp-server",
-    name: "MCP Server (Anthropic Model Context Protocol)",
+    name: "MCP Server (Model Context Protocol)",
     category: "Agents IA",
     status: "live",
     origin: "Standard",
     description:
-      "Premier MCP server du marché Security Awareness / Human Risk Management. Branche Claude Desktop, Mistral ou GPT sur les données Humanix en read-only : score conformité, utilisateurs à risque, exports OSCAL, campagnes récentes. Connecteur TypeScript autonome MIT.",
+      "Premier MCP server du marché Security Awareness / Human Risk Management. Approche souveraine : Mistral en first, LM Studio / Anything LLM / Ollama en local. ChatGPT, Claude et Gemini supportés en option. Expose 6 tools read-only : score conformité, users à risque, exports OSCAL, performance par équipe/module, recommandation modules par menace. Connecteur TypeScript autonome MIT.",
     href: "https://github.com/humanix-cybersecurity/humanix-academie/tree/main/connectors/mcp-server",
     releasedAt: "Mai 2026",
     emoji: "🤖",
