@@ -1713,6 +1713,17 @@ model CisoAssistantConnection {
   // description de chaque evidence pour traçabilite audit ISO 27001 §7.5.
   // En v1.2 : creation d'un Actor CISO Assistant lié a un User cote intuitem.
   ownerEmail    String?
+  // v1.3 toggles : extensions optionnelles, par defaut desactivees.
+  // Principe : zero inertie entre Humanix et CISO Assistant. L'admin
+  // active ce qu'il veut, peut tout couper sans casser le push d'evidences.
+  // Cf. lib/ciso-assistant/sync.ts pour le branchement.
+  // - createAppliedControls : creer un AppliedControl "Programme
+  //   sensibilisation Humanix" lie aux evidences poussees.
+  // - createFindings : a chaque sync, generer des Findings actionnables
+  //   pour les controles en statut partial ou non_compliant (P1/P2 +
+  //   ETA +30j).
+  createAppliedControls Boolean @default(false)
+  createFindings        Boolean @default(false)
   verifySSL     Boolean @default(true)
   // Dernier resultat du bouton "Tester la connexion".
   lastTestedAt  DateTime?

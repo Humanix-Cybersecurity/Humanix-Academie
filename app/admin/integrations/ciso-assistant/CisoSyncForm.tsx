@@ -28,6 +28,8 @@ type ExistingConnection = {
   folderName: string;
   ownerEmail: string | null;
   verifySSL: boolean;
+  createAppliedControls: boolean;
+  createFindings: boolean;
   lastTestedAt: string | null;
   lastTestStatus: string | null;
   lastTestError: string | null;
@@ -208,6 +210,50 @@ export default function CisoSyncForm({
             />
             Vérifier le certificat SSL (décocher uniquement en dev local avec cert auto-signé)
           </label>
+
+          {/* ============ Extensions optionnelles (v1.3) ============ */}
+          <fieldset className="rounded-xl border border-gray-200 dark:border-slate-700 p-4 mt-2">
+            <legend className="px-2 text-xs font-bold uppercase tracking-wider text-primary-500 dark:text-accent-300">
+              Extensions optionnelles
+            </legend>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 -mt-1">
+              Désactivées par défaut. Chacune fonctionne indépendamment — la sync des
+              evidences continue normalement si CISO Assistant refuse l'une d'elles.
+            </p>
+            <div className="space-y-3">
+              <label className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <input
+                  type="checkbox"
+                  name="createAppliedControls"
+                  defaultChecked={existing?.createAppliedControls ?? false}
+                  className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
+                />
+                <span>
+                  <strong>Créer un AppliedControl</strong> par framework.
+                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    Un contrôle "Programme de sensibilisation Humanix" agrège toutes les
+                    evidences poussées. Sémantique GRC plus propre pour un RSSI.
+                  </span>
+                </span>
+              </label>
+              <label className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <input
+                  type="checkbox"
+                  name="createFindings"
+                  defaultChecked={existing?.createFindings ?? false}
+                  className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
+                />
+                <span>
+                  <strong>Générer des Findings</strong> pour les contrôles non conformes.
+                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    À chaque sync, chaque contrôle en statut <code>partial</code> ou{" "}
+                    <code>non_compliant</code> crée un Finding actionnable côté CISO
+                    Assistant (priorité P1/P2, ETA +12 mois, owner désigné).
+                  </span>
+                </span>
+              </label>
+            </div>
+          </fieldset>
 
           <div className="flex flex-wrap gap-3 pt-2">
             <button
