@@ -30,6 +30,9 @@ type ExistingConnection = {
   verifySSL: boolean;
   createAppliedControls: boolean;
   createFindings: boolean;
+  createRiskScenarios: boolean;
+  syncOwnerAsActor: boolean;
+  createIncidents: boolean;
   lastTestedAt: string | null;
   lastTestStatus: string | null;
   lastTestError: string | null;
@@ -249,6 +252,59 @@ export default function CisoSyncForm({
                     À chaque sync, chaque contrôle en statut <code>partial</code> ou{" "}
                     <code>non_compliant</code> crée un Finding actionnable côté CISO
                     Assistant (priorité P1/P2, ETA +12 mois, owner désigné).
+                  </span>
+                </span>
+              </label>
+              <label className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <input
+                  type="checkbox"
+                  name="createRiskScenarios"
+                  defaultChecked={existing?.createRiskScenarios ?? false}
+                  className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
+                />
+                <span>
+                  <strong>Générer un RiskScenario</strong> si la couche humaine est sous-formée.
+                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    Déclenché si {">"}30% des contrôles sont <code>non_compliant</code> OU 2+ en <code>partial</code>.
+                    Crée un scénario "Compromission via couche humaine" sous un
+                    RiskAssessment Humanix (nécessite une RiskMatrix préchargée
+                    côté CISO Assistant).
+                  </span>
+                </span>
+              </label>
+              <label className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <input
+                  type="checkbox"
+                  name="syncOwnerAsActor"
+                  defaultChecked={existing?.syncOwnerAsActor ?? false}
+                  className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
+                />
+                <span>
+                  <strong>Synchroniser le responsable</strong> comme Actor CISO Assistant.
+                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    L'<em>email du responsable</em> ci-dessus est résolu côté CISO
+                    Assistant (User créé s'il n'existe pas), puis son Actor est assigné
+                    comme owner sur chaque evidence et finding générés. Nécessite des
+                    permissions admin sur l'instance CISO Assistant pour la création
+                    de User.
+                  </span>
+                </span>
+              </label>
+              <label className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <input
+                  type="checkbox"
+                  name="createIncidents"
+                  defaultChecked={existing?.createIncidents ?? false}
+                  className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
+                />
+                <span>
+                  <strong>Ouvrir un Incident</strong> en cas de signal critique (≥1 contrôle non conforme).
+                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    Crée un Incident SEV3 <em>"Risque humain"</em> côté CISO Assistant à chaque
+                    sync où au moins un contrôle est <code>non_compliant</code>.
+                    Idempotent par jour (ref_id <code>humanix-{"{"}framework{"}"}-YYYY-MM-DD</code>).
+                    Sert d'alerte proactive type NIS2 §23, sans préjuger d'une compromission
+                    effective.
                   </span>
                 </span>
               </label>
