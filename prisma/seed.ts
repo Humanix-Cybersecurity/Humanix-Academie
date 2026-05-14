@@ -434,22 +434,34 @@ async function main() {
   }
   console.log(`  Groupes ✓ (${SYSTEM_GROUPS.length} groupes système)`);
 
-  // Tenant config : phishing obligatoire
-  await prisma.tenantSaisonConfig.upsert({
-    where: {
-      tenantId_saisonId: {
-        tenantId: tenant.id,
-        saisonId: saisonRecords.get("phishing").id,
+  // Tenant config : phishing obligatoire.
+  // En mode demo (DEMO_MODE=ON, content-pro absent), le slug `phishing` du
+  // catalogue commercial n'est pas chargé. On fallback sur
+  // `reconnaitre-phishing` (saison demo CC BY-SA livrée dans le repo
+  // public). Si vraiment aucune saison phishing-like n'existe, on skip.
+  const phishingSaison =
+    saisonRecords.get("phishing") ?? saisonRecords.get("reconnaitre-phishing");
+  if (phishingSaison) {
+    await prisma.tenantSaisonConfig.upsert({
+      where: {
+        tenantId_saisonId: {
+          tenantId: tenant.id,
+          saisonId: phishingSaison.id,
+        },
       },
-    },
-    update: { isMandatory: true },
-    create: {
-      tenantId: tenant.id,
-      saisonId: saisonRecords.get("phishing").id,
-      isMandatory: true,
-      isActive: true,
-    },
-  });
+      update: { isMandatory: true },
+      create: {
+        tenantId: tenant.id,
+        saisonId: phishingSaison.id,
+        isMandatory: true,
+        isActive: true,
+      },
+    });
+  } else {
+    console.log(
+      "  ⚠️  Saison phishing absente du catalogue actif, config tenant skip.",
+    );
+  }
 
   // Users + progressions (12 comptes fictifs demo)
   for (const u of FAKE_USERS) {
@@ -524,6 +536,9 @@ async function main() {
       const [key, ep] = allEpisodes[i];
       const saisonSlug = key.split("/")[0];
       const saison = saisonRecords.get(saisonSlug);
+      // En mode demo, certains slugs d'episodeRecords peuvent ne pas
+      // matcher saisonRecords (catalog reduit). On skip plutot que crash.
+      if (!saison) continue;
       const score = Math.floor(40 + Math.random() * 50 * u.maturity);
       // Quiz score % derive de la maturite avec bruit realiste
       // (45-95 %) - sans cela, l'admin /admin/impact affiche "Quiz moyen
