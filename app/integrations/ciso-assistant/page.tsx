@@ -325,18 +325,18 @@ export default function CisoAssistantIntegrationPage() {
         </h2>
         <ul className="space-y-3 text-sm">
           <li>
-            <strong>Pour le RSSI externalise</strong> : 8 PME = 8 instances CISO
-            Assistant. Une seule passerelle Humanix consolide les preuves de
-            sensibilisation des 8 tenants.
+            <strong>Pour le RSSI externalisé</strong> : 8 PME = 8 instances
+            CISO Assistant. Une seule passerelle Humanix consolide les
+            preuves de sensibilisation des 8 tenants.
           </li>
           <li>
-            <strong>Pour le DSI ETI en demarche ISO 27001</strong> : le controle
-            A.6.3 (sensibilisation) est aliment automatiquement en preuves
-            vivantes (score, certificats, taux de signalement).
+            <strong>Pour le DSI ETI en démarche ISO 27001</strong> : le
+            contrôle A.6.3 (sensibilisation) est alimenté automatiquement
+            en preuves vivantes (score, certificats, taux de signalement).
           </li>
           <li>
-            <strong>Pour le dirigeant en conformite NIS2</strong> : le score
-            NIS2 affiche dans CISO Assistant integre desormais le facteur
+            <strong>Pour le dirigeant en conformité NIS2</strong> : le score
+            NIS2 affiché dans CISO Assistant intègre désormais le facteur
             humain.
           </li>
         </ul>
@@ -413,8 +413,9 @@ export default function CisoAssistantIntegrationPage() {
             </summary>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
               L'export ne contient pas de PII brute : les certificats sont
-              represente par des liens (telechargeables avec votre cle API), pas
-              par leurs contenus. Les metriques sont agregees au niveau tenant.
+              représentés par des liens (téléchargeables avec votre clé API),
+              pas par leurs contenus. Les métriques sont agrégées au niveau
+              tenant.
             </p>
           </details>
         </div>
