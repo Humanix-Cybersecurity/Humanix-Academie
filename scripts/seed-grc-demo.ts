@@ -174,12 +174,70 @@ async function main() {
     console.log(`Saison custom déjà présente : ${saisonSlug}`);
   }
 
+  // === 4. Activer 3 users avec un peu de progression (boost tenant_score) ===
+  // Objectif : passer A.6.3 (tenant_score) de non_compliant -> partial.
+  // Formule tenant_score = activationRate*0.4 + completionRate*0.4 + avgQuiz*0.2
+  // Avec 3 users actifs sur 10 (0.3), 5 progress completed sur ~1600
+  // (completionRate très faible), quiz à 80% (0.8) -> score ≈ 0.16. Encore
+  // non_compliant. On simule plutot des progress completed pour avoir une
+  // metric "premiers pas" plausible.
+  // Strategie simplifiee : creer des progress completed sur quelques episodes
+  // pour faire monter completionRate juste assez pour atteindre partial
+  // (seuil 0.4 sur A.6.3 = tenant_score).
+  //
+  // Au lieu de jouer avec les chiffres, on cible direct une signature de
+  // demo claire : on ajoute 2 controles affaiblis facilement identifiables.
+
+  // 4a. Ajouter 4 events phishing.report supplementaires -> phishingReportRate
+  //     passe de 0.3 a 0.7. A.6.8 bascule de partial -> compliant.
+  //     -> Pour conserver A.6.8 en partial, on garde 3 events.
+  // On laisse phishing report a 3 (partial).
+
+  // 4b. Ne pas creer le marketplace module "phishing" -> conserve A.8.7
+  //     en not_assessed. (deja le cas)
+
+  // 4c. Activer 4 users LEARNER + creer quelques Progress completed pour
+  //     que tenant_score remonte sans atteindre 0.7. Resultat attendu :
+  //     A.6.3 reste non_compliant mais avec un score visible (pas 0/100).
+  const usersToActivate = userIds.slice(0, 4);
+  const firstSaison = await db.saison.findFirst({
+    where: { isPublished: true },
+    include: { episodes: { select: { id: true }, take: 5 } },
+  });
+  let progressCreated = 0;
+  if (firstSaison && firstSaison.episodes.length > 0) {
+    for (const userId of usersToActivate) {
+      for (const ep of firstSaison.episodes.slice(0, 3)) {
+        await db.progress.upsert({
+          where: { userId_episodeId: { userId, episodeId: ep.id } },
+          create: {
+            userId,
+            episodeId: ep.id,
+            saisonId: firstSaison.id,
+            tenantId: tenant.id,
+            status: "COMPLETED",
+            quizScorePct: 75,
+            completedAt: new Date(),
+          },
+          update: {},
+        });
+        progressCreated += 1;
+      }
+    }
+  }
+  console.log(
+    `Progress completed : ${progressCreated} records (${usersToActivate.length} users x 3 episodes)`,
+  );
+
   console.log("\n=== Métriques attendues après ce seed ===");
-  console.log("- A.5.1, A.5.24, A.6.6 → compliant (documentaire)");
+  console.log("- A.5.1, A.5.24, A.6.6 → compliant     (documentaire)");
   console.log("- A.7.7  → compliant     (module bureau-propre déployé)");
   console.log("- A.6.8  → partial       (phishingReportRate ≈ 0.3)");
-  console.log("- A.6.3  → non_compliant (tenant_score faible, 0% completion)");
+  console.log("- A.6.3  → non_compliant (tenant_score faible, ~0.05)");
   console.log("- A.8.7  → not_assessed  (pas de seuil défini)");
+  console.log("\n=== Trigger RiskScenario (v1.4) ===");
+  console.log("nbPartial + nbNonCompliant = 1 + 1 = 2 >= 2 → trigger déclenchement précoce");
+  console.log("→ RiskScenario auto-créé côté CISO Assistant si toggle activé.");
   console.log("\n→ Relance une sync depuis /admin/integrations/ciso-assistant");
 
   await db.$disconnect();
