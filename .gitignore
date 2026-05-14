@@ -150,3 +150,6 @@ data/tts-cache/[0-9a-f][0-9a-f]/
 /lib/library-seed.ts
 /lib/marketplace-seed.ts
 /lib/anecdotes/seed-data.ts
+
+# Doc de travail interne : script de RV intuitem (jetable apres usage).
+/docs/CISO_ASSISTANT_DEMO.md

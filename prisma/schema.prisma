@@ -119,6 +119,8 @@ model Tenant {
   riskScoreSnapshots  RiskScoreSnapshot[]
   cyberEventInstances CyberEventInstance[]
   samlConfig          TenantSamlConfig?
+  cisoConnection      CisoAssistantConnection?
+  cisoSyncRuns        CisoAssistantSyncRun[]
 
   @@index([parentTenantId])
 }
@@ -1533,6 +1535,13 @@ enum AuditAction {
   TENANT_SMTP_CONFIGURED // Admin a sauve une config SMTP
   TENANT_SMTP_TESTED // Admin a teste la connexion (succes ou echec)
   TENANT_SMTP_DELETED // Admin a supprime la config (perte des credentials)
+  // CISO Assistant (connexion + sync)
+  CISO_CONNECTION_CONFIGURED // Admin a sauve les credentials d'une instance CISO Assistant
+  CISO_CONNECTION_TESTED // Admin a teste la connexion (login + GET folders)
+  CISO_CONNECTION_DELETED // Admin a retire les credentials
+  CISO_SYNC_STARTED // Sync evidence push vers CISO Assistant lancee
+  CISO_SYNC_COMPLETED // Sync terminee avec succes
+  CISO_SYNC_FAILED // Sync interrompue par erreur
 }
 
 enum AuditOutcome {
@@ -1681,4 +1690,61 @@ model CyberEventInstance {
 
   @@unique([tenantId, eventSlug])
   @@index([tenantId, startDate])
+}
+
+// =====================================================
+// CISO ASSISTANT INTEGRATION
+// =====================================================
+// Permet a un tenant de connecter son instance CISO Assistant (intuitem)
+// et de synchroniser les evidences de conformite Humanix vers la GRC du
+// client en 1-clic depuis l'admin. Cf. lib/ciso-assistant-client.ts +
+// app/admin/integrations/ciso-assistant/page.tsx.
+
+model CisoAssistantConnection {
+  id            String  @id @default(cuid())
+  tenantId      String  @unique
+  baseUrl       String // ex: https://ciso.client.fr
+  username      String // email du compte CISO Assistant (Knox auth)
+  // Password chiffre AES-256-GCM (cf. lib/crypto.ts:encryptSecret).
+  // Format stocke : "<iv_b64>:<authTag_b64>:<ciphertext_b64>".
+  passwordEnc   String  @db.Text
+  folderName    String  @default("Humanix Académie")
+  // Owner designe (RSSI ou DPO du tenant). Optionnel, embedded dans la
+  // description de chaque evidence pour traçabilite audit ISO 27001 §7.5.
+  // En v1.2 : creation d'un Actor CISO Assistant lié a un User cote intuitem.
+  ownerEmail    String?
+  verifySSL     Boolean @default(true)
+  // Dernier resultat du bouton "Tester la connexion".
+  lastTestedAt  DateTime?
+  lastTestStatus String? // "ok" | "auth_failed" | "unreachable" | "schema_error"
+  lastTestError  String? @db.Text // message brut si echec
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  runs   CisoAssistantSyncRun[]
+}
+
+model CisoAssistantSyncRun {
+  id             String   @id @default(cuid())
+  tenantId       String
+  connectionId   String
+  framework      String // ISO27001:2022, NIS2, RGPD, ANSSI-HG, NIST-CSF
+  status         String // "running" | "success" | "partial" | "failed"
+  // User qui a clique sur "Synchroniser" (cron = null).
+  triggeredBy    String?
+  startedAt      DateTime @default(now())
+  finishedAt     DateTime?
+  evidencesTotal Int      @default(0)
+  evidencesOk    Int      @default(0)
+  evidencesFail  Int      @default(0)
+  // Log accumule ligne par ligne pendant l'execution, lu en SSE par l'UI.
+  // Format : chaque ligne = "<ISO_timestamp> [<level>] <message>".
+  logs           String   @db.Text @default("")
+
+  tenant     Tenant                  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  connection CisoAssistantConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, startedAt])
+  @@index([status])
 }
