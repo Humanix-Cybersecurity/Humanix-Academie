@@ -9,7 +9,9 @@
 import {
   fetchComplianceScore,
   fetchEvidenceExport,
+  fetchModuleRecommendations,
   fetchRecentCampaigns,
+  fetchTeamModulePerformance,
   fetchUsersAtRisk,
   HumanixApiError,
   type EvidenceFormat,
@@ -121,6 +123,52 @@ export const TOOLS: readonly ToolDefinition[] = [
       additionalProperties: false,
     },
   },
+  {
+    name: "humanix_team_module_performance",
+    description:
+      "Repond a une question RSSI type 'Qui dans mon equipe Marketing n'a pas compris la politique de mots de passe ?'. Retourne les metriques agregees (taux completion, score quiz moyen, count failing users) + top 5 users en echec PSEUDONYMISES (hash + service) pour un module Humanix donne, optionnellement filtre sur une equipe (Group). Read-only et RGPD-safe.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        module: {
+          type: "string",
+          description:
+            "Slug technique du module Humanix (ex: 'mots-de-passe', 'phishing', 'ransomware').",
+        },
+        team: {
+          type: "string",
+          description:
+            "Optionnel : slug d'une equipe (Group) du tenant pour scoper la mesure (ex: 'compta', 'rh', 'marketing'). Si absent, mesure sur tous les utilisateurs LEARNER actifs du tenant.",
+        },
+      },
+      required: ["module"],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "humanix_recommend_modules_for_threat",
+    description:
+      "Repond a une question RSSI type 'Mon analyse de risque identifie phishing finance, quels modules Humanix recommandez-vous ?'. Recoit du texte libre decrivant une menace (en anglais ou francais), retourne 1 a 5 modules Humanix tries par pertinence. Utile pour materialiser une analyse de risque CISO Assistant en parcours de formation cible.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        threat: {
+          type: "string",
+          description:
+            "Texte libre decrivant la menace ou le scenario de risque (ex: 'phishing finance', 'password reuse', 'social engineering vishing', 'ransomware', 'NIS2').",
+        },
+        limit: {
+          type: "integer",
+          minimum: 1,
+          maximum: 20,
+          default: 5,
+          description: "Nombre maximum de recommandations a retourner.",
+        },
+      },
+      required: ["threat"],
+      additionalProperties: false,
+    },
+  },
 ] as const;
 
 export type ToolCallResult =
@@ -156,6 +204,23 @@ export async function callTool(
       case "humanix_recent_campaigns": {
         const days = parseLimit(args.days ?? 30, 1, 365);
         const data = await fetchRecentCampaigns(cfg, days);
+        return { ok: true, data };
+      }
+      case "humanix_team_module_performance": {
+        const moduleSlug = parseSlug(args.module, "module");
+        const teamSlug =
+          args.team !== undefined ? parseSlug(args.team, "team") : undefined;
+        const data = await fetchTeamModulePerformance(
+          cfg,
+          moduleSlug,
+          teamSlug,
+        );
+        return { ok: true, data };
+      }
+      case "humanix_recommend_modules_for_threat": {
+        const threat = parseFreeText(args.threat, "threat");
+        const limit = parseLimit(args.limit ?? 5, 1, 20);
+        const data = await fetchModuleRecommendations(cfg, threat, limit);
         return { ok: true, data };
       }
       default:
@@ -200,4 +265,22 @@ function parseLimit(v: unknown, min: number, max: number): number {
     throw new Error(`Valeur invalide. Attendu entier entre ${min} et ${max}. Recu: ${String(v)}`);
   }
   return n;
+}
+
+function parseSlug(v: unknown, paramName: string): string {
+  if (typeof v !== "string" || !/^[a-z0-9][a-z0-9-]{0,63}$/.test(v)) {
+    throw new Error(
+      `${paramName} invalide. Attendu slug en minuscules (a-z 0-9 -), 64 chars max. Recu: ${String(v)}`,
+    );
+  }
+  return v;
+}
+
+function parseFreeText(v: unknown, paramName: string): string {
+  if (typeof v !== "string" || v.trim().length === 0 || v.length > 500) {
+    throw new Error(
+      `${paramName} invalide. Attendu texte 1-500 chars. Recu: ${String(v)}`,
+    );
+  }
+  return v.trim();
 }
