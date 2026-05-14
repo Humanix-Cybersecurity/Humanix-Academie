@@ -790,7 +790,15 @@ export function statusFromMetric(
   control: ControlMapping,
 ): EvidenceStatus {
   if (value === null || value === undefined) return "not_assessed";
-  if (control.thresholdCompliant === undefined) return "compliant";
+  // Sans seuil explicite, on ne peut PAS evaluer la conformite -> not_assessed.
+  // Avant : on retournait "compliant" par defaut, ce qui faisait apparaitre
+  // un controle metrique a 0% comme COMPLIANT et faussait les rapports audit
+  // (CISO Assistant affichait "approved" alors que le score etait 0/100).
+  // Si un controle est volontairement documentaire (la simple existence d'un
+  // artifact suffit comme preuve), on lui donne des artifacts de type
+  // policy/document -> isDocumentaryOnly() court-circuite avant d'appeler
+  // cette fonction (cf. lib/ciso-assistant/build-bundle.ts).
+  if (control.thresholdCompliant === undefined) return "not_assessed";
   if (value >= control.thresholdCompliant) return "compliant";
   if (
     control.thresholdPartial !== undefined &&
