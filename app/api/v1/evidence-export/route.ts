@@ -142,8 +142,12 @@ export async function GET(req: Request) {
   }
 
   const metrics = await computeGrcMetrics(tenantId);
+  // NEXT_PUBLIC_BASE_URL est inline au build-time par Next. Avec
+  // docker-compose passant "" si la var shell n'existe pas, on a "" au
+  // runtime -- le `??` ne remplace pas "". On utilise `||` pour aussi
+  // fallback sur l'empty string.
   const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL ??
+    process.env.NEXT_PUBLIC_BASE_URL ||
     `https://${req.headers.get("host") ?? "humanix-academie.fr"}`;
 
   // ----- 5. Construction des evidences -----

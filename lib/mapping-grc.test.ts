@@ -121,14 +121,21 @@ describe("statusFromMetric", () => {
     expect(statusFromMetric(0.0, sampleControl)).toBe("non_compliant");
   });
 
-  it("retourne 'compliant' si pas de threshold défini (contrôle documentaire)", () => {
-    const docOnly: ControlMapping = {
-      ref: "DOC.1",
-      name: "Documentary",
-      artifacts: [{ type: "policy", source: "pack_nis2_pdf", label: "Pack" }],
+  it("retourne 'not_assessed' si pas de threshold défini (intégrité audit)", () => {
+    const noThreshold: ControlMapping = {
+      ref: "NOT.1",
+      name: "Sans seuil",
+      artifacts: [
+        { type: "metric", source: "completion_rate", label: "Taux" },
+      ],
     };
-    // Si une valeur est fournie mais pas de seuil, on considère compliant par défaut
-    expect(statusFromMetric(1, docOnly)).toBe("compliant");
+    // Sans seuil explicite, on ne PEUT pas évaluer la conformité.
+    // Le défaut "compliant" précédent faussait les rapports audit
+    // (un score à 0% apparaissait COMPLIANT). Les contrôles purement
+    // documentaires doivent utiliser des artifacts policy/document
+    // pour être court-circuités par isDocumentaryOnly().
+    expect(statusFromMetric(1, noThreshold)).toBe("not_assessed");
+    expect(statusFromMetric(0, noThreshold)).toBe("not_assessed");
   });
 
   it("ne surcote JAMAIS sans donnée (intégrité Humanix)", () => {
