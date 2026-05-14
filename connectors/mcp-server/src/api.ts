@@ -1,9 +1,11 @@
 // Client HTTP minimal pour l'API REST Humanix Academie.
 //
-// Cible : un visiteur Claude Desktop qui branche le MCP server pour interroger
-// les donnees Humanix conversationnellement. On reste read-only par design :
-// le MCP server n'a pas vocation a modifier l'etat (les agents IA n'ont pas
-// l'autorite humaine pour cela). Les ecritures restent dans /admin.
+// Cible : un RSSI qui interroge ses donnees Humanix en langage naturel
+// via un agent IA conforme MCP -- Mistral en first (souverain FR), puis
+// LM Studio / Anything LLM / Ollama en local, et ChatGPT/Claude/Gemini
+// en option. On reste read-only par design : le MCP server n'a pas
+// vocation a modifier l'etat (les agents IA n'ont pas l'autorite humaine
+// pour cela). Les ecritures restent dans /admin.
 
 import { request } from "node:https";
 import { request as httpRequest } from "node:http";
@@ -65,6 +67,30 @@ export async function fetchRecentCampaigns(
   days = 30,
 ): Promise<unknown> {
   return getJson(cfg, `/api/v1/campaigns/recent?days=${days}`);
+}
+
+// v0.2 - Drill-down par equipe / module pour les agents IA
+export async function fetchTeamModulePerformance(
+  cfg: HumanixConfig,
+  moduleSlug: string,
+  teamSlug?: string,
+): Promise<unknown> {
+  const params = new URLSearchParams({ module: moduleSlug });
+  if (teamSlug) params.set("team", teamSlug);
+  return getJson(cfg, `/api/v1/team-module-performance?${params.toString()}`);
+}
+
+// v0.2 - Recommandation de modules pour traiter une menace
+export async function fetchModuleRecommendations(
+  cfg: HumanixConfig,
+  threatQuery: string,
+  limit = 5,
+): Promise<unknown> {
+  const params = new URLSearchParams({
+    threat: threatQuery,
+    limit: String(limit),
+  });
+  return getJson(cfg, `/api/v1/recommend-modules?${params.toString()}`);
 }
 
 // Implementation HTTP commune. On evite fetch() pour rester compatible Node 20
