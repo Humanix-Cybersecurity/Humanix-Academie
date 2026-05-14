@@ -28,6 +28,8 @@ import {
 import { buildCisoBundle } from "./build-bundle";
 import { CisoAssistantClient, CisoError } from "./client";
 import { decryptCisoPassword } from "./encryption";
+import { renderSignedEvidencePdf } from "./evidence-pdf";
+import { getCurrentPublicKeyPem } from "./pdf-signing";
 
 function nowLine(level: "INFO" | "OK" | "WARN" | "FAIL", msg: string): string {
   const ts = new Date().toISOString().slice(11, 19); // HH:MM:SS UTC
@@ -117,8 +119,13 @@ async function executeSync(
   actor: { userId: string; email: string; role: string },
 ): Promise<void> {
   const startedAt = Date.now();
+  // ATTENTION : NEXT_PUBLIC_BASE_URL est inline par Next au build-time.
+  // Avec docker-compose passant "" (empty string) si la var shell n'existe
+  // pas, process.env.NEXT_PUBLIC_BASE_URL = "" au runtime. Le `??` ne
+  // remplace que null/undefined, PAS "". On utilise `||` pour traiter
+  // aussi empty string -> fallback.
   const baseUrl =
-    process.env.NEXT_PUBLIC_BASE_URL ?? "https://humanix-academie.fr";
+    process.env.NEXT_PUBLIC_BASE_URL || "https://humanix-academie.fr";
 
   try {
     await appendLog(runId, nowLine("INFO", `Démarrage sync framework=${framework}`));
@@ -204,17 +211,30 @@ async function executeSync(
       nowLine("INFO", `Cache : ${existingCount} evidences existantes dans le folder`),
     );
 
+    const pubkey = getCurrentPublicKeyPem();
+    if (pubkey.ephemeral) {
+      await appendLog(
+        runId,
+        nowLine(
+          "WARN",
+          `Clé de signature PDF ÉPHÉMÈRE (régénérée au boot) — empreinte ${pubkey.fingerprint.slice(0, 23)}…`,
+        ),
+      );
+    } else {
+      await appendLog(
+        runId,
+        nowLine(
+          "INFO",
+          `Clé de signature PDF persistante — empreinte ${pubkey.fingerprint.slice(0, 23)}…`,
+        ),
+      );
+    }
+
     let ok = 0;
     let fail = 0;
     for (const evidence of bundle.evidences) {
       const result = await client.upsertEvidence(evidence, baseUrl, auditMeta);
-      if (result.ok) {
-        ok += 1;
-        await appendLog(
-          runId,
-          nowLine("OK", `${result.action} ${result.controlRef} → evidence ${result.id}`),
-        );
-      } else {
+      if (!result.ok) {
         fail += 1;
         await appendLog(
           runId,
@@ -222,6 +242,53 @@ async function executeSync(
             "FAIL",
             `${result.controlRef} : HTTP ${result.status} ${result.error}`,
           ),
+        );
+        continue;
+      }
+
+      ok += 1;
+      await appendLog(
+        runId,
+        nowLine(
+          "OK",
+          `${result.action} ${result.controlRef} → evidence ${result.id}`,
+        ),
+      );
+
+      // Generation + signature + upload du PDF audit-ready (v1.2).
+      // Errors non-bloquant : un upload PDF rate ne fait pas echouer
+      // la sync globale (l'evidence textuelle est deja en place).
+      try {
+        const { pdf, signature } = await renderSignedEvidencePdf({
+          evidence,
+          tenant,
+          framework,
+          audit: auditMeta,
+        });
+        const filename = `humanix-${framework}-${evidence.control_ref}.pdf`;
+        const up = await client.uploadAttachment(result.id, filename, pdf);
+        if (up.ok) {
+          await appendLog(
+            runId,
+            nowLine(
+              "OK",
+              `PDF signé attaché à ${result.controlRef} (${(pdf.byteLength / 1024).toFixed(1)} KB, sig ${signature.signature.slice(0, 12)}…)`,
+            ),
+          );
+        } else {
+          await appendLog(
+            runId,
+            nowLine(
+              "WARN",
+              `PDF non attaché pour ${result.controlRef} : HTTP ${up.status} ${up.error}`,
+            ),
+          );
+        }
+      } catch (pdfErr) {
+        const msg = pdfErr instanceof Error ? pdfErr.message : String(pdfErr);
+        await appendLog(
+          runId,
+          nowLine("WARN", `PDF échec ${result.controlRef} : ${msg}`),
         );
       }
     }
