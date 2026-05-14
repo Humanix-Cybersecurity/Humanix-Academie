@@ -1,26 +1,37 @@
 #!/usr/bin/env node
 // Serveur MCP (Model Context Protocol) Humanix Academie.
 //
-// Premier MCP server du marche SAT/HRM, expose les donnees Humanix en
-// read-only aux agents IA (Claude Desktop, Mistral via passerelle, GPT
-// via passerelle). Transport stdio standard MCP.
+// Premier MCP server du marche SAT/HRM. Expose les donnees Humanix en
+// read-only aux agents IA, dans l'ordre de preference suivant :
 //
-// Usage Claude Desktop (~/.claude_desktop_config.json) :
+//   1. Mistral (souverain FR) via passerelle ou client MCP-aware
+//   2. Local : LM Studio, Anything LLM (clients MCP natifs depuis fin
+//      2024). Ollama via passerelle MCP (ex: mcp-server-ollama) car
+//      Ollama n'a pas de support MCP natif a ce jour.
+//   3. Optionnel/sur demande : ChatGPT, Claude Desktop, Gemini.
+//
+// Transport : stdio JSON-RPC 2.0 (standard MCP).
+//
+// Exemple de configuration pour un client MCP (format generique compatible
+// LM Studio, Anything LLM, Claude Desktop) :
 //   {
 //     "mcpServers": {
 //       "humanix": {
 //         "command": "npx",
 //         "args": ["humanix-mcp-server"],
 //         "env": {
-//           "HUMANIX_API_KEY": "hk_xxxxxxxxxxxx",
+//           "HUMANIX_API_KEY": "hxa_xxxxxxxxxxxx",
 //           "HUMANIX_BASE_URL": "https://votre-tenant.humanix.fr"
 //         }
 //       }
 //     }
 //   }
 //
-// Le serveur utilise le SDK officiel @modelcontextprotocol/sdk (Anthropic)
-// pour parler le protocole stdio JSON-RPC 2.0.
+// MCP est un protocole ouvert (specification publiee par Anthropic en
+// novembre 2024, adopte depuis par OpenAI, plusieurs LLM open source et
+// la majorite des clients IA desktop). Notre serveur respecte la spec
+// sans dependance proprietaire : il fonctionne avec n'importe quel
+// client conforme.
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
