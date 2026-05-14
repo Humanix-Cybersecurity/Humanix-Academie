@@ -60,6 +60,9 @@ export async function saveConnection(formData: FormData): Promise<{
   const verifySSL = formData.get("verifySSL") === "on";
   const createAppliedControls = formData.get("createAppliedControls") === "on";
   const createFindings = formData.get("createFindings") === "on";
+  const createRiskScenarios = formData.get("createRiskScenarios") === "on";
+  const syncOwnerAsActor = formData.get("syncOwnerAsActor") === "on";
+  const createIncidents = formData.get("createIncidents") === "on";
 
   if (!baseUrl || !username) {
     throw new Error("Base URL et username obligatoires");
@@ -97,6 +100,9 @@ export async function saveConnection(formData: FormData): Promise<{
       verifySSL,
       createAppliedControls,
       createFindings,
+      createRiskScenarios,
+      syncOwnerAsActor,
+      createIncidents,
     },
     update: {
       baseUrl,
@@ -107,6 +113,9 @@ export async function saveConnection(formData: FormData): Promise<{
       verifySSL,
       createAppliedControls,
       createFindings,
+      createRiskScenarios,
+      syncOwnerAsActor,
+      createIncidents,
     },
   });
 
