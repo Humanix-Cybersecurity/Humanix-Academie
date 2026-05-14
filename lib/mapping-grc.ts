@@ -191,6 +191,11 @@ const ISO_27001_2022: FrameworkMapping = {
           filter: { slug: "bureau-propre" },
         },
       ],
+      // Metric binaire : 0 = module non deploye, 1 = deploye. Seuil 0.5 :
+      // un seul module suffit a satisfaire le controle "sensibilisation
+      // bureau et ecran propres" cote couverture Humanix. Le controle
+      // technique (verrouillage ecran, etc.) reste hors scope.
+      thresholdCompliant: 0.5,
     },
     {
       ref: "A.8.7",
