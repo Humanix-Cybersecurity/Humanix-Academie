@@ -33,6 +33,75 @@ export default async function IntegrationsPage() {
       />
 
       <div className="space-y-6 min-w-0">
+        <AdminSection title="Autres intégrations">
+          <ul className="grid sm:grid-cols-2 gap-3">
+            <li>
+              <a
+                href="/admin/integrations/ciso-assistant"
+                className="block p-4 rounded-xl border border-gray-200 dark:border-slate-700 hover:border-accent-400 dark:hover:border-accent-500 hover:shadow-sm transition group"
+              >
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl shrink-0" aria-hidden="true">
+                    🛡
+                  </span>
+                  <div className="min-w-0">
+                    <p className="font-bold text-primary-500 dark:text-accent-300 group-hover:underline">
+                      CISO Assistant (intuitem)
+                    </p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                      Push 1-clic des preuves de conformité Humanix
+                      (ISO 27001, NIS2, RGPD, ANSSI, NIST CSF) vers votre
+                      instance CISO Assistant. Terminal live, idempotent.
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/admin/sso-saml"
+                className="block p-4 rounded-xl border border-gray-200 dark:border-slate-700 hover:border-accent-400 dark:hover:border-accent-500 hover:shadow-sm transition group"
+              >
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl shrink-0" aria-hidden="true">
+                    🔐
+                  </span>
+                  <div className="min-w-0">
+                    <p className="font-bold text-primary-500 dark:text-accent-300 group-hover:underline">
+                      SSO SAML / SCIM
+                    </p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                      Authentification entreprise (Entra ID, Okta, Google,
+                      Keycloak) + provisioning auto. Pro+.
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/admin/api-keys"
+                className="block p-4 rounded-xl border border-gray-200 dark:border-slate-700 hover:border-accent-400 dark:hover:border-accent-500 hover:shadow-sm transition group"
+              >
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl shrink-0" aria-hidden="true">
+                    🔑
+                  </span>
+                  <div className="min-w-0">
+                    <p className="font-bold text-primary-500 dark:text-accent-300 group-hover:underline">
+                      API Keys
+                    </p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                      Clés d'API tenant pour outils GRC tiers (Eramba, Splunk,
+                      Sentinel, etc.) et connecteurs externes.
+                    </p>
+                  </div>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </AdminSection>
+
         <AdminSection title="Vos webhooks configurés">
           <WebhookTable
             webhooks={webhooks.map((w) => ({
