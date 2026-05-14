@@ -267,6 +267,12 @@ export class CisoAssistantClient {
     //     "informations documentées" (identification, responsable, périmètre,
     //     période). Lisible par un auditeur humain dans l'UI CISO Assistant.
     //   - Bloc 2 (DONNEES HUMANIX) : ce qu'on mesure côté plateforme.
+    // Le score Humanix est un ratio 0-1 (compute en interne). On l'affiche
+    // formate en pourcentage (0-100) avec 1 decimale pour rester audit-lisible.
+    const scorePct =
+      typeof evidence.score === "number"
+        ? `${Math.round(evidence.score * 1000) / 10}/100`
+        : "non évalué";
     const description =
       `## Métadonnées audit\n` +
       `- Référentiel : ${evidence.category ?? "n/a"}\n` +
@@ -276,7 +282,7 @@ export class CisoAssistantClient {
       `- Version du contenu Humanix : ${audit.contentVersion}\n` +
       `- À ré-évaluer avant : ${audit.expiryDate}\n` +
       `\n## Données Humanix\n` +
-      `- Score conformité : ${evidence.score ?? "n/a"}/100\n` +
+      `- Score conformité : ${scorePct}\n` +
       `- Statut conformité : ${evidence.status}\n` +
       `- Source : Humanix Académie (sync automatique)\n` +
       `- Synchronisé : ${new Date().toISOString()}\n`;
