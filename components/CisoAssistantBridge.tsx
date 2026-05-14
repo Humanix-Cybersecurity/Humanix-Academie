@@ -33,7 +33,7 @@ r = requests.get(
     timeout=30,
 )
 bundle = r.json()
-print(f"{bundle['summary']['compliant']}/{bundle['summary']['total_controls']} controles compliant")`,
+print(f"{bundle['summary']['compliant']}/{bundle['summary']['total_controls']} contrôles compliant")`,
   },
   {
     id: "node",
@@ -228,7 +228,7 @@ export default function CisoAssistantBridge() {
             3. Mapping {fw.title}
           </h2>
           <label className="text-sm">
-            <span className="sr-only">Filtrer les controles</span>
+            <span className="sr-only">Filtrer les contrôles</span>
             <input
               type="search"
               placeholder="Filtrer (ref, nom, catégorie)..."
@@ -242,7 +242,7 @@ export default function CisoAssistantBridge() {
         <div className="overflow-x-auto card p-0">
           <table className="w-full text-sm">
             <caption className="sr-only">
-              Mapping des controles {fw.title} vers les données Humanix
+              Mapping des contrôles {fw.title} vers les données Humanix
             </caption>
             <thead>
               <tr className="bg-gray-50 dark:bg-slate-800 text-left">
@@ -250,7 +250,7 @@ export default function CisoAssistantBridge() {
                   Ref
                 </th>
                 <th scope="col" className="p-3 font-bold">
-                  Controle
+                  Contrôle
                 </th>
                 <th scope="col" className="p-3 font-bold">
                   Catégorie
@@ -267,7 +267,7 @@ export default function CisoAssistantBridge() {
               {filteredControls.length === 0 && (
                 <tr>
                   <td colSpan={5} className="p-6 text-center text-gray-500">
-                    Aucun controle ne correspond a votre filtre.
+                    Aucun contrôle ne correspond à votre filtre.
                   </td>
                 </tr>
               )}
@@ -299,7 +299,7 @@ export default function CisoAssistantBridge() {
                     <td className="p-3 text-right">
                       {isCore ? (
                         <span className="inline-flex items-center gap-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-xs font-bold px-2 py-1 rounded-full">
-                          ★ Coeur
+                          ★ Cœur
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs font-bold px-2 py-1 rounded-full">
@@ -317,7 +317,7 @@ export default function CisoAssistantBridge() {
         {fw.outOfScope.length > 0 && (
           <details className="mt-4 text-sm">
             <summary className="cursor-pointer text-gray-600 dark:text-gray-400 hover:text-primary-500 font-semibold">
-              Hors scope assume ({fw.outOfScope.length} controles)
+              Hors scope assumé ({fw.outOfScope.length} contrôles)
             </summary>
             <ul className="mt-2 ml-4 list-disc space-y-1 text-gray-600 dark:text-gray-400 text-xs">
               {fw.outOfScope.map((o) => (
