@@ -248,12 +248,18 @@ export class CisoAssistantClient {
     }`.slice(0, 255);
 
     // URL relative Humanix -> absolue (URLField Django exige absolue).
+    // Defensive : si le prefixage produit toujours une URL relative (ex:
+    // humanixBaseUrl=""), on n'envoie pas le link plutot que d'envoyer
+    // une URL invalide qui ferait echouer tout le PATCH cote Django.
     let link: string | undefined;
     const artifactUrl = evidence.artifacts.find((a) => a.url)?.url;
     if (artifactUrl) {
-      link = artifactUrl.startsWith("/")
+      const candidate = artifactUrl.startsWith("/")
         ? `${humanixBaseUrl}${artifactUrl}`
         : artifactUrl;
+      if (/^https?:\/\//.test(candidate)) {
+        link = candidate;
+      }
     }
 
     // Description en deux blocs Markdown :
@@ -311,6 +317,46 @@ export class CisoAssistantClient {
     return {
       ok: false,
       controlRef: ref,
+      status: r.status,
+      error: (await r.text()).slice(0, 300),
+    };
+  }
+
+  /**
+   * Upload un PDF comme attachment de l'evidence donnee. CISO Assistant
+   * cree automatiquement une EvidenceRevision si necessaire (cf.
+   * backend/core/views.py:UploadAttachmentView).
+   *
+   * L'endpoint est /api/evidences/<id>/upload/ avec FileUploadParser :
+   * le body est le binaire raw du fichier, le header Content-Disposition
+   * porte le filename.
+   */
+  async uploadAttachment(
+    evidenceId: string,
+    filename: string,
+    pdfBuffer: Buffer,
+  ): Promise<{ ok: true } | { ok: false; status: number; error: string }> {
+    const url = `${this.conn.baseUrl}/api/evidences/${evidenceId}/upload/`;
+    const headers: Record<string, string> = {
+      "Content-Type": "application/pdf",
+      "Content-Disposition": `attachment; filename="${filename}"`,
+    };
+    if (this.token) headers.Authorization = `Token ${this.token}`;
+    const init: RequestInit = {
+      method: "POST",
+      headers,
+      body: pdfBuffer as unknown as BodyInit,
+    };
+    if (this.dispatcher) {
+      (init as RequestInit & { dispatcher?: unknown }).dispatcher =
+        this.dispatcher;
+    }
+    const r = await fetch(url, init);
+    if ([200, 201, 204].includes(r.status)) {
+      return { ok: true };
+    }
+    return {
+      ok: false,
       status: r.status,
       error: (await r.text()).slice(0, 300),
     };
