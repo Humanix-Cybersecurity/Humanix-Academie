@@ -115,7 +115,16 @@ async function executeSync(
   runId: string,
   tenantId: string,
   framework: FrameworkRef,
-  conn: { baseUrl: string; username: string; passwordEnc: string; folderName: string; verifySSL: boolean; ownerEmail: string | null },
+  conn: {
+    baseUrl: string;
+    username: string;
+    passwordEnc: string;
+    folderName: string;
+    verifySSL: boolean;
+    ownerEmail: string | null;
+    createAppliedControls: boolean;
+    createFindings: boolean;
+  },
   actor: { userId: string; email: string; role: string },
 ): Promise<void> {
   const startedAt = Date.now();
@@ -230,6 +239,44 @@ async function executeSync(
       );
     }
 
+    // v1.3 hooks optionnels : AppliedControl + FindingsAssessment.
+    // Fire-and-forget : un echec sur les extensions ne casse JAMAIS la sync
+    // principale (push des evidences). Principe d'autonomie : Humanix
+    // continue de fonctionner si CISO Assistant est down ou refuse.
+    let appliedControlId: string | null = null;
+    let findingsAssessmentId: string | null = null;
+    const evidenceIdsForLink: string[] = [];
+
+    if (conn.createAppliedControls) {
+      try {
+        appliedControlId = await client.ensureAppliedControl(framework);
+        await appendLog(
+          runId,
+          appliedControlId
+            ? nowLine("OK", `AppliedControl prêt (id ${appliedControlId})`)
+            : nowLine("WARN", "AppliedControl non créé (extension désactivée côté CISO Assistant ?)"),
+        );
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        await appendLog(runId, nowLine("WARN", `AppliedControl: ${msg}`));
+      }
+    }
+
+    if (conn.createFindings) {
+      try {
+        findingsAssessmentId = await client.ensureFindingsAssessment(framework);
+        await appendLog(
+          runId,
+          findingsAssessmentId
+            ? nowLine("OK", `FindingsAssessment prêt (id ${findingsAssessmentId})`)
+            : nowLine("WARN", "FindingsAssessment non créé"),
+        );
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        await appendLog(runId, nowLine("WARN", `FindingsAssessment: ${msg}`));
+      }
+    }
+
     let ok = 0;
     let fail = 0;
     for (const evidence of bundle.evidences) {
@@ -254,6 +301,48 @@ async function executeSync(
           `${result.action} ${result.controlRef} → evidence ${result.id}`,
         ),
       );
+      evidenceIdsForLink.push(result.id);
+
+      // v1.3 Finding : pour partial / non_compliant, on cree un constat
+      // actionnable. Non-bloquant : echec ne casse pas la sync.
+      if (
+        conn.createFindings &&
+        findingsAssessmentId &&
+        (evidence.status === "partial" ||
+          evidence.status === "non_compliant")
+      ) {
+        try {
+          const fr = await client.upsertFinding({
+            findingsAssessmentId,
+            controlRef: evidence.control_ref,
+            controlName: evidence.control_name ?? evidence.control_ref,
+            status: evidence.status,
+            score: evidence.score,
+            appliedControlId,
+            etaDate: auditMeta.expiryDate,
+          });
+          if (fr.ok) {
+            await appendLog(
+              runId,
+              nowLine(
+                "OK",
+                `Finding ${fr.action} ${evidence.control_ref} (P${evidence.status === "non_compliant" ? 1 : 2}, ETA ${auditMeta.expiryDate})`,
+              ),
+            );
+          } else {
+            await appendLog(
+              runId,
+              nowLine("WARN", `Finding non créé pour ${evidence.control_ref}`),
+            );
+          }
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : String(err);
+          await appendLog(
+            runId,
+            nowLine("WARN", `Finding échec ${evidence.control_ref}: ${msg}`),
+          );
+        }
+      }
 
       // Generation + signature + upload du PDF audit-ready (v1.2).
       // Errors non-bloquant : un upload PDF rate ne fait pas echouer
@@ -294,6 +383,32 @@ async function executeSync(
           runId,
           nowLine("WARN", `PDF échec ${result.controlRef} : ${msg}`),
         );
+      }
+    }
+
+    // Link M2M des evidences poussees au AppliedControl (si active).
+    if (
+      conn.createAppliedControls &&
+      appliedControlId &&
+      evidenceIdsForLink.length > 0
+    ) {
+      try {
+        const ok = await client.linkEvidencesToAppliedControl(
+          appliedControlId,
+          evidenceIdsForLink,
+        );
+        await appendLog(
+          runId,
+          ok
+            ? nowLine(
+                "OK",
+                `AppliedControl lié à ${evidenceIdsForLink.length} evidence(s)`,
+              )
+            : nowLine("WARN", "AppliedControl link M2M échoué"),
+        );
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        await appendLog(runId, nowLine("WARN", `Link M2M: ${msg}`));
       }
     }
 
