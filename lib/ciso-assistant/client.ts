@@ -681,6 +681,117 @@ export class CisoAssistantClient {
   }
 
   // =========================================================================
+  // v1.7 - Metrology hooks. Le module metrology de CISO Assistant permet
+  // au RSSI/DSI/DPO de visualiser l'evolution dans le temps de metriques
+  // operationnelles (tenant_score, completion_rate, phishing_report_rate,
+  // counts d'evidences). On expose :
+  //   - MetricDefinition : "template" reutilisable (ex: "humanix.tenant_score")
+  //   - MetricInstance : instance du template scopee au tenant + folder
+  //   - CustomMetricSample : point de mesure (timestamp + value JSON)
+  //
+  // Le format value attendu pour metric quantitative : {"result": <number>}.
+  // =========================================================================
+
+  /**
+   * Cree ou retrouve une MetricDefinition Humanix par ref_id. Quantitative
+   * par defaut, higher_is_better=true (la majorite de nos metriques).
+   */
+  async ensureMetricDefinition(args: {
+    refId: string; // ex: "humanix.tenant_score"
+    name: string;
+    description: string;
+    higherIsBetter?: boolean;
+    defaultTarget?: number;
+  }): Promise<string | null> {
+    if (!this.folderId) return null;
+    const list = await this.request(
+      "GET",
+      `/api/metric-definitions/?ref_id=${encodeURIComponent(args.refId)}`,
+    );
+    if (list.status === 200) {
+      const data = (await list.json()) as any;
+      const items = data.results ?? (Array.isArray(data) ? data : []);
+      const exact = items.find((d: any) => d.ref_id === args.refId);
+      if (exact) return exact.id;
+    }
+    const r = await this.request("POST", "/api/metric-definitions/", {
+      ref_id: args.refId,
+      name: args.name,
+      description: args.description,
+      folder: this.folderId,
+      category: "quantitative",
+      is_published: true,
+      higher_is_better: args.higherIsBetter ?? true,
+      ...(args.defaultTarget !== undefined && {
+        default_target: args.defaultTarget,
+      }),
+    });
+    if (![200, 201].includes(r.status)) return null;
+    const created = (await r.json()) as { id: string };
+    return created.id;
+  }
+
+  /**
+   * Cree ou retrouve une MetricInstance liee a une MetricDefinition pour
+   * le folder Humanix courant. Idempotent par name. Frequency monthly
+   * par defaut (on push a chaque sync, mensuel = pas stale en cron quotidien).
+   */
+  async ensureMetricInstance(args: {
+    metricDefinitionId: string;
+    name: string;
+    framework: string;
+    targetValue?: number;
+  }): Promise<string | null> {
+    if (!this.folderId) return null;
+    const list = await this.request(
+      "GET",
+      `/api/metric-instances/?folder=${encodeURIComponent(this.folderId)}`,
+    );
+    if (list.status === 200) {
+      const data = (await list.json()) as any;
+      const items = data.results ?? (Array.isArray(data) ? data : []);
+      const exact = items.find((i: any) => i.name === args.name);
+      if (exact) return exact.id;
+    }
+    const r = await this.request("POST", "/api/metric-instances/", {
+      name: args.name,
+      description: `Mesure Humanix Académie pour ${args.framework}, alimentée automatiquement à chaque sync.`,
+      folder: this.folderId,
+      metric_definition: args.metricDefinitionId,
+      status: "active",
+      collection_frequency: "monthly",
+      ...(args.targetValue !== undefined && { target_value: args.targetValue }),
+      ...(this.ownerActorId && { owner: [this.ownerActorId] }),
+    });
+    if (![200, 201].includes(r.status)) return null;
+    const created = (await r.json()) as { id: string };
+    return created.id;
+  }
+
+  /**
+   * Push un point de mesure dans la serie temporelle. Format value
+   * quantitative : {"result": <number>}. Timestamp = now (le serializer
+   * Django rejette les timestamps futurs).
+   */
+  async pushMetricSample(args: {
+    metricInstanceId: string;
+    value: number;
+    observation?: string;
+  }): Promise<{ ok: boolean; id?: string }> {
+    const r = await this.request("POST", "/api/custom-metric-samples/", {
+      metric_instance: args.metricInstanceId,
+      timestamp: new Date().toISOString(),
+      value: { result: args.value },
+      ...(args.observation && { observation: args.observation }),
+    });
+    if ([200, 201].includes(r.status)) {
+      const created = (await r.json()) as { id: string };
+      return { ok: true, id: created.id };
+    }
+    return { ok: false };
+  }
+
+  // =========================================================================
   // v1.6 - Incident hooks. Quand >=1 controle est non_compliant sur le panel
   // d'evidences, on cree un Incident SEV3 "Risque humain critique" cote CISO
   // Assistant. Idempotent par ref_id = humanix-<framework>-<YYYY-MM-DD>.
