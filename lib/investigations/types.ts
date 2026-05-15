@@ -122,10 +122,16 @@ const MediaSchema = z.discriminatedUnion("type", [
     data: z.object({
       // Description textuelle de la scene rendue en SVG/JSX cote mockup.
       // Liste des elements et leur position (% relatif).
+      // Aussi utilise pour les scenes piggyback (badge reader, porte
+      // tenue) et trash bin (papiers visibles, broyeur absent).
+      sceneType: z
+        .enum(["office", "piggyback", "trash_bin"])
+        .default("office"),
       scene: z.array(
         z.object({
           id: z.string(),
           kind: z.enum([
+            // Office
             "laptop_unlocked",
             "sticky_note_password",
             "paper_confidential",
@@ -136,6 +142,20 @@ const MediaSchema = z.discriminatedUnion("type", [
             "coffee_mug",
             "office_chair",
             "desk_lamp",
+            // Piggyback (sas badge)
+            "badge_reader",
+            "open_door",
+            "polite_holder",
+            "unbadged_intruder",
+            "security_camera",
+            "tailgate_notice",
+            // Trash bin (poubelle non securisee)
+            "loose_papers",
+            "envelope_confidential",
+            "missing_shredder",
+            "id_card_thrown",
+            "post_it_sensitive",
+            "broken_lock",
           ]),
           x: z.number().min(0).max(100),
           y: z.number().min(0).max(100),
