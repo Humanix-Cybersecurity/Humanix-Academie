@@ -34,6 +34,8 @@ type ExistingConnection = {
   syncOwnerAsActor: boolean;
   createIncidents: boolean;
   pushMetrologySamples: boolean;
+  syncGroupsAsTeams: boolean;
+  syncCampaigns: boolean;
   lastTestedAt: string | null;
   lastTestStatus: string | null;
   lastTestError: string | null;
@@ -325,6 +327,42 @@ export default function CisoSyncForm({
                     de contrôles conformes / partiels / non conformes. Le
                     RSSI, DSI ou DPO visualise l'évolution dans les
                     dashboards natifs CISO Assistant.
+                  </span>
+                </span>
+              </label>
+              <label className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <input
+                  type="checkbox"
+                  name="syncGroupsAsTeams"
+                  defaultChecked={existing?.syncGroupsAsTeams ?? false}
+                  className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
+                />
+                <span>
+                  <strong>Synchroniser les équipes</strong> (Groups Humanix → Teams CISO Assistant).
+                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    Crée une Team CISO Assistant par Group Humanix (Compta,
+                    RH, Dev, Commercial...). Le RSSI peut ensuite assigner
+                    findings et incidents par équipe nativement. Les
+                    membres ne sont pas pushés automatiquement (cf. demande 1
+                    du document roadmap intuitem).
+                  </span>
+                </span>
+              </label>
+              <label className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <input
+                  type="checkbox"
+                  name="syncCampaigns"
+                  defaultChecked={existing?.syncCampaigns ?? false}
+                  className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
+                />
+                <span>
+                  <strong>Synchroniser les campagnes</strong> phishing simulé / smishing.
+                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    À chaque sync, pour chaque PhishingCampaign Humanix
+                    active ou récente (90 jours), crée/maintient une Campaign
+                    CISO Assistant avec statut mappé (draft / in_progress /
+                    done). Le RSSI suit toutes ses campagnes dans son cockpit
+                    GRC habituel.
                   </span>
                 </span>
               </label>
