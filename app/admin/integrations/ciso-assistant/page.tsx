@@ -91,6 +91,18 @@ export default async function CisoAssistantAdminPage() {
           statuts sans créer de doublons. Aucune modification requise côté
           intuitem — Humanix s'adapte à leur API publique.
         </p>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <a
+            href="/integrations/ciso-assistant/fonctionnalites"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800/50 text-primary-700 dark:text-primary-300 text-sm font-semibold hover:bg-primary-100 dark:hover:bg-primary-900/30 transition"
+          >
+            <span aria-hidden="true">📖</span>
+            Voir toutes les fonctionnalités du connecteur
+            <span aria-hidden="true" className="text-xs opacity-70">↗</span>
+          </a>
+        </div>
       </header>
 
       <CisoSyncForm
