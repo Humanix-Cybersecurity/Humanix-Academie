@@ -108,6 +108,8 @@ export default async function CisoAssistantAdminPage() {
                 syncOwnerAsActor: connection.syncOwnerAsActor,
                 createIncidents: connection.createIncidents,
                 pushMetrologySamples: connection.pushMetrologySamples,
+                syncGroupsAsTeams: connection.syncGroupsAsTeams,
+                syncCampaigns: connection.syncCampaigns,
                 lastTestedAt: connection.lastTestedAt?.toISOString() ?? null,
                 lastTestStatus: connection.lastTestStatus,
                 lastTestError: connection.lastTestError,

@@ -1,0 +1,93 @@
+convert_library_version: 'v2 ; Compat Mode: [0] {[v2.1] (DEFAULT) Don''t use any Compatibility Mode}'
+urn: urn:humanix:risk:library:mapping-humanix-awareness-to-gdpr
+locale: fr
+ref_id: mapping-humanix-awareness-to-gdpr
+name: Humanix Académie ↔ RGPD (UE 2016/679)
+description: |-
+  Mapping entre le catalogue de modules Humanix Académie et le règlement
+  général sur la protection des données (RGPD). Cible principalement :
+    - art. 5 (principes de traitement)
+    - art. 25 (privacy by design / by default)
+    - art. 32 (sécurité du traitement)
+    - art. 33 (notification de violation)
+    - art. 35 (AIPD)
+    - art. 39 (missions du DPO)
+
+  Le module `dpo-quotidien` couvre `equal` les missions opérationnelles
+  du DPO décrites à l'art. 39.
+copyright: |-
+  © Humanix-Cybersecurity SASU. Mapping publié sous licence CC BY-SA 4.0.
+version: 1
+publication_date: 2026-05-15
+provider: Humanix-Cybersecurity SASU
+packager: Humanix-Cybersecurity
+dependencies:
+  - urn:humanix:risk:library:humanix-awareness-catalog-v1
+  - urn:intuitem:risk:library:gdpr
+objects:
+  requirement_mapping_sets:
+    - urn: urn:humanix:risk:req_mapping_set:mapping-humanix-awareness-to-gdpr
+      ref_id: mapping-humanix-awareness-to-gdpr
+      name: Humanix Académie ↔ RGPD
+      description: Mapping modules Humanix Académie vers RGPD articles 5, 25, 32, 33, 35, 39.
+      source_framework_urn: urn:humanix:risk:framework:humanix-awareness-catalog-v1
+      target_framework_urn: urn:intuitem:risk:framework:gdpr
+      requirement_mappings:
+        # Art. 5 — Principes (minimisation, intégrité, confidentialité)
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:donnees-sensibles
+          target_requirement_urn: urn:intuitem:risk:req_node:gdpr:art-5
+          relationship: intersect
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:vie-privee-bureau
+          target_requirement_urn: urn:intuitem:risk:req_node:gdpr:art-5
+          relationship: intersect
+
+        # Art. 25 — Privacy by design / by default
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:cyber-dev
+          target_requirement_urn: urn:intuitem:risk:req_node:gdpr:art-25
+          relationship: intersect
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:donnees-sensibles
+          target_requirement_urn: urn:intuitem:risk:req_node:gdpr:art-25
+          relationship: intersect
+
+        # Art. 32 — Sécurité du traitement (sensibilisation + accès + crypto)
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:mots-de-passe
+          target_requirement_urn: urn:intuitem:risk:req_node:gdpr:art-32
+          relationship: intersect
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:donnees-sensibles
+          target_requirement_urn: urn:intuitem:risk:req_node:gdpr:art-32
+          relationship: intersect
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:phishing
+          target_requirement_urn: urn:intuitem:risk:req_node:gdpr:art-32
+          relationship: intersect
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:teletravail
+          target_requirement_urn: urn:intuitem:risk:req_node:gdpr:art-32
+          relationship: intersect
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:stockage-cloud
+          target_requirement_urn: urn:intuitem:risk:req_node:gdpr:art-32
+          relationship: intersect
+
+        # Art. 33 — Notification de violation
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:crise-cyber
+          target_requirement_urn: urn:intuitem:risk:req_node:gdpr:art-33
+          relationship: intersect
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:remediation-flash
+          target_requirement_urn: urn:intuitem:risk:req_node:gdpr:art-33
+          relationship: intersect
+
+        # Art. 35 — AIPD
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:dpo-quotidien
+          target_requirement_urn: urn:intuitem:risk:req_node:gdpr:art-35
+          relationship: intersect
+
+        # Art. 39 — Missions du DPO (CŒUR Humanix dpo-quotidien)
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:dpo-quotidien
+          target_requirement_urn: urn:intuitem:risk:req_node:gdpr:art-39
+          relationship: equal
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:cyber-rh
+          target_requirement_urn: urn:intuitem:risk:req_node:gdpr:art-39
+          relationship: intersect
+
+        # Art. 24 — Responsabilité du responsable de traitement
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:cyber-dirigeants
+          target_requirement_urn: urn:intuitem:risk:req_node:gdpr:art-24
+          relationship: intersect
