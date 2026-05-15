@@ -1542,6 +1542,7 @@ enum AuditAction {
   CISO_SYNC_STARTED // Sync evidence push vers CISO Assistant lancee
   CISO_SYNC_COMPLETED // Sync terminee avec succes
   CISO_SYNC_FAILED // Sync interrompue par erreur
+  CISO_LIVE_SYNC // Mini-sync incrementale declenchee par un evenement metier (Live Mode v2.0)
 }
 
 enum AuditOutcome {
@@ -1758,6 +1759,19 @@ model CisoAssistantConnection {
   // RSSI de suivre ses campagnes phishing simule dans son cockpit GRC
   // habituel, sans repli sur Humanix.
   syncCampaigns         Boolean @default(false)
+  // v2.0 Live Mode : si actif, chaque evenement metier (episode.completed,
+  // phishing.reported, phishing.user_clicked) declenche une mini-sync
+  // incrementale debouncee (5s) sur les frameworks deja synchronises au
+  // moins une fois. Permet au RSSI de voir le score remonter en temps reel
+  // pendant une presentation COMEX, sans attendre le cron quotidien.
+  // - Re-upsert des evidences uniquement (pas de PDF, pas d'extensions).
+  // - Fire-and-forget : un echec ne bloque jamais l'evenement metier.
+  // - Coalesce via debouncer : 50 evenements en 5s = 1 seule sync.
+  enableLiveMode        Boolean @default(false)
+  // Telemetrie Live Mode (informationnel, mis a jour apres chaque mini-sync).
+  lastLiveSyncAt        DateTime?
+  lastLiveSyncEvent     String? // "episode.completed" | "phishing.reported" | "phishing.user_clicked"
+  liveSyncCount         Int     @default(0)
   verifySSL     Boolean @default(true)
   // Dernier resultat du bouton "Tester la connexion".
   lastTestedAt  DateTime?
