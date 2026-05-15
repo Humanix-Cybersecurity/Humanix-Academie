@@ -115,9 +115,18 @@ export default async function EnquetesPage() {
           repère soi-même, on ne le retient pas — on le voit venir.
         </p>
         {userId && (
-          <div className="mt-5 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-100 dark:bg-accent-950/30 border-2 border-accent-300 dark:border-accent-900 text-accent-800 dark:text-accent-200 font-bold text-sm">
-            <span>🕵️</span>
-            <span>Ton rang : {DETECTIVE_RANK_LABELS[rank]}</span>
+          <div className="mt-5 flex items-center justify-center gap-3 flex-wrap">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-100 dark:bg-accent-950/30 border-2 border-accent-300 dark:border-accent-900 text-accent-800 dark:text-accent-200 font-bold text-sm">
+              <span>🕵️</span>
+              <span>Ton rang : {DETECTIVE_RANK_LABELS[rank]}</span>
+            </div>
+            <Link
+              href="/apprendre/enquetes/leaderboard"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100 dark:bg-amber-950/30 border-2 border-amber-300 dark:border-amber-900 text-amber-800 dark:text-amber-200 font-bold text-sm hover:bg-amber-200 dark:hover:bg-amber-950/50 transition-colors"
+            >
+              <span>🏆</span>
+              <span>Leaderboard 30j</span>
+            </Link>
           </div>
         )}
       </section>
