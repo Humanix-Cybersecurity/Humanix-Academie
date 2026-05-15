@@ -911,14 +911,14 @@ export class CisoAssistantClient {
       return { id: null, error: "folderId manquant" };
     const list = await this.request(
       "GET",
-      `/api/metric-definitions/?ref_id=${encodeURIComponent(args.refId)}`,
+      `/api/metrology/metric-definitions/?ref_id=${encodeURIComponent(args.refId)}`,
     );
     if (list.status === 404) {
       const txt = await list.text();
       return {
         id: null,
         status: 404,
-        error: `Endpoint /api/metric-definitions/ inexistant — module Metrology non disponible sur cette instance (${txt.slice(0, 120)})`,
+        error: `Endpoint /api/metrology/metric-definitions/ inexistant — module Metrology non disponible sur cette instance (${txt.slice(0, 120)})`,
       };
     }
     if (list.status === 401 || list.status === 403) {
@@ -926,7 +926,7 @@ export class CisoAssistantClient {
       return {
         id: null,
         status: list.status,
-        error: `GET /api/metric-definitions/ refusé (${list.status}) : ${txt.slice(0, 120)}`,
+        error: `GET /api/metrology/metric-definitions/ refusé (${list.status}) : ${txt.slice(0, 120)}`,
       };
     }
     if (list.status === 200) {
@@ -935,7 +935,7 @@ export class CisoAssistantClient {
       const exact = items.find((d: any) => d.ref_id === args.refId);
       if (exact) return { id: exact.id };
     }
-    const r = await this.request("POST", "/api/metric-definitions/", {
+    const r = await this.request("POST", "/api/metrology/metric-definitions/", {
       ref_id: args.refId,
       name: args.name,
       description: args.description,
@@ -952,7 +952,7 @@ export class CisoAssistantClient {
       return {
         id: null,
         status: r.status,
-        error: `POST /api/metric-definitions/ HTTP ${r.status} : ${txt.slice(0, 200)}`,
+        error: `POST /api/metrology/metric-definitions/ HTTP ${r.status} : ${txt.slice(0, 200)}`,
       };
     }
     const created = (await r.json()) as { id: string };
@@ -973,14 +973,14 @@ export class CisoAssistantClient {
     if (!this.folderId) return { id: null, error: "folderId manquant" };
     const list = await this.request(
       "GET",
-      `/api/metric-instances/?folder=${encodeURIComponent(this.folderId)}`,
+      `/api/metrology/metric-instances/?folder=${encodeURIComponent(this.folderId)}`,
     );
     if (list.status === 404) {
       const txt = await list.text();
       return {
         id: null,
         status: 404,
-        error: `Endpoint /api/metric-instances/ inexistant (${txt.slice(0, 120)})`,
+        error: `Endpoint /api/metrology/metric-instances/ inexistant (${txt.slice(0, 120)})`,
       };
     }
     if (list.status === 200) {
@@ -989,7 +989,7 @@ export class CisoAssistantClient {
       const exact = items.find((i: any) => i.name === args.name);
       if (exact) return { id: exact.id };
     }
-    const r = await this.request("POST", "/api/metric-instances/", {
+    const r = await this.request("POST", "/api/metrology/metric-instances/", {
       name: args.name,
       description: `Mesure Humanix Académie pour ${args.framework}, alimentée automatiquement à chaque sync.`,
       folder: this.folderId,
@@ -1004,7 +1004,7 @@ export class CisoAssistantClient {
       return {
         id: null,
         status: r.status,
-        error: `POST /api/metric-instances/ HTTP ${r.status} : ${txt.slice(0, 200)}`,
+        error: `POST /api/metrology/metric-instances/ HTTP ${r.status} : ${txt.slice(0, 200)}`,
       };
     }
     const created = (await r.json()) as { id: string };
@@ -1021,7 +1021,7 @@ export class CisoAssistantClient {
     value: number;
     observation?: string;
   }): Promise<{ ok: boolean; id?: string; status?: number; error?: string }> {
-    const r = await this.request("POST", "/api/custom-metric-samples/", {
+    const r = await this.request("POST", "/api/metrology/custom-metric-samples/", {
       metric_instance: args.metricInstanceId,
       timestamp: new Date().toISOString(),
       value: { result: args.value },
@@ -1035,7 +1035,7 @@ export class CisoAssistantClient {
     return {
       ok: false,
       status: r.status,
-      error: `POST /api/custom-metric-samples/ HTTP ${r.status} : ${txt.slice(0, 200)}`,
+      error: `POST /api/metrology/custom-metric-samples/ HTTP ${r.status} : ${txt.slice(0, 200)}`,
     };
   }
 
