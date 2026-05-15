@@ -897,8 +897,82 @@ export class CisoAssistantClient {
   // =========================================================================
 
   /**
+   * Resout l'id d'une unite Terminology (METRIC_UNIT) par son nom. Les
+   * unites built-in de CISO Assistant sont : count, users, bytes,
+   * percentage, score, days, hours, "events per second".
+   * Retourne null si l'unite n'existe pas (instance ancienne, libraries
+   * Terminology non chargees, etc.) -> on continuera sans unit.
+   * Cache in-memory pour eviter N appels.
+   */
+  private terminologyCache: Map<string, string> = new Map();
+  async resolveMetricUnit(unitName: string): Promise<string | null> {
+    const cached = this.terminologyCache.get(unitName);
+    if (cached) return cached;
+    // field_path=METRIC_UNIT scope la recherche aux Terminology d'unites
+    // (vs autres usages comme ROTO_RISK_ORIGIN, QUALIFICATIONS, etc.).
+    const r = await this.request(
+      "GET",
+      `/api/terminologies/?field_path=METRIC_UNIT&name=${encodeURIComponent(unitName)}`,
+    );
+    if (r.status !== 200) return null;
+    const data = (await r.json()) as any;
+    const items = data.results ?? (Array.isArray(data) ? data : []);
+    // Match exact sur name OU translations (CISO Assistant ships avec FR/EN).
+    const exact =
+      items.find((t: any) => t.name === unitName) ??
+      items.find((t: any) =>
+        Object.values(t.translations ?? {}).some((v: any) =>
+          typeof v?.name === "string" ? v.name === unitName : v === unitName,
+        ),
+      );
+    if (exact?.id) {
+      this.terminologyCache.set(unitName, exact.id);
+      return exact.id;
+    }
+    return null;
+  }
+
+  /**
+   * Cree ou retrouve un FilteringLabel par sa valeur `label`. Idempotent.
+   * `label` doit matcher regex ^[\w-]{1,36}$ (validation Django). On
+   * normalise donc en remplacant les caracteres invalides par "-".
+   * Le label est cree dans le folder Humanix par defaut.
+   */
+  async ensureFilteringLabel(label: string): Promise<string | null> {
+    if (!this.folderId) return null;
+    // Normalise : minuscules + caracteres autorises uniquement, max 36 chars
+    const norm = label
+      .toLowerCase()
+      .replace(/[^a-z0-9_-]/g, "-")
+      .slice(0, 36);
+    const list = await this.request(
+      "GET",
+      `/api/filtering-labels/?label=${encodeURIComponent(norm)}`,
+    );
+    if (list.status === 200) {
+      const data = (await list.json()) as any;
+      const items = data.results ?? (Array.isArray(data) ? data : []);
+      const exact = items.find((f: any) => f.label === norm);
+      if (exact?.id) return exact.id;
+    }
+    // Pas trouve -> POST
+    const r = await this.request("POST", "/api/filtering-labels/", {
+      label: norm,
+      folder: this.folderId,
+    });
+    if (![200, 201].includes(r.status)) return null;
+    const created = (await r.json()) as { id: string };
+    return created.id;
+  }
+
+  /**
    * Cree ou retrouve une MetricDefinition Humanix par ref_id. Quantitative
    * par defaut, higher_is_better=true (la majorite de nos metriques).
+   *
+   * Enrichissement v2 :
+   *  - provider: "Humanix Académie" (champ ReferentialObjectMixin)
+   *  - unit: FK Terminology resolue par nom ("percentage", "count", "score")
+   *  - filtering_labels: M2M, label "humanix" (cree au besoin)
    */
   async ensureMetricDefinition(args: {
     refId: string; // ex: "humanix.tenant_score"
@@ -906,6 +980,8 @@ export class CisoAssistantClient {
     description: string;
     higherIsBetter?: boolean;
     defaultTarget?: number;
+    unitName?: "count" | "percentage" | "score" | "users" | "days" | "hours";
+    labelIds?: string[]; // FilteringLabel ids deja resolus
   }): Promise<{ id: string | null; status?: number; error?: string }> {
     if (!this.folderId)
       return { id: null, error: "folderId manquant" };
@@ -935,6 +1011,11 @@ export class CisoAssistantClient {
       const exact = items.find((d: any) => d.ref_id === args.refId);
       if (exact) return { id: exact.id };
     }
+    // Resolution unit (best-effort, ignore si introuvable)
+    let unitId: string | null = null;
+    if (args.unitName) {
+      unitId = await this.resolveMetricUnit(args.unitName);
+    }
     const r = await this.request("POST", "/api/metrology/metric-definitions/", {
       ref_id: args.refId,
       name: args.name,
@@ -943,6 +1024,11 @@ export class CisoAssistantClient {
       category: "quantitative",
       is_published: true,
       higher_is_better: args.higherIsBetter ?? true,
+      provider: "Humanix Académie",
+      ...(unitId && { unit: unitId }),
+      ...(args.labelIds && args.labelIds.length > 0 && {
+        filtering_labels: args.labelIds,
+      }),
       ...(args.defaultTarget !== undefined && {
         default_target: args.defaultTarget,
       }),
@@ -969,6 +1055,7 @@ export class CisoAssistantClient {
     name: string;
     framework: string;
     targetValue?: number;
+    labelIds?: string[]; // FilteringLabel ids (idem que sur Definition)
   }): Promise<{ id: string | null; status?: number; error?: string }> {
     if (!this.folderId) return { id: null, error: "folderId manquant" };
     const list = await this.request(
@@ -994,6 +1081,9 @@ export class CisoAssistantClient {
       description: `Mesure Humanix Académie pour ${args.framework}, alimentée automatiquement à chaque sync.`,
       folder: this.folderId,
       metric_definition: args.metricDefinitionId,
+      ...(args.labelIds && args.labelIds.length > 0 && {
+        filtering_labels: args.labelIds,
+      }),
       status: "active",
       collection_frequency: "monthly",
       ...(args.targetValue !== undefined && { target_value: args.targetValue }),

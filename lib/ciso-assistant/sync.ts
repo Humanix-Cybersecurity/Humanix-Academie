@@ -713,7 +713,9 @@ async function executeSync(
         const grcMetrics = await computeGrcMetrics(tenant.id);
 
         // Liste des metriques Humanix a pousser. Chaque entrée :
-        // (refId, name, valeur, description, higherIsBetter, target).
+        // (refId, name, valeur, description, higherIsBetter, target, unit).
+        // L'unite mappe sur les Terminology built-in de CISO Assistant
+        // (field_path=METRIC_UNIT) : count, percentage, score, ...
         const metrics: Array<{
           refId: string;
           name: string;
@@ -721,6 +723,7 @@ async function executeSync(
           description: string;
           higherIsBetter: boolean;
           target?: number;
+          unitName: "count" | "percentage" | "score";
         }> = [
           {
             refId: "humanix.tenant_score",
@@ -731,6 +734,7 @@ async function executeSync(
               "Combinaison pondérée d'activation, completion et scores quiz.",
             higherIsBetter: true,
             target: 80,
+            unitName: "score",
           },
           {
             refId: "humanix.completion_rate",
@@ -741,6 +745,7 @@ async function executeSync(
               "population active du tenant.",
             higherIsBetter: true,
             target: 70,
+            unitName: "percentage",
           },
           {
             refId: "humanix.phishing_report_rate",
@@ -751,6 +756,7 @@ async function executeSync(
               "phishing simulé sur la période.",
             higherIsBetter: true,
             target: 50,
+            unitName: "percentage",
           },
           {
             refId: "humanix.evidences_compliant_count",
@@ -759,6 +765,7 @@ async function executeSync(
             description: `Nombre de contrôles ${framework} en statut compliant côté Humanix.`,
             higherIsBetter: true,
             target: nbTotal,
+            unitName: "count",
           },
           {
             refId: "humanix.evidences_non_compliant_count",
@@ -767,6 +774,7 @@ async function executeSync(
             description: `Nombre de contrôles ${framework} en statut non_compliant côté Humanix.`,
             higherIsBetter: false,
             target: 0,
+            unitName: "count",
           },
           {
             refId: "humanix.evidences_partial_count",
@@ -775,8 +783,23 @@ async function executeSync(
             description: `Nombre de contrôles ${framework} en couverture partielle côté Humanix.`,
             higherIsBetter: false,
             target: 0,
+            unitName: "count",
           },
         ];
+
+        // Pre-resolve les labels Humanix (idempotents) pour eviter N appels.
+        // "humanix" + "sensibilisation" + le framework slug.
+        const labelIds: string[] = [];
+        try {
+          const labelHumanix = await client.ensureFilteringLabel("humanix");
+          if (labelHumanix) labelIds.push(labelHumanix);
+          const labelSens = await client.ensureFilteringLabel("sensibilisation");
+          if (labelSens) labelIds.push(labelSens);
+          const labelFw = await client.ensureFilteringLabel(framework);
+          if (labelFw) labelIds.push(labelFw);
+        } catch {
+          // Best-effort : si filtering-labels indisponible, on continue sans.
+        }
 
         let metricsOk = 0;
         let metricsFail = 0;
@@ -793,12 +816,14 @@ async function executeSync(
               description: m.description,
               higherIsBetter: m.higherIsBetter,
               defaultTarget: m.target,
+              unitName: m.unitName,
+              labelIds,
             });
             if (defRes.status === 404) {
               // Module Metrology pas dans cette build de CISO Assistant.
               // Inutile de retenter sur les 5 metriques restantes.
               metrologyUnavailable = true;
-              firstMetricError = `module Metrology non disponible sur cette instance CISO Assistant (HTTP 404 sur /api/metric-definitions/)`;
+              firstMetricError = `module Metrology non disponible sur cette instance CISO Assistant (HTTP 404 sur /api/metrology/metric-definitions/)`;
               break;
             }
             if (!defRes.id) {
@@ -812,6 +837,7 @@ async function executeSync(
               name: m.name,
               framework,
               targetValue: m.target,
+              labelIds,
             });
             if (!instRes.id) {
               metricsFail += 1;
