@@ -20,7 +20,7 @@ export const metadata = {
   title:
     "Connecteur CISO Assistant — Toutes les fonctionnalités | Humanix Académie",
   description:
-    "Référence complète du connecteur Humanix × CISO Assistant : 16 surfaces métier alimentées, 12 toggles indépendants, audit OpenAPI, PDF signés Ed25519, mode temps réel. Tout est documenté.",
+    "Référence complète du connecteur Humanix × CISO Assistant : 17 surfaces métier alimentées, 12 interrupteurs indépendants, alignement OpenAPI, PDF signés Ed25519, synchronisation en temps réel. Tout est documenté.",
 };
 
 // ============================================================================
@@ -65,32 +65,32 @@ const CATEGORIES: Record<
   core: {
     label: "Cœur du connecteur",
     description:
-      "Le push automatique des preuves de conformité — base obligatoire que toutes les autres fonctionnalités enrichissent.",
+      "La transmission automatique des preuves de conformité — base obligatoire que toutes les autres fonctionnalités enrichissent.",
   },
   grc: {
     label: "Boucle GRC complète",
     description:
-      "Tout ce qu'un RSSI attend dans un GRC moderne : contrôles appliqués, constats, scénarios de risque, incidents.",
+      "Tout ce qu'un RSSI attend dans un outil de gouvernance, risque et conformité moderne : contrôles appliqués, constats, scénarios de risque, incidents.",
   },
   metrology: {
-    label: "Métriques & dashboards",
+    label: "Métriques et tableaux de bord",
     description:
-      "Séries temporelles dans le module Metrology natif + dashboard pré-cuisiné prêt à présenter en COMEX.",
+      "Séries temporelles dans le module Métrologie natif et tableau de bord prêt à l'emploi pour une présentation en comité de direction.",
   },
   people: {
     label: "Couche humaine",
     description:
-      "Cartographie de la dimension humaine du risque cyber : équipes, menaces, asset workforce, owner désigné.",
+      "Cartographie de la dimension humaine du risque cyber : équipes, menaces, actif « personnel », responsable désigné.",
   },
   automation: {
     label: "Automatisation",
     description:
-      "Mode temps réel, sync planifié, labels auto, idempotence — pour que ça tourne tout seul une fois configuré.",
+      "Mode temps réel, synchronisation planifiée, étiquettes automatiques, idempotence — pour que tout fonctionne sans intervention une fois configuré.",
   },
   audit: {
-    label: "Preuve & audit",
+    label: "Preuve et audit",
     description:
-      "Tout ce qui aide à passer un audit ISO 27001 / NIS2 / DORA : signatures cryptographiques, traçabilité, manifeste.",
+      "Tout ce qui aide à passer un audit ISO 27001, NIS2 ou DORA : signatures cryptographiques, traçabilité, manifeste d'intégrité.",
   },
 };
 
@@ -102,7 +102,7 @@ const FEATURES: Feature[] = [
     icon: "📋",
     version: "v1.0",
     shortDescription:
-      "Une evidence par contrôle, idempotente par nom, avec score, statut, période de couverture et lien vers Humanix.",
+      "Une preuve par contrôle, idempotente par nom, avec score, statut, période de couverture et lien vers Humanix.",
     defaultOn: true,
     effect: (
       <>
@@ -154,7 +154,7 @@ const FEATURES: Feature[] = [
     icon: "🔏",
     version: "v1.2",
     shortDescription:
-      "Chaque evidence est accompagnée d'un PDF audit-ready signé cryptographiquement, vérifiable hors-ligne avec OpenSSL standard.",
+      "Chaque preuve est accompagnée d'un PDF prêt à l'audit, signé cryptographiquement, et vérifiable hors-ligne avec OpenSSL standard.",
     defaultOn: true,
     effect: (
       <>
@@ -198,7 +198,7 @@ const FEATURES: Feature[] = [
     icon: "🛡",
     version: "v1.3",
     shortDescription:
-      "Un contrôle appliqué « Programme de sensibilisation Humanix » regroupe toutes les evidences poussées, avec catégorie process, csf_function=protect et effort L.",
+      "Un contrôle appliqué « Programme de sensibilisation Humanix » regroupe toutes les preuves transmises, avec la catégorie « processus », csf_function=protect et un effort de niveau L.",
     toggleName: "createAppliedControls",
     effect: (
       <>
@@ -245,7 +245,7 @@ const FEATURES: Feature[] = [
     icon: "🔍",
     version: "v1.3",
     shortDescription:
-      "Chaque contrôle partial ou non_compliant génère un Finding P1/P2 avec ETA +12 mois et lien vers l'AppliedControl parent.",
+      "Chaque contrôle partiel ou non conforme génère un constat de priorité 1 ou 2, avec une échéance à 12 mois et un lien vers le contrôle appliqué parent.",
     toggleName: "createFindings",
     effect: (
       <>
@@ -293,7 +293,7 @@ const FEATURES: Feature[] = [
     icon: "⚖",
     version: "v1.4",
     shortDescription:
-      "Si >30% du panel est non_compliant ou ≥2 contrôles affaiblis, on crée un scénario « Compromission via couche humaine sous-formée » sous un RiskAssessment dédié.",
+      "Si plus de 30 % du panel est non conforme ou si au moins deux contrôles sont affaiblis, on crée un scénario « Compromission via couche humaine sous-formée » sous une analyse de risque dédiée.",
     toggleName: "createRiskScenarios",
     effect: (
       <>
@@ -336,7 +336,7 @@ const FEATURES: Feature[] = [
     icon: "🚨",
     version: "v1.6",
     shortDescription:
-      "Quand ≥1 contrôle est non_compliant, on ouvre un Incident SEV3 « Risque humain » avec reported_at, occurred_at, idempotent par date (jour).",
+      "Quand au moins un contrôle est non conforme, on ouvre un incident de sévérité 3 « Risque humain » avec date de signalement et date d'occurrence, idempotent à la journée.",
     toggleName: "createIncidents",
     effect: (
       <>
@@ -382,7 +382,7 @@ const FEATURES: Feature[] = [
     icon: "📈",
     version: "v1.7",
     shortDescription:
-      "6 MetricDefinitions Humanix avec unit (score / percentage / count), provider Humanix Académie, filtering_labels, et CustomMetricSamples par sync.",
+      "Six définitions de métriques Humanix avec leur unité (score, pourcentage, comptage), fournisseur Humanix Académie, étiquettes de filtrage, et un échantillon temporel par synchronisation.",
     toggleName: "pushMetrologySamples",
     effect: (
       <>
@@ -442,7 +442,7 @@ const FEATURES: Feature[] = [
     icon: "📊",
     version: "v2.2",
     shortDescription:
-      "Dashboard 6 widgets pré-cuisiné : jauge score, 2 KPI cards, line 90j, 2 sparklines. Le RSSI ouvre CISO Assistant et voit déjà du contenu.",
+      "Tableau de bord prêt à l'emploi avec six vignettes : une jauge pour le score, deux indicateurs clés, une courbe sur 90 jours, deux mini-graphes. Le RSSI ouvre CISO Assistant et voit déjà du contenu.",
     toggleName: "createDashboard",
     effect: (
       <>
@@ -493,7 +493,7 @@ const FEATURES: Feature[] = [
     icon: "👤",
     version: "v1.5",
     shortDescription:
-      "Crée le User CISO Assistant correspondant à l'ownerEmail du tenant, et l'assigne automatiquement comme owner sur toutes les evidences, findings, risk scenarios, incidents, métriques, asset.",
+      "Crée l'utilisateur CISO Assistant correspondant à l'adresse du responsable, et l'affecte automatiquement comme responsable sur toutes les preuves, constats, scénarios de risque, incidents, métriques et actifs.",
     toggleName: "syncOwnerAsActor",
     effect: (
       <>
@@ -535,7 +535,7 @@ const FEATURES: Feature[] = [
     icon: "👥",
     version: "v1.8",
     shortDescription:
-      "Synchronise les Groups Humanix (Compta, RH, Dev, Commercial…) comme Teams CISO Assistant. Le RSSI peut assigner findings et incidents par équipe nativement.",
+      "Synchronise les groupes Humanix (Comptabilité, RH, Développement, Commercial…) en équipes CISO Assistant. Le RSSI peut affecter les constats et les incidents par équipe, nativement.",
     toggleName: "syncGroupsAsTeams",
     effect: (
       <>
@@ -574,7 +574,7 @@ const FEATURES: Feature[] = [
     icon: "🧍",
     version: "v2.2",
     shortDescription:
-      "Crée un Asset primary « Personnel · Couche humaine Humanix Académie » dans le folder, type PR, is_business_function=true, ref_id humanix.workforce.",
+      "Crée un actif primaire « Personnel · Couche humaine Humanix Académie » dans le dossier, de type PR (primaire), marqué fonction métier, avec la référence humanix.workforce.",
     toggleName: "createWorkforceAsset",
     effect: (
       <>
@@ -621,7 +621,7 @@ const FEATURES: Feature[] = [
     icon: "⚠",
     version: "v2.2",
     shortDescription:
-      "Pousse les 15 menaces du catalog Humanix (FOVI, vishing, smishing, quishing, deepfake CEO, password reuse, shadow IT, tailgating, fuite RGPD, fuite secrets dev, etc.) comme Threat entities.",
+      "Transmet les 15 menaces du catalogue Humanix (fraude au président, hameçonnage vocal, par SMS, par QR code, hypertrucage du dirigeant, réutilisation de mot de passe, informatique fantôme, talonnage, fuite RGPD, fuite de secrets par les développeurs, etc.) en entités de type « menace ».",
     toggleName: "syncThreats",
     effect: (
       <>
@@ -675,11 +675,11 @@ const FEATURES: Feature[] = [
   // ============== AUTOMATION ==============
   {
     slug: "live-mode",
-    title: "Live Mode — sync temps réel",
+    title: "Mode temps réel — synchronisation à l'évènement",
     icon: "⚡",
     version: "v2.0",
     shortDescription:
-      "Chaque événement métier (episode.completed, phishing.reported, phishing.user_clicked) déclenche une mini-sync incrémentale debouncée 5s. Le RSSI voit le score remonter en direct.",
+      "Chaque évènement métier (épisode terminé, hameçonnage signalé, clic sur faux hameçonnage) déclenche une mini-synchronisation incrémentale, regroupée sur une fenêtre de 5 secondes. Le RSSI voit le score remonter en direct.",
     toggleName: "enableLiveMode",
     effect: (
       <>
@@ -728,11 +728,11 @@ const FEATURES: Feature[] = [
   },
   {
     slug: "filtering-labels",
-    title: "FilteringLabels auto-attachés",
+    title: "Étiquettes de filtrage attachées automatiquement",
     icon: "🏷",
     version: "v2.1",
     shortDescription:
-      "3 labels (humanix, sensibilisation, <framework>) sont créés et attachés automatiquement à toutes les entités poussées : evidences, applied controls, findings, risk scenarios, incidents, métriques, asset, threats, dashboard.",
+      "Trois étiquettes (humanix, sensibilisation, nom du référentiel) sont créées et attachées automatiquement à toutes les entités transmises : preuves, contrôles appliqués, constats, scénarios de risque, incidents, métriques, actif, menaces, tableau de bord.",
     effect: (
       <>
         <p>
@@ -762,7 +762,7 @@ const FEATURES: Feature[] = [
     icon: "🎣",
     version: "v1.9",
     shortDescription:
-      "Pour chaque PhishingCampaign Humanix active ou récente (90 jours), crée/maintient une Campaign CISO Assistant scopée aux frameworks et perimeter par défaut.",
+      "Pour chaque campagne d'hameçonnage Humanix active ou récente (90 jours), crée et maintient une campagne CISO Assistant rattachée aux référentiels et au périmètre par défaut.",
     toggleName: "syncCampaigns",
     effect: (
       <>
@@ -811,7 +811,7 @@ const FEATURES: Feature[] = [
     icon: "📜",
     version: "v1.0",
     shortDescription:
-      "Toutes les actions admin (configure / test / delete / sync) ET les events automatiques (live sync) sont auditées dans /admin/audit avec actor, target, metadata.",
+      "Toutes les actions d'administration (configurer, tester, supprimer, synchroniser) ainsi que les évènements automatiques (synchronisation temps réel) sont auditées dans /admin/audit avec l'acteur, la cible et les métadonnées associées.",
     defaultOn: true,
     effect: (
       <>
@@ -855,7 +855,7 @@ const FEATURES: Feature[] = [
     icon: "🔐",
     version: "v1.0",
     shortDescription:
-      "Le password CISO Assistant est chiffré AES-256-GCM avec une clé dérivée par HKDF de AUTH_SECRET. Format de stockage : iv:authTag:ciphertext (tous base64).",
+      "Le mot de passe CISO Assistant est chiffré en AES-256-GCM avec une clé dérivée par HKDF à partir d'AUTH_SECRET. Format de stockage : iv:authTag:texte_chiffré (tout en base64).",
     defaultOn: true,
     effect: (
       <>
@@ -941,7 +941,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
             )}
             {feature.toggleName && !feature.defaultOn && (
               <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300">
-                opt-in
+                à activer
               </span>
             )}
           </div>
@@ -953,7 +953,7 @@ function FeatureCard({ feature }: { feature: Feature }) {
 
       {feature.toggleName && (
         <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 font-mono">
-          Toggle admin : <code>{feature.toggleName}</code>
+          Interrupteur dans l'administration : <code>{feature.toggleName}</code>
         </p>
       )}
 
@@ -1008,15 +1008,17 @@ export default function CisoAssistantFeaturesPage() {
         <h1 className="text-4xl sm:text-5xl font-extrabold text-primary-500 leading-tight mb-4">
           Toutes les fonctionnalités du connecteur,{" "}
           <span className="bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
-            documentées par endpoint.
+            documentées service par service.
           </span>
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl">
           Cette page documente exhaustivement chaque fonctionnalité du
-          connecteur Humanix Académie × CISO Assistant : effet côté GRC,
-          endpoints OpenAPI consommés, toggle d'activation, cas d'usage type.
-          Chaque feature est aligné contre le schéma OpenAPI réel de
-          CISO Assistant community — pas de reverse engineering.
+          connecteur Humanix Académie × CISO Assistant : effet côté
+          gouvernance, risque et conformité, services OpenAPI consommés,
+          interrupteur d'activation, cas d'usage type. Chaque
+          fonctionnalité est alignée contre le contrat OpenAPI réel de
+          CISO Assistant community — pas d'analyse à l'envers, pas de
+          devinette.
         </p>
       </header>
 
@@ -1038,7 +1040,7 @@ export default function CisoAssistantFeaturesPage() {
             {toggleCount}
           </div>
           <div className="text-xs uppercase tracking-wider text-gray-600 dark:text-gray-400">
-            Toggles indépendants
+            Interrupteurs indépendants
           </div>
         </div>
         <div className="rounded-xl bg-emerald-500/5 dark:bg-emerald-500/10 border border-emerald-500/20 p-5 text-center">
@@ -1054,7 +1056,7 @@ export default function CisoAssistantFeaturesPage() {
             0
           </div>
           <div className="text-xs uppercase tracking-wider text-gray-600 dark:text-gray-400">
-            Modif côté intuitem
+            Modification côté intuitem
           </div>
         </div>
       </section>
@@ -1112,7 +1114,7 @@ export default function CisoAssistantFeaturesPage() {
         </section>
       ))}
 
-      {/* ===== HORS SCOPE ===== */}
+      {/* ===== HORS PÉRIMÈTRE ===== */}
       <section
         aria-labelledby="out-of-scope"
         className="mb-12 rounded-2xl bg-gray-50 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 p-6"
@@ -1121,55 +1123,59 @@ export default function CisoAssistantFeaturesPage() {
           id="out-of-scope"
           className="text-xl font-bold text-gray-900 dark:text-white mb-3"
         >
-          Hors scope — explicitement
+          Hors périmètre — explicitement
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-          On dit ce qu'on couvre, on dit aussi ce qu'on{" "}
-          <strong>ne couvre pas</strong>. Ces fonctionnalités sont disponibles
-          côté CISO Assistant mais n'ont pas de sens à être alimentées
+          Nous disons ce que nous couvrons, et nous disons aussi ce que nous{" "}
+          <strong>ne couvrons pas</strong>. Ces fonctionnalités existent côté
+          CISO Assistant mais cela n'a pas de sens de les alimenter
           automatiquement depuis Humanix :
         </p>
         <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-2 list-disc pl-5">
           <li>
-            <strong>Vulnérabilités techniques</strong> (<code>/api/vulnerabilities/</code>
-            , CVE) — du ressort d'un scanner type Tenable / Wiz.
+            <strong>Vulnérabilités techniques</strong> (
+            <code>/api/vulnerabilities/</code>, CVE) — du ressort d'un
+            scanneur de vulnérabilités du type Tenable ou Wiz.
           </li>
           <li>
-            <strong>Contrats fournisseurs</strong> (<code>/api/contracts/</code>) — du
-            ressort de l'achats ou du juridique.
+            <strong>Contrats fournisseurs</strong> (
+            <code>/api/contracts/</code>) — du ressort de l'achat ou du
+            juridique.
           </li>
           <li>
-            <strong>Questionnaires d'audit</strong> (<code>/api/questions/</code>,{" "}
-            <code>/api/answers/</code>) — flux interne CISO Assistant entre
-            auditeur et audité.
+            <strong>Questionnaires d'audit</strong> (
+            <code>/api/questions/</code>, <code>/api/answers/</code>) — flux
+            interne à CISO Assistant entre auditeur et audité.
           </li>
           <li>
-            <strong>Risk acceptances</strong> (
-            <code>/api/risk-acceptances/</code>) — décision business, doit
+            <strong>Acceptations de risque</strong> (
+            <code>/api/risk-acceptances/</code>) — décision métier, qui doit
             rester manuelle.
           </li>
           <li>
-            <strong>Membres d'équipes</strong> — on push les Groups comme
-            Teams (toggle <code>syncGroupsAsTeams</code>) mais{" "}
-            <em>pas</em> les membres. Nécessite un User CISO Assistant par
-            membre, hors scope.
+            <strong>Membres d'équipes</strong> — nous transmettons les
+            groupes Humanix comme équipes (interrupteur{" "}
+            <code>syncGroupsAsTeams</code>), mais <em>pas</em> les membres
+            individuels. Nécessite un utilisateur CISO Assistant pour chaque
+            membre — hors périmètre.
           </li>
           <li>
-            <strong>Compliance Assessments</strong> — coquille trop lourde à
-            maintenir auto. Le RSSI les crée à la main et lie nos evidences.
+            <strong>Évaluations de conformité complètes</strong> — coquille
+            trop lourde à entretenir automatiquement. Le RSSI les crée à la
+            main et y rattache nos preuves.
           </li>
         </ul>
       </section>
 
-      {/* ===== CTA ===== */}
+      {/* ===== APPEL À L'ACTION ===== */}
       <section className="rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 text-white p-8 text-center">
         <h2 className="text-2xl font-extrabold mb-2">
           Activer le connecteur maintenant
         </h2>
         <p className="text-white/90 mb-5 max-w-2xl mx-auto">
-          Si vous êtes admin / RSSI / SUPERADMIN du tenant, vous pouvez
-          configurer la connexion CISO Assistant en 2 minutes dans l'admin
-          console.
+          Si vous êtes administrateur, RSSI ou super-administrateur du compte
+          client, vous pouvez configurer la connexion à CISO Assistant en
+          deux minutes dans la console d'administration.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
           <Link
@@ -1182,7 +1188,7 @@ export default function CisoAssistantFeaturesPage() {
             href="/integrations/ciso-assistant"
             className="inline-flex items-center px-5 py-2.5 rounded-lg border-2 border-white/40 text-white font-bold hover:bg-white/10 transition"
           >
-            ← Page commerciale
+            ← Page de présentation
           </Link>
         </div>
       </section>
