@@ -1772,6 +1772,22 @@ model CisoAssistantConnection {
   lastLiveSyncAt        DateTime?
   lastLiveSyncEvent     String? // "episode.completed" | "phishing.reported" | "phishing.user_clicked"
   liveSyncCount         Int     @default(0)
+  // v2.2 Enrichissements (audit OpenAPI v0.7) :
+  // - createWorkforceAsset : push un Asset primary "Personnel · Couche
+  //   humaine Humanix Académie" dans le folder, scope par defaut pour les
+  //   RiskScenarios/Findings/Incidents. Permet de cartographier la
+  //   couche humaine comme un asset GRC explicite.
+  createWorkforceAsset  Boolean @default(false)
+  // - syncThreats : push les 15 menaces humaines Humanix (FOVI, vishing,
+  //   deepfake CEO, smishing, quishing, etc.) comme Threat entities
+  //   dans le folder. Permet au RSSI de les linker a ses RiskScenarios.
+  syncThreats           Boolean @default(false)
+  // - createDashboard : pre-cree un Dashboard "Cockpit Humanix Académie"
+  //   avec 6 widgets pointant sur les MetricInstances poussees par
+  //   pushMetrologySamples. Effet "ouvre la boite c'est joli" en demo.
+  //   Necessite pushMetrologySamples=true (sinon les widgets n'ont pas
+  //   de cible).
+  createDashboard       Boolean @default(false)
   verifySSL     Boolean @default(true)
   // Dernier resultat du bouton "Tester la connexion".
   lastTestedAt  DateTime?
