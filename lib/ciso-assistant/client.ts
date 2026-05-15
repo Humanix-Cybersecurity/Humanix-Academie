@@ -897,39 +897,48 @@ export class CisoAssistantClient {
   // =========================================================================
 
   /**
-   * Resout l'id d'une unite Terminology (METRIC_UNIT) par son nom. Les
-   * unites built-in de CISO Assistant sont : count, users, bytes,
-   * percentage, score, days, hours, "events per second".
-   * Retourne null si l'unite n'existe pas (instance ancienne, libraries
-   * Terminology non chargees, etc.) -> on continuera sans unit.
-   * Cache in-memory pour eviter N appels.
+   * Resout l'id d'une unite Terminology (METRIC_UNIT) par un alias court.
+   *
+   * Le `name` stocke cote Django n'est pas normalise : on a "Count",
+   * "Score", "bytes", "Percentage (%)", "events per second", etc.
+   * Filtrer par ?name=X ne marche pas (besoin de match exact, et la
+   * casse + les "(%)" cassent). On fetch donc TOUS les Terminology
+   * METRIC_UNIT (~8 entrees) une fois, puis on match cote JS sur des
+   * heuristiques tolerantes (startsWith case-insensitive sur le name).
+   *
+   * Cache 1 fetch par instance client (pas par alias) -> 1 round-trip
+   * pour les 6 metriques d'une sync.
+   *
+   * Retourne null si la Terminology Library n'est pas chargee cote CISO
+   * Assistant -> on push la MetricDefinition sans unit plutot que planter.
    */
-  private terminologyCache: Map<string, string> = new Map();
-  async resolveMetricUnit(unitName: string): Promise<string | null> {
-    const cached = this.terminologyCache.get(unitName);
-    if (cached) return cached;
-    // field_path=METRIC_UNIT scope la recherche aux Terminology d'unites
-    // (vs autres usages comme ROTO_RISK_ORIGIN, QUALIFICATIONS, etc.).
-    const r = await this.request(
-      "GET",
-      `/api/terminologies/?field_path=METRIC_UNIT&name=${encodeURIComponent(unitName)}`,
-    );
-    if (r.status !== 200) return null;
-    const data = (await r.json()) as any;
-    const items = data.results ?? (Array.isArray(data) ? data : []);
-    // Match exact sur name OU translations (CISO Assistant ships avec FR/EN).
-    const exact =
-      items.find((t: any) => t.name === unitName) ??
-      items.find((t: any) =>
-        Object.values(t.translations ?? {}).some((v: any) =>
-          typeof v?.name === "string" ? v.name === unitName : v === unitName,
-        ),
+  private metricUnitsCache: Array<{ id: string; name: string }> | null = null;
+  async resolveMetricUnit(alias: string): Promise<string | null> {
+    if (!this.metricUnitsCache) {
+      const r = await this.request(
+        "GET",
+        `/api/terminologies/?field_path=METRIC_UNIT`,
       );
-    if (exact?.id) {
-      this.terminologyCache.set(unitName, exact.id);
-      return exact.id;
+      if (r.status !== 200) {
+        this.metricUnitsCache = []; // negative cache (instance sans Terminology)
+        return null;
+      }
+      const data = (await r.json()) as any;
+      const items = data.results ?? (Array.isArray(data) ? data : []);
+      this.metricUnitsCache = items
+        .filter((t: any) => t.id && typeof t.name === "string")
+        .map((t: any) => ({ id: t.id, name: t.name }));
     }
-    return null;
+    // Heuristique de match : startsWith case-insensitive sur l'alias.
+    //   alias "percentage" -> matche "Percentage (%)"
+    //   alias "count"      -> matche "Count"
+    //   alias "score"      -> matche "Score"
+    //   alias "days"       -> matche "Days"
+    const cache = this.metricUnitsCache;
+    if (!cache || cache.length === 0) return null;
+    const a = alias.toLowerCase();
+    const hit = cache.find((u) => u.name.toLowerCase().startsWith(a));
+    return hit?.id ?? null;
   }
 
   /**
