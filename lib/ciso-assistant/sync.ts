@@ -587,45 +587,70 @@ async function executeSync(
             createdAt: true,
           },
         });
-        let campOk = 0;
-        let campFail = 0;
-        let firstCampError: string | undefined;
-        for (const c of campaigns) {
-          let status: "draft" | "in_progress" | "done" = "draft";
-          if (c.sentAt) status = c.isActive ? "in_progress" : "done";
-          else if (c.scheduledAt && c.scheduledAt <= new Date())
-            status = "in_progress";
-          // `scheduledAt` est nullable cote Prisma : on retombe sur sentAt
-          // ou createdAt pour ne pas crasher `toISOString()`.
-          const dueDateSource =
-            c.scheduledAt ?? c.sentAt ?? c.createdAt ?? new Date();
-          const r = await client.ensureCampaign({
-            name: `Humanix · ${c.title}`.slice(0, 255),
-            description:
-              `Campagne ${c.channel.toLowerCase()} Humanix Académie · ` +
-              `template ${c.template} · planifiée ${dueDateSource.toISOString().slice(0, 10)}.\n` +
-              `Synchronisée depuis Humanix Académie le ${new Date().toISOString()}.`,
-            status,
-            dueDate: dueDateSource.toISOString().slice(0, 10),
-          });
-          if (r.ok) campOk += 1;
-          else {
-            campFail += 1;
-            if (!firstCampError && r.error) firstCampError = r.error;
-          }
-        }
-        await appendLog(
-          runId,
-          nowLine(
-            campFail === 0 ? "OK" : "WARN",
-            `Campaigns sync : ${campOk}/${campaigns.length} campagnes${campFail > 0 ? ` (${campFail} échec(s))` : ""}`,
-          ),
-        );
-        if (firstCampError) {
+        // Cote CISO Assistant, une Campaign DOIT etre liee a au moins un
+        // Framework et un Perimeter (M2M obligatoires cote Django). On
+        // les resout une fois en debut de boucle pour eviter N appels.
+        const perimRes = await client.ensureDefaultPerimeter();
+        const frameworkIds = await client.listFrameworkIds();
+        if (!perimRes.id) {
           await appendLog(
             runId,
-            nowLine("WARN", `Campaigns sync — première cause : ${firstCampError}`),
+            nowLine(
+              "WARN",
+              `Campaigns sync : Perimeter par défaut non créé (${perimRes.error ?? "raison inconnue"}). Skip de la boucle.`,
+            ),
           );
+        } else if (frameworkIds.length === 0) {
+          await appendLog(
+            runId,
+            nowLine(
+              "WARN",
+              "Campaigns sync : aucun Framework chargé côté CISO Assistant — charger une stored-library framework avant.",
+            ),
+          );
+        } else {
+          let campOk = 0;
+          let campFail = 0;
+          let firstCampError: string | undefined;
+          for (const c of campaigns) {
+            let status: "draft" | "in_progress" | "done" = "draft";
+            if (c.sentAt) status = c.isActive ? "in_progress" : "done";
+            else if (c.scheduledAt && c.scheduledAt <= new Date())
+              status = "in_progress";
+            // `scheduledAt` est nullable cote Prisma : on retombe sur sentAt
+            // ou createdAt pour ne pas crasher `toISOString()`.
+            const dueDateSource =
+              c.scheduledAt ?? c.sentAt ?? c.createdAt ?? new Date();
+            const r = await client.ensureCampaign({
+              name: `Humanix · ${c.title}`.slice(0, 255),
+              description:
+                `Campagne ${c.channel.toLowerCase()} Humanix Académie · ` +
+                `template ${c.template} · planifiée ${dueDateSource.toISOString().slice(0, 10)}.\n` +
+                `Synchronisée depuis Humanix Académie le ${new Date().toISOString()}.`,
+              status,
+              dueDate: dueDateSource.toISOString().slice(0, 10),
+              perimeterIds: [perimRes.id],
+              frameworkIds,
+            });
+            if (r.ok) campOk += 1;
+            else {
+              campFail += 1;
+              if (!firstCampError && r.error) firstCampError = r.error;
+            }
+          }
+          await appendLog(
+            runId,
+            nowLine(
+              campFail === 0 ? "OK" : "WARN",
+              `Campaigns sync : ${campOk}/${campaigns.length} campagnes${campFail > 0 ? ` (${campFail} échec(s))` : ""}`,
+            ),
+          );
+          if (firstCampError) {
+            await appendLog(
+              runId,
+              nowLine("WARN", `Campaigns sync — première cause : ${firstCampError}`),
+            );
+          }
         }
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
@@ -756,7 +781,11 @@ async function executeSync(
         let metricsOk = 0;
         let metricsFail = 0;
         let firstMetricError: string | undefined;
+        // Detection module absent : si la 1ere ensureMetricDefinition
+        // retourne un 404, on coupe court (les 5 suivantes echoueront pareil).
+        let metrologyUnavailable = false;
         for (const m of metrics) {
+          if (metrologyUnavailable) break;
           try {
             const defRes = await client.ensureMetricDefinition({
               refId: m.refId,
@@ -765,6 +794,13 @@ async function executeSync(
               higherIsBetter: m.higherIsBetter,
               defaultTarget: m.target,
             });
+            if (defRes.status === 404) {
+              // Module Metrology pas dans cette build de CISO Assistant.
+              // Inutile de retenter sur les 5 metriques restantes.
+              metrologyUnavailable = true;
+              firstMetricError = `module Metrology non disponible sur cette instance CISO Assistant (HTTP 404 sur /api/metric-definitions/)`;
+              break;
+            }
             if (!defRes.id) {
               metricsFail += 1;
               if (!firstMetricError && defRes.error)
@@ -800,18 +836,28 @@ async function executeSync(
             await appendLog(runId, nowLine("WARN", `Metric ${m.refId}: ${msg}`));
           }
         }
-        await appendLog(
-          runId,
-          nowLine(
-            metricsFail === 0 ? "OK" : "WARN",
-            `Metrology : ${metricsOk}/${metrics.length} samples poussés${metricsFail > 0 ? ` (${metricsFail} échec(s))` : ""}`,
-          ),
-        );
-        if (firstMetricError) {
+        if (metrologyUnavailable) {
           await appendLog(
             runId,
-            nowLine("WARN", `Metrology — première cause : ${firstMetricError}`),
+            nowLine(
+              "WARN",
+              `Metrology : module non disponible sur cette instance CISO Assistant — toggle pushMetrologySamples ignoré`,
+            ),
           );
+        } else {
+          await appendLog(
+            runId,
+            nowLine(
+              metricsFail === 0 ? "OK" : "WARN",
+              `Metrology : ${metricsOk}/${metrics.length} samples poussés${metricsFail > 0 ? ` (${metricsFail} échec(s))` : ""}`,
+            ),
+          );
+          if (firstMetricError) {
+            await appendLog(
+              runId,
+              nowLine("WARN", `Metrology — première cause : ${firstMetricError}`),
+            );
+          }
         }
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
