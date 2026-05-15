@@ -681,6 +681,109 @@ export class CisoAssistantClient {
   }
 
   // =========================================================================
+  // v1.9 - Campaigns sync. Cree/maintient une Campaign CISO Assistant
+  // par PhishingCampaign Humanix. Idempotent par name. Mapping statut :
+  //   - !sentAt + scheduledAt > now -> draft
+  //   - !sentAt + scheduledAt <= now -> in_progress
+  //   - sentAt + isActive -> in_progress
+  //   - sentAt + !isActive -> done
+  // =========================================================================
+
+  async ensureCampaign(args: {
+    name: string;
+    description: string;
+    status: "draft" | "in_progress" | "in_review" | "done" | "deprecated";
+    dueDate?: string; // YYYY-MM-DD
+  }): Promise<{ ok: boolean; id?: string; action?: "POST" | "PATCH" }> {
+    if (!this.folderId) return { ok: false };
+    const list = await this.request(
+      "GET",
+      `/api/campaigns/?folder=${encodeURIComponent(this.folderId)}`,
+    );
+    let existing: any | undefined;
+    if (list.status === 200) {
+      const data = (await list.json()) as any;
+      const items = data.results ?? (Array.isArray(data) ? data : []);
+      existing = items.find((c: any) => c.name === args.name);
+    }
+    const payload: Record<string, unknown> = {
+      name: args.name,
+      description: args.description,
+      folder: this.folderId,
+      status: args.status,
+      ...(args.dueDate && { due_date: args.dueDate }),
+    };
+    if (existing) {
+      const r = await this.request(
+        "PATCH",
+        `/api/campaigns/${existing.id}/`,
+        payload,
+      );
+      if ([200, 201].includes(r.status)) {
+        return { ok: true, action: "PATCH", id: existing.id };
+      }
+      return { ok: false };
+    }
+    const r = await this.request("POST", "/api/campaigns/", payload);
+    if ([200, 201].includes(r.status)) {
+      const created = (await r.json()) as { id: string };
+      return { ok: true, action: "POST", id: created.id };
+    }
+    return { ok: false };
+  }
+
+  // =========================================================================
+  // v1.8 - Teams sync. Cree/maintient une Team CISO Assistant par Group
+  // Humanix (Compta, RH, Dev, Commercial...). Le RSSI peut assigner des
+  // findings/incidents nativement par equipe. Idempotent par name.
+  // =========================================================================
+
+  /**
+   * Cree ou retrouve une Team CISO Assistant par name dans le folder
+   * Humanix. Description et team_email mis a jour si Team trouvee.
+   * Membres NON synchronises automatiquement (necessite User CISO
+   * Assistant correspondant). C'est le RSSI qui assigne les membres
+   * cote intuitem.
+   */
+  async ensureTeam(args: {
+    name: string;
+    description: string;
+    teamEmail?: string;
+  }): Promise<{ ok: boolean; id?: string; action?: "POST" | "PATCH" }> {
+    if (!this.folderId) return { ok: false };
+    // Lister existants
+    const list = await this.request(
+      "GET",
+      `/api/teams/?folder=${encodeURIComponent(this.folderId)}`,
+    );
+    let existing: any | undefined;
+    if (list.status === 200) {
+      const data = (await list.json()) as any;
+      const items = data.results ?? (Array.isArray(data) ? data : []);
+      existing = items.find((t: any) => t.name === args.name);
+    }
+    const payload: Record<string, unknown> = {
+      name: args.name,
+      description: args.description,
+      folder: this.folderId,
+      ...(args.teamEmail && { team_email: args.teamEmail }),
+    };
+    if (existing) {
+      const r = await this.request("PATCH", `/api/teams/${existing.id}/`, payload);
+      if ([200, 201].includes(r.status)) {
+        return { ok: true, action: "PATCH", id: existing.id };
+      }
+      return { ok: false };
+    }
+    const r = await this.request("POST", "/api/teams/", payload);
+    if ([200, 201].includes(r.status)) {
+      const created = (await r.json()) as { id: string };
+      return { ok: true, action: "POST", id: created.id };
+    }
+    return { ok: false };
+  }
+
+  // =========================================================================
   // v1.7 - Metrology hooks. Le module metrology de CISO Assistant permet
   // au RSSI/DSI/DPO de visualiser l'evolution dans le temps de metriques
   // operationnelles (tenant_score, completion_rate, phishing_report_rate,
