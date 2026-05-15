@@ -158,3 +158,8 @@ data/tts-cache/[0-9a-f][0-9a-f]/
 
 # Doc de travail interne : script de RV intuitem (jetable apres usage).
 /docs/CISO_ASSISTANT_DEMO.md
+
+# Dump local du schema OpenAPI de l'instance CISO Assistant.
+# Utilise pour auditer le client contre le contrat reel - NE PAS commit
+# (varie selon l'instance, peut contenir des UUIDs internes du client).
+/connectors/ciso-assistant-schema/
