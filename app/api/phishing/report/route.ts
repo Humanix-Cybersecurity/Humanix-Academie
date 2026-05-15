@@ -22,6 +22,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { fireWebhook } from "@/lib/webhooks/dispatcher";
+import { triggerCisoLiveSync } from "@/lib/ciso-assistant/live-mode";
 import { refreshUserRiskScore } from "@/lib/risk-score";
 
 export const dynamic = "force-dynamic";
@@ -145,6 +146,10 @@ export async function POST(req: NextRequest) {
     subject: data.subject,
     source: data.source ?? "outlook-addin",
   }).catch(() => {});
+
+  // Live Mode (v2.0) : trigger une mini-sync CISO Assistant debouncee (5s).
+  // Fire-and-forget : ne bloque ni la reponse Outlook ni le webhook.
+  triggerCisoLiveSync(user.tenantId, "phishing.reported");
 
   return NextResponse.json(
     {
