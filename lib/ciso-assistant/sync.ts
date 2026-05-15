@@ -589,22 +589,30 @@ async function executeSync(
         });
         let campOk = 0;
         let campFail = 0;
+        let firstCampError: string | undefined;
         for (const c of campaigns) {
           let status: "draft" | "in_progress" | "done" = "draft";
           if (c.sentAt) status = c.isActive ? "in_progress" : "done";
           else if (c.scheduledAt && c.scheduledAt <= new Date())
             status = "in_progress";
+          // `scheduledAt` est nullable cote Prisma : on retombe sur sentAt
+          // ou createdAt pour ne pas crasher `toISOString()`.
+          const dueDateSource =
+            c.scheduledAt ?? c.sentAt ?? c.createdAt ?? new Date();
           const r = await client.ensureCampaign({
             name: `Humanix · ${c.title}`.slice(0, 255),
             description:
               `Campagne ${c.channel.toLowerCase()} Humanix Académie · ` +
-              `template ${c.template} · planifiée ${c.scheduledAt.toISOString().slice(0, 10)}.\n` +
+              `template ${c.template} · planifiée ${dueDateSource.toISOString().slice(0, 10)}.\n` +
               `Synchronisée depuis Humanix Académie le ${new Date().toISOString()}.`,
             status,
-            dueDate: c.scheduledAt.toISOString().slice(0, 10),
+            dueDate: dueDateSource.toISOString().slice(0, 10),
           });
           if (r.ok) campOk += 1;
-          else campFail += 1;
+          else {
+            campFail += 1;
+            if (!firstCampError && r.error) firstCampError = r.error;
+          }
         }
         await appendLog(
           runId,
@@ -613,6 +621,12 @@ async function executeSync(
             `Campaigns sync : ${campOk}/${campaigns.length} campagnes${campFail > 0 ? ` (${campFail} échec(s))` : ""}`,
           ),
         );
+        if (firstCampError) {
+          await appendLog(
+            runId,
+            nowLine("WARN", `Campaigns sync — première cause : ${firstCampError}`),
+          );
+        }
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
         await appendLog(runId, nowLine("WARN", `Campaigns sync bloc échec : ${msg}`));
@@ -741,36 +755,45 @@ async function executeSync(
 
         let metricsOk = 0;
         let metricsFail = 0;
+        let firstMetricError: string | undefined;
         for (const m of metrics) {
           try {
-            const defId = await client.ensureMetricDefinition({
+            const defRes = await client.ensureMetricDefinition({
               refId: m.refId,
               name: m.name,
               description: m.description,
               higherIsBetter: m.higherIsBetter,
               defaultTarget: m.target,
             });
-            if (!defId) {
+            if (!defRes.id) {
               metricsFail += 1;
+              if (!firstMetricError && defRes.error)
+                firstMetricError = `definition · ${defRes.error}`;
               continue;
             }
-            const instId = await client.ensureMetricInstance({
-              metricDefinitionId: defId,
+            const instRes = await client.ensureMetricInstance({
+              metricDefinitionId: defRes.id,
               name: m.name,
               framework,
               targetValue: m.target,
             });
-            if (!instId) {
+            if (!instRes.id) {
               metricsFail += 1;
+              if (!firstMetricError && instRes.error)
+                firstMetricError = `instance · ${instRes.error}`;
               continue;
             }
             const sample = await client.pushMetricSample({
-              metricInstanceId: instId,
+              metricInstanceId: instRes.id,
               value: m.value,
               observation: `Sync auto Humanix · ${new Date().toISOString().slice(0, 10)}`,
             });
             if (sample.ok) metricsOk += 1;
-            else metricsFail += 1;
+            else {
+              metricsFail += 1;
+              if (!firstMetricError && sample.error)
+                firstMetricError = `sample · ${sample.error}`;
+            }
           } catch (err) {
             metricsFail += 1;
             const msg = err instanceof Error ? err.message : String(err);
@@ -784,6 +807,12 @@ async function executeSync(
             `Metrology : ${metricsOk}/${metrics.length} samples poussés${metricsFail > 0 ? ` (${metricsFail} échec(s))` : ""}`,
           ),
         );
+        if (firstMetricError) {
+          await appendLog(
+            runId,
+            nowLine("WARN", `Metrology — première cause : ${firstMetricError}`),
+          );
+        }
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
         await appendLog(runId, nowLine("WARN", `Metrology bloc échec : ${msg}`));
