@@ -1,0 +1,199 @@
+convert_library_version: 'v2 ; Compat Mode: [0] {[v2.1] (DEFAULT) Don''t use any Compatibility Mode}'
+urn: urn:humanix:risk:library:humanix-human-threats-catalog-v1
+locale: fr
+ref_id: humanix-human-threats-catalog-v1
+name: Humanix Académie — Catalogue de menaces humaines
+description: |-
+  Catalogue de menaces cyber spécifiques à la couche humaine, complémentaire
+  aux bibliothèques de menaces techniques (OWASP, MITRE ATT&CK, etc.).
+  Permet à un RSSI de qualifier ses Findings, Incidents et RiskScenarios
+  côté CISO Assistant avec des menaces qui décrivent les vecteurs
+  d'ingénierie sociale et d'erreurs humaines observées en PME / ETI.
+
+  Sourcé de l'expérience terrain Humanix Académie (cas réels français
+  agrégés sur 4 ans : Vinci, Pathé, BNP, divers cas DPO/RSSI clients).
+copyright: |-
+  © Humanix-Cybersecurity SASU. Catalogue publié sous licence CC BY-SA 4.0
+  (https://creativecommons.org/licenses/by-sa/4.0/). Reuse autorisé avec
+  attribution.
+version: 1
+publication_date: 2026-05-15
+provider: Humanix-Cybersecurity SASU
+packager: Humanix-Cybersecurity
+objects:
+  threats:
+    # ============ Ingénierie sociale ============
+    - urn: urn:humanix:risk:threat:human:spear-phishing-finance
+      ref_id: HUMAN-T1
+      name: Spear phishing finance / fraude au virement
+      description: |-
+        Email ciblé visant un comptable ou DAF, usurpant l'identité d'un
+        fournisseur connu ou du dirigeant, pour rediriger un virement vers
+        un IBAN frauduleux. Cas observés : 25 k€ à 18 M€. Vecteur n°1 de
+        perte financière directe pour les PME françaises.
+      annotation: |-
+        Mitigation Humanix : modules cyber-compta, fraude-president,
+        email-pro. Procédure de vérification à 2 canaux (téléphone +
+        validation N+1) avant tout virement > 5 k€.
+    - urn: urn:humanix:risk:threat:human:fraude-president-fovi
+      ref_id: HUMAN-T2
+      name: Fraude au président / FOVI
+      description: |-
+        Faux ordre de virement international. L'attaquant se fait passer
+        pour le PDG ou DAF en mission, prétexte une urgence confidentielle,
+        contourne les procédures usuelles. Souvent précédé de plusieurs
+        semaines d'OSINT sur LinkedIn et calendriers publics.
+      annotation: |-
+        Cas emblématiques : Vinci 2016 (18 M€), Pathé 2018 (19 M€).
+        Mitigation Humanix : module fraude-president (validation à 2
+        canaux obligatoire, mot de code interne).
+    - urn: urn:humanix:risk:threat:human:vishing-cfo
+      ref_id: HUMAN-T3
+      name: Vishing CFO / faux support IT
+      description: |-
+        Appel téléphonique usurpant un opérateur, un support IT interne
+        ou la banque. L'attaquant manipule la confiance pour extraire des
+        identifiants, des codes OTP, ou faire installer un RAT sous prétexte
+        de "dépannage urgent".
+      annotation: |-
+        Mitigation Humanix : modules fraude-president, mots-de-passe.
+        Procédure : aucun mot de passe / OTP transmis par téléphone, jamais.
+    - urn: urn:humanix:risk:threat:human:smishing
+      ref_id: HUMAN-T4
+      name: Smishing / phishing SMS
+      description: |-
+        SMS frauduleux usurpant La Poste, Chronopost, Ameli, banque, opérateur
+        télécom, redirigeant vers un site fishing ou demandant le téléchargement
+        d'une fausse app Android. En forte croissance depuis 2023.
+      annotation: |-
+        Mitigation Humanix : module mobile-smartphone, phishing.
+    - urn: urn:humanix:risk:threat:human:quishing
+      ref_id: HUMAN-T5
+      name: Quishing / QR code piégé
+      description: |-
+        QR code malveillant collé en superposition sur un parcmètre, un
+        menu de restaurant, une borne de paiement, ou affiché dans un email
+        de "vérification compte". Le scan redirige vers du phishing ou
+        un faux paiement.
+      annotation: |-
+        Mitigation Humanix : modules phishing, mobile-smartphone.
+        Procédure : ne scanner que des QR code de sources certifiées,
+        toujours vérifier le domaine final avant de saisir un identifiant.
+    - urn: urn:humanix:risk:threat:human:deepfake-ceo
+      ref_id: HUMAN-T6
+      name: Deepfake CEO audio ou vidéo
+      description: |-
+        Synthèse vocale ou vidéo IA usurpant le CEO ou un dirigeant pour
+        donner un faux ordre en visio. Cas Arup 2024 (25 M$ HK extorqués via
+        deepfake visio CFO). Le coût de production d'un deepfake usable
+        est passé sous 50 $ avec les outils 2025.
+      annotation: |-
+        Mitigation Humanix : module deepfakes, fraude-president,
+        visios-meetings. Procédure d'authentification (mot de code,
+        rappel sur ligne directe, vérification physique).
+
+    # ============ Erreurs et négligences ============
+    - urn: urn:humanix:risk:threat:human:password-reuse
+      ref_id: HUMAN-T10
+      name: Réutilisation de mot de passe
+      description: |-
+        Un employé utilise le même mot de passe pour son compte pro et
+        plusieurs comptes perso. Lors d'un leak public, le mot de passe
+        se retrouve dans des dictionnaires d'attaque, donnant un accès
+        direct au SI de l'entreprise via credential stuffing.
+      annotation: |-
+        Mitigation Humanix : module mots-de-passe (gestionnaire + MFA
+        partout). Détection : monitoring HaveIBeenPwned, observatoire
+        des fuites de données Humanix.
+    - urn: urn:humanix:risk:threat:human:credentials-on-paper
+      ref_id: HUMAN-T11
+      name: Identifiants visibles (post-it, papier)
+      description: |-
+        Mot de passe écrit sur post-it collé à l'écran, sur tapis de
+        souris, ou affiché sur un tableau blanc visible depuis l'open space.
+        Risque accru en visioconférence (caméra qui capte l'environnement).
+      annotation: |-
+        Mitigation Humanix : modules vie-privee-bureau, mots-de-passe,
+        acces-physiques. Politique bureau propre + verrouillage écran.
+    - urn: urn:humanix:risk:threat:human:shadow-it
+      ref_id: HUMAN-T12
+      name: Shadow IT
+      description: |-
+        Utilisation de services cloud non validés par la DSI : Dropbox
+        perso pour partager des fichiers clients, Notion / Trello pour
+        gérer des projets sensibles, ChatGPT pour coller du code propriétaire,
+        Whatsapp pour des comm internes.
+      annotation: |-
+        Mitigation Humanix : modules stockage-cloud, ia-generative,
+        cyber-collaboration. Catalogue d'alternatives souveraines
+        (Whaller, NextCloud, Le Chat).
+    - urn: urn:humanix:risk:threat:human:lost-stolen-device
+      ref_id: HUMAN-T13
+      name: Perte ou vol de matériel
+      description: |-
+        Laptop oublié dans un train, smartphone volé, clé USB perdue.
+        Si chiffrement intégral désactivé ou code écran trivial,
+        compromission directe des données contenues + risque sur les
+        sessions ouvertes.
+      annotation: |-
+        Mitigation Humanix : modules mobile-smartphone, teletravail.
+        BitLocker / FileVault obligatoires, MDM avec wipe à distance.
+    - urn: urn:humanix:risk:threat:human:tailgating
+      ref_id: HUMAN-T14
+      name: Tailgating / accès physique non contrôlé
+      description: |-
+        Un visiteur ou un intrus suit un employé qui badge à la porte
+        sécurisée. Accès à des zones sensibles (salle serveur, vestiaire,
+        zone admin) sans contrôle. Souvent justifié par "j'ai oublié mon
+        badge".
+      annotation: |-
+        Mitigation Humanix : module acces-physiques. Sas anti-tailgating,
+        culture "challenge poli" des visiteurs sans badge.
+
+    # ============ Menaces NIS2 / réglementaires ============
+    - urn: urn:humanix:risk:threat:human:unreported-incident
+      ref_id: HUMAN-T20
+      name: Incident non signalé (sous-déclaration NIS2)
+      description: |-
+        Un collaborateur identifie un signal faible (email suspect, écran
+        figé, popup anormale) mais ne signale pas, par peur de "déranger"
+        ou de passer pour ignorant. L'incident s'amplifie pendant des heures
+        à jours avant détection.
+      annotation: |-
+        Mitigation Humanix : modules phishing, crise-cyber. Culture
+        "no-blame" sur le signalement. Boutons signalement dans tous
+        les clients mail.
+    - urn: urn:humanix:risk:threat:human:gdpr-data-leak
+      ref_id: HUMAN-T21
+      name: Fuite RGPD par négligence
+      description: |-
+        Email envoyé en CC au lieu de CCI (exposition des destinataires),
+        partage de lien public au lieu de privé, upload d'un fichier
+        contenant des données personnelles sur un service grand public,
+        impression oubliée sur imprimante partagée.
+      annotation: |-
+        Mitigation Humanix : modules donnees-sensibles, dpo-quotidien,
+        email-pro, vie-privee-bureau.
+
+    # ============ Menaces verticales ============
+    - urn: urn:humanix:risk:threat:human:dev-secrets-leak
+      ref_id: HUMAN-T30
+      name: Fuite de secrets par développeur
+      description: |-
+        Commits avec clés API, mots de passe, tokens GitHub en clair dans
+        le code public. Variables sensibles versionnées dans .env commités.
+        Cas hebdomadaires sur GitHub public via Trufflehog / GitGuardian.
+      annotation: |-
+        Mitigation Humanix : module cyber-dev. Pre-commit hooks
+        (Gitleaks), gestionnaire de secrets (Vault, 1Password).
+    - urn: urn:humanix:risk:threat:human:hr-offboarding-leak
+      ref_id: HUMAN-T31
+      name: Offboarding RH bâclé
+      description: |-
+        Compte d'un ex-collaborateur non désactivé pendant des semaines
+        après son départ, accès cloud personnel toujours valide,
+        emails forwardés vers son compte perso. Vecteur d'exfiltration
+        ou de vengeance.
+      annotation: |-
+        Mitigation Humanix : module cyber-rh. Procédure offboarding
+        documentée, désactivation SSO immédiate, audit comptes inactifs.
