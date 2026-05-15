@@ -1,0 +1,44 @@
+# =============================================================================
+# docker-compose.ciso-bridge.yml — Override pour brancher Humanix sur CISO
+# Assistant en local (test du connecteur, démo client, etc.).
+# -----------------------------------------------------------------------------
+# Quand le stack CISO Assistant (intuitem/ciso-assistant-community) tourne à
+# côté en Docker, son service `backend` (Django) est exposé sur le réseau
+# Docker `ciso-assistant_default`. Ce fichier rattache `humanix-app` à ce
+# réseau pour qu'il puisse joindre `http://backend:8000` directement depuis
+# le code Next.js, sans passer par l'hôte ni par la résolution DNS publique.
+#
+# Sans ce fichier, après chaque `docker compose up --build`, le conteneur
+# `humanix-app` perd l'attachement manuel (`docker network connect ...`) et
+# tu te retrouves avec un sync CISO en échec ENOTFOUND `backend`.
+#
+# Utilisation :
+#   docker compose -f docker-compose.yml -f docker-compose.ciso-bridge.yml up -d --build app
+#
+# Prérequis : le stack CISO Assistant doit tourner et le réseau
+# `ciso-assistant_default` exister. Vérifier :
+#   docker network ls | grep ciso-assistant_default
+#
+# Si le réseau a un autre nom (selon le dossier où tu as cloné intuitem),
+# adapter la valeur `name:` ci-dessous. Convention Docker Compose :
+#   <basename-du-dossier-compose>_default
+# Ex: si cloné dans ~/work/ciso-assistant-community/ -> ciso-assistant-community_default
+#
+# IMPORTANT : ce fichier n'est PAS pour la prod. En prod, Humanix et CISO
+# Assistant tournent sur des hôtes / VPC différents et se parlent en HTTPS
+# avec DNS public ; aucun réseau Docker partagé.
+# =============================================================================
+
+services:
+  app:
+    networks:
+      - humanix_frontend
+      - humanix_backend
+      - ciso_assistant
+
+networks:
+  ciso_assistant:
+    external: true
+    # ⚠ Adapter selon le nom réel du réseau créé par le compose CISO Assistant.
+    # Vérifier avec : docker network ls | grep ciso
+    name: ciso-assistant_default
