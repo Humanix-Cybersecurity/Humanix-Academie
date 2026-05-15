@@ -694,17 +694,39 @@ export class CisoAssistantClient {
     description: string;
     status: "draft" | "in_progress" | "in_review" | "done" | "deprecated";
     dueDate?: string; // YYYY-MM-DD
-  }): Promise<{ ok: boolean; id?: string; action?: "POST" | "PATCH" }> {
-    if (!this.folderId) return { ok: false };
+  }): Promise<{
+    ok: boolean;
+    id?: string;
+    action?: "POST" | "PATCH";
+    status?: number;
+    error?: string;
+  }> {
+    if (!this.folderId)
+      return { ok: false, error: "folderId manquant (ensureFolder absent ?)" };
     const list = await this.request(
       "GET",
       `/api/campaigns/?folder=${encodeURIComponent(this.folderId)}`,
     );
+    if (list.status === 404) {
+      const txt = await list.text();
+      return {
+        ok: false,
+        status: 404,
+        error: `Endpoint /api/campaigns/ inexistant — instance CISO Assistant trop ancienne ou module non activé (${txt.slice(0, 120)})`,
+      };
+    }
     let existing: any | undefined;
     if (list.status === 200) {
       const data = (await list.json()) as any;
       const items = data.results ?? (Array.isArray(data) ? data : []);
       existing = items.find((c: any) => c.name === args.name);
+    } else if (list.status === 401 || list.status === 403) {
+      const txt = await list.text();
+      return {
+        ok: false,
+        status: list.status,
+        error: `GET /api/campaigns/ refusé (${list.status}) — permissions insuffisantes : ${txt.slice(0, 120)}`,
+      };
     }
     const payload: Record<string, unknown> = {
       name: args.name,
@@ -722,14 +744,24 @@ export class CisoAssistantClient {
       if ([200, 201].includes(r.status)) {
         return { ok: true, action: "PATCH", id: existing.id };
       }
-      return { ok: false };
+      const txt = await r.text();
+      return {
+        ok: false,
+        status: r.status,
+        error: `PATCH /api/campaigns/${existing.id}/ HTTP ${r.status} : ${txt.slice(0, 200)}`,
+      };
     }
     const r = await this.request("POST", "/api/campaigns/", payload);
     if ([200, 201].includes(r.status)) {
       const created = (await r.json()) as { id: string };
       return { ok: true, action: "POST", id: created.id };
     }
-    return { ok: false };
+    const txt = await r.text();
+    return {
+      ok: false,
+      status: r.status,
+      error: `POST /api/campaigns/ HTTP ${r.status} : ${txt.slice(0, 200)}`,
+    };
   }
 
   // =========================================================================
@@ -805,17 +837,34 @@ export class CisoAssistantClient {
     description: string;
     higherIsBetter?: boolean;
     defaultTarget?: number;
-  }): Promise<string | null> {
-    if (!this.folderId) return null;
+  }): Promise<{ id: string | null; status?: number; error?: string }> {
+    if (!this.folderId)
+      return { id: null, error: "folderId manquant" };
     const list = await this.request(
       "GET",
       `/api/metric-definitions/?ref_id=${encodeURIComponent(args.refId)}`,
     );
+    if (list.status === 404) {
+      const txt = await list.text();
+      return {
+        id: null,
+        status: 404,
+        error: `Endpoint /api/metric-definitions/ inexistant — module Metrology non disponible sur cette instance (${txt.slice(0, 120)})`,
+      };
+    }
+    if (list.status === 401 || list.status === 403) {
+      const txt = await list.text();
+      return {
+        id: null,
+        status: list.status,
+        error: `GET /api/metric-definitions/ refusé (${list.status}) : ${txt.slice(0, 120)}`,
+      };
+    }
     if (list.status === 200) {
       const data = (await list.json()) as any;
       const items = data.results ?? (Array.isArray(data) ? data : []);
       const exact = items.find((d: any) => d.ref_id === args.refId);
-      if (exact) return exact.id;
+      if (exact) return { id: exact.id };
     }
     const r = await this.request("POST", "/api/metric-definitions/", {
       ref_id: args.refId,
@@ -829,9 +878,16 @@ export class CisoAssistantClient {
         default_target: args.defaultTarget,
       }),
     });
-    if (![200, 201].includes(r.status)) return null;
+    if (![200, 201].includes(r.status)) {
+      const txt = await r.text();
+      return {
+        id: null,
+        status: r.status,
+        error: `POST /api/metric-definitions/ HTTP ${r.status} : ${txt.slice(0, 200)}`,
+      };
+    }
     const created = (await r.json()) as { id: string };
-    return created.id;
+    return { id: created.id };
   }
 
   /**
@@ -844,17 +900,25 @@ export class CisoAssistantClient {
     name: string;
     framework: string;
     targetValue?: number;
-  }): Promise<string | null> {
-    if (!this.folderId) return null;
+  }): Promise<{ id: string | null; status?: number; error?: string }> {
+    if (!this.folderId) return { id: null, error: "folderId manquant" };
     const list = await this.request(
       "GET",
       `/api/metric-instances/?folder=${encodeURIComponent(this.folderId)}`,
     );
+    if (list.status === 404) {
+      const txt = await list.text();
+      return {
+        id: null,
+        status: 404,
+        error: `Endpoint /api/metric-instances/ inexistant (${txt.slice(0, 120)})`,
+      };
+    }
     if (list.status === 200) {
       const data = (await list.json()) as any;
       const items = data.results ?? (Array.isArray(data) ? data : []);
       const exact = items.find((i: any) => i.name === args.name);
-      if (exact) return exact.id;
+      if (exact) return { id: exact.id };
     }
     const r = await this.request("POST", "/api/metric-instances/", {
       name: args.name,
@@ -866,9 +930,16 @@ export class CisoAssistantClient {
       ...(args.targetValue !== undefined && { target_value: args.targetValue }),
       ...(this.ownerActorId && { owner: [this.ownerActorId] }),
     });
-    if (![200, 201].includes(r.status)) return null;
+    if (![200, 201].includes(r.status)) {
+      const txt = await r.text();
+      return {
+        id: null,
+        status: r.status,
+        error: `POST /api/metric-instances/ HTTP ${r.status} : ${txt.slice(0, 200)}`,
+      };
+    }
     const created = (await r.json()) as { id: string };
-    return created.id;
+    return { id: created.id };
   }
 
   /**
@@ -880,7 +951,7 @@ export class CisoAssistantClient {
     metricInstanceId: string;
     value: number;
     observation?: string;
-  }): Promise<{ ok: boolean; id?: string }> {
+  }): Promise<{ ok: boolean; id?: string; status?: number; error?: string }> {
     const r = await this.request("POST", "/api/custom-metric-samples/", {
       metric_instance: args.metricInstanceId,
       timestamp: new Date().toISOString(),
@@ -891,7 +962,12 @@ export class CisoAssistantClient {
       const created = (await r.json()) as { id: string };
       return { ok: true, id: created.id };
     }
-    return { ok: false };
+    const txt = await r.text();
+    return {
+      ok: false,
+      status: r.status,
+      error: `POST /api/custom-metric-samples/ HTTP ${r.status} : ${txt.slice(0, 200)}`,
+    };
   }
 
   // =========================================================================
