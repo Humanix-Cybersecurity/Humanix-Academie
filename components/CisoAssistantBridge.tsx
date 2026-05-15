@@ -2,8 +2,10 @@
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Composant client pour la page /integrations/ciso-assistant.
-// Gere : onglets framework, copie 1-clic des snippets, preview JSON live.
-// A11y : aria-selected sur tabs, focus visible, prefers-reduced-motion.
+// Gère : onglets de référentiel, copie en un clic des exemples de code,
+// aperçu JSON en direct.
+// Accessibilité : aria-selected sur les onglets, focus visible,
+// prefers-reduced-motion.
 
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -33,7 +35,7 @@ r = requests.get(
     timeout=30,
 )
 bundle = r.json()
-print(f"{bundle['summary']['compliant']}/{bundle['summary']['total_controls']} contrôles compliant")`,
+print(f"{bundle['summary']['compliant']}/{bundle['summary']['total_controls']} contrôles conformes")`,
   },
   {
     id: "node",
@@ -43,15 +45,15 @@ print(f"{bundle['summary']['compliant']}/{bundle['summary']['total_controls']} c
   { headers: { Authorization: \`Bearer \${process.env.HUMANIX_API_KEY}\` } }
 );
 const bundle = await res.json();
-console.log(\`\${bundle.summary.compliant}/\${bundle.summary.total_controls} compliant\`);`,
+console.log(\`\${bundle.summary.compliant}/\${bundle.summary.total_controls} conformes\`);`,
   },
 ];
 
-// NB: on evite les emojis drapeau (sequences de Regional Indicator type
-// `🇫🇷`) car certaines fonts emoji (Safari/macOS
-// notamment) appliquent un anti-aliasing qui debordent sur le texte
-// adjacent et le rendent quasi invisible. Pictogrammes neutres a la
-// place -- meme code que les autres referentiels.
+// NB : on évite les emojis drapeau (séquences de Regional Indicator
+// du type `🇫🇷`). Certaines polices emoji (Safari et macOS notamment)
+// appliquent un anti-crénelage qui déborde sur le texte adjacent et le
+// rend quasi invisible. On utilise des pictogrammes neutres à la place,
+// avec le même traitement que les autres référentiels.
 const FRAMEWORK_LABELS: Record<FrameworkRef, { short: string; emoji: string }> =
   {
     "ISO27001:2022": { short: "ISO 27001", emoji: "🌍" },
@@ -102,18 +104,18 @@ export default function CisoAssistantBridge() {
   return (
     <div className="space-y-10">
       {/* ============================================================
-          BLOC 1 - Selecteur de framework
+          Bloc 1 — Sélecteur de référentiel
           ============================================================ */}
       <section aria-labelledby="framework-selector-title">
         <h2
           id="framework-selector-title"
           className="text-xl font-extrabold text-primary-500 mb-3"
         >
-          1. Choisissez votre referentiel
+          1. Choisissez votre référentiel
         </h2>
         <div
           role="tablist"
-          aria-label="Referentiels de conformité supportes"
+          aria-label="Référentiels de conformité pris en charge"
           className="flex flex-wrap gap-2"
         >
           {SUPPORTED_FRAMEWORKS.map((ref) => {
@@ -134,8 +136,8 @@ export default function CisoAssistantBridge() {
                 }`}
               >
                 <span aria-hidden="true">{meta.emoji}</span>
-                {/* span dedie pour le label : isole la couleur d'eventuels
-                    debordements de rendu emoji adjacents */}
+                {/* span dédié pour l'étiquette : isole la couleur
+                    d'éventuels débordements de rendu emoji adjacents */}
                 <span
                   className={
                     selected ? "text-white" : "text-gray-700 dark:text-gray-200"
@@ -150,7 +152,7 @@ export default function CisoAssistantBridge() {
       </section>
 
       {/* ============================================================
-          BLOC 2 - Snippet copiable
+          Bloc 2 — Exemple de code copiable
           ============================================================ */}
       <section
         id={`framework-panel-${framework}`}
@@ -159,19 +161,19 @@ export default function CisoAssistantBridge() {
         className="card"
       >
         <h2 className="text-xl font-extrabold text-primary-500 mb-3">
-          2. Recuperez vos preuves en une requete
+          2. Récupérez vos preuves en une seule requête
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-          Une cle API tenant suffit. Generez-la depuis{" "}
+          Une clé d'API du compte client suffit. Générez-la depuis{" "}
           <code className="text-xs bg-gray-100 dark:bg-slate-700 px-1.5 py-0.5 rounded">
             /admin/api-keys
           </code>{" "}
-          (plan Pro ou superieur).
+          (offre Pro ou supérieure).
         </p>
 
         <div
           role="tablist"
-          aria-label="Langage du snippet"
+          aria-label="Langage de l'exemple de code"
           className="flex gap-1 mb-3 border-b border-gray-200 dark:border-slate-700"
         >
           {snippets.map((s) => (
@@ -203,21 +205,21 @@ export default function CisoAssistantBridge() {
               copyToClipboard(currentSnippet.code, currentSnippet.id)
             }
             className="absolute top-3 right-3 bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-500"
-            aria-label={`Copier le snippet ${currentSnippet.label}`}
+            aria-label={`Copier l'exemple ${currentSnippet.label}`}
           >
-            {copied === currentSnippet.id ? "✓ Copie" : "Copier"}
+            {copied === currentSnippet.id ? "✓ Copié" : "Copier"}
           </button>
         </div>
 
         <div role="status" aria-live="polite" className="sr-only">
           {copied === currentSnippet.id
-            ? "Snippet copie dans le presse-papiers"
+            ? "Exemple copié dans le presse-papiers"
             : ""}
         </div>
       </section>
 
       {/* ============================================================
-          BLOC 3 - Tableau de mapping filtrable
+          Bloc 3 — Tableau de correspondances filtrable
           ============================================================ */}
       <section aria-labelledby="mapping-table-title">
         <div className="flex flex-wrap gap-3 items-center justify-between mb-3">
@@ -225,13 +227,13 @@ export default function CisoAssistantBridge() {
             id="mapping-table-title"
             className="text-xl font-extrabold text-primary-500"
           >
-            3. Mapping {fw.title}
+            3. Correspondance {fw.title}
           </h2>
           <label className="text-sm">
             <span className="sr-only">Filtrer les contrôles</span>
             <input
               type="search"
-              placeholder="Filtrer (ref, nom, catégorie)..."
+              placeholder="Filtrer (référence, nom, catégorie)…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-64 max-w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3 py-2 text-sm focus:border-accent-500 focus:outline-none"
@@ -242,12 +244,13 @@ export default function CisoAssistantBridge() {
         <div className="overflow-x-auto card p-0">
           <table className="w-full text-sm">
             <caption className="sr-only">
-              Mapping des contrôles {fw.title} vers les données Humanix
+              Correspondance des contrôles {fw.title} vers les données
+              Humanix
             </caption>
             <thead>
               <tr className="bg-gray-50 dark:bg-slate-800 text-left">
                 <th scope="col" className="p-3 font-bold">
-                  Ref
+                  Référence
                 </th>
                 <th scope="col" className="p-3 font-bold">
                   Contrôle
@@ -317,7 +320,7 @@ export default function CisoAssistantBridge() {
         {fw.outOfScope.length > 0 && (
           <details className="mt-4 text-sm">
             <summary className="cursor-pointer text-gray-600 dark:text-gray-400 hover:text-primary-500 font-semibold">
-              Hors scope assumé ({fw.outOfScope.length} contrôles)
+              Hors périmètre volontaire ({fw.outOfScope.length} contrôles)
             </summary>
             <ul className="mt-2 ml-4 list-disc space-y-1 text-gray-600 dark:text-gray-400 text-xs">
               {fw.outOfScope.map((o) => (
@@ -325,7 +328,7 @@ export default function CisoAssistantBridge() {
                   <code className="bg-gray-100 dark:bg-slate-700 px-1 rounded">
                     {o.ref}
                   </code>{" "}
-                  - {o.reason}
+                  — {o.reason}
                 </li>
               ))}
             </ul>
