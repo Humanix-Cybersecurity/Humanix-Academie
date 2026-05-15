@@ -689,11 +689,78 @@ export class CisoAssistantClient {
   //   - sentAt + !isActive -> done
   // =========================================================================
 
+  /**
+   * Retourne la liste des Framework IDs disponibles (publishables de
+   * libraries chargees dans CISO Assistant). Permet de scoper les
+   * Campaigns aux frameworks reels (champ M2M obligatoire cote Django).
+   */
+  async listFrameworkIds(): Promise<string[]> {
+    const r = await this.request("GET", "/api/frameworks/");
+    if (r.status !== 200) return [];
+    const data = (await r.json()) as any;
+    const items = data.results ?? (Array.isArray(data) ? data : []);
+    return items.map((f: any) => f.id).filter(Boolean);
+  }
+
+  /**
+   * Cree ou retrouve un Perimeter "Humanix Académie" dans le folder courant.
+   * Perimeter = scope organisationnel cote CISO Assistant ; sert de pivot
+   * obligatoire (M2M) pour les Campaigns. Idempotent par name.
+   *
+   * Retourne null si le module Perimeters n'existe pas (404 -> instance
+   * trop ancienne) ou si la creation echoue (permissions).
+   */
+  async ensureDefaultPerimeter(): Promise<{
+    id: string | null;
+    status?: number;
+    error?: string;
+  }> {
+    if (!this.folderId) return { id: null, error: "folderId manquant" };
+    const name = `Humanix Académie · scope par défaut`;
+    const list = await this.request(
+      "GET",
+      `/api/perimeters/?folder=${encodeURIComponent(this.folderId)}`,
+    );
+    if (list.status === 404) {
+      const txt = await list.text();
+      return {
+        id: null,
+        status: 404,
+        error: `Endpoint /api/perimeters/ inexistant (${txt.slice(0, 120)})`,
+      };
+    }
+    if (list.status === 200) {
+      const data = (await list.json()) as any;
+      const items = data.results ?? (Array.isArray(data) ? data : []);
+      const exact = items.find((p: any) => p.name === name);
+      if (exact) return { id: exact.id };
+    }
+    const r = await this.request("POST", "/api/perimeters/", {
+      name,
+      description:
+        "Périmètre par défaut Humanix Académie — sert de pivot pour les " +
+        "Campaigns de phishing simulé synchronisées depuis Humanix.",
+      folder: this.folderId,
+    });
+    if (![200, 201].includes(r.status)) {
+      const txt = await r.text();
+      return {
+        id: null,
+        status: r.status,
+        error: `POST /api/perimeters/ HTTP ${r.status} : ${txt.slice(0, 200)}`,
+      };
+    }
+    const created = (await r.json()) as { id: string };
+    return { id: created.id };
+  }
+
   async ensureCampaign(args: {
     name: string;
     description: string;
     status: "draft" | "in_progress" | "in_review" | "done" | "deprecated";
     dueDate?: string; // YYYY-MM-DD
+    perimeterIds: string[]; // M2M obligatoire cote Django
+    frameworkIds: string[]; // M2M obligatoire cote Django
   }): Promise<{
     ok: boolean;
     id?: string;
@@ -733,6 +800,8 @@ export class CisoAssistantClient {
       description: args.description,
       folder: this.folderId,
       status: args.status,
+      perimeters: args.perimeterIds,
+      frameworks: args.frameworkIds,
       ...(args.dueDate && { due_date: args.dueDate }),
     };
     if (existing) {
