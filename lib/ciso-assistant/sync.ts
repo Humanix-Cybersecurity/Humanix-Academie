@@ -127,6 +127,7 @@ async function executeSync(
     createRiskScenarios: boolean;
     syncOwnerAsActor: boolean;
     createIncidents: boolean;
+    pushMetrologySamples: boolean;
   },
   actor: { userId: string; email: string; role: string },
 ): Promise<void> {
@@ -560,6 +561,143 @@ async function executeSync(
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
         await appendLog(runId, nowLine("WARN", `Incident échec : ${msg}`));
+      }
+    }
+
+    // v1.7 Metrology : push d'une serie temporelle de samples dans CISO
+    // Assistant. Le RSSI visualise l'evolution dans les dashboards natifs
+    // CISO Assistant. Fire-and-forget : un echec ne casse pas la sync.
+    if (conn.pushMetrologySamples) {
+      try {
+        const nbCompliant = bundle.summary.compliant;
+        const nbPartial = bundle.summary.partial;
+        const nbNonCompliant = bundle.summary.non_compliant;
+        const nbTotal = bundle.evidences.length;
+
+        // Computer le tenant_score et completion_rate via la meme logique
+        // que dans computeGrcMetrics. On les recompute ici pour eviter
+        // un round-trip ; le bundle ne les contient pas en haut niveau.
+        const tenant = await db.tenant.findUniqueOrThrow({
+          where: { id: tenantId },
+          select: { id: true },
+        });
+        const { computeGrcMetrics } = await import("@/lib/grc-metrics");
+        const grcMetrics = await computeGrcMetrics(tenant.id);
+
+        // Liste des metriques Humanix a pousser. Chaque entrée :
+        // (refId, name, valeur, description, higherIsBetter, target).
+        const metrics: Array<{
+          refId: string;
+          name: string;
+          value: number;
+          description: string;
+          higherIsBetter: boolean;
+          target?: number;
+        }> = [
+          {
+            refId: "humanix.tenant_score",
+            name: `Humanix · Score maturité cyber humaine · ${framework}`,
+            value: Math.round(grcMetrics.tenantScore * 1000) / 10,
+            description:
+              "Score global de maturité cyber humaine du tenant (0-100). " +
+              "Combinaison pondérée d'activation, completion et scores quiz.",
+            higherIsBetter: true,
+            target: 80,
+          },
+          {
+            refId: "humanix.completion_rate",
+            name: `Humanix · Taux de complétion sensibilisation · ${framework}`,
+            value: Math.round(grcMetrics.completionRate * 1000) / 10,
+            description:
+              "Pourcentage de modules de sensibilisation complétés par la " +
+              "population active du tenant.",
+            higherIsBetter: true,
+            target: 70,
+          },
+          {
+            refId: "humanix.phishing_report_rate",
+            name: `Humanix · Taux signalement phishing · ${framework}`,
+            value: Math.round(grcMetrics.phishingReportRate * 1000) / 10,
+            description:
+              "Pourcentage des utilisateurs ayant signalé au moins un " +
+              "phishing simulé sur la période.",
+            higherIsBetter: true,
+            target: 50,
+          },
+          {
+            refId: "humanix.evidences_compliant_count",
+            name: `Humanix · Contrôles conformes · ${framework}`,
+            value: nbCompliant,
+            description: `Nombre de contrôles ${framework} en statut compliant côté Humanix.`,
+            higherIsBetter: true,
+            target: nbTotal,
+          },
+          {
+            refId: "humanix.evidences_non_compliant_count",
+            name: `Humanix · Contrôles non conformes · ${framework}`,
+            value: nbNonCompliant,
+            description: `Nombre de contrôles ${framework} en statut non_compliant côté Humanix.`,
+            higherIsBetter: false,
+            target: 0,
+          },
+          {
+            refId: "humanix.evidences_partial_count",
+            name: `Humanix · Contrôles partiels · ${framework}`,
+            value: nbPartial,
+            description: `Nombre de contrôles ${framework} en couverture partielle côté Humanix.`,
+            higherIsBetter: false,
+            target: 0,
+          },
+        ];
+
+        let metricsOk = 0;
+        let metricsFail = 0;
+        for (const m of metrics) {
+          try {
+            const defId = await client.ensureMetricDefinition({
+              refId: m.refId,
+              name: m.name,
+              description: m.description,
+              higherIsBetter: m.higherIsBetter,
+              defaultTarget: m.target,
+            });
+            if (!defId) {
+              metricsFail += 1;
+              continue;
+            }
+            const instId = await client.ensureMetricInstance({
+              metricDefinitionId: defId,
+              name: m.name,
+              framework,
+              targetValue: m.target,
+            });
+            if (!instId) {
+              metricsFail += 1;
+              continue;
+            }
+            const sample = await client.pushMetricSample({
+              metricInstanceId: instId,
+              value: m.value,
+              observation: `Sync auto Humanix · ${new Date().toISOString().slice(0, 10)}`,
+            });
+            if (sample.ok) metricsOk += 1;
+            else metricsFail += 1;
+          } catch (err) {
+            metricsFail += 1;
+            const msg = err instanceof Error ? err.message : String(err);
+            await appendLog(runId, nowLine("WARN", `Metric ${m.refId}: ${msg}`));
+          }
+        }
+        await appendLog(
+          runId,
+          nowLine(
+            metricsFail === 0 ? "OK" : "WARN",
+            `Metrology : ${metricsOk}/${metrics.length} samples poussés${metricsFail > 0 ? ` (${metricsFail} échec(s))` : ""}`,
+          ),
+        );
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        await appendLog(runId, nowLine("WARN", `Metrology bloc échec : ${msg}`));
       }
     }
 
