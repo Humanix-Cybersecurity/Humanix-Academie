@@ -1,6 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { OG_SIZE, OG_CONTENT_TYPE, renderOgCard } from "@/lib/og-card";
 
+// Force le rendu runtime au lieu du prerender au build. Satori (next/og)
+// peut tenter un fetch externe (font glyph manquant, emoji Twemoji) qui
+// timeout dans le sandbox Docker BuildKit (pas d'internet sortant sur
+// certaines confs NAT/DNS). Au runtime, le container a internet et Next
+// cache la reponse HTTP de la route -> pas de cout supplementaire en prod.
+export const dynamic = "force-dynamic";
+
 export const alt =
   "Humanix Académie — La cyber pour tous, à partir de 5 minutes par semaine";
 export const size = OG_SIZE;
