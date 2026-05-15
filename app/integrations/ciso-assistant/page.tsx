@@ -21,7 +21,7 @@ export default function CisoAssistantIntegrationPage() {
       {/* ===== HERO ===== */}
       <header className="text-center mb-12">
         <p className="text-xs uppercase tracking-widest text-accent-500 font-bold mb-3">
-          Integration RSSI · GRC
+          Intégration RSSI · GRC
         </p>
         <h1 className="text-4xl sm:text-5xl font-extrabold text-primary-500 leading-tight mb-4">
           Le seul connecteur natif{" "}
@@ -31,13 +31,159 @@ export default function CisoAssistantIntegrationPage() {
           en France.
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-          Vos preuves de sensibilisation, certificats individuels, score de
-          maturite et Pack NIS2 alimentent automatiquement{" "}
-          <strong>CISO Assistant</strong> (intuitem) et tout outil GRC
-          compatible. Plus de copier-coller, plus d'Excel partage, plus d'audit
-          douloureux.
+          Humanix Académie pousse automatiquement vos preuves de sensibilisation
+          dans <strong>CISO Assistant</strong> (intuitem). Plus de copier-coller,
+          plus d'Excel partagé, plus d'audit douloureux. Tout est traçable,
+          signé Ed25519, vérifiable hors-ligne.
         </p>
       </header>
+
+      {/* ===== CE QU'ON ALIMENTE COTE CISO ASSISTANT ===== */}
+      <section
+        aria-labelledby="surfaces-title"
+        className="card mb-12 border-2 border-primary-500/20"
+      >
+        <h2
+          id="surfaces-title"
+          className="text-2xl font-extrabold text-primary-500 mb-2"
+        >
+          7 surfaces métier alimentées automatiquement
+        </h2>
+        <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
+          Chaque hook est <strong>indépendant</strong> et <strong>désactivable</strong>{" "}
+          dans la console admin. Tout est <em>fire-and-forget</em> : aucune
+          inertie entre Humanix et CISO Assistant — chaque outil reste autonome.
+          Aucune modification requise côté intuitem.
+        </p>
+        <div className="grid sm:grid-cols-2 gap-4 text-sm">
+          <div className="p-4 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
+            <p className="font-bold text-primary-500 dark:text-accent-300 mb-1">
+              📜 Evidences + PDF signé Ed25519
+            </p>
+            <p className="text-gray-600 dark:text-gray-400 text-xs">
+              Pour chaque contrôle GRC, une preuve datée avec statut, score, owner
+              désigné et expiry date. PDF audit-ready en pièce jointe, signé
+              cryptographiquement, vérifiable hors-ligne avec OpenSSL pendant
+              des années — sans dépendance Humanix runtime.
+            </p>
+          </div>
+          <div className="p-4 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
+            <p className="font-bold text-primary-500 dark:text-accent-300 mb-1">
+              🛡 Applied Controls
+            </p>
+            <p className="text-gray-600 dark:text-gray-400 text-xs">
+              Un contrôle parent <em>"Programme de sensibilisation Humanix"</em>{" "}
+              par framework, lié M2M aux evidences poussées. Le RSSI voit dans
+              CISO Assistant le contrôle <strong>réel</strong> mis en place,
+              pas une accumulation d'évidences orphelines.
+            </p>
+          </div>
+          <div className="p-4 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
+            <p className="font-bold text-primary-500 dark:text-accent-300 mb-1">
+              🎯 Findings + Findings Assessments
+            </p>
+            <p className="text-gray-600 dark:text-gray-400 text-xs">
+              Pour chaque contrôle <code>partial</code> (P2) ou{" "}
+              <code>non_compliant</code> (P1), Humanix génère un constat
+              actionnable avec ETA, owner et plan d'action recommandé. Le RSSI
+              a une to-do list auto-générée, pas un simple dashboard à
+              interpréter.
+            </p>
+          </div>
+          <div className="p-4 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
+            <p className="font-bold text-primary-500 dark:text-accent-300 mb-1">
+              📊 Risk Scenarios
+            </p>
+            <p className="text-gray-600 dark:text-gray-400 text-xs">
+              Si la couverture humaine s'effrite (≥30% non_compliant, 2+ partials,
+              ou déclenchement précoce), Humanix génère un{" "}
+              <em>"RiskScenario : compromission via couche humaine sous-formée"</em>{" "}
+              sous un RiskAssessment dédié. Humanix participe au risk register
+              avec justification chiffrée.
+            </p>
+          </div>
+          <div className="p-4 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
+            <p className="font-bold text-primary-500 dark:text-accent-300 mb-1">
+              🚨 Incidents (alerte NIS2 §23)
+            </p>
+            <p className="text-gray-600 dark:text-gray-400 text-xs">
+              Si ≥1 contrôle non conforme, Humanix ouvre un Incident SEV3{" "}
+              <em>"Risque humain"</em> (idempotent par jour). Traçabilité
+              ISO 27001 §10.1 + NIS2 §21.2.g — sans préjuger d'une
+              compromission effective.
+            </p>
+          </div>
+          <div className="p-4 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
+            <p className="font-bold text-primary-500 dark:text-accent-300 mb-1">
+              👤 Users + Actors (owner)
+            </p>
+            <p className="text-gray-600 dark:text-gray-400 text-xs">
+              Le RSSI ou DPO désigné est créé comme User CISO Assistant (s'il
+              n'existe pas) puis son Actor est assigné comme{" "}
+              <code>owner</code> sur toutes les Evidences, Findings et Incidents.
+              Le responsable filtre son périmètre nativement.
+            </p>
+          </div>
+          <div className="p-4 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 sm:col-span-2">
+            <p className="font-bold text-primary-500 dark:text-accent-300 mb-1">
+              📈 Metrology — séries temporelles
+            </p>
+            <p className="text-gray-600 dark:text-gray-400 text-xs">
+              6 métriques poussées en continu dans le module Metrology de CISO
+              Assistant : score de maturité cyber humaine, taux de complétion,
+              taux de signalement phishing, comptes d'évidences par statut.
+              Le RSSI/DSI/DPO compose ses propres dashboards CISO Assistant
+              avec des widgets pointant ces séries — évolution dans le temps,
+              alerte si stale, target par métrique.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== MCP + COMMUNITY FRAMEWORK ===== */}
+      <section className="card mb-12 bg-gradient-to-br from-accent-50 to-primary-50 dark:from-slate-800 dark:to-slate-700">
+        <h2 className="text-2xl font-extrabold text-primary-500 mb-2">
+          Au-delà du push : 2 contributions à l'écosystème
+        </h2>
+        <div className="grid sm:grid-cols-2 gap-4 text-sm mt-4">
+          <div>
+            <p className="font-bold text-primary-500 dark:text-accent-300 mb-1">
+              🤖 MCP Server (agent IA souverain)
+            </p>
+            <p className="text-gray-700 dark:text-gray-300 text-xs">
+              Premier MCP server du marché SAT/HRM. 6 tools read-only pour
+              interroger Humanix en langage naturel depuis votre agent IA :
+              Mistral, LM Studio, Anything LLM, Ollama via passerelle. ChatGPT /
+              Claude / Gemini supportés en option. Posture souveraine : votre
+              instance n'a aucune dépendance Cloud Act.
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+              Cas d'usage type : <em>"Qui dans Marketing n'a pas compris la
+              politique mdp ?"</em> → réponse pseudonymisée RGPD-safe en 1 prompt.
+            </p>
+          </div>
+          <div>
+            <p className="font-bold text-primary-500 dark:text-accent-300 mb-1">
+              📚 Community Framework (CC BY-SA 4.0)
+            </p>
+            <p className="text-gray-700 dark:text-gray-300 text-xs">
+              Catalogue Humanix Académie publié comme framework chargeable
+              dans CISO Assistant (URN <code>urn:humanix:risk:framework:humanix-awareness-catalog-v1</code>),
+              + mappings open source vers ISO 27001:2022 (relations{" "}
+              <code>equal</code> et <code>intersect</code>). Mappings NIS2, RGPD,
+              ANSSI HG, NIST CSF en backlog. PR future sur{" "}
+              <a
+                href="https://github.com/intuitem/risk-libraries"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent-500 underline"
+              >
+                intuitem/risk-libraries
+              </a>.
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* ===== SCHEMA ARCHITECTURE ===== */}
       <section

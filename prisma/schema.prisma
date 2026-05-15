@@ -1741,6 +1741,13 @@ model CisoAssistantConnection {
   // RSSI : "ta couverture humaine présente un signal d'alerte".
   // Idempotent par ref_id = "humanix-{framework}-{date YYYY-MM-DD}".
   createIncidents       Boolean @default(false)
+  // v1.7 toggle : a chaque sync, pousse une serie temporelle de samples
+  // dans le module Metrology de CISO Assistant (CustomMetricSample). Le
+  // RSSI / DSI / DPO peut visualiser dans les dashboards CISO Assistant
+  // natifs l'evolution dans le temps : tenant_score, completion_rate,
+  // phishing_report_rate, counts d'evidences par statut. 6 metriques par
+  // sync. Necessite que le folder Humanix existe.
+  pushMetrologySamples  Boolean @default(false)
   verifySSL     Boolean @default(true)
   // Dernier resultat du bouton "Tester la connexion".
   lastTestedAt  DateTime?

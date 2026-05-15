@@ -33,6 +33,7 @@ type ExistingConnection = {
   createRiskScenarios: boolean;
   syncOwnerAsActor: boolean;
   createIncidents: boolean;
+  pushMetrologySamples: boolean;
   lastTestedAt: string | null;
   lastTestStatus: string | null;
   lastTestError: string | null;
@@ -305,6 +306,25 @@ export default function CisoSyncForm({
                     Idempotent par jour (ref_id <code>humanix-{"{"}framework{"}"}-YYYY-MM-DD</code>).
                     Sert d'alerte proactive type NIS2 §23, sans préjuger d'une compromission
                     effective.
+                  </span>
+                </span>
+              </label>
+              <label className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <input
+                  type="checkbox"
+                  name="pushMetrologySamples"
+                  defaultChecked={existing?.pushMetrologySamples ?? false}
+                  className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
+                />
+                <span>
+                  <strong>Pousser les métriques dans le temps</strong> (Metrology dashboards).
+                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    À chaque sync, crée 6 séries temporelles dans le module
+                    Metrology de CISO Assistant : score de maturité humaine,
+                    taux de complétion, taux de signalement phishing, nombre
+                    de contrôles conformes / partiels / non conformes. Le
+                    RSSI, DSI ou DPO visualise l'évolution dans les
+                    dashboards natifs CISO Assistant.
                   </span>
                 </span>
               </label>
