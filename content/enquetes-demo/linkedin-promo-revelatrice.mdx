@@ -1,0 +1,177 @@
+---
+title: "La promo LinkedIn de Sophie"
+kind: investigation
+investigationType: LINKEDIN
+difficulty: 3
+durationSeconds: 90
+xpReward: 60
+isFree: true
+tags:
+  - osint
+  - ingenierie-sociale
+  - oversharing
+brief: |
+  Tu travailles à la sécurité informatique d'une PME. Sophie, la DAF
+  de l'entreprise, vient de publier un post LinkedIn pour annoncer
+  sa promotion.
+
+  Le post a déjà 47 réactions. Pour toi, c'est un cauchemar : ce que
+  Sophie a écrit là est un buffet à volonté pour un attaquant.
+
+  Quels éléments du post vont aider un attaquant à monter une fraude
+  au président, un phishing ciblé ou de l'ingénierie sociale ? Coche
+  tout ce qui constitue une fuite d'information.
+media:
+  type: linkedin-mockup
+  data:
+    author: "Sophie Martin"
+    authorHeadline: "Directrice Administrative et Financière — Acme Industries"
+    timeAgo: "il y a 3 jours"
+    body: |
+      🎉 Heureuse de partager une nouvelle étape !
+
+      Après 7 ans en tant que Responsable Comptable chez Acme Industries
+      (Toulouse, 180 collaborateurs), je suis nommée Directrice
+      Administrative et Financière. Je prends la suite de Jean-Marc
+      Durand qui part en retraite.
+
+      Mes priorités pour les 12 prochains mois :
+      ✅ Finaliser la migration de notre ERP SAP vers Cegid Loop
+      ✅ Préparer la consolidation avec notre filiale espagnole (rachat finalisé en mars)
+      ✅ Auditer notre processus de double validation des virements (chantier urgent)
+      ✅ Mettre en place un reporting mensuel direct vers notre CEO François Lefèvre
+
+      Je suis joignable directement par mail (s.martin@acme-industries.fr)
+      ou via le standard au 05 61 XX XX XX.
+
+      Hâte de relever ces défis avec mon équipe de 4 personnes !
+
+      #Promotion #DAF #Acme #Toulouse #Cegid #SAP #Consolidation
+    reactions: 47
+    comments: 8
+redFlags:
+  - id: hierarchy-ceo-name
+    label: "Nom du CEO dévoilé (François Lefèvre)"
+    points: 20
+    explanation: |
+      Un attaquant qui monte une fraude au président a besoin du
+      nom du PDG pour personnaliser son mail. Sophie vient de lui
+      offrir gratuitement. Ajouté à son propre email s.martin@..., un
+      attaquant peut envoyer un faux mail "François Lefèvre" à Sophie.
+  - id: predecessor-info
+    label: "Nom + statut du prédécesseur (Jean-Marc Durand, parti en retraite)"
+    points: 10
+    explanation: |
+      Permet à un attaquant d'usurper l'identité du prédécesseur :
+      « Bonjour Sophie, c'est Jean-Marc, j'ai oublié de te dire... ».
+      Crédibilise une attaque par familiarité contextuelle.
+  - id: erp-migration
+    label: "Migration ERP en cours (SAP → Cegid Loop)"
+    points: 15
+    explanation: |
+      Une migration ERP = système instable, équipe sous stress,
+      validations bypassées en mode dégradé. Fenêtre d'attaque idéale.
+      L'attaquant peut se faire passer pour un consultant Cegid avec
+      un faux mail « problème de bascule, validez ce virement test ».
+  - id: weak-process-disclosed
+    label: "Aveu de processus de validation faible (« chantier urgent »)"
+    points: 25
+    explanation: |
+      Le signal le plus grave. Sophie reconnaît publiquement que la
+      double validation des virements est défaillante. Un attaquant
+      qui lit ça sait QUE c'est exploitable, et QUAND attaquer (avant
+      qu'elle ne fixe le processus).
+  - id: spanish-subsidiary
+    label: "Acquisition récente d'une filiale espagnole"
+    points: 10
+    explanation: |
+      Filiale récente = comptabilité pas encore intégrée, processus
+      pas encore harmonisés, équipe pas encore connue. Idéal pour
+      injecter un faux fournisseur ou un faux virement « urgent depuis
+      l'Espagne ».
+  - id: phone-number
+    label: "Numéro de standard public (05 61 XX XX XX)"
+    points: 5
+    explanation: |
+      Permet le vishing (phishing par téléphone). L'attaquant appelle,
+      demande à parler à Sophie, prétend être un fournisseur, etc.
+      Moins critique mais ajoute une surface d'attaque.
+  - id: team-size
+    label: "Taille exacte de l'équipe (4 personnes)"
+    points: 5
+    explanation: |
+      Surface d'attaque mesurable. L'attaquant sait que Sophie n'a
+      que 3 collaborateurs directs à risque-of-compromise. Permet de
+      cibler chacun individuellement.
+distractors:
+  - id: company-name
+    label: "Nom de l'entreprise (Acme Industries)"
+    penalty: 5
+    explanation: |
+      Faux positif : le nom de l'entreprise est sur le profil LinkedIn
+      de toute façon, sur le site web, sur Pappers, etc. Ce n'est pas
+      une fuite : c'est public par construction.
+  - id: emoji
+    label: "Utilisation d'emojis (🎉 ✅)"
+    penalty: 3
+    explanation: |
+      Faux positif : les emojis sur LinkedIn sont culturels en 2026.
+      Aucun rapport avec la sécurité.
+  - id: city
+    label: "Ville (Toulouse)"
+    penalty: 3
+    explanation: |
+      Faux positif : la ville est publique aussi (siège social
+      enregistré à l'INSEE). En revanche, si Sophie publiait sa rue
+      ou son code postal personnel, ce serait un signal.
+debrief: |
+  **Tu viens de comprendre ce qu'est l'OSINT (Open Source Intelligence).**
+
+  Sophie a publié un post LinkedIn qui semble inoffensif — et pourtant,
+  un attaquant compétent peut construire un scénario d'attaque complet
+  en moins de 10 minutes à partir de ces informations.
+
+  ## Le scénario d'attaque que ça permet
+
+  1. L'attaquant lit le post (toute l'info est là, en clair)
+  2. Il crée un email piégé "francois.lefevre@acme-industries-corp.fr"
+     (faux domaine -corp ajouté)
+  3. Il envoie à Sophie : « Sophie, urgent, problème avec la filiale
+     espagnole, peux-tu valider ce virement de 187 k€ avant 17h ?
+     Cegid plante encore, fais en manuel, c'est exceptionnel. »
+  4. Sophie connaît le contexte (migration ERP, filiale espagnole,
+     CEO qui demande), elle valide.
+
+  → Fraude au président réussie en 2 jours d'OSINT + 1 mail.
+
+  ## Le piège pédagogique
+
+  Sophie pensait faire une **annonce professionnelle légitime**. Et
+  elle a raison : tout ce qu'elle a écrit est vrai et utile à son
+  réseau pro. Mais en cumulant **trop d'informations à un seul endroit**,
+  elle a créé une surface d'attaque.
+
+  ## La règle
+
+  En OSINT, ce n'est pas chaque information prise isolément qui crée
+  le risque. C'est **l'agrégation**. Un nom de CEO ailleurs + une
+  migration ERP ailleurs + un email ailleurs = pas grave. Réunis dans
+  un seul post avec un téléphone et un aveu de faille = jackpot.
+
+  ## Ce qu'aurait dû faire Sophie
+
+  - Annoncer la promo sans citer le CEO
+  - Ne pas mentionner les projets internes
+  - SURTOUT ne pas dire « chantier urgent » sur un sujet sécurité
+  - Garder le numéro et l'email loin du post (les gens qui ont besoin
+    de la joindre ont déjà ses coordonnées)
+
+  ## Prochaine étape
+
+  L'enquête **Photo bureau ouvert** est encore plus subtile : il
+  faut détecter des signaux dans une scène physique, sans aucun texte.
+---
+
+# La promo LinkedIn de Sophie
+
+Ce contenu est rendu par le composant InvestigationPlayer.
