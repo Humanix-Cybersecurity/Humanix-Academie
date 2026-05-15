@@ -8,6 +8,8 @@
 import EmailMockup from "./EmailMockup";
 import LinkedInMockup from "./LinkedInMockup";
 import PhotoOfficeMockup from "./PhotoOfficeMockup";
+import SmsMockup from "./SmsMockup";
+import FacebookMockup from "./FacebookMockup";
 import type { Media } from "@/lib/investigations/types";
 
 type Props = { media: Media };
@@ -20,17 +22,9 @@ export default function MediaMockup({ media }: Props) {
       return <LinkedInMockup media={media} />;
     case "photo-office-mockup":
       return <PhotoOfficeMockup media={media} />;
-    case "facebook-mockup":
     case "sms-mockup":
-      // Sprint 2 : ajouter FacebookMockup + SmsMockup
-      return (
-        <div className="p-6 rounded-2xl border-2 border-amber-300 bg-amber-50 text-amber-900">
-          <p className="font-bold">Type de média non encore implémenté</p>
-          <p className="text-sm">
-            Le composant {media.type} arrivera dans le Sprint 2 du Mode
-            Enquêteur.
-          </p>
-        </div>
-      );
+      return <SmsMockup media={media} />;
+    case "facebook-mockup":
+      return <FacebookMockup media={media} />;
   }
 }
