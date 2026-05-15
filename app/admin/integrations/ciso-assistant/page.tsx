@@ -110,6 +110,11 @@ export default async function CisoAssistantAdminPage() {
                 pushMetrologySamples: connection.pushMetrologySamples,
                 syncGroupsAsTeams: connection.syncGroupsAsTeams,
                 syncCampaigns: connection.syncCampaigns,
+                enableLiveMode: connection.enableLiveMode,
+                lastLiveSyncAt:
+                  connection.lastLiveSyncAt?.toISOString() ?? null,
+                lastLiveSyncEvent: connection.lastLiveSyncEvent,
+                liveSyncCount: connection.liveSyncCount,
                 lastTestedAt: connection.lastTestedAt?.toISOString() ?? null,
                 lastTestStatus: connection.lastTestStatus,
                 lastTestError: connection.lastTestError,
@@ -205,6 +210,13 @@ export default async function CisoAssistantAdminPage() {
             le connecteur Python autonome) pour une sync automatique
             quotidienne. Le mode <em>upsert idempotent</em> garantit zéro
             doublon.
+          </li>
+          <li>
+            Activez <strong>Live Mode</strong> (extension v2.0) pour des
+            rafraîchissements temps réel : à chaque module complété,
+            phishing signalé ou clic sur faux mail, une mini-sync incrémentale
+            (debouncée 5 s) repousse les preuves impactées vers CISO
+            Assistant — utile en présentation COMEX.
           </li>
         </ol>
         <p className="text-xs text-gray-500 dark:text-gray-500 mt-3">

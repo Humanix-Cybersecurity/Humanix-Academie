@@ -17,6 +17,7 @@ import Link from "next/link";
 import { db } from "@/lib/db";
 import { getTemplate } from "@/lib/phishing";
 import { fireWebhook } from "@/lib/webhooks/dispatcher";
+import { triggerCisoLiveSync } from "@/lib/ciso-assistant/live-mode";
 import AskHexExplain from "@/components/AskHexExplain";
 import { QUISHING_TEMPLATES } from "@/lib/phishing/qr-code";
 
@@ -137,6 +138,10 @@ export default async function PhishingLandingPage({
     } catch {
       // best-effort (cf. fireWebhook déjà fail-safe en interne)
     }
+
+    // Live Mode (v2.0) : trigger une mini-sync CISO Assistant debouncee (5s).
+    // Fire-and-forget : ne bloque pas la landing utilisateur.
+    triggerCisoLiveSync(result.campaign.tenantId, "phishing.user_clicked");
 
     // 3) Remediations auto opt-in (configurables /admin/automations).
     // On agit sur l'user pour limiter les degats d'un futur clic reel :
