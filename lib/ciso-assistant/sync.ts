@@ -128,6 +128,8 @@ async function executeSync(
     syncOwnerAsActor: boolean;
     createIncidents: boolean;
     pushMetrologySamples: boolean;
+    syncGroupsAsTeams: boolean;
+    syncCampaigns: boolean;
   },
   actor: { userId: string; email: string; role: string },
 ): Promise<void> {
@@ -561,6 +563,93 @@ async function executeSync(
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
         await appendLog(runId, nowLine("WARN", `Incident échec : ${msg}`));
+      }
+    }
+
+    // v1.9 Campaigns sync : push des PhishingCampaign Humanix actives/recentes
+    // (90 jours) comme Campaign CISO Assistant. Fire-and-forget.
+    if (conn.syncCampaigns) {
+      try {
+        const ninetyDaysAgo = new Date(Date.now() - 90 * 86400 * 1000);
+        const campaigns = await db.phishingCampaign.findMany({
+          where: {
+            tenantId,
+            OR: [{ isActive: true }, { sentAt: { gte: ninetyDaysAgo } }],
+          },
+          select: {
+            id: true,
+            title: true,
+            template: true,
+            channel: true,
+            scheduledAt: true,
+            sentAt: true,
+            isActive: true,
+            createdAt: true,
+          },
+        });
+        let campOk = 0;
+        let campFail = 0;
+        for (const c of campaigns) {
+          let status: "draft" | "in_progress" | "done" = "draft";
+          if (c.sentAt) status = c.isActive ? "in_progress" : "done";
+          else if (c.scheduledAt && c.scheduledAt <= new Date())
+            status = "in_progress";
+          const r = await client.ensureCampaign({
+            name: `Humanix · ${c.title}`.slice(0, 255),
+            description:
+              `Campagne ${c.channel.toLowerCase()} Humanix Académie · ` +
+              `template ${c.template} · planifiée ${c.scheduledAt.toISOString().slice(0, 10)}.\n` +
+              `Synchronisée depuis Humanix Académie le ${new Date().toISOString()}.`,
+            status,
+            dueDate: c.scheduledAt.toISOString().slice(0, 10),
+          });
+          if (r.ok) campOk += 1;
+          else campFail += 1;
+        }
+        await appendLog(
+          runId,
+          nowLine(
+            campFail === 0 ? "OK" : "WARN",
+            `Campaigns sync : ${campOk}/${campaigns.length} campagnes${campFail > 0 ? ` (${campFail} échec(s))` : ""}`,
+          ),
+        );
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        await appendLog(runId, nowLine("WARN", `Campaigns sync bloc échec : ${msg}`));
+      }
+    }
+
+    // v1.8 Teams sync : push des Groups Humanix actifs comme Team CISO
+    // Assistant. Fire-and-forget : un echec ne casse pas la sync.
+    if (conn.syncGroupsAsTeams) {
+      try {
+        const groups = await db.group.findMany({
+          where: { tenantId, isActive: true },
+          select: { id: true, slug: true, name: true, description: true, _count: { select: { members: true } } },
+        });
+        let teamsOk = 0;
+        let teamsFail = 0;
+        for (const g of groups) {
+          const desc =
+            (g.description ?? `Équipe ${g.name} (${g._count.members} membres) ` +
+              `synchronisée automatiquement depuis Humanix Académie.`);
+          const r = await client.ensureTeam({
+            name: `Humanix · ${g.name}`,
+            description: desc,
+          });
+          if (r.ok) teamsOk += 1;
+          else teamsFail += 1;
+        }
+        await appendLog(
+          runId,
+          nowLine(
+            teamsFail === 0 ? "OK" : "WARN",
+            `Teams sync : ${teamsOk}/${groups.length} équipes${teamsFail > 0 ? ` (${teamsFail} échec(s))` : ""}`,
+          ),
+        );
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        await appendLog(runId, nowLine("WARN", `Teams sync bloc échec : ${msg}`));
       }
     }
 

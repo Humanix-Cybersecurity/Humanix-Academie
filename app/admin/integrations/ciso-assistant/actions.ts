@@ -64,6 +64,8 @@ export async function saveConnection(formData: FormData): Promise<{
   const syncOwnerAsActor = formData.get("syncOwnerAsActor") === "on";
   const createIncidents = formData.get("createIncidents") === "on";
   const pushMetrologySamples = formData.get("pushMetrologySamples") === "on";
+  const syncGroupsAsTeams = formData.get("syncGroupsAsTeams") === "on";
+  const syncCampaigns = formData.get("syncCampaigns") === "on";
 
   if (!baseUrl || !username) {
     throw new Error("Base URL et username obligatoires");
@@ -105,6 +107,8 @@ export async function saveConnection(formData: FormData): Promise<{
       syncOwnerAsActor,
       createIncidents,
       pushMetrologySamples,
+      syncGroupsAsTeams,
+      syncCampaigns,
     },
     update: {
       baseUrl,
@@ -119,6 +123,8 @@ export async function saveConnection(formData: FormData): Promise<{
       syncOwnerAsActor,
       createIncidents,
       pushMetrologySamples,
+      syncGroupsAsTeams,
+      syncCampaigns,
     },
   });
 

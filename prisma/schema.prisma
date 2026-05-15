@@ -1748,6 +1748,16 @@ model CisoAssistantConnection {
   // phishing_report_rate, counts d'evidences par statut. 6 metriques par
   // sync. Necessite que le folder Humanix existe.
   pushMetrologySamples  Boolean @default(false)
+  // v1.8 toggle : synchronise les Groups Humanix (Compta, RH, Dev,
+  // Commercial...) comme Team CISO Assistant. Permet d'assigner des
+  // findings/incidents par equipe nativement dans CISO Assistant.
+  // Membres pseudonymises (hash SHA-256) -- pas d'export PII brut.
+  syncGroupsAsTeams     Boolean @default(false)
+  // v1.9 toggle : pour chaque PhishingCampaign Humanix active ou recente
+  // (90 jours), cree/maintient une Campaign CISO Assistant. Permet au
+  // RSSI de suivre ses campagnes phishing simule dans son cockpit GRC
+  // habituel, sans repli sur Humanix.
+  syncCampaigns         Boolean @default(false)
   verifySSL     Boolean @default(true)
   // Dernier resultat du bouton "Tester la connexion".
   lastTestedAt  DateTime?
