@@ -245,19 +245,21 @@ async function executeSync(
       );
     }
 
-    // v1.5 : sync owner -> User CISO Assistant + Actor. Si actif et ownerEmail
-    // defini, le client.ownerActorId sera renseigne et inclus dans tous les
-    // payloads downstream (Evidence.owner, Finding.owner, etc.).
+    // v1.5 / v2.1 : sync owner -> User CISO Assistant. Si actif et ownerEmail
+    // defini, le client.ownerUserId est renseigne et inclus comme `owner`
+    // (ou `owners` pour Incident) dans tous les payloads downstream.
+    // Correctif v2.1 : on stocke desormais le User UUID (pas Actor UUID),
+    // ce qui correspond au contrat OpenAPI (`owner: array<uuid>` = User refs).
     if (conn.syncOwnerAsActor && conn.ownerEmail) {
       try {
-        const actorId = await client.resolveOwnerActor(conn.ownerEmail);
-        if (actorId) {
-          client.ownerActorId = actorId;
+        const userId = await client.resolveOwnerUser(conn.ownerEmail);
+        if (userId) {
+          client.ownerUserId = userId;
           await appendLog(
             runId,
             nowLine(
               "OK",
-              `Owner ${conn.ownerEmail} → Actor ${actorId} (assigné sur tous les artefacts)`,
+              `Owner ${conn.ownerEmail} → User ${userId} (assigné sur tous les artefacts)`,
             ),
           );
         } else {
@@ -273,6 +275,34 @@ async function executeSync(
         const msg = err instanceof Error ? err.message : String(err);
         await appendLog(runId, nowLine("WARN", `Sync owner: ${msg}`));
       }
+    }
+
+    // v2.1 : FilteringLabels. Resolus une fois pour toute la sync et
+    // attaches automatiquement par le client a chaque write artefact
+    // (evidences, applied-controls, findings, risk-scenarios, incidents,
+    // metric-*). Best-effort : si /api/filtering-labels/ est indisponible,
+    // on continue sans -- les writes restent corrects sans le tag.
+    try {
+      const labelIds: string[] = [];
+      const labelHumanix = await client.ensureFilteringLabel("humanix");
+      if (labelHumanix) labelIds.push(labelHumanix);
+      const labelSens = await client.ensureFilteringLabel("sensibilisation");
+      if (labelSens) labelIds.push(labelSens);
+      const labelFw = await client.ensureFilteringLabel(framework);
+      if (labelFw) labelIds.push(labelFw);
+      client.filteringLabelIds = labelIds;
+      if (labelIds.length > 0) {
+        await appendLog(
+          runId,
+          nowLine(
+            "OK",
+            `FilteringLabels prêts (${labelIds.length}) : humanix, sensibilisation, ${framework}`,
+          ),
+        );
+      }
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      await appendLog(runId, nowLine("WARN", `FilteringLabels: ${msg}`));
     }
 
     // v1.3 hooks optionnels : AppliedControl + FindingsAssessment.
@@ -787,19 +817,9 @@ async function executeSync(
           },
         ];
 
-        // Pre-resolve les labels Humanix (idempotents) pour eviter N appels.
-        // "humanix" + "sensibilisation" + le framework slug.
-        const labelIds: string[] = [];
-        try {
-          const labelHumanix = await client.ensureFilteringLabel("humanix");
-          if (labelHumanix) labelIds.push(labelHumanix);
-          const labelSens = await client.ensureFilteringLabel("sensibilisation");
-          if (labelSens) labelIds.push(labelSens);
-          const labelFw = await client.ensureFilteringLabel(framework);
-          if (labelFw) labelIds.push(labelFw);
-        } catch {
-          // Best-effort : si filtering-labels indisponible, on continue sans.
-        }
+        // FilteringLabels deja resolus + caches sur le client en debut de
+        // sync (cf. bloc plus haut). On les reutilise ici.
+        const labelIds = client.filteringLabelIds;
 
         let metricsOk = 0;
         let metricsFail = 0;

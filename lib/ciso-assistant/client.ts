@@ -99,9 +99,24 @@ export class CisoAssistantClient {
   private token: string | null = null;
   private folderId: string | null = null;
   private existingByName: Map<string, { id: string }> | null = null;
-  /** Actor.id de l'owner (RSSI/DPO) resolu via resolveOwnerActor(). Si
-   * defini, est inclus comme owner sur tous les artefacts crees. */
-  public ownerActorId: string | null = null;
+  /** User.id (UUID) de l'owner (RSSI/DPO) resolu via resolveOwnerUser().
+   * Si defini, est inclus comme `owner` (ou `owners` pour Incident) sur
+   * tous les artefacts crees. Note v2.1 : on stockait l'Actor.id avant,
+   * mais le schema OpenAPI confirme que `owner: array<uuid>` attend des
+   * User UUIDs -- pas Actor UUIDs. */
+  public ownerUserId: string | null = null;
+  /** Compat backward : ownerActorId redirige sur ownerUserId. A retirer
+   * apres la prochaine release majeure du connecteur (callers externes). */
+  public get ownerActorId(): string | null {
+    return this.ownerUserId;
+  }
+  public set ownerActorId(v: string | null) {
+    this.ownerUserId = v;
+  }
+  /** Liste d'ids FilteringLabel a attacher a chaque write artefact (
+   * evidences, applied-controls, findings, risk-scenarios, incidents,
+   * metric-* ). Resolus une fois par sync. */
+  public filteringLabelIds: string[] = [];
 
   constructor(conn: CisoConnectionInput) {
     this.conn = { ...conn, baseUrl: conn.baseUrl.replace(/\/+$/, "") };
@@ -297,7 +312,10 @@ export class CisoAssistantClient {
       folder: this.folderId,
       expiry_date: audit.expiryDate,
       ...(link && { link }),
-      ...(this.ownerActorId && { owner: [this.ownerActorId] }),
+      ...(this.ownerUserId && { owner: [this.ownerUserId] }),
+      ...(this.filteringLabelIds.length > 0 && {
+        filtering_labels: this.filteringLabelIds,
+      }),
     };
 
     const existing = this.existingByName.get(name);
@@ -361,13 +379,29 @@ export class CisoAssistantClient {
         if (c.name === name) return c.id;
       }
     }
-    // Creer
+    // Creer avec metadonnees enrichies (cf. audit OpenAPI v0.7) :
+    //  - csf_function = "protect" (NIST CSF 2.0 : la sensibilisation est
+    //    une protection comportementale, pas une detection)
+    //  - priority 3 (mid : programme continu, pas un sprint urgent)
+    //  - effort "L" (programme transverse a maintenir dans la duree)
+    //  - eta = +12 mois (ce que l'audit doit re-verifier)
+    const eta = new Date(Date.now() + 365 * 86400 * 1000)
+      .toISOString()
+      .slice(0, 10);
     const r = await this.request("POST", "/api/applied-controls/", {
       name,
       description,
       folder: this.folderId,
-      status: "active",
-      category: "process",
+      status: "active", // Status436Enum
+      category: "process", // Category3aaEnum
+      csf_function: "protect", // CsfFunctionEnum
+      priority: 3, // PriorityEnum (1..4)
+      effort: "L", // EffortEnum
+      eta,
+      ...(this.ownerUserId && { owner: [this.ownerUserId] }),
+      ...(this.filteringLabelIds.length > 0 && {
+        filtering_labels: this.filteringLabelIds,
+      }),
     });
     if (![200, 201].includes(r.status)) return null;
     const created = (await r.json()) as { id: string };
@@ -459,7 +493,10 @@ export class CisoAssistantClient {
       ...(args.appliedControlId && {
         applied_controls: [args.appliedControlId],
       }),
-      ...(this.ownerActorId && { owner: [this.ownerActorId] }),
+      ...(this.ownerUserId && { owner: [this.ownerUserId] }),
+      ...(this.filteringLabelIds.length > 0 && {
+        filtering_labels: this.filteringLabelIds,
+      }),
     };
 
     // GET findings du folder/assessment puis match by name
@@ -505,7 +542,7 @@ export class CisoAssistantClient {
    * sur le token courant). Retourne null en cas d'echec - les appels
    * upsertEvidence/Finding/Scenario fonctionnent sans owner aussi.
    */
-  async resolveOwnerActor(ownerEmail: string): Promise<string | null> {
+  async resolveOwnerUser(ownerEmail: string): Promise<string | null> {
     // 1. Trouver le User par email
     const userList = await this.request(
       "GET",
@@ -534,19 +571,15 @@ export class CisoAssistantClient {
       const created = (await create.json()) as { id: string };
       userId = created.id;
     }
-    // 3. Recuperer l'Actor lie a ce User (auto-cree par User.save() cote
-    //    Django via OneToOneField). Note : l'API actors/ filtre par
-    //    specific._id (user.id) -- on doit lister et matcher.
-    const actorList = await this.request("GET", `/api/actors/`);
-    if (actorList.status !== 200) return null;
-    const data = (await actorList.json()) as any;
-    const items = data.results ?? (Array.isArray(data) ? data : []);
-    const match = items.find(
-      (a: any) =>
-        a.type === "user" &&
-        (a.specific?.id === userId || a.specific?.str === ownerEmail),
-    );
-    return match?.id ?? null;
+    // 3. Schema OpenAPI : `owner: array<string uuid>` attend des User
+    //    UUIDs, pas Actor UUIDs. L'endpoint /api/actors/ est un read-only
+    //    aggregator pour l'UI -- pas pour ownership. On retourne userId.
+    return userId;
+  }
+
+  /** @deprecated utilise resolveOwnerUser. Garde pour compat backward. */
+  async resolveOwnerActor(ownerEmail: string): Promise<string | null> {
+    return this.resolveOwnerUser(ownerEmail);
   }
 
   // =========================================================================
@@ -625,7 +658,7 @@ export class CisoAssistantClient {
       description,
       risk_assessment: args.riskAssessmentId,
       folder: this.folderId,
-      treatment: "mitigate",
+      treatment: "mitigate", // TreatmentEnum
       // Likelihood / Impact : indices 0..N-1 selon la taille de la
       // RiskMatrix utilisee. Sur une matrice 3x3 (Low/Medium/High =
       // 0/1/2), on cible 2 (= High) pour les 2 axes. Sur 5x5 ce sera
@@ -634,6 +667,10 @@ export class CisoAssistantClient {
       // au cas par cas.
       current_proba: 2,
       current_impact: 2,
+      ...(this.ownerUserId && { owner: [this.ownerUserId] }),
+      ...(this.filteringLabelIds.length > 0 && {
+        filtering_labels: this.filteringLabelIds,
+      }),
     };
 
     const list = await this.request(
@@ -1171,15 +1208,23 @@ export class CisoAssistantClient {
       `audit (ISO 27001 §10.1 / NIS2 §21.2.g). Il ne préjuge PAS d'une ` +
       `compromission effective.`;
 
+    // Schema OpenAPI : Incident utilise `owners` (M2M, pluriel), pas
+    // `owner` (singulier). Verifie sur openapi.json -> IncidentWrite.
+    const nowIso = new Date().toISOString();
     const payload: Record<string, unknown> = {
       ref_id: refId,
       name,
       description,
       folder: this.folderId,
-      status: "new",
-      severity: 3, // SEV3 Moderate
-      detection: "internally_detected",
-      ...(this.ownerActorId && { owner: [this.ownerActorId] }),
+      status: "new", // IncidentWriteStatusEnum
+      severity: 3, // IncidentWriteSeverityEnum (integer 1..6, 3 = Moderate)
+      detection: "internally_detected", // DetectionEnum
+      reported_at: nowIso,
+      occurred_at: nowIso,
+      ...(this.ownerUserId && { owners: [this.ownerUserId] }),
+      ...(this.filteringLabelIds.length > 0 && {
+        filtering_labels: this.filteringLabelIds,
+      }),
     };
 
     const list = await this.request(
