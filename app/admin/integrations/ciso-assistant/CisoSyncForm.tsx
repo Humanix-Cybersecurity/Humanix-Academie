@@ -40,6 +40,9 @@ type ExistingConnection = {
   lastLiveSyncAt: string | null;
   lastLiveSyncEvent: string | null;
   liveSyncCount: number;
+  createWorkforceAsset: boolean;
+  syncThreats: boolean;
+  createDashboard: boolean;
   lastTestedAt: string | null;
   lastTestStatus: string | null;
   lastTestError: string | null;
@@ -393,6 +396,72 @@ export default function CisoSyncForm({
                     remonter en direct pendant une présentation COMEX.
                     Nécessite d'avoir lancé au moins une sync manuelle d'un
                     framework au préalable (sinon no-op).
+                  </span>
+                </span>
+              </label>
+              <label className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <input
+                  type="checkbox"
+                  name="createWorkforceAsset"
+                  defaultChecked={existing?.createWorkforceAsset ?? false}
+                  className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
+                />
+                <span>
+                  <strong>Asset « Workforce »</strong> — couche humaine comme asset GRC{" "}
+                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold uppercase tracking-wider">
+                    v2.2
+                  </span>
+                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    Crée un Asset primary <em>« Personnel · Couche humaine
+                    Humanix Académie »</em> dans le folder. Permet de cibler
+                    explicitement la couche humaine sur les RiskScenarios,
+                    Findings et Incidents. Idempotent par nom.
+                  </span>
+                </span>
+              </label>
+              <label className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <input
+                  type="checkbox"
+                  name="syncThreats"
+                  defaultChecked={existing?.syncThreats ?? false}
+                  className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
+                />
+                <span>
+                  <strong>Catalogue de 15 menaces humaines</strong> — FOVI, deepfake CEO, smishing…{" "}
+                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold uppercase tracking-wider">
+                    v2.2
+                  </span>
+                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    Pousse les 15 menaces humaines Humanix (spear phishing
+                    finance, fraude au président, vishing CFO, smishing,
+                    quishing, deepfake CEO, password reuse, shadow IT,
+                    tailgating, fuite RGPD, fuite secrets dev, etc.) comme{" "}
+                    <code>Threat</code> entities. Le RSSI peut les linker à
+                    ses RiskScenarios (M2M <code>threats</code>) sans avoir
+                    à charger la stored-library manuellement.
+                  </span>
+                </span>
+              </label>
+              <label className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <input
+                  type="checkbox"
+                  name="createDashboard"
+                  defaultChecked={existing?.createDashboard ?? false}
+                  className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
+                />
+                <span>
+                  <strong>Dashboard pré-cuisiné</strong> — vue agrégée 6 widgets{" "}
+                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold uppercase tracking-wider">
+                    v2.2
+                  </span>
+                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    Crée un Dashboard <em>« Cockpit Humanix Académie »</em>{" "}
+                    avec 6 widgets pointant sur les MetricInstances Humanix :
+                    jauge score maturité, KPI cards complétion / signalement
+                    phishing, line chart évolution 90 j, sparklines
+                    conformes / non conformes. <strong>Nécessite
+                    pushMetrologySamples actif</strong> (sinon les widgets
+                    n'ont pas de cible).
                   </span>
                 </span>
               </label>

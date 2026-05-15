@@ -30,6 +30,7 @@ import { CisoAssistantClient, CisoError } from "./client";
 import { decryptCisoPassword } from "./encryption";
 import { renderSignedEvidencePdf } from "./evidence-pdf";
 import { getCurrentPublicKeyPem } from "./pdf-signing";
+import { HUMANIX_HUMAN_THREATS } from "./threats-catalog";
 
 function nowLine(level: "INFO" | "OK" | "WARN" | "FAIL", msg: string): string {
   const ts = new Date().toISOString().slice(11, 19); // HH:MM:SS UTC
@@ -130,6 +131,9 @@ async function executeSync(
     pushMetrologySamples: boolean;
     syncGroupsAsTeams: boolean;
     syncCampaigns: boolean;
+    createWorkforceAsset: boolean;
+    syncThreats: boolean;
+    createDashboard: boolean;
   },
   actor: { userId: string; email: string; role: string },
 ): Promise<void> {
@@ -303,6 +307,73 @@ async function executeSync(
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       await appendLog(runId, nowLine("WARN", `FilteringLabels: ${msg}`));
+    }
+
+    // v2.2 Asset Workforce : push un Asset primary "Personnel · Couche
+    // humaine" comme cible explicite pour les RiskScenarios/Findings.
+    // Fire-and-forget : un echec ne bloque pas le reste.
+    if (conn.createWorkforceAsset) {
+      try {
+        const r = await client.ensureWorkforceAsset();
+        if (r.ok) {
+          await appendLog(
+            runId,
+            nowLine(
+              "OK",
+              `Asset Workforce ${r.action} (id ${r.id}) — \"Personnel · Couche humaine Humanix Académie\"`,
+            ),
+          );
+        } else {
+          await appendLog(
+            runId,
+            nowLine(
+              "WARN",
+              `Asset Workforce non créé : ${r.error ?? "raison inconnue"}`,
+            ),
+          );
+        }
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        await appendLog(runId, nowLine("WARN", `Asset Workforce: ${msg}`));
+      }
+    }
+
+    // v2.2 Threats catalog : push les 15 menaces humaines Humanix dans le
+    // folder. Idempotent par ref_id (HUMAN-T1..T31).
+    if (conn.syncThreats) {
+      try {
+        let threatsOk = 0;
+        let threatsFail = 0;
+        let firstThreatError: string | undefined;
+        for (const t of HUMANIX_HUMAN_THREATS) {
+          const r = await client.upsertThreat({
+            refId: t.refId,
+            name: t.name,
+            description: t.description,
+          });
+          if (r.ok) threatsOk += 1;
+          else {
+            threatsFail += 1;
+            if (!firstThreatError && r.error) firstThreatError = r.error;
+          }
+        }
+        await appendLog(
+          runId,
+          nowLine(
+            threatsFail === 0 ? "OK" : "WARN",
+            `Threats catalog : ${threatsOk}/${HUMANIX_HUMAN_THREATS.length} menaces humaines${threatsFail > 0 ? ` (${threatsFail} échec(s))` : ""}`,
+          ),
+        );
+        if (firstThreatError) {
+          await appendLog(
+            runId,
+            nowLine("WARN", `Threats — première cause : ${firstThreatError}`),
+          );
+        }
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        await appendLog(runId, nowLine("WARN", `Threats bloc échec : ${msg}`));
+      }
     }
 
     // v1.3 hooks optionnels : AppliedControl + FindingsAssessment.
@@ -827,6 +898,9 @@ async function executeSync(
         // Detection module absent : si la 1ere ensureMetricDefinition
         // retourne un 404, on coupe court (les 5 suivantes echoueront pareil).
         let metrologyUnavailable = false;
+        // v2.2 : on capture {refId -> metricInstanceId} pour pouvoir
+        // construire le Dashboard apres si createDashboard est actif.
+        const instanceIdByRefId: Record<string, string> = {};
         for (const m of metrics) {
           if (metrologyUnavailable) break;
           try {
@@ -865,6 +939,7 @@ async function executeSync(
                 firstMetricError = `instance · ${instRes.error}`;
               continue;
             }
+            instanceIdByRefId[m.refId] = instRes.id;
             const sample = await client.pushMetricSample({
               metricInstanceId: instRes.id,
               value: m.value,
@@ -902,6 +977,167 @@ async function executeSync(
             await appendLog(
               runId,
               nowLine("WARN", `Metrology — première cause : ${firstMetricError}`),
+            );
+          }
+
+          // v2.2 Dashboard : cree un Dashboard "Cockpit Humanix Académie"
+          // avec 6 widgets pointant sur les MetricInstance qu'on vient de
+          // creer. Le RSSI a une vue agregee pre-cuisinee.
+          if (
+            conn.createDashboard &&
+            Object.keys(instanceIdByRefId).length > 0
+          ) {
+            try {
+              const dashName = `Cockpit Humanix Académie · ${framework}`;
+              const dashRes = await client.ensureDashboard(dashName);
+              if (dashRes.ok && dashRes.id) {
+                const dashboardId = dashRes.id;
+                // Layout 12-col : 3 KPI cards en haut, 1 line chart + 1
+                // donut + 1 sparkline en bas.
+                const widgets: Array<{
+                  title: string;
+                  refId: string;
+                  chartType:
+                    | "kpi_card"
+                    | "donut"
+                    | "line"
+                    | "sparkline"
+                    | "gauge";
+                  positionX: number;
+                  positionY: number;
+                  width: number;
+                  height: number;
+                  aggregation?: "last" | "avg";
+                  timeRange?:
+                    | "last_30_days"
+                    | "last_90_days"
+                    | "last_year";
+                }> = [
+                  {
+                    title: "Score maturité cyber humaine",
+                    refId: "humanix.tenant_score",
+                    chartType: "gauge",
+                    positionX: 0,
+                    positionY: 0,
+                    width: 4,
+                    height: 3,
+                    aggregation: "last",
+                  },
+                  {
+                    title: "Taux de complétion sensibilisation",
+                    refId: "humanix.completion_rate",
+                    chartType: "kpi_card",
+                    positionX: 4,
+                    positionY: 0,
+                    width: 4,
+                    height: 3,
+                    aggregation: "last",
+                  },
+                  {
+                    title: "Taux signalement phishing",
+                    refId: "humanix.phishing_report_rate",
+                    chartType: "kpi_card",
+                    positionX: 8,
+                    positionY: 0,
+                    width: 4,
+                    height: 3,
+                    aggregation: "last",
+                  },
+                  {
+                    title: "Évolution score sur 90 jours",
+                    refId: "humanix.tenant_score",
+                    chartType: "line",
+                    positionX: 0,
+                    positionY: 3,
+                    width: 8,
+                    height: 4,
+                    timeRange: "last_90_days",
+                  },
+                  {
+                    title: "Contrôles non conformes (tendance)",
+                    refId: "humanix.evidences_non_compliant_count",
+                    chartType: "sparkline",
+                    positionX: 8,
+                    positionY: 3,
+                    width: 4,
+                    height: 2,
+                    timeRange: "last_90_days",
+                  },
+                  {
+                    title: "Contrôles conformes (tendance)",
+                    refId: "humanix.evidences_compliant_count",
+                    chartType: "sparkline",
+                    positionX: 8,
+                    positionY: 5,
+                    width: 4,
+                    height: 2,
+                    timeRange: "last_90_days",
+                  },
+                ];
+                let widOk = 0;
+                let widFail = 0;
+                let firstWidgetError: string | undefined;
+                for (const w of widgets) {
+                  const metricInstanceId = instanceIdByRefId[w.refId];
+                  if (!metricInstanceId) continue;
+                  const wr = await client.ensureDashboardWidget({
+                    dashboardId,
+                    title: w.title,
+                    chartType: w.chartType,
+                    metricInstanceId,
+                    positionX: w.positionX,
+                    positionY: w.positionY,
+                    width: w.width,
+                    height: w.height,
+                    aggregation: w.aggregation,
+                    timeRange: w.timeRange,
+                  });
+                  if (wr.ok) widOk += 1;
+                  else {
+                    widFail += 1;
+                    if (!firstWidgetError && wr.error)
+                      firstWidgetError = wr.error;
+                  }
+                }
+                await appendLog(
+                  runId,
+                  nowLine(
+                    widFail === 0 ? "OK" : "WARN",
+                    `Dashboard « ${dashName} » ${dashRes.action} avec ${widOk}/${widgets.length} widgets${widFail > 0 ? ` (${widFail} échec(s))` : ""}`,
+                  ),
+                );
+                if (firstWidgetError) {
+                  await appendLog(
+                    runId,
+                    nowLine(
+                      "WARN",
+                      `Dashboard widgets — première cause : ${firstWidgetError}`,
+                    ),
+                  );
+                }
+              } else {
+                await appendLog(
+                  runId,
+                  nowLine(
+                    "WARN",
+                    `Dashboard non créé : ${dashRes.error ?? "raison inconnue"}`,
+                  ),
+                );
+              }
+            } catch (err) {
+              const msg = err instanceof Error ? err.message : String(err);
+              await appendLog(runId, nowLine("WARN", `Dashboard: ${msg}`));
+            }
+          } else if (
+            conn.createDashboard &&
+            Object.keys(instanceIdByRefId).length === 0
+          ) {
+            await appendLog(
+              runId,
+              nowLine(
+                "WARN",
+                "Dashboard : aucune MetricInstance disponible (toggle createDashboard nécessite pushMetrologySamples)",
+              ),
             );
           }
         }
