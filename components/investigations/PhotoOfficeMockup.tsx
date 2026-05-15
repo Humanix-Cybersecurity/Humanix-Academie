@@ -24,6 +24,7 @@ const SCENE_ITEMS: Record<
   string,
   { emoji: string; label: string }
 > = {
+  // Office (clean desk audit)
   laptop_unlocked: { emoji: "💻", label: "Laptop" },
   sticky_note_password: { emoji: "🟨", label: "Post-it" },
   paper_confidential: { emoji: "📄", label: "Document" },
@@ -34,16 +35,58 @@ const SCENE_ITEMS: Record<
   coffee_mug: { emoji: "☕", label: "Mug" },
   office_chair: { emoji: "🪑", label: "Chaise" },
   desk_lamp: { emoji: "💡", label: "Lampe" },
+  // Piggyback (entree de batiment)
+  badge_reader: { emoji: "📟", label: "Lecteur badge" },
+  open_door: { emoji: "🚪", label: "Porte ouverte" },
+  polite_holder: { emoji: "🙋", label: "Personne tenant la porte" },
+  unbadged_intruder: { emoji: "👤", label: "Intrus sans badge" },
+  security_camera: { emoji: "📹", label: "Caméra" },
+  tailgate_notice: { emoji: "🪧", label: "Affiche anti-tailgating" },
+  // Trash bin (poubelle non securisee)
+  loose_papers: { emoji: "📃", label: "Papiers en vrac" },
+  envelope_confidential: { emoji: "✉️", label: "Enveloppe CONFIDENTIEL" },
+  missing_shredder: { emoji: "❌", label: "Pas de broyeur" },
+  id_card_thrown: { emoji: "🪪", label: "Carte d'identité jetée" },
+  post_it_sensitive: { emoji: "🟨", label: "Post-it" },
+  broken_lock: { emoji: "🔓", label: "Serrure cassée" },
+};
+
+const SCENE_HEADER: Record<
+  string,
+  { emoji: string; label: string; bgClass: string }
+> = {
+  office: {
+    emoji: "🏢",
+    label: "VUE BUREAU — REPÈRE LES INDICES",
+    bgClass:
+      "bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800",
+  },
+  piggyback: {
+    emoji: "🚪",
+    label: "ENTRÉE DU BÂTIMENT — REPÈRE LES INDICES",
+    bgClass:
+      "bg-gradient-to-br from-slate-100 via-gray-50 to-zinc-100 dark:from-slate-900 dark:via-slate-800 dark:to-zinc-900",
+  },
+  trash_bin: {
+    emoji: "🗑️",
+    label: "POUBELLE COMMUNE — REPÈRE LES INDICES",
+    bgClass:
+      "bg-gradient-to-br from-stone-100 via-amber-50 to-orange-50 dark:from-stone-900 dark:via-amber-950 dark:to-orange-950",
+  },
 };
 
 export default function PhotoOfficeMockup({ media }: Props) {
   const items = media.data.scene;
+  const sceneType = media.data.sceneType ?? "office";
+  const header = SCENE_HEADER[sceneType] ?? SCENE_HEADER.office;
   return (
-    <div className="rounded-2xl border-2 border-gray-300 dark:border-slate-700 bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800 shadow-lg overflow-hidden">
+    <div
+      className={`rounded-2xl border-2 border-gray-300 dark:border-slate-700 ${header.bgClass} shadow-lg overflow-hidden`}
+    >
       {/* Header */}
       <div className="bg-amber-900/80 text-amber-50 px-4 py-2 flex items-center gap-2 text-xs font-bold tracking-wider">
-        <span>🏢</span>
-        <span>VUE BUREAU — REPÈRE LES INDICES</span>
+        <span>{header.emoji}</span>
+        <span>{header.label}</span>
       </div>
 
       {/* Scene : ratio 16/10 pour ressembler a une vue plongeante */}
