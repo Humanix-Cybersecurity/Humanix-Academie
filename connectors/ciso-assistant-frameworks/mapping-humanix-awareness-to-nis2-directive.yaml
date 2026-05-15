@@ -1,0 +1,103 @@
+convert_library_version: 'v2 ; Compat Mode: [0] {[v2.1] (DEFAULT) Don''t use any Compatibility Mode}'
+urn: urn:humanix:risk:library:mapping-humanix-awareness-to-nis2-directive
+locale: fr
+ref_id: mapping-humanix-awareness-to-nis2-directive
+name: Humanix Académie ↔ NIS2 Directive (2022/2555)
+description: |-
+  Mapping entre le catalogue de modules Humanix Académie et la directive
+  NIS2 (UE 2022/2555). Cible principalement l'article 21.2 (mesures de
+  cybersécurité) et l'article 23 (notification d'incidents).
+
+  Le module Humanix `cyber-dirigeants` couvre `equal` l'obligation de
+  formation des organes de direction (NIS2 §20.2) — exigence explicite
+  et opposable.
+copyright: |-
+  © Humanix-Cybersecurity SASU. Mapping publié sous licence CC BY-SA 4.0.
+version: 1
+publication_date: 2026-05-15
+provider: Humanix-Cybersecurity SASU
+packager: Humanix-Cybersecurity
+dependencies:
+  - urn:humanix:risk:library:humanix-awareness-catalog-v1
+  - urn:intuitem:risk:library:nis2-directive
+objects:
+  requirement_mapping_sets:
+    - urn: urn:humanix:risk:req_mapping_set:mapping-humanix-awareness-to-nis2-directive
+      ref_id: mapping-humanix-awareness-to-nis2-directive
+      name: Humanix Académie ↔ NIS2 Directive
+      description: Mapping modules Humanix Académie vers NIS2 articles 21 et 23.
+      source_framework_urn: urn:humanix:risk:framework:humanix-awareness-catalog-v1
+      target_framework_urn: urn:intuitem:risk:framework:nis2-directive
+      requirement_mappings:
+        # Art. 21.2.a — Politiques d'analyse des risques + SI
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:nis2-pme
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.2.a
+          relationship: intersect
+
+        # Art. 21.2.b — Gestion des incidents
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:crise-cyber
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.2.b
+          relationship: intersect
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:remediation-flash
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.2.b
+          relationship: intersect
+
+        # Art. 21.2.c — Continuité (sauvegardes + reprise)
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:ransomware
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.2.c
+          relationship: intersect
+
+        # Art. 21.2.d — Sécurité chaîne d'approvisionnement
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:supply-chain
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.2.d
+          relationship: intersect
+
+        # Art. 21.2.g — Cyber-hygiène et formation (CŒUR Humanix)
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:phishing
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.2.g
+          relationship: equal
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:mots-de-passe
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.2.g
+          relationship: equal
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:email-pro
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.2.g
+          relationship: equal
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:teletravail
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.2.g
+          relationship: equal
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:cyber-dirigeants
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.2.g
+          relationship: equal
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:fraude-president
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.2.g
+          relationship: equal
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:deepfakes
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.2.g
+          relationship: equal
+
+        # Art. 21.2.i — Sécurité RH, contrôle accès, gestion actifs
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:cyber-rh
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.2.i
+          relationship: intersect
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:acces-physiques
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.2.i
+          relationship: intersect
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:donnees-sensibles
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.2.i
+          relationship: intersect
+
+        # Art. 21.2.j — MFA, sécurité comm
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:mots-de-passe
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.2.j
+          relationship: intersect
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:wifi-reseaux
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.2.j
+          relationship: intersect
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:visios-meetings
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.2.j
+          relationship: intersect
+
+        # Art. 23 — Notification d'incidents (signalement par les utilisateurs)
+        - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:phishing
+          target_requirement_urn: urn:intuitem:risk:req_node:nis2-directive:21.3
+          relationship: intersect
