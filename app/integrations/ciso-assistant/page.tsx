@@ -36,6 +36,15 @@ export default function CisoAssistantIntegrationPage() {
           plus d'Excel partagé, plus d'audit douloureux. Tout est traçable,
           signé Ed25519, vérifiable hors-ligne.
         </p>
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <Link
+            href="/integrations/ciso-assistant/fonctionnalites"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary-500 text-white font-semibold hover:bg-primary-600 transition shadow-sm"
+          >
+            <span aria-hidden="true">📖</span>
+            Voir les 17 fonctionnalités en détail
+          </Link>
+        </div>
       </header>
 
       {/* ===== CE QU'ON ALIMENTE COTE CISO ASSISTANT ===== */}
