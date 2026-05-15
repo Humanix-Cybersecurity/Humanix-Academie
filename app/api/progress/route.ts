@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { computeCoinsEarned, getLevel } from "@/lib/levels";
 import { fireWebhook } from "@/lib/webhooks/dispatcher";
+import { triggerCisoLiveSync } from "@/lib/ciso-assistant/live-mode";
 import { evaluateAndUnlock } from "@/lib/achievements/evaluate";
 
 export const dynamic = "force-dynamic";
@@ -169,6 +170,11 @@ export async function POST(req: Request) {
     }).catch(() => {
       // log silencieux : les erreurs sont enregistrees dans TenantWebhook.lastError
     });
+
+    // Live Mode (v2.0) : si l'admin a active enableLiveMode sur la connexion
+    // CISO Assistant, on declenche une mini-sync incrementale debouncee (5s).
+    // Fire-and-forget : ne bloque ni l'utilisateur ni le webhook.
+    triggerCisoLiveSync(tenantId, "episode.completed");
   }
 
   // Evaluation des achievements (badges) : declenche aussi sur les

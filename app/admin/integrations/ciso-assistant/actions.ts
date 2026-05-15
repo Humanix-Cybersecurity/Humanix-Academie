@@ -66,6 +66,7 @@ export async function saveConnection(formData: FormData): Promise<{
   const pushMetrologySamples = formData.get("pushMetrologySamples") === "on";
   const syncGroupsAsTeams = formData.get("syncGroupsAsTeams") === "on";
   const syncCampaigns = formData.get("syncCampaigns") === "on";
+  const enableLiveMode = formData.get("enableLiveMode") === "on";
 
   if (!baseUrl || !username) {
     throw new Error("Base URL et username obligatoires");
@@ -109,6 +110,7 @@ export async function saveConnection(formData: FormData): Promise<{
       pushMetrologySamples,
       syncGroupsAsTeams,
       syncCampaigns,
+      enableLiveMode,
     },
     update: {
       baseUrl,
@@ -125,6 +127,7 @@ export async function saveConnection(formData: FormData): Promise<{
       pushMetrologySamples,
       syncGroupsAsTeams,
       syncCampaigns,
+      enableLiveMode,
     },
   });
 
@@ -134,7 +137,7 @@ export async function saveConnection(formData: FormData): Promise<{
     tenantId,
     target: { type: "ciso_connection", label: baseUrl },
     message: `Connexion CISO Assistant ${existing ? "mise à jour" : "configurée"}`,
-    metadata: { baseUrl, folderName, verifySSL },
+    metadata: { baseUrl, folderName, verifySSL, enableLiveMode },
   });
 
   revalidatePath("/admin/integrations/ciso-assistant");

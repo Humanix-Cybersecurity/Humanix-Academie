@@ -36,6 +36,10 @@ type ExistingConnection = {
   pushMetrologySamples: boolean;
   syncGroupsAsTeams: boolean;
   syncCampaigns: boolean;
+  enableLiveMode: boolean;
+  lastLiveSyncAt: string | null;
+  lastLiveSyncEvent: string | null;
+  liveSyncCount: number;
   lastTestedAt: string | null;
   lastTestStatus: string | null;
   lastTestError: string | null;
@@ -366,6 +370,32 @@ export default function CisoSyncForm({
                   </span>
                 </span>
               </label>
+              <label className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+                <input
+                  type="checkbox"
+                  name="enableLiveMode"
+                  defaultChecked={existing?.enableLiveMode ?? false}
+                  className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
+                />
+                <span>
+                  <strong>Live Mode</strong> — sync temps réel sur événements{" "}
+                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-[10px] font-bold uppercase tracking-wider">
+                    v2.0
+                  </span>
+                  <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    Déclenche une mini-sync incrémentale vers CISO Assistant à
+                    chaque événement métier Humanix :{" "}
+                    <code>episode.completed</code>,{" "}
+                    <code>phishing.reported</code>,{" "}
+                    <code>phishing.user_clicked</code>. Debouncée à 5 secondes
+                    pour éviter les rafales (50 utilisateurs qui terminent un
+                    module en 30 s = 1 seule sync). Le RSSI voit le score
+                    remonter en direct pendant une présentation COMEX.
+                    Nécessite d'avoir lancé au moins une sync manuelle d'un
+                    framework au préalable (sinon no-op).
+                  </span>
+                </span>
+              </label>
             </div>
           </fieldset>
 
@@ -419,6 +449,40 @@ export default function CisoSyncForm({
               </span>
             )}
           </p>
+        )}
+
+        {existing?.enableLiveMode && (
+          <div className="mt-4 p-3 rounded-lg bg-amber-50 dark:bg-amber-900/15 border border-amber-200 dark:border-amber-800/40 flex items-center gap-3">
+            <span className="relative inline-flex h-2.5 w-2.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75"></span>
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-amber-500"></span>
+            </span>
+            <div className="text-xs text-amber-900 dark:text-amber-200 flex-1">
+              <span className="font-bold uppercase tracking-wider">Live Mode actif</span>
+              {existing.lastLiveSyncAt ? (
+                <span className="block mt-0.5">
+                  Dernière mini-sync :{" "}
+                  {new Date(existing.lastLiveSyncAt).toLocaleString("fr-FR")}
+                  {existing.lastLiveSyncEvent && (
+                    <>
+                      {" "}— événement{" "}
+                      <code className="font-mono">
+                        {existing.lastLiveSyncEvent}
+                      </code>
+                    </>
+                  )}{" "}
+                  • {existing.liveSyncCount} mini-sync(s) cumulée(s)
+                </span>
+              ) : (
+                <span className="block mt-0.5">
+                  Aucune mini-sync déclenchée pour l'instant. Lancez une sync
+                  manuelle d'un framework au moins une fois, puis les
+                  événements métier déclencheront automatiquement les
+                  rafraîchissements.
+                </span>
+              )}
+            </div>
+          </div>
         )}
 
         {toast && (
