@@ -1,0 +1,202 @@
+---
+title: "Le bureau de Karim, retour de pause café"
+kind: investigation
+investigationType: PHOTO_OFFICE
+difficulty: 3
+durationSeconds: 90
+xpReward: 70
+isFree: true
+tags:
+  - poste-de-travail
+  - confidentialite
+  - ingenierie-sociale-physique
+brief: |
+  Karim est parti chercher un café. Tu passes devant son bureau. Tu
+  prends 90 secondes pour identifier tout ce qui pose un problème de
+  sécurité dans la scène.
+
+  Astuce : un bon auditeur regarde ce qui est *visible*, ce qui est
+  *atteignable*, et ce qui est *exploitable* par quelqu'un qui
+  passerait devant ce bureau sans être surveillé.
+media:
+  type: photo-office-mockup
+  data:
+    scene:
+      - id: laptop
+        kind: laptop_unlocked
+        x: 35
+        y: 50
+        label: "Session ouverte, mail visible"
+      - id: postit
+        kind: sticky_note_password
+        x: 28
+        y: 38
+        label: "AcmeProd2026!"
+      - id: doc
+        kind: paper_confidential
+        x: 55
+        y: 65
+        label: "CONFIDENTIEL — Plan licenciements Q2"
+      - id: phone
+        kind: phone_visible
+        x: 70
+        y: 55
+        label: "iPhone déverrouillé, notifs visibles"
+      - id: drawer
+        kind: open_drawer
+        x: 15
+        y: 75
+        label: "Tiroir ouvert, badge visible"
+      - id: window
+        kind: window_view
+        x: 85
+        y: 25
+        label: "Fenêtre donnant sur la rue"
+      - id: bin
+        kind: trash_bin
+        x: 90
+        y: 80
+        label: "Poubelle non sécurisée"
+      - id: mug
+        kind: coffee_mug
+        x: 50
+        y: 30
+        label: "Mug Humanix"
+      - id: chair
+        kind: office_chair
+        x: 45
+        y: 90
+        label: "Chaise vide"
+      - id: lamp
+        kind: desk_lamp
+        x: 20
+        y: 20
+        label: "Lampe LED"
+redFlags:
+  - id: laptop-unlocked
+    label: "Le laptop est déverrouillé, session active"
+    points: 25
+    explanation: |
+      Toute personne qui passe peut voir les mails, télécharger des
+      documents, envoyer un message au nom de Karim. C'est LE signal
+      majeur d'un poste de travail abandonné. Règle : verrouille
+      systématiquement avec Win+L ou Ctrl+Cmd+Q dès que tu te lèves.
+  - id: postit-password
+    label: "Post-it avec mot de passe collé à l'écran"
+    points: 30
+    explanation: |
+      Le classique. Un mot de passe écrit sur un post-it (« AcmeProd2026! »)
+      est exposé à tout le monde : collègues, prestataires, technicien
+      fibre, femme/homme de ménage, intrus. C'est aussi photographiable
+      depuis la fenêtre ! Toujours utiliser un gestionnaire de mots de
+      passe (Bitwarden, 1Password, KeePass) plutôt qu'un post-it.
+  - id: confidential-doc
+    label: "Document marqué CONFIDENTIEL en clair sur le bureau"
+    points: 25
+    explanation: |
+      Un « Plan licenciements Q2 » laissé à la vue est une fuite à la
+      fois RH, juridique et émotionnelle. Si un collègue tombe dessus,
+      c'est l'effet domino (rumeurs, démissions préventives, voire
+      poursuites). Politique clean desk = obligatoire.
+  - id: phone-unlocked-notifs
+    label: "Téléphone déverrouillé avec notifications visibles"
+    points: 15
+    explanation: |
+      Notifications visibles = mails pro, SMS perso, codes 2FA.
+      Quelqu'un qui passe peut lire un code de validation reçu par
+      SMS et l'utiliser dans la fenêtre des 5 minutes. Soit on verrouille,
+      soit on désactive le contenu détaillé des notifs sur l'écran de
+      verrouillage.
+  - id: drawer-badge
+    label: "Tiroir ouvert avec badge d'accès visible"
+    points: 15
+    explanation: |
+      Un badge d'accès aux locaux, ou une carte de paiement
+      d'entreprise, dans un tiroir ouvert, c'est une invitation au
+      vol opportuniste. Tiroirs avec serrure = standard ; au minimum
+      les fermer en quittant son poste.
+  - id: window-overlook
+    label: "Fenêtre donnant sur la rue (shoulder surfing extérieur)"
+    points: 10
+    explanation: |
+      Un passant ou quelqu'un avec un téléphone et un zoom peut
+      photographier ton écran, ton bureau, ton post-it. C'est rare
+      mais réel (cas documentés dans des locaux en RDC avec vis-à-vis).
+      Filtre de confidentialité (3M Privacy Filter) ou rideaux le
+      jour = bonne pratique.
+  - id: trash-bin
+    label: "Poubelle non sécurisée à proximité"
+    points: 10
+    explanation: |
+      Si Karim jette des brouillons ou des extraits du plan
+      licenciements ici, un dumpster diver (ou simplement la femme/
+      homme de ménage) peut les récupérer. Documents sensibles =
+      broyeur (cross-cut shredder), pas poubelle.
+distractors:
+  - id: mug
+    label: "Mug Humanix sur le bureau"
+    penalty: 3
+    explanation: |
+      Faux positif : un mug n'est pas un risque sécurité. Même s'il
+      révèle le nom de l'employeur, c'est déjà sur sa porte de bureau
+      et sur LinkedIn.
+  - id: chair
+    label: "Chaise vide (suggère Karim absent)"
+    penalty: 3
+    explanation: |
+      Faux positif : la chaise vide n'est pas un signal, c'est juste
+      un fait (Karim est en pause). Le VRAI signal est ce que Karim
+      a laissé derrière lui (laptop unlocked, etc.), pas le fait
+      qu'il soit parti.
+  - id: lamp
+    label: "Lampe LED allumée"
+    penalty: 3
+    explanation: |
+      Faux positif : oui Karim laisse une lampe allumée, c'est pas
+      bien pour la planète, mais c'est pas un risque cyber.
+debrief: |
+  **Tu viens de faire un audit clean desk sans le savoir.**
+
+  Sur le terrain, les RSSI passent dans les open-spaces une fois par
+  trimestre pour faire exactement cet exercice. Ils notent ce qu'ils
+  voient, prennent des photos (avec autorisation), et présentent au
+  CODIR en mode « voici notre surface d'attaque physique ».
+
+  ## Les 7 signaux de la scène
+
+  1. **Laptop déverrouillé** — Win+L systématique
+  2. **Post-it mot de passe** — gestionnaire de mots de passe à la place
+  3. **Document confidentiel exposé** — clean desk policy
+  4. **Téléphone déverrouillé** — désactiver notifs détaillées
+  5. **Tiroir ouvert avec badge** — fermer en quittant
+  6. **Fenêtre rue** — filtre de confidentialité
+  7. **Poubelle non sécurisée** — broyeur pour les sensibles
+
+  ## La règle « 3 secondes »
+
+  Avant de te lever, prends 3 secondes pour scanner :
+  - Mon laptop est-il verrouillé ? (Win+L)
+  - Ai-je un document sensible visible ? (ranger ou retourner)
+  - Mon téléphone est-il verrouillé ? (bouton off)
+
+  3 secondes × 5 fois par jour × 220 jours par an = 55 minutes
+  de protection. Probablement le meilleur ratio temps/risque que
+  tu pourras jamais atteindre.
+
+  ## Le piège pédagogique
+
+  La sécurité physique est **invisible quand elle marche, évidente
+  quand elle plante**. Tu peux passer 10 ans dans un bureau sans
+  jamais voir d'attaque. Et puis un jour, quelqu'un photographie ton
+  écran avec ton mot de passe dessus, et c'est trop tard.
+
+  ## Bravo détective !
+
+  Tu as terminé les 3 enquêtes gratuites. Les enquêtes premium
+  (smishing, fraude au président, piggybacking, profils X publics)
+  débloquent des cas réels plus subtils.
+---
+
+# Le bureau de Karim, retour de pause café
+
+Ce contenu est rendu par le composant InvestigationPlayer.
