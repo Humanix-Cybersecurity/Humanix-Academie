@@ -934,17 +934,21 @@ export class CisoAssistantClient {
   // =========================================================================
 
   /**
-   * Resout l'id d'une unite Terminology (METRIC_UNIT) par un alias court.
+   * Resout l'id d'une unite Terminology (field_path=metric_definition.unit)
+   * par un alias court.
+   *
+   * BUG hist. corrige v2.2 : on filtrait sur `field_path=METRIC_UNIT`
+   * (le nom Python de la constante TextChoices), mais Django expose la
+   * valeur reelle `metric_definition.unit` (dot-notation lowercase).
+   * Cf. FieldPathEnum dans openapi.json. Resultat avant correctif : 0
+   * Terminology retournee -> unit jamais peuplee sur les MetricDefinition.
    *
    * Le `name` stocke cote Django n'est pas normalise : on a "Count",
-   * "Score", "bytes", "Percentage (%)", "events per second", etc.
-   * Filtrer par ?name=X ne marche pas (besoin de match exact, et la
-   * casse + les "(%)" cassent). On fetch donc TOUS les Terminology
-   * METRIC_UNIT (~8 entrees) une fois, puis on match cote JS sur des
-   * heuristiques tolerantes (startsWith case-insensitive sur le name).
+   * "Score", "bytes", "Percentage (%)", "events per second", etc. On
+   * fetch TOUS les Terminology metric_definition.unit (~8 entrees) une
+   * fois et on match cote JS via startsWith case-insensitive.
    *
-   * Cache 1 fetch par instance client (pas par alias) -> 1 round-trip
-   * pour les 6 metriques d'une sync.
+   * Cache 1 fetch par instance client -> 1 round-trip pour les 6 metriques.
    *
    * Retourne null si la Terminology Library n'est pas chargee cote CISO
    * Assistant -> on push la MetricDefinition sans unit plutot que planter.
@@ -954,7 +958,7 @@ export class CisoAssistantClient {
     if (!this.metricUnitsCache) {
       const r = await this.request(
         "GET",
-        `/api/terminologies/?field_path=METRIC_UNIT`,
+        `/api/terminologies/?field_path=metric_definition.unit`,
       );
       if (r.status !== 200) {
         this.metricUnitsCache = []; // negative cache (instance sans Terminology)
@@ -1051,16 +1055,46 @@ export class CisoAssistantClient {
         error: `GET /api/metrology/metric-definitions/ refusé (${list.status}) : ${txt.slice(0, 120)}`,
       };
     }
+    // Resolution unit (best-effort, ignore si introuvable cote CISO).
+    // On la fait ici (avant le branch existing/new) parce qu'on en a
+    // besoin aussi pour le PATCH self-healing ci-dessous.
+    let unitId: string | null = null;
+    if (args.unitName) {
+      unitId = await this.resolveMetricUnit(args.unitName);
+    }
+
     if (list.status === 200) {
       const data = (await list.json()) as any;
       const items = data.results ?? (Array.isArray(data) ? data : []);
       const exact = items.find((d: any) => d.ref_id === args.refId);
-      if (exact) return { id: exact.id };
-    }
-    // Resolution unit (best-effort, ignore si introuvable)
-    let unitId: string | null = null;
-    if (args.unitName) {
-      unitId = await this.resolveMetricUnit(args.unitName);
+      if (exact) {
+        // Self-healing v2.2 : si la def existe deja mais que des champs
+        // qualite sont vides (unit, provider, filtering_labels), on les
+        // backfill. Evite a l'admin d'avoir a supprimer-et-recreer suite
+        // a un bug fix client comme la correction du field_path.
+        const needsUnit = unitId && !exact.unit;
+        const needsProvider =
+          !exact.provider || exact.provider !== "Humanix Académie";
+        const needsLabels =
+          args.labelIds &&
+          args.labelIds.length > 0 &&
+          (!Array.isArray(exact.filtering_labels) ||
+            exact.filtering_labels.length === 0);
+        if (needsUnit || needsProvider || needsLabels) {
+          const patch: Record<string, unknown> = {};
+          if (needsUnit) patch.unit = unitId;
+          if (needsProvider) patch.provider = "Humanix Académie";
+          if (needsLabels) patch.filtering_labels = args.labelIds;
+          await this.request(
+            "PATCH",
+            `/api/metrology/metric-definitions/${exact.id}/`,
+            patch,
+          );
+          // Best-effort : on ne fail pas si le PATCH foire. La def existe
+          // deja, c'est mieux que rien.
+        }
+        return { id: exact.id };
+      }
     }
     const r = await this.request("POST", "/api/metrology/metric-definitions/", {
       ref_id: args.refId,
@@ -1120,7 +1154,28 @@ export class CisoAssistantClient {
       const data = (await list.json()) as any;
       const items = data.results ?? (Array.isArray(data) ? data : []);
       const exact = items.find((i: any) => i.name === args.name);
-      if (exact) return { id: exact.id };
+      if (exact) {
+        // Self-healing : backfill owner / filtering_labels si vides.
+        const needsOwner =
+          this.ownerUserId &&
+          (!Array.isArray(exact.owner) || exact.owner.length === 0);
+        const needsLabels =
+          args.labelIds &&
+          args.labelIds.length > 0 &&
+          (!Array.isArray(exact.filtering_labels) ||
+            exact.filtering_labels.length === 0);
+        if (needsOwner || needsLabels) {
+          const patch: Record<string, unknown> = {};
+          if (needsOwner) patch.owner = [this.ownerUserId];
+          if (needsLabels) patch.filtering_labels = args.labelIds;
+          await this.request(
+            "PATCH",
+            `/api/metrology/metric-instances/${exact.id}/`,
+            patch,
+          );
+        }
+        return { id: exact.id };
+      }
     }
     const r = await this.request("POST", "/api/metrology/metric-instances/", {
       name: args.name,
@@ -1133,7 +1188,7 @@ export class CisoAssistantClient {
       status: "active",
       collection_frequency: "monthly",
       ...(args.targetValue !== undefined && { target_value: args.targetValue }),
-      ...(this.ownerActorId && { owner: [this.ownerActorId] }),
+      ...(this.ownerUserId && { owner: [this.ownerUserId] }),
     });
     if (![200, 201].includes(r.status)) {
       const txt = await r.text();
