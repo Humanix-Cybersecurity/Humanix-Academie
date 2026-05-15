@@ -67,6 +67,10 @@ export async function saveConnection(formData: FormData): Promise<{
   const syncGroupsAsTeams = formData.get("syncGroupsAsTeams") === "on";
   const syncCampaigns = formData.get("syncCampaigns") === "on";
   const enableLiveMode = formData.get("enableLiveMode") === "on";
+  const createWorkforceAsset =
+    formData.get("createWorkforceAsset") === "on";
+  const syncThreats = formData.get("syncThreats") === "on";
+  const createDashboard = formData.get("createDashboard") === "on";
 
   if (!baseUrl || !username) {
     throw new Error("Base URL et username obligatoires");
@@ -111,6 +115,9 @@ export async function saveConnection(formData: FormData): Promise<{
       syncGroupsAsTeams,
       syncCampaigns,
       enableLiveMode,
+      createWorkforceAsset,
+      syncThreats,
+      createDashboard,
     },
     update: {
       baseUrl,
@@ -128,6 +135,9 @@ export async function saveConnection(formData: FormData): Promise<{
       syncGroupsAsTeams,
       syncCampaigns,
       enableLiveMode,
+      createWorkforceAsset,
+      syncThreats,
+      createDashboard,
     },
   });
 
