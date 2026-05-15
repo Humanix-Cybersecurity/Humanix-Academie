@@ -1350,6 +1350,322 @@ export class CisoAssistantClient {
       error: (await r.text()).slice(0, 300),
     };
   }
+
+  // =========================================================================
+  // v2.2 - Asset Workforce. Cree/maintient un Asset primary "Personnel ·
+  // Couche humaine Humanix Académie" dans le folder. Permet au RSSI de
+  // cartographier la couche humaine comme un asset GRC explicite et de
+  // linker ses RiskScenarios/Findings/Incidents a cet asset.
+  // Type "PR" = Primary (AssetWriteTypeEnum). Idempotent par name.
+  // =========================================================================
+  async ensureWorkforceAsset(): Promise<{
+    ok: boolean;
+    id?: string;
+    action?: "POST" | "PATCH";
+    status?: number;
+    error?: string;
+  }> {
+    if (!this.folderId)
+      return { ok: false, error: "folderId manquant" };
+    const name = "Personnel · Couche humaine Humanix Académie";
+    const description =
+      "Asset primaire représentant la couche humaine du tenant : collaborateurs, " +
+      "managers, fonctions exposées au social engineering (finance, RH, IT, " +
+      "direction). Synchronisé depuis Humanix Académie comme cible pour les " +
+      "scénarios de risque humain (phishing, ingénierie sociale, fuite de " +
+      "credentials, deepfake CEO, etc.).";
+    const list = await this.request(
+      "GET",
+      `/api/assets/?folder=${encodeURIComponent(this.folderId)}`,
+    );
+    if (list.status === 404) {
+      const txt = await list.text();
+      return {
+        ok: false,
+        status: 404,
+        error: `Endpoint /api/assets/ inexistant (${txt.slice(0, 120)})`,
+      };
+    }
+    let existing: any | undefined;
+    if (list.status === 200) {
+      const data = (await list.json()) as any;
+      const items = data.results ?? (Array.isArray(data) ? data : []);
+      existing = items.find((a: any) => a.name === name);
+    }
+    if (existing) {
+      // Self-healing : backfill description + owner + labels si vides.
+      const needsLabels =
+        this.filteringLabelIds.length > 0 &&
+        (!Array.isArray(existing.filtering_labels) ||
+          existing.filtering_labels.length === 0);
+      if (needsLabels) {
+        await this.request("PATCH", `/api/assets/${existing.id}/`, {
+          filtering_labels: this.filteringLabelIds,
+        });
+      }
+      return { ok: true, action: "PATCH", id: existing.id };
+    }
+    const r = await this.request("POST", "/api/assets/", {
+      name,
+      description,
+      folder: this.folderId,
+      type: "PR", // AssetWriteTypeEnum: 'PR' (Primary) | 'SP' (Supporting)
+      ref_id: "humanix.workforce",
+      is_business_function: true,
+      ...(this.ownerUserId && { owner: [this.ownerUserId] }),
+      ...(this.filteringLabelIds.length > 0 && {
+        filtering_labels: this.filteringLabelIds,
+      }),
+    });
+    if (![200, 201].includes(r.status)) {
+      const txt = await r.text();
+      return {
+        ok: false,
+        status: r.status,
+        error: `POST /api/assets/ HTTP ${r.status} : ${txt.slice(0, 200)}`,
+      };
+    }
+    const created = (await r.json()) as { id: string };
+    return { ok: true, action: "POST", id: created.id };
+  }
+
+  // =========================================================================
+  // v2.2 - Threats catalog. Push 15 menaces humaines Humanix dans le folder
+  // (cf. humanix-human-threats-catalog-v1.yaml). Idempotent par ref_id.
+  // Le RSSI peut ensuite linker ces threats dans ses RiskScenarios via le
+  // champ M2M `threats: [...]` deja support cote OpenAPI.
+  // =========================================================================
+  async upsertThreat(args: {
+    refId: string; // ex: "humanix.spear-phishing-finance"
+    name: string;
+    description: string;
+  }): Promise<{
+    ok: boolean;
+    id?: string;
+    action?: "POST" | "PATCH";
+    status?: number;
+    error?: string;
+  }> {
+    if (!this.folderId)
+      return { ok: false, error: "folderId manquant" };
+    const list = await this.request(
+      "GET",
+      `/api/threats/?folder=${encodeURIComponent(this.folderId)}&ref_id=${encodeURIComponent(args.refId)}`,
+    );
+    if (list.status === 404) {
+      const txt = await list.text();
+      return {
+        ok: false,
+        status: 404,
+        error: `Endpoint /api/threats/ inexistant (${txt.slice(0, 120)})`,
+      };
+    }
+    let existing: any | undefined;
+    if (list.status === 200) {
+      const data = (await list.json()) as any;
+      const items = data.results ?? (Array.isArray(data) ? data : []);
+      existing = items.find((t: any) => t.ref_id === args.refId);
+    }
+    const payload: Record<string, unknown> = {
+      ref_id: args.refId,
+      name: args.name,
+      description: args.description,
+      folder: this.folderId,
+      provider: "Humanix Académie",
+      is_published: true,
+      ...(this.filteringLabelIds.length > 0 && {
+        filtering_labels: this.filteringLabelIds,
+      }),
+    };
+    if (existing) {
+      const r = await this.request(
+        "PATCH",
+        `/api/threats/${existing.id}/`,
+        payload,
+      );
+      if ([200, 201].includes(r.status))
+        return { ok: true, action: "PATCH", id: existing.id };
+      const txt = await r.text();
+      return {
+        ok: false,
+        status: r.status,
+        error: `PATCH /api/threats/ HTTP ${r.status} : ${txt.slice(0, 200)}`,
+      };
+    }
+    const r = await this.request("POST", "/api/threats/", payload);
+    if ([200, 201].includes(r.status)) {
+      const created = (await r.json()) as { id: string };
+      return { ok: true, action: "POST", id: created.id };
+    }
+    const txt = await r.text();
+    return {
+      ok: false,
+      status: r.status,
+      error: `POST /api/threats/ HTTP ${r.status} : ${txt.slice(0, 200)}`,
+    };
+  }
+
+  // =========================================================================
+  // v2.2 - Dashboard pre-cuisine. Cree un Dashboard "Cockpit Humanix
+  // Académie" + 6 widgets pointant sur nos MetricInstances. Le RSSI ouvre
+  // CISO Assistant et voit deja une vue agregee de la maturite cyber
+  // humaine. Effet "wow" en demo.
+  // =========================================================================
+  async ensureDashboard(name: string): Promise<{
+    ok: boolean;
+    id?: string;
+    action?: "POST" | "PATCH";
+    status?: number;
+    error?: string;
+  }> {
+    if (!this.folderId)
+      return { ok: false, error: "folderId manquant" };
+    const list = await this.request(
+      "GET",
+      `/api/metrology/dashboards/?folder=${encodeURIComponent(this.folderId)}`,
+    );
+    if (list.status === 404) {
+      const txt = await list.text();
+      return {
+        ok: false,
+        status: 404,
+        error: `Endpoint /api/metrology/dashboards/ inexistant (${txt.slice(0, 120)})`,
+      };
+    }
+    let existing: any | undefined;
+    if (list.status === 200) {
+      const data = (await list.json()) as any;
+      const items = data.results ?? (Array.isArray(data) ? data : []);
+      existing = items.find((d: any) => d.name === name);
+    }
+    if (existing) return { ok: true, action: "PATCH", id: existing.id };
+    const r = await this.request("POST", "/api/metrology/dashboards/", {
+      name,
+      description:
+        "Vue agrégée de la maturité cyber humaine du tenant — alimentée " +
+        "automatiquement par les MetricInstances Humanix à chaque sync. " +
+        "Score, complétion sensibilisation, taux signalement phishing, " +
+        "comptage des contrôles par statut de conformité.",
+      folder: this.folderId,
+      is_published: true,
+      ...(this.filteringLabelIds.length > 0 && {
+        filtering_labels: this.filteringLabelIds,
+      }),
+    });
+    if (![200, 201].includes(r.status)) {
+      const txt = await r.text();
+      return {
+        ok: false,
+        status: r.status,
+        error: `POST /api/metrology/dashboards/ HTTP ${r.status} : ${txt.slice(0, 200)}`,
+      };
+    }
+    const created = (await r.json()) as { id: string };
+    return { ok: true, action: "POST", id: created.id };
+  }
+
+  /**
+   * Ajoute un widget a un dashboard, idempotent par (dashboard, title).
+   * chartType : kpi_card | donut | pie | bar | line | area | gauge |
+   * sparkline | table | text (ChartTypeEnum).
+   */
+  async ensureDashboardWidget(args: {
+    dashboardId: string;
+    title: string;
+    chartType:
+      | "kpi_card"
+      | "donut"
+      | "pie"
+      | "bar"
+      | "line"
+      | "area"
+      | "gauge"
+      | "sparkline"
+      | "table"
+      | "text";
+    metricInstanceId?: string;
+    timeRange?:
+      | "last_hour"
+      | "last_24_hours"
+      | "last_7_days"
+      | "last_30_days"
+      | "last_90_days"
+      | "last_year"
+      | "all_time";
+    aggregation?: "none" | "avg" | "sum" | "min" | "max" | "count" | "last";
+    positionX?: number;
+    positionY?: number;
+    width?: number;
+    height?: number;
+    showTarget?: boolean;
+    showLegend?: boolean;
+  }): Promise<{
+    ok: boolean;
+    id?: string;
+    action?: "POST" | "PATCH";
+    status?: number;
+    error?: string;
+  }> {
+    if (!this.folderId) return { ok: false, error: "folderId manquant" };
+    const list = await this.request(
+      "GET",
+      `/api/metrology/dashboard-widgets/?dashboard=${encodeURIComponent(args.dashboardId)}`,
+    );
+    let existing: any | undefined;
+    if (list.status === 200) {
+      const data = (await list.json()) as any;
+      const items = data.results ?? (Array.isArray(data) ? data : []);
+      existing = items.find((w: any) => w.title === args.title);
+    }
+    const payload: Record<string, unknown> = {
+      dashboard: args.dashboardId,
+      folder: this.folderId,
+      title: args.title,
+      chart_type: args.chartType,
+      position_x: args.positionX ?? 0,
+      position_y: args.positionY ?? 0,
+      width: args.width ?? 4,
+      height: args.height ?? 3,
+      show_target: args.showTarget ?? true,
+      show_legend: args.showLegend ?? false,
+      time_range: args.timeRange ?? "last_90_days",
+      aggregation: args.aggregation ?? "last",
+      is_published: true,
+      ...(args.metricInstanceId && {
+        metric_instance: args.metricInstanceId,
+      }),
+    };
+    if (existing) {
+      const r = await this.request(
+        "PATCH",
+        `/api/metrology/dashboard-widgets/${existing.id}/`,
+        payload,
+      );
+      if ([200, 201].includes(r.status))
+        return { ok: true, action: "PATCH", id: existing.id };
+      const txt = await r.text();
+      return {
+        ok: false,
+        status: r.status,
+        error: `PATCH /api/metrology/dashboard-widgets/ HTTP ${r.status} : ${txt.slice(0, 200)}`,
+      };
+    }
+    const r = await this.request(
+      "POST",
+      "/api/metrology/dashboard-widgets/",
+      payload,
+    );
+    if ([200, 201].includes(r.status)) {
+      const created = (await r.json()) as { id: string };
+      return { ok: true, action: "POST", id: created.id };
+    }
+    const txt = await r.text();
+    return {
+      ok: false,
+      status: r.status,
+      error: `POST /api/metrology/dashboard-widgets/ HTTP ${r.status} : ${txt.slice(0, 200)}`,
+    };
+  }
 }
 
 export class CisoError extends Error {
