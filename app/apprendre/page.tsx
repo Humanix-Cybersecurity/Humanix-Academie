@@ -381,6 +381,40 @@ export default async function ApprendrePage() {
           </section>
         )}
 
+        {/* Mode Enqueteur — invitation a la decouverte guidee.
+            On le pose juste avant les acquis pour qu'il complète le
+            parcours classique : "tu as fait X modules, maintenant
+            joue à les reperer dans la vraie vie". */}
+        <section className="max-w-5xl mx-auto px-4 mt-8">
+          <a
+            href="/apprendre/enquetes"
+            className="block rounded-3xl border-2 border-accent-300 dark:border-accent-900/50 bg-gradient-to-br from-accent-50 via-white to-blue-50 dark:from-accent-950/30 dark:via-slate-900 dark:to-blue-950/30 p-6 sm:p-8 hover:shadow-xl hover:border-accent-500 transition-all group"
+          >
+            <div className="flex items-start gap-4 flex-wrap">
+              <span className="text-5xl shrink-0" aria-hidden="true">
+                🔍
+              </span>
+              <div className="flex-1 min-w-[200px]">
+                <p className="text-xs uppercase tracking-widest font-bold text-accent-600 dark:text-accent-300 mb-1">
+                  Nouveau · Mode Enquêteur
+                </p>
+                <h2 className="font-display text-2xl font-extrabold text-primary-500 dark:text-accent-300 mb-2 group-hover:text-accent-500 transition-colors">
+                  Joue à repérer les pièges plutôt qu'à les apprendre.
+                </h2>
+                <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
+                  On te montre un mail, un post LinkedIn ou une scène
+                  de bureau — tu coches ce qui te paraît louche. Le
+                  signal qu'on repère soi-même, on ne le retient pas
+                  par cœur : on le voit venir.
+                </p>
+              </div>
+              <span className="ml-auto text-2xl text-accent-500 group-hover:translate-x-1 transition-transform">
+                →
+              </span>
+            </div>
+          </a>
+        </section>
+
         {/* Tes acquis - badges + phrase chaleureuse */}
         <AcquisSection
           completedCount={completedCount}

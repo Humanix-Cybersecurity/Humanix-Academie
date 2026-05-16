@@ -48,13 +48,16 @@ export default function MarkdownView({
             );
           case "p":
             return (
-              <p key={i} className="text-gray-800">
+              <p key={i} className="text-gray-800 dark:text-gray-100">
                 {Inline(b.text)}
               </p>
             );
           case "ul":
             return (
-              <ul key={i} className="list-disc pl-6 space-y-1 text-gray-800">
+              <ul
+                key={i}
+                className="list-disc pl-6 space-y-1 text-gray-800 dark:text-gray-100"
+              >
                 {b.items.map((it, j) => (
                   <li key={j}>{Inline(it)}</li>
                 ))}
@@ -62,7 +65,10 @@ export default function MarkdownView({
             );
           case "ol":
             return (
-              <ol key={i} className="list-decimal pl-6 space-y-1 text-gray-800">
+              <ol
+                key={i}
+                className="list-decimal pl-6 space-y-1 text-gray-800 dark:text-gray-100"
+              >
                 {b.items.map((it, j) => (
                   <li key={j}>{Inline(it)}</li>
                 ))}
@@ -72,7 +78,7 @@ export default function MarkdownView({
             return (
               <blockquote
                 key={i}
-                className="border-l-4 border-accent-500 pl-4 italic text-gray-600 bg-primary-50 py-2 rounded-r-xl"
+                className="border-l-4 border-accent-500 pl-4 italic text-gray-600 dark:text-gray-300 bg-primary-50 dark:bg-primary-950/30 py-2 rounded-r-xl"
               >
                 {Inline(b.text)}
               </blockquote>
