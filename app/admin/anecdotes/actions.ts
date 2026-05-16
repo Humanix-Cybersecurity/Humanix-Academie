@@ -115,6 +115,14 @@ export async function dispatchNow(anecdoteId?: string) {
 
 export async function seedAnecdotesIfEmpty() {
   await requireSuperAdmin();
+  // En mode DEMO, on refuse de seed du contenu premium : l'instance
+  // doit refleter l'experience OSS pure.
+  if (process.env.DEMO_MODE === "true") {
+    return {
+      ok: false,
+      reason: "Indisponible en mode démo (contenu premium désactivé).",
+    };
+  }
   const count = await db.weeklyAnecdote.count();
   if (count > 0) return { ok: false, reason: "Des anecdotes existent déjà." };
   const { ANECDOTES_SEED } = await import("@/lib/anecdotes/seed-data");
