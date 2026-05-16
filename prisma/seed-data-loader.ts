@@ -17,10 +17,23 @@
 //   - LIBRARY, MARKETPLACE, ANECDOTES : tableau vide. L'app marche, ces
 //     surfaces sont juste vides.
 //
+// Mode DEMO (DEMO_MODE=true) : on force le fallback OSS meme si
+// content-pro/ est present. Une instance de demo doit se comporter comme
+// un fork AGPLv3 pur — aucun contenu premium visible, pour ne pas
+// induire un visiteur en erreur ("c'est ce que j'aurai en m'abonnant")
+// et pour proteger la propriete intellectuelle du contenu commercial.
+//
 // Cf. docs/OPEN_CORE.md pour le rationale + workflow operateur.
 
 import type { CatalogSaison } from "./catalog-saisons-shared";
 import { CATALOG_SAISONS_DEMO } from "./catalog-saisons-demo";
+
+/**
+ * En mode DEMO, on bypass systematiquement content-pro pour offrir
+ * une experience OSS pure aux visiteurs de la demo publique.
+ * Cf. en-tete de fichier pour le rationale.
+ */
+const IS_DEMO_MODE = process.env.DEMO_MODE === "true";
 
 /**
  * Tente d'importer dynamiquement un module. Retourne `null` si absent.
@@ -53,6 +66,9 @@ export function loadCatalogSaisons(): {
   saisons: CatalogSaison[];
   source: "commercial" | "demo";
 } {
+  if (IS_DEMO_MODE) {
+    return { saisons: CATALOG_SAISONS_DEMO, source: "demo" };
+  }
   const pro = tryRequire("./catalog-saisons");
   if (pro && Array.isArray(pro.CATALOG_SAISONS) && pro.CATALOG_SAISONS.length) {
     return { saisons: pro.CATALOG_SAISONS, source: "commercial" };
@@ -66,6 +82,7 @@ export function loadCatalogSaisons(): {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function loadLibraryArticles(): any[] {
+  if (IS_DEMO_MODE) return [];
   const pro = tryRequire("../lib/library-seed");
   if (pro && Array.isArray(pro.LIBRARY_ARTICLES)) return pro.LIBRARY_ARTICLES;
   return [];
@@ -77,6 +94,7 @@ export function loadLibraryArticles(): any[] {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function loadMarketplaceModules(): any[] {
+  if (IS_DEMO_MODE) return [];
   const pro = tryRequire("../lib/marketplace-seed");
   if (pro && Array.isArray(pro.MARKETPLACE_MODULES))
     return pro.MARKETPLACE_MODULES;
@@ -89,6 +107,7 @@ export function loadMarketplaceModules(): any[] {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function loadAnecdoteSeeds(): any[] {
+  if (IS_DEMO_MODE) return [];
   const pro = tryRequire("../lib/anecdotes/seed-data");
   if (pro && Array.isArray(pro.ANECDOTES_SEED)) return pro.ANECDOTES_SEED;
   // Tolere d'anciens noms d'export pour compat fork

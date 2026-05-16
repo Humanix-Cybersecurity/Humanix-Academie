@@ -51,19 +51,33 @@ export type EpisodeContent = {
 // moins une saison, on l'utilise. Sinon, on bascule sur content/saisons-demo/.
 // Aucune variable d'env requise — auto-detection par presence de contenu.
 //
+// Mode DEMO (DEMO_MODE=true) : on force content/saisons-demo/ meme si le
+// catalog commercial est present sur le disque (symlink content-pro/).
+// La demo publique doit refleter l'experience OSS pure et ne PAS exposer
+// le contenu premium en MDX brut via l'URL /apprendre/<saison>/<episode>.
+//
 // Cf. docs/OPEN_CORE.md pour l'architecture detaillee.
 // =============================================================================
 const CONTENT_ROOT_PRO = path.join(process.cwd(), "content", "saisons");
 const CONTENT_ROOT_DEMO = path.join(process.cwd(), "content", "saisons-demo");
+const IS_DEMO_MODE = process.env.DEMO_MODE === "true";
 
 /**
  * Resout le repertoire racine du contenu MDX. Privilegie le catalogue
  * commercial si present, sinon retombe sur les saisons demo OSS.
  *
+ * En mode DEMO, on force le fallback sur saisons-demo meme si le
+ * catalog commercial est present (cf. en-tete de fichier).
+ *
  * @returns le path absolu du dossier de contenu actif, ou null si aucun
  *   contenu n'est disponible (cas erreur d'installation).
  */
 function resolveContentRoot(): string | null {
+  // En mode DEMO, on saute directement au fallback OSS.
+  if (IS_DEMO_MODE) {
+    if (fs.existsSync(CONTENT_ROOT_DEMO)) return CONTENT_ROOT_DEMO;
+    return null;
+  }
   // 1. Catalogue commercial complet : on verifie qu'il existe ET contient
   //    au moins une saison (sous-dossier). Un dossier vide = on bascule
   //    sur la demo (cas d'un submodule pas encore initialise).
