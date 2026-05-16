@@ -22,6 +22,21 @@
 //  - Adaptive Security (US, $136M leves) ajoutee comme disrupteur AI-native
 //  - Lignes vishing (deepfake +442 % H2 2024), MCP server, agents IA
 //    orchestrateurs, HRM Maturity Model, contenu pedagogique reel.
+//
+// Refresh 16 mai 2026 — ajout des chantiers livres sprint 12-15 :
+//  - CISO Assistant connector v2.2 (17 surfaces : Evidence + PDF Ed25519,
+//    Findings, RiskScenarios, Incidents, Métrologie, Dashboard pré-cuisiné,
+//    Asset Workforce, Threats catalog, Teams, Campaigns, Live Mode, etc.)
+//  - Mode Enquêteur (catégorie complète) : 27 enquêtes interactives avec
+//    mockups visuels (email, SMS, LinkedIn, Facebook, photo bureau,
+//    piggyback, hotspot Wi-Fi), red flags + faux positifs, débrief IA Hex
+//  - Onboarding & RGPD utilisateurs (catégorie complète) :
+//      * /rejoindre — aiguillage 6 profils
+//      * /signup?plan=starter — self-service 5 sièges gratuits
+//      * Rattachement RGPD-safe cross-tenant (anti-énumération)
+//      * Mode « Voir en tant que » read-only avec consentement explicite
+//  - Catalogue mis à jour : 33 saisons / 186 modules / 27 enquêtes / 30
+//    articles librairie. Gratuit OSS : 3 saisons + 3 enquêtes + 30 articles.
 
 import { Fragment } from "react";
 import Link from "next/link";
@@ -31,7 +46,7 @@ import { BreadcrumbJsonLd } from "@/lib/seo/jsonld";
 
 const META_TITLE = "Comparatif honnête - HumaniX vs concurrents | Humanix Académie";
 const META_DESCRIPTION =
-  "Comparatif honnête entre Humanix Académie et les principales plateformes de sensibilisation cyber 2026 (KnowBe4, Hoxhunt, Phished, Cyber Guru, Adaptive Security). On vous dit où nous sommes meilleurs, équivalents et ce qu'on apprend d'eux.";
+  "Comparatif honnête entre Humanix Académie et les principales plateformes de sensibilisation cyber 2026 (KnowBe4, Hoxhunt, Phished, Cyber Guru, Adaptive Security). 9 catégories, 60+ critères : tarification, catalogue (186 modules + 27 enquêtes interactives), simulation phishing, conformité, pilotage dirigeant, HRM 2026, intégrations (CISO Assistant 17 surfaces), onboarding RGPD, écosystème.";
 
 export const metadata = {
   title: META_TITLE,
@@ -124,12 +139,24 @@ const ROWS: Row[] = [
   {
     category: "Catalogue & contenu",
     feature: "Nombre de modules disponibles (catalogue)",
-    humanix: eq("180 modules (25 saisons + marketplace)"),
+    humanix: eq(
+      "186 modules (33 saisons) + 27 enquêtes interactives + 30 articles librairie",
+    ),
     knowbe4: win("1 000+ modules"),
     cyberGuru: eq("300+ modules"),
     hoxhunt: eq("~100 modules"),
     phished: win("500+ modules"),
     adaptiveSecurity: eq("Modules génératifs IA à la demande"),
+  },
+  {
+    category: "Catalogue & contenu",
+    feature: "Catalogue gratuit (OSS, CC BY-SA 4.0)",
+    humanix: win("3 saisons + 3 enquêtes + 30 articles, sans inscription pro"),
+    knowbe4: loss("Non (essai 30 j, puis payant)"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
   },
   {
     category: "Catalogue & contenu",
@@ -423,9 +450,23 @@ const ROWS: Row[] = [
   },
   {
     category: "Intégrations",
-    feature: "Connecteur GRC natif (CISO Assistant)",
-    humanix: win("Oui - endpoint /api/v1/evidence-export + connecteur Python"),
+    feature: "Connecteur GRC natif (CISO Assistant) — 17 surfaces v2.2",
+    humanix: win(
+      "Oui — Evidences + PDF Ed25519, Findings, RiskScenarios, Incidents, Métrologie, Dashboard, Asset Workforce, Threats catalog, Teams, Campaigns, Live Mode temps réel. 24 endpoints OpenAPI alignés.",
+    ),
     knowbe4: loss("Non"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
+  },
+  {
+    category: "Intégrations",
+    feature: "Sync GRC temps réel (event-driven)",
+    humanix: win(
+      "Oui — Live Mode debouncé 5 s sur episode.completed, phishing.reported, phishing.user_clicked",
+    ),
+    knowbe4: loss("Non (export batch ponctuel)"),
     cyberGuru: loss("Non"),
     hoxhunt: loss("Non"),
     phished: loss("Non"),
@@ -555,6 +596,114 @@ const ROWS: Row[] = [
     phished: eq("Series A"),
     adaptiveSecurity: win("$136M (a16z, OpenAI, Bain, NVIDIA)"),
   },
+
+  // -----------------------------------------------------------------------
+  // CATEGORIE : MODE ENQUETEUR (formats interactifs au-dela du e-learning)
+  // -----------------------------------------------------------------------
+  {
+    category: "Mode Enquêteur (formats interactifs)",
+    feature: "Enquêtes ludiques à signaux (red flags + faux positifs)",
+    humanix: win(
+      "27 enquêtes (3 gratuites + 24 premium) — email, SMS, LinkedIn, Facebook, photo bureau, piggyback parking, hotspot Wi-Fi",
+    ),
+    knowbe4: loss("Non (modules linéaires)"),
+    cyberGuru: loss("Non"),
+    hoxhunt: eq("Phishing adaptatif mais pas d'enquête narrative"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
+  },
+  {
+    category: "Mode Enquêteur (formats interactifs)",
+    feature: "Mockups visuels haute-fidélité (Outlook, SMS, LinkedIn, FB)",
+    humanix: win("Oui — 7 types de média rendus en composants React natifs"),
+    knowbe4: eq("Capture d'écran statique"),
+    cyberGuru: loss("Non"),
+    hoxhunt: eq("Email rendu réel via plugin Outlook"),
+    phished: eq("Email rendu réel"),
+    adaptiveSecurity: loss("Non"),
+  },
+  {
+    category: "Mode Enquêteur (formats interactifs)",
+    feature: "Débrief IA personnalisé post-quiz (Hex)",
+    humanix: win("Oui — synthèse adaptée au persona, sourcée Mistral souverain"),
+    knowbe4: loss("Non"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: eq("IA générative générique"),
+  },
+  {
+    category: "Mode Enquêteur (formats interactifs)",
+    feature: "Leaderboard d'équipe et badges gamification",
+    humanix: win("Oui — XP, coins, niveaux, achievements, leaderboard"),
+    knowbe4: eq("Optimisation engagement via SmartReward"),
+    cyberGuru: win("Oui (gamification poussée)"),
+    hoxhunt: win("Oui (référence du marché sur engagement)"),
+    phished: eq("Oui"),
+    adaptiveSecurity: loss("Non documenté"),
+  },
+
+  // -----------------------------------------------------------------------
+  // CATEGORIE : ONBOARDING & RGPD UTILISATEURS
+  // -----------------------------------------------------------------------
+  {
+    category: "Onboarding & RGPD utilisateurs",
+    feature: "Page d'aiguillage 6 profils (curieux, RSSI, Pro, Enterprise, etc.)",
+    humanix: win("Oui — /rejoindre + FAQ cas particuliers"),
+    knowbe4: loss("Non (formulaire commercial unique)"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
+  },
+  {
+    category: "Onboarding & RGPD utilisateurs",
+    feature: "Self-service tenant gratuit (5 sièges, sans CB)",
+    humanix: win(
+      "Oui — /signup?plan=starter, création tenant ADMIN en 2 min, anti-abus (honeypot, rate-limit, kill switch)",
+    ),
+    knowbe4: loss("Non (commercial obligatoire)"),
+    cyberGuru: loss("Non (commercial)"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
+  },
+  {
+    category: "Onboarding & RGPD utilisateurs",
+    feature: "Rattachement RGPD-safe d'un compte existant (cross-tenant)",
+    humanix: win(
+      "Oui — mail de demande de rattachement, consentement explicite double-clic, audit complet. Aucune fuite d'existence (anti-énumération)",
+    ),
+    knowbe4: loss("Non"),
+    cyberGuru: loss("Non"),
+    hoxhunt: loss("Non"),
+    phished: loss("Non"),
+    adaptiveSecurity: loss("Non"),
+  },
+  {
+    category: "Onboarding & RGPD utilisateurs",
+    feature: "Mode « Voir en tant que » read-only (debug support, consentement)",
+    humanix: win(
+      "Oui — admin demande l'accès par mail, user accepte (double-clic anti-prefetch), session ACTIVE 15min..24h, lecture seule, bandeau visible, révocation à tout moment",
+    ),
+    knowbe4: eq("Impersonation full sans consentement utilisateur"),
+    cyberGuru: eq("Impersonation full sans consentement"),
+    hoxhunt: eq("Impersonation full"),
+    phished: eq("Impersonation full"),
+    adaptiveSecurity: loss("Non documenté"),
+  },
+  {
+    category: "Onboarding & RGPD utilisateurs",
+    feature: "Audit log complet (toute action sensible tracée)",
+    humanix: win(
+      "Oui — 50+ AuditActions (login, invitation, transfert, voir, sync GRC, etc.) consultables sur /admin/audit",
+    ),
+    knowbe4: win("Oui (Enterprise tier)"),
+    cyberGuru: eq("Oui (partiel)"),
+    hoxhunt: win("Oui"),
+    phished: eq("Oui"),
+    adaptiveSecurity: eq("Oui"),
+  },
 ];
 
 const COMPETITORS: Array<{ key: keyof Omit<Row, "category" | "feature" | "humanix">; name: string; site: string }> = [
@@ -673,6 +822,30 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
       badge:
         "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-200",
       accent: "text-emerald-700 dark:text-emerald-300",
+    },
+  },
+  "Mode Enquêteur (formats interactifs)": {
+    emoji: "🔍",
+    intro:
+      "Le e-learning linéaire ne suffit plus. On a inventé le Mode Enquêteur : un mockup réel (mail Outlook, post LinkedIn, photo de bureau), une mission de 60 à 90 secondes, des signaux à cocher, des faux positifs à éviter. Le débrief IA est sourcé sur le persona du joueur, par Mistral souverain.",
+    palette: {
+      bg: "from-rose-50 via-white to-pink-50 dark:from-slate-900 dark:via-slate-900 dark:to-rose-950/40",
+      ring: "border-rose-200 dark:border-rose-900/40",
+      badge:
+        "bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-200",
+      accent: "text-rose-700 dark:text-rose-300",
+    },
+  },
+  "Onboarding & RGPD utilisateurs": {
+    emoji: "🛂",
+    intro:
+      "L'onboarding et les frontières entre comptes sont l'angle mort de la concurrence. On a posé trois flux RGPD-safe : aiguillage 6 profils, rattachement consenti d'un compte existant entre tenants, mode « voir en tant que » en lecture seule pour le support. Tout avec consentement explicite, audit complet et anti-énumération.",
+    palette: {
+      bg: "from-indigo-50 via-white to-purple-50 dark:from-slate-900 dark:via-slate-900 dark:to-indigo-950/40",
+      ring: "border-indigo-200 dark:border-indigo-900/40",
+      badge:
+        "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-200",
+      accent: "text-indigo-700 dark:text-indigo-300",
     },
   },
 };
