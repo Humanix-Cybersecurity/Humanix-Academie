@@ -10,6 +10,8 @@ import LinkedInMockup from "./LinkedInMockup";
 import PhotoOfficeMockup from "./PhotoOfficeMockup";
 import SmsMockup from "./SmsMockup";
 import FacebookMockup from "./FacebookMockup";
+import XProfileMockup from "./XProfileMockup";
+import InstagramProfileMockup from "./InstagramProfileMockup";
 import type { Media } from "@/lib/investigations/types";
 
 type Props = { media: Media };
@@ -26,5 +28,9 @@ export default function MediaMockup({ media }: Props) {
       return <SmsMockup media={media} />;
     case "facebook-mockup":
       return <FacebookMockup media={media} />;
+    case "x-profile-mockup":
+      return <XProfileMockup media={media} />;
+    case "instagram-profile-mockup":
+      return <InstagramProfileMockup media={media} />;
   }
 }
