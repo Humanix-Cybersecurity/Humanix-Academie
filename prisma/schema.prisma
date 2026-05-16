@@ -102,27 +102,28 @@ model Tenant {
   parent   Tenant?  @relation("TenantHierarchy", fields: [parentTenantId], references: [id], onDelete: SetNull)
   children Tenant[] @relation("TenantHierarchy")
 
-  users                User[]
-  saisons              Saison[]                  @relation("TenantSaisons")
-  progress             Progress[]
-  events               Event[]
-  saisonConfigs        TenantSaisonConfig[]
-  smtpConfig           TenantSmtpConfig?
-  challenges           TeamChallenge[]
-  apiKeys              ApiKey[]
-  phishingCampaigns    PhishingCampaign[]
-  notificationLogs     NotificationLog[]
-  marketplaceInstalls  MarketplaceInstallation[]
-  webhooks             TenantWebhook[]
-  familyInvites        FamilyInvite[]
-  transferRequests     TenantTransferRequest[]   @relation("TransferRequestTenant")
-  incidents            IncidentResponse[]
-  riskScoreSnapshots   RiskScoreSnapshot[]
-  cyberEventInstances  CyberEventInstance[]
-  samlConfig           TenantSamlConfig?
-  cisoConnection       CisoAssistantConnection?
-  cisoSyncRuns         CisoAssistantSyncRun[]
-  investigationResults InvestigationResult[]
+  users                 User[]
+  saisons               Saison[]                  @relation("TenantSaisons")
+  progress              Progress[]
+  events                Event[]
+  saisonConfigs         TenantSaisonConfig[]
+  smtpConfig            TenantSmtpConfig?
+  challenges            TeamChallenge[]
+  apiKeys               ApiKey[]
+  phishingCampaigns     PhishingCampaign[]
+  notificationLogs      NotificationLog[]
+  marketplaceInstalls   MarketplaceInstallation[]
+  webhooks              TenantWebhook[]
+  familyInvites         FamilyInvite[]
+  transferRequests      TenantTransferRequest[]   @relation("TransferRequestTenant")
+  impersonationSessions ImpersonationSession[]    @relation("ImpersonationAdminTenant")
+  incidents             IncidentResponse[]
+  riskScoreSnapshots    RiskScoreSnapshot[]
+  cyberEventInstances   CyberEventInstance[]
+  samlConfig            TenantSamlConfig?
+  cisoConnection        CisoAssistantConnection?
+  cisoSyncRuns          CisoAssistantSyncRun[]
+  investigationResults  InvestigationResult[]
 
   @@index([parentTenantId])
 }
@@ -343,6 +344,8 @@ model User {
   reviewedModules        MarketplaceModule[]     @relation("ReviewedModules")
   familyInvitesIssued    FamilyInvite[]          @relation("FamilyInviteSponsor")
   transferRequestsIssued TenantTransferRequest[] @relation("TransferRequestRequester")
+  impersonationsAsAdmin  ImpersonationSession[]  @relation("ImpersonationAdmin")
+  impersonationsAsTarget ImpersonationSession[]  @relation("ImpersonationTarget")
   expertProfile          ExpertProfile?
   passwordResets         PasswordResetToken[]
   groups                 UserGroup[]
@@ -1421,6 +1424,88 @@ enum TransferRequestStatus {
 }
 
 // =====================================================
+// IMPERSONATION SESSION - Mode « Voir en tant que » RGPD-safe
+// =====================================================
+//
+// Cas d'usage : un admin / RSSI doit debug le compte d'un utilisateur
+// (problemes d'affichage, progres bloque, certificat manquant, etc.).
+// Plutot que de demander a l'utilisateur de partager son ecran ou
+// que l'admin « se logue en tant que » (risque RGPD majeur), on cree
+// une session de lecture seule limitee dans le temps avec consentement
+// explicite par mail.
+//
+// Flux :
+//   1. Admin tape l'email de l'utilisateur cible + raison + duree
+//      souhaitee (15min / 1h / 24h, max 24h)
+//   2. Server cree une ImpersonationSession en status PENDING + envoie
+//      mail explicite a l'utilisateur cible
+//   3. Utilisateur clique le lien, double-clic Accepter -> session
+//      passe en ACTIVE, expiresAt = now + dureeChoisie
+//   4. Admin accede a /admin/voir/[sessionId] et voit le tableau de
+//      bord de l'utilisateur en LECTURE SEULE (progres, certificats,
+//      activite recente). Aucune action possible pour l'utilisateur.
+//   5. Bandeau persistent en haut de page : « Vous voyez le compte de X
+//      (XX min restantes) — Sortir »
+//   6. Session expire automatiquement OU admin clique « Sortir » OU
+//      utilisateur revoque depuis ses preferences
+//
+// SECURITE :
+//   - Meme tenant uniquement (sauf SUPERADMIN cross-tenant explicite)
+//   - LECTURE SEULE : pas de modification, pas d'envoi d'email,
+//     pas de completion d'episode au nom de l'utilisateur
+//   - Audit log de chaque acces, expiration, revocation
+//   - Utilisateur peut revoquer a tout moment depuis /profil/securite
+//   - Double-clic anti-prefetch pour le consentement
+//
+// =====================================================
+model ImpersonationSession {
+  id                       String                     @id @default(cuid())
+  // L'admin qui demande l'acces
+  adminUserId              String
+  adminTenantId            String
+  // L'utilisateur cible (doit consentir)
+  targetUserId             String
+  targetEmail              String
+  // Token public unique pour le lien magique du consentement
+  token                    String                     @unique
+  status                   ImpersonationSessionStatus @default(PENDING)
+  // Raison documentee par l'admin (visible par l'utilisateur)
+  reason                   String                     @db.Text
+  // Duree DEMANDEE par l'admin (en minutes, max 1440 = 24h)
+  requestedDurationMinutes Int                        @default(60)
+  // Timestamps
+  requestedAt              DateTime                   @default(now())
+  // expiresAt du LIEN de consentement (24h pour cliquer)
+  consentExpiresAt         DateTime
+  // grantedAt : quand l'utilisateur a accepte
+  grantedAt                DateTime?
+  // endsAt : quand la session ACTIVE prend fin (grantedAt + dureeChoisie)
+  endsAt                   DateTime?
+  // Quand la session a ete cloturee (manuellement ou auto)
+  endedAt                  DateTime?
+  endedReason              String? // "user_revoked" | "admin_ended" | "expired"
+
+  adminUser   User   @relation("ImpersonationAdmin", fields: [adminUserId], references: [id], onDelete: Cascade)
+  adminTenant Tenant @relation("ImpersonationAdminTenant", fields: [adminTenantId], references: [id], onDelete: Cascade)
+  targetUser  User   @relation("ImpersonationTarget", fields: [targetUserId], references: [id], onDelete: Cascade)
+
+  @@index([adminUserId])
+  @@index([targetUserId])
+  @@index([adminTenantId])
+  @@index([token])
+  @@index([status])
+}
+
+enum ImpersonationSessionStatus {
+  PENDING // En attente de consentement utilisateur
+  ACTIVE // Consenti, en cours
+  EXPIRED // Le lien de consentement a expire (jamais accepte)
+  REJECTED // Utilisateur a refuse
+  REVOKED // Utilisateur a revoque pendant la session active
+  ENDED // Session terminee normalement (admin ou timeout)
+}
+
+// =====================================================
 // EXPERT PROFILE - Bibliotheque vivante d'experts cyber francais
 // Une personne (User) peut etre auteur de modules marketplace ET avoir
 // un profil public expert valorisant sa contribution. C'est le levier
@@ -1564,6 +1649,13 @@ enum AuditAction {
   TRANSFER_REQUEST_ACCEPTED // L'utilisateur cible a accepte
   TRANSFER_REQUEST_REJECTED // L'utilisateur cible a refuse
   TRANSFER_REQUEST_REVOKED // Admin a annule sa demande
+  // Mode « Voir en tant que » (impersonation read-only)
+  IMPERSONATION_REQUESTED // Admin a demande l'acces en lecture
+  IMPERSONATION_GRANTED // L'utilisateur cible a accepte
+  IMPERSONATION_REJECTED // L'utilisateur cible a refuse
+  IMPERSONATION_REVOKED // L'utilisateur cible a revoque pendant l'acces
+  IMPERSONATION_ENDED // L'admin a clos la session ou timeout
+  IMPERSONATION_VIEW // Admin a consulte une page pendant la session
   // Tenant
   TENANT_CREATED
   TENANT_UPDATED
