@@ -247,37 +247,154 @@ export async function deleteUser(userId: string) {
   return { ok: true };
 }
 
+/**
+ * Invite ou rattache un utilisateur — RGPD-safe.
+ *
+ * 3 chemins selon l'etat de la cible :
+ *  1. L'email n'existe nulle part dans la BDD
+ *     -> on cree un User dans le tenant courant (flux invitation classique)
+ *  2. L'email existe DEJA dans le tenant courant
+ *     -> erreur claire "already_member"
+ *  3. L'email existe DANS UN AUTRE TENANT
+ *     -> on cree un TenantTransferRequest et on envoie un mail de
+ *        demande de rattachement a l'adresse. Cote admin, on retourne
+ *        un message NEUTRE pour ne pas reveler l'existence d'un compte
+ *        ailleurs (RGPD : pas de fuite d'existence par enumeration).
+ *
+ * Le retour distingue les 3 cas pour que l'UI puisse afficher le bon
+ * message :
+ *  - { ok: true, mode: "invited" } : User cree dans le tenant
+ *  - { ok: false, reason: "already_member" } : email present dans
+ *    le tenant courant -> rien a faire
+ *  - { ok: true, mode: "transfer_requested" } : message neutre, on a
+ *    ENVOYE un mail SI le compte existe ailleurs (l'admin ne sait pas
+ *    si l'email existe vraiment)
+ */
 export async function inviteUser(formData: FormData) {
   const ctx = await requireAdmin();
-  const email = formData.get("email") as string;
-  const name = formData.get("name") as string;
-  const service = formData.get("service") as string;
+  const email = (formData.get("email") as string)?.trim().toLowerCase();
+  const name = (formData.get("name") as string) || null;
+  const service = (formData.get("service") as string) || null;
   const role = (formData.get("role") as Role) || "LEARNER";
+  const personalMessage =
+    ((formData.get("personalMessage") as string) || "").trim() || null;
   if (!email || !email.includes("@")) throw new Error("invalid_email");
 
-  const existing = await db.user.findUnique({ where: { email } });
-  if (existing) throw new Error("email_taken");
+  const existing = await db.user.findUnique({
+    where: { email },
+    select: { id: true, tenantId: true },
+  });
 
-  const created = await db.user.create({
-    data: {
+  // Cas 2 : deja dans le meme tenant -> erreur claire
+  if (existing && existing.tenantId === ctx.tenantId) {
+    return { ok: false as const, reason: "already_member" as const };
+  }
+
+  // Cas 1 : email libre -> creation User classique
+  if (!existing) {
+    const created = await db.user.create({
+      data: {
+        tenantId: ctx.tenantId,
+        email,
+        name,
+        service,
+        role,
+      },
+    });
+    await auditLog({
+      action: AuditActions.USER_INVITED,
+      actor: { userId: ctx.userId, email: ctx.email, role: ctx.role },
       tenantId: ctx.tenantId,
-      email,
-      name: name || null,
-      service: service || null,
-      role,
+      target: { type: "user", id: created.id, label: created.email },
+      metadata: { role, service },
+    });
+    // Auto-assignation parcours obligatoire (fire-and-forget)
+    void fireAndForgetAutoAssign(created.id, ctx.tenantId);
+    revalidatePath("/admin/utilisateurs");
+    return { ok: true as const, mode: "invited" as const };
+  }
+
+  // Cas 3 : email existe dans un autre tenant
+  // -> demande de rattachement RGPD-safe avec consentement explicite
+  const { randomBytes } = await import("crypto");
+  const token = randomBytes(32).toString("base64url");
+  const expiresAt = new Date(Date.now() + 7 * 86400 * 1000); // 7 jours
+
+  // On marque les anciennes demandes en attente pour ce meme email
+  // depuis ce meme admin comme REVOKED (eviter les doublons en file).
+  await db.tenantTransferRequest.updateMany({
+    where: {
+      requestedByTenantId: ctx.tenantId,
+      targetEmail: email,
+      status: "PENDING",
+    },
+    data: { status: "REVOKED" },
+  });
+
+  const transferRequest = await db.tenantTransferRequest.create({
+    data: {
+      requestedByUserId: ctx.userId,
+      requestedByTenantId: ctx.tenantId,
+      targetEmail: email,
+      token,
+      expiresAt,
+      personalMessage,
     },
   });
+
+  // Recupere le tenant + sponsor pour le mail
+  const [tenant, requester] = await Promise.all([
+    db.tenant.findUnique({
+      where: { id: ctx.tenantId },
+      select: { name: true },
+    }),
+    db.user.findUnique({
+      where: { id: ctx.userId },
+      select: { name: true, email: true },
+    }),
+  ]);
+
+  // Envoi du mail (fire-and-forget : on ne revele pas a l'admin si
+  // l'envoi a echoue, pour conserver la non-divulgation d'existence).
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL ||
+    process.env.AUTH_URL ||
+    "http://localhost";
+  const acceptUrl = `${baseUrl}/transferer/${token}?action=accept`;
+  const rejectUrl = `${baseUrl}/transferer/${token}?action=reject`;
+
+  void (async () => {
+    try {
+      const { sendTransferRequestEmail } = await import(
+        "@/lib/transfer-requests/email"
+      );
+      await sendTransferRequestEmail({
+        to: email,
+        ctx: {
+          requestedByUserName:
+            requester?.name || requester?.email || "un administrateur",
+          requestedByTenantName: tenant?.name || "Humanix Académie",
+          personalMessage,
+          acceptUrl,
+          rejectUrl,
+          expiresAt,
+        },
+      });
+    } catch (err) {
+      console.error("[transfer-request] email failed", err);
+    }
+  })();
+
   await auditLog({
-    action: AuditActions.USER_INVITED,
+    action: AuditActions.TRANSFER_REQUEST_CREATED,
     actor: { userId: ctx.userId, email: ctx.email, role: ctx.role },
     tenantId: ctx.tenantId,
-    target: { type: "user", id: created.id, label: created.email },
-    metadata: { role, service: service || null },
+    target: { type: "transfer_request", id: transferRequest.id, label: email },
+    metadata: { expiresAt: expiresAt.toISOString() },
   });
-  // Auto-assignation parcours obligatoire (fire-and-forget)
-  void fireAndForgetAutoAssign(created.id, ctx.tenantId);
+
   revalidatePath("/admin/utilisateurs");
-  return { ok: true };
+  return { ok: true as const, mode: "transfer_requested" as const };
 }
 
 // =====================================================
