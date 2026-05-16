@@ -10,6 +10,11 @@
 // Les deux sont combinees : sur une instance avec content-pro, on a
 // les 3 gratuites + les payantes (~12+). En fork OSS pur, seules les 3
 // gratuites sont disponibles.
+//
+// Mode DEMO (DEMO_MODE=true) : on ignore content-pro meme si le
+// submodule est present sur le disque. La demo publique doit refleter
+// l'experience OSS pure (3 enquetes gratuites uniquement), pour ne pas
+// induire les visiteurs en erreur et proteger le contenu commercial.
 
 import fs from "node:fs";
 import path from "node:path";
@@ -24,6 +29,13 @@ const CONTENT_PRO = path.resolve(
   process.cwd(),
   "content-pro/content/enquetes",
 );
+
+/**
+ * En mode DEMO, on bypass content-pro meme si le submodule est present.
+ * La demo publique doit refleter l'experience OSS pure (3 enquetes
+ * gratuites uniquement).
+ */
+const IS_DEMO_MODE = process.env.DEMO_MODE === "true";
 
 /**
  * Lit, parse, valide un fichier MDX d'enquete. Retourne null en cas
@@ -86,7 +98,7 @@ export function listInvestigations(): Investigation[] {
   if (cache) return cache;
   const files = [
     ...listMdxFiles(CONTENT_DEMO),
-    ...listMdxFiles(CONTENT_PRO),
+    ...(IS_DEMO_MODE ? [] : listMdxFiles(CONTENT_PRO)),
   ];
   const investigations = files
     .map(parseFile)
