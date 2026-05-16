@@ -20,6 +20,7 @@ import Link from "next/link";
 import type { Investigation } from "@/lib/investigations/types";
 import { computeScore } from "@/lib/investigations/types";
 import MediaMockup from "./MediaMockup";
+import MarkdownView from "@/components/MarkdownView";
 
 type Phase = "brief" | "playing" | "submitting" | "results" | "debrief";
 
@@ -174,8 +175,8 @@ export default function InvestigationPlayer({
             <span>+{investigation.xpReward} XP max</span>
           </div>
         </header>
-        <div className="bg-accent-50 dark:bg-accent-950/30 border-2 border-accent-200 dark:border-accent-900/50 rounded-2xl p-5 text-gray-800 dark:text-gray-100 whitespace-pre-wrap leading-relaxed">
-          {investigation.brief}
+        <div className="bg-accent-50 dark:bg-accent-950/30 border-2 border-accent-200 dark:border-accent-900/50 rounded-2xl p-5">
+          <MarkdownView content={investigation.brief} />
         </div>
         <div className="flex justify-center">
           <button
@@ -367,9 +368,9 @@ export default function InvestigationPlayer({
                   +{rf.points} pts
                 </span>
               </div>
-              <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
-                {rf.explanation}
-              </p>
+              <div className="text-sm">
+                <MarkdownView content={rf.explanation} />
+              </div>
             </div>
           );
         })}
@@ -399,9 +400,9 @@ export default function InvestigationPlayer({
                     −{d.penalty} pts
                   </span>
                 </div>
-                <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
-                  {d.explanation}
-                </p>
+                <div className="text-sm">
+                  <MarkdownView content={d.explanation} />
+                </div>
               </div>
             );
           })}
@@ -412,9 +413,7 @@ export default function InvestigationPlayer({
         <h2 className="font-display text-lg font-bold text-primary-500 dark:text-accent-300 mb-3">
           💡 Synthèse
         </h2>
-        <div className="text-sm text-gray-800 dark:text-gray-100 whitespace-pre-wrap leading-relaxed">
-          {investigation.debrief}
-        </div>
+        <MarkdownView content={investigation.debrief} />
       </section>
 
       <div className="flex items-center justify-center gap-3 flex-wrap">
