@@ -1,0 +1,92 @@
+---
+title: "Le Wi-Fi du café qui s'appelle « Free-Airport »"
+durationMinutes: 6
+persona: "tous"
+objective: "Reconnaître un faux point d'accès Wi-Fi et adopter le réflexe partage de connexion"
+xpReward: 50
+scenario: |
+  Hugo attend son train à la gare. Il a besoin d'envoyer un
+  document à un client dans la demi-heure. Trois réseaux Wi-Fi
+  apparaissent : « SNCF-Officiel », « FREE-WiFi-Gare » et
+  « WIFI-FREE-AIRPORT ». Lequel choisir, sachant qu'il a un
+  document confidentiel à transmettre ?
+choices:
+  - id: "a"
+    label: "Se connecter à « WIFI-FREE-AIRPORT », c'est le plus rapide"
+    outcome: "bad"
+    feedback: "Le nom ne veut rien dire. N'importe qui peut nommer son hotspot « FREE-AIRPORT » dans n'importe quelle ville. C'est même le piège préféré des attaquants : un nom qui rassure."
+    points: -10
+  - id: "b"
+    label: "Se connecter à « SNCF-Officiel » parce que ça a l'air sérieux"
+    outcome: "bad"
+    feedback: "Ce nom est facile à imiter à un caractère près. Même sur un Wi-Fi légitime, sans VPN, vos paquets restent observables par les autres connectés au même réseau."
+    points: -5
+  - id: "c"
+    label: "Activer le partage de connexion de son téléphone et envoyer depuis son laptop"
+    outcome: "good"
+    feedback: "Bravo. Le partage de connexion 4G ou 5G de votre téléphone passe par votre opérateur, chiffré bout en bout entre votre téléphone et l'antenne. Aucun voisin de comptoir ne peut s'y greffer."
+    points: 25
+  - id: "d"
+    label: "Envoyer le document depuis son téléphone directement, sans laptop"
+    outcome: "ok"
+    feedback: "C'est mieux que le Wi-Fi public mais cela suppose que le client peut recevoir depuis votre téléphone. Le partage de connexion vers le laptop reste la solution la plus universelle."
+    points: 5
+quizCorrectAnswer: "c"
+takeaway: |
+  Sur un point d'accès Wi-Fi inconnu, considérez par défaut que
+  le réseau est espionné. Le partage de connexion 4G ou 5G est
+  votre solution par défaut quand vous traitez un document
+  professionnel en mobilité. À défaut, un VPN d'entreprise.
+licence: "CC BY-SA 4.0 — Humanix Académie Community Edition"
+---
+
+# Le Wi-Fi du café qui s'appelle « Free-Airport »
+
+Les hotspots Wi-Fi publics sont l'un des terrains de chasse les
+plus simples pour un attaquant. Pas besoin d'être un expert :
+une carte Wi-Fi à dix euros et trois minutes de configuration.
+
+## L'attaque par jumeau maléfique
+
+L'attaquant choisit un lieu fréquenté (gare, aéroport, café),
+allume son ordinateur et diffuse un réseau Wi-Fi au nom rassurant :
+« Free-Airport », « Wifi-Gare », « SNCF-Visiteurs ».
+
+Vous vous connectez en confiance. Tous vos paquets passent par
+sa machine. Il voit en clair tout ce qui n'est pas chiffré bout
+en bout : sites en HTTP, métadonnées HTTPS, parfois des cookies
+de session si vous êtes déjà identifié sur un service.
+
+Ce n'est pas de la science-fiction. Le CERT-FR documente chaque
+année plusieurs dizaines de cas en France, dans toutes les
+grandes gares parisiennes et lyonnaises.
+
+## Le partage de connexion, votre meilleur ami
+
+Tous les forfaits mobiles français autorisent aujourd'hui le
+partage de connexion (hotspot personnel). Le débit en 4G est
+largement suffisant pour de la bureautique, et la 5G dépasse la
+plupart des Wi-Fi publics gratuits.
+
+L'avantage : votre flux passe par votre opérateur mobile, chiffré
+entre votre téléphone et l'antenne. Un voisin ne peut pas s'y
+greffer simplement en se connectant au même réseau Wi-Fi public.
+
+## Les trois cas où le Wi-Fi public reste acceptable
+
+- Pour lire la presse, regarder une vidéo grand public, faire
+  une recherche d'itinéraire
+- Pour des sites où vous n'êtes pas connecté
+- Pour de la navigation passive sans formulaire
+
+Tout ce qui implique un login, un formulaire, un document
+professionnel, un mail à signer : partage de connexion ou VPN
+d'entreprise. Jamais directement sur le Wi-Fi public.
+
+## L'alternative VPN pour les nomades fréquents
+
+Si vous êtes en déplacement deux à trois jours par semaine, votre
+employeur peut fournir un VPN d'entreprise. Il chiffre l'intégralité
+de votre trafic jusqu'au siège, peu importe le réseau d'arrivée.
+C'est devenu un standard pour les commerciaux, consultants et
+auditeurs itinérants.
