@@ -58,14 +58,24 @@ export default function SaisonsCarousel({
         tabIndex={0}
         className="overflow-x-auto overflow-y-visible snap-x snap-mandatory scroll-smooth py-2 pb-4 px-4 sm:px-1 [scrollbar-width:thin] [scrollbar-color:theme(colors.gray.300)_transparent] dark:[scrollbar-color:theme(colors.slate.700)_transparent] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-400 rounded-2xl"
       >
-        <ul className="flex gap-4 sm:gap-5 w-max">
+        {/* items-stretch + [&>*]:h-full sur le <li> forcent toutes les
+            cards a avoir la meme hauteur (la plus haute du lot). Sans ca,
+            on a un effet "escalier" car les cards ont des contenus de
+            longueur variable (titres / descriptions / badges). */}
+        <ul className="flex items-stretch gap-4 sm:gap-5 w-max">
           {Children.map(children, (child, i) => (
             <li
               key={i}
               // Largeur : 82vw mobile (effet "peek" sur la card suivante,
-              // typique des carrousels iOS) + max 320px sur desktop pour
-              // garder la densite visuelle.
-              className="snap-start shrink-0 w-[82vw] max-w-[320px] sm:w-[320px]"
+              // typique des carrousels iOS) + 320px desktop pour garder
+              // la densite visuelle.
+              // [&>*]:h-full → l'<article> enfant remplit la hauteur du
+              //   <li>, qui prend la hauteur uniforme du <ul> stretch.
+              // [&>article]:flex [&>article]:flex-col → assure que les
+              //   cards qui ne sont pas deja flex se comportent comme
+              //   tel pour que le contenu interne puisse pousser le CTA
+              //   en bas via mt-auto.
+              className="snap-start shrink-0 w-[82vw] max-w-[320px] sm:w-[320px] [&>article]:h-full [&>article]:flex [&>article]:flex-col"
             >
               {child}
             </li>
