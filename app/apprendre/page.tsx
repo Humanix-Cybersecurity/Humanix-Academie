@@ -1,26 +1,24 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// Hub apprenant - refonte cosy mai 2026 + Sprint 4 (juin 2026).
+// Hub apprenant - refonte simplifiee mai 2026.
 //
-// Refonte juin 2026 (Sprint 4 simplicite) : decoupage des 8 sections en
-// widgets composables sous components/learner/. La page reste server
-// component (queries Prisma + calculs) mais l'UI est externalisee.
+// Pourquoi cette refonte ? L'ancienne page combinait 8 sections (hero,
+// coach, prochain pas, defi du jour, saisons, acquis, citation, etc.).
+// Trop dense pour la question reelle de l'apprenant : "qu'est-ce que je
+// fais maintenant ?". On a deplace ce qui releve du tableau de bord
+// (badges, niveau detaille, mascotte equipee, coach long, citations) sur
+// /profil et on garde ici 4 zones essentielles, dans l'ordre du focus :
 //
-// 8 sections narratives (preservees a l'identique) :
 //   1. Bandeau challenge (s'il y en a un, ton chaleureux et non urgent)
-//   2. Hero "Bonjour [prenom]" personnalise selon l'heure du jour
-//   3. Coach Hex (composant existant)
-//   4. Ton prochain pas - l'action recommandee mise en valeur
-//   5. Defi tranquille du jour - pas de pression
-//   6. Tes saisons - cards magazine avec gradients doux
-//   7. Tes acquis - badges valorisants
-//   8. Respiration - citation rassurante de fin
+//   2. Hero compact - salutation + 4 stats inline + barre progress
+//   3. Ton prochain pas - l'action recommandee mise en valeur
+//   4. Tes saisons - cards magazine avec gradients doux
+//   5. Mode Enqueteur - invitation a la decouverte guidee
 //
-// Brief original conserve : "magie, audace, professionalisme, animation,
-// accessibilite, cosy, charmant, impactant. L'utilisateur au coeur du
-// voyage sans se rendre compte qu'il est la pour apprendre. Sensibilisation
-// reelle, pas celle generee par la peur - celle qui sent bon la maitrise
-// et la confiance."
+// Brief design conserve : "magie, audace, professionalisme, accessibilite,
+// cosy, charmant. L'apprenant au coeur du voyage sans se rendre compte
+// qu'il est la pour apprendre. Sensibilisation reelle, pas celle generee
+// par la peur - celle qui sent bon la maitrise et la confiance."
 //
 // Logique metier (queries Prisma, calculs streak/level/progress) conservee
 // a l'identique.
@@ -29,12 +27,10 @@
 import { auth, getSignInPath } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import CoachCard from "@/components/CoachCard";
+import Link from "next/link";
 import CyberEventBanner from "@/components/CyberEventBanner";
 import { getLevel } from "@/lib/levels";
-import { buildEquippedFromInventory } from "@/lib/shop";
 import { getActiveChallenge } from "@/lib/challenge";
-import { generateCoachAdvice } from "@/lib/coach";
 import { listExpertEpisodes } from "@/lib/content-availability";
 import { getUserPersona } from "@/lib/ai/persona";
 import {
@@ -45,14 +41,11 @@ import {
 import { computeStreak } from "@/lib/streak";
 
 import ChallengeBanner from "@/components/learner/ChallengeBanner";
-import LearnerHero from "@/components/learner/LearnerHero";
+import LearnerHeroCompact from "@/components/learner/LearnerHeroCompact";
 import NextStepCard from "@/components/learner/NextStepCard";
-import DailyGoalCard from "@/components/learner/DailyGoalCard";
 import SaisonCard from "@/components/learner/SaisonCard";
-import AcquisSection from "@/components/learner/AcquisSection";
 import LearnerEmptyState from "@/components/learner/LearnerEmptyState";
-import CloseQuote from "@/components/learner/CloseQuote";
-import { SAISON_PALETTES, CITATIONS } from "@/components/learner/palettes";
+import { SAISON_PALETTES } from "@/components/learner/palettes";
 import {
   PREMIUM_SAISONS_PREVIEW,
   isDemoMode,
@@ -69,9 +62,11 @@ export default async function ApprendrePage() {
   const userId = session.user!.id as string;
   const tenantId = session.user!.tenantId as string;
 
-  // Saisons publiees + config tenant + inventaire pour customisations Hex
-  // Filtrage : saisons globales (tenantId null) + saisons custom du tenant
-  const [allSaisons, tenantConfigs, progress, user, inventory, userGroups] =
+  // Saisons publiees + config tenant + progress + user + groupes.
+  // Refonte mai 2026 : on a retire inventory + buildEquippedFromInventory
+  // de cette page (la mascotte equipée n'apparait plus dans le hero
+  // simplifie). Si on veut la remettre plus tard, c'est sur /profil.
+  const [allSaisons, tenantConfigs, progress, user, userGroups] =
     await Promise.all([
       db.saison.findMany({
         where: {
@@ -96,17 +91,8 @@ export default async function ApprendrePage() {
       db.user.findUnique({
         where: { id: userId },
         select: {
-          coins: true,
           name: true,
-          mascotSpecies: true,
-          mascotEmojiCustom: true,
-          mood: true,
-          shareCount: true,
         },
-      }),
-      db.userInventory.findMany({
-        where: { userId, isEquipped: true },
-        include: { item: true },
       }),
       // Groupes (metiers / departements) auxquels l'user appartient.
       // Sert pour l'highlight des episodes targetes (Episode.targetGroups).
@@ -122,11 +108,7 @@ export default async function ApprendrePage() {
   // restent accessibles, juste pas de highlight).
   const userGroupSlugs = new Set(userGroups.map((ug) => ug.group.slug));
 
-  const equipped = buildEquippedFromInventory(
-    inventory.map((i) => ({ item: i.item, isEquipped: i.isEquipped })),
-  );
   const activeChallenge = await getActiveChallenge(tenantId);
-  const coachAdvice = await generateCoachAdvice(userId);
 
   // Persona pedagogique infere : sert a prioriser les saisons sur la page
   // (un developpeur voit "cyber-dev" en haut, un finance voit
@@ -220,14 +202,6 @@ export default async function ApprendrePage() {
     .map((p) => p.completedAt!);
   const streak = computeStreak(completedDates);
 
-  // Daily goal
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const completedToday = progress.filter(
-    (p) => p.completedAt && new Date(p.completedAt) >= today,
-  ).length;
-  const dailyGoal = 1;
-
   // Salutation contextuelle selon l'heure
   const hour = new Date().getHours();
   const greet =
@@ -252,11 +226,6 @@ export default async function ApprendrePage() {
     !!recommendedEpisode &&
     progressByEp.get(recommendedEpisode.id)?.status === "IN_PROGRESS";
 
-  // Citation deterministe par jour pour eviter les sauts de placement
-  // entre rafraichissements
-  const citationIdx = today.getDate() % CITATIONS.length;
-  const citation = CITATIONS[citationIdx];
-
   return (
     <main id="main-content" className="animate-fadeIn overflow-x-hidden">
       {/* Evenement cyber en cours (Cybermois, WPD, etc.) */}
@@ -270,31 +239,23 @@ export default async function ApprendrePage() {
         />
       )}
 
-      {/* Hero personnel : salutation + mascotte + niveau + stats */}
-      <LearnerHero
+      {/* Hero compact : salutation + 4 stats inline + barre progress.
+          La mascotte equipee + le coach long sont deplaces sur /profil.
+          Cf. refonte mai 2026 : on privilegie le "faire" sur "regarder". */}
+      <LearnerHeroCompact
         greet={greet}
         firstName={firstName}
         totalXP={totalXP}
-        coins={user?.coins ?? 0}
         streak={streak}
+        currentLevel={currentLevel}
         completedCount={completedCount}
         totalEpisodes={totalEpisodes}
-        currentLevel={currentLevel}
-        mood={user?.mood ?? undefined}
-        mascotSpecies={user?.mascotSpecies ?? undefined}
-        mascotEmojiCustom={user?.mascotEmojiCustom}
-        equipped={equipped}
       />
 
       <div className="max-w-5xl mx-auto px-4 py-8 sm:py-10 space-y-8">
-        {/* Coach Hex - guidage personnalise (composant existant) */}
-        <CoachCard
-          advice={coachAdvice}
-          xp={totalXP}
-          species={user?.mascotSpecies ?? "fox"}
-        />
-
-        {/* Ton prochain pas - l'action prioritaire en valeur */}
+        {/* Ton prochain pas — UN seul appel a l'action, mis en valeur.
+            C'est la seule chose qui compte si tu viens sur cette page
+            pour APPRENDRE plutot que pour CONSULTER ton tableau de bord. */}
         {recommendedEpisode && recommendedSaison && (
           <NextStepCard
             saisonSlug={recommendedSaison.slug}
@@ -306,9 +267,6 @@ export default async function ApprendrePage() {
             isResume={recommendedIsResume}
           />
         )}
-
-        {/* Defi tranquille du jour */}
-        <DailyGoalCard completedToday={completedToday} dailyGoal={dailyGoal} />
 
         {/* Tes saisons - cards magazine */}
         {saisons.length === 0 ? (
@@ -448,17 +406,6 @@ export default async function ApprendrePage() {
           </a>
         </section>
 
-        {/* Tes acquis - badges + phrase chaleureuse */}
-        <AcquisSection
-          completedCount={completedCount}
-          totalEpisodes={totalEpisodes}
-          streak={streak}
-          totalXP={totalXP}
-          shareCount={user?.shareCount ?? 0}
-        />
-
-        {/* Respiration - citation finale */}
-        <CloseQuote citation={citation} />
       </div>
     </main>
   );
