@@ -44,6 +44,7 @@ import ChallengeBanner from "@/components/learner/ChallengeBanner";
 import LearnerHeroCompact from "@/components/learner/LearnerHeroCompact";
 import NextStepCard from "@/components/learner/NextStepCard";
 import SaisonCard from "@/components/learner/SaisonCard";
+import SaisonsCarousel from "@/components/learner/SaisonsCarousel";
 import LearnerEmptyState from "@/components/learner/LearnerEmptyState";
 import { SAISON_PALETTES } from "@/components/learner/palettes";
 import {
@@ -294,18 +295,24 @@ export default async function ApprendrePage() {
             </div>
 
             {/* En DEMO_MODE : bandeau introductif pour montrer ce que la
-                formule Standard apporte (placé AVANT la grille pour que le
-                visiteur comprenne immédiatement ce qu'il voit après). */}
+                formule payante apporte (placé AVANT le carrousel pour que
+                le visiteur comprenne immédiatement ce qu'il voit après). */}
             {isDemoMode() && (
               <div className="mb-6">
                 <PremiumPreviewIntro
                   totalCount={PREMIUM_SAISONS_PREVIEW.length}
-                  label="saisons premium à débloquer (≈178 modules)"
+                  label={`saisons premium à débloquer (${PREMIUM_SAISONS_PREVIEW.reduce((s, p) => s + p.episodes, 0)}+ modules)`}
                 />
               </div>
             )}
 
-            <div className="grid sm:grid-cols-2 gap-5">
+            {/* Carrousel horizontal scroll-snap : la grille 2 colonnes
+                empilait 8-12 saisons verticalement, ce qui rendait la page
+                tres longue. Le carrousel garde toutes les saisons visibles
+                en une rangee. Swipe natif mobile, drag/wheel desktop. */}
+            <SaisonsCarousel
+              ariaLabel={`Tes ${saisons.length} saisons d'apprentissage${isDemoMode() ? " + apercus premium" : ""}`}
+            >
               {saisons.map((s, idx) => {
                 const palette = SAISON_PALETTES[idx % SAISON_PALETTES.length];
                 const total = s.episodes.length;
@@ -368,7 +375,7 @@ export default async function ApprendrePage() {
                     subtitle={`${p.episodes} épisodes · Audience : ${p.audience}`}
                   />
                 ))}
-            </div>
+            </SaisonsCarousel>
           </section>
         )}
 
