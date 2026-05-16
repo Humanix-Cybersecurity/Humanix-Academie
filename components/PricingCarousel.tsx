@@ -365,9 +365,14 @@ function CtaButton({
     );
   }
   if (t.cta.type === "signup-free") {
+    // Le palier Starter cree un VRAI tenant ADMIN (5 sieges gratuits)
+    // via /signup. /inscription est reserve aux apprenants individuels
+    // qui rejoignent le tenant Communaute. Ne PAS confondre :
+    //   - /inscription = LEARNER -> tenant humanix-community
+    //   - /signup?plan=starter = ADMIN -> nouveau tenant dedie
     return (
       <Link
-        href="/inscription"
+        href={`/signup?plan=${t.id}`}
         onClick={onClickStop}
         className={cls}
         aria-disabled={disabled}
