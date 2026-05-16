@@ -15,6 +15,13 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# Garantit que content-pro/ existe au moins comme dossier vide. Si on
+# builde depuis un fork OSS sans le submodule prive, le `COPY . .` ne
+# l'a pas inclus. Le `COPY --from=builder /app/content-pro ./content-pro`
+# du runner stage echouerait sans ce mkdir. Dans le cas commercial,
+# le dossier existe deja avec son contenu — le mkdir est no-op.
+RUN mkdir -p content-pro
+
 # ---------------------------------------------------------------------------
 # Build args pour les variables NEXT_PUBLIC_* — INDISPENSABLE pour Next.js.
 # ---------------------------------------------------------------------------
@@ -72,6 +79,19 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/content ./content
+# content-pro/ : submodule prive contenant le catalogue commercial (saisons,
+# library articles, anecdotes, enquetes Premium du Mode Enqueteur).
+#
+# Cas "instance commerciale" : `COPY . .` du builder a inclus content-pro/
+# avec son contenu. La ligne ci-dessous le copie tel quel dans le runner,
+# et les symlinks dans content/ et lib/ resolvent vers les fichiers reels.
+#
+# Cas "OSS pur" (fork sans content-pro) : on a fait `mkdir -p content-pro`
+# dans le builder pour garantir qu'il existe au moins comme dossier vide.
+# La ligne ci-dessous le copie (vide) — les symlinks sont alors casses
+# mais resolveContentRoot() de lib/episodes.ts detecte le cas et bascule
+# sur content/saisons-demo/ (2 saisons demo CC BY-SA).
+COPY --from=builder /app/content-pro ./content-pro
 # lib/ et tsconfig.json necessaires au runtime du seed (tsx resoud les imports
 # relatifs comme ../lib/levels depuis prisma/seed.ts)
 COPY --from=builder /app/lib ./lib

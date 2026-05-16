@@ -18,47 +18,47 @@ datasource db {
 // le reporting est consolide.
 // =====================================================
 model Tenant {
-  id                                  String    @id @default(cuid())
-  name                                String
-  slug                                String    @unique
+  id                    String    @id @default(cuid())
+  name                  String
+  slug                  String    @unique
   // Plan effectif du tenant (cf. lib/plans.ts pour les valeurs valides :
   // starter, pro, enterprise — depuis pivot 4 paliers mai 2026).
   // Default "starter" (forever-free <=5 sieges) — plan le plus restrictif
   // qui ne necessite ni paiement ni provisionnement special.
   // Anciennes valeurs (decouverte/solo/essentielle/premium/trial) sont
   // gracieusement normalisees par lib/plans.ts::normalizePlan().
-  plan                                String    @default("starter")
+  plan                  String    @default("starter")
   // Multi-etablissements : un tenant peut avoir un parent (groupe / siege)
-  parentTenantId                      String?
+  parentTenantId        String?
   // Type d'etablissement libre (ex : "siege", "agence", "site", "boutique")
   // Affiche dans le breadcrumb / dashboard. null pour les tenants racine.
-  establishmentType                   String?
+  establishmentType     String?
   // ----------------------------------------------------
   // BILLING (provider-agnostique : Payplug FR par defaut, possible Stripe)
   // ----------------------------------------------------
   // Identifie le prestataire de paiement actif pour ce tenant.
   // Valeurs : "payplug", "stripe", null (pas encore d'abonnement payant).
-  paymentProvider                     String?
+  paymentProvider       String?
   // Identifiants opaques chez le prestataire. Le format depend du provider
   // (Payplug : "cus_xxx", Stripe : "cus_xxx", interchangeables coté schema).
-  paymentCustomerId                   String?   @unique
-  paymentSubscriptionId               String?   @unique
+  paymentCustomerId     String?   @unique
+  paymentSubscriptionId String?   @unique
   // Statut normalise : active, past_due, canceled, incomplete, unpaid.
   // ("trialing" est un statut legacy retire en mai 2026 mais encore tolere
   // par le state machine pour les anciens tenants — cf. lib/subscription-state.ts).
   // Source de verite = webhook du provider. Synchro a chaque event subscription.
-  subscriptionStatus                  String?
+  subscriptionStatus    String?
   // Fin de la periode de facturation courante (renouvellement automatique
   // OU coupure du service si subscriptionStatus=canceled).
-  currentPeriodEnd                    DateTime?
+  currentPeriodEnd      DateTime?
   // Numero de seats facturees (relevant pour Solo/Essentielle/Pro qui ont
   // un plafond). Null si plan flat-fee ou plan gratuit.
-  seatCount                           Int?
+  seatCount             Int?
   // Champ legacy : date de fin de l'essai gratuit. Plus jamais ecrit depuis
   // le retrait de l'essai gratuit (mai 2026, vente directe). Conserve dans
   // le schema le temps de purger les anciennes valeurs en BDD via la
   // migration ; sera retire dans une migration future.
-  trialEndsAt                         DateTime?
+  trialEndsAt           DateTime?
 
   // ----------------------------------------------------
   // RGPD - Retention configurable des donnees
@@ -75,9 +75,9 @@ model Tenant {
   //     pour integrite FK Progress / Event)
   //
   // Cf. lib/data-retention.ts pour la logique + dry-run.
-  dataRetentionDays                   Int?
+  dataRetentionDays      Int?
   // Dernier passage de la purge automatique (info UI + heuristique cron).
-  dataRetentionLastRunAt              DateTime?
+  dataRetentionLastRunAt DateTime?
 
   // ----------------------------------------------------
   // AUTOMATIONS DE REMEDIATION (mai 2026)
@@ -94,33 +94,34 @@ model Tenant {
   //   actives du user (deconnexion forcee de tous les devices). Au
   //   prochain acces, il devra se reconnecter (et configurer 2FA si
   //   le flag precedent est aussi activé).
-  autoForce2FAAfterPhishingClick      Boolean   @default(false)
-  autoRevokeSessionAfterPhishingClick Boolean   @default(false)
-  createdAt                           DateTime  @default(now())
-  updatedAt                           DateTime  @updatedAt
+  autoForce2FAAfterPhishingClick      Boolean  @default(false)
+  autoRevokeSessionAfterPhishingClick Boolean  @default(false)
+  createdAt                           DateTime @default(now())
+  updatedAt                           DateTime @updatedAt
 
   parent   Tenant?  @relation("TenantHierarchy", fields: [parentTenantId], references: [id], onDelete: SetNull)
   children Tenant[] @relation("TenantHierarchy")
 
-  users               User[]
-  saisons             Saison[]                  @relation("TenantSaisons")
-  progress            Progress[]
-  events              Event[]
-  saisonConfigs       TenantSaisonConfig[]
-  smtpConfig          TenantSmtpConfig?
-  challenges          TeamChallenge[]
-  apiKeys             ApiKey[]
-  phishingCampaigns   PhishingCampaign[]
-  notificationLogs    NotificationLog[]
-  marketplaceInstalls MarketplaceInstallation[]
-  webhooks            TenantWebhook[]
-  familyInvites       FamilyInvite[]
-  incidents           IncidentResponse[]
-  riskScoreSnapshots  RiskScoreSnapshot[]
-  cyberEventInstances CyberEventInstance[]
-  samlConfig          TenantSamlConfig?
-  cisoConnection      CisoAssistantConnection?
-  cisoSyncRuns        CisoAssistantSyncRun[]
+  users                User[]
+  saisons              Saison[]                  @relation("TenantSaisons")
+  progress             Progress[]
+  events               Event[]
+  saisonConfigs        TenantSaisonConfig[]
+  smtpConfig           TenantSmtpConfig?
+  challenges           TeamChallenge[]
+  apiKeys              ApiKey[]
+  phishingCampaigns    PhishingCampaign[]
+  notificationLogs     NotificationLog[]
+  marketplaceInstalls  MarketplaceInstallation[]
+  webhooks             TenantWebhook[]
+  familyInvites        FamilyInvite[]
+  incidents            IncidentResponse[]
+  riskScoreSnapshots   RiskScoreSnapshot[]
+  cyberEventInstances  CyberEventInstance[]
+  samlConfig           TenantSamlConfig?
+  cisoConnection       CisoAssistantConnection?
+  cisoSyncRuns         CisoAssistantSyncRun[]
+  investigationResults InvestigationResult[]
 
   @@index([parentTenantId])
 }
@@ -329,22 +330,23 @@ model User {
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
-  tenant              Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  progress            Progress[]
-  events              Event[]
-  accounts            Account[]
-  sessions            Session[]
-  inventory           UserInventory[]
-  phishingResults     PhishingResult[]
-  notificationLogs    NotificationLog[]
-  authoredModules     MarketplaceModule[]  @relation("AuthoredModules")
-  reviewedModules     MarketplaceModule[]  @relation("ReviewedModules")
-  familyInvitesIssued FamilyInvite[]       @relation("FamilyInviteSponsor")
-  expertProfile       ExpertProfile?
-  passwordResets      PasswordResetToken[]
-  groups              UserGroup[]
-  webauthnCredentials WebAuthnCredential[]
-  achievements        UserAchievement[]
+  tenant               Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  progress             Progress[]
+  events               Event[]
+  accounts             Account[]
+  sessions             Session[]
+  inventory            UserInventory[]
+  phishingResults      PhishingResult[]
+  notificationLogs     NotificationLog[]
+  authoredModules      MarketplaceModule[]   @relation("AuthoredModules")
+  reviewedModules      MarketplaceModule[]   @relation("ReviewedModules")
+  familyInvitesIssued  FamilyInvite[]        @relation("FamilyInviteSponsor")
+  expertProfile        ExpertProfile?
+  passwordResets       PasswordResetToken[]
+  groups               UserGroup[]
+  webauthnCredentials  WebAuthnCredential[]
+  achievements         UserAchievement[]
+  investigationResults InvestigationResult[]
 
   @@index([tenantId])
   @@index([isActive])
@@ -1702,18 +1704,18 @@ model CyberEventInstance {
 // app/admin/integrations/ciso-assistant/page.tsx.
 
 model CisoAssistantConnection {
-  id            String  @id @default(cuid())
-  tenantId      String  @unique
-  baseUrl       String // ex: https://ciso.client.fr
-  username      String // email du compte CISO Assistant (Knox auth)
+  id                    String    @id @default(cuid())
+  tenantId              String    @unique
+  baseUrl               String // ex: https://ciso.client.fr
+  username              String // email du compte CISO Assistant (Knox auth)
   // Password chiffre AES-256-GCM (cf. lib/crypto.ts:encryptSecret).
   // Format stocke : "<iv_b64>:<authTag_b64>:<ciphertext_b64>".
-  passwordEnc   String  @db.Text
-  folderName    String  @default("Humanix Académie")
+  passwordEnc           String    @db.Text
+  folderName            String    @default("Humanix Académie")
   // Owner designe (RSSI ou DPO du tenant). Optionnel, embedded dans la
   // description de chaque evidence pour traçabilite audit ISO 27001 §7.5.
   // En v1.2 : creation d'un Actor CISO Assistant lié a un User cote intuitem.
-  ownerEmail    String?
+  ownerEmail            String?
   // v1.3 toggles : extensions optionnelles, par defaut desactivees.
   // Principe : zero inertie entre Humanix et CISO Assistant. L'admin
   // active ce qu'il veut, peut tout couper sans casser le push d'evidences.
@@ -1723,42 +1725,42 @@ model CisoAssistantConnection {
   // - createFindings : a chaque sync, generer des Findings actionnables
   //   pour les controles en statut partial ou non_compliant (P1/P2 +
   //   ETA +30j).
-  createAppliedControls Boolean @default(false)
-  createFindings        Boolean @default(false)
+  createAppliedControls Boolean   @default(false)
+  createFindings        Boolean   @default(false)
   // v1.4 toggle : si tenant_score < 0.4 OU phishingReportRate < 0.2,
   // genere un RiskScenario "Risque humain eleve" sous un RiskAssessment
   // dedie Humanix. Necessite qu'une RiskMatrix soit chargee cote CISO
   // Assistant (sinon WARN + skip). Cf. lib/ciso-assistant/sync.ts.
-  createRiskScenarios   Boolean @default(false)
+  createRiskScenarios   Boolean   @default(false)
   // v1.5 toggle : si l'ownerEmail est defini, crée le User correspondant
   // dans CISO Assistant (s'il n'existe pas) puis assigne son Actor comme
   // owner sur les evidences, findings et risk scenarios poussés. Permet
   // d'avoir un responsable nommé côté GRC. Necessite permissions admin
   // sur l'instance CISO Assistant.
-  syncOwnerAsActor      Boolean @default(false)
+  syncOwnerAsActor      Boolean   @default(false)
   // v1.6 toggle : ouvre un Incident côté CISO Assistant si au moins
   // un contrôle est non_compliant sur le panel. Severite par defaut
   // SEV3 (Moderate). Sert d'alerte proactive type NIS2 §23 pour le
   // RSSI : "ta couverture humaine présente un signal d'alerte".
   // Idempotent par ref_id = "humanix-{framework}-{date YYYY-MM-DD}".
-  createIncidents       Boolean @default(false)
+  createIncidents       Boolean   @default(false)
   // v1.7 toggle : a chaque sync, pousse une serie temporelle de samples
   // dans le module Metrology de CISO Assistant (CustomMetricSample). Le
   // RSSI / DSI / DPO peut visualiser dans les dashboards CISO Assistant
   // natifs l'evolution dans le temps : tenant_score, completion_rate,
   // phishing_report_rate, counts d'evidences par statut. 6 metriques par
   // sync. Necessite que le folder Humanix existe.
-  pushMetrologySamples  Boolean @default(false)
+  pushMetrologySamples  Boolean   @default(false)
   // v1.8 toggle : synchronise les Groups Humanix (Compta, RH, Dev,
   // Commercial...) comme Team CISO Assistant. Permet d'assigner des
   // findings/incidents par equipe nativement dans CISO Assistant.
   // Membres pseudonymises (hash SHA-256) -- pas d'export PII brut.
-  syncGroupsAsTeams     Boolean @default(false)
+  syncGroupsAsTeams     Boolean   @default(false)
   // v1.9 toggle : pour chaque PhishingCampaign Humanix active ou recente
   // (90 jours), cree/maintient une Campaign CISO Assistant. Permet au
   // RSSI de suivre ses campagnes phishing simule dans son cockpit GRC
   // habituel, sans repli sur Humanix.
-  syncCampaigns         Boolean @default(false)
+  syncCampaigns         Boolean   @default(false)
   // v2.0 Live Mode : si actif, chaque evenement metier (episode.completed,
   // phishing.reported, phishing.user_clicked) declenche une mini-sync
   // incrementale debouncee (5s) sur les frameworks deja synchronises au
@@ -1767,59 +1769,120 @@ model CisoAssistantConnection {
   // - Re-upsert des evidences uniquement (pas de PDF, pas d'extensions).
   // - Fire-and-forget : un echec ne bloque jamais l'evenement metier.
   // - Coalesce via debouncer : 50 evenements en 5s = 1 seule sync.
-  enableLiveMode        Boolean @default(false)
+  enableLiveMode        Boolean   @default(false)
   // Telemetrie Live Mode (informationnel, mis a jour apres chaque mini-sync).
   lastLiveSyncAt        DateTime?
   lastLiveSyncEvent     String? // "episode.completed" | "phishing.reported" | "phishing.user_clicked"
-  liveSyncCount         Int     @default(0)
+  liveSyncCount         Int       @default(0)
   // v2.2 Enrichissements (audit OpenAPI v0.7) :
   // - createWorkforceAsset : push un Asset primary "Personnel · Couche
   //   humaine Humanix Académie" dans le folder, scope par defaut pour les
   //   RiskScenarios/Findings/Incidents. Permet de cartographier la
   //   couche humaine comme un asset GRC explicite.
-  createWorkforceAsset  Boolean @default(false)
+  createWorkforceAsset  Boolean   @default(false)
   // - syncThreats : push les 15 menaces humaines Humanix (FOVI, vishing,
   //   deepfake CEO, smishing, quishing, etc.) comme Threat entities
   //   dans le folder. Permet au RSSI de les linker a ses RiskScenarios.
-  syncThreats           Boolean @default(false)
+  syncThreats           Boolean   @default(false)
   // - createDashboard : pre-cree un Dashboard "Cockpit Humanix Académie"
   //   avec 6 widgets pointant sur les MetricInstances poussees par
   //   pushMetrologySamples. Effet "ouvre la boite c'est joli" en demo.
   //   Necessite pushMetrologySamples=true (sinon les widgets n'ont pas
   //   de cible).
-  createDashboard       Boolean @default(false)
-  verifySSL     Boolean @default(true)
+  createDashboard       Boolean   @default(false)
+  verifySSL             Boolean   @default(true)
   // Dernier resultat du bouton "Tester la connexion".
-  lastTestedAt  DateTime?
-  lastTestStatus String? // "ok" | "auth_failed" | "unreachable" | "schema_error"
-  lastTestError  String? @db.Text // message brut si echec
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  lastTestedAt          DateTime?
+  lastTestStatus        String? // "ok" | "auth_failed" | "unreachable" | "schema_error"
+  lastTestError         String?   @db.Text // message brut si echec
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
-  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tenant Tenant                 @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   runs   CisoAssistantSyncRun[]
 }
 
 model CisoAssistantSyncRun {
-  id             String   @id @default(cuid())
+  id             String    @id @default(cuid())
   tenantId       String
   connectionId   String
   framework      String // ISO27001:2022, NIS2, RGPD, ANSSI-HG, NIST-CSF
   status         String // "running" | "success" | "partial" | "failed"
   // User qui a clique sur "Synchroniser" (cron = null).
   triggeredBy    String?
-  startedAt      DateTime @default(now())
+  startedAt      DateTime  @default(now())
   finishedAt     DateTime?
-  evidencesTotal Int      @default(0)
-  evidencesOk    Int      @default(0)
-  evidencesFail  Int      @default(0)
+  evidencesTotal Int       @default(0)
+  evidencesOk    Int       @default(0)
+  evidencesFail  Int       @default(0)
   // Log accumule ligne par ligne pendant l'execution, lu en SSE par l'UI.
   // Format : chaque ligne = "<ISO_timestamp> [<level>] <message>".
-  logs           String   @db.Text @default("")
+  logs           String    @default("") @db.Text
 
   tenant     Tenant                  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   connection CisoAssistantConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
 
   @@index([tenantId, startedAt])
   @@index([status])
+}
+
+// =====================================================
+// MODE ENQUETEUR — apprentissage par decouverte guidee (mai 2026)
+// =====================================================
+// L'apprenant analyse un media (email, post LinkedIn, photo bureau...)
+// et coche les "red flags" qu'il identifie. Score = somme des red flags
+// trouves - somme des penalites pour faux positifs (distractors).
+//
+// Difference avec un Quiz classique :
+//   - Quiz = QCM avec 1 bonne reponse parmi 4
+//   - Enquete = QCM "tout ce qui s'applique" avec faux positifs penalises
+//
+// Le contenu source (red flags + distractors + media + explications) vit
+// dans le frontmatter MDX (cf. content/enquetes-demo/*.mdx pour les 3
+// gratuits OSS, content-pro/content/enquetes/ pour les payants).
+// La table InvestigationResult stocke uniquement les RESULTATS par user.
+//
+// Cf. ROADMAP_MODE_ENQUETEUR.md (hors repo) pour la stratégie complète.
+
+enum InvestigationType {
+  EMAIL // mail de phishing
+  SMS // SMS de smishing
+  LINKEDIN // post LinkedIn d'oversharing pro
+  FACEBOOK // post Facebook d'oversharing perso
+  PROFILE_PUBLIC // profil public exposant trop d'info
+  PHOTO_OFFICE // photo de bureau (post-it MdP, ecran ouvert...)
+  PHOTO_PIGGYBACK // photo d'un sas badge avec tailgating
+  TRASH_BIN // photo de poubelle avec doc sensible
+  PUBLIC_WIFI // photo en lieu public avec ecran visible
+}
+
+model InvestigationResult {
+  id              String            @id @default(cuid())
+  tenantId        String
+  userId          String
+  // Slug de l'enquete (ref vers le fichier MDX). Pas de FK car le catalogue
+  // d'enquetes vit en MDX (versionne dans le repo / submodule), pas en DB.
+  scenarioSlug    String
+  scenarioType    InvestigationType
+  // IDs des red flags coches correctement (ex: ["typosquat", "urgency"])
+  redFlagsFound   Json
+  // IDs des distractors coches a tort (ex: ["html_format"])
+  distractorsHit  Json
+  // Score net = sum(redFlags points) - sum(distractors penalty)
+  score           Int
+  // Score max possible (= sum de tous les redFlags points). Permet de
+  // calculer le % de reussite sans recharger le MDX.
+  maxScore        Int
+  // Temps mis pour completer (sert au mode chronometre + leaderboard)
+  durationSeconds Int
+  // True si score >= seuil (60% du max). Sert au calcul du rank Detective.
+  passed          Boolean           @default(false)
+  createdAt       DateTime          @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([userId, scenarioSlug])
+  @@index([userId, passed])
+  @@index([tenantId, createdAt])
 }

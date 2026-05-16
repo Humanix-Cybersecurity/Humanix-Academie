@@ -1,0 +1,153 @@
+---
+title: "L'email Microsoft 365 du mardi soir"
+kind: investigation
+investigationType: EMAIL
+difficulty: 2
+durationSeconds: 60
+xpReward: 50
+isFree: true
+tags:
+  - phishing
+  - email
+  - typosquatting
+brief: |
+  Tu es au bureau, mardi 16h47. Tu reçois ce mail dans ta boîte pro.
+  Avant de cliquer sur quoi que ce soit, tu prends 60 secondes pour
+  l'analyser.
+
+  Quels signaux suspects vois-tu ? Coche tout ce qui te paraît
+  louche. Attention aux faux positifs : un bon enquêteur sait aussi
+  ne pas s'alarmer pour rien.
+media:
+  type: email-mockup
+  data:
+    from: "Microsoft Account Support"
+    fromEmail: "support@micr0soft-secure.com"
+    to: "vous@votre-entreprise.fr"
+    sentAt: "Mardi 16h47 (il y a 2 minutes)"
+    subject: "[Action requise] Votre compte sera désactivé sous 2h"
+    body: |
+      Cher utilisateur,
+
+      Nous avons détecté une activité inhabituelle sur votre compte
+      Microsoft 365. Pour éviter la désactivation sous 2 heures,
+      vous devez confirmer votre identité immédiatement.
+
+      Cliquez sur le lien ci-dessous pour sécuriser votre accès :
+
+      https://login.microsoftonline.com/secure
+
+      Si vous ne réalisez pas cette action sous le délai imparti,
+      votre boîte mail sera suspendue et toutes vos données seront
+      effacées.
+
+      Cordialement,
+      L'équipe Microsoft Account Support
+    hasAttachment: false
+    links:
+      - label: "https://login.microsoftonline.com/secure"
+        displayedHref: "https://login.microsoftonline.com/secure"
+        realHref: "https://login-micr0soft-secure.tk/verify-account"
+redFlags:
+  - id: typosquat-domain
+    label: "Domaine expéditeur 'micr0soft-secure.com' (zéro à la place du 'o')"
+    points: 25
+    explanation: |
+      C'est du typosquatting. Le vrai domaine Microsoft est
+      microsoft.com (avec un O, pas un 0). L'attaquant remplace une
+      lettre par un caractère visuellement similaire pour vous
+      tromper. Toujours zoomer sur le domaine de l'expéditeur.
+  - id: urgency
+    label: "Pression artificielle (« sous 2 heures »)"
+    points: 20
+    explanation: |
+      Microsoft ne désactive JAMAIS un compte en 2h. L'urgence est
+      l'arme #1 des attaquants : elle court-circuite le cerveau
+      rationnel et pousse au clic réflexe. Règle simple : si on te
+      met sous pression temporelle, c'est suspect.
+  - id: link-mismatch
+    label: "Le lien affiché ne correspond PAS à sa vraie destination"
+    points: 25
+    explanation: |
+      Le texte affiche 'login.microsoftonline.com/secure' mais le
+      vrai lien (visible en survolant) pointe vers
+      'login-micr0soft-secure.tk/verify-account'. Le .tk + le tiret
+      + le typosquat = phishing évident. Toujours survoler les
+      liens avant de cliquer (Outlook affiche la cible en bas).
+  - id: generic-salutation
+    label: "Salutation impersonnelle (« Cher utilisateur »)"
+    points: 10
+    explanation: |
+      Microsoft connaît ton nom (et même ton tenant Azure). Une
+      vraie alerte de sécurité commencerait par ton prénom. Une
+      salutation générique = envoi de masse = phishing.
+  - id: threat-data-loss
+    label: "Menace de destruction de données (« toutes vos données seront effacées »)"
+    points: 15
+    explanation: |
+      Aucun fournisseur cloud sérieux ne menace de supprimer tes
+      données dans un mail. Microsoft a une procédure légale (30
+      jours de grâce minimum, notifications multiples par canaux
+      différents). C'est de l'intimidation, pas de la sécurité.
+distractors:
+  - id: html-format
+    label: "L'email est en HTML"
+    penalty: 5
+    explanation: |
+      Faux positif : 99 % des emails pro sont en HTML aujourd'hui
+      (mise en page, logos, liens cliquables). Le format HTML seul
+      n'est pas un signal de phishing.
+  - id: french-grammar
+    label: "Le français est trop bon (pas d'erreur)"
+    penalty: 5
+    explanation: |
+      Idée reçue : les phishings modernes (surtout depuis l'IA
+      générative) ont un français impeccable. Se fier UNIQUEMENT
+      à la qualité du français pour détecter le phishing est
+      dangereux en 2026.
+  - id: short-email
+    label: "L'email est court (< 100 mots)"
+    penalty: 3
+    explanation: |
+      Faux positif : les vrais emails Microsoft de sécurité sont
+      courts aussi (le but est l'action rapide, pas la prose).
+      La longueur ne discrimine rien.
+debrief: |
+  **Bravo, détective.** Tu viens d'analyser un phishing avec 5
+  signaux suspects et 3 faux positifs typiques.
+
+  ## Les 5 signaux à retenir
+
+  1. **Typosquatting du domaine** (le zéro à la place du O)
+  2. **Urgence artificielle** (« 2 heures »)
+  3. **Lien affiché ≠ lien réel** (toujours survoler)
+  4. **Salutation impersonnelle** (Microsoft connaît ton prénom)
+  5. **Menace de destruction de données** (intimidation)
+
+  ## La règle des 2 sur 5
+
+  Tu n'as pas besoin de tous les détecter pour te sauver. Sur le
+  terrain, **2 signaux sur 5 suffisent** à classer un mail en
+  phishing et à le signaler.
+
+  Le signal le plus fiable reste **le domaine expéditeur**. Quand
+  tu hésites : zoome dessus, vérifie chaque lettre. Si tu vois un
+  zéro à la place d'un O, un 1 à la place d'un l, un .tk au lieu
+  de .com — c'est suspect.
+
+  ## Et les faux positifs ?
+
+  Les bons enquêteurs ne sur-alarment pas. Le HTML, un bon français
+  ou un email court ne sont **pas** des signaux. Si tu coches tout
+  par principe, tu vas spammer ton RSSI avec des faux positifs et
+  finir par ne plus être pris au sérieux.
+
+  ## Prochaine étape
+
+  Essaye l'enquête **LinkedIn promo** : un cas d'oversharing
+  professionnel beaucoup plus subtil.
+---
+
+# L'email Microsoft 365 du mardi soir
+
+Ce contenu est rendu par le composant InvestigationPlayer.
