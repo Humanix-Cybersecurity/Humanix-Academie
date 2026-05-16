@@ -61,6 +61,12 @@ const DEMO_DROPDOWN_ITEM: DropdownItem = {
 };
 const PRODUIT_ITEMS_BASE: DropdownItem[] = [
   {
+    href: "/rejoindre",
+    label: "Comment commencer",
+    description: "6 profils, 6 chemins. Trouvez le vôtre en 30 secondes.",
+    emoji: "🧭",
+  },
+  {
     href: "/tarifs",
     label: "Tarifs",
     description: "Self-host gratuit ou cloud à partir de 0 €/mois",

@@ -39,6 +39,7 @@ const DEMO_LINK: FooterLink | null = IS_DEMO_MODE
 
 // Colonne "Notre offre" -- miroir strict de PRODUIT_ITEMS dans HeaderBar.tsx
 const NOTRE_OFFRE: FooterLink[] = [
+  { href: "/rejoindre", label: "Comment commencer", emoji: "🧭" },
   { href: "/tarifs", label: "Tarifs", emoji: "💶" },
   ...(DEMO_LINK ? [DEMO_LINK] : []),
   { href: "/comparatif", label: "Comparatif", emoji: "⚖️" },
