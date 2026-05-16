@@ -23,9 +23,11 @@ type Props = {
   /** Sous-titre court : ex "Audience : RH", "6 épisodes", "Difficulté ★★★". */
   subtitle?: string;
   /**
-   * Libelle du badge de tier en bas. Par defaut : "Formule Standard".
-   * On peut passer "Formule Pro" / "Enterprise" si l'item est sur un palier
-   * plus haut.
+   * Libelle du badge de tier en bas. Par defaut : "Formule Pro".
+   * Aligne sur la grille officielle (Community / Starter / Pro / Enterprise) :
+   * le catalogue premium est inclus des le Starter payant (19 €/mois,
+   * 6-15 sieges) et evidemment en Pro (3 €/user/mois) + Enterprise.
+   * On peut passer "Formule Enterprise" si l'item est gate plus haut.
    */
   tier?: string;
   /**
@@ -40,7 +42,7 @@ export default function LockedPremiumCard({
   emoji,
   title,
   subtitle,
-  tier = "Formule Standard",
+  tier = "Formule Pro",
   ctaHref = "/tarifs",
   ctaLabel = "Découvrir l'offre",
 }: Props) {
@@ -111,13 +113,14 @@ export function PremiumPreviewIntro({
         </span>
         <div className="flex-1 min-w-0">
           <h2 className="text-sm font-bold text-amber-900 dark:text-amber-200 uppercase tracking-wider">
-            +{totalCount} {label} en formule Standard
+            +{totalCount} {label} dès la formule payante
           </h2>
           <p className="mt-1 text-sm text-amber-800 dark:text-amber-100/80 leading-relaxed">
             Vous êtes sur une démo publique. Le contenu ci-dessous est verrouillé —
-            il s'active dès l'abonnement, à partir de{" "}
-            <strong className="font-bold">4 €/utilisateur/mois</strong>. Aucune
-            carte bancaire requise pour démarrer un essai (5 sièges gratuits 14 jours).
+            il s'active dès l'abonnement à partir de{" "}
+            <strong className="font-bold">3 €/utilisateur/mois</strong> (Pro), ou{" "}
+            <strong className="font-bold">19 €/mois forfait</strong> jusqu'à 15 sièges
+            (Starter). Pas de CB : le plan Starter est gratuit à vie jusqu'à 5 sièges.
           </p>
           <div className="mt-3 flex flex-wrap gap-2 text-xs">
             <Link
