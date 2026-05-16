@@ -1,0 +1,103 @@
+---
+title: "La lampe-torche qui veut accéder à vos contacts"
+durationMinutes: 5
+persona: "tous"
+objective: "Comprendre le principe des permissions et apprendre à dire non sans casser l'application"
+xpReward: 45
+scenario: |
+  Élise installe une application lampe-torche gratuite recommandée
+  par un collègue. Au premier lancement, l'application demande
+  l'accès aux contacts, à la position en arrière-plan, aux SMS
+  et au microphone. Que doit-elle faire ?
+choices:
+  - id: "a"
+    label: "Accepter tout, sinon l'application ne marchera pas"
+    outcome: "bad"
+    feedback: "Une lampe-torche n'a strictement aucun besoin légitime de vos contacts, de votre position ou de vos SMS. Si elle refuse de fonctionner sans, c'est qu'elle ne vit pas de la lampe : elle vit de vos données."
+    points: -10
+  - id: "b"
+    label: "Refuser toutes les permissions et observer ce qui ne fonctionne plus"
+    outcome: "good"
+    feedback: "Excellent réflexe. Une lampe-torche n'a besoin que de l'accès au flash de la caméra. Si vous refusez et que la lampe marche, vous savez que les autres permissions étaient abusives. Sinon, vous changez d'application."
+    points: 25
+  - id: "c"
+    label: "Accepter seulement l'accès aux contacts pour aller plus vite"
+    outcome: "bad"
+    feedback: "Vos contacts sont des données personnelles d'autres personnes que vous n'avez pas le droit de partager comme ça. Vous engagez aussi leur vie privée en faisant ce choix."
+    points: -8
+  - id: "d"
+    label: "Désinstaller et chercher une lampe-torche dans les applications natives du téléphone"
+    outcome: "good"
+    feedback: "Le meilleur choix. iOS et Android intègrent une lampe-torche native, sans permission supplémentaire. Aucune application tierce n'est nécessaire."
+    points: 30
+quizCorrectAnswer: "d"
+takeaway: |
+  Une application demande seulement les permissions strictement
+  nécessaires à son métier. Toute permission « hors-sujet » est
+  un signal d'alarme. Et pour 80 % des besoins simples (lampe,
+  chronomètre, calculatrice, niveau à bulle), les applications
+  natives du téléphone suffisent largement.
+licence: "CC BY-SA 4.0 — Humanix Académie Community Edition"
+---
+
+# La lampe-torche qui veut accéder à vos contacts
+
+Une étude de l'université de Berkeley publiée en 2023 a analysé
+les cent applications lampe-torche les plus téléchargées sur les
+deux principaux magasins d'applications. Quatre-vingt-deux d'entre
+elles demandaient des permissions sans aucun rapport avec leur
+fonction annoncée.
+
+## Le modèle économique caché
+
+Beaucoup d'applications gratuites ne facturent pas leur usage.
+Elles facturent vos données. Le contrat est invisible et
+asymétrique : vous obtenez une lampe-torche, l'éditeur obtient
+votre carnet d'adresses, votre géolocalisation, et parfois vos
+SMS qu'il revend à des courtiers en données ou à des annonceurs.
+
+Le problème de fond : vos contacts ne sont pas que les vôtres.
+Quand vous les partagez, vous partagez les numéros de téléphone,
+mails et anniversaires de gens qui n'ont jamais consenti à ce
+partage. Sur le plan RGPD, vous devenez vous-même responsable de
+la fuite.
+
+## La règle de la nécessité fonctionnelle
+
+Une permission n'est légitime que si elle est strictement nécessaire
+à une fonctionnalité visible et annoncée de l'application :
+
+- Une appli de messagerie : oui pour les contacts (pour suggérer
+  qui inviter)
+- Une appli de navigation : oui pour la position (pour vous
+  guider)
+- Une appli de scan QR : oui pour la caméra
+- Une lampe-torche : oui pour la caméra (le flash), c'est tout
+
+Si la connexion entre le service rendu et la permission demandée
+n'est pas évidente, c'est non. Vous pouvez toujours revenir en
+arrière dans les réglages si vous avez besoin de la fonction
+plus tard.
+
+## Le bon réflexe à l'installation
+
+Au premier lancement, refusez toutes les permissions et essayez
+l'application. Si tout marche, parfait. Si une fonction précise
+réclame une permission, vous la débloquerez à ce moment-là, en
+connaissance de cause.
+
+Sur iOS et Android récents, vous pouvez aussi accorder une
+permission de manière granulaire : « Une seule fois », « Quand
+j'utilise l'application », « Toujours ». Le « Toujours » est très
+rarement nécessaire pour une utilisation honnête.
+
+## L'audit annuel de vos permissions
+
+Une fois par an, ouvrez les réglages de permissions de votre
+téléphone (Réglages, Confidentialité, Localisation par exemple).
+Vous serez surpris de découvrir combien d'applications oubliées
+ont encore accès à votre position en arrière-plan.
+
+Désinstallez tout ce que vous n'avez pas utilisé depuis trois
+mois. Révoquez les permissions « Toujours » sur tout ce qui n'en
+a pas un besoin réel et continu.
