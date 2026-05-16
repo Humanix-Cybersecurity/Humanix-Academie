@@ -82,7 +82,14 @@ export function loadCatalogSaisons(): {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function loadLibraryArticles(): any[] {
-  if (IS_DEMO_MODE) return [];
+  if (IS_DEMO_MODE) {
+    // En demo, on seed un mini-corpus de 5 articles CC BY-SA pour montrer
+    // l'experience "lecture cyber-RH" sans exposer le catalogue premium.
+    const demo = tryRequire("../lib/library-seed-demo");
+    if (demo && Array.isArray(demo.LIBRARY_ARTICLES_DEMO))
+      return demo.LIBRARY_ARTICLES_DEMO;
+    return [];
+  }
   const pro = tryRequire("../lib/library-seed");
   if (pro && Array.isArray(pro.LIBRARY_ARTICLES)) return pro.LIBRARY_ARTICLES;
   return [];
@@ -107,7 +114,14 @@ export function loadMarketplaceModules(): any[] {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function loadAnecdoteSeeds(): any[] {
-  if (IS_DEMO_MODE) return [];
+  if (IS_DEMO_MODE) {
+    // En demo, on seed 6 anecdotes 2024 publiquement sourcees (CC BY-SA)
+    // pour montrer le format newsletter sans exposer le catalogue complet.
+    const demo = tryRequire("../lib/anecdotes/seed-data-demo");
+    if (demo && Array.isArray(demo.ANECDOTES_SEED_DEMO))
+      return demo.ANECDOTES_SEED_DEMO;
+    return [];
+  }
   const pro = tryRequire("../lib/anecdotes/seed-data");
   if (pro && Array.isArray(pro.ANECDOTES_SEED)) return pro.ANECDOTES_SEED;
   // Tolere d'anciens noms d'export pour compat fork

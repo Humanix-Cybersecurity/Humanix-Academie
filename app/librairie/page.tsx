@@ -14,6 +14,13 @@ import { redirect } from "next/navigation";
 import { auth, getSignInPath } from "@/lib/auth";
 import { db } from "@/lib/db";
 import HexBackdrop from "@/components/HexBackdrop";
+import {
+  PREMIUM_ARTICLES_PREVIEW,
+  isDemoMode,
+} from "@/lib/demo-mode/premium-previews";
+import LockedPremiumCard, {
+  PremiumPreviewIntro,
+} from "@/components/demo/LockedPremiumCard";
 
 export const dynamic = "force-dynamic";
 
@@ -82,6 +89,13 @@ export default async function LibrairiePage({
 
   // Estimation temps total disponible
   const totalMinutes = articles.reduce((s, a) => s + a.readTimeMinutes, 0);
+
+  // En mode demo, on grise les articles premium pour "appater" le visiteur.
+  // On exclut les slugs deja seedes en demo (pas de doublon visuel).
+  const demoSeededSlugs = new Set(articles.map((a) => a.slug));
+  const premiumTeasers = isDemoMode()
+    ? PREMIUM_ARTICLES_PREVIEW.filter((p) => !demoSeededSlugs.has(p.slug))
+    : [];
 
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
@@ -231,6 +245,28 @@ export default async function LibrairiePage({
               );
             })}
           </div>
+        )}
+
+        {/* ============================================================
+            3.bis APERCU PREMIUM - uniquement en mode DEMO
+            ============================================================ */}
+        {premiumTeasers.length > 0 && (
+          <section aria-label="Articles disponibles en formule Standard">
+            <PremiumPreviewIntro
+              totalCount={premiumTeasers.length}
+              label="articles à lire en formule Standard"
+            />
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {premiumTeasers.map((p) => (
+                <LockedPremiumCard
+                  key={p.slug}
+                  emoji={p.emoji}
+                  title={p.title}
+                  subtitle={`Audience : ${p.audience} · ${p.category}`}
+                />
+              ))}
+            </div>
+          </section>
         )}
 
         {/* ============================================================
