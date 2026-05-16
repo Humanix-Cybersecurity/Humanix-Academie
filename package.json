@@ -59,6 +59,8 @@
     "db:reset": "prisma db push --force-reset --accept-data-loss && npm run db:seed",
     "db:purge-demo": "tsx scripts/purge-demo-fixtures.ts",
     "db:purge-demo:apply": "tsx scripts/purge-demo-fixtures.ts --apply",
+    "db:wipe-content": "tsx scripts/wipe-content.ts",
+    "db:wipe-content:apply": "tsx scripts/wipe-content.ts --apply",
     "breaches:refresh": "tsx scripts/scrape-breaches.ts",
     "breaches:refresh:deep": "tsx scripts/scrape-breaches.ts --deep",
     "breaches:debug": "tsx scripts/debug-breaches.ts",
