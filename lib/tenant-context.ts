@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
 // Helpers server-side pour resoudre le tenant courant depuis :
-//   1. Le header `x-tenant-slug` injecte par le middleware (multi-tenant SaaS)
+//   1. Le header `x-tenant-slug` injecte par le proxy (multi-tenant SaaS)
 //   2. La session NextAuth (session.user.tenantId)
 //
 // Et pour valider la coherence entre les deux sources :
@@ -83,7 +83,7 @@ export type TenantContext =
 
 /**
  * Resout le contexte tenant courant en lisant le header `x-tenant-slug`
- * (injecte par middleware.ts) et la session.
+ * (injecte par proxy.ts) et la session.
  *
  * SECURITE : valide la coherence entre le subdomain et le tenant connecte.
  * Si un user de tenant A tape l'URL de tenant B avec son cookie, on detecte
