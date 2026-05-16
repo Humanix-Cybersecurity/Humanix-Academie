@@ -89,6 +89,16 @@ function SignupInner() {
         <p className="text-gray-600 dark:text-gray-300 mt-2 text-sm">
           {planMeta.tagline}.
         </p>
+        <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+          Vous hésitez sur la formule ?{" "}
+          <Link
+            href="/rejoindre"
+            className="text-primary-500 dark:text-accent-300 underline"
+          >
+            Voir les 6 profils
+          </Link>
+          .
+        </p>
       </div>
 
       {error && (
