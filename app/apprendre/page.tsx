@@ -53,6 +53,13 @@ import AcquisSection from "@/components/learner/AcquisSection";
 import LearnerEmptyState from "@/components/learner/LearnerEmptyState";
 import CloseQuote from "@/components/learner/CloseQuote";
 import { SAISON_PALETTES, CITATIONS } from "@/components/learner/palettes";
+import {
+  PREMIUM_SAISONS_PREVIEW,
+  isDemoMode,
+} from "@/lib/demo-mode/premium-previews";
+import LockedPremiumCard, {
+  PremiumPreviewIntro,
+} from "@/components/demo/LockedPremiumCard";
 
 export const dynamic = "force-dynamic";
 
@@ -328,6 +335,18 @@ export default async function ApprendrePage() {
               </a>
             </div>
 
+            {/* En DEMO_MODE : bandeau introductif pour montrer ce que la
+                formule Standard apporte (placé AVANT la grille pour que le
+                visiteur comprenne immédiatement ce qu'il voit après). */}
+            {isDemoMode() && (
+              <div className="mb-6">
+                <PremiumPreviewIntro
+                  totalCount={PREMIUM_SAISONS_PREVIEW.length}
+                  label="saisons premium à débloquer (≈178 modules)"
+                />
+              </div>
+            )}
+
             <div className="grid sm:grid-cols-2 gap-5">
               {saisons.map((s, idx) => {
                 const palette = SAISON_PALETTES[idx % SAISON_PALETTES.length];
@@ -377,6 +396,20 @@ export default async function ApprendrePage() {
                   />
                 );
               })}
+
+              {/* En DEMO_MODE : les saisons premium suivent les saisons OSS
+                  pour montrer la profondeur du catalogue commercial. */}
+              {isDemoMode() &&
+                PREMIUM_SAISONS_PREVIEW.filter(
+                  (p) => !saisons.some((s) => s.slug === p.slug),
+                ).map((p) => (
+                  <LockedPremiumCard
+                    key={`premium-${p.slug}`}
+                    emoji={p.emoji}
+                    title={p.title}
+                    subtitle={`${p.episodes} épisodes · Audience : ${p.audience}`}
+                  />
+                ))}
             </div>
           </section>
         )}
