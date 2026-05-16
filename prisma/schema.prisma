@@ -115,6 +115,7 @@ model Tenant {
   marketplaceInstalls  MarketplaceInstallation[]
   webhooks             TenantWebhook[]
   familyInvites        FamilyInvite[]
+  transferRequests     TenantTransferRequest[]   @relation("TransferRequestTenant")
   incidents            IncidentResponse[]
   riskScoreSnapshots   RiskScoreSnapshot[]
   cyberEventInstances  CyberEventInstance[]
@@ -330,23 +331,24 @@ model User {
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 
-  tenant               Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  progress             Progress[]
-  events               Event[]
-  accounts             Account[]
-  sessions             Session[]
-  inventory            UserInventory[]
-  phishingResults      PhishingResult[]
-  notificationLogs     NotificationLog[]
-  authoredModules      MarketplaceModule[]   @relation("AuthoredModules")
-  reviewedModules      MarketplaceModule[]   @relation("ReviewedModules")
-  familyInvitesIssued  FamilyInvite[]        @relation("FamilyInviteSponsor")
-  expertProfile        ExpertProfile?
-  passwordResets       PasswordResetToken[]
-  groups               UserGroup[]
-  webauthnCredentials  WebAuthnCredential[]
-  achievements         UserAchievement[]
-  investigationResults InvestigationResult[]
+  tenant                 Tenant                  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  progress               Progress[]
+  events                 Event[]
+  accounts               Account[]
+  sessions               Session[]
+  inventory              UserInventory[]
+  phishingResults        PhishingResult[]
+  notificationLogs       NotificationLog[]
+  authoredModules        MarketplaceModule[]     @relation("AuthoredModules")
+  reviewedModules        MarketplaceModule[]     @relation("ReviewedModules")
+  familyInvitesIssued    FamilyInvite[]          @relation("FamilyInviteSponsor")
+  transferRequestsIssued TenantTransferRequest[] @relation("TransferRequestRequester")
+  expertProfile          ExpertProfile?
+  passwordResets         PasswordResetToken[]
+  groups                 UserGroup[]
+  webauthnCredentials    WebAuthnCredential[]
+  achievements           UserAchievement[]
+  investigationResults   InvestigationResult[]
 
   @@index([tenantId])
   @@index([isActive])
@@ -1363,6 +1365,62 @@ model FamilyInvite {
 }
 
 // =====================================================
+// TENANT TRANSFER REQUEST - Rattachement RGPD-safe d'un compte
+// =====================================================
+//
+// Cas d'usage : un admin tape l'email d'une personne pour l'inviter.
+// Si l'email existe deja dans un autre tenant (ex: conjoint inscrit
+// en solo avant que l'employeur ouvre un espace), on ne peut pas le
+// creer a nouveau (User.email est unique global). On ne peut pas non
+// plus reveler a l'admin que ce compte existe (RGPD : pas de fuite
+// d'existence de comptes via enumeration).
+//
+// Solution : un flux de "rattachement consenti".
+//   1. Admin tape l'email -> server cree un TenantTransferRequest,
+//      envoie un mail a l'adresse, et retourne un message NEUTRE a
+//      l'admin (« Si cette personne existe, un lien lui a ete envoye »)
+//   2. L'utilisateur recoit un mail explicite : « X souhaite que vous
+//      rejoigniez son espace Y. Acceptez-vous ? »
+//   3. Il clique le lien, se connecte si besoin, et accepte ou refuse
+//   4. Si accepte : son User.tenantId est mis a jour vers le tenant
+//      cible. Ses progres / certificats restent les siens.
+//   5. Audit log a chaque etape. Le lien expire en 7 jours.
+model TenantTransferRequest {
+  id                  String                @id @default(cuid())
+  // L'admin qui a lance la demande
+  requestedByUserId   String
+  requestedByTenantId String
+  // Email cible. Stocke meme si pas d'user correspondant, pour cacher
+  // l'existence (on cree la request dans tous les cas).
+  targetEmail         String
+  // Token public unique pour le lien magique
+  token               String                @unique
+  status              TransferRequestStatus @default(PENDING)
+  sentAt              DateTime              @default(now())
+  expiresAt           DateTime
+  acceptedAt          DateTime?
+  rejectedAt          DateTime?
+  // Message personnel optionnel ajoute par l'admin
+  personalMessage     String?               @db.Text
+
+  requestedBy       User   @relation("TransferRequestRequester", fields: [requestedByUserId], references: [id], onDelete: Cascade)
+  requestedByTenant Tenant @relation("TransferRequestTenant", fields: [requestedByTenantId], references: [id], onDelete: Cascade)
+
+  @@index([requestedByTenantId])
+  @@index([token])
+  @@index([targetEmail])
+  @@index([status])
+}
+
+enum TransferRequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  EXPIRED
+  REVOKED
+}
+
+// =====================================================
 // EXPERT PROFILE - Bibliotheque vivante d'experts cyber francais
 // Une personne (User) peut etre auteur de modules marketplace ET avoir
 // un profil public expert valorisant sa contribution. C'est le levier
@@ -1501,6 +1559,11 @@ enum AuditAction {
   USER_SUSPENDED
   USER_ROLE_CHANGED
   USER_GROUPS_CHANGED
+  // Rattachement cross-tenant (RGPD-safe)
+  TRANSFER_REQUEST_CREATED // Admin a demande le rattachement d'un email
+  TRANSFER_REQUEST_ACCEPTED // L'utilisateur cible a accepte
+  TRANSFER_REQUEST_REJECTED // L'utilisateur cible a refuse
+  TRANSFER_REQUEST_REVOKED // Admin a annule sa demande
   // Tenant
   TENANT_CREATED
   TENANT_UPDATED
