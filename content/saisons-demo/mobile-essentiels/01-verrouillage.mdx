@@ -1,0 +1,82 @@
+---
+title: "Le verrouillage en 30 secondes"
+durationMinutes: 5
+persona: "tous"
+objective: "Comprendre pourquoi 30 secondes de verrouillage automatique valent mieux que 5 minutes"
+xpReward: 40
+scenario: |
+  Camille pose son téléphone professionnel sur le comptoir
+  pendant qu'elle commande son café. Elle le récupère trente
+  secondes plus tard. Que peut-il s'être passé pendant ces
+  trente secondes si l'écran ne s'est pas verrouillé ?
+choices:
+  - id: "a"
+    label: "Rien, trente secondes ce n'est pas assez pour faire du mal"
+    outcome: "bad"
+    feedback: "Trente secondes suffisent largement à un voisin opportuniste pour photographier un mail confidentiel, lire un message ou installer un raccourci d'accès à distance."
+    points: -10
+  - id: "b"
+    label: "On peut tout faire : copier une pièce jointe, lire les messages, installer une application"
+    outcome: "good"
+    feedback: "Exactement. Un téléphone professionnel non verrouillé est une station de travail ouverte à tous les passants. Trente secondes, c'est largement assez pour exfiltrer."
+    points: 15
+  - id: "c"
+    label: "Un attaquant a besoin du mot de passe pour faire quoi que ce soit"
+    outcome: "bad"
+    feedback: "Si l'écran est encore actif, le téléphone est déjà déverrouillé. Aucun mot de passe à connaître."
+    points: -5
+quizCorrectAnswer: "b"
+takeaway: |
+  Régler le verrouillage automatique à 30 secondes (et non 5 minutes
+  comme par défaut). C'est inconfortable les trois premiers jours,
+  invisible ensuite. Sur iOS et Android, c'est dans Réglages, section
+  Écran et luminosité, option Verrouillage automatique.
+licence: "CC BY-SA 4.0 — Humanix Académie Community Edition"
+---
+
+# Le verrouillage en 30 secondes
+
+Le téléphone professionnel est devenu le point d'entrée numéro un
+des fuites de données en mobilité. Beaucoup plus que le laptop, qui
+reste souvent dans le sac.
+
+## Pourquoi 30 secondes plutôt que 5 minutes
+
+Le délai par défaut dans la plupart des téléphones est de plusieurs
+minutes. C'est confortable, mais c'est aussi la fenêtre offerte à
+un voisin de comptoir, de salle d'attente, de train, pour lire,
+photographier ou interagir avec votre écran sans rien casser de
+votre flux de travail.
+
+Trente secondes, c'est la durée pendant laquelle vous gardez
+naturellement le téléphone en main pendant une action. Au-delà,
+c'est que vous l'avez posé ou que votre attention est ailleurs —
+exactement le moment où il doit se verrouiller.
+
+## Les chiffres terrain
+
+D'après les déclarations à la CNIL en 2024, **34 % des incidents
+de fuite par appareil mobile** se sont produits lors d'une absence
+de moins de cinq minutes du propriétaire. Sur ces cas, l'écran
+était resté actif. C'est massif et entièrement évitable.
+
+## Le réflexe à acquérir
+
+Avant de poser votre téléphone sur n'importe quelle surface,
+posez-vous une question simple : si on me le piquait maintenant,
+qu'est-ce qu'on verrait à l'écran ?
+
+Si la réponse n'est pas « rien, c'est l'écran d'accueil verrouillé »,
+c'est qu'il faut verrouiller manuellement (bouton latéral) ou
+réduire le délai automatique.
+
+## La règle des trois écrans
+
+Trois écrans à toujours considérer comme exposés :
+- L'écran de votre téléphone
+- L'écran de votre laptop
+- L'écran de votre montre connectée (notifications)
+
+Le verrouillage automatique court règle 90 % du risque sur les
+deux premiers. Pour la montre, c'est dans les notifications : à
+masquer dès qu'elles touchent au pro.
