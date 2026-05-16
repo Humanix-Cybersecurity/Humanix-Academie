@@ -17,6 +17,13 @@ import {
   DETECTIVE_RANK_LABELS,
   type Investigation,
 } from "@/lib/investigations/types";
+import {
+  PREMIUM_INVESTIGATIONS_PREVIEW,
+  isDemoMode,
+} from "@/lib/demo-mode/premium-previews";
+import LockedPremiumCard, {
+  PremiumPreviewIntro,
+} from "@/components/demo/LockedPremiumCard";
 
 export const dynamic = "force-dynamic";
 
@@ -166,7 +173,31 @@ export default async function EnquetesPage() {
         </section>
       )}
 
-      {free.length === 0 && paid.length === 0 && (
+      {/* En DEMO_MODE : on grise les enquetes premium pour "appater". */}
+      {isDemoMode() && paid.length === 0 && (
+        <section
+          aria-label="Enquêtes disponibles en formule Standard"
+          className="max-w-5xl mx-auto px-4 py-6"
+        >
+          <PremiumPreviewIntro
+            totalCount={PREMIUM_INVESTIGATIONS_PREVIEW.length}
+            label="enquêtes premium à débloquer"
+          />
+          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {PREMIUM_INVESTIGATIONS_PREVIEW.map((p) => (
+              <li key={p.slug}>
+                <LockedPremiumCard
+                  emoji="🔍"
+                  title={p.title}
+                  subtitle={`Difficulté ${"★".repeat(p.difficulty)}${"☆".repeat(5 - p.difficulty)}`}
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {free.length === 0 && paid.length === 0 && !isDemoMode() && (
         <section className="max-w-3xl mx-auto px-4 py-12 text-center text-gray-500 dark:text-gray-400">
           <p>Aucune enquête disponible pour le moment.</p>
         </section>
