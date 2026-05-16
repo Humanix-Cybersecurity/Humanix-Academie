@@ -49,7 +49,7 @@ export default function LockedPremiumCard({
   return (
     <article
       aria-label={`${title} — disponible en ${tier}`}
-      className="group relative flex flex-col rounded-xl border border-dashed border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/40 p-5 transition-all hover:border-primary-300 dark:hover:border-accent-400 hover:shadow-sm"
+      className="group relative flex flex-col h-full rounded-xl border border-dashed border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/40 p-5 transition-all hover:border-primary-300 dark:hover:border-accent-400 hover:shadow-sm"
     >
       {/* Cadenas overlay haut-droit */}
       <span
@@ -75,8 +75,10 @@ export default function LockedPremiumCard({
         ) : null}
       </div>
 
-      {/* Bandeau bas : tier + CTA */}
-      <div className="mt-5 pt-4 border-t border-gray-200 dark:border-slate-800 flex items-center justify-between gap-3">
+      {/* Bandeau bas : tier + CTA. mt-auto pousse en bas dans un parent
+          flex-col h-full (utilise par le carrousel /apprendre pour aligner
+          tous les CTA). pt-4 garde un espace minimum si la card est courte. */}
+      <div className="mt-auto pt-4 border-t border-gray-200 dark:border-slate-800 flex items-center justify-between gap-3">
         <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 text-[10px] font-semibold uppercase tracking-wider">
           <span aria-hidden="true">✦</span>
           {tier}
