@@ -2,7 +2,7 @@
 // Tests du rendu markdown inline -- critique pour anti-XSS sur les liens.
 
 import { describe, it, expect } from "vitest";
-import { renderInline, markdownToPlainText } from "./markdown";
+import { renderInline, markdownToPlainText, parseMarkdown } from "./markdown";
 
 describe("renderInline - rendu liens cliquables", () => {
   it("convertit [texte](https://...) en token link", () => {
@@ -139,5 +139,60 @@ describe("markdownToPlainText - strip propre des liens", () => {
     expect(
       markdownToPlainText("Lis [un](u1) et [deux](u2) et [trois](u3)"),
     ).toBe("Lis un et deux et trois");
+  });
+});
+
+describe("parseMarkdown - regression : italique en debut de ligne", () => {
+  // Bug historique : un paragraphe dont une ligne commence par
+  // *italique* etait coupe, et la ligne droppee silencieusement
+  // (cf. brief de l'enquete photo-bureau-ouvert.mdx).
+  // La regex de break exigeait `\s?` (espace optionnel) apres le
+  // marqueur, donc `*atteignable*` etait detecte comme debut de
+  // liste alors que ce n'en est pas une.
+
+  it("conserve un mot en italique en debut de ligne dans un paragraphe", () => {
+    const blocks = parseMarkdown(
+      "Astuce : ce qui est *visible*, ce qui est\n*atteignable*, et ce qui est *exploitable* par quelqu'un qui\npasserait devant ce bureau sans etre surveille.",
+    );
+    expect(blocks).toHaveLength(1);
+    expect(blocks[0].type).toBe("p");
+    expect((blocks[0] as { text: string }).text).toContain("atteignable");
+    expect((blocks[0] as { text: string }).text).toContain("exploitable");
+    expect((blocks[0] as { text: string }).text).toContain("passerait");
+  });
+
+  it("conserve un mot en gras en debut de ligne dans un paragraphe", () => {
+    const blocks = parseMarkdown(
+      "Note importante :\n**Bravo, detective.** Tu viens d'analyser un phishing.",
+    );
+    // On accepte deux paragraphes (un par ligne) OU un seul, tant
+    // que le texte gras est conserve quelque part.
+    const allText = blocks
+      .filter((b) => b.type === "p")
+      .map((b) => (b as { text: string }).text)
+      .join(" ");
+    expect(allText).toContain("Bravo, detective.");
+  });
+
+  it("detecte toujours correctement une vraie liste a puces", () => {
+    const blocks = parseMarkdown("* item un\n* item deux");
+    expect(blocks).toHaveLength(1);
+    expect(blocks[0].type).toBe("ul");
+    expect((blocks[0] as { items: string[] }).items).toEqual([
+      "item un",
+      "item deux",
+    ]);
+  });
+
+  it("detecte toujours correctement une vraie liste ordonnee", () => {
+    const blocks = parseMarkdown("1. premier\n2. deuxieme");
+    expect(blocks).toHaveLength(1);
+    expect(blocks[0].type).toBe("ol");
+  });
+
+  it("detecte toujours correctement un titre h2", () => {
+    const blocks = parseMarkdown("## Mon titre");
+    expect(blocks).toHaveLength(1);
+    expect(blocks[0].type).toBe("h2");
   });
 });
