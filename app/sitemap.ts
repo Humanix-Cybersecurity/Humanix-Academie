@@ -84,6 +84,15 @@ const PAGES: SitemapEntry[] = [
 // La fonction est async pour autoriser les requetes Prisma (anecdotes,
 // experts). En cas de DB down au moment de la generation, on degrade
 // gracieusement vers la liste statique sans planter la build.
+//
+// Pendant `next build`, la DB n'est generalement pas accessible (CI sans
+// service postgres, build Docker en multi-stage, etc.) — on skip les
+// requetes DB completement plutot que de laisser Prisma logger
+// "prisma:error Invalid prisma.X.findMany() invocation". Le sitemap est
+// rendu dynamiquement au runtime (cf. route flag ƒ dans la build output),
+// donc skip en build n'a aucun impact sur la version servie aux crawlers.
+const IS_BUILD_PHASE = process.env.NEXT_PHASE === "phase-production-build";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
   const staticEntries: MetadataRoute.Sitemap = PAGES.map((p) => ({
@@ -103,40 +112,44 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Anecdotes publiees (dynamiques, depuis DB)
   let anecdoteEntries: MetadataRoute.Sitemap = [];
-  try {
-    const anecdotes = await db.weeklyAnecdote.findMany({
-      where: { isActive: true, publishedAt: { not: null } },
-      select: { slug: true, updatedAt: true, publishedAt: true },
-      orderBy: { publishedAt: "desc" },
-      take: 200,
-    });
-    anecdoteEntries = anecdotes.map((a) => ({
-      url: `${PROD_URL}/anecdotes/${a.slug}`,
-      lastModified: a.updatedAt,
-      changeFrequency: "yearly" as const,
-      priority: 0.5,
-    }));
-  } catch (err) {
-    // DB down ou ENV manquant a la generation : on degrade sans planter.
-    console.warn("sitemap: anecdotes lookup failed, skipping", err);
+  if (!IS_BUILD_PHASE) {
+    try {
+      const anecdotes = await db.weeklyAnecdote.findMany({
+        where: { isActive: true, publishedAt: { not: null } },
+        select: { slug: true, updatedAt: true, publishedAt: true },
+        orderBy: { publishedAt: "desc" },
+        take: 200,
+      });
+      anecdoteEntries = anecdotes.map((a) => ({
+        url: `${PROD_URL}/anecdotes/${a.slug}`,
+        lastModified: a.updatedAt,
+        changeFrequency: "yearly" as const,
+        priority: 0.5,
+      }));
+    } catch (err) {
+      // DB down ou ENV manquant au runtime : on degrade sans planter.
+      console.warn("sitemap: anecdotes lookup failed, skipping", err);
+    }
   }
 
   // Experts publics (profils marketplace)
   let expertEntries: MetadataRoute.Sitemap = [];
-  try {
-    const experts = await db.expertProfile.findMany({
-      where: { isPublished: true },
-      select: { slug: true, updatedAt: true },
-      take: 200,
-    });
-    expertEntries = experts.map((e) => ({
-      url: `${PROD_URL}/experts/${e.slug}`,
-      lastModified: e.updatedAt,
-      changeFrequency: "monthly" as const,
-      priority: 0.4,
-    }));
-  } catch (err) {
-    console.warn("sitemap: experts lookup failed, skipping", err);
+  if (!IS_BUILD_PHASE) {
+    try {
+      const experts = await db.expertProfile.findMany({
+        where: { isPublished: true },
+        select: { slug: true, updatedAt: true },
+        take: 200,
+      });
+      expertEntries = experts.map((e) => ({
+        url: `${PROD_URL}/experts/${e.slug}`,
+        lastModified: e.updatedAt,
+        changeFrequency: "monthly" as const,
+        priority: 0.4,
+      }));
+    } catch (err) {
+      console.warn("sitemap: experts lookup failed, skipping", err);
+    }
   }
 
   return [

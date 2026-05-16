@@ -1,9 +1,11 @@
 /* Tailwind v4 : un seul import remplace les 3 directives @tailwind v3.
-   La directive @config reutilise notre tailwind.config.ts existant
+   La directive @config reutilise notre tailwind.config.mts existant
    (safelist + colors HumaniX + fontFamily) — migration CSS-first
-   (avec @theme blocks) deferee a une PR ulterieure. */
+   (avec @theme blocks) deferee a une PR ulterieure.
+   .mts (et non .ts) car le projet n'a pas "type": "module" dans
+   package.json ; .mts evite le warning MODULE_TYPELESS_PACKAGE_JSON. */
 @import "tailwindcss";
-@config "../tailwind.config.ts";
+@config "../tailwind.config.mts";
 
 /* =============================================================================
    Cross-OS flag emoji rendering

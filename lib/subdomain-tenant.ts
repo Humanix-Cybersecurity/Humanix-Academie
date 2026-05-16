@@ -9,13 +9,13 @@
 //   demo.humanix-academie.fr   -> mode demo (deja cable, slug demo-pme)
 //
 // Utilise par :
-//   - middleware.ts        : validation early (reject si subdomain inconnu)
+//   - proxy.ts             : validation early (reject si subdomain inconnu)
 //   - lib/auth.ts          : session.tenantId resolu via host header
 //   - app/admin/layout.tsx : check coherence subdomain <-> tenant connecte
 //
 // SECURITE : un user de tenant A connecte qui tape l'URL d'un tenant B
 // (ex : evil.humanix-academie.fr pour B avec son cookie de A) DOIT etre
-// rejete. Le middleware fait ce check.
+// rejete. Le proxy fait ce check.
 
 const RESERVED_SUBDOMAINS = new Set<string>([
   // Sites/services nous-memes
