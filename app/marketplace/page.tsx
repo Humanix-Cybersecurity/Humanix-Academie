@@ -5,6 +5,13 @@ import { redirect } from "next/navigation";
 import { auth, getSignInPath } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { ALLOWED_CATEGORIES } from "@/lib/marketplace/schema";
+import {
+  PREMIUM_MODULES_PREVIEW,
+  isDemoMode,
+} from "@/lib/demo-mode/premium-previews";
+import LockedPremiumCard, {
+  PremiumPreviewIntro,
+} from "@/components/demo/LockedPremiumCard";
 
 export const dynamic = "force-dynamic";
 
@@ -131,7 +138,15 @@ export default async function MarketplacePage({
         )}
       </div>
 
-      {modules.length === 0 ? (
+      {/* En DEMO_MODE : bandeau introductif AVANT la grille (vide ou pas) */}
+      {isDemoMode() && (
+        <PremiumPreviewIntro
+          totalCount={PREMIUM_MODULES_PREVIEW.length}
+          label="modules marketplace à installer en formule Standard"
+        />
+      )}
+
+      {modules.length === 0 && !isDemoMode() ? (
         <div className="card text-center py-16">
           <p className="text-5xl mb-3">📭</p>
           <p className="text-gray-500">
@@ -196,6 +211,19 @@ export default async function MarketplacePage({
               </Link>
             );
           })}
+
+          {/* En DEMO_MODE : on grise les modules premium pour "appater". */}
+          {isDemoMode() &&
+            PREMIUM_MODULES_PREVIEW.filter(
+              (p) => !modules.some((m) => m.slug === p.slug),
+            ).map((p) => (
+              <LockedPremiumCard
+                key={`premium-${p.slug}`}
+                emoji={p.emoji}
+                title={p.title}
+                subtitle={`${p.isOfficial ? "Officiel Humanix" : "Communauté"} · ${p.category}`}
+              />
+            ))}
         </div>
       )}
     </div>
