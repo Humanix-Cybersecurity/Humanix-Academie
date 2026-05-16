@@ -117,6 +117,63 @@ const MediaSchema = z.discriminatedUnion("type", [
       receivedAt: z.string().optional(),
     }),
   }),
+  // Profil X / Twitter — page profil publique avec bio + recent posts.
+  // Audience cible : reconnaissance d'OSINT social (compte perso qui en
+  // dit trop, recruteurs, journalistes, fictif lookalike).
+  z.object({
+    type: z.literal("x-profile-mockup"),
+    data: z.object({
+      handle: z.string(), // sans le @ devant
+      displayName: z.string(),
+      verified: z.boolean().optional(),
+      bio: z.string(),
+      location: z.string().optional(),
+      website: z.string().optional(),
+      joinedDate: z.string().optional(), // libre, ex: "Janvier 2019"
+      // Stats sociales pour la credibilite visuelle
+      following: z.number().optional(),
+      followers: z.number().optional(),
+      // 3-5 derniers posts visibles sur la page profil
+      recentPosts: z
+        .array(
+          z.object({
+            timeAgo: z.string(),
+            text: z.string(),
+            // Emoji placeholder pour "photo attached" (ex: "🏖️", "🚗")
+            photoEmoji: z.string().optional(),
+            location: z.string().optional(),
+          }),
+        )
+        .min(1)
+        .max(6),
+    }),
+  }),
+  // Profil Instagram — grille de posts + bio. Format classique :
+  // 9 vignettes 3x3 + bio + stats.
+  z.object({
+    type: z.literal("instagram-profile-mockup"),
+    data: z.object({
+      handle: z.string(), // sans le @
+      displayName: z.string(),
+      bio: z.string(),
+      website: z.string().optional(),
+      posts: z.number().optional(), // nb total de posts
+      followers: z.number().optional(),
+      following: z.number().optional(),
+      // Grille 3x3 (jusqu'a 9 posts). Emoji = placeholder photo.
+      grid: z
+        .array(
+          z.object({
+            id: z.string(),
+            photoEmoji: z.string(),
+            caption: z.string().optional(),
+            location: z.string().optional(),
+          }),
+        )
+        .min(3)
+        .max(9),
+    }),
+  }),
   z.object({
     type: z.literal("photo-office-mockup"),
     data: z.object({
@@ -125,7 +182,7 @@ const MediaSchema = z.discriminatedUnion("type", [
       // Aussi utilise pour les scenes piggyback (badge reader, porte
       // tenue) et trash bin (papiers visibles, broyeur absent).
       sceneType: z
-        .enum(["office", "piggyback", "trash_bin"])
+        .enum(["office", "piggyback", "trash_bin", "public_wifi"])
         .default("office"),
       scene: z.array(
         z.object({
