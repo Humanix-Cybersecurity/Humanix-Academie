@@ -123,6 +123,22 @@ async function InscriptionInner({
             Accès libre aux modules pédagogiques. Pas de carte bancaire,
             pas de mot de passe à retenir.
           </p>
+
+          {/* Aiguillage RSSI / DSI : pour éviter qu'un responsable cyber
+              s'inscrive comme apprenant individuel et se retrouve dans
+              le tenant Communauté sans pouvoir gérer une équipe. */}
+          <div className="mt-6 inline-flex flex-wrap items-center justify-center gap-2 rounded-xl bg-white/80 dark:bg-slate-900/70 border border-primary-500/30 px-4 py-3 text-sm">
+            <span aria-hidden="true">👔</span>
+            <span className="text-gray-700 dark:text-gray-200">
+              Vous êtes RSSI, DSI, DAF ou DPO ?
+            </span>
+            <Link
+              href="/signup?plan=starter"
+              className="font-bold text-primary-500 dark:text-accent-300 underline underline-offset-2"
+            >
+              Créer un espace pour votre équipe →
+            </Link>
+          </div>
         </section>
       </HexBackdrop>
 
