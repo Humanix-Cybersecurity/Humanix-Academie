@@ -27,33 +27,51 @@ const COLORS = {
   light: "#EAF3F8",
 };
 
-// Resolution robuste du logo : Next 15 standalone copie public/ a cote du
-// server.js, mais cwd peut varier selon le launcher. On essaye 3 paths
-// connus, le premier qui existe gagne. Si aucun, le filigrane est omis
-// (le certificat reste lisible).
-function resolveLogoPath(): string | null {
+// Resolution robuste du logo : Next 15+ standalone copie public/ a cote du
+// server.js, mais cwd peut varier selon le launcher. On essaie 2 paths
+// scopes au sous-dossier "public" (Turbopack NFT trace correctement les
+// chemins statiquement scopes a un sous-dossier connu). Si aucun ne
+// resout, le filigrane est omis (le certificat reste lisible).
+//
+// Lazy + cache : on calcule a la 1ere demande (runtime), pas au import
+// du module. Cela evite a Turbopack de declencher la trace NFT au build
+// (warning "Encountered unexpected file in NFT list").
+let cachedLogoPath: string | null | undefined;
+
+function getLogoPath(): string | null {
+  if (cachedLogoPath !== undefined) return cachedLogoPath;
+  // L'annotation /* turbopackIgnore: true */ sur process.cwd() dit a
+  // Turbopack de ne pas tracer ce sous-arbre lors du build NFT (sinon
+  // il y a un warning "Encountered unexpected file in NFT list" — le
+  // chemin etant resolu seulement au runtime, le tracing build-time
+  // n'apporte rien).
   const candidates = [
-    path.join(process.cwd(), "public", "logo-humanix-academie-512.png"),
     path.join(
-      process.cwd(),
+      /* turbopackIgnore: true */ process.cwd(),
+      "public",
+      "logo-humanix-academie-512.png",
+    ),
+    path.join(
+      /* turbopackIgnore: true */ process.cwd(),
       ".next",
       "standalone",
       "public",
       "logo-humanix-academie-512.png",
     ),
-    path.join(__dirname ?? "", "..", "public", "logo-humanix-academie-512.png"),
   ];
   for (const p of candidates) {
     try {
-      if (fs.existsSync(p)) return p;
+      if (fs.existsSync(p)) {
+        cachedLogoPath = p;
+        return p;
+      }
     } catch {
       // ignore
     }
   }
+  cachedLogoPath = null;
   return null;
 }
-
-const LOGO_PATH = resolveLogoPath();
 
 const styles = StyleSheet.create({
   page: {
@@ -215,6 +233,9 @@ export function CertificateOfCompletion(props: Props) {
     `${props.recipientName}-${props.tenantName}-${props.totalXP}-${props.generatedAt.toISOString()}`,
   );
 
+  // Resolution lazy au moment du rendu (1ere demande). Evite que le
+  // module-load ne declenche un fs scan a build time.
+  const logoPath = getLogoPath();
   return (
     <Document>
       <Page size="A4" orientation="landscape" style={styles.page}>
@@ -222,7 +243,7 @@ export function CertificateOfCompletion(props: Props) {
             autres elements grace a position absolute + ordre de rendu.
             Omis silencieusement si le fichier n'est pas trouve au runtime. */}
         {/* eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf/renderer Image n'accepte pas la prop alt */}
-        {LOGO_PATH && <Image src={LOGO_PATH} style={styles.watermark} />}
+        {logoPath && <Image src={logoPath} style={styles.watermark} />}
 
         <View style={styles.border}>
           <View style={styles.innerBorder}>
