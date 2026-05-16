@@ -73,6 +73,12 @@ const SCENE_HEADER: Record<
     bgClass:
       "bg-gradient-to-br from-stone-100 via-amber-50 to-orange-50 dark:from-stone-900 dark:via-amber-950 dark:to-orange-950",
   },
+  public_wifi: {
+    emoji: "📶",
+    label: "LIEU PUBLIC — REPÈRE LES INDICES",
+    bgClass:
+      "bg-gradient-to-br from-sky-50 via-cyan-50 to-blue-100 dark:from-sky-950 dark:via-cyan-950 dark:to-blue-950",
+  },
 };
 
 export default function PhotoOfficeMockup({ media }: Props) {
