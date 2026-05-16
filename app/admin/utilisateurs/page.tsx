@@ -12,6 +12,8 @@ import UsersTable from "@/components/UsersTable";
 import InviteUserForm from "@/components/InviteUserForm";
 import CsvImporter from "@/components/CsvImporter";
 import RemindersButton from "@/components/RemindersButton";
+import RequestImpersonationForm from "@/components/admin/RequestImpersonationForm";
+import ActiveImpersonationsList from "@/components/admin/ActiveImpersonationsList";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminSection from "@/components/admin/AdminSection";
 
@@ -146,6 +148,19 @@ export default async function AdminUsersPage() {
               description="Notifie ceux qui n'ont pas commencé leur parcours."
             >
               <RemindersButton />
+            </AdminSection>
+
+            <AdminSection
+              title="Voir un compte (debug / support)"
+              description="Demande d'accès en lecture seule avec consentement explicite de l'utilisateur."
+            >
+              <ActiveImpersonationsList
+                tenantId={tenantId}
+                adminUserId={currentUserId}
+              />
+              <div className="mt-4">
+                <RequestImpersonationForm />
+              </div>
             </AdminSection>
 
             {/* Notice RGPD - variante visuelle warning */}
