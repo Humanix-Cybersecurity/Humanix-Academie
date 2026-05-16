@@ -80,4 +80,33 @@ export const CATALOG_SAISONS_DEMO: CatalogSaison[] = [
       },
     ],
   },
+  {
+    slug: "mobile-essentiels",
+    title: "Mobile : les essentiels",
+    description:
+      "Les 3 reflexes mobiles qui evitent 80% des incidents : verrouillage automatique, Wi-Fi public, permissions d'apps. Source : recommandations publiques ANSSI et CNIL.",
+    coverEmoji: "📱",
+    order: 3,
+    audience: "tous",
+    episodes: [
+      {
+        slug: "01-verrouillage",
+        title: "Le verrouillage en 30 secondes",
+        durationMinutes: 5,
+        difficulty: "easy",
+      },
+      {
+        slug: "02-wifi-public",
+        title: "Le Wi-Fi du cafe qui s'appelle Free-Airport",
+        durationMinutes: 6,
+        difficulty: "medium",
+      },
+      {
+        slug: "03-permissions",
+        title: "La lampe-torche qui veut acceder aux contacts",
+        durationMinutes: 5,
+        difficulty: "easy",
+      },
+    ],
+  },
 ];
