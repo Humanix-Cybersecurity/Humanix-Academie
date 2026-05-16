@@ -79,7 +79,13 @@ export default function SaisonCard({
         </span>
       )}
 
-      <div className="relative">
+      {/*
+        relative flex-1 flex flex-col : permet a la card de remplir la
+        hauteur du <li> parent (forcee par SaisonsCarousel), et de pousser
+        le bloc CTA+meta en bas via mt-auto pour eviter l'effet "escalier"
+        quand les descriptions ont des longueurs variables.
+      */}
+      <div className="relative flex flex-col flex-1">
         {/* Cover emoji principal */}
         <div className="text-5xl mb-4" aria-hidden="true">
           {isLocked ? "🌒" : saison.coverEmoji}
@@ -124,41 +130,45 @@ export default function SaisonCard({
           </p>
         )}
 
-        {/* Barre de progression */}
-        {!isLocked && (
-          <div className="w-full h-2 bg-white/60 dark:bg-slate-800/60 rounded-full overflow-hidden mb-5">
-            <div
-              className="h-full bg-gradient-to-r from-accent-500 to-primary-500 transition-all"
-              style={{ width: `${pct}%` }}
-            />
-          </div>
-        )}
+        {/* Bloc bas (barre progress + CTA + meta) — mt-auto le pousse
+            au bas de la card pour aligner tous les CTA quand les cards
+            ont des descriptions de longueurs variables (carrousel). */}
+        <div className="mt-auto pt-2">
+          {/* Barre de progression */}
+          {!isLocked && (
+            <div className="w-full h-2 bg-white/60 dark:bg-slate-800/60 rounded-full overflow-hidden mb-5">
+              <div
+                className="h-full bg-gradient-to-r from-accent-500 to-primary-500 transition-all"
+                style={{ width: `${pct}%` }}
+              />
+            </div>
+          )}
 
-        {/* CTA */}
-        {isLocked ? (
-          <p className="text-sm italic text-gray-500 dark:text-gray-400">
-            Bientot disponible
-          </p>
-        ) : firstUndoneSlug ? (
-          <Link
-            href={`/apprendre/${saison.slug}/${firstUndoneSlug}`}
-            className="btn-primary w-full"
-          >
-            {done === 0 ? "Commencer" : "Continuer"}
-          </Link>
-        ) : (
-          <p className="text-sm font-bold text-emerald-700 dark:text-emerald-300 flex items-center justify-center gap-2">
-            <span className="text-xl" aria-hidden="true">
-              ✓
-            </span>{" "}
-            Saison terminee - bravo
-          </p>
-        )}
+          {/* CTA */}
+          {isLocked ? (
+            <p className="text-sm italic text-gray-500 dark:text-gray-400">
+              Bientot disponible
+            </p>
+          ) : firstUndoneSlug ? (
+            <Link
+              href={`/apprendre/${saison.slug}/${firstUndoneSlug}`}
+              className="btn-primary w-full"
+            >
+              {done === 0 ? "Commencer" : "Continuer"}
+            </Link>
+          ) : (
+            <p className="text-sm font-bold text-emerald-700 dark:text-emerald-300 flex items-center justify-center gap-2">
+              <span className="text-xl" aria-hidden="true">
+                ✓
+              </span>{" "}
+              Saison terminee - bravo
+            </p>
+          )}
 
-        {/* Meta info - naturelle, pas survendue.
-            On affiche "~X min par episode" plutot que le total (qui ferait
-            36 min et casserait la promesse "5 minutes par jour"). */}
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-4 text-center tabular-nums">
+          {/* Meta info - naturelle, pas survendue.
+              On affiche "~X min par episode" plutot que le total (qui ferait
+              36 min et casserait la promesse "5 minutes par jour"). */}
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-4 text-center tabular-nums">
           {total} episode{total > 1 ? "s" : ""} · ~{avgMinutes} min par
           episode
           {expertCount > 0 ? (
@@ -187,6 +197,7 @@ export default function SaisonCard({
             </>
           ) : null}
         </p>
+        </div>
       </div>
     </article>
   );
