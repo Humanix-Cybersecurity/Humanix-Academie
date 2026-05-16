@@ -14,20 +14,37 @@ export default function InviteUserForm() {
     setFeedback(null);
     startTransition(async () => {
       try {
-        await inviteUser(formData);
-        setFeedback({ type: "ok", msg: "Invitation envoyée avec succès." });
-        // reset
-        const form = document.querySelector(
-          "#invite-form",
-        ) as HTMLFormElement | null;
-        form?.reset();
-      } catch (e: any) {
+        const res = await inviteUser(formData);
+        if (res.ok) {
+          if (res.mode === "invited") {
+            setFeedback({
+              type: "ok",
+              msg: "Invitation envoyée. La personne va recevoir un mail pour activer son compte.",
+            });
+          } else if (res.mode === "transfer_requested") {
+            // Reponse NEUTRE : on ne revele pas a l'admin si l'email
+            // existe ailleurs. On dit juste qu'un lien a ete envoye.
+            setFeedback({
+              type: "ok",
+              msg: "Demande envoyée. Si cette adresse est associée à un compte Humanix existant, la personne recevra un lien pour confirmer le rattachement à votre espace. C'est elle qui doit accepter (consentement RGPD).",
+            });
+          }
+          const form = document.querySelector(
+            "#invite-form",
+          ) as HTMLFormElement | null;
+          form?.reset();
+        } else if (res.reason === "already_member") {
+          setFeedback({
+            type: "err",
+            msg: "Cette personne fait déjà partie de votre espace. Consultez la liste des utilisateurs.",
+          });
+        }
+      } catch (e: unknown) {
+        const errMessage = e instanceof Error ? e.message : String(e);
         const msg =
-          e?.message === "email_taken"
-            ? "Cet email est déjà inscrit dans l'organisation."
-            : e?.message === "invalid_email"
-              ? "Email invalide."
-              : "Impossible d'inviter cet utilisateur.";
+          errMessage === "invalid_email"
+            ? "Email invalide."
+            : "Impossible d'inviter cet utilisateur. Réessayez plus tard.";
         setFeedback({ type: "err", msg });
       }
     });
@@ -116,6 +133,28 @@ export default function InviteUserForm() {
           <option value="RSSI">🛡️ RSSI</option>
           <option value="ADMIN">⚙️ Admin</option>
         </select>
+      </div>
+
+      <div>
+        <label
+          htmlFor="invite-personal-message"
+          className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1"
+        >
+          Message personnel{" "}
+          <span className="text-xs text-gray-500 font-normal">(optionnel)</span>
+        </label>
+        <textarea
+          id="invite-personal-message"
+          name="personalMessage"
+          rows={2}
+          maxLength={400}
+          placeholder="Une phrase qui aidera la personne à reconnaître votre demande — ex. « c'est moi, on rejoint l'espace famille »."
+          className="w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none text-sm resize-none"
+        />
+        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+          Utile si la personne est déjà inscrite chez nous : ce message
+          apparaîtra dans le mail de demande de rattachement.
+        </p>
       </div>
 
       <button
