@@ -796,8 +796,14 @@ export default async function TarifsPage({
         </p>
         <div className="flex flex-wrap justify-center gap-3 relative">
           <Link
-            href="/demo"
+            href="/rejoindre"
             className="bg-white text-primary-500 font-bold px-6 sm:px-8 py-4 rounded-2xl hover:scale-105 transition shadow-lg"
+          >
+            🧭 Trouver mon profil
+          </Link>
+          <Link
+            href="/demo"
+            className="bg-white/10 backdrop-blur border-2 border-white/70 text-white font-bold px-6 sm:px-8 py-4 rounded-2xl hover:bg-white/20 transition"
           >
             🎮 Tester la demo publique
           </Link>
