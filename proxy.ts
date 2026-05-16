@@ -1,5 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Middleware Next.js (edge runtime) - 2 responsabilites distinctes :
+// Proxy Next.js (edge runtime) - 2 responsabilites distinctes.
+//
+// Note : depuis Next.js 16, le fichier "middleware.ts" est renomme
+// "proxy.ts" (la fonction exportee s'appelle `proxy`).
+// Cf. https://nextjs.org/docs/messages/middleware-to-proxy
+//
 //
 //   1. RESOLUTION SUBDOMAIN -> TENANT SLUG (multi-tenant SaaS)
 //      Pour <slug>.humanix-academie.fr :
@@ -41,7 +46,7 @@ function hasSessionCookie(req: NextRequest): boolean {
   return false;
 }
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // === 1. RESOLUTION SUBDOMAIN -> TENANT SLUG ===
