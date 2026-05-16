@@ -7,8 +7,8 @@
 //   - `autoprefixer` n'est plus necessaire : Tailwind v4 integre nativement
 //     les prefixes vendor pour les navigateurs modernes (drop IE11).
 //
-// Le fichier `tailwind.config.ts` (legacy v3 style avec safelist + theme
-// custom) est reutilise via la directive `@config "../tailwind.config.ts"`
+// Le fichier `tailwind.config.mts` (legacy v3 style avec safelist + theme
+// custom) est reutilise via la directive `@config "../tailwind.config.mts"`
 // dans app/globals.css. La migration CSS-first (theme dans @theme blocks)
 // est differee a une PR ulterieure.
 export default {
