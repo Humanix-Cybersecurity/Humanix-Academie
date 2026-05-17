@@ -39,6 +39,10 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import {
+  POPUP_PRIORITY,
+  usePopupSlot,
+} from "@/components/popup-coordinator";
 
 const STORAGE_KEY = "humanix-cookie-consent";
 
@@ -122,7 +126,16 @@ export default function CookieBanner() {
     setVisible(readConsent() === null);
   }, [pathname]);
 
-  if (!mounted || !visible) return null;
+  // Reservation d'un slot dans le coordinator (priorite 100 — legal,
+  // toujours en premier). Si une autre popup essaie d'apparaitre pendant
+  // que la cookie est visible, elle attendra.
+  const allowed = usePopupSlot({
+    id: "cookie",
+    priority: POPUP_PRIORITY.cookie,
+    ready: mounted && visible,
+  });
+
+  if (!mounted || !visible || !allowed) return null;
 
   const accept = () => {
     writeConsent("granted");

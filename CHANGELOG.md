@@ -12,6 +12,18 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 > stratégiques sont en place : sécurité Zero-Trust, Pack NIS2 v2, Mode
 > Enquêteur, librairie SEO publique.
 
+### 🏆 Validation externe — Triple A+ (17 mai 2026)
+
+Trois audits publics indépendants ont validé la posture sécurité avant le launch :
+
+| Scanner | Résultat | Détails |
+|---|---|---|
+| **Mozilla Observatory** | **A+** | 110/100 · 10/10 tests passés |
+| **Security Headers** (Snyk) | **A+** | 6/6 en-têtes HTTP présents (CSP, HSTS, X-Frame, X-Content-Type, Referrer-Policy, Permissions-Policy) |
+| **Qualys SSL Labs** | **A+** | TLS 1.3 · Post-Quantum Cryptography (PQC) key exchange · HSTS long duration |
+
+Tous les rapports sont **rejouables en temps réel** depuis [`/securite/audits-externes`](https://humanix-cybersecurity.fr/securite/audits-externes) — aucune note auto-déclarée.
+
 ### Sécurité — Zero-Trust / Least Privilege (Sprint 1-4)
 
 - **RBAC central** (`requireRole()`) sur 30+ routes API admin, plus de patterns dupliqués
