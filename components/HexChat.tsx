@@ -27,6 +27,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import MarkdownView from "@/components/MarkdownView";
+import {
+  POPUP_PRIORITY,
+  isLandingPath,
+  usePopupSlot,
+} from "@/components/popup-coordinator";
 
 type ChatRole = "user" | "assistant";
 type Citation = {
@@ -117,12 +122,27 @@ export default function HexChat({ enabled }: Props) {
     if (typeof window !== "undefined") {
       const dismissed = window.localStorage.getItem(FAB_DISMISSED_KEY);
       if (!dismissed) {
-        // Affiche la bulle tooltip 6 sec apres le mount
-        const t = window.setTimeout(() => setShowFabHint(true), 6000);
+        // Affiche la bulle tooltip 12 sec apres le mount.
+        // Avant : 6s mais cumule avec Cookie + PWA + Mascot ca faisait
+        // 4 popups en 6s. Le coordinator s'occupe maintenant de la
+        // sequencer (priorite 30, viendra apres cookie/PWA si ready).
+        const t = window.setTimeout(() => setShowFabHint(true), 12000);
         return () => window.clearTimeout(t);
       }
     }
   }, []);
+
+  // Coordinator slot : ne concerne QUE le tooltip (la bulle "Hex est
+  // dispo"), pas le FAB lui-meme qui reste toujours visible. Sur landing
+  // page, le tooltip est carrement supprime — un FAB visible suffit comme
+  // affordance, la bulle additionnelle est du bruit pour la conversion.
+  const onLanding = isLandingPath(pathname);
+  const tooltipReady = showFabHint && !open && !onLanding;
+  const tooltipAllowed = usePopupSlot({
+    id: "hex-tooltip",
+    priority: POPUP_PRIORITY.hexTooltip,
+    ready: tooltipReady,
+  });
 
   // Auto-scroll en bas a chaque nouveau message
   useEffect(() => {
@@ -311,8 +331,9 @@ export default function HexChat({ enabled }: Props) {
     <>
       {/* FAB bouton flottant */}
       <div className="fixed bottom-4 right-4 z-40 flex flex-col items-end gap-2">
-        {/* Tooltip d'accueil (premier passage uniquement) */}
-        {showFabHint && !open && (
+        {/* Tooltip d'accueil (premier passage uniquement, gate par
+            le PopupCoordinator pour ne pas s'empiler avec cookie/PWA/mascotte) */}
+        {tooltipReady && tooltipAllowed && (
           <div className="bg-white dark:bg-slate-900 shadow-lg rounded-2xl border-2 border-accent-500 p-3 max-w-xs animate-fadeIn">
             <p className="text-sm font-semibold text-primary-500 dark:text-accent-300 mb-1">
               🦊 Hex est dispo
