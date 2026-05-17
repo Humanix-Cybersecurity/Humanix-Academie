@@ -71,13 +71,13 @@ export default function DiagnosticNis2Page() {
           </p>
           <div className="flex flex-wrap gap-2 justify-center text-xs">
             <span className="px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-200 font-bold">
-              🇫🇷 Aligné loi du 31 octobre 2024
+              <span aria-hidden="true">🇫🇷 </span>Aligné loi du 31 octobre 2024
             </span>
             <span className="px-3 py-1.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200 font-bold">
-              📋 11 articles couverts (21.2.a → 23)
+              <span aria-hidden="true">📋 </span>11 articles couverts (21.2.a → 23)
             </span>
             <span className="px-3 py-1.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 font-bold">
-              🔓 RGPD-friendly (rien stocké)
+              <span aria-hidden="true">🔓 </span>RGPD-friendly (rien stocké)
             </span>
           </div>
         </section>
@@ -156,7 +156,10 @@ export default function DiagnosticNis2Page() {
               <div className="space-y-5">
                 {qs.map((q) => (
                   <fieldset key={q.id} className="space-y-2">
-                    <legend className="text-sm font-medium text-gray-900 dark:text-gray-100 leading-snug">
+                    <legend
+                      id={`q-${q.id}-legend`}
+                      className="text-sm font-medium text-gray-900 dark:text-gray-100 leading-snug"
+                    >
                       {q.text}
                     </legend>
                     {q.hint && (
@@ -164,12 +167,19 @@ export default function DiagnosticNis2Page() {
                         💡 {q.hint}
                       </p>
                     )}
-                    <div className="flex flex-wrap gap-2" role="radiogroup">
+                    <div
+                      className="flex flex-wrap gap-2"
+                      role="radiogroup"
+                      aria-labelledby={`q-${q.id}-legend`}
+                    >
                       {(["oui", "non", "ne_sait_pas"] as const).map((val) => {
-                        const labels = {
-                          oui: "✓ Oui",
-                          non: "✗ Non",
-                          ne_sait_pas: "? Je ne sais pas",
+                        // Le symbole est decoratif : on l'expose en
+                        // aria-hidden et on garde le mot pour le lecteur
+                        // d'ecran.
+                        const display = {
+                          oui: { symbol: "✓", label: "Oui" },
+                          non: { symbol: "✗", label: "Non" },
+                          ne_sait_pas: { symbol: "?", label: "Je ne sais pas" },
                         };
                         return (
                           <label
@@ -183,7 +193,10 @@ export default function DiagnosticNis2Page() {
                               required
                               className="sr-only"
                             />
-                            {labels[val]}
+                            <span aria-hidden="true">
+                              {display[val].symbol}{" "}
+                            </span>
+                            {display[val].label}
                           </label>
                         );
                       })}
