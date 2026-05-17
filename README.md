@@ -145,6 +145,7 @@ documenté dans [docs/CRON.md](./docs/CRON.md).
 - [docs/configuration.md](./docs/configuration.md) — toutes les variables d'environnement
 - [docs/SECURITY_HARDENING.md](./docs/SECURITY_HARDENING.md) — runbook Zero-Trust / Least Privilege (mai 2026)
 - [docs/SECRETS.md](./docs/SECRETS.md) — interface `getSecret()` (préparation Vault / Scaleway Secret Manager)
+- [docs/PACK_NIS2_V2.md](./docs/PACK_NIS2_V2.md) — diagnostic 30Q + score per-article + rapport annuel autorité
 - [docs/DEPLOYMENT_RUNBOOK.md](./docs/DEPLOYMENT_RUNBOOK.md) — runbook déploiement production
 - [docs/upgrade.md](./docs/upgrade.md) — procédure de mise à jour entre versions
 - [docs/CRON.md](./docs/CRON.md) — tâches planifiées (Ofelia / k8s CronJob)
