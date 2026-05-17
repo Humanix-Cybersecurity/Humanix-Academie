@@ -11,6 +11,11 @@
 // Ajouter ici tout nouveau lieu d'usage TTS du site pour eviter les latences
 // "premier clic".
 
+// @ts-ignore — `../library-seed` est un symlink vers le submodule prive
+// content-pro/ qui peut etre absent en build OSS pur (CI public, fork
+// sans contrat commercial). TypeScript se plaint a la resolution
+// statique, mais au runtime le fichier est present sur les instances
+// commerciales et le script de warmup est gracieusement skip ailleurs.
 import { LIBRARY_ARTICLES } from "../library-seed";
 import { markdownToPlainText } from "../markdown";
 import { sanitizeForTTS } from "./sanitize";
