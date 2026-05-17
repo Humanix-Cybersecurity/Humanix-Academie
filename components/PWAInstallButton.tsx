@@ -17,6 +17,12 @@
 //     (cas hot-reload ou layout remount).
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import {
+  POPUP_PRIORITY,
+  isLandingPath,
+  usePopupSlot,
+} from "@/components/popup-coordinator";
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -25,7 +31,11 @@ type BeforeInstallPromptEvent = Event & {
 
 const STORAGE_KEY = "humanix:pwa-install-state";
 const DISMISS_TTL_DAYS = 30;
-const SHOW_DELAY_MS = 4000;
+// On laisse 8s avant de meme considerer afficher : laisse l'user lire
+// la home / scroller avant qu'on lui propose un install. Le coordinator
+// peut encore retarder davantage si une popup plus prioritaire (cookie)
+// est devant.
+const SHOW_DELAY_MS = 8000;
 const DOM_TAG = "data-humanix-pwa-install-mounted";
 
 type PersistedState =
@@ -60,6 +70,13 @@ function savePersistedState(state: PersistedState) {
 }
 
 export default function PWAInstallButton() {
+  const pathname = usePathname() ?? "/";
+  // Sur les pages d'acquisition (landing, librairie, tarifs...), on ne
+  // propose JAMAIS l'install : c'est une distraction pour la conversion.
+  // L'install est plus pertinent post-inscription, dans `/apprendre` ou
+  // `/profil` (ou l'app sert vraiment "comme une app").
+  const onLanding = isLandingPath(pathname);
+
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(
     null,
   );
@@ -127,9 +144,24 @@ export default function PWAInstallButton() {
     return cleanup;
   }, []);
 
-  if (installed || dismissed) return null;
-  if (!delayElapsed) return null;
-  if (!deferred && !showIOSHint) return null;
+  // Coordinator : on s'enregistre comme slot meme quand pas pret, pour que
+  // le winner soit recalcule des qu'on devient ready. `ready` agrege toutes
+  // les conditions d'affichage (hors orchestration). Sur landing, ready=false
+  // d'office -> jamais de slot revendique.
+  const ready =
+    !onLanding &&
+    !installed &&
+    !dismissed &&
+    delayElapsed &&
+    Boolean(deferred || showIOSHint);
+
+  const allowed = usePopupSlot({
+    id: "pwa-install",
+    priority: POPUP_PRIORITY.pwa,
+    ready,
+  });
+
+  if (!ready || !allowed) return null;
 
   const onInstall = async () => {
     if (!deferred) return;
