@@ -38,15 +38,16 @@ export default function RapportAuditPage() {
           </div>
           <div>
             <p className="text-xs uppercase tracking-widest opacity-80 font-bold mb-1">
-              Édition v1.4 · 12 mai 2026 · stabilisation supply chain
+              Édition v1.5 · 17 mai 2026 · Zero-Trust / Least Privilege
             </p>
             <h2 className="text-xl font-bold">
-              Rapport complet (~14 pages)
+              Rapport complet (~15 pages)
             </h2>
             <p className="text-sm opacity-90 mt-1">
               Méthodologie, périmètre, contrôles vérifiés, gaps assumés, plan de
-              remédiation à 6 mois — avec mise à jour post-Sprint 5 (consentement
-              CNIL 2020-091) et 12 PRs de stabilisation deps.
+              remédiation à 6 mois — avec mise à jour Sprints sécurité 1, 2 et 4
+              (RBAC central, dbReadOnly analytiques, CSP nonce per-request,
+              page publique audits externes).
             </p>
           </div>
           <a
@@ -254,6 +255,115 @@ export default function RapportAuditPage() {
                 docs/MIGRATION_PRISMA_7.md
               </Link>
               ).
+            </span>
+          </li>
+        </ul>
+      </section>
+
+      {/* Evolutions v1.5 — Sprint securite Zero-Trust */}
+      <section className="card mb-10 border-l-4 border-emerald-500">
+        <p className="text-xs uppercase tracking-widest text-emerald-600 dark:text-emerald-400 font-bold mb-2">
+          🛡️ Évolutions · 13 → 17 mai 2026 (Sprints sécurité 1, 2, 4)
+        </p>
+        <h2 className="text-2xl font-bold text-primary-500 mb-3">
+          Ce qui a changé depuis l&apos;édition v1.4
+        </h2>
+        <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+          Application concrète des principes <strong>Zero-Trust</strong> et{" "}
+          <strong>Least Privilege</strong> à l&apos;architecture existante.
+          Trois chantiers livrés en 4 jours, zéro régression fonctionnelle,
+          défense en profondeur renforcée sur 3 vecteurs (autorisation, base
+          de données analytique, exécution scripts inline navigateur).
+        </p>
+        <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-2 list-none">
+          <li className="flex items-start gap-2">
+            <span aria-hidden="true">✅</span>
+            <span>
+              <strong>RBAC central (Sprint 1)</strong> : helper{" "}
+              <code className="px-1 py-0.5 rounded bg-gray-100 dark:bg-slate-800 text-xs">
+                requireRole()
+              </code>{" "}
+              applicable sur tous les middlewares API. Supprime les{" "}
+              <code className="text-xs">if (role !== ...)</code> dupliqués
+              ~30 fois et garantit un comportement uniforme. Filtre PII{" "}
+              <strong>côté serveur</strong> dans Hex Chat (anti exfiltration
+              accidentelle via prompt injection). 18 tests d&apos;invariant
+              tenant verts.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span aria-hidden="true">✅</span>
+            <span>
+              <strong>dbReadOnly sur analytiques (Sprint 2 reste)</strong> :
+              5 modules de reporting (heatmap, at-risk-users, risk-forecast,
+              risk-trend, computeRiskScore) passent par un client Prisma
+              dédié branché sur un rôle Postgres{" "}
+              <code className="text-xs">SELECT</code>-only. En cas de bug code
+              qui appellerait{" "}
+              <code className="text-xs">.update()</code> ou{" "}
+              <code className="text-xs">.delete()</code> sur ces clients, la
+              base refuse au niveau SQL avec « permission denied ». Fallback
+              transparent sur le client principal si{" "}
+              <code className="text-xs">DATABASE_URL_READONLY</code> n&apos;est
+              pas configuré (zéro régression).
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span aria-hidden="true">✅</span>
+            <span>
+              <strong>CSP nonce per-request (Sprint 4)</strong> : adoption de
+              la stratégie « Strict CSP » Google —{" "}
+              <code className="text-xs">
+                script-src &apos;self&apos; &apos;nonce-XXX&apos;
+                &apos;strict-dynamic&apos;
+              </code>
+              . Nonce 96 bits b64 généré à chaque requête par le proxy edge,
+              injecté dans les 4 scripts inline du site (theme init,
+              JSON-LD SEO). Sur les navigateurs CSP3-aware (Chrome 60+,
+              Firefox 56+, Safari 14+, Edge moderne),{" "}
+              <code className="text-xs">&apos;unsafe-inline&apos;</code>
+              est <strong>ignoré</strong> dès qu&apos;un nonce est présent —
+              protection forte contre XSS reflechi.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span aria-hidden="true">✅</span>
+            <span>
+              <strong>Page publique{" "}
+                <Link
+                  href="/securite/audits-externes"
+                  className="underline"
+                >
+                  /securite/audits-externes
+                </Link>
+              </strong>{" "}
+              — transparence radicale : Mozilla Observatory, Security Headers
+              (Scott Helme), Qualys SSL Labs, rapport interne. Chaque entrée
+              a un lien LIVE vers le scanner officiel. Aucun score
+              auto-déclaré, le visiteur vérifie en temps réel.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span aria-hidden="true">📋</span>
+            <span>
+              <strong>Reste à activer en prod</strong> : provisionner le rôle
+              Postgres readonly avec{" "}
+              <code className="text-xs">prisma/sql/setup-readonly-role.sql</code>{" "}
+              puis renseigner{" "}
+              <code className="text-xs">DATABASE_URL_READONLY</code> dans
+              l&apos;environnement. Sans cette étape, le code tourne en
+              fallback mais la défense en profondeur n&apos;est pas effective.
+            </span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span aria-hidden="true">🔜</span>
+            <span>
+              <strong>Sprint 3 (à venir)</strong> : finalisation WebAuthn
+              (login passkey-first par défaut, fallback password en backup)
+              + interface{" "}
+              <code className="text-xs">getSecret()</code> pour découpler
+              les secrets API tiers de l&apos;environnement (préparation à
+              une intégration Scaleway Secret Manager ou Vault optionnels).
             </span>
           </li>
         </ul>
