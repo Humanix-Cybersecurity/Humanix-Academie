@@ -93,11 +93,20 @@ function extractCatalogEntries(): CatalogEntry[] {
   return entries;
 }
 
+// Dossiers a IGNORER dans content/saisons/ : ces sous-dossiers contiennent
+// du MDX qui ne suit pas la convention "catalogue Saison/Episode" et est
+// charge par d'autres loaders dedies. Les y inclure produirait des
+// faux-positifs "orphelins" alors que le contenu est tres bien charge.
+const IGNORED_SUBDIRS = new Set([
+  "enquetes", // Mode Enqueteur — loader lib/investigations/loader.ts
+]);
+
 function listMdxFiles(): CatalogEntry[] {
   if (!fs.existsSync(CONTENT_ROOT)) return [];
   const out: CatalogEntry[] = [];
   for (const saison of fs.readdirSync(CONTENT_ROOT, { withFileTypes: true })) {
     if (!saison.isDirectory()) continue;
+    if (IGNORED_SUBDIRS.has(saison.name)) continue;
     const dir = path.join(CONTENT_ROOT, saison.name);
     for (const f of fs.readdirSync(dir)) {
       if (!f.endsWith(".mdx")) continue;
