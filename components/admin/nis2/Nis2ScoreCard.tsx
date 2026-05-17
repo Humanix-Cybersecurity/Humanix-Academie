@@ -10,11 +10,23 @@ import type { Nis2TenantScore } from "@/lib/nis2/score-tenant";
 function ScoreBadge({ score }: { score: number | null }) {
   if (score === null) {
     return (
-      <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 text-xs font-bold">
+      <span
+        className="inline-flex items-center px-2.5 py-1 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-500 dark:text-gray-400 text-xs font-bold"
+        aria-label="Score indisponible (aucune saison Humanix mappée à cet article n'est encore installée)"
+      >
         N/A
       </span>
     );
   }
+  // Label semantique : on ne se repose pas sur la couleur seule (WCAG 1.4.1).
+  const verdict =
+    score >= 80
+      ? "robuste"
+      : score >= 60
+        ? "en marche"
+        : score >= 40
+          ? "fragile"
+          : "alerte";
   const color =
     score >= 80
       ? "bg-emerald-500"
@@ -26,6 +38,7 @@ function ScoreBadge({ score }: { score: number | null }) {
   return (
     <span
       className={`inline-flex items-center justify-center min-w-[3rem] h-6 px-2 rounded-full ${color} text-white text-xs font-bold tabular-nums`}
+      aria-label={`Score ${score}%, niveau ${verdict}`}
     >
       {score}%
     </span>
