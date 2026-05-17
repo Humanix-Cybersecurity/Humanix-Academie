@@ -1,8 +1,19 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Lecture d'un article librairie
+// Lecture d'un article librairie — PAGE PUBLIQUE (SEO).
+//
+// La librairie est la vitrine marketing/SEO de Humanix : aucun gate
+// d'authentification, aucun gate DEMO_MODE. Tous les articles publies
+// sont accessibles aux visiteurs anonymes et aux crawlers (Google,
+// Bing, Qwant, Ecosia).
+//
+// SEO :
+//   - generateMetadata : title + description + OpenGraph + canonical
+//   - JSON-LD Article : rich snippet schema.org (auteur, date, lecture)
+//   - viewCount incremente en fire-and-forget (force-dynamic conserve)
+
+import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
+import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import MarkdownView from "@/components/MarkdownView";
 import TTSButton from "@/components/TTSButton";
@@ -11,20 +22,72 @@ import { markdownToPlainText } from "@/lib/markdown";
 
 export const dynamic = "force-dynamic";
 
+const PROD_URL =
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://humanix-cybersecurity.fr";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const article = await db.libraryArticle
+    .findUnique({
+      where: { slug },
+      select: {
+        title: true,
+        description: true,
+        emoji: true,
+        category: true,
+        authorName: true,
+        readTimeMinutes: true,
+        isPublished: true,
+      },
+    })
+    .catch(() => null);
+
+  if (!article || !article.isPublished) {
+    return {
+      title: "Article introuvable — Librairie Humanix",
+    };
+  }
+
+  const title = `${article.title} | Librairie Humanix`;
+  const description = article.description;
+  const url = `${PROD_URL}/librairie/${slug}`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `/librairie/${slug}` },
+    openGraph: {
+      title: article.title,
+      description,
+      url,
+      type: "article",
+      locale: "fr_FR",
+      siteName: "Humanix Académie",
+      authors: article.authorName ? [article.authorName] : undefined,
+      tags: [article.category],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: article.title,
+      description,
+    },
+  };
+}
+
 export default async function ArticleReadPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const session = await auth();
   const { slug } = await params;
   const article = await db.libraryArticle.findUnique({ where: { slug } });
   if (!article || !article.isPublished) return notFound();
 
-  // Articles publics (audience famille / tous) : accessibles SANS login.
-  // Articles pro : auth requise.
-  if (article.audience === "pro" && !session?.user)
-    return redirect("/connexion");
+  // Pas de gate auth — la librairie est publique (vitrine SEO).
 
   // Increment view count (fire-and-forget)
   db.libraryArticle
@@ -52,8 +115,42 @@ export default async function ArticleReadPage({
     take: 3,
   });
 
+  // JSON-LD Article schema.org pour rich snippets Google.
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.description,
+    author: {
+      "@type": "Organization",
+      name: article.authorName ?? "Humanix Académie",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Humanix-Cybersecurity",
+      url: PROD_URL,
+    },
+    datePublished: article.createdAt.toISOString(),
+    dateModified: article.updatedAt.toISOString(),
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${PROD_URL}/librairie/${article.slug}`,
+    },
+    timeRequired: `PT${article.readTimeMinutes}M`,
+    inLanguage: "fr-FR",
+    articleSection: article.category,
+    isAccessibleForFree: true,
+  };
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-10 animate-fadeIn">
+      {/* JSON-LD schema.org pour rich snippets Google */}
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <Link
         href="/librairie"
         className="text-sm text-gray-500 hover:text-primary-500 mb-4 inline-block"
@@ -90,13 +187,11 @@ export default async function ArticleReadPage({
 
         <MarkdownView content={article.body} />
 
-        {(article.audience === "famille" || article.audience === "tous") && (
-          <ShareArticleButton
-            slug={article.slug}
-            title={article.title}
-            description={article.description}
-          />
-        )}
+        <ShareArticleButton
+          slug={article.slug}
+          title={article.title}
+          description={article.description}
+        />
       </article>
 
       {related.length > 0 && (
@@ -123,6 +218,32 @@ export default async function ArticleReadPage({
           </div>
         </section>
       )}
+
+      {/* CTA conversion : visiteurs anonymes ↔ inscription tenant */}
+      <section className="mt-10 rounded-2xl border-2 border-accent-200 dark:border-accent-900/40 bg-gradient-to-br from-accent-50 to-white dark:from-accent-950/30 dark:to-slate-900 p-6 text-center">
+        <h2 className="font-display text-xl font-extrabold text-primary-500 dark:text-accent-300 mb-2">
+          Tu veux aller plus loin que la lecture ?
+        </h2>
+        <p className="text-sm text-gray-700 dark:text-gray-200 max-w-xl mx-auto mb-4">
+          La plateforme Humanix Académie propose en plus des saisons interactives,
+          un mode Enquêteur, du suivi d'équipe, et un dashboard pour ton RSSI.
+          Démarrage gratuit, 5 sièges, sans carte bancaire.
+        </p>
+        <div className="flex flex-wrap gap-2 justify-center">
+          <Link
+            href="/rejoindre"
+            className="inline-flex items-center gap-1 px-4 py-2 rounded-full bg-primary-500 hover:bg-primary-600 text-white text-sm font-semibold transition-colors"
+          >
+            Comment commencer →
+          </Link>
+          <Link
+            href="/tarifs"
+            className="inline-flex items-center gap-1 px-4 py-2 rounded-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-sm font-semibold hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+          >
+            Voir les tarifs
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }
