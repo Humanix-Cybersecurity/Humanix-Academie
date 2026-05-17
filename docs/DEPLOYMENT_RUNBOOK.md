@@ -223,6 +223,11 @@ psql $DATABASE_URL -c "SELECT email, role FROM \"User\" WHERE role='SUPERADMIN';
 
 ## H. Smoke tests post-deploy
 
+> **🛡️ Sécurité hardening** — Pour activer les défenses Zero-Trust
+> livrées en mai 2026 (rôle Postgres read-only, REVOKE chirurgicaux,
+> audits externes Mozilla Observatory / Security Headers / SSL Labs),
+> consulte le runbook dédié : [`SECURITY_HARDENING.md`](./SECURITY_HARDENING.md).
+
 À lancer après chaque déploiement majeur :
 
 - [ ] `https://<domaine>/` → page d'accueil charge sans erreur
@@ -250,6 +255,9 @@ psql $DATABASE_URL -c "SELECT email, role FROM \"User\" WHERE role='SUPERADMIN';
 - [ ] Page `/lancement-oss` countdown affiche le bon nombre de jours
 - [ ] Backups DB automatiques activés
 - [ ] Logs centralisés (Sentry / Scaleway logs)
+- [ ] `POSTGRES_READONLY_PASSWORD` généré et en coffre (cf. [`SECURITY_HARDENING.md`](./SECURITY_HARDENING.md) § 1)
+- [ ] `DATABASE_URL_READONLY` configurée + `prisma/sql/post-migration-grants.sql` appliqué
+- [ ] Audits externes lancés sur `/securite/audits-externes` → A+ partout
 
 ---
 
