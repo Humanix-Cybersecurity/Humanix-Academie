@@ -34,6 +34,7 @@ import AnecdoteSubscribeForm from "@/components/AnecdoteSubscribeForm";
 import { getLevel } from "@/lib/levels";
 import { buildEquippedFromInventory } from "@/lib/shop";
 import { computeRiskScore } from "@/lib/risk-score";
+import { ACHIEVEMENTS_CATALOG } from "@/lib/achievements/catalog";
 
 export const dynamic = "force-dynamic";
 
@@ -92,6 +93,32 @@ export default async function ProfilPage({
     select: { isActive: true },
   });
   const isSubscribed = !!anecdoteSub?.isActive;
+
+  // Badges debloques (apercu compact en haut de page, collection complete
+  // sur /profil/badges). On prend les 5 derniers debloques pour donner
+  // un signal de progression recent sans surcharger la page.
+  const unlockedAchievements = await db.userAchievement.findMany({
+    where: { userId },
+    orderBy: { unlockedAt: "desc" },
+    take: 5,
+    select: {
+      unlockedAt: true,
+      achievement: { select: { slug: true } },
+    },
+  });
+  const totalAchievementsUnlocked = await db.userAchievement.count({
+    where: { userId },
+  });
+  // Jointure in-memory avec le catalogue (titre, emoji, rarete) pour
+  // eviter un select large sur Achievement.
+  const recentBadges = unlockedAchievements
+    .map((u) => {
+      const def = ACHIEVEMENTS_CATALOG.find(
+        (a) => a.slug === u.achievement.slug,
+      );
+      return def ? { ...def, unlockedAt: u.unlockedAt } : null;
+    })
+    .filter((b): b is NonNullable<typeof b> => b !== null);
 
   // Seuil "score parfait" : sert uniquement au styling de la couleur
   // (vert >=70 %, ambre sinon) et au choix du label CTA ("Refaire" pour
@@ -253,12 +280,70 @@ export default async function ProfilPage({
 
       <div className="max-w-5xl mx-auto px-4 py-12 space-y-12">
         {/* ============================================================
-            2. SCORE DE RISQUE CYBER
+            2. MES BADGES - apercu compact + lien vers collection complete
+            ============================================================ */}
+        <section aria-labelledby="badges-title">
+          <div className="flex items-end justify-between gap-3 flex-wrap mb-5">
+            <div>
+              <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-1">
+                Mes succès
+              </p>
+              <h2
+                id="badges-title"
+                className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300"
+              >
+                🏆 Mes badges{" "}
+                <span className="text-base font-bold text-gray-500 dark:text-gray-400 tabular-nums">
+                  ({totalAchievementsUnlocked} / {ACHIEVEMENTS_CATALOG.length})
+                </span>
+              </h2>
+            </div>
+            <Link
+              href="/profil/badges"
+              className="text-sm font-semibold text-accent-600 dark:text-accent-300 hover:text-accent-700 dark:hover:text-accent-200 underline-offset-4 hover:underline whitespace-nowrap"
+            >
+              Voir toute ma collection →
+            </Link>
+          </div>
+
+          {recentBadges.length === 0 ? (
+            <div className="rounded-3xl border-2 border-dashed border-amber-200 dark:border-amber-900/40 bg-amber-50/40 dark:bg-amber-950/10 p-6 text-center">
+              <p className="text-4xl mb-2" aria-hidden="true">
+                🌱
+              </p>
+              <p className="text-sm text-gray-700 dark:text-gray-200 italic max-w-md mx-auto">
+                Tes premiers badges arrivent quand tu termines un épisode ou
+                que tu enchaînes 2 jours de pratique. Pas de pression — ça
+                vient naturellement.
+              </p>
+              <Link
+                href="/profil/badges"
+                className="inline-block mt-3 text-xs font-semibold text-accent-600 dark:text-accent-300 underline-offset-4 hover:underline"
+              >
+                Voir tous les badges à débloquer →
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+              {recentBadges.map((b) => (
+                <BadgeChip
+                  key={b.slug}
+                  emoji={b.emoji}
+                  title={b.title}
+                  rarity={b.rarity}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* ============================================================
+            3. SCORE DE RISQUE CYBER
             ============================================================ */}
         <RiskScoreCard risk={risk} />
 
         {/* ============================================================
-            3. NEWSLETTER OPT-IN - chaleureux, pas insistant
+            4. NEWSLETTER OPT-IN - chaleureux, pas insistant
             ============================================================ */}
         {!isSubscribed && (
           <section
@@ -301,7 +386,7 @@ export default async function ProfilPage({
         )}
 
         {/* ============================================================
-            4. JOURNAL DE BORD - liste unique de tous les episodes
+            5. JOURNAL DE BORD - liste unique de tous les episodes
             (anciennement section 6, simplifie : on a retire les
             doublons "À polir" en cards et "Tes pépites" en cards qui
             recopiaient l'information deja dans cette liste).
@@ -498,7 +583,7 @@ export default async function ProfilPage({
         </section>
 
         {/* ============================================================
-            5. RESPIRATION - citation finale signature
+            6. RESPIRATION - citation finale signature
             ============================================================ */}
         <section className="text-center pt-4">
           <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
@@ -547,6 +632,48 @@ function SoftStat({
         {label}
       </p>
     </div>
+  );
+}
+
+/**
+ * Carte compacte d'un badge debloque, affichee dans l'apercu sur /profil.
+ * La collection complete avec descriptions + badges non-debloques vit
+ * sur /profil/badges.
+ */
+function BadgeChip({
+  emoji,
+  title,
+  rarity,
+}: {
+  emoji: string;
+  title: string;
+  rarity: "common" | "rare" | "epic" | "legendary";
+}) {
+  // Palette par rarete : on garde la meme convention que /profil/badges
+  // pour la coherence visuelle (1 coup d'oeil = je sais quel niveau).
+  const palette = {
+    common:
+      "bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700",
+    rare:
+      "bg-gradient-to-br from-cyan-50 to-white dark:from-cyan-950/30 dark:to-slate-900 border-cyan-200 dark:border-cyan-900/50",
+    epic:
+      "bg-gradient-to-br from-purple-50 to-white dark:from-purple-950/30 dark:to-slate-900 border-purple-200 dark:border-purple-900/50",
+    legendary:
+      "bg-gradient-to-br from-amber-50 to-white dark:from-amber-950/30 dark:to-slate-900 border-amber-300 dark:border-amber-900/60",
+  }[rarity];
+
+  return (
+    <article
+      className={`rounded-2xl border-2 p-3 text-center shadow-sm hover:shadow-md transition-shadow ${palette}`}
+      title={title}
+    >
+      <p className="text-3xl mb-1" aria-hidden="true">
+        {emoji}
+      </p>
+      <p className="text-xs font-semibold text-gray-700 dark:text-gray-200 leading-tight line-clamp-2">
+        {title}
+      </p>
+    </article>
   );
 }
 
