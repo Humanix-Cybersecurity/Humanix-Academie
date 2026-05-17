@@ -7,6 +7,7 @@
 // /profil, etc.) qui sont déjà en disallow dans robots.ts.
 //
 // Le sitemap est COMPLETE dynamiquement avec :
+//   - Les articles de la librairie (/librairie/[slug]) -> vitrine SEO
 //   - Les anecdotes publiees (/anecdotes/[slug]) -> dernieres news
 //   - Les experts publics (/experts/[slug]) -> profils contributeurs
 //   - Les incidents urgence-cyber (/urgence-cyber/[slug]) -> hub d'urgence
@@ -62,6 +63,7 @@ const PAGES: SitemapEntry[] = [
   { path: "/contact", priority: 0.6, changeFrequency: "yearly" },
 
   // Outils gratuits / lead gen
+  { path: "/librairie", priority: 0.9, changeFrequency: "weekly" },
   { path: "/audit-flash", priority: 0.7, changeFrequency: "monthly" },
   { path: "/cyber-meteo", priority: 0.6, changeFrequency: "hourly" },
   { path: "/observatoire-fuites", priority: 0.6, changeFrequency: "daily" },
@@ -110,6 +112,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
+  // Articles de la librairie (vitrine SEO publique).
+  // Priorite 0.7 par article pour aider le crawler a hierarchiser les
+  // URLs les plus susceptibles d'apporter du trafic organique.
+  let libraryEntries: MetadataRoute.Sitemap = [];
+  if (!IS_BUILD_PHASE) {
+    try {
+      const articles = await db.libraryArticle.findMany({
+        where: { isPublished: true },
+        select: { slug: true, updatedAt: true },
+        orderBy: { viewCount: "desc" },
+        take: 500,
+      });
+      libraryEntries = articles.map((a) => ({
+        url: `${PROD_URL}/librairie/${a.slug}`,
+        lastModified: a.updatedAt,
+        changeFrequency: "monthly" as const,
+        priority: 0.7,
+      }));
+    } catch (err) {
+      console.warn("sitemap: library lookup failed, skipping", err);
+    }
+  }
+
   // Anecdotes publiees (dynamiques, depuis DB)
   let anecdoteEntries: MetadataRoute.Sitemap = [];
   if (!IS_BUILD_PHASE) {
@@ -154,6 +179,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     ...staticEntries,
+    ...libraryEntries,
     ...urgenceEntries,
     ...anecdoteEntries,
     ...expertEntries,
