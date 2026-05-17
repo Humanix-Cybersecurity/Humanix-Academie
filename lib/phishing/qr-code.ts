@@ -149,7 +149,8 @@ export async function buildQrCodeDataUrl(
 
 /**
  * Construit l'URL de la landing pedagogique pour une cible donnee.
- * Le token est unique par destinataire (cf. PhishingResult.trackToken).
+ * Le token est unique par destinataire (cf. PhishingResult.trackToken,
+ * format `phx_<32 hex>`).
  */
 export function buildQuishingLandingUrl(
   appBaseUrl: string,
@@ -157,4 +158,45 @@ export function buildQuishingLandingUrl(
 ): string {
   const base = appBaseUrl.replace(/\/$/, "");
   return `${base}/phishing/${trackToken}`;
+}
+
+/**
+ * Prefixe utilise pour le token NIVEAU CAMPAGNE des affiches quishing.
+ * La landing /phishing/[token] route differemment selon le prefixe :
+ *   - phx_<hex>      : trackToken par destinataire (email/SMS/quishing v1)
+ *   - qhc_<cuidId>   : token de campagne quishing (1 seul QR partage,
+ *                       1 seul poster PDF a dupliquer physiquement)
+ *
+ * Cf. lib/quishing/poster-pdf.tsx et app/phishing/[token]/page.tsx.
+ */
+export const QUISHING_CAMPAIGN_TOKEN_PREFIX = "qhc_";
+
+/**
+ * Construit le token campagne a encoder dans le QR d'un poster quishing.
+ * Format : `qhc_<campaignId>` — deterministe, pas besoin de stocker en
+ * BDD. La landing reverse-parse pour resoudre la campagne.
+ */
+export function buildQuishingCampaignToken(campaignId: string): string {
+  return `${QUISHING_CAMPAIGN_TOKEN_PREFIX}${campaignId}`;
+}
+
+/**
+ * Helper inverse : extrait le campaignId si le token a le prefixe
+ * quishing-campagne, sinon null (= c'est un trackToken classique).
+ */
+export function parseQuishingCampaignToken(token: string): string | null {
+  if (!token.startsWith(QUISHING_CAMPAIGN_TOKEN_PREFIX)) return null;
+  const id = token.slice(QUISHING_CAMPAIGN_TOKEN_PREFIX.length);
+  return id.length > 0 ? id : null;
+}
+
+/**
+ * Construit l'URL de landing pour le QR commun d'un poster quishing.
+ */
+export function buildQuishingCampaignLandingUrl(
+  appBaseUrl: string,
+  campaignId: string,
+): string {
+  const base = appBaseUrl.replace(/\/$/, "");
+  return `${base}/phishing/${buildQuishingCampaignToken(campaignId)}`;
 }
