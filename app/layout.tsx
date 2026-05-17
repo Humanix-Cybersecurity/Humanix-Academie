@@ -267,20 +267,31 @@ export default async function RootLayout({
   const hexChatEnabled =
     isHexChatAvailable() && (Boolean(session?.user?.id) || isDemo);
 
+  // CSP nonce per-request : genere par proxy.ts (edge), recupere ici
+  // pour autoriser les scripts inline (theme init, JSON-LD) avec
+  // 'nonce-XXX' dans script-src. Sans cet attribut, le navigateur les
+  // bloquerait. Cf. lib/csp-nonce.ts.
+  const cspNonce = headersList.get("x-csp-nonce") ?? undefined;
+
   return (
     <html lang="fr">
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script
+          nonce={cspNonce}
+          dangerouslySetInnerHTML={{ __html: themeInitScript }}
+        />
         {/* JSON-LD Organization + WebSite - SEO knowledge panel +
             rich snippets + sitelinks searchbox eligible */}
         <script
           type="application/ld+json"
+          nonce={cspNonce}
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(organizationJsonLd),
           }}
         />
         <script
           type="application/ld+json"
+          nonce={cspNonce}
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(webSiteJsonLd),
           }}
