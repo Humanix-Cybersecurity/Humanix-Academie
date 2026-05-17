@@ -70,6 +70,14 @@ const RESOURCES: Resource[] = [
     badge: "5 min",
   },
   {
+    href: "/diagnostic-nis2",
+    title: "Diagnostic NIS2",
+    emoji: "📋",
+    description:
+      "30 questions concrètes mappées article par article (21.2.a → 23). Score per-article + top 3 chantiers prioritaires. En 10 minutes, sans inscription.",
+    badge: "10 min",
+  },
+  {
     href: "/librairie",
     title: "Librairie",
     emoji: "📚",
