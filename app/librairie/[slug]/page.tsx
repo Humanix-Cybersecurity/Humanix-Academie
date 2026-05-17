@@ -19,6 +19,7 @@ import MarkdownView from "@/components/MarkdownView";
 import TTSButton from "@/components/TTSButton";
 import ShareArticleButton from "@/components/ShareArticleButton";
 import { markdownToPlainText } from "@/lib/markdown";
+import { getCspNonce } from "@/lib/csp-nonce";
 
 export const dynamic = "force-dynamic";
 
@@ -87,6 +88,9 @@ export default async function ArticleReadPage({
   const article = await db.libraryArticle.findUnique({ where: { slug } });
   if (!article || !article.isPublished) return notFound();
 
+  // CSP nonce per-request pour le JSON-LD inline ci-dessous.
+  const cspNonce = await getCspNonce();
+
   // Pas de gate auth — la librairie est publique (vitrine SEO).
 
   // Increment view count (fire-and-forget)
@@ -147,6 +151,7 @@ export default async function ArticleReadPage({
       {/* JSON-LD schema.org pour rich snippets Google */}
       <script
         type="application/ld+json"
+        nonce={cspNonce}
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />

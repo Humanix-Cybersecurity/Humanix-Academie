@@ -2,7 +2,16 @@
 // Calcul du score de risque humain par utilisateur.
 // Echelle 0-100 : 100 = excellent (faible risque cyber), 0 = catastrophe.
 // Recompute possible a la volee, OU mis en cache sur User.riskScore via update().
+//
+// PRINCIPE LEAST PRIVILEGE :
+//   - `computeRiskScore()` est une lecture seule -> utilise `dbReadOnly`.
+//     Si DATABASE_URL_READONLY est configure, ces queries passent par le
+//     role Postgres RO (impossible d'ecrire meme en cas de bug).
+//     Sinon, fallback sur `db` (zero regression).
+//   - `refreshUserRiskScore()` ecrit dans User.riskScore -> utilise `db`
+//     (le client RW principal).
 import { db } from "@/lib/db";
+import { dbReadOnly } from "@/lib/db-readonly";
 
 export type RiskFactors = {
   baseline: number;
@@ -19,7 +28,7 @@ export type RiskFactors = {
 const VERDICT_THRESHOLDS = { excellent: 80, bon: 60, a_surveiller: 40 };
 
 export async function computeRiskScore(userId: string): Promise<RiskFactors> {
-  const user = await db.user.findUnique({
+  const user = await dbReadOnly.user.findUnique({
     where: { id: userId },
     include: {
       progress: {
@@ -211,7 +220,7 @@ export async function computeRiskScore(userId: string): Promise<RiskFactors> {
   if (userGroupSlugs.size > 0) {
     // On charge les episodes du tenant qui ciblent un des groupes metier
     // de l'user. targetGroups est un CSV ("compta,rh,direction") ou null.
-    const tenantEpisodes = await db.episode.findMany({
+    const tenantEpisodes = await dbReadOnly.episode.findMany({
       where: {
         saison: { tenantId: user.tenantId },
         isPublished: true,
