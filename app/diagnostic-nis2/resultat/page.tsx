@@ -36,6 +36,16 @@ export const metadata: Metadata = {
 };
 
 function ScoreBadge({ score }: { score: number }) {
+  // Label semantique : on ne se repose pas sur la couleur seule (WCAG 1.4.1).
+  // Un daltonien lit "Score 80%, niveau robuste" via le lecteur d'ecran.
+  const verdict =
+    score >= 80
+      ? "robuste"
+      : score >= 60
+        ? "en marche"
+        : score >= 40
+          ? "fragile"
+          : "alerte";
   const color =
     score >= 80
       ? "bg-emerald-500"
@@ -47,6 +57,7 @@ function ScoreBadge({ score }: { score: number }) {
   return (
     <span
       className={`inline-flex items-center justify-center min-w-[3rem] h-7 px-2 rounded-full ${color} text-white text-sm font-bold tabular-nums`}
+      aria-label={`Score ${score} sur 100, niveau ${verdict}`}
     >
       {score}%
     </span>
