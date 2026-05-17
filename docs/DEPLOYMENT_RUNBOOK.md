@@ -89,61 +89,18 @@ Le bouton Google / Apple / Microsoft sur `/inscription` n'apparaît QUE si les e
 
 ---
 
-## D. Payplug (Phase 3 — verrou /signup + future automatisation)
+## D. Paiements (optionnel — instance commerciale)
 
-### D.1 — Verrou /signup en prod
+Pour une instance qui veut accepter les abonnements payants, les
+variables d'env suivantes doivent être renseignées (consulter
+`.env.example` pour la liste à jour) :
 
-Tant que Payplug n'est pas configuré, garde le verrou. **Action :** assure-toi que la variable suivante est **absente** ou `false` :
+- Provider de paiement (clé secrète + secret webhook HMAC)
+- Identifiants des plans tarifaires
+- Verrou `SIGNUP_ALLOW_SELF_SERVICE` (false par défaut)
 
-```
-SIGNUP_ALLOW_SELF_SERVICE="false"   # ou non posée du tout
-```
-
-Effet : `/signup` redirige automatiquement vers `/demande-abonnement`. Les apprenants gratuits passent par `/inscription`.
-
-> Si tu dois réactiver `/signup` temporairement pour debug : pose `SIGNUP_ALLOW_SELF_SERVICE="true"` UNIQUEMENT en staging, **jamais en prod commerciale**.
-
-### D.2 — Notification founder (demandes d'abonnement)
-
-- [ ] Poser `FOUNDER_NOTIFICATION_EMAIL="contact@humanix-cybersecurity.fr"` (ou ton adresse)
-- [ ] Vérifier que `EMAIL_FROM` + le serveur SMTP (Scaleway TEM) sont configurés (déjà testé via les magic links Phase 2)
-
-À chaque soumission de `/demande-abonnement`, un email arrive sur cette adresse avec toutes les infos + un rappel CLI pour provisionner.
-
-### D.3 — Configuration Payplug (self-service automatique)
-
-> **Recommandé pré-launch** — sans cette config, `/souscrire` affiche un fallback gracieux qui renvoie vers `/demande-abonnement` (manuel founder).
-
-- [ ] Compte Payplug Pro : https://www.payplug.com/
-- [ ] Récupérer la **Secret Key** (Settings → API keys)
-- [ ] Créer 2 **Subscription Plans** correspondant à `starter` et `pro` (cf. lib/plans.ts pour la grille). `enterprise` est manuel (devis), pas de plan Payplug self-service.
-  - **Starter** : forfait 19 €/mois (mensuel) ou 15 €/mois (annuel). Limite 15 sièges, mais Payplug ne gère pas le sub-tier free <=5 — c'est l'app qui ne déclenche pas le checkout tant que `activeUsers <= 5`.
-  - **Pro** : 3 €/utilisateur/mois (mensuel) ou 2,50 € (annuel). Volume 16-250 sièges.
-- [ ] Créer un **webhook** :
-  - URL : `https://<ton-domaine>/api/payments/webhook`
-  - Events : `subscription.created`, `subscription.updated`, `subscription.activated`, `subscription.canceled`, `subscription.payment_failed`, `subscription.payment_succeeded`, `payment.failed`, `payment.paid`
-- [ ] Récupérer le **webhook secret** (pour vérifier la signature HMAC)
-- [ ] Poser dans `.env` :
-  ```
-  PAYPLUG_SECRET_KEY="..."
-  PAYPLUG_WEBHOOK_SECRET="..."
-  PAYPLUG_PLAN_STARTER="<plan_id>"
-  PAYPLUG_PLAN_PRO="<plan_id>"
-  # Enterprise: pas de plan Payplug (process commercial manuel)
-  ```
-
-Une fois ces variables posées, **le flow self-service est entièrement automatique** :
-
-1. User sur `/tarifs` clique sur le CTA d'un plan payant (Starter ou Pro).
-2. Page `/souscrire?plan=X` → form (email + organisation + sièges estimés).
-3. POST `/api/payments/checkout/start` → crée Payplug Customer + Subscription anonyme.
-4. User redirigé sur la page Payplug, paye.
-5. Webhook `subscription.created` → fetche l'email via API Payplug → `provisionTenantWithAdmin` crée tenant + ADMIN → magic link envoyé.
-6. User clic le lien dans son mail → atterrit sur `/admin`.
-
-**Aucune intervention humaine côté Humanix dans ce parcours.**
-
-`/demande-abonnement` reste la voie pour Enterprise (251+ sièges, instance dédiée, SecNumCloud, white-label) et tous les cas particuliers.
+Sans cette config, le parcours d'abonnement est désactivé proprement
+(les visiteurs sont redirigés vers une page de contact).
 
 ---
 
@@ -151,40 +108,13 @@ Une fois ces variables posées, **le flow self-service est entièrement automati
 
 Pour répondre à une demande de `/demande-abonnement` ou pour bootstrapper un tenant en interne :
 
-```bash
-# Option 1 — via /superadmin (UI)
-# (à câbler en Phase 4 si pas déjà disponible)
+Le provisionnement passe par l'interface admin
+(`/superadmin/tenants`) ou via la fonction
+`lib/tenant-provisioning.ts:provisionTenantWithAdmin()` selon l'usage.
 
-# Option 2 — via script CLI (à créer si besoin)
-# Exemple de syntaxe ciblée :
-npm run db:provision-tenant -- \
-  --email="dsi@mapme.fr" \
-  --org="Ma PME SAS" \
-  --plan="pro"
-```
-
-Le script appelle `lib/tenant-provisioning.ts:provisionTenantWithAdmin()` qui :
-1. Vérifie que l'email n'est pas déjà ADMIN d'un autre tenant
-2. Génère un slug unique
-3. Crée tenant + user ADMIN dans une transaction
-4. Émet un audit log `TENANT_CREATED`
-5. (Optionnel) envoie un magic link de bienvenue
-
-Si le script CLI n'existe pas encore, ouvrir une session Node depuis le serveur :
-
-```bash
-node -e "
-import('./lib/tenant-provisioning.ts').then(async m => {
-  const r = await m.provisionTenantWithAdmin({
-    email: 'dsi@mapme.fr',
-    organizationName: 'Ma PME SAS',
-    plan: 'pro',
-    source: 'superadmin-manual',
-  });
-  console.log(r);
-});
-"
-```
+Étapes appliquées : vérification d'unicité de l'email ADMIN, génération
+d'un slug unique, création atomique tenant + user, audit log
+`TENANT_CREATED`, envoi optionnel d'un magic link de bienvenue.
 
 ---
 
@@ -223,22 +153,15 @@ psql $DATABASE_URL -c "SELECT email, role FROM \"User\" WHERE role='SUPERADMIN';
 
 ## H. Smoke tests post-deploy
 
-> **🛡️ Sécurité hardening** — Pour activer les défenses Zero-Trust
-> livrées en mai 2026 (rôle Postgres read-only, REVOKE chirurgicaux,
-> audits externes Mozilla Observatory / Security Headers / SSL Labs),
-> consulte le runbook dédié : [`SECURITY_HARDENING.md`](./SECURITY_HARDENING.md).
-
 À lancer après chaque déploiement majeur :
 
 - [ ] `https://<domaine>/` → page d'accueil charge sans erreur
 - [ ] `https://<domaine>/inscription` → page accessible, boutons SSO visibles selon les providers configurés
 - [ ] `https://<domaine>/connexion` avec email Google inconnu → rejet `NoAccount` (sécurité préservée)
 - [ ] `https://<domaine>/signup` → redirige vers `/demande-abonnement` (verrou actif)
-- [ ] `https://<domaine>/demande-abonnement` → form fonctionne, soumission → email arrive sur `FOUNDER_NOTIFICATION_EMAIL`
 - [ ] `https://<domaine>/admin` quand non connecté → redirect `/connexion`
 - [ ] `https://<domaine>/admin` quand LEARNER → redirect `/apprendre` (gating role)
-- [ ] Setup MFA d'un compte → QR scanné → code TOTP accepté (cf. PR #219 résilience)
-- [ ] Si Payplug configuré : `validatePayplugSetup()` (cf. lib/payplug.ts) ne reporte aucune erreur
+- [ ] Setup MFA d'un compte → QR scanné → code TOTP accepté
 
 ---
 
@@ -247,15 +170,13 @@ psql $DATABASE_URL -c "SELECT email, role FROM \"User\" WHERE role='SUPERADMIN';
 - [ ] Tenant Communauté créé (B)
 - [ ] AUTH_SECRET rotaté + en coffre
 - [ ] Au moins UN provider SSO actif (Google recommandé) (C)
-- [ ] FOUNDER_NOTIFICATION_EMAIL pointé sur la bonne adresse (D.2)
-- [ ] DEMO_MODE désactivé
-- [ ] SIGNUP_ALLOW_SELF_SERVICE désactivé
+- [ ] DEMO_MODE désactivé en production
+- [ ] SIGNUP_ALLOW_SELF_SERVICE désactivé par défaut
 - [ ] SUPERADMIN bootstrap fait (F)
 - [ ] Smoke tests passés (H)
-- [ ] Page `/lancement-oss` countdown affiche le bon nombre de jours
 - [ ] Backups DB automatiques activés
 - [ ] Logs centralisés (Sentry / Scaleway logs)
-- [ ] `POSTGRES_READONLY_PASSWORD` généré et en coffre (cf. [`SECURITY_HARDENING.md`](./SECURITY_HARDENING.md) § 1)
+- [ ] `POSTGRES_READONLY_PASSWORD` généré et en coffre
 - [ ] `DATABASE_URL_READONLY` configurée + `prisma/sql/post-migration-grants.sql` appliqué
 - [ ] Audits externes lancés sur `/securite/audits-externes` → A+ partout
 
