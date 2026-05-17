@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Proxy Next.js (edge runtime) - 2 responsabilites distinctes.
+// Proxy Next.js (edge runtime) - 3 responsabilites distinctes.
 //
 // Note : depuis Next.js 16, le fichier "middleware.ts" est renomme
 // "proxy.ts" (la fonction exportee s'appelle `proxy`).
@@ -20,6 +20,18 @@
 //      server (auth() dans les layouts). Reduit la surface d'attaque
 //      sur scans / bots.
 //
+//   3. CSP NONCE PER-REQUEST (Sprint 4 securite)
+//      Genere un nonce cryptographiquement aleatoire pour chaque requete,
+//      l'inject dans :
+//        - le header request `x-csp-nonce` (lecture cote server components
+//          via lib/csp-nonce.ts)
+//        - le header response `Content-Security-Policy` (directive
+//          script-src 'nonce-XXX' + 'strict-dynamic')
+//      But : supprimer 'unsafe-inline' du script-src. Les scripts inline
+//      du repo (theme init, JSON-LD SEO) doivent porter l'attribut
+//      `nonce={nonce}` pour etre execute. Tout autre script inline est
+//      bloque par le navigateur -> protection forte contre XSS reflechi.
+//
 // On ne valide PAS la signature du cookie ici (ca demanderait d'importer
 // next-auth dans l'edge runtime - couteux et bloque par Prisma adapter).
 // Le but est juste de rejeter le cas evident "aucun cookie".
@@ -30,6 +42,86 @@ import {
   extractTenantSlug,
   getRootDomain,
 } from "@/lib/subdomain-tenant";
+
+/**
+ * Origine Plausible cloud, deduit dynamiquement de l'env var pour ne PAS
+ * hardcoder plausible.io dans le CSP : un fork peut utiliser un proxy
+ * self-host ou desactiver completement Plausible.
+ */
+function plausibleOrigin(): string {
+  const url = process.env.NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT;
+  if (!url) return "";
+  try {
+    return new URL(url).origin;
+  } catch {
+    return "";
+  }
+}
+
+/**
+ * Construit le header Content-Security-Policy en injectant le nonce
+ * per-request. Strategie "Strict CSP" Google :
+ *   - script-src 'nonce-XXX' 'strict-dynamic' 'unsafe-inline'
+ *     -> les navigateurs CSP3-aware ignorent 'unsafe-inline' si nonce
+ *        present (fallback compat pour vieux navigateurs uniquement).
+ *   - style-src garde 'unsafe-inline' (Tailwind CSS-in-JS l'exige).
+ *   - connect-src whitelist FR/UE souverains.
+ */
+function buildCsp(nonce: string): string {
+  const plausible = plausibleOrigin();
+  const directives = [
+    "default-src 'self'",
+    [
+      "script-src 'self'",
+      `'nonce-${nonce}'`,
+      "'strict-dynamic'",
+      // Fallback pour navigateurs pre-CSP3 (Edge ancien, IE11) — ignore
+      // par les nav modernes des que nonce/strict-dynamic est present.
+      "'unsafe-inline'",
+      plausible,
+    ]
+      .filter(Boolean)
+      .join(" "),
+    // style-src reste avec 'unsafe-inline' (Tailwind CSS-in-JS + inline
+    // styles dynamiques l'exigent).
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: https:",
+    "font-src 'self' data:",
+    // media-src 'blob:' : TTSButton cree un blob URL depuis le MP3 recu
+    // de /api/tts/synthesize. Sans blob:, l'audio echoue silencieusement.
+    "media-src 'self' blob:",
+    [
+      "connect-src 'self'",
+      // Plausible cloud (events POST) si configure
+      plausible,
+      // Providers UE/FR souverains
+      "https://api.mistral.ai",
+      "https://api.payplug.com",
+      "https://secure.payplug.com",
+      "https://api.scaleway.com",
+    ]
+      .filter(Boolean)
+      .join(" "),
+    "frame-ancestors 'none'",
+    "form-action 'self'",
+    "base-uri 'self'",
+    "object-src 'none'",
+    "upgrade-insecure-requests",
+  ];
+  return directives.join("; ");
+}
+
+/**
+ * Genere un nonce CSP cryptographiquement aleatoire (96 bits, encode b64).
+ * Web Crypto API native disponible dans le runtime edge Next.js.
+ */
+function generateNonce(): string {
+  const bytes = new Uint8Array(12);
+  crypto.getRandomValues(bytes);
+  // base64 standard (pas urlsafe) : le nonce vit dans le HTML/header,
+  // pas dans une URL.
+  return btoa(String.fromCharCode(...bytes));
+}
 
 // Noms de cookies utilises par Auth.js v5.
 // - Dev : "authjs.session-token"
@@ -80,17 +172,22 @@ export function proxy(req: NextRequest) {
     }
   }
 
-  // === 4. PROPAGATION du tenant slug aux server components ===
-  // On clone les headers de la requete et on inject `x-tenant-slug` si present.
-  // Le `Set-Cookie`-style ici ne marche pas (NextRequest est immutable), il
-  // faut passer par une nouvelle response avec headers modifies.
-  if (slug) {
-    const requestHeaders = new Headers(req.headers);
-    requestHeaders.set("x-tenant-slug", slug);
-    return NextResponse.next({ request: { headers: requestHeaders } });
-  }
+  // === 4. PROPAGATION request headers + CSP NONCE per-request ===
+  // On clone les headers de la requete pour pouvoir :
+  //   - Injecter `x-tenant-slug` (etape 1)
+  //   - Injecter `x-csp-nonce` (lecture cote server components via
+  //     lib/csp-nonce.ts -> headers().get("x-csp-nonce"))
+  // Le CSP response header porte le meme nonce dans script-src 'nonce-XXX'
+  // pour que le navigateur n'execute que les scripts inline qui portent
+  // l'attribut `nonce={nonce}` (theme init, JSON-LD SEO).
+  const nonce = generateNonce();
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("x-csp-nonce", nonce);
+  if (slug) requestHeaders.set("x-tenant-slug", slug);
 
-  return NextResponse.next();
+  const response = NextResponse.next({ request: { headers: requestHeaders } });
+  response.headers.set("Content-Security-Policy", buildCsp(nonce));
+  return response;
 }
 
 // Matcher : execute sur tous les paths SAUF les assets statiques et le
