@@ -213,12 +213,20 @@ export default function SecuritePage() {
                   publiquement. C'est notre signature.
                 </p>
               </div>
-              <Link
-                href="/securite/rapport-audit"
-                className="inline-flex items-center gap-2 bg-white text-primary-500 font-bold px-6 py-3 rounded-2xl shadow-md hover:scale-105 transition-transform whitespace-nowrap"
-              >
-                Consulter <span aria-hidden="true">→</span>
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-3 whitespace-nowrap">
+                <Link
+                  href="/securite/rapport-audit"
+                  className="inline-flex items-center gap-2 bg-white text-primary-500 font-bold px-6 py-3 rounded-2xl shadow-md hover:scale-105 transition-transform"
+                >
+                  Rapport interne <span aria-hidden="true">→</span>
+                </Link>
+                <Link
+                  href="/securite/audits-externes"
+                  className="inline-flex items-center gap-2 bg-primary-700 text-white font-bold px-6 py-3 rounded-2xl shadow-md hover:scale-105 transition-transform border-2 border-white/30"
+                >
+                  Audits externes <span aria-hidden="true">→</span>
+                </Link>
+              </div>
             </div>
           </div>
         </section>
