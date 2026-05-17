@@ -8,8 +8,11 @@ const cfg: api.HumanixConfig = {
 };
 
 describe("TOOLS catalog", () => {
-  it("expose 4 outils nommes humanix_*", () => {
-    expect(TOOLS).toHaveLength(4);
+  it("expose au moins 4 outils nommes humanix_*", () => {
+    // Le catalogue grandit avec les versions. On valide juste qu'il y
+    // a au moins le coeur historique (4 outils) et que TOUS respectent
+    // les invariants de nommage / schema.
+    expect(TOOLS.length).toBeGreaterThanOrEqual(4);
     for (const t of TOOLS) {
       expect(t.name.startsWith("humanix_")).toBe(true);
       expect(t.description.length).toBeGreaterThan(20);
