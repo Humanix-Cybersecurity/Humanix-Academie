@@ -57,6 +57,7 @@ const PAGES: SitemapEntry[] = [
   { path: "/presse", priority: 0.7, changeFrequency: "monthly" },
   { path: "/securite", priority: 0.7, changeFrequency: "monthly" },
   { path: "/securite/rapport-audit", priority: 0.6, changeFrequency: "monthly" },
+  { path: "/securite/audits-externes", priority: 0.6, changeFrequency: "monthly" },
   { path: "/integrations", priority: 0.7, changeFrequency: "monthly" },
   { path: "/famille", priority: 0.7, changeFrequency: "monthly" },
   { path: "/experts", priority: 0.6, changeFrequency: "weekly" },
