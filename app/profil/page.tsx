@@ -37,10 +37,19 @@ import { computeRiskScore } from "@/lib/risk-score";
 
 export const dynamic = "force-dynamic";
 
-export default async function ProfilPage() {
+export default async function ProfilPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ saison?: string }>;
+}) {
   const session = await auth();
   if (!session?.user) redirect(getSignInPath());
   const userId = session.user!.id as string;
+
+  // Filtre saison optionnel (?saison=<slug>) : permet a l'apprenant de
+  // ne voir que les episodes d'une saison precise dans son journal de
+  // bord. Pas de filtre = on montre tout. Pattern identique a /librairie.
+  const { saison: saisonFilter } = await searchParams;
 
   const user = await db.user.findUnique({
     where: { id: userId },
@@ -89,6 +98,36 @@ export default async function ProfilPage() {
   // un episode reussi, "Ameliorer" sinon). Pas de filtrage : on affiche
   // tous les episodes dans une seule liste.
   const PERFECT_THRESHOLD = 70;
+
+  // Liste des saisons sur lesquelles l'apprenant a un progres, deduplee
+  // et ordonnee par premiere apparition (= ordre chronologique inverse,
+  // saison la plus recemment travaillee en premier). Sert a generer les
+  // pills de filtre au-dessus du journal de bord.
+  const saisonsBySlug = new Map<
+    string,
+    { slug: string; title: string; emoji: string; count: number }
+  >();
+  for (const p of user.progress) {
+    const existing = saisonsBySlug.get(p.saison.slug);
+    if (existing) {
+      existing.count += 1;
+    } else {
+      saisonsBySlug.set(p.saison.slug, {
+        slug: p.saison.slug,
+        title: p.saison.title,
+        emoji: p.saison.coverEmoji,
+        count: 1,
+      });
+    }
+  }
+  const availableSaisons = [...saisonsBySlug.values()];
+
+  // Filtre actif : on ne garde que les progres de la saison choisie.
+  // Si la saison demandee n'existe pas dans le progres de l'user, on
+  // tombe en silence sur "tous" (pas d'erreur, on log juste).
+  const filteredProgress = saisonFilter
+    ? user.progress.filter((p) => p.saison.slug === saisonFilter)
+    : user.progress;
 
   const firstName = user.name?.split(" ")[0] ?? user.email.split("@")[0];
 
@@ -276,13 +315,58 @@ export default async function ProfilPage() {
               id="all-title"
               className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300"
             >
-              Tous tes épisodes ({completedCount})
+              {saisonFilter
+                ? `${filteredProgress.length} épisode${filteredProgress.length > 1 ? "s" : ""} sur cette saison`
+                : `Tous tes épisodes (${filteredProgress.length})`}
             </h2>
             <p className="text-sm text-gray-600 dark:text-gray-300 italic mt-1">
               Le score en vert : c'est solide. En ambre : tu peux encore
               gagner du terrain — clique sur « Améliorer » pour rejouer.
             </p>
           </div>
+
+          {/* Filtres par saison — pills cliquables au-dessus de la
+              liste. Affichees seulement si l'apprenant a un progres sur
+              au moins 2 saisons (sinon le filtre n'a pas de sens). */}
+          {availableSaisons.length >= 2 && (
+            <nav
+              aria-label="Filtrer par saison"
+              className="flex flex-wrap gap-2 mb-5"
+            >
+              <Link
+                href="/profil"
+                aria-current={!saisonFilter ? "page" : undefined}
+                className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-all border-2 ${
+                  !saisonFilter
+                    ? "bg-primary-500 text-white border-primary-500 shadow-sm"
+                    : "bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-200 hover:border-accent-500 hover:-translate-y-0.5"
+                }`}
+              >
+                Tous{" "}
+                <span className="opacity-70 tabular-nums">
+                  ({user.progress.length})
+                </span>
+              </Link>
+              {availableSaisons.map((s) => (
+                <Link
+                  key={s.slug}
+                  href={`/profil?saison=${s.slug}`}
+                  aria-current={saisonFilter === s.slug ? "page" : undefined}
+                  className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-all border-2 inline-flex items-center gap-1.5 ${
+                    saisonFilter === s.slug
+                      ? "bg-primary-500 text-white border-primary-500 shadow-sm"
+                      : "bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-200 hover:border-accent-500 hover:-translate-y-0.5"
+                  }`}
+                >
+                  <span aria-hidden="true">{s.emoji}</span>
+                  <span>{s.title}</span>
+                  <span className="opacity-70 tabular-nums">
+                    ({s.count})
+                  </span>
+                </Link>
+              ))}
+            </nav>
+          )}
 
           {user.progress.length === 0 ? (
             <div className="card text-center py-16 bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/30 border-emerald-200 dark:border-emerald-900/40">
@@ -330,7 +414,23 @@ export default async function ProfilPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {user.progress.map((p) => {
+                  {filteredProgress.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan={5}
+                        className="py-8 text-center text-gray-500 dark:text-gray-400 italic"
+                      >
+                        Aucun épisode pour cette saison —{" "}
+                        <Link
+                          href="/profil"
+                          className="text-accent-500 hover:underline"
+                        >
+                          voir tous les épisodes
+                        </Link>
+                      </td>
+                    </tr>
+                  )}
+                  {filteredProgress.map((p) => {
                     const score = p.score ?? 0;
                     const perfect = score >= PERFECT_THRESHOLD;
                     return (
