@@ -14,7 +14,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { decodeAnswers } from "../actions";
+import { decodeAnswers } from "../encoding";
 import {
   computeNis2Diagnostic,
   VERDICT_LABEL,
