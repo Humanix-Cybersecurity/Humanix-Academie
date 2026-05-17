@@ -22,6 +22,41 @@ import HexMascot from "@/components/HexMascot";
 type SsoProviders = { google: boolean; microsoft: boolean };
 type Mode = "password" | "magic-link" | "webauthn";
 
+// Clef localStorage : indique que l'utilisateur a deja reussi un login
+// WebAuthn sur ce navigateur -> on lui propose la clef par defaut au
+// prochain passage (passkey-first UX, Sprint 3 securite).
+//
+// Si l'utilisateur change de navigateur / efface ses cookies / utilise
+// la nav privee : pas de drame, on retombe sur password (default
+// historique). Aucun secret stocke, juste un flag UX.
+const WEBAUTHN_PREF_KEY = "humanix:pref:webauthn";
+
+/**
+ * Lit la preference WebAuthn cote client. Renvoie false en SSR
+ * (window indefini) — ConnexionInner verifiera en useEffect au mount.
+ */
+function readWebauthnPreference(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem(WEBAUTHN_PREF_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function writeWebauthnPreference(value: boolean): void {
+  if (typeof window === "undefined") return;
+  try {
+    if (value) {
+      window.localStorage.setItem(WEBAUTHN_PREF_KEY, "1");
+    } else {
+      window.localStorage.removeItem(WEBAUTHN_PREF_KEY);
+    }
+  } catch {
+    /* Mode privacy / quota exceeded : on ignore silencieusement. */
+  }
+}
+
 export default function ConnexionPage() {
   return (
     <Suspense fallback={<ConnexionFallback />}>
@@ -52,7 +87,17 @@ function ConnexionInner() {
   const errorCode = params.get("error");
   const stepUp = params.get("step-up") === "1";
 
-  const [mode, setMode] = useState<Mode>(stepUp ? "webauthn" : "password");
+  // Default du mode :
+  //   - stepUp=1 dans l'URL (acces superadmin) -> webauthn (impose)
+  //   - sinon, si l'utilisateur a deja reussi un login WebAuthn sur ce
+  //     navigateur (localStorage humanix:pref:webauthn) -> webauthn
+  //   - fallback -> password (default historique)
+  // Initial state hydrate cote client uniquement (SSR-safe via lazy
+  // initializer + useEffect plus bas pour le sync apres mount).
+  const [mode, setMode] = useState<Mode>(() => {
+    if (stepUp) return "webauthn";
+    return readWebauthnPreference() ? "webauthn" : "password";
+  });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mfaCode, setMfaCode] = useState("");
@@ -149,6 +194,9 @@ function ConnexionInner() {
         setError("Connexion impossible après vérification de la clé.");
         return;
       }
+      // Login WebAuthn reussi : on memorise la preference pour la
+      // prochaine visite (passkey-first UX).
+      writeWebauthnPreference(true);
       router.push(res.url ?? "/apprendre");
     } catch (e: unknown) {
       setSending(false);
@@ -266,6 +314,7 @@ function ConnexionInner() {
           }}
           icon="🔑"
           label="Clé"
+          recommended
         />
         <TabBtn
           active={mode === "magic-link"}
@@ -360,6 +409,28 @@ function ConnexionInner() {
         {/* ===== FORMS (un seul affiche selon `mode`) ===== */}
         {mode === "webauthn" ? (
           <form onSubmit={onWebauthnSubmit} className="space-y-4">
+          {/* Bandeau pedagogique : explique le mode passkey (phishing-proof,
+              sans mot de passe a memoriser, FIDO2). Affiche uniquement
+              quand le tab Clé est actif. */}
+          <div className="rounded-xl border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50 dark:bg-emerald-950/30 p-3 text-xs text-emerald-900 dark:text-emerald-100">
+            <p className="font-bold mb-1 flex items-center gap-1.5">
+              <span aria-hidden="true">🛡️</span>
+              Connexion sans mot de passe — la plus sûre
+            </p>
+            <p className="opacity-90 leading-relaxed">
+              Une clé d&apos;accès (passkey, YubiKey, Touch ID, Windows Hello)
+              prouve ton identité <strong>sans rien transmettre</strong> qu&apos;un
+              phishing pourrait voler. Si tu n&apos;en as pas encore : utilise
+              le mot de passe, puis active une clé dans{" "}
+              <Link
+                href="/profil/securite"
+                className="underline font-semibold"
+              >
+                Profil → Sécurité
+              </Link>
+              .
+            </p>
+          </div>
           <div>
             <label
               htmlFor="connexion-email-fido"
@@ -592,11 +663,14 @@ function TabBtn({
   onClick,
   icon,
   label,
+  recommended,
 }: {
   active: boolean;
   onClick: () => void;
   icon: string;
   label: string;
+  /** Affiche un point vert "Recommande" en haut a droite du tab. */
+  recommended?: boolean;
 }) {
   return (
     <button
@@ -612,6 +686,13 @@ function TabBtn({
     >
       <span aria-hidden="true">{icon}</span>
       <span>{label}</span>
+      {recommended && (
+        <span
+          aria-label="Recommandé"
+          title="Plus sécurisé que le mot de passe"
+          className="absolute top-1.5 right-1.5 inline-flex h-2 w-2 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900"
+        />
+      )}
       {active && (
         <span
           aria-hidden="true"
