@@ -1,26 +1,37 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Catalogue librairie micro-learning - refonte cosy mai 2026.
 //
+// VITRINE SEO PUBLIQUE — la librairie est la surface marketing/SEO
+// principale de Humanix : 100 % accessible aux visiteurs anonymes et aux
+// crawlers (Google, Bing, Qwant, Ecosia). Pas d'auth requise, ni en
+// liste, ni en detail. Pas de gating DEMO_MODE non plus : on seed les
+// 30 articles complets meme en demo (transparence, conversion).
+//
 // Brief : "experience, terrain, sensibilisation reelle, pas celle generee
 // par la peur - celle qui sent bon la maitrise et la confiance".
 //
-// La librairie est l'espace de lecture libre : un endroit ou le visiteur
-// vient quand il a 5 a 10 minutes pour apprendre quelque chose, pas dans
-// un parcours impose. Le ton chaleureux et l'invitation a la lecture
-// importent autant que le catalogue lui-même.
+// Le ton chaleureux et l'invitation a la lecture importent autant que
+// le catalogue lui-même.
 
+import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { auth, getSignInPath } from "@/lib/auth";
 import { db } from "@/lib/db";
 import HexBackdrop from "@/components/HexBackdrop";
-import {
-  PREMIUM_ARTICLES_PREVIEW,
-  isDemoMode,
-} from "@/lib/demo-mode/premium-previews";
-import LockedPremiumCard, {
-  PremiumPreviewIntro,
-} from "@/components/demo/LockedPremiumCard";
+
+export const metadata: Metadata = {
+  title:
+    "Librairie cyber — articles courts pour apprendre la cybersécurité au quotidien",
+  description:
+    "Articles de 5 à 10 minutes pour comprendre le phishing, les mots de passe, le RGPD, le Wi-Fi public, les sauvegardes, l'IA au bureau, et plus encore. Lecture libre, gratuite, sans inscription.",
+  alternates: { canonical: "/librairie" },
+  openGraph: {
+    title: "Librairie Humanix — la cybersécurité du quotidien, en clair",
+    description:
+      "30+ articles courts pour décortiquer phishing, RGPD, IA, BYOD, mobile, sauvegardes, fraude. Sources publiques (ANSSI, CNIL, CERT-FR). Aucune inscription requise.",
+    type: "website",
+    locale: "fr_FR",
+  },
+};
 
 export const dynamic = "force-dynamic";
 
@@ -68,9 +79,7 @@ export default async function LibrairiePage({
 }: {
   searchParams: Promise<{ category?: string }>;
 }) {
-  const session = await auth();
-  if (!session?.user) redirect(getSignInPath());
-
+  // Pas d'auth requise — la librairie est publique (vitrine SEO).
   const { category } = await searchParams;
 
   const articles = await db.libraryArticle.findMany({
@@ -89,13 +98,6 @@ export default async function LibrairiePage({
 
   // Estimation temps total disponible
   const totalMinutes = articles.reduce((s, a) => s + a.readTimeMinutes, 0);
-
-  // En mode demo, on grise les articles premium pour "appater" le visiteur.
-  // On exclut les slugs deja seedes en demo (pas de doublon visuel).
-  const demoSeededSlugs = new Set(articles.map((a) => a.slug));
-  const premiumTeasers = isDemoMode()
-    ? PREMIUM_ARTICLES_PREVIEW.filter((p) => !demoSeededSlugs.has(p.slug))
-    : [];
 
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
@@ -245,28 +247,6 @@ export default async function LibrairiePage({
               );
             })}
           </div>
-        )}
-
-        {/* ============================================================
-            3.bis APERCU PREMIUM - uniquement en mode DEMO
-            ============================================================ */}
-        {premiumTeasers.length > 0 && (
-          <section aria-label="Articles disponibles en formule Standard">
-            <PremiumPreviewIntro
-              totalCount={premiumTeasers.length}
-              label="articles à lire en formule Standard"
-            />
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {premiumTeasers.map((p) => (
-                <LockedPremiumCard
-                  key={p.slug}
-                  emoji={p.emoji}
-                  title={p.title}
-                  subtitle={`Audience : ${p.audience} · ${p.category}`}
-                />
-              ))}
-            </div>
-          </section>
         )}
 
         {/* ============================================================

@@ -1,13 +1,23 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page profil utilisateur - refonte cosy mai 2026.
+// Page profil utilisateur - refonte simplifiee mai 2026 (suite refonte
+// cosy de mai 2026).
 //
-// Brief : "experience, terrain, sensibilisation reelle, pas celle generee
-// par la peur - celle qui sent bon la maitrise et la confiance".
+// Brief : "le plus fluide, le plus simple pour les utilisateurs. On
+// privilegie la simplicite plutot qu'un cockpit d'avion ou il faut un
+// doctorat pour piloter."
 //
-// La page profil est l'espace personnel de l'apprenant. Avant, les
-// labels "A ameliorer" / "Refaire pour ameliorer" sonnaient comme des
-// reproches. Cette refonte adoucit le ton tout en preservant la fonction
-// utilitaire (rejouer les episodes pour monter en maitrise).
+// Refonte mai 2026 : suppression de la duplication des modules. Avant,
+// les episodes apparaissaient 3 fois :
+//   - Section "À polir" en cards (score < 70 %)
+//   - Section "Tes pépites" en cards (top 3 scores)
+//   - Section "Tous tes épisodes" en liste/table (TOUS, avec actions)
+// La liste 6 contenait deja tout le necessaire : nom, saison, score,
+// date, action "Refaire" ou "Ameliorer". Les 2 sections en cards
+// dupliquaient juste l'information.
+//
+// Maintenant : UNE seule vue, la liste. Avec actions "Refaire" /
+// "Ameliorer" conservees (l'apprenant garde l'option de rejouer un
+// episode pour monter en maitrise).
 //
 // Logique metier preservee : queries Prisma, computeRiskScore, streak,
 // abonnement Cyber-Anecdote.
@@ -74,19 +84,11 @@ export default async function ProfilPage() {
   });
   const isSubscribed = !!anecdoteSub?.isActive;
 
-  // Categorisation : pepites (>=70%) / a polir (<70%)
+  // Seuil "score parfait" : sert uniquement au styling de la couleur
+  // (vert >=70 %, ambre sinon) et au choix du label CTA ("Refaire" pour
+  // un episode reussi, "Ameliorer" sinon). Pas de filtrage : on affiche
+  // tous les episodes dans une seule liste.
   const PERFECT_THRESHOLD = 70;
-  const perfectEpisodes = user.progress.filter(
-    (p) => p.status === "COMPLETED" && (p.score ?? 0) >= PERFECT_THRESHOLD,
-  );
-  const toImproveEpisodes = user.progress.filter(
-    (p) => p.status === "COMPLETED" && (p.score ?? 0) < PERFECT_THRESHOLD,
-  );
-
-  // Top 3 meilleurs scores
-  const topScores = [...perfectEpisodes]
-    .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
-    .slice(0, 3);
 
   const firstName = user.name?.split(" ")[0] ?? user.email.split("@")[0];
 
@@ -260,87 +262,10 @@ export default async function ProfilPage() {
         )}
 
         {/* ============================================================
-            4. POUR ALLER PLUS LOIN - episodes a polir
-            ============================================================ */}
-        {toImproveEpisodes.length > 0 && (
-          <section aria-labelledby="improve-title">
-            <div className="flex items-end justify-between gap-3 flex-wrap mb-5">
-              <div>
-                <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-1">
-                  Pour aller plus loin
-                </p>
-                <h2
-                  id="improve-title"
-                  className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300"
-                >
-                  À polir ({toImproveEpisodes.length})
-                </h2>
-                <p className="text-sm text-gray-600 dark:text-gray-300 italic mt-1">
-                  Pas un échec - juste des épisodes où il y a encore du
-                  terrain à gagner. À ton rythme.
-                </p>
-              </div>
-              <span className="text-xs text-gray-500 dark:text-gray-400 italic tabular-nums">
-                Score &lt; {PERFECT_THRESHOLD} %
-              </span>
-            </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {toImproveEpisodes.map((p, i) => (
-                <ImproveCard key={p.id} progress={p} delay={i * 60} />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* ============================================================
-            5. TES PEPITES - top 3 reussites
-            ============================================================ */}
-        {topScores.length > 0 && (
-          <section aria-labelledby="top-title">
-            <div className="text-center mb-6 sm:text-left">
-              <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-1">
-                Tes pépites
-              </p>
-              <h2
-                id="top-title"
-                className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300"
-              >
-                Tes meilleures réussites
-              </h2>
-            </div>
-            <div className="grid sm:grid-cols-3 gap-4">
-              {topScores.map((p, i) => (
-                <article
-                  key={p.id}
-                  className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-emerald-950/30 dark:via-slate-900 dark:to-teal-950/20 border-2 border-emerald-200 dark:border-emerald-900/40 p-5 shadow-sm hover:shadow-md transition-all hover:-translate-y-1 animate-slide-up"
-                  style={{ animationDelay: `${i * 80}ms` }}
-                >
-                  <span
-                    className="absolute top-3 right-3 text-3xl"
-                    aria-hidden="true"
-                  >
-                    {i === 0 ? "🥇" : i === 1 ? "🥈" : "🥉"}
-                  </span>
-                  <p className="text-3xl mb-2" aria-hidden="true">
-                    {p.saison.coverEmoji}
-                  </p>
-                  <p className="text-xs text-gray-600 dark:text-gray-300 mb-1 italic">
-                    {p.saison.title}
-                  </p>
-                  <p className="font-display font-extrabold text-primary-500 dark:text-accent-300 mb-3 leading-tight">
-                    {p.episode.title}
-                  </p>
-                  <p className="font-display text-2xl font-extrabold text-emerald-700 dark:text-emerald-300 tabular-nums">
-                    {p.score} XP
-                  </p>
-                </article>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* ============================================================
-            6. TOUS LES EPISODES - table complete
+            4. JOURNAL DE BORD - liste unique de tous les episodes
+            (anciennement section 6, simplifie : on a retire les
+            doublons "À polir" en cards et "Tes pépites" en cards qui
+            recopiaient l'information deja dans cette liste).
             ============================================================ */}
         <section aria-labelledby="all-title">
           <div className="text-center mb-6 sm:text-left">
@@ -353,6 +278,10 @@ export default async function ProfilPage() {
             >
               Tous tes épisodes ({completedCount})
             </h2>
+            <p className="text-sm text-gray-600 dark:text-gray-300 italic mt-1">
+              Le score en vert : c'est solide. En ambre : tu peux encore
+              gagner du terrain — clique sur « Améliorer » pour rejouer.
+            </p>
           </div>
 
           {user.progress.length === 0 ? (
@@ -469,7 +398,7 @@ export default async function ProfilPage() {
         </section>
 
         {/* ============================================================
-            7. RESPIRATION - citation finale signature
+            5. RESPIRATION - citation finale signature
             ============================================================ */}
         <section className="text-center pt-4">
           <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
@@ -518,42 +447,6 @@ function SoftStat({
         {label}
       </p>
     </div>
-  );
-}
-
-function ImproveCard({
-  progress,
-  delay,
-}: {
-  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-  progress: any;
-  delay: number;
-}) {
-  const score = progress.score ?? 0;
-  return (
-    <Link
-      href={`/apprendre/${progress.saison.slug}/${progress.episode.slug}`}
-      className="block bg-gradient-to-br from-amber-50 via-white to-yellow-50 dark:from-amber-950/30 dark:via-slate-900 dark:to-yellow-950/20 border-2 border-amber-200 dark:border-amber-900/40 rounded-3xl p-5 hover:shadow-md hover:-translate-y-1 transition-all animate-slide-up"
-      style={{ animationDelay: `${delay}ms` }}
-    >
-      <div className="flex items-start justify-between mb-3">
-        <div className="text-3xl" aria-hidden="true">
-          {progress.saison.coverEmoji}
-        </div>
-        <span className="text-xs bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 px-2 py-1 rounded-full font-bold tabular-nums">
-          {score} XP
-        </span>
-      </div>
-      <p className="text-xs text-gray-600 dark:text-gray-400 mb-1 italic">
-        {progress.saison.title}
-      </p>
-      <h3 className="font-display font-extrabold text-primary-500 dark:text-accent-300 mb-3 leading-tight">
-        {progress.episode.title}
-      </h3>
-      <div className="text-sm text-amber-700 dark:text-amber-300 font-bold flex items-center gap-1 underline-offset-4 hover:underline">
-        <span aria-hidden="true">↑</span> Améliorer mon score
-      </div>
-    </Link>
   );
 }
 
