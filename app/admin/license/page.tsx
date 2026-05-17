@@ -42,7 +42,7 @@ export default async function AdminLicensePage() {
     <>
       <AdminPageHeader
         title="Licence Ed25519"
-        description="Statut de la licence signée qui active les features Pro+ en self-host commercial. Voir docs/LICENSE_KEY.md pour la procédure d'obtention et de renouvellement."
+        description="Statut de la licence signée qui active les features Pro+ en self-host commercial. Pour obtenir ou renouveler une licence, contactez contact@humanix-cybersecurity.fr."
         icon="🔐"
       />
 
