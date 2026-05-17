@@ -21,7 +21,9 @@
 // "Graal" (prédire avant l'incident), c'est la combinaison
 // `riskScore < seuil` (présent) + `verdict === "degrading"` (futur).
 
-import { db } from "@/lib/db";
+// Lectures pures pour le risk-trend : on passe par le client read-only.
+// Cf. lib/db-readonly.ts (fallback automatique sur db si pas configure).
+import { dbReadOnly as db } from "@/lib/db-readonly";
 
 const RECENT_WINDOW_DAYS = 30;
 const PREVIOUS_WINDOW_DAYS = 30;
