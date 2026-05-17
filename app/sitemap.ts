@@ -71,6 +71,14 @@ const PAGES: SitemapEntry[] = [
   { path: "/anecdotes", priority: 0.6, changeFrequency: "weekly" },
   { path: "/urgence-cyber", priority: 0.7, changeFrequency: "monthly" },
 
+  // Badges Detective publics (Mode Enqueteur partage social).
+  // Tres faible priorite SEO car ces pages sont surtout cibles de
+  // partage direct (LinkedIn/X), pas de crawl Google profond.
+  { path: "/badges/detective/detective-junior", priority: 0.4, changeFrequency: "yearly" },
+  { path: "/badges/detective/detective-confirme", priority: 0.4, changeFrequency: "yearly" },
+  { path: "/badges/detective/cyber-sherlock", priority: 0.4, changeFrequency: "yearly" },
+  { path: "/badges/detective/maitre-detective", priority: 0.4, changeFrequency: "yearly" },
+
   // Auth (publiques)
   { path: "/connexion", priority: 0.4, changeFrequency: "yearly" },
   { path: "/signup", priority: 0.5, changeFrequency: "yearly" },
