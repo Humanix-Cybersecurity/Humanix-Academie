@@ -29,8 +29,7 @@ export default function robots(): MetadataRoute.Robots {
           "/profil/",
           "/apprendre",
           "/apprendre/",
-          "/librairie",
-          "/librairie/",
+          // /librairie est INDEXABLE (vitrine SEO publique).
           "/boutique",
           "/marketplace",
           "/marketplace/",
