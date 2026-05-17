@@ -27,8 +27,30 @@ const WHITELIST = new Set([
   "HUMANIX_BASE_URL",
   "HUMANIX_LICENSE_PRIVATE_KEY_FILE", // outil dev licensing:* uniquement
   "NODE_ENV", // Standard Node, jamais a documenter
+  "NEXT_PHASE", // Standard Next.js (phase-production-build, etc.)
   "VERCEL", // Plateforme runtime
   "VERCEL_URL",
+  // Feature flags runtime documentes ailleurs (DEPLOYMENT_RUNBOOK)
+  "SIGNUP_ALLOW_SELF_SERVICE",
+  "SIGNUP_BLOCK_SELF_SERVICE",
+  // Variables de tests vitest (lib/secrets.test.ts, etc.)
+  // Elles ne servent qu'aux tests unitaires, jamais en runtime.
+  "ABSENT",
+  "ASYNC_REQUIRED",
+  "CACHED",
+  "DELAYED",
+  "DEBUG",
+  "EMPTY",
+  "FOO",
+  "MISSING_SECRET",
+  "NORMAL",
+  "OK_SECRET",
+  "PRESENT",
+  "ROTATABLE",
+  "TEST_SECRET",
+  "A",
+  "B",
+  "ANY",
 ]);
 
 // Dossiers a scanner pour trouver process.env.X
