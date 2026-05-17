@@ -14,6 +14,12 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import {
+  POPUP_PRIORITY,
+  isLandingPath,
+  useDwellTime,
+  usePopupSlot,
+} from "@/components/popup-coordinator";
 
 // Messages contextuels par chemin (matching prefix)
 const MESSAGES: {
@@ -94,22 +100,41 @@ export default function MascotPeek() {
     }
   };
 
-  // Pas afficher tant que pas mounted (éviter mismatch SSR)
-  if (!mounted) return null;
-  if (dismissed) return null;
-
   // Pages privees : on n'affiche jamais
-  if (HIDDEN_PREFIXES.some((p) => path.startsWith(p))) return null;
+  const isHiddenPath = HIDDEN_PREFIXES.some((p) => path.startsWith(p));
+  // Sur les pages d'acquisition, on attend 10s avant de pop pour laisser
+  // l'user prendre la mesure du contenu sans distraction immediate. Sur
+  // les autres pages (legales, etc.) : 4s suffisent.
+  const onLanding = isLandingPath(path);
+  const dwelled = useDwellTime(onLanding ? 10000 : 4000);
 
-  // Trouve le message correspondant a la page
+  // Trouve le message correspondant a la page (peut etre null si aucun match)
   const msg = MESSAGES.find((m) => m.match(path));
-  if (!msg) return null;
+
+  // Slot coordinator : priorite la plus basse (delight). N'apparait que si
+  // aucune autre popup en queue. Sur landing on s'autoriser une seule
+  // popup non-essentielle = la mascotte (avec dwell de 10s). Le PWA install
+  // et le HexChat tooltip sont supprimes sur landing (cf. leurs onLanding).
+  const ready = mounted && !dismissed && !isHiddenPath && Boolean(msg) && dwelled;
+  const allowed = usePopupSlot({
+    id: "mascot",
+    priority: POPUP_PRIORITY.mascot,
+    ready,
+  });
+
+  if (!ready || !allowed || !msg) return null;
+
+  // Position : sur landing on va en bas-GAUCHE pour eviter la zone bas-droite
+  // (deja occupee par HexChat FAB qui reste toujours visible). Sur app pages,
+  // bas-droite (config historique, le HexChat FAB et la mascotte se cotoient
+  // mais sans clash car la mascotte se ferme apres une interaction).
+  const positionClass = onLanding ? "bottom-6 left-6" : "bottom-6 right-6";
 
   return (
     <aside
       role="complementary"
       aria-label="Message de la mascotte HumaniX"
-      className={`fixed bottom-6 right-6 z-40 max-w-xs ${
+      className={`fixed ${positionClass} z-40 max-w-xs ${
         reducedMotion ? "" : "animate-fadeIn"
       }`}
     >
@@ -148,10 +173,10 @@ export default function MascotPeek() {
           </div>
         </div>
 
-        {/* Triangle de bulle (decoratif) */}
+        {/* Triangle de bulle (decoratif) — cote oppose a la position d'ancrage */}
         <div
           aria-hidden="true"
-          className="absolute -bottom-2 right-8 w-4 h-4 bg-white dark:bg-slate-800 border-r-2 border-b-2 border-accent-500/40 transform rotate-45"
+          className={`absolute -bottom-2 ${onLanding ? "left-8" : "right-8"} w-4 h-4 bg-white dark:bg-slate-800 border-r-2 border-b-2 border-accent-500/40 transform rotate-45`}
         />
       </div>
     </aside>
