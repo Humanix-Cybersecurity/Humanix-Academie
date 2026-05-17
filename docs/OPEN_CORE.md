@@ -97,15 +97,14 @@ Si tu veux héberger pour un client en marque blanche commercialement, c'est pos
 
 ## Modèle économique
 
-| Source de revenus     | % cible 2026 | Description                                                                |
-| --------------------- | ------------ | -------------------------------------------------------------------------- |
-| Cloud managé          | 40 %         | `humanix-cybersecurity.fr/tarifs` - paliers Starter / Pro / Enterprise |
-| Audit + formation     | 30 %         | Prestations menées par Humanix-Cybersecurity (RSSI externalisé, audit cyber, formation sur site) |
-| Pack NIS2 turnkey     | 15 %         | Service consulting + livraison documentaire pour passer NIS2 en 30 jours   |
-| Marketplace           | 10 %         | Revenue share avec contributeurs experts (50/50 sur les modules payants)   |
-| Dual-licensing        | 5 %          | Cas où un éditeur tiers veut intégrer Humanix sans assumer l'AGPL          |
+Humanix Cybersecurity SASU finance le développement via plusieurs sources
+complémentaires :
 
-Cible 24 mois : **180 à 250 k€** en solo bootstrap.
+- **Cloud managé** — instance SaaS sur `humanix-cybersecurity.fr/tarifs`
+- **Audit + formation** — RSSI externalisé, audit cyber, formation sur site
+- **Pack NIS2 turnkey** — service consulting + livraison documentaire
+- **Marketplace** — revenue share avec contributeurs experts
+- **Dual-licensing** — pour les éditeurs qui veulent intégrer sans assumer AGPL
 
 ---
 
@@ -128,7 +127,10 @@ Si tu veux forker, **fais-le ouvertement** : ajoute ton repo dans la marketplace
 
 ### Pourquoi
 
-Le code applicatif est libre AGPLv3. Le **contenu pédagogique** (159 modules MDX, 27 saisons, 1.8 MB) représente plusieurs mois d'effort éditorial — il **ne doit pas** être distribué gratuitement avec la version OSS, sinon le revenu du SaaS s'effondre.
+Le code applicatif est libre AGPLv3. Le **contenu pédagogique** premium
+(scénarios crafted par experts, parcours persona-spécifiques) représente
+l'effort éditorial qui finance le projet — il est licencié séparément
+sous licence commerciale, dans un dépôt distinct.
 
 Solution : **2 repos distincts** + auto-bascule au runtime.
 
@@ -136,10 +138,8 @@ Solution : **2 repos distincts** + auto-bascule au runtime.
 
 | Repo | Visibilité | Contenu | Licence |
 |---|---|---|---|
-| `Humanix-Cybersecurity/Humanix-Academie` | **public** | Code + 2 saisons démo génériques (6 modules) + schéma MDX + outils | AGPLv3 (code) + CC BY-SA 4.0 (démos) |
-| `Humanix-Cybersecurity/humanix-content-pro` | **privé** | 27 saisons × 6 épisodes (159 MDX) + catalogues + librairie + marketplace + anecdotes | Propriétaire Humanix Cybersecurity |
-
-**Volume privé** : ~5 515 lignes de seeds + 1.8 MB de MDX = l'asset commercial principal.
+| `Humanix-Cybersecurity/Humanix-Academie` | **public** | Code + saisons démo génériques + schéma MDX + outils | AGPLv3 (code) + CC BY-SA 4.0 (démos) |
+| `Humanix-Cybersecurity/humanix-content-pro` | **privé** | Saisons commerciales + librairie cyber-RH + marketplace officielle + anecdotes | Propriétaire Humanix Cybersecurity |
 
 ### Mécanisme de bascule automatique
 

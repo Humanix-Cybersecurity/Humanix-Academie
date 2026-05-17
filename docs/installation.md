@@ -152,12 +152,10 @@ docker compose exec postgres psql -U humanix -d humanix \
   < prisma/sql/post-migration-grants.sql
 ```
 
-> **🛡️ Note sécurité** — Depuis mai 2026, l'image Postgres custom
-> `humanix-postgres:secured` provisionne automatiquement un rôle
-> SELECT-only (`humanix_ro_user`) au premier boot, et l'app y branche
-> ses 5 modules analytiques (forecasts, heatmap, risk-score). Pour le
-> détail + activation sur instance existante :
-> [`SECURITY_HARDENING.md`](./SECURITY_HARDENING.md).
+> **🛡️ Note sécurité** — L'image Postgres custom `humanix-postgres:secured`
+> provisionne automatiquement un rôle Postgres read-only au premier boot
+> (mécanisme Least Privilege). Sur instance existante, applique
+> `prisma/sql/setup-readonly-role.sql` manuellement.
 
 ### Étape 5 - Premier accès
 

@@ -183,24 +183,23 @@ DOMPurify (parseur HTML5, audit Cure53) avant rendu côté client. Whitelist
 stricte de balises (p, br, strong, em, a, ul/ol/li, h1-h6, code, blockquote,
 span, div). URLs `javascript:` / `data:` bloquées. Cf. `lib/ai/mistral.ts`.
 
-### `PAYPLUG_*` (paiement souverain FR)
+### `PAYPLUG_*` (paiement souverain FR — instance commerciale)
 
 Clés API [Payplug](https://www.payplug.com) pour la facturation cloud SaaS.
 
 ```env
-PAYPLUG_SECRET_KEY="sk_live_..."        # ou sk_test_... pour staging
-PAYPLUG_WEBHOOK_SECRET="whsec_..."       # CRITIQUE - sinon webhooks rejetés
-PAYPLUG_PLAN_STARTER="plan_starter_id"   # ID du plan Payplug Starter (forfait 19EUR/mois 6-15 sieges)
-PAYPLUG_PLAN_PRO="plan_pro_id"           # ID du plan Payplug Pro (3EUR/user/mois 16-250 sieges)
-# Enterprise : pas de plan Payplug self-service (process commercial manuel via /demande-abonnement)
+PAYPLUG_SECRET_KEY="<your-payplug-secret-key>"
+PAYPLUG_WEBHOOK_SECRET="<your-webhook-hmac-secret>"
+PAYPLUG_PLAN_STARTER="<plan-id-starter>"
+PAYPLUG_PLAN_PRO="<plan-id-pro>"
 ```
 
-**Diagnostic au boot** : la fonction `validatePayplugSetup()` exportée par
-`lib/payplug.ts` audite la configuration et logge les warnings au démarrage
-(plans manquants, secret webhook absent, endpoints non documentés).
+**Diagnostic au boot** : la fonction `validatePayplugSetup()` exportée
+par `lib/payplug.ts` audite la configuration et logge les warnings au
+démarrage.
 
-**Sans ces clés** : la facturation cloud est désactivée. Le mode self-host
-n'a pas besoin de Payplug.
+**Sans ces clés** : la facturation cloud est désactivée (mode self-host
+ou démo). Le parcours d'abonnement est désactivé proprement.
 
 ### Connecteurs SSO (optionnels, palier Pro+)
 

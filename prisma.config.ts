@@ -9,10 +9,10 @@
 //   - Le chemin du schema (defaut, mais explicite c'est plus clair)
 //   - La commande `seed` (anciennement dans package.json#prisma.seed)
 //
-// La cle `datasource` (avec `url`) sera ajoutee plus tard, AU MOMENT de
-// la migration vers Prisma 7 + driver adapter (cf. docs/MIGRATION_PRISMA_7.md
-// § 6). Tant qu'on reste sur Prisma 6.x avec `url = env("DATABASE_URL")`
-// dans le schema, on n'a pas besoin du bloc datasource ici.
+// La cle `datasource` (avec `url`) sera ajoutee plus tard si on migre
+// vers une version majeure ulterieure de Prisma + driver adapter. Tant
+// qu'on reste sur Prisma 6.x avec `url = env("DATABASE_URL")` dans le
+// schema, on n'a pas besoin du bloc datasource ici.
 
 import { defineConfig } from "prisma/config";
 
