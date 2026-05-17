@@ -73,16 +73,38 @@ services:
       retries: 5
 
   # =====================================================================
-  # POSTGRES — base de données (réseau backend uniquement)
+  # POSTGRES — image custom Humanix avec role read-only pre-configure
+  # ---------------------------------------------------------------------
+  # Basee sur postgres:16-alpine + script d'init dans docker/postgres/initdb/
+  # qui cree automatiquement au PREMIER boot :
+  #   - role humanix_readonly (NOLOGIN, SELECT-only sur futures tables)
+  #   - utilisateur humanix_ro_user (LOGIN, password via env)
+  # Cf. docker/postgres/Dockerfile pour les details.
+  #
+  # Le client app utilise DATABASE_URL (read+write).
+  # Les modules analytiques (forecasts, heatmap, risk-score) utilisent
+  # DATABASE_URL_READONLY -> defense en profondeur (cf. lib/db-readonly.ts).
+  #
+  # Apres le 1er prisma db push, applique aussi les REVOKE chirurgicaux :
+  #   docker compose exec -e PGPASSWORD=... postgres psql -U humanix \
+  #     -d humanix -f /docker-entrypoint-initdb.d/post-migration.sql
+  # (ou monter le fichier prisma/sql/post-migration-grants.sql en volume)
   # =====================================================================
   postgres:
-    image: postgres:16-alpine
+    build:
+      context: ./docker/postgres
+      dockerfile: Dockerfile
+    image: humanix-postgres:secured
     container_name: humanix-postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: humanix
       POSTGRES_PASSWORD: humanix_demo
       POSTGRES_DB: humanix
+      # Password du role read-only humanix_ro_user. Min 16 chars sinon
+      # le script d'init refuse de creer le role.
+      # En prod : openssl rand -base64 32. En demo/dev : valeur par defaut OK.
+      POSTGRES_READONLY_PASSWORD: "${POSTGRES_READONLY_PASSWORD:-humanix_ro_demo_16_chars_min}"
     # PAS de "ports" : postgres n'est plus exposé sur l'host pour des raisons
     # de sécurité. Pour debug local : `docker exec -it humanix-postgres psql -U humanix`
     volumes:
@@ -90,10 +112,13 @@ services:
     networks:
       - humanix_backend
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U humanix -d humanix"]
-      interval: 3s
+      test:
+        - "CMD-SHELL"
+        - "pg_isready -U humanix -d humanix && psql -U humanix -d humanix -tAc \"SELECT 1 FROM pg_roles WHERE rolname='humanix_readonly';\" | grep -q 1"
+      interval: 5s
       timeout: 3s
       retries: 20
+      start_period: 30s
 
   # =====================================================================
   # TTS — Piper self-hosted (option OSS, depuis mai 2026 sous `--profile piper`)
@@ -157,6 +182,12 @@ services:
     # PAS de "ports" : on passe systématiquement par haproxy
     environment:
       DATABASE_URL: "postgresql://humanix:humanix_demo@postgres:5432/humanix?schema=public"
+      # Client read-only pour les surfaces analytiques (cf. lib/db-readonly.ts).
+      # Le password vient de POSTGRES_READONLY_PASSWORD du service postgres
+      # ci-dessus. Le role est cree au 1er boot par l'image custom.
+      # Defense en profondeur : forecasts/heatmap/risk-score passent par
+      # ce client, donc impossibles de muter par accident.
+      DATABASE_URL_READONLY: "postgresql://humanix_ro_user:${POSTGRES_READONLY_PASSWORD:-humanix_ro_demo_16_chars_min}@postgres:5432/humanix?schema=public"
       AUTH_SECRET: "demo-secret-change-me-in-prod-d3m0-s3cr3t-1234567890"
       AUTH_URL: "http://localhost:80"
       AUTH_TRUST_HOST: "true" # Indispensable derrière un reverse proxy
