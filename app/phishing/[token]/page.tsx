@@ -12,14 +12,19 @@
 //   En parallele, on dispatch un webhook phishing.user_clicked aux
 //   abonnes du tenant (Slack/Teams admin) pour alerte temps reel.
 
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getTemplate } from "@/lib/phishing";
 import { fireWebhook } from "@/lib/webhooks/dispatcher";
 import { triggerCisoLiveSync } from "@/lib/ciso-assistant/live-mode";
 import AskHexExplain from "@/components/AskHexExplain";
-import { QUISHING_TEMPLATES } from "@/lib/phishing/qr-code";
+import {
+  QUISHING_TEMPLATES,
+  parseQuishingCampaignToken,
+  type QuishingTemplate,
+} from "@/lib/phishing/qr-code";
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +35,14 @@ export default async function PhishingLandingPage({
 }) {
   const { token } = await params;
 
+  // Branche A : token niveau campagne (poster quishing partage par N personnes).
+  // Format `qhc_<campaignId>` — un seul PDF, un seul QR.
+  const campaignIdFromPoster = parseQuishingCampaignToken(token);
+  if (campaignIdFromPoster) {
+    return renderQuishingPosterScan(campaignIdFromPoster);
+  }
+
+  // Branche B (existante) : trackToken par destinataire (format `phx_<hex>`).
   const result = await db.phishingResult.findUnique({
     where: { trackToken: token },
     include: {
@@ -394,6 +407,140 @@ export default async function PhishingLandingPage({
         entreprise.
         <br />
         Aucun usage disciplinaire de ce résultat - c'est un exercice
+        pédagogique.
+      </p>
+    </div>
+  );
+}
+
+// ===========================================================================
+// QUISHING POSTER SCAN (token niveau campagne, format qhc_<campaignId>)
+// ===========================================================================
+
+/**
+ * Rendu de la landing quand le QR scanne provient d'un POSTER PHYSIQUE
+ * (1 seul QR pour toute la campagne). 3 cas :
+ *
+ *   1. Scanneur authentifie ET cible de la campagne (a une PhishingResult)
+ *      → redirect vers /phishing/<son_trackToken> pour avoir le flow
+ *        complet personnalise (auto-enrollement remediation, webhook, etc.)
+ *
+ *   2. Scanneur authentifie mais PAS cible (collegue curieux, RSSI qui
+ *      teste)
+ *      → on log un event "anonymous_scan" et on affiche le debrief
+ *        pedagogique generique du template, sans attribution
+ *
+ *   3. Scanneur non authentifie
+ *      → idem cas 2 : debrief pedagogique generique + CTA connexion pour
+ *        qui veut faire le module de remediation associe
+ */
+async function renderQuishingPosterScan(campaignId: string) {
+  const campaign = await db.phishingCampaign.findUnique({
+    where: { id: campaignId },
+    select: {
+      id: true,
+      tenantId: true,
+      template: true,
+      channel: true,
+      isActive: true,
+    },
+  });
+  if (!campaign || campaign.channel !== "QUISHING") notFound();
+
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  // Cas 1 : utilisateur authentifie + il a une PhishingResult sur cette
+  // campagne → on redirige vers son trackToken pour le flow complet.
+  if (userId) {
+    const userResult = await db.phishingResult.findUnique({
+      where: { campaignId_userId: { campaignId, userId } },
+      select: { trackToken: true },
+    });
+    if (userResult) {
+      redirect(`/phishing/${userResult.trackToken}`);
+    }
+  }
+
+  // Cas 2 + 3 : scan anonyme (ou utilisateur non-cible).
+  // On log l'evenement pour les stats campagne + on affiche le debrief.
+  await db.event
+    .create({
+      data: {
+        tenantId: campaign.tenantId,
+        userId: userId ?? null,
+        type: "quishing_poster_scan_anonymous",
+        payload: { campaignId },
+      },
+    })
+    .catch(() => {
+      /* best-effort */
+    });
+
+  const quishingTpl =
+    QUISHING_TEMPLATES[campaign.template as QuishingTemplate] ?? null;
+
+  return (
+    <div className="max-w-2xl mx-auto px-4 py-8 sm:py-12 animate-fadeIn">
+      <div className="text-center mb-8">
+        <p className="text-5xl mb-3" aria-hidden="true">
+          🔳
+        </p>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-primary-500 mb-3">
+          Tu viens de scanner une affiche piège
+        </h1>
+        <p className="text-gray-600 dark:text-gray-300 max-w-lg mx-auto leading-relaxed">
+          Pas de panique : c&apos;est un exercice de sensibilisation interne.
+          Aucune donnée n&apos;a été collectée, aucun fichier téléchargé.
+        </p>
+      </div>
+
+      {quishingTpl && (
+        <div className="rounded-2xl bg-amber-50 dark:bg-amber-950/30 border-2 border-amber-200 dark:border-amber-900/50 p-5 mb-6">
+          <p className="text-xs uppercase tracking-widest font-bold text-amber-700 dark:text-amber-300 mb-2">
+            Pourquoi ce piège fonctionne
+          </p>
+          <h2 className="font-display text-lg font-extrabold text-amber-900 dark:text-amber-200 mb-3">
+            {quishingTpl.name}
+          </h2>
+          <ul className="space-y-2 text-sm text-amber-900 dark:text-amber-100">
+            {quishingTpl.pedagogicalMarkers.map((m, i) => (
+              <li key={i} className="flex items-start gap-2">
+                <span className="text-amber-600 dark:text-amber-300 shrink-0">
+                  •
+                </span>
+                <span>{m}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <div className="rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border-2 border-emerald-200 dark:border-emerald-900/50 p-5 mb-6">
+        <p className="text-sm text-emerald-900 dark:text-emerald-100 leading-relaxed">
+          <strong>La règle d&apos;or :</strong> ne scanne jamais un QR code que
+          tu n&apos;attendais pas, surtout s&apos;il est imprimé sur papier
+          dans un lieu public. Vérifie la source par un autre canal avant
+          d&apos;agir.
+        </p>
+      </div>
+
+      {!userId && (
+        <div className="text-center">
+          <Link
+            href="/connexion"
+            className="inline-block bg-primary-500 hover:bg-primary-600 text-white font-bold px-6 py-3 rounded-xl"
+          >
+            Me connecter pour suivre le module dédié →
+          </Link>
+        </div>
+      )}
+
+      <p className="text-xs text-center text-gray-500 italic mt-6">
+        Test effectué dans le cadre du programme de sensibilisation cyber de
+        ton entreprise.
+        <br />
+        Aucun usage disciplinaire de ce résultat — c&apos;est un exercice
         pédagogique.
       </p>
     </div>

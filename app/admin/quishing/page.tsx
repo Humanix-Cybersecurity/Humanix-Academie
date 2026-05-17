@@ -24,8 +24,8 @@ import AdminSection from "@/components/admin/AdminSection";
 import StatusBadge from "@/components/admin/StatusBadge";
 import EmptyState from "@/components/admin/EmptyState";
 import LaunchQuishingForm from "@/components/LaunchQuishingForm";
+import QuishingPosterDownloadForm from "@/components/QuishingPosterDownloadForm";
 import { QUISHING_TEMPLATES } from "@/lib/phishing/qr-code";
-import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -228,13 +228,7 @@ export default async function AdminQuishingPage() {
                           </p>
                         </div>
                       </div>
-                      <Link
-                        href={`/api/admin/quishing/poster/${c.id}`}
-                        target="_blank"
-                        className="text-xs px-3 py-1.5 rounded-lg border-2 border-accent-500 text-accent-700 dark:text-accent-300 hover:bg-accent-50 dark:hover:bg-accent-950/40 font-bold transition"
-                      >
-                        📥 Re-télécharger PDF
-                      </Link>
+                      <QuishingPosterDownloadForm campaignId={c.id} />
                     </header>
                   </article>
                 );

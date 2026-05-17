@@ -186,8 +186,9 @@ export default function LaunchQuishingForm({
           </div>
           {totalTargets !== null && (
             <p className="text-xs text-accent-700 dark:text-accent-300 mt-2 font-medium">
-              👉 {totalTargets} affiche{totalTargets > 1 ? "s" : ""}{" "}
-              générée{totalTargets > 1 ? "s" : ""} (1 par destinataire)
+              👉 1 affiche A4 générée, à imprimer puis dupliquer pour la
+              poser dans les contextes que tu cibles ({totalTargets} personne
+              {totalTargets > 1 ? "s" : ""} dans la campagne).
             </p>
           )}
         </div>
@@ -219,8 +220,7 @@ export default function LaunchQuishingForm({
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-accent-500 hover:bg-accent-600 text-white font-bold px-4 py-2 rounded-lg text-xs"
               >
-                📥 Télécharger le PDF d&apos;affiches ({feedback.targets}{" "}
-                page{(feedback.targets ?? 0) > 1 ? "s" : ""})
+                📥 Télécharger l&apos;affiche PDF (1 page)
               </a>
             </p>
           )}
@@ -228,8 +228,9 @@ export default function LaunchQuishingForm({
       )}
 
       <p className="text-xs text-gray-500 dark:text-gray-500 italic text-center">
-        Aucun envoi technique : tu reçois un PDF, tu imprimes, tu colles. Le
-        QR code de chaque affiche est unique et trackable.
+        Aucun envoi technique : tu reçois un PDF d&apos;une page, tu imprimes,
+        tu duplique et tu colles dans les contextes que tu cibles. Tu pourras
+        ajouter un logo entreprise au moment du re-téléchargement.
       </p>
     </form>
   );
