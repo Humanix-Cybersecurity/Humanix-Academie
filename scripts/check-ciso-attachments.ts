@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Vérifie rapidement que toutes les evidences du folder Humanix Académie
 // dans CISO Assistant ont bien un attachment PDF.
 // Usage : docker exec humanix-app npx tsx scripts/check-ciso-attachments.ts
