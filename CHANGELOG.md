@@ -23,7 +23,7 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 - **Interface `lib/secrets`** — couche d'abstraction pour intégration Vault / Scaleway Secret Manager (préparation, sans migration forcée)
 - **Image Docker Postgres custom** `humanix-postgres:secured` qui provisionne automatiquement le rôle SELECT-only au premier boot
 
-→ Cf. [`docs/SECURITY_HARDENING.md`](./docs/SECURITY_HARDENING.md), [`docs/SECRETS.md`](./docs/SECRETS.md)
+→ Détails sécurité disponibles sur demande (audit RSSI / due diligence).
 
 ### Pack NIS2 v2 — différenciateur GRC
 
@@ -64,8 +64,6 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ### Documentation
 
-- [`docs/SECURITY_HARDENING.md`](./docs/SECURITY_HARDENING.md) — runbook Sprint sécurité
-- [`docs/SECRETS.md`](./docs/SECRETS.md) — interface Vault-ready
 - [`docs/PACK_NIS2_V2.md`](./docs/PACK_NIS2_V2.md) — runbook Pack NIS2 v2
 - Rapport audit public mis à jour **v1.5** (`/securite/rapport-audit`)
 
