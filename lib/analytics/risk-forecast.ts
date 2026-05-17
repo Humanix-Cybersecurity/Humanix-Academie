@@ -17,7 +17,10 @@
 // vs le tenant. Si reportedBy moyen > tenant moyen, signal "les bien
 // formés sont ceux qui rapportent".
 
-import { db } from "@/lib/db";
+// Lectures pures pour les forecasts : on passe par le client read-only.
+// Si DATABASE_URL_READONLY n'est pas configure, dbReadOnly fallback sur
+// le client principal (cf. lib/db-readonly.ts). Zero regression possible.
+import { dbReadOnly as db } from "@/lib/db-readonly";
 import { computeUserTrend } from "@/lib/analytics/risk-trend";
 
 const HISTORY_WINDOW_DAYS = 30;
