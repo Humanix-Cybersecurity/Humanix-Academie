@@ -66,6 +66,7 @@ const PAGES: SitemapEntry[] = [
   // Outils gratuits / lead gen
   { path: "/librairie", priority: 0.9, changeFrequency: "weekly" },
   { path: "/audit-flash", priority: 0.7, changeFrequency: "monthly" },
+  { path: "/diagnostic-nis2", priority: 0.8, changeFrequency: "monthly" },
   { path: "/cyber-meteo", priority: 0.6, changeFrequency: "hourly" },
   { path: "/observatoire-fuites", priority: 0.6, changeFrequency: "daily" },
   { path: "/anecdotes", priority: 0.6, changeFrequency: "weekly" },
