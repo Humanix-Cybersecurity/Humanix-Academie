@@ -12,7 +12,9 @@
 // jusqu'a quelques milliers d'users / tenant ; au-dela faudra
 // materialiser (nightly snapshot) comme RiskScoreSnapshot.
 
-import { db } from "@/lib/db";
+// Lectures pures pour la heatmap : on passe par le client read-only.
+// Cf. lib/db-readonly.ts (fallback automatique sur db si pas configure).
+import { dbReadOnly as db } from "@/lib/db-readonly";
 
 export type HeatmapCell = {
   groupSlug: string;

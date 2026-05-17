@@ -15,7 +15,9 @@
 //   - /api/admin/users/at-risk/export : CSV pour le RSSI
 //   - /api/admin/users/at-risk/remind : envoi rappel cible
 
-import { db } from "@/lib/db";
+// Lectures pures (analytique RSSI) : on passe par le client read-only.
+// Cf. lib/db-readonly.ts (fallback automatique sur db si pas configure).
+import { dbReadOnly as db } from "@/lib/db-readonly";
 import {
   computeUserTrendsBatch,
   type TrendVerdict,
