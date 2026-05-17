@@ -4,23 +4,45 @@
 // Formulaire de saisie des variables du Pack NIS2.
 // Soumission GET vers /api/admin/pack-nis2/download avec query params.
 // Pas d'etat serveur a stocker : a chaque telechargement on re-genere.
+//
+// Pack NIS2 v2 (mai 2026) : 2 boutons de telechargement partagent le
+// MEME formulaire :
+//   - "Telecharger le pack PDF" (4 docs signables) -> /download
+//   - "Telecharger le rapport annuel" (rapport autorite) -> /annual-report
+// Les 2 routes acceptent les memes query params.
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 type Props = { tenantName: string };
 
 export default function PackNis2Form({ tenantName }: Props) {
   const [submitting, setSubmitting] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   function onSubmit() {
     setSubmitting(true);
-    // On laisse le navigateur gerer la soumission GET native ; le timeout
-    // ci-dessous reactive le bouton si l'utilisateur reste sur la page.
     setTimeout(() => setSubmitting(false), 4000);
+  }
+
+  // Bouton secondaire : on switch dynamiquement l'action du form et on
+  // submit. Ca permet de generer 2 PDFs avec UN SEUL set de champs.
+  function downloadAnnualReport() {
+    if (!formRef.current) return;
+    formRef.current.action = "/api/admin/pack-nis2/annual-report";
+    onSubmit();
+    formRef.current.submit();
+    // Restaure l'action du form pour le pack standard (UX : si l'admin
+    // re-clique sur le bouton principal apres).
+    setTimeout(() => {
+      if (formRef.current) {
+        formRef.current.action = "/api/admin/pack-nis2/download";
+      }
+    }, 100);
   }
 
   return (
     <form
+      ref={formRef}
       action="/api/admin/pack-nis2/download"
       method="GET"
       onSubmit={onSubmit}
@@ -214,9 +236,29 @@ export default function PackNis2Form({ tenantName }: Props) {
         </div>
       </div>
 
-      <button type="submit" className="btn-primary" disabled={submitting}>
-        {submitting ? "Génération en cours…" : "📄 Télécharger mon pack PDF"}
-      </button>
+      <div className="flex flex-wrap gap-3 pt-2">
+        <button
+          type="submit"
+          className="btn-primary"
+          disabled={submitting}
+        >
+          {submitting ? "Génération en cours…" : "📄 Télécharger le pack PDF"}
+        </button>
+        <button
+          type="button"
+          onClick={downloadAnnualReport}
+          className="btn-secondary"
+          disabled={submitting}
+          title="Rapport annuel formel destiné à l'autorité compétente (ANSSI) — utilise les mêmes informations que ci-dessus."
+        >
+          {submitting ? "Génération en cours…" : "📋 Télécharger le rapport annuel NIS2"}
+        </button>
+      </div>
+      <p className="text-xs text-gray-500 italic">
+        💡 Le rapport annuel reprend les mêmes informations + l&apos;état des
+        lieux temps réel (score per-article + incidents + sensibilisation).
+        Période par défaut : 12 derniers mois.
+      </p>
     </form>
   );
 }
