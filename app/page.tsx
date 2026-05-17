@@ -27,6 +27,7 @@ import HowItWorksSection from "@/components/home/HowItWorksSection";
 import ProofSection from "@/components/home/ProofSection";
 import PricingTeaser from "@/components/home/PricingTeaser";
 import FinalQuote from "@/components/home/FinalQuote";
+import LaunchCountdown from "@/components/home/LaunchCountdown";
 
 export const revalidate = 3600;
 
@@ -52,6 +53,7 @@ export default async function HomePage() {
 
   return (
     <main id="main-content" className="overflow-x-hidden">
+      <LaunchCountdown />
       <HeroSection meteo={meteo} />
       <ProofSection />
       <HowItWorksSection />
