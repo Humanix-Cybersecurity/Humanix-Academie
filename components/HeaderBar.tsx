@@ -107,6 +107,13 @@ function buildProduitItems(demoMode: boolean): DropdownItem[] {
 
 const SOLUTIONS_ITEMS: DropdownItem[] = [
   {
+    href: "/librairie",
+    label: "Librairie",
+    description:
+      "30+ articles courts sur le phishing, le RGPD, l'IA, les mots de passe — sans inscription",
+    emoji: "📚",
+  },
+  {
     href: "/dpo",
     label: "Espace DPO",
     description: "RGPD-by-design, AIPD, registre fourni",

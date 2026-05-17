@@ -82,16 +82,18 @@ export function loadCatalogSaisons(): {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function loadLibraryArticles(): any[] {
-  if (IS_DEMO_MODE) {
-    // En demo, on seed un mini-corpus de 5 articles CC BY-SA pour montrer
-    // l'experience "lecture cyber-RH" sans exposer le catalogue premium.
-    const demo = tryRequire("../lib/library-seed-demo");
-    if (demo && Array.isArray(demo.LIBRARY_ARTICLES_DEMO))
-      return demo.LIBRARY_ARTICLES_DEMO;
-    return [];
-  }
+  // EXCEPTION DEMO_MODE : la librairie est la VITRINE SEO publique de
+  // Humanix. Elle doit etre identique en demo et en prod commerciale —
+  // 30 articles complets, indexables par Google sans gating. On ne
+  // grise rien et on ne masque rien : c'est notre canal d'acquisition.
+  // Cf. app/librairie/page.tsx + app/robots.ts (allow).
   const pro = tryRequire("../lib/library-seed");
   if (pro && Array.isArray(pro.LIBRARY_ARTICLES)) return pro.LIBRARY_ARTICLES;
+  // Fork OSS pur (content-pro absent) : fallback sur les 5 articles demo
+  // pour qu'une instance fork ait quand meme une librairie fonctionnelle.
+  const demo = tryRequire("../lib/library-seed-demo");
+  if (demo && Array.isArray(demo.LIBRARY_ARTICLES_DEMO))
+    return demo.LIBRARY_ARTICLES_DEMO;
   return [];
 }
 
