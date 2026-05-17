@@ -243,18 +243,10 @@ export default function RapportAuditPage() {
           <li className="flex items-start gap-2">
             <span aria-hidden="true">📋</span>
             <span>
-              <strong>Transparence supply chain</strong> : Prisma 7 + adapter pg
-              est documenté comme bloqué par Turbopack default Next 16. On reste
-              sur Prisma 6.19.3 LTS (cf.{" "}
-              <Link
-                href="https://github.com/Humanix-Cybersecurity/Humanix-Academie/blob/main/docs/MIGRATION_PRISMA_7.md"
-                className="underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                docs/MIGRATION_PRISMA_7.md
-              </Link>
-              ).
+              <strong>Transparence supply chain</strong> : nous restons sur
+              Prisma 6.19.3 LTS, version stable maintenue. Les bumps majeurs
+              futurs sont évalués au cas par cas selon la maturité de
+              l&apos;écosystème.
             </span>
           </li>
         </ul>

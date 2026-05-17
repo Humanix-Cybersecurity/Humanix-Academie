@@ -48,15 +48,6 @@ export default function UpdateProcedure() {
       </ol>
       <div className="mt-6 flex flex-col sm:flex-row gap-3">
         <a
-          href="https://github.com/humanix-cybersecurity/humanix-academie/blob/main/docs/LICENSE_KEY.md"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-secondary text-sm"
-        >
-          <span aria-hidden="true">📖</span> Documentation complète
-          <span className="sr-only"> (nouvel onglet)</span>
-        </a>
-        <a
           href="mailto:contact@humanix-cybersecurity.fr?subject=Renouvellement licence Humanix"
           className="btn-primary text-sm"
         >

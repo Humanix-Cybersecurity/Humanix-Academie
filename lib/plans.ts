@@ -123,12 +123,9 @@ export function planHasFeature(
  * pour le browser, et tout import statique de `node:crypto` dans la
  * chaîne casse le build.
  *
- * Pour avoir le plan effectif **prenant en compte une licence Ed25519
+ * Pour avoir le plan effectif **prenant en compte une licence
  * éventuellement configurée** (HUMANIX_LICENSE_KEY), appelle
  * `getEffectivePlan(tenantId)` exporté par `@/lib/license` à la place.
- *
- * Cf. `docs/LICENSE_KEY.md` pour le système de licence côté self-host
- * commercial.
  *
  * Retourne "starter" en fallback si tenant introuvable (= plan le plus bas).
  */
