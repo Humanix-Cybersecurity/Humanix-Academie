@@ -6,6 +6,21 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.0.1] — 2026-05-17 🔧 Hotfix popup coordinator
+
+### Fixed
+
+- **HOTFIX critique** `PopupCoordinator` : boucle infinie de re-renders qui freezait le main thread du navigateur (clics non-cliquables, navigation impossible, sans erreur console).
+  - Cause : objet `value` du Provider non mémoïsé → `ctx` change à chaque render → cascade de `useEffect` cleanup/register → setState → re-render Provider → loop.
+  - Fix : `useMemo` pour la value + pattern subscription explicite + split du hook `usePopupSlot` en 3 effects indépendants (subscribe / setSlot / removeSlot).
+  - Cooldown 1.5s déclenché uniquement sur transitions réelles `ready` true→false (plus à chaque update).
+
+Aucun changement fonctionnel attendu pour l'utilisateur final — la mécanique interne du coordinateur a été refondue, l'UX (sequencing, cooldown, suppression sur landing) reste identique à v1.0.0.
+
+Commit : `f019f74` (PR [#562](https://github.com/Humanix-Cybersecurity/Humanix-Academie/pull/562))
+
+---
+
 ## [1.0.0] — 2026-05-21 🚀 LAUNCH OSS PUBLIC
 
 > Première version publique sous licence AGPLv3. Tous les chantiers
