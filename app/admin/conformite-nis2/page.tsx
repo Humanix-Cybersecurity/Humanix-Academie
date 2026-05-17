@@ -12,6 +12,8 @@ import PackNis2Form from "@/components/PackNis2Form";
 import PlanGateNis2 from "@/components/PlanGateNis2";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminSection from "@/components/admin/AdminSection";
+import Nis2ScoreCard from "@/components/admin/nis2/Nis2ScoreCard";
+import { computeTenantNis2Score } from "@/lib/nis2/score-tenant";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +29,11 @@ export default async function AdminConformiteNis2Page() {
     where: { id: tenantId },
     select: { name: true, slug: true },
   });
+
+  // Score NIS2 temps reel per-article (Pack NIS2 v2). Calcule a partir
+  // de la completion reelle des saisons mappees aux articles NIS2 par
+  // les utilisateurs actifs du tenant. Lecture seule via dbReadOnly.
+  const nis2Score = isAllowed ? await computeTenantNis2Score(tenantId) : null;
 
   if (!isAllowed) {
     return (
@@ -85,6 +92,16 @@ export default async function AdminConformiteNis2Page() {
             ))}
           </ol>
         </AdminSection>
+
+        {/* Score temps reel par article NIS2 (Pack NIS2 v2) */}
+        {nis2Score && (
+          <AdminSection
+            title="Ton score NIS2 par article"
+            description="Calculé en temps réel à partir de la complétion des saisons Humanix mappées aux articles NIS2 par tes utilisateurs actifs."
+          >
+            <Nis2ScoreCard score={nis2Score} />
+          </AdminSection>
+        )}
 
         {/* Formulaire principal */}
         <AdminSection
