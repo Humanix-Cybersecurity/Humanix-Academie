@@ -4,6 +4,39 @@ name: CI
 # - chaque push sur main
 # - chaque PR vers main
 # Vérifie : lint + typecheck + tests + build + audits OSS + format + DCO.
+#
+# =============================================================================
+# RUNNER : self-hosted (machine Humanix dédiée)
+# =============================================================================
+# Pourquoi : le billing GitHub Actions sur runners GitHub-managed est désactivé.
+# On utilise un runner self-hosted déclaré dans Settings → Actions → Runners.
+#
+# ⚠️ SÉCURITÉ — CONFIGURATION OBLIGATOIRE AVANT REPO PUBLIC :
+#
+#   Self-hosted + repo public = risque d'exécution de code arbitraire par
+#   n'importe quel contributeur via une PR malveillante.
+#
+#   Mitigations à activer (Settings → Actions → General) :
+#
+#   1. "Fork pull request workflows from outside collaborators" :
+#      → **Require approval for all outside collaborators**
+#      (sinon n'importe quel inconnu peut faire tourner du code sur ta machine)
+#
+#   2. "Approval for first-time contributors" :
+#      → activer pour ajouter une friction supplémentaire
+#
+#   3. Le runner doit être restreint à ce repo (pas un runner org-wide
+#      sauf si tous les repos de l'org sont de confiance)
+#
+#   4. Le runner doit tourner dans un environnement isolé :
+#      - VM / conteneur dédié (idéalement éphémère, recréé à chaque job)
+#      - Pas d'accès au reste du réseau local
+#      - Pas de secrets perso accessibles (~/.ssh, ~/.aws, etc.)
+#
+#   Cf. https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security
+#
+# Si tu veux temporairement repasser sur ubuntu-latest pour un job, fais-le
+# explicitement avec "runs-on: ubuntu-latest" sur le job concerné.
 
 on:
   push:
@@ -33,7 +66,7 @@ jobs:
   # ---------------------------------------------------------------------------
   lint:
     name: Lint & TypeScript
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     continue-on-error: true
     timeout-minutes: 10
     steps:
@@ -60,7 +93,7 @@ jobs:
   # ---------------------------------------------------------------------------
   test:
     name: Tests unitaires (Vitest)
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 10
     needs: lint
     steps:
@@ -95,7 +128,7 @@ jobs:
   # ---------------------------------------------------------------------------
   build:
     name: Production build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 15
     needs: lint
     steps:
@@ -125,7 +158,7 @@ jobs:
   # ---------------------------------------------------------------------------
   security:
     name: npm audit (HIGH/CRITICAL)
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     continue-on-error: true
     timeout-minutes: 5
     steps:
@@ -153,7 +186,7 @@ jobs:
   # Cf. scripts/validate-mdx-catalog.ts.
   mdx-catalog:
     name: Validation MDX <-> catalogue
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 3
     steps:
       - name: Checkout
@@ -180,7 +213,7 @@ jobs:
   # Cf. scripts/add-license-headers.ts (regen avec `npm run license:headers`).
   license-headers:
     name: Headers SPDX AGPL-3.0
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 3
     steps:
       - name: Checkout
@@ -206,7 +239,7 @@ jobs:
   # évite qu'un dev hardcode un secret par flemme. Cf. scripts/audit-env-coverage.ts.
   env-audit:
     name: Couverture .env.example
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 3
     steps:
       - name: Checkout
@@ -233,7 +266,7 @@ jobs:
   # mai 2026 ou un import casse n'etait detecte qu'au build Docker (PR #34).
   mcp-server-build:
     name: Build connectors/mcp-server
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 5
     steps:
       - name: Checkout
@@ -265,7 +298,7 @@ jobs:
   # ---------------------------------------------------------------------------
   format:
     name: Prettier check
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 5
     steps:
       - name: Checkout
@@ -289,7 +322,7 @@ jobs:
   # ---------------------------------------------------------------------------
   dco:
     name: DCO signed-off-by check
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     if: github.event_name == 'pull_request'
     timeout-minutes: 5
     steps:
