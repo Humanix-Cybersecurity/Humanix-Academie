@@ -382,14 +382,26 @@ function CtaButton({
     );
   }
   if (t.cta.type === "subscribe") {
+    // Switch temporaire : si Payplug est indisponible (validation KYC en
+    // cours par exemple), on redirige les CTA paiement vers le formulaire
+    // de demande de devis. Le founder repond sous 24h avec une facture
+    // proforma + provision le tenant manuellement.
+    //
+    // Flip via env : NEXT_PUBLIC_PAYPLUG_AVAILABLE=false en prod ->
+    // les CTA basculent. Defaut "true" (Payplug ON) si non defini.
+    const payplugDown =
+      process.env.NEXT_PUBLIC_PAYPLUG_AVAILABLE === "false";
+    const href = payplugDown
+      ? `/demande-abonnement?plan=${t.id}&billing=${billing}&via=payplug-down`
+      : `/souscrire?plan=${t.id}&billing=${billing}`;
     return (
       <Link
-        href={`/souscrire?plan=${t.id}&billing=${billing}`}
+        href={href}
         onClick={onClickStop}
         className={cls}
         aria-disabled={disabled}
       >
-        {t.cta.label}
+        {payplugDown ? "Demander un devis" : t.cta.label}
       </Link>
     );
   }

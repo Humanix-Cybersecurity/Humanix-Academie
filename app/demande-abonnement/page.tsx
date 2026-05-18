@@ -38,37 +38,81 @@ const PLAN_OPTIONS = [
   { value: "non-decide", label: "Je n'ai pas encore décidé, conseillez-moi" },
 ];
 
+const DURATION_OPTIONS = [
+  { value: "6", label: "6 mois" },
+  { value: "12", label: "12 mois" },
+  { value: "24", label: "24 mois" },
+  { value: "36", label: "36 mois" },
+];
+
 export default async function DemandeAbonnementPage({
   searchParams,
 }: {
-  searchParams: Promise<{ submitted?: string; error?: string }>;
+  searchParams: Promise<{
+    submitted?: string;
+    error?: string;
+    plan?: string;
+    billing?: string;
+    seats?: string;
+    via?: string;
+  }>;
 }) {
   const params = await searchParams;
   const submitted = params.submitted === "1";
   const errorMsg = params.error
     ? "Une erreur est survenue. Réessaye dans un instant ou écris-nous directement à contact@humanix-cybersecurity.fr."
     : null;
+  // Pre-fill depuis query params (CTA Pro/Enterprise sur /tarifs)
+  const prefillPlan = params.plan && ["starter", "pro", "enterprise"].includes(params.plan)
+    ? params.plan
+    : "non-decide";
+  const prefillBilling = params.billing === "monthly" ? "monthly" : "annual";
+  const prefillSeats = params.seats && /^\d+$/.test(params.seats) ? params.seats : "";
+  // Si on arrive parce que PayPlug est down (CTA Pro reroutee), on change le ton.
+  const payplugDownContext = params.via === "payplug-down";
 
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
         <section className="max-w-2xl mx-auto px-4 pt-12 pb-6 sm:pt-16 sm:pb-8 text-center">
-          <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
-            👑 Enterprise · Sur devis
-          </p>
-          <h1 className="font-display text-4xl sm:text-5xl font-extrabold text-primary-500 dark:text-accent-300 leading-[1.05] mb-3">
-            Au-delà du standard.
-          </h1>
-          <p className="text-base text-gray-700 dark:text-gray-200 leading-relaxed">
-            Pour <strong>+250 sièges</strong>,{" "}
-            <strong>instance dédiée</strong>, <strong>SecNumCloud</strong>,{" "}
-            white-label ou intégrations sur-mesure. Tous les autres besoins
-            sont self-service via{" "}
-            <Link href="/tarifs" className="text-accent-700 underline">
-              /tarifs
-            </Link>
-            .
-          </p>
+          {payplugDownContext ? (
+            <>
+              <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
+                📋 Demande de devis
+              </p>
+              <h1 className="font-display text-4xl sm:text-5xl font-extrabold text-primary-500 dark:text-accent-300 leading-[1.05] mb-3">
+                Réservez votre place.
+              </h1>
+              <p className="text-base text-gray-700 dark:text-gray-200 leading-relaxed">
+                Le paiement en ligne (carte / SEPA) est temporairement
+                indisponible — notre processeur de paiement{" "}
+                <strong>Payplug</strong> finalise notre validation KYC. En
+                attendant, remplissez ce formulaire :{" "}
+                <strong>nous activons votre compte sous 24h ouvrées</strong>{" "}
+                avec une facture proforma payable par virement, et la
+                bascule en paiement automatique se fera dès Payplug en place.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
+                👑 Enterprise · Sur devis
+              </p>
+              <h1 className="font-display text-4xl sm:text-5xl font-extrabold text-primary-500 dark:text-accent-300 leading-[1.05] mb-3">
+                Au-delà du standard.
+              </h1>
+              <p className="text-base text-gray-700 dark:text-gray-200 leading-relaxed">
+                Pour <strong>+250 sièges</strong>,{" "}
+                <strong>instance dédiée</strong>, <strong>SecNumCloud</strong>,{" "}
+                white-label ou intégrations sur-mesure. Tous les autres besoins
+                sont self-service via{" "}
+                <Link href="/tarifs" className="text-accent-700 underline">
+                  /tarifs
+                </Link>
+                .
+              </p>
+            </>
+          )}
         </section>
       </HexBackdrop>
 
@@ -198,7 +242,7 @@ export default async function DemandeAbonnementPage({
                   name="plan"
                   required
                   className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none bg-white dark:bg-slate-900"
-                  defaultValue="non-decide"
+                  defaultValue={prefillPlan}
                 >
                   {PLAN_OPTIONS.map((p) => (
                     <option key={p.value} value={p.value}>
@@ -207,6 +251,82 @@ export default async function DemandeAbonnementPage({
                   ))}
                 </select>
               </div>
+
+              {/* Quantification : nombre de sieges + duree d'engagement.
+                  Demande client typique pour qu'on emette un devis precis. */}
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    htmlFor="seats"
+                    className="block text-sm font-medium mb-1"
+                  >
+                    Nombre de sièges <span className="text-warn">*</span>
+                  </label>
+                  <input
+                    id="seats"
+                    name="seats"
+                    type="number"
+                    min={1}
+                    max={10000}
+                    required
+                    defaultValue={prefillSeats}
+                    placeholder="Ex: 25"
+                    className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="duration"
+                    className="block text-sm font-medium mb-1"
+                  >
+                    Durée d&apos;engagement <span className="text-warn">*</span>
+                  </label>
+                  <select
+                    id="duration"
+                    name="duration"
+                    required
+                    defaultValue="12"
+                    className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none bg-white dark:bg-slate-900"
+                  >
+                    {DURATION_OPTIONS.map((d) => (
+                      <option key={d.value} value={d.value}>
+                        {d.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Paiement <span className="text-warn">*</span>
+                </label>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <label className="flex-1 flex items-center gap-2 cursor-pointer rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 hover:border-accent-500 has-checked:border-accent-500 has-checked:bg-accent-50 dark:has-checked:bg-accent-900/20">
+                    <input
+                      type="radio"
+                      name="billing"
+                      value="monthly"
+                      defaultChecked={prefillBilling === "monthly"}
+                      className="accent-accent-500"
+                      required
+                    />
+                    <span className="text-sm">Mensuel</span>
+                  </label>
+                  <label className="flex-1 flex items-center gap-2 cursor-pointer rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 hover:border-accent-500 has-checked:border-accent-500 has-checked:bg-accent-50 dark:has-checked:bg-accent-900/20">
+                    <input
+                      type="radio"
+                      name="billing"
+                      value="annual"
+                      defaultChecked={prefillBilling === "annual"}
+                      className="accent-accent-500"
+                      required
+                    />
+                    <span className="text-sm">Annuel <span className="text-emerald-600 text-xs">(-10 %)</span></span>
+                  </label>
+                </div>
+              </div>
+
               <div>
                 <label
                   htmlFor="message"
