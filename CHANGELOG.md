@@ -6,6 +6,44 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.1.0] — 2026-05-20 💳 Migration provider de paiement Payplug → Mollie
+
+### Changed
+
+- **Provider de paiement migré de Payplug vers Mollie**. Payplug a refusé notre demande de validation KYC, ce qui rendait le checkout self-service inopérant à 24h du launch. Migration complète vers [Mollie](https://www.mollie.com) (Pays-Bas, régulé DNB, agréé établissement de paiement UE).
+
+#### Côté code
+
+- Nouveau module `lib/mollie.ts` qui remplace `lib/payplug.ts` (548 LoC). Utilise le SDK officiel `@mollie/api-client` (MIT).
+- 5 endpoints API refactorés : `/api/payments/{checkout,checkout/start,webhook,portal,cancel}`.
+- **Modèle webhook différent** (Mollie = pull-based vs Payplug = push HMAC) : la sécurité repose sur le fait que retrieve d'une ressource requiert la clé API secrète (un attaquant qui spam le webhook ne peut rien lire).
+- **Flow recurring différent** : Mollie impose un "First Payment" (sequenceType=first) qui pose un MANDATE, puis on crée la Subscription après webhook payment.paid. Charges suivantes automatiques.
+- Webhook unique `/api/payments/webhook` qui dispatch sur les prefixes d'ID (`tr_*` = payment, `sub_*` = subscription).
+- DB schema **inchangé** (déjà provider-agnostique : `paymentProvider`, `paymentCustomerId`, `paymentSubscriptionId`). On passe simplement `"mollie"` au lieu de `"payplug"`.
+
+#### Côté env vars
+
+- ❌ Retirés : `PAYPLUG_SECRET_KEY`, `PAYPLUG_WEBHOOK_SECRET`, `PAYPLUG_PLAN_STARTER`, `PAYPLUG_PLAN_PRO`, `NEXT_PUBLIC_PAYPLUG_AVAILABLE`
+- ✅ Ajoutés : `MOLLIE_API_KEY` (test_* ou live_*), `NEXT_PUBLIC_MOLLIE_AVAILABLE`
+- Note : Mollie n'utilise pas de "plan IDs" — on calcule le montant à la volée depuis seats × prix × billing cycle (cf. `mollieAmountForPlan()`).
+
+#### Méthodes de paiement activables côté Mollie dashboard
+
+- CB / Visa / Mastercard
+- SEPA Direct Debit (recommandé Pro/Enterprise pour stabilité recurring)
+- PayPal
+- Apple Pay / Google Pay
+
+#### CSP
+
+- `proxy.ts` : `connect-src` mis à jour pour autoriser `api.mollie.com` à la place de `api.payplug.com` + `secure.payplug.com`.
+
+#### Compatibilité
+
+- Le form devis (`/demande-abonnement`) introduit en v1.0.1 reste disponible comme fallback si Mollie est temporairement indisponible (flag `NEXT_PUBLIC_MOLLIE_AVAILABLE=false`).
+
+---
+
 ## [1.0.1] — 2026-05-17 🔧 Hotfix popup coordinator
 
 ### Fixed
