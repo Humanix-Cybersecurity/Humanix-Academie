@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// DEV_MODE — bypass des intégrations externes (Payplug, emails) pour
+// DEV_MODE — bypass des intégrations externes (Mollie, emails) pour
 // tester les flows inscription / souscription en local sans avoir à
-// configurer un compte Payplug ni un provider email.
+// configurer un compte Mollie ni un provider email.
 //
 // Différence avec DEMO_MODE :
 //   - DEMO_MODE crée des comptes fictifs via /demo (sélecteur de profils
 //     pré-seedés). Vise les démos commerciales / salons.
 //   - DEV_MODE garde le flow réel (POST formulaires, création de tenants)
-//     mais simule les externals : pas d'appel Payplug, pas d'email envoyé,
+//     mais simule les externals : pas d'appel Mollie, pas d'email envoyé,
 //     auto-login direct comme si l'utilisateur avait cliqué sur le magic
 //     link / payé avec succès.
 //

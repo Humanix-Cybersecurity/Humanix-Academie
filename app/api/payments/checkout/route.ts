@@ -1,30 +1,28 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // POST /api/payments/checkout
 //
-// Cree une session de paiement chez le prestataire (Payplug FR par defaut).
-// Auth : ADMIN/RSSI/SUPERADMIN du tenant. Rate limit 5/h/tenant.
+// Cree une session de paiement Mollie. Auth : ADMIN/RSSI/SUPERADMIN du
+// tenant. Rate limit 5/h/tenant. Utilise par les tenants existants qui
+// upgradent leur plan depuis /profil/facturation ou /admin/billing.
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/api/require-role";
 import { checkRateLimit } from "@/lib/rate-limit";
 import {
-  isPayplugConfigured,
+  isMollieConfigured,
   isPlanBuyable,
-  payplugPlanIdForTier,
   createCheckoutSession,
-} from "@/lib/payplug";
+} from "@/lib/mollie";
 import { isPlanId } from "@/lib/plans";
 
 export async function POST(req: Request) {
-  if (!isPayplugConfigured()) {
+  if (!isMollieConfigured()) {
     return NextResponse.json(
       { error: "Le module de paiement n'est pas configuré sur cette instance." },
       { status: 503 },
     );
   }
 
-  // RBAC central : ADMIN / RSSI / SUPERADMIN seuls. Audit log auto
-  // sur tentative refusee. Cf. lib/api/require-role.ts.
   const guard = await requireAdmin(req);
   if ("response" in guard) return guard.response;
   const { session } = guard;
@@ -36,6 +34,13 @@ export async function POST(req: Request) {
 
   const body = await req.json().catch(() => ({}));
   const planRaw = String(body?.plan ?? "");
+  const seats =
+    typeof body?.seats === "number" && body.seats > 0
+      ? Math.floor(body.seats)
+      : null;
+  const billing: "monthly" | "annual" =
+    body?.billing === "annual" ? "annual" : "monthly";
+
   if (!isPlanId(planRaw)) {
     return NextResponse.json({ error: "Plan invalide." }, { status: 400 });
   }
@@ -49,7 +54,6 @@ export async function POST(req: Request) {
     );
   }
 
-  // Rate limit par tenant
   const rl = checkRateLimit(`payments-checkout:${tenantId}`, 5, 60 * 60 * 1000);
   if (!rl.ok) {
     return NextResponse.json(
@@ -63,11 +67,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Tenant introuvable." }, { status: 404 });
   }
 
-  const planId = payplugPlanIdForTier(planRaw);
-  if (!planId) {
+  const effectiveSeats =
+    planRaw === "starter" ? 1 : seats ?? tenant.seatCount ?? 1;
+
+  if (planRaw === "pro" && !seats && !tenant.seatCount) {
     return NextResponse.json(
-      { error: "Plan non configuré côté provider." },
-      { status: 500 },
+      {
+        error:
+          "Le nombre de sieges est requis pour le plan Pro.",
+      },
+      { status: 400 },
     );
   }
 
@@ -78,22 +87,24 @@ export async function POST(req: Request) {
     const checkout = await createCheckoutSession({
       customerId: tenant.paymentCustomerId ?? undefined,
       customerEmail: userEmail,
-      planId,
+      customerName: tenant.name,
+      plan: planRaw,
+      billing,
+      seats: effectiveSeats,
       tenantId,
-      appPlanId: planRaw,
-      successUrl: `${baseUrl}/profil/facturation?success=1&session_id=${tenantId}`,
+      successUrl: `${baseUrl}/profil/facturation?success=1`,
       cancelUrl: `${baseUrl}/tarifs?canceled=1`,
+      webhookUrl: `${baseUrl}/api/payments/webhook`,
       metadata: {
         tenantId,
-        appPlanId: planRaw,
       },
     });
-    // Si Payplug a cree un customer juste maintenant, on le persiste
+    // Mollie a peut-etre cree un customer juste maintenant : on le persiste
     if (checkout.customer?.id && !tenant.paymentCustomerId) {
       await db.tenant.update({
         where: { id: tenantId },
         data: {
-          paymentProvider: "payplug",
+          paymentProvider: "mollie",
           paymentCustomerId: checkout.customer.id,
         },
       });

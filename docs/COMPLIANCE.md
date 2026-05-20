@@ -58,7 +58,7 @@ variables d'env correspondantes ne sont pas posées.
 
 | Sous-traitant | Localisation | Données traitées | Statut |
 |---|---|---|---|
-| Payplug (paiement) | **France** (Paris, Natixis/BPCE) | Email facturation + nom organisation | activable via `PAYPLUG_SECRET_KEY` |
+| Mollie (paiement) | **France** (Paris, Natixis/BPCE) | Email facturation + nom organisation | activable via `MOLLIE_SECRET_KEY` |
 | Scaleway TEM (emails transactionnels) | **France** (Paris) | Email + nom des destinataires | activable via `SCALEWAY_TEM_TOKEN` |
 | Mistral AI (IA) | **France** (Paris) | Contexte phishing/vishing/smishing (anonymisé, anti-PII en entrée) | activable via `MISTRAL_API_KEY` |
 | Postgres (BDD) | À la charge de l'opérateur self-host | Toutes les données utilisateur | requis |
@@ -135,7 +135,7 @@ Les trois modules suivent la même éthique pédagogique (cf. section 1, art. 32
 - [ ] Backups Postgres réguliers (chiffrés, hors-site)
 - [ ] Certificat TLS valide (Let's Encrypt minimum)
 - [ ] DPA (Data Processing Agreement) signé avec chaque sous-traitant
-  activé (Payplug et/ou Scaleway TEM le moment venu)
+  activé (Mollie et/ou Scaleway TEM le moment venu)
 - [ ] DPO désigné si > 250 employés ou traitement à grande échelle
 - [ ] Politique de confidentialité publique à jour (`/confidentialite`)
 - [ ] Page Cookies (`/cookies`) à jour si tracking ajouté

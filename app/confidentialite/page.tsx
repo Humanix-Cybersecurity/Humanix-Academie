@@ -258,11 +258,11 @@ export default function ConfidentialitePage() {
                 newsletter Cyber-Anecdote du Lundi)
               </li>
               <li>
-                <strong>Payplug SA</strong> (France 🇫🇷, Paris) - prestataire
+                <strong>Mollie SA</strong> (France 🇫🇷, Paris) - prestataire
                 de paiement pour les abonnements. Traite les données de carte
                 bancaire en mode tokenisation conforme PCI-DSS niveau 1.
                 Humanix ne reçoit jamais ton numéro de carte ni ton CVV : nous
-                stockons uniquement un identifiant chiffré (token Payplug)
+                stockons uniquement un identifiant chiffré (token Mollie)
                 qui permet de représenter le moyen de paiement sans pouvoir
                 l&apos;utiliser hors de notre flow.
               </li>
