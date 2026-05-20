@@ -30,8 +30,8 @@ const WHITELIST = new Set([
   "NEXT_PHASE", // Standard Next.js (phase-production-build, etc.)
   "VERCEL", // Plateforme runtime
   "VERCEL_URL",
-  // Feature flags runtime documentes ailleurs (DEPLOYMENT_RUNBOOK)
-  "SIGNUP_ALLOW_SELF_SERVICE",
+  // Feature flag runtime documente ailleurs (DEPLOYMENT_RUNBOOK)
+  // SIGNUP_ALLOW_SELF_SERVICE est maintenant documente dans .env.example
   "SIGNUP_BLOCK_SELF_SERVICE",
   // Variables de tests vitest (lib/secrets.test.ts, etc.)
   // Elles ne servent qu'aux tests unitaires, jamais en runtime.
