@@ -40,7 +40,7 @@ export type SubscriptionState = {
   state: SubscriptionStateName;
   /** Plan effectif (normalise). */
   plan: PlanId;
-  /** Status brut tel que renvoye par Payplug (active, past_due, canceled, etc.). */
+  /** Status brut tel que renvoye par Mollie (active, past_due, canceled, etc.). */
   rawStatus: string | null;
   /**
    * Niveau de restriction applique par le middleware admin :
@@ -173,7 +173,7 @@ export async function getSubscriptionState(
     };
   }
 
-  // === 4. Plan gratuit "starter" forever-free, pas de subscription Payplug ===
+  // === 4. Plan gratuit "starter" forever-free, pas de subscription Mollie ===
   if (plan === "starter" && !rawStatus) {
     return {
       state: "active",

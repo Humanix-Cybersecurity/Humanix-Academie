@@ -382,17 +382,17 @@ function CtaButton({
     );
   }
   if (t.cta.type === "subscribe") {
-    // Switch temporaire : si Payplug est indisponible (validation KYC en
+    // Switch temporaire : si Mollie est indisponible (validation KYC en
     // cours par exemple), on redirige les CTA paiement vers le formulaire
     // de demande de devis. Le founder repond sous 24h avec une facture
     // proforma + provision le tenant manuellement.
     //
-    // Flip via env : NEXT_PUBLIC_PAYPLUG_AVAILABLE=false en prod ->
-    // les CTA basculent. Defaut "true" (Payplug ON) si non defini.
-    const payplugDown =
-      process.env.NEXT_PUBLIC_PAYPLUG_AVAILABLE === "false";
-    const href = payplugDown
-      ? `/demande-abonnement?plan=${t.id}&billing=${billing}&via=payplug-down`
+    // Flip via env : NEXT_PUBLIC_MOLLIE_AVAILABLE=false en prod ->
+    // les CTA basculent. Defaut "true" (Mollie ON) si non defini.
+    const paymentDown =
+      process.env.NEXT_PUBLIC_MOLLIE_AVAILABLE === "false";
+    const href = paymentDown
+      ? `/demande-abonnement?plan=${t.id}&billing=${billing}&via=payment-pending`
       : `/souscrire?plan=${t.id}&billing=${billing}`;
     return (
       <Link
@@ -401,7 +401,7 @@ function CtaButton({
         className={cls}
         aria-disabled={disabled}
       >
-        {payplugDown ? "Demander un devis" : t.cta.label}
+        {paymentDown ? "Demander un devis" : t.cta.label}
       </Link>
     );
   }
