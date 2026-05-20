@@ -186,8 +186,8 @@ export const PLAN_FREE_SEATS: Record<PlanId, number> = {
 // =============================================================================
 // PRIX MENSUELS HT (€)
 // =============================================================================
-// Source de verite des prix affiches sur /tarifs et factures Payplug.
-// Les vrais ID de plans Payplug sont dans .env (PAYPLUG_PLAN_*).
+// Source de verite des prix affiches sur /tarifs et factures Mollie.
+// Les vrais ID de plans Mollie sont dans .env (MOLLIE_PROFILE_*).
 //
 // `null` = pas de prix forfait (utilise PLAN_PRICE_PER_USER_EUR_MONTHLY a la
 // place) ou sur devis (Enterprise).
@@ -266,7 +266,7 @@ export function isPaidPlan(plan: PlanId): boolean {
 /**
  * Le tenant doit-il reellement payer maintenant, compte tenu de son plan
  * et de son nombre de sieges actifs ? Utile pour decider si on declenche
- * un checkout Payplug ou si on laisse en mode forever-free.
+ * un checkout Mollie ou si on laisse en mode forever-free.
  */
 export function isPaidUsage(plan: PlanId, activeSeats: number): boolean {
   const freeSeats = PLAN_FREE_SEATS[plan];

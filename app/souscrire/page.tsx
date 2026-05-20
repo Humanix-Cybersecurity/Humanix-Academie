@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
 // /souscrire — page de pré-checkout self-service. L'organisation choisit
-// son plan + saisit email + nom d'org → submit → redirect Payplug Checkout.
+// son plan + saisit email + nom d'org → submit → redirect Mollie Checkout.
 // Le paiement déclenche le webhook qui provisionne tenant + ADMIN +
 // envoie un magic link de bienvenue. Aucune action humaine côté Humanix.
 //
 // Pour les plans non self-service (enterprise, instance dédiée), on redirige
 // vers /demande-abonnement (workflow founder).
 //
-// Si Payplug n'est pas configuré (env vars absentes), on affiche une
+// Si Mollie n'est pas configuré (env vars absentes), on affiche une
 // note explicite + lien /demande-abonnement (fallback gracieux).
 
 import { Suspense } from "react";
@@ -17,9 +17,9 @@ import { redirect } from "next/navigation";
 import HexBackdrop from "@/components/HexBackdrop";
 import { TIERS } from "@/lib/pricing";
 import {
-  isPayplugConfigured,
-  PAYPLUG_BUYABLE_PLANS,
-} from "@/lib/payplug";
+  isMollieConfigured,
+  MOLLIE_BUYABLE_PLANS,
+} from "@/lib/mollie";
 import { isPlanId } from "@/lib/plans";
 import { isDevMode } from "@/lib/dev-mode";
 import SouscrireForm from "./SouscrireForm";
@@ -31,7 +31,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Souscrire — Humanix Académie",
   description:
-    "Créez votre compte entreprise en 2 minutes : choix du plan, email professionnel, paiement Payplug, accès immédiat à la console admin via un lien magique.",
+    "Créez votre compte entreprise en 2 minutes : choix du plan, email professionnel, paiement Mollie, accès immédiat à la console admin via un lien magique.",
   alternates: { canonical: "/souscrire" },
 };
 
@@ -57,13 +57,13 @@ export default async function SouscrirePage({
 
   // Plan inconnu ou non self-service → renvoyer vers /tarifs ou enterprise.
   //
-  // NB : on ne gate PAS sur `isPlanBuyable()` ici (qui exige PAYPLUG_PLAN_*
-  // en env). Sinon, sur une instance ou Payplug n'est pas encore configure,
+  // NB : on ne gate PAS sur `isPlanBuyable()` ici (qui exige MOLLIE_PLAN_*
+  // en env). Sinon, sur une instance ou Mollie n'est pas encore configure,
   // un click sur "Demarrer l'essai gratuit" depuis /tarifs boucle vers
   // /tarifs (PR du bug : isPlanBuyable=false → redirect → user reclique).
-  // La page elle-même gere le cas "Payplug pas pret" via le banner amber
-  // ci-dessous (cf. !payplugReady) avec un lien vers /demande-abonnement.
-  if (!isPlanId(planRaw) || !PAYPLUG_BUYABLE_PLANS.includes(planRaw)) {
+  // La page elle-même gere le cas "Mollie pas pret" via le banner amber
+  // ci-dessous (cf. !mollieReady) avec un lien vers /demande-abonnement.
+  if (!isPlanId(planRaw) || !MOLLIE_BUYABLE_PLANS.includes(planRaw)) {
     if (planRaw === "enterprise") {
       redirect("/demande-abonnement?type=enterprise");
     }
@@ -75,8 +75,8 @@ export default async function SouscrirePage({
 
   // En DEV_MODE, on affiche le formulaire reel : la POST sur
   // /api/payments/checkout/start detecte DEV_MODE et provisionne sans
-  // appeler Payplug. Cf. lib/dev-mode.ts pour le rationale.
-  const payplugReady = isPayplugConfigured() || isDevMode();
+  // appeler Mollie. Cf. lib/dev-mode.ts pour le rationale.
+  const mollieReady = isMollieConfigured() || isDevMode();
 
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
@@ -182,7 +182,7 @@ export default async function SouscrirePage({
           )}
         </div>
 
-        {!payplugReady ? (
+        {!mollieReady ? (
           <div className="bg-amber-50 border-2 border-amber-300 text-amber-900 rounded-2xl p-5">
             <p className="font-bold mb-2">
               💳 Le paiement automatique n&apos;est pas encore activé sur cette

@@ -96,8 +96,7 @@ function buildCsp(nonce: string): string {
       plausible,
       // Providers UE/FR souverains
       "https://api.mistral.ai",
-      "https://api.payplug.com",
-      "https://secure.payplug.com",
+      "https://api.mollie.com",
       "https://api.scaleway.com",
     ]
       .filter(Boolean)
@@ -199,7 +198,7 @@ export function proxy(req: NextRequest) {
 //   - _next/image  (Next image optimizer)
 //   - favicon.ico
 //   - api/health   (UptimeRobot, monitoring -- ne doit pas dependre du tenant)
-//   - api/payments/webhook (Payplug, signature externe -- pas de host check)
+//   - api/payments/webhook (Mollie, pas de host check)
 //   - .well-known  (security.txt, ACME challenges)
 export const config = {
   matcher: [

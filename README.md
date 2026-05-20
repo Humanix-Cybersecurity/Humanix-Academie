@@ -44,10 +44,10 @@ souverain, intégrée nativement à CISO Assistant.
 - **Connecteur natif CISO Assistant** : preuves de conformité exportées automatiquement
 - **Format OSCAL v1.1.2** (NIST) + CEF (Sentinel, Splunk, Sekoia, QRadar)
 - **API REST** + webhooks signés HMAC-SHA256
-- **Stack 100 % souveraine** : hébergement Scaleway Paris, email Scaleway TEM, paiement Payplug, IA Mistral
+- **Stack 100 % souveraine** : hébergement Scaleway Paris, email Scaleway TEM, paiement Mollie, IA Mistral
 - **Sécurité défense en profondeur** : CSP strict, middleware edge sur `/admin`, DOMPurify, HSTS preload, anti-SSRF whitelist, anti-PII sur prompts, scrypt + AES-256-GCM
 - **Conformité multi-cadre** : RGPD · NIS2 · **Loi Sapin II Art. 17** · ISO 27001:2022 · ANSSI HG · NIST CSF, mapping technique versionné dans [`lib/mapping-grc.ts`](./lib/mapping-grc.ts)
-- **Mode démo** + **Mode dev** (bypass Payplug/email) pour tester sans setup externe
+- **Mode démo** + **Mode dev** (bypass Mollie/email) pour tester sans setup externe
 
 ---
 
@@ -180,8 +180,8 @@ documenté dans [docs/CRON.md](./docs/CRON.md).
 | Mode | Activation | Effet |
 |---|---|---|
 | **DEMO_MODE** | `DEMO_MODE=true` | Comptes fictifs pré-seedés via `/demo`, sélecteur 1 clic. Pour démos commerciales / salons. |
-| **DEV_MODE** | `DEV_MODE=true` (avec `AUTH_URL` local) | Bypass Payplug + email : inscription auto-login direct, souscription instantanée. Pour tester le vrai flow sans config externe. |
-| **Production** | les deux à `false` | Flow réel : email Scaleway TEM, paiement Payplug, magic links signés. |
+| **DEV_MODE** | `DEV_MODE=true` (avec `AUTH_URL` local) | Bypass Mollie + email : inscription auto-login direct, souscription instantanée. Pour tester le vrai flow sans config externe. |
+| **Production** | les deux à `false` | Flow réel : email Scaleway TEM, paiement Mollie, magic links signés. |
 
 Garde-fou : `DEV_MODE` est ignoré quand `AUTH_URL` ne pointe pas sur localhost.
 
