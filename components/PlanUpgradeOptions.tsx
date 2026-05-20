@@ -9,7 +9,7 @@
 // <Link href="/tarifs"> qui renvoyait l'admin sur la page marketing
 // publique : pas de checkout déclenché, pas de continuité avec sa
 // session, dead end UX. Ici on appelle directement l'endpoint auth-
-// gated qui crée la session Payplug et on redirige vers l'URL hostée.
+// gated qui crée la session Mollie et on redirige vers l'URL hostée.
 
 import { useState } from "react";
 import Link from "next/link";
@@ -26,7 +26,7 @@ type Props = {
   currentPlan: PlanId;
   // Plans pour lesquels le checkout self-service est dispo (sinon, on
   // bascule sur le formulaire "Demande d'abonnement" pour Enterprise ou
-  // pour les instances sans Payplug configuré).
+  // pour les instances sans Mollie configuré).
   buyablePlans: readonly PlanId[];
 };
 

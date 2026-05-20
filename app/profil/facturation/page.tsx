@@ -5,13 +5,13 @@
 // d'abonnement courant et propose :
 //  - Si pas de plan payant : CTA vers /tarifs
 //  - Si plan payant : bouton "Mettre a jour mon moyen de paiement"
-//    qui ouvre le portail Payplug (ou affiche un fallback interne si
-//    Payplug ne supporte pas l'update CB hosted)
+//    qui ouvre le portail Mollie (ou affiche un fallback interne si
+//    Mollie ne supporte pas l'update CB hosted)
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { isPayplugConfigured } from "@/lib/payplug";
+import { isMollieConfigured } from "@/lib/mollie";
 import BillingActions from "@/components/BillingActions";
 
 export const dynamic = "force-dynamic";
@@ -59,7 +59,7 @@ export default async function FacturationPage({
   });
   if (!tenant) redirect("/profil");
 
-  const paymentReady = isPayplugConfigured();
+  const paymentReady = isMollieConfigured();
   const hasSub = !!tenant.paymentSubscriptionId;
   const statusMeta = tenant.subscriptionStatus
     ? (STATUS_LABELS[tenant.subscriptionStatus] ?? {
@@ -96,7 +96,7 @@ export default async function FacturationPage({
           <p className="font-bold">✓ Paiement réussi</p>
           <p className="text-sm mt-1">
             Votre abonnement est activé. Le statut peut prendre quelques
-            secondes à se mettre à jour ci-dessous (synchronisation Payplug).
+            secondes à se mettre à jour ci-dessous (synchronisation Mollie).
           </p>
         </div>
       )}
