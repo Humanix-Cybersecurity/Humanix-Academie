@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
 // /demande-abonnement — VOIE EXCEPTIONNELLE pour les besoins qui ne
-// rentrent pas dans le self-service Payplug.
+// rentrent pas dans le self-service Mollie.
 //
 // CAS D'USAGE :
 //   - +250 sièges (au-delà du plan Pro)
@@ -10,7 +10,7 @@
 //   - Demandes spécifiques nécessitant un échange humain
 //
 // Pour TOUS les autres cas (Starter / Pro standards), le user
-// passe par /tarifs → /souscrire → Payplug Checkout → webhook qui
+// passe par /tarifs → /souscrire → Mollie Checkout → webhook qui
 // provisionne tenant + ADMIN automatiquement. Aucune action humaine.
 //
 // Workflow ici :
@@ -69,13 +69,13 @@ export default async function DemandeAbonnementPage({
   const prefillBilling = params.billing === "monthly" ? "monthly" : "annual";
   const prefillSeats = params.seats && /^\d+$/.test(params.seats) ? params.seats : "";
   // Si on arrive parce que PayPlug est down (CTA Pro reroutee), on change le ton.
-  const payplugDownContext = params.via === "payplug-down";
+  const paymentDownContext = params.via === "payment-pending";
 
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
         <section className="max-w-2xl mx-auto px-4 pt-12 pb-6 sm:pt-16 sm:pb-8 text-center">
-          {payplugDownContext ? (
+          {paymentDownContext ? (
             <>
               <p className="text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
                 📋 Demande de devis
@@ -86,11 +86,11 @@ export default async function DemandeAbonnementPage({
               <p className="text-base text-gray-700 dark:text-gray-200 leading-relaxed">
                 Le paiement en ligne (carte / SEPA) est temporairement
                 indisponible — notre processeur de paiement{" "}
-                <strong>Payplug</strong> finalise notre validation KYC. En
+                <strong>Mollie</strong> finalise notre validation KYC. En
                 attendant, remplissez ce formulaire :{" "}
                 <strong>nous activons votre compte sous 24h ouvrées</strong>{" "}
                 avec une facture proforma payable par virement, et la
-                bascule en paiement automatique se fera dès Payplug en place.
+                bascule en paiement automatique se fera dès Mollie en place.
               </p>
             </>
           ) : (

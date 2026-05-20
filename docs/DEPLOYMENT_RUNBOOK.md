@@ -1,6 +1,6 @@
 # Deployment Runbook — Humanix Académie
 
-Toutes les **actions manuelles** à exécuter au déploiement, par phase. Ne nécessite que les accès consoles habituels (Scaleway, Payplug, Apple Developer, dépôt GitHub) + `npm` + `psql` côté serveur.
+Toutes les **actions manuelles** à exécuter au déploiement, par phase. Ne nécessite que les accès consoles habituels (Scaleway, Mollie, Apple Developer, dépôt GitHub) + `npm` + `psql` côté serveur.
 
 > Ce runbook est cumulatif : si tu déploies pour la première fois, exécute tout dans l'ordre. Si tu redéploies, repère les sections marquées **« First-deploy only »**.
 

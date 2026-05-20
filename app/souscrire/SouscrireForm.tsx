@@ -13,7 +13,7 @@ type Props = {
   maxSeats: number | null;
   /** Cycle de facturation choisi sur /tarifs (mensuel sans engagement / annuel −X%). */
   billing: "monthly" | "annual";
-  /** Si true : copie adaptee (pas de paiement Payplug, auto-login direct). */
+  /** Si true : copie adaptee (pas de paiement Mollie, auto-login direct). */
   devMode?: boolean;
 };
 
@@ -52,7 +52,7 @@ export default function SouscrireForm({
           setError(data.error ?? "Impossible de démarrer le paiement.");
           return;
         }
-        // Hard navigate vers Payplug (sortie de l'app)
+        // Hard navigate vers Mollie (sortie de l'app)
         window.location.href = data.url;
       } catch (err) {
         setError(
@@ -183,10 +183,10 @@ export default function SouscrireForm({
 
       <p className="text-xs text-gray-500 text-center">
         {devMode
-          ? "🛠️ DEV_MODE : tenant + ADMIN créés sans appel Payplug."
+          ? "🛠️ DEV_MODE : tenant + ADMIN créés sans appel Mollie."
           : billing === "annual"
-            ? "Paiement sécurisé Payplug 🇫🇷 · CB / SEPA · engagement 12 mois, prélèvement annuel."
-            : "Paiement sécurisé Payplug 🇫🇷 · CB / SEPA · résiliable à tout moment."}
+            ? "Paiement sécurisé Mollie 🇫🇷 · CB / SEPA · engagement 12 mois, prélèvement annuel."
+            : "Paiement sécurisé Mollie 🇫🇷 · CB / SEPA · résiliable à tout moment."}
       </p>
     </form>
   );

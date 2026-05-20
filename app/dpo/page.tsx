@@ -76,7 +76,7 @@ const PROMESSES = [
       ring: "border-emerald-200 dark:border-emerald-900/40",
       accent: "text-emerald-700 dark:text-emerald-300",
     },
-    body: "Data Processing Agreement (article 28 RGPD) déjà redige selon les exigences CNIL et signables en 1 minute. Liste exhaustive des sous-traitants ulterieurs (Scaleway Paris pour l'hosting, Mistral Paris pour l'IA, Payplug pour le paiement). Aucune dependance Cloud Act par defaut.",
+    body: "Data Processing Agreement (article 28 RGPD) déjà redige selon les exigences CNIL et signables en 1 minute. Liste exhaustive des sous-traitants ulterieurs (Scaleway Paris pour l'hosting, Mistral Paris pour l'IA, Mollie pour le paiement). Aucune dependance Cloud Act par defaut.",
   },
   {
     emoji: "⏰",
@@ -106,7 +106,7 @@ const PROMESSES = [
       ring: "border-rose-200 dark:border-rose-900/40",
       accent: "text-rose-700 dark:text-rose-300",
     },
-    body: "Données personnelles 100 % France. Email transactionnel via Scaleway TEM (PR #106), paiement via Payplug (PR #97), IA generative via Mistral Paris. Aucune donnee personnelle ne traverse le Cloud Act. Option SecNumCloud disponible en Enterprise.",
+    body: "Données personnelles 100 % France. Email transactionnel via Scaleway TEM (PR #106), paiement via Mollie (PR #97), IA generative via Mistral Paris. Aucune donnee personnelle ne traverse le Cloud Act. Option SecNumCloud disponible en Enterprise.",
   },
   {
     emoji: "🛡",
