@@ -2,13 +2,13 @@
 //
 // Helper atomique de provisionnement d'un tenant payant + son ADMIN.
 // Une seule porte d'entrée pour TOUS les flows qui créent un tenant
-// payant (futur Payplug webhook auto, /superadmin manuel, scripts CI).
+// payant (futur Mollie webhook auto, /superadmin manuel, scripts CI).
 //
 // MODÈLE D'ACCÈS 3-LAYER (cf. plan launch OSS mai 2026) :
 //   - Tenant Communauté : créé par seed, accueille les LEARNERs gratuits.
 //     Cf. lib/tenant-community.ts.
 //   - Tenants payants : créés UNIQUEMENT par cette fonction, qui implique
-//     un acte de souscription validé (paiement Payplug ou décision admin).
+//     un acte de souscription validé (paiement Mollie ou décision admin).
 //     Le premier user est ADMIN, peut ensuite inviter ses collègues.
 //
 // IDEMPOTENT :
@@ -31,7 +31,7 @@ import { auditLog, AuditActions } from "@/lib/audit";
 import type { PlanId } from "@/lib/plans";
 
 export type ProvisionSource =
-  | "payplug-webhook"
+  | "mollie-webhook"
   | "superadmin-manual"
   | "demande-abonnement"
   | "dev-mode";
@@ -59,10 +59,10 @@ export type ProvisionInput = {
   plan: PlanId;
   /** Nom de l'admin (optionnel). */
   adminName?: string;
-  /** Identifiants Payplug si l'origine est un webhook ou un checkout. */
+  /** Identifiants Mollie si l'origine est un webhook ou un checkout. */
   paymentCustomerId?: string;
   paymentSubscriptionId?: string;
-  /** État initial de la souscription. Utilisé par le webhook Payplug pour
+  /** État initial de la souscription. Utilisé par le webhook Mollie pour
    * passer "active" sur subscription.created (le checkout a réussi).
    * Défaut "active" — il n'y a plus de phase trial depuis mai 2026. */
   subscriptionStatus?: string;
@@ -178,7 +178,7 @@ export async function provisionTenantWithAdmin(
           slug,
           name: input.organizationName,
           plan: input.plan,
-          paymentProvider: input.paymentCustomerId ? "payplug" : null,
+          paymentProvider: input.paymentCustomerId ? "mollie" : null,
           paymentCustomerId: input.paymentCustomerId ?? null,
           paymentSubscriptionId: input.paymentSubscriptionId ?? null,
           subscriptionStatus: input.subscriptionStatus ?? "active",

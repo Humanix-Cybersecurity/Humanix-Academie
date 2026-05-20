@@ -445,7 +445,7 @@ export default function SecuritePage() {
                   loc="France 🇫🇷 (Paris)"
                 />
                 <SubcontractorRow
-                  name="Payplug SA"
+                  name="Mollie SA"
                   role="Prestataire de paiement (PCI-DSS niveau 1, tokenisation CB)"
                   loc="France 🇫🇷 (Paris)"
                 />
