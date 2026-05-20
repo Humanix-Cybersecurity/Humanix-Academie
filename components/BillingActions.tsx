@@ -1,7 +1,7 @@
 "use client";
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Boutons d'action pour /profil/facturation : update CB Payplug ou
+// Boutons d'action pour /profil/facturation : update CB Mollie ou
 // annulation d'abonnement.
 
 import { useState } from "react";
@@ -32,7 +32,7 @@ export default function BillingActions({
         window.location.href = data.url;
         return;
       }
-      // Payplug n'a pas pu générer une URL hosted -> fallback : on affiche
+      // Mollie n'a pas pu générer une URL hosted -> fallback : on affiche
       // l'option d'annulation ci-dessous
       setFallback(true);
       setPending(false);
@@ -90,7 +90,7 @@ export default function BillingActions({
             {pending ? "Ouverture…" : "Mettre à jour mon moyen de paiement"}
           </button>
           <p className="text-xs text-gray-500">
-            Vous serez redirigé vers la page sécurisée Payplug pour modifier
+            Vous serez redirigé vers la page sécurisée Mollie pour modifier
             votre carte bancaire.
           </p>
         </>
@@ -103,7 +103,7 @@ export default function BillingActions({
           >
             facturation@humanix-cybersecurity.fr
           </a>{" "}
-          (le portail self-service Payplug sera ajouté prochainement).
+          (le portail self-service Mollie sera ajouté prochainement).
         </p>
       )}
 

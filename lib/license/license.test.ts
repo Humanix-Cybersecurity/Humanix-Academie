@@ -145,8 +145,18 @@ describe("verifyLicenseString - rejets", () => {
   it("rejette une signature falsifiee", () => {
     const payload = makePayload();
     const str = signLicense(payload, TEST_KEYS.privateKeyPem);
-    // On corrompt le dernier caractere de la signature
-    const corrupted = str.slice(0, -1) + (str.slice(-1) === "A" ? "B" : "A");
+    // On corrompt un caractere AU MILIEU de la signature, pas le dernier.
+    // RAISON : la signature Ed25519 fait 64 bytes = 85.33 chars en base64url,
+    // donc seuls les 2 bits de poids fort du dernier char sont significatifs.
+    // Flipper le dernier char donne souvent le meme decodage (false positive
+    // -> test flaky). On flippe au milieu pour garantir un changement reel
+    // dans les bytes decodes de la signature.
+    const lastDotIdx = str.lastIndexOf(".");
+    const sigStart = lastDotIdx + 1;
+    const midIdx = sigStart + Math.floor((str.length - sigStart) / 2);
+    const corruptedChar = str[midIdx] === "A" ? "B" : "A";
+    const corrupted =
+      str.slice(0, midIdx) + corruptedChar + str.slice(midIdx + 1);
     const r = verifyLicenseString(corrupted, undefined, new Date("2026-06-01"));
     expect(r.valid).toBe(false);
     if (!r.valid) expect(r.error).toBe("bad_signature");

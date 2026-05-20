@@ -163,3 +163,4 @@ data/tts-cache/[0-9a-f][0-9a-f]/
 # Utilise pour auditer le client contre le contrat reel - NE PAS commit
 # (varie selon l'instance, peut contenir des UUIDs internes du client).
 /connectors/ciso-assistant-schema/
+.git.bak.*/
