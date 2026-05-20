@@ -1,47 +1,81 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
+//
 // POST /api/payments/webhook
 //
-// Recoit les events Payplug (subscription.*, payment.*) et synchronise
-// l'etat du Tenant en BDD. Idempotent via BillingEvent.providerEventId.
+// Webhook Mollie. Modele PULL : Mollie envoie juste un `id` (form-encoded
+// dans le body), on doit fetch la ressource via Mollie API pour avoir l'etat
+// reel. Pas de signature HMAC : la securite vient du fait que retrieve
+// requiert notre cle API secrete (un attaquant qui spam le webhook ne peut
+// rien lire).
 //
-// Sécurité :
-//  - Vérification HMAC-SHA256 de la signature Payplug
-//  - Pas d'auth user : c'est Payplug qui appelle
+// Types d'event geres :
+//   - Payment (tr_xxx) :
+//       sequenceType=first  + paid    -> creer Subscription + provisionner tenant
+//       sequenceType=first  + failed  -> log, pas de provisionnement
+//       sequenceType=recurring + paid -> mettre a jour subscription period
+//       sequenceType=recurring + failed -> marquer tenant past_due
+//   - Subscription (sub_xxx) :
+//       canceled                       -> rebascule tenant sur starter
+//
+// Idempotence : BillingEvent.providerEventId = mollieId + "_" + status pour
+// distinguer paid vs failed sur le meme payment.
+
 import { NextResponse } from "next/server";
-import { headers } from "next/headers";
 import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
 import {
-  verifyWebhookSignature,
-  PAYPLUG_SIGNATURE_HEADER,
-  tierFromPayplugPlanId,
-  getCustomer,
-  type PayplugWebhookEvent,
-} from "@/lib/payplug";
+  getPayment,
+  getSubscription,
+  getMollieCustomer,
+  createSubscriptionForCustomer,
+  mollieAmountForPlan,
+  molliePaymentIsPaid,
+  molliePaymentIsFailed,
+  mollieStatusToSubscription,
+  type MolliePaymentResource,
+} from "@/lib/mollie";
 import { provisionTenantWithAdmin } from "@/lib/tenant-provisioning";
 import { signIn } from "@/lib/auth";
+import { isPlanId } from "@/lib/plans";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
-  const h = await headers();
-  const sig = h.get(PAYPLUG_SIGNATURE_HEADER);
+  // Mollie POST body est form-encoded : id=tr_xxx (ou sub_xxx)
   const rawBody = await req.text();
+  const params = new URLSearchParams(rawBody);
+  const resourceId = params.get("id");
 
-  if (!verifyWebhookSignature(rawBody, sig)) {
-    return NextResponse.json({ error: "signature_invalide" }, { status: 400 });
+  if (!resourceId) {
+    return NextResponse.json({ error: "missing_id" }, { status: 400 });
   }
 
-  let event: PayplugWebhookEvent;
-  try {
-    event = JSON.parse(rawBody) as PayplugWebhookEvent;
-  } catch {
-    return NextResponse.json({ error: "payload_invalide" }, { status: 400 });
+  // Dispatch par prefix de l'id
+  if (resourceId.startsWith("tr_")) {
+    return handlePaymentEvent(resourceId, req);
+  }
+  if (resourceId.startsWith("sub_")) {
+    return handleSubscriptionEvent(resourceId);
+  }
+  // Inconnu (mol_, mdt_, etc.) — on retourne 200 pour eviter Mollie retry indefini
+  return NextResponse.json({ received: true, ignored: true });
+}
+
+async function handlePaymentEvent(paymentId: string, req: Request) {
+  // 1. Fetch la ressource Mollie (verifie l'authenticite implicitement)
+  const payment = await getPayment(paymentId);
+  if (!payment) {
+    // Mollie envoie parfois des webhooks pour des ressources que l'API ne
+    // retourne pas tout de suite (race condition). On retourne 200 pour ne
+    // pas declencher de retry brutal.
+    return NextResponse.json({ received: true, not_found: true });
   }
 
-  // Idempotence
+  // 2. Idempotence : on cle sur "{paymentId}_{status}" pour distinguer
+  //    les transitions (paid puis chargeback par ex.).
+  const eventKey = `${payment.id}_${payment.status}`;
   const existing = await db.billingEvent.findUnique({
-    where: { providerEventId: event.id },
+    where: { providerEventId: eventKey },
   });
   if (existing) {
     return NextResponse.json({ received: true, duplicate: true });
@@ -49,153 +83,29 @@ export async function POST(req: Request) {
 
   let status: "applied" | "ignored" | "error" = "ignored";
   let errorMessage: string | null = null;
-  let tenantId: string | null = null;
+  let tenantId: string | null = payment.metadata.tenantId ?? null;
+  // Si pas de tenantId en metadata (cas anonymous-inscription), on resout
+  // via le paymentCustomerId.
+  if ((!tenantId || tenantId === "anonymous-inscription") && payment.customerId) {
+    const t = await db.tenant.findUnique({
+      where: { paymentCustomerId: payment.customerId },
+      select: { id: true },
+    });
+    tenantId = t?.id ?? null;
+  }
 
   try {
-    const obj = event.data?.object as Record<string, unknown> | undefined;
-    const metadata =
-      (obj?.metadata as Record<string, string> | undefined) ?? {};
-    tenantId = metadata.tenantId ?? null;
-    if (!tenantId && typeof obj?.customer_id === "string") {
-      const t = await db.tenant.findUnique({
-        where: { paymentCustomerId: obj.customer_id as string },
-        select: { id: true },
-      });
-      tenantId = t?.id ?? null;
-    }
-
-    switch (event.type) {
-      case "subscription.created":
-      case "subscription.updated":
-      case "subscription.activated": {
-        const planId =
-          (obj?.subscription_plan_id as string | undefined) ??
-          (obj?.plan_id as string | undefined);
-        const newTier = planId ? tierFromPayplugPlanId(planId) : null;
-
-        // Cas Phase 3b : pas de tenant existant pour ce customer = paiement
-        // anonyme via /tarifs (Payplug Checkout sans auth préalable). On
-        // provisionne un tenant + ADMIN à la volée + magic link de bienvenue.
-        // Pré-requis : le payload contient customer_id ; on récupère l'email
-        // via Payplug API (les events webhook ne portent pas l'email).
-        if (
-          !tenantId &&
-          event.type === "subscription.created" &&
-          newTier &&
-          typeof obj?.customer_id === "string"
-        ) {
-          const customer = await getCustomer(obj.customer_id as string);
-          const email = customer?.email?.trim().toLowerCase();
-          // organization name : metadata > customer last_name > "Nouvelle entreprise"
-          const orgName =
-            metadata.organization ??
-            (customer?.last_name && customer?.first_name
-              ? `${customer.first_name} ${customer.last_name}`.trim()
-              : null) ??
-            "Nouvelle entreprise";
-          if (email) {
-            const result = await provisionTenantWithAdmin({
-              email,
-              organizationName: orgName,
-              plan: newTier,
-              adminName: customer?.first_name ?? undefined,
-              paymentCustomerId: obj.customer_id as string,
-              paymentSubscriptionId: (obj?.id as string) ?? undefined,
-              // Payplug a confirmé le paiement (subscription.created) =
-              // souscription active immédiatement, pas en trial.
-              subscriptionStatus: (obj?.status as string | undefined) ?? "active",
-              source: "payplug-webhook",
-            });
-            if (result.ok) {
-              tenantId = result.tenantId;
-              if (result.created) {
-                // Magic link de bienvenue : signIn nodemailer envoie
-                // l'email via Scaleway TEM. Le user click → atterrit sur
-                // /admin (post-login redirect par rôle, Phase 4).
-                try {
-                  await signIn("nodemailer", {
-                    email,
-                    redirect: false,
-                    redirectTo: "/post-login",
-                  });
-                } catch (e) {
-                  // Non-bloquant : l'admin peut récupérer son accès via
-                  // /connexion → magic link manuel.
-                  console.error(
-                    "[webhook] welcome magic link send failed (non-blocking)",
-                    e,
-                  );
-                }
-              }
-              status = "applied";
-            } else {
-              errorMessage = `provisioning_failed:${result.reason}`;
-              status = "error";
-            }
-          } else {
-            errorMessage = "customer_email_unresolved";
-            status = "error";
-          }
-          break;
-        }
-
-        // Cas usuel : tenant existant, on met à jour l'état billing.
-        if (tenantId) {
-          await db.tenant.update({
-            where: { id: tenantId },
-            data: {
-              paymentProvider: "payplug",
-              paymentSubscriptionId: (obj?.id as string) ?? null,
-              paymentCustomerId:
-                (obj?.customer_id as string | undefined) ?? undefined,
-              subscriptionStatus:
-                (obj?.status as string | undefined) ?? "active",
-              currentPeriodEnd: obj?.next_payment_at
-                ? new Date((obj.next_payment_at as number) * 1000)
-                : null,
-              ...(newTier ? { plan: newTier } : {}),
-            },
-          });
-          status = "applied";
-        }
-        break;
-      }
-
-      case "subscription.canceled":
-      case "subscription.cancelled": {
-        if (tenantId) {
-          // Quand un tenant resilie, on le rebascule sur Découverte
-          // (forever-free 5 sieges) au lieu de couper l'accès brutalement.
-          // Ses données restent accessibles, il peut re-souscrire plus tard.
-          await db.tenant.update({
-            where: { id: tenantId },
-            data: {
-              subscriptionStatus: "canceled",
-              plan: "starter",
-              paymentSubscriptionId: null,
-              currentPeriodEnd: null,
-              seatCount: null,
-            },
-          });
-          status = "applied";
-        }
-        break;
-      }
-
-      case "payment.failed":
-      case "subscription.payment_failed": {
-        if (tenantId) {
-          await db.tenant.update({
-            where: { id: tenantId },
-            data: { subscriptionStatus: "past_due" },
-          });
-          status = "applied";
-        }
-        break;
-      }
-
-      case "payment.paid":
-      case "subscription.payment_succeeded": {
+    if (molliePaymentIsPaid(payment.status)) {
+      if (payment.sequenceType === "first") {
+        // First payment OK : mandate cree cote Mollie, on peut maintenant
+        // creer la Subscription pour les charges recurrentes + provisionner.
+        const handled = await onFirstPaymentPaid(payment, req);
+        tenantId = handled.tenantId ?? tenantId;
+        status = handled.status;
+        errorMessage = handled.errorMessage;
+      } else {
+        // Recurring : Mollie a charge automatiquement via mandate. On met
+        // a jour la periode courante + statut active.
         if (tenantId) {
           await db.tenant.update({
             where: { id: tenantId },
@@ -203,54 +113,52 @@ export async function POST(req: Request) {
           });
           status = "applied";
         }
-        break;
       }
-
-      default:
+    } else if (molliePaymentIsFailed(payment.status)) {
+      if (payment.sequenceType === "first") {
+        // First payment failed : on log mais ne fait rien (pas de tenant
+        // a marquer past_due puisqu'on n'en a jamais cree).
         status = "ignored";
+      } else if (tenantId) {
+        await db.tenant.update({
+          where: { id: tenantId },
+          data: { subscriptionStatus: "past_due" },
+        });
+        status = "applied";
+      }
     }
   } catch (err: unknown) {
     status = "error";
     errorMessage = err instanceof Error ? err.message : String(err);
   }
 
+  // Persistence event pour idempotence + audit
   await db.billingEvent.create({
     data: {
-      provider: "payplug",
-      providerEventId: event.id,
-      type: event.type,
+      provider: "mollie",
+      providerEventId: eventKey,
+      type: `payment.${payment.status}`,
       tenantId,
-      payload: event as unknown as object,
+      payload: payment as unknown as object,
       status,
       errorMessage,
-      providerCreatedAt: new Date((event.created_at ?? 0) * 1000),
+      providerCreatedAt: new Date(payment.createdAt),
     },
   });
 
-  // AuditLog conformité
   if (status === "applied" && tenantId) {
-    const auditAction =
-      event.type.startsWith("subscription.created") ||
-      event.type === "subscription.activated"
-        ? AuditActions.BILLING_SUBSCRIPTION_CREATED
-        : event.type === "subscription.updated"
-          ? AuditActions.BILLING_SUBSCRIPTION_UPDATED
-          : event.type.startsWith("subscription.cancel")
-            ? AuditActions.BILLING_SUBSCRIPTION_CANCELED
-            : event.type === "payment.failed" ||
-                event.type === "subscription.payment_failed"
-              ? AuditActions.BILLING_PAYMENT_FAILED
-              : null;
-    if (auditAction) {
-      await auditLog({
-        action: auditAction,
-        actor: { email: "payplug-webhook" },
-        tenantId,
-        target: { type: "subscription", id: tenantId, label: event.type },
-        message: `Payplug event ${event.type}`,
-        metadata: { providerEventId: event.id },
-      });
-    }
+    await auditLog({
+      action: molliePaymentIsPaid(payment.status)
+        ? payment.sequenceType === "first"
+          ? AuditActions.BILLING_SUBSCRIPTION_CREATED
+          : AuditActions.BILLING_SUBSCRIPTION_UPDATED
+        : AuditActions.BILLING_PAYMENT_FAILED,
+      actor: { email: "mollie-webhook" },
+      tenantId,
+      target: { type: "payment", id: tenantId, label: payment.status },
+      message: `Mollie payment ${payment.status} (${payment.sequenceType})`,
+      metadata: { paymentId: payment.id, amount: payment.amount.value },
+    });
   }
 
   if (status === "error") {
@@ -259,5 +167,208 @@ export async function POST(req: Request) {
       { status: 500 },
     );
   }
+  return NextResponse.json({ received: true });
+}
+
+/**
+ * First payment paid : on cree la Subscription pour les charges recurrentes,
+ * et si tenant inexistant (cas anonymous-inscription depuis /tarifs) on
+ * provisionne tenant + ADMIN + magic link de bienvenue.
+ */
+async function onFirstPaymentPaid(
+  payment: MolliePaymentResource,
+  req: Request,
+): Promise<{
+  tenantId: string | null;
+  status: "applied" | "ignored" | "error";
+  errorMessage: string | null;
+}> {
+  const md = payment.metadata;
+  const planRaw = md.plan ?? "";
+  const billingRaw = md.billing ?? "monthly";
+  const seatsRaw = Number.parseInt(md.seats ?? "0", 10);
+  const billing: "monthly" | "annual" = billingRaw === "annual" ? "annual" : "monthly";
+
+  if (!isPlanId(planRaw) || !payment.customerId) {
+    return {
+      tenantId: null,
+      status: "error",
+      errorMessage: "metadata_invalide_ou_customer_manquant",
+    };
+  }
+
+  // 1. Creer la Subscription pour les charges recurrentes a venir
+  const pricing = mollieAmountForPlan(planRaw, billing, seatsRaw || 1);
+  // Webhook URL identique a celui de ce route handler (reutilisable).
+  const proto = req.headers.get("x-forwarded-proto") ?? "https";
+  const host = req.headers.get("host") ?? "humanix-academie.fr";
+  const webhookUrl = `${proto}://${host}/api/payments/webhook`;
+
+  let subscriptionId: string | null = null;
+  try {
+    const sub = await createSubscriptionForCustomer({
+      customerId: payment.customerId,
+      amount: pricing.amount,
+      interval: pricing.interval,
+      description: pricing.description,
+      webhookUrl,
+      metadata: {
+        tenantId: md.tenantId ?? "anonymous-inscription",
+        plan: planRaw,
+        billing,
+        seats: String(seatsRaw),
+      },
+    });
+    subscriptionId = sub.id;
+  } catch (e) {
+    return {
+      tenantId: null,
+      status: "error",
+      errorMessage: `subscription_create_failed:${e instanceof Error ? e.message : String(e)}`,
+    };
+  }
+
+  // 2. Cas tenant existant : on met juste a jour
+  let tenantId = md.tenantId && md.tenantId !== "anonymous-inscription"
+    ? md.tenantId
+    : null;
+  if (tenantId) {
+    await db.tenant.update({
+      where: { id: tenantId },
+      data: {
+        paymentProvider: "mollie",
+        paymentCustomerId: payment.customerId,
+        paymentSubscriptionId: subscriptionId,
+        subscriptionStatus: "active",
+        plan: planRaw,
+      },
+    });
+    return { tenantId, status: "applied", errorMessage: null };
+  }
+
+  // 3. Cas inscription anonyme : on provisionne tenant + ADMIN + magic link
+  const customer = payment.customerId
+    ? await getMollieCustomer(payment.customerId)
+    : null;
+  const email = customer?.email?.trim().toLowerCase();
+  const orgName = md.organization ?? customer?.name ?? "Nouvelle entreprise";
+
+  if (!email) {
+    return {
+      tenantId: null,
+      status: "error",
+      errorMessage: "customer_email_unresolved",
+    };
+  }
+
+  const result = await provisionTenantWithAdmin({
+    email,
+    organizationName: orgName,
+    plan: planRaw,
+    paymentCustomerId: payment.customerId,
+    paymentSubscriptionId: subscriptionId ?? undefined,
+    subscriptionStatus: "active",
+    source: "mollie-webhook",
+  });
+
+  if (!result.ok) {
+    return {
+      tenantId: null,
+      status: "error",
+      errorMessage: `provisioning_failed:${result.reason}`,
+    };
+  }
+
+  tenantId = result.tenantId;
+
+  if (result.created) {
+    // Magic link de bienvenue (non-bloquant si echec : l'admin peut
+    // recuperer via /connexion -> magic link manuel).
+    try {
+      await signIn("nodemailer", {
+        email,
+        redirect: false,
+        redirectTo: "/post-login",
+      });
+    } catch (e) {
+      console.error(
+        "[mollie-webhook] welcome magic link failed (non-blocking)",
+        e,
+      );
+    }
+  }
+
+  return { tenantId, status: "applied", errorMessage: null };
+}
+
+/**
+ * Subscription event : Mollie n'envoie un webhook pour subscription qu'en
+ * cas d'annulation forcee (3 echecs paiement consecutifs par ex.). On
+ * rebascule alors le tenant sur starter.
+ */
+async function handleSubscriptionEvent(subscriptionId: string) {
+  // Pour fetch une subscription Mollie il faut le customerId. On le retrouve
+  // via notre BDD (Tenant.paymentSubscriptionId).
+  const tenant = await db.tenant.findFirst({
+    where: { paymentSubscriptionId: subscriptionId },
+    select: { id: true, paymentCustomerId: true },
+  });
+
+  if (!tenant || !tenant.paymentCustomerId) {
+    return NextResponse.json({ received: true, unknown_subscription: true });
+  }
+
+  const sub = await getSubscription(tenant.paymentCustomerId, subscriptionId);
+  if (!sub) {
+    return NextResponse.json({ received: true, not_found: true });
+  }
+
+  const eventKey = `${subscriptionId}_${sub.status}`;
+  const existing = await db.billingEvent.findUnique({
+    where: { providerEventId: eventKey },
+  });
+  if (existing) {
+    return NextResponse.json({ received: true, duplicate: true });
+  }
+
+  const newStatus = mollieStatusToSubscription(sub.status);
+  await db.tenant.update({
+    where: { id: tenant.id },
+    data:
+      newStatus === "canceled"
+        ? {
+            subscriptionStatus: "canceled",
+            plan: "starter",
+            paymentSubscriptionId: null,
+            currentPeriodEnd: null,
+            seatCount: null,
+          }
+        : { subscriptionStatus: newStatus },
+  });
+
+  await db.billingEvent.create({
+    data: {
+      provider: "mollie",
+      providerEventId: eventKey,
+      type: `subscription.${sub.status}`,
+      tenantId: tenant.id,
+      payload: sub as unknown as object,
+      status: "applied",
+      errorMessage: null,
+      providerCreatedAt: new Date(),
+    },
+  });
+
+  if (newStatus === "canceled") {
+    await auditLog({
+      action: AuditActions.BILLING_SUBSCRIPTION_CANCELED,
+      actor: { email: "mollie-webhook" },
+      tenantId: tenant.id,
+      target: { type: "subscription", id: tenant.id, label: subscriptionId },
+      message: `Mollie subscription canceled`,
+      metadata: { subscriptionId },
+    });
+  }
+
   return NextResponse.json({ received: true });
 }

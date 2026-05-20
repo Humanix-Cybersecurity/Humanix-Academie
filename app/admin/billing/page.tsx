@@ -4,7 +4,7 @@
 //   - Etat du subscription (active, past_due, canceled, etc.)
 //   - Prochain renouvellement / restriction d'accès si paiement KO
 //   - CTA upgrade / downgrade / annuler
-//   - Lien portail Payplug self-service
+//   - Lien portail Mollie self-service
 //
 // Defense en profondeur : layout admin/ verifie déjà le role >= ADMIN.
 // On affiche cette page même aux ADMIN qui n'auraient pas le droit de modifier
@@ -22,7 +22,7 @@ import {
   isPaidPlan,
   type PlanId,
 } from "@/lib/plans";
-import { PAYPLUG_BUYABLE_PLANS } from "@/lib/payplug";
+import { MOLLIE_BUYABLE_PLANS } from "@/lib/mollie";
 import PlanUpgradeOptions from "@/components/PlanUpgradeOptions";
 
 export const dynamic = "force-dynamic";
@@ -149,13 +149,13 @@ export default async function BillingPage() {
             Faire évoluer ton plan
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-300">
-            Tu peux changer de palier à tout moment. Le checkout Payplug
+            Tu peux changer de palier à tout moment. Le checkout Mollie
             calcule le prorata, et ton accès passe au plan supérieur dès
             confirmation du paiement.
           </p>
           <PlanUpgradeOptions
             currentPlan={state.plan}
-            buyablePlans={PAYPLUG_BUYABLE_PLANS}
+            buyablePlans={MOLLIE_BUYABLE_PLANS}
           />
         </section>
       )}
@@ -166,7 +166,7 @@ export default async function BillingPage() {
           Actions disponibles
         </h2>
 
-        {/* Portail Payplug self-service */}
+        {/* Portail Mollie self-service */}
         {isPaidPlan(state.plan) && (
           <a
             href="/api/payments/portal"
@@ -176,7 +176,7 @@ export default async function BillingPage() {
               Gestion CB / factures
             </p>
             <h3 className="font-display text-lg font-extrabold text-gray-700 dark:text-gray-200 mb-2">
-              📄 Portail Payplug
+              📄 Portail Mollie
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-300">
               Mettre à jour ta carte, télécharger tes factures, voir l'historique.
@@ -218,7 +218,7 @@ export default async function BillingPage() {
           . On répond sous 24 h ouvrées.
         </p>
         <p className="mt-2 text-xs">
-          Tous les paiements transitent par Payplug (Paris, France) — pas de
+          Tous les paiements transitent par Mollie (Paris, France) — pas de
           dépendance américaine.
         </p>
       </section>

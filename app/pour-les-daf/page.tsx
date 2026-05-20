@@ -101,7 +101,7 @@ const PROMESSES = [
       ring: "border-indigo-200 dark:border-indigo-900/40",
       accent: "text-indigo-700 dark:text-indigo-300",
     },
-    body: "Hébergement Scaleway Paris, paiement Payplug FR, email Scaleway TEM, IA Mistral Paris. Aucune dépendance Cloud Act US par défaut. Tu réponds à ta DGCCRF / CNIL sans avoir à expliquer pourquoi tes données passent par Virginia.",
+    body: "Hébergement Scaleway Paris, paiement Mollie FR, email Scaleway TEM, IA Mistral Paris. Aucune dépendance Cloud Act US par défaut. Tu réponds à ta DGCCRF / CNIL sans avoir à expliquer pourquoi tes données passent par Virginia.",
     cta: { label: "Voir Trust Center", href: "/securite" },
   },
   {

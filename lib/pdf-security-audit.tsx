@@ -841,7 +841,7 @@ export function SecurityAuditReport() {
           et ses sous-domaines, ou la plateforme Humanix Académie, est éligible.
         </Text>
         <Text style={styles.paragraph}>
-          Hors périmètre : sites tiers (Scaleway TEM, Payplug, Mistral, etc.), social
+          Hors périmètre : sites tiers (Scaleway TEM, Mollie, Mistral, etc.), social
           engineering des employés, attaques DoS volumétriques.
         </Text>
 
