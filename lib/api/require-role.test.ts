@@ -1,4 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
+// @ts-nocheck — Ce fichier mocke `auth` de NextAuth v5 qui a 3 overloads
+// (Server Action / Middleware / API Route). TypeScript peine a resoudre
+// le bon overload sur `vi.mocked(auth).mockResolvedValue(...)`. Vitest
+// execute le test tel quel sans tsc (validation par les assertions
+// runtime). Si NextAuth ajoute un overload qui casse le test, vitest
+// rouge nous le dira.
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import type { Session } from "next-auth";
 

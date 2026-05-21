@@ -6,11 +6,76 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.1.0] — 2026-05-20 💳 Migration provider de paiement Payplug → Mollie
+
+### Changed
+
+- **Provider de paiement migré de Payplug vers Mollie**. Payplug a refusé notre demande de validation KYC, ce qui rendait le checkout self-service inopérant à 24h du launch. Migration complète vers [Mollie](https://www.mollie.com) (Pays-Bas, régulé DNB, agréé établissement de paiement UE).
+
+#### Côté code
+
+- Nouveau module `lib/mollie.ts` qui remplace `lib/payplug.ts` (548 LoC). Utilise le SDK officiel `@mollie/api-client` (MIT).
+- 5 endpoints API refactorés : `/api/payments/{checkout,checkout/start,webhook,portal,cancel}`.
+- **Modèle webhook différent** (Mollie = pull-based vs Payplug = push HMAC) : la sécurité repose sur le fait que retrieve d'une ressource requiert la clé API secrète (un attaquant qui spam le webhook ne peut rien lire).
+- **Flow recurring différent** : Mollie impose un "First Payment" (sequenceType=first) qui pose un MANDATE, puis on crée la Subscription après webhook payment.paid. Charges suivantes automatiques.
+- Webhook unique `/api/payments/webhook` qui dispatch sur les prefixes d'ID (`tr_*` = payment, `sub_*` = subscription).
+- DB schema **inchangé** (déjà provider-agnostique : `paymentProvider`, `paymentCustomerId`, `paymentSubscriptionId`). On passe simplement `"mollie"` au lieu de `"payplug"`.
+
+#### Côté env vars
+
+- ❌ Retirés : `PAYPLUG_SECRET_KEY`, `PAYPLUG_WEBHOOK_SECRET`, `PAYPLUG_PLAN_STARTER`, `PAYPLUG_PLAN_PRO`, `NEXT_PUBLIC_PAYPLUG_AVAILABLE`
+- ✅ Ajoutés : `MOLLIE_API_KEY` (test_* ou live_*), `NEXT_PUBLIC_MOLLIE_AVAILABLE`
+- Note : Mollie n'utilise pas de "plan IDs" — on calcule le montant à la volée depuis seats × prix × billing cycle (cf. `mollieAmountForPlan()`).
+
+#### Méthodes de paiement activables côté Mollie dashboard
+
+- CB / Visa / Mastercard
+- SEPA Direct Debit (recommandé Pro/Enterprise pour stabilité recurring)
+- PayPal
+- Apple Pay / Google Pay
+
+#### CSP
+
+- `proxy.ts` : `connect-src` mis à jour pour autoriser `api.mollie.com` à la place de `api.payplug.com` + `secure.payplug.com`.
+
+#### Compatibilité
+
+- Le form devis (`/demande-abonnement`) introduit en v1.0.1 reste disponible comme fallback si Mollie est temporairement indisponible (flag `NEXT_PUBLIC_MOLLIE_AVAILABLE=false`).
+
+---
+
+## [1.0.1] — 2026-05-17 🔧 Hotfix popup coordinator
+
+### Fixed
+
+- **HOTFIX critique** `PopupCoordinator` : boucle infinie de re-renders qui freezait le main thread du navigateur (clics non-cliquables, navigation impossible, sans erreur console).
+  - Cause : objet `value` du Provider non mémoïsé → `ctx` change à chaque render → cascade de `useEffect` cleanup/register → setState → re-render Provider → loop.
+  - Fix : `useMemo` pour la value + pattern subscription explicite + split du hook `usePopupSlot` en 3 effects indépendants (subscribe / setSlot / removeSlot).
+  - Cooldown 1.5s déclenché uniquement sur transitions réelles `ready` true→false (plus à chaque update).
+
+Aucun changement fonctionnel attendu pour l'utilisateur final — la mécanique interne du coordinateur a été refondue, l'UX (sequencing, cooldown, suppression sur landing) reste identique à v1.0.0.
+
+Commit : `f019f74` (PR [#562](https://github.com/Humanix-Cybersecurity/Humanix-Academie/pull/562))
+
+---
+
 ## [1.0.0] — 2026-05-21 🚀 LAUNCH OSS PUBLIC
 
 > Première version publique sous licence AGPLv3. Tous les chantiers
 > stratégiques sont en place : sécurité Zero-Trust, Pack NIS2 v2, Mode
 > Enquêteur, librairie SEO publique.
+
+### 🏆 Validation externe — Triple A+ (17 mai 2026)
+
+Trois audits publics indépendants ont validé la posture sécurité avant le launch :
+
+| Scanner | Résultat | Détails |
+|---|---|---|
+| **Mozilla Observatory** | **A+** | 110/100 · 10/10 tests passés |
+| **Security Headers** (Snyk) | **A+** | 6/6 en-têtes HTTP présents (CSP, HSTS, X-Frame, X-Content-Type, Referrer-Policy, Permissions-Policy) |
+| **Qualys SSL Labs** | **A+** | TLS 1.3 · Post-Quantum Cryptography (PQC) key exchange · HSTS long duration |
+
+Tous les rapports sont **rejouables en temps réel** depuis [`/securite/audits-externes`](https://humanix-cybersecurity.fr/securite/audits-externes) — aucune note auto-déclarée.
 
 ### Sécurité — Zero-Trust / Least Privilege (Sprint 1-4)
 
