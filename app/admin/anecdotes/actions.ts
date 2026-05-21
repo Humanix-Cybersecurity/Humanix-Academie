@@ -125,7 +125,37 @@ export async function seedAnecdotesIfEmpty() {
   }
   const count = await db.weeklyAnecdote.count();
   if (count > 0) return { ok: false, reason: "Des anecdotes existent déjà." };
-  const { ANECDOTES_SEED } = await import("@/lib/anecdotes/seed-data");
+
+  // Import dynamique en try/catch : `@/lib/anecdotes/seed-data` est un
+  // symlink vers le submodule prive `content-pro/` qui peut etre absent
+  // en build OSS pur (CI, fork sans contrat commercial). Si absent, on
+  // refuse proprement plutot que de faire planter le build Turbopack.
+  //
+  // /* turbopackIgnore: true */ : on demande a Turbopack de ne PAS
+  // analyser cet import statiquement (sinon il echoue au build quand
+  // le symlink pointe vers un fichier absent). Le bundle resoud le
+  // module au runtime via le require Node standard.
+  let ANECDOTES_SEED;
+  try {
+    const mod = await import(
+      // @ts-ignore — symlink content-pro/ absent en build OSS pur (CI),
+      // present au runtime sur les instances commerciales.
+      /* turbopackIgnore: true */ "@/lib/anecdotes/seed-data"
+    );
+    ANECDOTES_SEED = mod.ANECDOTES_SEED;
+  } catch {
+    return {
+      ok: false,
+      reason:
+        "Module commercial content-pro absent. Cette fonctionnalite n'est disponible que sur les instances avec un contrat commercial Humanix.",
+    };
+  }
+  if (!Array.isArray(ANECDOTES_SEED) || ANECDOTES_SEED.length === 0) {
+    return {
+      ok: false,
+      reason: "Catalogue d'anecdotes commercial introuvable ou vide.",
+    };
+  }
   for (const a of ANECDOTES_SEED) {
     await db.weeklyAnecdote.create({
       data: {

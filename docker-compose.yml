@@ -37,17 +37,18 @@ services:
       # vide, donc on a un default pour ne jamais bloquer le boot.
       HAPROXY_STATS_PASSWORD: "${HAPROXY_STATS_PASSWORD:-humanix-stats-change-me}"
     ports:
-      # Seul service exposé publiquement
+      # Services exposés publiquement (80 redirige -> 443)
       - "80:80"
-      # Décommenter quand un cert TLS est en place (cf. infra/haproxy/certs/)
-      # - "443:443"
+      - "443:443"
       # Stats internes — uniquement bindé sur localhost (debug local)
       - "127.0.0.1:8404:8404"
     volumes:
       - ./infra/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
       - ./infra/haproxy/errors:/etc/haproxy/errors:ro
-      # Décommenter quand un cert est dispo :
-      # - ./infra/haproxy/certs:/etc/haproxy/certs:ro
+      # Cert wildcard *.humanix-academie.fr genere par acme.sh + DNS-01 Scaleway.
+      # Format attendu : fullchain.pem + privkey.pem concatenes dans wildcard.pem.
+      # Hot-reload sur renouvellement : kill -USR2 1 (zero downtime).
+      - ./infra/haproxy/certs:/etc/haproxy/certs:ro
     networks:
       - humanix_frontend
     depends_on:

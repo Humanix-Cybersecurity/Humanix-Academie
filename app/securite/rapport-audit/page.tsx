@@ -38,7 +38,7 @@ export default function RapportAuditPage() {
           </div>
           <div>
             <p className="text-xs uppercase tracking-widest opacity-80 font-bold mb-1">
-              Édition v1.5 · 17 mai 2026 · Zero-Trust / Least Privilege
+              Édition v1.6 · 17 mai 2026 · Triple A+ audits externes
             </p>
             <h2 className="text-xl font-bold">
               Rapport complet (~15 pages)
@@ -250,6 +250,79 @@ export default function RapportAuditPage() {
             </span>
           </li>
         </ul>
+      </section>
+
+      {/* Evolutions v1.6 — Triple A+ audits externes */}
+      <section className="card mb-10 border-l-4 border-emerald-600 bg-emerald-50/40 dark:bg-emerald-950/20">
+        <p className="text-xs uppercase tracking-widest text-emerald-700 dark:text-emerald-300 font-bold mb-2">
+          🏆 Résultats audits externes · 17 mai 2026
+        </p>
+        <h2 className="text-2xl font-bold text-primary-500 mb-3">
+          Triple A+ — Mozilla, Security Headers, SSL Labs
+        </h2>
+        <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+          Validation indépendante des Sprints sécurité 1-4 par trois
+          scanners publics reconnus. <strong>Tous les rapports sont
+          rejouables en un clic</strong> depuis la page{" "}
+          <Link
+            href="/securite/audits-externes"
+            className="underline font-semibold"
+          >
+            /securite/audits-externes
+          </Link>{" "}
+          — aucune capture datée à croire sur parole.
+        </p>
+        <div className="grid sm:grid-cols-3 gap-3 mb-4">
+          <article className="rounded-xl border-2 border-emerald-300 dark:border-emerald-800 bg-white dark:bg-slate-900 p-4 text-center">
+            <p className="text-3xl mb-1" aria-hidden="true">
+              🦊
+            </p>
+            <p className="text-xs uppercase tracking-widest font-bold text-gray-600 dark:text-gray-400">
+              Mozilla Observatory
+            </p>
+            <p className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-300 my-1 tabular-nums">
+              A+
+            </p>
+            <p className="text-xs text-gray-600 dark:text-gray-400">
+              110/100 · 10/10 tests
+            </p>
+          </article>
+          <article className="rounded-xl border-2 border-emerald-300 dark:border-emerald-800 bg-white dark:bg-slate-900 p-4 text-center">
+            <p className="text-3xl mb-1" aria-hidden="true">
+              🛡️
+            </p>
+            <p className="text-xs uppercase tracking-widest font-bold text-gray-600 dark:text-gray-400">
+              Security Headers
+            </p>
+            <p className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-300 my-1 tabular-nums">
+              A+
+            </p>
+            <p className="text-xs text-gray-600 dark:text-gray-400">
+              6/6 en-têtes
+            </p>
+          </article>
+          <article className="rounded-xl border-2 border-emerald-300 dark:border-emerald-800 bg-white dark:bg-slate-900 p-4 text-center">
+            <p className="text-3xl mb-1" aria-hidden="true">
+              🔒
+            </p>
+            <p className="text-xs uppercase tracking-widest font-bold text-gray-600 dark:text-gray-400">
+              Qualys SSL Labs
+            </p>
+            <p className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-300 my-1 tabular-nums">
+              A+
+            </p>
+            <p className="text-xs text-gray-600 dark:text-gray-400">
+              TLS 1.3 · PQC
+            </p>
+          </article>
+        </div>
+        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+          <strong>Note technique notable</strong> : Qualys détecte que le
+          serveur supporte <strong>PQC (Post-Quantum Cryptography)</strong>{" "}
+          pour l&apos;échange de clé TLS — protection contre les attaques
+          quantiques à long terme. C&apos;est un standard récent que peu
+          de serveurs HTTPS exposent encore en 2026.
+        </p>
       </section>
 
       {/* Evolutions v1.5 — Sprint securite Zero-Trust */}
