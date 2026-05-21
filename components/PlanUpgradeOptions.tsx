@@ -52,6 +52,14 @@ export default function PlanUpgradeOptions({
 }: Props) {
   const [busyPlan, setBusyPlan] = useState<PlanId | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Pro requiert un nombre de sieges pour calculer le montant Mollie
+  // (3 EUR/siege/mois). Default 16 = palier minimum Pro (cf. /tarifs).
+  const [proSeats, setProSeats] = useState<number>(16);
+  // Cycle de facturation (annuel = -10 %). Default = annuel pour booster
+  // l'engagement, l'utilisateur peut switch en cliquant.
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">(
+    "annual",
+  );
 
   const upgrades = PLAN_ORDER.filter(
     (p) => PLAN_RANK[p] > PLAN_RANK[currentPlan],
@@ -77,10 +85,19 @@ export default function PlanUpgradeOptions({
     setBusyPlan(plan);
     setError(null);
     try {
+      const body: Record<string, unknown> = {
+        plan,
+        billing: billingCycle,
+      };
+      // Le plan Pro requiert un nombre de sieges (3 EUR/siege/mois).
+      // Pour les autres plans (starter forfait), l'API choisit un default.
+      if (plan === "pro") {
+        body.seats = proSeats;
+      }
       const res = await fetch("/api/payments/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan }),
+        body: JSON.stringify(body),
       });
       const data = (await res.json().catch(() => ({}))) as {
         url?: string;
@@ -147,6 +164,80 @@ export default function PlanUpgradeOptions({
                 )}
               </div>
             </div>
+
+            {/* === Configurateur (Pro uniquement) === */}
+            {isBuyable && plan === "pro" && (
+              <div className="mt-4 pt-4 border-t border-cyan-200/60 dark:border-cyan-900/40 grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    htmlFor={`seats-${plan}`}
+                    className="block text-xs font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-300 mb-1.5"
+                  >
+                    Nombre de sièges
+                  </label>
+                  <input
+                    id={`seats-${plan}`}
+                    type="number"
+                    min={16}
+                    max={250}
+                    value={proSeats}
+                    onChange={(e) =>
+                      setProSeats(
+                        Math.max(
+                          16,
+                          Math.min(250, parseInt(e.target.value, 10) || 16),
+                        ),
+                      )
+                    }
+                    className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-2 focus:border-accent-500 focus:outline-none text-sm bg-white dark:bg-slate-900"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    16 à 250 sièges · 3 €/siège/mois
+                  </p>
+                </div>
+                <div>
+                  <span className="block text-xs font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-300 mb-1.5">
+                    Cycle de paiement
+                  </span>
+                  <div className="flex gap-2">
+                    <label className="flex-1 flex items-center gap-2 cursor-pointer rounded-xl border-2 border-gray-200 dark:border-slate-700 p-2 hover:border-accent-500 has-checked:border-accent-500 has-checked:bg-accent-50 dark:has-checked:bg-accent-900/20">
+                      <input
+                        type="radio"
+                        name={`billing-${plan}`}
+                        value="monthly"
+                        checked={billingCycle === "monthly"}
+                        onChange={() => setBillingCycle("monthly")}
+                        className="accent-accent-500"
+                      />
+                      <span className="text-xs">Mensuel</span>
+                    </label>
+                    <label className="flex-1 flex items-center gap-2 cursor-pointer rounded-xl border-2 border-gray-200 dark:border-slate-700 p-2 hover:border-accent-500 has-checked:border-accent-500 has-checked:bg-accent-50 dark:has-checked:bg-accent-900/20">
+                      <input
+                        type="radio"
+                        name={`billing-${plan}`}
+                        value="annual"
+                        checked={billingCycle === "annual"}
+                        onChange={() => setBillingCycle("annual")}
+                        className="accent-accent-500"
+                      />
+                      <span className="text-xs">
+                        Annuel <span className="text-emerald-600">−10 %</span>
+                      </span>
+                    </label>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Total :{" "}
+                    <strong>
+                      {billingCycle === "annual"
+                        ? (proSeats * 3 * 12 * 0.9).toFixed(0)
+                        : (proSeats * 3).toFixed(0)}
+                      &nbsp;€ HT
+                    </strong>{" "}
+                    {billingCycle === "annual" ? "/ an" : "/ mois"}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         );
       })}
