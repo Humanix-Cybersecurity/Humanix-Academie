@@ -4,7 +4,7 @@
 //
 // CONTEXTE :
 // Humanix Academie consomme des secrets API tiers (MISTRAL_API_KEY,
-// SCALEWAY_TEM_TOKEN, WEBHOOK_SECRET, PAYPLUG_SECRET_KEY, etc.).
+// SCALEWAY_TEM_TOKEN, WEBHOOK_SECRET, MOLLIE_API_KEY, etc.).
 // Aujourd'hui ils sont tous lus via `process.env.X` dispersé dans le code.
 //
 // Ce module introduit une couche d'abstraction pour preparer le terrain
@@ -47,7 +47,7 @@
 //   import { fetchFromScalewaySecretManager } from "./my-vault";
 //
 //   setSecretResolver(async (name) => {
-//     if (name.startsWith("MISTRAL_") || name.startsWith("PAYPLUG_")) {
+//     if (name.startsWith("MISTRAL_") || name.startsWith("MOLLIE_")) {
 //       return fetchFromScalewaySecretManager(name);
 //     }
 //     return process.env[name]; // fallback env

@@ -183,19 +183,19 @@ DOMPurify (parseur HTML5, audit Cure53) avant rendu côté client. Whitelist
 stricte de balises (p, br, strong, em, a, ul/ol/li, h1-h6, code, blockquote,
 span, div). URLs `javascript:` / `data:` bloquées. Cf. `lib/ai/mistral.ts`.
 
-### `PAYPLUG_*` (paiement souverain FR — instance commerciale)
+### `MOLLIE_*` (paiement souverain FR — instance commerciale)
 
-Clés API [Payplug](https://www.payplug.com) pour la facturation cloud SaaS.
+Clés API [Mollie](https://www.mollie.com) pour la facturation cloud SaaS.
 
 ```env
-PAYPLUG_SECRET_KEY="<your-payplug-secret-key>"
-PAYPLUG_WEBHOOK_SECRET="<your-webhook-hmac-secret>"
-PAYPLUG_PLAN_STARTER="<plan-id-starter>"
-PAYPLUG_PLAN_PRO="<plan-id-pro>"
+MOLLIE_SECRET_KEY="<your-mollie-secret-key>"
+MOLLIE_WEBHOOK_SECRET="<your-webhook-hmac-secret>"
+MOLLIE_PLAN_STARTER="<plan-id-starter>"
+MOLLIE_PLAN_PRO="<plan-id-pro>"
 ```
 
-**Diagnostic au boot** : la fonction `validatePayplugSetup()` exportée
-par `lib/payplug.ts` audite la configuration et logge les warnings au
+**Diagnostic au boot** : la fonction `validateMollieSetup()` exportée
+par `lib/mollie.ts` audite la configuration et logge les warnings au
 démarrage.
 
 **Sans ces clés** : la facturation cloud est désactivée (mode self-host

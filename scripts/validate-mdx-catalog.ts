@@ -33,6 +33,18 @@ const isStrict = process.argv.includes("--strict");
 type CatalogEntry = { saisonSlug: string; episodeSlug: string };
 
 function extractCatalogEntries(): CatalogEntry[] {
+  // Le catalog est livre via le submodule prive `content-pro/`. En CI public
+  // ou sur un fork OSS sans contrat commercial, le fichier est absent : on
+  // exit gracieusement (impossible de valider quelque chose contre rien).
+  if (!fs.existsSync(CATALOG)) {
+    console.log(
+      `ℹ Catalog commercial absent (${path.relative(ROOT, CATALOG)}).`,
+    );
+    console.log(
+      "  Mode OSS pur detecte : aucun catalogue commercial a valider. Skip.",
+    );
+    return [];
+  }
   // Le catalog est du TS qu'on parse a la regex : pas envie de tirer ts-morph
   // pour un script de CI. On match les blocs "slug:" + on identifie la saison
   // courante via le dernier "slug:" de niveau saison.
@@ -93,11 +105,20 @@ function extractCatalogEntries(): CatalogEntry[] {
   return entries;
 }
 
+// Dossiers a IGNORER dans content/saisons/ : ces sous-dossiers contiennent
+// du MDX qui ne suit pas la convention "catalogue Saison/Episode" et est
+// charge par d'autres loaders dedies. Les y inclure produirait des
+// faux-positifs "orphelins" alors que le contenu est tres bien charge.
+const IGNORED_SUBDIRS = new Set([
+  "enquetes", // Mode Enqueteur — loader lib/investigations/loader.ts
+]);
+
 function listMdxFiles(): CatalogEntry[] {
   if (!fs.existsSync(CONTENT_ROOT)) return [];
   const out: CatalogEntry[] = [];
   for (const saison of fs.readdirSync(CONTENT_ROOT, { withFileTypes: true })) {
     if (!saison.isDirectory()) continue;
+    if (IGNORED_SUBDIRS.has(saison.name)) continue;
     const dir = path.join(CONTENT_ROOT, saison.name);
     for (const f of fs.readdirSync(dir)) {
       if (!f.endsWith(".mdx")) continue;
@@ -112,6 +133,14 @@ function listMdxFiles(): CatalogEntry[] {
 
 function main(): void {
   const catalog = extractCatalogEntries();
+
+  // Catalogue absent (mode OSS pur) : on a deja affiche le message
+  // d'information dans extractCatalogEntries(). On exit sans erreur.
+  if (catalog.length === 0 && !fs.existsSync(CATALOG)) {
+    console.log("✓ Aucune validation a effectuer (mode OSS, catalog absent).");
+    return;
+  }
+
   const mdx = listMdxFiles();
 
   const catalogSet = new Set(

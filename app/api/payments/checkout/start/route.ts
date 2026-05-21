@@ -3,17 +3,17 @@
 // POST /api/payments/checkout/start
 //
 // Endpoint ANONYME (pas d'auth requise) pour démarrer une souscription
-// Payplug avant la création du tenant. Workflow :
+// Mollie avant la création du tenant. Workflow :
 //
 //   1. User sur /tarifs → choisit un plan payant (starter ou pro) et
 //      remplit email + organisation sur /souscrire.
-//   2. Le form POST ici → on crée un Payplug Customer (via createCustomer)
+//   2. Le form POST ici → on crée un Mollie Customer (via createCustomer)
 //      puis une Subscription pour ce customer (createCheckoutSession).
-//      L'organisation est stockée en metadata côté Payplug.
-//   3. On renvoie l'URL Payplug (hosted_payment) → user redirige et paye.
-//   4. Payplug envoie le webhook subscription.created → handler
+//      L'organisation est stockée en metadata côté Mollie.
+//   3. On renvoie l'URL Mollie (hosted_payment) → user redirige et paye.
+//   4. Mollie envoie le webhook subscription.created → handler
 //      app/api/payments/webhook/route.ts détecte qu'aucun tenant ne
-//      correspond au customer_id, lit l'email via Payplug API,
+//      correspond au customer_id, lit l'email via Mollie API,
 //      provisionne tenant + ADMIN + magic link de bienvenue.
 //
 // Sécurité :
@@ -21,19 +21,18 @@
 //   - Rate limit par IP : 5 starts / heure
 //   - Validation des inputs côté serveur
 //   - Refuse les plans non buyable (enterprise → /demande-abonnement)
-//   - Email écrasable côté Payplug si déjà customer (Payplug gère)
+//   - Email écrasable côté Mollie si déjà customer (Mollie gère)
 //
 // Cf. docs/DEPLOYMENT_RUNBOOK.md section D pour la configuration.
 
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import {
-  isPayplugConfigured,
+  isMollieConfigured,
   isPlanBuyable,
-  PAYPLUG_BUYABLE_PLANS,
-  payplugPlanIdForTier,
+  MOLLIE_BUYABLE_PLANS,
   createCheckoutSession,
-} from "@/lib/payplug";
+} from "@/lib/mollie";
 import { isPlanId } from "@/lib/plans";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { isDevMode } from "@/lib/dev-mode";
@@ -52,10 +51,10 @@ type StartRequest = {
 };
 
 export async function POST(req: Request) {
-  // En DEV_MODE on shortcut Payplug (cf. lib/dev-mode.ts pour le rationale
+  // En DEV_MODE on shortcut Mollie (cf. lib/dev-mode.ts pour le rationale
   // et le garde-fou NODE_ENV != "production"). Sinon on exige une config
-  // Payplug opérationnelle pour ne pas créer de tenants payants fantomes.
-  if (!isPayplugConfigured() && !isDevMode()) {
+  // Mollie opérationnelle pour ne pas créer de tenants payants fantomes.
+  if (!isMollieConfigured() && !isDevMode()) {
     return NextResponse.json(
       {
         error:
@@ -109,7 +108,7 @@ export async function POST(req: Request) {
   if (!isPlanId(planRaw)) {
     return NextResponse.json({ error: "Plan invalide." }, { status: 400 });
   }
-  if (!PAYPLUG_BUYABLE_PLANS.includes(planRaw)) {
+  if (!MOLLIE_BUYABLE_PLANS.includes(planRaw)) {
     return NextResponse.json(
       {
         error:
@@ -119,9 +118,9 @@ export async function POST(req: Request) {
     );
   }
 
-  // === DEV_MODE : bypass Payplug, provisionnement immediat + auto-login ===
+  // === DEV_MODE : bypass Mollie, provisionnement immediat + auto-login ===
   // Cf. lib/dev-mode.ts. Garde-fou NODE_ENV != "production" déjà en place.
-  // On ne fait AUCUN appel Payplug : on cree directement tenant + ADMIN
+  // On ne fait AUCUN appel Mollie : on cree directement tenant + ADMIN
   // comme si subscription.created etait remonte du webhook, puis on pose
   // le cookie de session via "dev-bypass" pour que l'admin atterrisse
   // logue sur /admin.
@@ -156,7 +155,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ url: "/admin" });
   }
 
-  // === Flow Payplug standard ===
+  // === Flow Mollie standard ===
   if (!isPlanBuyable(planRaw)) {
     return NextResponse.json(
       {
@@ -167,44 +166,42 @@ export async function POST(req: Request) {
     );
   }
 
-  const planId = payplugPlanIdForTier(planRaw);
-  if (!planId) {
-    return NextResponse.json(
-      {
-        error: "Plan non configuré côté provider. Contactez le support.",
-      },
-      { status: 500 },
-    );
-  }
-
   const baseUrl =
     process.env.AUTH_URL ??
     process.env.NEXT_PUBLIC_APP_URL ??
     "http://localhost:3000";
 
+  // Mollie veut un nombre de sieges concret pour calculer le montant Pro.
+  // Si l'utilisateur n'a pas precise (Starter forfait, ou choix tardif),
+  // on assume seats=1 pour starter, et on rejette pour pro (must specify).
+  const effectiveSeats =
+    planRaw === "starter" ? 1 : seats && seats > 0 ? seats : null;
+
+  if (planRaw === "pro" && !effectiveSeats) {
+    return NextResponse.json(
+      {
+        error:
+          "Le nombre de sieges est requis pour le plan Pro. Selectionnez un effectif sur /tarifs.",
+      },
+      { status: 400 },
+    );
+  }
+
   try {
-    // Pas de tenantId à ce stade — on passe un placeholder reconnaissable
-    // par le webhook ("anonymous-inscription") et on stocke l'organisation
-    // + l'email + le plan dans metadata pour que le webhook puisse créer
-    // le bon tenant.
     const checkout = await createCheckoutSession({
       customerEmail: email,
-      planId,
+      customerName: organization,
+      plan: planRaw,
+      billing,
+      seats: effectiveSeats as number,
       tenantId: "anonymous-inscription",
-      appPlanId: planRaw,
-      successUrl: `${baseUrl}/souscrire/succès?plan=${encodeURIComponent(planRaw)}`,
+      successUrl: `${baseUrl}/souscrire/succes?plan=${encodeURIComponent(planRaw)}`,
       cancelUrl: `${baseUrl}/tarifs?canceled=1`,
+      webhookUrl: `${baseUrl}/api/payments/webhook`,
       metadata: {
         mode: "anonymous-inscription",
-        appPlanId: planRaw,
         organization,
         email,
-        seatsRequested: seats != null ? String(seats) : "",
-        // Cycle de facturation choisi par le client. Pour l'instant on n'a
-        // qu'un seul Subscription Plan Payplug par tier (cf. ENV_PLAN_BY_TIER
-        // dans lib/payplug.ts). TODO Phase 2 : mapper monthly / annual sur
-        // 2 plans Payplug distincts (PAYPLUG_PLAN_<TIER>_ANNUAL).
-        billingCycle: billing,
       },
     });
     return NextResponse.json({

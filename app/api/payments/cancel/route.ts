@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // POST /api/payments/cancel
-// Annule l'abonnement Payplug du tenant courant.
+// Annule l'abonnement Mollie du tenant courant.
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { isPayplugConfigured, cancelSubscription } from "@/lib/payplug";
+import { isMollieConfigured, cancelSubscription } from "@/lib/mollie";
 import { auditLog, AuditActions } from "@/lib/audit";
 
 export async function POST() {
-  if (!isPayplugConfigured()) {
+  if (!isMollieConfigured()) {
     return NextResponse.json(
       { error: "Le module de paiement n'est pas configuré." },
       { status: 503 },
@@ -32,12 +32,13 @@ export async function POST() {
   }
 
   const tenant = await db.tenant.findUnique({ where: { id: tenantId } });
-  if (!tenant?.paymentSubscriptionId) {
+  if (!tenant?.paymentSubscriptionId || !tenant.paymentCustomerId) {
     return NextResponse.json({ error: "Aucun abonnement actif." }, { status: 404 });
   }
 
   try {
-    await cancelSubscription(tenant.paymentSubscriptionId);
+    // Mollie requiert le customerId en plus du subscriptionId pour cancel.
+    await cancelSubscription(tenant.paymentCustomerId, tenant.paymentSubscriptionId);
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : "erreur";
     return NextResponse.json({ error: msg }, { status: 500 });

@@ -17,6 +17,8 @@ const VALID_PLANS = new Set([
   "non-decide",
 ]);
 const VALID_SIZES = new Set(["", "1-9", "10-49", "50-249", "250+"]);
+const VALID_DURATIONS = new Set(["6", "12", "24", "36"]);
+const VALID_BILLINGS = new Set(["monthly", "annual"]);
 
 function escapeHtml(s: string): string {
   return s
@@ -54,6 +56,11 @@ export async function submitDemandeAbonnement(
   const size = String(formData.get("size") ?? "").trim();
   const plan = String(formData.get("plan") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
+  // Nouveaux champs : quantification du devis
+  const seatsRaw = String(formData.get("seats") ?? "").trim();
+  const duration = String(formData.get("duration") ?? "").trim();
+  const billing = String(formData.get("billing") ?? "").trim();
+  const seats = Number.parseInt(seatsRaw, 10);
 
   if (
     !organization ||
@@ -64,7 +71,12 @@ export async function submitDemandeAbonnement(
     !VALID_PLANS.has(plan) ||
     !VALID_SIZES.has(size) ||
     role.length > 80 ||
-    message.length > 2000
+    message.length > 2000 ||
+    !Number.isFinite(seats) ||
+    seats < 1 ||
+    seats > 10000 ||
+    !VALID_DURATIONS.has(duration) ||
+    !VALID_BILLINGS.has(billing)
   ) {
     redirect("/demande-abonnement?error=invalid_input");
   }
@@ -73,8 +85,22 @@ export async function submitDemandeAbonnement(
   // Pour ajouter un AuditAction dédié, il faudra étendre l'enum
   // prisma/schema.prisma + migration. Hors scope de ce PR.
   console.log(
-    `[demande-abonnement] received plan=${plan} size=${size || "n/a"} ipHash=${hashIp(ip)}`,
+    `[demande-abonnement] received plan=${plan} seats=${seats} duration=${duration}m billing=${billing} size=${size || "n/a"} ipHash=${hashIp(ip)}`,
   );
+
+  // Calcul d'estimation (ordre de grandeur, le founder peut affiner) :
+  // Pro = 3 €/user/mois (annuel : -10 %). Enterprise = devis sur-mesure.
+  const monthlyHT =
+    plan === "pro" ? seats * 3 : plan === "starter" && seats > 5 ? 19 : 0;
+  const months = Number.parseInt(duration, 10);
+  const totalHT =
+    plan === "pro"
+      ? monthlyHT * months * (billing === "annual" ? 0.9 : 1)
+      : null;
+  const estimateLine =
+    totalHT !== null
+      ? `Estimation Pro : <strong>${totalHT.toFixed(0)} € HT</strong> sur ${duration} mois (${billing === "annual" ? "annuel -10 %" : "mensuel"})`
+      : "Estimation : devis sur-mesure (Enterprise / Starter)";
 
   // Notification email au founder
   if (isEmailConfigured()) {
@@ -90,7 +116,13 @@ export async function submitDemandeAbonnement(
       <tr><td style="padding: 6px 0; color: #64748b;">Rôle</td><td style="padding: 6px 0;">${escapeHtml(role) || "<em>non précisé</em>"}</td></tr>
       <tr><td style="padding: 6px 0; color: #64748b;">Effectif</td><td style="padding: 6px 0;">${escapeHtml(size) || "<em>non précisé</em>"}</td></tr>
       <tr><td style="padding: 6px 0; color: #64748b;">Plan envisagé</td><td style="padding: 6px 0; font-weight: 600;">${escapeHtml(plan)}</td></tr>
+      <tr><td style="padding: 6px 0; color: #64748b;">Sièges</td><td style="padding: 6px 0; font-weight: 600;">${seats}</td></tr>
+      <tr><td style="padding: 6px 0; color: #64748b;">Durée</td><td style="padding: 6px 0;">${escapeHtml(duration)} mois</td></tr>
+      <tr><td style="padding: 6px 0; color: #64748b;">Paiement</td><td style="padding: 6px 0;">${billing === "annual" ? "Annuel (-10 %)" : "Mensuel"}</td></tr>
     </table>
+    <div style="margin-top: 12px; padding: 10px 12px; background: #ecfdf5; border-left: 3px solid #10b981; border-radius: 4px; font-size: 13px; color: #065f46;">
+      ${estimateLine}
+    </div>
     ${
       message
         ? `<div style="margin-top: 16px; padding: 12px; background: #f1f5f9; border-radius: 8px; font-size: 13px; color: #334155; white-space: pre-wrap;">${escapeHtml(message)}</div>`

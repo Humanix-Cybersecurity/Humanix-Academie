@@ -29,15 +29,21 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { PricingTier } from "@/lib/pricing";
+import type { PlanId } from "@/lib/plans";
 
 type BillingCycle = "monthly" | "annual";
 
 export default function PricingCarousel({
   tiers,
   billing,
+  currentPlan,
 }: {
   tiers: PricingTier[];
   billing: BillingCycle;
+  /** Plan actuel de l'utilisateur connecte (null si anonyme). Sert a marquer
+   *  la card du plan actuel + a router les CTA d'upgrade vers /admin/billing
+   *  au lieu du flow anonyme /souscrire (qui creerait un 2eme tenant). */
+  currentPlan?: PlanId | null;
 }) {
   // Index par defaut = Starter. On le derive du tier id pour rester robuste
   // si TIERS est reordonne plus tard.
@@ -93,6 +99,7 @@ export default function PricingCarousel({
             // En mobile pas de transparence, juste un ring colore sur le selected
             opacity={1}
             scale={1}
+            currentPlan={currentPlan ?? null}
           />
         ))}
       </div>
@@ -166,6 +173,7 @@ export default function PricingCarousel({
                     onClick={() => setSelectedIdx(idx)}
                     opacity={opacity}
                     scale={scale}
+                    currentPlan={currentPlan ?? null}
                   />
                 </li>
               );
@@ -206,6 +214,7 @@ function PricingCard({
   onClick,
   opacity,
   scale,
+  currentPlan,
 }: {
   tier: PricingTier;
   billing: BillingCycle;
@@ -213,7 +222,10 @@ function PricingCard({
   onClick: () => void;
   opacity: number;
   scale: number;
+  currentPlan: PlanId | null;
 }) {
+  const isCurrentPlan = currentPlan !== null && t.id === currentPlan;
+  const isLoggedIn = currentPlan !== null;
   // Badge :
   //  - Open Source pour Community Edition
   //  - Le plus populaire pour le tier highlight (Pro)
@@ -317,7 +329,13 @@ function PricingCard({
         ))}
       </ul>
 
-      <CtaButton tier={t} billing={billing} disabled={!isSelected} />
+      <CtaButton
+        tier={t}
+        billing={billing}
+        disabled={!isSelected}
+        isCurrentPlan={isCurrentPlan}
+        isLoggedIn={isLoggedIn}
+      />
     </article>
   );
 }
@@ -326,14 +344,34 @@ function CtaButton({
   tier: t,
   billing,
   disabled,
+  isCurrentPlan,
+  isLoggedIn,
 }: {
   tier: PricingTier;
   billing: BillingCycle;
   disabled: boolean;
+  /** Si true, l'utilisateur est deja sur ce plan -> badge "Plan actuel". */
+  isCurrentPlan: boolean;
+  /** Si true, l'utilisateur est authentifie -> les CTA d'upgrade vont vers
+   *  /admin/billing au lieu du flow anonyme /souscrire. */
+  isLoggedIn: boolean;
 }) {
   const cls = `${t.highlight ? "btn-primary" : "btn-secondary"} text-sm ${
     disabled ? "pointer-events-none opacity-60" : ""
   }`;
+
+  // Cas le plus simple : la card represente le plan actuel de l'utilisateur.
+  // On affiche un badge "Plan actuel" non-cliquable au lieu du CTA habituel.
+  if (isCurrentPlan) {
+    return (
+      <span
+        className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 border-2 border-emerald-300 dark:border-emerald-700 text-sm font-bold text-emerald-800 dark:text-emerald-200"
+        aria-label="Votre plan actuel"
+      >
+        ✓ Votre plan actuel
+      </span>
+    );
+  }
 
   // Si la card n'est pas selectionnee, on rend le CTA non cliquable
   // (sinon le click sur la card l'amene au centre, mais le click sur le
@@ -370,6 +408,18 @@ function CtaButton({
     // qui rejoignent le tenant Communaute. Ne PAS confondre :
     //   - /inscription = LEARNER -> tenant humanix-community
     //   - /signup?plan=starter = ADMIN -> nouveau tenant dedie
+    //
+    // Cas utilisateur connecte sur un plan superieur : on n'affiche PAS le
+    // CTA "Creer un compte" qui serait absurde -> on cache pour eviter
+    // qu'il se transforme en piege (impossible de creer un 2e compte avec
+    // la meme adresse, et downgrader gratuitement n'a pas de sens cote UX).
+    if (isLoggedIn) {
+      return (
+        <span className="text-xs text-gray-500 italic px-3 py-2">
+          Inferieur a votre plan
+        </span>
+      );
+    }
     return (
       <Link
         href={`/signup?plan=${t.id}`}
@@ -382,14 +432,40 @@ function CtaButton({
     );
   }
   if (t.cta.type === "subscribe") {
+    // Switch temporaire : si Mollie est indisponible (validation KYC en
+    // cours par exemple), on redirige les CTA paiement vers le formulaire
+    // de demande de devis. Le founder repond sous 24h avec une facture
+    // proforma + provision le tenant manuellement.
+    //
+    // Flip via env : NEXT_PUBLIC_MOLLIE_AVAILABLE=false en prod ->
+    // les CTA basculent. Defaut "true" (Mollie ON) si non defini.
+    const paymentDown =
+      process.env.NEXT_PUBLIC_MOLLIE_AVAILABLE === "false";
+
+    // Si l'utilisateur est connecte avec un plan inferieur, l'upgrade doit
+    // passer par /admin/billing (qui contient PlanUpgradeOptions et call
+    // /api/payments/checkout protege par auth -> Mollie checkout lie au
+    // tenant existant). Sinon on cree un 2eme tenant via le flow anonyme.
+    let href: string;
+    let label: string;
+    if (paymentDown) {
+      href = `/demande-abonnement?plan=${t.id}&billing=${billing}&via=payment-pending`;
+      label = "Demander un devis";
+    } else if (isLoggedIn) {
+      href = `/admin/billing?upgrade=${t.id}&billing=${billing}#upgrade-title`;
+      label = `Passer au ${t.id === "pro" ? "Pro" : t.id}`;
+    } else {
+      href = `/souscrire?plan=${t.id}&billing=${billing}`;
+      label = t.cta.label;
+    }
     return (
       <Link
-        href={`/souscrire?plan=${t.id}&billing=${billing}`}
+        href={href}
         onClick={onClickStop}
         className={cls}
         aria-disabled={disabled}
       >
-        {t.cta.label}
+        {label}
       </Link>
     );
   }

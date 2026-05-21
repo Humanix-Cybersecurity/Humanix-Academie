@@ -506,7 +506,7 @@ export default function CGVPage() {
             newsletter Cyber-Anecdote du Lundi) ;
           </li>
           <li>
-            <strong>Payplug SA</strong> (France 🇫🇷, Paris) - prestataire
+            <strong>Mollie SA</strong> (France 🇫🇷, Paris) - prestataire
             de paiement pour les abonnements SaaS Humanix Académie. Traite
             les données de carte bancaire en mode tokenisation conforme PCI-DSS
             ; Humanix ne stocke jamais le PAN ni le CVV ;

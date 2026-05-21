@@ -1,25 +1,22 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // POST /api/payments/portal
 //
-// Payplug n'expose pas de Customer Portal hosted comme Stripe. Pour la
-// gestion d'abonnement on utilise donc :
-//  - update CB : URL Payplug dediee si dispo (fonction createPaymentMethod
-//    UpdateUrl), sinon retombe sur un message dans la page interne
-//  - annulation : POST /api/payments/cancel cote app (ci-dessous)
+// Mollie n'expose pas de Customer Portal hosted comme Stripe. Pour la
+// V1 on retourne systematiquement { fallback: true } : le front affiche
+// alors la page interne /profil/facturation avec les options "Annuler"
+// + "Mettre a jour la carte = annuler + re-souscrire".
 //
-// Cette route renvoie une URL d'update CB OU un payload {fallback: true}
-// pour indiquer au front d'afficher le portail interne.
+// TODO (post-launch) : utiliser Mollie's mandate update flow (sequenceType
+// recurring + mandateMethod) pour permettre l'update CB sans re-souscrire.
+// Cf. https://docs.mollie.com/payments/recurring#change-payment-method
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import {
-  isPayplugConfigured,
-  createPaymentMethodUpdateUrl,
-} from "@/lib/payplug";
+import { isMollieConfigured } from "@/lib/mollie";
 import { auditLog, AuditActions } from "@/lib/audit";
 
 export async function POST() {
-  if (!isPayplugConfigured()) {
+  if (!isMollieConfigured()) {
     return NextResponse.json(
       { error: "Le module de paiement n'est pas configuré." },
       { status: 503 },
@@ -53,14 +50,6 @@ export async function POST() {
     );
   }
 
-  const baseUrl =
-    process.env.AUTH_URL ?? process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-
-  const url = await createPaymentMethodUpdateUrl({
-    subscriptionId: tenant.paymentSubscriptionId,
-    successUrl: `${baseUrl}/profil/facturation`,
-  });
-
   await auditLog({
     action: AuditActions.BILLING_PORTAL_ACCESSED,
     actor: {
@@ -69,15 +58,10 @@ export async function POST() {
       role,
     },
     tenantId,
-    message: url
-      ? "Acces portail Payplug update CB"
-      : "Tentative portail Payplug - fallback interne",
+    message: "Acces portail facturation Mollie (fallback interne)",
   });
 
-  if (url) {
-    return NextResponse.json({ url });
-  }
-  // Fallback : Payplug ne supporte pas l'update CB hosted -> le front
-  // affichera la page interne qui propose l'annulation.
+  // Toujours fallback : le front affiche la page interne (annulation
+  // + re-souscription = update CB par contournement).
   return NextResponse.json({ fallback: true });
 }

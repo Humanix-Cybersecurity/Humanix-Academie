@@ -123,7 +123,7 @@ if (isDemoMode) {
 // Dev-bypass provider : utilise par les flows inscription / souscription
 // quand DEV_MODE=true (jamais en prod, cf. lib/dev-mode.ts). Permet de
 // simuler le clic sur le magic link sans envoyer d'email, et de finaliser
-// la souscription Payplug sans configurer de compte provider.
+// la souscription Mollie sans configurer de compte provider.
 //
 // SECURITE : la verification NODE_ENV != "production" est dans isDevMode().
 // Ici on rajoute un garde-fou de creation : un user ne peut etre cree par
@@ -147,7 +147,7 @@ if (isDevMode()) {
         if (!user) {
           // User inconnu : on ne cree que dans le contexte d'une inscription
           // explicite (cookie d'intention pose par /inscription). Pour une
-          // souscription Payplug en DEV_MODE, le tenant + admin sont crees
+          // souscription Mollie en DEV_MODE, le tenant + admin sont crees
           // par /api/payments/checkout/start AVANT signIn -> user existe deja.
           const intent = await readInscriptionIntent();
           if (intent !== "community-learner") {

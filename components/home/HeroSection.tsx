@@ -49,10 +49,13 @@ export default function HeroSection({ meteo }: { meteo: CyberMeteo }) {
             className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto mb-10 leading-relaxed animate-slide-up"
             style={{ animationDelay: "300ms" }}
           >
-            Pas un cours d'expert. Pas un kit anti-peur. Une habitude
-            tranquille. Pour toi, ton équipe, ta famille, ton association,
-            ta boîte — quelle que soit sa taille, et même si tu n'es pas
-            à l'aise avec l'informatique.
+            Reconnaître les arnaques numériques avant de cliquer :
+            phishing, faux SMS, QR codes piégés, faux profils.{" "}
+            <strong className="text-gray-900 dark:text-white font-semibold">
+              Un mini-épisode par semaine, en français, pour ton équipe{" "}
+              <em>et</em> ta famille.
+            </strong>{" "}
+            Sans jargon, sans peur, sans expert.
           </p>
 
           <div

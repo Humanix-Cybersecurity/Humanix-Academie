@@ -15,7 +15,7 @@
 //    en B2B). L'utilisateur peut reset son mdp s'il s'est trompe d'email.
 //  - Seul le plan "starter" (gratuit jusqu'a 5 sieges) est autorise a
 //    l'ouverture de compte self-service. Les plans payants (Pro, Enterprise)
-//    passent par /souscrire (Payplug) ou /demande-abonnement (Enterprise),
+//    passent par /souscrire (Mollie) ou /demande-abonnement (Enterprise),
 //    hors scope de ce signup gratuit.
 "use server";
 
@@ -82,7 +82,7 @@ export async function createStarterAccount(
   // pour une organisation qui souscrit un abonnement payant. Les apprenants
   // gratuits passent par /inscription (tenant Communauté, role LEARNER).
   // Les organisations qui veulent un tenant payant passent par
-  // /demande-abonnement (manuel pour l'instant, Payplug auto en Phase 3b).
+  // /demande-abonnement (manuel pour l'instant, Mollie auto en Phase 3b).
   // Cf. docs/DEPLOYMENT_RUNBOOK.md
   if (process.env.SIGNUP_ALLOW_SELF_SERVICE !== "true") {
     return {

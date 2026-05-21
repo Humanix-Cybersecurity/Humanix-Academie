@@ -16,6 +16,9 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { TIERS, ADD_ONS } from "@/lib/pricing";
+import { auth } from "@/lib/auth";
+import { db } from "@/lib/db";
+import type { PlanId } from "@/lib/plans";
 import PricingSimulator from "@/components/PricingSimulator";
 import HexBackdrop from "@/components/HexBackdrop";
 import PricingCarousel from "@/components/PricingCarousel";
@@ -135,6 +138,21 @@ export default async function TarifsPage({
   const params = await searchParams;
   const billing: BillingCycle =
     params.billing === "annual" ? "annual" : "monthly";
+
+  // Auth context : si l'utilisateur est connecte ET qu'il est ADMIN d'un
+  // tenant (i.e. il peut souscrire), on lui montre quel est son plan actuel
+  // sur les cards (badge "Plan actuel") et on adapte les CTA d'upgrade
+  // pour le diriger vers /admin/billing au lieu de /souscrire (qui est le
+  // flow anonyme et tenterait de creer un 2eme tenant).
+  const session = await auth();
+  let currentPlan: PlanId | null = null;
+  if (session?.user?.tenantId) {
+    const tenant = await db.tenant.findUnique({
+      where: { id: session.user.tenantId },
+      select: { plan: true },
+    });
+    currentPlan = (tenant?.plan as PlanId | undefined) ?? null;
+  }
 
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
@@ -314,7 +332,11 @@ export default async function TarifsPage({
           </div>
         </div>
 
-        <PricingCarousel tiers={TIERS} billing={billing} />
+        <PricingCarousel
+          tiers={TIERS}
+          billing={billing}
+          currentPlan={currentPlan}
+        />
 
         <p className="text-xs text-center text-gray-500 mt-8">
           Tous les prix sont HT. Vente directe sans essai gratuit (la{" "}
