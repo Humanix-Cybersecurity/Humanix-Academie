@@ -131,6 +131,20 @@
     letter-spacing: 0.01em;
   }
 
+  /* Tailwind v4 a change le defaut de border-color de gray-200 vers
+     currentColor. Resultat : toute classe `border` ou `border-2` sans
+     couleur explicite herite de la couleur du texte (souvent noir),
+     ce qui produit des bordures noires epaisses tres marquees.
+     On restaure le comportement v3 en repassant le defaut a gray-200
+     (cf. --color-border defini ci-dessus, qui suit aussi le dark mode
+     via les overrides .dark plus bas dans ce fichier).
+     RGAA : aucune contrainte sur les bordures decoratives, c'est
+     uniquement le texte et les indicateurs de focus qui doivent
+     respecter les seuils de contraste. */
+  *, ::before, ::after {
+    border-color: var(--color-border);
+  }
+
   *:focus-visible {
     outline: 3px solid var(--color-accent);
     outline-offset: 2px;
