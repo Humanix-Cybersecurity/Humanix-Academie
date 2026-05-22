@@ -89,10 +89,19 @@ fi
 # ----------------------------------------------------------------------------
 # Validation config
 # ----------------------------------------------------------------------------
-REQUIRED_VARS=(
-  PGHOST PGUSER PGDATABASE
-  BACKUP_AGE_RECIPIENT
-)
+# Mode "docker exec" : si BACKUP_PG_CONTAINER est defini, on execute pg_dump
+# DANS le container Postgres. Cas typique : Postgres self-host non-expose sur
+# l'host (5432/tcp interne uniquement, pas de port publish). Plus securise.
+#
+# Mode "host" : PGHOST = IP/hostname accessible depuis l'host. Necessite que
+# le port Postgres soit publish ou que la BDD soit sur un autre serveur.
+DOCKER_MODE=0
+if [[ -n "${BACKUP_PG_CONTAINER:-}" ]]; then
+  DOCKER_MODE=1
+  REQUIRED_VARS=(BACKUP_PG_CONTAINER PGUSER PGDATABASE BACKUP_AGE_RECIPIENT)
+else
+  REQUIRED_VARS=(PGHOST PGUSER PGDATABASE BACKUP_AGE_RECIPIENT)
+fi
 if [[ "$LOCAL_ONLY" -eq 0 ]]; then
   REQUIRED_VARS+=(BACKUP_FTP_HOST BACKUP_FTP_USER BACKUP_FTP_PASSWORD BACKUP_FTP_PATH)
 fi
@@ -105,8 +114,17 @@ PGPORT="${PGPORT:-5432}"
 BACKUP_RETENTION_DAYS="${BACKUP_RETENTION_DAYS:-30}"
 BACKUP_LOCAL_DIR="${BACKUP_LOCAL_DIR:-/var/backups/humanix}"
 
-# Pre-requis binaires
-for bin in pg_dump age lftp; do
+# Pre-requis binaires : pg_dump uniquement requis en mode host
+# (en mode docker, pg_dump est DANS le container Postgres deja).
+if [[ "$DOCKER_MODE" -eq 0 ]]; then
+  command -v pg_dump >/dev/null 2>&1 || fail "Binaire manquant : pg_dump" 1
+else
+  command -v docker >/dev/null 2>&1 || fail "Binaire manquant : docker" 1
+  docker ps --filter "name=^${BACKUP_PG_CONTAINER}$" --format '{{.Names}}' \
+    | grep -q "^${BACKUP_PG_CONTAINER}$" \
+    || fail "Container Postgres introuvable ou arrete : $BACKUP_PG_CONTAINER" 1
+fi
+for bin in age lftp; do
   command -v "$bin" >/dev/null 2>&1 || fail "Binaire manquant : $bin" 1
 done
 
@@ -127,18 +145,38 @@ trap cleanup EXIT
 # ----------------------------------------------------------------------------
 # 1. pg_dump (format custom, compresse natif, restorable selectif)
 # ----------------------------------------------------------------------------
-log "Etape 1/5 : pg_dump $PGDATABASE depuis $PGHOST:$PGPORT (user=$PGUSER)..."
-PGPASSWORD="${PGPASSWORD:-}" pg_dump \
-  --host="$PGHOST" \
-  --port="$PGPORT" \
-  --username="$PGUSER" \
-  --dbname="$PGDATABASE" \
-  --format=custom \
-  --compress=9 \
-  --no-owner \
-  --no-privileges \
-  --file="$DUMP_FILE" \
-  || fail "pg_dump a echoue" 2
+if [[ "$DOCKER_MODE" -eq 1 ]]; then
+  log "Etape 1/5 : pg_dump (mode docker exec) $PGDATABASE dans container $BACKUP_PG_CONTAINER (user=$PGUSER)..."
+  # On execute pg_dump DANS le container (qui a deja le binaire + accees BDD
+  # via Unix socket ou 127.0.0.1 local au container). Le stream sort sur
+  # stdout et on le redirige vers $DUMP_FILE cote host.
+  # PGPASSWORD passe via -e (jamais ecrit dans le filesystem du container).
+  docker exec -i \
+    -e PGPASSWORD="${PGPASSWORD:-}" \
+    "$BACKUP_PG_CONTAINER" \
+    pg_dump \
+      --username="$PGUSER" \
+      --dbname="$PGDATABASE" \
+      --format=custom \
+      --compress=9 \
+      --no-owner \
+      --no-privileges \
+    > "$DUMP_FILE" \
+    || fail "pg_dump (docker exec) a echoue" 2
+else
+  log "Etape 1/5 : pg_dump (mode host) $PGDATABASE depuis $PGHOST:$PGPORT (user=$PGUSER)..."
+  PGPASSWORD="${PGPASSWORD:-}" pg_dump \
+    --host="$PGHOST" \
+    --port="$PGPORT" \
+    --username="$PGUSER" \
+    --dbname="$PGDATABASE" \
+    --format=custom \
+    --compress=9 \
+    --no-owner \
+    --no-privileges \
+    --file="$DUMP_FILE" \
+    || fail "pg_dump a echoue" 2
+fi
 
 DUMP_SIZE=$(stat -c %s "$DUMP_FILE" 2>/dev/null || stat -f %z "$DUMP_FILE")
 log "Dump OK : $DUMP_FILE ($DUMP_SIZE octets)"
