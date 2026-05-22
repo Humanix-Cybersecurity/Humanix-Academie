@@ -258,12 +258,14 @@ export default function ConfidentialitePage() {
                 newsletter Cyber-Anecdote du Lundi)
               </li>
               <li>
-                <strong>Mollie SA</strong> (France 🇫🇷, Paris) - prestataire
-                de paiement pour les abonnements. Traite les données de carte
-                bancaire en mode tokenisation conforme PCI-DSS niveau 1.
-                Humanix ne reçoit jamais ton numéro de carte ni ton CVV : nous
-                stockons uniquement un identifiant chiffré (token Mollie)
-                qui permet de représenter le moyen de paiement sans pouvoir
+                <strong>Mollie B.V.</strong> (UE 🇪🇺, Amsterdam, Pays-Bas) -
+                prestataire de paiement pour les abonnements. Régulé par la
+                DNB (Banque centrale des Pays-Bas), agréé établissement de
+                paiement UE sous PSD2. Traite les données de carte bancaire
+                en mode tokenisation conforme PCI-DSS niveau 1. Humanix ne
+                reçoit jamais ton numéro de carte ni ton CVV : nous stockons
+                uniquement un identifiant chiffré (token Mollie) qui permet
+                de représenter le moyen de paiement sans pouvoir
                 l&apos;utiliser hors de notre flow.
               </li>
               <li>
