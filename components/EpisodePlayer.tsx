@@ -30,6 +30,7 @@ import HexMascotEvolved from "@/components/HexMascotEvolved";
 import LevelUpOverlay from "@/components/LevelUpOverlay";
 import TTSButton from "@/components/TTSButton";
 import FormattedText from "@/components/FormattedText";
+import MarkdownView from "@/components/MarkdownView";
 import LiveRegion from "@/components/a11y/LiveRegion";
 import HexRecap from "@/components/HexRecap";
 import { useAnnouncer } from "@/lib/a11y";
@@ -354,14 +355,22 @@ export default function EpisodePlayer(props: {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-cyan-50 via-white to-blue-50 dark:from-cyan-950/30 dark:via-slate-900 dark:to-blue-950/30 rounded-2xl p-5 mb-6 text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-line border border-cyan-200 dark:border-cyan-900/40">
+            {/* Le debrief peut etre genere par Hex (Mistral) et contenir du
+                markdown riche : gras, listes, liens, code, tables. On utilise
+                MarkdownView (meme rendu que HexChat / HexRecap) plutot que
+                FormattedText qui ne supporte que le gras — sinon les tables
+                apparaissent en markdown brut, signale par Florian 22/05/2026 :
+                "sur le debrief de hex, j'ai les tableau qui sont pas formattes".
+                whitespace-pre-line retire ici car MarkdownView gere les sauts
+                de ligne (block-level p / li / table). */}
+            <div className="bg-gradient-to-br from-cyan-50 via-white to-blue-50 dark:from-cyan-950/30 dark:via-slate-900 dark:to-blue-950/30 rounded-2xl p-5 mb-6 text-gray-700 dark:text-gray-200 leading-relaxed border border-cyan-200 dark:border-cyan-900/40">
               <div className="flex items-center justify-between mb-3">
                 <p className="text-xs uppercase tracking-[0.25em] text-accent-500 font-bold">
                   Le debrief de Hex
                 </p>
                 <TTSButton text={props.debrief} label="Ecouter le debrief" />
               </div>
-              <FormattedText text={props.debrief} />
+              <MarkdownView content={props.debrief} />
             </div>
             <button
               onClick={() => {
