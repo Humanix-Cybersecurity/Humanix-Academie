@@ -106,7 +106,7 @@ const PROMESSES = [
       ring: "border-rose-200 dark:border-rose-900/40",
       accent: "text-rose-700 dark:text-rose-300",
     },
-    body: "Données personnelles 100 % France. Email transactionnel via Scaleway TEM (PR #106), paiement via Mollie (PR #97), IA generative via Mistral Paris. Aucune donnee personnelle ne traverse le Cloud Act. Option SecNumCloud disponible en Enterprise.",
+    body: "Données personnelles hébergées en France (Scaleway Paris). Sous-traitants UE : email transactionnel via Scaleway TEM (Paris), paiement via Mollie (Amsterdam — régulé DNB), IA générative via Mistral (Paris). Aucune donnée personnelle ne traverse le Cloud Act US. Option SecNumCloud disponible en Enterprise.",
   },
   {
     emoji: "🛡",
