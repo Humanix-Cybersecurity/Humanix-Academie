@@ -310,6 +310,40 @@ export async function inviteUser(formData: FormData) {
     });
     // Auto-assignation parcours obligatoire (fire-and-forget)
     void fireAndForgetAutoAssign(created.id, ctx.tenantId);
+
+    // Envoyer le magic link d'invitation (fire-and-forget pour ne pas
+    // bloquer l'admin si Scaleway TEM est lent / down). Recupere le
+    // tenant + inviteur pour personnaliser l'email.
+    void (async () => {
+      try {
+        const [tenant, inviter] = await Promise.all([
+          db.tenant.findUnique({
+            where: { id: ctx.tenantId },
+            select: { name: true },
+          }),
+          db.user.findUnique({
+            where: { id: ctx.userId },
+            select: { name: true, email: true },
+          }),
+        ]);
+        const baseUrl =
+          process.env.NEXT_PUBLIC_BASE_URL ||
+          process.env.AUTH_URL ||
+          process.env.NEXT_PUBLIC_APP_URL ||
+          "http://localhost:3000";
+        const { sendInviteMagicLink } = await import("@/lib/invite-email");
+        await sendInviteMagicLink({
+          email,
+          recipientName: name,
+          inviterName: inviter?.name || inviter?.email || "un administrateur",
+          tenantName: tenant?.name || "votre espace Humanix",
+          baseUrl,
+        });
+      } catch (err) {
+        console.error("[invite] magic link email failed", err);
+      }
+    })();
+
     revalidatePath("/admin/utilisateurs");
     return { ok: true as const, mode: "invited" as const };
   }
