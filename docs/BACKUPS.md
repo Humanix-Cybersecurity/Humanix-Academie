@@ -145,8 +145,161 @@ sont conservés 12 mois.
 
 ---
 
+## 10. Procédure opérationnelle — self-host Docker
+
+> Section ajoutée mai 2026 quand Humanix prod est passée en Postgres
+> self-host (container Docker sur `humanix-prod-01`) avec backup off-site
+> FTPS Scaleway. Les sections précédentes décrivent la cible long-terme
+> (Postgres Managed Scaleway) — cette section décrit l'implémentation
+> opérationnelle actuelle.
+
+### 10.1 Scripts livrés
+
+- `scripts/backup-db.sh` — pg_dump + chiffrement age + upload FTPS + rotation 30j (FTPS) / 7j (local)
+- `scripts/restore-db.sh` — interactif (sélection backup → déchiffrement → confirmation explicite → pg_restore)
+
+### 10.2 Setup initial (à faire 1 fois)
+
+**1. Générer la clé age** (sur poste dev, PAS sur prod) :
+
+```bash
+brew install age            # macOS
+sudo apt install age        # Debian/Ubuntu
+
+mkdir -p ~/.config/humanix
+age-keygen -o ~/.config/humanix/backup.key
+chmod 600 ~/.config/humanix/backup.key
+cat ~/.config/humanix/backup.key
+```
+
+Tu obtiens :
+- Une ligne `# public key: age1abc...` → la **clé publique** (va dans `.env` prod)
+- Une ligne `AGE-SECRET-KEY-1XYZ...` → la **clé privée** (à protéger HORS-BANDE : papier + USB chiffrée géographiquement séparés)
+
+⚠ Si la clé privée est perdue, **tous les backups deviennent illisibles**.
+
+**2. Installer les binaires sur humanix-prod-01** :
+
+```bash
+ssh humanix@humanix-prod-01
+sudo apt update
+sudo apt install -y postgresql-client age lftp jq
+```
+
+**3. Configurer /etc/humanix/backup.env sur prod** :
+
+```bash
+sudo mkdir -p /etc/humanix
+sudo nano /etc/humanix/backup.env
+```
+
+Contenu :
+
+```ini
+# Postgres source (le container Docker expose 5432 sur l'host)
+PGHOST=127.0.0.1
+PGPORT=5432
+PGUSER=humanix
+PGPASSWORD=<password BDD prod>
+PGDATABASE=humanix_academie
+
+# Clé publique age (uniquement la ligne age1xxx, sans le commentaire)
+BACKUP_AGE_RECIPIENT=age1abc123...xyz
+
+# FTPS Scaleway Backup Space
+BACKUP_FTP_HOST=backup-paris-1.dedibox.fr   # adapter à ton serveur
+BACKUP_FTP_USER=<user FTP fourni par Scaleway>
+BACKUP_FTP_PASSWORD=<password FTP>
+BACKUP_FTP_PATH=/humanix-academie
+
+# Rétention (jours)
+BACKUP_RETENTION_DAYS=30
+BACKUP_LOCAL_DIR=/var/backups/humanix
+```
+
+```bash
+sudo chmod 600 /etc/humanix/backup.env
+sudo chown root:root /etc/humanix/backup.env
+```
+
+**4. Créer le dossier local + log** :
+
+```bash
+sudo mkdir -p /var/backups/humanix /var/log/humanix
+sudo chown humanix:humanix /var/backups/humanix /var/log/humanix
+```
+
+**5. Test manuel** :
+
+```bash
+cd /opt/humanix-prod
+./scripts/backup-db.sh --local-only        # dump + chiffrement, pas d'upload
+./scripts/backup-db.sh --dry-run            # tout sauf upload réel
+./scripts/backup-db.sh                       # full prod run
+```
+
+Vérifier le fichier produit dans `/var/backups/humanix/humanix-pg-*.dump.age`.
+
+**6. Installer le cron** :
+
+```bash
+sudo crontab -e -u humanix
+```
+
+Ajouter :
+
+```cron
+# Humanix Académie — backup BDD vers FTPS Scaleway, 02h45 UTC quotidien
+45 2 * * * /opt/humanix-prod/scripts/backup-db.sh >> /var/log/humanix/backup.log 2>&1
+```
+
+### 10.3 Vérifier que ça tourne
+
+```bash
+# Logs des 7 derniers backups
+tail -200 /var/log/humanix/backup.log
+
+# Backups locaux récents
+ls -lh /var/backups/humanix/
+
+# Backups distants
+lftp -e "
+  set ftp:ssl-force yes;
+  open -u <user>,<password> <host>;
+  cd /humanix-academie;
+  cls -lh;
+  bye
+"
+```
+
+### 10.4 Procédure de restauration d'urgence
+
+Sur la machine où tu veux restaurer (peut être prod, peut être une instance test) :
+
+```bash
+# 1. S'assurer d'avoir la clé privée age localement
+ls -l ~/.config/humanix/backup.key   # doit exister
+
+# 2. Lancer le restore interactif
+cd /opt/humanix-prod
+./scripts/restore-db.sh
+```
+
+Le script va :
+1. Lister les backups locaux + distants
+2. Te demander lequel restaurer (numéro)
+3. Télécharger si distant, déchiffrer avec ta clé privée
+4. **Te demander "OUI JE CONFIRME" en clair** avant de remplacer la BDD
+5. Lancer `pg_restore --clean --if-exists` (efface la BDD cible et restaure)
+6. Te suggérer les requêtes de validation
+
+**Drill semestriel obligatoire** (avril + octobre, cf. § 4) : faire un restore complet en environnement isolé pour valider RPO/RTO.
+
+---
+
 ## Historique des révisions
 
 | Date | Auteur | Changements |
 |---|---|---|
 | 2026-05-11 | Florian + Claude | Création du document — politique initiale |
+| 2026-05-22 | Florian + Claude | Ajout § 10 : implémentation opérationnelle self-host + scripts `backup-db.sh` / `restore-db.sh` + procédure cron host |
