@@ -117,6 +117,34 @@ Scannez pour acceder au portail :`,
   };
 
 /**
+ * Resout le `posterCallout` d'un template avec des variables de campagne
+ * injectees. Pour le moment seul QR_FAKE_WIFI accepte une personnalisation
+ * (le nom du Wi-Fi affiche).
+ *
+ * Le SSID a deja ete VALIDE en amont (cf. lib/quishing/ssid-validation.ts) :
+ * whitelist stricte, max 32 chars. On le considere donc safe a injecter
+ * dans le posterCallout sans risque XSS/injection.
+ *
+ * @param ctx.wifiSsid Si fourni et template = QR_FAKE_WIFI, remplace
+ *   "Humanix-Guest" par ce SSID dans le callout. Sinon le callout par
+ *   defaut est retourne.
+ */
+export function resolvePosterCallout(
+  templateId: QuishingTemplate,
+  ctx: { wifiSsid?: string | null } = {},
+): string {
+  const baseCallout = QUISHING_TEMPLATES[templateId].posterCallout;
+  if (templateId === "QR_FAKE_WIFI" && ctx.wifiSsid) {
+    // Le callout WIFI contient "Reseau : Humanix-Guest". On substitue
+    // par le SSID custom. Le SSID a ete valide en amont (alphanumerique
+    // strict + espace/tiret/underscore/point), donc pas de risque de
+    // template-injection (pas de syntaxe `${...}` dans la chaine).
+    return baseCallout.replace(/Humanix-Guest/, ctx.wifiSsid);
+  }
+  return baseCallout;
+}
+
+/**
  * Genere un QR code en data URL PNG (offline, souverain : utilise la
  * lib npm `qrcode` qui implemente Reed-Solomon localement, aucun appel
  * reseau).
