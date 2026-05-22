@@ -548,11 +548,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!user.email) return false;
         const existing = await db.user.findUnique({
           where: { email: user.email.toLowerCase() },
-          select: { id: true, isActive: true },
+          select: {
+            id: true,
+            isActive: true,
+            tenant: { select: { isActive: true } },
+          },
         });
         if (existing) {
           if (!existing.isActive) {
             return "/connexion?error=AccountSuspended";
+          }
+          // Si le tenant est desactive par le SUPERADMIN (paiement en retard,
+          // demande client, abus, etc.), on refuse la connexion meme pour
+          // un user actif. Message distinct pour ne pas exposer que c'est
+          // le tenant qui est suspendu (info operationnelle confidentielle).
+          if (existing.tenant && !existing.tenant.isActive) {
+            return "/connexion?error=TenantSuspended";
           }
           return true;
         }
