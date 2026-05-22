@@ -206,26 +206,48 @@ if [[ "$LOCAL_ONLY" -eq 1 ]]; then
 elif [[ "$DRY_RUN" -eq 1 ]]; then
   log "Etape 3/5 : DRY-RUN, upload simule."
 else
-  log "Etape 3/5 : upload FTPS vers $BACKUP_FTP_HOST$BACKUP_FTP_PATH..."
   REMOTE_FILE="humanix-pg-${TIMESTAMP}.dump.age"
 
-  # lftp avec FTPS Explicit (AUTH TLS, port 21 standard)
-  # ssl-force=yes : exige TLS, refuse FTP en clair
-  # ssl-protect-data : chiffre aussi le canal de donnees (pas que la commande)
-  # net:timeout : evite de bloquer indefiniment sur reseau lent
-  lftp -e "
-    set ftp:ssl-force yes;
-    set ftp:ssl-protect-data yes;
-    set ssl:verify-certificate yes;
-    set net:timeout 60;
-    set net:max-retries 3;
-    set net:reconnect-interval-base 5;
-    open -u \"$BACKUP_FTP_USER\",\"$BACKUP_FTP_PASSWORD\" \"$BACKUP_FTP_HOST\";
-    mkdir -p \"$BACKUP_FTP_PATH\";
-    cd \"$BACKUP_FTP_PATH\";
-    put -O . \"$ENCRYPTED_FILE\" -o \"$REMOTE_FILE\";
-    bye
-  " || fail "Upload FTPS a echoue" 4
+  # Mode TLS : par defaut "yes" (Explicit AUTH TLS sur port 21). Les serveurs
+  # comme Scaleway Backup Space (dedibackup-*.online.net) sont parfois en
+  # FTP en clair uniquement. Dans ce cas mettre BACKUP_FTP_TLS=no dans backup.env.
+  # SECURITE : meme en FTP clair, le contenu UPLOADED est deja chiffre age,
+  # seules les credentials FTP sont en clair (a tourner regulierement).
+  BACKUP_FTP_TLS="${BACKUP_FTP_TLS:-yes}"
+
+  if [[ "$BACKUP_FTP_TLS" == "yes" ]]; then
+    log "Etape 3/5 : upload FTPS (TLS) vers $BACKUP_FTP_HOST$BACKUP_FTP_PATH..."
+  else
+    log "Etape 3/5 : upload FTP (clair, TLS desactive) vers $BACKUP_FTP_HOST$BACKUP_FTP_PATH..."
+    log "  ⚠ Credentials envoyees en clair sur le reseau. Contenu deja chiffre age, donc safe."
+  fi
+
+  # Construction d'un script lftp dans un fichier temp pour eviter les
+  # problemes d'escape avec -e quand les variables contiennent des "
+  # ou des caracteres speciaux.
+  LFTP_SCRIPT=$(mktemp)
+  trap 'rm -f "$LFTP_SCRIPT"; cleanup' EXIT  # garde le trap precedent
+  {
+    if [[ "$BACKUP_FTP_TLS" == "yes" ]]; then
+      echo "set ftp:ssl-force yes"
+      echo "set ftp:ssl-protect-data yes"
+      echo "set ssl:verify-certificate ${BACKUP_FTP_SSL_VERIFY:-yes}"
+    else
+      echo "set ftp:ssl-force no"
+      echo "set ftp:ssl-allow no"
+    fi
+    echo "set net:timeout 60"
+    echo "set net:max-retries 3"
+    echo "set net:reconnect-interval-base 5"
+    echo "open -u $BACKUP_FTP_USER,$BACKUP_FTP_PASSWORD $BACKUP_FTP_HOST"
+    echo "mkdir -p $BACKUP_FTP_PATH"
+    echo "cd $BACKUP_FTP_PATH"
+    echo "put $ENCRYPTED_FILE -o $REMOTE_FILE"
+    echo "bye"
+  } > "$LFTP_SCRIPT"
+
+  lftp -f "$LFTP_SCRIPT" || fail "Upload FTP a echoue" 4
+  rm -f "$LFTP_SCRIPT"
 
   log "Upload OK : $BACKUP_FTP_HOST$BACKUP_FTP_PATH/$REMOTE_FILE"
 fi
@@ -238,34 +260,51 @@ if [[ "$LOCAL_ONLY" -eq 0 && "$DRY_RUN" -eq 0 ]]; then
   CUTOFF_DATE=$(date -u -d "$BACKUP_RETENTION_DAYS days ago" +%Y%m%d 2>/dev/null \
                 || date -u -v-"${BACKUP_RETENTION_DAYS}"d +%Y%m%d)
 
+  # Helper : genere un script lftp avec la bonne config TLS
+  _lftp_header() {
+    if [[ "${BACKUP_FTP_TLS:-yes}" == "yes" ]]; then
+      echo "set ftp:ssl-force yes"
+      echo "set ftp:ssl-protect-data yes"
+      echo "set ssl:verify-certificate ${BACKUP_FTP_SSL_VERIFY:-yes}"
+    else
+      echo "set ftp:ssl-force no"
+      echo "set ftp:ssl-allow no"
+    fi
+    echo "set net:timeout 30"
+  }
+
   # Liste les fichiers, parse les dates, supprime ceux plus vieux que CUTOFF
-  DELETED=$(lftp -e "
-    set ftp:ssl-force yes;
-    set ssl:verify-certificate yes;
-    set net:timeout 30;
-    open -u \"$BACKUP_FTP_USER\",\"$BACKUP_FTP_PASSWORD\" \"$BACKUP_FTP_HOST\";
-    cd \"$BACKUP_FTP_PATH\";
-    cls -1 humanix-pg-*.dump.age 2>/dev/null;
-    bye
-  " 2>/dev/null | while read -r f; do
+  LFTP_LS=$(mktemp)
+  {
+    _lftp_header
+    echo "open -u $BACKUP_FTP_USER,$BACKUP_FTP_PASSWORD $BACKUP_FTP_HOST"
+    echo "cd $BACKUP_FTP_PATH"
+    echo "cls -1 humanix-pg-*.dump.age"
+    echo "bye"
+  } > "$LFTP_LS"
+
+  DELETED=$(lftp -f "$LFTP_LS" 2>/dev/null | while read -r f; do
     # Extraction de la date : humanix-pg-YYYYMMDD-HHMMSS.dump.age
     FILE_DATE=$(echo "$f" | sed -E 's/^humanix-pg-([0-9]{8})-.*/\1/')
     if [[ "$FILE_DATE" =~ ^[0-9]{8}$ ]] && [[ "$FILE_DATE" < "$CUTOFF_DATE" ]]; then
       echo "$f"
     fi
   done)
+  rm -f "$LFTP_LS"
 
   if [[ -n "$DELETED" ]]; then
     while IFS= read -r f; do
       log "  Suppression : $f"
-      lftp -e "
-        set ftp:ssl-force yes;
-        set ssl:verify-certificate yes;
-        open -u \"$BACKUP_FTP_USER\",\"$BACKUP_FTP_PASSWORD\" \"$BACKUP_FTP_HOST\";
-        cd \"$BACKUP_FTP_PATH\";
-        rm -f \"$f\";
-        bye
-      " 2>/dev/null || log "  WARN : suppression $f a echoue (non bloquant)"
+      LFTP_RM=$(mktemp)
+      {
+        _lftp_header
+        echo "open -u $BACKUP_FTP_USER,$BACKUP_FTP_PASSWORD $BACKUP_FTP_HOST"
+        echo "cd $BACKUP_FTP_PATH"
+        echo "rm -f $f"
+        echo "bye"
+      } > "$LFTP_RM"
+      lftp -f "$LFTP_RM" 2>/dev/null || log "  WARN : suppression $f a echoue (non bloquant)"
+      rm -f "$LFTP_RM"
     done <<< "$DELETED"
   else
     log "Rotation : aucun fichier a supprimer."
