@@ -22,12 +22,14 @@
 // EXEMPLES :
 //   florian.durano@humanix-cybersecurity.fr
 //     -> fl***o@h***ity.fr
+//   florian@humanix.fr
+//     -> fl***n@h***nix.fr
 //   a@b.fr
-//     -> a***a@b.fr      (trop court pour vraiment masquer, mais on garde le format)
+//     -> a***a@b.fr      (domaine 1 char garde tel quel, rien a masquer)
 //   Florian Durano
-//     -> F*n D*o
+//     -> F***n D***o
 //   Jean-Marie Lefevre
-//     -> J*e L*e        (note: tirets perdus, on coupe sur espace)
+//     -> J***e L***e     (note: tirets perdus, on coupe sur espace)
 
 /**
  * Masque un email pour affichage operateur RGPD-aware.
@@ -89,7 +91,13 @@ export function maskName(name: string | null | undefined): string {
  */
 function maskString(s: string, head: number, tail: number): string {
   if (!s) return "";
-  if (s.length <= head + tail || s.length <= 2) {
+  // Si la string est tres courte (1 char), aucune valeur a masquer : on
+  // la garde telle quelle pour eviter un "b***b" qui est juste du bruit.
+  if (s.length === 1) return s;
+  // Si trop courte pour le pattern head+tail+separateur, on degrade
+  // sur "1er char + *** + dernier char" — preserve la confidentialite
+  // sans crasher.
+  if (s.length <= head + tail) {
     return s[0] + "***" + s[s.length - 1];
   }
   return s.slice(0, head) + "***" + (tail > 0 ? s.slice(-tail) : "");
