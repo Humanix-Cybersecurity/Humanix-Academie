@@ -157,6 +157,7 @@ async function generatePdfResponse(
   tenantId: string,
   userId: string | null,
   logoDataUrl: string | null,
+  wifiSsid: string | null,
 ): Promise<NextResponse> {
   const baseUrl =
     process.env.NEXT_PUBLIC_APP_URL ?? "https://humanix-cybersecurity.fr";
@@ -166,6 +167,7 @@ async function generatePdfResponse(
     baseUrl,
     campaignId,
     logoDataUrl,
+    wifiSsid,
   });
 
   // Audit log : qui a telecharge quoi
@@ -212,6 +214,7 @@ export async function GET(
     auth.tenantId,
     auth.session.user?.id ?? null,
     null,
+    auth.campaign.wifiSsid,
   );
 }
 
@@ -242,5 +245,6 @@ export async function POST(
     auth.tenantId,
     auth.session.user?.id ?? null,
     logoResult.dataUrl,
+    auth.campaign.wifiSsid,
   );
 }
