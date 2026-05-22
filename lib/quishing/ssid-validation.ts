@@ -93,8 +93,24 @@ export function validateWifiSsid(raw: unknown): SsidValidationResult {
     return { ok: false, reason: "wrong_type" };
   }
 
-  // Trim + collapse espaces multiples
-  const normalized = raw.trim().replace(/\s+/g, " ");
+  // Cas vide explicite (avant tout traitement).
+  if (raw.length === 0) {
+    return { ok: false, reason: "empty" };
+  }
+
+  // REJET STRICT des whitespace non-espace (\t, \n, \r, \v, \f) et chars
+  // de controle. Plutot que de les normaliser silencieusement en espace
+  // (ce qui ferait passer "Acme\nfake" en "Acme fake"), on retourne une
+  // erreur explicite. Principe "controler ce que l'on fait" — un newline
+  // dans un SSID est tres probablement un accident de copier-coller, on
+  // veut le signaler.
+  if (/[\x00-\x1F\x7F]/.test(raw)) {
+    return { ok: false, reason: "invalid_chars" };
+  }
+
+  // Trim + collapse uniquement des espaces simples (\x20). Les autres
+  // whitespace ont deja ete rejetes au-dessus.
+  const normalized = raw.trim().replace(/ +/g, " ");
 
   if (normalized.length === 0) {
     return { ok: false, reason: "empty" };

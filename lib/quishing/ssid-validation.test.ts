@@ -77,9 +77,15 @@ describe("validateWifiSsid - cas d'echec", () => {
 
   it("rejette une chaine de seulement espaces", () => {
     expect(validateWifiSsid("   ")).toEqual({ ok: false, reason: "empty" });
+  });
+
+  it("rejette tab/newline/CR comme chars de controle (pas comme empty)", () => {
+    // Politique stricte : les whitespace non-espace sont rejetes
+    // explicitement plutot que normalises en espace. Empeche d'accepter
+    // silencieusement "Acme\nfake" comme "Acme fake".
     expect(validateWifiSsid("\t\n\r")).toEqual({
       ok: false,
-      reason: "empty",
+      reason: "invalid_chars",
     });
   });
 
