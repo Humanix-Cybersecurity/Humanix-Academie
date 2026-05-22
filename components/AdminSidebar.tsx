@@ -65,6 +65,7 @@ const SECTIONS: Section[] = [
     icon: "🎓",
     items: [
       { href: "/admin/modules", label: "Modules", icon: "📚" },
+      { href: "/admin/maturite-ia", label: "Maturité IA", icon: "🧠" },
       { href: "/admin/phishing", label: "Phishing", icon: "🎣", gate: "Pro+" },
       {
         href: "/admin/challenge",

@@ -26,31 +26,73 @@ import path from "node:path";
 
 const ROOT = process.cwd();
 const CATALOG = path.join(ROOT, "prisma", "catalog-saisons.ts");
-const CONTENT_ROOT = path.join(ROOT, "content", "saisons");
+// Le catalogue DEMO OSS contient les saisons livrees dans le repo public
+// (CC BY-SA 4.0). Une instance commerciale a les deux catalogues fusionnes.
+// On valide les MDX contre l'UNION des deux pour eviter les faux orphelins.
+const CATALOG_DEMO = path.join(ROOT, "prisma", "catalog-saisons-demo.ts");
+// Sources MDX : content/saisons/ (commercial, via submodule content-pro/,
+// gitignored cote OSS) + content/saisons-demo/ (OSS public, CC BY-SA).
+const CONTENT_ROOTS = [
+  path.join(ROOT, "content", "saisons"),
+  path.join(ROOT, "content", "saisons-demo"),
+];
 
 const isStrict = process.argv.includes("--strict");
 
 type CatalogEntry = { saisonSlug: string; episodeSlug: string };
 
+function parseCatalogFile(filePath: string): CatalogEntry[] {
+  if (!fs.existsSync(filePath)) return [];
+  const src = fs.readFileSync(filePath, "utf-8");
+  return parseCatalogSource(src);
+}
+
 function extractCatalogEntries(): CatalogEntry[] {
-  // Le catalog est livre via le submodule prive `content-pro/`. En CI public
-  // ou sur un fork OSS sans contrat commercial, le fichier est absent : on
-  // exit gracieusement (impossible de valider quelque chose contre rien).
-  if (!fs.existsSync(CATALOG)) {
+  // Sources de verite : catalogue COMMERCIAL (via submodule content-pro/) +
+  // catalogue DEMO (livre dans le repo public AGPLv3). Une instance complete
+  // a les deux fusionnes ; un fork OSS pur a uniquement le demo.
+  // On accepte un MDX si son slug matche L'UN ou L'AUTRE des deux.
+  const commercialEntries = parseCatalogFile(CATALOG);
+  const demoEntries = parseCatalogFile(CATALOG_DEMO);
+
+  if (commercialEntries.length === 0 && demoEntries.length === 0) {
     console.log(
-      `ℹ Catalog commercial absent (${path.relative(ROOT, CATALOG)}).`,
+      `ℹ Aucun catalogue trouve (ni ${path.relative(ROOT, CATALOG)}, ni ${path.relative(ROOT, CATALOG_DEMO)}).`,
     );
-    console.log(
-      "  Mode OSS pur detecte : aucun catalogue commercial a valider. Skip.",
-    );
+    console.log("  Skip validation.");
     return [];
   }
+
+  if (commercialEntries.length === 0) {
+    console.log(
+      `ℹ Catalog commercial absent (${path.relative(ROOT, CATALOG)}). Validation contre demo uniquement.`,
+    );
+  }
+  if (demoEntries.length === 0) {
+    console.log(
+      `ℹ Catalog demo absent (${path.relative(ROOT, CATALOG_DEMO)}). Validation contre commercial uniquement.`,
+    );
+  }
+
+  // Union des deux : on deduplique par couple (saison, episode).
+  const seen = new Set<string>();
+  const merged: CatalogEntry[] = [];
+  for (const e of [...commercialEntries, ...demoEntries]) {
+    const key = `${e.saisonSlug}/${e.episodeSlug}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      merged.push(e);
+    }
+  }
+  return merged;
+}
+
+function parseCatalogSource(src: string): CatalogEntry[] {
   // Le catalog est du TS qu'on parse a la regex : pas envie de tirer ts-morph
   // pour un script de CI. On match les blocs "slug:" + on identifie la saison
   // courante via le dernier "slug:" de niveau saison.
   // Approche pragmatique : on lit la structure attendue (saisons -> episodes)
   // en se basant sur l'imbrication des accolades.
-  const src = fs.readFileSync(CATALOG, "utf-8");
   const entries: CatalogEntry[] = [];
 
   // Strategie simple : un saison est definie par "slug: \"X\",\n    title: \"...\""
@@ -114,18 +156,24 @@ const IGNORED_SUBDIRS = new Set([
 ]);
 
 function listMdxFiles(): CatalogEntry[] {
-  if (!fs.existsSync(CONTENT_ROOT)) return [];
   const out: CatalogEntry[] = [];
-  for (const saison of fs.readdirSync(CONTENT_ROOT, { withFileTypes: true })) {
-    if (!saison.isDirectory()) continue;
-    if (IGNORED_SUBDIRS.has(saison.name)) continue;
-    const dir = path.join(CONTENT_ROOT, saison.name);
-    for (const f of fs.readdirSync(dir)) {
-      if (!f.endsWith(".mdx")) continue;
-      out.push({
-        saisonSlug: saison.name,
-        episodeSlug: f.replace(/\.mdx$/, ""),
-      });
+  const seen = new Set<string>();
+  for (const root of CONTENT_ROOTS) {
+    if (!fs.existsSync(root)) continue;
+    for (const saison of fs.readdirSync(root, { withFileTypes: true })) {
+      if (!saison.isDirectory()) continue;
+      if (IGNORED_SUBDIRS.has(saison.name)) continue;
+      const dir = path.join(root, saison.name);
+      for (const f of fs.readdirSync(dir)) {
+        if (!f.endsWith(".mdx")) continue;
+        const key = `${saison.name}/${f}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        out.push({
+          saisonSlug: saison.name,
+          episodeSlug: f.replace(/\.mdx$/, ""),
+        });
+      }
     }
   }
   return out;
@@ -134,10 +182,10 @@ function listMdxFiles(): CatalogEntry[] {
 function main(): void {
   const catalog = extractCatalogEntries();
 
-  // Catalogue absent (mode OSS pur) : on a deja affiche le message
-  // d'information dans extractCatalogEntries(). On exit sans erreur.
-  if (catalog.length === 0 && !fs.existsSync(CATALOG)) {
-    console.log("✓ Aucune validation a effectuer (mode OSS, catalog absent).");
+  // Aucun catalogue trouve (ni commercial ni demo) : on a deja affiche le
+  // message d'information dans extractCatalogEntries(). On exit sans erreur.
+  if (catalog.length === 0) {
+    console.log("✓ Aucune validation a effectuer (aucun catalogue dispo).");
     return;
   }
 
