@@ -51,10 +51,14 @@ describe("parseCookieValue", () => {
   it("rejette un cookie avec signature trafiquée", () => {
     const v = buildCookieValue("community-learner");
     const parts = v.split(".");
-    // Inverse les 2 premiers caractères de la signature
-    const tampered = parts[3].split("");
-    [tampered[0], tampered[1]] = [tampered[1], tampered[0]];
-    const bad = `${parts[0]}.${parts[1]}.${parts[2]}.${tampered.join("")}`;
+    // Remplace le premier char par un char base64url GARANTI different.
+    // Le précédent test échangeait parts[3][0] et parts[3][1] : no-op si
+    // les 2 chars étaient identiques (proba ~1/64 en HMAC-SHA256 base64url
+    // = test flaky qui finissait par échouer un jour). On choisit un
+    // remplacement déterministe : "A" si différent, sinon "B".
+    const sig = parts[3];
+    const replacement = sig[0] === "A" ? "B" : "A";
+    const bad = `${parts[0]}.${parts[1]}.${parts[2]}.${replacement}${sig.slice(1)}`;
     expect(parseCookieValue(bad)).toBeNull();
   });
 
