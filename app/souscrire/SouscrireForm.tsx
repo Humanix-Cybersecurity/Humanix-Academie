@@ -185,8 +185,8 @@ export default function SouscrireForm({
         {devMode
           ? "🛠️ DEV_MODE : tenant + ADMIN créés sans appel Mollie."
           : billing === "annual"
-            ? "Paiement sécurisé Mollie 🇫🇷 · CB / SEPA · engagement 12 mois, prélèvement annuel."
-            : "Paiement sécurisé Mollie 🇫🇷 · CB / SEPA · résiliable à tout moment."}
+            ? "Paiement sécurisé Mollie 🇪🇺 · CB / SEPA / PayPal / Apple Pay · engagement 12 mois, prélèvement annuel."
+            : "Paiement sécurisé Mollie 🇪🇺 · CB / SEPA / PayPal / Apple Pay · résiliable à tout moment."}
       </p>
     </form>
   );

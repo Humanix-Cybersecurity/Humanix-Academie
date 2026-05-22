@@ -58,7 +58,7 @@ variables d'env correspondantes ne sont pas posées.
 
 | Sous-traitant | Localisation | Données traitées | Statut |
 |---|---|---|---|
-| Mollie (paiement) | **France** (Paris, Natixis/BPCE) | Email facturation + nom organisation | activable via `MOLLIE_SECRET_KEY` |
+| Mollie (paiement) | **UE** (Amsterdam, régulé DNB / PSD2) | Email facturation + nom organisation | activable via `MOLLIE_API_KEY` |
 | Scaleway TEM (emails transactionnels) | **France** (Paris) | Email + nom des destinataires | activable via `SCALEWAY_TEM_TOKEN` |
 | Mistral AI (IA) | **France** (Paris) | Contexte phishing/vishing/smishing (anonymisé, anti-PII en entrée) | activable via `MISTRAL_API_KEY` |
 | Postgres (BDD) | À la charge de l'opérateur self-host | Toutes les données utilisateur | requis |

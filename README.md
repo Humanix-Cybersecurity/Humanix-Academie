@@ -44,7 +44,7 @@ souverain, intégrée nativement à CISO Assistant.
 - **Connecteur natif CISO Assistant** : preuves de conformité exportées automatiquement
 - **Format OSCAL v1.1.2** (NIST) + CEF (Sentinel, Splunk, Sekoia, QRadar)
 - **API REST** + webhooks signés HMAC-SHA256
-- **Stack 100 % souveraine** : hébergement Scaleway Paris, email Scaleway TEM, paiement Mollie, IA Mistral
+- **Stack souveraine UE** : hébergement Scaleway Paris 🇫🇷, email Scaleway TEM 🇫🇷, IA Mistral Paris 🇫🇷, paiement Mollie Amsterdam 🇪🇺 (régulé DNB, PSD2 UE) — aucune dépendance Cloud Act US
 - **Sécurité défense en profondeur** : CSP strict, middleware edge sur `/admin`, DOMPurify, HSTS preload, anti-SSRF whitelist, anti-PII sur prompts, scrypt + AES-256-GCM
 - **Conformité multi-cadre** : RGPD · NIS2 · **Loi Sapin II Art. 17** · ISO 27001:2022 · ANSSI HG · NIST CSF, mapping technique versionné dans [`lib/mapping-grc.ts`](./lib/mapping-grc.ts)
 - **Mode démo** + **Mode dev** (bypass Mollie/email) pour tester sans setup externe

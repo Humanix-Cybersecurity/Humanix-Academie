@@ -218,8 +218,8 @@ export default async function BillingPage() {
           . On répond sous 24 h ouvrées.
         </p>
         <p className="mt-2 text-xs">
-          Tous les paiements transitent par Mollie (Paris, France) — pas de
-          dépendance américaine.
+          Tous les paiements transitent par Mollie (Amsterdam, UE — régulé
+          DNB) — pas de dépendance Cloud Act US.
         </p>
       </section>
     </main>
