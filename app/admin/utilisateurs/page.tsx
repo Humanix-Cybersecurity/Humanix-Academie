@@ -8,6 +8,7 @@
 
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import type { Role } from "@prisma/client";
 import UsersTable from "@/components/UsersTable";
 import InviteUserForm from "@/components/InviteUserForm";
 import CsvImporter from "@/components/CsvImporter";
@@ -24,6 +25,7 @@ export default async function AdminUsersPage() {
   const session = await auth();
   const tenantId = session!.user.tenantId as string;
   const currentUserId = session!.user.id as string;
+  const currentUserRole = session!.user.role as Role;
 
   const [users, allGroups] = await Promise.all([
     db.user.findMany({
@@ -125,7 +127,11 @@ export default async function AdminUsersPage() {
             title="Tous mes collaborateurs"
             description={`${enriched.length} utilisateur${enriched.length > 1 ? "s" : ""} dans votre organisation`}
           >
-            <UsersTable users={enriched} allGroups={allGroups} />
+            <UsersTable
+              users={enriched}
+              allGroups={allGroups}
+              currentUserRole={currentUserRole}
+            />
           </AdminSection>
 
           <div className="space-y-4 min-w-0">

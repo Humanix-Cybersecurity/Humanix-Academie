@@ -6,9 +6,27 @@
 //   - Colonnes : nom/email, role (avec RSSI), service, groupes, 2FA, statut.
 //   - Actions : suspendre, supprimer, forcer 2FA, deverrouiller, reset 2FA,
 //               assigner aux groupes (drawer).
+//
+// REFONTE 2026-05-22 (Florian) :
+//
+//   1. HIERARCHIE RBAC cote UI : on ne montre la dropdown de role que si
+//      l'utilisateur courant a un rang strictement superieur a la cible. Les
+//      options sont aussi filtrees (un ADMIN ne voit pas SUPERADMIN dans
+//      les choix). Cf. lib/role-hierarchy.ts pour la logique cote server.
+//
+//      Avant : un MANAGER voyait la dropdown role sur un ADMIN et cliquait
+//      → server throw forbidden → alert "Action impossible" (mauvaise UX +
+//      illusion de pouvoir).
+//
+//   2. MENU ACTIONS via REACT PORTAL : avant, le menu absolute etait dans
+//      un <td> au sein d'un parent overflow-x-auto → le dropdown etait
+//      TRONQUE (signale "UX en cacahuette"). On utilise createPortal +
+//      position calculee au click (getBoundingClientRect) pour le rendre
+//      hors de la table, z-50, sans contrainte de clipping.
 // =============================================================================
 
-import { useTransition, useState } from "react";
+import { useTransition, useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import type { Role } from "@prisma/client";
 import {
   toggleUserActive,
@@ -19,6 +37,10 @@ import {
   adminResetUserMfa,
   setUserGroups,
 } from "@/app/admin/actions";
+import {
+  canModifyRoleOf,
+  getAssignableRoles,
+} from "@/lib/role-hierarchy";
 
 type GroupOpt = {
   id: string;
@@ -59,10 +81,18 @@ const ROLE_LABEL: Record<string, { label: string; emoji: string }> = {
 export default function UsersTable({
   users,
   allGroups,
+  currentUserRole,
 }: {
   users: U[];
   allGroups: GroupOpt[];
+  /**
+   * Role de l'utilisateur actuellement connecte. Utilise pour filtrer
+   * les options de role assignable + cacher les actions sur les users
+   * de rang >= au sien. Cf. lib/role-hierarchy.ts.
+   */
+  currentUserRole: Role;
 }) {
+  const assignableRoles = getAssignableRoles(currentUserRole);
   const [pending, startTransition] = useTransition();
   const [busy, setBusy] = useState<string | null>(null);
   const [filter, setFilter] = useState("");
@@ -281,19 +311,47 @@ export default function UsersTable({
                   </td>
 
                   <td className="py-3 pr-3">
-                    <select
-                      value={u.role}
-                      onChange={(e) => onChangeRole(u, e.target.value as Role)}
-                      disabled={pending || u.isCurrent}
-                      aria-label={`Rôle de ${u.name}`}
-                      className="text-xs border border-gray-200 dark:border-slate-700 rounded-lg px-2 py-1 disabled:opacity-50 bg-white dark:bg-slate-950"
-                    >
-                      {Object.entries(ROLE_LABEL).map(([k, v]) => (
-                        <option key={k} value={k}>
-                          {v.emoji} {v.label}
-                        </option>
-                      ))}
-                    </select>
+                    {canModifyRoleOf(currentUserRole, u.role) &&
+                    !u.isCurrent ? (
+                      <select
+                        value={u.role}
+                        onChange={(e) =>
+                          onChangeRole(u, e.target.value as Role)
+                        }
+                        disabled={pending}
+                        aria-label={`Rôle de ${u.name}`}
+                        className="text-xs border border-gray-200 dark:border-slate-700 rounded-lg px-2 py-1 disabled:opacity-50 bg-white dark:bg-slate-950"
+                      >
+                        {assignableRoles.map((k) => (
+                          <option key={k} value={k}>
+                            {ROLE_LABEL[k].emoji} {ROLE_LABEL[k].label}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      // Lecture seule : soit la cible est de rang >= au notre
+                      // (un ADMIN ne peut pas modifier un autre ADMIN), soit
+                      // c'est notre propre compte (auto-modification interdite).
+                      <span
+                        className="inline-flex items-center gap-1 text-xs bg-gray-100 dark:bg-slate-800 text-gray-700 dark:text-gray-300 px-2 py-1 rounded-lg font-medium"
+                        title={
+                          u.isCurrent
+                            ? "Tu ne peux pas modifier ton propre rôle"
+                            : `Tu n'as pas les droits pour modifier un ${ROLE_LABEL[u.role].label}`
+                        }
+                      >
+                        <span aria-hidden="true">
+                          {ROLE_LABEL[u.role].emoji}
+                        </span>
+                        <span>{ROLE_LABEL[u.role].label}</span>
+                        <span
+                          aria-hidden="true"
+                          className="text-gray-400 dark:text-gray-500 ml-1"
+                        >
+                          🔒
+                        </span>
+                      </span>
+                    )}
                   </td>
 
                   <td className="py-3 pr-3 max-w-[200px]">
@@ -396,6 +454,9 @@ export default function UsersTable({
                     <UserMenu
                       u={u}
                       pending={pending}
+                      canAct={
+                        canModifyRoleOf(currentUserRole, u.role) && !u.isCurrent
+                      }
                       onToggleActive={() => onToggleActive(u)}
                       onForceMfa={() => onForceMfa(u)}
                       onUnlock={() => onUnlock(u)}
@@ -428,9 +489,23 @@ export default function UsersTable({
   );
 }
 
+/**
+ * Menu Actions par-ligne, rendu via React Portal pour echapper au
+ * overflow-x-auto du wrapper de table (sinon le dropdown etait tronque a
+ * droite, signale "UX en cacahuette" par Florian le 22/05/2026).
+ *
+ * Position calculee au click via getBoundingClientRect du bouton trigger,
+ * ancree top-right du bouton. z-50 pour passer au-dessus des autres
+ * elements de la page.
+ *
+ * Si `canAct=false` (hierarchie RBAC bloque ou auto-modification), on
+ * affiche un bouton disabled avec un tooltip explicatif plutot que de
+ * cacher completement — l'admin comprend pourquoi il ne peut pas agir.
+ */
 function UserMenu({
   u,
   pending,
+  canAct,
   onToggleActive,
   onForceMfa,
   onUnlock,
@@ -439,6 +514,7 @@ function UserMenu({
 }: {
   u: U;
   pending: boolean;
+  canAct: boolean;
   onToggleActive: () => void;
   onForceMfa: () => void;
   onUnlock: () => void;
@@ -446,78 +522,139 @@ function UserMenu({
   onDelete: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState<{ top: number; right: number } | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  // createPortal n'existe pas cote SSR — on attend le mount client.
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Calcul de la position au moment de l'ouverture. On utilise window
+  // coords (position: fixed) pour ne pas dependre du contexte d'overflow.
+  // Recompute au scroll/resize pour suivre le bouton.
+  useEffect(() => {
+    if (!open) return;
+    const updatePosition = () => {
+      const rect = btnRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      setPos({
+        top: rect.bottom + 4, // 4px sous le bouton
+        right: window.innerWidth - rect.right, // ancre par la droite
+      });
+    };
+    updatePosition();
+    window.addEventListener("scroll", updatePosition, true);
+    window.addEventListener("resize", updatePosition);
+    return () => {
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, [open]);
+
+  // Fermeture au clavier (Escape).
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const disabledTitle = !canAct
+    ? u.isCurrent
+      ? "Tu ne peux pas modifier ton propre compte"
+      : `Tu n'as pas les droits pour modifier un ${ROLE_LABEL[u.role].label}`
+    : undefined;
+
   return (
-    <div className="relative inline-block text-left">
+    <>
       <button
+        ref={btnRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
-        disabled={pending}
-        className="text-xs px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 dark:hover:bg-slate-800 border border-gray-200 dark:border-slate-700"
+        disabled={pending || !canAct}
+        title={disabledTitle}
+        className="text-xs px-2 py-1 rounded-md text-gray-600 hover:bg-gray-100 dark:hover:bg-slate-800 border border-gray-200 dark:border-slate-700 disabled:opacity-40 disabled:cursor-not-allowed"
         aria-haspopup="true"
         aria-expanded={open}
+        aria-label={
+          canAct
+            ? `Actions sur ${u.name}`
+            : `Actions non disponibles sur ${u.name}`
+        }
       >
         Actions ⌄
       </button>
-      {open && (
-        <>
-          <div
-            className="fixed inset-0 z-10"
-            onClick={() => setOpen(false)}
-            aria-hidden="true"
-          />
-          <div className="absolute right-0 mt-1 w-56 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg shadow-lg z-20 text-sm overflow-hidden">
-            <MenuItem
-              onClick={() => {
-                setOpen(false);
-                onToggleActive();
-              }}
-              disabled={u.isCurrent}
+      {open &&
+        mounted &&
+        pos &&
+        createPortal(
+          <>
+            {/* Backdrop transparent pour fermer au clic externe */}
+            <div
+              className="fixed inset-0 z-40"
+              onClick={() => setOpen(false)}
+              aria-hidden="true"
+            />
+            <div
+              role="menu"
+              style={{ top: pos.top, right: pos.right }}
+              className="fixed w-56 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg shadow-lg z-50 text-sm overflow-hidden"
             >
-              {u.isActive ? "⏸ Suspendre" : "▶ Réactiver"}
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                setOpen(false);
-                onForceMfa();
-              }}
-            >
-              {u.mfaForced ? "🛡️ Ne plus forcer la 2FA" : "🛡️ Forcer la 2FA"}
-            </MenuItem>
-            {u.isLocked && (
               <MenuItem
                 onClick={() => {
                   setOpen(false);
-                  onUnlock();
+                  onToggleActive();
                 }}
               >
-                🔓 Déverrouiller
+                {u.isActive ? "⏸ Suspendre" : "▶ Réactiver"}
               </MenuItem>
-            )}
-            {u.mfaEnabled && (
               <MenuItem
                 onClick={() => {
                   setOpen(false);
-                  onResetMfa();
+                  onForceMfa();
                 }}
               >
-                🔄 Réinitialiser la 2FA
+                {u.mfaForced ? "🛡️ Ne plus forcer la 2FA" : "🛡️ Forcer la 2FA"}
               </MenuItem>
-            )}
-            <div className="border-t border-gray-100 dark:border-slate-800" />
-            <MenuItem
-              onClick={() => {
-                setOpen(false);
-                onDelete();
-              }}
-              disabled={u.isCurrent}
-              danger
-            >
-              🗑 Supprimer (RGPD)
-            </MenuItem>
-          </div>
-        </>
-      )}
-    </div>
+              {u.isLocked && (
+                <MenuItem
+                  onClick={() => {
+                    setOpen(false);
+                    onUnlock();
+                  }}
+                >
+                  🔓 Déverrouiller
+                </MenuItem>
+              )}
+              {u.mfaEnabled && (
+                <MenuItem
+                  onClick={() => {
+                    setOpen(false);
+                    onResetMfa();
+                  }}
+                >
+                  🔄 Réinitialiser la 2FA
+                </MenuItem>
+              )}
+              <div className="border-t border-gray-100 dark:border-slate-800" />
+              <MenuItem
+                onClick={() => {
+                  setOpen(false);
+                  onDelete();
+                }}
+                danger
+              >
+                🗑 Supprimer (RGPD)
+              </MenuItem>
+            </div>
+          </>,
+          document.body,
+        )}
+    </>
   );
 }
 
