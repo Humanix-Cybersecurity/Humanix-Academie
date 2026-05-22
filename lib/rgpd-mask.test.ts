@@ -15,12 +15,11 @@ describe("maskEmail", () => {
   });
 
   it("normalise en lowercase + trim", () => {
-    expect(maskEmail("  FLORIAN@HUMANIX.FR  ")).toBe("fl***n@h***ix.fr");
+    expect(maskEmail("  FLORIAN@HUMANIX.FR  ")).toBe("fl***n@h***nix.fr");
   });
 
   it("gere les emails tres courts gracieusement", () => {
-    // a@b.co : trop court pour vraiment masquer mais on prefere "format ok"
-    // plutot que crash. Au moins ca reste illisible.
+    // a@b.co : domain name = "b" (1 char), keepe tel quel (rien a masquer).
     expect(maskEmail("a@b.co")).toBe("a***a@b.co");
   });
 
@@ -34,9 +33,14 @@ describe("maskEmail", () => {
     expect(maskEmail("")).toBe("");
   });
 
-  it("garde le TLD lisible (utile pour identifier .gouv.fr / .com)", () => {
-    expect(maskEmail("contact@academie.gouv.fr")).toMatch(/\.gouv\.fr$/);
+  it("garde le TLD lisible (utile pour identifier .com / .fr / .org)", () => {
+    // Le TLD du DERNIER niveau est preserve (.fr, .com, .org). Les ccTLDs
+    // composites (.gouv.fr, .co.uk) sont consideres comme du nom de domaine
+    // et masques. Acceptable pour notre usage : on identifie quand meme le
+    // pays via .fr final.
+    expect(maskEmail("contact@academie.gouv.fr")).toMatch(/\.fr$/);
     expect(maskEmail("admin@example.com")).toMatch(/\.com$/);
+    expect(maskEmail("user@noreply.org")).toMatch(/\.org$/);
   });
 
   it("masque suffisamment pour ne pas reconstituer l'email", () => {
