@@ -94,10 +94,14 @@ async function streamMistral(
     throw new Error("HEX_AI_PROVIDER=mistral but MISTRAL_API_KEY is not set");
   }
 
+  // ATTENTION : on utilise `||` et non `??` pour fallback aussi sur les
+  // strings VIDES. Avec ?? (nullish coalescing), une var d'env definie a ""
+  // serait retenue et Mistral renverrait 400 "Missing model parameter".
+  // Cas reel observe en prod 2026-05-22 : MISTRAL_MODEL="" dans le .env.
   const model =
-    process.env.HEX_AI_MODEL ??
-    process.env.MISTRAL_MODEL ??
-    "mistral-small-latest";
+    (process.env.HEX_AI_MODEL?.trim() ||
+      process.env.MISTRAL_MODEL?.trim() ||
+      "mistral-small-latest");
 
   const res = await fetch(MISTRAL_API, {
     method: "POST",
@@ -136,9 +140,9 @@ async function streamOllama(
   opts: ChatStreamOptions,
 ): Promise<ReadableStream<string>> {
   const base = (
-    process.env.OLLAMA_BASE_URL ?? "http://localhost:11434"
+    process.env.OLLAMA_BASE_URL?.trim() || "http://localhost:11434"
   ).replace(/\/$/, "");
-  const model = process.env.HEX_AI_MODEL ?? "mistral:7b-instruct";
+  const model = process.env.HEX_AI_MODEL?.trim() || "mistral:7b-instruct";
 
   const res = await fetch(`${base}/api/chat`, {
     method: "POST",
