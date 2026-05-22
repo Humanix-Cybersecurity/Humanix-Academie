@@ -125,6 +125,54 @@ function SignupInner() {
           </label>
         </div>
 
+        {/* === Filtre intent : qualifie le signup pour eviter la pollution
+            de tenants par des employes / particuliers qui devraient
+            passer par /inscription. Les options "employee" et "individual"
+            redirigent server-side vers /inscription. */}
+        <fieldset>
+          <legend className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2">
+            Je m&apos;inscris en tant que{" "}
+            <span className="text-warn" aria-hidden="true">*</span>
+          </legend>
+          <div className="grid sm:grid-cols-2 gap-2">
+            {[
+              { value: "dsi", label: "DSI / RSSI / Responsable IT" },
+              { value: "direction", label: "Direction / Dirigeant·e" },
+              { value: "drh-daf", label: "DRH / DAF / Manager" },
+              { value: "autre-cadre", label: "Autre fonction d'encadrement" },
+              {
+                value: "employee",
+                label: "Employé·e curieux·se (pas décideur)",
+              },
+              { value: "individual", label: "Particulier ou famille" },
+            ].map((opt) => (
+              <label
+                key={opt.value}
+                className="flex items-center gap-2 cursor-pointer rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 hover:border-accent-500 has-checked:border-accent-500 has-checked:bg-accent-50 dark:has-checked:bg-accent-900/20 transition"
+              >
+                <input
+                  type="radio"
+                  name="signupRole"
+                  value={opt.value}
+                  required
+                  className="accent-accent-500"
+                />
+                <span className="text-sm">{opt.label}</span>
+              </label>
+            ))}
+          </div>
+          <p className="text-xs text-gray-500 mt-2">
+            Les employé·es et particuliers seront redirigés vers{" "}
+            <Link
+              href="/inscription"
+              className="text-accent-700 underline hover:text-accent-600"
+            >
+              /inscription
+            </Link>{" "}
+            (apprentissage gratuit, pas de tenant à gérer).
+          </p>
+        </fieldset>
+
         <div>
           <label
             htmlFor="signup-org"

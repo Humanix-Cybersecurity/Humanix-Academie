@@ -80,7 +80,7 @@ export const metadata = {
 export default function InscriptionPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: InscriptionErrorCode }>;
+  searchParams: Promise<{ error?: InscriptionErrorCode; via?: string }>;
 }) {
   if (isDemoMode) {
     // En démo, on n'ouvre pas l'inscription publique : les apprenants
@@ -93,13 +93,16 @@ export default function InscriptionPage({
 async function InscriptionInner({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: InscriptionErrorCode }>;
+  searchParams: Promise<{ error?: InscriptionErrorCode; via?: string }>;
 }) {
   const sso = detectSsoEnabled();
   const params = await searchParams;
   const errorMsg = params.error
     ? errorMessageFromCode(params.error)
     : null;
+  // Si l'utilisateur a ete redirige depuis /signup parce qu'il s'est declare
+  // employe / particulier, on lui affiche un bandeau explicatif amical.
+  const fromSignupRole = params.via === "signup-role";
   const anySso = sso.google || sso.microsoft || sso.apple;
 
   return (
@@ -176,6 +179,28 @@ async function InscriptionInner({
           "il faut une marge en haut"). shadow-xl + rounded-3xl conservent
           la presence visuelle forte du card. */}
       <section className="max-w-md mx-auto px-4 pb-12 mt-4 sm:mt-6 relative z-10">
+        {fromSignupRole && (
+          <div
+            role="status"
+            className="flex items-start gap-2 text-sm bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-100 rounded-xl p-3 mb-4"
+          >
+            <span aria-hidden="true">🌱</span>
+            <span>
+              <strong>On t&apos;a dirigé·e au bon endroit.</strong> Pas
+              besoin de tenant à gérer pour apprendre : ici tu rejoins la
+              <strong> Communauté Humanix</strong> et tu accèdes aux modules
+              en quelques secondes. Si tu es en fait décideur·euse d&apos;une
+              organisation,{" "}
+              <Link
+                href="/signup?plan=starter"
+                className="underline font-bold"
+              >
+                reviens à l&apos;inscription pro
+              </Link>
+              .
+            </span>
+          </div>
+        )}
         {errorMsg && (
           <div
             role="alert"
