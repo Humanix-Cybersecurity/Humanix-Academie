@@ -877,6 +877,13 @@ model PhishingCampaign {
   // Corps du SMS si channel=SMS (max 160 chars + lien tracke ajoute).
   // Pour le phishing email le corps est dans le template, pas ici.
   smsBody     String?
+  // SSID Wi-Fi affiche sur le poster pour le template QR_FAKE_WIFI.
+  // Nullable : defaut "Humanix-Guest" si non specifie. Validation stricte
+  // cote application : whitelist [a-zA-Z0-9 _.-], max 32 chars, anti-injection
+  // QR/HTML (cf. lib/quishing/ssid-validation.ts). Ajoute 2026-05-22 a la
+  // demande de Florian pour rendre les campagnes plus credibles (poster avec
+  // le nom du Wi-Fi reel de l'entreprise plutot que "Humanix-Guest").
+  wifiSsid    String?
   scheduledAt DateTime
   sentAt      DateTime?
   isActive    Boolean          @default(true)
