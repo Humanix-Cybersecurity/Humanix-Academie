@@ -6,6 +6,85 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.2.0] — 2026-05-22 🧠 Sprint AI Literacy + Backup self-host + License pubkey prod
+
+Cycle de release post-launch v1.0.0 / v1.1.0. Trois chantiers majeurs + une série de fixes opérationnels.
+
+### Added
+
+#### 🧠 Sprint "AI Literacy" — première position FR sur la maîtrise de l'IA
+
+Suite au feedback Digital 113 Members Day : forte demande des entreprises FR pour comprendre l'IA générative sans alarmisme. Positionnement : *"L'IA ne te remplacera pas. Quelqu'un qui sait l'utiliser, oui."*
+
+- **Landing publique `/maitrise-ia`** : hero soft + 3 études citées (MIT Media Lab *"Your Brain on ChatGPT"* 2025, Stanford HAI 2025, AI Act EU 2026) + preview 12 épisodes + section dirigeants + section Cyber-Famille. SEO complet (canonical, OG).
+- **3 articles Cyber-Famille** (CC BY-SA dans `library-seed-demo.ts`) :
+  - 👵 *"Mamie, ChatGPT n'est pas Google"* — règle santé/argent/papiers
+  - 🎓 *"Quand ton ado utilise ChatGPT pour ses devoirs"* — méthode 3 niveaux d'usage
+  - 🎭 *"Mon proche est tombé pour un deepfake"* — règle "raccrocher + rappeler"
+- **Module admin `/admin/maturite-ia`** : questionnaire 8 axes (charte IA, formation, shadow AI, données sensibles, supervision humaine, deepfake, AI Act, audit) → score 0-100 + benchmark sectoriel (médiane PME FR = 42/100) + plan d'action priorisé live + export JSON. Persistance localStorage en V1.
+- **Saison "Maîtrise de l'IA générative"** — 12 épisodes au catalogue, 3 MDX rédigés en MVP (E01 hallucinations, E03 atrophie MIT 2025, E04 mes données partent où). Sources MIT/Stanford/ANSSI/AI Act.
+
+#### 💾 Backup/restore self-host avec chiffrement client-side
+
+Postgres tourne en self-host (container Docker non-exposé) sans snapshots managed. La doc `docs/BACKUPS.md` décrivait la cible mais aucun script. Implémentation complète :
+
+- **`scripts/backup-db.sh`** : pg_dump (mode `docker exec` ou host) → chiffrement `age` asymétrique (Curve25519 + ChaCha20-Poly1305) → upload FTP/FTPS via lftp → rotation 30j distant / 7j local. Options `--dry-run`, `--local-only`. Variables `BACKUP_FTP_TLS` (default yes) pour activer/désactiver TLS selon le serveur (FTP-only chez Scaleway Backup Space).
+- **`scripts/restore-db.sh`** : interactif, sélection backup local ou distant, déchiffrement avec clé privée, confirmation explicite *"OUI JE CONFIRME"* avant pg_restore destructif, parallélisme x4.
+- **Doc opérationnelle complète** dans `docs/BACKUPS.md` § 10 : génération clé age, setup `/etc/humanix/backup.env`, cron host, procédure restore d'urgence.
+
+#### 🔑 Clé publique licence Ed25519 de prod
+
+- Remplacement du placeholder `REPLACE_BEFORE_PROD_...` dans `lib/license/public-key.ts` par la vraie clé Ed25519 X.509 (validée par `node:crypto`).
+- Clé privée stockée hors-bande par Humanix (1Password + papier coffre + USB chiffrée).
+- Procédure de rotation documentée pour cas de compromission.
+
+#### 🛡️ Signup avec gating rôle pro (anti-pollution tenants)
+
+- Nouveau radio "Je m'inscris en tant que" sur `/signup?plan=starter` avec 6 options (DSI/RSSI, dirigeant, DRH/DAF, autre cadre, employé, particulier).
+- Si l'utilisateur se déclare employé ou particulier → redirect serveur vers `/inscription?via=signup-role` avec bandeau emerald explicatif. Tenant Communauté en LEARNER, pas de tenant fantôme créé.
+- Trace `declaredRole` dans `AuditLog.metadata.TENANT_CREATED` pour analytics post-launch.
+
+#### 🎯 Upgrade flow Starter → Pro depuis `/tarifs`
+
+- `/tarifs` détecte la session + plan actuel, passe à PricingCarousel.
+- Card du plan actuel → badge `✓ Votre plan actuel` (non-cliquable). Card Pro pour user connecté → "Passer au Pro" qui route vers `/admin/billing#upgrade-title` (qui contient `PlanUpgradeOptions` + API auth-gated `/api/payments/checkout` → checkout Mollie lié au tenant existant, pas de 2e tenant créé).
+- `PlanUpgradeOptions` : configurateur Pro (input sièges 16-250, radio billing mensuel/annuel −10 %, calcul total HT live).
+
+#### 📝 Form devis bridge (`/demande-abonnement`)
+
+- 3 nouveaux champs requis : sièges, durée (6/12/24/36 mois), billing (mensuel/annuel).
+- Pré-fill via query params + copy adaptive si `?via=payment-pending`.
+- Estimation Pro live dans l'email founder (seats × 3 € × durée × 0.9 si annuel).
+- Switch UX via `NEXT_PUBLIC_MOLLIE_AVAILABLE=false` : CTA Pro reroute du checkout vers le form devis (fallback si paiement self-service indisponible).
+
+### Changed
+
+- **Hero homepage Option B** : *"Pas un cours d'expert..."* → *"Reconnaître les arnaques numériques avant de cliquer : phishing, faux SMS, QR codes piégés, faux profils. Un mini-épisode par semaine, en français, pour ton équipe et ta famille. Sans jargon, sans peur, sans expert."*
+- **`SIGNUP_ALLOW_SELF_SERVICE`** documenté dans `.env.example` (sortait de la whitelist secrète).
+- **Mollie clarifié comme entreprise UE** (Amsterdam, régulé DNB, PSD2) dans CGV, confidentialité, DPO, page DAF, admin billing, form souscrire, COMPLIANCE.md, README. La sed-migration Payplug→Mollie avait laissé "Mollie SA (France 🇫🇷)" — corrigé en "Mollie B.V. (UE 🇪🇺, Amsterdam)".
+
+### Fixed
+
+- **Hex chat 400 "Missing model parameter"** en prod : `process.env.MISTRAL_MODEL ?? fallback` ne fallback pas sur string vide. Remplacé par `|| .trim()` aux 3 occurrences (Mistral provider, Ollama provider, audit-flash narrative).
+- **Bordures noires partout (régression Tailwind v4)** : Tailwind v4 a changé `border-color` default de `gray-200` vers `currentColor`. Restauration du comportement v3 via règle CSS one-liner dans `@layer base` qui pointe sur `var(--color-border)`.
+- **PopupCoordinator boucle infinie** (hotfix tardif v1.0.1) : déjà documenté mais inclus dans le bilan.
+- **3 vulnérabilités Dependabot** corrigées : Vite Path Traversal (`@vitest/coverage-v8`), esbuild dev server (`connectors/mcp-server`), isomorphic-dompurify patch.
+- **Test flaky `lib/license/license.test.ts`** : corruption du dernier char base64url ignorait 4 bits → flippe maintenant un char au milieu (déterministe).
+
+### Security
+
+- 0 vulnérabilité Dependabot ouverte au moment du release.
+- License privkey stockée hors-bande (3 supports géographiquement séparés).
+- Backup BDD chiffré client-side avant transit (age) — credentials FTP peuvent fuiter sans compromettre les données.
+
+### Documentation
+
+- `docs/BACKUPS.md` § 10 : 150 LoC de procédure opérationnelle complète (setup, cron, restore d'urgence).
+- `docs/CRON.md` : référence des 10 jobs cron (9 endpoints `/api/cron/*` via Ofelia + 1 backup host).
+- README.md : positionnement "Stack souveraine UE" clarifié (Scaleway/Mistral FR 🇫🇷 + Mollie UE 🇪🇺).
+
+---
+
 ## [1.1.0] — 2026-05-20 💳 Migration provider de paiement Payplug → Mollie
 
 ### Changed
