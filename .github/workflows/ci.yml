@@ -1,9 +1,15 @@
 name: CI
 
 # Tourne sur :
-# - chaque push sur main
-# - chaque PR vers main
+# - chaque push sur main et develop
+# - chaque PR vers main et develop
 # Vérifie : lint + typecheck + tests + build + audits OSS + format + DCO.
+#
+# Pourquoi develop aussi : les feature branches ouvrent leur PR vers develop
+# d'abord (gitflow). Sans CI sur develop, on découvre les régressions
+# seulement au moment du back-merge develop → main, trop tard. Étendu le
+# 2026-05-22 après que la PR #582 (sync develop ← main) n'ait reçu aucun
+# check faute de trigger.
 #
 # =============================================================================
 # RUNNER : self-hosted (machine Humanix dédiée)
@@ -40,9 +46,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
 
 # Permissions minimales (principe du moindre privilège).
 permissions:
