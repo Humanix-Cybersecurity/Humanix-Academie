@@ -506,10 +506,12 @@ export default function CGVPage() {
             newsletter Cyber-Anecdote du Lundi) ;
           </li>
           <li>
-            <strong>Mollie SA</strong> (France 🇫🇷, Paris) - prestataire
-            de paiement pour les abonnements SaaS Humanix Académie. Traite
-            les données de carte bancaire en mode tokenisation conforme PCI-DSS
-            ; Humanix ne stocke jamais le PAN ni le CVV ;
+            <strong>Mollie B.V.</strong> (UE 🇪🇺, Amsterdam, Pays-Bas) -
+            prestataire de paiement pour les abonnements SaaS Humanix Académie.
+            Régulé par la DNB (Banque centrale des Pays-Bas) et agréé
+            établissement de paiement UE sous PSD2. Traite les données de
+            carte bancaire en mode tokenisation conforme PCI-DSS ; Humanix
+            ne stocke jamais le PAN ni le CVV ;
           </li>
           <li>
             <strong>Olinda SAS / Qonto</strong> (France 🇫🇷) - compte de
