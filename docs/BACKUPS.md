@@ -183,8 +183,16 @@ Tu obtiens :
 ```bash
 ssh humanix@humanix-prod-01
 sudo apt update
-sudo apt install -y postgresql-client age lftp jq
+
+# Mode docker exec (recommandé prod Humanix) — pas besoin de postgresql-client
+sudo apt install -y age lftp jq
+
+# Mode host (alternative, si Postgres exposé sur l'host)
+# sudo apt install -y postgresql-client age lftp jq
 ```
+
+Le binaire `pg_dump` est fourni par l'image `postgres:16-alpine` du container,
+pas besoin de l'installer sur l'host en mode docker.
 
 **3. Configurer /etc/humanix/backup.env sur prod** :
 
@@ -193,12 +201,21 @@ sudo mkdir -p /etc/humanix
 sudo nano /etc/humanix/backup.env
 ```
 
-Contenu :
+Le script supporte **deux modes de connexion à Postgres** :
+
+- **Mode docker exec** (recommandé si Postgres tourne en container non-exposé sur l'host — ce qui est le cas de la prod Humanix : container `humanix-prod-postgres` avec port `5432/tcp` interne uniquement). Le script lance `pg_dump` à l'intérieur du container via `docker exec`. Plus sécurisé, pas besoin de publier le port 5432.
+
+- **Mode host** (si Postgres est sur un autre serveur, ou si le port 5432 est publish sur l'host avec `0.0.0.0:5432->5432/tcp`).
+
+Pour activer le mode docker, définir `BACKUP_PG_CONTAINER` (nom du container). Sinon mode host par défaut.
+
+**Contenu pour le mode docker (recommandé prod Humanix)** :
 
 ```ini
-# Postgres source (le container Docker expose 5432 sur l'host)
-PGHOST=127.0.0.1
-PGPORT=5432
+# Mode docker exec : nom du container Postgres (docker ps)
+BACKUP_PG_CONTAINER=humanix-prod-postgres
+
+# Credentials BDD (PGHOST/PGPORT ignorés en mode docker, connexion locale au container)
 PGUSER=humanix
 PGPASSWORD=<password BDD prod>
 PGDATABASE=humanix_academie
@@ -215,6 +232,19 @@ BACKUP_FTP_PATH=/humanix-academie
 # Rétention (jours)
 BACKUP_RETENTION_DAYS=30
 BACKUP_LOCAL_DIR=/var/backups/humanix
+```
+
+**Contenu pour le mode host** (alternative, si Postgres exposé) :
+
+```ini
+# Mode host : adresse atteignable depuis l'host
+PGHOST=127.0.0.1
+PGPORT=5432
+PGUSER=humanix
+PGPASSWORD=<password BDD prod>
+PGDATABASE=humanix_academie
+
+# ... (reste identique)
 ```
 
 ```bash
