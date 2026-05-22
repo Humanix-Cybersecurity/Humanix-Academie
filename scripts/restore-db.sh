@@ -123,16 +123,25 @@ else
   if [[ "$LOCAL_ONLY" -eq 0 ]] && command -v lftp >/dev/null 2>&1 \
      && [[ -n "${BACKUP_FTP_HOST:-}" ]]; then
     echo ""
-    echo "=== Backups DISTANTS (FTPS $BACKUP_FTP_HOST$BACKUP_FTP_PATH) ==="
-    REMOTE_FILES=$(lftp -e "
-      set ftp:ssl-force yes;
-      set ssl:verify-certificate yes;
-      set net:timeout 30;
-      open -u \"$BACKUP_FTP_USER\",\"$BACKUP_FTP_PASSWORD\" \"$BACKUP_FTP_HOST\";
-      cd \"$BACKUP_FTP_PATH\";
-      cls -1 humanix-pg-*.dump.age;
-      bye
-    " 2>/dev/null | sort -r || true)
+    echo "=== Backups DISTANTS (FTP/FTPS $BACKUP_FTP_HOST$BACKUP_FTP_PATH) ==="
+    LFTP_SCRIPT=$(mktemp)
+    {
+      if [[ "${BACKUP_FTP_TLS:-yes}" == "yes" ]]; then
+        echo "set ftp:ssl-force yes"
+        echo "set ftp:ssl-protect-data yes"
+        echo "set ssl:verify-certificate ${BACKUP_FTP_SSL_VERIFY:-yes}"
+      else
+        echo "set ftp:ssl-force no"
+        echo "set ftp:ssl-allow no"
+      fi
+      echo "set net:timeout 30"
+      echo "open -u $BACKUP_FTP_USER,$BACKUP_FTP_PASSWORD $BACKUP_FTP_HOST"
+      echo "cd $BACKUP_FTP_PATH"
+      echo "cls -1 humanix-pg-*.dump.age"
+      echo "bye"
+    } > "$LFTP_SCRIPT"
+    REMOTE_FILES=$(lftp -f "$LFTP_SCRIPT" 2>/dev/null | sort -r || true)
+    rm -f "$LFTP_SCRIPT"
     if [[ -z "$REMOTE_FILES" ]]; then
       echo "  (aucun)"
     else
@@ -155,17 +164,26 @@ else
       REMOTE_NAME=$(echo "$REMOTE_FILES" | sed -n "${REMOTE_IDX}p")
       [[ -n "$REMOTE_NAME" ]] || fail "Index invalide : $CHOICE" 2
 
-      log "Telechargement de $REMOTE_NAME depuis FTPS..."
+      log "Telechargement de $REMOTE_NAME depuis FTP/FTPS..."
       mkdir -p "$BACKUP_LOCAL_DIR"
-      lftp -e "
-        set ftp:ssl-force yes;
-        set ssl:verify-certificate yes;
-        set net:timeout 60;
-        open -u \"$BACKUP_FTP_USER\",\"$BACKUP_FTP_PASSWORD\" \"$BACKUP_FTP_HOST\";
-        cd \"$BACKUP_FTP_PATH\";
-        get \"$REMOTE_NAME\" -o \"$BACKUP_LOCAL_DIR/$REMOTE_NAME\";
-        bye
-      " || fail "Telechargement FTPS a echoue" 3
+      LFTP_GET=$(mktemp)
+      {
+        if [[ "${BACKUP_FTP_TLS:-yes}" == "yes" ]]; then
+          echo "set ftp:ssl-force yes"
+          echo "set ftp:ssl-protect-data yes"
+          echo "set ssl:verify-certificate ${BACKUP_FTP_SSL_VERIFY:-yes}"
+        else
+          echo "set ftp:ssl-force no"
+          echo "set ftp:ssl-allow no"
+        fi
+        echo "set net:timeout 60"
+        echo "open -u $BACKUP_FTP_USER,$BACKUP_FTP_PASSWORD $BACKUP_FTP_HOST"
+        echo "cd $BACKUP_FTP_PATH"
+        echo "get $REMOTE_NAME -o $BACKUP_LOCAL_DIR/$REMOTE_NAME"
+        echo "bye"
+      } > "$LFTP_GET"
+      lftp -f "$LFTP_GET" || { rm -f "$LFTP_GET"; fail "Telechargement FTP/FTPS a echoue" 3; }
+      rm -f "$LFTP_GET"
       SELECTED_FILE="$BACKUP_LOCAL_DIR/$REMOTE_NAME"
       log "Telechargement OK : $SELECTED_FILE"
     fi
