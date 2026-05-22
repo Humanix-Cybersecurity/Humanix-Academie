@@ -41,6 +41,18 @@ const ORG_NAME_MIN = 2;
 const ORG_NAME_MAX = 100;
 const PERSON_NAME_MAX = 100;
 
+// Roles "pro" autorises a creer un tenant en self-service. Les autres
+// (employee, individual) sont rediriges vers /inscription -> tenant
+// Communaute, role LEARNER. Le but : ne pas polluer la BDD avec des
+// tenants vides crees par des curieux qui ne sont pas decideurs.
+const PROFESSIONAL_ROLES = new Set([
+  "dsi",
+  "direction",
+  "drh-daf",
+  "autre-cadre",
+]);
+const LEARNER_ROLES = new Set(["employee", "individual"]);
+
 function slugify(input: string): string {
   return input
     .normalize("NFD")
@@ -130,6 +142,25 @@ export async function createStarterAccount(
   const plan: PlanId = ALLOWED_SIGNUP_PLANS.includes(planRaw as PlanId)
     ? (planRaw as PlanId)
     : "starter";
+  const signupRole = String(formData.get("signupRole") ?? "").trim();
+
+  // === Filtre intent : qualifie le signup ===
+  // Si l'utilisateur s'est declare employe / particulier, on ne cree PAS
+  // de tenant pour lui (ce n'est pas un decideur). On le redirige vers
+  // /inscription qui le rejoint au tenant Communaute en role LEARNER.
+  // Le query param ?via=signup-role permet a /inscription de lui afficher
+  // un message contextuel "On t'a redirige ici parce que..."
+  if (LEARNER_ROLES.has(signupRole)) {
+    redirect("/inscription?via=signup-role");
+  }
+  // Si role ni pro ni learner ni vide -> valeur invalide
+  if (!PROFESSIONAL_ROLES.has(signupRole)) {
+    return {
+      ok: false,
+      error:
+        "Merci de choisir votre fonction dans l'organisation (DSI, direction, DRH/DAF, autre cadre, ou employé·e).",
+    };
+  }
 
   if (!email || !email.includes("@") || email.length > 200) {
     return { ok: false, error: "Email invalide." };
@@ -233,7 +264,7 @@ export async function createStarterAccount(
     actor: { userId: created.user.id, email, role: "ADMIN" },
     tenantId: created.tenant.id,
     target: { type: "tenant", id: created.tenant.id, label: orgName },
-    metadata: { plan, source: "self_service_signup" },
+    metadata: { plan, source: "self_service_signup", declaredRole: signupRole },
     ip,
   });
   await auditLog({
