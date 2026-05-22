@@ -8,7 +8,16 @@
 import { useState, useTransition } from "react";
 import clsx from "clsx";
 import { launchQuishing } from "@/app/admin/quishing/actions";
-import { QUISHING_TEMPLATES } from "@/lib/phishing/qr-code";
+import {
+  QUISHING_TEMPLATES,
+  resolvePosterCallout,
+} from "@/lib/phishing/qr-code";
+import {
+  validateWifiSsid,
+  ssidValidationErrorMessageFr,
+  SSID_MAX_LENGTH,
+  DEFAULT_WIFI_SSID,
+} from "@/lib/quishing/ssid-validation";
 
 export type GroupOption = {
   slug: string;
@@ -27,12 +36,28 @@ export default function LaunchQuishingForm({
     "QR_FAKE_RH",
   );
   const [selectedGroups, setSelectedGroups] = useState<Set<string>>(new Set());
+  // SSID Wi-Fi custom (uniquement utilise si template = QR_FAKE_WIFI).
+  // Vide = utilise la valeur par defaut "Humanix-Guest".
+  const [wifiSsidInput, setWifiSsidInput] = useState("");
   const [feedback, setFeedback] = useState<{
     type: "ok" | "err";
     msg: string;
     posterUrl?: string;
     targets?: number;
   } | null>(null);
+
+  // Validation live cote client (defense en profondeur — le server re-valide).
+  // Si l'input est vide, pas d'erreur (= utilisera le defaut). Sinon, on
+  // applique la meme regle stricte que cote server (lib/quishing/
+  // ssid-validation.ts).
+  const ssidValidation =
+    wifiSsidInput.trim() === ""
+      ? null
+      : validateWifiSsid(wifiSsidInput);
+  const ssidError =
+    ssidValidation && !ssidValidation.ok
+      ? ssidValidationErrorMessageFr(ssidValidation.reason)
+      : null;
 
   const toggleGroup = (slug: string) => {
     setSelectedGroups((prev) => {
@@ -45,7 +70,20 @@ export default function LaunchQuishingForm({
 
   const onSubmit = async (formData: FormData) => {
     setFeedback(null);
+
+    // Garde-fou cote client : bloque le submit si SSID invalide (le server
+    // re-valide de toute facon mais on epargne un round-trip).
+    if (selected === "QR_FAKE_WIFI" && ssidError) {
+      setFeedback({ type: "err", msg: ssidError });
+      return;
+    }
+
     formData.set("template", selected);
+    // SSID uniquement transmis pour template WIFI + si l'admin a saisi
+    // quelque chose. Le server applique aussi cette regle defensive.
+    if (selected === "QR_FAKE_WIFI" && wifiSsidInput.trim()) {
+      formData.set("wifiSsid", wifiSsidInput.trim());
+    }
     selectedGroups.forEach((slug) => formData.append("groupSlugs", slug));
     startTransition(async () => {
       try {
@@ -53,6 +91,8 @@ export default function LaunchQuishingForm({
         if (!res.ok) {
           const map: Record<string, string> = {
             invalid_template: "Template invalide.",
+            invalid_wifi_ssid:
+              "Nom de Wi-Fi invalide. Utilise uniquement lettres, chiffres, espace, point, tiret ou underscore (max 32 caractères).",
             no_targets:
               "Aucune cible trouvée. Sélectionne au moins un groupe avec des membres actifs.",
             unauthorized: "Session expirée, reconnecte-toi.",
@@ -131,13 +171,69 @@ export default function LaunchQuishingForm({
         </div>
       </div>
 
+      {/* Input SSID Wi-Fi custom — uniquement pour le template WIFI.
+          Validation cote client (defense en profondeur, le server re-valide
+          avec la meme regle stricte). */}
+      {selected === "QR_FAKE_WIFI" && (
+        <div>
+          <label
+            htmlFor="wifiSsid"
+            className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-2"
+          >
+            Nom du Wi-Fi (SSID) affiché sur l&apos;affiche
+            <span className="ml-2 text-xs font-normal text-gray-500">
+              (facultatif — defaut : {DEFAULT_WIFI_SSID})
+            </span>
+          </label>
+          <input
+            id="wifiSsid"
+            type="text"
+            value={wifiSsidInput}
+            onChange={(e) => setWifiSsidInput(e.target.value)}
+            placeholder={DEFAULT_WIFI_SSID}
+            maxLength={SSID_MAX_LENGTH}
+            // Pattern HTML5 cohérent avec validateWifiSsid (defense client).
+            // Le serveur reste la source de vérité (validation stricte).
+            pattern="[a-zA-Z0-9 _.\-]+"
+            className={clsx(
+              "w-full px-3 py-2 text-sm rounded-lg border-2 bg-white dark:bg-slate-900",
+              ssidError
+                ? "border-rose-400 focus:border-rose-500"
+                : "border-gray-200 dark:border-slate-700 focus:border-accent-500",
+            )}
+            aria-invalid={!!ssidError}
+            aria-describedby="wifiSsid-help"
+          />
+          <p
+            id="wifiSsid-help"
+            className={clsx(
+              "mt-1.5 text-xs",
+              ssidError
+                ? "text-rose-700 dark:text-rose-300 font-medium"
+                : "text-gray-500 dark:text-gray-400",
+            )}
+          >
+            {ssidError ??
+              `Lettres, chiffres, espace, point, tiret ou underscore. Max ${SSID_MAX_LENGTH} caractères. Exemple : "AcmeCorp-Guest".`}
+          </p>
+        </div>
+      )}
+
       {tpl && (
         <details className="text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-slate-800/40 rounded-xl p-3">
           <summary className="cursor-pointer font-medium">
             Aperçu du texte d&apos;affiche
           </summary>
           <pre className="mt-2 whitespace-pre-wrap font-mono text-xs bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg p-3">
-            {tpl.posterCallout}
+            {/* Le preview utilise la meme fonction que le PDF cote server,
+                avec le SSID custom si specifie. resolvePosterCallout est
+                pure (pas d'effet de bord) donc safe a appeler ici. */}
+            {resolvePosterCallout(selected, {
+              wifiSsid:
+                selected === "QR_FAKE_WIFI" && wifiSsidInput.trim()
+                  ? wifiSsidInput.trim()
+                  : null,
+            })}
           </pre>
           <p className="mt-2 text-[11px] italic">
             Le QR code (unique par destinataire) sera placé sous ce texte.
@@ -199,7 +295,11 @@ export default function LaunchQuishingForm({
         </p>
       )}
 
-      <button type="submit" disabled={pending} className="btn-primary w-full">
+      <button
+        type="submit"
+        disabled={pending || !!ssidError}
+        className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+      >
         {pending ? "Génération du PDF…" : "🔳 Générer les affiches"}
       </button>
 
