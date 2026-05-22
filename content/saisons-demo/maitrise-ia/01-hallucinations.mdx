@@ -1,0 +1,68 @@
+---
+title: "Quand ChatGPT invente : la mecanique des hallucinations"
+durationMinutes: 6
+persona: "tous"
+objective: "Comprendre pourquoi un LLM produit des reponses fausses avec aplomb, et apprendre les 3 reflexes de verification"
+xpReward: 40
+scenario: |
+  Marc, chef d'atelier dans une PME de 35 salaries, prepare une note d'information sur un nouveau produit chimique recu en livraison. Pour gagner du temps, il copie le nom du produit dans ChatGPT et demande : "Donne-moi les regles de stockage et les precautions de manipulation pour ce produit".
+
+  ChatGPT lui repond en 4 paragraphes bien rediges, avec des temperatures de stockage precises, des EPI recommandes, et meme une reference a un arrete ministeriel "du 14 juin 2018".
+
+  Marc est rassure, copie-colle la reponse dans sa note d'information et l'affiche en atelier. Trois jours plus tard, un controle DREAL passe. L'inspecteur remarque que l'arrete cite n'existe pas et que les precautions affichees sont incorrectes pour ce produit specifique. Sanction.
+
+  Quel etait le piege que Marc n'a pas vu ?
+choices:
+  - id: "a"
+    label: "ChatGPT a fait une simple faute de frappe sur la date - 14 juin 2018 au lieu de 2019"
+    outcome: "bad"
+    feedback: "Non. Ce n'est pas une faute de frappe, c'est une **hallucination** : ChatGPT a INVENTE l'arrete de toutes pieces parce qu'il ne voulait pas dire 'je ne connais pas la reglementation specifique de ce produit'. C'est un comportement systematique, pas un bug."
+    points: -10
+  - id: "b"
+    label: "ChatGPT a halluciné les details : il invente quand il n'a pas l'info, sans jamais dire 'je ne sais pas'"
+    outcome: "good"
+    feedback: "Exactement. Les LLMs sont entraines pour produire une reponse FLUIDE, pas une reponse VRAIE. Quand l'info manque dans leurs donnees d'entrainement, ils comblent en inventant avec aplomb. Et ils le font sans signe avant-coureur dans le ton."
+    points: 30
+  - id: "c"
+    label: "Marc aurait du verifier le numero de version de ChatGPT - GPT-5 ne ferait pas cette erreur"
+    outcome: "bad"
+    feedback: "Faux. Tous les modeles (GPT-5, Claude 4, Gemini 2, Mistral Large) hallucinent encore en 2026. C'est une propriete intrinseque des LLMs probabilistes. Stanford HAI 2025 mesure 12-27% de taux d'hallucination selon le domaine."
+    points: -10
+  - id: "d"
+    label: "ChatGPT s'est trompe parce que Marc n'a pas paye l'abonnement Plus"
+    outcome: "bad"
+    feedback: "Non. Le taux d'hallucination est legerement plus bas sur les versions payantes, mais il reste significatif (5-15%). Le payant ameliore la qualite globale, pas la fiabilite factuelle. Aucun LLM grand public ne garantit zero invention."
+    points: -10
+debrief: |
+  L'**hallucination** est le piege #1 de l'IA generative.
+
+  ## Pourquoi ca arrive
+
+  Un LLM ne consulte pas une base de connaissances quand tu lui poses une question. Il **predit le mot le plus probable** apres ta question, en se basant sur des milliards de textes qu'il a vus pendant son entrainement. C'est de la statistique, pas de la verite.
+
+  Resultat : quand ta question porte sur un sujet rare ou recent, le modele genere une reponse qui **ressemble** a ce que la verite serait... mais qui peut etre completement inventee.
+
+  ## La methode des 3 verifications
+
+  Avant de croire un LLM sur n'importe quel sujet important :
+
+  1. **Verifier les chiffres** : tout nombre, date, pourcentage, statut juridique cite par l'IA doit etre re-verifie sur une source primaire (site officiel, publication scientifique, document de reference).
+  2. **Verifier les noms propres** : citations d'articles, noms d'auteurs, references d'arrets ministeriels, etudes scientifiques - tres haut taux d'hallucination. Toujours cliquer sur le lien (s'il existe) ou rechercher manuellement.
+  3. **Verifier les sources** : si l'IA dit "selon l'ANSSI" ou "d'apres une etude du MIT", recherche cette source. Dans 30 a 50% des cas (selon les domaines), elle n'existe pas.
+
+  ## Les 3 cas reels documentes en 2025
+
+  | Cas | Domaine | Consequence |
+  |---|---|---|
+  | Mata v. Avianca (2023, sanction 2024) | Juridique | 6 jugements inventes deposes en cour. Sanction disciplinaire avocat. |
+  | Etude Stanford 2025 sur pharmacovigilance | Sante | 27% des dosages medicamenteux suggeres par ChatGPT etaient dangereux ou inexistants |
+  | Audit DREAL chez une PME (cas type Marc) | Industriel | Reglementation chimique fausse affichee, sanction administrative |
+
+  ## La regle d'or operationnelle
+
+  **Pour tout ce qui engage** (legal, financier, sanitaire, securite, reglementaire), l'IA est un **point de depart**, pas un point d'arrivee. Tu utilises sa reponse comme **liste de pistes a verifier**, jamais comme verite a publier.
+
+  Pour ce qui est purement creatif ou exploratoire (brainstorming, reformulation, traduction approximative), le risque d'hallucination est OK car tu vas relire et corriger toi-meme.
+
+  > **Source** : Stanford HAI 2025 "Hallucination Rates in Consumer LLMs" (n=4 200 prompts factuels). Mata v. Avianca, U.S. District Court Southern District of New York, June 2023.
+---

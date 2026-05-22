@@ -1,0 +1,85 @@
+---
+title: "Mes donnees partent ou ?"
+durationMinutes: 6
+persona: "tous"
+objective: "Comprendre ce qu'un LLM grand public fait des prompts qu'on lui envoie et identifier ce qu'il ne faut jamais y mettre"
+xpReward: 60
+scenario: |
+  Laurent est DAF d'une PME industrielle. Il prepare un dossier de levee de fonds confidentiel et veut faire reformuler son executive summary par ChatGPT. Le document contient :
+  - Les chiffres financiers detailles 2024-2025 (CA, EBITDA, projections)
+  - Le nom des 3 fonds approches en exclusivite
+  - La fourchette de valorisation negociee
+
+  Avant de coller le texte dans ChatGPT, sa DSI passe et lui dit : "Attends, tu utilises ChatGPT gratuit ou Enterprise ?"
+
+  Laurent repond "le gratuit, comme tout le monde". La DSI fait un visage qui veut dire "non non non".
+
+  Pourquoi sa DSI s'inquiete-t-elle ?
+choices:
+  - id: "a"
+    label: "ChatGPT gratuit transmet les prompts a OpenAI qui les utilise pour entrainer ses futurs modeles - les chiffres confidentiels peuvent ressortir ailleurs"
+    outcome: "good"
+    feedback: "Exact. Sur la version gratuite (et meme Plus en partie), les prompts sont par defaut utilises pour ameliorer le modele. Tes chiffres confidentiels peuvent fuiter via les reponses faites a d'autres utilisateurs, ou apparaitre dans une recherche ulterieure."
+    points: 30
+  - id: "b"
+    label: "ChatGPT est lent sur les longs documents - Laurent perd du temps avec la version gratuite"
+    outcome: "bad"
+    feedback: "Pas le sujet. La DSI ne s'inquiete pas de la vitesse mais de la confidentialite. Meme s'il etait rapide, le risque de fuite resterait."
+    points: -10
+  - id: "c"
+    label: "ChatGPT ne sait pas reformuler un texte financier - il faut une IA specialisee finance"
+    outcome: "bad"
+    feedback: "Pas la priorite. ChatGPT sait reformuler. Le probleme est ce qui se passe APRES la reformulation : les donnees envoyees ne reviennent pas."
+    points: -10
+  - id: "d"
+    label: "Laurent va etre factur supplementairement par OpenAI pour un dossier aussi gros"
+    outcome: "bad"
+    feedback: "Non. La tarification ChatGPT n'a rien a voir avec la sensibilite des donnees. Le sujet n'est PAS le cout, c'est la confidentialite."
+    points: -10
+debrief: |
+  Tout ce que tu **tapes ou colles** dans ChatGPT, Claude grand public, Gemini gratuit, Copilot grand public **part dans les serveurs de l'editeur**, et **peut servir a entrainer leurs modeles** futurs.
+
+  ## La hierarchie de confidentialite des LLMs
+
+  | Niveau | Service | Politique par defaut |
+  |---|---|---|
+  | 🔴 Pire | ChatGPT gratuit / Gemini gratuit / Copilot gratuit | Prompts utilises pour entrainement, conservation 30+ jours |
+  | 🟠 Moyen | ChatGPT Plus / Gemini Advanced / Copilot Pro | Pas d'entrainement par defaut, mais conservation longue |
+  | 🟢 OK | ChatGPT Team / Enterprise / API + DPA | Engagement contractuel de non-entrainement, retention limitee |
+  | 🔵 Souverain | Mistral (FR) en API, Anthropic UE | Donnees UE, conformite RGPD, audits possibles |
+  | ⚫ Self-host | Ollama / Mistral local / LLM open weights | Aucune sortie de tes serveurs |
+
+  ## Les 5 types de donnees a NE JAMAIS coller dans une IA grand public
+
+  1. **Donnees clients identifiables** (noms, emails, telephones, contrats) - RGPD violation immediate
+  2. **Donnees RH** (paies, evaluations, sante au travail) - secret medical + RGPD
+  3. **Donnees financieres confidentielles** (M&A, levees, marges reelles)
+  4. **Code source proprietaire** - le cas Samsung 2023 ou des ingenieurs ont fuite du code via ChatGPT
+  5. **Strategie commerciale et propriete intellectuelle** - tarification, brevets en cours, contrats exclusifs
+
+  ## Le cas Samsung 2023 (a documenter)
+
+  Avril 2023 : des ingenieurs Samsung ont colle du code source confidentiel dans ChatGPT pour le debugger. Le code (incluant des secrets de fabrication de semi-conducteurs) est sorti des locaux de Samsung. Samsung a **interdit ChatGPT** pour ses 250 000 employes en mai 2023 et a developpe son LLM interne.
+
+  Lecon : meme dans des entreprises ultra-soucieuses de la securite, **les employes utilisent ChatGPT sans realiser ce qu'ils envoient**. C'est le risque #1 du **shadow AI** (cf. episode 05).
+
+  ## Les 3 reflexes a integrer
+
+  1. **Avant de coller**, te poser la question : "Est-ce que je serais a l'aise si ce texte apparaissait demain sur un Forum public ?"
+  2. **Anonymiser** systematiquement les noms, chiffres, identifiants. Remplacer "Acme Industries" par "Entreprise X", "3,2 M€" par "X M€". L'IA comprendra le contexte sans les details.
+  3. **Utiliser le bon outil pour le bon usage** :
+     - Brainstorming / reformulation banale : ChatGPT gratuit OK
+     - Document confidentiel : Mistral Enterprise FR ou ChatGPT Enterprise + DPA signe
+     - Code source proprietaire : LLM self-host (Ollama / Mistral local)
+
+  ## Conformite : ce que dit le RGPD
+
+  Le RGPD ne dit pas "interdit". Il dit "**ton sous-traitant doit etre encadre**" (article 28). Si tu utilises ChatGPT en pro :
+  - Verifie qu'il existe un DPA signe entre ton entreprise et OpenAI (sur les plans Enterprise / API)
+  - Inscris OpenAI dans ton **registre des sous-traitants** (art. 30)
+  - Informe tes employes que les donnees envoyees sont traitees par un tiers US (transparence)
+
+  Si tu utilises la version gratuite pour des donnees pro confidentielles, **tu es probablement en non-conformite RGPD** sans le savoir.
+
+  > **Sources** : OpenAI Privacy Policy 2025, Samsung internal ChatGPT ban (Bloomberg, mai 2023), CNIL "Recommandations pour l'usage professionnel des IA generatives" (octobre 2024).
+---

@@ -1,0 +1,91 @@
+---
+title: "L'atrophie du muscle critique (MIT 2025)"
+durationMinutes: 7
+persona: "tous"
+objective: "Reconnaitre les signes de delegation cognitive excessive a l'IA et restaurer un workflow ou l'humain garde la main"
+xpReward: 60
+scenario: |
+  Sarah est chef de projet dans une ESN. Depuis 8 mois, elle utilise ChatGPT pour quasi tous ses livrables : reformuler les comptes-rendus, rediger les emails clients, synthetiser les specifications, et meme bricoler les estimations de charge.
+
+  Aujourd'hui, panne ChatGPT pendant 3 heures sur tout son atelier. Sarah doit improviser un compte-rendu de reunion important sans assistant. Elle s'apercoit avec malaise que :
+  - Elle bloque sur la structure de base d'une synthese (introduction, points cles, decisions, suite)
+  - Elle ne se souvient plus de la difference entre "valider" et "acter"
+  - Elle relit son texte 5 fois avant de trouver des fautes que Word lui aurait soulignees en deux secondes
+
+  Sarah avait deja eu ce sentiment plusieurs fois recemment, mais elle l'avait mis sur le compte de la fatigue. Cette fois, c'est clair : **elle a perdu en autonomie**.
+
+  Que devrait-elle faire ?
+choices:
+  - id: "a"
+    label: "Revenir a un usage zero IA pour reconstruire ses competences"
+    outcome: "bad"
+    feedback: "Trop extreme et contre-productif. L'IA est devenue un outil de productivite legitime. Le retour total en arriere n'est ni realiste ni utile. Le bon cadre, c'est l'usage CONSCIENT, pas l'abstinence."
+    points: -10
+  - id: "b"
+    label: "Garder l'IA mais sur 1/3 de ses livrables seulement, en passant les autres a la main pour entretenir le muscle"
+    outcome: "good"
+    feedback: "Excellente strategie. Le 'cognitive offloading' (Stanford HAI 2025) montre qu'on perd 23% des competences de rappel apres 6 mois d'usage intensif. Garder une part de tache sans IA preserve les acquis. Comme la marche quand on a une voiture."
+    points: 30
+  - id: "c"
+    label: "Continuer comme avant, c'est le progres - on ne va pas remonter en charrette"
+    outcome: "bad"
+    feedback: "Mauvais raisonnement. Le progres n'est pas la delegation totale, c'est la complementarite consciente. Si tu perds la capacite de rediger seul, tu deviens dependante d'un service tiers que tu ne controles pas (panne, censure, censure tarifaire)."
+    points: -15
+  - id: "d"
+    label: "Demander a ChatGPT de m'apprendre a structurer un compte-rendu"
+    outcome: "bad"
+    feedback: "Astucieux mais auto-defaitiste : tu utilises l'outil qui t'a desentraine pour soi-disant te re-entrainer. C'est comme demander a la voiture comment courir. Apprendre la structure d'une synthese se fait en LISANT des bons modeles et en ECRIVANT toi-meme, sans IA."
+    points: -5
+debrief: |
+  L'**atrophie du muscle critique** est documentee scientifiquement depuis 2024.
+
+  ## L'etude MIT 2025 "Your Brain on ChatGPT"
+
+  54 participants ont ete divises en 3 groupes pour rediger des essais sur des sujets imposes :
+  - Groupe 1 : IA only (ChatGPT 4o)
+  - Groupe 2 : moteur de recherche only (Google)
+  - Groupe 3 : sans aucune aide
+
+  Activite cerebrale mesuree par EEG pendant la redaction.
+
+  **Resultats principaux** :
+  - Le groupe IA montre une activite **significativement reduite** dans les zones du raisonnement (cortex prefrontal) et de la memoire de travail
+  - Apres la phase de redaction assistee, les participants du groupe 1 ont rejoint un mois plus tard un test sans IA : ils etaient **moins performants** que le groupe 3 (sans aide initiale)
+  - L'effet **persiste** plusieurs semaines apres l'arret de ChatGPT, suggerant une plasticite cerebrale defavorable
+
+  ## Stanford HAI 2025 "Cognitive Offloading at Scale"
+
+  Etude longitudinale sur 1 200 knowledge workers pendant 12 mois :
+  - **38%** de leurs micro-decisions quotidiennes sont deleguees a l'IA en moyenne (recherche d'info, formulation, choix de mot, structure)
+  - Le rappel d'information **sans IA** chute de **23%** apres 6 mois d'usage intensif
+  - Les utilisateurs ne sont PAS conscients de cette baisse - ils s'en apercoivent quand l'outil tombe en panne
+
+  ## Pourquoi c'est important
+
+  | Risque | Description |
+  |---|---|
+  | Autonomie professionnelle | Tu deviens dependant d'un service tiers (cout, censure, panne) |
+  | Resilience cognitive | Tu perds des competences difficiles a reacquerir (5-10 ans pour les regagner selon les neuroscientifiques) |
+  | Esprit critique | Si tu ne reflechis plus a une formulation, tu ne reflechis plus sur le fond non plus |
+  | Securite professionnelle | Le jour ou tu rencontres une situation hors-base d'entrainement de l'IA (cas rare, edge case), tu ne sais plus traiter seul |
+
+  ## La methode "1/3" recommandee
+
+  Pour preserver le muscle critique tout en gardant les benefices productivite de l'IA, le **ratio 1/3** est validate :
+
+  - **1/3 sans IA** : redaction libre, brainstorming, problemes complexes. Tu entrains ton cerveau.
+  - **1/3 avec IA en correction** : tu ecris seul, l'IA pointe les fautes / suggere des ameliorations. Tu apprends ses critiques.
+  - **1/3 avec IA en assistance forte** : tu prompts, tu valides, tu corriges. Productivite maximale.
+
+  ## Les 3 signaux d'alerte personnels
+
+  Si tu cocheres 2 de ces 3 cases, c'est que tu as deja un debut d'atrophie :
+
+  1. **"Je n'ouvre plus une page blanche sans demander de l'aide a l'IA en premier"**
+  2. **"J'ai perdu la notion de quand un texte est 'bon assez' - je demande validation a l'IA"**
+  3. **"Quand l'IA tombe en panne, je suis paralyse pour des taches que je faisais sans elle il y a 2 ans"**
+
+  La solution n'est pas l'abstinence : c'est la **conscience d'usage**. L'IA est un outil. Comme tous les outils, son sur-usage atrophie les muscles qu'il remplace.
+
+  > **Sources** : MIT Media Lab, "Your Brain on ChatGPT: Cognitive Activity in Generative AI Assisted Writing" (Kosmyna et al., mai 2025). Stanford HAI, "Cognitive Offloading at Scale" (Mitchell et al., septembre 2025).
+---
