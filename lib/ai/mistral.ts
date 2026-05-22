@@ -154,7 +154,8 @@ export async function generatePhishing(
         authorization: `Bearer ${process.env.MISTRAL_API_KEY}`,
       },
       body: JSON.stringify({
-        model: process.env.MISTRAL_MODEL ?? "ministral-8b-latest",
+        // `||` (pas `??`) pour fallback aussi sur string vide (cf. provider.ts)
+        model: process.env.MISTRAL_MODEL?.trim() || "ministral-8b-latest",
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userPrompt },
