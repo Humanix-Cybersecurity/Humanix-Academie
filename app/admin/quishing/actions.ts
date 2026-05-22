@@ -15,6 +15,7 @@ import {
   QUISHING_TEMPLATES,
   type QuishingTemplate,
 } from "@/lib/phishing/qr-code";
+import { validateWifiSsid } from "@/lib/quishing/ssid-validation";
 
 async function requireAdmin() {
   const session = await auth();
@@ -38,6 +39,7 @@ export type LaunchQuishingResult =
       ok: false;
       error:
         | "invalid_template"
+        | "invalid_wifi_ssid"
         | "no_targets"
         | "unauthorized"
         | "forbidden"
@@ -62,6 +64,25 @@ export async function launchQuishing(
   const templateId = formData.get("template") as string;
   if (!templateId || !(templateId in QUISHING_TEMPLATES)) {
     return { ok: false, error: "invalid_template" };
+  }
+
+  // SSID Wi-Fi custom (uniquement pertinent pour template = QR_FAKE_WIFI).
+  // Validation STRICTE cote server : whitelist [a-zA-Z0-9 _.-], max 32 chars
+  // (limite IEEE 802.11), anti-injection HTML/QR. Cf. lib/quishing/
+  // ssid-validation.ts. Si l'admin a laisse le champ vide -> null -> fallback
+  // sur "Humanix-Guest" dans le poster.
+  let wifiSsid: string | null = null;
+  const rawSsid = formData.get("wifiSsid");
+  if (templateId === "QR_FAKE_WIFI" && rawSsid != null && rawSsid !== "") {
+    const validation = validateWifiSsid(rawSsid);
+    if (!validation.ok) {
+      return {
+        ok: false,
+        error: "invalid_wifi_ssid",
+        message: validation.reason,
+      };
+    }
+    wifiSsid = validation.value;
   }
 
   const groupSlugs = formData
@@ -111,6 +132,7 @@ export async function launchQuishing(
     targets,
     targetingMode,
     targetingDetail,
+    wifiSsid,
   });
 
   revalidatePath("/admin/quishing");

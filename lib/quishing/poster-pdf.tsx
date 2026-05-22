@@ -39,6 +39,7 @@ import {
   type QuishingTemplate,
   buildQrCodeDataUrl,
   buildQuishingCampaignLandingUrl,
+  resolvePosterCallout,
 } from "@/lib/phishing/qr-code";
 
 const styles = StyleSheet.create({
@@ -123,6 +124,12 @@ export type PosterDocProps = {
    * l'affiche doit pouvoir passer pour un document de l'entreprise).
    */
   logoDataUrl: string | null;
+  /**
+   * SSID Wi-Fi custom pour le template QR_FAKE_WIFI. Doit avoir ete VALIDE
+   * en amont (lib/quishing/ssid-validation.ts). Si null/undefined ou si le
+   * template n'est pas WIFI, le callout par defaut est utilise.
+   */
+  wifiSsid?: string | null;
 };
 
 /**
@@ -135,9 +142,13 @@ export function QuishingPosterDoc({
   landingUrl,
   campaignId,
   logoDataUrl,
+  wifiSsid,
 }: PosterDocProps) {
   const tpl = QUISHING_TEMPLATES[templateId];
   if (!tpl) return null;
+  // Resout le callout avec les variables custom (SSID Wi-Fi en l'occurrence).
+  // Le SSID a deja ete valide cote server avant d'arriver ici.
+  const callout = resolvePosterCallout(templateId, { wifiSsid });
 
   return (
     <Document
@@ -165,7 +176,7 @@ export function QuishingPosterDoc({
             ) : null}
           </View>
 
-          <Text style={styles.callout}>{tpl.posterCallout}</Text>
+          <Text style={styles.callout}>{callout}</Text>
           {qrDataUrl ? (
             /* eslint-disable-next-line jsx-a11y/alt-text */
             <Image src={qrDataUrl} style={styles.qrImage} />
@@ -197,6 +208,11 @@ export async function renderQuishingPosterBuffer(opts: {
   campaignId: string;
   /** Optionnel — data URL d'un logo entreprise a embarquer dans le PDF. */
   logoDataUrl: string | null;
+  /**
+   * SSID Wi-Fi custom (uniquement utile si templateId = QR_FAKE_WIFI).
+   * Doit avoir ete VALIDE en amont par validateWifiSsid().
+   */
+  wifiSsid?: string | null;
 }): Promise<Buffer> {
   const landingUrl = buildQuishingCampaignLandingUrl(
     opts.baseUrl,
@@ -210,6 +226,7 @@ export async function renderQuishingPosterBuffer(opts: {
       landingUrl={landingUrl}
       campaignId={opts.campaignId}
       logoDataUrl={opts.logoDataUrl}
+      wifiSsid={opts.wifiSsid}
     />,
   );
 }
