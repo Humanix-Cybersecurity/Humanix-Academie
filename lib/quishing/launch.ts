@@ -43,6 +43,13 @@ export type QuishingLaunchOptions = {
   /** Pour traçabilite (audit) - decrit comment les targets ont ete choisis */
   targetingMode?: "all" | "groups" | "users";
   targetingDetail?: string;
+  /**
+   * SSID Wi-Fi custom pour le template QR_FAKE_WIFI. Doit avoir ete VALIDE
+   * en amont par validateWifiSsid() (whitelist stricte, max 32 chars).
+   * Si null/undefined : le poster utilise "Humanix-Guest" par defaut.
+   * Ignore silencieusement si templateId !== "QR_FAKE_WIFI".
+   */
+  wifiSsid?: string | null;
 };
 
 export type QuishingLaunchResult =
@@ -91,6 +98,11 @@ export async function launchQuishingCampaign(
         scheduledAt: new Date(),
         sentAt: new Date(), // pas d'envoi reel mais on marque "en cours"
         isActive: true,
+        // Stocke le SSID custom UNIQUEMENT pour le template WIFI (les autres
+        // templates n'ont pas de champ SSID, mettre une valeur serait
+        // semantiquement faux et apparaitrait dans les audits).
+        wifiSsid:
+          templateId === "QR_FAKE_WIFI" ? (opts.wifiSsid ?? null) : null,
       },
     });
 
@@ -118,6 +130,10 @@ export async function launchQuishingCampaign(
           targets: targets.length,
           targetingMode: opts.targetingMode ?? "all",
           targetingDetail: opts.targetingDetail ?? null,
+          // Trace le SSID custom utilise pour audit (si template WIFI).
+          // Null = SSID par defaut "Humanix-Guest".
+          wifiSsid:
+            templateId === "QR_FAKE_WIFI" ? (opts.wifiSsid ?? null) : null,
         },
       },
     });
