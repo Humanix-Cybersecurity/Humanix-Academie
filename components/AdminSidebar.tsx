@@ -19,13 +19,29 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useSession } from "next-auth/react";
+import type { Role } from "@prisma/client";
 import clsx from "clsx";
+import { ROLE_RANK } from "@/lib/role-hierarchy";
 
 type NavItem = {
   href: string;
   label: string;
   icon: string; // emoji simple (compat tous navigateurs, pas de lib)
   gate?: "Pro+";
+  /**
+   * Role minimum requis pour voir cet item. Defaut = MANAGER (premier
+   * niveau d'admin). Pour les operations qui modifient la configuration
+   * du tenant (campagnes phishing, automations, modules), passer a ADMIN.
+   * Pour les vues conformite/securite/RH, passer a RSSI.
+   *
+   * Si l'utilisateur connecte a un rang < minRole, l'item est masque.
+   * Si la section devient vide apres filtrage, elle n'est pas rendue.
+   *
+   * Ajoute le 22/05/2026 apres signalement Florian : un MANAGER voyait
+   * "Automations" dans la sidebar alors que la page n'est pas accessible
+   * pour lui (bug visuel + redirect/error a l'arrivee).
+   */
+  minRole?: Role;
 };
 
 type Section = {
@@ -48,6 +64,15 @@ type Section = {
 // pesent pas sur la charge cognitive du quotidien.
 // =============================================================================
 
+// Convention pour les minRole :
+// - MANAGER : lecture/vue, pilotage d'equipe (default si non specifie)
+// - RSSI : conformite, securite, analytics sensibles, DPO
+// - ADMIN : configuration du tenant (campagnes, automations, modules, SSO)
+//
+// Cf. lib/role-hierarchy.ts pour la justification. Les pages elles-memes
+// font deja leurs propres checks server-side (defense en profondeur), la
+// sidebar est juste cosmetique pour ne pas afficher de liens morts ou
+// pages buggees pour le role courant.
 const SECTIONS: Section[] = [
   {
     id: "pilotage",
@@ -56,7 +81,15 @@ const SECTIONS: Section[] = [
     items: [
       { href: "/admin", label: "Tableau de bord", icon: "📊" },
       { href: "/admin/utilisateurs", label: "Utilisateurs", icon: "👥" },
-      { href: "/admin/automations", label: "Automations", icon: "⚙️" },
+      // Automations = workflows tenant (envois auto, regles de scoring,
+      // triggers). Page ADMIN-only, bug en MANAGER (signale Florian
+      // 2026-05-22).
+      {
+        href: "/admin/automations",
+        label: "Automations",
+        icon: "⚙️",
+        minRole: "ADMIN",
+      },
     ],
   },
   {
@@ -64,14 +97,34 @@ const SECTIONS: Section[] = [
     title: "Apprendre",
     icon: "🎓",
     items: [
-      { href: "/admin/modules", label: "Modules", icon: "📚" },
-      { href: "/admin/maturite-ia", label: "Maturité IA", icon: "🧠" },
-      { href: "/admin/phishing", label: "Phishing", icon: "🎣", gate: "Pro+" },
+      // Modules = configuration des saisons/episodes du tenant.
+      {
+        href: "/admin/modules",
+        label: "Modules",
+        icon: "📚",
+        minRole: "ADMIN",
+      },
+      // Maturite IA = dashboard KPIs IA (lecture etendue).
+      {
+        href: "/admin/maturite-ia",
+        label: "Maturité IA",
+        icon: "🧠",
+        minRole: "RSSI",
+      },
+      // Phishing/Vishing/Smishing/Quishing = declenchement de campagnes.
+      {
+        href: "/admin/phishing",
+        label: "Phishing",
+        icon: "🎣",
+        gate: "Pro+",
+        minRole: "ADMIN",
+      },
       {
         href: "/admin/challenge",
         label: "Challenges",
         icon: "🏆",
         gate: "Pro+",
+        minRole: "ADMIN",
       },
     ],
   },
@@ -85,9 +138,20 @@ const SECTIONS: Section[] = [
         label: "NIS2",
         icon: "📋",
         gate: "Pro+",
+        minRole: "RSSI",
       },
-      { href: "/admin/dpo", label: "Espace DPO", icon: "🛡" },
-      { href: "/admin/audit", label: "Journal d'audit", icon: "📜" },
+      {
+        href: "/admin/dpo",
+        label: "Espace DPO",
+        icon: "🛡",
+        minRole: "RSSI",
+      },
+      {
+        href: "/admin/audit",
+        label: "Journal d'audit",
+        icon: "📜",
+        minRole: "RSSI",
+      },
     ],
   },
   {
@@ -95,23 +159,31 @@ const SECTIONS: Section[] = [
     title: "Intégrations",
     icon: "🔗",
     items: [
-      { href: "/admin/integrations", label: "Webhooks", icon: "🔗" },
+      {
+        href: "/admin/integrations",
+        label: "Webhooks",
+        icon: "🔗",
+        minRole: "ADMIN",
+      },
       {
         href: "/admin/integrations/ciso-assistant",
         label: "CISO Assistant",
         icon: "🛡",
+        minRole: "ADMIN",
       },
       {
         href: "/admin/sso-saml",
         label: "SSO SAML",
         icon: "🔐",
         gate: "Pro+",
+        minRole: "ADMIN",
       },
       {
         href: "/admin/api-keys",
         label: "API Keys",
         icon: "🔑",
         gate: "Pro+",
+        minRole: "ADMIN",
       },
     ],
   },
@@ -124,57 +196,96 @@ const SECTIONS: Section[] = [
     title: "Avancé",
     icon: "🧰",
     items: [
-      { href: "/admin/onboarding", label: "Premiers pas", icon: "🚀" },
-      { href: "/admin/impact", label: "Impact mesuré", icon: "📈" },
-      { href: "/admin/business", label: "Impact business", icon: "💼" },
+      // Premiers pas = wizard onboarding pour ADMIN qui configure le tenant.
+      {
+        href: "/admin/onboarding",
+        label: "Premiers pas",
+        icon: "🚀",
+        minRole: "ADMIN",
+      },
+      // Impact = analytics business etendus, plutot pour RSSI/dirigeant.
+      {
+        href: "/admin/impact",
+        label: "Impact mesuré",
+        icon: "📈",
+        minRole: "RSSI",
+      },
+      {
+        href: "/admin/business",
+        label: "Impact business",
+        icon: "💼",
+        minRole: "RSSI",
+      },
       {
         href: "/admin/analytics/heatmap",
         label: "Heatmap métier",
         icon: "🔥",
+        minRole: "RSSI",
       },
       {
         href: "/admin/analytics/forecast",
         label: "Forecast & trajectoires",
         icon: "🔮",
+        minRole: "RSSI",
       },
+      // Liste sensible (users a risque). RSSI minimum (donnees nominatives
+      // de fragilite cyber).
       {
         href: "/admin/users/at-risk",
         label: "Utilisateurs vulnérables",
         icon: "⚠️",
+        minRole: "RSSI",
       },
+      // Groupes = organisation d'equipe, accessible MANAGER.
       { href: "/admin/groupes", label: "Groupes", icon: "🏷️" },
       {
         href: "/admin/vishing",
         label: "Vishing 🇫🇷",
         icon: "📞",
         gate: "Pro+",
+        minRole: "ADMIN",
       },
       {
         href: "/admin/smishing",
         label: "Smishing 🇫🇷",
         icon: "📱",
         gate: "Pro+",
+        minRole: "ADMIN",
       },
       {
         href: "/admin/quishing",
         label: "Quishing 🇫🇷",
         icon: "🔳",
         gate: "Pro+",
+        minRole: "ADMIN",
       },
-      { href: "/admin/contributions", label: "Contributions", icon: "✍️" },
+      {
+        href: "/admin/contributions",
+        label: "Contributions",
+        icon: "✍️",
+        minRole: "ADMIN",
+      },
       {
         href: "/admin/incidents",
         label: "Cyber-Réflexe",
         icon: "🚨",
         gate: "Pro+",
+        minRole: "ADMIN",
       },
       {
         href: "/admin/etablissements",
         label: "Établissements",
         icon: "🏢",
         gate: "Pro+",
+        minRole: "ADMIN",
       },
-      { href: "/admin/license", label: "Licence Ed25519", icon: "🔐" },
+      // Licence Ed25519 = config crypto sensible.
+      {
+        href: "/admin/license",
+        label: "Licence Ed25519",
+        icon: "🔐",
+        minRole: "ADMIN",
+      },
     ],
   },
 ];
@@ -218,11 +329,30 @@ function findActiveSectionId(
 export default function AdminSidebar() {
   const path = usePathname();
   const { data: session } = useSession();
-  const isSuperAdmin = (session?.user as any)?.role === "SUPERADMIN";
-  const sections = useMemo(
-    () => (isSuperAdmin ? [...SECTIONS, ...SUPERADMIN_SECTIONS] : SECTIONS),
-    [isSuperAdmin],
-  );
+  // Rang numerique du role courant (defaut : MANAGER = 1 si pas de session
+  // ou role inconnu, ce qui est conservateur — pendant le tres bref temps
+  // de chargement de useSession on n'affiche que les items MANAGER+).
+  const currentRole = ((session?.user as any)?.role as Role) ?? "MANAGER";
+  const currentRank = ROLE_RANK[currentRole] ?? ROLE_RANK.MANAGER;
+  const isSuperAdmin = currentRole === "SUPERADMIN";
+
+  // Filtre les sections : on garde un item si son minRole (default MANAGER)
+  // est <= au rang courant. Si une section finit vide apres filtrage, on
+  // ne la rend pas du tout (evite les accordeons fantomes).
+  const sections = useMemo(() => {
+    const all = isSuperAdmin
+      ? [...SECTIONS, ...SUPERADMIN_SECTIONS]
+      : SECTIONS;
+    return all
+      .map((section) => ({
+        ...section,
+        items: section.items.filter((it) => {
+          const minRank = ROLE_RANK[it.minRole ?? "MANAGER"];
+          return currentRank >= minRank;
+        }),
+      }))
+      .filter((section) => section.items.length > 0);
+  }, [currentRank, isSuperAdmin]);
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
