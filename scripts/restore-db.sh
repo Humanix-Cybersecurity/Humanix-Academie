@@ -78,15 +78,26 @@ TARGET_DB="${TARGET_DB:-$PGDATABASE}"
 BACKUP_LOCAL_DIR="${BACKUP_LOCAL_DIR:-/var/backups/humanix}"
 AGE_KEY_FILE="${BACKUP_AGE_KEY_FILE:-$HOME/.config/humanix/backup.key}"
 
+# Mode docker exec si BACKUP_PG_CONTAINER defini (cf. backup-db.sh)
+DOCKER_MODE=0
+if [[ -n "${BACKUP_PG_CONTAINER:-}" ]]; then
+  DOCKER_MODE=1
+fi
+
 # Verifications de base
-[[ -n "${PGHOST:-}" ]] || fail "PGHOST non defini" 1
 [[ -n "${PGUSER:-}" ]] || fail "PGUSER non defini" 1
 [[ -n "$TARGET_DB" ]] || fail "Base cible non specifiee" 1
 [[ -f "$AGE_KEY_FILE" ]] || fail "Cle privee age introuvable : $AGE_KEY_FILE" 1
-
-for bin in pg_restore age; do
-  command -v "$bin" >/dev/null 2>&1 || fail "Binaire manquant : $bin" 1
-done
+if [[ "$DOCKER_MODE" -eq 0 ]]; then
+  [[ -n "${PGHOST:-}" ]] || fail "PGHOST non defini (ou definir BACKUP_PG_CONTAINER pour mode docker)" 1
+  command -v pg_restore >/dev/null 2>&1 || fail "Binaire manquant : pg_restore" 1
+else
+  command -v docker >/dev/null 2>&1 || fail "Binaire manquant : docker" 1
+  docker ps --filter "name=^${BACKUP_PG_CONTAINER}$" --format '{{.Names}}' \
+    | grep -q "^${BACKUP_PG_CONTAINER}$" \
+    || fail "Container Postgres introuvable ou arrete : $BACKUP_PG_CONTAINER" 1
+fi
+command -v age >/dev/null 2>&1 || fail "Binaire manquant : age" 1
 
 # ----------------------------------------------------------------------------
 # 1. Selection du backup
@@ -193,7 +204,11 @@ echo "============================================================"
 echo "  Backup source  : $SELECTED_FILE"
 echo "  Taille dump    : $DEC_SIZE octets"
 echo "  Base cible     : $TARGET_DB"
-echo "  Host           : $PGHOST:$PGPORT"
+if [[ "$DOCKER_MODE" -eq 1 ]]; then
+  echo "  Mode           : docker exec dans container $BACKUP_PG_CONTAINER"
+else
+  echo "  Host           : $PGHOST:$PGPORT"
+fi
 echo "  Utilisateur    : $PGUSER"
 echo ""
 echo "  ⚠  Cette operation va REMPLACER le contenu de '$TARGET_DB'."
@@ -207,22 +222,44 @@ CONFIRM=$(ask "Tape 'OUI JE CONFIRME' (en majuscules, exactement) :")
 # 4. pg_restore
 # ----------------------------------------------------------------------------
 log "pg_restore en cours (cela peut prendre plusieurs minutes)..."
-PGPASSWORD="${PGPASSWORD:-}" pg_restore \
-  --host="$PGHOST" \
-  --port="$PGPORT" \
-  --username="$PGUSER" \
-  --dbname="$TARGET_DB" \
-  --clean \
-  --if-exists \
-  --no-owner \
-  --no-privileges \
-  --jobs=4 \
-  --verbose \
-  "$DECRYPTED_FILE" \
-  || fail "pg_restore a echoue" 4
 
-log "Restauration terminee avec succes."
-log "Base : $TARGET_DB sur $PGHOST:$PGPORT"
+if [[ "$DOCKER_MODE" -eq 1 ]]; then
+  # Mode docker exec : on streamline le fichier dechiffre dans stdin du container
+  # qui execute pg_restore en lisant depuis stdin (- en argument).
+  # --jobs=4 n'est PAS compatible avec --format=custom + stdin pour pg_restore
+  # (limitation Postgres). On reste sur jobs=1 en docker mode.
+  docker exec -i \
+    -e PGPASSWORD="${PGPASSWORD:-}" \
+    "$BACKUP_PG_CONTAINER" \
+    pg_restore \
+      --username="$PGUSER" \
+      --dbname="$TARGET_DB" \
+      --clean \
+      --if-exists \
+      --no-owner \
+      --no-privileges \
+      --verbose \
+    < "$DECRYPTED_FILE" \
+    || fail "pg_restore (docker exec) a echoue" 4
+  log "Restauration terminee avec succes."
+  log "Base : $TARGET_DB dans container $BACKUP_PG_CONTAINER"
+else
+  PGPASSWORD="${PGPASSWORD:-}" pg_restore \
+    --host="$PGHOST" \
+    --port="$PGPORT" \
+    --username="$PGUSER" \
+    --dbname="$TARGET_DB" \
+    --clean \
+    --if-exists \
+    --no-owner \
+    --no-privileges \
+    --jobs=4 \
+    --verbose \
+    "$DECRYPTED_FILE" \
+    || fail "pg_restore a echoue" 4
+  log "Restauration terminee avec succes."
+  log "Base : $TARGET_DB sur $PGHOST:$PGPORT"
+fi
 log ""
 log "Etapes de validation recommandees :"
 log "  1. psql -c 'SELECT COUNT(*) FROM \"Tenant\";'"
