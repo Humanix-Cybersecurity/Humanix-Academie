@@ -252,6 +252,7 @@ export default function HeaderBar({ demoMode = false }: { demoMode?: boolean }) 
     user?.role === "MANAGER" ||
     user?.role === "RSSI" ||
     user?.role === "SUPERADMIN";
+  const isSuperadmin = user?.role === "SUPERADMIN";
   const canMarketplace =
     user?.role === "ADMIN" ||
     user?.role === "RSSI" ||
@@ -313,6 +314,21 @@ export default function HeaderBar({ demoMode = false }: { demoMode?: boolean }) 
                 className="hidden md:inline-flex"
               >
                 Console
+              </NavLink>
+            )}
+            {isSuperadmin && (
+              <NavLink
+                href="/superadmin"
+                isActive={isActive("/superadmin")}
+                className="hidden md:inline-flex"
+              >
+                <span className="inline-flex items-center gap-1">
+                  Super-admin
+                  <span
+                    aria-hidden="true"
+                    className="inline-block w-1.5 h-1.5 rounded-full bg-rose-500"
+                  />
+                </span>
               </NavLink>
             )}
 
@@ -437,6 +453,14 @@ export default function HeaderBar({ demoMode = false }: { demoMode?: boolean }) 
                         href="/admin"
                         icon="⚙️"
                         label="Console admin"
+                        onClick={() => setUserMenuOpen(false)}
+                      />
+                    )}
+                    {isSuperadmin && (
+                      <UserMenuItem
+                        href="/superadmin"
+                        icon="⭐"
+                        label="Super-admin (cross-tenant)"
                         onClick={() => setUserMenuOpen(false)}
                       />
                     )}
