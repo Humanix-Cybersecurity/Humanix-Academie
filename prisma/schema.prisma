@@ -80,6 +80,23 @@ model Tenant {
   dataRetentionLastRunAt DateTime?
 
   // ----------------------------------------------------
+  // SUSPENSION / DESACTIVATION (mai 2026)
+  // ----------------------------------------------------
+  // Geree par le SUPERADMIN depuis /superadmin/tenants/[id].
+  // Un tenant desactive :
+  //   - Refuse les nouveaux logins (cf. lib/auth.ts callbacks.signIn)
+  //   - Garde ses donnees en BDD (pas une suppression)
+  //   - Est filtre par defaut sur /superadmin/tenants (toggle "voir
+  //     desactives" pour les afficher)
+  // Defaut true (les tenants existants restent actifs apres migration).
+  isActive       Boolean   @default(true)
+  disabledAt     DateTime?
+  // Email du SUPERADMIN qui a desactive (audit + UX "qui contacter").
+  disabledBy     String?
+  // Texte libre court (motif RGPD : conserve pour traçabilite).
+  disabledReason String?
+
+  // ----------------------------------------------------
   // AUTOMATIONS DE REMEDIATION (mai 2026)
   // ----------------------------------------------------
   // Flags opt-in (defaut false) configurables sur /admin/automations.
@@ -1660,6 +1677,9 @@ enum AuditAction {
   TENANT_CREATED
   TENANT_UPDATED
   TENANT_DELETED
+  TENANT_DEACTIVATED
+  TENANT_REACTIVATED
+  TENANT_USERS_VIEWED // SUPERADMIN a consulte la liste users d'un tenant
   // Groupes
   GROUP_CREATED
   GROUP_UPDATED

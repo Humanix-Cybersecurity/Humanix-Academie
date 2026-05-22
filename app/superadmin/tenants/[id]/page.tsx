@@ -5,6 +5,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { computeTenantHealth } from "@/lib/tenant-health";
 import { db } from "@/lib/db";
+import {
+  deactivateTenant,
+  reactivateTenant,
+  deleteTenant,
+} from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -16,12 +21,31 @@ const SIGNAL_BG: Record<string, string> = {
 
 export default async function TenantDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ msg?: string }>;
 }) {
   const { id } = await params;
+  const { msg } = await searchParams;
   const health = await computeTenantHealth(id);
   if (!health) notFound();
+
+  // Fetch des champs isActive / disabledAt / disabledBy / disabledReason
+  // (pas dans tenant-health pour eviter de toucher la couche analytics).
+  const tenantMeta = await db.tenant.findUnique({
+    where: { id },
+    select: {
+      isActive: true,
+      disabledAt: true,
+      disabledBy: true,
+      disabledReason: true,
+      paymentSubscriptionId: true,
+      subscriptionStatus: true,
+    },
+  });
+  // tenant existe forcement (health serait null sinon). On a deja notFound() ci-dessus.
+  if (!tenantMeta) notFound();
 
   // Liste des admins du tenant pour le support (qui contacter)
   const admins = await db.user.findMany({
@@ -160,6 +184,179 @@ export default async function TenantDetailPage({
             </tbody>
           </table>
         </div>
+      </section>
+
+      {/* Message flash (toast simple via query param ?msg=) */}
+      {msg && (
+        <div
+          role="status"
+          className="rounded-xl border border-emerald-200 dark:border-emerald-900/40 bg-emerald-50 dark:bg-emerald-900/15 p-3 text-sm text-emerald-900 dark:text-emerald-200"
+        >
+          {msg === "deactivated" && "✓ Tenant désactivé. Les utilisateurs ne peuvent plus se connecter."}
+          {msg === "reactivated" && "✓ Tenant réactivé. Les utilisateurs peuvent à nouveau se connecter."}
+          {msg === "already-disabled" && "ℹ Tenant déjà désactivé."}
+          {msg === "already-active" && "ℹ Tenant déjà actif."}
+        </div>
+      )}
+
+      {/* === ACCES USERS (avec masquage RGPD) === */}
+      <section
+        aria-labelledby="users-title"
+        className="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5"
+      >
+        <h2
+          id="users-title"
+          className="font-display font-bold text-primary-500 dark:text-accent-300 mb-2"
+        >
+          👥 Tous les utilisateurs du tenant
+        </h2>
+        <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+          Voir la liste complète ({health.totalUsers} utilisateurs) avec
+          emails et noms <strong>masqués RGPD</strong>. Accès tracé dans le
+          journal d&apos;audit.
+        </p>
+        <Link
+          href={`/superadmin/tenants/${id}/users`}
+          className="btn-secondary text-sm"
+        >
+          Consulter la liste →
+        </Link>
+      </section>
+
+      {/* === DESACTIVATION / REACTIVATION === */}
+      {tenantMeta?.isActive ? (
+        <section
+          aria-labelledby="disable-title"
+          className="rounded-2xl border-2 border-amber-200 dark:border-amber-900/40 bg-amber-50/40 dark:bg-amber-900/15 p-5"
+        >
+          <h2
+            id="disable-title"
+            className="font-display font-bold text-amber-900 dark:text-amber-200 mb-2"
+          >
+            ⏸ Désactiver le tenant
+          </h2>
+          <p className="text-sm text-amber-800 dark:text-amber-300 mb-4">
+            Bloque les connexions de tous les utilisateurs de ce tenant.{" "}
+            <strong>Réversible</strong> — données conservées en BDD. À utiliser
+            pour suspendre temporairement (impayé, abus, demande client).
+          </p>
+          <form action={deactivateTenant} className="space-y-3">
+            <input type="hidden" name="tenantId" value={id} />
+            <div>
+              <label
+                htmlFor="disable-reason"
+                className="block text-xs font-bold uppercase tracking-wider text-amber-900 dark:text-amber-200 mb-1"
+              >
+                Motif (obligatoire — pour audit)
+              </label>
+              <input
+                id="disable-reason"
+                name="reason"
+                type="text"
+                required
+                maxLength={500}
+                placeholder="Ex : impayé 30j, demande client, suspicion d'abus..."
+                className="block w-full rounded-xl border-2 border-amber-200 dark:border-amber-700 bg-white dark:bg-slate-900 p-2 text-sm focus:border-accent-500 focus:outline-none"
+              />
+            </div>
+            <button
+              type="submit"
+              className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-sm font-bold transition"
+            >
+              Désactiver le tenant
+            </button>
+          </form>
+        </section>
+      ) : (
+        <section
+          aria-labelledby="reactivate-title"
+          className="rounded-2xl border-2 border-emerald-200 dark:border-emerald-900/40 bg-emerald-50/40 dark:bg-emerald-900/15 p-5"
+        >
+          <h2
+            id="reactivate-title"
+            className="font-display font-bold text-emerald-900 dark:text-emerald-200 mb-2"
+          >
+            ▶ Tenant désactivé · Réactiver
+          </h2>
+          <div className="text-sm text-emerald-800 dark:text-emerald-300 mb-4 space-y-1">
+            <p>
+              <strong>Désactivé le :</strong>{" "}
+              {tenantMeta.disabledAt
+                ? new Date(tenantMeta.disabledAt).toLocaleString("fr-FR")
+                : "n/a"}
+            </p>
+            <p>
+              <strong>Par :</strong> {tenantMeta.disabledBy ?? "n/a"}
+            </p>
+            <p>
+              <strong>Motif :</strong> {tenantMeta.disabledReason ?? "n/a"}
+            </p>
+          </div>
+          <form action={reactivateTenant}>
+            <input type="hidden" name="tenantId" value={id} />
+            <button
+              type="submit"
+              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold transition"
+            >
+              Réactiver le tenant
+            </button>
+          </form>
+        </section>
+      )}
+
+      {/* === DANGER ZONE : SUPPRESSION === */}
+      <section
+        aria-labelledby="delete-title"
+        className="rounded-2xl border-2 border-rose-300 dark:border-rose-900/60 bg-rose-50/40 dark:bg-rose-900/15 p-5"
+      >
+        <h2
+          id="delete-title"
+          className="font-display font-bold text-rose-900 dark:text-rose-200 mb-2"
+        >
+          ⚠ Danger zone · Supprimer le tenant
+        </h2>
+        <p className="text-sm text-rose-800 dark:text-rose-300 mb-3">
+          <strong>Action irréversible</strong> — supprime le tenant et{" "}
+          <strong>toutes</strong> ses données (utilisateurs, progressions,
+          événements, groupes, audit logs liés). Conforme RGPD art. 17.
+        </p>
+        {tenantMeta?.paymentSubscriptionId &&
+        tenantMeta?.subscriptionStatus === "active" ? (
+          <p className="text-sm bg-rose-100 dark:bg-rose-950/40 rounded-lg p-3 text-rose-900 dark:text-rose-200">
+            ⛔ Abonnement Mollie actif détecté. Résilie d&apos;abord la
+            subscription via la console Mollie ou /admin/billing avant de
+            pouvoir supprimer ce tenant.
+          </p>
+        ) : (
+          <form action={deleteTenant} className="space-y-3">
+            <input type="hidden" name="tenantId" value={id} />
+            <div>
+              <label
+                htmlFor="confirm-name"
+                className="block text-xs font-bold uppercase tracking-wider text-rose-900 dark:text-rose-200 mb-1"
+              >
+                Pour confirmer, retape exactement :{" "}
+                <span className="font-mono text-sm bg-rose-100 dark:bg-rose-950/40 px-2 py-0.5 rounded">
+                  {health.tenantName}
+                </span>
+              </label>
+              <input
+                id="confirm-name"
+                name="confirmName"
+                type="text"
+                required
+                autoComplete="off"
+                className="block w-full rounded-xl border-2 border-rose-300 dark:border-rose-700 bg-white dark:bg-slate-900 p-2 text-sm font-mono focus:border-rose-500 focus:outline-none"
+              />
+            </div>
+            <button
+              type="submit"
+              className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-sm font-bold transition"
+            >
+              Supprimer définitivement
+            </button>
+          </form>
+        )}
       </section>
     </div>
   );
