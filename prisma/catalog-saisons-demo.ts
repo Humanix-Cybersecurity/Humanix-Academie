@@ -109,4 +109,96 @@ export const CATALOG_SAISONS_DEMO: CatalogSaison[] = [
       },
     ],
   },
+  // -----------------------------------------------------------------------------
+  // SAISON "MAITRISE DE L'IA" (mai 2026, post-launch sprint)
+  // 12 episodes officiels. Le contenu pedagogique detaille (MDX scenario,
+  // quiz, choix) est ajoute progressivement dans content/saisons/maitrise-ia/.
+  // Pour les episodes sans MDX, le moteur fallback (cf. components/Episode
+  // Player.tsx) sert un contenu generique base sur le titre + description.
+  // Sources : MIT Media Lab "Your Brain on ChatGPT" 2025, Stanford HAI
+  // "Cognitive Offloading at Scale" 2025, ANSSI, AI Act EU.
+  // -----------------------------------------------------------------------------
+  {
+    slug: "maitrise-ia",
+    title: "Maitrise de l'IA generative",
+    description:
+      "12 episodes pour utiliser ChatGPT, Claude et consorts sans deleguer ton esprit critique. Hallucinations, atrophie cognitive, shadow AI, deepfakes, AI Act. Source : MIT Media Lab 2025, Stanford HAI, ANSSI, AI Act EU.",
+    coverEmoji: "🧠",
+    order: 4,
+    audience: "tous",
+    episodes: [
+      {
+        slug: "01-hallucinations",
+        title: "Quand ChatGPT invente : la mecanique des hallucinations",
+        durationMinutes: 6,
+        difficulty: "easy",
+      },
+      {
+        slug: "02-autorite-textuelle",
+        title: "Le piege de l'autorite textuelle",
+        durationMinutes: 5,
+        difficulty: "easy",
+      },
+      {
+        slug: "03-atrophie-critique",
+        title: "L'atrophie du muscle critique (MIT 2025)",
+        durationMinutes: 7,
+        difficulty: "medium",
+      },
+      {
+        slug: "04-mes-donnees-partent-ou",
+        title: "Mes donnees partent ou ?",
+        durationMinutes: 6,
+        difficulty: "medium",
+      },
+      {
+        slug: "05-shadow-ai",
+        title: "Shadow AI : quand l'IT ne sait pas",
+        durationMinutes: 6,
+        difficulty: "medium",
+      },
+      {
+        slug: "06-deepfakes-vocaux",
+        title: "Deepfakes vocaux : 3 secondes d'audio suffisent",
+        durationMinutes: 7,
+        difficulty: "medium",
+      },
+      {
+        slug: "07-biais-equite",
+        title: "Biais & equite : quand un LLM exclut sans le voir",
+        durationMinutes: 6,
+        difficulty: "medium",
+      },
+      {
+        slug: "08-prompt-injection",
+        title: "Prompt injection : manipuler un assistant IA",
+        durationMinutes: 7,
+        difficulty: "hard",
+      },
+      {
+        slug: "09-verifier-sources",
+        title: "Verifier les sources : la methode des 3 sources",
+        durationMinutes: 5,
+        difficulty: "easy",
+      },
+      {
+        slug: "10-co-pilote-pas-pilote",
+        title: "Co-pilote, pas pilote : workflow avec l'humain final",
+        durationMinutes: 6,
+        difficulty: "medium",
+      },
+      {
+        slug: "11-ai-act-2026",
+        title: "AI Act 2026 : ce qui change pour ton equipe",
+        durationMinutes: 8,
+        difficulty: "hard",
+      },
+      {
+        slug: "12-charte-ia",
+        title: "Batir une charte IA pour ton entreprise",
+        durationMinutes: 7,
+        difficulty: "medium",
+      },
+    ],
+  },
 ];
