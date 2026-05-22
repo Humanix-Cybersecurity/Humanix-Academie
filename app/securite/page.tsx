@@ -445,9 +445,9 @@ export default function SecuritePage() {
                   loc="France 🇫🇷 (Paris)"
                 />
                 <SubcontractorRow
-                  name="Mollie SA"
-                  role="Prestataire de paiement (PCI-DSS niveau 1, tokenisation CB)"
-                  loc="France 🇫🇷 (Paris)"
+                  name="Mollie B.V."
+                  role="Prestataire de paiement (PCI-DSS niveau 1, tokenisation CB, régulé DNB, PSD2 UE)"
+                  loc="UE 🇪🇺 (Amsterdam, Pays-Bas)"
                 />
                 <SubcontractorRow
                   name="Olinda SAS (Qonto)"
