@@ -8,6 +8,10 @@ import { db } from "@/lib/db";
 import type { Role } from "@prisma/client";
 import { auditLog, AuditActions } from "@/lib/audit";
 import { fireAndForgetAutoAssign } from "@/lib/onboarding/auto-assign";
+import {
+  assertCanActOn,
+  assertCanChangeRole,
+} from "@/lib/role-hierarchy";
 
 async function requireAdmin() {
   const session = await auth();
@@ -200,6 +204,10 @@ export async function toggleUserActive(userId: string, isActive: boolean) {
   if (userId === ctx.userId) throw new Error("cannot_disable_self");
   const target = await db.user.findUnique({ where: { id: userId } });
   if (!target || target.tenantId !== ctx.tenantId) throw new Error("not_found");
+  // Hierarchie RBAC : on ne peut suspendre/reactiver qu'un user de rang
+  // strictement inferieur. Empeche deux ADMIN de se suspendre mutuellement
+  // (lockout tenant) ou un RSSI de suspendre un ADMIN/SUPERADMIN.
+  assertCanActOn(ctx.role as Role, target.role);
   await db.user.update({ where: { id: userId }, data: { isActive } });
   await auditLog({
     action: isActive ? AuditActions.USER_ACTIVATED : AuditActions.USER_SUSPENDED,
@@ -217,6 +225,11 @@ export async function changeUserRole(userId: string, role: Role) {
   const target = await db.user.findUnique({ where: { id: userId } });
   if (!target || target.tenantId !== ctx.tenantId) throw new Error("not_found");
   const previousRole = target.role;
+  // Hierarchie RBAC : (1) on ne peut modifier qu'un user de rang STRICTEMENT
+  // inferieur, (2) on ne peut promouvoir QUE vers un role <= le sien.
+  // Empeche un ADMIN de creer un SUPERADMIN (privilege escalation), ou un
+  // MANAGER de toucher au role d'un ADMIN. Signale par Florian 2026-05-22.
+  assertCanChangeRole(ctx.role as Role, previousRole, role);
   await db.user.update({ where: { id: userId }, data: { role } });
   await auditLog({
     action: AuditActions.USER_ROLE_CHANGED,
@@ -235,6 +248,9 @@ export async function deleteUser(userId: string) {
   if (userId === ctx.userId) throw new Error("cannot_delete_self");
   const target = await db.user.findUnique({ where: { id: userId } });
   if (!target || target.tenantId !== ctx.tenantId) throw new Error("not_found");
+  // Hierarchie RBAC : impossible de supprimer un user de rang >= soi.
+  // Empeche un ADMIN de supprimer un autre ADMIN ou un SUPERADMIN.
+  assertCanActOn(ctx.role as Role, target.role);
   await db.user.delete({ where: { id: userId } });
   await auditLog({
     action: AuditActions.USER_DELETED,
@@ -634,6 +650,11 @@ export async function forceUserMfa(userId: string, force: boolean) {
   }
   const target = await db.user.findUnique({ where: { id: userId } });
   if (!target || target.tenantId !== ctx.tenantId) throw new Error("not_found");
+  // Hierarchie RBAC : on ne peut forcer/lever la 2FA que sur un user de
+  // rang strictement inferieur. Sauf cas isCurrent ou on auto-force sa 2FA.
+  if (userId !== ctx.userId) {
+    assertCanActOn(ctx.role as Role, target.role);
+  }
   await db.user.update({
     where: { id: userId },
     data: { mfaForced: force },
@@ -654,6 +675,11 @@ export async function unlockUser(userId: string) {
   const ctx = await requireAdmin();
   const target = await db.user.findUnique({ where: { id: userId } });
   if (!target || target.tenantId !== ctx.tenantId) throw new Error("not_found");
+  // Hierarchie RBAC : on ne peut deverrouiller qu'un user de rang
+  // strictement inferieur. Empeche un ADMIN de deverrouiller un
+  // SUPERADMIN compromis (qui doit passer par le SUPERADMIN lui-meme
+  // pour signaler la prise en charge).
+  assertCanActOn(ctx.role as Role, target.role);
   await db.user.update({
     where: { id: userId },
     data: { failedLoginAttempts: 0, lockedUntil: null },
@@ -673,6 +699,11 @@ export async function adminResetUserMfa(userId: string) {
   const ctx = await requireAdmin();
   const target = await db.user.findUnique({ where: { id: userId } });
   if (!target || target.tenantId !== ctx.tenantId) throw new Error("not_found");
+  // Hierarchie RBAC : reset 2FA = action destructive sur la securite du
+  // compte cible, on l'autorise SEULEMENT sur un user de rang inferieur.
+  // Sinon un ADMIN pourrait reset la 2FA d'un SUPERADMIN et hijacker son
+  // compte (suppression du seul facteur restant).
+  assertCanActOn(ctx.role as Role, target.role);
   await db.user.update({
     where: { id: userId },
     data: {
