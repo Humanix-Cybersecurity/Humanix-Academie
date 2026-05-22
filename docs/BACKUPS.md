@@ -232,6 +232,17 @@ BACKUP_FTP_PATH=/humanix-academie
 # Rétention (jours)
 BACKUP_RETENTION_DAYS=30
 BACKUP_LOCAL_DIR=/var/backups/humanix
+
+# Mode TLS du serveur FTP cible.
+# - "yes" (defaut) : exige FTPS Explicit (AUTH TLS sur port 21), refuse si serveur ne supporte pas
+# - "no" : FTP en clair (cas Scaleway "Backup Space" dedibackup-*.online.net qui n'accepte que FTP)
+#
+# IMPORTANT : meme avec "no", le CONTENU des fichiers reste chiffre cote
+# client par age. Seules les credentials FTP transitent en clair (donc a
+# rotater regulierement). Le scenario "attaquant qui ecoute le reseau"
+# ne lui donne acces qu'au fichier dejà chiffré (illisible sans clé privée).
+BACKUP_FTP_TLS=no                # pour Scaleway Backup Space
+# BACKUP_FTP_SSL_VERIFY=yes      # uniquement utile si BACKUP_FTP_TLS=yes
 ```
 
 **Contenu pour le mode host** (alternative, si Postgres exposé) :
