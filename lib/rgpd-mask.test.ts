@@ -19,8 +19,11 @@ describe("maskEmail", () => {
   });
 
   it("gere les emails tres courts gracieusement", () => {
-    // a@b.co : domain name = "b" (1 char), keepe tel quel (rien a masquer).
-    expect(maskEmail("a@b.co")).toBe("a***a@b.co");
+    // a@b.co : local "a" (1 char) + domain "b" (1 char) tous deux gardes
+    // tels quels (rien a masquer sur 1 char, ca produirait juste du bruit
+    // "a***a" plus long que l'original). Le format reste lisible et le
+    // TLD est preserve.
+    expect(maskEmail("a@b.co")).toBe("a@b.co");
   });
 
   it("retourne *** sur email sans @", () => {
