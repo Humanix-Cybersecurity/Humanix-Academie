@@ -30,6 +30,11 @@ const AUTH_ERROR_FR: Record<string, string> = {
     "Aucun compte trouvé pour cette adresse. Demandez à votre administrateur de vous inviter d'abord.",
   AccountSuspended:
     "Votre compte est suspendu. Contactez votre administrateur.",
+  // Le tenant entier est desactive par l'operateur Humanix (SUPERADMIN).
+  // Message volontairement neutre pour ne pas exposer l'info "tenant
+  // suspendu" a un user innocent — il pense que c'est son compte.
+  TenantSuspended:
+    "Votre espace est temporairement indisponible. Contactez le support à contact@humanix-cybersecurity.fr.",
   // Erreurs custom Humanix (provider Credentials password)
   MfaRequired:
     "Cette adresse exige un code à 2 facteurs. Ouvrez votre application d'authentification.",
