@@ -9,11 +9,13 @@
 // "webauthn" dans lib/auth.ts).
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { headers } from "next/headers";
 import { db } from "@/lib/db";
 import {
   verifyChallenge,
   verifyLogin,
   signFreshAuth,
+  buildRequestOrigin,
   WEBAUTHN_LOGIN_COOKIE,
   WEBAUTHN_FRESH_COOKIE,
 } from "@/lib/webauthn";
@@ -46,10 +48,25 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Challenge invalide." }, { status: 400 });
   }
 
+  // Origin attendu de la signature browser : on lit l'host de la requete
+  // courante (pour supporter le login depuis un sous-domaine de tenant)
+  // et on valide qu'il est bien sous le rpID. Cf. fix bug Florian
+  // 2026-05-23 : verify retournait 401 quand origin browser etait un
+  // sub-domain de humanix-academie.fr alors que getOrigin() = root.
+  const h = await headers();
+  const originCheck = buildRequestOrigin(h);
+  if (!originCheck.ok) {
+    return NextResponse.json(
+      { error: "Origin invalide." },
+      { status: 400 },
+    );
+  }
+
   const result = await verifyLogin({
     userId: user.id,
     expectedChallenge: env.challenge,
     response,
+    expectedOrigin: originCheck.origin,
   });
   if (!result.ok) {
     return NextResponse.json(
