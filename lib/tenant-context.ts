@@ -19,6 +19,7 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { hasTenantAccess } from "@/lib/tenant-membership";
 
 // Type local pour la session NextAuth retournee par auth() sans args.
 // On evite Awaited<ReturnType<typeof auth>> qui resout sur la signature
@@ -126,8 +127,21 @@ export async function resolveTenantContext(): Promise<TenantContext> {
     return { kind: "tenant_match", slug, tenant, session };
   }
 
-  // Mismatch : user connecte sur un autre tenant. On construit l'URL de SON
-  // tenant pour redirect.
+  // Mismatch potentiel : avant de rediriger, on verifie si le user a un
+  // ACCES LEGITIME a ce tenant (SUPERADMIN ou TenantMembership). Si oui,
+  // on autorise la navigation cross-tenant — le user pourra agir comme
+  // admin sur ce tenant via le sous-domaine correspondant.
+  // Ajoute 2026-05-23 (multi-tenant membership a la demande de Florian).
+  const userId = typeof session.user.id === "string" ? session.user.id : null;
+  if (userId) {
+    const hasAccess = await hasTenantAccess(userId, tenant.id);
+    if (hasAccess) {
+      return { kind: "tenant_match", slug, tenant, session };
+    }
+  }
+
+  // Mismatch confirme : user connecte sur un autre tenant SANS membership.
+  // On construit l'URL de SON tenant pour redirect.
   const userTenant = sessionTenantId
     ? await db.tenant.findUnique({
         where: { id: sessionTenantId },
