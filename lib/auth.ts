@@ -615,9 +615,15 @@ const cookieDomain = getCookieDomain();
 // le cookie cross-subdomain (domain defini), on doit utiliser `__Secure-`
 // a la place. Si pas de domain (dev), on peut garder `__Host-` qui est
 // plus restrictif (et donc plus sur en dev pour eviter les conflits).
+//
+// IMPORTANT 2026-05-23 (bug Florian) : les noms doivent etre `authjs.*`
+// (Auth.js v5 standard), PAS `next-auth.*` (legacy NextAuth v4). Sinon
+// le proxy.ts qui cherche `__Secure-authjs.session-token` ne trouve pas
+// le cookie et redirige toute requete /admin vers /connexion alors que
+// l'user est connecte (-> boucle de login infernale).
 const csrfTokenName = cookieDomain
-  ? "__Secure-next-auth.csrf-token"
-  : "__Host-next-auth.csrf-token";
+  ? "__Secure-authjs.csrf-token"
+  : "__Host-authjs.csrf-token";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter,
@@ -632,9 +638,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   // En dev (localhost), domain reste undefined = comportement par defaut.
   cookies: {
     sessionToken: {
+      // Nom Auth.js v5 standard : `authjs.session-token`. C'est ce que
+      // cherche proxy.ts. Bug 2026-05-23 (#600 a tort) : on avait mis
+      // `next-auth.*` (legacy v4) -> proxy ne trouvait pas -> boucle
+      // de login infernale sur /admin.
       name: cookieDomain
-        ? "__Secure-next-auth.session-token"
-        : "next-auth.session-token",
+        ? "__Secure-authjs.session-token"
+        : "authjs.session-token",
       options: {
         httpOnly: true,
         sameSite: "lax",
@@ -645,8 +655,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     callbackUrl: {
       name: cookieDomain
-        ? "__Secure-next-auth.callback-url"
-        : "next-auth.callback-url",
+        ? "__Secure-authjs.callback-url"
+        : "authjs.callback-url",
       options: {
         sameSite: "lax",
         path: "/",
