@@ -67,6 +67,39 @@ export function getOrigin(): string {
   );
 }
 
+/**
+ * Construit + valide l'origin pour la requete courante.
+ *
+ * Pour le multi-tenant : un user peut signer une challenge WebAuthn depuis
+ * un sous-domaine de tenant (ex: humanix-community.humanix-academie.fr).
+ * Le browser envoie l'origin du sub-domain dans la signature, donc
+ * `expectedOrigin` cote serveur doit matcher ce sub-domain (pas le root
+ * configure dans AUTH_URL).
+ *
+ * SECURITE : on revalide que l'host est soit le rpID exact, soit un
+ * sub-domain du rpID. Cela empeche un attaquant qui controlerait un
+ * autre domaine de jouer une signature replay-cross-domain.
+ *
+ * @param headersList Headers de la requete courante (next/headers)
+ * @returns { ok: true, origin } si valide ; { ok: false } sinon
+ */
+export function buildRequestOrigin(headersList: {
+  get: (name: string) => string | null;
+}):
+  | { ok: true; origin: string }
+  | { ok: false; reason: string } {
+  const host = headersList.get("host");
+  if (!host) return { ok: false, reason: "no_host_header" };
+  const protocol = headersList.get("x-forwarded-proto") ?? "https";
+  const rpId = getRpId();
+  // Strip port pour la comparaison
+  const hostName = host.split(":")[0];
+  if (hostName !== rpId && !hostName.endsWith(`.${rpId}`)) {
+    return { ok: false, reason: "origin_not_under_rpid" };
+  }
+  return { ok: true, origin: `${protocol}://${host}` };
+}
+
 // -----------------------------------------------------------------------------
 // HMAC challenge stocké en cookie. On signe { challenge, userId, expiresAt }
 // pour eviter un fetch BDD a chaque /options - /verify.
@@ -173,13 +206,19 @@ export async function verifyAndSaveRegistration(params: {
   expectedChallenge: string;
   response: RegistrationResponseJSON;
   deviceName: string;
+  /**
+   * Origin attendu (ex: "https://humanix-community.humanix-academie.fr").
+   * Si omis, fallback sur getOrigin() = AUTH_URL. Le caller doit avoir
+   * valide que host = rpID ou sub-domain. Cf. /api/webauthn/register/verify.
+   */
+  expectedOrigin?: string;
 }): Promise<{ ok: boolean; error?: string; credentialId?: string }> {
   let verification: Awaited<ReturnType<typeof verifyRegistrationResponse>>;
   try {
     verification = await verifyRegistrationResponse({
       response: params.response,
       expectedChallenge: params.expectedChallenge,
-      expectedOrigin: getOrigin(),
+      expectedOrigin: params.expectedOrigin ?? getOrigin(),
       expectedRPID: getRpId(),
       requireUserVerification: false,
     });
@@ -256,6 +295,19 @@ export async function verifyLogin(params: {
   userId: string;
   expectedChallenge: string;
   response: AuthenticationResponseJSON;
+  /**
+   * Origin attendu de la signature WebAuthn (ex:
+   * "https://humanix-community.humanix-academie.fr"). Si omis, on fallback
+   * sur getOrigin() qui retourne le AUTH_URL global.
+   *
+   * SECURITE : le caller doit AVOIR VALIDE que l'origin est legitime (host
+   * = rpID ou sub-domain du rpID). Cf. /api/webauthn/login/verify/route.ts.
+   *
+   * Ajoute 2026-05-23 : bug Florian — login depuis un sous-domaine de
+   * tenant (humanix-community.humanix-academie.fr) retournait 401 parce
+   * que getOrigin() = root domain mismatch avec origin signature browser.
+   */
+  expectedOrigin?: string;
 }): Promise<{ ok: boolean; error?: string; credentialId?: string }> {
   const credId = params.response.id;
   const credential = await db.webAuthnCredential.findUnique({
@@ -272,7 +324,7 @@ export async function verifyLogin(params: {
     verification = await verifyAuthenticationResponse({
       response: params.response,
       expectedChallenge: params.expectedChallenge,
-      expectedOrigin: getOrigin(),
+      expectedOrigin: params.expectedOrigin ?? getOrigin(),
       expectedRPID: getRpId(),
       // SimpleWebAuthn v12+ : le parametre `authenticator` est renomme en
       // `credential` et utilise les noms canoniques WebAuthn (`id`,
