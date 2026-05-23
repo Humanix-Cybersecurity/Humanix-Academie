@@ -73,6 +73,13 @@ const PRODUIT_ITEMS_BASE: DropdownItem[] = [
     emoji: "💶",
   },
   {
+    href: "/certificat",
+    label: "Certificat",
+    description:
+      "Bouclier assurance cyber + preuve conformité NIS2. Démarche ANSSI.",
+    emoji: "🛡️",
+  },
+  {
     href: "/comparatif",
     label: "Comparatif",
     description: "Notre lecture honnête face à 5 concurrents",

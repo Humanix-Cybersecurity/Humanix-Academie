@@ -64,6 +64,29 @@ forecast.
 
 ---
 
+## 🛡️ Certificat & reconnaissance
+
+Le **Certificat Humanix** est conçu comme un **actif économique** pour les
+PME et ETI, pas comme un PDF décoratif. Trois leviers d'adoption :
+
+- **Bouclier assurance cyber** — signature Ed25519 vérifiable en 1
+  seconde + API B2B avec webhooks signés HMAC-SHA256 pour les courtiers
+  et souscripteurs. Cible : réduction de prime cyber de 15 à 40 % selon
+  le pourcentage de l'effectif certifié.
+- **Preuve de conformité NIS2** — obligation légale dirigeants depuis
+  octobre 2024 (sanctions jusqu'à 10 M€ ou 2 % CA mondial). Export
+  OSCAL v1.1.2 directement intégrable dans CISO Assistant, audit trail
+  intégral opposable.
+- **Démarche d'agrément ANSSI** — Humanix Académie postule à devenir
+  *le « Pix de la cybersécurité »* côté sensibilisation, avec un dossier
+  formel d'agrément lancé en 2026. Reconnaissance officielle visée 2027.
+
+Détail complet sur **[/certificat](https://humanix-academie.fr/certificat)** ·
+positionnement commercial assureurs dans [`docs/CERTIFICAT_POSITIONING.md`](./docs/CERTIFICAT_POSITIONING.md) ·
+trame courrier ANSSI dans [`docs/COURRIER_ANSSI.md`](./docs/COURRIER_ANSSI.md).
+
+---
+
 ## Quickstart dev local (3 minutes) ⚡
 
 ```bash
