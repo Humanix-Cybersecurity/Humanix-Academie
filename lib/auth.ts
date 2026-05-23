@@ -498,6 +498,62 @@ const adapter: typeof baseAdapter = {
 // callback a chaque requete (cout : 1 query DB par request).
 const useJwtSessions = true;
 
+/**
+ * Retourne le `domain` a utiliser pour les cookies de session NextAuth,
+ * pour qu'ils soient partages entre TOUS les sous-domaines de tenant.
+ *
+ * Exemple : prod sur "humanix-academie.fr" -> domain = ".humanix-academie.fr"
+ * Le leading dot dit au browser "ce cookie est valide pour le domaine ET
+ * tous ses sous-domaines" (specs RFC 6265 §5.1.3).
+ *
+ * En dev (localhost ou IP), on retourne undefined : le browser n'accepte
+ * pas de cookie avec un domain explicite sur localhost, donc on laisse
+ * NextAuth utiliser ses defaults (cookie host-only).
+ *
+ * BUG SIGNALE PAR FLORIAN 2026-05-23 :
+ * "impossible de se connecter depuis un autre tenant, je ne recois pas
+ * le lien magique et si j'utilise login mdp il me dis erreur"
+ *
+ * CAUSE : sans cette config, le cookie de session pose sur
+ * humanix-academie.fr n'etait pas envoye sur acme.humanix-academie.fr
+ * et reciproquement. Login OK techniquement mais session perdue
+ * immediatement apres redirect cross-subdomain. Sur un meme browser, on
+ * pouvait etre simultanement "anonyme sur acme" et "connecte sur root".
+ *
+ * Ce fix etait pre-requis du sprint multi-tenant membership (#592).
+ */
+function getCookieDomain(): string | undefined {
+  const url = process.env.NEXT_PUBLIC_APP_URL;
+  if (!url) return undefined;
+  try {
+    const hostname = new URL(url).hostname;
+    // localhost / IPv4 / IPv6 : les browsers n'acceptent pas un domain
+    // explicite -> laisser undefined pour fallback host-only.
+    if (
+      hostname === "localhost" ||
+      /^\d+\.\d+\.\d+\.\d+$/.test(hostname) ||
+      hostname.includes(":")
+    ) {
+      return undefined;
+    }
+    // Production : leading dot = valide pour le domain ET ses sous-domaines.
+    // On retire un eventuel "www." en prefixe pour eviter d'isoler les
+    // sous-domaines au www-only.
+    return `.${hostname.replace(/^www\./, "")}`;
+  } catch {
+    return undefined;
+  }
+}
+
+const cookieDomain = getCookieDomain();
+// `__Host-` prefix interdit le `domain` (specs RFC 6265bis). Si on partage
+// le cookie cross-subdomain (domain defini), on doit utiliser `__Secure-`
+// a la place. Si pas de domain (dev), on peut garder `__Host-` qui est
+// plus restrictif (et donc plus sur en dev pour eviter les conflits).
+const csrfTokenName = cookieDomain
+  ? "__Secure-next-auth.csrf-token"
+  : "__Host-next-auth.csrf-token";
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter,
   session: { strategy: useJwtSessions ? "jwt" : "database" },
@@ -505,6 +561,48 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: isDemoMode ? "/demo" : "/connexion",
     verifyRequest: "/connexion/verification",
+  },
+  // Cookies configures pour traverser les sous-domaines en prod
+  // (humanix-academie.fr + acme.humanix-academie.fr + community.humanix-...)
+  // En dev (localhost), domain reste undefined = comportement par defaut.
+  cookies: {
+    sessionToken: {
+      name: cookieDomain
+        ? "__Secure-next-auth.session-token"
+        : "next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: !!cookieDomain,
+        domain: cookieDomain,
+      },
+    },
+    callbackUrl: {
+      name: cookieDomain
+        ? "__Secure-next-auth.callback-url"
+        : "next-auth.callback-url",
+      options: {
+        sameSite: "lax",
+        path: "/",
+        secure: !!cookieDomain,
+        domain: cookieDomain,
+      },
+    },
+    csrfToken: {
+      name: csrfTokenName,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: !!cookieDomain,
+        // __Host- interdit domain ; __Secure- l'accepte. On n'attribue
+        // donc domain QUE si le nom commence par __Secure-.
+        domain: csrfTokenName.startsWith("__Secure-")
+          ? cookieDomain
+          : undefined,
+      },
+    },
   },
   providers,
   callbacks: {
