@@ -141,6 +141,10 @@ model Tenant {
   cisoConnection        CisoAssistantConnection?
   cisoSyncRuns          CisoAssistantSyncRun[]
   investigationResults  InvestigationResult[]
+  // Memberships : users externes qui ont un role admin dans ce tenant
+  // sans en etre membre natif (cf. TenantMembership). Cas typique : un
+  // SUPERADMIN Humanix qui gere plusieurs tenants clients.
+  memberships           TenantMembership[]
 
   @@index([parentTenantId])
 }
@@ -369,9 +373,66 @@ model User {
   webauthnCredentials    WebAuthnCredential[]
   achievements           UserAchievement[]
   investigationResults   InvestigationResult[]
+  // Memberships croisees : le user a un role admin DANS D'AUTRES tenants que
+  // son home. Cas typique : un SUPERADMIN Humanix qui agit aussi comme admin
+  // sur les tenants clients qu'il accompagne (cf. TenantMembership).
+  tenantMemberships      TenantMembership[]      @relation("UserTenantMemberships")
+  tenantMembershipsGrantedByMe TenantMembership[] @relation("TenantMembershipsGrantedBy")
 
   @@index([tenantId])
   @@index([isActive])
+}
+
+// =====================================================
+// TENANT MEMBERSHIP - role ADDITIONNEL dans un autre tenant que son home.
+// =====================================================
+// Cas d'usage : un SUPERADMIN Humanix qui accompagne plusieurs tenants
+// clients en tant qu'admin operatif. Sans cette table, il devrait creer
+// un user distinct par tenant (lourd, audit incoherent).
+//
+// Semantique :
+//   - User.tenantId = "home" tenant (creation, milieu naturel)
+//   - User.role     = role dans le home tenant
+//   - TenantMembership(userId, tenantId) = role ADDITIONNEL dans
+//                                          UN AUTRE tenant
+//
+// Politique de creation :
+//   - Cree par un SUPERADMIN via /superadmin/tenants/[id]/admins
+//   - jamais auto-cree
+//   - audit obligatoire (grantedBy + grantedAt + audit log)
+//
+// Effet sur les acces :
+//   - resolveTenantContext() (lib/tenant-context.ts) reconnait le mismatch
+//     si membership existe et autorise l'acces au sous-domaine.
+//   - Le helper getCurrentTenantId() (a venir) renvoie le tenant resolu
+//     via le sous-domaine pour les pages admin.
+//
+// Hierarchie (lib/role-hierarchy.ts) :
+//   - Le role assigne dans le membership doit etre <= role de l'operateur
+//   - L'operateur doit avoir un rang strictement superieur au user cible
+//
+// Ajoute 2026-05-23 a la demande de Florian.
+model TenantMembership {
+  id        String   @id @default(cuid())
+  userId    String
+  tenantId  String
+  // Role accorde dans le tenant. Typiquement ADMIN, mais peut aussi etre
+  // MANAGER ou RSSI pour limiter les droits.
+  role      Role
+  // Qui a accorde ce membership. Optionnel pour permettre la migration de
+  // donnees historiques (avant d'avoir ce champ).
+  grantedBy String?
+  grantedAt DateTime @default(now())
+  // Note libre (raison de l'attribution, contexte). Max ~200 chars.
+  note      String?
+
+  user        User    @relation("UserTenantMemberships", fields: [userId], references: [id], onDelete: Cascade)
+  tenant      Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  grantedByUser User? @relation("TenantMembershipsGrantedBy", fields: [grantedBy], references: [id], onDelete: SetNull)
+
+  @@unique([userId, tenantId], name: "userId_tenantId")
+  @@index([tenantId, role])
+  @@index([userId])
 }
 
 // =====================================================
@@ -1687,6 +1748,11 @@ enum AuditAction {
   TENANT_DEACTIVATED
   TENANT_REACTIVATED
   TENANT_USERS_VIEWED // SUPERADMIN a consulte la liste users d'un tenant
+  // Multi-tenant membership (SUPERADMIN gere les admins d'un tenant 2026-05-23)
+  TENANT_MEMBERSHIP_GRANTED // Admin externe ajoute via TenantMembership
+  TENANT_MEMBERSHIP_REVOKED // Membership retire
+  TENANT_MEMBERSHIP_UPDATED // Role du membership modifie (MANAGER -> ADMIN, etc.)
+  USER_CREATED_BY_SUPERADMIN // Nouvel admin natif cree directement via panel SUPERADMIN
   // Groupes
   GROUP_CREATED
   GROUP_UPDATED
