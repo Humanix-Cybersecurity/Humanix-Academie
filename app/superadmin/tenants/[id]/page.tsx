@@ -223,6 +223,31 @@ export default async function TenantDetailPage({
         </Link>
       </section>
 
+      {/* === GESTION DES ADMINS (multi-tenant membership) === */}
+      <section
+        aria-labelledby="admins-title"
+        className="rounded-2xl border border-accent-200 dark:border-accent-900/40 bg-accent-50/40 dark:bg-accent-950/20 p-5"
+      >
+        <h2
+          id="admins-title"
+          className="font-display font-bold text-primary-500 dark:text-accent-300 mb-2"
+        >
+          ⚙️ Gestion des admins du tenant
+        </h2>
+        <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+          Inviter de nouveaux admins natifs, accorder des memberships
+          externes (acces admin cross-tenant pour des SUPERADMIN), ou
+          retirer des droits existants. Chaque action est tracee dans le
+          journal d&apos;audit.
+        </p>
+        <Link
+          href={`/superadmin/tenants/${id}/admins`}
+          className="btn-primary text-sm"
+        >
+          Gerer les admins →
+        </Link>
+      </section>
+
       {/* === DESACTIVATION / REACTIVATION === */}
       {tenantMeta?.isActive ? (
         <section
