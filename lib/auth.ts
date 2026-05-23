@@ -404,15 +404,80 @@ if (isEmailConfigured()) {
       server: { host: "smtp.invalid", port: 25, auth: { user: "", pass: "" } },
       sendVerificationRequest: async (params) => {
         const { identifier, url } = params;
-        // Verifier que l'utilisateur n'est pas suspendu avant l'envoi
-        const u = await db.user.findUnique({ where: { email: identifier } });
+        // Verifier que l'utilisateur n'est pas suspendu avant l'envoi.
+        // On recupere AUSSI le slug du tenant home pour reecrire le
+        // callbackUrl du lien (cf. ci-dessous).
+        const u = await db.user.findUnique({
+          where: { email: identifier },
+          select: {
+            isActive: true,
+            tenantId: true,
+            tenant: { select: { slug: true } },
+          },
+        });
         if (u && !u.isActive) {
           throw new Error("Compte suspendu : contactez votre administrateur.");
         }
+
+        // ====================================================================
+        // REECRITURE DU MAGIC LINK : pointer le callbackUrl sur le sous-domaine
+        // du tenant home du user.
+        //
+        // CONTEXTE (bug Florian 2026-05-23) : NextAuth construit l'URL du
+        // magic link comme suit :
+        //   ${AUTH_URL}/api/auth/callback/nodemailer?token=...&callbackUrl=${callbackUrl}
+        //
+        // Le `callbackUrl` est le path/URL passé par le caller (signIn ou
+        // server action). Cote client UI on a fixé pour passer l'URL absolue
+        // avec window.location.origin. Mais cote server (inscription Server
+        // Action, webhook Mollie) on n'a pas le host browser, et les
+        // callbackUrl relatifs sont resolus via AUTH_URL = root.
+        //
+        // Resultat AVANT ce fix : magic links pointent vers
+        // https://humanix-academie.fr/post-login (root), pas vers le
+        // sous-domaine du tenant. L'user atterrit sur root et reste perdu.
+        //
+        // CE FIX : on reecrit le callbackUrl en construisant l'URL absolue
+        // vers le sous-domaine du tenant HOME du user (lookup BDD). Comme
+        // ca, quel que soit le flow declencheur, le lien envoie l'user sur
+        // SON tenant.
+        //
+        // Le callback NextAuth lui-meme reste sur root (rate inevitable :
+        // NextAuth utilise AUTH_URL pour construire son endpoint). Mais ce
+        // n'est pas un probleme : le browser hit root, NextAuth valide le
+        // token, pose le cookie domain-shared (.humanix-academie.fr cf. #600),
+        // puis redirige vers le callbackUrl reecrit = sous-domaine tenant.
+        // L'user atterrit sur son sous-domaine avec session active.
+        // ====================================================================
+        let finalUrl = url;
+        if (u?.tenant?.slug) {
+          try {
+            const urlObj = new URL(url);
+            const authUrl = process.env.AUTH_URL ?? process.env.NEXT_PUBLIC_APP_URL;
+            if (authUrl) {
+              const rootDomain = new URL(authUrl)
+                .hostname.replace(/^www\./, "");
+              // Ne pas reecrire en dev (localhost / IP) — pas de routage par
+              // sous-domaine possible.
+              const isDevHost =
+                rootDomain === "localhost" ||
+                /^\d+\.\d+\.\d+\.\d+$/.test(rootDomain);
+              if (!isDevHost) {
+                const newCallback = `https://${u.tenant.slug}.${rootDomain}/post-login`;
+                urlObj.searchParams.set("callbackUrl", newCallback);
+                finalUrl = urlObj.toString();
+              }
+            }
+          } catch {
+            // En cas d'erreur de parsing, on garde l'URL originale (degrade
+            // gracieusement plutot que d'echouer l'envoi).
+          }
+        }
+
         const result = await sendEmail({
           to: identifier,
           subject: "🦊 Hex t'invite à entrer dans Humanix Académie",
-          html: magicLinkEmailHTML(url),
+          html: magicLinkEmailHTML(finalUrl),
           // Le magic link est transactionnel (l'utilisateur l'a explicitement
           // demande en se loguant ou en s'inscrivant). On injecte un header
           // List-Unsubscribe avec un mailto: pour satisfaire les checks
