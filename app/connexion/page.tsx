@@ -129,12 +129,20 @@ function ConnexionInner() {
     e.preventDefault();
     setError(null);
     setSending(true);
+    // BUG FIX 2026-05-23 (Florian) : callbackUrl PATH relatif etait resolu
+    // par NextAuth via AUTH_URL=https://humanix-academie.fr (root). Donc
+    // login depuis humanix-community.humanix-academie.fr -> redirect vers
+    // root au lieu de rester sur le sous-domaine.
+    // Fix : construire l'URL absolue avec window.location.origin pour que
+    // NextAuth conserve le sous-domaine actuel. trustHost: true (lib/auth.ts)
+    // autorise les sous-domaines comme callbackUrl.
+    const callbackUrl = `${window.location.origin}/post-login`;
     const res = await signIn("password", {
       email,
       password,
       mfaCode,
       redirect: false,
-      callbackUrl: "/post-login",
+      callbackUrl,
     });
     setSending(false);
     if (!res) {
@@ -187,7 +195,7 @@ function ConnexionInner() {
         email,
         marker: "fido2",
         redirect: false,
-        callbackUrl: "/post-login",
+        callbackUrl: `${window.location.origin}/post-login`,
       });
       setSending(false);
       if (!res || res.error) {
@@ -219,7 +227,7 @@ function ConnexionInner() {
     const res = await signIn("nodemailer", {
       email,
       redirect: false,
-      callbackUrl: "/post-login",
+      callbackUrl: `${window.location.origin}/post-login`,
     });
     if (res?.error) {
       // Surface les erreurs explicites au lieu de "ok" silencieux
@@ -385,7 +393,7 @@ function ConnexionInner() {
                   type="button"
                   onClick={() =>
                     signIn("microsoft-entra-id", {
-                      callbackUrl: "/post-login",
+                      callbackUrl: `${window.location.origin}/post-login`,
                     })
                   }
                   className="w-full flex items-center justify-center gap-3 p-3 rounded-xl border-2 border-gray-200 dark:border-slate-700 hover:border-accent-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:-translate-y-px transition-all font-medium text-sm"
@@ -399,7 +407,9 @@ function ConnexionInner() {
                 <button
                   type="button"
                   onClick={() =>
-                    signIn("google", { callbackUrl: "/post-login" })
+                    signIn("google", {
+                      callbackUrl: `${window.location.origin}/post-login`,
+                    })
                   }
                   className="w-full flex items-center justify-center gap-3 p-3 rounded-xl border-2 border-gray-200 dark:border-slate-700 hover:border-accent-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:-translate-y-px transition-all font-medium text-sm"
                   aria-label="Se connecter avec Google"
