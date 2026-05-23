@@ -209,11 +209,24 @@ function ConnexionInner() {
     e.preventDefault();
     setError(null);
     setSending(true);
-    await signIn("resend", {
+    // Provider id = "nodemailer" (default Auth.js v5 pour
+    // next-auth/providers/nodemailer). Bug historique signale par Florian
+    // 2026-05-23 : on appelait signIn("resend") depuis l'epoque ou on
+    // utilisait Resend, mais on a bascule sur Scaleway TEM via
+    // EmailProvider/nodemailer custom (sendVerificationRequest override).
+    // Resultat : provider id inexistant -> silent fail, magic link jamais
+    // envoye depuis l'UI. sendEmail() direct fonctionnait pourtant.
+    const res = await signIn("nodemailer", {
       email,
       redirect: false,
       callbackUrl: "/post-login",
     });
+    if (res?.error) {
+      // Surface les erreurs explicites au lieu de "ok" silencieux
+      setError(humanizeAuthError(res.error));
+      setSending(false);
+      return;
+    }
     setMagicSent(true);
     setSending(false);
   };
