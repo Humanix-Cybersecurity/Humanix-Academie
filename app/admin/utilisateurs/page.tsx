@@ -9,6 +9,7 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import type { Role } from "@prisma/client";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import UsersTable from "@/components/UsersTable";
 import InviteUserForm from "@/components/InviteUserForm";
 import CsvImporter from "@/components/CsvImporter";
@@ -23,7 +24,10 @@ export const dynamic = "force-dynamic";
 export default async function AdminUsersPage() {
   // Auth garantie par app/admin/layout.tsx (defense-in-depth déjà appliquée).
   const session = await auth();
-  const tenantId = session!.user.tenantId as string;
+  // Resout le tenant ACTIF (sous-domaine + membership) plutot que d'utiliser
+  // toujours session.user.tenantId. Permet a un SUPERADMIN avec membership
+  // de voir les users du tenant cible plutot que ceux de son home.
+  const tenantId = await getCurrentTenantId();
   const currentUserId = session!.user.id as string;
   const currentUserRole = session!.user.role as Role;
 

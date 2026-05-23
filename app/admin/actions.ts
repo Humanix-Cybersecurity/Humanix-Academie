@@ -12,7 +12,20 @@ import {
   assertCanActOn,
   assertCanChangeRole,
 } from "@/lib/role-hierarchy";
+import { getCurrentTenantId } from "@/lib/current-tenant";
+import { canActAsAdminInTenant } from "@/lib/tenant-membership";
 
+/**
+ * Garde commun a toutes les server actions admin. Resout le tenant ACTIF
+ * via getCurrentTenantId (sous-domaine + membership) plutot que de se
+ * contenter de session.user.tenantId — ce qui permet a un SUPERADMIN
+ * avec membership d'agir comme admin sur un autre tenant via son
+ * sous-domaine.
+ *
+ * Securite : on revalide cote server que l'user a effectivement un acces
+ * admin au tenant ACTIF (defense en profondeur, le layout fait deja le
+ * check mais on s'assure que personne ne contourne via API directe).
+ */
 async function requireAdmin() {
   const session = await auth();
   if (!session?.user) throw new Error("unauthorized");
@@ -20,11 +33,21 @@ async function requireAdmin() {
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     throw new Error("forbidden");
   }
-  const tenantId = session.user!.tenantId as string;
-  if (!tenantId) throw new Error("no_tenant");
+  const userId = session.user!.id as string;
+
+  // Resout le tenant actif via le sous-domaine + membership (Sprint 2
+  // multi-tenant : un SUPERADMIN sur acme.humanix-academie.fr agit dans
+  // tenant Acme, pas dans son tenant home Humanix).
+  const tenantId = await getCurrentTenantId();
+
+  // Defense en profondeur : revalide l'acces admin au tenant actif.
+  // SUPERADMIN bypass automatiquement (cf. canActAsAdminInTenant).
+  const allowed = await canActAsAdminInTenant(userId, tenantId);
+  if (!allowed) throw new Error("forbidden");
+
   return {
     tenantId,
-    userId: session.user!.id as string,
+    userId,
     role,
     email: session.user!.email as string | undefined,
   };
