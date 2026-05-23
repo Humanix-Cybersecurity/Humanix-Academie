@@ -70,8 +70,7 @@ export async function addExternalAdminMembership(
         | "already_native"
         | "already_member"
         | "invalid_role"
-        | "forbidden_role_hierarchy"
-        | "self_membership_forbidden";
+        | "forbidden_role_hierarchy";
     }
 > {
   let actor: Awaited<ReturnType<typeof requireSuperadmin>>;
@@ -108,13 +107,13 @@ export async function addExternalAdminMembership(
     return { ok: false, error: "user_not_found_neutral" };
   }
 
-  // Defense en profondeur : meme si SUPERADMIN peut tout, on bloque
-  // explicitement l'auto-membership via cette UI (cree de la confusion
-  // dans l'audit). Pour qu'un SUPERADMIN ajoute SON propre access a un
-  // tenant, c'est deja le cas via le bypass SUPERADMIN.
-  if (user.id === actor.userId) {
-    return { ok: false, error: "self_membership_forbidden" };
-  }
+  // NB : on AUTORISE le self-membership. Cas d'usage signale par Florian
+  // 2026-05-23 : le SUPERADMIN doit pouvoir s'auto-declarer admin d'un
+  // tenant pour apparaitre dans la liste des admins de ce tenant et que
+  // ses actions soient tracees comme legitimes (et non pas "bypass
+  // SUPERADMIN tolere"). Le garde precedent self_membership_forbidden
+  // etait trop conservateur — il bloquait le cas d'usage principal.
+  // L'action reste auditee (audit trail trace qui a accorde quoi a qui).
 
   // Si le user est natif du tenant cible, c'est une promotion classique,
   // pas un membership externe. On refuse pour eviter la duplication.
