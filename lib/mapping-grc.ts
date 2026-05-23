@@ -464,125 +464,793 @@ const RGPD: FrameworkMapping = {
 // ANSSI - Guide d'hygiene informatique (renforcee)
 // ---------------------------------------------------------------------------
 
+// ANSSI - Guide d'hygiene informatique v2 (42 mesures, edition 2017)
+// Reference : https://cyber.gouv.fr/publications/guide-dhygiene-informatique
+//
+// COUVERTURE DOUBLE pour Humanix :
+//   1. PEDAGOGIQUE (axe principal) : modules MDX qui sensibilisent les utilisateurs
+//      aux mesures qui concernent leur poste de travail. Mesure par
+//      `completion_rate` / `marketplace_modules`.
+//   2. PLATEFORME (axe complementaire) : conformite de la plateforme Humanix
+//      elle-meme aux mesures (ex: M7 inventaire prives via /superadmin/admins-by-tenant,
+//      M16 MFA, M14 hash scrypt, M36 audit_trail, M37 backup self-host age, etc.).
+//      Mesure par presence d'artifacts internes (audit_trail filtre, policy interne).
+//
+// HORS SCOPE assume : mesures qui ne dependent QUE de la config reseau / postes
+// du client (M9 limiter Internet, M25 passerelle Internet, M26 cloisonnement DMZ,
+// M19 outil gestion centralisee parc). Pour celles-la, Humanix fournit la
+// sensibilisation des utilisateurs / admins mais la mise en oeuvre technique
+// reste du cote client.
 const ANSSI_HG: FrameworkMapping = {
   ref: "ANSSI-HG",
-  title: "ANSSI - Guide d'hygiene informatique - 42 mesures",
+  title: "ANSSI - Guide d'hygiene informatique (v2, 42 mesures)",
   publisher: "ANSSI",
-  url: "https://www.ssi.gouv.fr/guide/guide-dhygiene-informatique/",
+  url: "https://cyber.gouv.fr/publications/guide-dhygiene-informatique",
   controls: [
+    // -------------------------------------------------------------------------
+    // I. Sensibiliser et former
+    // -------------------------------------------------------------------------
     {
       ref: "M1",
-      name: "Sensibiliser les utilisateurs aux bonnes pratiques elementaires de securite informatique",
-      category: "Sensibilisation",
+      name: "Former les equipes operationnelles a la securite des systemes d'information",
+      category: "I. Sensibiliser et former",
       artifacts: [
         {
           type: "metric",
-          source: "tenant_score",
-          label: "Score de maturite cyber",
+          source: "completion_rate",
+          label: "Taux de completion modules admin/dev/SOC",
+          filter: { audience: "admin_or_dev" },
         },
         {
           type: "metric",
-          source: "completion_rate",
-          label: "Taux de completion",
+          source: "marketplace_modules",
+          label: "Saisons techniques deployees (cyber-dev, securiser-administration-si)",
+          filter: { audience: "operationnel" },
         },
       ],
       thresholdCompliant: 0.7,
       thresholdPartial: 0.4,
-      scopeNote: "Mesure phare ANSSI - couverte directement par Humanix.",
+      scopeNote:
+        "Couvre saisons cyber-dev (6 ep), cyber-dirigeants (6 ep), securiser-administration-si (6 ep). Cible le personnel operationnel SI.",
     },
     {
       ref: "M2",
-      name: "Authentifier l'utilisateur",
-      category: "Authentification",
-      artifacts: [
-        {
-          type: "metric",
-          source: "marketplace_modules",
-          label: "Modules MFA / mots de passe deployes",
-          filter: { category: "auth" },
-        },
-      ],
-    },
-    {
-      ref: "M3",
-      name: "Identifier nommement chaque utilisateur",
-      category: "Authentification",
+      name: "Sensibiliser les utilisateurs aux bonnes pratiques elementaires de securite informatique",
+      category: "I. Sensibiliser et former",
       artifacts: [
         {
           type: "metric",
           source: "tenant_score",
-          label: "Comptes nominatifs (vs partages)",
+          label: "Score de maturite cyber humaine du tenant",
+        },
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux de completion saisons fondamentales",
+        },
+        {
+          type: "document",
+          source: "user_certificates",
+          label: "Certificats individuels (preuve formation)",
         },
       ],
+      thresholdCompliant: 0.7,
+      thresholdPartial: 0.4,
+      scopeNote:
+        "MESURE PHARE HUMANIX. 31 saisons / 200+ modules couvrent l'ensemble des bonnes pratiques (phishing, mots de passe, donnees sensibles, mobilite, etc.).",
+    },
+
+    // -------------------------------------------------------------------------
+    // II. Connaitre le systeme d'information
+    // -------------------------------------------------------------------------
+    {
+      ref: "M3",
+      name: "Maitriser les risques de l'infogerance",
+      category: "II. Connaitre le SI",
+      artifacts: [
+        {
+          type: "policy",
+          source: "dpa_pdf",
+          label: "Contrat de sous-traitance DPA (art. 28 RGPD)",
+        },
+        {
+          type: "policy",
+          source: "pack_nis2_pdf",
+          label: "Pack NIS2 - clauses securite prestataires",
+        },
+      ],
+      scopeNote:
+        "Humanix fournit le DPA et les clauses securite type pour encadrer les prestataires du client.",
     },
     {
-      ref: "M11",
-      name: "Identifier les informations sensibles et savoir comment les manipuler",
-      category: "Donnees",
+      ref: "M4",
+      name: "Identifier les informations et serveurs les plus sensibles et maintenir un schema du reseau",
+      category: "II. Connaitre le SI",
       artifacts: [
         {
           type: "metric",
           source: "marketplace_modules",
-          label: "Modules classification donnees deployes",
+          label: "Modules classification donnees sensibles deployes",
           filter: { slug: "classification-donnees" },
         },
-      ],
-    },
-    {
-      ref: "M22",
-      name: "Sensibiliser les utilisateurs aux risques lies a la mobilite",
-      category: "Mobilite",
-      artifacts: [
         {
           type: "metric",
-          source: "marketplace_modules",
-          label: "Modules teletravail/nomadisme deployes",
-          filter: { category: "mobilite" },
+          source: "completion_rate",
+          label: "Taux completion saison donnees-sensibles",
+          filter: { saison: "donnees-sensibles" },
         },
       ],
+      thresholdCompliant: 0.6,
+      thresholdPartial: 0.3,
     },
     {
-      ref: "M30",
-      name: "Sensibiliser les utilisateurs face aux courriels malveillants (phishing)",
-      category: "Sensibilisation",
+      ref: "M5",
+      name: "Disposer d'une cartographie precise de l'installation informatique et la maintenir a jour",
+      category: "II. Connaitre le SI",
       artifacts: [
         {
-          type: "metric",
-          source: "phishing_report_rate",
-          label: "Taux de signalement phishing simule",
+          type: "document",
+          source: "audit_trail",
+          label: "Cartographie technique Humanix (architecture.md interne)",
+          filter: { type: "evidence.architecture_map" },
+        },
+      ],
+      scopeNote:
+        "Couvert pour la plateforme Humanix (architecture.md, schema souverain Scaleway). Cote client : hors scope plateforme, mais Humanix sensibilise via saison cyber-dirigeants.",
+    },
+    {
+      ref: "M6",
+      name: "Maitriser les flux et acces aux composants tiers (cartographie applicative)",
+      category: "II. Connaitre le SI",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Inventaire dependances + Stack EOL tracking (interne)",
+          filter: { type: "evidence.stack_eol" },
+        },
+      ],
+      scopeNote:
+        "Plateforme Humanix : doc STACK_EOL_TRACKING.md interne (dependances Next.js, Prisma, Node, HAProxy, Scaleway). Client : hors scope plateforme.",
+    },
+    {
+      ref: "M7",
+      name: "Disposer d'un inventaire exhaustif des comptes privilegies et le maintenir a jour",
+      category: "II. Connaitre le SI",
+      artifacts: [
+        {
+          type: "report",
+          source: "audit_trail",
+          label: "Inventaire comptes privilegies (/superadmin/admins-by-tenant)",
+          filter: { role: "ADMIN_RSSI_SUPERADMIN" },
         },
         {
           type: "event_log",
           source: "audit_trail",
-          label: "Campagnes phishing IA executees",
-          filter: { type: "phishing.campaign_completed" },
+          label: "Journal des changements de role + memberships croisees",
+          filter: { type: "USER_ROLE_CHANGED" },
+        },
+      ],
+      thresholdCompliant: 0.95,
+      scopeNote:
+        "★ COUVERT NATIVEMENT. Page /superadmin/admins-by-tenant liste tous comptes ADMIN/RSSI/SUPERADMIN par tenant + TenantMembership croisees. Export CSV pour audit annuel. Tout changement de role audite (table Event, retention 1 an).",
+    },
+    {
+      ref: "M8",
+      name: "Rediger des procedures d'arrivee et de depart des utilisateurs (privileges, droits, materiels, secrets)",
+      category: "II. Connaitre le SI",
+      artifacts: [
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux completion saison cyber-rh (onboarding/offboarding)",
+          filter: { saison: "cyber-rh" },
+        },
+        {
+          type: "metric",
+          source: "marketplace_modules",
+          label: "Module depart-entreprise-donnees deploye",
+          filter: { slug: "06-depart-entreprise-donnees" },
+        },
+      ],
+      thresholdCompliant: 0.6,
+      thresholdPartial: 0.3,
+    },
+    {
+      ref: "M9",
+      name: "Limiter le nombre d'acces Internet de l'entreprise au strict necessaire",
+      category: "II. Connaitre le SI",
+      artifacts: [],
+      scopeNote:
+        "Hors scope Humanix : depend de l'architecture reseau client (firewalls, proxy DNS, etc.).",
+    },
+    {
+      ref: "M10",
+      name: "Interdire la connexion d'equipements personnels au systeme d'information de l'entite",
+      category: "II. Connaitre le SI",
+      artifacts: [
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux completion saison byod-perso-pro",
+          filter: { saison: "byod-perso-pro" },
+        },
+      ],
+      thresholdCompliant: 0.6,
+      thresholdPartial: 0.3,
+    },
+
+    // -------------------------------------------------------------------------
+    // III. Authentifier et controler les acces
+    // -------------------------------------------------------------------------
+    {
+      ref: "M11",
+      name: "Identifier chaque individu accedant au systeme par un identifiant nominatif",
+      category: "III. Authentifier et controler les acces",
+      artifacts: [
+        {
+          type: "metric",
+          source: "tenant_score",
+          label: "Comptes nominatifs (User.email unique, pas de comptes partages)",
+        },
+      ],
+      thresholdCompliant: 1.0,
+      scopeNote:
+        "★ COUVERT NATIVEMENT. Schema Prisma : User.email @unique = pas de doublon, pas de compte partage techniquement possible. Chaque action est tracee a un user nominatif (Event.userId).",
+    },
+    {
+      ref: "M12",
+      name: "Attribuer les bons droits sur les ressources sensibles du SI",
+      category: "III. Authentifier et controler les acces",
+      artifacts: [
+        {
+          type: "metric",
+          source: "tenant_score",
+          label: "Hierarchie RBAC respectee (canActOn, role-hierarchy.ts)",
+        },
+        {
+          type: "event_log",
+          source: "audit_trail",
+          label: "Journal des changements de droits",
+          filter: { type: "USER_ROLE_CHANGED" },
+        },
+      ],
+      thresholdCompliant: 1.0,
+      scopeNote:
+        "★ COUVERT NATIVEMENT. lib/role-hierarchy.ts impose : LEARNER < MANAGER < RSSI < ADMIN < SUPERADMIN. Un MANAGER ne peut pas modifier un ADMIN ni un SUPERADMIN. Toute escalade refusee est auditee.",
+    },
+    {
+      ref: "M13",
+      name: "Definir et verifier des regles de choix et de dimensionnement des mots de passe",
+      category: "III. Authentifier et controler les acces",
+      artifacts: [
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux completion modules mots de passe / phrases passe",
+          filter: { category: "auth" },
+        },
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Politique MDP appliquee cote plateforme (lib/password.ts)",
+          filter: { type: "evidence.password_policy" },
+        },
+      ],
+      thresholdCompliant: 0.7,
+      thresholdPartial: 0.4,
+      scopeNote:
+        "Plateforme : lib/password.ts impose min 12 caracteres, derivation scrypt. Pedagogique : modules dedies dans plusieurs saisons.",
+    },
+    {
+      ref: "M14",
+      name: "Proteger les mots de passe stockes sur les systemes",
+      category: "III. Authentifier et controler les acces",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Hash scrypt RFC 7914 (N=2^15, r=8, p=1, sel 32B aleatoire)",
+          filter: { type: "evidence.password_hash" },
+        },
+      ],
+      scopeNote:
+        "★ COUVERT NATIVEMENT. lib/password.ts utilise scrypt (RFC 7914), parametres conformes recommandations CNIL/ANSSI. Aucun mot de passe en clair, jamais.",
+    },
+    {
+      ref: "M15",
+      name: "Changer les elements d'authentification par defaut sur les equipements et services",
+      category: "III. Authentifier et controler les acces",
+      artifacts: [
+        {
+          type: "metric",
+          source: "marketplace_modules",
+          label: "Module sensibilisation mots de passe par defaut deploye",
+          filter: { slug: "credentials-default" },
+        },
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Procedure rotation secrets Humanix (interne)",
+          filter: { type: "evidence.secret_rotation" },
+        },
+      ],
+      scopeNote:
+        "Plateforme : rotation AUTH_SECRET / cles signature / DB credentials via procedure interne. Pedagogique : modules dedies.",
+    },
+    {
+      ref: "M16",
+      name: "Privilegier lorsque c'est possible une authentification forte",
+      category: "III. Authentifier et controler les acces",
+      artifacts: [
+        {
+          type: "metric",
+          source: "tenant_score",
+          label: "Taux d'utilisateurs MFA actif (TOTP + WebAuthn)",
+        },
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux completion saison mfa / clefs-securite",
+          filter: { saison: "mfa" },
+        },
+      ],
+      thresholdCompliant: 0.6,
+      thresholdPartial: 0.3,
+      scopeNote:
+        "★ COUVERT NATIVEMENT. Plateforme Humanix supporte TOTP (RFC 6238) + WebAuthn FIDO2 (lib/webauthn.ts). Step-up obligatoire pour /superadmin (cle hardware exigee).",
+    },
+
+    // -------------------------------------------------------------------------
+    // IV. Securiser les postes
+    // -------------------------------------------------------------------------
+    {
+      ref: "M17",
+      name: "Mettre en place un niveau de securite minimal sur l'ensemble du parc informatique",
+      category: "IV. Securiser les postes",
+      artifacts: [
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux completion modules hygiene poste",
+          filter: { category: "hygiene-poste" },
+        },
+      ],
+      thresholdCompliant: 0.6,
+      thresholdPartial: 0.3,
+      scopeNote:
+        "Cote sensibilisation utilisateur. Mise en oeuvre technique (durcissement OS, AV, EDR) reste cote client.",
+    },
+    {
+      ref: "M18",
+      name: "Se proteger des menaces relatives a l'utilisation de supports amovibles",
+      category: "IV. Securiser les postes",
+      artifacts: [
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux completion saison cles-usb / supports amovibles",
+          filter: { category: "supports-amovibles" },
+        },
+      ],
+      thresholdCompliant: 0.6,
+      thresholdPartial: 0.3,
+    },
+    {
+      ref: "M19",
+      name: "Utiliser un outil de gestion centralisee pour homogeneiser les politiques de securite",
+      category: "IV. Securiser les postes",
+      artifacts: [],
+      scopeNote:
+        "Hors scope Humanix : depend de l'outillage SI client (MDM, GPO, Ansible, Jamf, etc.).",
+    },
+    {
+      ref: "M20",
+      name: "Activer et configurer le pare-feu local des postes de travail",
+      category: "IV. Securiser les postes",
+      artifacts: [
+        {
+          type: "metric",
+          source: "marketplace_modules",
+          label: "Module pare-feu local deploye",
+          filter: { slug: "pare-feu-local" },
+        },
+      ],
+    },
+    {
+      ref: "M21",
+      name: "Chiffrer les donnees sensibles, en particulier sur le materiel potentiellement perdable",
+      category: "IV. Securiser les postes",
+      artifacts: [
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux completion modules chiffrement disque / FileVault / BitLocker",
+          filter: { category: "chiffrement" },
+        },
+      ],
+      thresholdCompliant: 0.5,
+      thresholdPartial: 0.2,
+    },
+
+    // -------------------------------------------------------------------------
+    // V. Securiser le reseau
+    // -------------------------------------------------------------------------
+    {
+      ref: "M22",
+      name: "Segmenter le reseau et mettre en place un cloisonnement entre les zones",
+      category: "V. Securiser le reseau",
+      artifacts: [],
+      scopeNote:
+        "Hors scope Humanix : depend de la topologie reseau client (VLANs, micro-segmentation, etc.).",
+    },
+    {
+      ref: "M23",
+      name: "S'assurer de la securite des reseaux d'acces Wi-Fi et de la separation des usages",
+      category: "V. Securiser le reseau",
+      artifacts: [
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux completion modules Wi-Fi public + quishing",
+          filter: { category: "wifi" },
+        },
+        {
+          type: "event_log",
+          source: "audit_trail",
+          label: "Campagnes quishing IA (SSID Wi-Fi personnalise)",
+          filter: { type: "quishing.campaign_completed" },
         },
       ],
       thresholdCompliant: 0.5,
       thresholdPartial: 0.2,
     },
     {
-      ref: "M40",
-      name: "Definir une politique de gestion des incidents de securite",
-      category: "Reponse a incident",
+      ref: "M24",
+      name: "Utiliser des protocoles reseaux securises des qu'ils existent",
+      category: "V. Securiser le reseau",
+      artifacts: [
+        {
+          type: "metric",
+          source: "marketplace_modules",
+          label: "Modules sensibilisation HTTPS/TLS/SSH deployes",
+          filter: { category: "protocoles" },
+        },
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "TLS 1.3 only sur humanix-academie.fr (test SSLLabs A+)",
+          filter: { type: "evidence.tls_audit" },
+        },
+      ],
+      scopeNote:
+        "Plateforme : HTTPS partout, HSTS preload, TLS 1.3 (Triple A+ Mozilla Observatory).",
+    },
+    {
+      ref: "M25",
+      name: "Mettre en place une passerelle d'acces securise a Internet",
+      category: "V. Securiser le reseau",
+      artifacts: [],
+      scopeNote:
+        "Hors scope Humanix : depend du SI client (proxy filtrant, NGFW, etc.).",
+    },
+    {
+      ref: "M26",
+      name: "Cloisonner les services visibles depuis Internet du reste du systeme",
+      category: "V. Securiser le reseau",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Architecture Humanix : HAProxy bare-metal en frontal, app Next.js cloisonnee Docker",
+          filter: { type: "evidence.network_segmentation" },
+        },
+      ],
+      scopeNote:
+        "Plateforme : reverse-proxy HAProxy en frontal (rate-limit, stick-table), backend Next.js isole. Cote client : hors scope.",
+    },
+
+    // -------------------------------------------------------------------------
+    // VI. Securiser l'administration
+    // -------------------------------------------------------------------------
+    {
+      ref: "M27",
+      name: "Interdire l'acces a Internet depuis les comptes ou equipements utilises pour l'administration",
+      category: "VI. Securiser l'administration",
+      artifacts: [
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux completion module poste-admin-dedie (saison securiser-administration-si)",
+          filter: { slug: "01-poste-admin-dedie" },
+        },
+      ],
+      thresholdCompliant: 0.6,
+      thresholdPartial: 0.3,
+    },
+    {
+      ref: "M28",
+      name: "Utiliser un reseau dedie et cloisonne pour l'administration du SI",
+      category: "VI. Securiser l'administration",
+      artifacts: [
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux completion module cloisonnement-reseau-admin",
+          filter: { slug: "04-cloisonnement-reseau-admin" },
+        },
+      ],
+      thresholdCompliant: 0.6,
+      thresholdPartial: 0.3,
+    },
+    {
+      ref: "M29",
+      name: "Limiter au strict besoin les droits d'administration sur les postes de travail",
+      category: "VI. Securiser l'administration",
+      artifacts: [
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux completion module audit-comptes-privilegies",
+          filter: { slug: "06-audit-comptes-privilegies" },
+        },
+        {
+          type: "event_log",
+          source: "audit_trail",
+          label: "Verifications hierarchie RBAC (canActOn, assertCanChangeRole)",
+          filter: { type: "RBAC_HIERARCHY_VIOLATION_BLOCKED" },
+        },
+      ],
+      thresholdCompliant: 0.6,
+      thresholdPartial: 0.3,
+      scopeNote:
+        "Plateforme : hierarchie RBAC stricte (cf. M12). Pedagogique : module dedie.",
+    },
+
+    // -------------------------------------------------------------------------
+    // VII. Gerer le nomadisme
+    // -------------------------------------------------------------------------
+    {
+      ref: "M30",
+      name: "Prendre des mesures de securisation physique des terminaux mobiles",
+      category: "VII. Gerer le nomadisme",
+      artifacts: [
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux completion saison nomadisme / mobilite",
+          filter: { category: "mobilite" },
+        },
+      ],
+      thresholdCompliant: 0.6,
+      thresholdPartial: 0.3,
+    },
+    {
+      ref: "M31",
+      name: "Chiffrer les donnees sensibles transmises par voie Internet",
+      category: "VII. Gerer le nomadisme",
+      artifacts: [
+        {
+          type: "metric",
+          source: "marketplace_modules",
+          label: "Modules sensibilisation chiffrement transit / TLS",
+          filter: { category: "chiffrement-transit" },
+        },
+      ],
+    },
+    {
+      ref: "M32",
+      name: "Securiser la connexion reseau des postes utilises en situation de nomadisme",
+      category: "VII. Gerer le nomadisme",
+      artifacts: [
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux completion modules VPN / Wi-Fi public",
+          filter: { category: "teletravail" },
+        },
+      ],
+      thresholdCompliant: 0.6,
+      thresholdPartial: 0.3,
+    },
+    {
+      ref: "M33",
+      name: "Adopter des politiques de securite dediees aux terminaux mobiles",
+      category: "VII. Gerer le nomadisme",
+      artifacts: [
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux completion saison byod-perso-pro",
+          filter: { saison: "byod-perso-pro" },
+        },
+      ],
+      thresholdCompliant: 0.6,
+      thresholdPartial: 0.3,
+    },
+
+    // -------------------------------------------------------------------------
+    // VIII. Maintenir le SI a jour
+    // -------------------------------------------------------------------------
+    {
+      ref: "M34",
+      name: "Definir une politique de mise a jour des composants du SI",
+      category: "VIII. Maintenir le SI a jour",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Politique mises a jour Humanix (Dependabot + revue mensuelle)",
+          filter: { type: "evidence.update_policy" },
+        },
+        {
+          type: "metric",
+          source: "marketplace_modules",
+          label: "Module sensibilisation mises a jour utilisateurs",
+          filter: { slug: "mises-a-jour-poste" },
+        },
+      ],
+      scopeNote:
+        "Plateforme : Dependabot actif, audit npm hebdomadaire, prod patchee max 7j apres CVE critique.",
+    },
+    {
+      ref: "M35",
+      name: "Anticiper la fin de la maintenance des logiciels et systemes et limiter les adherences",
+      category: "VIII. Maintenir le SI a jour",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Tracking EOL stack (STACK_EOL_TRACKING.md interne)",
+          filter: { type: "evidence.stack_eol" },
+        },
+      ],
+      scopeNote:
+        "Plateforme : doc interne STACK_EOL_TRACKING.md liste pour chaque dependance critique (Node, Postgres, Prisma, Next.js, HAProxy) la version actuelle, la date EOL, et le plan de migration.",
+    },
+
+    // -------------------------------------------------------------------------
+    // IX. Superviser, auditer, reagir
+    // -------------------------------------------------------------------------
+    {
+      ref: "M36",
+      name: "Activer et configurer les journaux des composants les plus importants",
+      category: "IX. Superviser, auditer, reagir",
+      artifacts: [
+        {
+          type: "event_log",
+          source: "audit_trail",
+          label: "Table Event - audit trail tamper-evident (retention 1 an)",
+        },
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Logs HAProxy + applicatifs Next.js (Scaleway Object Storage)",
+          filter: { type: "evidence.logs_retention" },
+        },
+      ],
+      scopeNote:
+        "★ COUVERT NATIVEMENT. Table Event (~20 types : auth, role change, incident, etc.). Retention 1 an. Filtrable par tenant pour le client.",
+    },
+    {
+      ref: "M37",
+      name: "Definir et appliquer une politique de sauvegarde des composants critiques",
+      category: "IX. Superviser, auditer, reagir",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Backup quotidien Postgres + chiffrement age + FTPS Scaleway Object Storage",
+          filter: { type: "evidence.backup_policy" },
+        },
+      ],
+      scopeNote:
+        "★ COUVERT NATIVEMENT. Backup auto pg_dump quotidien, chiffrement age (X25519), upload FTPS vers Scaleway, retention 30 jours rolling + 12 mois mensuel. Cf. scripts/backup/.",
+    },
+    {
+      ref: "M38",
+      name: "Proceder a des controles et audits de securite reguliers puis appliquer les actions correctives",
+      category: "IX. Superviser, auditer, reagir",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Audits externes (Mozilla Observatory A+, SSLLabs A+, securityheaders.com A+) + pentest annuel",
+          filter: { type: "evidence.security_audits" },
+        },
+      ],
+      scopeNote:
+        "Plateforme : Triple A+ externe (audits automatises continus) + pentest annuel formalise (cf. plan PENTEST_ANNUEL.md interne). Premier pentest Q3 2026.",
+    },
+    {
+      ref: "M39",
+      name: "Designer un point de contact en securite des systemes d'information et le faire connaitre",
+      category: "IX. Superviser, auditer, reagir",
       artifacts: [
         {
           type: "policy",
           source: "incident_procedure",
-          label: "Procedure incident Pack NIS2",
+          label: "Point de contact securite : security@humanix-cybersecurity.fr + RSSI Humanix",
         },
       ],
+      scopeNote:
+        "★ COUVERT NATIVEMENT. Page /securite expose security@humanix-cybersecurity.fr (publique). RSSI designe (Florian Durano) chez Humanix Cybersecurity SASU.",
+    },
+    {
+      ref: "M40",
+      name: "Definir une procedure de gestion des incidents de securite",
+      category: "IX. Superviser, auditer, reagir",
+      artifacts: [
+        {
+          type: "policy",
+          source: "incident_procedure",
+          label: "Procedure incident Pack NIS2 (notification CNIL 72h + ANSSI 24h/72h/1mois)",
+        },
+        {
+          type: "event_log",
+          source: "audit_trail",
+          label: "Logs incidents declares + notifies",
+          filter: { type: "incident.declared" },
+        },
+      ],
+      scopeNote:
+        "★ COUVERT NATIVEMENT. Procedure unifiee Pack NIS2 couvre RGPD art. 33 (CNIL 72h) + NIS2 art. 23 (ANSSI). PSSI consolidee interne en complement.",
+    },
+
+    // -------------------------------------------------------------------------
+    // X. Pour aller plus loin
+    // -------------------------------------------------------------------------
+    {
+      ref: "M41",
+      name: "Privilegier l'usage de produits et de services qualifies par l'ANSSI",
+      category: "X. Pour aller plus loin",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Demarche de reconnaissance ANSSI Humanix (Q4 2026)",
+          filter: { type: "evidence.anssi_recognition" },
+        },
+      ],
+      scopeNote:
+        "Humanix est en demarche de reconnaissance ANSSI (objectif visibilite SecNumedu / qualification). Roadmap publique sur /certificat.",
+    },
+    {
+      ref: "M42",
+      name: "Mener une demarche de qualification ou certification sur le perimetre le plus pertinent",
+      category: "X. Pour aller plus loin",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Roadmap certification ANSSI (dossier Q4 2026, reconnaissance visee 2027)",
+          filter: { type: "evidence.certification_roadmap" },
+        },
+      ],
+      scopeNote:
+        "Humanix : demarche reconnaissance ANSSI engagee. Cote client : Humanix delivre certificats individuels signes Ed25519 verifiables cryptographiquement (preuve incontestable de formation).",
     },
   ],
   outOfScope: [
-    { ref: "M5-M10", reason: "Configuration postes - outils techniques tiers" },
     {
-      ref: "M16-M20",
-      reason: "Architecture reseau - hors scope sensibilisation",
+      ref: "M9",
+      reason:
+        "Limitation des acces Internet de l'entite : depend de l'architecture reseau client (firewalls, proxy, NGFW)",
     },
     {
-      ref: "M35-M39",
-      reason: "Securite physique - hors scope plateforme SaaS",
+      ref: "M19",
+      reason:
+        "Outil de gestion centralisee du parc : MDM/GPO/Ansible/Jamf cote client",
+    },
+    {
+      ref: "M22",
+      reason:
+        "Segmentation reseau / VLANs : depend de la topologie reseau client",
+    },
+    {
+      ref: "M25",
+      reason:
+        "Passerelle Internet securisee : NGFW / proxy filtrant cote client",
     },
   ],
 };

@@ -72,6 +72,13 @@ export default async function SuperadminLayout({
               Tenants
             </Link>
             <Link
+              href="/superadmin/admins-by-tenant"
+              className="text-gray-700 dark:text-gray-200 hover:text-accent-500 font-medium"
+              title="Inventaire des comptes à privilèges (ANSSI HG mesure 7)"
+            >
+              Comptes privilégiés
+            </Link>
+            <Link
               href="/admin"
               className="text-xs text-gray-500 hover:text-accent-500 underline"
             >
