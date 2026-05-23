@@ -24,10 +24,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import type { Role } from "@prisma/client";
 import { auditLog, AuditActions } from "@/lib/audit";
-import {
-  canAssignRole,
-  assertCanChangeRole,
-} from "@/lib/role-hierarchy";
+import { canAssignRole } from "@/lib/role-hierarchy";
 import { sendInviteMagicLink } from "@/lib/invite-email";
 
 async function requireSuperadmin() {
@@ -121,14 +118,20 @@ export async function addExternalAdminMembership(
     return { ok: false, error: "already_native" };
   }
 
-  // Hierarchie : le SUPERADMIN doit pouvoir assigner le role par rapport
-  // au role courant du user dans son home (sinon on creerait une elevation
-  // par effet de bord).
-  try {
-    assertCanChangeRole(actor.role, user.role, roleRaw);
-  } catch {
-    return { ok: false, error: "forbidden_role_hierarchy" };
-  }
+  // NB : on n'applique PAS assertCanChangeRole(actor.role, user.role, roleRaw)
+  // ici. Un membership N'EST PAS une modification du role HOME du user :
+  // c'est juste un accès secondaire au tenant cible. Appliquer le check
+  // bloquait absurdement le SUPERADMIN qui voulait s'auto-declarer admin
+  // d'un tenant (canModifyRoleOf(SUPERADMIN, SUPERADMIN) = false parce
+  // que l'egalite de rang n'est pas autorisee dans cette regle).
+  //
+  // Signale par Florian 2026-05-23 : "lorsque je m'ajoute j'ai ce message :
+  // Tu ne peux pas accorder ce role (hierarchie RBAC)".
+  //
+  // Le check qui RESTE pertinent est canAssignRole(actor.role, roleRaw)
+  // (deja applique plus haut) : l'acteur ne peut pas creer un membership
+  // d'un niveau superieur au sien. Comme seul SUPERADMIN peut atteindre
+  // cette action (requireSuperadmin), il peut creer n'importe quel niveau.
 
   // Tente la creation ; @@unique(userId, tenantId) garantit l'idempotence.
   try {
@@ -248,11 +251,12 @@ export async function updateExternalAdminMembershipRole(
   });
   if (!m) return { ok: false, error: "not_found" };
 
-  try {
-    assertCanChangeRole(actor.role, m.user.role, newRole);
-  } catch {
-    return { ok: false, error: "forbidden_role_hierarchy" };
-  }
+  // NB : on n'applique PAS assertCanChangeRole(actor.role, m.user.role, newRole).
+  // Comme pour addExternalAdminMembership, modifier le ROLE d'un membership
+  // n'est pas une modification du role HOME du user — donc la regle
+  // canModifyRoleOf qui exige rank(actor) > rank(target) ne s'applique pas.
+  // canAssignRole (deja verifie ligne 247) garantit que l'acteur ne peut
+  // pas creer un membership d'un niveau superieur au sien.
 
   const previousRole = m.role;
   await db.tenantMembership.update({
