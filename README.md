@@ -110,7 +110,28 @@ Détails : [docs/installation.md](./docs/installation.md#mode-0---quickstart-dev
 - 5 Go d'espace disque
 - Un nom de domaine (ou `localhost` pour tester)
 
-### Installation
+### Option A — Image Docker Hub officielle (recommandée)
+
+L'image OSS est publiée automatiquement à chaque release sur
+[Docker Hub `humanixcybersecurity/humanix-academie`](https://hub.docker.com/r/humanixcybersecurity/humanix-academie),
+**multi-arch (linux/amd64 + linux/arm64)**, **AGPLv3**, avec provenance
+SLSA et SBOM SPDX inclus dans le manifest.
+
+```bash
+docker pull humanixcybersecurity/humanix-academie:latest
+# ou un tag spécifique : :1.2.3, :edge (HEAD de main)
+```
+
+Tags disponibles :
+
+| Tag                 | Quand                            | Stabilité |
+| ------------------- | -------------------------------- | --------- |
+| `:latest`           | Dernière release stable (`v*.*.*`) | Stable    |
+| `:1.2.3` / `:1.2` / `:1` | Versions semver                  | Stable    |
+| `:edge`             | HEAD de `main` (build continu)   | Béta      |
+| `:main-<sha7>`      | Commit précis sur `main`         | Béta      |
+
+### Option B — Build local depuis les sources
 
 ```bash
 git clone https://github.com/Humanix-Cybersecurity/Humanix-Academie.git
