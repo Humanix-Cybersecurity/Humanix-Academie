@@ -21,8 +21,6 @@ const ERROR_FR: Record<string, string> = {
   invalid_role: "Rôle invalide. Choisis MANAGER, RSSI ou ADMIN.",
   forbidden_role_hierarchy:
     "Tu ne peux pas accorder ce rôle (hiérarchie RBAC).",
-  self_membership_forbidden:
-    "Tu ne peux pas t'ajouter toi-même un membership via cette interface.",
 };
 
 export default function AddExternalAdminForm({
