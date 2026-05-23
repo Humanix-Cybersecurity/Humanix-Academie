@@ -192,7 +192,12 @@ export async function deleteTenant(formData: FormData): Promise<void> {
       "Tenant avec abonnement Mollie actif. Résilie d'abord la subscription via /admin/billing.",
     );
   }
-  // À partir d'ici on a un tenant non-null garanti.
+  // À partir d'ici on a un tenant non-null garanti par les checks
+  // ci-dessus (les errorRedirect throw et sortent de la fonction). Mais
+  // TypeScript ne peut pas inferer le narrowing a travers une fonction
+  // wrapper qui retourne `never` — on doit donc capturer dans une const
+  // explicite pour avoir le typing correct dans la suite.
+  const safeTenant = tenant!;
 
   // Audit log AVANT suppression : si le delete echoue on a quand meme la
   // trace de la tentative. Et apres : on ne peut plus referencer tenantId
@@ -202,9 +207,9 @@ export async function deleteTenant(formData: FormData): Promise<void> {
     actor: { userId: session.user.id, email: actorEmail, role: "SUPERADMIN" },
     // tenantId null APRES delete -> on le set quand meme ici pour l'historique,
     // mais sans contrainte FK (la table AuditLog n'a pas de FK strict).
-    target: { type: "tenant", id: tenantId, label: tenant.name },
-    message: `Tenant SUPPRIME definitivement (${tenant.name})`,
-    metadata: { slug: tenant.slug, deletedTenantId: tenantId },
+    target: { type: "tenant", id: tenantId, label: safeTenant.name },
+    message: `Tenant SUPPRIME definitivement (${safeTenant.name})`,
+    metadata: { slug: safeTenant.slug, deletedTenantId: tenantId },
   });
 
   // Cascade DELETE : Prisma supprime automatiquement User, Progress,
