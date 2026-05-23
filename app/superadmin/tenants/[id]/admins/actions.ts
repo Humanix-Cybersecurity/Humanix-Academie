@@ -112,26 +112,59 @@ export async function addExternalAdminMembership(
   // etait trop conservateur — il bloquait le cas d'usage principal.
   // L'action reste auditee (audit trail trace qui a accorde quoi a qui).
 
-  // Si le user est natif du tenant cible, c'est une promotion classique,
-  // pas un membership externe. On refuse pour eviter la duplication.
+  // Cas USER NATIF DU TENANT CIBLE : on ne cree pas un membership externe
+  // (n'aurait pas de sens : il est deja dans ce tenant en tant que natif),
+  // mais on PROMEUT directement son role natif. C'est le cas principal
+  // sur le tenant humanix-community ou tous les nouveaux inscrits sont
+  // des LEARNER natifs et doivent etre promus en MANAGER/RSSI/ADMIN.
+  //
+  // Signale par Florian 2026-05-23 :
+  // "j'ai tenter de mettre un autre de mes compte qui lui est dans
+  // humanix-community en admin mais il me dis de le faire par la console
+  // car il est deja utilisateur du tenant. (...) c'est genant car le
+  // tenant community c'est celui ou il y aura le plus d'utilisateur"
+  //
+  // Avant ce fix : return { ok: false, error: "already_native" } -> blocage.
+  // Apres : on update le role natif + audit USER_ROLE_CHANGED.
+  //
+  // NB : on n'applique PAS assertCanChangeRole(actor.role, user.role, roleRaw)
+  // ici. La regle canModifyRoleOf qui exige rank(actor) > rank(target) est
+  // faite pour empecher un ADMIN de modifier le role d'un autre ADMIN. Mais
+  // seul SUPERADMIN peut atteindre cette action (requireSuperadmin), donc
+  // la check serait vide en pratique. canAssignRole (deja applique ligne 94)
+  // suffit comme defense en profondeur.
   if (user.tenantId === tenantId) {
-    return { ok: false, error: "already_native" };
+    if (user.role === roleRaw) {
+      // No-op : le user a deja le bon role natif. Pas d'erreur, mais on
+      // n'audite pas non plus pour eviter le bruit.
+      return { ok: true, userId: user.id };
+    }
+    const previousRole = user.role;
+    await db.user.update({
+      where: { id: user.id },
+      data: { role: roleRaw },
+    });
+    await auditLog({
+      action: AuditActions.USER_ROLE_CHANGED,
+      actor: { userId: actor.userId, email: actor.email, role: actor.role },
+      tenantId,
+      target: { type: "user", id: user.id, label: email },
+      message: `Role natif ${previousRole} -> ${roleRaw} dans ${tenant.slug} (via UI superadmin)`,
+      metadata: {
+        from: previousRole,
+        to: roleRaw,
+        promotionContext: "superadmin_native_promotion",
+        note,
+      },
+    });
+    revalidatePath(`/superadmin/tenants/${tenantId}/admins`);
+    revalidatePath(`/superadmin/tenants/${tenantId}/users`);
+    return { ok: true, userId: user.id };
   }
 
-  // NB : on n'applique PAS assertCanChangeRole(actor.role, user.role, roleRaw)
-  // ici. Un membership N'EST PAS une modification du role HOME du user :
-  // c'est juste un accès secondaire au tenant cible. Appliquer le check
-  // bloquait absurdement le SUPERADMIN qui voulait s'auto-declarer admin
-  // d'un tenant (canModifyRoleOf(SUPERADMIN, SUPERADMIN) = false parce
-  // que l'egalite de rang n'est pas autorisee dans cette regle).
-  //
-  // Signale par Florian 2026-05-23 : "lorsque je m'ajoute j'ai ce message :
-  // Tu ne peux pas accorder ce role (hierarchie RBAC)".
-  //
-  // Le check qui RESTE pertinent est canAssignRole(actor.role, roleRaw)
-  // (deja applique plus haut) : l'acteur ne peut pas creer un membership
-  // d'un niveau superieur au sien. Comme seul SUPERADMIN peut atteindre
-  // cette action (requireSuperadmin), il peut creer n'importe quel niveau.
+  // User EXTERNE au tenant : on cree un TenantMembership normal.
+  // canAssignRole (ligne 94) garantit que l'acteur ne peut pas creer un
+  // membership d'un niveau superieur au sien.
 
   // Tente la creation ; @@unique(userId, tenantId) garantit l'idempotence.
   try {
