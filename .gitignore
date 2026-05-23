@@ -164,3 +164,18 @@ data/tts-cache/[0-9a-f][0-9a-f]/
 # (varie selon l'instance, peut contenir des UUIDs internes du client).
 /connectors/ciso-assistant-schema/
 .git.bak.*/
+
+# =============================================================================
+# Documents INTERNES Humanix — NE JAMAIS COMMIT
+# =============================================================================
+# Strategie commerciale, courriers institutionnels, positionnement assureurs,
+# documents financiers, contrats. Tout ce qui n'est pas open source AGPLv3.
+# Si tu as besoin d'un document partage entre toi et l'equipe, utilise
+# 1Password / Notion / Google Drive interne — pas le repo.
+docs/CERTIFICAT_POSITIONING.md
+docs/COURRIER_ANSSI.md
+docs/INTERNAL_*.md
+docs/INTERNE_*.md
+docs/STRATEGIE_*.md
+/docs-internes/
+/internal/
