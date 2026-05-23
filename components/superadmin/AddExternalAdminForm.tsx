@@ -15,8 +15,12 @@ const ERROR_FR: Record<string, string> = {
   tenant_not_found: "Tenant introuvable.",
   user_not_found_neutral:
     "Aucun user trouvé avec cet email (sur la plateforme entière). Utilise « Inviter un nouvel admin » à la place.",
+  // already_native : le user est natif du tenant, on PROMEUT son rôle natif
+  // directement (cf. addExternalAdminMembership). Cette erreur ne devrait
+  // plus jamais arriver depuis le fix 2026-05-23 ; on garde le mapping en
+  // defense en profondeur au cas où on rétablirait la garde.
   already_native:
-    "Cet user est déjà membre natif de ce tenant. Modifie son rôle via /admin/utilisateurs plutôt qu'un membership externe.",
+    "Cet utilisateur est déjà natif du tenant. Son rôle a été promu directement (ou conserve son rôle actuel s'il est déjà au niveau demandé).",
   already_member: "Ce user a déjà un membership sur ce tenant.",
   invalid_role: "Rôle invalide. Choisis MANAGER, RSSI ou ADMIN.",
   forbidden_role_hierarchy:
