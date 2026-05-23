@@ -143,8 +143,19 @@ export async function deleteTenant(formData: FormData): Promise<void> {
   const tenantId = String(formData.get("tenantId") ?? "").trim();
   const confirmName = String(formData.get("confirmName") ?? "").trim();
 
-  if (!tenantId) throw new Error("tenantId requis");
-  if (!confirmName) throw new Error("confirmation du nom requise");
+  // Helper : redirect avec message d'erreur en query param, plus robuste
+  // que `throw` (les throws dans Server Actions peuvent afficher un 404
+  // cryptique au lieu du message — bug signale par Florian 2026-05-23).
+  // La page detail lit `?error=...` et affiche un banner rose.
+  const errorRedirect = (msg: string): never => {
+    const target = tenantId
+      ? `/superadmin/tenants/${tenantId}?error=${encodeURIComponent(msg)}`
+      : `/superadmin/tenants?error=${encodeURIComponent(msg)}`;
+    redirect(target);
+  };
+
+  if (!tenantId) errorRedirect("tenantId requis");
+  if (!confirmName) errorRedirect("Tape le nom du tenant pour confirmer");
 
   const tenant = await db.tenant.findUnique({
     where: { id: tenantId },
@@ -156,29 +167,32 @@ export async function deleteTenant(formData: FormData): Promise<void> {
       subscriptionStatus: true,
     },
   });
-  if (!tenant) throw new Error("Tenant introuvable");
+  if (!tenant) errorRedirect("Tenant introuvable");
 
   // Garde-fou 1 : protection du tenant Communaute (jamais supprimable)
-  if (tenant.slug === "humanix-community" || tenant.slug === "community") {
-    throw new Error("Le tenant Communaute ne peut pas etre supprime");
+  if (tenant!.slug === "humanix-community" || tenant!.slug === "community") {
+    errorRedirect(
+      "Le tenant Communauté ne peut pas être supprimé (il accueille les apprenants gratuits)",
+    );
   }
 
   // Garde-fou 2 : confirmation exacte du nom
-  if (confirmName !== tenant.name) {
-    throw new Error(
-      `Confirmation incorrecte : tape exactement "${tenant.name}" pour confirmer`,
+  if (confirmName !== tenant!.name) {
+    errorRedirect(
+      `Confirmation incorrecte : tape exactement "${tenant!.name}" (attention aux espaces et accents)`,
     );
   }
 
   // Garde-fou 3 : subscription active = il faut resilier Mollie d'abord
   if (
-    tenant.paymentSubscriptionId &&
-    tenant.subscriptionStatus === "active"
+    tenant!.paymentSubscriptionId &&
+    tenant!.subscriptionStatus === "active"
   ) {
-    throw new Error(
-      "Tenant avec abonnement actif. Resilie d'abord la subscription Mollie via /admin/billing.",
+    errorRedirect(
+      "Tenant avec abonnement Mollie actif. Résilie d'abord la subscription via /admin/billing.",
     );
   }
+  // À partir d'ici on a un tenant non-null garanti.
 
   // Audit log AVANT suppression : si le delete echoue on a quand meme la
   // trace de la tentative. Et apres : on ne peut plus referencer tenantId
