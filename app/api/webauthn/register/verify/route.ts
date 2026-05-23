@@ -3,11 +3,12 @@
 // Recoit la reponse du navigateur après interaction avec la cle FIDO2,
 // verifie + persiste le credential.
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import {
   verifyChallenge,
   verifyAndSaveRegistration,
+  buildRequestOrigin,
   WEBAUTHN_REGISTER_COOKIE,
 } from "@/lib/webauthn";
 import { auditLog, AuditActions, AuditOutcomes } from "@/lib/audit";
@@ -42,11 +43,23 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Challenge invalide." }, { status: 400 });
   }
 
+  // Origin attendu de l'enregistrement : on lit l'host courant et on valide
+  // qu'il est sous le rpID (support enrollment depuis un sous-domaine).
+  const h = await headers();
+  const originCheck = buildRequestOrigin(h);
+  if (!originCheck.ok) {
+    return NextResponse.json(
+      { error: "Origin invalide." },
+      { status: 400 },
+    );
+  }
+
   const result = await verifyAndSaveRegistration({
     userId,
     expectedChallenge: env.challenge,
     response,
     deviceName,
+    expectedOrigin: originCheck.origin,
   });
 
   if (result.ok) {
