@@ -29,6 +29,10 @@ import {
 import AdminSidebar from "@/components/AdminSidebar";
 import AdminTopBar from "@/components/AdminTopBar";
 import AdminSearchBox from "@/components/admin/AdminSearchBox";
+import CrossTenantBanner from "@/components/admin/CrossTenantBanner";
+import { getTenantContextSummary } from "@/lib/current-tenant";
+import { canActAsAdminInTenant } from "@/lib/tenant-membership";
+import { db } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -51,15 +55,49 @@ export default async function AdminLayout({
     redirect("/apprendre");
   }
 
+  // === Sprint 2 multi-tenant membership ===
+  // Resout le tenant ACTIF (sous-domaine + membership) au lieu de toujours
+  // utiliser session.user.tenantId. Permet a un SUPERADMIN navigant sur
+  // acme.humanix-academie.fr/admin d'agir dans Acme plutot que dans son
+  // tenant home Humanix.
+  const ctxSummary = await getTenantContextSummary();
+  const activeTenantId = ctxSummary?.activeTenantId ?? (session.user.tenantId as string | undefined);
+  const isCrossTenant = ctxSummary ? !ctxSummary.isHome : false;
+
+  // Defense en profondeur : si on est en mode cross-tenant (membership),
+  // on revalide que le user a effectivement le droit d'agir comme admin
+  // dans ce tenant. SUPERADMIN bypass automatiquement.
+  if (isCrossTenant && activeTenantId) {
+    const userId = session.user!.id as string;
+    const allowed = await canActAsAdminInTenant(userId, activeTenantId);
+    if (!allowed) {
+      // Pas d'acces : redirect vers /apprendre (interface user) plutot que
+      // /admin pour eviter une boucle. L'utilisateur ne devrait jamais
+      // arriver ici (resolveTenantContext bloque deja), mais defense en
+      // profondeur.
+      redirect("/apprendre");
+    }
+  }
+
+  // Nom du tenant actif (pour le banner cross-tenant si different du home)
+  let activeTenantName: string | null = null;
+  if (isCrossTenant && activeTenantId) {
+    const t = await db.tenant.findUnique({
+      where: { id: activeTenantId },
+      select: { name: true },
+    });
+    activeTenantName = t?.name ?? null;
+  }
+
   // === SaaS multi-tenant : enforcement subscription status ===
-  // Recupere l'etat du subscription du tenant courant. Selon `restriction` :
+  // Recupere l'etat du subscription du tenant ACTIF. Selon `restriction` :
   //   none     -> tout fonctionne
   //   warn     -> bandeau d'avertissement, mais accès complet
   //   read_only -> bandeau + on bloque les mutations cote actions
   //                (lib/seats.ts + actions de modification verifient canMutate)
   //   blocked   -> redirect /admin/billing avec CTA renew
   // SUPERADMIN ne subit jamais cette restriction (accès global Humanix interne).
-  const tenantId = session.user.tenantId;
+  const tenantId = activeTenantId;
   let subState: Awaited<ReturnType<typeof getSubscriptionState>> | null = null;
   if (typeof tenantId === "string" && role !== "SUPERADMIN") {
     subState = await getSubscriptionState(tenantId);
@@ -95,6 +133,14 @@ export default async function AdminLayout({
           contenu (pattern moins disruptif). */}
       <div className="flex-1 min-w-0 flex flex-col lg:pl-14">
         <AdminTopBar />
+
+        {/* Banner cross-tenant : visible quand l'user agit sur un tenant
+            different de son home (membership ou bypass SUPERADMIN).
+            Defense en profondeur visuelle pour eviter qu'un SUPERADMIN
+            modifie par erreur le mauvais tenant. */}
+        {isCrossTenant && activeTenantName && (
+          <CrossTenantBanner activeTenantName={activeTenantName} />
+        )}
 
         {/* Bandeau de subscription si necessaire (warn/read_only/blocked) */}
         {subState && shouldShowWarning(subState) && (

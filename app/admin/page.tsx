@@ -18,6 +18,7 @@
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getCurrentTenantId } from "@/lib/current-tenant";
 import AdminDashboard from "@/components/AdminDashboard";
 import HexBackdrop from "@/components/HexBackdrop";
 
@@ -27,10 +28,13 @@ export default async function AdminPage() {
   // Auth garantie par app/admin/layout.tsx (défense en profondeur déjà appliquée).
   // On récupère juste session pour le tenantId et la salutation.
   const session = await auth();
-  if (!session?.user || typeof session.user.tenantId !== "string") {
-    throw new Error("Unauthorized: missing tenant context");
+  if (!session?.user) {
+    throw new Error("Unauthorized: no session");
   }
-  const tenantId = session.user.tenantId;
+  // Resout le tenant ACTIF (sous-domaine + membership) plutot que d'utiliser
+  // toujours session.user.tenantId. Permet a un SUPERADMIN avec membership
+  // de voir le dashboard du tenant cible plutot que celui de son home.
+  const tenantId = await getCurrentTenantId();
 
   const [users, saisons, allProgress] = await Promise.all([
     db.user.findMany({ where: { tenantId, role: "LEARNER" } }),
