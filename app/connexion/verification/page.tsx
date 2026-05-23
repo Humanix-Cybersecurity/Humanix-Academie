@@ -4,8 +4,11 @@
 //
 // Configuree dans lib/auth.ts comme `pages.verifyRequest`. Auth.js redirige
 // automatiquement ici après :
-//   - signIn("nodemailer", { email }) -> envoi du magic link de vérification
-//   - signIn("resend", { email })      -> idem (alternate provider)
+//   - signIn("nodemailer", { email }) -> envoi du magic link via Scaleway TEM
+//     (provider id = "nodemailer" par default, custom sendVerificationRequest)
+//
+// Note : on a abandonne Resend en mai 2026 pour Scaleway TEM (souverain FR).
+// Le provider "resend" n'existe plus, ne pas l'utiliser.
 //
 // Cette page n'a aucune logique : c'est juste un message de confirmation
 // pour rassurer l'utilisateur que son mail est en route. Le lien dans le
