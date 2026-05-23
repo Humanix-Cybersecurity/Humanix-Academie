@@ -81,9 +81,7 @@ PME et ETI, pas comme un PDF décoratif. Trois leviers d'adoption :
   *le « Pix de la cybersécurité »* côté sensibilisation, avec un dossier
   formel d'agrément lancé en 2026. Reconnaissance officielle visée 2027.
 
-Détail complet sur **[/certificat](https://humanix-academie.fr/certificat)** ·
-positionnement commercial assureurs dans [`docs/CERTIFICAT_POSITIONING.md`](./docs/CERTIFICAT_POSITIONING.md) ·
-trame courrier ANSSI dans [`docs/COURRIER_ANSSI.md`](./docs/COURRIER_ANSSI.md).
+Détail complet sur **[/certificat](https://humanix-academie.fr/certificat)**.
 
 ---
 
