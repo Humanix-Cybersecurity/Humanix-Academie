@@ -11,6 +11,19 @@ name: CI
 # 2026-05-22 après que la PR #582 (sync develop ← main) n'ait reçu aucun
 # check faute de trigger.
 #
+# OPTIM CI 2026-05-23 (Florian "chaque iteration mets plus de 15 minutes") :
+#
+#   1. paths-ignore : skip CI sur changes docs/wiki/markdown-only (gain :
+#      ~15 min/PR doc qui n'ont rien a tester)
+#
+#   2. Cache node_modules + .prisma partage entre jobs via actions/cache,
+#      key = hash(package-lock + schema.prisma). Sur self-hosted-runner
+#      mono-job, les jobs sont serialises ; le 1er paie `npm ci` (~60s),
+#      les suivants restaurent en ~5s. Gain : 50s × 9 jobs = ~7 min/CI.
+#
+#   3. Vitest sans coverage sur les PR (juste les tests). Coverage seulement
+#      sur push main pour archive. Gain : ~15s par run de test.
+#
 # =============================================================================
 # RUNNER : self-hosted (machine Humanix dédiée)
 # =============================================================================
@@ -47,8 +60,26 @@ name: CI
 on:
   push:
     branches: [main, develop]
+    # Skip CI sur les changes docs/markdown only : pas de logique à tester,
+    # gain ~15 min par PR doc.
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - "wiki/**"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".github/PULL_REQUEST_TEMPLATE.md"
+      - "LICENSE"
+      - "CHANGELOG.md"
   pull_request:
     branches: [main, develop]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - "wiki/**"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".github/PULL_REQUEST_TEMPLATE.md"
+      - "LICENSE"
+      - "CHANGELOG.md"
 
 # Permissions minimales (principe du moindre privilège).
 permissions:
@@ -60,6 +91,11 @@ permissions:
 # force la migration le 2 juin 2026 (1 semaine après notre launch).
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+  # Cache key partage entre tous les jobs. Inclut package-lock pour les deps
+  # et schema.prisma pour le client Prisma genere (qui est dans
+  # node_modules/.prisma/). Si l'un ou l'autre change -> cache miss = full
+  # `npm ci` + `prisma generate`.
+  CACHE_KEY_PREFIX: "node-deps-v1"
 
 # Annule les runs précédents pour la même PR (gain CI minutes).
 concurrency:
@@ -85,11 +121,20 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Cache node_modules + Prisma client
+        id: cache-deps
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            node_modules/.prisma
+          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('package-lock.json', 'prisma/schema.prisma') }}
 
-      - name: Generate Prisma Client
-        run: npx prisma generate
+      - name: Install dependencies + generate Prisma (cache miss only)
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+        run: |
+          npm ci
+          npx prisma generate
 
       - name: Run ESLint + tsc --noEmit
         run: npm run lint
@@ -97,6 +142,8 @@ jobs:
   # ---------------------------------------------------------------------------
   # Job : Tests unitaires + coverage (Vitest)
   # ---------------------------------------------------------------------------
+  # Optim 2026-05-23 : sur PR on ne genere PAS de coverage (juste run les
+  # tests) — gain ~15s. Sur push main on garde la coverage pour l'artifact.
   test:
     name: Tests unitaires (Vitest)
     runs-on: self-hosted
@@ -112,17 +159,31 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Cache node_modules + Prisma client
+        id: cache-deps
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            node_modules/.prisma
+          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('package-lock.json', 'prisma/schema.prisma') }}
 
-      - name: Generate Prisma Client
-        run: npx prisma generate
+      - name: Install dependencies + generate Prisma (cache miss only)
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+        run: |
+          npm ci
+          npx prisma generate
 
-      - name: Run Vitest with coverage
+      - name: Run Vitest (sans coverage sur PR)
+        if: github.event_name == 'pull_request'
+        run: npm test
+
+      - name: Run Vitest avec coverage (push main/develop)
+        if: github.event_name == 'push'
         run: npm run test:coverage
 
       - name: Upload coverage report
-        if: always()
+        if: github.event_name == 'push' && always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
@@ -147,8 +208,20 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Cache node_modules + Prisma client
+        id: cache-deps
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            node_modules/.prisma
+          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('package-lock.json', 'prisma/schema.prisma') }}
+
+      - name: Install dependencies + generate Prisma (cache miss only)
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+        run: |
+          npm ci
+          npx prisma generate
 
       - name: Build Next.js
         run: npm run build
@@ -177,7 +250,15 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
+      - name: Cache node_modules
+        id: cache-deps
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('package-lock.json', 'prisma/schema.prisma') }}
+
+      - name: Install dependencies (cache miss only)
+        if: steps.cache-deps.outputs.cache-hit != 'true'
         run: npm ci --ignore-scripts
 
       - name: Audit production dependencies (HIGH/CRITICAL only)
@@ -204,7 +285,15 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
+      - name: Cache node_modules
+        id: cache-deps
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('package-lock.json', 'prisma/schema.prisma') }}
+
+      - name: Install dependencies (cache miss only)
+        if: steps.cache-deps.outputs.cache-hit != 'true'
         run: npm ci --ignore-scripts
 
       - name: Verify MDX slugs match catalog
@@ -231,7 +320,15 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
+      - name: Cache node_modules
+        id: cache-deps
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('package-lock.json', 'prisma/schema.prisma') }}
+
+      - name: Install dependencies (cache miss only)
+        if: steps.cache-deps.outputs.cache-hit != 'true'
         run: npm ci --ignore-scripts
 
       - name: Verify SPDX headers on source files
@@ -257,7 +354,15 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
+      - name: Cache node_modules
+        id: cache-deps
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('package-lock.json', 'prisma/schema.prisma') }}
+
+      - name: Install dependencies (cache miss only)
+        if: steps.cache-deps.outputs.cache-hit != 'true'
         run: npm ci --ignore-scripts
 
       - name: Audit env coverage
@@ -283,7 +388,15 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install MCP server dependencies
+      - name: Cache MCP server node_modules
+        id: cache-mcp
+        uses: actions/cache@v4
+        with:
+          path: connectors/mcp-server/node_modules
+          key: mcp-server-deps-v1-${{ hashFiles('connectors/mcp-server/package-lock.json', 'connectors/mcp-server/package.json') }}
+
+      - name: Install MCP server dependencies (cache miss only)
+        if: steps.cache-mcp.outputs.cache-hit != 'true'
         working-directory: connectors/mcp-server
         run: npm install
 
@@ -316,11 +429,19 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install dependencies
+      - name: Cache node_modules
+        id: cache-deps
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('package-lock.json', 'prisma/schema.prisma') }}
+
+      - name: Install dependencies (cache miss only)
+        if: steps.cache-deps.outputs.cache-hit != 'true'
         run: npm ci --ignore-scripts
 
       - name: Check formatting
-        run: npx prettier --check "**/*.{ts,tsx,js,jsx,json,md,yml,yaml}"
+        run: npx prettier --check --cache "**/*.{ts,tsx,js,jsx,json,md,yml,yaml}"
         continue-on-error: true # Format check ne bloque pas la PR (avertissement seulement)
 
   # ---------------------------------------------------------------------------
