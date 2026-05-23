@@ -24,10 +24,10 @@ export default async function TenantDetailPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ msg?: string }>;
+  searchParams: Promise<{ msg?: string; error?: string }>;
 }) {
   const { id } = await params;
-  const { msg } = await searchParams;
+  const { msg, error: actionError } = await searchParams;
   const health = await computeTenantHealth(id);
   if (!health) notFound();
 
@@ -196,6 +196,24 @@ export default async function TenantDetailPage({
           {msg === "reactivated" && "✓ Tenant réactivé. Les utilisateurs peuvent à nouveau se connecter."}
           {msg === "already-disabled" && "ℹ Tenant déjà désactivé."}
           {msg === "already-active" && "ℹ Tenant déjà actif."}
+        </div>
+      )}
+
+      {/* Banner d'erreur (toast rose via query param ?error=). Affiche le
+          message remonte par les server actions deactivateTenant /
+          reactivateTenant / deleteTenant. Plus fiable que throw + error
+          boundary (les throws dans Server Actions pouvaient afficher un
+          404 cryptique cf. bug Florian 2026-05-23). */}
+      {actionError && (
+        <div
+          role="alert"
+          className="rounded-xl border-2 border-rose-200 dark:border-rose-900/40 bg-rose-50 dark:bg-rose-900/15 p-4 text-sm text-rose-900 dark:text-rose-200 flex items-start gap-2"
+        >
+          <span aria-hidden="true" className="text-lg">⚠️</span>
+          <div className="flex-1">
+            <p className="font-bold mb-1">Action refusée</p>
+            <p>{actionError}</p>
+          </div>
         </div>
       )}
 
