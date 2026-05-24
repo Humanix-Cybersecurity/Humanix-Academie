@@ -110,7 +110,40 @@ Détails : [docs/installation.md](./docs/installation.md#mode-0---quickstart-dev
 - 5 Go d'espace disque
 - Un nom de domaine (ou `localhost` pour tester)
 
-### Installation
+### Option A — Image OCI officielle (recommandée)
+
+L'image OSS est publiée automatiquement à chaque release sur **GitHub
+Container Registry** (registre primaire, gratuit, illimité) et
+**Docker Hub** (mirror compte perso, pour visibilité grand public).
+**Multi-arch** (linux/amd64 + linux/arm64), **AGPLv3**, avec provenance
+SLSA et SBOM SPDX inclus dans le manifest.
+
+```bash
+# GHCR (primaire, recommandé)
+docker pull ghcr.io/humanix-cybersecurity/humanix-academie:latest
+
+# Docker Hub (mirror, optionnel)
+docker pull humanixcybersecurity/humanix-academie:latest
+
+# ou un tag spécifique : :1.2.3, :edge (HEAD de main)
+```
+
+Tags disponibles :
+
+| Tag                 | Quand                            | Stabilité |
+| ------------------- | -------------------------------- | --------- |
+| `:latest`           | Dernière release stable (`v*.*.*`) | Stable    |
+| `:1.2.3` / `:1.2` / `:1` | Versions semver                  | Stable    |
+| `:edge`             | HEAD de `main` (build continu)   | Béta      |
+| `:main-<sha7>`      | Commit précis sur `main`         | Béta      |
+
+> **Pourquoi GHCR en primaire ?** Pas de quota pull (Docker Hub en
+> impose 100/6h aux utilisateurs anonymes depuis 2020), gratuit
+> illimité, intégré GitHub, et alignement souverain UE (Microsoft
+> Azure hébergement Europe). Docker Hub reste publié en mirror pour
+> les habitudes des développeurs.
+
+### Option B — Build local depuis les sources
 
 ```bash
 git clone https://github.com/Humanix-Cybersecurity/Humanix-Academie.git
