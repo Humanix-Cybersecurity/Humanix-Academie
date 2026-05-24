@@ -274,6 +274,12 @@ export default function SecuritePage() {
               <TocItem n="09" href="#grc">
                 Intégration GRC native
               </TocItem>
+              <TocItem n="10" href="#anssi-hg">
+                Conformité ANSSI HG (42 mesures)
+              </TocItem>
+              <TocItem n="11" href="#architecture-link">
+                Architecture technique publique
+              </TocItem>
             </ol>
           </div>
         </section>
@@ -393,18 +399,92 @@ export default function SecuritePage() {
           <ul>
             <li>
               Aucun secret n'est commité dans le code source - vérifié par scan
-              automatisé en CI
+              automatisé en CI (TruffleHog + grep patterns)
             </li>
             <li>
               Variables d'environnement injectées au runtime, jamais
               persistées dans les images Docker
             </li>
             <li>
-              Rotation périodique des secrets de chiffrement et des clés
-              signature
+              <strong>Coffre 1Password vault dédié Humanix Cybersecurity</strong>{" "}
+              pour les credentials administrateur et secrets d'infrastructure
             </li>
-            <li>Coffre de secrets pour les credentials administrateur</li>
+            <li>
+              <strong>Clé Ed25519 de signature certificats</strong> :
+              jamais en repo, jamais dans le runtime applicatif. Signature dans
+              une étape isolée. Backup hors-bande (YubiKey + papier coffre).
+            </li>
           </ul>
+
+          <p className="mt-4 mb-2 font-semibold text-primary-500 dark:text-accent-300">
+            Politique de rotation (mesure ANSSI HG 15) :
+          </p>
+          <div className="overflow-x-auto -mx-2 px-2">
+            <table className="w-full text-sm border-collapse">
+              <caption className="sr-only">
+                Cadence de rotation des secrets de la plateforme
+              </caption>
+              <thead>
+                <tr>
+                  <th className="text-left p-3 bg-primary-500 text-white font-bold rounded-tl-xl">
+                    Type de secret
+                  </th>
+                  <th className="text-left p-3 bg-primary-500 text-white font-bold">
+                    Cadence
+                  </th>
+                  <th className="text-left p-3 bg-primary-500 text-white font-bold rounded-tr-xl">
+                    Déclencheur incident
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <SecretRotationRow
+                  type="AUTH_SECRET (signature sessions Auth.js)"
+                  cadence="Annuelle"
+                  incident="Immédiat si compromission soupçonnée"
+                />
+                <SecretRotationRow
+                  type="Clé Ed25519 signature certificats"
+                  cadence="Jamais (intégrité historique)"
+                  incident="Migration version + invalidation lot"
+                />
+                <SecretRotationRow
+                  type="DB password Postgres"
+                  cadence="Annuelle"
+                  incident="Immédiat si fuite"
+                />
+                <SecretRotationRow
+                  type="Tokens API Scaleway / Mistral / Mollie"
+                  cadence="Annuelle ou à révocation prestataire"
+                  incident="Immédiat si fuite"
+                />
+                <SecretRotationRow
+                  type="Webhook HMAC secret (Mollie, API)"
+                  cadence="Annuelle"
+                  incident="Immédiat si fuite"
+                />
+                <SecretRotationRow
+                  type="API keys utilisateurs (table ApiKey)"
+                  cadence="Configurable par utilisateur"
+                  incident="Révocation 1-clic par admin"
+                />
+                <SecretRotationRow
+                  type="Clé chiffrement backup age"
+                  cadence="Annuelle"
+                  incident="Régénération + re-chiffrement backups récents"
+                />
+                <SecretRotationRow
+                  type="Clés SSH d'administration"
+                  cadence="Trimestrielle (90 jours)"
+                  incident="Immédiat si laptop admin compromis"
+                />
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-3 italic">
+            Procédure de rotation détaillée dans la PSSI interne. Chaque
+            rotation est tracée dans l'audit log (table Event).
+          </p>
         </Section>
 
         <Section
@@ -561,7 +641,15 @@ export default function SecuritePage() {
             outil GRC via l'API <code>/api/v1/evidence-export</code>.
             Connecteur Python prêt à l'emploi pour{" "}
             <strong>CISO Assistant</strong> (intuitem). Mappings ISO 27001,
-            NIS2, RGPD, ANSSI HG documentés et auditables.
+            NIS2, RGPD, ANSSI HG, NIST CSF et Sapin II documentés et
+            auditables dans{" "}
+            <Link
+              href="https://github.com/Humanix-Cybersecurity/Humanix-Academie/blob/main/lib/mapping-grc.ts"
+              className="font-mono text-accent-500 underline-offset-4 hover:underline"
+            >
+              lib/mapping-grc.ts
+            </Link>
+            .
           </p>
           <p className="mt-3">
             <Link
@@ -569,6 +657,55 @@ export default function SecuritePage() {
               className="font-bold text-accent-500 underline-offset-4 hover:underline"
             >
               Voir le connecteur CISO Assistant →
+            </Link>
+          </p>
+        </Section>
+
+        <Section
+          n="10"
+          emoji="🛡️"
+          title="Conformité ANSSI HG (42 mesures)"
+          id="anssi-hg"
+        >
+          <p>
+            Page dédiée listant les <strong>42 mesures</strong> du Guide
+            d'hygiène informatique ANSSI v2 avec leur statut effectif sur la
+            plateforme Humanix. Page <strong>générée dynamiquement</strong> à
+            partir du fichier{" "}
+            <code className="text-xs">lib/mapping-grc.ts</code>, source de
+            vérité unique avec l'API <code>evidence-export</code> : aucune
+            dérive possible entre l'affichage commercial et la conformité
+            opérationnelle.
+          </p>
+          <p className="mt-3">
+            <Link
+              href="/conformite/anssi-hg"
+              className="font-bold text-accent-500 underline-offset-4 hover:underline"
+            >
+              Voir le mapping public 42 mesures →
+            </Link>
+          </p>
+        </Section>
+
+        <Section
+          n="11"
+          emoji="🗺️"
+          title="Architecture technique publique"
+          id="architecture-link"
+        >
+          <p>
+            Cartographie complète de l'infrastructure conforme à la{" "}
+            <strong>mesure 5 du Guide d'hygiène informatique ANSSI</strong>{" "}
+            (cartographie précise de l'installation maintenue à jour) :
+            composants, technologies, localisations, choix souverains motivés,
+            algorithmes cryptographiques, posture TLS.
+          </p>
+          <p className="mt-3">
+            <Link
+              href="/architecture"
+              className="font-bold text-accent-500 underline-offset-4 hover:underline"
+            >
+              Voir le schéma d'architecture →
             </Link>
           </p>
         </Section>
@@ -741,6 +878,28 @@ function SubcontractorRow({
       </td>
       <td className="p-3 text-gray-700 dark:text-gray-200">{role}</td>
       <td className="p-3 text-gray-600 dark:text-gray-300 italic">{loc}</td>
+    </tr>
+  );
+}
+
+function SecretRotationRow({
+  type,
+  cadence,
+  incident,
+}: {
+  type: string;
+  cadence: string;
+  incident: string;
+}) {
+  return (
+    <tr className="border-b border-gray-200 dark:border-slate-700 last:border-0">
+      <td className="p-3 font-semibold text-gray-900 dark:text-gray-100">
+        {type}
+      </td>
+      <td className="p-3 text-gray-700 dark:text-gray-200">{cadence}</td>
+      <td className="p-3 text-gray-600 dark:text-gray-300 italic text-xs">
+        {incident}
+      </td>
     </tr>
   );
 }
