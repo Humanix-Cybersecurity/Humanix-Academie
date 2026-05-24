@@ -47,10 +47,21 @@ describe("FRAMEWORKS catalog", () => {
     }
   });
 
-  it("chaque contrôle a au moins un artifact source", () => {
+  it("chaque contrôle a soit un artifact source, soit un scopeNote explicite", () => {
+    // Permet aux mesures volontairement hors-scope plateforme SaaS d'apparaitre
+    // dans `controls` (avec artifacts vide + scopeNote justifiant) pour etre
+    // affichees dans le sommaire mesure par mesure (cf. /conformite/anssi-hg)
+    // tout en garantissant qu'aucun controle ne passe en silence sans
+    // documentation. Cas typique : ANSSI HG M9, M19, M22, M25 (architecture
+    // reseau du client, hors scope d'un SaaS de sensibilisation).
     for (const fw of Object.values(FRAMEWORKS)) {
       for (const c of fw.controls) {
-        expect(c.artifacts.length).toBeGreaterThan(0);
+        const hasArtifacts = c.artifacts.length > 0;
+        const hasScopeNote = typeof c.scopeNote === "string" && c.scopeNote.length > 0;
+        expect(
+          hasArtifacts || hasScopeNote,
+          `Le controle ${c.ref} doit avoir au moins un artifact OU un scopeNote (hors-scope explicite).`,
+        ).toBe(true);
       }
     }
   });
