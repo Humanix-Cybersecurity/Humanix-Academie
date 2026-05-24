@@ -1793,6 +1793,9 @@ enum AuditAction {
   CISO_SYNC_COMPLETED // Sync terminee avec succes
   CISO_SYNC_FAILED // Sync interrompue par erreur
   CISO_LIVE_SYNC // Mini-sync incrementale declenchee par un evenement metier (Live Mode v2.0)
+  // Securite IA (pentest fix 2026-05-24)
+  AI_PROMPT_INJECTION_ATTEMPT // Filtre output Hex a detecte une tentative de fuite du system prompt
+  AI_OUTPUT_LEAK_BLOCKED // Stream Hex coupe par defense en profondeur (signature prompt detectee)
 }
 
 enum AuditOutcome {

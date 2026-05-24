@@ -32,8 +32,10 @@ import {
   buildToneAddendum,
 } from "@/lib/ai/hex/context";
 import { retrieveRagContext, formatRagContext } from "@/lib/ai/hex/rag";
+import { wrapWithLeakFilter } from "@/lib/ai/hex/output-filter";
 import { scanPii, describePiiHits } from "@/lib/security/pii-filter";
 import { normalizePlan, type PlanId } from "@/lib/plans";
+import { auditLog, AuditActions } from "@/lib/audit";
 
 export const dynamic = "force-dynamic";
 
@@ -198,6 +200,32 @@ export async function POST(req: Request) {
       { status: 502 },
     );
   }
+
+  // 8 bis) Pentest fix #2 (2026-05-24) — defense en profondeur prompt
+  // injection : on wrappe le stream avec un filtre qui detecte les fuites
+  // de signatures du system prompt (cf. lib/ai/hex/output-filter.ts).
+  // En cas de detection : remplace par un refus standard + audit log
+  // AI_PROMPT_INJECTION_ATTEMPT pour traçabilite.
+  upstream = wrapWithLeakFilter(upstream, async (match) => {
+    try {
+      await auditLog({
+        action: AuditActions.AI_PROMPT_INJECTION_ATTEMPT,
+        actor: { userId, email: session.user.email ?? "unknown" },
+        tenantId,
+        target: { type: "ai_chat", id: userId, label: "hex" },
+        message: "Tentative de fuite du system prompt Hex detectee (signature match)",
+        // On NE logue PAS le match exact pour eviter de re-stocker un fragment
+        // du prompt dans l'audit log. On logue uniquement les meta utiles
+        // pour l'investigation.
+        metadata: {
+          signature_length: match.length,
+          last_user_message_preview: last.content.slice(0, 200),
+        },
+      });
+    } catch (err) {
+      console.error("hex-chat: audit log AI_PROMPT_INJECTION_ATTEMPT failed", err);
+    }
+  });
 
   // 9) Encoder le stream texte en SSE pour le client
   //    - 1er event : pii notice (si on a masque des donnees)
