@@ -18,6 +18,7 @@ import {
   SIZE_LABELS,
   SECTOR_LABELS,
 } from "@/lib/audit-flash/scoring";
+import { buildSignedPdfUrl } from "@/lib/audit-flash/signed-urls";
 
 export const dynamic = "force-dynamic";
 
@@ -122,7 +123,7 @@ export default async function AuditResultPage({
 
           <div className="mt-6 flex flex-col sm:flex-row gap-3">
             <a
-              href={`/api/audit-flash/${submission.id}/pdf`}
+              href={buildSignedPdfUrl(submission.id)}
               className="btn-primary inline-flex items-center justify-center gap-2"
               aria-label="Télécharger le rapport PDF"
             >
