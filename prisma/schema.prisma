@@ -1366,9 +1366,42 @@ model AuditFlashSubmission {
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
 
+  // Traçabilite acces PDF (pentest fix #4, 2026-05-24)
+  pdfAccesses AuditFlashPdfAccess[]
+
   @@index([leadStatus])
   @@index([createdAt])
   @@index([email])
+}
+
+// =====================================================
+// AuditFlashPdfAccess - Trace des telechargements du PDF
+//
+// Pentest fix #4 (2026-05-24) : avant, le PDF etait accessible via
+// capability-URL CUID seul, sans expiration ni audit. On a passe l'URL
+// en signee HMAC (cf. lib/audit-flash/signed-urls.ts) ET on logge chaque
+// acces ici pour traçabilite (RGPD art. 32 + ANSSI HG M36).
+//
+// Politique de retention : on garde les acces 12 mois max (cohérent avec
+// la retention des soumissions). Purge auto via cron mensuel.
+// =====================================================
+model AuditFlashPdfAccess {
+  id           String                @id @default(cuid())
+  submissionId String
+  ipHash       String? // SHA-256 de l'IP (RGPD-compatible)
+  userAgent    String?               @db.Text
+  // Statut : "ok" (signature valide) | "expired" | "bad_signature" | "missing_sig" | "no_signature"
+  // "no_signature" est utilise pendant la fenetre de grace (compat ascendante).
+  status       String                @default("ok")
+  // Date d'expiration de la signature ayant servi a acceder (pour analyse)
+  signatureExp DateTime?
+  accessedAt   DateTime              @default(now())
+
+  submission AuditFlashSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+
+  @@index([submissionId])
+  @@index([accessedAt])
+  @@index([status])
 }
 
 // =====================================================
