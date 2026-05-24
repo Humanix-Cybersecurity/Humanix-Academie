@@ -62,6 +62,8 @@ const FRAMEWORK_LABELS: Record<FrameworkRef, { short: string; emoji: string }> =
     "ANSSI-HG": { short: "ANSSI HG", emoji: "🏛" },
     "NIST-CSF": { short: "NIST CSF", emoji: "📐" },
     SAPIN2: { short: "Sapin II", emoji: "⚖️" },
+    // SOC 2 ajoute 2026-05-24 (AICPA Trust Services Criteria, cf. mapping-grc.ts)
+    SOC2: { short: "SOC 2", emoji: "🇺🇸" },
   };
 
 export default function CisoAssistantBridge() {
