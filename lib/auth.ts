@@ -632,6 +632,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: isDemoMode ? "/demo" : "/connexion",
     verifyRequest: "/connexion/verification",
+    // Pentest fix #10 (2026-05-24) : page d'erreur custom qui ne 500 jamais.
+    // Sans `error` configure, Auth.js fallback sur sa page interne qui
+    // pouvait HTTP 500 sur certains codes (Configuration en particulier),
+    // exposant un fingerprint exploitable. La page custom rend toujours
+    // un 200 avec un message FR via humanizeAuthError().
+    error: "/auth/error",
   },
   // Cookies configures pour traverser les sous-domaines en prod
   // (humanix-academie.fr + acme.humanix-academie.fr + community.humanix-...)
