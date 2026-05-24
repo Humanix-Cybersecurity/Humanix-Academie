@@ -13,9 +13,11 @@ import {
 } from "./mapping-grc";
 
 describe("FRAMEWORKS catalog", () => {
-  it("expose les 6 référentiels supportés", () => {
-    // SAPIN2 (loi anti-corruption FR) ajoute apres la redaction initiale
-    // du test. Liste a maintenir synchronisee avec lib/mapping-grc.ts.
+  it("expose les 7 référentiels supportés", () => {
+    // SAPIN2 (loi anti-corruption FR) ajoute apres la redaction initiale.
+    // SOC2 (AICPA Trust Services Criteria) ajoute 2026-05-24 pour
+    // faciliter les due diligence clients B2B (notamment US ou ETI FR
+    // avec donneurs d'ordre US). Cf. lib/mapping-grc.ts section SOC2.
     expect(SUPPORTED_FRAMEWORKS).toEqual([
       "ISO27001:2022",
       "NIS2",
@@ -23,6 +25,7 @@ describe("FRAMEWORKS catalog", () => {
       "ANSSI-HG",
       "NIST-CSF",
       "SAPIN2",
+      "SOC2",
     ]);
   });
 

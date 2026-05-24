@@ -16,7 +16,8 @@ export type FrameworkRef =
   | "RGPD"
   | "ANSSI-HG"
   | "NIST-CSF"
-  | "SAPIN2";
+  | "SAPIN2"
+  | "SOC2";
 
 export type ArtifactType =
   | "metric" // chiffre cle (taux, score, count)
@@ -1432,6 +1433,486 @@ const SAPIN2: FrameworkMapping = {
 };
 
 // ---------------------------------------------------------------------------
+// SOC 2 (Service Organization Control 2) — AICPA Trust Services Criteria 2017
+//
+// Standard americain de reference pour la confiance dans les SaaS B2B.
+// Demande systematiquement par les acheteurs sereieux (Fortune 500, scale-ups
+// US, ETI FR avec clients US). Type I = state-in-time, Type II = sur 6+ mois.
+//
+// 5 Trust Services Criteria (TSC) :
+//   - **Security (Common Criteria)** — OBLIGATOIRE, 33 CC : CC1-CC9
+//   - Availability — optionnel
+//   - Processing Integrity — optionnel
+//   - Confidentiality — optionnel
+//   - Privacy — optionnel
+//
+// Humanix couvre principalement les Common Criteria (Security) qui sont
+// le coeur du standard. Mapping partiel mais honnete : on ne pretend pas
+// avoir un audit SOC 2 Type II — on documente l'alignement de la
+// plateforme avec les controles SOC 2 pour faciliter les due diligence
+// des clients qui en font la demande.
+// ---------------------------------------------------------------------------
+const SOC2: FrameworkMapping = {
+  ref: "SOC2",
+  title: "SOC 2 - Trust Services Criteria 2017 (AICPA)",
+  publisher: "AICPA (American Institute of CPAs)",
+  url: "https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2",
+  controls: [
+    // ========================================================================
+    // CC1 - Control Environment (5 criteres)
+    // ========================================================================
+    {
+      ref: "CC1.1",
+      name: "L'entite demontre un engagement envers l'integrite et les valeurs ethiques",
+      category: "CC1 - Control Environment",
+      artifacts: [
+        {
+          type: "policy",
+          source: "pack_nis2_pdf",
+          label: "Politique de securite & code de conduite (Pack NIS2)",
+        },
+      ],
+      scopeNote:
+        "Couvert par le Pack NIS2 + PSSI interne Humanix. AGPLv3 = ethique de transparence affichee publiquement.",
+    },
+    {
+      ref: "CC1.2",
+      name: "Le conseil exerce une supervision independante",
+      category: "CC1 - Control Environment",
+      artifacts: [],
+      scopeNote:
+        "Humanix SASU 1 personne actuellement. Gouvernance formalisee a recruter au-dela de 5 collaborateurs.",
+    },
+    {
+      ref: "CC1.4",
+      name: "L'entite recrute, developpe et retient des collaborateurs competents",
+      category: "CC1 - Control Environment",
+      artifacts: [
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux de completion sensibilisation collaborateurs",
+        },
+      ],
+      thresholdCompliant: 0.9,
+      thresholdPartial: 0.5,
+      scopeNote:
+        "Cote client : taux de formation cyber des collaborateurs. Cote Humanix : politique RH d'onboarding/offboarding (PSSI section 4.1).",
+    },
+
+    // ========================================================================
+    // CC2 - Communication and Information (3 criteres)
+    // ========================================================================
+    {
+      ref: "CC2.1",
+      name: "L'entite obtient ou genere de l'information pertinente, de qualite, pour supporter le fonctionnement des controles",
+      category: "CC2 - Communication and Information",
+      artifacts: [
+        {
+          type: "event_log",
+          source: "audit_trail",
+          label: "Table Event - audit trail tamper-evident",
+        },
+        {
+          type: "metric",
+          source: "tenant_score",
+          label: "Score de maturite cyber humaine",
+        },
+      ],
+      scopeNote:
+        "Couvert : audit trail + dashboard tenant en temps reel + exports OSCAL.",
+    },
+    {
+      ref: "CC2.2",
+      name: "L'entite communique en interne l'information necessaire au fonctionnement des controles",
+      category: "CC2 - Communication and Information",
+      artifacts: [
+        {
+          type: "policy",
+          source: "pack_nis2_pdf",
+          label: "Pack NIS2 - politique cybersecurite",
+        },
+        {
+          type: "metric",
+          source: "completion_rate",
+          label: "Taux d'engagement sensibilisation",
+        },
+      ],
+      thresholdCompliant: 0.7,
+      thresholdPartial: 0.4,
+    },
+    {
+      ref: "CC2.3",
+      name: "L'entite communique avec les parties externes les sujets relatifs aux controles internes",
+      category: "CC2 - Communication and Information",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Page publique /securite + /architecture + /conformite/anssi-hg",
+          filter: { type: "evidence.public_trust_center" },
+        },
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "security.txt RFC 9116 (security@humanix-cybersecurity.fr)",
+          filter: { type: "evidence.security_txt" },
+        },
+      ],
+      scopeNote:
+        "★ COUVERT NATIVEMENT. Trust Center public, security.txt, code AGPLv3 auditable, page conformite 42 mesures ANSSI HG generee dynamiquement.",
+    },
+
+    // ========================================================================
+    // CC3 - Risk Assessment (4 criteres)
+    // ========================================================================
+    {
+      ref: "CC3.1",
+      name: "L'entite specifie ses objectifs avec suffisamment de clarte pour identifier et evaluer les risques",
+      category: "CC3 - Risk Assessment",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "PSSI Humanix - section 3 objectifs securite",
+          filter: { type: "evidence.pssi" },
+        },
+      ],
+      scopeNote: "PSSI interne formalisee, revue annuelle minimum.",
+    },
+    {
+      ref: "CC3.2",
+      name: "L'entite identifie les risques et determine comment les gerer",
+      category: "CC3 - Risk Assessment",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Audit ANSSI HG 42 mesures + pentest annuel + STACK_EOL_TRACKING",
+          filter: { type: "evidence.risk_assessment" },
+        },
+      ],
+      scopeNote:
+        "Triple approche : conformite reglementaire (ANSSI HG), pentest offensif (PASSI annuel), gestion technique EOL.",
+    },
+
+    // ========================================================================
+    // CC4 - Monitoring Activities (2 criteres)
+    // ========================================================================
+    {
+      ref: "CC4.1",
+      name: "L'entite selectionne, developpe et execute des evaluations continues et/ou separees",
+      category: "CC4 - Monitoring Activities",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Triple A+ continu (Mozilla Observatory + SSLLabs + securityheaders.com)",
+          filter: { type: "evidence.continuous_monitoring" },
+        },
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Plan pentest annuel PASSI (cf. PLAN_PENTEST_ANNUEL interne)",
+          filter: { type: "evidence.pentest_plan" },
+        },
+      ],
+      scopeNote:
+        "★ COUVERT NATIVEMENT. Audits automatises continus + pentest annuel formalise (premier Q3 2026).",
+    },
+    {
+      ref: "CC4.2",
+      name: "L'entite evalue et communique les deficiences de controle interne en temps opportun",
+      category: "CC4 - Monitoring Activities",
+      artifacts: [
+        {
+          type: "event_log",
+          source: "audit_trail",
+          label: "Audit trail Event - alertes incidents et changements de role",
+          filter: { type: "incident.declared" },
+        },
+      ],
+    },
+
+    // ========================================================================
+    // CC5 - Control Activities (3 criteres)
+    // ========================================================================
+    {
+      ref: "CC5.1",
+      name: "L'entite selectionne et developpe des activites de controle qui contribuent a la maitrise des risques",
+      category: "CC5 - Control Activities",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "RBAC hierarchique (lib/role-hierarchy.ts) + multi-tenant isolation",
+          filter: { type: "evidence.rbac" },
+        },
+      ],
+      scopeNote: "★ COUVERT NATIVEMENT. Hierarchie LEARNER < MANAGER < RSSI < ADMIN < SUPERADMIN, isolation tenant stricte.",
+    },
+    {
+      ref: "CC5.3",
+      name: "L'entite deploie des controles via des politiques et des procedures",
+      category: "CC5 - Control Activities",
+      artifacts: [
+        {
+          type: "policy",
+          source: "pack_nis2_pdf",
+          label: "Pack NIS2 + PSSI interne + procedures incident",
+        },
+      ],
+    },
+
+    // ========================================================================
+    // CC6 - Logical and Physical Access (8 criteres - le plus important !)
+    // ========================================================================
+    {
+      ref: "CC6.1",
+      name: "L'entite implemente des mesures de controle d'acces logiques pour proteger les donnees et systemes",
+      category: "CC6 - Logical and Physical Access",
+      artifacts: [
+        {
+          type: "metric",
+          source: "marketplace_modules",
+          label: "MFA TOTP + WebAuthn FIDO2 + step-up auth admin",
+          filter: { category: "auth" },
+        },
+      ],
+      scopeNote:
+        "★ COUVERT NATIVEMENT. Auth.js v5, MFA obligatoire admins, WebAuthn pour SUPERADMIN, scrypt RFC 7914 pour les MDP.",
+    },
+    {
+      ref: "CC6.2",
+      name: "Avant d'octroyer l'acces, l'entite enregistre, autorise et identifie les nouveaux utilisateurs",
+      category: "CC6 - Logical and Physical Access",
+      artifacts: [
+        {
+          type: "event_log",
+          source: "audit_trail",
+          label: "Logs USER_INVITED + USER_CREATED + USER_ROLE_CHANGED",
+          filter: { type: "USER_INVITED" },
+        },
+      ],
+      scopeNote: "Tout cycle de vie utilisateur audite (creation, role, suspension, suppression).",
+    },
+    {
+      ref: "CC6.3",
+      name: "L'entite autorise, modifie ou retire l'acces en fonction des roles et responsabilites",
+      category: "CC6 - Logical and Physical Access",
+      artifacts: [
+        {
+          type: "report",
+          source: "audit_trail",
+          label: "Inventaire comptes privilegies (/superadmin/admins-by-tenant)",
+          filter: { role: "ADMIN_RSSI_SUPERADMIN" },
+        },
+      ],
+      scopeNote: "★ COUVERT NATIVEMENT. Cf. mesure 7 ANSSI HG : inventaire exhaustif + export CSV + detection dormants.",
+    },
+    {
+      ref: "CC6.6",
+      name: "L'entite implemente des controles pour proteger contre les menaces depuis l'exterieur du perimetre",
+      category: "CC6 - Logical and Physical Access",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "HAProxy frontal + rate-limit + WAF leger + HSTS preload + CSP nonce",
+          filter: { type: "evidence.network_defense" },
+        },
+      ],
+      scopeNote: "★ COUVERT NATIVEMENT. Defense en profondeur reseau + applicative.",
+    },
+    {
+      ref: "CC6.7",
+      name: "L'entite restreint la transmission, le mouvement et la suppression de donnees aux objectifs autorises",
+      category: "CC6 - Logical and Physical Access",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "TLS 1.3 only + chiffrement age backup + isolation multi-tenant Prisma",
+          filter: { type: "evidence.data_protection" },
+        },
+      ],
+    },
+    {
+      ref: "CC6.8",
+      name: "L'entite implemente des controles pour prevenir ou detecter et agir sur l'introduction de logiciels malveillants",
+      category: "CC6 - Logical and Physical Access",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Dependabot + npm audit hebdo + scan secrets en CI + provenance SLSA + SBOM",
+          filter: { type: "evidence.supply_chain" },
+        },
+      ],
+      scopeNote: "Couverture supply chain : alertes deps + scan secrets + provenance Docker.",
+    },
+
+    // ========================================================================
+    // CC7 - System Operations (5 criteres)
+    // ========================================================================
+    {
+      ref: "CC7.1",
+      name: "L'entite utilise des procedures de detection pour identifier les changements de configuration et les vulnerabilites",
+      category: "CC7 - System Operations",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Monitoring Scaleway Cockpit + logs HAProxy + alertes prod",
+          filter: { type: "evidence.monitoring" },
+        },
+      ],
+    },
+    {
+      ref: "CC7.2",
+      name: "L'entite surveille les composants du systeme et l'environnement pour les anomalies",
+      category: "CC7 - System Operations",
+      artifacts: [
+        {
+          type: "event_log",
+          source: "audit_trail",
+          label: "Detection bursts admin / exfiltration en masse (sprint 3 pentest)",
+          filter: { type: "anomaly.detected" },
+        },
+      ],
+      scopeNote:
+        "Sprint 3 pentest : rate-limit endpoints /api/admin/*/export + detection > 100 req/60s.",
+    },
+    {
+      ref: "CC7.3",
+      name: "L'entite evalue les evenements de securite et determine s'ils constituent un incident",
+      category: "CC7 - System Operations",
+      artifacts: [
+        {
+          type: "policy",
+          source: "incident_procedure",
+          label: "Procedure incident Pack NIS2 (qualification < 1h)",
+        },
+      ],
+    },
+    {
+      ref: "CC7.4",
+      name: "L'entite repond aux incidents de securite identifies en executant un programme de reponse",
+      category: "CC7 - System Operations",
+      artifacts: [
+        {
+          type: "policy",
+          source: "incident_procedure",
+          label: "Procedure incident unifiee (CNIL 72h + ANSSI 24h/72h/1mois + client < 24h)",
+        },
+        {
+          type: "event_log",
+          source: "audit_trail",
+          label: "Logs incident.declared + incident.notified",
+          filter: { type: "incident.declared" },
+        },
+      ],
+      scopeNote: "★ COUVERT NATIVEMENT. Procedure formalisee + tests tabletop annuels.",
+    },
+    {
+      ref: "CC7.5",
+      name: "L'entite identifie, developpe et implemente les activites pour se remettre des incidents",
+      category: "CC7 - System Operations",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Backup quotidien chiffre age + test restauration trimestriel",
+          filter: { type: "evidence.backup_policy" },
+        },
+      ],
+    },
+
+    // ========================================================================
+    // CC8 - Change Management (1 critere)
+    // ========================================================================
+    {
+      ref: "CC8.1",
+      name: "L'entite autorise, conçoit, developpe ou se procure, configure, documente, teste, approuve et implemente les changements",
+      category: "CC8 - Change Management",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "PR review obligatoire + CI/CD + tests automatises Vitest + Production build",
+          filter: { type: "evidence.change_management" },
+        },
+      ],
+      scopeNote:
+        "★ COUVERT NATIVEMENT. Branches protegees main/develop, review obligatoire, CI verte requise, deploy manuel.",
+    },
+
+    // ========================================================================
+    // CC9 - Risk Mitigation (2 criteres)
+    // ========================================================================
+    {
+      ref: "CC9.1",
+      name: "L'entite identifie, selectionne et developpe des activites pour attenuer les risques liees a la perturbation des activites",
+      category: "CC9 - Risk Mitigation",
+      artifacts: [
+        {
+          type: "document",
+          source: "audit_trail",
+          label: "Plan de reprise + tests restauration mensuel + geo-redondance Scaleway Paris/Amsterdam",
+          filter: { type: "evidence.brc_drp" },
+        },
+      ],
+      scopeNote: "DRP/BCP partiel : backup + geo-redondance OK, mais test formel annuel a formaliser.",
+    },
+    {
+      ref: "CC9.2",
+      name: "L'entite evalue et gere les risques associes aux fournisseurs et partenaires",
+      category: "CC9 - Risk Mitigation",
+      artifacts: [
+        {
+          type: "policy",
+          source: "dpa_pdf",
+          label: "DPA signe avec tous les sous-traitants (Scaleway, Mollie, Mistral, OVH)",
+        },
+      ],
+      scopeNote: "Tous sous-traitants UE souverains, DPA RGPD art. 28 systematique.",
+    },
+  ],
+  outOfScope: [
+    {
+      ref: "A1.1-A1.3",
+      reason:
+        "Availability TSC : on aligne sur SLA 99% mensuel mais pas certifie SOC 2 Type II",
+    },
+    {
+      ref: "PI1.1-PI1.5",
+      reason:
+        "Processing Integrity TSC : pas applicable a un SaaS de sensibilisation (pas de transactions financieres critiques pour le client)",
+    },
+    {
+      ref: "C1.1-C1.2",
+      reason:
+        "Confidentiality TSC : couvert via Security CC6.x. Pas de scope etendu specifique.",
+    },
+    {
+      ref: "P1.0-P8.1",
+      reason:
+        "Privacy TSC : couvert via RGPD (referentiel europeen, plus strict que SOC 2 Privacy)",
+    },
+    {
+      ref: "CC1.3, CC1.5, CC3.3, CC3.4, CC5.2",
+      reason:
+        "Controles de gouvernance entreprise specifiques au scaling > 5 collaborateurs",
+    },
+    {
+      ref: "CC6.4, CC6.5",
+      reason:
+        "Acces physique aux installations (datacenters) : delegue a Scaleway (certifie ISO 27001, ISO 50001, HDS)",
+    },
+  ],
+};
+
+// ---------------------------------------------------------------------------
 // Registre principal
 // ---------------------------------------------------------------------------
 
@@ -1442,6 +1923,7 @@ export const FRAMEWORKS: Record<FrameworkRef, FrameworkMapping> = {
   "ANSSI-HG": ANSSI_HG,
   "NIST-CSF": NIST_CSF,
   SAPIN2,
+  SOC2,
 };
 
 export const SUPPORTED_FRAMEWORKS: FrameworkRef[] = [
@@ -1451,6 +1933,7 @@ export const SUPPORTED_FRAMEWORKS: FrameworkRef[] = [
   "ANSSI-HG",
   "NIST-CSF",
   "SAPIN2",
+  "SOC2",
 ];
 
 /**
