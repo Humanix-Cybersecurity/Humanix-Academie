@@ -210,7 +210,7 @@ export async function POST(req: Request) {
     try {
       await auditLog({
         action: AuditActions.AI_PROMPT_INJECTION_ATTEMPT,
-        actor: { id: userId, email: session.user.email ?? "unknown" },
+        actor: { userId, email: session.user.email ?? "unknown" },
         tenantId,
         target: { type: "ai_chat", id: userId, label: "hex" },
         message: "Tentative de fuite du system prompt Hex detectee (signature match)",
