@@ -40,25 +40,76 @@ import { isPlanId } from "@/lib/plans";
 
 export const dynamic = "force-dynamic";
 
+// Pentest fix #7 (2026-05-24) — try/catch global :
+//
+// AVANT : si getPayment(tr_inconnu) throw (cas habituel quand un attaquant
+// pousse un id factice, ou quand l'API Mollie a un timeout), le handler
+// remontait l'exception en HTTP 500. Probleme double :
+//   1. Fingerprint : un 500 sur le webhook signale un endpoint actif et
+//      vulnerable a l'envoi d'ids forges (recon facile).
+//   2. DoS Mollie : Mollie retry le webhook automatiquement sur HTTP non-2xx,
+//      ce qui peut saturer notre quota API si l'erreur persiste (et nous
+//      facturer 1k+ appels gratuits par jour).
+//
+// APRES : on encapsule tout le dispatch dans un try/catch qui :
+//   - retourne TOUJOURS 200 a Mollie (pas de retry, pas de fingerprint)
+//   - logge en interne via console + table BillingEvent (status=error)
+//   - persiste l'erreur pour investigation sans bloquer le flux
+//
+// Note : la vraie defense reste l'authenticite par retrieve (cle API
+// secrete obligatoire) — l'attaquant qui force un tr_xxx ne peut rien
+// LIRE de la ressource. Le try/catch global est une defense-en-profondeur
+// contre le DoS et le fingerprint.
+
 export async function POST(req: Request) {
-  // Mollie POST body est form-encoded : id=tr_xxx (ou sub_xxx)
-  const rawBody = await req.text();
-  const params = new URLSearchParams(rawBody);
-  const resourceId = params.get("id");
+  try {
+    // Mollie POST body est form-encoded : id=tr_xxx (ou sub_xxx)
+    const rawBody = await req.text();
+    const params = new URLSearchParams(rawBody);
+    const resourceId = params.get("id");
 
-  if (!resourceId) {
-    return NextResponse.json({ error: "missing_id" }, { status: 400 });
-  }
+    if (!resourceId) {
+      // Pas un retry Mollie (qui aurait au minimum un id meme invalide) :
+      // soit un scan offensif, soit un misconfig. On retourne 400 pour
+      // ne pas dissimuler un bug cote Mollie.
+      return NextResponse.json({ error: "missing_id" }, { status: 400 });
+    }
 
-  // Dispatch par prefix de l'id
-  if (resourceId.startsWith("tr_")) {
-    return handlePaymentEvent(resourceId, req);
+    // Dispatch par prefix de l'id
+    if (resourceId.startsWith("tr_")) {
+      return await handlePaymentEvent(resourceId, req);
+    }
+    if (resourceId.startsWith("sub_")) {
+      return await handleSubscriptionEvent(resourceId);
+    }
+    // Inconnu (mol_, mdt_, etc.) — on retourne 200 pour eviter Mollie retry indefini
+    return NextResponse.json({ received: true, ignored: true });
+  } catch (err) {
+    // Fallback ultime : on logge cote serveur et on retourne 200 pour
+    // que Mollie ne retry pas. Mieux vaut un evenement non traite (qu'on
+    // peut recuperer manuellement via leur dashboard) qu'un retry-storm.
+    const errorMessage = err instanceof Error ? err.message : String(err);
+    console.error("[mollie-webhook] uncaught error", err);
+    try {
+      // Persiste l'erreur pour audit interne (best-effort, ne propage pas
+      // une nouvelle exception si la BDD est down).
+      await db.billingEvent.create({
+        data: {
+          provider: "mollie",
+          providerEventId: `unhandled_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+          type: "webhook.unhandled_error",
+          tenantId: null,
+          payload: { error: errorMessage } as object,
+          status: "error",
+          errorMessage,
+          providerCreatedAt: new Date(),
+        },
+      });
+    } catch (logErr) {
+      console.error("[mollie-webhook] failed to log uncaught error", logErr);
+    }
+    return NextResponse.json({ received: true, internal_error: true });
   }
-  if (resourceId.startsWith("sub_")) {
-    return handleSubscriptionEvent(resourceId);
-  }
-  // Inconnu (mol_, mdt_, etc.) — on retourne 200 pour eviter Mollie retry indefini
-  return NextResponse.json({ received: true, ignored: true });
 }
 
 async function handlePaymentEvent(paymentId: string, req: Request) {
