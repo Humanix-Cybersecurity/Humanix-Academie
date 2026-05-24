@@ -1,0 +1,330 @@
+name: Docker Publish (OSS)
+
+# Publie l'image OSS de Humanix Academie sur :
+#
+#   - GHCR (GitHub Container Registry) — TOUJOURS ACTIF
+#     ghcr.io/humanix-cybersecurity/humanix-academie
+#     Gratuit illimite, integre GitHub, pas de PAT a rotater.
+#
+#   - Docker Hub (compte perso) — OPTIONNEL
+#     <DOCKERHUB_USERNAME>/humanix-academie
+#     Active automatiquement si les secrets DOCKERHUB_USERNAME + DOCKERHUB_TOKEN
+#     sont definis. Sinon, ignore proprement (pas d'erreur).
+#
+# === Pourquoi cette double publication ===
+#
+# GHCR est notre registre principal (ADR 2026-05-23) :
+#   - Gratuit illimite pour images publiques
+#   - Pas de quota pull (vs Docker Hub : 100 pull/6h pour anonymes)
+#   - GITHUB_TOKEN auto-fourni (pas de PAT a generer ni rotater)
+#   - Provenance + SBOM supportes
+#   - Acces revoque automatiquement si on quitte l'org
+#
+# Docker Hub reste utile pour la visibilite grand public (Stack Overflow,
+# tutos qui pointent par defaut vers docker.io/...). Compte perso gratuit
+# (les organisations Docker Hub sont payantes a partir de 75 $/mois pour
+# 5 users mini — pas justifie pour un projet OSS solo).
+#
+# === Quand ce workflow se declenche ===
+#
+#   - push sur `main` : tag `:edge` + `:main-<sha7>`
+#   - push d'un tag git `v*.*.*` : tags `:1.2.3`, `:1.2`, `:1`, `:latest`
+#   - workflow_dispatch : declenchement manuel avec tag custom
+#
+# === Mode OSS pur (sans content-pro) ===
+#
+# Checkout sans submodule prive. Le Dockerfile gere via `mkdir -p content-pro`
+# + fallback `resolveContentRoot()` sur les 2 saisons demo CC BY-SA.
+#
+# === Secrets requis (Settings → Secrets and variables → Actions) ===
+#
+#   GHCR : aucun (GITHUB_TOKEN fourni automatiquement)
+#
+#   Docker Hub (optionnel) :
+#     - DOCKERHUB_USERNAME : nom du compte Docker Hub perso (pas l'email)
+#     - DOCKERHUB_TOKEN    : PAT Docker Hub avec scope "Read & Write",
+#                            rotation annuelle obligatoire (PSSI M15)
+#
+# === Variables repo override (Settings → Variables) ===
+#
+#   - DOCKER_IMAGE_NAME_GHCR (optionnel) : surcharge le nom GHCR
+#     (defaut : `ghcr.io/humanix-cybersecurity/humanix-academie`)
+#
+#   - DOCKER_IMAGE_NAME_HUB (optionnel) : surcharge le nom Docker Hub
+#     (defaut : `${DOCKERHUB_USERNAME}/humanix-academie`)
+#
+# === Premier setup GHCR ===
+#
+# Au premier push, l'image apparait dans Settings → Packages de l'org
+# en mode PRIVATE par defaut. Pour la rendre publique :
+#   Packages → humanix-academie → Settings → Change visibility → Public
+# A faire UNE SEULE FOIS apres le premier push reussi.
+#
+# === Conformite ANSSI / OCI ===
+#
+# - Labels OCI standardises (org.opencontainers.image.*)
+# - Provenance SLSA mode=max + SBOM SPDX inclus automatiquement
+# - Image AGPLv3 declaree dans le label `licenses`
+# - Cf. ANSSI HG mesures M6 (cartographie tiers) + M38 (audits reguliers)
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - "v*.*.*"
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - "wiki/**"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".github/PULL_REQUEST_TEMPLATE.md"
+      - "LICENSE"
+      - "CHANGELOG.md"
+  workflow_dispatch:
+    inputs:
+      custom_tag:
+        description: "Tag custom (sera prefixe par 'manual-')"
+        required: false
+        default: ""
+      platforms:
+        description: "Plateformes (defaut : linux/amd64,linux/arm64)"
+        required: false
+        default: "linux/amd64,linux/arm64"
+
+permissions:
+  contents: read
+  packages: write # GHCR push (necessaire meme pour le token integre)
+
+concurrency:
+  group: docker-publish-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  DEFAULT_GHCR_IMAGE: ghcr.io/humanix-cybersecurity/humanix-academie
+
+jobs:
+  # ===========================================================================
+  # Pre-flight : detection des registres actifs
+  # ===========================================================================
+  preflight:
+    name: Preflight
+    runs-on: self-hosted
+    timeout-minutes: 5
+    if: github.repository_owner == 'Humanix-Cybersecurity'
+    outputs:
+      ghcr_image: ${{ steps.config.outputs.ghcr_image }}
+      hub_image: ${{ steps.config.outputs.hub_image }}
+      hub_enabled: ${{ steps.config.outputs.hub_enabled }}
+    steps:
+      - name: Resolve registry config
+        id: config
+        env:
+          DH_USER: ${{ secrets.DOCKERHUB_USERNAME }}
+          DH_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          GHCR_OVERRIDE: ${{ vars.DOCKER_IMAGE_NAME_GHCR }}
+          HUB_OVERRIDE: ${{ vars.DOCKER_IMAGE_NAME_HUB }}
+        run: |
+          # GHCR : toujours actif
+          GHCR_IMAGE="${GHCR_OVERRIDE:-${{ env.DEFAULT_GHCR_IMAGE }}}"
+          echo "ghcr_image=${GHCR_IMAGE}" >> "$GITHUB_OUTPUT"
+          echo "::notice::GHCR target: ${GHCR_IMAGE}"
+
+          # Docker Hub : optionnel, active uniquement si les 2 secrets sont definis
+          if [[ -n "${DH_USER}" && -n "${DH_TOKEN}" ]]; then
+            HUB_IMAGE="${HUB_OVERRIDE:-${DH_USER}/humanix-academie}"
+            echo "hub_enabled=true" >> "$GITHUB_OUTPUT"
+            echo "hub_image=${HUB_IMAGE}" >> "$GITHUB_OUTPUT"
+            echo "::notice::Docker Hub target: ${HUB_IMAGE} (secrets detectes)"
+          else
+            echo "hub_enabled=false" >> "$GITHUB_OUTPUT"
+            echo "hub_image=" >> "$GITHUB_OUTPUT"
+            echo "::notice::Docker Hub: desactive (secrets DOCKERHUB_USERNAME/TOKEN non definis)"
+          fi
+
+  # ===========================================================================
+  # Build & publish multi-arch (GHCR + Docker Hub si actif)
+  # ===========================================================================
+  publish:
+    name: Build & push multi-arch
+    needs: preflight
+    runs-on: self-hosted
+    timeout-minutes: 90 # Build arm64 par QEMU peut prendre ~30 min
+    outputs:
+      digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - name: Checkout (sans submodule prive)
+        # On NE checkoute PAS content-pro/ (submodule prive humanix-content-pro).
+        # L'image OSS doit tourner sans. Le Dockerfile gere ce cas via
+        # `mkdir -p content-pro` et resolveContentRoot() bascule sur les
+        # 2 saisons demo CC BY-SA.
+        uses: actions/checkout@v6
+        with:
+          submodules: false
+          fetch-depth: 0 # Tags pour metadata-action
+
+      - name: Verify OSS mode (no content-pro contents)
+        run: |
+          if [ -f content-pro/prisma/catalog-saisons.ts ]; then
+            echo "::error::content-pro/ a ete checkoute - ce workflow doit publier en mode OSS PUR uniquement"
+            exit 1
+          fi
+          echo "✓ Mode OSS confirme (content-pro vide)"
+
+      - name: Set up QEMU (multi-arch emulation)
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: all
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # === Login GHCR (toujours) ===
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # === Login Docker Hub (optionnel) ===
+      - name: Login to Docker Hub
+        if: needs.preflight.outputs.hub_enabled == 'true'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # === Metadata combine pour les 2 registres ===
+      #
+      # docker/metadata-action genere les tags pour TOUTES les images listees
+      # dans `images:`. docker/build-push-action peut ensuite pousser tous
+      # ces tags en une seule fois (manifest commun multi-arch).
+      - name: Extract metadata (tags, labels)
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          # Liste des images cibles, une par ligne. Si hub_enabled=false,
+          # la 2e ligne est absente (vide → ignoree par metadata-action).
+          images: |
+            ${{ needs.preflight.outputs.ghcr_image }}
+            ${{ needs.preflight.outputs.hub_enabled == 'true' && needs.preflight.outputs.hub_image || '' }}
+          tags: |
+            type=semver,pattern={{version}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=semver,pattern={{major}}.{{minor}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=semver,pattern={{major}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=raw,value=edge,enable=${{ github.ref == 'refs/heads/main' }}
+            type=sha,prefix=main-,format=short,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=manual-${{ github.event.inputs.custom_tag }},enable=${{ github.event_name == 'workflow_dispatch' && github.event.inputs.custom_tag != '' }}
+          labels: |
+            org.opencontainers.image.title=Humanix Académie
+            org.opencontainers.image.description=Plateforme française de sensibilisation cyber — souveraine, AGPLv3, conforme ANSSI HG 42 mesures
+            org.opencontainers.image.vendor=Humanix Cybersecurity SASU (Toulouse, France)
+            org.opencontainers.image.licenses=AGPL-3.0-or-later
+            org.opencontainers.image.source=https://github.com/Humanix-Cybersecurity/Humanix-Academie
+            org.opencontainers.image.url=https://humanix-academie.fr
+            org.opencontainers.image.documentation=https://github.com/Humanix-Cybersecurity/Humanix-Academie/wiki
+            org.opencontainers.image.authors=Humanix Cybersecurity <security@humanix-cybersecurity.fr>
+            io.humanix.flavor=oss
+            io.humanix.compliance.anssi-hg=42-mesures-mappees
+            io.humanix.sovereignty=eu-only
+
+      - name: Build & push
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: ${{ github.event.inputs.platforms || 'linux/amd64,linux/arm64' }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # Cache build buildx via GitHub Actions cache.
+          # Reduit le temps des builds suivants de ~30 min a ~5 min.
+          cache-from: type=gha,scope=docker-${{ github.workflow }}
+          cache-to: type=gha,mode=max,scope=docker-${{ github.workflow }}
+          # Supply chain : provenance SLSA + SBOM SPDX inclus dans le manifest.
+          provenance: mode=max
+          sbom: true
+          # Args build : NEXT_PUBLIC_* vides (override au runtime via env).
+          build-args: |
+            NEXT_PUBLIC_APP_URL=
+            NEXT_PUBLIC_APP_NAME=Humanix Académie
+            NEXT_PUBLIC_BASE_URL=
+            NEXT_PUBLIC_PLAUSIBLE_DOMAIN=
+            NEXT_PUBLIC_PLAUSIBLE_API_HOST=
+            NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT=
+            NEXT_PUBLIC_MATOMO_URL=
+            NEXT_PUBLIC_MATOMO_SITE_ID=
+
+      - name: Image summary
+        run: |
+          echo "::notice::Digest : ${{ steps.build.outputs.digest }}"
+          echo "::notice::GHCR  : ${{ needs.preflight.outputs.ghcr_image }}"
+          if [ "${{ needs.preflight.outputs.hub_enabled }}" = "true" ]; then
+            echo "::notice::Docker Hub : ${{ needs.preflight.outputs.hub_image }}"
+          fi
+          echo ""
+          echo "Tags publies :"
+          echo "${{ steps.meta.outputs.tags }}"
+          echo ""
+          echo "Pour pull (GHCR, primaire) :"
+          echo "  docker pull ${{ needs.preflight.outputs.ghcr_image }}:latest"
+
+  # ===========================================================================
+  # Smoke test post-publish (depuis GHCR, registre primaire)
+  # ===========================================================================
+  smoke-test:
+    name: Smoke test pulled image
+    needs: [preflight, publish]
+    if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main'
+    runs-on: self-hosted
+    timeout-minutes: 10
+    steps:
+      - name: Determine tag to test
+        id: tag
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            TAG="latest"
+          else
+            TAG="edge"
+          fi
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Login to GHCR (pour pull)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull image
+        run: docker pull ${{ needs.preflight.outputs.ghcr_image }}:${{ steps.tag.outputs.tag }}
+
+      - name: Run container (skip migrations, fake DATABASE_URL)
+        run: |
+          docker run -d --name humanix-smoketest \
+            -p 13000:3000 \
+            -e DATABASE_URL=postgresql://placeholder:placeholder@placeholder:5432/placeholder \
+            -e AUTH_SECRET=smoketest-secret-not-real-32chars-ok \
+            -e SKIP_MIGRATIONS=true \
+            -e NODE_ENV=production \
+            ${{ needs.preflight.outputs.ghcr_image }}:${{ steps.tag.outputs.tag }}
+          # Attendre que Next.js demarre (max 60s)
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:13000/ >/dev/null 2>&1; then
+              echo "✓ Container repond apres ${i}s"
+              break
+            fi
+            sleep 1
+          done
+
+      - name: Container logs (toujours)
+        if: always()
+        run: docker logs humanix-smoketest 2>&1 | tail -50
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker rm -f humanix-smoketest 2>/dev/null || true
+          docker image prune -af --filter "until=24h" 2>/dev/null || true
