@@ -22,11 +22,16 @@
 //   - Liens vers /confidentialite, /sécurité, modules pedagogiques DPO
 //   - Citation finale "Hex veille"
 //
-// ROADMAP suite :
-//   - /admin/dpo : dashboard prive avec preuves RGPD exportables, queue de
-//     demandes (article 15-22), AIPD generator (PR a venir)
-//   - Modules MDX dedies DPO : AIPD, controle CNIL, transferts hors UE
-//     (PR a venir)
+// ROADMAP (mise a jour 2026-05-24) :
+//   - /admin/dpo : ✅ LIVRE — dashboard avec compteurs RGPD 90j, queue
+//     effacement art. 17, activite 30j
+//   - /admin/dpo/aipd : ✅ LIVRE — generateur AIPD avec template pre-rempli
+//   - /admin/dpo/retention : ✅ LIVRE — config retention par tenant
+//   - Saison `dpo-quotidien` : ✅ LIVREE — 6 modules MDX (AIPD, CNIL,
+//     transferts hors UE, profilage, base legale, mutualisation PME)
+//   - /integrations/privacy-tools : ✅ LIVRE 2026-05-24 — connecteur
+//     dedie Privacy Tools (OneTrust, Didomi, Privacy.fr) via endpoint
+//     `/api/v1/dpo-export`
 //   - Reference dans HeaderBar + footer (déjà fait)
 
 import Link from "next/link";
@@ -275,76 +280,190 @@ export default function DpoLandingPage() {
         </section>
 
         {/* ============================================================
-            4. ROADMAP DPO - ce qui arrive
+            4. ESPACE DPO OPERATIONNEL - ce qui est livre + ce qui arrive
             ============================================================ */}
         <section
-          aria-labelledby="roadmap-title"
-          className="rounded-3xl border-2 border-amber-200 dark:border-amber-900/40 bg-gradient-to-br from-amber-50 via-white to-yellow-50 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/40 p-6 sm:p-10 shadow-sm animate-slide-up"
+          aria-labelledby="dpo-space-title"
+          className="rounded-3xl border-2 border-emerald-200 dark:border-emerald-900/40 bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/40 p-6 sm:p-10 shadow-sm animate-slide-up"
           style={{ animationDelay: "200ms" }}
         >
-          <p className="text-xs uppercase tracking-[0.25em] font-bold text-amber-700 dark:text-amber-300 mb-2">
-            Roadmap espace DPO · Q3-Q4 2026
+          <p className="text-xs uppercase tracking-[0.25em] font-bold text-emerald-700 dark:text-emerald-300 mb-2">
+            Espace DPO opérationnel · disponible maintenant
           </p>
           <h2
-            id="roadmap-title"
+            id="dpo-space-title"
             className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-4 leading-tight"
           >
-            Ce qu'on construit pour toi cette annee.
+            Ton espace dédié, déjà en production.
           </h2>
+          <p className="text-base text-gray-700 dark:text-gray-200 mb-5 leading-relaxed">
+            Quatre outils opérationnels te sont déjà accessibles dans la console
+            (rôle ADMIN/RSSI/SUPERADMIN). Pas de promesse "Q4 2026", c'est en
+            ligne aujourd'hui.
+          </p>
           <ul className="space-y-3 text-base text-gray-700 dark:text-gray-200 leading-relaxed">
             <li className="flex items-start gap-3">
-              <span aria-hidden="true" className="shrink-0 text-xl">
-                🗂
+              <span
+                aria-hidden="true"
+                className="shrink-0 text-xs font-bold uppercase tracking-wider bg-emerald-500 text-white px-2 py-1 rounded mt-0.5"
+              >
+                Live
               </span>
               <span>
                 <strong className="text-primary-500 dark:text-accent-300">
-                  Dashboard /admin/dpo :
+                  Dashboard{" "}
+                  <Link
+                    href="/admin/dpo"
+                    className="underline hover:text-accent-500"
+                  >
+                    /admin/dpo
+                  </Link>{" "}
+                  :
                 </strong>{" "}
-                vue dediee DPO avec queue de demandes RGPD recues,
-                statuts, delais legaux, exports en 1 clic.
+                compteurs RGPD 90 jours, queue des demandes d'effacement
+                art. 17 avec flag <em>en retard</em>, activité RGPD 30 jours,
+                liens directs vers les outils internes.
               </span>
             </li>
             <li className="flex items-start gap-3">
-              <span aria-hidden="true" className="shrink-0 text-xl">
-                📝
+              <span
+                aria-hidden="true"
+                className="shrink-0 text-xs font-bold uppercase tracking-wider bg-emerald-500 text-white px-2 py-1 rounded mt-0.5"
+              >
+                Live
               </span>
               <span>
                 <strong className="text-primary-500 dark:text-accent-300">
-                  AIPD generator :
+                  Générateur AIPD{" "}
+                  <Link
+                    href="/admin/dpo/aipd"
+                    className="underline hover:text-accent-500"
+                  >
+                    /admin/dpo/aipd
+                  </Link>{" "}
+                  :
                 </strong>{" "}
-                template d'analyse d'impact a la protection des données
-                pre-rempli pour les nouveaux traitements de la PME.
+                template d'analyse d'impact pré-rempli pour les nouveaux
+                traitements de la PME. Export PDF prêt pour la CNIL.
               </span>
             </li>
             <li className="flex items-start gap-3">
-              <span aria-hidden="true" className="shrink-0 text-xl">
-                📚
+              <span
+                aria-hidden="true"
+                className="shrink-0 text-xs font-bold uppercase tracking-wider bg-emerald-500 text-white px-2 py-1 rounded mt-0.5"
+              >
+                Live
               </span>
               <span>
                 <strong className="text-primary-500 dark:text-accent-300">
-                  Modules MDX dedies DPO :
+                  Saison{" "}
+                  <Link
+                    href="/apprendre/saison/dpo-quotidien"
+                    className="underline hover:text-accent-500"
+                  >
+                    Quotidien d'un DPO
+                  </Link>{" "}
+                  (6 modules MDX) :
                 </strong>{" "}
-                AIPD, controle CNIL, transferts hors UE, profilage,
-                base juridique - pour former le DPO lui-même et son entourage.
+                AIPD, contrôle CNIL, transferts hors UE, profilage / décision
+                automatisée, base légale, mutualisation entre PME. Tu te
+                formes toi-même et tu formes ton entourage.
               </span>
             </li>
             <li className="flex items-start gap-3">
-              <span aria-hidden="true" className="shrink-0 text-xl">
-                🤝
+              <span
+                aria-hidden="true"
+                className="shrink-0 text-xs font-bold uppercase tracking-wider bg-emerald-500 text-white px-2 py-1 rounded mt-0.5"
+              >
+                Live
               </span>
               <span>
                 <strong className="text-primary-500 dark:text-accent-300">
-                  Connecteur GRC dedie DPO :
+                  Politique de rétention{" "}
+                  <Link
+                    href="/admin/dpo/retention"
+                    className="underline hover:text-accent-500"
+                  >
+                    /admin/dpo/retention
+                  </Link>{" "}
+                  :
                 </strong>{" "}
-                push direct vers le module DPO de CISO Assistant ou Privacy
-                Tools - preuves de sensibilisation transferees automatiquement.
+                configure le seuil de conservation par tenant (RGPD art.
+                5.1.e), purge automatique au-delà du seuil, compteur
+                tenant 90 jours.
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span
+                aria-hidden="true"
+                className="shrink-0 text-xs font-bold uppercase tracking-wider bg-blue-500 text-white px-2 py-1 rounded mt-0.5"
+              >
+                New
+              </span>
+              <span>
+                <strong className="text-primary-500 dark:text-accent-300">
+                  Connecteur{" "}
+                  <Link
+                    href="/integrations/privacy-tools"
+                    className="underline hover:text-accent-500"
+                  >
+                    Privacy Tools
+                  </Link>{" "}
+                  :
+                </strong>{" "}
+                push direct vers OneTrust, Didomi, Privacy.fr — preuves de
+                sensibilisation et compteurs RGPD via API JSON
+                <code className="font-mono text-xs bg-gray-100 dark:bg-slate-800 px-1.5 py-0.5 rounded mx-1">
+                  /api/v1/dpo-export
+                </code>
+                .
               </span>
             </li>
           </ul>
-          <p className="text-sm text-gray-600 dark:text-gray-300 mt-4 italic">
-            Ces fonctionnalites sont co-construites avec les premiers DPO qui
-            voudront bien temoigner de leur quotidien. Si tu veux participer
-            au pilote, ecris-nous a l'adresse ci-dessous.
+
+          <div className="mt-6 rounded-2xl border border-gray-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 p-4">
+            <p className="text-xs uppercase tracking-wider font-bold text-gray-500 dark:text-gray-400 mb-2">
+              À venir (suite de la roadmap 2026-2027)
+            </p>
+            <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-200">
+              <li className="flex items-start gap-2">
+                <span aria-hidden="true">📨</span>
+                <span>
+                  <strong>Wizard notification CNIL 72 h</strong> : génération
+                  guidée du dossier de violation (formulaire + courrier
+                  pré-rempli).
+                </span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span aria-hidden="true">📞</span>
+                <span>
+                  <strong>Connecteur centres d'appel</strong> (Aircall,
+                  RingCentral) pour rattacher automatiquement les demandes
+                  RGPD reçues par téléphone à la queue DPO.
+                </span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span aria-hidden="true">🌍</span>
+                <span>
+                  <strong>Registre des sous-traitants enrichi</strong> : suivi
+                  des transferts hors UE par traitement, mécanismes de
+                  garantie (CCT, BCR, code de conduite), avec alertes sur
+                  désuétude (cas Schrems II / III).
+                </span>
+              </li>
+            </ul>
+          </div>
+
+          <p className="text-sm text-gray-600 dark:text-gray-300 mt-5 italic">
+            Tu es DPO pilote ? Tes retours orientent la prochaine vague.
+            Écris-nous à{" "}
+            <a
+              href="mailto:rgpd@humanix-cybersecurity.fr"
+              className="underline hover:text-accent-500"
+            >
+              rgpd@humanix-cybersecurity.fr
+            </a>
+            .
           </p>
         </section>
 
