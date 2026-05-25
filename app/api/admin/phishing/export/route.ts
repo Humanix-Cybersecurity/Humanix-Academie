@@ -17,6 +17,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
+import { recordExportAccess } from "@/lib/security/exfiltration-detection";
 
 export const dynamic = "force-dynamic";
 
@@ -154,6 +155,20 @@ export async function GET(req: Request) {
       campaignId: campaignId ?? null,
       rowCount: results.length,
     },
+  });
+
+  // Pentest fix #8 sprint 3 : detection exfiltration en masse.
+  // Compte les rows exportees sur fenetre rolling 5 min ; au-dela du
+  // seuil (5000 rows ou 20 exports), audit log EXFILTRATION_SUSPECTED.
+  // Ne bloque PAS l'export (defense en profondeur, pas en barriere)
+  // pour ne pas dropper un export legitime.
+  await recordExportAccess({
+    tenantId,
+    userId: session.user!.id as string,
+    userEmail: session.user!.email as string,
+    userRole: role,
+    rowCount: results.length,
+    endpoint: "/api/admin/phishing/export",
   });
 
   const filename = campaignId
