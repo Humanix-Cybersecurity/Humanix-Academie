@@ -13,6 +13,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { listAtRiskUsers } from "@/lib/admin/at-risk-users";
+import { recordExportAccess } from "@/lib/security/exfiltration-detection";
 
 export const dynamic = "force-dynamic";
 
@@ -105,6 +106,18 @@ export async function GET(req: Request) {
 
   const today = new Date().toISOString().slice(0, 10);
   const filename = `humanix-utilisateurs-vulnerables-${today}-score${filters.threshold}-inactif${filters.daysInactive}j.csv`;
+
+  // Pentest fix #8 sprint 3 : detection exfiltration en masse.
+  // Compte les rows exportees sur fenetre rolling 5 min ; au-dela du
+  // seuil (5000 rows ou 20 exports), audit log EXFILTRATION_SUSPECTED.
+  await recordExportAccess({
+    tenantId,
+    userId: session.user.id as string,
+    userEmail: session.user.email as string,
+    userRole: role,
+    rowCount: users.length,
+    endpoint: "/api/admin/users/at-risk/export",
+  });
 
   return new NextResponse(csv, {
     status: 200,
