@@ -197,7 +197,9 @@ export const SHOP_CATALOG: ShopItemSeed[] = [
     emoji: "💎",
     category: "ACCESSORY",
     price: 600,
-    minLevel: 4,
+    // Refonte 10 niveaux (mai 2026) : L4 ancien = top-2, devient L7 (Veilleur)
+    // pour rester du haut de gamme dans la nouvelle echelle.
+    minLevel: 7,
     description: "Le summum du raffinement cyber.",
     rarity: "legendary",
   },
@@ -207,7 +209,9 @@ export const SHOP_CATALOG: ShopItemSeed[] = [
     emoji: "🏆",
     category: "ACCESSORY",
     price: 800,
-    minLevel: 5,
+    // Refonte 10 niveaux : L5 ancien = endgame, devient L10 (Maitre).
+    // Le texte "Reserve aux Maitres" colle pile au nouveau L10.
+    minLevel: 10,
     description: "Réservé aux Maîtres Cyber.",
     rarity: "legendary",
   },
@@ -263,6 +267,232 @@ export const SHOP_CATALOG: ShopItemSeed[] = [
     description: "Néons et hackers.",
     rarity: "epic",
   },
+
+  // ============================================================================
+  // EXTENSION REFONTE GAMIFICATION (mai 2026)
+  // ============================================================================
+  // 21 nouveaux items pour etoffer la boutique sur l'echelle 10 niveaux.
+  // Prix progressifs : items endgame (L10) montent jusqu'a 6000 coins pour
+  // donner un objectif d'epargne aux Maitres. Les items mid-tier (L4-L7)
+  // remplissent le trou entre common (L1-L2) et legendary (L10).
+
+  // ----- CHAPEAUX ADDITIONNELS (6) -----
+  {
+    slug: "pirate-hat",
+    name: "Bandana de pirate",
+    emoji: "🏴‍☠️",
+    category: "HAT",
+    price: 180,
+    minLevel: 3,
+    description: "Pour les chasseurs de menaces.",
+    rarity: "rare",
+  },
+  {
+    slug: "detective-hat",
+    name: "Chapeau de detective",
+    emoji: "🕵️",
+    category: "HAT",
+    price: 200,
+    minLevel: 4,
+    description: "Pour pister les indicateurs de compromission.",
+    rarity: "rare",
+  },
+  {
+    slug: "top-hat",
+    name: "Haut-de-forme",
+    emoji: "🎩",
+    category: "HAT",
+    price: 300,
+    minLevel: 5,
+    description: "Classe et autorite, version Gardien.",
+    rarity: "epic",
+  },
+  {
+    slug: "cyber-crown",
+    name: "Couronne neon",
+    emoji: "🤴",
+    category: "HAT",
+    price: 500,
+    minLevel: 7,
+    description: "Pour les Veilleurs qui voient l'invisible.",
+    rarity: "epic",
+  },
+  {
+    slug: "master-hat",
+    name: "Couronne de Champion",
+    emoji: "👑",
+    category: "HAT",
+    price: 1200,
+    minLevel: 9,
+    description: "Reservee aux Champions L9.",
+    rarity: "legendary",
+  },
+  {
+    slug: "crown-titanium",
+    name: "Couronne titane Maitre",
+    emoji: "🏵️",
+    category: "HAT",
+    price: 6000,
+    minLevel: 10,
+    description: "Endgame ultime. La couronne legendaire du Maitre L10.",
+    rarity: "legendary",
+  },
+
+  // ----- LUNETTES ADDITIONNELLES (3) -----
+  {
+    slug: "monocle",
+    name: "Monocle de gentleman",
+    emoji: "🧐",
+    category: "GLASSES",
+    price: 100,
+    minLevel: 2,
+    description: "L'observation, premier reflexe cyber.",
+    rarity: "common",
+  },
+  {
+    slug: "3d-glasses",
+    name: "Lunettes 3D retro",
+    emoji: "👓",
+    category: "GLASSES",
+    price: 130,
+    minLevel: 3,
+    description: "Pour voir le monde en relief... et les fakes.",
+    rarity: "rare",
+  },
+  {
+    slug: "laser-goggles",
+    name: "Lunettes laser",
+    emoji: "🥽",
+    category: "GLASSES",
+    price: 400,
+    minLevel: 6,
+    description: "Detection tactique, niveau Sentinelle.",
+    rarity: "epic",
+  },
+
+  // ----- ACCESSOIRES ADDITIONNELS (6) -----
+  {
+    slug: "backpack",
+    name: "Sac a dos d'apprenti",
+    emoji: "🎒",
+    category: "ACCESSORY",
+    price: 110,
+    minLevel: 2,
+    description: "Toujours pret pour la prochaine saison.",
+    rarity: "common",
+  },
+  {
+    slug: "magnifier",
+    name: "Loupe d'enqueteur",
+    emoji: "🔎",
+    category: "ACCESSORY",
+    price: 150,
+    minLevel: 3,
+    description: "Pour scruter chaque URL avant de cliquer.",
+    rarity: "rare",
+  },
+  {
+    slug: "cape",
+    name: "Cape de heros",
+    emoji: "🦸",
+    category: "ACCESSORY",
+    price: 400,
+    minLevel: 5,
+    description: "Le costume du Gardien.",
+    rarity: "epic",
+  },
+  {
+    slug: "amulet",
+    name: "Amulette mystique",
+    emoji: "🧿",
+    category: "ACCESSORY",
+    price: 700,
+    minLevel: 7,
+    description: "Protection mystique contre les zero-days.",
+    rarity: "epic",
+  },
+  {
+    slug: "legendary-medallion",
+    name: "Medaillon legendaire",
+    emoji: "🏵️",
+    category: "ACCESSORY",
+    price: 1500,
+    minLevel: 8,
+    description: "Octroyé aux Experts qui ont tout vu.",
+    rarity: "legendary",
+  },
+  {
+    slug: "aura-master",
+    name: "Aura du Maitre",
+    emoji: "💠",
+    category: "ACCESSORY",
+    price: 5000,
+    minLevel: 10,
+    description: "Endgame. L'aura visible des Maitres L10. Tres tres cher.",
+    rarity: "legendary",
+  },
+
+  // ----- BACKGROUNDS ADDITIONNELS (6) -----
+  {
+    slug: "bg-forest",
+    name: "Foret enchantee",
+    emoji: "🌲",
+    category: "BACKGROUND",
+    price: 90,
+    minLevel: 1,
+    description: "Sous-bois mysterieux.",
+    rarity: "common",
+  },
+  {
+    slug: "bg-mountain",
+    name: "Sommets enneiges",
+    emoji: "🏔️",
+    category: "BACKGROUND",
+    price: 160,
+    minLevel: 2,
+    description: "Air pur, vision degagee.",
+    rarity: "common",
+  },
+  {
+    slug: "bg-neon",
+    name: "Arcade neon",
+    emoji: "🎮",
+    category: "BACKGROUND",
+    price: 280,
+    minLevel: 4,
+    description: "Atmosphere retrowave.",
+    rarity: "rare",
+  },
+  {
+    slug: "bg-castle",
+    name: "Chateau cyber-medieval",
+    emoji: "🏰",
+    category: "BACKGROUND",
+    price: 450,
+    minLevel: 6,
+    description: "La forteresse du Sentinelle.",
+    rarity: "epic",
+  },
+  {
+    slug: "bg-galaxy-supreme",
+    name: "Galaxie supreme",
+    emoji: "✨",
+    category: "BACKGROUND",
+    price: 1200,
+    minLevel: 9,
+    description: "Au-dela des etoiles.",
+    rarity: "legendary",
+  },
+  {
+    slug: "bg-cosmic-master",
+    name: "Cosmos du Maitre",
+    emoji: "🌌",
+    category: "BACKGROUND",
+    price: 5000,
+    minLevel: 10,
+    description: "Endgame. Le cosmos qui s'incline devant le Maitre L10.",
+    rarity: "legendary",
+  },
 ];
 
 // Mapping background slug → tailwind gradient classes pour le rendu mascot
@@ -272,6 +502,16 @@ export const BACKGROUND_GRADIENTS: Record<string, string> = {
   "bg-ocean": "from-cyan-200 via-blue-300 to-blue-500",
   "bg-sakura": "from-pink-100 via-rose-200 to-pink-300",
   "bg-cyber": "from-fuchsia-500 via-violet-600 to-cyan-500",
+  // Refonte mai 2026 — 6 nouveaux fonds couvrant low/mid/endgame.
+  "bg-forest": "from-green-200 via-emerald-300 to-teal-400",
+  "bg-mountain": "from-slate-200 via-blue-200 to-indigo-300",
+  "bg-neon": "from-pink-500 via-purple-500 to-indigo-500",
+  "bg-castle": "from-stone-400 via-slate-500 to-zinc-700",
+  "bg-galaxy-supreme":
+    "from-violet-600 via-fuchsia-600 via-purple-700 to-indigo-900",
+  // Endgame L10 : 4 stops + animation-gradient via class custom CSS
+  "bg-cosmic-master":
+    "from-purple-900 via-pink-600 via-amber-500 to-cyan-400",
 };
 
 export const RARITY_STYLE: Record<

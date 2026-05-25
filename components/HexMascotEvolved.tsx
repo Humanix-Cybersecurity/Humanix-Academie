@@ -161,7 +161,8 @@ export default function HexMascotEvolved({
             className={clsx(
               "absolute -top-3 -right-3 drop-shadow-md",
               sz.accessory,
-              level.id >= 4 ? "animate-bounce-slow" : "",
+              // Animation reservee aux niveaux endgame (Sentinelle+ post-refonte 10 niveaux)
+              level.id >= 6 ? "animate-bounce-slow" : "",
             )}
           >
             {hatToShow}
@@ -201,15 +202,27 @@ export default function HexMascotEvolved({
           <p
             className={clsx(
               "font-bold",
-              level.id === 5
+              // Palette etendue post-refonte 10 niveaux (mai 2026).
+              // Plus on monte, plus la couleur est riche / endgame.
+              level.id >= 10
                 ? "text-purple-600"
-                : level.id === 4
-                  ? "text-amber-600"
-                  : level.id === 3
-                    ? "text-emerald-600"
-                    : level.id === 2
-                      ? "text-cyan-600"
-                      : "text-gray-700",
+                : level.id >= 9
+                  ? "text-fuchsia-600"
+                  : level.id >= 8
+                    ? "text-violet-600"
+                    : level.id >= 7
+                      ? "text-orange-600"
+                      : level.id >= 6
+                        ? "text-amber-600"
+                        : level.id >= 5
+                          ? "text-emerald-600"
+                          : level.id >= 4
+                            ? "text-teal-600"
+                            : level.id >= 3
+                              ? "text-cyan-600"
+                              : level.id >= 2
+                                ? "text-slate-600"
+                                : "text-gray-700",
             )}
           >
             {level.name}
