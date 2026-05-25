@@ -90,6 +90,23 @@ describe("getSeatUsage", () => {
     expect(u.plan).toBe("starter");
     expect(u.max).toBe(15);
   });
+
+  it("tenant Communaute (humanix-community) = illimite meme sur plan starter", async () => {
+    // Tous les apprenants gratuits du cloud sont rattaches a ce tenant unique :
+    // aucun plafond de sieges ne doit s'appliquer (cf. lib/tenant-community.ts).
+    dbMock.tenant.findUnique.mockResolvedValue({
+      plan: "starter",
+      slug: "humanix-community",
+    });
+    dbMock.user.count.mockResolvedValue(5000);
+
+    const u = await getSeatUsage("community");
+    expect(u.max).toBe(Infinity);
+    expect(u.canAdd).toBe(true);
+    expect(u.atLimit).toBe(false);
+    expect(u.remaining).toBe(Infinity);
+    expect(u.percent).toBe(0);
+  });
 });
 
 describe("enforceSeatQuota", () => {
@@ -129,6 +146,15 @@ describe("enforceSeatQuota", () => {
     dbMock.tenant.findUnique.mockResolvedValue({ plan: "enterprise" });
     dbMock.user.count.mockResolvedValue(500);
     await expect(enforceSeatQuota("t1", 10000)).resolves.toBeUndefined();
+  });
+
+  it("tenant Communaute = aucun plafond, on peut ajouter 10000 learners gratuits", async () => {
+    dbMock.tenant.findUnique.mockResolvedValue({
+      plan: "starter",
+      slug: "humanix-community",
+    });
+    dbMock.user.count.mockResolvedValue(5000);
+    await expect(enforceSeatQuota("community", 10000)).resolves.toBeUndefined();
   });
 });
 
