@@ -1831,6 +1831,8 @@ enum AuditAction {
   AI_OUTPUT_LEAK_BLOCKED // Stream Hex coupe par defense en profondeur (signature prompt detectee)
   // Detection exfiltration (pentest fix #8 sprint 3 - 2026-05-24)
   EXFILTRATION_SUSPECTED // Seuil rolling window depasse sur /api/admin/*/export
+  // Connecteur Privacy Tools dedie DPO (2026-05-24)
+  DPO_EXPORT_REQUESTED // Export JSON via /api/v1/dpo-export (OneTrust, Didomi, Privacy.fr)
 }
 
 enum AuditOutcome {
