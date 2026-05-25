@@ -171,7 +171,7 @@ export async function recordExportAccess(params: {
       await auditLog({
         action: AuditActions.EXFILTRATION_SUSPECTED,
         outcome: "FAILURE",
-        severity: "HIGH",
+        severity: "CRITICAL",
         actor: {
           userId: params.userId,
           email: params.userEmail,
