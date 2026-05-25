@@ -147,20 +147,22 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
   },
   {
     slug: "xp_1500",
-    title: "Maître des XP",
+    title: "Cap des 1500 XP",
     emoji: "💎",
-    description: "Atteins 1500 XP. Niveau Maître débloqué.",
+    description: "Atteins 1500 XP. Tu pèses dans le SOC.",
     category: "progression",
-    rarity: "epic",
-    points: 100,
+    rarity: "rare",
+    points: 50,
     isSecret: false,
     isUnlocked: (s) => s.totalXP >= 1500,
   },
   {
     slug: "level_3_gardien",
-    title: "Gardien",
-    emoji: "🛡️",
-    description: "Atteins le niveau 3. Tu protèges les autres.",
+    // NOTE migration mai 2026 : le slug historique conserve "gardien" pour
+    // ne pas casser la BDD, mais L3 est desormais "Initie" (10 paliers).
+    title: "Initié confirmé",
+    emoji: "🔍",
+    description: "Atteins le niveau 3 (Initié). Les fondamentaux sont là.",
     category: "progression",
     rarity: "common",
     points: 20,
@@ -169,12 +171,15 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
   },
   {
     slug: "level_5_master",
-    title: "Niveau Maître",
-    emoji: "👑",
-    description: "Atteins le niveau 5. Le sommet de la pratique.",
+    // NOTE migration mai 2026 : le slug historique conserve "master" pour
+    // ne pas casser la BDD, mais L5 est desormais "Gardien" (10 paliers).
+    // Le badge endgame "vrai Maitre" est level_10_master (cf. commit suivant).
+    title: "Gardien confirmé",
+    emoji: "⚡",
+    description: "Atteins le niveau 5 (Gardien). Tu protèges activement.",
     category: "progression",
-    rarity: "epic",
-    points: 80,
+    rarity: "rare",
+    points: 40,
     isSecret: false,
     isUnlocked: (s) => s.level >= 5,
   },
