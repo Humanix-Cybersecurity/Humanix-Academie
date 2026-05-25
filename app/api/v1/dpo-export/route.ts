@@ -171,7 +171,7 @@ export async function GET(req: Request) {
     by: ["action"],
     where: {
       tenantId,
-      action: { in: RGPD_ACTIONS as unknown as string[] },
+      action: { in: [...RGPD_ACTIONS] },
       createdAt: { gte: since90 },
     },
     _count: { _all: true },
@@ -244,7 +244,7 @@ export async function GET(req: Request) {
   const recentRaw = await db.auditLog.findMany({
     where: {
       tenantId,
-      action: { in: RGPD_ACTIONS as unknown as string[] },
+      action: { in: [...RGPD_ACTIONS] },
       createdAt: { gte: since30 },
     },
     orderBy: { createdAt: "desc" },
