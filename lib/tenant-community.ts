@@ -36,12 +36,12 @@ export const COMMUNITY_TENANT_SLUG = "humanix-community";
 export const COMMUNITY_TENANT_NAME = "Humanix Communauté";
 
 /**
- * Plan attaché au tenant Communauté. Mappé sur `decouverte` (forever-free)
- * pour rester compatible avec l'enum PlanId existant (lib/plans.ts), mais
- * la limite de sièges de `decouverte` (5) NE S'APPLIQUE PAS au tenant
- * Communauté — il accueille tous les apprenants gratuits sans plafond.
- * L'exception est portée par la logique seat-check (cf. lib/plans.ts
- * helper `seatCountFor()` lors d'une refonte ultérieure).
+ * Plan attaché au tenant Communauté. Mappé sur `starter` pour rester
+ * compatible avec l'enum PlanId existant (lib/plans.ts), mais la limite
+ * de sièges du plan starter (15) NE S'APPLIQUE PAS au tenant Communauté —
+ * il accueille tous les apprenants gratuits sans plafond.
+ * L'exception est portée par `getSeatUsage()` dans lib/seats.ts, qui
+ * detecte le slug `humanix-community` et force `max = Infinity`.
  */
 export const COMMUNITY_TENANT_PLAN = "starter";
 
