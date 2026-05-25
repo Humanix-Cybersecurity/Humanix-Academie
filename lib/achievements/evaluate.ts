@@ -91,11 +91,15 @@ export async function buildUserStats(userId: string): Promise<UserStats | null> 
   );
   let completedSaisonsCount = 0;
   let hasCompletedAtLeastOneSaison = false;
+  // Slugs des saisons entierement completees -- alimente les badges
+  // d'audience (cyber-rh, cyber-dev...) et thematiques (anti-phishing...).
+  const completedSaisonSlugs: string[] = [];
   if (saisonIds.length > 0) {
     const saisons = await db.saison.findMany({
       where: { id: { in: saisonIds }, isPublished: true },
       select: {
         id: true,
+        slug: true,
         episodes: {
           where: { isPublished: true },
           select: { id: true },
@@ -104,10 +108,13 @@ export async function buildUserStats(userId: string): Promise<UserStats | null> 
     });
     for (const s of saisons) {
       if (s.episodes.length === 0) continue;
-      const allDone = s.episodes.every((e) => completedEpisodeIds.has(e.id));
+      const allDone = s.episodes.every((e: { id: string }) =>
+        completedEpisodeIds.has(e.id),
+      );
       if (allDone) {
         completedSaisonsCount++;
         hasCompletedAtLeastOneSaison = true;
+        completedSaisonSlugs.push(s.slug);
       }
     }
   }
@@ -172,6 +179,7 @@ export async function buildUserStats(userId: string): Promise<UserStats | null> 
     completedSaisonsCount,
     ownedItemsCount: user.inventory.length,
     avgQuizScorePct,
+    completedSaisonSlugs,
   };
 }
 
