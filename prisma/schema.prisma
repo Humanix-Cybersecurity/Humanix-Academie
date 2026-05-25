@@ -1829,6 +1829,8 @@ enum AuditAction {
   // Securite IA (pentest fix 2026-05-24)
   AI_PROMPT_INJECTION_ATTEMPT // Filtre output Hex a detecte une tentative de fuite du system prompt
   AI_OUTPUT_LEAK_BLOCKED // Stream Hex coupe par defense en profondeur (signature prompt detectee)
+  // Detection exfiltration (pentest fix #8 sprint 3 - 2026-05-24)
+  EXFILTRATION_SUSPECTED // Seuil rolling window depasse sur /api/admin/*/export
 }
 
 enum AuditOutcome {
