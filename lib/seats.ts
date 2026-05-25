@@ -14,6 +14,7 @@
 
 import { db } from "@/lib/db";
 import { PLAN_SEATS, normalizePlan, type PlanId } from "@/lib/plans";
+import { COMMUNITY_TENANT_SLUG } from "@/lib/tenant-community";
 
 export class SeatQuotaError extends Error {
   constructor(
@@ -60,13 +61,17 @@ export async function getSeatUsage(tenantId: string): Promise<SeatUsage> {
   const [tenant, used] = await Promise.all([
     db.tenant.findUnique({
       where: { id: tenantId },
-      select: { plan: true },
+      select: { plan: true, slug: true },
     }),
     countActiveUsers(tenantId),
   ]);
 
   const plan = normalizePlan(tenant?.plan);
-  const max = PLAN_SEATS[plan];
+  // Exception tenant Communaute : accueille tous les apprenants gratuits du
+  // cloud, jamais de plafond de sieges quel que soit le plan technique stocke.
+  // Cf. lib/tenant-community.ts (COMMUNITY_TENANT_PLAN).
+  const isCommunity = tenant?.slug === COMMUNITY_TENANT_SLUG;
+  const max = isCommunity ? Infinity : PLAN_SEATS[plan];
   const isUnlimited = !Number.isFinite(max);
 
   const percent = isUnlimited ? 0 : Math.min(100, Math.round((used / max) * 100));
