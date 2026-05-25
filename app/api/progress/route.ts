@@ -4,7 +4,11 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { computeCoinsEarned, getLevel } from "@/lib/levels";
+import {
+  computeCoinsEarned,
+  getLevel,
+  PERFECT_QUIZ_XP_BONUS,
+} from "@/lib/levels";
 import { fireWebhook } from "@/lib/webhooks/dispatcher";
 import { triggerCisoLiveSync } from "@/lib/ciso-assistant/live-mode";
 import { evaluateAndUnlock } from "@/lib/achievements/evaluate";
@@ -38,12 +42,25 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   }
-  const { episodeId, score, status, perfectQuiz } = parsed.data;
-  // Si quizScorePct non fourni, on retombe sur min(100, score) pour ne pas
+  const { episodeId, score: baseScore, status, perfectQuiz } = parsed.data;
+  // Si quizScorePct non fourni, on retombe sur min(100, baseScore) pour ne pas
   // casser les anciens clients (provisoire - a retirer après deploiement
   // generalise du nouveau client).
   const quizScorePct =
-    parsed.data.quizScorePct ?? Math.min(100, Math.max(0, score));
+    parsed.data.quizScorePct ?? Math.min(100, Math.max(0, baseScore));
+
+  // BONUS XP : +PERFECT_QUIZ_XP_BONUS (10) si quiz parfait. Ce bonus est
+  // ajoute AU score stocke (cf. commentaire du modele Progress : "score =
+  // xpReward + bonus quiz + bonus scenario"). Cela se cumule naturellement
+  // dans la somme totalXP utilisee pour le calcul du niveau.
+  //
+  // Refonte gamification mai 2026 (cf. lib/levels.ts pour la rationale).
+  // TODO follow-up : bonus streak quotidien (+5 XP/jour J3+) et bonus
+  // badge-unlock (+50 XP) requierent un champ User.bonusXP denormalise
+  // (migration Prisma a part). Pour l'instant, seul le perfect quiz est
+  // wire -- les constantes streak/badge sont exportees pour la suite.
+  const perfectQuizBonus = perfectQuiz ? PERFECT_QUIZ_XP_BONUS : 0;
+  const score = baseScore + perfectQuizBonus;
 
   const userId = session.user!.id as string;
   const tenantId = session.user!.tenantId as string;
@@ -140,7 +157,15 @@ export async function POST(req: Request) {
         tenantId,
         userId,
         type: status === "COMPLETED" ? "episode_completed" : "episode_progress",
-        payload: { episodeId, score, coinsAwarded, leveledUp, newLevel },
+        payload: {
+          episodeId,
+          score,
+          baseScore,
+          perfectQuizBonus, // tracabilite : combien d'XP bonus accordes
+          coinsAwarded,
+          leveledUp,
+          newLevel,
+        },
       },
     });
 
