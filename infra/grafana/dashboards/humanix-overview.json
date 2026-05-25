@@ -1,0 +1,384 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Vue d'ensemble Humanix Académie : HTTP, audit log sécurité, métriques Node.js. À importer dans Grafana / Scaleway Cockpit avec datasource Prometheus pointant sur l'endpoint Mimir Cockpit.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [
+    {
+      "icon": "external link",
+      "tags": [],
+      "targetBlank": true,
+      "title": "Humanix /securite Trust Center",
+      "tooltip": "Trust Center public",
+      "type": "link",
+      "url": "https://humanix-academie.fr/securite"
+    },
+    {
+      "icon": "external link",
+      "tags": [],
+      "targetBlank": true,
+      "title": "Conformité ANSSI HG 42 mesures",
+      "tooltip": "Mapping public",
+      "type": "link",
+      "url": "https://humanix-academie.fr/conformite/anssi-hg"
+    }
+  ],
+  "panels": [
+    {
+      "type": "row",
+      "title": "HTTP — Trafic & latence",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "collapsed": false,
+      "id": 100
+    },
+    {
+      "type": "timeseries",
+      "title": "Requêtes/s par status",
+      "description": "Débit HTTP par code de status. Permet de détecter une explosion de 5xx (incident) ou de 401/403 (tentative d'intrusion).",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 1 },
+      "id": 1,
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps",
+          "color": { "mode": "palette-classic" }
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (status) (rate(humanix_http_requests_total[5m]))",
+          "legendFormat": "{{status}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Latence p50 / p95 / p99 (s)",
+      "description": "Latence HTTP en secondes. Le p95 > 1s sur 5 min consécutives = à investiguer (DB lente, IA timeout, etc.).",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 1 },
+      "id": 2,
+      "fieldConfig": {
+        "defaults": { "unit": "s" }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.50, sum by (le) (rate(humanix_http_request_duration_seconds_bucket[5m])))",
+          "legendFormat": "p50",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(humanix_http_request_duration_seconds_bucket[5m])))",
+          "legendFormat": "p95",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(humanix_http_request_duration_seconds_bucket[5m])))",
+          "legendFormat": "p99",
+          "refId": "C"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Taux d'erreur 5xx (5 min)",
+      "description": "Pourcentage des requêtes en erreur serveur. > 1% = incident en cours, alerter PagerDuty.",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 9 },
+      "id": 3,
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.005 },
+              { "color": "red", "value": 0.01 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(humanix_http_requests_total{status=~\"5..\"}[5m])) / clamp_min(sum(rate(humanix_http_requests_total[5m])), 1)",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Taux d'erreur 4xx (5 min)",
+      "description": "Pourcentage des requêtes en erreur client. Pic = abus (énumération, bruteforce).",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 9 },
+      "id": 4,
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.05 },
+              { "color": "red", "value": 0.15 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(humanix_http_requests_total{status=~\"4..\"}[5m])) / clamp_min(sum(rate(humanix_http_requests_total[5m])), 1)",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Requêtes totales / min",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 9 },
+      "id": 5,
+      "fieldConfig": {
+        "defaults": { "unit": "reqpm" }
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(humanix_http_requests_total[1m])) * 60",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "title": "Sécurité — Audit log",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 13 },
+      "collapsed": false,
+      "id": 200
+    },
+    {
+      "type": "timeseries",
+      "title": "Events audit par action (5 min)",
+      "description": "Détail des actions auditées (login, role change, exfiltration, etc.). Pic de USER_LOGIN_FAILED = bruteforce ; apparition de EXFILTRATION_SUSPECTED ou AI_PROMPT_INJECTION_ATTEMPT = à investiguer.",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 8, "w": 16, "x": 0, "y": 14 },
+      "id": 6,
+      "fieldConfig": {
+        "defaults": { "unit": "ops" }
+      },
+      "targets": [
+        {
+          "expr": "sum by (action) (rate(humanix_audit_action_total[5m]))",
+          "legendFormat": "{{action}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "EXFILTRATION_SUSPECTED (1h)",
+      "description": "Nombre d'alertes d'exfiltration en masse détectées. Toute valeur > 0 nécessite investigation immédiate.",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 14 },
+      "id": 7,
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(increase(humanix_audit_action_total{action=\"EXFILTRATION_SUSPECTED\"}[1h]))",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "AI_PROMPT_INJECTION_ATTEMPT (1h)",
+      "description": "Tentatives de fuite du system prompt Hex bloquées par le filtre output post-LLM.",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 18 },
+      "id": 8,
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "red", "value": 10 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(increase(humanix_audit_action_total{action=\"AI_PROMPT_INJECTION_ATTEMPT\"}[1h]))",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Login fail rate (5 min)",
+      "description": "Taux de USER_LOGIN_FAILED / s. Pic = bruteforce ou énumération de comptes.",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 22 },
+      "id": 9,
+      "fieldConfig": {
+        "defaults": { "unit": "ops" }
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(humanix_audit_action_total{action=\"USER_LOGIN_FAILED\"}[5m]))",
+          "legendFormat": "login_failed/s",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(humanix_audit_action_total{action=\"USER_LOGIN_SUCCESS\"}[5m]))",
+          "legendFormat": "login_success/s",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Severity distribution (5 min)",
+      "description": "Distribution des severites d'audit. Pic en CRITICAL ou WARNING = à investiguer.",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 22 },
+      "id": 10,
+      "fieldConfig": {
+        "defaults": { "unit": "ops" }
+      },
+      "targets": [
+        {
+          "expr": "sum by (severity) (rate(humanix_audit_action_total[5m]))",
+          "legendFormat": "{{severity}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "title": "Process Node.js",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 30 },
+      "collapsed": false,
+      "id": 300
+    },
+    {
+      "type": "timeseries",
+      "title": "Mémoire heap (MB)",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 7, "w": 8, "x": 0, "y": 31 },
+      "id": 11,
+      "fieldConfig": {
+        "defaults": { "unit": "decbytes" }
+      },
+      "targets": [
+        {
+          "expr": "humanix_nodejs_heap_size_used_bytes",
+          "legendFormat": "heap_used",
+          "refId": "A"
+        },
+        {
+          "expr": "humanix_nodejs_heap_size_total_bytes",
+          "legendFormat": "heap_total",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Event loop lag (s)",
+      "description": "Si > 100ms p99 = backpressure I/O, investiguer.",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 7, "w": 8, "x": 8, "y": 31 },
+      "id": 12,
+      "fieldConfig": {
+        "defaults": { "unit": "s" }
+      },
+      "targets": [
+        {
+          "expr": "humanix_nodejs_eventloop_lag_p99_seconds",
+          "legendFormat": "p99",
+          "refId": "A"
+        },
+        {
+          "expr": "humanix_nodejs_eventloop_lag_p50_seconds",
+          "legendFormat": "p50",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "CPU process (%)",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "h": 7, "w": 8, "x": 16, "y": 31 },
+      "id": 13,
+      "fieldConfig": {
+        "defaults": { "unit": "percentunit" }
+      },
+      "targets": [
+        {
+          "expr": "rate(humanix_process_cpu_seconds_total[1m])",
+          "legendFormat": "cpu",
+          "refId": "A"
+        }
+      ]
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["humanix", "overview", "anssi-hg-m36"],
+  "templating": {
+    "list": [
+      {
+        "current": { "selected": false, "text": "Prometheus", "value": "Prometheus" },
+        "description": "Datasource Prometheus (Scaleway Cockpit Mimir, Grafana Cloud, self-hosted, etc.)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Datasource",
+        "multi": false,
+        "name": "DS_PROMETHEUS",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      }
+    ]
+  },
+  "time": { "from": "now-1h", "to": "now" },
+  "timepicker": {},
+  "timezone": "Europe/Paris",
+  "title": "Humanix Académie — Overview",
+  "uid": "humanix-overview",
+  "version": 1,
+  "weekStart": "monday"
+}

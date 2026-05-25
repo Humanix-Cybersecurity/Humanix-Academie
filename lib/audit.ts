@@ -27,6 +27,7 @@ import {
 } from "@prisma/client";
 import { db } from "@/lib/db";
 import { hashIp } from "@/lib/password-reset";
+import { recordAuditMetric } from "@/lib/metrics/registry";
 
 export type AuditActor = {
   userId?: string | null;
@@ -58,12 +59,13 @@ export type AuditLogInput = {
  * echec (et n'echoue jamais).
  */
 export async function auditLog(input: AuditLogInput): Promise<boolean> {
+  const severity = input.severity ?? defaultSeverityFor(input.action);
   try {
     await db.auditLog.create({
       data: {
         action: input.action,
         outcome: input.outcome ?? AuditOutcome.SUCCESS,
-        severity: input.severity ?? defaultSeverityFor(input.action),
+        severity,
         tenantId: input.tenantId ?? null,
         actorUserId: input.actor?.userId ?? null,
         actorEmail: input.actor?.email ?? null,
@@ -77,6 +79,11 @@ export async function auditLog(input: AuditLogInput): Promise<boolean> {
         metadata: input.metadata ?? Prisma.JsonNull,
       },
     });
+    // Increment du counter Prometheus (best-effort, ne throw jamais).
+    // Permet d'alerter sur les pics de USER_LOGIN_FAILED, l'apparition
+    // de EXFILTRATION_SUSPECTED, AI_PROMPT_INJECTION_ATTEMPT, etc.
+    // cf. lib/metrics/registry.ts + app/api/metrics/route.ts.
+    recordAuditMetric(input.action, severity);
     return true;
   } catch (e) {
     // On log dans la console mais on ne propage pas : un crash de l'audit
