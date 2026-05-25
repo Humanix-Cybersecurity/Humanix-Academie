@@ -1833,6 +1833,8 @@ enum AuditAction {
   EXFILTRATION_SUSPECTED // Seuil rolling window depasse sur /api/admin/*/export
   // Connecteur Privacy Tools dedie DPO (2026-05-24)
   DPO_EXPORT_REQUESTED // Export JSON via /api/v1/dpo-export (OneTrust, Didomi, Privacy.fr)
+  // Catalog seeding (refonte gamification mai 2026)
+  CATALOG_RESEEDED // SUPERADMIN a relance le seed catalog (saisons + badges + boutique) via /superadmin/catalog
 }
 
 enum AuditOutcome {
