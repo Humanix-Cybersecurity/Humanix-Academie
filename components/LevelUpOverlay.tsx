@@ -114,6 +114,17 @@ export default function LevelUpOverlay({
               🎁 Tu débloques
             </p>
             <div className="grid grid-cols-2 gap-3 text-left text-sm">
+              {/*
+                Bonus par palier — etend a 10 niveaux (refonte mai 2026).
+                Chaque palier debloque cosmetique + coins, plus genereux a mesure
+                qu'on monte (le grind devient plus long, la recompense suit).
+              */}
+              {level.id < 2 && (
+                <>
+                  <Bonus icon="🎯" label="Mascotte de base" />
+                  <Bonus icon="🪙" label="Système de coins activé" />
+                </>
+              )}
               {level.id === 2 && (
                 <>
                   <Bonus icon="✨" label="Mascotte qui scintille" />
@@ -122,26 +133,50 @@ export default function LevelUpOverlay({
               )}
               {level.id === 3 && (
                 <>
-                  <Bonus icon="🛡️" label="Bouclier sur ta mascotte" />
+                  <Bonus icon="🔍" label="Mascotte Initié" />
                   <Bonus icon="🪙" label="+10 coins offerts" />
                 </>
               )}
               {level.id === 4 && (
                 <>
-                  <Bonus icon="👑" label="Couronne dorée animée" />
-                  <Bonus icon="🪙" label="+25 coins offerts" />
+                  <Bonus icon="🛡️" label="Bouclier sur ta mascotte" />
+                  <Bonus icon="🪙" label="+15 coins offerts" />
                 </>
               )}
               {level.id === 5 && (
                 <>
-                  <Bonus icon="🏆" label="Statut Maître Cyber" />
-                  <Bonus icon="🪙" label="+50 coins offerts" />
+                  <Bonus icon="⚡" label="Aura Gardien" />
+                  <Bonus icon="🪙" label="+25 coins offerts" />
                 </>
               )}
-              {level.id < 2 && (
+              {level.id === 6 && (
                 <>
-                  <Bonus icon="🎯" label="Mascotte de base" />
-                  <Bonus icon="🪙" label="Système de coins activé" />
+                  <Bonus icon="⚔️" label="Épée Sentinelle" />
+                  <Bonus icon="🪙" label="+40 coins offerts" />
+                </>
+              )}
+              {level.id === 7 && (
+                <>
+                  <Bonus icon="👁️" label="Œil du Veilleur" />
+                  <Bonus icon="🪙" label="+60 coins offerts" />
+                </>
+              )}
+              {level.id === 8 && (
+                <>
+                  <Bonus icon="🎓" label="Toge d'Expert" />
+                  <Bonus icon="🪙" label="+100 coins offerts" />
+                </>
+              )}
+              {level.id === 9 && (
+                <>
+                  <Bonus icon="👑" label="Couronne de Champion" />
+                  <Bonus icon="🪙" label="+150 coins offerts" />
+                </>
+              )}
+              {level.id === 10 && (
+                <>
+                  <Bonus icon="🏆" label="Statut Maître Cyber" />
+                  <Bonus icon="🪙" label="+250 coins offerts" />
                 </>
               )}
             </div>
