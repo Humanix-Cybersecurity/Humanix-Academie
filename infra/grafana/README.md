@@ -81,15 +81,36 @@ Console Scaleway → **Observability → Cockpit** → région `fr-par` → Enab
 
 Récupérer l'URL Grafana (format `https://<random>.fr-par.grafana.scaleway.fr`).
 
-### 2. Générer le token de scraping
+### 2. Créer une Data Source push (logs)
 
-Cockpit → **Tokens** → New Token :
-- Name : `humanix-prod-scraper`
-- Scopes : `metrics:write`, `logs:write`, `alerts:read+write`
+Cockpit → **Data Sources → + Create** :
+- **Name** : `humanix-prod-logs`
+- **Type** : **Logs** (Loki)
+- **Origin** : **External** (= push, vs "Scaleway" managed)
+- **Retention** : 7 jours (free tier)
 
-Sauvegarder le token dans 1Password vault Humanix.
+Après création, ouvrir la data source → noter l'**URL Push** unique
+(format `https://<DATASOURCE_ID>.logs.cockpit.fr-par.scw.cloud/loki/api/v1/push`).
 
-### 3. Configurer les env vars en prod
+C'est cette URL qu'on utilisera dans `SCW_LOKI_URL`, pas l'URL
+générique `logs.cockpit.fr-par.scw.cloud` (qui retourne 404).
+
+Idem pour les métriques : créer une data source `humanix-prod-metrics`
+type **Metrics** (Mimir) en push, noter son URL.
+
+### 3. Générer le token de scraping
+
+Cockpit → **Tokens** → + Create Token :
+- **Name** : `humanix-prod-vector-push`
+- **Permissions** : **Logs → Push** + **Metrics → Push**
+  ⚠️ Bien cocher **Push** (write), pas **Read** (qui sert aux dashboards Grafana)
+- **Data sources** : sélectionner `humanix-prod-logs` + `humanix-prod-metrics`
+- **Validity** : 1 an (rotation annuelle PSSI M15)
+
+**COPIE LE SECRET IMMÉDIATEMENT** — Scaleway ne le réaffichera plus.
+Sauvegarder dans 1Password vault Humanix.
+
+### 4. Configurer les env vars en prod
 
 Sur la VM prod, ajouter à `/opt/humanix-prod/.env` :
 
@@ -107,59 +128,75 @@ SCW_LOKI_URL=https://logs.cockpit.fr-par.scw.cloud/loki/api/v1/push
 SCW_MIMIR_URL=https://metrics.cockpit.fr-par.scw.cloud
 ```
 
-### 4. Déployer Vector pour les logs Docker
+### 5. Déployer Vector pour les logs Docker
 
 Ajouter à `docker-compose.yml` :
 
 ```yaml
 services:
   vector:
-    image: timberio/vector:0.40-alpine
+    image: timberio/vector:0.55-alpine
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./infra/vector/vector.toml:/etc/vector/vector.toml:ro
-    environment:
-      - SCW_LOKI_TOKEN=${SCW_COCKPIT_TOKEN}
-      - SCW_LOKI_URL=${SCW_LOKI_URL}
+      - ./infra/vector/vector.yaml:/etc/vector/vector.yaml:ro
+    # PIEGE : avec `environment:` les vars ${SCW_*} ne sont pas
+    # toujours interpolees correctement selon la position du .env.
+    # `env_file` injecte TOUTES les vars du .env directement dans
+    # le container → plus robuste, recommande pour les agents.
+    env_file:
+      - .env
 ```
 
-Créer `infra/vector/vector.toml` :
+> ⚠️ **Format YAML, pas TOML** : Vector 0.55+ charge `vector.yaml` par
+> defaut. Si tu utilises `vector.toml`, Vector ignore ton fichier
+> et fallback sur sa source de demo `demo_logs` (qui genere des logs
+> Syslog fake avec des noms type `nullable_nate`, `cache_cowboy`).
 
-```toml
-[sources.docker]
-type = "docker_logs"
-exclude_containers = ["vector"]  # éviter la boucle
+Créer `infra/vector/vector.yaml` :
 
-[transforms.parse_json]
-type = "remap"
-inputs = ["docker"]
-source = '''
-  if exists(.message) {
-    parsed, err = parse_json(.message)
-    if err == null {
-      . = merge(., parsed)
-    }
-  }
-'''
+```yaml
+sources:
+  docker:
+    type: docker_logs
+    exclude_containers:
+      - vector   # éviter la boucle infinie
 
-[sinks.scaleway_loki]
-type = "loki"
-inputs = ["parse_json"]
-endpoint = "${SCW_LOKI_URL}"
-auth.strategy = "bearer"
-auth.token = "${SCW_LOKI_TOKEN}"
-encoding.codec = "json"
-remove_label_fields = true
+transforms:
+  parse_json:
+    type: remap
+    inputs:
+      - docker
+    source: |
+      # Tente de parser le message JSON. On ne merge QUE si le résultat
+      # est un object (sinon VRL refuse `merge` qui exige `object` strict).
+      if exists(.message) && is_string(.message) {
+        parsed, err = parse_json(.message)
+        if err == null && is_object(parsed) {
+          . = merge!(., object!(parsed))
+        }
+      }
 
-# Labels Loki : host + container + service. Pas de PII.
-[sinks.scaleway_loki.labels]
-host = "humanix-prod-01"
-container = "{{ container_name }}"
-image = "{{ image }}"
+sinks:
+  scaleway_loki:
+    type: loki
+    inputs:
+      - parse_json
+    endpoint: "${SCW_LOKI_URL}"
+    auth:
+      strategy: bearer
+      token: "${SCW_LOKI_TOKEN}"
+    encoding:
+      codec: json
+    remove_label_fields: true
+    # Labels Loki : host + container + image. Pas de PII.
+    labels:
+      host: humanix-prod-01
+      container: "{{ container_name }}"
+      image: "{{ image }}"
 ```
 
-### 5. Configurer le scrape Prometheus distant
+### 6. Configurer le scrape Prometheus distant
 
 Dans Cockpit → **Data sources** → Prometheus déjà configuré.
 
@@ -234,14 +271,14 @@ auth.token = "${SCW_COCKPIT_TOKEN}"
 Recommandé : **Option B** (un seul agent Vector pour logs + metrics =
 plus simple à maintenir).
 
-### 6. Importer le dashboard
+### 7. Importer le dashboard
 
 Grafana Cockpit → **Dashboards → Import** → uploader
 `infra/grafana/dashboards/humanix-overview.json`.
 
 Sélectionner la datasource Prometheus quand demandé.
 
-### 7. Provisionner les 7 alertes
+### 8. Provisionner les 7 alertes
 
 Suivre `infra/grafana/alerts-cockpit.md`. Compter ~5 min par alerte
 via l'UI (35 min total). À automatiser via API Scaleway quand le
