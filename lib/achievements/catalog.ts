@@ -50,6 +50,15 @@ export type UserStats = {
   ownedItemsCount: number;
   /** Maturite : avg quiz score sur les ep. completes (0-100) */
   avgQuizScorePct: number;
+  /**
+   * Slugs des saisons COMPLETEMENT terminees par l'user. Permet aux badges
+   * d'audience/thematiques de cibler des saisons specifiques (cyber-rh,
+   * cyber-dev, anti-phishing, ransomware, etc.) sans elargir le contrat.
+   *
+   * Convention : array (pas Set) pour la serialisation JSON / facilite
+   * de test. Lookup O(n) acceptable, n < 50 saisons en pratique.
+   */
+  completedSaisonSlugs: string[];
 };
 
 export type AchievementDef = {
@@ -425,6 +434,320 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
         s.completedEpisodes >= 1
       );
     },
+  },
+
+  // ============================================================================
+  // EXTENSION REFONTE GAMIFICATION (mai 2026)
+  // ============================================================================
+  // Suite au passage de 5 -> 10 niveaux et a l'echelle reelle du catalog
+  // commercial (32 saisons, 11 420 XP base), 22 nouveaux badges debloquent
+  // des paliers intermediaires et endgame. Repartition :
+  //   - 5 badges progression XP/level haut (xp_3000/6000/10000, level_8, level_10)
+  //   - 3 badges episodes haut (completionist_50/100, perfect_30/50)
+  //   - 4 badges consistency long terme (streak_60/100/365, monthly_3)
+  //   - 5 badges mastery saisons (5/10/20/all + audiences-specifiques)
+  //   - 5 badges thematiques anti-menace (phishing/ransomware/credentials/IA/social)
+
+  // ----- PROGRESSION (paliers hauts post-refonte) -----
+  {
+    slug: "xp_3000",
+    title: "Cap des 3000 XP",
+    emoji: "🚀",
+    description: "Atteins 3000 XP. Le rythme est lance.",
+    category: "progression",
+    rarity: "rare",
+    points: 75,
+    isSecret: false,
+    isUnlocked: (s) => s.totalXP >= 3000,
+  },
+  {
+    slug: "xp_6000",
+    title: "Cap des 6000 XP",
+    emoji: "💫",
+    description: "Atteins 6000 XP. Tu es dans le top des apprenants.",
+    category: "progression",
+    rarity: "epic",
+    points: 150,
+    isSecret: false,
+    isUnlocked: (s) => s.totalXP >= 6000,
+  },
+  {
+    slug: "xp_10000",
+    title: "Endgame XP",
+    emoji: "🔥",
+    description: "Atteins 10 000 XP. Le pallier Maitre est franchi.",
+    category: "progression",
+    rarity: "legendary",
+    points: 250,
+    isSecret: false,
+    isUnlocked: (s) => s.totalXP >= 10000,
+  },
+  {
+    slug: "level_8_expert",
+    title: "Expert reconnu",
+    emoji: "🎓",
+    description: "Atteins le niveau 8 (Expert). Le RSSI te consulte.",
+    category: "progression",
+    rarity: "epic",
+    points: 120,
+    isSecret: false,
+    isUnlocked: (s) => s.level >= 8,
+  },
+  {
+    slug: "level_10_master",
+    title: "Maître Cyber",
+    emoji: "🏆",
+    description: "Atteins le niveau 10 (Maître). Le vrai endgame. Respect.",
+    category: "progression",
+    rarity: "legendary",
+    points: 300,
+    isSecret: false,
+    isUnlocked: (s) => s.level >= 10,
+  },
+  {
+    slug: "completionist_50",
+    title: "Demi-centaine",
+    emoji: "🏅",
+    description: "Termine 50 épisodes. Tu connais le catalog presque par cœur.",
+    category: "progression",
+    rarity: "epic",
+    points: 100,
+    isSecret: false,
+    isUnlocked: (s) => s.completedEpisodes >= 50,
+  },
+  {
+    slug: "completionist_100",
+    title: "Centurion",
+    emoji: "💯",
+    description: "Termine 100 épisodes. La ténacité paye toujours.",
+    category: "progression",
+    rarity: "legendary",
+    points: 200,
+    isSecret: false,
+    isUnlocked: (s) => s.completedEpisodes >= 100,
+  },
+
+  // ----- CONSISTENCY (streaks longs) -----
+  {
+    slug: "streak_60",
+    title: "Deux mois sans coupure",
+    emoji: "🌋",
+    description: "60 jours d'affilée. Tu es un robot ?",
+    category: "consistency",
+    rarity: "epic",
+    points: 200,
+    isSecret: false,
+    isUnlocked: (s) => s.maxStreak >= 60,
+  },
+  {
+    slug: "streak_100",
+    title: "Centaine de jours",
+    emoji: "💎",
+    description: "100 jours d'affilée. Le club très select.",
+    category: "consistency",
+    rarity: "legendary",
+    points: 300,
+    isSecret: false,
+    isUnlocked: (s) => s.maxStreak >= 100,
+  },
+  {
+    slug: "streak_365",
+    title: "Une année de cyber",
+    emoji: "🌠",
+    description: "365 jours d'affilée. L'académie a un dieu vivant.",
+    category: "consistency",
+    rarity: "legendary",
+    points: 500,
+    isSecret: true,
+    isUnlocked: (s) => s.maxStreak >= 365,
+  },
+
+  // ----- MASTERY (quizz parfaits + saisons completes) -----
+  {
+    slug: "perfect_30",
+    title: "30 sans-faute",
+    emoji: "🎯",
+    description: "30 quizz parfaits. Précision chirurgicale.",
+    category: "mastery",
+    rarity: "epic",
+    points: 150,
+    isSecret: false,
+    isUnlocked: (s) => s.perfectQuizCount >= 30,
+  },
+  {
+    slug: "perfect_50",
+    title: "Sniper d'élite",
+    emoji: "🏹",
+    description: "50 quizz parfaits. La lecture est devenue un super-pouvoir.",
+    category: "mastery",
+    rarity: "legendary",
+    points: 250,
+    isSecret: false,
+    isUnlocked: (s) => s.perfectQuizCount >= 50,
+  },
+  {
+    slug: "five_saisons_done",
+    title: "5 saisons completes",
+    emoji: "📚",
+    description: "Termine 5 saisons entieres. Le rythme de croisiere.",
+    category: "mastery",
+    rarity: "epic",
+    points: 120,
+    isSecret: false,
+    isUnlocked: (s) => s.completedSaisonsCount >= 5,
+  },
+  {
+    slug: "ten_saisons_done",
+    title: "10 saisons completes",
+    emoji: "📖",
+    description: "Termine 10 saisons entieres. Tu vois grand.",
+    category: "mastery",
+    rarity: "legendary",
+    points: 200,
+    isSecret: false,
+    isUnlocked: (s) => s.completedSaisonsCount >= 10,
+  },
+  {
+    slug: "twenty_saisons_done",
+    title: "Bibliotheque cyber",
+    emoji: "🏛️",
+    description: "Termine 20 saisons entieres. Encyclopedie ambulante.",
+    category: "mastery",
+    rarity: "legendary",
+    points: 350,
+    isSecret: false,
+    isUnlocked: (s) => s.completedSaisonsCount >= 20,
+  },
+
+  // ----- AUDIENCES (specialisation par metier / public-cible) -----
+  // Helper interne : true si toutes les saisons listees sont dans
+  // completedSaisonSlugs (intersection complete).
+  {
+    slug: "audience_master_rh",
+    title: "RH cyber-aware",
+    emoji: "💼",
+    description: "Termine la saison 'cyber-rh'. Le recrutement & la formation, c'est aussi de la securite.",
+    category: "mastery",
+    rarity: "epic",
+    points: 80,
+    isSecret: false,
+    isUnlocked: (s) => s.completedSaisonSlugs.includes("cyber-rh"),
+  },
+  {
+    slug: "audience_master_dev",
+    title: "Dev secu",
+    emoji: "💻",
+    description: "Termine la saison 'cyber-dev'. Shift-left, c'est toi.",
+    category: "mastery",
+    rarity: "epic",
+    points: 80,
+    isSecret: false,
+    isUnlocked: (s) => s.completedSaisonSlugs.includes("cyber-dev"),
+  },
+  {
+    slug: "audience_master_compta",
+    title: "Finance vigilante",
+    emoji: "💰",
+    description: "Termine la saison 'cyber-compta'. Le piege du faux RIB, jamais.",
+    category: "mastery",
+    rarity: "epic",
+    points: 80,
+    isSecret: false,
+    isUnlocked: (s) => s.completedSaisonSlugs.includes("cyber-compta"),
+  },
+  {
+    slug: "audience_master_dirigeants",
+    title: "Dirigeant cyber",
+    emoji: "👔",
+    description: "Termine la saison 'cyber-dirigeants'. Le risque, tu l'arbitres.",
+    category: "mastery",
+    rarity: "epic",
+    points: 80,
+    isSecret: false,
+    isUnlocked: (s) => s.completedSaisonSlugs.includes("cyber-dirigeants"),
+  },
+  {
+    slug: "audience_master_dpo",
+    title: "DPO operationnel",
+    emoji: "⚖️",
+    description: "Termine la saison 'dpo-quotidien'. RGPD au quotidien.",
+    category: "mastery",
+    rarity: "epic",
+    points: 80,
+    isSecret: false,
+    isUnlocked: (s) => s.completedSaisonSlugs.includes("dpo-quotidien"),
+  },
+
+  // ----- THEMATIQUES (anti-menace, trophy par famille d'attaque) -----
+  {
+    slug: "anti_phishing_master",
+    title: "Anti-phishing master",
+    emoji: "🎣",
+    description: "Termine les saisons phishing + fraude-president + email-pro. Plus aucun mail ne te piege.",
+    category: "special",
+    rarity: "epic",
+    points: 120,
+    isSecret: false,
+    isUnlocked: (s) =>
+      ["phishing", "fraude-president", "email-pro"].every((slug) =>
+        s.completedSaisonSlugs.includes(slug),
+      ),
+  },
+  {
+    slug: "anti_ransomware_master",
+    title: "Anti-ransomware master",
+    emoji: "🔒",
+    description: "Termine les saisons ransomware + sauvegardes + supply-chain. Tu es pret pour le pire.",
+    category: "special",
+    rarity: "epic",
+    points: 120,
+    isSecret: false,
+    isUnlocked: (s) =>
+      ["ransomware", "sauvegardes", "supply-chain"].every((slug) =>
+        s.completedSaisonSlugs.includes(slug),
+      ),
+  },
+  {
+    slug: "anti_credential_master",
+    title: "Forteresse des credentials",
+    emoji: "🔑",
+    description: "Termine les saisons mots-de-passe + acces-physiques + stockage-cloud. Inviolable.",
+    category: "special",
+    rarity: "epic",
+    points: 120,
+    isSecret: false,
+    isUnlocked: (s) =>
+      ["mots-de-passe", "acces-physiques", "stockage-cloud"].every((slug) =>
+        s.completedSaisonSlugs.includes(slug),
+      ),
+  },
+  {
+    slug: "anti_ia_threats_master",
+    title: "IA aware",
+    emoji: "🤖",
+    description: "Termine les saisons ia-generative + deepfakes. Tu distingues le vrai du faux genere.",
+    category: "special",
+    rarity: "epic",
+    points: 120,
+    isSecret: false,
+    isUnlocked: (s) =>
+      ["ia-generative", "deepfakes"].every((slug) =>
+        s.completedSaisonSlugs.includes(slug),
+      ),
+  },
+  {
+    slug: "anti_mobile_master",
+    title: "Mobile-proof",
+    emoji: "📱",
+    description: "Termine les saisons mobile-smartphone + wifi-reseaux + teletravail + voyages-affaires. Mobile-first, secure-first.",
+    category: "special",
+    rarity: "legendary",
+    points: 150,
+    isSecret: false,
+    isUnlocked: (s) =>
+      ["mobile-smartphone", "wifi-reseaux", "teletravail", "voyages-affaires"].every(
+        (slug) => s.completedSaisonSlugs.includes(slug),
+      ),
   },
 ];
 
