@@ -46,19 +46,47 @@ type DropdownItem = {
   label: string;
   description: string;
   emoji: string;
+  /**
+   * Si true : ouvre le lien dans un nouvel onglet (target=_blank +
+   * rel=noopener noreferrer + icone ↗). Sert pour pointer vers le
+   * sous-domaine demo.humanix-cybersecurity.fr depuis la prod
+   * commerciale, sans confondre le visiteur avec le vrai SaaS.
+   */
+  external?: boolean;
 };
 
-// "Démo" est UNIQUEMENT exposé en mode démo (DEMO_MODE=true côté serveur).
-// En prod commerciale, retire complètement l'entrée du dropdown "Notre
-// offre" pour éviter qu'un visiteur arrive sur des données fictives en
-// croyant être sur le SaaS. Defense en profondeur : la page /demo elle-
-// même retourne 404 via app/demo/layout.tsx côté serveur en prod.
-const DEMO_DROPDOWN_ITEM: DropdownItem = {
-  href: "/demo",
-  label: "Démo",
-  description: "Tester en 2 minutes, sans inscription",
-  emoji: "🎮",
-};
+// URL publique du sous-domaine demo, deploye sur une instance separee
+// avec DEMO_MODE=true. Override possible via NEXT_PUBLIC_DEMO_URL (utile
+// pour les self-hosteurs qui veulent leur propre URL demo, ou pour
+// debrancher la demo en mettant une chaine vide).
+const DEMO_PUBLIC_URL =
+  process.env.NEXT_PUBLIC_DEMO_URL ?? "https://demo.humanix-cybersecurity.fr";
+
+// Construit l'entree "Demo" du dropdown selon le contexte :
+//   - En DEMO_MODE (instance demo elle-meme)  : href local /demo
+//   - En prod commerciale                     : href externe vers le
+//     sous-domaine demo. target=_blank pour bien signaler que c'est
+//     une autre instance, pas le SaaS principal.
+// Si DEMO_PUBLIC_URL est vide ET pas en DEMO_MODE -> retourne null
+// (le self-hosteur peut completement masquer la mention demo).
+function buildDemoDropdownItem(demoMode: boolean): DropdownItem | null {
+  if (demoMode) {
+    return {
+      href: "/demo",
+      label: "Démo",
+      description: "Tester en 2 minutes, sans inscription",
+      emoji: "🎮",
+    };
+  }
+  if (!DEMO_PUBLIC_URL) return null;
+  return {
+    href: DEMO_PUBLIC_URL,
+    label: "Démo",
+    description: "Tester sans inscription (instance dédiée)",
+    emoji: "🎮",
+    external: true,
+  };
+}
 const PRODUIT_ITEMS_BASE: DropdownItem[] = [
   {
     href: "/rejoindre",
@@ -105,11 +133,14 @@ const PRODUIT_ITEMS_BASE: DropdownItem[] = [
   },
 ];
 function buildProduitItems(demoMode: boolean): DropdownItem[] {
-  // En mode démo : insérer "Démo" en 2e position (après "Tarifs"),
-  // ordre historique. En prod : aucune mention de la démo.
-  return demoMode
-    ? [PRODUIT_ITEMS_BASE[0], DEMO_DROPDOWN_ITEM, ...PRODUIT_ITEMS_BASE.slice(1)]
-    : PRODUIT_ITEMS_BASE;
+  // L'entree "Demo" est inseree en 2e position (apres "Comment commencer"),
+  // ordre historique. En DEMO_MODE elle pointe sur /demo local, en prod
+  // sur le sous-domaine demo externe (target=_blank). Cf.
+  // buildDemoDropdownItem. Retourne null si DEMO_PUBLIC_URL est vide et
+  // pas en demoMode -> l'entree est alors omise.
+  const demoItem = buildDemoDropdownItem(demoMode);
+  if (!demoItem) return PRODUIT_ITEMS_BASE;
+  return [PRODUIT_ITEMS_BASE[0], demoItem, ...PRODUIT_ITEMS_BASE.slice(1)];
 }
 
 const SOLUTIONS_ITEMS: DropdownItem[] = [
@@ -700,6 +731,8 @@ function NavDropdown({
                 key={item.href}
                 href={item.href}
                 role="menuitem"
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noopener noreferrer" : undefined}
                 className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700/50 transition group"
               >
                 <span
@@ -711,6 +744,14 @@ function NavDropdown({
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-primary-500 dark:text-accent-300 group-hover:underline-offset-4">
                     {item.label}
+                    {item.external && (
+                      <span
+                        aria-label="(ouvre dans un nouvel onglet)"
+                        className="ml-1 text-[10px] text-gray-400 dark:text-gray-500"
+                      >
+                        ↗
+                      </span>
+                    )}
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">
                     {item.description}
@@ -742,6 +783,8 @@ function MobileSection({
           <li key={item.href}>
             <Link
               href={item.href}
+              target={item.external ? "_blank" : undefined}
+              rel={item.external ? "noopener noreferrer" : undefined}
               className="flex items-start gap-3 px-2 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800/50 transition"
             >
               <span
@@ -753,6 +796,14 @@ function MobileSection({
               <div className="min-w-0">
                 <p className="text-base font-bold text-primary-500 dark:text-accent-300">
                   {item.label}
+                  {item.external && (
+                    <span
+                      aria-label="(ouvre dans un nouvel onglet)"
+                      className="ml-1 text-xs text-gray-400 dark:text-gray-500"
+                    >
+                      ↗
+                    </span>
+                  )}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
                   {item.description}
