@@ -5,6 +5,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { computeTenantHealth } from "@/lib/tenant-health";
 import { db } from "@/lib/db";
+import { getSeatUsage, formatSeatUsage } from "@/lib/seats";
 import {
   deactivateTenant,
   reactivateTenant,
@@ -30,6 +31,11 @@ export default async function TenantDetailPage({
   const { msg, error: actionError } = await searchParams;
   const health = await computeTenantHealth(id);
   if (!health) notFound();
+
+  // Sieges (quota de plan) -- distinct des compteurs actifs/total ci-dessus.
+  // Pour le tenant Communaute, getSeatUsage() retourne Infinity (cf. lib/seats.ts
+  // et l'exception slug humanix-community).
+  const seatUsage = await getSeatUsage(id);
 
   // Fetch des champs isActive / disabledAt / disabledBy / disabledReason
   // (pas dans tenant-health pour eviter de toucher la couche analytics).
@@ -111,7 +117,18 @@ export default async function TenantDetailPage({
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         <Stat
           title="Utilisateurs"
-          value={`${health.activeUsers} actifs / ${health.totalUsers} total`}
+          // Format reformule (mai 2026) : avant "X actifs / Y total" preetait a
+          // confusion avec un quota de sieges. Maintenant "(sur Y inscrits)"
+          // casse le pattern X/Y. Le vrai quota de sieges est sur la KPI dediee
+          // ci-dessous via getSeatUsage().
+          value={`${health.activeUsers} actifs (sur ${health.totalUsers} inscrits)`}
+        />
+        <Stat
+          title="Sièges (quota plan)"
+          // Pour le tenant Communaute, formatSeatUsage retourne "X sieges utilises
+          // (illimite)" car getSeatUsage force max=Infinity (cf. lib/seats.ts).
+          // Pour un tenant paye, "X / Y sieges utilises (Z%)".
+          value={formatSeatUsage(seatUsage)}
         />
         <Stat title="Administrateurs" value={`${health.adminCount}`} />
         <Stat title="Groupes définis" value={`${health.groupCount}`} />
