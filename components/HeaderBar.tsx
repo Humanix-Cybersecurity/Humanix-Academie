@@ -49,8 +49,8 @@ type DropdownItem = {
   /**
    * Si true : ouvre le lien dans un nouvel onglet (target=_blank +
    * rel=noopener noreferrer + icone ↗). Sert pour pointer vers le
-   * sous-domaine demo.humanix-cybersecurity.fr depuis la prod
-   * commerciale, sans confondre le visiteur avec le vrai SaaS.
+   * sous-domaine demo.humanix-academie.fr depuis la prod commerciale,
+   * sans confondre le visiteur avec le vrai SaaS.
    */
   external?: boolean;
 };
@@ -60,7 +60,7 @@ type DropdownItem = {
 // pour les self-hosteurs qui veulent leur propre URL demo, ou pour
 // debrancher la demo en mettant une chaine vide).
 const DEMO_PUBLIC_URL =
-  process.env.NEXT_PUBLIC_DEMO_URL ?? "https://demo.humanix-cybersecurity.fr";
+  process.env.NEXT_PUBLIC_DEMO_URL ?? "https://demo.humanix-academie.fr";
 
 // Construit l'entree "Demo" du dropdown selon le contexte :
 //   - En DEMO_MODE (instance demo elle-meme)  : href local /demo
