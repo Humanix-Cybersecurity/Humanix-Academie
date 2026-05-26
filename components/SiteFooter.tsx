@@ -30,7 +30,7 @@ type FooterLink = {
 // Le lien "Démo" du footer suit la même règle que le header :
 //   - En DEMO_MODE (instance demo elle-meme)  : /demo local
 //   - En prod commerciale                     : sous-domaine externe
-//     demo.humanix-cybersecurity.fr (target=_blank). Le sous-domaine est
+//     demo.humanix-academie.fr (target=_blank). Le sous-domaine est
 //     une instance separee deployee en DEMO_MODE=true, donc safe a
 //     proposer publiquement -- les donnees sont fictives par construction.
 // La page /demo locale retourne 404 server-side en prod (cf.
@@ -41,7 +41,7 @@ type FooterLink = {
 // l'entree Demo est masquee (utile pour self-hosteur sans demo publique).
 const IS_DEMO_MODE = process.env.DEMO_MODE === "true";
 const DEMO_PUBLIC_URL =
-  process.env.NEXT_PUBLIC_DEMO_URL ?? "https://demo.humanix-cybersecurity.fr";
+  process.env.NEXT_PUBLIC_DEMO_URL ?? "https://demo.humanix-academie.fr";
 const DEMO_LINK: FooterLink | null = IS_DEMO_MODE
   ? { href: "/demo", label: "Démo", emoji: "🎮" }
   : DEMO_PUBLIC_URL

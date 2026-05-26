@@ -54,7 +54,7 @@ souverain, intégrée nativement à CISO Assistant.
 ## Démo en ligne
 
 Teste les 3 vues principales sans installation, sans inscription :
-**[demo.humanix-cybersecurity.fr](https://demo.humanix-cybersecurity.fr)**
+**[demo.humanix-academie.fr](https://demo.humanix-academie.fr)**
 
 La base de démonstration est réinitialisée régulièrement — tu peux tout
 cliquer, tout modifier, tout casser sans crainte. Comptes pré-remplis pour
