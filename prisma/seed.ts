@@ -10,6 +10,7 @@ import {
 import { getLevel, computeCoinsEarned } from "../lib/levels";
 import { SHOP_CATALOG } from "../lib/shop";
 import { ACHIEVEMENTS_CATALOG } from "../lib/achievements/catalog";
+import { seedCatalog } from "../lib/catalog-seeder";
 import { computeContentHash } from "../lib/marketplace/integrity";
 // Open Core : on charge les seeds via le loader qui resout dynamiquement
 // la source (catalog commercial complet OU catalog demo OSS). Si les
@@ -17,18 +18,10 @@ import { computeContentHash } from "../lib/marketplace/integrity";
 // anecdotes/seed-data) ne sont pas presents dans le repo (cas fork OSS),
 // le loader retourne des fallbacks vides ou demo. Cf. docs/OPEN_CORE.md.
 import {
-  loadCatalogSaisons,
   loadLibraryArticles,
   loadMarketplaceModules,
 } from "./seed-data-loader";
-import { rewardsFor, validateCatalog } from "./catalog-saisons-shared";
-import { tagsForSaison } from "./catalog-tags";
 import { seedAnecdotes } from "./seed-anecdotes";
-import {
-  COMMUNITY_TENANT_SLUG,
-  COMMUNITY_TENANT_NAME,
-  COMMUNITY_TENANT_PLAN,
-} from "../lib/tenant-community";
 
 const prisma = new PrismaClient();
 
@@ -212,176 +205,43 @@ async function main() {
   // ====================================================================
   // 1. CONTENU PARTAGE (toujours seede, demo ou prod)
   // ====================================================================
-
-  // Saisons + episodes : on charge le catalog via le loader Open Core,
-  // qui resout dynamiquement la source (commercial complet ou demo OSS).
-  // Cf. prisma/seed-data-loader.ts + docs/OPEN_CORE.md.
-  const { saisons: catalogSaisons, source: catalogSource } = loadCatalogSaisons();
-  const integrity = validateCatalog(catalogSaisons);
+  // Refactor mai 2026 : extrait dans lib/catalog-seeder.ts pour pouvoir etre
+  // reappele depuis l'UI superadmin (/superadmin/catalog). Inclut saisons,
+  // episodes, boutique, achievements, tenant Communaute. Idempotent.
+  const catalogResult = await seedCatalog(prisma);
   console.log(
-    `  Catalogue (${catalogSource}) : ${integrity.totalSaisons} saisons / ${integrity.totalEpisodes} episodes`,
+    `  Catalogue (${catalogResult.catalogSource}) : ${catalogResult.saisons} saisons / ${catalogResult.episodes} episodes`,
   );
-
-  const saisonRecords = new Map<string, any>();
-  const episodeRecords = new Map<string, any>();
-  for (const s of catalogSaisons) {
-    const tags = tagsForSaison(s.slug);
-    const dbS = await prisma.saison.upsert({
-      where: { slug: s.slug },
-      update: {
-        title: s.title,
-        description: s.description,
-        coverEmoji: s.coverEmoji,
-        order: s.order,
-        audience: s.audience,
-        tags,
-      },
-      create: {
-        slug: s.slug,
-        title: s.title,
-        description: s.description,
-        coverEmoji: s.coverEmoji,
-        order: s.order,
-        audience: s.audience,
-        tags,
-      },
-    });
-    saisonRecords.set(s.slug, dbS);
-    let order = 1;
-    for (const ep of s.episodes) {
-      const r = rewardsFor(ep.difficulty);
-      const dbE = await prisma.episode.upsert({
-        where: { saisonId_slug: { saisonId: dbS.id, slug: ep.slug } },
-        update: {
-          title: ep.title,
-          order,
-          durationMinutes: ep.durationMinutes,
-          xpReward: r.xpReward,
-          coinsReward: r.coinsReward,
-        },
-        create: {
-          saisonId: dbS.id,
-          slug: ep.slug,
-          title: ep.title,
-          order,
-          durationMinutes: ep.durationMinutes,
-          xpReward: r.xpReward,
-          coinsReward: r.coinsReward,
-        },
-      });
-      episodeRecords.set(`${s.slug}/${ep.slug}`, dbE);
-      order++;
-    }
-  }
+  console.log(`  Boutique ✓ (${catalogResult.shopItems} items)`);
   console.log(
-    `  Saisons ✓ (${catalogSaisons.length} saisons / ${episodeRecords.size} episodes)`,
+    `  Achievements ✓ (${catalogResult.achievements} badges au catalogue)`,
   );
+  console.log(`  Tenant Communauté ✓ (${catalogResult.communityTenantSlug})`);
 
-  // Catalogue boutique (global, pas de tenant -> partage par tous)
-  // Saisonnalite : si un item a un seasonalWindow, on convertit en
-  // availableFrom/availableUntil pour l'annee courante. Le cron de
-  // remise-a-jour annuelle (a faire) avancera l'annee chaque 1er jan.
-  const shopItemsBySlug = new Map<string, any>();
-  const currentYear = new Date().getUTCFullYear();
-  for (const it of SHOP_CATALOG) {
-    let availableFrom: Date | null = null;
-    let availableUntil: Date | null = null;
-    if (it.seasonalWindow) {
-      const w = it.seasonalWindow;
-      availableFrom = new Date(
-        Date.UTC(currentYear, w.fromMonth - 1, w.fromDay),
-      );
-      // Si la fenetre chevauche fin d'annee (ex. 22 dec -> 7 jan), on
-      // pousse l'annee de fin a +1 pour que la fenetre soit valide.
-      const yearTo =
-        w.toMonth < w.fromMonth ? currentYear + 1 : currentYear;
-      availableUntil = new Date(Date.UTC(yearTo, w.toMonth - 1, w.toDay + 1));
-    }
-    const dbItem = await prisma.shopItem.upsert({
-      where: { slug: it.slug },
-      update: {
-        name: it.name,
-        emoji: it.emoji,
-        price: it.price,
-        minLevel: it.minLevel,
-        description: it.description,
-        rarity: it.rarity,
-        availableFrom,
-        availableUntil,
-      },
-      create: {
-        slug: it.slug,
-        name: it.name,
-        emoji: it.emoji,
-        category: it.category as ItemCategory,
-        price: it.price,
-        minLevel: it.minLevel,
-        description: it.description,
-        rarity: it.rarity,
-        availableFrom,
-        availableUntil,
-      },
-    });
-    shopItemsBySlug.set(it.slug, dbItem);
-  }
-  console.log(`  Boutique ✓ (${SHOP_CATALOG.length} items)`);
-
-  // Catalogue achievements (badges) — upserted depuis lib/achievements/catalog.ts
-  // Le slug est l'identifiant stable, le reste peut evoluer (tweak titres,
-  // nouveaux badges) sans casser les UserAchievement existants.
-  for (const a of ACHIEVEMENTS_CATALOG) {
-    await prisma.achievement.upsert({
-      where: { slug: a.slug },
-      update: {
-        title: a.title,
-        emoji: a.emoji,
-        description: a.description,
-        category: a.category,
-        rarity: a.rarity,
-        points: a.points,
-        isSecret: a.isSecret,
-        isActive: true,
-      },
-      create: {
-        slug: a.slug,
-        title: a.title,
-        emoji: a.emoji,
-        description: a.description,
-        category: a.category,
-        rarity: a.rarity,
-        points: a.points,
-        isSecret: a.isSecret,
-      },
-    });
-  }
-  console.log(
-    `  Achievements ✓ (${ACHIEVEMENTS_CATALOG.length} badges au catalogue)`,
-  );
-
-  // Librairie micro-learning (contenu editorial public, pas de tenant)
+  // Librairie micro-learning (contenu editorial public, pas de tenant).
+  // Maintenu separe : le loader peut etre lourd (Open Core dynamic require)
+  // et ne doit pas etre dans le seeder bouton UI (qui doit etre rapide).
   await seedLibrary();
 
   // Cyber-Anecdotes du Lundi (4 cas réels documentés, 3 publiées + 1 brouillon)
+  // Maintenu separe pour la meme raison.
   await seedAnecdotes(prisma);
 
-  // Tenant Communauté : unique tenant non-payant de la plateforme cloud,
-  // hébergeant tous les LEARNERs gratuits. Toujours seede (prod ET demo)
-  // car c'est le rattachement par défaut du flow signup gratuit.
-  // Cf. lib/tenant-community.ts pour le rationale architecture 3-layer.
-  const communityTenant = await prisma.tenant.upsert({
-    where: { slug: COMMUNITY_TENANT_SLUG },
-    update: {
-      name: COMMUNITY_TENANT_NAME,
-      // Pas de update du plan : si quelqu'un l'a modifié manuellement, on
-      // respecte la valeur en BDD pour éviter de casser un environnement.
-    },
-    create: {
-      slug: COMMUNITY_TENANT_SLUG,
-      name: COMMUNITY_TENANT_NAME,
-      plan: COMMUNITY_TENANT_PLAN,
-    },
+  // Re-charge depuis la BDD les Maps utilisees par la section demo
+  // (saisonRecords / episodeRecords / shopItemsBySlug). Avant le refactor
+  // catalog-seeder, ces Maps etaient construites au fur et a mesure des
+  // upserts ; maintenant elles sont reconstruites en 1 round-trip apres
+  // que seedCatalog les ait toutes ecrites. Cout : 3 findMany.
+  const allSaisons = await prisma.saison.findMany();
+  const saisonRecords = new Map(allSaisons.map((s) => [s.slug, s]));
+  const allEpisodes = await prisma.episode.findMany({
+    include: { saison: { select: { slug: true } } },
   });
-  console.log(`  Tenant Communauté ✓ (${communityTenant.slug})`);
+  const episodeRecords = new Map(
+    allEpisodes.map((e) => [`${e.saison.slug}/${e.slug}`, e]),
+  );
+  const allShopItems = await prisma.shopItem.findMany();
+  const shopItemsBySlug = new Map(allShopItems.map((it) => [it.slug, it]));
 
   // ====================================================================
   // 2. CONTENU DEMO-ONLY (skip si DEMO_MODE != "true")
