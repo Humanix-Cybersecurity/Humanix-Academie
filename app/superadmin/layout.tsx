@@ -79,6 +79,13 @@ export default async function SuperadminLayout({
               Comptes privilégiés
             </Link>
             <Link
+              href="/superadmin/catalog"
+              className="text-gray-700 dark:text-gray-200 hover:text-accent-500 font-medium"
+              title="Re-importer saisons / badges / items boutique après deploy"
+            >
+              Catalog
+            </Link>
+            <Link
               href="/admin"
               className="text-xs text-gray-500 hover:text-accent-500 underline"
             >
