@@ -24,6 +24,7 @@ import { db } from "@/lib/db";
 import { fireWebhook } from "@/lib/webhooks/dispatcher";
 import { triggerCisoLiveSync } from "@/lib/ciso-assistant/live-mode";
 import { refreshUserRiskScore } from "@/lib/risk-score";
+import { gradePhishingReport } from "@/lib/ai/phishing-report-grader";
 
 export const dynamic = "force-dynamic";
 
@@ -112,8 +113,17 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Side-effects : Event + coins + riskScore + webhook
-  const COINS_AWARDED = 5;
+  // Phase 5d (mai 2026) : grading IA Mistral du signalement.
+  // On call Mistral AVANT la transaction pour pouvoir ajuster les coins
+  // selon la qualite. Timeout court (8s) cote helper -- si Mistral down,
+  // fallback gracieux sur coins fixes a 5 (comportement historique).
+  const grade = await gradePhishingReport({
+    subject: data.subject,
+    from: data.from ?? null,
+    fromDisplayName: data.fromDisplayName ?? null,
+    bodyExcerpt: data.bodyExcerpt ?? null,
+  });
+  const COINS_AWARDED = grade.ok ? grade.grade.suggestedCoins : 5;
 
   await db.$transaction(async (tx) => {
     await tx.event.create({
@@ -129,6 +139,15 @@ export async function POST(req: NextRequest) {
           internetMessageId: data.internetMessageId ?? null,
           bodyExcerptLen: (data.bodyExcerpt ?? "").length,
           source: data.source ?? "outlook-addin",
+          // Phase 5d : verdict IA pour audit ulterieur (filtres admin,
+          // analytics qualite des signalements)
+          aiGrade: grade.ok
+            ? {
+                quality: grade.grade.quality,
+                isLikelyReal: grade.grade.isLikelyReal,
+                reasoning: grade.grade.reasoning,
+              }
+            : null,
         },
       },
     });
@@ -151,11 +170,33 @@ export async function POST(req: NextRequest) {
   // Fire-and-forget : ne bloque ni la reponse Outlook ni le webhook.
   triggerCisoLiveSync(user.tenantId, "phishing.reported");
 
+  // Message personalise selon le verdict IA. Si grading echoue, message
+  // generique historique.
+  let message = "Merci ! Votre signalement a été enregistré.";
+  if (grade.ok) {
+    if (grade.grade.quality === "high" && grade.grade.isLikelyReal) {
+      message = `Excellent signalement ! Mistral confirme : ce mail ressemble bien à un phishing. +${COINS_AWARDED} coins.`;
+    } else if (grade.grade.quality === "medium") {
+      message = `Bon réflexe de signaler par précaution. +${COINS_AWARDED} coins.`;
+    } else {
+      message = `Merci ! Le mail semble légitime, mais bien fait de douter. +${COINS_AWARDED} coins.`;
+    }
+  }
+
   return NextResponse.json(
     {
       ok: true,
       coinsAwarded: COINS_AWARDED,
-      message: "Merci ! Votre signalement a été enregistré.",
+      message,
+      // Verdict IA expose pour permettre au plugin Outlook d'afficher des
+      // details si souhaite (futur : icone vert/orange/gris dans le ribbon)
+      aiGrade: grade.ok
+        ? {
+            quality: grade.grade.quality,
+            isLikelyReal: grade.grade.isLikelyReal,
+            reasoning: grade.grade.reasoning,
+          }
+        : null,
     },
     { headers: cors },
   );
