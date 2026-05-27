@@ -118,7 +118,7 @@ export default async function AdminPhishingPage() {
         />
 
         {/* Cross-sell IA Mistral */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <CrossSellCard
             badge="🇫🇷 IA souveraine"
             title="Générer un mail sur-mesure en 5 secondes"
@@ -133,6 +133,14 @@ export default async function AdminPhishingPage() {
             description="Sélectionnez vos cibles → l'IA génère un mail différent pour chacune (service, contexte, ton)."
             cta="Lancer le batch"
             href="/admin/phishing/personalize"
+            icon="🎯"
+          />
+          <CrossSellCard
+            badge="🎯 Red team IA"
+            title="Scénario phishing complet pour ton secteur"
+            description="Décris ton contexte (secteur, attaque vue récemment, cibles). Mistral génère subject + sender + corps HTML + signaux pédagogiques."
+            cta="Mode red team"
+            href="/admin/phishing/redteam"
             icon="🎯"
           />
         </div>
