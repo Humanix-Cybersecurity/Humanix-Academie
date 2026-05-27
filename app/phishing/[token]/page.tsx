@@ -20,6 +20,7 @@ import { getTemplate } from "@/lib/phishing";
 import { fireWebhook } from "@/lib/webhooks/dispatcher";
 import { triggerCisoLiveSync } from "@/lib/ciso-assistant/live-mode";
 import AskHexExplain from "@/components/AskHexExplain";
+import PhishingDebrief from "@/components/PhishingDebrief";
 import {
   QUISHING_TEMPLATES,
   parseQuishingCampaignToken,
@@ -331,6 +332,11 @@ export default async function PhishingLandingPage({
             </p>
           </div>
         )}
+
+        {/* Debrief IA personnalise (Phase 5a) : appelle Mistral en async avec
+            l'historique du user. Si IA down, le composant n'affiche rien et
+            le bloc markers ci-dessous fait office de fallback complet. */}
+        {tpl && <PhishingDebrief token={token} />}
 
         {tpl && (
           <>
