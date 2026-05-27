@@ -128,6 +128,7 @@ model Tenant {
   challenges            TeamChallenge[]
   apiKeys               ApiKey[]
   phishingCampaigns     PhishingCampaign[]
+  phishingRecipientLists PhishingRecipientList[]
   notificationLogs      NotificationLog[]
   marketplaceInstalls   MarketplaceInstallation[]
   webhooks              TenantWebhook[]
@@ -360,6 +361,7 @@ model User {
   sessions               Session[]
   inventory              UserInventory[]
   phishingResults        PhishingResult[]
+  phishingRecipientListEntries PhishingRecipientListEntry[]
   notificationLogs       NotificationLog[]
   authoredModules        MarketplaceModule[]     @relation("AuthoredModules")
   reviewedModules        MarketplaceModule[]     @relation("ReviewedModules")
@@ -969,6 +971,62 @@ model PhishingCampaign {
 
   @@index([tenantId])
   @@index([tenantId, channel])
+}
+
+// =====================================================
+// PHISHING RECIPIENT LIST (Phase 3 Phishing Engine v2, mai 2026)
+// =====================================================
+// Liste ad-hoc de destinataires pour campagnes phishing, alternative aux
+// ciblages par Group/service existants. Permet d'importer un CSV de
+// destinataires externes a l'organisation officielle (ex: campagne sur
+// un sous-ensemble de prestataires, sur un service en cours de creation,
+// sur un panel de test cyber-aware...).
+//
+// LIEN OPTIONNEL AVEC USER :
+//   userId nullable : si l'email matche un User en BDD, on lie. Sinon, le
+//   recipient est "externe" (pas de progress academy, juste capture des
+//   metrics phishing). Une campagne mixte (User + externe) est OK.
+
+model PhishingRecipientList {
+  id          String   @id @default(cuid())
+  tenantId    String
+  // Nom lisible pour selection dans le formulaire de campagne
+  name        String
+  // Description libre (ex: "Panel pilote Q3 2026", "Prestataires audit")
+  description String?
+  // Soft-delete : on conserve l'historique des campagnes meme apres
+  // suppression. Une liste "supprimee" n'apparait plus dans le selecteur.
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant     Tenant                       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  recipients PhishingRecipientListEntry[]
+
+  @@index([tenantId])
+}
+
+model PhishingRecipientListEntry {
+  id     String @id @default(cuid())
+  listId String
+  // Email destinataire (lowercase forced cote application). Pas @unique
+  // global -- un meme email peut figurer dans plusieurs listes.
+  email  String
+  // Nom de l'employe pour personnalisation (firstName parsing cote launch).
+  name   String?
+  // Service ou role libre, utilise par les badges et le profiling IA.
+  service String?
+  // Lien optionnel vers User si l'email match. Resolu au import OU plus
+  // tard si l'email est ajoute en BDD apres coup.
+  userId String?
+  createdAt DateTime @default(now())
+
+  list PhishingRecipientList @relation(fields: [listId], references: [id], onDelete: Cascade)
+  user User?                  @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([listId, email]) // dedupe au sein d'une liste
+  @@index([listId])
+  @@index([userId])
 }
 
 model PhishingResult {
