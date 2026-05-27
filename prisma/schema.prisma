@@ -922,8 +922,21 @@ enum PhishingChannel {
 }
 
 enum PhishingStatus {
+  // Funnel Gophish-like (refonte Phishing Engine v2, mai 2026) :
+  //   SENT      = mail envoye via SMTP tenant
+  //   OPENED    = pixel tracking GET (mail ouvert dans le client mail)
+  //   CLICKED   = lien clique, landing page atteinte
+  //   SUBMITTED = formulaire soumis sur la landing (credentials fake)
+  //   REPORTED  = signale par l'utilisateur (Outlook add-in)
+  // Convention : on stocke le PLUS HAUT etat atteint dans le funnel. REPORTED
+  // est un cas particulier orthogonal (peut arriver depuis SENT direct si le
+  // user signale sans ouvrir). Cf. PhishingResult.reportedAt pour le flag
+  // independant. Pour determiner le funnel reel, joindre les timestamps
+  // openedAt/clickedAt/submittedAt/reportedAt.
   SENT
+  OPENED
   CLICKED
+  SUBMITTED
   REPORTED
 }
 
@@ -965,8 +978,23 @@ model PhishingResult {
   trackToken String         @unique
   status     PhishingStatus @default(SENT)
   sentAt     DateTime       @default(now())
-  clickedAt  DateTime?
-  reportedAt DateTime?
+  // Funnel tracking (Phishing Engine v2, mai 2026) :
+  //   openedAt    : premier GET du pixel tracking (=mail ouvert)
+  //   clickedAt   : premier GET de la landing /phishing/[token]
+  //   submittedAt : premier POST sur /api/phishing/submit/[token] (form fake)
+  //   reportedAt  : signalement via Outlook add-in (orthogonal au funnel)
+  // Tous nullable. Idempotents : on n'ecrit que si null (premier event qui
+  // gagne, evite que des bots ou des proxies de prefetch ne polluent les stats).
+  openedAt    DateTime?
+  clickedAt   DateTime?
+  reportedAt  DateTime?
+  submittedAt DateTime?
+  // Metadata des champs soumis lors d'un SUBMITTED. JAMAIS les valeurs en clair
+  // (sinon on capture des vrais mots de passe -- exposition RGPD + risque legal
+  // enorme). On stocke uniquement {name, type, length} par champ pour permettre
+  // a l'admin de comprendre "mon user a soumis email + password de longueur 12".
+  // Format : { fields: [{ name, type, length }], userAgent, submittedAt }
+  submittedData Json?
 
   campaign PhishingCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
