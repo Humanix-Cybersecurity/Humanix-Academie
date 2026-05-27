@@ -145,6 +145,24 @@ export default async function AdminPhishingPage() {
           />
         </div>
 
+        {/* Lien vers le scoring IA par user (cf. Phase 5c) */}
+        <div className="rounded-xl border border-violet-200 dark:border-violet-800 bg-gradient-to-br from-violet-50 to-white dark:from-violet-950/30 dark:to-slate-900 p-4 flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <p className="text-xs uppercase tracking-widest font-bold text-violet-700 dark:text-violet-300 mb-1">
+              🎯 Vulnerabilites IA par apprenant
+            </p>
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              Profil narratif Mistral pour identifier qui pousser, qui valoriser, qui faire un debrief 1:1.
+            </p>
+          </div>
+          <a
+            href="/admin/phishing/vulnerable-users"
+            className="btn-secondary text-sm whitespace-nowrap"
+          >
+            Voir les vulnerabilites →
+          </a>
+        </div>
+
         <AdminSection
           title="Lancer une campagne"
           description="Choisissez un template prêt-à-l'emploi et une audience cible."
