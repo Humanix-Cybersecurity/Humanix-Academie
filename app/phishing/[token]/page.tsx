@@ -30,10 +30,16 @@ export const dynamic = "force-dynamic";
 
 export default async function PhishingLandingPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ token: string }>;
+  searchParams: Promise<{ submitted?: string }>;
 }) {
   const { token } = await params;
+  const sp = await searchParams;
+  // Flag affichage du bandeau debrief "tu viens de soumettre tes credentials".
+  // Provient du redirect 303 emis par /api/phishing/submit/[token].
+  const isSubmittedDebrief = sp.submitted === "1";
 
   // Branche A : token niveau campagne (poster quishing partage par N personnes).
   // Format `qhc_<campaignId>` — un seul PDF, un seul QR.
@@ -207,6 +213,37 @@ export default async function PhishingLandingPage({
           </p>
         </div>
 
+        {/* Bandeau debrief "tu as soumis" : affiche apres redirect 303 du
+            endpoint /api/phishing/submit/[token]. Conseille tres explicite
+            de changer le vrai mot de passe + active 2FA. */}
+        {isSubmittedDebrief && (
+          <div
+            role="alert"
+            className="rounded-2xl border-2 border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/30 p-5 mb-6"
+          >
+            <p className="font-bold text-red-900 dark:text-red-200 text-base mb-2 flex items-center gap-2">
+              <span aria-hidden="true">🚨</span>
+              Tu viens de soumettre tes credentials sur un faux site
+            </p>
+            <p className="text-sm text-red-800 dark:text-red-300 mb-3 leading-relaxed">
+              Pas de panique : c&apos;etait un test, AUCUNE valeur n&apos;a ete
+              enregistree (on stocke uniquement les metadonnees : tu as soumis
+              X champs dont un mot de passe). Mais si ca avait ete un vrai site
+              de phishing, ton mot de passe serait deja entre les mains d&apos;un
+              attaquant.
+            </p>
+            <p className="text-sm font-bold text-red-900 dark:text-red-200 mb-2">
+              Reflexes a appliquer maintenant si ce piege etait reel :
+            </p>
+            <ol className="text-sm text-red-800 dark:text-red-300 list-decimal pl-5 space-y-1">
+              <li>Changer ce mot de passe sur le vrai site immediatement</li>
+              <li>Le changer aussi sur tout autre site ou il etait reutilise</li>
+              <li>Activer la 2FA partout ou c&apos;est possible</li>
+              <li>Verifier les connexions recentes / sessions actives</li>
+            </ol>
+          </div>
+        )}
+
         {/* Bandeau de transparence : si des remediations auto ont ete
             declenchees, on previent honnetement l'user (pas de surprise
             au prochain login). */}
@@ -352,6 +389,81 @@ export default async function PhishingLandingPage({
             phishing.
           </p>
         </div>
+
+        {/* FAKE LOGIN FORM : ce que l'apprenant aurait vu sur un VRAI site
+            de phishing apres le clic. Affiche uniquement si :
+              - pas deja soumis (sinon redondant avec le bandeau debrief en haut)
+              - canal email (pas pour QUISHING / SMS qui ont une UX differente)
+            Le form POST vers /api/phishing/submit/[token] qui :
+              - Capture les METADONNEES (nom/type/longueur) JAMAIS les valeurs
+              - Marque PhishingResult.submittedAt + status=SUBMITTED
+              - Redirige 303 vers ?submitted=1 (bandeau debrief en haut). */}
+        {!isSubmittedDebrief &&
+          result.submittedAt === null &&
+          channel === "EMAIL" && (
+            <div className="rounded-2xl border-2 border-dashed border-gray-300 dark:border-slate-600 p-5 mb-6 bg-gray-50 dark:bg-slate-900/40">
+              <p className="text-xs uppercase tracking-widest font-bold text-gray-500 dark:text-gray-400 mb-2">
+                🪤 Ce que tu aurais vu apres le clic
+              </p>
+              <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+                Sur un vrai site de phishing, tu serais arrive sur une fausse
+                page de login (souvent une copie pixel-perfect de Microsoft,
+                Google, ta banque...). Tu peux essayer de la soumettre ci-dessous
+                pour vivre l&apos;experience -- on capture seulement le geste,
+                jamais les valeurs.
+              </p>
+              <form
+                action={`/api/phishing/submit/${token}`}
+                method="POST"
+                className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-gray-200 dark:border-slate-700 max-w-md mx-auto"
+                autoComplete="off"
+              >
+                <p className="text-center text-lg font-bold text-gray-700 dark:text-gray-200 mb-4">
+                  🔐 Connexion securisee
+                </p>
+                <label
+                  htmlFor="fake-email"
+                  className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1"
+                >
+                  Email professionnel
+                </label>
+                <input
+                  type="email"
+                  id="fake-email"
+                  name="email"
+                  required
+                  placeholder="prenom.nom@entreprise.fr"
+                  autoComplete="off"
+                  className="w-full px-3 py-2 mb-3 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+                <label
+                  htmlFor="fake-password"
+                  className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1"
+                >
+                  Mot de passe
+                </label>
+                <input
+                  type="password"
+                  id="fake-password"
+                  name="password"
+                  required
+                  placeholder="••••••••"
+                  autoComplete="new-password"
+                  className="w-full px-3 py-2 mb-4 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+                <button
+                  type="submit"
+                  className="w-full bg-primary-500 hover:bg-primary-600 text-white font-bold px-4 py-2.5 rounded-lg transition"
+                >
+                  Se connecter
+                </button>
+                <p className="text-[11px] text-center text-gray-500 mt-3 italic">
+                  Aucune valeur n&apos;est enregistree -- on stocke uniquement
+                  le geste (nom et longueur du champ, jamais le contenu).
+                </p>
+              </form>
+            </div>
+          )}
 
         {/* CTA PHARE : module flash de remediation auto-assigne.
             On le met en TRES gros pour que l'user clique tout de suite.

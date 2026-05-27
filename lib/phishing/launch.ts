@@ -20,7 +20,7 @@
 // launchCampaign(), on factorise pour eviter le drift.
 
 import { db } from "@/lib/db";
-import { getTemplate } from "@/lib/phishing";
+import { getTemplate, injectTrackingPixel } from "@/lib/phishing";
 import { generateTrackingToken } from "@/lib/crypto";
 import { sendMailViaTenantSmtp } from "@/lib/smtp/sender";
 import type { PhishingTemplate } from "@prisma/client";
@@ -128,8 +128,13 @@ export async function launchPhishingCampaign(
         continue;
       }
       const firstName = (target.name?.split(" ")[0] ?? "").trim();
-      const trackingUrl = `${baseUrl.replace(/\/$/, "")}/phishing/${r.trackToken}`;
-      const html = tpl.emailHtml(firstName, trackingUrl);
+      const cleanBaseUrl = baseUrl.replace(/\/$/, "");
+      const trackingUrl = `${cleanBaseUrl}/phishing/${r.trackToken}`;
+      // Pixel d'open tracking : injecte en fin de HTML. Voir lib/phishing.ts
+      // injectTrackingPixel() pour le rationale (faux positifs proxies, etc).
+      const pixelUrl = `${cleanBaseUrl}/api/phishing/track/open/${r.trackToken}`;
+      const lureHtml = tpl.emailHtml(firstName, trackingUrl);
+      const html = injectTrackingPixel(lureHtml, pixelUrl);
       const sendResult = await sendMailViaTenantSmtp(tenantId, {
         to: target.email,
         subject: tpl.emailSubject,
