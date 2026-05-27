@@ -26,6 +26,17 @@ import { sendMailViaTenantSmtp } from "@/lib/smtp/sender";
 import type { PhishingTemplate } from "@prisma/client";
 
 export type LaunchTarget = {
+  /**
+   * Identifiant interne. Pour les User normaux : User.id. Pour les
+   * recipients d'une PhishingRecipientList externe (sans User correspondant),
+   * on utilise un userId synthetique "ext_<entryId>" qui sera detecte cote
+   * launchPhishingCampaign pour skip la creation de PhishingResult lie a User.
+   *
+   * Phase 3 mai 2026 (recipient lists) : si l'entry CSV match un User en BDD,
+   * le caller passe le vrai userId. Sinon il faudrait skipper / creer un
+   * mecanisme separe. Pour la v1 : on ne supporte que les entries matches
+   * (entries externes ignorees au lancement, signalees a l'admin).
+   */
   id: string;
   email: string;
   name: string | null;
