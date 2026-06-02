@@ -47,8 +47,8 @@ export type LaunchOptions = {
   templateId: string;
   targets: LaunchTarget[];
   /** Description de la cohorte ciblee, pour traçabilité dans Event.payload */
-  targetingMode?: "all" | "service" | "groups" | "users";
-  targetingDetail?: string; // ex: "groups:rh,compta" ou "service:Finance"
+  targetingMode?: "all" | "service" | "groups" | "users" | "list";
+  targetingDetail?: string; // ex: "groups:rh,compta" ou "service:Finance" ou "list:<name>"
 };
 
 export type LaunchResult =
