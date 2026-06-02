@@ -42,16 +42,24 @@ export type LaunchCampaignResult =
       sent: number;
       failed: number;
       simulated: boolean;
+      /** Phase 3 v2 : nb d'entries de la liste externes (sans User match) ignorees */
+      skippedExternal?: number;
+      /** Phase 7a : split A/B (a + b = sent) si templateBId fourni */
+      variantSplit?: { a: number; b: number };
+      /** Phase 7b : nb de results en attente d'envoi differe (cron drip) */
+      dripPending?: number;
     }
   | {
       ok: false;
       error:
         | "invalid_template"
+        | "invalid_template_b"
         | "no_targets"
         | "smtp_not_configured"
         | "smtp_decrypt_failed"
         | "unauthorized"
-        | "forbidden";
+        | "forbidden"
+        | "list_not_found";
       message?: string;
     };
 
@@ -70,6 +78,17 @@ export async function launchCampaign(
   }
 
   const templateId = formData.get("template") as string;
+  // Phase 7a (juin 2026) : A/B variants. Si l'admin a coche "Test A/B" et
+  // choisi un 2eme template, on transmet le templateBId au helper.
+  const templateBId = String(formData.get("templateB") ?? "").trim() || undefined;
+  // Phase 7b (juin 2026) : drip campaigns. Si l'admin a coche "Etaler les
+  // envois" avec un nombre de jours, on transmet la strategy au helper.
+  const dripDaysRaw = String(formData.get("dripDays") ?? "").trim();
+  const dripDays = dripDaysRaw ? parseInt(dripDaysRaw, 10) : NaN;
+  const dripStrategy =
+    Number.isFinite(dripDays) && dripDays >= 1
+      ? { dripDays: Math.min(30, dripDays) }
+      : undefined;
   const targetService = (formData.get("service") as string) || "";
 
   // Nouveau ciblage par groupes (mai 2026). Multi-select dans le form.
@@ -79,12 +98,68 @@ export async function launchCampaign(
     .map((v) => String(v))
     .filter((s) => s.length > 0);
 
-  // Resolution des cibles : groupes > service > tous
-  let targets: LaunchTarget[];
-  let targetingMode: "groups" | "service" | "all" = "all";
-  let targetingDetail: string | undefined;
+  // Phase 3 v2 (juin 2026) : ciblage par recipient list. Priorite la plus haute.
+  // Permet de cibler une cohorte ad-hoc importee via CSV (panel pilote,
+  // prestataires, nouveaux arrivants...). Cf. /admin/phishing/lists.
+  const listId = String(formData.get("listId") ?? "").trim();
 
-  if (groupSlugs.length > 0) {
+  // Resolution des cibles : list > groupes > service > tous
+  let targets: LaunchTarget[];
+  let targetingMode: "list" | "groups" | "service" | "all" = "all";
+  let targetingDetail: string | undefined;
+  let skippedExternal = 0;
+
+  if (listId) {
+    // Verifie que la liste appartient bien au tenant (defense en profondeur
+    // contre URL/form tampering qui injecterait un listId d'un autre tenant)
+    const list = await db.phishingRecipientList.findFirst({
+      where: { id: listId, tenantId, isActive: true },
+      select: { id: true, name: true },
+    });
+    if (!list) {
+      return {
+        ok: false,
+        error: "list_not_found",
+        message:
+          "Liste introuvable ou supprimee. Verifie sur /admin/phishing/lists.",
+      };
+    }
+
+    // Charge les entries de la liste. On ne garde QUE celles qui ont un
+    // userId resolu (match avec un User du tenant) -- les emails externes
+    // sans User en BDD sont skippes car launchPhishingCampaign attend des
+    // User.id valides (cf. note dans lib/phishing/launch.ts).
+    // TODO ulterieur : supporter les destinataires externes en stockant
+    // les PhishingResult sans userId (nullable) -- demande migration schema.
+    const entries = await db.phishingRecipientListEntry.findMany({
+      where: { listId },
+      select: {
+        userId: true,
+        email: true,
+        name: true,
+        user: {
+          select: { id: true, email: true, name: true, isActive: true },
+        },
+      },
+    });
+
+    targets = [];
+    for (const e of entries) {
+      if (!e.user || !e.user.isActive) {
+        skippedExternal++;
+        continue;
+      }
+      targets.push({
+        id: e.user.id,
+        email: e.user.email,
+        // Prefere le name de la liste (souvent plus a jour) sinon User.name
+        name: e.name ?? e.user.name,
+      });
+    }
+
+    targetingMode = "list";
+    targetingDetail = `list:${list.name}`;
+  } else if (groupSlugs.length > 0) {
     targets = await db.user.findMany({
       where: {
         tenantId,
@@ -131,12 +206,21 @@ export async function launchCampaign(
   const result: LaunchResult = await launchPhishingCampaign({
     tenantId,
     templateId,
+    templateBId, // Phase 7a
+    dripStrategy, // Phase 7b
     targets,
     targetingMode,
     targetingDetail,
   });
 
   revalidatePath("/admin/phishing");
+
+  // Phase 3 v2 : si la cible etait une recipient list, on remonte aussi le
+  // nb d'entries skippees (externes sans User match) pour que le form
+  // affiche un message clair "X envoyes, Y ignores car emails externes".
+  if (result.ok && skippedExternal > 0) {
+    return { ...result, skippedExternal };
+  }
   return result;
 }
 
