@@ -128,6 +128,8 @@ model Tenant {
   challenges            TeamChallenge[]
   apiKeys               ApiKey[]
   phishingCampaigns     PhishingCampaign[]
+  phishingRecipientLists PhishingRecipientList[]
+  phishingEmailTemplates PhishingEmailTemplate[]
   notificationLogs      NotificationLog[]
   marketplaceInstalls   MarketplaceInstallation[]
   webhooks              TenantWebhook[]
@@ -360,6 +362,7 @@ model User {
   sessions               Session[]
   inventory              UserInventory[]
   phishingResults        PhishingResult[]
+  phishingRecipientListEntries PhishingRecipientListEntry[]
   notificationLogs       NotificationLog[]
   authoredModules        MarketplaceModule[]     @relation("AuthoredModules")
   reviewedModules        MarketplaceModule[]     @relation("ReviewedModules")
@@ -922,8 +925,21 @@ enum PhishingChannel {
 }
 
 enum PhishingStatus {
+  // Funnel Gophish-like (refonte Phishing Engine v2, mai 2026) :
+  //   SENT      = mail envoye via SMTP tenant
+  //   OPENED    = pixel tracking GET (mail ouvert dans le client mail)
+  //   CLICKED   = lien clique, landing page atteinte
+  //   SUBMITTED = formulaire soumis sur la landing (credentials fake)
+  //   REPORTED  = signale par l'utilisateur (Outlook add-in)
+  // Convention : on stocke le PLUS HAUT etat atteint dans le funnel. REPORTED
+  // est un cas particulier orthogonal (peut arriver depuis SENT direct si le
+  // user signale sans ouvrir). Cf. PhishingResult.reportedAt pour le flag
+  // independant. Pour determiner le funnel reel, joindre les timestamps
+  // openedAt/clickedAt/submittedAt/reportedAt.
   SENT
+  OPENED
   CLICKED
+  SUBMITTED
   REPORTED
 }
 
@@ -945,6 +961,14 @@ model PhishingCampaign {
   // demande de Florian pour rendre les campagnes plus credibles (poster avec
   // le nom du Wi-Fi reel de l'entreprise plutot que "Humanix-Guest").
   wifiSsid    String?
+  // Phase 7a (juin 2026) -- A/B variants :
+  //   Slug d'un 2eme template (variant B). Si non null, la campagne envoie
+  //   2 lures differents a moitie / moitie des targets (split deterministe
+  //   par hash(userId) % 2). Permet de mesurer quel template performe
+  //   mieux sur la meme audience.
+  //   Le slug pointe vers PhishingEmailTemplate (tenant-custom OU platform
+  //   wide). Le "variant A" reste le PhishingCampaign.template (enum).
+  variantBSlug String?
   scheduledAt DateTime
   sentAt      DateTime?
   isActive    Boolean          @default(true)
@@ -958,6 +982,147 @@ model PhishingCampaign {
   @@index([tenantId, channel])
 }
 
+// =====================================================
+// PHISHING EMAIL TEMPLATE (Phase 0 Phishing Engine v2, juin 2026)
+// =====================================================
+// Sortie des templates hardcoded de lib/phishing.ts vers la BDD pour :
+//   - Permettre aux admins de creer leurs propres templates (custom)
+//   - Persister les scenarios generes par Red Team mode (IA Mistral)
+//   - Versionner / dupliquer / supprimer des templates sans toucher au code
+//   - Import / export entre tenants (futur)
+//
+// PORTEE :
+//   tenantId nullable : si null, template "platform-wide" disponible pour
+//   tous les tenants. Les 3 templates historiques (FAKE_MICROSOFT,
+//   FAKE_COLISSIMO, FAKE_PRESIDENT) sont migres en platform-wide via seed.
+//
+// COMPAT BACKWARDS :
+//   Le champ slug est l'identifiant stable utilise par PhishingCampaign.template
+//   (qui reste un enum PhishingTemplate pour compat). Le helper de lookup
+//   essaie d'abord la BDD via slug, puis fallback sur l'enum hardcoded.
+
+model PhishingEmailTemplate {
+  id          String   @id @default(cuid())
+  // tenantId null = platform-wide (les 3 templates historiques migres seedes)
+  tenantId    String?
+  // Slug stable pour identification : "FAKE_MICROSOFT", "FAKE_COLISSIMO",
+  // ou slugs custom genere par les admins ("redteam-finance-q3-2026").
+  // @@unique sur (tenantId, slug) : un meme slug peut exister en
+  // platform-wide ET en tenant-custom (l'override tenant prime).
+  slug        String
+  name        String
+  description String?
+  emoji       String   @default("🎣")
+  // Difficulte pedagogique pour aider l'admin a choisir
+  difficulty  String   @default("medium") // easy | medium | hard
+  // Canal d'envoi : pour l'instant juste EMAIL (SMS / QUISHING ont leur
+  // propre schema). Champ string pour evolutivite future.
+  channel     String   @default("EMAIL")
+  // Contenu du mail piege
+  emailSubject  String
+  emailFromName String  @default("Service IT")
+  emailFromAddr String
+  // HTML inline compatible Outlook/Gmail. Accepte les placeholders
+  // {firstName} et {trackingUrl} qui sont remplaces au lancement.
+  emailHtml     String
+  // Signaux pedagogiques affiches sur la landing post-clic. Array de
+  // strings, sauvegarde en Json pour souplesse.
+  markers       Json     @default("[]")
+  // Module de remediation flash associe (saison + episode slug)
+  remediationSaisonSlug      String?
+  remediationEpisodeSlug     String?
+  remediationLabel           String?
+  remediationDurationMinutes Int?    @default(2)
+  // Landing page custom (Phase 2 Phishing Engine v2, juin 2026)
+  // Si non null : la landing /phishing/[token] affichera CETTE fausse page
+  // de login dans une iframe sandbox AU LIEU du fake login generique
+  // (style "Connexion securisee"). Le HTML peut utiliser le placeholder
+  // {submitUrl} qui sera remplace par /api/phishing/submit/[token].
+  // Le tracking funnel (clicked + submitted) continue de fonctionner
+  // exactement comme avant -- on capture juste un visuel different.
+  //
+  // Use cases :
+  //   - Faux portail Microsoft 365 pixel-perfect pour test endgame
+  //   - Faux portail RH interne (lookalike du SSO entreprise)
+  //   - Faux site banque pour tester la cible finance
+  //
+  // Securite : iframe sandbox="" (no allow-scripts) cote rendering pour
+  // empecher l'admin (ou l'IA Red Team) d'injecter du JS malicieux qui
+  // pourrait exfiltrer les credentials hors de notre endpoint /submit.
+  landingFakeHtml String?
+  // Titre affiche au-dessus de l'iframe landing custom, ex: "Microsoft 365"
+  landingTitle    String?
+  // Soft-delete : isActive=false n'apparait plus dans le selecteur mais
+  // l'historique des PhishingCampaign avec ce template reste consultable.
+  isActive   Boolean  @default(true)
+  // Audit minimal
+  createdBy  String?  // userId qui a cree (null pour platform-wide seedes)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  tenant Tenant? @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, isActive])
+  @@index([slug])
+}
+
+// =====================================================
+// PHISHING RECIPIENT LIST (Phase 3 Phishing Engine v2, mai 2026)
+// =====================================================
+// Liste ad-hoc de destinataires pour campagnes phishing, alternative aux
+// ciblages par Group/service existants. Permet d'importer un CSV de
+// destinataires externes a l'organisation officielle (ex: campagne sur
+// un sous-ensemble de prestataires, sur un service en cours de creation,
+// sur un panel de test cyber-aware...).
+//
+// LIEN OPTIONNEL AVEC USER :
+//   userId nullable : si l'email matche un User en BDD, on lie. Sinon, le
+//   recipient est "externe" (pas de progress academy, juste capture des
+//   metrics phishing). Une campagne mixte (User + externe) est OK.
+
+model PhishingRecipientList {
+  id          String   @id @default(cuid())
+  tenantId    String
+  // Nom lisible pour selection dans le formulaire de campagne
+  name        String
+  // Description libre (ex: "Panel pilote Q3 2026", "Prestataires audit")
+  description String?
+  // Soft-delete : on conserve l'historique des campagnes meme apres
+  // suppression. Une liste "supprimee" n'apparait plus dans le selecteur.
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant     Tenant                       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  recipients PhishingRecipientListEntry[]
+
+  @@index([tenantId])
+}
+
+model PhishingRecipientListEntry {
+  id     String @id @default(cuid())
+  listId String
+  // Email destinataire (lowercase forced cote application). Pas @unique
+  // global -- un meme email peut figurer dans plusieurs listes.
+  email  String
+  // Nom de l'employe pour personnalisation (firstName parsing cote launch).
+  name   String?
+  // Service ou role libre, utilise par les badges et le profiling IA.
+  service String?
+  // Lien optionnel vers User si l'email match. Resolu au import OU plus
+  // tard si l'email est ajoute en BDD apres coup.
+  userId String?
+  createdAt DateTime @default(now())
+
+  list PhishingRecipientList @relation(fields: [listId], references: [id], onDelete: Cascade)
+  user User?                  @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([listId, email]) // dedupe au sein d'une liste
+  @@index([listId])
+  @@index([userId])
+}
+
 model PhishingResult {
   id         String         @id @default(cuid())
   campaignId String
@@ -965,8 +1130,44 @@ model PhishingResult {
   trackToken String         @unique
   status     PhishingStatus @default(SENT)
   sentAt     DateTime       @default(now())
-  clickedAt  DateTime?
-  reportedAt DateTime?
+  // Phase 7a (juin 2026) -- A/B variants :
+  //   "A" = template du PhishingCampaign.template (defaut, retro-compatible)
+  //   "B" = variantBSlug si la campagne en a defini un
+  //   Sur dashboard analytics, on compare les metrics opened/clicked/
+  //   submitted/reported entre A et B pour identifier le template qui
+  //   convertit le mieux (= plus haut taux de clic, le pire cas).
+  variant    String         @default("A")
+  // Phase 7b (juin 2026) -- Drip campaigns :
+  //   dripScheduledAt nullable : si non-null, le mail est prevu pour cette
+  //     date. Le cron /api/cron/phishing-drip ramasse les results dont
+  //     dripScheduledAt <= now() ET mailDispatchedAt IS NULL et envoie.
+  //   mailDispatchedAt nullable : timestamp reel d'envoi du mail via SMTP
+  //     (vs sentAt qui est la creation du result row). Pour les campagnes
+  //     historiques sans drip, mailDispatchedAt = sentAt (envoi immediat).
+  //
+  // Use case : etaler 200 mails sur 7 jours pour eviter la vague "tout le
+  // monde a recu le meme mail bizarre" qui eveille les soupcons et casse
+  // la pedagogie. Les targets sont distribuees en round-robin sur les
+  // batches journaliers (deterministe pour reproductibilite).
+  dripScheduledAt  DateTime?
+  mailDispatchedAt DateTime?
+  // Funnel tracking (Phishing Engine v2, mai 2026) :
+  //   openedAt    : premier GET du pixel tracking (=mail ouvert)
+  //   clickedAt   : premier GET de la landing /phishing/[token]
+  //   submittedAt : premier POST sur /api/phishing/submit/[token] (form fake)
+  //   reportedAt  : signalement via Outlook add-in (orthogonal au funnel)
+  // Tous nullable. Idempotents : on n'ecrit que si null (premier event qui
+  // gagne, evite que des bots ou des proxies de prefetch ne polluent les stats).
+  openedAt    DateTime?
+  clickedAt   DateTime?
+  reportedAt  DateTime?
+  submittedAt DateTime?
+  // Metadata des champs soumis lors d'un SUBMITTED. JAMAIS les valeurs en clair
+  // (sinon on capture des vrais mots de passe -- exposition RGPD + risque legal
+  // enorme). On stocke uniquement {name, type, length} par champ pour permettre
+  // a l'admin de comprendre "mon user a soumis email + password de longueur 12".
+  // Format : { fields: [{ name, type, length }], userAgent, submittedAt }
+  submittedData Json?
 
   campaign PhishingCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
   user     User             @relation(fields: [userId], references: [id], onDelete: Cascade)
