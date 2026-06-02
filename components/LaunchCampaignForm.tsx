@@ -3,16 +3,19 @@
 //
 // Form de lancement de campagne phishing.
 //
-// Ciblage (mai 2026) : 3 modes possibles, mutuellement exclusifs cote UX
+// Ciblage (mai 2026, etendu juin 2026 avec recipient lists) :
+// 4 modes possibles, mutuellement exclusifs cote UX
 // (le form utilise le 1er non vide dans cet ordre) :
-//   1. Groupes metier (compta, rh, dev, comex...) — recommandé, structuré
-//   2. Service legacy (User.service string libre) — fallback compat
-//   3. Tous les apprenants actifs — par defaut
+//   1. Recipient list (juin 2026 Phase 3 v2) — cohorte CSV importee
+//   2. Groupes metier (compta, rh, dev, comex...) — recommandé, structuré
+//   3. Service legacy (User.service string libre) — fallback compat
+//   4. Tous les apprenants actifs — par defaut
 
 import { useTransition, useState } from "react";
 import { launchCampaign } from "@/app/admin/phishing/actions";
 import { PHISHING_TEMPLATES } from "@/lib/phishing";
 import clsx from "clsx";
+import Link from "next/link";
 
 export type GroupOption = {
   slug: string;
@@ -21,16 +24,26 @@ export type GroupOption = {
   memberCount: number;
 };
 
+export type RecipientListOption = {
+  id: string;
+  name: string;
+  description: string | null;
+  recipientCount: number;
+};
+
 export default function LaunchCampaignForm({
   services,
   groups,
+  lists = [],
 }: {
   services: string[];
   groups: GroupOption[];
+  lists?: RecipientListOption[];
 }) {
   const [pending, startTransition] = useTransition();
   const [selected, setSelected] = useState<string>("FAKE_MICROSOFT");
   const [selectedGroups, setSelectedGroups] = useState<Set<string>>(new Set());
+  const [selectedListId, setSelectedListId] = useState<string>("");
   const [feedback, setFeedback] = useState<{
     type: "ok" | "err";
     msg: string;
@@ -48,16 +61,22 @@ export default function LaunchCampaignForm({
   const onSubmit = async (formData: FormData) => {
     setFeedback(null);
     formData.set("template", selected);
-    // Le multi-select des groupes : on ajoute un entry par groupe selectionne
-    // (FormData.getAll("groupSlugs") cote serveur retournera l'array)
-    selectedGroups.forEach((slug) => formData.append("groupSlugs", slug));
+    // Priorite UX : list > groups > service > all. Le serveur respecte le
+    // meme ordre via les champs FormData : si listId est present, le reste
+    // est ignore (cf. actions.ts launchCampaign).
+    if (selectedListId) {
+      formData.set("listId", selectedListId);
+    } else {
+      // Pas de liste : on transmet les groupes selectionnes
+      selectedGroups.forEach((slug) => formData.append("groupSlugs", slug));
+    }
     startTransition(async () => {
       try {
         const res = await launchCampaign(formData);
         if (!res.ok) {
           const msgByError: Record<string, string> = {
             no_targets:
-              "Aucune cible trouvée. Vérifie ton ciblage (groupes, service, ou utilisateurs actifs).",
+              "Aucune cible trouvée. Vérifie ton ciblage (liste, groupes, service, ou utilisateurs actifs).",
             invalid_template: "Template invalide.",
             smtp_not_configured:
               "Aucun SMTP configuré pour ton tenant. Va sur /admin/smtp pour le paramétrer (ou nous contacter pour une prestation au forfait).",
@@ -65,6 +84,8 @@ export default function LaunchCampaignForm({
               "Erreur de déchiffrement du password SMTP. Re-saisis-le dans /admin/smtp.",
             unauthorized: "Session expirée, reconnecte-toi.",
             forbidden: "Tu n'as pas les droits pour lancer une campagne.",
+            list_not_found:
+              "Liste introuvable ou supprimée. Vérifie sur /admin/phishing/lists.",
           };
           setFeedback({
             type: "err",
@@ -72,20 +93,24 @@ export default function LaunchCampaignForm({
           });
           return;
         }
+        // Phase 3 v2 : message specifique si entries externes skippees
+        const skipNote = res.skippedExternal
+          ? ` (${res.skippedExternal} email${res.skippedExternal > 1 ? "s" : ""} de la liste ignoré${res.skippedExternal > 1 ? "s" : ""} car non rattaché${res.skippedExternal > 1 ? "s" : ""} à un compte utilisateur)`
+          : "";
         if (res.simulated) {
           setFeedback({
             type: "ok",
-            msg: `🎭 Mode démo : campagne créée vers ${res.targets} cible${res.targets > 1 ? "s" : ""} (pas d'envoi réel).`,
+            msg: `🎭 Mode démo : campagne créée vers ${res.targets} cible${res.targets > 1 ? "s" : ""} (pas d'envoi réel)${skipNote}.`,
           });
         } else if (res.failed > 0) {
           setFeedback({
             type: "ok",
-            msg: `🚀 Campagne lancée : ${res.sent}/${res.targets} envoyé(s), ${res.failed} échec(s). Vérifie /admin/smtp si beaucoup d'échecs.`,
+            msg: `🚀 Campagne lancée : ${res.sent}/${res.targets} envoyé(s), ${res.failed} échec(s)${skipNote}. Vérifie /admin/smtp si beaucoup d'échecs.`,
           });
         } else {
           setFeedback({
             type: "ok",
-            msg: `🚀 Campagne lancée : ${res.sent} email${res.sent > 1 ? "s" : ""} envoyé${res.sent > 1 ? "s" : ""} via ton SMTP.`,
+            msg: `🚀 Campagne lancée : ${res.sent} email${res.sent > 1 ? "s" : ""} envoyé${res.sent > 1 ? "s" : ""} via ton SMTP${skipNote}.`,
           });
         }
       } catch (e: unknown) {
@@ -150,9 +175,49 @@ export default function LaunchCampaignForm({
         </div>
       </div>
 
-      {/* CIBLAGE PAR GROUPES (recommandé) */}
-      {groups.length > 0 && (
+      {/* CIBLAGE PAR RECIPIENT LIST (Phase 3 v2, juin 2026) */}
+      {lists.length > 0 && (
         <div>
+          <label className="text-sm font-medium text-gray-700 block mb-2">
+            Cibler une liste de destinataires
+            <span className="ml-2 text-xs font-normal text-gray-500">
+              (cohorte ad-hoc importee via CSV — prioritaire si selectionnee)
+            </span>
+          </label>
+          <select
+            value={selectedListId}
+            onChange={(e) => setSelectedListId(e.target.value)}
+            className="w-full rounded-xl border-2 border-gray-200 p-3 focus:border-accent-500 focus:outline-none text-sm bg-white"
+          >
+            <option value="">— Pas de liste, utiliser le ciblage ci-dessous —</option>
+            {lists.map((l) => (
+              <option key={l.id} value={l.id}>
+                📋 {l.name} ({l.recipientCount} destinataire
+                {l.recipientCount > 1 ? "s" : ""})
+                {l.description ? ` — ${l.description}` : ""}
+              </option>
+            ))}
+          </select>
+          {selectedListId && (
+            <p className="text-xs text-accent-700 mt-2 font-medium">
+              👉 Cette liste sera ciblée en priorité. Les autres modes
+              (groupes / service) seront ignorés.
+            </p>
+          )}
+          <p className="text-xs text-gray-500 italic mt-1">
+            <Link
+              href="/admin/phishing/lists"
+              className="underline hover:text-accent-500"
+            >
+              Gérer mes listes →
+            </Link>
+          </p>
+        </div>
+      )}
+
+      {/* CIBLAGE PAR GROUPES (recommandé). Desactive si une liste est selectionnee. */}
+      {groups.length > 0 && (
+        <div className={selectedListId ? "opacity-40 pointer-events-none" : ""}>
           <label className="text-sm font-medium text-gray-700 block mb-2">
             Cibler des groupes métier
             <span className="ml-2 text-xs font-normal text-gray-500">
@@ -203,17 +268,19 @@ export default function LaunchCampaignForm({
         </div>
       )}
 
-      {/* CIBLAGE LEGACY PAR SERVICE (string libre) */}
-      <details className="text-sm">
+      {/* CIBLAGE LEGACY PAR SERVICE (string libre). Desactive si liste OU groupes selectionnes. */}
+      <details className={`text-sm ${selectedListId ? "opacity-40 pointer-events-none" : ""}`}>
         <summary className="cursor-pointer text-gray-600 hover:text-gray-800">
-          {selectedGroups.size > 0
-            ? "Ou cibler par service (legacy, ignoré si des groupes sont sélectionnés)"
-            : "Ou cibler par service (legacy)"}
+          {selectedListId
+            ? "Ou cibler par service (ignoré si une liste est sélectionnée)"
+            : selectedGroups.size > 0
+              ? "Ou cibler par service (legacy, ignoré si des groupes sont sélectionnés)"
+              : "Ou cibler par service (legacy)"}
         </summary>
         <div className="mt-2">
           <select
             name="service"
-            disabled={selectedGroups.size > 0}
+            disabled={selectedGroups.size > 0 || !!selectedListId}
             className="w-full rounded-xl border-2 border-gray-200 p-3 focus:border-accent-500 focus:outline-none text-sm bg-white disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <option value="">Tous les collaborateurs actifs</option>

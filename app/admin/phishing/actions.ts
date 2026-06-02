@@ -42,6 +42,8 @@ export type LaunchCampaignResult =
       sent: number;
       failed: number;
       simulated: boolean;
+      /** Phase 3 v2 : nb d'entries de la liste externes (sans User match) ignorees */
+      skippedExternal?: number;
     }
   | {
       ok: false;
@@ -51,7 +53,8 @@ export type LaunchCampaignResult =
         | "smtp_not_configured"
         | "smtp_decrypt_failed"
         | "unauthorized"
-        | "forbidden";
+        | "forbidden"
+        | "list_not_found";
       message?: string;
     };
 
@@ -79,12 +82,68 @@ export async function launchCampaign(
     .map((v) => String(v))
     .filter((s) => s.length > 0);
 
-  // Resolution des cibles : groupes > service > tous
-  let targets: LaunchTarget[];
-  let targetingMode: "groups" | "service" | "all" = "all";
-  let targetingDetail: string | undefined;
+  // Phase 3 v2 (juin 2026) : ciblage par recipient list. Priorite la plus haute.
+  // Permet de cibler une cohorte ad-hoc importee via CSV (panel pilote,
+  // prestataires, nouveaux arrivants...). Cf. /admin/phishing/lists.
+  const listId = String(formData.get("listId") ?? "").trim();
 
-  if (groupSlugs.length > 0) {
+  // Resolution des cibles : list > groupes > service > tous
+  let targets: LaunchTarget[];
+  let targetingMode: "list" | "groups" | "service" | "all" = "all";
+  let targetingDetail: string | undefined;
+  let skippedExternal = 0;
+
+  if (listId) {
+    // Verifie que la liste appartient bien au tenant (defense en profondeur
+    // contre URL/form tampering qui injecterait un listId d'un autre tenant)
+    const list = await db.phishingRecipientList.findFirst({
+      where: { id: listId, tenantId, isActive: true },
+      select: { id: true, name: true },
+    });
+    if (!list) {
+      return {
+        ok: false,
+        error: "list_not_found",
+        message:
+          "Liste introuvable ou supprimee. Verifie sur /admin/phishing/lists.",
+      };
+    }
+
+    // Charge les entries de la liste. On ne garde QUE celles qui ont un
+    // userId resolu (match avec un User du tenant) -- les emails externes
+    // sans User en BDD sont skippes car launchPhishingCampaign attend des
+    // User.id valides (cf. note dans lib/phishing/launch.ts).
+    // TODO ulterieur : supporter les destinataires externes en stockant
+    // les PhishingResult sans userId (nullable) -- demande migration schema.
+    const entries = await db.phishingRecipientListEntry.findMany({
+      where: { listId },
+      select: {
+        userId: true,
+        email: true,
+        name: true,
+        user: {
+          select: { id: true, email: true, name: true, isActive: true },
+        },
+      },
+    });
+
+    targets = [];
+    for (const e of entries) {
+      if (!e.user || !e.user.isActive) {
+        skippedExternal++;
+        continue;
+      }
+      targets.push({
+        id: e.user.id,
+        email: e.user.email,
+        // Prefere le name de la liste (souvent plus a jour) sinon User.name
+        name: e.name ?? e.user.name,
+      });
+    }
+
+    targetingMode = "list";
+    targetingDetail = `list:${list.name}`;
+  } else if (groupSlugs.length > 0) {
     targets = await db.user.findMany({
       where: {
         tenantId,
@@ -137,6 +196,13 @@ export async function launchCampaign(
   });
 
   revalidatePath("/admin/phishing");
+
+  // Phase 3 v2 : si la cible etait une recipient list, on remonte aussi le
+  // nb d'entries skippees (externes sans User match) pour que le form
+  // affiche un message clair "X envoyes, Y ignores car emails externes".
+  if (result.ok && skippedExternal > 0) {
+    return { ...result, skippedExternal };
+  }
   return result;
 }
 

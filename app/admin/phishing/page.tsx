@@ -46,7 +46,7 @@ export default async function AdminPhishingPage() {
     );
   }
 
-  const [services, campaigns, smtpCfg, groupsRaw] = await Promise.all([
+  const [services, campaigns, smtpCfg, groupsRaw, listsRaw] = await Promise.all([
     db.user.findMany({
       where: { tenantId, isActive: true },
       select: { service: true },
@@ -83,6 +83,18 @@ export default async function AdminPhishingPage() {
         },
       },
     }),
+    // Phase 3 v2 (juin 2026) : recipient lists actives pour le selecteur
+    // du form de lancement. Cf. /admin/phishing/lists pour la gestion.
+    db.phishingRecipientList.findMany({
+      where: { tenantId, isActive: true },
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        _count: { select: { recipients: true } },
+      },
+    }),
   ]);
 
   const distinctServices = services
@@ -98,6 +110,17 @@ export default async function AdminPhishingPage() {
       name: g.name,
       emoji: g.emoji,
       memberCount: g._count.members,
+    }));
+
+  // Phase 3 v2 : on masque aussi les listes vides (0 destinataire) pour
+  // eviter de proposer une selection inutile.
+  const listOptions = listsRaw
+    .filter((l) => l._count.recipients > 0)
+    .map((l) => ({
+      id: l.id,
+      name: l.name,
+      description: l.description,
+      recipientCount: l._count.recipients,
     }));
 
   return (
@@ -189,6 +212,7 @@ export default async function AdminPhishingPage() {
           <LaunchCampaignForm
             services={distinctServices}
             groups={groupOptions}
+            lists={listOptions}
           />
         </AdminSection>
 
