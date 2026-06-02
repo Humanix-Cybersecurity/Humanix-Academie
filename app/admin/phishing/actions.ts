@@ -46,6 +46,8 @@ export type LaunchCampaignResult =
       skippedExternal?: number;
       /** Phase 7a : split A/B (a + b = sent) si templateBId fourni */
       variantSplit?: { a: number; b: number };
+      /** Phase 7b : nb de results en attente d'envoi differe (cron drip) */
+      dripPending?: number;
     }
   | {
       ok: false;
@@ -79,6 +81,14 @@ export async function launchCampaign(
   // Phase 7a (juin 2026) : A/B variants. Si l'admin a coche "Test A/B" et
   // choisi un 2eme template, on transmet le templateBId au helper.
   const templateBId = String(formData.get("templateB") ?? "").trim() || undefined;
+  // Phase 7b (juin 2026) : drip campaigns. Si l'admin a coche "Etaler les
+  // envois" avec un nombre de jours, on transmet la strategy au helper.
+  const dripDaysRaw = String(formData.get("dripDays") ?? "").trim();
+  const dripDays = dripDaysRaw ? parseInt(dripDaysRaw, 10) : NaN;
+  const dripStrategy =
+    Number.isFinite(dripDays) && dripDays >= 1
+      ? { dripDays: Math.min(30, dripDays) }
+      : undefined;
   const targetService = (formData.get("service") as string) || "";
 
   // Nouveau ciblage par groupes (mai 2026). Multi-select dans le form.
@@ -197,6 +207,7 @@ export async function launchCampaign(
     tenantId,
     templateId,
     templateBId, // Phase 7a
+    dripStrategy, // Phase 7b
     targets,
     targetingMode,
     targetingDetail,
