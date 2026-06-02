@@ -45,6 +45,7 @@ import {
 } from "@prisma/client";
 import { SHOP_CATALOG } from "@/lib/shop";
 import { ACHIEVEMENTS_CATALOG } from "@/lib/achievements/catalog";
+import { PHISHING_TEMPLATES } from "@/lib/phishing";
 import { loadCatalogSaisons } from "@/prisma/seed-data-loader";
 import {
   rewardsFor,
@@ -62,6 +63,8 @@ export type SeedCatalogResult = {
   episodes: number;
   shopItems: number;
   achievements: number;
+  /** Phase 0 (juin 2026) : templates phishing platform-wide migres en BDD */
+  phishingTemplates: number;
   catalogSource: "commercial" | "demo";
   durationMs: number;
   communityTenantSlug: string;
@@ -214,7 +217,66 @@ export async function seedCatalog(
     });
   }
 
-  // ----- 4. Tenant Communaute -----
+  // ----- 4. Phishing Email Templates (platform-wide, juin 2026) -----
+  // Migration des 3 templates hardcoded de lib/phishing.ts vers la BDD.
+  // tenantId=null => disponibles pour tous les tenants. Les admins
+  // pourront override par slug (PhishingEmailTemplate @@unique(tenantId,slug)).
+  //
+  // Astuce de migration : on appelle emailHtml(firstName, trackingUrl) avec
+  // des PLACEHOLDERS string ("{firstName}" / "{trackingUrl}"). Comme ce
+  // sont des strings truthy non vides, les expressions defensives type
+  // `${firstName || "Utilisateur"}` retournent bien "{firstName}". Le HTML
+  // resultant contient les placeholders au bon endroit, pret pour le
+  // remplacement au moment du lancement.
+  for (const tpl of PHISHING_TEMPLATES) {
+    const bodyTemplate = tpl.emailHtml("{firstName}", "{trackingUrl}");
+    await prisma.phishingEmailTemplate.upsert({
+      where: { tenantId_slug: { tenantId: null as unknown as string, slug: tpl.id } },
+      // NOTE Prisma : la composite unique sur (tenantId, slug) avec tenantId
+      // nullable demande un cast `null as unknown as string` car le client
+      // genere n'accepte pas formellement null dans le where unique. C'est
+      // un workaround connu (https://github.com/prisma/prisma/issues/3197).
+      // Le SQL genere distingue correctement les NULL via IS NULL en pratique.
+      update: {
+        name: tpl.name,
+        description: tpl.description,
+        emoji: tpl.emoji,
+        difficulty: tpl.difficulty,
+        channel: "EMAIL",
+        emailSubject: tpl.emailSubject,
+        emailFromAddr: tpl.emailFrom,
+        emailFromName: tpl.emailFrom.split("@")[0] ?? "Service IT",
+        emailHtml: bodyTemplate,
+        markers: tpl.markers,
+        remediationSaisonSlug: tpl.remediationEpisode?.saisonSlug,
+        remediationEpisodeSlug: tpl.remediationEpisode?.episodeSlug,
+        remediationLabel: tpl.remediationEpisode?.label,
+        remediationDurationMinutes: tpl.remediationEpisode?.durationMinutes,
+        isActive: true,
+      },
+      create: {
+        tenantId: null,
+        slug: tpl.id,
+        name: tpl.name,
+        description: tpl.description,
+        emoji: tpl.emoji,
+        difficulty: tpl.difficulty,
+        channel: "EMAIL",
+        emailSubject: tpl.emailSubject,
+        emailFromAddr: tpl.emailFrom,
+        emailFromName: tpl.emailFrom.split("@")[0] ?? "Service IT",
+        emailHtml: bodyTemplate,
+        markers: tpl.markers,
+        remediationSaisonSlug: tpl.remediationEpisode?.saisonSlug,
+        remediationEpisodeSlug: tpl.remediationEpisode?.episodeSlug,
+        remediationLabel: tpl.remediationEpisode?.label,
+        remediationDurationMinutes: tpl.remediationEpisode?.durationMinutes,
+        isActive: true,
+      },
+    });
+  }
+
+  // ----- 5. Tenant Communaute -----
   // Unique tenant non-payant de la plateforme cloud, hebergeant tous les
   // LEARNERs gratuits. Toujours seede (prod ET demo). Cf. lib/tenant-community.ts.
   await prisma.tenant.upsert({
@@ -236,6 +298,7 @@ export async function seedCatalog(
     episodes: episodeRecords.size,
     shopItems: SHOP_CATALOG.length,
     achievements: ACHIEVEMENTS_CATALOG.length,
+    phishingTemplates: PHISHING_TEMPLATES.length,
     catalogSource,
     durationMs: Date.now() - start,
     communityTenantSlug: COMMUNITY_TENANT_SLUG,

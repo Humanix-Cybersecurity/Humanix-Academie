@@ -22,6 +22,8 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import SmtpConfigForm from "./SmtpConfigForm";
+import DeliverabilityCheck from "./DeliverabilityCheck";
+import { extractDomainFromEmail } from "@/lib/smtp/dns-auth-check";
 
 export const dynamic = "force-dynamic";
 
@@ -186,6 +188,15 @@ export default async function SmtpConfigPage() {
 
       {/* ===== FORMULAIRE ===== */}
       <SmtpConfigForm initial={cfg} />
+
+      {/* ===== DELIVERABILITY (Phase 6 Phishing Engine v2, juin 2026) =====
+          Affiche un check SPF/DKIM/DMARC sur le domaine du fromEmail.
+          Visible uniquement si fromEmail configure -- sinon rien a checker. */}
+      {cfg?.fromEmail && (
+        <DeliverabilityCheck
+          domain={extractDomainFromEmail(cfg.fromEmail) ?? ""}
+        />
+      )}
 
       {/* ===== INFO LEGALE ===== */}
       <section className="rounded-xl border border-dashed border-gray-300 dark:border-slate-700 bg-gray-50/60 dark:bg-slate-900/60 px-4 py-4 text-xs text-gray-600 dark:text-gray-400 leading-relaxed space-y-2">

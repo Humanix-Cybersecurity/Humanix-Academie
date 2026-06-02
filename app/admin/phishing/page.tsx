@@ -46,7 +46,7 @@ export default async function AdminPhishingPage() {
     );
   }
 
-  const [services, campaigns, smtpCfg, groupsRaw] = await Promise.all([
+  const [services, campaigns, smtpCfg, groupsRaw, listsRaw] = await Promise.all([
     db.user.findMany({
       where: { tenantId, isActive: true },
       select: { service: true },
@@ -83,6 +83,18 @@ export default async function AdminPhishingPage() {
         },
       },
     }),
+    // Phase 3 v2 (juin 2026) : recipient lists actives pour le selecteur
+    // du form de lancement. Cf. /admin/phishing/lists pour la gestion.
+    db.phishingRecipientList.findMany({
+      where: { tenantId, isActive: true },
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        _count: { select: { recipients: true } },
+      },
+    }),
   ]);
 
   const distinctServices = services
@@ -98,6 +110,17 @@ export default async function AdminPhishingPage() {
       name: g.name,
       emoji: g.emoji,
       memberCount: g._count.members,
+    }));
+
+  // Phase 3 v2 : on masque aussi les listes vides (0 destinataire) pour
+  // eviter de proposer une selection inutile.
+  const listOptions = listsRaw
+    .filter((l) => l._count.recipients > 0)
+    .map((l) => ({
+      id: l.id,
+      name: l.name,
+      description: l.description,
+      recipientCount: l._count.recipients,
     }));
 
   return (
@@ -118,7 +141,7 @@ export default async function AdminPhishingPage() {
         />
 
         {/* Cross-sell IA Mistral */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <CrossSellCard
             badge="🇫🇷 IA souveraine"
             title="Générer un mail sur-mesure en 5 secondes"
@@ -135,6 +158,69 @@ export default async function AdminPhishingPage() {
             href="/admin/phishing/personalize"
             icon="🎯"
           />
+          <CrossSellCard
+            badge="🎯 Red team IA"
+            title="Scénario phishing complet pour ton secteur"
+            description="Décris ton contexte (secteur, attaque vue récemment, cibles). Mistral génère subject + sender + corps HTML + signaux pédagogiques."
+            cta="Mode red team"
+            href="/admin/phishing/redteam"
+            icon="🎯"
+          />
+        </div>
+
+        {/* Liens : vulnerabilites IA + recipient lists (Phase 3 + 5c) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="rounded-xl border border-violet-200 dark:border-violet-800 bg-gradient-to-br from-violet-50 to-white dark:from-violet-950/30 dark:to-slate-900 p-4 flex items-center justify-between gap-4 flex-wrap">
+            <div>
+              <p className="text-xs uppercase tracking-widest font-bold text-violet-700 dark:text-violet-300 mb-1">
+                🎯 Vulnerabilites IA par apprenant
+              </p>
+              <p className="text-sm text-gray-700 dark:text-gray-300">
+                Profil narratif Mistral pour identifier qui pousser, qui valoriser, qui faire un debrief 1:1.
+              </p>
+            </div>
+            <a
+              href="/admin/phishing/vulnerable-users"
+              className="btn-secondary text-sm whitespace-nowrap"
+            >
+              Voir →
+            </a>
+          </div>
+
+          <div className="rounded-xl border border-cyan-200 dark:border-cyan-800 bg-gradient-to-br from-cyan-50 to-white dark:from-cyan-950/30 dark:to-slate-900 p-4 flex items-center justify-between gap-4 flex-wrap">
+            <div>
+              <p className="text-xs uppercase tracking-widest font-bold text-cyan-700 dark:text-cyan-300 mb-1">
+                📋 Listes de destinataires
+              </p>
+              <p className="text-sm text-gray-700 dark:text-gray-300">
+                Importe un CSV pour cibler une cohorte custom (panel pilote, prestataires, nouveaux arrivants).
+              </p>
+            </div>
+            <a
+              href="/admin/phishing/lists"
+              className="btn-secondary text-sm whitespace-nowrap"
+            >
+              Gerer →
+            </a>
+          </div>
+        </div>
+
+        {/* Lien vers gestion des templates custom (Phase 0) */}
+        <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950/30 dark:to-slate-900 p-4 flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <p className="text-xs uppercase tracking-widest font-bold text-emerald-700 dark:text-emerald-300 mb-1">
+              ✉️ Templates email custom
+            </p>
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              Crée tes propres templates ou sauvegarde les scenarios IA Red Team. Override possible des templates platform-wide.
+            </p>
+          </div>
+          <a
+            href="/admin/phishing/templates"
+            className="btn-secondary text-sm whitespace-nowrap"
+          >
+            Gerer →
+          </a>
         </div>
 
         <AdminSection
@@ -144,6 +230,7 @@ export default async function AdminPhishingPage() {
           <LaunchCampaignForm
             services={distinctServices}
             groups={groupOptions}
+            lists={listOptions}
           />
         </AdminSection>
 
