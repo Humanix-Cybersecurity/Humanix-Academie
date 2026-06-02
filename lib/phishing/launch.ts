@@ -58,6 +58,20 @@ export type LaunchOptions = {
    */
   templateBId?: string;
   targets: LaunchTarget[];
+  /**
+   * Phase 7b (juin 2026) -- Drip campaigns.
+   * Si fourni : etale les envois sur N jours au lieu de tout d'un coup.
+   * Repartition round-robin deterministe par index target -- ordre stable
+   * et reproductible.
+   *   - dripDays : nombre de jours d'etalement (ex: 7 = J0 a J+6)
+   *   - dripBatchesPerDay : nombre de batches par jour (defaut: 1)
+   * Exemple : 200 targets sur 7 jours @ 1 batch/jour = ~28 mails par jour.
+   * Si non fourni : envoi immediat de tous les mails (comportement legacy).
+   */
+  dripStrategy?: {
+    dripDays: number;
+    dripBatchesPerDay?: number;
+  };
   /** Description de la cohorte ciblee, pour traçabilité dans Event.payload */
   targetingMode?: "all" | "service" | "groups" | "users" | "list";
   targetingDetail?: string; // ex: "groups:rh,compta" ou "service:Finance" ou "list:<name>"
@@ -73,6 +87,12 @@ export type LaunchResult =
       simulated: boolean;
       /** Phase 7a : split A/B si templateBId fourni */
       variantSplit?: { a: number; b: number };
+      /**
+       * Phase 7b : nb de targets en attente d'envoi differe (dripScheduledAt
+       * dans le futur). Ces mails seront envoyes par le cron
+       * /api/cron/phishing-drip. sent + dripPending = targets.
+       */
+      dripPending?: number;
     }
   | {
       ok: false;
@@ -100,10 +120,45 @@ function assignVariant(userId: string): "A" | "B" {
   return hash % 2 === 0 ? "A" : "B";
 }
 
+/**
+ * Phase 7b -- calcule le dripScheduledAt pour chaque target en
+ * distribution round-robin sur N jours et M batches/jour.
+ *
+ * Round-robin deterministe : on assigne targets[0]=batch0, targets[1]=batch1,
+ * ..., targets[batches]=batch0+1day, etc. Permet une distribution uniforme
+ * meme si la liste est triee (par service, alphabetique, etc.) -- evite
+ * que tous les "Compta" soient le meme jour.
+ *
+ * Le batch 0 = MAINTENANT (envoi immediat). Les batches suivants sont
+ * planifies pour le cron.
+ */
+function computeDripSchedule(
+  targetCount: number,
+  dripDays: number,
+  batchesPerDay: number,
+): Date[] {
+  const slots: Date[] = [];
+  const totalBatches = Math.max(1, dripDays * batchesPerDay);
+  // Repartition de targetCount items sur totalBatches batches en round-robin.
+  // Le 1er batch (index 0) reste a "maintenant" pour preserve l'experience
+  // "ya un mail piege qui circule" cote admin (sinon l'admin ne voit rien
+  // avant J+1 et doute du fonctionnement).
+  const baseTime = Date.now();
+  const slotDurationMs = (dripDays * 24 * 3600 * 1000) / totalBatches;
+
+  for (let i = 0; i < targetCount; i++) {
+    const batchIdx = i % totalBatches;
+    // batch 0 = maintenant, batch N = baseTime + N * slotDuration
+    const ts = baseTime + batchIdx * slotDurationMs;
+    slots.push(new Date(ts));
+  }
+  return slots;
+}
+
 export async function launchPhishingCampaign(
   opts: LaunchOptions,
 ): Promise<LaunchResult> {
-  const { tenantId, templateId, templateBId, targets } = opts;
+  const { tenantId, templateId, templateBId, targets, dripStrategy } = opts;
 
   // Phase 0 (juin 2026) : resolution unifiee via lib/phishing/email-template.ts
   // qui regarde BDD tenant-custom > BDD platform-wide > hardcoded fallback.
@@ -155,9 +210,20 @@ export async function launchPhishingCampaign(
 
   // Phase 7a : assigne deterministe chaque target A ou B avant create.
   // Si pas de templateBId, tous en variant "A" (defaut historique).
+  // Phase 7b : si dripStrategy fourni, calcule dripScheduledAt par target
+  // en round-robin sur N jours.
+  const dripSchedule = dripStrategy
+    ? computeDripSchedule(
+        targets.length,
+        Math.max(1, Math.min(30, dripStrategy.dripDays)),
+        Math.max(1, Math.min(24, dripStrategy.dripBatchesPerDay ?? 1)),
+      )
+    : null;
+
   const results = await db.$transaction(
-    targets.map((u) => {
+    targets.map((u, idx) => {
       const variant = templateBId ? assignVariant(u.id) : "A";
+      const dripScheduledAt = dripSchedule?.[idx] ?? null;
       return db.phishingResult.create({
         data: {
           campaignId: campaign.id,
@@ -165,20 +231,36 @@ export async function launchPhishingCampaign(
           trackToken: generateTrackingToken(),
           status: "SENT",
           variant,
+          dripScheduledAt,
         },
-        select: { id: true, userId: true, trackToken: true, variant: true },
+        select: {
+          id: true,
+          userId: true,
+          trackToken: true,
+          variant: true,
+          dripScheduledAt: true,
+        },
       });
     }),
   );
 
   let sent = 0;
   let failed = 0;
+  // Phase 7b : results en attente d'envoi differe (dripScheduledAt > now).
+  // Le cron /api/cron/phishing-drip les ramassera plus tard.
+  let dripPending = 0;
+  const nowTs = Date.now();
   if (isDemoMode) {
     sent = results.length;
   } else {
     const baseUrl =
       process.env.NEXT_PUBLIC_APP_URL ?? "https://humanix-academie.fr";
     for (const r of results) {
+      // Skip les results planifies dans le futur -- on les laisse au cron.
+      if (r.dripScheduledAt && r.dripScheduledAt.getTime() > nowTs) {
+        dripPending++;
+        continue;
+      }
       const target = targets.find((t) => t.id === r.userId);
       if (!target) {
         failed++;
@@ -204,6 +286,13 @@ export async function launchPhishingCampaign(
       });
       if (sendResult.ok) {
         sent++;
+        // Phase 7b : trace l'envoi reel (vs sentAt qui est la creation du
+        // row). Permet au cron drip de savoir quels results sont encore
+        // en attente.
+        await db.phishingResult.update({
+          where: { id: r.id },
+          data: { mailDispatchedAt: new Date() },
+        });
       } else {
         failed++;
         // SMTP HS : on stoppe la boucle (pas la peine de tenter les 99
@@ -264,5 +353,6 @@ export async function launchPhishingCampaign(
     failed,
     simulated: isDemoMode,
     variantSplit: templateBId ? { a: variantA, b: variantB } : undefined,
+    dripPending: dripStrategy ? dripPending : undefined,
   };
 }

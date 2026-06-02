@@ -1137,6 +1137,20 @@ model PhishingResult {
   //   submitted/reported entre A et B pour identifier le template qui
   //   convertit le mieux (= plus haut taux de clic, le pire cas).
   variant    String         @default("A")
+  // Phase 7b (juin 2026) -- Drip campaigns :
+  //   dripScheduledAt nullable : si non-null, le mail est prevu pour cette
+  //     date. Le cron /api/cron/phishing-drip ramasse les results dont
+  //     dripScheduledAt <= now() ET mailDispatchedAt IS NULL et envoie.
+  //   mailDispatchedAt nullable : timestamp reel d'envoi du mail via SMTP
+  //     (vs sentAt qui est la creation du result row). Pour les campagnes
+  //     historiques sans drip, mailDispatchedAt = sentAt (envoi immediat).
+  //
+  // Use case : etaler 200 mails sur 7 jours pour eviter la vague "tout le
+  // monde a recu le meme mail bizarre" qui eveille les soupcons et casse
+  // la pedagogie. Les targets sont distribuees en round-robin sur les
+  // batches journaliers (deterministe pour reproductibilite).
+  dripScheduledAt  DateTime?
+  mailDispatchedAt DateTime?
   // Funnel tracking (Phishing Engine v2, mai 2026) :
   //   openedAt    : premier GET du pixel tracking (=mail ouvert)
   //   clickedAt   : premier GET de la landing /phishing/[token]

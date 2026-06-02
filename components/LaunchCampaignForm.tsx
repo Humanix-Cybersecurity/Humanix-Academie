@@ -46,6 +46,10 @@ export default function LaunchCampaignForm({
   // 2eme selecteur de template et on transmet templateB au server action.
   const [abTestEnabled, setAbTestEnabled] = useState(false);
   const [selectedB, setSelectedB] = useState<string>("FAKE_COLISSIMO");
+  // Phase 7b (juin 2026) : drip campaigns. Si dripEnabled : on transmet
+  // dripDays au server action et le cron etalera les envois.
+  const [dripEnabled, setDripEnabled] = useState(false);
+  const [dripDays, setDripDays] = useState(3);
   const [selectedGroups, setSelectedGroups] = useState<Set<string>>(new Set());
   const [selectedListId, setSelectedListId] = useState<string>("");
   const [feedback, setFeedback] = useState<{
@@ -70,6 +74,12 @@ export default function LaunchCampaignForm({
     // variant A et B et envoie le bon template a chaque target.
     if (abTestEnabled && selectedB && selectedB !== selected) {
       formData.set("templateB", selectedB);
+    }
+    // Phase 7b : si drip active, transmet le nombre de jours d'etalement.
+    // Le serveur cree les results avec dripScheduledAt etale en round-robin
+    // et le cron /api/cron/phishing-drip envoie les mails au fur et a mesure.
+    if (dripEnabled && dripDays >= 1) {
+      formData.set("dripDays", String(dripDays));
     }
     // Priorite UX : list > groups > service > all. Le serveur respecte le
     // meme ordre via les champs FormData : si listId est present, le reste
@@ -111,20 +121,24 @@ export default function LaunchCampaignForm({
         const variantNote = res.variantSplit
           ? ` — Split A/B : ${res.variantSplit.a} variant A / ${res.variantSplit.b} variant B`
           : "";
+        // Phase 7b : message specifique si drip active
+        const dripNote = res.dripPending
+          ? ` — ⏱️ ${res.dripPending} mail${res.dripPending > 1 ? "s" : ""} planifie${res.dripPending > 1 ? "s" : ""} pour les prochains jours (envoyes par le cron)`
+          : "";
         if (res.simulated) {
           setFeedback({
             type: "ok",
-            msg: `🎭 Mode démo : campagne créée vers ${res.targets} cible${res.targets > 1 ? "s" : ""} (pas d'envoi réel)${skipNote}${variantNote}.`,
+            msg: `🎭 Mode démo : campagne créée vers ${res.targets} cible${res.targets > 1 ? "s" : ""} (pas d'envoi réel)${skipNote}${variantNote}${dripNote}.`,
           });
         } else if (res.failed > 0) {
           setFeedback({
             type: "ok",
-            msg: `🚀 Campagne lancée : ${res.sent}/${res.targets} envoyé(s), ${res.failed} échec(s)${skipNote}${variantNote}. Vérifie /admin/smtp si beaucoup d'échecs.`,
+            msg: `🚀 Campagne lancée : ${res.sent}/${res.targets} envoyé(s), ${res.failed} échec(s)${skipNote}${variantNote}${dripNote}. Vérifie /admin/smtp si beaucoup d'échecs.`,
           });
         } else {
           setFeedback({
             type: "ok",
-            msg: `🚀 Campagne lancée : ${res.sent} email${res.sent > 1 ? "s" : ""} envoyé${res.sent > 1 ? "s" : ""} via ton SMTP${skipNote}${variantNote}.`,
+            msg: `🚀 Campagne lancée : ${res.sent} email${res.sent > 1 ? "s" : ""} envoyé${res.sent > 1 ? "s" : ""} via ton SMTP${skipNote}${variantNote}${dripNote}.`,
           });
         }
       } catch (e: unknown) {
@@ -232,6 +246,58 @@ export default function LaunchCampaignForm({
                 le test ait du sens.
               </p>
             )}
+          </div>
+        )}
+      </div>
+
+      {/* DRIP CAMPAIGN TOGGLE (Phase 7b, juin 2026)
+          Etale les envois sur N jours pour eviter la "vague" qui eveille
+          les soupcons internes. Distribution round-robin deterministe. */}
+      <div className="rounded-xl border-2 border-dashed border-orange-200 dark:border-orange-800 bg-orange-50/30 dark:bg-orange-950/20 p-3">
+        <label className="flex items-center gap-2 text-sm cursor-pointer">
+          <input
+            type="checkbox"
+            checked={dripEnabled}
+            onChange={(e) => setDripEnabled(e.target.checked)}
+            className="rounded"
+          />
+          <span className="font-bold text-orange-800 dark:text-orange-200">
+            ⏱️ Etaler les envois sur plusieurs jours (drip campaign)
+          </span>
+        </label>
+        {dripEnabled && (
+          <div className="mt-3 space-y-2">
+            <p className="text-xs text-orange-700 dark:text-orange-300">
+              Repartit les envois en round-robin sur N jours. Evite la
+              vague &quot;tout le monde a recu le meme mail bizarre en meme
+              temps&quot; qui casse la pedagogie en open space.
+            </p>
+            <label className="text-xs font-medium text-gray-700 dark:text-gray-300 block">
+              Etalement sur{" "}
+              <strong className="tabular-nums text-orange-700 dark:text-orange-300">
+                {dripDays} jour{dripDays > 1 ? "s" : ""}
+              </strong>{" "}
+              :
+            </label>
+            <input
+              type="range"
+              min={1}
+              max={14}
+              step={1}
+              value={dripDays}
+              onChange={(e) => setDripDays(parseInt(e.target.value, 10))}
+              className="w-full accent-orange-500"
+            />
+            <div className="flex justify-between text-[10px] text-orange-600 dark:text-orange-400">
+              <span>1j (rapide)</span>
+              <span>7j (recommande)</span>
+              <span>14j (max)</span>
+            </div>
+            <p className="text-xs text-orange-700 dark:text-orange-300 italic">
+              Les premieres cibles recoivent immediatement (J0), les
+              suivantes sont planifiees pour le cron qui les envoie au fur
+              et a mesure (/api/cron/phishing-drip, planifie 1x/heure).
+            </p>
           </div>
         )}
       </div>
