@@ -17,6 +17,7 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getTemplate } from "@/lib/phishing";
+import { getEmailTemplateBySlug } from "@/lib/phishing/email-template";
 import { fireWebhook } from "@/lib/webhooks/dispatcher";
 import { triggerCisoLiveSync } from "@/lib/ciso-assistant/live-mode";
 import AskHexExplain from "@/components/AskHexExplain";
@@ -75,6 +76,17 @@ export default async function PhishingLandingPage({
     channel === "QUISHING"
       ? null // quishing utilise QUISHING_TEMPLATES, pas le getTemplate email
       : getTemplate(result.campaign.template);
+  // Phase 2 (juin 2026) : charge aussi le template DB-driven pour recuperer
+  // landingFakeHtml (custom fake login page). Fallback sur null si template
+  // pas migre en DB (cas tests/dev sans seed) -> on retombe sur le fake
+  // login generique ci-dessous.
+  const dbTpl =
+    channel === "EMAIL"
+      ? await getEmailTemplateBySlug(
+          result.campaign.tenantId,
+          result.campaign.template,
+        )
+      : null;
   const quishingTpl =
     channel === "QUISHING"
       ? QUISHING_TEMPLATES[
@@ -409,7 +421,10 @@ export default async function PhishingLandingPage({
           channel === "EMAIL" && (
             <div className="rounded-2xl border-2 border-dashed border-gray-300 dark:border-slate-600 p-5 mb-6 bg-gray-50 dark:bg-slate-900/40">
               <p className="text-xs uppercase tracking-widest font-bold text-gray-500 dark:text-gray-400 mb-2">
-                🪤 Ce que tu aurais vu apres le clic
+                🪤{" "}
+                {dbTpl?.landingTitle
+                  ? `Ce que tu aurais vu : ${dbTpl.landingTitle}`
+                  : "Ce que tu aurais vu apres le clic"}
               </p>
               <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
                 Sur un vrai site de phishing, tu serais arrive sur une fausse
@@ -418,56 +433,89 @@ export default async function PhishingLandingPage({
                 pour vivre l&apos;experience -- on capture seulement le geste,
                 jamais les valeurs.
               </p>
-              <form
-                action={`/api/phishing/submit/${token}`}
-                method="POST"
-                className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-gray-200 dark:border-slate-700 max-w-md mx-auto"
-                autoComplete="off"
-              >
-                <p className="text-center text-lg font-bold text-gray-700 dark:text-gray-200 mb-4">
-                  🔐 Connexion securisee
-                </p>
-                <label
-                  htmlFor="fake-email"
-                  className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1"
-                >
-                  Email professionnel
-                </label>
-                <input
-                  type="email"
-                  id="fake-email"
-                  name="email"
-                  required
-                  placeholder="prenom.nom@entreprise.fr"
+              {/* Phase 2 (juin 2026) : si le template definit une landing
+                  custom, on la rend dans une iframe SANDBOX="" (no
+                  allow-scripts) -- defense en profondeur contre injection JS
+                  d'un admin malveillant ou d'une IA Red Team trompeuse. Le
+                  form du landing custom POST vers /api/phishing/submit qui
+                  capture la metadata (sans valeurs). Sinon : fallback sur le
+                  fake login generique inline. */}
+              {dbTpl?.landingFakeHtml ? (
+                <iframe
+                  // Replace placeholder {submitUrl} par l'URL reelle de submit.
+                  // L'iframe sandbox="" empeche tout autre comportement
+                  // (script, top-navigation, form externe, etc.). Si le form
+                  // du HTML custom utilise method=POST + action={submitUrl},
+                  // le browser fait un POST cross-origin vers notre endpoint
+                  // qui capture la metadata puis redirect 303 vers la landing
+                  // avec ?submitted=1 (visible dans la frame parente apres
+                  // navigation top-level, donc on bypass le sandbox limitation
+                  // via... attendons, sandbox="" empeche top-navigation aussi).
+                  //
+                  // Solution : on autorise UNIQUEMENT allow-forms +
+                  // allow-top-navigation-by-user-activation pour permettre le
+                  // POST + redirect post-submission sur action utilisateur.
+                  // Pas allow-scripts donc JS injecte reste neutralise.
+                  srcDoc={dbTpl.landingFakeHtml.replaceAll(
+                    "{submitUrl}",
+                    `/api/phishing/submit/${token}`,
+                  )}
+                  sandbox="allow-forms allow-top-navigation-by-user-activation"
+                  title={dbTpl.landingTitle ?? "Fausse page de login"}
+                  className="w-full min-h-[400px] rounded-xl border border-gray-300 dark:border-slate-700 bg-white"
+                />
+              ) : (
+                <form
+                  action={`/api/phishing/submit/${token}`}
+                  method="POST"
+                  className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-gray-200 dark:border-slate-700 max-w-md mx-auto"
                   autoComplete="off"
-                  className="w-full px-3 py-2 mb-3 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-                />
-                <label
-                  htmlFor="fake-password"
-                  className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1"
                 >
-                  Mot de passe
-                </label>
-                <input
-                  type="password"
-                  id="fake-password"
-                  name="password"
-                  required
-                  placeholder="••••••••"
-                  autoComplete="new-password"
-                  className="w-full px-3 py-2 mb-4 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-                />
-                <button
-                  type="submit"
-                  className="w-full bg-primary-500 hover:bg-primary-600 text-white font-bold px-4 py-2.5 rounded-lg transition"
-                >
-                  Se connecter
-                </button>
-                <p className="text-[11px] text-center text-gray-500 mt-3 italic">
-                  Aucune valeur n&apos;est enregistree -- on stocke uniquement
-                  le geste (nom et longueur du champ, jamais le contenu).
-                </p>
-              </form>
+                  <p className="text-center text-lg font-bold text-gray-700 dark:text-gray-200 mb-4">
+                    🔐 Connexion securisee
+                  </p>
+                  <label
+                    htmlFor="fake-email"
+                    className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1"
+                  >
+                    Email professionnel
+                  </label>
+                  <input
+                    type="email"
+                    id="fake-email"
+                    name="email"
+                    required
+                    placeholder="prenom.nom@entreprise.fr"
+                    autoComplete="off"
+                    className="w-full px-3 py-2 mb-3 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  />
+                  <label
+                    htmlFor="fake-password"
+                    className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1"
+                  >
+                    Mot de passe
+                  </label>
+                  <input
+                    type="password"
+                    id="fake-password"
+                    name="password"
+                    required
+                    placeholder="••••••••"
+                    autoComplete="new-password"
+                    className="w-full px-3 py-2 mb-4 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  />
+                  <button
+                    type="submit"
+                    className="w-full bg-primary-500 hover:bg-primary-600 text-white font-bold px-4 py-2.5 rounded-lg transition"
+                  >
+                    Se connecter
+                  </button>
+                  <p className="text-[11px] text-center text-gray-500 mt-3 italic">
+                    Aucune valeur n&apos;est enregistree -- on stocke uniquement
+                    le geste (nom et longueur du champ, jamais le contenu).
+                  </p>
+                </form>
+              )}
             </div>
           )}
 
