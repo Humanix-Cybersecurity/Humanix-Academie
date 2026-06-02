@@ -144,3 +144,28 @@ export const PHISHING_TEMPLATES: PhishingTemplateDef[] = [
 export function getTemplate(id: string): PhishingTemplateDef | undefined {
   return PHISHING_TEMPLATES.find((t) => t.id === id);
 }
+
+/**
+ * Injecte un pixel de tracking 1x1 transparent en fin de HTML de l'email.
+ *
+ * Le `<img>` pointe vers `/api/phishing/track/open/[token]` qui marque
+ * `PhishingResult.openedAt` au premier GET (idempotent). Permet de mesurer
+ * le taux d'OPENED du funnel (sent -> opened -> clicked -> submitted).
+ *
+ * Caveat : les clients mail modernes (Gmail, Outlook 365) pre-fetchent les
+ * images via un proxy serveur (Google Image Proxy, Microsoft Safe Links).
+ * Cela declenche le pixel meme si le user n'a pas reellement ouvert le mail.
+ * On accepte ce faux positif -- impossible a distinguer cote pixel pur.
+ *
+ * Le style display:none ET les dimensions 1x1 garantissent que le pixel
+ * n'altere pas le rendu visuel du mail.
+ */
+export function injectTrackingPixel(
+  emailHtml: string,
+  pixelUrl: string,
+): string {
+  const pixelTag = `<img src="${pixelUrl}" width="1" height="1" alt="" border="0" style="display:none;width:1px;height:1px;border:0;visibility:hidden;opacity:0" />`;
+  // Append en toute fin -- pas besoin de chercher </body> car nos templates
+  // ne sont pas des emails HTML complets (juste des fragments avec <div>).
+  return `${emailHtml}\n${pixelTag}`;
+}
