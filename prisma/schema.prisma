@@ -961,6 +961,14 @@ model PhishingCampaign {
   // demande de Florian pour rendre les campagnes plus credibles (poster avec
   // le nom du Wi-Fi reel de l'entreprise plutot que "Humanix-Guest").
   wifiSsid    String?
+  // Phase 7a (juin 2026) -- A/B variants :
+  //   Slug d'un 2eme template (variant B). Si non null, la campagne envoie
+  //   2 lures differents a moitie / moitie des targets (split deterministe
+  //   par hash(userId) % 2). Permet de mesurer quel template performe
+  //   mieux sur la meme audience.
+  //   Le slug pointe vers PhishingEmailTemplate (tenant-custom OU platform
+  //   wide). Le "variant A" reste le PhishingCampaign.template (enum).
+  variantBSlug String?
   scheduledAt DateTime
   sentAt      DateTime?
   isActive    Boolean          @default(true)
@@ -1122,6 +1130,13 @@ model PhishingResult {
   trackToken String         @unique
   status     PhishingStatus @default(SENT)
   sentAt     DateTime       @default(now())
+  // Phase 7a (juin 2026) -- A/B variants :
+  //   "A" = template du PhishingCampaign.template (defaut, retro-compatible)
+  //   "B" = variantBSlug si la campagne en a defini un
+  //   Sur dashboard analytics, on compare les metrics opened/clicked/
+  //   submitted/reported entre A et B pour identifier le template qui
+  //   convertit le mieux (= plus haut taux de clic, le pire cas).
+  variant    String         @default("A")
   // Funnel tracking (Phishing Engine v2, mai 2026) :
   //   openedAt    : premier GET du pixel tracking (=mail ouvert)
   //   clickedAt   : premier GET de la landing /phishing/[token]

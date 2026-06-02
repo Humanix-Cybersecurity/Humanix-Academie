@@ -44,11 +44,14 @@ export type LaunchCampaignResult =
       simulated: boolean;
       /** Phase 3 v2 : nb d'entries de la liste externes (sans User match) ignorees */
       skippedExternal?: number;
+      /** Phase 7a : split A/B (a + b = sent) si templateBId fourni */
+      variantSplit?: { a: number; b: number };
     }
   | {
       ok: false;
       error:
         | "invalid_template"
+        | "invalid_template_b"
         | "no_targets"
         | "smtp_not_configured"
         | "smtp_decrypt_failed"
@@ -73,6 +76,9 @@ export async function launchCampaign(
   }
 
   const templateId = formData.get("template") as string;
+  // Phase 7a (juin 2026) : A/B variants. Si l'admin a coche "Test A/B" et
+  // choisi un 2eme template, on transmet le templateBId au helper.
+  const templateBId = String(formData.get("templateB") ?? "").trim() || undefined;
   const targetService = (formData.get("service") as string) || "";
 
   // Nouveau ciblage par groupes (mai 2026). Multi-select dans le form.
@@ -190,6 +196,7 @@ export async function launchCampaign(
   const result: LaunchResult = await launchPhishingCampaign({
     tenantId,
     templateId,
+    templateBId, // Phase 7a
     targets,
     targetingMode,
     targetingDetail,

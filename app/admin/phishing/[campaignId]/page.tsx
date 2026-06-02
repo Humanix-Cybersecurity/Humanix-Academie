@@ -73,6 +73,13 @@ export default async function CampaignDetailPage({
     clicked === 0 ? 0 : Math.round((submitted / clicked) * 100);
   const reportRate = sent === 0 ? 0 : Math.round((reported / sent) * 100);
 
+  // Phase 7a (juin 2026) : decomposition A/B si la campagne avait un
+  // variantBSlug. On compute les memes metrics par variant pour comparison.
+  const isAbTest = !!campaign.variantBSlug;
+  const variantStats = isAbTest
+    ? computeVariantStats(campaign.results)
+    : null;
+
   return (
     <>
       <div className="flex items-center gap-2 mb-2">
@@ -156,6 +163,27 @@ export default async function CampaignDetailPage({
         </div>
       </AdminSection>
 
+      {/* PHASE 7a : COMPARAISON A/B (visible seulement si la campagne en
+          avait un) */}
+      {variantStats && campaign.variantBSlug && (
+        <AdminSection title="🧪 Comparaison A/B">
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+            Cette campagne a envoye 2 templates en parallele. Le badge{" "}
+            <span className="text-rose-600 font-bold">Plus piegeant</span>{" "}
+            identifie le template qui a fait plus cliquer / soumettre (le
+            template qui converti le mieux est le PIRE cas pour l&apos;
+            apprenant). Le badge{" "}
+            <span className="text-emerald-600 font-bold">Mieux</span> identifie
+            le template qui a fait plus signaler (vrai reflexe cyber).
+          </p>
+          <VariantComparisonSection
+            stats={variantStats}
+            templateASlug={campaign.template}
+            variantBSlug={campaign.variantBSlug}
+          />
+        </AdminSection>
+      )}
+
       {/* TABLE PER-USER avec timestamps */}
       <AdminSection title={`Résultats par destinataire (${sent})`}>
         {sent === 0 ? (
@@ -167,6 +195,9 @@ export default async function CampaignDetailPage({
                 <tr>
                   <th className="px-3 py-2 font-semibold">Destinataire</th>
                   <th className="px-3 py-2 font-semibold">Service</th>
+                  {isAbTest && (
+                    <th className="px-3 py-2 font-semibold">Variant</th>
+                  )}
                   <th className="px-3 py-2 font-semibold">Statut</th>
                   <th className="px-3 py-2 font-semibold whitespace-nowrap">
                     Envoyé
@@ -202,6 +233,19 @@ export default async function CampaignDetailPage({
                     <td className="px-3 py-2 text-gray-600 dark:text-gray-300">
                       {r.user.service ?? "—"}
                     </td>
+                    {isAbTest && (
+                      <td className="px-3 py-2">
+                        <span
+                          className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                            r.variant === "A"
+                              ? "bg-fuchsia-100 dark:bg-fuchsia-900/40 text-fuchsia-700 dark:text-fuchsia-300"
+                              : "bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300"
+                          }`}
+                        >
+                          {r.variant}
+                        </span>
+                      </td>
+                    )}
                     <td className="px-3 py-2">
                       <StatusPill status={r.status} />
                     </td>
@@ -344,4 +388,149 @@ function formatShortDate(d: Date | null): string {
     hour: "2-digit",
     minute: "2-digit",
   }).format(d);
+}
+
+// =============================================================================
+// PHASE 7a (juin 2026) -- A/B variants stats
+// =============================================================================
+
+type VariantStat = {
+  variant: "A" | "B";
+  sent: number;
+  opened: number;
+  clicked: number;
+  submitted: number;
+  reported: number;
+  openRate: number; // %
+  clickRate: number; // % of sent
+  submitRate: number; // % of sent
+  reportRate: number; // % of sent
+};
+
+type ResultsForStats = Array<{
+  variant: string;
+  openedAt: Date | null;
+  clickedAt: Date | null;
+  submittedAt: Date | null;
+  reportedAt: Date | null;
+}>;
+
+function computeVariantStats(results: ResultsForStats): {
+  A: VariantStat;
+  B: VariantStat;
+} {
+  function buildFor(variant: "A" | "B"): VariantStat {
+    const subset = results.filter((r) => r.variant === variant);
+    const sent = subset.length;
+    const opened = subset.filter((r) => r.openedAt !== null).length;
+    const clicked = subset.filter((r) => r.clickedAt !== null).length;
+    const submitted = subset.filter((r) => r.submittedAt !== null).length;
+    const reported = subset.filter((r) => r.reportedAt !== null).length;
+    return {
+      variant,
+      sent,
+      opened,
+      clicked,
+      submitted,
+      reported,
+      openRate: sent === 0 ? 0 : Math.round((opened / sent) * 100),
+      clickRate: sent === 0 ? 0 : Math.round((clicked / sent) * 100),
+      submitRate: sent === 0 ? 0 : Math.round((submitted / sent) * 100),
+      reportRate: sent === 0 ? 0 : Math.round((reported / sent) * 100),
+    };
+  }
+  return { A: buildFor("A"), B: buildFor("B") };
+}
+
+export function VariantComparisonSection({
+  stats,
+  variantBSlug,
+  templateASlug,
+}: {
+  stats: { A: VariantStat; B: VariantStat };
+  variantBSlug: string;
+  templateASlug: string;
+}) {
+  // Determine le "gagnant" sur chaque metric (le pire = celui qui a fait
+  // cliquer / soumettre le plus).
+  function badge(value: number, comparison: number, kind: "lower-is-better" | "higher-is-better") {
+    if (value === comparison) return null;
+    const isWorse =
+      kind === "lower-is-better" ? value > comparison : value < comparison;
+    return (
+      <span
+        className={`ml-2 text-[10px] font-bold uppercase ${
+          isWorse
+            ? "text-rose-600 dark:text-rose-400"
+            : "text-emerald-600 dark:text-emerald-400"
+        }`}
+      >
+        {isWorse ? "Plus piegeant" : "Mieux"}
+      </span>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <VariantCard
+        title={`Variant A — ${templateASlug}`}
+        stat={stats.A}
+        compareTo={stats.B}
+        badge={badge}
+      />
+      <VariantCard
+        title={`Variant B — ${variantBSlug}`}
+        stat={stats.B}
+        compareTo={stats.A}
+        badge={badge}
+      />
+    </div>
+  );
+}
+
+function VariantCard({
+  title,
+  stat,
+  compareTo,
+  badge,
+}: {
+  title: string;
+  stat: VariantStat;
+  compareTo: VariantStat;
+  badge: (
+    v: number,
+    c: number,
+    kind: "lower-is-better" | "higher-is-better",
+  ) => React.ReactNode;
+}) {
+  return (
+    <div className="rounded-xl border-2 border-fuchsia-200 dark:border-fuchsia-800 bg-white dark:bg-slate-900 p-4">
+      <h3 className="font-bold text-fuchsia-700 dark:text-fuchsia-300 mb-3 truncate">
+        {title}
+      </h3>
+      <dl className="grid grid-cols-2 gap-y-1 text-sm">
+        <dt className="text-gray-500 dark:text-gray-400">Envoyes</dt>
+        <dd className="tabular-nums text-right">{stat.sent}</dd>
+        <dt className="text-gray-500 dark:text-gray-400">Ouverts</dt>
+        <dd className="tabular-nums text-right">
+          {stat.opened} ({stat.openRate}%)
+        </dd>
+        <dt className="text-gray-500 dark:text-gray-400">Cliques</dt>
+        <dd className="tabular-nums text-right">
+          {stat.clicked} ({stat.clickRate}%)
+          {badge(stat.clickRate, compareTo.clickRate, "lower-is-better")}
+        </dd>
+        <dt className="text-gray-500 dark:text-gray-400">Soumis</dt>
+        <dd className="tabular-nums text-right">
+          {stat.submitted} ({stat.submitRate}%)
+          {badge(stat.submitRate, compareTo.submitRate, "lower-is-better")}
+        </dd>
+        <dt className="text-gray-500 dark:text-gray-400">Signales</dt>
+        <dd className="tabular-nums text-right text-emerald-700 dark:text-emerald-300">
+          {stat.reported} ({stat.reportRate}%)
+          {badge(stat.reportRate, compareTo.reportRate, "higher-is-better")}
+        </dd>
+      </dl>
+    </div>
+  );
 }

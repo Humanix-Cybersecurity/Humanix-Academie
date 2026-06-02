@@ -42,6 +42,10 @@ export default function LaunchCampaignForm({
 }) {
   const [pending, startTransition] = useTransition();
   const [selected, setSelected] = useState<string>("FAKE_MICROSOFT");
+  // Phase 7a (juin 2026) : A/B variants. Si abTestEnabled : on affiche un
+  // 2eme selecteur de template et on transmet templateB au server action.
+  const [abTestEnabled, setAbTestEnabled] = useState(false);
+  const [selectedB, setSelectedB] = useState<string>("FAKE_COLISSIMO");
   const [selectedGroups, setSelectedGroups] = useState<Set<string>>(new Set());
   const [selectedListId, setSelectedListId] = useState<string>("");
   const [feedback, setFeedback] = useState<{
@@ -61,6 +65,12 @@ export default function LaunchCampaignForm({
   const onSubmit = async (formData: FormData) => {
     setFeedback(null);
     formData.set("template", selected);
+    // Phase 7a : si A/B active, transmet le 2eme template au server action.
+    // Le serveur split deterministe les targets (hash(userId) % 2) entre
+    // variant A et B et envoie le bon template a chaque target.
+    if (abTestEnabled && selectedB && selectedB !== selected) {
+      formData.set("templateB", selectedB);
+    }
     // Priorite UX : list > groups > service > all. Le serveur respecte le
     // meme ordre via les champs FormData : si listId est present, le reste
     // est ignore (cf. actions.ts launchCampaign).
@@ -97,20 +107,24 @@ export default function LaunchCampaignForm({
         const skipNote = res.skippedExternal
           ? ` (${res.skippedExternal} email${res.skippedExternal > 1 ? "s" : ""} de la liste ignoré${res.skippedExternal > 1 ? "s" : ""} car non rattaché${res.skippedExternal > 1 ? "s" : ""} à un compte utilisateur)`
           : "";
+        // Phase 7a : message specifique si A/B test active
+        const variantNote = res.variantSplit
+          ? ` — Split A/B : ${res.variantSplit.a} variant A / ${res.variantSplit.b} variant B`
+          : "";
         if (res.simulated) {
           setFeedback({
             type: "ok",
-            msg: `🎭 Mode démo : campagne créée vers ${res.targets} cible${res.targets > 1 ? "s" : ""} (pas d'envoi réel)${skipNote}.`,
+            msg: `🎭 Mode démo : campagne créée vers ${res.targets} cible${res.targets > 1 ? "s" : ""} (pas d'envoi réel)${skipNote}${variantNote}.`,
           });
         } else if (res.failed > 0) {
           setFeedback({
             type: "ok",
-            msg: `🚀 Campagne lancée : ${res.sent}/${res.targets} envoyé(s), ${res.failed} échec(s)${skipNote}. Vérifie /admin/smtp si beaucoup d'échecs.`,
+            msg: `🚀 Campagne lancée : ${res.sent}/${res.targets} envoyé(s), ${res.failed} échec(s)${skipNote}${variantNote}. Vérifie /admin/smtp si beaucoup d'échecs.`,
           });
         } else {
           setFeedback({
             type: "ok",
-            msg: `🚀 Campagne lancée : ${res.sent} email${res.sent > 1 ? "s" : ""} envoyé${res.sent > 1 ? "s" : ""} via ton SMTP${skipNote}.`,
+            msg: `🚀 Campagne lancée : ${res.sent} email${res.sent > 1 ? "s" : ""} envoyé${res.sent > 1 ? "s" : ""} via ton SMTP${skipNote}${variantNote}.`,
           });
         }
       } catch (e: unknown) {
@@ -173,6 +187,53 @@ export default function LaunchCampaignForm({
             </button>
           ))}
         </div>
+      </div>
+
+      {/* A/B TEST TOGGLE (Phase 7a, juin 2026)
+          Active un 2eme selecteur de template. Les targets sont split
+          deterministe 50/50 par hash(userId) % 2 cote server. Permet de
+          comparer 2 lures sur la meme audience. */}
+      <div className="rounded-xl border-2 border-dashed border-fuchsia-200 dark:border-fuchsia-800 bg-fuchsia-50/30 dark:bg-fuchsia-950/20 p-3">
+        <label className="flex items-center gap-2 text-sm cursor-pointer">
+          <input
+            type="checkbox"
+            checked={abTestEnabled}
+            onChange={(e) => setAbTestEnabled(e.target.checked)}
+            className="rounded"
+          />
+          <span className="font-bold text-fuchsia-800 dark:text-fuchsia-200">
+            🧪 Test A/B (envoyer 2 templates en parallele)
+          </span>
+        </label>
+        {abTestEnabled && (
+          <div className="mt-3 space-y-2">
+            <p className="text-xs text-fuchsia-700 dark:text-fuchsia-300">
+              Les destinataires seront divises 50/50 (split deterministe).
+              Le dashboard de campagne affichera les metrics cote a cote pour
+              identifier le template qui convertit le mieux.
+            </p>
+            <label className="text-xs font-medium text-gray-700 dark:text-gray-300 block">
+              Template B (variant) :
+            </label>
+            <select
+              value={selectedB}
+              onChange={(e) => setSelectedB(e.target.value)}
+              className="w-full rounded-lg border border-gray-300 dark:border-slate-600 p-2 text-sm bg-white dark:bg-slate-900"
+            >
+              {PHISHING_TEMPLATES.filter((t) => t.id !== selected).map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.emoji} {t.name} ({t.difficulty})
+                </option>
+              ))}
+            </select>
+            {selectedB === selected && (
+              <p className="text-xs text-amber-700 dark:text-amber-400">
+                ⚠️ Le template B doit etre different du template A pour que
+                le test ait du sens.
+              </p>
+            )}
+          </div>
+        )}
       </div>
 
       {/* CIBLAGE PAR RECIPIENT LIST (Phase 3 v2, juin 2026) */}

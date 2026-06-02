@@ -49,6 +49,14 @@ export type LaunchTarget = {
 export type LaunchOptions = {
   tenantId: string;
   templateId: string;
+  /**
+   * Phase 7a (juin 2026) -- A/B variants.
+   * Si fourni : slug d'un 2eme template. Les targets sont splitees
+   * deterministement (hash(userId) % 2) entre variant A (templateId) et
+   * variant B (templateBId). Chaque target recoit UN SEUL mail mais le
+   * dashboard peut comparer les 2 variants apres coup.
+   */
+  templateBId?: string;
   targets: LaunchTarget[];
   /** Description de la cohorte ciblee, pour traçabilité dans Event.payload */
   targetingMode?: "all" | "service" | "groups" | "users" | "list";
@@ -63,28 +71,53 @@ export type LaunchResult =
       sent: number;
       failed: number;
       simulated: boolean;
+      /** Phase 7a : split A/B si templateBId fourni */
+      variantSplit?: { a: number; b: number };
     }
   | {
       ok: false;
       error:
         | "invalid_template"
+        | "invalid_template_b"
         | "no_targets"
         | "smtp_not_configured"
         | "smtp_decrypt_failed";
       message?: string;
     };
 
+/**
+ * Split deterministe d'un userId entre variant A et B.
+ * Utilise un hash simple (sum char codes) % 2 -- pas crypto, mais suffisant
+ * pour avoir une distribution ~50/50 stable. Stable = le meme userId tombera
+ * toujours dans le meme variant pour cette campagne, ce qui permet de
+ * reanalysier sans surprise.
+ */
+function assignVariant(userId: string): "A" | "B" {
+  let hash = 0;
+  for (let i = 0; i < userId.length; i++) {
+    hash = (hash + userId.charCodeAt(i)) | 0;
+  }
+  return hash % 2 === 0 ? "A" : "B";
+}
+
 export async function launchPhishingCampaign(
   opts: LaunchOptions,
 ): Promise<LaunchResult> {
-  const { tenantId, templateId, targets } = opts;
+  const { tenantId, templateId, templateBId, targets } = opts;
 
   // Phase 0 (juin 2026) : resolution unifiee via lib/phishing/email-template.ts
   // qui regarde BDD tenant-custom > BDD platform-wide > hardcoded fallback.
   // Async desormais (avant : sync via getTemplate hardcoded).
-  const tpl = await getEmailTemplateBySlug(tenantId, templateId);
+  // Phase 7a (juin 2026) : on resout les 2 templates en parallel si A/B test.
+  const [tpl, tplB] = await Promise.all([
+    getEmailTemplateBySlug(tenantId, templateId),
+    templateBId ? getEmailTemplateBySlug(tenantId, templateBId) : Promise.resolve(null),
+  ]);
   if (!tpl) {
     return { ok: false, error: "invalid_template" };
+  }
+  if (templateBId && !tplB) {
+    return { ok: false, error: "invalid_template_b" };
   }
   if (targets.length === 0) {
     return { ok: false, error: "no_targets" };
@@ -110,26 +143,32 @@ export async function launchPhishingCampaign(
   const campaign = await db.phishingCampaign.create({
     data: {
       tenantId,
-      title: tpl.name,
+      title: tplB ? `${tpl.name} vs ${tplB.name} (A/B)` : tpl.name,
       template: templateId as PhishingTemplate,
+      // Phase 7a : persiste le slug du variant B pour audit/reporting
+      variantBSlug: templateBId ?? null,
       scheduledAt: new Date(),
       sentAt: null,
       isActive: true,
     },
   });
 
+  // Phase 7a : assigne deterministe chaque target A ou B avant create.
+  // Si pas de templateBId, tous en variant "A" (defaut historique).
   const results = await db.$transaction(
-    targets.map((u) =>
-      db.phishingResult.create({
+    targets.map((u) => {
+      const variant = templateBId ? assignVariant(u.id) : "A";
+      return db.phishingResult.create({
         data: {
           campaignId: campaign.id,
           userId: u.id,
           trackToken: generateTrackingToken(),
           status: "SENT",
+          variant,
         },
-        select: { id: true, userId: true, trackToken: true },
-      }),
-    ),
+        select: { id: true, userId: true, trackToken: true, variant: true },
+      });
+    }),
   );
 
   let sent = 0;
@@ -151,14 +190,16 @@ export async function launchPhishingCampaign(
       // Pixel d'open tracking : injecte en fin de HTML. Voir lib/phishing.ts
       // injectTrackingPixel() pour le rationale (faux positifs proxies, etc).
       const pixelUrl = `${cleanBaseUrl}/api/phishing/track/open/${r.trackToken}`;
+      // Phase 7a : selectionne le bon template selon le variant du target.
+      // r.variant a ete assigne lors de la creation ci-dessus (A ou B).
+      const activeTpl = r.variant === "B" && tplB ? tplB : tpl;
       // Phase 0 : renderEmailHtml remplace les placeholders {firstName} et
-      // {trackingUrl} du template string charge depuis la BDD. Compat avec
-      // le fallback hardcoded (qui genere la meme forme de template string).
-      const lureHtml = renderEmailHtml(tpl, firstName, trackingUrl);
+      // {trackingUrl} du template string charge depuis la BDD.
+      const lureHtml = renderEmailHtml(activeTpl, firstName, trackingUrl);
       const html = injectTrackingPixel(lureHtml, pixelUrl);
       const sendResult = await sendMailViaTenantSmtp(tenantId, {
         to: target.email,
-        subject: tpl.emailSubject,
+        subject: activeTpl.emailSubject,
         html,
       });
       if (sendResult.ok) {
@@ -191,6 +232,11 @@ export async function launchPhishingCampaign(
     }
   }
 
+  // Phase 7a : compte le split A/B dans les results crees pour le retour
+  // et l'event audit. Si pas de templateBId, B=0 (toutes en A).
+  const variantA = results.filter((r) => r.variant === "A").length;
+  const variantB = results.filter((r) => r.variant === "B").length;
+
   await db.event.create({
     data: {
       tenantId,
@@ -198,12 +244,14 @@ export async function launchPhishingCampaign(
       payload: {
         campaignId: campaign.id,
         template: templateId,
+        templateB: templateBId ?? null,
         targets: targets.length,
         sent,
         failed,
         demo: isDemoMode,
         targetingMode: opts.targetingMode ?? "all",
         targetingDetail: opts.targetingDetail ?? null,
+        variantSplit: templateBId ? { a: variantA, b: variantB } : null,
       },
     },
   });
@@ -215,5 +263,6 @@ export async function launchPhishingCampaign(
     sent,
     failed,
     simulated: isDemoMode,
+    variantSplit: templateBId ? { a: variantA, b: variantB } : undefined,
   };
 }
