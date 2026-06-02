@@ -20,7 +20,11 @@
 // launchCampaign(), on factorise pour eviter le drift.
 
 import { db } from "@/lib/db";
-import { getTemplate, injectTrackingPixel } from "@/lib/phishing";
+import { injectTrackingPixel } from "@/lib/phishing";
+import {
+  getEmailTemplateBySlug,
+  renderEmailHtml,
+} from "@/lib/phishing/email-template";
 import { generateTrackingToken } from "@/lib/crypto";
 import { sendMailViaTenantSmtp } from "@/lib/smtp/sender";
 import type { PhishingTemplate } from "@prisma/client";
@@ -75,7 +79,10 @@ export async function launchPhishingCampaign(
 ): Promise<LaunchResult> {
   const { tenantId, templateId, targets } = opts;
 
-  const tpl = getTemplate(templateId);
+  // Phase 0 (juin 2026) : resolution unifiee via lib/phishing/email-template.ts
+  // qui regarde BDD tenant-custom > BDD platform-wide > hardcoded fallback.
+  // Async desormais (avant : sync via getTemplate hardcoded).
+  const tpl = await getEmailTemplateBySlug(tenantId, templateId);
   if (!tpl) {
     return { ok: false, error: "invalid_template" };
   }
@@ -144,7 +151,10 @@ export async function launchPhishingCampaign(
       // Pixel d'open tracking : injecte en fin de HTML. Voir lib/phishing.ts
       // injectTrackingPixel() pour le rationale (faux positifs proxies, etc).
       const pixelUrl = `${cleanBaseUrl}/api/phishing/track/open/${r.trackToken}`;
-      const lureHtml = tpl.emailHtml(firstName, trackingUrl);
+      // Phase 0 : renderEmailHtml remplace les placeholders {firstName} et
+      // {trackingUrl} du template string charge depuis la BDD. Compat avec
+      // le fallback hardcoded (qui genere la meme forme de template string).
+      const lureHtml = renderEmailHtml(tpl, firstName, trackingUrl);
       const html = injectTrackingPixel(lureHtml, pixelUrl);
       const sendResult = await sendMailViaTenantSmtp(tenantId, {
         to: target.email,

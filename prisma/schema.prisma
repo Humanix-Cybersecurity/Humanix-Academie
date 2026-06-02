@@ -129,6 +129,7 @@ model Tenant {
   apiKeys               ApiKey[]
   phishingCampaigns     PhishingCampaign[]
   phishingRecipientLists PhishingRecipientList[]
+  phishingEmailTemplates PhishingEmailTemplate[]
   notificationLogs      NotificationLog[]
   marketplaceInstalls   MarketplaceInstallation[]
   webhooks              TenantWebhook[]
@@ -971,6 +972,72 @@ model PhishingCampaign {
 
   @@index([tenantId])
   @@index([tenantId, channel])
+}
+
+// =====================================================
+// PHISHING EMAIL TEMPLATE (Phase 0 Phishing Engine v2, juin 2026)
+// =====================================================
+// Sortie des templates hardcoded de lib/phishing.ts vers la BDD pour :
+//   - Permettre aux admins de creer leurs propres templates (custom)
+//   - Persister les scenarios generes par Red Team mode (IA Mistral)
+//   - Versionner / dupliquer / supprimer des templates sans toucher au code
+//   - Import / export entre tenants (futur)
+//
+// PORTEE :
+//   tenantId nullable : si null, template "platform-wide" disponible pour
+//   tous les tenants. Les 3 templates historiques (FAKE_MICROSOFT,
+//   FAKE_COLISSIMO, FAKE_PRESIDENT) sont migres en platform-wide via seed.
+//
+// COMPAT BACKWARDS :
+//   Le champ slug est l'identifiant stable utilise par PhishingCampaign.template
+//   (qui reste un enum PhishingTemplate pour compat). Le helper de lookup
+//   essaie d'abord la BDD via slug, puis fallback sur l'enum hardcoded.
+
+model PhishingEmailTemplate {
+  id          String   @id @default(cuid())
+  // tenantId null = platform-wide (les 3 templates historiques migres seedes)
+  tenantId    String?
+  // Slug stable pour identification : "FAKE_MICROSOFT", "FAKE_COLISSIMO",
+  // ou slugs custom genere par les admins ("redteam-finance-q3-2026").
+  // @@unique sur (tenantId, slug) : un meme slug peut exister en
+  // platform-wide ET en tenant-custom (l'override tenant prime).
+  slug        String
+  name        String
+  description String?
+  emoji       String   @default("🎣")
+  // Difficulte pedagogique pour aider l'admin a choisir
+  difficulty  String   @default("medium") // easy | medium | hard
+  // Canal d'envoi : pour l'instant juste EMAIL (SMS / QUISHING ont leur
+  // propre schema). Champ string pour evolutivite future.
+  channel     String   @default("EMAIL")
+  // Contenu du mail piege
+  emailSubject  String
+  emailFromName String  @default("Service IT")
+  emailFromAddr String
+  // HTML inline compatible Outlook/Gmail. Accepte les placeholders
+  // {firstName} et {trackingUrl} qui sont remplaces au lancement.
+  emailHtml     String
+  // Signaux pedagogiques affiches sur la landing post-clic. Array de
+  // strings, sauvegarde en Json pour souplesse.
+  markers       Json     @default("[]")
+  // Module de remediation flash associe (saison + episode slug)
+  remediationSaisonSlug      String?
+  remediationEpisodeSlug     String?
+  remediationLabel           String?
+  remediationDurationMinutes Int?    @default(2)
+  // Soft-delete : isActive=false n'apparait plus dans le selecteur mais
+  // l'historique des PhishingCampaign avec ce template reste consultable.
+  isActive   Boolean  @default(true)
+  // Audit minimal
+  createdBy  String?  // userId qui a cree (null pour platform-wide seedes)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  tenant Tenant? @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, isActive])
+  @@index([slug])
 }
 
 // =====================================================
