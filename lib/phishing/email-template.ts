@@ -47,6 +47,15 @@ export type ResolvedEmailTemplate = {
     label: string;
     durationMinutes: number;
   } | null;
+  /**
+   * Landing custom (Phase 2, juin 2026) :
+   *   - landingFakeHtml : HTML inline de la fausse page de login, avec
+   *     placeholder {submitUrl} qui sera remplace par /api/phishing/submit/[token]
+   *   - landingTitle : titre affiche au-dessus de l'iframe
+   * Si null/absent : la landing utilise le fake login generique hardcoded.
+   */
+  landingFakeHtml: string | null;
+  landingTitle: string | null;
 };
 
 /**
@@ -111,6 +120,8 @@ type PrismaTemplate = {
   remediationEpisodeSlug: string | null;
   remediationLabel: string | null;
   remediationDurationMinutes: number | null;
+  landingFakeHtml: string | null;
+  landingTitle: string | null;
 };
 
 function mapDbToResolved(
@@ -139,6 +150,8 @@ function mapDbToResolved(
             durationMinutes: t.remediationDurationMinutes ?? 2,
           }
         : null,
+    landingFakeHtml: t.landingFakeHtml,
+    landingTitle: t.landingTitle,
   };
 }
 
@@ -167,6 +180,10 @@ function mapHardcodedToResolved(
           durationMinutes: t.remediationEpisode.durationMinutes,
         }
       : null,
+    // Hardcoded n'a pas de landing custom -- les 3 templates legacy
+    // utilisent le fake login generique de la landing.
+    landingFakeHtml: null,
+    landingTitle: null,
   };
 }
 

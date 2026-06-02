@@ -78,6 +78,9 @@ export async function createCustomTemplate(
   const emailHtml = String(formData.get("emailHtml") ?? "").trim();
   const markersRaw = String(formData.get("markers") ?? "").trim();
   const emoji = String(formData.get("emoji") ?? "🎣").trim().slice(0, 4) || "🎣";
+  // Phase 2 (juin 2026) : landing custom optionnelle
+  const landingFakeHtml = String(formData.get("landingFakeHtml") ?? "").trim();
+  const landingTitle = String(formData.get("landingTitle") ?? "").trim().slice(0, 100);
 
   if (!name || !emailSubject || !emailFromAddr || !emailHtml) {
     return { ok: false, error: "missing_required_fields" };
@@ -110,6 +113,9 @@ export async function createCustomTemplate(
         emailFromName: emailFromName || "Service IT",
         emailHtml,
         markers,
+        // Phase 2 : null si admin n'a rien fourni -> fallback fake login generique
+        landingFakeHtml: landingFakeHtml.length > 0 ? landingFakeHtml : null,
+        landingTitle: landingTitle.length > 0 ? landingTitle : null,
         isActive: true,
         createdBy: userId,
       },

@@ -21,6 +21,8 @@ export default function CreateTemplateForm() {
   // Preview state : on garde une version locale du HTML pour le rendre
   // dans l'iframe en live (sans attendre le submit).
   const [previewHtml, setPreviewHtml] = useState("");
+  // Phase 2 (juin 2026) : preview live de la landing custom
+  const [previewLanding, setPreviewLanding] = useState("");
 
   return (
     <div className="space-y-6">
@@ -202,6 +204,80 @@ export default function CreateTemplateForm() {
             className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-xs font-mono"
           />
         </div>
+
+        {/* PHASE 2 : Landing custom (optionnel) */}
+        <details className="rounded-xl border-2 border-dashed border-violet-200 dark:border-violet-800 bg-violet-50/30 dark:bg-violet-950/20 p-4">
+          <summary className="cursor-pointer text-sm font-bold text-violet-700 dark:text-violet-300">
+            🎨 Landing page custom (optionnel, Phase 2)
+          </summary>
+          <div className="mt-3 space-y-3">
+            <p className="text-xs text-violet-800 dark:text-violet-200 leading-relaxed">
+              Par défaut, la landing post-clic affiche un fake login générique
+              "Connexion sécurisée". Tu peux le remplacer par une fausse page
+              de login custom (Microsoft 365 pixel-perfect, portail RH, banque...).
+              Utilise le placeholder{" "}
+              <code className="bg-violet-100 dark:bg-violet-900 px-1 rounded">
+                {"{submitUrl}"}
+              </code>{" "}
+              dans l&apos;attribut <code>action</code> de ton form -- il sera
+              remplacé par /api/phishing/submit/[token] qui capture la
+              metadata (sans valeurs).
+            </p>
+
+            <div>
+              <label
+                htmlFor="landingTitle"
+                className="block text-sm font-bold text-gray-700 dark:text-gray-200 mb-1"
+              >
+                Titre de la landing
+              </label>
+              <input
+                type="text"
+                id="landingTitle"
+                name="landingTitle"
+                maxLength={100}
+                placeholder='Ex: "Microsoft 365 — Connexion"'
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-sm"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="landingFakeHtml"
+                className="block text-sm font-bold text-gray-700 dark:text-gray-200 mb-1"
+              >
+                HTML de la fausse page de login
+              </label>
+              <textarea
+                id="landingFakeHtml"
+                name="landingFakeHtml"
+                rows={10}
+                onChange={(e) => setPreviewLanding(e.target.value)}
+                placeholder={`<div style="font-family:Segoe UI,Arial,sans-serif;max-width:400px;margin:40px auto;padding:32px;border:1px solid #e0e0e0">\n  <h2>Connexion Microsoft 365</h2>\n  <form action="{submitUrl}" method="POST">\n    <input type="email" name="email" placeholder="email@entreprise.fr" required style="width:100%;padding:8px;margin-bottom:8px" />\n    <input type="password" name="password" placeholder="Mot de passe" required style="width:100%;padding:8px;margin-bottom:16px" />\n    <button type="submit" style="width:100%;padding:10px;background:#0078d4;color:white;border:none">Se connecter</button>\n  </form>\n</div>`}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-xs font-mono"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Le form sera rendu dans une iframe sandbox{" "}
+                <code>sandbox=""</code> côté landing : pas de script, pas
+                d&apos;iframe imbriquée, défense en profondeur.
+              </p>
+            </div>
+
+            {previewLanding.trim().length > 0 && (
+              <div>
+                <p className="text-xs uppercase tracking-widest font-bold text-violet-500 mb-2">
+                  Aperçu landing (sandbox isolé)
+                </p>
+                <iframe
+                  srcDoc={previewLanding.replaceAll("{submitUrl}", "#preview")}
+                  sandbox=""
+                  title="Aperçu landing"
+                  className="w-full min-h-[300px] rounded-lg border border-violet-300 dark:border-violet-700 bg-white"
+                />
+              </div>
+            )}
+          </div>
+        </details>
 
         <div>
           <label

@@ -1025,6 +1025,25 @@ model PhishingEmailTemplate {
   remediationEpisodeSlug     String?
   remediationLabel           String?
   remediationDurationMinutes Int?    @default(2)
+  // Landing page custom (Phase 2 Phishing Engine v2, juin 2026)
+  // Si non null : la landing /phishing/[token] affichera CETTE fausse page
+  // de login dans une iframe sandbox AU LIEU du fake login generique
+  // (style "Connexion securisee"). Le HTML peut utiliser le placeholder
+  // {submitUrl} qui sera remplace par /api/phishing/submit/[token].
+  // Le tracking funnel (clicked + submitted) continue de fonctionner
+  // exactement comme avant -- on capture juste un visuel different.
+  //
+  // Use cases :
+  //   - Faux portail Microsoft 365 pixel-perfect pour test endgame
+  //   - Faux portail RH interne (lookalike du SSO entreprise)
+  //   - Faux site banque pour tester la cible finance
+  //
+  // Securite : iframe sandbox="" (no allow-scripts) cote rendering pour
+  // empecher l'admin (ou l'IA Red Team) d'injecter du JS malicieux qui
+  // pourrait exfiltrer les credentials hors de notre endpoint /submit.
+  landingFakeHtml String?
+  // Titre affiche au-dessus de l'iframe landing custom, ex: "Microsoft 365"
+  landingTitle    String?
   // Soft-delete : isActive=false n'apparait plus dans le selecteur mais
   // l'historique des PhishingCampaign avec ce template reste consultable.
   isActive   Boolean  @default(true)
