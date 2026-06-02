@@ -205,6 +205,24 @@ export default async function AdminPhishingPage() {
           </div>
         </div>
 
+        {/* Lien vers gestion des templates custom (Phase 0) */}
+        <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-950/30 dark:to-slate-900 p-4 flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <p className="text-xs uppercase tracking-widest font-bold text-emerald-700 dark:text-emerald-300 mb-1">
+              ✉️ Templates email custom
+            </p>
+            <p className="text-sm text-gray-700 dark:text-gray-300">
+              Crée tes propres templates ou sauvegarde les scenarios IA Red Team. Override possible des templates platform-wide.
+            </p>
+          </div>
+          <a
+            href="/admin/phishing/templates"
+            className="btn-secondary text-sm whitespace-nowrap"
+          >
+            Gerer →
+          </a>
+        </div>
+
         <AdminSection
           title="Lancer une campagne"
           description="Choisissez un template prêt-à-l'emploi et une audience cible."

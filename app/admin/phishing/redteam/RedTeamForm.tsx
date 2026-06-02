@@ -4,8 +4,9 @@
 // Formulaire client pour generer un scenario red team via Mistral.
 // Affiche le brouillon recu en preview + bouton "copier le HTML".
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useTransition } from "react";
 import { generateRedTeamAction } from "./actions";
+import { saveRedTeamAsTemplate } from "../templates/actions";
 import type { RedTeamResult } from "@/lib/ai/phishing-redteam";
 
 export default function RedTeamForm() {
@@ -224,7 +225,7 @@ function ScenarioPreview({
         </div>
       </div>
 
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex gap-2 flex-wrap items-center">
         <button
           type="button"
           onClick={() => copy("body", scenario.bodyHtml)}
@@ -232,14 +233,80 @@ function ScenarioPreview({
         >
           {copied === "body" ? "HTML copie!" : "Copier le HTML"}
         </button>
+        <SaveAsTemplateButton scenario={scenario} />
       </div>
 
       <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-3 text-xs text-amber-900 dark:text-amber-200">
-        <strong>Prochaine etape :</strong> ce scenario n&apos;est PAS
-        sauvegarde automatiquement. Pour le lancer en campagne reelle, copie
-        le HTML / sujet / sender et utilise-les via le formulaire de lancement
-        sur /admin/phishing (un slot template custom sera ajoute en Phase 0).
+        <strong>Prochaine etape :</strong> utilise le bouton{" "}
+        <em>Sauvegarder comme template</em> pour persister ce scenario en
+        BDD et le rendre dispo dans le selecteur de campagne sur
+        /admin/phishing. Sinon copie le HTML / sujet / sender et utilise-les
+        manuellement.
       </div>
     </div>
+  );
+}
+
+/**
+ * Bouton "Sauvegarder comme template" : persiste le scenario IA en BDD via
+ * saveRedTeamAsTemplate() pour reutilisation dans le selecteur de campagne.
+ */
+function SaveAsTemplateButton({
+  scenario,
+}: {
+  scenario: import("@/lib/ai/phishing-redteam").RedTeamScenario;
+}) {
+  const [isPending, startTransition] = useTransition();
+  const [feedback, setFeedback] = useState<
+    | { kind: "saved"; slug: string }
+    | { kind: "error"; msg: string }
+    | null
+  >(null);
+
+  function save() {
+    startTransition(async () => {
+      setFeedback(null);
+      const fd = new FormData();
+      // Le name du scenario est deduit du subject (1eres ~50 chars sans
+      // prefixes URGENT/Action)
+      const cleanName = scenario.subject
+        .replace(/^\[?(URGENT|Action requise|Confidentiel)\]?\s*/i, "")
+        .slice(0, 80);
+      fd.set("name", cleanName || "Scenario red team");
+      fd.set("subject", scenario.subject);
+      fd.set("fromEmail", scenario.fromEmail);
+      fd.set("fromName", scenario.fromName);
+      fd.set("bodyHtml", scenario.bodyHtml);
+      fd.set("markersJson", JSON.stringify(scenario.markers));
+      const res = await saveRedTeamAsTemplate(fd);
+      if (res.ok) {
+        setFeedback({ kind: "saved", slug: res.slug });
+      } else {
+        setFeedback({ kind: "error", msg: res.error });
+      }
+    });
+  }
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={save}
+        disabled={isPending}
+        className="text-sm px-3 py-1.5 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition disabled:opacity-50"
+      >
+        {isPending ? "Sauvegarde..." : "💾 Sauvegarder comme template"}
+      </button>
+      {feedback?.kind === "saved" && (
+        <span className="text-xs text-emerald-700 dark:text-emerald-300 font-bold">
+          ✅ Sauvegardé (slug: <code>{feedback.slug}</code>)
+        </span>
+      )}
+      {feedback?.kind === "error" && (
+        <span className="text-xs text-red-700 dark:text-red-300 font-bold">
+          ❌ {feedback.msg}
+        </span>
+      )}
+    </>
   );
 }
