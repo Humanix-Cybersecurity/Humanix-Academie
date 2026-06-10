@@ -83,9 +83,14 @@ export function ReseedCatalogForm() {
             <dd className="tabular-nums">{state.result.shopItems}</dd>
             <dt>Durée</dt>
             <dd className="tabular-nums">{state.result.durationMs} ms</dd>
+            <dt>Users réévalués</dt>
+            <dd className="tabular-nums">{state.reevaluation.evaluated}</dd>
+            <dt>Badges rétroactifs</dt>
+            <dd className="tabular-nums">{state.reevaluation.newBadges}</dd>
           </dl>
           <p className="text-xs text-emerald-800 dark:text-emerald-300 mt-3">
-            Rafraîchis la page pour voir les nouveaux totaux BDD ci-dessus.
+            Rafraîchis la page pour voir les nouveaux totaux BDD ci-dessus. Les
+            badges déjà mérités ont été débloqués rétroactivement.
           </p>
         </div>
       )}
