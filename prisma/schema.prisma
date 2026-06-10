@@ -113,6 +113,16 @@ model Tenant {
   //   le flag precedent est aussi activé).
   autoForce2FAAfterPhishingClick      Boolean  @default(false)
   autoRevokeSessionAfterPhishingClick Boolean  @default(false)
+  // --- Exposition Numerique Phase 2 B2B (OFF par defaut, gated DPA+AIPD) ---
+  // Veille d'exposition des comptes salaries. Ne s'active JAMAIS sans le flag
+  // global env + DPA enregistree. Cf. lib/exposure/b2b-flags.ts.
+  exposureMonitoringEnabled    Boolean  @default(false)
+  // Horodatage de signature du DPA art.28 (gate legal obligatoire).
+  exposureMonitoringDpaSignedAt DateTime?
+  // Domaines declares a surveiller (ex: ["acme.fr"]). Vide = rien surveille.
+  // Tout email hors de ces domaines = donnee de tiers -> jamais traitee.
+  exposureDomains              String[] @default([])
+  employeeExposures            EmployeeExposure[]
   createdAt                           DateTime @default(now())
   updatedAt                           DateTime @updatedAt
 
@@ -364,6 +374,7 @@ model User {
   phishingResults        PhishingResult[]
   phishingRecipientListEntries PhishingRecipientListEntry[]
   remediationPlan        RemediationPlan?
+  employeeExposures      EmployeeExposure[]
   notificationLogs       NotificationLog[]
   authoredModules        MarketplaceModule[]     @relation("AuthoredModules")
   reviewedModules        MarketplaceModule[]     @relation("ReviewedModules")
@@ -1915,6 +1926,8 @@ model DataBreach {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  employeeExposures EmployeeExposure[]
+
   // Dedup forte : meme externalId par source = meme fuite
   @@unique([source, externalId])
   @@index([incidentDate])
@@ -1967,6 +1980,56 @@ model RemediationPlan {
   // Un plan actif par user (on update plutot que multiplier)
   @@unique([userId])
   @@index([userId])
+}
+
+// =====================================================
+// EXPOSITION NUMERIQUE — PHASE 2 B2B (veille salaries)
+// =====================================================
+// ⚠️ FEATURE GATEE, OFF PAR DEFAUT. Ne s'active JAMAIS sans :
+//   1. Flag global env EXPOSURE_B2B_ENABLED=true (kill switch plateforme)
+//   2. Tenant.exposureMonitoringEnabled=true
+//   3. Tenant.exposureMonitoringDpaSignedAt non null (DPA art.28 enregistree)
+// Cf. lib/exposure/b2b-flags.ts (triple garde) + docs/exposition-numerique/
+// {aipd-trame,notice-transparence-salaries}.md + roadmap.md (Go/No-Go).
+//
+// PRINCIPE ANTI-DERIVE : le cron DETECTE seulement (status NEW). AUCUNE
+// notification ni auto-assignation de formation sans VALIDATION RSSI humaine
+// explicite (status NEW -> VALIDATED -> TRAINING_ASSIGNED). Donnee d'un tiers
+// (email hors domaines declares du tenant) : jamais creee.
+
+enum EmployeeExposureStatus {
+  NEW // detecte par le cron, en attente de validation RSSI
+  VALIDATED // RSSI a confirme : ce n'est pas un faux positif
+  TRAINING_ASSIGNED // formation de remediation assignee au salarie
+  DISMISSED // RSSI a ecarte (faux positif)
+  REMEDIATED // salarie a complete la remediation
+}
+
+model EmployeeExposure {
+  id        String                 @id @default(cuid())
+  tenantId  String
+  userId    String
+  // Reference vers la fuite de l'observatoire qui a matche le domaine.
+  breachId  String
+  // Domaine declare du tenant qui a matche (tracabilite + anti-tiers).
+  matchedDomain String
+  status    EmployeeExposureStatus @default(NEW)
+  detectedAt DateTime              @default(now())
+  // Validation RSSI (obligatoire avant toute notif/assignation).
+  validatedByUserId String?
+  validatedAt       DateTime?
+  // Episode de remediation assigne (apres validation).
+  assignedEpisodeId String?
+  resolvedAt        DateTime?
+
+  tenant  Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  breach  DataBreach   @relation(fields: [breachId], references: [id], onDelete: Cascade)
+
+  // Une exposition par (salarie, fuite) : pas de doublon au re-scan.
+  @@unique([userId, breachId])
+  @@index([tenantId, status])
+  @@index([tenantId, detectedAt])
 }
 
 // =====================================================
@@ -2087,6 +2150,11 @@ enum AuditAction {
   // Module Exposition Numerique (juin 2026)
   EXPOSURE_CHECK_PERFORMED // Un check d'exposition a ete effectue (ipHash only, JAMAIS la cible)
   EXPOSURE_EMAIL_VERIFIED // Propriete d'email verifiee via OTP (self-check anti-doxxing)
+  // Phase 2 B2B (veille salaries) — TOUJOURS OFF par defaut, gated DPA+AIPD
+  EXPOSURE_MONITORING_ENABLED // Un tenant a active la veille (DPA enregistree)
+  EXPOSURE_MONITORING_DISABLED // Kill switch : veille desactivee
+  EXPOSURE_DETECTED // Domaine tenant matche dans une fuite (validation RSSI requise avant notif)
+  EXPOSURE_TRAINING_ASSIGNED // Formation assignee a un salarie expose APRES validation RSSI
 }
 
 enum AuditOutcome {
