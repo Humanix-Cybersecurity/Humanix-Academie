@@ -5,12 +5,26 @@
 // n'est persisté). Le check mot de passe tourne 100% dans le navigateur.
 
 import { useState, useTransition } from "react";
+import Link from "next/link";
 import { checkPasswordPwned } from "@/lib/exposure/pwned-passwords";
 import {
   computeExposureScore,
   verdictLabel,
   type ExposureInput,
 } from "@/lib/exposure/exposure-score";
+import { deriveRemediationPlan } from "@/lib/exposure/remediation";
+import { saveRemediationPlan } from "./actions";
+
+// Checklist auto-OSINT guidée : l'utilisateur EXÉCUTE lui-même, on guide.
+// AUCUN scraping, aucune collecte (contrainte #4).
+const OSINT_CHECKLIST = [
+  "Cherche ton nom complet sur un moteur de recherche (mode navigation privée).",
+  "Cherche ton adresse email et ton pseudo habituel.",
+  "Vérifie la confidentialité de tes profils réseaux sociaux (qui voit quoi ?).",
+  "Regarde les photos publiques où tu es identifié (toi + tes proches).",
+  "Vérifie les informations pro exposées (poste, téléphone) sur les annuaires.",
+  "Recherche ton numéro de téléphone entre guillemets.",
+];
 
 type PwdState =
   | { kind: "idle" }
@@ -58,6 +72,14 @@ export default function ExpositionChecker() {
   const [otp, setOtp] = useState("");
   const [emailState, setEmailState] = useState<EmailState>({ kind: "idle" });
   const [emailPending, startEmail] = useTransition();
+
+  // --- Plan de remédiation (toggles locaux) + sauvegarde opt-in ---
+  const [planDone, setPlanDone] = useState<Set<string>>(new Set());
+  const [osintDone, setOsintDone] = useState<Set<number>>(new Set());
+  const [saveState, setSaveState] = useState<
+    "idle" | "saving" | "saved" | "need_account" | "error"
+  >("idle");
+  const [savePending, startSave] = useTransition();
 
   async function runPasswordCheck() {
     if (!password) return;
@@ -121,6 +143,43 @@ export default function ExpositionChecker() {
         }
       : null;
   const score = scoreInput ? computeExposureScore(scoreInput) : null;
+  const plan = scoreInput ? deriveRemediationPlan(scoreInput) : [];
+
+  function togglePlan(key: string) {
+    setPlanDone((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }
+  function toggleOsint(i: number) {
+    setOsintDone((prev) => {
+      const next = new Set(prev);
+      if (next.has(i)) next.delete(i);
+      else next.add(i);
+      return next;
+    });
+  }
+
+  function savePlan() {
+    if (!score) return;
+    setSaveState("saving");
+    startSave(async () => {
+      const res = await saveRemediationPlan(
+        plan.map((p) => ({
+          key: p.key,
+          label: p.label,
+          done: planDone.has(p.key),
+          sourceUrl: p.sourceUrl,
+        })),
+        score.score,
+      );
+      if (res.ok) setSaveState("saved");
+      else if (res.error === "not_authenticated") setSaveState("need_account");
+      else setSaveState("error");
+    });
+  }
 
   return (
     <div className="space-y-6">
@@ -353,6 +412,132 @@ export default function ExpositionChecker() {
           </p>
         </section>
       )}
+
+      {/* ===== PLAN DE REMÉDIATION ===== */}
+      {plan.length > 0 && (
+        <section
+          aria-labelledby="plan-title"
+          className="card border border-gray-200 dark:border-slate-700"
+        >
+          <h2 id="plan-title" className="font-display text-xl font-extrabold text-primary-500 dark:text-accent-300 mb-1">
+            Ton plan de remédiation
+          </h2>
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+            Priorisé selon ton exposition. Chaque action renvoie à une source
+            officielle et à un micro-module pour aller plus loin.
+          </p>
+          <ol className="space-y-3">
+            {plan.map((item) => (
+              <li
+                key={item.key}
+                className="flex items-start gap-3 rounded-lg border border-gray-100 dark:border-slate-800 p-3"
+              >
+                <input
+                  type="checkbox"
+                  id={`plan-${item.key}`}
+                  checked={planDone.has(item.key)}
+                  onChange={() => togglePlan(item.key)}
+                  className="mt-1 h-4 w-4 shrink-0"
+                />
+                <div className="min-w-0">
+                  <label
+                    htmlFor={`plan-${item.key}`}
+                    className="font-semibold text-gray-800 dark:text-gray-100 cursor-pointer"
+                  >
+                    <span
+                      className={`inline-block mr-2 text-[10px] font-bold uppercase px-1.5 py-0.5 rounded-full ${
+                        item.priority === 1
+                          ? "bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300"
+                          : item.priority === 2
+                            ? "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
+                            : "bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-gray-300"
+                      }`}
+                    >
+                      {item.priority === 1 ? "Urgent" : item.priority === 2 ? "Important" : "Bonne pratique"}
+                    </span>
+                    {item.label}
+                  </label>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{item.why}</p>
+                  <p className="text-xs mt-1 flex gap-3 flex-wrap">
+                    <a href={item.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-accent-600 dark:text-accent-300 underline">
+                      Guide {item.sourceLabel}
+                    </a>
+                    <Link href={`/apprendre/${item.episodeSlug}`} className="text-primary-600 dark:text-accent-300 underline">
+                      Micro-module →
+                    </Link>
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+
+          {/* Sauvegarde opt-in */}
+          <div className="mt-5 pt-4 border-t border-gray-200 dark:border-slate-700">
+            <button
+              type="button"
+              onClick={savePlan}
+              disabled={savePending || saveState === "saved"}
+              className="btn-secondary text-sm disabled:opacity-50"
+            >
+              {saveState === "saved" ? "✅ Plan sauvegardé" : savePending ? "Sauvegarde…" : "💾 Sauvegarder mon plan"}
+            </button>
+            {saveState === "need_account" && (
+              <p className="text-sm text-gray-700 dark:text-gray-200 mt-2">
+                Pour sauvegarder ton plan et débloquer des badges,{" "}
+                <Link href="/inscription" className="text-accent-600 dark:text-accent-300 underline font-semibold">
+                  crée un compte gratuit
+                </Link>{" "}
+                (tier Communauté). Sinon, ton plan reste affiché ici sans être conservé.
+              </p>
+            )}
+            {saveState === "error" && (
+              <p className="text-sm text-rose-700 dark:text-rose-400 mt-2" role="alert">
+                Sauvegarde impossible pour le moment. Réessaie plus tard.
+              </p>
+            )}
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 italic">
+              La sauvegarde ne conserve que les actions du plan (pas tes
+              mots de passe, pas le détail des fuites).
+            </p>
+          </div>
+        </section>
+      )}
+
+      {/* ===== AUTO-OSINT GUIDÉ ===== */}
+      <section
+        aria-labelledby="osint-title"
+        className="card border border-gray-200 dark:border-slate-700"
+      >
+        <h2 id="osint-title" className="font-display text-xl font-extrabold text-primary-500 dark:text-accent-300 mb-1">
+          🔎 Auto-OSINT guidé
+        </h2>
+        <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+          Mesure toi-même ton empreinte publique. <strong>Tu exécutes, on
+          guide</strong> : Humanix ne lance aucune recherche et ne collecte rien.
+        </p>
+        <ul className="space-y-2">
+          {OSINT_CHECKLIST.map((step, i) => (
+            <li key={i} className="flex items-start gap-3">
+              <input
+                type="checkbox"
+                id={`osint-${i}`}
+                checked={osintDone.has(i)}
+                onChange={() => toggleOsint(i)}
+                className="mt-1 h-4 w-4 shrink-0"
+              />
+              <label htmlFor={`osint-${i}`} className="text-sm text-gray-700 dark:text-gray-200 cursor-pointer">
+                {step}
+              </label>
+            </li>
+          ))}
+        </ul>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
+          {osintDone.size}/{OSINT_CHECKLIST.length} vérifications effectuées.{" "}
+          <Link href="/apprendre/exposition-numerique/07-reduire-son-empreinte" className="underline text-primary-600 dark:text-accent-300">
+            Réduire mon empreinte →
+          </Link>
+        </p>
+      </section>
     </div>
   );
 }
