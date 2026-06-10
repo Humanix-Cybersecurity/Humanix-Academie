@@ -1,0 +1,74 @@
+---
+title: "Reprends la main sur tes données"
+durationMinutes: 5
+persona: "tous"
+objective: "Connaître son droit à l'effacement (RGPD art. 17) et savoir l'exercer auprès des courtiers en données"
+xpReward: 60
+scenario: |
+  En cherchant ton nom, tu découvres un site d'annuaire qui affiche ton
+  adresse, ton téléphone et ta tranche d'âge, sans que tu aies jamais
+  rien fourni. Que peux-tu faire, légalement ?
+choices:
+  - id: "a"
+    label: "Rien : c'est public, ils ont le droit"
+    outcome: "bad"
+    feedback: "Faux. Le RGPD te donne un droit à l'effacement (art. 17). Tu peux exiger la suppression de tes données, même sur un site qui les a agrégées sans ton accord."
+    points: -10
+  - id: "b"
+    label: "Exercer mon droit à l'effacement RGPD en demandant la suppression"
+    outcome: "good"
+    feedback: "Exactement. L'article 17 du RGPD t'autorise à demander la suppression. Le responsable doit traiter ta demande, en principe sous un mois."
+    points: 15
+  - id: "c"
+    label: "Porter plainte tout de suite à la police"
+    outcome: "bad"
+    feedback: "Pas la première étape. On commence par exercer son droit à l'effacement auprès du site, et on saisit la CNIL en cas de refus ou d'absence de réponse."
+    points: -5
+quizCorrectAnswer: "b"
+takeaway: |
+  Le RGPD (art. 17) te donne un droit à l'effacement. Pour réduire ton
+  exposition : repère les sites qui affichent tes données, envoie une
+  demande de suppression (modèle CNIL), et conserve une preuve d'envoi.
+  En cas de refus ou de silence sous un mois, saisis la CNIL. C'est
+  gratuit et ça marche.
+licence: "CC BY-SA 4.0 — Humanix Académie Community Edition"
+---
+
+# Reprends la main sur tes données
+
+Tes données circulent souvent sans ton accord : annuaires, courtiers en
+données, agrégateurs. La bonne nouvelle, c'est que la loi est de ton côté
+— encore faut-il savoir l'utiliser.
+
+## Ton arme : le droit à l'effacement (RGPD art. 17)
+
+Le Règlement Général sur la Protection des Données te donne le droit de
+demander la **suppression** de tes données personnelles. Ce droit
+s'applique aussi aux sites qui ont agrégé tes informations sans te
+demander ton avis. Le responsable du traitement doit répondre, en
+principe, **sous un mois**.
+
+## Comment procéder concrètement
+
+1. **Repère** : note les sites qui affichent tes données (nom, adresse,
+   téléphone). L'épisode "auto-OSINT" t'aide à les trouver.
+2. **Demande** : envoie une demande d'effacement claire (la CNIL fournit
+   des modèles de courrier). Précise les données concernées.
+3. **Garde une preuve** : date et trace de ta demande.
+4. **Relance / escalade** : sans réponse sous un mois, ou en cas de refus
+   non justifié, **saisis la CNIL**. La démarche est gratuite.
+
+## Les courtiers en données
+
+Certains acteurs font commerce de la revente d'informations personnelles.
+Ils sont soumis au RGPD comme les autres : tu peux exiger l'effacement.
+C'est fastidieux quand ils sont nombreux, mais chaque suppression réduit
+ta surface d'exposition (et complique le travail de qui voudrait te cibler
+ou t'usurper).
+
+## Garder le réflexe
+
+Reprendre la main n'est pas un one-shot : refais le tour de ton empreinte
+une à deux fois par an. Les données ont tendance à réapparaître ; la
+vigilance régulière est ce qui maintient ton exposition basse dans la
+durée.
