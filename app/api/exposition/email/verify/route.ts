@@ -12,6 +12,7 @@ import { verifyEmailOtp } from "@/lib/exposure/email-ownership";
 import { matchEmailDomain } from "@/lib/exposure/breach-match";
 import { recordExposureMetric } from "@/lib/exposure/metrics";
 import { auditLog } from "@/lib/audit";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -38,6 +39,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "invalid_input" }, { status: 400 });
   }
   const { email, otp } = parsed.data;
+
+  // ANTI-BRUTE-FORCE : le code OTP fait 6 chiffres et le cookie de binding
+  // reste valide 10 min. Sans frein, on pourrait tenter des codes en boucle.
+  // On borne les tentatives par IP (le code lui-meme est compare en temps
+  // constant cote lib).
+  const ip = clientIp(req) ?? "unknown";
+  const rl = checkRateLimit(`exposure-otp-verify:${ip}`, 10, 10 * 60 * 1000);
+  if (!rl.ok) {
+    return NextResponse.json({ ok: false, error: "rate_limited" }, { status: 429 });
+  }
 
   const verified = await verifyEmailOtp(email, otp);
   if (!verified.ok) {

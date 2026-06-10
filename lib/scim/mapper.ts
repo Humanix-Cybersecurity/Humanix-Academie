@@ -18,6 +18,19 @@ type PrismaUser = {
 
 const HUMANIX_EXT = SCIM_SCHEMAS.HUMANIX_USER;
 
+// SECURITE : roles provisionnables via SCIM (IdP du tenant). SUPERADMIN est un
+// role d'OPERATEUR PLATEFORME et ne doit JAMAIS pouvoir etre attribue par un
+// IdP client (sinon un tenant se fabrique un acces plateforme). Tout role hors
+// de cette liste (y compris SUPERADMIN ou une valeur inconnue) retombe sur le
+// role le plus faible. Garde central applique aux chemins create ET patch.
+const SCIM_ASSIGNABLE_ROLES = new Set(["LEARNER", "MANAGER", "RSSI", "ADMIN"]);
+
+export function coerceScimRole(raw: unknown): string {
+  if (typeof raw !== "string") return "LEARNER";
+  const r = raw.trim().toUpperCase();
+  return SCIM_ASSIGNABLE_ROLES.has(r) ? r : "LEARNER";
+}
+
 /**
  * Convertit un User Prisma en SCIM User pour reponse GET.
  */
@@ -86,8 +99,7 @@ export function scimToPrismaCreate(payload: unknown): {
 
   // Extension Humanix
   const ext = p[HUMANIX_EXT] as Record<string, unknown> | undefined;
-  const role =
-    (ext && typeof ext.role === "string" && ext.role.trim()) || "LEARNER";
+  const role = coerceScimRole(ext?.role);
   const service =
     (ext && typeof ext.service === "string" && ext.service.trim()) || null;
 
@@ -142,7 +154,8 @@ export function applyScimPatch(
     } else if (path?.startsWith(HUMANIX_EXT.toLowerCase())) {
       // urn:humanix:...:User:1.0:role ou ...:service
       const sub = path.split(":").pop() ?? "";
-      if (sub === "role" && typeof value === "string") update.role = value;
+      if (sub === "role" && typeof value === "string")
+        update.role = coerceScimRole(value);
       if (sub === "service" && typeof value === "string")
         update.service = value;
     } else if (!path && value && typeof value === "object") {
@@ -153,7 +166,7 @@ export function applyScimPatch(
       if (typeof v.displayName === "string") update.name = v.displayName;
       const ext = v[HUMANIX_EXT] as Record<string, unknown> | undefined;
       if (ext) {
-        if (typeof ext.role === "string") update.role = ext.role;
+        if (typeof ext.role === "string") update.role = coerceScimRole(ext.role);
         if (typeof ext.service === "string") update.service = ext.service;
       }
     }
