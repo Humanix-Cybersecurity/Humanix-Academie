@@ -22,6 +22,7 @@ import {
 import ExpositionAdminClient, {
   type ExposureRow,
   type MonitoringState,
+  type PostureState,
 } from "./ExpositionAdminClient";
 
 export const dynamic = "force-dynamic";
@@ -50,7 +51,7 @@ export default async function AdminExpositionPage() {
     );
   }
 
-  const [tenant, rows] = await Promise.all([
+  const [tenant, rows, snapshots] = await Promise.all([
     db.tenant.findUnique({
       where: { id: tenantId },
       select: {
@@ -71,6 +72,11 @@ export default async function AdminExpositionPage() {
         user: { select: { name: true, email: true } },
         breach: { select: { title: true, organization: true } },
       },
+    }),
+    db.exposureSnapshot.findMany({
+      where: { tenantId },
+      orderBy: { day: "desc" },
+      take: 30,
     }),
   ]);
 
@@ -101,13 +107,34 @@ export default async function AdminExpositionPage() {
     breachOrg: r.breach?.organization ?? null,
   }));
 
+  // Phase 3 : posture agrégée (le plus récent en tête après .reverse côté UI).
+  const latest = snapshots[0] ?? null;
+  const posture: PostureState = {
+    hasData: latest !== null,
+    orgExposureScore: latest?.orgExposureScore ?? 0,
+    exposedCount: latest?.exposedCount ?? 0,
+    newCount: latest?.newCount ?? 0,
+    trainingCount: latest?.trainingCount ?? 0,
+    remediatedCount: latest?.remediatedCount ?? 0,
+    dismissedCount: latest?.dismissedCount ?? 0,
+    trend: [...snapshots].reverse().map((s) => ({
+      day: s.day.toISOString().slice(0, 10),
+      exposedCount: s.exposedCount,
+      orgExposureScore: s.orgExposureScore,
+    })),
+  };
+
   return (
     <>
       <AdminPageHeader
         title="Veille d'exposition"
         description="Comptes salariés détectés dans des fuites publiques. Aucune notification n'est envoyée sans votre validation."
       />
-      <ExpositionAdminClient monitoring={monitoring} exposures={exposures} />
+      <ExpositionAdminClient
+        monitoring={monitoring}
+        exposures={exposures}
+        posture={posture}
+      />
     </>
   );
 }

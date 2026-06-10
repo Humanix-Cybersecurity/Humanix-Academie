@@ -123,6 +123,9 @@ model Tenant {
   // Tout email hors de ces domaines = donnee de tiers -> jamais traitee.
   exposureDomains              String[] @default([])
   employeeExposures            EmployeeExposure[]
+  // Phase 3 : snapshots agreges quotidiens (0 PII individuelle) pour le
+  // reporting de posture (NIS2 art.21 / RGPD art.32) et les tendances RSSI.
+  exposureSnapshots            ExposureSnapshot[]
   createdAt                           DateTime @default(now())
   updatedAt                           DateTime @updatedAt
 
@@ -2032,6 +2035,34 @@ model EmployeeExposure {
   @@index([tenantId, detectedAt])
 }
 
+// Phase 3 (B2B reporting). Snapshot AGREGE quotidien de la posture
+// d'exposition d'un tenant. Ne contient AUCUNE donnee individuelle : que des
+// compteurs et un score d'organisation. Sert au reporting de conformite
+// (preuve de mesures de securite NIS2 art.21 / RGPD art.32), aux tendances
+// RSSI et aux exports. Ecrit par le cron quand la veille est active.
+model ExposureSnapshot {
+  id               String   @id @default(cuid())
+  tenantId         String
+  // Jour du snapshot (granularite jour, un par tenant et par jour).
+  day              DateTime @db.Date
+  // Compteurs par statut au moment du snapshot.
+  newCount         Int      @default(0)
+  trainingCount    Int      @default(0)
+  remediatedCount  Int      @default(0)
+  dismissedCount   Int      @default(0)
+  // Expositions "ouvertes" (NEW + VALIDATED + TRAINING_ASSIGNED), i.e. non
+  // ecartees et non remediees -> ce qui reste a traiter.
+  exposedCount     Int      @default(0)
+  // Score de posture d'organisation 0-100 (0 = sain, 100 = exposition forte).
+  orgExposureScore Int      @default(0)
+  createdAt        DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, day])
+  @@index([tenantId, day])
+}
+
 // =====================================================
 // AUDIT LOG - Journal de conformité
 //
@@ -2155,6 +2186,7 @@ enum AuditAction {
   EXPOSURE_MONITORING_DISABLED // Kill switch : veille desactivee
   EXPOSURE_DETECTED // Domaine tenant matche dans une fuite (validation RSSI requise avant notif)
   EXPOSURE_TRAINING_ASSIGNED // Formation assignee a un salarie expose APRES validation RSSI
+  EXPOSURE_REPORT_EXPORTED // Phase 3 : export SIEM ou rapport de posture (accountability)
 }
 
 enum AuditOutcome {
