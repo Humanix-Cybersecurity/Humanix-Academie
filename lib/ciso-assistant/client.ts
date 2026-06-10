@@ -19,7 +19,52 @@
 // utilise https.Agent avec rejectUnauthorized=false dans ce cas.
 
 import { Agent as UndiciAgent } from "undici";
+import { lookup } from "node:dns/promises";
 import type { CisoEvidence } from "./build-bundle";
+
+/**
+ * SSRF : le baseUrl CISO est configure par un admin TENANT et chaque requete
+ * porte le token Knox dans l'en-tete Authorization. Un baseUrl pointe vers le
+ * endpoint de metadonnees cloud (169.254.169.254) ou le loopback exfiltrerait
+ * ce token / les creds IAM de l'infra Humanix. On bloque donc les plages
+ * JAMAIS legitimes pour un CISO Assistant — loopback, lien-local/metadata,
+ * unspecified, multicast — tout en autorisant le RFC1918 (un CISO Assistant
+ * peut etre legitimement auto-heberge sur un reseau prive).
+ */
+function isForbiddenCisoIp(ip: string): boolean {
+  const addr = ip.trim().toLowerCase().replace(/^\[|\]$/g, "");
+  if (addr.includes(":")) {
+    if (addr === "::1" || addr === "::") return true;
+    if (addr.startsWith("fe80")) return true; // link-local
+    const mapped = addr.match(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/);
+    return mapped ? isForbiddenCisoIp(mapped[1]) : false;
+  }
+  const m = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/.exec(addr);
+  if (!m) return true; // forme non canonique -> refus prudent
+  const [a, b] = [parseInt(m[1], 10), parseInt(m[2], 10)];
+  if (a === 0 || a === 127) return true; // unspecified / loopback
+  if (a === 169 && b === 254) return true; // link-local + metadata cloud
+  if (a >= 224) return true; // multicast + reserve
+  return false;
+}
+
+async function assertCisoHostAllowed(baseUrl: string): Promise<void> {
+  let hostname: string;
+  try {
+    hostname = new URL(baseUrl).hostname;
+  } catch {
+    throw new Error("ciso_invalid_base_url");
+  }
+  let results: { address: string }[];
+  try {
+    results = await lookup(hostname, { all: true });
+  } catch {
+    throw new Error("ciso_host_unresolvable");
+  }
+  if (!results.length || results.some((r) => isForbiddenCisoIp(r.address))) {
+    throw new Error("ciso_host_forbidden");
+  }
+}
 
 export type CisoConnectionInput = {
   baseUrl: string;
@@ -153,6 +198,10 @@ export class CisoAssistantClient {
       (init as RequestInit & { dispatcher?: unknown }).dispatcher =
         this.dispatcher;
     }
+    // Anti-SSRF : revalide l'IP resolue du baseUrl avant CHAQUE requete
+    // (le token est attache ci-dessus, on ne doit jamais l'envoyer a une
+    // cible loopback/metadata).
+    await assertCisoHostAllowed(this.conn.baseUrl);
     return fetch(`${this.conn.baseUrl}${path}`, init);
   }
 
