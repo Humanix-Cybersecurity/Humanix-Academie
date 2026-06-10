@@ -20,7 +20,7 @@ Source de vérité versionnée de la roadmap décidée en juin 2026.
 | 0 | Socle commun (B2B-ready) | M | 🟢 RAS |
 | 1 | Tier gratuit individuel (MVP public) | M-L | 🟢 RAS |
 | 2 | **Feature cœur** : boucle exposition → formation auto-assignée → suivi RSSI | L | 🟡 code **livré (inerte)** ; activation conditionnée (cf. Go/No-Go + `runbook-activation-b2b.md`) |
-| 3 | Reporting & conformité B2B (NIS2/CNIL/SIEM) | M-L | 🟡 dépend Phase 2 |
+| 3 | Reporting & conformité B2B (NIS2/SIEM, posture agrégée) | M-L | 🟡 code **livré (inerte)** ; **pas** de notification CNIL art.33 (exposition tiers ≠ violation du tenant) ; activation = celle de la Phase 2 |
 | 4 | Veille avancée (e-réputation, VIP, stealer logs) | L+ | 🔴 NO-GO sans contrat+AIPD |
 | 5 | Engagement communauté (badges, challenges) | S-M | 🟢 RAS |
 

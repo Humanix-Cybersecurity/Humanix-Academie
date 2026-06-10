@@ -51,6 +51,22 @@ humaine** dans `/admin/exposition`.
    **valide** (→ formation `exposition-numerique/02-email-dans-une-fuite`
    auto-assignée) ou les **écarte**. Chaque action est auditée.
 
+## 2 bis. Reporting (Phase 3, activé en même temps que la Phase 2)
+
+Une fois la veille active, le reporting suit automatiquement (mêmes gates) :
+
+- **Snapshot quotidien** : le cron `exposure-scan` écrit un `ExposureSnapshot`
+  agrégé par tenant et par jour (compteurs par statut + `orgExposureScore`
+  0-100). **Aucune donnée individuelle** n'est persistée dans le snapshot.
+- **Panneau posture** sur `/admin/exposition` : score, compteurs, mini-tendance.
+- **Exports** (boutons admin, gated, audités `EXPOSURE_REPORT_EXPORTED`) :
+  - **Rapport de posture** (`.md`) — cadre **NIS2 art.21 / RGPD art.32** (preuve
+    de mesure de sécurité). ⚠️ Ce n'est **pas** une notification CNIL art.33 :
+    une exposition provient d'une fuite chez un tiers, pas d'une violation du
+    tenant. Pour une vraie violation interne → module Cyber-Réflexe.
+  - **Export SIEM** (`JSON` / `CEF` ArcSight) — événements `EmployeeExposure`
+    du tenant vers son propre SIEM (couvert par le DPA art.28).
+
 ## 3. Désactivation / kill
 
 - **Tenant** : bouton « Désactiver la veille » (`exposureMonitoringEnabled=false`,
