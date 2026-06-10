@@ -363,6 +363,7 @@ model User {
   inventory              UserInventory[]
   phishingResults        PhishingResult[]
   phishingRecipientListEntries PhishingRecipientListEntry[]
+  remediationPlan        RemediationPlan?
   notificationLogs       NotificationLog[]
   authoredModules        MarketplaceModule[]     @relation("AuthoredModules")
   reviewedModules        MarketplaceModule[]     @relation("ReviewedModules")
@@ -1922,6 +1923,53 @@ model DataBreach {
 }
 
 // =====================================================
+// EXPOSITION NUMERIQUE (module juin 2026)
+// =====================================================
+// IMPORTANT privacy-by-design : le tier GRATUIT ne persiste AUCUNE PII.
+// Les checks (email/password/telephone) sont traites en memoire et jamais
+// stockes. Seuls des AGREGATS NON-IDENTIFIANTS sont conserves ci-dessous,
+// uniquement pour les stats communautaires anonymisees.
+
+// Compteurs agreges des checks d'exposition. ZERO donnee identifiante :
+// pas d'email, pas de hash de cible, pas d'IP. Juste des compteurs par jour
+// et par type de check, bucketises pour le k-anonymat des stats elles-memes.
+model ExposureCheckMetric {
+  id        String   @id @default(cuid())
+  day       DateTime @db.Date // jour du check (granularite jour, pas d'heure)
+  // Type de check : "password" | "email_domain" | "phone"
+  checkType String
+  // Bucket de resultat : "exposed" | "clean" (jamais le detail)
+  bucket    String
+  count     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Un seul compteur par (jour, type, bucket) -> upsert incremental
+  @@unique([day, checkType, bucket])
+  @@index([day])
+}
+
+// Plan de remediation personnel. Cree UNIQUEMENT si l'utilisateur a choisi
+// d'ouvrir un compte (tier community) et a explicitement consenti a sauvegarder
+// son plan. Le chemin anonyme ne cree JAMAIS de ligne ici.
+model RemediationPlan {
+  id        String   @id @default(cuid())
+  userId    String
+  // Items du plan : liste de { key, label, done, sourceUrl }. Pas de PII de fuite.
+  items     Json     @default("[]")
+  // Score d'exposition au moment de la creation (0-100), pour suivi de progres.
+  initialScore Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Un plan actif par user (on update plutot que multiplier)
+  @@unique([userId])
+  @@index([userId])
+}
+
+// =====================================================
 // AUDIT LOG - Journal de conformité
 //
 // Distinct du modèle Event (qui sert au business / gamification).
@@ -2036,6 +2084,9 @@ enum AuditAction {
   DPO_EXPORT_REQUESTED // Export JSON via /api/v1/dpo-export (OneTrust, Didomi, Privacy.fr)
   // Catalog seeding (refonte gamification mai 2026)
   CATALOG_RESEEDED // SUPERADMIN a relance le seed catalog (saisons + badges + boutique) via /superadmin/catalog
+  // Module Exposition Numerique (juin 2026)
+  EXPOSURE_CHECK_PERFORMED // Un check d'exposition a ete effectue (ipHash only, JAMAIS la cible)
+  EXPOSURE_EMAIL_VERIFIED // Propriete d'email verifiee via OTP (self-check anti-doxxing)
 }
 
 enum AuditOutcome {
