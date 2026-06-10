@@ -12,6 +12,8 @@ import {
   disableExposureMonitoring,
   validateExposureAction,
   dismissExposureAction,
+  exportSiemAction,
+  exportComplianceReportAction,
 } from "./actions";
 
 export type ExposureRow = {
@@ -31,6 +33,17 @@ export type MonitoringState = {
   blockedReason: string | null;
   domains: string[];
   dpaSignedAt: string | null;
+};
+
+export type PostureState = {
+  hasData: boolean;
+  orgExposureScore: number;
+  exposedCount: number;
+  newCount: number;
+  trainingCount: number;
+  remediatedCount: number;
+  dismissedCount: number;
+  trend: { day: string; exposedCount: number; orgExposureScore: number }[];
 };
 
 const STATUS_META: Record<
@@ -63,6 +76,8 @@ const ERROR_LABELS: Record<string, string> = {
   dpa_not_confirmed: "Confirmez la signature du DPA art.28.",
   no_valid_domain: "Saisissez au moins un domaine valide (ex. acme.fr).",
   monitoring_inactive: "Veille inactive (vérifiez les conditions d'activation).",
+  inactive: "Veille inactive : rien à exporter.",
+  no_tenant: "Tenant introuvable.",
   not_found: "Exposition introuvable ou déjà traitée.",
   wrong_status: "Cette exposition a déjà été traitée.",
   no_episode: "Épisode de remédiation introuvable.",
@@ -76,15 +91,57 @@ function fmtDate(iso: string): string {
   return iso.slice(0, 10);
 }
 
+/** Déclenche un téléchargement client à partir d'une chaîne. */
+function triggerDownload(filename: string, content: string, mime: string) {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function scoreColor(score: number): string {
+  if (score >= 67) return "text-red-600 dark:text-red-400";
+  if (score >= 34) return "text-amber-600 dark:text-amber-400";
+  return "text-emerald-600 dark:text-emerald-400";
+}
+
 export default function ExpositionAdminClient({
   monitoring,
   exposures,
+  posture,
 }: {
   monitoring: MonitoringState;
   exposures: ExposureRow[];
+  posture: PostureState;
 }) {
   const [pending, startTransition] = useTransition();
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  function runDownload(
+    fn: () => Promise<
+      | { ok: true; filename: string; content: string; mime: string }
+      | { ok: false; error: string }
+    >,
+  ) {
+    setMsg(null);
+    startTransition(async () => {
+      const r = await fn();
+      if (r.ok) {
+        triggerDownload(r.filename, r.content, r.mime);
+        setMsg({ ok: true, text: `Export généré : ${r.filename}` });
+      } else {
+        setMsg({
+          ok: false,
+          text: ERROR_LABELS[r.error] ?? r.error ?? "Erreur d'export.",
+        });
+      }
+    });
+  }
 
   function run(fn: () => Promise<{ ok: boolean; error?: string; message?: string }>) {
     setMsg(null);
@@ -144,6 +201,80 @@ export default function ExpositionAdminClient({
         >
           {msg.text}
         </div>
+      )}
+
+      {/* Panneau posture agrégée + exports (Phase 3) */}
+      {monitoring.active && (
+        <section className="rounded-xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5">
+          <div className="flex items-start justify-between gap-4 flex-wrap mb-4">
+            <div>
+              <h2 className="text-base font-bold">Posture d'exposition</h2>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                Vue agrégée (sans donnée individuelle) — preuve de mesure de
+                sécurité NIS2 art.21 / RGPD art.32.
+              </p>
+            </div>
+            <div className="text-right">
+              <p className={`text-3xl font-bold ${scoreColor(posture.orgExposureScore)}`}>
+                {posture.orgExposureScore}
+                <span className="text-base text-gray-400">/100</span>
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">
+                score de posture
+              </p>
+            </div>
+          </div>
+
+          {posture.hasData ? (
+            <>
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-4">
+                <Stat label="Ouvertes" value={posture.exposedCount} />
+                <Stat label="À valider" value={posture.newCount} />
+                <Stat label="En formation" value={posture.trainingCount} />
+                <Stat label="Remédiées" value={posture.remediatedCount} />
+                <Stat label="Écartées" value={posture.dismissedCount} />
+              </div>
+              {posture.trend.length > 1 && (
+                <TrendBar trend={posture.trend} />
+              )}
+            </>
+          ) : (
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Aucun snapshot encore : la posture apparaîtra après le premier
+              passage du scan quotidien.
+            </p>
+          )}
+
+          <div className="flex items-center gap-2 flex-wrap mt-5 pt-4 border-t border-gray-100 dark:border-slate-800">
+            <span className="text-xs text-gray-500 dark:text-gray-400 mr-1">
+              Exports :
+            </span>
+            <button
+              type="button"
+              disabled={pending}
+              onClick={() => runDownload(() => exportComplianceReportAction())}
+              className="btn-secondary text-xs"
+            >
+              📄 Rapport de posture (.md)
+            </button>
+            <button
+              type="button"
+              disabled={pending}
+              onClick={() => runDownload(() => exportSiemAction("json"))}
+              className="btn-secondary text-xs"
+            >
+              🧩 SIEM (JSON)
+            </button>
+            <button
+              type="button"
+              disabled={pending}
+              onClick={() => runDownload(() => exportSiemAction("cef"))}
+              className="btn-secondary text-xs"
+            >
+              🧩 SIEM (CEF)
+            </button>
+          </div>
+        </section>
       )}
 
       {/* Panneau de configuration / activation */}
@@ -316,6 +447,43 @@ export default function ExpositionAdminClient({
           </ul>
         </section>
       )}
+    </div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-lg border border-gray-200 dark:border-slate-700 p-3 text-center">
+      <p className="text-2xl font-bold tabular-nums">{value}</p>
+      <p className="text-[11px] uppercase tracking-wide text-gray-500 dark:text-gray-400">
+        {label}
+      </p>
+    </div>
+  );
+}
+
+/** Mini-barres de tendance des expositions ouvertes (sans dépendance graphique). */
+function TrendBar({
+  trend,
+}: {
+  trend: { day: string; exposedCount: number; orgExposureScore: number }[];
+}) {
+  const max = Math.max(1, ...trend.map((t) => t.exposedCount));
+  return (
+    <div>
+      <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+        Expositions ouvertes — {trend.length} derniers jours
+      </p>
+      <div className="flex items-end gap-1 h-20">
+        {trend.map((t) => (
+          <div
+            key={t.day}
+            className="flex-1 bg-indigo-200 dark:bg-indigo-900/50 rounded-t"
+            style={{ height: `${Math.round((t.exposedCount / max) * 100)}%` }}
+            title={`${t.day} : ${t.exposedCount} ouverte(s), score ${t.orgExposureScore}/100`}
+          />
+        ))}
+      </div>
     </div>
   );
 }

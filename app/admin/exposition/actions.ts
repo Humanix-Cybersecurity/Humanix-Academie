@@ -24,6 +24,11 @@ import {
   validateAndAssignTraining,
   dismissExposure,
 } from "@/lib/exposure/b2b-assign";
+import {
+  buildSiemExport,
+  serializeSiemExport,
+} from "@/lib/exposure/b2b-siem-export";
+import { buildComplianceReport } from "@/lib/exposure/b2b-report";
 
 type ActionResult =
   | { ok: true; message?: string }
@@ -172,4 +177,70 @@ export async function dismissExposureAction(
   revalidatePath("/admin/exposition");
   if (!res.ok) return { ok: false, error: "not_found" };
   return { ok: true, message: "Exposition ecartee." };
+}
+
+// ---------------------------------------------------------------------------
+// Phase 3 : exports (SIEM + rapport de posture). Renvoient le contenu prêt à
+// télécharger côté client (Blob). Gated triple garde + audit accountability.
+// ---------------------------------------------------------------------------
+
+type DownloadResult =
+  | { ok: true; filename: string; content: string; mime: string }
+  | { ok: false; error: string };
+
+/** Export SIEM des événements d'exposition (JSON ou CEF). */
+export async function exportSiemAction(
+  format: "json" | "cef",
+): Promise<DownloadResult> {
+  const guard = await requireExposureAdmin();
+  if (!guard.ok) return { ok: false, error: guard.error };
+
+  const data = await buildSiemExport(guard.tenantId);
+  if (!data.ok) return { ok: false, error: data.reason };
+
+  void auditLog({
+    action: "EXPOSURE_REPORT_EXPORTED",
+    outcome: "SUCCESS",
+    tenantId: guard.tenantId,
+    actor: { userId: guard.userId, role: guard.role },
+    target: { type: "siem_export", label: `${data.count} evenement(s) / ${format}` },
+    message: "Export SIEM des expositions.",
+    metadata: { format, count: data.count },
+  });
+
+  const content = serializeSiemExport(data, format);
+  const stamp = data.generatedAt.slice(0, 10);
+  return {
+    ok: true,
+    filename: `humanix-exposition-siem-${stamp}.${format === "cef" ? "cef" : "json"}`,
+    content,
+    mime: format === "cef" ? "text/plain" : "application/json",
+  };
+}
+
+/** Rapport de posture de conformité (markdown, agrégé, NIS2/RGPD art.32). */
+export async function exportComplianceReportAction(): Promise<DownloadResult> {
+  const guard = await requireExposureAdmin();
+  if (!guard.ok) return { ok: false, error: guard.error };
+
+  const report = await buildComplianceReport(guard.tenantId);
+  if (!report.ok) return { ok: false, error: report.reason };
+
+  void auditLog({
+    action: "EXPOSURE_REPORT_EXPORTED",
+    outcome: "SUCCESS",
+    tenantId: guard.tenantId,
+    actor: { userId: guard.userId, role: guard.role },
+    target: { type: "compliance_report", label: "posture" },
+    message: "Export du rapport de posture d'exposition.",
+    metadata: { kind: "compliance_report" },
+  });
+
+  const stamp = report.generatedAt.slice(0, 10);
+  return {
+    ok: true,
+    filename: `humanix-exposition-rapport-${stamp}.md`,
+    content: report.markdown,
+    mime: "text/markdown",
+  };
 }

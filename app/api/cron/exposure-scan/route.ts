@@ -16,6 +16,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { isB2bGloballyEnabled } from "@/lib/exposure/b2b-flags";
 import { scanTenantDomainExposure } from "@/lib/exposure/b2b-scan";
+import { computeAndStoreSnapshot } from "@/lib/exposure/b2b-snapshot";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -65,11 +66,13 @@ export async function POST(req: Request) {
   });
 
   let totalNew = 0;
-  const results = [];
+  let snapshots = 0;
   for (const t of tenants) {
     const r = await scanTenantDomainExposure(t.id);
     totalNew += r.newExposures;
-    results.push(r);
+    // Phase 3 : snapshot agrégé de la posture du jour (0 PII individuelle).
+    const snap = await computeAndStoreSnapshot(t.id);
+    if (snap.ok) snapshots++;
   }
 
   return NextResponse.json({
@@ -77,6 +80,7 @@ export async function POST(req: Request) {
     globallyEnabled: true,
     scanned: tenants.length,
     totalNewExposures: totalNew,
+    snapshots,
   });
 }
 
