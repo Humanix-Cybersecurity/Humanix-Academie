@@ -19,7 +19,7 @@ Source de vérité versionnée de la roadmap décidée en juin 2026.
 |---|---|---|---|
 | 0 | Socle commun (B2B-ready) | M | 🟢 RAS |
 | 1 | Tier gratuit individuel (MVP public) | M-L | 🟢 RAS |
-| 2 | **Feature cœur** : boucle exposition → formation auto-assignée → suivi RSSI | L | 🟡 conditionné (cf. Go/No-Go) |
+| 2 | **Feature cœur** : boucle exposition → formation auto-assignée → suivi RSSI | L | 🟡 code **livré (inerte)** ; activation conditionnée (cf. Go/No-Go + `runbook-activation-b2b.md`) |
 | 3 | Reporting & conformité B2B (NIS2/CNIL/SIEM) | M-L | 🟡 dépend Phase 2 |
 | 4 | Veille avancée (e-réputation, VIP, stealer logs) | L+ | 🔴 NO-GO sans contrat+AIPD |
 | 5 | Engagement communauté (badges, challenges) | S-M | 🟢 RAS |
@@ -56,6 +56,8 @@ Source de vérité versionnée de la roadmap décidée en juin 2026.
 4. Étape de validation RSSI avant toute notification/auto-assignation
 
 **🔴 NO-GO** si l'une manque → on ne livre pas la veille B2B. Le code peut être prêt ; on ne l'active pas sans le juridique.
+
+> Le code Phase 2 est **livré et inerte** (triple garde OFF par défaut). La séquence d'activation pas-à-pas, une fois le 🟢 GO obtenu, est décrite dans [`runbook-activation-b2b.md`](./runbook-activation-b2b.md).
 
 **Red lines (NO-GO par défaut)** : stealer logs sans contrat+AIPD ; réutilisation de données volées ; scraping de tiers ; scoring individuel disciplinaire ; veille VIP sans périmètre signé ; notification massive sans validation RSSI. Donnée d'un tiers détectée → suppression immédiate.
 
