@@ -38,6 +38,14 @@ type Resource = {
 
 const RESOURCES: Resource[] = [
   {
+    href: "/exposition",
+    title: "Suis-je exposé ?",
+    emoji: "🛡️",
+    description:
+      "Vérifie si ton mot de passe a fuité (sans jamais l'envoyer — k-anonymity) et si une fuite connue te concerne. Plus un guide pas-à-pas pour chercher tes traces et réduire ton empreinte. Rien n'est conservé.",
+    badge: "Gratuit",
+  },
+  {
     href: "/cyber-meteo",
     title: "Cyber-météo France",
     emoji: "🌦️",
