@@ -230,50 +230,42 @@ export async function seedCatalog(
   // remplacement au moment du lancement.
   for (const tpl of PHISHING_TEMPLATES) {
     const bodyTemplate = tpl.emailHtml("{firstName}", "{trackingUrl}");
-    await prisma.phishingEmailTemplate.upsert({
-      where: { tenantId_slug: { tenantId: null as unknown as string, slug: tpl.id } },
-      // NOTE Prisma : la composite unique sur (tenantId, slug) avec tenantId
-      // nullable demande un cast `null as unknown as string` car le client
-      // genere n'accepte pas formellement null dans le where unique. C'est
-      // un workaround connu (https://github.com/prisma/prisma/issues/3197).
-      // Le SQL genere distingue correctement les NULL via IS NULL en pratique.
-      update: {
-        name: tpl.name,
-        description: tpl.description,
-        emoji: tpl.emoji,
-        difficulty: tpl.difficulty,
-        channel: "EMAIL",
-        emailSubject: tpl.emailSubject,
-        emailFromAddr: tpl.emailFrom,
-        emailFromName: tpl.emailFrom.split("@")[0] ?? "Service IT",
-        emailHtml: bodyTemplate,
-        markers: tpl.markers,
-        remediationSaisonSlug: tpl.remediationEpisode?.saisonSlug,
-        remediationEpisodeSlug: tpl.remediationEpisode?.episodeSlug,
-        remediationLabel: tpl.remediationEpisode?.label,
-        remediationDurationMinutes: tpl.remediationEpisode?.durationMinutes,
-        isActive: true,
-      },
-      create: {
-        tenantId: null,
-        slug: tpl.id,
-        name: tpl.name,
-        description: tpl.description,
-        emoji: tpl.emoji,
-        difficulty: tpl.difficulty,
-        channel: "EMAIL",
-        emailSubject: tpl.emailSubject,
-        emailFromAddr: tpl.emailFrom,
-        emailFromName: tpl.emailFrom.split("@")[0] ?? "Service IT",
-        emailHtml: bodyTemplate,
-        markers: tpl.markers,
-        remediationSaisonSlug: tpl.remediationEpisode?.saisonSlug,
-        remediationEpisodeSlug: tpl.remediationEpisode?.episodeSlug,
-        remediationLabel: tpl.remediationEpisode?.label,
-        remediationDurationMinutes: tpl.remediationEpisode?.durationMinutes,
-        isActive: true,
-      },
+    // Champs communs create/update.
+    const fields = {
+      name: tpl.name,
+      description: tpl.description,
+      emoji: tpl.emoji,
+      difficulty: tpl.difficulty,
+      channel: "EMAIL" as const,
+      emailSubject: tpl.emailSubject,
+      emailFromAddr: tpl.emailFrom,
+      emailFromName: tpl.emailFrom.split("@")[0] ?? "Service IT",
+      emailHtml: bodyTemplate,
+      markers: tpl.markers,
+      remediationSaisonSlug: tpl.remediationEpisode?.saisonSlug,
+      remediationEpisodeSlug: tpl.remediationEpisode?.episodeSlug,
+      remediationLabel: tpl.remediationEpisode?.label,
+      remediationDurationMinutes: tpl.remediationEpisode?.durationMinutes,
+      isActive: true,
+    };
+    // IMPORTANT : Prisma REFUSE null dans une cle unique composite cote `where`
+    // (tenantId_slug) -> `Argument tenantId must not be null`. Pour les
+    // templates platform-wide (tenantId = null) on ne peut donc PAS utiliser
+    // upsert. On resout via findFirst(tenantId:null, slug) puis update/create.
+    const existing = await prisma.phishingEmailTemplate.findFirst({
+      where: { tenantId: null, slug: tpl.id },
+      select: { id: true },
     });
+    if (existing) {
+      await prisma.phishingEmailTemplate.update({
+        where: { id: existing.id },
+        data: fields,
+      });
+    } else {
+      await prisma.phishingEmailTemplate.create({
+        data: { tenantId: null, slug: tpl.id, ...fields },
+      });
+    }
   }
 
   // ----- 5. Tenant Communaute -----
