@@ -39,7 +39,7 @@ export default async function AdminIncidentsPage() {
   const tenantId = session!.user.tenantId as string;
 
   const plan = await getTenantPlan(tenantId);
-  if (!planHasFeature(plan, "incidents")) {
+  if (!planHasFeature(plan, "incidents", session?.user?.role)) {
     return (
       <>
         <AdminPageHeader

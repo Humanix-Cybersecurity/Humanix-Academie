@@ -29,7 +29,7 @@ export default async function PhishingTemplatesPage() {
   const tenantId = session!.user.tenantId as string;
   const plan = await getTenantPlan(tenantId);
 
-  if (!planHasFeature(plan, "phishing")) {
+  if (!planHasFeature(plan, "phishing", session?.user?.role)) {
     return (
       <>
         <AdminPageHeader

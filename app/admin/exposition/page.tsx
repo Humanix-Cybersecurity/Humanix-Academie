@@ -35,7 +35,7 @@ export default async function AdminExpositionPage() {
   const plan = await getTenantPlan(tenantId);
 
   // Gate : veille d'exposition = Enterprise.
-  if (!planHasFeature(plan, "exposure_monitoring")) {
+  if (!planHasFeature(plan, "exposure_monitoring", session?.user?.role)) {
     return (
       <>
         <AdminPageHeader

@@ -52,7 +52,7 @@ async function requireExposureAdmin(): Promise<
   if (!tenantId) return { ok: false, error: "no_tenant" };
 
   const plan = await getTenantPlan(tenantId);
-  if (!planHasFeature(plan, "exposure_monitoring")) {
+  if (!planHasFeature(plan, "exposure_monitoring", session?.user?.role)) {
     return { ok: false, error: "plan_required" };
   }
   return { ok: true, tenantId, userId: session.user.id as string, role };
