@@ -21,7 +21,7 @@ export default async function PersonalizePhishingPage() {
   const tenantId = session.user!.tenantId as string;
   const plan = await getTenantPlan(tenantId);
 
-  if (!planHasFeature(plan, "phishing_ia")) {
+  if (!planHasFeature(plan, "phishing_ia", session?.user?.role)) {
     return (
       <div className="max-w-5xl mx-auto px-4 py-10">
         <h1 className="text-3xl font-extrabold text-primary-500 dark:text-accent-300">
