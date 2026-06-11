@@ -134,6 +134,13 @@ const SECTIONS: Section[] = [
     icon: "🛡",
     items: [
       {
+        href: "/admin/conformite",
+        label: "Référentiels",
+        icon: "🛡",
+        gate: "Pro+",
+        minRole: "RSSI",
+      },
+      {
         href: "/admin/conformite-nis2",
         label: "NIS2",
         icon: "📋",
