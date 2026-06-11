@@ -18,8 +18,88 @@
 // SSL : verifySSL=false pour les certs auto-signes en local. Node natif
 // utilise https.Agent avec rejectUnauthorized=false dans ce cas.
 
-import { Agent as UndiciAgent } from "undici";
+import { Agent } from "undici";
+import { lookup } from "node:dns/promises";
+import { buildPinnedAgent, type PinnedAddress } from "@/lib/net/pinned-agent";
 import type { CisoEvidence } from "./build-bundle";
+
+/**
+ * SSRF : le baseUrl CISO est configure par un admin TENANT et chaque requete
+ * porte le token Knox dans l'en-tete Authorization. Un baseUrl pointe vers le
+ * endpoint de metadonnees cloud (169.254.169.254) ou le loopback exfiltrerait
+ * ce token / les creds IAM de l'infra Humanix. On bloque donc les plages
+ * JAMAIS legitimes pour un CISO Assistant — loopback, lien-local/metadata,
+ * unspecified, multicast — tout en autorisant le RFC1918 (un CISO Assistant
+ * peut etre legitimement auto-heberge sur un reseau prive).
+ */
+/**
+ * Extrait l'IPv4 embarquee dans un litteral IPv6 mapped/compat (queue dotted
+ * ::ffff:a.b.c.d OU hex ::ffff:7f00:1 == 127.0.0.1). Renvoie null sinon.
+ * Sans ca, le contournement "loopback/metadata en IPv6-mapped hex" passe : le
+ * parseur URL re-normalise [::ffff:169.254.169.254] en hex, et un AAAA
+ * malveillant peut resoudre directement vers ::ffff:7f00:1.
+ */
+function embeddedIpv4(addr: string): string | null {
+  const dotted = addr.match(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/);
+  if (dotted) return dotted[1];
+  const hex = addr.match(/^::(?:ffff:)?([0-9a-f]{1,4}):([0-9a-f]{1,4})$/);
+  if (hex) {
+    const hi = parseInt(hex[1], 16);
+    const lo = parseInt(hex[2], 16);
+    return `${(hi >> 8) & 255}.${hi & 255}.${(lo >> 8) & 255}.${lo & 255}`;
+  }
+  return null;
+}
+
+export function isForbiddenCisoIp(ip: string): boolean {
+  const addr = ip.trim().toLowerCase().replace(/^\[|\]$/g, "");
+  if (addr.includes(":")) {
+    if (addr === "::1" || addr === "::") return true; // loopback / unspecified
+    // fe80::/10 COMPLET (pas juste fe80:) -> link-local + metadata cloud.
+    const head = parseInt(addr.split(":")[0] || "0", 16);
+    if (head >= 0xfe80 && head <= 0xfebf) return true;
+    if (head >= 0xff00) return true; // multicast ff00::/8
+    // NB : ULA fc00::/7 volontairement NON bloquee -> un CISO Assistant peut
+    // etre legitimement auto-heberge sur reseau prive (cf. RFC1918 plus bas).
+    const v4 = embeddedIpv4(addr);
+    return v4 ? isForbiddenCisoIp(v4) : false;
+  }
+  const m = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/.exec(addr);
+  if (!m) return true; // forme non canonique -> refus prudent
+  const [a, b] = [parseInt(m[1], 10), parseInt(m[2], 10)];
+  if (a === 0 || a === 127) return true; // unspecified / loopback
+  if (a === 169 && b === 254) return true; // link-local + metadata cloud
+  if (a >= 224) return true; // multicast + reserve
+  return false;
+}
+
+/**
+ * Resout le hostname du baseUrl, refuse si UNE des IP est interdite, et renvoie
+ * les adresses validees A EPINGLER. Lever ici (au lieu de juste valider) permet
+ * de fermer la fenetre TOCTOU : la connexion sera epinglee sur ces adresses
+ * exactes (cf. pinnedDispatcher), sans 2e resolution cote undici qu'un
+ * attaquant DNS-rebinding pourrait detourner vers loopback/metadata.
+ */
+async function assertCisoHostAllowed(
+  baseUrl: string,
+): Promise<PinnedAddress[]> {
+  let hostname: string;
+  try {
+    hostname = new URL(baseUrl).hostname;
+  } catch {
+    throw new Error("ciso_invalid_base_url");
+  }
+  let results: { address: string; family: number }[];
+  try {
+    results = await lookup(hostname, { all: true });
+  } catch {
+    throw new Error("ciso_host_unresolvable");
+  }
+  if (!results.length || results.some((r) => isForbiddenCisoIp(r.address))) {
+    throw new Error("ciso_host_forbidden");
+  }
+  return results.map((r) => ({ address: r.address, family: r.family }));
+}
 
 export type CisoConnectionInput = {
   baseUrl: string;
@@ -95,7 +175,14 @@ export function mapStatusToCiso(humanixStatus: string): string {
  */
 export class CisoAssistantClient {
   private readonly conn: CisoConnectionInput;
-  private readonly dispatcher: UndiciAgent | undefined;
+  /** Agent undici epingle sur la DERNIERE resolution validee du baseUrl.
+   * Reconstruit si la resolution change (cf. pinnedDispatcher). Porte aussi
+   * rejectUnauthorized=false quand verifySSL est desactive (certs auto-signes
+   * en local). On epingle l'IP pour fermer la fenetre TOCTOU entre la
+   * validation SSRF et l'ouverture du socket (anti DNS-rebinding) : meme en
+   * verifySSL=true, on ne laisse plus undici re-resoudre le hostname. */
+  private pinnedAgent: Agent | null = null;
+  private pinnedKey: string | null = null;
   private token: string | null = null;
   private folderId: string | null = null;
   private existingByName: Map<string, { id: string }> | null = null;
@@ -120,14 +207,38 @@ export class CisoAssistantClient {
 
   constructor(conn: CisoConnectionInput) {
     this.conn = { ...conn, baseUrl: conn.baseUrl.replace(/\/+$/, "") };
-    // Pour les certs auto-signes (HAProxy dev, Caddy local). En prod le
-    // tenant doit fournir un cert valide. On utilise undici Agent (et
-    // pas node:https Agent) car fetch() Next.js passe par undici, pas par
-    // node:https. C'est la seule maniere de propager rejectUnauthorized
-    // a la requete sans toucher au process global (NODE_TLS_REJECT...).
-    this.dispatcher = conn.verifySSL
-      ? undefined
-      : new UndiciAgent({ connect: { rejectUnauthorized: false } });
+  }
+
+  /**
+   * Renvoie l'Agent undici epingle sur `addresses`. Cache : tant que la
+   * resolution validee ne change pas, on reutilise le meme Agent (un seul
+   * socket-pool par sync, pas de fuite). Si elle change (DNS legitimement mis a
+   * jour entre deux requetes d'une meme sync), on reconstruit et on ferme
+   * l'ancien.
+   *
+   * verifySSL=false (certs auto-signes : HAProxy dev, Caddy local) -> on
+   * propage rejectUnauthorized=false. On passe par un Agent undici (et pas
+   * node:https) car le fetch() de Next.js utilise undici ; c'est la seule
+   * maniere de regler rejectUnauthorized sans toucher au process global
+   * (NODE_TLS_REJECT_UNAUTHORIZED).
+   */
+  private pinnedDispatcher(addresses: PinnedAddress[]): Agent {
+    const key = addresses
+      .map((a) => `${a.address}/${a.family}`)
+      .sort()
+      .join(",");
+    if (this.pinnedAgent && this.pinnedKey === key) {
+      return this.pinnedAgent;
+    }
+    if (this.pinnedAgent) {
+      // best-effort : on libere l'ancien pool epingle sur la resolution perimee
+      void this.pinnedAgent.destroy().catch(() => {});
+    }
+    this.pinnedKey = key;
+    this.pinnedAgent = buildPinnedAgent(addresses, {
+      rejectUnauthorized: this.conn.verifySSL ? undefined : false,
+    });
+    return this.pinnedAgent;
   }
 
   private async request(
@@ -147,12 +258,16 @@ export class CisoAssistantClient {
       headers,
       ...(body !== undefined && { body: JSON.stringify(body) }),
     };
-    if (this.dispatcher) {
-      // undici dispatcher : ignored par TS DOM Fetch types mais respecte
-      // par Next.js fetch underlying undici implementation.
-      (init as RequestInit & { dispatcher?: unknown }).dispatcher =
-        this.dispatcher;
-    }
+    // Anti-SSRF / DNS-rebinding : on revalide l'IP resolue du baseUrl avant
+    // CHAQUE requete (le token Knox est attache ci-dessus, il ne doit jamais
+    // partir vers loopback/metadata), PUIS on epingle la connexion sur cette
+    // IP exacte. undici ne re-resout plus le hostname de son cote : plus de
+    // fenetre TOCTOU. Le Host header / SNI restent le hostname du baseUrl.
+    const addresses = await assertCisoHostAllowed(this.conn.baseUrl);
+    // undici dispatcher : ignore par les types DOM Fetch mais respecte par le
+    // fetch() de Next.js (undici sous-jacent).
+    (init as RequestInit & { dispatcher?: unknown }).dispatcher =
+      this.pinnedDispatcher(addresses);
     return fetch(`${this.conn.baseUrl}${path}`, init);
   }
 
@@ -1325,6 +1440,11 @@ export class CisoAssistantClient {
     filename: string,
     pdfBuffer: Buffer,
   ): Promise<{ ok: true } | { ok: false; status: number; error: string }> {
+    // Anti-SSRF / DNS-rebinding : uploadAttachment fait un fetch() DIRECT (hors
+    // request()), il faut donc revalider l'IP resolue du baseUrl ICI AUSSI puis
+    // epingler la connexion dessus -- le token Knox est attache plus bas et ne
+    // doit jamais partir vers loopback/metadata, ni via une 2e resolution.
+    const addresses = await assertCisoHostAllowed(this.conn.baseUrl);
     const url = `${this.conn.baseUrl}/api/evidences/${evidenceId}/upload/`;
     const headers: Record<string, string> = {
       "Content-Type": "application/pdf",
@@ -1336,10 +1456,8 @@ export class CisoAssistantClient {
       headers,
       body: pdfBuffer as unknown as BodyInit,
     };
-    if (this.dispatcher) {
-      (init as RequestInit & { dispatcher?: unknown }).dispatcher =
-        this.dispatcher;
-    }
+    (init as RequestInit & { dispatcher?: unknown }).dispatcher =
+      this.pinnedDispatcher(addresses);
     const r = await fetch(url, init);
     if ([200, 201, 204].includes(r.status)) {
       return { ok: true };

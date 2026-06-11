@@ -1,0 +1,91 @@
+---
+title: "Ton mot de passe a fuité"
+durationMinutes: 3
+persona: "tous"
+objective: "Comprendre le credential stuffing et adopter le bon réflexe quand un mot de passe est retrouvé dans une fuite"
+xpReward: 40
+scenario: |
+  Le vérificateur t'a indiqué qu'un de tes mots de passe apparaît
+  dans une base de fuites connue, vu des centaines de milliers de
+  fois. Tu utilises ce même mot de passe sur ta messagerie perso,
+  un site de e-commerce et l'intranet de ton entreprise. Quel est
+  le vrai danger immédiat ?
+choices:
+  - id: "a"
+    label: "Aucun : tant que personne ne connaît mon email avec, c'est bon"
+    outcome: "bad"
+    feedback: "Les attaquants ne devinent pas : ils rejouent automatiquement des couples email+mot de passe issus de fuites sur des milliers de sites. C'est le credential stuffing, et c'est massif et automatisé."
+    points: -10
+  - id: "b"
+    label: "Un attaquant peut tester ce mot de passe sur tous mes autres comptes, automatiquement"
+    outcome: "good"
+    feedback: "Exactement. Un mot de passe réutilisé et fuité = toutes tes portes ouvertes avec la même clé. Le risque n'est pas la fuite d'origine, c'est la réutilisation ailleurs."
+    points: 15
+  - id: "c"
+    label: "Je change juste le mot de passe du site qui a fuité"
+    outcome: "bad"
+    feedback: "Insuffisant : le danger vient de tous les autres sites où tu réutilises ce mot de passe. Il faut le changer partout où il servait, en mettant un mot de passe unique à chaque fois."
+    points: -5
+quizCorrectAnswer: "b"
+takeaway: |
+  Un mot de passe trouvé dans une fuite doit être changé partout où
+  il était utilisé, avec un mot de passe UNIQUE par site. La seule
+  façon tenable de gérer des mots de passe uniques partout : un
+  gestionnaire de mots de passe (KeePassXC souverain, ou le coffre
+  intégré au navigateur). Et on active la double authentification
+  là où c'est possible — voir l'épisode suivant.
+licence: "CC BY-SA 4.0 — Humanix Académie Community Edition"
+---
+
+# Ton mot de passe a fuité
+
+Voir un de ses mots de passe dans une base de fuites, c'est désagréable.
+Mais ce n'est pas la fuite elle-même le vrai problème. Le vrai problème,
+c'est ce qu'un attaquant peut en faire **ailleurs**.
+
+## Le credential stuffing, expliqué simplement
+
+Quand une base de données fuite, elle contient des millions de couples
+« email + mot de passe ». Les attaquants ne perdent pas leur temps à
+cibler des gens un par un. Ils prennent ces millions de couples et les
+**rejouent automatiquement** sur des milliers de sites : banques,
+messageries, réseaux sociaux, intranets.
+
+La logique est froide : si tu réutilises le même mot de passe sur dix
+sites, il leur suffit d'une seule fuite pour avoir la clé de tes dix
+portes. C'est pour ça qu'un mot de passe fuité et réutilisé est bien
+plus dangereux qu'il n'en a l'air.
+
+## Pourquoi le k-anonymat protège ta vérification
+
+Tu as peut-être remarqué que le vérificateur ne t'a jamais demandé
+d'envoyer ton mot de passe. C'est volontaire : ton mot de passe est
+transformé en empreinte **dans ton navigateur**, et seuls les cinq
+premiers caractères de cette empreinte sont envoyés. Le service
+renvoie une liste d'empreintes correspondantes, et la comparaison
+finale se fait chez toi. Ton mot de passe ne quitte jamais ton
+appareil. C'est le principe du k-anonymat.
+
+## Le bon réflexe en trois temps
+
+1. **Changer le mot de passe compromis** sur le site d'origine.
+2. **Le changer partout** où tu l'avais réutilisé — c'est le point
+   critique, et le plus souvent oublié.
+3. **Mettre un mot de passe unique** à chaque endroit, généré et
+   retenu par un gestionnaire.
+
+## « Je n'arriverai jamais à retenir un mot de passe par site »
+
+C'est exactement pour ça que les gestionnaires de mots de passe
+existent. Tu retiens **un seul** mot de passe maître, fort, et le
+gestionnaire s'occupe du reste. KeePassXC est libre, gratuit et
+souverain ; le coffre intégré à ton navigateur fait déjà une grande
+partie du travail.
+
+## Le piège à éviter
+
+Ne te contente pas de « rajouter un chiffre » à la fin de ton mot de
+passe habituel. Les attaquants connaissent ce réflexe, et leurs outils
+testent automatiquement les variantes (`motdepasse`, `motdepasse1`,
+`motdepasse2024`…). Un bon mot de passe est **différent**, pas
+légèrement modifié.

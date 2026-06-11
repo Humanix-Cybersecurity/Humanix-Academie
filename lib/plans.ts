@@ -64,6 +64,8 @@ export const FEATURE_MIN_PLAN = {
   multi_site: "enterprise",
   // White-label (logo + couleurs personnalises)
   white_label: "enterprise",
+  // Veille d'exposition B2B des comptes salaries (Phase 2, gated DPA+AIPD)
+  exposure_monitoring: "enterprise",
 } as const satisfies Record<string, PlanId>;
 
 export type Feature = keyof typeof FEATURE_MIN_PLAN;

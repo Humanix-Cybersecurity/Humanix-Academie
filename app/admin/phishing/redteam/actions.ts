@@ -6,6 +6,8 @@
 // scenario est juste renvoye au client pour preview + edit avant lancement.
 
 import { auth } from "@/lib/auth";
+import { getTenantPlan, planHasFeature } from "@/lib/plans";
+import { checkRateLimit } from "@/lib/rate-limit";
 import {
   generateRedTeamScenario,
   type RedTeamInput,
@@ -18,6 +20,25 @@ export async function generateRedTeamAction(
   const session = await auth();
   if (!session?.user) {
     return { ok: false, error: "unauthorized" };
+  }
+  // SECURITE : une server action est invocable en POST direct, le layout
+  // /admin ne la protege PAS. On exige donc role + plan ici (comme les
+  // generateurs IA voisins), sinon n'importe quel compte authentifie (meme
+  // LEARNER d'un tenant gratuit) consomme le quota Mistral et la surface de
+  // prompt-injection.
+  const role = session.user.role;
+  if (role !== "ADMIN" && role !== "RSSI" && role !== "MANAGER" && role !== "SUPERADMIN") {
+    return { ok: false, error: "forbidden" };
+  }
+  const tenantId = session.user.tenantId as string;
+  const plan = await getTenantPlan(tenantId);
+  if (!planHasFeature(plan, "phishing_ia")) {
+    return { ok: false, error: "plan_too_low" };
+  }
+  // Rate limit : 20 generations/heure/user (anti-abus quota IA).
+  const rl = checkRateLimit(`redteam:${session.user.id}`, 20, 60 * 60 * 1000);
+  if (!rl.ok) {
+    return { ok: false, error: "rate_limited" };
   }
 
   const sector = String(formData.get("sector") ?? "").trim().slice(0, 200);

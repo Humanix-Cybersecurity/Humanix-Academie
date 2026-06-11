@@ -113,6 +113,19 @@ model Tenant {
   //   le flag precedent est aussi activé).
   autoForce2FAAfterPhishingClick      Boolean  @default(false)
   autoRevokeSessionAfterPhishingClick Boolean  @default(false)
+  // --- Exposition Numerique Phase 2 B2B (OFF par defaut, gated DPA+AIPD) ---
+  // Veille d'exposition des comptes salaries. Ne s'active JAMAIS sans le flag
+  // global env + DPA enregistree. Cf. lib/exposure/b2b-flags.ts.
+  exposureMonitoringEnabled    Boolean  @default(false)
+  // Horodatage de signature du DPA art.28 (gate legal obligatoire).
+  exposureMonitoringDpaSignedAt DateTime?
+  // Domaines declares a surveiller (ex: ["acme.fr"]). Vide = rien surveille.
+  // Tout email hors de ces domaines = donnee de tiers -> jamais traitee.
+  exposureDomains              String[] @default([])
+  employeeExposures            EmployeeExposure[]
+  // Phase 3 : snapshots agreges quotidiens (0 PII individuelle) pour le
+  // reporting de posture (NIS2 art.21 / RGPD art.32) et les tendances RSSI.
+  exposureSnapshots            ExposureSnapshot[]
   createdAt                           DateTime @default(now())
   updatedAt                           DateTime @updatedAt
 
@@ -363,6 +376,8 @@ model User {
   inventory              UserInventory[]
   phishingResults        PhishingResult[]
   phishingRecipientListEntries PhishingRecipientListEntry[]
+  remediationPlan        RemediationPlan?
+  employeeExposures      EmployeeExposure[]
   notificationLogs       NotificationLog[]
   authoredModules        MarketplaceModule[]     @relation("AuthoredModules")
   reviewedModules        MarketplaceModule[]     @relation("ReviewedModules")
@@ -1914,11 +1929,138 @@ model DataBreach {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  employeeExposures EmployeeExposure[]
+
   // Dedup forte : meme externalId par source = meme fuite
   @@unique([source, externalId])
   @@index([incidentDate])
   @@index([source, incidentDate])
   @@index([isPublished, incidentDate])
+}
+
+// =====================================================
+// EXPOSITION NUMERIQUE (module juin 2026)
+// =====================================================
+// IMPORTANT privacy-by-design : le tier GRATUIT ne persiste AUCUNE PII.
+// Les checks (email/password/telephone) sont traites en memoire et jamais
+// stockes. Seuls des AGREGATS NON-IDENTIFIANTS sont conserves ci-dessous,
+// uniquement pour les stats communautaires anonymisees.
+
+// Compteurs agreges des checks d'exposition. ZERO donnee identifiante :
+// pas d'email, pas de hash de cible, pas d'IP. Juste des compteurs par jour
+// et par type de check, bucketises pour le k-anonymat des stats elles-memes.
+model ExposureCheckMetric {
+  id        String   @id @default(cuid())
+  day       DateTime @db.Date // jour du check (granularite jour, pas d'heure)
+  // Type de check : "password" | "email_domain" | "phone"
+  checkType String
+  // Bucket de resultat : "exposed" | "clean" (jamais le detail)
+  bucket    String
+  count     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Un seul compteur par (jour, type, bucket) -> upsert incremental
+  @@unique([day, checkType, bucket])
+  @@index([day])
+}
+
+// Plan de remediation personnel. Cree UNIQUEMENT si l'utilisateur a choisi
+// d'ouvrir un compte (tier community) et a explicitement consenti a sauvegarder
+// son plan. Le chemin anonyme ne cree JAMAIS de ligne ici.
+model RemediationPlan {
+  id        String   @id @default(cuid())
+  userId    String
+  // Items du plan : liste de { key, label, done, sourceUrl }. Pas de PII de fuite.
+  items     Json     @default("[]")
+  // Score d'exposition au moment de la creation (0-100), pour suivi de progres.
+  initialScore Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Un plan actif par user (on update plutot que multiplier)
+  @@unique([userId])
+  @@index([userId])
+}
+
+// =====================================================
+// EXPOSITION NUMERIQUE — PHASE 2 B2B (veille salaries)
+// =====================================================
+// ⚠️ FEATURE GATEE, OFF PAR DEFAUT. Ne s'active JAMAIS sans :
+//   1. Flag global env EXPOSURE_B2B_ENABLED=true (kill switch plateforme)
+//   2. Tenant.exposureMonitoringEnabled=true
+//   3. Tenant.exposureMonitoringDpaSignedAt non null (DPA art.28 enregistree)
+// Cf. lib/exposure/b2b-flags.ts (triple garde) + docs/exposition-numerique/
+// {aipd-trame,notice-transparence-salaries}.md + roadmap.md (Go/No-Go).
+//
+// PRINCIPE ANTI-DERIVE : le cron DETECTE seulement (status NEW). AUCUNE
+// notification ni auto-assignation de formation sans VALIDATION RSSI humaine
+// explicite (status NEW -> VALIDATED -> TRAINING_ASSIGNED). Donnee d'un tiers
+// (email hors domaines declares du tenant) : jamais creee.
+
+enum EmployeeExposureStatus {
+  NEW // detecte par le cron, en attente de validation RSSI
+  VALIDATED // RSSI a confirme : ce n'est pas un faux positif
+  TRAINING_ASSIGNED // formation de remediation assignee au salarie
+  DISMISSED // RSSI a ecarte (faux positif)
+  REMEDIATED // salarie a complete la remediation
+}
+
+model EmployeeExposure {
+  id        String                 @id @default(cuid())
+  tenantId  String
+  userId    String
+  // Reference vers la fuite de l'observatoire qui a matche le domaine.
+  breachId  String
+  // Domaine declare du tenant qui a matche (tracabilite + anti-tiers).
+  matchedDomain String
+  status    EmployeeExposureStatus @default(NEW)
+  detectedAt DateTime              @default(now())
+  // Validation RSSI (obligatoire avant toute notif/assignation).
+  validatedByUserId String?
+  validatedAt       DateTime?
+  // Episode de remediation assigne (apres validation).
+  assignedEpisodeId String?
+  resolvedAt        DateTime?
+
+  tenant  Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  breach  DataBreach   @relation(fields: [breachId], references: [id], onDelete: Cascade)
+
+  // Une exposition par (salarie, fuite) : pas de doublon au re-scan.
+  @@unique([userId, breachId])
+  @@index([tenantId, status])
+  @@index([tenantId, detectedAt])
+}
+
+// Phase 3 (B2B reporting). Snapshot AGREGE quotidien de la posture
+// d'exposition d'un tenant. Ne contient AUCUNE donnee individuelle : que des
+// compteurs et un score d'organisation. Sert au reporting de conformite
+// (preuve de mesures de securite NIS2 art.21 / RGPD art.32), aux tendances
+// RSSI et aux exports. Ecrit par le cron quand la veille est active.
+model ExposureSnapshot {
+  id               String   @id @default(cuid())
+  tenantId         String
+  // Jour du snapshot (granularite jour, un par tenant et par jour).
+  day              DateTime @db.Date
+  // Compteurs par statut au moment du snapshot.
+  newCount         Int      @default(0)
+  trainingCount    Int      @default(0)
+  remediatedCount  Int      @default(0)
+  dismissedCount   Int      @default(0)
+  // Expositions "ouvertes" (NEW + VALIDATED + TRAINING_ASSIGNED), i.e. non
+  // ecartees et non remediees -> ce qui reste a traiter.
+  exposedCount     Int      @default(0)
+  // Score de posture d'organisation 0-100 (0 = sain, 100 = exposition forte).
+  orgExposureScore Int      @default(0)
+  createdAt        DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, day])
+  @@index([tenantId, day])
 }
 
 // =====================================================
@@ -2036,6 +2178,15 @@ enum AuditAction {
   DPO_EXPORT_REQUESTED // Export JSON via /api/v1/dpo-export (OneTrust, Didomi, Privacy.fr)
   // Catalog seeding (refonte gamification mai 2026)
   CATALOG_RESEEDED // SUPERADMIN a relance le seed catalog (saisons + badges + boutique) via /superadmin/catalog
+  // Module Exposition Numerique (juin 2026)
+  EXPOSURE_CHECK_PERFORMED // Un check d'exposition a ete effectue (ipHash only, JAMAIS la cible)
+  EXPOSURE_EMAIL_VERIFIED // Propriete d'email verifiee via OTP (self-check anti-doxxing)
+  // Phase 2 B2B (veille salaries) — TOUJOURS OFF par defaut, gated DPA+AIPD
+  EXPOSURE_MONITORING_ENABLED // Un tenant a active la veille (DPA enregistree)
+  EXPOSURE_MONITORING_DISABLED // Kill switch : veille desactivee
+  EXPOSURE_DETECTED // Domaine tenant matche dans une fuite (validation RSSI requise avant notif)
+  EXPOSURE_TRAINING_ASSIGNED // Formation assignee a un salarie expose APRES validation RSSI
+  EXPOSURE_REPORT_EXPORTED // Phase 3 : export SIEM ou rapport de posture (accountability)
 }
 
 enum AuditOutcome {

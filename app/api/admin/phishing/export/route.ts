@@ -24,7 +24,13 @@ export const dynamic = "force-dynamic";
 /** Echappe une cellule CSV (RFC 4180) : guillemets doubles + entoure si besoin */
 function csvCell(v: string | number | null | undefined): string {
   if (v === null || v === undefined) return "";
-  const s = String(v);
+  let s = String(v);
+  // Anti CSV-injection : neutralise les cellules debutant par un caractere de
+  // formule (= + - @, tab, CR) en les prefixant d'une apostrophe. Sinon un
+  // nom user type =HYPERLINK(...) s'executerait a l'ouverture Excel/Sheets.
+  if (/^[=+\-@\t\r]/.test(s)) {
+    s = `'${s}`;
+  }
   // Si la cellule contient virgule, retour ligne ou guillemet -> entourer
   if (/[",\n\r;]/.test(s)) {
     return `"${s.replace(/"/g, '""')}"`;
