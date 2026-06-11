@@ -363,15 +363,20 @@ export default function EpisodePlayer(props: {
                 "sur le debrief de hex, j'ai les tableau qui sont pas formattes".
                 whitespace-pre-line retire ici car MarkdownView gere les sauts
                 de ligne (block-level p / li / table). */}
-            <div className="bg-gradient-to-br from-cyan-50 via-white to-blue-50 dark:from-cyan-950/30 dark:via-slate-900 dark:to-blue-950/30 rounded-2xl p-5 mb-6 text-gray-700 dark:text-gray-200 leading-relaxed border border-cyan-200 dark:border-cyan-900/40">
-              <div className="flex items-center justify-between mb-3">
-                <p className="text-xs uppercase tracking-[0.25em] text-accent-500 font-bold">
-                  Le debrief de Hex
-                </p>
-                <TTSButton text={props.debrief} label="Ecouter le debrief" />
+            {/* Bloc debrief affiche UNIQUEMENT si l'episode a un debrief
+                redige (certains MDX n'ont que scenario/feedback/quiz). Evite
+                une boite vide et n'instancie pas TTSButton sur du vide. */}
+            {props.debrief?.trim() && (
+              <div className="bg-gradient-to-br from-cyan-50 via-white to-blue-50 dark:from-cyan-950/30 dark:via-slate-900 dark:to-blue-950/30 rounded-2xl p-5 mb-6 text-gray-700 dark:text-gray-200 leading-relaxed border border-cyan-200 dark:border-cyan-900/40">
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-xs uppercase tracking-[0.25em] text-accent-500 font-bold">
+                    Le debrief de Hex
+                  </p>
+                  <TTSButton text={props.debrief} label="Ecouter le debrief" />
+                </div>
+                <MarkdownView content={props.debrief} />
               </div>
-              <MarkdownView content={props.debrief} />
-            </div>
+            )}
             <button
               onClick={() => {
                 setStep("quiz");

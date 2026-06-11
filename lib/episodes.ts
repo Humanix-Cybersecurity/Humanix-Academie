@@ -125,10 +125,20 @@ export function loadEpisode(
   if (!fs.existsSync(file)) return null;
   const raw = fs.readFileSync(file, "utf-8");
   const { data, content } = matter(raw);
+  // Le frontmatter MDX est de qualite variable : certains episodes n'ont pas
+  // de `debrief`, `choices` ou `quiz`. On garantit ici une forme stable pour
+  // que les consommateurs (page episode, shuffle, EpisodePlayer, TTSButton)
+  // ne manipulent jamais d'undefined -> evite les 500 SSR (ex. cleanForTTS).
+  const meta = (data ?? {}) as EpisodeContent["meta"];
   return {
     saisonSlug,
     episodeSlug,
-    meta: data as EpisodeContent["meta"],
+    meta: {
+      ...meta,
+      debrief: meta.debrief ?? "",
+      choices: meta.choices ?? [],
+      quiz: meta.quiz ?? [],
+    },
     body: content,
   };
 }
