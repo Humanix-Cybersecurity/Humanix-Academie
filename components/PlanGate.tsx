@@ -117,6 +117,15 @@ const FEATURE_PITCH: Record<
       "Idéal pour les groupes qui veulent une plateforme à leur image - interne ou externe.",
     ],
   },
+  exposure_monitoring: {
+    emoji: "🛡️",
+    title: "Veille d'exposition des comptes salariés",
+    benefits: [
+      "Détecte les comptes de tes salariés apparaissant dans les fuites publiques (matching domaine).",
+      "Boucle exposition → formation auto-assignée → suivi RSSI, avec validation humaine à chaque étape.",
+      "Cadre RGPD strict : DPA art.28, AIPD et notice salariés requis ; détection seule, aucune donnée de tiers.",
+    ],
+  },
 };
 
 export default function PlanGate({

@@ -24,6 +24,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getTemplate } from "@/lib/phishing";
 import { generatePhishingDebrief } from "@/lib/ai/phishing-debrief";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +36,14 @@ export async function GET(
 
   if (!token) {
     return NextResponse.json({ ok: false, error: "invalid_token" });
+  }
+
+  // ANTI-ABUS : chaque appel declenche une generation Mistral. Le contenu est
+  // deterministe pour un token donne -> on borne a 5/h/token (un porteur de
+  // token legitime n'en a pas besoin de plus ; bloque le martelage du quota).
+  const rl = checkRateLimit(`phishing-debrief:${token}`, 5, 60 * 60 * 1000);
+  if (!rl.ok) {
+    return NextResponse.json({ ok: false, error: "rate_limited" }, { status: 429 });
   }
 
   const result = await db.phishingResult.findUnique({

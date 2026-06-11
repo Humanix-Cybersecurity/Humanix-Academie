@@ -611,6 +611,14 @@ function getCookieDomain(): string | undefined {
 }
 
 const cookieDomain = getCookieDomain();
+// SECURITE : le flag `secure` ne doit PAS dependre uniquement de la presence
+// d'un cookieDomain. Si NEXT_PUBLIC_APP_URL est absent/malforme en prod,
+// cookieDomain devient undefined et les cookies de session partiraient sans
+// `Secure` (interceptables en clair). On force donc Secure des qu'on est en
+// production, quel que soit l'etat du domaine. En dev (localhost) on garde
+// le comportement host-only non-secure attendu.
+const secureCookies =
+  !!cookieDomain || process.env.NODE_ENV === "production";
 // `__Host-` prefix interdit le `domain` (specs RFC 6265bis). Si on partage
 // le cookie cross-subdomain (domain defini), on doit utiliser `__Secure-`
 // a la place. Si pas de domain (dev), on peut garder `__Host-` qui est
@@ -655,7 +663,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         httpOnly: true,
         sameSite: "lax",
         path: "/",
-        secure: !!cookieDomain,
+        secure: secureCookies,
         domain: cookieDomain,
       },
     },
@@ -666,7 +674,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       options: {
         sameSite: "lax",
         path: "/",
-        secure: !!cookieDomain,
+        secure: secureCookies,
         domain: cookieDomain,
       },
     },
@@ -676,7 +684,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         httpOnly: true,
         sameSite: "lax",
         path: "/",
-        secure: !!cookieDomain,
+        secure: secureCookies,
         // __Host- interdit domain ; __Secure- l'accepte. On n'attribue
         // donc domain QUE si le nom commence par __Secure-.
         domain: csrfTokenName.startsWith("__Secure-")

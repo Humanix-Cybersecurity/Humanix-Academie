@@ -5,7 +5,12 @@
 // Conformité RFC 7643/7644.
 
 import { describe, it, expect } from "vitest";
-import { prismaToScim, scimToPrismaCreate, applyScimPatch } from "./mapper";
+import {
+  prismaToScim,
+  scimToPrismaCreate,
+  applyScimPatch,
+  coerceScimRole,
+} from "./mapper";
 import { SCIM_SCHEMAS } from "./types";
 
 const HUMANIX_EXT = SCIM_SCHEMAS.HUMANIX_USER;
@@ -84,6 +89,46 @@ describe("prismaToScim", () => {
   it("inclut un version ETag basé sur updatedAt (concurrence optimiste)", () => {
     const scim = prismaToScim(samplePrismaUser, "https://api.humanix.fr");
     expect(scim.meta?.version).toMatch(/^W\/"\d+"$/);
+  });
+});
+
+describe("coerceScimRole (anti-escalade SUPERADMIN via IdP)", () => {
+  it("accepte les roles tenant standards", () => {
+    expect(coerceScimRole("LEARNER")).toBe("LEARNER");
+    expect(coerceScimRole("manager")).toBe("MANAGER");
+    expect(coerceScimRole("Rssi")).toBe("RSSI");
+    expect(coerceScimRole("ADMIN")).toBe("ADMIN");
+  });
+
+  it("RETROGRADE SUPERADMIN en LEARNER (jamais provisionnable par un IdP)", () => {
+    expect(coerceScimRole("SUPERADMIN")).toBe("LEARNER");
+    expect(coerceScimRole("superadmin")).toBe("LEARNER");
+  });
+
+  it("retombe sur LEARNER pour toute valeur inconnue ou non-string", () => {
+    expect(coerceScimRole("root")).toBe("LEARNER");
+    expect(coerceScimRole("")).toBe("LEARNER");
+    expect(coerceScimRole(undefined)).toBe("LEARNER");
+    expect(coerceScimRole(42)).toBe("LEARNER");
+  });
+
+  it("un payload SCIM tentant SUPERADMIN ne cree pas un SUPERADMIN", () => {
+    const created = scimToPrismaCreate({
+      userName: "evil@acme.fr",
+      [HUMANIX_EXT]: { role: "SUPERADMIN" },
+    });
+    expect(created?.role).toBe("LEARNER");
+  });
+
+  it("un PATCH tentant SUPERADMIN est neutralise", () => {
+    const update = applyScimPatch(samplePrismaUser, [
+      {
+        op: "replace",
+        path: `${HUMANIX_EXT}:role`,
+        value: "SUPERADMIN",
+      },
+    ]);
+    expect(update.role).toBe("LEARNER");
   });
 });
 

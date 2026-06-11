@@ -1,0 +1,72 @@
+---
+title: "Cloisonne tes emails"
+durationMinutes: 3
+persona: "tous"
+objective: "Comprendre l'intérêt du cloisonnement des adresses email pour limiter l'impact d'une fuite"
+xpReward: 40
+scenario: |
+  Tu utilises la même adresse email pour ta banque, tes achats en ligne,
+  tes réseaux sociaux et tes inscriptions diverses. Un site marchand
+  mineur subit une fuite et ton adresse se retrouve dans la nature. Quel
+  est l'impact ?
+choices:
+  - id: "a"
+    label: "Faible : ce n'est qu'un petit site, mon adresse n'a pas de valeur"
+    outcome: "bad"
+    feedback: "Ton adresse unique relie tous tes comptes. Une fois connue, elle sert de point d'entrée pour te cibler partout, y compris sur ta banque."
+    points: -10
+  - id: "b"
+    label: "Élevé : cette adresse unique relie et expose tous mes comptes d'un coup"
+    outcome: "good"
+    feedback: "Exactement. Une adresse partout = un seul fil à tirer pour un attaquant. Le cloisonnement aurait limité la casse à ce seul usage."
+    points: 15
+  - id: "c"
+    label: "Nul : tant que le mot de passe n'a pas fuité avec, rien à craindre"
+    outcome: "bad"
+    feedback: "L'adresse seule permet déjà de te cibler (phishing) et de tester tes mots de passe ailleurs. Le cloisonnement réduit la surface, indépendamment du mot de passe."
+    points: -5
+quizCorrectAnswer: "b"
+takeaway: |
+  Sépare tes usages avec des adresses dédiées : une pour les comptes
+  sensibles (banque, impôts, santé), une pour les achats, une "jetable"
+  pour les inscriptions ponctuelles. Beaucoup de fournisseurs proposent
+  des alias : une adresse compromise se désactive sans toucher aux autres.
+licence: "CC BY-SA 4.0 — Humanix Académie Community Edition"
+---
+
+# Cloisonne tes emails
+
+Utiliser une seule adresse partout, c'est pratique — et c'est exactement
+ce qui transforme une petite fuite en problème généralisé. Le
+cloisonnement répare ça sans complexité.
+
+## Le principe : un usage, une adresse
+
+L'idée est simple : ne pas mettre tous tes œufs dans le même panier.
+
+- **Adresse sensible** : banque, impôts, santé, administration. Connue de
+  presque personne, jamais utilisée pour s'inscrire ailleurs.
+- **Adresse courante** : achats, abonnements, services du quotidien.
+- **Adresse jetable / alias** : inscriptions ponctuelles, essais, sites
+  douteux. Si elle fuit, tu la jettes.
+
+## Les alias, l'outil clé
+
+Un alias est une adresse secondaire qui redirige vers ta vraie boîte.
+Beaucoup de fournisseurs (et des services dédiés) en proposent. L'intérêt :
+si un alias se retrouve dans une fuite ou croule sous le spam, tu le
+**désactives** sans rien casser. Bonus : tu sais immédiatement quel site
+a "vendu" ou laissé fuiter ton adresse (puisque l'alias lui était dédié).
+
+## Pourquoi ça réduit ton exposition
+
+Une adresse unique, c'est un fil que l'attaquant tire pour remonter à tous
+tes comptes. Des adresses cloisonnées, c'est autant de fils coupés : une
+fuite sur l'un n'expose pas les autres. Tu transformes un risque
+"tout ou rien" en risques isolés et gérables.
+
+## Par où commencer
+
+Pas besoin de tout refaire d'un coup. Commence par **isoler tes comptes
+les plus sensibles** sur une adresse à part, inconnue ailleurs. C'est 80 %
+du bénéfice pour 20 % de l'effort.
