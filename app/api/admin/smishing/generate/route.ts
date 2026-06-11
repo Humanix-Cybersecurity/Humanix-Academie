@@ -52,7 +52,7 @@ export async function POST(req: Request) {
   }
 
   const plan = await getTenantPlan(tenantId);
-  if (!planHasFeature(plan, "smishing")) {
+  if (!planHasFeature(plan, "smishing", session?.user?.role)) {
     return NextResponse.json(
       {
         error: "plan_too_low",

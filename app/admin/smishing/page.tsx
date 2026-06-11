@@ -27,7 +27,7 @@ export default async function AdminSmishingPage() {
   const tenantId = session.user!.tenantId as string;
   const plan = await getTenantPlan(tenantId);
 
-  if (!planHasFeature(plan, "smishing")) {
+  if (!planHasFeature(plan, "smishing", session?.user?.role)) {
     return (
       <>
         <AdminPageHeader

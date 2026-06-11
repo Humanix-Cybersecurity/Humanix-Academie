@@ -23,7 +23,7 @@ export default async function NewIncidentPage() {
   const session = await auth();
   const tenantId = session!.user.tenantId as string;
   const plan = await getTenantPlan(tenantId);
-  if (!planHasFeature(plan, "incidents")) redirect("/admin/incidents");
+  if (!planHasFeature(plan, "incidents", session?.user?.role)) redirect("/admin/incidents");
 
   const today = new Date().toISOString().slice(0, 16);
 

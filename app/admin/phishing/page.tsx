@@ -30,7 +30,7 @@ export default async function AdminPhishingPage() {
   const plan = await getTenantPlan(tenantId);
 
   // Gate : Phishing simulé = Pro+
-  if (!planHasFeature(plan, "phishing")) {
+  if (!planHasFeature(plan, "phishing", session?.user?.role)) {
     return (
       <>
         <AdminPageHeader
