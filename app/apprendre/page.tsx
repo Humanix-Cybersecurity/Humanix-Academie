@@ -28,6 +28,7 @@ import { auth, getSignInPath } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import CyberEventBanner from "@/components/CyberEventBanner";
 import { getLevel } from "@/lib/levels";
 import { getActiveChallenge } from "@/lib/challenge";
@@ -44,7 +45,9 @@ import ChallengeBanner from "@/components/learner/ChallengeBanner";
 import LearnerHeroCompact from "@/components/learner/LearnerHeroCompact";
 import NextStepCard from "@/components/learner/NextStepCard";
 import SaisonCard from "@/components/learner/SaisonCard";
-import SaisonsCarousel from "@/components/learner/SaisonsCarousel";
+import SaisonsAccordion, {
+  type AccordionSection,
+} from "@/components/learner/SaisonsAccordion";
 import LearnerEmptyState from "@/components/learner/LearnerEmptyState";
 import { SAISON_PALETTES } from "@/components/learner/palettes";
 import {
@@ -227,6 +230,162 @@ export default async function ApprendrePage() {
     !!recommendedEpisode &&
     progressByEp.get(recommendedEpisode.id)?.status === "IN_PROGRESS";
 
+  // ===========================================================================
+  // Regroupement par CATÉGORIE pour l'accordéon (remplace le carrousel).
+  // La catégorie d'une saison est dérivée de son tag `famille:*` (cf.
+  // catalog-tags.ts, pensé pour ce groupement). Fallback "autres" sinon.
+  // ===========================================================================
+  const FAMILLE_DEFS: { id: string; tag: string; label: string; emoji: string }[] =
+    [
+      {
+        id: "fondamentaux",
+        tag: "famille:public",
+        label: "Fondamentaux — pour tout le monde",
+        emoji: "🌱",
+      },
+      { id: "metiers", tag: "famille:metier", label: "Par métier", emoji: "💼" },
+      {
+        id: "conformite",
+        tag: "famille:conformite",
+        label: "Conformité & réglementaire",
+        emoji: "⚖️",
+      },
+      {
+        id: "avance",
+        tag: "famille:avance",
+        label: "Pour aller plus loin",
+        emoji: "🚀",
+      },
+    ];
+  const categoryOf = (tags: string[]): string => {
+    for (const d of FAMILLE_DEFS) if (tags.includes(d.tag)) return d.id;
+    return "autres";
+  };
+
+  type Group = {
+    cards: ReactNode[];
+    saisonCount: number;
+    done: number;
+    total: number;
+  };
+  const groups = new Map<string, Group>();
+
+  saisons.forEach((s, idx) => {
+    const palette = SAISON_PALETTES[idx % SAISON_PALETTES.length];
+    const total = s.episodes.length;
+    const done = s.episodes.filter(
+      (e) => progressByEp.get(e.id)?.status === "COMPLETED",
+    ).length;
+    const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+    const firstUndone = s.episodes.find(
+      (e) => progressByEp.get(e.id)?.status !== "COMPLETED",
+    );
+    const isLocked = total === 0;
+    const expertCount = s.episodes.filter((e) =>
+      expertEpisodes.has(`${s.slug}/${e.slug}`),
+    ).length;
+    const targetedCount = s.episodes.filter((e) => e.targetedForUser).length;
+    const avgMinutes =
+      total === 0
+        ? 0
+        : Math.round(
+            s.episodes.reduce((acc, e) => acc + (e.durationMinutes ?? 6), 0) /
+              total,
+          );
+
+    const card = (
+      <SaisonCard
+        key={s.id}
+        idx={idx}
+        saison={s}
+        palette={palette}
+        pct={pct}
+        done={done}
+        total={total}
+        isLocked={isLocked}
+        firstUndoneSlug={firstUndone?.slug ?? null}
+        expertCount={expertCount}
+        avgMinutes={avgMinutes}
+        targetedCount={targetedCount}
+        classification={s.classification}
+      />
+    );
+
+    const catId = categoryOf(s.tags ?? []);
+    const g = groups.get(catId) ?? {
+      cards: [],
+      saisonCount: 0,
+      done: 0,
+      total: 0,
+    };
+    g.cards.push(card);
+    g.saisonCount += 1;
+    g.done += done;
+    g.total += total;
+    groups.set(catId, g);
+  });
+
+  const CATEGORY_ORDER = [
+    ...FAMILLE_DEFS,
+    { id: "autres", label: "Autres parcours", emoji: "✨" },
+  ];
+  const saisonSections: AccordionSection[] = CATEGORY_ORDER.filter((c) =>
+    groups.has(c.id),
+  ).map((c) => {
+    const g = groups.get(c.id)!;
+    return {
+      id: c.id,
+      label: c.label,
+      emoji: c.emoji,
+      saisonCount: g.saisonCount,
+      doneModules: g.done,
+      totalModules: g.total,
+      content: (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {g.cards}
+        </div>
+      ),
+    };
+  });
+
+  // En DEMO_MODE : une dernière catégorie "premium" avec les aperçus verrouillés.
+  if (isDemoMode()) {
+    const premiumCards = PREMIUM_SAISONS_PREVIEW.filter(
+      (p) => !saisons.some((s) => s.slug === p.slug),
+    ).map((p) => (
+      <LockedPremiumCard
+        key={`premium-${p.slug}`}
+        emoji={p.emoji}
+        title={p.title}
+        subtitle={`${p.episodes} épisodes · Audience : ${p.audience}`}
+      />
+    ));
+    if (premiumCards.length > 0) {
+      saisonSections.push({
+        id: "premium",
+        label: "À débloquer (premium)",
+        emoji: "🔒",
+        saisonCount: premiumCards.length,
+        doneModules: 0,
+        totalModules: PREMIUM_SAISONS_PREVIEW.reduce(
+          (s, p) => s + p.episodes,
+          0,
+        ),
+        content: (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {premiumCards}
+          </div>
+        ),
+      });
+    }
+  }
+
+  // Catégorie ouverte par défaut : celle qui contient la saison recommandée
+  // (l'apprenant atterrit pile sur son prochain pas).
+  const defaultOpenCategoryId = recommendedSaison
+    ? categoryOf(recommendedSaison.tags ?? [])
+    : undefined;
+
   return (
     <main id="main-content" className="animate-fadeIn overflow-x-hidden">
       {/* Evenement cyber en cours (Cybermois, WPD, etc.) */}
@@ -283,7 +442,7 @@ export default async function ApprendrePage() {
                   Tes saisons
                 </h2>
                 <p className="text-sm text-gray-600 dark:text-gray-300 italic mt-1">
-                  Chaque saison est un theme. Va a ton rythme.
+                  Choisis une catégorie pour voir ses modules. Va à ton rythme.
                 </p>
               </div>
               <a
@@ -306,76 +465,13 @@ export default async function ApprendrePage() {
               </div>
             )}
 
-            {/* Carrousel horizontal scroll-snap : la grille 2 colonnes
-                empilait 8-12 saisons verticalement, ce qui rendait la page
-                tres longue. Le carrousel garde toutes les saisons visibles
-                en une rangee. Swipe natif mobile, drag/wheel desktop. */}
-            <SaisonsCarousel
-              ariaLabel={`Tes ${saisons.length} saisons d'apprentissage${isDemoMode() ? " + apercus premium" : ""}`}
-            >
-              {saisons.map((s, idx) => {
-                const palette = SAISON_PALETTES[idx % SAISON_PALETTES.length];
-                const total = s.episodes.length;
-                const done = s.episodes.filter(
-                  (e) => progressByEp.get(e.id)?.status === "COMPLETED",
-                ).length;
-                const pct = total === 0 ? 0 : Math.round((done / total) * 100);
-                const firstUndone = s.episodes.find(
-                  (e) => progressByEp.get(e.id)?.status !== "COMPLETED",
-                );
-                const isLocked = total === 0;
-                const expertCount = s.episodes.filter((e) =>
-                  expertEpisodes.has(`${s.slug}/${e.slug}`),
-                ).length;
-                const targetedCount = s.episodes.filter(
-                  (e) => e.targetedForUser,
-                ).length;
-                // Duree moyenne par episode = vraie valeur, pas un hardcode.
-                // On affichera "~X min par episode" pour preserver la
-                // promesse "5 min par jour".
-                const avgMinutes =
-                  total === 0
-                    ? 0
-                    : Math.round(
-                        s.episodes.reduce(
-                          (acc, e) => acc + (e.durationMinutes ?? 6),
-                          0,
-                        ) / total,
-                      );
-
-                return (
-                  <SaisonCard
-                    key={s.id}
-                    idx={idx}
-                    saison={s}
-                    palette={palette}
-                    pct={pct}
-                    done={done}
-                    total={total}
-                    isLocked={isLocked}
-                    firstUndoneSlug={firstUndone?.slug ?? null}
-                    expertCount={expertCount}
-                    avgMinutes={avgMinutes}
-                    targetedCount={targetedCount}
-                    classification={s.classification}
-                  />
-                );
-              })}
-
-              {/* En DEMO_MODE : les saisons premium suivent les saisons OSS
-                  pour montrer la profondeur du catalogue commercial. */}
-              {isDemoMode() &&
-                PREMIUM_SAISONS_PREVIEW.filter(
-                  (p) => !saisons.some((s) => s.slug === p.slug),
-                ).map((p) => (
-                  <LockedPremiumCard
-                    key={`premium-${p.slug}`}
-                    emoji={p.emoji}
-                    title={p.title}
-                    subtitle={`${p.episodes} épisodes · Audience : ${p.audience}`}
-                  />
-                ))}
-            </SaisonsCarousel>
+            {/* Accordéon par catégorie : déplie UNE catégorie à la fois pour
+                voir ses modules. Remplace le carrousel horizontal (trop dense
+                avec ~37 saisons). Cf. components/learner/SaisonsAccordion. */}
+            <SaisonsAccordion
+              sections={saisonSections}
+              defaultOpenId={defaultOpenCategoryId}
+            />
           </section>
         )}
 
