@@ -87,9 +87,15 @@ on:
         required: false
         default: ""
       platforms:
-        description: "Plateformes (defaut : linux/amd64,linux/arm64)"
+        # arm64 RETIRE du defaut : le build arm64 sous QEMU fait echouer
+        # `prisma generate` (le moteur wasm mal-parse le schema sous emulation
+        # -> P1012 lignes fantomes ""), ce qui, buildx etant tout-ou-rien,
+        # bloquait aussi l'image amd64 pourtant valide (echecs 8 + 11 juin).
+        # La prod tourne en amd64. Pour reactiver arm64 proprement, utiliser un
+        # runner natif arm64 (pas QEMU) via une matrice de build.
+        description: "Plateformes (defaut : linux/amd64)"
         required: false
-        default: "linux/amd64,linux/arm64"
+        default: "linux/amd64"
 
 permissions:
   contents: read
@@ -235,7 +241,7 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          platforms: ${{ github.event.inputs.platforms || 'linux/amd64,linux/arm64' }}
+          platforms: ${{ github.event.inputs.platforms || 'linux/amd64' }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
