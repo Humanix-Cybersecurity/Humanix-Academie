@@ -49,7 +49,7 @@ export default function SaisonCard({
 }) {
   return (
     <article
-      className={`relative overflow-hidden rounded-3xl border-2 ${palette.ring} bg-gradient-to-br ${palette.bg} p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-slide-up ${
+      className={`relative overflow-hidden rounded-3xl border-2 ${palette.ring} bg-gradient-to-br ${palette.bg} p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-slide-up h-full flex flex-col ${
         isLocked ? "opacity-60" : ""
       }`}
       style={{ animationDelay: `${idx * 60}ms` }}
