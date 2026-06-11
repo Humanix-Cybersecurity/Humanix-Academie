@@ -15,16 +15,88 @@ import {
 import { deriveRemediationPlan } from "@/lib/exposure/remediation";
 import { saveRemediationPlan } from "./actions";
 
-// Checklist auto-OSINT guidée : l'utilisateur EXÉCUTE lui-même, on guide.
-// AUCUN scraping, aucune collecte (contrainte #4).
-const OSINT_CHECKLIST = [
-  "Cherche ton nom complet sur un moteur de recherche (mode navigation privée).",
-  "Cherche ton adresse email et ton pseudo habituel.",
-  "Vérifie la confidentialité de tes profils réseaux sociaux (qui voit quoi ?).",
-  "Regarde les photos publiques où tu es identifié (toi + tes proches).",
-  "Vérifie les informations pro exposées (poste, téléphone) sur les annuaires.",
-  "Recherche ton numéro de téléphone entre guillemets.",
+// Parcours auto-OSINT guidé en 4 phases : CHERCHER -> LIMITER -> SUPPRIMER ->
+// PROTÉGER. L'utilisateur EXÉCUTE lui-même chaque action ; Humanix ne lance
+// AUCUNE recherche et ne collecte RIEN (contrainte #4 zéro-PII). Les liens
+// pointent vers les vrais formulaires officiels (déréférencement, CNIL…).
+type OsintStep = { text: string; link?: { label: string; href: string } };
+type OsintPhase = {
+  id: string;
+  title: string;
+  emoji: string;
+  intro?: string;
+  steps: OsintStep[];
+};
+
+const OSINT_PHASES: OsintPhase[] = [
+  {
+    id: "chercher",
+    title: "1. Te chercher (comme le ferait un inconnu)",
+    emoji: "🔎",
+    intro: "En navigation privée, pour voir ce que tout le monde voit.",
+    steps: [
+      { text: "Ton nom complet entre guillemets + variantes (nom de jeune fille, surnom)." },
+      { text: "Ton email et ton pseudo habituel — ils relient tes comptes entre eux." },
+      { text: "Ton numéro de téléphone entre guillemets." },
+      {
+        text: "Recherche d'images : les photos où tu es identifié (toi et tes proches).",
+        link: { label: "Google Images", href: "https://images.google.com" },
+      },
+      { text: "Annuaires et data brokers : ton nom sur Pappers, pages blanches, 118712." },
+    ],
+  },
+  {
+    id: "limiter",
+    title: "2. Limiter la casse (verrouiller)",
+    emoji: "🔒",
+    steps: [
+      { text: "Passe tes profils réseaux sociaux en privé (vérifie « qui voit quoi »)." },
+      { text: "Retire date de naissance, adresse et téléphone des profils publics." },
+      { text: "Ferme ou supprime les vieux comptes oubliés (forums, anciens réseaux)." },
+      { text: "Désactive la géolocalisation (EXIF) de tes photos avant publication." },
+    ],
+  },
+  {
+    id: "supprimer",
+    title: "3. Demander la suppression / le déréférencement",
+    emoji: "🧹",
+    intro: "C'est ton droit : effacement (RGPD art. 17) et déréférencement.",
+    steps: [
+      { text: "Contenu sur un site : écris au responsable (mentions légales) en invoquant le droit à l'effacement RGPD." },
+      {
+        text: "Faire disparaître un résultat de recherche Google sur ton nom (déréférencement).",
+        link: { label: "Formulaire Google", href: "https://reportcontent.google.com/forms/rtbf" },
+      },
+      {
+        text: "Même démarche côté Bing.",
+        link: { label: "Formulaire Bing", href: "https://www.bing.com/webmaster/tools/eu-privacy-request" },
+      },
+      {
+        text: "Refus ou pas de réponse sous 1 mois ? Dépose une plainte en ligne à la CNIL.",
+        link: { label: "Plainte CNIL", href: "https://www.cnil.fr/fr/plaintes" },
+      },
+    ],
+  },
+  {
+    id: "proteger",
+    title: "4. Protéger ton image dans la durée",
+    emoji: "🛡️",
+    steps: [
+      {
+        text: "Crée une alerte sur ton nom pour être prévenu des nouvelles publications.",
+        link: { label: "Google Alerts", href: "https://www.google.com/alerts" },
+      },
+      { text: "Refais cet audit tous les 6 mois : les sources réapparaissent." },
+      { text: "Avant de publier : « est-ce que je voudrais que mon employeur voie ça dans 10 ans ? »." },
+      {
+        text: "Pour aller plus loin : la saison « OSINT : ce que les autres savent de toi ».",
+        link: { label: "Voir la saison", href: "/apprendre/osint-particuliers" },
+      },
+    ],
+  },
 ];
+
+const OSINT_TOTAL_STEPS = OSINT_PHASES.reduce((n, p) => n + p.steps.length, 0);
 
 type PwdState =
   | { kind: "idle" }
@@ -75,7 +147,7 @@ export default function ExpositionChecker() {
 
   // --- Plan de remédiation (toggles locaux) + sauvegarde opt-in ---
   const [planDone, setPlanDone] = useState<Set<string>>(new Set());
-  const [osintDone, setOsintDone] = useState<Set<number>>(new Set());
+  const [osintDone, setOsintDone] = useState<Set<string>>(new Set());
   const [saveState, setSaveState] = useState<
     "idle" | "saving" | "saved" | "need_account" | "error"
   >("idle");
@@ -153,11 +225,11 @@ export default function ExpositionChecker() {
       return next;
     });
   }
-  function toggleOsint(i: number) {
+  function toggleOsint(key: string) {
     setOsintDone((prev) => {
       const next = new Set(prev);
-      if (next.has(i)) next.delete(i);
-      else next.add(i);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
       return next;
     });
   }
@@ -512,29 +584,75 @@ export default function ExpositionChecker() {
           🔎 Auto-OSINT guidé
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-          Mesure toi-même ton empreinte publique. <strong>Tu exécutes, on
-          guide</strong> : Humanix ne lance aucune recherche et ne collecte rien.
+          Chercher, limiter, faire supprimer, protéger. <strong>Tu exécutes, on
+          guide</strong> : Humanix ne lance aucune recherche et ne collecte
+          rien. Coche au fur et à mesure (suivi local, jamais envoyé).
         </p>
-        <ul className="space-y-2">
-          {OSINT_CHECKLIST.map((step, i) => (
-            <li key={i} className="flex items-start gap-3">
-              <input
-                type="checkbox"
-                id={`osint-${i}`}
-                checked={osintDone.has(i)}
-                onChange={() => toggleOsint(i)}
-                className="mt-1 h-4 w-4 shrink-0"
-              />
-              <label htmlFor={`osint-${i}`} className="text-sm text-gray-700 dark:text-gray-200 cursor-pointer">
-                {step}
-              </label>
-            </li>
+
+        <div className="space-y-5">
+          {OSINT_PHASES.map((phase) => (
+            <div key={phase.id}>
+              <p className="font-display font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+                <span aria-hidden="true">{phase.emoji}</span>
+                {phase.title}
+              </p>
+              {phase.intro && (
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 mb-2">
+                  {phase.intro}
+                </p>
+              )}
+              <ul className="space-y-2 mt-2">
+                {phase.steps.map((step, i) => {
+                  const key = `${phase.id}:${i}`;
+                  const isExternal = step.link?.href.startsWith("http");
+                  return (
+                    <li key={key} className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        id={`osint-${key}`}
+                        checked={osintDone.has(key)}
+                        onChange={() => toggleOsint(key)}
+                        className="mt-1 h-4 w-4 shrink-0"
+                      />
+                      <label
+                        htmlFor={`osint-${key}`}
+                        className="text-sm text-gray-700 dark:text-gray-200 cursor-pointer"
+                      >
+                        {step.text}
+                        {step.link &&
+                          (isExternal ? (
+                            <a
+                              href={step.link.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="ml-1 underline text-primary-600 dark:text-accent-300 whitespace-nowrap"
+                            >
+                              {step.link.label} ↗
+                            </a>
+                          ) : (
+                            <Link
+                              href={step.link.href}
+                              className="ml-1 underline text-primary-600 dark:text-accent-300 whitespace-nowrap"
+                            >
+                              {step.link.label} →
+                            </Link>
+                          ))}
+                      </label>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
           ))}
-        </ul>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
-          {osintDone.size}/{OSINT_CHECKLIST.length} vérifications effectuées.{" "}
-          <Link href="/apprendre/exposition-numerique/07-reduire-son-empreinte" className="underline text-primary-600 dark:text-accent-300">
-            Réduire mon empreinte →
+        </div>
+
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
+          {osintDone.size}/{OSINT_TOTAL_STEPS} actions effectuées.{" "}
+          <Link
+            href="/apprendre/exposition-numerique/07-reduire-son-empreinte"
+            className="underline text-primary-600 dark:text-accent-300"
+          >
+            Plan complet pour réduire mon empreinte →
           </Link>
         </p>
       </section>
