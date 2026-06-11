@@ -30,6 +30,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
 import { seedCatalog, type SeedCatalogResult } from "@/lib/catalog-seeder";
+import { reEvaluateAllUsers } from "@/lib/achievements/evaluate";
 import { AuditOutcome, AuditSeverity } from "@prisma/client";
 
 async function requireSuperadminSession() {
@@ -41,7 +42,13 @@ async function requireSuperadminSession() {
 }
 
 export type ReseedCatalogResponse =
-  | { ok: true; result: SeedCatalogResult }
+  | {
+      ok: true;
+      result: SeedCatalogResult;
+      /** Badges debloques retroactivement apres re-import (badges nouvellement
+       *  seedes que des users avaient deja merites). */
+      reevaluation: { evaluated: number; newBadges: number };
+    }
   | { ok: false; error: string };
 
 /**
@@ -58,6 +65,12 @@ export async function reseedCatalogAction(): Promise<ReseedCatalogResponse> {
   try {
     const result = await seedCatalog(db);
 
+    // Reevalue les badges de tous les users : les badges fraichement seedes
+    // (dont la row Achievement manquait) sont debloques retroactivement pour
+    // ceux qui les avaient deja merites. C'est ce qui repare les "badges
+    // manquants" cote utilisateur en un seul clic.
+    const re = await reEvaluateAllUsers();
+
     await auditLog({
       action: AuditActions.CATALOG_RESEEDED,
       outcome: AuditOutcome.SUCCESS,
@@ -71,7 +84,7 @@ export async function reseedCatalogAction(): Promise<ReseedCatalogResponse> {
         type: "catalog",
         label: `${result.saisons} saisons / ${result.episodes} episodes / ${result.achievements} badges / ${result.shopItems} items`,
       },
-      message: `Re-seed catalog effectue (source: ${result.catalogSource}, ${result.durationMs} ms)`,
+      message: `Re-seed catalog effectue (source: ${result.catalogSource}, ${result.durationMs} ms) — ${re.totalNewUnlocks} badge(s) retroactif(s)`,
       metadata: {
         catalogSource: result.catalogSource,
         saisons: result.saisons,
@@ -79,10 +92,16 @@ export async function reseedCatalogAction(): Promise<ReseedCatalogResponse> {
         achievements: result.achievements,
         shopItems: result.shopItems,
         durationMs: result.durationMs,
+        reevaluatedUsers: re.evaluated,
+        newBadges: re.totalNewUnlocks,
       },
     });
 
-    return { ok: true, result };
+    return {
+      ok: true,
+      result,
+      reevaluation: { evaluated: re.evaluated, newBadges: re.totalNewUnlocks },
+    };
   } catch (e) {
     const errorMessage = e instanceof Error ? e.message : "unknown_error";
 

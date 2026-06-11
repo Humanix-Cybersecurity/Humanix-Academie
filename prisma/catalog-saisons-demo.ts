@@ -201,4 +201,57 @@ export const CATALOG_SAISONS_DEMO: CatalogSaison[] = [
       },
     ],
   },
+  {
+    slug: "exposition-numerique",
+    title: "Exposition numerique",
+    description:
+      "Comprendre et reduire son exposition : mots de passe fuites, fuites d'organisation, MFA, cloisonnement, droit a l'effacement. Declenchee par le verificateur d'exposition gratuit. Sources : cybermalveillance.gouv.fr, CNIL.",
+    coverEmoji: "🔓",
+    order: 3,
+    audience: "tous",
+    episodes: [
+      {
+        slug: "01-mot-de-passe-compromis",
+        title: "Ton mot de passe a fuite",
+        durationMinutes: 3,
+        difficulty: "easy",
+      },
+      {
+        slug: "02-email-dans-une-fuite",
+        title: "Ton email est dans une fuite",
+        durationMinutes: 3,
+        difficulty: "easy",
+      },
+      {
+        slug: "03-activer-la-mfa",
+        title: "La MFA, ton filet de securite",
+        durationMinutes: 4,
+        difficulty: "medium",
+      },
+      {
+        slug: "04-alias-et-cloisonnement",
+        title: "Cloisonne tes emails",
+        durationMinutes: 3,
+        difficulty: "easy",
+      },
+      {
+        slug: "05-opt-out-data-brokers",
+        title: "Reprends la main sur tes donnees",
+        durationMinutes: 5,
+        difficulty: "medium",
+      },
+      {
+        slug: "06-reflexes-apres-fuite",
+        title: "Les 72 heures apres une fuite",
+        durationMinutes: 4,
+        difficulty: "medium",
+      },
+      {
+        slug: "07-reduire-son-empreinte",
+        title: "Ton ombre numerique",
+        durationMinutes: 5,
+        difficulty: "medium",
+      },
+    ],
+  },
 ];

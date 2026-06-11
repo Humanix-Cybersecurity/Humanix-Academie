@@ -35,14 +35,19 @@ echo "[2.5/5] Migrations legacy plans (idempotentes)..."
 npx tsx scripts/migrate-legacy-trial.ts || echo "  -> migrate-legacy-trial ignoree (non bloquante)"
 npx tsx scripts/migrate-4-tiers-pivot.ts || echo "  -> migrate-4-tiers-pivot ignoree (non bloquante)"
 
-# Seed (idempotent grace aux upserts) — uniquement en mode demo, pour ne pas
-# polluer une vraie base prod avec les fake users de demonstration.
-echo "[3/5] Seed initial..."
+# Seed du CATALOG partage (saisons + episodes + badges + boutique + tenant
+# Communaute) — PROD-SAFE et idempotent (upserts par slug, AUCUN fake user).
+# DOIT tourner a CHAQUE deploiement : sinon les nouvelles saisons / badges
+# ajoutes au code ne se propagent JAMAIS en BDD de prod (bug modules + badges,
+# juin 2026). Le script reevalue aussi les badges des users (retroactif).
+echo "[3/5] Seed du catalog partage (saisons, episodes, badges, boutique)..."
+npx tsx scripts/seed-catalog.ts || echo "  -> seed-catalog a echoue (non bloquant), relancable via /superadmin/catalog"
+
+# En mode demo UNIQUEMENT : seed des comptes de demonstration (fake users),
+# inappropries en prod. seed.ts re-appelle seedCatalog en interne (idempotent).
 if [ "$DEMO_MODE" = "true" ]; then
   echo "  -> DEMO_MODE=true, seed des comptes de demonstration"
   npx prisma db seed
-else
-  echo "  -> DEMO_MODE=false, skip du seed (les fake users seraient inappropries en prod)"
 fi
 
 # Bootstrap du premier administrateur si la base est vierge.

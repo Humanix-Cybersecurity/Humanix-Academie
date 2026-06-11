@@ -1,0 +1,85 @@
+---
+title: "Ton ombre numérique"
+durationMinutes: 5
+persona: "tous"
+objective: "Prendre conscience de son empreinte publique et adopter des gestes durables pour la réduire"
+xpReward: 60
+scenario: |
+  Tu fais l'exercice d'auto-OSINT : tu cherches ton nom, ton email, ton
+  pseudo. Tu retrouves un vieux profil oublié, des photos publiques et ton
+  numéro de téléphone sur un annuaire. Quelle est la bonne attitude ?
+choices:
+  - id: "a"
+    label: "C'est trop tard, internet n'oublie rien, autant abandonner"
+    outcome: "bad"
+    feedback: "Fatalisme contre-productif. Chaque élément retiré réduit concrètement ta surface d'exposition et la matière disponible pour t'usurper ou te cibler."
+    points: -10
+  - id: "b"
+    label: "Traiter les éléments un par un : fermer, restreindre, demander la suppression"
+    outcome: "good"
+    feedback: "Exactement. Réduire son empreinte est un travail progressif et réaliste : on ne vise pas l'invisibilité totale, on diminue la surface utile à un attaquant."
+    points: 15
+  - id: "c"
+    label: "Tout supprimer en urgence et fermer tous mes comptes"
+    outcome: "bad"
+    feedback: "Réaction excessive et souvent impossible. L'objectif n'est pas de disparaître mais de maîtriser ce qui est exposé et pourquoi."
+    points: -5
+quizCorrectAnswer: "b"
+takeaway: |
+  Réduire son empreinte se fait par étapes : ferme les comptes oubliés,
+  restreins la visibilité de tes profils, masque tes coordonnées sur les
+  annuaires (droit à l'effacement), réfléchis avant de publier des infos
+  identifiantes. L'objectif n'est pas de disparaître mais de réduire la
+  matière exploitable. À refaire une à deux fois par an.
+licence: "CC BY-SA 4.0 — Humanix Académie Community Edition"
+---
+
+# Ton ombre numérique
+
+Ton "ombre numérique", c'est tout ce qu'on peut apprendre sur toi sans te
+le demander : profils, photos, coordonnées, traces d'anciens services.
+Plus elle est grande, plus elle offre de prises à qui voudrait te cibler,
+t'usurper ou te manipuler. Bonne nouvelle : elle se réduit.
+
+## L'objectif réaliste
+
+On ne cherche **pas** à devenir invisible (c'est illusoire et inutile). On
+cherche à **réduire la matière exploitable** : moins d'informations
+identifiantes croisables, moins de portes d'entrée pour une ingénierie
+sociale.
+
+## Le tour d'horizon (auto-OSINT)
+
+Avec la pudeur de se chercher soi-même, en navigation privée :
+
+- Ton **nom complet** : que voit-on en premier ?
+- Ton **email** et ton **pseudo** habituel : reliés à quoi ?
+- Tes **photos publiques** : où es-tu identifié, avec qui ?
+- Tes **coordonnées** : téléphone, adresse, sur quels annuaires ?
+
+Tu n'exécutes que des recherches que **tout le monde** pourrait faire —
+c'est précisément l'intérêt : voir ce qu'un attaquant verrait.
+
+## Les gestes qui comptent
+
+1. **Ferme les comptes oubliés.** Un vieux forum, un service jamais
+   utilisé : autant de bases de données qui peuvent fuiter avec tes infos.
+2. **Restreins la visibilité** de tes profils actifs (qui voit quoi).
+3. **Fais retirer tes coordonnées** des annuaires (droit à l'effacement,
+   épisode précédent).
+4. **Réfléchis avant de publier** : une date de naissance, un lieu de
+   travail, un nom d'animal de compagnie sont autant de réponses à des
+   questions de sécurité.
+
+## Un entretien, pas un sprint
+
+Ton empreinte n'est pas figée : de nouvelles données réapparaissent. Refais
+ce tour **une à deux fois par an**. C'est cette régularité, plus que
+n'importe quel grand ménage ponctuel, qui maintient ton exposition basse
+dans la durée.
+
+## Le mot de la fin
+
+Réduire son empreinte, ce n'est pas de la paranoïa : c'est de l'hygiène.
+Comme fermer sa porte à clé, ça ne garantit rien d'absolu, mais ça
+décourage l'immense majorité des opportunistes.

@@ -19,7 +19,10 @@
 //   await fireWebhook(tenantId, "phishing.campaign_completed", { ... });
 
 import crypto from "crypto";
+import { lookup } from "node:dns/promises";
+import type { Agent } from "undici";
 import { db } from "@/lib/db";
+import { buildPinnedAgent, type PinnedAddress } from "@/lib/net/pinned-agent";
 import {
   WEBHOOK_EVENTS,
   WebhookEventKey,
@@ -37,13 +40,73 @@ const TIMEOUT_MS = 5000;
 const MAX_PAYLOAD_BYTES = 50 * 1024;
 
 /**
- * Verifie qu'une URL est sure pour un appel sortant.
- * - Doit etre https://
- * - Hostname pas une IP privee (10.x, 172.16.x, 192.168.x, 127.x, 169.254.x, 0.x)
- * - Hostname pas localhost / *.local / *.internal
+ * Extrait l'IPv4 embarquee dans un litteral IPv6 mapped/compat, que la queue
+ * soit en forme DOTTED (::ffff:a.b.c.d) ou HEXADECIMALE (::ffff:a9fe:a9fe ==
+ * 169.254.169.254). Renvoie null si aucune IPv4 n'est embarquee.
  *
- * Note : on autorise des domaines whitelistes pour Slack/Teams meme s'ils
- * resolvent a des CDN tiers (le DNS resoudra cote runtime).
+ * Indispensable : le parseur WHATWG URL RE-NORMALISE "[::ffff:169.254.169.254]"
+ * en "[::ffff:a9fe:a9fe]" (hex), et dns.lookup peut renvoyer cette meme forme
+ * hex pour un AAAA malveillant. Un filtre limite au dotted laissait donc passer
+ * le endpoint metadata cloud / loopback via IPv6-mapped.
+ */
+function embeddedIpv4(addr: string): string | null {
+  const dotted = addr.match(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/);
+  if (dotted) return dotted[1];
+  const hex = addr.match(/^::(?:ffff:)?([0-9a-f]{1,4}):([0-9a-f]{1,4})$/);
+  if (hex) {
+    const hi = parseInt(hex[1], 16);
+    const lo = parseInt(hex[2], 16);
+    return `${(hi >> 8) & 255}.${hi & 255}.${(lo >> 8) & 255}.${lo & 255}`;
+  }
+  return null;
+}
+
+/**
+ * Une IP (v4 ou v6) tombe-t-elle dans une plage privee / reservee / loopback /
+ * link-local / CGNAT / multicast ? Utilise pour bloquer le SSRF, AUSSI BIEN sur
+ * un litteral d'URL que sur l'IP reellement resolue par le DNS.
+ */
+export function isPrivateIp(ip: string): boolean {
+  const addr = ip.trim().toLowerCase().replace(/^\[|\]$/g, "");
+  // IPv6
+  if (addr.includes(":")) {
+    if (addr === "::1" || addr === "::") return true; // loopback / unspecified
+    // Classer sur le 1er hextet -> couvre TOUTE la plage, pas juste le
+    // prefixe litteral (fe80:: ne couvrait pas fea0:: == aussi link-local).
+    const head = parseInt(addr.split(":")[0] || "0", 16);
+    if (head >= 0xfe80 && head <= 0xfebf) return true; // link-local fe80::/10
+    if (head >= 0xfc00 && head <= 0xfdff) return true; // ULA fc00::/7
+    if (head >= 0xff00) return true; // multicast ff00::/8
+    // IPv4 embarquee (mapped/compat), dotted OU hex -> valider la partie IPv4.
+    const v4 = embeddedIpv4(addr);
+    if (v4) return isPrivateIp(v4);
+    return false;
+  }
+  // IPv4
+  const m = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/.exec(addr);
+  if (!m) return true; // forme IPv4 non canonique -> refus prudent
+  const o = m.slice(1).map((n) => parseInt(n, 10));
+  if (o.some((n) => n > 255)) return true;
+  const [a, b] = o;
+  if (a === 0 || a === 10 || a === 127) return true;
+  if (a === 169 && b === 254) return true; // link-local (metadata cloud)
+  if (a === 172 && b >= 16 && b <= 31) return true;
+  if (a === 192 && b === 168) return true;
+  if (a === 100 && b >= 64 && b <= 127) return true; // CGNAT 100.64.0.0/10
+  if (a >= 224) return true; // multicast + reserve
+  return false;
+}
+
+/**
+ * Verifie qu'une URL est sure pour un appel sortant (filtre synchrone) :
+ * - https:// obligatoire
+ * - pas localhost / *.local / *.internal / *.lan
+ * - pas un litteral d'IP privee/reservee (IPv4 ET IPv6)
+ *
+ * NB : ce filtre ne suffit pas seul (un domaine public peut resoudre vers une
+ * IP interne = DNS rebinding). La validation de l'IP REELLEMENT resolue, puis
+ * l'epinglage de la connexion dessus, sont faits juste avant le fetch dans
+ * postWithTimeout (resolvePublicHost + buildPinnedAgent).
  */
 export function isSafeWebhookUrl(rawUrl: string): boolean {
   let u: URL;
@@ -63,17 +126,37 @@ export function isSafeWebhookUrl(rawUrl: string): boolean {
   )
     return false;
 
-  // IP literal ?
-  const ipv4 = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/.exec(host);
-  if (ipv4) {
-    const [a, b] = [parseInt(ipv4[1], 10), parseInt(ipv4[2], 10)];
-    if (a === 10 || a === 127 || a === 0) return false;
-    if (a === 169 && b === 254) return false; // link-local
-    if (a === 172 && b >= 16 && b <= 31) return false;
-    if (a === 192 && b === 168) return false;
-  }
+  // Litteral d'IP (IPv4 dotted, ou IPv6 entre crochets) -> valider la plage.
+  const isV4Literal = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(host);
+  const isV6Literal = host.startsWith("[") || host.includes(":");
+  if ((isV4Literal || isV6Literal) && isPrivateIp(host)) return false;
 
   return true;
+}
+
+/**
+ * Resout le hostname et renvoie les adresses validees A EPINGLER, ou null si
+ * UNE des IP est privee/reservee (ou si la resolution echoue). Bloque le DNS
+ * rebinding et les encodages d'IP alternatifs (le resolveur getaddrinfo
+ * normalise "2130706433" / "0x7f.1" en 127.0.0.1, qui est alors rejete).
+ *
+ * Ce qui SORT de cette fonction est EXACTEMENT ce sur quoi la connexion sera
+ * epinglee (cf. buildPinnedAgent dans postWithTimeout) : il n'y a plus de 2e
+ * resolution cote undici, donc plus de fenetre TOCTOU exploitable par un
+ * attaquant DNS-rebinding (IP publique a la validation, IP privee a la
+ * connexion).
+ */
+export async function resolvePublicHost(
+  hostname: string,
+): Promise<PinnedAddress[] | null> {
+  try {
+    const results = await lookup(hostname, { all: true });
+    if (!results.length) return null;
+    if (results.some((r) => isPrivateIp(r.address))) return null;
+    return results.map((r) => ({ address: r.address, family: r.family }));
+  } catch {
+    return null; // resolution impossible -> on n'appelle pas
+  }
 }
 
 export function signPayload(payload: string, secret: string): string {
@@ -91,13 +174,34 @@ async function postWithTimeout(
 ): Promise<{ ok: boolean; status: number; error?: string }> {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+  let agent: Agent | undefined;
   try {
-    const res = await fetch(url, {
+    // Anti-SSRF / DNS-rebinding : on resout + valide l'IP, PUIS on epingle la
+    // connexion dessus. undici ne re-resout plus le hostname de son cote (le
+    // filtre string isSafeWebhookUrl ne voit pas une resolution malveillante,
+    // et une 2e resolution rouvrirait la fenetre TOCTOU). Le socket sort donc
+    // exactement vers l'IP vetee ; le Host header et le SNI restent le hostname.
+    let hostname: string;
+    try {
+      hostname = new URL(url).hostname;
+    } catch {
+      return { ok: false, status: 0, error: "invalid_url" };
+    }
+    const pinned = await resolvePublicHost(hostname);
+    if (!pinned) {
+      return { ok: false, status: 0, error: "blocked_private_host" };
+    }
+    agent = buildPinnedAgent(pinned);
+    const init: RequestInit & { dispatcher?: unknown } = {
       method: "POST",
       headers: { "content-type": "application/json", ...headers },
       body,
       signal: ctrl.signal,
-    });
+    };
+    // undici dispatcher : ignore par les types DOM Fetch mais respecte par le
+    // fetch() de Next.js (undici sous-jacent).
+    init.dispatcher = agent;
+    const res = await fetch(url, init);
     return { ok: res.ok, status: res.status };
   } catch (e: unknown) {
     return {
@@ -107,6 +211,10 @@ async function postWithTimeout(
     };
   } finally {
     clearTimeout(timer);
+    // Agent ephemere (1 requete) : on ferme le socket epingle. destroy() ne
+    // bloque pas meme si le corps de reponse n'est pas consomme (on ne lit que
+    // ok/status, deja captures dans le return ci-dessus).
+    if (agent) await agent.destroy().catch(() => {});
   }
 }
 

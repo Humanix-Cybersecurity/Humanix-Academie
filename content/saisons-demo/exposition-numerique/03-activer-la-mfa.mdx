@@ -1,0 +1,72 @@
+---
+title: "La MFA, ton filet de sécurité"
+durationMinutes: 4
+persona: "tous"
+objective: "Comprendre pourquoi la double authentification protège même quand un mot de passe a fuité, et savoir quelle méthode privilégier"
+xpReward: 60
+scenario: |
+  Ton mot de passe d'un service important a fuité. Heureusement, tu
+  avais activé la double authentification (MFA). Un attaquant récupère
+  ton mot de passe dans la fuite et tente de se connecter. Que se
+  passe-t-il ?
+choices:
+  - id: "a"
+    label: "Il entre : le mot de passe suffit, la MFA c'est juste à la création du compte"
+    outcome: "bad"
+    feedback: "Non. La MFA est demandée à CHAQUE connexion depuis un appareil non reconnu. Le mot de passe seul ne suffit plus."
+    points: -10
+  - id: "b"
+    label: "Il est bloqué : il lui manque ton second facteur (code, appli, clé)"
+    outcome: "good"
+    feedback: "Exactement. La MFA transforme un mot de passe volé en clé incomplète. C'est le filet de sécurité le plus efficace contre le credential stuffing."
+    points: 15
+  - id: "c"
+    label: "Il reçoit le code MFA puisqu'il a le mot de passe"
+    outcome: "bad"
+    feedback: "Le second facteur est sur TON appareil (appli d'authentification, clé physique). L'attaquant ne l'a pas, sauf s'il te le fait communiquer par ruse — d'où l'importance de ne jamais donner un code."
+    points: -5
+quizCorrectAnswer: "b"
+takeaway: |
+  Active la MFA partout où c'est possible, en priorité sur l'email
+  principal (qui sert à réinitialiser tous tes autres comptes). Préfère
+  une appli d'authentification (TOTP) ou une clé physique plutôt que le
+  SMS, plus vulnérable. Et ne communique JAMAIS un code reçu, même à
+  quelqu'un qui prétend être le support.
+licence: "CC BY-SA 4.0 — Humanix Académie Community Edition"
+---
+
+# La MFA, ton filet de sécurité
+
+La double authentification (MFA, ou 2FA) est la mesure qui transforme un
+mot de passe volé en clé qui n'ouvre plus rien. C'est, à elle seule, la
+protection la plus rentable que tu puisses activer.
+
+## Pourquoi c'est si efficace
+
+Un attaquant qui récupère ton mot de passe dans une fuite se heurte à un
+second mur : un code ou une validation qui n'existe que **sur ton
+appareil**. Sans lui, le mot de passe ne sert à rien. C'est exactement le
+scénario du credential stuffing, neutralisé.
+
+## Quelle méthode choisir
+
+Toutes les MFA ne se valent pas :
+
+- **Clé physique (FIDO2)** : le plus robuste, résistant au phishing.
+- **Appli d'authentification (TOTP)** : très bon, gratuit, hors-ligne.
+- **SMS** : mieux que rien, mais vulnérable au détournement de carte SIM
+  (SIM swapping). À éviter si une autre option existe.
+
+## Par où commencer
+
+Si tu ne devais protéger qu'un seul compte, ce serait ton **email
+principal**. Pourquoi ? Parce qu'il sert à réinitialiser le mot de passe
+de presque tous tes autres comptes. Le compromettre, c'est compromettre
+tout le reste.
+
+## Le piège à connaître
+
+Aucun service légitime ne te demandera jamais de **communiquer** ton code
+MFA, par téléphone, par mail ou par message. Si on te le demande, c'est
+une arnaque — même si l'interlocuteur semble être le support officiel.
+Le code reste chez toi, point.
