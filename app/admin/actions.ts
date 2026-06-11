@@ -11,6 +11,7 @@ import { fireAndForgetAutoAssign } from "@/lib/onboarding/auto-assign";
 import {
   assertCanActOn,
   assertCanChangeRole,
+  canAssignRole,
 } from "@/lib/role-hierarchy";
 import { getCurrentTenantId } from "@/lib/current-tenant";
 import { canActAsAdminInTenant } from "@/lib/tenant-membership";
@@ -318,6 +319,14 @@ export async function inviteUser(formData: FormData) {
   const personalMessage =
     ((formData.get("personalMessage") as string) || "").trim() || null;
   if (!email || !email.includes("@")) throw new Error("invalid_email");
+
+  // SECURITE (anti-escalade de privilege) : ne jamais accepter un role
+  // superieur a celui de l'acteur. Le role vient du formulaire ; le <select>
+  // de l'UI ne protege pas un POST direct sur cette server action. Sans ce
+  // garde, un ADMIN/RSSI pourrait se fabriquer un compte SUPERADMIN.
+  if (!canAssignRole(ctx.role as Role, role)) {
+    throw new Error("forbidden_role_hierarchy");
+  }
 
   const existing = await db.user.findUnique({
     where: { email },
@@ -753,7 +762,8 @@ export async function adminResetUserMfa(userId: string) {
 type CsvRow = { email: string; name?: string; service?: string; role?: string };
 
 export async function bulkImportUsers(rows: CsvRow[]) {
-  const { tenantId } = await requireAdmin();
+  const ctx = await requireAdmin();
+  const tenantId = ctx.tenantId;
   const validRoles = ["LEARNER", "MANAGER", "RSSI", "ADMIN"];
 
   const result = { created: 0, skipped: 0, errors: [] as string[] };
@@ -772,6 +782,14 @@ export async function bulkImportUsers(rows: CsvRow[]) {
     let role: Role = "LEARNER";
     if (row.role && validRoles.includes(row.role.toUpperCase())) {
       role = row.role.toUpperCase() as Role;
+    }
+    // Anti-escalade : un acteur ne peut pas creer un compte d'un rang
+    // superieur au sien (ex. un RSSI ne cree pas d'ADMIN) via le CSV.
+    if (!canAssignRole(ctx.role as Role, role)) {
+      result.errors.push(
+        `Role "${role}" non autorise pour "${email}" (hierarchie).`,
+      );
+      continue;
     }
     try {
       const newUser = await db.user.create({

@@ -1,0 +1,70 @@
+---
+title: "Ton email est dans une fuite"
+durationMinutes: 3
+persona: "tous"
+objective: "Comprendre ce que signifie réellement la présence de son email dans une fuite et hiérarchiser les risques"
+xpReward: 40
+scenario: |
+  Le vérificateur t'indique que l'organisation derrière ton domaine
+  email apparaît dans une fuite publique. Tu te dis : "ce n'est pas
+  mon adresse perso, juste le boulot, ça ne me concerne pas vraiment".
+  Est-ce une bonne lecture de la situation ?
+choices:
+  - id: "a"
+    label: "Oui, une fuite côté employeur ne m'expose pas personnellement"
+    outcome: "bad"
+    feedback: "Une fuite touchant ton organisation expose souvent les adresses pro des salariés, qui deviennent des cibles d'hameçonnage ciblé (spear-phishing) et de credential stuffing."
+    points: -10
+  - id: "b"
+    label: "Non : mon adresse pro devient une cible privilégiée d'attaques ciblées"
+    outcome: "good"
+    feedback: "Exactement. Un attaquant qui sait que tu travailles là peut forger un mail crédible (faux RH, faux IT) ou tester d'anciens mots de passe associés."
+    points: 15
+  - id: "c"
+    label: "Ce n'est grave que si mon mot de passe a fuité avec"
+    outcome: "bad"
+    feedback: "Le mot de passe aggrave, mais l'email seul suffit déjà à du phishing ciblé crédible. Les deux risques se cumulent, ils ne s'annulent pas."
+    points: -5
+quizCorrectAnswer: "b"
+takeaway: |
+  Une fuite liée à ton organisation = vigilance accrue sur les mails
+  entrants (un attaquant sait où tu travailles). Vérifie tes mots de
+  passe (épisode précédent), active la MFA (épisode suivant), et
+  signale tout mail inhabituel à ton service informatique.
+licence: "CC BY-SA 4.0 — Humanix Académie Community Edition"
+---
+
+# Ton email est dans une fuite
+
+Voir son organisation citée dans une fuite, ce n'est pas une fatalité,
+mais ce n'est pas anodin non plus. L'enjeu, c'est de comprendre **ce que
+ça change concrètement** pour toi.
+
+## Ce qu'un attaquant peut en faire
+
+Connaître ton adresse professionnelle, c'est déjà beaucoup pour qui veut
+te piéger :
+
+- **Hameçonnage ciblé** : un faux mail "service RH" ou "support IT" qui te
+  cible nommément est bien plus crédible qu'un spam générique.
+- **Credential stuffing** : si une fuite a aussi exposé des mots de passe,
+  les attaquants les rejouent sur tes accès professionnels.
+- **Reconnaissance** : ton adresse confirme ton employeur, ton service,
+  parfois ta fonction — matière première pour une attaque sur mesure.
+
+## Ce que notre observatoire dit (et ne dit pas)
+
+L'observatoire des fuites de Humanix est **souverain** et recense les
+fuites d'**organisations** françaises rendues publiques. Il te dit donc
+si l'entité derrière ton domaine y figure. Il ne prétend pas savoir si
+**ton adresse exacte** a fuité — pour ça, le signal le plus fiable reste
+le **check de tes mots de passe**, qui, lui, est exact.
+
+## Le bon réflexe
+
+Pas de panique, mais trois gestes :
+
+1. Vérifie tes mots de passe (épisode 01) et change ceux qui ont fuité.
+2. Active la double authentification partout où c'est possible (épisode 03).
+3. Redouble d'attention sur les mails : un expéditeur qui te connaît trop
+   bien, une urgence inhabituelle, un lien pressant = signalement.

@@ -146,6 +146,7 @@ describe("planHasFeature", () => {
       sso_enterprise: ["enterprise"],
       multi_site: ["enterprise"],
       white_label: ["enterprise"],
+      exposure_monitoring: ["enterprise"],
     };
 
     for (const [feature, allowedPlans] of Object.entries(matrix) as [

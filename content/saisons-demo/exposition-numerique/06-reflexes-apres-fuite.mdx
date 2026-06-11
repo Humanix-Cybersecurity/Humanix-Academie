@@ -1,0 +1,77 @@
+---
+title: "Les 72 heures après une fuite"
+durationMinutes: 4
+persona: "tous"
+objective: "Savoir réagir vite et dans le bon ordre quand on apprend qu'on est concerné par une fuite"
+xpReward: 60
+scenario: |
+  Tu viens d'apprendre qu'un service que tu utilises a été victime d'une
+  fuite incluant les mots de passe. Tu as cinq minutes devant toi. Quelle
+  est la PREMIÈRE chose à faire ?
+choices:
+  - id: "a"
+    label: "Supprimer mon compte sur le service touché"
+    outcome: "bad"
+    feedback: "Trop tard et pas prioritaire : le mal est fait sur ce service. L'urgence, c'est d'empêcher la propagation aux AUTRES comptes où tu réutilisais le mot de passe."
+    points: -5
+  - id: "b"
+    label: "Changer ce mot de passe partout où je l'ai réutilisé, en commençant par l'email"
+    outcome: "good"
+    feedback: "Exactement. La priorité absolue est de couper la propagation : email principal d'abord (il déverrouille le reste), puis tous les comptes partageant ce mot de passe."
+    points: 15
+  - id: "c"
+    label: "Attendre de voir si quelque chose d'anormal se produit"
+    outcome: "bad"
+    feedback: "Attendre, c'est laisser la fenêtre ouverte. Les rejeux automatiques de credentials se font en heures, pas en semaines. On agit tout de suite."
+    points: -10
+quizCorrectAnswer: "b"
+takeaway: |
+  Réflexes 72h, dans l'ordre : 1) change le mot de passe concerné PARTOUT
+  où il était réutilisé, en commençant par ton email principal ; 2) active
+  la MFA sur les comptes clés ; 3) vérifie les connexions/sessions actives
+  et déconnecte l'inconnu ; 4) surveille relevés bancaires et messages
+  suspects les jours suivants. Vite et dans le bon ordre.
+licence: "CC BY-SA 4.0 — Humanix Académie Community Edition"
+---
+
+# Les 72 heures après une fuite
+
+Quand une fuite te concerne, ce n'est pas le moment de paniquer ni
+d'attendre. C'est le moment d'agir **vite et dans le bon ordre**. Les
+attaques automatisées se déclenchent en heures ; ta réactivité fait la
+différence.
+
+## L'ordre des priorités
+
+1. **Couper la propagation.** Change le mot de passe concerné **partout**
+   où tu le réutilisais, en commençant par ton **email principal** (il sert
+   à réinitialiser tout le reste). C'est l'action qui stoppe le credential
+   stuffing.
+2. **Verrouiller avec la MFA.** Active la double authentification sur les
+   comptes clés. Même si un mot de passe traîne encore, le compte tient.
+3. **Inspecter les sessions actives.** La plupart des services listent les
+   appareils/sessions connectés. Déconnecte tout ce que tu ne reconnais pas.
+4. **Surveiller.** Les jours suivants, garde un œil sur tes relevés
+   bancaires et sur les mails inhabituels (réinitialisations que tu n'as
+   pas demandées = signal d'alerte).
+
+## Ce qu'il ne faut PAS faire
+
+- **Attendre** "de voir". Les rejeux sont automatiques et rapides.
+- **Réutiliser une variante** de l'ancien mot de passe (`motdepasse2`).
+  Les outils d'attaque testent les variantes.
+- **Cliquer sur un mail "votre compte a fuité, cliquez ici"**. Les
+  attaquants surfent sur la peur post-fuite. Va sur le site **toi-même**,
+  jamais via un lien reçu.
+
+## Si des données sensibles sont concernées
+
+Coordonnées bancaires, pièce d'identité : préviens ta banque, surveille
+les opérations, et garde une trace. En cas d'usurpation avérée, le portail
+cybermalveillance.gouv.fr oriente vers les bonnes démarches.
+
+## Transformer la peur en réflexe
+
+Une fuite, c'est désagréable, mais c'est aussi l'occasion d'ancrer les
+bons gestes. Une fois la MFA en place et les mots de passe uniques, la
+prochaine fuite n'aura presque plus de prise sur toi.

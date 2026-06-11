@@ -27,7 +27,7 @@ type NavItem = {
   href: string;
   label: string;
   icon: string; // emoji simple (compat tous navigateurs, pas de lib)
-  gate?: "Pro+";
+  gate?: "Pro+" | "Enterprise";
   /**
    * Role minimum requis pour voir cet item. Defaut = MANAGER (premier
    * niveau d'admin). Pour les operations qui modifient la configuration
@@ -144,6 +144,13 @@ const SECTIONS: Section[] = [
         href: "/admin/dpo",
         label: "Espace DPO",
         icon: "🛡",
+        minRole: "RSSI",
+      },
+      {
+        href: "/admin/exposition",
+        label: "Veille exposition",
+        icon: "🛡️",
+        gate: "Enterprise",
         minRole: "RSSI",
       },
       {

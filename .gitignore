@@ -35,6 +35,11 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+# Couvre aussi .env.production / .env.development (sans suffixe .local) :
+# convention Next.js courante ou un operateur met de vrais secrets.
+.env.production
+.env.development
+.env.*.local
 
 # vercel
 .vercel

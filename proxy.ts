@@ -182,6 +182,12 @@ export function proxy(req: NextRequest) {
   const nonce = generateNonce();
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set("x-csp-nonce", nonce);
+  // SECURITE : on supprime TOUJOURS un x-tenant-slug entrant (forge par le
+  // client) avant de poser le slug legitime derive du host. Sinon, sur le
+  // domaine nu ou un sous-domaine reserve (slug=null), un header forge
+  // survivrait jusqu'a resolveTenantContext. Defense en profondeur (la
+  // resolution aval revalide deja l'acces via hasTenantAccess).
+  requestHeaders.delete("x-tenant-slug");
   if (slug) requestHeaders.set("x-tenant-slug", slug);
 
   const response = NextResponse.next({ request: { headers: requestHeaders } });

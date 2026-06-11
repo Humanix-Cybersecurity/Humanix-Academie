@@ -24,7 +24,12 @@ export const dynamic = "force-dynamic";
  */
 function csvEscape(v: string | number | null | undefined): string {
   if (v === null || v === undefined) return "";
-  const s = String(v);
+  let s = String(v);
+  // Anti CSV-injection : prefixe les cellules debutant par = + - @ (ou tab/CR)
+  // pour qu'Excel/Sheets ne les interprete pas comme des formules.
+  if (/^[=+\-@\t\r]/.test(s)) {
+    s = `'${s}`;
+  }
   if (/[",\n\r]/.test(s)) {
     return `"${s.replace(/"/g, '""')}"`;
   }
