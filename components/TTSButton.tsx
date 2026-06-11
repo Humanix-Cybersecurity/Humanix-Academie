@@ -76,7 +76,10 @@ function savePrefs(prefs: Prefs) {
  *  - garde la ponctuation pour le rythme
  */
 function cleanForTTS(raw: string): string {
-  let t = raw;
+  // Defense : `raw` peut etre undefined (ex. episode sans champ `debrief`
+  // dans son frontmatter MDX). Sans ce garde, le .replace ci-dessous throw
+  // pendant le SSR (useMemo) -> 500 sur la page episode.
+  let t = raw ?? "";
 
   // Markdown headings, listes, blockquotes
   t = t.replace(/^#{1,6}\s+/gm, "");
