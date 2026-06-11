@@ -19,7 +19,10 @@
 import { db } from "@/lib/db";
 import { SHOP_CATALOG } from "@/lib/shop";
 import { ACHIEVEMENTS_CATALOG } from "@/lib/achievements/catalog";
-import { loadCatalogSaisons } from "@/prisma/seed-data-loader";
+import {
+  loadCatalogSaisons,
+  isCommercialCatalogAvailable,
+} from "@/prisma/seed-data-loader";
 import { ReseedCatalogForm } from "./ReseedCatalogForm";
 
 export const dynamic = "force-dynamic";
@@ -65,6 +68,22 @@ export default async function SuperadminCatalogPage() {
     episodesInDb !== expectedEpisodes ||
     badgesInDb !== expectedBadges ||
     shopItemsInDb !== expectedItems;
+
+  // Diagnostic de la SOURCE du catalogue. Si l'instance résout en "demo"
+  // alors qu'on attend du commercial, on veut savoir POURQUOI :
+  //   - DEMO_MODE=true force le démo (même si content-pro présent), ou
+  //   - content-pro absent de l'image (ex. image OSS) -> fallback démo.
+  const demoModeEnv = process.env.DEMO_MODE === "true";
+  const commercialAvailable = isCommercialCatalogAvailable();
+  // On "attend" du commercial dès que le catalogue commercial est embarqué
+  // dans l'image (sinon c'est un fork/démo OSS, et "demo" est normal).
+  const sourceIssue =
+    catalogSource === "demo" && (demoModeEnv || commercialAvailable);
+  const sourceReason = demoModeEnv
+    ? "DEMO_MODE=true force le catalogue démo (5 saisons). Pose DEMO_MODE=false dans l'environnement de prod, puis redéploie/reseed."
+    : !commercialAvailable
+      ? "Le catalogue commercial (content-pro) est ABSENT de cette image — c'est typiquement une image OSS. La prod doit tourner une image buildée AVEC le submodule content-pro."
+      : "Catalogue commercial chargé.";
 
   return (
     <div className="space-y-8 max-w-4xl">
@@ -116,6 +135,39 @@ export default async function SuperadminCatalogPage() {
         <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
           Source catalog : <strong>{catalogSource}</strong>
         </p>
+
+        {/* Diagnostic source : explique POURQUOI on est en démo le cas échéant */}
+        <div
+          className={`mb-4 rounded-xl border p-3 text-sm ${
+            sourceIssue
+              ? "border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/30 text-red-900 dark:text-red-200"
+              : "border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/40 text-gray-700 dark:text-gray-300"
+          }`}
+        >
+          <p className="font-semibold mb-1">
+            {sourceIssue
+              ? "⚠️ Source = démo alors qu'on attend le catalogue commercial"
+              : "Diagnostic de la source"}
+          </p>
+          <ul className="space-y-0.5 font-mono text-xs">
+            <li>
+              DEMO_MODE = <strong>{demoModeEnv ? "true" : "false"}</strong>
+            </li>
+            <li>
+              content-pro (catalogue commercial) ={" "}
+              <strong>{commercialAvailable ? "présent" : "ABSENT"}</strong>
+            </li>
+          </ul>
+          <p className="mt-2">{sourceReason}</p>
+          {sourceIssue && (
+            <p className="mt-1 text-xs">
+              Tant que la source est « démo », les saisons commerciales ne sont
+              pas seedées → leurs épisodes renvoient 404 (ex.{" "}
+              <code>/apprendre/enfants-numerique-famille/01-premiere-tablette</code>
+              ).
+            </p>
+          )}
+        </div>
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-200 dark:border-slate-700 text-left">

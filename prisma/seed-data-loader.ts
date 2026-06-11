@@ -77,6 +77,23 @@ export function loadCatalogSaisons(): {
 }
 
 /**
+ * Le catalogue COMMERCIAL (content-pro / prisma/catalog-saisons.ts) est-il
+ * present et chargeable dans CETTE image ? Independant de DEMO_MODE.
+ *
+ * Sert au diagnostic /superadmin/catalog : si le catalogue resout en "demo"
+ * alors qu'on attend du commercial, on veut savoir si c'est (a) DEMO_MODE=true
+ * qui force le demo, ou (b) content-pro absent de l'image (ex. image OSS).
+ */
+export function isCommercialCatalogAvailable(): boolean {
+  const pro = tryRequire("./catalog-saisons");
+  return !!(
+    pro &&
+    Array.isArray(pro.CATALOG_SAISONS) &&
+    pro.CATALOG_SAISONS.length
+  );
+}
+
+/**
  * Resout les articles de librairie cyber-RH.
  * Tableau vide si non disponibles (fork OSS pur).
  */
