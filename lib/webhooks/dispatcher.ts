@@ -20,7 +20,9 @@
 
 import crypto from "crypto";
 import { lookup } from "node:dns/promises";
+import type { Agent } from "undici";
 import { db } from "@/lib/db";
+import { buildPinnedAgent, type PinnedAddress } from "@/lib/net/pinned-agent";
 import {
   WEBHOOK_EVENTS,
   WebhookEventKey,
@@ -38,6 +40,28 @@ const TIMEOUT_MS = 5000;
 const MAX_PAYLOAD_BYTES = 50 * 1024;
 
 /**
+ * Extrait l'IPv4 embarquee dans un litteral IPv6 mapped/compat, que la queue
+ * soit en forme DOTTED (::ffff:a.b.c.d) ou HEXADECIMALE (::ffff:a9fe:a9fe ==
+ * 169.254.169.254). Renvoie null si aucune IPv4 n'est embarquee.
+ *
+ * Indispensable : le parseur WHATWG URL RE-NORMALISE "[::ffff:169.254.169.254]"
+ * en "[::ffff:a9fe:a9fe]" (hex), et dns.lookup peut renvoyer cette meme forme
+ * hex pour un AAAA malveillant. Un filtre limite au dotted laissait donc passer
+ * le endpoint metadata cloud / loopback via IPv6-mapped.
+ */
+function embeddedIpv4(addr: string): string | null {
+  const dotted = addr.match(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/);
+  if (dotted) return dotted[1];
+  const hex = addr.match(/^::(?:ffff:)?([0-9a-f]{1,4}):([0-9a-f]{1,4})$/);
+  if (hex) {
+    const hi = parseInt(hex[1], 16);
+    const lo = parseInt(hex[2], 16);
+    return `${(hi >> 8) & 255}.${hi & 255}.${(lo >> 8) & 255}.${lo & 255}`;
+  }
+  return null;
+}
+
+/**
  * Une IP (v4 ou v6) tombe-t-elle dans une plage privee / reservee / loopback /
  * link-local / CGNAT / multicast ? Utilise pour bloquer le SSRF, AUSSI BIEN sur
  * un litteral d'URL que sur l'IP reellement resolue par le DNS.
@@ -47,11 +71,15 @@ export function isPrivateIp(ip: string): boolean {
   // IPv6
   if (addr.includes(":")) {
     if (addr === "::1" || addr === "::") return true; // loopback / unspecified
-    if (addr.startsWith("fe80")) return true; // link-local
-    if (addr.startsWith("fc") || addr.startsWith("fd")) return true; // ULA fc00::/7
-    // IPv4-mapped (::ffff:a.b.c.d) : valider la partie IPv4.
-    const mapped = addr.match(/(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/);
-    if (mapped) return isPrivateIp(mapped[1]);
+    // Classer sur le 1er hextet -> couvre TOUTE la plage, pas juste le
+    // prefixe litteral (fe80:: ne couvrait pas fea0:: == aussi link-local).
+    const head = parseInt(addr.split(":")[0] || "0", 16);
+    if (head >= 0xfe80 && head <= 0xfebf) return true; // link-local fe80::/10
+    if (head >= 0xfc00 && head <= 0xfdff) return true; // ULA fc00::/7
+    if (head >= 0xff00) return true; // multicast ff00::/8
+    // IPv4 embarquee (mapped/compat), dotted OU hex -> valider la partie IPv4.
+    const v4 = embeddedIpv4(addr);
+    if (v4) return isPrivateIp(v4);
     return false;
   }
   // IPv4
@@ -76,8 +104,9 @@ export function isPrivateIp(ip: string): boolean {
  * - pas un litteral d'IP privee/reservee (IPv4 ET IPv6)
  *
  * NB : ce filtre ne suffit pas seul (un domaine public peut resoudre vers une
- * IP interne = DNS rebinding). La validation de l'IP REELLEMENT resolue est
- * faite juste avant le fetch dans postWithTimeout (assertPublicHost).
+ * IP interne = DNS rebinding). La validation de l'IP REELLEMENT resolue, puis
+ * l'epinglage de la connexion dessus, sont faits juste avant le fetch dans
+ * postWithTimeout (resolvePublicHost + buildPinnedAgent).
  */
 export function isSafeWebhookUrl(rawUrl: string): boolean {
   let u: URL;
@@ -106,18 +135,27 @@ export function isSafeWebhookUrl(rawUrl: string): boolean {
 }
 
 /**
- * Resout le hostname et refuse si UNE des IP est privee/reservee. Bloque le
- * DNS rebinding et les encodages d'IP alternatifs (le resolveur getaddrinfo
+ * Resout le hostname et renvoie les adresses validees A EPINGLER, ou null si
+ * UNE des IP est privee/reservee (ou si la resolution echoue). Bloque le DNS
+ * rebinding et les encodages d'IP alternatifs (le resolveur getaddrinfo
  * normalise "2130706433" / "0x7f.1" en 127.0.0.1, qui est alors rejete).
- * Fenetre TOCTOU residuelle (resolution != connexion) acceptee a ce stade.
+ *
+ * Ce qui SORT de cette fonction est EXACTEMENT ce sur quoi la connexion sera
+ * epinglee (cf. buildPinnedAgent dans postWithTimeout) : il n'y a plus de 2e
+ * resolution cote undici, donc plus de fenetre TOCTOU exploitable par un
+ * attaquant DNS-rebinding (IP publique a la validation, IP privee a la
+ * connexion).
  */
-async function assertPublicHost(hostname: string): Promise<boolean> {
+export async function resolvePublicHost(
+  hostname: string,
+): Promise<PinnedAddress[] | null> {
   try {
     const results = await lookup(hostname, { all: true });
-    if (!results.length) return false;
-    return results.every((r) => !isPrivateIp(r.address));
+    if (!results.length) return null;
+    if (results.some((r) => isPrivateIp(r.address))) return null;
+    return results.map((r) => ({ address: r.address, family: r.family }));
   } catch {
-    return false; // resolution impossible -> on n'appelle pas
+    return null; // resolution impossible -> on n'appelle pas
   }
 }
 
@@ -136,25 +174,34 @@ async function postWithTimeout(
 ): Promise<{ ok: boolean; status: number; error?: string }> {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+  let agent: Agent | undefined;
   try {
-    // Anti-SSRF / DNS-rebinding : on revalide l'IP REELLEMENT resolue juste
-    // avant la connexion (le filtre string isSafeWebhookUrl ne voit pas une
-    // resolution malveillante).
+    // Anti-SSRF / DNS-rebinding : on resout + valide l'IP, PUIS on epingle la
+    // connexion dessus. undici ne re-resout plus le hostname de son cote (le
+    // filtre string isSafeWebhookUrl ne voit pas une resolution malveillante,
+    // et une 2e resolution rouvrirait la fenetre TOCTOU). Le socket sort donc
+    // exactement vers l'IP vetee ; le Host header et le SNI restent le hostname.
     let hostname: string;
     try {
       hostname = new URL(url).hostname;
     } catch {
       return { ok: false, status: 0, error: "invalid_url" };
     }
-    if (!(await assertPublicHost(hostname))) {
+    const pinned = await resolvePublicHost(hostname);
+    if (!pinned) {
       return { ok: false, status: 0, error: "blocked_private_host" };
     }
-    const res = await fetch(url, {
+    agent = buildPinnedAgent(pinned);
+    const init: RequestInit & { dispatcher?: unknown } = {
       method: "POST",
       headers: { "content-type": "application/json", ...headers },
       body,
       signal: ctrl.signal,
-    });
+    };
+    // undici dispatcher : ignore par les types DOM Fetch mais respecte par le
+    // fetch() de Next.js (undici sous-jacent).
+    init.dispatcher = agent;
+    const res = await fetch(url, init);
     return { ok: res.ok, status: res.status };
   } catch (e: unknown) {
     return {
@@ -164,6 +211,10 @@ async function postWithTimeout(
     };
   } finally {
     clearTimeout(timer);
+    // Agent ephemere (1 requete) : on ferme le socket epingle. destroy() ne
+    // bloque pas meme si le corps de reponse n'est pas consomme (on ne lit que
+    // ok/status, deja captures dans le return ci-dessus).
+    if (agent) await agent.destroy().catch(() => {});
   }
 }
 
