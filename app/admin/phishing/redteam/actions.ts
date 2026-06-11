@@ -32,7 +32,7 @@ export async function generateRedTeamAction(
   }
   const tenantId = session.user.tenantId as string;
   const plan = await getTenantPlan(tenantId);
-  if (!planHasFeature(plan, "phishing_ia")) {
+  if (!planHasFeature(plan, "phishing_ia", session?.user?.role)) {
     return { ok: false, error: "plan_too_low" };
   }
   // Rate limit : 20 generations/heure/user (anti-abus quota IA).

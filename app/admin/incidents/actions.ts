@@ -56,7 +56,7 @@ async function requireAdminWithPlan() {
   const tenantId = session.user!.tenantId as string;
   const userId = session.user!.id as string;
   const plan = await getTenantPlan(tenantId);
-  if (!planHasFeature(plan, "incidents")) {
+  if (!planHasFeature(plan, "incidents", session?.user?.role)) {
     throw new Error("plan_required");
   }
   return { tenantId, userId, userName: session.user.name ?? "Anonyme" };

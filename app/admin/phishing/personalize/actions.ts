@@ -53,7 +53,7 @@ async function requireAdminWithPlan() {
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") throw new Error("forbidden");
   const tenantId = session.user!.tenantId as string;
   const plan = await getTenantPlan(tenantId);
-  if (!planHasFeature(plan, "phishing_ia")) throw new Error("plan_required");
+  if (!planHasFeature(plan, "phishing_ia", session?.user?.role)) throw new Error("plan_required");
   return { tenantId };
 }
 

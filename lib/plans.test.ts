@@ -178,4 +178,29 @@ describe("Labels UI", () => {
     expect(featureMinPlanLabel("sso_enterprise")).toBe("Enterprise");
     expect(featureMinPlanLabel("api")).toBe("Pro");
   });
+
+  describe("bypass opérateur SUPERADMIN", () => {
+    it("SUPERADMIN accède à TOUTE feature quel que soit le plan", () => {
+      // starter + feature Enterprise -> normalement refusé, mais SUPERADMIN passe
+      expect(
+        planHasFeature("starter", "exposure_monitoring", "SUPERADMIN"),
+      ).toBe(true);
+      expect(planHasFeature("starter", "sso_enterprise", "SUPERADMIN")).toBe(
+        true,
+      );
+      expect(planHasFeature(null, "phishing", "SUPERADMIN")).toBe(true);
+    });
+
+    it("les autres rôles NE bypassent PAS le plan", () => {
+      expect(planHasFeature("starter", "exposure_monitoring", "ADMIN")).toBe(
+        false,
+      );
+      expect(planHasFeature("starter", "phishing", "RSSI")).toBe(false);
+    });
+
+    it("rétro-compat : appel à 2 args = logique de plan pure (aucun bypass)", () => {
+      expect(planHasFeature("starter", "exposure_monitoring")).toBe(false);
+      expect(planHasFeature("enterprise", "exposure_monitoring")).toBe(true);
+    });
+  });
 });

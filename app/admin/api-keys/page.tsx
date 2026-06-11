@@ -15,7 +15,7 @@ export default async function AdminApiKeysPage() {
   const tenantId = session!.user.tenantId as string;
 
   const plan = await getTenantPlan(tenantId);
-  if (!planHasFeature(plan, "api")) {
+  if (!planHasFeature(plan, "api", session?.user?.role)) {
     return (
       <>
         <AdminPageHeader
