@@ -18,6 +18,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { loadEpisode } from "@/lib/episodes";
 import { buildFallbackContent } from "@/lib/episodes-fallback";
+import { seededShuffle } from "@/lib/shuffle";
 import EpisodePlayer from "@/components/EpisodePlayer";
 
 type Params = { saison: string; episode: string };
@@ -87,6 +88,22 @@ export default async function EpisodePage({
         }
       : null;
 
+  // Mélange déterministe de l'ordre des réponses, seedé par (user + épisode).
+  // Évite que la bonne réponse soit toujours à la même position (ex. position
+  // 2 dans tout le catalogue) -> on ne peut plus répondre sans lire. Stable
+  // par user (reprise cohérente) et différent d'un user à l'autre (pas de
+  // corrigé partageable). Le scoring est fait par id/outcome/correct, jamais
+  // par position : mélanger l'affichage est donc sûr.
+  const shuffleSeed = `${userId}:${dbEpisode.id}`;
+  const shuffledChoices = seededShuffle(
+    content.meta.choices,
+    `${shuffleSeed}:scenario`,
+  );
+  const shuffledQuiz = content.meta.quiz.map((q, i) => ({
+    ...q,
+    choices: seededShuffle(q.choices, `${shuffleSeed}:quiz${i}`),
+  }));
+
   return (
     <main id="main-content" className="max-w-3xl mx-auto px-4 py-8">
       {isFallback && (
@@ -117,9 +134,9 @@ export default async function EpisodePage({
         episodeSlug={episode}
         title={content.meta.title}
         scenario={content.meta.scenario}
-        choices={content.meta.choices}
+        choices={shuffledChoices}
         debrief={content.meta.debrief}
-        quiz={content.meta.quiz}
+        quiz={shuffledQuiz}
         xpReward={content.meta.xpReward}
         species={species}
         resume={resume}
