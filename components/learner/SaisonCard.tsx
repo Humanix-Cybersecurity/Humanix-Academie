@@ -80,10 +80,10 @@ export default function SaisonCard({
       )}
 
       {/*
-        relative flex-1 flex flex-col : permet a la card de remplir la
-        hauteur du <li> parent (forcee par SaisonsCarousel), et de pousser
-        le bloc CTA+meta en bas via mt-auto pour eviter l'effet "escalier"
-        quand les descriptions ont des longueurs variables.
+        relative flex-1 flex flex-col : la card remplit la hauteur de sa
+        cellule de grille (article en h-full flex flex-col, cf. SaisonsAccordion)
+        et pousse le bloc CTA+meta en bas via mt-auto pour eviter l'effet
+        "escalier" quand les descriptions ont des longueurs variables.
       */}
       <div className="relative flex flex-col flex-1">
         {/* Cover emoji principal */}
