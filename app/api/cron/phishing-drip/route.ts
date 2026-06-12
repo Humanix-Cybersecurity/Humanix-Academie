@@ -4,7 +4,7 @@
 //
 // PHASE 7b (juin 2026) -- Drip campaigns :
 //   Pour chaque PhishingResult avec :
-//     - dripScheduledAt <= now (arrive a echeance)
+//     - dripScheduledAt <= now (arrivé à échéance)
 //     - mailDispatchedAt IS NULL (pas encore envoye)
 //     - campaign.isActive (pas annulee)
 //   On envoie le mail via le SMTP du tenant et on set mailDispatchedAt.
