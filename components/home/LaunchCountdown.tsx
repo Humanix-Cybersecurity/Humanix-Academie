@@ -53,7 +53,6 @@ export default function LaunchCountdown() {
   }
 
   // Pre-launch : countdown
-  const label = days === 1 ? "jour" : "jours";
   return (
     <section
       aria-label="Lancement open source à venir"

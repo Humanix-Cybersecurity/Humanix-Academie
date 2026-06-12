@@ -20,10 +20,7 @@ import {
   VERDICT_LABEL,
   type Nis2ArticleScore,
 } from "@/lib/nis2/scoring";
-import {
-  NIS2_ARTICLES,
-  NIS2_ARTICLES_ORDER,
-} from "@/lib/nis2/articles";
+import { NIS2_ARTICLES_ORDER } from "@/lib/nis2/articles";
 
 export const dynamic = "force-dynamic";
 
