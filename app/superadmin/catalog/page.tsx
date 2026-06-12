@@ -87,11 +87,26 @@ export default async function SuperadminCatalogPage() {
   const expectedBadges = codeView.badges;
   const expectedItems = codeView.items;
 
-  const hasDrift =
-    saisonsInDb !== expectedSaisons ||
-    episodesInDb !== expectedEpisodes ||
-    badgesInDb !== expectedBadges ||
-    shopItemsInDb !== expectedItems;
+  // Le seeder est ADDITIF (upsert par slug, ne supprime JAMAIS pour protéger
+  // les UserProgress/UserAchievement). On distingue donc deux cas, et un seul
+  // est un vrai « drift » actionnable :
+  //   - code > BDD  -> il MANQUE des entités en BDD qu'un re-import ajoutera
+  //                    (drift actionnable).
+  //   - BDD > code  -> la BDD a des entités EN PLUS (ex. les 5 saisons démo
+  //                    cumulées à un seed commercial). Un re-import ne les
+  //                    retire PAS : c'est normal et bénin, surtout PAS une
+  //                    raison de re-seeder.
+  const missingInDb =
+    Math.max(0, expectedSaisons - saisonsInDb) +
+    Math.max(0, expectedEpisodes - episodesInDb) +
+    Math.max(0, expectedBadges - badgesInDb) +
+    Math.max(0, expectedItems - shopItemsInDb);
+  const extraInDb =
+    Math.max(0, saisonsInDb - expectedSaisons) +
+    Math.max(0, episodesInDb - expectedEpisodes) +
+    Math.max(0, badgesInDb - expectedBadges) +
+    Math.max(0, shopItemsInDb - expectedItems);
+  const hasActionableDrift = missingInDb > 0;
 
   // Diagnostic de la SOURCE du catalogue. Si l'instance résout en "demo"
   // alors qu'on attend du commercial, on veut savoir POURQUOI :
@@ -125,13 +140,26 @@ export default async function SuperadminCatalogPage() {
       </header>
 
       {/* Bandeau drift */}
-      {hasDrift ? (
+      {hasActionableDrift ? (
         <div className="rounded-2xl border-2 border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/30 p-4">
           <p className="font-bold text-amber-900 dark:text-amber-200">
-            ⚠️ Drift détecté entre le code et la BDD
+            ⚠️ Des entités du code manquent en BDD
           </p>
           <p className="text-sm text-amber-800 dark:text-amber-300 mt-1">
-            Les counts ci-dessous ne correspondent pas. Un re-import est probablement nécessaire.
+            {missingInDb} entité(s) définie(s) dans le code ne sont pas encore en
+            BDD. Un re-import les ajoutera (idempotent).
+          </p>
+        </div>
+      ) : extraInDb > 0 ? (
+        <div className="rounded-2xl border-2 border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/30 p-4">
+          <p className="font-bold text-emerald-900 dark:text-emerald-200">
+            ✅ BDD synchronisée avec le code
+          </p>
+          <p className="text-sm text-emerald-800 dark:text-emerald-300 mt-1">
+            Tout le contenu du code est présent. La BDD contient en plus{" "}
+            {extraInDb} entité(s) qui ne sont pas dans le catalogue actif (ex.
+            saisons démo cumulées au commercial) — c&apos;est normal : le seed
+            est additif et ne supprime jamais. Aucun re-import nécessaire.
           </p>
         </div>
       ) : (
@@ -140,7 +168,7 @@ export default async function SuperadminCatalogPage() {
             ✅ BDD synchronisée avec le code
           </p>
           <p className="text-sm text-emerald-800 dark:text-emerald-300 mt-1">
-            Aucun drift détecté. Re-importer reste safe (idempotent) mais pas nécessaire.
+            Aucun écart. Re-importer reste safe (idempotent) mais pas nécessaire.
           </p>
         </div>
       )}
@@ -198,7 +226,7 @@ export default async function SuperadminCatalogPage() {
               <th className="py-2 font-semibold">Entité</th>
               <th className="py-2 font-semibold text-right">Dans le code</th>
               <th className="py-2 font-semibold text-right">En BDD</th>
-              <th className="py-2 font-semibold text-right">Drift</th>
+              <th className="py-2 font-semibold text-right">Écart</th>
             </tr>
           </thead>
           <tbody>
@@ -262,7 +290,9 @@ function CountRow({
   code: number;
   db: number;
 }) {
-  const drift = code - db;
+  // gap = BDD − code. >0 : entités EN PLUS en BDD (bénin, le seed additif ne
+  // les retire pas). <0 : entités MANQUANTES en BDD (un re-import les ajoute).
+  const gap = db - code;
   return (
     <tr className="border-b border-gray-100 dark:border-slate-800 last:border-0">
       <td className="py-2">{label}</td>
@@ -270,14 +300,18 @@ function CountRow({
       <td className="py-2 text-right tabular-nums">{db}</td>
       <td
         className={`py-2 text-right tabular-nums font-bold ${
-          drift === 0
+          gap === 0
             ? "text-gray-400"
-            : drift > 0
-              ? "text-amber-600 dark:text-amber-400"
-              : "text-red-600 dark:text-red-400"
+            : gap > 0
+              ? "text-slate-500 dark:text-slate-400"
+              : "text-amber-600 dark:text-amber-400"
         }`}
       >
-        {drift === 0 ? "—" : drift > 0 ? `+${drift}` : drift}
+        {gap === 0
+          ? "—"
+          : gap > 0
+            ? `+${gap} en BDD`
+            : `${Math.abs(gap)} manquant`}
       </td>
     </tr>
   );
