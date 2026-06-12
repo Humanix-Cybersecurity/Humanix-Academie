@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Cron : envoi des PhishingResult drip-planifies qui sont arrives a echeance.
+// Cron : envoi des PhishingResult drip-planifiés qui sont arrivés à échéance.
 //
 // PHASE 7b (juin 2026) -- Drip campaigns :
 //   Pour chaque PhishingResult avec :
