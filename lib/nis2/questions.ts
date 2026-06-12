@@ -34,7 +34,7 @@ export type Nis2Question = {
 
 export const NIS2_QUESTIONS: Nis2Question[] = [
   // ============================================================
-  // ART. 21.2.a — Politiques d'analyse des risques et SI
+  // ART. 21.2.a - Politiques d'analyse des risques et SI
   // ============================================================
   {
     id: "risk_policy_written",
@@ -59,7 +59,7 @@ export const NIS2_QUESTIONS: Nis2Question[] = [
   },
 
   // ============================================================
-  // ART. 21.2.b — Gestion des incidents
+  // ART. 21.2.b - Gestion des incidents
   // ============================================================
   {
     id: "incident_procedure",
@@ -84,7 +84,7 @@ export const NIS2_QUESTIONS: Nis2Question[] = [
   },
 
   // ============================================================
-  // ART. 21.2.c — Continuité d'activité + sauvegardes
+  // ART. 21.2.c - Continuité d'activité + sauvegardes
   // ============================================================
   {
     id: "backup_321",
@@ -109,7 +109,7 @@ export const NIS2_QUESTIONS: Nis2Question[] = [
   },
 
   // ============================================================
-  // ART. 21.2.d — Sécurité de la chaîne d'approvisionnement
+  // ART. 21.2.d - Sécurité de la chaîne d'approvisionnement
   // ============================================================
   {
     id: "supplier_inventory",
@@ -133,7 +133,7 @@ export const NIS2_QUESTIONS: Nis2Question[] = [
   },
 
   // ============================================================
-  // ART. 21.2.e — Sécurité acquisition / dev / maintenance
+  // ART. 21.2.e - Sécurité acquisition / dev / maintenance
   // ============================================================
   {
     id: "patch_management",
@@ -151,7 +151,7 @@ export const NIS2_QUESTIONS: Nis2Question[] = [
   },
 
   // ============================================================
-  // ART. 21.2.f — Politiques d'évaluation de l'efficacité
+  // ART. 21.2.f - Politiques d'évaluation de l'efficacité
   // ============================================================
   {
     id: "internal_audit",
@@ -168,14 +168,14 @@ export const NIS2_QUESTIONS: Nis2Question[] = [
   },
 
   // ============================================================
-  // ART. 21.2.g — Cyber-hygiène + sensibilisation
+  // ART. 21.2.g - Cyber-hygiène + sensibilisation
   // ============================================================
   {
     id: "training_program",
     article: "21.2.g",
     text: "Avez-vous un programme de sensibilisation cyber pour TOUS vos collaborateurs (pas seulement IT) ?",
     weight: 3,
-    hint: "Article 21.2.g NIS2 — explicite sur la formation OBLIGATOIRE de l'ensemble du personnel.",
+    hint: "Article 21.2.g NIS2 - explicite sur la formation OBLIGATOIRE de l'ensemble du personnel.",
   },
   {
     id: "phishing_simulation",
@@ -189,11 +189,11 @@ export const NIS2_QUESTIONS: Nis2Question[] = [
     article: "21.2.g",
     text: "Vos dirigeants (COMEX, CODIR) ont-ils suivi une formation cyber spécifique à leur niveau dans les 24 derniers mois ?",
     weight: 3,
-    hint: "Article 20 NIS2 — formation des dirigeants OBLIGATOIRE et imposable juridiquement.",
+    hint: "Article 20 NIS2 - formation des dirigeants OBLIGATOIRE et imposable juridiquement.",
   },
 
   // ============================================================
-  // ART. 21.2.h — Cryptographie + chiffrement
+  // ART. 21.2.h - Cryptographie + chiffrement
   // ============================================================
   {
     id: "encryption_at_rest",
@@ -210,7 +210,7 @@ export const NIS2_QUESTIONS: Nis2Question[] = [
   },
 
   // ============================================================
-  // ART. 21.2.i — Sécurité RH (départs, accès)
+  // ART. 21.2.i - Sécurité RH (départs, accès)
   // ============================================================
   {
     id: "offboarding_procedure",
@@ -234,7 +234,7 @@ export const NIS2_QUESTIONS: Nis2Question[] = [
   },
 
   // ============================================================
-  // ART. 21.2.j — MFA et authentification
+  // ART. 21.2.j - MFA et authentification
   // ============================================================
   {
     id: "mfa_admins",
@@ -259,7 +259,7 @@ export const NIS2_QUESTIONS: Nis2Question[] = [
   },
 
   // ============================================================
-  // ART. 23 — Notification d'incident à l'autorité
+  // ART. 23 - Notification d'incident à l'autorité
   // ============================================================
   {
     id: "notification_24h",

@@ -9,7 +9,7 @@ description: |-
   Permet à un RSSI d'identifier instantanément, depuis CISO Assistant,
   quels modules Humanix couvrent quels contrôles ISO 27001.
 
-  Relation utilisée : "intersect" — un module Humanix couvre partiellement
+  Relation utilisée : "intersect" - un module Humanix couvre partiellement
   un contrôle ISO (la couche humaine). Les contrôles techniques associés
   (chiffrement, segmentation réseau, etc.) restent à couvrir par d'autres
   mesures.
@@ -141,7 +141,7 @@ objects:
           target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:8.20
           relationship: intersect
 
-        # A.8.24 Cryptographie & A.8.5 MFA — abordés par mots-de-passe
+        # A.8.24 Cryptographie & A.8.5 MFA - abordés par mots-de-passe
         - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:mots-de-passe
           target_requirement_urn: urn:intuitem:risk:req_node:iso27001-2022:8.5
           relationship: intersect

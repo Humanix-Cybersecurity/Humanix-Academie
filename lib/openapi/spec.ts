@@ -20,7 +20,7 @@ const APP_URL =
 export const OPENAPI_SPEC = {
   openapi: "3.0.3",
   info: {
-    title: "Humanix Académie — API publique",
+    title: "Humanix Académie - API publique",
     description: `API REST publique pour intégrer Humanix Académie à votre SI.
 
 Authentification : header \`Authorization: Bearer hxa_xxx\` (créer une clé dans \`/admin/api-keys\`).
@@ -314,7 +314,7 @@ Idéal pour automatiser la collecte de preuves dans votre GRC ou SIEM.`,
         ],
         responses: {
           "200": {
-            description: "OK — format dépend du paramètre",
+            description: "OK - format dépend du paramètre",
             content: {
               "application/json": {
                 schema: {

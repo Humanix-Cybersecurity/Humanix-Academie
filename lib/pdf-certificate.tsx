@@ -42,7 +42,7 @@ function getLogoPath(): string | null {
   if (cachedLogoPath !== undefined) return cachedLogoPath;
   // L'annotation /* turbopackIgnore: true */ sur process.cwd() dit a
   // Turbopack de ne pas tracer ce sous-arbre lors du build NFT (sinon
-  // il y a un warning "Encountered unexpected file in NFT list" — le
+  // il y a un warning "Encountered unexpected file in NFT list" - le
   // chemin etant resolu seulement au runtime, le tracing build-time
   // n'apporte rien).
   const candidates = [
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
  * Comportement (a la demande utilisateur, cf. /profil/infos) :
  *   - Si l'utilisateur a renseigne SON prenom ET son nom reels (optionnels),
  *     on les utilise : "Prenom Nom".
- *   - Sinon, on retombe sur le pseudo (`name`) — comportement historique.
+ *   - Sinon, on retombe sur le pseudo (`name`) - comportement historique.
  *   - Ultime filet de securite : la partie locale de l'email.
  *
  * On exige les DEUX champs (prenom + nom) pour eviter un certificat a moitie

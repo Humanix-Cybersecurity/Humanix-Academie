@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Tenant Communauté — l'unique tenant non-payant de la plateforme cloud
+// Tenant Communauté - l'unique tenant non-payant de la plateforme cloud
 // Humanix. Tous les apprenants gratuits y sont rattachés en role LEARNER.
 //
 // MODÈLE D'ACCÈS 3-LAYER (cf. plan launch OSS mai 2026) :
-//   Niveau 1 — Plateforme owner (SUPERADMIN, founder Humanix)
+//   Niveau 1 - Plateforme owner (SUPERADMIN, founder Humanix)
 //     Accès cross-tenant via /superadmin. Pas concerné par ce module.
-//   Niveau 2 — Tenant admins payants (RSSI/DAF/DSI/DPO/MANAGER/ADMIN)
+//   Niveau 2 - Tenant admins payants (RSSI/DAF/DSI/DPO/MANAGER/ADMIN)
 //     Une organisation = un tenant payant = leur propre /admin.
-//   Niveau 3 — Apprenants gratuits (LEARNER) — CE MODULE
+//   Niveau 3 - Apprenants gratuits (LEARNER) - CE MODULE
 //     Inscription publique, attachés au tenant Communauté, accès
 //     uniquement à /apprendre + contenus publics. Pas d'/admin.
 //
-// IMPORTANT — pourquoi un slug constant et pas un flag schema isDefault :
+// IMPORTANT - pourquoi un slug constant et pas un flag schema isDefault :
 //   - Plus simple : pas de migration ni de partial unique index PostgreSQL
 //     (Prisma ne les supporte pas nativement).
 //   - Plus robuste : le slug est déjà @unique au niveau DB, garanti par
@@ -22,7 +22,7 @@
 //     interne Humanix-Cybersecurity pour la dogfooding), on suit la même
 //     convention via d'autres slugs réservés.
 //
-// CONVENTION — ne PAS confondre avec le palier "Community Edition" de
+// CONVENTION - ne PAS confondre avec le palier "Community Edition" de
 // /tarifs (self-host AGPL). Ici on parle du tenant CLOUD humanix-cybersecurity.fr
 // auquel les apprenants gratuits sont rattachés. Voir lib/plans.ts pour le
 // commentaire d'origine sur ce point.
@@ -38,7 +38,7 @@ export const COMMUNITY_TENANT_NAME = "Humanix Communauté";
 /**
  * Plan attaché au tenant Communauté. Mappé sur `starter` pour rester
  * compatible avec l'enum PlanId existant (lib/plans.ts), mais la limite
- * de sièges du plan starter (15) NE S'APPLIQUE PAS au tenant Communauté —
+ * de sièges du plan starter (15) NE S'APPLIQUE PAS au tenant Communauté -
  * il accueille tous les apprenants gratuits sans plafond.
  * L'exception est portée par `getSeatUsage()` dans lib/seats.ts, qui
  * detecte le slug `humanix-community` et force `max = Infinity`.
@@ -50,7 +50,7 @@ type WithSlug = { slug: string };
 
 /**
  * Récupère le tenant Communauté en BDD. `null` si absent (= seed pas
- * encore exécuté en prod) — laisser à l'appelant le soin de gérer.
+ * encore exécuté en prod) - laisser à l'appelant le soin de gérer.
  */
 export async function getCommunityTenant() {
   return db.tenant.findUnique({

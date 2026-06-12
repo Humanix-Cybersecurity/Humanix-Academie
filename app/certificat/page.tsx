@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /certificat — landing produit "Le certificat qui vaut quelque chose".
+// /certificat - landing produit "Le certificat qui vaut quelque chose".
 //
 // POSITIONNEMENT STRATEGIQUE 2026-05-23 (decision Florian, sprint reconnaissance) :
 //
@@ -24,7 +24,7 @@ import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
 const TITLE =
-  "Le certificat cyber qui vaut quelque chose — Humanix Académie";
+  "Le certificat cyber qui vaut quelque chose - Humanix Académie";
 const DESC =
   "Certificat de sensibilisation cyber signé Ed25519, exportable OSCAL, conçu comme bouclier assurance cyber + preuve de conformité NIS2. Démarche d'agrément ANSSI en cours.";
 
@@ -47,7 +47,7 @@ export default function CertificatPage() {
   return (
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       {/* ====================================================================
-          1. HERO — positionnement direct
+          1. HERO - positionnement direct
           ==================================================================== */}
       <HexBackdrop intensity="soft" className="bg-humanix-soft">
         <section
@@ -55,7 +55,7 @@ export default function CertificatPage() {
           className="max-w-4xl mx-auto px-4 pt-16 pb-12 sm:pt-24 sm:pb-16 text-center"
         >
           <p className="inline-flex items-center gap-2 text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 bg-white/70 dark:bg-slate-800/60 backdrop-blur-sm border border-accent-500/30 px-4 py-2 rounded-full mb-8 shadow-sm">
-            <span aria-hidden="true">🛡️</span> Le Pix de la cybersécurité — en
+            <span aria-hidden="true">🛡️</span> Le Pix de la cybersécurité - en
             construction
           </p>
 
@@ -109,7 +109,7 @@ export default function CertificatPage() {
 
       <div className="max-w-4xl mx-auto px-4 py-12 sm:py-16 space-y-20">
         {/* ==================================================================
-            2. VOLET 1 — ASSURANCE CYBER
+            2. VOLET 1 - ASSURANCE CYBER
             ================================================================== */}
         <section
           id="assurance"
@@ -220,7 +220,7 @@ export default function CertificatPage() {
         </section>
 
         {/* ==================================================================
-            3. VOLET 2 — CONFORMITE NIS2
+            3. VOLET 2 - CONFORMITE NIS2
             ================================================================== */}
         <section
           id="nis2"
@@ -287,18 +287,18 @@ export default function CertificatPage() {
             </h3>
             <ol className="space-y-3 text-sm text-primary-900/90 dark:text-primary-200/90 list-decimal pl-5">
               <li>
-                <strong>Audit trail intégral</strong> — chaque action de
+                <strong>Audit trail intégral</strong> - chaque action de
                 formation, chaque scénario joué, chaque quiz validé est
                 journalisé en table AuditLog avec horodatage signé.
               </li>
               <li>
-                <strong>Mapping ANSSI HG → NIS2</strong> — chacun des 200+
+                <strong>Mapping ANSSI HG → NIS2</strong> - chacun des 200+
                 modules est cartographié sur les 42 mesures du Guide Hygiène
                 ANSSI et les contrôles NIS2 (cf.{" "}
                 <code className="bg-primary-100 dark:bg-primary-900/40 px-1.5 py-0.5 rounded text-xs">
                   lib/mapping-grc.ts
                 </code>{" "}
-                — code source public AGPLv3).
+                - code source public AGPLv3).
               </li>
               <li>
                 <strong>Rapport conformité PDF</strong> signé Ed25519 + export
@@ -321,7 +321,7 @@ export default function CertificatPage() {
         </section>
 
         {/* ==================================================================
-            4. VOLET 3 — DEMARCHE ANSSI
+            4. VOLET 3 - DEMARCHE ANSSI
             ================================================================== */}
         <section
           id="anssi"
@@ -403,7 +403,7 @@ export default function CertificatPage() {
                 </span>
                 <span>
                   <strong>Dossier technique préparé</strong> : architecture,
-                  sécurité, mapping de conformité, gouvernance OSS — documenté
+                  sécurité, mapping de conformité, gouvernance OSS - documenté
                   publiquement.
                 </span>
               </li>
@@ -412,7 +412,7 @@ export default function CertificatPage() {
                   ⏳
                 </span>
                 <span>
-                  <strong>Échanges initiés avec l'ANSSI</strong> — réponse
+                  <strong>Échanges initiés avec l'ANSSI</strong> - réponse
                   attendue 2026 Q3.
                 </span>
               </li>
@@ -421,7 +421,7 @@ export default function CertificatPage() {
                   ○
                 </span>
                 <span>
-                  <strong>Reconnaissance officielle</strong> visée 2027 — sera
+                  <strong>Reconnaissance officielle</strong> visée 2027 - sera
                   affichée sur cette page dès obtention.
                 </span>
               </li>
@@ -430,7 +430,7 @@ export default function CertificatPage() {
         </section>
 
         {/* ==================================================================
-            5. APPEL FINAL — CTA dirigeants + courtiers
+            5. APPEL FINAL - CTA dirigeants + courtiers
             ================================================================== */}
         <section
           aria-labelledby="cta-title"
@@ -474,7 +474,7 @@ export default function CertificatPage() {
         </section>
 
         {/* ==================================================================
-            6. FOOTER — citation
+            6. FOOTER - citation
             ================================================================== */}
         <div className="text-center pt-4">
           <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
@@ -486,7 +486,7 @@ export default function CertificatPage() {
             aria-hidden="true"
             className="mt-3 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
           >
-            — Florian Durano, fondateur Humanix Cybersecurity
+            - Florian Durano, fondateur Humanix Cybersecurity
           </p>
         </div>
       </div>

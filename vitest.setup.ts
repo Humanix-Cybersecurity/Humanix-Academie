@@ -1,4 +1,4 @@
-// Setup Vitest — mocks globaux pour les tests unitaires.
+// Setup Vitest - mocks globaux pour les tests unitaires.
 //
 // On mock @/lib/db (singleton Prisma) car son simple import déclenche
 // le chargement du binaire natif Prisma, qui n'est pas dispo dans

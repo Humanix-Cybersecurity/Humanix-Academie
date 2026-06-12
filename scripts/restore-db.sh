@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# restore-db.sh — Restauration interactive depuis backup chiffre.
+# restore-db.sh - Restauration interactive depuis backup chiffre.
 #
 # Procedure :
 #   1. Liste les backups disponibles (local ou FTPS)

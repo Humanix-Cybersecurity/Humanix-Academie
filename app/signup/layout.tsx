@@ -4,11 +4,11 @@
 // jusqu'a 5 sieges).
 //
 // HISTORIQUE :
-//   Phase 3 launch OSS (mai 2026) — /signup etait FERME par defaut
+//   Phase 3 launch OSS (mai 2026) - /signup etait FERME par defaut
 //   pour eviter les comptes fantomes. Activable uniquement via flag
 //   SIGNUP_ALLOW_SELF_SERVICE=true ou DEMO_MODE=true.
 //
-//   Phase 3b (post-launch, 16 mai 2026) — /signup est OUVERT par
+//   Phase 3b (post-launch, 16 mai 2026) - /signup est OUVERT par
 //   defaut. Le plan starter (gratuit jusqu'a 5 sieges) est self-service
 //   complet, avec anti-abus solide :
 //     - Honeypot field "website" silencieux

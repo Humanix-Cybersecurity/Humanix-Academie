@@ -8,7 +8,7 @@
 //   ne peut donc pas le lancer en production. Du coup, l'ancien
 //   docker-entrypoint.sh SKIPPAIT tout seed quand DEMO_MODE != true. Résultat :
 //   les saisons et badges ajoutés au code APRÈS le 1er déploiement
-//   n'arrivaient JAMAIS en BDD de prod (-> modules en 404, badges manquants —
+//   n'arrivaient JAMAIS en BDD de prod (-> modules en 404, badges manquants -
 //   bug juin 2026).
 //
 //   Ce script n'importe QUE le catalog universel (aucun fake user) : il est
@@ -26,7 +26,7 @@ async function main() {
   try {
     const r = await seedCatalog(prisma);
     console.log(
-      `[seed-catalog] catalog OK — ${r.saisons} saisons, ${r.episodes} episodes, ` +
+      `[seed-catalog] catalog OK - ${r.saisons} saisons, ${r.episodes} episodes, ` +
         `${r.achievements} badges, ${r.shopItems} items boutique ` +
         `(source: ${r.catalogSource}, ${r.durationMs}ms)`,
     );
@@ -36,7 +36,7 @@ async function main() {
     // rétroactivement pour ceux qui les ont déjà mérités.
     const re = await reEvaluateAllUsers();
     console.log(
-      `[seed-catalog] reevaluation badges — ${re.evaluated} users, ` +
+      `[seed-catalog] reevaluation badges - ${re.evaluated} users, ` +
         `${re.totalNewUnlocks} badge(s) debloque(s) retroactivement`,
     );
 

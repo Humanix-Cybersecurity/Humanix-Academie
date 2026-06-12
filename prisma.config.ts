@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Fichier de configuration Prisma — equivalent moderne du bloc
+// Fichier de configuration Prisma - equivalent moderne du bloc
 // `package.json#prisma` qui est deprecated et sera supprime en Prisma 7.
 //
 // Cf. https://pris.ly/prisma-config

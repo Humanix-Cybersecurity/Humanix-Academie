@@ -7,7 +7,7 @@
 // executePurge() qui DELETE Event/AuditLog non-critiques > seuil et
 // ANONYMIZE les Users inactifs > seuil. Voir lib/data-retention.ts.
 //
-// Fréquence recommandée : 1x/jour (ex. 03:00 UTC). Idempotent — si tu le
+// Fréquence recommandée : 1x/jour (ex. 03:00 UTC). Idempotent - si tu le
 // rejoues sur la même journée, les counts seront 0 au 2e passage.
 //
 // Auth : header X-Cron-Secret == process.env.CRON_SECRET (16 chars min).

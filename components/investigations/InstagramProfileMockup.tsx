@@ -10,7 +10,7 @@ type Props = {
 };
 
 function formatStat(n: number | undefined): string {
-  if (typeof n !== "number") return "—";
+  if (typeof n !== "number") return "-";
   if (n >= 1000000) return `${(n / 1000000).toFixed(1)} M`;
   if (n >= 1000) return `${(n / 1000).toFixed(1)} k`;
   return String(n);
@@ -22,7 +22,7 @@ export default function InstagramProfileMockup({ media }: Props) {
     <div className="max-w-2xl mx-auto rounded-2xl border-2 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-lg overflow-hidden">
       {/* Header bandeau */}
       <div className="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-400 text-white px-4 py-2 text-xs font-bold tracking-wider text-center">
-        PROFIL PHOTO — PUBLIC
+        PROFIL PHOTO - PUBLIC
       </div>
 
       {/* Header profil */}

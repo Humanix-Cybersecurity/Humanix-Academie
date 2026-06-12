@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// LIBRARY_ARTICLES_DEMO — 5 articles cyber-RH livres en open source dans
+// LIBRARY_ARTICLES_DEMO - 5 articles cyber-RH livres en open source dans
 // le repo public, sous licence CC BY-SA 4.0 (sources : ANSSI, CERT-FR,
 // CNIL, NIST publications publiques).
 //
@@ -27,7 +27,7 @@ export const LIBRARY_ARTICLES_DEMO: LibraryArticleSeed[] = [
     authorName: "Humanix Académie · CC BY-SA",
     body: `# 1. Vérifier le domaine, pas le nom affiché
 
-Un email frauduleux peut afficher "Microsoft" en expéditeur tout en venant de \`microsft-support@xyz.com\`. Le **nom affiché** est trivial à falsifier — seul le **domaine** compte.
+Un email frauduleux peut afficher "Microsoft" en expéditeur tout en venant de \`microsft-support@xyz.com\`. Le **nom affiché** est trivial à falsifier - seul le **domaine** compte.
 
 Avant de cliquer sur quoi que ce soit, regarde l'adresse complète : sur ordinateur, survole l'expéditeur ; sur mobile, tape dessus pour la dérouler. Si le domaine ne correspond pas à l'organisation prétendue, c'est suspect.
 
@@ -39,11 +39,11 @@ La règle d'or : **plus c'est urgent, plus c'est suspect**. Une vraie banque, un
 
 # 3. Signaler, ne pas se contenter de supprimer
 
-Quand tu reçois un phishing, ne le jette pas — signale-le. C'est gratuit et ça protège les autres :
+Quand tu reçois un phishing, ne le jette pas - signale-le. C'est gratuit et ça protège les autres :
 
 - **Phishing classique** : fais suivre à \`signal-spam@signal-spam.fr\` ou utilise [signalspam.fr](https://www.signal-spam.fr).
 - **SMS frauduleux** : transfère au **33700** (gratuit).
-- **En entreprise** : remonte à ton service IT ou au RSSI — même si tu n'as pas cliqué, l'attaque cible peut-être tes collègues.
+- **En entreprise** : remonte à ton service IT ou au RSSI - même si tu n'as pas cliqué, l'attaque cible peut-être tes collègues.
 
 # À retenir
 
@@ -63,7 +63,7 @@ Vérifier le domaine. Ralentir face à l'urgence. Signaler systématiquement. Ce
     authorName: "Humanix Académie · CC BY-SA",
     body: `# Le problème : impossible d'en retenir 100
 
-L'utilisateur moyen a une centaine de comptes en ligne. Personne ne peut mémoriser 100 mots de passe forts et **uniques**. Il faut donc une méthode — pas une mémoire de génie.
+L'utilisateur moyen a une centaine de comptes en ligne. Personne ne peut mémoriser 100 mots de passe forts et **uniques**. Il faut donc une méthode - pas une mémoire de génie.
 
 # La méthode en 3 étapes
 
@@ -121,7 +121,7 @@ C'est ce qu'on appelle un **point d'accès pirate** (rogue AP). Très facile à 
 
 ## Règle 1 : Ne fais rien de sensible sur un Wi-Fi public
 
-Pas de banque, pas de mails pro, pas d'achats en ligne. Si tu dois absolument le faire, utilise la 4G/5G de ton téléphone — c'est chiffré nativement par l'opérateur.
+Pas de banque, pas de mails pro, pas d'achats en ligne. Si tu dois absolument le faire, utilise la 4G/5G de ton téléphone - c'est chiffré nativement par l'opérateur.
 
 ## Règle 2 : Utilise un VPN si tu n'as pas le choix
 
@@ -157,7 +157,7 @@ Wi-Fi public = canal hostile. VPN ou 4G pour tout ce qui compte. Connexion autom
     authorName: "Humanix Académie · CC BY-SA",
     body: `# Pourquoi c'est urgent
 
-Les photos qu'on prend tous les jours sont sur 1 seul appareil. S'il tombe à l'eau, s'il est volé, s'il est chiffré par un rançongiciel, ou si tu le perds dans le métro — c'est fini. 10 ans de famille perdus en 3 secondes.
+Les photos qu'on prend tous les jours sont sur 1 seul appareil. S'il tombe à l'eau, s'il est volé, s'il est chiffré par un rançongiciel, ou si tu le perds dans le métro - c'est fini. 10 ans de famille perdus en 3 secondes.
 
 Et pourtant, sauvegarder, c'est gratuit ou presque, et ça prend une heure à mettre en place pour toute une vie.
 
@@ -230,7 +230,7 @@ C'est sérieux : utilisé par les gouvernements, le FBI, l'ANSSI, et intégré n
 
 Si c'est vert : aucune fuite connue. Continue à faire attention.
 
-Si c'est rouge : ton email apparaît dans X fuites. La liste te dit lesquelles (LinkedIn 2012, Adobe 2013, etc.) — change immédiatement le mot de passe sur ces services, et **partout où tu l'as réutilisé**.
+Si c'est rouge : ton email apparaît dans X fuites. La liste te dit lesquelles (LinkedIn 2012, Adobe 2013, etc.) - change immédiatement le mot de passe sur ces services, et **partout où tu l'as réutilisé**.
 
 # L'alerte automatique (gratuite)
 
@@ -238,7 +238,7 @@ Plutôt que de vérifier tous les 6 mois, abonne-toi aux **notifications** : tu 
 
 # Pourquoi c'est sûr de mettre son email là
 
-Have I Been Pwned ne te demande **jamais ton mot de passe**. Il vérifie uniquement si ton email est dans des bases qui sont déjà publiques (souvent depuis des années, sur des forums underground). Mettre ton email là ne crée aucun risque supplémentaire — l'attaquant l'a déjà.
+Have I Been Pwned ne te demande **jamais ton mot de passe**. Il vérifie uniquement si ton email est dans des bases qui sont déjà publiques (souvent depuis des années, sur des forums underground). Mettre ton email là ne crée aucun risque supplémentaire - l'attaquant l'a déjà.
 
 # À retenir
 
@@ -266,21 +266,21 @@ Vérifier ses emails 1 fois. S'abonner aux alertes. Changer les mots de passe co
 
 Quand Mamie tape une question dans Google, elle obtient une liste de sites. Elle clique, elle lit, elle compare. C'est lent mais elle a appris : on vérifie sur 2-3 sources avant de croire.
 
-Quand Mamie tape la même question dans ChatGPT, elle obtient **une seule réponse**, rédigée comme si c'était évident, sans aucun lien. Le ton est confiant. Le texte est bien écrit. **Pourtant, ChatGPT peut tout simplement inventer** — un médicament, une date, une procédure, une loi.
+Quand Mamie tape la même question dans ChatGPT, elle obtient **une seule réponse**, rédigée comme si c'était évident, sans aucun lien. Le ton est confiant. Le texte est bien écrit. **Pourtant, ChatGPT peut tout simplement inventer** - un médicament, une date, une procédure, une loi.
 
 C'est ce qu'on appelle une **hallucination**. Et c'est très différent d'une erreur Google : sur Google, l'info fausse est sur UN site qu'on peut identifier. Avec ChatGPT, l'info fausse arrive sans source, mélangée à des infos vraies, impossible à distinguer.
 
 # Les 3 cas réels documentés en 2025
 
-- **Faux médicaments** : une étude américaine a montré que ChatGPT recommandait, dans 27 % des cas testés, des dosages dangereux ou des interactions médicamenteuses inexistantes — toujours formulés avec aplomb.
+- **Faux médicaments** : une étude américaine a montré que ChatGPT recommandait, dans 27 % des cas testés, des dosages dangereux ou des interactions médicamenteuses inexistantes - toujours formulés avec aplomb.
 - **Faux articles juridiques** : un avocat new-yorkais a déposé en cour des références à 6 jugements... qui n'existaient pas. ChatGPT les avait fabriqués. Sanction disciplinaire à la clé.
 - **Faux historique de famille** : des utilisateurs demandent à ChatGPT "qui était mon grand-père" et reçoivent des biographies inventées de toutes pièces, parce que ChatGPT "complète" l'absence de données.
 
 # Comment expliquer ça à Mamie sans la décourager
 
-Pas la peine de dire "ChatGPT ment" — elle ne l'utilisera plus du tout, et c'est dommage parce que ça reste un bon outil pour reformuler une lettre, traduire, ou expliquer un mot. La bonne formule est :
+Pas la peine de dire "ChatGPT ment" - elle ne l'utilisera plus du tout, et c'est dommage parce que ça reste un bon outil pour reformuler une lettre, traduire, ou expliquer un mot. La bonne formule est :
 
-> *"ChatGPT, c'est comme un voisin très bavard qui a lu beaucoup de livres. Il te répond toujours avec assurance, mais parfois il invente parce qu'il ne veut pas dire 'je ne sais pas'. Pour tout ce qui est important — santé, banque, juridique, identité — il faut toujours vérifier sur un vrai site officiel."*
+> *"ChatGPT, c'est comme un voisin très bavard qui a lu beaucoup de livres. Il te répond toujours avec assurance, mais parfois il invente parce qu'il ne veut pas dire 'je ne sais pas'. Pour tout ce qui est important - santé, banque, juridique, identité - il faut toujours vérifier sur un vrai site officiel."*
 
 # La règle "3 cas où on ne fait JAMAIS confiance"
 
@@ -288,7 +288,7 @@ Pas la peine de dire "ChatGPT ment" — elle ne l'utilisera plus du tout, et c'e
 2. **Argent** : virements, impôts, succession → toujours sa banque, son notaire, le site impots.gouv.fr.
 3. **Démarches administratives** : papiers, droits sociaux → toujours service-public.fr ou la mairie.
 
-Pour tout le reste — recettes, idées de cadeau, reformuler une lettre, comprendre un mot — ChatGPT est OK, à condition de garder son bon sens.
+Pour tout le reste - recettes, idées de cadeau, reformuler une lettre, comprendre un mot - ChatGPT est OK, à condition de garder son bon sens.
 
 # À retenir
 
@@ -320,16 +320,16 @@ En clair : si ton ado fait rédiger tous ses devoirs par ChatGPT, **il perd prog
 
 # La méthode "3 niveaux d'usage" à proposer
 
-**Niveau 0 — Devoir simple (apprentissage des bases)** : pas de ChatGPT.
+**Niveau 0 - Devoir simple (apprentissage des bases)** : pas de ChatGPT.
 - Exercices de math, conjugaison, vocabulaire, mémorisation : c'est exactement ce qui muscle.
 - ChatGPT à ce niveau = ne plus marcher quand on apprend à marcher.
 
-**Niveau 1 — Devoir long (rédaction, dissertation)** : ChatGPT comme correcteur, pas comme rédacteur.
+**Niveau 1 - Devoir long (rédaction, dissertation)** : ChatGPT comme correcteur, pas comme rédacteur.
 - Ton ado écrit son brouillon SEUL. Puis demande à ChatGPT : *"Cite-moi 3 fautes de structure dans ce texte sans réécrire"*.
 - ChatGPT pointe les problèmes, ton ado les corrige LUI.
 - Il apprend la méta-cognition : *"je me rends compte que ma structure est faible"*.
 
-**Niveau 2 — Recherche complexe** : ChatGPT comme starter, pas comme conclusion.
+**Niveau 2 - Recherche complexe** : ChatGPT comme starter, pas comme conclusion.
 - "ChatGPT, donne-moi 5 angles pour traiter ce sujet de philo."
 - Ton ado choisit 1 angle, fait ses propres recherches (Wikipédia, manuels, prof), construit son argumentation.
 - ChatGPT a juste été un brainstorming.
@@ -348,7 +348,7 @@ Au lieu de surveiller ses sessions ChatGPT (impossible et destructeur de confian
 
 > *"Tu as utilisé ChatGPT pour ce devoir ? OK. Tu peux m'expliquer en 30 secondes ce que tu as appris avec ?"*
 
-S'il bafouille, le devoir est creux. S'il explique clairement, il a vraiment appris — peu importe qu'il ait utilisé ChatGPT ou pas.
+S'il bafouille, le devoir est creux. S'il explique clairement, il a vraiment appris - peu importe qu'il ait utilisé ChatGPT ou pas.
 
 # À retenir
 
@@ -358,7 +358,7 @@ ChatGPT est là pour rester. Interdire = perdre. La méthode qui marche : **3 ni
   },
   {
     slug: "demo-proche-victime-deepfake",
-    title: "Mon proche est tombé pour un deepfake — comment réagir",
+    title: "Mon proche est tombé pour un deepfake - comment réagir",
     description:
       "Reconnaître un deepfake vocal ou vidéo, désamorcer le moment de panique, et accompagner sans culpabiliser.",
     emoji: "🎭",
@@ -376,31 +376,31 @@ Idem pour la vidéo : un appel WhatsApp de 30 secondes avec l'image de quelqu'un
 
 # Si c'est arrivé : les 3 priorités, dans cet ordre
 
-**Priorité 1 — Ne pas culpabiliser le proche**
+**Priorité 1 - Ne pas culpabiliser le proche**
 
 C'est le plus important. Une victime de deepfake se sent souvent "ridicule" alors qu'elle ne l'est pas du tout : ces outils trompent même des experts en cybersécurité. Si tu lui dis *"tu aurais dû te méfier"*, tu casses la confiance et tu l'isoles. Au contraire :
 
-> *"Ce qui t'est arrivé arrive à des centaines de personnes par mois, y compris des PDG et des banquiers. Les outils sont devenus indétectables. Tu n'es pas naïf — tu es la première vague d'une nouvelle escroquerie."*
+> *"Ce qui t'est arrivé arrive à des centaines de personnes par mois, y compris des PDG et des banquiers. Les outils sont devenus indétectables. Tu n'es pas naïf - tu es la première vague d'une nouvelle escroquerie."*
 
-**Priorité 2 — Geler l'argent si virement parti**
+**Priorité 2 - Geler l'argent si virement parti**
 
 Si un virement bancaire a été effectué dans les **dernières 24-72h** :
 1. Appeler immédiatement la banque (numéro au dos de la carte) pour demander un **rappel de virement** (procédure SEPA recall). Plus tu agis vite, plus tu as de chances.
-2. Déposer plainte en gendarmerie ou commissariat — c'est obligatoire pour la suite (assurance, fiscalité, démarches bancaires).
-3. Signaler sur [cybermalveillance.gouv.fr](https://www.cybermalveillance.gouv.fr) — service public gratuit, ils orientent et accompagnent.
+2. Déposer plainte en gendarmerie ou commissariat - c'est obligatoire pour la suite (assurance, fiscalité, démarches bancaires).
+3. Signaler sur [cybermalveillance.gouv.fr](https://www.cybermalveillance.gouv.fr) - service public gratuit, ils orientent et accompagnent.
 
-**Priorité 3 — Sécuriser pour la suite**
+**Priorité 3 - Sécuriser pour la suite**
 
 L'escroc a utilisé un échantillon de voix/vidéo qui existe quelque part. Aide ton proche à :
 - Passer ses comptes Facebook, Instagram, TikTok en privé (ses messages vocaux ne doivent plus être accessibles aux inconnus).
 - Activer la double authentification sur tous ses comptes.
-- Convenir d'un **mot de passe familial** (un mot anodin que seuls les proches connaissent) à demander en cas d'appel suspect. *"Maman, c'est moi, le code c'est quoi ?"* — si l'appelant ne sait pas, c'est un deepfake.
+- Convenir d'un **mot de passe familial** (un mot anodin que seuls les proches connaissent) à demander en cas d'appel suspect. *"Maman, c'est moi, le code c'est quoi ?"* - si l'appelant ne sait pas, c'est un deepfake.
 
 # Comment reconnaître un deepfake AVANT de tomber
 
 C'est de plus en plus difficile, mais voici les signaux d'alarme actuels (qui disparaîtront dans 2-3 ans) :
 
-- **Vocal** : voix légèrement "trop fluide", rythme régulier sans pause naturelle, intonations un peu mécaniques sur les fins de phrase. Si la personne parle vite et sans respirer, demande-lui de chuchoter ou de répéter une phrase précise — les deepfakes basiques ratent souvent ces variations.
+- **Vocal** : voix légèrement "trop fluide", rythme régulier sans pause naturelle, intonations un peu mécaniques sur les fins de phrase. Si la personne parle vite et sans respirer, demande-lui de chuchoter ou de répéter une phrase précise - les deepfakes basiques ratent souvent ces variations.
 - **Vidéo** : clignements d'yeux anormaux (trop rares ou trop réguliers), peau du cou qui ne bouge pas en cohérence avec la mâchoire, éclairage incohérent entre visage et arrière-plan.
 - **Comportemental** : urgence extrême + demande financière + interdiction de raccrocher = combo classique. Une vraie urgence familiale n'empêche jamais de raccrocher pour rappeler depuis le numéro habituel.
 

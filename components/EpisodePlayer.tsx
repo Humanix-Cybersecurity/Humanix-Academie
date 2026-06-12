@@ -358,7 +358,7 @@ export default function EpisodePlayer(props: {
             {/* Le debrief peut etre genere par Hex (Mistral) et contenir du
                 markdown riche : gras, listes, liens, code, tables. On utilise
                 MarkdownView (meme rendu que HexChat / HexRecap) plutot que
-                FormattedText qui ne supporte que le gras — sinon les tables
+                FormattedText qui ne supporte que le gras - sinon les tables
                 apparaissent en markdown brut, signale par Florian 22/05/2026 :
                 "sur le debrief de hex, j'ai les tableau qui sont pas formattes".
                 whitespace-pre-line retire ici car MarkdownView gere les sauts

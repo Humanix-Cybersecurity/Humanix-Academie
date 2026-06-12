@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// POST /api/exposition/metric — beacon agrégé NON-IDENTIFIANT.
+// POST /api/exposition/metric - beacon agrégé NON-IDENTIFIANT.
 // Le check password tourne 100% côté client (le mdp ne touche jamais le
 // serveur) ; ce beacon permet juste d'incrémenter un compteur anonyme
 // "exposed/clean" pour les stats communautaires. AUCUNE donnée de cible.

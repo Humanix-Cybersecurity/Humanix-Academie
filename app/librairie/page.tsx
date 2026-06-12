@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Catalogue librairie micro-learning - refonte cosy mai 2026.
 //
-// VITRINE SEO PUBLIQUE — la librairie est la surface marketing/SEO
+// VITRINE SEO PUBLIQUE - la librairie est la surface marketing/SEO
 // principale de Humanix : 100 % accessible aux visiteurs anonymes et aux
 // crawlers (Google, Bing, Qwant, Ecosia). Pas d'auth requise, ni en
 // liste, ni en detail. Pas de gating DEMO_MODE non plus : on seed les
@@ -20,12 +20,12 @@ import HexBackdrop from "@/components/HexBackdrop";
 
 export const metadata: Metadata = {
   title:
-    "Librairie cyber — articles courts pour apprendre la cybersécurité au quotidien",
+    "Librairie cyber - articles courts pour apprendre la cybersécurité au quotidien",
   description:
     "Articles de 5 à 10 minutes pour comprendre le phishing, les mots de passe, le RGPD, le Wi-Fi public, les sauvegardes, l'IA au bureau, et plus encore. Lecture libre, gratuite, sans inscription.",
   alternates: { canonical: "/librairie" },
   openGraph: {
-    title: "Librairie Humanix — la cybersécurité du quotidien, en clair",
+    title: "Librairie Humanix - la cybersécurité du quotidien, en clair",
     description:
       "30+ articles courts pour décortiquer phishing, RGPD, IA, BYOD, mobile, sauvegardes, fraude. Sources publiques (ANSSI, CNIL, CERT-FR). Aucune inscription requise.",
     type: "website",
@@ -79,7 +79,7 @@ export default async function LibrairiePage({
 }: {
   searchParams: Promise<{ category?: string }>;
 }) {
-  // Pas d'auth requise — la librairie est publique (vitrine SEO).
+  // Pas d'auth requise - la librairie est publique (vitrine SEO).
   const { category } = await searchParams;
 
   const articles = await db.libraryArticle.findMany({

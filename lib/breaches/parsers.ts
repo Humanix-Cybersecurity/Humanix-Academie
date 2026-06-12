@@ -284,8 +284,8 @@ function parseFeed(xml: string): FeedItem[] {
 
 function guessOrganization(title: string): string | null {
   const patterns = [
-    /(?:fuite\s+(?:massive\s+)?(?:à|chez|de)|chez|piratage\s+(?:de|chez)|leak\s+(?:chez|de))\s+(?:la\s+|le\s+|les\s+|l'|de\s+l'|du\s+|de\s+la\s+)?([A-ZÀ-Ÿ][\wÀ-ÿ\s&.'-]+?)(?:\s*[-—:|,]|\s+\d|\s+expose|\s+touche|\s+annonce|$)/i,
-    /^([A-ZÀ-Ÿ][\wÀ-ÿ\s&.-]+?)\s*[-—:|]/,
+    /(?:fuite\s+(?:massive\s+)?(?:à|chez|de)|chez|piratage\s+(?:de|chez)|leak\s+(?:chez|de))\s+(?:la\s+|le\s+|les\s+|l'|de\s+l'|du\s+|de\s+la\s+)?([A-ZÀ-Ÿ][\wÀ-ÿ\s&.'-]+?)(?:\s*[--:|,]|\s+\d|\s+expose|\s+touche|\s+annonce|$)/i,
+    /^([A-ZÀ-Ÿ][\wÀ-ÿ\s&.-]+?)\s*[--:|]/,
   ];
   for (const re of patterns) {
     const m = re.exec(title);

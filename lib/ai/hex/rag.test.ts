@@ -58,7 +58,7 @@ describe("formatRagContext", () => {
     expect(out).toContain('"Source : <titre>"');
   });
 
-  it("ne reproduit pas mot pour mot — instruit a reformuler", () => {
+  it("ne reproduit pas mot pour mot - instruit a reformuler", () => {
     const out = formatRagContext([
       { title: "T", sourcePath: "s", url: null, score: 0.5, excerpt: "E" },
     ]);
@@ -155,7 +155,7 @@ describe("retrieveRagContext (degradation gracieuse)", () => {
     expect(r.chunks[0].title).toBe("Pertinent");
   });
 
-  it("ne plante JAMAIS — exception interne -> chunks:[]", async () => {
+  it("ne plante JAMAIS - exception interne -> chunks:[]", async () => {
     vi.mocked(isMistralEmbeddingsAvailable).mockReturnValue(true);
     vi.mocked(isPgvectorAvailable).mockResolvedValue(true);
     vi.mocked(embedOneSafe).mockResolvedValue(new Array(1024).fill(0.1));

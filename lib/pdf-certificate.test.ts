@@ -2,7 +2,7 @@
 import { describe, it, expect } from "vitest";
 import { certificateName } from "./pdf-certificate";
 
-describe("certificateName — nom affiche sur le certificat", () => {
+describe("certificateName - nom affiche sur le certificat", () => {
   it("utilise prenom + nom quand LES DEUX sont renseignes", () => {
     expect(
       certificateName({

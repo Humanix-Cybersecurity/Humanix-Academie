@@ -117,7 +117,7 @@ const MediaSchema = z.discriminatedUnion("type", [
       receivedAt: z.string().optional(),
     }),
   }),
-  // Profil X / Twitter — page profil publique avec bio + recent posts.
+  // Profil X / Twitter - page profil publique avec bio + recent posts.
   // Audience cible : reconnaissance d'OSINT social (compte perso qui en
   // dit trop, recruteurs, journalistes, fictif lookalike).
   z.object({
@@ -148,7 +148,7 @@ const MediaSchema = z.discriminatedUnion("type", [
         .max(6),
     }),
   }),
-  // Profil Instagram — grille de posts + bio. Format classique :
+  // Profil Instagram - grille de posts + bio. Format classique :
   // 9 vignettes 3x3 + bio + stats.
   z.object({
     type: z.literal("instagram-profile-mockup"),

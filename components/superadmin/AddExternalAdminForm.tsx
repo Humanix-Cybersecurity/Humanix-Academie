@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
 // Formulaire SUPERADMIN pour ajouter un admin EXTERNE (membership) sur
-// un tenant. Le user cible doit deja exister sur la plateforme — sinon
+// un tenant. Le user cible doit deja exister sur la plateforme - sinon
 // utiliser InviteNewTenantAdminForm a la place.
 
 import { useState, useTransition } from "react";

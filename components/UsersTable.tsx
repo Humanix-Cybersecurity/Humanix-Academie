@@ -500,7 +500,7 @@ export default function UsersTable({
  *
  * Si `canAct=false` (hierarchie RBAC bloque ou auto-modification), on
  * affiche un bouton disabled avec un tooltip explicatif plutot que de
- * cacher completement — l'admin comprend pourquoi il ne peut pas agir.
+ * cacher completement - l'admin comprend pourquoi il ne peut pas agir.
  */
 function UserMenu({
   u,
@@ -526,7 +526,7 @@ function UserMenu({
   const [mounted, setMounted] = useState(false);
   const btnRef = useRef<HTMLButtonElement>(null);
 
-  // createPortal n'existe pas cote SSR — on attend le mount client.
+  // createPortal n'existe pas cote SSR - on attend le mount client.
   useEffect(() => {
     setMounted(true);
   }, []);

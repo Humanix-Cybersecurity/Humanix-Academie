@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// GET /api/phishing/track/open/[token] — Pixel tracking 1x1 transparent.
+// GET /api/phishing/track/open/[token] - Pixel tracking 1x1 transparent.
 //
 // CONTEXT (Phishing Engine v2, mai 2026) :
 //   Le HTML des emails de phishing inclut un <img src="${AUTH_URL}/api/phishing/

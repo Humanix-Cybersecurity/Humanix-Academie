@@ -115,7 +115,7 @@ export const TIERS: PricingTier[] = [
     id: "pro",
     name: "Pro",
     tagline:
-      "Le standard PME — tout le contenu, tous les connecteurs souverains",
+      "Le standard PME - tout le contenu, tous les connecteurs souverains",
     emoji: "🚀",
     highlight: true,
     pricing: {
@@ -128,7 +128,7 @@ export const TIERS: PricingTier[] = [
       },
     },
     seats: { min: 16, max: 250 },
-    // Top 10 features (detail complet — 25+ items — dans le tableau comparatif).
+    // Top 10 features (detail complet - 25+ items - dans le tableau comparatif).
     features: [
       "Tout le catalogue cyber (saisons + librairie + nouveautés mensuelles)",
       "SSO Microsoft 365 + Google + SCIM v2 (Entra/Okta)",

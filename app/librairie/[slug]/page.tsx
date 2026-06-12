@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Lecture d'un article librairie — PAGE PUBLIQUE (SEO).
+// Lecture d'un article librairie - PAGE PUBLIQUE (SEO).
 //
 // La librairie est la vitrine marketing/SEO de Humanix : aucun gate
 // d'authentification, aucun gate DEMO_MODE. Tous les articles publies
@@ -49,7 +49,7 @@ export async function generateMetadata({
 
   if (!article || !article.isPublished) {
     return {
-      title: "Article introuvable — Librairie Humanix",
+      title: "Article introuvable - Librairie Humanix",
     };
   }
 
@@ -91,7 +91,7 @@ export default async function ArticleReadPage({
   // CSP nonce per-request pour le JSON-LD inline ci-dessous.
   const cspNonce = await getCspNonce();
 
-  // Pas de gate auth — la librairie est publique (vitrine SEO).
+  // Pas de gate auth - la librairie est publique (vitrine SEO).
 
   // Increment view count (fire-and-forget)
   db.libraryArticle

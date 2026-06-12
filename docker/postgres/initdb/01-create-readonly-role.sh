@@ -58,7 +58,7 @@ psql -v ON_ERROR_STOP=1 \
   GRANT USAGE ON SCHEMA public TO humanix_readonly;
 
   -- =============================================================
-  -- 3. ALTER DEFAULT PRIVILEGES — couvre TOUTES les futures tables
+  -- 3. ALTER DEFAULT PRIVILEGES - couvre TOUTES les futures tables
   --    qui seront creees par Prisma (db push / migration deploy).
   --    Critique : sans cette ligne, le ro_user ne verrait rien.
   -- =============================================================
@@ -99,7 +99,7 @@ psql -v ON_ERROR_STOP=1 \
   GRANT humanix_readonly TO humanix_ro_user;
 EOSQL
 
-echo "[init-readonly-role] OK — humanix_ro_user cree."
+echo "[init-readonly-role] OK - humanix_ro_user cree."
 echo "[init-readonly-role] URL de connection :"
 echo "  postgresql://humanix_ro_user:***@$(hostname)/$POSTGRES_DB"
 echo "[init-readonly-role] Apres le 1er prisma db push, applique les REVOKE chirurgicaux :"

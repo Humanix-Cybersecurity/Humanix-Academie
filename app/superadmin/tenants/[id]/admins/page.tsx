@@ -4,7 +4,7 @@
 //
 // Console SUPERADMIN pour gerer les admins d'un tenant donne :
 //   - Lister les admins NATIFS (membres du tenant avec role >= MANAGER)
-//   - Lister les admins EXTERNES (via TenantMembership) — typiquement
+//   - Lister les admins EXTERNES (via TenantMembership) - typiquement
 //     d'autres SUPERADMIN Humanix qui accompagnent ce client
 //   - Inviter un NOUVEAU admin natif (creation + magic link)
 //   - Ajouter un admin EXTERNE (recherche par email un user existant

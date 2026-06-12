@@ -4,7 +4,7 @@ import { OG_SIZE, OG_CONTENT_TYPE, renderOgCard } from "@/lib/og-card";
 // Cf. app/opengraph-image.tsx pour la justification.
 export const dynamic = "force-dynamic";
 
-export const alt = "Cyber-météo France — Le niveau d'alerte cyber national, en clair";
+export const alt = "Cyber-météo France - Le niveau d'alerte cyber national, en clair";
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 

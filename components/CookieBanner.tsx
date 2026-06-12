@@ -14,19 +14,19 @@
 //
 // Modele de consentement :
 //   - 2 boutons : "Tout accepter" / "Tout refuser" (parite stricte cote
-//     visibilite + couleur de degats — exigence CNIL recommandation 2020-091).
+//     visibilite + couleur de degats - exigence CNIL recommandation 2020-091).
 //   - Pas de bouton "Continuer sans consentir" deguise.
 //   - Pas de pre-cochage. Statut "non consenti" jusqu'a action explicite.
-//   - Stockage du choix dans localStorage (pas dans un cookie tiers — la
+//   - Stockage du choix dans localStorage (pas dans un cookie tiers - la
 //     decision elle-meme n'est pas un traceur).
 //   - Choix re-modifiable depuis /confidentialite (lien dans le footer).
 //
 // Le CookieBanner s'affiche uniquement si :
 //   - un traceur necessitant consentement est configure (Plausible cloud via
-//     NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT) — sinon il n'y a rien a consentir
+//     NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT) - sinon il n'y a rien a consentir
 //   - ET localStorage 'humanix-cookie-consent' n'a aucune valeur
 //   - ET on n'est pas sur les pages legales (cgu, cgv, mentions, confidentialite,
-//     cookies) — eviter de masquer le contenu pendant que l'utilisateur lit.
+//     cookies) - eviter de masquer le contenu pendant que l'utilisateur lit.
 //
 // Pourquoi conditionnel : Humanix Academie est AGPL v3. Un fork qui n'utilise
 // pas Plausible cloud (mais Matomo ou Plausible self-host en mode CNIL-exempt,
@@ -50,7 +50,7 @@ const STORAGE_KEY = "humanix-cookie-consent";
  * Indique si un traceur soumis a consentement est configure cote operateur.
  * Aujourd'hui : uniquement Plausible cloud (le self-host et Matomo sont
  * consideres exemptes par defaut sous regime CNIL recommandation 2020-091
- * — c'est a l'operateur de verifier que sa config respecte bien les criteres
+ * - c'est a l'operateur de verifier que sa config respecte bien les criteres
  * d'exemption : anonymisation IP, pas de cross-site, conservation limitee).
  */
 const NEEDS_CONSENT =
@@ -85,7 +85,7 @@ function writeConsent(value: "granted" | "denied"): void {
   try {
     window.localStorage.setItem(STORAGE_KEY, value);
   } catch {
-    /* quota plein / mode prive — on ignore, l'user reverra la banniere */
+    /* quota plein / mode prive - on ignore, l'user reverra la banniere */
   }
   window.dispatchEvent(
     new CustomEvent("humanix-consent-changed", { detail: value }),
@@ -126,7 +126,7 @@ export default function CookieBanner() {
     setVisible(readConsent() === null);
   }, [pathname]);
 
-  // Reservation d'un slot dans le coordinator (priorite 100 — legal,
+  // Reservation d'un slot dans le coordinator (priorite 100 - legal,
   // toujours en premier). Si une autre popup essaie d'apparaitre pendant
   // que la cookie est visible, elle attendra.
   const allowed = usePopupSlot({
@@ -169,7 +169,7 @@ export default function CookieBanner() {
             Pour comprendre quelles pages vous aident, on utilise{" "}
             <strong>Plausible Analytics</strong> (souverain UE, RGPD-by-design,
             sans cookies tiers, sans profilage). Vos données ne sortent pas
-            d'Europe. Vous pouvez accepter ou refuser — votre choix est
+            d'Europe. Vous pouvez accepter ou refuser - votre choix est
             modifiable a tout moment depuis{" "}
             <Link
               href="/confidentialite"

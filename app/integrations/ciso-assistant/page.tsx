@@ -13,7 +13,7 @@ import Link from "next/link";
 import CisoAssistantBridge from "@/components/CisoAssistantBridge";
 
 export const metadata = {
-  title: "Connecteur CISO Assistant — Humanix Académie",
+  title: "Connecteur CISO Assistant - Humanix Académie",
   description:
     "Le seul connecteur natif entre une plateforme française de sensibilisation cyber et CISO Assistant (intuitem). Vos preuves de sensibilisation alimentent automatiquement votre outil de gouvernance, risque et conformité.",
 };
@@ -77,7 +77,7 @@ export default function CisoAssistantIntegrationPage() {
               Pour chaque contrôle du référentiel, une preuve datée avec
               statut, score, responsable désigné et date d'expiration. Un
               PDF prêt pour audit y est joint, signé cryptographiquement
-              et vérifiable hors-ligne avec OpenSSL pendant des années — sans
+              et vérifiable hors-ligne avec OpenSSL pendant des années - sans
               aucune dépendance à Humanix.
             </p>
           </div>
@@ -143,7 +143,7 @@ export default function CisoAssistantIntegrationPage() {
           </div>
           <div className="p-4 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 sm:col-span-2">
             <p className="font-bold text-primary-500 dark:text-accent-300 mb-1">
-              📈 Métrologie — séries temporelles
+              📈 Métrologie - séries temporelles
             </p>
             <p className="text-gray-600 dark:text-gray-400 text-xs">
               Six métriques transmises en continu dans le module Métrologie
@@ -151,7 +151,7 @@ export default function CisoAssistantIntegrationPage() {
               d'achèvement, taux de signalement de tentatives d'hameçonnage,
               nombre de preuves par statut. Le RSSI, le DSI ou le DPO
               compose ensuite ses propres tableaux de bord CISO Assistant
-              avec des vignettes pointant sur ces séries — évolution dans le
+              avec des vignettes pointant sur ces séries - évolution dans le
               temps, alerte si la valeur devient périmée, cible par
               métrique.
             </p>
@@ -184,7 +184,7 @@ export default function CisoAssistantIntegrationPage() {
                 « Qui dans le Marketing n'a pas compris la politique de mot
                 de passe ? »
               </em>{" "}
-              — réponse pseudonymisée et compatible RGPD en une requête.
+              - réponse pseudonymisée et compatible RGPD en une requête.
             </p>
           </div>
           <div>
@@ -228,7 +228,7 @@ export default function CisoAssistantIntegrationPage() {
           Approche par <strong>transmission</strong> : Humanix Académie
           transmet les preuves vivantes (statut, score, PDF signé Ed25519) à
           votre instance CISO Assistant via son API publique. Aucune
-          modification n'est requise côté intuitem — c'est Humanix qui
+          modification n'est requise côté intuitem - c'est Humanix qui
           s'adapte à leur schéma.
         </p>
 
@@ -513,7 +513,7 @@ export default function CisoAssistantIntegrationPage() {
           <li>
             <strong>Pour le DSI d'une ETI en démarche ISO 27001</strong> :
             le contrôle A.6.3 (sensibilisation) est alimenté
-            automatiquement en preuves vivantes — score, certificats,
+            automatiquement en preuves vivantes - score, certificats,
             taux de signalement.
           </li>
           <li>
@@ -539,8 +539,8 @@ export default function CisoAssistantIntegrationPage() {
             </summary>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
               Non. Le format <code>ciso-assistant-v1</code> est documenté
-              et stable. N'importe quel outil GRC — Eramba, MetricStream,
-              ServiceNow GRC, ou un script maison — peut consommer le
+              et stable. N'importe quel outil GRC - Eramba, MetricStream,
+              ServiceNow GRC, ou un script maison - peut consommer le
               service. Le format <code>raw</code> donne accès aux données
               brutes.
             </p>
@@ -577,7 +577,7 @@ export default function CisoAssistantIntegrationPage() {
             </summary>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
               Chaque PDF de preuve envoyé dans CISO Assistant contient un
-              manifeste d'intégrité signé Ed25519 en page 2 — algorithme,
+              manifeste d'intégrité signé Ed25519 en page 2 - algorithme,
               empreinte de la clé publique, hachage SHA-256, signature
               base64url, charge utile JSON canonique et procédure de
               vérification OpenSSL. La clé publique est exposée à

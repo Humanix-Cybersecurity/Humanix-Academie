@@ -45,7 +45,7 @@ export default function RapportAuditPage() {
             </h2>
             <p className="text-sm opacity-90 mt-1">
               Méthodologie, périmètre, contrôles vérifiés, gaps assumés, plan de
-              remédiation à 6 mois — avec mise à jour Sprints sécurité 1, 2 et 4
+              remédiation à 6 mois - avec mise à jour Sprints sécurité 1, 2 et 4
               (RBAC central, dbReadOnly analytiques, CSP nonce per-request,
               page publique audits externes).
             </p>
@@ -74,7 +74,7 @@ export default function RapportAuditPage() {
           🎯 Pentest interne · 7 mai 2026
         </p>
         <h2 className="text-2xl font-bold text-primary-500 mb-3">
-          Pentest box-grise interne — résultats v1.1
+          Pentest box-grise interne - résultats v1.1
         </h2>
         <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
           Test offensif réalisé depuis un container Exegol isolé, contre une
@@ -101,7 +101,7 @@ export default function RapportAuditPage() {
             title="HAProxy stats interface (port 8404) sans authentification"
             cvss="5.3 (CVSS 3.1, Network/Low/None/None/Unchanged/Low/None/None)"
             issue="Le frontend stats HAProxy bind sur *:8404 sans stats auth. Bien que docker-compose limite l'exposition à 127.0.0.1 sur l'host, tout container partageant le réseau Docker peut accéder anonymement à la page (backends, débit, état des serveurs). Risque d'énumération si l'infra est partagée."
-            fix="Statut au 12 mai 2026 : Basic Auth activée — stats auth admin:${HAPROXY_STATS_PASSWORD} dans haproxy.cfg + haproxy.dev.cfg. Password en variable d'env injectée par docker-compose. stats hide-version ajouté en bonus anti-fingerprint. Healthcheck Docker adapté pour passer les credentials. Verifié : 401 sans auth, 200 avec auth correcte."
+            fix="Statut au 12 mai 2026 : Basic Auth activée - stats auth admin:${HAPROXY_STATS_PASSWORD} dans haproxy.cfg + haproxy.dev.cfg. Password en variable d'env injectée par docker-compose. stats hide-version ajouté en bonus anti-fingerprint. Healthcheck Docker adapté pour passer les credentials. Verifié : 401 sans auth, 200 avec auth correcte."
             status="fixed"
           />
           <Finding
@@ -192,7 +192,7 @@ export default function RapportAuditPage() {
             <span aria-hidden="true">✅</span>
             <span>
               <strong>0 CVE</strong> (toutes sévérités confondues) sur{" "}
-              <strong>781 dépendances</strong> npm — vérification automatisée à
+              <strong>781 dépendances</strong> npm - vérification automatisée à
               chaque release + Dependabot hebdo.
             </span>
           </li>
@@ -252,13 +252,13 @@ export default function RapportAuditPage() {
         </ul>
       </section>
 
-      {/* Evolutions v1.6 — Triple A+ audits externes */}
+      {/* Evolutions v1.6 - Triple A+ audits externes */}
       <section className="card mb-10 border-l-4 border-emerald-600 bg-emerald-50/40 dark:bg-emerald-950/20">
         <p className="text-xs uppercase tracking-widest text-emerald-700 dark:text-emerald-300 font-bold mb-2">
           🏆 Résultats audits externes · 17 mai 2026
         </p>
         <h2 className="text-2xl font-bold text-primary-500 mb-3">
-          Triple A+ — Mozilla, Security Headers, SSL Labs
+          Triple A+ - Mozilla, Security Headers, SSL Labs
         </h2>
         <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
           Validation indépendante des Sprints sécurité 1-4 par trois
@@ -270,7 +270,7 @@ export default function RapportAuditPage() {
           >
             /securite/audits-externes
           </Link>{" "}
-          — aucune capture datée à croire sur parole.
+          - aucune capture datée à croire sur parole.
         </p>
         <div className="grid sm:grid-cols-3 gap-3 mb-4">
           <article className="rounded-xl border-2 border-emerald-300 dark:border-emerald-800 bg-white dark:bg-slate-900 p-4 text-center">
@@ -319,13 +319,13 @@ export default function RapportAuditPage() {
         <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
           <strong>Note technique notable</strong> : Qualys détecte que le
           serveur supporte <strong>PQC (Post-Quantum Cryptography)</strong>{" "}
-          pour l&apos;échange de clé TLS — protection contre les attaques
+          pour l&apos;échange de clé TLS - protection contre les attaques
           quantiques à long terme. C&apos;est un standard récent que peu
           de serveurs HTTPS exposent encore en 2026.
         </p>
       </section>
 
-      {/* Evolutions v1.5 — Sprint securite Zero-Trust */}
+      {/* Evolutions v1.5 - Sprint securite Zero-Trust */}
       <section className="card mb-10 border-l-4 border-emerald-500">
         <p className="text-xs uppercase tracking-widest text-emerald-600 dark:text-emerald-400 font-bold mb-2">
           🛡️ Évolutions · 13 → 17 mai 2026 (Sprints sécurité 1, 2, 4)
@@ -377,7 +377,7 @@ export default function RapportAuditPage() {
             <span aria-hidden="true">✅</span>
             <span>
               <strong>CSP nonce per-request (Sprint 4)</strong> : adoption de
-              la stratégie « Strict CSP » Google —{" "}
+              la stratégie « Strict CSP » Google -{" "}
               <code className="text-xs">
                 script-src &apos;self&apos; &apos;nonce-XXX&apos;
                 &apos;strict-dynamic&apos;
@@ -387,7 +387,7 @@ export default function RapportAuditPage() {
               JSON-LD SEO). Sur les navigateurs CSP3-aware (Chrome 60+,
               Firefox 56+, Safari 14+, Edge moderne),{" "}
               <code className="text-xs">&apos;unsafe-inline&apos;</code>
-              est <strong>ignoré</strong> dès qu&apos;un nonce est présent —
+              est <strong>ignoré</strong> dès qu&apos;un nonce est présent -
               protection forte contre XSS reflechi.
             </span>
           </li>
@@ -402,7 +402,7 @@ export default function RapportAuditPage() {
                   /securite/audits-externes
                 </Link>
               </strong>{" "}
-              — transparence radicale : Mozilla Observatory, Security Headers
+              - transparence radicale : Mozilla Observatory, Security Headers
               (Scott Helme), Qualys SSL Labs, rapport interne. Chaque entrée
               a un lien LIVE vers le scanner officiel. Aucun score
               auto-déclaré, le visiteur vérifie en temps réel.

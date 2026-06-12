@@ -19,7 +19,7 @@ import { canActAsAdminInTenant } from "@/lib/tenant-membership";
 /**
  * Garde commun a toutes les server actions admin. Resout le tenant ACTIF
  * via getCurrentTenantId (sous-domaine + membership) plutot que de se
- * contenter de session.user.tenantId — ce qui permet a un SUPERADMIN
+ * contenter de session.user.tenantId - ce qui permet a un SUPERADMIN
  * avec membership d'agir comme admin sur un autre tenant via son
  * sous-domaine.
  *
@@ -288,7 +288,7 @@ export async function deleteUser(userId: string) {
 }
 
 /**
- * Invite ou rattache un utilisateur — RGPD-safe.
+ * Invite ou rattache un utilisateur - RGPD-safe.
  *
  * 3 chemins selon l'etat de la cible :
  *  1. L'email n'existe nulle part dans la BDD

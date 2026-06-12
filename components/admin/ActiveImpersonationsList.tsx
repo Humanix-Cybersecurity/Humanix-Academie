@@ -96,7 +96,7 @@ export default async function ActiveImpersonationsList({
                   Acceptée le {s.grantedAt && fmtDateTime(s.grantedAt)} ·{" "}
                   Reste{" "}
                   <strong>
-                    {s.endsAt ? fmtRemaining(s.endsAt) : "—"}
+                    {s.endsAt ? fmtRemaining(s.endsAt) : "-"}
                   </strong>
                 </>
               ) : (

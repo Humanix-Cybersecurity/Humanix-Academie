@@ -256,7 +256,7 @@ function EvidenceDoc({
           <View>
             <Text style={styles.brand}>Humanix Académie</Text>
             <Text style={styles.brandSub}>
-              Preuve de conformité — Sensibilisation cyber
+              Preuve de conformité - Sensibilisation cyber
             </Text>
           </View>
           <Text style={styles.badge}>{framework}</Text>
@@ -280,7 +280,7 @@ function EvidenceDoc({
           <View style={styles.row}>
             <Text style={styles.label}>Contrôle</Text>
             <Text style={styles.value}>
-              {evidence.control_ref} — {evidence.control_name}
+              {evidence.control_ref} - {evidence.control_name}
             </Text>
           </View>
           <View style={styles.row}>
@@ -345,7 +345,7 @@ function EvidenceDoc({
                     {a.value !== undefined && a.unit
                       ? ` : ${a.value}${a.unit}`
                       : ""}
-                    {a.url ? ` — ${a.url}` : ""}
+                    {a.url ? ` - ${a.url}` : ""}
                   </Text>
                 ))}
               </View>

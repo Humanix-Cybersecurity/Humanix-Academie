@@ -19,7 +19,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Comment rejoindre Humanix Académie ? — Choisissez votre profil",
+  title: "Comment rejoindre Humanix Académie ? - Choisissez votre profil",
   description:
     "Particulier, RSSI, DSI, DAF ou DPO ? Découvrez la bonne façon de rejoindre Humanix Académie en fonction de votre besoin. Inscription gratuite, espace pro 5 sièges offerts ou abonnement Enterprise.",
 };
@@ -167,7 +167,7 @@ export default function RejoindrePage() {
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
           Six profils, six parcours. Choisissez celui qui correspond le mieux
-          à votre situation — vous serez orienté vers la bonne formule, en
+          à votre situation - vous serez orienté vers la bonne formule, en
           quelques secondes.
         </p>
       </header>

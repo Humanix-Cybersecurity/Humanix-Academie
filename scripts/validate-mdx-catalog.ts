@@ -152,7 +152,7 @@ function parseCatalogSource(src: string): CatalogEntry[] {
 // charge par d'autres loaders dedies. Les y inclure produirait des
 // faux-positifs "orphelins" alors que le contenu est tres bien charge.
 const IGNORED_SUBDIRS = new Set([
-  "enquetes", // Mode Enqueteur — loader lib/investigations/loader.ts
+  "enquetes", // Mode Enqueteur - loader lib/investigations/loader.ts
 ]);
 
 function listMdxFiles(): CatalogEntry[] {

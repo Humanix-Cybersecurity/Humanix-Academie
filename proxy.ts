@@ -75,7 +75,7 @@ function buildCsp(nonce: string): string {
       "script-src 'self'",
       `'nonce-${nonce}'`,
       "'strict-dynamic'",
-      // Fallback pour navigateurs pre-CSP3 (Edge ancien, IE11) — ignore
+      // Fallback pour navigateurs pre-CSP3 (Edge ancien, IE11) - ignore
       // par les nav modernes des que nonce/strict-dynamic est present.
       "'unsafe-inline'",
       plausible,

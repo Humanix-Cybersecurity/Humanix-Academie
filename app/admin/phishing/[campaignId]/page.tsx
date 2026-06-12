@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /admin/phishing/[campaignId] — Detail d'une campagne avec funnel + timeline.
+// /admin/phishing/[campaignId] - Detail d'une campagne avec funnel + timeline.
 //
 // CONTEXT (Phishing Engine v2, mai 2026) :
 //   Avec le tracking funnel complet (sent / opened / clicked / submitted /
@@ -94,10 +94,10 @@ export default async function CampaignDetailPage({
       <AdminPageHeader
         title={campaign.title}
         icon={tpl?.emoji ?? "🎣"}
-        description={`Template ${campaign.template} · Canal ${campaign.channel} · Lancée ${campaign.sentAt?.toLocaleString("fr-FR") ?? "—"}`}
+        description={`Template ${campaign.template} · Canal ${campaign.channel} · Lancée ${campaign.sentAt?.toLocaleString("fr-FR") ?? "-"}`}
       />
 
-      {/* FUNNEL VISUEL — barres horizontales decroissantes */}
+      {/* FUNNEL VISUEL - barres horizontales decroissantes */}
       <AdminSection title="Funnel de campagne">
         <div className="space-y-3">
           <FunnelBar
@@ -112,7 +112,7 @@ export default async function CampaignDetailPage({
             value={opened}
             total={sent}
             color="bg-cyan-500"
-            description={`Pixel tracking déclenché (${openRate}% du total — attention : inclut les pre-fetch Gmail/Outlook)`}
+            description={`Pixel tracking déclenché (${openRate}% du total - attention : inclut les pre-fetch Gmail/Outlook)`}
           />
           <FunnelBar
             label="Cliqués"
@@ -126,14 +126,14 @@ export default async function CampaignDetailPage({
             value={submitted}
             total={sent}
             color="bg-rose-500"
-            description={`Formulaire fake rempli (${submitFromClickRate}% des cliqués) — le pire cas`}
+            description={`Formulaire fake rempli (${submitFromClickRate}% des cliqués) - le pire cas`}
           />
           <FunnelBar
             label="Signalés"
             value={reported}
             total={sent}
             color="bg-emerald-500"
-            description={`Reporté via Outlook add-in (${reportRate}% du total — c'est ce qu'on vise)`}
+            description={`Reporté via Outlook add-in (${reportRate}% du total - c'est ce qu'on vise)`}
           />
         </div>
       </AdminSection>
@@ -231,7 +231,7 @@ export default async function CampaignDetailPage({
                       </div>
                     </td>
                     <td className="px-3 py-2 text-gray-600 dark:text-gray-300">
-                      {r.user.service ?? "—"}
+                      {r.user.service ?? "-"}
                     </td>
                     {isAbTest && (
                       <td className="px-3 py-2">
@@ -381,7 +381,7 @@ function StatusPill({ status }: { status: string | null }) {
 }
 
 function formatShortDate(d: Date | null): string {
-  if (!d) return "—";
+  if (!d) return "-";
   return new Intl.DateTimeFormat("fr-FR", {
     day: "2-digit",
     month: "2-digit",
@@ -473,13 +473,13 @@ export function VariantComparisonSection({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
       <VariantCard
-        title={`Variant A — ${templateASlug}`}
+        title={`Variant A - ${templateASlug}`}
         stat={stats.A}
         compareTo={stats.B}
         badge={badge}
       />
       <VariantCard
-        title={`Variant B — ${variantBSlug}`}
+        title={`Variant B - ${variantBSlug}`}
         stat={stats.B}
         compareTo={stats.A}
         badge={badge}

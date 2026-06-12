@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page liste du Mode Enqueteur — `/apprendre/enquetes`.
+// Page liste du Mode Enqueteur - `/apprendre/enquetes`.
 //
 // Affiche les enquetes disponibles (free OSS + payantes content-pro)
 // avec leur difficulte, duree, type, et l'etat de completion par
@@ -29,7 +29,7 @@ import ShareDetectiveBadgeButton from "@/components/investigations/ShareDetectiv
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Mode Enquêteur — Cherche les signaux suspects | Humanix Académie",
+  title: "Mode Enquêteur - Cherche les signaux suspects | Humanix Académie",
   description:
     "Analyse des emails de phishing, des posts LinkedIn d'oversharing et des scènes de bureau. Coche les signaux suspects, gagne des points, deviens Cyber Sherlock. Sensibilisation cyber par découverte guidée.",
   alternates: { canonical: "/apprendre/enquetes" },
@@ -120,7 +120,7 @@ export default async function EnquetesPage() {
         <p className="text-base sm:text-lg text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed">
           Au lieu de te dire ce qu'est un phishing, on t'en montre un.
           Tu analyses, tu coches, tu gagnes des points. Le piège qu'on
-          repère soi-même, on ne le retient pas — on le voit venir.
+          repère soi-même, on ne le retient pas - on le voit venir.
         </p>
         {userId && (
           <div className="mt-5 flex flex-col items-center justify-center gap-3">

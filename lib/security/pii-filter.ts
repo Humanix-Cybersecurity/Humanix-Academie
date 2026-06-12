@@ -158,7 +158,7 @@ export function scanPii(input: string): PiiScanResult {
       if (start < 0) continue;
       const raw = m[0];
 
-      // Validation custom (Luhn, IBAN mod97...) — sinon on accepte
+      // Validation custom (Luhn, IBAN mod97...) - sinon on accepte
       if (pattern.validate && !pattern.validate(raw)) {
         continue;
       }

@@ -130,7 +130,7 @@ export default function SaisonCard({
           </p>
         )}
 
-        {/* Bloc bas (barre progress + CTA + meta) — mt-auto le pousse
+        {/* Bloc bas (barre progress + CTA + meta) - mt-auto le pousse
             au bas de la card pour aligner tous les CTA quand les cards
             ont des descriptions de longueurs variables (carrousel). */}
         <div className="mt-auto pt-2">

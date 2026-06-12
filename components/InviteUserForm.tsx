@@ -148,7 +148,7 @@ export default function InviteUserForm() {
           name="personalMessage"
           rows={2}
           maxLength={400}
-          placeholder="Une phrase qui aidera la personne à reconnaître votre demande — ex. « c'est moi, on rejoint l'espace famille »."
+          placeholder="Une phrase qui aidera la personne à reconnaître votre demande - ex. « c'est moi, on rejoint l'espace famille »."
           className="w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none text-sm resize-none"
         />
         <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">

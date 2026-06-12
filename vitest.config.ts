@@ -20,7 +20,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   resolve: {
     // En Vitest 4, le pattern object `"@": __dirname` ne suffit plus pour
-    // les imports type `@/lib/plans` cote workers — il faut un alias regex
+    // les imports type `@/lib/plans` cote workers - il faut un alias regex
     // explicite (matche le segment `@/` AVEC le `/` final) et un chemin
     // absolu qui inclut le `/` final aussi pour eviter les ambiguites.
     // Equivalent au mapping tsconfig `"@/*": ["./*"]`.

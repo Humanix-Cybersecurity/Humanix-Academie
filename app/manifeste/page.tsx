@@ -32,9 +32,9 @@ import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 import HexMascotEvolved from "@/components/HexMascotEvolved";
 
-const MANIFESTE_TITLE = "Manifeste — La cybersécurité humaine, française, libre | Humanix Académie";
+const MANIFESTE_TITLE = "Manifeste - La cybersécurité humaine, française, libre | Humanix Académie";
 const MANIFESTE_DESC =
-  "Pourquoi Humanix existe. La cybersécurité humaine, française, libre. Une plateforme open source AGPLv3 pour que personne — particulier, équipe, association, organisation — ne soit plus le maillon faible.";
+  "Pourquoi Humanix existe. La cybersécurité humaine, française, libre. Une plateforme open source AGPLv3 pour que personne - particulier, équipe, association, organisation - ne soit plus le maillon faible.";
 
 export const metadata = {
   title: MANIFESTE_TITLE,
@@ -49,7 +49,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Manifeste — La cybersécurité humaine, française, libre",
+    title: "Manifeste - La cybersécurité humaine, française, libre",
     description: MANIFESTE_DESC,
     images: ["/logo-humanix-academie-512.png"],
   },
@@ -176,8 +176,8 @@ export default function ManifestePage() {
           <ChapterHeader number="01" title="Le problème" eyebrow="On a tous vu ces scènes" id="ch2-title" />
 
           <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 leading-relaxed max-w-3xl mb-16 mx-auto text-center">
-            Dix ans en pentest. À chaque mission — entreprise, collectivité,
-            association, particulier piégé — c'est la même histoire qui se
+            Dix ans en pentest. À chaque mission - entreprise, collectivité,
+            association, particulier piégé - c'est la même histoire qui se
             rejoue. Trois scènes, trois personnes, le même point commun :{" "}
             <strong>personne ne les a formés</strong>.
           </p>
@@ -237,8 +237,8 @@ export default function ManifestePage() {
                   90<span className="text-7xl sm:text-9xl">%</span>
                 </p>
                 <p className="text-lg text-gray-700 dark:text-gray-200 mt-4">
-                  des cyberattaques — toutes structures confondues, du
-                  particulier au grand groupe — passent par un humain.
+                  des cyberattaques - toutes structures confondues, du
+                  particulier au grand groupe - passent par un humain.
                 </p>
               </div>
               <div className="animate-slide-up" style={{ animationDelay: "120ms" }}>
@@ -526,7 +526,7 @@ export default function ManifestePage() {
               <strong>180 à 250 k€ en solo bootstrap</strong>. Pas une
               licorne, pas une IPO. Une activité qui paie ses factures, fait
               vivre son fondateur, et accompagne <strong>tout le monde</strong>{" "}
-              — particuliers, équipes, organisations de toute taille — plutôt
+              - particuliers, équipes, organisations de toute taille - plutôt
               que de courir après 30 grosses boîtes.
             </p>
           </div>
@@ -563,7 +563,7 @@ export default function ManifestePage() {
             </p>
             <p className="mt-6 animate-slide-up" style={{ animationDelay: "200ms" }}>
               Elle se gagnera avec un <strong className="not-italic text-accent-300">écosystème souverain</strong>,
-              libre, auditable, où chacun — du particulier au RSSI — peut
+              libre, auditable, où chacun - du particulier au RSSI - peut
               savoir exactement ce qui tourne dans son outil. »
             </p>
           </blockquote>

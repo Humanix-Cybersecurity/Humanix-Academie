@@ -1,6 +1,6 @@
-# Dependabot v2 — Humanix Académie Community Edition
+# Dependabot v2 - Humanix Académie Community Edition
 #
-# Stratégie pour solo mainteneur — VERSION 2 (5 mai 2026) :
+# Stratégie pour solo mainteneur - VERSION 2 (5 mai 2026) :
 #
 #   Leçon de la v1 : les groupes "nommés" (next-stack, prisma-stack…) sans
 #   filtre `update-types` ont laissé passer des MAJORS dangereuses
@@ -17,7 +17,7 @@ version: 2
 
 updates:
   # =========================================================================
-  # 1. Stack Next.js (racine) — minor + patch uniquement
+  # 1. Stack Next.js (racine) - minor + patch uniquement
   # =========================================================================
   - package-ecosystem: "npm"
     directory: "/"
@@ -88,7 +88,7 @@ updates:
     # ----- Bloquer les MAJORS sur tout package critique -----
     # Une MAJOR sera mise à jour manuellement, dans une PR dédiée et testée.
     ignore:
-      # Stack Next.js — MAJORS bloquées (migrations souvent breaking)
+      # Stack Next.js - MAJORS bloquées (migrations souvent breaking)
       - dependency-name: "next"
         update-types: ["version-update:semver-major"]
       - dependency-name: "react"
@@ -100,13 +100,13 @@ updates:
       - dependency-name: "@types/react-dom"
         update-types: ["version-update:semver-major"]
 
-      # Prisma — MAJOR strictement bloquée (CLI doit rester aligné avec le client)
+      # Prisma - MAJOR strictement bloquée (CLI doit rester aligné avec le client)
       - dependency-name: "prisma"
         update-types: ["version-update:semver-major"]
       - dependency-name: "@prisma/client"
         update-types: ["version-update:semver-major"]
 
-      # NextAuth en beta — pas de bumps automatiques (trop volatil)
+      # NextAuth en beta - pas de bumps automatiques (trop volatil)
       # On gère manuellement, sur preview locale d'abord
       - dependency-name: "next-auth"
         # Toutes les mises à jour bloquées, on contrôle à la main
@@ -114,17 +114,17 @@ updates:
       - dependency-name: "@auth/*"
         update-types: ["version-update:semver-major"]
 
-      # Validation / serialization — MAJORS souvent breaking
+      # Validation / serialization - MAJORS souvent breaking
       - dependency-name: "zod"
         update-types: ["version-update:semver-major"]
       - dependency-name: "next-mdx-remote"
         update-types: ["version-update:semver-major"]
 
-      # Style / UI — MAJORS souvent à migrer manuellement
+      # Style / UI - MAJORS souvent à migrer manuellement
       - dependency-name: "tailwindcss"
         update-types: ["version-update:semver-major"]
 
-      # Outils dev — MAJORS souvent à migrer manuellement
+      # Outils dev - MAJORS souvent à migrer manuellement
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
       - dependency-name: "eslint"
@@ -132,12 +132,12 @@ updates:
       - dependency-name: "eslint-config-next"
         update-types: ["version-update:semver-major"]
 
-      # Node types — suivent la LTS, MAJOR à migrer avec engines.node
+      # Node types - suivent la LTS, MAJOR à migrer avec engines.node
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
 
   # =========================================================================
-  # 2. Connecteurs Python (8 dossiers) — minor + patch uniquement, mensuel
+  # 2. Connecteurs Python (8 dossiers) - minor + patch uniquement, mensuel
   # =========================================================================
   - package-ecosystem: "pip"
     directories:
@@ -177,7 +177,7 @@ updates:
         update-types: ["version-update:semver-major"]
 
   # =========================================================================
-  # 3. GitHub Actions workflows — minor + patch uniquement, mensuel
+  # 3. GitHub Actions workflows - minor + patch uniquement, mensuel
   # =========================================================================
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -208,7 +208,7 @@ updates:
         update-types: ["version-update:semver-major"]
 
   # =========================================================================
-  # 4. Docker (Dockerfile à la racine) — patch uniquement, mensuel
+  # 4. Docker (Dockerfile à la racine) - patch uniquement, mensuel
   # =========================================================================
   # Plus strict que le reste : pour Docker, même les minors sont risquées
   # (changement de runtime Node.js, libssl, glibc, etc.). On reste sur les

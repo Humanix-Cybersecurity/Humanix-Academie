@@ -214,7 +214,7 @@ export default async function IntegrationsPage() {
               </p>
             </div>
 
-            {/* Secret / auth — requis pour Jira/ServiceNow/PagerDuty,
+            {/* Secret / auth - requis pour Jira/ServiceNow/PagerDuty,
                 optionnel pour Generic (auto-genere si vide), inutile pour
                 Slack/Teams (auth via URL). */}
             <div>

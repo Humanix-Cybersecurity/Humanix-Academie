@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 
-# Trame AIPD — Veille d'exposition numérique des comptes salariés (Phase 2 B2B)
+# Trame AIPD - Veille d'exposition numérique des comptes salariés (Phase 2 B2B)
 
 > **STATUT : TRAME À FAIRE VALIDER.** Analyse d'Impact relative à la Protection
 > des Données. Ce document est une trame pré-remplie côté Humanix (sous-traitant)
@@ -49,7 +49,7 @@
 ## 4. Sous-traitance et flux
 
 - **Humanix = sous-traitant** : DPA art. 28 signé avant activation, listant les sous-traitants ultérieurs éventuels (aucun hors UE).
-- **Pas de sous-traitant US** pour la donnée sensible. (Le check *password* du tier gratuit utilise le k-anonymat HIBP — aucune donnée personnelle n'y circule, et il est **hors périmètre de cette AIPD B2B**.)
+- **Pas de sous-traitant US** pour la donnée sensible. (Le check *password* du tier gratuit utilise le k-anonymat HIBP - aucune donnée personnelle n'y circule, et il est **hors périmètre de cette AIPD B2B**.)
 
 ## 5. Analyse des risques
 

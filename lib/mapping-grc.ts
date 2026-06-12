@@ -1433,22 +1433,22 @@ const SAPIN2: FrameworkMapping = {
 };
 
 // ---------------------------------------------------------------------------
-// SOC 2 (Service Organization Control 2) — AICPA Trust Services Criteria 2017
+// SOC 2 (Service Organization Control 2) - AICPA Trust Services Criteria 2017
 //
 // Standard americain de reference pour la confiance dans les SaaS B2B.
 // Demande systematiquement par les acheteurs sereieux (Fortune 500, scale-ups
 // US, ETI FR avec clients US). Type I = state-in-time, Type II = sur 6+ mois.
 //
 // 5 Trust Services Criteria (TSC) :
-//   - **Security (Common Criteria)** — OBLIGATOIRE, 33 CC : CC1-CC9
-//   - Availability — optionnel
-//   - Processing Integrity — optionnel
-//   - Confidentiality — optionnel
-//   - Privacy — optionnel
+//   - **Security (Common Criteria)** - OBLIGATOIRE, 33 CC : CC1-CC9
+//   - Availability - optionnel
+//   - Processing Integrity - optionnel
+//   - Confidentiality - optionnel
+//   - Privacy - optionnel
 //
 // Humanix couvre principalement les Common Criteria (Security) qui sont
 // le coeur du standard. Mapping partiel mais honnete : on ne pretend pas
-// avoir un audit SOC 2 Type II — on documente l'alignement de la
+// avoir un audit SOC 2 Type II - on documente l'alignement de la
 // plateforme avec les controles SOC 2 pour faciliter les due diligence
 // des clients qui en font la demande.
 // ---------------------------------------------------------------------------

@@ -23,16 +23,16 @@
 //   - Tenant Communaute (slug stable "humanix-community")
 //
 // CE QUI N'EST PAS SEEDE :
-//   - Library articles (seedLibrary) — declenche par le seed historique
+//   - Library articles (seedLibrary) - declenche par le seed historique
 //     car peut etre lourd (Open Core dynamic require).
-//   - Anecdotes (seedAnecdotes) — idem.
-//   - Fake users + tenant demo — strictement DEMO_MODE=true.
+//   - Anecdotes (seedAnecdotes) - idem.
+//   - Fake users + tenant demo - strictement DEMO_MODE=true.
 //
 // IDEMPOTENCE :
 //   Chaque entite est upserted par son slug. Re-executer ne cree pas de
 //   doublons. Les nouveaux champs (titre, description, prix, etc.) sont
 //   appliques en update. Les anciens slugs en BDD non presents dans les
-//   catalogs JS NE SONT PAS supprimes — un badge retire du code reste en
+//   catalogs JS NE SONT PAS supprimes - un badge retire du code reste en
 //   BDD (les UserAchievement existants ne sont pas casses). Pour purger un
 //   badge obsolete, le marquer isActive=false manuellement ou ajouter un
 //   script de cleanup dedie.

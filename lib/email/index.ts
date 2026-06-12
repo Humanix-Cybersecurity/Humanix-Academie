@@ -62,7 +62,7 @@ export type SendEmailResult =
 /**
  * Renvoie true si au moins un provider email est configure et
  * fonctionnel cote env. False si DEMO_MODE ou DEV_MODE est actif (pas
- * d'envoi reel en demo / dev — cf. lib/dev-mode.ts).
+ * d'envoi reel en demo / dev - cf. lib/dev-mode.ts).
  */
 export function isEmailConfigured(): boolean {
   if (process.env.DEMO_MODE === "true") return false;

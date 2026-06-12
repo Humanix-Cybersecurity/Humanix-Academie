@@ -107,7 +107,7 @@ Cockpit → **Tokens** → + Create Token :
 - **Data sources** : sélectionner `humanix-prod-logs` + `humanix-prod-metrics`
 - **Validity** : 1 an (rotation annuelle PSSI M15)
 
-**COPIE LE SECRET IMMÉDIATEMENT** — Scaleway ne le réaffichera plus.
+**COPIE LE SECRET IMMÉDIATEMENT** - Scaleway ne le réaffichera plus.
 Sauvegarder dans 1Password vault Humanix.
 
 ### 4. Configurer les env vars en prod
@@ -203,7 +203,7 @@ Dans Cockpit → **Data sources** → Prometheus déjà configuré.
 Pour scrape `/api/metrics` Humanix, ajouter un job. Comme Cockpit ne
 scrape pas direct un endpoint externe (il reçoit du push), 2 options :
 
-**Option A** — Grafana Agent côté Humanix (push vers Mimir) :
+**Option A** - Grafana Agent côté Humanix (push vers Mimir) :
 
 ```yaml
 # infra/grafana-agent/agent.yaml
@@ -250,7 +250,7 @@ Ajouter au `docker-compose.yml` :
       - app
 ```
 
-**Option B** (simpler mais moins flexible) — utiliser Vector aussi pour metrics :
+**Option B** (simpler mais moins flexible) - utiliser Vector aussi pour metrics :
 
 ```toml
 [sources.humanix_metrics]
@@ -301,7 +301,7 @@ docker compose logs vector | tail -50
 # Query PromQL : up{job="humanix-app"}
 
 # 5. Dashboard affiche les graphiques
-# Aller dans Grafana → Dashboards → "Humanix Académie — Overview"
+# Aller dans Grafana → Dashboards → "Humanix Académie - Overview"
 
 # 6. Test alerte (déclencher 11 logins échoués en 1 min)
 # → Slack #cyber-alerts doit recevoir la notification < 30s
@@ -320,9 +320,9 @@ docker compose logs vector | tail -50
 ## Conformité
 
 Ce setup couvre les exigences :
-- **ANSSI HG M36** (journalisation composants importants) — Loki + Mimir
-- **ANSSI HG M38** (audits réguliers) — dashboards + alertes
-- **SOC 2 CC4.1 / CC4.2** (monitoring & deficiencies) — détection continue
-- **SOC 2 CC7.1 / CC7.2** (system operations / surveillance anomalies) — alertes proactives
-- **RGPD art. 32** (sécurité du traitement) — mesure technique appropriée
-- **NIS2 art. 21.2(b)** (gestion incidents) — alertes routées vers procédure incident
+- **ANSSI HG M36** (journalisation composants importants) - Loki + Mimir
+- **ANSSI HG M38** (audits réguliers) - dashboards + alertes
+- **SOC 2 CC4.1 / CC4.2** (monitoring & deficiencies) - détection continue
+- **SOC 2 CC7.1 / CC7.2** (system operations / surveillance anomalies) - alertes proactives
+- **RGPD art. 32** (sécurité du traitement) - mesure technique appropriée
+- **NIS2 art. 21.2(b)** (gestion incidents) - alertes routées vers procédure incident

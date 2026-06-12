@@ -3,7 +3,7 @@
 // Endpoint cron : purge globale des AuditLog au-delà de la fenêtre CNIL
 // (~13 mois pour les logs sécurité).
 //
-// IMPORTANT — distinction avec /api/cron/data-retention-purge :
+// IMPORTANT - distinction avec /api/cron/data-retention-purge :
 //   - data-retention-purge applique la rétention CONFIGURÉE PAR TENANT
 //     (Tenant.dataRetentionDays) avec une whitelist d'actions critiques
 //     conservées indéfiniment (BILLING_*, USER_DELETED…).

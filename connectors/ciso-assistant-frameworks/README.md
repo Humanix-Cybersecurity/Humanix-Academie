@@ -1,4 +1,4 @@
-# Humanix × CISO Assistant — Community Frameworks
+# Humanix × CISO Assistant - Community Frameworks
 
 Bibliothèques **CC BY-SA 4.0** publiées par Humanix-Cybersecurity pour
 enrichir l'écosystème CISO Assistant (intuitem) avec la couche humaine
@@ -26,7 +26,7 @@ contribue à cet écosystème en publiant le mapping **couche humaine
 
 ## Comment charger ces bibliothèques dans votre instance CISO Assistant
 
-### Méthode 1 — Upload manuel (UI CISO Assistant)
+### Méthode 1 - Upload manuel (UI CISO Assistant)
 
 1. Téléchargez les fichiers YAML depuis ce dossier.
 2. Dans CISO Assistant, menu **Libraries → Upload library**.
@@ -36,7 +36,7 @@ contribue à cet écosystème en publiant le mapping **couche humaine
 5. Allez dans **Libraries → Available** et cliquez **Import** sur
    chacun. Les frameworks et mappings apparaissent dans votre instance.
 
-### Méthode 2 — Via l'API CISO Assistant (curl)
+### Méthode 2 - Via l'API CISO Assistant (curl)
 
 ```bash
 TOKEN=$(curl -sX POST https://ciso.exemple.fr/api/iam/login/ \
@@ -70,7 +70,7 @@ curl -X POST "https://ciso.exemple.fr/api/stored-libraries/$LIB_ID/import/" \
   -H "Authorization: Token $TOKEN"
 ```
 
-### Méthode 3 — PR sur intuitem/risk-libraries (proposition Humanix)
+### Méthode 3 - PR sur intuitem/risk-libraries (proposition Humanix)
 
 L'idéal serait que ces frameworks soient distribués **directement par
 la library CISO Assistant officielle**. Humanix proposera une PR sur
@@ -124,4 +124,4 @@ reste sous AGPLv3 (cf. `LICENSE` à la racine du repo).
 
 ## Contact
 
-`contact@humanix-cybersecurity.fr` — Humanix-Cybersecurity SASU
+`contact@humanix-cybersecurity.fr` - Humanix-Cybersecurity SASU

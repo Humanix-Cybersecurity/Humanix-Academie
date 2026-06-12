@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// PostCSS config — Tailwind v4.
+// PostCSS config - Tailwind v4.
 //
 // Changements vs v3 :
 //   - Le plugin n'est plus `tailwindcss` mais `@tailwindcss/postcss`.

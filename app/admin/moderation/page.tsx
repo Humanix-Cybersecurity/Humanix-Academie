@@ -160,7 +160,7 @@ export default async function ModerationPage() {
                     )}
                   </td>
                   <td className="py-3 text-gray-500 text-xs">
-                    {m.reviewedBy?.name ?? "—"}
+                    {m.reviewedBy?.name ?? "-"}
                   </td>
                   <td className="py-3 text-gray-500 text-xs">
                     {m.reviewedAt?.toLocaleDateString("fr-FR")}

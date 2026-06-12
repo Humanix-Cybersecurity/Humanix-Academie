@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /architecture — Cartographie technique publique de la plateforme
+// /architecture - Cartographie technique publique de la plateforme
 // Humanix Academie. Couvre la mesure ANSSI HG 5 (disposer d'une
 // cartographie precise de l'installation informatique).
 //
@@ -16,7 +16,7 @@ import Link from "next/link";
 
 export const metadata = {
   title:
-    "Architecture technique — Humanix Académie",
+    "Architecture technique - Humanix Académie",
   description:
     "Cartographie publique de l'infrastructure Humanix Académie : stack souveraine, cloisonnement réseau, crypto, sauvegardes, sous-traitants. Conforme mesure 5 du Guide d'hygiène informatique ANSSI v2.",
   alternates: { canonical: "/architecture" },

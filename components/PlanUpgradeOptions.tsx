@@ -30,7 +30,7 @@ type Props = {
   buyablePlans: readonly PlanId[];
 };
 
-// Ordre fixe — aligné sur lib/plans.ts PLAN_RANK.
+// Ordre fixe - aligné sur lib/plans.ts PLAN_RANK.
 const PLAN_ORDER: PlanId[] = ["starter", "pro", "enterprise"];
 
 function priceLine(plan: PlanId): string {

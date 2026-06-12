@@ -73,7 +73,7 @@ export const TOOLS: readonly ToolDefinition[] = [
   {
     name: "humanix_users_at_risk",
     description:
-      "Retourne le top N des utilisateurs avec le score de risque humain le plus eleve (basé sur reponses phishing simules, taux completion modules, fraicheur formations). Read-only — utile pour cibler les remediations.",
+      "Retourne le top N des utilisateurs avec le score de risque humain le plus eleve (basé sur reponses phishing simules, taux completion modules, fraicheur formations). Read-only - utile pour cibler les remediations.",
     inputSchema: {
       type: "object",
       properties: {
@@ -175,7 +175,7 @@ export type ToolCallResult =
   | { ok: true; data: unknown }
   | { ok: false; error: string; code?: number };
 
-// Validateurs runtime — on ne fait pas confiance au LLM pour respecter le
+// Validateurs runtime - on ne fait pas confiance au LLM pour respecter le
 // JSON Schema. On rejette toute valeur hors enum / hors range avec un
 // message clair que l'agent IA peut interpreter et corriger.
 export async function callTool(

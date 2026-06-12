@@ -3,7 +3,7 @@
 // GET /api/admin/pack-nis2/annual-report
 //
 // Genere et streame le RAPPORT ANNUEL NIS2 PDF d'un tenant.
-// Pack NIS2 v2 — sortie autorite competente (CSIRT national / ANSSI).
+// Pack NIS2 v2 - sortie autorite competente (CSIRT national / ANSSI).
 //
 // Authz : ADMIN/MANAGER/SUPERADMIN + plan Pro+.
 // Tenant scope : strict (un admin ne peut telecharger que SON rapport).

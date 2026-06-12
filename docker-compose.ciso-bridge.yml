@@ -1,5 +1,5 @@
 # =============================================================================
-# docker-compose.ciso-bridge.yml — Override pour brancher Humanix sur CISO
+# docker-compose.ciso-bridge.yml - Override pour brancher Humanix sur CISO
 # Assistant en local (test du connecteur, démo client, etc.).
 # -----------------------------------------------------------------------------
 # Quand le stack CISO Assistant (intuitem/ciso-assistant-community) tourne à

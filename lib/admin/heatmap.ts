@@ -33,7 +33,7 @@ export type HeatmapData = {
   groups: { slug: string; name: string; emoji: string; userCount: number }[];
   saisons: { id: string; slug: string; title: string; episodeCount: number }[];
   cells: HeatmapCell[];
-  /** Pour chaque saison : completion globale (tous users actifs confondus) — ligne "Tous" */
+  /** Pour chaque saison : completion globale (tous users actifs confondus) - ligne "Tous" */
   globalSaisonCompletion: { saisonId: string; completionPct: number }[];
 };
 

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Catalogue DEMO Open Core — 2 saisons × 3 episodes = 6 modules genériques.
+// Catalogue DEMO Open Core - 2 saisons × 3 episodes = 6 modules genériques.
 //
 // Ce catalogue est livre dans le repo PUBLIC AGPLv3. Il sert de fallback
 // quand le catalogue commercial complet (prisma/catalog-saisons.ts) n'est
-// pas disponible — par exemple sur un fork OSS ou une install self-host
+// pas disponible - par exemple sur un fork OSS ou une install self-host
 // qui n'a pas le contenu premium.
 //
 // LICENCE DU CONTENU DEMO : CC BY-SA 4.0

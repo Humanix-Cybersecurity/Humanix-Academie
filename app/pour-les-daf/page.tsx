@@ -25,7 +25,7 @@ import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 import { BreadcrumbJsonLd } from "@/lib/seo/jsonld";
 
-const DAF_TITLE = "Pour les DAF — Éviter FOVI, reporting NIS2 prêt COMEX | Humanix Académie";
+const DAF_TITLE = "Pour les DAF - Éviter FOVI, reporting NIS2 prêt COMEX | Humanix Académie";
 const DAF_DESC =
   "Pour les Directeurs Administratifs et Financiers : éviter les FOVI / deepfakes qui coûtent 200 k€ en moyenne, reporting NIS2/RGPD prêt pour COMEX, ROI calculé en €. La cybersécurité humaine en langage de directeur financier.";
 
@@ -42,7 +42,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cyber pour DAF — Éviter FOVI, reporting NIS2",
+    title: "Cyber pour DAF - Éviter FOVI, reporting NIS2",
     description: DAF_DESC,
     images: ["/logo-humanix-academie-512.png"],
   },
@@ -117,7 +117,7 @@ const PROMESSES = [
   },
   {
     emoji: "⚖️",
-    title: "Loi Sapin II Art. 17 — formation anti-corruption",
+    title: "Loi Sapin II Art. 17 - formation anti-corruption",
     palette: {
       bg: "from-slate-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-blue-950/40",
       ring: "border-blue-300 dark:border-blue-900/40",

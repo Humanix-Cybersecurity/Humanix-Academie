@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /admin/phishing/vulnerable-users — Tableau des utilisateurs avec leur
+// /admin/phishing/vulnerable-users - Tableau des utilisateurs avec leur
 // profil de vulnerabilite phishing genere par Mistral.
 //
 // CONTEXT (Phase 5c Phishing Engine v2, mai 2026) :
@@ -149,7 +149,7 @@ export default async function VulnerableUsersPage() {
                     userId={u.id}
                     name={u.name ?? u.email}
                     email={u.email}
-                    service={u.service ?? "—"}
+                    service={u.service ?? "-"}
                     stats={{
                       total: u.total,
                       opened: u.opened,

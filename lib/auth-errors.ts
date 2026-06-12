@@ -32,7 +32,7 @@ const AUTH_ERROR_FR: Record<string, string> = {
     "Votre compte est suspendu. Contactez votre administrateur.",
   // Le tenant entier est desactive par l'operateur Humanix (SUPERADMIN).
   // Message volontairement neutre pour ne pas exposer l'info "tenant
-  // suspendu" a un user innocent — il pense que c'est son compte.
+  // suspendu" a un user innocent - il pense que c'est son compte.
   TenantSuspended:
     "Votre espace est temporairement indisponible. Contactez le support à contact@humanix-cybersecurity.fr.",
   // Erreurs custom Humanix (provider Credentials password)

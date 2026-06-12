@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// getCurrentTenantId() — resout le tenant ACTIF pour la requete en cours,
+// getCurrentTenantId() - resout le tenant ACTIF pour la requete en cours,
 // en respectant la possibilite de naviguer cross-tenant via TenantMembership.
 //
 // LOGIQUE :
@@ -63,7 +63,7 @@ export async function getCurrentTenantId(): Promise<string> {
   //   - kind === "tenant_unknown" (sous-domaine inexistant, ne devrait pas
   //     arriver en pratique mais securise)
   //   - kind === "tenant_mismatch" (user n'a pas d'acces au tenant du
-  //     sous-domaine — on revient sur son home tenant comme protection)
+  //     sous-domaine - on revient sur son home tenant comme protection)
   const sessionTenantId =
     typeof ctx.session?.user?.tenantId === "string"
       ? ctx.session.user.tenantId
@@ -77,7 +77,7 @@ export async function getCurrentTenantId(): Promise<string> {
 }
 
 /**
- * Variante qui ne throw pas — retourne null en cas d'echec.
+ * Variante qui ne throw pas - retourne null en cas d'echec.
  * Pratique pour les server components qui veulent gerer le cas
  * "pas de tenant" sans crash.
  */

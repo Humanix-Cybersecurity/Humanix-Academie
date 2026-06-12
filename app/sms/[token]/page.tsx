@@ -120,7 +120,7 @@ export default async function SmishingLandingPage({
           Test envoyé le{" "}
           {result.sentAt
             ? new Date(result.sentAt).toLocaleDateString("fr-FR")
-            : "—"}{" "}
+            : "-"}{" "}
           dans le cadre du programme Humanix Académie de votre organisation.
         </p>
       </div>

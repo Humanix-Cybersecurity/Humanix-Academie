@@ -139,7 +139,7 @@ export default function Nis2ScoreCard({
       {/* Footer */}
       <div className="rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/40 p-4 text-xs text-blue-900 dark:text-blue-100">
         <p className="leading-relaxed">
-          💡 <strong>Comment lire ce score</strong> — Pour chaque article NIS2,
+          💡 <strong>Comment lire ce score</strong> - Pour chaque article NIS2,
           on calcule le ratio moyen de complétion des saisons mappées par tes
           utilisateurs actifs. Un article à 0 % signifie que tu as les saisons
           mais que personne ne les a finies. À N/A : tu n&apos;as pas encore

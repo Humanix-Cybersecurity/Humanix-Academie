@@ -24,7 +24,7 @@ import HexBackdrop from "@/components/HexBackdrop";
 import HexMascot from "@/components/HexMascot";
 
 export const metadata = {
-  title: "Mail envoyé — Humanix Académie",
+  title: "Mail envoyé - Humanix Académie",
   description:
     "Le lien magique de connexion a été envoyé sur ton email. Clique dessus pour finaliser ta connexion ou ton inscription.",
   robots: { index: false, follow: false },

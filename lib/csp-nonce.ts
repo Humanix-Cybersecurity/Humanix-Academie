@@ -30,7 +30,7 @@ import { headers } from "next/headers";
 
 /**
  * Lit le nonce CSP de la requete courante. Retourne `undefined` si
- * la requete n'a pas passe par le middleware (tests, dev edge cases) —
+ * la requete n'a pas passe par le middleware (tests, dev edge cases) -
  * dans ce cas, on omet l'attribut `nonce` du script, et le CSP statique
  * fallback de next.config.mjs s'applique.
  */

@@ -1,11 +1,11 @@
-# Politique de sauvegarde — Humanix Académie
+# Politique de sauvegarde - Humanix Académie
 
 Ce document décrit la politique de sauvegarde, de chiffrement et de
 restauration des données pour les instances cloud Humanix Académie
 opérées par Humanix Cybersecurity.
 
 Pour les déploiements self-host (Community Edition AGPLv3), c'est
-l'opérateur qui définit sa propre politique — ce document peut servir
+l'opérateur qui définit sa propre politique - ce document peut servir
 de référence à adapter selon l'infrastructure cible.
 
 ---
@@ -16,7 +16,7 @@ de référence à adapter selon l'infrastructure cible.
 |---|---|---|
 | PostgreSQL (Scaleway Managed) | ~5–50 Go par tenant actif | Critique |
 | Volumes Docker (TTS cache, uploads, logs) | ~80 Mo TTS + variable | Moyenne (régénérable) |
-| Objet S3 compatible (Scaleway Object Storage) — captures audit, exports RGPD | ~1 Go par tenant/an | Critique |
+| Objet S3 compatible (Scaleway Object Storage) - captures audit, exports RGPD | ~1 Go par tenant/an | Critique |
 | Secrets (variables d'environnement, certificats) | ~100 Ko | Critique (cf. § 7) |
 
 ---
@@ -25,17 +25,17 @@ de référence à adapter selon l'infrastructure cible.
 
 | Cible | Fréquence | Rétention | Outil |
 |---|---|---|---|
-| PostgreSQL — snapshot full | Quotidien (02h00 UTC) | 30 jours | Snapshots automatiques Scaleway Managed |
-| PostgreSQL — WAL streaming | Continu | 14 jours (PITR) | PITR Scaleway natif |
-| PostgreSQL — dump logique chiffré off-site | Hebdomadaire (dimanche 04h00 UTC) | 90 jours | `pg_dump` + chiffrement client + S3 cross-region |
-| Object Storage — versioning | Continu | 30 jours par objet | Scaleway Object Storage versioning |
-| Object Storage — snapshot cross-region | Mensuel | 12 mois | Scaleway lifecycle policy |
-| Secrets — backup vault | Mensuel (manuel ou cron) | Indéfini (rotation 90j sur les valeurs) | Hors-bande, support physique sécurisé |
+| PostgreSQL - snapshot full | Quotidien (02h00 UTC) | 30 jours | Snapshots automatiques Scaleway Managed |
+| PostgreSQL - WAL streaming | Continu | 14 jours (PITR) | PITR Scaleway natif |
+| PostgreSQL - dump logique chiffré off-site | Hebdomadaire (dimanche 04h00 UTC) | 90 jours | `pg_dump` + chiffrement client + S3 cross-region |
+| Object Storage - versioning | Continu | 30 jours par objet | Scaleway Object Storage versioning |
+| Object Storage - snapshot cross-region | Mensuel | 12 mois | Scaleway lifecycle policy |
+| Secrets - backup vault | Mensuel (manuel ou cron) | Indéfini (rotation 90j sur les valeurs) | Hors-bande, support physique sécurisé |
 
 **Justification rétention** :
 - 30 jours snapshots = couvre 99 % des cas de restauration (corruption, suppression accidentelle, ransomware détecté ≤ 2 semaines).
 - 90 jours dumps off-site = couvre les cas d'incident détecté tardivement (audit RGPD, demande d'effacement contestée).
-- 12 mois cross-region = conformité comptable (Code de commerce art. L. 123-22 : 10 ans pour les pièces justificatives, mais Humanix ne stocke pas de pièces comptables — 12 mois est conservateur pour Object Storage).
+- 12 mois cross-region = conformité comptable (Code de commerce art. L. 123-22 : 10 ans pour les pièces justificatives, mais Humanix ne stocke pas de pièces comptables - 12 mois est conservateur pour Object Storage).
 
 **Suppression définitive** :
 - Au-delà de la rétention, les sauvegardes sont supprimées **cryptographiquement** (suppression de la clé de chiffrement = données inaccessibles, conforme RGPD art. 17).
@@ -145,18 +145,18 @@ sont conservés 12 mois.
 
 ---
 
-## 10. Procédure opérationnelle — self-host Docker
+## 10. Procédure opérationnelle - self-host Docker
 
 > Section ajoutée mai 2026 quand Humanix prod est passée en Postgres
 > self-host (container Docker sur `humanix-prod-01`) avec backup off-site
 > FTPS Scaleway. Les sections précédentes décrivent la cible long-terme
-> (Postgres Managed Scaleway) — cette section décrit l'implémentation
+> (Postgres Managed Scaleway) - cette section décrit l'implémentation
 > opérationnelle actuelle.
 
 ### 10.1 Scripts livrés
 
-- `scripts/backup-db.sh` — pg_dump + chiffrement age + upload FTPS + rotation 30j (FTPS) / 7j (local)
-- `scripts/restore-db.sh` — interactif (sélection backup → déchiffrement → confirmation explicite → pg_restore)
+- `scripts/backup-db.sh` - pg_dump + chiffrement age + upload FTPS + rotation 30j (FTPS) / 7j (local)
+- `scripts/restore-db.sh` - interactif (sélection backup → déchiffrement → confirmation explicite → pg_restore)
 
 ### 10.2 Setup initial (à faire 1 fois)
 
@@ -184,7 +184,7 @@ Tu obtiens :
 ssh humanix@humanix-prod-01
 sudo apt update
 
-# Mode docker exec (recommandé prod Humanix) — pas besoin de postgresql-client
+# Mode docker exec (recommandé prod Humanix) - pas besoin de postgresql-client
 sudo apt install -y age lftp jq
 
 # Mode host (alternative, si Postgres exposé sur l'host)
@@ -203,7 +203,7 @@ sudo nano /etc/humanix/backup.env
 
 Le script supporte **deux modes de connexion à Postgres** :
 
-- **Mode docker exec** (recommandé si Postgres tourne en container non-exposé sur l'host — ce qui est le cas de la prod Humanix : container `humanix-prod-postgres` avec port `5432/tcp` interne uniquement). Le script lance `pg_dump` à l'intérieur du container via `docker exec`. Plus sécurisé, pas besoin de publier le port 5432.
+- **Mode docker exec** (recommandé si Postgres tourne en container non-exposé sur l'host - ce qui est le cas de la prod Humanix : container `humanix-prod-postgres` avec port `5432/tcp` interne uniquement). Le script lance `pg_dump` à l'intérieur du container via `docker exec`. Plus sécurisé, pas besoin de publier le port 5432.
 
 - **Mode host** (si Postgres est sur un autre serveur, ou si le port 5432 est publish sur l'host avec `0.0.0.0:5432->5432/tcp`).
 
@@ -290,7 +290,7 @@ sudo crontab -e -u humanix
 Ajouter :
 
 ```cron
-# Humanix Académie — backup BDD vers FTPS Scaleway, 02h45 UTC quotidien
+# Humanix Académie - backup BDD vers FTPS Scaleway, 02h45 UTC quotidien
 45 2 * * * /opt/humanix-prod/scripts/backup-db.sh >> /var/log/humanix/backup.log 2>&1
 ```
 
@@ -342,5 +342,5 @@ Le script va :
 
 | Date | Auteur | Changements |
 |---|---|---|
-| 2026-05-11 | Florian + Claude | Création du document — politique initiale |
+| 2026-05-11 | Florian + Claude | Création du document - politique initiale |
 | 2026-05-22 | Florian + Claude | Ajout § 10 : implémentation opérationnelle self-host + scripts `backup-db.sh` / `restore-db.sh` + procédure cron host |

@@ -20,7 +20,7 @@ import MaturiteIAClient from "./MaturiteIAClient";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Maturité IA — Console admin Humanix Académie",
+  title: "Maturité IA - Console admin Humanix Académie",
   description:
     "Évaluez la maturité IA de votre organisation : politique, formation, shadow AI, supervision humaine, conformité AI Act.",
 };
@@ -54,14 +54,14 @@ export default async function MaturiteIAPage() {
 
       <footer className="mt-12 pt-6 border-t border-gray-200 dark:border-slate-800 text-xs text-gray-500 dark:text-gray-400 space-y-1">
         <p>
-          <strong>Méthodologie</strong> — chaque question vaut 12.5 points
+          <strong>Méthodologie</strong> - chaque question vaut 12.5 points
           (8 axes × 12.5 = 100). Le score moyen PME française médiane est
           calculé à partir d&apos;une enquête CESIN 2025 (n = 320 PME 10-250
           salariés). V2 (Q3 2026) ajoutera une comparaison anonymisée vs
           autres tenants Humanix de votre secteur (k-anonymity ≥ 5).
         </p>
         <p>
-          <strong>Confidentialité</strong> — vos réponses ne quittent pas
+          <strong>Confidentialité</strong> - vos réponses ne quittent pas
           votre navigateur en V1. Aucune donnée envoyée à Humanix ni à un
           tiers. Vous pouvez exporter votre auto-évaluation au format JSON
           en bas de page.

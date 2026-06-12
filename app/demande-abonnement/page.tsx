@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /demande-abonnement — VOIE EXCEPTIONNELLE pour les besoins qui ne
+// /demande-abonnement - VOIE EXCEPTIONNELLE pour les besoins qui ne
 // rentrent pas dans le self-service Mollie.
 //
 // CAS D'USAGE :
@@ -25,16 +25,16 @@ import HexBackdrop from "@/components/HexBackdrop";
 import { submitDemandeAbonnement } from "./actions";
 
 export const metadata = {
-  title: "Demande d'abonnement entreprise — Humanix Académie",
+  title: "Demande d'abonnement entreprise - Humanix Académie",
   description:
     "Votre organisation cherche à équiper ses équipes d'une plateforme de cybersensibilisation française et souveraine ? Décrivez votre besoin, nous revenons vers vous sous 24h ouvrées.",
   alternates: { canonical: "/demande-abonnement" },
 };
 
 const PLAN_OPTIONS = [
-  { value: "starter", label: "Starter — 1 à 15 sièges (gratuit ≤5, 19 €/mois 6-15)" },
-  { value: "pro", label: "Pro — 16 à 250 sièges (3 €/utilisateur/mois)" },
-  { value: "enterprise", label: "Enterprise — 250+ sièges / sur-mesure" },
+  { value: "starter", label: "Starter - 1 à 15 sièges (gratuit ≤5, 19 €/mois 6-15)" },
+  { value: "pro", label: "Pro - 16 à 250 sièges (3 €/utilisateur/mois)" },
+  { value: "enterprise", label: "Enterprise - 250+ sièges / sur-mesure" },
   { value: "non-decide", label: "Je n'ai pas encore décidé, conseillez-moi" },
 ];
 
@@ -85,7 +85,7 @@ export default async function DemandeAbonnementPage({
               </h1>
               <p className="text-base text-gray-700 dark:text-gray-200 leading-relaxed">
                 Le paiement en ligne (carte / SEPA) est temporairement
-                indisponible — notre processeur de paiement{" "}
+                indisponible - notre processeur de paiement{" "}
                 <strong>Mollie</strong> finalise notre validation KYC. En
                 attendant, remplissez ce formulaire :{" "}
                 <strong>nous activons votre compte sous 24h ouvrées</strong>{" "}
@@ -222,7 +222,7 @@ export default async function DemandeAbonnementPage({
                     name="size"
                     className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none bg-white dark:bg-slate-900"
                   >
-                    <option value="">— Préférez ne pas répondre —</option>
+                    <option value="">- Préférez ne pas répondre -</option>
                     <option value="1-9">1 à 9 personnes</option>
                     <option value="10-49">10 à 49 personnes</option>
                     <option value="50-249">50 à 249 personnes</option>

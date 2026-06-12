@@ -44,7 +44,7 @@ export default async function PhishingLandingPage({
   const isSubmittedDebrief = sp.submitted === "1";
 
   // Branche A : token niveau campagne (poster quishing partage par N personnes).
-  // Format `qhc_<campaignId>` — un seul PDF, un seul QR.
+  // Format `qhc_<campaignId>` - un seul PDF, un seul QR.
   const campaignIdFromPoster = parseQuishingCampaignToken(token);
   if (campaignIdFromPoster) {
     return renderQuishingPosterScan(campaignIdFromPoster);
@@ -282,7 +282,7 @@ export default async function PhishingLandingPage({
               )}
             </ul>
             <p className="text-[11px] text-blue-900/60 dark:text-blue-100/60 italic mt-2">
-              Politique de sécurité de ton entreprise — pas une sanction,
+              Politique de sécurité de ton entreprise - pas une sanction,
               une protection.
             </p>
           </div>
@@ -563,7 +563,7 @@ export default async function PhishingLandingPage({
           <Link href="/apprendre" className="underline hover:text-accent-500">
             l&apos;ensemble du parcours
           </Link>{" "}
-          quand tu veux. 1 personne sur 3 clique sur ce type de mail — c&apos;est
+          quand tu veux. 1 personne sur 3 clique sur ce type de mail - c&apos;est
           exactement pour ça qu&apos;on s&apos;entraîne.
         </p>
       </div>
@@ -706,7 +706,7 @@ async function renderQuishingPosterScan(campaignId: string) {
         Test effectué dans le cadre du programme de sensibilisation cyber de
         ton entreprise.
         <br />
-        Aucun usage disciplinaire de ce résultat — c&apos;est un exercice
+        Aucun usage disciplinaire de ce résultat - c&apos;est un exercice
         pédagogique.
       </p>
     </div>

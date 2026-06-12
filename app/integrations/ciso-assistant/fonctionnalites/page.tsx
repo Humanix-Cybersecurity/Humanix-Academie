@@ -18,7 +18,7 @@ import Link from "next/link";
 
 export const metadata = {
   title:
-    "Connecteur CISO Assistant — Toutes les fonctionnalités | Humanix Académie",
+    "Connecteur CISO Assistant - Toutes les fonctionnalités | Humanix Académie",
   description:
     "Référence complète du connecteur Humanix × CISO Assistant : 17 surfaces métier alimentées, 12 interrupteurs indépendants, alignement OpenAPI, PDF signés Ed25519, synchronisation en temps réel. Tout est documenté.",
 };
@@ -46,7 +46,7 @@ type Feature = {
   effect: React.ReactNode;
   /** Endpoint(s) API consommé(s) côté CISO Assistant. */
   endpoints: string[];
-  /** Cas d'usage type — pour qui c'est utile. */
+  /** Cas d'usage type - pour qui c'est utile. */
   useCase: string;
   /** Catégorie pour grouper. */
   category:
@@ -65,7 +65,7 @@ const CATEGORIES: Record<
   core: {
     label: "Cœur du connecteur",
     description:
-      "La transmission automatique des preuves de conformité — base obligatoire que toutes les autres fonctionnalités enrichissent.",
+      "La transmission automatique des preuves de conformité - base obligatoire que toutes les autres fonctionnalités enrichissent.",
   },
   grc: {
     label: "Boucle GRC complète",
@@ -85,7 +85,7 @@ const CATEGORIES: Record<
   automation: {
     label: "Automatisation",
     description:
-      "Mode temps réel, synchronisation planifiée, étiquettes automatiques, idempotence — pour que tout fonctionne sans intervention une fois configuré.",
+      "Mode temps réel, synchronisation planifiée, étiquettes automatiques, idempotence - pour que tout fonctionne sans intervention une fois configuré.",
   },
   audit: {
     label: "Preuve et audit",
@@ -181,7 +181,7 @@ const FEATURES: Feature[] = [
           >
             /.well-known/humanix-pdf-pubkey.pem
           </Link>{" "}
-          — un auditeur peut vérifier l'authenticité de n'importe quelle
+          - un auditeur peut vérifier l'authenticité de n'importe quelle
           evidence sans contacter Humanix.
         </p>
       </>
@@ -220,7 +220,7 @@ const FEATURES: Feature[] = [
             continu)
           </li>
           <li>
-            <code>eta: +12 mois</code> — date du prochain audit
+            <code>eta: +12 mois</code> - date du prochain audit
           </li>
         </ul>
         <p>
@@ -327,7 +327,7 @@ const FEATURES: Feature[] = [
       "POST /api/risk-scenarios/",
     ],
     useCase:
-      "Le RSSI veut une alerte automatique quand la couche humaine présente un signal d'alerte — sans avoir à scruter manuellement les dashboards.",
+      "Le RSSI veut une alerte automatique quand la couche humaine présente un signal d'alerte - sans avoir à scruter manuellement les dashboards.",
     category: "grc",
   },
   {
@@ -341,7 +341,7 @@ const FEATURES: Feature[] = [
     effect: (
       <>
         <p>
-          Pas une déclaration formelle d'incident — c'est un constat d'écart
+          Pas une déclaration formelle d'incident - c'est un constat d'écart
           automatique pour la traçabilité audit ISO 27001 §10.1 / NIS2 §21.2.g
           :
         </p>
@@ -372,7 +372,7 @@ const FEATURES: Feature[] = [
       "PATCH /api/incidents/{id}/",
     ],
     useCase:
-      "Le RSSI a un historique d'incidents typé NIS2 généré automatiquement quand le score tombe — utile pour démontrer la conformité §23 en cas d'audit.",
+      "Le RSSI a un historique d'incidents typé NIS2 généré automatiquement quand le score tombe - utile pour démontrer la conformité §23 en cas d'audit.",
     category: "grc",
   },
   // ============== METROLOGY ==============
@@ -392,27 +392,27 @@ const FEATURES: Feature[] = [
         </p>
         <ul>
           <li>
-            <code>humanix.tenant_score</code> — score maturité 0-100 (
+            <code>humanix.tenant_score</code> - score maturité 0-100 (
             <em>Score</em>)
           </li>
           <li>
-            <code>humanix.completion_rate</code> — taux complétion 0-100% (
+            <code>humanix.completion_rate</code> - taux complétion 0-100% (
             <em>Percentage (%)</em>)
           </li>
           <li>
-            <code>humanix.phishing_report_rate</code> — taux signalement
+            <code>humanix.phishing_report_rate</code> - taux signalement
             phishing 0-100% (<em>Percentage (%)</em>)
           </li>
           <li>
-            <code>humanix.evidences_compliant_count</code> — N contrôles
+            <code>humanix.evidences_compliant_count</code> - N contrôles
             conformes (<em>Count</em>)
           </li>
           <li>
-            <code>humanix.evidences_non_compliant_count</code> — N non
+            <code>humanix.evidences_non_compliant_count</code> - N non
             conformes (<em>Count</em>)
           </li>
           <li>
-            <code>humanix.evidences_partial_count</code> — N partiels (
+            <code>humanix.evidences_partial_count</code> - N partiels (
             <em>Count</em>)
           </li>
         </ul>
@@ -453,22 +453,22 @@ const FEATURES: Feature[] = [
         </p>
         <ul>
           <li>
-            <strong>Gauge</strong> — Score maturité cyber humaine
+            <strong>Gauge</strong> - Score maturité cyber humaine
           </li>
           <li>
-            <strong>KPI card</strong> — Taux de complétion sensibilisation
+            <strong>KPI card</strong> - Taux de complétion sensibilisation
           </li>
           <li>
-            <strong>KPI card</strong> — Taux signalement phishing
+            <strong>KPI card</strong> - Taux signalement phishing
           </li>
           <li>
-            <strong>Line chart</strong> 90 jours — Évolution score
+            <strong>Line chart</strong> 90 jours - Évolution score
           </li>
           <li>
-            <strong>Sparkline</strong> — Tendance contrôles non conformes
+            <strong>Sparkline</strong> - Tendance contrôles non conformes
           </li>
           <li>
-            <strong>Sparkline</strong> — Tendance contrôles conformes
+            <strong>Sparkline</strong> - Tendance contrôles conformes
           </li>
         </ul>
         <p>
@@ -511,7 +511,7 @@ const FEATURES: Feature[] = [
             )
           </li>
           <li>
-            Retourne le User UUID (<strong>pas</strong> Actor UUID — le
+            Retourne le User UUID (<strong>pas</strong> Actor UUID - le
             schéma OpenAPI confirme que les champs <code>owner</code>{" "}
             attendent des User refs)
           </li>
@@ -553,7 +553,7 @@ const FEATURES: Feature[] = [
           </em>
         </p>
         <p>
-          Les membres ne sont <strong>pas pushés automatiquement</strong> —
+          Les membres ne sont <strong>pas pushés automatiquement</strong> -
           c'est le RSSI qui assigne nominativement (besoin d'un User CISO
           Assistant par membre, hors scope du connecteur).
         </p>
@@ -627,21 +627,21 @@ const FEATURES: Feature[] = [
       <>
         <p>15 Threats créés dans le folder, idempotent par ref_id :</p>
         <ul className="columns-2 sm:columns-3 gap-x-6 text-sm">
-          <li>HUMAN-T1 — Spear phishing finance</li>
-          <li>HUMAN-T2 — Fraude au président (FOVI)</li>
-          <li>HUMAN-T3 — Vishing CFO</li>
-          <li>HUMAN-T4 — Smishing</li>
-          <li>HUMAN-T5 — Quishing</li>
-          <li>HUMAN-T6 — Deepfake CEO audio/vidéo</li>
-          <li>HUMAN-T10 — Réutilisation MdP</li>
-          <li>HUMAN-T11 — Identifiants visibles</li>
-          <li>HUMAN-T12 — Shadow IT</li>
-          <li>HUMAN-T13 — Perte / vol device</li>
-          <li>HUMAN-T14 — Tailgating</li>
-          <li>HUMAN-T20 — Incident non signalé</li>
-          <li>HUMAN-T21 — Fuite RGPD négligence</li>
-          <li>HUMAN-T30 — Fuite secrets dev</li>
-          <li>HUMAN-T31 — Offboarding RH bâclé</li>
+          <li>HUMAN-T1 - Spear phishing finance</li>
+          <li>HUMAN-T2 - Fraude au président (FOVI)</li>
+          <li>HUMAN-T3 - Vishing CFO</li>
+          <li>HUMAN-T4 - Smishing</li>
+          <li>HUMAN-T5 - Quishing</li>
+          <li>HUMAN-T6 - Deepfake CEO audio/vidéo</li>
+          <li>HUMAN-T10 - Réutilisation MdP</li>
+          <li>HUMAN-T11 - Identifiants visibles</li>
+          <li>HUMAN-T12 - Shadow IT</li>
+          <li>HUMAN-T13 - Perte / vol device</li>
+          <li>HUMAN-T14 - Tailgating</li>
+          <li>HUMAN-T20 - Incident non signalé</li>
+          <li>HUMAN-T21 - Fuite RGPD négligence</li>
+          <li>HUMAN-T30 - Fuite secrets dev</li>
+          <li>HUMAN-T31 - Offboarding RH bâclé</li>
         </ul>
         <p>
           Chaque Threat est créé avec <code>provider=Humanix Académie</code>,
@@ -675,7 +675,7 @@ const FEATURES: Feature[] = [
   // ============== AUTOMATION ==============
   {
     slug: "live-mode",
-    title: "Mode temps réel — synchronisation à l'évènement",
+    title: "Mode temps réel - synchronisation à l'évènement",
     icon: "⚡",
     version: "v2.0",
     shortDescription:
@@ -706,7 +706,7 @@ const FEATURES: Feature[] = [
           Assistant (pas 50).
         </p>
         <p>
-          Re-upsert des evidences uniquement (pas de PDF, pas d'extensions —
+          Re-upsert des evidences uniquement (pas de PDF, pas d'extensions -
           trop coûteux temps réel). Skip si une sync manuelle est déjà en
           cours. No-op si aucun framework n'a jamais été syncé manuellement
           (live mode rafraîchit, n'initialise pas).
@@ -818,20 +818,20 @@ const FEATURES: Feature[] = [
         <p>5 actions auditées (cf. enum Prisma <code>AuditAction</code>) :</p>
         <ul>
           <li>
-            <code>CISO_CONNECTION_CONFIGURED</code> — sauvegarde des creds
+            <code>CISO_CONNECTION_CONFIGURED</code> - sauvegarde des creds
           </li>
           <li>
-            <code>CISO_CONNECTION_TESTED</code> — bouton « Tester la
+            <code>CISO_CONNECTION_TESTED</code> - bouton « Tester la
             connexion »
           </li>
           <li>
-            <code>CISO_CONNECTION_DELETED</code> — suppression des creds
+            <code>CISO_CONNECTION_DELETED</code> - suppression des creds
           </li>
           <li>
-            <code>CISO_SYNC_STARTED</code> — lancement manuel d'une sync
+            <code>CISO_SYNC_STARTED</code> - lancement manuel d'une sync
           </li>
           <li>
-            <code>CISO_LIVE_SYNC</code> — mini-sync v2.0 déclenchée par event
+            <code>CISO_LIVE_SYNC</code> - mini-sync v2.0 déclenchée par event
           </li>
         </ul>
         <p>
@@ -844,9 +844,9 @@ const FEATURES: Feature[] = [
         </p>
       </>
     ),
-    endpoints: ["(local Humanix — table AuditLog)"],
+    endpoints: ["(local Humanix - table AuditLog)"],
     useCase:
-      "L'auditeur ISO 27001 §9.2 demande la traçabilité « qui a touché à quoi quand ». Le bouton Sync, le test de connexion, la suppression — tout est tracé.",
+      "L'auditeur ISO 27001 §9.2 demande la traçabilité « qui a touché à quoi quand ». Le bouton Sync, le test de connexion, la suppression - tout est tracé.",
     category: "audit",
   },
   {
@@ -877,12 +877,12 @@ const FEATURES: Feature[] = [
             tous les passwords stockés (à reconfigurer)
           </li>
           <li>
-            Pas de dépendance KMS externe — on reste hébergeable on-prem
+            Pas de dépendance KMS externe - on reste hébergeable on-prem
           </li>
         </ul>
       </>
     ),
-    endpoints: ["(local Humanix — lib/ciso-assistant/encryption.ts)"],
+    endpoints: ["(local Humanix - lib/ciso-assistant/encryption.ts)"],
     useCase:
       "Bonne pratique baseline pour tout connecteur sortant. Demande typique d'un audit RGPD ou ANSSI HG.",
     category: "audit",
@@ -1017,7 +1017,7 @@ export default function CisoAssistantFeaturesPage() {
           gouvernance, risque et conformité, services OpenAPI consommés,
           interrupteur d'activation, cas d'usage type. Chaque
           fonctionnalité est alignée contre le contrat OpenAPI réel de
-          CISO Assistant community — pas d'analyse à l'envers, pas de
+          CISO Assistant community - pas d'analyse à l'envers, pas de
           devinette.
         </p>
       </header>
@@ -1123,7 +1123,7 @@ export default function CisoAssistantFeaturesPage() {
           id="out-of-scope"
           className="text-xl font-bold text-gray-900 dark:text-white mb-3"
         >
-          Hors périmètre — explicitement
+          Hors périmètre - explicitement
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
           Nous disons ce que nous couvrons, et nous disons aussi ce que nous{" "}
@@ -1134,33 +1134,33 @@ export default function CisoAssistantFeaturesPage() {
         <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-2 list-disc pl-5">
           <li>
             <strong>Vulnérabilités techniques</strong> (
-            <code>/api/vulnerabilities/</code>, CVE) — du ressort d'un
+            <code>/api/vulnerabilities/</code>, CVE) - du ressort d'un
             scanneur de vulnérabilités du type Tenable ou Wiz.
           </li>
           <li>
             <strong>Contrats fournisseurs</strong> (
-            <code>/api/contracts/</code>) — du ressort de l'achat ou du
+            <code>/api/contracts/</code>) - du ressort de l'achat ou du
             juridique.
           </li>
           <li>
             <strong>Questionnaires d'audit</strong> (
-            <code>/api/questions/</code>, <code>/api/answers/</code>) — flux
+            <code>/api/questions/</code>, <code>/api/answers/</code>) - flux
             interne à CISO Assistant entre auditeur et audité.
           </li>
           <li>
             <strong>Acceptations de risque</strong> (
-            <code>/api/risk-acceptances/</code>) — décision métier, qui doit
+            <code>/api/risk-acceptances/</code>) - décision métier, qui doit
             rester manuelle.
           </li>
           <li>
-            <strong>Membres d'équipes</strong> — nous transmettons les
+            <strong>Membres d'équipes</strong> - nous transmettons les
             groupes Humanix comme équipes (interrupteur{" "}
             <code>syncGroupsAsTeams</code>), mais <em>pas</em> les membres
             individuels. Nécessite un utilisateur CISO Assistant pour chaque
-            membre — hors périmètre.
+            membre - hors périmètre.
           </li>
           <li>
-            <strong>Évaluations de conformité complètes</strong> — coquille
+            <strong>Évaluations de conformité complètes</strong> - coquille
             trop lourde à entretenir automatiquement. Le RSSI les crée à la
             main et y rattache nos preuves.
           </li>

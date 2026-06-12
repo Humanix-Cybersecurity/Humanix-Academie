@@ -20,7 +20,7 @@ Chrome / Firefox / Safari sur la machine ou le CA est trust.
 **Le fichier .pem est git-ignored** (cf. `.gitignore`) - chaque dev genere
 le sien.
 
-## En prod — wildcard via acme.sh + DNS-01 Scaleway
+## En prod - wildcard via acme.sh + DNS-01 Scaleway
 
 Le `haproxy.cfg` de prod attend un fichier **`wildcard.pem`** qui couvre
 `humanix-academie.fr` ET `*.humanix-academie.fr` (multi-tenancy par subdomain :
@@ -58,7 +58,7 @@ export SCALEWAY_API_TOKEN="<secret-key-scaleway>"
 L'auto-renewal Let's Encrypt (90 jours) est ajoute a `crontab -e` par
 acme.sh automatiquement. Aucune intervention manuelle ensuite.
 
-**Le fichier `wildcard.pem` est git-ignored** (cf. `.gitignore`) — il ne
+**Le fichier `wildcard.pem` est git-ignored** (cf. `.gitignore`) - il ne
 quitte jamais la machine de prod.
 
 ## Format HAProxy

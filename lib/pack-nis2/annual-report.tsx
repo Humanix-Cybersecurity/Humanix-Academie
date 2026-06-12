@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Generation du RAPPORT ANNUEL NIS2 d'un tenant (Pack NIS2 v2 — C).
+// Generation du RAPPORT ANNUEL NIS2 d'un tenant (Pack NIS2 v2 - C).
 //
 // A destination de l'autorite competente (CSIRT national / ANSSI en France)
 // ou pour archivage interne lors d'un audit. Couvre l'integralite de
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
 });
 
 function fmtDate(d: Date | string | null | undefined): string {
-  if (!d) return "—";
+  if (!d) return "-";
   const date = d instanceof Date ? d : new Date(d);
   return date.toLocaleDateString("fr-FR", {
     day: "2-digit",
@@ -203,12 +203,12 @@ function verdictLabel(score: number): string {
 export function AnnualReportPdf({ data }: { data: AnnualReportData }) {
   return (
     <PdfDocument
-      title={`Rapport annuel NIS2 — ${data.tenantName}`}
+      title={`Rapport annuel NIS2 - ${data.tenantName}`}
       author={data.tenantName}
       creator="Humanix Académie"
       producer="Humanix Académie"
     >
-      {/* ============ PAGE 1 — COUVERTURE + ETAT DES LIEUX ============ */}
+      {/* ============ PAGE 1 - COUVERTURE + ETAT DES LIEUX ============ */}
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.brand}>RAPPORT ANNUEL NIS2</Text>
@@ -304,7 +304,7 @@ export function AnnualReportPdf({ data }: { data: AnnualReportData }) {
         </Text>
       </Page>
 
-      {/* ============ PAGE 2 — INCIDENTS + SENSIBILISATION ============ */}
+      {/* ============ PAGE 2 - INCIDENTS + SENSIBILISATION ============ */}
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.brand}>RAPPORT ANNUEL NIS2 · suite</Text>
@@ -352,7 +352,7 @@ export function AnnualReportPdf({ data }: { data: AnnualReportData }) {
                   </Text>
                   <Text style={{ ...styles.td, width: 60 }}>{inc.status}</Text>
                   <Text style={{ ...styles.td, width: 70 }}>
-                    {inc.notifiedToAuthority ? "OUI" : "—"}
+                    {inc.notifiedToAuthority ? "OUI" : "-"}
                   </Text>
                 </View>
               );
@@ -401,7 +401,7 @@ export function AnnualReportPdf({ data }: { data: AnnualReportData }) {
         </Text>
       </Page>
 
-      {/* ============ PAGE 3 — PLAN + ENGAGEMENT ============ */}
+      {/* ============ PAGE 3 - PLAN + ENGAGEMENT ============ */}
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.brand}>RAPPORT ANNUEL NIS2 · plan</Text>
@@ -422,7 +422,7 @@ export function AnnualReportPdf({ data }: { data: AnnualReportData }) {
           .map((a) => (
             <View key={a.article} style={{ marginBottom: 8 }}>
               <Text style={styles.h3}>
-                Art. {a.article} — {a.title} ({a.score} / 100)
+                Art. {a.article} - {a.title} ({a.score} / 100)
               </Text>
               <Text style={styles.p}>{a.description}</Text>
             </View>
@@ -440,15 +440,15 @@ export function AnnualReportPdf({ data }: { data: AnnualReportData }) {
           Je confirme également :
         </Text>
         <Text style={styles.bullet}>
-          — Avoir suivi la formation cybersécurité obligatoire des
+          - Avoir suivi la formation cybersécurité obligatoire des
           dirigeants (art. 20 NIS2) dans les 24 derniers mois ;
         </Text>
         <Text style={styles.bullet}>
-          — Que le rapport sera transmis au CSIRT compétent (ANSSI en
+          - Que le rapport sera transmis au CSIRT compétent (ANSSI en
           France) sur demande de l&apos;autorité ;
         </Text>
         <Text style={styles.bullet}>
-          — Que les indicateurs présentés sont auditables sur la plateforme
+          - Que les indicateurs présentés sont auditables sur la plateforme
           Humanix Académie et reproductibles à tout moment.
         </Text>
 

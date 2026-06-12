@@ -14,7 +14,7 @@ export default function FacebookMockup({ media }: Props) {
     <div className="max-w-2xl mx-auto rounded-2xl border-2 border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-lg overflow-hidden">
       {/* Header */}
       <div className="bg-blue-600 text-white px-4 py-2 text-xs font-bold tracking-wider">
-        RÉSEAU SOCIAL — POST PUBLIC
+        RÉSEAU SOCIAL - POST PUBLIC
       </div>
 
       {/* Auteur */}

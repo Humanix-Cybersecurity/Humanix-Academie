@@ -14,7 +14,7 @@
 //   - NON STOCKE : lu en memoire, encode base64 pour @react-pdf,
 //     supprime apres generation. Aucune persistance disque/BDD.
 //   - Si absent : pas de logo affiche (pas non plus de logo Humanix
-//     par defaut — l'affiche doit pouvoir passer pour un document
+//     par defaut - l'affiche doit pouvoir passer pour un document
 //     interne de l'entreprise).
 //
 // Auth : ADMIN, RSSI, MANAGER (lecture), SUPERADMIN

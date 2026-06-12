@@ -11,7 +11,7 @@ d'aller-retours.
 
 ## Sommaire
 
-1. [Mon premier PR — par où commencer](#mon-premier-pr--par-où-commencer)
+1. [Mon premier PR - par où commencer](#mon-premier-pr--par-où-commencer)
 2. [Code de conduite](#code-de-conduite)
 3. [Types de contributions acceptées](#types-de-contributions-acceptées)
 4. [Contribuer un module MDX](#contribuer-un-module-mdx)
@@ -26,12 +26,12 @@ d'aller-retours.
 
 ---
 
-## Mon premier PR — par où commencer
+## Mon premier PR - par où commencer
 
 Tu débarques, tu veux contribuer, tu ne sais pas où mettre les mains. Voici les
 3 portes d'entrée par effort croissant.
 
-### Porte 1 — La typo (10 minutes)
+### Porte 1 - La typo (10 minutes)
 
 La plus accessible. Tu lis le README ou un fichier docs et tu vois une faute,
 une formulation maladroite, un lien cassé. Tu fork, tu corriges, tu pousses.
@@ -47,14 +47,14 @@ git push origin main
 
 Pas besoin de tout setup. La review est rapide.
 
-### Porte 2 — Le module MDX pédagogique (1-2 heures)
+### Porte 2 - Le module MDX pédagogique (1-2 heures)
 
 C'est la voie royale. Le catalog (`prisma/catalog-saisons.ts`) liste **26 saisons**
 de **6 épisodes chacune** = 156 modules attendus. Au moment de l'écriture,
-**8 saisons sont complètes en MDX expert** (48 modules) — il reste 108 modules
+**8 saisons sont complètes en MDX expert** (48 modules) - il reste 108 modules
 à enrichir. Voir la section [Contribuer un module MDX](#contribuer-un-module-mdx).
 
-### Porte 3 — La feature ou le connecteur (1-5 jours)
+### Porte 3 - La feature ou le connecteur (1-5 jours)
 
 Pour les développeurs qui veulent contribuer du code. Issues marquées
 `good first issue` sur GitHub. Si tu veux ajouter un connecteur (Drata, Vanta,
@@ -67,7 +67,7 @@ pour toute feature de plus de 200 lignes.
 
 Ce projet adhère au [Contributor Covenant 2.1](./CODE_OF_CONDUCT.md). En
 participant, tu acceptes de respecter ce code. Tout comportement abusif peut
-être signalé à `security@humanix-cybersecurity.fr` — traitement confidentiel
+être signalé à `security@humanix-cybersecurity.fr` - traitement confidentiel
 sous 72 h.
 
 ---
@@ -107,9 +107,9 @@ intégralement vides.
 Avant de commencer, lis attentivement 2-3 modules existants pour absorber la
 grammaire :
 
-- `content/saisons/phishing/01-mail-du-pdg.mdx` — easy, narratif court
-- `content/saisons/fraude-president/06-cas-pathe.mdx` — hard, cas réel
-- `content/saisons/dpo-quotidien/01-aipd.mdx` — medium, juridique structuré
+- `content/saisons/phishing/01-mail-du-pdg.mdx` - easy, narratif court
+- `content/saisons/fraude-president/06-cas-pathe.mdx` - hard, cas réel
+- `content/saisons/dpo-quotidien/01-aipd.mdx` - medium, juridique structuré
 
 ### 3. Écrire le module
 
@@ -165,7 +165,7 @@ quiz:
 
 ### 5. Slug ASCII strict
 
-Le slug doit matcher `/^[a-z0-9](?:[a-z0-9-]{1,48}[a-z0-9])?$/` — pas d'accents,
+Le slug doit matcher `/^[a-z0-9](?:[a-z0-9-]{1,48}[a-z0-9])?$/` - pas d'accents,
 pas de caractères spéciaux. Le validateur CI (`npm run validate:mdx`) bloque
 sinon.
 
@@ -307,7 +307,7 @@ git push origin main
 - Toute nouvelle feature DOIT avoir au moins 1 test (unitaire ou e2e)
 - Coverage cible : 70 % sur le code métier (`lib/`)
 
-### Sécurité — patterns à respecter
+### Sécurité - patterns à respecter
 
 Humanix Académie est un produit cyber : la posture sécurité du **code lui-même** doit refléter ce qu'on enseigne. Deux principes fondateurs : **Zero-Trust** et **Least Privilege**.
 
@@ -329,11 +329,11 @@ const { session } = guard;
 ```
 
 Variants disponibles :
-- `requireSession()` — user connecté quelconque
-- `requireAdmin(req?)` — ADMIN, RSSI, SUPERADMIN
-- `requireSuperadmin(req?)` — SUPERADMIN uniquement
-- `requireRole([...], req?)` — liste explicite
-- `requireTenantMember(tenantId, roles?, req?)` — anti cross-tenant
+- `requireSession()` - user connecté quelconque
+- `requireAdmin(req?)` - ADMIN, RSSI, SUPERADMIN
+- `requireSuperadmin(req?)` - SUPERADMIN uniquement
+- `requireRole([...], req?)` - liste explicite
+- `requireTenantMember(tenantId, roles?, req?)` - anti cross-tenant
 
 Les refus produisent un audit log automatique (outcome=DENIED) → utilisable pour détecter les tentatives d'escalade.
 
@@ -385,7 +385,7 @@ Tous les fichiers source TS/TSX dans `app/`, `lib/`, `components/`, `scripts/`, 
 
 Approche moderne FSF + Linux kernel : 1 ligne SPDX plutôt qu'un boilerplate copyright. Lisible par REUSE, FOSSology, GitHub.
 
-**Régénération automatique** : `npm run license:headers` ajoute la ligne aux fichiers qui en manquent. La CI lance `npm run license:check` à chaque PR — bloque le merge si un fichier oublie.
+**Régénération automatique** : `npm run license:headers` ajoute la ligne aux fichiers qui en manquent. La CI lance `npm run license:check` à chaque PR - bloque le merge si un fichier oublie.
 
 Les sous-projets `connectors/` et `outlook-addin/` sont sous **MIT** (cf. leur propre `LICENSE`) et ne sont donc pas concernés par cette règle.
 

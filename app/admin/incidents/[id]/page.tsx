@@ -286,7 +286,7 @@ export default async function IncidentDetailPage({
               <div className="flex-1">
                 <p className="text-sm whitespace-pre-line">{t.content}</p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  par {t.authorName ?? "—"}
+                  par {t.authorName ?? "-"}
                 </p>
               </div>
             </li>

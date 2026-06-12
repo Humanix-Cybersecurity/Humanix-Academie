@@ -53,7 +53,7 @@ export type ProvisionInput = {
   email: string;
   /** Nom de l'organisation (sert de Tenant.name + base du slug). */
   organizationName: string;
-  /** Plan initial (cf. lib/plans.ts). Doit être un plan payant — pas
+  /** Plan initial (cf. lib/plans.ts). Doit être un plan payant - pas
    * "starter" qui est reserve aux LEARNERs sur le tenant Communaute
    * et n'aboutit PAS sur un tenant payant (sub-tier free <=5 sieges). */
   plan: PlanId;
@@ -64,7 +64,7 @@ export type ProvisionInput = {
   paymentSubscriptionId?: string;
   /** État initial de la souscription. Utilisé par le webhook Mollie pour
    * passer "active" sur subscription.created (le checkout a réussi).
-   * Défaut "active" — il n'y a plus de phase trial depuis mai 2026. */
+   * Défaut "active" - il n'y a plus de phase trial depuis mai 2026. */
   subscriptionStatus?: string;
   /** Provenance pour tracing/audit. */
   source: ProvisionSource;
@@ -103,7 +103,7 @@ async function buildUniqueSlug(name: string): Promise<string | null> {
  * Provisionne un tenant payant + son ADMIN initial. Idempotent par
  * paymentCustomerId si fourni.
  *
- * NE PAS appeler ça pour créer un compte LEARNER — ça crée TOUJOURS un
+ * NE PAS appeler ça pour créer un compte LEARNER - ça crée TOUJOURS un
  * ADMIN sur un nouveau tenant payant. Pour les LEARNERs gratuits, voir
  * lib/auth.ts (PrismaAdapter override) qui les attache au tenant Communauté.
  */

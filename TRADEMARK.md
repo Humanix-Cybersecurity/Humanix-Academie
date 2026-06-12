@@ -111,7 +111,7 @@ Si vous redistribuez le code d'Humanix CE (modifié ou non), vous devez :
   **« Humanix Cloud Pro »**, **« Humanix Enterprise »** est strictement
   réservée à l'éditeur Humanix-Cybersecurity SASU. Ces noms désignent
   les services hébergés et opérés par nous.
-- Si vous hébergez votre propre instance, **n'utilisez pas ces noms** —
+- Si vous hébergez votre propre instance, **n'utilisez pas ces noms** -
   utilisez « Humanix Community Edition » ou votre propre branding.
 
 ---
@@ -127,7 +127,7 @@ Si vous êtes une ESN, un cabinet de conseil ou un prestataire qui
   commerciale.
 - Inclure Humanix dans votre stack publiquement affichée.
 - Facturer la prestation de déploiement, configuration, formation à vos
-  clients (c'est même encouragé — c'est notre modèle économique).
+  clients (c'est même encouragé - c'est notre modèle économique).
 
 ❌ Vous ne pouvez pas :
 
@@ -190,14 +190,14 @@ réservé aux abus manifestes et répétés.
 
 ---
 
-## 7. Référence — assets officiels
+## 7. Référence - assets officiels
 
 Les assets de marque officiels téléchargeables (logos, palettes,
 typographies, kit presse) sont disponibles sur :
 
 **`humanix-cybersecurity.fr/presse`**
 
-Tout autre asset trouvé sur Internet n'est pas garanti officiel —
+Tout autre asset trouvé sur Internet n'est pas garanti officiel -
 référez-vous à la page presse pour la version courante.
 
 ---

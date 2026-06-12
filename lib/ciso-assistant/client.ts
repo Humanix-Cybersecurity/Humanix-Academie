@@ -28,8 +28,8 @@ import type { CisoEvidence } from "./build-bundle";
  * porte le token Knox dans l'en-tete Authorization. Un baseUrl pointe vers le
  * endpoint de metadonnees cloud (169.254.169.254) ou le loopback exfiltrerait
  * ce token / les creds IAM de l'infra Humanix. On bloque donc les plages
- * JAMAIS legitimes pour un CISO Assistant — loopback, lien-local/metadata,
- * unspecified, multicast — tout en autorisant le RFC1918 (un CISO Assistant
+ * JAMAIS legitimes pour un CISO Assistant - loopback, lien-local/metadata,
+ * unspecified, multicast - tout en autorisant le RFC1918 (un CISO Assistant
  * peut etre legitimement auto-heberge sur un reseau prive).
  */
 /**
@@ -890,7 +890,7 @@ export class CisoAssistantClient {
     const r = await this.request("POST", "/api/perimeters/", {
       name,
       description:
-        "Périmètre par défaut Humanix Académie — sert de pivot pour les " +
+        "Périmètre par défaut Humanix Académie - sert de pivot pour les " +
         "Campaigns de phishing simulé synchronisées depuis Humanix.",
       folder: this.folderId,
     });
@@ -931,7 +931,7 @@ export class CisoAssistantClient {
       return {
         ok: false,
         status: 404,
-        error: `Endpoint /api/campaigns/ inexistant — instance CISO Assistant trop ancienne ou module non activé (${txt.slice(0, 120)})`,
+        error: `Endpoint /api/campaigns/ inexistant - instance CISO Assistant trop ancienne ou module non activé (${txt.slice(0, 120)})`,
       };
     }
     let existing: any | undefined;
@@ -944,7 +944,7 @@ export class CisoAssistantClient {
       return {
         ok: false,
         status: list.status,
-        error: `GET /api/campaigns/ refusé (${list.status}) — permissions insuffisantes : ${txt.slice(0, 120)}`,
+        error: `GET /api/campaigns/ refusé (${list.status}) - permissions insuffisantes : ${txt.slice(0, 120)}`,
       };
     }
     const payload: Record<string, unknown> = {
@@ -1159,7 +1159,7 @@ export class CisoAssistantClient {
       return {
         id: null,
         status: 404,
-        error: `Endpoint /api/metrology/metric-definitions/ inexistant — module Metrology non disponible sur cette instance (${txt.slice(0, 120)})`,
+        error: `Endpoint /api/metrology/metric-definitions/ inexistant - module Metrology non disponible sur cette instance (${txt.slice(0, 120)})`,
       };
     }
     if (list.status === 401 || list.status === 403) {
@@ -1660,7 +1660,7 @@ export class CisoAssistantClient {
     const r = await this.request("POST", "/api/metrology/dashboards/", {
       name,
       description:
-        "Vue agrégée de la maturité cyber humaine du tenant — alimentée " +
+        "Vue agrégée de la maturité cyber humaine du tenant - alimentée " +
         "automatiquement par les MetricInstances Humanix à chaque sync. " +
         "Score, complétion sensibilisation, taux signalement phishing, " +
         "comptage des contrôles par statut de conformité.",

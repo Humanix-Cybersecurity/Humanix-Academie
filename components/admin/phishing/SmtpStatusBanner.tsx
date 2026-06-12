@@ -22,7 +22,7 @@ export default function SmtpStatusBanner({
       <article className="rounded-xl border-2 border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20 p-4">
         <h3 className="font-bold text-amber-900 dark:text-amber-100 text-sm flex items-center gap-2">
           <span aria-hidden="true">📭</span>
-          SMTP non configuré — l&apos;envoi des phishing est bloqué
+          SMTP non configuré - l&apos;envoi des phishing est bloqué
         </h3>
         <p className="text-xs text-amber-900/90 dark:text-amber-100/90 mt-2 leading-relaxed">
           Humanix-Cybersecurity ne partage pas son serveur SMTP pour les
@@ -70,7 +70,7 @@ export default function SmtpStatusBanner({
           SMTP configuré mais jamais vérifié (ou dernier test échoué)
         </h3>
         <p className="text-xs text-amber-900/90 dark:text-amber-100/90 mt-2 leading-relaxed">
-          <strong>{host}</strong> — l&apos;envoi peut échouer. Va sur{" "}
+          <strong>{host}</strong> - l&apos;envoi peut échouer. Va sur{" "}
           <Link href="/admin/smtp" className="underline font-bold">
             /admin/smtp
           </Link>{" "}
@@ -86,7 +86,7 @@ export default function SmtpStatusBanner({
       <p className="text-xs text-emerald-900 dark:text-emerald-100 leading-relaxed flex items-center gap-2">
         <span aria-hidden="true">✅</span>
         <span>
-          <strong>SMTP prêt</strong> — envois depuis{" "}
+          <strong>SMTP prêt</strong> - envois depuis{" "}
           <code className="font-mono bg-white/60 dark:bg-slate-900/40 px-1.5 py-0.5 rounded">
             {fromEmail}
           </code>{" "}

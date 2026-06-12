@@ -4,7 +4,7 @@ Bridge bidirectionnel entre **HarfangLab** (EDR souverain 🇫🇷) et **Humanix
 
 ## Deux sens de circulation
 
-### Sens 1 — push : Humanix → HarfangLab
+### Sens 1 - push : Humanix → HarfangLab
 
 ```bash
 python humanix_harfanglab_connector.py push --framework NIS2
@@ -12,7 +12,7 @@ python humanix_harfanglab_connector.py push --framework NIS2
 
 Pousse les preuves de conformité au format CEF dans le syslog HarfangLab. Permet de corréler le facteur humain (taux de complétion, signalements phishing) avec les alertes techniques EDR dans le même Manager.
 
-### Sens 2 — pull : HarfangLab → Humanix
+### Sens 2 - pull : HarfangLab → Humanix
 
 ```bash
 python humanix_harfanglab_connector.py pull --hours 24 --dry-run

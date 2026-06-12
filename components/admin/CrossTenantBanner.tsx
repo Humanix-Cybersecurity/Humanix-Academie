@@ -6,7 +6,7 @@
 // Defense en profondeur visuelle : evite qu'un SUPERADMIN modifie par
 // erreur le mauvais tenant en pensant etre dans son home.
 //
-// Server component (pas de "use client") — rendu une seule fois au mount
+// Server component (pas de "use client") - rendu une seule fois au mount
 // de la page, mis a jour automatiquement au changement de route via
 // React Server Components.
 //

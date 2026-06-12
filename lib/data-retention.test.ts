@@ -9,7 +9,7 @@ import {
   RETENTION_RECOMMENDED_DAYS,
 } from "./data-retention";
 
-// Note : previewPurge() et executePurge() font des appels DB Prisma —
+// Note : previewPurge() et executePurge() font des appels DB Prisma -
 // testes en integration post-launch via testcontainers. Ici on couvre
 // la validation et les helpers de calcul, qui sont des fonctions pures
 // et 100% testables sans I/O. Couverture RGPD critique.

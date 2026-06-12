@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Cookie d'intention "inscription" — discriminateur entre /connexion (qui
+// Cookie d'intention "inscription" - discriminateur entre /connexion (qui
 // REFUSE les SSO inconnus, sécurité) et /inscription (qui ACCEPTE et crée
 // un LEARNER sur le tenant Communauté).
 //

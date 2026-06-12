@@ -44,7 +44,7 @@ async function requireSuperadmin() {
  *
  * Le user cible doit deja exister sur la plateforme (n'importe quel tenant).
  * Si l'email donne ne correspond a aucun user, on retourne un message
- * neutre — pour eviter l'enumeration (RGPD).
+ * neutre - pour eviter l'enumeration (RGPD).
  *
  * Si le user est deja natif du tenant cible, on retourne une erreur claire
  * (il faut le promouvoir via changeUserRole sur /admin/utilisateurs, pas
@@ -109,7 +109,7 @@ export async function addExternalAdminMembership(
   // tenant pour apparaitre dans la liste des admins de ce tenant et que
   // ses actions soient tracees comme legitimes (et non pas "bypass
   // SUPERADMIN tolere"). Le garde precedent self_membership_forbidden
-  // etait trop conservateur — il bloquait le cas d'usage principal.
+  // etait trop conservateur - il bloquait le cas d'usage principal.
   // L'action reste auditee (audit trail trace qui a accorde quoi a qui).
 
   // Cas USER NATIF DU TENANT CIBLE : on ne cree pas un membership externe
@@ -286,7 +286,7 @@ export async function updateExternalAdminMembershipRole(
 
   // NB : on n'applique PAS assertCanChangeRole(actor.role, m.user.role, newRole).
   // Comme pour addExternalAdminMembership, modifier le ROLE d'un membership
-  // n'est pas une modification du role HOME du user — donc la regle
+  // n'est pas une modification du role HOME du user - donc la regle
   // canModifyRoleOf qui exige rank(actor) > rank(target) ne s'applique pas.
   // canAssignRole (deja verifie ligne 247) garantit que l'acteur ne peut
   // pas creer un membership d'un niveau superieur au sien.
@@ -388,7 +388,7 @@ export async function inviteNewTenantAdmin(
   });
 
   // Envoi magic link (fire-and-forget : si l'email echoue, on log mais
-  // on ne casse pas l'invitation — le SUPERADMIN peut renvoyer plus tard).
+  // on ne casse pas l'invitation - le SUPERADMIN peut renvoyer plus tard).
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
   const res = await sendInviteMagicLink({
     email,

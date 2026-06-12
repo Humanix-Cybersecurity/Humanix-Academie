@@ -2,7 +2,7 @@
 import { describe, it, expect } from "vitest";
 import { sanitizeEmailHtml } from "./sanitize-html";
 
-describe("sanitizeEmailHtml — neutralise les vecteurs XSS", () => {
+describe("sanitizeEmailHtml - neutralise les vecteurs XSS", () => {
   it("supprime <script>", () => {
     const out = sanitizeEmailHtml('<p>ok</p><script>alert(1)</script>');
     expect(out).toContain("<p>ok</p>");
@@ -30,7 +30,7 @@ describe("sanitizeEmailHtml — neutralise les vecteurs XSS", () => {
   });
 });
 
-describe("sanitizeEmailHtml — préserve le présentationnel (réalisme)", () => {
+describe("sanitizeEmailHtml - préserve le présentationnel (réalisme)", () => {
   it("garde les styles inline", () => {
     const out = sanitizeEmailHtml('<div style="color:#0078d4;padding:20px">Microsoft</div>');
     expect(out).toContain("style=");

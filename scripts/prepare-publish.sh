@@ -18,7 +18,7 @@
 #   chmod +x scripts/prepare-publish.sh
 #   ./scripts/prepare-publish.sh
 #
-# Aucun push effectué — la création du remote GitHub privé et le push
+# Aucun push effectué - la création du remote GitHub privé et le push
 # restent manuels (cf. 00_ACTIONS_MANUELLES_REQUISES.md action A17).
 
 set -euo pipefail
@@ -39,8 +39,8 @@ step()  { echo -e "\n${GREEN}━━━ $1 ━━━${RESET}"; }
 # ---------------------------------------------------------------------------
 # Pré-vol : on est bien dans le repo ?
 # ---------------------------------------------------------------------------
-[ -d ".git" ] || fail "Pas de .git/ détecté — êtes-vous bien dans humanix-academie/ ?"
-[ -f "package.json" ] || fail "package.json absent — repo invalide."
+[ -d ".git" ] || fail "Pas de .git/ détecté - êtes-vous bien dans humanix-academie/ ?"
+[ -f "package.json" ] || fail "package.json absent - repo invalide."
 
 step "1. Suppression du .git/index.lock orphelin"
 if [ -f ".git/index.lock" ]; then
@@ -104,7 +104,7 @@ step "6. Commits structurés"
 
 # Vérif qu'il y a bien des changements à commiter
 if git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
-  ok "Working tree propre — rien à commiter"
+  ok "Working tree propre - rien à commiter"
   exit 0
 fi
 
@@ -147,7 +147,7 @@ if ! git diff --cached --quiet; then
 No behavior change, presentation only."
   ok "Commit 1/3 créé"
 else
-  ok "Commit 1/3 — rien à commiter"
+  ok "Commit 1/3 - rien à commiter"
 fi
 
 # ---- Commit 2 : Sprint OSS juridique ----
@@ -179,7 +179,7 @@ git add \
   2>/dev/null || true
 
 if ! git diff --cached --quiet; then
-  git commit -m "feat(oss): sprint pivot open-source — license, juridique, connecteurs
+  git commit -m "feat(oss): sprint pivot open-source - license, juridique, connecteurs
 
 OSS juridique racine
   - LICENSE : GNU AGPL v3 (format FSF officiel, déjà tracké)
@@ -196,7 +196,7 @@ Pages publiques pivot
 
 Connecteurs écosystème
   - CISO Assistant + format OSCAL v1.1.2 (NIST)
-  - SCIM v2 (RFC 7643/7644) — Entra/Okta/Google
+  - SCIM v2 (RFC 7643/7644) - Entra/Okta/Google
   - Microsoft Sentinel + Splunk HEC
   - Lucca, GLPI, CyberMalveillance.gouv.fr
   - Sekoia.io, HarfangLab, Mailinblack/Vade
@@ -206,7 +206,7 @@ Cf. docs : 04_DECISION_JURIDIQUE.md, INTEGRATION_CISO_ASSISTANT.md,
 INTEGRATIONS_ECOSYSTEME.md, ROADMAP_PRODUIT.md."
   ok "Commit 2/3 créé"
 else
-  ok "Commit 2/3 — rien à commiter"
+  ok "Commit 2/3 - rien à commiter"
 fi
 
 # ---- Commit 3 : page presse ----
@@ -215,7 +215,7 @@ echo "▸ Commit 3/3 : page kit presse"
 git add app/presse/ 2>/dev/null || true
 
 if ! git diff --cached --quiet; then
-  git commit -m "feat(presse): page /presse — kit journalistes pour launch 26 mai
+  git commit -m "feat(presse): page /presse - kit journalistes pour launch 26 mai
 
 - Pitch en 3 longueurs (1 ligne / 30s / 2 min)
 - 11 faits clés (date launch, licence, repo, prix, hébergement, etc.)
@@ -227,7 +227,7 @@ if ! git diff --cached --quiet; then
 Lié depuis le footer (rubrique Confiance)."
   ok "Commit 3/3 créé"
 else
-  ok "Commit 3/3 — rien à commiter"
+  ok "Commit 3/3 - rien à commiter"
 fi
 
 # ---- Reste à staguer ?
