@@ -30,18 +30,28 @@ function safeEqual(a: string, b: string): boolean {
   }
 }
 
-async function checkAuth(req: Request): Promise<boolean> {
+async function checkAuth(
+  req: Request,
+): Promise<{ authorized: boolean; scopeTenantId: string | null }> {
+  // CRON_SECRET (machine) -> global. Session admin -> scope a SON tenant.
   const cronSecret = req.headers.get("x-cron-secret");
   if (cronSecret && safeEqual(cronSecret, process.env.CRON_SECRET ?? "")) {
-    return true;
+    return { authorized: true, scopeTenantId: null };
   }
   const session = await auth();
   const role = session?.user?.role;
-  return role === "ADMIN" || role === "RSSI" || role === "SUPERADMIN";
+  if (role === "ADMIN" || role === "RSSI" || role === "SUPERADMIN") {
+    return {
+      authorized: true,
+      scopeTenantId: (session?.user?.tenantId as string | undefined) ?? null,
+    };
+  }
+  return { authorized: false, scopeTenantId: null };
 }
 
 export async function POST(req: Request) {
-  if (!(await checkAuth(req))) {
+  const a = await checkAuth(req);
+  if (!a.authorized) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
@@ -56,10 +66,12 @@ export async function POST(req: Request) {
   }
 
   // Tenants candidats (le détail de la triple garde est revérifié par tenant).
+  // Scope : si declenche par un admin, on ne traite QUE son tenant.
   const tenants = await db.tenant.findMany({
     where: {
       exposureMonitoringEnabled: true,
       exposureMonitoringDpaSignedAt: { not: null },
+      ...(a.scopeTenantId ? { id: a.scopeTenantId } : {}),
     },
     select: { id: true },
     take: 200,
@@ -86,13 +98,15 @@ export async function POST(req: Request) {
 
 /** GET = preview du nombre de tenants éligibles (sans scanner). */
 export async function GET(req: Request) {
-  if (!(await checkAuth(req))) {
+  const a = await checkAuth(req);
+  if (!a.authorized) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
   const eligible = await db.tenant.count({
     where: {
       exposureMonitoringEnabled: true,
       exposureMonitoringDpaSignedAt: { not: null },
+      ...(a.scopeTenantId ? { id: a.scopeTenantId } : {}),
     },
   });
   return NextResponse.json({
