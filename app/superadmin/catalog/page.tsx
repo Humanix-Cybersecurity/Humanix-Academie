@@ -23,7 +23,26 @@ import {
   loadCatalogSaisons,
   isCommercialCatalogAvailable,
 } from "@/prisma/seed-data-loader";
+import { getCatalogReport, type CatalogReport } from "@/lib/catalog-runner";
 import { ReseedCatalogForm } from "./ReseedCatalogForm";
+
+/**
+ * Fallback in-process (résolution bundlée) si le sous-process tsx échoue.
+ * En dev local / fork OSS, c'est correct ; en prod commerciale, ça peut sous-
+ * estimer (demo) — mais on n'arrive ici que si tsx est indisponible.
+ */
+function buildInProcessReport(): CatalogReport {
+  const { saisons, source } = loadCatalogSaisons();
+  return {
+    source,
+    demoMode: process.env.DEMO_MODE === "true",
+    commercialAvailable: isCommercialCatalogAvailable(),
+    saisons: saisons.length,
+    episodes: saisons.reduce((n, s) => n + s.episodes.length, 0),
+    badges: ACHIEVEMENTS_CATALOG.length,
+    items: SHOP_CATALOG.length,
+  };
+}
 
 export const dynamic = "force-dynamic";
 
@@ -53,15 +72,20 @@ export default async function SuperadminCatalogPage() {
     }),
   ]);
 
-  // Counts attendus depuis le code
-  const { saisons: codeSaisons, source: catalogSource } = loadCatalogSaisons();
-  const expectedSaisons = codeSaisons.length;
-  const expectedEpisodes = codeSaisons.reduce(
-    (n, s) => n + s.episodes.length,
-    0,
-  );
-  const expectedBadges = ACHIEVEMENTS_CATALOG.length;
-  const expectedItems = SHOP_CATALOG.length;
+  // Counts attendus depuis le code.
+  //
+  // On passe par un SOUS-PROCESS tsx (getCatalogReport) : le bundle serveur
+  // Next ne résout pas fiablement le symlink prisma/catalog-saisons.ts ->
+  // content-pro, donc loadCatalogSaisons() appelé in-process verrait "demo" à
+  // tort. tsx lit le .ts sur disque et voit le commercial (comme le boot-seed).
+  // Fallback in-process si le sous-process échoue (dev local / fork OSS).
+  const report = await getCatalogReport();
+  const codeView = report ?? buildInProcessReport();
+  const catalogSource = codeView.source;
+  const expectedSaisons = codeView.saisons;
+  const expectedEpisodes = codeView.episodes;
+  const expectedBadges = codeView.badges;
+  const expectedItems = codeView.items;
 
   const hasDrift =
     saisonsInDb !== expectedSaisons ||
@@ -73,8 +97,8 @@ export default async function SuperadminCatalogPage() {
   // alors qu'on attend du commercial, on veut savoir POURQUOI :
   //   - DEMO_MODE=true force le démo (même si content-pro présent), ou
   //   - content-pro absent de l'image (ex. image OSS) -> fallback démo.
-  const demoModeEnv = process.env.DEMO_MODE === "true";
-  const commercialAvailable = isCommercialCatalogAvailable();
+  const demoModeEnv = codeView.demoMode;
+  const commercialAvailable = codeView.commercialAvailable;
   // On "attend" du commercial dès que le catalogue commercial est embarqué
   // dans l'image (sinon c'est un fork/démo OSS, et "demo" est normal).
   const sourceIssue =
