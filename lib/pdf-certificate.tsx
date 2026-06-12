@@ -211,6 +211,32 @@ const styles = StyleSheet.create({
   },
 });
 
+/**
+ * Nom a faire figurer sur le certificat.
+ *
+ * Comportement (a la demande utilisateur, cf. /profil/infos) :
+ *   - Si l'utilisateur a renseigne SON prenom ET son nom reels (optionnels),
+ *     on les utilise : "Prenom Nom".
+ *   - Sinon, on retombe sur le pseudo (`name`) — comportement historique.
+ *   - Ultime filet de securite : la partie locale de l'email.
+ *
+ * On exige les DEUX champs (prenom + nom) pour eviter un certificat a moitie
+ * rempli ("Marie " ou " Durand"). Tant que l'un manque, on garde le pseudo.
+ */
+export function certificateName(user: {
+  firstName?: string | null;
+  lastName?: string | null;
+  name?: string | null;
+  email?: string | null;
+}): string {
+  const first = user.firstName?.trim();
+  const last = user.lastName?.trim();
+  if (first && last) return `${first} ${last}`;
+  const pseudo = user.name?.trim();
+  if (pseudo) return pseudo;
+  return user.email ? user.email.split("@")[0] : "";
+}
+
 type Props = {
   recipientName: string;
   tenantName: string;

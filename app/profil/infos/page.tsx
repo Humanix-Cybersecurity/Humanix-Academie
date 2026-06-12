@@ -32,6 +32,8 @@ export default async function ProfileInfosPage() {
     select: {
       email: true,
       name: true,
+      firstName: true,
+      lastName: true,
       service: true,
       role: true,
       emailVerified: true,
@@ -72,6 +74,8 @@ export default async function ProfileInfosPage() {
       <section className="max-w-2xl mx-auto px-4 pb-16 -mt-2">
         <ProfileInfoForm
           initialName={user.name ?? ""}
+          initialFirstName={user.firstName ?? ""}
+          initialLastName={user.lastName ?? ""}
           initialService={user.service ?? ""}
           email={user.email}
           emailVerified={!!user.emailVerified}
