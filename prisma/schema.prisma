@@ -2411,7 +2411,7 @@ model CisoAssistantConnection {
   syncCampaigns         Boolean   @default(false)
   // v2.0 Live Mode : si actif, chaque evenement metier (episode.completed,
   // phishing.reported, phishing.user_clicked) declenche une mini-sync
-  // incrementale debouncee (5s) sur les frameworks deja synchronises au
+  // incrementale debounced (5s) sur les frameworks deja synchronises au
   // moins une fois. Permet au RSSI de voir le score remonter en temps reel
   // pendant une presentation COMEX, sans attendre le cron quotidien.
   // - Re-upsert des evidences uniquement (pas de PDF, pas d'extensions).
