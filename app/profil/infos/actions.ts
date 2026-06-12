@@ -132,6 +132,14 @@ export async function updateProfileInfo(
   });
 
   // Audit log : ne logue que les diffs reels.
+  //
+  // PII : firstName/lastName sont l'identite civile REELLE de la personne. On
+  // ne les ecrit PAS en clair dans l'AuditLog (qui a sa propre retention) —
+  // minimisation RGPD art. 5.1.c. On consigne uniquement la TRANSITION (ajout /
+  // suppression / modification) via un marqueur "[défini]", ce qui garde un
+  // audit exploitable sans dupliquer la donnee. Le pseudo `name`, lui, est
+  // public (affiche partout) : on le journalise en clair, sans enjeu.
+  const redactPII = (v: string | null): string | null => (v ? "[défini]" : null);
   const changes: Record<string, { from: string | null; to: string | null }> = {};
   if (before.name !== newName) {
     changes.name = { from: before.name, to: newName };
@@ -140,10 +148,16 @@ export async function updateProfileInfo(
     changes.service = { from: before.service, to: newService };
   }
   if (before.firstName !== newFirstName) {
-    changes.firstName = { from: before.firstName, to: newFirstName };
+    changes.firstName = {
+      from: redactPII(before.firstName),
+      to: redactPII(newFirstName),
+    };
   }
   if (before.lastName !== newLastName) {
-    changes.lastName = { from: before.lastName, to: newLastName };
+    changes.lastName = {
+      from: redactPII(before.lastName),
+      to: redactPII(newLastName),
+    };
   }
 
   await auditLog({
