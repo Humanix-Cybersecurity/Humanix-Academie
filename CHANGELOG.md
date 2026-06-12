@@ -6,6 +6,90 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [Unreleased] — sur `main` (non taggé)
+
+Cycle post-v1.2.0 : exposition numérique & OSINT souverains, hub conformité
+multi-référentiels, certificat au nom réel, et une série de durcissements
+sécurité + fixes de catalogue prod. Déjà déployé en production depuis `main`.
+
+### Added
+
+#### 🕵️ Exposition numérique & OSINT (zéro stockage)
+
+Brique « Suis-je exposé ? » pour outiller la personne sans jamais conserver de
+donnée personnelle (anti-doxxing par conception).
+
+- **Outil public `/exposition`** : 3 auto-diagnostics — mot de passe (k-anonymity
+  Pwned Passwords, le mot de passe ne quitte jamais le navigateur en clair),
+  email et téléphone — + **score d'exposition** affiché RGAA. APIs éphémères,
+  **aucune PII conservée**, aucun compte requis.
+- **Parcours auto-OSINT guidé en 4 phases** : checklist pour rechercher ses
+  propres traces (moteurs, réseaux, data brokers/Pappers, métadonnées photo),
+  **limiter la casse**, **demander la suppression** et protéger son image.
+- **Plan de remédiation** personnalisé + déclenchement de micro-modules + opt-in
+  compte (tout optionnel).
+- **Saison `osint-particuliers`** (6 épisodes MDX) : empreinte numérique,
+  LinkedIn, métadonnées photo, réseaux & famille, data brokers, défense OSINT.
+- **Stats communautaires anonymisées** (agrégats, 0 PII individuelle).
+- **Veille d'exposition B2B `/admin/exposition`** (Enterprise) : surveillance de
+  l'exposition des collaborateurs sur le domaine du tenant — **gardée OFF par
+  défaut** (triple garde), activation conditionnée à un DPA + AIPD + notice
+  salariés, propriété du domaine prouvée par match sur un email vérifié du
+  tenant. Reporting de posture (NIS2 art. 21 / RGPD art. 32) + exports SIEM
+  (JSON + CEF), **sans** notification CNIL art. 33 (par design).
+  Docs : [`docs/exposition-numerique/`](./docs/exposition-numerique/) (roadmap,
+  AIPD, notice salariés, runbook d'activation).
+
+#### 📊 Hub conformité multi-référentiels `/admin/conformite`
+
+- Couverture calculée **par tenant** sur **7 référentiels** : ISO 27001:2022,
+  NIS2, RGPD, ANSSI Guide d'hygiène, NIST CSF v2.0, Loi Sapin II Art. 17, SOC 2.
+- Repose sur le mapping technique versionné [`lib/mapping-grc.ts`](./lib/mapping-grc.ts)
+  (jamais de surcote d'un contrôle) ; preuves exportables vers CISO Assistant.
+
+#### 🛡️ Certificat au nom réel (optionnel)
+
+- Nouveaux champs **optionnels** `User.firstName` / `User.lastName` ; `/profil/infos`
+  passe à 3 champs (pseudo, prénom, nom).
+- Le certificat PDF utilise « Prénom Nom » **uniquement si les deux sont
+  renseignés**, sinon il retombe sur le pseudo (comportement historique
+  préservé). Helper `certificateName()` + tests.
+
+#### 🧭 SUPERADMIN — bypass opérateur
+
+- `planHasFeature(plan, feature, role?)` : le rôle SUPERADMIN (opérateur
+  plateforme) outrepasse les gates de plan, sans changer le comportement des
+  rôles tenant. 21 sites de gating balayés.
+
+### Changed
+
+- **`/apprendre`** : remplacement du carrousel par un **accordéon par catégorie**
+  (repliable), suppression du code mort `SaisonsCarousel`.
+- **Modules** : la position de la bonne réponse aux quiz est **randomisée**
+  (anti « clic sans lire »).
+
+### Fixed
+
+- **Catalogue prod** : seed du catalogue au déploiement (modules en 404 + badges
+  manquants car le catalogue n'était jamais seedé en prod) ; seed des templates
+  de phishing platform-wide (`tenantId` null).
+- **500 SSR** sur les épisodes sans champ `debrief` (TTSButton appelait
+  `cleanForTTS(undefined)`).
+- **CI Docker Publish** : build `amd64` uniquement (QEMU arm64 cassait
+  `prisma generate`).
+
+### Security
+
+- **SSRF** : épinglage de l'IP résolue pour les fetch sortants vers des URL
+  tenant/admin (anti DNS-rebinding, ferme le TOCTOU résiduel) — cf.
+  `lib/net/pinned-agent`.
+- **Sanitisation HTML serveur** des templates de phishing (DOMPurify,
+  `lib/sanitize-html.ts`).
+- **Crons** : scoping au tenant appelant (plus de traitement cross-tenant).
+- Durcissements mineurs (bornes de validation, escalade de privilège).
+
+---
+
 ## [1.2.0] — 2026-05-22 🧠 Sprint AI Literacy + Backup self-host + License pubkey prod
 
 Cycle de release post-launch v1.0.0 / v1.1.0. Trois chantiers majeurs + une série de fixes opérationnels.

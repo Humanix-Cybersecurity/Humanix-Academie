@@ -249,8 +249,8 @@ Période couverte : 8 → 12 mai 2026 (5 jours, 12 PRs mergées).
                            └──────────┬───────────┘
                                       │
                   ┌───────────────────▼────────────────────┐
-                  │  Next.js 15 (humanix-app)              │
-                  │  Auth.js v5 + Prisma 5 + React 19      │
+                  │  Next.js 16 (humanix-app)              │
+                  │  Auth.js v5 + Prisma 6 + React 19      │
                   └──┬──────────────┬──────────────┬───────┘
                      │ humanix_backend (privé)
        ┌─────────────▼────┐  ┌──────▼──────┐ ┌────▼──────────────┐
@@ -578,7 +578,7 @@ Procédure :
 | Choix                       | Justification sécurité                                                                     |
 | --------------------------- | ------------------------------------------------------------------------------------------ |
 | **TypeScript strict**       | Détection d'erreurs au build, réduction des bugs runtime                                   |
-| **Next.js 15 + App Router** | Server Components par défaut (moins d'attaques côté client), CSRF natif sur Server Actions |
+| **Next.js 16 + App Router** | Server Components par défaut (moins d'attaques côté client), CSRF natif sur Server Actions |
 | **Prisma ORM**              | Queries paramétrées par nature (immune SQL injection), schema versionné                    |
 | **Auth.js v5**              | Lib auditée, base installée massive                                                        |
 | **Zod**                     | Validation runtime systématique                                                            |
