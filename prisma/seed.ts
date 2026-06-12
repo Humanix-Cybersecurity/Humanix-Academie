@@ -4,12 +4,9 @@ import {
   PrismaClient,
   ProgressStatus,
   Role,
-  ItemCategory,
   PhishingStatus,
 } from "@prisma/client";
 import { getLevel, computeCoinsEarned } from "../lib/levels";
-import { SHOP_CATALOG } from "../lib/shop";
-import { ACHIEVEMENTS_CATALOG } from "../lib/achievements/catalog";
 import { seedCatalog } from "../lib/catalog-seeder";
 import { computeContentHash } from "../lib/marketplace/integrity";
 // Open Core : on charge les seeds via le loader qui resout dynamiquement

@@ -27,7 +27,6 @@
 import { auth, getSignInPath } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import type { ReactNode } from "react";
 import CyberEventBanner from "@/components/CyberEventBanner";
 import { getLevel } from "@/lib/levels";
