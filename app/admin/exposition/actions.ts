@@ -32,7 +32,7 @@ import { buildComplianceReport } from "@/lib/exposure/b2b-report";
 
 type ActionResult =
   | { ok: true; message?: string }
-  | { ok: false; error: string };
+  | { ok: false; error: string; message?: string };
 
 /**
  * Garde commune : RSSI/ADMIN/SUPERADMIN + plan enterprise (feature
@@ -77,8 +77,28 @@ function parseDomains(raw: string): string[] {
 }
 
 /**
+ * Ensemble des domaines email VERIFIES du tenant (un salarie a un email
+ * verifie sur ce domaine). Sert de preuve de propriete : on n'autorise la
+ * surveillance d'un domaine que s'il appartient au tenant (anti-tiers — on
+ * ne surveille jamais le domaine d'un concurrent ou d'un grand public).
+ */
+async function verifiedEmailDomains(tenantId: string): Promise<Set<string>> {
+  const users = await db.user.findMany({
+    where: { tenantId, emailVerified: { not: null } },
+    select: { email: true },
+  });
+  const set = new Set<string>();
+  for (const u of users) {
+    const at = u.email.lastIndexOf("@");
+    if (at > 0) set.add(u.email.slice(at + 1).toLowerCase());
+  }
+  return set;
+}
+
+/**
  * Active la veille pour le tenant : enregistre l'opt-in + la signature DPA +
- * les domaines. Exige la case "DPA signe" cochee et >= 1 domaine valide.
+ * les domaines. Exige la case "DPA signe" cochee, >= 1 domaine valide, ET que
+ * chaque domaine soit PROUVE (correspond a l'email verifie d'un salarie).
  * NB : n'active PAS le kill switch plateforme (hors perimetre tenant).
  */
 export async function enableExposureMonitoring(
@@ -94,6 +114,22 @@ export async function enableExposureMonitoring(
   const domains = parseDomains(String(formData.get("domains") ?? ""));
   if (domains.length === 0) {
     return { ok: false, error: "no_valid_domain" };
+  }
+
+  // PREUVE DE PROPRIETE (anti-tiers) : chaque domaine surveille doit
+  // correspondre au domaine email VERIFIE d'au moins un salarie du tenant.
+  // Bloque la declaration du domaine d'un tiers (concurrent, grand public).
+  const owned = await verifiedEmailDomains(guard.tenantId);
+  const unproven = domains.filter((d) => !owned.has(d));
+  if (unproven.length > 0) {
+    return {
+      ok: false,
+      error: "domain_not_owned",
+      message:
+        `Domaine(s) non prouvé(s) : ${unproven.join(", ")}. ` +
+        "Un domaine ne peut être surveillé que s'il correspond à l'adresse " +
+        "email vérifiée d'un salarié de votre organisation (preuve de propriété).",
+    };
   }
 
   await db.tenant.update({

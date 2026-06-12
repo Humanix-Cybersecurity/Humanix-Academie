@@ -11,8 +11,10 @@ export async function GET(req: Request) {
   if (!a.ok) return NextResponse.json({ error: a.error }, { status: a.status });
 
   const url = new URL(req.url);
+  // Borne robuste : NaN / négatif / 0 -> 100, plafond 500 (un `take` négatif
+  // ou NaN produit un comportement Prisma inattendu / 500).
   const limit = Math.min(
-    parseInt(url.searchParams.get("limit") ?? "100", 10),
+    Math.max(parseInt(url.searchParams.get("limit") ?? "100", 10) || 100, 1),
     500,
   );
 

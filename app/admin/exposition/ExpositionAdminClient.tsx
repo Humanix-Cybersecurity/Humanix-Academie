@@ -75,6 +75,8 @@ const STATUS_META: Record<
 const ERROR_LABELS: Record<string, string> = {
   dpa_not_confirmed: "Confirmez la signature du DPA art.28.",
   no_valid_domain: "Saisissez au moins un domaine valide (ex. acme.fr).",
+  domain_not_owned:
+    "Domaine non prouvé : il doit correspondre à l'email vérifié d'un salarié.",
   monitoring_inactive: "Veille inactive (vérifiez les conditions d'activation).",
   inactive: "Veille inactive : rien à exporter.",
   no_tenant: "Tenant introuvable.",
@@ -152,7 +154,8 @@ export default function ExpositionAdminClient({
       } else {
         setMsg({
           ok: false,
-          text: ERROR_LABELS[r.error ?? ""] ?? r.error ?? "Erreur.",
+          text:
+            r.message ?? ERROR_LABELS[r.error ?? ""] ?? r.error ?? "Erreur.",
         });
       }
     });
@@ -329,8 +332,10 @@ export default function ExpositionAdminClient({
                 className="w-full rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm"
               />
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Séparez par des virgules. Seuls les comptes salariés sur ces
-                domaines seront analysés (anti-données de tiers).
+                Séparez par des virgules. Chaque domaine doit correspondre à
+                l'email vérifié d'un salarié (preuve de propriété) — sinon il
+                est refusé. Seuls les comptes sur ces domaines sont analysés
+                (anti-données de tiers).
               </p>
             </div>
 
