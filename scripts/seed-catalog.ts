@@ -39,6 +39,25 @@ async function main() {
       `[seed-catalog] reevaluation badges — ${re.evaluated} users, ` +
         `${re.totalNewUnlocks} badge(s) debloque(s) retroactivement`,
     );
+
+    // Ligne machine-readable pour le bouton /superadmin/catalog, qui execute
+    // ce script en sous-process tsx (cf. lib/catalog-runner.ts) au lieu
+    // d'appeler seedCatalog() in-process (le bundle Next ne voit que demo).
+    console.log(
+      "__SEED_RESULT__" +
+        JSON.stringify({
+          source: r.catalogSource,
+          saisons: r.saisons,
+          episodes: r.episodes,
+          achievements: r.achievements,
+          shopItems: r.shopItems,
+          phishingTemplates: r.phishingTemplates,
+          communityTenantSlug: r.communityTenantSlug,
+          durationMs: r.durationMs,
+          reevaluated: re.evaluated,
+          newBadges: re.totalNewUnlocks,
+        }),
+    );
   } finally {
     await prisma.$disconnect();
   }

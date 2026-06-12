@@ -29,8 +29,8 @@
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
-import { seedCatalog, type SeedCatalogResult } from "@/lib/catalog-seeder";
-import { reEvaluateAllUsers } from "@/lib/achievements/evaluate";
+import { type SeedCatalogResult } from "@/lib/catalog-seeder";
+import { reseedCatalogViaTsx } from "@/lib/catalog-runner";
 import { AuditOutcome, AuditSeverity } from "@prisma/client";
 
 async function requireSuperadminSession() {
@@ -63,13 +63,22 @@ export async function reseedCatalogAction(): Promise<ReseedCatalogResponse> {
   const actorUserId = session.user.id as string;
 
   try {
-    const result = await seedCatalog(db);
-
-    // Reevalue les badges de tous les users : les badges fraichement seedes
-    // (dont la row Achievement manquait) sont debloques retroactivement pour
-    // ceux qui les avaient deja merites. C'est ce qui repare les "badges
-    // manquants" cote utilisateur en un seul clic.
-    const re = await reEvaluateAllUsers();
+    // On NE seede PAS in-process : le bundle Next ne resout pas le symlink du
+    // catalogue commercial (-> il seederait demo). On delegue a un sous-process
+    // tsx (comme le boot-seed) qui lit le .ts sur disque et voit le commercial.
+    // Le re-seed reevalue deja les badges de tous les users en interne.
+    const r = await reseedCatalogViaTsx();
+    const result: SeedCatalogResult = {
+      saisons: r.saisons,
+      episodes: r.episodes,
+      shopItems: r.shopItems,
+      achievements: r.achievements,
+      phishingTemplates: r.phishingTemplates,
+      catalogSource: r.source,
+      durationMs: r.durationMs,
+      communityTenantSlug: r.communityTenantSlug,
+    };
+    const re = { evaluated: r.reevaluated, totalNewUnlocks: r.newBadges };
 
     await auditLog({
       action: AuditActions.CATALOG_RESEEDED,
