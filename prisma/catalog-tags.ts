@@ -239,6 +239,144 @@ export const SAISON_TAGS: Record<string, string[]> = {
     "ingenierie-sociale",
     "mobilite",
   ],
+  // --- Extension catalogue (saisons 34-57) ---
+  "quishing": [
+    "famille:public",
+    "tout-public",
+    "phishing",
+    "vecteur:qr",
+  ],
+  "arnaques-courantes": [
+    "famille:public",
+    "tout-public",
+    "fraude",
+    "ingenierie-sociale",
+  ],
+  "navigation-web": [
+    "famille:public",
+    "tout-public",
+    "web",
+    "vecteur:web",
+  ],
+  "iot-maison": [
+    "famille:public",
+    "tout-public",
+    "iot",
+    "teletravail",
+  ],
+  "cyberharcelement": [
+    "famille:public",
+    "tout-public",
+    "vie-privee",
+    "reputation",
+  ],
+  "cyber-communication": [
+    "famille:metier",
+    "metier:communication",
+    "social-media",
+    "deepfake",
+  ],
+  "cyber-accueil": [
+    "famille:metier",
+    "metier:accueil",
+    "physique",
+    "ingenierie-sociale",
+  ],
+  "cyber-support": [
+    "famille:metier",
+    "metier:support",
+    "ingenierie-sociale",
+    "comptes",
+  ],
+  "cyber-achats": [
+    "famille:metier",
+    "metier:achats",
+    "supply-chain",
+    "fraude",
+  ],
+  "cyber-juridique": [
+    "famille:metier",
+    "metier:juridique",
+    "confidentialite",
+    "secret-affaires",
+  ],
+  "dora": [
+    "famille:conformite",
+    "dora",
+    "secteur-financier",
+    "resilience",
+  ],
+  "iso-27001": [
+    "famille:conformite",
+    "iso-27001",
+    "smsi",
+  ],
+  "hygiene-anssi": [
+    "famille:conformite",
+    "anssi",
+    "hygiene",
+    "fondamentaux",
+  ],
+  "sapin2-conformite": [
+    "famille:conformite",
+    "sapin2",
+    "anti-corruption",
+    "ethique",
+  ],
+  "ai-act": [
+    "famille:conformite",
+    "ai-act",
+    "ia",
+    "rgpd",
+  ],
+  "securiser-m365": [
+    "famille:avance",
+    "cloud",
+    "m365",
+    "admin",
+  ],
+  "gestion-secrets": [
+    "famille:avance",
+    "dev",
+    "secrets",
+    "api",
+  ],
+  "zero-trust": [
+    "famille:avance",
+    "zero-trust",
+    "architecture",
+  ],
+  "securite-api-cloud": [
+    "famille:avance",
+    "dev",
+    "api",
+    "cloud",
+  ],
+  "secteur-sante": [
+    "famille:sectoriel",
+    "secteur:sante",
+    "donnees-sensibles",
+  ],
+  "secteur-collectivites": [
+    "famille:sectoriel",
+    "secteur:collectivites",
+    "service-public",
+  ],
+  "secteur-education": [
+    "famille:sectoriel",
+    "secteur:education",
+    "mineurs",
+  ],
+  "secteur-liberales": [
+    "famille:sectoriel",
+    "secteur:liberales",
+    "secret-professionnel",
+  ],
+  "secteur-industrie-ot": [
+    "famille:sectoriel",
+    "secteur:industrie",
+    "ot",
+  ],
 };
 
 /**
