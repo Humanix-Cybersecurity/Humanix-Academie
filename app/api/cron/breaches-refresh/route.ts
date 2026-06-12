@@ -38,11 +38,13 @@ export async function POST(req: NextRequest) {
   return NextResponse.json(result);
 }
 
-// Support GET aussi pour les services qui ne savent que faire des GET
-// (cron-job.org gratuit). Sécurité identique : verif du secret en query.
+// Support GET aussi pour les services qui ne savent que faire des GET.
+// SECURITE : le secret passe UNIQUEMENT par le header x-cron-secret — plus
+// de fallback `?secret=` en query string (qui fuyait le CRON_SECRET dans les
+// access logs HAProxy/Next + l'historique navigateur + le Referer).
+// cron-job.org & co. supportent les headers custom.
 export async function GET(req: NextRequest) {
-  const provided =
-    req.headers.get("x-cron-secret") ?? req.nextUrl.searchParams.get("secret");
+  const provided = req.headers.get("x-cron-secret");
   if (!verifySecret(provided)) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }

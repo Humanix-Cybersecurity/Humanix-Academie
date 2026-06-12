@@ -44,10 +44,14 @@ function safeEqual(a: string, b: string): boolean {
   }
 }
 
-async function checkAuth(req: Request): Promise<{ authorized: boolean }> {
+async function checkAuth(
+  req: Request,
+): Promise<{ authorized: boolean; scopeTenantId?: string | null }> {
+  // CRON_SECRET (machine) -> global. Session admin -> scope a SON tenant
+  // (anti cross-tenant : on ne traite jamais le drip d'autres tenants).
   const cronSecret = req.headers.get("x-cron-secret");
   if (cronSecret && safeEqual(cronSecret, process.env.CRON_SECRET ?? "")) {
-    return { authorized: true };
+    return { authorized: true, scopeTenantId: null };
   }
   const session = await auth();
   if (!session?.user) return { authorized: false };
@@ -55,7 +59,7 @@ async function checkAuth(req: Request): Promise<{ authorized: boolean }> {
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     return { authorized: false };
   }
-  return { authorized: true };
+  return { authorized: true, scopeTenantId: session.user.tenantId as string };
 }
 
 type DripProcessResult = {
@@ -65,14 +69,19 @@ type DripProcessResult = {
   errors: string[];
 };
 
-async function processDueDripResults(): Promise<DripProcessResult> {
+async function processDueDripResults(
+  scopeTenantId: string | null,
+): Promise<DripProcessResult> {
   const now = new Date();
   // On limite a 200 par tour pour eviter de saturer le SMTP du tenant.
   const due = await db.phishingResult.findMany({
     where: {
       mailDispatchedAt: null,
       dripScheduledAt: { lte: now },
-      campaign: { isActive: true },
+      campaign: {
+        isActive: true,
+        ...(scopeTenantId ? { tenantId: scopeTenantId } : {}),
+      },
     },
     include: {
       campaign: { select: { id: true, tenantId: true, template: true, variantBSlug: true } },
@@ -169,7 +178,7 @@ export async function POST(req: Request) {
   if (!a.authorized) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  const result = await processDueDripResults();
+  const result = await processDueDripResults(a.scopeTenantId ?? null);
   return NextResponse.json({ ok: true, ...result });
 }
 
@@ -179,19 +188,26 @@ export async function GET(req: Request) {
   if (!a.authorized) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
+  const scope = a.scopeTenantId ?? null;
   const now = new Date();
   const dueCount = await db.phishingResult.count({
     where: {
       mailDispatchedAt: null,
       dripScheduledAt: { lte: now },
-      campaign: { isActive: true },
+      campaign: {
+        isActive: true,
+        ...(scope ? { tenantId: scope } : {}),
+      },
     },
   });
   const upcomingCount = await db.phishingResult.count({
     where: {
       mailDispatchedAt: null,
       dripScheduledAt: { gt: now },
-      campaign: { isActive: true },
+      campaign: {
+        isActive: true,
+        ...(scope ? { tenantId: scope } : {}),
+      },
     },
   });
   return NextResponse.json({

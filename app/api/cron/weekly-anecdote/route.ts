@@ -22,22 +22,26 @@ function safeEqual(a: string, b: string): boolean {
   }
 }
 
-async function checkAuth(
-  req: Request,
-): Promise<{ authorized: boolean; reason?: string }> {
-  // 1. Cron header
+async function checkAuth(req: Request): Promise<{
+  authorized: boolean;
+  viaCron: boolean;
+  role?: string;
+  reason?: string;
+}> {
+  // 1. Cron header (machine)
   const cronSecret = req.headers.get("x-cron-secret");
   if (cronSecret && safeEqual(cronSecret, process.env.CRON_SECRET ?? "")) {
-    return { authorized: true };
+    return { authorized: true, viaCron: true };
   }
   // 2. Admin authentifie
   const session = await auth();
-  if (!session?.user) return { authorized: false, reason: "unauthorized" };
+  if (!session?.user)
+    return { authorized: false, viaCron: false, reason: "unauthorized" };
   const role = session.user!.role;
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
-    return { authorized: false, reason: "forbidden" };
+    return { authorized: false, viaCron: false, reason: "forbidden" };
   }
-  return { authorized: true };
+  return { authorized: true, viaCron: false, role };
 }
 
 export async function POST(req: Request) {
@@ -46,6 +50,19 @@ export async function POST(req: Request) {
     return NextResponse.json(
       { error: auth.reason ?? "unauthorized" },
       { status: 401 },
+    );
+  }
+  // L'ENVOI est une operation PLATEFORME (newsletter globale a tous les abonnes,
+  // pas une donnee tenant). Un admin de tenant ne doit pas pouvoir declencher
+  // un blast global -> reserve au cron (machine) ou au SUPERADMIN (operateur).
+  if (!auth.viaCron && auth.role !== "SUPERADMIN") {
+    return NextResponse.json(
+      {
+        error: "forbidden",
+        message:
+          "Envoi reserve a l'operateur plateforme (SUPERADMIN) ou au cron.",
+      },
+      { status: 403 },
     );
   }
 
