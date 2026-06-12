@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { CertificateOfCompletion } from "@/lib/pdf-certificate";
+import { CertificateOfCompletion, certificateName } from "@/lib/pdf-certificate";
 import { getLevel } from "@/lib/levels";
 
 export const dynamic = "force-dynamic";
@@ -38,9 +38,12 @@ export async function GET() {
         );
   const level = getLevel(totalXP);
 
+  // Prenom + nom reels si renseignes (option utilisateur), sinon pseudo.
+  const displayName = certificateName(user);
+
   const buffer = await renderToBuffer(
     CertificateOfCompletion({
-      recipientName: user.name ?? user.email.split("@")[0],
+      recipientName: displayName,
       tenantName: user.tenant.name,
       totalEpisodes: user.progress.length,
       totalXP,
@@ -56,7 +59,7 @@ export async function GET() {
     }),
   );
 
-  const filename = `certificat-humanix-${(user.name || user.email).replace(/[^a-z0-9]/gi, "-")}-${new Date().toISOString().split("T")[0]}.pdf`;
+  const filename = `certificat-humanix-${(displayName || user.email).replace(/[^a-z0-9]/gi, "-")}-${new Date().toISOString().split("T")[0]}.pdf`;
 
   return new NextResponse(buffer as any, {
     status: 200,
