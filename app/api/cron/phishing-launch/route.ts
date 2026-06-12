@@ -41,22 +41,27 @@ function safeEqual(a: string, b: string): boolean {
   }
 }
 
-async function checkAuth(
-  req: Request,
-): Promise<{ authorized: boolean; reason?: string }> {
-  // 1. Cron header
+async function checkAuth(req: Request): Promise<{
+  authorized: boolean;
+  /** null = run GLOBAL (CRON_SECRET machine) ; sinon = scope a CE tenant. */
+  scopeTenantId?: string | null;
+  reason?: string;
+}> {
+  // 1. Cron header (machine) -> run global sur tous les tenants.
   const cronSecret = req.headers.get("x-cron-secret");
   if (cronSecret && safeEqual(cronSecret, process.env.CRON_SECRET ?? "")) {
-    return { authorized: true };
+    return { authorized: true, scopeTenantId: null };
   }
-  // 2. Admin authentifie
+  // 2. Admin authentifie (declenchement manuel) -> SCOPE a SON tenant.
+  // Anti cross-tenant : un admin ne declenche/ne voit JAMAIS les campagnes
+  // d'autres tenants. Pour un run global, passer par CRON_SECRET.
   const session = await auth();
   if (!session?.user) return { authorized: false, reason: "unauthorized" };
   const role = session.user!.role;
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     return { authorized: false, reason: "forbidden" };
   }
-  return { authorized: true };
+  return { authorized: true, scopeTenantId: session.user!.tenantId as string };
 }
 
 type ProcessResult = {
@@ -68,13 +73,16 @@ type ProcessResult = {
   errors: string[];
 };
 
-async function processDueCampaigns(): Promise<ProcessResult> {
+async function processDueCampaigns(
+  scopeTenantId: string | null,
+): Promise<ProcessResult> {
   const now = new Date();
   const due = await db.phishingCampaign.findMany({
     where: {
       isActive: true,
       sentAt: null,
       scheduledAt: { lte: now },
+      ...(scopeTenantId ? { tenantId: scopeTenantId } : {}),
     },
     include: {
       tenant: {
@@ -237,7 +245,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const result = await processDueCampaigns();
+  const result = await processDueCampaigns(a.scopeTenantId ?? null);
   return NextResponse.json({ ok: true, ...result });
 }
 
@@ -251,16 +259,23 @@ export async function GET(req: Request) {
     );
   }
 
+  const scope = a.scopeTenantId ?? null;
   const now = new Date();
   const dueCount = await db.phishingCampaign.count({
     where: {
       isActive: true,
       sentAt: null,
       scheduledAt: { lte: now },
+      ...(scope ? { tenantId: scope } : {}),
     },
   });
   const upcoming = await db.phishingCampaign.findMany({
-    where: { isActive: true, sentAt: null, scheduledAt: { gt: now } },
+    where: {
+      isActive: true,
+      sentAt: null,
+      scheduledAt: { gt: now },
+      ...(scope ? { tenantId: scope } : {}),
+    },
     orderBy: { scheduledAt: "asc" },
     take: 5,
     select: {

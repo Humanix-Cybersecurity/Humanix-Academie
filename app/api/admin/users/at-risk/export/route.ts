@@ -53,8 +53,14 @@ export async function GET(req: Request) {
   const tenantId = session.user.tenantId as string;
 
   const url = new URL(req.url);
-  const threshold = parseInt(url.searchParams.get("threshold") ?? "40", 10);
-  const days = parseInt(url.searchParams.get("days") ?? "60", 10);
+  // Bornes robustes : NaN/hors plage -> defaut (evite de propager NaN dans
+  // listAtRiskUsers).
+  const clampInt = (raw: string | null, def: number, lo: number, hi: number) => {
+    const n = parseInt(raw ?? "", 10);
+    return Number.isFinite(n) ? Math.min(Math.max(n, lo), hi) : def;
+  };
+  const threshold = clampInt(url.searchParams.get("threshold"), 40, 0, 100);
+  const days = clampInt(url.searchParams.get("days"), 60, 1, 365);
 
   const { users, filters } = await listAtRiskUsers(tenantId, {
     threshold,

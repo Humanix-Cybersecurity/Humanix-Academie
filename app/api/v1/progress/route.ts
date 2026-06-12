@@ -12,13 +12,17 @@ export async function GET(req: Request) {
 
   const url = new URL(req.url);
   const userId = url.searchParams.get("userId");
-  const status = url.searchParams.get("status"); // COMPLETED / IN_PROGRESS / NOT_STARTED
+  // Valide le filtre status contre l'enum Prisma (sinon `as any` -> erreur non
+  // geree si valeur invalide). Valeur inconnue -> filtre simplement ignore.
+  const statusParam = url.searchParams.get("status");
+  const VALID_STATUS = ["COMPLETED", "IN_PROGRESS", "NOT_STARTED"] as const;
+  const status = VALID_STATUS.find((s) => s === statusParam);
 
   const progress = await db.progress.findMany({
     where: {
       tenantId: a.tenantId!,
       ...(userId ? { userId } : {}),
-      ...(status ? { status: status as any } : {}),
+      ...(status ? { status } : {}),
     },
     include: {
       user: { select: { id: true, email: true, name: true, service: true } },

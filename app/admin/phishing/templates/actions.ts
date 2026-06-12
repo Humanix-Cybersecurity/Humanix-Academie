@@ -13,6 +13,7 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { sanitizeEmailHtml } from "@/lib/sanitize-html";
 
 async function requireAdmin() {
   const session = await auth();
@@ -75,11 +76,18 @@ export async function createCustomTemplate(
   const emailFromName = String(formData.get("emailFromName") ?? "")
     .trim()
     .slice(0, 100);
-  const emailHtml = String(formData.get("emailHtml") ?? "").trim();
+  // Anti-XSS : on sanitise le HTML cote serveur AVANT persistance (DOMPurify).
+  // Preserve le presentationnel (styles inline, img, tables, formulaire de
+  // landing) pour le realisme, mais neutralise script/on*/javascript:/iframe…
+  const emailHtml = sanitizeEmailHtml(
+    String(formData.get("emailHtml") ?? "").trim(),
+  );
   const markersRaw = String(formData.get("markers") ?? "").trim();
   const emoji = String(formData.get("emoji") ?? "🎣").trim().slice(0, 4) || "🎣";
   // Phase 2 (juin 2026) : landing custom optionnelle
-  const landingFakeHtml = String(formData.get("landingFakeHtml") ?? "").trim();
+  const landingFakeHtml = sanitizeEmailHtml(
+    String(formData.get("landingFakeHtml") ?? "").trim(),
+  );
   const landingTitle = String(formData.get("landingTitle") ?? "").trim().slice(0, 100);
 
   if (!name || !emailSubject || !emailFromAddr || !emailHtml) {
@@ -170,7 +178,11 @@ export async function saveRedTeamAsTemplate(formData: FormData): Promise<
   const subject = String(formData.get("subject") ?? "").trim().slice(0, 200);
   const fromEmail = String(formData.get("fromEmail") ?? "").trim().slice(0, 100);
   const fromName = String(formData.get("fromName") ?? "").trim().slice(0, 100);
-  const bodyHtml = String(formData.get("bodyHtml") ?? "").trim();
+  // Anti-XSS : le corps red-team vient du client (form), on resanitise au
+  // stockage (DOMPurify), comme pour les templates custom.
+  const bodyHtml = sanitizeEmailHtml(
+    String(formData.get("bodyHtml") ?? "").trim(),
+  );
   const markersJson = String(formData.get("markersJson") ?? "[]");
 
   if (!name || !subject || !fromEmail || !bodyHtml) {
