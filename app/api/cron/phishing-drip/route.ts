@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Cron : envoi des PhishingResult drip-planifies qui sont arrives a echeance.
+// Cron : envoi des PhishingResult drip-planifiés qui sont arrivés à échéance.
 //
 // PHASE 7b (juin 2026) -- Drip campaigns :
 //   Pour chaque PhishingResult avec :
-//     - dripScheduledAt <= now (arrive a echeance)
+//     - dripScheduledAt <= now (arrivé à échéance)
 //     - mailDispatchedAt IS NULL (pas encore envoye)
 //     - campaign.isActive (pas annulee)
 //   On envoie le mail via le SMTP du tenant et on set mailDispatchedAt.
@@ -14,10 +14,10 @@
 // reste pour le lancement initial des campagnes. Ce cron est pour le suivi
 // drip post-lancement.
 //
-// AUTH : header X-Cron-Secret + timing-safe compare (meme pattern que
+// AUTH : header X-Cron-Secret + timing-safe compare (même pattern que
 // phishing-launch). Ou admin authentifie pour declenchement manuel.
 //
-// LIMITE PAR TOUR : 200 mails par invocation pour eviter de trop charger
+// LIMITE PAR TOUR : 200 mails par invocation pour éviter de trop charger
 // le SMTP du tenant + respecter le timeout maxDuration de la lambda
 // (Vercel = 10s default).
 
