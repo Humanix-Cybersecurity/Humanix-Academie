@@ -61,7 +61,7 @@ export default async function ForecastPage() {
       {/* === 1. PROJECTION TENANT === */}
       <AdminSection
         title="Trajectoire tenant"
-        description="Régression linéaire sur les 30 derniers snapshots quotidiens (RiskScoreSnapshot), projection à J+30. Indicatif — pas une garantie."
+        description="Régression linéaire sur les 30 derniers snapshots quotidiens (RiskScoreSnapshot), projection à J+30. Indicatif - pas une garantie."
       >
         <div className="grid sm:grid-cols-3 gap-3 mb-4">
           <KpiCard
@@ -69,7 +69,7 @@ export default async function ForecastPage() {
             value={
               forecast.currentAvgScore !== null
                 ? Math.round(forecast.currentAvgScore).toString()
-                : "—"
+                : "-"
             }
             help="Moyenne tenant à aujourd'hui"
           />
@@ -78,7 +78,7 @@ export default async function ForecastPage() {
             value={
               forecast.forecastAvgScore !== null
                 ? Math.round(forecast.forecastAvgScore).toString()
-                : "—"
+                : "-"
             }
             help={
               forecast.slopePerDay !== null
@@ -141,7 +141,7 @@ export default async function ForecastPage() {
 
         <AdminSection
           title="🌱 Plus forte amélioration"
-          description="Trajectoires positives — feedback à éventuellement valoriser."
+          description="Trajectoires positives - feedback à éventuellement valoriser."
         >
           {movers.improving.length === 0 ? (
             <EmptyMovers message="Pas encore d'amélioration significative cette période." />
@@ -177,7 +177,7 @@ export default async function ForecastPage() {
               value={
                 correlation.tenantAvgScore !== null
                   ? Math.round(correlation.tenantAvgScore).toString()
-                  : "—"
+                  : "-"
               }
               help="Population LEARNER + MANAGER active"
             />
@@ -186,14 +186,14 @@ export default async function ForecastPage() {
               value={
                 correlation.scoreDelta !== null
                   ? `${correlation.scoreDelta > 0 ? "+" : ""}${correlation.scoreDelta.toFixed(1)}`
-                  : "—"
+                  : "-"
               }
               help={
                 correlation.scoreDelta !== null
                   ? correlation.scoreDelta > 5
                     ? "Les rapporteurs ont un meilleur score : la formation porte ses fruits."
                     : correlation.scoreDelta < -5
-                      ? "Les rapporteurs ont un score plus bas — investigation utile."
+                      ? "Les rapporteurs ont un score plus bas - investigation utile."
                       : "Pas d'écart significatif sur cet échantillon."
                   : "Pas de rapporteurs identifiés sur la période."
               }

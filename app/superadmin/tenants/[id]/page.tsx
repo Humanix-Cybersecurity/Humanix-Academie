@@ -176,10 +176,10 @@ export default async function TenantDetailPage({
                   </td>
                   <td className="px-4 py-2 text-xs">{a.role}</td>
                   <td className="px-4 py-2">
-                    {a.emailVerified ? "✓" : "—"}
+                    {a.emailVerified ? "✓" : "-"}
                   </td>
                   <td className="px-4 py-2">
-                    {a.mfaEnabled ? "✓" : "—"}
+                    {a.mfaEnabled ? "✓" : "-"}
                   </td>
                   <td className="px-4 py-2">
                     {a.isActive ? "actif" : "suspendu"}
@@ -187,7 +187,7 @@ export default async function TenantDetailPage({
                   <td className="px-4 py-2 text-xs text-gray-500">
                     {a.lastLoginAt
                       ? a.lastLoginAt.toLocaleDateString("fr-FR")
-                      : "—"}
+                      : "-"}
                   </td>
                 </tr>
               ))}
@@ -297,7 +297,7 @@ export default async function TenantDetailPage({
           </h2>
           <p className="text-sm text-amber-800 dark:text-amber-300 mb-4">
             Bloque les connexions de tous les utilisateurs de ce tenant.{" "}
-            <strong>Réversible</strong> — données conservées en BDD. À utiliser
+            <strong>Réversible</strong> - données conservées en BDD. À utiliser
             pour suspendre temporairement (impayé, abus, demande client).
           </p>
           <form action={deactivateTenant} className="space-y-3">
@@ -307,7 +307,7 @@ export default async function TenantDetailPage({
                 htmlFor="disable-reason"
                 className="block text-xs font-bold uppercase tracking-wider text-amber-900 dark:text-amber-200 mb-1"
               >
-                Motif (obligatoire — pour audit)
+                Motif (obligatoire - pour audit)
               </label>
               <input
                 id="disable-reason"
@@ -376,7 +376,7 @@ export default async function TenantDetailPage({
           ⚠ Danger zone · Supprimer le tenant
         </h2>
         <p className="text-sm text-rose-800 dark:text-rose-300 mb-3">
-          <strong>Action irréversible</strong> — supprime le tenant et{" "}
+          <strong>Action irréversible</strong> - supprime le tenant et{" "}
           <strong>toutes</strong> ses données (utilisateurs, progressions,
           événements, groupes, audit logs liés). Conforme RGPD art. 17.
         </p>

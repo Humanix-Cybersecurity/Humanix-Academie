@@ -218,7 +218,7 @@ function Cell({ pct, subtitle }: { pct: number; subtitle?: string }) {
   return (
     <div
       className={`rounded-md text-center py-2 px-1 ${tone}`}
-      title={subtitle ? `${pct}% — ${subtitle}` : `${pct}%`}
+      title={subtitle ? `${pct}% - ${subtitle}` : `${pct}%`}
     >
       <p className="font-extrabold tabular-nums text-sm sm:text-base">
         {pct}%

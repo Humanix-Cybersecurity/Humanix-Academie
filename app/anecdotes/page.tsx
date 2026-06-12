@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cyber-Anecdote du Lundi — 1 incident, 1 leçon",
+    title: "Cyber-Anecdote du Lundi - 1 incident, 1 leçon",
     description: ANEC_DESC,
     images: ["/logo-humanix-academie-512.png"],
   },

@@ -5,7 +5,7 @@
 // Genere l'URL canonique vers /badges/detective/[rank] qui rendra
 // l'image OG dynamique (cf. opengraph-image.tsx).
 //
-// Le bouton supporte LinkedIn (canal principal — pro / cyber), Twitter,
+// Le bouton supporte LinkedIn (canal principal - pro / cyber), Twitter,
 // et le clipboard pour partage manuel. Pas de tracking analytics ni de
 // pixel social : le partage est purement de l'echange p2p.
 

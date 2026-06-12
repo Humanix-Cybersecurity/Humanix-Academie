@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /souscrire/succès — landing post-paiement Mollie.
+// /souscrire/succès - landing post-paiement Mollie.
 // Le webhook a (ou est en train de) provisionné le tenant + ADMIN +
 // envoyé un magic link. On rassure l'user pendant qu'il regarde sa
 // boîte mail. Pas d'auth requise (l'user n'a pas encore cliqué le lien).
@@ -9,7 +9,7 @@ import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
 export const metadata = {
-  title: "Paiement reçu — Humanix Académie",
+  title: "Paiement reçu - Humanix Académie",
   description: "Votre abonnement est activé. Le lien d'accès est en route.",
   alternates: { canonical: "/souscrire/succes" },
 };
@@ -83,7 +83,7 @@ export default async function SouscrireSuccesPage({
               contact@humanix-cybersecurity.fr
             </a>{" "}
             avec le plan choisi
-            {plan ? ` (${plan})` : ""} et l&apos;email utilisé — on regarde
+            {plan ? ` (${plan})` : ""} et l&apos;email utilisé - on regarde
             tout de suite.
           </p>
         </div>

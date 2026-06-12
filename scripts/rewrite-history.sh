@@ -9,7 +9,7 @@
 # Operations effectuees :
 #  1. Backup mirror local du repo dans ../humanix-academie-backup-YYYYMMDD-HHMM
 #  2. Reecriture des messages de commit via git-filter-repo + replacements.txt
-#  3. Force push vers origin (main, develop, testing) — DESTRUCTIF
+#  3. Force push vers origin (main, develop, testing) - DESTRUCTIF
 #  4. Edition des titres de PR concernes via l'API GitHub (pas de force push)
 #
 # A LIRE AVANT D'EXECUTER :
@@ -119,7 +119,7 @@ EOF
 # Liste des PRs a renommer si --skip-pr-titles n'est pas pose
 declare -a PR_RENAMES
 PR_RENAMES=(
-  "32|feat(roadmap): roadmap technique printemps 2026 — vishing souverain, MCP server, /comparatif 2026"
+  "32|feat(roadmap): roadmap technique printemps 2026 - vishing souverain, MCP server, /comparatif 2026"
   "64|docs(demo): runbook demo + assets fallback (script vishing pre-baked)"
   "74|chore: retirer mentions partenaires non confirmes"
 )
@@ -128,7 +128,7 @@ PR_RENAMES=(
 # 3. Affichage du plan
 # -----------------------------------------------------------------------------
 echo "=================================================================="
-echo "  Reecriture d'historique git — humanix-academie"
+echo "  Reecriture d'historique git - humanix-academie"
 echo "=================================================================="
 echo
 echo "Mode      : $([ $APPLY -eq 1 ] && echo "APPLY (destructif)" || echo "DRY-RUN (lecture seule)")"

@@ -54,7 +54,7 @@ function severityForEvent(event: WebhookEventKey): {
 }
 
 /**
- * JIRA — POST sur https://acme.atlassian.net/rest/api/3/issue
+ * JIRA - POST sur https://acme.atlassian.net/rest/api/3/issue
  * Doc : https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/
  *
  * L'admin Jira doit nous donner :
@@ -99,7 +99,7 @@ export function formatJiraIssue(
 }
 
 /**
- * SERVICENOW — POST sur https://acme.service-now.com/api/now/table/incident
+ * SERVICENOW - POST sur https://acme.service-now.com/api/now/table/incident
  * Doc : https://developer.servicenow.com/dev.do#!/reference/api/utah/rest/c_TableAPI
  *
  * L'admin ServiceNow nous donne l'URL pleine + auth basic.
@@ -134,7 +134,7 @@ export function formatServiceNowIncident(
 }
 
 /**
- * PAGERDUTY — POST sur https://events.pagerduty.com/v2/enqueue
+ * PAGERDUTY - POST sur https://events.pagerduty.com/v2/enqueue
  * Doc : https://developer.pagerduty.com/docs/events-api-v2/trigger-events/
  *
  * L'auth se fait via routing_key dans le body (pas d'header). Le secret

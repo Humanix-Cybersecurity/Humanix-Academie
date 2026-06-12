@@ -101,7 +101,7 @@ export function validateWifiSsid(raw: unknown): SsidValidationResult {
   // REJET STRICT des whitespace non-espace (\t, \n, \r, \v, \f) et chars
   // de controle. Plutot que de les normaliser silencieusement en espace
   // (ce qui ferait passer "Acme\nfake" en "Acme fake"), on retourne une
-  // erreur explicite. Principe "controler ce que l'on fait" — un newline
+  // erreur explicite. Principe "controler ce que l'on fait" - un newline
   // dans un SSID est tres probablement un accident de copier-coller, on
   // veut le signaler.
   if (/[\x00-\x1F\x7F]/.test(raw)) {

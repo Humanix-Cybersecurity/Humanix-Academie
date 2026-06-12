@@ -2,7 +2,7 @@ convert_library_version: 'v2 ; Compat Mode: [0] {[v2.1] (DEFAULT) Don''t use any
 urn: urn:humanix:risk:library:humanix-awareness-catalog-v1
 locale: fr
 ref_id: humanix-awareness-catalog-v1
-name: Humanix Académie — Catalogue de sensibilisation cyber
+name: Humanix Académie - Catalogue de sensibilisation cyber
 description: |-
   Catalogue des modules de sensibilisation cybersécurité Humanix Académie.
   Chaque "requirement" représente un module pédagogique opérationnel
@@ -22,7 +22,7 @@ provider: Humanix-Cybersecurity SASU
 packager: Humanix-Cybersecurity
 translations:
   en:
-    name: Humanix Académie — Cybersecurity Awareness Catalog
+    name: Humanix Académie - Cybersecurity Awareness Catalog
     description: |-
       Catalog of cybersecurity awareness modules from Humanix Académie.
       Each requirement is a runnable training module (interactive episodes
@@ -37,7 +37,7 @@ objects:
   framework:
     urn: urn:humanix:risk:framework:humanix-awareness-catalog-v1
     ref_id: HUMANIX-AWARENESS-V1
-    name: Humanix Académie — Catalogue de sensibilisation cyber
+    name: Humanix Académie - Catalogue de sensibilisation cyber
     description: |-
       27 modules de sensibilisation cyber Humanix Académie, indexés par
       thème métier (RH, compta, dirigeants, dev, DPO...) et par typologie
@@ -175,7 +175,7 @@ objects:
         name: Données sensibles & classification
         description: |-
           C0/C1/C2/C3 : qui voit quoi, où ça vit, comment ça part.
-          RGPD art. 32 — la sécurité commence par savoir ce qu'on protège.
+          RGPD art. 32 - la sécurité commence par savoir ce qu'on protège.
       - urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:vie-privee-bureau
         assessable: true
         depth: 1

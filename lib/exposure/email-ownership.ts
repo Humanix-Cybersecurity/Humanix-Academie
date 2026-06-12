@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Vérification de propriété d'email par OTP — STATELESS, ZÉRO PERSISTANCE.
+// Vérification de propriété d'email par OTP - STATELESS, ZÉRO PERSISTANCE.
 //
 // Réconcilie deux contraintes du module Exposition :
 //   #1 self-check only : on ne révèle l'exposition qu'au propriétaire de
@@ -76,8 +76,8 @@ export async function requestEmailOtp(
   const sent = await sendEmail({
     to: email,
     subject: "Ton code de vérification Humanix",
-    text: `Ton code de vérification est : ${otp}\n\nIl est valable 10 minutes. Si tu n'as pas demandé cette vérification, ignore cet email.\n\nHumanix Académie — on vérifie que c'est bien toi avant d'afficher quoi que ce soit (anti-doxxing).`,
-    html: `<p>Ton code de vérification est :</p><p style="font-size:28px;font-weight:bold;letter-spacing:4px">${otp}</p><p>Il est valable 10 minutes. Si tu n'as pas demandé cette vérification, ignore cet email.</p><p style="color:#666;font-size:13px">Humanix Académie — on vérifie que c'est bien toi avant d'afficher quoi que ce soit (anti-doxxing).</p>`,
+    text: `Ton code de vérification est : ${otp}\n\nIl est valable 10 minutes. Si tu n'as pas demandé cette vérification, ignore cet email.\n\nHumanix Académie - on vérifie que c'est bien toi avant d'afficher quoi que ce soit (anti-doxxing).`,
+    html: `<p>Ton code de vérification est :</p><p style="font-size:28px;font-weight:bold;letter-spacing:4px">${otp}</p><p>Il est valable 10 minutes. Si tu n'as pas demandé cette vérification, ignore cet email.</p><p style="color:#666;font-size:13px">Humanix Académie - on vérifie que c'est bien toi avant d'afficher quoi que ce soit (anti-doxxing).</p>`,
   });
 
   // En dev/demo, sendEmail renvoie ok:false (dev_mode/demo_mode) : on pose

@@ -25,7 +25,7 @@ couvrirait. Évite de décrire la solution avant le problème.
 
 ## Solution proposée
 
-Décris ce que tu imagines comme implémentation. C'est OK d'être vague — on
+Décris ce que tu imagines comme implémentation. C'est OK d'être vague - on
 discutera des détails ensemble.
 
 ## Alternatives considérées

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /admin/phishing/redteam — Generateur IA de scenarios phishing complets.
+// /admin/phishing/redteam - Generateur IA de scenarios phishing complets.
 //
 // CONTEXT (Phase 5b Phishing Engine v2, mai 2026) :
 //   L'admin (RSSI / DPO / direction) decrit son contexte (secteur, attaque

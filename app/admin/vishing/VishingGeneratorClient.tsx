@@ -347,7 +347,7 @@ export default function VishingGeneratorClient() {
               <p className="text-xs text-blue-700 dark:text-blue-300 mb-2">
                 🔒 TTS souverain FR (Mistral Voxtral en SaaS Paris, ou Piper
                 self-hosted selon `TTS_PROVIDER`). Aucun audio n'est conserve
-                cote provider — le buffer est cache en local pour reutilisation.
+                cote provider - le buffer est cache en local pour reutilisation.
               </p>
               <audio
                 controls

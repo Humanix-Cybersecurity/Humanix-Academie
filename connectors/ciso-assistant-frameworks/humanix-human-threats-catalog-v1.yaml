@@ -2,7 +2,7 @@ convert_library_version: 'v2 ; Compat Mode: [0] {[v2.1] (DEFAULT) Don''t use any
 urn: urn:humanix:risk:library:humanix-human-threats-catalog-v1
 locale: fr
 ref_id: humanix-human-threats-catalog-v1
-name: Humanix Académie — Catalogue de menaces humaines
+name: Humanix Académie - Catalogue de menaces humaines
 description: |-
   Catalogue de menaces cyber spécifiques à la couche humaine, complémentaire
   aux bibliothèques de menaces techniques (OWASP, MITRE ATT&CK, etc.).

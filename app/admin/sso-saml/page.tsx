@@ -57,7 +57,7 @@ export default async function AdminSamlPage() {
           Activation de SAML : 3 voies disponibles
         </h3>
         <p className="text-xs text-cyan-900/85 dark:text-cyan-100/85 leading-relaxed">
-          Selon ton infra, choisis la voie qui te convient — toutes
+          Selon ton infra, choisis la voie qui te convient - toutes
           consomment la config saisie ci-dessous.{" "}
           <Link
             href="/integrations/sso-saml"

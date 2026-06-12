@@ -1,4 +1,4 @@
-# Conditions d'utilisation — Humanix Académie Community Edition (self-host)
+# Conditions d'utilisation - Humanix Académie Community Edition (self-host)
 
 > **Version 1.0 · 4 mai 2026**
 > Ce document accompagne le fichier [`LICENSE`](./LICENSE) et précise en
@@ -68,7 +68,7 @@ C'est la **clause clé de l'AGPL** (article 13). Si vous :
 
 - Modifiez le code,
 - ET déployez votre version modifiée comme **service en ligne**
-  (interaction utilisateur via réseau — c'est le cas par construction
+  (interaction utilisateur via réseau - c'est le cas par construction
   pour Humanix qui est une application web),
 
 → alors vous devez **fournir aux utilisateurs** un moyen de récupérer le

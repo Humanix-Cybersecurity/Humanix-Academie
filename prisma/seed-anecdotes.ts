@@ -138,7 +138,7 @@ const ANECDOTES: AnecdoteSeed[] = [
     lesson:
       "Le credential stuffing exploite le fait qu'un humain réutilise le même mot de passe sur 5 à 10 sites. Quand un site faiblement protégé fuit, les attaquants testent ses identifiants sur tous les autres. La parade : un mot de passe unique par site (gestionnaire de mots de passe) et la 2FA partout où c'est possible.",
     miniAction:
-      "Liste mentalement tes 5 sites les plus utilisés (banque, mail principal, employeur, Amazon, sécu). Pour chacun : as-tu un mot de passe différent ET la 2FA activée ? Si la réponse est « oui partout », tu es en avance. Sinon, commence par le mail principal — c'est le plus critique.",
+      "Liste mentalement tes 5 sites les plus utilisés (banque, mail principal, employeur, Amazon, sécu). Pour chacun : as-tu un mot de passe différent ET la 2FA activée ? Si la réponse est « oui partout », tu es en avance. Sinon, commence par le mail principal - c'est le plus critique.",
     sourceUrl:
       "https://www.cnil.fr/fr/violation-donnees-personnelles-auchan",
     sourceLabel: "CNIL · 22 novembre 2024",
@@ -154,7 +154,7 @@ const ANECDOTES: AnecdoteSeed[] = [
     summary:
       "16 avril 2024, le centre hospitalier Simone Veil de Cannes est paralysé par un rançongiciel attribué au groupe LockBit. L'établissement bascule en mode dégradé : prescriptions papier, déprogrammation des opérations non urgentes, transferts de patients vers les hôpitaux voisins. Le retour à la normale prendra plusieurs mois. Aucune rançon n'est versée, conformément à la doctrine française.",
     lesson:
-      "Les hôpitaux sont une cible privilégiée des ransomware parce qu'ils combinent données sensibles, dépendance critique au SI, et obligation morale de fonctionner. La meilleure défense reste la sauvegarde froide (déconnectée du réseau) et un plan de continuité testé en mode papier — pas juste sur PowerPoint.",
+      "Les hôpitaux sont une cible privilégiée des ransomware parce qu'ils combinent données sensibles, dépendance critique au SI, et obligation morale de fonctionner. La meilleure défense reste la sauvegarde froide (déconnectée du réseau) et un plan de continuité testé en mode papier - pas juste sur PowerPoint.",
     miniAction:
       "Ton organisation a-t-elle un PCA (Plan de Continuité d'Activité) testé en condition réelle dans les 12 derniers mois ? Si oui, demande la dernière fiche de test. Si non, c'est le sujet à mettre à l'ordre du jour du prochain comité de direction.",
     sourceUrl:
@@ -242,7 +242,7 @@ const ANECDOTES: AnecdoteSeed[] = [
     slug: "phishing-impots-juin-2025-pic-saisonnier",
     title: "Pic de phishing impôts : 3 vagues, 50 000 victimes potentielles",
     summary:
-      "Juin 2025, en pleine période de déclaration et de réception des avis d'imposition, l'administration fiscale et CyberMalveillance.gouv.fr alertent sur une vague massive de phishing par SMS et email usurpant l'identité de impots.gouv.fr : « Vous avez droit à un remboursement de 318,42 € — confirmez votre RIB ». Les données saisies servent à des fraudes au RIB (changement frauduleux de RIB du salarié sur son compte employeur).",
+      "Juin 2025, en pleine période de déclaration et de réception des avis d'imposition, l'administration fiscale et CyberMalveillance.gouv.fr alertent sur une vague massive de phishing par SMS et email usurpant l'identité de impots.gouv.fr : « Vous avez droit à un remboursement de 318,42 € - confirmez votre RIB ». Les données saisies servent à des fraudes au RIB (changement frauduleux de RIB du salarié sur son compte employeur).",
     lesson:
       "Les périodes de communication de masse de l'administration (impôts, CAF, sécu) sont les saisons hautes du phishing. Les escrocs surfent sur la légitimité du sujet : tu attends vraiment un mail des impôts, donc ta vigilance baisse. La règle : impots.gouv.fr ne demande JAMAIS un RIB par mail ou SMS pour rembourser. Tout passe par ton espace personnel sécurisé.",
     miniAction:
@@ -264,7 +264,7 @@ const ANECDOTES: AnecdoteSeed[] = [
     lesson:
       "Les collectivités locales sont devenues une cible massive : 50 % des cyberattaques contre les services publics français en 2024-2025 visent des mairies de moins de 20 000 habitants. Pourquoi ? Elles ont de la donnée sensible (état civil), peu de DSI, peu de budget, et beaucoup de portes d'entrée (élus, agents, prestataires). Le secours, c'est la sauvegarde déconnectée du réseau.",
     miniAction:
-      "Si tu travailles dans une collectivité ou si tu connais quelqu'un qui y travaille : la question à poser au DSI est « notre dernière sauvegarde testée date de quand, et où est-elle stockée ? ». Si la réponse contient « cloud » ou « serveur du réseau », c'est insuffisant — il faut une sauvegarde froide, déconnectée, testée en restauration.",
+      "Si tu travailles dans une collectivité ou si tu connais quelqu'un qui y travaille : la question à poser au DSI est « notre dernière sauvegarde testée date de quand, et où est-elle stockée ? ». Si la réponse contient « cloud » ou « serveur du réseau », c'est insuffisant - il faut une sauvegarde froide, déconnectée, testée en restauration.",
     sourceUrl:
       "https://www.cybermalveillance.gouv.fr/tous-nos-contenus/actualites/mairie-rancongiciel-juillet-2025",
     sourceLabel: "CyberMalveillance.gouv.fr · juillet 2025",
@@ -298,9 +298,9 @@ const ANECDOTES: AnecdoteSeed[] = [
     summary:
       "Octobre 2025, le CERT-FR alerte sur une vague massive de smishing bancaire utilisant le « SMS spoofing » : les escrocs falsifient l'expéditeur du SMS pour qu'il s'affiche dans le fil de conversation officiel de la banque (Crédit Agricole, BNP, Société Générale). Le SMS dit « opération suspecte sur votre compte, validez ou refusez : [lien] ». Le lien mène à une copie pixel-perfect de l'app bancaire. 12 000 personnes y sont passées en 3 jours, perte cumulée estimée à 18 M€.",
     lesson:
-      "Le SMS spoofing exploite une faille structurelle des télécoms français : aucune banque ne peut vraiment signer ses SMS. Conséquence : le canal SMS est compromis pour toute opération sensible. Toujours valider les opérations bancaires depuis l'app officielle (que tu ouvres toi-même), jamais depuis un lien — même si le SMS s'affiche dans la bonne conversation.",
+      "Le SMS spoofing exploite une faille structurelle des télécoms français : aucune banque ne peut vraiment signer ses SMS. Conséquence : le canal SMS est compromis pour toute opération sensible. Toujours valider les opérations bancaires depuis l'app officielle (que tu ouvres toi-même), jamais depuis un lien - même si le SMS s'affiche dans la bonne conversation.",
     miniAction:
-      "Désactive AUJOURD'HUI l'option « SMS-OTP » de ta banque si possible et active la validation par notification dans l'app officielle. C'est plus sûr (signé cryptographiquement, lié à ton appareil) et c'est gratuit. Au pire, si tu dois garder le SMS, ne clique JAMAIS sur un lien — ouvre l'app toi-même.",
+      "Désactive AUJOURD'HUI l'option « SMS-OTP » de ta banque si possible et active la validation par notification dans l'app officielle. C'est plus sûr (signé cryptographiquement, lié à ton appareil) et c'est gratuit. Au pire, si tu dois garder le SMS, ne clique JAMAIS sur un lien - ouvre l'app toi-même.",
     sourceUrl:
       "https://www.cert.ssi.gouv.fr/cti/CERTFR-2025-CTI-smishing-bancaire",
     sourceLabel: "CERT-FR / ANSSI · 8 octobre 2025",

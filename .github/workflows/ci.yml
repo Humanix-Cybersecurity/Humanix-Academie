@@ -30,7 +30,7 @@ name: CI
 # Pourquoi : le billing GitHub Actions sur runners GitHub-managed est désactivé.
 # On utilise un runner self-hosted déclaré dans Settings → Actions → Runners.
 #
-# ⚠️ SÉCURITÉ — CONFIGURATION OBLIGATOIRE AVANT REPO PUBLIC :
+# ⚠️ SÉCURITÉ - CONFIGURATION OBLIGATOIRE AVANT REPO PUBLIC :
 #
 #   Self-hosted + repo public = risque d'exécution de code arbitraire par
 #   n'importe quel contributeur via une PR malveillante.
@@ -143,7 +143,7 @@ jobs:
   # Job : Tests unitaires + coverage (Vitest)
   # ---------------------------------------------------------------------------
   # Optim 2026-05-23 : sur PR on ne genere PAS de coverage (juste run les
-  # tests) — gain ~15s. Sur push main on garde la coverage pour l'artifact.
+  # tests) - gain ~15s. Sur push main on garde la coverage pour l'artifact.
   test:
     name: Tests unitaires (Vitest)
     runs-on: self-hosted

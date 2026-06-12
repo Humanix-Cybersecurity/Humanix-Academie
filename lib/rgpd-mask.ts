@@ -95,7 +95,7 @@ function maskString(s: string, head: number, tail: number): string {
   // la garde telle quelle pour eviter un "b***b" qui est juste du bruit.
   if (s.length === 1) return s;
   // Si trop courte pour le pattern head+tail+separateur, on degrade
-  // sur "1er char + *** + dernier char" — preserve la confidentialite
+  // sur "1er char + *** + dernier char" - preserve la confidentialite
   // sans crasher.
   if (s.length <= head + tail) {
     return s[0] + "***" + s[s.length - 1];

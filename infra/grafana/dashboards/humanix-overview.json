@@ -40,7 +40,7 @@
   "panels": [
     {
       "type": "row",
-      "title": "HTTP — Trafic & latence",
+      "title": "HTTP - Trafic & latence",
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
       "collapsed": false,
       "id": 100
@@ -166,7 +166,7 @@
     },
     {
       "type": "row",
-      "title": "Sécurité — Audit log",
+      "title": "Sécurité - Audit log",
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 13 },
       "collapsed": false,
       "id": 200
@@ -377,7 +377,7 @@
   "time": { "from": "now-1h", "to": "now" },
   "timepicker": {},
   "timezone": "Europe/Paris",
-  "title": "Humanix Académie — Overview",
+  "title": "Humanix Académie - Overview",
   "uid": "humanix-overview",
   "version": 1,
   "weekStart": "monday"

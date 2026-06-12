@@ -111,7 +111,7 @@ export function planHasFeature(
   role?: string | null,
 ): boolean {
   // Bypass OPERATEUR : le SUPERADMIN (staff plateforme Humanix) accede a TOUTES
-  // les features quel que soit le plan du tenant — pour la demo, le support et
+  // les features quel que soit le plan du tenant - pour la demo, le support et
   // le test. Le plan-gating ne concerne que les CLIENTS, pas l'exploitant.
   // (Param optionnel -> les appels a 2 args restent inchanges : logique de
   // plan pure, ex. tests de la matrice plans×features.)

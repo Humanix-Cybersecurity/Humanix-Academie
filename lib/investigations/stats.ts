@@ -48,7 +48,7 @@ export async function getTenantLeaderboard(
     },
   });
 
-  // 2) Aggrege par user — garde le MEILLEUR score par scenario
+  // 2) Aggrege par user - garde le MEILLEUR score par scenario
   //    (pas la moyenne, sinon retries penalisent).
   type Acc = {
     userId: string;

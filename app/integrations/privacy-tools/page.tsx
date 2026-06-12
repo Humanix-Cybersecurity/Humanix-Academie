@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /integrations/privacy-tools — Connecteur Privacy Tools dedie DPO.
+// /integrations/privacy-tools - Connecteur Privacy Tools dedie DPO.
 //
 // Publie la specification de l'endpoint `/api/v1/dpo-export` et donne
 // des exemples concrets d'integration vers les 4 outils Privacy
@@ -13,7 +13,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-const TITLE = "Connecteur Privacy Tools — Humanix Académie";
+const TITLE = "Connecteur Privacy Tools - Humanix Académie";
 const DESC =
   "Push automatique des preuves DPO (queue effacement RGPD art. 17, compteurs 90j, AIPD, certifs sensibilisation) vers OneTrust, Didomi, Privacy.fr, Dastra. API JSON stable.";
 

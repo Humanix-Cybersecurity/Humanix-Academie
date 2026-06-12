@@ -30,7 +30,7 @@ export default function ApiDocPage() {
             API REST publique
           </h1>
           <p className="text-base sm:text-lg text-gray-700 dark:text-gray-200 max-w-3xl mb-6 leading-relaxed">
-            OpenAPI 3.0 — consommez les utilisateurs, progrès, score de
+            OpenAPI 3.0 - consommez les utilisateurs, progrès, score de
             conformité et exports SIEM depuis vos outils GRC, BI, HRIS.
             Auth Bearer, rate-limit, exports SIEM CEF/CIM.
           </p>

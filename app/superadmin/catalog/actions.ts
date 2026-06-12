@@ -93,7 +93,7 @@ export async function reseedCatalogAction(): Promise<ReseedCatalogResponse> {
         type: "catalog",
         label: `${result.saisons} saisons / ${result.episodes} episodes / ${result.achievements} badges / ${result.shopItems} items`,
       },
-      message: `Re-seed catalog effectue (source: ${result.catalogSource}, ${result.durationMs} ms) — ${re.totalNewUnlocks} badge(s) retroactif(s)`,
+      message: `Re-seed catalog effectue (source: ${result.catalogSource}, ${result.durationMs} ms) - ${re.totalNewUnlocks} badge(s) retroactif(s)`,
       metadata: {
         catalogSource: result.catalogSource,
         saisons: result.saisons,

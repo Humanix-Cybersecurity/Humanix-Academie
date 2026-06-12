@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /souscrire — page de pré-checkout self-service. L'organisation choisit
+// /souscrire - page de pré-checkout self-service. L'organisation choisit
 // son plan + saisit email + nom d'org → submit → redirect Mollie Checkout.
 // Le paiement déclenche le webhook qui provisionne tenant + ADMIN +
 // envoie un magic link de bienvenue. Aucune action humaine côté Humanix.
@@ -29,7 +29,7 @@ import SouscrireForm from "./SouscrireForm";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Souscrire — Humanix Académie",
+  title: "Souscrire - Humanix Académie",
   description:
     "Créez votre compte entreprise en 2 minutes : choix du plan, email professionnel, paiement Mollie, accès immédiat à la console admin via un lien magique.",
   alternates: { canonical: "/souscrire" },

@@ -46,7 +46,7 @@ export default function LaunchQuishingForm({
     targets?: number;
   } | null>(null);
 
-  // Validation live cote client (defense en profondeur — le server re-valide).
+  // Validation live cote client (defense en profondeur - le server re-valide).
   // Si l'input est vide, pas d'erreur (= utilisera le defaut). Sinon, on
   // applique la meme regle stricte que cote server (lib/quishing/
   // ssid-validation.ts).
@@ -171,7 +171,7 @@ export default function LaunchQuishingForm({
         </div>
       </div>
 
-      {/* Input SSID Wi-Fi custom — uniquement pour le template WIFI.
+      {/* Input SSID Wi-Fi custom - uniquement pour le template WIFI.
           Validation cote client (defense en profondeur, le server re-valide
           avec la meme regle stricte). */}
       {selected === "QR_FAKE_WIFI" && (
@@ -182,7 +182,7 @@ export default function LaunchQuishingForm({
           >
             Nom du Wi-Fi (SSID) affiché sur l&apos;affiche
             <span className="ml-2 text-xs font-normal text-gray-500">
-              (facultatif — defaut : {DEFAULT_WIFI_SSID})
+              (facultatif - defaut : {DEFAULT_WIFI_SSID})
             </span>
           </label>
           <input

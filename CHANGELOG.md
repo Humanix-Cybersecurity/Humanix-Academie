@@ -1,4 +1,4 @@
-# Changelog — Humanix Académie
+# Changelog - Humanix Académie
 
 Toutes les évolutions notables du produit, classées par version. Conforme
 [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/) +
@@ -6,7 +6,7 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
-## [Unreleased] — sur `main` (non taggé)
+## [Unreleased] - sur `main` (non taggé)
 
 Cycle post-v1.2.0 : exposition numérique & OSINT souverains, hub conformité
 multi-référentiels, certificat au nom réel, et une série de durcissements
@@ -19,9 +19,9 @@ sécurité + fixes de catalogue prod. Déjà déployé en production depuis `mai
 Brique « Suis-je exposé ? » pour outiller la personne sans jamais conserver de
 donnée personnelle (anti-doxxing par conception).
 
-- **Outil public `/exposition`** : 3 auto-diagnostics — mot de passe (k-anonymity
+- **Outil public `/exposition`** : 3 auto-diagnostics - mot de passe (k-anonymity
   Pwned Passwords, le mot de passe ne quitte jamais le navigateur en clair),
-  email et téléphone — + **score d'exposition** affiché RGAA. APIs éphémères,
+  email et téléphone - + **score d'exposition** affiché RGAA. APIs éphémères,
   **aucune PII conservée**, aucun compte requis.
 - **Parcours auto-OSINT guidé en 4 phases** : checklist pour rechercher ses
   propres traces (moteurs, réseaux, data brokers/Pappers, métadonnées photo),
@@ -32,7 +32,7 @@ donnée personnelle (anti-doxxing par conception).
   LinkedIn, métadonnées photo, réseaux & famille, data brokers, défense OSINT.
 - **Stats communautaires anonymisées** (agrégats, 0 PII individuelle).
 - **Veille d'exposition B2B `/admin/exposition`** (Enterprise) : surveillance de
-  l'exposition des collaborateurs sur le domaine du tenant — **gardée OFF par
+  l'exposition des collaborateurs sur le domaine du tenant - **gardée OFF par
   défaut** (triple garde), activation conditionnée à un DPA + AIPD + notice
   salariés, propriété du domaine prouvée par match sur un email vérifié du
   tenant. Reporting de posture (NIS2 art. 21 / RGPD art. 32) + exports SIEM
@@ -55,7 +55,7 @@ donnée personnelle (anti-doxxing par conception).
   renseignés**, sinon il retombe sur le pseudo (comportement historique
   préservé). Helper `certificateName()` + tests.
 
-#### 🧭 SUPERADMIN — bypass opérateur
+#### 🧭 SUPERADMIN - bypass opérateur
 
 - `planHasFeature(plan, feature, role?)` : le rôle SUPERADMIN (opérateur
   plateforme) outrepasse les gates de plan, sans changer le comportement des
@@ -81,7 +81,7 @@ donnée personnelle (anti-doxxing par conception).
 ### Security
 
 - **SSRF** : épinglage de l'IP résolue pour les fetch sortants vers des URL
-  tenant/admin (anti DNS-rebinding, ferme le TOCTOU résiduel) — cf.
+  tenant/admin (anti DNS-rebinding, ferme le TOCTOU résiduel) - cf.
   `lib/net/pinned-agent`.
 - **Sanitisation HTML serveur** des templates de phishing (DOMPurify,
   `lib/sanitize-html.ts`).
@@ -90,23 +90,23 @@ donnée personnelle (anti-doxxing par conception).
 
 ---
 
-## [1.2.0] — 2026-05-22 🧠 Sprint AI Literacy + Backup self-host + License pubkey prod
+## [1.2.0] - 2026-05-22 🧠 Sprint AI Literacy + Backup self-host + License pubkey prod
 
 Cycle de release post-launch v1.0.0 / v1.1.0. Trois chantiers majeurs + une série de fixes opérationnels.
 
 ### Added
 
-#### 🧠 Sprint "AI Literacy" — première position FR sur la maîtrise de l'IA
+#### 🧠 Sprint "AI Literacy" - première position FR sur la maîtrise de l'IA
 
 Suite au feedback Digital 113 Members Day : forte demande des entreprises FR pour comprendre l'IA générative sans alarmisme. Positionnement : *"L'IA ne te remplacera pas. Quelqu'un qui sait l'utiliser, oui."*
 
 - **Landing publique `/maitrise-ia`** : hero soft + 3 études citées (MIT Media Lab *"Your Brain on ChatGPT"* 2025, Stanford HAI 2025, AI Act EU 2026) + preview 12 épisodes + section dirigeants + section Cyber-Famille. SEO complet (canonical, OG).
 - **3 articles Cyber-Famille** (CC BY-SA dans `library-seed-demo.ts`) :
-  - 👵 *"Mamie, ChatGPT n'est pas Google"* — règle santé/argent/papiers
-  - 🎓 *"Quand ton ado utilise ChatGPT pour ses devoirs"* — méthode 3 niveaux d'usage
-  - 🎭 *"Mon proche est tombé pour un deepfake"* — règle "raccrocher + rappeler"
+  - 👵 *"Mamie, ChatGPT n'est pas Google"* - règle santé/argent/papiers
+  - 🎓 *"Quand ton ado utilise ChatGPT pour ses devoirs"* - méthode 3 niveaux d'usage
+  - 🎭 *"Mon proche est tombé pour un deepfake"* - règle "raccrocher + rappeler"
 - **Module admin `/admin/maturite-ia`** : questionnaire 8 axes (charte IA, formation, shadow AI, données sensibles, supervision humaine, deepfake, AI Act, audit) → score 0-100 + benchmark sectoriel (médiane PME FR = 42/100) + plan d'action priorisé live + export JSON. Persistance localStorage en V1.
-- **Saison "Maîtrise de l'IA générative"** — 12 épisodes au catalogue, 3 MDX rédigés en MVP (E01 hallucinations, E03 atrophie MIT 2025, E04 mes données partent où). Sources MIT/Stanford/ANSSI/AI Act.
+- **Saison "Maîtrise de l'IA générative"** - 12 épisodes au catalogue, 3 MDX rédigés en MVP (E01 hallucinations, E03 atrophie MIT 2025, E04 mes données partent où). Sources MIT/Stanford/ANSSI/AI Act.
 
 #### 💾 Backup/restore self-host avec chiffrement client-side
 
@@ -145,7 +145,7 @@ Postgres tourne en self-host (container Docker non-exposé) sans snapshots manag
 
 - **Hero homepage Option B** : *"Pas un cours d'expert..."* → *"Reconnaître les arnaques numériques avant de cliquer : phishing, faux SMS, QR codes piégés, faux profils. Un mini-épisode par semaine, en français, pour ton équipe et ta famille. Sans jargon, sans peur, sans expert."*
 - **`SIGNUP_ALLOW_SELF_SERVICE`** documenté dans `.env.example` (sortait de la whitelist secrète).
-- **Mollie clarifié comme entreprise UE** (Amsterdam, régulé DNB, PSD2) dans CGV, confidentialité, DPO, page DAF, admin billing, form souscrire, COMPLIANCE.md, README. La sed-migration Payplug→Mollie avait laissé "Mollie SA (France 🇫🇷)" — corrigé en "Mollie B.V. (UE 🇪🇺, Amsterdam)".
+- **Mollie clarifié comme entreprise UE** (Amsterdam, régulé DNB, PSD2) dans CGV, confidentialité, DPO, page DAF, admin billing, form souscrire, COMPLIANCE.md, README. La sed-migration Payplug→Mollie avait laissé "Mollie SA (France 🇫🇷)" - corrigé en "Mollie B.V. (UE 🇪🇺, Amsterdam)".
 
 ### Fixed
 
@@ -159,7 +159,7 @@ Postgres tourne en self-host (container Docker non-exposé) sans snapshots manag
 
 - 0 vulnérabilité Dependabot ouverte au moment du release.
 - License privkey stockée hors-bande (3 supports géographiquement séparés).
-- Backup BDD chiffré client-side avant transit (age) — credentials FTP peuvent fuiter sans compromettre les données.
+- Backup BDD chiffré client-side avant transit (age) - credentials FTP peuvent fuiter sans compromettre les données.
 
 ### Documentation
 
@@ -169,7 +169,7 @@ Postgres tourne en self-host (container Docker non-exposé) sans snapshots manag
 
 ---
 
-## [1.1.0] — 2026-05-20 💳 Migration provider de paiement Payplug → Mollie
+## [1.1.0] - 2026-05-20 💳 Migration provider de paiement Payplug → Mollie
 
 ### Changed
 
@@ -188,7 +188,7 @@ Postgres tourne en self-host (container Docker non-exposé) sans snapshots manag
 
 - ❌ Retirés : `PAYPLUG_SECRET_KEY`, `PAYPLUG_WEBHOOK_SECRET`, `PAYPLUG_PLAN_STARTER`, `PAYPLUG_PLAN_PRO`, `NEXT_PUBLIC_PAYPLUG_AVAILABLE`
 - ✅ Ajoutés : `MOLLIE_API_KEY` (test_* ou live_*), `NEXT_PUBLIC_MOLLIE_AVAILABLE`
-- Note : Mollie n'utilise pas de "plan IDs" — on calcule le montant à la volée depuis seats × prix × billing cycle (cf. `mollieAmountForPlan()`).
+- Note : Mollie n'utilise pas de "plan IDs" - on calcule le montant à la volée depuis seats × prix × billing cycle (cf. `mollieAmountForPlan()`).
 
 #### Méthodes de paiement activables côté Mollie dashboard
 
@@ -207,7 +207,7 @@ Postgres tourne en self-host (container Docker non-exposé) sans snapshots manag
 
 ---
 
-## [1.0.1] — 2026-05-17 🔧 Hotfix popup coordinator
+## [1.0.1] - 2026-05-17 🔧 Hotfix popup coordinator
 
 ### Fixed
 
@@ -216,19 +216,19 @@ Postgres tourne en self-host (container Docker non-exposé) sans snapshots manag
   - Fix : `useMemo` pour la value + pattern subscription explicite + split du hook `usePopupSlot` en 3 effects indépendants (subscribe / setSlot / removeSlot).
   - Cooldown 1.5s déclenché uniquement sur transitions réelles `ready` true→false (plus à chaque update).
 
-Aucun changement fonctionnel attendu pour l'utilisateur final — la mécanique interne du coordinateur a été refondue, l'UX (sequencing, cooldown, suppression sur landing) reste identique à v1.0.0.
+Aucun changement fonctionnel attendu pour l'utilisateur final - la mécanique interne du coordinateur a été refondue, l'UX (sequencing, cooldown, suppression sur landing) reste identique à v1.0.0.
 
 Commit : `f019f74` (PR [#562](https://github.com/Humanix-Cybersecurity/Humanix-Academie/pull/562))
 
 ---
 
-## [1.0.0] — 2026-05-21 🚀 LAUNCH OSS PUBLIC
+## [1.0.0] - 2026-05-21 🚀 LAUNCH OSS PUBLIC
 
 > Première version publique sous licence AGPLv3. Tous les chantiers
 > stratégiques sont en place : sécurité Zero-Trust, Pack NIS2 v2, Mode
 > Enquêteur, librairie SEO publique.
 
-### 🏆 Validation externe — Triple A+ (17 mai 2026)
+### 🏆 Validation externe - Triple A+ (17 mai 2026)
 
 Trois audits publics indépendants ont validé la posture sécurité avant le launch :
 
@@ -238,39 +238,39 @@ Trois audits publics indépendants ont validé la posture sécurité avant le la
 | **Security Headers** (Snyk) | **A+** | 6/6 en-têtes HTTP présents (CSP, HSTS, X-Frame, X-Content-Type, Referrer-Policy, Permissions-Policy) |
 | **Qualys SSL Labs** | **A+** | TLS 1.3 · Post-Quantum Cryptography (PQC) key exchange · HSTS long duration |
 
-Tous les rapports sont **rejouables en temps réel** depuis [`/securite/audits-externes`](https://humanix-cybersecurity.fr/securite/audits-externes) — aucune note auto-déclarée.
+Tous les rapports sont **rejouables en temps réel** depuis [`/securite/audits-externes`](https://humanix-cybersecurity.fr/securite/audits-externes) - aucune note auto-déclarée.
 
-### Sécurité — Zero-Trust / Least Privilege (Sprint 1-4)
+### Sécurité - Zero-Trust / Least Privilege (Sprint 1-4)
 
 - **RBAC central** (`requireRole()`) sur 30+ routes API admin, plus de patterns dupliqués
 - **Filtre PII server-side** dans Hex Chat (anti exfiltration via prompt injection)
 - **Client Prisma read-only** dédié aux 5 modules analytiques (forecasts, heatmap, risk-score, at-risk-users, risk-trend) → defense en profondeur SQL
-- **CSP nonce per-request** ([Strict CSP](https://csp.withgoogle.com/docs/strict-csp.html) Google) — suppression effective de `unsafe-inline` pour les navigateurs CSP3-aware
-- **Page publique `/securite/audits-externes`** — Mozilla Observatory, Security Headers, SSL Labs en lecture directe (transparence radicale)
+- **CSP nonce per-request** ([Strict CSP](https://csp.withgoogle.com/docs/strict-csp.html) Google) - suppression effective de `unsafe-inline` pour les navigateurs CSP3-aware
+- **Page publique `/securite/audits-externes`** - Mozilla Observatory, Security Headers, SSL Labs en lecture directe (transparence radicale)
 - **WebAuthn passkey-first UX** sur `/connexion` (préférence mémorisée + badge "Recommandé")
-- **Interface `lib/secrets`** — couche d'abstraction pour intégration Vault / Scaleway Secret Manager (préparation, sans migration forcée)
+- **Interface `lib/secrets`** - couche d'abstraction pour intégration Vault / Scaleway Secret Manager (préparation, sans migration forcée)
 - **Image Docker Postgres custom** `humanix-postgres:secured` qui provisionne automatiquement le rôle SELECT-only au premier boot
 
 → Détails sécurité disponibles sur demande (audit RSSI / due diligence).
 
-### Pack NIS2 v2 — différenciateur GRC
+### Pack NIS2 v2 - différenciateur GRC
 
 - **Diagnostic public 30 questions** `/diagnostic-nis2` (gratuit, sans inscription, RGPD-friendly, mappé sur les 11 articles NIS2)
 - **Score per-article temps réel** pour tenants, basé sur la complétion des saisons mappées (visible dans `/admin/conformite-nis2`)
-- **PDF rapport annuel autorité compétente** (CSIRT / ANSSI) — 3 pages : état des lieux + incidents + sensibilisation + plan + engagement direction
+- **PDF rapport annuel autorité compétente** (CSIRT / ANSSI) - 3 pages : état des lieux + incidents + sensibilisation + plan + engagement direction
 - Mapping `connectors/ciso-assistant-frameworks/mapping-humanix-awareness-to-nis2-directive.yaml` couvrant 11 articles × 12 saisons
 
 → Cf. [`docs/PACK_NIS2_V2.md`](./docs/PACK_NIS2_V2.md)
 
-### Mode Enquêteur Sprint 3 — apprentissage par découverte
+### Mode Enquêteur Sprint 3 - apprentissage par découverte
 
 - **30 enquêtes** (3 OSS + 27 commercial) sur 9 types : Email, SMS, LinkedIn, Facebook, X, Instagram, photos bureau / piggyback / poubelle, Wi-Fi public
 - **5 rangs Détective** (Aspirant → Cyber Sherlock → Maître Détective) avec seuils 60% / 75% / 90% / 100%
 - **Leaderboard 30j** par tenant
-- **Trophées partageables LinkedIn / X / clipboard** — chaque rang débloque une page publique `/badges/detective/<rank>` avec OG image dynamique
+- **Trophées partageables LinkedIn / X / clipboard** - chaque rang débloque une page publique `/badges/detective/<rank>` avec OG image dynamique
 - **Premier mover marché** : aucun concurrent ne propose ce format
 
-### Librairie — vitrine SEO publique
+### Librairie - vitrine SEO publique
 
 - **30 articles** cyber-RH accessibles **sans authentification** (canal d'acquisition organique)
 - **Métadonnées SEO complètes** : `generateMetadata` par article, JSON-LD `schema.org/Article`, sitemap dynamique top 500 par viewCount
@@ -292,7 +292,7 @@ Tous les rapports sont **rejouables en temps réel** depuis [`/securite/audits-e
 
 ### Documentation
 
-- [`docs/PACK_NIS2_V2.md`](./docs/PACK_NIS2_V2.md) — runbook Pack NIS2 v2
+- [`docs/PACK_NIS2_V2.md`](./docs/PACK_NIS2_V2.md) - runbook Pack NIS2 v2
 - Rapport audit public mis à jour **v1.5** (`/securite/rapport-audit`)
 
 ### Tests
@@ -308,54 +308,54 @@ Tous les rapports sont **rejouables en temps réel** depuis [`/securite/audits-e
 
 ---
 
-## [0.3.x] — mai 2026 (pré-launch)
+## [0.3.x] - mai 2026 (pré-launch)
 
-### Sprint 4 — Mode Enquêteur profils (PR #538)
+### Sprint 4 - Mode Enquêteur profils (PR #538)
 - Profils publics X (`XProfileMockup`) + Instagram (`InstagramProfileMockup`)
 - Scène Wi-Fi public
 
-### Sprint 3 — Refonte cosy (PRs #429-#437)
+### Sprint 3 - Refonte cosy (PRs #429-#437)
 - AdminDashboard 1357 → 147 lignes (Sprint 2)
 - Pages admin > 300 lignes : 6 → 0
 - Quick Setup Wizard 4 écrans
 - Hub `/ressources` (regroupe Cyber-météo, Observatoire fuites, Anecdotes, Audit flash, Librairie, Urgence cyber)
 - Refonte page d'accueil 591 → 62 lignes
 
-### Sprint 5 — Télémétrie + cookies RGPD (PR #439)
+### Sprint 5 - Télémétrie + cookies RGPD (PR #439)
 - Bandeau cookie CNIL 2020-091 (parité stricte Accepter / Refuser)
 - Plausible Cloud uniquement avec consentement explicite
 
 ---
 
-## [0.2.x] — avril 2026
+## [0.2.x] - avril 2026
 
-### Phase 13 — Connecteurs souverains FR
+### Phase 13 - Connecteurs souverains FR
 - Sekoia.io (SIEM/XDR)
 - HarfangLab (EDR)
 - Mailinblack / Vade Secure (anti-phishing)
 
-### Phase 12 — Levier commercial PME FR
-- Lucca (HR souverain) — SCIM v2 auto-provisioning
-- GLPI (ITSM open-source) — bridge webhook → tickets
-- CyberMalveillance.gouv.fr — page liaison
+### Phase 12 - Levier commercial PME FR
+- Lucca (HR souverain) - SCIM v2 auto-provisioning
+- GLPI (ITSM open-source) - bridge webhook → tickets
+- CyberMalveillance.gouv.fr - page liaison
 
-### Phase 11 — Connecteurs SIEM mainstream
+### Phase 11 - Connecteurs SIEM mainstream
 - Splunk CIM v1 + connecteur Python HEC
 - Microsoft Sentinel CEF + workbook clé en main
 
-### Phase 10 — Standards pivots interop
+### Phase 10 - Standards pivots interop
 - OSCAL v1.1.2 (NIST Assessment Results)
 - Webhook outbound `evidence.exported` (HMAC-SHA256)
 - SCIM v2 complet (Entra / Okta / Google / Keycloak)
 
-### Phase 9 — Passerelle CISO Assistant (intuitem)
+### Phase 9 - Passerelle CISO Assistant (intuitem)
 - Mapping ISO 27001:2022, NIS2, RGPD, ANSSI HG, NIST CSF
 - Endpoint `/api/v1/evidence-export` authentifié + rate-limited
 - Page `/integrations/ciso-assistant` + connecteur Python MIT autonome
 
 ---
 
-## [0.1.x] — janvier-mars 2026
+## [0.1.x] - janvier-mars 2026
 
 ### Bootstrap & assainissement
 - Stack Docker durcie (HAProxy 2.9-alpine, multi-stage, réseaux segmentés)

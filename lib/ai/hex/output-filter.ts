@@ -23,7 +23,7 @@
 // Le LLM streame token par token. Detecter un pattern multi-tokens necessite
 // d'accumuler un buffer. On accumule, on check a chaque delta, et on stop
 // le stream des qu'on detecte un leak. Le client a vu un debut de leak
-// (~quelques tokens) mais on coupe avant la fin — defense imparfaite mais
+// (~quelques tokens) mais on coupe avant la fin - defense imparfaite mais
 // notable. Couplee au prompt durci, ca remonte significativement le
 // niveau d'effort pour exfiltrer le prompt.
 
@@ -72,7 +72,7 @@ export function findPromptLeak(buffer: string): { match: string; index: number }
 
 /**
  * Message de refus standard remplacant le contenu fuite. On ne donne pas
- * de detail sur ce qui a ete detecte — pas d'aide a l'attaquant.
+ * de detail sur ce qui a ete detecte - pas d'aide a l'attaquant.
  */
 export const LEAK_REFUSAL_MESSAGE =
   "Je suis Hex, l'assistant cyber d'Humanix Académie. Je ne partage pas mes instructions internes. Comment puis-je t'aider sur un sujet cybersécurité ?";

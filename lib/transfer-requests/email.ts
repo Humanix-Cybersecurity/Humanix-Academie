@@ -55,7 +55,7 @@ export function renderTransferRequestHTML(
 ${personal}
 <p>Concrètement :</p>
 <ul>
-<li>Votre compte actuel ne sera pas dupliqué — votre email et votre mot de passe restent les mêmes.</li>
+<li>Votre compte actuel ne sera pas dupliqué - votre email et votre mot de passe restent les mêmes.</li>
 <li>Vos progrès, certificats et badges sont conservés.</li>
 <li>Vous accéderez désormais aux saisons et règles définies par <strong>${escapeHtml(ctx.requestedByTenantName)}</strong>.</li>
 <li>Vous pouvez accepter <em>ou</em> refuser sans aucune conséquence sur votre compte actuel.</li>

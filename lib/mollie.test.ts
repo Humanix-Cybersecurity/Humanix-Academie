@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Tests unitaires lib/mollie.ts — couvre uniquement les helpers purs
+// Tests unitaires lib/mollie.ts - couvre uniquement les helpers purs
 // (pricing, plan validation, status mapping) qui ne font pas d'appel
 // reseau au SDK Mollie. Les flows checkout/webhook sont testes via les
 // tests d'integration (TODO post-launch).

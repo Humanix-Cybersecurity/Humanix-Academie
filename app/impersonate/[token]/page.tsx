@@ -14,7 +14,7 @@ import ImpersonateConsentClient from "./ImpersonateConsentClient";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Demande d'accès en lecture — Humanix Académie",
+  title: "Demande d'accès en lecture - Humanix Académie",
   description:
     "Confirmez si vous souhaitez autoriser un administrateur à consulter votre compte en lecture seule.",
 };

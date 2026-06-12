@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: AGPL-3.0-or-later
 # =============================================================================
-# scripts/start.sh — Demarrage assiste de la stack docker en mode dev
+# scripts/start.sh - Demarrage assiste de la stack docker en mode dev
 # -----------------------------------------------------------------------------
 # Ce que fait ce script :
 #   1. Detecte l'OS (macOS / Linux / autre)

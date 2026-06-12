@@ -29,7 +29,7 @@ objects:
       source_framework_urn: urn:humanix:risk:framework:humanix-awareness-catalog-v1
       target_framework_urn: urn:intuitem:risk:framework:anssi-guide-hygiene
       requirement_mappings:
-        # Règle 1 — Former les équipes opérationnelles à la sécurité (CŒUR)
+        # Règle 1 - Former les équipes opérationnelles à la sécurité (CŒUR)
         - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:cyber-dev
           target_requirement_urn: urn:intuitem:risk:req_node:anssi-guide-hygiene:1
           relationship: equal
@@ -40,7 +40,7 @@ objects:
           target_requirement_urn: urn:intuitem:risk:req_node:anssi-guide-hygiene:1
           relationship: equal
 
-        # Règle 2 — Sensibiliser les utilisateurs aux bonnes pratiques (CŒUR)
+        # Règle 2 - Sensibiliser les utilisateurs aux bonnes pratiques (CŒUR)
         - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:phishing
           target_requirement_urn: urn:intuitem:risk:req_node:anssi-guide-hygiene:2
           relationship: equal
@@ -57,7 +57,7 @@ objects:
           target_requirement_urn: urn:intuitem:risk:req_node:anssi-guide-hygiene:2
           relationship: equal
 
-        # Règle 2.R — Sensibilisation renforcée (cas haut niveau)
+        # Règle 2.R - Sensibilisation renforcée (cas haut niveau)
         - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:fraude-president
           target_requirement_urn: urn:intuitem:risk:req_node:anssi-guide-hygiene:2.r
           relationship: equal
@@ -68,17 +68,17 @@ objects:
           target_requirement_urn: urn:intuitem:risk:req_node:anssi-guide-hygiene:2.r
           relationship: equal
 
-        # Règle 3 — Maîtriser les risques de l'infogérance / supply chain
+        # Règle 3 - Maîtriser les risques de l'infogérance / supply chain
         - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:supply-chain
           target_requirement_urn: urn:intuitem:risk:req_node:anssi-guide-hygiene:3
           relationship: intersect
 
-        # Règle 6 — Procédures d'arrivée, départ, changement (RH)
+        # Règle 6 - Procédures d'arrivée, départ, changement (RH)
         - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:cyber-rh
           target_requirement_urn: urn:intuitem:risk:req_node:anssi-guide-hygiene:6
           relationship: intersect
 
-        # Règle 7 — Connexion réseau (BYOD, devices contrôlés)
+        # Règle 7 - Connexion réseau (BYOD, devices contrôlés)
         - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:mobile-smartphone
           target_requirement_urn: urn:intuitem:risk:req_node:anssi-guide-hygiene:7
           relationship: intersect

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Live Mode v2.0 — mini-sync incrementale event-driven.
+// Live Mode v2.0 - mini-sync incrementale event-driven.
 //
 // PRINCIPE
 // ========

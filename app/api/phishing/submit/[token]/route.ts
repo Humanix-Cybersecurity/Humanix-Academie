@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// POST /api/phishing/submit/[token] — Capture de submission de formulaire fake.
+// POST /api/phishing/submit/[token] - Capture de submission de formulaire fake.
 //
 // CONTEXT (Phishing Engine v2, mai 2026) :
 //   La landing /phishing/[token] presente un formulaire de fake login (email +
@@ -8,7 +8,7 @@
 //   test, le form POST ici. On marque le PhishingResult comme SUBMITTED et on
 //   redirige vers la page debrief educative.
 //
-// SECURITE / RGPD — REGLE CARDINALE :
+// SECURITE / RGPD - REGLE CARDINALE :
 //   On NE STOCKE JAMAIS la valeur des champs soumis. Meme hashees, meme
 //   chiffrees. Le user a tape son VRAI mot de passe en pensant se connecter
 //   a Microsoft -- le capturer serait :

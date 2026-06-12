@@ -1,4 +1,4 @@
-# Politique de sécurité — Humanix Académie
+# Politique de sécurité - Humanix Académie
 
 Humanix Cybersecurity prend la sécurité de ses utilisateurs et de la
 communauté très au sérieux. Cette politique décrit comment signaler une
@@ -13,10 +13,10 @@ réponse, et comment nous traitons les chercheurs en sécurité.
 | ------------------------------- | ------------- | ----------------------------------- |
 | `main` (en développement)       | Active        | Oui, immédiat                       |
 | `1.x` (dernière release stable) | Active        | Oui, dans les 7 jours pour critique |
-| `0.x` (anciennes pre-release)   | Non supportée | Non — migrer vers `1.x`             |
+| `0.x` (anciennes pre-release)   | Non supportée | Non - migrer vers `1.x`             |
 
 Une version est supportée pendant **12 mois** après la sortie de la version
-majeure suivante. Au-delà, elle ne reçoit plus de patches sécurité — la mise
+majeure suivante. Au-delà, elle ne reçoit plus de patches sécurité - la mise
 à jour est nécessaire.
 
 ---
@@ -59,7 +59,7 @@ PGP publique :
 - **Téléchargement** : `https://humanix-cybersecurity.fr/security/pgp.asc`
 
 Si la clé n'est pas encore en ligne, envoie en clair à
-`security@humanix-cybersecurity.fr` — l'adresse est surveillée et restreinte.
+`security@humanix-cybersecurity.fr` - l'adresse est surveillée et restreinte.
 
 ---
 
@@ -70,13 +70,13 @@ Si la clé n'est pas encore en ligne, envoie en clair à
 | Accusé de réception du rapport     | **24 h** ouvrées              |
 | Triage initial (gravité, scope)    | **72 h** ouvrées              |
 | Plan d'action communiqué           | **7 jours** ouvrés            |
-| Patch publié — Critique (CVSS ≥ 9) | **7 jours**                   |
-| Patch publié — Élevé (CVSS 7-8.9)  | **30 jours**                  |
-| Patch publié — Moyen (CVSS 4-6.9)  | **60 jours**                  |
-| Patch publié — Bas (CVSS < 4)      | **prochaine release mineure** |
+| Patch publié - Critique (CVSS ≥ 9) | **7 jours**                   |
+| Patch publié - Élevé (CVSS 7-8.9)  | **30 jours**                  |
+| Patch publié - Moyen (CVSS 4-6.9)  | **60 jours**                  |
+| Patch publié - Bas (CVSS < 4)      | **prochaine release mineure** |
 
 Une fois le patch livré, nous publions un **avis de sécurité** (GitHub
-Security Advisory) avec ton crédit (ou ton anonymat si tu préfères) — cf.
+Security Advisory) avec ton crédit (ou ton anonymat si tu préfères) - cf.
 section Hall of Fame ci-dessous.
 
 ---
@@ -219,6 +219,6 @@ catégorie Security.
 
 ---
 
-_Politique de sécurité v1.0 — Mai 2026 · Sera revue annuellement._
+_Politique de sécurité v1.0 - Mai 2026 · Sera revue annuellement._
 
 _Humanix Cybersecurity_

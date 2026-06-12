@@ -39,7 +39,7 @@ async function requireAdmin() {
  * suggestions de saisons (active + obligatoires). Retourne le nombre
  * de saisons activees / rendues obligatoires pour affichage.
  *
- * L'admin peut ensuite ajuster manuellement via /admin/modules — le
+ * L'admin peut ensuite ajuster manuellement via /admin/modules - le
  * wizard ne fait qu'un setup initial intelligent.
  */
 export async function setupApplyProfile(profile: SetupProfile) {

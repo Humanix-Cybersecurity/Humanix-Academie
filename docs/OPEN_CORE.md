@@ -100,11 +100,11 @@ Si tu veux héberger pour un client en marque blanche commercialement, c'est pos
 Humanix Cybersecurity SASU finance le développement via plusieurs sources
 complémentaires :
 
-- **Cloud managé** — instance SaaS sur `humanix-cybersecurity.fr/tarifs`
-- **Audit + formation** — RSSI externalisé, audit cyber, formation sur site
-- **Pack NIS2 turnkey** — service consulting + livraison documentaire
-- **Marketplace** — revenue share avec contributeurs experts
-- **Dual-licensing** — pour les éditeurs qui veulent intégrer sans assumer AGPL
+- **Cloud managé** - instance SaaS sur `humanix-cybersecurity.fr/tarifs`
+- **Audit + formation** - RSSI externalisé, audit cyber, formation sur site
+- **Pack NIS2 turnkey** - service consulting + livraison documentaire
+- **Marketplace** - revenue share avec contributeurs experts
+- **Dual-licensing** - pour les éditeurs qui veulent intégrer sans assumer AGPL
 
 ---
 
@@ -129,7 +129,7 @@ Si tu veux forker, **fais-le ouvertement** : ajoute ton repo dans la marketplace
 
 Le code applicatif est libre AGPLv3. Le **contenu pédagogique** premium
 (scénarios crafted par experts, parcours persona-spécifiques) représente
-l'effort éditorial qui finance le projet — il est licencié séparément
+l'effort éditorial qui finance le projet - il est licencié séparément
 sous licence commerciale, dans un dépôt distinct.
 
 Solution : **2 repos distincts** + auto-bascule au runtime.
@@ -146,7 +146,7 @@ Solution : **2 repos distincts** + auto-bascule au runtime.
 Le code détecte la présence du contenu privé et bascule sans config :
 
 ```ts
-// lib/episodes.ts — résolution du content root
+// lib/episodes.ts - résolution du content root
 function resolveContentRoot(): string | null {
   if (fs.existsSync(CONTENT_ROOT_PRO)) {
     const entries = fs.readdirSync(CONTENT_ROOT_PRO, { withFileTypes: true })
@@ -157,7 +157,7 @@ function resolveContentRoot(): string | null {
   return null;
 }
 
-// prisma/seed-data-loader.ts — résolution du catalog au seeding
+// prisma/seed-data-loader.ts - résolution du catalog au seeding
 export function loadCatalogSaisons() {
   const pro = tryRequire("./catalog-saisons");
   if (pro?.CATALOG_SAISONS?.length) {
@@ -173,9 +173,9 @@ Au seeding, le log indique la source :
 
 ### Workflow opérateur (Humanix Cybersecurity)
 
-**Étape 1 — Créer le repo privé `humanix-content-pro` sur GitHub** (une seule fois).
+**Étape 1 - Créer le repo privé `humanix-content-pro` sur GitHub** (une seule fois).
 
-**Étape 2 — Migrer le contenu commercial** :
+**Étape 2 - Migrer le contenu commercial** :
 
 Note importante sur la structure cible : on copie **le contenu** de `content/saisons/` (les slugs de saisons) directement sous `content-pro/content/`, sans niveau `saisons/` intermédiaire. Ça simplifie l'arborescence du repo privé (qui n'a qu'un seul type de contenu) et le symlink côté public devient plus court.
 
@@ -206,11 +206,11 @@ humanix-content-pro/
         └── seed-data.ts
 ```
 
-**Étape 3 — Activer le `.gitignore` Open Core dans le repo public** (décommenter le bloc dédié, cf. `.gitignore`).
+**Étape 3 - Activer le `.gitignore` Open Core dans le repo public** (décommenter le bloc dédié, cf. `.gitignore`).
 
-⚠️ La règle pour `content/saisons` doit être **sans slash final** (`/content/saisons`, pas `/content/saisons/`). Avec slash final, git ne matche que les dossiers, alors qu'après l'étape 5 c'est un symlink — donc un fichier pour git.
+⚠️ La règle pour `content/saisons` doit être **sans slash final** (`/content/saisons`, pas `/content/saisons/`). Avec slash final, git ne matche que les dossiers, alors qu'après l'étape 5 c'est un symlink - donc un fichier pour git.
 
-**Étape 4 — Retirer du tracking git** (les fichiers restent sur le disque) :
+**Étape 4 - Retirer du tracking git** (les fichiers restent sur le disque) :
 
 ```bash
 git rm --cached -r content/saisons
@@ -221,7 +221,7 @@ git rm --cached lib/anecdotes/seed-data.ts
 git commit -m "open core: split commercial content to private repo"
 ```
 
-**Étape 5 — Monter le contenu privé en prod via submodule + symlinks** :
+**Étape 5 - Monter le contenu privé en prod via submodule + symlinks** :
 
 ```bash
 # 1. Déclarer le submodule (clone le repo privé sous content-pro/)
@@ -246,7 +246,7 @@ readlink -f content/saisons \
 
 ⚠️ Pièges constatés à éviter :
 1. **Le 1er symlink pointe vers `../content-pro/content`** (pas `../content-pro/content/saisons`) parce que le repo privé n'a pas de niveau `saisons/` intermédiaire (cf. Étape 2).
-2. **Le préfixe est `../`** (remonter d'un niveau), pas `content-pro/...` direct — sinon la cible se résout vers `content/content-pro/...` qui n'existe pas.
+2. **Le préfixe est `../`** (remonter d'un niveau), pas `content-pro/...` direct - sinon la cible se résout vers `content/content-pro/...` qui n'existe pas.
 3. **Pour `lib/anecdotes/seed-data.ts`, c'est `../../`** (deux niveaux à remonter) puisque le symlink vit à deux niveaux de profondeur.
 
 Alternatives au submodule :
@@ -299,13 +299,13 @@ docker compose build --no-cache && docker compose up -d
 
 Le repo `Humanix-Cybersecurity/humanix-content-pro` est **privé** : il contient l'asset commercial principal (33 saisons / 216 épisodes + librairie + marketplace + anecdotes). Trois cas se présentent :
 
-### Cas 1 — Cloud SaaS sur `humanix-cybersecurity.fr` (zero action)
-Tu n'as rien à faire : le contenu commercial est servi par l'instance gérée. Le repo privé n'est même pas exposé — c'est Humanix qui opère.
+### Cas 1 - Cloud SaaS sur `humanix-cybersecurity.fr` (zero action)
+Tu n'as rien à faire : le contenu commercial est servi par l'instance gérée. Le repo privé n'est même pas exposé - c'est Humanix qui opère.
 
-### Cas 2 — Fork OSS pur (zero action)
+### Cas 2 - Fork OSS pur (zero action)
 Tu clones uniquement le repo public. La plateforme tourne avec les **5 saisons démo CC BY-SA** livrées dans `content/saisons-demo/`. Aucune licence ni démarche requise. Tu peux développer **ton propre catalogue** sous `content/saisons/` (l'app le détectera automatiquement et l'utilisera à la place des démos).
 
-### Cas 3 — Self-host Enterprise avec contenu Humanix complet
+### Cas 3 - Self-host Enterprise avec contenu Humanix complet
 Tu veux héberger la plateforme **chez toi** mais avec le catalogue Humanix complet (par exemple : groupe avec contraintes de souveraineté, secteur défense, OPEX critique). C'est un cas **commercial sous contrat** :
 
 1. **Souscription** : tu signes un contrat de licence Humanix Enterprise (`contact@humanix-cybersecurity.fr`). Le contrat précise la durée, le nombre d'utilisateurs et les conditions de mise à jour du contenu.

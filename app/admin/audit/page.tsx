@@ -125,7 +125,7 @@ export default async function AdminAuditPage() {
                       )}
                     </td>
                     <td className="px-2 py-2 max-w-[200px] truncate text-gray-600 dark:text-gray-300">
-                      {row.targetLabel ?? row.targetId ?? "—"}
+                      {row.targetLabel ?? row.targetId ?? "-"}
                     </td>
                     <td className="px-2 py-2 max-w-[280px] truncate text-gray-500 dark:text-gray-400">
                       {row.message ?? ""}

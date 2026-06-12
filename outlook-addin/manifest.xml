@@ -22,7 +22,7 @@
   <Version>1.0.0.0</Version>
   <ProviderName>Humanix-Cybersecurity SASU</ProviderName>
   <DefaultLocale>fr-FR</DefaultLocale>
-  <DisplayName DefaultValue="Humanix — Signaler un phishing" />
+  <DisplayName DefaultValue="Humanix - Signaler un phishing" />
   <Description DefaultValue="Bouton 1-clic pour signaler un mail suspect à votre référent cyber et au programme Humanix Académie." />
   <IconUrl DefaultValue="https://humanix-cybersecurity.fr/outlook/icon-64.png" />
   <HighResolutionIconUrl DefaultValue="https://humanix-cybersecurity.fr/outlook/icon-128.png" />

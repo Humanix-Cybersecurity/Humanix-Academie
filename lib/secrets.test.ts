@@ -73,7 +73,7 @@ describe("lib/secrets", () => {
     });
   });
 
-  describe("setSecretResolver — surcharge", () => {
+  describe("setSecretResolver - surcharge", () => {
     it("permet un resolver custom synchrone", () => {
       setSecretResolver((name) => `mocked:${name}`);
       expect(getSecret("ANY")).toBe("mocked:ANY");

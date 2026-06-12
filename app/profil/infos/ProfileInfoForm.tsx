@@ -101,7 +101,7 @@ export default function ProfileInfoForm({
         </div>
       )}
 
-      {/* Email — readonly */}
+      {/* Email - readonly */}
       <div>
         <label
           htmlFor="email"
@@ -138,7 +138,7 @@ export default function ProfileInfoForm({
         >
           {emailVerified
             ? "Ton email est vérifié. C'est l'identifiant utilisé pour la connexion."
-            : "Email non vérifié — connecte-toi via le lien magique pour le valider."}
+            : "Email non vérifié - connecte-toi via le lien magique pour le valider."}
         </p>
       </div>
 
@@ -176,7 +176,7 @@ export default function ProfileInfoForm({
         </p>
       </div>
 
-      {/* Identité réelle — optionnelle, pour le certificat */}
+      {/* Identité réelle - optionnelle, pour le certificat */}
       <fieldset className="rounded-xl border border-gray-200 dark:border-slate-700 p-4">
         <legend className="px-2 text-sm font-semibold text-gray-800 dark:text-gray-100">
           Nom sur le certificat{" "}

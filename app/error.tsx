@@ -46,7 +46,7 @@ export default function Error({
             style={{ animationDelay: "220ms" }}
           >
             On n'a pas réussi à charger cette page proprement. Ce n'est pas
-            ta faute, c'est la nôtre. Réessaie une fois — souvent ça suffit.
+            ta faute, c'est la nôtre. Réessaie une fois - souvent ça suffit.
           </p>
 
           <div

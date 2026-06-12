@@ -147,12 +147,12 @@ docker compose exec app npx prisma migrate deploy
 docker compose exec app npx prisma db seed
 
 # Applique les REVOKE chirurgicaux pour le rôle Postgres read-only
-# (Sprint sécurité 2 — defense en profondeur Least Privilege)
+# (Sprint sécurité 2 - defense en profondeur Least Privilege)
 docker compose exec postgres psql -U humanix -d humanix \
   < prisma/sql/post-migration-grants.sql
 ```
 
-> **🛡️ Note sécurité** — L'image Postgres custom `humanix-postgres:secured`
+> **🛡️ Note sécurité** - L'image Postgres custom `humanix-postgres:secured`
 > provisionne automatiquement un rôle Postgres read-only au premier boot
 > (mécanisme Least Privilege). Sur instance existante, applique
 > `prisma/sql/setup-readonly-role.sql` manuellement.

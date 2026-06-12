@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Open Core seed data loader — resout dynamiquement la source des donnees
+// Open Core seed data loader - resout dynamiquement la source des donnees
 // pedagogiques au seeding.
 //
 // 4 surfaces de contenu commercial Humanix Cybersecurity :
@@ -10,7 +10,7 @@
 //                          + curated par Humanix)
 //   4. ANECDOTES          newsletter quotidienne
 //
-// Chacune peut etre absente sur un fork OSS pur — auquel cas on fallback
+// Chacune peut etre absente sur un fork OSS pur - auquel cas on fallback
 // gracieusement :
 //   - CATALOG : on bascule sur le catalog DEMO (2 saisons × 3 episodes,
 //     CC BY-SA, livre dans le repo public).
@@ -19,7 +19,7 @@
 //
 // Mode DEMO (DEMO_MODE=true) : on force le fallback OSS meme si
 // content-pro/ est present. Une instance de demo doit se comporter comme
-// un fork AGPLv3 pur — aucun contenu premium visible, pour ne pas
+// un fork AGPLv3 pur - aucun contenu premium visible, pour ne pas
 // induire un visiteur en erreur ("c'est ce que j'aurai en m'abonnant")
 // et pour proteger la propriete intellectuelle du contenu commercial.
 //
@@ -100,7 +100,7 @@ export function isCommercialCatalogAvailable(): boolean {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function loadLibraryArticles(): any[] {
   // EXCEPTION DEMO_MODE : la librairie est la VITRINE SEO publique de
-  // Humanix. Elle doit etre identique en demo et en prod commerciale —
+  // Humanix. Elle doit etre identique en demo et en prod commerciale -
   // 30 articles complets, indexables par Google sans gating. On ne
   // grise rien et on ne masque rien : c'est notre canal d'acquisition.
   // Cf. app/librairie/page.tsx + app/robots.ts (allow).

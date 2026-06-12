@@ -30,7 +30,7 @@ import {
 } from "@/lib/seo/jsonld";
 
 const SEC_TITLE =
-  "Sécurité & Conformité — Trust Center souverain | Humanix Cybersecurity";
+  "Sécurité & Conformité - Trust Center souverain | Humanix Cybersecurity";
 const SEC_DESC =
   "Trust Center Humanix : hébergement souverain France (Scaleway Paris), chiffrement AES-256, RGPD-by-design, conformité NIS2/DORA, audit public, sous-traitants déclarés, code source AGPLv3 auditable.";
 
@@ -47,7 +47,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sécurité & Conformité — Trust Center souverain",
+    title: "Sécurité & Conformité - Trust Center souverain",
     description:
       "🇫🇷 Hébergement Paris · 🔒 AES-256 · ⚖️ RGPD/NIS2 · 📂 AGPLv3 · 📅 Audit public",
     images: ["/logo-humanix-academie-512.png"],

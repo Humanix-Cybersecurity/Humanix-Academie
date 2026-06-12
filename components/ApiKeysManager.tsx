@@ -181,7 +181,7 @@ export default function ApiKeysManager({ keys }: { keys: Key[] }) {
                   <td className="py-3 text-xs text-gray-500">
                     {k.lastUsedAt
                       ? new Date(k.lastUsedAt).toLocaleDateString("fr-FR")
-                      : "—"}
+                      : "-"}
                   </td>
                   <td className="py-3 text-xs text-gray-500">
                     {k.expiresAt

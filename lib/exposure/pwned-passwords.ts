@@ -44,7 +44,7 @@ async function sha1Hex(input: string): Promise<string | null> {
  * Vérifie si un mot de passe apparaît dans les fuites connues (HIBP).
  * À appeler CÔTÉ CLIENT. Renvoie le nombre d'occurrences (0 = jamais vu).
  *
- * @param password Le mot de passe en clair — ne quitte jamais le navigateur.
+ * @param password Le mot de passe en clair - ne quitte jamais le navigateur.
  */
 export async function checkPasswordPwned(
   password: string,

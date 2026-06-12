@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /auth/error — Page d'erreur Auth.js v5 personnalisee.
+// /auth/error - Page d'erreur Auth.js v5 personnalisee.
 //
 // Pourquoi cette page existe (pentest fix #10, 2026-05-24) :
 //
@@ -88,7 +88,7 @@ export default async function AuthErrorPage({
 }
 
 export const metadata = {
-  title: "Connexion impossible — Humanix Académie",
+  title: "Connexion impossible - Humanix Académie",
   description:
     "Une erreur de connexion s'est produite. Vous pouvez réessayer ou contacter le support.",
   robots: { index: false, follow: false },

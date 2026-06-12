@@ -381,7 +381,7 @@ function findWeakestService(team: CyberscoreTeam[]): {
     { totalDone: number; totalPossible: number; size: number }
   >();
   for (const u of team) {
-    const key = u.service || "—";
+    const key = u.service || "-";
     const cur = byService.get(key) ?? {
       totalDone: 0,
       totalPossible: 0,

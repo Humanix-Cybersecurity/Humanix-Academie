@@ -23,7 +23,7 @@
 //  - Lignes vishing (deepfake +442 % H2 2024), MCP server, agents IA
 //    orchestrateurs, HRM Maturity Model, contenu pedagogique reel.
 //
-// Refresh 16 mai 2026 — ajout des chantiers livres sprint 12-15 :
+// Refresh 16 mai 2026 - ajout des chantiers livres sprint 12-15 :
 //  - CISO Assistant connector v2.2 (17 surfaces : Evidence + PDF Ed25519,
 //    Findings, RiskScenarios, Incidents, Métrologie, Dashboard pré-cuisiné,
 //    Asset Workforce, Threats catalog, Teams, Campaigns, Live Mode, etc.)
@@ -31,8 +31,8 @@
 //    mockups visuels (email, SMS, LinkedIn, Facebook, photo bureau,
 //    piggyback, hotspot Wi-Fi), red flags + faux positifs, débrief IA Hex
 //  - Onboarding & RGPD utilisateurs (catégorie complète) :
-//      * /rejoindre — aiguillage 6 profils
-//      * /signup?plan=starter — self-service 5 sièges gratuits
+//      * /rejoindre - aiguillage 6 profils
+//      * /signup?plan=starter - self-service 5 sièges gratuits
 //      * Rattachement RGPD-safe cross-tenant (anti-énumération)
 //      * Mode « Voir en tant que » read-only avec consentement explicite
 //  - Catalogue mis à jour : 33 saisons / 186 modules / 27 enquêtes / 30
@@ -450,9 +450,9 @@ const ROWS: Row[] = [
   },
   {
     category: "Intégrations",
-    feature: "Connecteur GRC natif (CISO Assistant) — 17 surfaces v2.2",
+    feature: "Connecteur GRC natif (CISO Assistant) - 17 surfaces v2.2",
     humanix: win(
-      "Oui — Evidences + PDF Ed25519, Findings, RiskScenarios, Incidents, Métrologie, Dashboard, Asset Workforce, Threats catalog, Teams, Campaigns, Live Mode temps réel. 24 endpoints OpenAPI alignés.",
+      "Oui - Evidences + PDF Ed25519, Findings, RiskScenarios, Incidents, Métrologie, Dashboard, Asset Workforce, Threats catalog, Teams, Campaigns, Live Mode temps réel. 24 endpoints OpenAPI alignés.",
     ),
     knowbe4: loss("Non"),
     cyberGuru: loss("Non"),
@@ -464,7 +464,7 @@ const ROWS: Row[] = [
     category: "Intégrations",
     feature: "Sync GRC temps réel (event-driven)",
     humanix: win(
-      "Oui — Live Mode debouncé 5 s sur episode.completed, phishing.reported, phishing.user_clicked",
+      "Oui - Live Mode debouncé 5 s sur episode.completed, phishing.reported, phishing.user_clicked",
     ),
     knowbe4: loss("Non (export batch ponctuel)"),
     cyberGuru: loss("Non"),
@@ -604,7 +604,7 @@ const ROWS: Row[] = [
     category: "Mode Enquêteur (formats interactifs)",
     feature: "Enquêtes ludiques à signaux (red flags + faux positifs)",
     humanix: win(
-      "27 enquêtes (3 gratuites + 24 premium) — email, SMS, LinkedIn, Facebook, photo bureau, piggyback parking, hotspot Wi-Fi",
+      "27 enquêtes (3 gratuites + 24 premium) - email, SMS, LinkedIn, Facebook, photo bureau, piggyback parking, hotspot Wi-Fi",
     ),
     knowbe4: loss("Non (modules linéaires)"),
     cyberGuru: loss("Non"),
@@ -615,7 +615,7 @@ const ROWS: Row[] = [
   {
     category: "Mode Enquêteur (formats interactifs)",
     feature: "Mockups visuels haute-fidélité (Outlook, SMS, LinkedIn, FB)",
-    humanix: win("Oui — 7 types de média rendus en composants React natifs"),
+    humanix: win("Oui - 7 types de média rendus en composants React natifs"),
     knowbe4: eq("Capture d'écran statique"),
     cyberGuru: loss("Non"),
     hoxhunt: eq("Email rendu réel via plugin Outlook"),
@@ -625,7 +625,7 @@ const ROWS: Row[] = [
   {
     category: "Mode Enquêteur (formats interactifs)",
     feature: "Débrief IA personnalisé post-quiz (Hex)",
-    humanix: win("Oui — synthèse adaptée au persona, sourcée Mistral souverain"),
+    humanix: win("Oui - synthèse adaptée au persona, sourcée Mistral souverain"),
     knowbe4: loss("Non"),
     cyberGuru: loss("Non"),
     hoxhunt: loss("Non"),
@@ -635,7 +635,7 @@ const ROWS: Row[] = [
   {
     category: "Mode Enquêteur (formats interactifs)",
     feature: "Leaderboard d'équipe et badges gamification",
-    humanix: win("Oui — XP, coins, niveaux, achievements, leaderboard"),
+    humanix: win("Oui - XP, coins, niveaux, achievements, leaderboard"),
     knowbe4: eq("Optimisation engagement via SmartReward"),
     cyberGuru: win("Oui (gamification poussée)"),
     hoxhunt: win("Oui (référence du marché sur engagement)"),
@@ -649,7 +649,7 @@ const ROWS: Row[] = [
   {
     category: "Onboarding & RGPD utilisateurs",
     feature: "Page d'aiguillage 6 profils (curieux, RSSI, Pro, Enterprise, etc.)",
-    humanix: win("Oui — /rejoindre + FAQ cas particuliers"),
+    humanix: win("Oui - /rejoindre + FAQ cas particuliers"),
     knowbe4: loss("Non (formulaire commercial unique)"),
     cyberGuru: loss("Non"),
     hoxhunt: loss("Non"),
@@ -660,7 +660,7 @@ const ROWS: Row[] = [
     category: "Onboarding & RGPD utilisateurs",
     feature: "Self-service tenant gratuit (5 sièges, sans CB)",
     humanix: win(
-      "Oui — /signup?plan=starter, création tenant ADMIN en 2 min, anti-abus (honeypot, rate-limit, kill switch)",
+      "Oui - /signup?plan=starter, création tenant ADMIN en 2 min, anti-abus (honeypot, rate-limit, kill switch)",
     ),
     knowbe4: loss("Non (commercial obligatoire)"),
     cyberGuru: loss("Non (commercial)"),
@@ -672,7 +672,7 @@ const ROWS: Row[] = [
     category: "Onboarding & RGPD utilisateurs",
     feature: "Rattachement RGPD-safe d'un compte existant (cross-tenant)",
     humanix: win(
-      "Oui — mail de demande de rattachement, consentement explicite double-clic, audit complet. Aucune fuite d'existence (anti-énumération)",
+      "Oui - mail de demande de rattachement, consentement explicite double-clic, audit complet. Aucune fuite d'existence (anti-énumération)",
     ),
     knowbe4: loss("Non"),
     cyberGuru: loss("Non"),
@@ -684,7 +684,7 @@ const ROWS: Row[] = [
     category: "Onboarding & RGPD utilisateurs",
     feature: "Mode « Voir en tant que » read-only (debug support, consentement)",
     humanix: win(
-      "Oui — admin demande l'accès par mail, user accepte (double-clic anti-prefetch), session ACTIVE 15min..24h, lecture seule, bandeau visible, révocation à tout moment",
+      "Oui - admin demande l'accès par mail, user accepte (double-clic anti-prefetch), session ACTIVE 15min..24h, lecture seule, bandeau visible, révocation à tout moment",
     ),
     knowbe4: eq("Impersonation full sans consentement utilisateur"),
     cyberGuru: eq("Impersonation full sans consentement"),
@@ -696,7 +696,7 @@ const ROWS: Row[] = [
     category: "Onboarding & RGPD utilisateurs",
     feature: "Audit log complet (toute action sensible tracée)",
     humanix: win(
-      "Oui — 50+ AuditActions (login, invitation, transfert, voir, sync GRC, etc.) consultables sur /admin/audit",
+      "Oui - 50+ AuditActions (login, invitation, transfert, voir, sync GRC, etc.) consultables sur /admin/audit",
     ),
     knowbe4: win("Oui (Enterprise tier)"),
     cyberGuru: eq("Oui (partiel)"),

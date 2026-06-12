@@ -131,7 +131,7 @@ export default function RiskTimeseriesChart({
 
   const deltaLabel =
     summary.delta30d === null
-      ? "—"
+      ? "-"
       : summary.delta30d > 0
         ? `+${summary.delta30d}`
         : `${summary.delta30d}`;
@@ -150,13 +150,13 @@ export default function RiskTimeseriesChart({
             Évolution du score humain
           </h3>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-            {points.length} jour{points.length > 1 ? "s" : ""} de mesures —
+            {points.length} jour{points.length > 1 ? "s" : ""} de mesures -
             seuil vulnérable à 40
           </p>
         </div>
         <div className="text-right">
           <p className="text-3xl font-extrabold tabular-nums text-gray-900 dark:text-gray-100">
-            {summary.current ?? "—"}
+            {summary.current ?? "-"}
           </p>
           <p className={`text-xs font-bold tabular-nums ${deltaColor}`}>
             {deltaLabel} pts sur 30j

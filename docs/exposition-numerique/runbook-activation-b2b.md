@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 
-# Runbook — Activation de la veille d'exposition B2B (Phase 2)
+# Runbook - Activation de la veille d'exposition B2B (Phase 2)
 
 > **État par défaut : INERTE.** Tout le code de la Phase 2 est livré et testé,
 > mais verrouillé. Ce runbook décrit la séquence exacte pour passer de
@@ -14,7 +14,7 @@
 | 1 | DPA art. 28 signé par le tenant | Contrat signé archivé | `Tenant.exposureMonitoringDpaSignedAt` (horodatage, posé via l'UI) |
 | 2 | AIPD instanciée | `aipd-trame.md` complétée + validée DPO | Hors-code (dossier conformité) |
 | 3 | Notice transparence salariés diffusée | `notice-transparence-salaries.md` diffusée + écran d'info | Hors-code (RH/DPO) |
-| 4 | Validation RSSI avant toute notif/assignation | — | `validateAndAssignTraining()` : aucune assignation automatique |
+| 4 | Validation RSSI avant toute notif/assignation | - | `validateAndAssignTraining()` : aucune assignation automatique |
 
 **Si l'une manque → STOP.** Le code reste inerte, c'est volontaire.
 
@@ -60,11 +60,11 @@ Une fois la veille active, le reporting suit automatiquement (mêmes gates) :
   0-100). **Aucune donnée individuelle** n'est persistée dans le snapshot.
 - **Panneau posture** sur `/admin/exposition` : score, compteurs, mini-tendance.
 - **Exports** (boutons admin, gated, audités `EXPOSURE_REPORT_EXPORTED`) :
-  - **Rapport de posture** (`.md`) — cadre **NIS2 art.21 / RGPD art.32** (preuve
+  - **Rapport de posture** (`.md`) - cadre **NIS2 art.21 / RGPD art.32** (preuve
     de mesure de sécurité). ⚠️ Ce n'est **pas** une notification CNIL art.33 :
     une exposition provient d'une fuite chez un tiers, pas d'une violation du
     tenant. Pour une vraie violation interne → module Cyber-Réflexe.
-  - **Export SIEM** (`JSON` / `CEF` ArcSight) — événements `EmployeeExposure`
+  - **Export SIEM** (`JSON` / `CEF` ArcSight) - événements `EmployeeExposure`
     du tenant vers son propre SIEM (couvert par le DPA art.28).
 
 ## 3. Désactivation / kill

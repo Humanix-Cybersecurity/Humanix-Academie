@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 
-# Modèle de notice d'information des salariés — Veille d'exposition numérique
+# Modèle de notice d'information des salariés - Veille d'exposition numérique
 
 > **STATUT : MODÈLE À FAIRE VALIDER JURIDIQUEMENT.** Ce document est un gabarit
 > fourni par Humanix au client (l'employeur). Il **doit** être relu par un
@@ -66,7 +66,7 @@ Vous pouvez également introduire une réclamation auprès de la CNIL.
 Conformément au Code du travail, ce dispositif a fait l'objet « [d'une information /
 d'une consultation] » du Comité Social et Économique (CSE) en date du
 « [date] ». *(À adapter : la consultation préalable du CSE peut être requise
-selon l'ampleur du dispositif — à valider juridiquement.)*
+selon l'ampleur du dispositif - à valider juridiquement.)*
 
 ---
 

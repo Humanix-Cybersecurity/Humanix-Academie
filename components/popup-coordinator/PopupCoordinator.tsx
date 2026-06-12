@@ -15,7 +15,7 @@
 //   - Le hook s'abonne via `subscribe(force)` et se re-render quand un
 //     slot change. Il lit `isAllowed(id)` en render pour decider.
 //   - Cooldown 1.5s applique UNIQUEMENT quand un slot transitionne
-//     ready=true -> false (ou unmount) — pas a chaque setSlot.
+//     ready=true -> false (ou unmount) - pas a chaque setSlot.
 //
 // BUG HISTORIQUE FIXE (commit 9070eb7 -> hotfix) :
 // La 1ere version passait `value={{ register, update, isAllowed }}` au
@@ -147,7 +147,7 @@ export function PopupCoordinatorProvider({
  *
  * @returns true si ce slot est le winner courant (priorite la plus haute
  * parmi les `ready=true`), false sinon. Si aucun Provider n'enveloppe
- * l'arbre, retourne true (graceful fallback — les popups continuent de
+ * l'arbre, retourne true (graceful fallback - les popups continuent de
  * fonctionner independamment).
  */
 export function usePopupSlot(opts: {

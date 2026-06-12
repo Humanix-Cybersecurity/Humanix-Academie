@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// ANECDOTES_SEED_DEMO — 6 incidents cyber publics de 2024, fortement
+// ANECDOTES_SEED_DEMO - 6 incidents cyber publics de 2024, fortement
 // mediatises et sourcables, livres en open source dans le repo public.
 //
 // USAGE : seeding d'une instance en mode DEMO ou d'un fork OSS pur.
@@ -67,7 +67,7 @@ export const ANECDOTES_SEED_DEMO: SeedAnecdote[] = [
     summary:
       "Début février 2024, deux opérateurs de tiers payant (Viamedis et Almerys) annoncent successivement des intrusions par phishing ciblé. 33 millions d'assurés mutuelle concernés : état civil, situation familiale, numéro de sécurité sociale, nom de la mutuelle. La CNIL ouvre une procédure de contrôle.",
     lesson:
-      "Le phishing ciblé d'un compte technicien suffit à compromettre des bases massives. L'authentification multifacteur sur les comptes back-office N'EST PAS optionnelle — c'est le verrou minimal légal pour traiter des données sensibles (CNIL).",
+      "Le phishing ciblé d'un compte technicien suffit à compromettre des bases massives. L'authentification multifacteur sur les comptes back-office N'EST PAS optionnelle - c'est le verrou minimal légal pour traiter des données sensibles (CNIL).",
     miniAction:
       "Audite cette semaine les comptes 'admin' / 'opérateur' de tes outils métier : MFA activée ? Sessions limitées dans le temps ? Logs d'accès consultés ? Si non sur l'un des 3, c'est une priorité.",
     sourceUrl: "https://www.cnil.fr/fr/violations-de-donnees-viamedis-et-almerys-la-cnil-ouvre-des-procedures-de-controle",
@@ -97,7 +97,7 @@ export const ANECDOTES_SEED_DEMO: SeedAnecdote[] = [
     lesson:
       "Un assureur conserve tout : état civil, contrats, sinistres parfois sensibles, IBAN. Un seul compte sous-traitant compromis et tout est exposé. La règle : minimisation (seules les données utiles) + chiffrement au repos systématique.",
     miniAction:
-      "Si tu es client Direct Assurance : vérifie tes mails depuis fin août 2024 pour la notification d'incident. Ne réponds JAMAIS à un mail t'invitant à 'reconfirmer' un RIB ou un mot de passe à la suite de cet incident — c'est un signal de phishing post-fuite.",
+      "Si tu es client Direct Assurance : vérifie tes mails depuis fin août 2024 pour la notification d'incident. Ne réponds JAMAIS à un mail t'invitant à 'reconfirmer' un RIB ou un mot de passe à la suite de cet incident - c'est un signal de phishing post-fuite.",
     sourceUrl: "https://www.lemonde.fr/pixels/article/2024/08/30/cyberattaque-contre-direct-assurance-les-donnees-de-millions-de-clients-derobees_6296973_4408996.html",
     sourceLabel: "Le Monde, 30 août 2024",
     category: AnecdoteCategory.DATA_LEAK,

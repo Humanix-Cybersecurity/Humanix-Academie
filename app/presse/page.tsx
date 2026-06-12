@@ -6,7 +6,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
-const PRESSE_TITLE = "Kit presse — Humanix Académie Community Edition";
+const PRESSE_TITLE = "Kit presse - Humanix Académie Community Edition";
 const PRESSE_DESC =
   "Kit presse Humanix Académie : pitch (30 s / 2 min / 5 min), faits clés, citation fondateur, screenshots, logos téléchargeables, contact dédié journalistes. Launch open source AGPLv3 le 26 mai 2026.";
 
@@ -23,7 +23,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kit presse Humanix Académie — Launch OSS 26 mai 2026",
+    title: "Kit presse Humanix Académie - Launch OSS 26 mai 2026",
     description: PRESSE_DESC,
     images: ["/logo-humanix-academie-512.png"],
   },
@@ -31,7 +31,7 @@ export const metadata = {
 
 const PITCH_30S = `Humanix Académie est la première plateforme française open source de cybersensibilisation pour tous : particuliers, équipes, associations, organisations de toute taille. Distribuée sous licence AGPLv3, hébergée en France, conçue comme la brique humaine complémentaire de l'écosystème souverain (CISO Assistant, OpenCTI, Wazuh). Lancement le 26 mai 2026.`;
 
-const PITCH_2MIN = `90 % des cyberattaques passent par un humain — peu importe la taille de la structure visée, du particulier piégé au grand groupe. 90 % des outils pour former cet humain viennent des États-Unis et coûtent 8 000 € à 30 000 € par an, hors de portée de l'écrasante majorité.
+const PITCH_2MIN = `90 % des cyberattaques passent par un humain - peu importe la taille de la structure visée, du particulier piégé au grand groupe. 90 % des outils pour former cet humain viennent des États-Unis et coûtent 8 000 € à 30 000 € par an, hors de portée de l'écrasante majorité.
 
 Humanix Académie comble ce vide. C'est une plateforme de cybersensibilisation 100 % française, pensée pour s'adapter à tout contexte : un particulier qui veut protéger sa famille, une association qui débute, une équipe de 15 personnes, une PME, une collectivité, un grand groupe. Modules de 5 minutes, gamification, mascotte évolutive, contenu en français, intégrations natives avec les outils français du quotidien (Lucca pour le HR, GLPI pour l'ITSM, Sekoia.io pour le SIEM, HarfangLab pour l'EDR, Mailinblack et Vade pour l'anti-phishing).
 
@@ -39,7 +39,7 @@ Le 26 mai 2026, Humanix-Cybersecurity ouvre l'intégralité du code source de la
 
 Le modèle économique est inspiré des éditeurs OSS français rentables : la plateforme est libre, les revenus viennent des services à forte valeur ajoutée (audit cyber, formation Qualiopi, RSSI externalisé, hébergement managé, accompagnement NIS2). Cible 24 mois : 180 à 250 k€ de chiffre d'affaires en solo, 350 à 500 k€ avec un premier collaborateur.
 
-Humanix Académie se positionne comme la brique humaine indispensable de l'écosystème open source cyber souverain français — un écosystème qui s'est déjà structuré autour de CISO Assistant pour la gouvernance, OpenCTI pour la threat intelligence, Wazuh pour la détection, mais où la sensibilisation des collaborateurs et des particuliers restait un trou béant.`;
+Humanix Académie se positionne comme la brique humaine indispensable de l'écosystème open source cyber souverain français - un écosystème qui s'est déjà structuré autour de CISO Assistant pour la gouvernance, OpenCTI pour la threat intelligence, Wazuh pour la détection, mais où la sensibilisation des collaborateurs et des particuliers restait un trou béant.`;
 
 const FAITS_CLES = [
   { label: "Date de lancement OSS", value: "Mardi 26 mai 2026" },
@@ -77,7 +77,7 @@ const FAITS_CLES = [
 const QUOTES = [
   {
     author: "Florian DURANO, fondateur Humanix-Cybersecurity",
-    text: "La cybersécurité ne doit pas être un luxe réservé aux grands comptes ni aux geeks. Quand 90 % des attaques passent par l'humain — particulier comme salarié — et que 90 % des outils pour former cet humain coûtent une fortune et viennent d'outre-Atlantique, il y a un problème politique. Notre réponse : un outil libre, souverain, accessible à tous.",
+    text: "La cybersécurité ne doit pas être un luxe réservé aux grands comptes ni aux geeks. Quand 90 % des attaques passent par l'humain - particulier comme salarié - et que 90 % des outils pour former cet humain coûtent une fortune et viennent d'outre-Atlantique, il y a un problème politique. Notre réponse : un outil libre, souverain, accessible à tous.",
   },
   {
     author: "Florian DURANO, fondateur Humanix-Cybersecurity",
@@ -100,7 +100,7 @@ const FAQ_JOURNALISTES = [
   },
   {
     q: "Quelle est la cible utilisateur principale ?",
-    a: "Cible volontairement large : particuliers et familles (gratuit), équipes et organisations de toute taille — de 5 à plusieurs milliers de collaborateurs — associations, collectivités, ESN cyber qui équipent leurs clients. Total marché adressable potentiel : tous les actifs français + les particuliers connectés. Notre conviction : la cyber n'est pas un luxe d'entreprise, c'est une compétence de base de toute personne qui touche un clavier.",
+    a: "Cible volontairement large : particuliers et familles (gratuit), équipes et organisations de toute taille - de 5 à plusieurs milliers de collaborateurs - associations, collectivités, ESN cyber qui équipent leurs clients. Total marché adressable potentiel : tous les actifs français + les particuliers connectés. Notre conviction : la cyber n'est pas un luxe d'entreprise, c'est une compétence de base de toute personne qui touche un clavier.",
   },
   {
     q: "Quels sont vos partenariats annoncés ?",
@@ -132,7 +132,7 @@ export default function PressePage() {
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
           La première plateforme française de cybersensibilisation pour
-          tous — particuliers, équipes, organisations de toute taille —
+          tous - particuliers, équipes, organisations de toute taille -
           passe en AGPLv3 le mardi 26 mai 2026. Voici tout ce dont vous
           avez besoin pour en parler.
         </p>

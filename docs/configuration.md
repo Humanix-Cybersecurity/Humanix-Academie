@@ -183,7 +183,7 @@ DOMPurify (parseur HTML5, audit Cure53) avant rendu côté client. Whitelist
 stricte de balises (p, br, strong, em, a, ul/ol/li, h1-h6, code, blockquote,
 span, div). URLs `javascript:` / `data:` bloquées. Cf. `lib/ai/mistral.ts`.
 
-### `MOLLIE_*` (paiement souverain FR — instance commerciale)
+### `MOLLIE_*` (paiement souverain FR - instance commerciale)
 
 Clés API [Mollie](https://www.mollie.com) pour la facturation cloud SaaS.
 

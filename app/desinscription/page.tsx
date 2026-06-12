@@ -10,7 +10,7 @@ import HexBackdrop from "@/components/HexBackdrop";
 import HexMascot from "@/components/HexMascot";
 
 export const metadata = {
-  title: "Désinscription — Humanix Académie",
+  title: "Désinscription - Humanix Académie",
   description:
     "Confirmation de la prise en compte de votre demande de désinscription.",
   robots: { index: false, follow: false },

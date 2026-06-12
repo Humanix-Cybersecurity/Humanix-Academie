@@ -190,7 +190,7 @@ export default function SiteFooter() {
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400 max-w-md">
                 La brique humaine de l'écosystème cyber souverain français.
-                Open source AGPLv3, hébergement Paris, accessible à tous —
+                Open source AGPLv3, hébergement Paris, accessible à tous -
                 particuliers, équipes et organisations de toute taille.
               </p>
             </div>

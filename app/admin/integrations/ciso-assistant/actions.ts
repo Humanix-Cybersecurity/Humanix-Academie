@@ -204,7 +204,7 @@ export async function testConnection(): Promise<{
   if (result.ok) {
     return {
       ok: true,
-      message: `Connexion OK — folder « ${conn.folderName} » (${result.existingEvidences} evidence(s) existante(s)).`,
+      message: `Connexion OK - folder « ${conn.folderName} » (${result.existingEvidences} evidence(s) existante(s)).`,
       detail: `ID interne : ${result.folderId}`,
     };
   }

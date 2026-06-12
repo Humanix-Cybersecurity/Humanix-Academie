@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /post-login — page de routage canonique après authentification réussie.
+// /post-login - page de routage canonique après authentification réussie.
 // Server component qui :
 //   - Lit la session
 //   - Pas de session → redirect vers /connexion
@@ -46,7 +46,7 @@ export const dynamic = "force-dynamic";
  *
  * Retourne null si :
  *   - NEXT_PUBLIC_APP_URL non configure
- *   - hostname est localhost / IP (dev — pas de routage par sous-domaine)
+ *   - hostname est localhost / IP (dev - pas de routage par sous-domaine)
  *
  * @example
  *   buildTenantUrl("acme", "/admin")
@@ -58,7 +58,7 @@ function buildTenantUrl(slug: string, path: string): string | null {
   try {
     const url = new URL(base);
     const hostname = url.hostname.replace(/^www\./, "");
-    // En dev (localhost / IP) on ne route pas par sous-domaine — pas
+    // En dev (localhost / IP) on ne route pas par sous-domaine - pas
     // possible techniquement, le browser refuse les cookies cross-port.
     if (
       hostname === "localhost" ||
@@ -88,7 +88,7 @@ export default async function PostLoginPage() {
     redirect(targetPath);
   }
 
-  // Pas de tenantId (cas degrade — ne devrait pas arriver post-auth) ->
+  // Pas de tenantId (cas degrade - ne devrait pas arriver post-auth) ->
   // fallback comportement legacy sur l'host courant.
   if (!tenantId) {
     redirect(targetPath);
@@ -116,7 +116,7 @@ export default async function PostLoginPage() {
 
   // Construit l'URL cross-subdomain vers le tenant home + redirect.
   // Le cookie de session etant domain-shared (.humanix-academie.fr), la
-  // session survit le redirect — l'user arrive deja connecte sur son
+  // session survit le redirect - l'user arrive deja connecte sur son
   // sous-domaine.
   const tenantUrl = buildTenantUrl(tenant.slug, targetPath);
   if (!tenantUrl) {

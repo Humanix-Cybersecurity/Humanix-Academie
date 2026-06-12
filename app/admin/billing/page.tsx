@@ -136,7 +136,7 @@ export default async function BillingPage() {
         </div>
       </section>
 
-      {/* === UPGRADE — paliers supérieurs au plan courant === */}
+      {/* === UPGRADE - paliers supérieurs au plan courant === */}
       {upgradePlan && (
         <section
           aria-labelledby="upgrade-title"
@@ -218,8 +218,8 @@ export default async function BillingPage() {
           . On répond sous 24 h ouvrées.
         </p>
         <p className="mt-2 text-xs">
-          Tous les paiements transitent par Mollie (Amsterdam, UE — régulé
-          DNB) — pas de dépendance Cloud Act US.
+          Tous les paiements transitent par Mollie (Amsterdam, UE - régulé
+          DNB) - pas de dépendance Cloud Act US.
         </p>
       </section>
     </main>

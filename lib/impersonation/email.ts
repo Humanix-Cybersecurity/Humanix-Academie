@@ -139,7 +139,7 @@ export function renderImpersonationText(
 export function buildImpersonationSubject(
   ctx: ImpersonationEmailContext,
 ): string {
-  return `${ctx.adminUserName} demande à voir votre compte Humanix — votre accord est requis`;
+  return `${ctx.adminUserName} demande à voir votre compte Humanix - votre accord est requis`;
 }
 
 export async function sendImpersonationRequestEmail(args: {

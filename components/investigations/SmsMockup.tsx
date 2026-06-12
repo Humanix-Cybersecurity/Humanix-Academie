@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Mockup d'un SMS recu sur smartphone. Look minimaliste type iMessage /
-// Android Messages — pas d'image, juste des bulles.
+// Android Messages - pas d'image, juste des bulles.
 
 import type { Media } from "@/lib/investigations/types";
 

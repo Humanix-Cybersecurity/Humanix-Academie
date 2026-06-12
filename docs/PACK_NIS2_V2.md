@@ -1,16 +1,16 @@
-# Pack NIS2 v2 — diagnostic, score per-article, rapport annuel
+# Pack NIS2 v2 - diagnostic, score per-article, rapport annuel
 
 > Document technique · Version 1.0 · 17 mai 2026
 > Récap des chantiers Pack NIS2 v2 livrés en mai 2026.
 
 Le Pack NIS2 a 2 niveaux d'usage côté client :
 
-1. **Pack NIS2 v1** (déjà en place) — 4 documents signables (politique
+1. **Pack NIS2 v1** (déjà en place) - 4 documents signables (politique
    sensibilisation, procédure incident 24h/72h, registre formations,
    engagement collaborateur). PDF horodaté multi-pages.
    → `/admin/conformite-nis2` (Pro+ uniquement)
 
-2. **Pack NIS2 v2** (nouveau, mai 2026) — 3 ajouts coordonnés :
+2. **Pack NIS2 v2** (nouveau, mai 2026) - 3 ajouts coordonnés :
    - **Diagnostic public 30 questions** (gratuit, sans inscription)
    - **Score per-article temps réel** (basé sur les données du tenant)
    - **Rapport annuel pour autorité compétente** (PDF formel 3 pages)
@@ -25,21 +25,21 @@ Le Pack NIS2 a 2 niveaux d'usage côté client :
 
 ### Architecture
 
-- `lib/nis2/questions.ts` — catalogue de 30 questions structurées
+- `lib/nis2/questions.ts` - catalogue de 30 questions structurées
   par article NIS2 (21.2.a, 21.2.b, ... 21.2.j, art. 23). Chaque question
   a un poids 1-3 et une aide contextuelle.
-- `lib/nis2/articles.ts` — métadonnées des 11 articles (titre, description,
+- `lib/nis2/articles.ts` - métadonnées des 11 articles (titre, description,
   saisons Humanix qui les couvrent).
-- `lib/nis2/scoring.ts` — `computeNis2Diagnostic(answers)` retourne :
+- `lib/nis2/scoring.ts` - `computeNis2Diagnostic(answers)` retourne :
   - `globalScore` (0-100)
   - `verdict` (robuste / en_marche / fragile / alerte)
   - `articleScores` (11 entrées)
   - `topPriorities` (3 articles avec le plus gros gap)
-- `app/diagnostic-nis2/page.tsx` — wizard single-page, 30 questions
+- `app/diagnostic-nis2/page.tsx` - wizard single-page, 30 questions
   groupées par article.
-- `app/diagnostic-nis2/actions.ts` — encode les réponses en base64url
+- `app/diagnostic-nis2/actions.ts` - encode les réponses en base64url
   dans le query param `?d=...`.
-- `app/diagnostic-nis2/resultat/page.tsx` — décode + calcule + rend.
+- `app/diagnostic-nis2/resultat/page.tsx` - décode + calcule + rend.
 
 ### Lead-gen
 
@@ -63,13 +63,13 @@ partageable au CODIR (le score est dans l'URL).
 
 ### Architecture
 
-- `lib/nis2/score-tenant.ts` — `computeTenantNis2Score(tenantId)` :
+- `lib/nis2/score-tenant.ts` - `computeTenantNis2Score(tenantId)` :
   - Pour chaque article NIS2, identifie les saisons Humanix mappées
     (cf. `NIS2_ARTICLES[id].coveredBySaisons`)
   - Pour chaque saison mappée, calcule `completion = COMPLETED / (active_users × total_episodes)`
   - Score article = moyenne des completion ratios
   - Score global = moyenne des articles non-N/A
-- `components/admin/nis2/Nis2ScoreCard.tsx` — affichage server component
+- `components/admin/nis2/Nis2ScoreCard.tsx` - affichage server component
 - Intégré dans `app/admin/conformite-nis2/page.tsx` avant le formulaire
   Pack PDF.
 
@@ -111,19 +111,19 @@ Dans `/admin/conformite-nis2`, le formulaire `PackNis2Form` a maintenant
 
 ### Contenu du PDF (3 pages)
 
-**Page 1 — Couverture + état des lieux**
+**Page 1 - Couverture + état des lieux**
 - Identité de l'entité (raison sociale, SIREN, siège, dirigeant, DPO)
 - Période couverte (12 derniers mois par défaut)
 - Score global gros (avec verdict)
 - Tableau des 11 articles NIS2 avec score per-article
 
-**Page 2 — Incidents + sensibilisation**
+**Page 2 - Incidents + sensibilisation**
 - Tableau des incidents déclarés dans la période (depuis `IncidentResponse`)
 - "Autorité notifiée" = `anssiNotifiedAt OR cnilNotifiedAt` non null
 - Agrégats sensibilisation : apprenants actifs, modules complétés, score
   moyen, campagnes phishing simulé, taux de clic
 
-**Page 3 — Plan + engagement direction**
+**Page 3 - Plan + engagement direction**
 - 5 chantiers prioritaires (articles avec le score le plus bas)
 - Texte d'engagement attestable + signature dirigeant
 - Note méthodologique : "ne remplace pas un audit PASSI"

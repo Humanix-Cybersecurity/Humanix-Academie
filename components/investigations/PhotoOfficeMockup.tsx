@@ -19,7 +19,7 @@ type Props = {
 // Mapping kind -> emoji + classe couleur (semantic : rouge = risque
 // fort, amber = risque moyen, gris = neutre/distractor potentiel).
 // Les bordures/halos ne sont PAS appliquees ici pour ne pas donner
-// la reponse a l'apprenant — c'est le clic + scoring qui revele.
+// la reponse a l'apprenant - c'est le clic + scoring qui revele.
 const SCENE_ITEMS: Record<
   string,
   { emoji: string; label: string }
@@ -57,25 +57,25 @@ const SCENE_HEADER: Record<
 > = {
   office: {
     emoji: "🏢",
-    label: "VUE BUREAU — REPÈRE LES INDICES",
+    label: "VUE BUREAU - REPÈRE LES INDICES",
     bgClass:
       "bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 dark:from-slate-800 dark:via-slate-900 dark:to-slate-800",
   },
   piggyback: {
     emoji: "🚪",
-    label: "ENTRÉE DU BÂTIMENT — REPÈRE LES INDICES",
+    label: "ENTRÉE DU BÂTIMENT - REPÈRE LES INDICES",
     bgClass:
       "bg-gradient-to-br from-slate-100 via-gray-50 to-zinc-100 dark:from-slate-900 dark:via-slate-800 dark:to-zinc-900",
   },
   trash_bin: {
     emoji: "🗑️",
-    label: "POUBELLE COMMUNE — REPÈRE LES INDICES",
+    label: "POUBELLE COMMUNE - REPÈRE LES INDICES",
     bgClass:
       "bg-gradient-to-br from-stone-100 via-amber-50 to-orange-50 dark:from-stone-900 dark:via-amber-950 dark:to-orange-950",
   },
   public_wifi: {
     emoji: "📶",
-    label: "LIEU PUBLIC — REPÈRE LES INDICES",
+    label: "LIEU PUBLIC - REPÈRE LES INDICES",
     bgClass:
       "bg-gradient-to-br from-sky-50 via-cyan-50 to-blue-100 dark:from-sky-950 dark:via-cyan-950 dark:to-blue-950",
   },

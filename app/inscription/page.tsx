@@ -11,7 +11,7 @@
 //   - DEMO_MODE off → page accessible publiquement.
 //
 // 4 voies d'inscription proposées (toutes actives quand env vars présents) :
-//   1. Magic link (Scaleway TEM) — fallback universel sans dépendance externe
+//   1. Magic link (Scaleway TEM) - fallback universel sans dépendance externe
 //   2. Google
 //   3. Apple
 //   4. Microsoft Entra ID
@@ -59,19 +59,19 @@ function detectSsoEnabled(): SsoEnabled {
 }
 
 export const metadata = {
-  title: "Inscription gratuite — Humanix Académie",
+  title: "Inscription gratuite - Humanix Académie",
   description:
     "Crée ton compte apprenant gratuit pour accéder aux modules Humanix Académie. Connexion via magic link, Google, Apple ou Microsoft. Sans mot de passe à retenir.",
   alternates: { canonical: "/inscription" },
   openGraph: {
-    title: "Inscription gratuite — Humanix Académie",
+    title: "Inscription gratuite - Humanix Académie",
     description:
       "Apprends la cybersécurité au rythme de la communauté. Inscription en 1 clic, sans mot de passe.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Inscription gratuite — Humanix Académie",
+    title: "Inscription gratuite - Humanix Académie",
     description:
       "1 clic, sans mot de passe. Magic link, Google, Apple ou Microsoft.",
   },
@@ -212,7 +212,7 @@ async function InscriptionInner({
         )}
 
         <div className="relative bg-white dark:bg-slate-900 rounded-3xl border-2 border-gray-200 dark:border-slate-700 shadow-xl p-5 sm:p-6 space-y-5">
-          {/* SSO providers — un par un, action server-side */}
+          {/* SSO providers - un par un, action server-side */}
           {anySso && (
             <div className="space-y-3">
               <h2 className="text-xs uppercase tracking-wider font-bold text-gray-500 dark:text-gray-400">
@@ -279,7 +279,7 @@ async function InscriptionInner({
             </div>
           )}
 
-          {/* Magic link — fallback universel */}
+          {/* Magic link - fallback universel */}
           <form action={startMagicLinkInscription} className="space-y-3">
             {!anySso && (
               <h2 className="text-xs uppercase tracking-wider font-bold text-gray-500 dark:text-gray-400">

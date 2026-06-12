@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Page admin « Voir en tant que » — lecture seule du compte d'un
+// Page admin « Voir en tant que » - lecture seule du compte d'un
 // utilisateur, sous reserve d'une ImpersonationSession ACTIVE et
 // non expiree.
 //
@@ -21,7 +21,7 @@ import EndImpersonationButton from "./EndImpersonationButton";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Vue en tant que — Humanix Académie",
+  title: "Vue en tant que - Humanix Académie",
   description: "Consultation en lecture seule du compte d'un utilisateur.",
 };
 
@@ -260,7 +260,7 @@ export default async function ImpersonateAdminViewPage({ params }: Props) {
       {/* ============ EN-TETE PROFIL ============ */}
       <header className="mb-8 rounded-2xl bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 p-6">
         <p className="text-xs uppercase tracking-widest text-accent-500 font-bold mb-2">
-          Profil utilisateur — Lecture seule
+          Profil utilisateur - Lecture seule
         </p>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mb-2">
           {target.name || target.email}

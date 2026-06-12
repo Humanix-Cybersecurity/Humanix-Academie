@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /exposition — Tier GRATUIT du module Exposition Numérique.
+// /exposition - Tier GRATUIT du module Exposition Numérique.
 //
 // Public, sans compte, ÉPHÉMÈRE : aucun check n'est persisté, zéro PII.
 //   - Check mot de passe : 100% côté client (k-anonymity HIBP, le mdp ne
@@ -19,7 +19,7 @@ import ExpositionChecker from "./ExpositionChecker";
 export const dynamic = "force-static";
 
 export const metadata: Metadata = {
-  title: "Suis-je exposé ? — Vérifier mon exposition numérique | Humanix Académie",
+  title: "Suis-je exposé ? - Vérifier mon exposition numérique | Humanix Académie",
   description:
     "Vérifie gratuitement si ton mot de passe a fuité (sans jamais l'envoyer) et si ton organisation est concernée par une fuite connue. Souverain, éphémère, zéro donnée conservée.",
   alternates: { canonical: "/exposition" },
@@ -50,7 +50,7 @@ export default function ExpositionPage() {
         </p>
       </header>
 
-      {/* Bandeau confiance / privacy — RGAA : role complémentaire textuel */}
+      {/* Bandeau confiance / privacy - RGAA : role complémentaire textuel */}
       <section
         aria-label="Garanties de confidentialité"
         className="rounded-2xl border-2 border-emerald-200 dark:border-emerald-800 bg-emerald-50/60 dark:bg-emerald-950/30 p-4 mb-8 text-sm text-emerald-900 dark:text-emerald-100"

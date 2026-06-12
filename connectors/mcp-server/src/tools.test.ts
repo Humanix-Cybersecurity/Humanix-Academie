@@ -32,7 +32,7 @@ describe("TOOLS catalog", () => {
   });
 });
 
-describe("callTool — validation et dispatch", () => {
+describe("callTool - validation et dispatch", () => {
   beforeEach(() => {
     vi.spyOn(api, "fetchEvidenceExport").mockResolvedValue({ stub: "evidence" });
     vi.spyOn(api, "fetchUsersAtRisk").mockResolvedValue({ stub: "users" });

@@ -44,7 +44,7 @@ import { loadConfigFromEnv } from "./api.js";
 import { callTool, TOOLS } from "./tools.js";
 
 async function main() {
-  // Chargement config — on echoue tot si la cle API manque, plutot que
+  // Chargement config - on echoue tot si la cle API manque, plutot que
   // de laisser le LLM se prendre des 401 a chaque appel.
   const cfg = loadConfigFromEnv();
 

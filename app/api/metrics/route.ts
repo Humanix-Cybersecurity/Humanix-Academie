@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// GET /api/metrics — endpoint Prometheus pour scraping
+// GET /api/metrics - endpoint Prometheus pour scraping
 //
 // Expose les metriques applicatives au format `text/plain; version=0.0.4`
 // (standard Prometheus). Consomme par Scaleway Cockpit (Loki + Mimir),

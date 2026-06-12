@@ -61,7 +61,7 @@ export type SnapshotComputed = {
 
 /**
  * Calcule la distribution du riskScore pour UN tenant. Renvoie null si
- * le tenant n'a pas d'user actif (LEARNER/MANAGER) — on ne snapshote
+ * le tenant n'a pas d'user actif (LEARNER/MANAGER) - on ne snapshote
  * pas les tenants vides.
  */
 export async function computeTenantSnapshot(

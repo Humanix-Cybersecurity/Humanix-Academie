@@ -90,7 +90,7 @@ let actionsMod: typeof import("../app/admin/actions") | null = null;
 try {
   actionsMod = await import("../app/admin/actions");
 } catch {
-  // Source `app/` non disponible — le suite sera skipped (cf. describe.skipIf).
+  // Source `app/` non disponible - le suite sera skipped (cf. describe.skipIf).
 }
 const SUITE_AVAILABLE = actionsMod !== null;
 // Cast NonNullable : si SUITE_AVAILABLE est false les `describe.skipIf`

@@ -178,7 +178,7 @@ async function streamOllama(
 
 function streamDisabled(): ReadableStream<string> {
   const message =
-    "Hex est en pause sur cette instance — aucune cle d'IA n'est configuree. " +
+    "Hex est en pause sur cette instance - aucune cle d'IA n'est configuree. " +
     "Pour activer la conversation, l'administrateur doit definir MISTRAL_API_KEY " +
     "(cloud) ou OLLAMA_BASE_URL (self-host). Cf. docs/HEX_AI.md";
   return new ReadableStream<string>({
@@ -245,7 +245,7 @@ function decodeSSE(
                 const delta = parsed.choices?.[0]?.delta?.content;
                 if (delta) controller.enqueue(delta);
               } catch {
-                // Ligne malformee — on ignore, le stream continue
+                // Ligne malformee - on ignore, le stream continue
               }
             }
             continue;

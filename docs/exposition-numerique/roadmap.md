@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: AGPL-3.0-or-later -->
 
-# Module « Exposition Numérique » — Roadmap & ADR
+# Module « Exposition Numérique » - Roadmap & ADR
 
 Module reliant détection d'exposition, conformité et montée en compétence.
 Source de vérité versionnée de la roadmap décidée en juin 2026.
@@ -63,7 +63,7 @@ Source de vérité versionnée de la roadmap décidée en juin 2026.
 
 ## Saison de contenu
 
-`content/saisons-demo/exposition-numerique/` — 7 épisodes, déclenchés par type de résultat. Voir `01-mot-de-passe-compromis.mdx` (gabarit livré). Rédaction parallélisable au dev.
+`content/saisons-demo/exposition-numerique/` - 7 épisodes, déclenchés par type de résultat. Voir `01-mot-de-passe-compromis.mdx` (gabarit livré). Rédaction parallélisable au dev.
 
 ## Modèle de données à venir (Phase 2)
 

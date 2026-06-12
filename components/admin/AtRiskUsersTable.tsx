@@ -302,7 +302,7 @@ export default function AtRiskUsersTable({
                 </td>
                 <td className="p-3 hidden md:table-cell">
                   {u.groupBadges.length === 0 ? (
-                    <span className="text-xs text-gray-500">—</span>
+                    <span className="text-xs text-gray-500">-</span>
                   ) : (
                     <div className="flex flex-wrap gap-1">
                       {u.groupBadges.map((g, i) => (
@@ -339,7 +339,7 @@ export default function AtRiskUsersTable({
                 </td>
                 <td className="p-3 text-right tabular-nums text-gray-600 dark:text-gray-400">
                   {u.daysSinceActivity === null
-                    ? "—"
+                    ? "-"
                     : `${u.daysSinceActivity}j`}
                 </td>
                 <td className="p-3 text-right tabular-nums text-gray-600 dark:text-gray-400 hidden sm:table-cell">
@@ -420,7 +420,7 @@ function TrendBadge({
   const tooltip =
     reasons.length === 0
       ? `${s.label} (signal ${indicator.toFixed(2)})`
-      : `${s.label} (signal ${indicator.toFixed(2)}) — ${reasons.join(" · ")}`;
+      : `${s.label} (signal ${indicator.toFixed(2)}) - ${reasons.join(" · ")}`;
   return (
     <span
       title={tooltip}

@@ -53,14 +53,14 @@ export default function AutomationsForm({ initial }: { initial: Initial }) {
         onChange={setForce2FA}
         title="Forcer la 2FA au prochain login"
         consequence="Si l'user n'a pas encore configuré le 2FA, on positionne User.mfaForced=true. Au prochain login, il devra configurer le 2FA pour pouvoir continuer à utiliser ses comptes pro."
-        impact="Impact moyen — l'user doit consacrer 2-3 min pour configurer son authenticator avant sa prochaine session."
+        impact="Impact moyen - l'user doit consacrer 2-3 min pour configurer son authenticator avant sa prochaine session."
       />
       <ToggleRow
         checked={revokeSession}
         onChange={setRevokeSession}
         title="Révoquer toutes les sessions actives"
         consequence="Toutes les Session NextAuth de l'user sont supprimées (déconnexion forcée de tous les devices). Au prochain accès, il devra se reconnecter."
-        impact="Impact moyen — l'user voit ses applications déconnectées, doit re-saisir ses identifiants. Combiné avec le toggle 2FA, c'est une remédiation forte mais saine."
+        impact="Impact moyen - l'user voit ses applications déconnectées, doit re-saisir ses identifiants. Combiné avec le toggle 2FA, c'est une remédiation forte mais saine."
       />
 
       <div className="flex items-center gap-3 pt-2 border-t border-gray-200 dark:border-slate-700">

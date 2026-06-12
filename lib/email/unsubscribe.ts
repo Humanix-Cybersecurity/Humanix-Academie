@@ -42,7 +42,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
  *   Mailto only (pas de one-click), juste pour satisfaire les checks mail.
  * - "anecdote"      : Cyber-Anecdote du Lundi. Geree par AnecdoteSubscription
  *   (table dediee). On accepte cette valeur ici uniquement pour validation
- *   uniforme — l'endpoint /api/unsubscribe redirige vers le flow Anecdote
+ *   uniforme - l'endpoint /api/unsubscribe redirige vers le flow Anecdote
  *   pour eviter la double base de verite.
  * - "admin-alerts"  : notifs admin opt-in (futures). Stockees dans EmailOptOut.
  * - "marketing"     : nouveautes produit, conseils mensuels. Idem.
