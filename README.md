@@ -6,7 +6,7 @@
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Made in France](https://img.shields.io/badge/Made%20in-France-blue?labelColor=blue&color=red)](https://humanix-cybersecurity.fr)
-[![Stack](https://img.shields.io/badge/stack-Next.js%2015%20%C2%B7%20React%2019%20%C2%B7%20Prisma%20%C2%B7%20PostgreSQL-black)](https://nextjs.org)
+[![Stack](https://img.shields.io/badge/stack-Next.js%2016%20%C2%B7%20React%2019%20%C2%B7%20Prisma%206%20%C2%B7%20PostgreSQL-black)](https://nextjs.org)
 [![CISO Assistant](https://img.shields.io/badge/integrates-CISO%20Assistant-brightgreen)](https://github.com/intuitem/ciso-assistant-community)
 
 ---
@@ -29,12 +29,14 @@ souverain, intégrée nativement à CISO Assistant.
 
 ## En 30 secondes
 
-- **Plateforme web Next.js 15 / React 19** multi-tenant, gamifiée, mobile-first
-- **27 saisons · 183 modules MDX experts** (phishing, vishing, smishing, quishing, mots de passe, MFA, données sensibles, télétravail, fraude-président, ransomware, IA générative, Cyber-RH, Cyber-Compta, Cyber-Dev, supply chain, NIS2, Sapin II, vie privée bureau, sauvegardes, réseaux Wi-Fi, mobile, visios, stockage cloud, crise cyber, DPO…)
+- **Plateforme web Next.js 16 / React 19** multi-tenant, gamifiée, mobile-first
+- **33 saisons · 216 modules MDX experts** (phishing, vishing, smishing, quishing, mots de passe, MFA, données sensibles, télétravail, fraude-président, ransomware, IA générative, deepfakes, Cyber-RH, Cyber-Compta, Cyber-Dev, supply chain, NIS2, Sapin II, vie privée bureau, sauvegardes, réseaux Wi-Fi, mobile, visios, stockage cloud, crise cyber, DPO, OSINT & exposition numérique…)
 - **Gamification réelle** : XP, badges, mascotte évolutive Hex, classements internes, saisons en accordéon repliable
 - **Console dirigeant** dashboard temps-réel : score de risque humain, KPIs business, top performers, urgent actions, rapport conformité PDF, export OSCAL
 - **Forecast & analytics avancé** : régression linéaire J+30 sur le score tenant, top movers individuels, corrélation incidents ↔ sensibilisation
 - **Espace DPO** : dashboard RGPD interne, file d'effacement art. 17, générateur AIPD, rétention configurable par tenant (art. 5.1.e), counters 90j
+- **Outil public « Suis-je exposé ? »** ([`/exposition`](https://humanix-academie.fr/exposition)) : auto-diagnostic d'exposition (mot de passe via k-anonymity Pwned Passwords, email, téléphone) + parcours OSINT guidé en 4 phases + plan de remédiation — **zéro stockage, aucune PII conservée**
+- **Hub conformité multi-référentiels** (`/admin/conformite`) : couverture calculée par tenant sur **7 cadres** (ISO 27001:2022, NIS2, RGPD, ANSSI Guide Hygiène, NIST CSF v2.0, Sapin II Art. 17, SOC 2), preuves exportables vers CISO Assistant
 - **Quick Setup Wizard** : 4 écrans pour configurer un tenant fresh en <5 min
 - **AdminSearchBox** (`Ctrl+K`) : recherche transverse pages + utilisateurs + saisons
 - **Cookie consent CNIL-friendly** + Plausible Analytics (config self-host ou cloud)
@@ -46,7 +48,7 @@ souverain, intégrée nativement à CISO Assistant.
 - **API REST** + webhooks signés HMAC-SHA256
 - **Stack souveraine UE** : hébergement Scaleway Paris 🇫🇷, email Scaleway TEM 🇫🇷, IA Mistral Paris 🇫🇷, paiement Mollie Amsterdam 🇪🇺 (régulé DNB, PSD2 UE) — aucune dépendance Cloud Act US
 - **Sécurité défense en profondeur** : CSP strict, middleware edge sur `/admin`, DOMPurify, HSTS preload, anti-SSRF whitelist, anti-PII sur prompts, scrypt + AES-256-GCM
-- **Conformité multi-cadre** : RGPD · NIS2 · **Loi Sapin II Art. 17** · ISO 27001:2022 · ANSSI HG · NIST CSF, mapping technique versionné dans [`lib/mapping-grc.ts`](./lib/mapping-grc.ts)
+- **Conformité multi-cadre** : RGPD · NIS2 · **Loi Sapin II Art. 17** · ISO 27001:2022 · ANSSI HG · NIST CSF v2.0 · SOC 2, mapping technique versionné dans [`lib/mapping-grc.ts`](./lib/mapping-grc.ts), couverture par tenant visualisée dans le hub `/admin/conformite`
 - **Mode démo** + **Mode dev** (bypass Mollie/email) pour tester sans setup externe
 
 ---
@@ -80,6 +82,11 @@ PME et ETI, pas comme un PDF décoratif. Trois leviers d'adoption :
 - **Démarche d'agrément ANSSI** — Humanix Académie postule à devenir
   *le « Pix de la cybersécurité »* côté sensibilisation, avec un dossier
   formel d'agrément lancé en 2026. Reconnaissance officielle visée 2027.
+
+Chaque apprenant peut, **optionnellement**, renseigner ses prénom et nom réels
+dans `/profil/infos` pour que le PDF soit émis à son état civil plutôt qu'à son
+pseudo — sinon le pseudo reste utilisé (comportement par défaut, aucune donnée
+d'identité requise).
 
 Détail complet sur **[/certificat](https://humanix-academie.fr/certificat)**.
 
@@ -211,10 +218,10 @@ documenté dans [docs/CRON.md](./docs/CRON.md).
 
 | Couche       | Technologie                              | Pourquoi                                         |
 | ------------ | ---------------------------------------- | ------------------------------------------------ |
-| Front + back | **Next.js 15** (App Router) + React 19   | SSR + API routes + server actions                |
+| Front + back | **Next.js 16** (App Router) + React 19   | SSR + API routes + server actions                |
 | Langage      | **TypeScript** strict                    | Type-safe end-to-end                             |
 | Styling      | **Tailwind CSS**                         | Cohérence visuelle, performance, dark mode natif |
-| ORM          | **Prisma 5**                             | Schema-first, type-safe, migrations propres      |
+| ORM          | **Prisma 6**                             | Schema-first, type-safe, migrations propres      |
 | Base         | **PostgreSQL 16**                        | Multi-tenant scoping, indices fins, full-text    |
 | Auth         | **NextAuth.js v5**                       | SSO Google/Microsoft/Apple, magic link, RBAC, 2FA TOTP, WebAuthn |
 | Charts       | **Recharts** + SVG inline                | Composants React idiomatiques                    |
@@ -276,7 +283,7 @@ OLLAMA_BASE_URL=http://localhost:11434
 HEX_AI_MODEL=mistral:7b-instruct
 ```
 
-**RAG sur les 184 modules MDX** (Phase 3) : Hex cite les modules
+**RAG sur les 216 modules MDX** (Phase 3) : Hex cite les modules
 Humanix pertinents au lieu d'inventer. Repose sur PostgreSQL +
 extension `pgvector` + Mistral `mistral-embed`.
 
@@ -348,14 +355,16 @@ cloud managé ou via une licence commerciale.
 
 | Composant                                                          | Statut                               |
 | ------------------------------------------------------------------ | ------------------------------------ |
-| Plateforme Next.js 15 (engine, dashboards, API, multi-tenant)      | Open AGPLv3 (ce repo)                |
-| Modules pédagogiques de base (~30 MDX experts)                     | Open AGPLv3 (ce repo)                |
+| Plateforme Next.js 16 (engine, dashboards, API, multi-tenant)      | Open AGPLv3 (ce repo)                |
+| Modules pédagogiques de base (5 saisons démo · 19 MDX experts)     | Open AGPLv3 (ce repo)                |
+| Outil public d'exposition `/exposition` + parcours OSINT (0 PII)   | Open AGPLv3 (ce repo)                |
+| Hub conformité multi-référentiels `/admin/conformite` (7 cadres)   | Open AGPLv3 (ce repo)                |
 | Gamification engine + mascotte Hex                                 | Open AGPLv3 (ce repo)                |
 | Connecteur CISO Assistant + format OSCAL + CEF                     | Open AGPLv3 (ce repo)                |
 | Forecast + corrélation incidents (régression linéaire transparente)| Open AGPLv3 (ce repo)                |
 | Espace DPO + rétention configurable + AIPD                         | Open AGPLv3 (ce repo)                |
 | Quick Setup Wizard + AdminSearchBox                                | Open AGPLv3 (ce repo)                |
-| Catalogue 150+ modules avancés                                     | Cloud Pro / Enterprise               |
+| Catalogue 200+ modules avancés (33 saisons · 216 MDX)              | Cloud Pro / Enterprise               |
 | Phishing simulé (templates + IA Mistral)                           | Cloud Pro / Enterprise               |
 | Quishing campaigns + poster generator                              | Cloud Pro / Enterprise               |
 | Pack NIS2 turnkey complet                                          | Cloud Pro / Enterprise               |
@@ -373,9 +382,9 @@ Au démarrage, l'app détecte automatiquement quelle source de contenu utiliser 
 
 | Tu as cloné ce repo et... | L'app charge | Source |
 |---|---|---|
-| ...tu n'as rien fait | **2 saisons démo CC BY-SA** (6 modules) | `content/saisons-demo/` |
+| ...tu n'as rien fait | **5 saisons démo CC BY-SA** (19 modules) | `content/saisons-demo/` |
 | ...tu as ajouté **tes propres** saisons sous `content/saisons/` | **Ton catalogue** | `content/saisons/` |
-| ...tu as souscrit un contrat Humanix Enterprise | **27 saisons commerciales** (159 modules) | Repo privé `humanix-content-pro` monté en submodule |
+| ...tu as souscrit un contrat Humanix Enterprise | **33 saisons commerciales** (216 modules) | Repo privé `humanix-content-pro` monté en submodule |
 
 Le 3e cas (contenu commercial Humanix complet en self-host) nécessite une licence Ed25519 signée par Humanix. Procédure détaillée dans [`docs/OPEN_CORE.md`](./docs/OPEN_CORE.md#obtenir-le-content-pro-clients-enterprise--self-host-sous-contrat). Premier contact : `contact@humanix-cybersecurity.fr`.
 

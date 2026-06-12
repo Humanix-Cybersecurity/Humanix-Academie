@@ -22,7 +22,7 @@ Ce document liste de manière transparente **ce qui est ouvert** et **ce qui req
 
 ### Sensibilisation
 - ✅ Player de modules MDX avec scénarios + quiz + debrief
-- ✅ 5 modules de base sous `content/saisons/` (phishing, mots de passe, données sensibles, télétravail, RGPD)
+- ✅ 5 saisons démo (19 modules) sous `content/saisons-demo/` (reconnaître le phishing, mots de passe, mobile essentiels, maîtrise de l'IA, exposition numérique)
 - ✅ Mécanique de progression XP / streak / level
 - ✅ Cyber-Anecdote du Lundi (newsletter pédagogique)
 - ✅ Cyber-Réflexe / réponse à incident
@@ -168,8 +168,8 @@ export function loadCatalogSaisons() {
 ```
 
 Au seeding, le log indique la source :
-- `Catalogue (commercial) : 27 saisons / 159 episodes` → contenu privé chargé
-- `Catalogue (demo) : 2 saisons / 6 episodes` → fork OSS sans le contenu privé
+- `Catalogue (commercial) : 33 saisons / 216 episodes` → contenu privé chargé
+- `Catalogue (demo) : 5 saisons / 19 episodes` → fork OSS sans le contenu privé
 
 ### Workflow opérateur (Humanix Cybersecurity)
 
@@ -196,7 +196,7 @@ humanix-content-pro/
 ├── content/
 │   ├── phishing/          ← saisons directement, PAS sous saisons/
 │   ├── mots-de-passe/
-│   └── ... (27 saisons)
+│   └── ... (33 saisons)
 ├── prisma/
 │   └── catalog-saisons.ts
 └── lib/
@@ -258,7 +258,7 @@ Alternatives au submodule :
 | Acteur | Avant | Après |
 |---|---|---|
 | **Toi (Humanix)** | 1 repo monolithique privé | 2 repos : public (code) + privé (contenu). Submodule pour la prod. |
-| **Fork OSS** | N/A (repo privé) | Clone le repo public, obtient **2 saisons démo CC BY-SA**, plateforme fonctionnelle |
+| **Fork OSS** | N/A (repo privé) | Clone le repo public, obtient **5 saisons démo CC BY-SA**, plateforme fonctionnelle |
 | **Client Cloud SaaS** | catalogue complet via `humanix-cybersecurity.fr` | **Inchangé** : tu sers le contenu commercial complet |
 | **Client self-host Enterprise** | (cas spécifique) | Contrat + licence Ed25519 → accès au content-pro via submodule, tarball signé ou image Docker (cf. section *Obtenir le content-pro*) |
 
@@ -281,15 +281,15 @@ Alternatives au submodule :
 git clone https://github.com/Humanix-Cybersecurity/Humanix-Academie.git fork-test
 cd fork-test
 docker compose up -d
-# → log seed : "Catalogue (demo) : 2 saisons / 6 episodes"
-# → /apprendre affiche les 2 saisons démo
+# → log seed : "Catalogue (demo) : 5 saisons / 19 episodes"
+# → /apprendre affiche les 5 saisons démo
 ```
 
 **Sur le repo prod (avec le submodule)** :
 ```bash
 git pull && git submodule update --init
 docker compose build --no-cache && docker compose up -d
-# → log seed : "Catalogue (commercial) : 27 saisons / 159 episodes"
+# → log seed : "Catalogue (commercial) : 33 saisons / 216 episodes"
 # → /apprendre affiche le catalogue complet
 ```
 
@@ -297,13 +297,13 @@ docker compose build --no-cache && docker compose up -d
 
 ## Obtenir le content-pro (clients Enterprise / self-host sous contrat)
 
-Le repo `Humanix-Cybersecurity/humanix-content-pro` est **privé** : il contient l'asset commercial principal (27 saisons × 6 épisodes + librairie + marketplace + anecdotes). Trois cas se présentent :
+Le repo `Humanix-Cybersecurity/humanix-content-pro` est **privé** : il contient l'asset commercial principal (33 saisons / 216 épisodes + librairie + marketplace + anecdotes). Trois cas se présentent :
 
 ### Cas 1 — Cloud SaaS sur `humanix-cybersecurity.fr` (zero action)
 Tu n'as rien à faire : le contenu commercial est servi par l'instance gérée. Le repo privé n'est même pas exposé — c'est Humanix qui opère.
 
 ### Cas 2 — Fork OSS pur (zero action)
-Tu clones uniquement le repo public. La plateforme tourne avec les **2 saisons démo CC BY-SA** livrées dans `content/saisons-demo/`. Aucune licence ni démarche requise. Tu peux développer **ton propre catalogue** sous `content/saisons/` (l'app le détectera automatiquement et l'utilisera à la place des démos).
+Tu clones uniquement le repo public. La plateforme tourne avec les **5 saisons démo CC BY-SA** livrées dans `content/saisons-demo/`. Aucune licence ni démarche requise. Tu peux développer **ton propre catalogue** sous `content/saisons/` (l'app le détectera automatiquement et l'utilisera à la place des démos).
 
 ### Cas 3 — Self-host Enterprise avec contenu Humanix complet
 Tu veux héberger la plateforme **chez toi** mais avec le catalogue Humanix complet (par exemple : groupe avec contraintes de souveraineté, secteur défense, OPEX critique). C'est un cas **commercial sous contrat** :
@@ -335,9 +335,9 @@ Tu veux héberger la plateforme **chez toi** mais avec le catalogue Humanix comp
 
 | État de la licence | État du content-pro | Comportement attendu |
 |---|---|---|
-| Présente et valide | Présent (commercial) | Mode commercial Enterprise, log `Catalogue (commercial) : 27 saisons` |
+| Présente et valide | Présent (commercial) | Mode commercial Enterprise, log `Catalogue (commercial) : 33 saisons` |
 | Absente | Présent (commercial) | App fonctionne, warning licence dans les logs, header `X-Humanix-License: missing` sur les responses internes |
-| Présente et valide | Absent | App fonctionne en mode démo (`Catalogue (demo) : 2 saisons`), warning content-pro |
+| Présente et valide | Absent | App fonctionne en mode démo (`Catalogue (demo) : 5 saisons`), warning content-pro |
 | Absente | Absent | Fork OSS standard, mode démo, aucune mention licence |
 
 > **Pour les ayants droit potentiels** : envoie un mail à `contact@humanix-cybersecurity.fr` avec ton cas d'usage. Réponse sous 48h ouvrées avec devis et conditions.
