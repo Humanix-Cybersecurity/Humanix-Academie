@@ -59,7 +59,17 @@ export async function GET() {
     }),
   );
 
-  const filename = `certificat-humanix-${(displayName || user.email).replace(/[^a-z0-9]/gi, "-")}-${new Date().toISOString().split("T")[0]}.pdf`;
+  // Nom de fichier : on borne la portion "nom" a 50 caracteres. firstName et
+  // lastName peuvent faire 100 chars chacun -> sans borne, on produirait un nom
+  // de fichier de 200+ chars (limites FS / affichage navigateur). On collapse
+  // aussi les tirets et on retombe sur "utilisateur" si tout est filtre.
+  const safeNameForFile =
+    (displayName || user.email || "utilisateur")
+      .replace(/[^a-z0-9]/gi, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "")
+      .slice(0, 50) || "utilisateur";
+  const filename = `certificat-humanix-${safeNameForFile}-${new Date().toISOString().split("T")[0]}.pdf`;
 
   return new NextResponse(buffer as any, {
     status: 200,
