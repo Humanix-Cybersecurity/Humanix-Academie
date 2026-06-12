@@ -14,7 +14,7 @@
 // reste pour le lancement initial des campagnes. Ce cron est pour le suivi
 // drip post-lancement.
 //
-// AUTH : header X-Cron-Secret + timing-safe compare (meme pattern que
+// AUTH : header X-Cron-Secret + timing-safe compare (même pattern que
 // phishing-launch). Ou admin authentifie pour declenchement manuel.
 //
 // LIMITE PAR TOUR : 200 mails par invocation pour éviter de trop charger
