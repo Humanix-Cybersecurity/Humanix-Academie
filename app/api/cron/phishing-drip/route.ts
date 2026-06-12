@@ -17,7 +17,7 @@
 // AUTH : header X-Cron-Secret + timing-safe compare (meme pattern que
 // phishing-launch). Ou admin authentifie pour declenchement manuel.
 //
-// LIMITE PAR TOUR : 200 mails par invocation pour eviter de trop charger
+// LIMITE PAR TOUR : 200 mails par invocation pour éviter de trop charger
 // le SMTP du tenant + respecter le timeout maxDuration de la lambda
 // (Vercel = 10s default).
 
