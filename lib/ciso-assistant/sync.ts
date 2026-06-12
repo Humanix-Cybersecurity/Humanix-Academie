@@ -902,7 +902,9 @@ async function executeSync(
         // construire le Dashboard apres si createDashboard est actif.
         const instanceIdByRefId: Record<string, string> = {};
         for (const m of metrics) {
-          if (metrologyUnavailable) break;
+          // Note : le seul cas qui met metrologyUnavailable=true (404 sur la
+          // 1ere metrique) `break` immediatement -> pas besoin d'un garde en
+          // tete de boucle. La variable reste lue apres la boucle (rapport).
           try {
             const defRes = await client.ensureMetricDefinition({
               refId: m.refId,

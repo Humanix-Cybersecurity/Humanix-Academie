@@ -151,12 +151,12 @@ async function main() {
   // (la métrique marketplaceModulesActive compte les saisons custom
   //  ayant un sourceModuleId non null)
   const saisonSlug = `${moduleSlug}-tenant-${tenant.id.slice(-6)}`;
-  let saison = await db.saison.findUnique({
+  const saison = await db.saison.findUnique({
     where: { slug: saisonSlug },
     select: { id: true },
   });
   if (!saison) {
-    saison = await db.saison.create({
+    await db.saison.create({
       data: {
         slug: saisonSlug,
         title: "Bureau propre & écran verrouillé (déployé)",
