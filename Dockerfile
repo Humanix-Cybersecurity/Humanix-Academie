@@ -23,6 +23,30 @@ COPY . .
 RUN mkdir -p content-pro
 
 # ---------------------------------------------------------------------------
+# Materialise le catalogue COMMERCIAL avant `next build` (fix bug juin 2026).
+# ---------------------------------------------------------------------------
+# `prisma/catalog-saisons.ts` est un SYMLINK vers content-pro/prisma/. Le build
+# serveur Next (webpack) ne resout pas ce symlink de maniere fiable pour le
+# bundle : au runtime, loadCatalogSaisons() retombe alors sur le catalogue
+# "demo" (5 saisons) MEME quand content-pro est present — d'ou un /superadmin/
+# catalog qui affiche "source: demo / content-pro ABSENT" alors que la BDD a
+# bien le commercial (seede par le boot en tsx, qui lui suit le symlink).
+#
+# Fix deterministe : si content-pro est present a CE build, on remplace le
+# symlink par le VRAI fichier (deref). C'est un fichier de DONNEES pur (aucun
+# import) -> aucune resolution relative a casser. Webpack bundle alors un
+# module local normal -> le runtime resout "commercial".
+# En mode OSS (content-pro absent), on ne touche a rien -> demo, comportement
+# attendu pour un fork public.
+RUN if [ -f content-pro/prisma/catalog-saisons.ts ]; then \
+      rm -f prisma/catalog-saisons.ts && \
+      cp content-pro/prisma/catalog-saisons.ts prisma/catalog-saisons.ts && \
+      echo "[build] catalog commercial materialise (symlink -> fichier reel)"; \
+    else \
+      echo "[build] content-pro absent -> catalog demo (mode OSS)"; \
+    fi
+
+# ---------------------------------------------------------------------------
 # Build args pour les variables NEXT_PUBLIC_* — INDISPENSABLE pour Next.js.
 # ---------------------------------------------------------------------------
 # Pourquoi : Next.js inline les `process.env.NEXT_PUBLIC_*` dans le bundle JS
