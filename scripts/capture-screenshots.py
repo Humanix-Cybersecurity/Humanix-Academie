@@ -66,6 +66,10 @@ def main():
                 warm_page.goto(BASE_URL + path, wait_until="load", timeout=20000)
                 warm_page.wait_for_timeout(500)
             except Exception:
+                # Prechauffe best-effort : une route lente ou en cours de
+                # compilation Next.js peut timeout. On ignore volontairement
+                # et on continue — les captures reelles (plus bas) retentent
+                # chaque page de toute facon.
                 pass
         warm.close()
 

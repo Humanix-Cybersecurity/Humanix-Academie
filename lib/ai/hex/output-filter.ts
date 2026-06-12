@@ -96,25 +96,21 @@ export function wrapWithLeakFilter(
     async start(controller) {
       const reader = upstream.getReader();
       let buffer = "";
-      let leakHandled = false;
       try {
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
-          if (leakHandled) {
-            // On a deja envoye le refus, on ignore tous les tokens restants.
-            continue;
-          }
           buffer += value;
           const leak = findPromptLeak(buffer);
           if (leak) {
-            leakHandled = true;
             // Notifie le caller (audit log async). On ne await pas pour ne
             // pas bloquer le stream.
             Promise.resolve(onLeakDetected(leak.match)).catch((err) => {
               console.error("[hex-output-filter] onLeakDetected error", err);
             });
-            // Remplace TOUTE la sortie en cours par le refus.
+            // Remplace TOUTE la sortie en cours par le refus, puis coupe le
+            // stream : le break ci-dessous garantit qu'aucun token ne sort
+            // apres le refus (pas besoin d'un flag de suppression).
             controller.enqueue(LEAK_REFUSAL_MESSAGE);
             break;
           }

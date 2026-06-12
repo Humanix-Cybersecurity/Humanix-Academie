@@ -105,7 +105,9 @@ export async function launchCampaign(
 
   // Resolution des cibles : list > groupes > service > tous
   let targets: LaunchTarget[];
-  let targetingMode: "list" | "groups" | "service" | "all" = "all";
+  // Affecte dans chacune des branches ci-dessous (list / groups / service /
+  // else=all) — pas d'initialiseur, la chaine if/else est exhaustive.
+  let targetingMode: "list" | "groups" | "service" | "all";
   let targetingDetail: string | undefined;
   let skippedExternal = 0;
 
