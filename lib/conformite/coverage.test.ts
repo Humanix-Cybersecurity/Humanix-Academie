@@ -23,7 +23,7 @@ function metrics(overrides: Partial<GrcMetrics> = {}): GrcMetrics {
   };
 }
 
-describe("frameworkCoverage — Sapin II", () => {
+describe("frameworkCoverage - Sapin II", () => {
   it("tout couvert quand les métriques dépassent les seuils", () => {
     const cov = frameworkCoverage(
       "SAPIN2",
@@ -60,7 +60,7 @@ describe("frameworkCoverage — Sapin II", () => {
   });
 });
 
-describe("frameworkCoverage — structure générale", () => {
+describe("frameworkCoverage - structure générale", () => {
   it("calcule un % de couverture borné [0,100] pour chaque référentiel", () => {
     for (const ref of ["NIS2", "RGPD", "ISO27001:2022"] as const) {
       const cov = frameworkCoverage(ref, metrics({ completionRate: 0.5 }));

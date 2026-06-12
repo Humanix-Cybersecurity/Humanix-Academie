@@ -17,7 +17,7 @@ export default function PricingTeaser() {
         </h2>
         <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-xl mx-auto leading-relaxed">
           Pas de tarif à 4 chiffres. Pas d'engagement piège. Pas de jargon.
-          Quatre paliers limpides — Community, Starter, Pro, Enterprise.
+          Quatre paliers limpides - Community, Starter, Pro, Enterprise.
         </p>
         <Link
           href="/tarifs"

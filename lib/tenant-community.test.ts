@@ -2,7 +2,7 @@
 // Tests pures sur les helpers du tenant Communauté (fonctions sans IO).
 // Les variantes async (getCommunityTenant / getCommunityTenantOrThrow)
 // dépendent d'une BDD réelle et sont couvertes par les tests d'intégration
-// qui spinnent une PG dockerisée — pas dans la portée de ce fichier.
+// qui spinnent une PG dockerisée - pas dans la portée de ce fichier.
 
 import { describe, it, expect } from "vitest";
 import {

@@ -115,7 +115,7 @@ export default function LevelUpOverlay({
             </p>
             <div className="grid grid-cols-2 gap-3 text-left text-sm">
               {/*
-                Bonus par palier — etend a 10 niveaux (refonte mai 2026).
+                Bonus par palier - etend a 10 niveaux (refonte mai 2026).
                 Chaque palier debloque cosmetique + coins, plus genereux a mesure
                 qu'on monte (le grind devient plus long, la recompense suit).
               */}

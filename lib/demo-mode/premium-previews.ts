@@ -98,7 +98,7 @@ export const PREMIUM_ARTICLES_PREVIEW: PremiumArticlePreview[] = [
   { slug: "reflexes-pour-ma-grand-mere", title: "Les réflexes cyber pour ma grand-mère", emoji: "👵", category: "grand-public", audience: "famille" },
   { slug: "dangers-byod", title: "Les dangers du BYOD", emoji: "📱", category: "byod", audience: "pro" },
   { slug: "phishing-detection-5-signes", title: "Phishing : 5 signes en 5 secondes", emoji: "🎣", category: "phishing", audience: "tous" },
-  { slug: "donnees-personnelles-rgpd-quotidien", title: "RGPD au quotidien — Le guide express", emoji: "📁", category: "rgpd", audience: "pro" },
+  { slug: "donnees-personnelles-rgpd-quotidien", title: "RGPD au quotidien - Le guide express", emoji: "📁", category: "rgpd", audience: "pro" },
   { slug: "wifi-public-vraiment-dangereux", title: "Wi-Fi public : vraiment dangereux ?", emoji: "📶", category: "teletravail", audience: "tous" },
   { slug: "faux-conseiller-bancaire", title: "Le faux conseiller bancaire : l'arnaque qui a piégé 64 000 Français en 2025", emoji: "📞", category: "fraude", audience: "famille" },
   { slug: "smartphone-de-mes-parents", title: "Sécuriser le smartphone d'un parent ou grand-parent", emoji: "📱", category: "famille", audience: "famille" },

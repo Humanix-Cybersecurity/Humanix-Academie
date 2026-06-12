@@ -28,7 +28,7 @@ import { extractDomainFromEmail } from "@/lib/smtp/dns-auth-check";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Configuration SMTP — Humanix Académie",
+  title: "Configuration SMTP - Humanix Académie",
   description:
     "Configurer ton serveur SMTP pour envoyer les phishing simulés depuis ton propre domaine.",
   robots: { index: false, follow: false },
@@ -94,7 +94,7 @@ export default async function SmtpConfigPage() {
             <strong className="text-primary-500">
               1. Ton propre serveur SMTP
             </strong>{" "}
-            (gratuit, autonomie totale) — tu utilises un Postfix self-host,
+            (gratuit, autonomie totale) - tu utilises un Postfix self-host,
             un Mailcow, ou un compte Office 365 / Google Workspace dédié.
             Tu maîtrises tout : domaine, IP, réputation.
           </li>
@@ -102,7 +102,7 @@ export default async function SmtpConfigPage() {
             <strong className="text-primary-500">
               2. Un provider transactionnel
             </strong>{" "}
-            (Brevo, Mailjet, Scaleway TEM client, Mailgun…) — tu renseignes
+            (Brevo, Mailjet, Scaleway TEM client, Mailgun…) - tu renseignes
             ici les credentials du compte client que tu as ouvert
             spécifiquement pour les phishing simulés. Coût : variable selon
             le provider, souvent gratuit en deçà de quelques centaines
@@ -110,7 +110,7 @@ export default async function SmtpConfigPage() {
           </li>
           <li>
             <strong className="text-primary-500">3. Prestation Humanix</strong>{" "}
-            — pas envie de gérer l&apos;OPSEC ? Nous contacter pour une mise
+            - pas envie de gérer l&apos;OPSEC ? Nous contacter pour une mise
             en place complète facturée au forfait : SMTP dédié, délégation
             de domaine, suivi réputation.{" "}
             <Link

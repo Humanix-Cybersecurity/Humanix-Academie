@@ -11,7 +11,7 @@
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
-const CONTACT_TITLE = "Contact — Cinq adresses dédiées | Humanix Académie";
+const CONTACT_TITLE = "Contact - Cinq adresses dédiées | Humanix Académie";
 const CONTACT_DESC =
   "Cinq adresses email selon ton sujet : commercial, sécurité, RGPD, support, contributeur expert. Réponse sous 4 h ouvrées en moyenne. Pas de formulaire, pas de tracker.";
 
@@ -28,7 +28,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Contact Humanix — Réponse sous 4 h ouvrées",
+    title: "Contact Humanix - Réponse sous 4 h ouvrées",
     description: CONTACT_DESC,
     images: ["/logo-humanix-academie-512.png"],
   },

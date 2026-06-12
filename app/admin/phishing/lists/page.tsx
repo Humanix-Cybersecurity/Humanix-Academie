@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /admin/phishing/lists — Gestion des recipient lists pour campagnes phishing.
+// /admin/phishing/lists - Gestion des recipient lists pour campagnes phishing.
 //
 // CONTEXT (Phase 3 Phishing Engine v2, mai 2026) :
 //   Avant : ciblage uniquement par Group ou service via formulaire de campagne.
@@ -111,7 +111,7 @@ export default async function PhishingListsPage() {
                       {l.name}
                     </td>
                     <td className="px-3 py-2 text-gray-600 dark:text-gray-300">
-                      {l.description ?? "—"}
+                      {l.description ?? "-"}
                     </td>
                     <td className="px-3 py-2 text-right tabular-nums">
                       {l._count.recipients}

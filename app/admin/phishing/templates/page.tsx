@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /admin/phishing/templates — Gestion des templates email phishing.
+// /admin/phishing/templates - Gestion des templates email phishing.
 //
 // CONTEXT (Phase 0 Phishing Engine v2, juin 2026) :
 //   Listing des templates disponibles pour le tenant :

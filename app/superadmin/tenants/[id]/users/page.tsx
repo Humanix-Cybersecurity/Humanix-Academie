@@ -143,7 +143,7 @@ export default async function TenantUsersPage({
             {users.map((u) => (
               <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-slate-800/30">
                 <td className="px-4 py-3 font-mono text-xs">{maskEmail(u.email)}</td>
-                <td className="px-4 py-3">{maskName(u.name) || "—"}</td>
+                <td className="px-4 py-3">{maskName(u.name) || "-"}</td>
                 <td className="px-4 py-3">
                   <span
                     className={`inline-block px-2 py-0.5 rounded-md text-xs font-bold ${
@@ -171,12 +171,12 @@ export default async function TenantUsersPage({
                   )}
                 </td>
                 <td className="px-4 py-3 text-xs">
-                  {u.mfaEnabled ? "🔐" : "—"}
+                  {u.mfaEnabled ? "🔐" : "-"}
                 </td>
                 <td className="px-4 py-3 text-xs text-gray-500">
                   {u.lastLoginAt
                     ? new Date(u.lastLoginAt).toLocaleDateString("fr-FR")
-                    : "—"}
+                    : "-"}
                 </td>
                 <td className="px-4 py-3 text-xs text-gray-500">
                   {new Date(u.createdAt).toLocaleDateString("fr-FR")}

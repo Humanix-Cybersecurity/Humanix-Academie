@@ -129,7 +129,7 @@ export default async function AdminPage() {
     )[0];
     return {
       name: u.name || u.email.split("@")[0],
-      service: u.service ?? "—",
+      service: u.service ?? "-",
       episodesDone: ups.length,
       totalEpisodes,
       xp: ups.reduce((s, p) => s + (p.score || 0), 0),

@@ -249,7 +249,7 @@ export default function PackNis2Form({ tenantName }: Props) {
           onClick={downloadAnnualReport}
           className="btn-secondary"
           disabled={submitting}
-          title="Rapport annuel formel destiné à l'autorité compétente (ANSSI) — utilise les mêmes informations que ci-dessus."
+          title="Rapport annuel formel destiné à l'autorité compétente (ANSSI) - utilise les mêmes informations que ci-dessus."
         >
           {submitting ? "Génération en cours…" : "📋 Télécharger le rapport annuel NIS2"}
         </button>

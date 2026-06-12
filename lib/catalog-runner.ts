@@ -94,14 +94,14 @@ export async function getCatalogReport(): Promise<CatalogReport | null> {
 /**
  * Re-seed COMPLET du catalogue via tsx (résout le commercial, contrairement à
  * un seedCatalog() in-process bundlé). Lève en cas d'échec ou de sortie
- * inattendue — l'appelant (server action) loggue l'erreur en audit.
+ * inattendue - l'appelant (server action) loggue l'erreur en audit.
  */
 export async function reseedCatalogViaTsx(): Promise<CatalogReseedResult> {
   const out = await runTsxScript("scripts/seed-catalog.ts", 180_000);
   const result = extractJsonLine<CatalogReseedResult>(out, "__SEED_RESULT__");
   if (!result) {
     throw new Error(
-      "reseed: sortie tsx sans __SEED_RESULT__ — " +
+      "reseed: sortie tsx sans __SEED_RESULT__ - " +
         out.trim().split("\n").slice(-3).join(" | ").slice(0, 500),
     );
   }

@@ -239,7 +239,7 @@ export default async function ApprendrePage() {
       {
         id: "fondamentaux",
         tag: "famille:public",
-        label: "Fondamentaux — pour tout le monde",
+        label: "Fondamentaux - pour tout le monde",
         emoji: "🌱",
       },
       { id: "metiers", tag: "famille:metier", label: "Par métier", emoji: "💼" },
@@ -412,7 +412,7 @@ export default async function ApprendrePage() {
       />
 
       <div className="max-w-5xl mx-auto px-4 py-8 sm:py-10 space-y-8">
-        {/* Ton prochain pas — UN seul appel a l'action, mis en valeur.
+        {/* Ton prochain pas - UN seul appel a l'action, mis en valeur.
             C'est la seule chose qui compte si tu viens sur cette page
             pour APPRENDRE plutot que pour CONSULTER ton tableau de bord. */}
         {recommendedEpisode && recommendedSaison && (
@@ -474,7 +474,7 @@ export default async function ApprendrePage() {
           </section>
         )}
 
-        {/* Mode Enqueteur — invitation a la decouverte guidee.
+        {/* Mode Enqueteur - invitation a la decouverte guidee.
             On le pose juste avant les acquis pour qu'il complète le
             parcours classique : "tu as fait X modules, maintenant
             joue à les reperer dans la vraie vie". */}
@@ -496,7 +496,7 @@ export default async function ApprendrePage() {
                 </h2>
                 <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
                   On te montre un mail, un post LinkedIn ou une scène
-                  de bureau — tu coches ce qui te paraît louche. Le
+                  de bureau - tu coches ce qui te paraît louche. Le
                   signal qu'on repère soi-même, on ne le retient pas
                   par cœur : on le voit venir.
                 </p>

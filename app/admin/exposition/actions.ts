@@ -79,7 +79,7 @@ function parseDomains(raw: string): string[] {
 /**
  * Ensemble des domaines email VERIFIES du tenant (un salarie a un email
  * verifie sur ce domaine). Sert de preuve de propriete : on n'autorise la
- * surveillance d'un domaine que s'il appartient au tenant (anti-tiers — on
+ * surveillance d'un domaine que s'il appartient au tenant (anti-tiers - on
  * ne surveille jamais le domaine d'un concurrent ou d'un grand public).
  */
 async function verifiedEmailDomains(tenantId: string): Promise<Set<string>> {

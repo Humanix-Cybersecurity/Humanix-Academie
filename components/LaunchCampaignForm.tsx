@@ -6,10 +6,10 @@
 // Ciblage (mai 2026, etendu juin 2026 avec recipient lists) :
 // 4 modes possibles, mutuellement exclusifs cote UX
 // (le form utilise le 1er non vide dans cet ordre) :
-//   1. Recipient list (juin 2026 Phase 3 v2) — cohorte CSV importee
-//   2. Groupes metier (compta, rh, dev, comex...) — recommandé, structuré
-//   3. Service legacy (User.service string libre) — fallback compat
-//   4. Tous les apprenants actifs — par defaut
+//   1. Recipient list (juin 2026 Phase 3 v2) - cohorte CSV importee
+//   2. Groupes metier (compta, rh, dev, comex...) - recommandé, structuré
+//   3. Service legacy (User.service string libre) - fallback compat
+//   4. Tous les apprenants actifs - par defaut
 
 import { useTransition, useState } from "react";
 import { launchCampaign } from "@/app/admin/phishing/actions";
@@ -119,11 +119,11 @@ export default function LaunchCampaignForm({
           : "";
         // Phase 7a : message specifique si A/B test active
         const variantNote = res.variantSplit
-          ? ` — Split A/B : ${res.variantSplit.a} variant A / ${res.variantSplit.b} variant B`
+          ? ` - Split A/B : ${res.variantSplit.a} variant A / ${res.variantSplit.b} variant B`
           : "";
         // Phase 7b : message specifique si drip active
         const dripNote = res.dripPending
-          ? ` — ⏱️ ${res.dripPending} mail${res.dripPending > 1 ? "s" : ""} planifie${res.dripPending > 1 ? "s" : ""} pour les prochains jours (envoyes par le cron)`
+          ? ` - ⏱️ ${res.dripPending} mail${res.dripPending > 1 ? "s" : ""} planifie${res.dripPending > 1 ? "s" : ""} pour les prochains jours (envoyes par le cron)`
           : "";
         if (res.simulated) {
           setFeedback({
@@ -308,7 +308,7 @@ export default function LaunchCampaignForm({
           <label className="text-sm font-medium text-gray-700 block mb-2">
             Cibler une liste de destinataires
             <span className="ml-2 text-xs font-normal text-gray-500">
-              (cohorte ad-hoc importee via CSV — prioritaire si selectionnee)
+              (cohorte ad-hoc importee via CSV - prioritaire si selectionnee)
             </span>
           </label>
           <select
@@ -316,12 +316,12 @@ export default function LaunchCampaignForm({
             onChange={(e) => setSelectedListId(e.target.value)}
             className="w-full rounded-xl border-2 border-gray-200 p-3 focus:border-accent-500 focus:outline-none text-sm bg-white"
           >
-            <option value="">— Pas de liste, utiliser le ciblage ci-dessous —</option>
+            <option value="">- Pas de liste, utiliser le ciblage ci-dessous -</option>
             {lists.map((l) => (
               <option key={l.id} value={l.id}>
                 📋 {l.name} ({l.recipientCount} destinataire
                 {l.recipientCount > 1 ? "s" : ""})
-                {l.description ? ` — ${l.description}` : ""}
+                {l.description ? ` - ${l.description}` : ""}
               </option>
             ))}
           </select>
@@ -348,7 +348,7 @@ export default function LaunchCampaignForm({
           <label className="text-sm font-medium text-gray-700 block mb-2">
             Cibler des groupes métier
             <span className="ml-2 text-xs font-normal text-gray-500">
-              (recommandé — un DAF n&apos;a pas les mêmes risques qu&apos;un dev)
+              (recommandé - un DAF n&apos;a pas les mêmes risques qu&apos;un dev)
             </span>
           </label>
           <div className="flex flex-wrap gap-2">

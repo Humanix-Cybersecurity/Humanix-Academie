@@ -3,7 +3,7 @@ import { describe, it, expect } from "vitest";
 import { toVectorLiteral, EMBED_DIMS } from "./pgvector";
 
 // Note : isPgvectorAvailable / queryNearest / upsertChunk font des
-// $queryRawUnsafe — testes en integration post-launch. Ici on couvre
+// $queryRawUnsafe - testes en integration post-launch. Ici on couvre
 // la validation des inputs (notre defense contre l'injection SQL puisque
 // le vector literal est concatene en SQL et non passe en parametre).
 

@@ -12,7 +12,7 @@
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
-const INT_TITLE = "Connecteurs & intégrations — Écosystème cyber souverain | Humanix Académie";
+const INT_TITLE = "Connecteurs & intégrations - Écosystème cyber souverain | Humanix Académie";
 const INT_DESC =
   "Tous les connecteurs natifs Humanix : GRC, SIEM, IAM, ITSM, RH, anti-phishing. Hub-and-spoke avec priorité souveraineté française : Lucca, GLPI, Sekoia, HarfangLab, CISO Assistant, Mailinblack. Standards ouverts (OSCAL, SCIM, CEF, CIM, ECS).";
 
@@ -29,7 +29,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Connecteurs Humanix — Écosystème cyber souverain",
+    title: "Connecteurs Humanix - Écosystème cyber souverain",
     description: INT_DESC,
     images: ["/logo-humanix-academie-512.png"],
   },

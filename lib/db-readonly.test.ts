@@ -29,5 +29,5 @@ describe("hasDedicatedReadonlyDb", () => {
 // Note : dbReadOnly est instancie au module load et reutilise la
 // connection. Les tests d'integration (qui exigent une vraie DB
 // read-only Postgres + verification que les mutations sont rejetees)
-// sont separes — testcontainers Postgres + role humanix_ro_user, a
+// sont separes - testcontainers Postgres + role humanix_ro_user, a
 // faire en CI dediee post-launch.

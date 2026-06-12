@@ -52,7 +52,7 @@ Il est versionné dans Git, accessible publiquement, et mis à jour à chaque é
 | Sécurité applicative (XSS DOMPurify, anti-SSRF)      | 🟢 Mature        | Validation Zod, sanitisation HTML5, anti-SSRF whitelist, anti-PII Mistral            |
 | Consentement utilisateur (CNIL ePrivacy)             | 🟢 **Mature ↑**  | **Nouveau v1.4** : bandeau CNIL 2020-091 parité stricte, Plausible cloud only-if-granted |
 | Sécurité réseau & infrastructure                     | 🟢 Mature        | HAProxy + segmentation Docker + TLS 1.2+ + middleware edge                           |
-| Headers HTTP (HSTS, X-Frame, CSP, Permissions-Policy)| 🟢 Mature        | CSP **dynamique** (v1.4) — Plausible cloud autorisé uniquement si env configuré      |
+| Headers HTTP (HSTS, X-Frame, CSP, Permissions-Policy)| 🟢 Mature        | CSP **dynamique** (v1.4) - Plausible cloud autorisé uniquement si env configuré      |
 | Protection des données (RGPD)                        | 🟢 Mature        | DPA + registre + droits implémentés + souverain FR + export portabilité complet      |
 | Chaîne d'approvisionnement (supply chain)            | 🟢 **Mature ↑**  | **0 CVE** sur 781 deps (npm audit), 0 warning deprecated, libs sur dernière majeure stable |
 | SDLC sécurisé                                        | 🟡 Intermédiaire | TS strict 6.0, ESLint 10 flat config, **710/723 tests verts** (v1.4 : +16, -14 fix)  |
@@ -66,7 +66,7 @@ Il est versionné dans Git, accessible publiquement, et mis à jour à chaque é
 - **0** CVE (HIGH/CRITICAL/MEDIUM/LOW/INFO) sur 781 dépendances `npm audit` (v1.4, 12 mai)
 - **3 / 3** findings non-critiques v1.1 résolus en v1.4 (1 HIGH process ✅, 2 MEDIUM CVSS 5.3 ✅) - cf. §9.4
 - **100 %** des données sensibles traitées sur des hébergements français ou européens identifiables (zéro dépendance Cloud Act US)
-- **710** tests vitest verts sur 723 (13 skipped = isolation cross-tenant nécessitant DB live) — v1.3 avait **694 verts sur 708**, donc **+16 tests + résolution de 14 failures de domain drift**
+- **710** tests vitest verts sur 723 (13 skipped = isolation cross-tenant nécessitant DB live) - v1.3 avait **694 verts sur 708**, donc **+16 tests + résolution de 14 failures de domain drift**
 
 ### Position éditoriale assumée
 
@@ -205,7 +205,7 @@ Période couverte : 8 → 12 mai 2026 (5 jours, 12 PRs mergées).
 | 10 mai | #439 | Sprint 5 : bandeau cookie + Plausible Analytics | **Conformité CNIL 2020-091 améliorée** (parité stricte Accepter/Refuser, aucun script analytics chargé sans consentement explicite) |
 | 10 mai | #440 | Docker : `NEXT_PUBLIC_*` en build args | **Durcissement build** : la config publique est explicitement déclarée comme ARGs Dockerfile + `build.args` compose, plus de leak silencieux ni de divergence build/runtime |
 | 11 mai | #481-482 | Prisma 5.22 → 6.19 (lockfile aligné) | **Élimination d'une dette de patchs** : la prod tournait sur Prisma 5.22 alors que la maintenance s'arrêtait. Maintenant sur 6.x, support actif |
-| 12 mai | #483 | Markdown render Hex chat | **XSS-safe par design** : composant `MarkdownView` whitelist (gras, listes, liens) — aucun `dangerouslySetInnerHTML`, schémas URL bloqués (`javascript:*` filtré côté `renderInline`) |
+| 12 mai | #483 | Markdown render Hex chat | **XSS-safe par design** : composant `MarkdownView` whitelist (gras, listes, liens) - aucun `dangerouslySetInnerHTML`, schémas URL bloqués (`javascript:*` filtré côté `renderInline`) |
 | 12 mai | #485 | Revert `/api/debug` + stack expose dans `global-error.tsx` | **Correction d'une fuite potentielle** : un commit debug avait été promu accidentellement en main. Stack traces server-side n'étaient pas authentifiées. Revert chirurgical (PR dédiée, sans toucher au reste). |
 | 12 mai | #486 | `@simplewebauthn/server` 10 → **13.3** | **Bibliothèque crypto WebAuthn à jour** ; le sub-package `types@10` deprecated qui restait en transitive est éliminé. API alignée sur spec FIDO2 récente (champ `credential.id` + `credential.publicKey` regroupés). |
 | 12 mai | #487 | `recharts` 2 → 3 | Pas d'impact sécurité direct, mais alignement React 19 (DOM safety) |
@@ -220,14 +220,14 @@ Période couverte : 8 → 12 mai 2026 (5 jours, 12 PRs mergées).
 | # | Sévérité | Sujet | Statut au 12 mai |
 |---|---|---|---|
 | 1 | HIGH (process) | Image Docker en prod en retard sur main | ✅ **Corrigé** (rebuild de référence le 7 mai + procédure de rebuild documentée dans cette release) |
-| 2 | MEDIUM (5.3) | HAProxy stats `:8404` sans auth | 🟡 Backlog Q2 2026 — port bound sur 127.0.0.1 uniquement (atténuation existante : non joignable depuis l'extérieur) |
-| 3 | MEDIUM (5.3) | Rate limit absent sur `/api/auth/callback/credentials` | 🟡 Backlog Q2 2026 — le **provider Credentials** n'est plus exposé en prod (only magic link + SSO). À déprécier ou rate-limiter. |
+| 2 | MEDIUM (5.3) | HAProxy stats `:8404` sans auth | 🟡 Backlog Q2 2026 - port bound sur 127.0.0.1 uniquement (atténuation existante : non joignable depuis l'extérieur) |
+| 3 | MEDIUM (5.3) | Rate limit absent sur `/api/auth/callback/credentials` | 🟡 Backlog Q2 2026 - le **provider Credentials** n'est plus exposé en prod (only magic link + SSO). À déprécier ou rate-limiter. |
 
 **Nouveaux contrôles validés v1.4 :**
 
 - ✅ **Cookie banner CNIL 2020-091** : parité stricte des boutons (texte/taille/couleur ⩵), aucune case pré-cochée, événement custom `humanix-consent-changed` pour notifier `PlausibleLoader`, aucun appel réseau à `plausible.io` tant que `localStorage['humanix-cookie-consent'] !== 'granted'`
 - ✅ **CSP dynamique** : l'origine Plausible est ajoutée à `script-src` + `connect-src` **seulement si** `NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT` est défini. Les forks AGPL non configurés ont une CSP plus stricte par défaut (pas de whitelist `plausible.io` en dur)
-- ✅ **Aucun ID Plausible hardcodé** dans le repo : chaque opérateur configure SON URL via env var (respect AGPL — pas d'instrumentation cachée des forks)
+- ✅ **Aucun ID Plausible hardcodé** dans le repo : chaque opérateur configure SON URL via env var (respect AGPL - pas d'instrumentation cachée des forks)
 - ✅ **`npm audit` 0 / 0 / 0 / 0** sur 781 dépendances (critical/high/moderate/low/info)
 - ✅ **0 warning `npm deprecated`** au build (vs 2 en v1.3 : `glob@10.5.0` et `@simplewebauthn/types@10`)
 - ✅ **Build args Docker auditables** : 8 variables `NEXT_PUBLIC_*` déclarées explicitement dans `Dockerfile` + `docker-compose.yml`, avec valeurs default vides (forks OSS = CSP plus stricte, aucune confusion build/runtime)
@@ -695,7 +695,7 @@ Toutes les actions admin sensibles sont loggées dans `Event`. En cas d'incident
 
 ### 9.4 Findings du pentest interne v1.1 (7 mai 2026)
 
-#### Finding 1 — HIGH (process) : Image Docker en prod en retard sur les correctifs
+#### Finding 1 - HIGH (process) : Image Docker en prod en retard sur les correctifs
 
 **Constat** : à la date du test (7 mai), l'image `humanix-academie-app` déployée
 avait été buildée avant le merge des PRs #142 (CSP + middleware admin + alias
@@ -717,7 +717,7 @@ personne tant que l'image n'était pas reconstruite.
 auto au push main** (item §9.2 #1). Pipeline GitHub Actions → registre
 Docker → pull + restart automatique.
 
-#### Finding 2 — MEDIUM (CVSS 5.3) : HAProxy stats sans authentification
+#### Finding 2 - MEDIUM (CVSS 5.3) : HAProxy stats sans authentification
 
 **Constat** : `infra/haproxy/haproxy.cfg` ligne 151-157 expose le frontend
 stats sur `*:8404` sans `stats auth`. Un commentaire explicite mentionne
@@ -768,7 +768,7 @@ confirmé après restart.
 **Bonus sécurité** : `stats hide-version` ajouté pour éviter le fingerprint
 de la version HAProxy depuis la page stats.
 
-#### Finding 3 — MEDIUM (CVSS 5.3) : Rate limit per-IP absent sur /api/auth
+#### Finding 3 - MEDIUM (CVSS 5.3) : Rate limit per-IP absent sur /api/auth
 
 **Constat (v1.1, 7 mai)** : la protection lockout (5 échecs / 15 min) est
 par compte utilisateur (champ `User.failedLoginAttempts`). Pour des emails
@@ -825,14 +825,14 @@ auront été migrés.
 ### Q2 2026 (avant le launch OSS du 26 mai)
 
 1. ⏳ **CI/CD avec redeploy automatique au push main** (réponse à Finding #1 du pentest interne). **Reporté Q3 2026** : pas de budget runners GitHub Actions à la date du 12 mai 2026 (compte facturation bloqué). Mise en place dès résolution. En attendant : procédure manuelle de rebuild documentée + procédure de rollback testée.
-2. ✅ **HAProxy `stats auth`** sur frontend stats 8404 (Finding #2) — **livré le 12 mai 2026 (v1.4)**. Directive `stats auth admin:"${HAPROXY_STATS_PASSWORD}"` active dans `haproxy.cfg` + `haproxy.dev.cfg`, password injecté via env var docker-compose (default `humanix-stats-change-me` à override en prod). Healthcheck Docker adapté pour passer les credentials. `stats hide-version` ajouté en bonus anti-fingerprint.
-3. ✅ **Rate limit per-IP** : **considéré résolu de facto** au 12 mai 2026 — HAProxy `stk_abuse` rate-limit globalement à 400 req/10s + 80 erreurs/10s. Le credential provider est par ailleurs progressivement déprécié (magic link + SSO recommandés).
-4. ✅ **Dependabot** sur le repo principal — actif depuis le 5 mai 2026 (cf. v1.2). `npm audit` confirme **0 CVE** sur 781 deps au 12 mai.
+2. ✅ **HAProxy `stats auth`** sur frontend stats 8404 (Finding #2) - **livré le 12 mai 2026 (v1.4)**. Directive `stats auth admin:"${HAPROXY_STATS_PASSWORD}"` active dans `haproxy.cfg` + `haproxy.dev.cfg`, password injecté via env var docker-compose (default `humanix-stats-change-me` à override en prod). Healthcheck Docker adapté pour passer les credentials. `stats hide-version` ajouté en bonus anti-fingerprint.
+3. ✅ **Rate limit per-IP** : **considéré résolu de facto** au 12 mai 2026 - HAProxy `stk_abuse` rate-limit globalement à 400 req/10s + 80 erreurs/10s. Le credential provider est par ailleurs progressivement déprécié (magic link + SSO recommandés).
+4. ✅ **Dependabot** sur le repo principal - actif depuis le 5 mai 2026 (cf. v1.2). `npm audit` confirme **0 CVE** sur 781 deps au 12 mai.
 5. ✅ **/.well-known/security.txt** publié (RFC 9116, fait le 7 mai 2026)
-6. ✅ **Branch protection sur `main`** — **bloqué techniquement** : GitHub exige un plan Pro **OU** un repo public. **Activation automatique prévue le 26 mai 2026** lors du passage public du repo (cf. manifeste OSS).
-7. ✅ **Sprint 5 — Consentement explicite CNIL 2020-091** + Plausible cloud `only-if-granted` + panneau de révocation art. 7.3 RGPD (livré PR #439 le 10 mai 2026)
-8. ✅ **Bumps stables supply chain** (12 PRs entre 8 et 12 mai) — Next 16, TS 6, ESLint 10, Tailwind 4, WebAuthn 13.3, recharts 3, vitest 4. **0 warning npm deprecated**.
-9. ✅ **Restauration du gate CI tests** — 14 failures de domain drift fixées (PR #492). 710/723 tests verts.
+6. ✅ **Branch protection sur `main`** - **bloqué techniquement** : GitHub exige un plan Pro **OU** un repo public. **Activation automatique prévue le 26 mai 2026** lors du passage public du repo (cf. manifeste OSS).
+7. ✅ **Sprint 5 - Consentement explicite CNIL 2020-091** + Plausible cloud `only-if-granted` + panneau de révocation art. 7.3 RGPD (livré PR #439 le 10 mai 2026)
+8. ✅ **Bumps stables supply chain** (12 PRs entre 8 et 12 mai) - Next 16, TS 6, ESLint 10, Tailwind 4, WebAuthn 13.3, recharts 3, vitest 4. **0 warning npm deprecated**.
+9. ✅ **Restauration du gate CI tests** - 14 failures de domain drift fixées (PR #492). 710/723 tests verts.
 
 ### Q3 2026 (juillet–septembre)
 

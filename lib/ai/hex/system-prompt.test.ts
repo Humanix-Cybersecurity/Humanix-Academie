@@ -53,7 +53,7 @@ describe("buildSystemPrompt", () => {
     expect(out).toContain("email-pro/01-cci-cco");
   });
 
-  it("ne fuit AUCUN nom de famille — n'utilise que le premier mot du userFirstName", () => {
+  it("ne fuit AUCUN nom de famille - n'utilise que le premier mot du userFirstName", () => {
     // Pas un test du buildSystemPrompt directement (l'appelant doit faire
     // l'extraction), mais on verifie que si on passe juste "Florian" ca
     // marche sans concatener autre chose.

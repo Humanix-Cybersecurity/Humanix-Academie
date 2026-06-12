@@ -344,7 +344,7 @@ export default function AdminSidebar() {
   const path = usePathname();
   const { data: session } = useSession();
   // Rang numerique du role courant (defaut : MANAGER = 1 si pas de session
-  // ou role inconnu, ce qui est conservateur — pendant le tres bref temps
+  // ou role inconnu, ce qui est conservateur - pendant le tres bref temps
   // de chargement de useSession on n'affiche que les items MANAGER+).
   const currentRole = ((session?.user as any)?.role as Role) ?? "MANAGER";
   const currentRank = ROLE_RANK[currentRole] ?? ROLE_RANK.MANAGER;

@@ -114,7 +114,7 @@ export async function buildEnrichedContext(
 
 /**
  * Ajoute le bloc "tone hint" au system prompt si pertinent. Appele apres
- * buildSystemPrompt() — c'est un addendum injectable.
+ * buildSystemPrompt() - c'est un addendum injectable.
  */
 export function buildToneAddendum(
   ctx: Awaited<ReturnType<typeof buildEnrichedContext>>,

@@ -7,7 +7,7 @@
 // deleteTenant `throw new Error("...")` sur les cas refus (mauvais nom
 // de confirmation, tenant Communaute protege, abonnement Mollie actif,
 // etc.). Sans error boundary a ce niveau, l'exception remonte au
-// boundary global app/error.tsx — et dans le contexte particulier des
+// boundary global app/error.tsx - et dans le contexte particulier des
 // Server Actions Next.js, on peut voir un 404 cryptique au lieu d'un
 // message d'erreur lisible.
 //
@@ -88,19 +88,19 @@ export default function TenantPageError({
         <ul className="list-disc pl-5 space-y-1">
           <li>
             Le nom de confirmation ne matche pas exactement (espaces,
-            accents, majuscules — copie-colle depuis le label en gras pour
+            accents, majuscules - copie-colle depuis le label en gras pour
             être sûr)
           </li>
           <li>
             Le tenant Communauté ne peut pas être supprimé (protection
-            intégrée — il accueille les apprenants gratuits)
+            intégrée - il accueille les apprenants gratuits)
           </li>
           <li>
-            Un abonnement Mollie actif est rattaché — résilie d'abord la
+            Un abonnement Mollie actif est rattaché - résilie d'abord la
             subscription via la console Mollie
           </li>
           <li>
-            Tu as perdu ta session ou ton rôle SUPERADMIN — reconnecte-toi
+            Tu as perdu ta session ou ton rôle SUPERADMIN - reconnecte-toi
           </li>
         </ul>
       </div>

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Phase 3 (B2B reporting) — export SIEM des événements d'exposition.
+// Phase 3 (B2B reporting) - export SIEM des événements d'exposition.
 //
 // Émet les EmployeeExposure d'un tenant en deux formats standards :
 //   - JSON normalisé (ingestion générique : Splunk HEC, Elastic, etc.)
@@ -8,7 +8,7 @@
 //
 // GATED triple garde : l'export ne renvoie rien si la veille n'est pas active.
 // Les données restent celles DU tenant (ses propres comptes salariés, sur ses
-// domaines déclarés), exportées vers SON SIEM — couvert par le DPA art.28.
+// domaines déclarés), exportées vers SON SIEM - couvert par le DPA art.28.
 
 import { db } from "@/lib/db";
 import { isB2bMonitoringActive } from "@/lib/exposure/b2b-flags";

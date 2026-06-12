@@ -2,7 +2,7 @@
 import { describe, it, expect } from "vitest";
 import { buildToneAddendum } from "./context";
 
-// Note : buildEnrichedContext fait des appels DB Prisma — c'est un test
+// Note : buildEnrichedContext fait des appels DB Prisma - c'est un test
 // d'integration qui necessite un setup testcontainers. On le laisse pour
 // le sprint P1 post-launch. Ici on couvre uniquement buildToneAddendum
 // qui est PUR (pas d'I/O).

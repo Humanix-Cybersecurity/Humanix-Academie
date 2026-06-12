@@ -89,7 +89,7 @@ if (
 // Apple "Sign in with Apple" : la `clientSecret` est un JWT signé ES256 que
 // l'admin doit régénérer périodiquement (validité max 6 mois cf. Apple Dev
 // Portal). Soit on injecte un JWT pré-généré via AUTH_APPLE_SECRET, soit
-// on le calcule au runtime à partir de la clé .p8 — pour l'instant on
+// on le calcule au runtime à partir de la clé .p8 - pour l'instant on
 // reste sur un JWT statique (cohérent avec Google/Microsoft).
 if (process.env.AUTH_APPLE_ID && process.env.AUTH_APPLE_SECRET) {
   providers.push(
@@ -457,7 +457,7 @@ if (isEmailConfigured()) {
             if (authUrl) {
               const rootDomain = new URL(authUrl)
                 .hostname.replace(/^www\./, "");
-              // Ne pas reecrire en dev (localhost / IP) — pas de routage par
+              // Ne pas reecrire en dev (localhost / IP) - pas de routage par
               // sous-domaine possible.
               const isDevHost =
                 rootDomain === "localhost" ||

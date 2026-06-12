@@ -2,7 +2,7 @@
 //
 // Wipe des tables de contenu (Saison, Episode, LibraryArticle,
 // MarketplaceModule, WeeklyAnecdote) pour permettre un re-seed propre
-// — typiquement quand on bascule une instance existante en DEMO_MODE
+// - typiquement quand on bascule une instance existante en DEMO_MODE
 // alors qu'elle avait deja ete seedee avec le catalogue commercial.
 //
 // CE QUI EST CONSERVE :
@@ -82,7 +82,7 @@ async function main() {
   console.log("");
 
   if (totalRows === 0) {
-    console.log("✓ Rien à wipe — toutes les tables sont déjà vides.");
+    console.log("✓ Rien à wipe - toutes les tables sont déjà vides.");
     return;
   }
 

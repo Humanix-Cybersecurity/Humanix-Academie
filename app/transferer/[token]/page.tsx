@@ -16,7 +16,7 @@ import TransferConfirmClient from "./TransferConfirmClient";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Demande de rattachement — Humanix Académie",
+  title: "Demande de rattachement - Humanix Académie",
   description:
     "Confirmez si vous souhaitez rejoindre l'espace Humanix Académie qui vous a été proposé.",
 };

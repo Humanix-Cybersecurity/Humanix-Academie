@@ -12,7 +12,7 @@
 //     que le précédent (pas un simple +1500 entre L9 et L10).
 //
 // MIGRATION HISTORIQUE (mai 2026) :
-//   Ancien système 5 niveaux (0/100/300/700/1500) déprécié — les apprenants
+//   Ancien système 5 niveaux (0/100/300/700/1500) déprécié - les apprenants
 //   atteignaient Maître après 15% du contenu seulement (~5 saisons sur 32).
 //   Les IDs 1-5 conservent leurs noms mais les seuils sont relevés ; les IDs
 //   6-10 sont nouveaux. Les badges level_X référencent les nouveaux paliers.

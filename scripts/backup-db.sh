@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# backup-db.sh — Sauvegarde chiffree de la BDD Postgres vers FTPS off-site.
+# backup-db.sh - Sauvegarde chiffree de la BDD Postgres vers FTPS off-site.
 #
 # WORKFLOW :
 #   1. pg_dump (custom format, compresse) dans /tmp
@@ -78,7 +78,7 @@ if [[ -f /etc/humanix/backup.env ]]; then
   # shellcheck disable=SC1091
   source /etc/humanix/backup.env
 elif [[ -f .env ]]; then
-  # On ne sourcera que les vars BACKUP_*, PG* — pas tout .env (eviter de polluer)
+  # On ne sourcera que les vars BACKUP_*, PG* - pas tout .env (eviter de polluer)
   while IFS= read -r line; do
     [[ "$line" =~ ^(BACKUP_|PG)[A-Z_]+= ]] || continue
     # shellcheck disable=SC2163

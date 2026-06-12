@@ -1,8 +1,8 @@
 # humanix-mcp-server
 
-Serveur **MCP (Model Context Protocol)** pour exposer les données Humanix Académie aux agents IA modernes — **approche souveraine first**.
+Serveur **MCP (Model Context Protocol)** pour exposer les données Humanix Académie aux agents IA modernes - **approche souveraine first**.
 
-> Premier — et à ce jour seul — MCP server natif d'une plateforme de Security Awareness Training / Human Risk Management européenne.
+> Premier - et à ce jour seul - MCP server natif d'une plateforme de Security Awareness Training / Human Risk Management européenne.
 
 ## Posture : souveraineté avant tout
 
@@ -10,15 +10,15 @@ MCP est un **protocole ouvert** (spécification publiée fin 2024, adoptée par
 de multiples LLM et clients desktop). Notre serveur respecte la spec sans
 aucune dépendance propriétaire. **Ordre de préférence pour les clients IA** :
 
-1. **Mistral (souverain FR)** — via Le Chat, ou tout client MCP-aware le branchant.
+1. **Mistral (souverain FR)** - via Le Chat, ou tout client MCP-aware le branchant.
 2. **Local (zéro Cloud Act)** :
-   - **LM Studio** (macOS / Windows / Linux) — client MCP natif depuis fin 2024.
-   - **Anything LLM** (desktop multi-plateforme) — support MCP natif.
-   - **Ollama** — via passerelle MCP (Ollama n'a pas de support MCP natif
+   - **LM Studio** (macOS / Windows / Linux) - client MCP natif depuis fin 2024.
+   - **Anything LLM** (desktop multi-plateforme) - support MCP natif.
+   - **Ollama** - via passerelle MCP (Ollama n'a pas de support MCP natif
      à ce jour, mais des clients comme Continue.dev ou des bridges
      `mcp-server-ollama` s'en chargent).
 3. **Sur demande (propriétaires US)** : ChatGPT, Claude Desktop, Gemini.
-   Fonctionnent — Humanix expose **uniquement** la spec MCP standard — mais
+   Fonctionnent - Humanix expose **uniquement** la spec MCP standard - mais
    ne sont pas mis en avant. Le RSSI souverain a le choix d'y aller ou pas.
 
 ## À quoi ça sert
@@ -49,7 +49,7 @@ dans `/admin`.
 ## Pré-requis
 
 - Node.js 20+
-- Une clé API Humanix (plan Pro ou supérieur — générer dans `/admin/api-keys`)
+- Une clé API Humanix (plan Pro ou supérieur - générer dans `/admin/api-keys`)
 - Un client MCP-aware. Compatible avec **tout client conforme à la spec MCP 1.0** :
   - Mistral via passerelle MCP, LM Studio, Anything LLM (souverains / locaux)
   - mcp-cli, Cursor, Continue.dev (outils de dev)
@@ -57,13 +57,13 @@ dans `/admin`.
 
 ## Installation rapide
 
-### Option A — npx (recommandé)
+### Option A - npx (recommandé)
 
 ```bash
 npx humanix-mcp-server
 ```
 
-### Option B — installation locale (build statique)
+### Option B - installation locale (build statique)
 
 ```bash
 git clone https://github.com/humanix-cybersecurity/humanix-academie
@@ -121,7 +121,7 @@ du support natif côté Ollama.
 ### Clients propriétaires US (sur demande)
 
 Les clients Claude Desktop, ChatGPT (plugin) et Gemini fonctionnent
-avec n'importe quel serveur MCP conforme — y compris le nôtre — sans
+avec n'importe quel serveur MCP conforme - y compris le nôtre - sans
 configuration spécifique côté Humanix. Mais en posture souveraine, nous
 **ne les recommandons pas en first** : vos requêtes traversent les
 infrastructures américaines. À utiliser en connaissance de cause.
@@ -130,7 +130,7 @@ infrastructures américaines. À utiliser en connaissance de cause.
 
 | Variable | Obligatoire | Défaut | Description |
 |---|---|---|---|
-| `HUMANIX_API_KEY` | ✅ | — | Clé API Humanix (commence par `hxa_`) |
+| `HUMANIX_API_KEY` | ✅ | - | Clé API Humanix (commence par `hxa_`) |
 | `HUMANIX_BASE_URL` | ❌ | `https://app.humanix-cybersecurity.fr` | URL de votre instance Humanix |
 
 ## Exemples de prompts
@@ -151,7 +151,7 @@ infrastructures américaines. À utiliser en connaissance de cause.
 - **Read-only** : aucun outil n'expose une mutation. Le périmètre est volontairement réduit.
 - **Pseudonymisation** : `humanix_team_module_performance` retourne des hashes SHA-256 (12 chars) au lieu d'emails. Pas de PII brute exposée à l'agent IA.
 - **Pas de stockage local** : le MCP server n'écrit rien, ne cache rien, ne télémétrise rien.
-- **Souverain par défaut** : votre tenant Humanix est sur Scaleway Paris ou en self-host AGPLv3. Le client MCP est de votre choix — notre recommandation pousse au local / souverain UE.
+- **Souverain par défaut** : votre tenant Humanix est sur Scaleway Paris ou en self-host AGPLv3. Le client MCP est de votre choix - notre recommandation pousse au local / souverain UE.
 - **Logs sur stderr** : le protocole MCP utilise stdout pour les messages, donc nos logs sont sur stderr (capturés par votre client MCP dans son répertoire de logs habituel).
 
 ## Tests & développement
@@ -168,7 +168,7 @@ Coverage cible 80% sur la logique de `tools.ts` (validation arguments, dispatch,
 
 ## Licence
 
-MIT — utilisable librement, intégrable dans tout outil tiers (commercial inclus) sans contagion AGPL. Le serveur MCP est volontairement publié sous une licence permissive pour maximiser l'écosystème souverain européen.
+MIT - utilisable librement, intégrable dans tout outil tiers (commercial inclus) sans contagion AGPL. Le serveur MCP est volontairement publié sous une licence permissive pour maximiser l'écosystème souverain européen.
 
 Le **cœur de Humanix Académie** reste sous AGPLv3 (cf. `LICENSE` à la racine du repo).
 
@@ -177,7 +177,7 @@ Le **cœur de Humanix Académie** reste sous AGPLv3 (cf. `LICENSE` à la racine 
 PRs bienvenues ! En particulier :
 
 - **Plus d'outils MCP** : exposer `humanix_certificates`, `humanix_phishing_templates`, `humanix_team_completion_history` (toujours read-only).
-- **Outils write-with-confirmation** : MCP supporte des prompts de confirmation user — on pourrait ajouter `humanix_send_reminder` qui demande explicitement avant d'envoyer.
+- **Outils write-with-confirmation** : MCP supporte des prompts de confirmation user - on pourrait ajouter `humanix_send_reminder` qui demande explicitement avant d'envoyer.
 - **Bridges pour Ollama / Mistral** : un mini-projet de passerelle MCP→Ollama serait très utile pour la communauté FR.
 - **Bench performance** : les appels concurrents sont actuellement sériels.
 

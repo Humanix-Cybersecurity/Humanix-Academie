@@ -186,7 +186,7 @@ async function executeSync(
       runId,
       nowLine(
         "INFO",
-        `Contenu Humanix v${HUMANIX_CONTENT_VERSION} — Responsable : ${conn.ownerEmail ?? "(non renseigné)"}`,
+        `Contenu Humanix v${HUMANIX_CONTENT_VERSION} - Responsable : ${conn.ownerEmail ?? "(non renseigné)"}`,
       ),
     );
 
@@ -236,7 +236,7 @@ async function executeSync(
         runId,
         nowLine(
           "WARN",
-          `Clé de signature PDF ÉPHÉMÈRE (régénérée au boot) — empreinte ${pubkey.fingerprint.slice(0, 23)}…`,
+          `Clé de signature PDF ÉPHÉMÈRE (régénérée au boot) - empreinte ${pubkey.fingerprint.slice(0, 23)}…`,
         ),
       );
     } else {
@@ -244,7 +244,7 @@ async function executeSync(
         runId,
         nowLine(
           "INFO",
-          `Clé de signature PDF persistante — empreinte ${pubkey.fingerprint.slice(0, 23)}…`,
+          `Clé de signature PDF persistante - empreinte ${pubkey.fingerprint.slice(0, 23)}…`,
         ),
       );
     }
@@ -320,7 +320,7 @@ async function executeSync(
             runId,
             nowLine(
               "OK",
-              `Asset Workforce ${r.action} (id ${r.id}) — \"Personnel · Couche humaine Humanix Académie\"`,
+              `Asset Workforce ${r.action} (id ${r.id}) - \"Personnel · Couche humaine Humanix Académie\"`,
             ),
           );
         } else {
@@ -367,7 +367,7 @@ async function executeSync(
         if (firstThreatError) {
           await appendLog(
             runId,
-            nowLine("WARN", `Threats — première cause : ${firstThreatError}`),
+            nowLine("WARN", `Threats - première cause : ${firstThreatError}`),
           );
         }
       } catch (err) {
@@ -594,7 +594,7 @@ async function executeSync(
                   runId,
                   nowLine(
                     "OK",
-                    `RiskScenario ${rs.action} — triggers : ${triggers.join(" / ")}`,
+                    `RiskScenario ${rs.action} - triggers : ${triggers.join(" / ")}`,
                   ),
                 );
               } else {
@@ -706,7 +706,7 @@ async function executeSync(
             runId,
             nowLine(
               "WARN",
-              "Campaigns sync : aucun Framework chargé côté CISO Assistant — charger une stored-library framework avant.",
+              "Campaigns sync : aucun Framework chargé côté CISO Assistant - charger une stored-library framework avant.",
             ),
           );
         } else {
@@ -749,7 +749,7 @@ async function executeSync(
           if (firstCampError) {
             await appendLog(
               runId,
-              nowLine("WARN", `Campaigns sync — première cause : ${firstCampError}`),
+              nowLine("WARN", `Campaigns sync - première cause : ${firstCampError}`),
             );
           }
         }
@@ -964,7 +964,7 @@ async function executeSync(
             runId,
             nowLine(
               "WARN",
-              `Metrology : module non disponible sur cette instance CISO Assistant — toggle pushMetrologySamples ignoré`,
+              `Metrology : module non disponible sur cette instance CISO Assistant - toggle pushMetrologySamples ignoré`,
             ),
           );
         } else {
@@ -978,7 +978,7 @@ async function executeSync(
           if (firstMetricError) {
             await appendLog(
               runId,
-              nowLine("WARN", `Metrology — première cause : ${firstMetricError}`),
+              nowLine("WARN", `Metrology - première cause : ${firstMetricError}`),
             );
           }
 
@@ -1113,7 +1113,7 @@ async function executeSync(
                     runId,
                     nowLine(
                       "WARN",
-                      `Dashboard widgets — première cause : ${firstWidgetError}`,
+                      `Dashboard widgets - première cause : ${firstWidgetError}`,
                     ),
                   );
                 }

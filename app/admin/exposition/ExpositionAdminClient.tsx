@@ -213,7 +213,7 @@ export default function ExpositionAdminClient({
             <div>
               <h2 className="text-base font-bold">Posture d'exposition</h2>
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                Vue agrégée (sans donnée individuelle) — preuve de mesure de
+                Vue agrégée (sans donnée individuelle) - preuve de mesure de
                 sécurité NIS2 art.21 / RGPD art.32.
               </p>
             </div>
@@ -333,7 +333,7 @@ export default function ExpositionAdminClient({
               />
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 Séparez par des virgules. Chaque domaine doit correspondre à
-                l'email vérifié d'un salarié (preuve de propriété) — sinon il
+                l'email vérifié d'un salarié (preuve de propriété) - sinon il
                 est refusé. Seuls les comptes sur ces domaines sont analysés
                 (anti-données de tiers).
               </p>
@@ -477,7 +477,7 @@ function TrendBar({
   return (
     <div>
       <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-        Expositions ouvertes — {trend.length} derniers jours
+        Expositions ouvertes - {trend.length} derniers jours
       </p>
       <div className="flex items-end gap-1 h-20">
         {trend.map((t) => (

@@ -40,7 +40,7 @@ import { isPlanId } from "@/lib/plans";
 
 export const dynamic = "force-dynamic";
 
-// Pentest fix #7 (2026-05-24) — try/catch global :
+// Pentest fix #7 (2026-05-24) - try/catch global :
 //
 // AVANT : si getPayment(tr_inconnu) throw (cas habituel quand un attaquant
 // pousse un id factice, ou quand l'API Mollie a un timeout), le handler
@@ -57,7 +57,7 @@ export const dynamic = "force-dynamic";
 //   - persiste l'erreur pour investigation sans bloquer le flux
 //
 // Note : la vraie defense reste l'authenticite par retrieve (cle API
-// secrete obligatoire) — l'attaquant qui force un tr_xxx ne peut rien
+// secrete obligatoire) - l'attaquant qui force un tr_xxx ne peut rien
 // LIRE de la ressource. Le try/catch global est une defense-en-profondeur
 // contre le DoS et le fingerprint.
 
@@ -82,7 +82,7 @@ export async function POST(req: Request) {
     if (resourceId.startsWith("sub_")) {
       return await handleSubscriptionEvent(resourceId);
     }
-    // Inconnu (mol_, mdt_, etc.) — on retourne 200 pour eviter Mollie retry indefini
+    // Inconnu (mol_, mdt_, etc.) - on retourne 200 pour eviter Mollie retry indefini
     return NextResponse.json({ received: true, ignored: true });
   } catch (err) {
     // Fallback ultime : on logge cote serveur et on retourne 200 pour

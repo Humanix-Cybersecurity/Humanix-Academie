@@ -6,11 +6,11 @@ humanix-harfanglab-connector
 
 Bridge bidirectionnel HarfangLab (EDR souverain français) ↔ Humanix Académie.
 
-Sens 1 — push (Humanix → HarfangLab) :
+Sens 1 - push (Humanix → HarfangLab) :
     Pousse les preuves de conformité au format CEF dans le syslog
     HarfangLab pour enrichir les dashboards et corrélations EDR.
 
-Sens 2 — pull (HarfangLab → Humanix) :
+Sens 2 - pull (HarfangLab → Humanix) :
     Récupère les alertes HarfangLab récentes pour identifier les utilisateurs
     à risque et déclencher une campagne de sensibilisation Humanix ciblée
     via webhook (à configurer côté Humanix).
@@ -50,7 +50,7 @@ def must_env(key: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Sens 1 — Humanix CEF -> HarfangLab syslog
+# Sens 1 - Humanix CEF -> HarfangLab syslog
 # ---------------------------------------------------------------------------
 def push_humanix_to_harfanglab(framework: str, dry_run: bool) -> int:
     base = must_env("HUMANIX_BASE_URL").rstrip("/")
@@ -85,7 +85,7 @@ def push_humanix_to_harfanglab(framework: str, dry_run: bool) -> int:
 
 
 # ---------------------------------------------------------------------------
-# Sens 2 — HarfangLab alerts -> Humanix campagne ciblée
+# Sens 2 - HarfangLab alerts -> Humanix campagne ciblée
 # ---------------------------------------------------------------------------
 def pull_alerts_to_humanix(hours: int, dry_run: bool) -> int:
     hl_base = must_env("HARFANGLAB_BASE_URL").rstrip("/")

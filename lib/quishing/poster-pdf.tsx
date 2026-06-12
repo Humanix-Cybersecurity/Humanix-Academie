@@ -120,7 +120,7 @@ export type PosterDocProps = {
   campaignId: string;
   /**
    * Logo entreprise en data URL (data:image/png;base64,...) ou null.
-   * Si null : pas de logo affiche (PAS de logo Humanix par defaut —
+   * Si null : pas de logo affiche (PAS de logo Humanix par defaut -
    * l'affiche doit pouvoir passer pour un document de l'entreprise).
    */
   logoDataUrl: string | null;
@@ -206,7 +206,7 @@ export async function renderQuishingPosterBuffer(opts: {
   templateId: QuishingTemplate;
   baseUrl: string;
   campaignId: string;
-  /** Optionnel — data URL d'un logo entreprise a embarquer dans le PDF. */
+  /** Optionnel - data URL d'un logo entreprise a embarquer dans le PDF. */
   logoDataUrl: string | null;
   /**
    * SSID Wi-Fi custom (uniquement utile si templateId = QR_FAKE_WIFI).

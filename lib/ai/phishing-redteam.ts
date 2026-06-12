@@ -202,7 +202,7 @@ function isValidScenario(obj: unknown): obj is RedTeamScenario {
 
 function demoFixture(input: RedTeamInput): RedTeamScenario {
   return {
-    subject: `[URGENT] Validation virement fournisseur — secteur ${input.sector}`,
+    subject: `[URGENT] Validation virement fournisseur - secteur ${input.sector}`,
     fromEmail: "direction-finance@groupe-holding-paris.com",
     fromName: "Direction Financiere Groupe",
     bodyHtml: `<div style="font-family:Arial,sans-serif;padding:20px">

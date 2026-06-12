@@ -4,7 +4,7 @@
 // Actions SUPERADMIN sur un tenant : desactiver, reactiver, supprimer.
 //
 // SECURITE : toutes les actions exigent role SUPERADMIN (via auth() server-side).
-// Une UI cote client peut etre bypassee — la verif sert ici, pas dans le form.
+// Une UI cote client peut etre bypassee - la verif sert ici, pas dans le form.
 //
 // AUDIT : chaque action ecrit une entree dans AuditLog avec le contexte
 // (actor, tenantId cible, raison libre). Conserve indefiniment (RGPD :
@@ -145,7 +145,7 @@ export async function deleteTenant(formData: FormData): Promise<void> {
 
   // Helper : redirect avec message d'erreur en query param, plus robuste
   // que `throw` (les throws dans Server Actions peuvent afficher un 404
-  // cryptique au lieu du message — bug signale par Florian 2026-05-23).
+  // cryptique au lieu du message - bug signale par Florian 2026-05-23).
   // La page detail lit `?error=...` et affiche un banner rose.
   const errorRedirect = (msg: string): never => {
     const target = tenantId
@@ -195,7 +195,7 @@ export async function deleteTenant(formData: FormData): Promise<void> {
   // À partir d'ici on a un tenant non-null garanti par les checks
   // ci-dessus (les errorRedirect throw et sortent de la fonction). Mais
   // TypeScript ne peut pas inferer le narrowing a travers une fonction
-  // wrapper qui retourne `never` — on doit donc capturer dans une const
+  // wrapper qui retourne `never` - on doit donc capturer dans une const
   // explicite pour avoir le typing correct dans la suite.
   const safeTenant = tenant!;
 

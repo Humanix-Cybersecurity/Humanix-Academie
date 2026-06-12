@@ -22,10 +22,10 @@
 //     pour ne pas bloquer le rendu initial.
 //   - Si l'user refuse apres avoir accepte, le script reste charge mais cesse
 //     de tracker (Plausible n'a pas d'API "stop", on ne peut pas le decharger
-//     proprement — on documente la limitation et on respecte au plus pres :
+//     proprement - on documente la limitation et on respecte au plus pres :
 //     pas de re-chargement, pas d'evenements custom).
 //   - Quand l'user passe de "denied" a "granted", la page doit etre rechargee
-//     pour declencher le mount du script. On ne force pas le reload — c'est
+//     pour declencher le mount du script. On ne force pas le reload - c'est
 //     l'utilisateur qui choisit quand mettre a jour son choix.
 //
 // Configuration :
@@ -53,7 +53,7 @@ const PLAUSIBLE_SRC = process.env.NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT ?? "";
  * NEXT_PUBLIC_PLAUSIBLE_DOMAIN (cf. PlausibleScript.tsx), on n'active PAS
  * le loader cloud pour eviter le double tracking. Cote self-host, le
  * regime CNIL recommandation 2020-091 (mesure d'audience exemptee) peut
- * s'appliquer si la config est conforme — c'est a l'admin self-host de
+ * s'appliquer si la config est conforme - c'est a l'admin self-host de
  * decider, on ne lui impose pas notre flow consent.
  */
 const HAS_SELFHOST =

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// POST /api/exposition/email/verify — vérifie l'OTP puis, si OK, renvoie le
+// POST /api/exposition/email/verify - vérifie l'OTP puis, si OK, renvoie le
 // matching d'exposition souverain (domaine/organisation contre l'observatoire).
 //
 // PRIVACY : éphémère. L'email n'est jamais persisté. Audit = ipHash only

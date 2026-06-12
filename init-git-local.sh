@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# init-git-local.sh — Initialisation propre du repo Humanix Académie en local.
+# init-git-local.sh - Initialisation propre du repo Humanix Académie en local.
 # =============================================================================
 #
 # À exécuter UNE SEULE FOIS, depuis ton terminal macOS natif (pas depuis
@@ -21,7 +21,7 @@
 #   6. Crée le premier commit avec message structuré
 #   7. Affiche un récap final
 #
-# Aucun push GitHub n'est effectué — c'est volontaire (cf. consigne).
+# Aucun push GitHub n'est effectué - c'est volontaire (cf. consigne).
 # =============================================================================
 
 set -euo pipefail
@@ -113,7 +113,7 @@ echo ""
 # 6. Premier commit
 # -----------------------------------------------------------------------------
 echo -e "${B}--- Création du premier commit ---${N}"
-git commit -m "chore: initial commit — Humanix Académie v1 (Sprint 1+2 livré)
+git commit -m "chore: initial commit - Humanix Académie v1 (Sprint 1+2 livré)
 
 Application complète prête pour le launch OSS du 26 mai 2026.
 
@@ -138,7 +138,7 @@ Application complète prête pour le launch OSS du 26 mai 2026.
 - Démo locale via DEMO_MODE=true
 - 9 features avec plan-gating granulaire
 
-== SPRINT 1 — PIVOT TARIFICATION VOLUME ==
+== SPRINT 1 - PIVOT TARIFICATION VOLUME ==
 
 - Refonte lib/pricing.ts : 6 paliers (Community gratuit + Découverte forever-free + 4 cloud)
 - Refonte lib/plans.ts : ajout palier 'decouverte', 4 nouvelles features (marketplace, sso_enterprise, multi_site, white_label)
@@ -148,7 +148,7 @@ Application complète prête pour le launch OSS du 26 mai 2026.
 - Tarifs -40 à -60% vs grille initiale (volume > rente)
 - Page accueil + cgv + famille + demo + audit-flash alignés
 
-== SPRINT 2A — GOUVERNANCE OSS RACINE ==
+== SPRINT 2A - GOUVERNANCE OSS RACINE ==
 
 - LICENSE : GNU AGPLv3 officiel (téléchargé depuis gnu.org, sha256 vérifiable)
 - COPYRIGHT : Humanix Cybersecurity 2026 + clause trademark
@@ -157,7 +157,7 @@ Application complète prête pour le launch OSS du 26 mai 2026.
 - CODE_OF_CONDUCT.md : Contributor Covenant 2.1
 - SECURITY.md : disclosure responsable, SLA par sévérité CVSS, Hall of Fame
 
-== SPRINT 2B — TEMPLATES + CI + DOCS + AUDITS ==
+== SPRINT 2B - TEMPLATES + CI + DOCS + AUDITS ==
 
 - .github/ISSUE_TEMPLATE/ : bug_report + feature_request + config.yml (redirect Discussions/SECURITY)
 - .github/PULL_REQUEST_TEMPLATE.md : checklist DCO, conventions, tests
@@ -202,7 +202,7 @@ echo -e "Auteur local  : ${G}$(git config user.name) <$(git config user.email)>$
 echo ""
 echo -e "${G}✓ Repo initialisé avec succès${N}"
 echo ""
-echo -e "${Y}⚠ Aucun remote configuré — c'est voulu.${N}"
+echo -e "${Y}⚠ Aucun remote configuré - c'est voulu.${N}"
 echo "  Quand tu seras prêt à pousser sur GitHub (Sprint 4) :"
 echo "    git remote add origin git@github.com:humanix-cybersecurity/humanix-academie.git"
 echo "    git push -u origin main"

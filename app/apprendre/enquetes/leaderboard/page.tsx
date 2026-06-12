@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Leaderboard du Mode Enqueteur — top 10 detectives du tenant sur 30j.
+// Leaderboard du Mode Enqueteur - top 10 detectives du tenant sur 30j.
 //
 // SECURITE :
 //   - Auth obligatoire
@@ -15,7 +15,7 @@ import { DETECTIVE_RANK_LABELS } from "@/lib/investigations/types";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Leaderboard Détectives — Mode Enquêteur | Humanix Académie",
+  title: "Leaderboard Détectives - Mode Enquêteur | Humanix Académie",
   description:
     "Classement des meilleurs détectives cyber de ton équipe sur les 30 derniers jours.",
 };

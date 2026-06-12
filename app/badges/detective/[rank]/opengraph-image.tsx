@@ -86,4 +86,4 @@ export default async function Image({
   });
 }
 
-export const alt = "Badge Détective Mode Enquêteur — Humanix Académie";
+export const alt = "Badge Détective Mode Enquêteur - Humanix Académie";

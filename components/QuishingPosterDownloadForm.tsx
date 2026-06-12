@@ -9,7 +9,7 @@
 // est lu en memoire pour generer le PDF, puis disparait.
 //
 // Si pas de logo : on POST sans fichier (l'affiche est generee sans
-// logo, ce qui peut etre voulu — pas de logo Humanix par defaut).
+// logo, ce qui peut etre voulu - pas de logo Humanix par defaut).
 
 import { useState } from "react";
 
@@ -110,7 +110,7 @@ export default function QuishingPosterDownloadForm({
             className="block w-full text-xs text-gray-700 dark:text-gray-300 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-accent-500 file:text-white hover:file:bg-accent-600 file:cursor-pointer cursor-pointer"
           />
           <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 italic">
-            PNG ou JPEG, max 2 MB. Non stocké — utilisé uniquement pour ce
+            PNG ou JPEG, max 2 MB. Non stocké - utilisé uniquement pour ce
             PDF.
           </p>
           <div className="flex gap-2 mt-2 justify-end">

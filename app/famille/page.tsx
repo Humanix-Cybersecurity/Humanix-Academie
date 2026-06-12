@@ -27,7 +27,7 @@ import { isEligibleToInvite, remainingInvitesFor } from "@/lib/family-invites";
 
 export const dynamic = "force-dynamic";
 
-const FAM_TITLE = "Cyber Famille — Articles cyber gratuits sans inscription | Humanix Académie";
+const FAM_TITLE = "Cyber Famille - Articles cyber gratuits sans inscription | Humanix Académie";
 const FAM_DESC =
   "La cyber-protection de tes proches en cadeau. Articles courts (5-10 min), sans jargon, sans pub, sans inscription. Pour ta grand-mère, ton ado, tes parents, tes amis. Made in France.";
 
@@ -44,7 +44,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cyber Famille — Articles cyber gratuits",
+    title: "Cyber Famille - Articles cyber gratuits",
     description: FAM_DESC,
     images: ["/logo-humanix-academie-512.png"],
   },

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /conformite/anssi-hg — Page publique de conformite aux 42 mesures
+// /conformite/anssi-hg - Page publique de conformite aux 42 mesures
 // du Guide d'hygiene informatique de l'ANSSI v2 (2017).
 //
 // PHILOSOPHIE : on ne se contente pas de dire "on est conformes". On
@@ -18,7 +18,7 @@ import { FRAMEWORKS } from "@/lib/mapping-grc";
 
 export const metadata = {
   title:
-    "Conformité ANSSI HG (42 mesures) — Humanix Académie",
+    "Conformité ANSSI HG (42 mesures) - Humanix Académie",
   description:
     "Mapping public, mesure par mesure, de la conformité Humanix Académie aux 42 mesures du Guide d'hygiène informatique de l'ANSSI v2 (2017). Source de vérité unique avec l'API evidence-export.",
   alternates: { canonical: "/conformite/anssi-hg" },
@@ -66,7 +66,7 @@ const STATUS_BADGE: Record<MeasureStatus, { label: string; cls: string; emoji: s
   },
   out_of_scope: {
     label: "Hors scope SaaS",
-    emoji: "—",
+    emoji: "-",
     cls: "bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-gray-300",
   },
 };
@@ -116,7 +116,7 @@ export default function ConformiteAnssiHgPage() {
             Trust Center · Conformité publique
           </p>
           <h1 className="font-display text-3xl sm:text-5xl font-extrabold text-primary-500 dark:text-accent-300">
-            Conformité ANSSI HG — 42 mesures
+            Conformité ANSSI HG - 42 mesures
           </h1>
           <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
             Mapping public, mesure par mesure, du Guide d'hygiène informatique
@@ -127,7 +127,7 @@ export default function ConformiteAnssiHgPage() {
             >
               lib/mapping-grc.ts
             </Link>
-            {" "}— le même fichier qui alimente l'API{" "}
+            {" "}- le même fichier qui alimente l'API{" "}
             <code className="font-mono text-sm">/api/v1/evidence-export</code>{" "}
             et le connecteur CISO Assistant. Aucune dérive possible entre
             l'affichage commercial et la réalité opérationnelle.
@@ -157,7 +157,7 @@ export default function ConformiteAnssiHgPage() {
           <Kpi
             label="Hors scope SaaS"
             value={stats.out_of_scope}
-            sub="— Côté client uniquement"
+            sub="- Côté client uniquement"
             color="gray"
           />
         </section>

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// POST /api/exposition/email/request-otp — envoie un OTP de vérification de
+// POST /api/exposition/email/request-otp - envoie un OTP de vérification de
 // propriété d'email (anti-doxxing, contrainte #1). STATELESS, zéro PII en BDD.
 
 import { NextResponse } from "next/server";

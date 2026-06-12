@@ -134,7 +134,7 @@ export async function updateProfileInfo(
   // Audit log : ne logue que les diffs reels.
   //
   // PII : firstName/lastName sont l'identite civile REELLE de la personne. On
-  // ne les ecrit PAS en clair dans l'AuditLog (qui a sa propre retention) —
+  // ne les ecrit PAS en clair dans l'AuditLog (qui a sa propre retention) -
   // minimisation RGPD art. 5.1.c. On consigne uniquement la TRANSITION (ajout /
   // suppression / modification) via un marqueur "[défini]", ce qui garde un
   // audit exploitable sans dupliquer la donnee. Le pseudo `name`, lui, est

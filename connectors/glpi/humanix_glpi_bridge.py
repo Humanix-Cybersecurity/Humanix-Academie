@@ -172,7 +172,7 @@ def event_to_ticket(event: str, payload: dict) -> tuple[str, str, int]:
 
     if event == "phishing.campaign_completed":
         return (
-            f"[Humanix] Campagne phishing terminée — {data.get('campaignTitle', '')}",
+            f"[Humanix] Campagne phishing terminée - {data.get('campaignTitle', '')}",
             f"<p><strong>Tenant</strong> : {tenant}</p>"
             f"<p><strong>Envois</strong> : {data.get('sentTo', 0)}</p>"
             f"<p><strong>Cliqué</strong> : {data.get('clicked', 0)}</p>"
@@ -183,7 +183,7 @@ def event_to_ticket(event: str, payload: dict) -> tuple[str, str, int]:
 
     if event == "evidence.exported":
         return (
-            f"[Humanix] Bundle GRC exporté — {data.get('framework', '')}",
+            f"[Humanix] Bundle GRC exporté - {data.get('framework', '')}",
             f"<p><strong>Tenant</strong> : {tenant}</p>"
             f"<p><strong>Framework</strong> : {data.get('framework', 'n/a')}</p>"
             f"<p><strong>Format</strong> : {data.get('format', 'n/a')}</p>"

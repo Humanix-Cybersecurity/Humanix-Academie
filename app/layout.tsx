@@ -18,7 +18,7 @@ import ScrollProgress from "@/components/ScrollProgress";
 import { isHexChatAvailable } from "@/lib/ai/provider";
 import { auth } from "@/lib/auth";
 // Polices brand self-hostées via Fontsource (npm packages, woff2 dans node_modules).
-// On importe les CSS qui déclarent les @font-face — bundlés au build par Next.js,
+// On importe les CSS qui déclarent les @font-face - bundlés au build par Next.js,
 // aucun fetch externe au runtime ni au build (vs next/font/google qui dépend
 // de la connectivité fonts.gstatic.com côté CI).
 //   - Inter (variable, tous poids dans 1 fichier)
@@ -46,8 +46,8 @@ const SITE_OG_IMAGE = "/logo-humanix-academie-512.png";
 
 export const metadata: Metadata = {
   // Title : chaque page marketing owns son propre `title` complet (avec son
-  // suffixe " — Humanix Académie" si elle veut). Pas de template ici car
-  // ~25 pages contiennent deja "Humanix" dans leur titre — un template
+  // suffixe " - Humanix Académie" si elle veut). Pas de template ici car
+  // ~25 pages contiennent deja "Humanix" dans leur titre - un template
   // produirait des suffixes dupliques. Le titre ci-dessous est le fallback
   // utilise quand une page ne definit rien (rare, ideallement aucun pour
   // les pages indexables).

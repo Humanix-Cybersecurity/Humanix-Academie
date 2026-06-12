@@ -39,7 +39,7 @@ function getSecret(): string {
   const s = process.env.AUTH_SECRET;
   if (!s) {
     throw new Error(
-      "AUTH_SECRET non defini — impossible de hasher le token magic link",
+      "AUTH_SECRET non defini - impossible de hasher le token magic link",
     );
   }
   return s;
@@ -54,7 +54,7 @@ export type InviteEmailContext = {
   inviterName: string;
   /** Nom du tenant ("Mon entreprise"). */
   tenantName: string;
-  /** Base URL (https://academie.tonentreprise.fr — sans trailing slash). */
+  /** Base URL (https://academie.tonentreprise.fr - sans trailing slash). */
   baseUrl: string;
 };
 
@@ -62,7 +62,7 @@ export type InviteEmailContext = {
  * Cree un VerificationToken NextAuth + envoie l'email d'invitation.
  *
  * Returns { ok: true } meme si l'envoi a echoue silencieusement
- * (logging interne) — on ne veut PAS bloquer la creation du User cote
+ * (logging interne) - on ne veut PAS bloquer la creation du User cote
  * admin si Scaleway TEM est down.
  */
 export async function sendInviteMagicLink(
@@ -159,7 +159,7 @@ française de sensibilisation a la cybersecurite.
 </p>
 <p style="margin:0 0 24px;color:#333;font-size:15px">
 Pour activer ton compte et commencer ta formation, clique simplement sur le
-bouton ci-dessous. Aucun mot de passe a creer — c'est un lien magique
+bouton ci-dessous. Aucun mot de passe a creer - c'est un lien magique
 securise qui te connecte directement.
 </p>
 </td></tr>
@@ -171,7 +171,7 @@ securise qui te connecte directement.
 <tr><td style="padding:0 32px 24px">
 <p style="margin:0 0 12px;color:#666;font-size:13px">
 Ce lien expire le <strong>${expiresStr}</strong>. Si tu ne fais rien, ton
-compte restera en attente d'activation — ton ${escapeHtml(params.inviterName.toLowerCase().includes("admin") ? "administrateur" : "inviteur·euse")} peut te renvoyer une invitation a tout moment.
+compte restera en attente d'activation - ton ${escapeHtml(params.inviterName.toLowerCase().includes("admin") ? "administrateur" : "inviteur·euse")} peut te renvoyer une invitation a tout moment.
 </p>
 <p style="margin:0;color:#666;font-size:13px">
 Si tu n'es pas a l'origine de cette invitation ou que tu ne souhaites pas

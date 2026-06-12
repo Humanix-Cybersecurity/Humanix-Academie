@@ -11,7 +11,7 @@
 //   - "debrief"  : explications red flags + distractors + CTA suivant
 //
 // La logique de scoring est partagee avec le serveur via computeScore
-// (lib/investigations/types.ts) — on calcule cote client pour
+// (lib/investigations/types.ts) - on calcule cote client pour
 // affichage immediat MAIS le serveur recompute pour eviter la
 // triche par dev tools (cf. server action submitInvestigation).
 
@@ -75,7 +75,7 @@ export default function InvestigationPlayer({
       })),
     ];
     // Fisher-Yates shuffle deterministe a partir du slug (seed) pour
-    // que tous les users voient le meme ordre — facilite le support
+    // que tous les users voient le meme ordre - facilite le support
     // ("clique sur la 3e case", peer learning).
     // Hash simple sur le slug pour seed pseudo-random.
     const seed = investigation.slug
@@ -230,7 +230,7 @@ export default function InvestigationPlayer({
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
             Coche tout ce qui te paraît anormal. Attention aux faux
-            positifs — sur-alarmer pénalise le score.
+            positifs - sur-alarmer pénalise le score.
           </p>
           <ul className="space-y-2">
             {shuffledItems.map((item) => (
@@ -338,7 +338,7 @@ export default function InvestigationPlayer({
     <div className="max-w-4xl mx-auto space-y-6">
       <header>
         <h1 className="font-display text-2xl sm:text-3xl font-bold text-primary-500 dark:text-accent-300 mb-2">
-          Débrief — {investigation.title}
+          Débrief - {investigation.title}
         </h1>
         <p className="text-sm text-gray-600 dark:text-gray-400">
           Détails de chaque signal et faux positif.

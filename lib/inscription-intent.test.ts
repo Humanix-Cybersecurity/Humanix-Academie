@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Tests des helpers signature/parsing du cookie d'intention inscription.
 // Les variantes IO (set/read/clear via next/headers cookies()) ne sont pas
-// testables sans mock du store Next.js — on couvre la partie pure (build +
+// testables sans mock du store Next.js - on couvre la partie pure (build +
 // parse) qui est la surface critique pour la sécurité (signature HMAC).
 
 import { describe, it, expect, beforeAll } from "vitest";

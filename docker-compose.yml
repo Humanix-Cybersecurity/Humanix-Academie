@@ -1,5 +1,5 @@
 # ============================================================
-# HumaniX Academy — Stack Docker production-ready
+# HumaniX Academy - Stack Docker production-ready
 # Démarrage : docker compose up --build
 # Reset complet : docker compose down -v && docker compose up --build
 # ============================================================
@@ -22,7 +22,7 @@
 
 services:
   # =====================================================================
-  # HAPROXY — frontend public, sécurité L4/L7
+  # HAPROXY - frontend public, sécurité L4/L7
   # =====================================================================
   haproxy:
     image: haproxy:2.9-alpine
@@ -40,7 +40,7 @@ services:
       # Services exposés publiquement (80 redirige -> 443)
       - "80:80"
       - "443:443"
-      # Stats internes — uniquement bindé sur localhost (debug local)
+      # Stats internes - uniquement bindé sur localhost (debug local)
       - "127.0.0.1:8404:8404"
     volumes:
       - ./infra/haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
@@ -74,7 +74,7 @@ services:
       retries: 5
 
   # =====================================================================
-  # POSTGRES — image custom Humanix avec role read-only pre-configure
+  # POSTGRES - image custom Humanix avec role read-only pre-configure
   # ---------------------------------------------------------------------
   # Basee sur postgres:16-alpine + script d'init dans docker/postgres/initdb/
   # qui cree automatiquement au PREMIER boot :
@@ -122,7 +122,7 @@ services:
       start_period: 30s
 
   # =====================================================================
-  # TTS — Piper self-hosted (option OSS, depuis mai 2026 sous `--profile piper`)
+  # TTS - Piper self-hosted (option OSS, depuis mai 2026 sous `--profile piper`)
   # ---------------------------------------------------------------------
   # Deux modes au choix selon `TTS_PROVIDER` dans l'env du service `app` :
   #
@@ -157,7 +157,7 @@ services:
           cpus: "1.5"
 
   # =====================================================================
-  # APP — Next.js
+  # APP - Next.js
   # Pas exposé sur l'host : seul haproxy y accède via réseau frontend
   # =====================================================================
   app:
@@ -207,7 +207,7 @@ services:
       # en prod meme si la variable fuite.
       DEV_MODE: "${DEV_MODE:-false}"
       EMAIL_FROM: "demo@humanix.local"
-      # Scaleway TEM — vide en demo, le code retombe en mode "simulated"
+      # Scaleway TEM - vide en demo, le code retombe en mode "simulated"
       SCALEWAY_TEM_TOKEN: ""
       SCALEWAY_TEM_PROJECT_ID: ""
       SCALEWAY_TEM_REGION: "fr-par"
@@ -273,7 +273,7 @@ services:
         condition: service_healthy
 
 # =====================================================================
-# RÉSEAUX — segmentation L3
+# RÉSEAUX - segmentation L3
 # =====================================================================
 networks:
   # Réseau public-facing : haproxy ↔ app uniquement

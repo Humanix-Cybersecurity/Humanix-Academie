@@ -8,7 +8,7 @@ import {
   luhnCheck,
 } from "./pii-filter";
 
-describe("scanPii — emails", () => {
+describe("scanPii - emails", () => {
   it("detecte et masque un email simple", () => {
     const r = scanPii("Contacte-moi a alice@example.com pour le suivi");
     expect(r.hasPii).toBe(true);
@@ -38,7 +38,7 @@ describe("scanPii — emails", () => {
   });
 });
 
-describe("scanPii — IBAN", () => {
+describe("scanPii - IBAN", () => {
   it("detecte un IBAN FR valide (checksum mod 97)", () => {
     // IBAN FR valide d'exemple (test public, checksum correct)
     const r = scanPii("Mon IBAN : FR1420041010050500013M02606 merci");
@@ -58,7 +58,7 @@ describe("scanPii — IBAN", () => {
   });
 });
 
-describe("scanPii — telephone FR", () => {
+describe("scanPii - telephone FR", () => {
   it("detecte un numero mobile 06", () => {
     const r = scanPii("Tel: 0612345678");
     expect(r.hits.some((h) => h.type === "phone_fr")).toBe(true);
@@ -81,7 +81,7 @@ describe("scanPii — telephone FR", () => {
   });
 });
 
-describe("scanPii — carte bancaire (Luhn)", () => {
+describe("scanPii - carte bancaire (Luhn)", () => {
   it("detecte une CB valide (numero test Visa 4242 4242 4242 4242)", () => {
     const r = scanPii("CB: 4242 4242 4242 4242");
     expect(r.hits.some((h) => h.type === "credit_card")).toBe(true);
@@ -94,7 +94,7 @@ describe("scanPii — carte bancaire (Luhn)", () => {
   });
 });
 
-describe("scanPii — SIREN / SIRET", () => {
+describe("scanPii - SIREN / SIRET", () => {
   it("detecte un SIREN (9 chiffres)", () => {
     const r = scanPii("Mon SIREN 123456789 est public");
     expect(r.hits.some((h) => h.type === "siren")).toBe(true);
@@ -108,7 +108,7 @@ describe("scanPii — SIREN / SIRET", () => {
   });
 });
 
-describe("scanPii — NIR (securite sociale)", () => {
+describe("scanPii - NIR (securite sociale)", () => {
   it("detecte un NIR valide (15 chiffres, format strict)", () => {
     // NIR fictif valide structuralement (homme né en jan 1990, dept 75)
     const r = scanPii("NIR: 190017512345678");
@@ -122,7 +122,7 @@ describe("scanPii — NIR (securite sociale)", () => {
   });
 });
 
-describe("scanPii — input degenere", () => {
+describe("scanPii - input degenere", () => {
   it("string vide -> aucun hit", () => {
     expect(scanPii("").hasPii).toBe(false);
   });

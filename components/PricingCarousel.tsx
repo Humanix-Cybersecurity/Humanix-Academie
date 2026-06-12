@@ -313,7 +313,7 @@ function PricingCard({
         )}
         <p className="text-xs text-gray-500 mt-2">
           {t.selfHostOnly
-            ? "Pas de limite — votre infra"
+            ? "Pas de limite - votre infra"
             : t.seats.max
               ? `${t.seats.min}–${t.seats.max} utilisateurs`
               : `${t.seats.min}+ utilisateurs`}
@@ -375,7 +375,7 @@ function CtaButton({
 
   // Si la card n'est pas selectionnee, on rend le CTA non cliquable
   // (sinon le click sur la card l'amene au centre, mais le click sur le
-  // bouton la fait sortir vers /souscrire avant qu'elle soit centree —
+  // bouton la fait sortir vers /souscrire avant qu'elle soit centree -
   // mauvaise UX). On le grise tant que la card n'est pas centrale.
   const onClickStop = (e: React.MouseEvent) => {
     if (disabled) {

@@ -32,7 +32,7 @@ REVOKE SELECT ON TABLE "Account" FROM humanix_readonly;
 REVOKE SELECT ON TABLE "VerificationToken" FROM humanix_readonly;
 
 -- =============================================================================
--- 2. Vue v_user_analytics — colonnes non-secretes uniquement
+-- 2. Vue v_user_analytics - colonnes non-secretes uniquement
 -- =============================================================================
 -- Expose ce dont les jobs analytiques ont reellement besoin :
 --   - Identification : id, tenantId, role, isActive

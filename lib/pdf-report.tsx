@@ -329,7 +329,7 @@ export function ConformityReport({
                 {u.xp}
               </Text>
               <Text style={[styles.tableCell, { flex: 2 }]}>
-                {u.lastActivity ?? "—"}
+                {u.lastActivity ?? "-"}
               </Text>
             </View>
           ))}

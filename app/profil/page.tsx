@@ -313,7 +313,7 @@ export default async function ProfilPage({
               </p>
               <p className="text-sm text-gray-700 dark:text-gray-200 italic max-w-md mx-auto">
                 Tes premiers badges arrivent quand tu termines un épisode ou
-                que tu enchaînes 2 jours de pratique. Pas de pression — ça
+                que tu enchaînes 2 jours de pratique. Pas de pression - ça
                 vient naturellement.
               </p>
               <Link
@@ -406,11 +406,11 @@ export default async function ProfilPage({
             </h2>
             <p className="text-sm text-gray-600 dark:text-gray-300 italic mt-1">
               Le score en vert : c'est solide. En ambre : tu peux encore
-              gagner du terrain — clique sur « Améliorer » pour rejouer.
+              gagner du terrain - clique sur « Améliorer » pour rejouer.
             </p>
           </div>
 
-          {/* Filtres par saison — pills cliquables au-dessus de la
+          {/* Filtres par saison - pills cliquables au-dessus de la
               liste. Affichees seulement si l'apprenant a un progres sur
               au moins 2 saisons (sinon le filtre n'a pas de sens). */}
           {availableSaisons.length >= 2 && (
@@ -505,7 +505,7 @@ export default async function ProfilPage({
                         colSpan={5}
                         className="py-8 text-center text-gray-500 dark:text-gray-400 italic"
                       >
-                        Aucun épisode pour cette saison —{" "}
+                        Aucun épisode pour cette saison -{" "}
                         <Link
                           href="/profil"
                           className="text-accent-500 hover:underline"
@@ -546,7 +546,7 @@ export default async function ProfilPage({
                           )}
                         </td>
                         <td className="py-3 text-gray-500 dark:text-gray-400 text-xs italic">
-                          {p.completedAt ? formatDate(p.completedAt) : "—"}
+                          {p.completedAt ? formatDate(p.completedAt) : "-"}
                         </td>
                         <td className="py-3">
                           <Link

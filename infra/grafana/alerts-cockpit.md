@@ -1,4 +1,4 @@
-# Alertes Scaleway Cockpit — Setup
+# Alertes Scaleway Cockpit - Setup
 
 > Configuration des alertes Alertmanager sur Scaleway Cockpit pour la
 > production Humanix Académie. Couvre l'étape **E** du sprint Monitoring.
@@ -17,14 +17,14 @@
 ## Convention de nommage
 
 `humanix_<surface>_<symptome>` :
-- `humanix_http_5xx_high` — explosion d'erreurs serveur
-- `humanix_security_exfiltration_detected` — alerte exfiltration
-- `humanix_security_brute_force_login` — pic login failed
-- `humanix_security_prompt_injection_burst` — tentatives de fuite Hex
+- `humanix_http_5xx_high` - explosion d'erreurs serveur
+- `humanix_security_exfiltration_detected` - alerte exfiltration
+- `humanix_security_brute_force_login` - pic login failed
+- `humanix_security_prompt_injection_burst` - tentatives de fuite Hex
 
 ## 7 alertes à provisionner
 
-### 1. 🔴 `humanix_http_5xx_high` — Explosion 5xx
+### 1. 🔴 `humanix_http_5xx_high` - Explosion 5xx
 
 **Symptôme** : > 1 % d'erreurs serveur sur 5 min.
 
@@ -46,7 +46,7 @@
 
 ---
 
-### 2. 🔴 `humanix_security_exfiltration_detected` — Exfiltration en masse
+### 2. 🔴 `humanix_security_exfiltration_detected` - Exfiltration en masse
 
 **Symptôme** : au moins 1 event `EXFILTRATION_SUSPECTED` dans la dernière heure.
 
@@ -58,13 +58,13 @@ sum(increase(humanix_audit_action_total{action="EXFILTRATION_SUSPECTED"}[1h])) >
 |-------|--------|
 | Severity | `critical` |
 | For | `0s` (déclenchement immédiat) |
-| Annotation summary | `Exfiltration en masse détectée — investigation immédiate requise` |
+| Annotation summary | `Exfiltration en masse détectée - investigation immédiate requise` |
 | Annotation description | `Voir /admin/audit?action=EXFILTRATION_SUSPECTED + /superadmin/admins-by-tenant pour identifier le user. Révoquer la session + reset MFA si compromission confirmée.` |
 | Receiver | Slack #cyber-alerts + Email security@ |
 
 ---
 
-### 3. 🟠 `humanix_security_brute_force_login` — Pic login failed
+### 3. 🟠 `humanix_security_brute_force_login` - Pic login failed
 
 **Symptôme** : > 10 logins échoués / min pendant 5 min consécutives.
 
@@ -82,7 +82,7 @@ sum(rate(humanix_audit_action_total{action="USER_LOGIN_FAILED"}[5m])) * 60 > 10
 
 ---
 
-### 4. 🟠 `humanix_security_prompt_injection_burst` — Burst Hex prompt injection
+### 4. 🟠 `humanix_security_prompt_injection_burst` - Burst Hex prompt injection
 
 **Symptôme** : > 10 tentatives de fuite system prompt en 1h.
 
@@ -100,7 +100,7 @@ sum(increase(humanix_audit_action_total{action="AI_PROMPT_INJECTION_ATTEMPT"}[1h
 
 ---
 
-### 5. 🟡 `humanix_http_p95_latency_high` — Latence p95 dégradée
+### 5. 🟡 `humanix_http_p95_latency_high` - Latence p95 dégradée
 
 **Symptôme** : p95 latence > 1 s sur 10 min.
 
@@ -116,12 +116,12 @@ histogram_quantile(
 | Severity | `warning` |
 | For | `10m` |
 | Annotation summary | `p95 latency > 1s ({{ $value | humanizeDuration }})` |
-| Annotation description | `Lent — vérifier DB (slow queries), IA Mistral (timeout), ou taille des PDF rendus.` |
+| Annotation description | `Lent - vérifier DB (slow queries), IA Mistral (timeout), ou taille des PDF rendus.` |
 | Receiver | Slack #cyber-alerts |
 
 ---
 
-### 6. 🟡 `humanix_nodejs_eventloop_lag_high` — Event loop bloqué
+### 6. 🟡 `humanix_nodejs_eventloop_lag_high` - Event loop bloqué
 
 **Symptôme** : p99 event loop lag > 200ms sur 5 min.
 
@@ -139,7 +139,7 @@ humanix_nodejs_eventloop_lag_p99_seconds > 0.2
 
 ---
 
-### 7. 🟢 `humanix_metrics_endpoint_down` — Scraping cassé
+### 7. 🟢 `humanix_metrics_endpoint_down` - Scraping cassé
 
 **Symptôme** : pas de scrape réussi depuis 5 min.
 
@@ -159,7 +159,7 @@ up{job="humanix-academie"} == 0
 
 ## Procédure de provisioning dans Cockpit
 
-### Option A — Via UI Grafana (rapide)
+### Option A - Via UI Grafana (rapide)
 
 1. Console Scaleway → Cockpit → **Alerting** → New alert rule
 2. **Data source** : Prometheus (Cockpit Mimir)
@@ -173,7 +173,7 @@ up{job="humanix-academie"} == 0
 
 Répéter pour les 7 alertes.
 
-### Option B — Via API Scaleway (Infra as Code, recommandé)
+### Option B - Via API Scaleway (Infra as Code, recommandé)
 
 Pour gérer les alertes en YAML versionné (à terme), utiliser l'API
 Cockpit `POST /alerting/v1alpha1/rules`. Cf. doc :
@@ -224,8 +224,8 @@ vers Florian + équipe (à ajuster quand l'effectif grandit).
 
 ## Conformité
 
-- ✅ **ANSSI HG M36** (journalisation des composants importants) — alertes émises sur l'audit log
-- ✅ **ANSSI HG M40** (procédure incident) — chaque alerte critical doit déclencher le runbook Pack NIS2
-- ✅ **SOC 2 CC4.1** (monitoring activities) — détection continue
-- ✅ **SOC 2 CC7.2** (surveillance anomalies) — alertes proactives
-- ✅ **RGPD art. 32** (sécurité du traitement) — mesure technique adaptée
+- ✅ **ANSSI HG M36** (journalisation des composants importants) - alertes émises sur l'audit log
+- ✅ **ANSSI HG M40** (procédure incident) - chaque alerte critical doit déclencher le runbook Pack NIS2
+- ✅ **SOC 2 CC4.1** (monitoring activities) - détection continue
+- ✅ **SOC 2 CC7.2** (surveillance anomalies) - alertes proactives
+- ✅ **RGPD art. 32** (sécurité du traitement) - mesure technique adaptée

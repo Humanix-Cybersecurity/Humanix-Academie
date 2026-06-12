@@ -12,7 +12,7 @@
 //   - Acces aux pages avancees sans ouvrir la section "Avance"
 //   - Sans connaitre l'URL exacte ("phish" trouve /admin/phishing,
 //     /admin/vishing, /admin/smishing, /admin/quishing)
-//   - Compatible aussi en mobile (bouton dans la TopBar) — la palette
+//   - Compatible aussi en mobile (bouton dans la TopBar) - la palette
 //     prend tout l'ecran en mobile
 //
 // L'index des cibles vit dans ce fichier (statique). C'est volontairement

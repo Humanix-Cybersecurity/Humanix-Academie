@@ -303,7 +303,7 @@ export async function verifyLogin(params: {
    * SECURITE : le caller doit AVOIR VALIDE que l'origin est legitime (host
    * = rpID ou sub-domain du rpID). Cf. /api/webauthn/login/verify/route.ts.
    *
-   * Ajoute 2026-05-23 : bug Florian — login depuis un sous-domaine de
+   * Ajoute 2026-05-23 : bug Florian - login depuis un sous-domaine de
    * tenant (humanix-community.humanix-academie.fr) retournait 401 parce
    * que getOrigin() = root domain mismatch avec origin signature browser.
    */

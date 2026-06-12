@@ -129,7 +129,7 @@ export async function resolveTenantContext(): Promise<TenantContext> {
 
   // Mismatch potentiel : avant de rediriger, on verifie si le user a un
   // ACCES LEGITIME a ce tenant (SUPERADMIN ou TenantMembership). Si oui,
-  // on autorise la navigation cross-tenant — le user pourra agir comme
+  // on autorise la navigation cross-tenant - le user pourra agir comme
   // admin sur ce tenant via le sous-domaine correspondant.
   // Ajoute 2026-05-23 (multi-tenant membership a la demande de Florian).
   const userId = typeof session.user.id === "string" ? session.user.id : null;

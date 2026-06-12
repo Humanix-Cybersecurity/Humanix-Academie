@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Veille B2B — DÉTECTION du matching domaine tenant ↔ observatoire des fuites.
+// Veille B2B - DÉTECTION du matching domaine tenant ↔ observatoire des fuites.
 //
 // GARANTIES ANTI-DÉRIVE (cf. b2b-flags.ts + roadmap Go/No-Go) :
 //   - Ne s'exécute QUE si isB2bMonitoringActive(tenant) (triple garde).

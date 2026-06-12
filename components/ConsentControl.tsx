@@ -9,7 +9,7 @@
 //   - Etat courant ("Vous avez accepté" / "Vous avez refusé" / "Pas encore
 //     décidé")
 //   - 2 boutons pour changer le choix (parite stricte)
-//   - Date de la decision (si disponible — best effort, optionnel)
+//   - Date de la decision (si disponible - best effort, optionnel)
 //
 // A integrer sur les pages /confidentialite et /cookies pour respecter le
 // droit RGPD de revoquer son consentement aussi facilement que de l'avoir
@@ -85,7 +85,7 @@ export default function ConsentControl() {
         </p>
         <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
           🔒 Cette instance n&apos;active aucun traceur soumis a consentement.
-          Aucun cookie analytics, aucun appel reseau vers un tiers — rien a
+          Aucun cookie analytics, aucun appel reseau vers un tiers - rien a
           accepter ou refuser.
         </p>
       </div>

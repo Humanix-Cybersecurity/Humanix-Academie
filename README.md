@@ -18,7 +18,7 @@ des outils pour former cet humain viennent des États-Unis, sont fermés, et
 coûtent 8 000 € par an et plus.
 
 L'écosystème open source cyber français s'est structuré autour d'acteurs
-reconnus — **CISO Assistant** (intuitem) pour la gouvernance, **OpenCTI**
+reconnus - **CISO Assistant** (intuitem) pour la gouvernance, **OpenCTI**
 (Filigran) pour la threat intelligence, **Wazuh** pour la détection. Mais la
 couche humaine, la sensibilisation des collaborateurs, restait un trou béant.
 
@@ -35,7 +35,7 @@ souverain, intégrée nativement à CISO Assistant.
 - **Console dirigeant** dashboard temps-réel : score de risque humain, KPIs business, top performers, urgent actions, rapport conformité PDF, export OSCAL
 - **Forecast & analytics avancé** : régression linéaire J+30 sur le score tenant, top movers individuels, corrélation incidents ↔ sensibilisation
 - **Espace DPO** : dashboard RGPD interne, file d'effacement art. 17, générateur AIPD, rétention configurable par tenant (art. 5.1.e), counters 90j
-- **Outil public « Suis-je exposé ? »** ([`/exposition`](https://humanix-academie.fr/exposition)) : auto-diagnostic d'exposition (mot de passe via k-anonymity Pwned Passwords, email, téléphone) + parcours OSINT guidé en 4 phases + plan de remédiation — **zéro stockage, aucune PII conservée**
+- **Outil public « Suis-je exposé ? »** ([`/exposition`](https://humanix-academie.fr/exposition)) : auto-diagnostic d'exposition (mot de passe via k-anonymity Pwned Passwords, email, téléphone) + parcours OSINT guidé en 4 phases + plan de remédiation - **zéro stockage, aucune PII conservée**
 - **Hub conformité multi-référentiels** (`/admin/conformite`) : couverture calculée par tenant sur **7 cadres** (ISO 27001:2022, NIS2, RGPD, ANSSI Guide Hygiène, NIST CSF v2.0, Sapin II Art. 17, SOC 2), preuves exportables vers CISO Assistant
 - **Quick Setup Wizard** : 4 écrans pour configurer un tenant fresh en <5 min
 - **AdminSearchBox** (`Ctrl+K`) : recherche transverse pages + utilisateurs + saisons
@@ -46,7 +46,7 @@ souverain, intégrée nativement à CISO Assistant.
 - **Connecteur natif CISO Assistant** : preuves de conformité exportées automatiquement
 - **Format OSCAL v1.1.2** (NIST) + CEF (Sentinel, Splunk, Sekoia, QRadar)
 - **API REST** + webhooks signés HMAC-SHA256
-- **Stack souveraine UE** : hébergement Scaleway Paris 🇫🇷, email Scaleway TEM 🇫🇷, IA Mistral Paris 🇫🇷, paiement Mollie Amsterdam 🇪🇺 (régulé DNB, PSD2 UE) — aucune dépendance Cloud Act US
+- **Stack souveraine UE** : hébergement Scaleway Paris 🇫🇷, email Scaleway TEM 🇫🇷, IA Mistral Paris 🇫🇷, paiement Mollie Amsterdam 🇪🇺 (régulé DNB, PSD2 UE) - aucune dépendance Cloud Act US
 - **Sécurité défense en profondeur** : CSP strict, middleware edge sur `/admin`, DOMPurify, HSTS preload, anti-SSRF whitelist, anti-PII sur prompts, scrypt + AES-256-GCM
 - **Conformité multi-cadre** : RGPD · NIS2 · **Loi Sapin II Art. 17** · ISO 27001:2022 · ANSSI HG · NIST CSF v2.0 · SOC 2, mapping technique versionné dans [`lib/mapping-grc.ts`](./lib/mapping-grc.ts), couverture par tenant visualisée dans le hub `/admin/conformite`
 - **Mode démo** + **Mode dev** (bypass Mollie/email) pour tester sans setup externe
@@ -58,7 +58,7 @@ souverain, intégrée nativement à CISO Assistant.
 Teste les 3 vues principales sans installation, sans inscription :
 **[demo.humanix-academie.fr](https://demo.humanix-academie.fr)**
 
-La base de démonstration est réinitialisée régulièrement — tu peux tout
+La base de démonstration est réinitialisée régulièrement - tu peux tout
 cliquer, tout modifier, tout casser sans crainte. Comptes pré-remplis pour
 les rôles Apprenant, Manager et Admin, plus 5 utilisateurs profilés en
 vulnérables / inactifs / top performers pour exercer les vues at-risk et
@@ -71,21 +71,21 @@ forecast.
 Le **Certificat Humanix** est conçu comme un **actif économique** pour les
 PME et ETI, pas comme un PDF décoratif. Trois leviers d'adoption :
 
-- **Bouclier assurance cyber** — signature Ed25519 vérifiable en 1
+- **Bouclier assurance cyber** - signature Ed25519 vérifiable en 1
   seconde + API B2B avec webhooks signés HMAC-SHA256 pour les courtiers
   et souscripteurs. Cible : réduction de prime cyber de 15 à 40 % selon
   le pourcentage de l'effectif certifié.
-- **Preuve de conformité NIS2** — obligation légale dirigeants depuis
+- **Preuve de conformité NIS2** - obligation légale dirigeants depuis
   octobre 2024 (sanctions jusqu'à 10 M€ ou 2 % CA mondial). Export
   OSCAL v1.1.2 directement intégrable dans CISO Assistant, audit trail
   intégral opposable.
-- **Démarche d'agrément ANSSI** — Humanix Académie postule à devenir
+- **Démarche d'agrément ANSSI** - Humanix Académie postule à devenir
   *le « Pix de la cybersécurité »* côté sensibilisation, avec un dossier
   formel d'agrément lancé en 2026. Reconnaissance officielle visée 2027.
 
 Chaque apprenant peut, **optionnellement**, renseigner ses prénom et nom réels
 dans `/profil/infos` pour que le PDF soit émis à son état civil plutôt qu'à son
-pseudo — sinon le pseudo reste utilisé (comportement par défaut, aucune donnée
+pseudo - sinon le pseudo reste utilisé (comportement par défaut, aucune donnée
 d'identité requise).
 
 Détail complet sur **[/certificat](https://humanix-academie.fr/certificat)**.
@@ -117,7 +117,7 @@ Détails : [docs/installation.md](./docs/installation.md#mode-0---quickstart-dev
 - 5 Go d'espace disque
 - Un nom de domaine (ou `localhost` pour tester)
 
-### Option A — Image OCI officielle (recommandée)
+### Option A - Image OCI officielle (recommandée)
 
 L'image OSS est publiée automatiquement à chaque release sur **GitHub
 Container Registry** (registre primaire, gratuit, illimité) et
@@ -150,7 +150,7 @@ Tags disponibles :
 > Azure hébergement Europe). Docker Hub reste publié en mirror pour
 > les habitudes des développeurs.
 
-### Option B — Build local depuis les sources
+### Option B - Build local depuis les sources
 
 ```bash
 git clone https://github.com/Humanix-Cybersecurity/Humanix-Academie.git
@@ -175,7 +175,7 @@ Par défaut, le tout-premier compte est créé en `SUPERADMIN` (accès cross-ten
 modération plateforme). Surcharge via `BOOTSTRAP_ADMIN_ROLE` (valeurs :
 `SUPERADMIN | ADMIN | RSSI | MANAGER`).
 
-**Promouvoir un compte existant en SUPERADMIN** — si un déploiement antérieur
+**Promouvoir un compte existant en SUPERADMIN** - si un déploiement antérieur
 avait provisionné votre compte avec un rôle inférieur (ex. ancienne version qui
 forçait `ADMIN`), réexécutez le bootstrap avec `BOOTSTRAP_ADMIN_EMAIL` pointant
 sur votre email :
@@ -202,15 +202,15 @@ documenté dans [docs/CRON.md](./docs/CRON.md).
 
 ### Documentation détaillée
 
-- [docs/installation.md](./docs/installation.md) — installation pas-à-pas (Docker, bare-metal, Kubernetes)
-- [docs/configuration.md](./docs/configuration.md) — toutes les variables d'environnement
-- [docs/PACK_NIS2_V2.md](./docs/PACK_NIS2_V2.md) — diagnostic 30Q + score per-article + rapport annuel autorité
-- [docs/DEPLOYMENT_RUNBOOK.md](./docs/DEPLOYMENT_RUNBOOK.md) — runbook déploiement production
-- [docs/upgrade.md](./docs/upgrade.md) — procédure de mise à jour entre versions
-- [docs/CRON.md](./docs/CRON.md) — tâches planifiées (Ofelia / k8s CronJob)
-- [docs/TTS_VOXTRAL.md](./docs/TTS_VOXTRAL.md) — narration audio (Voxtral SaaS ou Piper self-hosted)
-- [docs/COMPLIANCE_SAPIN2.md](./docs/COMPLIANCE_SAPIN2.md) — couverture loi Sapin II Art. 17
-- [docs/faq.md](./docs/faq.md) — questions fréquentes self-host
+- [docs/installation.md](./docs/installation.md) - installation pas-à-pas (Docker, bare-metal, Kubernetes)
+- [docs/configuration.md](./docs/configuration.md) - toutes les variables d'environnement
+- [docs/PACK_NIS2_V2.md](./docs/PACK_NIS2_V2.md) - diagnostic 30Q + score per-article + rapport annuel autorité
+- [docs/DEPLOYMENT_RUNBOOK.md](./docs/DEPLOYMENT_RUNBOOK.md) - runbook déploiement production
+- [docs/upgrade.md](./docs/upgrade.md) - procédure de mise à jour entre versions
+- [docs/CRON.md](./docs/CRON.md) - tâches planifiées (Ofelia / k8s CronJob)
+- [docs/TTS_VOXTRAL.md](./docs/TTS_VOXTRAL.md) - narration audio (Voxtral SaaS ou Piper self-hosted)
+- [docs/COMPLIANCE_SAPIN2.md](./docs/COMPLIANCE_SAPIN2.md) - couverture loi Sapin II Art. 17
+- [docs/faq.md](./docs/faq.md) - questions fréquentes self-host
 
 ---
 
@@ -248,7 +248,7 @@ Garde-fou : `DEV_MODE` est ignoré quand `AUTH_URL` ne pointe pas sur localhost.
 
 ---
 
-## Hex Chat — assistant cyber conversationnel
+## Hex Chat - assistant cyber conversationnel
 
 🦊 Hex est un assistant cyber multi-tour, accessible via un FAB flottant
 sur toute l'app pour les utilisateurs connectés. Il sait :
@@ -263,7 +263,7 @@ sur toute l'app pour les utilisateurs connectés. Il sait :
 |---|---|---|
 | `mistral` (défaut) | Free tier Mistral "Experiment" (~1 req/s, 1 B tokens/mois) | Cloud Starter / Pro |
 | `ollama` | 0 € (self-host) | Community Edition AGPLv3 |
-| `disabled` | — | Désactive le chat (FAB invisible) |
+| `disabled` | - | Désactive le chat (FAB invisible) |
 
 **Rate limit** (par utilisateur) : 12 msg/h en Starter, 60 msg/h en Pro,
 200 msg/h en Enterprise. Protège le free tier Mistral sans frustrer les
@@ -304,7 +304,7 @@ quand même sans citations. Réindex à relancer après chaque ajout de
 module MDX (idempotent).
 
 Adaptation du ton automatique (Phase 2) : Hex repère ta progression
-(score quiz moyen 30 jours) et adapte son registre — encouragement
+(score quiz moyen 30 jours) et adapte son registre - encouragement
 si score < 50 %, challenge si ≥ 80 %.
 
 Roadmap des phases suivantes (coach personnalisé, roleplay scénarios,
@@ -313,7 +313,7 @@ voice, agentique) dans le document
 
 ---
 
-## Narration audio (TTS) — guide express
+## Narration audio (TTS) - guide express
 
 3 backends au choix selon le contexte :
 
@@ -346,7 +346,7 @@ Runbook : [docs/TTS_VOXTRAL.md](./docs/TTS_VOXTRAL.md).
 
 ---
 
-## Open core — ce qui est dans ce repo, ce qui est ailleurs
+## Open core - ce qui est dans ce repo, ce qui est ailleurs
 
 Humanix Académie suit un modèle **open core**. La plateforme et un sous-ensemble
 de modules pédagogiques sont open source AGPLv3. Les modules avancés, le
@@ -374,7 +374,7 @@ Tarifs cloud : voir [humanix-cybersecurity.fr/tarifs](https://humanix-cybersecur
 
 📖 **Document de référence détaillé** : [`docs/OPEN_CORE.md`](./docs/OPEN_CORE.md) liste exhaustivement ce qui est ouvert vs plan-gated en cloud.
 
-📝 **Contribuer un module pédagogique ?** [`content/community/README.md`](./content/community/README.md) — frontmatter, workflow de review, licence CC BY-SA 4.0.
+📝 **Contribuer un module pédagogique ?** [`content/community/README.md`](./content/community/README.md) - frontmatter, workflow de review, licence CC BY-SA 4.0.
 
 ### Catalogue complet en self-host
 
@@ -394,20 +394,20 @@ Le 3e cas (contenu commercial Humanix complet en self-host) nécessite une licen
 
 | Palier | Cible | Tarif mensuel | Tarif annuel (−17 à −21 %) |
 |---|---|---|---|
-| **Découverte** (Starter) | TPE 1-15 personnes | **Gratuit** jusqu'à 5 utilisateurs, puis 19 €/mois forfait | — |
+| **Découverte** (Starter) | TPE 1-15 personnes | **Gratuit** jusqu'à 5 utilisateurs, puis 19 €/mois forfait | - |
 | **Pro** | PME industrialisée 16-250 personnes | 3 €/user/mois | 2,50 €/user/mois |
 | **Enterprise** | Multi-sites, secteur réglementé, SecNumCloud | Sur devis | Sur devis |
-| **Community Edition** (self-host) | Devs, ESN, RSSI autonomes | **Gratuit à vie** AGPLv3 | — |
+| **Community Edition** (self-host) | Devs, ESN, RSSI autonomes | **Gratuit à vie** AGPLv3 | - |
 
-La démo en ligne (`/demo`) couvre déjà le besoin "tester avant de payer" —
+La démo en ligne (`/demo`) couvre déjà le besoin "tester avant de payer" -
 pas d'essai gratuit sur les paliers payants.
 
 ---
 
-## Écosystème — connecteurs techniques
+## Écosystème - connecteurs techniques
 
 Connecteurs techniques disponibles ou en cours
-(aucun partenariat commercial signé à ce jour — les intégrations sont
+(aucun partenariat commercial signé à ce jour - les intégrations sont
 techniquement prêtes côté Humanix, libre à chaque éditeur de les utiliser) :
 
 | Outil                                                                  | Rôle                                  | Statut           |
@@ -429,17 +429,17 @@ pédagogiques, retours d'expérience, signalements de vulnérabilité.
 
 - Avant de contribuer : [CONTRIBUTING.md](./CONTRIBUTING.md)
 - Code de conduite : [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
-- Vulnérabilités : [SECURITY.md](./SECURITY.md) — disclosure responsable
+- Vulnérabilités : [SECURITY.md](./SECURITY.md) - disclosure responsable
 - Discussions : [GitHub Discussions](https://github.com/Humanix-Cybersecurity/Humanix-Academie/discussions)
 - Page communauté publique : [humanix-cybersecurity.fr/communaute](https://humanix-cybersecurity.fr/communaute)
 
-### Ton premier PR — par où commencer
+### Ton premier PR - par où commencer
 
-1. **Typo / clarification doc** (10 min) — `README.md`, `docs/*.md`. PR directe, review légère.
-2. **Module MDX pédagogique** (1-2 h) — il reste des saisons sans MDX expert dans `prisma/catalog-saisons.ts`. Modèle : `content/saisons/phishing/01-mail-du-pdg.mdx`.
-3. **Traduction** (1-3 h) — fichiers `messages/<locale>.json` prêts pour i18n.
-4. **Connecteur** (1-2 jours) — GRC ou SIEM additionnel (Drata, Vanta, ServiceNow). Modèle dans `connectors/`. Licence MIT.
-5. **Module fonctionnel** (2-5 jours) — issues marquées `good first issue` ou roadmap.
+1. **Typo / clarification doc** (10 min) - `README.md`, `docs/*.md`. PR directe, review légère.
+2. **Module MDX pédagogique** (1-2 h) - il reste des saisons sans MDX expert dans `prisma/catalog-saisons.ts`. Modèle : `content/saisons/phishing/01-mail-du-pdg.mdx`.
+3. **Traduction** (1-3 h) - fichiers `messages/<locale>.json` prêts pour i18n.
+4. **Connecteur** (1-2 jours) - GRC ou SIEM additionnel (Drata, Vanta, ServiceNow). Modèle dans `connectors/`. Licence MIT.
+5. **Module fonctionnel** (2-5 jours) - issues marquées `good first issue` ou roadmap.
 
 ### Tests + qualité
 
@@ -459,7 +459,7 @@ HTML, setup wizard. Tournée en CI sur chaque push/PR.
 
 ---
 
-## Modèle économique — comment Humanix vit
+## Modèle économique - comment Humanix vit
 
 La plateforme open source est **gratuite à vie** en self-host. Humanix
 Cybersecurity finance le développement par les services à forte valeur ajoutée
@@ -472,7 +472,7 @@ qu'elle propose autour :
 - **Pack NIS2 turnkey** + accompagnement à la conformité
 - **Intégrations sur-mesure** (Drata, Vanta, ServiceNow, etc.)
 
-C'est le modèle d'intuitem (CISO Assistant), Filigran (OpenCTI) et Centreon —
+C'est le modèle d'intuitem (CISO Assistant), Filigran (OpenCTI) et Centreon -
 éprouvé en France, qui finance durablement l'open source.
 
 **Sponsoring** : GitHub Sponsors et Open Collective ouverts après le launch
@@ -495,7 +495,7 @@ intégral et [COPYRIGHT](./COPYRIGHT) pour la notice de copyright.
 - Tu peux contribuer tes modifications à l'upstream pour profiter à tous
 
 Si tu as besoin d'une **licence commerciale** (par exemple pour un produit
-fermé qui embarque Humanix), contacte `contact@humanix-cybersecurity.fr` —
+fermé qui embarque Humanix), contacte `contact@humanix-cybersecurity.fr` -
 Humanix Cybersecurity propose un dual-licensing au cas par cas.
 
 ---

@@ -68,7 +68,7 @@ def main():
             except Exception:
                 # Prechauffe best-effort : une route lente ou en cours de
                 # compilation Next.js peut timeout. On ignore volontairement
-                # et on continue — les captures reelles (plus bas) retentent
+                # et on continue - les captures reelles (plus bas) retentent
                 # chaque page de toute facon.
                 pass
         warm.close()

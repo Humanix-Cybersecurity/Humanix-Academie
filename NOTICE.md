@@ -33,19 +33,19 @@ for more details.
 Le choix de l'AGPLv3 (et non de la MIT, BSD ou Apache 2.0) est délibéré et
 stratégique :
 
-1. **Cohérence écosystème souverain français** — c'est la même licence que
+1. **Cohérence écosystème souverain français** - c'est la même licence que
    [CISO Assistant](https://github.com/intuitem/ciso-assistant-community)
    (intuitem) et [OpenCTI](https://github.com/OpenCTI-Platform/opencti)
    (Filigran), nos partenaires écosystème.
-2. **Protection contre les forks commerciaux fermés** — l'AGPL impose que
+2. **Protection contre les forks commerciaux fermés** - l'AGPL impose que
    toute version modifiée déployée comme service en réseau soit également
    redistribuée sous AGPL avec son code source. Cela empêche un acteur
    d'aspirer notre travail pour en faire un SaaS propriétaire.
-3. **Clause SaaS** — contrairement à la GPLv3, l'AGPLv3 ferme la "ASP
+3. **Clause SaaS** - contrairement à la GPLv3, l'AGPLv3 ferme la "ASP
    loophole" : le simple fait d'utiliser le logiciel comme service en ligne
    (sans en distribuer le binaire) déclenche tout de même l'obligation de
    redistribuer les modifications.
-4. **Compatible dual-licensing** — Humanix-Cybersecurity, en tant que seul
+4. **Compatible dual-licensing** - Humanix-Cybersecurity, en tant que seul
    détenteur des droits d'auteur (via le CLA contributeurs), conserve la
    possibilité de proposer des licences commerciales propriétaires aux
    clients qui ne peuvent pas se conformer à l'AGPL (ex : ETI qui refuse

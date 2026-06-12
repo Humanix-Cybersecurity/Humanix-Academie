@@ -1,4 +1,4 @@
-# TTS — Synthèse vocale des modules
+# TTS - Synthèse vocale des modules
 
 > Humanix supporte **deux backends TTS** au choix selon ton profil :
 > Voxtral SaaS (qualité quasi-humaine, payant) ou Piper self-hosted
@@ -74,7 +74,7 @@ Caractéristiques :
 - **Pas de batch nécessaire** : Piper synthétise au runtime, le cache se remplit au fil des clics utilisateurs (mêmes hashes/disque que Voxtral, mais avec `model="piper-fr_FR-siwis-medium"` pour disjoindre)
 
 `npm run tts:build` refuse explicitement de tourner si `TTS_PROVIDER=piper`
-— le batch n'a aucun intérêt pour Piper.
+- le batch n'a aucun intérêt pour Piper.
 
 ## Cache disque & volume Docker
 
@@ -140,12 +140,12 @@ sur un épisode pré-généré.
 
 Trois entrées principales pour l'apprenant final :
 
-1. **`/apprendre/<saison>/<episode>`** — `TTSButton` sur `props.scenario` et `props.debrief`
-2. **`/librairie/<slug>`** — `TTSButton` sur le `plainText` markdown→texte de l'article
-3. **`/famille`** — `AudioPreviewButton` sur chaque carte (titre + description)
+1. **`/apprendre/<saison>/<episode>`** - `TTSButton` sur `props.scenario` et `props.debrief`
+2. **`/librairie/<slug>`** - `TTSButton` sur le `plainText` markdown→texte de l'article
+3. **`/famille`** - `AudioPreviewButton` sur chaque carte (titre + description)
 
 Côté admin / formation :
-- **`/admin/vishing`** — Sélecteur de 4 voix Voxtral pour générer un audio crédible du script de phishing vocal (utile pour le debrief avec les apprenants après une simulation)
+- **`/admin/vishing`** - Sélecteur de 4 voix Voxtral pour générer un audio crédible du script de phishing vocal (utile pour le debrief avec les apprenants après une simulation)
 
 ## Voix Voxtral disponibles
 
@@ -174,7 +174,7 @@ Mapping segment → voix dans `lib/tts/segments.ts → defaultVoiceFor()`.
 | Catalogue complet | 54 modules × 12 segments = 662 segments, ~25 000 mots → **~$2.50** |
 | Limite Voxtral / requête | 300 mots (chunk auto via `chunkText()`) |
 | Concurrence batch | 5 par défaut (override via `--concurrency N`) |
-| Rate limit Mistral | empirique : ~5 req/s, 429 occasionnels — retry/backoff exponentiel auto |
+| Rate limit Mistral | empirique : ~5 req/s, 429 occasionnels - retry/backoff exponentiel auto |
 | Espace disque cache | ~80-100 Mo MP3 pour le catalogue complet |
 
 ## Idempotence et reprise

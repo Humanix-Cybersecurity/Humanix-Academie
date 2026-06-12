@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// GET /api/phishing/[token]/debrief — Genere un debrief IA personnalise.
+// GET /api/phishing/[token]/debrief - Genere un debrief IA personnalise.
 //
 // CONTEXT (Phase 5a Phishing Engine v2, mai 2026) :
 //   La landing /phishing/[token] appelle cette route en async pour afficher

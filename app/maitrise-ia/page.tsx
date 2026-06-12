@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /maitrise-ia — landing publique du chantier strategique "Maitrise de l'IA".
+// /maitrise-ia - landing publique du chantier strategique "Maitrise de l'IA".
 //
 // CONTEXTE PRODUIT (mai 2026) : 18 mois apres ChatGPT-3.5, les entreprises
 // francaises ont massivement adopte l'IA generative SANS formation. L'AI Act
@@ -29,7 +29,7 @@ export const dynamic = "force-static";
 
 export const metadata: Metadata = {
   title:
-    "Maîtrise de l'IA en entreprise — formation cyber & esprit critique | Humanix Académie",
+    "Maîtrise de l'IA en entreprise - formation cyber & esprit critique | Humanix Académie",
   description:
     "Forme tes équipes à utiliser l'IA générative sans perdre leur esprit critique. Saison dédiée, KPIs dirigeants, conformité AI Act EU. Gratuit pour la Communauté.",
   alternates: { canonical: "/maitrise-ia" },
@@ -52,7 +52,7 @@ const EPISODES = [
   {
     num: "02",
     title: "Le piège de l'autorité textuelle",
-    blurb: "Pourquoi on croit ce qui est écrit avec aplomb — biais cognitifs en action.",
+    blurb: "Pourquoi on croit ce qui est écrit avec aplomb - biais cognitifs en action.",
   },
   {
     num: "03",
@@ -67,7 +67,7 @@ const EPISODES = [
   {
     num: "05",
     title: "Shadow AI",
-    blurb: "Quand les équipes branchent ChatGPT sans dire à l'IT — risques + comment encadrer.",
+    blurb: "Quand les équipes branchent ChatGPT sans dire à l'IT - risques + comment encadrer.",
   },
   {
     num: "06",
@@ -77,12 +77,12 @@ const EPISODES = [
   {
     num: "07",
     title: "Biais & équité",
-    blurb: "Quand un LLM exclut des candidats sans qu'on le voie — biais d'entraînement.",
+    blurb: "Quand un LLM exclut des candidats sans qu'on le voie - biais d'entraînement.",
   },
   {
     num: "08",
     title: "Prompt injection",
-    blurb: "Manipuler un assistant IA d'entreprise — attaques + défenses.",
+    blurb: "Manipuler un assistant IA d'entreprise - attaques + défenses.",
   },
   {
     num: "09",
@@ -124,7 +124,7 @@ const STUDIES = [
   {
     source: "Commission européenne",
     year: "2026",
-    title: "AI Act — entrée en vigueur",
+    title: "AI Act - entrée en vigueur",
     finding:
       "Les systèmes IA à haut risque (RH, scoring, infrastructure) doivent garantir une supervision humaine effective. La formation des utilisateurs devient une obligation traçable.",
   },
@@ -149,7 +149,7 @@ export default function MaitriseIAPage() {
           <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 leading-relaxed max-w-2xl mx-auto mb-8">
             Forme tes équipes <em>et</em> tes proches à utiliser l&apos;IA
             générative <strong>sans déléguer leur esprit critique</strong>.
-            Hallucinations, shadow AI, deepfakes, atrophie cognitive — on
+            Hallucinations, shadow AI, deepfakes, atrophie cognitive - on
             traite tout, en français, en 5 minutes par épisode.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -176,7 +176,7 @@ export default function MaitriseIAPage() {
         </h2>
         <p className="text-base text-gray-700 dark:text-gray-200 leading-relaxed text-center max-w-2xl mx-auto mb-10">
           18 mois après l&apos;explosion grand public de ChatGPT, les
-          entreprises françaises ont massivement adopté l&apos;IA — sans
+          entreprises françaises ont massivement adopté l&apos;IA - sans
           formation. Les premières études objectives commencent à mesurer
           les effets. Voici ce qu&apos;elles montrent :
         </p>
@@ -262,7 +262,7 @@ export default function MaitriseIAPage() {
           <li className="flex gap-3">
             <span aria-hidden="true">🌑</span>
             <span>
-              <strong>Indicateur Shadow AI</strong> — pourcentage
+              <strong>Indicateur Shadow AI</strong> - pourcentage
               d&apos;employé·es déclarant utiliser des outils IA hors
               politique IT. Indispensable avant l&apos;AI Act.
             </span>
@@ -270,7 +270,7 @@ export default function MaitriseIAPage() {
           <li className="flex gap-3">
             <span aria-hidden="true">📈</span>
             <span>
-              <strong>Comparaison sectorielle anonymisée</strong> — où en es-tu
+              <strong>Comparaison sectorielle anonymisée</strong> - où en es-tu
               vs d&apos;autres PME de ton secteur (k-anonymity garantie,
               aucun tenant identifiable).
             </span>
@@ -278,7 +278,7 @@ export default function MaitriseIAPage() {
           <li className="flex gap-3">
             <span aria-hidden="true">🧭</span>
             <span>
-              <strong>Plan d&apos;action</strong> suggéré — formations
+              <strong>Plan d&apos;action</strong> suggéré - formations
               prioritaires + template de charte IA à valider en CODIR.
             </span>
           </li>

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// LockedPremiumCard — carte grisee, verrouillee, affichee UNIQUEMENT
+// LockedPremiumCard - carte grisee, verrouillee, affichee UNIQUEMENT
 // en mode DEMO pour montrer aux visiteurs le contenu disponible dans la
 // formule commerciale, sans en exposer le mode d'emploi.
 //
@@ -48,7 +48,7 @@ export default function LockedPremiumCard({
 }: Props) {
   return (
     <article
-      aria-label={`${title} — disponible en ${tier}`}
+      aria-label={`${title} - disponible en ${tier}`}
       className="group relative flex flex-col h-full rounded-xl border border-dashed border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/40 p-5 transition-all hover:border-primary-300 dark:hover:border-accent-400 hover:shadow-sm"
     >
       {/* Cadenas overlay haut-droit */}
@@ -118,7 +118,7 @@ export function PremiumPreviewIntro({
             +{totalCount} {label} dès la formule payante
           </h2>
           <p className="mt-1 text-sm text-amber-800 dark:text-amber-100/80 leading-relaxed">
-            Vous êtes sur une démo publique. Le contenu ci-dessous est verrouillé —
+            Vous êtes sur une démo publique. Le contenu ci-dessous est verrouillé -
             il s'active dès l'abonnement à partir de{" "}
             <strong className="font-bold">3 €/utilisateur/mois</strong> (Pro), ou{" "}
             <strong className="font-bold">19 €/mois forfait</strong> jusqu'à 15 sièges

@@ -173,7 +173,7 @@ export default function MascotPeek() {
           </div>
         </div>
 
-        {/* Triangle de bulle (decoratif) — cote oppose a la position d'ancrage */}
+        {/* Triangle de bulle (decoratif) - cote oppose a la position d'ancrage */}
         <div
           aria-hidden="true"
           className={`absolute -bottom-2 ${onLanding ? "left-8" : "right-8"} w-4 h-4 bg-white dark:bg-slate-800 border-r-2 border-b-2 border-accent-500/40 transform rotate-45`}

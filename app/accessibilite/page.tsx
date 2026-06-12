@@ -264,7 +264,7 @@ export default function AccessibilitePage() {
           <ul>
             <li>
               <strong>Contraste libellés secondaires</strong> (RGAA 3.2 / WCAG
-              1.4.3) — <em>résolu 12 mai 2026, v1.1</em> : 94 occurrences de{" "}
+              1.4.3) - <em>résolu 12 mai 2026, v1.1</em> : 94 occurrences de{" "}
               <code>text-gray-400</code> sur fond clair (ratio 2.84:1, échec
               WCAG AA) remplacées par <code>text-gray-500</code> (ratio 4.61:1,
               conforme) via patch automatisé Python avec lookbehind négatif
@@ -273,7 +273,7 @@ export default function AccessibilitePage() {
               préservées, 94 isolées corrigées.
             </li>
             <li>
-              <strong>Légendes de tableaux</strong> (RGAA 5.4) — <em>résolu
+              <strong>Légendes de tableaux</strong> (RGAA 5.4) - <em>résolu
               12 mai 2026, v1.1</em> : 15 tableaux ont reçu un{" "}
               <code>{`<caption className="sr-only">`}</code> descriptif (pages
               admin TeamTable, AtRiskUsers, AnecdoteAdmin, GroupsManager,
@@ -283,7 +283,7 @@ export default function AccessibilitePage() {
               désormais un contexte avant la lecture du tableau.
             </li>
             <li>
-              <strong>Landmarks ARIA explicites</strong> (RGAA 9.1) —{" "}
+              <strong>Landmarks ARIA explicites</strong> (RGAA 9.1) -{" "}
               <em>vérifié 12 mai 2026, v1.1</em> : audit révèle que les
               landmarks étaient <strong>déjà bien marqués</strong> dans le code
               (<code>{`<nav aria-label="Navigation principale">`}</code> sur

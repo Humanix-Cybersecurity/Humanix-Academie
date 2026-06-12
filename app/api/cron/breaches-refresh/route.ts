@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
 }
 
 // Support GET aussi pour les services qui ne savent que faire des GET.
-// SECURITE : le secret passe UNIQUEMENT par le header x-cron-secret — plus
+// SECURITE : le secret passe UNIQUEMENT par le header x-cron-secret - plus
 // de fallback `?secret=` en query string (qui fuyait le CRON_SECRET dans les
 // access logs HAProxy/Next + l'historique navigateur + le Referer).
 // cron-job.org & co. supportent les headers custom.

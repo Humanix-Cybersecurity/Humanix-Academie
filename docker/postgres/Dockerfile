@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# Image Postgres custom Humanix — preconfiguree Least Privilege.
+# Image Postgres custom Humanix - preconfiguree Least Privilege.
 #
 # Basee sur postgres:16-alpine officiel + scripts d'init dans
 # /docker-entrypoint-initdb.d/ qui sont executes UNE FOIS au premier

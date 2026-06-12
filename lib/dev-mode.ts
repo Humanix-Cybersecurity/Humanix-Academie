@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// DEV_MODE — bypass des intégrations externes (Mollie, emails) pour
+// DEV_MODE - bypass des intégrations externes (Mollie, emails) pour
 // tester les flows inscription / souscription en local sans avoir à
 // configurer un compte Mollie ni un provider email.
 //
@@ -12,7 +12,7 @@
 //     auto-login direct comme si l'utilisateur avait cliqué sur le magic
 //     link / payé avec succès.
 //
-// SÉCURITÉ — garde-fou critique :
+// SÉCURITÉ - garde-fou critique :
 //   isDevMode() refuse d'activer le bypass quand AUTH_URL pointe sur un
 //   domaine public (anything qui ne contient ni "localhost" ni
 //   "127.0.0.1"). Un attaquant qui tenterait de pousser DEV_MODE=true sur

@@ -19,7 +19,7 @@ COPY . .
 # builde depuis un fork OSS sans le submodule prive, le `COPY . .` ne
 # l'a pas inclus. Le `COPY --from=builder /app/content-pro ./content-pro`
 # du runner stage echouerait sans ce mkdir. Dans le cas commercial,
-# le dossier existe deja avec son contenu — le mkdir est no-op.
+# le dossier existe deja avec son contenu - le mkdir est no-op.
 RUN mkdir -p content-pro
 
 # ---------------------------------------------------------------------------
@@ -28,7 +28,7 @@ RUN mkdir -p content-pro
 # `prisma/catalog-saisons.ts` est un SYMLINK vers content-pro/prisma/. Le build
 # serveur Next (webpack) ne resout pas ce symlink de maniere fiable pour le
 # bundle : au runtime, loadCatalogSaisons() retombe alors sur le catalogue
-# "demo" (5 saisons) MEME quand content-pro est present — d'ou un /superadmin/
+# "demo" (5 saisons) MEME quand content-pro est present - d'ou un /superadmin/
 # catalog qui affiche "source: demo / content-pro ABSENT" alors que la BDD a
 # bien le commercial (seede par le boot en tsx, qui lui suit le symlink).
 #
@@ -47,11 +47,11 @@ RUN if [ -f content-pro/prisma/catalog-saisons.ts ]; then \
     fi
 
 # ---------------------------------------------------------------------------
-# Build args pour les variables NEXT_PUBLIC_* — INDISPENSABLE pour Next.js.
+# Build args pour les variables NEXT_PUBLIC_* - INDISPENSABLE pour Next.js.
 # ---------------------------------------------------------------------------
 # Pourquoi : Next.js inline les `process.env.NEXT_PUBLIC_*` dans le bundle JS
 # AU BUILD (next build), pas au runtime. Les passer dans `environment:` cote
-# docker-compose les rend visibles UNIQUEMENT au runtime du container — donc
+# docker-compose les rend visibles UNIQUEMENT au runtime du container - donc
 # invisibles dans le bundle deja construit.
 # Solution : declarer chaque var en ARG ici (avant `npm run build`) puis la
 # repromouvoir en ENV pour que `next build` la voie. Cote docker-compose,
@@ -112,7 +112,7 @@ COPY --from=builder /app/content ./content
 #
 # Cas "OSS pur" (fork sans content-pro) : on a fait `mkdir -p content-pro`
 # dans le builder pour garantir qu'il existe au moins comme dossier vide.
-# La ligne ci-dessous le copie (vide) — les symlinks sont alors casses
+# La ligne ci-dessous le copie (vide) - les symlinks sont alors casses
 # mais resolveContentRoot() de lib/episodes.ts detecte le cas et bascule
 # sur content/saisons-demo/ (2 saisons demo CC BY-SA).
 COPY --from=builder /app/content-pro ./content-pro

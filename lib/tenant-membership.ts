@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Helpers pour la gestion des memberships croises — un user (typiquement
+// Helpers pour la gestion des memberships croises - un user (typiquement
 // SUPERADMIN) peut avoir un role admin dans D'AUTRES tenants que son home.
 //
 // CONTEXTE : Florian a demande 2026-05-23 de pouvoir "se mettre en admin
@@ -84,7 +84,7 @@ export async function canActAsAdminInTenant(
 }
 
 /**
- * Verifie qu'un user a un acces (quelconque) a un tenant — natif ou via
+ * Verifie qu'un user a un acces (quelconque) a un tenant - natif ou via
  * membership. Utilise par resolveTenantContext pour autoriser la
  * navigation cross-tenant.
  */

@@ -77,7 +77,7 @@ export async function GET(req: NextRequest) {
     tenantName: params.get("tenantName") ?? tenant?.name ?? "Votre entreprise",
     tenantSiren: cleanSiren(params.get("tenantSiren")),
     headquarterCity: params.get("headquarterCity") ?? "France",
-    directeurName: params.get("directeurName") ?? "—",
+    directeurName: params.get("directeurName") ?? "-",
     directeurTitle: params.get("directeurTitle") ?? "Président",
     directeurEmail: params.get("directeurEmail") ?? "contact@entreprise.fr",
     dpoOrReferent: params.get("dpoOrReferent") || null,

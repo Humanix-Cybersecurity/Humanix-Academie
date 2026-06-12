@@ -163,10 +163,10 @@ export function suggestSaisons(
 // --- meta : libelles UI ----------------------------------------------------
 
 export const SIZE_LABELS: Record<TenantSize, string> = {
-  tpe: "TPE — moins de 10 personnes",
-  pme: "PME — 10 à 100 personnes",
-  eti: "ETI — 100 à 500 personnes",
-  grande: "Grande entreprise — 500+ personnes",
+  tpe: "TPE - moins de 10 personnes",
+  pme: "PME - 10 à 100 personnes",
+  eti: "ETI - 100 à 500 personnes",
+  grande: "Grande entreprise - 500+ personnes",
 };
 
 export const SECTOR_LABELS: Record<TenantSector, { label: string; emoji: string }> = {

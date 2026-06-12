@@ -39,7 +39,7 @@ import {
 } from "@/lib/urgence-cyber/sources";
 import { BreadcrumbJsonLd, ServiceJsonLd } from "@/lib/seo/jsonld";
 
-const URG_TITLE = "Urgence cyber — Que faire en cas d'incident | Humanix";
+const URG_TITLE = "Urgence cyber - Que faire en cas d'incident | Humanix";
 const URG_DESC =
   "Hub d'urgence cyber gratuit, accessible à tous (particuliers, équipes, organisations de toute taille). Procédures pour rançongiciel, fuite de données, fraude au président, compte compromis, vol de matériel. Outils souverains, sources officielles, intervention curative par Humanix Cybersecurity.";
 
@@ -56,7 +56,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Urgence cyber — Que faire en cas d'incident",
+    title: "Urgence cyber - Que faire en cas d'incident",
     description: URG_DESC,
     images: ["/logo-humanix-academie-512.png"],
   },

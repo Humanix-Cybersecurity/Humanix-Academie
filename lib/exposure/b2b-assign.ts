@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Assignation de formation à un salarié exposé — UNIQUEMENT après VALIDATION
+// Assignation de formation à un salarié exposé - UNIQUEMENT après VALIDATION
 // RSSI humaine. C'est le maillon "feature cœur" (exposition -> formation ->
 // suivi), mais cadenassé : jamais déclenché automatiquement par le cron.
 //

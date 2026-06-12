@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /badges/detective/[rank] — page publique partageable sur LinkedIn,
+// /badges/detective/[rank] - page publique partageable sur LinkedIn,
 // Twitter / X, etc. quand un utilisateur debloque un rang Detective.
 //
 // Le partage social devient un vecteur viral : chaque badge debloque
@@ -43,28 +43,28 @@ const RANK_META: Record<DetectiveRank, RankMeta> = {
   },
   "detective-junior": {
     emoji: "🔍",
-    tagline: "Œil affûté — 3 enquêtes maîtrisées",
+    tagline: "Œil affûté - 3 enquêtes maîtrisées",
     description:
-      "Tu détectes les signaux suspects que la plupart laissent passer. 3 enquêtes résolues à plus de 60 % de réussite — c'est déjà au-dessus de la moyenne.",
+      "Tu détectes les signaux suspects que la plupart laissent passer. 3 enquêtes résolues à plus de 60 % de réussite - c'est déjà au-dessus de la moyenne.",
     color: "#0EA5E9",
   },
   "detective-confirme": {
     emoji: "🕵️",
-    tagline: "Méthode + rigueur — 10 enquêtes brillantes",
+    tagline: "Méthode + rigueur - 10 enquêtes brillantes",
     description:
       "Tu as l'œil du métier. 10 enquêtes résolues à 75 %+ : tu lis entre les lignes, tu repères les manipulations, tu protèges ton équipe.",
     color: "#8B5CF6",
   },
   "cyber-sherlock": {
     emoji: "🎩",
-    tagline: "Référence — 25 enquêtes à 90 %+",
+    tagline: "Référence - 25 enquêtes à 90 %+",
     description:
       "Tu es la personne qu'on appelle quand un mail suspect arrive. 25 enquêtes résolues à 90 % de réussite : niveau « consultant sécurité » sans avoir signé pour le job.",
     color: "#F59E0B",
   },
   "maitre-detective": {
     emoji: "👑",
-    tagline: "Sans-faute — 50 enquêtes parfaites",
+    tagline: "Sans-faute - 50 enquêtes parfaites",
     description:
       "Le top 1 %. 50 enquêtes, score parfait sur chacune. Tu as transformé la vigilance cyber en réflexe naturel. Bravo.",
     color: "#DC2626",
@@ -82,17 +82,17 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { rank } = await params;
   if (!isValidRank(rank)) {
-    return { title: "Badge Détective — Humanix Académie" };
+    return { title: "Badge Détective - Humanix Académie" };
   }
   const label = DETECTIVE_RANK_LABELS[rank];
   const meta = RANK_META[rank];
   const url = `${PROD_URL}/badges/detective/${rank}`;
   return {
-    title: `${label} · Mode Enquêteur — Humanix Académie`,
+    title: `${label} · Mode Enquêteur - Humanix Académie`,
     description: meta.description,
     alternates: { canonical: `/badges/detective/${rank}` },
     openGraph: {
-      title: `${meta.emoji} ${label} — Mode Enquêteur Humanix`,
+      title: `${meta.emoji} ${label} - Mode Enquêteur Humanix`,
       description: meta.tagline,
       url,
       type: "website",
@@ -101,7 +101,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: `${meta.emoji} ${label} — Mode Enquêteur`,
+      title: `${meta.emoji} ${label} - Mode Enquêteur`,
       description: meta.tagline,
     },
   };
@@ -178,7 +178,7 @@ export default async function DetectiveBadgePage({
           Le Mode Enquêteur est une approche de sensibilisation cyber par
           découverte guidée : on te montre un mail, un post, une scène ; tu
           coches ce qui te paraît louche.{" "}
-          <strong>Le piège qu'on repère soi-même, on le voit venir</strong> —
+          <strong>Le piège qu'on repère soi-même, on le voit venir</strong> -
           contrairement à celui qu'on apprend par cœur.
         </p>
         <p>

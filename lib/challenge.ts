@@ -89,7 +89,7 @@ export async function getChallengeIndividualRanking(
     if (!users.has(p.user.id)) {
       users.set(p.user.id, {
         userId: p.user.id,
-        name: p.user.name ?? "—",
+        name: p.user.name ?? "-",
         service: p.user.service,
         xp: 0,
         episodes: 0,

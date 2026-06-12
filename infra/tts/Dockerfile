@@ -31,7 +31,7 @@ RUN groupadd -r tts && useradd -r -g tts -d /app -s /sbin/nologin tts
 
 WORKDIR /app
 
-# Dépendances Python — versions épinglées pour la reproductibilité
+# Dépendances Python - versions épinglées pour la reproductibilité
 RUN pip install --no-cache-dir \
         fastapi==0.115.0 \
         uvicorn[standard]==0.32.0 \

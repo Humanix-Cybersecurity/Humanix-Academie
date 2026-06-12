@@ -24,7 +24,7 @@ type Props = {
   text: string;
   /** Voix Voxtral (defaut : fr_marie_neutral). */
   voice?: string;
-  /** Label accessible — n'est pas affiche, sert uniquement aux lecteurs d'ecran. */
+  /** Label accessible - n'est pas affiche, sert uniquement aux lecteurs d'ecran. */
   ariaLabel?: string;
   /** Tag a propager (ex: "Apercu", "Ecouter") au survol. */
   hoverLabel?: string;

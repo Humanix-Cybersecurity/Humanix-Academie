@@ -98,7 +98,7 @@ const PAGES: SitemapEntry[] = [
 // gracieusement vers la liste statique sans planter la build.
 //
 // Pendant `next build`, la DB n'est generalement pas accessible (CI sans
-// service postgres, build Docker en multi-stage, etc.) — on skip les
+// service postgres, build Docker en multi-stage, etc.) - on skip les
 // requetes DB completement plutot que de laisser Prisma logger
 // "prisma:error Invalid prisma.X.findMany() invocation". Le sitemap est
 // rendu dynamiquement au runtime (cf. route flag ƒ dans la build output),

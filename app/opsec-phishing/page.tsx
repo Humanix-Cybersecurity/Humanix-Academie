@@ -22,7 +22,7 @@ import HexMascot from "@/components/HexMascot";
 
 export const metadata: Metadata = {
   title:
-    "OPSEC du phishing simulé : ce que tu prends à ta charge — Humanix Académie",
+    "OPSEC du phishing simulé : ce que tu prends à ta charge - Humanix Académie",
   description:
     "Cadrage honnête du travail OPSEC pour une campagne de phishing simulé efficace : DNS, réputation IP, légalité, communication, mesure. Tout ce que ton DSI/RSSI doit cocher avant le premier envoi.",
   alternates: { canonical: "/opsec-phishing" },
@@ -64,7 +64,7 @@ export default function OpsecPhishingPage() {
       <section className="max-w-3xl mx-auto px-4 mt-6 mb-10">
         <div className="rounded-2xl border-2 border-amber-200 dark:border-amber-900/40 bg-amber-50 dark:bg-amber-900/20 p-5 sm:p-6">
           <h2 className="font-display text-xl font-extrabold text-amber-900 dark:text-amber-100 mb-2">
-            ⏱️ TL;DR — Combien de temps&nbsp;?
+            ⏱️ TL;DR - Combien de temps&nbsp;?
           </h2>
           <p className="text-sm text-amber-900 dark:text-amber-100 leading-relaxed mb-3">
             Pour une <strong>première campagne propre</strong> sur 50–250
@@ -106,7 +106,7 @@ export default function OpsecPhishingPage() {
           title="Choix du domaine d'envoi"
           summary="Le domaine décide de la crédibilité ET de la réputation. Choisis-le bien : tu vas vivre avec longtemps."
           points={[
-            "Domaine de typosquat propre (acme-sécurité.fr quand ton vrai domaine est acme.fr) — ni trop éloigné (ne trompe personne), ni trop proche (ton anti-phishing va le bloquer).",
+            "Domaine de typosquat propre (acme-sécurité.fr quand ton vrai domaine est acme.fr) - ni trop éloigné (ne trompe personne), ni trop proche (ton anti-phishing va le bloquer).",
             "Réservé chez un registrar européen sérieux (OVH, Gandi, Scaleway). Pas de Namecheap / Hostinger pour du phishing même simulé.",
             "Whois public ou privé selon ta politique. Public = traçable légalement, privé = plus crédible si l'attaquant simulé est externe.",
             "Privilégie un domaine NEUF (>14 jours d'âge). Les SPAM filters Microsoft/Google pénalisent les domaines de moins de 7 jours.",
@@ -149,7 +149,7 @@ export default function OpsecPhishingPage() {
           summary="Une campagne de phishing simulé est un traitement de données personnelles avec finalité 'sécurité'. Sans cadrage, tu prends un risque CNIL et CSE."
           points={[
             "Charte cybersécurité signée par chaque collaborateur, mentionnant explicitement 'tests de sensibilisation par phishing simulé'.",
-            "Information préalable du CSE/CSE-S (Comité Social et Économique) — réunion + procès-verbal. Pas une simple note.",
+            "Information préalable du CSE/CSE-S (Comité Social et Économique) - réunion + procès-verbal. Pas une simple note.",
             "Avis du DPO (interne ou externe). À documenter dans le registre des traitements (RGPD article 30).",
             "Aucun usage disciplinaire des résultats. Le clic d'un employé ne doit JAMAIS apparaître dans son entretien annuel ou sa fiche RH.",
             "Conservation limitée : 12 mois max pour les résultats individuels nominatifs, agrégation au-delà. Cf. CNIL recommandation 2022.",
@@ -163,9 +163,9 @@ export default function OpsecPhishingPage() {
           title="Landing page de débrief"
           summary="Quand le collaborateur clique, il atterrit OÙ ? La landing fait toute la différence entre humiliation et apprentissage."
           points={[
-            "Hébergée sur ton domaine OU sur un domaine pédagogique signé Humanix (cf. /phishing/[token]) — jamais sur un domaine douteux.",
+            "Hébergée sur ton domaine OU sur un domaine pédagogique signé Humanix (cf. /phishing/[token]) - jamais sur un domaine douteux.",
             "Certificat HTTPS valide (Let's Encrypt, gratuit). Sans HTTPS, le navigateur affiche un warning qui casse l'effet pédagogique.",
-            "Ton chaleureux, jamais culpabilisant. 'Tu viens de tomber dans un piège, c'est NORMAL — voici les 4 indices à repérer la prochaine fois.'",
+            "Ton chaleureux, jamais culpabilisant. 'Tu viens de tomber dans un piège, c'est NORMAL - voici les 4 indices à repérer la prochaine fois.'",
             "3 à 5 markers pédagogiques (le domaine expéditeur faux, l'urgence artificielle, etc.). Pas plus, sinon on perd l'attention.",
             "CTA vers une formation courte (5 min) sur le sujet du phishing. Le moment du clic est le moment où l'apprentissage est maximum.",
           ]}
@@ -298,7 +298,7 @@ export default function OpsecPhishingPage() {
               rel="noopener noreferrer"
               className="text-accent-700 dark:text-accent-300 underline"
             >
-              CNIL — Recommandations cybersécurité
+              CNIL - Recommandations cybersécurité
             </a>{" "}
             (cadre légal RGPD)
           </li>
@@ -310,7 +310,7 @@ export default function OpsecPhishingPage() {
               rel="noopener noreferrer"
               className="text-accent-700 dark:text-accent-300 underline"
             >
-              CyberMalveillance.gouv.fr — Bonnes pratiques
+              CyberMalveillance.gouv.fr - Bonnes pratiques
             </a>{" "}
             (référentiel français officiel)
           </li>
@@ -322,7 +322,7 @@ export default function OpsecPhishingPage() {
               rel="noopener noreferrer"
               className="text-accent-700 dark:text-accent-300 underline"
             >
-              ANSSI — Guide TLS
+              ANSSI - Guide TLS
             </a>{" "}
             (HTTPS landing pages)
           </li>

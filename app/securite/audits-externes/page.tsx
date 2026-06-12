@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /securite/audits-externes — Trust Center, page publique des audits
+// /securite/audits-externes - Trust Center, page publique des audits
 // sécurité externes (4 scanners reconnus). Aucune notation auto-déclarée :
 // chaque audit a un lien vers le scanner officiel pour vérifier en live.
 //
@@ -110,7 +110,7 @@ export default function AuditsExternesPage() {
         </p>
         <div className="mt-5 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border-2 border-amber-200 dark:border-amber-900/40 p-4">
           <p className="text-sm text-amber-900 dark:text-amber-100">
-            <strong>Notre engagement</strong> — si l&apos;un de ces scores
+            <strong>Notre engagement</strong> - si l&apos;un de ces scores
             descend en-dessous de la cible affichée, vous le verrez avant nous.
             Les liens ci-dessous interrogent les scanners en temps réel : pas
             de capture d&apos;écran datée, pas de communiqué arrangé.
@@ -195,7 +195,7 @@ export default function AuditsExternesPage() {
           .
         </p>
         <p className="text-gray-700 dark:text-gray-200 leading-relaxed">
-          Si vous trouvez une faille — réelle ou potentielle — voici comment
+          Si vous trouvez une faille - réelle ou potentielle - voici comment
           nous joindre :{" "}
           <a
             href="mailto:security@humanix-cybersecurity.fr"

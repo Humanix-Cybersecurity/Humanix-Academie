@@ -262,7 +262,7 @@ export default function QuickSetupWizard() {
           />
 
           <p className="text-xs text-gray-500 mt-2">
-            Vous pouvez sauter cette etape — on vous laissera inviter plus
+            Vous pouvez sauter cette etape - on vous laissera inviter plus
             tard depuis{" "}
             <Link
               href="/admin/utilisateurs"

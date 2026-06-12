@@ -52,7 +52,7 @@ export type RagResult = {
  * Recupere les chunks pertinents pour une query. Retourne un objet
  * `{ chunks, available }`. Si rien de pertinent : chunks = [].
  *
- * Cette fonction NE FAIT JAMAIS d'erreur — toute erreur interne est
+ * Cette fonction NE FAIT JAMAIS d'erreur - toute erreur interne est
  * loggee et la fonction retourne un objet vide. Le RAG est best-effort.
  */
 export async function retrieveRagContext(opts: {

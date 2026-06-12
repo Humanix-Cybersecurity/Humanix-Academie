@@ -148,14 +148,14 @@ const SOLUTIONS_ITEMS: DropdownItem[] = [
     href: "/exposition",
     label: "Suis-je exposé ?",
     description:
-      "Mot de passe fuité ? Données exposées ? Test gratuit + guide pour réduire son empreinte — rien n'est conservé",
+      "Mot de passe fuité ? Données exposées ? Test gratuit + guide pour réduire son empreinte - rien n'est conservé",
     emoji: "🛡",
   },
   {
     href: "/librairie",
     label: "Librairie",
     description:
-      "30+ articles courts sur le phishing, le RGPD, l'IA, les mots de passe — sans inscription",
+      "30+ articles courts sur le phishing, le RGPD, l'IA, les mots de passe - sans inscription",
     emoji: "📚",
   },
   {

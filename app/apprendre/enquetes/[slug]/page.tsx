@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page player du Mode Enqueteur — `/apprendre/enquetes/[slug]`.
+// Page player du Mode Enqueteur - `/apprendre/enquetes/[slug]`.
 //
 // Server component qui charge l'enquete depuis le MDX, puis monte le
 // composant client InvestigationPlayer avec la server action injectee.
@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "Enquête introuvable | Humanix Académie" };
   }
   return {
-    title: `${inv.title} — Mode Enquêteur | Humanix Académie`,
+    title: `${inv.title} - Mode Enquêteur | Humanix Académie`,
     description: inv.brief.slice(0, 160),
     alternates: { canonical: `/apprendre/enquetes/${inv.slug}` },
   };
