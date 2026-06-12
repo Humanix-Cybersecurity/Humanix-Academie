@@ -14,16 +14,22 @@ const SERVICE_MAX = 100;
 
 export default function ProfileInfoForm({
   initialName,
+  initialFirstName,
+  initialLastName,
   initialService,
   email,
   emailVerified,
 }: {
   initialName: string;
+  initialFirstName: string;
+  initialLastName: string;
   initialService: string;
   email: string;
   emailVerified: boolean;
 }) {
   const [name, setName] = useState(initialName);
+  const [firstName, setFirstName] = useState(initialFirstName);
+  const [lastName, setLastName] = useState(initialLastName);
   const [service, setService] = useState(initialService);
   const [pending, setPending] = useState(false);
   const [feedback, setFeedback] = useState<
@@ -34,7 +40,11 @@ export default function ProfileInfoForm({
   const router = useRouter();
 
   // Detect dirty state pour activer/griser le bouton Save
-  const dirty = name.trim() !== initialName.trim() || service.trim() !== initialService.trim();
+  const dirty =
+    name.trim() !== initialName.trim() ||
+    firstName.trim() !== initialFirstName.trim() ||
+    lastName.trim() !== initialLastName.trim() ||
+    service.trim() !== initialService.trim();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -138,7 +148,7 @@ export default function ProfileInfoForm({
           htmlFor="name"
           className="block text-sm font-semibold text-gray-800 dark:text-gray-100 mb-1"
         >
-          Nom affiché{" "}
+          Pseudo / nom affiché{" "}
           <span className="text-warn" aria-hidden="true">
             *
           </span>
@@ -152,8 +162,8 @@ export default function ProfileInfoForm({
           maxLength={NAME_MAX}
           value={name}
           onChange={(e) => setName(e.target.value)}
-          autoComplete="name"
-          placeholder="Prénom Nom (ou pseudo)"
+          autoComplete="nickname"
+          placeholder="Ton pseudo (ou ton nom)"
           className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-3 text-sm focus:border-accent-500 focus:ring-2 focus:ring-accent-200 dark:focus:ring-accent-500/30 focus:outline-none transition"
           aria-describedby="name-help"
         />
@@ -161,10 +171,65 @@ export default function ProfileInfoForm({
           id="name-help"
           className="text-xs text-gray-500 dark:text-gray-400 mt-1.5"
         >
-          Apparaît dans ton espace, dans le classement, sur tes certificats
-          PDF, et est visible des admins de ton organisation.
+          Apparaît dans ton espace, dans le classement, et est visible des
+          admins de ton organisation. Un pseudo suffit.
         </p>
       </div>
+
+      {/* Identité réelle — optionnelle, pour le certificat */}
+      <fieldset className="rounded-xl border border-gray-200 dark:border-slate-700 p-4">
+        <legend className="px-2 text-sm font-semibold text-gray-800 dark:text-gray-100">
+          Nom sur le certificat{" "}
+          <span className="text-xs font-normal text-gray-500 dark:text-gray-400">
+            (optionnel)
+          </span>
+        </legend>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
+          Renseigne ton prénom et ton nom si tu veux que tes certificats PDF
+          soient à ton vrai nom plutôt qu'à ton pseudo. Si tu laisses vide, le
+          pseudo ci-dessus est utilisé (comportement actuel).
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label
+              htmlFor="firstName"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
+            >
+              Prénom
+            </label>
+            <input
+              id="firstName"
+              name="firstName"
+              type="text"
+              maxLength={NAME_MAX}
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              autoComplete="given-name"
+              placeholder="Ex : Marie"
+              className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-3 text-sm focus:border-accent-500 focus:ring-2 focus:ring-accent-200 dark:focus:ring-accent-500/30 focus:outline-none transition"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="lastName"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1"
+            >
+              Nom
+            </label>
+            <input
+              id="lastName"
+              name="lastName"
+              type="text"
+              maxLength={NAME_MAX}
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              autoComplete="family-name"
+              placeholder="Ex : Durand"
+              className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-3 text-sm focus:border-accent-500 focus:ring-2 focus:ring-accent-200 dark:focus:ring-accent-500/30 focus:outline-none transition"
+            />
+          </div>
+        </div>
+      </fieldset>
 
       {/* Service / Équipe */}
       <div>
@@ -222,6 +287,8 @@ export default function ProfileInfoForm({
             type="button"
             onClick={() => {
               setName(initialName);
+              setFirstName(initialFirstName);
+              setLastName(initialLastName);
               setService(initialService);
               setFeedback(null);
             }}

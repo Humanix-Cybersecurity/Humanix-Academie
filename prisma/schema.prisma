@@ -297,6 +297,12 @@ model User {
   email         String    @unique
   emailVerified DateTime?
   name          String?
+  // Prenom + nom REELS, optionnels. Le `name` ci-dessus reste le PSEUDO
+  // (affiche partout : classements, salutations…). firstName/lastName ne
+  // servent qu'au CERTIFICAT (a la demande de l'user, pour qu'il soit a son
+  // vrai nom et pas a son pseudo). Fallback sur `name` si non renseignes.
+  firstName     String?
+  lastName      String?
   role          Role      @default(LEARNER)
   // service = champ libre legacy, conserve pour compat (ex: import CSV).
   // La gestion structuree est faite via les Group / UserGroup ci-dessous.

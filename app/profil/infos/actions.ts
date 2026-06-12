@@ -52,6 +52,10 @@ export async function updateProfileInfo(
   // non-blancs (sinon on tombe dans des bonjours "Bonjour, .").
   const rawName = String(formData.get("name") ?? "").trim();
   const rawService = String(formData.get("service") ?? "").trim();
+  // Prenom + nom REELS, optionnels (utilises seulement pour le certificat).
+  // Chaine vide autorisee = effacer (revient au pseudo).
+  const rawFirstName = String(formData.get("firstName") ?? "").trim();
+  const rawLastName = String(formData.get("lastName") ?? "").trim();
 
   if (!rawName || rawName.length < 2) {
     return {
@@ -72,12 +76,29 @@ export async function updateProfileInfo(
       error: `Le service est trop long (maximum ${SERVICE_MAX_LENGTH} caractères).`,
     };
   }
+  if (
+    rawFirstName.length > NAME_MAX_LENGTH ||
+    rawLastName.length > NAME_MAX_LENGTH
+  ) {
+    return {
+      ok: false,
+      error: `Prénom / nom trop long (maximum ${NAME_MAX_LENGTH} caractères).`,
+    };
+  }
 
   // Read l'etat actuel pour ne logger que les vrais changements (et éviter
   // un USER_UPDATED bruyant a chaque clic Save).
   const before = await db.user.findUnique({
     where: { id: userId },
-    select: { name: true, service: true, email: true, tenantId: true, role: true },
+    select: {
+      name: true,
+      firstName: true,
+      lastName: true,
+      service: true,
+      email: true,
+      tenantId: true,
+      role: true,
+    },
   });
   if (!before) {
     return { ok: false, error: "Compte introuvable." };
@@ -85,8 +106,15 @@ export async function updateProfileInfo(
 
   const newName = rawName;
   const newService = rawService === "" ? null : rawService;
+  const newFirstName = rawFirstName === "" ? null : rawFirstName;
+  const newLastName = rawLastName === "" ? null : rawLastName;
 
-  if (before.name === newName && before.service === newService) {
+  if (
+    before.name === newName &&
+    before.service === newService &&
+    before.firstName === newFirstName &&
+    before.lastName === newLastName
+  ) {
     // No-op : on ne touche pas la BDD ni l'audit log.
     revalidatePath("/profil");
     revalidatePath("/profil/infos");
@@ -98,6 +126,8 @@ export async function updateProfileInfo(
     data: {
       name: newName,
       service: newService,
+      firstName: newFirstName,
+      lastName: newLastName,
     },
   });
 
@@ -108,6 +138,12 @@ export async function updateProfileInfo(
   }
   if (before.service !== newService) {
     changes.service = { from: before.service, to: newService };
+  }
+  if (before.firstName !== newFirstName) {
+    changes.firstName = { from: before.firstName, to: newFirstName };
+  }
+  if (before.lastName !== newLastName) {
+    changes.lastName = { from: before.lastName, to: newLastName };
   }
 
   await auditLog({
