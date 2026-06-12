@@ -229,6 +229,16 @@ export const SAISON_TAGS: Record<string, string[]> = {
     "phishing",
     "automation",
   ],
+
+  // ---- Extension metiers (saisons 33+) ----
+  "cyber-commercial": [
+    "famille:metier",
+    "metier:commercial",
+    "vente",
+    "crm",
+    "ingenierie-sociale",
+    "mobilite",
+  ],
 };
 
 /**
@@ -255,7 +265,7 @@ export function familyFromTags(tags: string[]): string {
  * Liste de toutes les familles disponibles, dans l'ordre d'affichage souhaite
  * dans /admin/modules (du plus grand public au plus specialise).
  */
-export const FAMILY_ORDER = ["public", "metier", "conformite", "avance"] as const;
+export const FAMILY_ORDER = ["public", "metier", "sectoriel", "conformite", "avance"] as const;
 
 export const FAMILY_LABELS: Record<string, { label: string; emoji: string; description: string }> = {
   public: {
@@ -266,7 +276,12 @@ export const FAMILY_LABELS: Record<string, { label: string; emoji: string; descr
   metier: {
     label: "Metiers",
     emoji: "🎯",
-    description: "Specialises par fonction : RH, compta, dev, dirigeants...",
+    description: "Specialises par fonction : RH, compta, dev, dirigeants, commercial...",
+  },
+  sectoriel: {
+    label: "Sectoriel",
+    emoji: "🏛️",
+    description: "Adaptes a un secteur : sante, collectivites, education, industrie...",
   },
   conformite: {
     label: "Conformite",
