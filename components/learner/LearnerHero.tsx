@@ -18,7 +18,7 @@ type Props = {
   completedCount: number;
   totalEpisodes: number;
   currentLevel: { id: number; name: string; description: string };
-  /** eslint-disable-next-line — l'union mood Auth.js v5 est volatile */
+  /** eslint-disable-next-line - l'union mood Auth.js v5 est volatile */
   mood?: string;
   mascotSpecies?: string;
   mascotEmojiCustom?: string | null;

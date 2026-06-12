@@ -69,7 +69,7 @@ export default function EmailMockup({ media }: Props) {
           {m.body}
         </div>
 
-        {/* Links — on affiche le label, mais on revele la vraie cible
+        {/* Links - on affiche le label, mais on revele la vraie cible
             au survol. Pas de href reel (anti-clic accidentel). */}
         {m.links && m.links.length > 0 && (
           <div className="mt-4 space-y-1.5">

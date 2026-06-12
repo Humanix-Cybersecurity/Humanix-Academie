@@ -3,7 +3,7 @@
 //
 // Pourquoi un nouveau composant et pas LearnerHero existant ?
 // Le LearnerHero historique fait beaucoup (mascotte qui flotte, 4 stats,
-// barre niveau, hex backdrop) — c'etait correct pour une page "tableau
+// barre niveau, hex backdrop) - c'etait correct pour une page "tableau
 // de bord", trop lourd pour une page "qu'est-ce que je fais maintenant".
 //
 // Cette version garde la chaleur (salutation, prenom) mais condense
@@ -55,7 +55,7 @@ export default function LearnerHeroCompact({
           </h1>
         </div>
 
-        {/* Stats compactes — pas une grille, juste une rangée respirante */}
+        {/* Stats compactes - pas une grille, juste une rangée respirante */}
         <div className="flex items-center gap-4 sm:gap-6 text-sm">
           <Stat
             label="Niveau"

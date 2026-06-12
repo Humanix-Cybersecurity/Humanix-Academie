@@ -8,7 +8,7 @@
 #
 # Le service ofelia tourne dans son propre container, lit infra/ofelia/config.ini,
 # et appelle les endpoints /api/cron/* du service "app" via le réseau interne
-# docker (`http://app:3000`). Aucune label à poser sur les containers métier —
+# docker (`http://app:3000`). Aucune label à poser sur les containers métier -
 # meilleure séparation, isolation propre.
 #
 # Pour ajouter / modifier un job : édite infra/ofelia/config.ini puis

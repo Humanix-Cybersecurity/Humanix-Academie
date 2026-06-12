@@ -30,13 +30,13 @@ npx prisma db push --skip-generate --accept-data-loss
 # Migrations legacy (idempotentes, no-op apres le 1er passage) :
 #   - migrate-legacy-trial.ts : retire l'ancien plan "trial" (pivot vente directe)
 #   - migrate-4-tiers-pivot.ts : passe de 5 paliers (decouverte/solo/essentielle/
-#     pro/premium) a 3 paliers (starter/pro/enterprise) — pivot mai 2026.
+#     pro/premium) a 3 paliers (starter/pro/enterprise) - pivot mai 2026.
 echo "[2.5/5] Migrations legacy plans (idempotentes)..."
 npx tsx scripts/migrate-legacy-trial.ts || echo "  -> migrate-legacy-trial ignoree (non bloquante)"
 npx tsx scripts/migrate-4-tiers-pivot.ts || echo "  -> migrate-4-tiers-pivot ignoree (non bloquante)"
 
 # Seed du CATALOG partage (saisons + episodes + badges + boutique + tenant
-# Communaute) — PROD-SAFE et idempotent (upserts par slug, AUCUN fake user).
+# Communaute) - PROD-SAFE et idempotent (upserts par slug, AUCUN fake user).
 # DOIT tourner a CHAQUE deploiement : sinon les nouvelles saisons / badges
 # ajoutes au code ne se propagent JAMAIS en BDD de prod (bug modules + badges,
 # juin 2026). Le script reevalue aussi les badges des users (retroactif).
@@ -56,12 +56,12 @@ fi
 echo "[4/5] Bootstrap admin..."
 npx tsx scripts/bootstrap-admin.ts || echo "  -> bootstrap-admin a echoue, on continue (l'app peut demarrer)"
 
-# Premier import de l'observatoire des fuites — uniquement si la table est
+# Premier import de l'observatoire des fuites - uniquement si la table est
 # vide (pour ne pas re-scraper a chaque redemarrage). Le mode --deep parcourt
 # les archives par annee pour construire un historique meaningful.
 # Les scrapes suivants sont declenches par le cron externe sur
 # /api/cron/breaches-refresh (configure independamment).
-echo "[5/5] Observatoire des fuites — premier import si necessaire..."
+echo "[5/5] Observatoire des fuites - premier import si necessaire..."
 HAS_BREACHES=$(npx tsx -e "
 import { PrismaClient } from '@prisma/client';
 const p = new PrismaClient();

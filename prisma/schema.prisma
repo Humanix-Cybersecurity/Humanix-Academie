@@ -22,8 +22,8 @@ model Tenant {
   name                  String
   slug                  String    @unique
   // Plan effectif du tenant (cf. lib/plans.ts pour les valeurs valides :
-  // starter, pro, enterprise — depuis pivot 4 paliers mai 2026).
-  // Default "starter" (forever-free <=5 sieges) — plan le plus restrictif
+  // starter, pro, enterprise - depuis pivot 4 paliers mai 2026).
+  // Default "starter" (forever-free <=5 sieges) - plan le plus restrictif
   // qui ne necessite ni paiement ni provisionnement special.
   // Anciennes valeurs (decouverte/solo/essentielle/premium/trial) sont
   // gracieusement normalisees par lib/plans.ts::normalizePlan().
@@ -45,7 +45,7 @@ model Tenant {
   paymentSubscriptionId String?   @unique
   // Statut normalise : active, past_due, canceled, incomplete, unpaid.
   // ("trialing" est un statut legacy retire en mai 2026 mais encore tolere
-  // par le state machine pour les anciens tenants — cf. lib/subscription-state.ts).
+  // par le state machine pour les anciens tenants - cf. lib/subscription-state.ts).
   // Source de verite = webhook du provider. Synchro a chaque event subscription.
   subscriptionStatus    String?
   // Fin de la periode de facturation courante (renouvellement automatique
@@ -877,7 +877,7 @@ model TeamChallenge {
   startDate            DateTime
   endDate              DateTime
   isActive             Boolean   @default(true)
-  // RECOMPENSES (mai 2026) — distribuees a la fin du challenge :
+  // RECOMPENSES (mai 2026) - distribuees a la fin du challenge :
   //   - rewardCoins : coins bonus aux Top 3 individuels (50% / 30% / 20%
   //     du total). 0 = pas de reward coins.
   //   - rewardItemId : item exclusif debloqué pour les Top 3 si defini.
@@ -1785,7 +1785,7 @@ enum TransferRequestStatus {
 //      bord de l'utilisateur en LECTURE SEULE (progres, certificats,
 //      activite recente). Aucune action possible pour l'utilisateur.
 //   5. Bandeau persistent en haut de page : « Vous voyez le compte de X
-//      (XX min restantes) — Sortir »
+//      (XX min restantes) - Sortir »
 //   6. Session expire automatiquement OU admin clique « Sortir » OU
 //      utilisateur revoque depuis ses preferences
 //
@@ -1992,7 +1992,7 @@ model RemediationPlan {
 }
 
 // =====================================================
-// EXPOSITION NUMERIQUE — PHASE 2 B2B (veille salaries)
+// EXPOSITION NUMERIQUE - PHASE 2 B2B (veille salaries)
 // =====================================================
 // ⚠️ FEATURE GATEE, OFF PAR DEFAUT. Ne s'active JAMAIS sans :
 //   1. Flag global env EXPOSURE_B2B_ENABLED=true (kill switch plateforme)
@@ -2187,7 +2187,7 @@ enum AuditAction {
   // Module Exposition Numerique (juin 2026)
   EXPOSURE_CHECK_PERFORMED // Un check d'exposition a ete effectue (ipHash only, JAMAIS la cible)
   EXPOSURE_EMAIL_VERIFIED // Propriete d'email verifiee via OTP (self-check anti-doxxing)
-  // Phase 2 B2B (veille salaries) — TOUJOURS OFF par defaut, gated DPA+AIPD
+  // Phase 2 B2B (veille salaries) - TOUJOURS OFF par defaut, gated DPA+AIPD
   EXPOSURE_MONITORING_ENABLED // Un tenant a active la veille (DPA enregistree)
   EXPOSURE_MONITORING_DISABLED // Kill switch : veille desactivee
   EXPOSURE_DETECTED // Domaine tenant matche dans une fuite (validation RSSI requise avant notif)
@@ -2475,7 +2475,7 @@ model CisoAssistantSyncRun {
 }
 
 // =====================================================
-// MODE ENQUETEUR — apprentissage par decouverte guidee (mai 2026)
+// MODE ENQUETEUR - apprentissage par decouverte guidee (mai 2026)
 // =====================================================
 // L'apprenant analyse un media (email, post LinkedIn, photo bureau...)
 // et coche les "red flags" qu'il identifie. Score = somme des red flags

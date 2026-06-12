@@ -4,7 +4,7 @@
 // Server action : calcule le diagnostic NIS2 a partir des reponses
 // utilisateur soumises depuis /diagnostic-nis2/page.tsx.
 //
-// Pas de persistance BDD pour V1 — le score + email transitent en
+// Pas de persistance BDD pour V1 - le score + email transitent en
 // query params encodes (base64) jusqu'a la page resultat. Pas de cookie,
 // pas de session : 100 % stateless, RGPD-friendly (rien stocke sauf si
 // l'utilisateur demande explicitement a recevoir le PDF par mail).

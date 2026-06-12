@@ -10,7 +10,7 @@ description: |-
   Couvre également DETECT (DE.CM) et RESPOND (RS.CO).
 
   Sous-catégories PR.AT-01 et PR.AT-02 en relation `equal` avec
-  Humanix — formation des employés et utilisateurs privilégiés.
+  Humanix - formation des employés et utilisateurs privilégiés.
 copyright: |-
   © Humanix-Cybersecurity SASU. Mapping publié sous licence CC BY-SA 4.0.
 version: 1
@@ -29,7 +29,7 @@ objects:
       source_framework_urn: urn:humanix:risk:framework:humanix-awareness-catalog-v1
       target_framework_urn: urn:intuitem:risk:framework:nist-csf-2.0
       requirement_mappings:
-        # PR.AT-01 — Awareness and Training de base (CŒUR Humanix)
+        # PR.AT-01 - Awareness and Training de base (CŒUR Humanix)
         - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:phishing
           target_requirement_urn: urn:intuitem:risk:req_node:nist-csf-2.0:pr.at-01
           relationship: equal
@@ -46,7 +46,7 @@ objects:
           target_requirement_urn: urn:intuitem:risk:req_node:nist-csf-2.0:pr.at-01
           relationship: equal
 
-        # PR.AT-02 — Privileged users / role-based training (CŒUR)
+        # PR.AT-02 - Privileged users / role-based training (CŒUR)
         - source_requirement_urn: urn:humanix:risk:req_node:humanix-awareness-catalog-v1:cyber-dirigeants
           target_requirement_urn: urn:intuitem:risk:req_node:nist-csf-2.0:pr.at-02
           relationship: equal

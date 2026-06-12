@@ -49,7 +49,7 @@ export type EpisodeContent = {
 //
 // Le code resout dynamiquement la source : si content/saisons/ contient au
 // moins une saison, on l'utilise. Sinon, on bascule sur content/saisons-demo/.
-// Aucune variable d'env requise — auto-detection par presence de contenu.
+// Aucune variable d'env requise - auto-detection par presence de contenu.
 //
 // Mode DEMO (DEMO_MODE=true) : on force content/saisons-demo/ meme si le
 // catalog commercial est present sur le disque (symlink content-pro/).

@@ -5,7 +5,7 @@
 // Contrainte : ces HTML doivent rester REALISTES (styles inline, images,
 // tableaux de mise en page, formulaire de landing) pour imiter un vrai mail
 // /une vraie page de connexion. On NE PEUT donc PAS reutiliser le sanitizer
-// strict de lib/ai/mistral.ts (qui supprime `style`, `img`, etc. — adapte aux
+// strict de lib/ai/mistral.ts (qui supprime `style`, `img`, etc. - adapte aux
 // previews IA, pas aux templates).
 //
 // Ce sanitizer PRESERVE le presentationnel (style, img, table, form) mais

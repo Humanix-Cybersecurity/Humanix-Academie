@@ -5,7 +5,7 @@
 // à la fois.
 //
 // HONNÊTETÉ : les contrôles hors périmètre Humanix (`outOfScope`) sont affichés
-// explicitement — on ne laisse jamais croire qu'on couvre ce qu'on ne couvre
+// explicitement - on ne laisse jamais croire qu'on couvre ce qu'on ne couvre
 // pas. La preuve s'exporte vers CISO Assistant via le bouton dédié.
 //
 // Accessibilité : motif accordion (button aria-expanded/aria-controls, panneau

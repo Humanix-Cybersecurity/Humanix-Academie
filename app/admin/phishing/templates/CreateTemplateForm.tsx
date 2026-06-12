@@ -236,7 +236,7 @@ export default function CreateTemplateForm() {
                 id="landingTitle"
                 name="landingTitle"
                 maxLength={100}
-                placeholder='Ex: "Microsoft 365 — Connexion"'
+                placeholder='Ex: "Microsoft 365 - Connexion"'
                 className="w-full px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-900 text-sm"
               />
             </div>

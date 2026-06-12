@@ -22,7 +22,7 @@ import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
 export const metadata: Metadata = {
-  title: "Ressources cyber gratuites — Humanix Académie",
+  title: "Ressources cyber gratuites - Humanix Académie",
   description:
     "Cyber-météo, observatoire des fuites, librairie, anecdotes hebdo, audit flash : nos ressources gratuites pour comprendre la cybersécurité au quotidien.",
   alternates: { canonical: "/ressources" },
@@ -42,7 +42,7 @@ const RESOURCES: Resource[] = [
     title: "Suis-je exposé ?",
     emoji: "🛡️",
     description:
-      "Vérifie si ton mot de passe a fuité (sans jamais l'envoyer — k-anonymity) et si une fuite connue te concerne. Plus un guide pas-à-pas pour chercher tes traces et réduire ton empreinte. Rien n'est conservé.",
+      "Vérifie si ton mot de passe a fuité (sans jamais l'envoyer - k-anonymity) et si une fuite connue te concerne. Plus un guide pas-à-pas pour chercher tes traces et réduire ton empreinte. Rien n'est conservé.",
     badge: "Gratuit",
   },
   {

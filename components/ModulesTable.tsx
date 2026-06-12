@@ -253,7 +253,7 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
     if (selected.size === 0) return;
     startTransition(async () => {
       await bulkSaisonAction(Array.from(selected), action);
-      // Conserve la selection apres action — l'admin peut enchainer.
+      // Conserve la selection apres action - l'admin peut enchainer.
     });
   };
 
@@ -433,7 +433,7 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
       )}
 
       {/* ============================================================ */}
-      {/* LISTE DES MODULES — groupes par famille                      */}
+      {/* LISTE DES MODULES - groupes par famille                      */}
       {/* ============================================================ */}
       {filtered.length === 0 ? (
         <div className="rounded-2xl border-2 border-dashed border-gray-300 dark:border-slate-700 p-8 text-center">
@@ -461,7 +461,7 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
                 totalCount={items.length}
                 // Replie par defaut pour une vue degagee. Si l'admin a une
                 // recherche / un filtre actif, on auto-deplie les familles
-                // qui contiennent des resultats — sinon il filtre et ne voit
+                // qui contiennent des resultats - sinon il filtre et ne voit
                 // rien.
                 forceOpen={hasFilters}
                 onSelectAll={() =>

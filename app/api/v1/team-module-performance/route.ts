@@ -192,7 +192,7 @@ export async function GET(req: Request) {
     (u) => u.avg < FAILING_QUIZ_THRESHOLD,
   );
 
-  // Top 5 failing users — pseudonymisés (hash + service uniquement)
+  // Top 5 failing users - pseudonymisés (hash + service uniquement)
   const usersById = Object.fromEntries(users.map((u) => [u.id, u]));
   const topFailing = failingUsers.slice(0, 5).map((u) => ({
     pseudo: pseudonymize(u.userId),

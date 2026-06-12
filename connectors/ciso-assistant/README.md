@@ -2,7 +2,7 @@
 
 Connecteur autonome qui synchronise les preuves de conformité (evidence) de **Humanix Académie** vers **CISO Assistant** (intuitem).
 
-> Premier — et à ce jour seul — connecteur natif entre une plateforme française de sensibilisation cyber et un outil GRC open-source.
+> Premier - et à ce jour seul - connecteur natif entre une plateforme française de sensibilisation cyber et un outil GRC open-source.
 
 ## À quoi ça sert
 
@@ -17,7 +17,7 @@ Plus de copier-coller manuel. Plus d'Excel partagé. Le score de conformité ref
 ## Pré-requis
 
 - Python 3.10+
-- Une clé API Humanix (plan Pro ou supérieur — voir `/admin/api-keys`)
+- Une clé API Humanix (plan Pro ou supérieur - voir `/admin/api-keys`)
 - Un compte CISO Assistant avec droits écriture sur les evidences
 
 ## Installation
@@ -64,7 +64,7 @@ NIST-CSF        NIST Cybersecurity Framework v2.0 (mapping partiel)
 0 6 * * * cd /opt/humanix-ciso && set -a && . ./.env && set +a && python humanix_ciso_connector.py --framework NIS2 >> /var/log/humanix-ciso.log 2>&1
 ```
 
-### Debug — sauvegarder le bundle brut
+### Debug - sauvegarder le bundle brut
 
 ```bash
 python humanix_ciso_connector.py --framework RGPD --output bundle.json --dry-run
@@ -85,7 +85,7 @@ jq '.evidences[] | {control_ref, status, score}' bundle.json
 
 ## Licence
 
-MIT — utilisable librement, y compris dans des projets propriétaires ou AGPL.
+MIT - utilisable librement, y compris dans des projets propriétaires ou AGPL.
 
 ## Support
 

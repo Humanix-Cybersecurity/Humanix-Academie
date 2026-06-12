@@ -9,7 +9,7 @@ import { OG_SIZE, OG_CONTENT_TYPE, renderOgCard } from "@/lib/og-card";
 export const dynamic = "force-dynamic";
 
 export const alt =
-  "Humanix Académie — La cyber pour tous, à partir de 5 minutes par semaine";
+  "Humanix Académie - La cyber pour tous, à partir de 5 minutes par semaine";
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 

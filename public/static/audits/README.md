@@ -1,4 +1,4 @@
-# Captures des audits externes — preuves datées
+# Captures des audits externes - preuves datées
 
 Ces images sont des **captures d'écran** des trois scanners publics
 auxquels Humanix Académie se soumet pour valider sa posture sécurité.
@@ -7,7 +7,7 @@ marketing et le rapport d'audit public.
 
 > Pour vérifier ces scores en temps réel (pas la peine de croire les
 > screenshots), va sur la page Trust Center : `/securite/audits-externes`
-> — chaque scanner a un lien live qui interroge nos serveurs en direct.
+> - chaque scanner a un lien live qui interroge nos serveurs en direct.
 
 ## Captures actuelles
 

@@ -33,7 +33,7 @@ const WEBAUTHN_PREF_KEY = "humanix:pref:webauthn";
 
 /**
  * Lit la preference WebAuthn cote client. Renvoie false en SSR
- * (window indefini) — ConnexionInner verifiera en useEffect au mount.
+ * (window indefini) - ConnexionInner verifiera en useEffect au mount.
  */
 function readWebauthnPreference(): boolean {
   if (typeof window === "undefined") return false;
@@ -294,7 +294,7 @@ function ConnexionInner() {
           </h1>
           <p className="text-base sm:text-lg text-gray-700 dark:text-gray-200 leading-relaxed max-w-sm mx-auto">
             Choisis ta voie d&apos;accès. Magic link, mot de passe, ou clé
-            de sécurité — comme tu préfères.
+            de sécurité - comme tu préfères.
           </p>
         </section>
       </HexBackdrop>
@@ -438,7 +438,7 @@ function ConnexionInner() {
           <div className="rounded-xl border border-emerald-200 dark:border-emerald-900/50 bg-emerald-50 dark:bg-emerald-950/30 p-3 text-xs text-emerald-900 dark:text-emerald-100">
             <p className="font-bold mb-1 flex items-center gap-1.5">
               <span aria-hidden="true">🛡️</span>
-              Connexion sans mot de passe — la plus sûre
+              Connexion sans mot de passe - la plus sûre
             </p>
             <p className="opacity-90 leading-relaxed">
               Une clé d&apos;accès (passkey, YubiKey, Touch ID, Windows Hello)

@@ -130,8 +130,8 @@ christine@masociete.fr,Christine Dubois,Compta,LEARNER`}
                 {rows.slice(0, 5).map((r, i) => (
                   <tr key={i} className="border-t">
                     <td className="px-3 py-2 font-mono">{r.email}</td>
-                    <td className="px-3 py-2">{r.name ?? "—"}</td>
-                    <td className="px-3 py-2">{r.service ?? "—"}</td>
+                    <td className="px-3 py-2">{r.name ?? "-"}</td>
+                    <td className="px-3 py-2">{r.service ?? "-"}</td>
                     <td className="px-3 py-2">{r.role ?? "LEARNER"}</td>
                   </tr>
                 ))}

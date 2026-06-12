@@ -90,7 +90,7 @@ export async function createStarterAccount(
     };
   }
 
-  // VERROU PHASE 3 — modèle d'accès 3-layer : un tenant n'est créé QUE
+  // VERROU PHASE 3 - modèle d'accès 3-layer : un tenant n'est créé QUE
   // pour une organisation qui souscrit un abonnement payant. Les apprenants
   // gratuits passent par /inscription (tenant Communauté, role LEARNER).
   // Les organisations qui veulent un tenant payant passent par

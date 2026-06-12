@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// `lib/secrets` — interface unifiee de lecture des secrets de l'application.
+// `lib/secrets` - interface unifiee de lecture des secrets de l'application.
 //
 // CONTEXTE :
 // Humanix Academie consomme des secrets API tiers (MISTRAL_API_KEY,
@@ -11,7 +11,7 @@
 // a une integration Vault / Scaleway Secret Manager / HashiCorp Vault
 // SANS imposer cette migration aujourd'hui :
 //
-//   - Par defaut : `getSecret(name)` lit `process.env[name]` — comportement
+//   - Par defaut : `getSecret(name)` lit `process.env[name]` - comportement
 //     identique a aujourd'hui, zero changement runtime.
 //   - Un operateur peut, dans `instrumentation.ts` ou un bootstrap script,
 //     enregistrer un resolver custom via `setSecretResolver()` qui interroge

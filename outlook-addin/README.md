@@ -1,4 +1,4 @@
-# Plugin Outlook — Humanix Académie
+# Plugin Outlook - Humanix Académie
 
 Add-in Office qui ajoute un bouton **« Signaler à Humanix »** dans le ruban Outlook. Le clic envoie le mail au backend Humanix → +5 coins pour l'utilisateur, événement `phishing_external_report` dans le dashboard, webhook `phishing.reported` déclenché.
 
@@ -61,17 +61,17 @@ Outlook Desktop :
 
 ### 4. Distribution
 
-**Option A — Internal only (recommandé pour PME)**
+**Option A - Internal only (recommandé pour PME)**
 
 Microsoft 365 Admin Center → **Settings → Integrated apps → Upload custom apps → Office Add-in** → Upload `manifest.xml` → Assigner aux groupes/utilisateurs cibles.
 
-**Option B — AppSource (Microsoft Store)**
+**Option B - AppSource (Microsoft Store)**
 
 Plus long (validation Microsoft 4-8 semaines), mais visibilité publique. Documentation : https://learn.microsoft.com/office/dev/store/submit-to-appsource-via-partner-center
 
 ### 5. Configurer le backend
 
-Pas de config supplémentaire requise — la route `/api/phishing/report` est déjà active en production avec :
+Pas de config supplémentaire requise - la route `/api/phishing/report` est déjà active en production avec :
 
 - CORS allowlist : outlook.office.com, outlook.office365.com, outlook.live.com
 - Rate limit 30 signalements/h/user
@@ -96,7 +96,7 @@ Quand un user signale :
 
 ## TODO V2 (post-publication)
 
-- [ ] Bouton « Mauvaise idée — annuler signalement » dans les 30 secondes (anti-clic accidentel)
+- [ ] Bouton « Mauvaise idée - annuler signalement » dans les 30 secondes (anti-clic accidentel)
 - [ ] Affichage du score user après signalement (« vous êtes le 3ᵉ signaleur du mois »)
 - [ ] Mode "spear-phishing detected" : si le mail correspond à un template piégé en cours de campagne (corrélation avec PhishingResult), feedback éducatif immédiat
 - [ ] Support Gmail (manifeste équivalent Google Workspace Add-on)

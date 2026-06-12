@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Dispatcher : selon le type du media, rend le bon composant Mockup.
 //
-// Server component (pas de state interne) — peut etre rendu cote
+// Server component (pas de state interne) - peut etre rendu cote
 // serveur dans le player. On garde les mockups separes pour les
 // rendre testables/extensibles independamment.
 

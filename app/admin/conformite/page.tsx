@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// /admin/conformite — Hub conformité multi-référentiels.
+// /admin/conformite - Hub conformité multi-référentiels.
 //
 // Vue d'ensemble de la couverture Humanix sur les 7 référentiels (ISO 27001,
 // NIS2, RGPD, ANSSI-HG, NIST-CSF, Sapin II, SOC2) : % de couverture, statut

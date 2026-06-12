@@ -4,7 +4,7 @@
     {
       "type": 1,
       "content": {
-        "json": "## Humanix Académie — Conformité cyber humaine\n\n**Tableau de bord standard fourni par Humanix-Cybersecurity.**\n\nSource : table custom `HumanixCompliance_CL` alimentée via la Logs Ingestion API.\nAprès configuration du connecteur, sélectionnez votre tenant et un framework pour visualiser le facteur humain de votre conformité."
+        "json": "## Humanix Académie - Conformité cyber humaine\n\n**Tableau de bord standard fourni par Humanix-Cybersecurity.**\n\nSource : table custom `HumanixCompliance_CL` alimentée via la Logs Ingestion API.\nAprès configuration du connecteur, sélectionnez votre tenant et un framework pour visualiser le facteur humain de votre conformité."
       },
       "name": "header"
     },

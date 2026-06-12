@@ -12,15 +12,15 @@
 #   ./cron-runner.sh <name>             # appelle /api/cron/<name>
 #
 # VARIABLES D'ENV :
-#   CRON_SECRET           (obligatoire) — secret partagé app + scheduler
-#   APP_INTERNAL_URL      (défaut http://app:3000) — base URL de l'API
-#   CRON_RUNNER_TIMEOUT   (défaut 600) — timeout curl en secondes
-#   CRON_RUNNER_RETRIES   (défaut 2) — nombre de retries en cas d'échec
+#   CRON_SECRET           (obligatoire) - secret partagé app + scheduler
+#   APP_INTERNAL_URL      (défaut http://app:3000) - base URL de l'API
+#   CRON_RUNNER_TIMEOUT   (défaut 600) - timeout curl en secondes
+#   CRON_RUNNER_RETRIES   (défaut 2) - nombre de retries en cas d'échec
 #
 # EXIT CODES :
 #   0  succès
 #   1  argument manquant ou config invalide
-#   2  erreur HTTP (non-2xx) — déclenche restart par Ofelia/k8s
+#   2  erreur HTTP (non-2xx) - déclenche restart par Ofelia/k8s
 
 set -e
 

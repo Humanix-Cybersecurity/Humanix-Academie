@@ -17,7 +17,7 @@
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
-const COMMU_TITLE = "Communauté — Rejoins l'écosystème cyber souverain | Humanix Académie";
+const COMMU_TITLE = "Communauté - Rejoins l'écosystème cyber souverain | Humanix Académie";
 const COMMU_DESC =
   "Rejoins la communauté Humanix Académie : Discord, GitHub Discussions, contribue un module MDX, un connecteur, ou simplement utilise. Open source AGPLv3, écosystème cyber souverain français.";
 
@@ -34,7 +34,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Communauté Humanix — Cyber souverain français",
+    title: "Communauté Humanix - Cyber souverain français",
     description: COMMU_DESC,
     images: ["/logo-humanix-academie-512.png"],
   },

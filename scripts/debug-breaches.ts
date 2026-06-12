@@ -40,7 +40,7 @@ async function main() {
     console.log(`${"=".repeat(72)}`);
     console.log(`SOURCE   : ${r.source}`);
     console.log(`URL      : ${r.url}`);
-    console.log(`Status   : ${r.status ?? "—"}${r.ok ? " ✓" : " ✗"}`);
+    console.log(`Status   : ${r.status ?? "-"}${r.ok ? " ✓" : " ✗"}`);
     console.log(`Bytes    : ${r.bytes}`);
     if (r.error) console.log(`Erreur   : ${r.error}`);
 

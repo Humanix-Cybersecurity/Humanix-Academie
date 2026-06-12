@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Phase 3 (B2B reporting) — rapport de POSTURE d'exposition.
+// Phase 3 (B2B reporting) - rapport de POSTURE d'exposition.
 //
 // CADRAGE JURIDIQUE VOLONTAIRE : ce rapport documente une MESURE DE SÉCURITÉ
 // (surveillance + remédiation des comptes exposés) au sens NIS2 art.21 et
@@ -21,7 +21,7 @@ function fmtDay(d: Date): string {
 }
 
 function trendArrow(prev: number | null, cur: number): string {
-  if (prev === null) return "—";
+  if (prev === null) return "-";
   if (cur > prev) return `▲ +${cur - prev}`;
   if (cur < prev) return `▼ ${cur - prev}`;
   return "= 0";
@@ -71,12 +71,12 @@ export async function buildComplianceReport(
     )
     .join("\n");
 
-  const md = `# Rapport de posture — Veille d'exposition
+  const md = `# Rapport de posture - Veille d'exposition
 
 **Organisation :** ${tenant.name}
 **Date du rapport :** ${generatedAt.slice(0, 10)}
 **Périmètre surveillé :** ${tenant.exposureDomains.join(", ") || "(aucun domaine)"}
-**DPA art. 28 :** signé le ${tenant.exposureMonitoringDpaSignedAt ? fmtDay(tenant.exposureMonitoringDpaSignedAt) : "—"}
+**DPA art. 28 :** signé le ${tenant.exposureMonitoringDpaSignedAt ? fmtDay(tenant.exposureMonitoringDpaSignedAt) : "-"}
 
 > ⚖️ **Nature de ce document.** Ce rapport atteste d'une **mesure de sécurité**
 > (surveillance et remédiation des comptes salariés exposés dans des fuites
@@ -96,7 +96,7 @@ ${
 - **Formation de remédiation assignée :** ${latest.trainingCount}
 - **Remédiées :** ${latest.remediatedCount}
 - **Écartées (faux positifs) :** ${latest.dismissedCount}
-- **Taux de remédiation :** ${remediationRate !== null ? remediationRate + " %" : "—"}`
+- **Taux de remédiation :** ${remediationRate !== null ? remediationRate + " %" : "-"}`
     : "_Aucun snapshot disponible : la veille n'a pas encore produit de mesure._"
 }
 
@@ -104,7 +104,7 @@ ${
 
 | Jour | Ouvertes | Remédiées | Score |
 |---|---|---|---|
-${history || "| — | — | — | — |"}
+${history || "| - | - | - | - |"}
 
 ## Mesures de sécurité en place
 
@@ -120,11 +120,11 @@ ${history || "| — | — | — | — |"}
 
 ## Cadre juridique
 
-- **NIS2 (directive UE 2022/2555) art. 21** — gestion des risques de cybersécurité :
+- **NIS2 (directive UE 2022/2555) art. 21** - gestion des risques de cybersécurité :
   cette veille constitue une mesure de surveillance et de traitement des menaces.
-- **RGPD art. 32** — sécurité du traitement : démarche proportionnée de réduction
+- **RGPD art. 32** - sécurité du traitement : démarche proportionnée de réduction
   du risque sur les comptes des personnes concernées.
-- **RGPD art. 28** — sous-traitance : encadrée par le DPA signé (cf. en-tête).
+- **RGPD art. 28** - sous-traitance : encadrée par le DPA signé (cf. en-tête).
 
 _Document généré automatiquement. Données agrégées, sans information individuelle._
 `;

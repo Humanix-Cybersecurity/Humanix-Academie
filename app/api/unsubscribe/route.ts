@@ -53,7 +53,7 @@ async function handleUnsubscribe(
   // Cas special : token de type "transactional". On accepte la demande
   // (l'user signale qu'il ne veut plus de magic link), mais comme c'est un
   // mail necessaire au login, on enregistre dans EmailOptOut puis on le
-  // documente — un humain peut traiter au cas par cas si necessaire.
+  // documente - un humain peut traiter au cas par cas si necessaire.
   // On NE bloque PAS les magic link futurs (sinon l'user ne peut plus
   // se connecter du tout).
   await markEmailOptedOut(verify.email, verify.list, {

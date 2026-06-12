@@ -29,7 +29,7 @@ import { ReseedCatalogForm } from "./ReseedCatalogForm";
 /**
  * Fallback in-process (résolution bundlée) si le sous-process tsx échoue.
  * En dev local / fork OSS, c'est correct ; en prod commerciale, ça peut sous-
- * estimer (demo) — mais on n'arrive ici que si tsx est indisponible.
+ * estimer (demo) - mais on n'arrive ici que si tsx est indisponible.
  */
 function buildInProcessReport(): CatalogReport {
   const { saisons, source } = loadCatalogSaisons();
@@ -121,7 +121,7 @@ export default async function SuperadminCatalogPage() {
   const sourceReason = demoModeEnv
     ? "DEMO_MODE=true force le catalogue démo (5 saisons). Pose DEMO_MODE=false dans l'environnement de prod, puis redéploie/reseed."
     : !commercialAvailable
-      ? "Le catalogue commercial (content-pro) est ABSENT de cette image — c'est typiquement une image OSS. La prod doit tourner une image buildée AVEC le submodule content-pro."
+      ? "Le catalogue commercial (content-pro) est ABSENT de cette image - c'est typiquement une image OSS. La prod doit tourner une image buildée AVEC le submodule content-pro."
       : "Catalogue commercial chargé.";
 
   return (
@@ -158,7 +158,7 @@ export default async function SuperadminCatalogPage() {
           <p className="text-sm text-emerald-800 dark:text-emerald-300 mt-1">
             Tout le contenu du code est présent. La BDD contient en plus{" "}
             {extraInDb} entité(s) qui ne sont pas dans le catalogue actif (ex.
-            saisons démo cumulées au commercial) — c&apos;est normal : le seed
+            saisons démo cumulées au commercial) - c&apos;est normal : le seed
             est additif et ne supprime jamais. Aucun re-import nécessaire.
           </p>
         </div>
@@ -269,10 +269,10 @@ export default async function SuperadminCatalogPage() {
               </span>
             </dd>
             <dt className="text-gray-500 dark:text-gray-400">Opérateur</dt>
-            <dd>{lastReseed.actorEmail ?? "—"}</dd>
+            <dd>{lastReseed.actorEmail ?? "-"}</dd>
             <dt className="text-gray-500 dark:text-gray-400">Détail</dt>
             <dd className="text-gray-700 dark:text-gray-300">
-              {lastReseed.message ?? "—"}
+              {lastReseed.message ?? "-"}
             </dd>
           </dl>
         </section>
@@ -308,7 +308,7 @@ function CountRow({
         }`}
       >
         {gap === 0
-          ? "—"
+          ? "-"
           : gap > 0
             ? `+${gap} en BDD`
             : `${Math.abs(gap)} manquant`}

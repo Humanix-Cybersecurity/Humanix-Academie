@@ -201,7 +201,7 @@ export const QUISHING_CAMPAIGN_TOKEN_PREFIX = "qhc_";
 
 /**
  * Construit le token campagne a encoder dans le QR d'un poster quishing.
- * Format : `qhc_<campaignId>` — deterministe, pas besoin de stocker en
+ * Format : `qhc_<campaignId>` - deterministe, pas besoin de stocker en
  * BDD. La landing reverse-parse pour resoudre la campagne.
  */
 export function buildQuishingCampaignToken(campaignId: string): string {

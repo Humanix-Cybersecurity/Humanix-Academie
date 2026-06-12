@@ -206,7 +206,7 @@ export default async function ObservatoireFuitesPage({
             />
             <ObsStat
               label="Dernière synchro"
-              value={stats.lastSync ? formatRelative(stats.lastSync) : "—"}
+              value={stats.lastSync ? formatRelative(stats.lastSync) : "-"}
               delay={240}
             />
           </div>

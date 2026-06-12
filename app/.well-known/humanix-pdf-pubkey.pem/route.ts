@@ -23,7 +23,7 @@ export async function GET() {
   const { pem, fingerprint, ephemeral } = getCurrentPublicKeyPem();
 
   const body =
-    `# Humanix Académie — clé publique Ed25519\n` +
+    `# Humanix Académie - clé publique Ed25519\n` +
     `# Empreinte SHA-256 : ${fingerprint}\n` +
     `# Mode : ${ephemeral ? "ÉPHÉMÈRE (régénérée à chaque redémarrage du process)" : "persistante (env HUMANIX_PDF_SIGNING_PRIVATE_KEY_PEM)"}\n` +
     `# Servie depuis : /.well-known/humanix-pdf-pubkey.pem\n` +

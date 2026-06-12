@@ -301,7 +301,7 @@ function PreviewCard({
         {label}
       </p>
       <p className="font-display text-3xl font-extrabold text-primary-500 dark:text-accent-300 tabular-nums">
-        {disabled ? "—" : value}
+        {disabled ? "-" : value}
       </p>
       <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 leading-relaxed">
         {help}

@@ -78,11 +78,11 @@ export default async function DonneesPage() {
         </header>
         <dl className="grid grid-cols-2 gap-3 text-sm">
           <Field label="Email" value={user.email} />
-          <Field label="Nom" value={user.name ?? "—"} />
-          <Field label="Service" value={user.service ?? "—"} />
+          <Field label="Nom" value={user.name ?? "-"} />
+          <Field label="Service" value={user.service ?? "-"} />
           <Field label="Rôle" value={user.role} />
-          <Field label="Organisation" value={user.tenant?.name ?? "—"} />
-          <Field label="Plan" value={user.tenant?.plan ?? "—"} />
+          <Field label="Organisation" value={user.tenant?.name ?? "-"} />
+          <Field label="Plan" value={user.tenant?.plan ?? "-"} />
           <Field label="Niveau" value={String(user.level)} />
           <Field label="Coins" value={String(user.coins)} />
           <Field
@@ -106,7 +106,7 @@ export default async function DonneesPage() {
             value={
               lastLogin?.lastLoginAt
                 ? lastLogin.lastLoginAt.toLocaleDateString("fr-FR")
-                : "—"
+                : "-"
             }
           />
           <Field

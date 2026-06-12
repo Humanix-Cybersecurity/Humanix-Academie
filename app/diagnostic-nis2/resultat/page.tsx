@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /diagnostic-nis2/resultat — page de resultat du diagnostic NIS2.
+// /diagnostic-nis2/resultat - page de resultat du diagnostic NIS2.
 //
 // Lit les reponses encodees dans le query param `?d=BASE64` (cf.
 // app/diagnostic-nis2/actions.ts pour l'encodage), calcule le score
 // per-article + verdict + top 3 priorites, et rend une page lisible
 // pour le RSSI / DSI / dirigeant.
 //
-// Pas de persistance BDD : la page est "stateless" — l'URL elle-meme
+// Pas de persistance BDD : la page est "stateless" - l'URL elle-meme
 // est partageable (peut etre bookmarkee, envoyee au CODIR), reproduit
 // le meme resultat.
 
@@ -25,7 +25,7 @@ import { NIS2_ARTICLES_ORDER } from "@/lib/nis2/articles";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Mon diagnostic NIS2 — Humanix Académie",
+  title: "Mon diagnostic NIS2 - Humanix Académie",
   description:
     "Résultat du diagnostic NIS2 en 30 questions : score per-article, verdict, top 3 priorités.",
   alternates: { canonical: "/diagnostic-nis2/resultat" },

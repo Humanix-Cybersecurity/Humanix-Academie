@@ -1,5 +1,5 @@
 # =============================================================================
-# docker-compose.dev.yml — Override pour le mode developpement local TLS
+# docker-compose.dev.yml - Override pour le mode developpement local TLS
 # -----------------------------------------------------------------------------
 # Ce fichier ajoute uniquement les ajustements specifiques au dev :
 #   - Port 443 expose sur l'host (HTTPS local via mkcert)

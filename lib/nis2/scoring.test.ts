@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Tests pour lib/nis2/scoring.ts — diagnostic NIS2 public (Pack NIS2 v2 — A).
+// Tests pour lib/nis2/scoring.ts - diagnostic NIS2 public (Pack NIS2 v2 - A).
 //
 // On valide :
 //   - Score 100/100 = robuste quand tout est "oui"
@@ -41,7 +41,7 @@ function allUnsure(): Nis2Answers {
   return a;
 }
 
-describe("lib/nis2/scoring — computeNis2Diagnostic", () => {
+describe("lib/nis2/scoring - computeNis2Diagnostic", () => {
   describe("scores extremes", () => {
     it("tout 'oui' => score 100, verdict robuste", () => {
       const r = computeNis2Diagnostic(allYes());
@@ -184,7 +184,7 @@ describe("lib/nis2/scoring — computeNis2Diagnostic", () => {
   });
 });
 
-describe("lib/nis2/scoring — countYesAnswers", () => {
+describe("lib/nis2/scoring - countYesAnswers", () => {
   it("compte correctement les 'oui'", () => {
     const a: Nis2Answers = {
       q1: "oui",

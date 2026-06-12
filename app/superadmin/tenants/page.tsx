@@ -240,7 +240,7 @@ function Pill({ ok, label }: { ok: boolean; label: string }) {
 }
 
 function formatActivity(days: number | null): string {
-  if (days === null) return "—";
+  if (days === null) return "-";
   if (days === 0) return "aujourd'hui";
   if (days === 1) return "hier";
   if (days < 7) return `il y a ${days} j`;

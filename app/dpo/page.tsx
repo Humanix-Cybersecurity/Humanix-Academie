@@ -23,13 +23,13 @@
 //   - Citation finale "Hex veille"
 //
 // ROADMAP (mise a jour 2026-05-24) :
-//   - /admin/dpo : ✅ LIVRE — dashboard avec compteurs RGPD 90j, queue
+//   - /admin/dpo : ✅ LIVRE - dashboard avec compteurs RGPD 90j, queue
 //     effacement art. 17, activite 30j
-//   - /admin/dpo/aipd : ✅ LIVRE — generateur AIPD avec template pre-rempli
-//   - /admin/dpo/retention : ✅ LIVRE — config retention par tenant
-//   - Saison `dpo-quotidien` : ✅ LIVREE — 6 modules MDX (AIPD, CNIL,
+//   - /admin/dpo/aipd : ✅ LIVRE - generateur AIPD avec template pre-rempli
+//   - /admin/dpo/retention : ✅ LIVRE - config retention par tenant
+//   - Saison `dpo-quotidien` : ✅ LIVREE - 6 modules MDX (AIPD, CNIL,
 //     transferts hors UE, profilage, base legale, mutualisation PME)
-//   - /integrations/privacy-tools : ✅ LIVRE 2026-05-24 — connecteur
+//   - /integrations/privacy-tools : ✅ LIVRE 2026-05-24 - connecteur
 //     dedie Privacy Tools (OneTrust, Didomi, Privacy.fr) via endpoint
 //     `/api/v1/dpo-export`
 //   - Reference dans HeaderBar + footer (déjà fait)
@@ -38,7 +38,7 @@ import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 import { BreadcrumbJsonLd } from "@/lib/seo/jsonld";
 
-const DPO_TITLE = "Espace DPO — Sensibilisation RGPD-by-design | Humanix Académie";
+const DPO_TITLE = "Espace DPO - Sensibilisation RGPD-by-design | Humanix Académie";
 const DPO_DESC =
   "Pour les Délégués à la Protection des Données : Humanix Académie est RGPD-by-design. Registre des traitements fourni, DPA modèle pré-signé, procédure 72 h CNIL pré-remplie, hébergement Scaleway Paris, audit log complet. Sensibilisation cyber qu'un DPO peut auditer et déléguer.";
 
@@ -55,7 +55,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Espace DPO — Sensibilisation RGPD-by-design",
+    title: "Espace DPO - Sensibilisation RGPD-by-design",
     description:
       "Registre des traitements, DPA modèle, procédure 72 h pré-remplie. Plateforme cyber qu'un DPO peut auditer.",
     images: ["/logo-humanix-academie-512.png"],
@@ -111,7 +111,7 @@ const PROMESSES = [
       ring: "border-rose-200 dark:border-rose-900/40",
       accent: "text-rose-700 dark:text-rose-300",
     },
-    body: "Données personnelles hébergées en France (Scaleway Paris). Sous-traitants UE : email transactionnel via Scaleway TEM (Paris), paiement via Mollie (Amsterdam — régulé DNB), IA générative via Mistral (Paris). Aucune donnée personnelle ne traverse le Cloud Act US. Option SecNumCloud disponible en Enterprise.",
+    body: "Données personnelles hébergées en France (Scaleway Paris). Sous-traitants UE : email transactionnel via Scaleway TEM (Paris), paiement via Mollie (Amsterdam - régulé DNB), IA générative via Mistral (Paris). Aucune donnée personnelle ne traverse le Cloud Act US. Option SecNumCloud disponible en Enterprise.",
   },
   {
     emoji: "🛡",
@@ -411,7 +411,7 @@ export default function DpoLandingPage() {
                   </Link>{" "}
                   :
                 </strong>{" "}
-                push direct vers OneTrust, Didomi, Privacy.fr — preuves de
+                push direct vers OneTrust, Didomi, Privacy.fr - preuves de
                 sensibilisation et compteurs RGPD via API JSON
                 <code className="font-mono text-xs bg-gray-100 dark:bg-slate-800 px-1.5 py-0.5 rounded mx-1">
                   /api/v1/dpo-export

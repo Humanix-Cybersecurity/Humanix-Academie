@@ -137,7 +137,7 @@ export async function submitDemandeAbonnement(
     try {
       await sendEmail({
         to: FOUNDER_EMAIL,
-        subject: `[Humanix] Demande d'abonnement — ${organization}`,
+        subject: `[Humanix] Demande d'abonnement - ${organization}`,
         html,
         // Permet au founder de répondre directement au demandeur en
         // cliquant "Répondre" dans son client mail (sans copier-coller

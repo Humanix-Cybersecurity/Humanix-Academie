@@ -34,14 +34,14 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: {
     title:
-      "Humanix Académie — La cyber pour tous, à partir de 5 minutes par semaine",
+      "Humanix Académie - La cyber pour tous, à partir de 5 minutes par semaine",
     description:
       "Pas un cours d'expert. Une habitude tranquille. Plateforme française open source de cybersensibilisation pour particuliers, équipes et organisations de toute taille.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Humanix Académie — La cyber pour tous",
+    title: "Humanix Académie - La cyber pour tous",
     description:
       "À partir de 5 minutes par semaine. RGPD-compliant. Open source AGPLv3.",
   },

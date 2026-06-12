@@ -32,7 +32,7 @@ function ldScript(data: unknown): ReactElement {
 }
 
 // ============================================================================
-// WebSite — apparait sous le knowledge panel + active SearchAction sitelinks
+// WebSite - apparait sous le knowledge panel + active SearchAction sitelinks
 // ============================================================================
 
 export function WebSiteJsonLd(): ReactElement {
@@ -53,7 +53,7 @@ export function WebSiteJsonLd(): ReactElement {
 }
 
 // ============================================================================
-// SoftwareApplication — la plateforme elle-meme (pour /tarifs et /demo).
+// SoftwareApplication - la plateforme elle-meme (pour /tarifs et /demo).
 // Active le badge "Logiciel" dans la SERP + la note moyenne si on en publie.
 // ============================================================================
 
@@ -126,7 +126,7 @@ export function SoftwareApplicationJsonLd(
 }
 
 // ============================================================================
-// FAQPage — accordeon FAQ visible directement dans la SERP. Pousser les
+// FAQPage - accordeon FAQ visible directement dans la SERP. Pousser les
 // reponses canoniques aux questions de l'audience pour capter les longs tails.
 // ============================================================================
 
@@ -146,7 +146,7 @@ export function FaqJsonLd({ items }: { items: FaqItem[] }): ReactElement {
 }
 
 // ============================================================================
-// BreadcrumbList — affiche le fil d'Ariane sous le titre dans la SERP a la
+// BreadcrumbList - affiche le fil d'Ariane sous le titre dans la SERP a la
 // place de l'URL brute. Effet visuel : on ressemble a un site structure.
 // ============================================================================
 
@@ -171,7 +171,7 @@ export function BreadcrumbJsonLd({
 }
 
 // ============================================================================
-// Article — pour les anecdotes hebdo et autres contenus editoriaux.
+// Article - pour les anecdotes hebdo et autres contenus editoriaux.
 // ============================================================================
 
 export type ArticleProps = {
@@ -217,7 +217,7 @@ export function ArticleJsonLd(props: ArticleProps): ReactElement {
 }
 
 // ============================================================================
-// Service — pour /securite, /audit-flash, /urgence-cyber. Active le badge
+// Service - pour /securite, /audit-flash, /urgence-cyber. Active le badge
 // "Service" et permet de declarer le type d'offre (Bxbe, particuliers...).
 // ============================================================================
 

@@ -106,7 +106,7 @@ export default function CisoAssistantBridge() {
   return (
     <div className="space-y-10">
       {/* ============================================================
-          Bloc 1 — Sélecteur de référentiel
+          Bloc 1 - Sélecteur de référentiel
           ============================================================ */}
       <section aria-labelledby="framework-selector-title">
         <h2
@@ -154,7 +154,7 @@ export default function CisoAssistantBridge() {
       </section>
 
       {/* ============================================================
-          Bloc 2 — Exemple de code copiable
+          Bloc 2 - Exemple de code copiable
           ============================================================ */}
       <section
         id={`framework-panel-${framework}`}
@@ -221,7 +221,7 @@ export default function CisoAssistantBridge() {
       </section>
 
       {/* ============================================================
-          Bloc 3 — Tableau de correspondances filtrable
+          Bloc 3 - Tableau de correspondances filtrable
           ============================================================ */}
       <section aria-labelledby="mapping-table-title">
         <div className="flex flex-wrap gap-3 items-center justify-between mb-3">
@@ -330,7 +330,7 @@ export default function CisoAssistantBridge() {
                   <code className="bg-gray-100 dark:bg-slate-700 px-1 rounded">
                     {o.ref}
                   </code>{" "}
-                  — {o.reason}
+                  - {o.reason}
                 </li>
               ))}
             </ul>

@@ -29,14 +29,14 @@ export const metadata: Metadata = {
     "Faites le point sur votre cybersécurité en 5 minutes. 15 questions, un rapport PDF avec vos forces, vos 3 leviers prioritaires et une feuille de route concrète. Pour particuliers, équipes et organisations de toute taille. 100 % gratuit, sans relance commerciale.",
   alternates: { canonical: "/audit-flash" },
   openGraph: {
-    title: "Audit Cyber Flash gratuit en 5 minutes — Humanix",
+    title: "Audit Cyber Flash gratuit en 5 minutes - Humanix",
     description:
       "Une photo bienveillante de votre maturité cyber. Score, leviers, feuille de route, conformité NIS2. En 5 minutes. Made in France.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Audit Cyber Flash gratuit en 5 minutes — Humanix",
+    title: "Audit Cyber Flash gratuit en 5 minutes - Humanix",
     description:
       "Pas un examen. Une photo bienveillante de votre maturité cyber, avec un PDF reçu par mail.",
   },
@@ -210,7 +210,7 @@ export default function AuditFlashPage() {
             <ul className="space-y-5 text-gray-700 dark:text-gray-200 max-w-3xl mx-auto">
               <TrustItem title="Conçu pour la réalité française">
                 Pas un copier-coller d'un questionnaire ISO 27001 inadapté à
-                votre réalité. Chaque question vise un sujet concret —
+                votre réalité. Chaque question vise un sujet concret -
                 quelle que soit la taille de votre structure (du
                 particulier au grand groupe).
               </TrustItem>
@@ -272,7 +272,7 @@ export default function AuditFlashPage() {
                 </li>
                 <li>
                   <strong>Score moyen ?</strong> C'est la majorité des
-                  organisations françaises. Bienvenue dans la normalité —
+                  organisations françaises. Bienvenue dans la normalité -
                   et dans le chemin vers la maîtrise.
                 </li>
               </ul>

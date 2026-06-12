@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Phase 3 (B2B reporting) — snapshot AGRÉGÉ quotidien de la posture
+// Phase 3 (B2B reporting) - snapshot AGRÉGÉ quotidien de la posture
 // d'exposition d'un tenant. Ne persiste AUCUNE donnée individuelle : que des
 // compteurs par statut et un score d'organisation 0-100.
 //

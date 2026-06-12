@@ -2,11 +2,11 @@ name: Docker Publish (OSS)
 
 # Publie l'image OSS de Humanix Academie sur :
 #
-#   - GHCR (GitHub Container Registry) — TOUJOURS ACTIF
+#   - GHCR (GitHub Container Registry) - TOUJOURS ACTIF
 #     ghcr.io/humanix-cybersecurity/humanix-academie
 #     Gratuit illimite, integre GitHub, pas de PAT a rotater.
 #
-#   - Docker Hub (compte perso) — OPTIONNEL
+#   - Docker Hub (compte perso) - OPTIONNEL
 #     <DOCKERHUB_USERNAME>/humanix-academie
 #     Active automatiquement si les secrets DOCKERHUB_USERNAME + DOCKERHUB_TOKEN
 #     sont definis. Sinon, ignore proprement (pas d'erreur).
@@ -23,7 +23,7 @@ name: Docker Publish (OSS)
 # Docker Hub reste utile pour la visibilite grand public (Stack Overflow,
 # tutos qui pointent par defaut vers docker.io/...). Compte perso gratuit
 # (les organisations Docker Hub sont payantes a partir de 75 $/mois pour
-# 5 users mini — pas justifie pour un projet OSS solo).
+# 5 users mini - pas justifie pour un projet OSS solo).
 #
 # === Quand ce workflow se declenche ===
 #
@@ -224,7 +224,7 @@ jobs:
             type=raw,value=manual-${{ github.event.inputs.custom_tag }},enable=${{ github.event_name == 'workflow_dispatch' && github.event.inputs.custom_tag != '' }}
           labels: |
             org.opencontainers.image.title=Humanix Académie
-            org.opencontainers.image.description=Plateforme française de sensibilisation cyber — souveraine, AGPLv3, conforme ANSSI HG 42 mesures
+            org.opencontainers.image.description=Plateforme française de sensibilisation cyber - souveraine, AGPLv3, conforme ANSSI HG 42 mesures
             org.opencontainers.image.vendor=Humanix Cybersecurity SASU (Toulouse, France)
             org.opencontainers.image.licenses=AGPL-3.0-or-later
             org.opencontainers.image.source=https://github.com/Humanix-Cybersecurity/Humanix-Academie

@@ -31,7 +31,7 @@ const CATEGORY_LABEL: Record<string, string> = {
 };
 
 function fmt(d: string | null): string {
-  if (!d) return "—";
+  if (!d) return "-";
   return new Date(d).toLocaleDateString("fr-FR", {
     day: "2-digit",
     month: "2-digit",

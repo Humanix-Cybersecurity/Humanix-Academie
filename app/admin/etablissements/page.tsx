@@ -137,7 +137,7 @@ export default async function EtablissementsPage() {
                         </p>
                       </td>
                       <td className="p-3 text-sm text-gray-600 dark:text-gray-300">
-                        {e.establishmentType ?? "—"}
+                        {e.establishmentType ?? "-"}
                       </td>
                       <td className="p-3 text-right tabular-nums">{e.seats}</td>
                       <td className="p-3 text-right tabular-nums">

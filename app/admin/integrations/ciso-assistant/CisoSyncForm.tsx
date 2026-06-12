@@ -200,7 +200,7 @@ export default function CisoSyncForm({
             </label>
             <label className="block md:col-span-2">
               <span className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                Email du responsable désigné <span className="text-gray-400">(optionnel — RSSI ou DPO du tenant)</span>
+                Email du responsable désigné <span className="text-gray-400">(optionnel - RSSI ou DPO du tenant)</span>
               </span>
               <input
                 type="email"
@@ -210,7 +210,7 @@ export default function CisoSyncForm({
                 className="w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white text-sm"
               />
               <span className="block text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Embedded dans la description de chaque evidence — exigence audit ISO 27001 §7.5 (informations documentées).
+                Embedded dans la description de chaque evidence - exigence audit ISO 27001 §7.5 (informations documentées).
               </span>
             </label>
           </div>
@@ -230,7 +230,7 @@ export default function CisoSyncForm({
               Extensions optionnelles
             </legend>
             <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 -mt-1">
-              Désactivées par défaut. Chacune fonctionne indépendamment — la sync des
+              Désactivées par défaut. Chacune fonctionne indépendamment - la sync des
               evidences continue normalement si CISO Assistant refuse l'une d'elles.
             </p>
             <div className="space-y-3">
@@ -381,7 +381,7 @@ export default function CisoSyncForm({
                   className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
                 />
                 <span>
-                  <strong>Live Mode</strong> — sync temps réel sur événements{" "}
+                  <strong>Live Mode</strong> - sync temps réel sur événements{" "}
                   <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 text-[10px] font-bold uppercase tracking-wider">
                     v2.0
                   </span>
@@ -407,7 +407,7 @@ export default function CisoSyncForm({
                   className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
                 />
                 <span>
-                  <strong>Asset « Workforce »</strong> — couche humaine comme asset GRC{" "}
+                  <strong>Asset « Workforce »</strong> - couche humaine comme asset GRC{" "}
                   <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold uppercase tracking-wider">
                     v2.2
                   </span>
@@ -427,7 +427,7 @@ export default function CisoSyncForm({
                   className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
                 />
                 <span>
-                  <strong>Catalogue de 15 menaces humaines</strong> — FOVI, deepfake CEO, smishing…{" "}
+                  <strong>Catalogue de 15 menaces humaines</strong> - FOVI, deepfake CEO, smishing…{" "}
                   <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold uppercase tracking-wider">
                     v2.2
                   </span>
@@ -450,7 +450,7 @@ export default function CisoSyncForm({
                   className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
                 />
                 <span>
-                  <strong>Dashboard pré-cuisiné</strong> — vue agrégée 6 widgets{" "}
+                  <strong>Dashboard pré-cuisiné</strong> - vue agrégée 6 widgets{" "}
                   <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold uppercase tracking-wider">
                     v2.2
                   </span>
@@ -501,7 +501,7 @@ export default function CisoSyncForm({
 
         {existing?.lastTestedAt && (
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
-            Dernier test : {new Date(existing.lastTestedAt).toLocaleString("fr-FR")} —{" "}
+            Dernier test : {new Date(existing.lastTestedAt).toLocaleString("fr-FR")} -{" "}
             <span
               className={
                 existing.lastTestStatus === "ok"
@@ -534,7 +534,7 @@ export default function CisoSyncForm({
                   {new Date(existing.lastLiveSyncAt).toLocaleString("fr-FR")}
                   {existing.lastLiveSyncEvent && (
                     <>
-                      {" "}— événement{" "}
+                      {" "}- événement{" "}
                       <code className="font-mono">
                         {existing.lastLiveSyncEvent}
                       </code>

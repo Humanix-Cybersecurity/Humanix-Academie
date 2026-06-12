@@ -2,7 +2,7 @@
 // Helpers pgvector pour le RAG Hex.
 //
 // On utilise une table autonome `hex_embedding` cree via raw SQL (cf.
-// setupPgvector()). Le model n'est PAS dans schema.prisma — Prisma ne
+// setupPgvector()). Le model n'est PAS dans schema.prisma - Prisma ne
 // genere pas de typage pour les colonnes Unsupported, et `prisma db push`
 // echoue si l'extension n'est pas dispo. On garde tout en raw SQL pour
 // que le module soit purement additif (zero impact sur le schema Prisma
@@ -15,7 +15,7 @@
 //     appelle setupPgvector() automatiquement).
 //
 // Securite :
-//   - Tous les inputs SQL passent par parametres ($1, $2, ...) — pas
+//   - Tous les inputs SQL passent par parametres ($1, $2, ...) - pas
 //     de concatenation, pas d'injection.
 //   - La table est par-installation (pas multi-tenant : les MDX
 //     modules sont partages entre tous les tenants).

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Calcul du streak : nombre de jours consecutifs avec au moins 1 episode
 // complete, en remontant a partir d'aujourd'hui (ou hier si pas
-// d'activite aujourd'hui — le streak ne se brise pas avant minuit J+1).
+// d'activite aujourd'hui - le streak ne se brise pas avant minuit J+1).
 
 export function computeStreak(dates: Date[]): number {
   if (dates.length === 0) return 0;

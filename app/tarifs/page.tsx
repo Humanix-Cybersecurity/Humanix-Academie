@@ -28,7 +28,7 @@ import {
   BreadcrumbJsonLd,
 } from "@/lib/seo/jsonld";
 
-const META_TITLE = "Tarifs cybersécurité 2026 — Humanix Académie";
+const META_TITLE = "Tarifs cybersécurité 2026 - Humanix Académie";
 const META_DESCRIPTION =
   "Sensibilisation cybersécurité française open source AGPL. Self-host gratuit à vie. Cloud souverain France gratuit jusqu'à 5 utilisateurs, puis 19 €/mois ou 3 €/utilisateur. 4 paliers sans engagement, RGPD-by-design, conforme NIS2.";
 
@@ -53,7 +53,7 @@ export const metadata = {
 
 // FAQ pour les rich snippets Google (FAQPage schema). Les questions/reponses
 // ci-dessous DOIVENT correspondre au contenu visible sur la page (section
-// "Questions frequentes" plus bas) — sinon Google flag pour spam. Cf.
+// "Questions frequentes" plus bas) - sinon Google flag pour spam. Cf.
 // https://developers.google.com/search/docs/appearance/structured-data/faqpage
 const PRICING_FAQ = [
   {
@@ -506,7 +506,7 @@ export default async function TarifsPage({
             <tbody>
               {/* Convention de marquage (typographie laique uniquement) :
                   - "✓"        : disponible sans condition
-                  - "—"        : non disponible
+                  - "-"        : non disponible
                   - "✓*"       : disponible en Starter mais payant >5 sieges
                                  (renvoie a la note bleue de bas de tableau)
                   - "✓**"      : disponible mais cout operateur additionnel
@@ -516,19 +516,19 @@ export default async function TarifsPage({
                                  suffixee par * ou ** */}
               <FeatureRow
                 label="Code source AGPL"
-                cells={["✓", "—", "—", "—"]}
+                cells={["✓", "-", "-", "-"]}
               />
               <FeatureRow
                 label="Self-host"
-                cells={["✓", "—", "—", "✓"]}
+                cells={["✓", "-", "-", "✓"]}
               />
               <FeatureRow
                 label="Cloud SaaS hébergé France"
-                cells={["—", "✓", "✓", "✓"]}
+                cells={["-", "✓", "✓", "✓"]}
               />
               <FeatureRow
                 label="Gratuit jusqu'à 5 utilisateurs"
-                cells={["✓", "✓", "—", "—"]}
+                cells={["✓", "✓", "-", "-"]}
               />
               <FeatureRow
                 label="5 modules de base"
@@ -536,7 +536,7 @@ export default async function TarifsPage({
               />
               <FeatureRow
                 label="Catalogue complet"
-                cells={["—", "✓*", "✓", "✓"]}
+                cells={["-", "✓*", "✓", "✓"]}
               />
               <FeatureRow
                 label="Mascotte évolutive"
@@ -548,43 +548,43 @@ export default async function TarifsPage({
               />
               <FeatureRow
                 label="Score de risque humain"
-                cells={["—", "—", "✓", "✓"]}
+                cells={["-", "-", "✓", "✓"]}
               />
               <FeatureRow
                 label="SSO M365 / Google"
-                cells={["—", "—", "✓", "✓"]}
+                cells={["-", "-", "✓", "✓"]}
               />
               <FeatureRow
                 label="SCIM v2 (Entra/Okta)"
-                cells={["—", "—", "✓", "✓"]}
+                cells={["-", "-", "✓", "✓"]}
               />
               <FeatureRow
                 label="Certificats individuels PDF"
-                cells={["—", "—", "✓", "✓"]}
+                cells={["-", "-", "✓", "✓"]}
               />
               <FeatureRow
                 label="API REST publique"
-                cells={["—", "—", "Illimitée", "Illimitée"]}
+                cells={["-", "-", "Illimitée", "Illimitée"]}
               />
               <FeatureRow
                 label="Connecteur CISO Assistant"
-                cells={["✓", "—", "✓", "✓"]}
+                cells={["✓", "-", "✓", "✓"]}
               />
               <FeatureRow
                 label="Webhooks signés HMAC"
-                cells={["—", "—", "✓", "✓"]}
+                cells={["-", "-", "✓", "✓"]}
               />
               <FeatureRow
-                label="Phishing email — génération templates"
-                cells={["—", "—", "Illimité**", "Illimité**"]}
+                label="Phishing email - génération templates"
+                cells={["-", "-", "Illimité**", "Illimité**"]}
               />
               <FeatureRow
                 label="Vishing IA souverain 🇫🇷 (Mistral + Piper TTS)"
-                cells={["—", "—", "✓**", "✓**"]}
+                cells={["-", "-", "✓**", "✓**"]}
               />
               <FeatureRow
                 label="Smishing IA souverain 🇫🇷 (Mistral)"
-                cells={["—", "—", "✓**", "✓**"]}
+                cells={["-", "-", "✓**", "✓**"]}
               />
               <FeatureRow
                 label="MCP Server (agents IA Claude/Mistral/GPT)"
@@ -592,19 +592,19 @@ export default async function TarifsPage({
               />
               <FeatureRow
                 label="Challenges d'équipe"
-                cells={["—", "—", "✓", "✓"]}
+                cells={["-", "-", "✓", "✓"]}
               />
               <FeatureRow
                 label="Marketplace communauté"
-                cells={["—", "—", "✓", "✓"]}
+                cells={["-", "-", "✓", "✓"]}
               />
               <FeatureRow
                 label="IA Coach personnalisé"
-                cells={["—", "—", "✓", "✓"]}
+                cells={["-", "-", "✓", "✓"]}
               />
               <FeatureRow
                 label="Cyber-Réflexe (incidents)"
-                cells={["—", "—", "✓", "✓"]}
+                cells={["-", "-", "✓", "✓"]}
               />
               <FeatureRow
                 label="Pack NIS2 turnkey"
@@ -612,23 +612,23 @@ export default async function TarifsPage({
               />
               <FeatureRow
                 label="Multi-établissements"
-                cells={["—", "—", "Light", "Filiales"]}
+                cells={["-", "-", "Light", "Filiales"]}
               />
               <FeatureRow
                 label="Customer Success Manager"
-                cells={["—", "—", "Dédié", "Dédié + onsite"]}
+                cells={["-", "-", "Dédié", "Dédié + onsite"]}
               />
               <FeatureRow
                 label="SLA garanti"
-                cells={["—", "—", "—", "99,9 %"]}
+                cells={["-", "-", "-", "99,9 %"]}
               />
               <FeatureRow
                 label="Option SecNumCloud"
-                cells={["—", "—", "—", "✓"]}
+                cells={["-", "-", "-", "✓"]}
               />
               <FeatureRow
                 label="White-label"
-                cells={["—", "—", "—", "✓"]}
+                cells={["-", "-", "-", "✓"]}
               />
               <FeatureRow
                 label="Support"
@@ -652,14 +652,14 @@ export default async function TarifsPage({
               <strong>uniquement payant au-delà de 5 utilisateurs</strong>{" "}
               (forfait 19 €/mois 6-15 sièges). En-dessous de 5 sièges, c'est
               gratuit pour toujours mais ces fonctions précises ne sont pas
-              activées — un signal pour faire grandir ton équipe avec nous.
+              activées - un signal pour faire grandir ton équipe avec nous.
             </p>
           </div>
 
           {/* Note ** : phishing/vishing/smishing modèle */}
           <div className="rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-900/50 dark:bg-amber-900/15 p-4 text-amber-900 dark:text-amber-100">
             <p>
-              <strong>** Phishing / Vishing / Smishing</strong> — Humanix génère
+              <strong>** Phishing / Vishing / Smishing</strong> - Humanix génère
               gratuitement les{" "}
               <strong>templates et scripts pédagogiques</strong> via IA
               souveraine Mistral. L'<strong>envoi réel</strong> (emails, SMS,
@@ -715,7 +715,7 @@ export default async function TarifsPage({
               </ul>
               <p className="text-sm text-gray-600 mt-4 italic">
                 À 900 €/an, l'investissement est rentabilisé dès la première
-                attaque évitée — qui statistiquement arrive en 18 mois pour une
+                attaque évitée - qui statistiquement arrive en 18 mois pour une
                 équipe non-formée.
               </p>
             </div>
@@ -974,7 +974,7 @@ function FeatureRow({ label, cells }: { label: string; cells: string[] }) {
  *
  * Convention de marquage (typographie laique, sans symbole religieux) :
  *   ✓         : disponible sans condition  -> coche verte
- *   —         : non disponible              -> tiret gris
+ *   -         : non disponible              -> tiret gris
  *   ✓*        : dispo mais payant au-dela de 5 sieges (renvoie a la note
  *               bleue de bas de tableau, marqueur asterisque simple)
  *   ✓**       : dispo mais cout operateur additionnel pour l'envoi reel
@@ -1007,8 +1007,8 @@ function FeatureCell({ value }: { value: string }) {
       </span>
     );
   }
-  if (core === "—") {
-    return <span className="text-gray-300">—</span>;
+  if (core === "-") {
+    return <span className="text-gray-300">-</span>;
   }
   return (
     <span className="text-xs font-medium text-gray-700">

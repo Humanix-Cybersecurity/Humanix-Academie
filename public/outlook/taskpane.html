@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Humanix — Signaler un phishing</title>
+<title>Humanix - Signaler un phishing</title>
 <!-- Office.js : SDK officiel Microsoft pour Add-ins. CDN MS uniquement. -->
 <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
 <style>
@@ -83,7 +83,7 @@
 </head>
 <body>
 <h1><span class="logo" aria-hidden="true">🛡️</span> Humanix Académie</h1>
-<p class="intro">Vous suspectez ce mail. Signalez-le à votre référent cyber en 1 clic — Humanix gagnera des points pour vous et alertera votre équipe.</p>
+<p class="intro">Vous suspectez ce mail. Signalez-le à votre référent cyber en 1 clic - Humanix gagnera des points pour vous et alertera votre équipe.</p>
 
 <div class="meta" id="mailMeta">
   <p><strong>Expéditeur :</strong> <span id="metaFrom">…</span></p>
@@ -109,11 +109,11 @@
 
     var item = Office.context.mailbox.item;
     document.getElementById("metaFrom").textContent =
-      (item.from && (item.from.displayName + " <" + item.from.emailAddress + ">")) || "—";
-    document.getElementById("metaSubject").textContent = item.subject || "—";
+      (item.from && (item.from.displayName + " <" + item.from.emailAddress + ">")) || "-";
+    document.getElementById("metaSubject").textContent = item.subject || "-";
     document.getElementById("metaDate").textContent = item.dateTimeCreated
       ? new Date(item.dateTimeCreated).toLocaleString("fr-FR")
-      : "—";
+      : "-";
 
     document.getElementById("reportBtn").addEventListener("click", function () {
       submitReport(item);

@@ -42,7 +42,7 @@ GET /api/cron/<name>?secret=<CRON_SECRET>
 ```
 
 - **Variable d'env** : `CRON_SECRET` (≥ 16 caractères, à générer une fois)
-- **Comparaison constante** : `crypto.timingSafeEqual` côté serveur — pas de timing attack
+- **Comparaison constante** : `crypto.timingSafeEqual` côté serveur - pas de timing attack
 - **Sans secret valide → 403 Forbidden**, pas d'exécution
 
 À générer :
@@ -50,7 +50,7 @@ GET /api/cron/<name>?secret=<CRON_SECRET>
 openssl rand -hex 32
 ```
 
-## 3. Comment exécuter — comparatif
+## 3. Comment exécuter - comparatif
 
 | Solution | Force | Faiblesse | Cas d'usage |
 |---|---|---|---|
@@ -164,14 +164,14 @@ counters. À brancher sur ton outil :
   depuis > 2× sa fréquence.
 
 Le projet a déjà `AuditLog` qui trace les actions sensibles
-(`DATA_RETENTION_PURGED`, `PHISHING_CAMPAIGN_SENT`…) — tu peux requeter
+(`DATA_RETENTION_PURGED`, `PHISHING_CAMPAIGN_SENT`…) - tu peux requeter
 la table pour des dashboards Grafana sans ajouter d'infra.
 
 ## 7. Path de migration
 
 | Phase | Plateforme | Scheduler | Effort |
 |---|---|---|---|
-| V0 actuelle | docker compose, hostname `localhost` | rien (manuel) | — |
+| V0 actuelle | docker compose, hostname `localhost` | rien (manuel) | - |
 | **V1 cible** | docker compose, hôte unique | **Ofelia** (livré dans ce repo) | 5 min : poser `CRON_SECRET`, lancer le service |
 | V2 prod self-host | docker compose multi-host ou docker swarm | Ofelia (1 instance fixe) | identique à V1 |
 | **V3 scale** | Kubernetes | **CronJob natifs** | 1 sprint : générer manifestes, secrets, observabilité |

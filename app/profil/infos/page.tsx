@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /profil/infos — Edition des informations personnelles (nom + service).
+// /profil/infos - Edition des informations personnelles (nom + service).
 //
 // Email NON modifiable : c'est l'identifiant unique pour Auth.js (pas de
 // password, magic link sur l'email) + protection anti-piratage. Si un user
@@ -17,7 +17,7 @@ import ProfileInfoForm from "./ProfileInfoForm";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Mes infos — Humanix Académie",
+  title: "Mes infos - Humanix Académie",
   description: "Modifier ton nom et ton service.",
   robots: { index: false, follow: false },
 };

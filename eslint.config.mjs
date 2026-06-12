@@ -38,7 +38,7 @@ export default [
   // Configs Next.js (core-web-vitals + typescript) via le bridge legacy.
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 
-  // Rules custom — strictement les memes qu'avant.
+  // Rules custom - strictement les memes qu'avant.
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "warn",

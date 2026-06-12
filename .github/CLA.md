@@ -1,4 +1,4 @@
-# Contributor License Agreement — Humanix Académie Community Edition
+# Contributor License Agreement - Humanix Académie Community Edition
 
 > **Version 1.0 · 4 mai 2026**
 > Inspiré du _Apache Individual Contributor License Agreement v2.0_,
@@ -67,7 +67,7 @@ par tout canal.
 
 e) **Sous-licencier** votre Contribution à des tiers, y compris sous
 des termes différents de la licence d'origine du Projet (notamment
-dans le cadre d'un éventuel dual-licensing commercial — voir §6
+dans le cadre d'un éventuel dual-licensing commercial - voir §6
 ci-dessous).
 
 f) **Exploiter commercialement** votre Contribution, seul ou en
@@ -132,7 +132,7 @@ client, une école) qui empêcherait cette cession.
 
 d) Si votre Contribution incorpore du code tiers, ce code tiers est
 **clairement identifié** et son **utilisation est autorisée** par
-sa licence d'origine (compatible AGPL — cf. [`docs/LICENSES_AUDIT.md`](../docs/LICENSES_AUDIT.md)).
+sa licence d'origine (compatible AGPL - cf. [`docs/LICENSES_AUDIT.md`](../docs/LICENSES_AUDIT.md)).
 
 Vous acceptez d'**indemniser et défendre** Humanix-Cybersecurity contre
 toute réclamation de tiers résultant d'une fausse déclaration de votre
@@ -149,7 +149,7 @@ souveraine des mainteneurs du projet.
 
 ---
 
-## 6. Dual-licensing commercial — clarification importante
+## 6. Dual-licensing commercial - clarification importante
 
 Vous comprenez et acceptez explicitement que :
 
@@ -228,7 +228,7 @@ identifiant GitHub authentifié, et conservé indéfiniment.
 
 ---
 
-## Annexe — Cas particuliers
+## Annexe - Cas particuliers
 
 ### A. Contribution sur temps de travail rémunéré
 
@@ -239,7 +239,7 @@ ressources de votre employeur, vous devez :
    simple email signé par votre manager suffit, à fournir à
    `legal@humanix-cybersecurity.fr` à la première demande).
 2. Soit demander à votre employeur de signer le **CLA Corporate**
-   (variante de ce CLA pour personnes morales — disponible sur
+   (variante de ce CLA pour personnes morales - disponible sur
    demande).
 
 ### B. Contribution mineure (< 50 lignes, fix de typo, doc)

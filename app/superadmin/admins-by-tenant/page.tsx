@@ -128,7 +128,7 @@ export default async function SuperadminAdminsByTenantPage() {
       {dormant.length > 0 && (
         <section>
           <h2 className="font-display font-bold text-rose-700 dark:text-rose-300 mb-3 flex items-center gap-2">
-            ⚠ Comptes à risque — revue immédiate recommandée
+            ⚠ Comptes à risque - revue immédiate recommandée
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
             Critères : MFA désactivé + email non vérifié, OU jamais connecté
@@ -383,7 +383,7 @@ function HygieneCard({
       <p className="text-2xl font-extrabold mt-1 tabular-nums">
         {current}/{total}
         <span className="text-sm font-medium opacity-60 ml-2">
-          ({total === 0 ? "—" : Math.round(ratio * 100)}%)
+          ({total === 0 ? "-" : Math.round(ratio * 100)}%)
         </span>
       </p>
     </div>

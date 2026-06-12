@@ -128,7 +128,7 @@ export default async function SaisonPage({
           {!next && total > 0 && (
             <p className="mt-5 inline-flex items-center gap-2 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-300 dark:border-emerald-700 text-emerald-900 dark:text-emerald-100 px-4 py-2 text-sm font-bold">
               <span aria-hidden="true">🎉</span>
-              <span>Saison terminée — bravo !</span>
+              <span>Saison terminée - bravo !</span>
             </p>
           )}
         </section>

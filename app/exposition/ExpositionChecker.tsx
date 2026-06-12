@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 "use client";
 //
-// Checker d'exposition — tier gratuit. Tout est ÉPHÉMÈRE (state React, rien
+// Checker d'exposition - tier gratuit. Tout est ÉPHÉMÈRE (state React, rien
 // n'est persisté). Le check mot de passe tourne 100% dans le navigateur.
 
 import { useState, useTransition } from "react";
@@ -36,7 +36,7 @@ const OSINT_PHASES: OsintPhase[] = [
     intro: "En navigation privée, pour voir ce que tout le monde voit.",
     steps: [
       { text: "Ton nom complet entre guillemets + variantes (nom de jeune fille, surnom)." },
-      { text: "Ton email et ton pseudo habituel — ils relient tes comptes entre eux." },
+      { text: "Ton email et ton pseudo habituel - ils relient tes comptes entre eux." },
       { text: "Ton numéro de téléphone entre guillemets." },
       {
         text: "Recherche d'images : les photos où tu es identifié (toi et tes proches).",
@@ -294,7 +294,7 @@ export default function ExpositionChecker() {
           {pwd.kind === "done" && pwd.pwned && (
             <div className="rounded-xl border-2 border-rose-300 dark:border-rose-700 bg-rose-50 dark:bg-rose-900/30 p-4">
               <p className="font-bold text-rose-900 dark:text-rose-200">
-                ⚠️ Compromis — vu {pwd.count.toLocaleString("fr-FR")} fois dans des fuites
+                ⚠️ Compromis - vu {pwd.count.toLocaleString("fr-FR")} fois dans des fuites
               </p>
               <p className="text-sm text-rose-800 dark:text-rose-300 mt-1">
                 Change-le partout où tu l'utilises, avec un mot de passe

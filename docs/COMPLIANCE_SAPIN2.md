@@ -1,4 +1,4 @@
-# Conformité Loi Sapin II — Article 17
+# Conformité Loi Sapin II - Article 17
 
 > Humanix Académie est, à notre connaissance, la **seule plateforme SAT/HRM
 > francophone** qui adresse explicitement les obligations de **formation
@@ -46,7 +46,7 @@ content/saisons/fraude-president/
 ├── 03-changement-rib.mdx      Faux fournisseur, RIB modifié en urgence
 ├── 04-deepfake-vocal.mdx      IA voix clonée (cas Arup 25M$)
 ├── 05-double-validation.mdx   Procédure de validation 4-eyes
-└── 06-cas-pathe.mdx           Étude de cas réelle 2018 — 19M€ détournés
+└── 06-cas-pathe.mdx           Étude de cas réelle 2018 - 19M€ détournés
 ```
 
 C'est **exactement** le cœur de cible Sapin II : ces 6 modules forment les
@@ -93,15 +93,15 @@ Le DAF (Directeur Administratif et Financier) est **personnellement exposé** au
 - « Humanix forme vos équipes compta + RH au coût d'**une journée de la prestation Big Four** »
 - « Vous générez les preuves AFA en 3 clics, pas en 3 semaines »
 - « La saison Fraude au Président est plus précise que les modules Sapin II génériques des concurrents (cas Pathé, cas Arup, deepfake vocal) »
-- « Mistral Voxtral simule un appel vishing crédible — vos managers entendent CE que vraisemblablement ils entendront »
+- « Mistral Voxtral simule un appel vishing crédible - vos managers entendent CE que vraisemblablement ils entendront »
 
 ## Périmètre out-of-scope (à dire honnêtement)
 
 Humanix **ne se substitue pas** à :
 - **Compliance Officer** (humain, pour décider du périmètre + revoir les cas)
-- **Outils GRC** (CISO Assistant, Eramba, MetricStream — pour suivre les contrôles 1, 4, 5)
-- **ERP financier** (Sage, SAP — pour la mesure 5 contrôle comptable)
-- **Plateforme whistleblowing** (Whispli, EQS — pour la mesure 2)
+- **Outils GRC** (CISO Assistant, Eramba, MetricStream - pour suivre les contrôles 1, 4, 5)
+- **ERP financier** (Sage, SAP - pour la mesure 5 contrôle comptable)
+- **Plateforme whistleblowing** (Whispli, EQS - pour la mesure 2)
 
 On est **complémentaires**. La table de mapping `lib/mapping-grc.ts` documente
 explicitement ce qu'on couvre (`controls`) et ce qu'on ne couvre pas (`outOfScope`)
@@ -110,7 +110,7 @@ pour éviter toute surcote.
 ## Liens utiles
 
 - Texte de loi : https://www.legifrance.gouv.fr/loda/id/JORFTEXT000033558528/
-- AFA — Recommandations 2021 : https://www.agence-francaise-anticorruption.gouv.fr/
+- AFA - Recommandations 2021 : https://www.agence-francaise-anticorruption.gouv.fr/
 - Référentiel AFA évaluation des tiers : https://www.agence-francaise-anticorruption.gouv.fr/fr/recommandations
 - ISO 37001 (système de management anti-corruption, complémentaire) : https://www.iso.org/standard/65034.html
 

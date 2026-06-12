@@ -117,13 +117,13 @@ export default function CookiesPage() {
           (cloud), un outil <strong>respectueux de la vie privée</strong>{" "}
           hébergé en Europe est utilisé. Il ne dépose{" "}
           <strong>aucun cookie</strong>, ne suit pas les utilisateurs entre les
-          sites, et ne collecte ni adresse IP brute ni identifiant personnel —
+          sites, et ne collecte ni adresse IP brute ni identifiant personnel -
           uniquement des statistiques agrégées (pages vues, pays, navigateur).
         </p>
         <p>
           Conformément à la recommandation CNIL n° 2020-091, son chargement
           n'intervient qu'après votre consentement explicite. Vous pouvez le
-          revoir, l'accepter ou le refuser à tout moment ci-dessous —{" "}
+          revoir, l'accepter ou le refuser à tout moment ci-dessous -{" "}
           <strong>aussi facilement que vous l'avez donné</strong> (article 7.3
           du RGPD). Si l'opérateur n'a configuré aucun traceur, le panneau
           ci-dessous l'indiquera et il n'y a rien à accepter ou refuser.

@@ -4,7 +4,7 @@
 //
 // Pourquoi : depuis TypeScript 6, les "side-effect imports"
 // (`import "package";` sans nom) requierent que le module soit declare
-// quelque part — sinon TS leve "Cannot find module or type declarations
+// quelque part - sinon TS leve "Cannot find module or type declarations
 // for side-effect import of '...'".
 //
 // Les packages Fontsource et les fichiers .css n'embarquent pas de .d.ts

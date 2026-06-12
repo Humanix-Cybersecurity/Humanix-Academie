@@ -1016,7 +1016,7 @@ async function seedMarketplace() {
   let pendingCount = 0;
   // Open Core : marketplace modules charges via le loader (tableau vide si
   // module marketplace-seed non disponible sur ce fork OSS). Le type est
-  // `any[]` parce que le loader resout dynamiquement le module — on cast
+  // `any[]` parce que le loader resout dynamiquement le module - on cast
   // localement les champs utilises pour satisfaire le typecheck strict TS 6.
   const marketplaceModules = loadMarketplaceModules();
   for (const m of marketplaceModules) {

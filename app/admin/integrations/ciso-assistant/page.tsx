@@ -22,7 +22,7 @@ import CisoSyncForm from "./CisoSyncForm";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Connecteur CISO Assistant — Admin Humanix",
+  title: "Connecteur CISO Assistant - Admin Humanix",
 };
 
 const STATUS_BADGES: Record<string, { label: string; color: string }> = {
@@ -89,7 +89,7 @@ export default async function CisoAssistantAdminPage() {
           </a>{" "}
           (intuitem) en un clic. Idempotent : un cron quotidien actualise les
           statuts sans créer de doublons. Aucune modification requise côté
-          intuitem — Humanix s'adapte à leur API publique.
+          intuitem - Humanix s'adapte à leur API publique.
         </p>
         <div className="mt-4 flex flex-wrap gap-3">
           <a
@@ -166,7 +166,7 @@ export default async function CisoAssistantAdminPage() {
                   const duration =
                     r.finishedAt && r.startedAt
                       ? `${((r.finishedAt.getTime() - r.startedAt.getTime()) / 1000).toFixed(1)}s`
-                      : "—";
+                      : "-";
                   return (
                     <tr key={r.id}>
                       <td className="px-4 py-3 text-gray-700 dark:text-gray-300 tabular-nums">
@@ -231,7 +231,7 @@ export default async function CisoAssistantAdminPage() {
             rafraîchissements temps réel : à chaque module complété,
             phishing signalé ou clic sur faux mail, une mini-sync incrémentale
             (debouncée 5 s) repousse les preuves impactées vers CISO
-            Assistant — utile en présentation COMEX.
+            Assistant - utile en présentation COMEX.
           </li>
         </ol>
         <p className="text-xs text-gray-500 dark:text-gray-500 mt-3">

@@ -68,7 +68,7 @@ function extractCurrentModule(pathname: string | null): string | undefined {
 const GREETING: ChatMessage = {
   role: "assistant",
   content:
-    "Coucou 🦊 Je suis Hex, ton assistant cyber.\n\nPose-moi une question sur le phishing, les mots de passe, le RGPD, NIS2, ou comment utiliser Humanix.\n\nJe suis bref par défaut — si tu veux que je creuse, dis-le-moi.",
+    "Coucou 🦊 Je suis Hex, ton assistant cyber.\n\nPose-moi une question sur le phishing, les mots de passe, le RGPD, NIS2, ou comment utiliser Humanix.\n\nJe suis bref par défaut - si tu veux que je creuse, dis-le-moi.",
 };
 
 function loadConversation(): ChatMessage[] {
@@ -87,7 +87,7 @@ function loadConversation(): ChatMessage[] {
 function saveConversation(msgs: ChatMessage[]) {
   if (typeof window === "undefined") return;
   try {
-    // On stocke max MAX_HISTORY messages — au-dela on tronque par la
+    // On stocke max MAX_HISTORY messages - au-dela on tronque par la
     // gauche (en gardant le greeting initial + les 19 derniers).
     const toStore =
       msgs.length > MAX_HISTORY
@@ -134,7 +134,7 @@ export default function HexChat({ enabled }: Props) {
 
   // Coordinator slot : ne concerne QUE le tooltip (la bulle "Hex est
   // dispo"), pas le FAB lui-meme qui reste toujours visible. Sur landing
-  // page, le tooltip est carrement supprime — un FAB visible suffit comme
+  // page, le tooltip est carrement supprime - un FAB visible suffit comme
   // affordance, la bulle additionnelle est du bruit pour la conversion.
   const onLanding = isLandingPath(pathname);
   const tooltipReady = showFabHint && !open && !onLanding;
@@ -287,7 +287,7 @@ export default function HexChat({ enabled }: Props) {
               });
             }
           } catch {
-            /* event malformé — on ignore */
+            /* event malformé - on ignore */
           }
         }
       }
@@ -466,7 +466,7 @@ function Bubble({ message }: { message: ChatMessage }) {
   const isUser = message.role === "user";
   // User : texte brut (whitespace-pre-wrap preserve les sauts de ligne tapes).
   // Assistant : markdown render (gras / liens / listes / code / tables) via
-  // MarkdownView — meme composant que /apprendre/recap (PR #434), donc XSS-safe
+  // MarkdownView - meme composant que /apprendre/recap (PR #434), donc XSS-safe
   // par construction (whitelist + pas de dangerouslySetInnerHTML).
   // Pendant le streaming, le markdown partiel s'affiche degrade (les `**` en
   // attente de fermeture restent textuels), c'est acceptable et resout des
@@ -498,7 +498,7 @@ function Bubble({ message }: { message: ChatMessage }) {
           <span aria-hidden="true">🛡</span>
           <span>
             <strong>Hex a masqué {message.piiNotice.summary}</strong> avant
-            d'envoyer ton message à l'IA. C'est volontaire — on ne transmet
+            d'envoyer ton message à l'IA. C'est volontaire - on ne transmet
             jamais tes données personnelles aux fournisseurs tiers.
           </span>
         </div>

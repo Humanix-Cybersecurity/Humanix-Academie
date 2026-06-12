@@ -138,7 +138,7 @@ export async function seedAnecdotesIfEmpty() {
   let ANECDOTES_SEED;
   try {
     const mod = await import(
-      // @ts-ignore — symlink content-pro/ absent en build OSS pur (CI),
+      // @ts-ignore - symlink content-pro/ absent en build OSS pur (CI),
       // present au runtime sur les instances commerciales.
       /* turbopackIgnore: true */ "@/lib/anecdotes/seed-data"
     );

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /exposition/stats — statistiques communautaires ANONYMISÉES.
+// /exposition/stats - statistiques communautaires ANONYMISÉES.
 // Agrégats non-identifiants uniquement (ExposureCheckMetric). K-anonymat des
 // stats : masquées tant que l'effectif total est insuffisant (anti-ré-identif).
 
@@ -50,7 +50,7 @@ export default async function ExpositionStatsPage() {
           <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
             Pour protéger l'anonymat (k-anonymat des statistiques), on n'affiche
             les ratios qu'à partir d'un volume suffisant de vérifications. Reviens
-            bientôt — ou{" "}
+            bientôt - ou{" "}
             <Link href="/exposition" className="underline text-accent-600 dark:text-accent-300">
               fais ta propre vérification
             </Link>

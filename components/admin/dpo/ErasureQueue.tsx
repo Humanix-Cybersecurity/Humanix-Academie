@@ -53,7 +53,7 @@ export default function ErasureQueue({ queue }: { queue: QueueRow[] }) {
               className="border-b border-gray-100 dark:border-slate-800"
             >
               <td className="p-2 text-gray-800 dark:text-gray-200">
-                {q.targetLabel ?? q.targetId ?? "—"}
+                {q.targetLabel ?? q.targetId ?? "-"}
               </td>
               <td className="p-2 text-gray-600 dark:text-gray-400 tabular-nums">
                 {q.requestedAt.toLocaleDateString("fr-FR", {

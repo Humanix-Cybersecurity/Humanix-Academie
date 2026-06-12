@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /diagnostic-nis2 — diagnostic public NIS2 en 30 questions (Pack NIS2 v2).
+// /diagnostic-nis2 - diagnostic public NIS2 en 30 questions (Pack NIS2 v2).
 //
 // Page publique, sans auth. L'utilisateur (RSSI / DSI / dirigeant) repond
 // a 30 questions OUI / NON / Je ne sais pas reparties sur 11 articles
 // NIS2. A la soumission, redirection vers /diagnostic-nis2/resultat
 // avec le score per-article + verdict + top 3 priorites.
 //
-// Pas de persistance BDD (stateless) — RGPD-friendly, pas de cookie,
+// Pas de persistance BDD (stateless) - RGPD-friendly, pas de cookie,
 // pas de session. L'email est optionnel et sert uniquement a recevoir
 // le PDF par mail si l'utilisateur le demande (V2 prochain commit).
 
@@ -22,13 +22,13 @@ export const dynamic = "force-static";
 
 export const metadata: Metadata = {
   title:
-    "Diagnostic NIS2 gratuit en 30 questions — Humanix Académie",
+    "Diagnostic NIS2 gratuit en 30 questions - Humanix Académie",
   description:
     "Évalue ta conformité NIS2 article par article en 10 minutes. 30 questions concrètes, score per-article + top 3 priorités. Gratuit, sans inscription.",
   alternates: { canonical: "/diagnostic-nis2" },
   openGraph: {
     title:
-      "Diagnostic NIS2 gratuit — où en es-tu vraiment ?",
+      "Diagnostic NIS2 gratuit - où en es-tu vraiment ?",
     description:
       "30 questions concrètes mappées article par article (21.2.a → 23). Score per-article + top 3 chantiers prioritaires. En 10 minutes.",
     type: "website",

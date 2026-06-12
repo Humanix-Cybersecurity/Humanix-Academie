@@ -309,17 +309,17 @@ while (<>) {
     s/\breellement\b/réellement/g;
     s/\bReellement\b/Réellement/g;
 
-    # "être" family — unambiguous as no other valid word
+    # "être" family - unambiguous as no other valid word
     s/\betre\b/être/g;
     s/\bEtre\b/Être/g;
     s/\bpeut-etre\b/peut-être/g;
     s/\bPeut-etre\b/Peut-être/g;
     s/\bbien-etre\b/bien-être/g;
 
-    # "été" — past participle of être / season; "ete" alone is never French
+    # "été" - past participle of être / season; "ete" alone is never French
     s/\bete\b/été/g;
 
-    # imperfect of être — unambiguous
+    # imperfect of être - unambiguous
     s/\betait\b/était/g;
     s/\bEtait\b/Était/g;
     s/\betaient\b/étaient/g;
@@ -740,7 +740,7 @@ while (<>) {
     s/\brepondu\b/répondu/g;
     s/\brepondant\b/répondant/g;
 
-    # éviter — only past part. and infinitive are unambiguous, "evite" alone is verb form
+    # éviter - only past part. and infinitive are unambiguous, "evite" alone is verb form
     s/\beviter\b/éviter/g;
     s/\bEviter\b/Éviter/g;
 
@@ -879,11 +879,11 @@ while (<>) {
     s/\bdebutant\b/débutant/g;
     s/\bdebutants\b/débutants/g;
 
-    # désir / dépression / désordre — no homograph
+    # désir / dépression / désordre - no homograph
     s/\bdesordre\b/désordre/g;
     s/\bdesordres\b/désordres/g;
 
-    # rappel — "rappel" is already correct, no fix needed
+    # rappel - "rappel" is already correct, no fix needed
     # mais "verifier" (déjà fait au-dessus)
 
     # impôt / dépôt
@@ -916,8 +916,8 @@ while (<>) {
     s/\btelemedecine\b/télémédecine/g;
 
     # informatique already correct
-    # logiciel — no accent originally
-    # email — keep as is
+    # logiciel - no accent originally
+    # email - keep as is
 
     # bénéfice / bénéficier
     s/\bbenefice\b/bénéfice/g;
@@ -932,7 +932,7 @@ while (<>) {
     s/\bnegociation\b/négociation/g;
     s/\bnegociations\b/négociations/g;
 
-    # élu / élection / élargir — no homograph
+    # élu / élection / élargir - no homograph
     s/\belection\b/élection/g;
     s/\belections\b/élections/g;
     s/\belargir\b/élargir/g;

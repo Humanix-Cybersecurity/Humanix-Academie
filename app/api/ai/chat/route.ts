@@ -15,7 +15,7 @@
 //   - Rate limit : 12 msg/h sur plan starter, 60 msg/h sur Pro+
 //     (couvre le free tier Mistral "Experiment" sans le brûler)
 //   - Validation Zod du body
-//   - Le system prompt est INJECTE SERVEUR-SIDE — le client ne peut pas
+//   - Le system prompt est INJECTE SERVEUR-SIDE - le client ne peut pas
 //     l'overrider (sinon trivial jailbreak)
 //   - Historique limite a 20 messages user/assistant (cap pour éviter
 //     l'inflation tokens)
@@ -63,7 +63,7 @@ const RATE_LIMIT_PER_HOUR: Record<PlanId, number> = {
 };
 
 export async function POST(req: Request) {
-  // 1) Auth — RBAC central (cf. lib/api/require-role.ts)
+  // 1) Auth - RBAC central (cf. lib/api/require-role.ts)
   const guard = await requireSession();
   if ("response" in guard) return guard.response;
   const { session } = guard;
@@ -201,7 +201,7 @@ export async function POST(req: Request) {
     );
   }
 
-  // 8 bis) Pentest fix #2 (2026-05-24) — defense en profondeur prompt
+  // 8 bis) Pentest fix #2 (2026-05-24) - defense en profondeur prompt
   // injection : on wrappe le stream avec un filtre qui detecte les fuites
   // de signatures du system prompt (cf. lib/ai/hex/output-filter.ts).
   // En cas de detection : remplace par un refus standard + audit log

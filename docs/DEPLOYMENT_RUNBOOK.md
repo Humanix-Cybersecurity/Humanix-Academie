@@ -1,4 +1,4 @@
-# Deployment Runbook — Humanix Académie
+# Deployment Runbook - Humanix Académie
 
 Toutes les **actions manuelles** à exécuter au déploiement, par phase. Ne nécessite que les accès consoles habituels (Scaleway, Mollie, Apple Developer, dépôt GitHub) + `npm` + `psql` côté serveur.
 
@@ -17,7 +17,7 @@ Toutes les **actions manuelles** à exécuter au déploiement, par phase. Ne né
 
 ## B. Tenant Communauté (Phase 1)
 
-> **First-deploy only** — idempotent, ne casse rien si tu relances.
+> **First-deploy only** - idempotent, ne casse rien si tu relances.
 
 ```bash
 npm run db:seed
@@ -39,9 +39,9 @@ Si tu vois plusieurs lignes ou un message vide : ne pas continuer Phase 2 tant q
 
 ## C. SSO providers (Phase 2)
 
-Le bouton Google / Apple / Microsoft sur `/inscription` n'apparaît QUE si les env vars sont posées. L'absence d'un provider ne casse rien — les autres restent disponibles.
+Le bouton Google / Apple / Microsoft sur `/inscription` n'apparaît QUE si les env vars sont posées. L'absence d'un provider ne casse rien - les autres restent disponibles.
 
-### C.1 — Google (recommandé en priorité)
+### C.1 - Google (recommandé en priorité)
 
 - [ ] Console : https://console.cloud.google.com/apis/credentials
 - [ ] Créer un OAuth 2.0 Client ID type "Web application"
@@ -53,7 +53,7 @@ Le bouton Google / Apple / Microsoft sur `/inscription` n'apparaît QUE si les e
   AUTH_GOOGLE_SECRET="..."
   ```
 
-### C.2 — Microsoft Entra ID
+### C.2 - Microsoft Entra ID
 
 - [ ] Azure Portal → App registrations → New registration
 - [ ] Redirect URI : `https://<ton-domaine>/api/auth/callback/microsoft-entra-id`
@@ -65,7 +65,7 @@ Le bouton Google / Apple / Microsoft sur `/inscription` n'apparaît QUE si les e
   AUTH_MICROSOFT_ENTRA_ID_ISSUER="https://login.microsoftonline.com/organizations/v2.0"
   ```
 
-### C.3 — Apple "Sign in with Apple"
+### C.3 - Apple "Sign in with Apple"
 
 > Apple requiert un compte Apple Developer payant (99 $/an).
 
@@ -89,7 +89,7 @@ Le bouton Google / Apple / Microsoft sur `/inscription` n'apparaît QUE si les e
 
 ---
 
-## D. Paiements (optionnel — instance commerciale)
+## D. Paiements (optionnel - instance commerciale)
 
 Pour une instance qui veut accepter les abonnements payants, les
 variables d'env suivantes doivent être renseignées (consulter
@@ -120,7 +120,7 @@ d'un slug unique, création atomique tenant + user, audit log
 
 ## F. Bootstrapping du SUPERADMIN (Niveau 1)
 
-> **First-deploy only** — un seul SUPERADMIN par défaut (le founder).
+> **First-deploy only** - un seul SUPERADMIN par défaut (le founder).
 
 ```bash
 npm run db:bootstrap-admin
