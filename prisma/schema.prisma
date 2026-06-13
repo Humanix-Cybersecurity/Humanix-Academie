@@ -2195,6 +2195,7 @@ enum AuditAction {
   PHISHING_CAMPAIGN_CREATED
   PHISHING_CAMPAIGN_SENT // Le cron a declenche l'envoi
   PHISHING_REPORT_EXPORTED // Admin a telecharge le CSV
+  PHISHING_REMEDIATION_ASSIGNED // Module anti-phishing assigne a un recidiviste (decision RSSI/admin)
   // SMTP tenant (config + tests + envois)
   TENANT_SMTP_CONFIGURED // Admin a sauve une config SMTP
   TENANT_SMTP_TESTED // Admin a teste la connexion (succes ou echec)
