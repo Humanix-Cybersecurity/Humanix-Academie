@@ -67,6 +67,23 @@ const TARGETS: Target[] = [
     icon: "⚙️",
     group: "Navigation",
   },
+  {
+    href: "/admin/marque-blanche",
+    label: "Marque blanche",
+    hint: "/admin/marque-blanche",
+    keywords: [
+      "white-label",
+      "white label",
+      "branding",
+      "logo",
+      "couleurs",
+      "revendeur",
+      "personnalisation",
+      "sous-domaine",
+    ],
+    icon: "🎨",
+    group: "Navigation",
+  },
 
   // === Equipe ===
   {
