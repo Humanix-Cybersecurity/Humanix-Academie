@@ -30,7 +30,7 @@ import {
 
 const META_TITLE = "Tarifs cybersécurité 2026 - Humanix Académie";
 const META_DESCRIPTION =
-  "Sensibilisation cybersécurité française open source AGPL. Self-host gratuit à vie. Cloud souverain France gratuit jusqu'à 5 utilisateurs, puis 19 €/mois ou 3 €/utilisateur. 4 paliers sans engagement, RGPD-by-design, conforme NIS2.";
+  "Sensibilisation cybersécurité française open source AGPL : 57 saisons, 339 modules. Self-host gratuit à vie. Cloud souverain France gratuit jusqu'à 5 utilisateurs, puis 19 €/mois ou 3 €/utilisateur. 4 paliers sans engagement, RGPD-by-design, aligné NIS2/ANSSI. Marque blanche et revendeur en Enterprise.";
 
 export const metadata = {
   title: META_TITLE,
@@ -96,6 +96,11 @@ const PRICING_FAQ = [
     answer:
       "Aucune, on est complémentaires. CISO Assistant fait la conformité (registres, contrôles, preuves). Humanix fait la sensibilisation humaine (modules, gamification, phishing). Notre intégration native exporte les preuves Humanix vers CISO Assistant.",
   },
+  {
+    question: "Proposez-vous la marque blanche ou un programme revendeur ?",
+    answer:
+      "Oui, en Enterprise. Vous déployez la plateforme sous votre marque (logo, couleurs, sous-domaine, emails, certificats). Le programme revendeur permet en plus de créer et gérer des espaces clients, chacun sous sa propre marque, avec cascade automatique de la vôtre - pensé pour les ESN, MSSP et cabinets de conseil.",
+  },
 ];
 
 // Offres SoftwareApplication exposees a Google : permet l'affichage du
@@ -124,7 +129,8 @@ const PRICING_OFFERS = [
     name: "Enterprise (instance dédiée)",
     priceCurrency: "EUR",
     price: 0,
-    description: "Sur devis : instance dédiée, SLA renforcé, SCIM/SAML.",
+    description:
+      "Sur devis : instance dédiée, SLA renforcé, SCIM/SAML, marque blanche et revendeur.",
   },
 ];
 
@@ -207,6 +213,7 @@ export default async function TarifsPage({
             <Trust>🛡️ RGPD-compliant native</Trust>
             <Trust>📋 Aligné NIS2 et ANSSI</Trust>
             <Trust>🌐 Connecteur CISO Assistant</Trust>
+            <Trust>🎨 Marque blanche dispo</Trust>
             <Trust>♻️ Forever-free 5 sièges</Trust>
           </div>
         </section>
@@ -446,9 +453,9 @@ export default async function TarifsPage({
               text: "Mesure objective, en temps reel, par collaborateur et par service. Ce que ton assureur cyber demande.",
             },
             {
-              emoji: "🛒",
-              title: "Marketplace communaute",
-              text: "Tes pairs RSSI publient leurs modules, moderes par notre équipe. Effet de levier collectif.",
+              emoji: "🎨",
+              title: "Marque blanche & revendeur",
+              text: "Déploie la plateforme sous ta marque (logo, couleurs, sous-domaine). Le mode revendeur gère des espaces clients en cascade - ESN, MSSP, cabinets de conseil.",
             },
             {
               emoji: "🦊",
@@ -535,7 +542,7 @@ export default async function TarifsPage({
                 cells={["✓", "✓", "✓", "✓"]}
               />
               <FeatureRow
-                label="Catalogue complet"
+                label="Catalogue complet (57 saisons · 339 modules)"
                 cells={["-", "✓*", "✓", "✓"]}
               />
               <FeatureRow
@@ -587,6 +594,10 @@ export default async function TarifsPage({
                 cells={["-", "-", "✓**", "✓**"]}
               />
               <FeatureRow
+                label="Quishing IA souverain 🇫🇷 (QR codes piégés)"
+                cells={["-", "-", "✓**", "✓**"]}
+              />
+              <FeatureRow
                 label="MCP Server (agents IA Claude/Mistral/GPT)"
                 cells={["✓", "✓", "✓", "✓"]}
               />
@@ -611,6 +622,14 @@ export default async function TarifsPage({
                 cells={["Lite", "Lite", "Complet", "Complet"]}
               />
               <FeatureRow
+                label="Hub conformité multi-référentiels (NIS2, RGPD, ISO 27001…)"
+                cells={["-", "-", "✓", "✓"]}
+              />
+              <FeatureRow
+                label="Veille fuites de données salariés (RSSI · DPA)"
+                cells={["-", "-", "-", "✓"]}
+              />
+              <FeatureRow
                 label="Multi-établissements"
                 cells={["-", "-", "Light", "Filiales"]}
               />
@@ -627,7 +646,7 @@ export default async function TarifsPage({
                 cells={["-", "-", "-", "✓"]}
               />
               <FeatureRow
-                label="White-label"
+                label="Marque blanche + portail revendeur multi-clients"
                 cells={["-", "-", "-", "✓"]}
               />
               <FeatureRow
@@ -785,6 +804,13 @@ export default async function TarifsPage({
             (registres, contrôles, preuves). Humanix fait la sensibilisation
             humaine (modules, gamification, phishing). Notre intégration native
             exporte les preuves Humanix vers CISO Assistant.
+          </Faq>
+          <Faq question="Proposez-vous la marque blanche ou un programme revendeur ?">
+            Oui, en Enterprise. Vous déployez la plateforme sous votre marque
+            (logo, couleurs, sous-domaine, emails, certificats). Le programme
+            revendeur permet en plus de créer et gérer des espaces clients,
+            chacun sous sa propre marque, avec cascade automatique de la vôtre -
+            pensé pour les ESN, MSSP et cabinets de conseil.
           </Faq>
         </div>
       </section>
