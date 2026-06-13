@@ -65,6 +65,17 @@
     --color-accent: #00A3A1;
     --color-success: #2E8B57;
     --color-warn: #C0392B;
+
+    /* Palette Tailwind pilotee par variables CSS (marque blanche / white-label).
+       Triplets RGB "r g b" (PAS de hex) pour preserver les modificateurs
+       d'opacite Tailwind du type `accent-500/30`. Defaut = charte Humanix
+       (conversion identite). Surchargee par tenant via le <style> du layout
+       (cf. lib/branding/theme-css.ts + app/layout.tsx). */
+    --primary-50: 234 243 248;
+    --primary-500: 11 61 145;
+    --primary-600: 8 46 115;
+    --accent-500: 0 163 161;
+    --accent-600: 0 127 125;
   }
 
   .dark {
