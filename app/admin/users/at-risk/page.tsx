@@ -16,13 +16,20 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { listAtRiskUsers } from "@/lib/admin/at-risk-users";
+import { listRepeatOffenders } from "@/lib/phishing/repeat-offenders";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AtRiskUsersTable from "@/components/admin/AtRiskUsersTable";
+import RepeatOffendersPanel from "@/components/admin/RepeatOffendersPanel";
 import EmptyState from "@/components/admin/EmptyState";
 
 export const dynamic = "force-dynamic";
 
-type SearchParams = Promise<{ threshold?: string; days?: string }>;
+type SearchParams = Promise<{
+  threshold?: string;
+  days?: string;
+  msg?: string;
+  error?: string;
+}>;
 
 export default async function AdminUsersAtRiskPage({
   searchParams,
@@ -46,10 +53,11 @@ export default async function AdminUsersAtRiskPage({
   const threshold = params.threshold ? parseInt(params.threshold, 10) : 40;
   const days = params.days ? parseInt(params.days, 10) : 60;
 
-  const { users, filters, totals } = await listAtRiskUsers(tenantId, {
-    threshold,
-    daysInactive: days,
-  });
+  const [{ users, filters, totals }, { offenders, minFails }] =
+    await Promise.all([
+      listAtRiskUsers(tenantId, { threshold, daysInactive: days }),
+      listRepeatOffenders(tenantId),
+    ]);
 
   // MANAGER : lecture seule (pas de bouton d'envoi rappel)
   const canAct = role === "ADMIN" || role === "RSSI" || role === "SUPERADMIN";
@@ -60,6 +68,30 @@ export default async function AdminUsersAtRiskPage({
         title="Utilisateurs vulnérables"
         description="Liste actionnable des collaborateurs avec un score de risque bas et/ou inactifs. Le lundi matin du RSSI."
         icon="⚠️"
+      />
+
+      {params.msg === "remediation-assigned" && (
+        <div
+          role="status"
+          className="rounded-xl border border-emerald-200 dark:border-emerald-900/40 bg-emerald-50 dark:bg-emerald-900/15 p-3 text-sm text-emerald-900 dark:text-emerald-200"
+        >
+          ✓ Module anti-phishing assigné. Le collaborateur le verra dans son
+          parcours.
+        </div>
+      )}
+      {(params.msg === "remediation-failed" || params.error) && (
+        <div
+          role="alert"
+          className="rounded-xl border-2 border-rose-200 dark:border-rose-900/40 bg-rose-50 dark:bg-rose-900/15 p-3 text-sm text-rose-900 dark:text-rose-200"
+        >
+          ⚠ L&apos;action n&apos;a pas pu aboutir. Réessayez.
+        </div>
+      )}
+
+      <RepeatOffendersPanel
+        offenders={offenders}
+        minFails={minFails}
+        canAct={canAct}
       />
 
       {users.length === 0 ? (
