@@ -80,7 +80,7 @@ PME et ETI, pas comme un PDF décoratif. Trois leviers d'adoption :
   OSCAL v1.1.2 directement intégrable dans CISO Assistant, audit trail
   intégral opposable.
 - **Démarche d'agrément ANSSI** - Humanix Académie postule à devenir
-  *le « Pix de la cybersécurité »* côté sensibilisation, avec un dossier
+  _le « Pix de la cybersécurité »_ côté sensibilisation, avec un dossier
   formel d'agrément lancé en 2026. Reconnaissance officielle visée 2027.
 
 Chaque apprenant peut, **optionnellement**, renseigner ses prénom et nom réels
@@ -137,12 +137,12 @@ docker pull humanixcybersecurity/humanix-academie:latest
 
 Tags disponibles :
 
-| Tag                 | Quand                            | Stabilité |
-| ------------------- | -------------------------------- | --------- |
-| `:latest`           | Dernière release stable (`v*.*.*`) | Stable    |
-| `:1.2.3` / `:1.2` / `:1` | Versions semver                  | Stable    |
-| `:edge`             | HEAD de `main` (build continu)   | Béta      |
-| `:main-<sha7>`      | Commit précis sur `main`         | Béta      |
+| Tag                      | Quand                              | Stabilité |
+| ------------------------ | ---------------------------------- | --------- |
+| `:latest`                | Dernière release stable (`v*.*.*`) | Stable    |
+| `:1.2.3` / `:1.2` / `:1` | Versions semver                    | Stable    |
+| `:edge`                  | HEAD de `main` (build continu)     | Béta      |
+| `:main-<sha7>`           | Commit précis sur `main`           | Béta      |
 
 > **Pourquoi GHCR en primaire ?** Pas de quota pull (Docker Hub en
 > impose 100/6h aux utilisateurs anonymes depuis 2020), gratuit
@@ -168,6 +168,7 @@ L'entrypoint synchronise le schéma Prisma, applique la migration legacy plans
 selon `BOOTSTRAP_ADMIN_*`, puis démarre Next.js.
 
 Premier compte admin :
+
 - Si `BOOTSTRAP_ADMIN_EMAIL` est configuré → le compte est créé au boot
 - Sinon : `docker compose exec app npx tsx scripts/bootstrap-admin.ts`
 
@@ -216,21 +217,21 @@ documenté dans [docs/CRON.md](./docs/CRON.md).
 
 ## Stack technique
 
-| Couche       | Technologie                              | Pourquoi                                         |
-| ------------ | ---------------------------------------- | ------------------------------------------------ |
-| Front + back | **Next.js 16** (App Router) + React 19   | SSR + API routes + server actions                |
-| Langage      | **TypeScript** strict                    | Type-safe end-to-end                             |
-| Styling      | **Tailwind CSS**                         | Cohérence visuelle, performance, dark mode natif |
-| ORM          | **Prisma 6**                             | Schema-first, type-safe, migrations propres      |
-| Base         | **PostgreSQL 16**                        | Multi-tenant scoping, indices fins, full-text    |
+| Couche       | Technologie                              | Pourquoi                                                         |
+| ------------ | ---------------------------------------- | ---------------------------------------------------------------- |
+| Front + back | **Next.js 16** (App Router) + React 19   | SSR + API routes + server actions                                |
+| Langage      | **TypeScript** strict                    | Type-safe end-to-end                                             |
+| Styling      | **Tailwind CSS**                         | Cohérence visuelle, performance, dark mode natif                 |
+| ORM          | **Prisma 6**                             | Schema-first, type-safe, migrations propres                      |
+| Base         | **PostgreSQL 16**                        | Multi-tenant scoping, indices fins, full-text                    |
 | Auth         | **NextAuth.js v5**                       | SSO Google/Microsoft/Apple, magic link, RBAC, 2FA TOTP, WebAuthn |
-| Charts       | **Recharts** + SVG inline                | Composants React idiomatiques                    |
-| PDF          | **@react-pdf/renderer**                  | Rapports de conformité côté serveur              |
-| Container    | **Docker** + Compose                     | Déploiement reproductible                        |
-| Cron         | **Ofelia** (V1) → k8s CronJob (V2)       | Tâches planifiées portables                      |
-| TTS          | **Voxtral** (Mistral) ou **Piper** local | Narration audio cache content-addressed          |
-| Analytics    | **Plausible** (self-host ou cloud)       | RGPD-friendly, sans cookie tracker               |
-| Tests        | **Vitest**                               | Logique métier critique sous tests               |
+| Charts       | **Recharts** + SVG inline                | Composants React idiomatiques                                    |
+| PDF          | **@react-pdf/renderer**                  | Rapports de conformité côté serveur                              |
+| Container    | **Docker** + Compose                     | Déploiement reproductible                                        |
+| Cron         | **Ofelia** (V1) → k8s CronJob (V2)       | Tâches planifiées portables                                      |
+| TTS          | **Voxtral** (Mistral) ou **Piper** local | Narration audio cache content-addressed                          |
+| Analytics    | **Plausible** (self-host ou cloud)       | RGPD-friendly, sans cookie tracker                               |
+| Tests        | **Vitest**                               | Logique métier critique sous tests                               |
 
 ---
 
@@ -238,11 +239,11 @@ documenté dans [docs/CRON.md](./docs/CRON.md).
 
 3 modes orthogonaux configurables via `.env` :
 
-| Mode | Activation | Effet |
-|---|---|---|
-| **DEMO_MODE** | `DEMO_MODE=true` | Comptes fictifs pré-seedés via `/demo`, sélecteur 1 clic. Pour démos commerciales / salons. |
-| **DEV_MODE** | `DEV_MODE=true` (avec `AUTH_URL` local) | Bypass Mollie + email : inscription auto-login direct, souscription instantanée. Pour tester le vrai flow sans config externe. |
-| **Production** | les deux à `false` | Flow réel : email Scaleway TEM, paiement Mollie, magic links signés. |
+| Mode           | Activation                              | Effet                                                                                                                          |
+| -------------- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **DEMO_MODE**  | `DEMO_MODE=true`                        | Comptes fictifs pré-seedés via `/demo`, sélecteur 1 clic. Pour démos commerciales / salons.                                    |
+| **DEV_MODE**   | `DEV_MODE=true` (avec `AUTH_URL` local) | Bypass Mollie + email : inscription auto-login direct, souscription instantanée. Pour tester le vrai flow sans config externe. |
+| **Production** | les deux à `false`                      | Flow réel : email Scaleway TEM, paiement Mollie, magic links signés.                                                           |
 
 Garde-fou : `DEV_MODE` est ignoré quand `AUTH_URL` ne pointe pas sur localhost.
 
@@ -252,6 +253,7 @@ Garde-fou : `DEV_MODE` est ignoré quand `AUTH_URL` ne pointe pas sur localhost.
 
 🦊 Hex est un assistant cyber multi-tour, accessible via un FAB flottant
 sur toute l'app pour les utilisateurs connectés. Il sait :
+
 - répondre aux questions cyber (phishing, RGPD, NIS2, MFA, mots de passe)
 - guider l'utilisation d'Humanix (où trouver un module, exporter un
   certificat, configurer la rétention RGPD)
@@ -259,11 +261,11 @@ sur toute l'app pour les utilisateurs connectés. Il sait :
 
 **Providers supportés** (sélection via `HEX_AI_PROVIDER`) :
 
-| Provider | Coût | Recommandé pour |
-|---|---|---|
-| `mistral` (défaut) | Free tier Mistral "Experiment" (~1 req/s, 1 B tokens/mois) | Cloud Starter / Pro |
-| `ollama` | 0 € (self-host) | Community Edition AGPLv3 |
-| `disabled` | - | Désactive le chat (FAB invisible) |
+| Provider           | Coût                                                       | Recommandé pour                   |
+| ------------------ | ---------------------------------------------------------- | --------------------------------- |
+| `mistral` (défaut) | Free tier Mistral "Experiment" (~1 req/s, 1 B tokens/mois) | Cloud Starter / Pro               |
+| `ollama`           | 0 € (self-host)                                            | Community Edition AGPLv3          |
+| `disabled`         | -                                                          | Désactive le chat (FAB invisible) |
 
 **Rate limit** (par utilisateur) : 12 msg/h en Starter, 60 msg/h en Pro,
 200 msg/h en Enterprise. Protège le free tier Mistral sans frustrer les
@@ -317,11 +319,11 @@ voice, agentique) dans le document
 
 3 backends au choix selon le contexte :
 
-| Backend | Activation | Use case |
-|---|---|---|
-| **`voxtral`** (recommandé) | `TTS_PROVIDER=voxtral` + `MISTRAL_API_KEY` | Voix Marie 6 émotions FR Mistral, qualité quasi-humaine, ~$0.0001/mot |
-| **`piper`** (option AGPL pure) | `docker compose --profile piper up` + `TTS_PROVIDER=piper` | Self-host total, voix `fr_FR-siwis-medium`, gratuit, RGPD strict |
-| `""` (vide, défaut) | rien | Fallback Web Speech API navigateur (gratuit, qualité variable) |
+| Backend                        | Activation                                                 | Use case                                                              |
+| ------------------------------ | ---------------------------------------------------------- | --------------------------------------------------------------------- |
+| **`voxtral`** (recommandé)     | `TTS_PROVIDER=voxtral` + `MISTRAL_API_KEY`                 | Voix Marie 6 émotions FR Mistral, qualité quasi-humaine, ~$0.0001/mot |
+| **`piper`** (option AGPL pure) | `docker compose --profile piper up` + `TTS_PROVIDER=piper` | Self-host total, voix `fr_FR-siwis-medium`, gratuit, RGPD strict      |
+| `""` (vide, défaut)            | rien                                                       | Fallback Web Speech API navigateur (gratuit, qualité variable)        |
 
 ```bash
 # Pré-rendre tout le catalogue audio (idempotent, ~10 min, ~$2.50 au 1er run)
@@ -337,6 +339,7 @@ requests + `Cache-Control: immutable max-age=1an` → **démarrage <100 ms en
 cache hit**, sans charger le fichier en RAM.
 
 Où l'audio apparaît :
+
 - 🔊 **Modules** (`/apprendre/<saison>/<episode>`) : « Écouter le scénario / le débrief »
 - 🔊 **Articles librairie** (`/librairie/<slug>`) : « Écouter l'article »
 - 🔊 **Cartes Cyber Famille** (`/famille`) : mini-bouton « 🔊 Aperçu »
@@ -353,22 +356,22 @@ de modules pédagogiques sont open source AGPLv3. Les modules avancés, le
 phishing simulé, le Pack NIS2 turnkey et le SSO entreprise sont proposés en
 cloud managé ou via une licence commerciale.
 
-| Composant                                                          | Statut                               |
-| ------------------------------------------------------------------ | ------------------------------------ |
-| Plateforme Next.js 16 (engine, dashboards, API, multi-tenant)      | Open AGPLv3 (ce repo)                |
-| Modules pédagogiques de base (5 saisons démo · 19 MDX experts)     | Open AGPLv3 (ce repo)                |
-| Outil public d'exposition `/exposition` + parcours OSINT (0 PII)   | Open AGPLv3 (ce repo)                |
-| Hub conformité multi-référentiels `/admin/conformite` (7 cadres)   | Open AGPLv3 (ce repo)                |
-| Gamification engine + mascotte Hex                                 | Open AGPLv3 (ce repo)                |
-| Connecteur CISO Assistant + format OSCAL + CEF                     | Open AGPLv3 (ce repo)                |
-| Forecast + corrélation incidents (régression linéaire transparente)| Open AGPLv3 (ce repo)                |
-| Espace DPO + rétention configurable + AIPD                         | Open AGPLv3 (ce repo)                |
-| Quick Setup Wizard + AdminSearchBox                                | Open AGPLv3 (ce repo)                |
-| Catalogue 300+ modules avancés (57 saisons · 339 MDX)              | Cloud Pro / Enterprise               |
-| Phishing simulé (templates + IA Mistral)                           | Cloud Pro / Enterprise               |
-| Quishing campaigns + poster generator                              | Cloud Pro / Enterprise               |
-| Pack NIS2 turnkey complet                                          | Cloud Pro / Enterprise               |
-| SSO SAML / SCIM enterprise                                         | Cloud Enterprise                     |
+| Composant                                                           | Statut                 |
+| ------------------------------------------------------------------- | ---------------------- |
+| Plateforme Next.js 16 (engine, dashboards, API, multi-tenant)       | Open AGPLv3 (ce repo)  |
+| Modules pédagogiques de base (5 saisons démo · 19 MDX experts)      | Open AGPLv3 (ce repo)  |
+| Outil public d'exposition `/exposition` + parcours OSINT (0 PII)    | Open AGPLv3 (ce repo)  |
+| Hub conformité multi-référentiels `/admin/conformite` (7 cadres)    | Open AGPLv3 (ce repo)  |
+| Gamification engine + mascotte Hex                                  | Open AGPLv3 (ce repo)  |
+| Connecteur CISO Assistant + format OSCAL + CEF                      | Open AGPLv3 (ce repo)  |
+| Forecast + corrélation incidents (régression linéaire transparente) | Open AGPLv3 (ce repo)  |
+| Espace DPO + rétention configurable + AIPD                          | Open AGPLv3 (ce repo)  |
+| Quick Setup Wizard + AdminSearchBox                                 | Open AGPLv3 (ce repo)  |
+| Catalogue 300+ modules avancés (57 saisons · 339 MDX)               | Cloud Pro / Enterprise |
+| Phishing simulé (templates + IA Mistral)                            | Cloud Pro / Enterprise |
+| Quishing campaigns + poster generator                               | Cloud Pro / Enterprise |
+| Pack NIS2 turnkey complet                                           | Cloud Pro / Enterprise |
+| SSO SAML / SCIM enterprise                                          | Cloud Enterprise       |
 
 Tarifs cloud : voir [humanix-cybersecurity.fr/tarifs](https://humanix-cybersecurity.fr/tarifs).
 
@@ -380,11 +383,11 @@ Tarifs cloud : voir [humanix-cybersecurity.fr/tarifs](https://humanix-cybersecur
 
 Au démarrage, l'app détecte automatiquement quelle source de contenu utiliser :
 
-| Tu as cloné ce repo et... | L'app charge | Source |
-|---|---|---|
-| ...tu n'as rien fait | **5 saisons démo CC BY-SA** (19 modules) | `content/saisons-demo/` |
-| ...tu as ajouté **tes propres** saisons sous `content/saisons/` | **Ton catalogue** | `content/saisons/` |
-| ...tu as souscrit un contrat Humanix Enterprise | **57 saisons commerciales** (339 modules) | Repo privé `humanix-content-pro` monté en submodule |
+| Tu as cloné ce repo et...                                       | L'app charge                              | Source                                              |
+| --------------------------------------------------------------- | ----------------------------------------- | --------------------------------------------------- |
+| ...tu n'as rien fait                                            | **5 saisons démo CC BY-SA** (19 modules)  | `content/saisons-demo/`                             |
+| ...tu as ajouté **tes propres** saisons sous `content/saisons/` | **Ton catalogue**                         | `content/saisons/`                                  |
+| ...tu as souscrit un contrat Humanix Enterprise                 | **57 saisons commerciales** (339 modules) | Repo privé `humanix-content-pro` monté en submodule |
 
 Le 3e cas (contenu commercial Humanix complet en self-host) nécessite une licence Ed25519 signée par Humanix. Procédure détaillée dans [`docs/OPEN_CORE.md`](./docs/OPEN_CORE.md#obtenir-le-content-pro-clients-enterprise--self-host-sous-contrat). Premier contact : `contact@humanix-cybersecurity.fr`.
 
@@ -392,12 +395,12 @@ Le 3e cas (contenu commercial Humanix complet en self-host) nécessite une licen
 
 ## Tarifs cloud (4 paliers · vente directe sans essai gratuit)
 
-| Palier | Cible | Tarif mensuel | Tarif annuel (−17 à −21 %) |
-|---|---|---|---|
-| **Découverte** (Starter) | TPE 1-15 personnes | **Gratuit** jusqu'à 5 utilisateurs, puis 19 €/mois forfait | - |
-| **Pro** | PME industrialisée 16-250 personnes | 3 €/user/mois | 2,50 €/user/mois |
-| **Enterprise** | Multi-sites, secteur réglementé, SecNumCloud | Sur devis | Sur devis |
-| **Community Edition** (self-host) | Devs, ESN, RSSI autonomes | **Gratuit à vie** AGPLv3 | - |
+| Palier                            | Cible                                        | Tarif mensuel                                              | Tarif annuel (−17 à −21 %) |
+| --------------------------------- | -------------------------------------------- | ---------------------------------------------------------- | -------------------------- |
+| **Découverte** (Starter)          | TPE 1-15 personnes                           | **Gratuit** jusqu'à 5 utilisateurs, puis 19 €/mois forfait | -                          |
+| **Pro**                           | PME industrialisée 16-250 personnes          | 3 €/user/mois                                              | 2,50 €/user/mois           |
+| **Enterprise**                    | Multi-sites, secteur réglementé, SecNumCloud | Sur devis                                                  | Sur devis                  |
+| **Community Edition** (self-host) | Devs, ESN, RSSI autonomes                    | **Gratuit à vie** AGPLv3                                   | -                          |
 
 La démo en ligne (`/demo`) couvre déjà le besoin "tester avant de payer" -
 pas d'essai gratuit sur les paliers payants.

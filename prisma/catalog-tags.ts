@@ -95,13 +95,7 @@ export const SAISON_TAGS: Record<string, string[]> = {
   ],
 
   // ---- Famille : tendances 2026 (specialisees, mais accessibles) ----
-  deepfakes: [
-    "famille:public",
-    "tout-public",
-    "deepfake",
-    "ia",
-    "fraude",
-  ],
+  deepfakes: ["famille:public", "tout-public", "deepfake", "ia", "fraude"],
   "supply-chain": [
     "famille:avance",
     "supply-chain",
@@ -116,13 +110,7 @@ export const SAISON_TAGS: Record<string, string[]> = {
     "secrets",
     "code-review",
   ],
-  "wifi-reseaux": [
-    "famille:public",
-    "tout-public",
-    "wifi",
-    "vpn",
-    "byod",
-  ],
+  "wifi-reseaux": ["famille:public", "tout-public", "wifi", "vpn", "byod"],
   "email-pro": [
     "famille:public",
     "tout-public",
@@ -186,19 +174,8 @@ export const SAISON_TAGS: Record<string, string[]> = {
     "onboarding",
     "offboarding",
   ],
-  "cyber-compta": [
-    "famille:metier",
-    "metier:compta",
-    "fovi",
-    "fraude",
-    "erp",
-  ],
-  "dpo-quotidien": [
-    "famille:conformite",
-    "metier:dpo",
-    "rgpd",
-    "regulation",
-  ],
+  "cyber-compta": ["famille:metier", "metier:compta", "fovi", "fraude", "erp"],
+  "dpo-quotidien": ["famille:conformite", "metier:dpo", "rgpd", "regulation"],
   sauvegardes: [
     "famille:public",
     "tout-public",
@@ -240,31 +217,16 @@ export const SAISON_TAGS: Record<string, string[]> = {
     "mobilite",
   ],
   // --- Extension catalogue (saisons 34-57) ---
-  "quishing": [
-    "famille:public",
-    "tout-public",
-    "phishing",
-    "vecteur:qr",
-  ],
+  quishing: ["famille:public", "tout-public", "phishing", "vecteur:qr"],
   "arnaques-courantes": [
     "famille:public",
     "tout-public",
     "fraude",
     "ingenierie-sociale",
   ],
-  "navigation-web": [
-    "famille:public",
-    "tout-public",
-    "web",
-    "vecteur:web",
-  ],
-  "iot-maison": [
-    "famille:public",
-    "tout-public",
-    "iot",
-    "teletravail",
-  ],
-  "cyberharcelement": [
+  "navigation-web": ["famille:public", "tout-public", "web", "vecteur:web"],
+  "iot-maison": ["famille:public", "tout-public", "iot", "teletravail"],
+  cyberharcelement: [
     "famille:public",
     "tout-public",
     "vie-privee",
@@ -288,95 +250,40 @@ export const SAISON_TAGS: Record<string, string[]> = {
     "ingenierie-sociale",
     "comptes",
   ],
-  "cyber-achats": [
-    "famille:metier",
-    "metier:achats",
-    "supply-chain",
-    "fraude",
-  ],
+  "cyber-achats": ["famille:metier", "metier:achats", "supply-chain", "fraude"],
   "cyber-juridique": [
     "famille:metier",
     "metier:juridique",
     "confidentialite",
     "secret-affaires",
   ],
-  "dora": [
-    "famille:conformite",
-    "dora",
-    "secteur-financier",
-    "resilience",
-  ],
-  "iso-27001": [
-    "famille:conformite",
-    "iso-27001",
-    "smsi",
-  ],
-  "hygiene-anssi": [
-    "famille:conformite",
-    "anssi",
-    "hygiene",
-    "fondamentaux",
-  ],
+  dora: ["famille:conformite", "dora", "secteur-financier", "resilience"],
+  "iso-27001": ["famille:conformite", "iso-27001", "smsi"],
+  "hygiene-anssi": ["famille:conformite", "anssi", "hygiene", "fondamentaux"],
   "sapin2-conformite": [
     "famille:conformite",
     "sapin2",
     "anti-corruption",
     "ethique",
   ],
-  "ai-act": [
-    "famille:conformite",
-    "ai-act",
-    "ia",
-    "rgpd",
-  ],
-  "securiser-m365": [
-    "famille:avance",
-    "cloud",
-    "m365",
-    "admin",
-  ],
-  "gestion-secrets": [
-    "famille:avance",
-    "dev",
-    "secrets",
-    "api",
-  ],
-  "zero-trust": [
-    "famille:avance",
-    "zero-trust",
-    "architecture",
-  ],
-  "securite-api-cloud": [
-    "famille:avance",
-    "dev",
-    "api",
-    "cloud",
-  ],
-  "secteur-sante": [
-    "famille:sectoriel",
-    "secteur:sante",
-    "donnees-sensibles",
-  ],
+  "ai-act": ["famille:conformite", "ai-act", "ia", "rgpd"],
+  "securiser-m365": ["famille:avance", "cloud", "m365", "admin"],
+  "gestion-secrets": ["famille:avance", "dev", "secrets", "api"],
+  "zero-trust": ["famille:avance", "zero-trust", "architecture"],
+  "securite-api-cloud": ["famille:avance", "dev", "api", "cloud"],
+  "secteur-sante": ["famille:sectoriel", "secteur:sante", "donnees-sensibles"],
   "secteur-collectivites": [
     "famille:sectoriel",
     "secteur:collectivites",
     "service-public",
   ],
-  "secteur-education": [
-    "famille:sectoriel",
-    "secteur:education",
-    "mineurs",
-  ],
+  "secteur-education": ["famille:sectoriel", "secteur:education", "mineurs"],
   "secteur-liberales": [
     "famille:sectoriel",
     "secteur:liberales",
     "secret-professionnel",
   ],
-  "secteur-industrie-ot": [
-    "famille:sectoriel",
-    "secteur:industrie",
-    "ot",
-  ],
+  "secteur-industrie-ot": ["famille:sectoriel", "secteur:industrie", "ot"],
 };
 
 /**
@@ -403,28 +310,41 @@ export function familyFromTags(tags: string[]): string {
  * Liste de toutes les familles disponibles, dans l'ordre d'affichage souhaite
  * dans /admin/modules (du plus grand public au plus specialise).
  */
-export const FAMILY_ORDER = ["public", "metier", "sectoriel", "conformite", "avance"] as const;
+export const FAMILY_ORDER = [
+  "public",
+  "metier",
+  "sectoriel",
+  "conformite",
+  "avance",
+] as const;
 
-export const FAMILY_LABELS: Record<string, { label: string; emoji: string; description: string }> = {
+export const FAMILY_LABELS: Record<
+  string,
+  { label: string; emoji: string; description: string }
+> = {
   public: {
     label: "Tout public",
     emoji: "👥",
-    description: "Modules accessibles a tous les collaborateurs, sans prerequis IT.",
+    description:
+      "Modules accessibles a tous les collaborateurs, sans prerequis IT.",
   },
   metier: {
     label: "Metiers",
     emoji: "🎯",
-    description: "Specialises par fonction : RH, compta, dev, dirigeants, commercial...",
+    description:
+      "Specialises par fonction : RH, compta, dev, dirigeants, commercial...",
   },
   sectoriel: {
     label: "Sectoriel",
     emoji: "🏛️",
-    description: "Adaptes a un secteur : sante, collectivites, education, industrie...",
+    description:
+      "Adaptes a un secteur : sante, collectivites, education, industrie...",
   },
   conformite: {
     label: "Conformite",
     emoji: "📋",
-    description: "NIS2, RGPD, regulations sectorielles. Pour DPO et dirigeants.",
+    description:
+      "NIS2, RGPD, regulations sectorielles. Pour DPO et dirigeants.",
   },
   avance: {
     label: "Avance",
