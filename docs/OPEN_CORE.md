@@ -177,7 +177,7 @@ export function loadCatalogSaisons() {
 
 Au seeding, le log indique la source :
 
-- `Catalogue (commercial) : 57 saisons / 339 episodes` → contenu privé chargé
+- `Catalogue (commercial) : 58 saisons / 344 episodes` → contenu privé chargé
 - `Catalogue (demo) : 5 saisons / 19 episodes` → fork OSS sans le contenu privé
 
 ### Workflow opérateur (Humanix Cybersecurity)
