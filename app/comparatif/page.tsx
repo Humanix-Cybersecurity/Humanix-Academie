@@ -35,8 +35,8 @@
 //      * /signup?plan=starter - self-service 5 sièges gratuits
 //      * Rattachement RGPD-safe cross-tenant (anti-énumération)
 //      * Mode « Voir en tant que » read-only avec consentement explicite
-//  - Catalogue mis à jour : 33 saisons / 186 modules / 27 enquêtes / 30
-//    articles librairie. Gratuit OSS : 3 saisons + 3 enquêtes + 30 articles.
+//  - Catalogue mis à jour : 57 saisons / 339 modules (dont 27 enquêtes) / 30
+//    articles librairie. Gratuit OSS : 5 saisons démo + 30 articles.
 
 import { Fragment } from "react";
 import Link from "next/link";
@@ -46,7 +46,7 @@ import { BreadcrumbJsonLd } from "@/lib/seo/jsonld";
 
 const META_TITLE = "Comparatif honnête - HumaniX vs concurrents | Humanix Académie";
 const META_DESCRIPTION =
-  "Comparatif honnête entre Humanix Académie et les principales plateformes de sensibilisation cyber 2026 (KnowBe4, Hoxhunt, Phished, Cyber Guru, Adaptive Security). 9 catégories, 60+ critères : tarification, catalogue (186 modules + 27 enquêtes interactives), simulation phishing, conformité, pilotage dirigeant, HRM 2026, intégrations (CISO Assistant 17 surfaces), onboarding RGPD, écosystème.";
+  "Comparatif honnête entre Humanix Académie et les principales plateformes de sensibilisation cyber 2026 (KnowBe4, Hoxhunt, Phished, Cyber Guru, Adaptive Security). 9 catégories, 60+ critères : tarification, catalogue (339 modules dont 27 enquêtes interactives), simulation phishing, conformité, pilotage dirigeant, HRM 2026, intégrations (CISO Assistant 17 surfaces), onboarding RGPD, écosystème.";
 
 export const metadata = {
   title: META_TITLE,
@@ -139,8 +139,8 @@ const ROWS: Row[] = [
   {
     category: "Catalogue & contenu",
     feature: "Nombre de modules disponibles (catalogue)",
-    humanix: eq(
-      "186 modules (33 saisons) + 27 enquêtes interactives + 30 articles librairie",
+    humanix: win(
+      "339 modules (57 saisons, dont 27 enquêtes interactives) + 30 articles librairie",
     ),
     knowbe4: win("1 000+ modules"),
     cyberGuru: eq("300+ modules"),
@@ -151,7 +151,7 @@ const ROWS: Row[] = [
   {
     category: "Catalogue & contenu",
     feature: "Catalogue gratuit (OSS, CC BY-SA 4.0)",
-    humanix: win("3 saisons + 3 enquêtes + 30 articles, sans inscription pro"),
+    humanix: win("5 saisons démo (CC BY-SA) + 30 articles, sans inscription pro"),
     knowbe4: loss("Non (essai 30 j, puis payant)"),
     cyberGuru: loss("Non"),
     hoxhunt: loss("Non"),
@@ -170,12 +170,14 @@ const ROWS: Row[] = [
   },
   {
     category: "Catalogue & contenu",
-    feature: "Marketplace ouverte (modules communauté)",
-    humanix: win("Oui, modulable + auteur visible"),
-    knowbe4: loss("Non"),
+    feature: "Packs métiers & sectoriels dédiés",
+    humanix: win(
+      "10+ packs : commercial, RH, compta, dev, support, achats, juridique, communication + santé, collectivités, éducation, libéral, industrie/OT",
+    ),
+    knowbe4: eq("Rôles génériques"),
     cyberGuru: loss("Non"),
     hoxhunt: loss("Non"),
-    phished: loss("Non"),
+    phished: eq("Quelques rôles"),
     adaptiveSecurity: loss("Non"),
   },
   {
