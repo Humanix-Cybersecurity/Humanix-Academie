@@ -119,6 +119,18 @@ const INTEGRATIONS: Integration[] = [
     releasedAt: "Avr 2026",
     emoji: "📨",
   },
+  {
+    slug: "gmail",
+    name: "Add-on Gmail",
+    category: "Email security",
+    status: "live",
+    origin: "US",
+    description:
+      "Bouton 'signaler ce phishing' dans Gmail (Google Workspace Add-on). Même endpoint que l'add-in Outlook : notification temps réel + log d'audit.",
+    href: "/integrations/gmail",
+    releasedAt: "Juin 2026",
+    emoji: "✉️",
+  },
   // ============ MCP Server (premier mover SAT/HRM) ============
   {
     slug: "mcp-server",
