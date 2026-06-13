@@ -14,7 +14,10 @@ import CyberMeteoTopBar from "@/components/CyberMeteoTopBar";
 import SiteFooter from "@/components/SiteFooter";
 import MascotPeek from "@/components/MascotPeek";
 import HexChat from "@/components/HexChat";
-import { getTenantBranding } from "@/lib/branding/tenant-branding";
+import {
+  getTenantBranding,
+  getBrandingForSubdomain,
+} from "@/lib/branding/tenant-branding";
 import { buildTenantThemeCss } from "@/lib/branding/theme-css";
 import ScrollProgress from "@/components/ScrollProgress";
 import { isHexChatAvailable } from "@/lib/ai/provider";
@@ -276,10 +279,14 @@ export default async function RootLayout({
   const cspNonce = headersList.get("x-csp-nonce") ?? undefined;
 
   // Marque blanche : branding effectif du tenant courant (cascade revendeur,
-  // défaut Humanix sinon). Injecte le thème (couleurs) + logo/favicon. Pour
-  // les pages publiques sans session, le tenant sera résolu par sous-domaine
-  // (WL7) ; ici on s'appuie sur la session quand elle existe.
-  const branding = await getTenantBranding(session?.user?.tenantId);
+  // défaut Humanix sinon). Injecte le thème (couleurs) + logo/favicon.
+  //  - Session présente -> branding du tenant de l'utilisateur.
+  //  - Pages publiques (login, /exposition…) sans session -> on résout par
+  //    sous-domaine (WL7) : proxy.ts a posé `x-tenant-slug` depuis le host.
+  //    Ainsi acme.humanix-academie.fr est déjà brandé avant connexion.
+  const branding = session?.user?.tenantId
+    ? await getTenantBranding(session.user.tenantId)
+    : await getBrandingForSubdomain(headersList.get("x-tenant-slug"));
   const themeCss = buildTenantThemeCss(branding);
 
   return (
