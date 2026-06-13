@@ -249,6 +249,11 @@ type Props = {
   // ne l'affiche plus sur le certificat (V2 = 1 page sans listing).
   modules: { title: string; saisonTitle: string; score: number }[];
   generatedAt: Date;
+  // Marque blanche (optionnel) : si fourni, remplace le branding Humanix sur
+  // le certificat (nom emetteur + filigrane logo). @react-pdf Image n'accepte
+  // que du raster (png/jpg), pas de SVG -> on ne passe le logo que si raster.
+  brandName?: string | null;
+  brandLogoData?: { data: Buffer; format: "png" | "jpg" } | null;
 };
 
 export function CertificateOfCompletion(props: Props) {
@@ -259,9 +264,16 @@ export function CertificateOfCompletion(props: Props) {
     `${props.recipientName}-${props.tenantName}-${props.totalXP}-${props.generatedAt.toISOString()}`,
   );
 
+  // Marque blanche : nom emetteur + filigrane logo du tenant si fournis,
+  // sinon defaut Humanix.
+  const issuer = props.brandName?.trim() || "Humanix-Cybersecurity";
+  const brandTitle = (props.brandName?.trim() || "Humanix Académie").toUpperCase();
+  const isCustomBrand = Boolean(props.brandName?.trim());
+
   // Resolution lazy au moment du rendu (1ere demande). Evite que le
   // module-load ne declenche un fs scan a build time.
   const logoPath = getLogoPath();
+  const watermarkSrc = props.brandLogoData ?? (logoPath || null);
   return (
     <Document>
       <Page size="A4" orientation="landscape" style={styles.page}>
@@ -269,15 +281,17 @@ export function CertificateOfCompletion(props: Props) {
             autres elements grace a position absolute + ordre de rendu.
             Omis silencieusement si le fichier n'est pas trouve au runtime. */}
         {/* eslint-disable-next-line jsx-a11y/alt-text -- @react-pdf/renderer Image n'accepte pas la prop alt */}
-        {logoPath && <Image src={logoPath} style={styles.watermark} />}
+        {watermarkSrc && <Image src={watermarkSrc} style={styles.watermark} />}
 
         <View style={styles.border}>
           <View style={styles.innerBorder}>
             {/* Marque (sans le H stylise) */}
             <View>
-              <Text style={styles.brandName}>HUMANIX ACADÉMIE</Text>
+              <Text style={styles.brandName}>{brandTitle}</Text>
               <Text style={styles.brandTagline}>
-                La cyber humaine pour tous
+                {isCustomBrand
+                  ? "Sensibilisation cybersécurité"
+                  : "La cyber humaine pour tous"}
               </Text>
 
               <Text style={styles.certificateTitle}>
@@ -317,9 +331,7 @@ export function CertificateOfCompletion(props: Props) {
                 </View>
                 <View style={styles.signatureBlockRight}>
                   <Text style={styles.signatureLine}>Validé par</Text>
-                  <Text style={styles.signatureName}>
-                    Humanix-Cybersecurity
-                  </Text>
+                  <Text style={styles.signatureName}>{issuer}</Text>
                   <Text style={styles.hash}>SIGNATURE : {hash}</Text>
                 </View>
               </View>
