@@ -70,6 +70,9 @@ type BrandingRow = {
   brandAccentColor: string | null;
   brandEmailFromName: string | null;
   brandHidePoweredBy: boolean;
+  // Entitlement du parent : un client d'un revendeur white_label est éligible
+  // même si son propre plan ne contient pas white_label (cf. isEligible).
+  parent: { isReseller: boolean; plan: string } | null;
 };
 
 const SELECT = {
@@ -84,11 +87,22 @@ const SELECT = {
   brandAccentColor: true,
   brandEmailFromName: true,
   brandHidePoweredBy: true,
+  parent: { select: { isReseller: true, plan: true } },
 } as const;
 
-/** Un tenant est-il éligible à FOURNIR un branding (flag + plan) ? */
+/**
+ * Un tenant est-il éligible à FOURNIR un branding ?
+ *   - brandingEnabled = true, ET
+ *   - son plan a white_label, OU son parent est un REVENDEUR white_label
+ *     (l'entitlement du revendeur couvre ses clients : un client sur un plan
+ *     pro peut donc avoir sa propre marque, posée par le revendeur — WL8).
+ */
 function isEligible(row: BrandingRow): boolean {
-  return row.brandingEnabled && planHasFeature(row.plan, "white_label");
+  if (!row.brandingEnabled) return false;
+  if (planHasFeature(row.plan, "white_label")) return true;
+  return Boolean(
+    row.parent?.isReseller && planHasFeature(row.parent.plan, "white_label"),
+  );
 }
 
 /** Construit le branding effectif à partir d'une row éligible. */
