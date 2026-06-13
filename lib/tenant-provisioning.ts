@@ -75,7 +75,7 @@ export type ProvisionInput = {
  * subdomain-tenant.ts (a-z, 0-9, tiret, 3-30 chars). En cas de collision
  * on suffixe avec un compteur (-2, -3, …) jusqu'à 50 essais avant abandon.
  */
-async function buildUniqueSlug(name: string): Promise<string | null> {
+export async function buildUniqueSlug(name: string): Promise<string | null> {
   const base = name
     .normalize("NFD")
     // Remove Unicode combining diacritical marks (U+0300 to U+036F)
