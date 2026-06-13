@@ -125,6 +125,54 @@ export async function reactivateTenant(formData: FormData): Promise<void> {
 }
 
 /**
+ * Active / desactive le statut REVENDEUR d'un tenant (WL8).
+ *
+ * Un revendeur (isReseller=true) peut creer et gerer des tenants clients
+ * enfants en marque blanche via /admin/revendeur. C'est une relation
+ * COMMERCIALE : seul le SUPERADMIN (Humanix) l'accorde. Le revendeur doit
+ * aussi avoir un plan avec white_label (enterprise) pour que le portail
+ * s'active cote client — on n'impose pas le plan ici (un revendeur peut etre
+ * provisionne avant la bascule de plan), mais on le signale dans l'UI.
+ */
+export async function setTenantReseller(formData: FormData): Promise<void> {
+  const session = await requireSuperadminSession();
+  const actorEmail = session.user.email ?? "unknown";
+
+  const tenantId = String(formData.get("tenantId") ?? "").trim();
+  const enable = String(formData.get("enable") ?? "") === "true";
+  if (!tenantId) throw new Error("tenantId requis");
+
+  const tenant = await db.tenant.findUnique({
+    where: { id: tenantId },
+    select: { id: true, name: true, slug: true, isReseller: true },
+  });
+  if (!tenant) throw new Error("Tenant introuvable");
+  if (tenant.isReseller === enable) {
+    redirect(`/superadmin/tenants/${tenantId}?msg=reseller-noop`);
+  }
+
+  await db.tenant.update({
+    where: { id: tenantId },
+    data: { isReseller: enable },
+  });
+
+  await auditLog({
+    action: AuditActions.TENANT_UPDATED,
+    actor: { userId: session.user.id, email: actorEmail, role: "SUPERADMIN" },
+    tenantId,
+    target: { type: "tenant", id: tenantId, label: tenant.name },
+    message: enable
+      ? "Statut revendeur ACTIVE (peut creer des clients marque blanche)"
+      : "Statut revendeur DESACTIVE",
+    metadata: { slug: tenant.slug, isReseller: enable },
+  });
+
+  redirect(
+    `/superadmin/tenants/${tenantId}?msg=${enable ? "reseller-on" : "reseller-off"}`,
+  );
+}
+
+/**
  * Suppression DESTRUCTIVE d'un tenant et de toutes ses donnees liees
  * (cascade DELETE Prisma sur User, Progress, Event, Group, etc.).
  *

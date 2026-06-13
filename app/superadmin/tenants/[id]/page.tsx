@@ -10,6 +10,7 @@ import {
   deactivateTenant,
   reactivateTenant,
   deleteTenant,
+  setTenantReseller,
 } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -48,6 +49,8 @@ export default async function TenantDetailPage({
       disabledReason: true,
       paymentSubscriptionId: true,
       subscriptionStatus: true,
+      isReseller: true,
+      plan: true,
     },
   });
   // tenant existe forcement (health serait null sinon). On a deja notFound() ci-dessus.
@@ -213,6 +216,9 @@ export default async function TenantDetailPage({
           {msg === "reactivated" && "✓ Tenant réactivé. Les utilisateurs peuvent à nouveau se connecter."}
           {msg === "already-disabled" && "ℹ Tenant déjà désactivé."}
           {msg === "already-active" && "ℹ Tenant déjà actif."}
+          {msg === "reseller-on" && "✓ Statut revendeur activé. Le tenant peut créer des clients en marque blanche (/admin/revendeur)."}
+          {msg === "reseller-off" && "✓ Statut revendeur désactivé."}
+          {msg === "reseller-noop" && "ℹ Statut revendeur déjà dans cet état."}
         </div>
       )}
 
@@ -281,6 +287,58 @@ export default async function TenantDetailPage({
         >
           Gerer les admins →
         </Link>
+      </section>
+
+      {/* === STATUT REVENDEUR (marque blanche multi-clients) === */}
+      <section
+        aria-labelledby="reseller-title"
+        className="rounded-2xl border border-indigo-200 dark:border-indigo-900/40 bg-indigo-50/40 dark:bg-indigo-950/20 p-5"
+      >
+        <h2
+          id="reseller-title"
+          className="font-display font-bold text-indigo-900 dark:text-indigo-200 mb-2"
+        >
+          🏷️ Statut revendeur (marque blanche)
+        </h2>
+        <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+          Un revendeur peut créer et gérer des tenants <strong>clients</strong>{" "}
+          enfants en marque blanche depuis <code>/admin/revendeur</code>. Son
+          entitlement white-label couvre ses clients (un client sur un plan
+          inférieur peut quand même avoir sa propre marque, posée par le
+          revendeur).
+        </p>
+        <p className="text-sm mb-4">
+          État actuel :{" "}
+          {tenantMeta?.isReseller ? (
+            <span className="font-bold text-indigo-700 dark:text-indigo-300">
+              REVENDEUR activé
+            </span>
+          ) : (
+            <span className="font-bold text-gray-500">standard (non revendeur)</span>
+          )}
+          {tenantMeta?.isReseller &&
+            tenantMeta.plan !== "enterprise" &&
+            tenantMeta.plan !== "ENTERPRISE" && (
+              <span className="block mt-2 text-amber-700 dark:text-amber-300">
+                ⚠ Plan actuel «&nbsp;{tenantMeta.plan}&nbsp;» sans white-label : le
+                portail revendeur restera inactif côté client tant que le plan
+                n&apos;est pas Enterprise.
+              </span>
+            )}
+        </p>
+        <form action={setTenantReseller}>
+          <input type="hidden" name="tenantId" value={id} />
+          <input
+            type="hidden"
+            name="enable"
+            value={tenantMeta?.isReseller ? "false" : "true"}
+          />
+          <button type="submit" className="btn-secondary text-sm">
+            {tenantMeta?.isReseller
+              ? "Retirer le statut revendeur"
+              : "Activer le statut revendeur"}
+          </button>
+        </form>
       </section>
 
       {/* === DESACTIVATION / REACTIVATION === */}
