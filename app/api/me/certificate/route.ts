@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { CertificateOfCompletion, certificateName } from "@/lib/pdf-certificate";
 import { getLevel } from "@/lib/levels";
+import { getTenantBranding } from "@/lib/branding/tenant-branding";
 
 export const dynamic = "force-dynamic";
 
@@ -41,6 +42,27 @@ export async function GET() {
   // Prenom + nom reels si renseignes (option utilisateur), sinon pseudo.
   const displayName = certificateName(user);
 
+  // Marque blanche : certificat emis a la marque du tenant (ou de son
+  // revendeur) si le branding est actif. Logo embarque uniquement si raster
+  // (png/jpg) — @react-pdf Image ne supporte pas le SVG.
+  const branding = await getTenantBranding(user.tenantId);
+  let brandLogoData: { data: Buffer; format: "png" | "jpg" } | null = null;
+  if (branding.isCustom && branding.sourceTenantId) {
+    const src = await db.tenant.findUnique({
+      where: { id: branding.sourceTenantId },
+      select: { brandLogo: true, brandLogoMime: true },
+    });
+    if (
+      src?.brandLogo &&
+      (src.brandLogoMime === "image/png" || src.brandLogoMime === "image/jpeg")
+    ) {
+      brandLogoData = {
+        data: Buffer.from(src.brandLogo),
+        format: src.brandLogoMime === "image/png" ? "png" : "jpg",
+      };
+    }
+  }
+
   const buffer = await renderToBuffer(
     CertificateOfCompletion({
       recipientName: displayName,
@@ -56,6 +78,8 @@ export async function GET() {
         score: p.score ?? 0,
       })),
       generatedAt: new Date(),
+      brandName: branding.isCustom ? branding.brandName : null,
+      brandLogoData,
     }),
   );
 

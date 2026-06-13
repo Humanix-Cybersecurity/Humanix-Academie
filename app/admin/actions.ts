@@ -386,6 +386,7 @@ export async function inviteUser(formData: FormData) {
           inviterName: inviter?.name || inviter?.email || "un administrateur",
           tenantName: tenant?.name || "votre espace Humanix",
           baseUrl,
+          tenantId: ctx.tenantId,
         });
       } catch (err) {
         console.error("[invite] magic link email failed", err);
