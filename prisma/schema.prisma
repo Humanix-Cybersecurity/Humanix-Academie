@@ -152,6 +152,11 @@ model Tenant {
   // tenant par host, cf. middleware). brandCustomDomain = phase ulterieure.
   brandSubdomain     String?  @unique
   brandCustomDomain  String?  @unique
+  // REVENDEUR (WL8) : tenant partenaire autorise a creer/gerer des tenants
+  // clients enfants (parentTenantId) en marque blanche. Active par le
+  // SUPERADMIN (relation commerciale). Son entitlement white_label couvre
+  // ses clients (cf. lib/branding/tenant-branding.ts isEligible).
+  isReseller         Boolean  @default(false)
 
   createdAt                           DateTime @default(now())
   updatedAt                           DateTime @updatedAt
