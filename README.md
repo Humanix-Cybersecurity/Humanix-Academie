@@ -30,7 +30,7 @@ souverain, intégrée nativement à CISO Assistant.
 ## En 30 secondes
 
 - **Plateforme web Next.js 16 / React 19** multi-tenant, gamifiée, mobile-first
-- **57 saisons · 339 modules MDX experts** (phishing, vishing, smishing, quishing, mots de passe, MFA, données sensibles, télétravail, fraude-président, ransomware, IA générative, deepfakes, Cyber-RH, Cyber-Compta, Cyber-Dev, supply chain, NIS2, Sapin II, vie privée bureau, sauvegardes, réseaux Wi-Fi, mobile, visios, stockage cloud, crise cyber, DPO, OSINT & exposition numérique, packs métiers (commercial, communication, support, achats, juridique) et sectoriels (santé, collectivités, éducation, libéral, industrie/OT)…)
+- **58 saisons · 344 modules MDX experts** (phishing, vishing, smishing, quishing, mots de passe, MFA, données sensibles, télétravail, fraude-président, ransomware, IA générative, deepfakes, Cyber-RH, Cyber-Compta, Cyber-Dev, supply chain, NIS2, Sapin II, vie privée bureau, sauvegardes, réseaux Wi-Fi, mobile, visios, stockage cloud, crise cyber, DPO, OSINT & exposition numérique, identités machines & agents IA, packs métiers (commercial, communication, support, achats, juridique) et sectoriels (santé, collectivités, éducation, libéral, industrie/OT)…)
 - **Gamification réelle** : XP, badges, mascotte évolutive Hex, classements internes, saisons en accordéon repliable
 - **Console dirigeant** dashboard temps-réel : score de risque humain, KPIs business, top performers, urgent actions, rapport conformité PDF, export OSCAL
 - **Forecast & analytics avancé** : régression linéaire J+30 sur le score tenant, top movers individuels, corrélation incidents ↔ sensibilisation
@@ -42,6 +42,8 @@ souverain, intégrée nativement à CISO Assistant.
 - **Cookie consent CNIL-friendly** + Plausible Analytics (config self-host ou cloud)
 - **MCP Server** premier mover SAT/HRM (Claude Desktop / Mistral / GPT)
 - **Phishing simulé** + **Vishing** + **Smishing** + **Quishing** souverains, IA Mistral, anti-PII automatique
+- **Add-in Outlook + add-on Gmail** « Signaler un phishing » en 1 clic (même endpoint, RGPD-minimisant) + **protection des récidivistes** : réassignation ciblée du module anti-phishing par le RSSI
+- **Marque blanche & portail revendeur** (Enterprise) : déploiement sous votre marque (logo, couleurs, sous-domaine, emails, certificats) avec cascade, + gestion d'espaces clients multi-tenant pour ESN/MSSP/cabinets
 - **Narration audio des modules** : cache MP3 pré-rendu Voxtral (`npm run tts:build`), streaming progressif natif `<audio>`, démarrage <100 ms en cache hit
 - **Connecteur natif CISO Assistant** : preuves de conformité exportées automatiquement
 - **Format OSCAL v1.1.2** (NIST) + CEF (Sentinel, Splunk, Sekoia, QRadar)
@@ -364,14 +366,16 @@ cloud managé ou via une licence commerciale.
 | Hub conformité multi-référentiels `/admin/conformite` (7 cadres)    | Open AGPLv3 (ce repo)  |
 | Gamification engine + mascotte Hex                                  | Open AGPLv3 (ce repo)  |
 | Connecteur CISO Assistant + format OSCAL + CEF                      | Open AGPLv3 (ce repo)  |
+| Add-in Outlook + add-on Gmail (« Signaler un phishing »)            | Open AGPLv3 (ce repo)  |
 | Forecast + corrélation incidents (régression linéaire transparente) | Open AGPLv3 (ce repo)  |
 | Espace DPO + rétention configurable + AIPD                          | Open AGPLv3 (ce repo)  |
 | Quick Setup Wizard + AdminSearchBox                                 | Open AGPLv3 (ce repo)  |
-| Catalogue 300+ modules avancés (57 saisons · 339 MDX)               | Cloud Pro / Enterprise |
+| Catalogue complet (58 saisons · 344 MDX experts)                    | Cloud Pro / Enterprise |
 | Phishing simulé (templates + IA Mistral)                            | Cloud Pro / Enterprise |
 | Quishing campaigns + poster generator                               | Cloud Pro / Enterprise |
 | Pack NIS2 turnkey complet                                           | Cloud Pro / Enterprise |
 | SSO SAML / SCIM enterprise                                          | Cloud Enterprise       |
+| Marque blanche + portail revendeur multi-clients                    | Cloud Enterprise       |
 
 Tarifs cloud : voir [humanix-cybersecurity.fr/tarifs](https://humanix-cybersecurity.fr/tarifs).
 
@@ -387,7 +391,7 @@ Au démarrage, l'app détecte automatiquement quelle source de contenu utiliser 
 | --------------------------------------------------------------- | ----------------------------------------- | --------------------------------------------------- |
 | ...tu n'as rien fait                                            | **5 saisons démo CC BY-SA** (19 modules)  | `content/saisons-demo/`                             |
 | ...tu as ajouté **tes propres** saisons sous `content/saisons/` | **Ton catalogue**                         | `content/saisons/`                                  |
-| ...tu as souscrit un contrat Humanix Enterprise                 | **57 saisons commerciales** (339 modules) | Repo privé `humanix-content-pro` monté en submodule |
+| ...tu as souscrit un contrat Humanix Enterprise                 | **58 saisons commerciales** (344 modules) | Repo privé `humanix-content-pro` monté en submodule |
 
 Le 3e cas (contenu commercial Humanix complet en self-host) nécessite une licence Ed25519 signée par Humanix. Procédure détaillée dans [`docs/OPEN_CORE.md`](./docs/OPEN_CORE.md#obtenir-le-content-pro-clients-enterprise--self-host-sous-contrat). Premier contact : `contact@humanix-cybersecurity.fr`.
 
@@ -416,6 +420,8 @@ techniquement prêtes côté Humanix, libre à chaque éditeur de les utiliser) 
 | Outil                                                                  | Rôle                                  | Statut           |
 | ---------------------------------------------------------------------- | ------------------------------------- | ---------------- |
 | [CISO Assistant](https://github.com/intuitem/ciso-assistant-community) | GRC (gouvernance, risque, conformité) | Connecteur natif |
+| Microsoft Outlook (add-in)                                             | Signalement phishing 1-clic           | Livré (manifest)  |
+| Gmail (Google Workspace Add-on)                                        | Signalement phishing 1-clic           | Livré (Apps Script) |
 | [OpenCTI](https://github.com/OpenCTI-Platform/opencti)                 | Threat intelligence                   | Roadmap Q3 2026  |
 | [Wazuh](https://github.com/wazuh/wazuh)                                | SIEM / détection                      | Format CEF       |
 | [TheHive](https://github.com/TheHive-Project/TheHive)                  | Réponse à incident                    | Roadmap Q4 2026  |

@@ -159,6 +159,58 @@ curl http://localhost:3000/api/health
 
 ---
 
+## Schéma Prisma & catalogue de contenu (spécificités Humanix)
+
+> Cette section fait autorité pour ce dépôt. Les commandes `prisma migrate`
+> mentionnées plus haut sont génériques : en pratique, Humanix applique le
+> schéma avec **`prisma db push`** (voir ci-dessous).
+
+### Schéma : `prisma db push` (pas de dossier `migrations/`)
+
+Ce dépôt n'utilise pas de migrations Prisma versionnées : le schéma est
+appliqué avec `prisma db push`. Les évolutions sont conçues **additives**
+(colonnes `nullable` / valeurs par défaut, valeurs d'enum ajoutées) pour
+rester rétro-compatibles et sûres en production (aucune perte, aucun downtime).
+
+Après un pull qui modifie `prisma/schema.prisma` :
+
+```bash
+# Docker Compose
+docker compose exec app npx prisma db push
+
+# bare-metal
+npx prisma db push && npx prisma generate
+```
+
+Exemples d'ajouts additifs récents : champs marque blanche / revendeur
+(`Tenant.brand*`, `Tenant.brandSubdomain`, `Tenant.isReseller`) et valeur
+d'enum `AuditAction.PHISHING_REMEDIATION_ASSIGNED` (protection récidivistes).
+
+### Catalogue commercial : submodule `content-pro` + reseed
+
+Le contenu pédagogique commercial vit dans le submodule privé `content-pro`
+(monté sur `content/saisons` + `prisma/catalog-saisons.ts`). Après l'ajout
+ou la mise à jour de saisons :
+
+```bash
+git submodule update --init --remote content-pro
+# Recharge le catalogue (idempotent, upsert par slug) :
+docker compose exec app npm run db:seed
+# ou, depuis l'app : bouton « Re-importer le catalog » dans /superadmin
+```
+
+Le reseed n'altère ni les utilisateurs ni leur progression.
+
+### Add-ins clients mail (Outlook / Gmail)
+
+Ils se déploient **hors de l'app** (côté Microsoft 365 / Google Workspace) :
+aucun impact sur la procédure d'upgrade serveur.
+
+- Outlook : manifest servi par `/api/integrations/outlook/manifest.xml`.
+- Gmail : code Apps Script dans `gmail-addon/` (cf. `gmail-addon/README.md`).
+
+---
+
 ## Migrations majeures (breaking changes)
 
 ### Comment savoir si c'est une migration majeure ?
