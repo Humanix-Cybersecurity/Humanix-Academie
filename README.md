@@ -30,7 +30,7 @@ souverain, intégrée nativement à CISO Assistant.
 ## En 30 secondes
 
 - **Plateforme web Next.js 16 / React 19** multi-tenant, gamifiée, mobile-first
-- **33 saisons · 216 modules MDX experts** (phishing, vishing, smishing, quishing, mots de passe, MFA, données sensibles, télétravail, fraude-président, ransomware, IA générative, deepfakes, Cyber-RH, Cyber-Compta, Cyber-Dev, supply chain, NIS2, Sapin II, vie privée bureau, sauvegardes, réseaux Wi-Fi, mobile, visios, stockage cloud, crise cyber, DPO, OSINT & exposition numérique…)
+- **57 saisons · 339 modules MDX experts** (phishing, vishing, smishing, quishing, mots de passe, MFA, données sensibles, télétravail, fraude-président, ransomware, IA générative, deepfakes, Cyber-RH, Cyber-Compta, Cyber-Dev, supply chain, NIS2, Sapin II, vie privée bureau, sauvegardes, réseaux Wi-Fi, mobile, visios, stockage cloud, crise cyber, DPO, OSINT & exposition numérique, packs métiers (commercial, communication, support, achats, juridique) et sectoriels (santé, collectivités, éducation, libéral, industrie/OT)…)
 - **Gamification réelle** : XP, badges, mascotte évolutive Hex, classements internes, saisons en accordéon repliable
 - **Console dirigeant** dashboard temps-réel : score de risque humain, KPIs business, top performers, urgent actions, rapport conformité PDF, export OSCAL
 - **Forecast & analytics avancé** : régression linéaire J+30 sur le score tenant, top movers individuels, corrélation incidents ↔ sensibilisation
@@ -283,7 +283,7 @@ OLLAMA_BASE_URL=http://localhost:11434
 HEX_AI_MODEL=mistral:7b-instruct
 ```
 
-**RAG sur les 216 modules MDX** (Phase 3) : Hex cite les modules
+**RAG sur les 339 modules MDX** (Phase 3) : Hex cite les modules
 Humanix pertinents au lieu d'inventer. Repose sur PostgreSQL +
 extension `pgvector` + Mistral `mistral-embed`.
 
@@ -364,7 +364,7 @@ cloud managé ou via une licence commerciale.
 | Forecast + corrélation incidents (régression linéaire transparente)| Open AGPLv3 (ce repo)                |
 | Espace DPO + rétention configurable + AIPD                         | Open AGPLv3 (ce repo)                |
 | Quick Setup Wizard + AdminSearchBox                                | Open AGPLv3 (ce repo)                |
-| Catalogue 200+ modules avancés (33 saisons · 216 MDX)              | Cloud Pro / Enterprise               |
+| Catalogue 300+ modules avancés (57 saisons · 339 MDX)              | Cloud Pro / Enterprise               |
 | Phishing simulé (templates + IA Mistral)                           | Cloud Pro / Enterprise               |
 | Quishing campaigns + poster generator                              | Cloud Pro / Enterprise               |
 | Pack NIS2 turnkey complet                                          | Cloud Pro / Enterprise               |
@@ -384,7 +384,7 @@ Au démarrage, l'app détecte automatiquement quelle source de contenu utiliser 
 |---|---|---|
 | ...tu n'as rien fait | **5 saisons démo CC BY-SA** (19 modules) | `content/saisons-demo/` |
 | ...tu as ajouté **tes propres** saisons sous `content/saisons/` | **Ton catalogue** | `content/saisons/` |
-| ...tu as souscrit un contrat Humanix Enterprise | **33 saisons commerciales** (216 modules) | Repo privé `humanix-content-pro` monté en submodule |
+| ...tu as souscrit un contrat Humanix Enterprise | **57 saisons commerciales** (339 modules) | Repo privé `humanix-content-pro` monté en submodule |
 
 Le 3e cas (contenu commercial Humanix complet en self-host) nécessite une licence Ed25519 signée par Humanix. Procédure détaillée dans [`docs/OPEN_CORE.md`](./docs/OPEN_CORE.md#obtenir-le-content-pro-clients-enterprise--self-host-sous-contrat). Premier contact : `contact@humanix-cybersecurity.fr`.
 

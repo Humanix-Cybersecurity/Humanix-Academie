@@ -168,7 +168,7 @@ export function loadCatalogSaisons() {
 ```
 
 Au seeding, le log indique la source :
-- `Catalogue (commercial) : 33 saisons / 216 episodes` → contenu privé chargé
+- `Catalogue (commercial) : 57 saisons / 339 episodes` → contenu privé chargé
 - `Catalogue (demo) : 5 saisons / 19 episodes` → fork OSS sans le contenu privé
 
 ### Workflow opérateur (Humanix Cybersecurity)
@@ -196,7 +196,7 @@ humanix-content-pro/
 ├── content/
 │   ├── phishing/          ← saisons directement, PAS sous saisons/
 │   ├── mots-de-passe/
-│   └── ... (33 saisons)
+│   └── ... (57 saisons)
 ├── prisma/
 │   └── catalog-saisons.ts
 └── lib/
@@ -289,7 +289,7 @@ docker compose up -d
 ```bash
 git pull && git submodule update --init
 docker compose build --no-cache && docker compose up -d
-# → log seed : "Catalogue (commercial) : 33 saisons / 216 episodes"
+# → log seed : "Catalogue (commercial) : 57 saisons / 339 episodes"
 # → /apprendre affiche le catalogue complet
 ```
 
@@ -297,7 +297,7 @@ docker compose build --no-cache && docker compose up -d
 
 ## Obtenir le content-pro (clients Enterprise / self-host sous contrat)
 
-Le repo `Humanix-Cybersecurity/humanix-content-pro` est **privé** : il contient l'asset commercial principal (33 saisons / 216 épisodes + librairie + marketplace + anecdotes). Trois cas se présentent :
+Le repo `Humanix-Cybersecurity/humanix-content-pro` est **privé** : il contient l'asset commercial principal (57 saisons / 339 épisodes + librairie + marketplace + anecdotes). Trois cas se présentent :
 
 ### Cas 1 - Cloud SaaS sur `humanix-cybersecurity.fr` (zero action)
 Tu n'as rien à faire : le contenu commercial est servi par l'instance gérée. Le repo privé n'est même pas exposé - c'est Humanix qui opère.
@@ -335,7 +335,7 @@ Tu veux héberger la plateforme **chez toi** mais avec le catalogue Humanix comp
 
 | État de la licence | État du content-pro | Comportement attendu |
 |---|---|---|
-| Présente et valide | Présent (commercial) | Mode commercial Enterprise, log `Catalogue (commercial) : 33 saisons` |
+| Présente et valide | Présent (commercial) | Mode commercial Enterprise, log `Catalogue (commercial) : 57 saisons` |
 | Absente | Présent (commercial) | App fonctionne, warning licence dans les logs, header `X-Humanix-License: missing` sur les responses internes |
 | Présente et valide | Absent | App fonctionne en mode démo (`Catalogue (demo) : 5 saisons`), warning content-pro |
 | Absente | Absent | Fork OSS standard, mode démo, aucune mention licence |
