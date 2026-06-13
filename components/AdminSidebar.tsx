@@ -293,6 +293,20 @@ const SECTIONS: Section[] = [
         gate: "Pro+",
         minRole: "ADMIN",
       },
+      {
+        href: "/admin/marque-blanche",
+        label: "Marque blanche",
+        icon: "🎨",
+        gate: "Enterprise",
+        minRole: "ADMIN",
+      },
+      {
+        href: "/admin/revendeur",
+        label: "Revendeur",
+        icon: "🏷️",
+        gate: "Enterprise",
+        minRole: "ADMIN",
+      },
       // Licence Ed25519 = config crypto sensible.
       {
         href: "/admin/license",
