@@ -66,15 +66,18 @@ const config: ConfigWithSafelist = {
   theme: {
     extend: {
       colors: {
-        // Charte HumaniX
+        // Charte HumaniX, pilotee par variables CSS pour la marque blanche.
+        // Pattern `rgb(var(--x) / <alpha-value>)` : conserve les modificateurs
+        // d'opacite Tailwind (ex: accent-500/30). Defaut Humanix defini dans
+        // app/globals.css :root, surcharge par tenant dans le <style> du layout.
         primary: {
-          50: "#EAF3F8",
-          500: "#0B3D91", // Navy
-          600: "#082E73",
+          50: "rgb(var(--primary-50) / <alpha-value>)", // #EAF3F8
+          500: "rgb(var(--primary-500) / <alpha-value>)", // #0B3D91 Navy
+          600: "rgb(var(--primary-600) / <alpha-value>)", // #082E73
         },
         accent: {
-          500: "#00A3A1", // Teal
-          600: "#007F7D",
+          500: "rgb(var(--accent-500) / <alpha-value>)", // #00A3A1 Teal
+          600: "rgb(var(--accent-600) / <alpha-value>)", // #007F7D
         },
         success: "#2E8B57",
         warn: "#C0392B",

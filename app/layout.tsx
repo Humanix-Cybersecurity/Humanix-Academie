@@ -14,6 +14,8 @@ import CyberMeteoTopBar from "@/components/CyberMeteoTopBar";
 import SiteFooter from "@/components/SiteFooter";
 import MascotPeek from "@/components/MascotPeek";
 import HexChat from "@/components/HexChat";
+import { getTenantBranding } from "@/lib/branding/tenant-branding";
+import { buildTenantThemeCss } from "@/lib/branding/theme-css";
 import ScrollProgress from "@/components/ScrollProgress";
 import { isHexChatAvailable } from "@/lib/ai/provider";
 import { auth } from "@/lib/auth";
@@ -273,6 +275,13 @@ export default async function RootLayout({
   // bloquerait. Cf. lib/csp-nonce.ts.
   const cspNonce = headersList.get("x-csp-nonce") ?? undefined;
 
+  // Marque blanche : branding effectif du tenant courant (cascade revendeur,
+  // défaut Humanix sinon). Injecte le thème (couleurs) + logo/favicon. Pour
+  // les pages publiques sans session, le tenant sera résolu par sous-domaine
+  // (WL7) ; ici on s'appuie sur la session quand elle existe.
+  const branding = await getTenantBranding(session?.user?.tenantId);
+  const themeCss = buildTenantThemeCss(branding);
+
   return (
     <html lang="fr">
       <head>
@@ -280,6 +289,17 @@ export default async function RootLayout({
           nonce={cspNonce}
           dangerouslySetInnerHTML={{ __html: themeInitScript }}
         />
+        {/* Marque blanche : surcharge des variables de palette pour ce tenant
+            (style-src 'unsafe-inline' autorisé, nonce par cohérence). */}
+        {themeCss ? (
+          <style
+            nonce={cspNonce}
+            dangerouslySetInnerHTML={{ __html: themeCss }}
+          />
+        ) : null}
+        {branding.faviconUrl ? (
+          <link rel="icon" href={branding.faviconUrl} />
+        ) : null}
         {/* JSON-LD Organization + WebSite - SEO knowledge panel +
             rich snippets + sitelinks searchbox eligible */}
         <script
@@ -325,7 +345,12 @@ export default async function RootLayout({
           </Suspense>
           {/* Bandeau démo dynamique : montre l'offre active si l'user est connecté */}
           <DemoBanner />
-          <HeaderBar demoMode={isDemo} />
+          <HeaderBar
+            demoMode={isDemo}
+            brandName={branding.brandName}
+            brandLogoUrl={branding.logoUrl}
+            hidePoweredBy={branding.hidePoweredBy}
+          />
           <ScrollProgress />
           <main id="main-content" tabIndex={-1} aria-label="Contenu principal">
             {children}
@@ -342,7 +367,11 @@ export default async function RootLayout({
               de pre-cochage). Modifiable depuis /confidentialite. */}
           <CookieBanner />
           <MascotPeek />
-          <SiteFooter />
+          <SiteFooter
+            brandName={branding.brandName}
+            brandLogoUrl={branding.logoUrl}
+            hidePoweredBy={branding.hidePoweredBy}
+          />
         </Providers>
       </body>
     </html>
