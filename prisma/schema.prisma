@@ -126,6 +126,33 @@ model Tenant {
   // Phase 3 : snapshots agreges quotidiens (0 PII individuelle) pour le
   // reporting de posture (NIS2 art.21 / RGPD art.32) et les tendances RSSI.
   exposureSnapshots            ExposureSnapshot[]
+
+  // ----------------------------------------------------
+  // MARQUE BLANCHE (white-label) - Enterprise (cf. lib/plans.ts white_label).
+  // ----------------------------------------------------
+  // Branding effectif resolu avec CASCADE : tenant enfant -> tenant parent
+  // (revendeur) -> defaut Humanix (cf. lib/branding/tenant-branding.ts).
+  // Tout est ignore si le plan n'a pas la feature white_label (gate plateforme).
+  brandingEnabled    Boolean  @default(false)
+  brandName          String?
+  // Logo + favicon stockes en BDD (petits PNG/SVG, valides cote serveur) et
+  // servis via /api/branding/[tenantId]/logo (URL utilisable web/email/certif).
+  brandLogo          Bytes?
+  brandLogoMime      String?
+  brandFavicon       Bytes?
+  brandFaviconMime   String?
+  // Couleurs hex #RRGGBB injectees en variables CSS (--primary, --accent).
+  brandPrimaryColor  String?
+  brandAccentColor   String?
+  // Nom d'expediteur des emails (ex : "Academie ACME").
+  brandEmailFromName String?
+  // Masque toute mention "Humanix" (footer "powered by", etc.).
+  brandHidePoweredBy Boolean  @default(false)
+  // Sous-domaine public <brandSubdomain>.humanix-academie.fr (resolution
+  // tenant par host, cf. middleware). brandCustomDomain = phase ulterieure.
+  brandSubdomain     String?  @unique
+  brandCustomDomain  String?  @unique
+
   createdAt                           DateTime @default(now())
   updatedAt                           DateTime @updatedAt
 
