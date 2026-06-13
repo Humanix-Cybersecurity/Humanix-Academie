@@ -207,7 +207,7 @@ const ROWS: Row[] = [
   {
     category: "Simulation phishing & ingénierie sociale",
     feature: "Plugin Outlook / Gmail (bouton « Signaler »)",
-    humanix: eq("Add-in Outlook livré (Gmail à venir)"),
+    humanix: eq("Add-in Outlook + add-on Gmail livrés"),
     knowbe4: win("Oui, mature + Gmail"),
     cyberGuru: win("Oui + Gmail"),
     hoxhunt: win("Oui, intégré + Gmail"),
@@ -399,7 +399,7 @@ const ROWS: Row[] = [
   {
     category: "Human Risk Management 2026",
     feature: "Couvre risque agents IA (non-humain)",
-    humanix: loss("Non (2027 - sujet émergent)"),
+    humanix: win("Saison dédiée livrée : identités machines & agents IA"),
     knowbe4: win("Annoncé 2026 (RSAC)"),
     cyberGuru: loss("Non"),
     hoxhunt: loss("Non"),
@@ -409,7 +409,7 @@ const ROWS: Row[] = [
   {
     category: "Human Risk Management 2026",
     feature: "Sandbox courrier suspect (repeat offender protection)",
-    humanix: loss("Non"),
+    humanix: eq("Protection récidivistes livrée ; bac à sable d'analyse à venir"),
     knowbe4: eq("Add-on PhishER"),
     cyberGuru: loss("Non"),
     hoxhunt: eq("Threat triage"),
@@ -1232,12 +1232,13 @@ export default function ComparatifPage() {
               <strong className="text-primary-500 dark:text-accent-300">
                 Ce qu'on apprend des acteurs historiques
               </strong>{" "}
-              - volume catalogue, plugin Outlook mature, agent IA orchestrateur,
-              SAML/SCIM enterprise. Ces écarts sont réels mais ne sont pas
-              bloquants pour la majorité des structures (TPE, PME, ETI,
+              - volume catalogue, agent IA orchestrateur autonome, maturité des
+              déploiements à grande échelle. Ces écarts sont réels mais ne sont
+              pas bloquants pour la majorité des structures (TPE, PME, ETI,
               associations, collectivités, particuliers). On comble
-              progressivement (vishing et smishing souverains FR MVP livrés,
-              audit RGAA cabinet à venir, Qualiopi en cours).
+              progressivement (add-ons Outlook et Gmail livrés, saison agents IA
+              livrée, vishing et smishing souverains FR MVP livrés, audit RGAA
+              cabinet à venir, Qualiopi en cours).
             </p>
             <p>
               <strong className="text-primary-500 dark:text-accent-300">
