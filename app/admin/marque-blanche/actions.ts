@@ -14,6 +14,7 @@ import { auditLog, AuditOutcomes } from "@/lib/audit";
 import { AuditAction } from "@prisma/client";
 import { planHasFeature } from "@/lib/plans";
 import { isValidHexColor } from "@/lib/branding/tenant-branding";
+import { isReservedSubdomain } from "@/lib/subdomain-tenant";
 
 const MAX_BYTES = 256 * 1024; // 256 Ko : un logo doit être léger.
 const ALLOWED_MIME = new Set([
@@ -81,6 +82,14 @@ export async function saveBranding(
         ok: false,
         error:
           "Sous-domaine invalide (lettres, chiffres, tirets ; 2 à 40 caractères).",
+      };
+    }
+    // Réservé (www, demo, api, mail…) : le middleware ne le résoudrait jamais
+    // vers ce tenant -> on refuse à l'écriture pour éviter une config morte.
+    if (isReservedSubdomain(subRaw)) {
+      return {
+        ok: false,
+        error: "Ce sous-domaine est réservé. Choisissez-en un autre.",
       };
     }
     const clash = await db.tenant.findFirst({
