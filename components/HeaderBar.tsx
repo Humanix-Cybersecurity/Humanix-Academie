@@ -29,7 +29,6 @@
 // pour aider l'identification rapide des items.
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -208,7 +207,17 @@ const SOLUTIONS_ITEMS: DropdownItem[] = [
  *              visiteurs. Defense en profondeur : la page /demo elle-même
  *              retourne 404 via app/demo/layout.tsx server side.
  */
-export default function HeaderBar({ demoMode = false }: { demoMode?: boolean }) {
+export default function HeaderBar({
+  demoMode = false,
+  brandName = "Humanix Académie",
+  brandLogoUrl = "/logo-humanix-academie-192.png",
+  hidePoweredBy = false,
+}: {
+  demoMode?: boolean;
+  brandName?: string;
+  brandLogoUrl?: string;
+  hidePoweredBy?: boolean;
+}) {
   const { data: session } = useSession();
   const user = session?.user as any;
   const [stats, setStats] = useState<{
@@ -315,23 +324,28 @@ export default function HeaderBar({ demoMode = false }: { demoMode?: boolean }) 
         <Link
           href="/"
           className="flex items-center gap-2.5 shrink-0 group"
-          aria-label="Humanix Académie - accueil"
+          aria-label={`${brandName} - accueil`}
         >
-          <Image
-            src="/logo-humanix-academie-192.png"
+          {/* Logo : <img> (et non next/image) car la marque blanche sert un
+              logo via route dynamique /api/branding/... (et parfois en SVG),
+              que l'optimiseur next/image ne gère pas bien. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={brandLogoUrl}
             alt=""
             width={40}
             height={60}
-            priority
             className="shrink-0 h-9 w-auto group-hover:scale-105 transition-transform"
           />
           <span className="hidden sm:flex flex-col leading-tight">
             <span className="text-base font-extrabold text-primary-500 dark:text-accent-300 tracking-tight">
-              Humanix Académie
+              {brandName}
             </span>
-            <span className="text-[10px] font-medium text-gray-500 dark:text-gray-400 -mt-0.5">
-              par Humanix-Cybersecurity
-            </span>
+            {!hidePoweredBy ? (
+              <span className="text-[10px] font-medium text-gray-500 dark:text-gray-400 -mt-0.5">
+                par Humanix-Cybersecurity
+              </span>
+            ) : null}
           </span>
         </Link>
 

@@ -16,7 +16,6 @@
 //
 // Inspiration : Vercel, Linear, Stripe, Posthog footers.
 
-import Image from "next/image";
 import Link from "next/link";
 import MadeInFranceStamp from "@/components/MadeInFranceStamp";
 
@@ -157,7 +156,15 @@ function FooterColumn({
   );
 }
 
-export default function SiteFooter() {
+export default function SiteFooter({
+  brandName = "Humanix Académie",
+  brandLogoUrl = "/logo-humanix-academie-192.png",
+  hidePoweredBy = false,
+}: {
+  brandName?: string;
+  brandLogoUrl?: string;
+  hidePoweredBy?: boolean;
+} = {}) {
   return (
     <footer
       aria-label="Pied de page"
@@ -175,10 +182,11 @@ export default function SiteFooter() {
           <Link
             href="/"
             className="flex items-center gap-3 group"
-            aria-label="Accueil Humanix Académie"
+            aria-label={`Accueil ${brandName}`}
           >
-            <Image
-              src="/logo-humanix-academie-192.png"
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={brandLogoUrl}
               alt=""
               width={56}
               height={56}
@@ -186,13 +194,15 @@ export default function SiteFooter() {
             />
             <div>
               <p className="text-lg font-extrabold text-primary-500 dark:text-accent-300 tracking-tight">
-                Humanix Académie
+                {brandName}
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 max-w-md">
-                La brique humaine de l'écosystème cyber souverain français.
-                Open source AGPLv3, hébergement Paris, accessible à tous -
-                particuliers, équipes et organisations de toute taille.
-              </p>
+              {!hidePoweredBy ? (
+                <p className="text-xs text-gray-500 dark:text-gray-400 max-w-md">
+                  La brique humaine de l'écosystème cyber souverain français.
+                  Open source AGPLv3, hébergement Paris, accessible à tous -
+                  particuliers, équipes et organisations de toute taille.
+                </p>
+              ) : null}
             </div>
           </Link>
           <MadeInFranceStamp size="md" className="hidden sm:block shrink-0" />
@@ -261,17 +271,26 @@ export default function SiteFooter() {
 
         {/* ============ Bandeau bas legal + trust badges ============ */}
         <div className="pt-8 border-t border-gray-200 dark:border-slate-800 flex flex-col md:flex-row gap-6 md:items-center md:justify-between">
-          <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-            <span aria-hidden="true">©</span> {new Date().getFullYear()}{" "}
-            <strong className="text-primary-500 dark:text-accent-300 font-semibold">
-              Humanix-Cybersecurity
-            </strong>{" "}
-            SASU
-            <span className="mx-2 text-gray-300 dark:text-slate-700">·</span>
-            <span className="tabular-nums">SIREN 103 901 799</span>
-            <span className="mx-2 text-gray-300 dark:text-slate-700">·</span>
-            <span className="tabular-nums">TVA FR 80 103 901 799</span>
-          </p>
+          {hidePoweredBy ? (
+            <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+              <span aria-hidden="true">©</span> {new Date().getFullYear()}{" "}
+              <strong className="text-primary-500 dark:text-accent-300 font-semibold">
+                {brandName}
+              </strong>
+            </p>
+          ) : (
+            <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+              <span aria-hidden="true">©</span> {new Date().getFullYear()}{" "}
+              <strong className="text-primary-500 dark:text-accent-300 font-semibold">
+                Humanix-Cybersecurity
+              </strong>{" "}
+              SASU
+              <span className="mx-2 text-gray-300 dark:text-slate-700">·</span>
+              <span className="tabular-nums">SIREN 103 901 799</span>
+              <span className="mx-2 text-gray-300 dark:text-slate-700">·</span>
+              <span className="tabular-nums">TVA FR 80 103 901 799</span>
+            </p>
+          )}
 
           <ul
             className="flex flex-wrap items-center gap-2"
