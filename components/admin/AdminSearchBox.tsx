@@ -84,6 +84,23 @@ const TARGETS: Target[] = [
     icon: "🎨",
     group: "Navigation",
   },
+  {
+    href: "/admin/revendeur",
+    label: "Revendeur",
+    hint: "/admin/revendeur",
+    keywords: [
+      "revendeur",
+      "reseller",
+      "clients",
+      "marque blanche",
+      "white-label",
+      "multi-clients",
+      "partenaire",
+      "sous-comptes",
+    ],
+    icon: "🏷️",
+    group: "Navigation",
+  },
 
   // === Equipe ===
   {
