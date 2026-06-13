@@ -396,6 +396,7 @@ export async function inviteNewTenantAdmin(
     inviterName: actor.email ?? "Humanix Admin",
     tenantName: tenant.name,
     baseUrl,
+    tenantId,
   });
   if (!res.ok) {
     console.error(

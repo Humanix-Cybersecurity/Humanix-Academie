@@ -21,6 +21,10 @@
 import { createHash, randomBytes } from "node:crypto";
 import { db } from "@/lib/db";
 import { sendEmail, isEmailConfigured } from "@/lib/email";
+import {
+  getTenantBranding,
+  DEFAULT_BRANDING,
+} from "@/lib/branding/tenant-branding";
 
 const TOKEN_TTL_HOURS = 72; // 3 jours pour qu'elle ait le temps de cliquer
 
@@ -56,6 +60,8 @@ export type InviteEmailContext = {
   tenantName: string;
   /** Base URL (https://academie.tonentreprise.fr - sans trailing slash). */
   baseUrl: string;
+  /** Tenant invitant : sert à résoudre le branding marque blanche de l'email. */
+  tenantId?: string;
 };
 
 /**
@@ -96,11 +102,17 @@ export async function sendInviteMagicLink(
   const callbackUrl = `${baseUrl}/post-login`;
   const url = `${baseUrl}/api/auth/callback/nodemailer?callbackUrl=${encodeURIComponent(callbackUrl)}&token=${rawToken}&email=${encodeURIComponent(email)}`;
 
-  // 4. Envoyer l'email
+  // 4. Brand marque blanche (cascade revendeur) si tenant fourni, sinon Humanix.
+  const brand = ctx.tenantId
+    ? await getTenantBranding(ctx.tenantId)
+    : DEFAULT_BRANDING;
+
+  // 5. Envoyer l'email
   const res = await sendEmail({
     to: email,
-    subject: `🦊 ${ctx.inviterName} t'invite a rejoindre ${ctx.tenantName} sur Humanix Academie`,
-    html: buildInviteHtml({ ...ctx, email, url, expires }),
+    fromName: brand.emailFromName,
+    subject: `🦊 ${ctx.inviterName} t'invite a rejoindre ${ctx.tenantName} sur ${brand.brandName}`,
+    html: buildInviteHtml({ ...ctx, email, url, expires, brand }),
     unsubscribe: { kind: "transactional" },
   });
 
@@ -130,6 +142,12 @@ function buildInviteHtml(params: {
   email: string;
   url: string;
   expires: Date;
+  brand: {
+    brandName: string;
+    primaryColor: string;
+    accentColor: string;
+    hidePoweredBy: boolean;
+  };
 }): string {
   const greeting = params.recipientName
     ? `Bonjour ${escapeHtml(params.recipientName)},`
@@ -146,16 +164,16 @@ function buildInviteHtml(params: {
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#FFF;border-radius:16px;overflow:hidden;border:1px solid #E5E7EB">
 
 <tr><td style="padding:32px 32px 16px">
-<p style="margin:0;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:#00A3A1;font-weight:bold">Invitation Humanix Academie</p>
-<h1 style="margin:8px 0 0;color:#0B3D91;font-size:24px;line-height:1.3">Tu es invite·e a rejoindre<br/>${escapeHtml(params.tenantName)}</h1>
+<p style="margin:0;font-size:12px;text-transform:uppercase;letter-spacing:1px;color:${params.brand.accentColor};font-weight:bold">Invitation ${escapeHtml(params.brand.brandName)}</p>
+<h1 style="margin:8px 0 0;color:${params.brand.primaryColor};font-size:24px;line-height:1.3">Tu es invite·e a rejoindre<br/>${escapeHtml(params.tenantName)}</h1>
 </td></tr>
 
 <tr><td style="padding:0 32px 16px">
 <p style="margin:0 0 16px;color:#333;font-size:15px">${greeting}</p>
 <p style="margin:0 0 16px;color:#333;font-size:15px">
 <strong>${escapeHtml(params.inviterName)}</strong> t'a invite·e a rejoindre l'espace
-<strong>${escapeHtml(params.tenantName)}</strong> sur Humanix Academie, la plateforme
-française de sensibilisation a la cybersecurite.
+<strong>${escapeHtml(params.tenantName)}</strong> sur ${escapeHtml(params.brand.brandName)}, la plateforme
+de sensibilisation a la cybersecurite.
 </p>
 <p style="margin:0 0 24px;color:#333;font-size:15px">
 Pour activer ton compte et commencer ta formation, clique simplement sur le
@@ -165,7 +183,7 @@ securise qui te connecte directement.
 </td></tr>
 
 <tr><td style="padding:0 32px 24px" align="center">
-<a href="${params.url}" style="display:inline-block;padding:14px 32px;background:#0B3D91;color:#FFF;text-decoration:none;border-radius:12px;font-weight:bold;font-size:15px">Activer mon compte →</a>
+<a href="${params.url}" style="display:inline-block;padding:14px 32px;background:${params.brand.primaryColor};color:#FFF;text-decoration:none;border-radius:12px;font-weight:bold;font-size:15px">Activer mon compte →</a>
 </td></tr>
 
 <tr><td style="padding:0 32px 24px">
@@ -182,8 +200,11 @@ ne sera pas utilisee.
 
 <tr><td style="padding:16px 32px;background:#F8F9FA;border-top:1px solid #E5E7EB">
 <p style="margin:0;color:#888;font-size:11px">
-Humanix Cybersecurity SASU · Toulouse, France · contact@humanix-cybersecurity.fr<br/>
-Plateforme française de cybersensibilisation · AGPLv3 · Donnees hebergees en France
+${
+  params.brand.hidePoweredBy
+    ? escapeHtml(params.brand.brandName)
+    : `Humanix Cybersecurity SASU · Toulouse, France · contact@humanix-cybersecurity.fr<br/>Plateforme française de cybersensibilisation · AGPLv3 · Donnees hebergees en France`
+}
 </p>
 </td></tr>
 
