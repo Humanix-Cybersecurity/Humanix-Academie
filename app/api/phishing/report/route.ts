@@ -1,14 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Endpoint qui reçoit les signalements de phishing depuis le plugin Outlook.
+// Endpoint qui reçoit les signalements de phishing depuis les add-ins clients
+// mail : plugin Outlook (browser, CORS) ET add-on Gmail (Apps Script,
+// server-side -> pas de CORS). Le champ `source` distingue l'origine
+// ("outlook-addin" | "gmail-addon").
 //
-// Auth : pas de NextAuth ici (l'add-in tourne dans Outlook avec une autre
-// identité). On AUTHENTIFIE le user via son email professionnel envoyé dans
-// le payload. Sécurité : on n'accepte que les users existants en BDD avec
+// Auth : pas de NextAuth ici (l'add-in tourne dans le client mail avec une
+// autre identité). On AUTHENTIFIE le user via son email professionnel envoyé
+// dans le payload. Sécurité : on n'accepte que les users existants en BDD avec
 // isActive=true. Si l'email n'est pas reconnu : 403.
 //
 // CORS : Outlook tourne dans une iframe sandbox sur outlook.office.com, donc
-// notre endpoint doit autoriser cet origine. On fait CORS strict permissif
-// uniquement sur cette route.
+// notre endpoint doit autoriser cet origine (CORS strict permissif uniquement
+// sur cette route). L'add-on Gmail appelle depuis Apps Script côté serveur :
+// pas d'en-tête Origin, le CORS ne s'y applique pas.
 //
 // Anti-abuse : rate limit 30 signalements/heure/user. Au-delà = 429.
 //
