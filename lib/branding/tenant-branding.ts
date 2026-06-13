@@ -143,3 +143,21 @@ export async function getTenantBranding(
 
   return DEFAULT_BRANDING;
 }
+
+/**
+ * Résout le branding pour un sous-domaine public (WL7) : utilisé sur les pages
+ * SANS session (login, /exposition…) pour qu'elles soient déjà brandées.
+ * Le middleware (proxy.ts) extrait le sous-domaine du host dans `x-tenant-slug`.
+ * On cherche le tenant par `brandSubdomain` puis on applique la cascade.
+ */
+export async function getBrandingForSubdomain(
+  subdomain: string | null | undefined,
+): Promise<EffectiveBranding> {
+  if (!subdomain) return DEFAULT_BRANDING;
+  const t = await db.tenant.findFirst({
+    where: { brandSubdomain: subdomain.toLowerCase() },
+    select: { id: true },
+  });
+  if (!t) return DEFAULT_BRANDING;
+  return getTenantBranding(t.id);
+}
