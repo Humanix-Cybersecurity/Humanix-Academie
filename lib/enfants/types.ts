@@ -118,7 +118,15 @@ export type Monde = {
   sousTitre: string;
   emoji: string;
   /** Clé de palette Tailwind utilisée pour la couleur du monde. */
-  couleur: "sky" | "emerald" | "violet" | "amber" | "rose" | "cyan";
+  couleur:
+    | "sky"
+    | "emerald"
+    | "violet"
+    | "amber"
+    | "rose"
+    | "cyan"
+    | "orange"
+    | "lime";
   /** false = carte « bientôt » non jouable (teaser sur le hub). */
   disponible: boolean;
   activites: Activite[];

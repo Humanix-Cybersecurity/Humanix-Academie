@@ -856,6 +856,518 @@ export const MONDES: Monde[] = [
       },
     ],
   },
+  // ===========================================================================
+  // MONDE 6 - Bien jouer en ligne (jeux vidéo)
+  // ===========================================================================
+  {
+    slug: "bien-jouer-en-ligne",
+    titre: "Bien jouer en ligne",
+    sousTitre: "Les arnaques des jeux vidéo, déjouées",
+    emoji: "🎮",
+    couleur: "amber",
+    disponible: true,
+    activites: [
+      {
+        type: "bd",
+        id: "bd-vbucks",
+        titre: "Les pièces gratuites",
+        panels: [
+          {
+            emoji: "🎮💎",
+            texte: "Tu cherches des pièces pour ton jeu. Un site promet :",
+          },
+          {
+            emoji: "🎉",
+            qui: "piege",
+            bulle: "1000 pièces GRATUITES ! Entre vite ton mot de passe de compte ici !",
+          },
+          {
+            emoji: "🦊🤨",
+            qui: "hex",
+            bulle: "Un vrai jeu ne te demande JAMAIS ton mot de passe sur un autre site.",
+          },
+        ],
+        question: {
+          consigne: "Tu fais quoi ?",
+          options: [
+            {
+              id: "donne",
+              label: "J'entre mon mot de passe pour les pièces",
+              emoji: "🔑",
+              bon: false,
+              reaction:
+                "On apprend : ce site veut voler ton compte. On ne tape jamais son mot de passe ailleurs que dans le vrai jeu.",
+            },
+            {
+              id: "ferme",
+              label: "Je ferme et je demande à un adulte",
+              emoji: "🛡️",
+              bon: true,
+              reaction: "Bravo ! Pas de mot de passe = pas d'arnaque possible.",
+            },
+          ],
+        },
+        morale:
+          "Pour gagner des trucs dans un jeu, on ne donne JAMAIS son mot de passe ailleurs.",
+      },
+      {
+        type: "repere",
+        id: "repere-chat-jeu",
+        titre: "L'arnaque dans le tchat",
+        consigne: "Touche les messages louches dans le tchat du jeu.",
+        ecran: "Pendant la partie, le tchat s'agite 👇",
+        elements: [
+          {
+            id: "gg",
+            emoji: "🎯",
+            texte: "« gg, tu joues super bien ! »",
+            piege: false,
+            reaction: "Ça, c'est juste sympa 🙂",
+          },
+          {
+            id: "lien",
+            emoji: "🔗",
+            texte: "« clique ce lien pour 1000 pièces »",
+            piege: true,
+            reaction: "Oui ! Un lien pour des cadeaux = arnaque.",
+          },
+          {
+            id: "mdp",
+            emoji: "🔑",
+            texte: "« donne ton mdp, je te booste »",
+            piege: true,
+            reaction: "Bravo ! Personne n'a besoin de ton mot de passe.",
+          },
+          {
+            id: "rejoue",
+            emoji: "📅",
+            texte: "« on rejoue ce soir ? »",
+            piege: false,
+            reaction: "Normal pour un jeu 🙂",
+          },
+          {
+            id: "mod",
+            emoji: "📥",
+            texte: "« télécharge ce mod-secret.exe »",
+            piege: true,
+            reaction: "Bien vu ! Un fichier inconnu peut être un virus.",
+          },
+        ],
+      },
+      {
+        type: "tri",
+        id: "tri-ok-stop",
+        titre: "Dans le jeu : OK ou Stop ?",
+        consigne: "Range chaque action du bon côté.",
+        gauche: { label: "OK", emoji: "👍" },
+        droite: { label: "Stop", emoji: "✋" },
+        cartes: [
+          {
+            id: "ami",
+            emoji: "🎮",
+            label: "Jouer avec un ami que je connais",
+            bon: "gauche",
+            reaction: "OK ! Jouer entre amis, c'est le top.",
+          },
+          {
+            id: "mdp",
+            emoji: "🔑",
+            label: "Un joueur demande mon mot de passe",
+            bon: "droite",
+            reaction: "Stop ! Mon mot de passe reste secret.",
+          },
+          {
+            id: "achat",
+            emoji: "💳",
+            label: "Acheter un truc sans demander à mes parents",
+            bon: "droite",
+            reaction: "Stop ! On demande toujours avant d'acheter.",
+          },
+          {
+            id: "pause",
+            emoji: "🍽️",
+            label: "Mettre en pause pour manger",
+            bon: "gauche",
+            reaction: "OK ! Le jeu peut attendre 🙂",
+          },
+          {
+            id: "skins",
+            emoji: "🎁",
+            label: "Cliquer « skins gratuits » d'un site inconnu",
+            bon: "droite",
+            reaction: "Stop ! Gratuit + inconnu = piège.",
+          },
+        ],
+      },
+      {
+        type: "quiz",
+        id: "quiz-jeu",
+        titre: "Le grand test",
+        emoji: "🎮💎",
+        question:
+          "Un site promet des pièces gratuites si tu donnes ton mot de passe. Tu fais quoi ?",
+        options: [
+          {
+            id: "a",
+            label: "Je donne mon mot de passe",
+            emoji: "🔑",
+            bon: false,
+            reaction: "Non ! Ton compte se ferait voler aussitôt.",
+          },
+          {
+            id: "b",
+            label: "Je donne juste mon pseudo et mon mot de passe",
+            emoji: "📝",
+            bon: false,
+            reaction: "Non ! Le mot de passe ne se donne jamais, nulle part.",
+          },
+          {
+            id: "c",
+            label: "Je ne donne rien, c'est une arnaque, j'en parle",
+            emoji: "🛡️",
+            bon: true,
+            reaction: "PARFAIT ! Tu protèges ton compte comme un champion 🏆",
+          },
+        ],
+      },
+    ],
+  },
+
+  // ===========================================================================
+  // MONDE 7 - Si ça va pas, j'en parle (cyberharcèlement)
+  // ===========================================================================
+  {
+    slug: "si-ca-va-pas-jen-parle",
+    titre: "Si ça va pas, j'en parle",
+    sousTitre: "Quand on est méchant avec toi en ligne",
+    emoji: "💬",
+    couleur: "orange",
+    disponible: true,
+    activites: [
+      {
+        type: "bd",
+        id: "bd-messages-mechants",
+        titre: "Des messages qui font mal",
+        panels: [
+          {
+            emoji: "📱😢",
+            texte: "Dans un groupe, des messages se moquent de toi.",
+          },
+          {
+            emoji: "🦊💙",
+            qui: "hex",
+            bulle: "Stop. Ce n'est PAS ta faute. Et tu n'es pas tout seul, je suis là.",
+          },
+          {
+            emoji: "🦊",
+            qui: "hex",
+            bulle: "On ne répond pas à la méchanceté par la méchanceté. On va trouver de l'aide.",
+          },
+        ],
+        question: {
+          consigne: "Tu fais quoi ?",
+          options: [
+            {
+              id: "venge",
+              label: "Je réponds une insulte encore plus forte",
+              emoji: "😡",
+              bon: false,
+              reaction:
+                "On apprend : se venger fait grossir la dispute, et ça ne te protège pas. Il y a mieux.",
+            },
+            {
+              id: "parle",
+              label: "Je garde une preuve, je bloque, et j'en parle à un adulte",
+              emoji: "🛡️",
+              bon: true,
+              reaction: "Bravo. En parler, c'est fort et c'est la bonne idée.",
+            },
+          ],
+        },
+        morale:
+          "Si on est méchant avec toi en ligne, ce n'est jamais ta faute. Tu en parles à un adulte de confiance.",
+      },
+      {
+        type: "paires",
+        id: "paires-reflexe-harcele",
+        titre: "Le bon réflexe quand ça va pas",
+        consigne: "Relie chaque situation au bon réflexe.",
+        paires: [
+          {
+            id: "insulte",
+            gauche: { emoji: "😢", label: "On t'insulte" },
+            droite: { emoji: "💙", label: "Ce n'est pas ta faute" },
+          },
+          {
+            id: "message",
+            gauche: { emoji: "📩", label: "Un message méchant" },
+            droite: { emoji: "📸", label: "Je garde une preuve, je ne réponds pas" },
+          },
+          {
+            id: "continue",
+            gauche: { emoji: "🔁", label: "Ça continue" },
+            droite: { emoji: "🚫", label: "Je bloque la personne" },
+          },
+          {
+            id: "malheureux",
+            gauche: { emoji: "😞", label: "Je me sens mal" },
+            droite: { emoji: "🧑‍🦰", label: "J'en parle à un adulte de confiance" },
+          },
+        ],
+      },
+      {
+        type: "tri",
+        id: "tri-bon-reflexe",
+        titre: "Bon réflexe, ou à éviter ?",
+        consigne: "Range chaque réaction du bon côté.",
+        gauche: { label: "Bon réflexe", emoji: "💚" },
+        droite: { label: "À éviter", emoji: "🚫" },
+        cartes: [
+          {
+            id: "insulter",
+            emoji: "😡",
+            label: "Répondre par une insulte",
+            bon: "droite",
+            reaction: "À éviter : ça nourrit la dispute.",
+          },
+          {
+            id: "montrer",
+            emoji: "🧑‍🦰",
+            label: "Montrer les messages à un adulte",
+            bon: "gauche",
+            reaction: "Oui ! Demander de l'aide, c'est courageux.",
+          },
+          {
+            id: "bloquer",
+            emoji: "🚫",
+            label: "Bloquer la personne",
+            bon: "gauche",
+            reaction: "Oui ! Tu n'as pas à subir ça.",
+          },
+          {
+            id: "seul",
+            emoji: "🤫",
+            label: "Tout garder pour soi et pleurer seul",
+            bon: "droite",
+            reaction: "À éviter : tu mérites d'être aidé. Parles-en.",
+          },
+          {
+            id: "preuve",
+            emoji: "📸",
+            label: "Faire une capture comme preuve",
+            bon: "gauche",
+            reaction: "Oui ! La preuve aide l'adulte à t'aider.",
+          },
+        ],
+      },
+      {
+        type: "quiz",
+        id: "quiz-harcele",
+        titre: "Le grand test",
+        emoji: "💬💙",
+        question:
+          "Quelqu'un t'envoie des messages méchants tous les jours. Le mieux ?",
+        options: [
+          {
+            id: "a",
+            label: "Je me venge en étant méchant aussi",
+            emoji: "😡",
+            bon: false,
+            reaction: "Non : ça empire les choses et ça ne te protège pas.",
+          },
+          {
+            id: "b",
+            label: "Je fais comme si de rien et je garde tout pour moi",
+            emoji: "🤐",
+            bon: false,
+            reaction: "Non : tu as le droit d'être aidé. Ne reste pas seul.",
+          },
+          {
+            id: "c",
+            label: "Je bloque, je garde une preuve et j'en parle à un adulte",
+            emoji: "🛡️",
+            bon: true,
+            reaction: "PARFAIT. Demander de l'aide, c'est la plus grande force 💙",
+          },
+        ],
+      },
+    ],
+  },
+
+  // ===========================================================================
+  // MONDE 8 - Mes écrans, mon équilibre (bien-être + sécurité)
+  // ===========================================================================
+  {
+    slug: "mes-ecrans-mon-equilibre",
+    titre: "Mes écrans, mon équilibre",
+    sousTitre: "Faire des pauses et savoir dire stop",
+    emoji: "⏰",
+    couleur: "lime",
+    disponible: true,
+    activites: [
+      {
+        type: "bd",
+        id: "bd-encore-5-min",
+        titre: "Encore 5 minutes !",
+        panels: [
+          {
+            emoji: "🌙🎮",
+            texte: "Il est tard, tes yeux piquent, mais le jeu est trop bien…",
+          },
+          {
+            emoji: "🦊😴",
+            qui: "hex",
+            bulle: "Les écrans, c'est sympa ! Mais ton corps a besoin de pauses et de sommeil pour être au top.",
+          },
+        ],
+        question: {
+          consigne: "Tu fais quoi ?",
+          options: [
+            {
+              id: "continue",
+              label: "Je continue 1 heure en cachette",
+              emoji: "🙈",
+              bon: false,
+              reaction:
+                "On apprend : sans sommeil, on est fatigué et grognon. Le jeu sera encore là demain 🙂",
+            },
+            {
+              id: "pause",
+              label: "Je fais une pause et je vais dormir",
+              emoji: "😴",
+              bon: true,
+              reaction: "Bravo ! Bien dormir, c'est un super-pouvoir.",
+            },
+          ],
+        },
+        morale:
+          "Les écrans, c'est bien avec des pauses. Le sommeil et le jeu dehors rendent plus fort.",
+      },
+      {
+        type: "tri",
+        id: "tri-equilibre",
+        titre: "Bon pour moi, ou trop ?",
+        consigne: "Range chaque habitude du bon côté.",
+        gauche: { label: "Équilibré", emoji: "😊" },
+        droite: { label: "Trop", emoji: "⚠️" },
+        cartes: [
+          {
+            id: "dehors",
+            emoji: "⚽",
+            label: "Un jeu, puis aller jouer dehors",
+            bon: "gauche",
+            reaction: "Équilibré ! Bouger, c'est important.",
+          },
+          {
+            id: "nuit",
+            emoji: "🌙",
+            label: "Jouer toute la nuit en cachette",
+            bon: "droite",
+            reaction: "Trop ! Le sommeil passe avant.",
+          },
+          {
+            id: "eteindre",
+            emoji: "🛏️",
+            label: "Éteindre les écrans avant de dormir",
+            bon: "gauche",
+            reaction: "Équilibré ! On dort beaucoup mieux.",
+          },
+          {
+            id: "repas",
+            emoji: "🍝",
+            label: "Un écran pendant tout le repas en famille",
+            bon: "droite",
+            reaction: "Trop ! Le repas, c'est le moment ensemble.",
+          },
+          {
+            id: "pause",
+            emoji: "🧘",
+            label: "Faire une pause pour reposer mes yeux",
+            bon: "gauche",
+            reaction: "Équilibré ! Tes yeux te disent merci.",
+          },
+        ],
+      },
+      {
+        type: "repere",
+        id: "repere-malaise",
+        titre: "Stop ! J'en parle tout de suite",
+        consigne: "Touche ce qui doit te faire ARRÊTER et prévenir un adulte.",
+        ecran: "Sur internet, certaines choses ne sont pas pour toi 👇",
+        elements: [
+          {
+            id: "chat",
+            emoji: "🐱",
+            texte: "Une vidéo de chat rigolote",
+            piege: false,
+            reaction: "Ça, c'est tout doux 🙂",
+          },
+          {
+            id: "peur",
+            emoji: "😱",
+            texte: "Une image violente ou qui fait très peur",
+            piege: true,
+            reaction: "Oui : j'éteins et je préviens un adulte.",
+          },
+          {
+            id: "secret",
+            emoji: "🤫",
+            texte: "« Garde ça secret, ne le dis pas aux adultes »",
+            piege: true,
+            reaction:
+              "STOP. Un secret qu'on doit cacher aux adultes = on en parle tout de suite.",
+          },
+          {
+            id: "jeu",
+            emoji: "🎮",
+            texte: "Un jeu rigolo avec un ami",
+            piege: false,
+            reaction: "Tout va bien 🙂",
+          },
+          {
+            id: "camera",
+            emoji: "📷",
+            texte: "« Enlève tes vêtements devant la caméra »",
+            piege: true,
+            reaction:
+              "STOP. Ce n'est JAMAIS normal. J'éteins et je préviens tout de suite un adulte de confiance.",
+          },
+        ],
+      },
+      {
+        type: "quiz",
+        id: "quiz-secret",
+        titre: "Le grand test",
+        emoji: "🤫🛡️",
+        question:
+          "Quelqu'un en ligne te demande de garder un « secret » rien qu'à vous deux. Tu fais quoi ?",
+        options: [
+          {
+            id: "a",
+            label: "Je garde le secret",
+            emoji: "🤐",
+            bon: false,
+            reaction:
+              "Non : un adulte de confiance ne te demande jamais de cacher un secret aux autres adultes.",
+          },
+          {
+            id: "b",
+            label: "Je fais ce qu'il dit pour ne pas le fâcher",
+            emoji: "😬",
+            bon: false,
+            reaction: "Non : tu n'as pas à obéir à ça. Ce n'est pas ta faute.",
+          },
+          {
+            id: "c",
+            label: "Je n'obéis pas et j'en parle tout de suite à un adulte",
+            emoji: "🛡️",
+            bon: true,
+            reaction: "PARFAIT. En parler, c'est exactement ce qu'il faut faire 💙",
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export function getMonde(slug: string): Monde | undefined {
