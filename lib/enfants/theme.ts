@@ -56,4 +56,20 @@ export const COULEURS: Record<
     btn: "bg-cyan-500 hover:bg-cyan-600",
     dot: "bg-cyan-500",
   },
+  orange: {
+    grad: "from-orange-400 to-amber-400",
+    soft: "bg-orange-50 dark:bg-orange-950/30",
+    ring: "border-orange-200 dark:border-orange-800",
+    text: "text-orange-700 dark:text-orange-300",
+    btn: "bg-orange-500 hover:bg-orange-600",
+    dot: "bg-orange-500",
+  },
+  lime: {
+    grad: "from-lime-400 to-green-400",
+    soft: "bg-lime-50 dark:bg-lime-950/30",
+    ring: "border-lime-200 dark:border-lime-800",
+    text: "text-lime-700 dark:text-lime-300",
+    btn: "bg-lime-600 hover:bg-lime-700",
+    dot: "bg-lime-500",
+  },
 };
