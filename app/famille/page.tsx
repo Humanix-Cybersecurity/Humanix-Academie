@@ -161,7 +161,17 @@ export default async function FamillePage() {
             <ConfidenceBadge tone="rose">Sans publicité</ConfidenceBadge>
             <ConfidenceBadge tone="rose">Aucun tracker</ConfidenceBadge>
             <ConfidenceBadge tone="rose">
-              <span aria-hidden="true">🇫🇷</span> Made in France
+              {/* Tricolore CSS (le drapeau emoji 🇫🇷 ne s'affiche pas en
+                  couleur sur beaucoup de navigateurs -> invisible/pas rouge). */}
+              <span
+                aria-hidden="true"
+                className="inline-flex h-3 w-[18px] overflow-hidden rounded-[2px] border border-black/10 align-[-1px]"
+              >
+                <span className="flex-1 bg-blue-700" />
+                <span className="flex-1 bg-white" />
+                <span className="flex-1 bg-red-600" />
+              </span>{" "}
+              Made in France
             </ConfidenceBadge>
           </div>
         </section>

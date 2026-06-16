@@ -52,7 +52,7 @@ export default function SaisonCard({
       className={`relative overflow-hidden rounded-3xl border-2 ${palette.ring} bg-gradient-to-br ${palette.bg} p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-slide-up h-full flex flex-col ${
         isLocked ? "opacity-60" : ""
       }`}
-      style={{ animationDelay: `${idx * 60}ms` }}
+      style={{ animationDelay: `${Math.min(idx, 8) * 40}ms` }}
     >
       {/* Emoji de cover en filigrane decoratif */}
       <span
