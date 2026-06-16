@@ -169,6 +169,39 @@ export default async function FamillePage() {
 
       <div className="max-w-5xl mx-auto px-4 py-12 sm:py-16 space-y-16">
         {/* ============================================================
+            1bis. ÉCOLE DE HEX - espace enfants (9-12 ans), gratuit
+            ============================================================ */}
+        <section aria-labelledby="ecole-hex-title">
+          <Link
+            href="/famille/enfants"
+            className="group flex flex-col sm:flex-row items-center gap-5 rounded-3xl bg-gradient-to-br from-sky-400 to-cyan-400 text-white p-6 sm:p-8 shadow-md hover:shadow-lg transition-all"
+          >
+            <div className="text-6xl sm:text-7xl group-hover:scale-110 transition-transform" aria-hidden="true">
+              🦊
+            </div>
+            <div className="flex-1 text-center sm:text-left">
+              <p className="text-xs uppercase tracking-[0.2em] font-bold opacity-90 mb-1">
+                Nouveau · pour les 9-12 ans
+              </p>
+              <h2
+                id="ecole-hex-title"
+                className="font-display text-2xl sm:text-3xl font-extrabold mb-1"
+              >
+                L&apos;école de Hex
+              </h2>
+              <p className="opacity-95 text-sm sm:text-base">
+                Des petites BD et des mini-jeux pour apprendre aux enfants à
+                repérer les pièges d&apos;internet. Gratuit, sans compte, aucune
+                donnée enregistrée.
+              </p>
+            </div>
+            <span className="shrink-0 rounded-2xl bg-white text-sky-600 font-bold px-5 py-3 group-hover:scale-105 transition-transform">
+              Jouer ▶
+            </span>
+          </Link>
+        </section>
+
+        {/* ============================================================
             2. CTA INVITATION - pour les apprenants connectés éligibles
             ============================================================ */}
         {inviteCta?.eligible && inviteCta.remaining > 0 && (
