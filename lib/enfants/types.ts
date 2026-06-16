@@ -90,11 +90,26 @@ export type ActiviteQuiz = {
   options: Choix[];
 };
 
+/** Jeu des paires : relier chaque carte de gauche à sa carte de droite
+ *  (ex: un danger et le bon réflexe). Gagné quand tout est relié. */
+export type ActivitePaires = {
+  type: "paires";
+  id: string;
+  titre: string;
+  consigne: string;
+  paires: {
+    id: string;
+    gauche: { emoji: string; label: string };
+    droite: { emoji: string; label: string };
+  }[];
+};
+
 export type Activite =
   | ActiviteBD
   | ActiviteRepere
   | ActiviteTri
-  | ActiviteQuiz;
+  | ActiviteQuiz
+  | ActivitePaires;
 
 /** Un « monde » = un parcours thématique enchaînant des activités. */
 export type Monde = {
