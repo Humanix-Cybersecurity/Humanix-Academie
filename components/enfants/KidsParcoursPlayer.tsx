@@ -11,6 +11,16 @@ import KidsBD from "./KidsBD";
 import KidsRepere from "./KidsRepere";
 import KidsTri from "./KidsTri";
 import KidsQuiz from "./KidsQuiz";
+import KidsPaires from "./KidsPaires";
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
 
 /** Sauvegarde locale (jamais en base : enfants = aucune donnée serveur). */
 function saveStars(slug: string, stars: number) {
@@ -30,6 +40,48 @@ export default function KidsParcoursPlayer({ monde }: { monde: Monde }) {
   const [index, setIndex] = useState(0);
   const [stars, setStars] = useState(0);
   const [fini, setFini] = useState(false);
+  const [prenom, setPrenom] = useState("");
+
+  function imprimerDiplome() {
+    const nom = prenom.trim() || "Détective du Net";
+    const etoiles = "⭐".repeat(stars) + "☆".repeat(Math.max(0, total - stars));
+    const html = `<!doctype html><html lang="fr"><head><meta charset="utf-8">
+<title>Mon diplôme - L'école de Hex</title><style>
+body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#f0f9ff}
+.d{width:760px;max-width:95vw;border:10px double #0ea5e9;border-radius:24px;padding:48px;text-align:center;background:#fff;box-shadow:0 10px 40px rgba(0,0,0,.08)}
+.fox{font-size:64px}.kicker{text-transform:uppercase;letter-spacing:3px;color:#0ea5e9;font-weight:700;margin:4px 0}
+h1{color:#0369a1;font-size:38px;margin:6px 0}
+.nom{font-size:30px;font-weight:800;margin:18px 0;color:#0f172a;border-bottom:3px solid #f59e0b;display:inline-block;padding:0 24px 6px}
+.et{font-size:34px;letter-spacing:8px;margin:14px 0}
+p{font-size:18px;color:#334155}.pied{color:#64748b;font-size:13px;margin-top:24px}
+@media print{body{background:#fff;min-height:auto}.d{box-shadow:none}}
+</style></head><body><div class="d">
+<div class="fox">🦊🎉</div>
+<p class="kicker">L'école de Hex</p>
+<h1>Diplôme de Détective du Net</h1>
+<p>décerné à</p>
+<div class="nom">${escapeHtml(nom)}</div>
+<p>pour avoir terminé le monde<br><b>${escapeHtml(monde.titre)}</b></p>
+<div class="et">${etoiles}</div>
+<p class="pied">Bravo ! Tu connais les bons réflexes pour te protéger sur internet.</p>
+</div></body></html>`;
+    const w = window.open("", "_blank");
+    if (!w) {
+      alert("Autorise les fenêtres pop-up pour imprimer ton diplôme 🙂");
+      return;
+    }
+    w.document.write(html);
+    w.document.close();
+    w.focus();
+    // Impression pilotée par l'ouvrant (pas de script inline -> compatible CSP).
+    setTimeout(() => {
+      try {
+        w.print();
+      } catch {
+        /* l'enfant peut imprimer via le menu du navigateur */
+      }
+    }, 300);
+  }
 
   useEffect(() => {
     if (!fini) return;
@@ -83,6 +135,40 @@ export default function KidsParcoursPlayer({ monde }: { monde: Monde }) {
             ? "Sans aucune faute ! Tu es un vrai détective du Net 🕵️"
             : "Super travail ! Tu connais déjà plein de réflexes malins."}
         </HexDit>
+
+        {/* Diplôme à imprimer (prénom optionnel, jamais enregistré) */}
+        <div className="rounded-3xl border-2 border-amber-200 dark:border-amber-900/50 bg-amber-50/60 dark:bg-amber-950/20 p-5 text-left space-y-3">
+          <p className="font-display text-lg font-extrabold text-amber-800 dark:text-amber-200 text-center">
+            🎓 Ton diplôme de Détective du Net
+          </p>
+          <label
+            htmlFor="prenom-diplome"
+            className="block text-sm font-bold text-gray-600 dark:text-gray-300"
+          >
+            Ton prénom (facultatif)
+          </label>
+          <input
+            id="prenom-diplome"
+            type="text"
+            value={prenom}
+            onChange={(e) => setPrenom(e.target.value.slice(0, 30))}
+            maxLength={30}
+            autoComplete="off"
+            placeholder="Ex : Léa"
+            className="w-full rounded-2xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-3 text-base"
+          />
+          <p className="text-xs text-gray-500">
+            On ne garde pas ton prénom : il sert juste à écrire ton diplôme. 🔒
+          </p>
+          <button
+            type="button"
+            onClick={imprimerDiplome}
+            className="w-full rounded-2xl bg-amber-500 hover:bg-amber-600 text-white text-lg font-bold py-4 transition active:scale-95"
+          >
+            🖨️ Voir / imprimer mon diplôme
+          </button>
+        </div>
+
         <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
           <button
             type="button"
@@ -146,6 +232,9 @@ export default function KidsParcoursPlayer({ monde }: { monde: Monde }) {
           )}
           {activite.type === "quiz" && (
             <KidsQuiz activite={activite} theme={theme} onDone={onDone} />
+          )}
+          {activite.type === "paires" && (
+            <KidsPaires activite={activite} theme={theme} onDone={onDone} />
           )}
         </div>
       </div>

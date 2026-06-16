@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { ActiviteQuiz, Choix } from "@/lib/enfants/types";
 import type { COULEURS } from "@/lib/enfants/theme";
 import HexDit from "./HexDit";
+import EcouterBtn from "./EcouterBtn";
 
 type Theme = (typeof COULEURS)[keyof typeof COULEURS];
 
@@ -28,6 +29,9 @@ export default function KidsQuiz({
         <p className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-100">
           {activite.question}
         </p>
+        <div className="mt-3 flex justify-center">
+          <EcouterBtn texte={activite.question} />
+        </div>
       </div>
 
       {!choix ? (

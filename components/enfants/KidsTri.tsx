@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { ActiviteTri } from "@/lib/enfants/types";
 import type { COULEURS } from "@/lib/enfants/theme";
 import HexDit from "./HexDit";
+import EcouterBtn from "./EcouterBtn";
 
 type Theme = (typeof COULEURS)[keyof typeof COULEURS];
 
@@ -42,9 +43,12 @@ export default function KidsTri({
 
   return (
     <div className="space-y-5">
-      <p className="text-center text-lg font-bold text-gray-800 dark:text-gray-100">
-        {activite.consigne}
-      </p>
+      <div className="flex items-center justify-center gap-2 flex-wrap">
+        <p className="text-center text-lg font-bold text-gray-800 dark:text-gray-100">
+          {activite.consigne}
+        </p>
+        <EcouterBtn texte={activite.consigne} />
+      </div>
       <p className="text-center text-sm font-bold text-gray-400">
         Carte {i + 1} / {activite.cartes.length}
       </p>
