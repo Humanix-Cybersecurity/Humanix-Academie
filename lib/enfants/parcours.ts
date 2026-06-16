@@ -8,7 +8,7 @@ import type { Monde } from "@/lib/enfants/types";
 
 export const MONDES: Monde[] = [
   // ===========================================================================
-  // MONDE 1 — Les pièges du Net (complet, jouable)
+  // MONDE 1 - Les pièges du Net (complet, jouable)
   // ===========================================================================
   {
     slug: "pieges-du-net",
@@ -198,7 +198,7 @@ export const MONDES: Monde[] = [
   },
 
   // ===========================================================================
-  // MONDE 2 — Le secret des mots de passe (teaser « bientôt »)
+  // MONDE 2 - Le secret des mots de passe (teaser « bientôt »)
   // ===========================================================================
   {
     slug: "secret-mots-de-passe",
@@ -211,7 +211,7 @@ export const MONDES: Monde[] = [
   },
 
   // ===========================================================================
-  // MONDE 3 — Les inconnus en ligne (teaser « bientôt »)
+  // MONDE 3 - Les inconnus en ligne (teaser « bientôt »)
   // ===========================================================================
   {
     slug: "inconnus-en-ligne",
