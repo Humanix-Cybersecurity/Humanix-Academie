@@ -292,10 +292,24 @@ export default async function ApprendrePage() {
               total,
           );
 
+    const catId = categoryOf(s.tags ?? []);
+    const g = groups.get(catId) ?? {
+      cards: [],
+      saisonCount: 0,
+      done: 0,
+      total: 0,
+    };
+
+    // Index LOCAL dans la catégorie : pilote uniquement le délai d'animation
+    // (cascade douce à l'ouverture d'une catégorie de l'accordéon). Avant on
+    // passait l'index GLOBAL (sur toutes les saisons) -> une carte loin dans
+    // la liste attendait jusqu'à ~3,5 s avant d'apparaître, d'où l'impression
+    // de page qui "rame". La palette, elle, reste dérivée de l'index global
+    // pour garder de la variété de couleurs.
     const card = (
       <SaisonCard
         key={s.id}
-        idx={idx}
+        idx={g.cards.length}
         saison={s}
         palette={palette}
         pct={pct}
@@ -310,13 +324,6 @@ export default async function ApprendrePage() {
       />
     );
 
-    const catId = categoryOf(s.tags ?? []);
-    const g = groups.get(catId) ?? {
-      cards: [],
-      saisonCount: 0,
-      done: 0,
-      total: 0,
-    };
     g.cards.push(card);
     g.saisonCount += 1;
     g.done += done;
