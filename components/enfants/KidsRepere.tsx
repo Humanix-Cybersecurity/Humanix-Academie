@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { ActiviteRepere } from "@/lib/enfants/types";
 import type { COULEURS } from "@/lib/enfants/theme";
 import HexDit from "./HexDit";
+import EcouterBtn from "./EcouterBtn";
 
 type Theme = (typeof COULEURS)[keyof typeof COULEURS];
 
@@ -32,9 +33,12 @@ export default function KidsRepere({
 
   return (
     <div className="space-y-5">
-      <p className="text-center text-lg font-bold text-gray-800 dark:text-gray-100">
-        {activite.consigne}
-      </p>
+      <div className="flex items-center justify-center gap-2 flex-wrap">
+        <p className="text-center text-lg font-bold text-gray-800 dark:text-gray-100">
+          {activite.consigne}
+        </p>
+        <EcouterBtn texte={activite.consigne} />
+      </div>
 
       {/* Écran simulé */}
       <div className="rounded-3xl bg-white dark:bg-slate-900 border-2 border-gray-100 dark:border-slate-800 p-4 sm:p-6 shadow-sm">

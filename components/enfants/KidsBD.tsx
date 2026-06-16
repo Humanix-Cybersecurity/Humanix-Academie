@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { ActiviteBD, Choix } from "@/lib/enfants/types";
 import type { COULEURS } from "@/lib/enfants/theme";
 import HexDit from "./HexDit";
+import EcouterBtn from "./EcouterBtn";
 
 type Theme = (typeof COULEURS)[keyof typeof COULEURS];
 
@@ -60,6 +61,12 @@ export default function KidsBD({
           </div>
         )}
       </div>
+
+      {(panel.texte || panel.bulle) && (
+        <div className="flex justify-center">
+          <EcouterBtn texte={[panel.texte, panel.bulle].filter(Boolean).join(". ")} />
+        </div>
+      )}
 
       {/* Navigation entre cases */}
       {!enFin && (
