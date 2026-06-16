@@ -1705,6 +1705,333 @@ export const MONDES: Monde[] = [
       },
     ],
   },
+  // ===========================================================================
+  // MONDE 11 - La maison qui écoute (objets connectés)
+  // ===========================================================================
+  {
+    slug: "la-maison-qui-ecoute",
+    titre: "La maison qui écoute",
+    sousTitre: "Assistants, caméras et jouets connectés",
+    emoji: "🏠",
+    couleur: "fuchsia",
+    disponible: true,
+    activites: [
+      {
+        type: "bd",
+        id: "bd-assistant",
+        titre: "Le haut-parleur magique",
+        panels: [
+          {
+            emoji: "🔊🏠",
+            texte: "À la maison, un petit haut-parleur répond quand on lui parle.",
+          },
+          {
+            emoji: "🦊👂",
+            qui: "hex",
+            bulle: "C'est pratique ! Mais il a un micro qui écoute pour répondre. On fait attention à ce qu'on dit devant.",
+          },
+        ],
+        question: {
+          consigne: "L'assistant te demande ton mot de passe pour « jouer ». Tu fais quoi ?",
+          options: [
+            {
+              id: "dit",
+              label: "Je le dis tout fort, c'est juste un jouet",
+              emoji: "🗣️",
+              bon: false,
+              reaction:
+                "On apprend : même à une machine, un mot de passe ne se dit pas. Et un micro peut tout entendre.",
+            },
+            {
+              id: "refuse",
+              label: "Je ne le dis pas et j'en parle à un adulte",
+              emoji: "🛡️",
+              bon: true,
+              reaction: "Bravo ! Un secret reste un secret, même devant un micro.",
+            },
+          ],
+        },
+        morale:
+          "Les objets connectés ont des micros et des caméras. Je fais attention à ce que je dis et montre devant.",
+      },
+      {
+        type: "paires",
+        id: "paires-objets",
+        titre: "Chaque objet, son réflexe",
+        consigne: "Relie chaque objet connecté au bon réflexe.",
+        paires: [
+          {
+            id: "micro",
+            gauche: { emoji: "🔊", label: "Assistant qui écoute" },
+            droite: { emoji: "🤫", label: "Je ne dis pas de secrets devant" },
+          },
+          {
+            id: "camera",
+            gauche: { emoji: "📷", label: "Caméra connectée" },
+            droite: { emoji: "🙈", label: "On peut la cacher ou l'éteindre" },
+          },
+          {
+            id: "montre",
+            gauche: { emoji: "⌚", label: "Montre qui sait où je suis" },
+            droite: { emoji: "🧑‍🦰", label: "Un adulte règle qui peut voir" },
+          },
+          {
+            id: "jouet",
+            gauche: { emoji: "🧸", label: "Jouet qui parle" },
+            droite: { emoji: "🔌", label: "On peut l'éteindre quand on veut" },
+          },
+        ],
+      },
+      {
+        type: "tri",
+        id: "tri-devant-objet",
+        titre: "Devant un objet connecté : OK ou pas ?",
+        consigne: "Range chaque idée du bon côté.",
+        gauche: { label: "OK", emoji: "👍" },
+        droite: { label: "Pas devant !", emoji: "🙊" },
+        cartes: [
+          {
+            id: "meteo",
+            emoji: "🌤️",
+            label: "Demander la météo à l'assistant",
+            bon: "gauche",
+            reaction: "OK ! C'est exactement son rôle.",
+          },
+          {
+            id: "mdp",
+            emoji: "🔑",
+            label: "Dire mon mot de passe tout fort",
+            bon: "droite",
+            reaction: "Pas devant ! Le micro pourrait l'entendre.",
+          },
+          {
+            id: "musique",
+            emoji: "🎵",
+            label: "Mettre une chanson",
+            bon: "gauche",
+            reaction: "OK ! Aucun souci 🙂",
+          },
+          {
+            id: "adresse",
+            emoji: "🏠",
+            label: "Donner mon adresse à un jouet connecté",
+            bon: "droite",
+            reaction: "Pas devant ! Mon adresse reste privée.",
+          },
+          {
+            id: "eteindre",
+            emoji: "🔌",
+            label: "Demander à un adulte d'éteindre la caméra",
+            bon: "gauche",
+            reaction: "OK ! Super réflexe de prudence.",
+          },
+        ],
+      },
+      {
+        type: "quiz",
+        id: "quiz-objets",
+        titre: "Le grand test",
+        emoji: "🔊🔑",
+        question:
+          "Un jouet connecté te demande ton mot de passe pour « débloquer un jeu ». Tu fais quoi ?",
+        options: [
+          {
+            id: "a",
+            label: "Je le dis, c'est juste un jouet",
+            emoji: "🧸",
+            bon: false,
+            reaction: "Non ! Jouet ou pas, un mot de passe ne se dit jamais.",
+          },
+          {
+            id: "b",
+            label: "Je l'écris pour le jouet",
+            emoji: "📝",
+            bon: false,
+            reaction: "Non ! Ni à voix haute, ni écrit. C'est secret.",
+          },
+          {
+            id: "c",
+            label: "Je refuse et j'en parle à un adulte",
+            emoji: "🛡️",
+            bon: true,
+            reaction: "PARFAIT ! Tu gardes tes secrets, même à la maison 🏠",
+          },
+        ],
+      },
+    ],
+  },
+
+  // ===========================================================================
+  // MONDE 12 - Où je suis (géolocalisation)
+  // ===========================================================================
+  {
+    slug: "ou-je-suis",
+    titre: "Où je suis",
+    sousTitre: "Ne pas dire à tout le monde où tu te trouves",
+    emoji: "🧭",
+    couleur: "blue",
+    disponible: true,
+    activites: [
+      {
+        type: "bd",
+        id: "bd-position",
+        titre: "La carte qui montre tout",
+        panels: [
+          {
+            emoji: "📍🗺️",
+            texte: "Une appli propose de partager ta position « avec tout le monde ».",
+          },
+          {
+            emoji: "🦊🤔",
+            qui: "hex",
+            bulle: "Partager où tu es, c'est dire à des inconnus où te trouver. On garde ça pour les gens de confiance.",
+          },
+        ],
+        question: {
+          consigne: "Tu choisis quoi ?",
+          options: [
+            {
+              id: "tout",
+              label: "Je partage ma position avec tout le monde",
+              emoji: "🌍",
+              bon: false,
+              reaction:
+                "On apprend : « tout le monde », ça inclut des inconnus. On ne montre pas où on est à n'importe qui.",
+            },
+            {
+              id: "off",
+              label: "Je laisse coupé et je demande à un adulte",
+              emoji: "🛡️",
+              bon: true,
+              reaction: "Bravo ! Ta position, c'est une info privée.",
+            },
+          ],
+        },
+        morale:
+          "Montrer où tu es, c'est privé. Je ne partage ma position qu'avec des gens de confiance, avec un adulte.",
+      },
+      {
+        type: "repere",
+        id: "repere-localisation",
+        titre: "Qu'est-ce qui dit où tu es ?",
+        consigne: "Touche tout ce qui montre l'endroit où tu te trouves.",
+        ecran: "Tu vas publier ça. Qu'est-ce qui révèle ta position ? 👇",
+        elements: [
+          {
+            id: "humeur",
+            emoji: "😄",
+            texte: "« Trop contente aujourd'hui ! »",
+            piege: false,
+            reaction: "Ça ne dit pas où tu es 🙂",
+          },
+          {
+            id: "lieu",
+            emoji: "📍",
+            texte: "Le petit drapeau « à l'école Jules-Ferry »",
+            piege: true,
+            reaction: "Oui ! Ça dit exactement où tu es.",
+          },
+          {
+            id: "rue",
+            emoji: "🪧",
+            texte: "La plaque de ta rue en arrière-plan",
+            piege: true,
+            reaction: "Bravo ! On peut lire où tu habites.",
+          },
+          {
+            id: "chat",
+            emoji: "🐱",
+            texte: "Ton chat sur le canapé",
+            piege: false,
+            reaction: "Le chat ne dit rien 🙂",
+          },
+          {
+            id: "direct",
+            emoji: "🔴",
+            texte: "« Je suis en direct au parc, venez ! »",
+            piege: true,
+            reaction: "Bien vu ! En direct, des inconnus savent où venir.",
+          },
+        ],
+      },
+      {
+        type: "tri",
+        id: "tri-position",
+        titre: "Je partage ma position avec qui ?",
+        consigne: "Range chaque cas du bon côté.",
+        gauche: { label: "Je peux (avec un adulte)", emoji: "👍" },
+        droite: { label: "Non", emoji: "🚫" },
+        cartes: [
+          {
+            id: "parent",
+            emoji: "👨‍👩‍👧",
+            label: "Mes parents savent où je suis",
+            bon: "gauche",
+            reaction: "Oui, c'est rassurant et normal.",
+          },
+          {
+            id: "inconnu",
+            emoji: "👤",
+            label: "Un inconnu d'un jeu veut ma position",
+            bon: "droite",
+            reaction: "Non ! Jamais à un inconnu.",
+          },
+          {
+            id: "public",
+            emoji: "🌍",
+            label: "Partager ma position « en public »",
+            bon: "droite",
+            reaction: "Non ! Tout le monde pourrait la voir.",
+          },
+          {
+            id: "direct",
+            emoji: "🔴",
+            label: "Annoncer « je suis ici, venez ! »",
+            bon: "droite",
+            reaction: "Non ! On ne donne pas rendez-vous comme ça.",
+          },
+          {
+            id: "off",
+            emoji: "📴",
+            label: "Couper la position quand je n'en ai pas besoin",
+            bon: "gauche",
+            reaction: "Oui ! Le bon réflexe par défaut.",
+          },
+        ],
+      },
+      {
+        type: "quiz",
+        id: "quiz-position",
+        titre: "Le grand test",
+        emoji: "📍👤",
+        question:
+          "Un inconnu dans un jeu te demande de partager ta position pour « jouer ensemble ». Tu fais quoi ?",
+        options: [
+          {
+            id: "a",
+            label: "Je partage ma position",
+            emoji: "📍",
+            bon: false,
+            reaction: "Non ! Il saurait où te trouver en vrai.",
+          },
+          {
+            id: "b",
+            label: "Je donne juste mon quartier",
+            emoji: "🏘️",
+            bon: false,
+            reaction: "Non ! Même un quartier, ça en dit trop.",
+          },
+          {
+            id: "c",
+            label: "Je refuse et j'en parle à un adulte",
+            emoji: "🛡️",
+            bon: true,
+            reaction: "PARFAIT ! Ta position reste privée 🧭",
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export function getMonde(slug: string): Monde | undefined {
