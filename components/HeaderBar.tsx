@@ -130,6 +130,12 @@ const PRODUIT_ITEMS_BASE: DropdownItem[] = [
     description: "Sphère personnelle gratuite, invitations proches",
     emoji: "❤️",
   },
+  {
+    href: "/famille/enfants",
+    label: "L'école de Hex",
+    description: "Cyber pour les 9-12 ans : BD et mini-jeux, gratuit",
+    emoji: "🦊",
+  },
 ];
 function buildProduitItems(demoMode: boolean): DropdownItem[] {
   // L'entree "Demo" est inseree en 2e position (apres "Comment commencer"),
