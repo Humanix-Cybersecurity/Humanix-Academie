@@ -2032,6 +2032,504 @@ export const MONDES: Monde[] = [
       },
     ],
   },
+  // ===========================================================================
+  // MONDE 13 - Les défis qui dérapent
+  // ===========================================================================
+  {
+    slug: "defis-qui-derapent",
+    titre: "Les défis qui dérapent",
+    sousTitre: "Quand un « défi » devient dangereux",
+    emoji: "🌀",
+    couleur: "red",
+    disponible: true,
+    activites: [
+      {
+        type: "bd",
+        id: "bd-defi",
+        titre: "Le défi de trop",
+        panels: [
+          {
+            emoji: "📹😬",
+            texte: "Des copains te filment et te lancent un défi :",
+          },
+          {
+            emoji: "👥",
+            qui: "enfant",
+            bulle: "Vas-y, retiens ta respiration le plus longtemps possible ! Tout le monde le fait !",
+          },
+          {
+            emoji: "🦊🛑",
+            qui: "hex",
+            bulle: "Un défi qui peut te faire mal, ce n'est pas un jeu. Un vrai ami ne te pousse jamais au danger.",
+          },
+        ],
+        question: {
+          consigne: "Tu fais quoi ?",
+          options: [
+            {
+              id: "fait",
+              label: "Je le fais pour être comme les autres",
+              emoji: "😰",
+              bon: false,
+              reaction:
+                "On apprend : suivre le groupe ne rend pas un défi sûr. Tu as toujours le droit de dire non.",
+            },
+            {
+              id: "non",
+              label: "Je dis non et j'en parle à un adulte",
+              emoji: "🛡️",
+              bon: true,
+              reaction: "Bravo ! Dire non quand c'est dangereux, c'est très courageux.",
+            },
+          ],
+        },
+        morale:
+          "Je ne fais pas un défi dangereux, même si tout le monde le fait. Dire non, c'est fort.",
+      },
+      {
+        type: "tri",
+        id: "tri-defi",
+        titre: "Défi rigolo, ou dangereux ?",
+        consigne: "Range chaque défi du bon côté.",
+        gauche: { label: "Rigolo & sans danger", emoji: "😄" },
+        droite: { label: "Dangereux", emoji: "🚫" },
+        cartes: [
+          {
+            id: "danse",
+            emoji: "💃",
+            label: "Imiter une danse rigolote",
+            bon: "gauche",
+            reaction: "Rigolo ! Et sans aucun risque 🙂",
+          },
+          {
+            id: "respiration",
+            emoji: "😵",
+            label: "Retenir sa respiration très longtemps",
+            bon: "droite",
+            reaction: "Dangereux ! Ça peut faire perdre connaissance.",
+          },
+          {
+            id: "dessin",
+            emoji: "🎨",
+            label: "Faire le plus beau dessin",
+            bon: "gauche",
+            reaction: "Rigolo ! Un chouette défi 🙂",
+          },
+          {
+            id: "avaler",
+            emoji: "🧪",
+            label: "Manger ou boire un truc pas fait pour ça",
+            bon: "droite",
+            reaction: "Dangereux ! On ne met jamais ça en bouche.",
+          },
+          {
+            id: "grimper",
+            emoji: "🧗",
+            label: "Grimper là où c'est interdit",
+            bon: "droite",
+            reaction: "Dangereux ! On peut tomber.",
+          },
+        ],
+      },
+      {
+        type: "paires",
+        id: "paires-defi",
+        titre: "Quand on me pousse",
+        consigne: "Relie chaque situation au bon réflexe.",
+        paires: [
+          {
+            id: "defi",
+            gauche: { emoji: "😬", label: "On me met au défi" },
+            droite: { emoji: "✋", label: "J'ai le droit de dire non" },
+          },
+          {
+            id: "danger",
+            gauche: { emoji: "⚠️", label: "C'est dangereux" },
+            droite: { emoji: "🚫", label: "Je ne le fais pas" },
+          },
+          {
+            id: "groupe",
+            gauche: { emoji: "👥", label: "Tout le monde le fait" },
+            droite: { emoji: "🤷", label: "Ça ne le rend pas sûr" },
+          },
+          {
+            id: "doute",
+            gauche: { emoji: "🤔", label: "Je ne sais pas quoi faire" },
+            droite: { emoji: "🧑‍🦰", label: "J'en parle à un adulte" },
+          },
+        ],
+      },
+      {
+        type: "quiz",
+        id: "quiz-defi",
+        titre: "Le grand test",
+        emoji: "📹⚠️",
+        question:
+          "Des amis te filment et te défient de faire un truc dangereux. Tu fais quoi ?",
+        options: [
+          {
+            id: "a",
+            label: "Je le fais pour ne pas avoir l'air nul",
+            emoji: "😰",
+            bon: false,
+            reaction: "Non ! Ta sécurité passe avant le regard des autres.",
+          },
+          {
+            id: "b",
+            label: "Je le fais juste un petit peu",
+            emoji: "😬",
+            bon: false,
+            reaction: "Non ! Un peu dangereux, c'est encore dangereux.",
+          },
+          {
+            id: "c",
+            label: "Je dis non et j'en parle à un adulte",
+            emoji: "🛡️",
+            bon: true,
+            reaction: "PARFAIT ! Tu es courageux ET malin 💪",
+          },
+        ],
+      },
+    ],
+  },
+
+  // ===========================================================================
+  // MONDE 14 - Les chaînes de messages
+  // ===========================================================================
+  {
+    slug: "chaines-de-messages",
+    titre: "Les chaînes de messages",
+    sousTitre: "« Fais suivre ou sinon… » : on arrête tout",
+    emoji: "🔗",
+    couleur: "pink",
+    disponible: true,
+    activites: [
+      {
+        type: "bd",
+        id: "bd-chaine",
+        titre: "Fais suivre ou sinon…",
+        panels: [
+          {
+            emoji: "📩😱",
+            texte: "Tu reçois ce message le soir :",
+          },
+          {
+            emoji: "⛓️",
+            qui: "piege",
+            bulle: "Envoie ce message à 15 personnes ou il t'arrive malheur cette nuit !",
+          },
+          {
+            emoji: "🦊😌",
+            qui: "hex",
+            bulle: "C'est une « chaîne ». Une fausse menace pour te faire peur et tout encombrer. Rien ne va t'arriver.",
+          },
+        ],
+        question: {
+          consigne: "Tu fais quoi ?",
+          options: [
+            {
+              id: "envoie",
+              label: "Je l'envoie à 15 amis, au cas où",
+              emoji: "📤",
+              bon: false,
+              reaction:
+                "On apprend : une chaîne est toujours fausse. L'envoyer fait juste peur aux autres. On arrête.",
+            },
+            {
+              id: "arrete",
+              label: "Je n'envoie à personne et j'en parle si ça m'inquiète",
+              emoji: "🛡️",
+              bon: true,
+              reaction: "Bravo ! Tu arrêtes la chaîne, comme un champion.",
+            },
+          ],
+        },
+        morale:
+          "Une chaîne « envoie sinon malheur » est toujours fausse. Je l'arrête, je ne la fais pas suivre.",
+      },
+      {
+        type: "repere",
+        id: "repere-chaine",
+        titre: "Repère la chaîne piège",
+        consigne: "Touche ce qui montre que c'est une chaîne piège.",
+        ecran: "Tu reçois ce long message 👇",
+        elements: [
+          {
+            id: "bonnenuit",
+            emoji: "🌙",
+            texte: "« Bonne nuit ! »",
+            piege: false,
+            reaction: "Ça, c'est juste gentil 🙂",
+          },
+          {
+            id: "envoie",
+            emoji: "📤",
+            texte: "« Envoie à 15 personnes »",
+            piege: true,
+            reaction: "Oui ! Te forcer à transmettre = chaîne.",
+          },
+          {
+            id: "malheur",
+            emoji: "😱",
+            texte: "« Sinon il t'arrive malheur »",
+            piege: true,
+            reaction: "Bravo ! La fausse menace, c'est le piège.",
+          },
+          {
+            id: "gain",
+            emoji: "💰",
+            texte: "« Tu gagneras 100 € si tu partages »",
+            piege: true,
+            reaction: "Bien vu ! On ne gagne rien en partageant.",
+          },
+          {
+            id: "blague",
+            emoji: "😄",
+            texte: "Une petite blague",
+            piege: false,
+            reaction: "Une blague, c'est sans souci 🙂",
+          },
+        ],
+      },
+      {
+        type: "tri",
+        id: "tri-chaine",
+        titre: "J'arrête, ou je peux transmettre ?",
+        consigne: "Range chaque message du bon côté.",
+        gauche: { label: "OK à partager", emoji: "👍" },
+        droite: { label: "J'arrête la chaîne", emoji: "✋" },
+        cartes: [
+          {
+            id: "menace",
+            emoji: "😱",
+            label: "« Envoie à 15 ou malheur »",
+            bon: "droite",
+            reaction: "J'arrête ! Fausse menace.",
+          },
+          {
+            id: "prof",
+            emoji: "🧑‍🏫",
+            label: "Une vraie info de ma maîtresse pour la classe",
+            bon: "gauche",
+            reaction: "OK, c'est une vraie info utile.",
+          },
+          {
+            id: "gain",
+            emoji: "🤑",
+            label: "« Gagne 1000 € en partageant »",
+            bon: "droite",
+            reaction: "J'arrête ! On ne gagne rien comme ça.",
+          },
+          {
+            id: "blague",
+            emoji: "😂",
+            label: "Une blague rigolote à un ami",
+            bon: "gauche",
+            reaction: "OK ! Juste pour rire 🙂",
+          },
+          {
+            id: "culpabilise",
+            emoji: "😢",
+            label: "« Partage ou tu es méchant »",
+            bon: "droite",
+            reaction: "J'arrête ! On ne te fait pas culpabiliser.",
+          },
+        ],
+      },
+      {
+        type: "quiz",
+        id: "quiz-chaine",
+        titre: "Le grand test",
+        emoji: "⛓️📵",
+        question:
+          "Un message dit : « Fais suivre à 15 amis ou il t'arrive malheur ». Tu fais quoi ?",
+        options: [
+          {
+            id: "a",
+            label: "Je l'envoie à 15 personnes",
+            emoji: "📣",
+            bon: false,
+            reaction: "Non ! Tu ferais peur aux autres pour rien.",
+          },
+          {
+            id: "b",
+            label: "Je l'envoie à 2 amis pour être tranquille",
+            emoji: "👬",
+            bon: false,
+            reaction: "Non ! Même à 2, tu propages la chaîne.",
+          },
+          {
+            id: "c",
+            label: "Je n'envoie à personne, c'est une fausse chaîne",
+            emoji: "🛡️",
+            bon: true,
+            reaction: "PARFAIT ! Tu coupes la chaîne net 🔗✂️",
+          },
+        ],
+      },
+    ],
+  },
+
+  // ===========================================================================
+  // MONDE 15 - Mon premier compte
+  // ===========================================================================
+  {
+    slug: "mon-premier-compte",
+    titre: "Mon premier compte",
+    sousTitre: "S'inscrire en donnant le moins d'infos possible",
+    emoji: "📧",
+    couleur: "yellow",
+    disponible: true,
+    activites: [
+      {
+        type: "bd",
+        id: "bd-compte",
+        titre: "Crée ton compte !",
+        panels: [
+          {
+            emoji: "📝",
+            texte: "Un site veut que tu crées un compte pour jouer. Il demande :",
+          },
+          {
+            emoji: "🪪",
+            qui: "piege",
+            bulle: "Ton vrai nom, ton adresse, ton âge, ton numéro et une photo de toi !",
+          },
+          {
+            emoji: "🦊🤔",
+            qui: "hex",
+            bulle: "On ne s'inscrit pas partout, et on donne le MOINS d'infos possible. Un adulte doit être au courant.",
+          },
+        ],
+        question: {
+          consigne: "Tu fais quoi ?",
+          options: [
+            {
+              id: "tout",
+              label: "Je remplis tout vite avec mes vraies infos",
+              emoji: "⚡",
+              bon: false,
+              reaction:
+                "On apprend : un jeu n'a pas besoin de toute ta vie. On demande à un adulte et on donne le minimum.",
+            },
+            {
+              id: "adulte",
+              label: "Je demande à un adulte et je donne le minimum",
+              emoji: "🛡️",
+              bon: true,
+              reaction: "Bravo ! Le minimum d'infos, c'est le bon réflexe.",
+            },
+          ],
+        },
+        morale:
+          "Avant de créer un compte, je demande à un adulte et je donne le moins d'infos possible.",
+      },
+      {
+        type: "tri",
+        id: "tri-inscription",
+        titre: "Pour m'inscrire : OK ou je garde ?",
+        consigne: "Range chaque info du bon côté.",
+        gauche: { label: "Souvent OK", emoji: "👍" },
+        droite: { label: "Je garde / je demande", emoji: "🚫" },
+        cartes: [
+          {
+            id: "pseudo",
+            emoji: "🦸",
+            label: "Un pseudo rigolo (pas mon vrai nom)",
+            bon: "gauche",
+            reaction: "OK ! Un pseudo protège ton vrai nom.",
+          },
+          {
+            id: "adresse",
+            emoji: "🏠",
+            label: "Ma vraie adresse maison",
+            bon: "droite",
+            reaction: "Je garde ! Mon adresse reste privée.",
+          },
+          {
+            id: "mdp",
+            emoji: "🔑",
+            label: "Choisir un mot de passe costaud",
+            bon: "gauche",
+            reaction: "OK ! C'est même une bonne idée 💪",
+          },
+          {
+            id: "tel",
+            emoji: "📱",
+            label: "Mon numéro de téléphone",
+            bon: "droite",
+            reaction: "Je garde ! Pas besoin pour jouer.",
+          },
+          {
+            id: "photo",
+            emoji: "🤳",
+            label: "Une vraie photo de moi",
+            bon: "droite",
+            reaction: "Je garde ! Ma photo, c'est perso.",
+          },
+        ],
+      },
+      {
+        type: "paires",
+        id: "paires-compte",
+        titre: "Le bon réflexe à l'inscription",
+        consigne: "Relie chaque situation au bon réflexe.",
+        paires: [
+          {
+            id: "avant",
+            gauche: { emoji: "📝", label: "Avant de m'inscrire" },
+            droite: { emoji: "🧑‍🦰", label: "Je demande à un adulte" },
+          },
+          {
+            id: "nom",
+            gauche: { emoji: "🪪", label: "On veut mon nom complet" },
+            droite: { emoji: "🤏", label: "Je donne le minimum" },
+          },
+          {
+            id: "mail",
+            gauche: { emoji: "✉️", label: "Un e-mail bizarre d'un inconnu" },
+            droite: { emoji: "🙅", label: "Je n'ouvre pas, je montre à un adulte" },
+          },
+          {
+            id: "mdp",
+            gauche: { emoji: "🔑", label: "Mon mot de passe" },
+            droite: { emoji: "💪", label: "Costaud et secret" },
+          },
+        ],
+      },
+      {
+        type: "quiz",
+        id: "quiz-compte",
+        titre: "Le grand test",
+        emoji: "📝🪪",
+        question:
+          "Un site veut ton nom, ton adresse et ta photo juste pour jouer. Tu fais quoi ?",
+        options: [
+          {
+            id: "a",
+            label: "Je remplis tout",
+            emoji: "✍️",
+            bon: false,
+            reaction: "Non ! Un jeu n'a pas besoin de toutes ces infos.",
+          },
+          {
+            id: "b",
+            label: "Je mets juste mon adresse",
+            emoji: "🏠",
+            bon: false,
+            reaction: "Non ! Ton adresse, on la garde privée.",
+          },
+          {
+            id: "c",
+            label: "Je demande à un adulte et je donne le minimum",
+            emoji: "🛡️",
+            bon: true,
+            reaction: "PARFAIT ! Tu t'inscris comme un pro prudent 📧",
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export function getMonde(slug: string): Monde | undefined {

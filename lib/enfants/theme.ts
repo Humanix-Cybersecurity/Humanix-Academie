@@ -104,4 +104,28 @@ export const COULEURS: Record<
     btn: "bg-blue-500 hover:bg-blue-600",
     dot: "bg-blue-500",
   },
+  red: {
+    grad: "from-red-400 to-orange-400",
+    soft: "bg-red-50 dark:bg-red-950/30",
+    ring: "border-red-200 dark:border-red-800",
+    text: "text-red-700 dark:text-red-300",
+    btn: "bg-red-500 hover:bg-red-600",
+    dot: "bg-red-500",
+  },
+  pink: {
+    grad: "from-pink-400 to-rose-400",
+    soft: "bg-pink-50 dark:bg-pink-950/30",
+    ring: "border-pink-200 dark:border-pink-800",
+    text: "text-pink-700 dark:text-pink-300",
+    btn: "bg-pink-500 hover:bg-pink-600",
+    dot: "bg-pink-500",
+  },
+  yellow: {
+    grad: "from-yellow-400 to-amber-400",
+    soft: "bg-yellow-50 dark:bg-yellow-950/30",
+    ring: "border-yellow-200 dark:border-yellow-800",
+    text: "text-yellow-700 dark:text-yellow-300",
+    btn: "bg-yellow-600 hover:bg-yellow-700",
+    dot: "bg-yellow-500",
+  },
 };
