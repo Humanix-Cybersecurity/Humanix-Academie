@@ -13,6 +13,38 @@ import KidsTri from "./KidsTri";
 import KidsQuiz from "./KidsQuiz";
 import KidsPaires from "./KidsPaires";
 
+/** Petit arpège joyeux (do-mi-sol) via Web Audio. Aucun fichier son, aucun
+ *  token. Best-effort : silencieux si le navigateur ne le permet pas. */
+function playChime() {
+  try {
+    if (typeof window === "undefined" || !window.AudioContext) return;
+    const ctx = new window.AudioContext();
+    [523.25, 659.25, 783.99].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = freq;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      const t = ctx.currentTime + i * 0.12;
+      gain.gain.setValueAtTime(0.0001, t);
+      gain.gain.exponentialRampToValueAtTime(0.2, t + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.25);
+      osc.start(t);
+      osc.stop(t + 0.3);
+    });
+    setTimeout(() => {
+      try {
+        ctx.close();
+      } catch {
+        /* no-op */
+      }
+    }, 900);
+  } catch {
+    /* son indisponible : ce n'est pas grave */
+  }
+}
+
 function escapeHtml(s: string): string {
   return s
     .replace(/&/g, "&amp;")
@@ -86,12 +118,13 @@ p{font-size:18px;color:#334155}.pied{color:#64748b;font-size:13px;margin-top:24p
   useEffect(() => {
     if (!fini) return;
     saveStars(monde.slug, stars);
-    // Pluie de confettis pour fêter la fin 🎉
+    // Pluie de confettis + petit son pour fêter la fin 🎉
     try {
       confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
     } catch {
       /* no-op */
     }
+    playChime();
   }, [fini, monde.slug, stars]);
 
   function onDone(success: boolean) {

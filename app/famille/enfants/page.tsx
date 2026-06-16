@@ -12,6 +12,7 @@ import Link from "next/link";
 import { MONDES } from "@/lib/enfants/parcours";
 import { COULEURS } from "@/lib/enfants/theme";
 import MondeBadge from "@/components/enfants/MondeBadge";
+import ProgressGlobal from "@/components/enfants/ProgressGlobal";
 
 export const metadata: Metadata = {
   title: "L'école de Hex - la cybersécurité pour les 9-12 ans | Humanix",
@@ -39,6 +40,9 @@ export default function EcoleDeHexPage() {
           <p className="mt-3 inline-block rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-sm font-bold px-4 py-1.5">
             Pour les 9-12 ans · gratuit · rien à installer
           </p>
+          <ProgressGlobal
+            slugs={MONDES.filter((m) => m.disponible).map((m) => m.slug)}
+          />
         </header>
 
         {/* Grille des mondes */}

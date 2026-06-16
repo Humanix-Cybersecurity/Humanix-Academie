@@ -129,7 +129,8 @@ export type Monde = {
     | "lime"
     | "teal"
     | "indigo"
-    | "fuchsia";
+    | "fuchsia"
+    | "blue";
   /** false = carte « bientôt » non jouable (teaser sur le hub). */
   disponible: boolean;
   activites: Activite[];
