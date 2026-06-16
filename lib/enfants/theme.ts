@@ -72,4 +72,28 @@ export const COULEURS: Record<
     btn: "bg-lime-600 hover:bg-lime-700",
     dot: "bg-lime-500",
   },
+  teal: {
+    grad: "from-teal-400 to-emerald-400",
+    soft: "bg-teal-50 dark:bg-teal-950/30",
+    ring: "border-teal-200 dark:border-teal-800",
+    text: "text-teal-700 dark:text-teal-300",
+    btn: "bg-teal-500 hover:bg-teal-600",
+    dot: "bg-teal-500",
+  },
+  indigo: {
+    grad: "from-indigo-400 to-violet-400",
+    soft: "bg-indigo-50 dark:bg-indigo-950/30",
+    ring: "border-indigo-200 dark:border-indigo-800",
+    text: "text-indigo-700 dark:text-indigo-300",
+    btn: "bg-indigo-500 hover:bg-indigo-600",
+    dot: "bg-indigo-500",
+  },
+  fuchsia: {
+    grad: "from-fuchsia-400 to-pink-400",
+    soft: "bg-fuchsia-50 dark:bg-fuchsia-950/30",
+    ring: "border-fuchsia-200 dark:border-fuchsia-800",
+    text: "text-fuchsia-700 dark:text-fuchsia-300",
+    btn: "bg-fuchsia-500 hover:bg-fuchsia-600",
+    dot: "bg-fuchsia-500",
+  },
 };

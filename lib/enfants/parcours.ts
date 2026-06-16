@@ -1368,6 +1368,343 @@ export const MONDES: Monde[] = [
       },
     ],
   },
+  // ===========================================================================
+  // MONDE 9 - Acheter sans se faire avoir
+  // ===========================================================================
+  {
+    slug: "acheter-sans-se-faire-avoir",
+    titre: "Acheter sans se faire avoir",
+    sousTitre: "Faux gratuits, achats cachés et boutons pièges",
+    emoji: "🛒",
+    couleur: "teal",
+    disponible: true,
+    activites: [
+      {
+        type: "bd",
+        id: "bd-gratuit-pas-gratuit",
+        titre: "Gratuit… pas si gratuit",
+        panels: [
+          {
+            emoji: "📲🆓",
+            texte: "Tu installes un jeu marqué « GRATUIT ». Tu joues, c'est top !",
+          },
+          {
+            emoji: "💳",
+            qui: "piege",
+            bulle: "Pour continuer, paie 9,99 € ! Vite, sinon tu perds tout !",
+          },
+          {
+            emoji: "🦊🤔",
+            qui: "hex",
+            bulle: "« Gratuit » au début ne veut pas dire gratuit après. Et l'argent, ce n'est pas à toi de décider seul.",
+          },
+        ],
+        question: {
+          consigne: "Tu fais quoi ?",
+          options: [
+            {
+              id: "paie",
+              label: "J'appuie vite sur « Payer » pour continuer",
+              emoji: "👆",
+              bon: false,
+              reaction:
+                "On apprend : un achat, c'est de l'argent réel. On ne paie jamais sans demander à un adulte.",
+            },
+            {
+              id: "demande",
+              label: "Je demande à un adulte avant de payer",
+              emoji: "🛡️",
+              bon: true,
+              reaction: "Bravo ! L'argent, on en parle toujours avec un adulte.",
+            },
+          ],
+        },
+        morale:
+          "« Gratuit » au début peut devenir payant. Je ne paie jamais sans demander à un adulte.",
+      },
+      {
+        type: "repere",
+        id: "repere-pieges-payer",
+        titre: "Les pièges pour te faire payer",
+        consigne: "Touche les pièges qui veulent ton argent ou ton clic.",
+        ecran: "Pendant le jeu, plein de choses s'affichent 👇",
+        elements: [
+          {
+            id: "continuer",
+            emoji: "▶️",
+            texte: "« Continuer gratuitement »",
+            piege: false,
+            reaction: "Ça, c'est l'option normale 🙂",
+          },
+          {
+            id: "achat",
+            emoji: "🛍️",
+            texte: "« ACHÈTE VITE, -50 % aujourd'hui ! »",
+            piege: true,
+            reaction: "Oui ! Te presser, c'est pour te faire payer sans réfléchir.",
+          },
+          {
+            id: "gagnant",
+            emoji: "🏆",
+            texte: "« Tu es le 1 000 000e visiteur, clique ! »",
+            piege: true,
+            reaction: "Bravo ! Personne n'a vraiment gagné quoi que ce soit.",
+          },
+          {
+            id: "croix",
+            emoji: "❌",
+            texte: "Une croix pour fermer la pub",
+            piege: false,
+            reaction: "Fermer la pub, c'est OK 🙂",
+          },
+          {
+            id: "abo",
+            emoji: "🧾",
+            texte: "Un abonnement caché écrit tout petit",
+            piege: true,
+            reaction: "Bien vu ! Le tout-petit texte cache souvent un piège.",
+          },
+        ],
+      },
+      {
+        type: "tri",
+        id: "tri-seul-ou-demander",
+        titre: "Tout seul, ou je demande d'abord ?",
+        consigne: "Range chaque action du bon côté.",
+        gauche: { label: "OK tout seul", emoji: "👍" },
+        droite: { label: "Je demande d'abord", emoji: "🙋" },
+        cartes: [
+          {
+            id: "bd",
+            emoji: "📖",
+            label: "Lire une histoire gratuite",
+            bon: "gauche",
+            reaction: "OK ! C'est gratuit et sans risque.",
+          },
+          {
+            id: "pieces",
+            emoji: "💰",
+            label: "Acheter des pièces avec de l'argent",
+            bon: "droite",
+            reaction: "Je demande ! L'argent, c'est avec un adulte.",
+          },
+          {
+            id: "carte",
+            emoji: "💳",
+            label: "Taper un numéro de carte bancaire",
+            bon: "droite",
+            reaction: "Je demande ! La carte, jamais sans un adulte.",
+          },
+          {
+            id: "avatar",
+            emoji: "🧑‍🎨",
+            label: "Choisir mon avatar gratuit",
+            bon: "gauche",
+            reaction: "OK ! Aucun souci 🙂",
+          },
+          {
+            id: "payer",
+            emoji: "🛒",
+            label: "Cliquer « Payer maintenant »",
+            bon: "droite",
+            reaction: "Je demande ! On ne paie pas tout seul.",
+          },
+        ],
+      },
+      {
+        type: "quiz",
+        id: "quiz-achat",
+        titre: "Le grand test",
+        emoji: "💳🎁",
+        question:
+          "Un jeu demande le numéro de carte bancaire pour « un cadeau gratuit ». Tu fais quoi ?",
+        options: [
+          {
+            id: "a",
+            label: "Je tape les chiffres de la carte",
+            emoji: "🔢",
+            bon: false,
+            reaction: "Non ! Un cadeau gratuit ne demande jamais de carte.",
+          },
+          {
+            id: "b",
+            label: "Je demande juste à un copain",
+            emoji: "🧒",
+            bon: false,
+            reaction: "Non ! Pour l'argent, c'est un adulte, pas un copain.",
+          },
+          {
+            id: "c",
+            label: "Je n'entre rien et je préviens un adulte",
+            emoji: "🛡️",
+            bon: true,
+            reaction: "PARFAIT ! Tu ne te fais pas avoir 💪",
+          },
+        ],
+      },
+    ],
+  },
+
+  // ===========================================================================
+  // MONDE 10 - IA : c'est vrai ou inventé ?
+  // ===========================================================================
+  {
+    slug: "ia-vrai-ou-invente",
+    titre: "IA : c'est vrai ou inventé ?",
+    sousTitre: "Images et voix fabriquées par ordinateur",
+    emoji: "🤖",
+    couleur: "indigo",
+    disponible: true,
+    activites: [
+      {
+        type: "bd",
+        id: "bd-photo-bizarre",
+        titre: "La photo trop incroyable",
+        panels: [
+          {
+            emoji: "🐱🚗",
+            texte: "Tu vois une photo d'un chat géant qui conduit une voiture.",
+          },
+          {
+            emoji: "🦊🤖",
+            qui: "hex",
+            bulle: "Aujourd'hui, un ordinateur (on dit l'IA) peut fabriquer des images, et même des voix, très réalistes.",
+          },
+          {
+            emoji: "🦊",
+            qui: "hex",
+            bulle: "Donc une image « preuve », ce n'est plus toujours vrai. On réfléchit avant de croire.",
+          },
+        ],
+        question: {
+          consigne: "Tu fais quoi avec cette photo ?",
+          options: [
+            {
+              id: "croit",
+              label: "Je la crois et je la partage partout",
+              emoji: "📤",
+              bon: false,
+              reaction:
+                "On apprend : une image incroyable peut être fabriquée. On ne partage pas sans vérifier.",
+            },
+            {
+              id: "doute",
+              label: "Je me dis que c'est peut-être inventé",
+              emoji: "🤔",
+              bon: true,
+              reaction: "Bravo ! Tu gardes ton esprit de détective 🕵️",
+            },
+          ],
+        },
+        morale:
+          "Une image ou une voix peut être fabriquée par un ordinateur. Je ne crois pas tout.",
+      },
+      {
+        type: "tri",
+        id: "tri-possible-invente",
+        titre: "Possible en vrai, ou sûrement inventé ?",
+        consigne: "Cette image ou cette voix, on peut y croire ?",
+        gauche: { label: "Possible", emoji: "✅" },
+        droite: { label: "Sûrement inventé", emoji: "🤖" },
+        cartes: [
+          {
+            id: "ecole",
+            emoji: "🌧️",
+            label: "Une photo de ton école sous la pluie",
+            bon: "gauche",
+            reaction: "Possible, c'est tout simple 🙂",
+          },
+          {
+            id: "chat-avion",
+            emoji: "🐱✈️",
+            label: "Un chat qui pilote un avion",
+            bon: "droite",
+            reaction: "Inventé ! Trop incroyable pour être vrai.",
+          },
+          {
+            id: "voix-code",
+            emoji: "🎙️",
+            label: "Une « voix de maman » qui réclame un code par message",
+            bon: "droite",
+            reaction: "Méfiance ! Une voix peut être imitée. Je vérifie en vrai.",
+          },
+          {
+            id: "vacances",
+            emoji: "🏖️",
+            label: "Une photo de tes vacances",
+            bon: "gauche",
+            reaction: "Possible, c'est normal 🙂",
+          },
+          {
+            id: "star",
+            emoji: "🎤",
+            label: "Une vidéo où une star dit un truc jamais vu ailleurs",
+            bon: "droite",
+            reaction: "Inventé peut-être ! On vérifie avant de croire.",
+          },
+        ],
+      },
+      {
+        type: "paires",
+        id: "paires-ia",
+        titre: "Le bon réflexe face à l'IA",
+        consigne: "Relie chaque situation au bon réflexe.",
+        paires: [
+          {
+            id: "incroyable",
+            gauche: { emoji: "🤯", label: "Image trop incroyable" },
+            droite: { emoji: "🧐", label: "Je me méfie" },
+          },
+          {
+            id: "voix",
+            gauche: { emoji: "🎙️", label: "Une voix réclame un code" },
+            droite: { emoji: "📞", label: "Je vérifie en vrai (j'appelle)" },
+          },
+          {
+            id: "doute",
+            gauche: { emoji: "🤔", label: "Je ne suis pas sûr" },
+            droite: { emoji: "🧑‍🦰", label: "Je demande à un adulte" },
+          },
+          {
+            id: "preuve",
+            gauche: { emoji: "🖼️", label: "Une « preuve » en image" },
+            droite: { emoji: "✂️", label: "Une image peut être fabriquée" },
+          },
+        ],
+      },
+      {
+        type: "quiz",
+        id: "quiz-ia",
+        titre: "Le grand test",
+        emoji: "🎙️🔐",
+        question:
+          "Un message avec la « voix » de ton parent réclame un code secret. Tu fais quoi ?",
+        options: [
+          {
+            id: "a",
+            label: "J'envoie le code, c'est sa voix",
+            emoji: "🔢",
+            bon: false,
+            reaction: "Non ! Une voix peut être imitée par un ordinateur.",
+          },
+          {
+            id: "b",
+            label: "Je réponds au message pour demander",
+            emoji: "💬",
+            bon: false,
+            reaction: "Non ! Le message peut être un faux. On vérifie autrement.",
+          },
+          {
+            id: "c",
+            label: "Je vais voir mon parent en vrai ou je l'appelle",
+            emoji: "📞",
+            bon: true,
+            reaction: "PARFAIT ! Vérifier en vrai, c'est le bon réflexe 🤖🚫",
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export function getMonde(slug: string): Monde | undefined {
