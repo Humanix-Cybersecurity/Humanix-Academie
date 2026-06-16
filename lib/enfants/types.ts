@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// « L'école de Hex » — espace enfants (9-12 ans) de la partie gratuite Famille.
+// « L'école de Hex » - espace enfants (9-12 ans) de la partie gratuite Famille.
 //
 // PRINCIPE : public, AUCUN compte, AUCUNE donnée collectée (enfants = mineurs,
 // posture RGPD stricte). Tout tourne côté navigateur. La progression (étoiles)
@@ -8,7 +8,7 @@
 //
 // Le contenu est un petit moteur typé : un « monde » enchaîne des « activités »
 // de 4 types (BD, repère-le-piège, tri, quiz). On ajoute un monde/activité en
-// éditant lib/enfants/parcours.ts — pas de MDX, pas de schéma Prisma.
+// éditant lib/enfants/parcours.ts - pas de MDX, pas de schéma Prisma.
 
 /** Une case de BD : un grand emoji + (option) narration et bulle de dialogue. */
 export type BDPanel = {
