@@ -126,7 +126,10 @@ export type Monde = {
     | "rose"
     | "cyan"
     | "orange"
-    | "lime";
+    | "lime"
+    | "teal"
+    | "indigo"
+    | "fuchsia";
   /** false = carte « bientôt » non jouable (teaser sur le hub). */
   disponible: boolean;
   activites: Activite[];
