@@ -96,4 +96,12 @@ export const COULEURS: Record<
     btn: "bg-fuchsia-500 hover:bg-fuchsia-600",
     dot: "bg-fuchsia-500",
   },
+  blue: {
+    grad: "from-blue-400 to-indigo-400",
+    soft: "bg-blue-50 dark:bg-blue-950/30",
+    ring: "border-blue-200 dark:border-blue-800",
+    text: "text-blue-700 dark:text-blue-300",
+    btn: "bg-blue-500 hover:bg-blue-600",
+    dot: "bg-blue-500",
+  },
 };
