@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page publique d'installation du plugin Outlook HumaniX.
+// Page publique d'installation du plugin Outlook Humanix.
 // Vise les administrateurs Microsoft 365 qui veulent deployer le bouton
 // "Signaler un phishing" a tous leurs collaborateurs.
 
@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Plugin Outlook - Signaler un phishing en 1 clic | HumaniX Académie",
+  title: "Plugin Outlook - Signaler un phishing en 1 clic | Humanix Académie",
   description:
     "Déployez en 5 minutes le bouton « Signaler un phishing » dans Outlook pour tous vos collaborateurs. Compatible Outlook Web, Desktop, Mobile. Gratuit, RGPD-compliant.",
   alternates: { canonical: "/integrations/outlook" },
@@ -28,7 +28,7 @@ export default function OutlookIntegrationPage() {
           <p className="text-lg text-gray-700 dark:text-gray-200 max-w-2xl mx-auto">
             Vos collaborateurs signalent un mail suspect en 1 clic depuis
             Outlook. Vous recevez l'alerte en temps réel, l'employé gagne des
-            points sur HumaniX. Compatible Outlook Web, Desktop, Mobile.
+            points sur Humanix. Compatible Outlook Web, Desktop, Mobile.
           </p>
         </header>
 
@@ -37,7 +37,7 @@ export default function OutlookIntegrationPage() {
           <h2 className="text-2xl font-bold mb-2">Téléchargez le manifest</h2>
           <p className="opacity-90 mb-6 text-sm">
             Le fichier XML pré-configuré avec le domaine de votre instance
-            HumaniX.
+            Humanix.
           </p>
           <a
             href="/api/integrations/outlook/manifest.xml"
@@ -155,7 +155,7 @@ export default function OutlookIntegrationPage() {
                 <li>Sélectionnez le manifest téléchargé. Confirmez.</li>
                 <li>
                   Ouvrez n'importe quel email : le bouton{" "}
-                  <strong>« Signaler à HumaniX »</strong> apparaît dans le
+                  <strong>« Signaler à Humanix »</strong> apparaît dans le
                   ruban.
                 </li>
               </ol>
@@ -204,12 +204,12 @@ export default function OutlookIntegrationPage() {
             <Step
               n={1}
               title="L'employé clique"
-              text="Sur un mail suspect, il clique sur « Signaler à HumaniX » dans le ruban Outlook."
+              text="Sur un mail suspect, il clique sur « Signaler à Humanix » dans le ruban Outlook."
             />
             <Step
               n={2}
               title="Le mail est analysé"
-              text="Métadonnées envoyées à HumaniX (expéditeur, sujet, longueur). Pas de stockage du contenu."
+              text="Métadonnées envoyées à Humanix (expéditeur, sujet, longueur). Pas de stockage du contenu."
             />
             <Step
               n={3}
@@ -244,7 +244,7 @@ export default function OutlookIntegrationPage() {
             </li>
             <li>
               <strong>Pas de partage tiers</strong> : les signalements restent
-              dans votre instance HumaniX (hébergement France).
+              dans votre instance Humanix (hébergement France).
             </li>
             <li>
               <strong>Audit complet</strong> : chaque signalement est journalisé

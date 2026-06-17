@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Page resultat publique de l'audit flash.
-// On affiche : score, verdict, top 3 risques, recommandation HumaniX, NIS2,
+// On affiche : score, verdict, top 3 risques, recommandation Humanix, NIS2,
 // + bouton telechargement PDF + CTA contact.
 //
 // L'URL est devinable (cuid), donc le contenu est volontairement neutre :
@@ -23,7 +23,7 @@ import { buildSignedPdfUrl } from "@/lib/audit-flash/signed-urls";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Votre résultat d'audit cyber | HumaniX Académie",
+  title: "Votre résultat d'audit cyber | Humanix Académie",
   description: "Découvrez votre score, vos risques et votre plan d'action.",
   robots: { index: false, follow: false },
 };
@@ -130,7 +130,7 @@ export default async function AuditResultPage({
               📄 Télécharger mon rapport PDF
             </a>
             <a
-              href="mailto:contact@humanix-cybersecurity.fr?subject=Suite%20%C3%A0%20mon%20audit%20cyber%20HumaniX"
+              href="mailto:contact@humanix-cybersecurity.fr?subject=Suite%20%C3%A0%20mon%20audit%20cyber%20Humanix"
               className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl border-2 border-primary-500 text-primary-500 dark:text-accent-300 dark:border-accent-300 hover:bg-primary-500 hover:text-white dark:hover:bg-accent-300 dark:hover:text-slate-900 transition"
             >
               💬 Échanger avec un expert
@@ -207,7 +207,7 @@ export default async function AuditResultPage({
           )}
         </section>
 
-        {/* Recommandation HumaniX */}
+        {/* Recommandation Humanix */}
         <section
           className="mb-10 rounded-3xl p-8 bg-primary-500 text-white"
           aria-labelledby="reco-title"
@@ -219,7 +219,7 @@ export default async function AuditResultPage({
             id="reco-title"
             className="text-3xl sm:text-4xl font-extrabold mb-2"
           >
-            HumaniX {result.recommendedPlan.name}
+            Humanix {result.recommendedPlan.name}
           </h2>
           <p className="text-xl text-accent-200 font-bold mb-4">
             {result.recommendedPlan.monthlyPrice} ·{" "}

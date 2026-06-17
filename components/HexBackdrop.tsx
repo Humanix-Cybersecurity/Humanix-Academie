@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Backdrop Hex : motif hexagonal subtil en arriere-plan d'une section.
-// Reference visuelle directe au nom HumaniX. Tres faible opacity (6-8%).
+// Reference visuelle directe au nom Humanix. Tres faible opacity (6-8%).
 //
 // Utilisation : <HexBackdrop>{contenu}</HexBackdrop>
 // Le motif est en absolu derriere le contenu, qui reste relatif et lisible.

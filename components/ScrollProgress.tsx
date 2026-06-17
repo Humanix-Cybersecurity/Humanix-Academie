@@ -2,7 +2,7 @@
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Mini barre de progression scroll en haut de page (signature subtile).
-// 2px, gradient HumaniX. Disparait en prefers-reduced-motion (bouge pas).
+// 2px, gradient Humanix. Disparait en prefers-reduced-motion (bouge pas).
 //
 // A11y : aria-hidden, purement decoratif. La progression scroll est
 // déjà fournie par le navigateur.

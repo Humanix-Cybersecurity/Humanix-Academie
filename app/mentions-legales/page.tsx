@@ -10,6 +10,7 @@ export const metadata = {
   title: "Mentions légales - Humanix-Cybersecurity",
   description:
     "Informations légales relatives à l'éditeur du site et de la plateforme Humanix Académie.",
+  alternates: { canonical: "/mentions-legales" },
 };
 
 const TODAY = new Date().toLocaleDateString("fr-FR");
