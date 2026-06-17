@@ -267,7 +267,7 @@ export default function AuditWizard() {
               />
               <span>
                 J'accepte de recevoir occasionnellement des conseils cyber et
-                des actualités HumaniX (1-2 emails / mois max, désabonnement
+                des actualités Humanix (1-2 emails / mois max, désabonnement
                 libre).
               </span>
             </label>

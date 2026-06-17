@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Désinscription confirmée | HumaniX Académie",
+  title: "Désinscription confirmée | Humanix Académie",
   robots: { index: false, follow: false },
 };
 

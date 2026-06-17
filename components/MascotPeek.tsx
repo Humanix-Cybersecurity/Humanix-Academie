@@ -54,7 +54,7 @@ const MESSAGES: {
   },
   {
     match: (p) => p === "/",
-    text: "Bienvenue ! Je suis Hex 🦊 - la mascotte HumaniX. Une question ?",
+    text: "Bienvenue ! Je suis Hex 🦊 - la mascotte Humanix. Une question ?",
     cta: { label: "Voir la démo", href: "/demo" },
   },
 ];
@@ -133,7 +133,7 @@ export default function MascotPeek() {
   return (
     <aside
       role="complementary"
-      aria-label="Message de la mascotte HumaniX"
+      aria-label="Message de la mascotte Humanix"
       className={`fixed ${positionClass} z-40 max-w-xs ${
         reducedMotion ? "" : "animate-fadeIn"
       }`}

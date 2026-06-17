@@ -176,7 +176,7 @@ export default function CodirMode(props: CodirModeProps) {
               {/* ROI */}
               <div className="rounded-3xl border-2 border-green-200 bg-green-50 p-8">
                 <p className="text-xs uppercase tracking-widest text-gray-500 font-bold">
-                  ROI HumaniX
+                  ROI Humanix
                 </p>
                 <p className="text-7xl sm:text-8xl font-extrabold text-green-600 leading-none mt-3">
                   ×{props.roiMultiplier}

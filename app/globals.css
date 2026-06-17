@@ -1,6 +1,6 @@
 /* Tailwind v4 : un seul import remplace les 3 directives @tailwind v3.
    La directive @config reutilise notre tailwind.config.mts existant
-   (safelist + colors HumaniX + fontFamily) - migration CSS-first
+   (safelist + colors Humanix + fontFamily) - migration CSS-first
    (avec @theme blocks) deferee a une PR ulterieure.
    .mts (et non .ts) car le projet n'a pas "type": "module" dans
    package.json ; .mts evite le warning MODULE_TYPELESS_PACKAGE_JSON. */
@@ -37,7 +37,7 @@
 }
 
 /* =============================================================================
-   HumaniX Academy - Tokens design system + dark mode
+   Humanix Academy - Tokens design system + dark mode
    -----------------------------------------------------------------------------
    DARK MODE = aligne sur Material Design 2 (m2.material.io/design/color/dark-theme)
    - Surface base #121212 (pas de pur black qui fatigue les yeux et "puits"
@@ -111,7 +111,7 @@
     --md-divider: rgba(255, 255, 255, 0.12);
     --md-outline: rgba(255, 255, 255, 0.24);
 
-    /* ----- Mappage avec les tokens HumaniX existants ----- */
+    /* ----- Mappage avec les tokens Humanix existants ----- */
     --color-bg:        var(--md-surface-0);
     --color-bg-soft:   var(--md-surface-1);
     --color-card:      var(--md-surface-1);
@@ -237,7 +237,7 @@
   }
 
   /* ============================================================
-   * DESIGN SYSTEM HumaniX - Variantes de cards officielles
+   * DESIGN SYSTEM Humanix - Variantes de cards officielles
    * Toutes pensées pour être combinables (pas d'override interne).
    * ============================================================ */
 
@@ -293,7 +293,7 @@
     box-shadow: none;
   }
 
-  /* Card hero : carte premium avec gradient HumaniX (pour CTA majeurs).
+  /* Card hero : carte premium avec gradient Humanix (pour CTA majeurs).
      Tailwind v4 : @apply ne peut plus referencer une classe custom definie
      dans le meme @layer. On inline le gradient ici (meme valeur que la
      classe .bg-humanix-hero ci-dessous, qui reste utilisable cote JSX). */
@@ -327,7 +327,7 @@
 
   /* ============================================================
    * MOTIF HEX SIGNATURE - fond subtil hexagonal en arrière-plan
-   * Référence visuelle directe au nom HumaniX. SVG inline.
+   * Référence visuelle directe au nom Humanix. SVG inline.
    * ============================================================ */
   .bg-hex-pattern {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'><path d='M28 2L52 16v32L28 62L4 48V16z' fill='none' stroke='%230B3D91' stroke-opacity='0.06' stroke-width='1.4'/><path d='M28 52L52 66v32L28 112L4 98V66z' fill='none' stroke='%230B3D91' stroke-opacity='0.06' stroke-width='1.4'/></svg>");

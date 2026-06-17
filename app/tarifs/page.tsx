@@ -30,7 +30,7 @@ import {
 
 const META_TITLE = "Tarifs cybersécurité 2026 - Humanix Académie";
 const META_DESCRIPTION =
-  "Sensibilisation cybersécurité française open source AGPL : 57 saisons, 339 modules. Self-host gratuit à vie. Cloud souverain France gratuit jusqu'à 5 utilisateurs, puis 19 €/mois ou 3 €/utilisateur. 4 paliers sans engagement, RGPD-by-design, aligné NIS2/ANSSI. Marque blanche et revendeur en Enterprise.";
+  "Sensibilisation cybersécurité française open source AGPL : 58 saisons, 344 modules. Self-host gratuit à vie. Cloud souverain France gratuit jusqu'à 5 utilisateurs, puis 19 €/mois ou 3 €/utilisateur. 4 paliers sans engagement, RGPD by design, aligné NIS2/ANSSI. Marque blanche et revendeur en Enterprise.";
 
 export const metadata = {
   title: META_TITLE,
@@ -74,7 +74,7 @@ const PRICING_FAQ = [
   {
     question: "Mes données sont-elles hébergées en France ?",
     answer:
-      "Hébergement Union Européenne par défaut (Paris ou Roubaix selon configuration). Hébergement français exclusif sur Pro et Enterprise. Option SecNumCloud disponible en Enterprise.",
+      "Hébergement en France (Scaleway, Paris) pour toute la plateforme, tous paliers confondus. Option SecNumCloud disponible en Enterprise.",
   },
   {
     question: "Que se passe-t-il en cas de désinstallation ?",
@@ -542,7 +542,7 @@ export default async function TarifsPage({
                 cells={["✓", "✓", "✓", "✓"]}
               />
               <FeatureRow
-                label="Catalogue complet (57 saisons · 339 modules)"
+                label="Catalogue complet (58 saisons · 344 modules)"
                 cells={["-", "✓*", "✓", "✓"]}
               />
               <FeatureRow
@@ -638,7 +638,7 @@ export default async function TarifsPage({
                 cells={["-", "-", "Dédié", "Dédié + onsite"]}
               />
               <FeatureRow
-                label="SLA garanti"
+                label="Disponibilité visée"
                 cells={["-", "-", "-", "99,9 %"]}
               />
               <FeatureRow
@@ -654,8 +654,8 @@ export default async function TarifsPage({
                 cells={[
                   "Communauté",
                   "Email 48h*",
-                  "Chat 4h",
-                  "7j/7 + DPO",
+                  "Chat prioritaire",
+                  "Prioritaire + DPO",
                 ]}
               />
             </tbody>
@@ -780,9 +780,8 @@ export default async function TarifsPage({
             3 €/utilisateur/mois (mensuel sans engagement ou annuel −17 %).
           </Faq>
           <Faq question="Mes données sont-elles hébergées en France ?">
-            Hébergement Union Européenne par défaut (Paris ou Roubaix selon
-            configuration). Hébergement français exclusif sur Pro et Enterprise.
-            Option SecNumCloud disponible en Enterprise.
+            Hébergement en France (Scaleway, Paris) pour toute la plateforme,
+            tous paliers confondus. Option SecNumCloud disponible en Enterprise.
           </Faq>
           <Faq question="Que se passe-t-il en cas de désinstallation ?">
             Tes données restent accessibles 30 jours pour export complet (RGPD).

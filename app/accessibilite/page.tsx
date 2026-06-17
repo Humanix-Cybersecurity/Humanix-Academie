@@ -14,7 +14,8 @@ import LegalLayout, {
 export const metadata = {
   title: "Accessibilité - Déclaration RGAA - Humanix Académie",
   description:
-    "Déclaration d'accessibilité de la plateforme Humanix Académie, conforme RGAA 4.1 / WCAG 2.1 AA. Engagement, état de conformité, signalement.",
+    "Déclaration d'accessibilité de la plateforme Humanix Académie : conformité partielle au RGAA 4.1 (~91 %). Engagement, état de conformité, signalement.",
+  alternates: { canonical: "/accessibilite" },
 };
 
 const TODAY = new Date().toLocaleDateString("fr-FR");
@@ -34,7 +35,7 @@ const TOC = [
 export default function AccessibilitePage() {
   return (
     <LegalLayout
-      badge="RGAA 4.1 · WCAG 2.1 AA"
+      badge="RGAA 4.1 · conformité partielle ~91 %"
       title="Déclaration d'accessibilité"
       subtitle="La cybersécurité ne devrait exclure personne. Voici notre état de conformité, en transparence."
       version="1.1"
