@@ -66,18 +66,39 @@ const config: ConfigWithSafelist = {
   theme: {
     extend: {
       colors: {
-        // Charte HumaniX, pilotee par variables CSS pour la marque blanche.
-        // Pattern `rgb(var(--x) / <alpha-value>)` : conserve les modificateurs
-        // d'opacite Tailwind (ex: accent-500/30). Defaut Humanix defini dans
-        // app/globals.css :root, surcharge par tenant dans le <style> du layout.
+        // Charte Humanix. Échelle COMPLÈTE 50->950 (toutes utilisées dans le
+        // site : sans elles, les classes type `to-accent-50` n'existent pas et
+        // les gradients cassent en gris). Les nuances de MARQUE (primary 50/500/
+        // 600, accent 500/600) restent pilotées par variables CSS pour la marque
+        // blanche (pattern `rgb(var(--x) / <alpha-value>)` -> conserve les
+        // modificateurs d'opacité ex `accent-500/30`). Défaut dans globals.css
+        // :root, surchargé par tenant dans le <style> du layout. Les autres
+        // nuances sont des hex statiques (non thématisées, cosmétique mineur).
         primary: {
-          50: "rgb(var(--primary-50) / <alpha-value>)", // #EAF3F8
-          500: "rgb(var(--primary-500) / <alpha-value>)", // #0B3D91 Navy
-          600: "rgb(var(--primary-600) / <alpha-value>)", // #082E73
+          50: "rgb(var(--primary-50) / <alpha-value>)", // #EAF3F8 (thématisable)
+          100: "#D6E4F5",
+          200: "#AEC8E8",
+          300: "#7FA3D6",
+          400: "#3F6FB5",
+          500: "rgb(var(--primary-500) / <alpha-value>)", // #0B3D91 Navy (thématisable)
+          600: "rgb(var(--primary-600) / <alpha-value>)", // #082E73 (thématisable)
+          700: "#07265E",
+          800: "#061E4B",
+          900: "#04132F",
+          950: "#020B1C",
         },
         accent: {
-          500: "rgb(var(--accent-500) / <alpha-value>)", // #00A3A1 Teal
-          600: "rgb(var(--accent-600) / <alpha-value>)", // #007F7D
+          50: "#E6F7F7",
+          100: "#C3ECEC",
+          200: "#8FDCDB",
+          300: "#4FC7C5",
+          400: "#1AB3B1",
+          500: "rgb(var(--accent-500) / <alpha-value>)", // #00A3A1 Teal (thématisable)
+          600: "rgb(var(--accent-600) / <alpha-value>)", // #007F7D (thématisable)
+          700: "#036463",
+          800: "#074F4E",
+          900: "#0A3F3E",
+          950: "#042524",
         },
         success: "#2E8B57",
         warn: "#C0392B",
