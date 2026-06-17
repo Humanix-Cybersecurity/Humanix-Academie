@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// Page publique d'installation de l'add-on Gmail HumaniX.
+// Page publique d'installation de l'add-on Gmail Humanix.
 // Vise les administrateurs Google Workspace qui veulent deployer le bouton
 // "Signaler un phishing" a tous leurs collaborateurs.
 
@@ -7,7 +7,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Add-on Gmail - Signaler un phishing en 1 clic | HumaniX Académie",
+  title: "Add-on Gmail - Signaler un phishing en 1 clic | Humanix Académie",
   description:
     "Déployez le bouton « Signaler un phishing » dans Gmail pour tous vos collaborateurs. Google Workspace Add-on, RGPD-compliant, hébergement France.",
   alternates: { canonical: "/integrations/gmail" },
@@ -28,7 +28,7 @@ export default function GmailIntegrationPage() {
           <p className="text-lg text-gray-700 dark:text-gray-200 max-w-2xl mx-auto">
             Vos collaborateurs signalent un mail suspect en 1 clic depuis Gmail.
             Vous recevez l'alerte en temps réel, l'employé gagne des points sur
-            HumaniX. Compatible Gmail Web et mobile (Google Workspace).
+            Humanix. Compatible Gmail Web et mobile (Google Workspace).
           </p>
         </header>
 
@@ -37,8 +37,8 @@ export default function GmailIntegrationPage() {
           <h2 className="text-2xl font-bold mb-2">Comment c'est livré</h2>
           <p className="opacity-90 text-sm leading-relaxed">
             Un add-on Gmail est un <strong>Google Workspace Add-on</strong> qui
-            s'exécute dans Google Apps Script (côté Google) — il n'y a donc rien
-            à héberger chez HumaniX. Le code source (manifest + script) est
+            s'exécute dans Google Apps Script (côté Google) : il n'y a donc rien
+            à héberger chez Humanix. Le code source (manifest + script) est
             fourni dans le dépôt, dossier{" "}
             <code className="bg-white/20 px-1.5 py-0.5 rounded text-xs">
               gmail-addon/
@@ -159,7 +159,7 @@ export default function GmailIntegrationPage() {
                   → <strong>Installer</strong>.
                 </li>
                 <li>
-                  Ouvrez Gmail puis un email : le volet HumaniX et le bouton
+                  Ouvrez Gmail puis un email : le volet Humanix et le bouton
                   « Signaler comme phishing » apparaissent à droite.
                 </li>
               </ol>
@@ -184,7 +184,7 @@ export default function GmailIntegrationPage() {
             <Step
               n={2}
               title="Le mail est analysé"
-              text="Métadonnées envoyées à HumaniX (expéditeur, sujet, longueur). Pas de stockage du contenu."
+              text="Métadonnées envoyées à Humanix (expéditeur, sujet, longueur). Pas de stockage du contenu."
             />
             <Step
               n={3}
@@ -209,7 +209,7 @@ export default function GmailIntegrationPage() {
             </li>
             <li>
               <strong>Authentification par email pro</strong> : l'utilisateur
-              doit exister et être actif sur HumaniX, sinon le signalement est
+              doit exister et être actif sur Humanix, sinon le signalement est
               refusé.
             </li>
             <li>

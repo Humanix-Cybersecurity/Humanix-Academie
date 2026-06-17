@@ -65,7 +65,7 @@ export default function RapportAuditPage() {
         <Stat value="0" label="vulnérabilité critique exploitée" tone="success" />
         <Stat value="0" label="CVE npm audit (781 deps scannées)" tone="success" />
         <Stat value="0" label="finding pentest non résolu" tone="success" />
-        <Stat value="100 %" label="hébergement France/UE" tone="info" />
+        <Stat value="100 %" label="hébergement France" tone="info" />
       </section>
 
       {/* Pentest interne v1.1 - résultats détaillés */}

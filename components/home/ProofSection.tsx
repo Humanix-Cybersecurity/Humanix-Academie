@@ -6,7 +6,7 @@
 import Link from "next/link";
 
 const STATS = [
-  { value: "180+", label: "modules cyber", emoji: "📚" },
+  { value: "344", label: "modules cyber", emoji: "📚" },
   { value: "5 min", label: "par semaine, par employé", emoji: "⏱" },
   { value: "0 €", label: "self-host AGPLv3", emoji: "🌐" },
   { value: "100 %", label: "hébergé en France", emoji: "🇫🇷" },
@@ -14,8 +14,8 @@ const STATS = [
 
 const TRUST_BADGES = [
   { emoji: "🇫🇷", label: "100 % hébergé en France" },
-  { emoji: "🛡", label: "RGPD-compliant + NIS2" },
-  { emoji: "♿", label: "Accessibilité RGAA AA" },
+  { emoji: "🛡", label: "RGPD by design · aligné NIS2" },
+  { emoji: "♿", label: "Accessibilité RGAA (~91 %)" },
   { emoji: "🔓", label: "Code public, audit vérifiable" },
 ];
 

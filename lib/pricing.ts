@@ -130,7 +130,7 @@ export const TIERS: PricingTier[] = [
     seats: { min: 16, max: 250 },
     // Top 10 features (detail complet - 25+ items - dans le tableau comparatif).
     features: [
-      "Tout le catalogue : 57 saisons · 339 modules + nouveautés mensuelles",
+      "Tout le catalogue : 58 saisons · 344 modules + nouveautés mensuelles",
       "SSO Microsoft 365 + Google + SCIM v2 (Entra/Okta)",
       "Score de risque humain temps réel + certificats PDF",
       "Phishing / Vishing / Smishing / Quishing IA souverains Mistral 🇫🇷",
@@ -139,7 +139,7 @@ export const TIERS: PricingTier[] = [
       "Connecteurs SIEM (Sentinel, Splunk, CEF QRadar/Sekoia/Elastic)",
       "IA Coach personnalisé + Cyber-Réflexe incidents",
       "Hub conformité multi-référentiels + Multi-établissements",
-      "Customer Success Manager dédié + chat 4h",
+      "Customer Success Manager dédié + chat prioritaire",
     ],
     cta: { label: "S'abonner", type: "subscribe" },
   },
@@ -162,8 +162,8 @@ export const TIERS: PricingTier[] = [
       "Marque blanche complète + portail revendeur multi-clients",
       "Veille des fuites de données salariés (RSSI · encadré DPA)",
       "Connecteurs souverains 🇫🇷 (Sekoia, HarfangLab, Vade)",
-      "SLA 99,9 % avec pénalités",
-      "Support 7j/7 (< 4h) + DPO partagé 1 an",
+      "Objectif de disponibilité 99,9 %",
+      "Support prioritaire + accompagnement DPO",
       "Onboarding sur site + ateliers présentiels",
       "Accès direct fondateur",
     ],

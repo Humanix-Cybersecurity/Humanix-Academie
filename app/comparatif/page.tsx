@@ -35,7 +35,7 @@
 //      * /signup?plan=starter - self-service 5 sièges gratuits
 //      * Rattachement RGPD-safe cross-tenant (anti-énumération)
 //      * Mode « Voir en tant que » read-only avec consentement explicite
-//  - Catalogue mis à jour : 57 saisons / 339 modules (dont 27 enquêtes) / 30
+//  - Catalogue mis à jour : 58 saisons / 344 modules (dont 27 enquêtes) / 30
 //    articles librairie. Gratuit OSS : 5 saisons démo + 30 articles.
 
 import { Fragment } from "react";
@@ -44,9 +44,9 @@ import { countExpertEpisodes } from "@/lib/content-availability";
 import HexBackdrop from "@/components/HexBackdrop";
 import { BreadcrumbJsonLd } from "@/lib/seo/jsonld";
 
-const META_TITLE = "Comparatif honnête - HumaniX vs concurrents | Humanix Académie";
+const META_TITLE = "Comparatif honnête - Humanix vs concurrents | Humanix Académie";
 const META_DESCRIPTION =
-  "Comparatif honnête entre Humanix Académie et les principales plateformes de sensibilisation cyber 2026 (KnowBe4, Hoxhunt, Phished, Cyber Guru, Adaptive Security). 9 catégories, 60+ critères : tarification, catalogue (339 modules dont 27 enquêtes interactives), simulation phishing, conformité, pilotage dirigeant, HRM 2026, intégrations (CISO Assistant 17 surfaces), onboarding RGPD, écosystème.";
+  "Comparatif honnête entre Humanix Académie et les principales plateformes de sensibilisation cyber 2026 (KnowBe4, Hoxhunt, Phished, Cyber Guru, Adaptive Security). 9 catégories, 60+ critères : tarification, catalogue (344 modules dont 27 enquêtes interactives), simulation phishing, conformité, pilotage dirigeant, HRM 2026, intégrations (CISO Assistant 17 surfaces), onboarding RGPD, écosystème.";
 
 export const metadata = {
   title: META_TITLE,
@@ -140,7 +140,7 @@ const ROWS: Row[] = [
     category: "Catalogue & contenu",
     feature: "Nombre de modules disponibles (catalogue)",
     humanix: win(
-      "339 modules (57 saisons, dont 27 enquêtes interactives) + 30 articles librairie",
+      "344 modules (58 saisons, dont 27 enquêtes interactives) + 30 articles librairie",
     ),
     knowbe4: win("1 000+ modules"),
     cyberGuru: eq("300+ modules"),
@@ -281,7 +281,7 @@ const ROWS: Row[] = [
   {
     category: "Conformité & souveraineté",
     feature: "Accessibilité RGAA / WCAG 2.1 AA",
-    humanix: win("Conformité interne 88 %, audit cabinet à venir"),
+    humanix: win("Conformité interne ~91 %, audit cabinet à venir"),
     knowbe4: eq("WCAG partiel"),
     cyberGuru: eq("WCAG partiel"),
     hoxhunt: eq("WCAG partiel"),
@@ -870,7 +870,7 @@ const STATUS_ICON = {
 } as const;
 
 const STATUS_LABEL = {
-  win: "Avantage HumaniX",
+  win: "Avantage Humanix",
   equal: "Équivalent",
   loss: "Ce qu'on apprend d'eux",
   na: "Non applicable",
@@ -958,7 +958,7 @@ export default function ComparatifPage() {
                 {winsHumanix}
               </p>
               <p className="text-emerald-800 dark:text-emerald-200 font-medium">
-                avantages HumaniX
+                avantages Humanix
               </p>
             </div>
             <div
@@ -1028,7 +1028,7 @@ export default function ComparatifPage() {
               <span>Note transparence : modules pédagogiques</span>
             </h2>
             <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
-              Notre catalogue affiche 180 modules. À ce jour,{" "}
+              Notre catalogue affiche 344 modules. À ce jour,{" "}
               <strong>
                 {expertCount} épisode{expertCount > 1 ? "s ont" : " a"} un
                 scénario détaillé rédigé par un expert
@@ -1056,7 +1056,7 @@ export default function ComparatifPage() {
             [
               {
                 key: "win" as const,
-                label: "Avantage HumaniX",
+                label: "Avantage Humanix",
                 hint: "On fait mieux que les concurrents listés.",
               },
               {
