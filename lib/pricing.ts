@@ -202,17 +202,20 @@ export const ADD_ONS: AddOn[] = [
   },
   {
     id: "audit-pentest",
-    name: "Pack Audit + Pentest annuel",
+    name: "Pack Audit + Pentest (baseline)",
     emoji: "🛡️",
     description:
-      "Une vue technique externe régulière sur ton niveau de cyberprotection réel.",
-    price: { display: "+ 2 400 €/an HT", details: "Disponible dès Pro" },
+      "Un point de départ technique pour situer ton niveau réel, en complément de la plateforme. Volontairement cadré : on regarde l'essentiel, et on approfondit si besoin.",
+    price: {
+      display: "+ 2 400 €/an HT",
+      details: "En pack avec un abonnement, dès Pro",
+    },
     features: [
-      "1 audit cyber complet par an (5 jours sur site ou hybride)",
-      "1 pentest externe annuel (3 jours)",
-      "Rapport executive + technique livré",
-      "Plan d'action priorisé",
+      "Reconnaissance + scan de la surface d'exposition externe",
+      "Pentest d'entrée (boîte noire) sur le périmètre public convenu",
+      "Rapport exécutif + technique avec findings priorisés",
       "Restitution en visio avec ton équipe",
+      "Si la reco révèle des points sensibles : pentest approfondi proposé en option",
     ],
   },
   {
