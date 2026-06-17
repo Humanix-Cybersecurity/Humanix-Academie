@@ -19,6 +19,13 @@ export const metadata: Metadata = {
   description:
     "Des petites BD et des mini-jeux gratuits pour apprendre aux enfants (9-12 ans) à repérer les pièges d'internet. Sans compte, sans publicité, aucune donnée enregistrée.",
   alternates: { canonical: "/famille/enfants" },
+  openGraph: {
+    title: "L'école de Hex - la cyber pour les 9-12 ans",
+    description:
+      "Des petites BD et des mini-jeux gratuits pour initier les enfants à la cybersécurité. Sans compte, aucune donnée enregistrée.",
+    type: "website",
+    url: "/famille/enfants",
+  },
 };
 
 export default function EcoleDeHexPage() {

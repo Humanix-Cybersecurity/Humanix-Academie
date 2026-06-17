@@ -22,6 +22,14 @@ export const metadata = {
   title: "Comment rejoindre Humanix Académie ? - Choisissez votre profil",
   description:
     "Particulier, RSSI, DSI, DAF ou DPO ? Découvrez la bonne façon de rejoindre Humanix Académie en fonction de votre besoin. Inscription gratuite, espace pro 5 sièges offerts ou abonnement Enterprise.",
+  alternates: { canonical: "/rejoindre" },
+  openGraph: {
+    title: "Comment rejoindre Humanix Académie ?",
+    description:
+      "Particulier, RSSI, DSI, DAF ou DPO ? Trouvez le bon point d'entrée. Inscription gratuite, 5 sièges offerts en pro, ou Enterprise.",
+    type: "website",
+    url: "/rejoindre",
+  },
 };
 
 type Persona = {

@@ -473,7 +473,7 @@ export default async function ApprendrePage() {
 
             {/* Accordéon par catégorie : déplie UNE catégorie à la fois pour
                 voir ses modules. Remplace le carrousel horizontal (trop dense
-                avec ~37 saisons). Cf. components/learner/SaisonsAccordion. */}
+                avec ~58 saisons). Cf. components/learner/SaisonsAccordion. */}
             <SaisonsAccordion
               sections={saisonSections}
               defaultOpenId={defaultOpenCategoryId}
