@@ -32,7 +32,7 @@ import {
 const SEC_TITLE =
   "Sécurité & Conformité - Trust Center souverain | Humanix Cybersecurity";
 const SEC_DESC =
-  "Trust Center Humanix : hébergement souverain France (Scaleway Paris), chiffrement AES-256, RGPD-by-design, conformité NIS2/DORA, audit public, sous-traitants déclarés, code source AGPLv3 auditable.";
+  "Trust Center Humanix : hébergement souverain France (Scaleway Paris), chiffrement AES-256, RGPD by design, aligné NIS2 et ANSSI, audit public, sous-traitants déclarés, code source AGPLv3 auditable.";
 
 export const metadata = {
   title: SEC_TITLE,
@@ -84,7 +84,7 @@ export default function SecuritePage() {
     <main id="main-content" className="overflow-x-hidden animate-fadeIn">
       <ServiceJsonLd
         name="Plateforme de cybersensibilisation Humanix Académie"
-        description="Sensibilisation cybersécurité française, hébergée à Paris (Scaleway), chiffrée AES-256, conforme RGPD/NIS2/DORA, code source AGPLv3 auditable. Trust Center public."
+        description="Sensibilisation cybersécurité française, hébergée à Paris (Scaleway), chiffrée AES-256, RGPD by design et alignée NIS2/ANSSI, code source AGPLv3 auditable. Trust Center public."
         url="/securite"
         serviceType="Cybersecurity awareness training"
         areaServed="FR"
@@ -754,7 +754,7 @@ export default function SecuritePage() {
           </p>
           <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-8 italic">
             Page mise à jour à chaque évolution majeure. État au{" "}
-            <time dateTime="2026-05-05">5 mai 2026</time>.
+            <time dateTime="2026-05-02">2 mai 2026</time>.
           </p>
         </section>
       </div>

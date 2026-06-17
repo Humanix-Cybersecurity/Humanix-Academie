@@ -12,6 +12,7 @@ export const metadata = {
   title: "Politique de confidentialité - Humanix-Cybersecurity",
   description:
     "Comment nous traitons vos données personnelles, en application du RGPD.",
+  alternates: { canonical: "/confidentialite" },
 };
 
 const TODAY = new Date().toLocaleDateString("fr-FR");

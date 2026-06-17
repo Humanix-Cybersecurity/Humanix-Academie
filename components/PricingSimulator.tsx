@@ -93,7 +93,7 @@ export default function PricingSimulator() {
           >
             Annuel
             <span className="absolute -top-1 -right-1 bg-success text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full">
-              -20%
+              -21%
             </span>
           </button>
         </div>

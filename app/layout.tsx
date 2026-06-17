@@ -67,25 +67,6 @@ export const metadata: Metadata = {
   creator: "Humanix Cybersecurity",
   publisher: "Humanix Cybersecurity",
   generator: "Next.js",
-  // Mots-cles cibles (ignore par Google depuis 2009 mais lu par Bing, Qwant,
-  // Ecosia et certains agregateurs francais). Aucun cout, signal supplementaire.
-  keywords: [
-    "sensibilisation cybersécurité",
-    "formation cyber",
-    "phishing simulé",
-    "RGPD",
-    "NIS2",
-    "cybersécurité PME",
-    "cybersécurité française",
-    "plateforme open source",
-    "alternative française KnowBe4",
-    "hébergement souverain France",
-    "sensibilisation cyber gratuite",
-    "sensibilisation cyber entreprise",
-    "deepfake",
-    "fraude au président",
-    "cyber awareness français",
-  ],
   category: "Cybersecurity",
   // Indexation par defaut autorisee. Les pages back-office surchargent via
   // leur propre metadata { robots: { index: false } }.
@@ -102,10 +83,9 @@ export const metadata: Metadata = {
   },
   referrer: "strict-origin-when-cross-origin",
   formatDetection: { email: false, address: false, telephone: false },
-  alternates: {
-    canonical: "/",
-    languages: { "fr-FR": "/", "x-default": "/" },
-  },
+  // Pas de canonical global ici : chaque page déclare le sien (sinon toutes
+  // les pages sans canonical propre pointaient vers l'accueil -> risque de
+  // désindexation des pages secondaires). La home pose canonical "/".
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
   ),
