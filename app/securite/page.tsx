@@ -360,7 +360,8 @@ export default function SecuritePage() {
               HTTPS forcée
             </li>
             <li>
-              <strong>Headers de sécurité</strong> : HSTS, X-Frame-Options,
+              <strong>Headers de sécurité</strong> : Content-Security-Policy
+              (avec nonce par requête), HSTS, X-Frame-Options,
               X-Content-Type-Options, Referrer-Policy, Permissions-Policy
             </li>
             <li>
