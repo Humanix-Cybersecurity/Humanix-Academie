@@ -88,7 +88,7 @@ export default function Nis2EspacePage() {
           </div>
           <div className="flex flex-wrap gap-2 justify-center text-xs mt-6">
             <span className="px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-200 font-bold">
-              <span aria-hidden="true">🇫🇷 </span>Aligné loi du 31 octobre 2024
+              <span aria-hidden="true">🇫🇷 </span>Aligné ReCyF (ANSSI)
             </span>
             <span className="px-3 py-1.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200 font-bold">
               <span aria-hidden="true">🔓 </span>Gratuit, sans inscription
@@ -112,6 +112,25 @@ export default function Nis2EspacePage() {
           </p>
         </div>
         <ParcoursSteps />
+      </section>
+
+      {/* Reference ReCyF */}
+      <section className="max-w-4xl mx-auto px-4 pb-4">
+        <div className="rounded-2xl border-2 border-primary-200 dark:border-primary-900/40 bg-primary-50/50 dark:bg-primary-950/20 p-5 text-center">
+          <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
+            <span aria-hidden="true">🇫🇷 </span>En France, le référentiel
+            officiel, c&apos;est le{" "}
+            <strong>Référentiel Cyber France (ReCyF)</strong> de l&apos;ANSSI :
+            20 objectifs de sécurité. Notre diagnostic suit cette structure pour
+            parler le même langage que l&apos;autorité.{" "}
+            <Link
+              href="/nis2/comprendre"
+              className="text-accent-600 dark:text-accent-300 underline hover:no-underline font-medium"
+            >
+              Comprendre ReCyF →
+            </Link>
+          </p>
+        </div>
       </section>
 
       {/* L'ESPRIT - anti cases a cocher */}
@@ -187,8 +206,9 @@ export default function Nis2EspacePage() {
           Cet espace est un outil pédagogique et d'auto-évaluation. Il vous
           accompagne vers la conformité NIS2 mais ne la garantit pas, et ne
           remplace ni un conseil juridique ni un audit formel par un prestataire
-          qualifié (PASSI). NIS2 : directive (UE) 2022/2555, transposée en France
-          par la loi du 31 octobre 2024.
+          qualifié (PASSI). NIS2 : directive (UE) 2022/2555 ; en France, l'ANSSI
+          en précise les mesures via le Référentiel Cyber France (ReCyF), un
+          document de travail susceptible d'évoluer.
         </p>
       </section>
     </main>

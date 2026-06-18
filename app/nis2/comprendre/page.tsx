@@ -7,6 +7,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
+import RecyfReference from "@/components/nis2/RecyfReference";
 
 export const dynamic = "force-static";
 
@@ -82,8 +83,9 @@ export default function Nis2ComprendrePage() {
           <p className="text-gray-700 dark:text-gray-200 leading-relaxed">
             NIS2 est une directive européenne qui demande aux organisations
             comptant pour la société et l'économie d'élever leur niveau de
-            cybersécurité. En France, elle a été transposée par la loi du 31
-            octobre 2024. L'idée n'est pas de vous piéger : c'est de faire en
+            cybersécurité. En France, sa transposition s'accompagne d'un
+            référentiel de mesures publié par l'ANSSI, le Référentiel Cyber
+            France (ReCyF). L'idée n'est pas de vous piéger : c'est de faire en
             sorte qu'une attaque sur un hôpital, une usine ou un fournisseur
             critique ne paralyse pas tout un pan d'activité.
           </p>
@@ -135,6 +137,9 @@ export default function Nis2ComprendrePage() {
           </div>
         </section>
 
+        {/* Le referentiel officiel : ReCyF */}
+        <RecyfReference />
+
         {/* Et si je ne fais rien */}
         <section className="rounded-2xl border-2 border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/40 p-6">
           <h2 className="font-display text-xl font-bold text-primary-500 dark:text-accent-300 mb-3">
@@ -169,8 +174,9 @@ export default function Nis2ComprendrePage() {
 
         <p className="text-xs text-center text-gray-500 dark:text-gray-400 italic max-w-2xl mx-auto leading-relaxed">
           Page pédagogique de vulgarisation. Elle ne constitue pas un avis
-          juridique. NIS2 : directive (UE) 2022/2555, transposée en France par
-          la loi du 31 octobre 2024 (n° 2024-1039).
+          juridique. NIS2 : directive (UE) 2022/2555. En France, l'ANSSI en
+          précise les mesures via le Référentiel Cyber France (ReCyF), un
+          document de travail susceptible d'évoluer.
         </p>
       </article>
     </main>

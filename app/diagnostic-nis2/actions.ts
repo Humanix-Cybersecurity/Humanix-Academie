@@ -1,50 +1,43 @@
 "use server";
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// Server action : calcule le diagnostic NIS2 a partir des reponses
-// utilisateur soumises depuis /diagnostic-nis2/page.tsx.
+// Server action : encode le diagnostic ReCyF soumis depuis le formulaire
+// et redirige vers la page resultat.
 //
-// Pas de persistance BDD pour V1 - le score + email transitent en
-// query params encodes (base64) jusqu'a la page resultat. Pas de cookie,
-// pas de session : 100 % stateless, RGPD-friendly (rien stocke sauf si
-// l'utilisateur demande explicitement a recevoir le PDF par mail).
+// 100 % stateless, RGPD-friendly : profil + reponses transitent en query
+// param encode (base64url). Rien n'est stocke (pas de cookie, pas de BDD).
 //
 // CONTRAINTE Next.js 16 + Turbopack : un fichier "use server" ne peut
-// exporter QUE des fonctions async. Les helpers sync `encodeAnswers` /
-// `decodeAnswers` vivent dans `./encoding.ts`.
+// exporter QUE des fonctions async. Les helpers sync d'encodage vivent
+// dans lib/nis2/recyf-encoding.
 
-import { z } from "zod";
 import { redirect } from "next/navigation";
+import { objectifsForProfil, type RecyfProfil } from "@/lib/nis2/recyf";
 import {
-  computeNis2Diagnostic,
-  type Nis2Answer,
-} from "@/lib/nis2/scoring";
-import { encodeAnswers } from "./encoding";
+  sanitizeAnswers,
+  type RecyfAnswer,
+  type RecyfAnswers,
+} from "@/lib/nis2/recyf-scoring";
+import { encodeRecyf } from "@/lib/nis2/recyf-encoding";
 
-const AnswerSchema = z.enum(["oui", "non", "ne_sait_pas"]);
+function asAnswer(v: string | undefined): RecyfAnswer | null {
+  if (v === "oui" || v === "en_partie" || v === "non") return v;
+  return null;
+}
 
-export async function submitDiagnosticNis2(formData: FormData) {
-  // Parse identite (optionnelle pour V1 : on ne force pas l'email)
-  const email = formData.get("email")?.toString().trim().toLowerCase() || null;
+export async function submitDiagnosticRecyf(formData: FormData) {
+  const profil: RecyfProfil =
+    formData.get("profil")?.toString() === "EE" ? "EE" : "EI";
   const companyName =
     formData.get("companyName")?.toString().trim() || null;
 
-  // Parse les 30 reponses
-  const answers: Record<string, Nis2Answer> = {};
-  for (const [key, value] of formData.entries()) {
-    if (key.startsWith("q_")) {
-      const qid = key.slice(2);
-      const parsed = AnswerSchema.safeParse(value);
-      if (parsed.success) {
-        answers[qid] = parsed.data;
-      }
-    }
+  // On ne lit que les objectifs applicables au profil declare.
+  const answers: RecyfAnswers = {};
+  for (const o of objectifsForProfil(profil)) {
+    const a = asAnswer(formData.get(`q_${o.num}`)?.toString());
+    if (a) answers[o.id] = a;
   }
 
-  // Compute pour validation cote serveur (on ne fait pas confiance au client)
-  computeNis2Diagnostic(answers);
-
-  // Redirect vers la page resultat avec les donnees encodees en query
-  const data = encodeAnswers(answers, email, companyName);
+  const data = encodeRecyf(profil, sanitizeAnswers(answers), companyName);
   redirect(`/diagnostic-nis2/resultat?d=${data}`);
 }
