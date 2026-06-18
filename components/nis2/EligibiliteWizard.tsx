@@ -232,9 +232,8 @@ export default function EligibiliteWizard() {
           <p className="text-xs text-gray-500 dark:text-gray-400 italic mt-5 leading-relaxed">
             Estimation indicative, fournie pour vous orienter. Elle ne
             constitue pas un avis juridique. Le périmètre exact dépend des
-            décrets d'application de la loi du 31 octobre 2024 et de votre
-            situation : certaines entités sont concernées quelle que soit leur
-            taille.
+            textes de transposition de NIS2 et de votre situation : certaines
+            entités sont concernées quelle que soit leur taille.
           </p>
         </section>
       )}
