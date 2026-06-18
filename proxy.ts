@@ -98,6 +98,12 @@ function buildCsp(nonce: string): string {
       "https://api.mistral.ai",
       "https://api.mollie.com",
       "https://api.scaleway.com",
+      // HIBP Pwned Passwords : check "mon mot de passe a-t-il fuite ?" en
+      // k-anonymity cote navigateur (/exposition). Seul le prefixe SHA-1 (5
+      // hex) sort, jamais le mot de passe ni son hash complet. Sans cette
+      // entree, le fetch client est bloque par la CSP -> "service
+      // indisponible". Cf. lib/exposure/pwned-passwords.ts.
+      "https://api.pwnedpasswords.com",
     ]
       .filter(Boolean)
       .join(" "),
