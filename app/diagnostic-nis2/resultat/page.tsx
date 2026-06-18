@@ -1,45 +1,83 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
-// /diagnostic-nis2/resultat - page de resultat du diagnostic NIS2.
+// /diagnostic-nis2/resultat - resultat du diagnostic ReCyF.
 //
-// Lit les reponses encodees dans le query param `?d=BASE64` (cf.
-// app/diagnostic-nis2/actions.ts pour l'encodage), calcule le score
-// per-article + verdict, puis construit le PLAN d'accompagnement narratif
-// (lib/nis2/plan) : pour chaque article, ce que la directive attend,
-// pourquoi, un levier rapide, le chantier de fond, et comment avancer.
-//
-// Pas de persistance BDD : la page est "stateless" - l'URL elle-meme est
-// partageable (bookmarkee, envoyee au CODIR) et reproduit le meme resultat.
+// Lit profil + reponses encodes dans `?d=BASE64` (cf. lib/nis2/recyf-encoding),
+// construit le plan d'accompagnement objectif par objectif (lib/nis2/recyf-
+// scoring) et l'affiche. Stateless : l'URL est partageable et reproduit le
+// meme resultat.
 
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { decodeAnswers } from "../encoding";
-import { computeNis2Diagnostic, VERDICT_LABEL } from "@/lib/nis2/scoring";
-import { buildNis2Plan } from "@/lib/nis2/plan";
+import { decodeRecyf } from "@/lib/nis2/recyf-encoding";
+import {
+  buildRecyfPlan,
+  RECYF_VERDICT_LABEL,
+} from "@/lib/nis2/recyf-scoring";
+import { RECYF_META } from "@/lib/nis2/recyf";
 import Nis2PlanView from "@/components/nis2/Nis2PlanView";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Mon diagnostic NIS2 - Humanix Académie",
+  title: "Mon diagnostic NIS2 / ReCyF - Humanix Académie",
   description:
-    "Résultat du diagnostic NIS2 : score par article, verdict, et votre plan d'action personnalisé pour avancer.",
+    "Résultat du diagnostic ReCyF : situation par objectif de sécurité et plan d'action personnalisé.",
   alternates: { canonical: "/diagnostic-nis2/resultat" },
-  robots: { index: false, follow: false }, // page de résultat personnel, pas indexable
+  robots: { index: false, follow: false },
 };
 
-// Texte du verdict : ton calme et orienté action (jamais alarmiste).
 const VERDICT_INTRO: Record<string, string> = {
   robuste:
-    "Excellent. Vos mesures couvrent l'essentiel de la directive. Consolidez ce qui est en marche et documentez vos pratiques.",
+    "Excellent. Vos pratiques couvrent l'essentiel des objectifs. Consolidez ce qui est en place et documentez votre démarche.",
   en_marche:
-    "Vous êtes sur la bonne voie. Plusieurs chantiers sont déjà en place ; le plan ci-dessous vous montre les quelques manques à combler.",
+    "Vous êtes sur la bonne voie. Plusieurs objectifs sont déjà en place ; le plan ci-dessous montre les quelques chantiers à mener.",
   fragile:
-    "Des écarts à combler sur des points importants. Pas de panique : le plan ci-dessous priorise par où commencer, étape par étape.",
+    "Des écarts à combler sur des objectifs importants. Pas de panique : le plan ci-dessous priorise par où commencer, étape par étape.",
   alerte:
     "Il y a du chemin, et c'est normal de commencer quelque part. Le plan ci-dessous vous donne les premiers leviers à activer dès cette semaine.",
 };
+
+function GroupBar({
+  label,
+  emoji,
+  score,
+}: {
+  label: string;
+  emoji: string;
+  score: number;
+}) {
+  const color =
+    score >= 80
+      ? "bg-emerald-500"
+      : score >= 50
+        ? "bg-amber-500"
+        : "bg-red-500";
+  return (
+    <div>
+      <div className="flex items-center justify-between text-sm mb-1">
+        <span className="font-medium text-gray-700 dark:text-gray-200">
+          <span aria-hidden="true">{emoji} </span>
+          {label}
+        </span>
+        <span className="tabular-nums text-gray-500 dark:text-gray-400">
+          {score}%
+        </span>
+      </div>
+      <div
+        className="h-2 rounded-full bg-gray-200 dark:bg-slate-700 overflow-hidden"
+        role="img"
+        aria-label={`${label} : ${score} sur 100`}
+      >
+        <div
+          className={`h-full rounded-full ${color}`}
+          style={{ width: `${score}%` }}
+        />
+      </div>
+    </div>
+  );
+}
 
 export default async function DiagnosticResultPage({
   searchParams,
@@ -49,12 +87,13 @@ export default async function DiagnosticResultPage({
   const { d } = await searchParams;
   if (!d) redirect("/diagnostic-nis2");
 
-  const decoded = decodeAnswers(d);
+  const decoded = decodeRecyf(d);
   if (!decoded) redirect("/diagnostic-nis2");
 
-  const diagnostic = computeNis2Diagnostic(decoded.answers);
-  const verdictInfo = VERDICT_LABEL[diagnostic.verdict];
-  const plan = buildNis2Plan(diagnostic);
+  const plan = buildRecyfPlan(decoded.answers, decoded.profil);
+  const verdictInfo = RECYF_VERDICT_LABEL[plan.verdict];
+  const profilLabel =
+    decoded.profil === "EE" ? "Entité essentielle" : "Entité importante";
 
   return (
     <main
@@ -85,13 +124,13 @@ export default async function DiagnosticResultPage({
         }}
       >
         <p className="text-xs uppercase tracking-[0.3em] font-bold mb-2 opacity-70">
-          Diagnostic NIS2 · {decoded.companyName ?? "Votre organisation"}
+          Diagnostic ReCyF · {decoded.companyName ?? profilLabel}
         </p>
         <h1
           className="font-display text-5xl sm:text-7xl font-extrabold mb-2 tabular-nums"
           style={{ color: verdictInfo.color }}
         >
-          {diagnostic.globalScore}
+          {plan.globalScore}
           <span className="text-3xl sm:text-4xl opacity-70">/100</span>
         </h1>
         <p
@@ -101,37 +140,43 @@ export default async function DiagnosticResultPage({
           {verdictInfo.label}
         </p>
         <p className="text-base text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed">
-          {VERDICT_INTRO[diagnostic.verdict]}
+          {VERDICT_INTRO[plan.verdict]}
+        </p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
+          {profilLabel} · {plan.objectifsCount} objectifs évalués ·{" "}
+          {plan.priorityCount} prioritaire
+          {plan.priorityCount > 1 ? "s" : ""} · {plan.solidCount} en place
         </p>
       </section>
 
-      {/* Resume chiffre du plan */}
-      <p className="text-center text-sm text-gray-600 dark:text-gray-300 mb-8">
-        Votre plan : <strong>{plan.priorityCount}</strong> chantier
-        {plan.priorityCount > 1 ? "s" : ""} prioritaire
-        {plan.priorityCount > 1 ? "s" : ""}
-        {plan.solidCount > 0 && (
-          <>
-            {" "}
-            · <strong>{plan.solidCount}</strong> point
-            {plan.solidCount > 1 ? "s" : ""} déjà solide
-            {plan.solidCount > 1 ? "s" : ""}
-          </>
-        )}
-        .
-      </p>
+      {/* Scores par thematique */}
+      <section className="rounded-2xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 sm:p-6 mb-10">
+        <h2 className="font-display text-lg font-bold text-primary-500 dark:text-accent-300 mb-4">
+          Votre situation par thématique
+        </h2>
+        <div className="grid sm:grid-cols-2 gap-x-8 gap-y-4">
+          {plan.groupScores.map((g) => (
+            <GroupBar
+              key={g.groupe}
+              label={g.label}
+              emoji={g.emoji}
+              score={g.score}
+            />
+          ))}
+        </div>
+      </section>
 
       {/* PLAN D'ACTION NARRATIF */}
       <section className="mb-10">
         <div className="mb-5">
           <h2 className="font-display text-2xl font-bold text-primary-500 dark:text-accent-300 mb-2">
-            <span aria-hidden="true">🗺️ </span>Votre plan d'action
+            <span aria-hidden="true">🗺️ </span>Votre plan d&apos;action
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl">
-            Article par article, dans l'ordre des priorités : ce que la
-            directive attend, pourquoi ça compte, un levier à activer cette
-            semaine, et le chantier de fond. On précise aussi ce qui revient à
-            votre prestataire IT.
+            Objectif par objectif, dans l&apos;ordre des priorités : ce que
+            l&apos;objectif attend, pourquoi ça compte, un levier à activer
+            cette semaine, et le chantier de fond. On précise aussi ce qui
+            revient à votre prestataire IT.
           </p>
         </div>
         <Nis2PlanView plan={plan} />
@@ -145,8 +190,8 @@ export default async function DiagnosticResultPage({
         <p className="text-gray-700 dark:text-gray-200 max-w-xl mx-auto mb-5 leading-relaxed">
           La plupart de ces leviers passent par la formation des équipes. Humanix
           Académie vous fournit les parcours, les campagnes de phishing et un
-          Pack NIS2 prêt à signer (politique, procédure d'incident, registre des
-          actions) pour documenter votre démarche.
+          Pack NIS2 prêt à signer (politique, procédure d&apos;incident, registre
+          des actions) pour documenter votre démarche.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
           <Link
@@ -159,7 +204,7 @@ export default async function DiagnosticResultPage({
             href="/nis2/comprendre"
             className="inline-flex items-center gap-2 bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-700 hover:border-accent-400 font-bold px-6 py-3 rounded-xl transition-colors"
           >
-            Comprendre NIS2
+            Comprendre ReCyF
           </Link>
           <Link
             href="/contact"
@@ -171,10 +216,11 @@ export default async function DiagnosticResultPage({
       </section>
 
       <p className="text-xs text-center text-gray-500 dark:text-gray-400 italic mt-8 max-w-2xl mx-auto leading-relaxed">
-        Ce diagnostic est un outil d&apos;auto-évaluation qui vous accompagne
-        vers la conformité, sans la garantir. Il ne remplace pas un audit formel
-        par un cabinet qualifié (PASSI) ni un conseil juridique. Pour un audit
-        opposable à l&apos;ANSSI, faites appel à un prestataire qualifié.
+        Basé sur le {RECYF_META.nom} ({RECYF_META.sigle}), version{" "}
+        {RECYF_META.version} ({RECYF_META.statut.toLowerCase()},{" "}
+        {RECYF_META.editeur}). Auto-évaluation indicative qui vous accompagne
+        vers la conformité sans la garantir. Elle ne remplace pas un audit
+        formel par un prestataire qualifié (PASSI) ni un conseil juridique.
       </p>
     </main>
   );
