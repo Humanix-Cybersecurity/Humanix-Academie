@@ -67,6 +67,7 @@ const NOTRE_OFFRE: FooterLink[] = [
 // + "Communauté" (entree de nav header de meme niveau).
 // /ressources regroupe cyber-meteo, observatoire-fuites, audit-flash, anecdotes.
 const OUTILS: FooterLink[] = [
+  { href: "/nis2", label: "Espace NIS2", emoji: "📋" },
   { href: "/exposition", label: "Suis-je exposé ?", emoji: "🛡" },
   { href: "/librairie", label: "Librairie", emoji: "📚" },
   { href: "/dpo", label: "Espace DPO", emoji: "🛡" },
