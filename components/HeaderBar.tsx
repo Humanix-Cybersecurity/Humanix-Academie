@@ -150,6 +150,13 @@ function buildProduitItems(demoMode: boolean): DropdownItem[] {
 
 const SOLUTIONS_ITEMS: DropdownItem[] = [
   {
+    href: "/nis2",
+    label: "Espace NIS2",
+    description:
+      "Comprendre et se mettre en conformité NIS2, sans jargon : diagnostic + plan personnalisé",
+    emoji: "📋",
+  },
+  {
     href: "/exposition",
     label: "Suis-je exposé ?",
     description:
