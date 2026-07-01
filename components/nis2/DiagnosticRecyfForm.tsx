@@ -14,8 +14,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
-  RECYF_OBJECTIFS,
   RECYF_GROUPES,
+  objectifsForProfil,
   type RecyfGroupe,
   type RecyfProfil,
 } from "@/lib/nis2/recyf";
@@ -37,9 +37,7 @@ export default function DiagnosticRecyfForm({
 }) {
   const [profil, setProfil] = useState<RecyfProfil>("EI");
 
-  const visibles = RECYF_OBJECTIFS.filter(
-    (o) => o.scope === "EI_EE" || profil === "EE",
-  );
+  const visibles = objectifsForProfil(profil);
 
   return (
     <form action={action} className="space-y-8">
@@ -148,11 +146,7 @@ export default function DiagnosticRecyfForm({
                     </span>{" "}
                     {o.question}
                   </legend>
-                  <div
-                    className="flex flex-wrap gap-2"
-                    role="radiogroup"
-                    aria-labelledby={`q-${o.num}-legend`}
-                  >
+                  <div className="flex flex-wrap gap-2">
                     {ANSWER_OPTIONS.map((opt) => (
                       <label
                         key={opt.value}

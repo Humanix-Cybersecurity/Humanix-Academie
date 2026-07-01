@@ -594,7 +594,8 @@ export type RecyfProfil = "EI" | "EE";
  * EI -> objectifs 1 a 15 ; EE -> objectifs 1 a 20.
  */
 export function objectifsForProfil(profil: RecyfProfil): RecyfObjectif[] {
-  return RECYF_OBJECTIFS.filter(
-    (o) => o.scope === "EI_EE" || profil === "EE",
-  );
+  // EE = les 20 objectifs ; EI = uniquement le socle commun (objectifs 1-15).
+  return profil === "EE"
+    ? RECYF_OBJECTIFS
+    : RECYF_OBJECTIFS.filter((o) => o.scope === "EI_EE");
 }
