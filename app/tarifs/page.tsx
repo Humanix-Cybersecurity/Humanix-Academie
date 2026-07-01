@@ -277,6 +277,82 @@ export default async function TarifsPage({
       </section>
 
       {/* =====================================================================
+          DEUX FACONS DE COMMENCER - leve la confusion apprenant vs organisation.
+          Point crucial : "s'inscrire" (/inscription) = compte apprenant SANS
+          console ; "creer un espace" (/signup) = tu deviens ADMIN avec la
+          console. Les 2 sont gratuits sans CB.
+          ===================================================================== */}
+      <section className="mb-16" aria-labelledby="deux-parcours-title">
+        <div className="text-center mb-6">
+          <h2
+            id="deux-parcours-title"
+            className="text-3xl font-extrabold text-primary-500 mb-2"
+          >
+            Deux façons de commencer
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300">
+            Choisis ton point d&apos;entrée. Les deux sont gratuits, sans carte
+            bancaire.
+          </p>
+        </div>
+        <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+          {/* Parcours apprenant (individuel) */}
+          <div className="rounded-3xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 flex flex-col">
+            <div className="text-4xl mb-3" aria-hidden="true">
+              🎓
+            </div>
+            <h3 className="font-display text-xl font-extrabold text-primary-600 dark:text-accent-200 mb-1">
+              J&apos;apprends, pour moi
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4 flex-1">
+              Un compte apprenant gratuit. Tu suis les parcours pour toi, en solo
+              ou avec tes proches. Pas de gestion d&apos;équipe, pas de console :
+              juste toi et ta progression.
+            </p>
+            <Link
+              href="/inscription"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border-2 border-gray-200 dark:border-slate-700 hover:border-accent-400 font-bold px-5 py-3 transition-colors"
+            >
+              Créer mon compte apprenant →
+            </Link>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+              Gratuit, sans carte bancaire.
+            </p>
+          </div>
+          {/* Parcours organisation (mis en avant) */}
+          <div className="rounded-3xl border-2 border-accent-400 dark:border-accent-600 bg-accent-50/50 dark:bg-accent-950/20 p-6 flex flex-col relative">
+            <span className="absolute top-4 right-4 text-xs font-bold px-3 py-1 rounded-full bg-accent-500 text-white">
+              Console admin incluse
+            </span>
+            <div className="text-4xl mb-3" aria-hidden="true">
+              🏢
+            </div>
+            <h3 className="font-display text-xl font-extrabold text-primary-600 dark:text-accent-200 mb-1">
+              Je déploie pour mon organisation
+            </h3>
+            <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed mb-4 flex-1">
+              Tu crées l&apos;espace de ta structure et tu en deviens
+              l&apos;administrateur : console d&apos;admin, invitation de ton
+              équipe, tableaux de bord, suivi de conformité.{" "}
+              <strong>Gratuit jusqu&apos;à 5 personnes</strong>, sans CB.
+            </p>
+            <Link
+              href="/signup?plan=starter"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-bold px-5 py-3 shadow-md transition-colors"
+            >
+              Créer mon espace gratuit →
+            </Link>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+              Tu deviens administrateur · forever-free jusqu&apos;à 5 sièges.
+            </p>
+          </div>
+        </div>
+        <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
+          Les offres ci-dessous détaillent le parcours organisation.
+        </p>
+      </section>
+
+      {/* =====================================================================
           4 PALIERS - rendu via PricingCarousel (client component)
           - Mobile : stack vertical
           - >= md  : carousel 3-visibles avec navigation arrows + dots
@@ -796,7 +872,7 @@ export default async function TarifsPage({
           <Faq question="Quel est l'engagement contractuel ?">
             Aucun engagement minimum sur Cloud. Tu peux résilier à tout moment
             depuis ta console, prorata jour exact. Engagement annuel = remise
-            –17 à –21 %, totalement optionnel.
+            de 17 à 21 %, totalement optionnel.
           </Faq>
           <Faq question="Quelle différence avec votre concurrent intuitem (CISO Assistant) ?">
             Aucune, on est complémentaires. CISO Assistant fait la conformité
