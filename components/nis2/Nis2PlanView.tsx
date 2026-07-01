@@ -51,11 +51,18 @@ function PlanCard({ item }: { item: RecyfPlanItem }) {
             {o.titre}
           </h3>
         </div>
-        <span
-          className={`shrink-0 text-xs font-bold px-3 py-1 rounded-full ${STATUS_STYLE[item.status]}`}
-        >
-          {RECYF_STATUS_LABEL[item.status]}
-        </span>
+        <div className="shrink-0 flex items-center gap-2">
+          {item.isPriority && (
+            <span className="text-xs font-bold px-3 py-1 rounded-full bg-primary-100 text-primary-700 dark:bg-primary-950/50 dark:text-primary-200">
+              <span aria-hidden="true">⭐ </span>Priorité
+            </span>
+          )}
+          <span
+            className={`text-xs font-bold px-3 py-1 rounded-full ${STATUS_STYLE[item.status]}`}
+          >
+            {RECYF_STATUS_LABEL[item.status]}
+          </span>
+        </div>
       </header>
 
       <div className="mb-3">
