@@ -2,8 +2,8 @@
 //
 // Score NIS2 per-article TEMPS REEL pour un tenant existant.
 //
-// Difference avec le diagnostic public (lib/nis2/scoring.ts) :
-//   - Le diagnostic = auto-evaluation par questionnaire 30Q (gratuit, public)
+// Difference avec le diagnostic public (lib/nis2/recyf-scoring.ts) :
+//   - Le diagnostic = auto-evaluation ReCyF (20 objectifs, gratuit, public)
 //   - Ce score-tenant = base sur les DONNEES REELLES d'apprentissage du
 //     tenant (utilisateurs actifs, modules completes, score moyen)
 //

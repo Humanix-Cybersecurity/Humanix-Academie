@@ -144,8 +144,7 @@ export default async function DiagnosticResultPage({
         </p>
         <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
           {profilLabel} · {plan.objectifsCount} objectifs évalués ·{" "}
-          {plan.priorityCount} prioritaire
-          {plan.priorityCount > 1 ? "s" : ""} · {plan.solidCount} en place
+          {plan.priorityCount} à engager · {plan.solidCount} en place
         </p>
       </section>
 
@@ -176,7 +175,8 @@ export default async function DiagnosticResultPage({
             Objectif par objectif, dans l&apos;ordre des priorités : ce que
             l&apos;objectif attend, pourquoi ça compte, un levier à activer
             cette semaine, et le chantier de fond. On précise aussi ce qui
-            revient à votre prestataire IT.
+            revient à votre prestataire IT. Commencez par les objectifs marqués
+            «&nbsp;Priorité&nbsp;».
           </p>
         </div>
         <Nis2PlanView plan={plan} />
