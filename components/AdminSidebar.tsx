@@ -126,6 +126,14 @@ const SECTIONS: Section[] = [
         gate: "Pro+",
         minRole: "ADMIN",
       },
+      // Exercice de crise en direct = drill cyber collectif (polling live).
+      {
+        href: "/admin/exercice-crise",
+        label: "Exercice de crise",
+        icon: "🚨",
+        gate: "Pro+",
+        minRole: "ADMIN",
+      },
     ],
   },
   {
