@@ -14,6 +14,28 @@ import {
 
 const rz = getScenario("rancongiciel")!;
 
+describe("integrite de tous les scenarios", () => {
+  it("chaque scenario : >= 6 manches, un unique meilleur reflexe, ids uniques", () => {
+    expect(DRILL_SCENARIOS.length).toBeGreaterThanOrEqual(3);
+    for (const sc of DRILL_SCENARIOS) {
+      expect(sc.id.length).toBeGreaterThan(0);
+      expect(sc.rounds.length).toBeGreaterThanOrEqual(6);
+      for (const r of sc.rounds) {
+        expect(r.choices.length).toBeGreaterThanOrEqual(3);
+        expect(r.choices.filter((c) => c.isBest)).toHaveLength(1);
+        const best = r.choices.find((c) => c.isBest)!;
+        expect(best.points).toBe(Math.max(...r.choices.map((c) => c.points)));
+        expect(new Set(r.choices.map((c) => c.id)).size).toBe(r.choices.length);
+      }
+    }
+  });
+
+  it("ids de scenarios uniques", () => {
+    const ids = DRILL_SCENARIOS.map((s) => s.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+});
+
 describe("scenario rancongiciel", () => {
   it("a 6 manches, chacune avec un unique meilleur reflexe", () => {
     expect(rz.rounds).toHaveLength(6);
