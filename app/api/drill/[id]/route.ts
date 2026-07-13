@@ -10,7 +10,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { getScenario, maxScore } from "@/lib/drill/scenarios";
+import { getScenario, maxScore, isDrillRole } from "@/lib/drill/scenarios";
 import { advanceDrill, hostActionLabel, tallyVotes } from "@/lib/drill/engine";
 
 export const dynamic = "force-dynamic";
@@ -43,7 +43,7 @@ export async function GET(_req: Request, ctx: Ctx) {
     where: {
       exerciseId_userId: { exerciseId: ex.id, userId: session.user.id },
     },
-    select: { id: true, score: true },
+    select: { id: true, score: true, role: true },
   });
 
   // Contenu de la manche courante (sans divulguer le bon choix en phase VOTING)
@@ -128,6 +128,19 @@ export async function GET(_req: Request, ctx: Ctx) {
     };
   }
 
+  // Repartition des roles (mode table-top) pour le lobby de l'hote.
+  let roles: Array<{ role: string; count: number }> | null = null;
+  if (ex.mode === "TABLETOP") {
+    const grouped = await db.crisisParticipant.groupBy({
+      by: ["role"],
+      where: { exerciseId: ex.id },
+      _count: true,
+    });
+    roles = grouped
+      .filter((g) => g.role !== null)
+      .map((g) => ({ role: g.role as string, count: g._count }));
+  }
+
   return NextResponse.json({
     session: {
       id: ex.id,
@@ -136,6 +149,7 @@ export async function GET(_req: Request, ctx: Ctx) {
       status: ex.status,
       currentRound: ex.currentRound,
       phase: ex.phase,
+      mode: ex.mode,
       totalRounds: scenario.rounds.length,
     },
     isHost,
@@ -149,6 +163,7 @@ export async function GET(_req: Request, ctx: Ctx) {
     round,
     reveal,
     leaderboard,
+    roles,
   });
 }
 
@@ -169,6 +184,7 @@ export async function POST(req: Request, ctx: Ctx) {
   const body = (await req.json().catch(() => ({}))) as {
     action?: string;
     choiceId?: string;
+    role?: string;
   };
 
   // ---- Rejoindre la salle -------------------------------------------------
@@ -181,11 +197,13 @@ export async function POST(req: Request, ctx: Ctx) {
       session.user.email?.split("@")[0] ||
       "Participant"
     ).slice(0, 60);
+    const role =
+      ex.mode === "TABLETOP" && isDrillRole(body.role) ? body.role : null;
     const p = await db.crisisParticipant.upsert({
       where: {
         exerciseId_userId: { exerciseId: ex.id, userId: session.user.id },
       },
-      create: { exerciseId: ex.id, userId: session.user.id, name },
+      create: { exerciseId: ex.id, userId: session.user.id, name, role },
       update: {},
       select: { id: true },
     });

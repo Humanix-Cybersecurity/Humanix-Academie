@@ -7,7 +7,7 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { DRILL_SCENARIOS } from "@/lib/drill/scenarios";
-import CreateDrillButton from "@/components/drill/CreateDrillButton";
+import CreateDrillPanel from "@/components/drill/CreateDrillPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -50,24 +50,16 @@ export default async function AdminCrisisDrillPage() {
         15 de ReCyF (exercices).
       </p>
 
-      {/* Scenarios disponibles */}
-      <div className="space-y-3 mb-10">
-        {DRILL_SCENARIOS.map((sc) => (
-          <div
-            key={sc.id}
-            className="rounded-2xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-5 flex flex-col sm:flex-row sm:items-center gap-4"
-          >
-            <div className="flex-1">
-              <h2 className="font-display text-lg font-bold text-primary-600 dark:text-accent-200">
-                {sc.title}
-              </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                {sc.rounds.length} manches · environ {sc.durationMin} min
-              </p>
-            </div>
-            <CreateDrillButton scenarioId={sc.id} />
-          </div>
-        ))}
+      {/* Scenarios + format */}
+      <div className="mb-10">
+        <CreateDrillPanel
+          scenarios={DRILL_SCENARIOS.map((sc) => ({
+            id: sc.id,
+            title: sc.title,
+            rounds: sc.rounds.length,
+            durationMin: sc.durationMin,
+          }))}
+        />
       </div>
 
       {/* Sessions recentes */}

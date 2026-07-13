@@ -23,7 +23,10 @@ function genCode(len = 6): string {
   return s;
 }
 
-const CreateSchema = z.object({ scenarioId: z.string().min(1).max(60) });
+const CreateSchema = z.object({
+  scenarioId: z.string().min(1).max(60),
+  mode: z.enum(["ECLAIR", "TABLETOP"]).optional(),
+});
 
 export async function POST(req: Request) {
   const session = await auth();
@@ -59,6 +62,7 @@ export async function POST(req: Request) {
       scenarioId: parsed.data.scenarioId,
       code,
       hostUserId: session.user.id,
+      mode: parsed.data.mode ?? "ECLAIR",
     },
     select: { id: true, code: true },
   });
