@@ -62,6 +62,13 @@ export default function DrillCockpit({
           <h1 className="font-display text-2xl font-extrabold text-primary-500 dark:text-accent-300">
             {scenarioTitle}
           </h1>
+          {s?.mode && (
+            <span className="inline-block mt-1 text-xs font-bold px-2.5 py-1 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300">
+              {s.mode === "TABLETOP"
+                ? "Format table-top (rôles)"
+                : "Format éclair (collectif)"}
+            </span>
+          )}
         </div>
         <span className="text-sm text-gray-600 dark:text-gray-300 inline-flex items-center gap-2">
           <span aria-hidden="true">👥</span>
@@ -96,6 +103,18 @@ export default function DrillCockpit({
           <p className="text-gray-700 dark:text-gray-200 mb-4">
             Salle d&apos;attente. Lance quand tout le monde est là.
           </p>
+          {s.mode === "TABLETOP" && state?.roles && state.roles.length > 0 && (
+            <div className="flex flex-wrap gap-2 justify-center mb-4">
+              {state.roles.map((r) => (
+                <span
+                  key={r.role}
+                  className="text-xs font-bold px-3 py-1 rounded-full bg-accent-50 dark:bg-accent-950/40 text-accent-800 dark:text-accent-200"
+                >
+                  {r.role} · {r.count}
+                </span>
+              ))}
+            </div>
+          )}
           <button
             type="button"
             onClick={advance}
@@ -241,10 +260,16 @@ export default function DrillCockpit({
               </li>
             ))}
           </ol>
-          <div className="mt-6 rounded-2xl border-2 border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/40 p-4 text-center text-sm text-gray-600 dark:text-gray-300 max-w-md mx-auto">
-            <span aria-hidden="true">📄 </span>
-            L&apos;attestation d&apos;exercice pour le registre (ReCyF objectif
-            15 / NIS2) arrive en phase 2.
+          <div className="mt-6 text-center">
+            <a
+              href={`/api/drill/${exerciseId}/attestation`}
+              className="inline-flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-white font-bold px-6 py-3 rounded-xl shadow-md transition-colors"
+            >
+              <span aria-hidden="true">📄 </span>Télécharger l&apos;attestation
+            </a>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+              Pour ton registre des exercices (ReCyF objectif 15 / NIS2).
+            </p>
           </div>
         </div>
       )}

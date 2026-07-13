@@ -11,13 +11,16 @@ export type DrillStateResponse = {
     status: "LOBBY" | "RUNNING" | "ENDED";
     currentRound: number;
     phase: "VOTING" | "REVEAL";
+    mode: "ECLAIR" | "TABLETOP";
     totalRounds: number;
   };
   isHost: boolean;
   /** Libelle du bouton hote (null si terminé ou non-hote). */
   hostAction: string | null;
   participantCount: number;
-  me: { id: string; score: number } | null;
+  me: { id: string; score: number; role: string | null } | null;
+  /** Repartition des roles (mode table-top, cote hote), null sinon. */
+  roles: null | Array<{ role: string; count: number }>;
   /** Le choix voté par l'utilisateur a la manche courante (null sinon). */
   myAnswer: string | null;
   round: null | {

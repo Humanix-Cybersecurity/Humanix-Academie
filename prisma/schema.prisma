@@ -2587,6 +2587,11 @@ enum DrillPhase {
   REVEAL
 }
 
+enum DrillMode {
+  ECLAIR // tout le monde repond la meme chose (15 min)
+  TABLETOP // roles assignes (Direction/Comm/IT/RSSI), facon exercice ANSSI
+}
+
 model CrisisExercise {
   id           String      @id @default(cuid())
   tenantId     String
@@ -2595,6 +2600,7 @@ model CrisisExercise {
   status       DrillStatus @default(LOBBY)
   currentRound Int         @default(0) // 0 en salle d'attente, sinon 1..N
   phase        DrillPhase  @default(VOTING)
+  mode         DrillMode   @default(ECLAIR)
   hostUserId   String // qui pilote la session
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
@@ -2614,6 +2620,7 @@ model CrisisParticipant {
   exerciseId String
   userId     String // membre du tenant (pas de FK formelle, snapshot ephemere)
   name       String // nom d'affichage au moment de rejoindre
+  role       String? // role table-top (Direction/Comm/IT/RSSI) ; null en mode eclair
   score      Int      @default(0)
   joinedAt   DateTime @default(now())
 
