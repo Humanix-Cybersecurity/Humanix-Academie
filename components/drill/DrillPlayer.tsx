@@ -6,6 +6,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useDrillState, drillAction } from "./useDrillState";
+import { DRILL_ROLES } from "@/lib/drill/scenarios";
 
 export default function DrillPlayer({
   exerciseId,
@@ -17,13 +18,24 @@ export default function DrillPlayer({
   const { state, refresh } = useDrillState(exerciseId);
   const joined = useRef(false);
   const [voting, setVoting] = useState(false);
+  const [joiningRole, setJoiningRole] = useState<string | null>(null);
+  const mode = state?.session.mode;
 
-  // Rejoint une seule fois au montage (upsert cote serveur = idempotent).
+  // Mode Eclair : on rejoint automatiquement. Table-top : on attend que le
+  // participant choisisse son role (selecteur ci-dessous).
   useEffect(() => {
-    if (joined.current) return;
+    if (mode !== "ECLAIR" || joined.current) return;
     joined.current = true;
     drillAction(exerciseId, { action: "join" }).then(() => refresh());
-  }, [exerciseId, refresh]);
+  }, [mode, exerciseId, refresh]);
+
+  async function joinWithRole(role: string) {
+    if (joiningRole) return;
+    setJoiningRole(role);
+    await drillAction(exerciseId, { action: "join", role });
+    await refresh();
+    setJoiningRole(null);
+  }
 
   async function vote(choiceId: string) {
     if (voting) return;
@@ -37,6 +49,8 @@ export default function DrillPlayer({
   const round = state?.round;
   const reveal = state?.reveal;
   const myAnswer = state?.myAnswer ?? null;
+  const needsRole =
+    mode === "TABLETOP" && !!state && !state.me && s?.status !== "ENDED";
 
   const HexLine = ({ children }: { children: React.ReactNode }) => (
     <div className="rounded-xl bg-accent-50 dark:bg-accent-950/30 p-3 flex gap-2 items-start">
@@ -58,13 +72,39 @@ export default function DrillPlayer({
         </span>
         {state?.me && (
           <span className="text-gray-600 dark:text-gray-300 shrink-0">
-            Ton score : <strong>{state.me.score}</strong>
+            {state.me.role ? `${state.me.role} · ` : ""}Ton score :{" "}
+            <strong>{state.me.score}</strong>
           </span>
         )}
       </div>
 
+      {/* Table-top : choix du role avant de jouer */}
+      {needsRole && (
+        <div className="py-8">
+          <p className="text-center font-bold text-primary-600 dark:text-accent-200 mb-1">
+            Choisis ton rôle
+          </p>
+          <p className="text-center text-sm text-gray-600 dark:text-gray-300 mb-4">
+            Tu incarnes cette fonction pour tout l&apos;exercice.
+          </p>
+          <div className="grid grid-cols-2 gap-2 max-w-sm mx-auto">
+            {DRILL_ROLES.map((r) => (
+              <button
+                key={r}
+                type="button"
+                onClick={() => joinWithRole(r)}
+                disabled={joiningRole !== null}
+                className="rounded-xl border-2 border-gray-200 dark:border-slate-700 hover:border-accent-400 disabled:opacity-50 p-3 font-bold text-primary-600 dark:text-accent-200 transition-colors"
+              >
+                {r}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* LOBBY */}
-      {(!s || s.status === "LOBBY") && (
+      {!needsRole && (!s || s.status === "LOBBY") && (
         <div className="text-center py-10">
           <div className="text-5xl mb-3 animate-pulse" aria-hidden="true">
             {mascotEmoji}
@@ -82,7 +122,7 @@ export default function DrillPlayer({
       )}
 
       {/* RUNNING */}
-      {s?.status === "RUNNING" && round && (
+      {!needsRole && s?.status === "RUNNING" && round && (
         <div>
           <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mb-2">
             <span>
