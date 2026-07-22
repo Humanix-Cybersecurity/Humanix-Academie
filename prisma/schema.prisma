@@ -189,6 +189,8 @@ model Tenant {
   cisoSyncRuns           CisoAssistantSyncRun[]
   investigationResults   InvestigationResult[]
   crisisExercises        CrisisExercise[]
+  recyfAssessment        RecyfAssessment?
+  recyfSnapshots         RecyfSnapshot[]
   // Memberships : users externes qui ont un role admin dans ce tenant
   // sans en etre membre natif (cf. TenantMembership). Cas typique : un
   // SUPERADMIN Humanix qui gere plusieurs tenants clients.
@@ -2645,4 +2647,38 @@ model CrisisResponse {
 
   @@unique([participantId, round])
   @@index([exerciseId, round])
+}
+
+// =====================================================
+// NIS2 / ReCyF - posture VIVANTE par tenant (v2 in-app) - juillet 2026
+// =====================================================
+// Auto-evaluation ReCyF persistee (le diagnostic public est stateless ;
+// ici on garde la reponse du tenant et on la fait vivre). Les objectifs 4
+// (formation) et 15 (exercices de crise) sont AUTO-MESURES depuis les donnees
+// reelles (progress + CrisisExercise), le reste est declare.
+
+model RecyfAssessment {
+  id        String   @id @default(cuid())
+  tenantId  String   @unique
+  profil    String   @default("EI") // "EI" | "EE"
+  answers   Json     @default("{}") // { "obj-1": "oui" | "en_partie" | "non", ... }
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+}
+
+model RecyfSnapshot {
+  id          String   @id @default(cuid())
+  tenantId    String
+  day         String // "YYYY-MM-DD" (un point par jour, pour la tendance)
+  globalScore Int
+  createdAt   DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, day])
+  @@index([tenantId])
 }
