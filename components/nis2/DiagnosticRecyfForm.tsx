@@ -32,10 +32,19 @@ const GROUP_ORDER = (Object.keys(RECYF_GROUPES) as RecyfGroupe[]).sort(
 
 export default function DiagnosticRecyfForm({
   action,
+  submitLabel,
+  initialProfil,
+  initialAnswers,
 }: {
   action: (formData: FormData) => void | Promise<void>;
+  /** Texte du bouton de soumission (defaut : diagnostic public). */
+  submitLabel?: string;
+  /** Pre-selection du profil (usage in-app : reprise de l'auto-evaluation). */
+  initialProfil?: RecyfProfil;
+  /** Pre-selection des reponses, clef = numero d'objectif. */
+  initialAnswers?: Record<number, "oui" | "en_partie" | "non">;
 }) {
-  const [profil, setProfil] = useState<RecyfProfil>("EI");
+  const [profil, setProfil] = useState<RecyfProfil>(initialProfil ?? "EI");
 
   const visibles = objectifsForProfil(profil);
 
@@ -52,20 +61,18 @@ export default function DiagnosticRecyfForm({
           <strong>20 objectifs</strong> pour les entités essentielles.
         </p>
         <div className="grid sm:grid-cols-2 gap-3">
-          {(
-            [
-              {
-                v: "EI" as const,
-                t: "Entité importante",
-                d: "15 objectifs de sécurité",
-              },
-              {
-                v: "EE" as const,
-                t: "Entité essentielle",
-                d: "20 objectifs (5 de plus)",
-              },
-            ]
-          ).map((p) => (
+          {[
+            {
+              v: "EI" as const,
+              t: "Entité importante",
+              d: "15 objectifs de sécurité",
+            },
+            {
+              v: "EE" as const,
+              t: "Entité essentielle",
+              d: "20 objectifs (5 de plus)",
+            },
+          ].map((p) => (
             <label
               key={p.v}
               className="cursor-pointer block rounded-xl border-2 border-gray-200 dark:border-slate-700 p-4 hover:border-accent-400 has-[input:checked]:border-accent-500 has-[input:checked]:bg-accent-50 dark:has-[input:checked]:bg-accent-950/40 transition-colors"
@@ -157,6 +164,7 @@ export default function DiagnosticRecyfForm({
                           name={`q_${o.num}`}
                           value={opt.value}
                           required
+                          defaultChecked={initialAnswers?.[o.num] === opt.value}
                           className="sr-only"
                         />
                         <span aria-hidden="true">{opt.symbol} </span>
@@ -177,14 +185,14 @@ export default function DiagnosticRecyfForm({
           Voir mon plan d&apos;action
         </h2>
         <p className="text-sm text-gray-700 dark:text-gray-200 mb-5">
-          Vous obtenez votre situation objectif par objectif, et un plan
-          concret priorisé.
+          Vous obtenez votre situation objectif par objectif, et un plan concret
+          priorisé.
         </p>
         <button
           type="submit"
           className="inline-flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-white font-bold px-8 py-3 rounded-xl text-lg shadow-md transition-colors"
         >
-          <span aria-hidden="true">📊 </span>Voir mon diagnostic ReCyF →
+          {submitLabel ?? "📊 Voir mon diagnostic ReCyF →"}
         </button>
         <p className="mt-4 text-xs text-gray-500 dark:text-gray-400 italic">
           Aucune donnée n&apos;est stockée. Le résultat est encodé dans
