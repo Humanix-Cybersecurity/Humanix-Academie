@@ -141,6 +141,14 @@ const SECTIONS: Section[] = [
     title: "Conformité",
     icon: "🛡",
     items: [
+      // Posture NIS2/ReCyF vivante (score qui evolue avec la formation + les exercices).
+      {
+        href: "/admin/nis2",
+        label: "Ma posture NIS2",
+        icon: "🎯",
+        gate: "Pro+",
+        minRole: "RSSI",
+      },
       {
         href: "/admin/conformite",
         label: "Référentiels",
@@ -376,9 +384,7 @@ export default function AdminSidebar() {
   // est <= au rang courant. Si une section finit vide apres filtrage, on
   // ne la rend pas du tout (evite les accordeons fantomes).
   const sections = useMemo(() => {
-    const all = isSuperAdmin
-      ? [...SECTIONS, ...SUPERADMIN_SECTIONS]
-      : SECTIONS;
+    const all = isSuperAdmin ? [...SECTIONS, ...SUPERADMIN_SECTIONS] : SECTIONS;
     return all
       .map((section) => ({
         ...section,
