@@ -23,9 +23,13 @@
     "test:watch": "vitest",
     "lint": "tsc --noEmit"
   },
-  "files": ["dist", "README.md", "LICENSE"],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0"
+    "@modelcontextprotocol/sdk": "^1.30.0"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
@@ -36,5 +40,14 @@
   "engines": {
     "node": ">=20"
   },
-  "keywords": ["mcp", "model-context-protocol", "claude", "humanix", "cybersecurity", "awareness", "hrm", "grc"]
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "humanix",
+    "cybersecurity",
+    "awareness",
+    "hrm",
+    "grc"
+  ]
 }
