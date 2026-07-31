@@ -145,7 +145,10 @@ services:
     networks:
       - humanix_backend
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:5500/health || exit 1"]
+      # 127.0.0.1 explicite (pas localhost) : dans le conteneur, localhost
+      # resout aussi ::1, or Piper n'ecoute qu'en IPv4 et BusyBox wget tente
+      # l'IPv6 sans repli -> healthcheck (unhealthy) alors que le service repond.
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5500/health || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
