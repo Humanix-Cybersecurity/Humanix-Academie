@@ -4,6 +4,8 @@ Toutes les **actions manuelles** à exécuter au déploiement, par phase. Ne né
 
 > Ce runbook est cumulatif : si tu déploies pour la première fois, exécute tout dans l'ordre. Si tu redéploies, repère les sections marquées **« First-deploy only »**.
 
+> **Couche conteneurs / Docker :** ce runbook couvre l'app (env, seed, SSO, flags). Pour les stacks Docker déployées (prod + démo), leur divergence assumée vis-à-vis du dépôt et la sauvegarde associée, voir [`INFRA_STACKS_DEPLOYED.md`](INFRA_STACKS_DEPLOYED.md).
+
 ---
 
 ## A. Pré-requis serveur
