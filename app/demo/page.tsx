@@ -4,7 +4,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { signIn } from "next-auth/react";
+import { getCsrfToken } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { switchDemoPlan, getDemoCurrentPlan } from "@/app/demo/actions";
 import { PLAN_LABEL, PLAN_EMOJI, type PlanId } from "@/lib/plans";
@@ -115,13 +115,39 @@ export default function DemoPage() {
     } catch {
       // si ca foire, on continue quand même avec le plan en place
     }
-    const res = await signIn("demo", {
-      email,
-      redirect: false,
-      callbackUrl: target,
-    });
-    if (res?.ok) router.push(target);
-    setLoading(null);
+    // NextAuth 5.0.0-beta.32 : le `signIn()` de `next-auth/react` a un bug
+    // avec les Credentials providers en `redirect: false` qui provoque
+    // "MissingCSRF: CSRF token was missing during an action callback".
+    // Workaround : POST manuel sur /api/auth/callback/{provider} avec le
+    // csrfToken recupere explicitement. Pattern officiel Auth.js pour les
+    // flows programmatiques (cf. authjs.dev/reference/nextjs#credentials).
+    try {
+      const csrfToken = await getCsrfToken();
+      if (!csrfToken) throw new Error("CSRF token indisponible");
+      const body = new URLSearchParams({
+        csrfToken,
+        email,
+        callbackUrl: target,
+        json: "true", // demande a next-auth de renvoyer JSON au lieu de rediriger
+      });
+      const res = await fetch("/api/auth/callback/demo", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString(),
+        // `same-origin` pour inclure le cookie __Secure-authjs.csrf-token
+        credentials: "same-origin",
+      });
+      if (res.ok || res.redirected) {
+        // La session cookie est desormais posee. On peut naviguer.
+        router.push(target);
+      } else {
+        setError("Connexion demo echouee. Verifie que le compte existe.");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur de connexion");
+    } finally {
+      setLoading(null);
+    }
   };
 
   return (
