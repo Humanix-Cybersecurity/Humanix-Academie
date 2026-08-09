@@ -78,7 +78,7 @@ export async function POST(req: Request) {
 
     // Dispatch par prefix de l'id
     if (resourceId.startsWith("tr_")) {
-      return await handlePaymentEvent(resourceId, req);
+      return await handlePaymentEvent(resourceId);
     }
     if (resourceId.startsWith("sub_")) {
       return await handleSubscriptionEvent(resourceId);
@@ -113,7 +113,7 @@ export async function POST(req: Request) {
   }
 }
 
-async function handlePaymentEvent(paymentId: string, req: Request) {
+async function handlePaymentEvent(paymentId: string) {
   // 1. Fetch la ressource Mollie (verifie l'authenticite implicitement)
   const payment = await getPayment(paymentId);
   if (!payment) {
@@ -151,7 +151,7 @@ async function handlePaymentEvent(paymentId: string, req: Request) {
       if (payment.sequenceType === "first") {
         // First payment OK : mandate cree cote Mollie, on peut maintenant
         // creer la Subscription pour les charges recurrentes + provisionner.
-        const handled = await onFirstPaymentPaid(payment, req);
+        const handled = await onFirstPaymentPaid(payment);
         tenantId = handled.tenantId ?? tenantId;
         status = handled.status;
         errorMessage = handled.errorMessage;
@@ -229,7 +229,6 @@ async function handlePaymentEvent(paymentId: string, req: Request) {
  */
 async function onFirstPaymentPaid(
   payment: MolliePaymentResource,
-  req: Request,
 ): Promise<{
   tenantId: string | null;
   status: "applied" | "ignored" | "error";
