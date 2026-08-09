@@ -37,6 +37,7 @@ import {
 import { provisionTenantWithAdmin } from "@/lib/tenant-provisioning";
 import { signIn } from "@/lib/auth";
 import { isPlanId } from "@/lib/plans";
+import { getAppBaseUrl } from "@/lib/subdomain-tenant";
 
 export const dynamic = "force-dynamic";
 
@@ -77,7 +78,7 @@ export async function POST(req: Request) {
 
     // Dispatch par prefix de l'id
     if (resourceId.startsWith("tr_")) {
-      return await handlePaymentEvent(resourceId, req);
+      return await handlePaymentEvent(resourceId);
     }
     if (resourceId.startsWith("sub_")) {
       return await handleSubscriptionEvent(resourceId);
@@ -112,7 +113,7 @@ export async function POST(req: Request) {
   }
 }
 
-async function handlePaymentEvent(paymentId: string, req: Request) {
+async function handlePaymentEvent(paymentId: string) {
   // 1. Fetch la ressource Mollie (verifie l'authenticite implicitement)
   const payment = await getPayment(paymentId);
   if (!payment) {
@@ -150,7 +151,7 @@ async function handlePaymentEvent(paymentId: string, req: Request) {
       if (payment.sequenceType === "first") {
         // First payment OK : mandate cree cote Mollie, on peut maintenant
         // creer la Subscription pour les charges recurrentes + provisionner.
-        const handled = await onFirstPaymentPaid(payment, req);
+        const handled = await onFirstPaymentPaid(payment);
         tenantId = handled.tenantId ?? tenantId;
         status = handled.status;
         errorMessage = handled.errorMessage;
@@ -228,7 +229,6 @@ async function handlePaymentEvent(paymentId: string, req: Request) {
  */
 async function onFirstPaymentPaid(
   payment: MolliePaymentResource,
-  req: Request,
 ): Promise<{
   tenantId: string | null;
   status: "applied" | "ignored" | "error";
@@ -250,10 +250,11 @@ async function onFirstPaymentPaid(
 
   // 1. Creer la Subscription pour les charges recurrentes a venir
   const pricing = mollieAmountForPlan(planRaw, billing, seatsRaw || 1);
-  // Webhook URL identique a celui de ce route handler (reutilisable).
-  const proto = req.headers.get("x-forwarded-proto") ?? "https";
-  const host = req.headers.get("host") ?? "humanix-academie.fr";
-  const webhookUrl = `${proto}://${host}/api/payments/webhook`;
+  // Webhook URL PERSISTEE cote Mollie pour toutes les charges recurrentes.
+  // SECURITE (#739) : on la derive de la config serveur, JAMAIS du header Host
+  // client. Sinon un attaquant qui devance le webhook legitime avec un Host
+  // forge redirige durablement les notifications de facturation.
+  const webhookUrl = `${getAppBaseUrl()}/api/payments/webhook`;
 
   let subscriptionId: string | null = null;
   try {

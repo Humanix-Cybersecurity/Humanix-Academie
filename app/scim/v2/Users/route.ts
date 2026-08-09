@@ -10,6 +10,7 @@ import { SCIM_SCHEMAS, scimError } from "@/lib/scim/types";
 import { prismaToScim, scimToPrismaCreate } from "@/lib/scim/mapper";
 import { parseScimFilter, filterToPrismaWhere } from "@/lib/scim/filter";
 import { fireAndForgetAutoAssign } from "@/lib/onboarding/auto-assign";
+import { getAppBaseUrl } from "@/lib/subdomain-tenant";
 
 export const dynamic = "force-dynamic";
 
@@ -28,11 +29,10 @@ function rateLimitGuard(tenantId: string, op: string) {
   );
 }
 
-function baseUrlOf(req: Request): string {
-  return (
-    process.env.NEXT_PUBLIC_BASE_URL ??
-    `https://${req.headers.get("host") ?? "humanix-academie.fr"}`
-  );
+// URL de base derivee de la config serveur, jamais du header Host client
+// (evite l'injection de Host dans les meta SCIM). Cf. #739.
+function baseUrlOf(): string {
+  return getAppBaseUrl();
 }
 
 // ----- GET /Users : liste paginee + filtre -----
@@ -113,7 +113,7 @@ export async function GET(req: Request) {
     updatedAt: Date;
   };
 
-  const baseUrl = baseUrlOf(req);
+  const baseUrl = baseUrlOf();
   return NextResponse.json(
     {
       schemas: [SCIM_SCHEMAS.LIST_RESPONSE],
@@ -220,11 +220,11 @@ export async function POST(req: Request) {
   // rate (le user est cree, c'est l'essentiel).
   void fireAndForgetAutoAssign(created.id, tenantId);
 
-  return NextResponse.json(prismaToScim(created, baseUrlOf(req)), {
+  return NextResponse.json(prismaToScim(created, baseUrlOf()), {
     status: 201,
     headers: {
       ...SCIM_HEADERS,
-      Location: `${baseUrlOf(req)}/scim/v2/Users/${created.id}`,
+      Location: `${baseUrlOf()}/scim/v2/Users/${created.id}`,
     },
   });
 }
