@@ -23,7 +23,11 @@ import { verifyPassword } from "@/lib/password";
 import { fireAndForgetAutoAssign } from "@/lib/onboarding/auto-assign";
 import { verifyTotpCode } from "@/lib/totp";
 import { consumeBackupCode } from "@/lib/password";
-import { auditLog, AuditActions, AuditOutcomes } from "@/lib/audit";
+import { auditLog, AuditActions, AuditOutcomes, readIpFromHeaders } from "@/lib/audit";
+import {
+  checkMagicLinkRateLimit,
+  checkPasswordRateLimit,
+} from "@/lib/auth-rate-limit";
 import { sendEmail, isEmailConfigured } from "@/lib/email";
 import {
   COMMUNITY_TENANT_SLUG,
@@ -212,11 +216,19 @@ if (!isDemoMode) {
         password: { label: "Mot de passe", type: "password" },
         mfaCode: { label: "Code 2FA", type: "text" },
       },
-      async authorize(credentials: any) {
+      async authorize(credentials: any, request: any) {
         const email = String(credentials?.email ?? "").toLowerCase().trim();
         const password = String(credentials?.password ?? "");
         const mfaCode = String(credentials?.mfaCode ?? "").trim();
         if (!email || !password) return null;
+
+        // Frein anti password-spraying (#737) : par IP + par email, AVANT
+        // tout travail (lookup BDD + scrypt). Le lockout par-compte ne voit
+        // pas un spray distribué sur plusieurs comptes depuis une même IP.
+        const ip = readIpFromHeaders(request?.headers ?? new Headers());
+        if (!checkPasswordRateLimit(ip, email)) {
+          throw new Error("RateLimited");
+        }
 
         const user = await db.user.findUnique({ where: { email } });
         if (!user) return null;
@@ -403,7 +415,15 @@ if (isEmailConfigured()) {
       // overrides sendVerificationRequest. On passe un objet vide.
       server: { host: "smtp.invalid", port: 25, auth: { user: "", pass: "" } },
       sendVerificationRequest: async (params) => {
-        const { identifier, url } = params;
+        const { identifier, url, request } = params;
+
+        // Frein anti email-bombing (#737) : ce hook déclenche un VRAI envoi
+        // via Scaleway TEM vers une adresse arbitraire non authentifiée.
+        // Par IP + par email, AVANT le lookup BDD et l'envoi.
+        const ip = readIpFromHeaders(request?.headers ?? new Headers());
+        if (!checkMagicLinkRateLimit(ip, identifier)) {
+          throw new Error("RateLimited");
+        }
         // Verifier que l'utilisateur n'est pas suspendu avant l'envoi.
         // On recupere AUSSI le slug du tenant home pour reecrire le
         // callbackUrl du lien (cf. ci-dessous).
