@@ -635,7 +635,16 @@ const csrfTokenName = cookieDomain
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter,
-  session: { strategy: useJwtSessions ? "jwt" : "database" },
+  session: {
+    strategy: useJwtSessions ? "jwt" : "database",
+    // Duree de vie de session bornee. En strategie JWT la revocation unitaire
+    // est impossible (token self-contained) -> la duree de vie est le seul
+    // levier contre un token vole. 12h + rafraichissement horaire : au pire
+    // 12h d'exploitation, et le callback jwt re-verifie deja `isActive` en DB
+    // a chaque requete (cout du raccourcissement = nul).
+    maxAge: 12 * 60 * 60, // 12 heures (defaut Auth.js = 30 jours)
+    updateAge: 60 * 60, // re-signe le token au plus 1x/heure d'activite
+  },
   trustHost: true,
   pages: {
     signIn: isDemoMode ? "/demo" : "/connexion",
