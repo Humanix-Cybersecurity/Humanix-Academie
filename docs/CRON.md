@@ -17,9 +17,10 @@ le tableau ci-dessous dans le scheduler de ton choix.
 | 4 | `/api/cron/achievements-reevaluate` | 1×/jour | `30 3 * * *` | 60s | ✅ | ⭐ | Re-évalue les badges achievements pour rattraper ceux ratés à la volée. |
 | 5 | `/api/cron/challenge-rewards` | 1×/jour | `45 3 * * *` | 60s | ✅ | ⭐⭐ | Distribue les coins/items aux gagnants des `TeamChallenge` terminés (idempotence via `rewardsDistributedAt`). |
 | 6 | `/api/cron/phishing-launch` | 1×/heure | `0 * * * *` | 60s | ✅ | ⭐⭐ | Démarre les campagnes phishing dont `scheduledAt` est dans le passé (`sentAt=null`). |
-| 7 | `/api/cron/breaches-refresh` | 1× / 6h | `0 */6 * * *` | 60s | ✅ | ⭐ | Scrape les sources publiques de fuites de données (observatoire `/cyber-meteo`). |
-| 8 | `/api/cron/weekly-anecdote` | 1× / semaine | `0 8 * * 1` | 300s | ✅ | ⭐ | Envoie l'anecdote hebdo aux abonnés (lundi 8h). |
-| 9 | `/api/cron/audit-logs-purge` | 1×/jour | `0 4 * * *` | 120s | ✅ | ⭐ | Filet de sécurité global : purge `AuditLog` > 400j (CNIL ~13 mois) pour les tenants qui n'ont pas configuré leur propre `dataRetentionDays`. |
+| 7 | `/api/cron/phishing-drip` | 1×/heure | `30 * * * *` | 60s | ✅ | ⭐⭐ | Envoie les mails de campagnes phishing drip-planifiés arrivés à échéance (`dripScheduledAt <= now`, `mailDispatchedAt IS NULL`). Décalé à HH:30 pour ne pas percuter `phishing-launch`. |
+| 8 | `/api/cron/breaches-refresh` | 1× / 6h | `0 */6 * * *` | 60s | ✅ | ⭐ | Scrape les sources publiques de fuites de données (observatoire `/cyber-meteo`). |
+| 9 | `/api/cron/weekly-anecdote` | 1× / semaine | `0 8 * * 1` | 300s | ✅ | ⭐ | Envoie l'anecdote hebdo aux abonnés (lundi 8h). |
+| 10 | `/api/cron/audit-logs-purge` | 1×/jour | `0 4 * * *` | 120s | ✅ | ⭐ | Filet de sécurité global : purge `AuditLog` > 400j (CNIL ~13 mois) pour les tenants qui n'ont pas configuré leur propre `dataRetentionDays`. |
 | 10 | `scripts/scrape-breaches.ts --deep` | au boot | n/a | n/a | ✅ | ⭐ | Import initial de l'observatoire breaches. Déjà appelé par `docker-entrypoint.sh`. |
 
 **Légende criticité** :
