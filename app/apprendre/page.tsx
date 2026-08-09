@@ -88,6 +88,7 @@ export default async function ApprendrePage() {
           episodeId: true,
           status: true,
           score: true,
+          bestQuizScorePct: true,
           completedAt: true,
         },
       }),
@@ -143,16 +144,17 @@ export default async function ApprendrePage() {
     (p) => p.status === "COMPLETED",
   ).length;
   // Score quiz moyen sur les episodes completes (pour debloquer le niveau
-  // "hard" quand maturite >= 70%). On utilise score (XP/totalXP% approche)
-  // faute de bestQuizScorePct ici ; pour 99% des cas la correlation est
-  // suffisante pour la classification.
+  // "hard" quand maturite >= 70%). On moyenne bestQuizScorePct (0-100, le
+  // meilleur pourcentage de bonnes reponses atteint) et NON score : ce dernier
+  // est de l'XP brute qui peut depasser 100, ce qui saturait le calcul a 100%
+  // des ~10 episodes -> tout le monde bascule en "hard". Cf. issue #736.
   const completedProgress = progress.filter((p) => p.status === "COMPLETED");
   const avgQuizScorePct =
     completedProgress.length === 0
       ? 0
       : Math.min(
           100,
-          completedProgress.reduce((s, p) => s + (p.score ?? 0), 0) /
+          completedProgress.reduce((s, p) => s + (p.bestQuizScorePct ?? 0), 0) /
             completedProgress.length,
         );
 
