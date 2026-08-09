@@ -8,6 +8,7 @@ import { db } from "@/lib/db";
 import type { Role } from "@prisma/client";
 import { auditLog, AuditActions } from "@/lib/audit";
 import { fireAndForgetAutoAssign } from "@/lib/onboarding/auto-assign";
+import { fireWebhook } from "@/lib/webhooks/dispatcher";
 import {
   assertCanActOn,
   assertCanChangeRole,
@@ -388,6 +389,13 @@ export async function inviteUser(formData: FormData) {
           baseUrl,
           tenantId: ctx.tenantId,
         });
+        // Webhook tenant (#734) : notifie Slack/Teams qu'un nouvel utilisateur
+        // a ete invite. Apres l'envoi reussi du magic link, dans le meme bloc
+        // fire-and-forget.
+        void fireWebhook(ctx.tenantId, "user.invited", {
+          email,
+          invitedBy: inviter?.name || inviter?.email || "un administrateur",
+        }).catch(() => {});
       } catch (err) {
         console.error("[invite] magic link email failed", err);
       }
