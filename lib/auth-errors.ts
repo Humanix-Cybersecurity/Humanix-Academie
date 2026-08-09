@@ -41,6 +41,9 @@ const AUTH_ERROR_FR: Record<string, string> = {
   MfaInvalid: "Code 2FA invalide.",
   AccountLocked:
     "Trop de tentatives. Compte verrouillé 15 minutes. Réessayez plus tard ou utilisez « Mot de passe oublié ».",
+  // Frein IP/email des flows d'auth (#737, cf. lib/auth-rate-limit.ts)
+  RateLimited:
+    "Trop de tentatives depuis votre réseau. Patientez quelques minutes puis réessayez.",
 
   // Erreurs WebAuthn
   credential_not_found:
