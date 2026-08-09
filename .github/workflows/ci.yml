@@ -136,8 +136,11 @@ jobs:
           npm ci
           npx prisma generate
 
-      - name: Run ESLint + tsc --noEmit
+      - name: Run tsc --noEmit + lint des routes
         run: npm run lint
+
+      - name: Run ESLint
+        run: npm run lint:eslint
 
   # ---------------------------------------------------------------------------
   # Job : Tests unitaires + coverage (Vitest)

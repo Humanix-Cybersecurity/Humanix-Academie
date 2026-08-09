@@ -27,7 +27,6 @@
 //   - L'operation est audit-loggee avec AuditAction.CATALOG_RESEEDED.
 
 import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
 import { type SeedCatalogResult } from "@/lib/catalog-seeder";
 import { reseedCatalogViaTsx } from "@/lib/catalog-runner";
