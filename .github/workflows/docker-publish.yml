@@ -100,6 +100,7 @@ on:
 permissions:
   contents: read
   packages: write # GHCR push (necessaire meme pour le token integre)
+  security-events: write # remontee des findings Trivy dans l'onglet Security
 
 concurrency:
   group: docker-publish-${{ github.ref }}
@@ -334,3 +335,104 @@ jobs:
         run: |
           docker rm -f humanix-smoketest 2>/dev/null || true
           docker image prune -af --filter "until=24h" 2>/dev/null || true
+
+  # ===========================================================================
+  # Scan de vulnerabilites de l'image publiee (Trivy) - #755
+  #
+  # POURQUOI : ce workflow produisait deja un SBOM SPDX... que personne ne
+  # scannait. Un SBOM non scanne ne protege de rien : il liste les composants
+  # sans jamais les confronter aux CVE connues.
+  #
+  # POURQUOI L'IMAGE OFFICIELLE ET PAS UNE ACTION TIERCE : moins de surface
+  # supply-chain (l'action tierce s'execute avec le token du job sur un
+  # runner self-hosted), version epinglee, et coherent avec un depot qui
+  # publie provenance SLSA + SBOM. Le socket Docker est deja accessible au
+  # runner puisqu'il build les images.
+  #
+  # POLITIQUE D'ECHEC : on bloque sur HIGH/CRITICAL *corrigeables*
+  # (--ignore-unfixed). Une CVE sans correctif publie n'est pas actionnable :
+  # la signaler est utile, bloquer toutes les publications dessus ne l'est
+  # pas. Les findings partent aussi dans l'onglet Security (SARIF), a cote
+  # de CodeQL.
+  # ===========================================================================
+  trivy-scan:
+    name: Scan vulnerabilites image (Trivy)
+    needs: [preflight, publish]
+    if: startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main'
+    runs-on: self-hosted
+    timeout-minutes: 20
+    steps:
+      - name: Determine tag to scan
+        id: tag
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=edge" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Login to GHCR (pour pull)
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull image a scanner
+        run: docker pull ${{ needs.preflight.outputs.ghcr_image }}:${{ steps.tag.outputs.tag }}
+
+      # Rapport lisible dans les logs : TOUTES les severites, y compris les
+      # non-corrigeables, pour garder la visibilite sans bloquer dessus.
+      - name: Rapport Trivy (informatif, toutes severites)
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v humanix-trivy-cache:/root/.cache/ \
+            aquasec/trivy:0.58.1 image \
+              --scanners vuln \
+              --severity MEDIUM,HIGH,CRITICAL \
+              --format table \
+              --timeout 15m \
+              "${{ needs.preflight.outputs.ghcr_image }}:${{ steps.tag.outputs.tag }}" \
+            || echo "::warning::Trivy (rapport informatif) s'est termine en erreur"
+
+      - name: Export SARIF (onglet Security)
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v humanix-trivy-cache:/root/.cache/ \
+            -v "$PWD:/out" \
+            aquasec/trivy:0.58.1 image \
+              --scanners vuln \
+              --severity HIGH,CRITICAL \
+              --ignore-unfixed \
+              --format sarif \
+              --output /out/trivy-results.sarif \
+              --timeout 15m \
+              "${{ needs.preflight.outputs.ghcr_image }}:${{ steps.tag.outputs.tag }}"
+
+      - name: Upload SARIF
+        if: always() && hashFiles('trivy-results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
+          category: trivy-image
+
+      # Garde bloquante : uniquement les HIGH/CRITICAL qui ONT un correctif.
+      - name: Bloquer sur HIGH/CRITICAL corrigeables
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v humanix-trivy-cache:/root/.cache/ \
+            aquasec/trivy:0.58.1 image \
+              --scanners vuln \
+              --severity HIGH,CRITICAL \
+              --ignore-unfixed \
+              --exit-code 1 \
+              --format table \
+              --timeout 15m \
+              "${{ needs.preflight.outputs.ghcr_image }}:${{ steps.tag.outputs.tag }}"
+
+      - name: Cleanup
+        if: always()
+        run: rm -f trivy-results.sarif
