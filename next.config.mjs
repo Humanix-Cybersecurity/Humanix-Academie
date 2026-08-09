@@ -26,12 +26,37 @@ const nextConfig = {
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           {
             key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=()",
+            // Deny-list large : on desactive toutes les API navigateur
+            // sensibles dont l'app n'a pas besoin (defense en profondeur
+            // contre un script injecte ou une iframe tierce).
+            value: [
+              "accelerometer=()",
+              "autoplay=()",
+              "browsing-topics=()",
+              "bluetooth=()",
+              "camera=()",
+              "display-capture=()",
+              "encrypted-media=()",
+              "fullscreen=(self)",
+              "geolocation=()",
+              "gyroscope=()",
+              "idle-detection=()",
+              "magnetometer=()",
+              "microphone=()",
+              "midi=()",
+              "payment=()",
+              "screen-wake-lock=()",
+              "serial=()",
+              "usb=()",
+            ].join(", "),
           },
           {
             key: "Strict-Transport-Security",
             value: "max-age=63072000; includeSubDomains; preload",
           },
+          // Cross-Origin-Opener-Policy / Cross-Origin-Resource-Policy : geres
+          // dynamiquement par proxy.ts (CORP conditionnel : cross-origin sur
+          // les images Open Graph pour preserver l'apercu de partage social).
           // Content-Security-Policy : gere dynamiquement par proxy.ts
           // (nonce per-request, suppression effective de 'unsafe-inline').
         ],

@@ -198,6 +198,20 @@ export function proxy(req: NextRequest) {
 
   const response = NextResponse.next({ request: { headers: requestHeaders } });
   response.headers.set("Content-Security-Policy", buildCsp(nonce));
+
+  // Isolation cross-origin (defense XS-Leaks / tabnabbing / Spectre).
+  // COOP same-origin est sans risque ici : l'auth passe par des redirections
+  // full-page (aucun flow SSO en popup qui dependrait de window.opener).
+  response.headers.set("Cross-Origin-Opener-Policy", "same-origin");
+  // CORP : same-origin par defaut pour empecher l'embarquement de nos reponses
+  // (PDF certificats, exports...) par des sites tiers. EXCEPTION : les images
+  // Open Graph, qui doivent rester chargeables cross-origin pour l'apercu de
+  // partage sur les reseaux sociaux (og:image des badges detective, etc.).
+  const isOpenGraphImage = pathname.endsWith("/opengraph-image");
+  response.headers.set(
+    "Cross-Origin-Resource-Policy",
+    isOpenGraphImage ? "cross-origin" : "same-origin",
+  );
   return response;
 }
 
