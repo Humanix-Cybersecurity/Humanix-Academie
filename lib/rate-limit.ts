@@ -7,6 +7,14 @@ type Bucket = { count: number; resetAt: number };
 
 const buckets = new Map<string, Bucket>();
 
+// Prune amorti : sans nettoyage, la Map grossit d'une entree par cle (IP/email)
+// vue et ne diminue jamais -> fuite memoire lente + vecteur de saturation.
+// On declenche un balayage des buckets expires au plus une fois par intervalle,
+// depuis checkRateLimit lui-meme (pas besoin d'un cron externe qui n'etait de
+// toute facon jamais appele).
+const PRUNE_INTERVAL_MS = 5 * 60 * 1000; // 5 min
+let lastPruneAt = 0;
+
 /**
  * Verifie + decremente un bucket.
  * Retourne `{ ok: true }` si la requete est dans la limite, `{ ok: false, retryAfter }` sinon.
@@ -21,6 +29,13 @@ export function checkRateLimit(
   windowMs: number,
 ): { ok: true } | { ok: false; retryAfter: number } {
   const now = Date.now();
+
+  // Nettoyage opportuniste, amorti dans le temps (au plus 1x / 5 min).
+  if (now - lastPruneAt >= PRUNE_INTERVAL_MS) {
+    lastPruneAt = now;
+    pruneRateLimitBuckets();
+  }
+
   const existing = buckets.get(key);
 
   if (!existing || existing.resetAt <= now) {
