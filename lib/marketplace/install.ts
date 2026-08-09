@@ -4,6 +4,7 @@
 // SERVER-ONLY (utilise db).
 import { db } from "@/lib/db";
 import type { ModulePayload } from "@/lib/marketplace/schema";
+import { fireWebhook } from "@/lib/webhooks/dispatcher";
 
 /**
  * Installe un module sur un tenant donne.
@@ -113,6 +114,20 @@ export async function installModule(opts: {
 
     return { saison, installation };
   });
+
+  // Webhook tenant (#734) : notifie Slack/Teams qu'un module communautaire a
+  // ete installe. Non bloquant, apres la transaction (l'install est deja
+  // persistee). L'event n'est emis que sur une VRAIE installation (on a
+  // retourne plus haut si alreadyInstalled).
+  const installer = await db.user.findUnique({
+    where: { id: installedById },
+    select: { name: true, email: true },
+  });
+  void fireWebhook(tenantId, "marketplace.module_installed", {
+    moduleTitle: module_.title,
+    author: module_.authorOrgName ?? "Communauté",
+    installedBy: installer?.name ?? installer?.email ?? "Admin",
+  }).catch(() => {});
 
   return {
     ok: true,
