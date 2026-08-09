@@ -120,13 +120,25 @@ export default async function ProfilBadgesPage() {
         </p>
 
         <div className="mt-6 grid grid-cols-3 gap-3 max-w-md">
-          <Stat label="Débloqués" value={`${unlockedCount} / ${totalCatalog}`} />
+          <Stat
+            label="Débloqués"
+            value={`${unlockedCount} / ${totalCatalog}`}
+          />
           <Stat
             label="Progression"
             value={`${Math.round((unlockedCount / Math.max(totalCatalog, 1)) * 100)} %`}
           />
           <Stat label="Points de gloire" value={totalPoints.toString()} />
         </div>
+
+        {/* Porte d'entree vers le classement permanent (#752) : sans ce
+            lien, les points de gloire n'ont d'existence que pour soi. */}
+        <Link
+          href="/classement/collectionneurs"
+          className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-violet-600 dark:text-violet-300 underline-offset-4 hover:underline"
+        >
+          🏅 Voir le classement des collectionneurs →
+        </Link>
       </header>
 
       <div className="space-y-10">
@@ -217,7 +229,9 @@ function BadgeCard({
       <p className="font-bold text-sm text-gray-900 dark:text-gray-100 leading-tight">
         {a.title}
       </p>
-      <p className={`text-[10px] uppercase tracking-widest font-bold ${r.text} mt-1`}>
+      <p
+        className={`text-[10px] uppercase tracking-widest font-bold ${r.text} mt-1`}
+      >
         {r.label} · {a.points} pts
       </p>
       <p className="text-[11px] text-gray-600 dark:text-gray-400 mt-2 leading-snug min-h-[2.5em]">

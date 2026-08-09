@@ -25,11 +25,21 @@ export default async function ClassementPage() {
           Aucun challenge en cours
         </h1>
         <p className="text-gray-600 mb-6">
-          Reviens quand ton dirigeant aura lancé un Cyber-Challenge !
+          Reviens quand ton dirigeant aura lancé un Cyber-Challenge ! En
+          attendant, le classement des collectionneurs de badges, lui, tourne en
+          permanence.
         </p>
-        <Link href="/apprendre" className="btn-primary">
-          Retour à mes saisons
-        </Link>
+        <div className="flex flex-wrap gap-3 justify-center">
+          <Link href="/classement/collectionneurs" className="btn-primary">
+            🏅 Voir les collectionneurs
+          </Link>
+          <Link
+            href="/apprendre"
+            className="inline-flex items-center rounded-xl border-2 border-gray-300 dark:border-slate-700 px-5 py-2.5 font-bold text-gray-700 dark:text-gray-200 hover:border-accent-500 transition-colors"
+          >
+            Retour à mes saisons
+          </Link>
+        </div>
       </div>
     );
   }
@@ -150,10 +160,19 @@ export default async function ClassementPage() {
         </div>
       </div>
 
-      <div className="mt-8 text-center">
+      <div className="mt-8 text-center space-y-3">
         <Link href="/apprendre" className="btn-primary">
           🎯 Continuer mon parcours pour grimper →
         </Link>
+        <p>
+          <Link
+            href="/classement/collectionneurs"
+            className="text-sm font-semibold text-violet-600 dark:text-violet-300 underline-offset-4 hover:underline"
+          >
+            🏅 Voir aussi le classement permanent des collectionneurs de badges
+            →
+          </Link>
+        </p>
       </div>
     </div>
   );
