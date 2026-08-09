@@ -283,6 +283,19 @@ export default function DrillPlayer({
               ))}
             </ol>
           )}
+          {state?.me && (
+            <div className="mt-6">
+              <a
+                href={`/api/drill/${exerciseId}/attestation?scope=self`}
+                className="inline-flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-white font-bold px-6 py-3 rounded-xl shadow-md transition-colors"
+              >
+                <span aria-hidden="true">📄 </span>Télécharger mon attestation
+              </a>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                Attestation nominative de ta participation, avec ton score.
+              </p>
+            </div>
+          )}
           <div className="mt-5">
             <HexLine>
               La crise la mieux gérée, c&apos;est celle dont on tire les leçons.

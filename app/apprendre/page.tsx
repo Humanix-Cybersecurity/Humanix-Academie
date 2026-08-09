@@ -48,6 +48,7 @@ import SaisonsAccordion, {
   type AccordionSection,
 } from "@/components/learner/SaisonsAccordion";
 import LearnerEmptyState from "@/components/learner/LearnerEmptyState";
+import JoinExerciseCard from "@/components/learner/JoinExerciseCard";
 import { SAISON_PALETTES } from "@/components/learner/palettes";
 import {
   PREMIUM_SAISONS_PREVIEW,
@@ -236,28 +237,32 @@ export default async function ApprendrePage() {
   // La catégorie d'une saison est dérivée de son tag `famille:*` (cf.
   // catalog-tags.ts, pensé pour ce groupement). Fallback "autres" sinon.
   // ===========================================================================
-  const FAMILLE_DEFS: { id: string; tag: string; label: string; emoji: string }[] =
-    [
-      {
-        id: "fondamentaux",
-        tag: "famille:public",
-        label: "Fondamentaux - pour tout le monde",
-        emoji: "🌱",
-      },
-      { id: "metiers", tag: "famille:metier", label: "Par métier", emoji: "💼" },
-      {
-        id: "conformite",
-        tag: "famille:conformite",
-        label: "Conformité & réglementaire",
-        emoji: "⚖️",
-      },
-      {
-        id: "avance",
-        tag: "famille:avance",
-        label: "Pour aller plus loin",
-        emoji: "🚀",
-      },
-    ];
+  const FAMILLE_DEFS: {
+    id: string;
+    tag: string;
+    label: string;
+    emoji: string;
+  }[] = [
+    {
+      id: "fondamentaux",
+      tag: "famille:public",
+      label: "Fondamentaux - pour tout le monde",
+      emoji: "🌱",
+    },
+    { id: "metiers", tag: "famille:metier", label: "Par métier", emoji: "💼" },
+    {
+      id: "conformite",
+      tag: "famille:conformite",
+      label: "Conformité & réglementaire",
+      emoji: "⚖️",
+    },
+    {
+      id: "avance",
+      tag: "famille:avance",
+      label: "Pour aller plus loin",
+      emoji: "🚀",
+    },
+  ];
   const categoryOf = (tags: string[]): string => {
     for (const d of FAMILLE_DEFS) if (tags.includes(d.tag)) return d.id;
     return "autres";
@@ -504,10 +509,9 @@ export default async function ApprendrePage() {
                   Joue à repérer les pièges plutôt qu'à les apprendre.
                 </h2>
                 <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
-                  On te montre un mail, un post LinkedIn ou une scène
-                  de bureau - tu coches ce qui te paraît louche. Le
-                  signal qu'on repère soi-même, on ne le retient pas
-                  par cœur : on le voit venir.
+                  On te montre un mail, un post LinkedIn ou une scène de bureau
+                  - tu coches ce qui te paraît louche. Le signal qu'on repère
+                  soi-même, on ne le retient pas par cœur : on le voit venir.
                 </p>
               </div>
               <span className="ml-auto text-2xl text-accent-500 group-hover:translate-x-1 transition-transform">
@@ -517,6 +521,10 @@ export default async function ApprendrePage() {
           </a>
         </section>
 
+        {/* Porte d'entree exercice de crise : l'apprenant saisit le code de
+            salle donne par l'organisateur (#746). Sans ce champ, /exercice
+            n'etait atteignable que par une URL envoyee hors plateforme. */}
+        <JoinExerciseCard />
       </div>
     </main>
   );
