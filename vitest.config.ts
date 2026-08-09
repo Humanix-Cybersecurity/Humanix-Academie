@@ -67,19 +67,47 @@ export default defineConfig({
         "lib/levels.ts",
         "lib/cyber-score.ts",
         "lib/vishing/script-generator.ts",
+        // Sprint #754 : noyau critique historiquement non couvert.
+        // lib/impersonation = la feature la plus dangereuse d'un SaaS
+        // multi-tenant ; lib/api-auth = portier des endpoints /api/v1.
+        "lib/impersonation/actions.ts",
+        "lib/api-auth.ts",
+        "lib/auth-rate-limit.ts",
+        "lib/notifications-mandatory.ts",
+        "lib/achievements/collectors.ts",
+        "lib/csv.ts",
       ],
       exclude: ["**/*.test.ts", "**/*.spec.ts"],
-      // Note coverage pendant la phase de montée en charge des tests :
-      // V8 instrumente tous les imports, même avec `include`, donc le total
-      // global reste bas tant que P1/P2 ne sont pas couverts. Pour ne pas
-      // bloquer la CI sur des fichiers volontairement non-testés en P0
-      // (ai/mistral, anecdotes, breaches, family-invites, incident-response,
-      // tts, phishing/personalized, business-impact, marketplace/install),
-      // on désactive les thresholds pendant ce sprint.
+      // Thresholds REACTIVES (#754). Ils ne portent que sur la liste
+      // `include` ci-dessus — le noyau critique volontairement couvert —
+      // et pas sur le dépôt entier : c'est ce qui les rend tenables.
+      //
+      // Rôle : cliquet anti-régression, pas objectif de perfection. Les
+      // valeurs sont posées ~5 points SOUS le niveau mesuré au moment de
+      // les activer (84.3 stmts / 75.9 branches / 86.5 funcs / 85.8 lignes),
+      // pour qu'un refactor honnête ne casse pas la CI mais qu'une vraie
+      // perte de couverture la casse.
+      //
+      // Les relever au fil des sprints plutôt que de les baisser : si un
+      // seuil devient gênant, ajouter les tests manquants ou retirer le
+      // fichier de `include` en le justifiant.
+      thresholds: {
+        statements: 80,
+        branches: 70,
+        functions: 80,
+        lines: 80,
+      },
       //
       // ROADMAP TESTS :
       //   - Sprint 1 P0 (FAIT) : 16 fichiers critiques, 279 tests, 97-100%
       //     coverage par fichier (sécu, billing, conformité, gamification).
+      //   - Sprint #754 (FAIT) : impersonation (la feature la plus
+      //     dangereuse d'un SaaS multi-tenant) + api-auth + les modules
+      //     ajoutés pendant l'audit d'août 2026. Thresholds réactivés.
+      //   - Reste non couvert, assumé : lib/auth.ts (câblage NextAuth, peu
+      //     testable unitairement), le handler webhook Mollie et les autres
+      //     routes app/ (aucun harnais pour app/ dans ce dépôt),
+      //     lib/webauthn.ts, lib/tenant-provisioning.ts.
       //   - Sprint 2 P1 (post-launch) : ai/mistral, anecdotes, breaches,
       //     business-impact, incident-response → cible 70% global.
       //   - Sprint 3 P2 (Q3 2026) : helpers utilitaires, atteindre 85%.
