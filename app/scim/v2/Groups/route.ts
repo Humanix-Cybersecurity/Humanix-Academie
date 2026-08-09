@@ -10,15 +10,15 @@ import { authenticateApiKey } from "@/lib/api-auth";
 import { db } from "@/lib/db";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { SCIM_SCHEMAS, scimError, type ScimGroup } from "@/lib/scim/types";
+import { getAppBaseUrl } from "@/lib/subdomain-tenant";
 
 export const dynamic = "force-dynamic";
 const SCIM_HEADERS = { "Content-Type": "application/scim+json" };
 
-function baseUrlOf(req: Request): string {
-  return (
-    process.env.NEXT_PUBLIC_BASE_URL ??
-    `https://${req.headers.get("host") ?? "humanix-academie.fr"}`
-  );
+// URL de base derivee de la config serveur, jamais du header Host client
+// (evite l'injection de Host dans les meta SCIM). Cf. #739.
+function baseUrlOf(): string {
+  return getAppBaseUrl();
 }
 
 function serviceToGroupId(service: string): string {
@@ -75,7 +75,7 @@ export async function GET(req: Request) {
     byService[u.service].push(u);
   }
 
-  const baseUrl = baseUrlOf(req);
+  const baseUrl = baseUrlOf();
   const groups: ScimGroup[] = Object.entries(byService).map(
     ([service, members]) => {
       const lastModified = members.reduce(

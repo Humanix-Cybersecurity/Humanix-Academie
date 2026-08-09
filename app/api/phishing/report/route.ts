@@ -7,7 +7,9 @@
 // Auth : pas de NextAuth ici (l'add-in tourne dans le client mail avec une
 // autre identité). On AUTHENTIFIE le user via son email professionnel envoyé
 // dans le payload. Sécurité : on n'accepte que les users existants en BDD avec
-// isActive=true. Si l'email n'est pas reconnu : 403.
+// isActive=true. Si l'email n'est pas reconnu, on renvoie une réponse 200
+// générique SANS side-effect (anti-énumération, #738) : un 403 distinct
+// transformait l'endpoint en oracle. Frein supplémentaire : rate limit par IP.
 //
 // CORS : Outlook tourne dans une iframe sandbox sur outlook.office.com, donc
 // notre endpoint doit autoriser cet origine (CORS strict permissif uniquement
@@ -29,6 +31,7 @@ import { fireWebhook } from "@/lib/webhooks/dispatcher";
 import { triggerCisoLiveSync } from "@/lib/ciso-assistant/live-mode";
 import { refreshUserRiskScore } from "@/lib/risk-score";
 import { gradePhishingReport } from "@/lib/ai/phishing-report-grader";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -89,15 +92,39 @@ export async function POST(req: NextRequest) {
   }
   const data = parsed.data;
 
-  // Authn par email pro : l'user doit exister + être actif
+  // SECURITE (#738) : rate limit par IP, INDEPENDANT de l'email cible.
+  // L'auth de cet endpoint n'est qu'un email dans le body (l'add-in n'a pas de
+  // secret) ; sans frein par IP, un attaquant peut enumerer les comptes de la
+  // plateforme (200 vs 403) et forger des signalements en masse. Le rate limit
+  // 30/h existant est par-VICTIME, pas par-attaquant -> inefficace ici.
+  const ip =
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    req.headers.get("x-real-ip") ??
+    "unknown";
+  const ipRl = checkRateLimit(`phishing-report-ip:${ip}`, 100, 60 * 60 * 1000);
+  if (!ipRl.ok) {
+    return NextResponse.json(
+      { error: "rate_limited", retry_after_seconds: ipRl.retryAfter },
+      { status: 429, headers: { ...cors, "retry-after": String(ipRl.retryAfter) } },
+    );
+  }
+
+  // Authn par email pro : l'user doit exister + être actif.
   const user = await db.user.findUnique({
     where: { email: data.userEmail.toLowerCase() },
     select: { id: true, tenantId: true, isActive: true, name: true },
   });
+  // SECURITE (#738) : email inconnu/inactif -> on renvoie la MEME reponse 200
+  // generique qu'un succes, SANS aucun side-effect (pas d'event, pas de coins,
+  // pas d'appel Mistral, pas de webhook). Un 403 distinct transformait
+  // l'endpoint en oracle d'enumeration d'utilisateurs. Le vrai add-in d'un
+  // user valide fonctionne normalement ; un attaquant ne peut plus distinguer
+  // un email valide d'un invalide. (Fix cible a suivre : secret partage par
+  // tenant -- necessite une migration, cf. #738.)
   if (!user || !user.isActive) {
     return NextResponse.json(
-      { error: "user_not_authorized" },
-      { status: 403, headers: cors },
+      { ok: true, message: "Merci ! Votre signalement a été enregistré." },
+      { headers: cors },
     );
   }
 

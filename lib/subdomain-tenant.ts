@@ -157,3 +157,31 @@ export function getRootDomain(): string {
     return "humanix-academie.fr";
   }
 }
+
+/**
+ * URL de base canonique de l'application (origine : scheme + host), derivee
+ * UNIQUEMENT de la configuration serveur, JAMAIS d'un header de la requete.
+ *
+ * SECURITE : a utiliser partout ou une URL absolue est persistee ou envoyee a
+ * un tiers (webhook Mollie, meta SCIM, liens d'email...). Deriver l'URL du
+ * header `Host` client permet a un attaquant de forger la destination (ex:
+ * detournement des webhooks de facturation Mollie). Cf. issue #739.
+ *
+ * Ordre de preference (les deux premieres doivent avoir la meme valeur en
+ * prod, cf. .env.example) : NEXT_PUBLIC_APP_URL, puis NEXT_PUBLIC_BASE_URL
+ * (encore utilisee par SCIM / evidence-export), puis AUTH_URL.
+ */
+export function getAppBaseUrl(): string {
+  const candidate =
+    process.env.NEXT_PUBLIC_APP_URL ??
+    process.env.NEXT_PUBLIC_BASE_URL ??
+    process.env.AUTH_URL;
+  if (candidate) {
+    try {
+      return new URL(candidate).origin;
+    } catch {
+      // valeur mal formee -> on tombe sur le defaut ci-dessous
+    }
+  }
+  return "https://humanix-academie.fr";
+}

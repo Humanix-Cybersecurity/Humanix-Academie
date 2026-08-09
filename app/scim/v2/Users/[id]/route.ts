@@ -12,6 +12,7 @@ import {
   scimToPrismaCreate,
   applyScimPatch,
 } from "@/lib/scim/mapper";
+import { getAppBaseUrl } from "@/lib/subdomain-tenant";
 
 export const dynamic = "force-dynamic";
 
@@ -19,11 +20,10 @@ const SCIM_HEADERS = { "Content-Type": "application/scim+json" };
 const SCIM_WRITE_LIMIT = 100; // PUT/PATCH/DELETE : 100/min/tenant
 const SCIM_RATE_WINDOW_MS = 60 * 1000;
 
-function baseUrlOf(req: Request): string {
-  return (
-    process.env.NEXT_PUBLIC_BASE_URL ??
-    `https://${req.headers.get("host") ?? "humanix-academie.fr"}`
-  );
+// URL de base derivee de la config serveur, jamais du header Host client
+// (evite l'injection de Host dans les meta SCIM). Cf. #739.
+function baseUrlOf(): string {
+  return getAppBaseUrl();
 }
 
 async function loadScopedUser(req: Request, id: string, op: string) {
@@ -79,7 +79,7 @@ export async function GET(
   const r = await loadScopedUser(req, id, "get");
   if ("response" in r && !r.user) return r.response;
 
-  return NextResponse.json(prismaToScim(r.user!, baseUrlOf(req)), {
+  return NextResponse.json(prismaToScim(r.user!, baseUrlOf()), {
     headers: SCIM_HEADERS,
   });
 }
@@ -122,7 +122,7 @@ export async function PUT(
     },
   });
 
-  return NextResponse.json(prismaToScim(updated, baseUrlOf(req)), {
+  return NextResponse.json(prismaToScim(updated, baseUrlOf()), {
     headers: SCIM_HEADERS,
   });
 }
@@ -162,7 +162,7 @@ export async function PATCH(
 
   if (Object.keys(update).length === 0) {
     // Aucun changement : on renvoie tel quel
-    return NextResponse.json(prismaToScim(r.user!, baseUrlOf(req)), {
+    return NextResponse.json(prismaToScim(r.user!, baseUrlOf()), {
       headers: SCIM_HEADERS,
     });
   }
@@ -172,7 +172,7 @@ export async function PATCH(
     data: update as Record<string, unknown>,
   });
 
-  return NextResponse.json(prismaToScim(updated, baseUrlOf(req)), {
+  return NextResponse.json(prismaToScim(updated, baseUrlOf()), {
     headers: SCIM_HEADERS,
   });
 }
