@@ -35,6 +35,7 @@ import { getLevel } from "@/lib/levels";
 import { buildEquippedFromInventory } from "@/lib/shop";
 import { computeRiskScore } from "@/lib/risk-score";
 import { ACHIEVEMENTS_CATALOG } from "@/lib/achievements/catalog";
+import { getScenario, maxScore } from "@/lib/drill/scenarios";
 
 export const dynamic = "force-dynamic";
 
@@ -119,6 +120,44 @@ export default async function ProfilPage({
       return def ? { ...def, unlockedAt: u.unlockedAt } : null;
     })
     .filter((b): b is NonNullable<typeof b> => b !== null);
+
+  // Exercices de crise auxquels l'apprenant a participe (#746). Avant, le
+  // CrisisParticipant.score ne remontait nulle part cote apprenant. On ne
+  // garde que les exercices TERMINES (score fige) et on resout le titre du
+  // scenario in-memory via le catalogue (pas de colonne titre en base).
+  const crisisRaw = await db.crisisParticipant.findMany({
+    where: { userId, exercise: { status: "ENDED" } },
+    orderBy: { exercise: { endedAt: "desc" } },
+    take: 10,
+    select: {
+      score: true,
+      role: true,
+      exercise: {
+        select: {
+          id: true,
+          scenarioId: true,
+          mode: true,
+          endedAt: true,
+          createdAt: true,
+        },
+      },
+    },
+  });
+  const crisisParticipations = crisisRaw
+    .map((p) => {
+      const scenario = getScenario(p.exercise.scenarioId);
+      if (!scenario) return null;
+      return {
+        exerciseId: p.exercise.id,
+        scenarioTitle: scenario.title,
+        score: p.score,
+        maxScore: maxScore(scenario),
+        role: p.role,
+        mode: p.exercise.mode,
+        date: p.exercise.endedAt ?? p.exercise.createdAt,
+      };
+    })
+    .filter((p): p is NonNullable<typeof p> => p !== null);
 
   // Seuil "score parfait" : sert uniquement au styling de la couleur
   // (vert >=70 %, ambre sinon) et au choix du label CTA ("Refaire" pour
@@ -312,9 +351,9 @@ export default async function ProfilPage({
                 🌱
               </p>
               <p className="text-sm text-gray-700 dark:text-gray-200 italic max-w-md mx-auto">
-                Tes premiers badges arrivent quand tu termines un épisode ou
-                que tu enchaînes 2 jours de pratique. Pas de pression - ça
-                vient naturellement.
+                Tes premiers badges arrivent quand tu termines un épisode ou que
+                tu enchaînes 2 jours de pratique. Pas de pression - ça vient
+                naturellement.
               </p>
               <Link
                 href="/profil/badges"
@@ -341,6 +380,65 @@ export default async function ProfilPage({
             3. SCORE DE RISQUE CYBER
             ============================================================ */}
         <RiskScoreCard risk={risk} />
+
+        {/* ============================================================
+            3bis. EXERCICES DE CRISE - participations de l'apprenant
+            avec score individuel + attestation nominative (#746).
+            ============================================================ */}
+        {crisisParticipations.length > 0 && (
+          <section aria-labelledby="crisis-title">
+            <div className="text-center mb-6 sm:text-left">
+              <p className="text-xs uppercase tracking-[0.25em] font-bold text-red-500 mb-1">
+                Tes exercices de crise
+              </p>
+              <h2
+                id="crisis-title"
+                className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300"
+              >
+                {crisisParticipations.length} simulation
+                {crisisParticipations.length > 1 ? "s" : ""} vécue
+                {crisisParticipations.length > 1 ? "s" : ""}
+              </h2>
+            </div>
+            <ul className="space-y-3 list-none p-0">
+              {crisisParticipations.map((c) => (
+                <li
+                  key={c.exerciseId}
+                  className="flex items-center gap-4 rounded-2xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4"
+                >
+                  <span className="text-3xl shrink-0" aria-hidden="true">
+                    🚨
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-gray-900 dark:text-gray-100 truncate">
+                      {c.scenarioTitle}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      {c.mode === "TABLETOP" ? "Table-top" : "Éclair"}
+                      {c.role ? ` · ${c.role}` : ""} ·{" "}
+                      {new Date(c.date).toLocaleDateString("fr-FR")}
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <p className="font-bold text-primary-600 dark:text-accent-300 tabular-nums">
+                      {c.score}
+                      <span className="text-xs text-gray-400 font-normal">
+                        {" "}
+                        / {c.maxScore}
+                      </span>
+                    </p>
+                    <a
+                      href={`/api/drill/${c.exerciseId}/attestation?scope=self`}
+                      className="text-xs text-accent-500 hover:text-accent-600 font-semibold underline-offset-4 hover:underline"
+                    >
+                      📄 Attestation
+                    </a>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {/* ============================================================
             4. NEWSLETTER OPT-IN - chaleureux, pas insistant
@@ -405,8 +503,8 @@ export default async function ProfilPage({
                 : `Tous tes épisodes (${filteredProgress.length})`}
             </h2>
             <p className="text-sm text-gray-600 dark:text-gray-300 italic mt-1">
-              Le score en vert : c'est solide. En ambre : tu peux encore
-              gagner du terrain - clique sur « Améliorer » pour rejouer.
+              Le score en vert : c'est solide. En ambre : tu peux encore gagner
+              du terrain - clique sur « Améliorer » pour rejouer.
             </p>
           </div>
 
@@ -445,9 +543,7 @@ export default async function ProfilPage({
                 >
                   <span aria-hidden="true">{s.emoji}</span>
                   <span>{s.title}</span>
-                  <span className="opacity-70 tabular-nums">
-                    ({s.count})
-                  </span>
+                  <span className="opacity-70 tabular-nums">({s.count})</span>
                 </Link>
               ))}
             </nav>
@@ -465,8 +561,8 @@ export default async function ProfilPage({
                 Ton voyage commence quand tu veux
               </h3>
               <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-md mx-auto">
-                Aucun épisode terminé pour le moment. Pas de pression - quand
-                tu te sens prêt·e, c'est par ici.
+                Aucun épisode terminé pour le moment. Pas de pression - quand tu
+                te sens prêt·e, c'est par ici.
               </p>
               <Link href="/apprendre" className="btn-primary">
                 Commencer ma première saison <span aria-hidden="true">→</span>
@@ -652,12 +748,9 @@ function BadgeChip({
   // Palette par rarete : on garde la meme convention que /profil/badges
   // pour la coherence visuelle (1 coup d'oeil = je sais quel niveau).
   const palette = {
-    common:
-      "bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700",
-    rare:
-      "bg-gradient-to-br from-cyan-50 to-white dark:from-cyan-950/30 dark:to-slate-900 border-cyan-200 dark:border-cyan-900/50",
-    epic:
-      "bg-gradient-to-br from-purple-50 to-white dark:from-purple-950/30 dark:to-slate-900 border-purple-200 dark:border-purple-900/50",
+    common: "bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700",
+    rare: "bg-gradient-to-br from-cyan-50 to-white dark:from-cyan-950/30 dark:to-slate-900 border-cyan-200 dark:border-cyan-900/50",
+    epic: "bg-gradient-to-br from-purple-50 to-white dark:from-purple-950/30 dark:to-slate-900 border-purple-200 dark:border-purple-900/50",
     legendary:
       "bg-gradient-to-br from-amber-50 to-white dark:from-amber-950/30 dark:to-slate-900 border-amber-300 dark:border-amber-900/60",
   }[rarity];

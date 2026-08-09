@@ -25,6 +25,19 @@ export type AttestationData = {
   generatedStr: string;
 };
 
+export type ParticipantAttestationData = {
+  orgName: string;
+  participantName: string;
+  /** Role table-top (Direction/Comm/...) ou null en mode eclair. */
+  role: string | null;
+  scenarioTitle: string;
+  score: number;
+  maxScore: number;
+  modeLabel: string;
+  dateStr: string;
+  generatedStr: string;
+};
+
 const COLORS = {
   primary: "#0B3D91",
   accent: "#00A3A1",
@@ -186,6 +199,87 @@ export function AttestationPdf({ data }: { data: AttestationData }) {
             <Text style={styles.signValue}>{data.generatedStr}</Text>
           </View>
         </View>
+
+        <Text style={styles.footer}>
+          Genere par Humanix Academie le {data.generatedStr} · La cyber humaine
+          pour tous
+        </Text>
+      </Page>
+    </Document>
+  );
+}
+
+/**
+ * Attestation NOMINATIVE de participation, destinee a l'apprenant : atteste
+ * qu'il a pris part a l'exercice, avec son score individuel. Meme posture
+ * declarative que l'attestation collective (ni certification ni preuve
+ * opposable).
+ */
+export function ParticipantAttestationPdf({
+  data,
+}: {
+  data: ParticipantAttestationData;
+}) {
+  return (
+    <Document
+      title={`Attestation de participation - ${data.participantName}`}
+      author="Humanix Academie"
+    >
+      <Page size="A4" style={styles.page}>
+        <Text style={styles.brand}>Humanix Academie</Text>
+        <Text style={styles.eyebrow}>Participation a un exercice de crise</Text>
+        <Text style={styles.title}>Attestation de participation</Text>
+        <View style={styles.rule} />
+
+        <Text style={styles.para}>
+          <Text style={{ fontWeight: "bold" }}>{data.participantName}</Text> a
+          participe, le {data.dateStr}, a un exercice de gestion de crise
+          d&apos;origine cyber organise par{" "}
+          <Text style={{ fontWeight: "bold" }}>{data.orgName}</Text> et anime
+          via la plateforme Humanix Academie.
+        </Text>
+
+        <View style={styles.detailBox}>
+          <View style={styles.row}>
+            <Text style={styles.key}>Scenario</Text>
+            <Text style={styles.val}>{data.scenarioTitle}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.key}>Date</Text>
+            <Text style={styles.val}>{data.dateStr}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.key}>Format</Text>
+            <Text style={styles.val}>{data.modeLabel}</Text>
+          </View>
+          {data.role && (
+            <View style={styles.row}>
+              <Text style={styles.key}>Role tenu</Text>
+              <Text style={styles.val}>{data.role}</Text>
+            </View>
+          )}
+          <View style={styles.row}>
+            <Text style={styles.key}>Score individuel</Text>
+            <Text style={styles.val}>
+              {data.score} / {data.maxScore} (indicatif)
+            </Text>
+          </View>
+        </View>
+
+        <Text style={styles.recyf}>
+          Cet exercice contribue a l&apos;objectif de securite n°15 du
+          Referentiel Cyber France (ReCyF, ANSSI) : « Exercices, tests et
+          entrainements », et aux bonnes pratiques de preparation a la gestion
+          de crise attendues au titre de la directive NIS2.
+        </Text>
+
+        <Text style={styles.caveat}>
+          Attestation declarative etablie a des fins internes de tracabilite.
+          Elle ne constitue ni une certification ni une preuve opposable a un
+          tiers ; le ReCyF est un document de travail de l&apos;ANSSI,
+          susceptible d&apos;evoluer. Le score est un indicateur pedagogique,
+          pas une note de competence.
+        </Text>
 
         <Text style={styles.footer}>
           Genere par Humanix Academie le {data.generatedStr} · La cyber humaine
