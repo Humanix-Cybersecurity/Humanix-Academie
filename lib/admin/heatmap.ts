@@ -37,6 +37,111 @@ export type HeatmapData = {
   globalSaisonCompletion: { saisonId: string; completionPct: number }[];
 };
 
+export type GroupSaisonExport = {
+  group: { slug: string; name: string; emoji: string };
+  saison: { id: string; slug: string; title: string };
+  /** Nb episodes publies dans la saison */
+  episodeCount: number;
+  /** Membres tries du moins avance au plus avance (ordre actionnable) */
+  members: {
+    name: string | null;
+    email: string;
+    role: string;
+    completedCount: number;
+    completionPct: number;
+  }[];
+};
+
+/**
+ * Detail d'une cellule de la heatmap (groupe x saison) : liste des membres
+ * avec leur completion individuelle sur la saison. Memes regles d'inclusion
+ * que computeHeatmap (membres LEARNER/MANAGER actifs, episodes publies,
+ * Progress COMPLETED). Retourne null si le groupe ou la saison n'existe
+ * pas dans le perimetre du tenant.
+ */
+export async function listGroupSaisonMembers(
+  tenantId: string,
+  groupSlug: string,
+  saisonId: string,
+): Promise<GroupSaisonExport | null> {
+  const group = await db.group.findFirst({
+    where: { tenantId, slug: groupSlug, isActive: true },
+    select: {
+      slug: true,
+      name: true,
+      emoji: true,
+      members: {
+        where: {
+          user: { isActive: true, role: { in: ["LEARNER", "MANAGER"] } },
+        },
+        select: {
+          user: { select: { id: true, name: true, email: true, role: true } },
+        },
+      },
+    },
+  });
+  if (!group) return null;
+
+  const saison = await db.saison.findFirst({
+    where: {
+      id: saisonId,
+      isPublished: true,
+      OR: [{ tenantId: null }, { tenantId }],
+    },
+    select: {
+      id: true,
+      slug: true,
+      title: true,
+      episodes: { where: { isPublished: true }, select: { id: true } },
+    },
+  });
+  if (!saison) return null;
+
+  const episodeCount = saison.episodes.length;
+  const userIds = group.members.map((m) => m.user.id);
+
+  const completedByUser = new Map<string, number>();
+  if (userIds.length > 0) {
+    const rows = await db.progress.findMany({
+      where: {
+        userId: { in: userIds },
+        saisonId: saison.id,
+        status: "COMPLETED",
+      },
+      select: { userId: true },
+    });
+    for (const r of rows) {
+      completedByUser.set(r.userId, (completedByUser.get(r.userId) ?? 0) + 1);
+    }
+  }
+
+  const members = group.members
+    .map(({ user }) => {
+      const completedCount = completedByUser.get(user.id) ?? 0;
+      return {
+        name: user.name,
+        email: user.email,
+        role: String(user.role),
+        completedCount,
+        completionPct:
+          episodeCount === 0
+            ? 0
+            : Math.round((completedCount / episodeCount) * 100),
+      };
+    })
+    .sort(
+      (a, b) =>
+        a.completionPct - b.completionPct || a.email.localeCompare(b.email),
+    );
+
+  return {
+    group: { slug: group.slug, name: group.name, emoji: group.emoji },
+    saison: { id: saison.id, slug: saison.slug, title: saison.title },
+    episodeCount,
+    members,
+  };
+}
+
 export async function computeHeatmap(tenantId: string): Promise<HeatmapData> {
   // 1) Saisons publiees vues par le tenant + count episodes publies.
   // Inclut le catalogue global (tenantId: null) ET les saisons custom du
@@ -98,9 +203,7 @@ export async function computeHeatmap(tenantId: string): Promise<HeatmapData> {
   // 3) Pour chaque (group, saison), compter les Progress COMPLETED
   // On fait 1 seule query large, puis on agrege en memoire pour eviter
   // un N+1.
-  const allUserIds = Array.from(
-    new Set(groups.flatMap((g) => g.userIds)),
-  );
+  const allUserIds = Array.from(new Set(groups.flatMap((g) => g.userIds)));
   const allSaisonIds = saisons.map((s) => s.id);
 
   let progressRows: { userId: string; saisonId: string }[] = [];
@@ -136,9 +239,7 @@ export async function computeHeatmap(tenantId: string): Promise<HeatmapData> {
       }
       const denom = g.userCount * s.episodeCount;
       const completionPct =
-        denom === 0
-          ? 0
-          : Math.round((completedCount / denom) * 100);
+        denom === 0 ? 0 : Math.round((completedCount / denom) * 100);
       cells.push({
         groupSlug: g.slug,
         saisonId: s.id,

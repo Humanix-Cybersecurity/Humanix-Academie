@@ -14,27 +14,11 @@ import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { listAtRiskUsers } from "@/lib/admin/at-risk-users";
 import { recordExportAccess } from "@/lib/security/exfiltration-detection";
+// Echappement RFC 4180 + anti CSV-injection : implementation canonique
+// partagee par tous les exports admin (cf. lib/csv.ts).
+import { buildCsv } from "@/lib/csv";
 
 export const dynamic = "force-dynamic";
-
-/**
- * Echappe une cellule CSV selon RFC 4180 :
- * - si elle contient une virgule, des guillemets ou un saut de ligne,
- *   on l'entoure de guillemets et on double les guillemets internes
- */
-function csvEscape(v: string | number | null | undefined): string {
-  if (v === null || v === undefined) return "";
-  let s = String(v);
-  // Anti CSV-injection : prefixe les cellules debutant par = + - @ (ou tab/CR)
-  // pour qu'Excel/Sheets ne les interprete pas comme des formules.
-  if (/^[=+\-@\t\r]/.test(s)) {
-    s = `'${s}`;
-  }
-  if (/[",\n\r]/.test(s)) {
-    return `"${s.replace(/"/g, '""')}"`;
-  }
-  return s;
-}
 
 export async function GET(req: Request) {
   const session = await auth();
@@ -55,7 +39,12 @@ export async function GET(req: Request) {
   const url = new URL(req.url);
   // Bornes robustes : NaN/hors plage -> defaut (evite de propager NaN dans
   // listAtRiskUsers).
-  const clampInt = (raw: string | null, def: number, lo: number, hi: number) => {
+  const clampInt = (
+    raw: string | null,
+    def: number,
+    lo: number,
+    hi: number,
+  ) => {
     const n = parseInt(raw ?? "", 10);
     return Number.isFinite(n) ? Math.min(Math.max(n, lo), hi) : def;
   };
@@ -95,25 +84,22 @@ export async function GET(req: Request) {
     "Motif",
   ];
 
-  const rows = users.map((u) =>
-    [
-      csvEscape(u.name),
-      csvEscape(u.email),
-      csvEscape(u.role),
-      csvEscape(u.service),
-      csvEscape(u.groupBadges.map((g) => g.name).join("; ")),
-      csvEscape(u.riskScore),
-      csvEscape(trendLabel[u.trend]),
-      csvEscape(u.trendIndicator.toFixed(2)),
-      csvEscape(u.trendReasons.join(" · ")),
-      csvEscape(u.daysSinceActivity),
-      csvEscape(u.completedEpisodes),
-      csvEscape(reasonLabel[u.reason]),
-    ].join(","),
-  );
+  const rows = users.map((u) => [
+    u.name,
+    u.email,
+    u.role,
+    u.service,
+    u.groupBadges.map((g) => g.name).join("; "),
+    u.riskScore,
+    trendLabel[u.trend],
+    u.trendIndicator.toFixed(2),
+    u.trendReasons.join(" · "),
+    u.daysSinceActivity,
+    u.completedEpisodes,
+    reasonLabel[u.reason],
+  ]);
 
-  // BOM UTF-8 pour Excel
-  const csv = "﻿" + [header.join(","), ...rows].join("\r\n") + "\r\n";
+  const csv = buildCsv(header, rows);
 
   const today = new Date().toISOString().slice(0, 10);
   const filename = `humanix-utilisateurs-vulnerables-${today}-score${filters.threshold}-inactif${filters.daysInactive}j.csv`;
