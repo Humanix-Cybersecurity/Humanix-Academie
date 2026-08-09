@@ -14,7 +14,7 @@ le tableau ci-dessous dans le scheduler de ton choix.
 | 1 | `/api/cron/risk-snapshot` | 1×/jour | `0 3 * * *` | 60s | ✅ | ⭐⭐ | Snapshot quotidien du score de risque par tenant (alimente `/admin/analytics/forecast`). |
 | 2 | `/api/cron/data-retention-purge` | 1×/jour | `15 3 * * *` | 300s | ✅ | ⭐⭐ | Anonymise les users inactifs et supprime les events/audit-logs au-delà du seuil RGPD configuré par tenant. |
 | 3 | `/api/cron/cyber-event-tick` | 1×/jour | `30 0 * * *` | 60s | ✅ | ⭐⭐ | Crée/active les `CyberEventInstance` (Cybermois, World Password Day…) selon le calendrier annuel. |
-| 4 | `/api/cron/achievements-reevaluate` | 1×/jour | `30 3 * * *` | 60s | ✅ | ⭐ | Re-évalue les badges achievements pour rattraper ceux ratés à la volée. |
+| 4 | `/api/cron/achievements-reevaluate` | 1×/jour | `30 3 * * *` | 300s | ✅ | ⭐ | Re-évalue les badges achievements pour rattraper ceux ratés à la volée. Émet aussi les notifications de saisons obligatoires : relance (`REMINDER_MANDATORY`, 1×/semaine max par saison) et annonce du certificat (`CERTIFICATE_READY`, 1× définitivement). |
 | 5 | `/api/cron/challenge-rewards` | 1×/jour | `45 3 * * *` | 60s | ✅ | ⭐⭐ | Distribue les coins/items aux gagnants des `TeamChallenge` terminés (idempotence via `rewardsDistributedAt`). |
 | 6 | `/api/cron/phishing-launch` | 1×/heure | `0 * * * *` | 60s | ✅ | ⭐⭐ | Démarre les campagnes phishing dont `scheduledAt` est dans le passé (`sentAt=null`). |
 | 7 | `/api/cron/phishing-drip` | 1×/heure | `30 * * * *` | 60s | ✅ | ⭐⭐ | Envoie les mails de campagnes phishing drip-planifiés arrivés à échéance (`dripScheduledAt <= now`, `mailDispatchedAt IS NULL`). Décalé à HH:30 pour ne pas percuter `phishing-launch`. |
