@@ -1,24 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 //
 // Flat config ESLint (format obligatoire depuis ESLint 10).
-// Equivalent de l'ancien .eslintrc.json, via le bridge `FlatCompat` qui
-// transforme les `extends: ["next/..."]` (format legacy) en flat config.
 //
-// Note : eslint-config-next 16 expose toujours ses configs en format
-// legacy (core-web-vitals.js / typescript.js), donc on passe par
-// FlatCompat. C'est la voie officielle recommandee par Vercel pendant
-// la transition.
+// eslint-config-next 16 expose desormais un flat config NATIF (un tableau
+// de config objects). On l'importe donc directement, sans passer par le
+// bridge `FlatCompat`/`@eslint/eslintrc` : ce dernier tentait de valider
+// la config Next via JSON.stringify et plantait sur la structure circulaire
+// des plugins (`TypeError: Converting circular structure to JSON`), ce qui
+// rendait `eslint .` totalement inoperant.
 
-import { FlatCompat } from "@eslint/eslintrc";
-import { fileURLToPath } from "node:url";
-import { dirname } from "node:path";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+import next from "eslint-config-next";
+import tseslint from "typescript-eslint";
 
 export default [
   // Ignores globaux (remplace les --ignore-pattern de l'ancien script lint).
@@ -35,11 +27,16 @@ export default [
     ],
   },
 
-  // Configs Next.js (core-web-vitals + typescript) via le bridge legacy.
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  // Config Next.js native (core-web-vitals + typescript + a11y + import).
+  ...next,
 
   // Rules custom - strictement les memes qu'avant.
+  // En flat config, un objet qui reference une regle de plugin doit declarer
+  // ce plugin ; on reattache donc @typescript-eslint ici.
   {
+    plugins: {
+      "@typescript-eslint": tseslint.plugin,
+    },
     rules: {
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/no-unused-vars": [
@@ -52,6 +49,22 @@ export default [
       ],
       "react/no-unescaped-entities": "off",
       "prefer-const": "error",
+    },
+  },
+
+  // Regles du React Compiler (eslint-plugin-react-hooks v6+, activees par
+  // le flat config de Next 16). Elles sont opt-in et tres strictes : elles
+  // flaggent quantite de patterns existants parfaitement fonctionnels
+  // (setState conditionnel dans un effect, etc.). On les garde en `warn`
+  // pour la visibilite (dette suivie, cf issue #735) sans bloquer la CI.
+  // A repasser progressivement en `error` fichier par fichier.
+  {
+    rules: {
+      "react-hooks/set-state-in-effect": "warn",
+      "react-hooks/purity": "warn",
+      "react-hooks/immutability": "warn",
+      "react-hooks/refs": "warn",
+      "react-hooks/static-components": "warn",
     },
   },
 ];
