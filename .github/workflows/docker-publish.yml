@@ -277,6 +277,40 @@ jobs:
           echo "Pour pull (GHCR, primaire) :"
           echo "  docker pull ${{ needs.preflight.outputs.ghcr_image }}:latest"
 
+      # =====================================================================
+      # Livraison : temps 2, a la main sur le serveur (cf. #753)
+      #
+      # Ce workflow ne deploie deliberement RIEN : pas de cle SSH dans
+      # GitHub, pas d'acces entrant vers humanix-prod-01. Il se contente de
+      # rappeler la commande exacte a lancer sur la machine, pour que
+      # l'artefact valide ici soit celui qui part en prod (et pas un rebuild
+      # local — cause racine de la divergence prod/main du pentest du 7 mai).
+      # =====================================================================
+      - name: Rappel de livraison (aucun deploiement automatique)
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            ENVIRONNEMENT="prod"
+            TAG="${GITHUB_REF_NAME}"
+          else
+            ENVIRONNEMENT="demo"
+            TAG="edge"
+          fi
+          {
+            echo "## Livraison (temps 2, manuel)"
+            echo ""
+            echo "Image publiee et smoke-testee. Rien n'a ete deploye : la"
+            echo "livraison se fait a la main sur \`humanix-prod-01\`."
+            echo ""
+            echo '```bash'
+            echo "./scripts/deploy.sh ${ENVIRONNEMENT} ${TAG}"
+            echo '```'
+            echo ""
+            echo "Commit livre : \`${GITHUB_SHA}\`"
+            echo ""
+            echo "Detail de la procedure : \`docs/DEPLOYMENT_RUNBOOK.md\` section G-bis."
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::notice::Livraison manuelle : ./scripts/deploy.sh ${ENVIRONNEMENT} ${TAG}"
+
   # ===========================================================================
   # Smoke test post-publish (depuis GHCR, registre primaire)
   # ===========================================================================

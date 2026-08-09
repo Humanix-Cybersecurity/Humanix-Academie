@@ -153,6 +153,67 @@ psql $DATABASE_URL -c "SELECT email, role FROM \"User\" WHERE role='SUPERADMIN';
 
 ---
 
+## G-bis. Livrer une nouvelle version (livraison en 2 temps)
+
+La livraison est **volontairement en deux temps** : la CI construit et valide,
+un humain décide et déploie sur la machine. Aucun accès entrant, aucune clé SSH
+dans GitHub.
+
+**Temps 1 — automatique (GitHub Actions).** `docker-publish.yml` build,
+smoke-teste et publie l'image sur GHCR avec provenance SLSA + SBOM :
+
+| Tag publié | Quand | Destiné à |
+|---|---|---|
+| `:edge` | à chaque push sur `main` | démo |
+| `:latest` + `:1.2.3`, `:1.2`, `:1` | sur un tag git `v*.*.*` | production |
+| `:main-<sha7>` | à chaque push sur `main` | rejouer un build précis |
+
+**Temps 2 — manuel (toi, sur `humanix-prod-01`).** `scripts/deploy.sh` déploie
+**l'image publiée**, sans rebuild :
+
+```bash
+cd /opt/humanix-prod          # ou le dépôt cloné, peu importe : le script prend le chemin en env
+./scripts/deploy.sh demo             # démo   -> :edge
+./scripts/deploy.sh prod             # prod   -> :latest (demande confirmation)
+./scripts/deploy.sh prod v1.2.3      # version précise
+./scripts/deploy.sh prod --dry-run   # montre le plan, ne touche à rien
+```
+
+Le script vérifie l'état, pull, redémarre le seul service `app`, attend que le
+service réponde, et affiche la commande de rollback s'il ne répond pas.
+
+### Pourquoi c'est important (cause racine, pentest du 7 mai)
+
+Avant, le temps 2 consistait à **rebuild sur place depuis git**. L'image
+construite et testée par la CI n'arrivait donc jamais en production : c'est
+l'origine documentée de la divergence prod/main (CSP, middleware, sanitization
+absents du build déployé). Déployer l'artefact publié supprime cette classe
+d'écart, et rend le commit déployé vérifiable :
+
+```bash
+docker inspect --format '{{index .Config.Labels "org.opencontainers.image.revision"}}' \
+  $(docker compose ps -q app)
+```
+
+### Pré-requis : la stack doit consommer l'image, pas la rebuilder
+
+Tant que le service `app` de `/opt/.../docker-compose.yml` porte un `build:`,
+`docker compose up` reconstruit en local et ignore l'image publiée. Le script
+**refuse de déployer** dans ce cas et affiche le patch. À appliquer dans
+`/opt/...` — ces fichiers font autorité, cf.
+[`INFRA_STACKS_DEPLOYED.md`](INFRA_STACKS_DEPLOYED.md), ne pas les remplacer par
+ceux du dépôt :
+
+```yaml
+  app:
+    image: ghcr.io/humanix-cybersecurity/humanix-academie:${HUMANIX_IMAGE_TAG:-edge}
+    # (retirer le bloc build:)
+```
+
+Sauvegarder avant édition : `cp docker-compose.yml docker-compose.yml.avant-$(date +%Y%m%d)`.
+
+---
+
 ## H. Smoke tests post-deploy
 
 À lancer après chaque déploiement majeur :
