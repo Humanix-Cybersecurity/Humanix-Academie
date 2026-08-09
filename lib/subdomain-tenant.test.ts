@@ -4,11 +4,12 @@
 // (ex : un attaquant pousse "evil..humanix-academie.fr" et est resolu en
 // tenant valide). Couverture exhaustive des edge cases.
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, afterEach } from "vitest";
 import {
   extractTenantSlug,
   isReservedSubdomain,
   isValidTenantSlug,
+  getAppBaseUrl,
 } from "./subdomain-tenant";
 
 const ROOT = "humanix-academie.fr";
@@ -132,5 +133,42 @@ describe("isValidTenantSlug", () => {
     expect(isValidTenantSlug("foo-")).toBe(false);
     expect(isValidTenantSlug("a_b")).toBe(false);
     expect(isValidTenantSlug("été")).toBe(false);
+  });
+});
+
+describe("getAppBaseUrl - securite (#739)", () => {
+  const saved = {
+    app: process.env.NEXT_PUBLIC_APP_URL,
+    base: process.env.NEXT_PUBLIC_BASE_URL,
+    auth: process.env.AUTH_URL,
+  };
+  afterEach(() => {
+    process.env.NEXT_PUBLIC_APP_URL = saved.app;
+    process.env.NEXT_PUBLIC_BASE_URL = saved.base;
+    process.env.AUTH_URL = saved.auth;
+  });
+
+  it("prefere NEXT_PUBLIC_APP_URL et retourne l'origine (sans chemin)", () => {
+    process.env.NEXT_PUBLIC_APP_URL = "https://academie.acme.fr/ignore";
+    process.env.NEXT_PUBLIC_BASE_URL = "https://autre.fr";
+    expect(getAppBaseUrl()).toBe("https://academie.acme.fr");
+  });
+
+  it("retombe sur NEXT_PUBLIC_BASE_URL puis AUTH_URL", () => {
+    delete process.env.NEXT_PUBLIC_APP_URL;
+    process.env.NEXT_PUBLIC_BASE_URL = "https://base.acme.fr";
+    expect(getAppBaseUrl()).toBe("https://base.acme.fr");
+    delete process.env.NEXT_PUBLIC_BASE_URL;
+    process.env.AUTH_URL = "https://auth.acme.fr";
+    expect(getAppBaseUrl()).toBe("https://auth.acme.fr");
+  });
+
+  it("utilise le defaut sur config absente ou mal formee (jamais de host client)", () => {
+    delete process.env.NEXT_PUBLIC_APP_URL;
+    delete process.env.NEXT_PUBLIC_BASE_URL;
+    delete process.env.AUTH_URL;
+    expect(getAppBaseUrl()).toBe("https://humanix-academie.fr");
+    process.env.NEXT_PUBLIC_APP_URL = "pas-une-url";
+    expect(getAppBaseUrl()).toBe("https://humanix-academie.fr");
   });
 });

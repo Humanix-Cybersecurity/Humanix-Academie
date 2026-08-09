@@ -37,6 +37,7 @@ import {
 import { provisionTenantWithAdmin } from "@/lib/tenant-provisioning";
 import { signIn } from "@/lib/auth";
 import { isPlanId } from "@/lib/plans";
+import { getAppBaseUrl } from "@/lib/subdomain-tenant";
 
 export const dynamic = "force-dynamic";
 
@@ -250,10 +251,11 @@ async function onFirstPaymentPaid(
 
   // 1. Creer la Subscription pour les charges recurrentes a venir
   const pricing = mollieAmountForPlan(planRaw, billing, seatsRaw || 1);
-  // Webhook URL identique a celui de ce route handler (reutilisable).
-  const proto = req.headers.get("x-forwarded-proto") ?? "https";
-  const host = req.headers.get("host") ?? "humanix-academie.fr";
-  const webhookUrl = `${proto}://${host}/api/payments/webhook`;
+  // Webhook URL PERSISTEE cote Mollie pour toutes les charges recurrentes.
+  // SECURITE (#739) : on la derive de la config serveur, JAMAIS du header Host
+  // client. Sinon un attaquant qui devance le webhook legitime avec un Host
+  // forge redirige durablement les notifications de facturation.
+  const webhookUrl = `${getAppBaseUrl()}/api/payments/webhook`;
 
   let subscriptionId: string | null = null;
   try {
