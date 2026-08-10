@@ -127,9 +127,37 @@ CURRENT_SHORT="$(git rev-parse --short HEAD)"
 log "Environnement : $ENVIRONMENT  ($STACK_DIR)"
 log "Commit en place : $CURRENT_SHORT  $(git log -1 --format=%s | cut -c1-60)"
 
-git fetch --quiet "$REMOTE" --tags || die "fetch impossible depuis $REMOTE"
+# Branches d'abord : c'est ce dont on a besoin pour deployer `main`.
+git fetch --quiet "$REMOTE" || die "fetch impossible depuis $REMOTE"
 
-TARGET="$(git rev-parse --verify "${REMOTE}/${REF}" 2>/dev/null || git rev-parse --verify "$REF" 2>/dev/null || true)"
+# Tags ensuite, SEPAREMENT et de maniere NON bloquante.
+#
+# Constate en production : des tags locaux (v1.0.0, v1.1.0, v1.2.0...)
+# pointent sur une histoire reecrite et divergent du distant. `git fetch
+# --tags` echoue alors avec "would clobber existing tag" -- ce qui, groupe
+# avec le fetch des branches, faisait echouer tout le deploiement pour une
+# raison sans rapport avec le code a livrer.
+TAGS_SYNCED=true
+if ! git fetch --quiet --tags "$REMOTE" 2>/dev/null; then
+  TAGS_SYNCED=false
+  warn "tags non synchronises (divergence locale). Le deploiement d'une"
+  warn "BRANCHE reste sur, celui d'un TAG est refuse ci-dessous."
+fi
+
+# Resolution de la ref cible.
+#
+# Une branche est resolue via le remote, qui fait autorite. Un tag, lui,
+# n'existe que localement (les tags ne vivent pas sous refs/remotes) : si
+# la synchro des tags a echoue, le tag local peut pointer sur une histoire
+# obsolete. On refuse alors plutot que de livrer silencieusement le mauvais
+# commit en production.
+TARGET="$(git rev-parse --verify --quiet "${REMOTE}/${REF}" || true)"
+if [ -z "$TARGET" ]; then
+  if [ "$TAGS_SYNCED" = false ]; then
+    die "tags non synchronises : impossible de garantir que '$REF' pointe sur le bon commit. Resoudre la divergence (git tag -d $REF && git fetch --tags $REMOTE) puis relancer." 2
+  fi
+  TARGET="$(git rev-parse --verify --quiet "refs/tags/${REF}" || true)"
+fi
 [ -n "$TARGET" ] || die "ref introuvable : $REF"
 TARGET_SHORT="$(git rev-parse --short "$TARGET")"
 log "Commit cible    : $TARGET_SHORT  $(git log -1 --format=%s "$TARGET" | cut -c1-60)"
