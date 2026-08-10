@@ -28,6 +28,16 @@ export type ShopItemSeed = {
     toMonth: number;
     toDay: number;
   };
+  /**
+   * BADGE REQUIS (#748) : slug d'un achievement de
+   * lib/achievements/catalog.ts. L'item n'est achetable que par un user
+   * qui l'a debloque. Complete minLevel (les deux s'appliquent).
+   *
+   * Sert a donner une contrepartie visible aux badges - jusque-la ils ne
+   * servaient qu'a eux-memes - et une raison de revenir en boutique une
+   * fois minLevel sature au niveau 10.
+   */
+  requiredAchievementSlug?: string;
 };
 
 export const SHOP_CATALOG: ShopItemSeed[] = [
@@ -493,10 +503,88 @@ export const SHOP_CATALOG: ShopItemSeed[] = [
     description: "Endgame. Le cosmos qui s'incline devant le Maitre L10.",
     rarity: "legendary",
   },
+  // ---------------------------------------------------------------------
+  // TROPHEES (#748) - items debloques par un BADGE, pas par le niveau.
+  //
+  // Ils ne s'achetent pas a la force du grind : il faut avoir fait la
+  // chose. Prix volontairement modestes - la rarete vient du badge, pas
+  // du prix, sinon on cumule deux murs et plus personne ne les voit.
+  //
+  // Les slugs references existent dans lib/achievements/catalog.ts (un
+  // test le verifie). Quand le badge enqueteur arrivera (#732), un
+  // chapeau de detective aura sa place ici.
+  // ---------------------------------------------------------------------
+  {
+    slug: "hat-sentinel",
+    name: "Casquette de sentinelle",
+    emoji: "\u{1FA96}",
+    category: "HAT",
+    price: 300,
+    minLevel: 1,
+    description:
+      "Pour qui signale les pieges au lieu de les subir. Reservee aux Sentinelles vigilantes.",
+    rarity: "epic",
+    requiredAchievementSlug: "vigilance_master",
+  },
+  {
+    slug: "glasses-sentinel",
+    name: "Lunettes de vigilance",
+    emoji: "\u{1F97D}",
+    category: "GLASSES",
+    price: 300,
+    minLevel: 1,
+    description:
+      "L'oeil qui repere le hameçon. Reservees aux Sentinelles vigilantes.",
+    rarity: "epic",
+    requiredAchievementSlug: "vigilance_master",
+  },
+  {
+    slug: "hat-globetrotter",
+    name: "Couronne du tour du monde",
+    emoji: "\u{1F451}",
+    category: "HAT",
+    price: 800,
+    minLevel: 1,
+    description:
+      "Toutes les saisons, jusqu'au bout. Reservee au Tour du monde cyber.",
+    rarity: "legendary",
+    requiredAchievementSlug: "all_saisons",
+  },
+  {
+    slug: "accessory-megaphone",
+    name: "Megaphone de l'evangeliste",
+    emoji: "\u{1F4E3}",
+    category: "ACCESSORY",
+    price: 500,
+    minLevel: 1,
+    description:
+      "Tu as fait passer le message plus loin que toi. Reserve aux Evangelistes cyber.",
+    rarity: "legendary",
+    requiredAchievementSlug: "evangelist",
+  },
+  {
+    slug: "bg-iron-will",
+    name: "Fond Volonte de fer",
+    emoji: "\u{1F9BE}",
+    category: "BACKGROUND",
+    price: 600,
+    minLevel: 1,
+    description:
+      "Tenir sur la duree, meme les jours sans. Reserve a la Volonte de fer.",
+    rarity: "epic",
+    requiredAchievementSlug: "iron_will",
+  },
 ];
 
 // Mapping background slug → tailwind gradient classes pour le rendu mascot
 export const BACKGROUND_GRADIENTS: Record<string, string> = {
+  // Trophee badge (#748)
+  "bg-iron-will": "from-zinc-300 via-slate-400 to-gray-600",
+  // BUGFIX (#748) : ce fond saisonnier etait vendu 70 coins mais n'avait
+  // aucun gradient - une fois equipe, buildEquippedFromInventory renvoyait
+  // undefined et l'apprenant ne voyait tout simplement rien. Repere par le
+  // test « donne un gradient à chaque fond » de lib/shop.test.ts.
+  "summer-palm": "from-amber-200 via-orange-200 to-cyan-300",
   "bg-aurora": "from-orange-200 via-pink-200 to-amber-200",
   "bg-space": "from-purple-700 via-indigo-700 to-blue-900",
   "bg-ocean": "from-cyan-200 via-blue-300 to-blue-500",
@@ -510,8 +598,7 @@ export const BACKGROUND_GRADIENTS: Record<string, string> = {
   "bg-galaxy-supreme":
     "from-violet-600 via-fuchsia-600 via-purple-700 to-indigo-900",
   // Endgame L10 : 4 stops + animation-gradient via class custom CSS
-  "bg-cosmic-master":
-    "from-purple-900 via-pink-600 via-amber-500 to-cyan-400",
+  "bg-cosmic-master": "from-purple-900 via-pink-600 via-amber-500 to-cyan-400",
 };
 
 export const RARITY_STYLE: Record<
