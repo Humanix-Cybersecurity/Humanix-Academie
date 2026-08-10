@@ -13,6 +13,10 @@ import {
   getXPProgress,
   computeCoinsEarned,
   computeStreakXPBonus,
+  computeTotalXP,
+  computeLevelUpCoins,
+  shouldAwardStreakBonus,
+  STREAK_BONUS_START_DAY,
   PERFECT_QUIZ_XP_BONUS,
   STREAK_XP_BONUS_PER_DAY,
   BADGE_UNLOCK_XP_BONUS,
@@ -185,5 +189,101 @@ describe("Constants bonus XP", () => {
 
   it("BADGE_UNLOCK_XP_BONUS = 50", () => {
     expect(BADGE_UNLOCK_XP_BONUS).toBe(50);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Câblage des bonus hors épisode (#743)
+// ---------------------------------------------------------------------------
+
+describe("computeTotalXP", () => {
+  it("additionne l'XP des épisodes et le bonus", () => {
+    expect(computeTotalXP([{ score: 100 }, { score: 50 }], 25)).toBe(175);
+  });
+
+  it("tolère un bonus absent (user créé avant le champ)", () => {
+    expect(computeTotalXP([{ score: 40 }], null)).toBe(40);
+    expect(computeTotalXP([{ score: 40 }], undefined)).toBe(40);
+  });
+
+  it("tolère des scores nuls", () => {
+    expect(computeTotalXP([{ score: null }, { score: 10 }], 0)).toBe(10);
+  });
+
+  it("retourne le seul bonus quand aucun épisode n'est fait", () => {
+    // Cas réel : un badge débloqué par une action hors épisode.
+    expect(computeTotalXP([], 50)).toBe(50);
+  });
+});
+
+describe("computeLevelUpCoins", () => {
+  it("n'accorde rien au niveau 1 (création du compte)", () => {
+    expect(computeLevelUpCoins(1)).toBe(0);
+    expect(computeLevelUpCoins(0)).toBe(0);
+  });
+
+  it("respecte les 3 paliers annoncés en boutique (10/25/50)", () => {
+    // La boutique affiche « Coins exclusifs au passage de niveau
+    // (10/25/50) » : ces valeurs sont une promesse faite à l'apprenant.
+    expect([2, 3, 4].map(computeLevelUpCoins)).toEqual([10, 10, 10]);
+    expect([5, 6, 7].map(computeLevelUpCoins)).toEqual([25, 25, 25]);
+    expect([8, 9, 10].map(computeLevelUpCoins)).toEqual([50, 50, 50]);
+  });
+
+  it("couvre tous les niveaux du catalogue", () => {
+    for (const l of LEVELS.filter((l) => l.id > 1)) {
+      expect(computeLevelUpCoins(l.id), `niveau ${l.id}`).toBeGreaterThan(0);
+    }
+  });
+});
+
+describe("shouldAwardStreakBonus", () => {
+  const now = new Date("2026-08-09T10:00:00");
+
+  it("n'accorde rien avant le 3e jour consécutif", () => {
+    expect(shouldAwardStreakBonus(0, null, now)).toBe(false);
+    expect(shouldAwardStreakBonus(2, null, now)).toBe(false);
+  });
+
+  it("accorde à partir du 3e jour si jamais accordé", () => {
+    expect(shouldAwardStreakBonus(3, null, now)).toBe(true);
+  });
+
+  it("n'accorde qu'UNE fois par jour, quel que soit le nombre d'épisodes", () => {
+    // Le piège de ce bonus : sans cette garde, terminer 5 épisodes dans la
+    // journée rapporterait 5× le bonus — inflation silencieuse de l'XP.
+    const dejaCeMatin = new Date("2026-08-09T02:00:00");
+    expect(shouldAwardStreakBonus(10, dejaCeMatin, now)).toBe(false);
+  });
+
+  it("réaccorde le lendemain", () => {
+    const hierSoir = new Date("2026-08-08T23:30:00");
+    expect(shouldAwardStreakBonus(10, hierSoir, now)).toBe(true);
+  });
+
+  it("compare des jours civils, pas des fenêtres de 24 h", () => {
+    // 23h30 hier -> 10h ce matin = moins de 24 h, mais jour différent :
+    // le bonus doit tomber, sinon un apprenant régulier du soir serait
+    // pénalisé un jour sur deux.
+    const hier = new Date("2026-08-08T23:59:00");
+    expect(
+      shouldAwardStreakBonus(5, hier, new Date("2026-08-09T00:30:00")),
+    ).toBe(true);
+  });
+
+  it("ne se laisse pas berner par un même quantième d'un autre mois", () => {
+    const memeJourMoisPrecedent = new Date("2026-07-09T10:00:00");
+    expect(shouldAwardStreakBonus(5, memeJourMoisPrecedent, now)).toBe(true);
+  });
+
+  it("cumulé sur la durée, retombe sur computeStreakXPBonus", () => {
+    // Attribution quotidienne (5 XP × jours éligibles) et formule
+    // cumulative doivent donner le même total — sinon les deux notions
+    // de « bonus de streak » divergeraient.
+    const streak = 7;
+    const joursEligibles = streak - STREAK_BONUS_START_DAY + 1;
+    expect(joursEligibles * STREAK_XP_BONUS_PER_DAY).toBe(
+      computeStreakXPBonus(streak),
+    );
   });
 });

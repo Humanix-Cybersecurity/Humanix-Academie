@@ -378,6 +378,22 @@ model User {
 
   coins             Int       @default(0)
   level             Int       @default(1)
+  // XP BONUS DENORMALISE (#743). L'XP "de base" est la somme des
+  // Progress.score ; ce compteur porte les bonus qui ne sont rattaches a
+  // AUCUN episode : streak quotidienne et deblocage de badge.
+  //
+  // Pourquoi un compteur separe plutot que de gonfler Progress.score :
+  // bestScore est un max par episode, y injecter un bonus de streak
+  // fausserait le "meilleur score" et se re-appliquerait a chaque rejeu.
+  //
+  // Le niveau se calcule sur (somme des Progress.score) + bonusXP :
+  // cf. computeTotalXP() dans lib/levels.ts, utilise partout ou un
+  // niveau est affiche.
+  bonusXP           Int       @default(0)
+  // Jour du dernier bonus de streak accorde. Rend l'attribution
+  // idempotente : le bonus tombe UNE fois par jour, quel que soit le
+  // nombre d'episodes termines dans la journee.
+  lastStreakBonusAt DateTime?
   riskScore         Int       @default(50) // 0 = très exposé, 100 = excellent
   // ----------------------------------------------------
   // PERSONA PEDAGOGIQUE (ajout mai 2026)
