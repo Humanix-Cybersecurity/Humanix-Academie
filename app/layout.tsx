@@ -63,7 +63,9 @@ export const metadata: Metadata = {
   title: SITE_TITLE,
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
-  authors: [{ name: "Humanix Cybersecurity", url: "https://humanix-cybersecurity.fr" }],
+  authors: [
+    { name: "Humanix Cybersecurity", url: "https://humanix-cybersecurity.fr" },
+  ],
   creator: "Humanix Cybersecurity",
   publisher: "Humanix Cybersecurity",
   generator: "Next.js",
@@ -136,7 +138,11 @@ const organizationJsonLd = {
   "@type": "Organization",
   "@id": `${SITE_URL_RUNTIME}/#organization`,
   name: SITE_NAME,
-  alternateName: ["Humanix Cybersecurity", "Humanix Academie", "Académie Humanix"],
+  alternateName: [
+    "Humanix Cybersecurity",
+    "Humanix Academie",
+    "Académie Humanix",
+  ],
   url: SITE_URL_RUNTIME,
   logo: {
     "@type": "ImageObject",
@@ -304,7 +310,11 @@ export default async function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-screen">
+      <body
+        className={`min-h-screen${
+          process.env.DEMO_MODE === "true" ? " has-demo-banner" : ""
+        }`}
+      >
         {/* Analytics :
             - PlausibleScript : self-host (active si NEXT_PUBLIC_PLAUSIBLE_DOMAIN
               est defini, sous regime exemption CNIL recommandation 2020-091).
