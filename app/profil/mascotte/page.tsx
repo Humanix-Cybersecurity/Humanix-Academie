@@ -9,6 +9,7 @@ import { getLevel } from "@/lib/levels";
 import MascotPicker from "@/components/MascotPicker";
 import MoodPicker from "@/components/MoodPicker";
 import CustomEmojiPicker from "@/components/CustomEmojiPicker";
+import { computeTotalXP } from "@/lib/levels";
 
 export const dynamic = "force-dynamic";
 
@@ -24,12 +25,13 @@ export default async function MascotChoosePage() {
       mascotEmojiCustom: true,
       mood: true,
       level: true,
+      bonusXP: true,
       progress: { select: { score: true } },
     },
   });
   if (!user) redirect(getSignInPath());
 
-  const totalXP = user.progress.reduce((s, p) => s + (p.score || 0), 0);
+  const totalXP = computeTotalXP(user.progress, user.bonusXP);
   const level = getLevel(totalXP);
 
   return (
