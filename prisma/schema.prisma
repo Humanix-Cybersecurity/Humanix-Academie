@@ -2245,6 +2245,11 @@ enum AuditAction {
   EXPOSURE_DETECTED // Domaine tenant matche dans une fuite (validation RSSI requise avant notif)
   EXPOSURE_TRAINING_ASSIGNED // Formation assignee a un salarie expose APRES validation RSSI
   EXPOSURE_REPORT_EXPORTED // Phase 3 : export SIEM ou rapport de posture (accountability)
+  // Mode Enqueteur (#732)
+  // Avant, submitInvestigation reutilisait USER_LOGIN_SUCCESS faute
+  // d'action dediee : ca polluait le journal RGPD avec de fausses
+  // connexions, et rendait inexploitable toute recherche d'authentification.
+  INVESTIGATION_COMPLETED // Un apprenant a termine une enquete (Mode Enqueteur)
 }
 
 enum AuditOutcome {

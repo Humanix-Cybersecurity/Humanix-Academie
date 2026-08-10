@@ -17,11 +17,10 @@ import { requireSession } from "@/lib/api/require-role";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { auditLog } from "@/lib/audit";
 import { AuditAction, AuditOutcome } from "@prisma/client";
-import {
-  computeScore,
-  type InvestigationResultPayload,
-} from "./types";
+import { computeScore, type InvestigationResultPayload } from "./types";
 import { getInvestigationBySlug } from "./loader";
+import { evaluateAndUnlock } from "@/lib/achievements/evaluate";
+import { computeCoinsEarned } from "@/lib/levels";
 
 const SubmitSchema = z.object({
   scenarioSlug: z.string().min(1).max(100),
@@ -36,6 +35,12 @@ export type SubmitResult = {
   maxScore?: number;
   passed?: boolean;
   error?: string;
+  /** XP réellement crédité (0 si l'enquête est échouée ou déjà réussie). */
+  xpAwarded?: number;
+  /** Coins réellement crédités. */
+  coinsAwarded?: number;
+  /** Badges débloqués par cette enquête. */
+  newlyUnlockedAchievements?: { slug: string; title: string; emoji: string }[];
 };
 
 /**
@@ -76,11 +81,7 @@ export async function submitInvestigation(
   // 4) Rate limit : 1 submit / 10s / user / scenario
   //    On limite par scenario pour eviter qu'un user spamme le meme
   //    scenario pour optimiser son score sans reflechir.
-  const rl = checkRateLimit(
-    `inv:${userId}:${inv.slug}`,
-    1,
-    10 * 1000,
-  );
+  const rl = checkRateLimit(`inv:${userId}:${inv.slug}`, 1, 10 * 1000);
   if (!rl.ok) {
     return {
       ok: false,
@@ -92,9 +93,7 @@ export async function submitInvestigation(
   //    client envoie un ID inventé, on l'ignore (defensive).
   const validRedFlagIds = new Set(inv.redFlags.map((rf) => rf.id));
   const validDistractorIds = new Set(inv.distractors.map((d) => d.id));
-  const foundIds = parsed.data.foundIds.filter((id) =>
-    validRedFlagIds.has(id),
-  );
+  const foundIds = parsed.data.foundIds.filter((id) => validRedFlagIds.has(id));
   const distractorIds = parsed.data.distractorIds.filter((id) =>
     validDistractorIds.has(id),
   );
@@ -105,30 +104,87 @@ export async function submitInvestigation(
     distractorIds,
   });
 
-  // 7) Sauvegarde DB
+  // 7) Sauvegarde DB + RECOMPENSES (#732)
+  //
+  // Avant, cette action ne faisait qu'un create : l'UI promettait
+  // « +N XP » et il ne se passait strictement rien. On credite donc
+  // desormais XP et coins, au prorata du score.
+  //
+  // ANTI-FARMING : la recompense n'est accordee que la PREMIERE fois
+  // qu'une enquete donnee est reussie. Sans ca, rejouer le meme scenario
+  // en boucle serait la facon la plus rapide de monter de niveau.
+  // L'enquete reste rejouable, elle ne rapporte simplement plus.
+  let xpAwarded = 0;
+  let coinsAwarded = 0;
   try {
-    await db.investigationResult.create({
-      data: {
-        tenantId,
-        userId,
-        scenarioSlug: inv.slug,
-        scenarioType: inv.investigationType,
-        redFlagsFound: foundIds,
-        distractorsHit: distractorIds,
-        score,
-        maxScore,
-        durationSeconds: parsed.data.durationSeconds,
-        passed,
-      },
+    const alreadyPassed =
+      passed &&
+      (await db.investigationResult.findFirst({
+        where: { userId, scenarioSlug: inv.slug, passed: true },
+        select: { id: true },
+      })) !== null;
+
+    if (passed && !alreadyPassed) {
+      // Prorata du score : reussir de justesse ne rapporte pas autant
+      // qu'un sans-faute.
+      const ratio = maxScore > 0 ? score / maxScore : 0;
+      xpAwarded = Math.max(1, Math.round(inv.xpReward * ratio));
+      coinsAwarded = computeCoinsEarned(xpAwarded, ratio >= 1);
+    }
+
+    await db.$transaction(async (tx) => {
+      await tx.investigationResult.create({
+        data: {
+          tenantId,
+          userId,
+          scenarioSlug: inv.slug,
+          scenarioType: inv.investigationType,
+          redFlagsFound: foundIds,
+          distractorsHit: distractorIds,
+          score,
+          maxScore,
+          durationSeconds: parsed.data.durationSeconds,
+          passed,
+        },
+      });
+
+      if (xpAwarded > 0 || coinsAwarded > 0) {
+        // L'XP d'enquete n'est rattachee a aucun episode : elle va dans
+        // User.bonusXP, le compteur prevu pour ca (#743). Le niveau se
+        // recalcule a l'affichage via computeTotalXP.
+        await tx.user.update({
+          where: { id: userId },
+          data: {
+            bonusXP: { increment: xpAwarded },
+            coins: { increment: coinsAwarded },
+          },
+        });
+      }
     });
   } catch (err) {
     console.error("submitInvestigation: DB write failed", err);
     return { ok: false, error: "Sauvegarde impossible" };
   }
 
+  // 7bis) Badges detective. Best-effort : une erreur d'evaluation ne doit
+  // pas faire echouer une enquete deja enregistree.
+  let newlyUnlockedAchievements: {
+    slug: string;
+    title: string;
+    emoji: string;
+  }[] = [];
+  if (passed) {
+    try {
+      const evalResult = await evaluateAndUnlock(userId);
+      newlyUnlockedAchievements = evalResult.newlyUnlocked;
+    } catch {
+      // best-effort
+    }
+  }
+
   // 8) Audit log (best-effort, ne bloque pas la reponse)
   void auditLog({
-    action: AuditAction.USER_LOGIN_SUCCESS, // pas d'action dediee, on reuse
+    action: AuditAction.INVESTIGATION_COMPLETED,
     outcome: AuditOutcome.SUCCESS,
     actor: {
       userId,
@@ -145,8 +201,18 @@ export async function submitInvestigation(
       maxScore,
       passed,
       durationSeconds: parsed.data.durationSeconds,
+      xpAwarded,
+      coinsAwarded,
     },
   });
 
-  return { ok: true, score, maxScore, passed };
+  return {
+    ok: true,
+    score,
+    maxScore,
+    passed,
+    xpAwarded,
+    coinsAwarded,
+    newlyUnlockedAchievements,
+  };
 }
