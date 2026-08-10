@@ -17,6 +17,7 @@ import crypto from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { executePurge } from "@/lib/data-retention";
+import { recordCronRun } from "@/lib/cron/record";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -26,10 +27,7 @@ function verifySecret(provided: string | null): boolean {
   if (!expected || expected.length < 16) return false;
   if (!provided || provided.length !== expected.length) return false;
   try {
-    return crypto.timingSafeEqual(
-      Buffer.from(provided),
-      Buffer.from(expected),
-    );
+    return crypto.timingSafeEqual(Buffer.from(provided), Buffer.from(expected));
   } catch {
     return false;
   }
@@ -74,10 +72,7 @@ async function runPurgeForAllTenants(): Promise<RunSummary> {
       summary.totalUsersAnonymized += r.usersAnonymized;
     } catch (e) {
       const reason = e instanceof Error ? e.message : "unknown";
-      console.error(
-        `[data-retention-purge] tenant ${t.id} failed`,
-        e,
-      );
+      console.error(`[data-retention-purge] tenant ${t.id} failed`, e);
       summary.errors.push({ tenantId: t.id, reason });
     }
   }
@@ -90,17 +85,20 @@ export async function POST(req: NextRequest) {
   if (!verifySecret(provided)) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const result = await runPurgeForAllTenants();
+  const result = await recordCronRun("data-retention-purge", () =>
+    runPurgeForAllTenants(),
+  );
   return NextResponse.json({ ok: true, ...result });
 }
 
 export async function GET(req: NextRequest) {
   const provided =
-    req.headers.get("x-cron-secret") ??
-    req.nextUrl.searchParams.get("secret");
+    req.headers.get("x-cron-secret") ?? req.nextUrl.searchParams.get("secret");
   if (!verifySecret(provided)) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const result = await runPurgeForAllTenants();
+  const result = await recordCronRun("data-retention-purge", () =>
+    runPurgeForAllTenants(),
+  );
   return NextResponse.json({ ok: true, ...result });
 }

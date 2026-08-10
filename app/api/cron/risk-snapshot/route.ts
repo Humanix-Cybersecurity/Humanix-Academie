@@ -17,6 +17,7 @@
 import crypto from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { recordAllTenantsSnapshot } from "@/lib/analytics/snapshot";
+import { recordCronRun } from "@/lib/cron/record";
 
 export const dynamic = "force-dynamic";
 // Plus long que les autres crons : 100 tenants × 50 users moyens ~= 30s
@@ -27,10 +28,7 @@ function verifySecret(provided: string | null): boolean {
   if (!expected || expected.length < 16) return false;
   if (!provided || provided.length !== expected.length) return false;
   try {
-    return crypto.timingSafeEqual(
-      Buffer.from(provided),
-      Buffer.from(expected),
-    );
+    return crypto.timingSafeEqual(Buffer.from(provided), Buffer.from(expected));
   } catch {
     return false;
   }
@@ -41,7 +39,9 @@ export async function POST(req: NextRequest) {
   if (!verifySecret(provided)) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const result = await recordAllTenantsSnapshot();
+  const result = await recordCronRun("risk-snapshot", () =>
+    recordAllTenantsSnapshot(),
+  );
   return NextResponse.json({ ok: true, ...result });
 }
 
@@ -49,11 +49,12 @@ export async function POST(req: NextRequest) {
 // Sécurité identique : verif du secret en query.
 export async function GET(req: NextRequest) {
   const provided =
-    req.headers.get("x-cron-secret") ??
-    req.nextUrl.searchParams.get("secret");
+    req.headers.get("x-cron-secret") ?? req.nextUrl.searchParams.get("secret");
   if (!verifySecret(provided)) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const result = await recordAllTenantsSnapshot();
+  const result = await recordCronRun("risk-snapshot", () =>
+    recordAllTenantsSnapshot(),
+  );
   return NextResponse.json({ ok: true, ...result });
 }

@@ -28,6 +28,7 @@ import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
 import { sendMailViaTenantSmtp } from "@/lib/smtp/sender";
 import { getTemplate } from "@/lib/phishing";
+import { recordCronRun } from "@/lib/cron/record";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -183,14 +184,11 @@ async function processDueCampaigns(
             const firstName = (target.name?.split(" ")[0] ?? "").trim();
             const trackingUrl = `${baseUrl.replace(/\/$/, "")}/phishing/${r.trackToken}`;
             const html = tpl.emailHtml(firstName, trackingUrl);
-            const sendResult = await sendMailViaTenantSmtp(
-              campaign.tenantId,
-              {
-                to: target.email,
-                subject: tpl.emailSubject,
-                html,
-              },
-            );
+            const sendResult = await sendMailViaTenantSmtp(campaign.tenantId, {
+              to: target.email,
+              subject: tpl.emailSubject,
+              html,
+            });
             if (sendResult.ok) {
               result.emailsSent++;
             } else {
@@ -245,7 +243,9 @@ export async function POST(req: Request) {
     );
   }
 
-  const result = await processDueCampaigns(a.scopeTenantId ?? null);
+  const result = await recordCronRun("phishing-launch", () =>
+    processDueCampaigns(a.scopeTenantId ?? null),
+  );
   return NextResponse.json({ ok: true, ...result });
 }
 
