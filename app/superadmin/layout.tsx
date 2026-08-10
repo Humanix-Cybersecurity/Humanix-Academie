@@ -10,10 +10,7 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import {
-  verifyFreshAuth,
-  WEBAUTHN_FRESH_COOKIE,
-} from "@/lib/webauthn";
+import { verifyFreshAuth, WEBAUTHN_FRESH_COOKIE } from "@/lib/webauthn";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +24,11 @@ export default async function SuperadminLayout({
   const role = session.user.role;
   if (role !== "SUPERADMIN") {
     // Un admin metier ne doit pas voir cette section.
-    redirect(role === "ADMIN" || role === "MANAGER" || role === "RSSI" ? "/admin" : "/apprendre");
+    redirect(
+      role === "ADMIN" || role === "MANAGER" || role === "RSSI"
+        ? "/admin"
+        : "/apprendre",
+    );
   }
 
   // Step-up : exige une auth WebAuthn datant de moins de 30 minutes.
@@ -50,7 +51,9 @@ export default async function SuperadminLayout({
       <header className="bg-white dark:bg-slate-950 border-b border-gray-200 dark:border-slate-800 px-4 sm:px-6 lg:px-8 py-3">
         <div className="max-w-screen-2xl mx-auto flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-3">
-            <span className="text-lg" aria-hidden="true">⭐</span>
+            <span className="text-lg" aria-hidden="true">
+              ⭐
+            </span>
             <p className="font-display font-bold text-primary-500 dark:text-accent-300">
               Console super-admin Humanix
             </p>
@@ -84,6 +87,13 @@ export default async function SuperadminLayout({
               title="Re-importer saisons / badges / items boutique après deploy"
             >
               Catalog
+            </Link>
+            <Link
+              href="/superadmin/system-health"
+              className="text-gray-700 dark:text-gray-200 hover:text-accent-500 font-medium"
+              title="Dernier passage des tâches planifiées (cf. #749)"
+            >
+              Santé système
             </Link>
             <Link
               href="/admin"

@@ -378,6 +378,22 @@ model User {
 
   coins             Int       @default(0)
   level             Int       @default(1)
+  // XP BONUS DENORMALISE (#743). L'XP "de base" est la somme des
+  // Progress.score ; ce compteur porte les bonus qui ne sont rattaches a
+  // AUCUN episode : streak quotidienne et deblocage de badge.
+  //
+  // Pourquoi un compteur separe plutot que de gonfler Progress.score :
+  // bestScore est un max par episode, y injecter un bonus de streak
+  // fausserait le "meilleur score" et se re-appliquerait a chaque rejeu.
+  //
+  // Le niveau se calcule sur (somme des Progress.score) + bonusXP :
+  // cf. computeTotalXP() dans lib/levels.ts, utilise partout ou un
+  // niveau est affiche.
+  bonusXP           Int       @default(0)
+  // Jour du dernier bonus de streak accorde. Rend l'attribution
+  // idempotente : le bonus tombe UNE fois par jour, quel que soit le
+  // nombre d'episodes termines dans la journee.
+  lastStreakBonusAt DateTime?
   riskScore         Int       @default(50) // 0 = très exposé, 100 = excellent
   // ----------------------------------------------------
   // PERSONA PEDAGOGIQUE (ajout mai 2026)
@@ -991,6 +1007,9 @@ enum PhishingChannel {
   SMS
   QUISHING // QR code physique : pas d'envoi technique, l'admin imprime
   // l'affiche/etiquette et la pose sur le terrain (test physique)
+  VOICE // Vishing : appel telephonique joue par un humain (#744). Comme
+  // QUISHING, aucun envoi technique -- et contrairement a SMS, aucun lien
+  // a cliquer : le resultat est saisi a la main par l'appelant.
 }
 
 enum PhishingStatus {
@@ -2694,4 +2713,39 @@ model RecyfSnapshot {
 
   @@unique([tenantId, day])
   @@index([tenantId])
+}
+
+// =====================================================
+// SANTE DES TACHES PLANIFIEES (#749)
+// =====================================================
+// Une ligne par execution de /api/cron/*. Alimente la console
+// /superadmin/system-health : dernier passage, duree, resultat.
+//
+// POURQUOI : 11 crons tournaient sans AUCUNE surface de verification. Le
+// bug phishing-drip (#733) - des mails planifies jamais envoyes parce que
+// le cron n'etait tout simplement pas declenche - est reste silencieux
+// faute de pouvoir repondre a « est-ce que ca tourne ? ».
+//
+// GLOBAL, pas par tenant : c'est de l'infrastructure plateforme. D'ou la
+// console superadmin (cross-tenant) et non /admin.
+//
+// Retention : purge amortie dans lib/cron/record.ts (cf. CRON_RUN_RETENTION_DAYS).
+model CronRun {
+  id           String    @id @default(cuid())
+  // Slug de l'endpoint, sans prefixe : "risk-snapshot", "phishing-drip"...
+  // Correspond aux entrees de lib/cron/registry.ts.
+  name         String
+  startedAt    DateTime  @default(now())
+  finishedAt   DateTime?
+  durationMs   Int?
+  // "ok" | "error". Pas d'enum Prisma : on veut pouvoir ajouter un etat
+  // sans migration sur une table de telemetrie.
+  status       String    @default("ok")
+  // Compteurs retournes par le cron (tenantsScanned, sent, purged...).
+  // Json libre : chaque cron a sa forme.
+  result       Json?
+  errorMessage String?
+
+  @@index([name, startedAt])
+  @@index([startedAt])
 }

@@ -1,0 +1,187 @@
+name: Sécurité (planifié)
+
+# Veille de sécurité PLANIFIÉE - #755
+#
+# === Le problème que ça résout ===
+#
+# `npm audit` ne tournait que sur push/PR : une CVE publiée sur une
+# dépendance figée n'était découverte qu'au prochain commit. Sur un dépôt
+# qui peut rester une semaine sans push, c'est une semaine d'exposition
+# silencieuse. Même chose pour l'image déployée : elle vieillit toute seule
+# (base Alpine, OpenSSL, zlib…) sans qu'une seule ligne de code ne change.
+#
+# Ce workflow attaque les deux, chaque nuit.
+#
+# === Pourquoi un workflow SÉPARÉ de ci.yml ===
+#
+# Ajouter un `schedule:` à ci.yml relancerait ses 12 jobs chaque nuit sur le
+# runner self-hosted unique (~40 min, jobs sérialisés) alors que seuls deux
+# checks nous intéressent ici. On garde donc une veille légère et isolée.
+#
+# === Politique d'échec ===
+#
+# Contrairement au job `npm audit` de ci.yml (continue-on-error : on ne
+# bloque pas une PR sur une CVE arrivée entre-temps), ici l'échec est LE
+# signal : un run rouge = quelque chose à regarder. Ne pas mettre
+# continue-on-error, ça viderait le workflow de son sens.
+#
+# === CodeQL ===
+#
+# Pas de job CodeQL ici : il est déjà actif (setup géré par GitHub, jobs
+# « Analyze (javascript-typescript) » et « Analyze (python) » sur chaque PR
+# et push main). L'item 1 de #755 était déjà couvert.
+
+on:
+  schedule:
+    # 05h15 UTC : après les crons applicatifs (cf. docs/CRON.md, le dernier
+    # est audit-logs-purge à 04h00) pour ne pas se disputer la machine.
+    - cron: "15 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: read # pull de l'image GHCR à scanner
+  security-events: write # remontée SARIF dans l'onglet Security
+
+concurrency:
+  group: security-scheduled
+  cancel-in-progress: false
+
+env:
+  GHCR_IMAGE: ghcr.io/humanix-cybersecurity/humanix-academie
+  TRIVY_VERSION: "0.58.1"
+
+jobs:
+  # ===========================================================================
+  # Dépendances npm : CVE publiées depuis le dernier commit
+  # ===========================================================================
+  npm-audit:
+    name: npm audit (dépendances de production)
+    runs-on: self-hosted
+    timeout-minutes: 10
+    if: github.repository_owner == 'Humanix-Cybersecurity'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: npm
+
+      # Pas de `npm ci` : `npm audit` travaille sur package-lock.json.
+      # On évite d'installer 600+ paquets pour une vérification de lockfile.
+      - name: Audit HIGH/CRITICAL (production uniquement)
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Rapport détaillé si échec
+        if: failure()
+        run: |
+          {
+            echo "## npm audit — vulnérabilités à traiter"
+            echo ""
+            echo "Une CVE HIGH/CRITICAL touche une dépendance de production."
+            echo ""
+            echo '```'
+            npm audit --omit=dev --audit-level=high 2>&1 | head -100 || true
+            echo '```'
+            echo ""
+            echo "Piste : \`npm audit fix\`, ou bump ciblé si le correctif casse l'API."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # ===========================================================================
+  # Image déployée : l'OS de base vieillit sans qu'on commite
+  # ===========================================================================
+  trivy-image:
+    name: Trivy sur l'image publiée
+    runs-on: self-hosted
+    timeout-minutes: 25
+    if: github.repository_owner == 'Humanix-Cybersecurity'
+    strategy:
+      fail-fast: false
+      matrix:
+        # edge = ce que suit la démo, latest = ce qui part en prod.
+        # Les deux peuvent diverger : on surveille les deux.
+        tag: [edge, latest]
+    steps:
+      - name: Login to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Un tag peut ne pas exister encore (ex. `latest` avant la 1re release
+      # taguée) : ce n'est pas une erreur de sécurité, on saute proprement.
+      - name: Pull ${{ matrix.tag }}
+        id: pull
+        run: |
+          if docker pull "${GHCR_IMAGE}:${{ matrix.tag }}" >/dev/null 2>&1; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Tag ${{ matrix.tag }} inexistant sur GHCR - scan ignoré"
+          fi
+
+      - name: Export SARIF
+        if: steps.pull.outputs.found == 'true'
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v humanix-trivy-cache:/root/.cache/ \
+            -v "$PWD:/out" \
+            "aquasec/trivy:${TRIVY_VERSION}" image \
+              --scanners vuln \
+              --severity HIGH,CRITICAL \
+              --ignore-unfixed \
+              --format sarif \
+              --output "/out/trivy-${{ matrix.tag }}.sarif" \
+              --timeout 20m \
+              "${GHCR_IMAGE}:${{ matrix.tag }}"
+
+      - name: Upload SARIF
+        if: steps.pull.outputs.found == 'true' && hashFiles(format('trivy-{0}.sarif', matrix.tag)) != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-${{ matrix.tag }}.sarif
+          category: trivy-scheduled-${{ matrix.tag }}
+
+      # Même politique que docker-publish : on n'échoue que sur ce qui est
+      # actionnable (CVE avec correctif disponible).
+      - name: Échouer sur HIGH/CRITICAL corrigeables
+        if: steps.pull.outputs.found == 'true'
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v humanix-trivy-cache:/root/.cache/ \
+            "aquasec/trivy:${TRIVY_VERSION}" image \
+              --scanners vuln \
+              --severity HIGH,CRITICAL \
+              --ignore-unfixed \
+              --exit-code 1 \
+              --format table \
+              --timeout 20m \
+              "${GHCR_IMAGE}:${{ matrix.tag }}"
+
+      - name: Rappel de remédiation si échec
+        if: failure()
+        run: |
+          {
+            echo "## Trivy — image \`${{ matrix.tag }}\` vulnérable"
+            echo ""
+            echo "Une CVE HIGH/CRITICAL **avec correctif disponible** touche"
+            echo "l'image publiée. L'image ne se met pas à jour toute seule :"
+            echo "il faut republier."
+            echo ""
+            echo "1. Rebuild : pousser sur \`main\` (edge) ou taguer \`v*.*.*\` (latest)."
+            echo "2. Livrer : \`./scripts/deploy.sh <demo|prod>\` sur le serveur"
+            echo "   (cf. \`docs/DEPLOYMENT_RUNBOOK.md\` section G-bis)."
+            echo ""
+            echo "Si la CVE vient de l'image de base, vérifier qu'un rebuild"
+            echo "récupère bien une base à jour (pas de couche en cache figée)."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Cleanup
+        if: always()
+        run: rm -f trivy-*.sarif

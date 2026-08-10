@@ -7,6 +7,7 @@ import HexMascotEvolved from "@/components/HexMascotEvolved";
 import { buildEquippedFromInventory, CATEGORY_LABEL } from "@/lib/shop";
 import ShopGrid from "@/components/ShopGrid";
 import { ACHIEVEMENTS_BY_SLUG } from "@/lib/achievements/catalog";
+import { computeTotalXP } from "@/lib/levels";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +27,7 @@ export default async function BoutiquePage() {
         mascotSpecies: true,
         mascotEmojiCustom: true,
         mood: true,
+        bonusXP: true,
         progress: { select: { score: true } },
       },
     }),
@@ -65,7 +67,7 @@ export default async function BoutiquePage() {
   ]);
   if (!user) redirect(getSignInPath());
 
-  const totalXP = user.progress.reduce((s, p) => s + (p.score || 0), 0);
+  const totalXP = computeTotalXP(user.progress, user.bonusXP);
   const equipped = buildEquippedFromInventory(
     inventory.map((i) => ({ item: i.item, isEquipped: i.isEquipped })),
   );

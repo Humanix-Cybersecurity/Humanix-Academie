@@ -17,6 +17,7 @@ import { db } from "@/lib/db";
 import { isB2bGloballyEnabled } from "@/lib/exposure/b2b-flags";
 import { scanTenantDomainExposure } from "@/lib/exposure/b2b-scan";
 import { computeAndStoreSnapshot } from "@/lib/exposure/b2b-snapshot";
+import { recordCronRun } from "@/lib/cron/record";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -55,45 +56,51 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
-  // GATE GLOBALE : kill switch plateforme.
-  if (!isB2bGloballyEnabled()) {
-    return NextResponse.json({
-      ok: true,
-      globallyEnabled: false,
-      message: "Veille B2B desactivee au niveau plateforme (EXPOSURE_B2B_ENABLED).",
-      scanned: 0,
+  // On enregistre l'execution MEME quand le kill switch est ferme : la
+  // question a laquelle repond /superadmin/system-health est « est-ce que
+  // l'ordonnanceur declenche ce cron ? », pas « a-t-il eu du travail ? ».
+  const result = await recordCronRun("exposure-scan", async () => {
+    // GATE GLOBALE : kill switch plateforme.
+    if (!isB2bGloballyEnabled()) {
+      return {
+        globallyEnabled: false,
+        message:
+          "Veille B2B desactivee au niveau plateforme (EXPOSURE_B2B_ENABLED).",
+        scanned: 0,
+      };
+    }
+
+    // Tenants candidats (le détail de la triple garde est revérifié par tenant).
+    // Scope : si declenche par un admin, on ne traite QUE son tenant.
+    const tenants = await db.tenant.findMany({
+      where: {
+        exposureMonitoringEnabled: true,
+        exposureMonitoringDpaSignedAt: { not: null },
+        ...(a.scopeTenantId ? { id: a.scopeTenantId } : {}),
+      },
+      select: { id: true },
+      take: 200,
     });
-  }
 
-  // Tenants candidats (le détail de la triple garde est revérifié par tenant).
-  // Scope : si declenche par un admin, on ne traite QUE son tenant.
-  const tenants = await db.tenant.findMany({
-    where: {
-      exposureMonitoringEnabled: true,
-      exposureMonitoringDpaSignedAt: { not: null },
-      ...(a.scopeTenantId ? { id: a.scopeTenantId } : {}),
-    },
-    select: { id: true },
-    take: 200,
+    let totalNew = 0;
+    let snapshots = 0;
+    for (const t of tenants) {
+      const r = await scanTenantDomainExposure(t.id);
+      totalNew += r.newExposures;
+      // Phase 3 : snapshot agrégé de la posture du jour (0 PII individuelle).
+      const snap = await computeAndStoreSnapshot(t.id);
+      if (snap.ok) snapshots++;
+    }
+
+    return {
+      globallyEnabled: true,
+      scanned: tenants.length,
+      totalNewExposures: totalNew,
+      snapshots,
+    };
   });
 
-  let totalNew = 0;
-  let snapshots = 0;
-  for (const t of tenants) {
-    const r = await scanTenantDomainExposure(t.id);
-    totalNew += r.newExposures;
-    // Phase 3 : snapshot agrégé de la posture du jour (0 PII individuelle).
-    const snap = await computeAndStoreSnapshot(t.id);
-    if (snap.ok) snapshots++;
-  }
-
-  return NextResponse.json({
-    ok: true,
-    globallyEnabled: true,
-    scanned: tenants.length,
-    totalNewExposures: totalNew,
-    snapshots,
-  });
+  return NextResponse.json({ ok: true, ...result });
 }
 
 /** GET = preview du nombre de tenants éligibles (sans scanner). */
