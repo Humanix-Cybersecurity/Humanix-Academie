@@ -23,7 +23,12 @@ import { verifyPassword } from "@/lib/password";
 import { fireAndForgetAutoAssign } from "@/lib/onboarding/auto-assign";
 import { verifyTotpCode } from "@/lib/totp";
 import { consumeBackupCode } from "@/lib/password";
-import { auditLog, AuditActions, AuditOutcomes, readIpFromHeaders } from "@/lib/audit";
+import {
+  auditLog,
+  AuditActions,
+  AuditOutcomes,
+  readIpFromHeaders,
+} from "@/lib/audit";
 import {
   checkMagicLinkRateLimit,
   checkPasswordRateLimit,
@@ -217,7 +222,9 @@ if (!isDemoMode) {
         mfaCode: { label: "Code 2FA", type: "text" },
       },
       async authorize(credentials: any, request: any) {
-        const email = String(credentials?.email ?? "").toLowerCase().trim();
+        const email = String(credentials?.email ?? "")
+          .toLowerCase()
+          .trim();
         const password = String(credentials?.password ?? "");
         const mfaCode = String(credentials?.mfaCode ?? "").trim();
         if (!email || !password) return null;
@@ -332,7 +339,9 @@ if (!isDemoMode) {
         marker: { label: "Marker", type: "text" },
       },
       async authorize(credentials: any, request: any) {
-        const email = String(credentials?.email ?? "").toLowerCase().trim();
+        const email = String(credentials?.email ?? "")
+          .toLowerCase()
+          .trim();
         if (!email) return null;
         const user = await db.user.findUnique({ where: { email } });
         if (!user || !user.isActive) return null;
@@ -473,10 +482,13 @@ if (isEmailConfigured()) {
         if (u?.tenant?.slug) {
           try {
             const urlObj = new URL(url);
-            const authUrl = process.env.AUTH_URL ?? process.env.NEXT_PUBLIC_APP_URL;
+            const authUrl =
+              process.env.AUTH_URL ?? process.env.NEXT_PUBLIC_APP_URL;
             if (authUrl) {
-              const rootDomain = new URL(authUrl)
-                .hostname.replace(/^www\./, "");
+              const rootDomain = new URL(authUrl).hostname.replace(
+                /^www\./,
+                "",
+              );
               // Ne pas reecrire en dev (localhost / IP) - pas de routage par
               // sous-domaine possible.
               const isDevHost =
@@ -556,7 +568,9 @@ const adapter: typeof baseAdapter = {
     // Cast vers le type attendu par next-auth (notre User a des champs en plus
     // que le type AdapterUser, et tenantId / role / isActive ne sont pas dans
     // sa surface publique).
-    return created as unknown as Awaited<ReturnType<NonNullable<typeof baseAdapter.createUser>>>;
+    return created as unknown as Awaited<
+      ReturnType<NonNullable<typeof baseAdapter.createUser>>
+    >;
   },
 };
 
@@ -637,8 +651,7 @@ const cookieDomain = getCookieDomain();
 // `Secure` (interceptables en clair). On force donc Secure des qu'on est en
 // production, quel que soit l'etat du domaine. En dev (localhost) on garde
 // le comportement host-only non-secure attendu.
-const secureCookies =
-  !!cookieDomain || process.env.NODE_ENV === "production";
+const secureCookies = !!cookieDomain || process.env.NODE_ENV === "production";
 // `__Host-` prefix interdit le `domain` (specs RFC 6265bis). Si on partage
 // le cookie cross-subdomain (domain defini), on doit utiliser `__Secure-`
 // a la place. Si pas de domain (dev), on peut garder `__Host-` qui est
@@ -649,9 +662,39 @@ const secureCookies =
 // le proxy.ts qui cherche `__Secure-authjs.session-token` ne trouve pas
 // le cookie et redirige toute requete /admin vers /connexion alors que
 // l'user est connecte (-> boucle de login infernale).
+/**
+ * SUFFIXE D'INSTANCE POUR LES NOMS DE COOKIES.
+ *
+ * LE BUG QUE CA CORRIGE : deux instances qui partagent un domaine parent
+ * se volent mutuellement leurs cookies. La prod tourne sur
+ * humanix-academie.fr, la demo sur demo.humanix-academie.fr. Le cookie de
+ * session de la prod porte `Domain=.humanix-academie.fr` (necessaire pour
+ * partager la session entre les sous-domaines de tenant), donc le
+ * navigateur l'envoie AUSSI a la demo (RFC 6265 §5.1.3).
+ *
+ * Les deux cookies portent le meme nom mais sont chiffres avec des
+ * AUTH_SECRET differents : la demo recoit celui de la prod, echoue a le
+ * dechiffrer ("no matching decryption secret"), en conclut qu'il n'y a
+ * pas de session, et renvoie au login -- en boucle, meme apres une
+ * connexion reussie.
+ *
+ * Un suffixe distinct par instance supprime la collision. VIDE PAR
+ * DEFAUT : la prod et les self-hosters gardent le nom standard, donc
+ * aucune session n'est invalidee au deploiement de ce correctif. Seule
+ * l'instance qui pose AUTH_COOKIE_SUFFIX change de nom.
+ *
+ * A poser sur la demo : AUTH_COOKIE_SUFFIX=demo
+ *
+ * proxy.ts doit connaitre le meme suffixe (il cherche le cookie pour
+ * decider des redirections) : cf. SESSION_COOKIE_NAMES la-bas.
+ */
+export const authCookieSuffix = process.env.AUTH_COOKIE_SUFFIX
+  ? `.${process.env.AUTH_COOKIE_SUFFIX.replace(/[^a-zA-Z0-9_-]/g, "")}`
+  : "";
+
 const csrfTokenName = cookieDomain
-  ? "__Secure-authjs.csrf-token"
-  : "__Host-authjs.csrf-token";
+  ? `__Secure-authjs.csrf-token${authCookieSuffix}`
+  : `__Host-authjs.csrf-token${authCookieSuffix}`;
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter,
@@ -686,8 +729,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       // `next-auth.*` (legacy v4) -> proxy ne trouvait pas -> boucle
       // de login infernale sur /admin.
       name: cookieDomain
-        ? "__Secure-authjs.session-token"
-        : "authjs.session-token",
+        ? `__Secure-authjs.session-token${authCookieSuffix}`
+        : `authjs.session-token${authCookieSuffix}`,
       options: {
         httpOnly: true,
         sameSite: "lax",
@@ -698,8 +741,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     callbackUrl: {
       name: cookieDomain
-        ? "__Secure-authjs.callback-url"
-        : "authjs.callback-url",
+        ? `__Secure-authjs.callback-url${authCookieSuffix}`
+        : `authjs.callback-url${authCookieSuffix}`,
       options: {
         sameSite: "lax",
         path: "/",
