@@ -465,11 +465,15 @@ export default function AdminSidebar() {
           La sidebar etant fixed, le contenu principal est offset de 56px
           (lg:pl-14 du layout) et la version expanded passe par-dessus en
           overlay -- pas besoin de pousser le contenu.
+
+          `top` vient de --app-chrome-h (cf. app/globals.css) et NON d'un
+          top-20 en dur : en mode demo le DemoBanner s'insere au-dessus du
+          header, et la sidebar se retrouvait masquee derriere lui.
           ===================================================================== */}
       <aside
         onMouseEnter={handleSidebarEnter}
         onMouseLeave={handleSidebarLeave}
-        className="group hidden lg:flex fixed top-20 left-0 bottom-0 z-30 w-14 hover:w-60 flex-col bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-slate-800 transition-[width] duration-200 ease-out shadow-[2px_0_0_0_transparent] hover:shadow-[2px_0_8px_-2px_rgba(0,0,0,0.08)]"
+        className="group hidden lg:flex fixed top-[var(--app-chrome-h)] left-0 bottom-0 z-30 w-14 hover:w-60 flex-col bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-slate-800 transition-[width] duration-200 ease-out shadow-[2px_0_0_0_transparent] hover:shadow-[2px_0_8px_-2px_rgba(0,0,0,0.08)]"
         aria-label="Navigation console"
       >
         <div className="px-4 pt-4 pb-2 whitespace-nowrap overflow-hidden">
