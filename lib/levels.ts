@@ -229,3 +229,57 @@ export function computeStreakXPBonus(streakDays: number): number {
   if (streakDays < STREAK_BONUS_START_DAY) return 0;
   return (streakDays - STREAK_BONUS_START_DAY + 1) * STREAK_XP_BONUS_PER_DAY;
 }
+
+/**
+ * XP total servant au calcul du niveau : XP des episodes + bonus hors
+ * episode (streak, badges).
+ *
+ * A utiliser PARTOUT ou un niveau est calcule ou affiche. Sinon le niveau
+ * stocke dans User.level (calcule avec bonus par l'API progress) diverge
+ * de celui recalcule a l'affichage, et l'apprenant voit deux valeurs
+ * differentes selon la page. Cf. #743.
+ */
+export function computeTotalXP(
+  progressScores: { score: number | null }[],
+  bonusXP: number | null | undefined,
+): number {
+  const base = progressScores.reduce((s, p) => s + (p.score || 0), 0);
+  return base + (bonusXP ?? 0);
+}
+
+/**
+ * Coins offerts au passage de niveau. La boutique annonce
+ * « Coins exclusifs au passage de niveau (10/25/50) » depuis toujours
+ * sans qu'aucun coins:increment n'existe au level-up (#743) : voici la
+ * regle correspondante, en 3 paliers.
+ *
+ * Retourne 0 pour un niveau <= 1 (pas de bonus a la creation du compte).
+ */
+export function computeLevelUpCoins(newLevel: number): number {
+  if (newLevel <= 1) return 0;
+  if (newLevel <= 4) return 10; // Apprenti -> Vigilant
+  if (newLevel <= 7) return 25; // Gardien -> Veilleur
+  return 50; // Expert, Champion, Maitre
+}
+
+/**
+ * Le bonus de streak tombe-t-il aujourd'hui ?
+ *
+ * Regles : streak >= STREAK_BONUS_START_DAY, et pas deja accorde dans la
+ * journee civile en cours. Pur (l'horloge est injectee) pour rester
+ * testable - c'est la fonction qui decide d'attribuer de l'XP, donc celle
+ * ou une erreur se paie en inflation silencieuse.
+ */
+export function shouldAwardStreakBonus(
+  streakDays: number,
+  lastAwardedAt: Date | null | undefined,
+  now: Date,
+): boolean {
+  if (streakDays < STREAK_BONUS_START_DAY) return false;
+  if (!lastAwardedAt) return true;
+  const sameDay =
+    lastAwardedAt.getFullYear() === now.getFullYear() &&
+    lastAwardedAt.getMonth() === now.getMonth() &&
+    lastAwardedAt.getDate() === now.getDate();
+  return !sameDay;
+}

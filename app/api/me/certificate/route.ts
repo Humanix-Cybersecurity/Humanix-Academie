@@ -4,9 +4,13 @@ import { NextResponse } from "next/server";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { CertificateOfCompletion, certificateName } from "@/lib/pdf-certificate";
+import {
+  CertificateOfCompletion,
+  certificateName,
+} from "@/lib/pdf-certificate";
 import { getLevel } from "@/lib/levels";
 import { getTenantBranding } from "@/lib/branding/tenant-branding";
+import { computeTotalXP } from "@/lib/levels";
 
 export const dynamic = "force-dynamic";
 
@@ -29,7 +33,7 @@ export async function GET() {
   });
   if (!user) return NextResponse.json({ error: "not_found" }, { status: 404 });
 
-  const totalXP = user.progress.reduce((s, p) => s + (p.score || 0), 0);
+  const totalXP = computeTotalXP(user.progress, user.bonusXP);
   const averageScore =
     user.progress.length === 0
       ? 0

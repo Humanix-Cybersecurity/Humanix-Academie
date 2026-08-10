@@ -6,9 +6,15 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import {
   computeCoinsEarned,
+  computeLevelUpCoins,
+  computeTotalXP,
   getLevel,
+  shouldAwardStreakBonus,
+  BADGE_UNLOCK_XP_BONUS,
   PERFECT_QUIZ_XP_BONUS,
+  STREAK_XP_BONUS_PER_DAY,
 } from "@/lib/levels";
+import { computeStreak } from "@/lib/streak";
 import { fireWebhook } from "@/lib/webhooks/dispatcher";
 import { triggerCisoLiveSync } from "@/lib/ciso-assistant/live-mode";
 import { evaluateAndUnlock } from "@/lib/achievements/evaluate";
@@ -55,10 +61,10 @@ export async function POST(req: Request) {
   // dans la somme totalXP utilisee pour le calcul du niveau.
   //
   // Refonte gamification mai 2026 (cf. lib/levels.ts pour la rationale).
-  // TODO follow-up : bonus streak quotidien (+5 XP/jour J3+) et bonus
-  // badge-unlock (+50 XP) requierent un champ User.bonusXP denormalise
-  // (migration Prisma a part). Pour l'instant, seul le perfect quiz est
-  // wire -- les constantes streak/badge sont exportees pour la suite.
+  // Le bonus streak (+5 XP/jour a partir de J3) et le bonus badge-unlock
+  // (+50 XP) sont desormais wires eux aussi, via User.bonusXP (#743) :
+  // ils ne sont rattaches a aucun episode, donc ils ne peuvent pas passer
+  // par Progress.score sans fausser bestScore.
   const perfectQuizBonus = perfectQuiz ? PERFECT_QUIZ_XP_BONUS : 0;
   const score = baseScore + perfectQuizBonus;
 
@@ -116,6 +122,9 @@ export async function POST(req: Request) {
     let coinsAwarded = 0;
     let leveledUp = false;
     let newLevel: number | null = null;
+    let streakBonusAwarded = 0;
+    let levelUpCoins = 0;
+    let streakDays = 0;
 
     // Attribution coins + level uniquement si première completion OU amélioration
     // ET si score > 0 (pas de coins gratuits sur quiz vide)
@@ -130,24 +139,58 @@ export async function POST(req: Request) {
       // Filtrage tenantId : on prend bien la progression du tenant courant.
       const allProgress = await tx.progress.findMany({
         where: { userId, tenantId },
-        select: { score: true },
+        select: { score: true, completedAt: true, status: true },
       });
-      const totalXP = allProgress.reduce((s, p) => s + (p.score || 0), 0);
-      const computedLevel = getLevel(totalXP);
 
       const userBefore = await tx.user.findUnique({
         where: { id: userId },
-        select: { level: true },
+        select: { level: true, bonusXP: true, lastStreakBonusAt: true },
       });
+
+      // BONUS STREAK (#743) : +5 XP par jour a partir du 3e jour
+      // consecutif, UNE seule fois par journee civile quel que soit le
+      // nombre d'episodes termines. lastStreakBonusAt porte l'idempotence.
+      const completedDates = allProgress
+        .filter((p) => p.status === "COMPLETED" && p.completedAt)
+        .map((p) => p.completedAt as Date);
+      streakDays = computeStreak(completedDates);
+      const awardStreak = shouldAwardStreakBonus(
+        streakDays,
+        userBefore?.lastStreakBonusAt ?? null,
+        now,
+      );
+      streakBonusAwarded = awardStreak ? STREAK_XP_BONUS_PER_DAY : 0;
+
+      // Le niveau se calcule sur XP episodes + bonus (y compris celui
+      // qu'on vient d'accorder), sinon le palier arrive avec un episode
+      // de retard.
+      const totalXP = computeTotalXP(
+        allProgress,
+        (userBefore?.bonusXP ?? 0) + streakBonusAwarded,
+      );
+      const computedLevel = getLevel(totalXP);
+
       if (userBefore && userBefore.level !== computedLevel.id) {
         leveledUp = computedLevel.id > userBefore.level;
         newLevel = computedLevel.id;
       }
+      // COINS DE PALIER (#743) : la boutique les annonce depuis toujours
+      // (« 10/25/50 au passage de niveau ») sans qu'aucun increment
+      // n'existe. On ne les accorde qu'a la MONTEE (leveledUp), jamais sur
+      // un recalcul a la baisse.
+      levelUpCoins = leveledUp && newLevel ? computeLevelUpCoins(newLevel) : 0;
+
       await tx.user.update({
         where: { id: userId },
         data: {
-          coins: { increment: coinsAwarded },
+          coins: { increment: coinsAwarded + levelUpCoins },
           level: computedLevel.id,
+          ...(streakBonusAwarded > 0
+            ? {
+                bonusXP: { increment: streakBonusAwarded },
+                lastStreakBonusAt: now,
+              }
+            : {}),
         },
       });
     }
@@ -162,6 +205,9 @@ export async function POST(req: Request) {
           score,
           baseScore,
           perfectQuizBonus, // tracabilite : combien d'XP bonus accordes
+          streakBonusAwarded,
+          streakDays,
+          levelUpCoins,
           coinsAwarded,
           leveledUp,
           newLevel,
@@ -169,7 +215,15 @@ export async function POST(req: Request) {
       },
     });
 
-    return { coinsAwarded, leveledUp, newLevel, isFirstCompletion };
+    return {
+      coinsAwarded,
+      leveledUp,
+      newLevel,
+      isFirstCompletion,
+      streakBonusAwarded,
+      streakDays,
+      levelUpCoins,
+    };
   });
 
   // Hook webhook : fire-and-forget, ne bloque PAS la reponse utilisateur.
@@ -206,11 +260,30 @@ export async function POST(req: Request) {
   // updates non-first-completion (parce que le score peut s'ameliorer
   // et debloquer "high_avg_score" / "perfect_5" / etc.). Best-effort,
   // ne bloque pas la reponse client.
-  let newlyUnlockedAchievements: { slug: string; title: string; emoji: string }[] = [];
+  let newlyUnlockedAchievements: {
+    slug: string;
+    title: string;
+    emoji: string;
+  }[] = [];
+  let badgeBonusAwarded = 0;
   if (status === "COMPLETED") {
     try {
       const evalResult = await evaluateAndUnlock(userId);
       newlyUnlockedAchievements = evalResult.newlyUnlocked;
+
+      // BONUS BADGE (#743) : +50 XP par badge fraichement debloque.
+      // Hors transaction parce que l'evaluation elle-meme l'est : c'est
+      // sans risque de double attribution, le @@unique([userId,
+      // achievementId]) de UserAchievement garantit qu'un badge n'est
+      // "newly unlocked" qu'une fois.
+      if (newlyUnlockedAchievements.length > 0) {
+        badgeBonusAwarded =
+          newlyUnlockedAchievements.length * BADGE_UNLOCK_XP_BONUS;
+        await db.user.update({
+          where: { id: userId },
+          data: { bonusXP: { increment: badgeBonusAwarded } },
+        });
+      }
     } catch {
       // best-effort
     }
@@ -220,5 +293,6 @@ export async function POST(req: Request) {
     ok: true,
     ...result,
     newlyUnlockedAchievements,
+    badgeBonusAwarded,
   });
 }

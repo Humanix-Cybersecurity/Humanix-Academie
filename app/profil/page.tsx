@@ -36,6 +36,7 @@ import { buildEquippedFromInventory } from "@/lib/shop";
 import { computeRiskScore } from "@/lib/risk-score";
 import { ACHIEVEMENTS_CATALOG } from "@/lib/achievements/catalog";
 import { getScenario, maxScore } from "@/lib/drill/scenarios";
+import { computeTotalXP } from "@/lib/levels";
 
 export const dynamic = "force-dynamic";
 
@@ -73,7 +74,9 @@ export default async function ProfilPage({
   );
   const risk = await computeRiskScore(userId);
 
-  const totalXP = user.progress.reduce((s, p) => s + (p.score || 0), 0);
+  // XP episodes + bonus streak/badges (#743) : meme formule que l'API
+  // progress, sinon le niveau affiche diverge du niveau stocke.
+  const totalXP = computeTotalXP(user.progress, user.bonusXP);
   const completedCount = user.progress.filter(
     (p) => p.status === "COMPLETED",
   ).length;

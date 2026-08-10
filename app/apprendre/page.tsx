@@ -29,7 +29,7 @@ import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import CyberEventBanner from "@/components/CyberEventBanner";
-import { getLevel } from "@/lib/levels";
+import { getLevel, computeTotalXP } from "@/lib/levels";
 import { getActiveChallenge } from "@/lib/challenge";
 import { listExpertEpisodes } from "@/lib/content-availability";
 import { getUserPersona } from "@/lib/ai/persona";
@@ -97,6 +97,8 @@ export default async function ApprendrePage() {
         where: { id: userId },
         select: {
           name: true,
+          // #743 : entre dans le calcul du niveau affiche dans le hero.
+          bonusXP: true,
         },
       }),
       // Groupes (metiers / departements) auxquels l'user appartient.
@@ -140,7 +142,7 @@ export default async function ApprendrePage() {
   // On calcule les agregats AVANT le tri pour pouvoir alimenter la
   // classification (qui depend du completedCount + avgQuizScorePct).
   const progressByEp = new Map(progress.map((p) => [p.episodeId, p]));
-  const totalXP = progress.reduce((s, p) => s + (p.score || 0), 0);
+  const totalXP = computeTotalXP(progress, user?.bonusXP);
   const completedCount = progress.filter(
     (p) => p.status === "COMPLETED",
   ).length;
