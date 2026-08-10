@@ -9,6 +9,7 @@ import { NextResponse } from "next/server";
 import { timingSafeEqual } from "node:crypto";
 import { auth } from "@/lib/auth";
 import { dispatchWeeklyAnecdote } from "@/lib/anecdotes/dispatcher";
+import { recordCronRun } from "@/lib/cron/record";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300; // 5 min : laisse le temps d'envoyer a beaucoup d'abonnes
@@ -71,7 +72,9 @@ export async function POST(req: Request) {
   const anecdoteId =
     typeof body?.anecdoteId === "string" ? body.anecdoteId : undefined;
 
-  const result = await dispatchWeeklyAnecdote({ force, anecdoteId });
+  const result = await recordCronRun("weekly-anecdote", () =>
+    dispatchWeeklyAnecdote({ force, anecdoteId }),
+  );
   return NextResponse.json(result);
 }
 

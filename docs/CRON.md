@@ -7,7 +7,7 @@ le tableau ci-dessous dans le scheduler de ton choix.
 
 ## 1. Inventaire des tâches
 
-8 endpoints HTTP `/api/cron/*` + quelques scripts standalone.
+11 endpoints HTTP `/api/cron/*` + quelques scripts standalone.
 
 | # | Endpoint / Script | Fréquence | Cron expr | maxDur | Idempotent | Critique | Rôle |
 |---|---|---|---|---|---|---|---|
@@ -21,7 +21,18 @@ le tableau ci-dessous dans le scheduler de ton choix.
 | 8 | `/api/cron/breaches-refresh` | 1× / 6h | `0 */6 * * *` | 60s | ✅ | ⭐ | Scrape les sources publiques de fuites de données (observatoire `/cyber-meteo`). |
 | 9 | `/api/cron/weekly-anecdote` | 1× / semaine | `0 8 * * 1` | 300s | ✅ | ⭐ | Envoie l'anecdote hebdo aux abonnés (lundi 8h). |
 | 10 | `/api/cron/audit-logs-purge` | 1×/jour | `0 4 * * *` | 120s | ✅ | ⭐ | Filet de sécurité global : purge `AuditLog` > 400j (CNIL ~13 mois) pour les tenants qui n'ont pas configuré leur propre `dataRetentionDays`. |
-| 10 | `scripts/scrape-breaches.ts --deep` | au boot | n/a | n/a | ✅ | ⭐ | Import initial de l'observatoire breaches. Déjà appelé par `docker-entrypoint.sh`. |
+| 11 | `/api/cron/exposure-scan` | 1×/jour | `0 5 * * *` | 60s | ✅ | ⭐ | Veille d'exposition B2B : détecte les fuites touchant les domaines des tenants abonnés. Inerte si `EXPOSURE_B2B_ENABLED != true`. **Ajouté au planning le 2026-08-09 (#749)** : l'endpoint existait mais n'était déclaré nulle part, il n'avait donc jamais tourné. |
+| 12 | `scripts/scrape-breaches.ts --deep` | au boot | n/a | n/a | ✅ | ⭐ | Import initial de l'observatoire breaches. Déjà appelé par `docker-entrypoint.sh`. |
+
+> **Vérifier que tout ça tourne vraiment** : `/superadmin/system-health` affiche
+> le dernier passage, la durée et le résultat de chaque tâche (modèle `CronRun`,
+> alimenté par `lib/cron/record.ts`). Une tâche jamais vue y apparaît en
+> « Jamais exécuté » — c'est exactement ce qui manquait pour repérer les
+> oublis de planification.
+>
+> **Ajouter un cron** = 3 endroits à mettre à jour, sinon il ne tournera pas ou
+> ne sera pas surveillé : ce tableau, `infra/ofelia/config.ini`, et
+> `lib/cron/registry.ts`.
 
 **Légende criticité** :
 - ⭐⭐ : silence = la feature ne marche pas (forecast vide, badges absents, phishing non envoyé)

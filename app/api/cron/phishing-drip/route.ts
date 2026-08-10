@@ -31,6 +31,7 @@ import {
   renderEmailHtml,
 } from "@/lib/phishing/email-template";
 import { injectTrackingPixel } from "@/lib/phishing";
+import { recordCronRun } from "@/lib/cron/record";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -84,7 +85,14 @@ async function processDueDripResults(
       },
     },
     include: {
-      campaign: { select: { id: true, tenantId: true, template: true, variantBSlug: true } },
+      campaign: {
+        select: {
+          id: true,
+          tenantId: true,
+          template: true,
+          variantBSlug: true,
+        },
+      },
       user: { select: { email: true, name: true } },
     },
     take: 200,
@@ -104,7 +112,10 @@ async function processDueDripResults(
 
   // Cache des templates par cle "tenantId:slug" pour eviter de re-fetch
   // a chaque iteration (200 items potentiels).
-  const tplCache = new Map<string, Awaited<ReturnType<typeof getEmailTemplateBySlug>>>();
+  const tplCache = new Map<
+    string,
+    Awaited<ReturnType<typeof getEmailTemplateBySlug>>
+  >();
   async function getCached(tenantId: string, slug: string) {
     const key = `${tenantId}:${slug}`;
     if (tplCache.has(key)) return tplCache.get(key)!;
@@ -178,7 +189,9 @@ export async function POST(req: Request) {
   if (!a.authorized) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
-  const result = await processDueDripResults(a.scopeTenantId ?? null);
+  const result = await recordCronRun("phishing-drip", () =>
+    processDueDripResults(a.scopeTenantId ?? null),
+  );
   return NextResponse.json({ ok: true, ...result });
 }
 

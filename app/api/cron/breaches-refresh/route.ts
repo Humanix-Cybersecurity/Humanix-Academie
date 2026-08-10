@@ -14,6 +14,7 @@
 import crypto from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { refreshBreaches } from "@/lib/breaches/repository";
+import { recordCronRun } from "@/lib/cron/record";
 
 export const dynamic = "force-dynamic";
 
@@ -34,7 +35,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
 
-  const result = await refreshBreaches();
+  const result = await recordCronRun("breaches-refresh", () =>
+    refreshBreaches(),
+  );
   return NextResponse.json(result);
 }
 
@@ -49,6 +52,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
 
-  const result = await refreshBreaches();
+  const result = await recordCronRun("breaches-refresh", () =>
+    refreshBreaches(),
+  );
   return NextResponse.json(result);
 }
