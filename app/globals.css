@@ -30,8 +30,9 @@
    ============================================================================= */
 @font-face {
   font-family: "Twemoji Country Flags";
-  unicode-range: U+1F1E6-1F1FF, U+1F3F4, U+E0062-E0063, U+E0065, U+E0067,
-    U+E006C, U+E006E, U+E0073-E0074, U+E0077, U+E007F;
+  unicode-range:
+    U+1F1E6-1F1FF, U+1F3F4, U+E0062-E0063, U+E0065, U+E0067, U+E006C, U+E006E,
+    U+E0073-E0074, U+E0077, U+E007F;
   src: url("/fonts/TwemojiCountryFlags.woff2") format("woff2");
   font-display: swap;
 }
@@ -54,17 +55,30 @@
    ============================================================================= */
 @layer base {
   :root {
-    --color-bg: #FFFFFF;
-    --color-bg-soft: #EAF3F8;
-    --color-card: #FFFFFF;
-    --color-fg: #1A1A1A;
+    /* HAUTEUR DU BANDEAU HAUT DE PAGE (header, + bandeau demo le cas echeant).
+     *
+     * Sert a positionner la sidebar admin, qui est `fixed` et doit donc
+     * connaitre la hauteur de ce qui la surplombe. Sans cette variable, la
+     * sidebar etait calee en dur sur la hauteur du header seul (top-20) :
+     * en mode demo, le DemoBanner s'inserant AU-DESSUS du header, la
+     * sidebar se retrouvait masquee derriere lui en haut de page.
+     *
+     * La sidebar desktop n'existe qu'a partir de lg (>= 1024px), ou le
+     * bandeau demo tient sur une seule ligne : sa hauteur est donc
+     * deterministe (py-2 + line-height text-sm + border). */
+    --app-chrome-h: 5rem;
+
+    --color-bg: #ffffff;
+    --color-bg-soft: #eaf3f8;
+    --color-card: #ffffff;
+    --color-fg: #1a1a1a;
     --color-fg-muted: #555555;
-    --color-border: #E5E7EB;
-    --color-primary: #0B3D91;
-    --color-primary-50: #EAF3F8;
-    --color-accent: #00A3A1;
-    --color-success: #2E8B57;
-    --color-warn: #C0392B;
+    --color-border: #e5e7eb;
+    --color-primary: #0b3d91;
+    --color-primary-50: #eaf3f8;
+    --color-accent: #00a3a1;
+    --color-success: #2e8b57;
+    --color-warn: #c0392b;
 
     /* Palette Tailwind pilotee par variables CSS (marque blanche / white-label).
        Triplets RGB "r g b" (PAS de hex) pour preserver les modificateurs
@@ -80,58 +94,64 @@
 
   .dark {
     /* Material Design 2 - Surface elevation system (8 levels) */
-    --md-surface-0:  #121212;  /*  0dp - page background     */
-    --md-surface-1:  #1E1E1E;  /*  1dp - cards basiques      ( 5% overlay) */
-    --md-surface-2:  #232323;  /*  2dp - cards hover         ( 7% overlay) */
-    --md-surface-3:  #252525;  /*  3dp - cards selected      ( 8% overlay) */
-    --md-surface-4:  #272727;  /*  4dp - app bar / hero      ( 9% overlay) */
-    --md-surface-6:  #2C2C2C;  /*  6dp - card hover elevated (11% overlay) */
-    --md-surface-8:  #2F2F2F;  /*  8dp - menu / drawer       (12% overlay) */
-    --md-surface-12: #333333;  /* 12dp - FAB pressed / sticky bar (14% overlay) */
-    --md-surface-16: #363636;  /* 16dp - modal sheet         (15% overlay) */
-    --md-surface-24: #383838;  /* 24dp - dialog top          (16% overlay) */
+    --md-surface-0: #121212; /*  0dp - page background     */
+    --md-surface-1: #1e1e1e; /*  1dp - cards basiques      ( 5% overlay) */
+    --md-surface-2: #232323; /*  2dp - cards hover         ( 7% overlay) */
+    --md-surface-3: #252525; /*  3dp - cards selected      ( 8% overlay) */
+    --md-surface-4: #272727; /*  4dp - app bar / hero      ( 9% overlay) */
+    --md-surface-6: #2c2c2c; /*  6dp - card hover elevated (11% overlay) */
+    --md-surface-8: #2f2f2f; /*  8dp - menu / drawer       (12% overlay) */
+    --md-surface-12: #333333; /* 12dp - FAB pressed / sticky bar (14% overlay) */
+    --md-surface-16: #363636; /* 16dp - modal sheet         (15% overlay) */
+    --md-surface-24: #383838; /* 24dp - dialog top          (16% overlay) */
 
     /* On-surface text - Material emphasis levels */
-    --md-on-surface-high:     rgba(255, 255, 255, 0.87);  /* body text, titres */
-    --md-on-surface-medium:   rgba(255, 255, 255, 0.60);  /* texte secondaire */
-    --md-on-surface-disabled: rgba(255, 255, 255, 0.38);  /* etats desactives */
+    --md-on-surface-high: rgba(255, 255, 255, 0.87); /* body text, titres */
+    --md-on-surface-medium: rgba(255, 255, 255, 0.6); /* texte secondaire */
+    --md-on-surface-disabled: rgba(255, 255, 255, 0.38); /* etats desactives */
 
     /* Primaires desaturees (Material tone 200) - reduisent neon glare */
-    --md-primary:    #90CAF9;  /* blue 200 (vs blue 500 #2196F3 sature) */
-    --md-on-primary: #002171;  /* texte fonce sur primary clair */
-    --md-secondary:  #80DEEA;  /* cyan 200 - accent calme */
-    --md-on-secondary: #00363A;
+    --md-primary: #90caf9; /* blue 200 (vs blue 500 #2196F3 sature) */
+    --md-on-primary: #002171; /* texte fonce sur primary clair */
+    --md-secondary: #80deea; /* cyan 200 - accent calme */
+    --md-on-secondary: #00363a;
 
     /* Status colors desaturees */
-    --md-success: #A5D6A7;  /* green 200 */
-    --md-warn:    #FFB74D;  /* orange 300 - moins agressif que red en dark */
-    --md-error:   #EF9A9A;  /* red 200 */
+    --md-success: #a5d6a7; /* green 200 */
+    --md-warn: #ffb74d; /* orange 300 - moins agressif que red en dark */
+    --md-error: #ef9a9a; /* red 200 */
 
     /* Borders et dividers (white avec opacity, reste lisible sur toutes surfaces) */
     --md-divider: rgba(255, 255, 255, 0.12);
     --md-outline: rgba(255, 255, 255, 0.24);
 
     /* ----- Mappage avec les tokens Humanix existants ----- */
-    --color-bg:        var(--md-surface-0);
-    --color-bg-soft:   var(--md-surface-1);
-    --color-card:      var(--md-surface-1);
-    --color-fg:        var(--md-on-surface-high);
-    --color-fg-muted:  var(--md-on-surface-medium);
-    --color-border:    var(--md-divider);
-    --color-primary:   var(--md-primary);
+    --color-bg: var(--md-surface-0);
+    --color-bg-soft: var(--md-surface-1);
+    --color-card: var(--md-surface-1);
+    --color-fg: var(--md-on-surface-high);
+    --color-fg-muted: var(--md-on-surface-medium);
+    --color-border: var(--md-divider);
+    --color-primary: var(--md-primary);
     --color-primary-50: var(--md-surface-2);
-    --color-accent:    var(--md-secondary);
-    --color-success:   var(--md-success);
-    --color-warn:      var(--md-warn);
+    --color-accent: var(--md-secondary);
+    --color-success: var(--md-success);
+    --color-warn: var(--md-warn);
   }
 
-  html, body {
+  html,
+  body {
     background: var(--color-bg-soft);
     color: var(--color-fg);
     /* "Twemoji Country Flags" en premier : grace a unicode-range, cette police
        n'est appliquee QUE sur les codepoints flag emoji - le reste du texte
        reste rendu par Inter (puis system-ui en fallback). */
-    font-family: 'Twemoji Country Flags', 'Inter', system-ui, -apple-system, sans-serif;
+    font-family:
+      "Twemoji Country Flags",
+      "Inter",
+      system-ui,
+      -apple-system,
+      sans-serif;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
   }
@@ -152,7 +172,9 @@
      RGAA : aucune contrainte sur les bordures decoratives, c'est
      uniquement le texte et les indicateurs de focus qui doivent
      respecter les seuils de contraste. */
-  *, ::before, ::after {
+  *,
+  ::before,
+  ::after {
     border-color: var(--color-border);
   }
 
@@ -181,12 +203,20 @@
 
   /* prefers-reduced-motion : desactive les animations */
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
+  }
+  /* Mode demo : le DemoBanner (components/DemoBanner.tsx) ajoute sa hauteur
+   * au-dessus du header. 1rem de padding vertical + 1.25rem de line-height
+   * + 1px de bordure. */
+  body.has-demo-banner {
+    --app-chrome-h: calc(5rem + 2.3125rem);
   }
 }
 
@@ -202,7 +232,7 @@
     box-shadow: none;
   }
   .dark .btn-primary:hover {
-    background: #4DD0E1; /* cyan 300, légèrement plus saturé au hover */
+    background: #4dd0e1; /* cyan 300, légèrement plus saturé au hover */
   }
 
   .btn-secondary {
@@ -213,7 +243,12 @@
     color: var(--md-primary);
   }
   .dark .btn-secondary:hover {
-    background: rgba(144, 202, 249, 0.08); /* primary 8% overlay - MD2 pattern */
+    background: rgba(
+      144,
+      202,
+      249,
+      0.08
+    ); /* primary 8% overlay - MD2 pattern */
   }
 
   .card {
@@ -227,7 +262,9 @@
     box-shadow: none;
   }
   .dark .card:hover {
-    background: var(--md-surface-2); /* hover = elevation +1 = surface-2 (2dp) */
+    background: var(
+      --md-surface-2
+    ); /* hover = elevation +1 = surface-2 (2dp) */
     box-shadow: none;
   }
 
@@ -257,11 +294,15 @@
     position: absolute;
     inset: 0 0 auto 0;
     height: 4px;
-    background: linear-gradient(90deg, #00A3A1 0%, #0B3D91 100%);
+    background: linear-gradient(90deg, #00a3a1 0%, #0b3d91 100%);
   }
   .dark .card-stat::before {
     /* gradient desaturé en dark : evite le neon glare */
-    background: linear-gradient(90deg, var(--md-secondary) 0%, var(--md-primary) 100%);
+    background: linear-gradient(
+      90deg,
+      var(--md-secondary) 0%,
+      var(--md-primary) 100%
+    );
   }
 
   /* Card feature : barre accent à gauche, pour features en grille */
@@ -299,7 +340,7 @@
      classe .bg-humanix-hero ci-dessous, qui reste utilisable cote JSX). */
   .card-hero {
     @apply rounded-3xl text-white p-8 shadow-xl;
-    background-image: linear-gradient(135deg, #0B3D91 0%, #00A3A1 100%);
+    background-image: linear-gradient(135deg, #0b3d91 0%, #00a3a1 100%);
   }
   /* MD2 : hero garde son gradient mais shadow attenuee en dark */
   .dark .card-hero {
@@ -311,18 +352,22 @@
    * Tous les gradients du produit doivent passer par ces utilities.
    * ============================================================ */
   .bg-humanix-hero {
-    background-image: linear-gradient(135deg, #0B3D91 0%, #00A3A1 100%);
+    background-image: linear-gradient(135deg, #0b3d91 0%, #00a3a1 100%);
   }
   .bg-humanix-soft {
-    background-image: linear-gradient(180deg, #EAF3F8 0%, #FFFFFF 100%);
+    background-image: linear-gradient(180deg, #eaf3f8 0%, #ffffff 100%);
   }
   /* MD2 : gradient soft = transition surface-1 -> surface-0 (elevation
      descendante). Plus contemplatif que l'ancien slate-800/900 trop bleu. */
   .dark .bg-humanix-soft {
-    background-image: linear-gradient(180deg, var(--md-surface-1) 0%, var(--md-surface-0) 100%);
+    background-image: linear-gradient(
+      180deg,
+      var(--md-surface-1) 0%,
+      var(--md-surface-0) 100%
+    );
   }
   .bg-humanix-warm {
-    background-image: linear-gradient(135deg, #F59E0B 0%, #E67E22 100%);
+    background-image: linear-gradient(135deg, #f59e0b 0%, #e67e22 100%);
   }
 
   /* ============================================================
@@ -360,8 +405,12 @@
    *
    * On garde la hierarchie visuelle : gray-400 < gray-500 < gray-600.
    * ============================================================ */
-  .text-gray-500 { color: #4F5763; }
-  .text-gray-400 { color: #6B7280; }
+  .text-gray-500 {
+    color: #4f5763;
+  }
+  .text-gray-400 {
+    color: #6b7280;
+  }
 
   /* ============================================================
    * DARK MODE - Mappage Tailwind sur surfaces Material Design 2
@@ -372,16 +421,36 @@
    * ============================================================ */
 
   /* Text - emphasis Material (87 / 60 / 38 % white) */
-  .dark .text-primary-500 { color: var(--md-primary); }
-  .dark .text-accent-500  { color: var(--md-secondary); }
-  .dark .text-gray-100    { color: var(--md-on-surface-high); }
-  .dark .text-gray-200    { color: var(--md-on-surface-high); }
-  .dark .text-gray-300    { color: rgba(255, 255, 255, 0.78); }
-  .dark .text-gray-400    { color: var(--md-on-surface-medium); }
-  .dark .text-gray-500    { color: rgba(255, 255, 255, 0.70); }
-  .dark .text-gray-600    { color: rgba(255, 255, 255, 0.55); }
-  .dark .text-gray-700    { color: var(--md-on-surface-high); }
-  .dark .text-gray-800    { color: var(--md-on-surface-high); }
+  .dark .text-primary-500 {
+    color: var(--md-primary);
+  }
+  .dark .text-accent-500 {
+    color: var(--md-secondary);
+  }
+  .dark .text-gray-100 {
+    color: var(--md-on-surface-high);
+  }
+  .dark .text-gray-200 {
+    color: var(--md-on-surface-high);
+  }
+  .dark .text-gray-300 {
+    color: rgba(255, 255, 255, 0.78);
+  }
+  .dark .text-gray-400 {
+    color: var(--md-on-surface-medium);
+  }
+  .dark .text-gray-500 {
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .dark .text-gray-600 {
+    color: rgba(255, 255, 255, 0.55);
+  }
+  .dark .text-gray-700 {
+    color: var(--md-on-surface-high);
+  }
+  .dark .text-gray-800 {
+    color: var(--md-on-surface-high);
+  }
 
   /* Backgrounds - elevation MD2 :
    *   page bg  = surface-0 (#121212)
@@ -395,23 +464,53 @@
    *   slate-800 = card elevated (surface-2)
    *   slate-700 = card haute (surface-4)
    */
-  .dark .bg-white        { background: var(--md-surface-1); }
-  .dark .bg-gray-50      { background: var(--md-surface-0); }
-  .dark .bg-gray-100     { background: var(--md-surface-1); }
-  .dark .bg-slate-950    { background: var(--md-surface-0); }
-  .dark .bg-slate-900    { background: var(--md-surface-1); }
-  .dark .bg-slate-800    { background: var(--md-surface-2); }
-  .dark .bg-slate-700    { background: var(--md-surface-4); }
-  .dark .bg-primary-50   { background: rgba(144, 202, 249, 0.08); }
-  .dark .bg-accent-50    { background: rgba(128, 222, 234, 0.08); }
+  .dark .bg-white {
+    background: var(--md-surface-1);
+  }
+  .dark .bg-gray-50 {
+    background: var(--md-surface-0);
+  }
+  .dark .bg-gray-100 {
+    background: var(--md-surface-1);
+  }
+  .dark .bg-slate-950 {
+    background: var(--md-surface-0);
+  }
+  .dark .bg-slate-900 {
+    background: var(--md-surface-1);
+  }
+  .dark .bg-slate-800 {
+    background: var(--md-surface-2);
+  }
+  .dark .bg-slate-700 {
+    background: var(--md-surface-4);
+  }
+  .dark .bg-primary-50 {
+    background: rgba(144, 202, 249, 0.08);
+  }
+  .dark .bg-accent-50 {
+    background: rgba(128, 222, 234, 0.08);
+  }
 
   /* Borders / dividers - white opacity (lisible sur toutes les surfaces) */
-  .dark .border-gray-100  { border-color: var(--md-divider); }
-  .dark .border-gray-200  { border-color: var(--md-divider); }
-  .dark .border-gray-300  { border-color: var(--md-outline); }
-  .dark .border-slate-700 { border-color: var(--md-divider); }
-  .dark .border-slate-800 { border-color: var(--md-divider); }
-  .dark .border-slate-900 { border-color: var(--md-divider); }
+  .dark .border-gray-100 {
+    border-color: var(--md-divider);
+  }
+  .dark .border-gray-200 {
+    border-color: var(--md-divider);
+  }
+  .dark .border-gray-300 {
+    border-color: var(--md-outline);
+  }
+  .dark .border-slate-700 {
+    border-color: var(--md-divider);
+  }
+  .dark .border-slate-800 {
+    border-color: var(--md-divider);
+  }
+  .dark .border-slate-900 {
+    border-color: var(--md-divider);
+  }
 
   /* Pas de box-shadow visible en dark : on retire les shadow utilities
      classiques. Les composants conservent leurs borders pour la separation. */
@@ -431,73 +530,160 @@
 
 /* ====== Animations Duolingo-style ====== */
 @layer utilities {
-  .animate-fadeIn { animation: fadeIn 0.4s ease-out; }
-  .animate-bounce-once { animation: bounceOnce 0.7s ease-out; }
-  .animate-bounce-slow { animation: bounceSlow 2s ease-in-out infinite; }
-  .animate-wiggle { animation: wiggle 0.6s ease-in-out; }
-  .animate-pulse-once { animation: pulseOnce 0.6s ease-out; }
-  .animate-slide-up { animation: slideUp 0.4s ease-out both; }
-  .animate-shake { animation: shake 0.4s ease-out; }
+  .animate-fadeIn {
+    animation: fadeIn 0.4s ease-out;
+  }
+  .animate-bounce-once {
+    animation: bounceOnce 0.7s ease-out;
+  }
+  .animate-bounce-slow {
+    animation: bounceSlow 2s ease-in-out infinite;
+  }
+  .animate-wiggle {
+    animation: wiggle 0.6s ease-in-out;
+  }
+  .animate-pulse-once {
+    animation: pulseOnce 0.6s ease-out;
+  }
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out both;
+  }
+  .animate-shake {
+    animation: shake 0.4s ease-out;
+  }
   .animate-gradient {
     background-size: 200% 200%;
     animation: gradientShift 3s ease infinite;
   }
   /* Pages immersives : flottement doux pour mascotte / icônes héros */
-  .animate-float { animation: float 6s ease-in-out infinite; }
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
   /* Halo pulsant pour CTA majeurs (jamais agressif, opacity 0→0.6→0) */
-  .animate-glow { animation: glow 3.5s ease-in-out infinite; }
+  .animate-glow {
+    animation: glow 3.5s ease-in-out infinite;
+  }
   /* Drift hex : mouvement quasi-imperceptible du fond hexagonal */
-  .animate-hex-drift { animation: hexDrift 24s linear infinite; }
+  .animate-hex-drift {
+    animation: hexDrift 24s linear infinite;
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes bounceOnce {
-  0% { transform: scale(0.5) translateY(20px); opacity: 0; }
-  50% { transform: scale(1.15) translateY(-10px); opacity: 1; }
-  80% { transform: scale(0.95) translateY(2px); }
-  100% { transform: scale(1) translateY(0); opacity: 1; }
+  0% {
+    transform: scale(0.5) translateY(20px);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.15) translateY(-10px);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(0.95) translateY(2px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
 }
 @keyframes bounceSlow {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 @keyframes wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-5deg); }
-  75% { transform: rotate(5deg); }
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-5deg);
+  }
+  75% {
+    transform: rotate(5deg);
+  }
 }
 @keyframes pulseOnce {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.07); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.07);
+  }
 }
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  75% { transform: translateX(6px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-6px);
+  }
+  75% {
+    transform: translateX(6px);
+  }
 }
 @keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 @keyframes float {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-12px) rotate(1.5deg); }
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(1.5deg);
+  }
 }
 @keyframes glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 163, 161, 0); }
-  50% { box-shadow: 0 0 32px 8px rgba(0, 163, 161, 0.32); }
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 163, 161, 0);
+  }
+  50% {
+    box-shadow: 0 0 32px 8px rgba(0, 163, 161, 0.32);
+  }
 }
 @keyframes hexDrift {
-  from { background-position: 0 0; }
-  to { background-position: 56px 100px; }
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 56px 100px;
+  }
 }
 
 /* Scrollbar discrète pour la nav admin (sidebar verticale 240px).
@@ -556,15 +742,23 @@
 .legal-prose p {
   margin: 0.75em 0;
 }
-.legal-prose p:first-child { margin-top: 0; }
-.legal-prose p:last-child { margin-bottom: 0; }
+.legal-prose p:first-child {
+  margin-top: 0;
+}
+.legal-prose p:last-child {
+  margin-bottom: 0;
+}
 .legal-prose ul,
 .legal-prose ol {
   margin: 0.75em 0 0.75em 1.25rem;
   padding-left: 0.5rem;
 }
-.legal-prose ul { list-style: disc; }
-.legal-prose ol { list-style: decimal; }
+.legal-prose ul {
+  list-style: disc;
+}
+.legal-prose ol {
+  list-style: decimal;
+}
 .legal-prose li {
   margin: 0.4em 0;
   padding-left: 0.25rem;
@@ -627,8 +821,12 @@
   header.card,
   .skip-link,
   nav,
-  footer { display: none !important; }
-  .legal-content { max-width: 100% !important; }
+  footer {
+    display: none !important;
+  }
+  .legal-content {
+    max-width: 100% !important;
+  }
   .card {
     box-shadow: none !important;
     border: 1px solid #ccc !important;
@@ -668,7 +866,9 @@ main:focus {
 
 /* Tap targets minimum 44x44 pour boutons sur mobile (WCAG 2.5.5) */
 @media (max-width: 640px) {
-  button, a.btn-primary, a.btn-secondary {
+  button,
+  a.btn-primary,
+  a.btn-secondary {
     min-height: 44px;
   }
 }
