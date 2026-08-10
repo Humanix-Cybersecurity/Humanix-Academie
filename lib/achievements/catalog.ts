@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
+import type { DetectiveRank } from "@/lib/investigations/types";
 //
 // Catalogue des badges (Achievement) de Humanix Academie.
 //
@@ -16,11 +17,7 @@
 //     retroactif.
 
 export type AchievementCategory =
-  | "progression"
-  | "consistency"
-  | "mastery"
-  | "social"
-  | "special";
+  "progression" | "consistency" | "mastery" | "social" | "special";
 
 export type AchievementRarity = "common" | "rare" | "epic" | "legendary";
 
@@ -59,6 +56,18 @@ export type UserStats = {
    * de test. Lookup O(n) acceptable, n < 50 saisons en pratique.
    */
   completedSaisonSlugs: string[];
+  /**
+   * MODE ENQUETEUR (#732). Nb d'enquetes DISTINCTES reussies (passed) :
+   * on deduplique par scenarioSlug, sinon rejouer la meme enquete 10 fois
+   * suffirait a decrocher les badges.
+   */
+  investigationsPassed: number;
+  /**
+   * Rang detective calcule par computeDetectiveRank (lib/investigations/
+   * types.ts) : depend du ratio de score ET du nombre d'enquetes, donc
+   * on ne le recalcule pas ici.
+   */
+  detectiveRank: DetectiveRank;
 };
 
 export type AchievementDef = {
@@ -198,7 +207,8 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     slug: "streak_3",
     title: "Trois jours d'affilée",
     emoji: "🔥",
-    description: "Connecte-toi et progresse 3 jours d'affilée. C'est ça l'habitude.",
+    description:
+      "Connecte-toi et progresse 3 jours d'affilée. C'est ça l'habitude.",
     category: "consistency",
     rarity: "common",
     points: 15,
@@ -380,7 +390,8 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     slug: "comeback_kid",
     title: "Le retour gagnant",
     emoji: "💪",
-    description: "Termine un module flash de remédiation après un clic phishing.",
+    description:
+      "Termine un module flash de remédiation après un clic phishing.",
     category: "special",
     rarity: "rare",
     points: 25,
@@ -391,7 +402,8 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     slug: "iron_will",
     title: "Volonté de fer",
     emoji: "🔱",
-    description: "3 remédiations flash terminées. Tu fais des erreurs ET tu apprends.",
+    description:
+      "3 remédiations flash terminées. Tu fais des erreurs ET tu apprends.",
     category: "special",
     rarity: "epic",
     points: 70,
@@ -418,7 +430,8 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     slug: "world_password_day",
     title: "Jour du mot de passe",
     emoji: "🔐",
-    description: "Termine un épisode lors de la World Password Day (1er jeudi de mai).",
+    description:
+      "Termine un épisode lors de la World Password Day (1er jeudi de mai).",
     category: "special",
     rarity: "epic",
     points: 60,
@@ -626,7 +639,8 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     slug: "audience_master_rh",
     title: "RH cyber-aware",
     emoji: "💼",
-    description: "Termine la saison 'cyber-rh'. Le recrutement & la formation, c'est aussi de la securite.",
+    description:
+      "Termine la saison 'cyber-rh'. Le recrutement & la formation, c'est aussi de la securite.",
     category: "mastery",
     rarity: "epic",
     points: 80,
@@ -648,7 +662,8 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     slug: "audience_master_compta",
     title: "Finance vigilante",
     emoji: "💰",
-    description: "Termine la saison 'cyber-compta'. Le piege du faux RIB, jamais.",
+    description:
+      "Termine la saison 'cyber-compta'. Le piege du faux RIB, jamais.",
     category: "mastery",
     rarity: "epic",
     points: 80,
@@ -659,7 +674,8 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     slug: "audience_master_dirigeants",
     title: "Dirigeant cyber",
     emoji: "👔",
-    description: "Termine la saison 'cyber-dirigeants'. Le risque, tu l'arbitres.",
+    description:
+      "Termine la saison 'cyber-dirigeants'. Le risque, tu l'arbitres.",
     category: "mastery",
     rarity: "epic",
     points: 80,
@@ -683,7 +699,8 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     slug: "anti_phishing_master",
     title: "Anti-phishing master",
     emoji: "🎣",
-    description: "Termine les saisons phishing + fraude-president + email-pro. Plus aucun mail ne te piege.",
+    description:
+      "Termine les saisons phishing + fraude-president + email-pro. Plus aucun mail ne te piege.",
     category: "special",
     rarity: "epic",
     points: 120,
@@ -697,7 +714,8 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     slug: "anti_ransomware_master",
     title: "Anti-ransomware master",
     emoji: "🔒",
-    description: "Termine les saisons ransomware + sauvegardes + supply-chain. Tu es pret pour le pire.",
+    description:
+      "Termine les saisons ransomware + sauvegardes + supply-chain. Tu es pret pour le pire.",
     category: "special",
     rarity: "epic",
     points: 120,
@@ -711,7 +729,8 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     slug: "anti_credential_master",
     title: "Forteresse des credentials",
     emoji: "🔑",
-    description: "Termine les saisons mots-de-passe + acces-physiques + stockage-cloud. Inviolable.",
+    description:
+      "Termine les saisons mots-de-passe + acces-physiques + stockage-cloud. Inviolable.",
     category: "special",
     rarity: "epic",
     points: 120,
@@ -725,7 +744,8 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     slug: "anti_ia_threats_master",
     title: "IA aware",
     emoji: "🤖",
-    description: "Termine les saisons ia-generative + deepfakes. Tu distingues le vrai du faux genere.",
+    description:
+      "Termine les saisons ia-generative + deepfakes. Tu distingues le vrai du faux genere.",
     category: "special",
     rarity: "epic",
     points: 120,
@@ -739,15 +759,98 @@ export const ACHIEVEMENTS_CATALOG: AchievementDef[] = [
     slug: "anti_mobile_master",
     title: "Mobile-proof",
     emoji: "📱",
-    description: "Termine les saisons mobile-smartphone + wifi-reseaux + teletravail + voyages-affaires. Mobile-first, secure-first.",
+    description:
+      "Termine les saisons mobile-smartphone + wifi-reseaux + teletravail + voyages-affaires. Mobile-first, secure-first.",
     category: "special",
     rarity: "legendary",
     points: 150,
     isSecret: false,
     isUnlocked: (s) =>
-      ["mobile-smartphone", "wifi-reseaux", "teletravail", "voyages-affaires"].every(
-        (slug) => s.completedSaisonSlugs.includes(slug),
-      ),
+      [
+        "mobile-smartphone",
+        "wifi-reseaux",
+        "teletravail",
+        "voyages-affaires",
+      ].every((slug) => s.completedSaisonSlugs.includes(slug)),
+  },
+
+  // ---------------------------------------------------------------------
+  // MODE ENQUETEUR (#732)
+  // ---------------------------------------------------------------------
+  // Le Mode Enqueteur existait sans aucune recompense : reussir une
+  // enquete ne debloquait rien. Ces badges lui donnent une progression.
+  //
+  // investigationsPassed compte les enquetes DISTINCTES reussies (dedup
+  // par scenarioSlug cote evaluate.ts) : rejouer la meme enquete ne fait
+  // pas avancer. detectiveRank vient de computeDetectiveRank, qui exige a
+  // la fois un ratio de score et un nombre d'enquetes.
+  {
+    slug: "first_investigation",
+    title: "Premier indice",
+    emoji: "\u{1F50E}",
+    description: "Réussis ta première enquête. L'oeil commence à se former.",
+    category: "progression",
+    rarity: "common",
+    points: 10,
+    isSecret: false,
+    isUnlocked: (s) => s.investigationsPassed >= 1,
+  },
+  {
+    slug: "detective_junior",
+    title: "Détective Junior",
+    emoji: "\u{1F575}",
+    description:
+      "Atteins le rang Détective Junior : 3 enquêtes à 60 % ou plus.",
+    category: "mastery",
+    rarity: "rare",
+    points: 30,
+    isSecret: false,
+    isUnlocked: (s) =>
+      s.detectiveRank === "detective-junior" ||
+      s.detectiveRank === "detective-confirme" ||
+      s.detectiveRank === "cyber-sherlock" ||
+      s.detectiveRank === "maitre-detective",
+  },
+  {
+    slug: "detective_confirme",
+    title: "Détective Confirmé",
+    emoji: "\u{1F5C2}",
+    description:
+      "Atteins le rang Détective Confirmé : 10 enquêtes à 75 % ou plus.",
+    category: "mastery",
+    rarity: "epic",
+    points: 80,
+    isSecret: false,
+    isUnlocked: (s) =>
+      s.detectiveRank === "detective-confirme" ||
+      s.detectiveRank === "cyber-sherlock" ||
+      s.detectiveRank === "maitre-detective",
+  },
+  {
+    slug: "cyber_sherlock",
+    title: "Cyber Sherlock",
+    emoji: "\u{1F3A9}",
+    description:
+      "Atteins le rang Cyber Sherlock : 25 enquêtes à 90 % ou plus. Élémentaire.",
+    category: "mastery",
+    rarity: "legendary",
+    points: 150,
+    isSecret: false,
+    isUnlocked: (s) =>
+      s.detectiveRank === "cyber-sherlock" ||
+      s.detectiveRank === "maitre-detective",
+  },
+  {
+    slug: "maitre_detective",
+    title: "Maître Détective",
+    emoji: "\u{1F396}",
+    description:
+      "Rang ultime : 50 enquêtes sans la moindre erreur. Plus rien ne t'échappe.",
+    category: "mastery",
+    rarity: "legendary",
+    points: 250,
+    isSecret: true,
+    isUnlocked: (s) => s.detectiveRank === "maitre-detective",
   },
 ];
 
