@@ -159,58 +159,63 @@ La livraison est **volontairement en deux temps** : la CI construit et valide,
 un humain décide et déploie sur la machine. Aucun accès entrant, aucune clé SSH
 dans GitHub.
 
+> ⚠️ **L'image GHCR n'est PAS l'artefact de déploiement de ces stacks.**
+> Elle est publiée en **mode OSS pur**, volontairement **sans le submodule
+> privé `content-pro`** (le workflow a un garde-fou qui fait échouer le
+> build s'il est présent). La déployer ferait tomber le catalogue de ~37
+> saisons à 2 : le site deviendrait une coquille vide. Elle sert la
+> **distribution aux self-hosters**, pas la démo ni la production, qui ont
+> besoin du contenu commercial et donc d'un build local.
+
 **Temps 1 — automatique (GitHub Actions).** `docker-publish.yml` build,
-smoke-teste et publie l'image sur GHCR avec provenance SLSA + SBOM :
+smoke-teste et publie l'image OSS sur GHCR avec provenance SLSA + SBOM :
 
 | Tag publié | Quand | Destiné à |
 |---|---|---|
-| `:edge` | à chaque push sur `main` | démo |
-| `:latest` + `:1.2.3`, `:1.2`, `:1` | sur un tag git `v*.*.*` | production |
+| `:edge` | à chaque push sur `main` | self-hosters qui suivent le fil |
+| `:latest` + `:1.2.3`, `:1.2`, `:1` | sur un tag git `v*.*.*` | self-hosters, version stable |
 | `:main-<sha7>` | à chaque push sur `main` | rejouer un build précis |
 
-**Temps 2 — manuel (toi, sur `humanix-prod-01`).** `scripts/deploy.sh` déploie
-**l'image publiée**, sans rebuild :
+Ces tags servent la **distribution OSS**. La démo et la production, elles, sont
+livrées depuis le clone git avec `content-pro` (temps 2 ci-dessous).
+
+**Temps 2 — manuel (toi, sur `humanix-prod-01`).** `scripts/deploy.sh` met le
+clone sur un commit **précis**, met à jour `content-pro`, rebuild et
+enregistre ce qui a été déployé :
 
 ```bash
-cd /opt/humanix-prod          # ou le dépôt cloné, peu importe : le script prend le chemin en env
-./scripts/deploy.sh demo             # démo   -> :edge
-./scripts/deploy.sh prod             # prod   -> :latest (demande confirmation)
-./scripts/deploy.sh prod v1.2.3      # version précise
+./scripts/deploy.sh demo             # démo -> dernier commit de main
+./scripts/deploy.sh prod v1.2.3      # prod -> un tag (demande confirmation)
 ./scripts/deploy.sh prod --dry-run   # montre le plan, ne touche à rien
 ```
 
-Le script vérifie l'état, pull, redémarre le seul service `app`, attend que le
-service réponde, et affiche la commande de rollback s'il ne répond pas.
+Le script **refuse de builder si `content-pro/` est vide** — sans ce garde-fou
+le build réussit, le site démarre, et le catalogue est simplement vide : panne
+totalement silencieuse.
+
+Il résout aussi le bon remote tout seul : sur ces stacks, `origin` pointe vers
+`humanix-content-pro` et c'est **`upstream`** qui pointe vers l'application. Un
+`git pull` nu tirerait le mauvais dépôt.
 
 ### Pourquoi c'est important (cause racine, pentest du 7 mai)
 
-Avant, le temps 2 consistait à **rebuild sur place depuis git**. L'image
-construite et testée par la CI n'arrivait donc jamais en production : c'est
-l'origine documentée de la divergence prod/main (CSP, middleware, sanitization
-absents du build déployé). Déployer l'artefact publié supprime cette classe
-d'écart, et rend le commit déployé vérifiable :
+La divergence prod/main ne venait pas du fait de builder sur place, mais du
+fait que **personne ne savait à quel commit le clone était**. Le script épingle
+désormais un commit précis et écrit une trace lisible :
 
 ```bash
-docker inspect --format '{{index .Config.Labels "org.opencontainers.image.revision"}}' \
-  $(docker compose ps -q app)
+cat /opt/humanix-demo/.humanix-deployed
+# commit=...  ref=main  content_pro=...  deployed_at=...  deployed_by=...
 ```
 
-### Pré-requis : la stack doit consommer l'image, pas la rebuilder
+### Pré-requis : accès au submodule privé
 
-Tant que le service `app` de `/opt/.../docker-compose.yml` porte un `build:`,
-`docker compose up` reconstruit en local et ignore l'image publiée. Le script
-**refuse de déployer** dans ce cas et affiche le patch. À appliquer dans
-`/opt/...` — ces fichiers font autorité, cf.
-[`INFRA_STACKS_DEPLOYED.md`](INFRA_STACKS_DEPLOYED.md), ne pas les remplacer par
-ceux du dépôt :
+La machine doit pouvoir cloner `humanix-content-pro` (clé de déploiement). Sans
+ça le script s'arrête avec le code 3 plutôt que de livrer un catalogue vide.
 
-```yaml
-  app:
-    image: ghcr.io/humanix-cybersecurity/humanix-academie:${HUMANIX_IMAGE_TAG:-edge}
-    # (retirer le bloc build:)
-```
-
-Sauvegarder avant édition : `cp docker-compose.yml docker-compose.yml.avant-$(date +%Y%m%d)`.
+Le `docker-compose.yml` de `/opt/...` a volontairement divergé du dépôt (cf.
+[`INFRA_STACKS_DEPLOYED.md`](INFRA_STACKS_DEPLOYED.md)) : le script ne le touche
+pas et signale les modifications locales qu'il préserve.
 
 ---
 
