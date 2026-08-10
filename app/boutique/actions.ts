@@ -27,6 +27,22 @@ export async function buyItem(itemId: string) {
       throw new Error(`level_required:${item.minLevel}`);
     }
 
+    // GATING PAR BADGE (#748). Verifie cote SERVEUR : l'UI grise l'item,
+    // mais rien n'empeche d'appeler l'action directement avec son id.
+    // Dans la transaction, donc pas de fenetre entre le check et le debit.
+    if (item.requiredAchievementSlug) {
+      const unlocked = await tx.userAchievement.findFirst({
+        where: {
+          userId,
+          achievement: { slug: item.requiredAchievementSlug },
+        },
+        select: { id: true },
+      });
+      if (!unlocked) {
+        throw new Error(`achievement_required:${item.requiredAchievementSlug}`);
+      }
+    }
+
     const owned = await tx.userInventory.findUnique({
       where: { userId_itemId: { userId, itemId: item.id } },
     });

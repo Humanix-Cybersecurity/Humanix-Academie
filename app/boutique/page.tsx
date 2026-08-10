@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import HexMascotEvolved from "@/components/HexMascotEvolved";
 import { buildEquippedFromInventory, CATEGORY_LABEL } from "@/lib/shop";
 import ShopGrid from "@/components/ShopGrid";
+import { ACHIEVEMENTS_BY_SLUG } from "@/lib/achievements/catalog";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +15,7 @@ export default async function BoutiquePage() {
   if (!session?.user) redirect(getSignInPath());
   const userId = session.user!.id as string;
 
-  const [user, items, inventory] = await Promise.all([
+  const [user, items, inventory, unlockedAchievements] = await Promise.all([
     db.user.findUnique({
       where: { id: userId },
       select: {
@@ -37,10 +38,16 @@ export default async function BoutiquePage() {
         isActive: true,
         AND: [
           {
-            OR: [{ availableFrom: null }, { availableFrom: { lte: new Date() } }],
+            OR: [
+              { availableFrom: null },
+              { availableFrom: { lte: new Date() } },
+            ],
           },
           {
-            OR: [{ availableUntil: null }, { availableUntil: { gt: new Date() } }],
+            OR: [
+              { availableUntil: null },
+              { availableUntil: { gt: new Date() } },
+            ],
           },
         ],
       },
@@ -50,6 +57,11 @@ export default async function BoutiquePage() {
       where: { userId },
       include: { item: true },
     }),
+    // Badges debloques : conditionnent les items « trophee » (#748).
+    db.userAchievement.findMany({
+      where: { userId },
+      select: { achievement: { select: { slug: true } } },
+    }),
   ]);
   if (!user) redirect(getSignInPath());
 
@@ -58,6 +70,7 @@ export default async function BoutiquePage() {
     inventory.map((i) => ({ item: i.item, isEquipped: i.isEquipped })),
   );
   const ownedIds = new Set(inventory.map((i) => i.itemId));
+  const unlockedSlugs = unlockedAchievements.map((u) => u.achievement.slug);
   const equippedIds = new Set(
     inventory.filter((i) => i.isEquipped).map((i) => i.itemId),
   );
@@ -147,11 +160,17 @@ export default async function BoutiquePage() {
               minLevel: i.minLevel,
               description: i.description,
               rarity: i.rarity,
+              requiredAchievementSlug: i.requiredAchievementSlug,
+              requiredAchievementLabel: i.requiredAchievementSlug
+                ? (ACHIEVEMENTS_BY_SLUG[i.requiredAchievementSlug]?.title ??
+                  null)
+                : null,
             }))}
             ownedIds={[...ownedIds]}
             equippedIds={[...equippedIds]}
             userCoins={user.coins}
             userLevel={user.level}
+            unlockedAchievementSlugs={unlockedSlugs}
           />
         </section>
       ))}
