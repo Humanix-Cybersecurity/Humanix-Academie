@@ -994,6 +994,9 @@ enum PhishingChannel {
   SMS
   QUISHING // QR code physique : pas d'envoi technique, l'admin imprime
   // l'affiche/etiquette et la pose sur le terrain (test physique)
+  VOICE // Vishing : appel telephonique joue par un humain (#744). Comme
+  // QUISHING, aucun envoi technique -- et contrairement a SMS, aucun lien
+  // a cliquer : le resultat est saisi a la main par l'appelant.
 }
 
 enum PhishingStatus {
