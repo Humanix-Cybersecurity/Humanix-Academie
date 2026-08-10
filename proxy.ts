@@ -38,10 +38,7 @@
 
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import {
-  extractTenantSlug,
-  getRootDomain,
-} from "@/lib/subdomain-tenant";
+import { extractTenantSlug, getRootDomain } from "@/lib/subdomain-tenant";
 
 /**
  * Origine Plausible cloud, deduit dynamiquement de l'env var pour ne PAS
@@ -131,9 +128,19 @@ function generateNonce(): string {
 // Noms de cookies utilises par Auth.js v5.
 // - Dev : "authjs.session-token"
 // - Prod (HTTPS) : "__Secure-authjs.session-token"
+//
+// AUTH_COOKIE_SUFFIX : suffixe d'instance, pour que deux deploiements
+// partageant un domaine parent (prod humanix-academie.fr et
+// demo.humanix-academie.fr) n'aient pas des cookies homonymes. Doit rester
+// aligne avec `authCookieSuffix` de lib/auth.ts, sinon le proxy cherche un
+// cookie qui n'existe pas et boucle sur le login.
+const COOKIE_SUFFIX = process.env.AUTH_COOKIE_SUFFIX
+  ? `.${process.env.AUTH_COOKIE_SUFFIX.replace(/[^a-zA-Z0-9_-]/g, "")}`
+  : "";
+
 const SESSION_COOKIE_NAMES = [
-  "authjs.session-token",
-  "__Secure-authjs.session-token",
+  `authjs.session-token${COOKIE_SUFFIX}`,
+  `__Secure-authjs.session-token${COOKIE_SUFFIX}`,
 ];
 
 function hasSessionCookie(req: NextRequest): boolean {
@@ -170,10 +177,7 @@ export function proxy(req: NextRequest) {
   // === 3. AUTH GUARD admin API ===
   if (pathname.startsWith("/api/admin")) {
     if (!hasSessionCookie(req)) {
-      return NextResponse.json(
-        { error: "unauthenticated" },
-        { status: 401 },
-      );
+      return NextResponse.json({ error: "unauthenticated" }, { status: 401 });
     }
   }
 
