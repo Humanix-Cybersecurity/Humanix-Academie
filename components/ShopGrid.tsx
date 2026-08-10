@@ -16,6 +16,10 @@ type Item = {
   minLevel: number;
   description: string | null;
   rarity: string;
+  /** Badge requis pour acheter (#748). null = pas de condition. */
+  requiredAchievementSlug: string | null;
+  /** Libelle du badge, pour l'afficher sans re-resoudre le catalogue. */
+  requiredAchievementLabel: string | null;
 };
 
 export default function ShopGrid({
@@ -24,12 +28,14 @@ export default function ShopGrid({
   equippedIds,
   userCoins,
   userLevel,
+  unlockedAchievementSlugs,
 }: {
   items: Item[];
   ownedIds: string[];
   equippedIds: string[];
   userCoins: number;
   userLevel: number;
+  unlockedAchievementSlugs: string[];
 }) {
   const [pending, startTransition] = useTransition();
   const [busy, setBusy] = useState<string | null>(null);
@@ -41,6 +47,7 @@ export default function ShopGrid({
 
   const owned = new Set(ownedIds);
   const equipped = new Set(equippedIds);
+  const unlockedSlugs = new Set(unlockedAchievementSlugs);
 
   const onBuy = (item: Item) => {
     setBusy(item.id);
@@ -90,6 +97,9 @@ export default function ShopGrid({
         const isEquipped = equipped.has(item.id);
         const canAfford = userCoins >= item.price;
         const canLevel = userLevel >= item.minLevel;
+        const hasBadge =
+          !item.requiredAchievementSlug ||
+          unlockedSlugs.has(item.requiredAchievementSlug);
         const rarity = RARITY_STYLE[item.rarity];
         const fb = feedback?.id === item.id ? feedback : null;
         const isBusy = busy === item.id;
@@ -102,7 +112,7 @@ export default function ShopGrid({
               isEquipped
                 ? "border-accent-500 bg-accent-50 shadow-md"
                 : "border-gray-200 bg-white hover:border-gray-300",
-              !isOwned && !canLevel ? "opacity-60" : "",
+              !isOwned && (!canLevel || !hasBadge) ? "opacity-60" : "",
               isBusy ? "animate-pulse" : "",
             )}
           >
@@ -157,6 +167,16 @@ export default function ShopGrid({
                   Équiper
                 </button>
               )
+            ) : !hasBadge ? (
+              <button
+                disabled
+                title={`Débloque le badge « ${item.requiredAchievementLabel ?? item.requiredAchievementSlug} » pour y avoir droit`}
+                className="w-full text-xs font-bold bg-violet-50 text-violet-700 border border-violet-200 rounded-xl py-2 cursor-not-allowed"
+              >
+                🏅 Badge «&nbsp;
+                {item.requiredAchievementLabel ?? item.requiredAchievementSlug}
+                &nbsp;»
+              </button>
             ) : !canLevel ? (
               <button
                 disabled
@@ -202,5 +222,7 @@ function mapError(code?: string): string {
   if (code === "already_owned") return "Déjà possédé";
   if (code.startsWith("level_required"))
     return `Niveau ${code.split(":")[1]} requis`;
+  if (code.startsWith("achievement_required"))
+    return "Badge requis non débloqué";
   return "Achat impossible";
 }

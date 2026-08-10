@@ -47,10 +47,7 @@ import { SHOP_CATALOG } from "@/lib/shop";
 import { ACHIEVEMENTS_CATALOG } from "@/lib/achievements/catalog";
 import { PHISHING_TEMPLATES } from "@/lib/phishing";
 import { loadCatalogSaisons } from "@/prisma/seed-data-loader";
-import {
-  rewardsFor,
-  validateCatalog,
-} from "@/prisma/catalog-saisons-shared";
+import { rewardsFor, validateCatalog } from "@/prisma/catalog-saisons-shared";
 import { tagsForSaison } from "@/prisma/catalog-tags";
 import {
   COMMUNITY_TENANT_SLUG,
@@ -155,11 +152,8 @@ export async function seedCatalog(
       availableFrom = new Date(
         Date.UTC(currentYear, w.fromMonth - 1, w.fromDay),
       );
-      const yearTo =
-        w.toMonth < w.fromMonth ? currentYear + 1 : currentYear;
-      availableUntil = new Date(
-        Date.UTC(yearTo, w.toMonth - 1, w.toDay + 1),
-      );
+      const yearTo = w.toMonth < w.fromMonth ? currentYear + 1 : currentYear;
+      availableUntil = new Date(Date.UTC(yearTo, w.toMonth - 1, w.toDay + 1));
     }
     await prisma.shopItem.upsert({
       where: { slug: it.slug },
@@ -172,6 +166,8 @@ export async function seedCatalog(
         rarity: it.rarity,
         availableFrom,
         availableUntil,
+        // #748 : sans ca, un item trophee resterait achetable par tous.
+        requiredAchievementSlug: it.requiredAchievementSlug ?? null,
       },
       create: {
         slug: it.slug,
@@ -184,6 +180,7 @@ export async function seedCatalog(
         rarity: it.rarity,
         availableFrom,
         availableUntil,
+        requiredAchievementSlug: it.requiredAchievementSlug ?? null,
       },
     });
   }

@@ -879,24 +879,37 @@ enum ItemCategory {
 }
 
 model ShopItem {
-  id             String       @id @default(cuid())
-  slug           String       @unique
-  name           String
-  emoji          String
-  category       ItemCategory
-  price          Int
-  minLevel       Int          @default(1)
-  description    String?
-  rarity         String       @default("common")
-  isActive       Boolean      @default(true)
+  id                      String       @id @default(cuid())
+  slug                    String       @unique
+  name                    String
+  emoji                   String
+  category                ItemCategory
+  price                   Int
+  minLevel                Int          @default(1)
+  // GATING PAR BADGE (#748) : si defini, l'item n'est achetable que par
+  // un user ayant debloque CET achievement (slug du catalogue
+  // lib/achievements/catalog.ts). Complete minLevel, ne le remplace pas :
+  // un item peut exiger les deux.
+  //
+  // Pourquoi : les 40 badges ne servaient qu'a eux-memes. Un item reserve
+  // leur donne une contrepartie visible, et une raison de revenir en
+  // boutique apres le niveau 10 (ou minLevel sature).
+  //
+  // Volontairement un slug libre et NON une relation : le catalogue de
+  // badges vit en TypeScript (source de verite du gameplay), pas en base.
+  // Un slug inconnu = item simplement non debloquable, pas une erreur.
+  requiredAchievementSlug String?
+  description             String?
+  rarity                  String       @default("common")
+  isActive                Boolean      @default(true)
   // SAISONNALITE (mai 2026)
   // Si availableFrom ou availableUntil sont definis, l'item n'est
   // visible/achetable que dans la fenetre. Permet les items "Halloween",
   // "Noel", "ete" qui apparaissent au bon moment et donnent envie. null
   // sur les deux = toujours dispo (default).
-  availableFrom  DateTime?
-  availableUntil DateTime?
-  createdAt      DateTime     @default(now())
+  availableFrom           DateTime?
+  availableUntil          DateTime?
+  createdAt               DateTime     @default(now())
 
   inventory UserInventory[]
 
