@@ -22,6 +22,7 @@
 import crypto from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { recordCronRun } from "@/lib/cron/record";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
@@ -31,10 +32,7 @@ function verifySecret(provided: string | null): boolean {
   if (!expected || expected.length < 16) return false;
   if (!provided || provided.length !== expected.length) return false;
   try {
-    return crypto.timingSafeEqual(
-      Buffer.from(provided),
-      Buffer.from(expected),
-    );
+    return crypto.timingSafeEqual(Buffer.from(provided), Buffer.from(expected));
   } catch {
     return false;
   }
@@ -185,17 +183,20 @@ export async function POST(req: NextRequest) {
   if (!verifySecret(provided)) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const result = await distributeAllPending();
+  const result = await recordCronRun("challenge-rewards", () =>
+    distributeAllPending(),
+  );
   return NextResponse.json({ ok: true, ...result });
 }
 
 export async function GET(req: NextRequest) {
   const provided =
-    req.headers.get("x-cron-secret") ??
-    req.nextUrl.searchParams.get("secret");
+    req.headers.get("x-cron-secret") ?? req.nextUrl.searchParams.get("secret");
   if (!verifySecret(provided)) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
-  const result = await distributeAllPending();
+  const result = await recordCronRun("challenge-rewards", () =>
+    distributeAllPending(),
+  );
   return NextResponse.json({ ok: true, ...result });
 }

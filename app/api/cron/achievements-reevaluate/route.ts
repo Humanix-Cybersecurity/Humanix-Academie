@@ -23,6 +23,7 @@ import crypto from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { reEvaluateAllUsers } from "@/lib/achievements/evaluate";
 import { notifyMandatoryAllUsers } from "@/lib/notifications-mandatory";
+import { recordCronRun } from "@/lib/cron/record";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300; // badges + notifications, users sequentiels
@@ -44,7 +45,9 @@ function verifySecret(provided: string | null): boolean {
  * isole leur erreur dans la reponse plutot que de propager un 500.
  */
 async function runCron() {
-  const badges = await reEvaluateAllUsers();
+  const badges = await recordCronRun("achievements-reevaluate", () =>
+    reEvaluateAllUsers(),
+  );
   try {
     const notifications = await notifyMandatoryAllUsers();
     return { ok: true, ...badges, notifications };

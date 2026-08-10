@@ -2682,3 +2682,38 @@ model RecyfSnapshot {
   @@unique([tenantId, day])
   @@index([tenantId])
 }
+
+// =====================================================
+// SANTE DES TACHES PLANIFIEES (#749)
+// =====================================================
+// Une ligne par execution de /api/cron/*. Alimente la console
+// /superadmin/system-health : dernier passage, duree, resultat.
+//
+// POURQUOI : 11 crons tournaient sans AUCUNE surface de verification. Le
+// bug phishing-drip (#733) - des mails planifies jamais envoyes parce que
+// le cron n'etait tout simplement pas declenche - est reste silencieux
+// faute de pouvoir repondre a « est-ce que ca tourne ? ».
+//
+// GLOBAL, pas par tenant : c'est de l'infrastructure plateforme. D'ou la
+// console superadmin (cross-tenant) et non /admin.
+//
+// Retention : purge amortie dans lib/cron/record.ts (cf. CRON_RUN_RETENTION_DAYS).
+model CronRun {
+  id           String    @id @default(cuid())
+  // Slug de l'endpoint, sans prefixe : "risk-snapshot", "phishing-drip"...
+  // Correspond aux entrees de lib/cron/registry.ts.
+  name         String
+  startedAt    DateTime  @default(now())
+  finishedAt   DateTime?
+  durationMs   Int?
+  // "ok" | "error". Pas d'enum Prisma : on veut pouvoir ajouter un etat
+  // sans migration sur une table de telemetrie.
+  status       String    @default("ok")
+  // Compteurs retournes par le cron (tenantsScanned, sent, purged...).
+  // Json libre : chaque cron a sa forme.
+  result       Json?
+  errorMessage String?
+
+  @@index([name, startedAt])
+  @@index([startedAt])
+}
