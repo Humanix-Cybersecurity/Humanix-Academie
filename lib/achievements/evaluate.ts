@@ -23,6 +23,7 @@
 //   re-evaluer que les users actifs (lastSeenAt < 30j).
 
 import { db } from "@/lib/db";
+import { computeDetectiveRank } from "@/lib/investigations/types";
 import {
   ACHIEVEMENTS_CATALOG,
   ACHIEVEMENTS_BY_SLUG,
@@ -33,7 +34,9 @@ import {
  * Reconstruit les stats agregeees d'un user pour evaluer les badges.
  * Une query Prisma + des aggregations en memoire.
  */
-export async function buildUserStats(userId: string): Promise<UserStats | null> {
+export async function buildUserStats(
+  userId: string,
+): Promise<UserStats | null> {
   const user = await db.user.findUnique({
     where: { id: userId },
     select: {
@@ -58,9 +61,44 @@ export async function buildUserStats(userId: string): Promise<UserStats | null> 
       inventory: {
         select: { id: true },
       },
+      // Mode Enqueteur (#732) : alimente investigationsPassed + le rang.
+      investigationResults: {
+        select: {
+          scenarioSlug: true,
+          score: true,
+          maxScore: true,
+          passed: true,
+        },
+      },
     },
   });
   if (!user) return null;
+
+  // MODE ENQUETEUR (#732) : on deduplique par scenarioSlug en gardant le
+  // MEILLEUR ratio de chaque enquete. Sans ca, rejouer 10 fois la meme
+  // enquete gonflerait le compteur et le rang sans rien prouver.
+  const bestByScenario = new Map<
+    string,
+    { score: number; maxScore: number; passed: boolean }
+  >();
+  for (const r of user.investigationResults) {
+    const prev = bestByScenario.get(r.scenarioSlug);
+    const ratio = r.maxScore > 0 ? r.score / r.maxScore : 0;
+    const prevRatio =
+      prev && prev.maxScore > 0 ? prev.score / prev.maxScore : -1;
+    if (!prev || ratio > prevRatio) {
+      bestByScenario.set(r.scenarioSlug, {
+        score: r.score,
+        maxScore: r.maxScore,
+        passed: r.passed,
+      });
+    }
+  }
+  const distinctInvestigations = [...bestByScenario.values()];
+  const investigationsPassed = distinctInvestigations.filter(
+    (r) => r.passed,
+  ).length;
+  const detectiveRank = computeDetectiveRank(distinctInvestigations);
 
   const completedProgress = user.progress.filter(
     (p) => p.status === "COMPLETED",
@@ -75,10 +113,8 @@ export async function buildUserStats(userId: string): Promise<UserStats | null> 
   const avgQuizScorePct =
     completedProgress.length === 0
       ? 0
-      : completedProgress.reduce(
-          (s, p) => s + (p.bestQuizScorePct ?? 0),
-          0,
-        ) / completedProgress.length;
+      : completedProgress.reduce((s, p) => s + (p.bestQuizScorePct ?? 0), 0) /
+        completedProgress.length;
 
   // Saisons completes : on compte les saisons ou TOUS les episodes
   // publies sont COMPLETED par cet user. Pour ca, on charge les
@@ -86,9 +122,7 @@ export async function buildUserStats(userId: string): Promise<UserStats | null> 
   const completedEpisodeIds = new Set(
     completedProgress.map((p) => p.episodeId),
   );
-  const saisonIds = Array.from(
-    new Set(user.progress.map((p) => p.saisonId)),
-  );
+  const saisonIds = Array.from(new Set(user.progress.map((p) => p.saisonId)));
   let completedSaisonsCount = 0;
   let hasCompletedAtLeastOneSaison = false;
   // Slugs des saisons entierement completees -- alimente les badges
@@ -180,6 +214,8 @@ export async function buildUserStats(userId: string): Promise<UserStats | null> 
     ownedItemsCount: user.inventory.length,
     avgQuizScorePct,
     completedSaisonSlugs,
+    investigationsPassed,
+    detectiveRank,
   };
 }
 
@@ -234,7 +270,8 @@ export async function evaluateAndUnlock(
     where: { id: userId },
     select: { tenantId: true },
   });
-  if (!user) return { newlyUnlocked: [], totalUnlocked: existingUnlocks.length };
+  if (!user)
+    return { newlyUnlocked: [], totalUnlocked: existingUnlocks.length };
 
   // Resolve les Achievement.id (ils sont upserted au seed)
   const dbAchievements = await db.achievement.findMany({
