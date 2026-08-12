@@ -1,16 +1,37 @@
 # Monitoring Humanix Académie
 
 > Stack monitoring : **Scaleway Cockpit** (Loki + Mimir + Alertmanager + Grafana)
-> + **Vector** (logs Docker → Loki) + **prom-client** (metrics applicatives Next.js)
+>
+> - **Vector** (logs Docker → Loki) + **prom-client** (metrics applicatives Next.js)
+
+> ### 🔧 Révision du 2026-08-12 — ce document était faux sur six points
+>
+> Vector tournait en prod **depuis mai 2026 sans jamais rien livrer** : 0 octet
+> et 0 échantillon côté Cockpit, tout en crachant 298 Ko/h de logs sur
+> lui-même (95 % du volume de la machine). Six erreurs cumulées, toutes
+> issues de ce document, chacune suffisante à elle seule :
+>
+> | #   | Erreur                                                         | Corrigée en |
+> | --- | -------------------------------------------------------------- | ----------- |
+> | 1   | Data sources « custom » jamais créées → aucune destination     | §2          |
+> | 2   | URL de push générique (404) au lieu de celle de la data source | §4          |
+> | 3   | Nom de variable du token incohérent entre `.env` et la conf    | §4          |
+> | 4   | `vector.yaml` recopié à la main, hors dépôt                    | §5          |
+> | 5   | Auto-exclusion inopérante (match par **préfixe**) → boucle     | §5          |
+> | 6   | Tag d'image `0.55-alpine` inexistant sur Docker Hub            | §5          |
+>
+> La table des coûts était fausse elle aussi, et concluait à tort « 100 %
+> gratuit ». Corrigée ci-dessous sur des chiffres relevés sur l'API.
 
 ## TL;DR
 
 1. **Activer Cockpit** dans la console Scaleway région `fr-par`
-2. **Créer un token** Cockpit avec scopes `metrics:write` + `logs:write`
-3. **Définir `METRICS_SCRAPE_TOKEN`** (>= 16 chars) en prod
-4. **Importer `dashboards/humanix-overview.json`** dans Grafana Cockpit
-5. **Provisionner les 7 alertes** documentées dans `alerts-cockpit.md`
-6. **Déployer Vector** dans `docker-compose.yml` pour streamer les logs
+2. **Créer les 2 data sources `custom`** (§2) — sans elles, rien n'est poussable
+3. **Créer un token** en **écriture seule** : `write_only_logs` + `write_only_metrics` (§3)
+4. **Poser les env vars** en prod, URLs **complètes** et propres aux data sources (§4)
+5. **Déployer Vector** avec la conf **versionnée** `infra/vector/vector.yaml` (§5)
+6. **Importer `dashboards/humanix-overview.json`** dans Grafana Cockpit (§7)
+7. **Provisionner les 7 alertes** documentées dans `alerts-cockpit.md` (§8)
 
 Total ~30-45 min côté ops.
 
@@ -61,17 +82,36 @@ Total ~30-45 min côté ops.
                   └────────────┘
 ```
 
-## Quotas Cockpit gratuits (à jour 2026)
+## Ce que ça coûte (vérifié le 2026-08-12)
 
-| Composant | Free tier | Au-delà |
-|-----------|-----------|---------|
-| Logs (Loki) | 50 GB ingestion/mois, 7j rétention | 0,90 €/GB ingéré |
-| Métriques (Mimir) | 100k échantillons/min, 31j rétention | 0,025 €/1M samples |
-| Alertes Alertmanager | Illimité | Gratuit |
-| Grafana | Illimité | Gratuit |
-| Traces (Tempo) | ❌ payant | 0,40 €/GB |
+> ⚠️ La version précédente de cette section annonçait « 50 Go de logs et
+> 100k échantillons/min gratuits », donc « 100 % gratuit ». **C'était faux.**
+> Il n'existe AUCUN palier gratuit pour les données qu'on pousse soi-même.
+> Chiffres ci-dessous relevés sur l'API Cockpit du projet et recoupés avec
+> la grille publique Scaleway.
 
-Pour Humanix actuel (< 5 GB logs/mois, < 10k metrics/min) → **100 % gratuit**.
+| Composant                                       | Facturation                          |
+| ----------------------------------------------- | ------------------------------------ |
+| Métriques/logs des ressources **Scaleway**      | gratuit                              |
+| **Ce qu'on pousse** (« custom »)                | facturé **dès le 1er échantillon**   |
+| Métriques custom                                | **0,15 €** / million d'échantillons  |
+| Logs et traces custom                           | **0,35 €** / Go ingéré               |
+| Rétention par défaut (31 j métriques, 7 j logs) | incluse                              |
+| Rétention étendue (1 an / 1 mois)               | 29 €/mois — **on n'en a pas besoin** |
+| Alertmanager, utilisateurs Grafana              | inclus                               |
+
+Estimation pour Humanix, sur volumes **mesurés** et non supposés :
+
+| Poste                                    | Volume             | Coût/mois |
+| ---------------------------------------- | ------------------ | --------- |
+| Logs des conteneurs                      | ~11 Mo/mois        | ~0,01 €   |
+| Métriques app (~110 séries @ 60 s)       | 4,8 M échantillons | ~0,71 €   |
+| _(option)_ node_exporter (~1 000 séries) | 43 M échantillons  | ~6,50 €   |
+
+**Soit moins de 1 €/mois en l'état.** Deux leviers si ça dérive : l'intervalle
+de scrape (linéaire — 30 s au lieu de 60 s double la note) et la cardinalité
+des labels. Ne JAMAIS mettre en label un identifiant d'utilisateur, de session
+ou de requête : chaque valeur distincte crée une série, donc une ligne de facture.
 
 ## Setup pas-à-pas
 
@@ -81,52 +121,83 @@ Console Scaleway → **Observability → Cockpit** → région `fr-par` → Enab
 
 Récupérer l'URL Grafana (format `https://<random>.fr-par.grafana.scaleway.fr`).
 
-### 2. Créer une Data Source push (logs)
+### 2. Créer les deux Data Sources « custom »
 
-Cockpit → **Data Sources → + Create** :
-- **Name** : `humanix-prod-logs`
-- **Type** : **Logs** (Loki)
-- **Origin** : **External** (= push, vs "Scaleway" managed)
-- **Retention** : 7 jours (free tier)
+> ✅ **Fait le 2026-08-12** sur le projet `c9a236c0-…`. Cette section
+> documente le pourquoi et sert si on repart de zéro.
 
-Après création, ouvrir la data source → noter l'**URL Push** unique
-(format `https://<DATASOURCE_ID>.logs.cockpit.fr-par.scw.cloud/loki/api/v1/push`).
+**C'est la cause n°1 de la panne de mai→août 2026.** Le projet ne contenait
+que les deux data sources créées d'office par Scaleway, d'origine
+`scaleway`. **On ne peut rien pousser dedans** : elles sont alimentées par
+Scaleway pour ses propres ressources. Le push exige des data sources
+d'origine `custom`, et elles n'existaient pas. Vector avait beau tourner,
+il n'avait aucune destination.
 
-C'est cette URL qu'on utilisera dans `SCW_LOKI_URL`, pas l'URL
-générique `logs.cockpit.fr-par.scw.cloud` (qui retourne 404).
+```bash
+scw -p humanix cockpit data-source create name=humanix-prod-logs type=logs region=fr-par
+scw -p humanix cockpit data-source create name=humanix-prod-metrics type=metrics region=fr-par
+```
 
-Idem pour les métriques : créer une data source `humanix-prod-metrics`
-type **Metrics** (Mimir) en push, noter son URL.
+Ne pas passer `retention-days` : les valeurs par défaut (7 j logs, 31 j
+métriques) sont celles du palier gratuit. En demander plus est facturé.
 
-### 3. Générer le token de scraping
+Relever ensuite l'**URL propre à chaque data source** — elle est préfixée
+par son identifiant :
 
-Cockpit → **Tokens** → + Create Token :
-- **Name** : `humanix-prod-vector-push`
-- **Permissions** : **Logs → Push** + **Metrics → Push**
-  ⚠️ Bien cocher **Push** (write), pas **Read** (qui sert aux dashboards Grafana)
-- **Data sources** : sélectionner `humanix-prod-logs` + `humanix-prod-metrics`
-- **Validity** : 1 an (rotation annuelle PSSI M15)
+```bash
+scw -p humanix cockpit data-source list
+```
 
-**COPIE LE SECRET IMMÉDIATEMENT** - Scaleway ne le réaffichera plus.
-Sauvegarder dans 1Password vault Humanix.
+C'est cette URL qui va dans `SCW_LOKI_URL` / `SCW_MIMIR_URL`, **pas** l'URL
+générique `logs.cockpit.fr-par.scw.cloud`, qui renvoie **404**.
+
+### 3. Générer le token de push
+
+En **écriture seule**. Le token précédent (`token-interesting-knuth`, mai 2026) portait neuf scopes dont `full_access_alert_manager` : beaucoup trop
+large pour un agent qui ne fait qu'envoyer. Un agent compromis ne doit pas
+pouvoir lire les journaux ni désarmer les alertes.
+
+```bash
+scw -p humanix cockpit token create name=humanix-prod-vector-push \
+  token-scopes.0=write_only_logs token-scopes.1=write_only_metrics region=fr-par
+```
+
+**COPIE LE SECRET IMMÉDIATEMENT** — Scaleway ne le réaffichera plus.
+Sauvegarder dans le coffre Humanix. Rotation annuelle (PSSI M15).
 
 ### 4. Configurer les env vars en prod
 
 Sur la VM prod, ajouter à `/opt/humanix-prod/.env` :
 
 ```bash
-# Token Bearer pour authentifier le scraping Prometheus
+# Token Bearer attendu par /api/metrics. >= 16 caracteres, sinon
+# l'endpoint repond 503 et refuse de servir quoi que ce soit.
 METRICS_SCRAPE_TOKEN=$(openssl rand -hex 32)
 
-# Token Cockpit (pour Vector → Loki)
-SCW_COCKPIT_TOKEN=<le token créé étape 2>
+# Token Cockpit, en ECRITURE SEULE (cf. etape 3). Un seul nom pour les
+# deux sinks Vector : logs ET metriques.
+SCW_COCKPIT_TOKEN=<le token cree a l'etape 3>
 
-# Endpoint Loki Cockpit (fixe selon région)
-SCW_LOKI_URL=https://logs.cockpit.fr-par.scw.cloud/loki/api/v1/push
-
-# Endpoint Mimir Cockpit (pour scrape Prometheus distant si besoin)
-SCW_MIMIR_URL=https://metrics.cockpit.fr-par.scw.cloud
+# URL de push COMPLETES, propres a chaque data source.
+SCW_LOKI_URL=https://9cb3d00b-29df-4036-b6cb-ff50f63fc6e0.logs.cockpit.fr-par.scw.cloud/loki/api/v1/push
+SCW_MIMIR_URL=https://299b6f0c-5da0-4894-9796-e8133b6a3048.metrics.cockpit.fr-par.scw.cloud/api/v1/push
 ```
+
+> 🔴 **Les trois pièges qui ont fait perdre trois mois** (mai → août 2026,
+> pendant lesquels Vector tournait sans jamais rien livrer) :
+>
+> 1. **L'URL doit être celle de la data source**, préfixée par son
+>    identifiant. L'URL générique `logs.cockpit.fr-par.scw.cloud` renvoie
+>    **404**. La version précédente de ce document avertissait de ce piège
+>    à l'étape 2… puis posait l'URL générique quinze lignes plus bas.
+> 2. **Un seul nom de variable.** Le `.env` définissait `SCW_COCKPIT_TOKEN`
+>    et la conf Vector lisait un autre nom : token vide, donc **401**.
+> 3. **Les URL sont données complètes**, chemin de push inclus. Laisser
+>    l'agent concaténer un chemin est précisément ce qui produit le piège 1.
+>
+> Ces valeurs sont celles du projet `c9a236c0-…`. Si tu recrées une data
+> source, l'identifiant change : relis-le avec
+> `scw -p humanix cockpit data-source list`.
 
 ### 5. Déployer Vector pour les logs Docker
 
@@ -135,7 +206,9 @@ Ajouter à `docker-compose.yml` :
 ```yaml
 services:
   vector:
-    image: timberio/vector:0.55-alpine
+    # Le tag doit etre `0.55.X-alpine` (avec le `.X`). `0.55-alpine`
+    # n'existe pas sur Docker Hub : le pull echoue.
+    image: timberio/vector:0.55.X-alpine
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -153,123 +226,62 @@ services:
 > et fallback sur sa source de demo `demo_logs` (qui genere des logs
 > Syslog fake avec des noms type `nullable_nate`, `cache_cowboy`).
 
-Créer `infra/vector/vector.yaml` :
+La configuration est **versionnée dans le dépôt** : [`infra/vector/vector.yaml`](../vector/vector.yaml).
+Elle couvre les logs **et** les métriques (un seul agent), et son en-tête
+documente les cinq causes de la panne de mai→août 2026.
 
-```yaml
-sources:
-  docker:
-    type: docker_logs
-    exclude_containers:
-      - vector   # éviter la boucle infinie
+> ⚠️ Elle ne vivait autrefois QUE sur la machine, recopiée à la main depuis
+> ce document. C'est la quatrième cause de la panne : sans son fichier,
+> Vector bascule sur sa source de démo `demo_logs` et fabrique de faux logs
+> Syslog (`nullable_nate`, `cache_cowboy`…). Ne la dupliquez plus ici.
 
-transforms:
-  parse_json:
-    type: remap
-    inputs:
-      - docker
-    source: |
-      # Tente de parser le message JSON. On ne merge QUE si le résultat
-      # est un object (sinon VRL refuse `merge` qui exige `object` strict).
-      if exists(.message) && is_string(.message) {
-        parsed, err = parse_json(.message)
-        if err == null && is_object(parsed) {
-          . = merge!(., object!(parsed))
-        }
-      }
+Trois pièges qu'elle neutralise, et qu'il faut connaître avant d'y toucher :
 
-sinks:
-  scaleway_loki:
-    type: loki
-    inputs:
-      - parse_json
-    endpoint: "${SCW_LOKI_URL}"
-    auth:
-      strategy: bearer
-      token: "${SCW_LOKI_TOKEN}"
-    encoding:
-      codec: json
-    remove_label_fields: true
-    # Labels Loki : host + container + image. Pas de PII.
-    labels:
-      host: humanix-prod-01
-      container: "{{ container_name }}"
-      image: "{{ image }}"
+| Piège                                                             | Ce qui se passe si on l'oublie                                                                                                                                                                              |
+| ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `exclude_containers` matche par **préfixe**                       | `vector` ne matche PAS `humanix-prod-vector-1` → Vector se relit lui-même, chaque erreur en génère une autre. C'est l'origine des **298 Ko/h** mesurés le 12/08, soit 95 % du volume de logs de la machine. |
+| Vector interpole `${...}` en **texte brut**, commentaires compris | Un nom de variable cité dans un commentaire est résolu comme une vraie variable → refus de démarrer. Citer les noms sans la syntaxe `${}`.                                                                  |
+| `string!(...)` **abandonne** l'événement si le champ manque       | Un `remap` qui abandonne jette la ligne **silencieusement**. Utiliser `string(...) ?? ""`.                                                                                                                  |
+
+Valider avant de déployer — ça prend dix secondes et ça évite un redémarrage en boucle :
+
+```bash
+docker run --rm -v "$PWD/infra/vector/vector.yaml:/etc/vector/vector.yaml:ro" --env-file .env timberio/vector:0.55.X-alpine validate --no-environment /etc/vector/vector.yaml
 ```
 
-### 6. Configurer le scrape Prometheus distant
+### 6. Métriques applicatives : c'est Vector qui scrape
 
-Dans Cockpit → **Data sources** → Prometheus déjà configuré.
+Cockpit ne sait **pas** scraper un endpoint externe — il ne fait que _recevoir
+du push_. Il faut donc un agent côté Humanix qui scrape `/api/metrics` puis
+pousse vers Mimir.
 
-Pour scrape `/api/metrics` Humanix, ajouter un job. Comme Cockpit ne
-scrape pas direct un endpoint externe (il reçoit du push), 2 options :
+C'est déjà le rôle du **même** Vector que les logs
+([`infra/vector/vector.yaml`](../vector/vector.yaml), source `humanix_metrics`
+et sink `scaleway_mimir`) : un seul agent, une seule conf, un seul token.
 
-**Option A** - Grafana Agent côté Humanix (push vers Mimir) :
+> L'ancienne version de ce document proposait un `grafana-agent` séparé en
+> « option A », tout en recommandant l'option B. Abandonné : deux agents,
+> deux configs et deux tokens à maintenir pour le même résultat. Le fichier
+> `infra/grafana-agent/agent.yaml` qu'elle décrivait n'a d'ailleurs jamais
+> existé dans le dépôt.
 
-```yaml
-# infra/grafana-agent/agent.yaml
-server:
-  log_level: info
+Intervalle de scrape : **60 s**. La facturation est linéaire en nombre
+d'échantillons — 30 s doublerait la note pour une résolution inutile ici.
 
-metrics:
-  global:
-    scrape_interval: 30s
-    external_labels:
-      app: humanix-academie
-      env: production
-  configs:
-    - name: humanix
-      remote_write:
-        - url: ${SCW_MIMIR_URL}/api/v1/push
-          authorization:
-            type: Bearer
-            credentials: ${SCW_COCKPIT_TOKEN}
-      scrape_configs:
-        - job_name: humanix-app
-          static_configs:
-            - targets: ['app:3000']
-          metrics_path: /api/metrics
-          authorization:
-            type: Bearer
-            credentials: ${METRICS_SCRAPE_TOKEN}
+Si le conteneur applicatif porte un autre nom que `humanix-prod-app`, le
+surcharger via le `.env` plutôt que de modifier la conf :
+
+```bash
+HUMANIX_METRICS_TARGET=mon-conteneur:3000
 ```
 
-Ajouter au `docker-compose.yml` :
-
-```yaml
-  grafana-agent:
-    image: grafana/agent:v0.40.0
-    restart: unless-stopped
-    command: -config.file=/etc/agent/agent.yaml
-    volumes:
-      - ./infra/grafana-agent/agent.yaml:/etc/agent/agent.yaml:ro
-    environment:
-      - SCW_MIMIR_URL=${SCW_MIMIR_URL}
-      - SCW_COCKPIT_TOKEN=${SCW_COCKPIT_TOKEN}
-      - METRICS_SCRAPE_TOKEN=${METRICS_SCRAPE_TOKEN}
-    depends_on:
-      - app
-```
-
-**Option B** (simpler mais moins flexible) - utiliser Vector aussi pour metrics :
-
-```toml
-[sources.humanix_metrics]
-type = "prometheus_scrape"
-endpoints = ["http://app:3000/api/metrics"]
-scrape_interval_secs = 30
-auth.strategy = "bearer"
-auth.token = "${METRICS_SCRAPE_TOKEN}"
-
-[sinks.scaleway_mimir]
-type = "prometheus_remote_write"
-inputs = ["humanix_metrics"]
-endpoint = "${SCW_MIMIR_URL}/api/v1/push"
-auth.strategy = "bearer"
-auth.token = "${SCW_COCKPIT_TOKEN}"
-```
-
-Recommandé : **Option B** (un seul agent Vector pour logs + metrics =
-plus simple à maintenir).
+> ⚠️ **La moitié du dashboard restera vide tant que `recordHttpMetric` ne
+> sera pas câblé.** `humanix_http_requests_total` et
+> `humanix_http_request_duration_seconds` sont déclarées dans
+> `lib/metrics/registry.ts` mais **jamais alimentées** : le helper existe et
+> n'est appelé nulle part. Ça représente 9 des 18 requêtes du dashboard et
+> 2 des 7 alertes. Les métriques Node (mémoire, event loop, CPU) et
+> `humanix_audit_action_total`, elles, remontent bien.
 
 ### 7. Importer le dashboard
 
@@ -286,40 +298,56 @@ besoin se fera sentir.
 
 ## Vérifications post-déploiement
 
+L'ancienne liste ne prouvait rien : elle vérifiait que Vector _démarre_, pas
+qu'il _livre_. C'est précisément pour ça que la panne a duré trois mois — tout
+avait l'air normal. **Le seul test qui compte est le compteur d'ingestion côté
+Cockpit.**
+
 ```bash
-# 1. /api/metrics répond
-curl -H "Authorization: Bearer $METRICS_SCRAPE_TOKEN" \
-  https://humanix-academie.fr/api/metrics | head -30
+# 1. L'endpoint sert bien les metriques (>= 100 lignes attendues)
+curl -sf -H "Authorization: Bearer $METRICS_SCRAPE_TOKEN" \
+  https://humanix-academie.fr/api/metrics | grep -c '^humanix_'
 
-# 2. Vector démarre sans erreur
-docker compose logs vector | tail -50
+# 2. Vector ne rejette rien. Chercher 401 / 404 / "error", pas "started".
+docker logs humanix-prod-vector-1 --since 5m 2>&1 | grep -iE 'error|401|404|refused' | head
 
-# 3. Logs apparaissent dans Cockpit Loki (UI Explorer)
-# Query LogQL : {app="humanix-academie"}
+# 3. Vector ne se relit plus lui-meme : ce volume doit etre FAIBLE.
+#    Avant correction : 298 Ko/h. Apres : quelques Ko/h.
+docker logs humanix-prod-vector-1 --since 1h 2>&1 | wc -c
 
-# 4. Métriques apparaissent dans Cockpit Mimir
-# Query PromQL : up{job="humanix-app"}
-
-# 5. Dashboard affiche les graphiques
-# Aller dans Grafana → Dashboards → "Humanix Académie - Overview"
-
-# 6. Test alerte (déclencher 11 logins échoués en 1 min)
-# → Slack #cyber-alerts doit recevoir la notification < 30s
+# 4. LE TEST QUI COMPTE — les compteurs custom doivent devenir non nuls.
+#    Compter quelques minutes apres le demarrage de Vector.
+scw -p humanix cockpit usage-overview get -o json \
+  | python3 -c 'import sys,json; d=json.load(sys.stdin); \
+      print("metriques:", d["external_metrics_usage"]["quantity_over_interval"]); \
+      print("logs     :", d["external_logs_usage"]["quantity_over_interval"])'
 ```
+
+Tant que l'étape 4 affiche `0`, **rien n'est livré** — inutile d'aller regarder
+Grafana. Reprendre §2 (les data sources existent-elles en origine `custom` ?),
+puis §4 (URL complète ? un seul nom de variable ?).
+
+Une fois non nul, dans Grafana :
+
+- LogQL : `{host="humanix-prod-01", env="prod"}`
+- PromQL : `humanix_nodejs_heap_size_used_bytes`
+  (choisir une métrique **réellement alimentée** — pas
+  `humanix_http_requests_total`, cf. l'avertissement du §6)
 
 ## Maintenance
 
-| Fréquence | Action |
-|-----------|--------|
-| **Quotidien** | Coup d'œil au dashboard Grafana |
-| **Hebdo** | Examiner les alertes warning, ajuster les seuils |
-| **Mensuel** | Audit volume Loki/Mimir (rester sous quota gratuit) |
+| Fréquence       | Action                                                         |
+| --------------- | -------------------------------------------------------------- |
+| **Quotidien**   | Coup d'œil au dashboard Grafana                                |
+| **Hebdo**       | Examiner les alertes warning, ajuster les seuils               |
+| **Mensuel**     | Audit volume Loki/Mimir (rester sous quota gratuit)            |
 | **Trimestriel** | Revue exhaustive : nouvelles surfaces, nouvelles audit actions |
-| **Annuel** | Rotation du token `METRICS_SCRAPE_TOKEN` (PSSI M15) |
+| **Annuel**      | Rotation du token `METRICS_SCRAPE_TOKEN` (PSSI M15)            |
 
 ## Conformité
 
 Ce setup couvre les exigences :
+
 - **ANSSI HG M36** (journalisation composants importants) - Loki + Mimir
 - **ANSSI HG M38** (audits réguliers) - dashboards + alertes
 - **SOC 2 CC4.1 / CC4.2** (monitoring & deficiencies) - détection continue
