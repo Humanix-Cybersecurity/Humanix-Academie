@@ -123,10 +123,16 @@ transforms:
     source: |
       # On ne fusionne QUE si le parse donne un objet : `merge` exige un
       # object strict et echouerait sur un scalaire (ex. un log "ok").
+      #
+      # `merge` SANS `!` : `object!(parsed)` garantit deja le type, donc
+      # merge ne peut plus echouer. Le `!` faisait emettre a VRL un
+      # avertissement au demarrage ("this function can't fail, remove
+      # this abort instruction") — du bruit dans les logs, au milieu
+      # duquel une vraie erreur passerait inapercue.
       if exists(.message) && is_string(.message) {
         parsed, err = parse_json(.message)
         if err == null && is_object(parsed) {
-          . = merge!(., object!(parsed))
+          . = merge(., object!(parsed))
         }
       }
 
@@ -179,3 +185,20 @@ sinks:
     auth:
       strategy: bearer
       token: "${SCW_COCKPIT_TOKEN}"
+    # Healthcheck DESACTIVE, et ce n'est pas de la complaisance : il ne
+    # peut structurellement pas reussir. Vector teste l'endpoint en GET,
+    # or l'endpoint de push Cockpit n'accepte que POST. Mesure le
+    # 2026-08-12 sur l'URL reelle :
+    #
+    #   GET  -> 404 Not Found
+    #   POST -> 401 Unauthorized (donc le chemin est bon)
+    #
+    # Le laisser actif fait ecrire un "Healthcheck failed ... 404" en
+    # ERROR a CHAQUE demarrage. Une erreur permanente qui n'en est pas
+    # une, c'est ce qui apprend a ne plus lire les erreurs — precisement
+    # ce qui a permis a cette panne de durer trois mois.
+    #
+    # La livraison reelle, elle, reste verifiable : compteurs
+    # d'ingestion Cockpit, et absence de "events dropped" dans ces logs.
+    healthcheck:
+      enabled: false
