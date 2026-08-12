@@ -37,7 +37,7 @@ services:
       app:
         condition: service_started
     networks:
-      - humanix_backend
+      - app_network
     # Healthcheck simple : ofelia ne crash pas tout seul, on vérifie juste
     # qu'il tourne. Pour aller plus loin : exposer un /metrics Prometheus
     # via un sidecar ou utiliser le mode WebUI d'ofelia.
@@ -48,6 +48,16 @@ services:
       retries: 3
 
 networks:
-  humanix_backend:
+  # Reseau de l'app, a joindre pour appeler http://app:3000/api/cron/*.
+  #
+  # Le nom etait code en dur a `humanix_backend`, la convention du depot.
+  # Or la stack prod a diverge : son reseau s'appelle `humanix_prod`. Un
+  # `compose up` echouait donc immediatement — « network declared as
+  # external, but could not be found ». C'est tres probablement pour ca
+  # qu'ofelia n'a JAMAIS ete demarre en production : au 2026-08-12, la
+  # table CronRun est vide, aucun job n'a jamais tourne.
+  #
+  # La prod surcharge dans son .env : APP_NETWORK=humanix_prod
+  app_network:
     external: true
-    name: humanix_backend
+    name: ${APP_NETWORK:-humanix_backend}
