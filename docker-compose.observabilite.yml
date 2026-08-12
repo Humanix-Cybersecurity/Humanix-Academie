@@ -58,6 +58,21 @@ services:
       # Lecture des logs de tous les conteneurs. En lecture seule : Vector
       # n'a aucune raison de piloter le démon Docker.
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      # Journal HAProxy. C'est la SEULE source qui voie tout le trafic HTTP :
+      # HAProxy tourne en service systemd sur l'hôte, pas en conteneur, donc
+      # `docker_logs` ne le voit pas.
+      #
+      # Les lignes ne sont PAS expédiées : elles sont converties en métriques
+      # puis jetées (cf. infra/vector/vector.yaml). Aucune adresse IP ni aucun
+      # chemin de requête ne sort de la machine.
+      - /var/log/haproxy.log:/var/log/haproxy.log:ro
+
+    # Le journal HAProxy est en `syslog:adm 640`. Sans appartenir au groupe
+    # `adm`, Vector ne peut pas l'ouvrir — et une source `file` qui ne peut pas
+    # lire sa cible échoue sans rien produire.
+    group_add:
+      - "4"
+
     depends_on:
       app:
         condition: service_started
