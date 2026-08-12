@@ -1,0 +1,87 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Extension compose pour l'observabilité : Vector → Scaleway Cockpit.
+# Cf. infra/grafana/README.md pour la mise en place complète.
+#
+# USAGE :
+#   docker compose -f docker-compose.yml -f docker-compose.observabilite.yml up -d
+#
+# Un SEUL agent pour les deux flux : il collecte les logs de tous les
+# conteneurs via le socket Docker, ET scrape /api/metrics de l'app. Une
+# conf, un token, un service à surveiller.
+#
+# ---------------------------------------------------------------------
+# POURQUOI CE FICHIER EXISTE
+# ---------------------------------------------------------------------
+#
+# Le service `vector` n'était déclaré NULLE PART dans le dépôt : il avait
+# été ajouté à la main dans le compose de la machine, avec sa conf posée
+# dans /opt/vector.yaml, hors de l'arborescence du clone. Résultat : il a
+# tourné de mai à août 2026 sans rien livrer, et personne ne pouvait le
+# voir en lisant le dépôt.
+#
+# Le versionner ici, comme ofelia, c'est ce qui garantit qu'un
+# `scripts/deploy.sh` le maintienne à jour au lieu de le laisser dériver.
+
+services:
+  vector:
+    # Version ÉPINGLÉE au mineur. La prod tournait en `latest-alpine` :
+    # une mise à jour majeure pouvait casser la collecte du jour au
+    # lendemain, sans que rien ne le signale.
+    #
+    # Attention au format du tag : c'est `0.55.X-alpine`, avec le `.X`.
+    # `0.55-alpine` n'existe pas sur Docker Hub.
+    image: timberio/vector:0.55.X-alpine
+    # PAS de `container_name`, volontairement. Compose nomme alors le
+    # conteneur `<projet>-vector-1`, ce qui donne `humanix-prod-vector-1`
+    # sur la prod : exactement le nom actuel, donc les commandes
+    # d'exploitation existantes continuent de fonctionner. Un nom fixe
+    # entrerait aussi en collision le jour où la démo aura son agent,
+    # les deux stacks partageant la même machine.
+    restart: unless-stopped
+    # `env_file` plutôt que `environment` : injecte toutes les variables du
+    # .env dans le conteneur, sans dépendre de l'interpolation compose (qui
+    # varie selon l'emplacement du .env).
+    #
+    # Variables requises, cf. infra/grafana/README.md §4 :
+    #   SCW_COCKPIT_TOKEN     token Cockpit, écriture seule
+    #   SCW_LOKI_URL          URL de base, SANS chemin
+    #   SCW_MIMIR_URL         URL COMPLÈTE, avec /api/v1/push
+    #   METRICS_SCRAPE_TOKEN  Bearer attendu par /api/metrics (>= 16 car.)
+    env_file:
+      - .env
+    volumes:
+      # Conf versionnée. Le montage doit pointer DANS le clone : c'est tout
+      # l'intérêt de la manœuvre. Ne pas revenir à un chemin type
+      # /opt/vector.yaml, qui redivergerait aussitôt.
+      - ./infra/vector/vector.yaml:/etc/vector/vector.yaml:ro
+      # Lecture des logs de tous les conteneurs. En lecture seule : Vector
+      # n'a aucune raison de piloter le démon Docker.
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      app:
+        condition: service_started
+    # Nécessaire pour joindre `app:3000` (scrape) ET Cockpit (push) :
+    # humanix_backend est `internal: false`, la sortie internet est donc
+    # possible.
+    networks:
+      - humanix_backend
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "vector"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    # Garde-fou contre la panne observée : sans exclusion correcte, Vector
+    # se relit lui-même et chaque erreur en génère de nouvelles. On a
+    # mesuré 298 Ko/h. L'exclusion est dans vector.yaml ; cette limite
+    # borne les dégâts si elle saute à nouveau.
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  humanix_backend:
+    external: true
+    name: humanix_backend
