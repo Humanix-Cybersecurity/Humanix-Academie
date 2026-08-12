@@ -19,10 +19,13 @@
 #      alimentees par Scaleway et ne se laissent PAS pousser dedans. Il
 #      faut des data sources d'origine `custom`. Elles n'existaient pas.
 #
-#   2. URL GENERIQUE. `logs.cockpit.fr-par.scw.cloud` renvoie 404 : le
-#      push se fait sur l'URL PROPRE a la data source, prefixee par son
-#      identifiant. L'ancien README avertissait de ce piege... puis
-#      posait quand meme l'URL generique quinze lignes plus loin.
+#   2. MAUVAISE DATA SOURCE. L'URL pointait sur la data source d'origine
+#      `scaleway` (1760729a-...), pas sur une `custom`. Scaleway refuse
+#      alors l'ecriture : 403 Forbidden, releve dans les logs Vector du
+#      2026-08-12. Ce n'est PAS un 404 : l'URL resolvait et le jeton
+#      etait accepte — c'est bien l'autorisation d'ecrire qui manquait.
+#      (Piege voisin, distinct : l'URL generique sans identifiant de
+#      data source, elle, renvoie 404.)
 #
 #   3. NOM DE VARIABLE INCOHERENT. Le .env definissait
 #      SCW_COCKPIT_TOKEN, la conf lisait SCW_LOKI_TOKEN. Token vide,
@@ -53,9 +56,26 @@
 #   SCW_MIMIR_URL         URL de push COMPLETE de humanix-prod-metrics
 #   METRICS_SCRAPE_TOKEN  Bearer attendu par /api/metrics (>= 16 chars)
 #
-# Les deux URL sont donnees COMPLETES (chemin de push inclus) : c'est
-# volontaire. Laisser Vector concatener un chemin est exactement ce qui
-# a produit la cause n2.
+# ATTENTION, LES DEUX URL N'ONT PAS LA MEME FORME. C'est asymetrique et
+# ce n'est pas une coquille :
+#
+#   SCW_LOKI_URL   URL DE BASE, SANS chemin. Le sink `loki` de Vector
+#                  ajoute lui-meme `/loki/api/v1/push` ("The base URL of
+#                  the Loki instance. The path value is appended to
+#                  this"). Fournir le chemin ici le ferait apparaitre en
+#                  DOUBLE -> 404.
+#
+#   SCW_MIMIR_URL  URL COMPLETE, chemin `/api/v1/push` INCLUS. Le sink
+#                  `prometheus_remote_write` n'ajoute rien ("The
+#                  endpoint should include the scheme and the path to
+#                  write to").
+#
+# Verifie le 2026-08-12 en sondant les endpoints sans jeton (401 = le
+# chemin existe, 404 = il n'existe pas) :
+#   .../api/v1/push                     -> 401  (metriques : bon chemin)
+#   .../api/v1/write                    -> 404
+#   .../loki/api/v1/push                -> 401  (logs : bon chemin)
+#   .../loki/api/v1/push/loki/api/v1/push -> 404 (le chemin double)
 
 # Vector journalise a son tour ; en `info` il reste discret. Ne pas
 # passer en `debug` sans re-verifier l'exclusion ci-dessous, sous peine

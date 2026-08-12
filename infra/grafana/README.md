@@ -4,21 +4,26 @@
 >
 > - **Vector** (logs Docker → Loki) + **prom-client** (metrics applicatives Next.js)
 
-> ### 🔧 Révision du 2026-08-12 — ce document était faux sur six points
+> ### 🔧 Révision du 2026-08-12 — ce document était faux sur sept points
 >
 > Vector tournait en prod **depuis mai 2026 sans jamais rien livrer** : 0 octet
 > et 0 échantillon côté Cockpit, tout en crachant 298 Ko/h de logs sur
-> lui-même (95 % du volume de la machine). Six erreurs cumulées, toutes
-> issues de ce document, chacune suffisante à elle seule :
+> lui-même (95 % du volume de la machine). Erreurs cumulées, toutes issues de
+> ce document :
 >
-> | #   | Erreur                                                         | Corrigée en |
-> | --- | -------------------------------------------------------------- | ----------- |
-> | 1   | Data sources « custom » jamais créées → aucune destination     | §2          |
-> | 2   | URL de push générique (404) au lieu de celle de la data source | §4          |
-> | 3   | Nom de variable du token incohérent entre `.env` et la conf    | §4          |
-> | 4   | `vector.yaml` recopié à la main, hors dépôt                    | §5          |
-> | 5   | Auto-exclusion inopérante (match par **préfixe**) → boucle     | §5          |
-> | 6   | Tag d'image `0.55-alpine` inexistant sur Docker Hub            | §5          |
+> | #   | Erreur                                                                | Statut sur la prod                          | Corrigée en |
+> | --- | --------------------------------------------------------------------- | ------------------------------------------- | ----------- |
+> | 1   | Data sources « custom » jamais créées → aucune destination            | **avérée**                                  | §2          |
+> | 2   | Push vers une data source d'origine `scaleway` → **403**              | **avérée** (cause directe du blocage)       | §4          |
+> | 3   | Nom de variable du token incohérent entre `.env` et la conf           | latente (le déploiement avait divergé)      | §4          |
+> | 4   | `vector.yaml` recopié à la main, hors dépôt (`/opt/vector.yaml`)      | **avérée**                                  | §5          |
+> | 5   | Auto-exclusion inopérante (match par **préfixe**) → boucle de logs    | **avérée** (les 298 Ko/h)                   | §5          |
+> | 6   | Tag d'image `0.55-alpine` inexistant sur Docker Hub                   | latente (la prod tourne en `latest-alpine`) | §5          |
+> | 7   | `SCW_MIMIR_URL` absente : **aucune métrique** n'était poussée du tout | **avérée**                                  | §4, §6      |
+>
+> Diagnostic établi sur les logs Vector du 12/08 : l'erreur réelle était
+> **403 Forbidden**, pas 404. L'URL résolvait, le jeton était accepté — seule
+> l'autorisation d'écrire manquait, ce qui pointe l'erreur 2 sans ambiguïté.
 >
 > La table des coûts était fausse elle aussi, et concluait à tort « 100 %
 > gratuit ». Corrigée ci-dessous sur des chiffres relevés sur l'API.
@@ -28,7 +33,7 @@
 1. **Activer Cockpit** dans la console Scaleway région `fr-par`
 2. **Créer les 2 data sources `custom`** (§2) — sans elles, rien n'est poussable
 3. **Créer un token** en **écriture seule** : `write_only_logs` + `write_only_metrics` (§3)
-4. **Poser les env vars** en prod, URLs **complètes** et propres aux data sources (§4)
+4. **Poser les env vars** en prod — attention, `SCW_LOKI_URL` **sans** chemin et `SCW_MIMIR_URL` **avec** (§4)
 5. **Déployer Vector** avec la conf **versionnée** `infra/vector/vector.yaml` (§5)
 6. **Importer `dashboards/humanix-overview.json`** dans Grafana Cockpit (§7)
 7. **Provisionner les 7 alertes** documentées dans `alerts-cockpit.md` (§8)
@@ -81,6 +86,11 @@ Total ~30-45 min côté ops.
                   │ alerts     │
                   └────────────┘
 ```
+
+> ⚠️ Le bloc « Cockpit Agent (scrape) » du schéma ci-dessus est **trompeur** :
+> Cockpit ne scrape rien, il ne fait que **recevoir du push**. C'est ce
+> malentendu qui a fait chercher au mauvais endroit pendant trois mois. C'est
+> le **même Vector** qui scrape `/api/metrics` et pousse vers Mimir (cf. §6).
 
 ## Ce que ça coûte (vérifié le 2026-08-12)
 
@@ -178,22 +188,40 @@ METRICS_SCRAPE_TOKEN=$(openssl rand -hex 32)
 # deux sinks Vector : logs ET metriques.
 SCW_COCKPIT_TOKEN=<le token cree a l'etape 3>
 
-# URL de push COMPLETES, propres a chaque data source.
-SCW_LOKI_URL=https://9cb3d00b-29df-4036-b6cb-ff50f63fc6e0.logs.cockpit.fr-par.scw.cloud/loki/api/v1/push
+# URL propres a chaque data source CUSTOM. Les deux formes DIFFERENT :
+# Loki sans chemin (Vector l'ajoute), Mimir avec. Cf. tableau ci-dessous.
+SCW_LOKI_URL=https://9cb3d00b-29df-4036-b6cb-ff50f63fc6e0.logs.cockpit.fr-par.scw.cloud
 SCW_MIMIR_URL=https://299b6f0c-5da0-4894-9796-e8133b6a3048.metrics.cockpit.fr-par.scw.cloud/api/v1/push
 ```
 
 > 🔴 **Les trois pièges qui ont fait perdre trois mois** (mai → août 2026,
 > pendant lesquels Vector tournait sans jamais rien livrer) :
 >
-> 1. **L'URL doit être celle de la data source**, préfixée par son
->    identifiant. L'URL générique `logs.cockpit.fr-par.scw.cloud` renvoie
->    **404**. La version précédente de ce document avertissait de ce piège
->    à l'étape 2… puis posait l'URL générique quinze lignes plus bas.
+> 1. **Pointer la bonne data source.** La conf déployée visait
+>    `1760729a-…`, c'est-à-dire « Scaleway Logs », d'origine `scaleway`.
+>    Scaleway refuse l'écriture dans ses propres sources : **403 Forbidden**,
+>    relevé dans les logs Vector le 12/08. Ce n'est **pas** un 404 — l'URL
+>    résolvait et le jeton était accepté ; c'est l'autorisation d'écrire qui
+>    manquait. Piège voisin mais distinct : l'URL générique, sans identifiant
+>    de data source, renvoie bien **404**.
 > 2. **Un seul nom de variable.** Le `.env` définissait `SCW_COCKPIT_TOKEN`
 >    et la conf Vector lisait un autre nom : token vide, donc **401**.
-> 3. **Les URL sont données complètes**, chemin de push inclus. Laisser
->    l'agent concaténer un chemin est précisément ce qui produit le piège 1.
+> 3. **Les deux URL n'ont pas la même forme.** C'est asymétrique, et ce n'est
+>    pas une coquille.
+>
+> | Variable        | Forme                               | Pourquoi                                                                                                                                                                         |
+> | --------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+> | `SCW_LOKI_URL`  | **base, sans chemin**               | le sink `loki` ajoute `/loki/api/v1/push` lui-même — _« The base URL of the Loki instance. The path value is appended to this. »_ Le fournir ici le mettrait en **double** → 404 |
+> | `SCW_MIMIR_URL` | **complète, `/api/v1/push` inclus** | `prometheus_remote_write` n'ajoute rien — _« The endpoint should include the scheme and the path to write to. »_                                                                 |
+>
+> Vérifiable sans jeton, en sondant les endpoints (401 = le chemin existe,
+> 404 = il n'existe pas) :
+>
+> ```bash
+> for u in "$SCW_MIMIR_URL" "$SCW_LOKI_URL/loki/api/v1/push"; do
+>   printf '%s -> %s\n' "$u" "$(curl -s -o /dev/null -w '%{http_code}' -X POST "$u")"
+> done
+> ```
 >
 > Ces valeurs sont celles du projet `c9a236c0-…`. Si tu recrées une data
 > source, l'identifiant change : relis-le avec
