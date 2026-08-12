@@ -69,7 +69,7 @@ services:
     # ne se voyaient pas. Le nom du reseau est donc PARAMETRABLE, parce
     # qu'il differe entre le depot et la stack deployee.
     networks:
-      - observabilite
+      - app_network
     healthcheck:
       test: ["CMD", "pgrep", "-f", "vector"]
       interval: 30s
@@ -91,8 +91,11 @@ networks:
   # push sans autre symptome qu'un silence.
   #
   # Defaut = la convention du depot. La stack prod ayant diverge, elle
-  # surcharge via son .env :
-  #   OBSERVABILITE_NETWORK=humanix_prod
-  observabilite:
+  # surcharge via son .env : APP_NETWORK=humanix_prod
+  #
+  # MEME variable que docker-compose.cron.yml, volontairement : les deux
+  # overlays expriment le meme besoin — joindre l'app. Deux noms pour un
+  # seul concept, c'est la derive qui a coute trois mois d'aveuglement.
+  app_network:
     external: true
-    name: ${OBSERVABILITE_NETWORK:-humanix_backend}
+    name: ${APP_NETWORK:-humanix_backend}
