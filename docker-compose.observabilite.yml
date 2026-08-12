@@ -61,11 +61,15 @@ services:
     depends_on:
       app:
         condition: service_started
-    # Nécessaire pour joindre `app:3000` (scrape) ET Cockpit (push) :
-    # humanix_backend est `internal: false`, la sortie internet est donc
-    # possible.
+    # Vector DOIT etre sur le meme reseau que l'app, sinon `app:3000` est
+    # injoignable et le scrape echoue en silence.
+    #
+    # C'etait le cas en prod le 12/08 : Vector sur `humanix-prod_default`
+    # (le reseau par defaut du projet), l'app sur `humanix_prod`. Les deux
+    # ne se voyaient pas. Le nom du reseau est donc PARAMETRABLE, parce
+    # qu'il differe entre le depot et la stack deployee.
     networks:
-      - humanix_backend
+      - observabilite
     healthcheck:
       test: ["CMD", "pgrep", "-f", "vector"]
       interval: 30s
@@ -82,6 +86,13 @@ services:
         max-file: "3"
 
 networks:
-  humanix_backend:
+  # Reseau de l'app, a joindre pour pouvoir la scraper. Il doit aussi
+  # laisser sortir vers internet (Cockpit) : `internal: true` casserait le
+  # push sans autre symptome qu'un silence.
+  #
+  # Defaut = la convention du depot. La stack prod ayant diverge, elle
+  # surcharge via son .env :
+  #   OBSERVABILITE_NETWORK=humanix_prod
+  observabilite:
     external: true
-    name: humanix_backend
+    name: ${OBSERVABILITE_NETWORK:-humanix_backend}
