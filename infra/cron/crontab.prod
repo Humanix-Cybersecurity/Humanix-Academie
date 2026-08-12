@@ -1,0 +1,90 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Crontab de production — humanix-prod-01, utilisateur `humanix`.
+#
+# NE PAS EDITER AVEC `crontab -e`. Ce fichier est la SOURCE DE VERITE :
+# on l'edite ici, on le commite, on le deploie, puis on l'installe avec
+#     ./infra/cron/install-crontab.sh
+#
+# Cf. docs/CRON.md pour le choix de l'ordonnanceur (crontab de l'hote ici,
+# overlay Ofelia pour les self-hosters) — et surtout pour la regle qui
+# compte : JAMAIS LES DEUX EN MEME TEMPS, sans quoi chaque job s'execute
+# deux fois, purges comprises.
+#
+# ---------------------------------------------------------------------
+# POURQUOI CE FICHIER EXISTE
+# ---------------------------------------------------------------------
+#
+# Jusqu'au 2026-08-12, la crontab n'existait QUE sur la machine. Elle ne
+# figurait dans aucun depot, donc personne ne pouvait lire ce qui etait
+# planifie sans ouvrir une session SSH. C'est ce qui a permis a un bug
+# d'extraction du secret de faire echouer TOUS les jobs, chaque nuit,
+# depuis la mise en service, sans que rien ne le signale : la table
+# CronRun est restee vide pendant des mois et le journal accumulait
+# 137 Ko d'erreurs 400 que personne n'allait lire.
+#
+# L'extraction du secret est desormais faite une seule fois, dans
+# scripts/cron-host.sh, qui documente le piege en detail.
+#
+# ---------------------------------------------------------------------
+# HORAIRES
+# ---------------------------------------------------------------------
+#
+# Tout est en UTC (cf. CRON_TZ). Les jobs de nuit sont espaces de 15 min
+# pour ne pas se marcher dessus sur une machine qui porte aussi la demo.
+#
+# Les frequences DOIVENT rester coherentes avec `expectedEveryHours` de
+# lib/cron/registry.ts : c'est cette valeur qui decide si un job est
+# affiche « en retard » sur /superadmin/system-health.
+
+CRON_TZ=UTC
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Repertoire de la stack, ou se trouve le .env contenant CRON_SECRET.
+HUMANIX=/opt/humanix-prod
+LOG=/var/log/humanix/cron.log
+
+# --- Renouvellement des certificats TLS -------------------------------
+19 12 * * * "/home/humanix/.acme.sh"/acme.sh --cron --home "/home/humanix/.acme.sh" > /dev/null
+
+# --- Sauvegarde chiffree de la base -----------------------------------
+45 2 * * * $HUMANIX/scripts/backup-db.sh >> /var/log/humanix/backup.log 2>&1
+
+# --- Archivage des journaux d'audit -----------------------------------
+#
+# ⚠️ A ACTIVER (retirer le '#') UNE FOIS LE BUCKET CREE. Cf. docs/CRON.md,
+# section « Archivage ». Tant que /etc/humanix/archive.env n'existe pas,
+# ce job echouerait chaque nuit — et un echec permanent est precisement
+# ce qui apprend a ne plus lire les journaux.
+#
+# Rien n'est perdu en attendant : la purge supprime a 400 jours et la
+# plus ancienne entree en a 83 (au 2026-08-12). La premiere suppression
+# possible est le 2027-06-24.
+#
+# Volontairement a 01h00, loin des 04h00 de la purge : aucune course
+# possible entre archiver et supprimer.
+# 0 1 * * * $HUMANIX/scripts/archive-audit-logs.sh >> /var/log/humanix/archive.log 2>&1
+
+# --- Jobs applicatifs -------------------------------------------------
+# Chaque ligne : <horaire> cron-host.sh <slug>. Le slug doit exister a la
+# fois dans lib/cron/registry.ts et sous app/api/cron/<slug>/.
+
+# Horaire (toutes les heures)
+0  *   * * *  $HUMANIX/scripts/cron-host.sh phishing-launch    >> $LOG 2>&1
+30 *   * * *  $HUMANIX/scripts/cron-host.sh phishing-drip      >> $LOG 2>&1
+
+# Toutes les 6 heures
+0  */6 * * *  $HUMANIX/scripts/cron-host.sh breaches-refresh   >> $LOG 2>&1
+
+# Quotidiens, de nuit
+30 0   * * *  $HUMANIX/scripts/cron-host.sh cyber-event-tick   >> $LOG 2>&1
+0  3   * * *  $HUMANIX/scripts/cron-host.sh risk-snapshot      >> $LOG 2>&1
+15 3   * * *  $HUMANIX/scripts/cron-host.sh data-retention-purge >> $LOG 2>&1
+30 3   * * *  $HUMANIX/scripts/cron-host.sh achievements-reevaluate >> $LOG 2>&1
+45 3   * * *  $HUMANIX/scripts/cron-host.sh challenge-rewards  >> $LOG 2>&1
+0  4   * * *  $HUMANIX/scripts/cron-host.sh audit-logs-purge   >> $LOG 2>&1
+0  5   * * *  $HUMANIX/scripts/cron-host.sh exposure-scan      >> $LOG 2>&1
+
+# Hebdomadaire — lundi matin
+0  8   * * 1  $HUMANIX/scripts/cron-host.sh weekly-anecdote    >> $LOG 2>&1
