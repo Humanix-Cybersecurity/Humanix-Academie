@@ -113,6 +113,26 @@ sources:
       strategy: bearer
       token: "${METRICS_SCRAPE_TOKEN}"
 
+  # === Journal HAProxy : requetes HTTP de TOUT le trafic ===
+  #
+  # Pourquoi passer par HAProxy plutot que par l'application : il n'existe
+  # aucun point de passage unique cote Node. `proxy.ts` tourne en runtime
+  # EDGE, ou prom-client ne peut pas vivre, et instrumenter route par route
+  # ne couvrirait que les routes instrumentees. HAProxy, lui, voit TOUT :
+  # pages, API, fichiers statiques, et les erreurs qui n'atteignent jamais
+  # l'application.
+  #
+  # Le fichier est en syslog:adm 640. Le conteneur doit donc appartenir au
+  # groupe `adm` (gid 4) : cf. `group_add` dans docker-compose.observabilite.yml.
+  haproxy:
+    type: file
+    include:
+      - /var/log/haproxy.log
+    # `end` : on ne rejoue pas l'historique au demarrage. Sans ca, chaque
+    # redemarrage de Vector reinjecterait tout le fichier et fausserait les
+    # compteurs.
+    read_from: end
+
 transforms:
   # Les logs applicatifs sont deja du JSON : on l'aplatit pour pouvoir
   # requeter les champs dans Loki plutot qu'une chaine opaque.
@@ -153,6 +173,60 @@ transforms:
         .env = "demo"
       }
 
+  # Extraction du statut et de la duree depuis le format `option httplog`.
+  #
+  # Format :
+  #   <ts> <host> haproxy[<pid>]: <ip>:<port> [<date>] <front>~ <back>/<srv>
+  #   <Tq>/<Tw>/<Tc>/<Tr>/<Tt> <status> <octets> - - <flags> ... "<methode> <chemin> <proto>"
+  #
+  # On ne garde QUE le statut et la duree totale. Ni l'IP, ni le chemin, ni
+  # l'agent : ce sont des donnees personnelles au sens du RGPD, et elles ne
+  # servent a aucune des requetes du tableau de bord.
+  haproxy_extraction:
+    type: remap
+    inputs:
+      - haproxy
+    drop_on_error: true
+    drop_on_abort: true
+    source: |
+      champs, err = parse_regex(.message, r'/(?P<tt>-?\d+)\s(?P<statut>\d{3})\s\d+\s')
+      if err != null {
+        # Lignes sans requete HTTP (echecs de handshake TLS, messages de
+        # demarrage). On les abandonne : `drop_on_abort` les ecarte sans
+        # remplir le journal d'erreurs.
+        abort
+      }
+      .statut = champs.statut
+      # HAProxy exprime les durees en MILLISECONDES, Prometheus attend des
+      # SECONDES. Une requete en cours vaut -1 : on la ramene a 0.
+      ms = to_int(champs.tt) ?? 0
+      if ms < 0 { ms = 0 }
+      .duree_secondes = to_float(ms) / 1000.0
+      # On ne derive PAS de "classe de statut" (2xx, 5xx...). Le tableau de
+      # bord filtre deja avec `status=~"5.."` sur le statut brut, et les codes
+      # HTTP forment un ensemble naturellement borne : une vingtaine de
+      # valeurs, pas de risque d'explosion de cardinalite.
+
+  # Conversion en metriques Prometheus. Les noms sont ceux qu'attendent
+  # infra/grafana/dashboards/humanix-overview.json et alerts-cockpit.md.
+  haproxy_metriques:
+    type: log_to_metric
+    inputs:
+      - haproxy_extraction
+    metrics:
+      - type: counter
+        field: statut
+        name: http_requests_total
+        namespace: humanix
+        tags:
+          status: "{{statut}}"
+      - type: histogram
+        field: duree_secondes
+        name: http_request_duration_seconds
+        namespace: humanix
+        tags:
+          status: "{{statut}}"
+
 sinks:
   scaleway_loki:
     type: loki
@@ -181,7 +255,17 @@ sinks:
     type: prometheus_remote_write
     inputs:
       - humanix_metrics
+      - haproxy_metriques
     endpoint: "${SCW_MIMIR_URL}"
+    # Bornes de l'histogramme des durees. Vector agrege les distributions en
+    # histogrammes Prometheus a l'aide de ces bornes ; sans elles il prendrait
+    # ses valeurs par defaut, et les seuils du tableau de bord (p50/p95/p99)
+    # tomberaient a cote.
+    #
+    # Valeurs alignees sur celles de lib/metrics/registry.ts, pour que les
+    # metriques venant de l'application et celles venant de HAProxy soient
+    # comparables. De 50 ms (page en cache) a 10 s (generation de PDF ou d'IA).
+    buckets: [0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0]
     auth:
       strategy: bearer
       token: "${SCW_COCKPIT_TOKEN}"

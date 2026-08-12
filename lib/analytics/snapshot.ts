@@ -25,6 +25,8 @@
 //   que les tenants actifs (lastSeenAt < 7j).
 
 import { db } from "@/lib/db";
+import { fireWebhook } from "@/lib/webhooks/dispatcher";
+import { doitEmettre, FENETRE_JOURS } from "@/lib/analytics/risk-degradation";
 
 /**
  * Normalise une date a 00:00:00 UTC pour grouper par jour.
@@ -78,9 +80,7 @@ export async function computeTenantSnapshot(
 
   if (users.length === 0) return null;
 
-  const scores = users
-    .map((u) => u.riskScore)
-    .sort((a, b) => a - b);
+  const scores = users.map((u) => u.riskScore).sort((a, b) => a - b);
 
   const sum = scores.reduce((s, v) => s + v, 0);
   const avgScore = sum / scores.length;
@@ -136,7 +136,73 @@ export async function recordTenantSnapshot(
     },
   });
 
+  await emettreSiDegradation(tenantId, day, computed.avgScore, computed);
+
   return { tenantId, recorded: true };
+}
+
+/**
+ * Emet le webhook `risk.degraded` si le score collectif vient de basculer.
+ *
+ * Declare dans lib/webhooks/events.ts depuis l'origine, cet evenement
+ * n'etait EMIS NULLE PART (issue #734). La donnee etait pourtant deja
+ * calculee ici, a chaque passage du cron.
+ *
+ * La regle metier (seuil, fenetre, non-repetition) vit dans
+ * lib/analytics/risk-degradation.ts et y est testee sans base ni cron.
+ * Cette fonction ne fait que LIRE l'historique et DECLENCHER.
+ *
+ * Best-effort : toute erreur est avalee. Un webhook qui echoue ne doit
+ * pas empecher l'enregistrement du snapshot, qui est la raison d'etre du
+ * cron.
+ */
+async function emettreSiDegradation(
+  tenantId: string,
+  day: Date,
+  scoreActuel: number,
+  computed: SnapshotComputed,
+): Promise<void> {
+  try {
+    const jour = (decalage: number) => {
+      const d = new Date(day);
+      d.setUTCDate(d.getUTCDate() - decalage);
+      return d;
+    };
+
+    // Quatre points : aujourd'hui et hier, chacun compare a son propre
+    // J-7. Il faut les deux pour distinguer "la degradation commence"
+    // de "la degradation dure" (cf. doitEmettre).
+    const [refAujourdhui, hier, refHier] = await Promise.all([
+      lireScore(tenantId, jour(FENETRE_JOURS)),
+      lireScore(tenantId, jour(1)),
+      lireScore(tenantId, jour(1 + FENETRE_JOURS)),
+    ]);
+
+    const degradation = doitEmettre({
+      aujourdhui: { actuel: scoreActuel, reference: refAujourdhui },
+      hier: hier === null ? null : { actuel: hier, reference: refHier },
+    });
+
+    if (!degradation) return;
+
+    await fireWebhook(tenantId, "risk.degraded", {
+      previousScore: degradation.scorePrecedent,
+      currentScore: degradation.scoreActuel,
+      delta: degradation.delta,
+      cause: `${computed.atRiskCount} utilisateur(s) sous le seuil de risque sur ${computed.userCount}`,
+    });
+  } catch (e) {
+    console.error("[snapshot] emission risk.degraded echouee", e);
+  }
+}
+
+/** Score moyen enregistre pour ce tenant a cette date, ou null. */
+async function lireScore(tenantId: string, day: Date): Promise<number | null> {
+  const row = await db.riskScoreSnapshot.findUnique({
+    where: { tenantId_day: { tenantId, day } },
+    select: { avgScore: true },
+  });
+  return row?.avgScore ?? null;
 }
 
 /**
