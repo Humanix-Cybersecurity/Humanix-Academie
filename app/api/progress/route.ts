@@ -18,6 +18,8 @@ import { computeStreak } from "@/lib/streak";
 import { fireWebhook } from "@/lib/webhooks/dispatcher";
 import { triggerCisoLiveSync } from "@/lib/ciso-assistant/live-mode";
 import { evaluateAndUnlock } from "@/lib/achievements/evaluate";
+import { saisonVientDEtreTerminee } from "@/lib/saisons/completion";
+import { remainingInvitesFor } from "@/lib/family-invites";
 
 export const dynamic = "force-dynamic";
 
@@ -249,6 +251,57 @@ export async function POST(req: Request) {
     }).catch(() => {
       // log silencieux : les erreurs sont enregistrees dans TenantWebhook.lastError
     });
+
+    // saison.completed (#734) : declare dans lib/webhooks/events.ts depuis
+    // l'origine, cochable dans /admin/integrations, mais jamais emis.
+    //
+    // Le filtre `isPublished: true` n'est pas un detail : c'est la MEME
+    // definition de "saison terminee" que isEligibleToInvite() dans
+    // lib/family-invites/index.ts. Deux definitions concurrentes finiraient
+    // par diverger, et un utilisateur verrait ses invitations debloquees
+    // sans que l'evenement parte, ou l'inverse.
+    //
+    // Best-effort et hors du chemin de reponse : un webhook ne doit jamais
+    // faire echouer l'enregistrement d'une progression.
+    void (async () => {
+      try {
+        const saisonId = episode.saisonId;
+        const [episodesPublies, progressions] = await Promise.all([
+          db.episode.findMany({
+            where: { saisonId, isPublished: true },
+            select: { id: true },
+          }),
+          db.progress.findMany({
+            where: { userId, saisonId },
+            select: { episodeId: true, status: true, bestScore: true },
+          }),
+        ]);
+
+        const parEpisode = new Map(progressions.map((p) => [p.episodeId, p]));
+        const termine = saisonVientDEtreTerminee({
+          episodes: episodesPublies.map((e) => {
+            const p = parEpisode.get(e.id);
+            return {
+              episodeId: e.id,
+              termine: p?.status === "COMPLETED",
+              score: p?.bestScore ?? 0,
+            };
+          }),
+          episodeValideId: episodeId,
+          estPremiereCompletion: result.isFirstCompletion,
+        });
+        if (!termine) return;
+
+        await fireWebhook(tenantId, "saison.completed", {
+          userName: user?.name ?? user?.email ?? "Anonyme",
+          saisonTitle: ep?.saison.title ?? "",
+          averageScore: termine.scoreMoyen,
+          familyInvitesUnlocked: await remainingInvitesFor(userId),
+        });
+      } catch (e) {
+        console.error("[progress] emission saison.completed echouee", e);
+      }
+    })();
 
     // Live Mode (v2.0) : si l'admin a active enableLiveMode sur la connexion
     // CISO Assistant, on declenche une mini-sync incrementale debouncee (5s).
