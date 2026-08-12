@@ -42,10 +42,19 @@ RETRIES="${CRON_RUNNER_RETRIES:-2}"
 URL="${APP_URL}/api/cron/${NAME}"
 START=$(date +%s)
 
+# Fichier de reponse PROPRE A CETTE EXECUTION. Il etait auparavant fixe
+# (/tmp/cron-runner-body) : deux jobs simultanes — et il y en a, phishing-launch
+# tourne a l'heure pile pendant que les jobs de nuit s'enchainent — ecrivaient
+# dans le meme fichier et se volaient mutuellement leur reponse. Les journaux
+# de production en portaient la trace, avec des lignes entrelacees
+# caractere par caractere.
+BODY="$(mktemp "/tmp/cron-runner-${NAME}.XXXXXX")"
+trap 'rm -f "$BODY"' EXIT INT TERM
+
 echo "[cron-runner] $(date -u +"%Y-%m-%dT%H:%M:%SZ") POST $URL"
 
 HTTP_CODE=$(
-  curl --silent --output /tmp/cron-runner-body \
+  curl --silent --output "$BODY" \
     --write-out "%{http_code}" \
     --max-time "$TIMEOUT" \
     --retry "$RETRIES" --retry-delay 5 --retry-connrefused \
@@ -60,11 +69,11 @@ ELAPSED=$(($(date +%s) - START))
 
 case "$HTTP_CODE" in
   2*)
-    echo "[cron-runner] OK ${HTTP_CODE} en ${ELAPSED}s : $(cat /tmp/cron-runner-body | head -c 200)"
+    echo "[cron-runner] OK ${HTTP_CODE} en ${ELAPSED}s : $(head -c 200 "$BODY")"
     exit 0
     ;;
   *)
-    echo "[cron-runner] ECHEC ${HTTP_CODE} apres ${ELAPSED}s : $(cat /tmp/cron-runner-body | head -c 500)" >&2
+    echo "[cron-runner] ECHEC ${HTTP_CODE} apres ${ELAPSED}s : $(head -c 500 "$BODY")" >&2
     exit 2
     ;;
 esac
