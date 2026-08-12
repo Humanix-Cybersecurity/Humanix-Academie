@@ -1,0 +1,98 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Hygiène des messages de commit.
+#
+# ---------------------------------------------------------------------------
+# POURQUOI UN WORKFLOW SÉPARÉ DE ci.yml
+# ---------------------------------------------------------------------------
+#
+# `ci.yml` a un `paths-ignore` sur `**.md`, `docs/**` et `wiki/**` : une PR
+# purement documentaire ne déclenche donc AUCUN job. Or c'est exactement le cas
+# où une faute de rédaction passe. Ce workflow n'a pas d'exclusion de chemins :
+# il tourne sur toutes les PR, toujours.
+#
+# ---------------------------------------------------------------------------
+# POURQUOI IL APPELLE LE HOOK PLUTÔT QUE DE REDÉFINIR LES RÈGLES
+# ---------------------------------------------------------------------------
+#
+# `infra/git-hooks/commit-msg` est la SEULE source de vérité. Recopier les
+# motifs ici en ferait une seconde, qui divergerait au premier ajustement, et
+# on se retrouverait avec un hook local et un CI qui ne refusent pas la même
+# chose. Le hook local prévient, ce workflow garantit : le premier peut être
+# contourné par `--no-verify` ou simplement pas installé, le second non.
+
+name: Hygiène des commits
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+jobs:
+  messages:
+    name: Messages de commit
+    runs-on: self-hosted
+    timeout-minutes: 3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          # Historique complet : il faut pouvoir énumérer les commits entre la
+          # base et la tête de la PR.
+          fetch-depth: 0
+
+      - name: Vérifier chaque commit de la PR
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -eu
+          chmod +x infra/git-hooks/commit-msg
+
+          # Les commits de fusion créés par GitHub ("Merge pull request #N…")
+          # ne sont pas rédigés par un humain : on ne les juge pas.
+          COMMITS=$(git rev-list --no-merges "$BASE".."$HEAD")
+
+          if [ -z "$COMMITS" ]; then
+            echo "Aucun commit à vérifier."
+            exit 0
+          fi
+
+          nb=$(printf '%s\n' "$COMMITS" | wc -l | tr -d ' ')
+          echo "Vérification de $nb commit(s)."
+          echo
+
+          echecs=0
+          for sha in $COMMITS; do
+            msg=$(mktemp)
+            git log -1 --format='%B' "$sha" > "$msg"
+            sujet=$(git log -1 --format='%s' "$sha")
+
+            if ./infra/git-hooks/commit-msg "$msg" 2>/tmp/hook-err; then
+              printf '  ok      %s  %s\n' "$(git rev-parse --short "$sha")" "$sujet"
+            else
+              printf '  REFUSE  %s  %s\n' "$(git rev-parse --short "$sha")" "$sujet"
+              sed 's/^/            /' /tmp/hook-err
+              echecs=$((echecs + 1))
+            fi
+            rm -f "$msg"
+          done
+
+          echo
+          if [ "$echecs" -gt 0 ]; then
+            echo "$echecs commit(s) refusé(s)."
+            echo
+            echo "Pour corriger le dernier commit :"
+            echo "    git commit --amend"
+            echo
+            echo "Pour en corriger plusieurs :"
+            echo "    git rebase -i $BASE   puis 'reword' sur les commits concernés"
+            echo
+            echo "Et pour éviter que ça se reproduise, active les hooks une fois :"
+            echo "    ./infra/git-hooks/install.sh"
+            exit 1
+          fi
+
+          echo "Tous les messages sont conformes."
