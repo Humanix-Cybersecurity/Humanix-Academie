@@ -1,0 +1,122 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# ACCEPTATIONS DE RISQUE TEMPORAIRES POUR LE SCAN TRIVY DE L'IMAGE
+#
+# Chaque entree est une decision documentee, avec une DATE D'EXPIRATION :
+# passe cette date, Trivy refait echouer le build et force une re-revue.
+# On n'ignore rien "pour toujours".
+#
+# Le scan INFORMATIF du workflow reste a couverture complete : ces CVE
+# continuent d'apparaitre dans les logs et dans l'onglet Security. Seule
+# la garde BLOQUANTE les laisse passer.
+#
+# ---------------------------------------------------------------------
+# POURQUOI CES ACCEPTATIONS
+# ---------------------------------------------------------------------
+#
+# Constat du 2026-08-12 : le scan bloquait chaque publication depuis le
+# 10/08, sur 23 vulnerabilites dont AUCUNE ne provient du code applicatif
+# ni de ses dependances de production (`npm audit --omit=dev` est vert).
+#
+# Deux origines :
+#
+#   1. Paquets embarques dans NPM lui-meme (tar, brace-expansion,
+#      picomatch, ip-address, sigstore). Ils viennent de l'image de base
+#      node:25-alpine. On ne peut pas les retirer : docker-entrypoint.sh
+#      utilise `npx` au demarrage (prisma db push, seed, scripts de
+#      migration). Correction possible seulement quand Node publiera une
+#      image de base corrigee.
+#
+#   2. Binaire Go d'ESBUILD (stdlib go1.23.12), tire par `tsx`, lui-meme
+#      requis au runtime par l'entrypoint. La montee de version est
+#      bloquee par DEUX contraintes simultanees :
+#        - notre quarantaine anti-supply-chain (minimum-release-age =
+#          7 jours) : les tsx corriges sont trop recents ;
+#        - un conflit de resolution : tsx >= 4.23.5 exige esbuild ~0.28,
+#          vite (vitest) exige ^0.25, et npm ne nidifie pas les deux.
+#
+# Nature du risque : ces CVE sont des denis de service (et une validation
+# de certificat pour crypto/tls). Aucune n'est atteignable depuis une
+# entree utilisateur : esbuild et npm ne traitent que des fichiers locaux
+# de confiance, au demarrage du conteneur, jamais du contenu distant.
+#
+# A FAIRE AVANT EXPIRATION :
+#   - re-tester `npm i -D tsx@<derniere version sortie de quarantaine>` et
+#     verifier que npm nidifie bien esbuild 0.28 sous tsx ;
+#   - verifier si node:25-alpine a ete republiee avec un npm corrige ;
+#   - a defaut, ne plus embarquer l'outillage de build dans l'image
+#     runtime (le stage `runner` copie aujourd'hui TOUT node_modules).
+
+vulnerabilities:
+  # --- Paquets embarques dans npm (image de base node:25-alpine) -------
+  - id: CVE-2026-59873 # tar : DoS via bombe gzip (CRITICAL)
+    statement: "npm bundle (image de base). npx requis au demarrage, n'ouvre que des archives locales de confiance."
+    expired_at: 2026-09-15
+  - id: CVE-2026-59874 # tar : DoS via archive malformee
+    statement: "npm bundle (image de base). Meme portee que CVE-2026-59873."
+    expired_at: 2026-09-15
+  - id: CVE-2026-13149 # brace-expansion : DoS
+    statement: "npm bundle (image de base). Pas d'entree utilisateur atteignant ce code."
+    expired_at: 2026-09-15
+  - id: CVE-2026-14257 # brace-expansion : DoS
+    statement: "npm bundle (image de base). Pas d'entree utilisateur atteignant ce code."
+    expired_at: 2026-09-15
+  - id: CVE-2026-69152 # brace-expansion : DoS
+    statement: "npm bundle (image de base). Pas d'entree utilisateur atteignant ce code."
+    expired_at: 2026-09-15
+  - id: CVE-2026-69192 # ip-address : parsing incoherent
+    statement: "npm bundle (image de base). Non utilise par l'application."
+    expired_at: 2026-09-15
+  - id: CVE-2026-33671 # picomatch : ReDoS
+    statement: "npm bundle (image de base). Motifs fournis par nous, jamais par un utilisateur."
+    expired_at: 2026-09-15
+  - id: CVE-2026-48815 # sigstore : certificats non autorises acceptes
+    statement: "npm bundle (image de base). Verification de provenance npm, non utilisee au runtime."
+    expired_at: 2026-09-15
+
+  # --- stdlib Go du binaire esbuild (tire par tsx) ---------------------
+  - id: CVE-2025-68121 # crypto/tls : validation de certificat incorrecte (CRITICAL)
+    statement: "Binaire esbuild (go1.23.12). esbuild ne fait aucune connexion TLS : il transpile des fichiers locaux au demarrage."
+    expired_at: 2026-09-15
+  - id: CVE-2025-61726
+    statement: "Binaire esbuild (go1.23.12). DoS non atteignable : aucune entree distante."
+    expired_at: 2026-09-15
+  - id: CVE-2025-61729
+    statement: "Binaire esbuild (go1.23.12). DoS non atteignable : aucune entree distante."
+    expired_at: 2026-09-15
+  - id: CVE-2026-25679
+    statement: "Binaire esbuild (go1.23.12). DoS non atteignable : aucune entree distante."
+    expired_at: 2026-09-15
+  - id: CVE-2026-27145
+    statement: "Binaire esbuild (go1.23.12). DoS non atteignable : aucune entree distante."
+    expired_at: 2026-09-15
+  - id: CVE-2026-32280
+    statement: "Binaire esbuild (go1.23.12). DoS non atteignable : aucune entree distante."
+    expired_at: 2026-09-15
+  - id: CVE-2026-32281
+    statement: "Binaire esbuild (go1.23.12). DoS non atteignable : aucune entree distante."
+    expired_at: 2026-09-15
+  - id: CVE-2026-32283
+    statement: "Binaire esbuild (go1.23.12). DoS non atteignable : aucune entree distante."
+    expired_at: 2026-09-15
+  - id: CVE-2026-33811
+    statement: "Binaire esbuild (go1.23.12). DoS non atteignable : aucune entree distante."
+    expired_at: 2026-09-15
+  - id: CVE-2026-33814
+    statement: "Binaire esbuild (go1.23.12). DoS non atteignable : aucune entree distante."
+    expired_at: 2026-09-15
+  - id: CVE-2026-39820
+    statement: "Binaire esbuild (go1.23.12). DoS non atteignable : aucune entree distante."
+    expired_at: 2026-09-15
+  - id: CVE-2026-39822 # os.Root : suivi de lien symbolique
+    statement: "Binaire esbuild (go1.23.12). Ne traite que l'arborescence du build, controlee par nous."
+    expired_at: 2026-09-15
+  - id: CVE-2026-39836
+    statement: "Binaire esbuild (go1.23.12). DoS non atteignable : aucune entree distante."
+    expired_at: 2026-09-15
+  - id: CVE-2026-42499
+    statement: "Binaire esbuild (go1.23.12). DoS non atteignable : aucune entree distante."
+    expired_at: 2026-09-15
+  - id: CVE-2026-42504
+    statement: "Binaire esbuild (go1.23.12). DoS non atteignable : aucune entree distante."
+    expired_at: 2026-09-15

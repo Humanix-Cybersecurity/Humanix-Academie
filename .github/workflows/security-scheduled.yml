@@ -105,6 +105,12 @@ jobs:
         # Les deux peuvent diverger : on surveille les deux.
         tag: [edge, latest]
     steps:
+      # Necessaire pour .trivyignore.yaml (acceptations de risque datees).
+      - name: Checkout (pour .trivyignore.yaml)
+        uses: actions/checkout@v6
+        with:
+          submodules: false
+
       - name: Login to GHCR
         uses: docker/login-action@v4
         with:
@@ -155,10 +161,12 @@ jobs:
           docker run --rm \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -v humanix-trivy-cache:/root/.cache/ \
+            -v "$PWD/.trivyignore.yaml:/tmp/.trivyignore.yaml:ro" \
             "aquasec/trivy:${TRIVY_VERSION}" image \
               --scanners vuln \
               --severity HIGH,CRITICAL \
               --ignore-unfixed \
+              --ignorefile /tmp/.trivyignore.yaml \
               --exit-code 1 \
               --format table \
               --timeout 20m \

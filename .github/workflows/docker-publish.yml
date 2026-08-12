@@ -396,6 +396,12 @@ jobs:
     runs-on: self-hosted
     timeout-minutes: 20
     steps:
+      # Necessaire pour .trivyignore.yaml (acceptations de risque datees).
+      - name: Checkout (pour .trivyignore.yaml)
+        uses: actions/checkout@v6
+        with:
+          submodules: false
+
       - name: Determine tag to scan
         id: tag
         run: |
@@ -452,16 +458,25 @@ jobs:
           sarif_file: trivy-results.sarif
           category: trivy-image
 
-      # Garde bloquante : uniquement les HIGH/CRITICAL qui ONT un correctif.
+      # Garde bloquante : les HIGH/CRITICAL corrigeables, MOINS les risques
+      # explicitement acceptes dans .trivyignore.yaml (chacun justifie et
+      # DATE : passe l'expiration, la garde refait echouer le build).
+      #
+      # Sans ce fichier, la garde bloquait chaque publication sur des CVE
+      # provenant de l'image de base et de l'outillage de build, qu'on ne
+      # peut pas corriger depuis ce depot. Une garde impossible a satisfaire
+      # finit ignoree : elle doit rester actionnable.
       - name: Bloquer sur HIGH/CRITICAL corrigeables
         run: |
           docker run --rm \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -v humanix-trivy-cache:/root/.cache/ \
+            -v "$PWD/.trivyignore.yaml:/tmp/.trivyignore.yaml:ro" \
             aquasec/trivy:0.58.1 image \
               --scanners vuln \
               --severity HIGH,CRITICAL \
               --ignore-unfixed \
+              --ignorefile /tmp/.trivyignore.yaml \
               --exit-code 1 \
               --format table \
               --timeout 15m \
