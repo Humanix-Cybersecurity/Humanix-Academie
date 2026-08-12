@@ -1,0 +1,69 @@
+#!/bin/sh
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Hook commit-msg : fait respecter deux regles de presentation du depot.
+#
+# INSTALLATION (une fois par clone) :
+#   ./infra/git-hooks/install.sh
+#
+# CONTOURNEMENT ponctuel, si vraiment necessaire :
+#   git commit --no-verify ...
+#
+# ---------------------------------------------------------------------
+# REGLE 1 : PAS DE TIRET CADRATIN
+# ---------------------------------------------------------------------
+#
+# La regle existait deja pour le code (cf. lib/enfants/parcours.ts) mais
+# n'etait appliquee nulle part ailleurs : au 2026-08-12, 190 sujets de
+# commit en contenaient — y compris celui du commit qui les retirait du
+# code. Une regle qui ne vaut que la ou on pense a l'appliquer n'est pas
+# une regle.
+#
+# ---------------------------------------------------------------------
+# REGLE 2 : PAS D'ATTRIBUTION D'OUTIL
+# ---------------------------------------------------------------------
+#
+# Les trailers `Co-Authored-By` et les mentions d'assistant n'ont rien a
+# faire dans l'historique : le code est ecrit, revu, teste et SIGNE par
+# ses auteurs humains, qui en portent la responsabilite. L'outil utilise
+# pour le produire ne fait pas plus partie de l'attribution que l'editeur
+# de texte ou le compilateur.
+#
+# Au 2026-08-12, 412 commits portaient un tel trailer.
+
+MSG_FILE="$1"
+[ -r "$MSG_FILE" ] || exit 0
+
+# On ignore les lignes de commentaire, que git retire de toute facon.
+CORPS=$(grep -v '^#' "$MSG_FILE")
+
+erreurs=0
+
+# --- Regle 1 ---------------------------------------------------------
+if printf '%s' "$CORPS" | grep -q '—'; then
+  echo "commit-msg : TIRET CADRATIN interdit dans les messages de commit." >&2
+  echo "  Lignes concernees :" >&2
+  printf '%s' "$CORPS" | grep -n '—' | head -5 | sed 's/^/    /' >&2
+  echo "  Remplace par ' - ', ' : ' ou une virgule." >&2
+  erreurs=$((erreurs + 1))
+fi
+
+# --- Regle 2 ---------------------------------------------------------
+if printf '%s' "$CORPS" | grep -qiE 'co-authored-by:.*(claude|copilot|chatgpt|gpt-|gemini|cursor)'; then
+  echo "commit-msg : trailer d'attribution d'outil interdit." >&2
+  erreurs=$((erreurs + 1))
+fi
+
+if printf '%s' "$CORPS" | grep -qiE 'generated with .*(claude|copilot|chatgpt|cursor)|🤖'; then
+  echo "commit-msg : mention d'assistant interdite dans le message." >&2
+  erreurs=$((erreurs + 1))
+fi
+
+if [ "$erreurs" -gt 0 ]; then
+  echo "" >&2
+  echo "  Message refuse. Corrige-le, ou force avec --no-verify si tu sais" >&2
+  echo "  ce que tu fais. Cf. infra/git-hooks/commit-msg pour le pourquoi." >&2
+  exit 1
+fi
+
+exit 0
