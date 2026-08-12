@@ -1,0 +1,158 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Vector — agent unique pour les logs Docker ET les metriques applicatives.
+#
+# Pousse vers Scaleway Cockpit :
+#   - logs des conteneurs      -> data source `humanix-prod-logs`   (Loki)
+#   - scrape de /api/metrics   -> data source `humanix-prod-metrics` (Mimir)
+#
+# ---------------------------------------------------------------------
+# CE FICHIER EXISTE PARCE QUE SON ABSENCE A COUTE CHER
+# ---------------------------------------------------------------------
+#
+# Constat du 2026-08-12 : Vector tournait en prod depuis mai et
+# n'a JAMAIS rien livre (0 octet, 0 echantillon cote Cockpit), tout en
+# crachant 298 Ko/h de logs sur lui-meme — 95 % du volume total de la
+# machine. Cinq causes cumulees, chacune suffisante a elle seule :
+#
+#   1. AUCUNE DESTINATION. Les data sources d'origine `scaleway` sont
+#      alimentees par Scaleway et ne se laissent PAS pousser dedans. Il
+#      faut des data sources d'origine `custom`. Elles n'existaient pas.
+#
+#   2. URL GENERIQUE. `logs.cockpit.fr-par.scw.cloud` renvoie 404 : le
+#      push se fait sur l'URL PROPRE a la data source, prefixee par son
+#      identifiant. L'ancien README avertissait de ce piege... puis
+#      posait quand meme l'URL generique quinze lignes plus loin.
+#
+#   3. NOM DE VARIABLE INCOHERENT. Le .env definissait
+#      SCW_COCKPIT_TOKEN, la conf lisait SCW_LOKI_TOKEN. Token vide,
+#      donc 401. On n'utilise plus qu'UN seul nom, ci-dessous.
+#
+#      (Ce paragraphe cite les noms SANS la syntaxe dollar-accolade :
+#      Vector interpole le fichier en TEXTE BRUT, commentaires compris,
+#      avant de parser le YAML. Ecrire la forme complete ici ferait
+#      echouer le demarrage sur une variable... qui n'existe plus.)
+#
+#   4. FICHIER HORS DEPOT. Il ne vivait que sur la machine. Sans son
+#      fichier, Vector bascule sur sa source de demo `demo_logs` et
+#      fabrique de faux logs syslog. Il est desormais versionne.
+#
+#   5. AUTO-EXCLUSION INOPERANTE. `exclude_containers` matche par
+#      PREFIXE. Le conteneur s'appelle `humanix-prod-vector-1`, le
+#      filtre disait `vector` : il ne matchait rien. Vector ingerait
+#      donc ses propres erreurs, ce qui en generait de nouvelles — la
+#      boucle de retroaction a l'origine des 298 Ko/h.
+#
+# ---------------------------------------------------------------------
+# VARIABLES ATTENDUES (dans le .env de la stack, via `env_file`)
+# ---------------------------------------------------------------------
+#
+#   SCW_COCKPIT_TOKEN     token Cockpit, scopes write_only_logs +
+#                         write_only_metrics UNIQUEMENT
+#   SCW_LOKI_URL          URL de push COMPLETE de humanix-prod-logs
+#   SCW_MIMIR_URL         URL de push COMPLETE de humanix-prod-metrics
+#   METRICS_SCRAPE_TOKEN  Bearer attendu par /api/metrics (>= 16 chars)
+#
+# Les deux URL sont donnees COMPLETES (chemin de push inclus) : c'est
+# volontaire. Laisser Vector concatener un chemin est exactement ce qui
+# a produit la cause n2.
+
+# Vector journalise a son tour ; en `info` il reste discret. Ne pas
+# passer en `debug` sans re-verifier l'exclusion ci-dessous, sous peine
+# de reproduire la boucle.
+log_schema:
+  timestamp_key: timestamp
+
+sources:
+  # === Logs de tous les conteneurs de la machine ===
+  docker:
+    type: docker_logs
+    # Match par PREFIXE (cf. cause n5). Le nom complet du conteneur est
+    # `humanix-prod-vector-1` : le prefixe doit couvrir ce nom, sinon
+    # Vector se relit lui-meme en boucle.
+    exclude_containers:
+      - humanix-prod-vector
+      - humanix-demo-vector
+
+  # === Metriques applicatives ===
+  #
+  # Cockpit ne sait pas scraper un endpoint externe : il ne fait que
+  # RECEVOIR du push. C'est donc Vector qui scrape puis pousse.
+  humanix_metrics:
+    type: prometheus_scrape
+    endpoints:
+      - "http://${HUMANIX_METRICS_TARGET:-humanix-prod-app:3000}/api/metrics"
+    # 60 s et pas 30 : la facturation Cockpit est lineaire en nombre
+    # d'echantillons. Passer a 30 s double la note pour un gain de
+    # resolution dont on n'a pas l'usage ici.
+    scrape_interval_secs: 60
+    auth:
+      strategy: bearer
+      token: "${METRICS_SCRAPE_TOKEN}"
+
+transforms:
+  # Les logs applicatifs sont deja du JSON : on l'aplatit pour pouvoir
+  # requeter les champs dans Loki plutot qu'une chaine opaque.
+  parse_json:
+    type: remap
+    inputs:
+      - docker
+    source: |
+      # On ne fusionne QUE si le parse donne un objet : `merge` exige un
+      # object strict et echouerait sur un scalaire (ex. un log "ok").
+      if exists(.message) && is_string(.message) {
+        parsed, err = parse_json(.message)
+        if err == null && is_object(parsed) {
+          . = merge!(., object!(parsed))
+        }
+      }
+
+      # Prod et demo cohabitent sur la meme machine et partagent ce
+      # Vector. On derive l'environnement du nom du conteneur, sans quoi
+      # les deux flux seraient indiscernables dans Loki.
+      #
+      # `string(...) ?? ""` et non `string!(...)` : la forme avec `!`
+      # ABANDONNE l'evenement si le champ est absent, et un evenement
+      # abandonne par un `remap` est jete SILENCIEUSEMENT. Verifie : sur
+      # un evenement sans container_name, la forme `!` perd la ligne,
+      # celle-ci la conserve avec env="inconnu".
+      nom = string(.container_name) ?? ""
+      .env = "inconnu"
+      if starts_with(nom, "humanix-prod-") {
+        .env = "prod"
+      } else if starts_with(nom, "humanix-demo-") {
+        .env = "demo"
+      }
+
+sinks:
+  scaleway_loki:
+    type: loki
+    inputs:
+      - parse_json
+    endpoint: "${SCW_LOKI_URL}"
+    auth:
+      strategy: bearer
+      token: "${SCW_COCKPIT_TOKEN}"
+    encoding:
+      codec: json
+    # Retire du corps les champs promus en labels, pour ne pas stocker
+    # deux fois la meme information (on paie l'octet ingere).
+    remove_label_fields: true
+    # Labels Loki : uniquement des valeurs a faible cardinalite. Ne
+    # JAMAIS y mettre d'identifiant d'utilisateur, de requete ou de
+    # session : chaque valeur distincte cree un flux, et la facture
+    # comme les performances suivent. Aucune donnee personnelle ici.
+    labels:
+      host: humanix-prod-01
+      container: "{{ container_name }}"
+      image: "{{ image }}"
+      env: "{{ env }}"
+
+  scaleway_mimir:
+    type: prometheus_remote_write
+    inputs:
+      - humanix_metrics
+    endpoint: "${SCW_MIMIR_URL}"
+    auth:
+      strategy: bearer
+      token: "${SCW_COCKPIT_TOKEN}"
