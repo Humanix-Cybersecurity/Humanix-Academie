@@ -100,8 +100,11 @@ sources:
   # RECEVOIR du push. C'est donc Vector qui scrape puis pousse.
   humanix_metrics:
     type: prometheus_scrape
+    # `app:3000` = le NOM DE SERVICE compose, pas le nom du conteneur. C'est
+    # la convention deja eprouvee par ofelia (APP_INTERNAL_URL). Elle survit
+    # aux renommages de conteneur, contrairement a `humanix-prod-app`.
     endpoints:
-      - "http://${HUMANIX_METRICS_TARGET:-humanix-prod-app:3000}/api/metrics"
+      - "http://${HUMANIX_METRICS_TARGET:-app:3000}/api/metrics"
     # 60 s et pas 30 : la facturation Cockpit est lineaire en nombre
     # d'echantillons. Passer a 30 s double la note pour un gain de
     # resolution dont on n'a pas l'usage ici.
