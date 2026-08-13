@@ -174,13 +174,29 @@ BACKUP_S3_REGION="${BACKUP_S3_REGION:-fr-par}"
 
 _s3() { aws --endpoint-url "$BACKUP_S3_ENDPOINT" --region "$BACKUP_S3_REGION" "$@"; }
 
+# ----------------------------------------------------------------------------
+# Moteur de conteneurs : declare, jamais devine
+# ----------------------------------------------------------------------------
+#
+# La demo tourne deja sous Podman rootless, la production encore sous Docker,
+# et les deux moteurs cohabitent sur la meme machine. Deviner lequel utiliser
+# reviendrait a sauvegarder la mauvaise base le jour ou l'un des deux change.
+#
+# CONTAINER_ENGINE porte le meme nom que dans scripts/deploy.sh et
+# scripts/archive-audit-logs.sh. Absent, on garde `docker` : le comportement
+# d'une installation qui n'a rien declare ne change pas.
+#
+# `podman ps --filter name=^X$` accepte la meme syntaxe que Docker, filtre par
+# expression reguliere comprise. `podman exec -i` de meme.
+MOTEUR="${CONTAINER_ENGINE:-docker}"
+
 # Pre-requis binaires : pg_dump uniquement requis en mode host
-# (en mode docker, pg_dump est DANS le container Postgres deja).
+# (en mode conteneur, pg_dump est DANS le container Postgres deja).
 if [[ "$DOCKER_MODE" -eq 0 ]]; then
   command -v pg_dump >/dev/null 2>&1 || fail "Binaire manquant : pg_dump" 1
 else
-  command -v docker >/dev/null 2>&1 || fail "Binaire manquant : docker" 1
-  docker ps --filter "name=^${BACKUP_PG_CONTAINER}$" --format '{{.Names}}' \
+  command -v "$MOTEUR" >/dev/null 2>&1 || fail "Binaire manquant : $MOTEUR" 1
+  "$MOTEUR" ps --filter "name=^${BACKUP_PG_CONTAINER}$" --format '{{.Names}}' \
     | grep -q "^${BACKUP_PG_CONTAINER}$" \
     || fail "Container Postgres introuvable ou arrete : $BACKUP_PG_CONTAINER" 1
 fi
@@ -216,12 +232,12 @@ trap cleanup EXIT
 # 1. pg_dump (format custom, compresse natif, restorable selectif)
 # ----------------------------------------------------------------------------
 if [[ "$DOCKER_MODE" -eq 1 ]]; then
-  log "Etape 1/5 : pg_dump (mode docker exec) $PGDATABASE dans container $BACKUP_PG_CONTAINER (user=$PGUSER)..."
+  log "Etape 1/5 : pg_dump ($MOTEUR exec) $PGDATABASE dans container $BACKUP_PG_CONTAINER (user=$PGUSER)..."
   # On execute pg_dump DANS le container (qui a deja le binaire + accees BDD
   # via Unix socket ou 127.0.0.1 local au container). Le stream sort sur
   # stdout et on le redirige vers $DUMP_FILE cote host.
   # PGPASSWORD passe via -e (jamais ecrit dans le filesystem du container).
-  docker exec -i \
+  "$MOTEUR" exec -i \
     -e PGPASSWORD="${PGPASSWORD:-}" \
     "$BACKUP_PG_CONTAINER" \
     pg_dump \
@@ -232,7 +248,7 @@ if [[ "$DOCKER_MODE" -eq 1 ]]; then
       --no-owner \
       --no-privileges \
     > "$DUMP_FILE" \
-    || fail "pg_dump (docker exec) a echoue" 2
+    || fail "pg_dump ($MOTEUR exec) a echoue" 2
 else
   log "Etape 1/5 : pg_dump (mode host) $PGDATABASE depuis $PGHOST:$PGPORT (user=$PGUSER)..."
   PGPASSWORD="${PGPASSWORD:-}" pg_dump \
