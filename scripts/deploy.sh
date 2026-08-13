@@ -203,10 +203,68 @@ fi
 # --- Mise a jour du code --------------------------------------------------
 
 log "Mise a jour du clone vers $TARGET_SHORT ..."
-git merge --ff-only "$TARGET" 2>/dev/null || git merge --no-edit "$TARGET" || {
+
+# CAS NORMAL : la cible descend de HEAD, avance rapide.
+if git merge --ff-only "$TARGET" 2>/dev/null; then
+  :
+
+# HISTORIQUE REECRIT : aucun ancetre commun entre le clone et la cible.
+#
+# Rencontre le 2026-08-13, apres la reecriture qui a retire 402 trailers
+# d'attribution d'outil et 714 tirets cadratin des messages de commit.
+# `git merge` refuse alors, a juste titre : "refusing to merge unrelated
+# histories". Le script s'arretait, et il fallait intervenir a la main.
+#
+# Un merge n'a de toute facon aucun sens ici. Une reecriture ne change
+# QUE les messages : l'arborescence est identique, ce qui se verifie
+# ci-dessous avant d'agir. On repositionne donc le clone par un reset,
+# en preservant explicitement les fichiers modifies localement (sur ces
+# stacks, docker-compose.yml a volontairement diverge du depot).
+elif ! git merge-base HEAD "$TARGET" >/dev/null 2>&1; then
+  warn "historique reecrit : aucun ancetre commun entre le clone et la cible."
+
+  # GARDE-FOU. On ne repositionne de force QUE si le contenu est
+  # rigoureusement identique. Si les arborescences different, ce n'est pas
+  # une reecriture de messages mais un autre historique : on refuse.
+  if [ "$(git rev-parse HEAD^{tree})" != "$(git rev-parse "$TARGET^{tree}")" ]; then
+    warn "les arborescences DIFFERENT : ce n'est pas une simple reecriture."
+    die "repositionnement de force refuse. Verifier a la main dans $STACK_DIR" 2
+  fi
+  log "  arborescences identiques : seuls les messages ont change."
+
+  # Sauvegarde horodatee des fichiers suivis modifies localement, avant
+  # le reset qui les ecraserait.
+  SAUVE="$STACK_DIR/.deploy-local-$(date +%Y%m%d-%H%M%S)"
+  MODIFIES="$(git diff --name-only HEAD || true)"
+  if [ -n "$MODIFIES" ]; then
+    mkdir -p "$SAUVE"
+    printf '%s\n' "$MODIFIES" | while IFS= read -r f; do
+      [ -f "$f" ] || continue
+      mkdir -p "$SAUVE/$(dirname "$f")"
+      cp -p "$f" "$SAUVE/$f"
+    done
+    log "  modifications locales sauvegardees dans $SAUVE"
+  fi
+
+  git reset --hard "$TARGET" >/dev/null || die "repositionnement impossible" 2
+
+  # Restauration a l'identique. Les fichiers reapparaissent donc comme
+  # modifies, ce qui est l'etat attendu de ces stacks.
+  if [ -n "$MODIFIES" ]; then
+    printf '%s\n' "$MODIFIES" | while IFS= read -r f; do
+      [ -f "$SAUVE/$f" ] && cp -p "$SAUVE/$f" "$f"
+    done
+    log "  modifications locales restaurees."
+  fi
+
+# Historiques lies mais divergents : merge classique.
+elif git merge --no-edit "$TARGET"; then
+  :
+
+else
   warn "le merge a echoue (conflit avec les modifications locales)."
   die "resoudre a la main dans $STACK_DIR puis relancer" 2
-}
+fi
 
 log "Mise a jour du submodule content-pro ..."
 git submodule update --init --recursive content-pro || {
