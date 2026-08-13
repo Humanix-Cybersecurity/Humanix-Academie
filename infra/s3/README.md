@@ -119,8 +119,59 @@ d'une version de l'API ne l'est pas d'office de la suivante.
 | ---------- | ------------------------------------------------------------------------------------- |
 | 2026-08-13 | bucket créé, Object Lock actif, versionnement actif, `NoSuchLifecycleConfiguration`   |
 | 2026-08-13 | **les quatre règles posées et relues**, `NoncurrentVersionExpiration` confirmé retenu |
+| 2026-08-13 | **premier dépôt réel verrouillé**, relu depuis une clé tierce                         |
 
-Ce qui reste à éprouver : aucun objet n'a encore été déposé. Le verrou WORM
-lui-même n'a donc jamais été exercé. Le premier `backup-db.sh` en
-`BACKUP_TARGET=s3` servira de test, et son `head-object` doit renvoyer
-`ObjectLockMode=COMPLIANCE`.
+## Le premier dépôt, et ce qu'il a coûté
+
+`postgres/humanix-pg-20260813-143238.dump.age`, déposé à 14:36 UTC. Relu
+depuis une clé **distincte de celle qui l'a écrit**, pour ne pas se contenter
+de la parole du script :
+
+|          | Annoncé           | Lu dans le bucket           |
+| -------- | ----------------- | --------------------------- |
+| Taille   | 446 431           | 446 431                     |
+| SHA-256  | `5913335f…876628` | `5913335f…876628`           |
+| Verrou   | COMPLIANCE        | COMPLIANCE                  |
+| Échéance | 2026-09-12        | `2026-09-12T14:32:38+00:00` |
+
+Deux obstacles ont précédé ce succès, à connaître pour la prochaine machine.
+
+**Le paquet `awscli` d'Ubuntu 26.04 est inutilisable.** Toutes les opérations
+paginées échouent en `badly formed help string`, alors que `put-object` et
+`head-object` fonctionnent : les sauvegardes seraient parties et la
+restauration aurait été hors service. Cf. `docs/BACKUPS.md`.
+
+**La clé d'application dédiée n'avait aucun droit sur ce bucket.** Les trois
+opérations, lecture comprise, répondaient `AccessDenied`. Ce refus uniforme
+distingue le défaut d'autorisation d'une faute de frappe : un identifiant
+inconnu donnerait `InvalidAccessKeyId`, un mauvais secret
+`SignatureDoesNotMatch`. Il faut `ObjectStorageFullAccess` sur le projet
+`c9a236c0-86de-4360-9a19-21e04705c7f6`, celui du bucket.
+
+Un jeu plus étroit (`ObjectStorageObjectsRead` + `…Write`) a été écarté :
+rien ne garantissait qu'il inclue `PutObjectRetention`, le droit de poser le
+verrou lui-même.
+
+## Ce qui reste à éprouver
+
+Scaleway **enregistre** le verrou, c'est établi. Qu'il le **fasse respecter**
+ne l'est pas.
+
+Le test non destructif consiste à tenter d'écourter la rétention. En
+COMPLIANCE, ce doit être refusé, y compris au propriétaire du bucket :
+
+```bash
+aws --endpoint-url https://s3.fr-par.scw.cloud --region fr-par \
+  s3api put-object-retention --bucket humanix-archives-audit \
+  --key postgres/<objet>.dump.age \
+  --retention Mode=COMPLIANCE,RetainUntilDate=<une date anterieure>
+```
+
+Un refus prouve le verrou ; un succès prouverait qu'il est décoratif. Dans
+les deux cas la sauvegarde reste en place, seule sa date changerait.
+
+⚠️ Ne PAS tester par `delete-object` sans identifiant de version. Sur un
+bucket versionné, l'appel réussirait en posant un marqueur de suppression :
+la sauvegarde disparaîtrait des listages, donc de `restore-db.sh`, sans que
+le verrou ait eu à s'y opposer. On aurait cassé la restauration en croyant
+tester la protection.
