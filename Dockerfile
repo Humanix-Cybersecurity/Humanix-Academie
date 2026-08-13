@@ -77,8 +77,8 @@ ENV NEXT_PUBLIC_MATOMO_SITE_ID=$NEXT_PUBLIC_MATOMO_SITE_ID
 
 # --- Mode OSS PUR ----------------------------------------------------------
 #
-# `npm run build` declenche `prebuild`, qui verifie que les quatre modules de
-# contenu commercial sont resolubles. Ils sont des symlinks vers le submodule
+# `npm run build` commence par resoudre les quatre modules de contenu
+# commercial (cf. scripts/resoudre-contenu-optionnel.ts). Ils sont des symlinks vers le submodule
 # prive content-pro/ : absents d'un fork AGPLv3, absents aussi de l'image OSS
 # publiee sur GHCR, qui est construite SANS content-pro par conception.
 #
@@ -101,6 +101,42 @@ ENV DATABASE_URL="postgresql://placeholder:placeholder@placeholder:5432/placehol
 RUN npx prisma generate
 # AUTH_SECRET injecté uniquement le temps du build (pas persisté en layer)
 RUN AUTH_SECRET="build-time-only-not-a-real-secret" npm run build
+
+# ---------------------------------------------------------------------------
+# Compilation des scripts de démarrage
+# ---------------------------------------------------------------------------
+#
+# docker-entrypoint.sh appelle six scripts TypeScript au boot (migrations,
+# seed du catalogue, bootstrap admin, import des fuites). Ils tournaient via
+# `npx tsx`, ce qui imposait d'embarquer tsx dans l'image runtime, donc
+# esbuild, donc son binaire Go : à lui seul, 30 des 38 alertes de sécurité
+# du dépôt le 2026-08-12, dans un binaire qui ne sert plus rien une fois le
+# build terminé.
+#
+# On les compile ici, dans le stage `builder` où esbuild a toute sa place, en
+# bundles autonomes. Le runtime n'a plus besoin que de `node`.
+#
+# `--packages=external` : on ne bundle QUE le code local. Les vrais paquets
+# npm (@prisma/client, zod) restent des imports résolus à l'exécution, donc
+# aucune duplication et le moteur natif de Prisma continue de fonctionner.
+#
+# CE N'ETAIT PAS POSSIBLE AVANT le 2026-08-13. prisma/seed-data-loader.ts
+# chargeait le catalogue commercial par un `require()` dynamique, que le
+# bundling cassait EN SILENCE : 58 saisons devenaient 5, sans erreur. La
+# résolution est désormais statique, et vérifiée identique dans les trois
+# modes d'exécution.
+RUN npx esbuild \
+      scripts/migrate-legacy-trial.ts \
+      scripts/migrate-4-tiers-pivot.ts \
+      scripts/seed-catalog.ts \
+      scripts/bootstrap-admin.ts \
+      scripts/scrape-breaches.ts \
+      prisma/seed.ts \
+      --bundle --platform=node --format=esm --target=node22 \
+      --packages=external --tsconfig=tsconfig.json \
+      --outdir=dist-scripts --out-extension:.js=.mjs \
+  && echo "[build] scripts de demarrage compiles :" \
+  && ls -la dist-scripts/scripts dist-scripts/prisma
 
 # Stage 3 : runner (production)
 FROM node:25-alpine AS runner
@@ -133,15 +169,40 @@ COPY --from=builder /app/content ./content
 # mais resolveContentRoot() de lib/episodes.ts detecte le cas et bascule
 # sur content/saisons-demo/ (2 saisons demo CC BY-SA).
 COPY --from=builder /app/content-pro ./content-pro
-# lib/ et tsconfig.json necessaires au runtime du seed (tsx resoud les imports
-# relatifs comme ../lib/levels depuis prisma/seed.ts)
-COPY --from=builder /app/lib ./lib
-COPY --from=builder /app/tsconfig.json ./tsconfig.json
-# scripts/ necessaire pour : npm run breaches:refresh (scrape observatoire),
-# et tout futur job standalone tsx invocable via docker exec.
-COPY --from=builder /app/scripts ./scripts
+# Scripts de demarrage COMPILES (cf. stage builder). Ils remplacent le trio
+# lib/ + tsconfig.json + scripts/ que le runtime devait embarquer pour que tsx
+# puisse resoudre les imports a la volee.
+COPY --from=builder /app/dist-scripts ./dist-scripts
 # Entrypoint avec permissions explicites (chmod 755, owner nextjs)
 COPY --chmod=755 --chown=nextjs:nodejs docker-entrypoint.sh /docker-entrypoint.sh
+
+# ---------------------------------------------------------------------------
+# Elagage des dependances de DEVELOPPEMENT
+# ---------------------------------------------------------------------------
+#
+# Le `COPY node_modules` ci-dessus amene TOUT l'arbre du builder, outillage de
+# compilation compris. Mesure du 2026-08-12 : l'image de production embarquait
+# le binaire Go d'esbuild, tire par tsx, a l'origine de 30 des 38 alertes de
+# securite du depot.
+#
+# Deux conditions rendent cet elagage possible :
+#
+#   1. `prisma` est passe en `dependencies`. Ce n'est pas un outil de
+#      developpement dans ce modele de deploiement : docker-entrypoint.sh
+#      l'invoque a CHAQUE demarrage (db push, db execute, db seed).
+#
+#   2. Les scripts de demarrage sont desormais COMPILES : plus besoin de tsx,
+#      donc plus d'esbuild.
+#
+# `--legacy-peer-deps` : OBLIGATOIRE, meme raison que dans le stage `deps`.
+# Sans lui, npm refait la resolution complete de l'arbre, bute sur le conflit
+# de peer dependencies du projet et echoue en ERESOLVE, alors qu'il n'a qu'a
+# SUPPRIMER des dossiers. Les deux commandes doivent porter les memes drapeaux.
+#
+# `--ignore-scripts` : on elague, on ne reconstruit rien.
+RUN npm prune --omit=dev --ignore-scripts --legacy-peer-deps \
+  && npm cache clean --force \
+  && echo "[build] outillage de build retire de l image runtime"
 
 RUN chown -R nextjs:nodejs /app
 

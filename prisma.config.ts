@@ -22,6 +22,6 @@ export default defineConfig({
   // Migrations seed : commande lancee par `prisma db seed` et par
   // l'entrypoint Docker.
   migrations: {
-    seed: "tsx prisma/seed.ts",
+    seed: "node dist-scripts/prisma/seed.mjs",
   },
 });

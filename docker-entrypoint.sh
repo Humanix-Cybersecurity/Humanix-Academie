@@ -32,8 +32,8 @@ npx prisma db push --skip-generate --accept-data-loss
 #   - migrate-4-tiers-pivot.ts : passe de 5 paliers (decouverte/solo/essentielle/
 #     pro/premium) a 3 paliers (starter/pro/enterprise) - pivot mai 2026.
 echo "[2.5/5] Migrations legacy plans (idempotentes)..."
-npx tsx scripts/migrate-legacy-trial.ts || echo "  -> migrate-legacy-trial ignoree (non bloquante)"
-npx tsx scripts/migrate-4-tiers-pivot.ts || echo "  -> migrate-4-tiers-pivot ignoree (non bloquante)"
+node dist-scripts/scripts/migrate-legacy-trial.mjs || echo "  -> migrate-legacy-trial ignoree (non bloquante)"
+node dist-scripts/scripts/migrate-4-tiers-pivot.mjs || echo "  -> migrate-4-tiers-pivot ignoree (non bloquante)"
 
 # Seed du CATALOG partage (saisons + episodes + badges + boutique + tenant
 # Communaute) - PROD-SAFE et idempotent (upserts par slug, AUCUN fake user).
@@ -41,7 +41,7 @@ npx tsx scripts/migrate-4-tiers-pivot.ts || echo "  -> migrate-4-tiers-pivot ign
 # ajoutes au code ne se propagent JAMAIS en BDD de prod (bug modules + badges,
 # juin 2026). Le script reevalue aussi les badges des users (retroactif).
 echo "[3/5] Seed du catalog partage (saisons, episodes, badges, boutique)..."
-npx tsx scripts/seed-catalog.ts || echo "  -> seed-catalog a echoue (non bloquant), relancable via /superadmin/catalog"
+node dist-scripts/scripts/seed-catalog.mjs || echo "  -> seed-catalog a echoue (non bloquant), relancable via /superadmin/catalog"
 
 # En mode demo UNIQUEMENT : seed des comptes de demonstration (fake users),
 # inappropries en prod. seed.ts re-appelle seedCatalog en interne (idempotent).
@@ -54,7 +54,7 @@ fi
 # Idempotent : se desactive automatiquement des qu'un user existe.
 # Variables BOOTSTRAP_ADMIN_EMAIL / BOOTSTRAP_ADMIN_PASSWORD (cf. .env.example).
 echo "[4/5] Bootstrap admin..."
-npx tsx scripts/bootstrap-admin.ts || echo "  -> bootstrap-admin a echoue, on continue (l'app peut demarrer)"
+node dist-scripts/scripts/bootstrap-admin.mjs || echo "  -> bootstrap-admin a echoue, on continue (l'app peut demarrer)"
 
 # Premier import de l'observatoire des fuites - uniquement si la table est
 # vide (pour ne pas re-scraper a chaque redemarrage). Le mode --deep parcourt
@@ -62,7 +62,7 @@ npx tsx scripts/bootstrap-admin.ts || echo "  -> bootstrap-admin a echoue, on co
 # Les scrapes suivants sont declenches par le cron externe sur
 # /api/cron/breaches-refresh (configure independamment).
 echo "[5/5] Observatoire des fuites - premier import si necessaire..."
-HAS_BREACHES=$(npx tsx -e "
+HAS_BREACHES=$(node --input-type=module -e "
 import { PrismaClient } from '@prisma/client';
 const p = new PrismaClient();
 p.dataBreach.count()
@@ -76,7 +76,7 @@ else
   echo "  -> Table DataBreach vide, import deep en cours (peut prendre 1-2 min)..."
   # Timeout 180s pour ne pas bloquer le demarrage si une source est lente.
   # En cas d'echec partiel, le cron externe rattrapera au prochain run.
-  timeout 180 npx tsx scripts/scrape-breaches.ts --deep \
+  timeout 180 node dist-scripts/scripts/scrape-breaches.mjs --deep \
     || echo "  -> Import partiel ou echec reseau, reessai au prochain cron"
 fi
 
