@@ -91,8 +91,19 @@ sources:
     # `humanix-prod-vector-1` : le prefixe doit couvrir ce nom, sinon
     # Vector se relit lui-meme en boucle.
     exclude_containers:
+      # Match par PREFIXE, et il faut couvrir LES DEUX conventions de nommage.
+      #
+      # docker compose nomme `humanix-prod-vector-1`, podman-compose nomme
+      # `humanix-prod_vector_1` — avec des TIRETS BAS. Constate le 2026-08-13
+      # a la bascule de la production : le filtre `humanix-prod-vector` ne
+      # correspondait plus, et Vector expediait ses propres journaux.
+      #
+      # Pas de boucle infinie observee (expedier ne produit pas de journal),
+      # mais du bruit, et une amplification des qu'il journalise une erreur.
       - humanix-prod-vector
+      - humanix-prod_vector
       - humanix-demo-vector
+      - humanix-demo_vector
 
   # === Logs des conteneurs PODMAN (la demo) ===
   #
@@ -118,8 +129,19 @@ sources:
     type: docker_logs
     docker_host: unix:///var/run/podman.sock
     exclude_containers:
+      # Match par PREFIXE, et il faut couvrir LES DEUX conventions de nommage.
+      #
+      # docker compose nomme `humanix-prod-vector-1`, podman-compose nomme
+      # `humanix-prod_vector_1` — avec des TIRETS BAS. Constate le 2026-08-13
+      # a la bascule de la production : le filtre `humanix-prod-vector` ne
+      # correspondait plus, et Vector expediait ses propres journaux.
+      #
+      # Pas de boucle infinie observee (expedier ne produit pas de journal),
+      # mais du bruit, et une amplification des qu'il journalise une erreur.
       - humanix-prod-vector
+      - humanix-prod_vector
       - humanix-demo-vector
+      - humanix-demo_vector
 
   # === Metriques applicatives ===
   #

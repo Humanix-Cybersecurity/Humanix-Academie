@@ -1,9 +1,13 @@
 # Podman rootless
 
-> **État au 2026-08-13** : la **démo** tourne sous Podman rootless sur
-> `humanix-prod-01`. La **production** est encore sous Docker. Les deux moteurs
-> cohabitent sur la même machine, et c'est volontaire pendant la période
-> d'observation.
+> **État au 2026-08-13, 20 h** : la **démo** et la **production** tournent
+> toutes deux sous Podman rootless sur `humanix-prod-01`. Plus aucun conteneur
+> Docker n'est en service ; ceux de l'ancienne stack sont **arrêtés, pas
+> supprimés**, et leurs volumes restent intacts — c'est le retour arrière.
+>
+> Le démarrage au boot est **éprouvé par un vrai redémarrage**, pas seulement
+> par un `systemctl start` : app, postgres et vector sont remontés seuls et
+> sains en 38 secondes.
 
 ## Pourquoi
 
@@ -173,36 +177,47 @@ Référence au moment de la migration : **37 saisons, 13 users, 2 tenants**.
 
 ## Ce qui reste à faire
 
-- [ ] **Éprouver un vrai redémarrage machine.** L'unité systemd a été testée par
-      `systemctl --user start` après arrêt complet de la pile, ce qui n'est pas
-      la même chose qu'un boot.
+- [x] ~~**Éprouver un vrai redémarrage machine.**~~ **Fait le 2026-08-13.**
+      Après `systemctl reboot`, les deux piles sont remontées seules : le cœur
+      de la production — app, postgres, vector — était sain en 38 secondes.
+
+      **Sauf TTS**, et c'est ce qui a révélé le défaut du profil `piper` :
+          rien ne l'activait, ni `deploy.sh` ni le `.env`, et l'unité systemd ne
+          passe pas `--profile`. Le service ne survivait que par
+          `restart: unless-stopped`. Le profil a été retiré du service.
+
+- [ ] **L'unité systemd générée est incomplète.** `podman-compose systemd -a
+    register` écrit `COMPOSE_FILE=docker-compose.yml` seul, sans le fichier
+      d'observabilité. Corrigé à la main dans
+      `~/.config/containers/compose/projects/humanix-prod.env`, mais un
+      nouveau `register` l'écraserait.
 - [x] ~~`scripts/backup-db.sh` et `scripts/restore-db.sh` appellent `docker exec`
       en dur.~~ **Fait le 2026-08-13.** Les deux lisent `CONTAINER_ENGINE`, comme
       `deploy.sh` et `archive-audit-logs.sh`. Absent, `docker` : aucune
       installation existante ne change de comportement.
 
       Vérifié par un intercepteur nommé `podman` qui journalise ses arguments
-                  avant de les relayer. La trace montre `podman ps --filter …` puis
-                  `podman exec -i -e PGPASSWORD=… pg_dump …` — plus aucun appel `docker`.
+                      avant de les relayer. La trace montre `podman ps --filter …` puis
+                      `podman exec -i -e PGPASSWORD=… pg_dump …` — plus aucun appel `docker`.
 
-                  Les deux scripts DOIVENT lire la même variable : restaurer avec un autre
-                  moteur que celui qui a sauvegardé viserait le mauvais conteneur, donc la
-                  mauvaise base, et on le découvrirait le jour de la restauration.
+                      Les deux scripts DOIVENT lire la même variable : restaurer avec un autre
+                      moteur que celui qui a sauvegardé viserait le mauvais conteneur, donc la
+                      mauvaise base, et on le découvrirait le jour de la restauration.
 
 - [ ] La dizaine de documents qui citent `docker compose` dans leurs exemples.
 - [ ] **Décider pour la production.** Deux corrections à ce que ce document
       affirmait.
 
       **Le volume PostgreSQL n'est pas un risque.** Mesuré le 2026-08-13 :
-              la base de production fait **15 Mo** (70 Mo de volume), celle de la démo
-              **14 Mo** (69 Mo). Elles sont de taille identique, et un `pg_dump` de la
-              production prend **0,231 s** pour 444 Ko. L'indisponibilité serait
-              dominée par l'arrêt et le démarrage des conteneurs, pas par les données.
-              La méthode reste `pg_dump`, jamais de copie de volume — non pour le
-              volume, mais parce que les UID diffèrent entre les deux moteurs.
+                  la base de production fait **15 Mo** (70 Mo de volume), celle de la démo
+                  **14 Mo** (69 Mo). Elles sont de taille identique, et un `pg_dump` de la
+                  production prend **0,231 s** pour 444 Ko. L'indisponibilité serait
+                  dominée par l'arrêt et le démarrage des conteneurs, pas par les données.
+                  La méthode reste `pg_dump`, jamais de copie de volume — non pour le
+                  volume, mais parce que les UID diffèrent entre les deux moteurs.
 
-              **Le vrai obstacle est l'observabilité**, et il s'est déjà manifesté.
-              Cf. la section suivante.
+                  **Le vrai obstacle est l'observabilité**, et il s'est déjà manifesté.
+                  Cf. la section suivante.
 
 ## Marche à suivre pour la production
 
@@ -225,7 +240,24 @@ docker exec humanix-prod-postgres sh -c 'pg_dump -U "$POSTGRES_USER" -Fc "$POSTG
   > ~/prod-avant-podman-$(date +%Y%m%d-%H%M%S).dump
 ```
 
-### 2. Transfert des images
+### 2. Transfert des images, et leur RÉÉTIQUETAGE
+
+⚠️ **Le tiret bas n'est pas une coquille.** Le service `app` n'a pas d'`image:`,
+il est construit — et compose dérive alors le nom depuis le projet et le
+service. `docker compose` produit `humanix-prod-app`, `podman-compose` produit
+`humanix-prod_app`. Sans réétiquetage, `podman-compose up` **reconstruit
+l'image depuis zéro** : une dizaine de minutes, en pleine coupure.
+
+Pour Vector l'écart est inverse : `podman load` le place sous `localhost/`,
+alors que la compose le désigne par un nom court que Podman résout vers
+`docker.io/`.
+
+```bash
+podman tag docker.io/library/humanix-prod-app:latest localhost/humanix-prod_app:latest
+podman tag localhost/timberio/vector:0.55.X-alpine   docker.io/timberio/vector:0.55.X-alpine
+```
+
+Le transfert lui-même
 
 ```bash
 docker save humanix-prod-app:latest        | podman load
