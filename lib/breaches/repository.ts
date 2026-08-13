@@ -46,7 +46,7 @@ export async function listRecentBreaches(
     ];
   }
 
-  const [items, total] = await Promise.all([
+  const [rows, total] = await Promise.all([
     db.dataBreach.findMany({
       where,
       orderBy: [{ incidentDate: "desc" }, { createdAt: "desc" }],
@@ -55,6 +55,20 @@ export async function listRecentBreaches(
     }),
     db.dataBreach.count({ where }),
   ]);
+
+  // `recordsExposed` est un BigInt en base (cf. schema.prisma : les fuites
+  // se comptent parfois en milliards). On le ramene a `number` ICI, a la
+  // frontiere, pour qu'aucun BigInt JavaScript ne circule plus loin : il
+  // n'est pas serialisable par JSON.stringify, donc il casserait le passage
+  // vers un composant client ou un bloc JSON-LD.
+  //
+  // La conversion est sans perte en pratique : Number.MAX_SAFE_INTEGER vaut
+  // ~9e15, six ordres de grandeur au-dessus de la population mondiale.
+  const items = rows.map((row) => ({
+    ...row,
+    recordsExposed:
+      row.recordsExposed == null ? null : Number(row.recordsExposed),
+  }));
 
   return { items, total };
 }
@@ -105,6 +119,19 @@ export async function getBreachStats() {
  *
  * Retourne le nombre d'inserts effectifs.
  */
+/**
+ * Convertit un compte d'enregistrements en BigInt pour la colonne Prisma.
+ *
+ * `BigInt()` REJETTE un non-entier : BigInt(3.5) leve un RangeError. Les
+ * parseurs arrondissent deja, mais une source future pourrait ne pas le
+ * faire, et l'exception remonterait dans le catch par item -- donc en perte
+ * silencieuse d'une fuite. Le Math.round est la pour que ca n'arrive pas.
+ */
+export function versBigInt(n: number | null | undefined): bigint | null {
+  if (n == null || !Number.isFinite(n)) return null;
+  return BigInt(Math.round(n));
+}
+
 export async function upsertScraped(args: {
   source: BreachSource;
   items: ScrapedBreach[];
@@ -125,7 +152,7 @@ export async function upsertScraped(args: {
           // On rafraîchit juste scrapedAt + summary si modif côté source
           scrapedAt: new Date(),
           summary: item.summary ?? undefined,
-          recordsExposed: item.recordsExposed ?? undefined,
+          recordsExposed: versBigInt(item.recordsExposed) ?? undefined,
         },
         create: {
           externalId: item.externalId,
@@ -137,7 +164,7 @@ export async function upsertScraped(args: {
           sector: item.sector ?? null,
           incidentDate: item.incidentDate,
           summary: item.summary ?? null,
-          recordsExposed: item.recordsExposed ?? null,
+          recordsExposed: versBigInt(item.recordsExposed),
           dataTypes: item.dataTypes ?? null,
           severity: item.severity ?? "medium",
         },

@@ -1990,8 +1990,22 @@ model DataBreach {
   scrapedAt      DateTime     @default(now())
   // Resume court (max 500 chars)
   summary        String?      @db.Text
-  // Nombre d'enregistrements exposes (null si non communique)
-  recordsExposed Int?
+  // Nombre d'enregistrements exposes (null si non communique).
+  //
+  // BigInt et non Int : int4 plafonne a 2 147 483 647, alors que
+  // parseRecordsExposed() de lib/breaches/parsers.ts sait produire des
+  // MILLIARDS ("3 milliards de comptes" -> 3_000_000_000). La colonne
+  // refusait donc les valeurs que le parseur est concu pour extraire.
+  //
+  // Le mode de panne n'etait pas un plantage : upsertScraped() attrape
+  // l'erreur par item et passe au suivant. L'observatoire laissait donc
+  // tomber EN SILENCE les fuites les plus massives, c'est-a-dire les
+  // seules qui font la une.
+  //
+  // La conversion vers `number` se fait a la frontiere du repository :
+  // aucun BigInt JavaScript ne circule dans l'application, ou il casserait
+  // la serialisation vers les composants client.
+  recordsExposed BigInt?
   // Types de donnees fuitees (CSV : "email,nom,telephone,mdp")
   dataTypes      String?
   // Severity heuristique pour tri/affichage : "low" / "medium" / "high" / "critical"
