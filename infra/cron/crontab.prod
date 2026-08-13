@@ -80,18 +80,22 @@ LOG=/var/log/humanix/cron.log
 
 # --- Archivage des journaux d'audit -----------------------------------
 #
-# ⚠️ A ACTIVER (retirer le '#') UNE FOIS LE BUCKET CREE. Cf. docs/CRON.md,
-# section « Archivage ». Tant que /etc/humanix/archive.env n'existe pas,
-# ce job echouerait chaque nuit — et un echec permanent est precisement
-# ce qui apprend a ne plus lire les journaux.
+# Le bucket existe, verrouille et eprouve (cf. infra/s3/README.md). Le job
+# est donc actif.
 #
-# Rien n'est perdu en attendant : la purge supprime a 400 jours et la
-# plus ancienne entree en a 83 (au 2026-08-12). La premiere suppression
-# possible est le 2027-06-24.
+# ⚠️ /etc/humanix/archive.env DOIT exister AVANT de reinstaller cette
+# crontab, sans quoi le job echoue chaque nuit — et un echec permanent est
+# precisement ce qui apprend a ne plus lire les journaux. Le fichier doit
+# porter ARCHIVE_PG_CONTAINER : le Postgres de prod ne publie aucun port,
+# une connexion reseau echouerait. Cf. docs/CRON.md, section « Archivage ».
+#
+# Rien n'est urgent : la purge supprime a 400 jours et la plus ancienne
+# entree en a 84 (au 2026-08-13). La premiere suppression possible est le
+# 2027-06-24.
 #
 # Volontairement a 01h00, loin des 04h00 de la purge : aucune course
 # possible entre archiver et supprimer.
-# 0 1 * * * $HUMANIX/scripts/archive-audit-logs.sh >> /var/log/humanix/archive.log 2>&1
+0 1 * * * $HUMANIX/scripts/archive-audit-logs.sh >> /var/log/humanix/archive.log 2>&1
 
 # --- Jobs applicatifs -------------------------------------------------
 # Chaque ligne : <horaire> cron-host.sh <slug>. Le slug doit exister a la

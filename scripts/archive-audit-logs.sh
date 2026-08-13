@@ -12,7 +12,8 @@
 #   5. Nettoyage du /tmp local
 #
 # PRE-REQUIS sur l'host :
-#   - postgresql-client (psql)
+#   - postgresql-client (psql) SI on se connecte directement ; inutile en
+#     mode conteneur, ou psql est celui de l'image Postgres
 #   - age (chiffrement asymetrique Curve25519)
 #   - awscli v2 (s3api, seul client exposant --object-lock-*)
 #   - gzip, sha256sum
@@ -27,6 +28,10 @@
 #   AWS_SECRET_ACCESS_KEY
 #
 # VARIABLES OPTIONNELLES :
+#   ARCHIVE_PG_CONTAINER      nom du conteneur Postgres. Defini => on passe
+#                             par `<moteur> exec` au lieu d'une connexion
+#                             reseau. INDISPENSABLE en production, cf. plus bas
+#   CONTAINER_ENGINE          docker (defaut) ou podman
 #   ARCHIVE_S3_ENDPOINT       defaut https://s3.fr-par.scw.cloud
 #   ARCHIVE_S3_REGION         defaut fr-par
 #   ARCHIVE_THRESHOLD_DAYS    defaut 370 (cf. « la marge » plus bas)
@@ -132,14 +137,57 @@ if [ -r "$CONF" ]; then
 fi
 
 # --- 1. Pre-requis ----------------------------------------------------
-for bin in psql age aws gzip sha256sum; do
+# ---------------------------------------------------------------------
+# ACCES A POSTGRESQL : PAR LE RESEAU, OU PAR LE CONTENEUR
+# ---------------------------------------------------------------------
+#
+# En production, le Postgres N'EST PAS joignable depuis l'hote. Verifie le
+# 2026-08-13 : `docker inspect` renvoie {"5432/tcp":null}, et 127.0.0.1:5432
+# est ferme. C'est deliberé, et backup-db.sh contourne deja par un exec dans
+# le conteneur.
+#
+# Sans ce mode, ce script echouerait CHAQUE NUIT sur une erreur de connexion.
+# Un echec permanent est precisement ce qui apprend a ne plus lire les
+# journaux -- l'inverse du but recherche.
+#
+# CONTAINER_ENGINE porte le meme nom que dans scripts/deploy.sh. Le moteur est
+# DECLARE, jamais devine : docker et podman cohabitent sur la machine, et une
+# bascule silencieuse d'un script d'archivage legal serait indefendable.
+MOTEUR="${CONTAINER_ENGINE:-docker}"
+
+if [ -n "${ARCHIVE_PG_CONTAINER:-}" ]; then
+  BINAIRES="$MOTEUR age aws gzip sha256sum"
+else
+  BINAIRES="psql age aws gzip sha256sum"
+fi
+for bin in $BINAIRES; do
   command -v "$bin" >/dev/null 2>&1 || die "binaire manquant : $bin" 1
 done
+
+# Point d'entree unique vers psql. Les appelants ne savent pas -- et n'ont
+# pas a savoir -- si la base est locale ou dans un conteneur.
+pg() {
+  if [ -n "${ARCHIVE_PG_CONTAINER:-}" ]; then
+    "$MOTEUR" exec -e PGPASSWORD="${PGPASSWORD:-}" \
+      "$ARCHIVE_PG_CONTAINER" psql -U "$PGUSER" -d "$PGDATABASE" "$@"
+  else
+    psql "$@"
+  fi
+}
 
 : "${ARCHIVE_AGE_RECIPIENT:?ARCHIVE_AGE_RECIPIENT non defini (cle publique age)}"
 : "${ARCHIVE_S3_BUCKET:?ARCHIVE_S3_BUCKET non defini}"
 : "${AWS_ACCESS_KEY_ID:?AWS_ACCESS_KEY_ID non defini}"
 : "${AWS_SECRET_ACCESS_KEY:?AWS_SECRET_ACCESS_KEY non defini}"
+
+# En mode conteneur, pg() construit la ligne de commande psql lui-meme et a
+# donc besoin de l'utilisateur et de la base. Sans ces controles, `set -u`
+# echouerait sur une variable non liee, avec un message qui ne dirait pas
+# quoi corriger.
+if [ -n "${ARCHIVE_PG_CONTAINER:-}" ]; then
+  : "${PGUSER:?PGUSER non defini (requis en mode ARCHIVE_PG_CONTAINER)}"
+  : "${PGDATABASE:?PGDATABASE non defini (requis en mode ARCHIVE_PG_CONTAINER)}"
+fi
 
 ENDPOINT="${ARCHIVE_S3_ENDPOINT:-https://s3.fr-par.scw.cloud}"
 REGION="${ARCHIVE_S3_REGION:-fr-par}"
@@ -168,13 +216,13 @@ $DRY_RUN && log "MODE --dry-run : aucune ecriture, aucun upload."
 # serait archive partiellement, puis re-archive le mois suivant sous le
 # meme nom d'objet — que l'Object Lock refuserait d'ecraser.
 MOIS=$(
-  psql -qtAX -c "
+  pg -qtAX -c "
     select distinct to_char(date_trunc('month', \"createdAt\"), 'YYYY-MM')
     from \"AuditLog\"
     where \"createdAt\" < date_trunc('month', now() - interval '$SEUIL_JOURS days')
     order by 1
   "
-) || die "export impossible : verifier PGHOST/PGUSER/PGPASSWORD" 2
+) || die "export impossible : verifier ARCHIVE_PG_CONTAINER, ou PGHOST/PGUSER/PGPASSWORD" 2
 
 if [ -z "$MOIS" ]; then
   log "Aucun mois complet au-dela du seuil. Rien a archiver."
@@ -197,7 +245,7 @@ for m in $MOIS; do
     continue
   fi
 
-  n=$(psql -qtAX -c "
+  n=$(pg -qtAX -c "
     select count(*) from \"AuditLog\"
     where date_trunc('month', \"createdAt\") = date '${m}-01'
   ") || die "comptage impossible pour $m" 2
@@ -219,7 +267,7 @@ for m in $MOIS; do
   # JSONL : une ligne JSON par entree. Format lisible sans schema,
   # rejouable, et qui se compresse tres bien. `row_to_json` conserve
   # tous les champs, y compris ceux ajoutes apres coup.
-  psql -qtAX -c "
+  pg -qtAX -c "
     select row_to_json(t) from (
       select * from \"AuditLog\"
       where date_trunc('month', \"createdAt\") = date '${m}-01'
