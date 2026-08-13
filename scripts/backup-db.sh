@@ -1,13 +1,36 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: AGPL-3.0-or-later
 #
-# backup-db.sh - Sauvegarde chiffree de la BDD Postgres vers FTPS off-site.
+# backup-db.sh - Sauvegarde chiffree de la BDD Postgres, hors site.
+#
+# DEUX DESTINATIONS, AU CHOIX (BACKUP_TARGET) :
+#
+#   s3   Object Storage Scaleway, avec verrou WORM par objet. RECOMMANDE.
+#   ftp  FTPS/FTP historique. Conserve pour le retour arriere.
+#
+# POURQUOI S3 PLUTOT QUE LE FTP
+#
+#   Le Backup Space Scaleway (dedibackup-*.online.net) REFUSE `AUTH TLS`.
+#   La seule facon de s'y connecter est le FTP en clair : identifiants
+#   lisibles sur le reseau a chaque nuit. Le CONTENU reste protege — il est
+#   chiffre par age avant de partir — mais des identifiants qui transitent
+#   en clair 365 fois par an finissent par etre captes.
+#
+#   Surtout, le FTP n'offre AUCUNE immuabilite. Un attaquant qui obtient ces
+#   identifiants efface les sauvegardes, puis chiffre la production. C'est le
+#   deroule ordinaire d'un rancongiciel, et le FTP n'y oppose rien.
+#
+#   En S3 avec Object Lock COMPLIANCE, la suppression est refusee par le
+#   stockage lui-meme pendant toute la duree du verrou. Ni la machine
+#   compromise, ni la cle de depot, ni le compte proprietaire ne peuvent
+#   passer outre. C'est la seule propriete qui distingue une sauvegarde
+#   d'une copie.
 #
 # WORKFLOW :
 #   1. pg_dump (custom format, compresse) dans /tmp
 #   2. Chiffrement age vers BACKUP_AGE_RECIPIENT (cle publique seulement)
-#   3. Upload FTPS vers serveur Scaleway (TLS force, certif verifie)
-#   4. Rotation : conserve les 30 derniers fichiers cote FTPS
+#   3. Upload vers la destination choisie (S3 avec verrou WORM, ou FTPS)
+#   4. Rotation : cycle de vie du bucket en S3, suppression active en FTP
 #   5. Nettoyage du /tmp local
 #   6. Log dans /var/log/humanix/backup.log (ou stdout si pas root)
 #
@@ -26,7 +49,15 @@
 #   BACKUP_FTP_HOST         (ex: backup-paris-1.dedibox.fr)
 #   BACKUP_FTP_USER, BACKUP_FTP_PASSWORD
 #   BACKUP_FTP_PATH         (chemin distant, ex: /humanix-academie)
-#   BACKUP_RETENTION_DAYS   (defaut 30)
+#   BACKUP_RETENTION_DAYS   (defaut 30 - en S3, DUREE DU VERROU WORM)
+#
+# VARIABLES POUR BACKUP_TARGET=s3 :
+#   BACKUP_S3_BUCKET        bucket avec Object Lock ACTIVE A LA CREATION
+#   AWS_ACCESS_KEY_ID       cle en ecriture
+#   AWS_SECRET_ACCESS_KEY
+#   BACKUP_S3_PREFIX        defaut postgres/   (cf. « un seul bucket » plus bas)
+#   BACKUP_S3_ENDPOINT      defaut https://s3.fr-par.scw.cloud
+#   BACKUP_S3_REGION        defaut fr-par
 #
 # USAGE :
 #   ./scripts/backup-db.sh                          # dump + upload + rotation
@@ -38,7 +69,7 @@
 #   1 = erreur de configuration (env manquant)
 #   2 = erreur pg_dump
 #   3 = erreur chiffrement age
-#   4 = erreur upload FTPS
+#   4 = erreur upload (S3 ou FTPS), ou verification post-upload echouee
 #   5 = erreur rotation
 #
 # CRON RECOMMANDE :
@@ -74,16 +105,24 @@ done
 # ----------------------------------------------------------------------------
 # Charger l'env (priorite : /etc/humanix/backup.env > .env)
 # ----------------------------------------------------------------------------
+# `set -a` : `source` seul cree des variables de SHELL. `aws`, `lftp` et
+# `pg_dump` sont des processus ENFANTS et ne lisent que l'ENVIRONNEMENT. Sans
+# l'export automatique, un backup.env parfaitement valide produirait un
+# « Variable manquante : AWS_ACCESS_KEY_ID » quelques lignes plus bas.
 if [[ -f /etc/humanix/backup.env ]]; then
+  set -a
   # shellcheck disable=SC1091
   source /etc/humanix/backup.env
+  set +a
 elif [[ -f .env ]]; then
-  # On ne sourcera que les vars BACKUP_*, PG* - pas tout .env (eviter de polluer)
+  # On ne sourcera que les vars BACKUP_*, PG*, AWS_* - pas tout .env.
+  # AWS_* est indispensable depuis BACKUP_TARGET=s3 : sans lui, les
+  # identifiants du bucket seraient ignores EN SILENCE.
   while IFS= read -r line; do
-    [[ "$line" =~ ^(BACKUP_|PG)[A-Z_]+= ]] || continue
+    [[ "$line" =~ ^(BACKUP_|PG|AWS_)[A-Z_]+= ]] || continue
     # shellcheck disable=SC2163
     export "$(echo "$line" | sed 's/^export //')"
-  done < <(grep -E '^(BACKUP_|PG)[A-Z_]+=' .env || true)
+  done < <(grep -E '^(BACKUP_|PG|AWS_)[A-Z_]+=' .env || true)
 fi
 
 # ----------------------------------------------------------------------------
@@ -102,8 +141,20 @@ if [[ -n "${BACKUP_PG_CONTAINER:-}" ]]; then
 else
   REQUIRED_VARS=(PGHOST PGUSER PGDATABASE BACKUP_AGE_RECIPIENT)
 fi
+# Destination. Defaut `ftp` : le comportement historique reste celui d'une
+# installation qui n'a rien declare, donc aucune migration surprise.
+BACKUP_TARGET="${BACKUP_TARGET:-ftp}"
+case "$BACKUP_TARGET" in
+  s3|ftp) : ;;
+  *) fail "BACKUP_TARGET invalide : '$BACKUP_TARGET' (attendu : s3 ou ftp)" 1 ;;
+esac
+
 if [[ "$LOCAL_ONLY" -eq 0 ]]; then
-  REQUIRED_VARS+=(BACKUP_FTP_HOST BACKUP_FTP_USER BACKUP_FTP_PASSWORD BACKUP_FTP_PATH)
+  if [[ "$BACKUP_TARGET" == "s3" ]]; then
+    REQUIRED_VARS+=(BACKUP_S3_BUCKET AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY)
+  else
+    REQUIRED_VARS+=(BACKUP_FTP_HOST BACKUP_FTP_USER BACKUP_FTP_PASSWORD BACKUP_FTP_PATH)
+  fi
 fi
 
 for var in "${REQUIRED_VARS[@]}"; do
@@ -113,6 +164,15 @@ done
 PGPORT="${PGPORT:-5432}"
 BACKUP_RETENTION_DAYS="${BACKUP_RETENTION_DAYS:-30}"
 BACKUP_LOCAL_DIR="${BACKUP_LOCAL_DIR:-/var/backups/humanix}"
+BACKUP_S3_PREFIX="${BACKUP_S3_PREFIX:-postgres/}"
+BACKUP_S3_ENDPOINT="${BACKUP_S3_ENDPOINT:-https://s3.fr-par.scw.cloud}"
+BACKUP_S3_REGION="${BACKUP_S3_REGION:-fr-par}"
+
+# Un prefixe DOIT se terminer par « / », sans quoi `postgres` et
+# `postgresql-vieux` tomberaient sous la meme regle de cycle de vie.
+[[ "$BACKUP_S3_PREFIX" == */ ]] || BACKUP_S3_PREFIX="${BACKUP_S3_PREFIX}/"
+
+_s3() { aws --endpoint-url "$BACKUP_S3_ENDPOINT" --region "$BACKUP_S3_REGION" "$@"; }
 
 # Pre-requis binaires : pg_dump uniquement requis en mode host
 # (en mode docker, pg_dump est DANS le container Postgres deja).
@@ -124,7 +184,17 @@ else
     | grep -q "^${BACKUP_PG_CONTAINER}$" \
     || fail "Container Postgres introuvable ou arrete : $BACKUP_PG_CONTAINER" 1
 fi
-for bin in age lftp; do
+# On n'exige que ce dont la destination retenue a besoin : reclamer `lftp`
+# sur une machine passee en S3 serait une panne inventee de toutes pieces.
+REQUIRED_BINS=(age)
+if [[ "$LOCAL_ONLY" -eq 0 ]]; then
+  if [[ "$BACKUP_TARGET" == "s3" ]]; then
+    REQUIRED_BINS+=(aws)
+  else
+    REQUIRED_BINS+=(lftp)
+  fi
+fi
+for bin in "${REQUIRED_BINS[@]}"; do
   command -v "$bin" >/dev/null 2>&1 || fail "Binaire manquant : $bin" 1
 done
 
@@ -199,12 +269,60 @@ HASH=$(sha256sum "$ENCRYPTED_FILE" 2>/dev/null | awk '{print $1}' \
 log "SHA-256 : $HASH"
 
 # ----------------------------------------------------------------------------
-# 3. Upload FTPS (lftp, TLS force, verification certif)
+# 3. Upload hors site : S3 avec verrou WORM, ou FTPS historique
 # ----------------------------------------------------------------------------
 if [[ "$LOCAL_ONLY" -eq 1 ]]; then
   log "Etape 3/5 : SKIP upload (--local-only). Fichier garde en $ENCRYPTED_FILE"
 elif [[ "$DRY_RUN" -eq 1 ]]; then
   log "Etape 3/5 : DRY-RUN, upload simule."
+
+elif [[ "$BACKUP_TARGET" == "s3" ]]; then
+  # -------------------------------------------------------------------------
+  # UN SEUL BUCKET, DEUX PREFIXES, DEUX DUREES
+  # -------------------------------------------------------------------------
+  #
+  # Les sauvegardes partagent le bucket des archives d'audit. C'est possible
+  # parce que la retention Object Lock se pose OBJET PAR OBJET au depot, et
+  # que le bucket n'a AUCUNE regle de retention par defaut :
+  #
+  #   auditlog/   verrou 366 jours   (obligation legale, mensuel)
+  #   postgres/   verrou  30 jours   (fenetre de restauration, quotidien)
+  #
+  # Si une regle de retention par defaut etait un jour ajoutee au bucket,
+  # elle s'appliquerait aux objets deposes SANS verrou explicite. Ce script
+  # en pose toujours un, il n'est donc pas concerne — mais la regle
+  # verrouillerait les sauvegardes de tout autre outil pour 366 jours.
+  OBJET="${BACKUP_S3_PREFIX}humanix-pg-${TIMESTAMP}.dump.age"
+
+  RETENIR_JUSQU_A=$(date -u -d "+${BACKUP_RETENTION_DAYS} days" +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null \
+    || date -u -v"+${BACKUP_RETENTION_DAYS}d" +"%Y-%m-%dT%H:%M:%SZ")
+
+  log "Etape 3/5 : upload S3 vers s3://$BACKUP_S3_BUCKET/$OBJET..."
+
+  # COMPLIANCE et non GOVERNANCE : en GOVERNANCE, un porteur du droit
+  # s3:BypassGovernanceRetention efface malgre le verrou. Comme l'interet
+  # meme du verrou est de resister a un compte compromis, GOVERNANCE
+  # protegerait contre l'accident mais pas contre l'attaque.
+  _s3 s3api put-object \
+    --bucket "$BACKUP_S3_BUCKET" \
+    --key "$OBJET" \
+    --body "$ENCRYPTED_FILE" \
+    --object-lock-mode COMPLIANCE \
+    --object-lock-retain-until-date "$RETENIR_JUSQU_A" \
+    --metadata "sha256=$HASH,base=$PGDATABASE" \
+    >/dev/null || fail "Upload S3 a echoue" 4
+
+  # On RELIT le distant plutot que de croire le put sur parole. Une
+  # sauvegarde jamais verifiee n'est pas une sauvegarde, c'est un espoir.
+  DISTANTE=$(_s3 s3api head-object --bucket "$BACKUP_S3_BUCKET" --key "$OBJET" \
+    --query 'ContentLength' --output text 2>/dev/null) \
+    || fail "Objet introuvable apres upload : $OBJET" 4
+  [[ "$DISTANTE" == "$ENC_SIZE" ]] \
+    || fail "Taille distante ($DISTANTE) differente de la locale ($ENC_SIZE)" 4
+
+  log "Upload OK : s3://$BACKUP_S3_BUCKET/$OBJET ($ENC_SIZE octets)"
+  log "  Verrou COMPLIANCE jusqu'au ${RETENIR_JUSQU_A%T*} (irrevocable)"
+
 else
   REMOTE_FILE="humanix-pg-${TIMESTAMP}.dump.age"
 
@@ -253,9 +371,32 @@ else
 fi
 
 # ----------------------------------------------------------------------------
-# 4. Rotation cote FTPS : garde les BACKUP_RETENTION_DAYS plus recents
+# 4. Rotation hors site
 # ----------------------------------------------------------------------------
-if [[ "$LOCAL_ONLY" -eq 0 && "$DRY_RUN" -eq 0 ]]; then
+#
+# EN S3, CE SCRIPT NE SUPPRIME RIEN, ET C'EST DELIBERE.
+#
+# Le bucket est VERSIONNE — le versionnement est une condition d'Object Lock,
+# pas une option. Sur un bucket versionne, `DeleteObject` sans identifiant de
+# version ne supprime pas : il pose un MARQUEUR DE SUPPRESSION. L'appel REUSSIT,
+# l'objet disparait des listings, la donnee reste stockee et facturee, et le
+# verrou n'a meme pas eu a s'y opposer.
+#
+# Une rotation naive afficherait donc « Suppression : ... OK » chaque nuit
+# pendant que le stockage grossit indefiniment. C'est pire que pas de rotation
+# du tout : ca en donne l'apparence.
+#
+# La suppression reelle revient au CYCLE DE VIE du bucket, seul mecanisme qui
+# sait purger les versions non courantes. Regles a poser sur le bucket :
+#
+#   prefixe postgres/   expiration  31 jours   (verrou 30 + 1)
+#   prefixe auditlog/   expiration 367 jours   (verrou 366 + 1)
+#
+# Toujours UN JOUR DE PLUS que le verrou : une expiration qui tomberait avant
+# la fin du verrou ne supprimerait rien, l'objet etant protege.
+if [[ "$BACKUP_TARGET" == "s3" ]]; then
+  log "Etape 4/5 : rotation deleguee au cycle de vie du bucket (verrou $BACKUP_RETENTION_DAYS j)."
+elif [[ "$LOCAL_ONLY" -eq 0 && "$DRY_RUN" -eq 0 ]]; then
   log "Etape 4/5 : rotation FTPS, conserve $BACKUP_RETENTION_DAYS jours..."
   CUTOFF_DATE=$(date -u -d "$BACKUP_RETENTION_DAYS days ago" +%Y%m%d 2>/dev/null \
                 || date -u -v-"${BACKUP_RETENTION_DAYS}"d +%Y%m%d)

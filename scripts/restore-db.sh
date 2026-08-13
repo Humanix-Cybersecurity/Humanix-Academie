@@ -4,7 +4,7 @@
 # restore-db.sh - Restauration interactive depuis backup chiffre.
 #
 # Procedure :
-#   1. Liste les backups disponibles (local ou FTPS)
+#   1. Liste les backups disponibles (local, ou S3 / FTPS selon BACKUP_TARGET)
 #   2. Selection par index ou par date
 #   3. Telechargement si distant
 #   4. Dechiffrement age (cle privee requise)
@@ -18,7 +18,7 @@
 # PRE-REQUIS :
 #   - postgresql-client (pg_restore)
 #   - age (binaire de dechiffrement)
-#   - lftp (si restore depuis FTPS)
+#   - lftp (si BACKUP_TARGET=ftp) ou awscli (si BACKUP_TARGET=s3)
 #   - Cle privee age accessible localement (ex: ~/.config/humanix/backup.key)
 #
 # USAGE :
@@ -64,19 +64,33 @@ done
 # ----------------------------------------------------------------------------
 # Env loading (meme logique que backup-db.sh)
 # ----------------------------------------------------------------------------
+# `set -a` et AWS_* : cf. le commentaire equivalent dans backup-db.sh. Les
+# deux scripts doivent lire la configuration DE LA MEME FACON, sans quoi on
+# decouvrirait l'ecart le jour de la restauration — le pire moment.
 if [[ -f /etc/humanix/backup.env ]]; then
+  set -a
+  # shellcheck disable=SC1091
   source /etc/humanix/backup.env
+  set +a
 elif [[ -f .env ]]; then
   while IFS= read -r line; do
-    [[ "$line" =~ ^(BACKUP_|PG)[A-Z_]+= ]] || continue
+    [[ "$line" =~ ^(BACKUP_|PG|AWS_)[A-Z_]+= ]] || continue
     export "$(echo "$line" | sed 's/^export //')"
-  done < <(grep -E '^(BACKUP_|PG)[A-Z_]+=' .env || true)
+  done < <(grep -E '^(BACKUP_|PG|AWS_)[A-Z_]+=' .env || true)
 fi
 
 PGPORT="${PGPORT:-5432}"
 TARGET_DB="${TARGET_DB:-$PGDATABASE}"
 BACKUP_LOCAL_DIR="${BACKUP_LOCAL_DIR:-/var/backups/humanix}"
 AGE_KEY_FILE="${BACKUP_AGE_KEY_FILE:-$HOME/.config/humanix/backup.key}"
+
+# Destination, lue a l'identique de backup-db.sh.
+BACKUP_TARGET="${BACKUP_TARGET:-ftp}"
+BACKUP_S3_PREFIX="${BACKUP_S3_PREFIX:-postgres/}"
+[[ "$BACKUP_S3_PREFIX" == */ ]] || BACKUP_S3_PREFIX="${BACKUP_S3_PREFIX}/"
+BACKUP_S3_ENDPOINT="${BACKUP_S3_ENDPOINT:-https://s3.fr-par.scw.cloud}"
+BACKUP_S3_REGION="${BACKUP_S3_REGION:-fr-par}"
+_s3() { aws --endpoint-url "$BACKUP_S3_ENDPOINT" --region "$BACKUP_S3_REGION" "$@"; }
 
 # Mode docker exec si BACKUP_PG_CONTAINER defini (cf. backup-db.sh)
 DOCKER_MODE=0
@@ -120,7 +134,30 @@ else
   fi
 
   REMOTE_FILES=""
-  if [[ "$LOCAL_ONLY" -eq 0 ]] && command -v lftp >/dev/null 2>&1 \
+  if [[ "$LOCAL_ONLY" -eq 0 && "$BACKUP_TARGET" == "s3" ]] \
+     && command -v aws >/dev/null 2>&1 && [[ -n "${BACKUP_S3_BUCKET:-}" ]]; then
+    echo ""
+    echo "=== Backups DISTANTS (S3 s3://$BACKUP_S3_BUCKET/$BACKUP_S3_PREFIX) ==="
+    # On retire le prefixe pour n'afficher que le nom : la selection par
+    # numero et le nommage local restent alors identiques aux deux modes.
+    #
+    # Le `grep` final n'est PAS decoratif. Sur un resultat vide, l'AWS CLI
+    # n'imprime pas une ligne vide mais le mot litteral « None » : sans ce
+    # filtre, le menu proposerait de restaurer un fichier nomme None.
+    # Verifie contre le bucket reel le 2026-08-13, alors encore vide.
+    REMOTE_FILES=$(_s3 s3api list-objects-v2 \
+        --bucket "$BACKUP_S3_BUCKET" --prefix "$BACKUP_S3_PREFIX" \
+        --query 'Contents[].Key' --output text 2>/dev/null \
+      | tr '\t' '\n' \
+      | sed "s|^${BACKUP_S3_PREFIX}||" \
+      | grep -E '^humanix-pg-.*\.dump\.age$' | sort -r || true)
+    if [[ -z "$REMOTE_FILES" ]]; then
+      echo "  (aucun)"
+    else
+      LOCAL_COUNT=$(echo "$LOCAL_FILES" | grep -c . 2>/dev/null || echo 0)
+      echo "$REMOTE_FILES" | nl -v $((LOCAL_COUNT + 1))
+    fi
+  elif [[ "$LOCAL_ONLY" -eq 0 ]] && command -v lftp >/dev/null 2>&1 \
      && [[ -n "${BACKUP_FTP_HOST:-}" ]]; then
     echo ""
     echo "=== Backups DISTANTS (FTP/FTPS $BACKUP_FTP_HOST$BACKUP_FTP_PATH) ==="
@@ -164,28 +201,40 @@ else
       REMOTE_NAME=$(echo "$REMOTE_FILES" | sed -n "${REMOTE_IDX}p")
       [[ -n "$REMOTE_NAME" ]] || fail "Index invalide : $CHOICE" 2
 
-      log "Telechargement de $REMOTE_NAME depuis FTP/FTPS..."
       mkdir -p "$BACKUP_LOCAL_DIR"
-      LFTP_GET=$(mktemp)
-      {
-        if [[ "${BACKUP_FTP_TLS:-yes}" == "yes" ]]; then
-          echo "set ftp:ssl-force yes"
-          echo "set ftp:ssl-protect-data yes"
-          echo "set ssl:verify-certificate ${BACKUP_FTP_SSL_VERIFY:-yes}"
-        else
-          echo "set ftp:ssl-force no"
-          echo "set ftp:ssl-allow no"
-        fi
-        echo "set net:timeout 60"
-        echo "open -u $BACKUP_FTP_USER,$BACKUP_FTP_PASSWORD $BACKUP_FTP_HOST"
-        echo "cd $BACKUP_FTP_PATH"
-        echo "get $REMOTE_NAME -o $BACKUP_LOCAL_DIR/$REMOTE_NAME"
-        echo "bye"
-      } > "$LFTP_GET"
-      lftp -f "$LFTP_GET" || { rm -f "$LFTP_GET"; fail "Telechargement FTP/FTPS a echoue" 3; }
-      rm -f "$LFTP_GET"
-      SELECTED_FILE="$BACKUP_LOCAL_DIR/$REMOTE_NAME"
-      log "Telechargement OK : $SELECTED_FILE"
+
+      if [[ "$BACKUP_TARGET" == "s3" ]]; then
+        log "Telechargement de $REMOTE_NAME depuis S3..."
+        _s3 s3api get-object \
+          --bucket "$BACKUP_S3_BUCKET" \
+          --key "${BACKUP_S3_PREFIX}${REMOTE_NAME}" \
+          "$BACKUP_LOCAL_DIR/$REMOTE_NAME" >/dev/null \
+          || fail "Telechargement S3 a echoue" 3
+        SELECTED_FILE="$BACKUP_LOCAL_DIR/$REMOTE_NAME"
+        log "Telechargement OK : $SELECTED_FILE"
+      else
+        log "Telechargement de $REMOTE_NAME depuis FTP/FTPS..."
+        LFTP_GET=$(mktemp)
+        {
+          if [[ "${BACKUP_FTP_TLS:-yes}" == "yes" ]]; then
+            echo "set ftp:ssl-force yes"
+            echo "set ftp:ssl-protect-data yes"
+            echo "set ssl:verify-certificate ${BACKUP_FTP_SSL_VERIFY:-yes}"
+          else
+            echo "set ftp:ssl-force no"
+            echo "set ftp:ssl-allow no"
+          fi
+          echo "set net:timeout 60"
+          echo "open -u $BACKUP_FTP_USER,$BACKUP_FTP_PASSWORD $BACKUP_FTP_HOST"
+          echo "cd $BACKUP_FTP_PATH"
+          echo "get $REMOTE_NAME -o $BACKUP_LOCAL_DIR/$REMOTE_NAME"
+          echo "bye"
+        } > "$LFTP_GET"
+        lftp -f "$LFTP_GET" || { rm -f "$LFTP_GET"; fail "Telechargement FTP/FTPS a echoue" 3; }
+        rm -f "$LFTP_GET"
+        SELECTED_FILE="$BACKUP_LOCAL_DIR/$REMOTE_NAME"
+        log "Telechargement OK : $SELECTED_FILE"
+      fi
     fi
   else
     fail "Choix invalide : $CHOICE" 2

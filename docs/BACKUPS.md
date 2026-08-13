@@ -54,6 +54,35 @@ de référence à adapter selon l'infrastructure cible.
 - TLS 1.3 entre l'application et Object Storage.
 - TLS 1.3 entre les régions Scaleway (Paris ↔ Roubaix).
 
+### Immuabilité (WORM)
+
+Depuis le **2026-08-13**, les dumps déposés en Object Storage portent un verrou
+`Object Lock` en mode **COMPLIANCE**, posé objet par objet au moment du dépôt.
+
+| Préfixe | Contenu | Verrou | Cycle de vie |
+|---|---|---|---|
+| `postgres/` | dumps PostgreSQL chiffrés | **30 jours** | expiration 31 jours |
+| `auditlog/` | archives de journaux d'audit | **366 jours** | expiration 367 jours |
+
+Un seul bucket, `humanix-archives-audit`, suffit : la rétention se pose par
+objet et le bucket n'a **aucune règle de rétention par défaut**.
+
+Ce que le verrou apporte, et que le FTP n'apportait pas : pendant sa durée, la
+suppression est refusée **par le stockage lui-même**. Ni la machine compromise,
+ni la clé de dépôt, ni le compte propriétaire ne peuvent l'abréger. C'est la
+seule propriété qui distingue une sauvegarde d'une copie, et c'est précisément
+celle qu'un rançongiciel cherche à contourner.
+
+Le mode COMPLIANCE a été retenu plutôt que GOVERNANCE : ce dernier cède devant
+un porteur du droit `s3:BypassGovernanceRetention`, donc devant l'attaquant
+qu'on cherche justement à arrêter.
+
+> **Le verrou n'est pas la rétention.** Il empêche d'effacer trop tôt ; il
+> n'efface pas. Sans les règles de cycle de vie ci-dessus, les archives
+> s'accumuleraient indéfiniment, ce qui est une non-conformité RGPD à part
+> entière (art. 5.1.e). L'expiration est toujours réglée **un jour après** la
+> fin du verrou : posée avant, elle ne supprimerait rien.
+
 ### Algorithmes
 - AES-256-GCM pour le chiffrement symétrique des dumps off-site
 - Curve25519 pour l'échange de clés (encapsulation `age`)
@@ -223,7 +252,27 @@ PGDATABASE=humanix_academie
 # Clé publique age (uniquement la ligne age1xxx, sans le commentaire)
 BACKUP_AGE_RECIPIENT=age1abc123...xyz
 
-# FTPS Scaleway Backup Space
+# ---------------------------------------------------------------------
+# Destination : s3 (RECOMMANDE) ou ftp (herite)
+# ---------------------------------------------------------------------
+BACKUP_TARGET=s3
+
+BACKUP_S3_BUCKET=humanix-archives-audit
+BACKUP_S3_PREFIX=postgres/
+AWS_ACCESS_KEY_ID=<cle d'application dediee, en ecriture>
+AWS_SECRET_ACCESS_KEY=<secret associe>
+
+# Optionnels, valeurs par defaut du script :
+# BACKUP_S3_ENDPOINT=https://s3.fr-par.scw.cloud
+# BACKUP_S3_REGION=fr-par
+
+# En mode s3, BACKUP_RETENTION_DAYS est la DUREE DU VERROU WORM, pas une
+# consigne de menage : le script ne supprime rien (cf. § 3, Immuabilite).
+
+# ---------------------------------------------------------------------
+# HERITE - FTPS Scaleway Backup Space. Conserve pour le retour arriere,
+# a ne renseigner que si BACKUP_TARGET=ftp.
+# ---------------------------------------------------------------------
 BACKUP_FTP_HOST=backup-paris-1.dedibox.fr   # adapter à ton serveur
 BACKUP_FTP_USER=<user FTP fourni par Scaleway>
 BACKUP_FTP_PASSWORD=<password FTP>
@@ -303,7 +352,18 @@ tail -200 /var/log/humanix/backup.log
 # Backups locaux récents
 ls -lh /var/backups/humanix/
 
-# Backups distants
+# Backups distants, mode s3
+aws --endpoint-url https://s3.fr-par.scw.cloud --region fr-par \
+  s3api list-objects-v2 --bucket humanix-archives-audit --prefix postgres/ \
+  --query 'Contents[].{Nom:Key,Taille:Size,Date:LastModified}' --output table
+
+# Verifier qu'un objet est BIEN verrouille (la reponse doit porter
+# ObjectLockMode=COMPLIANCE et une date de fin dans le futur)
+aws --endpoint-url https://s3.fr-par.scw.cloud --region fr-par \
+  s3api head-object --bucket humanix-archives-audit \
+  --key postgres/humanix-pg-<horodatage>.dump.age
+
+# Backups distants, mode ftp (herite)
 lftp -e "
   set ftp:ssl-force yes;
   open -u <user>,<password> <host>;
@@ -344,3 +404,4 @@ Le script va :
 |---|---|---|
 | 2026-05-11 | Florian + Claude | Création du document - politique initiale |
 | 2026-05-22 | Florian + Claude | Ajout § 10 : implémentation opérationnelle self-host + scripts `backup-db.sh` / `restore-db.sh` + procédure cron host |
+| 2026-08-13 | Florian + Claude | `BACKUP_TARGET=s3` : dépôt en Object Storage avec verrou WORM COMPLIANCE (30 j), rotation déléguée au cycle de vie du bucket. Le FTP en clair devient un mode hérité. `restore-db.sh` sait lister et récupérer depuis S3 |
