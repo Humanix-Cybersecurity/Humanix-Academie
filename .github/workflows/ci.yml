@@ -136,6 +136,18 @@ jobs:
           npm ci
           npx prisma generate
 
+      # Le runner n'a PAS content-pro/ : c'est un submodule prive, et le
+      # checkout ne le recupere pas. Les quatre modules de contenu commercial
+      # sont donc des symlinks casses, et `tsc --noEmit` echoue en TS2307.
+      #
+      # `npm run build` resout ce contenu de lui-meme, mais `npm run lint`
+      # appelle tsc directement. D'ou cette etape, qui doit rester ALIGNEE sur
+      # celle du job build : les deux declarent le meme mode.
+      - name: Resoudre le contenu optionnel (mode OSS)
+        run: npm run contenu:resoudre
+        env:
+          HUMANIX_OSS: "true"
+
       - name: Run tsc --noEmit + lint des routes
         run: npm run lint
 
@@ -229,6 +241,18 @@ jobs:
       - name: Build Next.js
         run: npm run build
         env:
+          # La CI construit SANS content-pro : le submodule est prive et le
+          # checkout ne le recupere pas. Il faut donc declarer le mode OSS,
+          # sinon `npm run build` s'arrete en code 3.
+          #
+          # Ce garde-fou est VOULU et ne doit pas etre contourne autrement :
+          # sans lui, un build commercial ampute de content-pro reussirait et
+          # livrerait 5 saisons au lieu de 63, sans que rien ne le signale.
+          # Ici on declare, on ne desactive pas.
+          #
+          # Consequence assumee : ce job valide le build OSS, pas le
+          # commercial. Ce dernier est construit hors CI, avec le submodule.
+          HUMANIX_OSS: "true"
           # Variables minimales pour que le build passe (pas de runtime).
           AUTH_SECRET: build-time-only-not-a-real-secret
           DATABASE_URL: postgresql://user:pass@localhost:5432/build?schema=public
