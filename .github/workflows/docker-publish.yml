@@ -255,6 +255,11 @@ jobs:
           sbom: true
           # Args build : NEXT_PUBLIC_* vides (override au runtime via env).
           build-args: |
+            # Cette image est publiee en mode OSS PUR (cf. l'etape
+            # "Verify OSS mode" ci-dessus, qui echoue si content-pro est
+            # present). On declare donc explicitement l'absence du contenu
+            # commercial, sans quoi `prebuild` refuserait de builder.
+            HUMANIX_OSS=true
             NEXT_PUBLIC_APP_URL=
             NEXT_PUBLIC_APP_NAME=Humanix Académie
             NEXT_PUBLIC_BASE_URL=

@@ -75,6 +75,23 @@ ENV NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT=$NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT
 ENV NEXT_PUBLIC_MATOMO_URL=$NEXT_PUBLIC_MATOMO_URL
 ENV NEXT_PUBLIC_MATOMO_SITE_ID=$NEXT_PUBLIC_MATOMO_SITE_ID
 
+# --- Mode OSS PUR ----------------------------------------------------------
+#
+# `npm run build` declenche `prebuild`, qui verifie que les quatre modules de
+# contenu commercial sont resolubles. Ils sont des symlinks vers le submodule
+# prive content-pro/ : absents d'un fork AGPLv3, absents aussi de l'image OSS
+# publiee sur GHCR, qui est construite SANS content-pro par conception.
+#
+# Sans cette declaration, le build ECHOUE (code 3) plutot que de produire
+# silencieusement une image au catalogue reduit. C'est voulu : le cas
+# dangereux est une image COMMERCIALE construite sans content-pro, qui
+# demarrerait avec 5 saisons au lieu de 63 sans que rien ne le signale.
+#
+# Le workflow docker-publish.yml passe HUMANIX_OSS=true. Un build commercial
+# ne le passe PAS, et beneficie donc du garde-fou.
+ARG HUMANIX_OSS=""
+ENV HUMANIX_OSS=$HUMANIX_OSS
+
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV SKIP_ENV_VALIDATION=1
 # DATABASE_URL fictif pour le build (Prisma client gen + build Next).
