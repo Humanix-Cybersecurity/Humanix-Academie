@@ -380,14 +380,40 @@ qu'une fois ces étapes faites, sans quoi il échouerait chaque nuit — et un
    par l'API, puis **relire** la configuration pour vérifier qu'elle a été
    retenue en entier. Relecture faite : le champ est bien pris en charge.
 
-5. ⬜ **`/etc/humanix/archive.env`** avec les variables listées en tête du
-   script. Depuis le 2026-08-13, **le script lit ce fichier lui-même**, avec
-   `set -a` : `source` seul créerait des variables de shell, invisibles pour
-   `aws` et `psql` qui sont des processus enfants.
-6. ⬜ **Décommenter la ligne**, réinstaller la crontab (§4), puis lancer une
-   fois à la main en `--dry-run`.
-7. ⬜ **Tester une restauration.** Une archive jamais restaurée n'est pas une
-   archive.
+5. ⬜ **`/etc/humanix/archive.env`.** Depuis le 2026-08-13, **le script lit
+   ce fichier lui-même**, avec `set -a` : `source` seul créerait des
+   variables de shell, invisibles pour `aws` et `psql` qui sont des
+   processus enfants.
+
+   ```bash
+   ARCHIVE_AGE_RECIPIENT=age1...            # clé PUBLIQUE, jamais la privée
+   ARCHIVE_S3_BUCKET=humanix-archives-audit
+   AWS_ACCESS_KEY_ID=...
+   AWS_SECRET_ACCESS_KEY=...
+
+   # INDISPENSABLE en production, cf. encadré ci-dessous
+   ARCHIVE_PG_CONTAINER=humanix-prod-postgres
+   PGUSER=humanix
+   PGDATABASE=humanix
+   PGPASSWORD=...
+   ```
+
+   ⚠️ **`ARCHIVE_PG_CONTAINER` n'est pas optionnel ici.** Le conteneur
+   Postgres de production **ne publie aucun port** — vérifié le 2026-08-13 :
+   `docker inspect` renvoie `{"5432/tcp":null}` et `127.0.0.1:5432` est
+   fermé. Une connexion réseau échouerait chaque nuit. Défini, le script
+   passe par `<moteur> exec`, comme `backup-db.sh` le fait déjà.
+
+   `CONTAINER_ENGINE` (`docker` par défaut, ou `podman`) porte le même nom
+   que dans `scripts/deploy.sh` : le moteur est **déclaré, jamais deviné**.
+
+6. ✅ **La ligne de crontab est active** dans `infra/cron/crontab.prod`
+   depuis le 2026-08-13. Réinstaller la crontab (§4) **après** avoir créé le
+   fichier d'environnement, pas avant.
+7. ⬜ **Lancer une fois à la main en `--dry-run`**, puis pour de vrai.
+8. ⬜ **Tester une restauration.** Une archive jamais restaurée n'est pas une
+   archive. La procédure du drill de sauvegarde s'applique : cf.
+   `docs/BACKUPS.md`, § 4.
 
 ### La durée retenue : 366 jours
 
