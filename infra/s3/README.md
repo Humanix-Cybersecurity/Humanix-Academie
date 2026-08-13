@@ -10,10 +10,10 @@ Un seul bucket, deux préfixes, deux durées. C'est possible parce que la
 rétention Object Lock se pose **objet par objet au dépôt**, et que le bucket
 n'a **aucune règle de rétention par défaut**.
 
-| Préfixe | Contenu | Écrit par | Verrou WORM |
-| --- | --- | --- | --- |
-| `postgres/` | dumps PostgreSQL chiffrés `age` | `scripts/backup-db.sh` | 30 jours |
-| `auditlog/` | journaux d'audit mensuels chiffrés `age` | `scripts/archive-audit-logs.sh` | 366 jours |
+| Préfixe     | Contenu                                  | Écrit par                       | Verrou WORM |
+| ----------- | ---------------------------------------- | ------------------------------- | ----------- |
+| `postgres/` | dumps PostgreSQL chiffrés `age`          | `scripts/backup-db.sh`          | 30 jours    |
+| `auditlog/` | journaux d'audit mensuels chiffrés `age` | `scripts/archive-audit-logs.sh` | 366 jours   |
 
 ## Le verrou n'efface pas
 
@@ -40,12 +40,12 @@ facture grossit.
 
 D'où l'enchaînement, pour `postgres/` :
 
-| Jour | Événement |
-| --- | --- |
-| 0 | dépôt de l'objet, verrou COMPLIANCE de 30 jours |
-| 30 | le verrou expire, la suppression redevient possible |
-| 31 | `Expiration.Days` pose le marqueur, la version devient non courante |
-| 32 | `NoncurrentVersionExpiration` supprime réellement la version |
+| Jour | Événement                                                           |
+| ---- | ------------------------------------------------------------------- |
+| 0    | dépôt de l'objet, verrou COMPLIANCE de 30 jours                     |
+| 30   | le verrou expire, la suppression redevient possible                 |
+| 31   | `Expiration.Days` pose le marqueur, la version devient non courante |
+| 32   | `NoncurrentVersionExpiration` supprime réellement la version        |
 
 Le même enchaînement pour `auditlog/`, décalé à 367 et 368 jours.
 
@@ -115,9 +115,9 @@ d'une version de l'API ne l'est pas d'office de la suivante.
 
 ## État
 
-| Date | État |
-| --- | --- |
-| 2026-08-13 | bucket créé, Object Lock actif, versionnement actif, `NoSuchLifecycleConfiguration` |
+| Date       | État                                                                                  |
+| ---------- | ------------------------------------------------------------------------------------- |
+| 2026-08-13 | bucket créé, Object Lock actif, versionnement actif, `NoSuchLifecycleConfiguration`   |
 | 2026-08-13 | **les quatre règles posées et relues**, `NoncurrentVersionExpiration` confirmé retenu |
 
 Ce qui reste à éprouver : aucun objet n'a encore été déposé. Le verrou WORM

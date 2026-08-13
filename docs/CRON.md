@@ -333,15 +333,15 @@ qu'une fois ces étapes faites, sans quoi il échouerait chaque nuit — et un
    référence est versionnée : `infra/s3/lifecycle-humanix-archives-audit.json`,
    avec le mode d'emploi dans `infra/s3/README.md`.
 
-   | Préfixe | Expiration | Versions non courantes |
-   | --- | --- | --- |
-   | `auditlog/` | **367 jours** | +1 jour |
-   | `postgres/` | **31 jours** | +1 jour |
+   | Préfixe     | Expiration    | Versions non courantes |
+   | ----------- | ------------- | ---------------------- |
+   | `auditlog/` | **367 jours** | +1 jour                |
+   | `postgres/` | **31 jours**  | +1 jour                |
 
    Toujours **un jour de plus** que le verrou correspondant. Le verrou
    empêche d'effacer trop tôt, il n'efface pas : sans ces règles, les
    archives s'accumuleraient indéfiniment — une non-conformité RGPD à part
-   entière (art. 5.1.e). Et une expiration réglée *avant* la fin du verrou ne
+   entière (art. 5.1.e). Et une expiration réglée _avant_ la fin du verrou ne
    supprimerait rien, l'objet étant protégé.
 
    La seconde colonne n'est pas un raffinement. Le bucket est **versionné**,
@@ -350,6 +350,7 @@ qu'une fois ces étapes faites, sans quoi il échouerait chaque nuit — et un
    console ne sait pas exprimer `NoncurrentVersionExpiration` ; il faut passer
    par l'API, puis **relire** la configuration pour vérifier qu'elle a été
    retenue en entier. Relecture faite : le champ est bien pris en charge.
+
 5. ⬜ **`/etc/humanix/archive.env`** avec les variables listées en tête du
    script. Depuis le 2026-08-13, **le script lit ce fichier lui-même**, avec
    `set -a` : `source` seul créerait des variables de shell, invisibles pour

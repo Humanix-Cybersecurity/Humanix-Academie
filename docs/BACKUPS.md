@@ -12,32 +12,34 @@ de référence à adapter selon l'infrastructure cible.
 
 ## 1. Données concernées
 
-| Source | Volume typique | Criticité |
-|---|---|---|
-| PostgreSQL (Scaleway Managed) | ~5–50 Go par tenant actif | Critique |
-| Volumes Docker (TTS cache, uploads, logs) | ~80 Mo TTS + variable | Moyenne (régénérable) |
-| Objet S3 compatible (Scaleway Object Storage) - captures audit, exports RGPD | ~1 Go par tenant/an | Critique |
-| Secrets (variables d'environnement, certificats) | ~100 Ko | Critique (cf. § 7) |
+| Source                                                                       | Volume typique            | Criticité             |
+| ---------------------------------------------------------------------------- | ------------------------- | --------------------- |
+| PostgreSQL (Scaleway Managed)                                                | ~5–50 Go par tenant actif | Critique              |
+| Volumes Docker (TTS cache, uploads, logs)                                    | ~80 Mo TTS + variable     | Moyenne (régénérable) |
+| Objet S3 compatible (Scaleway Object Storage) - captures audit, exports RGPD | ~1 Go par tenant/an       | Critique              |
+| Secrets (variables d'environnement, certificats)                             | ~100 Ko                   | Critique (cf. § 7)    |
 
 ---
 
 ## 2. Fréquence et rétention
 
-| Cible | Fréquence | Rétention | Outil |
-|---|---|---|---|
-| PostgreSQL - snapshot full | Quotidien (02h00 UTC) | 30 jours | Snapshots automatiques Scaleway Managed |
-| PostgreSQL - WAL streaming | Continu | 14 jours (PITR) | PITR Scaleway natif |
-| PostgreSQL - dump logique chiffré off-site | Hebdomadaire (dimanche 04h00 UTC) | 90 jours | `pg_dump` + chiffrement client + S3 cross-region |
-| Object Storage - versioning | Continu | 30 jours par objet | Scaleway Object Storage versioning |
-| Object Storage - snapshot cross-region | Mensuel | 12 mois | Scaleway lifecycle policy |
-| Secrets - backup vault | Mensuel (manuel ou cron) | Indéfini (rotation 90j sur les valeurs) | Hors-bande, support physique sécurisé |
+| Cible                                      | Fréquence                         | Rétention                               | Outil                                            |
+| ------------------------------------------ | --------------------------------- | --------------------------------------- | ------------------------------------------------ |
+| PostgreSQL - snapshot full                 | Quotidien (02h00 UTC)             | 30 jours                                | Snapshots automatiques Scaleway Managed          |
+| PostgreSQL - WAL streaming                 | Continu                           | 14 jours (PITR)                         | PITR Scaleway natif                              |
+| PostgreSQL - dump logique chiffré off-site | Hebdomadaire (dimanche 04h00 UTC) | 90 jours                                | `pg_dump` + chiffrement client + S3 cross-region |
+| Object Storage - versioning                | Continu                           | 30 jours par objet                      | Scaleway Object Storage versioning               |
+| Object Storage - snapshot cross-region     | Mensuel                           | 12 mois                                 | Scaleway lifecycle policy                        |
+| Secrets - backup vault                     | Mensuel (manuel ou cron)          | Indéfini (rotation 90j sur les valeurs) | Hors-bande, support physique sécurisé            |
 
 **Justification rétention** :
+
 - 30 jours snapshots = couvre 99 % des cas de restauration (corruption, suppression accidentelle, ransomware détecté ≤ 2 semaines).
 - 90 jours dumps off-site = couvre les cas d'incident détecté tardivement (audit RGPD, demande d'effacement contestée).
 - 12 mois cross-region = conformité comptable (Code de commerce art. L. 123-22 : 10 ans pour les pièces justificatives, mais Humanix ne stocke pas de pièces comptables - 12 mois est conservateur pour Object Storage).
 
 **Suppression définitive** :
+
 - Au-delà de la rétention, les sauvegardes sont supprimées **cryptographiquement** (suppression de la clé de chiffrement = données inaccessibles, conforme RGPD art. 17).
 
 ---
@@ -45,11 +47,13 @@ de référence à adapter selon l'infrastructure cible.
 ## 3. Chiffrement
 
 ### Au repos
+
 - **PostgreSQL Scaleway Managed** : chiffrement AES-256 transparent (TDE) activé par défaut sur les volumes block.
 - **Object Storage Scaleway** : chiffrement SSE-S3 par défaut (AES-256, clé gérée par Scaleway).
 - **Dumps off-site** : chiffrement client-side **avant** upload via `age` (Curve25519 + ChaCha20-Poly1305). La clé privée est conservée hors-bande dans le vault Humanix.
 
 ### En transit
+
 - TLS 1.3 obligatoire entre l'application et la base (vérification de certificat activée, pas de mode `sslmode=disable`).
 - TLS 1.3 entre l'application et Object Storage.
 - TLS 1.3 entre les régions Scaleway (Paris ↔ Roubaix).
@@ -59,9 +63,9 @@ de référence à adapter selon l'infrastructure cible.
 Depuis le **2026-08-13**, les dumps déposés en Object Storage portent un verrou
 `Object Lock` en mode **COMPLIANCE**, posé objet par objet au moment du dépôt.
 
-| Préfixe | Contenu | Verrou | Cycle de vie |
-|---|---|---|---|
-| `postgres/` | dumps PostgreSQL chiffrés | **30 jours** | expiration 31 jours |
+| Préfixe     | Contenu                      | Verrou        | Cycle de vie         |
+| ----------- | ---------------------------- | ------------- | -------------------- |
+| `postgres/` | dumps PostgreSQL chiffrés    | **30 jours**  | expiration 31 jours  |
 | `auditlog/` | archives de journaux d'audit | **366 jours** | expiration 367 jours |
 
 Configuration de référence du cycle de vie, versionnée avec son mode
@@ -87,6 +91,7 @@ qu'on cherche justement à arrêter.
 > fin du verrou : posée avant, elle ne supprimerait rien.
 
 ### Algorithmes
+
 - AES-256-GCM pour le chiffrement symétrique des dumps off-site
 - Curve25519 pour l'échange de clés (encapsulation `age`)
 - HMAC-SHA-256 pour l'authentification des dumps
@@ -116,13 +121,13 @@ Un drill **échoué** déclenche une revue obligatoire dans les 7 jours.
 
 ## 5. RTO / RPO cibles
 
-| Scénario | RPO cible | RTO cible | Procédure |
-|---|---|---|---|
-| Suppression accidentelle d'une ligne | ≤ 0 min | ≤ 30 min | Restore PITR ciblé |
-| Corruption d'une table | ≤ 24 h | ≤ 2 h | Restore snapshot quotidien |
-| Perte complète du primary | ≤ 15 min | ≤ 4 h | Failover replica + restore PITR |
-| Perte région Paris | ≤ 7 j | ≤ 24 h | Restore dump cross-region (Roubaix) |
-| Ransomware avec rétention compromise | ≤ 14 j | ≤ 24 h | Dump off-site chiffré hors-domaine |
+| Scénario                             | RPO cible | RTO cible | Procédure                           |
+| ------------------------------------ | --------- | --------- | ----------------------------------- |
+| Suppression accidentelle d'une ligne | ≤ 0 min   | ≤ 30 min  | Restore PITR ciblé                  |
+| Corruption d'une table               | ≤ 24 h    | ≤ 2 h     | Restore snapshot quotidien          |
+| Perte complète du primary            | ≤ 15 min  | ≤ 4 h     | Failover replica + restore PITR     |
+| Perte région Paris                   | ≤ 7 j     | ≤ 24 h    | Restore dump cross-region (Roubaix) |
+| Ransomware avec rétention compromise | ≤ 14 j    | ≤ 24 h    | Dump off-site chiffré hors-domaine  |
 
 ---
 
@@ -133,7 +138,7 @@ Un drill **échoué** déclenche une revue obligatoire dans les 7 jours.
 - **RGPD art. 17** : droit à l'effacement → suppression cryptographique
   (clé) appliquée même aux sauvegardes après la rétention.
 - **NIS2 art. 21** : politique de gestion des incidents → drill semestriel
-  + procédure documentée.
+  - procédure documentée.
 - **DORA art. 9** : test de résilience opérationnelle → drill semestriel.
 - **ISO 27001 A.12.3.1** : politique de sauvegarde → présent document.
 
@@ -148,6 +153,7 @@ migration vers un Vault (HashiCorp Vault auto-hébergé ou Scaleway
 Secret Manager).
 
 Tant que le Vault n'est pas en place :
+
 - Les clés age sont conservées hors-bande sur 2 supports physiques
   géographiquement distants (coffre + main)
 - Les valeurs `.env` de production ne sont jamais commitées
@@ -158,6 +164,7 @@ Tant que le Vault n'est pas en place :
 ## 8. Accès et audit
 
 L'accès aux backups est restreint à :
+
 - L'utilisateur Scaleway "operator" (compte fondateur, MFA obligatoire)
 - L'utilisateur Scaleway "restore-bot" en lecture seule pour les drills
   automatisés
@@ -205,6 +212,7 @@ cat ~/.config/humanix/backup.key
 ```
 
 Tu obtiens :
+
 - Une ligne `# public key: age1abc...` → la **clé publique** (va dans `.env` prod)
 - Une ligne `AGE-SECRET-KEY-1XYZ...` → la **clé privée** (à protéger HORS-BANDE : papier + USB chiffrée géographiquement séparés)
 
@@ -390,6 +398,7 @@ cd /opt/humanix-prod
 ```
 
 Le script va :
+
 1. Lister les backups locaux + distants
 2. Te demander lequel restaurer (numéro)
 3. Télécharger si distant, déchiffrer avec ta clé privée
@@ -403,8 +412,8 @@ Le script va :
 
 ## Historique des révisions
 
-| Date | Auteur | Changements |
-|---|---|---|
-| 2026-05-11 | Florian + Claude | Création du document - politique initiale |
-| 2026-05-22 | Florian + Claude | Ajout § 10 : implémentation opérationnelle self-host + scripts `backup-db.sh` / `restore-db.sh` + procédure cron host |
+| Date       | Auteur           | Changements                                                                                                                                                                                                              |
+| ---------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-05-11 | Florian + Claude | Création du document - politique initiale                                                                                                                                                                                |
+| 2026-05-22 | Florian + Claude | Ajout § 10 : implémentation opérationnelle self-host + scripts `backup-db.sh` / `restore-db.sh` + procédure cron host                                                                                                    |
 | 2026-08-13 | Florian + Claude | `BACKUP_TARGET=s3` : dépôt en Object Storage avec verrou WORM COMPLIANCE (30 j), rotation déléguée au cycle de vie du bucket. Le FTP en clair devient un mode hérité. `restore-db.sh` sait lister et récupérer depuis S3 |
