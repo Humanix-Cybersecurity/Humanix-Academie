@@ -110,6 +110,16 @@ BACKUP_S3_REGION="${BACKUP_S3_REGION:-fr-par}"
 _s3() { aws --endpoint-url "$BACKUP_S3_ENDPOINT" --region "$BACKUP_S3_REGION" "$@"; }
 
 # Mode docker exec si BACKUP_PG_CONTAINER defini (cf. backup-db.sh)
+# Moteur de conteneurs : declare, jamais devine. Meme variable que
+# scripts/deploy.sh, scripts/backup-db.sh et scripts/archive-audit-logs.sh,
+# ou le raisonnement est detaille. Absent => docker, comportement historique.
+#
+# Ce script DOIT lire la meme variable que backup-db.sh : restaurer avec un
+# autre moteur que celui qui a sauvegarde viserait le mauvais conteneur, donc
+# la mauvaise base -- le jour ou l'on restaure, c'est-a-dire le pire moment
+# pour s'en apercevoir.
+MOTEUR="${CONTAINER_ENGINE:-docker}"
+
 DOCKER_MODE=0
 if [[ -n "${BACKUP_PG_CONTAINER:-}" ]]; then
   DOCKER_MODE=1
@@ -120,11 +130,11 @@ fi
 [[ -n "$TARGET_DB" ]] || fail "Base cible non specifiee" 1
 [[ -f "$AGE_KEY_FILE" ]] || fail "Cle privee age introuvable : $AGE_KEY_FILE" 1
 if [[ "$DOCKER_MODE" -eq 0 ]]; then
-  [[ -n "${PGHOST:-}" ]] || fail "PGHOST non defini (ou definir BACKUP_PG_CONTAINER pour mode docker)" 1
+  [[ -n "${PGHOST:-}" ]] || fail "PGHOST non defini (ou definir BACKUP_PG_CONTAINER pour le mode conteneur)" 1
   command -v pg_restore >/dev/null 2>&1 || fail "Binaire manquant : pg_restore" 1
 else
-  command -v docker >/dev/null 2>&1 || fail "Binaire manquant : docker" 1
-  docker ps --filter "name=^${BACKUP_PG_CONTAINER}$" --format '{{.Names}}' \
+  command -v "$MOTEUR" >/dev/null 2>&1 || fail "Binaire manquant : $MOTEUR" 1
+  "$MOTEUR" ps --filter "name=^${BACKUP_PG_CONTAINER}$" --format '{{.Names}}' \
     | grep -q "^${BACKUP_PG_CONTAINER}$" \
     || fail "Container Postgres introuvable ou arrete : $BACKUP_PG_CONTAINER" 1
 fi
@@ -289,7 +299,7 @@ echo "  Backup source  : $SELECTED_FILE"
 echo "  Taille dump    : $DEC_SIZE octets"
 echo "  Base cible     : $TARGET_DB"
 if [[ "$DOCKER_MODE" -eq 1 ]]; then
-  echo "  Mode           : docker exec dans container $BACKUP_PG_CONTAINER"
+  echo "  Mode           : $MOTEUR exec dans container $BACKUP_PG_CONTAINER"
 else
   echo "  Host           : $PGHOST:$PGPORT"
 fi
@@ -312,7 +322,7 @@ if [[ "$DOCKER_MODE" -eq 1 ]]; then
   # qui execute pg_restore en lisant depuis stdin (- en argument).
   # --jobs=4 n'est PAS compatible avec --format=custom + stdin pour pg_restore
   # (limitation Postgres). On reste sur jobs=1 en docker mode.
-  docker exec -i \
+  "$MOTEUR" exec -i \
     -e PGPASSWORD="${PGPASSWORD:-}" \
     "$BACKUP_PG_CONTAINER" \
     pg_restore \
@@ -324,7 +334,7 @@ if [[ "$DOCKER_MODE" -eq 1 ]]; then
       --no-privileges \
       --verbose \
     < "$DECRYPTED_FILE" \
-    || fail "pg_restore (docker exec) a echoue" 4
+    || fail "pg_restore ($MOTEUR exec) a echoue" 4
   log "Restauration terminee avec succes."
   log "Base : $TARGET_DB dans container $BACKUP_PG_CONTAINER"
 else

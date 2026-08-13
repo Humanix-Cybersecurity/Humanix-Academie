@@ -176,9 +176,19 @@ Référence au moment de la migration : **37 saisons, 13 users, 2 tenants**.
 - [ ] **Éprouver un vrai redémarrage machine.** L'unité systemd a été testée par
       `systemctl --user start` après arrêt complet de la pile, ce qui n'est pas
       la même chose qu'un boot.
-- [ ] `scripts/backup-db.sh` et `scripts/restore-db.sh` appellent `docker exec`
-      en dur (`BACKUP_PG_CONTAINER`). Sans rapport pour l'instant, la production
-      étant encore sous Docker, mais bloquant pour sa migration.
+- [x] ~~`scripts/backup-db.sh` et `scripts/restore-db.sh` appellent `docker exec`
+      en dur.~~ **Fait le 2026-08-13.** Les deux lisent `CONTAINER_ENGINE`, comme
+      `deploy.sh` et `archive-audit-logs.sh`. Absent, `docker` : aucune
+      installation existante ne change de comportement.
+
+      Vérifié par un intercepteur nommé `podman` qui journalise ses arguments
+          avant de les relayer. La trace montre `podman ps --filter …` puis
+          `podman exec -i -e PGPASSWORD=… pg_dump …` — plus aucun appel `docker`.
+
+          Les deux scripts DOIVENT lire la même variable : restaurer avec un autre
+          moteur que celui qui a sauvegardé viserait le mauvais conteneur, donc la
+          mauvaise base, et on le découvrirait le jour de la restauration.
+
 - [ ] La dizaine de documents qui citent `docker compose` dans leurs exemples.
 - [ ] **Décider pour la production.** Le vrai risque y est le volume PostgreSQL,
       bien plus gros que les 69 Mo de la démo. Même méthode : `pg_dump`, jamais
