@@ -46,6 +46,23 @@ ask() {
   echo "$reply"
 }
 
+# Compte les lignes non vides d'une chaine.
+#
+# `grep -c .` est un piege sur une entree VIDE : il imprime 0 et sort en
+# code 1. Le `|| echo 0` qui accompagnait chaque appel ajoutait donc un
+# SECOND zero, donnant la chaine "0\n0", que $(( )) refuse :
+#
+#   restore-db.sh: line 158: 0
+#   0: arithmetic syntax error in expression (error token is "0")
+#
+# Le defaut ne se manifestait pas en production, ou /var/backups/humanix
+# contient toujours des fichiers. Il apparait des qu'on restaure sur une
+# machine propre -- c'est-a-dire dans un vrai test de restauration.
+compter_lignes() {
+  [[ -z "$1" ]] && { echo 0; return; }
+  printf '%s\n' "$1" | grep -c . || true
+}
+
 # ----------------------------------------------------------------------------
 # Args
 # ----------------------------------------------------------------------------
@@ -154,7 +171,7 @@ else
     if [[ -z "$REMOTE_FILES" ]]; then
       echo "  (aucun)"
     else
-      LOCAL_COUNT=$(echo "$LOCAL_FILES" | grep -c . 2>/dev/null || echo 0)
+      LOCAL_COUNT=$(compter_lignes "$LOCAL_FILES")
       echo "$REMOTE_FILES" | nl -v $((LOCAL_COUNT + 1))
     fi
   elif [[ "$LOCAL_ONLY" -eq 0 ]] && command -v lftp >/dev/null 2>&1 \
@@ -183,7 +200,7 @@ else
       echo "  (aucun)"
     else
       # Index decale : on commence apres les locaux pour eviter collision
-      LOCAL_COUNT=$(echo "$LOCAL_FILES" | grep -c . 2>/dev/null || echo 0)
+      LOCAL_COUNT=$(compter_lignes "$LOCAL_FILES")
       echo "$REMOTE_FILES" | nl -v $((LOCAL_COUNT + 1))
     fi
   fi
@@ -193,7 +210,7 @@ else
   [[ -z "$CHOICE" ]] && fail "Annule par l'operateur" 10
 
   if [[ "$CHOICE" =~ ^[0-9]+$ ]]; then
-    LOCAL_COUNT=$(echo "$LOCAL_FILES" | grep -c . 2>/dev/null || echo 0)
+    LOCAL_COUNT=$(compter_lignes "$LOCAL_FILES")
     if [[ "$CHOICE" -le "$LOCAL_COUNT" ]]; then
       SELECTED_FILE=$(echo "$LOCAL_FILES" | sed -n "${CHOICE}p")
     else
