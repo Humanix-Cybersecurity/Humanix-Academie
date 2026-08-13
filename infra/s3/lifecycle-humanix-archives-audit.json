@@ -1,0 +1,30 @@
+{
+  "Rules": [
+    {
+      "ID": "postgres-expiration-31j",
+      "Status": "Enabled",
+      "Filter": { "Prefix": "postgres/" },
+      "Expiration": { "Days": 31 },
+      "NoncurrentVersionExpiration": { "NoncurrentDays": 1 }
+    },
+    {
+      "ID": "postgres-menage-marqueurs",
+      "Status": "Enabled",
+      "Filter": { "Prefix": "postgres/" },
+      "Expiration": { "ExpiredObjectDeleteMarker": true }
+    },
+    {
+      "ID": "auditlog-expiration-367j",
+      "Status": "Enabled",
+      "Filter": { "Prefix": "auditlog/" },
+      "Expiration": { "Days": 367 },
+      "NoncurrentVersionExpiration": { "NoncurrentDays": 1 }
+    },
+    {
+      "ID": "auditlog-menage-marqueurs",
+      "Status": "Enabled",
+      "Filter": { "Prefix": "auditlog/" },
+      "Expiration": { "ExpiredObjectDeleteMarker": true }
+    }
+  ]
+}

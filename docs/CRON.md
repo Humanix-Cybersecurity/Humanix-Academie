@@ -318,19 +318,61 @@ Le job figure dans `infra/cron/crontab.prod` mais **commenté**. Ne l'activer
 qu'une fois ces étapes faites, sans quoi il échouerait chaque nuit — et un
 échec permanent est précisément ce qui apprend à ne plus lire les journaux.
 
-1. **Droits IAM** — la clé `humanix` n'a pas accès à Object Storage
-   (`bucket list` → 403 au 2026-08-12). Ajouter `ObjectStorageFullAccess`.
-2. **Créer le bucket avec Object Lock.** ⚠️ **Il ne peut pas être activé
-   après coup** : c'est à la création, et uniquement là. Un bucket créé sans
-   lui devra être recréé.
-3. **Une clé API dédiée, en écriture seule.** L'archiveur dépose ; il ne lit
-   ni ne supprime. La restauration passe par une clé distincte, détenue par un
-   humain.
-4. **`/etc/humanix/archive.env`** avec les variables listées en tête du script.
-5. **Décommenter la ligne**, réinstaller la crontab (§4), puis lancer une fois
-   à la main en `--dry-run`.
-6. **Tester une restauration.** Une archive jamais restaurée n'est pas une
+1. ✅ **Droits IAM** — fait le 2026-08-13. La clé `humanix` liste désormais
+   les buckets (403 le 2026-08-12).
+2. ✅ **Bucket `humanix-archives-audit` créé avec Object Lock**, le
+   2026-08-13. Vérifié : `ObjectLockEnabled`, versionnement activé, `AES256`.
+   ⚠️ L'Object Lock **ne peut pas être activé après coup** : c'est à la
+   création, et uniquement là. Un bucket créé sans lui devra être recréé.
+   Aucune règle de rétention par défaut — délibéré : la durée se pose objet
+   par objet, ce qui laisse cohabiter les journaux d'audit (366 jours) et les
+   sauvegardes PostgreSQL (30 jours) dans le même bucket.
+3. ✅ **Clé API dédiée, en écriture.** L'archiveur dépose ; il ne supprime
+   pas. La restauration passe par une clé distincte, détenue par un humain.
+4. ✅ **Règles de cycle de vie** posées et relues le 2026-08-13. La
+   référence est versionnée : `infra/s3/lifecycle-humanix-archives-audit.json`,
+   avec le mode d'emploi dans `infra/s3/README.md`.
+
+   | Préfixe     | Expiration    | Versions non courantes |
+   | ----------- | ------------- | ---------------------- |
+   | `auditlog/` | **367 jours** | +1 jour                |
+   | `postgres/` | **31 jours**  | +1 jour                |
+
+   Toujours **un jour de plus** que le verrou correspondant. Le verrou
+   empêche d'effacer trop tôt, il n'efface pas : sans ces règles, les
+   archives s'accumuleraient indéfiniment — une non-conformité RGPD à part
+   entière (art. 5.1.e). Et une expiration réglée _avant_ la fin du verrou ne
+   supprimerait rien, l'objet étant protégé.
+
+   La seconde colonne n'est pas un raffinement. Le bucket est **versionné**,
+   condition d'Object Lock : une expiration seule pose un marqueur de
+   suppression sans rien effacer, et le stockage continue d'être facturé. La
+   console ne sait pas exprimer `NoncurrentVersionExpiration` ; il faut passer
+   par l'API, puis **relire** la configuration pour vérifier qu'elle a été
+   retenue en entier. Relecture faite : le champ est bien pris en charge.
+
+5. ⬜ **`/etc/humanix/archive.env`** avec les variables listées en tête du
+   script. Depuis le 2026-08-13, **le script lit ce fichier lui-même**, avec
+   `set -a` : `source` seul créerait des variables de shell, invisibles pour
+   `aws` et `psql` qui sont des processus enfants.
+6. ⬜ **Décommenter la ligne**, réinstaller la crontab (§4), puis lancer une
+   fois à la main en `--dry-run`.
+7. ⬜ **Tester une restauration.** Une archive jamais restaurée n'est pas une
    archive.
+
+### La durée retenue : 366 jours
+
+Décision du 2026-08-13 : **un an, plus un jour de rotation**.
+
+L'obligation la plus contraignante qui s'applique aux journaux de connexion
+est celle de la **LCEN** (un an) ; la CNIL retient six mois comme durée de
+référence pour les journaux applicatifs. Le jour supplémentaire évite qu'une
+rotation exécutée quelques heures trop tôt tombe pile sur l'échéance.
+
+⚠️ **Cette durée est irrévocable objet par objet.** En mode COMPLIANCE, une
+rétention ne peut être ni raccourcie ni levée, pas même par le propriétaire du
+bucket. C'est ce qui fait sa valeur — et ce qui interdit de la choisir à la
+légère : chaque objet déposé engage le stockage pour 366 jours.
 
 ### Ce que le script vérifie lui-même
 

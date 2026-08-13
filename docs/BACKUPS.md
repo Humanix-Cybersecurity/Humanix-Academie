@@ -12,32 +12,34 @@ de référence à adapter selon l'infrastructure cible.
 
 ## 1. Données concernées
 
-| Source | Volume typique | Criticité |
-|---|---|---|
-| PostgreSQL (Scaleway Managed) | ~5–50 Go par tenant actif | Critique |
-| Volumes Docker (TTS cache, uploads, logs) | ~80 Mo TTS + variable | Moyenne (régénérable) |
-| Objet S3 compatible (Scaleway Object Storage) - captures audit, exports RGPD | ~1 Go par tenant/an | Critique |
-| Secrets (variables d'environnement, certificats) | ~100 Ko | Critique (cf. § 7) |
+| Source                                                                       | Volume typique            | Criticité             |
+| ---------------------------------------------------------------------------- | ------------------------- | --------------------- |
+| PostgreSQL (Scaleway Managed)                                                | ~5–50 Go par tenant actif | Critique              |
+| Volumes Docker (TTS cache, uploads, logs)                                    | ~80 Mo TTS + variable     | Moyenne (régénérable) |
+| Objet S3 compatible (Scaleway Object Storage) - captures audit, exports RGPD | ~1 Go par tenant/an       | Critique              |
+| Secrets (variables d'environnement, certificats)                             | ~100 Ko                   | Critique (cf. § 7)    |
 
 ---
 
 ## 2. Fréquence et rétention
 
-| Cible | Fréquence | Rétention | Outil |
-|---|---|---|---|
-| PostgreSQL - snapshot full | Quotidien (02h00 UTC) | 30 jours | Snapshots automatiques Scaleway Managed |
-| PostgreSQL - WAL streaming | Continu | 14 jours (PITR) | PITR Scaleway natif |
-| PostgreSQL - dump logique chiffré off-site | Hebdomadaire (dimanche 04h00 UTC) | 90 jours | `pg_dump` + chiffrement client + S3 cross-region |
-| Object Storage - versioning | Continu | 30 jours par objet | Scaleway Object Storage versioning |
-| Object Storage - snapshot cross-region | Mensuel | 12 mois | Scaleway lifecycle policy |
-| Secrets - backup vault | Mensuel (manuel ou cron) | Indéfini (rotation 90j sur les valeurs) | Hors-bande, support physique sécurisé |
+| Cible                                      | Fréquence                         | Rétention                               | Outil                                            |
+| ------------------------------------------ | --------------------------------- | --------------------------------------- | ------------------------------------------------ |
+| PostgreSQL - snapshot full                 | Quotidien (02h00 UTC)             | 30 jours                                | Snapshots automatiques Scaleway Managed          |
+| PostgreSQL - WAL streaming                 | Continu                           | 14 jours (PITR)                         | PITR Scaleway natif                              |
+| PostgreSQL - dump logique chiffré off-site | Hebdomadaire (dimanche 04h00 UTC) | 90 jours                                | `pg_dump` + chiffrement client + S3 cross-region |
+| Object Storage - versioning                | Continu                           | 30 jours par objet                      | Scaleway Object Storage versioning               |
+| Object Storage - snapshot cross-region     | Mensuel                           | 12 mois                                 | Scaleway lifecycle policy                        |
+| Secrets - backup vault                     | Mensuel (manuel ou cron)          | Indéfini (rotation 90j sur les valeurs) | Hors-bande, support physique sécurisé            |
 
 **Justification rétention** :
+
 - 30 jours snapshots = couvre 99 % des cas de restauration (corruption, suppression accidentelle, ransomware détecté ≤ 2 semaines).
 - 90 jours dumps off-site = couvre les cas d'incident détecté tardivement (audit RGPD, demande d'effacement contestée).
 - 12 mois cross-region = conformité comptable (Code de commerce art. L. 123-22 : 10 ans pour les pièces justificatives, mais Humanix ne stocke pas de pièces comptables - 12 mois est conservateur pour Object Storage).
 
 **Suppression définitive** :
+
 - Au-delà de la rétention, les sauvegardes sont supprimées **cryptographiquement** (suppression de la clé de chiffrement = données inaccessibles, conforme RGPD art. 17).
 
 ---
@@ -45,16 +47,51 @@ de référence à adapter selon l'infrastructure cible.
 ## 3. Chiffrement
 
 ### Au repos
+
 - **PostgreSQL Scaleway Managed** : chiffrement AES-256 transparent (TDE) activé par défaut sur les volumes block.
 - **Object Storage Scaleway** : chiffrement SSE-S3 par défaut (AES-256, clé gérée par Scaleway).
 - **Dumps off-site** : chiffrement client-side **avant** upload via `age` (Curve25519 + ChaCha20-Poly1305). La clé privée est conservée hors-bande dans le vault Humanix.
 
 ### En transit
+
 - TLS 1.3 obligatoire entre l'application et la base (vérification de certificat activée, pas de mode `sslmode=disable`).
 - TLS 1.3 entre l'application et Object Storage.
 - TLS 1.3 entre les régions Scaleway (Paris ↔ Roubaix).
 
+### Immuabilité (WORM)
+
+Depuis le **2026-08-13**, les dumps déposés en Object Storage portent un verrou
+`Object Lock` en mode **COMPLIANCE**, posé objet par objet au moment du dépôt.
+
+| Préfixe     | Contenu                      | Verrou        | Cycle de vie         |
+| ----------- | ---------------------------- | ------------- | -------------------- |
+| `postgres/` | dumps PostgreSQL chiffrés    | **30 jours**  | expiration 31 jours  |
+| `auditlog/` | archives de journaux d'audit | **366 jours** | expiration 367 jours |
+
+Configuration de référence du cycle de vie, versionnée avec son mode
+d'emploi : `infra/s3/`.
+
+Un seul bucket, `humanix-archives-audit`, suffit : la rétention se pose par
+objet et le bucket n'a **aucune règle de rétention par défaut**.
+
+Ce que le verrou apporte, et que le FTP n'apportait pas : pendant sa durée, la
+suppression est refusée **par le stockage lui-même**. Ni la machine compromise,
+ni la clé de dépôt, ni le compte propriétaire ne peuvent l'abréger. C'est la
+seule propriété qui distingue une sauvegarde d'une copie, et c'est précisément
+celle qu'un rançongiciel cherche à contourner.
+
+Le mode COMPLIANCE a été retenu plutôt que GOVERNANCE : ce dernier cède devant
+un porteur du droit `s3:BypassGovernanceRetention`, donc devant l'attaquant
+qu'on cherche justement à arrêter.
+
+> **Le verrou n'est pas la rétention.** Il empêche d'effacer trop tôt ; il
+> n'efface pas. Sans les règles de cycle de vie ci-dessus, les archives
+> s'accumuleraient indéfiniment, ce qui est une non-conformité RGPD à part
+> entière (art. 5.1.e). L'expiration est toujours réglée **un jour après** la
+> fin du verrou : posée avant, elle ne supprimerait rien.
+
 ### Algorithmes
+
 - AES-256-GCM pour le chiffrement symétrique des dumps off-site
 - Curve25519 pour l'échange de clés (encapsulation `age`)
 - HMAC-SHA-256 pour l'authentification des dumps
@@ -84,13 +121,13 @@ Un drill **échoué** déclenche une revue obligatoire dans les 7 jours.
 
 ## 5. RTO / RPO cibles
 
-| Scénario | RPO cible | RTO cible | Procédure |
-|---|---|---|---|
-| Suppression accidentelle d'une ligne | ≤ 0 min | ≤ 30 min | Restore PITR ciblé |
-| Corruption d'une table | ≤ 24 h | ≤ 2 h | Restore snapshot quotidien |
-| Perte complète du primary | ≤ 15 min | ≤ 4 h | Failover replica + restore PITR |
-| Perte région Paris | ≤ 7 j | ≤ 24 h | Restore dump cross-region (Roubaix) |
-| Ransomware avec rétention compromise | ≤ 14 j | ≤ 24 h | Dump off-site chiffré hors-domaine |
+| Scénario                             | RPO cible | RTO cible | Procédure                           |
+| ------------------------------------ | --------- | --------- | ----------------------------------- |
+| Suppression accidentelle d'une ligne | ≤ 0 min   | ≤ 30 min  | Restore PITR ciblé                  |
+| Corruption d'une table               | ≤ 24 h    | ≤ 2 h     | Restore snapshot quotidien          |
+| Perte complète du primary            | ≤ 15 min  | ≤ 4 h     | Failover replica + restore PITR     |
+| Perte région Paris                   | ≤ 7 j     | ≤ 24 h    | Restore dump cross-region (Roubaix) |
+| Ransomware avec rétention compromise | ≤ 14 j    | ≤ 24 h    | Dump off-site chiffré hors-domaine  |
 
 ---
 
@@ -101,7 +138,7 @@ Un drill **échoué** déclenche une revue obligatoire dans les 7 jours.
 - **RGPD art. 17** : droit à l'effacement → suppression cryptographique
   (clé) appliquée même aux sauvegardes après la rétention.
 - **NIS2 art. 21** : politique de gestion des incidents → drill semestriel
-  + procédure documentée.
+  - procédure documentée.
 - **DORA art. 9** : test de résilience opérationnelle → drill semestriel.
 - **ISO 27001 A.12.3.1** : politique de sauvegarde → présent document.
 
@@ -116,6 +153,7 @@ migration vers un Vault (HashiCorp Vault auto-hébergé ou Scaleway
 Secret Manager).
 
 Tant que le Vault n'est pas en place :
+
 - Les clés age sont conservées hors-bande sur 2 supports physiques
   géographiquement distants (coffre + main)
 - Les valeurs `.env` de production ne sont jamais commitées
@@ -126,6 +164,7 @@ Tant que le Vault n'est pas en place :
 ## 8. Accès et audit
 
 L'accès aux backups est restreint à :
+
 - L'utilisateur Scaleway "operator" (compte fondateur, MFA obligatoire)
 - L'utilisateur Scaleway "restore-bot" en lecture seule pour les drills
   automatisés
@@ -173,6 +212,7 @@ cat ~/.config/humanix/backup.key
 ```
 
 Tu obtiens :
+
 - Une ligne `# public key: age1abc...` → la **clé publique** (va dans `.env` prod)
 - Une ligne `AGE-SECRET-KEY-1XYZ...` → la **clé privée** (à protéger HORS-BANDE : papier + USB chiffrée géographiquement séparés)
 
@@ -190,6 +230,65 @@ sudo apt install -y age lftp jq
 # Mode host (alternative, si Postgres exposé sur l'host)
 # sudo apt install -y postgresql-client age lftp jq
 ```
+
+#### AWS CLI : ne PAS utiliser le paquet de la distribution
+
+⚠️ Vérifié le 2026-08-13 sur Ubuntu 26.04 : `apt install awscli` livre la
+version **2.31.35**, dans laquelle **toutes les opérations paginées sont
+inutilisables**.
+
+```
+ValueError: badly formed help string
+  awscli/clidriver.py, _create_operation_parser
+    argparse.py, _check_help
+```
+
+Python 3.14 valide désormais le formatage `%` des textes d'aide, et une chaîne
+d'aide de cette version d'AWS CLI en contient un non échappé. Le parseur
+explose avant même toute connexion réseau.
+
+L'étendue exacte des dégâts, mesurée :
+
+| Opération                                                 | 2.31.35 (apt) | 2.36.22 (officiel) |
+| --------------------------------------------------------- | ------------- | ------------------ |
+| `put-object`, `head-object`, `get-object`                 | ✅            | ✅                 |
+| `list-objects-v2`, `list-objects`, `list-object-versions` | ❌            | ✅                 |
+
+**C'est le pire panachage possible.** `backup-db.sh` n'utilise que
+`put-object` et `head-object` : les sauvegardes seraient parties sans la
+moindre erreur. `restore-db.sh` liste avant de récupérer : la restauration
+aurait été hors service, et on ne l'aurait découvert que le jour où on en
+aurait eu besoin.
+
+Installation par l'archive officielle, signature vérifiée (cf. la
+[page d'installation AWS](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+pour la clé publique, empreinte `FB5DB77FD5C118B80511ADA8A6310ACC4672475C`) :
+
+```bash
+cd /tmp
+curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscliv2.zip
+curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip.sig" -o awscliv2.sig
+gpg --verify awscliv2.sig awscliv2.zip      # doit dire « Good signature »
+unzip -q -o awscliv2.zip && sudo ./aws/install
+sudo apt-get remove -y awscli               # retirer le paquet cassé
+```
+
+L'installation se pose dans `/usr/local/bin`, qui précède `/usr/bin` dans le
+`PATH` de la crontab de production comme en interactif. Rien d'autre à
+reconfigurer.
+
+**Les mises à jour se font par `sudo aws update`**, pas par `apt`. C'est le
+seul coût réel de sortir du gestionnaire de paquets, et il est à porter au
+suivi des correctifs de sécurité.
+
+Vérifier après installation que le parseur se construit :
+
+```bash
+aws s3api list-objects-v2      # doit répondre « arguments are required: --bucket »
+```
+
+Si la réponse est `badly formed help string`, c'est encore le paquet `apt`
+qui répond : vérifier `command -v aws`.
 
 Le binaire `pg_dump` est fourni par l'image `postgres:16-alpine` du container,
 pas besoin de l'installer sur l'host en mode docker.
@@ -223,7 +322,27 @@ PGDATABASE=humanix_academie
 # Clé publique age (uniquement la ligne age1xxx, sans le commentaire)
 BACKUP_AGE_RECIPIENT=age1abc123...xyz
 
-# FTPS Scaleway Backup Space
+# ---------------------------------------------------------------------
+# Destination : s3 (RECOMMANDE) ou ftp (herite)
+# ---------------------------------------------------------------------
+BACKUP_TARGET=s3
+
+BACKUP_S3_BUCKET=humanix-archives-audit
+BACKUP_S3_PREFIX=postgres/
+AWS_ACCESS_KEY_ID=<cle d'application dediee, en ecriture>
+AWS_SECRET_ACCESS_KEY=<secret associe>
+
+# Optionnels, valeurs par defaut du script :
+# BACKUP_S3_ENDPOINT=https://s3.fr-par.scw.cloud
+# BACKUP_S3_REGION=fr-par
+
+# En mode s3, BACKUP_RETENTION_DAYS est la DUREE DU VERROU WORM, pas une
+# consigne de menage : le script ne supprime rien (cf. § 3, Immuabilite).
+
+# ---------------------------------------------------------------------
+# HERITE - FTPS Scaleway Backup Space. Conserve pour le retour arriere,
+# a ne renseigner que si BACKUP_TARGET=ftp.
+# ---------------------------------------------------------------------
 BACKUP_FTP_HOST=backup-paris-1.dedibox.fr   # adapter à ton serveur
 BACKUP_FTP_USER=<user FTP fourni par Scaleway>
 BACKUP_FTP_PASSWORD=<password FTP>
@@ -303,7 +422,18 @@ tail -200 /var/log/humanix/backup.log
 # Backups locaux récents
 ls -lh /var/backups/humanix/
 
-# Backups distants
+# Backups distants, mode s3
+aws --endpoint-url https://s3.fr-par.scw.cloud --region fr-par \
+  s3api list-objects-v2 --bucket humanix-archives-audit --prefix postgres/ \
+  --query 'Contents[].{Nom:Key,Taille:Size,Date:LastModified}' --output table
+
+# Verifier qu'un objet est BIEN verrouille (la reponse doit porter
+# ObjectLockMode=COMPLIANCE et une date de fin dans le futur)
+aws --endpoint-url https://s3.fr-par.scw.cloud --region fr-par \
+  s3api head-object --bucket humanix-archives-audit \
+  --key postgres/humanix-pg-<horodatage>.dump.age
+
+# Backups distants, mode ftp (herite)
 lftp -e "
   set ftp:ssl-force yes;
   open -u <user>,<password> <host>;
@@ -327,6 +457,7 @@ cd /opt/humanix-prod
 ```
 
 Le script va :
+
 1. Lister les backups locaux + distants
 2. Te demander lequel restaurer (numéro)
 3. Télécharger si distant, déchiffrer avec ta clé privée
@@ -340,7 +471,8 @@ Le script va :
 
 ## Historique des révisions
 
-| Date | Auteur | Changements |
-|---|---|---|
-| 2026-05-11 | Florian + Claude | Création du document - politique initiale |
-| 2026-05-22 | Florian + Claude | Ajout § 10 : implémentation opérationnelle self-host + scripts `backup-db.sh` / `restore-db.sh` + procédure cron host |
+| Date       | Auteur           | Changements                                                                                                                                                                                                              |
+| ---------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-05-11 | Florian + Claude | Création du document - politique initiale                                                                                                                                                                                |
+| 2026-05-22 | Florian + Claude | Ajout § 10 : implémentation opérationnelle self-host + scripts `backup-db.sh` / `restore-db.sh` + procédure cron host                                                                                                    |
+| 2026-08-13 | Florian + Claude | `BACKUP_TARGET=s3` : dépôt en Object Storage avec verrou WORM COMPLIANCE (30 j), rotation déléguée au cycle de vie du bucket. Le FTP en clair devient un mode hérité. `restore-db.sh` sait lister et récupérer depuis S3 |
