@@ -135,7 +135,25 @@ services:
   #                            externe, RGPD/AGPL-friendly. Container 200-500 Mo.
   # =====================================================================
   tts:
-    profiles: ["piper"]
+    # PAS de `profiles:` ici, et c'est deliberé depuis le 2026-08-13.
+    #
+    # Ce service portait `profiles: ["piper"]`. Or rien n'activait ce profil :
+    # ni deploy.sh, ni COMPOSE_PROFILES dans le .env de la stack. TTS ne
+    # tournait en production que parce qu'il avait ete demarre a la main un
+    # jour, et que `restart: unless-stopped` l'avait maintenu depuis.
+    #
+    # Autrement dit, le deploiement automatise n'a JAMAIS su remonter ce
+    # service. Personne ne s'en apercevait tant qu'on ne l'arretait pas. La
+    # bascule sous Podman l'a arrete, et le redemarrage machine qui a suivi
+    # l'a laisse au sol.
+    #
+    # Le profil decrivait donc une intention qui n'existait pas : TTS doit
+    # toujours tourner. On retire le profil plutot que d'ajouter le drapeau
+    # `--profile piper` a chaque chemin d'appel (deploy.sh, unite systemd,
+    # relance manuelle), dont un seul oubli suffirait a reproduire la panne.
+    #
+    # Un self-hoster qui n'en veut pas peut toujours ne pas le demarrer, ou
+    # remettre un profil chez lui en connaissance de cause.
     build:
       context: ./infra/tts
       dockerfile: Dockerfile
