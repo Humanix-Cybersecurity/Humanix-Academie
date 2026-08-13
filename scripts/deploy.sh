@@ -101,8 +101,29 @@ fi
 REF="${REF:-main}"
 
 [ -d "$STACK_DIR" ] || die "repertoire de stack introuvable : $STACK_DIR"
-command -v docker >/dev/null || die "docker introuvable"
 cd "$STACK_DIR"
+
+# --- Moteur de conteneurs -------------------------------------------------
+#
+# Les deux moteurs COHABITENT sur humanix-prod-01 : la demo tourne sous
+# Podman rootless depuis le 2026-08-13, la production encore sous Docker.
+#
+# Le moteur est declare EXPLICITEMENT dans le .env de la stack, et non
+# devine. Une detection automatique se tromperait forcement : `podman ps`
+# voit les conteneurs de la demo meme quand on deploie la production, et
+# inversement. Un deploiement qui rebasculerait une stack d'un moteur a
+# l'autre sans prevenir serait une regression silencieuse de plus.
+#
+#   CONTAINER_ENGINE=podman   dans /opt/humanix-demo/.env
+#   (absent)                  -> docker, comportement historique
+COMPOSE="docker compose"
+if [ -f .env ] && grep -qE '^CONTAINER_ENGINE=podman' .env 2>/dev/null; then
+  COMPOSE="podman-compose"
+fi
+MOTEUR="${COMPOSE%% *}"
+command -v "$MOTEUR" >/dev/null || die "$MOTEUR introuvable (declare dans .env)"
+log "Moteur de conteneurs : $COMPOSE"
+
 git rev-parse --git-dir >/dev/null 2>&1 || die "$STACK_DIR n'est pas un clone git" 2
 
 # --- Resolution du remote Humanix-Academie -------------------------------
@@ -295,10 +316,10 @@ log "content-pro present : $(ls content-pro/content 2>/dev/null | wc -l | tr -d 
 # --- Build + restart ------------------------------------------------------
 
 log "Build de l'image applicative (peut prendre plusieurs minutes) ..."
-docker compose build app || die "build echoue" 5
+$COMPOSE build app || die "build echoue" 5
 
 log "Redemarrage du service app ..."
-docker compose up -d --no-deps app
+$COMPOSE up -d --no-deps app
 
 # --- Trace de ce qui est deploye -----------------------------------------
 #
@@ -329,7 +350,7 @@ done
 
 if ! $healthy; then
   warn "le service ne repond pas sur $HEALTH_URL apres ${HEALTH_WAIT}s."
-  docker compose logs --tail=60 app || true
+  $COMPOSE logs --tail=60 app || true
   cat >&2 <<EOF
 
 [deploy] ROLLBACK : revenir au commit precedent avec
@@ -337,7 +358,7 @@ if ! $healthy; then
     cd $STACK_DIR
     git merge --abort 2>/dev/null || git reset --hard $CURRENT
     git submodule update --init --recursive content-pro
-    docker compose up -d --build app
+    $COMPOSE up -d --build app
 
   Commit precedent : $CURRENT_SHORT
 EOF
@@ -348,4 +369,4 @@ log "OK : service healthy."
 log "Commit deploye : $(git rev-parse --short HEAD)"
 log ""
 log "Verifier le catalogue :"
-log "    docker compose exec -T postgres psql -U humanix -d humanix -tAc 'select count(*) from \"Saison\";'"
+log "    $COMPOSE exec -T postgres psql -U humanix -d humanix -tAc 'select count(*) from \"Saison\";'"
