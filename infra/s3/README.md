@@ -152,13 +152,28 @@ Un jeu plus étroit (`ObjectStorageObjectsRead` + `…Write`) a été écarté :
 rien ne garantissait qu'il inclue `PutObjectRetention`, le droit de poser le
 verrou lui-même.
 
-## Ce qui reste à éprouver
+## Le verrou est réellement appliqué
 
-Scaleway **enregistre** le verrou, c'est établi. Qu'il le **fasse respecter**
-ne l'est pas.
+Éprouvé le 2026-08-13, et pas seulement enregistré. Une tentative d'écourter
+la rétention de l'objet déposé à 14:36, du 12 septembre au 14 août :
 
-Le test non destructif consiste à tenter d'écourter la rétention. En
-COMPLIANCE, ce doit être refusé, y compris au propriétaire du bucket :
+```
+An error occurred (AccessDenied) when calling the PutObjectRetention
+operation: Access Denied because object protected by object lock.
+```
+
+**Le message compte autant que le code.** Un `AccessDenied` nu est ce que
+renvoie une clé sans droits — on l'a vu une heure plus tôt, quand la clé
+d'application n'avait aucune permission sur ce bucket. Ici le refus nomme le
+verrou : ce n'est pas l'autorisation qui manque, c'est la protection qui
+s'oppose. Même code, cause opposée.
+
+Toute la chaîne est donc vérifiée : le dépôt, l'enregistrement du verrou, sa
+relecture depuis une clé tierce, et son refus d'être altéré.
+
+Le test reste à rejouer après toute évolution du bucket ou de sa politique.
+Il est non destructif — un refus prouve le verrou, un succès prouverait qu'il
+est décoratif, et dans les deux cas la sauvegarde reste en place :
 
 ```bash
 aws --endpoint-url https://s3.fr-par.scw.cloud --region fr-par \
@@ -166,9 +181,6 @@ aws --endpoint-url https://s3.fr-par.scw.cloud --region fr-par \
   --key postgres/<objet>.dump.age \
   --retention Mode=COMPLIANCE,RetainUntilDate=<une date anterieure>
 ```
-
-Un refus prouve le verrou ; un succès prouverait qu'il est décoratif. Dans
-les deux cas la sauvegarde reste en place, seule sa date changerait.
 
 ⚠️ Ne PAS tester par `delete-object` sans identifiant de version. Sur un
 bucket versionné, l'appel réussirait en posant un marqueur de suppression :
