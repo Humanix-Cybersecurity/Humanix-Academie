@@ -30,7 +30,7 @@
 #   ARCHIVE_S3_ENDPOINT       defaut https://s3.fr-par.scw.cloud
 #   ARCHIVE_S3_REGION         defaut fr-par
 #   ARCHIVE_THRESHOLD_DAYS    defaut 370 (cf. « la marge » plus bas)
-#   ARCHIVE_RETAIN_YEARS      defaut 10 (duree du verrou WORM)
+#   ARCHIVE_RETAIN_DAYS       defaut 366 (duree du verrou WORM, en jours)
 #
 # USAGE :
 #   ./scripts/archive-audit-logs.sh --dry-run   # montre le plan, n'ecrit rien
@@ -67,6 +67,24 @@
 # decisif ; tout le reste est secondaire.
 #
 # ---------------------------------------------------------------------
+# LE VERROU N'EST PAS LA RETENTION
+# ---------------------------------------------------------------------
+#
+# L'Object Lock empeche la SUPPRESSION pendant ARCHIVE_RETAIN_DAYS. Passe
+# ce delai, l'objet PEUT etre supprime, mais rien ne le supprime.
+#
+# Sans regle de cycle de vie sur le bucket, les archives s'accumuleraient
+# indefiniment -- ce qui est en soi une non-conformite RGPD (art. 5.1.e,
+# limitation de conservation). Il faut donc les DEUX :
+#
+#   le verrou (ici)        garantit qu'on ne peut pas effacer avant terme
+#   le cycle de vie (bucket) garantit qu'on efface bien apres terme
+#
+# La regle d'expiration doit etre posee A 367 JOURS au moins, soit un jour
+# de plus que le verrou : une expiration anterieure au verrou ne
+# supprimerait rien, l'objet etant protege. Cf. docs/CRON.md.
+
+# ---------------------------------------------------------------------
 # LA MARGE : pourquoi 370 et pas 400
 # ---------------------------------------------------------------------
 #
@@ -95,7 +113,25 @@ DRY_RUN=false
 log() { printf '[%s] %s\n' "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" "$*"; }
 die() { printf '[%s] ERREUR : %s\n' "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" "$1" >&2; exit "${2:-1}"; }
 
-# --- 0. Pre-requis ----------------------------------------------------
+# --- 0. Chargement de la configuration --------------------------------
+#
+# `set -a` n'est PAS decoratif. `source` seul cree des variables de SHELL ;
+# `aws` et `psql` sont des processus ENFANTS et ne lisent que l'ENVIRONNEMENT.
+# Sans l'export automatique, un fichier de conf parfaitement valide donnerait
+# « AWS_ACCESS_KEY_ID non defini » trois lignes plus bas.
+#
+# Le script se charge lui-meme de cette lecture plutot que de la deleguer a
+# la ligne cron : une ligne cron est un endroit ou l'on oublie, et l'oubli
+# se manifesterait par un echec chaque nuit a 01h00.
+CONF="${ARCHIVE_ENV_FILE:-/etc/humanix/archive.env}"
+if [ -r "$CONF" ]; then
+  set -a
+  # shellcheck disable=SC1090
+  . "$CONF"
+  set +a
+fi
+
+# --- 1. Pre-requis ----------------------------------------------------
 for bin in psql age aws gzip sha256sum; do
   command -v "$bin" >/dev/null 2>&1 || die "binaire manquant : $bin" 1
 done
@@ -108,7 +144,7 @@ done
 ENDPOINT="${ARCHIVE_S3_ENDPOINT:-https://s3.fr-par.scw.cloud}"
 REGION="${ARCHIVE_S3_REGION:-fr-par}"
 SEUIL_JOURS="${ARCHIVE_THRESHOLD_DAYS:-370}"
-RETENTION_ANS="${ARCHIVE_RETAIN_YEARS:-10}"
+RETENTION_JOURS="${ARCHIVE_RETAIN_DAYS:-366}"
 
 # La cle privee n'a rien a faire ici : `age -r` chiffre avec la seule cle
 # PUBLIQUE. Ce script ne peut donc pas relire ce qu'il produit — c'est
@@ -123,7 +159,7 @@ trap 'rm -rf "$TRAVAIL"' EXIT INT TERM
 
 s3() { aws --endpoint-url "$ENDPOINT" --region "$REGION" "$@"; }
 
-log "Seuil d'archivage : $SEUIL_JOURS jours. Verrou WORM : $RETENTION_ANS ans."
+log "Seuil d'archivage : $SEUIL_JOURS jours. Verrou WORM : $RETENTION_JOURS jours."
 $DRY_RUN && log "MODE --dry-run : aucune ecriture, aucun upload."
 
 # --- 1. Quels mois sont entierement au-dela du seuil ? ----------------
@@ -203,8 +239,8 @@ for m in $MOIS; do
   # Verrou WORM. `--object-lock-mode COMPLIANCE` : meme le proprietaire
   # du bucket ne peut pas raccourcir la retention. C'est plus fort que
   # GOVERNANCE, ou un porteur de droits suffisants peut passer outre.
-  RETENIR_JUSQU_A=$(date -u -d "+${RETENTION_ANS} years" +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null \
-    || date -u -v"+${RETENTION_ANS}y" +"%Y-%m-%dT%H:%M:%SZ")
+  RETENIR_JUSQU_A=$(date -u -d "+${RETENTION_JOURS} days" +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null \
+    || date -u -v"+${RETENTION_JOURS}d" +"%Y-%m-%dT%H:%M:%SZ")
 
   s3 s3api put-object \
     --bucket "$ARCHIVE_S3_BUCKET" \
