@@ -120,6 +120,7 @@ d'une version de l'API ne l'est pas d'office de la suivante.
 | 2026-08-13 | bucket créé, Object Lock actif, versionnement actif, `NoSuchLifecycleConfiguration`   |
 | 2026-08-13 | **les quatre règles posées et relues**, `NoncurrentVersionExpiration` confirmé retenu |
 | 2026-08-13 | **premier dépôt réel verrouillé**, relu depuis une clé tierce                         |
+| 2026-08-13 | **archivage éprouvé de bout en bout**, y compris la relecture                         |
 
 ## Le premier dépôt, et ce qu'il a coûté
 
@@ -151,6 +152,42 @@ inconnu donnerait `InvalidAccessKeyId`, un mauvais secret
 Un jeu plus étroit (`ObjectStorageObjectsRead` + `…Write`) a été écarté :
 rien ne garantissait qu'il inclue `PutObjectRetention`, le droit de poser le
 verrou lui-même.
+
+## L'archivage, éprouvé sans attendre juin 2027
+
+`archive-audit-logs.sh` ne traite que des mois complets au-delà de 370 jours.
+En production, la plus ancienne entrée d'`AuditLog` a 84 jours : le premier
+archivage réel n'aurait eu lieu qu'en **juin 2027**. Attendre deux ans pour
+savoir si le chiffrement, le dépôt et le verrou fonctionnent, c'est
+exactement la posture que ce dépôt s'interdit.
+
+Le chemin a donc été exercé le 2026-08-13 sur un banc jetable : une base au
+schéma réel, peuplée d'entrées d'audit fabriquées en 2025-06 et 2025-07 —
+deux mois que la production ne produira jamais, sa plus ancienne entrée
+datant de 2026-05.
+
+|                   | 2025-06    | 2025-07    |
+| ----------------- | ---------- | ---------- |
+| Lignes exportées  | 7          | 3          |
+| Taille de l'objet | 472 o      | 443 o      |
+| Verrou            | COMPLIANCE | COMPLIANCE |
+| Échéance          | 2027-08-14 | 2027-08-14 |
+
+**Ce que la relecture a confirmé**, après téléchargement, déchiffrement par
+la clé privée `age` et décompression :
+
+- 7 et 3 lignes JSONL, conformes aux métadonnées de l'objet ;
+- les **seize** colonnes d'`AuditLog` présentes, sans perte ;
+- les identifiants exacts des entrées insérées.
+
+Un second passage a répondu « 0 archive(s) creee(s), 2 deja presente(s) » :
+l'idempotence par interrogation du bucket fonctionne, sans fichier d'état
+local à désynchroniser.
+
+**Ces deux objets restent dans le bucket** jusqu'au 2027-08-14 — le verrou
+COMPLIANCE interdit de les effacer, c'est le prix assumé de la preuve. La
+règle de cycle de vie les supprimera d'elle-même à 367 jours. Ils sont
+reconnaissables à leur mois, antérieur à toute donnée de production.
 
 ## Le verrou est réellement appliqué
 
