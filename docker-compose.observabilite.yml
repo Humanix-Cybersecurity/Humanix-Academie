@@ -58,6 +58,15 @@ services:
       # Lecture des logs de tous les conteneurs. En lecture seule : Vector
       # n'a aucune raison de piloter le démon Docker.
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      # Socket API de Podman rootless, pour les conteneurs de la demo.
+      # `${PODMAN_SOCK:-/run/user/1000/podman/podman.sock}` : l'uid de
+      # `humanix` vaut 1000 sur humanix-prod-01, mais le rendre reglable
+      # evite de coder en dur une valeur qui n'a rien d'universel.
+      #
+      # A activer cote hote, une fois : `systemctl --user enable --now
+      # podman.socket`. Sans ca le chemin n'existe pas, et le montage
+      # echouerait -- d'ou le `:ro` et non un montage obligatoire.
+      - ${PODMAN_SOCK:-/run/user/1000/podman/podman.sock}:/var/run/podman.sock:ro
       # Journal HAProxy. C'est la SEULE source qui voie tout le trafic HTTP :
       # HAProxy tourne en service systemd sur l'hôte, pas en conteneur, donc
       # `docker_logs` ne le voit pas.

@@ -94,6 +94,33 @@ sources:
       - humanix-prod-vector
       - humanix-demo-vector
 
+  # === Logs des conteneurs PODMAN (la demo) ===
+  #
+  # Le socket Docker ne voit QUE les conteneurs Docker. Depuis la migration
+  # de la demo sous Podman rootless (2026-08-13), ses trois conteneurs sont
+  # devenus invisibles a la source ci-dessus, et ses logs ont cesse
+  # d'atteindre Loki. Personne ne l'a vu : la chaine de PRODUCTION
+  # continuait de fonctionner, donc rien n'a alerte.
+  #
+  # Podman expose une API compatible Docker, mais sur un socket a lui, et
+  # desactive par defaut. Cote hote, une fois pour toutes :
+  #
+  #     systemctl --user enable --now podman.socket
+  #
+  # `loginctl enable-linger humanix` est deja actif (pose lors de la
+  # migration de la demo) : sans lui le socket disparaitrait a la
+  # deconnexion, et avec lui les logs.
+  #
+  # Cette source est TOLERANTE A L'ABSENCE : si le socket n'existe pas,
+  # Vector journalise une erreur de connexion et les autres sources
+  # continuent. Un poste sans Podman n'est donc pas casse par ce bloc.
+  podman:
+    type: docker_logs
+    docker_host: unix:///var/run/podman.sock
+    exclude_containers:
+      - humanix-prod-vector
+      - humanix-demo-vector
+
   # === Metriques applicatives ===
   #
   # Cockpit ne sait pas scraper un endpoint externe : il ne fait que
@@ -140,6 +167,7 @@ transforms:
     type: remap
     inputs:
       - docker
+      - podman
     source: |
       # On ne fusionne QUE si le parse donne un objet : `merge` exige un
       # object strict et echouerait sur un scalaire (ex. un log "ok").

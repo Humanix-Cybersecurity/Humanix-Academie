@@ -182,14 +182,70 @@ Référence au moment de la migration : **37 saisons, 13 users, 2 tenants**.
       installation existante ne change de comportement.
 
       Vérifié par un intercepteur nommé `podman` qui journalise ses arguments
-          avant de les relayer. La trace montre `podman ps --filter …` puis
-          `podman exec -i -e PGPASSWORD=… pg_dump …` — plus aucun appel `docker`.
+              avant de les relayer. La trace montre `podman ps --filter …` puis
+              `podman exec -i -e PGPASSWORD=… pg_dump …` — plus aucun appel `docker`.
 
-          Les deux scripts DOIVENT lire la même variable : restaurer avec un autre
-          moteur que celui qui a sauvegardé viserait le mauvais conteneur, donc la
-          mauvaise base, et on le découvrirait le jour de la restauration.
+              Les deux scripts DOIVENT lire la même variable : restaurer avec un autre
+              moteur que celui qui a sauvegardé viserait le mauvais conteneur, donc la
+              mauvaise base, et on le découvrirait le jour de la restauration.
 
 - [ ] La dizaine de documents qui citent `docker compose` dans leurs exemples.
-- [ ] **Décider pour la production.** Le vrai risque y est le volume PostgreSQL,
-      bien plus gros que les 69 Mo de la démo. Même méthode : `pg_dump`, jamais
-      de copie de volume.
+- [ ] **Décider pour la production.** Deux corrections à ce que ce document
+      affirmait.
+
+      **Le volume PostgreSQL n'est pas un risque.** Mesuré le 2026-08-13 :
+          la base de production fait **15 Mo** (70 Mo de volume), celle de la démo
+          **14 Mo** (69 Mo). Elles sont de taille identique, et un `pg_dump` de la
+          production prend **0,231 s** pour 444 Ko. L'indisponibilité serait
+          dominée par l'arrêt et le démarrage des conteneurs, pas par les données.
+          La méthode reste `pg_dump`, jamais de copie de volume — non pour le
+          volume, mais parce que les UID diffèrent entre les deux moteurs.
+
+          **Le vrai obstacle est l'observabilité**, et il s'est déjà manifesté.
+          Cf. la section suivante.
+
+## Le piège qui a déjà mordu : Vector ne voit pas Podman
+
+Vector collecte les logs par la source `docker_logs`, qui interroge l'API du
+démon via `/var/run/docker.sock`. **Ce socket ne voit que les conteneurs
+Docker.**
+
+Constaté le 2026-08-13, après la migration de la démo :
+
+| Vu par `docker.sock`    | Vu par Podman seul      |
+| ----------------------- | ----------------------- |
+| `humanix-prod-app`      | `humanix-demo-app`      |
+| `humanix-prod-postgres` | `humanix-demo-postgres` |
+| `humanix-prod-tts`      | `humanix-demo-tts`      |
+| `humanix-prod-vector-1` |                         |
+
+Les logs de la démo ont donc **cessé d'atteindre Loki le jour de sa
+migration**, sans que rien ne le signale : la chaîne de production
+continuait de fonctionner, donc aucune alerte n'a sonné. C'est le mode de
+panne le plus coûteux — une perte de visibilité qui se découvre le jour où
+l'on cherche une trace qui n'existe pas.
+
+Migrer la production sous Podman sans traiter ce point couperait **toute**
+l'observabilité, cette fois.
+
+### La correction
+
+Podman expose une API compatible Docker, sur un socket à lui, désactivé par
+défaut. Côté hôte, une fois :
+
+```bash
+systemctl --user enable --now podman.socket
+ls -l /run/user/$(id -u)/podman/podman.sock
+```
+
+`loginctl enable-linger humanix` est déjà actif depuis la migration de la
+démo — indispensable, sans quoi le socket disparaîtrait à la déconnexion.
+
+`infra/vector/vector.yaml` porte désormais une **seconde source**
+`docker_logs` pointant sur `unix:///var/run/podman.sock`, chaînée dans le
+même `parse_json` que la première. Le socket est monté par
+`docker-compose.observabilite.yml`, via `PODMAN_SOCK` pour ne pas coder en
+dur un uid.
+
+La source est tolérante à l'absence : sans socket, Vector journalise une
+erreur de connexion et les autres sources continuent.
