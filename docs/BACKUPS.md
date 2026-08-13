@@ -117,6 +117,73 @@ environnement isolé. Procédure documentée :
 
 Un drill **échoué** déclenche une revue obligatoire dans les 7 jours.
 
+### Drill du 2026-08-13 : le premier depuis S3
+
+Le premier vraiment joué de bout en bout, et il a trouvé un défaut.
+
+**Où le jouer.** Pas sur la production : la clé privée `age` n'y est pas, et
+c'est voulu. `backup-db.sh` ne détient que la clé **publique**, donc une
+machine compromise ne peut pas relire ce qu'elle a produit. La contrepartie
+est que la restauration doit se faire là où vit la clé privée.
+
+**Le montage**, entièrement local, sans aucun contact avec la production :
+
+```bash
+docker run -d --name humanix-restore-test \
+  -e POSTGRES_USER=humanix -e POSTGRES_PASSWORD=<jetable> \
+  -e POSTGRES_DB=humanix_restore_test postgres:16-alpine
+
+cd <depot> && export \
+  AWS_ACCESS_KEY_ID=$(scw config get access-key --profile humanix) \
+  AWS_SECRET_ACCESS_KEY=$(scw config get secret-key --profile humanix) \
+  BACKUP_TARGET=s3 BACKUP_S3_BUCKET=humanix-archives-audit \
+  BACKUP_S3_PREFIX=postgres/ BACKUP_PG_CONTAINER=humanix-restore-test \
+  PGUSER=humanix PGPASSWORD=<jetable> PGDATABASE=humanix_restore_test \
+  BACKUP_LOCAL_DIR=<repertoire VIDE>
+./scripts/restore-db.sh
+```
+
+`BACKUP_LOCAL_DIR` doit pointer sur un répertoire **vide** : c'est ce qui
+force le script à passer par S3 plutôt que par une copie locale, donc à
+éprouver le chemin qu'on veut tester.
+
+**Le résultat**, comparé à la production au même instant :
+
+| Table                     | Restauré                | Production |
+| ------------------------- | ----------------------- | ---------- |
+| `Tenant`                  | 4                       | 4          |
+| `User`                    | 37                      | 37         |
+| `Saison`                  | 63                      | 63         |
+| `Episode`                 | 372                     | 372        |
+| `AuditLog`                | 211                     | 211        |
+| `DataBreach`              | 451                     | 451        |
+| `max(AuditLog.createdAt)` | 2026-08-13 12:03:14.243 | identique  |
+
+**Le défaut trouvé.** `restore-db.sh` échouait en erreur d'arithmétique dès
+que le répertoire local était vide :
+
+```
+restore-db.sh: line 158: 0
+0: arithmetic syntax error in expression (error token is "0")
+```
+
+`grep -c .` sur une entrée vide imprime `0` **et** sort en code 1 ; le
+`|| echo 0` qui l'accompagnait ajoutait un second `0`, et `$(( ))` recevait
+`"0\n0"`.
+
+Ce cas n'arrive jamais en production, où `/var/backups/humanix` contient
+toujours des fichiers. Il arrive en revanche systématiquement quand on
+restaure **sur une machine propre** — c'est-à-dire dans le seul scénario où
+la restauration compte vraiment. Le script était donc cassé, depuis le début,
+précisément pour l'usage qui justifie son existence.
+
+Aucune relecture ne l'aurait attrapé : le code paraît juste. Il a fallu jouer
+le drill.
+
+**Nettoyage.** Le dump déchiffré contient des données de production réelles.
+Le script le place dans un `mktemp` qu'il supprime lui-même ; il reste à
+retirer le fichier chiffré téléchargé et le conteneur jetable.
+
 ---
 
 ## 5. RTO / RPO cibles

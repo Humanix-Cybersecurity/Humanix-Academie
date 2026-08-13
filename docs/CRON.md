@@ -143,6 +143,35 @@ par une propriété qu'Ofelia n'a pas : **elle ne dépend pas de Docker**. Si
 le démon tombe ou si la stack est arrêtée pour maintenance, les purges et
 les sauvegardes s'exécutent quand même.
 
+### Les horaires sont en heure locale
+
+⚠️ **Europe/Paris, pas UTC** — contrairement à ce que ce dépôt a longtemps
+affirmé. Corrigé le 2026-08-13.
+
+`infra/cron/crontab.prod` portait `CRON_TZ=UTC`. Or **`CRON_TZ` n'existe pas
+dans la Vixie cron de Debian/Ubuntu** : absent de `man 5 crontab`, absent
+même des chaînes de `/usr/sbin/cron`. C'est une fonctionnalité de _cronie_,
+l'implémentation Red Hat. La ligne n'était qu'une variable d'environnement
+ordinaire, exportée aux jobs, sans effet sur l'ordonnancement.
+
+La preuve tient dans le journal : `45 2 * * *` s'exécute à `02:45:01+02:00`,
+soit 00:45 UTC. Honoré, `CRON_TZ=UTC` l'aurait fait partir à 04:45 locales.
+
+**Ce que ça change en pratique** : l'équivalent UTC se décale d'une heure
+entre été et hiver. 02:45 locales valent 00:45 UTC en été, 01:45 UTC en
+hiver. Ça ne compte que pour corréler ces horaires avec les journaux
+applicatifs, qui sont en UTC.
+
+**Ce que ça ne change pas** : aucun job ne saute au changement d'heure de
+mars, contrairement à ce qu'on pourrait craindre d'un job à 02:45. `man 8
+cron` est explicite — « _If the time has moved forwards, those jobs which
+would have run in the time that was skipped will be run soon after the
+change_ » — et cela vise précisément les jobs à heure fixe.
+
+Rendre l'ordonnancement réellement UTC demanderait de passer la machine
+entière en UTC. Ça n'a pas été fait : le gain est mince et le coût porte sur
+tout le reste, journaux système et confort d'administration compris.
+
 **La source de vérité est `infra/cron/crontab.prod`, dans le dépôt.**
 Ne jamais utiliser `crontab -e` : la modification serait invisible pour
 tout le monde, et c'est exactement ce qui a laissé vivre le bug ci-dessus.

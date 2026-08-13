@@ -30,14 +30,41 @@
 # HORAIRES
 # ---------------------------------------------------------------------
 #
-# Tout est en UTC (cf. CRON_TZ). Les jobs de nuit sont espaces de 15 min
-# pour ne pas se marcher dessus sur une machine qui porte aussi la demo.
+# LES HORAIRES SONT EN HEURE LOCALE, PAS EN UTC.
+#
+# Ce fichier a longtemps porte `CRON_TZ=UTC` et affirmait « tout est en
+# UTC ». C'etait faux, et verifie comme tel le 2026-08-13 :
+#
+#   CRON_TZ n'existe pas dans la Vixie cron de Debian/Ubuntu. Ni dans
+#   `man 5 crontab`, ni meme comme chaine dans /usr/sbin/cron. C'est une
+#   fonctionnalite de cronie (Red Hat). La ligne etait donc traitee comme
+#   une variable d'environnement ordinaire, exportee aux jobs, sans le
+#   moindre effet sur l'ordonnancement.
+#
+# La preuve par le journal : `45 2 * * *` s'execute a 02:45:01+02:00, soit
+# 00:45 UTC. Si CRON_TZ avait ete honore, le job serait parti a 04:45
+# locales. Il ne l'a jamais ete.
+#
+# Les horaires ci-dessous sont donc ceux de la MACHINE : Europe/Paris.
+#
+# CONSEQUENCE A CONNAITRE : l'equivalent UTC se decale d'une heure entre
+# ete et hiver. 02:45 locales valent 00:45 UTC en ete, 01:45 UTC en hiver.
+# Cela n'a d'importance que pour correler ces horaires avec les journaux
+# applicatifs, qui sont en UTC.
+#
+# Ce qui n'est PAS un probleme, contrairement a ce qu'on pourrait craindre :
+# le changement d'heure de mars ne fait sauter aucun job. `man 8 cron` :
+# « If the time has moved forwards, those jobs which would have run in the
+# time that was skipped will be run soon after the change. » Cela vise
+# exactement les jobs a heure fixe comme les notres.
+#
+# Les jobs de nuit sont espaces de 15 min pour ne pas se marcher dessus sur
+# une machine qui porte aussi la demo.
 #
 # Les frequences DOIVENT rester coherentes avec `expectedEveryHours` de
 # lib/cron/registry.ts : c'est cette valeur qui decide si un job est
 # affiche « en retard » sur /superadmin/system-health.
 
-CRON_TZ=UTC
 SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
