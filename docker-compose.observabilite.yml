@@ -79,8 +79,24 @@ services:
     # Le journal HAProxy est en `syslog:adm 640`. Sans appartenir au groupe
     # `adm`, Vector ne peut pas l'ouvrir — et une source `file` qui ne peut pas
     # lire sa cible échoue sans rien produire.
+    #
+    # LA VALEUR DEPEND DU MOTEUR, et ce n'est pas un detail.
+    #
+    #   docker   "4"            le GID 4 du conteneur EST l'adm de l'hote
+    #   podman   "keep-groups"  en rootless, le GID 4 du conteneur mappe vers
+    #                           100004 via le subgid, PAS vers adm. Vector
+    #                           perdrait l'acces au journal, donc les metriques
+    #                           de taux d'erreur et de latence, sans rien
+    #                           signaler d'autre qu'une source muette.
+    #
+    # `keep-groups` demande a Podman de conserver les groupes supplementaires
+    # de l'utilisateur hote. Cela ne fonctionne QUE parce que `humanix`
+    # appartient reellement a `adm` — verifie le 2026-08-13.
+    #
+    # Declare dans le .env de la stack, a cote de CONTAINER_ENGINE. Defaut "4"
+    # pour ne rien changer aux installations sous Docker.
     group_add:
-      - "4"
+      - "${VECTOR_GROUP_ADD:-4}"
 
     depends_on:
       app:
