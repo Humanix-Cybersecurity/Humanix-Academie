@@ -329,7 +329,7 @@ qu'une fois ces étapes faites, sans quoi il échouerait chaque nuit — et un
    sauvegardes PostgreSQL (30 jours) dans le même bucket.
 3. ✅ **Clé API dédiée, en écriture.** L'archiveur dépose ; il ne supprime
    pas. La restauration passe par une clé distincte, détenue par un humain.
-4. ⬜ **Règles de cycle de vie** sur le bucket. La configuration de
+4. ✅ **Règles de cycle de vie** posées et relues le 2026-08-13. La
    référence est versionnée : `infra/s3/lifecycle-humanix-archives-audit.json`,
    avec le mode d'emploi dans `infra/s3/README.md`.
 
@@ -344,12 +344,12 @@ qu'une fois ces étapes faites, sans quoi il échouerait chaque nuit — et un
    entière (art. 5.1.e). Et une expiration réglée *avant* la fin du verrou ne
    supprimerait rien, l'objet étant protégé.
 
-   ⚠️ La seconde colonne n'est pas un raffinement. Le bucket est **versionné**,
+   La seconde colonne n'est pas un raffinement. Le bucket est **versionné**,
    condition d'Object Lock : une expiration seule pose un marqueur de
    suppression sans rien effacer, et le stockage continue d'être facturé. La
    console ne sait pas exprimer `NoncurrentVersionExpiration` ; il faut passer
    par l'API, puis **relire** la configuration pour vérifier qu'elle a été
-   retenue en entier.
+   retenue en entier. Relecture faite : le champ est bien pris en charge.
 5. ⬜ **`/etc/humanix/archive.env`** avec les variables listées en tête du
    script. Depuis le 2026-08-13, **le script lit ce fichier lui-même**, avec
    `set -a` : `source` seul créerait des variables de shell, invisibles pour

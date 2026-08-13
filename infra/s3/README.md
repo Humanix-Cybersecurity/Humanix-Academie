@@ -61,9 +61,19 @@ clause `Expiration`, d'où une règle distincte plutôt qu'un champ de plus.
 ## Appliquer
 
 La console ne sait pas exprimer `NoncurrentVersionExpiration`. Il faut passer
-par l'API, avec une identité qui porte `ObjectStorageFullAccess` : la clé
-d'application dédiée à l'archivage n'a que le dépôt d'objets, elle ne suffit
-pas ici.
+par l'API.
+
+`PutBucketLifecycleConfiguration` est une opération de **bucket**, pas
+d'objet : une clé limitée au dépôt ne suffit pas. La clé du profil `scw`
+nommé `humanix` a fait l'affaire le 2026-08-13. `aws` ne lit pas la
+configuration de `scw`, il faut donc lui passer les identifiants
+explicitement — la substitution garde le secret hors de l'affichage et hors
+de l'historique du shell :
+
+```bash
+export AWS_ACCESS_KEY_ID=$(scw config get access-key --profile humanix)
+export AWS_SECRET_ACCESS_KEY=$(scw config get secret-key --profile humanix)
+```
 
 ```bash
 aws --endpoint-url https://s3.fr-par.scw.cloud --region fr-par \
@@ -92,12 +102,25 @@ Ce qui doit apparaître dans la réponse :
 
 Si `NoncurrentVersionExpiration` manque à la relecture, la rotation est
 incomplète : les versions non courantes ne seront jamais supprimées et le
-stockage croîtra sans fin. Le contournement est alors un ménage périodique par
-`list-object-versions` puis `delete-object --version-id`, à n'écrire que si le
-cas se présente vraiment.
+stockage croîtra sans fin. Le contournement serait alors un ménage périodique
+par `list-object-versions` puis `delete-object --version-id`, à n'écrire que
+si le cas se présente vraiment.
+
+**Vérifié le 2026-08-13 : le champ est bien retenu.** La relecture renvoie les
+quatre règles en `Enabled`, `NoncurrentVersionExpiration` compris sur les deux
+règles d'expiration. Scaleway le prend donc en charge, contrairement à ce que
+laissent croire des demandes de fonctionnalité publiques toujours ouvertes.
+La relecture reste à refaire à chaque nouvelle application : ce qui est vrai
+d'une version de l'API ne l'est pas d'office de la suivante.
 
 ## État
 
 | Date | État |
 | --- | --- |
-| 2026-08-13 | bucket créé, Object Lock actif, versionnement actif, **aucune règle de cycle de vie** (`NoSuchLifecycleConfiguration`) |
+| 2026-08-13 | bucket créé, Object Lock actif, versionnement actif, `NoSuchLifecycleConfiguration` |
+| 2026-08-13 | **les quatre règles posées et relues**, `NoncurrentVersionExpiration` confirmé retenu |
+
+Ce qui reste à éprouver : aucun objet n'a encore été déposé. Le verrou WORM
+lui-même n'a donc jamais été exercé. Le premier `backup-db.sh` en
+`BACKUP_TARGET=s3` servira de test, et son `head-object` doit renvoyer
+`ObjectLockMode=COMPLIANCE`.
