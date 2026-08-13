@@ -182,27 +182,133 @@ Référence au moment de la migration : **37 saisons, 13 users, 2 tenants**.
       installation existante ne change de comportement.
 
       Vérifié par un intercepteur nommé `podman` qui journalise ses arguments
-              avant de les relayer. La trace montre `podman ps --filter …` puis
-              `podman exec -i -e PGPASSWORD=… pg_dump …` — plus aucun appel `docker`.
+                  avant de les relayer. La trace montre `podman ps --filter …` puis
+                  `podman exec -i -e PGPASSWORD=… pg_dump …` — plus aucun appel `docker`.
 
-              Les deux scripts DOIVENT lire la même variable : restaurer avec un autre
-              moteur que celui qui a sauvegardé viserait le mauvais conteneur, donc la
-              mauvaise base, et on le découvrirait le jour de la restauration.
+                  Les deux scripts DOIVENT lire la même variable : restaurer avec un autre
+                  moteur que celui qui a sauvegardé viserait le mauvais conteneur, donc la
+                  mauvaise base, et on le découvrirait le jour de la restauration.
 
 - [ ] La dizaine de documents qui citent `docker compose` dans leurs exemples.
 - [ ] **Décider pour la production.** Deux corrections à ce que ce document
       affirmait.
 
       **Le volume PostgreSQL n'est pas un risque.** Mesuré le 2026-08-13 :
-          la base de production fait **15 Mo** (70 Mo de volume), celle de la démo
-          **14 Mo** (69 Mo). Elles sont de taille identique, et un `pg_dump` de la
-          production prend **0,231 s** pour 444 Ko. L'indisponibilité serait
-          dominée par l'arrêt et le démarrage des conteneurs, pas par les données.
-          La méthode reste `pg_dump`, jamais de copie de volume — non pour le
-          volume, mais parce que les UID diffèrent entre les deux moteurs.
+              la base de production fait **15 Mo** (70 Mo de volume), celle de la démo
+              **14 Mo** (69 Mo). Elles sont de taille identique, et un `pg_dump` de la
+              production prend **0,231 s** pour 444 Ko. L'indisponibilité serait
+              dominée par l'arrêt et le démarrage des conteneurs, pas par les données.
+              La méthode reste `pg_dump`, jamais de copie de volume — non pour le
+              volume, mais parce que les UID diffèrent entre les deux moteurs.
 
-          **Le vrai obstacle est l'observabilité**, et il s'est déjà manifesté.
-          Cf. la section suivante.
+              **Le vrai obstacle est l'observabilité**, et il s'est déjà manifesté.
+              Cf. la section suivante.
+
+## Marche à suivre pour la production
+
+Mesures du 2026-08-13, qui rendent la bascule bien moins lourde qu'annoncé :
+
+|                     |                                                     |
+| ------------------- | --------------------------------------------------- |
+| Base PostgreSQL     | 15 Mo, `pg_dump` en **0,231 s**                     |
+| Images à transférer | `humanix-prod-app` (3,07 Go) et Vector (205 Mo)     |
+| Déjà dans Podman    | `postgres:16-alpine`, `humanix-tts:1.0.0`           |
+| Ports privilégiés   | **aucun** : la stack ne publie que `127.0.0.1:3000` |
+
+L'indisponibilité est dominée par l'arrêt et le démarrage des conteneurs, pas
+par les données.
+
+### 1. Filet de sécurité
+
+```bash
+docker exec humanix-prod-postgres sh -c 'pg_dump -U "$POSTGRES_USER" -Fc "$POSTGRES_DB"' \
+  > ~/prod-avant-podman-$(date +%Y%m%d-%H%M%S).dump
+```
+
+### 2. Transfert des images
+
+```bash
+docker save humanix-prod-app:latest        | podman load
+docker save timberio/vector:0.55.X-alpine  | podman load
+podman tag docker.io/library/humanix-prod-app:latest humanix-prod-app:latest
+```
+
+### 3. Déclarer le moteur
+
+Dans `/opt/humanix-prod/.env` :
+
+```bash
+CONTAINER_ENGINE=podman
+VECTOR_GROUP_ADD=keep-groups
+```
+
+⚠️ **Les deux, pas seulement la première.** Sans `VECTOR_GROUP_ADD`, Vector
+perd l'accès au journal HAProxy — cf. la section suivante.
+
+Et dans `/etc/humanix/backup.env`, pour que les sauvegardes visent le bon
+moteur : `CONTAINER_ENGINE=podman`.
+
+### 4. Arrêter Docker SANS détruire
+
+```bash
+cd /opt/humanix-prod
+docker compose -f docker-compose.yml -f docker-compose.observabilite.yml stop
+```
+
+`stop`, jamais `down` : les conteneurs et volumes Docker restent en place, et
+c'est tout le retour arrière.
+
+### 5. PostgreSQL d'abord, puis restauration
+
+```bash
+podman-compose up -d postgres
+podman exec -i humanix-prod-postgres sh -c \
+  'pg_restore -U "$POSTGRES_USER" -d "$POSTGRES_DB" --clean --if-exists --no-owner' \
+  < ~/prod-avant-podman-*.dump
+```
+
+**Par `pg_dump`, jamais par copie de volume** : les UID diffèrent entre Docker
+et Podman rootless, et une copie donnerait des permissions incohérentes sur le
+répertoire de données.
+
+### 6. Le reste de la pile
+
+```bash
+podman-compose -f docker-compose.yml -f docker-compose.observabilite.yml up -d
+```
+
+### 7. Démarrage au boot
+
+```bash
+cd /opt/humanix-prod && podman-compose systemd -a register
+systemctl --user daemon-reload
+systemctl --user enable podman-compose@humanix-prod
+```
+
+### 8. Vérifier
+
+```bash
+curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:3000/api/health
+curl -s -o /dev/null -w '%{http_code}\n' https://humanix-academie.fr/api/health
+podman exec humanix-prod-postgres sh -c \
+  'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -At -c "select count(*) from \"User\""'
+podman exec humanix-prod-vector-1 sh -c \
+  'head -c 1 /var/log/haproxy.log >/dev/null && echo journal-lisible || echo JOURNAL-ILLISIBLE'
+```
+
+Référence au moment de la bascule : **4 tenants, 37 users, 63 saisons,
+372 épisodes**.
+
+Le dernier contrôle est le plus important : c'est celui que `keep-groups`
+conditionne, et le seul qui échouerait en silence.
+
+### Retour arrière
+
+```bash
+cd /opt/humanix-prod && podman-compose down && docker compose start
+```
+
+Puis retirer `CONTAINER_ENGINE` et `VECTOR_GROUP_ADD` du `.env`.
 
 ## Le piège qui a déjà mordu : Vector ne voit pas Podman
 
