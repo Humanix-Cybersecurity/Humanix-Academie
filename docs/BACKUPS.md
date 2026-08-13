@@ -64,6 +64,9 @@ Depuis le **2026-08-13**, les dumps déposés en Object Storage portent un verro
 | `postgres/` | dumps PostgreSQL chiffrés | **30 jours** | expiration 31 jours |
 | `auditlog/` | archives de journaux d'audit | **366 jours** | expiration 367 jours |
 
+Configuration de référence du cycle de vie, versionnée avec son mode
+d'emploi : `infra/s3/`.
+
 Un seul bucket, `humanix-archives-audit`, suffit : la rétention se pose par
 objet et le bucket n'a **aucune règle de rétention par défaut**.
 
