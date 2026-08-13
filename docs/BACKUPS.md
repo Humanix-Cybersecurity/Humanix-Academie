@@ -231,6 +231,65 @@ sudo apt install -y age lftp jq
 # sudo apt install -y postgresql-client age lftp jq
 ```
 
+#### AWS CLI : ne PAS utiliser le paquet de la distribution
+
+⚠️ Vérifié le 2026-08-13 sur Ubuntu 26.04 : `apt install awscli` livre la
+version **2.31.35**, dans laquelle **toutes les opérations paginées sont
+inutilisables**.
+
+```
+ValueError: badly formed help string
+  awscli/clidriver.py, _create_operation_parser
+    argparse.py, _check_help
+```
+
+Python 3.14 valide désormais le formatage `%` des textes d'aide, et une chaîne
+d'aide de cette version d'AWS CLI en contient un non échappé. Le parseur
+explose avant même toute connexion réseau.
+
+L'étendue exacte des dégâts, mesurée :
+
+| Opération                                                 | 2.31.35 (apt) | 2.36.22 (officiel) |
+| --------------------------------------------------------- | ------------- | ------------------ |
+| `put-object`, `head-object`, `get-object`                 | ✅            | ✅                 |
+| `list-objects-v2`, `list-objects`, `list-object-versions` | ❌            | ✅                 |
+
+**C'est le pire panachage possible.** `backup-db.sh` n'utilise que
+`put-object` et `head-object` : les sauvegardes seraient parties sans la
+moindre erreur. `restore-db.sh` liste avant de récupérer : la restauration
+aurait été hors service, et on ne l'aurait découvert que le jour où on en
+aurait eu besoin.
+
+Installation par l'archive officielle, signature vérifiée (cf. la
+[page d'installation AWS](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+pour la clé publique, empreinte `FB5DB77FD5C118B80511ADA8A6310ACC4672475C`) :
+
+```bash
+cd /tmp
+curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscliv2.zip
+curl -fsSL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip.sig" -o awscliv2.sig
+gpg --verify awscliv2.sig awscliv2.zip      # doit dire « Good signature »
+unzip -q -o awscliv2.zip && sudo ./aws/install
+sudo apt-get remove -y awscli               # retirer le paquet cassé
+```
+
+L'installation se pose dans `/usr/local/bin`, qui précède `/usr/bin` dans le
+`PATH` de la crontab de production comme en interactif. Rien d'autre à
+reconfigurer.
+
+**Les mises à jour se font par `sudo aws update`**, pas par `apt`. C'est le
+seul coût réel de sortir du gestionnaire de paquets, et il est à porter au
+suivi des correctifs de sécurité.
+
+Vérifier après installation que le parseur se construit :
+
+```bash
+aws s3api list-objects-v2      # doit répondre « arguments are required: --bucket »
+```
+
+Si la réponse est `badly formed help string`, c'est encore le paquet `apt`
+qui répond : vérifier `command -v aws`.
+
 Le binaire `pg_dump` est fourni par l'image `postgres:16-alpine` du container,
 pas besoin de l'installer sur l'host en mode docker.
 
