@@ -7,10 +7,10 @@
 
 Deux stacks tournent sur `humanix-prod-01` :
 
-| Stack | Emplacement serveur | Fichier de référence en dépôt |
-|---|---|---|
-| Production | `/opt/humanix-prod/docker-compose.yml` | `docker-compose.yml` (base, **a divergé**) |
-| Démo | `/opt/humanix-demo/docker-compose.yml` | **aucun** (c'est un `docker-compose.demo.yml` copié, jamais versionné) |
+| Stack      | Emplacement serveur                    | Fichier de référence en dépôt                                          |
+| ---------- | -------------------------------------- | ---------------------------------------------------------------------- |
+| Production | `/opt/humanix-prod/docker-compose.yml` | `docker-compose.yml` (base, **a divergé**)                             |
+| Démo       | `/opt/humanix-demo/docker-compose.yml` | **aucun** (c'est un `docker-compose.demo.yml` copié, jamais versionné) |
 
 Les fichiers réellement déployés ont été édités à la main sur la machine et ne
 correspondent plus aux fichiers suivis :
@@ -57,9 +57,11 @@ utilise `127.0.0.1` + `wget`. Les correctifs sont déjà appliqués sur le serve
 Deux niveaux, cumulatifs :
 
 1. **Snapshot horodaté + copie hors-machine** (à croner) :
+
    ```bash
    infra/backup-deployed-compose.sh
    ```
+
    Archive les `docker-compose*.yml` de `/opt/humanix-prod` et
    `/opt/humanix-demo` (les compose uniquement, jamais les `.env`) dans un
    tarball daté avec manifeste de sommes de contrôle, puis pousse la copie vers
@@ -73,6 +75,51 @@ Deux niveaux, cumulatifs :
    qu'à reconstruire en cas de perte machine, et met la config à l'abri
    hors-machine par construction (elle est dans git). À rafraîchir à chaque
    modification manuelle des fichiers `/opt`.
+
+## Le durcissement SSH etait mort-ne (2026-08-14)
+
+⚠️ **`sshd` retient la PREMIERE valeur de chaque mot-clé, pas la derniere.**
+
+Constaté sur `humanix-prod-01` : la machine acceptait l'authentification **par
+mot de passe** sur le port 22 ouvert au monde, alors qu'un fichier de
+durcissement la désactivait explicitement.
+
+| Fichier                     | Directive                    |
+| --------------------------- | ---------------------------- |
+| `50-cloud-init.conf`        | `PasswordAuthentication yes` |
+| `99-humanix-hardening.conf` | `PasswordAuthentication no`  |
+
+Les fichiers de `sshd_config.d/` sont lus dans l'ordre **lexical**. `50-` passe
+donc avant `99-`, et le durcissement n'a jamais rien durci.
+
+C'est contre-intuitif — partout ailleurs le numéro le plus élevé gagne — et
+**invisible à la relecture** : le fichier existait, il était correct, il disait
+exactement ce qu'on voulait y lire.
+
+Le fichier a été renommé **`01-humanix-hardening.conf`**.
+
+### Ce piège se rejouera
+
+`cloud-init` réécrit son `50-` à chaque réinstallation, et quiconque posera un
+durcissement en `99-` refera la même erreur. D'où le contrôle :
+
+```bash
+sudo ./scripts/verifier-durcissement-ssh.sh
+```
+
+Il lit `sshd -T`, c'est-à-dire la configuration **réellement appliquée**, et
+non les fichiers — qui donnent l'intention, pas le résultat.
+
+Il distingue trois issues, et cette distinction n'est pas cosmétique. Une
+première version tenait en une ligne :
+
+```bash
+sshd -T | grep -q '^passwordauthentication no' || echo "ALERTE"
+```
+
+Elle criait « mot de passe accepté » quand `sshd -T` avait simplement échoué,
+faute de privilèges ou lancée sur la mauvaise machine. Un contrôle qui ment sur
+la nature de son échec apprend à ne plus être lu.
 
 ## Si un jour on veut re-converger
 
