@@ -23,6 +23,8 @@ import {
   type LaunchTarget,
   type LaunchResult,
 } from "@/lib/phishing/launch";
+import { fireWebhook } from "@/lib/webhooks/dispatcher";
+import { resumerCampagne } from "@/lib/phishing/resume-campagne";
 
 async function requireAdmin() {
   const session = await auth();
@@ -80,7 +82,8 @@ export async function launchCampaign(
   const templateId = formData.get("template") as string;
   // Phase 7a (juin 2026) : A/B variants. Si l'admin a coche "Test A/B" et
   // choisi un 2eme template, on transmet le templateBId au helper.
-  const templateBId = String(formData.get("templateB") ?? "").trim() || undefined;
+  const templateBId =
+    String(formData.get("templateB") ?? "").trim() || undefined;
   // Phase 7b (juin 2026) : drip campaigns. Si l'admin a coche "Etaler les
   // envois" avec un nombre de jours, on transmet la strategy au helper.
   const dripDaysRaw = String(formData.get("dripDays") ?? "").trim();
@@ -236,6 +239,42 @@ export async function stopCampaign(campaignId: string) {
     where: { id: campaignId },
     data: { isActive: false },
   });
+
+  // --- Webhook `phishing.campaign_completed` ---------------------------
+  //
+  // C'est ICI, et nulle part ailleurs, que l'evenement a un sens.
+  //
+  // `isActive` retombe a false a deux endroits. Le second est le cron
+  // phishing-drip, qui desactive la campagne quand le SMTP du tenant est en
+  // panne -- son propre commentaire dit « autant arreter le massacre ».
+  // Emettre « campagne terminee » sur ce chemin serait un contresens :
+  // l'admin lirait un resume de succes dans son Slack alors que ses mails
+  // ne sont jamais partis.
+  //
+  // Un arret DELIBERE par l'admin, en revanche, EST une fin de campagne.
+  //
+  // Pas d'expiration automatique : le modele n'a ni `completedAt` ni
+  // `expiresAt`, et en ajouter un pour ce seul besoin serait
+  // disproportionne. Cf. issue #734.
+  try {
+    const results = await db.phishingResult.findMany({
+      where: { campaignId },
+      select: { clickedAt: true, reportedAt: true },
+    });
+
+    // Le comptage vit dans lib/phishing/resume-campagne.ts, avec ses tests :
+    // il se fait sur les HORODATAGES et non sur `status`, pour une raison
+    // qui n'a rien d'evident et que le module explique.
+    await fireWebhook(tenantId, "phishing.campaign_completed", {
+      campaignTitle: c.title,
+      ...resumerCampagne(results),
+    });
+  } catch (e) {
+    // L'arret de campagne a DEJA eu lieu et doit rester acquis : un webhook
+    // injoignable ne doit pas faire echouer l'action de l'admin.
+    console.error("[phishing] emission campaign_completed echouee", e);
+  }
+
   revalidatePath("/admin/phishing");
   return { ok: true };
 }
@@ -271,7 +310,9 @@ export async function simulateClicks(campaignId: string) {
     }
     return null;
   });
-  await db.$transaction(updates.filter(Boolean) as ReturnType<typeof db.phishingResult.update>[]);
+  await db.$transaction(
+    updates.filter(Boolean) as ReturnType<typeof db.phishingResult.update>[],
+  );
 
   revalidatePath("/admin/phishing");
   return { ok: true };
