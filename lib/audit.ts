@@ -58,8 +58,64 @@ export type AuditLogInput = {
  * Ecrit un log d'audit. Best-effort : retourne true si succes, false si
  * echec (et n'echoue jamais).
  */
+/**
+ * Actions dont l'occurrence doit atteindre Loki, et donc declencher une alerte.
+ *
+ * Critere d'inclusion : un pic anormal de cet evenement peut signaler une
+ * violation en cours. On reste volontairement court -- une liste qui grossit
+ * finit par tout emettre, et une alerte qui se declenche tous les jours
+ * n'alerte plus personne.
+ */
+const EVENEMENTS_A_SURVEILLER: ReadonlySet<AuditAction> = new Set([
+  AuditAction.USER_LOGIN_FAILED,
+  AuditAction.EXFILTRATION_SUSPECTED,
+  // Un export est legitime -- c'est un droit du Client. On l'emet pour
+  // pouvoir alerter sur un DEBIT anormal, pas sur son existence.
+  AuditAction.DATA_EXPORTED,
+  AuditAction.USER_LOCKED,
+  AuditAction.USER_ROLE_CHANGED,
+  AuditAction.USER_MFA_DISABLED,
+  AuditAction.USER_MFA_RESET_BY_ADMIN,
+  AuditAction.TENANT_DELETED,
+]);
+
 export async function auditLog(input: AuditLogInput): Promise<boolean> {
   const severity = input.severity ?? defaultSeverityFor(input.action);
+
+  // --- Miroir sur la SORTIE STANDARD pour les evenements surveillables ---
+  //
+  // Vector ne collecte que le stdout des conteneurs. Un AuditLog part en base,
+  // donc il n'atteint JAMAIS Loki : sans cette ligne, aucune alerte Grafana ne
+  // peut voir un echec d'authentification ou une exfiltration suspectee.
+  //
+  // C'est le maillon qui manquait a docs/PROCEDURE-VIOLATION-DONNEES.md, dont
+  // l'engagement de notification sous 48 h ne court qu'a partir de la
+  // CONNAISSANCE de l'incident. Sans detection, ce delai reste theorique.
+  //
+  // On n'emet QUE les evenements a surveiller, pas tout l'audit : deverser des
+  // milliers de lignes par jour dans Loki noierait le signal et couterait de
+  // l'ingestion pour rien.
+  //
+  // Format JSON sur une ligne : la source `docker_logs` de Vector le parse
+  // ensuite via `parse_json`, ce qui rend les champs requetables en LogQL.
+  if (EVENEMENTS_A_SURVEILLER.has(input.action)) {
+    // console.warn et non console.log : le niveau distingue ces lignes du
+    // bruit applicatif ordinaire, et sert de premier filtre cote Loki.
+    console.warn(
+      JSON.stringify({
+        canal: "securite",
+        action: input.action,
+        severite: severity,
+        outcome: input.outcome ?? AuditOutcome.SUCCESS,
+        tenantId: input.tenantId ?? null,
+        // JAMAIS l'email ni l'IP en clair : ces lignes partent vers un service
+        // tiers. L'AuditLog en base garde le detail, sous la retention du
+        // client. Ici on veut savoir QU'IL SE PASSE quelque chose, pas qui.
+        acteurPresent: Boolean(input.actor?.userId),
+      }),
+    );
+  }
+
   try {
     await db.auditLog.create({
       data: {

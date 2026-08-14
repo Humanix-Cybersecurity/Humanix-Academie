@@ -177,7 +177,9 @@ describe("auditLog - resilience (best-effort)", () => {
 
 describe("AuditActions helper", () => {
   it("re-exporte AuditAction sous un nom semantique", () => {
-    expect(AuditActions.USER_LOGIN_SUCCESS).toBe(AuditAction.USER_LOGIN_SUCCESS);
+    expect(AuditActions.USER_LOGIN_SUCCESS).toBe(
+      AuditAction.USER_LOGIN_SUCCESS,
+    );
     expect(AuditActions.DATA_EXPORTED).toBe(AuditAction.DATA_EXPORTED);
   });
 });
@@ -209,5 +211,78 @@ describe("readIpFromHeaders", () => {
       "x-real-ip": "9.9.9.9",
     });
     expect(readIpFromHeaders(h)).toBe("1.2.3.4");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Miroir sur la sortie standard.
+//
+// Ces tests gardent le maillon de DETECTION. Un AuditLog part en base ; Vector
+// ne collecte que le stdout des conteneurs. Sans la ligne emise ici, aucune
+// alerte Grafana ne peut voir un echec d'authentification -- et l'engagement
+// de notification sous 48 h du DPA ne court qu'a partir de la CONNAISSANCE de
+// l'incident.
+//
+// D'ou le test sur la NON-emission autant que sur l'emission : une liste qui
+// s'elargit silencieusement noierait le signal et couterait de l'ingestion.
+// ---------------------------------------------------------------------------
+describe("auditLog - miroir stdout pour la detection", () => {
+  it("emet une ligne JSON pour un evenement surveille", async () => {
+    mockDb.auditLog.create.mockResolvedValue({ id: "a" });
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    await auditLog({
+      action: AuditAction.USER_LOGIN_FAILED,
+      tenantId: "t1",
+      actor: { userId: "u1", email: "victime@client.fr", role: "USER" },
+      ip: "203.0.113.7",
+    });
+
+    expect(warn).toHaveBeenCalledTimes(1);
+    const ligne = JSON.parse(warn.mock.calls[0][0] as string);
+    expect(ligne).toMatchObject({
+      canal: "securite",
+      action: AuditAction.USER_LOGIN_FAILED,
+      tenantId: "t1",
+      acteurPresent: true,
+    });
+    warn.mockRestore();
+  });
+
+  it("n'emet RIEN pour une action ordinaire", async () => {
+    mockDb.auditLog.create.mockResolvedValue({ id: "a" });
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    await auditLog({ action: AuditAction.USER_LOGIN_SUCCESS, tenantId: "t1" });
+
+    expect(warn).not.toHaveBeenCalled();
+    warn.mockRestore();
+  });
+
+  it("ne divulgue NI courriel NI adresse IP : ces lignes partent chez un tiers", async () => {
+    mockDb.auditLog.create.mockResolvedValue({ id: "a" });
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    await auditLog({
+      action: AuditAction.EXFILTRATION_SUSPECTED,
+      actor: { userId: "u1", email: "victime@client.fr", role: "ADMIN" },
+      ip: "203.0.113.7",
+    });
+
+    const brut = warn.mock.calls[0][0] as string;
+    expect(brut).not.toContain("victime@client.fr");
+    expect(brut).not.toContain("203.0.113.7");
+    warn.mockRestore();
+  });
+
+  it("emet AVANT l'ecriture en base : une base morte ne doit pas rendre aveugle", async () => {
+    mockDb.auditLog.create.mockRejectedValue(new Error("base injoignable"));
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const ok = await auditLog({ action: AuditAction.USER_LOCKED });
+
+    expect(ok).toBe(false);
+    expect(warn).toHaveBeenCalled();
+    warn.mockRestore();
   });
 });
