@@ -88,7 +88,10 @@ export default function MentionsLegalesPage() {
         <p className="text-xs italic mt-2">
           Aucun Délégué à la Protection des Données (DPO) n'a été désigné,
           Humanix-Cybersecurity n'étant pas légalement tenue de le faire au
-          regard de l'article 37 du RGPD.
+          regard de l'article 37 du RGPD. Cette conclusion repose sur une
+          analyse motivée, réexaminée à intervalles définis : les trois
+          conditions de l'article 37.1.b sont examinées une à une, et seule
+          celle de la « grande échelle » n'est pas réunie à ce jour.
         </p>
       </LegalSection>
 

@@ -395,6 +395,21 @@ model User {
   // nombre d'episodes termines dans la journee.
   lastStreakBonusAt DateTime?
   riskScore         Int       @default(50) // 0 = très exposé, 100 = excellent
+
+  // Retrait volontaire du classement /classement (2026-08-14).
+  //
+  // Le classement ordonne sur les XP obtenus en completant des modules : c'est
+  // un palmares de MERITE, pas de vulnerabilite, et le riskScore n'y figure
+  // pas. L'exposition reste donc mesuree.
+  //
+  // Reste qu'il est NOMINATIF, affiche le service, et qu'un collaborateur
+  // systematiquement en bas y est identifiable comme tel par ses collegues. En
+  // contexte de subordination, laisser un droit de retrait coute peu et ferme
+  // le sujet. Cf. docs/AIPD-SCORING-COLLABORATEURS.md, section 2.3.
+  //
+  // Defaut `true` : le classement conserve son effet d'emulation, et seul qui
+  // le souhaite en sort. Un defaut inverse viderait la fonctionnalite.
+  showInLeaderboard Boolean   @default(true)
   // ----------------------------------------------------
   // PERSONA PEDAGOGIQUE (ajout mai 2026)
   // ----------------------------------------------------

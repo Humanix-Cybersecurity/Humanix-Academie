@@ -70,7 +70,15 @@ export async function getChallengeIndividualRanking(
       completedAt: { gte: startDate, lte: endDate },
     },
     include: {
-      user: { select: { id: true, name: true, service: true, isActive: true } },
+      user: {
+        select: {
+          id: true,
+          name: true,
+          service: true,
+          isActive: true,
+          showInLeaderboard: true,
+        },
+      },
     },
   });
 
@@ -86,6 +94,16 @@ export async function getChallengeIndividualRanking(
   >();
   for (const p of progress) {
     if (!p.user.isActive) continue;
+    // Retrait volontaire du classement individuel (User.showInLeaderboard).
+    //
+    // La personne sort du palmares ; ses XP ne sont pas reversees ailleurs.
+    // L'anonymiser DANS le classement plutot que l'en retirer la rendrait
+    // devinable par soustraction dans une petite equipe.
+    //
+    // Le classement par SERVICE, plus haut, n'est PAS filtre : il est agrege
+    // et ne nomme personne. Retirer les XP d'un individu y fausserait le
+    // total de son equipe sans rien proteger.
+    if (!p.user.showInLeaderboard) continue;
     if (!users.has(p.user.id)) {
       users.set(p.user.id, {
         userId: p.user.id,
