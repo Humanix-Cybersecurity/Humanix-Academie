@@ -122,6 +122,12 @@ if [ -f .env ] && grep -qE '^CONTAINER_ENGINE=podman' .env 2>/dev/null; then
 fi
 MOTEUR="${COMPOSE%% *}"
 command -v "$MOTEUR" >/dev/null || die "$MOTEUR introuvable (declare dans .env)"
+
+# Le binaire NU, pour les commandes qui ne passent pas par compose :
+# `podman inspect`, `podman rm`. `$MOTEUR` vaut `podman-compose` dans ce cas,
+# ce qui n'est pas la meme commande.
+MOTEUR_BIN="docker"
+[ "$COMPOSE" = "podman-compose" ] && MOTEUR_BIN="podman"
 log "Moteur de conteneurs : $COMPOSE"
 
 git rev-parse --git-dir >/dev/null 2>&1 || die "$STACK_DIR n'est pas un clone git" 2
@@ -316,10 +322,58 @@ log "content-pro present : $(ls content-pro/content 2>/dev/null | wc -l | tr -d 
 # --- Build + restart ------------------------------------------------------
 
 log "Build de l'image applicative (peut prendre plusieurs minutes) ..."
+
+CONTENEUR_APP="humanix-${ENVIRONMENT}-app"
+
+# IDENTIFIANT DU CONTENEUR avant le build, et non celui de son image.
+#
+# Comparer les images serait un faux ami : un deploiement qui ne change rien
+# produit la MEME image (cache de couches), et la verification crierait a
+# l'echec alors que tout va bien. Ce qu'on veut savoir est : le conteneur
+# a-t-il ete RECREE ? Son identifiant repond exactement a cela.
+CONTENEUR_AVANT="$($MOTEUR_BIN inspect "$CONTENEUR_APP" --format '{{.Id}}' 2>/dev/null | cut -c1-12 || true)"
+
 $COMPOSE build app || die "build echoue" 5
+
+# --- Le remplacement du conteneur, et pourquoi il ne va pas de soi --------
+#
+# `up -d --no-deps app` suffisait sous Docker. Sous PODMAN, non : les
+# conteneurs vivent dans un pod, et un `depends_on` declare EMPECHE le
+# remplacement. Constate le 2026-08-14 en PRODUCTION :
+#
+#   Error: container <app> has dependent containers which must be removed
+#   before it: <vector>: container already exists
+#
+# podman-compose a alors simplement REDEMARRE l'ancien conteneur et rendu la
+# main SANS erreur. Le script rapportait un succes pendant que l'image d'avant
+# continuait de servir. On ne s'en est apercu qu'en comparant a la main les
+# identifiants d'image -- sinon la livraison etait perdue en silence.
+#
+# On retire donc le conteneur avant de le recreer. `|| true` : son absence
+# n'est pas une erreur, c'est le cas d'un premier deploiement.
+if [ "$MOTEUR_BIN" = "podman" ]; then
+  log "Retrait du conteneur app (obligatoire sous podman, cf. commentaire) ..."
+  $MOTEUR_BIN rm -f "$CONTENEUR_APP" >/dev/null 2>&1 || true
+fi
 
 log "Redemarrage du service app ..."
 $COMPOSE up -d --no-deps app
+
+# --- Verifier ce qu'on a livre, plutot que de le supposer ----------------
+#
+# LE controle qui manquait. Un deploiement qui se croit reussi est pire qu'un
+# deploiement qui echoue : personne ne va verifier.
+sleep 5
+CONTENEUR_APRES="$($MOTEUR_BIN inspect "$CONTENEUR_APP" --format '{{.Id}}' 2>/dev/null | cut -c1-12 || true)"
+IMAGE_APRES="$($MOTEUR_BIN inspect "$CONTENEUR_APP" --format '{{.Image}}' 2>/dev/null | cut -c1-12 || true)"
+
+if [ -z "$CONTENEUR_APRES" ]; then
+  die "le conteneur $CONTENEUR_APP n'existe pas apres le demarrage" 6
+elif [ -n "$CONTENEUR_AVANT" ] && [ "$CONTENEUR_APRES" = "$CONTENEUR_AVANT" ]; then
+  die "le conteneur $CONTENEUR_AVANT n'a PAS ete recree -- il sert encore le code d'avant" 6
+else
+  log "Conteneur recree : ${CONTENEUR_AVANT:-aucun} -> $CONTENEUR_APRES (image $IMAGE_APRES)"
+fi
 
 # --- Trace de ce qui est deploye -----------------------------------------
 #
