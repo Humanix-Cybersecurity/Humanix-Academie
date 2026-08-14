@@ -37,6 +37,30 @@
 #   STACK=prod            # ou `demo`
 #   APP_HOST_PORT=3000    # 3001 pour la demo
 #
+# ⚠️ CE QUE PODMAN-COMPOSE LIT, ET CE QU'IL IGNORE — mesure le 2026-08-14,
+# apres m'y etre repris a trois fois :
+#
+#   COMPOSE_FILE dans le fichier .env        IGNORE
+#   COMPOSE_FILE en variable d'environnement HONORE, separateur `:` compris
+#   STACK, APP_HOST_PORT depuis le .env      lus (substitution de variables)
+#
+# La distinction n'est pas intuitive : le MEME nom de variable est lu depuis
+# l'environnement mais pas depuis le fichier. Le .env sert a la substitution,
+# pas a la selection des fichiers.
+#
+# Consequences pratiques :
+#
+#   - L'unite systemd fonctionne : elle passe la variable par EnvironmentFile,
+#     donc dans l'environnement.
+#   - `scripts/deploy.sh` lit le .env lui-meme et passe des `-f`.
+#   - TOUT APPEL MANUEL doit designer les fichiers explicitement.
+#
+# Piege de diagnostic rencontre : quand un fichier designe n'existe pas,
+# podman-compose ne se contente pas d'echouer -- selon le chemin d'appel il
+# peut retomber sur `docker-compose.yml`, la topologie SELF-HOSTER, et servir
+# un rendu parfaitement coherent mais completement faux. Verifier l'absence de
+# `haproxy` dans le rendu est le controle le plus rapide.
+#
 # ⚠️ `COMPOSE_FILE` dans le `.env` ne suffit PAS a lui seul. `docker compose`
 # l'honore, `podman-compose` NON -- constate le 2026-08-14 sur la demo, qui a
 # alors lu `docker-compose.yml`, la topologie self-hoster, et cree des
