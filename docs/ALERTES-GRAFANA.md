@@ -180,11 +180,27 @@ Celle qu'on oublie, et sans laquelle les quatre autres ne valent rien.
 sum(count_over_time({env="prod"} | json | canal="securite" | action="HEARTBEAT" [15m]))
 ```
 
-| Paramètre  | Valeur                         |
-| ---------- | ------------------------------ |
-| Condition  | `IS BELOW 1`                   |
-| Évaluation | toutes les `5m`, pendant `10m` |
-| Sévérité   | `critical`                     |
+| Paramètre           | Valeur                        |
+| ------------------- | ----------------------------- |
+| Condition           | `IS BELOW 1`                  |
+| Évaluation          | toutes les `1m`, pendant `0m` |
+| **Si aucune donnée** | **`Alerting`**                |
+| Sévérité            | `critical`                    |
+
+⚠️ **Les deux réglages ci-dessus sont ceux qui font marcher la règle**, et tous
+deux ont été trouvés en la testant — elle ne s'est pas déclenchée du premier
+coup.
+
+**« Si aucune donnée » doit valoir `Alerting`.** C'est sous *Configure no data
+and error handling*. Quand plus aucune ligne ne correspond, LogQL ne renvoie pas
+`0` : il ne renvoie **rien**. Le seuil `IS BELOW 1` n'a alors rien à comparer et
+la règle bascule en *No Data*, un état distinct qui ne suit pas forcément le même
+acheminement. Une règle d'homme mort laissée au réglage par défaut reste donc
+muette dans le seul cas où on la veut bruyante.
+
+**Pas de temporisation.** La fenêtre `[15m]` *est* la tolérance : il faut trois
+battements manqués pour la vider. Y ajouter une temporisation compterait la
+patience deux fois et repousserait l'alerte à 25 minutes.
 
 **Un silence et une panne se ressemblent parfaitement.** Si Vector s'arrête, si
 le jeton expire, si le socket Podman disparaît, les quatre règles ci-dessus
