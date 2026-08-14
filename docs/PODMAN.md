@@ -182,12 +182,12 @@ Référence au moment de la migration : **37 saisons, 13 users, 2 tenants**.
       de la production — app, postgres, vector — était sain en 38 secondes.
 
       **Sauf TTS**, et c'est ce qui a révélé le défaut du profil `piper` :
-          rien ne l'activait, ni `deploy.sh` ni le `.env`, et l'unité systemd ne
-          passe pas `--profile`. Le service ne survivait que par
-          `restart: unless-stopped`. Le profil a été retiré du service.
+              rien ne l'activait, ni `deploy.sh` ni le `.env`, et l'unité systemd ne
+              passe pas `--profile`. Le service ne survivait que par
+              `restart: unless-stopped`. Le profil a été retiré du service.
 
 - [ ] **L'unité systemd générée est incomplète.** `podman-compose systemd -a
-    register` écrit `COMPOSE_FILE=docker-compose.yml` seul, sans le fichier
+  register` écrit `COMPOSE_FILE=docker-compose.yml` seul, sans le fichier
       d'observabilité. Corrigé à la main dans
       `~/.config/containers/compose/projects/humanix-prod.env`, mais un
       nouveau `register` l'écraserait.
@@ -197,27 +197,27 @@ Référence au moment de la migration : **37 saisons, 13 users, 2 tenants**.
       installation existante ne change de comportement.
 
       Vérifié par un intercepteur nommé `podman` qui journalise ses arguments
-                      avant de les relayer. La trace montre `podman ps --filter …` puis
-                      `podman exec -i -e PGPASSWORD=… pg_dump …` — plus aucun appel `docker`.
+                          avant de les relayer. La trace montre `podman ps --filter …` puis
+                          `podman exec -i -e PGPASSWORD=… pg_dump …` — plus aucun appel `docker`.
 
-                      Les deux scripts DOIVENT lire la même variable : restaurer avec un autre
-                      moteur que celui qui a sauvegardé viserait le mauvais conteneur, donc la
-                      mauvaise base, et on le découvrirait le jour de la restauration.
+                          Les deux scripts DOIVENT lire la même variable : restaurer avec un autre
+                          moteur que celui qui a sauvegardé viserait le mauvais conteneur, donc la
+                          mauvaise base, et on le découvrirait le jour de la restauration.
 
 - [ ] La dizaine de documents qui citent `docker compose` dans leurs exemples.
 - [ ] **Décider pour la production.** Deux corrections à ce que ce document
       affirmait.
 
       **Le volume PostgreSQL n'est pas un risque.** Mesuré le 2026-08-13 :
-                  la base de production fait **15 Mo** (70 Mo de volume), celle de la démo
-                  **14 Mo** (69 Mo). Elles sont de taille identique, et un `pg_dump` de la
-                  production prend **0,231 s** pour 444 Ko. L'indisponibilité serait
-                  dominée par l'arrêt et le démarrage des conteneurs, pas par les données.
-                  La méthode reste `pg_dump`, jamais de copie de volume — non pour le
-                  volume, mais parce que les UID diffèrent entre les deux moteurs.
+                      la base de production fait **15 Mo** (70 Mo de volume), celle de la démo
+                      **14 Mo** (69 Mo). Elles sont de taille identique, et un `pg_dump` de la
+                      production prend **0,231 s** pour 444 Ko. L'indisponibilité serait
+                      dominée par l'arrêt et le démarrage des conteneurs, pas par les données.
+                      La méthode reste `pg_dump`, jamais de copie de volume — non pour le
+                      volume, mais parce que les UID diffèrent entre les deux moteurs.
 
-                  **Le vrai obstacle est l'observabilité**, et il s'est déjà manifesté.
-                  Cf. la section suivante.
+                      **Le vrai obstacle est l'observabilité**, et il s'est déjà manifesté.
+                      Cf. la section suivante.
 
 ## Marche à suivre pour la production
 
@@ -341,6 +341,77 @@ cd /opt/humanix-prod && podman-compose down && docker compose start
 ```
 
 Puis retirer `CONTAINER_ENGINE` et `VECTOR_GROUP_ADD` du `.env`.
+
+## Le stockage des images vit sur `/srv`, et pourquoi
+
+⚠️ **Podman rootless ne range pas ses images où Docker les rangeait.**
+
+| Moteur          | Emplacement                              | Partition  | Taille    |
+| --------------- | ---------------------------------------- | ---------- | --------- |
+| Docker          | `/var/lib/docker`, `/var/lib/containerd` | `/var/lib` | 196 Go    |
+| Podman rootless | `~/.local/share/containers/storage`      | **`/`**    | **49 Go** |
+
+La migration du 2026-08-13 a donc déplacé le stockage d'images vers la plus
+petite partition de la machine, sans que personne le remarque. Le lendemain,
+une matinée de déploiements — chaque construction ajoutant 2 à 3 Go — a rempli
+la racine à **100 %, zéro octet libre**, sur une machine qui porte PostgreSQL.
+
+Le build échoue alors dans une avalanche d'erreurs `overlay` illisibles, et
+Podman ne peut même plus élaguer : il lui faut écrire son index.
+
+### La solution : un montage lié, PAS un changement de `graphroot`
+
+Première tentative, **échouée** : déclarer `graphroot = "/srv/..."` dans
+`~/.config/containers/storage.conf`. Podman refuse :
+
+```
+Error: database static dir "/home/humanix/.local/share/containers/storage/libpod"
+does not match our static dir "/srv/containers/storage/libpod":
+database configuration mismatch
+```
+
+Sa base `libpod` mémorise les chemins avec lesquels elle a été créée. Il
+n'existe pas de chemin supporté pour déplacer un stockage peuplé — la réponse
+habituelle est `podman system reset`, qui **détruirait les volumes**, donc la
+base de production.
+
+La bonne mécanique ne change pas le chemin du tout :
+
+```bash
+# 1. Copier, en PRESERVANT les proprietaires numeriquement
+sudo rsync -aHAX --numeric-ids \
+  /home/humanix/.local/share/containers/storage/ /srv/containers/storage/
+
+# 2. Stacks arretees : rattrapage, puis bascule
+sudo rsync -aHAX --numeric-ids --delete \
+  /home/humanix/.local/share/containers/storage/ /srv/containers/storage/
+cd ~/.local/share/containers && mv storage storage.ancien && mkdir storage
+sudo mount --bind /srv/containers/storage ~/.local/share/containers/storage
+
+# 3. PERSISTER, sans quoi le prochain boot laisse les stacks au sol
+echo "/srv/containers/storage /home/humanix/.local/share/containers/storage none bind 0 0" \
+  | sudo tee -a /etc/fstab
+```
+
+### `--numeric-ids` n'est pas optionnel
+
+Le stockage rootless contient des fichiers appartenant aux UID **mappés** de
+l'espace de noms : `100000` et au-delà, la plage `subuid` de `humanix`. Un
+`rsync` lancé **sans** `sudo` produit des « permission denied » en cascade ;
+lancé avec `sudo` mais **sans** `--numeric-ids`, il aplatit tous ces
+propriétaires sur `humanix:humanix` et rend les couches illisibles.
+
+Le contrôle qui tranche, avant toute bascule — les deux distributions doivent
+se superposer **exactement** :
+
+```bash
+for d in ~/.local/share/containers/storage /srv/containers/storage; do
+  sudo find "$d/overlay" -maxdepth 4 -printf "%U:%G\n" | sort | uniq -c | sort -rn | head -6
+done
+```
+
+C'est le même piège que celui qui interdit de migrer les volumes PostgreSQL par
+copie — les UID diffèrent — appliqué cette fois au stockage d'images.
 
 ## Le piège qui a déjà mordu : Vector ne voit pas Podman
 
