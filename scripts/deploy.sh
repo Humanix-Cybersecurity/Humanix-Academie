@@ -360,6 +360,24 @@ log "content-pro present : $(ls content-pro/content 2>/dev/null | wc -l | tr -d 
 
 # --- Build + restart ------------------------------------------------------
 
+# --- Assez de place pour construire ? -----------------------------------
+#
+# Le 2026-08-14, un build a rempli la racine a 100 % et echoue trois minutes
+# plus tard dans une avalanche d'erreurs `overlay` illisibles -- sur une
+# machine qui porte PostgreSQL. Podman ne pouvait meme plus elaguer, faute de
+# pouvoir ecrire son index.
+#
+# Mieux vaut refuser tout de suite, avec un message qui dit quoi faire.
+# Chaque construction pese 2 a 3 Go ; 5 Go est le seuil sous lequel on ne
+# tente meme pas.
+ESPACE_LIBRE_KO="$(df -Pk . | awk 'NR==2 {print $4}')"
+if [ "${ESPACE_LIBRE_KO:-0}" -lt 5242880 ]; then
+  die "espace disque insuffisant : $((ESPACE_LIBRE_KO / 1024)) Mo libres, 5 Go requis pour construire.
+       Liberer avec : podman image prune -f
+       Cf. docs/PODMAN.md, section « Le stockage des images vit sur /srv »" 7
+fi
+log "Espace disponible : $((ESPACE_LIBRE_KO / 1024 / 1024)) Go"
+
 log "Build de l'image applicative (peut prendre plusieurs minutes) ..."
 
 CONTENEUR_APP="humanix-${ENVIRONMENT}-app"
