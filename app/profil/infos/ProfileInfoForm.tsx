@@ -17,6 +17,7 @@ export default function ProfileInfoForm({
   initialFirstName,
   initialLastName,
   initialService,
+  initialShowInLeaderboard,
   email,
   emailVerified,
 }: {
@@ -24,6 +25,7 @@ export default function ProfileInfoForm({
   initialFirstName: string;
   initialLastName: string;
   initialService: string;
+  initialShowInLeaderboard: boolean;
   email: string;
   emailVerified: boolean;
 }) {
@@ -257,12 +259,32 @@ export default function ProfileInfoForm({
           id="service-help"
           className="text-xs text-gray-500 dark:text-gray-400 mt-1.5"
         >
-          Permet aux admins de filtrer les progressions par service. Laisse
-          vide si tu ne souhaites pas le renseigner.
+          Permet aux admins de filtrer les progressions par service. Laisse vide
+          si tu ne souhaites pas le renseigner.
         </p>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 pt-2 border-t border-gray-100 dark:border-slate-800">
+        <div className="rounded-lg border border-gray-200 dark:border-slate-700 p-4 mb-4">
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              name="showInLeaderboard"
+              defaultChecked={initialShowInLeaderboard}
+              className="mt-1"
+            />
+            <span className="text-sm">
+              <strong>Apparaître dans le classement</strong>
+              <span className="block text-gray-500 dark:text-gray-400 mt-1">
+                Le classement met en avant les collaborateurs ayant complété le
+                plus de modules. Il n&apos;affiche jamais votre score de risque.
+                Décochez cette case pour ne plus y figurer : vos progrès
+                continuent d&apos;être enregistrés normalement.
+              </span>
+            </span>
+          </label>
+        </div>
+
         <button
           type="submit"
           disabled={pending || !dirty}

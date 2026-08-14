@@ -34,9 +34,7 @@ import { AuditAction } from "@prisma/client";
 const NAME_MAX_LENGTH = 100;
 const SERVICE_MAX_LENGTH = 100;
 
-export type UpdateProfileResult =
-  | { ok: true }
-  | { ok: false; error: string };
+export type UpdateProfileResult = { ok: true } | { ok: false; error: string };
 
 export async function updateProfileInfo(
   formData: FormData,
@@ -95,6 +93,7 @@ export async function updateProfileInfo(
       firstName: true,
       lastName: true,
       service: true,
+      showInLeaderboard: true,
       email: true,
       tenantId: true,
       role: true,
@@ -109,11 +108,16 @@ export async function updateProfileInfo(
   const newFirstName = rawFirstName === "" ? null : rawFirstName;
   const newLastName = rawLastName === "" ? null : rawLastName;
 
+  // Case a cocher : ABSENTE du FormData quand elle est decochee.
+  // `has()` et non `get()` -- sinon un retrait ne serait jamais enregistre.
+  const newShowInLeaderboard = formData.has("showInLeaderboard");
+
   if (
     before.name === newName &&
     before.service === newService &&
     before.firstName === newFirstName &&
-    before.lastName === newLastName
+    before.lastName === newLastName &&
+    before.showInLeaderboard === newShowInLeaderboard
   ) {
     // No-op : on ne touche pas la BDD ni l'audit log.
     revalidatePath("/profil");
@@ -128,6 +132,7 @@ export async function updateProfileInfo(
       service: newService,
       firstName: newFirstName,
       lastName: newLastName,
+      showInLeaderboard: newShowInLeaderboard,
     },
   });
 
@@ -139,8 +144,10 @@ export async function updateProfileInfo(
   // suppression / modification) via un marqueur "[défini]", ce qui garde un
   // audit exploitable sans dupliquer la donnee. Le pseudo `name`, lui, est
   // public (affiche partout) : on le journalise en clair, sans enjeu.
-  const redactPII = (v: string | null): string | null => (v ? "[défini]" : null);
-  const changes: Record<string, { from: string | null; to: string | null }> = {};
+  const redactPII = (v: string | null): string | null =>
+    v ? "[défini]" : null;
+  const changes: Record<string, { from: string | null; to: string | null }> =
+    {};
   if (before.name !== newName) {
     changes.name = { from: before.name, to: newName };
   }
