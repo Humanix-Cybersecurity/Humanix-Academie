@@ -37,6 +37,20 @@
 #   STACK=prod            # ou `demo`
 #   APP_HOST_PORT=3000    # 3001 pour la demo
 #
+# ⚠️ `COMPOSE_FILE` dans le `.env` ne suffit PAS a lui seul. `docker compose`
+# l'honore, `podman-compose` NON -- constate le 2026-08-14 sur la demo, qui a
+# alors lu `docker-compose.yml`, la topologie self-hoster, et cree des
+# conteneurs `humanix-app` avec un HAProxy conteneurise. Sur la production, ce
+# HAProxy se serait battu pour les ports 80/443 avec celui de l'hote.
+#
+# `scripts/deploy.sh` lit donc la variable lui-meme et la passe en `-f`. Mais
+# TOUT APPEL MANUEL doit designer le fichier explicitement :
+#
+#   podman-compose -f docker-compose.humanix.yml up -d
+#
+# Un `podman-compose up -d` nu, depuis le repertoire d'une stack, retomberait
+# sur `docker-compose.yml`. C'est le piege le plus couteux de ce fichier.
+#
 # `STACK` gouverne les noms de conteneurs, du reseau et des volumes. Il n'a PAS
 # de valeur par defaut, et c'est deliberé : une faute de frappe qui ferait
 # retomber la production sur les volumes de la demo serait irrattrapable.

@@ -123,6 +123,32 @@ fi
 MOTEUR="${COMPOSE%% *}"
 command -v "$MOTEUR" >/dev/null || die "$MOTEUR introuvable (declare dans .env)"
 
+# --- Quels fichiers compose ? ------------------------------------------
+#
+# COMPOSE_FILE dans le .env NE SUFFIT PAS : docker compose l'honore,
+# podman-compose NON. Constate le 2026-08-14 sur la demo, qui a alors lu
+# `docker-compose.yml` -- la topologie SELF-HOSTER -- et cree des conteneurs
+# `humanix-app` avec un HAProxy conteneurise. Sur la production, ce HAProxy
+# se serait battu pour les ports 80/443 avec celui de l'hote.
+#
+# On lit donc la variable NOUS-MEMES et on la passe en `-f`, ce que les deux
+# moteurs traitent pareil. Separateur `:`, comme docker compose.
+FICHIERS_COMPOSE=""
+if [ -f .env ]; then
+  _cf="$(grep -E '^COMPOSE_FILE=' .env 2>/dev/null | tail -1 | cut -d= -f2- | tr -d '"'"'"'"')"
+  if [ -n "$_cf" ]; then
+    _ancien_ifs="$IFS"; IFS=':'
+    for _f in $_cf; do
+      [ -n "$_f" ] || continue
+      [ -f "$_f" ] || die "COMPOSE_FILE designe $_f, introuvable dans $STACK_DIR" 2
+      FICHIERS_COMPOSE="$FICHIERS_COMPOSE -f $_f"
+    done
+    IFS="$_ancien_ifs"
+    log "Fichiers compose :$FICHIERS_COMPOSE"
+  fi
+fi
+COMPOSE="$COMPOSE$FICHIERS_COMPOSE"
+
 # Le binaire NU, pour les commandes qui ne passent pas par compose :
 # `podman inspect`, `podman rm`. `$MOTEUR` vaut `podman-compose` dans ce cas,
 # ce qui n'est pas la meme commande.

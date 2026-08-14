@@ -93,6 +93,24 @@ ARG HUMANIX_OSS=""
 ENV HUMANIX_OSS=$HUMANIX_OSS
 
 ENV NEXT_TELEMETRY_DISABLED=1
+
+# Prisma interroge son serveur de versions a chaque invocation de la CLI, et
+# affiche un encart « Update available » dans la sortie de build.
+#
+# Deux raisons de le couper, et la seconde compte davantage que la premiere :
+#
+#   1. Le bruit. L'encart apparait a chaque construction, y compris en CI, et
+#      finit par masquer ce qu'on cherche vraiment dans les journaux.
+#
+#   2. L'appel RESEAU. Une construction d'image doit dependre de ses entrees,
+#      pas d'un service tiers joignable. Cet appel la rend sensible a une panne
+#      externe et empeche toute construction hors ligne.
+#
+# CHECKPOINT_DISABLE coupe la verification elle-meme, pas seulement son
+# affichage. La montee vers Prisma 7 reste a faire, et se decidera sur le
+# CHANGELOG plutot que sur un encart de build : 58 fichiers importent
+# @prisma/client, et @auth/prisma-adapter n'a pas declare la 7 comme testee.
+ENV CHECKPOINT_DISABLE=1
 ENV SKIP_ENV_VALIDATION=1
 # DATABASE_URL fictif pour le build (Prisma client gen + build Next).
 # Aucune valeur sensible en ENV : AUTH_SECRET est injecté UNIQUEMENT au runtime
@@ -144,6 +162,11 @@ RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+# Meme raison que dans le stage builder : docker-entrypoint.sh invoque la CLI
+# Prisma a CHAQUE demarrage (db execute, db push, db seed). Sans cela, chaque
+# redemarrage de conteneur declencherait un appel reseau vers Prisma et
+# afficherait l'encart de mise a jour dans les journaux de production.
+ENV CHECKPOINT_DISABLE=1
 
 # Utilisateur non-root pour la sécurité
 RUN addgroup --system --gid 1001 nodejs && \
