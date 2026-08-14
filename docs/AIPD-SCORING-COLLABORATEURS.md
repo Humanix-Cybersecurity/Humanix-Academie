@@ -1,4 +1,15 @@
-# AIPD — Notation du risque cyber des collaborateurs
+# Analyse d'appui à l'AIPD — Notation du risque cyber des collaborateurs
+
+> **Ce document n'est PAS l'AIPD de Humanix-Cybersecurity.** C'est l'analyse
+> que Humanix fournit à ses clients pour qu'ils mènent la leur.
+>
+> **Pourquoi cette distinction.** Les CGV positionnent Humanix en
+> **sous-traitant** au sens de l'article 28 du RGPD ; le Client est
+> responsable du traitement. L'AIPD de l'article 35 incombe donc au
+> **responsable**, c'est-à-dire à chaque client. L'obligation de Humanix est
+> de l'**assister** (art. 28.3.f) — ce que fait ce document, en décrivant le
+> traitement avec une précision qu'aucun client ne pourrait atteindre seul,
+> puisqu'elle vient du code.
 
 > **État : TRAME À COMPLÉTER ET À VALIDER.** Ce document décrit le traitement
 > tel que le code l'exécute réellement au 2026-08-14. Les sections marquées
@@ -94,42 +105,84 @@ Un score bas déclenche des **relances ciblées** via
 volontairement le filtre des 7 j »_ — la personne signalée peut donc être
 relancée plus souvent que les autres.
 
-**⬜ À TRANCHER** : au-delà des relances, l'employeur tire-t-il d'autres
-conséquences de ce score ? Entretien, formation imposée, mention en évaluation
+**TRANCHÉ le 2026-08-14 : l'article 22 n'est pas engagé, sous une condition
+que les CGV rendent contraignante.**
+
+Le score ne déclenche aujourd'hui que des relances de sensibilisation. Ce n'est
+pas une décision produisant des effets juridiques ou significatifs au sens de
+l'article 22.
+
+Pour que cela reste vrai indépendamment de l'usage qu'en ferait un client, les
+CGV interdisent désormais contractuellement d'utiliser le score comme élément
+d'une décision individuelle — évaluation professionnelle, mesure
+disciplinaire, promotion, rémunération.
+
+C'est le choix prudent : il coûte une clause, il ferme une dérive, et il se
+plaide bien. Si un client souhaite malgré tout fonder des décisions sur ce
+score, il sort du cadre contractuel et devient seul responsable d'organiser
+l'intervention humaine que l'article 22.3 exige.
+
+Question résiduelle pour le Client : Entretien, formation imposée, mention en évaluation
 annuelle ? La réponse détermine si l'article 22 du RGPD — décision
 automatisée produisant des effets significatifs — est engagé, et donc si un
 droit à l'intervention humaine doit être organisé.
 
 ### 1.6 Durée de conservation
 
-**⬜ À COMPLÉTER.** Le score courant vit sur `User.riskScore` ; l'historique
-est conservé dans `RiskScoreSnapshot`, alimenté par le cron `risk-snapshot`.
-La durée de conservation de cet historique doit être fixée et justifiée.
+**TRANCHÉ le 2026-08-14 : aucune mesure nouvelle n'est nécessaire, et c'est
+une bonne surprise du code.**
+
+Vérification faite, **il n'existe aucun historique individuel de notation**.
+
+`RiskScoreSnapshot` est agrégé **par tenant** : ses colonnes sont `userCount`,
+`avgScore` et `atRiskCount`. Aucune donnée personnelle n'y figure — ce sont des
+statistiques d'organisation, alimentées quotidiennement par le cron
+`risk-snapshot` pour tracer une tendance.
+
+La seule donnée personnelle est le **score courant**, porté par
+`User.riskScore`. Il est écrasé à chaque recalcul et disparaît avec
+l'utilisateur, y compris lors de l'anonymisation opérée par la purge RGPD.
+
+Autrement dit : la notation d'un collaborateur ne laisse **aucune trace
+rétrospective**. On ne peut pas reconstituer qu'une personne était mal notée il
+y a six mois. C'est une limitation forte de l'intrusivité, obtenue par
+conception, et elle doit être portée au crédit du traitement dans la mise en
+balance.
+
+⚠️ **À préserver.** Ajouter un jour un historique par utilisateur — pour tracer
+une progression individuelle, par exemple — changerait la nature du traitement
+et devrait repasser par ce document.
 
 ---
 
 ## 2. Nécessité et proportionnalité
 
-### 2.1 Base légale
+### 2.1 Base légale — TRANCHÉ : intérêt légitime, pas NIS2
 
-**⬜ À TRANCHER — et la réponse spontanée ne tient pas.**
+**Décision du 2026-08-14.**
 
-La base invoquée jusqu'ici était **NIS2**. La directive (UE) 2022/2555, à son
-article 21.2.g, impose aux entités essentielles et importantes des pratiques
-d'hygiène cyber et de la formation. Elle fonde donc solidement **la
-sensibilisation**.
+La base invoquée jusqu'ici était **NIS2**. Elle ne tient pas, pour deux
+raisons cumulatives.
 
-Elle n'impose en revanche **ni la notation individuelle, ni sa restitution
-nominative à l'employeur, ni un classement**. Or l'article 6.1.c du RGPD exige
-que l'obligation légale invoquée impose effectivement le traitement en cause.
+D'abord, la directive (UE) 2022/2555 impose à son article 21.2.g des pratiques
+d'hygiène cyber et de la **formation**. Elle n'impose ni la notation
+individuelle, ni sa restitution nominative, ni un classement. Or l'article
+6.1.c du RGPD exige que l'obligation légale invoquée impose _effectivement_ le
+traitement en cause.
 
-La base réaliste pour la partie « scoring » est donc l'**intérêt légitime**
-(art. 6.1.f), ce qui emporte deux conséquences :
+Ensuite, NIS2 oblige **l'entité** — le Client — et non son fournisseur.
 
-- une **mise en balance documentée** est requise (intérêt poursuivi, nécessité,
-  impact sur les personnes, attentes raisonnables) ;
-- la personne dispose d'un **droit d'opposition** (art. 21), qu'il faut
-  organiser concrètement.
+**Base retenue : l'intérêt légitime du Client (art. 6.1.f).** Deux conséquences
+que le Client doit assumer, et que Humanix doit lui permettre d'assumer :
+
+- une **mise en balance documentée** (intérêt poursuivi, nécessité, impact,
+  attentes raisonnables des personnes) — Humanix en fournit la trame ci-dessous ;
+- un **droit d'opposition** (art. 21) ouvert à chaque collaborateur, qu'il faut
+  pouvoir exercer concrètement.
+
+NIS2 ne disparaît pas pour autant : elle devient le **contexte** qui nourrit la
+mise en balance. Un employeur soumis à NIS2 a un intérêt d'autant plus légitime
+à mesurer l'efficacité de la sensibilisation qu'il en répond juridiquement.
 
 ### 2.2 Minimisation
 
@@ -221,6 +274,44 @@ protection et un argument commercial.
 | Date de validation        |                              |
 | Avis du conseil juridique |                              |
 | Prochaine révision        |                              |
+
+## 6. Faut-il désigner un DPO ? — analyse motivée
+
+**Décision du 2026-08-14 : non, mais la question est datée et son réexamen
+déclenché par un seuil chiffré.**
+
+L'article 37.1.b vise les organismes dont les activités de base impliquent un
+suivi « régulier et systématique **à grande échelle** » des personnes. Il
+s'applique aux **sous-traitants** comme aux responsables — Humanix ne peut donc
+pas s'en exonérer par sa qualité de sous-traitant.
+
+Deux des trois conditions sont réunies, et il faut le dire clairement :
+
+| Condition                      | Réunie ?                                                               |
+| ------------------------------ | ---------------------------------------------------------------------- |
+| Activité de base               | **Oui.** Noter le risque cyber n'est pas accessoire, c'est le produit. |
+| Suivi régulier et systématique | **Oui.** Le cron `risk-snapshot` recalcule quotidiennement.            |
+| Grande échelle                 | **Non, à ce jour.** 4 tenants, 37 utilisateurs suivis au 2026-08-14.   |
+
+La conclusion tient donc **entièrement au volume**, ce qui la rend fragile par
+construction : elle cessera d'être vraie sans que rien ne le signale.
+
+### Seuil de réexamen
+
+La question est rouverte dès que **l'un** de ces seuils est franchi :
+
+- **1 000 personnes suivies**, tous tenants confondus ;
+- **50 tenants** ;
+- l'ajout d'une donnée sensible au sens de l'article 9 dans le calcul du score.
+
+Les deux premiers se mesurent en une requête. Le troisième est une décision
+produit, qui devrait de toute façon passer par ce document.
+
+⚠️ Les mentions légales affirment aujourd'hui qu'aucun DPO n'est requis « au
+regard de l'article 37 ». C'est exact mais insuffisamment motivé : elles
+devraient renvoyer à la présente analyse plutôt qu'énoncer une conclusion nue.
+
+---
 
 Rappel : Humanix-Cybersecurity n'a pas désigné de DPO, se jugeant hors du champ
 de l'article 37 du RGPD (cf. mentions légales). **⬜ À VÉRIFIER** : l'article

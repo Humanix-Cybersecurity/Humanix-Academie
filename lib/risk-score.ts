@@ -109,8 +109,7 @@ export async function computeRiskScore(userId: string): Promise<RiskFactors> {
     .map((p) => p.completedAt)
     .filter(Boolean)
     .sort((a, b) => (b as Date).getTime() - (a as Date).getTime())[0] as
-    | Date
-    | undefined;
+    Date | undefined;
   if (lastActivity) {
     const daysSince = Math.floor(
       (Date.now() - lastActivity.getTime()) / (24 * 3600 * 1000),
@@ -212,9 +211,7 @@ export async function computeRiskScore(userId: string): Promise<RiskFactors> {
   // compte tous les episodes (signal generique). Cette pondération est
   // une COUCHE supplementaire qui reflete le risque metier specifique.
   const userGroupSlugs = new Set(
-    user.groups
-      .filter((ug) => ug.group.isActive)
-      .map((ug) => ug.group.slug),
+    user.groups.filter((ug) => ug.group.isActive).map((ug) => ug.group.slug),
   );
 
   if (userGroupSlugs.size > 0) {
@@ -304,5 +301,13 @@ export const RISK_VERDICT_LABEL: Record<
   excellent: { label: "Excellent", color: "text-success" },
   bon: { label: "Bon", color: "text-accent-500" },
   a_surveiller: { label: "À surveiller", color: "text-amber-600" },
-  a_risque: { label: "Vulnérable", color: "text-warn" },
+  // « Sensibilisation à renforcer » et non « Vulnérable » : le libellé
+  // qualifie une ACTION A MENER, pas un ETAT de la personne.
+  //
+  // Ce score est restitué nominativement a l'employeur. Qualifier un
+  // collaborateur de « vulnérable » devant sa hiérarchie décrit un état
+  // supposé de l'individu la ou seul son comportement a été mesuré.
+  // Changer coûte une ligne ; ne pas changer se defend mal le jour ou un
+  // salarie découvre comment il est classé. Cf. docs/AIPD-SCORING-COLLABORATEURS.md
+  a_risque: { label: "Sensibilisation à renforcer", color: "text-warn" },
 };
