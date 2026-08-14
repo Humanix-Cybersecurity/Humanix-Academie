@@ -6,7 +6,89 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
-## [Unreleased] - sur `main` (non taggé)
+## [1.4.0] - 2026-08-13 🔒 Sauvegardes immuables, archivage légal, production sans démon root
+
+Journée entière consacrée à ce qui ne se voit pas tant qu'on n'en a pas besoin :
+les sauvegardes, les journaux d'audit, et le socle d'exécution. Trois défauts
+majeurs n'ont été trouvés qu'en éprouvant réellement les chemins, jamais en les
+relisant.
+
+### Added
+
+#### 💾 Sauvegardes en Object Storage, immuables
+
+`BACKUP_TARGET=s3` dépose les dumps chiffrés dans un bucket Scaleway avec un
+verrou **Object Lock COMPLIANCE de 30 jours**. Pendant cette durée, la
+suppression est refusée par le stockage lui-même : ni la machine compromise, ni
+la clé de dépôt, ni le compte propriétaire ne peuvent l'abréger.
+
+C'est la seule propriété qui distingue une sauvegarde d'une copie, et celle que
+le FTP en clair précédent n'offrait pas — un attaquant qui obtenait les
+identifiants effaçait les sauvegardes avant de chiffrer la production.
+
+Le verrou a été **éprouvé** : une tentative d'écourter la rétention renvoie
+`Access Denied because object protected by object lock`.
+
+#### 🗄️ Archivage des journaux d'audit
+
+`scripts/archive-audit-logs.sh` exporte les mois complets au-delà de 370 jours
+en JSONL, les compresse, les chiffre par `age` vers une clé publique, et les
+dépose sous verrou **366 jours** — un an plus un jour de rotation, la LCEN
+imposant un an pour les journaux de connexion.
+
+La marge de 30 jours avant la purge à 400 jours fait qu'un échec d'archivage
+produit un mois d'alertes avant la moindre perte.
+
+#### 🔭 Observabilité des conteneurs Podman
+
+Vector porte une seconde source `docker_logs` sur le socket Podman, sans quoi
+les conteneurs rootless sont invisibles.
+
+### Changed
+
+#### 🐳 Production sous Podman rootless
+
+Plus de démon root : les conteneurs sont des processus enfants d'un utilisateur
+ordinaire. Pour une entreprise qui vend de la cybersécurité, l'appartenance au
+groupe `docker` — équivalent à root, sans mot de passe ni trace `sudo` — était
+le point le plus difficile à défendre devant un auditeur.
+
+Éprouvé par un **vrai redémarrage machine** : app, postgres et vector remontés
+seuls et sains en 38 secondes.
+
+#### ⏰ Les horaires de cron sont en heure locale, et le disent
+
+`CRON_TZ=UTC` n'existe pas dans la Vixie cron de Debian — c'est une
+fonctionnalité de _cronie_. La ligne n'avait aucun effet, et la documentation
+affirmait le contraire depuis toujours.
+
+### Fixed
+
+#### 🚨 `restore-db.sh` était cassé pour le seul cas qui compte
+
+Erreur d'arithmétique dès que le répertoire local était vide. Ce cas n'arrive
+jamais en production, où `/var/backups/humanix` contient toujours des fichiers.
+Il arrive **systématiquement quand on restaure sur une machine propre** —
+c'est-à-dire quand la production a disparu.
+
+Trouvé en jouant le premier drill réel. Aucune relecture ne l'aurait attrapé.
+
+#### 📊 L'observatoire des fuites perdait les plus grosses
+
+`DataBreach.recordsExposed` était un `Int`, plafonné à 2 147 483 647, alors que
+le parseur est conçu pour extraire des milliards. Une fuite à 3 milliards de
+comptes produisait un avertissement en console et **disparaissait** — les seules
+fuites qui font la une. La plus grosse enregistrée compte 730 millions
+d'enregistrements.
+
+#### 🖼️ Image d'exécution allégée
+
+`esbuild` et son binaire Go retirés du runtime : **38 vulnérabilités → 8**, puis
+0 après retrait des dépendances embarquées de npm.
+
+---
+
+## [1.3.0] - 2026-08-12 🕵️ Exposition numérique, hub conformité, durcissements
 
 Cycle post-v1.2.0 : exposition numérique & OSINT souverains, hub conformité
 multi-référentiels, certificat au nom réel, et une série de durcissements
@@ -98,13 +180,13 @@ Cycle de release post-launch v1.0.0 / v1.1.0. Trois chantiers majeurs + une sér
 
 #### 🧠 Sprint "AI Literacy" - première position FR sur la maîtrise de l'IA
 
-Suite au feedback Digital 113 Members Day : forte demande des entreprises FR pour comprendre l'IA générative sans alarmisme. Positionnement : *"L'IA ne te remplacera pas. Quelqu'un qui sait l'utiliser, oui."*
+Suite au feedback Digital 113 Members Day : forte demande des entreprises FR pour comprendre l'IA générative sans alarmisme. Positionnement : _"L'IA ne te remplacera pas. Quelqu'un qui sait l'utiliser, oui."_
 
-- **Landing publique `/maitrise-ia`** : hero soft + 3 études citées (MIT Media Lab *"Your Brain on ChatGPT"* 2025, Stanford HAI 2025, AI Act EU 2026) + preview 12 épisodes + section dirigeants + section Cyber-Famille. SEO complet (canonical, OG).
+- **Landing publique `/maitrise-ia`** : hero soft + 3 études citées (MIT Media Lab _"Your Brain on ChatGPT"_ 2025, Stanford HAI 2025, AI Act EU 2026) + preview 12 épisodes + section dirigeants + section Cyber-Famille. SEO complet (canonical, OG).
 - **3 articles Cyber-Famille** (CC BY-SA dans `library-seed-demo.ts`) :
-  - 👵 *"Mamie, ChatGPT n'est pas Google"* - règle santé/argent/papiers
-  - 🎓 *"Quand ton ado utilise ChatGPT pour ses devoirs"* - méthode 3 niveaux d'usage
-  - 🎭 *"Mon proche est tombé pour un deepfake"* - règle "raccrocher + rappeler"
+  - 👵 _"Mamie, ChatGPT n'est pas Google"_ - règle santé/argent/papiers
+  - 🎓 _"Quand ton ado utilise ChatGPT pour ses devoirs"_ - méthode 3 niveaux d'usage
+  - 🎭 _"Mon proche est tombé pour un deepfake"_ - règle "raccrocher + rappeler"
 - **Module admin `/admin/maturite-ia`** : questionnaire 8 axes (charte IA, formation, shadow AI, données sensibles, supervision humaine, deepfake, AI Act, audit) → score 0-100 + benchmark sectoriel (médiane PME FR = 42/100) + plan d'action priorisé live + export JSON. Persistance localStorage en V1.
 - **Saison "Maîtrise de l'IA générative"** - 12 épisodes au catalogue, 3 MDX rédigés en MVP (E01 hallucinations, E03 atrophie MIT 2025, E04 mes données partent où). Sources MIT/Stanford/ANSSI/AI Act.
 
@@ -113,7 +195,7 @@ Suite au feedback Digital 113 Members Day : forte demande des entreprises FR pou
 Postgres tourne en self-host (container Docker non-exposé) sans snapshots managed. La doc `docs/BACKUPS.md` décrivait la cible mais aucun script. Implémentation complète :
 
 - **`scripts/backup-db.sh`** : pg_dump (mode `docker exec` ou host) → chiffrement `age` asymétrique (Curve25519 + ChaCha20-Poly1305) → upload FTP/FTPS via lftp → rotation 30j distant / 7j local. Options `--dry-run`, `--local-only`. Variables `BACKUP_FTP_TLS` (default yes) pour activer/désactiver TLS selon le serveur (FTP-only chez Scaleway Backup Space).
-- **`scripts/restore-db.sh`** : interactif, sélection backup local ou distant, déchiffrement avec clé privée, confirmation explicite *"OUI JE CONFIRME"* avant pg_restore destructif, parallélisme x4.
+- **`scripts/restore-db.sh`** : interactif, sélection backup local ou distant, déchiffrement avec clé privée, confirmation explicite _"OUI JE CONFIRME"_ avant pg_restore destructif, parallélisme x4.
 - **Doc opérationnelle complète** dans `docs/BACKUPS.md` § 10 : génération clé age, setup `/etc/humanix/backup.env`, cron host, procédure restore d'urgence.
 
 #### 🔑 Clé publique licence Ed25519 de prod
@@ -143,7 +225,7 @@ Postgres tourne en self-host (container Docker non-exposé) sans snapshots manag
 
 ### Changed
 
-- **Hero homepage Option B** : *"Pas un cours d'expert..."* → *"Reconnaître les arnaques numériques avant de cliquer : phishing, faux SMS, QR codes piégés, faux profils. Un mini-épisode par semaine, en français, pour ton équipe et ta famille. Sans jargon, sans peur, sans expert."*
+- **Hero homepage Option B** : _"Pas un cours d'expert..."_ → _"Reconnaître les arnaques numériques avant de cliquer : phishing, faux SMS, QR codes piégés, faux profils. Un mini-épisode par semaine, en français, pour ton équipe et ta famille. Sans jargon, sans peur, sans expert."_
 - **`SIGNUP_ALLOW_SELF_SERVICE`** documenté dans `.env.example` (sortait de la whitelist secrète).
 - **Mollie clarifié comme entreprise UE** (Amsterdam, régulé DNB, PSD2) dans CGV, confidentialité, DPO, page DAF, admin billing, form souscrire, COMPLIANCE.md, README. La sed-migration Payplug→Mollie avait laissé "Mollie SA (France 🇫🇷)" - corrigé en "Mollie B.V. (UE 🇪🇺, Amsterdam)".
 
@@ -232,11 +314,11 @@ Commit : `f019f74` (PR [#562](https://github.com/Humanix-Cybersecurity/Humanix-A
 
 Trois audits publics indépendants ont validé la posture sécurité avant le launch :
 
-| Scanner | Résultat | Détails |
-|---|---|---|
-| **Mozilla Observatory** | **A+** | 110/100 · 10/10 tests passés |
-| **Security Headers** (Snyk) | **A+** | 6/6 en-têtes HTTP présents (CSP, HSTS, X-Frame, X-Content-Type, Referrer-Policy, Permissions-Policy) |
-| **Qualys SSL Labs** | **A+** | TLS 1.3 · Post-Quantum Cryptography (PQC) key exchange · HSTS long duration |
+| Scanner                     | Résultat | Détails                                                                                              |
+| --------------------------- | -------- | ---------------------------------------------------------------------------------------------------- |
+| **Mozilla Observatory**     | **A+**   | 110/100 · 10/10 tests passés                                                                         |
+| **Security Headers** (Snyk) | **A+**   | 6/6 en-têtes HTTP présents (CSP, HSTS, X-Frame, X-Content-Type, Referrer-Policy, Permissions-Policy) |
+| **Qualys SSL Labs**         | **A+**   | TLS 1.3 · Post-Quantum Cryptography (PQC) key exchange · HSTS long duration                          |
 
 Tous les rapports sont **rejouables en temps réel** depuis [`/securite/audits-externes`](https://humanix-cybersecurity.fr/securite/audits-externes) - aucune note auto-déclarée.
 
@@ -311,10 +393,12 @@ Tous les rapports sont **rejouables en temps réel** depuis [`/securite/audits-e
 ## [0.3.x] - mai 2026 (pré-launch)
 
 ### Sprint 4 - Mode Enquêteur profils (PR #538)
+
 - Profils publics X (`XProfileMockup`) + Instagram (`InstagramProfileMockup`)
 - Scène Wi-Fi public
 
 ### Sprint 3 - Refonte cosy (PRs #429-#437)
+
 - AdminDashboard 1357 → 147 lignes (Sprint 2)
 - Pages admin > 300 lignes : 6 → 0
 - Quick Setup Wizard 4 écrans
@@ -322,6 +406,7 @@ Tous les rapports sont **rejouables en temps réel** depuis [`/securite/audits-e
 - Refonte page d'accueil 591 → 62 lignes
 
 ### Sprint 5 - Télémétrie + cookies RGPD (PR #439)
+
 - Bandeau cookie CNIL 2020-091 (parité stricte Accepter / Refuser)
 - Plausible Cloud uniquement avec consentement explicite
 
@@ -330,25 +415,30 @@ Tous les rapports sont **rejouables en temps réel** depuis [`/securite/audits-e
 ## [0.2.x] - avril 2026
 
 ### Phase 13 - Connecteurs souverains FR
+
 - Sekoia.io (SIEM/XDR)
 - HarfangLab (EDR)
 - Mailinblack / Vade Secure (anti-phishing)
 
 ### Phase 12 - Levier commercial PME FR
+
 - Lucca (HR souverain) - SCIM v2 auto-provisioning
 - GLPI (ITSM open-source) - bridge webhook → tickets
 - CyberMalveillance.gouv.fr - page liaison
 
 ### Phase 11 - Connecteurs SIEM mainstream
+
 - Splunk CIM v1 + connecteur Python HEC
 - Microsoft Sentinel CEF + workbook clé en main
 
 ### Phase 10 - Standards pivots interop
+
 - OSCAL v1.1.2 (NIST Assessment Results)
 - Webhook outbound `evidence.exported` (HMAC-SHA256)
 - SCIM v2 complet (Entra / Okta / Google / Keycloak)
 
 ### Phase 9 - Passerelle CISO Assistant (intuitem)
+
 - Mapping ISO 27001:2022, NIS2, RGPD, ANSSI HG, NIST CSF
 - Endpoint `/api/v1/evidence-export` authentifié + rate-limited
 - Page `/integrations/ciso-assistant` + connecteur Python MIT autonome
@@ -358,22 +448,26 @@ Tous les rapports sont **rejouables en temps réel** depuis [`/securite/audits-e
 ## [0.1.x] - janvier-mars 2026
 
 ### Bootstrap & assainissement
+
 - Stack Docker durcie (HAProxy 2.9-alpine, multi-stage, réseaux segmentés)
 - Migration souveraine : Scaleway Paris, Mistral, Resend UE, Piper TTS local
 - Audit code initial : élimination des bugs critiques (race conditions, fuite multi-tenant)
 
 ### Plan-gating & monétisation
+
 - Helper central `lib/plans.ts`
 - Server action `switchDemoPlan` (démo immersive sans paiement)
 - Bandeau permanent « Vue démo : [plan] »
 
 ### Conformité & légal
+
 - Pages légales complètes : mentions, confidentialité, cookies, CGV, CGU
 - DPA aligné CNIL (RGPD art. 28)
 - Registre des traitements art. 30
 - Trust Center `/securite` + audit qualité juridique + WCAG 2.1 AA / RGAA 4.1
 
 ### Différenciation commerciale
+
 - Page `/comparatif` honnête
 - Mode Présentation CODIR
 - Cyber Famille (3 proches gratuits)
@@ -387,6 +481,7 @@ Tous les rapports sont **rejouables en temps réel** depuis [`/securite/audits-e
 Cf. [`docs/ROADMAP_PRODUIT_v1.md`](https://github.com/Humanix-Cybersecurity/Humanix-Academie/issues) et issues GitHub.
 
 Chantiers identifiés :
+
 - Hex IA Phases 4-7 (coach, roleplay, voice, agentique)
 - Pack NIS2 v3 : snapshots historiques, comparaison cross-tenant anonyme
 - Industrialisation observabilité (Prometheus / Grafana)
