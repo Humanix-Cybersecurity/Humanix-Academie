@@ -8,8 +8,11 @@
 > contracter conformément à vos propres conditions.
 >
 > ⚠️ Ce modèle est un point de départ sérieux, pas un contrat prêt à signer.
-> Il doit être relu par un conseil, en particulier sur les articles 6
-> (responsabilité) et 9 (fin du contrat).
+> Il doit être relu par un conseil.
+>
+> **Les deux points signalés aux articles 6 et 9 ont été arbitrés le
+> 2026-08-14** et ne sont plus des questions ouvertes : la contradiction avec
+> le verrou WORM est assumée, et le délai de 48 heures est maintenu.
 
 ---
 
@@ -128,6 +131,12 @@ concernent pas.
 
 ## 6. Violation de données
 
+**ARBITRÉ le 2026-08-14 : le délai de 48 heures est maintenu.** Il est plus
+strict que ce que le RGPD impose au sous-traitant, dont l'article 33.2 parle
+d'un « délai injustifié » sans le chiffrer. C'est un engagement volontaire, et
+il suppose une astreinte capable de le tenir — le Sous-traitant s'organise en
+conséquence.
+
 Le Sous-traitant notifie le Client **sans délai injustifié et au plus tard sous
 48 heures** après en avoir pris connaissance, en fournissant la nature de la
 violation, les catégories et le nombre approximatif de personnes concernées,
@@ -166,13 +175,24 @@ Passé ce délai, le Sous-traitant procède à la **suppression définitive** de
 données, sauvegardes comprises, dans un délai maximal de **90 jours**
 correspondant au cycle de rotation des sauvegardes chiffrées.
 
-⚠️ **Point à valider juridiquement.** Les archives de journaux d'audit déposées
+**ARBITRÉ le 2026-08-14 : la sécurité prime, et la contradiction est assumée
+plutôt que masquée.**
+
+Les archives de journaux d'audit déposées
 sous verrou d'immuabilité (WORM, 366 jours) ne peuvent techniquement pas être
 supprimées avant l'expiration de ce verrou — c'est précisément leur fonction.
-Le Client doit en être informé **avant** signature, et cette conservation doit
-être justifiée par une obligation légale de conservation des traces (LCEN,
-NIS2). À défaut, il y a contradiction entre l'engagement de suppression et le
-dispositif technique.
+Le Client doit en être informé **avant** signature.
+
+Le choix retenu est de **conserver le verrou**. Un verrou d'immuabilité qui
+céderait à la demande ne serait pas un verrou : c'est précisément parce qu'il
+résiste, y compris à son propriétaire, qu'il protège les journaux d'audit d'un
+rançongiciel ou d'un effacement malveillant. Renoncer à cette propriété pour
+tenir une promesse de suppression reviendrait à affaiblir la sécurité au nom de
+la conformité.
+
+Le présent article énonce donc la limite au lieu de la dissimuler, et le
+Sous-traitant s'engage à ce qu'aucune donnée ainsi conservée ne soit exploitée
+à d'autres fins que la production d'une preuve en cas d'incident.
 
 ## 10. Droit applicable
 
