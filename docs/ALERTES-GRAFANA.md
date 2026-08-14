@@ -178,12 +178,17 @@ production : cette application n'écrit **rien** hors démarrage — 32 lignes e
 tout, 0 ligne par minute au repos. La règle se serait déclenchée en permanence
 sur une production parfaitement saine, et aurait été désactivée dans la semaine.
 
-Le journal HAProxy ne convenait pas davantage : lui aussi à zéro au moment de la
-mesure, et surtout **pas raccordé au puits Loki** — la source `haproxy` de
-`infra/vector/vector.yaml` n'alimente aucune destination. Le seul flux régulier
-qui atteignait Loki était un sous-produit des sondes de santé du conteneur TTS ;
-y accrocher la détection l'aurait rendue tributaire d'un service que personne ne
-maintient délibérément.
+Le journal HAProxy ne convenait pas davantage, pour une autre raison : il
+**n'arrive pas dans Loki sous forme de lignes**. La source `haproxy` de
+`infra/vector/vector.yaml` est bien raccordée, mais vers **Mimir et en tant que
+métriques** — `haproxy → haproxy_extraction → haproxy_metriques → scaleway_mimir`
+produit `humanix_http_requests_total` et `humanix_http_request_duration_seconds`.
+C'est délibéré et sain : un journal d'accès vaut peu comme texte et beaucoup
+comme débit. Il n'y a simplement rien à interroger en LogQL.
+
+Le seul flux régulier qui atteignait vraiment Loki était un sous-produit des
+sondes de santé du conteneur TTS ; y accrocher la détection l'aurait rendue
+tributaire d'un service que personne ne maintient délibérément.
 
 `instrumentation.ts` émet donc un battement explicite toutes les 5 minutes, soit
 3 attendus par quart d'heure. Sa disparition ne signifie qu'une chose.
@@ -196,6 +201,42 @@ services, ne le nomme pas explicitement) :
 ```bash
 ssh humanix@humanix-academie.fr 'podman stop humanix-prod_vector_1 && sleep 900 && podman start humanix-prod_vector_1'
 ```
+
+---
+
+## Règles 6 et 7 — côté métriques (Mimir, pas Loki)
+
+Les journaux HAProxy alimentent déjà Mimir en métriques. Rien à ajouter au
+code : ces deux règles sont disponibles immédiatement, sur la source de données
+**`humanix-prod-metrics`**.
+
+**Règle 6 — taux d'erreurs serveur.** Un pic de 5xx accompagne aussi bien une
+panne qu'une exploitation en cours.
+
+```promql
+sum(rate(humanix_http_requests_total{status=~"5.."}[5m]))
+  / sum(rate(humanix_http_requests_total[5m]))
+```
+
+Condition `IS ABOVE 0.05` pendant `10m`, sévérité `warning`. En ratio et non en
+valeur absolue : dix erreurs sur cent requêtes et dix sur cent mille ne disent
+pas la même chose.
+
+**Règle 7 — effondrement du trafic.**
+
+```promql
+sum(rate(humanix_http_requests_total[10m]))
+```
+
+Condition `IS BELOW 0.01` pendant `15m`, sévérité `critical`. Complète la règle 5
+par l'autre bout : celle-ci vérifie que le service **répond**, la règle 5 que la
+**collecte** fonctionne. Une panne de HAProxy ou de TLS laisserait le battement
+intact — l'application tourne, personne ne l'atteint.
+
+⚠️ À calibrer sur le trafic réel avant activation. Mesure du 2026-08-14 :
+`/var/log/haproxy.log` était à **0 ligne/minute** sur la minute observée. Un
+seuil posé sans mesure préalable produirait une alerte permanente, exactement
+l'erreur évitée à la règle 5. Regarder d'abord la courbe sur sept jours.
 
 ---
 
