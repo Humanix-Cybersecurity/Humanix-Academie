@@ -97,6 +97,16 @@ LOG=/var/log/humanix/cron.log
 # possible entre archiver et supprimer.
 0 1 * * * $HUMANIX/scripts/archive-audit-logs.sh >> /var/log/humanix/archive.log 2>&1
 
+# Rapport de conformite au comite de direction, le 1er de chaque mois.
+#
+# 07h00 et non la nuit : ce courriel arrive chez des dirigeants, autant
+# qu'il soit en haut de leur boite au moment ou ils l'ouvrent, plutot que
+# noye sous les notifications nocturnes.
+#
+# Envoie un LIEN, jamais le PDF en piece jointe. Cf.
+# lib/rapports/comite-direction.ts pour le raisonnement.
+0 7 1 * * $HUMANIX/scripts/cron-host.sh rapport-comite-direction >> $LOG 2>&1
+
 # --- Jobs applicatifs -------------------------------------------------
 # Chaque ligne : <horaire> cron-host.sh <slug>. Le slug doit exister a la
 # fois dans lib/cron/registry.ts et sous app/api/cron/<slug>/.
