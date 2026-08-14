@@ -152,19 +152,29 @@ jours plus tard est fausse, et cela se voit.
 
 ## Ce qui manque encore, et qu'il faut regarder en face
 
-**La détection.** Cette procédure suppose que vous _savez_ qu'une violation a eu
-lieu. Aujourd'hui, rien ne vous alerte : les journaux partent vers Loki, mais
-aucune règle ne déclenche de notification. Un accès anormal à 3 h du matin
-n'atteindra personne avant votre prochaine connexion.
+**La détection — traitée, mais partiellement.** Cette procédure suppose que
+vous _savez_ qu'une violation a eu lieu.
 
-C'est le maillon faible, et il rend le délai de 48 heures théorique : il ne
-court qu'à partir de votre _connaissance_, mais un client attend légitimement
-que cette connaissance soit rapide.
+Depuis le 2026-08-14, `lib/audit.ts` recopie sur la sortie standard les
+événements surveillables — échecs d'authentification, exfiltration suspectée,
+exports, élévations de privilèges — que Vector achemine vers Loki. Les cinq
+règles d'alerte correspondantes sont écrites dans `docs/ALERTES-GRAFANA.md`.
 
-**Pistes, par coût croissant** : une alerte Grafana sur les échecs
-d'authentification et les exports massifs ; une surveillance de l'intégrité des
-fichiers (AIDE est installé, son rapport n'est pas lu) ; une astreinte
-téléphonique réelle.
+Auparavant ces événements n'atteignaient jamais Loki : un `AuditLog` part en
+base, et Vector ne collecte que les sorties de conteneurs. Aucune règle n'aurait
+pu les voir.
+
+⚠️ **Ces règles se créent à la main** dans l'interface Grafana : le jeton
+Cockpit est en écriture seule. Tant qu'elles n'y sont pas saisies, rien
+n'alerte — le code émet dans le vide.
+
+**Ce qui reste découvert**, et qu'il faut avoir en tête en ouvrant cette
+procédure : un accès direct à PostgreSQL par SSH ne produit aucun événement
+applicatif ; une lecture lente et régulière reste sous tous les seuils. Les
+alertes attrapent la brutalité, pas la patience.
+
+**Prochaines marches, par coût croissant** : lire le rapport AIDE (installé,
+jamais consulté) ; une astreinte téléphonique réelle.
 
 **Le point de contact côté Client.** Notifier les ADMIN suppose que leurs
 adresses sont à jour et lues. Le DPA devrait exiger un contact de sécurité
