@@ -80,12 +80,12 @@ explicitement et que l'information aux personnes doit énoncer.
 
 ### 1.4 Destinataires
 
-| Destinataire                    | Accès                                  | Support                                   |
-| ------------------------------- | -------------------------------------- | ----------------------------------------- |
-| L'employeur (rôles ADMIN, RSSI) | Score et verdict **nominatifs**        | `/admin/users/at-risk`, `/admin/business` |
-| L'employeur                     | **Export** de la liste                 | `/api/admin/users/at-risk/export`         |
-| Les collègues                   | Position au classement, **nominative** | `/classement`                             |
-| Humanix (SUPERADMIN)            | Accès technique                        | Support et exploitation                   |
+| Destinataire                    | Accès                                                                                          | Support                                   |
+| ------------------------------- | ---------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| L'employeur (rôles ADMIN, RSSI) | Score et verdict **nominatifs**                                                                | `/admin/users/at-risk`, `/admin/business` |
+| L'employeur                     | **Export** de la liste                                                                         | `/api/admin/users/at-risk/export`         |
+| Les collègues                   | Classement **nominatif sur les XP** obtenus en complétant des modules — **pas** le `riskScore` | `/classement`                             |
+| Humanix (SUPERADMIN)            | Accès technique                                                                                | Support et exploitation                   |
 
 ### 1.5 Conséquences pour la personne
 
@@ -139,22 +139,47 @@ une mesure de minimisation délibérée.
 
 ### 2.3 Le classement nominatif
 
-**⬜ À TRANCHER, et c'est le point le plus exposé.**
+**⬜ À TRANCHER — mais moins urgent qu'il n'y paraissait.**
 
-Aujourd'hui, `/classement` affiche le nom de chaque collaborateur et
-**personne ne peut s'y soustraire**.
+Rectification d'une première version de ce document, qui présentait ce point
+comme le plus exposé : **c'était inexact**. `/classement` n'ordonne pas sur le
+`riskScore`. Il classe sur les **XP accumulés en complétant des modules**
+pendant un challenge, et affiche nom, service et nombre d'épisodes
+(`lib/challenge.ts`, `getChallengeIndividualRanking`).
 
-Si la base est l'intérêt légitime, la mise en balance a peu de chances
-d'aboutir : la finalité d'émulation s'obtient tout aussi bien avec un classement
-**pseudonymisé** ou **sur adhésion volontaire**. Lorsqu'une mesure moins
-intrusive atteint le même but, l'intérêt légitime cède.
+C'est un palmarès de **mérite**, pas de vulnérabilité. Classer des collègues
+sur ce qu'ils ont accompli n'a pas la portée de les classer sur leur faiblesse
+supposée, et la pratique est courante et généralement admise en contexte de
+challenge interne.
 
-Trois options, par ordre de robustesse :
+Ce qui reste néanmoins à arbitrer :
 
-1. Classement **sur option**, désactivé par défaut ;
-2. Classement **pseudonymisé** (« Collaborateur #7 »), chacun voyant sa propre
-   position ;
-3. Statu quo — à n'envisager qu'avec une mise en balance écrite et assumée.
+- la participation n'est **pas optionnelle** — tout collaborateur actif ayant
+  complété au moins un module y figure ;
+- le **service** est affiché à côté du nom, ce qui élargit l'information au-delà
+  de la seule performance individuelle ;
+- un collaborateur systématiquement en bas de classement reste identifiable
+  comme tel par ses collègues, même si le critère est positif.
+
+Une option de retrait individuel suffirait probablement à clore la question, et
+son coût est faible. Elle n'a pas l'urgence des points suivants.
+
+---
+
+## 2.4 Là où l'exposition est réellement forte
+
+Ce n'est pas le classement entre collègues, c'est la **restitution à
+l'employeur** :
+
+- `/admin/users/at-risk` liste nominativement les collaborateurs jugés
+  vulnérables ;
+- `/api/admin/users/at-risk/export` permet d'en sortir la liste ;
+- le verdict le plus bas s'affiche **« Vulnérable »** ;
+- les personnes signalées reçoivent des relances plus fréquentes que les
+  autres.
+
+C'est cette chaîne — notation, qualification, restitution hiérarchique,
+conséquence — qui justifie l'AIPD, et non le palmarès.
 
 ---
 
