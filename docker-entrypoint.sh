@@ -1,6 +1,17 @@
 #!/bin/sh
 set -e
 
+# Les binaires sont appeles par leur CHEMIN, pas par `npx`.
+#
+# `npx` appartient a npm, et npm n'est plus dans l'image d'execution : ses
+# dependances embarquees portaient a elles seules les 8 dernieres CVE de
+# l'image publiee (tar, sigstore, brace-expansion, ip-address, tinyglobby).
+# Aucune ne venait de nos dependances a nous, et aucune n'etait corrigeable
+# autrement qu'en changeant d'image de base -- ou en retirant npm.
+#
+# `npx prisma` ne faisait de toute facon que resoudre ./node_modules/.bin/prisma.
+# L'appeler directement supprime un intermediaire, et le demarrage y gagne.
+
 echo ""
 echo "  =============================================="
 echo "  HumaniX Academy - Demarrage du conteneur"
@@ -10,7 +21,7 @@ echo ""
 # Attendre que Postgres soit pret
 echo "[1/5] Attente Postgres..."
 RETRY=0
-until npx prisma db execute --schema=./prisma/schema.prisma --stdin >/dev/null 2>&1 <<EOF
+until ./node_modules/.bin/prisma db execute --schema=./prisma/schema.prisma --stdin >/dev/null 2>&1 <<EOF
 SELECT 1;
 EOF
 do
@@ -25,7 +36,7 @@ echo "  -> Postgres pret"
 
 # Sync du schema (db push : pas de migration formelle, parfait pour POC)
 echo "[2/5] Synchronisation du schema Prisma..."
-npx prisma db push --skip-generate --accept-data-loss
+./node_modules/.bin/prisma db push --skip-generate --accept-data-loss
 
 # Migrations legacy (idempotentes, no-op apres le 1er passage) :
 #   - migrate-legacy-trial.ts : retire l'ancien plan "trial" (pivot vente directe)
@@ -47,7 +58,7 @@ node dist-scripts/scripts/seed-catalog.mjs || echo "  -> seed-catalog a echoue (
 # inappropries en prod. seed.ts re-appelle seedCatalog en interne (idempotent).
 if [ "$DEMO_MODE" = "true" ]; then
   echo "  -> DEMO_MODE=true, seed des comptes de demonstration"
-  npx prisma db seed
+  ./node_modules/.bin/prisma db seed
 fi
 
 # Bootstrap du premier administrateur si la base est vierge.
@@ -87,4 +98,4 @@ echo "  =============================================="
 echo ""
 
 # Demarrage Next.js
-exec npx next start -H 0.0.0.0 -p 3000
+exec ./node_modules/.bin/next start -H 0.0.0.0 -p 3000
