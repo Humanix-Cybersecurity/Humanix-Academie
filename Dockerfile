@@ -204,6 +204,29 @@ RUN npm prune --omit=dev --ignore-scripts --legacy-peer-deps \
   && npm cache clean --force \
   && echo "[build] outillage de build retire de l image runtime"
 
+# npm lui-meme est retire, et l'ORDRE compte : `npm prune` ci-dessus en a
+# encore besoin.
+#
+# Mesure du 2026-08-13 sur l'image publiee : les 8 dernieres vulnerabilites
+# rapportees par Trivy etaient TOUTES dans
+# /usr/local/lib/node_modules/npm/node_modules -- les dependances que npm
+# embarque, dans l'image node:25-alpine elle-meme. Aucune ne venait de nos
+# dependances, et aucune n'etait corrigeable par notre gestion de paquets :
+# il fallait changer d'image de base, ou retirer npm.
+#
+# Rien a l'execution n'en a besoin : docker-entrypoint.sh appelle desormais
+# ./node_modules/.bin/prisma et ./node_modules/.bin/next par leur chemin, et
+# la commande de seed declaree dans prisma.config.ts est `node
+# dist-scripts/prisma/seed.mjs` -- du node pur.
+#
+# Consequence a connaitre : plus aucun `npm`, `npx` ni `yarn` dans un shell
+# de debogage sur ce conteneur. Pour installer quoi que ce soit a chaud, il
+# faut reconstruire l'image -- ce qui est le comportement recherche.
+RUN rm -rf /usr/local/lib/node_modules/npm \
+      /usr/local/bin/npm \
+      /usr/local/bin/npx \
+  && echo "[build] npm retire de l image runtime"
+
 RUN chown -R nextjs:nodejs /app
 
 USER nextjs
