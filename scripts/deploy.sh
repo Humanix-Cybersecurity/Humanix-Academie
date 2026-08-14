@@ -408,13 +408,33 @@ $COMPOSE build app || die "build echoue" 5
 #
 # On retire donc le conteneur avant de le recreer. `|| true` : son absence
 # n'est pas une erreur, c'est le cas d'un premier deploiement.
-if [ "$MOTEUR_BIN" = "podman" ]; then
-  log "Retrait du conteneur app (obligatoire sous podman, cf. commentaire) ..."
-  $MOTEUR_BIN rm -f "$CONTENEUR_APP" >/dev/null 2>&1 || true
+if [ "$MOTEUR_BIN" = "podman" ] && [ -n "$CONTENEUR_AVANT" ]; then
+  # `-f` NE SUFFIT PAS. Il force l'arret, pas la levee de la dependance :
+  #
+  #   Error: container <app> has dependent containers which must be removed
+  #   before it: <vector>: container already exists
+  #
+  # C'est ce que mon premier correctif avait manque : le `|| true` avalait
+  # cette erreur, `up -d` redemarrait l'ancien conteneur, et seule la
+  # verification finale a rattrape le coup -- apres un build de trois
+  # minutes pour rien.
+  #
+  # `--depend` retire le conteneur ET ceux qui en dependent, ici vector.
+  # D'ou le `up -d` complet plus bas : il faut les faire revenir.
+  log "Retrait du conteneur app et de ses dependants (podman) ..."
+  $MOTEUR_BIN rm -f --depend "$CONTENEUR_APP" >/dev/null 2>&1 \
+    || die "retrait de $CONTENEUR_APP impossible -- livraison interrompue" 6
 fi
 
 log "Redemarrage du service app ..."
-$COMPOSE up -d --no-deps app
+if [ "$MOTEUR_BIN" = "podman" ]; then
+  # PAS `--no-deps` : `--depend` vient de retirer vector avec app, et
+  # `--no-deps app` le laisserait au sol -- l'observabilite muette, sans
+  # que rien ne le signale. C'est deja arrive le 2026-08-14.
+  $COMPOSE up -d
+else
+  $COMPOSE up -d --no-deps app
+fi
 
 # --- Verifier ce qu'on a livre, plutot que de le supposer ----------------
 #
