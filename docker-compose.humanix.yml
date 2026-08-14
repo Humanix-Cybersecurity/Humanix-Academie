@@ -1,0 +1,163 @@
+# =============================================================================
+# docker-compose.humanix.yml — les DEUX stacks internes (prod et demo)
+# =============================================================================
+#
+# POURQUOI CE FICHIER EXISTE
+#
+# `docker-compose.yml` decrit la topologie SELF-HOSTER : HAProxy en conteneur,
+# ports 80/443 publies, reseaux `humanix_frontend` / `humanix_backend`. C'est
+# ce qu'un tiers deploie chez lui, et ca doit le rester.
+#
+# Les deux stacks de humanix-prod-01 ont une topologie DIFFERENTE : HAProxy est
+# un service systemd de l'HOTE, un seul reseau par stack, et seul
+# `127.0.0.1:<port>` est publie. Elles ne peuvent donc pas utiliser le fichier
+# self-hoster.
+#
+# Faute d'avoir versionne cette topologie, chaque stack portait une copie
+# MODIFIEE LOCALEMENT de `docker-compose.yml` — 260 lignes d'ecart pour la
+# production. Le 2026-08-14 ca a coute un deploiement interrompu en plein vol :
+#
+#   error: Your local changes to the following files would be overwritten
+#          by merge: docker-compose.yml
+#
+# Il a fallu sauvegarder le fichier a la main, laisser le merge passer, puis le
+# restaurer. Toute livraison touchant `docker-compose.yml` aurait redemande la
+# meme gymnastique — et l'oubli d'une seule etape aurait remplace la topologie
+# de production par celle des self-hosters.
+#
+# Ce fichier met fin a cela : les deux stacks lisent la MEME source versionnee,
+# et ne modifient plus rien localement.
+#
+# -----------------------------------------------------------------------------
+# COMMENT S'EN SERVIR
+#
+# Dans le `.env` de la stack :
+#
+#   COMPOSE_FILE=docker-compose.humanix.yml
+#   STACK=prod            # ou `demo`
+#   APP_HOST_PORT=3000    # 3001 pour la demo
+#
+# `STACK` gouverne les noms de conteneurs, du reseau et des volumes. Il n'a PAS
+# de valeur par defaut, et c'est deliberé : une faute de frappe qui ferait
+# retomber la production sur les volumes de la demo serait irrattrapable.
+# Compose echoue si la variable manque.
+#
+# -----------------------------------------------------------------------------
+# LES CLES SONT FIXES, SEULS LES `name:` SONT VARIABLES
+#
+# `networks:` et `volumes:` gardent des cles neutres (`interne`, `pg`, `tts`)
+# et portent le nom reel dans leur champ `name:`. Interpoler une CLE de mapping
+# YAML fonctionne sous docker compose mais n'est pas garanti sous
+# podman-compose, qui pilote les deux stacks depuis le 2026-08-13. On reste
+# donc sur ce que les deux moteurs traitent de facon identique.
+
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_APP_URL: "${NEXT_PUBLIC_APP_URL:-http://localhost}"
+        NEXT_PUBLIC_APP_NAME: "${NEXT_PUBLIC_APP_NAME:-HumaniX Academy}"
+        NEXT_PUBLIC_BASE_URL: "${NEXT_PUBLIC_BASE_URL:-}"
+        NEXT_PUBLIC_PLAUSIBLE_DOMAIN: "${NEXT_PUBLIC_PLAUSIBLE_DOMAIN:-}"
+        NEXT_PUBLIC_PLAUSIBLE_API_HOST: "${NEXT_PUBLIC_PLAUSIBLE_API_HOST:-}"
+        NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT: "${NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT:-}"
+        NEXT_PUBLIC_MATOMO_URL: "${NEXT_PUBLIC_MATOMO_URL:-}"
+        NEXT_PUBLIC_MATOMO_SITE_ID: "${NEXT_PUBLIC_MATOMO_SITE_ID:-}"
+    container_name: humanix-${STACK:?STACK non defini (prod ou demo)}-app
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      tts:
+        condition: service_started
+    networks:
+      - interne
+    volumes:
+      # Cache TTS pre-genere, monte depuis l'hote et non depuis un volume.
+      #
+      # Ce sont les MP3 produits par `npm run tts:build`, deposes dans le depot.
+      # Les lier directement evite de les recopier dans un volume a chaque
+      # deploiement. Verifie le 2026-08-14 : 204 Ko en production, montes et
+      # servis.
+      - ./data/tts-cache:/app/data/tts-cache
+    ports:
+      # Seul le loopback est publie : HAProxy tourne sur l'HOTE, en service
+      # systemd, et c'est lui qui tient 80/443 et le TLS. Exposer ce port sur
+      # 0.0.0.0 court-circuiterait ses regles de filtrage et de limitation.
+      - "127.0.0.1:${APP_HOST_PORT:?APP_HOST_PORT non defini (3000 prod, 3001 demo)}:3000"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: humanix-${STACK}-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: humanix
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD non defini}
+      POSTGRES_DB: humanix
+    volumes:
+      - pg:/var/lib/postgresql/data
+    networks:
+      - interne
+    # PAS de `ports:` — la base n'est joignable que par le reseau interne.
+    #
+    # Consequence a connaitre : les scripts de l'hote ne peuvent PAS s'y
+    # connecter en TCP. `backup-db.sh`, `restore-db.sh` et
+    # `archive-audit-logs.sh` passent par `<moteur> exec` pour cette raison,
+    # via BACKUP_PG_CONTAINER / ARCHIVE_PG_CONTAINER.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U humanix -d humanix"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  tts:
+    # PAS de `profiles:` ici, et c'est deliberé depuis le 2026-08-13.
+    #
+    # Ce service a porte `profiles: ["piper"]`, que RIEN n'activait : ni
+    # deploy.sh, ni le .env, ni l'unite systemd de podman-compose. TTS ne
+    # tournait que parce qu'il avait ete demarre a la main un jour, et que
+    # `restart: unless-stopped` l'avait maintenu. Le redemarrage machine du
+    # 2026-08-13 l'a laisse au sol : le profil decrivait une intention qui
+    # n'existait pas.
+    build:
+      context: ./infra/tts
+      dockerfile: Dockerfile
+    image: humanix-tts:1.0.0
+    container_name: humanix-${STACK}-tts
+    restart: unless-stopped
+    networks:
+      - interne
+    volumes:
+      - tts:/app/cache
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5500/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1.5"
+
+networks:
+  interne:
+    name: humanix_${STACK}
+    driver: bridge
+
+volumes:
+  pg:
+    name: humanix_${STACK}_pg
+  tts:
+    name: humanix_${STACK}_tts
