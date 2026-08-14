@@ -23,6 +23,30 @@ se saisissent donc dans l'interface Grafana de Scaleway Cockpit :
 C'est fastidieux une fois, et jamais plus. Les requêtes sont écrites pour être
 recopiées telles quelles.
 
+### Deux mécaniques de l'interface qui font perdre du temps
+
+**La requête seule ne suffit pas.** Grafana construit une règle en trois étages :
+la requête `A`, une réduction `B`, un seuil `C`. Coller la LogQL dans `A` et
+chercher le champ « seuil » à côté ne mène nulle part. Mettre `B` sur **Last**,
+et porter la condition du tableau (`IS ABOVE 20`) dans `C`.
+
+**L'ordre de création compte.** Un point de contact doit exister avant qu'une
+règle puisse notifier — sinon l'alerte se déclenche dans le vide, ce qui est
+exactement l'état qu'on cherche à quitter. Voir la section « Acheminement »
+en premier, puis créer les règles dans cet ordre :
+
+1. **règle 5** (l'homme mort) — elle surveille les six autres ;
+2. **règle 2** (exfiltration) puis **1** (échecs d'authentification) ;
+3. **règles 4** et **3** ;
+4. **règles 6 et 7**, une fois le trafic observé sur sept jours.
+
+### État de la chaîne
+
+Vérifié de bout en bout le 2026-08-14 : `instrumentation.ts` émet, `podman logs`
+le montre, Vector l'achemine, et les battements sont visibles dans Grafana. Ce
+qui reste manquant, ce sont les règles ci-dessous — le code émet, personne
+n'écoute encore.
+
 ---
 
 ## Ce que Loki voit, et ce qu'il ne voit pas
