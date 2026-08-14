@@ -123,6 +123,24 @@ fi
 MOTEUR="${COMPOSE%% *}"
 command -v "$MOTEUR" >/dev/null || die "$MOTEUR introuvable (declare dans .env)"
 
+# Le binaire NU, pour les commandes qui ne passent pas par compose :
+# `podman inspect`, `podman rm`.
+#
+# CALCULE AVANT d'ajouter les `-f` a $COMPOSE, et c'est tout le sujet : le
+# 2026-08-14 ce bloc les SUIVAIT, donc $COMPOSE valait
+# `podman-compose -f docker-compose.humanix.yml`, la comparaison echouait, et
+# MOTEUR_BIN restait a `docker`.
+#
+# Consequence observee sur la demo : le retrait force du conteneur n'a pas eu
+# lieu, et la verification a inspecte DOCKER -- qui possede encore un
+# conteneur `humanix-demo-app` arrete depuis la migration. Elle a compare deux
+# fois ce fantome, conclu a l'absence de recreation, et arrete le script.
+#
+# La conclusion etait juste, le raisonnement faux. Un controle qui tombe juste
+# par accident est un controle qui mentira un jour.
+MOTEUR_BIN="docker"
+[ "$COMPOSE" = "podman-compose" ] && MOTEUR_BIN="podman"
+
 # --- Quels fichiers compose ? ------------------------------------------
 #
 # COMPOSE_FILE dans le .env NE SUFFIT PAS : docker compose l'honore,
@@ -149,11 +167,6 @@ if [ -f .env ]; then
 fi
 COMPOSE="$COMPOSE$FICHIERS_COMPOSE"
 
-# Le binaire NU, pour les commandes qui ne passent pas par compose :
-# `podman inspect`, `podman rm`. `$MOTEUR` vaut `podman-compose` dans ce cas,
-# ce qui n'est pas la meme commande.
-MOTEUR_BIN="docker"
-[ "$COMPOSE" = "podman-compose" ] && MOTEUR_BIN="podman"
 log "Moteur de conteneurs : $COMPOSE"
 
 git rev-parse --git-dir >/dev/null 2>&1 || die "$STACK_DIR n'est pas un clone git" 2
