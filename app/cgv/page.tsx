@@ -516,6 +516,18 @@ export default function CGVPage() {
 
       <LegalSection id="soustraitance" num="Article 13" title="Sous-traitance">
         <p>
+          Deux catégories de prestataires interviennent, et elles n&apos;ont pas
+          le même régime. Les confondre reviendrait à promettre au Client un
+          droit de regard sur des traitements qui ne le concernent pas.
+        </p>
+        <p>
+          <strong>
+            1. Sous-traitants ultérieurs, au sens de l&apos;article 28.4 du RGPD
+          </strong>{" "}
+          — ils traitent les données des collaborateurs du Client, et relèvent
+          du droit d&apos;opposition prévu au DPA :
+        </p>
+        <p>
           Humanix-Cybersecurity recourt à des sous-traitants techniques pour
           l'exécution de ses prestations. La liste à jour est consultable sur la
           page <Link href="/securite">Sécurité &amp; Conformité</Link>. Au jour
@@ -531,6 +543,20 @@ export default function CGVPage() {
             transactionnels (lien magique de connexion, alertes système,
             newsletter Cyber-Anecdote du Lundi) ;
           </li>
+        </ul>
+        <p>
+          <strong>
+            2. Prestataires de Humanix-Cybersecurity, sur ses propres
+            traitements
+          </strong>{" "}
+          — ils n&apos;accèdent <strong>pas</strong> aux données des
+          collaborateurs du Client. Ils interviennent sur la facturation, la
+          gestion et l&apos;assurance de Humanix-Cybersecurity, qui agit à leur
+          égard en qualité de <strong>responsable de traitement</strong> et non
+          de sous-traitant. Ils sont mentionnés par transparence, non au titre
+          de l&apos;article 28.4 :
+        </p>
+        <ul>
           <li>
             <strong>Mollie B.V.</strong> (UE 🇪🇺, Amsterdam, Pays-Bas) -
             prestataire de paiement pour les abonnements SaaS Humanix Académie.

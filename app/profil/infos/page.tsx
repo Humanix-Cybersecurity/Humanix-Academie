@@ -35,6 +35,7 @@ export default async function ProfileInfosPage() {
       firstName: true,
       lastName: true,
       service: true,
+      showInLeaderboard: true,
       role: true,
       emailVerified: true,
       createdAt: true,
@@ -77,6 +78,7 @@ export default async function ProfileInfosPage() {
           initialFirstName={user.firstName ?? ""}
           initialLastName={user.lastName ?? ""}
           initialService={user.service ?? ""}
+          initialShowInLeaderboard={user.showInLeaderboard}
           email={user.email}
           emailVerified={!!user.emailVerified}
         />
@@ -114,11 +116,10 @@ export default async function ProfileInfosPage() {
             <span className="font-semibold text-gray-700 dark:text-gray-200">
               ℹ️ À propos de l&apos;email :
             </span>{" "}
-            ton email est l&apos;identifiant unique de ton compte (utilisé
-            pour la connexion par lien magique ou SSO). Il ne peut pas être
-            modifié pour des raisons de sécurité (anti-piratage). Si tu dois
-            changer d&apos;email, contacte le support ou crée un nouveau
-            compte.
+            ton email est l&apos;identifiant unique de ton compte (utilisé pour
+            la connexion par lien magique ou SSO). Il ne peut pas être modifié
+            pour des raisons de sécurité (anti-piratage). Si tu dois changer
+            d&apos;email, contacte le support ou crée un nouveau compte.
           </p>
         </div>
       </section>
