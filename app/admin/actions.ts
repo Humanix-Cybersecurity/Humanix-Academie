@@ -2,6 +2,7 @@
 // Server Actions pour les operations admin
 "use server";
 
+import { getErrorMessage } from "@/lib/errors";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -150,11 +151,7 @@ export async function resetSaisonsOrder() {
  */
 export async function bulkSaisonAction(
   saisonIds: string[],
-  action:
-    | "activate"
-    | "deactivate"
-    | "make-mandatory"
-    | "drop-mandatory",
+  action: "activate" | "deactivate" | "make-mandatory" | "drop-mandatory",
 ) {
   const { tenantId } = await requireAdmin();
   if (!Array.isArray(saisonIds) || saisonIds.length === 0) {
@@ -235,7 +232,9 @@ export async function toggleUserActive(userId: string, isActive: boolean) {
   assertCanActOn(ctx.role as Role, target.role);
   await db.user.update({ where: { id: userId }, data: { isActive } });
   await auditLog({
-    action: isActive ? AuditActions.USER_ACTIVATED : AuditActions.USER_SUSPENDED,
+    action: isActive
+      ? AuditActions.USER_ACTIVATED
+      : AuditActions.USER_SUSPENDED,
     actor: { userId: ctx.userId, email: ctx.email, role: ctx.role },
     tenantId: ctx.tenantId,
     target: { type: "user", id: userId, label: target.email },
@@ -456,9 +455,8 @@ export async function inviteUser(formData: FormData) {
 
   void (async () => {
     try {
-      const { sendTransferRequestEmail } = await import(
-        "@/lib/transfer-requests/email"
-      );
+      const { sendTransferRequestEmail } =
+        await import("@/lib/transfer-requests/email");
       await sendTransferRequestEmail({
         to: email,
         ctx: {
@@ -814,8 +812,8 @@ export async function bulkImportUsers(rows: CsvRow[]) {
       // Auto-assignation parcours obligatoire (fire-and-forget pour ne
       // pas bloquer l'import de 200 lignes si une assign rate)
       void fireAndForgetAutoAssign(newUser.id, tenantId);
-    } catch (e: any) {
-      result.errors.push(`Erreur pour ${email} : ${e?.message ?? "inconnue"}`);
+    } catch (e) {
+      result.errors.push(`Erreur pour ${email} : ${getErrorMessage(e)}`);
     }
   }
   revalidatePath("/admin/utilisateurs");

@@ -1,6 +1,7 @@
 "use client";
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
+import { getErrorMessage } from "@/lib/errors";
 import { useTransition, useState } from "react";
 import { buyItem, equipItem, unequipItem } from "@/app/boutique/actions";
 import { RARITY_STYLE } from "@/lib/shop";
@@ -60,8 +61,8 @@ export default function ShopGrid({
           type: "ok",
           msg: `🎉 ${item.name} acheté !`,
         });
-      } catch (e: any) {
-        const msg = mapError(e?.message);
+      } catch (e) {
+        const msg = mapError(getErrorMessage(e));
         setFeedback({ id: item.id, type: "err", msg });
       }
       setBusy(null);

@@ -16,11 +16,11 @@ import type { WebhookType } from "@prisma/client";
 
 async function requireAdminTenant(): Promise<{ tenantId: string }> {
   const session = await auth();
-  const role = (session?.user as any)?.role;
+  const role = session?.user?.role;
   if (role !== "ADMIN" && role !== "MANAGER" && role !== "SUPERADMIN") {
     throw new Error("forbidden");
   }
-  const tenantId = (session?.user as any)?.tenantId as string;
+  const tenantId = session?.user?.tenantId as string;
   if (!tenantId) throw new Error("forbidden");
   return { tenantId };
 }

@@ -12,9 +12,10 @@ import { createChildTenant } from "@/lib/multi-tenant";
 
 async function requireAdminOnRoot(): Promise<{ tenantId: string }> {
   const session = await auth();
-  const role = (session?.user as any)?.role;
-  if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") throw new Error("forbidden");
-  const tenantId = (session?.user as any)?.tenantId as string;
+  const role = session?.user?.role;
+  if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN")
+    throw new Error("forbidden");
+  const tenantId = session?.user?.tenantId as string;
   if (!tenantId) throw new Error("forbidden");
   return { tenantId };
 }

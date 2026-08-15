@@ -4,6 +4,7 @@
 // Formulaire CRUD anecdote - reutilise pour creation et edition.
 // Utilise une server action via prop pour soumettre.
 
+import { getErrorMessage } from "@/lib/errors";
 import { useState } from "react";
 import Link from "next/link";
 import { upsertAnecdote } from "@/app/admin/anecdotes/actions";
@@ -47,9 +48,9 @@ export default function AnecdoteEditor({
     setError(null);
     try {
       await upsertAnecdote(formData);
-    } catch (e: any) {
+    } catch (e) {
       // L'action redirect() throw aussi, on filtre uniquement les vraies erreurs
-      const msg = String(e?.message ?? e);
+      const msg = getErrorMessage(e);
       if (msg.includes("NEXT_REDIRECT")) return;
       setError(msg);
     }

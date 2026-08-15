@@ -232,7 +232,7 @@ export default function HeaderBar({
   hidePoweredBy?: boolean;
 }) {
   const { data: session } = useSession();
-  const user = session?.user as any;
+  const user = session?.user;
   const [stats, setStats] = useState<{
     xp: number;
     coins: number;
@@ -328,362 +328,360 @@ export default function HeaderBar({
 
   return (
     <>
-    <header className="sticky top-0 z-40 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md border-b border-gray-200/80 dark:border-slate-800/80">
-      <nav
-        aria-label="Navigation principale"
-        className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4"
-      >
-        {/* ============ Brand ============ */}
-        <Link
-          href="/"
-          className="flex items-center gap-2.5 shrink-0 group"
-          aria-label={`${brandName} - accueil`}
+      <header className="sticky top-0 z-40 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md border-b border-gray-200/80 dark:border-slate-800/80">
+        <nav
+          aria-label="Navigation principale"
+          className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4"
         >
-          {/* Logo : <img> (et non next/image) car la marque blanche sert un
+          {/* ============ Brand ============ */}
+          <Link
+            href="/"
+            className="flex items-center gap-2.5 shrink-0 group"
+            aria-label={`${brandName} - accueil`}
+          >
+            {/* Logo : <img> (et non next/image) car la marque blanche sert un
               logo via route dynamique /api/branding/... (et parfois en SVG),
               que l'optimiseur next/image ne gère pas bien. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={brandLogoUrl}
-            alt=""
-            width={40}
-            height={60}
-            className="shrink-0 h-9 w-auto group-hover:scale-105 transition-transform"
-          />
-          <span className="hidden sm:flex flex-col leading-tight">
-            <span className="text-base font-extrabold text-primary-500 dark:text-accent-300 tracking-tight">
-              {brandName}
-            </span>
-            {!hidePoweredBy ? (
-              <span className="text-[10px] font-medium text-gray-500 dark:text-gray-400 -mt-0.5">
-                par Humanix-Cybersecurity
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={brandLogoUrl}
+              alt=""
+              width={40}
+              height={60}
+              className="shrink-0 h-9 w-auto group-hover:scale-105 transition-transform"
+            />
+            <span className="hidden sm:flex flex-col leading-tight">
+              <span className="text-base font-extrabold text-primary-500 dark:text-accent-300 tracking-tight">
+                {brandName}
               </span>
-            ) : null}
-          </span>
-        </Link>
+              {!hidePoweredBy ? (
+                <span className="text-[10px] font-medium text-gray-500 dark:text-gray-400 -mt-0.5">
+                  par Humanix-Cybersecurity
+                </span>
+              ) : null}
+            </span>
+          </Link>
 
-        {/* ============ Nav apprenant logue ============ */}
-        {user ? (
-          <div className="flex items-center gap-1 sm:gap-2">
-            <NavLink
-              href="/apprendre"
-              isActive={isActive("/apprendre")}
-              className="hidden md:inline-flex"
-            >
-              Apprendre
-            </NavLink>
-            <NavLink
-              href="/librairie"
-              isActive={isActive("/librairie")}
-              className="hidden md:inline-flex"
-            >
-              Librairie
-            </NavLink>
-            {isAdmin && (
+          {/* ============ Nav apprenant logue ============ */}
+          {user ? (
+            <div className="flex items-center gap-1 sm:gap-2">
               <NavLink
-                href="/admin"
-                isActive={isActive("/admin")}
+                href="/apprendre"
+                isActive={isActive("/apprendre")}
                 className="hidden md:inline-flex"
               >
-                Console
+                Apprendre
               </NavLink>
-            )}
-            {isSuperadmin && (
               <NavLink
-                href="/superadmin"
-                isActive={isActive("/superadmin")}
+                href="/librairie"
+                isActive={isActive("/librairie")}
                 className="hidden md:inline-flex"
               >
-                <span className="inline-flex items-center gap-1">
-                  Super-admin
-                  <span
-                    aria-hidden="true"
-                    className="inline-block w-1.5 h-1.5 rounded-full bg-rose-500"
-                  />
-                </span>
+                Librairie
               </NavLink>
-            )}
-
-            {/* Stats compactes (niveau + coins) */}
-            {stats && (
-              <Link
-                href="/profil"
-                className="hidden sm:inline-flex items-center gap-1.5 bg-gradient-to-r from-primary-50 to-cyan-50 dark:from-slate-800 dark:to-slate-700 rounded-full pl-3 pr-3 py-1 hover:scale-[1.03] transition-transform border border-primary-100/80 dark:border-slate-600/80 ml-1"
-                title={`Niveau ${stats.level} - ${stats.levelName} · ${stats.xp} XP`}
-              >
-                <span className="text-[11px] font-bold text-primary-500 dark:text-accent-300 tabular-nums">
-                  N{stats.level}
-                </span>
-                <span className="w-px h-3 bg-primary-200 dark:bg-slate-600" />
-                <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400 tabular-nums">
-                  🪙 {stats.coins}
-                </span>
-              </Link>
-            )}
-
-            <ThemeToggle compact />
-
-            {/* Avatar dropdown */}
-            <div className="relative" ref={userMenuRef}>
-              <button
-                onClick={() => setUserMenuOpen((v) => !v)}
-                aria-haspopup="menu"
-                aria-expanded={userMenuOpen}
-                aria-label={`Menu utilisateur de ${user.name ?? user.email}${userMenuOpen ? ", ouvert" : ", fermé"}`}
-                className="flex items-center gap-2 rounded-xl px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-slate-800 transition"
-              >
-                <span className="text-2xl" aria-hidden="true">
-                  {mascot.emoji}
-                </span>
-                <span className="hidden lg:inline text-sm text-gray-700 dark:text-gray-200 max-w-[120px] truncate">
-                  {user.name?.split(" ")[0] ?? "Moi"}
-                </span>
-                <span className="text-xs text-gray-500" aria-hidden="true">
-                  ▾
-                </span>
-              </button>
-
-              {userMenuOpen && (
-                <div
-                  role="menu"
-                  className="absolute right-0 mt-2 w-64 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-200 dark:border-slate-700 py-2 animate-fadeIn"
+              {isAdmin && (
+                <NavLink
+                  href="/admin"
+                  isActive={isActive("/admin")}
+                  className="hidden md:inline-flex"
                 >
-                  <div className="px-4 py-2 border-b border-gray-100 dark:border-slate-700">
-                    <p className="text-sm font-bold text-primary-500 dark:text-accent-300 truncate">
-                      {user.name ?? user.email}
-                    </p>
-                    {stats && (
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        Niveau {stats.level} · {stats.levelName}
+                  Console
+                </NavLink>
+              )}
+              {isSuperadmin && (
+                <NavLink
+                  href="/superadmin"
+                  isActive={isActive("/superadmin")}
+                  className="hidden md:inline-flex"
+                >
+                  <span className="inline-flex items-center gap-1">
+                    Super-admin
+                    <span
+                      aria-hidden="true"
+                      className="inline-block w-1.5 h-1.5 rounded-full bg-rose-500"
+                    />
+                  </span>
+                </NavLink>
+              )}
+
+              {/* Stats compactes (niveau + coins) */}
+              {stats && (
+                <Link
+                  href="/profil"
+                  className="hidden sm:inline-flex items-center gap-1.5 bg-gradient-to-r from-primary-50 to-cyan-50 dark:from-slate-800 dark:to-slate-700 rounded-full pl-3 pr-3 py-1 hover:scale-[1.03] transition-transform border border-primary-100/80 dark:border-slate-600/80 ml-1"
+                  title={`Niveau ${stats.level} - ${stats.levelName} · ${stats.xp} XP`}
+                >
+                  <span className="text-[11px] font-bold text-primary-500 dark:text-accent-300 tabular-nums">
+                    N{stats.level}
+                  </span>
+                  <span className="w-px h-3 bg-primary-200 dark:bg-slate-600" />
+                  <span className="text-[11px] font-bold text-amber-600 dark:text-amber-400 tabular-nums">
+                    🪙 {stats.coins}
+                  </span>
+                </Link>
+              )}
+
+              <ThemeToggle compact />
+
+              {/* Avatar dropdown */}
+              <div className="relative" ref={userMenuRef}>
+                <button
+                  onClick={() => setUserMenuOpen((v) => !v)}
+                  aria-haspopup="menu"
+                  aria-expanded={userMenuOpen}
+                  aria-label={`Menu utilisateur de ${user.name ?? user.email}${userMenuOpen ? ", ouvert" : ", fermé"}`}
+                  className="flex items-center gap-2 rounded-xl px-2 py-1.5 hover:bg-gray-100 dark:hover:bg-slate-800 transition"
+                >
+                  <span className="text-2xl" aria-hidden="true">
+                    {mascot.emoji}
+                  </span>
+                  <span className="hidden lg:inline text-sm text-gray-700 dark:text-gray-200 max-w-[120px] truncate">
+                    {user.name?.split(" ")[0] ?? "Moi"}
+                  </span>
+                  <span className="text-xs text-gray-500" aria-hidden="true">
+                    ▾
+                  </span>
+                </button>
+
+                {userMenuOpen && (
+                  <div
+                    role="menu"
+                    className="absolute right-0 mt-2 w-64 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-200 dark:border-slate-700 py-2 animate-fadeIn"
+                  >
+                    <div className="px-4 py-2 border-b border-gray-100 dark:border-slate-700">
+                      <p className="text-sm font-bold text-primary-500 dark:text-accent-300 truncate">
+                        {user.name ?? user.email}
                       </p>
-                    )}
-                  </div>
+                      {stats && (
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Niveau {stats.level} · {stats.levelName}
+                        </p>
+                      )}
+                    </div>
 
-                  <UserMenuItem
-                    href="/profil"
-                    icon="👤"
-                    label="Mon profil"
-                    onClick={() => setUserMenuOpen(false)}
-                  />
-                  <UserMenuItem
-                    href="/profil/securite"
-                    icon="🔐"
-                    label="Sécurité (2FA, sessions)"
-                    onClick={() => setUserMenuOpen(false)}
-                  />
-                  {isAdmin && (
                     <UserMenuItem
-                      href="/profil/facturation"
-                      icon="💳"
-                      label="Facturation"
-                      onClick={() => setUserMenuOpen(false)}
-                    />
-                  )}
-                  <UserMenuItem
-                    href="/profil/donnees"
-                    icon="⚖️"
-                    label="Mes données (RGPD)"
-                    onClick={() => setUserMenuOpen(false)}
-                  />
-                  <UserMenuItem
-                    href="/boutique"
-                    icon="🛒"
-                    label="Boutique"
-                    onClick={() => setUserMenuOpen(false)}
-                  />
-                  <UserMenuItem
-                    href="/famille"
-                    icon="❤️"
-                    label="Cyber Famille"
-                    onClick={() => setUserMenuOpen(false)}
-                  />
-                  {canMarketplace && (
-                    <UserMenuItem
-                      href="/marketplace"
-                      icon="🏛"
-                      label="Marketplace"
-                      onClick={() => setUserMenuOpen(false)}
-                    />
-                  )}
-
-                  {/* Liens secondaires sur mobile (en double avec la nav md:) */}
-                  <div className="md:hidden border-t border-gray-100 dark:border-slate-700 mt-1 pt-1">
-                    <UserMenuItem
-                      href="/apprendre"
-                      icon="🎯"
-                      label="Apprendre"
+                      href="/profil"
+                      icon="👤"
+                      label="Mon profil"
                       onClick={() => setUserMenuOpen(false)}
                     />
                     <UserMenuItem
-                      href="/librairie"
-                      icon="📚"
-                      label="Librairie"
+                      href="/profil/securite"
+                      icon="🔐"
+                      label="Sécurité (2FA, sessions)"
                       onClick={() => setUserMenuOpen(false)}
                     />
                     {isAdmin && (
                       <UserMenuItem
-                        href="/admin"
-                        icon="⚙️"
-                        label="Console admin"
+                        href="/profil/facturation"
+                        icon="💳"
+                        label="Facturation"
                         onClick={() => setUserMenuOpen(false)}
                       />
                     )}
-                    {isSuperadmin && (
+                    <UserMenuItem
+                      href="/profil/donnees"
+                      icon="⚖️"
+                      label="Mes données (RGPD)"
+                      onClick={() => setUserMenuOpen(false)}
+                    />
+                    <UserMenuItem
+                      href="/boutique"
+                      icon="🛒"
+                      label="Boutique"
+                      onClick={() => setUserMenuOpen(false)}
+                    />
+                    <UserMenuItem
+                      href="/famille"
+                      icon="❤️"
+                      label="Cyber Famille"
+                      onClick={() => setUserMenuOpen(false)}
+                    />
+                    {canMarketplace && (
                       <UserMenuItem
-                        href="/superadmin"
-                        icon="⭐"
-                        label="Super-admin (cross-tenant)"
+                        href="/marketplace"
+                        icon="🏛"
+                        label="Marketplace"
                         onClick={() => setUserMenuOpen(false)}
                       />
                     )}
+
+                    {/* Liens secondaires sur mobile (en double avec la nav md:) */}
+                    <div className="md:hidden border-t border-gray-100 dark:border-slate-700 mt-1 pt-1">
+                      <UserMenuItem
+                        href="/apprendre"
+                        icon="🎯"
+                        label="Apprendre"
+                        onClick={() => setUserMenuOpen(false)}
+                      />
+                      <UserMenuItem
+                        href="/librairie"
+                        icon="📚"
+                        label="Librairie"
+                        onClick={() => setUserMenuOpen(false)}
+                      />
+                      {isAdmin && (
+                        <UserMenuItem
+                          href="/admin"
+                          icon="⚙️"
+                          label="Console admin"
+                          onClick={() => setUserMenuOpen(false)}
+                        />
+                      )}
+                      {isSuperadmin && (
+                        <UserMenuItem
+                          href="/superadmin"
+                          icon="⭐"
+                          label="Super-admin (cross-tenant)"
+                          onClick={() => setUserMenuOpen(false)}
+                        />
+                      )}
+                    </div>
+
+                    <div className="border-t border-gray-100 dark:border-slate-700 mt-1 pt-1">
+                      <button
+                        onClick={() => {
+                          setUserMenuOpen(false);
+                          // Demo : retour au selecteur de comptes /demo.
+                          // Prod : retour a la home (le selecteur n'existe pas).
+                          signOut({ callbackUrl: demoMode ? "/demo" : "/" });
+                        }}
+                        role="menuitem"
+                        className="w-full text-left px-4 py-2 text-sm text-warn hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg mx-1"
+                      >
+                        🚪 Se déconnecter
+                      </button>
+                    </div>
                   </div>
-
-                  <div className="border-t border-gray-100 dark:border-slate-700 mt-1 pt-1">
-                    <button
-                      onClick={() => {
-                        setUserMenuOpen(false);
-                        // Demo : retour au selecteur de comptes /demo.
-                        // Prod : retour a la home (le selecteur n'existe pas).
-                        signOut({ callbackUrl: demoMode ? "/demo" : "/" });
-                      }}
-                      role="menuitem"
-                      className="w-full text-left px-4 py-2 text-sm text-warn hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg mx-1"
-                    >
-                      🚪 Se déconnecter
-                    </button>
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
-        ) : (
-          /* ============ Nav visiteur ============ */
-          <>
-            {/* Desktop nav (md+) */}
-            <div className="hidden md:flex items-center gap-1">
-              <NavDropdown
-                label="Notre offre"
-                items={buildProduitItems(demoMode)}
-              />
-              <NavDropdown label="Outils" items={SOLUTIONS_ITEMS} />
-              <NavLink href="/communaute" isActive={isActive("/communaute")}>
-                Communauté
-              </NavLink>
-            </div>
+          ) : (
+            /* ============ Nav visiteur ============ */
+            <>
+              {/* Desktop nav (md+) */}
+              <div className="hidden md:flex items-center gap-1">
+                <NavDropdown
+                  label="Notre offre"
+                  items={buildProduitItems(demoMode)}
+                />
+                <NavDropdown label="Outils" items={SOLUTIONS_ITEMS} />
+                <NavLink href="/communaute" isActive={isActive("/communaute")}>
+                  Communauté
+                </NavLink>
+              </div>
 
-            <div className="hidden md:flex items-center gap-2">
-              <Link
-                href="/connexion"
-                className="text-sm text-gray-600 dark:text-gray-300 hover:text-primary-500 dark:hover:text-accent-300 font-medium px-3 py-2"
-              >
-                Connexion
-              </Link>
-              <ThemeToggle compact />
-              {demoMode ? (
-                <Link
-                  href="/demo"
-                  className="bg-primary-500 hover:bg-primary-600 text-white text-sm font-bold px-4 py-2 rounded-xl transition shadow-sm hover:shadow-md"
-                >
-                  Démo
-                </Link>
-              ) : (
-                <Link
-                  href="/inscription"
-                  className="bg-accent-500 hover:bg-accent-600 text-white text-sm font-bold px-4 py-2 rounded-xl transition shadow-sm hover:shadow-md"
-                >
-                  Inscription gratuite
-                </Link>
-              )}
-            </div>
-
-            {/* Mobile burger */}
-            <div className="flex md:hidden items-center gap-2">
-              <ThemeToggle compact />
-              <button
-                onClick={() => setMobileOpen((v) => !v)}
-                aria-label={
-                  mobileOpen ? "Fermer le menu" : "Ouvrir le menu"
-                }
-                aria-expanded={mobileOpen}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition"
-              >
-                <BurgerIcon open={mobileOpen} />
-              </button>
-            </div>
-          </>
-        )}
-      </nav>
-
-      {/* Le drawer mobile est rendu via un PORTAL hors du <header> --
-          voir le bloc createPortal plus bas. Sans ca, le `backdrop-blur-md`
-          du header crée un stacking context isole qui enferme le drawer
-          z-50 et le rend invisible au-dessus du contenu de la page. */}
-    </header>
-    {/* ============ Drawer mobile visiteur (portal) ============ */}
-    {mounted &&
-      !user &&
-      mobileOpen &&
-      createPortal(
-        <div className="md:hidden">
-          <div
-            className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm animate-fadeIn"
-            onClick={() => setMobileOpen(false)}
-            aria-hidden="true"
-          />
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Menu de navigation"
-            className="fixed top-16 inset-x-0 bottom-0 z-[70] bg-white dark:bg-slate-900 overflow-y-auto animate-slide-up shadow-2xl"
-          >
-            <div className="px-4 py-6 space-y-6">
-              <MobileSection
-                title="Notre offre"
-                items={buildProduitItems(demoMode)}
-              />
-              <MobileSection title="Outils" items={SOLUTIONS_ITEMS} />
-              <MobileSection
-                title="Communauté"
-                items={[
-                  {
-                    href: "/communaute",
-                    label: "Rejoindre",
-                    description:
-                      "4 portes d'entrée - utilisateur, dev, contenu, écosystème",
-                    emoji: "🤝",
-                  },
-                ]}
-              />
-
-              <div className="pt-4 border-t border-gray-200 dark:border-slate-700 flex flex-col gap-3">
+              <div className="hidden md:flex items-center gap-2">
                 <Link
                   href="/connexion"
-                  className="text-center px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-200 font-medium hover:border-primary-300"
+                  className="text-sm text-gray-600 dark:text-gray-300 hover:text-primary-500 dark:hover:text-accent-300 font-medium px-3 py-2"
                 >
                   Connexion
                 </Link>
+                <ThemeToggle compact />
                 {demoMode ? (
                   <Link
                     href="/demo"
-                    className="text-center bg-primary-500 hover:bg-primary-600 text-white font-bold px-4 py-3 rounded-xl shadow-sm"
+                    className="bg-primary-500 hover:bg-primary-600 text-white text-sm font-bold px-4 py-2 rounded-xl transition shadow-sm hover:shadow-md"
                   >
-                    Démarrer la démo
+                    Démo
                   </Link>
                 ) : (
                   <Link
                     href="/inscription"
-                    className="text-center bg-accent-500 hover:bg-accent-600 text-white font-bold px-4 py-3 rounded-xl shadow-sm"
+                    className="bg-accent-500 hover:bg-accent-600 text-white text-sm font-bold px-4 py-2 rounded-xl transition shadow-sm hover:shadow-md"
                   >
                     Inscription gratuite
                   </Link>
                 )}
               </div>
+
+              {/* Mobile burger */}
+              <div className="flex md:hidden items-center gap-2">
+                <ThemeToggle compact />
+                <button
+                  onClick={() => setMobileOpen((v) => !v)}
+                  aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
+                  aria-expanded={mobileOpen}
+                  className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition"
+                >
+                  <BurgerIcon open={mobileOpen} />
+                </button>
+              </div>
+            </>
+          )}
+        </nav>
+
+        {/* Le drawer mobile est rendu via un PORTAL hors du <header> --
+          voir le bloc createPortal plus bas. Sans ca, le `backdrop-blur-md`
+          du header crée un stacking context isole qui enferme le drawer
+          z-50 et le rend invisible au-dessus du contenu de la page. */}
+      </header>
+      {/* ============ Drawer mobile visiteur (portal) ============ */}
+      {mounted &&
+        !user &&
+        mobileOpen &&
+        createPortal(
+          <div className="md:hidden">
+            <div
+              className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm animate-fadeIn"
+              onClick={() => setMobileOpen(false)}
+              aria-hidden="true"
+            />
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Menu de navigation"
+              className="fixed top-16 inset-x-0 bottom-0 z-[70] bg-white dark:bg-slate-900 overflow-y-auto animate-slide-up shadow-2xl"
+            >
+              <div className="px-4 py-6 space-y-6">
+                <MobileSection
+                  title="Notre offre"
+                  items={buildProduitItems(demoMode)}
+                />
+                <MobileSection title="Outils" items={SOLUTIONS_ITEMS} />
+                <MobileSection
+                  title="Communauté"
+                  items={[
+                    {
+                      href: "/communaute",
+                      label: "Rejoindre",
+                      description:
+                        "4 portes d'entrée - utilisateur, dev, contenu, écosystème",
+                      emoji: "🤝",
+                    },
+                  ]}
+                />
+
+                <div className="pt-4 border-t border-gray-200 dark:border-slate-700 flex flex-col gap-3">
+                  <Link
+                    href="/connexion"
+                    className="text-center px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-200 font-medium hover:border-primary-300"
+                  >
+                    Connexion
+                  </Link>
+                  {demoMode ? (
+                    <Link
+                      href="/demo"
+                      className="text-center bg-primary-500 hover:bg-primary-600 text-white font-bold px-4 py-3 rounded-xl shadow-sm"
+                    >
+                      Démarrer la démo
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/inscription"
+                      className="text-center bg-accent-500 hover:bg-accent-600 text-white font-bold px-4 py-3 rounded-xl shadow-sm"
+                    >
+                      Inscription gratuite
+                    </Link>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>,
-        document.body,
-      )}
-  </>
+          </div>,
+          document.body,
+        )}
+    </>
   );
 }
 
@@ -755,10 +753,7 @@ function NavDropdown({
         </span>
       </button>
       {open && (
-        <div
-          role="menu"
-          className="absolute left-0 top-full pt-1.5 w-80 z-50"
-        >
+        <div role="menu" className="absolute left-0 top-full pt-1.5 w-80 z-50">
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-200 dark:border-slate-700 p-2 animate-fadeIn">
             {items.map((item) => (
               <Link
