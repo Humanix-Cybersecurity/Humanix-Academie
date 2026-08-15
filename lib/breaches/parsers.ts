@@ -12,6 +12,7 @@
 // défensives (multi-patterns). Si certaines structures changent, l'endpoint
 // /api/admin/breaches/debug retourne le HTML brut pour calibration.
 
+import { getErrorMessage, isAbortError } from "@/lib/errors";
 import crypto from "node:crypto";
 import type { ScrapeResult, ScrapedBreach } from "./types";
 
@@ -73,13 +74,13 @@ export async function fetchText(url: string): Promise<FetchResult> {
       bytes: buf.byteLength,
       status: res.status,
     };
-  } catch (e: any) {
+  } catch (e) {
     return {
       url,
       ok: false,
       body: "",
       bytes: 0,
-      error: e?.name === "AbortError" ? "timeout" : String(e?.message ?? e),
+      error: isAbortError(e) ? "timeout" : getErrorMessage(e),
     };
   } finally {
     clearTimeout(timer);
@@ -642,24 +643,20 @@ export async function scrapeAllSources(
   opts: { deep?: boolean } = {},
 ): Promise<ScrapeResult[]> {
   return Promise.all([
-    scrapeFrenchBreaches(opts).catch(
-      (e): ScrapeResult => ({
-        source: "FRENCHBREACHES",
-        ok: false,
-        count: 0,
-        errors: [String(e?.message ?? e)],
-        items: [],
-      }),
-    ),
-    scrapeBonjourLaFuite(opts).catch(
-      (e): ScrapeResult => ({
-        source: "BONJOURLAFUITE",
-        ok: false,
-        count: 0,
-        errors: [String(e?.message ?? e)],
-        items: [],
-      }),
-    ),
+    scrapeFrenchBreaches(opts).catch((e): ScrapeResult => ({
+      source: "FRENCHBREACHES",
+      ok: false,
+      count: 0,
+      errors: [String(e?.message ?? e)],
+      items: [],
+    })),
+    scrapeBonjourLaFuite(opts).catch((e): ScrapeResult => ({
+      source: "BONJOURLAFUITE",
+      ok: false,
+      count: 0,
+      errors: [String(e?.message ?? e)],
+      items: [],
+    })),
     // FUITESINFOS retiré (cf. note plus haut)
   ]);
 }

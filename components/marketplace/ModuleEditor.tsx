@@ -1,6 +1,7 @@
 "use client";
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
+import { getErrorMessage } from "@/lib/errors";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -146,8 +147,8 @@ export default function ModuleEditor(props: {
           msg: "🎉 Soumis à la modération. Tu seras notifié de la décision.",
         });
         setTimeout(() => router.refresh(), 600);
-      } catch (e: any) {
-        const m = e?.message ?? "";
+      } catch (e) {
+        const m = getErrorMessage(e);
         if (m === "rate_limited")
           setFeedback({
             type: "err",

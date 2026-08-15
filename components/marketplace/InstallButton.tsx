@@ -1,5 +1,6 @@
 "use client";
 // SPDX-License-Identifier: AGPL-3.0-or-later
+import { getErrorMessage } from "@/lib/errors";
 import { useTransition, useState } from "react";
 import {
   installModuleAction,
@@ -27,9 +28,10 @@ export default function InstallButton({
     startTransition(async () => {
       try {
         await installModuleAction(moduleId);
-      } catch (e: any) {
+      } catch (e) {
         setError(
-          "Installation impossible : " + (e?.message ?? "erreur inconnue"),
+          "Installation impossible : " +
+            (getErrorMessage(e) || "erreur inconnue"),
         );
       }
     });
@@ -46,9 +48,10 @@ export default function InstallButton({
     startTransition(async () => {
       try {
         await uninstallModuleAction(moduleId);
-      } catch (e: any) {
+      } catch (e) {
         setError(
-          "Désinstallation impossible : " + (e?.message ?? "erreur inconnue"),
+          "Désinstallation impossible : " +
+            (getErrorMessage(e) || "erreur inconnue"),
         );
       }
     });

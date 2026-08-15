@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Selecteur d'humeur - grille de 6 boutons, persistance via server action.
 
+import { getErrorMessage } from "@/lib/errors";
 import { useTransition } from "react";
 import { chooseMood } from "@/app/profil/mascotte/actions";
 
@@ -22,9 +23,9 @@ export default function MoodPicker({ currentMood }: { currentMood: string }) {
     startTransition(async () => {
       try {
         await chooseMood(id);
-      } catch (e: any) {
+      } catch (e) {
         // Notification simple ; on pourrait remplacer par un toast
-        alert(`Erreur : ${e?.message ?? "inconnue"}`);
+        alert(`Erreur : ${getErrorMessage(e)}`);
       }
     });
   }

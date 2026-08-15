@@ -2,6 +2,8 @@
 // Templates email pour l'invitation famille.
 // Inspire de lib/anecdotes/email-template : meme style minimal, RGPD-friendly.
 
+import { getErrorMessage } from "@/lib/errors";
+
 export type FamilyInviteEmailContext = {
   sponsorUserName: string;
   sponsorTenantName: string;
@@ -119,7 +121,7 @@ export async function sendFamilyInviteEmail(args: {
       return { ok: false, error: sendRes.reason };
     }
     return { ok: true };
-  } catch (e: any) {
-    return { ok: false, error: String(e?.message ?? e).slice(0, 200) };
+  } catch (e) {
+    return { ok: false, error: getErrorMessage(e, 200) };
   }
 }

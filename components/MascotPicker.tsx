@@ -1,6 +1,7 @@
 "use client";
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
+import { getErrorMessage } from "@/lib/errors";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import HexMascotEvolved from "@/components/HexMascotEvolved";
@@ -51,9 +52,11 @@ export default function MascotPicker({
           msg: "✓ Ta mascotte a changé. Bienvenue à elle !",
         });
         setTimeout(() => router.push("/profil"), 1200);
-      } catch (e: any) {
-        const msg = e?.message?.startsWith("locked:")
-          ? `Niveau ${e.message.split(":")[1]} requis pour cette mascotte.`
+      } catch (e) {
+        // `locked:<niveau>` est le protocole convenu avec l'action serveur.
+        const brut = getErrorMessage(e);
+        const msg = brut.startsWith("locked:")
+          ? `Niveau ${brut.split(":")[1]} requis pour cette mascotte.`
           : "Impossible de changer de mascotte.";
         setFeedback({ type: "err", msg });
       }

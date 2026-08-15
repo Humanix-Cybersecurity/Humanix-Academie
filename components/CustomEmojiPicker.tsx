@@ -4,6 +4,7 @@
 // Saisie d'un emoji libre pour personnaliser sa mascotte au-dela des
 // 16 especes pre-definies. UX : preview en direct + bouton "effacer".
 
+import { getErrorMessage } from "@/lib/errors";
 import { useState, useTransition } from "react";
 import { setCustomMascotEmoji } from "@/app/profil/mascotte/actions";
 import { getMascotById } from "@/lib/mascots";
@@ -51,8 +52,8 @@ export default function CustomEmojiPicker({
     startTransition(async () => {
       try {
         await setCustomMascotEmoji(next);
-      } catch (e: any) {
-        alert(`Erreur : ${e?.message ?? "inconnue"}`);
+      } catch (e) {
+        alert(`Erreur : ${getErrorMessage(e)}`);
       }
     });
   }

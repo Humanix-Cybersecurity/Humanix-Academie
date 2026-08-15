@@ -3,12 +3,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // /admin/groupes : CRUD client des groupes metier.
 
+import { getErrorMessage } from "@/lib/errors";
 import { useState, useTransition } from "react";
-import {
-  createGroup,
-  updateGroup,
-  deleteGroup,
-} from "@/app/admin/actions";
+import { createGroup, updateGroup, deleteGroup } from "@/app/admin/actions";
 
 type G = {
   id: string;
@@ -54,8 +51,8 @@ export default function GroupsManager({ groups }: { groups: G[] }) {
       try {
         await createGroup(fd);
         setCreating(false);
-      } catch (err: any) {
-        setError(err?.message ?? "erreur");
+      } catch (err) {
+        setError(getErrorMessage(err) || "erreur");
       }
     });
   };
@@ -68,8 +65,8 @@ export default function GroupsManager({ groups }: { groups: G[] }) {
       try {
         await updateGroup(id, fd);
         setEditingId(null);
-      } catch (err: any) {
-        setError(err?.message ?? "erreur");
+      } catch (err) {
+        setError(getErrorMessage(err) || "erreur");
       }
     });
   };
@@ -95,8 +92,8 @@ export default function GroupsManager({ groups }: { groups: G[] }) {
     startTransition(async () => {
       try {
         await deleteGroup(g.id);
-      } catch (err: any) {
-        setError(err?.message ?? "erreur");
+      } catch (err) {
+        setError(getErrorMessage(err) || "erreur");
       }
     });
   };
@@ -134,7 +131,11 @@ export default function GroupsManager({ groups }: { groups: G[] }) {
         >
           <GroupFormFields />
           <div className="flex gap-2">
-            <button type="submit" disabled={pending} className="btn-primary text-sm">
+            <button
+              type="submit"
+              disabled={pending}
+              className="btn-primary text-sm"
+            >
               Créer
             </button>
             <button
@@ -150,7 +151,9 @@ export default function GroupsManager({ groups }: { groups: G[] }) {
 
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <caption className="sr-only">Groupes d'utilisateurs du tenant</caption>
+          <caption className="sr-only">
+            Groupes d'utilisateurs du tenant
+          </caption>
           <thead className="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-slate-800">
             <tr>
               <th className="pb-2 font-medium text-xs">Groupe</th>
@@ -344,9 +347,7 @@ function GroupFormFields({ defaults }: { defaults?: G }) {
                 type="radio"
                 name="emoji"
                 value={e}
-                defaultChecked={
-                  defaults ? defaults.emoji === e : e === "🏷️"
-                }
+                defaultChecked={defaults ? defaults.emoji === e : e === "🏷️"}
                 className="sr-only peer"
               />
               <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg border-2 border-transparent peer-checked:border-accent-500 hover:bg-gray-100 dark:hover:bg-slate-800 text-lg">

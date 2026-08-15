@@ -10,7 +10,7 @@ export default async function DemoBanner() {
   if (process.env.DEMO_MODE !== "true") return null;
 
   const session = await auth();
-  const tenantId = (session?.user as any)?.tenantId as string | undefined;
+  const tenantId = session?.user?.tenantId;
   const plan = tenantId ? await getTenantPlan(tenantId) : null;
 
   return (

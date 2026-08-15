@@ -1,6 +1,7 @@
 "use server";
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
+import { getErrorMessage } from "@/lib/errors";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getTenantPlan } from "@/lib/plans";
@@ -38,8 +39,8 @@ export async function generatePhishingAction(
   let auth: { tenantId: string; userId: string };
   try {
     auth = await requirePro();
-  } catch (e: any) {
-    return { ok: false, error: String(e?.message ?? "auth_failed") };
+  } catch (e) {
+    return { ok: false, error: getErrorMessage(e) || "auth_failed" };
   }
 
   // Rate limit léger : 10 générations/heure/user
@@ -58,8 +59,8 @@ export async function generatePhishingAction(
   let data: GeneratedPhishing;
   try {
     data = await generatePhishing(args);
-  } catch (e: any) {
-    return { ok: false, error: String(e?.message ?? "generation_failed") };
+  } catch (e) {
+    return { ok: false, error: getErrorMessage(e) || "generation_failed" };
   }
 
   // Audit log (sans le contenu généré)

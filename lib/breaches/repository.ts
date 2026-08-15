@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Repository Prisma + dedup + lazy refresh.
 
+import { getErrorMessage } from "@/lib/errors";
 import { db } from "@/lib/db";
 import type { BreachSource } from "@prisma/client";
 import { scrapeAllSources } from "./parsers";
@@ -169,10 +170,10 @@ export async function upsertScraped(args: {
           severity: item.severity ?? "medium",
         },
       });
-    } catch (e: any) {
+    } catch (e) {
       // Log précis de l'item qui plante : permet d'identifier le caractère
       // problématique côté source pour adapter sanitizeForDb si besoin.
-      const msg = String(e?.message ?? e).slice(0, 300);
+      const msg = getErrorMessage(e, 300);
       console.warn(
         `[upsertScraped] ${args.source} échec sur item :`,
         JSON.stringify({

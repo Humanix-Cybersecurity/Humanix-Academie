@@ -1,5 +1,6 @@
 "use client";
 // SPDX-License-Identifier: AGPL-3.0-or-later
+import { getErrorMessage } from "@/lib/errors";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { approveModule, rejectModule } from "@/app/admin/contributions/actions";
@@ -21,8 +22,8 @@ export default function ModerationActions({ moduleId }: { moduleId: string }) {
       try {
         await approveModule(moduleId);
         router.refresh();
-      } catch (e: any) {
-        alert("Approbation impossible : " + (e?.message ?? "erreur"));
+      } catch (e) {
+        alert("Approbation impossible : " + (getErrorMessage(e) || "erreur"));
       }
     });
   };

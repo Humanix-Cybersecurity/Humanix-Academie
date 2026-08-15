@@ -105,7 +105,7 @@ export async function generateBatch(
     try {
       const personalized = await generateOne(t, ctx);
       results.push(personalized);
-    } catch (e: any) {
+    } catch (e) {
       // Retry 1x avec backoff
       try {
         await sleep(3000);
