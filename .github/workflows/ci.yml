@@ -315,6 +315,29 @@ jobs:
       - name: Audit production dependencies (HIGH/CRITICAL only)
         run: npm audit --omit=dev --audit-level=high
 
+      # Le depot porte DEUX verrous, et cette etape n'auditait que la racine.
+      #
+      # `connectors/mcp-server/package-lock.json` est reste sur nanoid 3.3.16
+      # -- plus ancienne encore que la racine -- pendant que la CI affichait
+      # « 0 vulnerabilite ». Seul Dependabot le voyait, et son alerte a
+      # ressurgi juste apres qu'on ait cru le sujet clos.
+      #
+      # PAS de `--omit=dev` ICI, contrairement a la racine, et c'est mesure :
+      # dans ce sous-projet nanoid arrive par `postcss`, qui y est une
+      # dependance de DEVELOPPEMENT. Avec `--omit=dev`, la commande renvoie 0
+      # sur le verrou vulnerable -- verifie le 2026-08-15 en remettant la
+      # 3.3.16. L'etape aurait ete purement decorative.
+      #
+      # La racine garde `--omit=dev` parce qu'elle traine des centaines de
+      # dependances de developpement dont les avis ne partent jamais en
+      # production. Ce sous-projet en compte CINQ au total : l'auditer en
+      # entier ne coute rien et dit la meme chose que Dependabot, au lieu de
+      # le contredire.
+      #
+      # `--prefix` et non `cd` : l'echec doit remonter au job.
+      - name: Audit connectors/mcp-server (dev inclus, cf. ci-dessus)
+        run: npm audit --prefix connectors/mcp-server --audit-level=high
+
   # ---------------------------------------------------------------------------
   # Job : Validation MDX <-> catalogue
   # ---------------------------------------------------------------------------
