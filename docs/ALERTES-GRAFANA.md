@@ -23,6 +23,30 @@ se saisissent donc dans l'interface Grafana de Scaleway Cockpit :
 C'est fastidieux une fois, et jamais plus. Les requêtes sont écrites pour être
 recopiées telles quelles.
 
+### Deux mécaniques de l'interface qui font perdre du temps
+
+**La requête seule ne suffit pas.** Grafana construit une règle en trois étages :
+la requête `A`, une réduction `B`, un seuil `C`. Coller la LogQL dans `A` et
+chercher le champ « seuil » à côté ne mène nulle part. Mettre `B` sur **Last**,
+et porter la condition du tableau (`IS ABOVE 20`) dans `C`.
+
+**L'ordre de création compte.** Un point de contact doit exister avant qu'une
+règle puisse notifier — sinon l'alerte se déclenche dans le vide, ce qui est
+exactement l'état qu'on cherche à quitter. Voir la section « Acheminement »
+en premier, puis créer les règles dans cet ordre :
+
+1. **règle 5** (l'homme mort) — elle surveille les six autres ;
+2. **règle 2** (exfiltration) puis **1** (échecs d'authentification) ;
+3. **règles 4** et **3** ;
+4. **règles 6 et 7**, une fois le trafic observé sur sept jours.
+
+### État de la chaîne
+
+Vérifié de bout en bout le 2026-08-14 : `instrumentation.ts` émet, `podman logs`
+le montre, Vector l'achemine, et les battements sont visibles dans Grafana. Ce
+qui reste manquant, ce sont les règles ci-dessous — le code émet, personne
+n'écoute encore.
+
 ---
 
 ## Ce que Loki voit, et ce qu'il ne voit pas
@@ -156,11 +180,27 @@ Celle qu'on oublie, et sans laquelle les quatre autres ne valent rien.
 sum(count_over_time({env="prod"} | json | canal="securite" | action="HEARTBEAT" [15m]))
 ```
 
-| Paramètre  | Valeur                         |
-| ---------- | ------------------------------ |
-| Condition  | `IS BELOW 1`                   |
-| Évaluation | toutes les `5m`, pendant `10m` |
-| Sévérité   | `critical`                     |
+| Paramètre           | Valeur                        |
+| ------------------- | ----------------------------- |
+| Condition           | `IS BELOW 1`                  |
+| Évaluation          | toutes les `1m`, pendant `0m` |
+| **Si aucune donnée** | **`Alerting`**                |
+| Sévérité            | `critical`                    |
+
+⚠️ **Les deux réglages ci-dessus sont ceux qui font marcher la règle**, et tous
+deux ont été trouvés en la testant — elle ne s'est pas déclenchée du premier
+coup.
+
+**« Si aucune donnée » doit valoir `Alerting`.** C'est sous *Configure no data
+and error handling*. Quand plus aucune ligne ne correspond, LogQL ne renvoie pas
+`0` : il ne renvoie **rien**. Le seuil `IS BELOW 1` n'a alors rien à comparer et
+la règle bascule en *No Data*, un état distinct qui ne suit pas forcément le même
+acheminement. Une règle d'homme mort laissée au réglage par défaut reste donc
+muette dans le seul cas où on la veut bruyante.
+
+**Pas de temporisation.** La fenêtre `[15m]` *est* la tolérance : il faut trois
+battements manqués pour la vider. Y ajouter une temporisation compterait la
+patience deux fois et repousserait l'alerte à 25 minutes.
 
 **Un silence et une panne se ressemblent parfaitement.** Si Vector s'arrête, si
 le jeton expire, si le socket Podman disparaît, les quatre règles ci-dessus
