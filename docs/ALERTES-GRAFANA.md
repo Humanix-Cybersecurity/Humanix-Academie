@@ -23,12 +23,40 @@ se saisissent donc dans l'interface Grafana de Scaleway Cockpit :
 C'est fastidieux une fois, et jamais plus. Les requêtes sont écrites pour être
 recopiées telles quelles.
 
-### Deux mécaniques de l'interface qui font perdre du temps
+### Trois mécaniques de l'interface, dont une qui rend une règle inopérante
 
 **La requête seule ne suffit pas.** Grafana construit une règle en trois étages :
 la requête `A`, une réduction `B`, un seuil `C`. Coller la LogQL dans `A` et
 chercher le champ « seuil » à côté ne mène nulle part. Mettre `B` sur **Last**,
 et porter la condition du tableau (`IS ABOVE 20`) dans `C`.
+
+**⚠️ La requête doit être de type `Instant`, jamais `Range`.** C'est le réglage
+le plus discret et le seul capable de rendre une règle définitivement muette.
+
+Quand plus aucune ligne ne correspond, Loki n'émet pas `0` : il **cesse
+d'émettre des points**. Sur une requête `Range`, la série s'arrête donc sur sa
+dernière valeur connue, et `Last` retourne indéfiniment ce dernier point
+disponible. Une règle « moins de 1 » n'est jamais franchie, et l'état _No Data_
+n'est jamais atteint non plus puisque la série existe.
+
+Mesuré sur la règle 5 : à l'arrêt de Vector, la courbe a drainé `3 → 2 → 1` puis
+s'est figée sur `1`. La règle était correctement configurée par ailleurs et ne
+pouvait structurellement pas se déclencher.
+
+`Instant` évalue uniquement à `now`. Si rien ne correspond à cet instant, il n'y
+a pas de série du tout — donc _No Data_, donc l'alerte si le réglage suivant est
+mis.
+
+**Le sens de « Si aucune donnée » n'est PAS le même pour toutes les règles.**
+C'est une asymétrie qu'on lit à l'envers une fois sur deux :
+
+| Règle          | Absence de données signifie  | _Alert state if no data_ |
+| -------------- | ---------------------------- | ------------------------ |
+| 5 (homme mort) | la collecte est morte        | **`Alerting`**           |
+| 1, 2, 3, 4     | rien d'anormal ne se produit | **`OK` / `Normal`**      |
+
+Mettre `Alerting` sur les règles 1 à 4 les ferait hurler en permanence : une
+journée sans échec d'authentification est une bonne journée, pas une panne.
 
 **L'ordre de création compte.** Un point de contact doit exister avant qu'une
 règle puisse notifier — sinon l'alerte se déclenche dans le vide, ce qui est
@@ -39,6 +67,20 @@ en premier, puis créer les règles dans cet ordre :
 2. **règle 2** (exfiltration) puis **1** (échecs d'authentification) ;
 3. **règles 4** et **3** ;
 4. **règles 6 et 7**, une fois le trafic observé sur sept jours.
+
+### Tester une règle sans couper la production
+
+Vérifier un homme mort en arrêtant Vector coûte quinze minutes d'aveuglement, et
+ne teste que la moitié du chemin. Pour éprouver **l'acheminement** — règle →
+politique de notification → Telegram — inverser temporairement la condition :
+
+`IS BELOW 1` → `IS ABOVE 0`
+
+Elle devient vraie immédiatement. Si la notification arrive dans la minute,
+l'acheminement fonctionne et seule la requête est en cause. Sinon, le problème
+est la politique de notification, et toucher aux règles ne sert à rien.
+
+Remettre la condition d'origine ensuite.
 
 ### État de la chaîne
 
@@ -98,11 +140,13 @@ Le signal le plus banal, et celui qui précède le plus souvent le reste.
 sum(count_over_time({env="prod"} | json | canal="securite" | action="USER_LOGIN_FAILED" [5m]))
 ```
 
-| Paramètre  | Valeur                        |
-| ---------- | ----------------------------- |
-| Condition  | `IS ABOVE 20`                 |
-| Évaluation | toutes les `1m`, pendant `5m` |
-| Sévérité   | `warning`                     |
+| Paramètre            | Valeur                        |
+| -------------------- | ----------------------------- |
+| Type de requête      | `Instant`                     |
+| Condition            | `IS ABOVE 20`                 |
+| Évaluation           | toutes les `1m`, pendant `5m` |
+| **Si aucune donnée** | **`OK`**                      |
+| Sévérité             | `warning`                     |
 
 **Pourquoi 20 et pas 5.** Un utilisateur qui se trompe trois fois puis demande
 un lien de connexion en produit déjà quatre ou cinq. Un seuil à 5 se
@@ -118,11 +162,13 @@ silence. 20 en 5 minutes ne ressemble à aucun usage humain.
 sum(count_over_time({env="prod"} | json | canal="securite" | action="EXFILTRATION_SUSPECTED" [5m]))
 ```
 
-| Paramètre  | Valeur                        |
-| ---------- | ----------------------------- |
-| Condition  | `IS ABOVE 0`                  |
-| Évaluation | toutes les `1m`, pendant `0m` |
-| Sévérité   | `critical`                    |
+| Paramètre            | Valeur                        |
+| -------------------- | ----------------------------- |
+| Type de requête      | `Instant`                     |
+| Condition            | `IS ABOVE 0`                  |
+| Évaluation           | toutes les `1m`, pendant `0m` |
+| **Si aucune donnée** | **`OK`**                      |
+| Sévérité             | `critical`                    |
 
 **Sans temporisation.** L'application n'émet cette action que lorsqu'elle a
 déjà conclu à une anomalie ; attendre une confirmation reviendrait à demander
@@ -137,11 +183,13 @@ deux fois la même chose. Une occurrence déclenche
 sum by (tenantId) (count_over_time({env="prod"} | json | canal="securite" | action="DATA_EXPORTED" [1h]))
 ```
 
-| Paramètre  | Valeur                          |
-| ---------- | ------------------------------- |
-| Condition  | `IS ABOVE 10`                   |
-| Évaluation | toutes les `10m`, pendant `10m` |
-| Sévérité   | `warning`                       |
+| Paramètre            | Valeur                          |
+| -------------------- | ------------------------------- |
+| Type de requête      | `Instant`                       |
+| Condition            | `IS ABOVE 10`                   |
+| Évaluation           | toutes les `10m`, pendant `10m` |
+| **Si aucune donnée** | **`OK`**                        |
+| Sévérité             | `warning`                       |
 
 **On alerte sur le débit, jamais sur l'existence.** Exporter ses données est un
 **droit du Client** (RGPD art. 20, et DPA article 9). Une alerte à la première
@@ -160,11 +208,13 @@ tenants sont une matinée ordinaire, douze sur un seul ne le sont pas.
 sum(count_over_time({env="prod"} | json | canal="securite" | action=~"USER_ROLE_CHANGED|USER_MFA_DISABLED|USER_MFA_RESET_BY_ADMIN|TENANT_DELETED" [15m]))
 ```
 
-| Paramètre  | Valeur                        |
-| ---------- | ----------------------------- |
-| Condition  | `IS ABOVE 3`                  |
-| Évaluation | toutes les `5m`, pendant `5m` |
-| Sévérité   | `critical`                    |
+| Paramètre            | Valeur                        |
+| -------------------- | ----------------------------- |
+| Type de requête      | `Instant`                     |
+| Condition            | `IS ABOVE 3`                  |
+| Évaluation           | toutes les `5m`, pendant `5m` |
+| **Si aucune donnée** | **`OK`**                      |
+| Sévérité             | `critical`                    |
 
 Ces actions sont légitimes et rares. Leur **regroupement** ne l'est pas :
 désactiver un second facteur puis changer un rôle dans le quart d'heure est la
@@ -180,25 +230,28 @@ Celle qu'on oublie, et sans laquelle les quatre autres ne valent rien.
 sum(count_over_time({env="prod"} | json | canal="securite" | action="HEARTBEAT" [15m]))
 ```
 
-| Paramètre           | Valeur                        |
-| ------------------- | ----------------------------- |
-| Condition           | `IS BELOW 1`                  |
-| Évaluation          | toutes les `1m`, pendant `0m` |
-| **Si aucune donnée** | **`Alerting`**                |
-| Sévérité            | `critical`                    |
+| Paramètre            | Valeur                         |
+| -------------------- | ------------------------------ |
+| **Type de requête**  | **`Instant`** (jamais `Range`) |
+| Condition            | `IS BELOW 1`                   |
+| Évaluation           | toutes les `1m`, pendant `0m`  |
+| **Si aucune donnée** | **`Alerting`**                 |
+| Sévérité             | `critical`                     |
 
-⚠️ **Les deux réglages ci-dessus sont ceux qui font marcher la règle**, et tous
-deux ont été trouvés en la testant — elle ne s'est pas déclenchée du premier
-coup.
+⚠️ **Les trois réglages en gras sont ceux qui font marcher la règle**, et les
+trois ont été trouvés en la testant — elle ne s'est pas déclenchée aux deux
+premières tentatives. Le type `Instant` est le plus discret et le plus
+decisif : en `Range`, la série se fige sur sa dernière valeur et la condition
+n'est jamais franchie (cf. la section sur les mécaniques de l'interface).
 
-**« Si aucune donnée » doit valoir `Alerting`.** C'est sous *Configure no data
-and error handling*. Quand plus aucune ligne ne correspond, LogQL ne renvoie pas
+**« Si aucune donnée » doit valoir `Alerting`.** C'est sous _Configure no data
+and error handling_. Quand plus aucune ligne ne correspond, LogQL ne renvoie pas
 `0` : il ne renvoie **rien**. Le seuil `IS BELOW 1` n'a alors rien à comparer et
-la règle bascule en *No Data*, un état distinct qui ne suit pas forcément le même
+la règle bascule en _No Data_, un état distinct qui ne suit pas forcément le même
 acheminement. Une règle d'homme mort laissée au réglage par défaut reste donc
 muette dans le seul cas où on la veut bruyante.
 
-**Pas de temporisation.** La fenêtre `[15m]` *est* la tolérance : il faut trois
+**Pas de temporisation.** La fenêtre `[15m]` _est_ la tolérance : il faut trois
 battements manqués pour la vider. Y ajouter une temporisation compterait la
 patience deux fois et repousserait l'alerte à 25 minutes.
 
