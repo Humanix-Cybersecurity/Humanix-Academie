@@ -15,6 +15,9 @@ name: CI
 #
 #   1. paths-ignore : skip CI sur changes docs/wiki/markdown-only (gain :
 #      ~15 min/PR doc qui n'ont rien a tester)
+#      >>> RETIRE DES PULL REQUESTS le 2026-08-15 : ce filtre rendait les PR
+#      >>> documentaires impossibles a fusionner. Conserve sur `push`.
+#      >>> Explication complete sous le bloc `on:`.
 #
 #   2. Cache node_modules + .prisma partage entre jobs via actions/cache,
 #      key = hash(package-lock + schema.prisma). Sur self-hosted-runner
@@ -70,16 +73,37 @@ on:
       - ".github/PULL_REQUEST_TEMPLATE.md"
       - "LICENSE"
       - "CHANGELOG.md"
+  # PAS de paths-ignore ici, et c'est délibéré — cf. le bloc ci-dessous.
   pull_request:
     branches: [main, develop]
-    paths-ignore:
-      - "**.md"
-      - "docs/**"
-      - "wiki/**"
-      - ".github/ISSUE_TEMPLATE/**"
-      - ".github/PULL_REQUEST_TEMPLATE.md"
-      - "LICENSE"
-      - "CHANGELOG.md"
+
+# POURQUOI LES PR NE SONT PLUS FILTREES (2026-08-15)
+#
+#   Le `paths-ignore` ajoute le 2026-05-23 pour epargner ~15 min sur les PR
+#   documentaires rendait ces PR IMPOSSIBLES A FUSIONNER.
+#
+#   Le ruleset `main-protected` exige dix controles produits par ce fichier.
+#   Sur une PR purement documentaire, le workflow ne demarrait pas : les dix
+#   contextes n'etaient donc jamais rapportes, et GitHub attendait
+#   indefiniment des controles qui ne viendraient jamais. La PR #821 est
+#   restee BLOCKED sans qu'aucun voyant ne soit rouge — l'interface montre
+#   « en attente », pas « impossible ».
+#
+#   Les deux reglages avaient ete decides separement et se contredisaient.
+#
+#   ALTERNATIVE ECARTEE : un second workflow qui rapporterait les dix memes
+#   noms de controle sur les PR documentaires. `paths:` se declenche des
+#   QU'UN fichier correspond, donc une PR mixte code + docs aurait declenche
+#   les DEUX workflows. Deux rapports portant le meme nom, l'un reel et
+#   l'autre toujours vert : un echec de la CI aurait pu etre masque par le
+#   succes factice. On refuse un trou dans le garde-fou pour gagner quinze
+#   minutes.
+#
+#   COUT ASSUME : une PR documentaire paie desormais la CI complete. C'est
+#   le prix d'un garde-fou qui ferme reellement. Si ce cout devient penible,
+#   la vraie solution est un job de perimetre en amont qui conditionne les
+#   ETAPES couteuses — les travaux continuent alors de rapporter leur
+#   contexte au lieu d'etre sautes. C'est un chantier a part, testable.
 
 # Permissions minimales (principe du moindre privilège).
 permissions:
@@ -290,6 +314,29 @@ jobs:
 
       - name: Audit production dependencies (HIGH/CRITICAL only)
         run: npm audit --omit=dev --audit-level=high
+
+      # Le depot porte DEUX verrous, et cette etape n'auditait que la racine.
+      #
+      # `connectors/mcp-server/package-lock.json` est reste sur nanoid 3.3.16
+      # -- plus ancienne encore que la racine -- pendant que la CI affichait
+      # « 0 vulnerabilite ». Seul Dependabot le voyait, et son alerte a
+      # ressurgi juste apres qu'on ait cru le sujet clos.
+      #
+      # PAS de `--omit=dev` ICI, contrairement a la racine, et c'est mesure :
+      # dans ce sous-projet nanoid arrive par `postcss`, qui y est une
+      # dependance de DEVELOPPEMENT. Avec `--omit=dev`, la commande renvoie 0
+      # sur le verrou vulnerable -- verifie le 2026-08-15 en remettant la
+      # 3.3.16. L'etape aurait ete purement decorative.
+      #
+      # La racine garde `--omit=dev` parce qu'elle traine des centaines de
+      # dependances de developpement dont les avis ne partent jamais en
+      # production. Ce sous-projet en compte CINQ au total : l'auditer en
+      # entier ne coute rien et dit la meme chose que Dependabot, au lieu de
+      # le contredire.
+      #
+      # `--prefix` et non `cd` : l'echec doit remonter au job.
+      - name: Audit connectors/mcp-server (dev inclus, cf. ci-dessus)
+        run: npm audit --prefix connectors/mcp-server --audit-level=high
 
   # ---------------------------------------------------------------------------
   # Job : Validation MDX <-> catalogue
