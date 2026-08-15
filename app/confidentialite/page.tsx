@@ -46,8 +46,8 @@ export default function ConfidentialitePage() {
         </p>
         <p>
           La présente politique s'applique uniquement aux services Cloud opérés
-          par Humanix-Cybersecurity (paliers Starter,
-          Pro, Enterprise). Les organisations qui déploient elles-mêmes{" "}
+          par Humanix-Cybersecurity (paliers Starter, Pro, Enterprise). Les
+          organisations qui déploient elles-mêmes{" "}
           <strong>Humanix Community Edition</strong> en self-host (à partir du
           code source publié sous licence GNU AGPL v3) deviennent{" "}
           <strong>seules responsables de traitement</strong> au sens du RGPD
@@ -247,7 +247,8 @@ export default function ConfidentialitePage() {
             uniquement (entreprise solo)
           </li>
           <li>
-            <strong>Sous-traitants techniques</strong> :
+            <strong>Sous-traitants de la plateforme</strong> — ce sont les seuls
+            à traiter tes données d&apos;apprenant :
             <ul>
               <li>
                 <strong>Scaleway SAS</strong> (France 🇫🇷) - hébergement,
@@ -255,19 +256,32 @@ export default function ConfidentialitePage() {
               </li>
               <li>
                 <strong>Scaleway TEM</strong> (France 🇫🇷, Paris) - emails
-                transactionnels (lien magique de connexion, alertes,
-                newsletter Cyber-Anecdote du Lundi)
+                transactionnels (lien magique de connexion, alertes, newsletter
+                Cyber-Anecdote du Lundi)
               </li>
+            </ul>
+          </li>
+          <li>
+            <strong>Prestataires de gestion de Humanix-Cybersecurity</strong> —
+            ils{" "}
+            <strong>n&apos;accèdent à aucune donnée d&apos;apprenant</strong>.
+            Ils interviennent uniquement sur les données de facturation et de
+            gestion du souscripteur, pour lesquelles Humanix-Cybersecurity agit
+            en qualité de <strong>responsable de traitement</strong> et non de
+            sous-traitant. Si tu es apprenant sur la plateforme sans être le
+            souscripteur, aucun de ces prestataires ne détient de données te
+            concernant :
+            <ul>
               <li>
                 <strong>Mollie B.V.</strong> (UE 🇪🇺, Amsterdam, Pays-Bas) -
-                prestataire de paiement pour les abonnements. Régulé par la
-                DNB (Banque centrale des Pays-Bas), agréé établissement de
-                paiement UE sous PSD2. Traite les données de carte bancaire
-                en mode tokenisation conforme PCI-DSS niveau 1. Humanix ne
-                reçoit jamais ton numéro de carte ni ton CVV : nous stockons
-                uniquement un identifiant chiffré (token Mollie) qui permet
-                de représenter le moyen de paiement sans pouvoir
-                l&apos;utiliser hors de notre flow.
+                prestataire de paiement pour les abonnements. Régulé par la DNB
+                (Banque centrale des Pays-Bas), agréé établissement de paiement
+                UE sous PSD2. Traite les données de carte bancaire en mode
+                tokenisation conforme PCI-DSS niveau 1. Humanix ne reçoit jamais
+                ton numéro de carte ni ton CVV : nous stockons uniquement un
+                identifiant chiffré (token Mollie) qui permet de représenter le
+                moyen de paiement sans pouvoir l&apos;utiliser hors de notre
+                flow.
               </li>
               <li>
                 <strong>Olinda SAS</strong> exploitant le service{" "}
@@ -280,12 +294,11 @@ export default function ConfidentialitePage() {
               </li>
               <li>
                 <strong>Hiscox France</strong> (France 🇫🇷) - assureur
-                Responsabilité Civile Professionnelle. N&apos;a accès à
-                aucune donnée client en fonctionnement nominal ; un
-                partage limité ne survient qu&apos;en cas d&apos;incident
-                matériel indemnisé, et exclusivement avec les éléments
-                probants strictement nécessaires à l&apos;instruction du
-                sinistre.
+                Responsabilité Civile Professionnelle. N&apos;a accès à aucune
+                donnée client en fonctionnement nominal ; un partage limité ne
+                survient qu&apos;en cas d&apos;incident matériel indemnisé, et
+                exclusivement avec les éléments probants strictement nécessaires
+                à l&apos;instruction du sinistre.
               </li>
             </ul>
           </li>
