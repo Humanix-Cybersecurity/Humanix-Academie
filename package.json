@@ -3,7 +3,7 @@
   "version": "1.4.0",
   "private": true,
   "license": "AGPL-3.0-or-later",
-  "description": "Humanix Académie Community Edition - plateforme française open source de cybersensibilisation pour PME.",
+  "description": "Humanix Acad\u00e9mie Community Edition - plateforme fran\u00e7aise open source de cybersensibilisation pour PME.",
   "homepage": "https://humanix-cybersecurity.fr",
   "repository": {
     "type": "git",
@@ -119,7 +119,7 @@
     "vitest": "^4.1.10"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=24.15.0"
   },
   "overrides": {
     "next": {

@@ -1,7 +1,7 @@
 # ============= Multi-stage Dockerfile pour HumaniX Academy =============
 
 # Stage 1 : dependencies
-FROM node:25-alpine AS deps
+FROM node:24-alpine AS deps
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 COPY package*.json ./
@@ -9,7 +9,7 @@ COPY prisma ./prisma
 RUN npm install --legacy-peer-deps --no-audit --no-fund
 
 # Stage 2 : builder
-FROM node:25-alpine AS builder
+FROM node:24-alpine AS builder
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
@@ -157,7 +157,7 @@ RUN npx esbuild \
   && ls -la dist-scripts/scripts dist-scripts/prisma
 
 # Stage 3 : runner (production)
-FROM node:25-alpine AS runner
+FROM node:24-alpine AS runner
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 ENV NODE_ENV=production
@@ -233,7 +233,7 @@ RUN npm prune --omit=dev --ignore-scripts --legacy-peer-deps \
 # Mesure du 2026-08-13 sur l'image publiee : les 8 dernieres vulnerabilites
 # rapportees par Trivy etaient TOUTES dans
 # /usr/local/lib/node_modules/npm/node_modules -- les dependances que npm
-# embarque, dans l'image node:25-alpine elle-meme. Aucune ne venait de nos
+# embarque, dans l'image node:24-alpine elle-meme. Aucune ne venait de nos
 # dependances, et aucune n'etait corrigeable par notre gestion de paquets :
 # il fallait changer d'image de base, ou retirer npm.
 #
