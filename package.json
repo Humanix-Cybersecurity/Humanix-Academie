@@ -3,7 +3,7 @@
   "version": "1.4.0",
   "private": true,
   "license": "AGPL-3.0-or-later",
-  "description": "Humanix Académie Community Edition - plateforme française open source de cybersensibilisation pour PME.",
+  "description": "Humanix Acad\u00e9mie Community Edition - plateforme fran\u00e7aise open source de cybersensibilisation pour PME.",
   "homepage": "https://humanix-cybersecurity.fr",
   "repository": {
     "type": "git",
@@ -87,7 +87,7 @@
     "canvas-confetti": "^1.9.3",
     "clsx": "^2.1.1",
     "gray-matter": "^4.0.3",
-    "isomorphic-dompurify": "^3.19.0",
+    "isomorphic-dompurify": "^3.22.0",
     "next": "^16.3.1",
     "next-auth": "5.0.0-beta.32",
     "nodemailer": "^9.0.5",
@@ -98,7 +98,7 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "recharts": "^3.10.1",
-    "undici": "^7.29.0",
+    "undici": "^8.10.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -119,7 +119,7 @@
     "vitest": "^4.1.10"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=24.15.0"
   },
   "overrides": {
     "next": {

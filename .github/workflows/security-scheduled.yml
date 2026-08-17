@@ -67,7 +67,18 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 20
+          # Node 24 et non 20 : la CI doit tester CE QUE LA PRODUCTION EXECUTE.
+          #
+          # Elle validait sur Node 20 pendant que le Dockerfile livrait Node 25 --
+          # deux runtimes differents, donc une CI qui ne prouvait rien sur le
+          # binaire reel. Le 2026-08-17, undici 8 a rendu l'ecart visible :
+          # `webidl.util.markAsUncloneable` vient de `node:worker_threads` et
+          # n'existe pas avant Node 22. La CI echouait sur du code qui fonctionne
+          # en production.
+          #
+          # 24 et non 25 : jsdom 30 declare `^22.22.2 || ^24.15.0 || >=26.0.0`,
+          # qui EXCLUT la 25. Et 24 est une ligne LTS, la 25 non.
+          node-version: 24
           cache: npm
 
       # Pas de `npm ci` : `npm audit` travaille sur package-lock.json.
