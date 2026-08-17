@@ -8,7 +8,12 @@
 import { describe, it, expect } from "vitest";
 import http from "node:http";
 import type { AddressInfo } from "node:net";
-import { Agent } from "undici";
+// `fetch` d'undici et non le global : ce test fait une VRAIE requete a
+// travers l'Agent epingle. Avec le fetch global, les deux moities viendraient
+// de paquets undici differents et la requete echouerait sur
+// `invalid onRequestStart method` des undici 8 -- le defaut meme que ce module
+// a rencontre en production. Cf. lib/webhooks/dispatcher.ts.
+import { Agent, fetch as fetchUndici } from "undici";
 import { buildPinnedAgent, makePinnedLookup } from "./pinned-agent";
 
 describe("makePinnedLookup - court-circuit DNS vers l'IP validee", () => {
@@ -79,9 +84,11 @@ describe("buildPinnedAgent - epinglage de la connexion sortante", () => {
       // `dns-rebind.invalid` NE RESOUT PAS en vrai DNS. La requete n'aboutit QUE
       // parce que la connexion est epinglee sur 127.0.0.1 : si le code
       // re-resolvait le hostname (= fenetre TOCTOU), on aurait un ENOTFOUND.
-      const res = await fetch(`http://dns-rebind.invalid:${port}/hook`, {
+      // Plus de cast : le fetch d'undici type `dispatcher` nativement, la ou
+      // les types DOM Fetch l'ignoraient et imposaient une acrobatie.
+      const res = await fetchUndici(`http://dns-rebind.invalid:${port}/hook`, {
         dispatcher: agent,
-      } as RequestInit & { dispatcher: unknown });
+      });
       expect(res.status).toBe(200);
       const body = (await res.json()) as { host: string; url: string };
       expect(body.url).toBe("/hook");

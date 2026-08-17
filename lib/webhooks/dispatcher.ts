@@ -20,7 +20,21 @@
 
 import crypto from "crypto";
 import { lookup } from "node:dns/promises";
-import type { Agent } from "undici";
+// `fetch` vient d'UNDICI et non du global, et ce n'est pas un detail de style.
+//
+// On passe un `Agent` du paquet npm `undici` comme dispatcher. Le fetch global
+// de Node est adosse a l'undici EMBARQUE dans Node, d'une autre version : il
+// transmet au dispatcher un handler conforme a SON interface. Les deux
+// coincidaient jusqu'a undici 7 ; la 8 a change l'interface et rejette ce
+// handler avec `InvalidArgumentError: invalid onRequestStart method`.
+//
+// Mesure du 2026-08-17 sur undici 8.10.0, meme Agent epingle :
+//   fetch global de Node -> ECHEC invalid onRequestStart method
+//   fetch d'undici       -> HTTP 200
+//
+// Prendre le fetch d'undici garantit que les deux moities viennent du meme
+// paquet, quelle que soit la version embarquee par Node.
+import { fetch as fetchUndici, type Agent } from "undici";
 import { db } from "@/lib/db";
 import { buildPinnedAgent, type PinnedAddress } from "@/lib/net/pinned-agent";
 import {
@@ -67,7 +81,10 @@ function embeddedIpv4(addr: string): string | null {
  * un litteral d'URL que sur l'IP reellement resolue par le DNS.
  */
 export function isPrivateIp(ip: string): boolean {
-  const addr = ip.trim().toLowerCase().replace(/^\[|\]$/g, "");
+  const addr = ip
+    .trim()
+    .toLowerCase()
+    .replace(/^\[|\]$/g, "");
   // IPv6
   if (addr.includes(":")) {
     if (addr === "::1" || addr === "::") return true; // loopback / unspecified
@@ -201,7 +218,7 @@ async function postWithTimeout(
     // undici dispatcher : ignore par les types DOM Fetch mais respecte par le
     // fetch() de Next.js (undici sous-jacent).
     init.dispatcher = agent;
-    const res = await fetch(url, init);
+    const res = await fetchUndici(url, init as never);
     return { ok: res.ok, status: res.status };
   } catch (e: unknown) {
     return {
@@ -226,13 +243,7 @@ async function postWithTimeout(
  * key pour PagerDuty). On les passe en options.
  */
 function buildPayload(
-  type:
-    | "SLACK"
-    | "TEAMS"
-    | "GENERIC"
-    | "JIRA"
-    | "SERVICENOW"
-    | "PAGERDUTY",
+  type: "SLACK" | "TEAMS" | "GENERIC" | "JIRA" | "SERVICENOW" | "PAGERDUTY",
   event: WebhookEventKey,
   tenantId: string,
   tenantName: string,
@@ -333,14 +344,10 @@ export async function fireWebhook(
         return;
       }
 
-      const payload = buildPayload(
-        w.type,
-        event,
-        tenantId,
-        tenant.name,
-        data,
-        { webhookUrl: w.url, secret: w.secret },
-      );
+      const payload = buildPayload(w.type, event, tenantId, tenant.name, data, {
+        webhookUrl: w.url,
+        secret: w.secret,
+      });
 
       if (Buffer.byteLength(payload) > MAX_PAYLOAD_BYTES) {
         await db.tenantWebhook.update({

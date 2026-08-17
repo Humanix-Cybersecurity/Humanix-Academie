@@ -10,13 +10,30 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import * as dnsPromises from "node:dns/promises";
-import { Agent } from "undici";
+import { Agent, fetch as fetchUndici } from "undici";
 import { CisoAssistantClient, isForbiddenCisoIp } from "./client";
 
 // On mock la resolution DNS du baseUrl pour piloter ce que VOIT le garde, et on
 // espionne fetch() pour observer (a) qu'aucune connexion ne part vers une cible
 // interdite, (b) que la connexion autorisee porte bien un dispatcher epingle.
 vi.mock("node:dns/promises", () => ({ lookup: vi.fn() }));
+
+// ON DOUBLE LE `fetch` D'UNDICI, PLUS CELUI DU GLOBAL.
+//
+// `client.ts` appelait le fetch global avec un dispatcher issu du paquet npm
+// `undici`. Les deux moities venaient de paquets differents, ce qui a casse a
+// undici 8 (`invalid onRequestStart method`). Le code prend desormais le fetch
+// d'undici, donc l'espion doit le suivre.
+//
+// Ce n'est pas cosmetique : laisse sur `globalThis.fetch`, l'assertion
+// « aucune connexion n'est partie » passerait A VIDE -- le code n'appelle plus
+// ce fetch-la. Un test vert qui ne prouve plus rien est pire qu'un test rouge.
+//
+// `Agent` reste REEL : les tests verifient `dispatcher instanceof Agent`.
+vi.mock("undici", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("undici")>()),
+  fetch: vi.fn(),
+}));
 const mockLookup = dnsPromises.lookup as unknown as ReturnType<typeof vi.fn>;
 
 describe("isForbiddenCisoIp - garde SSRF (exfiltration token Knox)", () => {
@@ -91,27 +108,31 @@ describe("CisoAssistantClient - garde SSRF + epinglage IP (anti DNS-rebinding)",
 
   // Reponse GET /api/folders/ qui contient deja le folder -> ensureFolder()
   // s'arrete apres UN seul fetch (le GET), pratique pour observer le dispatcher.
-  function folderFoundResponse(): Response {
+  // Le double doit rendre une Response D'UNDICI (elle porte `textStream`), pas
+  // celle du DOM : c'est le fetch d'undici qu'on remplace desormais.
+  function folderFoundResponse(): Awaited<ReturnType<typeof fetchUndici>> {
     return new Response(
-      JSON.stringify({ results: [{ id: "folder-1", name: baseConn.folderName }] }),
+      JSON.stringify({
+        results: [{ id: "folder-1", name: baseConn.folderName }],
+      }),
       { status: 200, headers: { "content-type": "application/json" } },
-    );
+    ) as unknown as Awaited<ReturnType<typeof fetchUndici>>;
   }
 
-  let fetchSpy: ReturnType<typeof vi.spyOn> | undefined;
+  const fetchSpy = vi.mocked(fetchUndici);
 
   beforeEach(() => {
     mockLookup.mockReset();
+    fetchSpy.mockReset();
   });
   afterEach(() => {
-    fetchSpy?.mockRestore();
-    fetchSpy = undefined;
+    fetchSpy.mockReset();
   });
 
   it("REFUSE sans aucun fetch quand le baseUrl resout vers une IP interdite (loopback)", async () => {
     // L'attaquant fait resoudre un hostname public vers le loopback.
     mockLookup.mockResolvedValue([{ address: "127.0.0.1", family: 4 }]);
-    fetchSpy = vi.spyOn(globalThis, "fetch");
+    // fetchSpy est deja le double du module undici (cf. vi.mock en tete).
     const client = new CisoAssistantClient(baseConn);
     await expect(client.ensureFolder()).rejects.toThrow("ciso_host_forbidden");
     // Le token Knox ne part JAMAIS : aucune connexion n'a ete ouverte.
@@ -120,7 +141,7 @@ describe("CisoAssistantClient - garde SSRF + epinglage IP (anti DNS-rebinding)",
 
   it("REFUSE sans aucun fetch quand le baseUrl resout vers le metadata cloud (169.254.169.254)", async () => {
     mockLookup.mockResolvedValue([{ address: "169.254.169.254", family: 4 }]);
-    fetchSpy = vi.spyOn(globalThis, "fetch");
+    // fetchSpy est deja le double du module undici (cf. vi.mock en tete).
     const client = new CisoAssistantClient(baseConn);
     await expect(client.ensureFolder()).rejects.toThrow("ciso_host_forbidden");
     expect(fetchSpy).not.toHaveBeenCalled();
@@ -129,12 +150,10 @@ describe("CisoAssistantClient - garde SSRF + epinglage IP (anti DNS-rebinding)",
   it("attache un dispatcher undici epingle quand le host resout vers une IP publique", async () => {
     mockLookup.mockResolvedValue([{ address: "93.184.216.34", family: 4 }]);
     let dispatcher: unknown;
-    fetchSpy = vi
-      .spyOn(globalThis, "fetch")
-      .mockImplementation((_url, init) => {
-        dispatcher = (init as { dispatcher?: unknown } | undefined)?.dispatcher;
-        return Promise.resolve(folderFoundResponse());
-      });
+    fetchSpy.mockImplementation((_url, init) => {
+      dispatcher = (init as { dispatcher?: unknown } | undefined)?.dispatcher;
+      return Promise.resolve(folderFoundResponse());
+    });
     const client = new CisoAssistantClient(baseConn);
     const folderId = await client.ensureFolder();
     expect(folderId).toBe("folder-1");
@@ -147,12 +166,10 @@ describe("CisoAssistantClient - garde SSRF + epinglage IP (anti DNS-rebinding)",
     // Politique CISO : un CISO Assistant peut etre auto-heberge sur reseau prive.
     mockLookup.mockResolvedValue([{ address: "10.1.2.3", family: 4 }]);
     let dispatcher: unknown;
-    fetchSpy = vi
-      .spyOn(globalThis, "fetch")
-      .mockImplementation((_url, init) => {
-        dispatcher = (init as { dispatcher?: unknown } | undefined)?.dispatcher;
-        return Promise.resolve(folderFoundResponse());
-      });
+    fetchSpy.mockImplementation((_url, init) => {
+      dispatcher = (init as { dispatcher?: unknown } | undefined)?.dispatcher;
+      return Promise.resolve(folderFoundResponse());
+    });
     const client = new CisoAssistantClient(baseConn);
     await expect(client.ensureFolder()).resolves.toBe("folder-1");
     expect(dispatcher).toBeInstanceOf(Agent);
@@ -161,12 +178,10 @@ describe("CisoAssistantClient - garde SSRF + epinglage IP (anti DNS-rebinding)",
   it("reutilise le MEME agent epingle tant que la resolution ne change pas (pas de fuite de pool)", async () => {
     mockLookup.mockResolvedValue([{ address: "93.184.216.34", family: 4 }]);
     const seen: unknown[] = [];
-    fetchSpy = vi
-      .spyOn(globalThis, "fetch")
-      .mockImplementation((_url, init) => {
-        seen.push((init as { dispatcher?: unknown } | undefined)?.dispatcher);
-        return Promise.resolve(folderFoundResponse());
-      });
+    fetchSpy.mockImplementation((_url, init) => {
+      seen.push((init as { dispatcher?: unknown } | undefined)?.dispatcher);
+      return Promise.resolve(folderFoundResponse());
+    });
     const client = new CisoAssistantClient(baseConn);
     await client.ensureFolder();
     await client.ensureFolder();
@@ -177,12 +192,10 @@ describe("CisoAssistantClient - garde SSRF + epinglage IP (anti DNS-rebinding)",
 
   it("RECONSTRUIT l'agent epingle quand la resolution change (DNS legitimement mis a jour)", async () => {
     const seen: unknown[] = [];
-    fetchSpy = vi
-      .spyOn(globalThis, "fetch")
-      .mockImplementation((_url, init) => {
-        seen.push((init as { dispatcher?: unknown } | undefined)?.dispatcher);
-        return Promise.resolve(folderFoundResponse());
-      });
+    fetchSpy.mockImplementation((_url, init) => {
+      seen.push((init as { dispatcher?: unknown } | undefined)?.dispatcher);
+      return Promise.resolve(folderFoundResponse());
+    });
     const client = new CisoAssistantClient(baseConn);
     mockLookup.mockResolvedValue([{ address: "93.184.216.34", family: 4 }]);
     await client.ensureFolder();

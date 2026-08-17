@@ -18,7 +18,21 @@
 // SSL : verifySSL=false pour les certs auto-signes en local. Node natif
 // utilise https.Agent avec rejectUnauthorized=false dans ce cas.
 
-import { Agent } from "undici";
+// `fetch` vient d'UNDICI et non du global, et ce n'est pas un detail de style.
+//
+// On passe un `Agent` du paquet npm `undici` comme dispatcher. Le fetch global
+// de Node est adosse a l'undici EMBARQUE dans Node, d'une autre version : il
+// transmet au dispatcher un handler conforme a SON interface. Les deux
+// coincidaient jusqu'a undici 7 ; la 8 a change l'interface et rejette ce
+// handler avec `InvalidArgumentError: invalid onRequestStart method`.
+//
+// Mesure du 2026-08-17 sur undici 8.10.0, meme Agent epingle :
+//   fetch global de Node -> ECHEC invalid onRequestStart method
+//   fetch d'undici       -> HTTP 200
+//
+// Prendre le fetch d'undici garantit que les deux moities viennent du meme
+// paquet, quelle que soit la version embarquee par Node.
+import { Agent, fetch as fetchUndici } from "undici";
 import { lookup } from "node:dns/promises";
 import { buildPinnedAgent, type PinnedAddress } from "@/lib/net/pinned-agent";
 import type { CisoEvidence } from "./build-bundle";
@@ -52,7 +66,10 @@ function embeddedIpv4(addr: string): string | null {
 }
 
 export function isForbiddenCisoIp(ip: string): boolean {
-  const addr = ip.trim().toLowerCase().replace(/^\[|\]$/g, "");
+  const addr = ip
+    .trim()
+    .toLowerCase()
+    .replace(/^\[|\]$/g, "");
   if (addr.includes(":")) {
     if (addr === "::1" || addr === "::") return true; // loopback / unspecified
     // fe80::/10 COMPLET (pas juste fe80:) -> link-local + metadata cloud.
@@ -268,7 +285,10 @@ export class CisoAssistantClient {
     // fetch() de Next.js (undici sous-jacent).
     (init as RequestInit & { dispatcher?: unknown }).dispatcher =
       this.pinnedDispatcher(addresses);
-    return fetch(`${this.conn.baseUrl}${path}`, init);
+    return fetchUndici(
+      `${this.conn.baseUrl}${path}`,
+      init as never,
+    ) as unknown as Promise<Response>;
   }
 
   /** Auth Knox via /api/iam/login/. */
@@ -287,10 +307,7 @@ export class CisoAssistantClient {
     const data = (await r.json()) as { token?: string; access?: string };
     const token = data.token ?? data.access;
     if (!token) {
-      throw new CisoError(
-        "schema_error",
-        "Reponse /login/ sans champ 'token'",
-      );
+      throw new CisoError("schema_error", "Reponse /login/ sans champ 'token'");
     }
     this.token = token;
   }
@@ -299,10 +316,7 @@ export class CisoAssistantClient {
   async ensureFolder(): Promise<string> {
     const r = await this.request("GET", "/api/folders/");
     if (r.status !== 200) {
-      throw new CisoError(
-        "unknown",
-        `GET /api/folders/ failed: ${r.status}`,
-      );
+      throw new CisoError("unknown", `GET /api/folders/ failed: ${r.status}`);
     }
     const data = (await r.json()) as {
       results?: Array<{ id: string; name: string }>;
@@ -343,10 +357,7 @@ export class CisoAssistantClient {
       `/api/evidences/?folder=${encodeURIComponent(this.folderId)}`,
     );
     if (r.status !== 200) {
-      throw new CisoError(
-        "unknown",
-        `GET /api/evidences/ failed ${r.status}`,
-      );
+      throw new CisoError("unknown", `GET /api/evidences/ failed ${r.status}`);
     }
     const data = (await r.json()) as {
       results?: Array<{ id: string; name: string }>;
@@ -376,9 +387,10 @@ export class CisoAssistantClient {
       throw new Error("loadExistingEvidences() must be called first");
     }
     const ref = evidence.control_ref;
-    const name = `Humanix · ${ref} · ${
-      evidence.control_name ?? ref
-    }`.slice(0, 255);
+    const name = `Humanix · ${ref} · ${evidence.control_name ?? ref}`.slice(
+      0,
+      255,
+    );
 
     // URL relative Humanix -> absolue (URLField Django exige absolue).
     // Defensive : si le prefixage produit toujours une URL relative (ex:
@@ -477,7 +489,11 @@ export class CisoAssistantClient {
    */
   async ensureAppliedControl(framework: string): Promise<string | null> {
     if (!this.folderId) return null;
-    const name = `Programme de sensibilisation Humanix Académie · ${framework}`.slice(0, 255);
+    const name =
+      `Programme de sensibilisation Humanix Académie · ${framework}`.slice(
+        0,
+        255,
+      );
     const description =
       `Contrôle appliqué synthétisant la couverture Humanix Académie ` +
       `pour le référentiel ${framework}. Les evidences attachées proviennent ` +
@@ -545,7 +561,10 @@ export class CisoAssistantClient {
    */
   async ensureFindingsAssessment(framework: string): Promise<string | null> {
     if (!this.folderId) return null;
-    const name = `Audit sensibilisation Humanix Académie · ${framework}`.slice(0, 255);
+    const name = `Audit sensibilisation Humanix Académie · ${framework}`.slice(
+      0,
+      255,
+    );
     const list = await this.request(
       "GET",
       `/api/findings-assessments/?folder=${encodeURIComponent(this.folderId)}`,
@@ -668,8 +687,7 @@ export class CisoAssistantClient {
       const data = (await userList.json()) as any;
       const items = data.results ?? (Array.isArray(data) ? data : []);
       const exact = items.find(
-        (u: any) =>
-          (u.email ?? "").toLowerCase() === ownerEmail.toLowerCase(),
+        (u: any) => (u.email ?? "").toLowerCase() === ownerEmail.toLowerCase(),
       );
       if (exact) userId = exact.id;
     }
@@ -722,7 +740,10 @@ export class CisoAssistantClient {
     riskMatrixId: string,
   ): Promise<string | null> {
     if (!this.folderId) return null;
-    const name = `Audit risque humain Humanix Académie · ${framework}`.slice(0, 255);
+    const name = `Audit risque humain Humanix Académie · ${framework}`.slice(
+      0,
+      255,
+    );
     const list = await this.request(
       "GET",
       `/api/risk-assessments/?folder=${encodeURIComponent(this.folderId)}`,
@@ -757,7 +778,11 @@ export class CisoAssistantClient {
     triggers: string[]; // descriptions des seuils franchis
   }): Promise<{ ok: boolean; action?: "POST" | "PATCH"; id?: string }> {
     if (!this.folderId) return { ok: false };
-    const name = `Compromission via couche humaine sous-formée · ${args.framework}`.slice(0, 255);
+    const name =
+      `Compromission via couche humaine sous-formée · ${args.framework}`.slice(
+        0,
+        255,
+      );
     const description =
       `Scénario généré automatiquement par Humanix Académie suite aux ` +
       `triggers suivants :\n${args.triggers.map((t) => "  - " + t).join("\n")}\n\n` +
@@ -1022,7 +1047,11 @@ export class CisoAssistantClient {
       ...(args.teamEmail && { team_email: args.teamEmail }),
     };
     if (existing) {
-      const r = await this.request("PATCH", `/api/teams/${existing.id}/`, payload);
+      const r = await this.request(
+        "PATCH",
+        `/api/teams/${existing.id}/`,
+        payload,
+      );
       if ([200, 201].includes(r.status)) {
         return { ok: true, action: "PATCH", id: existing.id };
       }
@@ -1148,8 +1177,7 @@ export class CisoAssistantClient {
     unitName?: "count" | "percentage" | "score" | "users" | "days" | "hours";
     labelIds?: string[]; // FilteringLabel ids deja resolus
   }): Promise<{ id: string | null; status?: number; error?: string }> {
-    if (!this.folderId)
-      return { id: null, error: "folderId manquant" };
+    if (!this.folderId) return { id: null, error: "folderId manquant" };
     const list = await this.request(
       "GET",
       `/api/metrology/metric-definitions/?ref_id=${encodeURIComponent(args.refId)}`,
@@ -1221,9 +1249,10 @@ export class CisoAssistantClient {
       higher_is_better: args.higherIsBetter ?? true,
       provider: "Humanix Académie",
       ...(unitId && { unit: unitId }),
-      ...(args.labelIds && args.labelIds.length > 0 && {
-        filtering_labels: args.labelIds,
-      }),
+      ...(args.labelIds &&
+        args.labelIds.length > 0 && {
+          filtering_labels: args.labelIds,
+        }),
       ...(args.defaultTarget !== undefined && {
         default_target: args.defaultTarget,
       }),
@@ -1297,9 +1326,10 @@ export class CisoAssistantClient {
       description: `Mesure Humanix Académie pour ${args.framework}, alimentée automatiquement à chaque sync.`,
       folder: this.folderId,
       metric_definition: args.metricDefinitionId,
-      ...(args.labelIds && args.labelIds.length > 0 && {
-        filtering_labels: args.labelIds,
-      }),
+      ...(args.labelIds &&
+        args.labelIds.length > 0 && {
+          filtering_labels: args.labelIds,
+        }),
       status: "active",
       collection_frequency: "monthly",
       ...(args.targetValue !== undefined && { target_value: args.targetValue }),
@@ -1327,12 +1357,16 @@ export class CisoAssistantClient {
     value: number;
     observation?: string;
   }): Promise<{ ok: boolean; id?: string; status?: number; error?: string }> {
-    const r = await this.request("POST", "/api/metrology/custom-metric-samples/", {
-      metric_instance: args.metricInstanceId,
-      timestamp: new Date().toISOString(),
-      value: { result: args.value },
-      ...(args.observation && { observation: args.observation }),
-    });
+    const r = await this.request(
+      "POST",
+      "/api/metrology/custom-metric-samples/",
+      {
+        metric_instance: args.metricInstanceId,
+        timestamp: new Date().toISOString(),
+        value: { result: args.value },
+        ...(args.observation && { observation: args.observation }),
+      },
+    );
     if ([200, 201].includes(r.status)) {
       const created = (await r.json()) as { id: string };
       return { ok: true, id: created.id };
@@ -1363,7 +1397,10 @@ export class CisoAssistantClient {
     if (!this.folderId) return { ok: false };
     const refId = `humanix-${args.framework}-${args.refDate}`.slice(0, 100);
     const name =
-      `Risque humain : ${args.nbNonCompliant} contrôle(s) non conforme(s) sur ${args.framework}`.slice(0, 255);
+      `Risque humain : ${args.nbNonCompliant} contrôle(s) non conforme(s) sur ${args.framework}`.slice(
+        0,
+        255,
+      );
     const description =
       `Détection automatique Humanix Académie.\n` +
       `Référentiel : ${args.framework}\n` +
@@ -1458,7 +1495,7 @@ export class CisoAssistantClient {
     };
     (init as RequestInit & { dispatcher?: unknown }).dispatcher =
       this.pinnedDispatcher(addresses);
-    const r = await fetch(url, init);
+    const r = await fetchUndici(url, init as never);
     if ([200, 201, 204].includes(r.status)) {
       return { ok: true };
     }
@@ -1483,8 +1520,7 @@ export class CisoAssistantClient {
     status?: number;
     error?: string;
   }> {
-    if (!this.folderId)
-      return { ok: false, error: "folderId manquant" };
+    if (!this.folderId) return { ok: false, error: "folderId manquant" };
     const name = "Personnel · Couche humaine Humanix Académie";
     const description =
       "Asset primaire représentant la couche humaine du tenant : collaborateurs, " +
@@ -1564,8 +1600,7 @@ export class CisoAssistantClient {
     status?: number;
     error?: string;
   }> {
-    if (!this.folderId)
-      return { ok: false, error: "folderId manquant" };
+    if (!this.folderId) return { ok: false, error: "folderId manquant" };
     const list = await this.request(
       "GET",
       `/api/threats/?folder=${encodeURIComponent(this.folderId)}&ref_id=${encodeURIComponent(args.refId)}`,
@@ -1636,8 +1671,7 @@ export class CisoAssistantClient {
     status?: number;
     error?: string;
   }> {
-    if (!this.folderId)
-      return { ok: false, error: "folderId manquant" };
+    if (!this.folderId) return { ok: false, error: "folderId manquant" };
     const list = await this.request(
       "GET",
       `/api/metrology/dashboards/?folder=${encodeURIComponent(this.folderId)}`,
