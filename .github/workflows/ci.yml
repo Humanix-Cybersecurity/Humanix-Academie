@@ -329,7 +329,11 @@ jobs:
         run: npm ci --ignore-scripts
 
       - name: Audit production dependencies (HIGH/CRITICAL only)
-        run: npm audit --omit=dev --audit-level=high
+        # Passe par le script et non `npm audit` directement : il applique les
+        # acceptations DATEES de .trivyignore.yaml, source unique partagee
+        # avec Trivy. Une acceptation perimee fait echouer meme si l'avis a
+        # disparu -- elle ne peut donc pas dormir.
+        run: node scripts/audit-npm.mjs --omit-dev
 
       # Le depot porte DEUX verrous, et cette etape n'auditait que la racine.
       #
@@ -352,7 +356,7 @@ jobs:
       #
       # `--prefix` et non `cd` : l'echec doit remonter au job.
       - name: Audit connectors/mcp-server (dev inclus, cf. ci-dessus)
-        run: npm audit --prefix connectors/mcp-server --audit-level=high
+        run: node scripts/audit-npm.mjs --prefix connectors/mcp-server
 
   # ---------------------------------------------------------------------------
   # Job : Validation MDX <-> catalogue

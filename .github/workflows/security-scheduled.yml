@@ -84,7 +84,11 @@ jobs:
       # Pas de `npm ci` : `npm audit` travaille sur package-lock.json.
       # On évite d'installer 600+ paquets pour une vérification de lockfile.
       - name: Audit HIGH/CRITICAL (production uniquement)
-        run: npm audit --omit=dev --audit-level=high
+        # Passe par le script et non `npm audit` directement : il applique les
+        # acceptations DATEES de .trivyignore.yaml, source unique partagee
+        # avec Trivy. Une acceptation perimee fait echouer meme si l'avis a
+        # disparu -- elle ne peut donc pas dormir.
+        run: node scripts/audit-npm.mjs --omit-dev
 
       - name: Rapport détaillé si échec
         if: failure()
