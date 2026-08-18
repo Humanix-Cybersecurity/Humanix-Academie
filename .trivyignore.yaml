@@ -48,7 +48,32 @@
 #     runtime (le stage `runner` copie aujourd'hui TOUT node_modules).
 
 vulnerabilities:
-  # --- Paquets embarques dans npm (image de base node:25-alpine) -------
+  # --- Dependance de production, sans correctif amont ------------------
+  #
+  # Seule entree de ce fichier qui touche une dependance de PRODUCTION.
+  # Les autres viennent de l'image de base ou de l'outillage de build.
+  #
+  # `deepmerge-ts` arrive par @prisma/config -> prisma. TOUTES les versions
+  # de Prisma l'epinglent en 7.1.5 EXACTEMENT, y compris la 7.9.1 : il n'y
+  # a donc aucune sortie par le haut, et le downgrade propose par
+  # `npm audit fix --force` est cassant.
+  #
+  # `prisma` ne peut pas passer en devDependencies : docker-entrypoint.sh
+  # execute `prisma db push` au demarrage du conteneur.
+  #
+  # deepmerge-ts 8.0.1 corrige l'avis. Publiee le 2026-08-16, elle sort de
+  # notre quarantaine (min-release-age=7) le 2026-08-23. L'expiration est
+  # posee au 24 pour laisser un jour de marge.
+  #
+  # A FAIRE LE 2026-08-23 : `npm i` avec un override deepmerge-ts@^8.0.1,
+  # verifier que `prisma --version` et `prisma db push --help` repondent,
+  # puis SUPPRIMER cette entree.
+  - id: CVE-2026-40345
+    ghsa: GHSA-ggr8-5vv4-36mx # meme avis, identifiant npm
+    statement: "@prisma/config ne fusionne que prisma.config.ts, jamais une entree utilisateur. Epuisement de pile non atteignable."
+    expired_at: 2026-08-24
+
+  # --- Paquets embarques dans npm (image de base node (24-alpine depuis le 2026-08-17)) -------
   - id: CVE-2026-59873 # tar : DoS via bombe gzip (CRITICAL)
     statement: "npm bundle (image de base). npx requis au demarrage, n'ouvre que des archives locales de confiance."
     expired_at: 2026-09-15
