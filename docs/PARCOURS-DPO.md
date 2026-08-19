@@ -138,18 +138,41 @@ C'est le choix le plus économe, et le plus cohérent avec le métier.
 **L'état par étape**
 
 ```prisma
-model EtapeParcoursDpo {
-  id       String   @id @default(cuid())
-  tenantId String
-  userId   String   // le parcours suit UNE personne, pas une organisation
-  cle      String   // "registre-cinq-traitements", "durees-conservation", ...
-  statut   String   // a_faire | en_cours | fait | sans_objet
-  note     String?  // « fait pour la paie, reste le recrutement »
-  majLe    DateTime @updatedAt
+// CE QUI APPARTIENT A LA PERSONNE — part avec elle.
+// « J'ai compris ce qu'est le RGPD », « j'ai suivi l'introduction ».
+model EtapeApprentissageDpo {
+  id     String   @id @default(cuid())
+  userId String
+  cle    String
+  statut String   // a_faire | en_cours | fait
+  majLe  DateTime @updatedAt
 
   @@unique([userId, cle])
 }
+
+// CE QUI DECRIT L'ENTREPRISE — reste, et sert au successeur.
+// « Notre registre liste cinq traitements », « nos durees sont fixees ».
+model EtapeConformiteTenant {
+  id       String    @id @default(cuid())
+  tenantId String
+  cle      String
+  statut   String    // a_faire | en_cours | fait | sans_objet
+  note     String?   // « fait pour la paie, reste le recrutement »
+  majPar   String?   // qui a change le statut, pour le journal d'audit
+  majLe    DateTime  @updatedAt
+
+  @@unique([tenantId, cle])
+}
 ```
+
+**Deux tables et non une colonne `portee`.** Un seul modele avec `userId`
+nullable rendrait la contrainte d'unicite inoperante : PostgreSQL considere deux
+`NULL` comme distincts, donc rien n'empecherait de creer dix fois la meme etape
+d'entreprise.
+
+Chaque etape du catalogue declare sa portee. L'interface les affiche dans le
+meme fil -- la personne ne voit qu'un parcours -- mais elles ne vivent pas au
+meme endroit, et ne disparaissent pas ensemble.
 
 Le catalogue des étapes reste **dans le code** : c'est de la doctrine, elle suit
 la loi, elle se relit et se diffe comme du contenu pédagogique.
@@ -237,24 +260,22 @@ attachées à un compte anonymisé. Il faut donc les supprimer explicitement lor
 de l'anonymisation — sinon une progression fantôme reste en base, sans personne
 derrière.
 
-⚠️ **Une question reste ouverte, et elle mérite d'être tranchée avant de coder.**
-Le parcours mélange deux natures :
+**TRANCHE : ce qui décrit l'entreprise reste au niveau du tenant.**
+
+Le parcours mélange deux natures, et elles n'ont pas le même propriétaire :
 
 - _« j'ai compris ce qu'est le RGPD »_ → appartient à la personne, part avec
-  elle ;
-- _« notre registre liste cinq traitements »_ → décrit **l'entreprise**, et son
-  successeur en aurait besoin.
+  elle à l'anonymisation ;
+- _« notre registre liste cinq traitements »_ → décrit **l'entreprise**, reste,
+  et sert au successeur.
 
-Tout effacer fait repartir le suivant de zéro. Une piste : conserver au niveau
-du tenant les étapes qui décrivent l'organisation, et laisser partir celles qui
-décrivent l'apprentissage. À arbitrer.
+Le successeur ne repart donc pas de zéro : il retrouve où en est l'organisation,
+et refait seulement son propre apprentissage. C'est exactement ce qu'on veut —
+la mémoire de la conformité ne doit pas tenir dans une seule tête.
 
 ---
 
 ## 8. Reste à préciser
-
-**Le sort des étapes qui décrivent l'entreprise** quand la personne part
-(cf. section 7). C'est le seul point bloquant avant de coder.
 
 **La validation terrain des étapes.** Décidée, pas encore faite. Elle peut se
 mener en parallèle de l'écriture : la structure ne dépend pas de l'ordre exact,
