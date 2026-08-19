@@ -121,10 +121,11 @@ quelle échéance.
 
 ## Ordre proposé
 
-1. **Questionnaire sécurité client** — déblocage de vente, aucun concurrent
-   dessus ;
-2. **Parcours complet par un œil neuf**, base vérifiée à l'appui ;
-3. **Site web de l'entreprise** — parle à qui n'a pas de DSI ;
+1. ~~**Questionnaire sécurité client** — déblocage de vente, aucun concurrent
+   dessus~~ — **livré** le 2026-08-19, 6 épisodes, ordre 59 ;
+2. ~~**Parcours complet par un œil neuf**~~ — écarté par l'utilisateur ;
+3. ~~**Site web de l'entreprise** — parle à qui n'a pas de DSI~~ — **livré**
+   le 2026-08-19, 6 épisodes, 40 min, ordre 60 ;
 4. **Facturation électronique** — fenêtre de recherche à ne pas rater ;
 5. **Secteurs commerce et BTP** — volume ;
 6. **Assurance cyber** — étendre l'épisode existant en saison.
