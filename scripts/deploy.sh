@@ -421,6 +421,28 @@ if [ "$MOTEUR_BIN" = "podman" ] && [ -n "$CONTENEUR_AVANT" ]; then
   #
   # `--depend` retire le conteneur ET ceux qui en dependent, ici vector.
   # D'ou le `up -d` complet plus bas : il faut les faire revenir.
+  # --- PREPARATION AVANT COUPURE -------------------------------------------
+  #
+  # Schema, migrations legacy, seed du catalogue, bootstrag admin : toutes ces
+  # etapes mutent l'etat PARTAGE, et elles tournaient jusqu'ici au demarrage du
+  # conteneur applicatif -- donc PENDANT la coupure, allongeant d'autant le
+  # temps ou le service ne repond pas.
+  #
+  # On les execute maintenant AVANT de retirer l'ancien conteneur, dans un
+  # conteneur jetable bati sur la nouvelle image. L'ancienne version continue
+  # de servir le trafic pendant ce temps.
+  #
+  # C'est aussi le prealable a une bascule sans coupure : deux versions ne
+  # peuvent cohabiter que si aucune des deux ne modifie le schema en demarrant.
+  #
+  # Si cette etape echoue, on s'arrete AVANT d'avoir touche au service en
+  # place : l'ancienne version reste debout, intacte.
+  log "Preparation de l'etat partage (schema, seeds) sur l'ancienne version en ligne ..."
+  if ! $COMPOSE run --rm --no-deps app ./docker-entrypoint.sh preparer; then
+    die "preparation echouee -- rien n'a ete touche, l'ancienne version sert toujours" 7
+  fi
+  log "  -> etat partage a jour, la coupure ne portera plus que le redemarrage"
+
   log "Retrait du conteneur app et de ses dependants (podman) ..."
   $MOTEUR_BIN rm -f --depend "$CONTENEUR_APP" >/dev/null 2>&1 \
     || die "retrait de $CONTENEUR_APP impossible -- livraison interrompue" 6
