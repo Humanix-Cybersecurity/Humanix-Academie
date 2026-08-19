@@ -122,6 +122,74 @@ preparer_etat_partage() {
   fi
 }
 
+# -----------------------------------------------------------------------------
+# GARDE : la base correspond-elle au schema du code ?
+#
+# POURQUOI
+#
+#   Depuis que la preparation est sortie du demarrage, le conteneur SUPPOSE que
+#   quelqu'un l'a faite. Si l'etape de deploiement ne s'execute pas -- script
+#   pas encore a jour, erreur avalee, lancement manuel oublie -- l'application
+#   demarre quand meme et repond normalement, contre une base non migree.
+#
+#   C'est arrive le 2026-08-19 : un deploiement complet n'a rien prepare, et
+#   rien ne l'a signale. Le service etait « healthy ». Ce jour-la le schema
+#   n'avait pas change, donc sans consequence. La fois suivante, non.
+#
+#   Un service qui repond faux est pire qu'un service qui refuse de demarrer.
+#
+# COMMENT
+#
+#   `prisma migrate diff` compare la base VIVANTE (--from-schema-datasource,
+#   qui lit l'URL du datasource) au schema du CODE (--to-schema-datamodel).
+#   Avec --exit-code : 0 = en phase, 2 = derive, 1 = erreur de l'outil.
+#
+# QUE FAIRE EN CAS DE DERIVE
+#
+#   Pas de contournement dedie, et c'est deliberé : la sortie de secours est
+#   HUMANIX_PREPARER_AU_DEMARRAGE=true, qui fait preparer le conteneur
+#   lui-meme. C'est la vraie correction, pas un interrupteur qui masque.
+# -----------------------------------------------------------------------------
+verifier_schema() {
+  echo "[garde] Verification : la base correspond-elle au schema du code ?"
+  ./node_modules/.bin/prisma migrate diff \
+    --from-schema-datasource ./prisma/schema.prisma \
+    --to-schema-datamodel ./prisma/schema.prisma \
+    --exit-code >/dev/null 2>&1
+  code=$?
+
+  if [ "$code" -eq 0 ]; then
+    echo "  -> base en phase avec le schema."
+    return 0
+  fi
+
+  if [ "$code" -eq 2 ]; then
+    echo ""
+    echo "  =============================================="
+    echo "  DEMARRAGE REFUSE : la base ne correspond pas au schema du code."
+    echo "  =============================================="
+    echo ""
+    echo "  La preparation n'a pas ete faite pour cette version."
+    echo ""
+    echo "  Corriger :   ./scripts/deploy.sh <demo|prod>"
+    echo "  Ou seul  :   compose run --rm --no-deps app preparer"
+    echo ""
+    echo "  En dernier recours, poser HUMANIX_PREPARER_AU_DEMARRAGE=true :"
+    echo "  le conteneur preparera lui-meme au demarrage."
+    echo ""
+    exit 1
+  fi
+
+  # Code 1 : l'outil n'a pas su repondre. On NE bloque PAS.
+  #
+  # Un signal ambigu ne doit pas coucher un service sain -- une base
+  # momentanement lente au demarrage suffirait a rendre le conteneur
+  # inredemarrable, y compris apres un reboot. On demarre, en le disant fort.
+  echo "  -> AVERTISSEMENT : verification impossible (code $code)."
+  echo "     Le demarrage continue, mais la conformite du schema n'est PAS etablie."
+  return 0
+}
+
 if [ "$1" = "preparer" ]; then
   attendre_postgres
   preparer_etat_partage
@@ -136,6 +204,8 @@ if [ "$HUMANIX_PREPARER_AU_DEMARRAGE" = "false" ]; then
   echo "[preparation] Ignoree : HUMANIX_PREPARER_AU_DEMARRAGE=false."
   echo "              Le schema et les donnees partagees sont supposes deja a jour"
   echo "              (cf. l'etape de preparation de scripts/deploy.sh)."
+  # « Supposes » ne suffit pas : on verifie.
+  verifier_schema
 else
   preparer_etat_partage
 fi
