@@ -15,9 +15,13 @@
 //   - DELETE AuditLog > seuil    SAUF actions critiques (cf. PROTECTED_AUDIT_ACTIONS)
 //   - ANONYMIZE User inactif    (email/name/IP vides, ID conserve pour
 //                                 integrite FK Progress / Event)
+//   - DELETE EtapeApprentissageDpo du user : son parcours de conformite
+//                                 part avec lui (cf. docs/PARCOURS-DPO.md)
 //
 // CE QU'ON GARDE :
 //   - Progress (parcours pedago anonyme apres anonymisation user)
+//   - EtapeConformiteTenant : decrit l'ENTREPRISE, pas la personne. Reste
+//     pour son successeur.
 //   - Stats agregees (cyber-meteo, scores tenant)
 //   - AuditLog d'actions critiques : TENANT_*, USER_DELETED,
 //     DATA_ERASURE_*, BILLING_* (preuve fiscale = 10 ans), DATA_RETENTION_*
@@ -95,7 +99,10 @@ export function isValidRetentionDays(days: number): boolean {
  *
  * Exporte pour testabilite (cf. data-retention.test.ts).
  */
-export function cutoffFromRetention(days: number, now: Date = new Date()): Date {
+export function cutoffFromRetention(
+  days: number,
+  now: Date = new Date(),
+): Date {
   const cutoff = new Date(now);
   cutoff.setUTCDate(cutoff.getUTCDate() - days);
   return cutoff;
@@ -136,8 +143,8 @@ export async function previewPurge(
   }
   const cutoff = cutoffFromRetention(tenant.dataRetentionDays, now);
 
-  const [eventsToDelete, auditLogsToDelete, candidateUsers] =
-    await Promise.all([
+  const [eventsToDelete, auditLogsToDelete, candidateUsers] = await Promise.all(
+    [
       db.event.count({
         where: { tenantId, createdAt: { lt: cutoff } },
       }),
@@ -159,18 +166,12 @@ export async function previewPurge(
               AND: [
                 { lastSeenAt: { lt: cutoff } },
                 {
-                  OR: [
-                    { lastLoginAt: { lt: cutoff } },
-                    { lastLoginAt: null },
-                  ],
+                  OR: [{ lastLoginAt: { lt: cutoff } }, { lastLoginAt: null }],
                 },
               ],
             },
             {
-              AND: [
-                { lastSeenAt: null },
-                { lastLoginAt: { lt: cutoff } },
-              ],
+              AND: [{ lastSeenAt: null }, { lastLoginAt: { lt: cutoff } }],
             },
             {
               AND: [
@@ -183,7 +184,8 @@ export async function previewPurge(
         },
         select: { id: true, email: true },
       }),
-    ]);
+    ],
+  );
 
   // Filtre cote app : pas deja anonymises.
   const usersToAnonymize = candidateUsers.filter(
@@ -273,13 +275,23 @@ export async function executePurge(
     },
     select: { id: true, email: true },
   });
-  const toAnonymize = candidateUsers.filter(
-    (u) => !isAnonymizedEmail(u.email),
-  );
+  const toAnonymize = candidateUsers.filter((u) => !isAnonymizedEmail(u.email));
 
   let usersAnonymized = 0;
   for (const u of toAnonymize) {
     try {
+      // Le parcours de conformite d'une personne PART AVEC ELLE.
+      //
+      // L'anonymisation vide l'email et le nom mais CONSERVE l'identifiant,
+      // pour l'integrite referentielle de Progress et Event. Sans cette
+      // suppression, les etapes d'apprentissage survivraient attachees a un
+      // compte sans personne derriere : une progression fantome.
+      //
+      // On ne touche PAS a EtapeConformiteTenant : ces etapes decrivent
+      // l'entreprise, pas la personne, et servent a son successeur. La
+      // memoire de la conformite ne doit pas tenir dans une seule tete.
+      await db.etapeApprentissageDpo.deleteMany({ where: { userId: u.id } });
+
       await db.user.update({
         where: { id: u.id },
         data: {
@@ -299,10 +311,7 @@ export async function executePurge(
     } catch (e) {
       // Conflit potentiel sur l'email (rare, anciens IDs) : on logge et
       // on continue sur le suivant.
-      console.warn(
-        `[data-retention] anonymization failed for user ${u.id}`,
-        e,
-      );
+      console.warn(`[data-retention] anonymization failed for user ${u.id}`, e);
     }
   }
 
