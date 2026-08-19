@@ -496,8 +496,12 @@ if [ "$MOTEUR_BIN" = "podman" ]; then
   log "Bascule : ${CONTENEUR_SORTANT} -> ${CONTENEUR_CIBLE} (port ${PORT_CIBLE})"
 
   # Une couleur cible laissee par une livraison precedente fausserait tout.
-  # `--depend` est sans danger ICI : l'autre couleur sert le trafic, et si
-  # vector s'accrochait a celle-ci, le `up -d app` juste apres le ramene.
+  #
+  # `--depend` emporte les dependants -- vector declare `depends_on: app`. Le
+  # service applicatif n'en souffre pas : l'autre couleur sert le trafic. Mais
+  # vector, lui, NE REVIENT PAS TOUT SEUL : `up -d --no-deps app` saute les
+  # dependances, et vector n'est pas une dependance de app, c'en est un
+  # dependant. On le ramene donc explicitement en fin de bascule.
   $MOTEUR_BIN rm -f --depend "$CONTENEUR_CIBLE" >/dev/null 2>&1 || true
 
   # `--no-deps` : sans lui, compose relance AUSSI postgres et tts. Mesure du
@@ -552,6 +556,26 @@ if [ "$MOTEUR_BIN" = "podman" ]; then
     # L'ancienne couleur reste en place, arretee. La prochaine livraison qui
     # la visera la retirera avant de la recreer.
     $MOTEUR_BIN stop "$CONTENEUR_SORTANT" >/dev/null 2>&1 || true
+  fi
+
+  # Ramener les dependants emportes par le `--depend` ci-dessus.
+  #
+  # Constate le 2026-08-19 : apres une bascule, vector avait purement disparu
+  # -- pas arrete, SUPPRIME -- et l'observabilite de production etait muette
+  # sans que rien ne le signale. C'est exactement ce que la regle « homme
+  # mort » de docs/ALERTES-GRAFANA.md doit rattraper, mais mieux vaut ne pas
+  # avoir a compter dessus.
+  #
+  # `--no-deps` pour ne PAS recreer l'applicatif : c'est ce qui avait fait
+  # tomber les deux couleurs ensemble a la premiere version de cette bascule.
+  #
+  # Toutes les piles n'ont pas vector (la demo n'en a pas) : son absence du
+  # fichier compose n'est pas une erreur de livraison.
+  if $COMPOSE config --services 2>/dev/null | grep -qx vector; then
+    log "Retour des dependants (vector) ..."
+    APP_COULEUR="$COULEUR_CIBLE" APP_HOST_PORT="$PORT_CIBLE" \
+      $COMPOSE up -d --no-deps vector \
+      || log "  -> vector n'est pas reparti, observabilite a verifier"
   fi
 
   # La verification qui suit doit porter sur le conteneur reellement en service.
