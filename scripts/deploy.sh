@@ -408,7 +408,7 @@ $COMPOSE build app || die "build echoue" 5
 #
 # On retire donc le conteneur avant de le recreer. `|| true` : son absence
 # n'est pas une erreur, c'est le cas d'un premier deploiement.
-if [ "$MOTEUR_BIN" = "podman" ] && [ -n "$CONTENEUR_AVANT" ]; then
+if [ "$MOTEUR_BIN" = "podman" ]; then
   # `-f` NE SUFFIT PAS. Il force l'arret, pas la levee de la dependance :
   #
   #   Error: container <app> has dependent containers which must be removed
@@ -452,20 +452,118 @@ if [ "$MOTEUR_BIN" = "podman" ] && [ -n "$CONTENEUR_AVANT" ]; then
   fi
   log "  -> etat partage a jour, la coupure ne portera plus que le redemarrage"
 
-  log "Retrait du conteneur app et de ses dependants (podman) ..."
-  $MOTEUR_BIN rm -f --depend "$CONTENEUR_APP" >/dev/null 2>&1 \
-    || die "retrait de $CONTENEUR_APP impossible -- livraison interrompue" 6
-fi
+  # --- BASCULE BLEU/VERT ----------------------------------------------------
+  #
+  # On ne coupe plus. On demarre la couleur libre, on attend qu'elle reponde,
+  # HAProxy la voit monter et lui envoie du trafic, et SEULEMENT ENSUITE on
+  # arrete l'ancienne.
+  #
+  # /etc/haproxy/haproxy.cfg declare les deux couleurs par backend
+  # (prod_a:3000 / prod_b:3010, demo_a:3001 / demo_b:3011) avec
+  # `check inter 1s fall 2 rise 1`. Une couleur absente est simplement DOWN :
+  # la declarer ne coute rien.
+  #
+  # Le recouvrement -- les deux versions servent quelques secondes -- est
+  # assume. Il n'est sans danger que parce que la preparation du schema a eu
+  # lieu JUSTE AU-DESSUS : les deux versions parlent a une base deja migree.
+  PORT_A=3000
+  [ "$ENVIRONMENT" = "demo" ] && PORT_A=3001
 
-log "Redemarrage du service app ..."
-if [ "$MOTEUR_BIN" = "podman" ]; then
-  # PAS `--no-deps` : `--depend` vient de retirer vector avec app, et
-  # `--no-deps app` le laisserait au sol -- l'observabilite muette, sans
-  # que rien ne le signale. C'est deja arrive le 2026-08-14.
-  $COMPOSE up -d
+  # On cherche la couleur QUI SERT, pas celle qui existe.
+  #
+  # `container exists` renvoie vrai pour un conteneur ARRETE. Comme l'ancienne
+  # couleur reste en place apres la bascule, le script a cru le 2026-08-19 que
+  # `b` etait en service alors qu'elle etait arretee depuis la livraison
+  # precedente -- il a donc cible `a`, c'est-a-dire la couleur qui servait
+  # reellement, et l'a demolie. Quatre requetes en 502/503.
+  #
+  # `podman ps` ne liste que ce qui tourne.
+  COULEUR_ACTUELLE=""
+  if [ -n "$($MOTEUR_BIN ps --filter "name=^${CONTENEUR_APP}b$" --format '{{.Names}}' 2>/dev/null)" ]; then
+    COULEUR_ACTUELLE="b"
+  fi
+
+  if [ "$COULEUR_ACTUELLE" = "b" ]; then
+    COULEUR_CIBLE=""
+    PORT_CIBLE="$PORT_A"
+  else
+    COULEUR_CIBLE="b"
+    PORT_CIBLE=$((PORT_A + 10))
+  fi
+  CONTENEUR_CIBLE="${CONTENEUR_APP}${COULEUR_CIBLE}"
+  CONTENEUR_SORTANT="${CONTENEUR_APP}${COULEUR_ACTUELLE}"
+
+  log "Bascule : ${CONTENEUR_SORTANT} -> ${CONTENEUR_CIBLE} (port ${PORT_CIBLE})"
+
+  # Une couleur cible laissee par une livraison precedente fausserait tout.
+  # `--depend` est sans danger ICI : l'autre couleur sert le trafic, et si
+  # vector s'accrochait a celle-ci, le `up -d app` juste apres le ramene.
+  $MOTEUR_BIN rm -f --depend "$CONTENEUR_CIBLE" >/dev/null 2>&1 || true
+
+  # `--no-deps` : sans lui, compose relance AUSSI postgres et tts. Mesure du
+  # 2026-08-19 : les deux affichaient « Up 35 seconds » apres une bascule,
+  # c'est-a-dire qu'une livraison applicative redemarrait la base. Les sondes
+  # externes n'ont rien vu -- l'application a tenu -- mais redemarrer Postgres
+  # a chaque livraison n'a aucune raison d'etre.
+  APP_COULEUR="$COULEUR_CIBLE" APP_HOST_PORT="$PORT_CIBLE" \
+    $COMPOSE up -d --no-deps app || die "demarrage de la couleur cible impossible" 6
+
+  log "Attente de la nouvelle couleur sur 127.0.0.1:${PORT_CIBLE} ..."
+  cible_prete=false
+  attente=0
+  while [ "$attente" -lt "$HEALTH_WAIT" ]; do
+    if curl -sfo /dev/null "http://127.0.0.1:${PORT_CIBLE}/api/health" 2>/dev/null; then
+      cible_prete=true
+      break
+    fi
+    attente=$((attente + 1)); sleep 1
+  done
+
+  if [ "$cible_prete" != true ]; then
+    # L'ancienne couleur n'a pas ete touchee : le service tourne toujours.
+    $MOTEUR_BIN rm -f "$CONTENEUR_CIBLE" >/dev/null 2>&1 || true
+    die "la nouvelle couleur n'a pas repondu -- ancienne version toujours en service" 4
+  fi
+  log "  -> prete apres ${attente}s"
+
+  # Laisser HAProxy la constater. `rise 1` + `inter 1s` suffiraient ; on prend
+  # cinq secondes pour ne pas dependre du calage des sondes.
+  log "Attente de la prise en compte par HAProxy (5s) ..."
+  sleep 5
+
+  # Arret GRACIEUX : SIGTERM, Next.js termine les requetes en cours. HAProxy
+  # sort l'ancienne du pool en ~2s, et `option redispatch` (deja dans
+  # `defaults`) rejoue sur la couleur restante ce qui partirait entre-temps.
+  if $MOTEUR_BIN container exists "$CONTENEUR_SORTANT" 2>/dev/null; then
+    log "Arret gracieux de l'ancienne couleur ..."
+    # ON ARRETE, ON NE RETIRE PAS -- et c'est tout le sujet.
+    #
+    # Premiere version : `rm -f --depend` puis un `$COMPOSE up -d` pour ramener
+    # vector, qui declare `depends_on: app`. Ce `up -d` RECREAIT aussi le
+    # conteneur applicatif : mesure du 2026-08-19, les deux couleurs sont
+    # tombees ensemble a 12:53:51 et le site a rendu 503 pendant six secondes.
+    # La bascule fabriquait exactement la coupure qu'elle devait supprimer.
+    #
+    # Un conteneur simplement arrete ne declenche aucune dependance. Vector
+    # continue de tourner : son `depends_on` n'ordonne que le demarrage, et sa
+    # collecte passe par le socket podman, ou il decouvre les conteneurs de
+    # lui-meme.
+    #
+    # L'ancienne couleur reste en place, arretee. La prochaine livraison qui
+    # la visera la retirera avant de la recreer.
+    $MOTEUR_BIN stop "$CONTENEUR_SORTANT" >/dev/null 2>&1 || true
+  fi
+
+  # La verification qui suit doit porter sur le conteneur reellement en service.
+  CONTENEUR_APP="$CONTENEUR_CIBLE"
 else
+  # Moteur docker : pas de bascule. La topologie bleu/vert s'appuie sur
+  # `podman container exists` et sur les couleurs declarees cote HAProxy ;
+  # les piles internes tournent toutes sous podman depuis le 2026-08-14.
+  log "Redemarrage du service app (docker, sans bascule) ..."
   $COMPOSE up -d --no-deps app
 fi
+
 
 # --- Verifier ce qu'on a livre, plutot que de le supposer ----------------
 #
