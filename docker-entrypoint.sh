@@ -18,7 +18,9 @@ echo "  HumaniX Academy - Demarrage du conteneur"
 echo "  =============================================="
 echo ""
 
-# Attendre que Postgres soit pret
+# Attendre que Postgres soit pret. Appelee dans les deux modes : meme un
+# conteneur qui ne prepare rien a besoin d'une base joignable.
+attendre_postgres() {
 echo "[1/5] Attente Postgres..."
 RETRY=0
 until ./node_modules/.bin/prisma db execute --schema=./prisma/schema.prisma --stdin >/dev/null 2>&1 <<EOF
@@ -33,62 +35,109 @@ do
   sleep 1
 done
 echo "  -> Postgres pret"
+}
 
-# Sync du schema (db push : pas de migration formelle, parfait pour POC)
-echo "[2/5] Synchronisation du schema Prisma..."
-./node_modules/.bin/prisma db push --skip-generate --accept-data-loss
+# -----------------------------------------------------------------------------
+# PREPARATION : tout ce qui mute l'etat PARTAGE (schema + donnees communes).
+#
+# POURQUOI C'EST ISOLE
+#
+#   Une livraison sans coupure fait tourner DEUX versions de l'application en
+#   meme temps, le temps de basculer le trafic. Si chaque conteneur executait
+#   `prisma db push --accept-data-loss` a son demarrage, la nouvelle version
+#   modifierait le schema pendant que l'ancienne sert encore : un renommage ou
+#   une suppression de colonne la casserait instantanement, sans rien demander.
+#
+#   Ces etapes s'executent donc UNE FOIS, avant la bascule.
+#
+# COMMENT L'APPELER
+#
+#   docker-entrypoint.sh preparer      execute la preparation puis sort.
+#                                      C'est ce que fait scripts/deploy.sh.
+#
+#   HUMANIX_PREPARER_AU_DEMARRAGE=false
+#                                      le demarrage ne prepare plus rien et va
+#                                      directement a Next.js.
+#
+#   Par DEFAUT la preparation reste faite au demarrage : une installation
+#   auto-hebergee (Community Edition) doit continuer a marcher avec un simple
+#   `compose up`, sans etape supplementaire a connaitre.
+# -----------------------------------------------------------------------------
+preparer_etat_partage() {
+  # Sync du schema (db push : pas de migration formelle, parfait pour POC)
+  echo "[2/5] Synchronisation du schema Prisma..."
+  ./node_modules/.bin/prisma db push --skip-generate --accept-data-loss
 
-# Migrations legacy (idempotentes, no-op apres le 1er passage) :
-#   - migrate-legacy-trial.ts : retire l'ancien plan "trial" (pivot vente directe)
-#   - migrate-4-tiers-pivot.ts : passe de 5 paliers (decouverte/solo/essentielle/
-#     pro/premium) a 3 paliers (starter/pro/enterprise) - pivot mai 2026.
-echo "[2.5/5] Migrations legacy plans (idempotentes)..."
-node dist-scripts/scripts/migrate-legacy-trial.mjs || echo "  -> migrate-legacy-trial ignoree (non bloquante)"
-node dist-scripts/scripts/migrate-4-tiers-pivot.mjs || echo "  -> migrate-4-tiers-pivot ignoree (non bloquante)"
+  # Migrations legacy (idempotentes, no-op apres le 1er passage) :
+  #   - migrate-legacy-trial.ts : retire l'ancien plan "trial" (pivot vente directe)
+  #   - migrate-4-tiers-pivot.ts : passe de 5 paliers (decouverte/solo/essentielle/
+  #     pro/premium) a 3 paliers (starter/pro/enterprise) - pivot mai 2026.
+  echo "[2.5/5] Migrations legacy plans (idempotentes)..."
+  node dist-scripts/scripts/migrate-legacy-trial.mjs || echo "  -> migrate-legacy-trial ignoree (non bloquante)"
+  node dist-scripts/scripts/migrate-4-tiers-pivot.mjs || echo "  -> migrate-4-tiers-pivot ignoree (non bloquante)"
 
-# Seed du CATALOG partage (saisons + episodes + badges + boutique + tenant
-# Communaute) - PROD-SAFE et idempotent (upserts par slug, AUCUN fake user).
-# DOIT tourner a CHAQUE deploiement : sinon les nouvelles saisons / badges
-# ajoutes au code ne se propagent JAMAIS en BDD de prod (bug modules + badges,
-# juin 2026). Le script reevalue aussi les badges des users (retroactif).
-echo "[3/5] Seed du catalog partage (saisons, episodes, badges, boutique)..."
-node dist-scripts/scripts/seed-catalog.mjs || echo "  -> seed-catalog a echoue (non bloquant), relancable via /superadmin/catalog"
+  # Seed du CATALOG partage (saisons + episodes + badges + boutique + tenant
+  # Communaute) - PROD-SAFE et idempotent (upserts par slug, AUCUN fake user).
+  # DOIT tourner a CHAQUE deploiement : sinon les nouvelles saisons / badges
+  # ajoutes au code ne se propagent JAMAIS en BDD de prod (bug modules + badges,
+  # juin 2026). Le script reevalue aussi les badges des users (retroactif).
+  echo "[3/5] Seed du catalog partage (saisons, episodes, badges, boutique)..."
+  node dist-scripts/scripts/seed-catalog.mjs || echo "  -> seed-catalog a echoue (non bloquant), relancable via /superadmin/catalog"
 
-# En mode demo UNIQUEMENT : seed des comptes de demonstration (fake users),
-# inappropries en prod. seed.ts re-appelle seedCatalog en interne (idempotent).
-if [ "$DEMO_MODE" = "true" ]; then
-  echo "  -> DEMO_MODE=true, seed des comptes de demonstration"
-  ./node_modules/.bin/prisma db seed
+  # En mode demo UNIQUEMENT : seed des comptes de demonstration (fake users),
+  # inappropries en prod. seed.ts re-appelle seedCatalog en interne (idempotent).
+  if [ "$DEMO_MODE" = "true" ]; then
+    echo "  -> DEMO_MODE=true, seed des comptes de demonstration"
+    ./node_modules/.bin/prisma db seed
+  fi
+
+  # Bootstrap du premier administrateur si la base est vierge.
+  # Idempotent : se desactive automatiquement des qu'un user existe.
+  # Variables BOOTSTRAP_ADMIN_EMAIL / BOOTSTRAP_ADMIN_PASSWORD (cf. .env.example).
+  echo "[4/5] Bootstrap admin..."
+  node dist-scripts/scripts/bootstrap-admin.mjs || echo "  -> bootstrap-admin a echoue, on continue (l'app peut demarrer)"
+
+  # Premier import de l'observatoire des fuites - uniquement si la table est
+  # vide (pour ne pas re-scraper a chaque redemarrage). Le mode --deep parcourt
+  # les archives par annee pour construire un historique meaningful.
+  # Les scrapes suivants sont declenches par le cron externe sur
+  # /api/cron/breaches-refresh (configure independamment).
+  echo "[5/5] Observatoire des fuites - premier import si necessaire..."
+  HAS_BREACHES=$(node --input-type=module -e "
+  import { PrismaClient } from '@prisma/client';
+  const p = new PrismaClient();
+  p.dataBreach.count()
+    .then((n) => { console.log(n > 0 ? 'yes' : 'no'); return p.\$disconnect(); })
+    .catch(() => { console.log('no'); return p.\$disconnect(); });
+  " 2>/dev/null | tail -n 1)
+
+  if [ "$HAS_BREACHES" = "yes" ]; then
+    echo "  -> Table DataBreach deja peuplee, skip de l'import initial"
+  else
+    echo "  -> Table DataBreach vide, import deep en cours (peut prendre 1-2 min)..."
+    # Timeout 180s pour ne pas bloquer le demarrage si une source est lente.
+    # En cas d'echec partiel, le cron externe rattrapera au prochain run.
+    timeout 180 node dist-scripts/scripts/scrape-breaches.mjs --deep \
+      || echo "  -> Import partiel ou echec reseau, reessai au prochain cron"
+  fi
+}
+
+if [ "$1" = "preparer" ]; then
+  attendre_postgres
+  preparer_etat_partage
+  echo ""
+  echo "  Preparation terminee. Le conteneur applicatif peut demarrer."
+  exit 0
 fi
 
-# Bootstrap du premier administrateur si la base est vierge.
-# Idempotent : se desactive automatiquement des qu'un user existe.
-# Variables BOOTSTRAP_ADMIN_EMAIL / BOOTSTRAP_ADMIN_PASSWORD (cf. .env.example).
-echo "[4/5] Bootstrap admin..."
-node dist-scripts/scripts/bootstrap-admin.mjs || echo "  -> bootstrap-admin a echoue, on continue (l'app peut demarrer)"
+attendre_postgres
 
-# Premier import de l'observatoire des fuites - uniquement si la table est
-# vide (pour ne pas re-scraper a chaque redemarrage). Le mode --deep parcourt
-# les archives par annee pour construire un historique meaningful.
-# Les scrapes suivants sont declenches par le cron externe sur
-# /api/cron/breaches-refresh (configure independamment).
-echo "[5/5] Observatoire des fuites - premier import si necessaire..."
-HAS_BREACHES=$(node --input-type=module -e "
-import { PrismaClient } from '@prisma/client';
-const p = new PrismaClient();
-p.dataBreach.count()
-  .then((n) => { console.log(n > 0 ? 'yes' : 'no'); return p.\$disconnect(); })
-  .catch(() => { console.log('no'); return p.\$disconnect(); });
-" 2>/dev/null | tail -n 1)
-
-if [ "$HAS_BREACHES" = "yes" ]; then
-  echo "  -> Table DataBreach deja peuplee, skip de l'import initial"
+if [ "$HUMANIX_PREPARER_AU_DEMARRAGE" = "false" ]; then
+  echo "[preparation] Ignoree : HUMANIX_PREPARER_AU_DEMARRAGE=false."
+  echo "              Le schema et les donnees partagees sont supposes deja a jour"
+  echo "              (cf. l'etape de preparation de scripts/deploy.sh)."
 else
-  echo "  -> Table DataBreach vide, import deep en cours (peut prendre 1-2 min)..."
-  # Timeout 180s pour ne pas bloquer le demarrage si une source est lente.
-  # En cas d'echec partiel, le cron externe rattrapera au prochain run.
-  timeout 180 node dist-scripts/scripts/scrape-breaches.mjs --deep \
-    || echo "  -> Import partiel ou echec reseau, reessai au prochain cron"
+  preparer_etat_partage
 fi
 
 echo ""

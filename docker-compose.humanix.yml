@@ -103,10 +103,25 @@ services:
         NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT: "${NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT:-}"
         NEXT_PUBLIC_MATOMO_URL: "${NEXT_PUBLIC_MATOMO_URL:-}"
         NEXT_PUBLIC_MATOMO_SITE_ID: "${NEXT_PUBLIC_MATOMO_SITE_ID:-}"
-    container_name: humanix-${STACK:?STACK non defini (prod ou demo)}-app
+    # `APP_COULEUR` (a|b) permet de faire coexister DEUX conteneurs applicatifs
+    # le temps d'une bascule sans coupure. Vide par defaut : le nom et le port
+    # restent alors ceux d'avant, et une pile qui ne fait pas de bascule n'a
+    # rien a changer.
+    container_name: humanix-${STACK:?STACK non defini (prod ou demo)}-app${APP_COULEUR:-}
     restart: unless-stopped
     env_file:
       - ./.env
+    environment:
+      # `deploy.sh` execute la preparation AVANT de couper, sur l'ancienne
+      # version encore en ligne. La refaire au demarrage rallongerait la
+      # coupure pour rien, et surtout empecherait toute cohabitation de deux
+      # versions : un `db push --accept-data-loss` lance par la nouvelle
+      # casserait l'ancienne pendant qu'elle sert.
+      #
+      # UNIQUEMENT sur cette topologie interne. Le `docker-compose.yml`
+      # d'auto-hebergement garde la preparation au demarrage, sans quoi un
+      # `compose up` sur une base vierge ne donnerait rien.
+      HUMANIX_PREPARER_AU_DEMARRAGE: "false"
     depends_on:
       postgres:
         condition: service_healthy
@@ -126,6 +141,9 @@ services:
       # Seul le loopback est publie : HAProxy tourne sur l'HOTE, en service
       # systemd, et c'est lui qui tient 80/443 et le TLS. Exposer ce port sur
       # 0.0.0.0 court-circuiterait ses regles de filtrage et de limitation.
+      # Le port de l'hote suit la couleur : HAProxy porte les DEUX en amont et
+      # commute de l'un a l'autre. Cf. scripts/deploy.sh et la section
+      # `backend_prod` de /etc/haproxy/haproxy.cfg.
       - "127.0.0.1:${APP_HOST_PORT:?APP_HOST_PORT non defini (3000 prod, 3001 demo)}:3000"
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3000/api/health"]
