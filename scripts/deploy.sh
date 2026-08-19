@@ -438,7 +438,16 @@ if [ "$MOTEUR_BIN" = "podman" ] && [ -n "$CONTENEUR_AVANT" ]; then
   # Si cette etape echoue, on s'arrete AVANT d'avoir touche au service en
   # place : l'ancienne version reste debout, intacte.
   log "Preparation de l'etat partage (schema, seeds) sur l'ancienne version en ligne ..."
-  if ! $COMPOSE run --rm --no-deps app ./docker-entrypoint.sh preparer; then
+  # `preparer` SEUL, pas `./docker-entrypoint.sh preparer`.
+  #
+  # L'image declare un ENTRYPOINT : ce qu'on passe ici en devient les
+  # ARGUMENTS. Avec le chemin, le conteneur executait
+  # `/docker-entrypoint.sh ./docker-entrypoint.sh preparer`, donc $1 valait le
+  # chemin et jamais `preparer`. Le test echouait, la preparation etait sautee,
+  # et le conteneur demarrait Next.js -- un faux serveur sain qui emettait meme
+  # des battements dans Loki, pendant que `run` attendait une fin qui ne
+  # viendrait jamais. Constate sur la demo le 2026-08-19.
+  if ! $COMPOSE run --rm --no-deps app preparer; then
     die "preparation echouee -- rien n'a ete touche, l'ancienne version sert toujours" 7
   fi
   log "  -> etat partage a jour, la coupure ne portera plus que le redemarrage"
