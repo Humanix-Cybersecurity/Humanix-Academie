@@ -12,6 +12,7 @@ import { useState, useTransition } from "react";
 import { definirStatutEtape } from "@/app/admin/dpo/parcours/actions";
 import type { EtapeParcours, StatutEtape } from "@/lib/dpo/catalogue";
 import type { EtatEtape } from "@/lib/dpo/etat";
+import { MODELES_PAR_ETAPE } from "@/lib/dpo/modeles";
 
 const LIBELLE_STATUT: Record<string, string> = {
   a_faire: "À faire",
@@ -107,6 +108,18 @@ export default function EtapeCarte({
           {etape.action}
         </p>
       </div>
+
+      {/* Le modele avant le lien externe : pour quelqu'un devant une page
+          blanche, un tableau deja structure vaut mieux qu'un site a lire. */}
+      {MODELES_PAR_ETAPE[etape.cle] && (
+        <a
+          href={`/admin/dpo/parcours/modele/${etape.cle}`}
+          className="mt-3 inline-flex items-center gap-2 rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-700 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-white"
+        >
+          <span aria-hidden="true">⬇</span>
+          {MODELES_PAR_ETAPE[etape.cle].libelle}
+        </a>
+      )}
 
       {etape.ressource && (
         <a
