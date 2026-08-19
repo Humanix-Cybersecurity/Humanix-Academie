@@ -9,7 +9,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { MODELES_PAR_ETAPE } from "@/lib/dpo/modeles";
+import { MODELES_PAR_ETAPE } from "@/lib/conformite-rgpd/modeles";
 
 export async function GET(
   _req: Request,

@@ -6,7 +6,7 @@
 // personne ne voit QU'UN parcours : on les fusionne ici, une bonne fois, plutot
 // que dans chaque composant d'affichage.
 import { db } from "@/lib/db";
-import { CATALOGUE, type StatutEtape } from "@/lib/dpo/catalogue";
+import { CATALOGUE, type StatutEtape } from "@/lib/conformite-rgpd/catalogue";
 
 export type EtatEtape = {
   statut: StatutEtape;

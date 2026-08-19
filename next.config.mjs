@@ -84,6 +84,35 @@ const nextConfig = {
         destination: "/manifeste",
         permanent: true,
       },
+      // --- Scission de l'ancien « Espace DPO » (2026-08-19) ----------------
+      //
+      // /admin/dpo melangeait deux sujets sans rapport : ce que HUMANIX fait
+      // des donnees confiees (retention, effacements, journal) et la mise en
+      // conformite de L'ENTREPRISE CLIENTE (parcours, AIPD, modeles). La
+      // hierarchie d'URL suggerait meme que le second etait un sous-chapitre
+      // du premier -- l'inverse de la verite.
+      //
+      // Le second est parti sous /admin/conformite-rgpd, au milieu des autres
+      // referentiels. /admin/dpo garde son URL : c'est un champ de l'API
+      // publique dpo-export (`admin_dpo_dashboard`, schema 1.0).
+      //
+      // Redirections permanentes : des favoris existent, et /dpo affichait ces
+      // chemins en toutes lettres.
+      {
+        source: "/admin/dpo/parcours",
+        destination: "/admin/conformite-rgpd",
+        permanent: true,
+      },
+      {
+        source: "/admin/dpo/parcours/modele/:cle",
+        destination: "/admin/conformite-rgpd/modele/:cle",
+        permanent: true,
+      },
+      {
+        source: "/admin/dpo/aipd",
+        destination: "/admin/conformite-rgpd/aipd",
+        permanent: true,
+      },
     ];
   },
 };

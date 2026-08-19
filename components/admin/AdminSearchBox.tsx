@@ -138,10 +138,39 @@ const TARGETS: Target[] = [
     group: "Conformite",
   },
   {
+    // Les mots-cles sont ce qui rattrape une recherche faite avec l'ancien
+    // vocabulaire : « dpo », « parcours », « aipd » menent au bon des deux.
+    href: "/admin/conformite-rgpd",
+    label: "Conformité RGPD de mon entreprise",
+    hint: "/admin/conformite-rgpd",
+    keywords: [
+      "rgpd",
+      "conformite",
+      "parcours",
+      "registre",
+      "aipd",
+      "cnil",
+      "dpo",
+      "mentions",
+      "sous-traitants",
+    ],
+    icon: "🧭",
+    group: "Conformite",
+  },
+  {
     href: "/admin/dpo",
-    label: "Espace DPO",
+    label: "Vos données chez Humanix",
     hint: "/admin/dpo",
-    keywords: ["rgpd", "dpo", "donnees", "privacy"],
+    keywords: [
+      "retention",
+      "effacement",
+      "article 17",
+      "donnees",
+      "privacy",
+      "dpo",
+      "sous-traitant",
+      "dpa",
+    ],
     icon: "🛡",
     group: "Conformite",
   },
@@ -309,10 +338,7 @@ const TARGETS: Target[] = [
 
 // --- normalisation (sans accents) pour la recherche ---
 function norm(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "");
+  return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 }
 
 function matchScore(q: string, t: Target): number {
@@ -378,8 +404,7 @@ export default function AdminSearchBox() {
   useEffect(() => {
     const handler = () => setOpen(true);
     window.addEventListener("admin-open-searchbox", handler);
-    return () =>
-      window.removeEventListener("admin-open-searchbox", handler);
+    return () => window.removeEventListener("admin-open-searchbox", handler);
   }, []);
 
   const results = useMemo(() => {

@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
-// /admin/dpo/aipd - Generateur AIPD (Analyse d'Impact a la Protection des Données).
+// /admin/conformite-rgpd/aipd - Generateur AIPD (Analyse d'Impact a la
+// Protection des Données) pour les traitements de L'ENTREPRISE CLIENTE.
+//
+// Cote « conformite de son entreprise », pas cote « donnees chez Humanix » :
+// l'AIPD qu'on aide a produire ici porte sur SA paie, SA videosurveillance.
 //
 // Approche pragmatique : on ne reinvente pas le PIA Tool de la CNIL. On
 // fournit un MODELE Markdown pre-rempli avec toutes les sections attendues
@@ -46,11 +50,11 @@ export default async function AipdGeneratorPage() {
         icon="📝"
         actions={
           <Link
-            href="/admin/dpo"
+            href="/admin/conformite-rgpd"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 transition text-sm font-medium"
           >
             <span aria-hidden="true">←</span>
-            Retour espace DPO
+            Retour au parcours
           </Link>
         }
       />
@@ -80,8 +84,8 @@ export default async function AipdGeneratorPage() {
             </strong>{" "}
             Une AIPD bien menee prend 4 a 8 heures de DPO + 2 a 4 heures
             d'echanges avec le metier et l'IT. Au-dela, c'est qu'il y a un
-            probleme de scoping (le projet est sans doute trop ambitieux et
-            doit être decoupé).
+            probleme de scoping (le projet est sans doute trop ambitieux et doit
+            être decoupé).
           </p>
           <p>
             <strong className="text-primary-500 dark:text-accent-300">
@@ -155,8 +159,8 @@ export default async function AipdGeneratorPage() {
               Consultation prealable CNIL :
             </strong>{" "}
             si l'AIPD revele un risque residuel eleve malgre les mesures, la
-            CNIL doit être consultee AVANT mise en oeuvre (article 36).
-            Reponse sous 8 semaines.
+            CNIL doit être consultee AVANT mise en oeuvre (article 36). Reponse
+            sous 8 semaines.
           </li>
           <li>
             <strong className="text-primary-500 dark:text-accent-300">

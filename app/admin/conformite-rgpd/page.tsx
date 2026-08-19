@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// /admin/dpo/parcours — Mise en conformite RGPD, pas a pas.
+// /admin/conformite-rgpd — Mise en conformite RGPD de l'entreprise cliente.
 //
 // A QUI CETTE PAGE PARLE
 //
@@ -8,12 +8,18 @@
 //   RAF, parfois le QSE : quelqu'un de competent a qui on a pose un chapeau
 //   sans mode d'emploi. On ne fait pas a sa place -- on rend clair.
 //
-// A NE PAS CONFONDRE avec /admin/dpo, qui montre ce que HUMANIX fait des
-// donnees confiees. Ici il s'agit de SON entreprise : sa paie, sa
-// videosurveillance, son fichier clients.
+// LE SUJET, C'EST SON ENTREPRISE : sa paie, sa videosurveillance, son fichier
+// clients. Rien de ce qui est ici ne parle de Humanix.
 //
-//   Si les deux se melangeaient, la personne croirait que cocher NOS cases la
-//   met en conformite. Ce serait faux, et grave. D'ou l'encart d'ouverture.
+//   Ce que Humanix detient de ses utilisateurs vit ailleurs, sous /admin/dpo
+//   (« Vos donnees chez Humanix »). Les deux ont cohabite sous /admin/dpo
+//   jusqu'au 2026-08-19 : la hierarchie d'URL laissait croire que la mise en
+//   conformite de l'entreprise etait un sous-chapitre de ce que Humanix fait
+//   de ses donnees. C'est l'inverse qui est vrai -- les deux sujets n'ont
+//   aucun rapport. La confusion coutait cher : on pouvait croire que cocher
+//   NOS cases rendait SON entreprise conforme.
+//
+// D'ou la scission, et l'encart d'ouverture qui la rappelle.
 //
 // Cf. docs/PARCOURS-DPO.md.
 // =============================================================================
@@ -28,9 +34,10 @@ import {
   avancement,
   prochaineEtape,
   type SectionParcours,
-} from "@/lib/dpo/catalogue";
-import { chargerEtatParcours, statutsSeuls } from "@/lib/dpo/etat";
-import EtapeCarte from "@/components/admin/dpo/EtapeCarte";
+} from "@/lib/conformite-rgpd/catalogue";
+import { chargerEtatParcours, statutsSeuls } from "@/lib/conformite-rgpd/etat";
+import EtapeCarte from "@/components/admin/conformite-rgpd/EtapeCarte";
+import OutilsConformite from "@/components/admin/conformite-rgpd/OutilsConformite";
 
 export const metadata = { title: "Mise en conformité RGPD — Humanix" };
 
@@ -68,11 +75,17 @@ export default async function ParcoursPage() {
         <p className="mt-1 text-amber-800 dark:text-amber-300">
           Votre paie, vos caméras, votre fichier clients. Il ne remplace pas un
           conseil juridique, et cocher ces cases ne vous rend pas conforme :
-          c&apos;est vous qui le devenez, étape après étape.{" "}
-          <Link href="/admin/dpo" className="underline">
-            Ce que Humanix fait de vos données
-          </Link>{" "}
-          est une autre page.
+          c&apos;est vous qui le devenez, étape après étape.
+        </p>
+        <p className="mt-2 text-amber-800 dark:text-amber-300">
+          Ce que <em>Humanix</em> conserve de vos utilisateurs — rétention,
+          demandes d&apos;effacement, journal — est un tout autre sujet, et se
+          règle sur{" "}
+          <Link href="/admin/dpo" className="underline font-semibold">
+            Vos données chez Humanix
+          </Link>
+          . Rien de ce qui est coché ici n&apos;y change quoi que ce soit, et
+          réciproquement.
         </p>
       </div>
 
@@ -123,6 +136,14 @@ export default async function ParcoursPage() {
           </AdminSection>
         );
       })}
+
+      <AdminSection
+        title="Les outils du parcours"
+        description="Trames, modules et sources officielles — tous sur les traitements de votre entreprise."
+        variant="muted"
+      >
+        <OutilsConformite />
+      </AdminSection>
     </div>
   );
 }

@@ -114,7 +114,8 @@ const TARGETS = [
     notes:
       "Leader mondial GRC + Privacy. Adapter le payload via webhook personnalisé (DSR Import API).",
     docs: "https://my.onetrust.com",
-    pertinence: "Pour les groupes internationaux. Cher (~50k €/an) mais standard de facto.",
+    pertinence:
+      "Pour les groupes internationaux. Cher (~50k €/an) mais standard de facto.",
   },
   {
     name: "Didomi",
@@ -130,7 +131,8 @@ const TARGETS = [
     notes:
       "Plateforme RGPD complète (registre, AIPD, demandes droits, audits) pour PME/ETI.",
     docs: "https://docs.dastra.eu/",
-    pertinence: "Le plus aligné Humanix : ETI françaises, philosophie souveraine.",
+    pertinence:
+      "Le plus aligné Humanix : ETI françaises, philosophie souveraine.",
   },
   {
     name: "Witik",
@@ -155,12 +157,11 @@ export default function PrivacyToolsIntegrationPage() {
             Privacy Tools · push automatique
           </h1>
           <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Récupère tes preuves DPO (queue d'effacement RGPD art. 17,
-            compteurs 90 jours, AIPD, certifs sensibilisation) dans un JSON
-            stable. Importable dans <strong>OneTrust</strong>,{" "}
-            <strong>Didomi</strong>, <strong>Privacy.fr</strong>,{" "}
-            <strong>Dastra</strong>, <strong>Witik</strong>, ou tout outil
-            qui consomme du JSON.
+            Récupère tes preuves DPO (queue d'effacement RGPD art. 17, compteurs
+            90 jours, AIPD, certifs sensibilisation) dans un JSON stable.
+            Importable dans <strong>OneTrust</strong>, <strong>Didomi</strong>,{" "}
+            <strong>Privacy.fr</strong>, <strong>Dastra</strong>,{" "}
+            <strong>Witik</strong>, ou tout outil qui consomme du JSON.
           </p>
         </header>
 
@@ -232,10 +233,10 @@ export default function PrivacyToolsIntegrationPage() {
           </pre>
           <p className="text-xs text-gray-500 dark:text-gray-400 italic mt-2">
             <strong>Stabilité du schéma</strong> : on ne renomme jamais un
-            champ. Les évolutions se font uniquement par <strong>ajout</strong>
-            {" "}de nouveaux champs (rétrocompatible). Le champ{" "}
-            <code className="font-mono">schema_version</code> change
-            uniquement si un breaking change est inévitable.
+            champ. Les évolutions se font uniquement par <strong>ajout</strong>{" "}
+            de nouveaux champs (rétrocompatible). Le champ{" "}
+            <code className="font-mono">schema_version</code> change uniquement
+            si un breaking change est inévitable.
           </p>
         </section>
 
@@ -283,8 +284,8 @@ export default function PrivacyToolsIntegrationPage() {
           <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-200">
             <li>
               ✓ <strong>Auth :</strong> API key tenant (header{" "}
-              <code>Authorization: Bearer</code>), hash SHA-256 stocké en BDD, révocable
-              en 1 clic depuis{" "}
+              <code>Authorization: Bearer</code>), hash SHA-256 stocké en BDD,
+              révocable en 1 clic depuis{" "}
               <Link
                 href="/admin/api-keys"
                 className="text-accent-500 underline-offset-4 hover:underline"
@@ -297,12 +298,12 @@ export default function PrivacyToolsIntegrationPage() {
               ✓ <strong>Plan-gating :</strong> Pro et Enterprise uniquement.
             </li>
             <li>
-              ✓ <strong>Rate limit :</strong> 10 requêtes/heure par tenant
-              (le DPO sync typiquement 1× par jour, le quota est large).
+              ✓ <strong>Rate limit :</strong> 10 requêtes/heure par tenant (le
+              DPO sync typiquement 1× par jour, le quota est large).
             </li>
             <li>
-              ✓ <strong>Audit trail :</strong> chaque appel logue un
-              événement <code>DPO_EXPORT_REQUESTED</code> visible dans{" "}
+              ✓ <strong>Audit trail :</strong> chaque appel logue un événement{" "}
+              <code>DPO_EXPORT_REQUESTED</code> visible dans{" "}
               <Link
                 href="/admin/audit"
                 className="text-accent-500 underline-offset-4 hover:underline"
@@ -313,9 +314,9 @@ export default function PrivacyToolsIntegrationPage() {
             </li>
             <li>
               ✓ <strong>Pas de PII inutile :</strong> les emails d'utilisateurs
-              n'apparaissent que dans la queue d'effacement (où c'est la finalité
-              même de la demande) et l'activité récente (où l'audit log les a
-              déjà). Pas de bulk export d'annuaire.
+              n'apparaissent que dans la queue d'effacement (où c'est la
+              finalité même de la demande) et l'activité récente (où l'audit log
+              les a déjà). Pas de bulk export d'annuaire.
             </li>
           </ul>
         </section>
@@ -325,7 +326,7 @@ export default function PrivacyToolsIntegrationPage() {
           <RelatedCard
             href="/dpo"
             title="Espace DPO"
-            desc="Landing dédiée + dashboard /admin/dpo + générateur AIPD"
+            desc="Ce que Humanix conserve (/admin/dpo) et comment mettre votre entreprise en règle (/admin/conformite-rgpd)"
           />
           <RelatedCard
             href="/integrations/ciso-assistant"
