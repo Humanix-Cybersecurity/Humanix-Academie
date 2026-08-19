@@ -42,7 +42,10 @@ export default async function BillingPage() {
   const upgradePlan = nextPlan(state.plan);
 
   return (
-    <main id="main-content" className="max-w-4xl mx-auto px-4 py-8 space-y-8 animate-fadeIn">
+    <main
+      id="main-content"
+      className="max-w-4xl mx-auto px-4 py-8 space-y-8 animate-fadeIn"
+    >
       <header>
         <p className="text-xs uppercase tracking-widest text-accent-500 font-bold mb-1">
           Espace de facturation
@@ -68,7 +71,10 @@ export default async function BillingPage() {
             <p className="text-xs uppercase tracking-widest text-gray-500 dark:text-gray-400 font-bold mb-1">
               Plan actuel
             </p>
-            <h2 id="current-plan" className="font-display text-2xl font-extrabold text-primary-500 dark:text-accent-300">
+            <h2
+              id="current-plan"
+              className="font-display text-2xl font-extrabold text-primary-500 dark:text-accent-300"
+            >
               {PLAN_EMOJI[state.plan]} {PLAN_LABEL[state.plan]}
             </h2>
             <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
@@ -124,7 +130,8 @@ export default async function BillingPage() {
           {usage.atLimit && upgradePlan && (
             <p className="text-xs text-warn mt-2">
               Tu as atteint la limite. Passe en{" "}
-              <strong>{PLAN_LABEL[upgradePlan]}</strong> pour ajouter plus de sièges.
+              <strong>{PLAN_LABEL[upgradePlan]}</strong> pour ajouter plus de
+              sièges.
             </p>
           )}
           {usage.approaching && !usage.atLimit && upgradePlan && (
@@ -138,10 +145,7 @@ export default async function BillingPage() {
 
       {/* === UPGRADE - paliers supérieurs au plan courant === */}
       {upgradePlan && (
-        <section
-          aria-labelledby="upgrade-title"
-          className="space-y-3"
-        >
+        <section aria-labelledby="upgrade-title" className="space-y-3">
           <h2
             id="upgrade-title"
             className="font-display text-xl font-extrabold text-primary-500 dark:text-accent-300"
@@ -149,9 +153,9 @@ export default async function BillingPage() {
             Faire évoluer ton plan
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-300">
-            Tu peux changer de palier à tout moment. Le checkout Mollie
-            calcule le prorata, et ton accès passe au plan supérieur dès
-            confirmation du paiement.
+            Tu peux changer de palier à tout moment. Le checkout Mollie calcule
+            le prorata, et ton accès passe au plan supérieur dès confirmation du
+            paiement.
           </p>
           <PlanUpgradeOptions
             currentPlan={state.plan}
@@ -161,7 +165,10 @@ export default async function BillingPage() {
       )}
 
       {/* === ACTIONS === */}
-      <section aria-labelledby="actions-title" className="grid sm:grid-cols-2 gap-4">
+      <section
+        aria-labelledby="actions-title"
+        className="grid sm:grid-cols-2 gap-4"
+      >
         <h2 id="actions-title" className="sr-only">
           Actions disponibles
         </h2>
@@ -179,22 +186,29 @@ export default async function BillingPage() {
               📄 Portail Mollie
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-300">
-              Mettre à jour ta carte, télécharger tes factures, voir l'historique.
+              Mettre à jour ta carte, télécharger tes factures, voir
+              l'historique.
             </p>
           </a>
         )}
 
-        {/* Annuler */}
+        {/* Resiliation en libre-service.
+        
+            La carte pointait sur `/api/payments/cancel`, qui n'exporte que
+            POST : une navigation <Link> y faisait un GET, donc un 405 sur
+            l'action la plus sensible de la page. On renvoie vers
+            /profil/facturation, ou BillingActions demande confirmation puis
+            POSTe reellement. */}
         {isPaidPlan(state.plan) && state.state !== "suspended" && (
           <Link
-            href="/api/payments/cancel"
+            href="/profil/facturation"
             className="card hover:shadow-lg transition-shadow border-amber-200 dark:border-amber-900/40 bg-gradient-to-br from-amber-50 to-white dark:from-amber-950/30 dark:to-slate-900"
           >
             <p className="text-xs uppercase tracking-widest text-amber-700 dark:text-amber-300 font-bold mb-1">
               Annuler l'abonnement
             </p>
             <h3 className="font-display text-lg font-extrabold text-amber-800 dark:text-amber-200 mb-2">
-              ⏸ Mettre en pause
+              ⏸ Résilier l'abonnement
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-300">
               Tu garderas l'accès jusqu'à la fin de la période payée. Aucun
@@ -207,7 +221,9 @@ export default async function BillingPage() {
       {/* === Help === */}
       <section className="text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-900/50 rounded-2xl p-5 border border-gray-200 dark:border-slate-700">
         <p>
-          <strong className="text-gray-700 dark:text-gray-200">Une question sur ta facture ?</strong>{" "}
+          <strong className="text-gray-700 dark:text-gray-200">
+            Une question sur ta facture ?
+          </strong>{" "}
           Écris à{" "}
           <a
             href="mailto:contact@humanix-cybersecurity.fr"
@@ -218,8 +234,8 @@ export default async function BillingPage() {
           . On répond sous 24 h ouvrées.
         </p>
         <p className="mt-2 text-xs">
-          Tous les paiements transitent par Mollie (Amsterdam, UE - régulé
-          DNB) - pas de dépendance Cloud Act US.
+          Tous les paiements transitent par Mollie (Amsterdam, UE - régulé DNB)
+          - pas de dépendance Cloud Act US.
         </p>
       </section>
     </main>
@@ -237,8 +253,10 @@ function StateBanner({
 }) {
   const styles = {
     warn: "bg-amber-50 dark:bg-amber-900/30 border-amber-300 dark:border-amber-700 text-amber-800 dark:text-amber-200",
-    read_only: "bg-orange-50 dark:bg-orange-900/30 border-orange-400 dark:border-orange-700 text-orange-900 dark:text-orange-200",
-    blocked: "bg-red-50 dark:bg-red-900/30 border-red-400 dark:border-red-700 text-red-900 dark:text-red-200",
+    read_only:
+      "bg-orange-50 dark:bg-orange-900/30 border-orange-400 dark:border-orange-700 text-orange-900 dark:text-orange-200",
+    blocked:
+      "bg-red-50 dark:bg-red-900/30 border-red-400 dark:border-red-700 text-red-900 dark:text-red-200",
   } as const;
 
   if (state.restriction === "none") return null;
@@ -254,7 +272,10 @@ function StateBanner({
             typeof daysLeft === "number"
               ? `Ta dernière échéance n'a pas été honorée. Tu as ${daysLeft} jour${daysLeft !== 1 ? "s" : ""} pour mettre à jour ta carte avant restriction d'accès.`
               : "Ta dernière échéance n'a pas été honorée. Le délai exact avant restriction d'accès est en cours de mise à jour.",
-          cta: { label: "Mettre à jour la carte", href: "/api/payments/portal" },
+          cta: {
+            label: "Mettre à jour la carte",
+            href: "/api/payments/portal",
+          },
         };
       }
       case "read_only":
@@ -262,7 +283,10 @@ function StateBanner({
           emoji: "🔒",
           title: "Accès en lecture seule",
           message: `Tu peux consulter mais plus rien modifier. ${state.daysLeft ? `Tu as ${state.daysLeft} jour${state.daysLeft !== 1 ? "s" : ""} avant suspension complète.` : ""}`,
-          cta: { label: "Régulariser maintenant", href: "/api/payments/portal" },
+          cta: {
+            label: "Régulariser maintenant",
+            href: "/api/payments/portal",
+          },
         };
       case "suspended":
         return {
@@ -285,7 +309,10 @@ function StateBanner({
   const styleKey = state.restriction;
 
   return (
-    <div role="status" className={`rounded-2xl border-2 p-4 ${styles[styleKey]}`}>
+    <div
+      role="status"
+      className={`rounded-2xl border-2 p-4 ${styles[styleKey]}`}
+    >
       <div className="flex items-start gap-3 flex-wrap">
         <span className="text-2xl shrink-0" aria-hidden="true">
           {config.emoji}
