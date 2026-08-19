@@ -203,19 +203,64 @@ pilotage GRC pour qui en a besoin. Le parcours s'arrête où il commence.
 
 ---
 
-## 7. À trancher avant d'écrire une ligne
+## 7. Décisions prises
 
-1. **Le parcours est-il un contenu ou une fonctionnalité ?** Le traiter comme
-   une saison réutilise tout l'existant — progression, reprise, mémorisation.
-   C'est mon avis, mais il engage l'architecture.
+| Question                                         | Décision                                                                   |
+| ------------------------------------------------ | -------------------------------------------------------------------------- |
+| Contenu ou fonctionnalité ?                      | **Fonctionnalité** dédiée                                                  |
+| Valider les étapes auprès de vrais DPO ?         | **Oui**, avant de figer l'ordre                                            |
+| Quel palier ?                                    | **Starter** — donc l'offre gratuite                                        |
+| Que devient la progression si la personne part ? | Elle supprime son compte ; à défaut, le nettoyage des inactifs s'en charge |
 
-2. **Les étapes sont-elles les bonnes ?** Elles viennent du texte, pas du
-   terrain. Vous avez rencontré ces DPO : leur soumettre l'ordre avant de le
-   figer coûterait une semaine et éviterait de livrer une théorie.
+### Ce que « fonctionnalité » implique
 
-3. **Palier Starter ou Pro ?** L'accompagnement peut être ce qui fait basculer
-   une PME vers l'offre payante — ou ce qui la fait entrer.
+On ne réutilise pas les mécaniques de saisons/épisodes : il faut donc écrire la
+progression, la reprise et l'affichage. C'est plus de code, mais on gagne ce que
+le contenu ne sait pas faire — statuts par étape, note libre, « sans objet »,
+modèles téléchargeables, et un affichage qui n'a rien d'un cours.
 
-4. **Qui suit le parcours ?** Il est nominatif ci-dessus, parce qu'une personne
-   apprend, pas une organisation. Mais si cette personne quitte l'entreprise, la
-   progression doit-elle rester ?
+### Ce que « Starter » implique
+
+Le parcours est dans l'offre **gratuite** (≤ 5 sièges). C'est un choix
+d'acquisition : la PME qui découvre le RGPD par ce chemin connaîtra Humanix
+avant d'avoir besoin de sensibilisation. Il doit donc être autonome — utile
+même pour quelqu'un qui n'achètera jamais.
+
+### Ce que la progression nominative implique — à vérifier au moment de coder
+
+`lib/data-retention.ts` **anonymise** les utilisateurs inactifs, il ne les
+supprime pas : e-mail et nom sont vidés, **l'identifiant est conservé** pour
+l'intégrité référentielle.
+
+Les lignes `EtapeParcoursDpo` étant liées à `userId`, elles **survivraient**
+attachées à un compte anonymisé. Il faut donc les supprimer explicitement lors
+de l'anonymisation — sinon une progression fantôme reste en base, sans personne
+derrière.
+
+⚠️ **Une question reste ouverte, et elle mérite d'être tranchée avant de coder.**
+Le parcours mélange deux natures :
+
+- _« j'ai compris ce qu'est le RGPD »_ → appartient à la personne, part avec
+  elle ;
+- _« notre registre liste cinq traitements »_ → décrit **l'entreprise**, et son
+  successeur en aurait besoin.
+
+Tout effacer fait repartir le suivant de zéro. Une piste : conserver au niveau
+du tenant les étapes qui décrivent l'organisation, et laisser partir celles qui
+décrivent l'apprentissage. À arbitrer.
+
+---
+
+## 8. Reste à préciser
+
+**Le sort des étapes qui décrivent l'entreprise** quand la personne part
+(cf. section 7). C'est le seul point bloquant avant de coder.
+
+**La validation terrain des étapes.** Décidée, pas encore faite. Elle peut se
+mener en parallèle de l'écriture : la structure ne dépend pas de l'ordre exact,
+seul le catalogue changerait.
+
+**Le nom donné à la chose.** « Parcours DPO » parle à quelqu'un qui se sait DPO.
+La RH à qui on a posé le chapeau ne se reconnaîtra peut-être pas dedans —
+« Mise en conformité RGPD, pas à pas » lui parlerait davantage. À décider avant
+la première capture d'écran commerciale.
