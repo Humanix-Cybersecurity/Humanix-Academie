@@ -28,6 +28,7 @@ import {
   getSubscription,
   getMollieCustomer,
   createSubscriptionForCustomer,
+  prochaineEcheance,
   mollieAmountForPlan,
   molliePaymentIsPaid,
   molliePaymentIsFailed,
@@ -138,7 +139,10 @@ async function handlePaymentEvent(paymentId: string) {
   let tenantId: string | null = payment.metadata.tenantId ?? null;
   // Si pas de tenantId en metadata (cas anonymous-inscription), on resout
   // via le paymentCustomerId.
-  if ((!tenantId || tenantId === "anonymous-inscription") && payment.customerId) {
+  if (
+    (!tenantId || tenantId === "anonymous-inscription") &&
+    payment.customerId
+  ) {
     const t = await db.tenant.findUnique({
       where: { paymentCustomerId: payment.customerId },
       select: { id: true },
@@ -227,9 +231,7 @@ async function handlePaymentEvent(paymentId: string) {
  * et si tenant inexistant (cas anonymous-inscription depuis /tarifs) on
  * provisionne tenant + ADMIN + magic link de bienvenue.
  */
-async function onFirstPaymentPaid(
-  payment: MolliePaymentResource,
-): Promise<{
+async function onFirstPaymentPaid(payment: MolliePaymentResource): Promise<{
   tenantId: string | null;
   status: "applied" | "ignored" | "error";
   errorMessage: string | null;
@@ -238,7 +240,8 @@ async function onFirstPaymentPaid(
   const planRaw = md.plan ?? "";
   const billingRaw = md.billing ?? "monthly";
   const seatsRaw = Number.parseInt(md.seats ?? "0", 10);
-  const billing: "monthly" | "annual" = billingRaw === "annual" ? "annual" : "monthly";
+  const billing: "monthly" | "annual" =
+    billingRaw === "annual" ? "annual" : "monthly";
 
   if (!isPlanId(planRaw) || !payment.customerId) {
     return {
@@ -264,6 +267,11 @@ async function onFirstPaymentPaid(
       interval: pricing.interval,
       description: pricing.description,
       webhookUrl,
+      // SANS CETTE DATE, LE CLIENT PAIE DEUX FOIS SON PREMIER MOIS : le
+      // paiement `first` ci-dessus a deja encaisse la periode en cours, et
+      // une Subscription sans `startDate` demarre IMMEDIATEMENT.
+      // Cf. prochaineEcheance() dans lib/mollie.ts.
+      startDate: prochaineEcheance(pricing.interval),
       metadata: {
         tenantId: md.tenantId ?? "anonymous-inscription",
         plan: planRaw,
@@ -281,9 +289,8 @@ async function onFirstPaymentPaid(
   }
 
   // 2. Cas tenant existant : on met juste a jour
-  let tenantId = md.tenantId && md.tenantId !== "anonymous-inscription"
-    ? md.tenantId
-    : null;
+  let tenantId =
+    md.tenantId && md.tenantId !== "anonymous-inscription" ? md.tenantId : null;
   if (tenantId) {
     await db.tenant.update({
       where: { id: tenantId },

@@ -14,6 +14,7 @@ import {
   molliePaymentIsPaid,
   molliePaymentIsFailed,
   validateMollieSetup,
+  prochaineEcheance,
 } from "./mollie";
 
 describe("MOLLIE_BUYABLE_PLANS", () => {
@@ -137,5 +138,47 @@ describe("validateMollieSetup", () => {
     const r = validateMollieSetup();
     expect(r.enabled).toBe(false);
     if (prev !== undefined) process.env.MOLLIE_API_KEY = prev;
+  });
+});
+
+// ---------------------------------------------------------------------------
+// prochaineEcheance - la date qui evite le double prelevement.
+//
+// Ces tests gardent de l'incident du 2026-08-17 : le premier client a paye
+// 96 EUR pour un abonnement a 48 EUR/mois, parce que la Subscription creee
+// apres le paiement `first` demarrait immediatement.
+// ---------------------------------------------------------------------------
+describe("prochaineEcheance", () => {
+  it("mensuel : un mois apres le paiement initial", () => {
+    const d = prochaineEcheance("1 month", new Date("2026-08-17T23:32:51Z"));
+    expect(d.toISOString().slice(0, 10)).toBe("2026-09-17");
+  });
+
+  it("annuel : douze mois apres", () => {
+    const d = prochaineEcheance("12 months", new Date("2026-08-17T23:32:51Z"));
+    expect(d.toISOString().slice(0, 10)).toBe("2027-08-17");
+  });
+
+  it("ramene au dernier jour du mois quand le quantieme n'existe pas", () => {
+    // Sans garde, `setUTCMonth` deborderait sur le 3 mars : le client serait
+    // preleve APRES la fin de la periode qu'il a payee.
+    const d = prochaineEcheance("1 month", new Date("2026-01-31T10:00:00Z"));
+    expect(d.toISOString().slice(0, 10)).toBe("2026-02-28");
+  });
+
+  it("est TOUJOURS posterieure au paiement initial", () => {
+    // La propriete qui compte : quelle que soit la date, on ne prelevera
+    // jamais le jour meme.
+    for (const jour of [
+      "2026-01-31",
+      "2026-02-28",
+      "2026-03-15",
+      "2026-12-31",
+    ]) {
+      const initial = new Date(`${jour}T12:00:00Z`);
+      expect(prochaineEcheance("1 month", initial).getTime()).toBeGreaterThan(
+        initial.getTime(),
+      );
+    }
   });
 });

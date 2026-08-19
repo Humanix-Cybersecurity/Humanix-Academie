@@ -73,8 +73,7 @@ function customerToPublic(c: Customer): MollieCustomer {
     id: c.id,
     email: c.email ?? null,
     name: c.name ?? null,
-    metadata:
-      (c.metadata as Record<string, string> | null | undefined) ?? {},
+    metadata: (c.metadata as Record<string, string> | null | undefined) ?? {},
   };
 }
 
@@ -136,7 +135,8 @@ export function mollieAmountForPlan(
   billing: "monthly" | "annual",
   seats: number,
 ): PricingResult {
-  const interval: MollieInterval = billing === "annual" ? "12 months" : "1 month";
+  const interval: MollieInterval =
+    billing === "annual" ? "12 months" : "1 month";
 
   let cents = 0;
   if (plan === "starter") {
@@ -147,7 +147,9 @@ export function mollieAmountForPlan(
     const monthly = seats * 3_00;
     cents = billing === "annual" ? Math.round(monthly * 12 * 0.9) : monthly;
   } else {
-    throw new Error(`Plan ${plan} non achetable via Mollie (enterprise = devis).`);
+    throw new Error(
+      `Plan ${plan} non achetable via Mollie (enterprise = devis).`,
+    );
   }
 
   return {
@@ -201,7 +203,11 @@ export async function createCheckoutSession(params: {
   }
 
   // 2. Calculer le montant + interval (servira au webhook pour creer la sub)
-  const pricing = mollieAmountForPlan(params.plan, params.billing, params.seats);
+  const pricing = mollieAmountForPlan(
+    params.plan,
+    params.billing,
+    params.seats,
+  );
 
   // 3. Creer le first payment hosted
   const client = getClient();
@@ -251,7 +257,10 @@ export type MollieSubscriptionResult = {
   nextPaymentDate: Date | null;
 };
 
-function subscriptionToPublic(s: Subscription, customerId: string): MollieSubscriptionResult {
+function subscriptionToPublic(
+  s: Subscription,
+  customerId: string,
+): MollieSubscriptionResult {
   return {
     id: s.id,
     customerId,
@@ -420,4 +429,38 @@ export function validateMollieSetup(): MollieSetupReport {
   }
 
   return { enabled, liveMode, warnings };
+}
+
+/**
+ * Date de premiere charge RECURRENTE : une periode apres le paiement initial.
+ *
+ * SANS CETTE DATE, LE CLIENT PAIE DEUX FOIS SON PREMIER MOIS.
+ *
+ * Le parcours d'abonnement fait deux choses de suite :
+ *   1. un paiement `first` qui encaisse le premier mois ET etablit le mandat ;
+ *   2. la creation de la Subscription pour la suite.
+ *
+ * Mollie demarre une Subscription sans `startDate` IMMEDIATEMENT. Le mandat
+ * venant d'etre valide, la premiere charge recurrente part dans la foulee et
+ * double le mois deja paye.
+ *
+ * Constate en production le 2026-08-17 sur le premier client : 48,00 EUR a
+ * 22:54 (`sequenceType: first`) puis 48,00 EUR a 23:32
+ * (`sequenceType: recurring`), soit 96 EUR pour un abonnement a 48 EUR/mois.
+ *
+ * @param depuis paiement initial (par defaut : maintenant)
+ */
+export function prochaineEcheance(
+  interval: MollieInterval,
+  depuis: Date = new Date(),
+): Date {
+  const d = new Date(depuis.getTime());
+  const mois = interval === "12 months" ? 12 : 1;
+  const jourVoulu = d.getUTCDate();
+  d.setUTCMonth(d.getUTCMonth() + mois);
+  // Un 31 janvier + 1 mois donne le 3 mars : `setUTCMonth` reporte le
+  // debordement sur le mois suivant. On ramene alors au dernier jour du mois
+  // vise, pour que le client soit preleve le 28 fevrier et non le 3 mars.
+  if (d.getUTCDate() !== jourVoulu) d.setUTCDate(0);
+  return d;
 }
