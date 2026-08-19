@@ -25,7 +25,10 @@
 // ROADMAP (mise a jour 2026-05-24) :
 //   - /admin/dpo : ✅ LIVRE - dashboard avec compteurs RGPD 90j, queue
 //     effacement art. 17, activite 30j
-//   - /admin/dpo/aipd : ✅ LIVRE - generateur AIPD avec template pre-rempli
+//   - /admin/conformite-rgpd : ✅ LIVRE - parcours de mise en conformite en
+//     10 etapes pour l'entreprise cliente (ex /admin/dpo/parcours)
+//   - /admin/conformite-rgpd/aipd : ✅ LIVRE - generateur AIPD avec template
+//     pre-rempli (ex /admin/dpo/aipd)
 //   - /admin/dpo/retention : ✅ LIVRE - config retention par tenant
 //   - Saison `dpo-quotidien` : ✅ LIVREE - 6 modules MDX (AIPD, CNIL,
 //     transferts hors UE, profilage, base legale, mutualisation PME)
@@ -38,7 +41,8 @@ import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 import { BreadcrumbJsonLd } from "@/lib/seo/jsonld";
 
-const DPO_TITLE = "Espace DPO - Sensibilisation RGPD-by-design | Humanix Académie";
+const DPO_TITLE =
+  "Espace DPO - Sensibilisation RGPD-by-design | Humanix Académie";
 const DPO_DESC =
   "Pour les Délégués à la Protection des Données : Humanix Académie est RGPD-by-design. Registre des traitements fourni, DPA modèle pré-signé, procédure 72 h CNIL pré-remplie, hébergement Scaleway Paris, audit log complet. Sensibilisation cyber qu'un DPO peut auditer et déléguer.";
 
@@ -51,7 +55,9 @@ export const metadata = {
     description: DPO_DESC,
     type: "website",
     url: "/dpo",
-    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+    images: [
+      { url: "/logo-humanix-academie-512.png", width: 512, height: 512 },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -158,9 +164,9 @@ export default function DpoLandingPage() {
             style={{ animationDelay: "220ms" }}
           >
             Humanix Academie est un outil de sensibilisation cyber. Mais c'est
-            aussi un sous-traitant RGPD. On a fait le choix d'être auditable
-            par construction : registre fourni, DPA modèle, 72h pre-rempli,
-            hosting Scaleway Paris, audit log complet, code AGPLv3 public.
+            aussi un sous-traitant RGPD. On a fait le choix d'être auditable par
+            construction : registre fourni, DPA modèle, 72h pre-rempli, hosting
+            Scaleway Paris, audit log complet, code AGPLv3 public.
           </p>
         </section>
       </HexBackdrop>
@@ -169,10 +175,7 @@ export default function DpoLandingPage() {
         {/* ============================================================
             2. PROMESSES - 6 cards palette saisons
             ============================================================ */}
-        <section
-          aria-labelledby="promesses-title"
-          className="space-y-1"
-        >
+        <section aria-labelledby="promesses-title" className="space-y-1">
           <div className="text-center mb-6">
             <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
               6 promesses tracables
@@ -229,11 +232,11 @@ export default function DpoLandingPage() {
               <strong className="text-primary-500 dark:text-accent-300">
                 La situation :
               </strong>{" "}
-              tu es DPO mutualise (3 jours/semaine), tu pilotes la conformité
-              de plusieurs PME francaises. NIS2 est arrivee, tes dirigeants te
-              demandent de prouver que les collaborateurs sont sensibilises a
-              la cyber. Tu cherches une plateforme qui ne te rajoute pas
-              elle-même une dette RGPD.
+              tu es DPO mutualise (3 jours/semaine), tu pilotes la conformité de
+              plusieurs PME francaises. NIS2 est arrivee, tes dirigeants te
+              demandent de prouver que les collaborateurs sont sensibilises a la
+              cyber. Tu cherches une plateforme qui ne te rajoute pas elle-même
+              une dette RGPD.
             </p>
             <p>
               <strong className="text-primary-500 dark:text-accent-300">
@@ -242,9 +245,9 @@ export default function DpoLandingPage() {
               tu deploies le tenant en 30 minutes. Le registre, le DPA, la
               procedure 72h sont fournis dans /admin. Tu n'as plus qu'a les
               annexer a ton dossier de sous-traitants. La plateforme propose
-              elle-même les modules pedagogiques pour former tes
-              collaborateurs sur les sujets RGPD operationnels (regle des 3
-              questions, droit d'accès, registre, sous-traitants - saison{" "}
+              elle-même les modules pedagogiques pour former tes collaborateurs
+              sur les sujets RGPD operationnels (regle des 3 questions, droit
+              d'accès, registre, sous-traitants - saison{" "}
               <Link
                 href="/apprendre"
                 className="text-accent-500 underline font-medium"
@@ -273,8 +276,8 @@ export default function DpoLandingPage() {
               >
                 /cyber-meteo
               </Link>{" "}
-              donne le contexte national CERT-FR. Tu economises 4 a 6 heures
-              par mois.
+              donne le contexte national CERT-FR. Tu economises 4 a 6 heures par
+              mois.
             </p>
           </div>
         </section>
@@ -297,7 +300,7 @@ export default function DpoLandingPage() {
             Ton espace dédié, déjà en production.
           </h2>
           <p className="text-base text-gray-700 dark:text-gray-200 mb-5 leading-relaxed">
-            Quatre outils opérationnels te sont déjà accessibles dans la console
+            Cinq outils opérationnels te sont déjà accessibles dans la console
             (rôle ADMIN/RSSI/SUPERADMIN). Pas de promesse "Q4 2026", c'est en
             ligne aujourd'hui.
           </p>
@@ -320,9 +323,35 @@ export default function DpoLandingPage() {
                   </Link>{" "}
                   :
                 </strong>{" "}
-                compteurs RGPD 90 jours, queue des demandes d'effacement
-                art. 17 avec flag <em>en retard</em>, activité RGPD 30 jours,
-                liens directs vers les outils internes.
+                ce que la plateforme conserve de tes utilisateurs : compteurs
+                RGPD 90 jours, queue des demandes d'effacement art. 17 avec flag{" "}
+                <em>en retard</em>, activité RGPD 30 jours.
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span
+                aria-hidden="true"
+                className="shrink-0 text-xs font-bold uppercase tracking-wider bg-emerald-500 text-white px-2 py-1 rounded mt-0.5"
+              >
+                Live
+              </span>
+              <span>
+                <strong className="text-primary-500 dark:text-accent-300">
+                  Mise en conformité{" "}
+                  <Link
+                    href="/admin/conformite-rgpd"
+                    className="underline hover:text-accent-500"
+                  >
+                    /admin/conformite-rgpd
+                  </Link>{" "}
+                  :
+                </strong>{" "}
+                dix étapes pour mettre <em>ton</em> entreprise en règle —
+                registre, mentions, sous-traitants, durées, droits des
+                personnes. Une action concrète par étape, des modèles à
+                télécharger, aucun jargon. Rien à voir avec ce que Humanix fait
+                de tes données : c&apos;est ta paie, tes caméras, ton fichier
+                clients.
               </span>
             </li>
             <li className="flex items-start gap-3">
@@ -336,10 +365,10 @@ export default function DpoLandingPage() {
                 <strong className="text-primary-500 dark:text-accent-300">
                   Générateur AIPD{" "}
                   <Link
-                    href="/admin/dpo/aipd"
+                    href="/admin/conformite-rgpd/aipd"
                     className="underline hover:text-accent-500"
                   >
-                    /admin/dpo/aipd
+                    /admin/conformite-rgpd/aipd
                   </Link>{" "}
                   :
                 </strong>{" "}
@@ -366,8 +395,8 @@ export default function DpoLandingPage() {
                   (6 modules MDX) :
                 </strong>{" "}
                 AIPD, contrôle CNIL, transferts hors UE, profilage / décision
-                automatisée, base légale, mutualisation entre PME. Tu te
-                formes toi-même et tu formes ton entourage.
+                automatisée, base légale, mutualisation entre PME. Tu te formes
+                toi-même et tu formes ton entourage.
               </span>
             </li>
             <li className="flex items-start gap-3">
@@ -388,9 +417,8 @@ export default function DpoLandingPage() {
                   </Link>{" "}
                   :
                 </strong>{" "}
-                configure le seuil de conservation par tenant (RGPD art.
-                5.1.e), purge automatique au-delà du seuil, compteur
-                tenant 90 jours.
+                configure le seuil de conservation par tenant (RGPD art. 5.1.e),
+                purge automatique au-delà du seuil, compteur tenant 90 jours.
               </span>
             </li>
             <li className="flex items-start gap-3">
@@ -438,17 +466,17 @@ export default function DpoLandingPage() {
                 <span aria-hidden="true">📞</span>
                 <span>
                   <strong>Connecteur centres d'appel</strong> (Aircall,
-                  RingCentral) pour rattacher automatiquement les demandes
-                  RGPD reçues par téléphone à la queue DPO.
+                  RingCentral) pour rattacher automatiquement les demandes RGPD
+                  reçues par téléphone à la queue DPO.
                 </span>
               </li>
               <li className="flex items-start gap-2">
                 <span aria-hidden="true">🌍</span>
                 <span>
                   <strong>Registre des sous-traitants enrichi</strong> : suivi
-                  des transferts hors UE par traitement, mécanismes de
-                  garantie (CCT, BCR, code de conduite), avec alertes sur
-                  désuétude (cas Schrems II / III).
+                  des transferts hors UE par traitement, mécanismes de garantie
+                  (CCT, BCR, code de conduite), avec alertes sur désuétude (cas
+                  Schrems II / III).
                 </span>
               </li>
             </ul>

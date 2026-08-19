@@ -34,12 +34,11 @@ export default async function RetentionPage({
   searchParams: Promise<{ ok?: string; msg?: string; error?: string }>;
 }) {
   const sp = await searchParams;
-  const flash =
-    sp.error
-      ? { kind: "error" as const, text: sp.error }
-      : sp.ok && sp.msg
-        ? { kind: "ok" as const, text: sp.msg }
-        : null;
+  const flash = sp.error
+    ? { kind: "error" as const, text: sp.error }
+    : sp.ok && sp.msg
+      ? { kind: "ok" as const, text: sp.msg }
+      : null;
   const session = await auth();
   if (!session?.user) redirect("/connexion");
   const role = session.user.role;
@@ -80,12 +79,12 @@ export default async function RetentionPage({
         href="/admin/dpo"
         className="text-xs uppercase tracking-widest font-bold text-accent-500 hover:underline inline-block"
       >
-        ← Espace DPO
+        ← Vos données chez Humanix
       </Link>
       <AdminPageHeader
         icon="🗓"
         title="Rétention des données"
-        description="Limitation de conservation RGPD (article 5.1.e). Configure pendant combien de temps les données personnelles sont gardées avant anonymisation / purge."
+        description="Pendant combien de temps Humanix conserve les données de vos utilisateurs avant anonymisation ou purge (RGPD article 5.1.e). Ce réglage ne concerne que la plateforme, pas les traitements de votre entreprise."
       />
 
       {/* Bandeau de feedback (succès / erreur) renseigne par les server
@@ -99,9 +98,7 @@ export default async function RetentionPage({
               : "border-rose-300 dark:border-rose-700 bg-rose-50/60 dark:bg-rose-900/30 text-rose-900 dark:text-rose-100"
           }`}
         >
-          <span aria-hidden="true">
-            {flash.kind === "ok" ? "✅" : "⚠️"}
-          </span>
+          <span aria-hidden="true">{flash.kind === "ok" ? "✅" : "⚠️"}</span>
           <span>{flash.text}</span>
         </div>
       )}
@@ -155,8 +152,8 @@ export default async function RetentionPage({
               className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3 text-sm focus:border-accent-500 focus:outline-none"
             />
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              Au-delà de cette durée, les utilisateurs inactifs sont
-              anonymisés et les events / audit logs non-critiques supprimés.
+              Au-delà de cette durée, les utilisateurs inactifs sont anonymisés
+              et les events / audit logs non-critiques supprimés.
             </p>
           </div>
           <button type="submit" className="btn-primary text-sm">

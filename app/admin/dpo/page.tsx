@@ -1,17 +1,26 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // =============================================================================
-// /admin/dpo - Dashboard DPO interne.
+// /admin/dpo - « Vos donnees chez Humanix ».
 //
-// Refonte juin 2026 (Sprint 2 bis) : decoupage des sous-composants visuels
-// dans components/admin/dpo/. La page reste server component, charge les
-// donnees via Prisma, et delegue l'affichage aux widgets.
+// UN SEUL SUJET ICI : ce que HUMANIX detient des utilisateurs du tenant, et ce
+// que le client peut en exiger. Retention, demandes d'effacement, journal.
+//
+// Ce qui n'est PAS ici : la mise en conformite de l'entreprise cliente -- sa
+// paie, sa videosurveillance, son fichier clients. Ca vit sous
+// /admin/conformite-rgpd, et les deux n'ont aucun rapport.
+//
+//   Les deux ont cohabite sur cette page jusqu'au 2026-08-19, sous l'intitule
+//   « Espace DPO ». Un nom de ROLE, pas de sujet -- et comme les deux sujets
+//   concernent la meme personne, tout s'y est agrege. La confusion etait
+//   couteuse : on pouvait croire que regler la retention Humanix avancait la
+//   conformite de sa propre entreprise. L'URL est conservee (champ
+//   `admin_dpo_dashboard` de l'API publique dpo-export, schema 1.0).
 //
 // Données affichees (toutes derivees du modèle AuditLog existant) :
 //   - Compteurs RGPD des 90 derniers jours
 //   - Queue des demandes d'effacement (article 17) avec flag "en retard"
 //   - Activite RGPD recente (30 dernieres actions)
-//   - Lien vers le generateur AIPD
-//   - Liens vers les modules pedagogiques
+//   - Ressources sur Humanix comme sous-traitant
 //
 // Roles autorises : ADMIN, RSSI, SUPERADMIN.
 // =============================================================================
@@ -31,7 +40,7 @@ import ErasureQueue, {
 import RecentActivity, {
   type RecentEntry,
 } from "@/components/admin/dpo/RecentActivity";
-import DpoResources from "@/components/admin/dpo/DpoResources";
+import RessourcesHumanix from "@/components/admin/dpo/RessourcesHumanix";
 
 export const dynamic = "force-dynamic";
 
@@ -148,39 +157,41 @@ export default async function AdminDpoPage() {
   return (
     <div className="space-y-8">
       <AdminPageHeader
-        title="Espace DPO"
-        description="Demandes RGPD, journal d'audit, AIPD generator, retention configurable. Tout ce qu'un DPO interne ou mutualise consulte au quotidien."
+        title="Vos données chez Humanix"
+        description="Ce que la plateforme conserve de vos utilisateurs : durée de rétention, demandes d'effacement, journal des accès."
         icon="🛡"
         actions={
-          <div className="flex flex-wrap gap-2">
-            <Link
-              href="/admin/dpo/retention"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-700 dark:text-gray-200 text-sm font-bold hover:border-accent-500 transition shadow-sm"
-            >
-              <span aria-hidden="true">🗓</span>
-              Retention RGPD
-            </Link>
-            {/* Le parcours vise UNE AUTRE PERSONNE et un AUTRE sujet que le reste
-                de cette page : ici on montre ce que Humanix fait des donnees
-                confiees, la-bas on accompagne la mise en conformite de SON
-                entreprise. Le lien est mis en avant, l'intitule les distingue. */}
-            <Link
-              href="/admin/dpo/parcours"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition shadow-sm"
-            >
-              <span aria-hidden="true">🧭</span>
-              Mettre mon entreprise en conformite
-            </Link>
-            <Link
-              href="/admin/dpo/aipd"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary-500 text-white font-bold hover:bg-primary-600 transition shadow-sm"
-            >
-              <span aria-hidden="true">📝</span>
-              Generateur AIPD
-            </Link>
-          </div>
+          <Link
+            href="/admin/dpo/retention"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-700 dark:text-gray-200 text-sm font-bold hover:border-accent-500 transition shadow-sm"
+          >
+            <span aria-hidden="true">🗓</span>
+            Durée de rétention
+          </Link>
         }
       />
+
+      {/* La contrepartie de l'encart de /admin/conformite-rgpd. Les deux pages
+          se renvoient l'une a l'autre en disant ce qu'elles NE sont PAS : c'est
+          la seule facon de tuer durablement la confusion, un lien discret dans
+          une barre d'actions n'y suffisait pas. */}
+      <div className="rounded-2xl border border-sky-200 bg-sky-50 p-5 text-sm dark:border-sky-900/40 dark:bg-sky-950/20">
+        <p className="font-semibold text-sky-900 dark:text-sky-200">
+          Cette page parle de <em>nous</em>, pas de vous
+        </p>
+        <p className="mt-1 text-sky-800 dark:text-sky-300">
+          Tout ce qui suit décrit ce que Humanix fait des données que vous nous
+          confiez. Rien ici ne concerne les traitements de votre entreprise —
+          votre paie, vos caméras, votre fichier clients. Pour ceux-là,{" "}
+          <Link
+            href="/admin/conformite-rgpd"
+            className="underline font-semibold"
+          >
+            mettez votre entreprise en conformité
+          </Link>{" "}
+          est la bonne page.
+        </p>
+      </div>
 
       <AdminSection
         title="Vue d'ensemble · 90 derniers jours"
@@ -224,11 +235,11 @@ export default async function AdminDpoPage() {
       </AdminSection>
 
       <AdminSection
-        title="Ressources DPO"
-        description="Modules pedagogiques et outils pour le quotidien du DPO"
+        title="Humanix comme sous-traitant"
+        description="Ce que vous pouvez consulter, exiger ou transmettre à votre direction."
         variant="muted"
       >
-        <DpoResources />
+        <RessourcesHumanix />
       </AdminSection>
 
       <section className="text-center pt-4 pb-2">

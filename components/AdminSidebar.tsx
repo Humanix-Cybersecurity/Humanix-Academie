@@ -163,9 +163,22 @@ const SECTIONS: Section[] = [
         gate: "Pro+",
         minRole: "RSSI",
       },
+      // Deux entrees, deux sujets. Elles ont ete une seule ligne « Espace DPO »
+      // jusqu'au 2026-08-19 : un nom de ROLE, sous lequel se sont agreges deux
+      // sujets sans rapport. On nomme desormais par sujet, ce qui rend le
+      // melange impossible a refaire.
       {
+        // La conformite de SON entreprise. A sa place au milieu des autres
+        // referentiels, pas sous ce que Humanix fait de ses donnees.
+        href: "/admin/conformite-rgpd",
+        label: "Conformité RGPD",
+        icon: "🧭",
+        minRole: "RSSI",
+      },
+      {
+        // Ce que HUMANIX detient. URL conservee : champ d'API publique.
         href: "/admin/dpo",
-        label: "Espace DPO",
+        label: "Vos données chez Humanix",
         icon: "🛡",
         minRole: "RSSI",
       },

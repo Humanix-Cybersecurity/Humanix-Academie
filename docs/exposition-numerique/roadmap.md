@@ -45,7 +45,7 @@ Source de vérité versionnée de la roadmap décidée en juin 2026.
 | Chiffrement | `lib/smtp/encryption.ts` (template) |
 | Plan-gating | `lib/plans.ts`, `lib/tenant-community.ts` |
 | Audit | `lib/audit.ts` |
-| Conformité DPO | `/admin/dpo/` (générateur AIPD, file effacement art.17) |
+| Conformité DPO | `/admin/dpo/` (file effacement art.17) + `/admin/conformite-rgpd/` (parcours, AIPD) |
 
 ## Go / No-Go Phase 2 (B2B)
 

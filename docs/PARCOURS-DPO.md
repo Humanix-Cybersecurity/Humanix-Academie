@@ -189,7 +189,25 @@ la loi, elle se relit et se diffe comme du contenu pédagogique.
 
 **Ce qui ne doit surtout pas y figurer** : nos propres cases. Elles vivent sur
 `/admin/dpo`, séparément, sous un intitulé qui ne prête pas à confusion —
-_« Ce que Humanix fait de vos données »_, et non _« Votre conformité »_.
+_« Vos données chez Humanix »_, et non _« Votre conformité »_.
+
+> **Fait le 2026-08-19, et ça méritait un correctif.** La première livraison a
+> mis le parcours sous `/admin/dpo/parcours` — c'est-à-dire _à l'intérieur_ de
+> nos propres cases. La hiérarchie d'URL disait le contraire de ce paragraphe :
+> que la mise en conformité de l'entreprise était un sous-chapitre de ce que
+> Humanix fait de ses données. Un encart d'avertissement avait été ajouté sur
+> chaque page au lieu de corriger la structure — documenter une confusion ne la
+> lève pas.
+>
+> Le parcours est désormais sous **`/admin/conformite-rgpd`**, au milieu des
+> autres référentiels (`/admin/conformite`, `/admin/conformite-nis2`), avec
+> l'AIPD et les modèles. `/admin/dpo` conserve son URL — c'est un champ de
+> l'API publique `dpo-export` (`admin_dpo_dashboard`, schéma 1.0) — et ne parle
+> plus que de ce que la plateforme conserve. Redirections permanentes en place.
+>
+> La leçon, générale : **nommer par rôle agrège, nommer par sujet sépare.**
+> « Espace DPO » désignait une personne ; les deux sujets concernaient cette
+> personne, donc les deux s'y sont installés.
 
 ---
 

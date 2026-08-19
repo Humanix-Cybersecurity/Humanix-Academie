@@ -9,7 +9,7 @@
 > la veille B2B est en **NO-GO**.
 >
 > Aligné sur la méthode CNIL (PIA). Le générateur AIPD existant de l'Académie
-> (`/admin/dpo/aipd`) peut servir de point de départ instanciable par tenant.
+> (`/admin/conformite-rgpd/aipd`) peut servir de point de départ instanciable par tenant.
 
 ---
 

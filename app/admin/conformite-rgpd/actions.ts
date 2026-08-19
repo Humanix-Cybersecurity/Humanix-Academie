@@ -17,7 +17,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
-import { etapeParCle, STATUTS, type StatutEtape } from "@/lib/dpo/catalogue";
+import { etapeParCle, STATUTS, type StatutEtape } from "@/lib/conformite-rgpd/catalogue";
 
 export type ResultatAction = { ok: true } | { ok: false; erreur: string };
 
@@ -84,6 +84,6 @@ export async function definirStatutEtape(
     });
   }
 
-  revalidatePath("/admin/dpo/parcours");
+  revalidatePath("/admin/conformite-rgpd");
   return { ok: true };
 }
