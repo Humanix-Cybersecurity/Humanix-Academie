@@ -195,6 +195,7 @@ model Tenant {
   // sans en etre membre natif (cf. TenantMembership). Cas typique : un
   // SUPERADMIN Humanix qui gere plusieurs tenants clients.
   memberships            TenantMembership[]
+  etapesConformite       EtapeConformiteTenant[]
 
   @@index([parentTenantId])
 }
@@ -468,6 +469,7 @@ model User {
   // sur les tenants clients qu'il accompagne (cf. TenantMembership).
   tenantMemberships            TenantMembership[]           @relation("UserTenantMemberships")
   tenantMembershipsGrantedByMe TenantMembership[]           @relation("TenantMembershipsGrantedBy")
+  etapesApprentissageDpo       EtapeApprentissageDpo[]
 
   @@index([tenantId])
   @@index([isActive])
@@ -2279,6 +2281,10 @@ enum AuditAction {
   EXFILTRATION_SUSPECTED // Seuil rolling window depasse sur /api/admin/*/export
   // Connecteur Privacy Tools dedie DPO (2026-05-24)
   DPO_EXPORT_REQUESTED // Export JSON via /api/v1/dpo-export (OneTrust, Didomi, Privacy.fr)
+  /// Un point du parcours de mise en conformite change d'etat. Seules les
+  /// etapes qui decrivent l'ENTREPRISE sont tracees : l'apprentissage d'une
+  /// personne ne regarde qu'elle. Cf. docs/PARCOURS-DPO.md.
+  COMPLIANCE_STEP_UPDATED
   // Catalog seeding (refonte gamification mai 2026)
   CATALOG_RESEEDED // SUPERADMIN a relance le seed catalog (saisons + badges + boutique) via /superadmin/catalog
   // Module Exposition Numerique (juin 2026)
@@ -2782,4 +2788,64 @@ model CronRun {
 
   @@index([name, startedAt])
   @@index([startedAt])
+}
+
+// =============================================================================
+// PARCOURS DE MISE EN CONFORMITE RGPD
+// =============================================================================
+//
+// Cf. docs/PARCOURS-DPO.md.
+//
+// A NE PAS CONFONDRE avec la conformite de Humanix lui-meme (DPA, retention,
+// journal d'audit), qui vit dans /admin/dpo. Ici on accompagne une PERSONNE --
+// souvent la RH, le RAF ou le QSE a qui on a pose le chapeau DPO -- a mettre
+// SON entreprise en conformite. Sa paie, sa videosurveillance, son fichier
+// clients : rien a voir avec nos traitements.
+//
+// POURQUOI DEUX TABLES ET NON UNE COLONNE `portee`
+//
+//   Le parcours melange deux natures qui n'ont pas le meme proprietaire :
+//   l'apprentissage part avec la personne, l'etat de l'organisation reste et
+//   sert a son successeur.
+//
+//   Un modele unique avec `userId` nullable rendrait la contrainte d'unicite
+//   INOPERANTE : PostgreSQL considere deux NULL comme distincts, donc rien
+//   n'empecherait de creer dix fois la meme etape d'entreprise.
+
+/// Ce qui appartient a la PERSONNE. Part avec elle a l'anonymisation.
+/// « J'ai compris ce qu'est le RGPD », « j'ai su dire si je suis DPO ».
+model EtapeApprentissageDpo {
+  id     String   @id @default(cuid())
+  userId String
+  /// Cle du catalogue (lib/dpo/catalogue.ts). Pas une FK : le catalogue est
+  /// du code, il se relit et se diffe comme de la doctrine.
+  cle    String
+  statut String   @default("a_faire")
+  majLe  DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, cle])
+  @@index([userId])
+}
+
+/// Ce qui decrit l'ENTREPRISE. Reste quand la personne part.
+/// « Notre registre liste cinq traitements », « nos durees sont fixees ».
+model EtapeConformiteTenant {
+  id       String   @id @default(cuid())
+  tenantId String
+  cle      String
+  statut   String   @default("a_faire")
+  /// Le DPO ecrit POURQUOI, pas seulement quoi : « fait pour la paie, reste
+  /// le recrutement ». C'est ce que son successeur lira en premier.
+  note     String?
+  /// Qui a change le statut. Conserve meme si la personne part : c'est la
+  /// tracabilite de l'organisation, pas une donnee de la personne.
+  majPar   String?
+  majLe    DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, cle])
+  @@index([tenantId])
 }

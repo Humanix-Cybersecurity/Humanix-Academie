@@ -109,7 +109,7 @@ export default async function AdminDpoPage() {
   const queue: QueueRow[] = erasureRequests.map((r) => {
     const completedAt =
       r.targetId && completionsByTarget.get(r.targetId)
-        ? completionsByTarget.get(r.targetId) ?? null
+        ? (completionsByTarget.get(r.targetId) ?? null)
         : null;
     const daysSince = Math.round(
       (now - r.createdAt.getTime()) / (24 * 3600 * 1000),
@@ -159,6 +159,17 @@ export default async function AdminDpoPage() {
             >
               <span aria-hidden="true">🗓</span>
               Retention RGPD
+            </Link>
+            {/* Le parcours vise UNE AUTRE PERSONNE et un AUTRE sujet que le reste
+                de cette page : ici on montre ce que Humanix fait des donnees
+                confiees, la-bas on accompagne la mise en conformite de SON
+                entreprise. Le lien est mis en avant, l'intitule les distingue. */}
+            <Link
+              href="/admin/dpo/parcours"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition shadow-sm"
+            >
+              <span aria-hidden="true">🧭</span>
+              Mettre mon entreprise en conformite
             </Link>
             <Link
               href="/admin/dpo/aipd"
@@ -222,9 +233,9 @@ export default async function AdminDpoPage() {
 
       <section className="text-center pt-4 pb-2">
         <blockquote className="font-display italic text-base text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-          « Un DPO ne devrait pas avoir a choisir entre un outil cyber utile
-          et un outil cyber conforme. On a passe deux ans a construire
-          l'option qui est les deux a la fois. »
+          « Un DPO ne devrait pas avoir a choisir entre un outil cyber utile et
+          un outil cyber conforme. On a passe deux ans a construire l'option qui
+          est les deux a la fois. »
         </blockquote>
         <p
           aria-hidden="true"
