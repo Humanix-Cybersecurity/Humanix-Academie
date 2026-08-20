@@ -26,6 +26,17 @@ export default function SouscrireForm({
 }: Props) {
   const [email, setEmail] = useState("");
   const [organization, setOrganization] = useState("");
+
+  // Coordonnees de facturation. Obligatoires : sans denomination ni adresse
+  // de l'acheteur, aucune facture conforme ne peut etre emise (article 242
+  // nonies A de l'annexe II au CGI). Les collecter ici evite qu'un client
+  // paie sans pouvoir etre facture.
+  const [adresse, setAdresse] = useState("");
+  const [codePostal, setCodePostal] = useState("");
+  const [ville, setVille] = useState("");
+  const [pays, setPays] = useState("FR");
+  const [siren, setSiren] = useState("");
+  const [tvaIntra, setTvaIntra] = useState("");
   const [seats, setSeats] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
@@ -45,6 +56,15 @@ export default function SouscrireForm({
             organization,
             seats: seatsNum,
             billing,
+            // La denomination de facturation reprend le nom d'organisation :
+            // un champ de moins a remplir, et c'est la meme entite.
+            raisonSociale: organization,
+            adresse,
+            codePostal,
+            ville,
+            pays,
+            siren,
+            tvaIntra,
           }),
         });
         const data = (await res.json()) as { url?: string; error?: string };
@@ -85,7 +105,9 @@ export default function SouscrireForm({
               : "Cycle mensuel - sans engagement"
           }
         >
-          {billing === "annual" ? "Annuel · 12 mois" : "Mensuel · sans engagement"}
+          {billing === "annual"
+            ? "Annuel · 12 mois"
+            : "Mensuel · sans engagement"}
         </span>
       </div>
 
@@ -132,6 +154,141 @@ export default function SouscrireForm({
             : "Vous recevrez un lien magique sur cet email après paiement pour accéder à votre console admin."}
         </p>
       </div>
+
+      {/* ================= Coordonnees de facturation =================
+          Obligatoires cote loi : une facture sans denomination ni adresse de
+          l'acheteur n'est pas conforme. Les demander ici plutot qu'apres le
+          paiement evite qu'un client paie sans pouvoir etre facture. */}
+      <fieldset className="space-y-4 rounded-xl border-2 border-gray-200 p-4 dark:border-slate-700">
+        <legend className="px-2 text-sm font-bold">
+          Coordonnées de facturation
+        </legend>
+        <p className="text-xs text-gray-500">
+          Elles figureront sur vos factures. La raison sociale reprend le nom
+          d&apos;organisation saisi plus haut.
+        </p>
+
+        <div>
+          <label
+            htmlFor="souscrire-adresse"
+            className="block text-sm font-medium mb-1"
+          >
+            Adresse <span className="text-warn">*</span>
+          </label>
+          <input
+            id="souscrire-adresse"
+            type="text"
+            required
+            maxLength={200}
+            autoComplete="street-address"
+            value={adresse}
+            onChange={(e) => setAdresse(e.target.value)}
+            placeholder="12 rue de l'Exemple"
+            className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none"
+          />
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          <div>
+            <label
+              htmlFor="souscrire-cp"
+              className="block text-sm font-medium mb-1"
+            >
+              Code postal <span className="text-warn">*</span>
+            </label>
+            <input
+              id="souscrire-cp"
+              type="text"
+              required
+              maxLength={20}
+              autoComplete="postal-code"
+              value={codePostal}
+              onChange={(e) => setCodePostal(e.target.value)}
+              className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="souscrire-ville"
+              className="block text-sm font-medium mb-1"
+            >
+              Ville <span className="text-warn">*</span>
+            </label>
+            <input
+              id="souscrire-ville"
+              type="text"
+              required
+              maxLength={100}
+              autoComplete="address-level2"
+              value={ville}
+              onChange={(e) => setVille(e.target.value)}
+              className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="souscrire-pays"
+              className="block text-sm font-medium mb-1"
+            >
+              Pays <span className="text-warn">*</span>
+            </label>
+            <input
+              id="souscrire-pays"
+              type="text"
+              required
+              maxLength={2}
+              autoComplete="country"
+              value={pays}
+              onChange={(e) => setPays(e.target.value.toUpperCase())}
+              placeholder="FR"
+              className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none uppercase"
+            />
+          </div>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label
+              htmlFor="souscrire-siren"
+              className="block text-sm font-medium mb-1"
+            >
+              SIREN
+            </label>
+            <input
+              id="souscrire-siren"
+              type="text"
+              maxLength={20}
+              value={siren}
+              onChange={(e) => setSiren(e.target.value)}
+              placeholder="123456789"
+              className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Obligatoire entre entreprises établies en France.
+            </p>
+          </div>
+          <div>
+            <label
+              htmlFor="souscrire-tva"
+              className="block text-sm font-medium mb-1"
+            >
+              N° de TVA intracommunautaire
+            </label>
+            <input
+              id="souscrire-tva"
+              type="text"
+              maxLength={20}
+              value={tvaIntra}
+              onChange={(e) => setTvaIntra(e.target.value)}
+              placeholder="FR80103901799"
+              className="block w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Hors de France, il permet l&apos;autoliquidation.
+            </p>
+          </div>
+        </div>
+      </fieldset>
 
       {maxSeats && maxSeats > 1 && (
         <div>

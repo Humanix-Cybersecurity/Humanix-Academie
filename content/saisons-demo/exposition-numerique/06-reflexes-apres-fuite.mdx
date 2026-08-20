@@ -32,6 +32,61 @@ takeaway: |
   et déconnecte l'inconnu ; 4) surveille relevés bancaires et messages
   suspects les jours suivants. Vite et dans le bon ordre.
 licence: "CC BY-SA 4.0 - Humanix Académie Community Edition"
+debrief: |
+  Les premieres heures apres une fuite decident du reste. **L'ordre compte plus que la vitesse.**
+
+  **1. Changer le mot de passe concerne PARTOUT ou il a servi**, en commencant par la messagerie
+  principale. Tant que la messagerie est accessible, tous les autres comptes le sont aussi.
+
+  **2. Activer la double authentification** sur les comptes qui ne l'avaient pas. C'est le moment
+  ou l'on est motive.
+
+  **3. Verifier les acces actifs** : la plupart des services listent les sessions ouvertes et les
+  appareils connus. On ferme ce qu'on ne reconnait pas.
+
+  **4. Surveiller ce qui bouge** : demandes de reinitialisation non sollicitees, messages envoyes a
+  votre place, regles de transfert automatique creees dans la messagerie. Ce dernier point est le
+  plus discret et le plus grave : une regle de transfert survit au changement de mot de passe.
+
+  **Ce qu'il ne faut pas faire :** attendre de voir. Une fuite publiee peut dater de plusieurs
+  annees -- le delai a deja couru.
+quiz:
+  - question: "Quel est le premier geste apres une fuite ?"
+    choices:
+      - id: "a"
+        label: "Fermer le compte concerne"
+        correct: false
+      - id: "b"
+        label: "Changer le mot de passe partout ou il a servi, en commencant par la messagerie"
+        correct: true
+      - id: "c"
+        label: "Attendre de voir si quelque chose se passe"
+        correct: false
+    explanation: "Tant que la messagerie est accessible, tous les autres comptes le sont. Et attendre ne fait qu'allonger un delai qui court deja."
+  - question: "Qu'est-ce qui survit a un changement de mot de passe ?"
+    choices:
+      - id: "a"
+        label: "Les sessions deja ouvertes uniquement"
+        correct: false
+      - id: "b"
+        label: "Une regle de transfert automatique creee dans la messagerie"
+        correct: true
+      - id: "c"
+        label: "Rien, le changement coupe tout"
+        correct: false
+    explanation: "C'est le plus discret et le plus grave : la copie de vos messages continue de partir sans qu'aucune connexion suspecte n'apparaisse."
+  - question: "Une fuite publiee aujourd'hui concerne des donnees :"
+    choices:
+      - id: "a"
+        label: "Necessairement recentes"
+        correct: false
+      - id: "b"
+        label: "Qui peuvent dater de plusieurs annees"
+        correct: true
+      - id: "c"
+        label: "Toujours anonymisees"
+        correct: false
+    explanation: "Le delai entre la compromission et la publication se compte souvent en annees. Tout ce qui a utilise ce mot de passe entretemps est expose."
 ---
 
 # Les 72 heures après une fuite

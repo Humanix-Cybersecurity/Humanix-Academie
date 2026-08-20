@@ -28,6 +28,63 @@ takeaway: |
   Signaler un phishing = proteger toute l'equipe. Le RSSI peut bloquer
   l'expediteur a la source et eviter des dizaines de clics potentiels.
 licence: "CC BY-SA 4.0 - Humanix Academie Community Edition"
+debrief: |
+  Signaler un hameconnage ne sert pas a se couvrir : **ca protege tous les autres**.
+
+  Quand un message frauduleux arrive dans une entreprise, il arrive rarement seul. Sur cent
+  destinataires :
+
+  - 5 a 10 % ne le voient jamais (filtre, archive) ;
+  - 70 a 80 % le voient et l'ignorent ;
+  - 10 a 15 % le voient et **doutent** ;
+  - quelques-uns cliquent.
+
+  Un seul signalement permet de bloquer l'expediteur a la source et d'avertir les autres **avant**
+  qu'ils ne cliquent. Les doutants deviennent alors des personnes rassurees, pas des victimes.
+
+  **Comment signaler utilement :** transferer le message a la personne qui gere la securite ou au
+  support, **en disant qu'il s'agit d'un hameconnage**. Ne pas se contenter de supprimer.
+
+  **Et si on a deja clique :** le dire tout de suite. Le delai entre le clic et le signalement est
+  le seul facteur sur lequel on peut encore agir. Une entreprise qui punit le clic n'apprend jamais
+  rien -- elle apprend seulement a ses equipes a se taire.
+quiz:
+  - question: "A quoi sert de signaler un hameconnage qu'on a su eviter ?"
+    choices:
+      - id: "a"
+        label: "A se couvrir en cas de probleme"
+        correct: false
+      - id: "b"
+        label: "A faire bloquer l'expediteur avant que d'autres ne cliquent"
+        correct: true
+      - id: "c"
+        label: "A alimenter les statistiques de securite"
+        correct: false
+    explanation: "Le message n'arrive jamais a une seule personne. Un signalement protege ceux qui doutent encore, et ceux qui n'ont pas encore ouvert."
+  - question: "Que faire d'un message frauduleux, une fois repere ?"
+    choices:
+      - id: "a"
+        label: "Le supprimer"
+        correct: false
+      - id: "b"
+        label: "Le transferer au support en precisant que c'est un hameconnage"
+        correct: true
+      - id: "c"
+        label: "Repondre pour demander l'arret des envois"
+        correct: false
+    explanation: "Supprimer protege une personne. Transferer permet de bloquer a la source. Repondre confirme au fraudeur que l'adresse est vivante."
+  - question: "On a clique, puis on s'en rend compte. Que fait-on ?"
+    choices:
+      - id: "a"
+        label: "On le dit immediatement"
+        correct: true
+      - id: "b"
+        label: "On change son mot de passe et on n'en parle pas"
+        correct: false
+      - id: "c"
+        label: "On attend de voir s'il se passe quelque chose"
+        correct: false
+    explanation: "Le delai entre le clic et le signalement est le seul facteur encore modifiable. Une entreprise qui punit le clic apprend seulement a ses equipes a se taire."
 ---
 
 # Signaler un phishing
@@ -41,6 +98,7 @@ Tes collegues vont en beneficier directement.
 ### Effet "defense collective"
 
 Quand un phishing arrive, il y a typiquement :
+
 - 5-10 % qui ne le voient meme pas (filtre anti-spam, archive, etc.)
 - 70-80 % qui le voient mais l'ignorent
 - 10-15 % qui le voient et **doutent**
@@ -48,6 +106,7 @@ Quand un phishing arrive, il y a typiquement :
 
 Les 10-15 % qui doutent **ont besoin d'un signal** pour confirmer leur
 doute. Si tu signales l'attaque, le RSSI peut :
+
 1. Bloquer l'expediteur (filtrage mail au niveau du serveur)
 2. Envoyer une alerte interne ("Phishing en cours, voici les signaux")
 3. Eduquer ceux qui ont clique discretement
@@ -73,6 +132,7 @@ doute. Si tu signales l'attaque, le RSSI peut :
 ## Et si on a deja clique ?
 
 C'est **MIEUX de le dire** qu'essayer de cacher. Le RSSI peut :
+
 - Revoquer les sessions actives
 - Forcer le changement de mot de passe
 - Inspecter les logs pour evaluer l'impact
@@ -85,6 +145,7 @@ ransomwares non detectes pendant des semaines.
 ## Pour aller plus loin
 
 Cette demo Open Core couvre les bases. Le catalogue complet inclut :
+
 - Procedure formalisee de signalement (avec workflow et SLA)
 - Integration avec un SIEM (Splunk, Sentinel, Sekoia)
 - Plan de reponse a incident post-clic (CERT-FR templates)

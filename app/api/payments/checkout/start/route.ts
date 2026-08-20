@@ -35,6 +35,8 @@ import {
 } from "@/lib/mollie";
 import { isPlanId } from "@/lib/plans";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { validerCoordonnees } from "@/lib/facturation/coordonnees";
+import { memoriserCoordonnees } from "@/lib/facturation/en-attente";
 import { isDevMode } from "@/lib/dev-mode";
 import { provisionTenantWithAdmin } from "@/lib/tenant-provisioning";
 import { signIn } from "@/lib/auth";
@@ -48,6 +50,17 @@ type StartRequest = {
   seats?: number;
   /** Cycle de facturation choisi cote /tarifs : "monthly" (defaut) ou "annual". */
   billing?: string;
+  // --- Coordonnees de facturation ---------------------------------------
+  // Collectees au checkout, et non apres l'encaissement : sans denomination
+  // ni adresse de l'acheteur, aucune facture conforme ne peut etre emise
+  // (article 242 nonies A de l'annexe II au CGI).
+  raisonSociale?: string;
+  adresse?: string;
+  codePostal?: string;
+  ville?: string;
+  pays?: string;
+  siren?: string;
+  tvaIntra?: string;
 };
 
 export async function POST(req: Request) {
@@ -147,10 +160,7 @@ export async function POST(req: Request) {
       await signIn("dev-bypass", { email, redirect: false });
     } catch (e) {
       console.error("[checkout/start] dev-bypass signIn failed", e);
-      return NextResponse.json(
-        { error: "auto_login_failed" },
-        { status: 500 },
-      );
+      return NextResponse.json({ error: "auto_login_failed" }, { status: 500 });
     }
     return NextResponse.json({ url: "/admin" });
   }
@@ -187,6 +197,23 @@ export async function POST(req: Request) {
     );
   }
 
+  // Coordonnees de facturation : validees AVANT d'ouvrir le paiement.
+  //
+  // Les collecter ici plutot qu'apres l'encaissement evite la situation ou
+  // un client paie sans qu'aucune facture conforme puisse etre emise.
+  const coord = validerCoordonnees({
+    raisonSociale: body.raisonSociale ?? organization,
+    adresse: body.adresse,
+    codePostal: body.codePostal,
+    ville: body.ville,
+    pays: body.pays,
+    siren: body.siren,
+    tvaIntra: body.tvaIntra,
+  });
+  if (!coord.ok) {
+    return NextResponse.json({ error: coord.erreur }, { status: 400 });
+  }
+
   try {
     const checkout = await createCheckoutSession({
       customerEmail: email,
@@ -204,12 +231,27 @@ export async function POST(req: Request) {
         email,
       },
     });
+    // Memorisation APRES la creation du client Mollie : c'est son identifiant
+    // qui fait le lien jusqu'au webhook, ou le tenant sera cree. Best-effort :
+    // un echec ici ne doit pas empecher le paiement -- l'admin pourra saisir
+    // ses coordonnees depuis la console.
+    try {
+      await memoriserCoordonnees({
+        paymentCustomerId: checkout.customer.id,
+        coordonnees: coord.valeur,
+      });
+    } catch (e) {
+      console.error("[checkout/start] coordonnees non memorisees", e);
+    }
+
     return NextResponse.json({
       url: checkout.hosted_payment.payment_url,
     });
   } catch (err: unknown) {
     const msg =
-      err instanceof Error ? err.message : "Erreur lors du démarrage du paiement.";
+      err instanceof Error
+        ? err.message
+        : "Erreur lors du démarrage du paiement.";
     console.error("[checkout/start] failed", err);
     return NextResponse.json({ error: msg }, { status: 500 });
   }

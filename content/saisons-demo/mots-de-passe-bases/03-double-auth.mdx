@@ -30,6 +30,62 @@ takeaway: |
   le piratage de compte. Active-la partout : email, banque, reseaux sociaux,
   outils pro.
 licence: "CC BY-SA 4.0 - Humanix Academie Community Edition"
+debrief: |
+  La double authentification combine **quelque chose qu'on sait** (le mot de passe) et **quelque
+  chose qu'on a** (le telephone, une cle). Un mot de passe vole ne suffit alors plus.
+
+  Elle bloque environ **99,9 %** des compromissions de compte -- c'est, de loin, la mesure au
+  meilleur rapport effort/protection.
+
+  **Les trois formes, de la plus faible a la plus solide :**
+
+  - **le code par SMS** : mieux que rien, mais interceptable par detournement de carte SIM ;
+  - **l'application d'authentification** (code a six chiffres) : bon niveau, gratuit, hors ligne ;
+  - **la cle physique** : le seul mecanisme qui resiste aussi au hameconnage, parce que la cle
+    verifie l'adresse du site avant de repondre.
+
+  **Par ou commencer :** la messagerie, puis la banque, puis les outils de travail. Et conserver
+  les codes de secours **ailleurs que dans le telephone** qui porte l'application.
+
+  **Le piege a connaitre :** un attaquant peut appeler en se faisant passer pour le support et
+  demander « le code que vous venez de recevoir ». Ce code ne se communique jamais, a personne.
+quiz:
+  - question: "Que combine la double authentification ?"
+    choices:
+      - id: "a"
+        label: "Deux mots de passe differents"
+        correct: false
+      - id: "b"
+        label: "Quelque chose qu'on sait et quelque chose qu'on a"
+        correct: true
+      - id: "c"
+        label: "Un mot de passe et une question secrete"
+        correct: false
+    explanation: "Deux facteurs de nature differente. Une question secrete reste « quelque chose qu'on sait » -- et se devine souvent."
+  - question: "Quelle forme resiste aussi au hameconnage ?"
+    choices:
+      - id: "a"
+        label: "Le code par SMS"
+        correct: false
+      - id: "b"
+        label: "L'application d'authentification"
+        correct: false
+      - id: "c"
+        label: "La cle physique"
+        correct: true
+    explanation: "La cle verifie l'adresse du site avant de repondre. Un faux site n'obtient rien, meme si l'utilisateur y consent."
+  - question: "Le « support » vous appelle et demande le code recu par SMS. Que faites-vous ?"
+    choices:
+      - id: "a"
+        label: "Je le donne, l'appel vient du support"
+        correct: false
+      - id: "b"
+        label: "Je ne le communique jamais, a personne"
+        correct: true
+      - id: "c"
+        label: "Je le donne apres avoir verifie le numero affiche"
+        correct: false
+    explanation: "Aucun service legitime ne demande ce code. Et le numero affiche se falsifie -- c'est meme la premiere chose que fait l'attaquant."
 ---
 
 # La double authentification
@@ -49,17 +105,20 @@ facteur.
 ## Les 3 types de 2FA, du moins securise au plus securise
 
 ### 1. SMS - A EVITER
+
 Code envoye par SMS. Vulnerable au "SIM swapping" (l'attaquant convainc
 l'operateur de transferer le numero sur sa propre carte SIM). NIST
 deconseille depuis 2017.
 
 ### 2. TOTP (app authenticator) - TRES RECOMMANDE
+
 Une app sur le telephone (Authy, Google Authenticator, Microsoft
 Authenticator) genere un code a 6 chiffres toutes les 30 secondes,
 calcule localement avec une cle partagee a l'inscription. Pas de
 reseau requis, pas de SIM swapping.
 
 ### 3. FIDO2 / Passkey - IDEAL
+
 Cle physique (YubiKey) ou cle embarquee (Windows Hello, Touch ID,
 Android). Impossible a hameconner : la cle ne fonctionne que sur le
 vrai site, jamais sur un site de phishing.
@@ -67,6 +126,7 @@ vrai site, jamais sur un site de phishing.
 ## Pour aller plus loin
 
 Cette demo Open Core couvre les bases. Le catalogue complet inclut :
+
 - Deploiement de TOTP en equipe (par groupe AD)
 - Politique de cles FIDO2 (achat, distribution, recuperation)
 - Gestion des cas de perte de telephone

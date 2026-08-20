@@ -35,6 +35,60 @@ takeaway: |
   intégré au navigateur). Et on active la double authentification
   là où c'est possible - voir l'épisode suivant.
 licence: "CC BY-SA 4.0 - Humanix Académie Community Edition"
+debrief: |
+  Un mot de passe apparu dans une fuite n'est plus un secret : il figure dans des listes qui
+  circulent, et il sera **teste automatiquement** sur des centaines d'autres services.
+
+  **Ce qu'il faut faire, dans l'ordre :**
+
+  1. le changer **partout ou il a servi**, pas seulement sur le service concerne ;
+  2. commencer par la messagerie principale -- c'est elle qui permet de reinitialiser tous les
+     autres comptes ;
+  3. mettre un mot de passe **unique** sur chacun. Sans gestionnaire, cette regle est intenable.
+
+  **Ce qui ne suffit pas :** changer un caractere ou ajouter un chiffre a la fin. Les outils
+  d'attaque essaient ces variantes en priorite.
+
+  **Et la question qui derange :** depuis combien de temps ce mot de passe circule-t-il ? Une fuite
+  publiee aujourd'hui peut dater de plusieurs annees. Tout ce qui l'a utilise pendant ce temps est
+  a considerer comme expose.
+quiz:
+  - question: "Que peut faire un attaquant avec un mot de passe issu d'une fuite ?"
+    choices:
+      - id: "a"
+        label: "Rien, si le service concerne a ete securise depuis"
+        correct: false
+      - id: "b"
+        label: "Le tester automatiquement sur des centaines d'autres services"
+        correct: true
+      - id: "c"
+        label: "Uniquement acceder au service d'origine"
+        correct: false
+    explanation: "C'est le bourrage d'identifiants : l'operation est industrielle et mise sur la reutilisation."
+  - question: "Par quel compte commencer le changement ?"
+    choices:
+      - id: "a"
+        label: "La messagerie principale"
+        correct: true
+      - id: "b"
+        label: "Le service ou la fuite a eu lieu"
+        correct: false
+      - id: "c"
+        label: "La banque"
+        correct: false
+    explanation: "La messagerie permet de reinitialiser tous les autres. Qui la controle controle le reste."
+  - question: "Ajouter un chiffre a la fin d'un mot de passe compromis suffit-il ?"
+    choices:
+      - id: "a"
+        label: "Oui, il devient different"
+        correct: false
+      - id: "b"
+        label: "Non : les outils d'attaque essaient ces variantes en priorite"
+        correct: true
+      - id: "c"
+        label: "Oui, si on ajoute aussi une majuscule"
+        correct: false
+    explanation: "Les listes de variantes sont generees automatiquement a partir du mot de passe d'origine. Il faut un mot de passe reellement nouveau."
 ---
 
 # Ton mot de passe a fuité

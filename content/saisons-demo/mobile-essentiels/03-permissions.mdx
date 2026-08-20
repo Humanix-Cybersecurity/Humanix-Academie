@@ -38,6 +38,61 @@ takeaway: |
   chronomètre, calculatrice, niveau à bulle), les applications
   natives du téléphone suffisent largement.
 licence: "CC BY-SA 4.0 - Humanix Académie Community Edition"
+debrief: |
+  Une permission accordee ne se limite pas a l'usage qu'on imagine : elle vaut **en continu**, y
+  compris quand l'application tourne en arriere-plan.
+
+  **Le test qui tranche : la permission est-elle necessaire a la fonction ?**
+
+  - une application de messagerie qui demande les contacts : coherent ;
+  - une application de navigation qui demande la position : coherent ;
+  - une lampe-torche qui demande les contacts : **aucun rapport**. La demande n'a d'autre objet que
+    la collecte.
+
+  **La methode qui evite d'avoir a trancher : tout refuser, puis observer.** Ce qui casse
+  reellement se voit en trente secondes, et on accorde alors au cas par cas. C'est l'inverse du
+  reflexe habituel, et c'est ce qui fait la difference.
+
+  **A revoir deux fois par an :** la liste des permissions accordees, notamment position, micro et
+  camera. Les mises a jour en ajoutent parfois sans le dire, et des applications qu'on n'utilise
+  plus gardent les leurs.
+quiz:
+  - question: "Une lampe-torche demande l'acces aux contacts. Que faire ?"
+    choices:
+      - id: "a"
+        label: "Accepter, sinon l'application ne fonctionnera pas"
+        correct: false
+      - id: "b"
+        label: "Refuser : la permission n'a aucun rapport avec la fonction"
+        correct: true
+      - id: "c"
+        label: "Accepter puis retirer la permission ensuite"
+        correct: false
+    explanation: "Le critere est le lien avec la fonction. Sans rapport, la demande n'a d'autre objet que la collecte."
+  - question: "Quelle methode evite d'avoir a juger chaque demande ?"
+    choices:
+      - id: "a"
+        label: "Accepter, puis retirer ce qui derange"
+        correct: false
+      - id: "b"
+        label: "Tout refuser, puis observer ce qui casse vraiment"
+        correct: true
+      - id: "c"
+        label: "Suivre les recommandations du magasin d'applications"
+        correct: false
+    explanation: "Ce qui casse se voit en trente secondes, et on accorde alors au cas par cas. Accorder d'abord laisse la collecte demarrer avant tout examen."
+  - question: "Une permission accordee vaut :"
+    choices:
+      - id: "a"
+        label: "Uniquement pendant que l'application est ouverte"
+        correct: false
+      - id: "b"
+        label: "En continu, y compris en arriere-plan"
+        correct: true
+      - id: "c"
+        label: "Jusqu'a la prochaine mise a jour"
+        correct: false
+    explanation: "C'est ce qui rend une permission inutile si couteuse : elle ne se limite pas au moment ou l'on s'en sert."
 ---
 
 # La lampe-torche qui veut accéder à vos contacts

@@ -25,7 +25,7 @@
 //   oui.
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const { mockDb, mockMollie, mockAudit, mockProvision } = vi.hoisted(() => ({
+const { mockDb, mockMollie, mockAudit, mockProvision, mockFacturer } = vi.hoisted(() => ({
   mockDb: {
     billingEvent: { findUnique: vi.fn(), create: vi.fn() },
     tenant: { findUnique: vi.fn(), update: vi.fn() },
@@ -38,9 +38,18 @@ const { mockDb, mockMollie, mockAudit, mockProvision } = vi.hoisted(() => ({
   },
   mockAudit: vi.fn(),
   mockProvision: vi.fn(),
+  mockFacturer: vi.fn(),
 }));
 
 vi.mock("@/lib/db", () => ({ db: mockDb }));
+// La facturation est DOUBLEE ici, pas laissee au vrai module. Sans ce
+// double, `mockDb.facture` est undefined, facturerPaiement avale le
+// TypeError et les tests resteraient verts en ne facturant JAMAIS --
+// c'etait le cas au premier passage. Le comportement reel de l'emission
+// est prouve ailleurs, contre une vraie base.
+vi.mock("@/lib/facturation/au-paiement", () => ({
+  facturerPaiement: mockFacturer,
+}));
 vi.mock("@/lib/audit", () => ({
   auditLog: mockAudit,
   AuditActions: new Proxy({}, { get: (_t, p) => String(p) }),
@@ -98,6 +107,8 @@ beforeEach(() => {
     plan: "starter",
   });
   mockDb.tenant.update.mockResolvedValue({});
+  mockFacturer.mockReset();
+  mockFacturer.mockResolvedValue({ etat: "emise", numero: "FA-2026-0001" });
   mockMollie.createSubscriptionForCustomer.mockResolvedValue({
     id: "sub_test",
   });
@@ -204,5 +215,71 @@ describe("webhook Mollie - ce a quoi le handler fait confiance", () => {
     // 200 volontaire : un 4xx declencherait une tempete de retentatives.
     expect(res.status).toBe(200);
     expect(mockMollie.getPayment).not.toHaveBeenCalled();
+  });
+});
+
+// ===========================================================================
+// FACTURATION
+//
+// Deux proprietes protegees :
+//   1. tout encaissement produit une facture, avec les bonnes donnees ;
+//   2. un echec de facturation NE FAIT PAS echouer le webhook.
+//
+// La seconde est la plus importante. Si le webhook repondait en erreur, Mollie
+// rejouerait -- et le rejeu repasserait par le provisionnement du tenant. Un
+// probleme de facture ne doit jamais menacer l'encaissement ni l'acces client.
+// ===========================================================================
+describe("facturation au paiement", () => {
+  it("emet une facture apres un premier paiement encaisse", async () => {
+    mockMollie.getPayment.mockResolvedValue(paiementInitial());
+    await POST(requeteWebhook("tr_ttSTHVovUv7noCYDBNXVJ"));
+    expect(mockFacturer).toHaveBeenCalledTimes(1);
+    const arg = mockFacturer.mock.calls[0][0];
+    // La reference du paiement porte l'idempotence : c'est elle qui empeche
+    // deux factures quand Mollie rejoue le meme webhook.
+    expect(arg.paiementRef).toBe("tr_ttSTHVovUv7noCYDBNXVJ");
+    // Le montant est repris TEL QUEL du paiement, jamais recalcule depuis la
+    // grille tarifaire : sinon un prorata ou un changement de tarif ferait
+    // diverger la facture de ce qui a ete preleve.
+    expect(arg.montantValeur).toBe("48.00");
+  });
+
+  it("emet aussi une facture sur un prelevement recurrent", async () => {
+    mockMollie.getPayment.mockResolvedValue(
+      paiementInitial({ sequenceType: "recurring", subscriptionId: "sub_1" }),
+    );
+    await POST(requeteWebhook("tr_ttSTHVovUv7noCYDBNXVJ"));
+    expect(mockFacturer).toHaveBeenCalledTimes(1);
+  });
+
+  it("NE facture PAS un paiement echoue", async () => {
+    mockMollie.getPayment.mockResolvedValue(
+      paiementInitial({ status: "failed", sequenceType: "recurring" }),
+    );
+    await POST(requeteWebhook("tr_ttSTHVovUv7noCYDBNXVJ"));
+    expect(mockFacturer).not.toHaveBeenCalled();
+  });
+
+  it("le webhook repond 200 meme si la facturation part en erreur", async () => {
+    mockFacturer.mockRejectedValue(new Error("base indisponible"));
+    mockMollie.getPayment.mockResolvedValue(paiementInitial());
+    const res = await POST(requeteWebhook("tr_ttSTHVovUv7noCYDBNXVJ"));
+    expect(res.status).toBe(200);
+  });
+
+  it("une facture differee (adresse client manquante) n'est pas une erreur", async () => {
+    mockFacturer.mockResolvedValue({
+      etat: "differee",
+      motif: "identite_facturation_absente",
+    });
+    mockMollie.getPayment.mockResolvedValue(paiementInitial());
+    const res = await POST(requeteWebhook("tr_ttSTHVovUv7noCYDBNXVJ"));
+    expect(res.status).toBe(200);
+    // La trace reste dans l'evenement : c'est ce qui permet de retrouver les
+    // factures en attente depuis la console.
+    const cree = mockDb.billingEvent.create.mock.calls.at(-1)?.[0];
+    expect(JSON.stringify(cree?.data?.payload)).toContain(
+      "identite_facturation_absente",
+    );
   });
 });

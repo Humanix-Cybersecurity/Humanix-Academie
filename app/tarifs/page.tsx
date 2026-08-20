@@ -422,7 +422,8 @@ export default async function TarifsPage({
         />
 
         <p className="text-xs text-center text-gray-500 mt-8">
-          Tous les prix sont HT. Vente directe sans essai gratuit (la{" "}
+          Tous les prix sont TTC, TVA française 20 % incluse : le prix affiché
+            est le prix prélevé. Vente directe sans essai gratuit (la{" "}
           <Link href="/demo" className="underline">démo</Link> remplit ce rôle).
           Mensuel résiliable à tout moment, annuel = engagement 12 mois.
         </p>

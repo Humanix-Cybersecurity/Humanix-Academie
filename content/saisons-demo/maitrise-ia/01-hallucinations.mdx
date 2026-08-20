@@ -65,4 +65,41 @@ debrief: |
   Pour ce qui est purement creatif ou exploratoire (brainstorming, reformulation, traduction approximative), le risque d'hallucination est OK car tu vas relire et corriger toi-meme.
 
   > **Source** : Stanford HAI 2025 "Hallucination Rates in Consumer LLMs" (n=4 200 prompts factuels). Mata v. Avianca, U.S. District Court Southern District of New York, June 2023.
+quiz:
+  - question: "Pourquoi un modele invente-t-il des references ?"
+    choices:
+      - id: "a"
+        label: "Parce que sa base de donnees est incomplete"
+        correct: false
+      - id: "b"
+        label: "Parce qu'il produit la suite la plus plausible, sans savoir qu'il ne sait pas"
+        correct: true
+      - id: "c"
+        label: "Parce qu'il a ete mal configure"
+        correct: false
+    explanation: "Il n'interroge pas une base : il genere. Quand l'information manque, rien dans le mecanisme ne declenche un « je ne sais pas »."
+  - question: "Qu'est-ce qui est le plus souvent invente ?"
+    choices:
+      - id: "a"
+        label: "Les explications generales"
+        correct: false
+      - id: "b"
+        label: "Les references precises : numeros d'articles, dates, noms"
+        correct: true
+      - id: "c"
+        label: "Le style de la reponse"
+        correct: false
+    explanation: "Et c'est le piege : leur precision inspire confiance, donc on ne pense pas a les verifier."
+  - question: "Quand le risque est-il le plus eleve ?"
+    choices:
+      - id: "a"
+        label: "Sur les sujets larges et courants"
+        correct: false
+      - id: "b"
+        label: "Sur les questions pointues et rares"
+        correct: true
+      - id: "c"
+        label: "Quand la question est mal formulee"
+        correct: false
+    explanation: "Sur un sujet large, le modele a beaucoup vu. Sur un detail rare, il comble -- et c'est la que la verification compte le plus."
 ---

@@ -29,6 +29,64 @@ takeaway: |
   Un mot de passe = un service. Si vous reutilisez, une seule fuite ouvre
   tous vos comptes. Le gestionnaire de mots de passe rend cette regle facile.
 licence: "CC BY-SA 4.0 - Humanix Academie Community Edition"
+debrief: |
+  Reutiliser un mot de passe transforme **une fuite** en **compromission generale**.
+
+  Le mecanisme s'appelle le bourrage d'identifiants : un attaquant recupere un couple
+  adresse/mot de passe dans une fuite, puis le teste automatiquement sur des centaines d'autres
+  services. L'operation est industrielle et coute presque rien.
+
+  Entre **60 % et 70 %** des utilisateurs reutilisent leurs mots de passe. C'est ce qui rend
+  l'attaque rentable.
+
+  **La regle : un service, un mot de passe.** Elle n'est tenable qu'avec un gestionnaire -- personne
+  ne retient cinquante phrases de passe.
+
+  **Les options gratuites et serieuses :**
+
+  - **Bitwarden** : gratuit, audit de securite, fonctionne partout ;
+  - **KeePassXC** : entierement hors ligne, base chiffree que vous gardez.
+
+  **Le geste qui suit :** verifier si votre adresse figure dans une fuite connue, et changer en
+  priorite les mots de passe reutilises sur vos comptes sensibles -- messagerie d'abord, car c'est
+  elle qui permet de reinitialiser tous les autres.
+quiz:
+  - question: "Qu'est-ce que le bourrage d'identifiants ?"
+    choices:
+      - id: "a"
+        label: "Deviner un mot de passe par force brute"
+        correct: false
+      - id: "b"
+        label: "Tester un couple email/mot de passe vole sur des centaines d'autres services"
+        correct: true
+      - id: "c"
+        label: "Saturer un formulaire de connexion"
+        correct: false
+    explanation: "Aucune devinette : l'attaquant a deja le couple. Il l'essaie ailleurs, automatiquement, en misant sur la reutilisation."
+  - question: "Quel compte faut-il securiser en premier ?"
+    choices:
+      - id: "a"
+        label: "La banque"
+        correct: false
+      - id: "b"
+        label: "La messagerie"
+        correct: true
+      - id: "c"
+        label: "Les reseaux sociaux"
+        correct: false
+    explanation: "La messagerie permet de reinitialiser tous les autres comptes. Qui la controle controle le reste, banque comprise."
+  - question: "Pourquoi un gestionnaire de mots de passe ?"
+    choices:
+      - id: "a"
+        label: "Parce qu'il genere des mots de passe plus solides"
+        correct: false
+      - id: "b"
+        label: "Parce que la regle « un service, un mot de passe » n'est pas tenable de memoire"
+        correct: true
+      - id: "c"
+        label: "Parce qu'il change les mots de passe automatiquement"
+        correct: false
+    explanation: "La regle est simple a enoncer et impossible a tenir sur cinquante comptes. Le gestionnaire est ce qui la rend applicable."
 ---
 
 # Ne JAMAIS reutiliser
@@ -58,6 +116,7 @@ genere automatiquement des mots de passe uniques et complexes pour chaque
 service.
 
 Options open source recommandees :
+
 - **Bitwarden** : gratuit, audit de securite, multi-plateforme
 - **KeePass** / **KeePassXC** : 100 % offline, base SQLite chiffree
 

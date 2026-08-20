@@ -4,7 +4,14 @@
 //   - Etat du subscription (active, past_due, canceled, etc.)
 //   - Prochain renouvellement / restriction d'accès si paiement KO
 //   - CTA upgrade / downgrade / annuler
-//   - Lien portail Mollie self-service
+//   - Coordonnees de facturation + factures telechargeables
+//
+// Le 2026-08-20, cette page portait une carte « 📄 Portail Mollie -
+// telecharger tes factures ». Elle promettait quelque chose qui n'existait
+// pas : Mollie n'expose aucun portail client hoste, /api/payments/portal
+// n'accepte que POST, et la carte etait un <a href> -- donc un GET, donc
+// 405. Le bouton venait de l'epoque Stripe et avait survecu a deux
+// migrations. Il est remplace par de vraies factures, emises par Humanix.
 //
 // Defense en profondeur : layout admin/ verifie déjà le role >= ADMIN.
 // On affiche cette page même aux ADMIN qui n'auraient pas le droit de modifier
@@ -24,6 +31,11 @@ import {
 } from "@/lib/plans";
 import { MOLLIE_BUYABLE_PLANS } from "@/lib/mollie";
 import PlanUpgradeOptions from "@/components/PlanUpgradeOptions";
+import { db } from "@/lib/db";
+import IdentiteForm from "@/components/admin/facturation/IdentiteForm";
+import ListeFactures from "@/components/admin/facturation/ListeFactures";
+import PaiementsAFacturer from "@/components/admin/facturation/PaiementsAFacturer";
+import { paiementsAFacturer } from "@/lib/facturation/rattrapage";
 
 export const dynamic = "force-dynamic";
 
@@ -34,9 +46,25 @@ export default async function BillingPage() {
   }
   const tenantId = session.user.tenantId;
 
-  const [state, usage] = await Promise.all([
+  const [state, usage, identite, factures, aFacturer] = await Promise.all([
     getSubscriptionState(tenantId),
     getSeatUsage(tenantId),
+    db.identiteFacturation.findUnique({ where: { tenantId } }),
+    db.facture.findMany({
+      where: { tenantId },
+      orderBy: { emiseLe: "desc" },
+      select: {
+        id: true,
+        numero: true,
+        emiseLe: true,
+        totalTtcCentimes: true,
+      },
+      take: 100,
+    }),
+    // `verifierRemboursements` relit chaque paiement chez Mollie : un appel
+    // reseau par paiement en attente. Acceptable ici -- la liste est courte et
+    // facturer un paiement rembourse coute plus cher que 200 ms.
+    paiementsAFacturer(tenantId, { verifierRemboursements: true }),
   ]);
 
   const upgradePlan = nextPlan(state.plan);
@@ -173,21 +201,24 @@ export default async function BillingPage() {
           Actions disponibles
         </h2>
 
-        {/* Portail Mollie self-service */}
+        {/* Les factures vivent plus bas sur cette page : plus de renvoi vers
+            un portail externe qui n'existe pas. */}
         {isPaidPlan(state.plan) && (
           <a
-            href="/api/payments/portal"
+            href="#factures"
             className="card hover:shadow-lg transition-shadow border-gray-200 dark:border-slate-700"
           >
             <p className="text-xs uppercase tracking-widest text-gray-500 dark:text-gray-400 font-bold mb-1">
-              Gestion CB / factures
+              Factures
             </p>
             <h3 className="font-display text-lg font-extrabold text-gray-700 dark:text-gray-200 mb-2">
-              📄 Portail Mollie
+              📄{" "}
+              {factures.length > 0
+                ? `${factures.length} facture${factures.length > 1 ? "s" : ""}`
+                : "Mes factures"}
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-300">
-              Mettre à jour ta carte, télécharger tes factures, voir
-              l'historique.
+              Télécharger les PDF, renseigner les coordonnées de facturation.
             </p>
           </a>
         )}
@@ -216,6 +247,60 @@ export default async function BillingPage() {
             </p>
           </Link>
         )}
+      </section>
+
+      {/* === Coordonnees de facturation et factures === */}
+      <section
+        id="factures"
+        className="scroll-mt-8 rounded-2xl border border-gray-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-900"
+      >
+        <h2 className="font-display text-xl font-extrabold text-primary-500 dark:text-accent-300">
+          Coordonnées de facturation
+        </h2>
+        <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+          Ce sont les mentions qui figureront sur vos factures. La dénomination
+          et l&apos;adresse sont obligatoires : sans elles, aucune facture ne
+          peut être émise.
+        </p>
+
+        {!identite && (
+          <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-200">
+            Vos coordonnées ne sont pas encore renseignées. Les prélèvements
+            déjà encaissés seront facturés dès que ce formulaire sera rempli.
+          </div>
+        )}
+
+        <div className="mt-5">
+          <IdentiteForm identite={identite} />
+        </div>
+      </section>
+
+      {aFacturer.length > 0 && (
+        <section className="rounded-2xl border border-amber-200 bg-amber-50/50 p-6 dark:border-amber-900/40 dark:bg-amber-950/10">
+          <h2 className="font-display text-xl font-extrabold text-primary-500 dark:text-accent-300">
+            {aFacturer.length} prélèvement
+            {aFacturer.length > 1 ? "s" : ""} en attente de facture
+          </h2>
+          <p className="mt-1 mb-5 text-sm text-gray-600 dark:text-gray-300">
+            Encaissés avant la mise en place de la facturation, ou en attente de
+            vos coordonnées. Vérifiez chaque ligne avant d&apos;émettre.
+          </p>
+          <PaiementsAFacturer
+            paiements={aFacturer}
+            identiteRenseignee={identite !== null}
+          />
+        </section>
+      )}
+
+      <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-900">
+        <h2 className="font-display text-xl font-extrabold text-primary-500 dark:text-accent-300">
+          Vos factures
+        </h2>
+        <p className="mt-1 mb-5 text-sm text-gray-600 dark:text-gray-300">
+          Émises automatiquement à chaque prélèvement. Les prix affichés sont
+          TTC ; le détail HT et TVA figure sur le PDF.
+        </p>
+        <ListeFactures factures={factures} />
       </section>
 
       {/* === Help === */}
@@ -272,9 +357,11 @@ function StateBanner({
             typeof daysLeft === "number"
               ? `Ta dernière échéance n'a pas été honorée. Tu as ${daysLeft} jour${daysLeft !== 1 ? "s" : ""} pour mettre à jour ta carte avant restriction d'accès.`
               : "Ta dernière échéance n'a pas été honorée. Le délai exact avant restriction d'accès est en cours de mise à jour.",
+          // /profil/facturation et non /api/payments/portal : cette route
+          // n'accepte que POST, un lien y renvoyait un 405.
           cta: {
             label: "Mettre à jour la carte",
-            href: "/api/payments/portal",
+            href: "/profil/facturation",
           },
         };
       }
@@ -285,7 +372,7 @@ function StateBanner({
           message: `Tu peux consulter mais plus rien modifier. ${state.daysLeft ? `Tu as ${state.daysLeft} jour${state.daysLeft !== 1 ? "s" : ""} avant suspension complète.` : ""}`,
           cta: {
             label: "Régulariser maintenant",
-            href: "/api/payments/portal",
+            href: "/profil/facturation",
           },
         };
       case "suspended":

@@ -33,6 +33,61 @@ takeaway: |
   SMS, plus vulnérable. Et ne communique JAMAIS un code reçu, même à
   quelqu'un qui prétend être le support.
 licence: "CC BY-SA 4.0 - Humanix Académie Community Edition"
+debrief: |
+  La double authentification est le **filet de securite** qui reste tendu quand le mot de passe a
+  cede. Un attaquant qui detient le bon mot de passe se retrouve bloque : il lui manque le second
+  facteur.
+
+  **Par ou commencer, et l'ordre compte :**
+
+  1. **la messagerie principale**, parce qu'elle sert a reinitialiser tous les autres comptes ;
+  2. la banque et les services financiers ;
+  3. les outils professionnels ;
+  4. les reseaux sociaux, souvent utilises comme preuve d'identite.
+
+  **Les formes, de la plus faible a la plus solide :** code par SMS (interceptable), application
+  d'authentification (bon niveau, gratuit, fonctionne hors ligne), cle physique (resiste aussi au
+  hameconnage).
+
+  **Les codes de secours :** on les recoit a l'activation, on les range **ailleurs que dans le
+  telephone** qui porte l'application. Sinon, un telephone perdu ferme tous les comptes d'un coup.
+quiz:
+  - question: "Un attaquant a votre mot de passe et vous avez active la double authentification :"
+    choices:
+      - id: "a"
+        label: "Il entre quand meme, le mot de passe suffit"
+        correct: false
+      - id: "b"
+        label: "Il est bloque : il lui manque le second facteur"
+        correct: true
+      - id: "c"
+        label: "Il entre, mais vous recevez une alerte"
+        correct: false
+    explanation: "C'est exactement la fonction du second facteur : rendre un mot de passe vole insuffisant."
+  - question: "Sur quel compte l'activer en premier ?"
+    choices:
+      - id: "a"
+        label: "La banque"
+        correct: false
+      - id: "b"
+        label: "La messagerie principale"
+        correct: true
+      - id: "c"
+        label: "Les reseaux sociaux"
+        correct: false
+    explanation: "La messagerie permet de reinitialiser tous les autres comptes, banque comprise. C'est la porte d'entree."
+  - question: "Ou ranger les codes de secours ?"
+    choices:
+      - id: "a"
+        label: "Dans le telephone, avec l'application"
+        correct: false
+      - id: "b"
+        label: "Ailleurs que sur l'appareil qui porte le second facteur"
+        correct: true
+      - id: "c"
+        label: "Nulle part, on peut toujours les regenerer"
+        correct: false
+    explanation: "Les garder sur le meme appareil annule leur interet : un telephone perdu fermerait tous les comptes d'un coup."
 ---
 
 # La MFA, ton filet de sécurité

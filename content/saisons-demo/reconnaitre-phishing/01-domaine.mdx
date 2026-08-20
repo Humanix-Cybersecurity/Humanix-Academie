@@ -30,6 +30,62 @@ takeaway: |
   Avant tout clic : 1) verifier l'orthographe du domaine 2) verifier le
   ton (urgence, peur) 3) en cas de doute, contacter par un canal alternatif.
 licence: "CC BY-SA 4.0 - Humanix Academie Community Edition"
+debrief: |
+  Le nom affiche d'un expediteur ne prouve rien : il se choisit librement. **Seul le domaine
+  compte**, et il faut le lire caractere par caractere.
+
+  **Les substitutions classiques :**
+
+  - `microsoft.com` devient `m1crosoft.com` (un « 1 » a la place du « i ») ;
+  - `paypal.com` devient `paypa1.com` ;
+  - `google.com` devient `gooogle.com`.
+
+  A la lecture rapide, aucune ne saute aux yeux. C'est tout l'interet.
+
+  **Ou regarder :** la partie juste avant le premier `/` d'un lien, et ce qui suit le `@` d'une
+  adresse. Tout le reste -- sous-domaines, chemin, texte affiche -- est choisi par l'expediteur et
+  ne prouve rien. `microsoft.com.securite-login.xyz` est un site `securite-login.xyz`.
+
+  **Le reflexe qui remplace l'expertise :** ne pas suivre le lien. Ouvrir le site par ses propres
+  moyens -- favori, adresse tapee a la main, application. Si le message etait vrai, l'information
+  s'y trouvera aussi.
+quiz:
+  - question: "Ou se trouve l'information qui compte dans un lien ?"
+    choices:
+      - id: "a"
+        label: "Dans le texte affiche du lien"
+        correct: false
+      - id: "b"
+        label: "Dans le domaine, juste avant le premier /"
+        correct: true
+      - id: "c"
+        label: "Dans le cadenas du navigateur"
+        correct: false
+    explanation: "Le texte affiche est libre, et le cadenas atteste seulement du chiffrement -- un site frauduleux en a un aussi."
+  - question: "`microsoft.com.securite-login.xyz` : quel est le vrai site ?"
+    choices:
+      - id: "a"
+        label: "microsoft.com"
+        correct: false
+      - id: "b"
+        label: "securite-login.xyz"
+        correct: true
+      - id: "c"
+        label: "Impossible a savoir"
+        correct: false
+    explanation: "Le domaine se lit de droite a gauche : c'est ce qui precede immediatement l'extension qui compte. Tout ce qui est avant n'est qu'un sous-domaine choisi librement."
+  - question: "Quel reflexe remplace l'expertise technique ?"
+    choices:
+      - id: "a"
+        label: "Passer la souris sur le lien pour verifier"
+        correct: false
+      - id: "b"
+        label: "Ne pas suivre le lien et ouvrir le site par ses propres moyens"
+        correct: true
+      - id: "c"
+        label: "Verifier la presence du cadenas"
+        correct: false
+    explanation: "Survoler aide, mais suppose de savoir lire un domaine. Ouvrir le site soi-meme ne demande aucune competence et fonctionne a tous les coups."
 ---
 
 # Verifier le domaine
@@ -42,14 +98,18 @@ l'argent.
 ## Les 4 trucages de domaine les plus courants
 
 ### 1. Homoglyphes
+
 Remplacer une lettre par un caractere similaire :
+
 - `microsoft.com` → `m1crosoft.com` (1 au lieu de i)
 - `paypal.com` → `paypa1.com`
 - `google.com` → `gooogle.com` (3 o)
 - `humanix-cybersecurity.fr` → `humanix-cybersecunty.fr` (rt sans le i)
 
 ### 2. Sous-domaine trompeur
+
 Le vrai domaine est a droite. Exemple :
+
 - **microsoft.support-securite.com** : le vrai domaine est
   `support-securite.com`, PAS `microsoft.com`. C'est juste un sous-domaine
   nomme `microsoft`.
@@ -57,10 +117,12 @@ Le vrai domaine est a droite. Exemple :
   immediatement `.com` / `.fr` / `.org` etc.
 
 ### 3. TLD different
+
 - `microsoft.com` (officiel) vs `microsoft.co` (suspect) vs `microsoft.support` (suspect)
 - Si vous connaissez le domaine officiel (`.com`, `.fr`...), tout autre TLD est suspect.
 
 ### 4. Caracteres Unicode (IDN)
+
 Domaines comme `аррlе.com` qui utilisent des lettres cyrilliques (а р р) visuellement
 identiques aux latines (a p p). Les navigateurs modernes affichent un
 warning, mais pas tous.
