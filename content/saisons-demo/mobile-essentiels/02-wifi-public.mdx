@@ -38,6 +38,62 @@ takeaway: |
   votre solution par défaut quand vous traitez un document
   professionnel en mobilité. À défaut, un VPN d'entreprise.
 licence: "CC BY-SA 4.0 - Humanix Académie Community Edition"
+debrief: |
+  Un point d'acces sans fil ouvert n'offre **aucune garantie sur qui l'opere**. Le nom se choisit
+  librement : n'importe qui peut diffuser un reseau nomme « Free-Airport ».
+
+  **Le plus sur, et le plus simple : le partage de connexion de son telephone.** Le trafic passe
+  par l'operateur mobile, sur un lien chiffre, et personne autour de vous ne le voit.
+
+  **Si le partage est impossible :**
+
+  - un reseau prive d'entreprise, active **avant** d'ouvrir quoi que ce soit ;
+  - s'en tenir a de la consultation, sans connexion a un compte ni formulaire.
+
+  **Ce qui ne suffit pas :** le HTTPS. Il protege le contenu, pas le fait que vous visitiez tel
+  site ni, dans certains cas, une redirection vers une page falsifiee. Necessaire, mais pas
+  suffisant.
+
+  **Et le point qu'on oublie :** activer le reseau prive apres s'etre connecte laisse passer les
+  premieres secondes -- synchronisation de messagerie, mises a jour -- avant l'etablissement du
+  tunnel.
+quiz:
+  - question: "Quelle est la meilleure parade sur un reseau sans fil inconnu ?"
+    choices:
+      - id: "a"
+        label: "Verifier la presence du cadenas HTTPS"
+        correct: false
+      - id: "b"
+        label: "Le partage de connexion de son telephone"
+        correct: true
+      - id: "c"
+        label: "Demander le nom exact du reseau au personnel"
+        correct: false
+    explanation: "Le partage supprime le probleme au lieu de le contourner. Demander le nom aide, mais un attaquant peut diffuser exactement le meme."
+  - question: "Le HTTPS suffit-il sur un reseau public ?"
+    choices:
+      - id: "a"
+        label: "Oui, le contenu est chiffre"
+        correct: false
+      - id: "b"
+        label: "Non : il protege le contenu, pas le reste"
+        correct: true
+      - id: "c"
+        label: "Oui, si le cadenas est vert"
+        correct: false
+    explanation: "Necessaire mais pas suffisant. Les sites visites restent observables, et une redirection vers une page falsifiee reste possible."
+  - question: "Quand faut-il activer son reseau prive d'entreprise ?"
+    choices:
+      - id: "a"
+        label: "Apres s'etre connecte au reseau"
+        correct: false
+      - id: "b"
+        label: "Avant d'ouvrir quoi que ce soit"
+        correct: true
+      - id: "c"
+        label: "Seulement pour les sites sensibles"
+        correct: false
+    explanation: "Les premieres secondes suffisent aux synchronisations automatiques -- messagerie en tete -- pour partir en clair avant l'etablissement du tunnel."
 ---
 
 # Le Wi-Fi du café qui s'appelle « Free-Airport »

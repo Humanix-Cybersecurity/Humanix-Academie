@@ -181,75 +181,72 @@ function listMdxFiles(): CatalogEntry[] {
 }
 
 /**
- * Episodes que le lecteur sert REELLEMENT, et dont le frontmatter est
- * incomplet.
+ * Episodes dont le frontmatter est incomplet, DANS LES DEUX RACINES.
  *
- * POURQUOI ON PASSE PAR loadEpisode ET PAS PAR LE SYSTEME DE FICHIERS
+ * POURQUOI LES DEUX, ET PAS CELLE QUE RESOUT LE CHARGEUR
  *
- *   Un MDX peut exister sans jamais etre charge : 19 fichiers de
- *   content/saisons-demo sont dans ce cas, et le generateur de secours sert
- *   un contenu complet a leur place. Les signaler serait une fausse alerte.
+ *   lib/episodes.ts ne sert QU'UNE racine a la fois : content/saisons si le
+ *   catalogue commercial est present, content/saisons-demo sinon -- et
+ *   toujours la demo quand DEMO_MODE est actif.
  *
- *   Inversement, un episode SANS MDX est parfaitement servi par le secours.
- *   Ce qui casse la production, c'est uniquement le cas intermediaire : un
- *   MDX charge, mais ampute de ce que le lecteur consomme.
+ *   Or LES DEUX tournent en production : humanix-academie.fr sert le
+ *   commercial, demo.humanix-academie.fr sert la demo. Ne valider que la
+ *   racine resolue par l'environnement courant rend la couverture
+ *   accidentelle : un poste de dev ne verrait jamais la demo, et un runner
+ *   sans sous-module ne verrait jamais le commercial.
  *
- *   On interroge donc le chargeur lui-meme. Le controle teste le vrai chemin.
+ *   C'est exactement ce qui s'est produit le 2026-08-20 : l'audit local
+ *   declarait la demo « non servie » alors que ses 19 episodes etaient tous
+ *   casses sur le site public. La CI l'a vu, pas moi.
+ *
+ * CE QUI EST CONTROLE
+ *
+ *   Les quatre champs que le lecteur consomme. `quiz` est le plus traitre :
+ *   un tableau VIDE passe tous les controles de type, et casse le lecteur a
+ *   l'execution -- il affiche « Question 1 / 0 » puis lit quiz[0].
  */
-async function episodesServisIncomplets(): Promise<{
-  servis: number;
-  incomplets: { cle: string; champs: string[] }[];
-}> {
-  const { loadEpisode } = await import("../lib/episodes");
-  const catalogues = [
-    { chemin: CATALOG, racine: ROOT },
-    { chemin: CATALOG_DEMO, racine: ROOT },
-  ];
-  const vus = new Set<string>();
+function episodesIncomplets(): { cle: string; champs: string[] }[] {
   const incomplets: { cle: string; champs: string[] }[] = [];
-  let servis = 0;
-
-  for (const { chemin } of catalogues) {
-    if (!fs.existsSync(chemin)) continue;
-    for (const e of parseCatalogFile(chemin)) {
-      const cle = `${e.saisonSlug}/${e.episodeSlug}`;
-      if (vus.has(cle)) continue;
-      vus.add(cle);
-
-      let charge: Awaited<ReturnType<typeof loadEpisode>>;
-      try {
-        charge = await loadEpisode(e.saisonSlug, e.episodeSlug);
-      } catch (err) {
-        incomplets.push({
-          cle,
-          champs: [`chargement impossible (${(err as Error).message.slice(0, 60)})`],
-        });
-        continue;
+  for (const racine of CONTENT_ROOTS) {
+    if (!fs.existsSync(racine)) continue;
+    const etiquette = path.basename(racine);
+    for (const saison of fs.readdirSync(racine, { withFileTypes: true })) {
+      if (!saison.isDirectory()) continue;
+      if (IGNORED_SUBDIRS.has(saison.name)) continue;
+      const dossier = path.join(racine, saison.name);
+      for (const f of fs.readdirSync(dossier)) {
+        if (!f.endsWith(".mdx")) continue;
+        const cle = `${etiquette}/${saison.name}/${f.replace(/\.mdx$/, "")}`;
+        let data: Record<string, unknown>;
+        try {
+          data = matter(fs.readFileSync(path.join(dossier, f), "utf-8"))
+            .data as Record<string, unknown>;
+        } catch (err) {
+          incomplets.push({
+            cle,
+            champs: [
+              `frontmatter illisible (${(err as Error).message.slice(0, 60)})`,
+            ],
+          });
+          continue;
+        }
+        const champs: string[] = [];
+        if (!String(data.scenario ?? "").trim()) champs.push("scenario");
+        if (!Array.isArray(data.choices) || data.choices.length < 2) {
+          champs.push("choices (>= 2)");
+        }
+        if (!String(data.debrief ?? "").trim()) champs.push("debrief");
+        if (!Array.isArray(data.quiz) || data.quiz.length === 0) {
+          champs.push("quiz (>= 1 question)");
+        }
+        if (champs.length > 0) incomplets.push({ cle, champs });
       }
-      // Pas de MDX : le secours prend le relais et fournit un contenu
-      // complet. Ce n'est pas un defaut.
-      if (!charge) continue;
-      servis++;
-
-      const meta = charge.meta as unknown as Record<string, unknown>;
-      const champs: string[] = [];
-      if (!String(meta.scenario ?? "").trim()) champs.push("scenario");
-      if (!Array.isArray(meta.choices) || meta.choices.length < 2) {
-        champs.push("choices (>= 2)");
-      }
-      if (!String(meta.debrief ?? "").trim()) champs.push("debrief");
-      // Le piege : un tableau VIDE est present, typé, et casse le lecteur.
-      // Il affiche « Question 1 / 0 » puis lit quiz[0], qui n'existe pas.
-      if (!Array.isArray(meta.quiz) || meta.quiz.length === 0) {
-        champs.push("quiz (>= 1 question)");
-      }
-      if (champs.length > 0) incomplets.push({ cle, champs });
     }
   }
-  return { servis, incomplets };
+  return incomplets;
 }
 
-async function main(): Promise<void> {
+function main(): void {
   const catalog = extractCatalogEntries();
 
   // Aucun catalogue trouve (ni commercial ni demo) : on a deja affiche le
@@ -278,24 +275,34 @@ async function main(): Promise<void> {
 
   console.log(`Catalogue : ${catalog.length} episodes declares`);
   console.log(`MDX       : ${mdx.length} fichiers rediges`);
-  console.log(`Couverture : ${mdx.length - orphans.length}/${catalog.length} (${Math.round(((mdx.length - orphans.length) / Math.max(1, catalog.length)) * 100)} %)`);
+  console.log(
+    `Couverture : ${mdx.length - orphans.length}/${catalog.length} (${Math.round(((mdx.length - orphans.length) / Math.max(1, catalog.length)) * 100)} %)`,
+  );
   console.log("");
 
   if (orphans.length > 0) {
-    console.error(`✗ ${orphans.length} fichier(s) MDX orphelin(s) (slug ne matche pas le catalog) :`);
+    console.error(
+      `✗ ${orphans.length} fichier(s) MDX orphelin(s) (slug ne matche pas le catalog) :`,
+    );
     for (const o of orphans) {
       console.error(`  - content/saisons/${o.saisonSlug}/${o.episodeSlug}.mdx`);
     }
     console.error("");
-    console.error("→ Ce contenu redige n'est jamais charge. Renomme le fichier");
-    console.error("  pour matcher un slug de prisma/catalog-saisons.ts, ou ajoute");
+    console.error(
+      "→ Ce contenu redige n'est jamais charge. Renomme le fichier",
+    );
+    console.error(
+      "  pour matcher un slug de prisma/catalog-saisons.ts, ou ajoute",
+    );
     console.error("  l'episode au catalog.");
     process.exit(1);
   }
 
   if (missingMdx.length > 0) {
     const lvl = isStrict ? "✗" : "⚠";
-    console.log(`${lvl} ${missingMdx.length} episode(s) catalog sans MDX (fallback generique) :`);
+    console.log(
+      `${lvl} ${missingMdx.length} episode(s) catalog sans MDX (fallback generique) :`,
+    );
     for (const m of missingMdx.slice(0, 10)) {
       console.log(`  - ${m.saisonSlug}/${m.episodeSlug}`);
     }
@@ -307,7 +314,9 @@ async function main(): Promise<void> {
       console.error("→ Mode strict : tout episode declare doit avoir un MDX.");
       process.exit(1);
     }
-    console.log("→ Pas bloquant : le fallback generique de buildFallbackContent");
+    console.log(
+      "→ Pas bloquant : le fallback generique de buildFallbackContent",
+    );
     console.log("  prend le relais. Ajoute --strict pour un audit complet.");
   }
 
@@ -328,11 +337,13 @@ async function main(): Promise<void> {
   //
   //   Verifier la PRESENCE du fichier ne suffit pas : il faut verifier qu'il
   //   contient ce que le lecteur consomme.
-  const { servis: vusServis, incomplets } = await episodesServisIncomplets();
+  const incomplets = episodesIncomplets();
 
   if (incomplets.length > 0) {
     console.error("");
-    console.error(`✗ ${incomplets.length} episode(s) servi(s) au frontmatter incomplet :`);
+    console.error(
+      `✗ ${incomplets.length} episode(s) au frontmatter incomplet :`,
+    );
     for (const i of incomplets.slice(0, 30)) {
       console.error(`  - ${i.cle} : ${i.champs.join(", ")}`);
     }
@@ -341,14 +352,14 @@ async function main(): Promise<void> {
     }
     console.error("");
     console.error("→ Le lecteur d'episode consomme scenario, choices, debrief");
-    console.error("  et quiz. Un episode qui n'a pas les quatre est INUTILISABLE");
+    console.error(
+      "  et quiz. Un episode qui n'a pas les quatre est INUTILISABLE",
+    );
     console.error("  en production, meme si son fichier existe.");
     process.exit(1);
   }
 
-  console.log(
-    `✓ Frontmatter complet sur les ${vusServis} episode(s) reellement servi(s).`,
-  );
+  console.log("✓ Frontmatter complet dans les deux racines de contenu.");
 }
 
 main();

@@ -29,6 +29,61 @@ takeaway: |
   Privilegier la longueur (16+ caracteres) sur la complexite. Une phrase de
   passe simple a memoriser est plus solide qu'un mot de passe complexe court.
 licence: "CC BY-SA 4.0 - Humanix Academie Community Edition"
+debrief: |
+  La force d'un mot de passe tient d'abord a sa **longueur**, pas a sa complexite.
+
+  Une attaque par force brute progresse par essais : chaque caractere ajoute multiplie le nombre de
+  combinaisons. Chaque substitution exotique, elle, ne fait que doubler ou tripler -- et elle rend le
+  mot de passe impossible a retenir, donc note quelque part.
+
+  | Mot de passe | Resistance approximative |
+  | --- | --- |
+  | 8 caracteres complexes | quelques heures |
+  | 12 caracteres complexes | quelques mois |
+  | 16 caracteres, meme simples | des annees |
+
+  **La phrase de passe est le meilleur compromis** : quatre mots sans rapport donnent une longueur
+  confortable, se retiennent sans effort, et se tapent vite.
+
+  **Ce qui ne marche pas :** remplacer les `a` par des `@` et les `e` par des `3`. Les outils
+  d'attaque connaissent ces substitutions depuis vingt ans -- elles sont dans leurs dictionnaires.
+quiz:
+  - question: "Qu'est-ce qui protege le plus un mot de passe ?"
+    choices:
+      - id: "a"
+        label: "Les caracteres speciaux et les chiffres"
+        correct: false
+      - id: "b"
+        label: "Sa longueur"
+        correct: true
+      - id: "c"
+        label: "Le fait de le changer tous les mois"
+        correct: false
+    explanation: "Chaque caractere ajoute multiplie le nombre de combinaisons. Une substitution exotique ne fait que doubler -- et rend le mot de passe impossible a retenir."
+  - question: "« Correct horse battery staple » : bon ou mauvais mot de passe ?"
+    choices:
+      - id: "a"
+        label: "Mauvais : que des mots du dictionnaire"
+        correct: false
+      - id: "b"
+        label: "Bon : 28 caracteres, et facile a retenir"
+        correct: true
+      - id: "c"
+        label: "Mauvais : pas de majuscule ni de chiffre"
+        correct: false
+    explanation: "Vingt-huit caracteres resistent des annees, meme composes de mots simples. Et un mot de passe qu'on retient est un mot de passe qu'on n'ecrit pas sur un post-it."
+  - question: "Remplacer les « a » par des « @ » renforce-t-il un mot de passe ?"
+    choices:
+      - id: "a"
+        label: "Oui, ca ajoute des caracteres speciaux"
+        correct: false
+      - id: "b"
+        label: "Non : ces substitutions sont dans les dictionnaires d'attaque"
+        correct: true
+      - id: "c"
+        label: "Oui, mais seulement si on en met plusieurs"
+        correct: false
+    explanation: "Les outils testent ces substitutions en priorite. Elles n'ajoutent presque rien a la resistance et beaucoup a la difficulte de memorisation."
 ---
 
 # La longueur compte
@@ -46,6 +101,7 @@ Chaque caractere supplementaire multiplie le nombre de combinaisons par
 multiplie le temps de craquage par 40 millions.
 
 En pratique :
+
 - 8 caracteres complexes : quelques heures
 - 12 caracteres complexes : quelques mois
 - 16 caracteres meme simples : des annees

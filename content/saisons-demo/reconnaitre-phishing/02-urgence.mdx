@@ -32,6 +32,62 @@ takeaway: |
   secondes pour verifier par un canal alternatif coute beaucoup moins
   cher qu'un virement perdu.
 licence: "CC BY-SA 4.0 - Humanix Academie Community Edition"
+debrief: |
+  **Urgence + secret + autorite** : ce trio est la signature de la fraude au president, et il est
+  present dans presque tous les cas.
+
+  Chaque element a une fonction precise :
+
+  - **l'urgence** empeche de reflechir et de verifier ;
+  - **le secret** empeche d'en parler a quelqu'un qui aurait des doutes ;
+  - **l'autorite** rend la question elle-meme genante.
+
+  Ce n'est pas un defaut d'attention : le message est concu pour desactiver la verification.
+
+  **La parade tient en une regle : verifier par un canal que VOUS choisissez.** Le numero de
+  l'annuaire interne, pas celui de l'email. Un passage dans le bureau. Un message sur l'outil
+  professionnel.
+
+  **Et la mesure qui protege l'entreprise plus que l'individu :** une procedure ecrite qui dit
+  qu'aucun virement exceptionnel ne part sans double validation, quelle que soit l'urgence
+  invoquee, et **quel que soit le demandeur**. Elle protege aussi celui qui doit dire non.
+quiz:
+  - question: "Quelle combinaison signale une fraude au president ?"
+    choices:
+      - id: "a"
+        label: "Une piece jointe et un lien"
+        correct: false
+      - id: "b"
+        label: "Urgence, secret et autorite"
+        correct: true
+      - id: "c"
+        label: "Une faute d'orthographe et un expediteur inconnu"
+        correct: false
+    explanation: "Chaque element a sa fonction : empecher de reflechir, empecher d'en parler, rendre la question genante."
+  - question: "Comment verifier une demande urgente du dirigeant ?"
+    choices:
+      - id: "a"
+        label: "En repondant a l'email pour demander confirmation"
+        correct: false
+      - id: "b"
+        label: "En appelant le numero de l'annuaire interne"
+        correct: true
+      - id: "c"
+        label: "En verifiant que l'adresse d'expedition est la bonne"
+        correct: false
+    explanation: "Repondre s'adresse au fraudeur, et une adresse s'usurpe. Le canal doit etre choisi par vous, pas fourni par le message."
+  - question: "Qu'est-ce qui protege le mieux l'entreprise ?"
+    choices:
+      - id: "a"
+        label: "Former chacun a reperer les faux messages"
+        correct: false
+      - id: "b"
+        label: "Une procedure de double validation qui vaut quel que soit le demandeur"
+        correct: true
+      - id: "c"
+        label: "Un filtre anti-spam plus strict"
+        correct: false
+    explanation: "La formation aide mais depend de la vigilance du jour. Une procedure qui ne fait pas d'exception protege aussi celui qui doit dire non a son dirigeant."
 ---
 
 # Le levier d'urgence
@@ -43,18 +99,19 @@ personne, c'est confidentiel"), le combo est devastateur.
 
 ## Les signaux qui doivent declencher une alerte
 
-| Signal | Pourquoi c'est suspect |
-|---|---|
-| **Delai court** ("dans l'heure", "avant 18h", "tres urgent") | Empeche la verification |
-| **Heure inhabituelle** (vendredi 17h, weekend, ferie) | Bypass les controles |
-| **Secret demande** ("confidentiel", "ne deranger personne") | Empeche les contre-verifications |
+| Signal                                                                   | Pourquoi c'est suspect                  |
+| ------------------------------------------------------------------------ | --------------------------------------- |
+| **Delai court** ("dans l'heure", "avant 18h", "tres urgent")             | Empeche la verification                 |
+| **Heure inhabituelle** (vendredi 17h, weekend, ferie)                    | Bypass les controles                    |
+| **Secret demande** ("confidentiel", "ne deranger personne")              | Empeche les contre-verifications        |
 | **Source inhabituelle** (Gmail/Outlook perso, telephone perso, WhatsApp) | Le DG officiel n'utilise pas ces canaux |
-| **Demande de virement / d'achat / de code 2FA** | Cible directe de l'attaque |
-| **Ton emotionnel** ("Je compte sur toi", "Ne me decois pas") | Manipulation affective |
+| **Demande de virement / d'achat / de code 2FA**                          | Cible directe de l'attaque              |
+| **Ton emotionnel** ("Je compte sur toi", "Ne me decois pas")             | Manipulation affective                  |
 
 ## La regle d'or des 30 secondes
 
 Avant toute action sensible :
+
 1. **Pause** : aucune urgence reelle ne justifie de sauter la verification
 2. **Verification par canal alternatif** :
    - Appeler le numero pro (annuaire interne, pas celui de l'email)
@@ -72,6 +129,7 @@ appele : c'etait un faux email depuis 6 mois.
 ## Pour aller plus loin
 
 Cette demo Open Core couvre les bases. Le catalogue complet inclut :
+
 - Fraude au president avancee (deepfake audio/video du DG)
 - BEC (Business Email Compromise)
 - Procedures de double validation pour les virements
