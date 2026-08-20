@@ -22,13 +22,51 @@ describe("determinerRegime", () => {
     ).toBe(TVA_FR_STANDARD_BP);
   });
 
-  it("UE avec numero de TVA : autoliquidation a 0 %, avec la mention", () => {
-    const r = determinerRegime({ pays: "BE", tvaIntra: "BE0123456789" });
+  it("UE avec numero VERIFIE : autoliquidation a 0 %, avec la mention", () => {
+    const r = determinerRegime({
+      pays: "BE",
+      tvaIntra: "BE0123456789",
+      tvaIntraVerifie: true,
+    });
     expect(r.tauxBp).toBe(TVA_ZERO_BP);
     expect(r.mention).toMatch(/Autoliquidation/);
     expect(r.mention).toMatch(/283-2/);
-    // Le numero n'a PAS ete verifie aupres de VIES : le drapeau le dit.
+    expect(r.exigeVerificationVies).toBe(false);
+  });
+
+  // LE TROU QUE CE TEST FERME : « BE0000000000 » passe le controle de forme
+  // et n'existe pas. Sans verification VIES, il donnait 0 % de TVA.
+  it("UE avec numero bien forme mais NON verifie : TVA francaise", () => {
+    const r = determinerRegime({ pays: "BE", tvaIntra: "BE0000000000" });
+    expect(r.tauxBp).toBe(TVA_FR_STANDARD_BP);
+    expect(r.mention).toMatch(/non vérifié/);
     expect(r.exigeVerificationVies).toBe(true);
+  });
+
+  it("UE avec verification NEGATIVE : TVA francaise", () => {
+    const r = determinerRegime({
+      pays: "BE",
+      tvaIntra: "BE0123456789",
+      tvaIntraVerifie: false,
+    });
+    expect(r.tauxBp).toBe(TVA_FR_STANDARD_BP);
+  });
+
+  // Garde-fou general : dans l'UE, aucune combinaison ne doit produire 0 %
+  // sans verification positive.
+  it("JAMAIS 0 % dans l'UE sans verification positive", () => {
+    for (const pays of ["BE", "DE", "IT", "ES", "NL", "PT"]) {
+      for (const tva of [undefined, null, "", "BE0123456789", "X"]) {
+        for (const verifie of [undefined, false]) {
+          const r = determinerRegime({
+            pays,
+            tvaIntra: tva,
+            tvaIntraVerifie: verifie,
+          });
+          expect(r.tauxBp).toBe(TVA_FR_STANDARD_BP);
+        }
+      }
+    }
   });
 
   it("UE SANS numero : TVA francaise -- on ne presume pas l'exoneration", () => {
@@ -64,7 +102,11 @@ describe("determinerRegime", () => {
 
   it("le code pays est insensible a la casse", () => {
     expect(
-      determinerRegime({ pays: "be", tvaIntra: "BE0123456789" }).tauxBp,
+      determinerRegime({
+        pays: "be",
+        tvaIntra: "BE0123456789",
+        tvaIntraVerifie: true,
+      }).tauxBp,
     ).toBe(TVA_ZERO_BP);
   });
 

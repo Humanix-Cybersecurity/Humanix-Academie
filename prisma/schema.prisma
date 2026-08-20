@@ -197,8 +197,9 @@ model Tenant {
   memberships            TenantMembership[]
   etapesConformite       EtapeConformiteTenant[]
 
-  // Facturation (cf. modeles en fin de fichier)
-  factures            Facture[]
+  // Facturation (cf. modeles en fin de fichier).
+  // Pas de `factures Facture[]` : la facture ne porte pas de cle etrangere
+  // vers le tenant, pour survivre a sa suppression (voir le modele Facture).
   identiteFacturation IdentiteFacturation?
 
   @@index([parentTenantId])
@@ -2883,8 +2884,22 @@ model Facture {
   // Numero legal, unique et sans trou. Format FA-AAAA-NNNN.
   numero String @unique
 
+  // Reference au tenant SANS cle etrangere, et c'est deliberé.
+  //
+  // Une facture n'est pas une ligne fille : c'est un DOCUMENT autonome, qui
+  // porte deja l'identite complete de l'acheteur dans `acheteur`. Elle doit
+  // survivre a la suppression du tenant -- le code de commerce impose dix ans
+  // de conservation (article L123-22), et le RGPD le prevoit explicitement :
+  // l'article 17.3.b ecarte le droit a l'effacement quand le traitement
+  // repond a une obligation legale.
+  //
+  // Une cle etrangere forcerait a choisir entre deux mauvaises options :
+  //   - onDelete: Restrict -> le superadmin ne peut PLUS supprimer un client
+  //     qui a paye une fois. Ca cassait /superadmin/tenants/[id] en silence.
+  //   - onDelete: Cascade  -> on detruit des pieces comptables. Exclu.
+  // Sans cle etrangere, la suppression du tenant fonctionne et la facture
+  // reste, complete et opposable.
   tenantId String
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
 
   // Date d'emission (fait foi) et date de la prestation facturee.
   emiseLe   DateTime @default(now())
@@ -2942,17 +2957,27 @@ model IdentiteFacturation {
   tenantId String @id
   tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
-  raisonSociale String
-  adresse       String
-  codePostal    String
-  ville         String
-  pays          String  @default("FR")
+  raisonSociale     String
+  adresse           String
+  codePostal        String
+  ville             String
+  pays              String    @default("FR")
   // SIREN de l'acheteur : mention obligatoire sur les factures entre
   // assujettis etablis en France depuis le decret du 26 juin 2024.
-  siren         String?
+  siren             String?
   // Numero de TVA intracommunautaire. Requis pour justifier une
   // autoliquidation UE -- sans lui, la TVA francaise s'applique.
-  tvaIntra      String?
+  tvaIntra          String?
+  // Resultat de la derniere verification VIES : "valide" | "invalide" |
+  // "inconnu". L'autoliquidation n'est accordee QUE sur "valide" -- un
+  // numero bien forme mais faux donnerait sinon 0 % de TVA.
+  // "inconnu" n'est PAS "invalide" : VIES repond `isValid: false` quand le
+  // service d'un Etat membre est occupe (cf. lib/facturation/vies.ts).
+  tvaIntraStatut    String?
+  tvaIntraVerifieLe DateTime?
+  // Denomination renvoyee par VIES, pour que l'admin voie a qui appartient
+  // reellement le numero qu'il a saisi.
+  tvaIntraNom       String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

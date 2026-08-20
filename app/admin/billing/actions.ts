@@ -13,6 +13,9 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
 import { formeTvaIntraPlausible } from "@/lib/facturation/regime-tva";
+import { verifierTvaIntra } from "@/lib/facturation/vies";
+import { facturerPaiement } from "@/lib/facturation/au-paiement";
+import { paiementsAFacturer } from "@/lib/facturation/rattrapage";
 
 const CHEMIN = "/admin/billing";
 
@@ -63,6 +66,22 @@ export async function enregistrerIdentiteFacturation(donnees: FormData) {
     );
   }
 
+  // Verification VIES a l'ENREGISTREMENT, pas a l'emission : une facture ne
+  // doit pas dependre de la disponibilite d'un service tiers. Le resultat est
+  // fige ici, et relu au moment de facturer.
+  //
+  // Trois etats, jamais deux : VIES repond `isValid: false` aussi bien pour un
+  // numero inexistant que pour un service occupe (cf. lib/facturation/vies.ts).
+  let tvaIntraStatut: string | null = null;
+  let tvaIntraNom: string | null = null;
+  let tvaIntraVerifieLe: Date | null = null;
+  if (tvaIntra) {
+    const r = await verifierTvaIntra(tvaIntra);
+    tvaIntraStatut = r.statut;
+    tvaIntraVerifieLe = new Date();
+    if (r.statut === "valide") tvaIntraNom = r.nom;
+  }
+
   const donneesIdentite = {
     raisonSociale,
     adresse,
@@ -71,6 +90,9 @@ export async function enregistrerIdentiteFacturation(donnees: FormData) {
     pays,
     siren,
     tvaIntra,
+    tvaIntraStatut,
+    tvaIntraNom,
+    tvaIntraVerifieLe,
   };
   await db.identiteFacturation.upsert({
     where: { tenantId },
@@ -97,7 +119,89 @@ export async function enregistrerIdentiteFacturation(donnees: FormData) {
   });
 
   revalidatePath(CHEMIN);
+
+  // Le message dit ce que VIES a repondu. « Non verifie » n'est pas
+  // « invalide », et l'admin doit pouvoir faire la difference : dans un cas il
+  // a saisi un mauvais numero, dans l'autre il n'a qu'a reessayer.
+  let message = "Coordonnées de facturation enregistrées.";
+  if (tvaIntraStatut === "valide") {
+    message += tvaIntraNom
+      ? ` Numéro de TVA vérifié : ${tvaIntraNom}.`
+      : " Numéro de TVA vérifié.";
+  } else if (tvaIntraStatut === "invalide") {
+    message +=
+      " Attention : ce numéro de TVA est inconnu de VIES. La TVA française sera appliquée.";
+  } else if (tvaIntraStatut === "inconnu") {
+    message +=
+      " Le service VIES n'a pas pu répondre : la TVA française s'applique en attendant. Réenregistrez plus tard.";
+  }
+  redirect(`${CHEMIN}?ok=1&msg=${encodeURIComponent(message)}`);
+}
+
+/**
+ * Emet la facture d'un paiement deja encaisse.
+ *
+ * Volontairement UNITAIRE et declenchee a la main : un paiement peut avoir ete
+ * rembourse depuis (cf. le double prelevement du 2026-08-17). Une emission en
+ * masse produirait des factures pour de l'argent rendu, qu'il faudrait ensuite
+ * annuler par des avoirs.
+ */
+export async function emettreFactureManquante(donnees: FormData) {
+  const session = await auth();
+  const role = session?.user?.role;
+  if (!session?.user || (role !== "ADMIN" && role !== "SUPERADMIN")) {
+    redirect("/admin");
+  }
+  const tenantId = session.user.tenantId as string;
+  const ref = propre(donnees.get("paiementRef"), 100);
+  if (!ref)
+    redirect(
+      `${CHEMIN}?error=${encodeURIComponent("Référence de paiement manquante.")}`,
+    );
+
+  // On repart de la LISTE plutot que de la reference recue : un formulaire
+  // trafique ne peut donc pas faire facturer le paiement d'un autre tenant,
+  // ni un paiement deja facture.
+  const candidats = await paiementsAFacturer(tenantId);
+  const cible = candidats.find((p) => p.ref === ref);
+  if (!cible) {
+    redirect(
+      `${CHEMIN}?error=${encodeURIComponent("Ce paiement est introuvable ou déjà facturé.")}`,
+    );
+  }
+
+  const r = await facturerPaiement({
+    tenantId,
+    paiementRef: cible.ref,
+    montantValeur: (cible.montantTtcCentimes / 100).toFixed(2),
+    presteeLe: cible.encaisseLe,
+  });
+
+  if (r.etat === "emise") {
+    await auditLog({
+      action: AuditActions.TENANT_UPDATED,
+      outcome: "SUCCESS",
+      severity: "INFO",
+      tenantId,
+      actor: {
+        userId: session.user.id,
+        email: session.user.email ?? null,
+        role,
+      },
+      target: { type: "facture", label: r.numero },
+      message: `Facture ${r.numero} emise pour le paiement ${cible.ref}`,
+    });
+    revalidatePath(CHEMIN);
+    redirect(
+      `${CHEMIN}?ok=1&msg=${encodeURIComponent(`Facture ${r.numero} émise.`)}`,
+    );
+  }
+
+  const explication =
+    r.motif === "identite_facturation_absente"
+      ? "Renseignez d'abord vos coordonnées de facturation."
+      : r.motif;
   redirect(
-    `${CHEMIN}?ok=1&msg=${encodeURIComponent("Coordonnées de facturation enregistrées.")}`,
+    `${CHEMIN}?error=${encodeURIComponent(`Émission impossible : ${explication}`)}`,
   );
 }

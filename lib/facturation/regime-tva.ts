@@ -54,6 +54,14 @@ export type RegimeTva = {
 export type AcheteurPourRegime = {
   pays: string;
   tvaIntra?: string | null;
+  /**
+   * Le numero a-t-il ete VERIFIE aupres de VIES (statut « valide ») ?
+   *
+   * La forme ne suffit pas : « BE0000000000 » est bien forme et n'existe pas.
+   * Sans verification positive, l'autoliquidation n'est pas justifiable et la
+   * TVA francaise s'applique.
+   */
+  tvaIntraVerifie?: boolean;
 };
 
 /**
@@ -67,10 +75,10 @@ export function normaliserTvaIntra(v: string): string {
 /**
  * Verifie la FORME d'un numero de TVA intracommunautaire.
  *
- * Ce n'est PAS une validation VIES : seul VIES dit si un numero est actif, et
- * l'autoliquidation exige un numero valide AU MOMENT de l'operation. Tant que
- * l'appel VIES n'est pas branche, un numero bien forme reste une declaration
- * du client -- d'ou l'avertissement porte par `exigeVerificationVies`.
+ * Ce n'est PAS une validation VIES, et la forme ne suffit JAMAIS a accorder
+ * l'autoliquidation : « BE0000000000 » est bien forme et n'existe pas. Ce
+ * controle sert uniquement a rejeter une saisie manifestement erronee avant
+ * d'appeler VIES (cf. lib/facturation/vies.ts).
  */
 export function formeTvaIntraPlausible(v: string): boolean {
   const n = normaliserTvaIntra(v);
@@ -93,17 +101,36 @@ export function determinerRegime(acheteur: AcheteurPourRegime): RegimeTva & {
     };
   }
 
-  // 2. Autre Etat membre AVEC numero de TVA plausible : autoliquidation.
-  if (UE_HORS_FRANCE.has(pays) && tva && formeTvaIntraPlausible(tva)) {
+  // 2. Autre Etat membre, numero bien forme ET VERIFIE aupres de VIES :
+  //    autoliquidation.
+  if (
+    UE_HORS_FRANCE.has(pays) &&
+    tva &&
+    formeTvaIntraPlausible(tva) &&
+    acheteur.tvaIntraVerifie === true
+  ) {
     return {
       tauxBp: TVA_ZERO_BP,
       mention:
         "Autoliquidation - article 283-2 du CGI. TVA due par le preneur.",
+      exigeVerificationVies: false,
+    };
+  }
+
+  // 3. Numero bien forme mais PAS verifie : TVA francaise.
+  //    « BE0000000000 » passe le controle de forme et n'existe pas. Accorder
+  //    l'exoneration sur la seule forme, ce serait offrir 0 % de TVA a qui
+  //    sait inventer un numero plausible.
+  if (UE_HORS_FRANCE.has(pays) && tva && formeTvaIntraPlausible(tva)) {
+    return {
+      tauxBp: TVA_FR_STANDARD_BP,
+      mention:
+        "TVA française 20 % - numéro de TVA intracommunautaire non vérifié",
       exigeVerificationVies: true,
     };
   }
 
-  // 3. Autre Etat membre SANS numero exploitable : on ne devine pas.
+  // 4. Autre Etat membre SANS numero exploitable : on ne devine pas.
   //    Sans numero valide, l'autoliquidation n'est pas justifiable : TVA due.
   if (UE_HORS_FRANCE.has(pays)) {
     return {
@@ -114,7 +141,7 @@ export function determinerRegime(acheteur: AcheteurPourRegime): RegimeTva & {
     };
   }
 
-  // 4. Hors UE : prestation de services B2B hors champ de la TVA francaise.
+  // 5. Hors UE : prestation de services B2B hors champ de la TVA francaise.
   return {
     tauxBp: TVA_ZERO_BP,
     mention: "TVA non applicable - prestation hors champ, article 259-1 du CGI",

@@ -34,6 +34,8 @@ import PlanUpgradeOptions from "@/components/PlanUpgradeOptions";
 import { db } from "@/lib/db";
 import IdentiteForm from "@/components/admin/facturation/IdentiteForm";
 import ListeFactures from "@/components/admin/facturation/ListeFactures";
+import PaiementsAFacturer from "@/components/admin/facturation/PaiementsAFacturer";
+import { paiementsAFacturer } from "@/lib/facturation/rattrapage";
 
 export const dynamic = "force-dynamic";
 
@@ -44,7 +46,7 @@ export default async function BillingPage() {
   }
   const tenantId = session.user.tenantId;
 
-  const [state, usage, identite, factures] = await Promise.all([
+  const [state, usage, identite, factures, aFacturer] = await Promise.all([
     getSubscriptionState(tenantId),
     getSeatUsage(tenantId),
     db.identiteFacturation.findUnique({ where: { tenantId } }),
@@ -59,6 +61,10 @@ export default async function BillingPage() {
       },
       take: 100,
     }),
+    // `verifierRemboursements` relit chaque paiement chez Mollie : un appel
+    // reseau par paiement en attente. Acceptable ici -- la liste est courte et
+    // facturer un paiement rembourse coute plus cher que 200 ms.
+    paiementsAFacturer(tenantId, { verifierRemboursements: true }),
   ]);
 
   const upgradePlan = nextPlan(state.plan);
@@ -268,6 +274,23 @@ export default async function BillingPage() {
           <IdentiteForm identite={identite} />
         </div>
       </section>
+
+      {aFacturer.length > 0 && (
+        <section className="rounded-2xl border border-amber-200 bg-amber-50/50 p-6 dark:border-amber-900/40 dark:bg-amber-950/10">
+          <h2 className="font-display text-xl font-extrabold text-primary-500 dark:text-accent-300">
+            {aFacturer.length} prélèvement
+            {aFacturer.length > 1 ? "s" : ""} en attente de facture
+          </h2>
+          <p className="mt-1 mb-5 text-sm text-gray-600 dark:text-gray-300">
+            Encaissés avant la mise en place de la facturation, ou en attente de
+            vos coordonnées. Vérifiez chaque ligne avant d&apos;émettre.
+          </p>
+          <PaiementsAFacturer
+            paiements={aFacturer}
+            identiteRenseignee={identite !== null}
+          />
+        </section>
+      )}
 
       <section className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-slate-700 dark:bg-slate-900">
         <h2 className="font-display text-xl font-extrabold text-primary-500 dark:text-accent-300">

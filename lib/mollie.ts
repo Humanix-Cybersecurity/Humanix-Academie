@@ -337,6 +337,16 @@ export type MolliePaymentResource = {
   createdAt: string;
   paidAt: string | null;
   failedAt: string | null;
+  /**
+   * Montant deja rembourse, tel que Mollie le connait MAINTENANT.
+   *
+   * Absent du payload stocke au moment du webhook : un remboursement survient
+   * apres. Il faut donc relire le paiement chez Mollie pour le voir -- c'est
+   * exactement ce que fait le rattrapage de facturation, pour ne pas facturer
+   * benignement un paiement qui a ete rendu (cf. le double prelevement du
+   * 2026-08-17, dont une moitie a ete remboursee).
+   */
+  amountRefunded: MollieAmount | null;
 };
 
 function paymentToPublic(p: Payment): MolliePaymentResource {
@@ -352,6 +362,7 @@ function paymentToPublic(p: Payment): MolliePaymentResource {
     createdAt: p.createdAt as string,
     paidAt: (p.paidAt as string | null) ?? null,
     failedAt: (p.failedAt as string | null) ?? null,
+    amountRefunded: (p.amountRefunded as MollieAmount | null) ?? null,
   };
 }
 

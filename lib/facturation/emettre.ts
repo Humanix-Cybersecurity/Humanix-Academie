@@ -70,6 +70,10 @@ export async function emettreFacture(demande: DemandeEmission) {
   const regime = determinerRegime({
     pays: identite.pays,
     tvaIntra: identite.tvaIntra,
+    // On relit le resultat FIGE de la verification VIES, on ne rappelle pas le
+    // service : une facture ne doit pas dependre de la disponibilite d'un
+    // tiers au moment ou elle part.
+    tvaIntraVerifie: identite.tvaIntraStatut === "valide",
   });
   const totaux = calculerTotaux(demande.lignes, regime.tauxBp);
   const emiseLe = demande.emiseLe ?? new Date();
