@@ -17,6 +17,7 @@ import {
   ligneAbonnement,
 } from "./depuis-paiement";
 import { db } from "@/lib/db";
+import { notifierFactureEmise } from "./notification";
 
 export type ResultatFacturation =
   | { etat: "emise"; numero: string }
@@ -47,6 +48,19 @@ export async function facturerPaiement(params: {
         presteeLe: params.presteeLe,
       }),
     });
+    // Notification au client. Apres l'emission, jamais avant, et sans
+    // pouvoir la remettre en cause : `notifierFactureEmise` ne leve pas
+    // (cf. son en-tete). Une facture emise sans mail reste consultable ;
+    // l'inverse -- un mail annoncant une facture inexistante -- ne serait
+    // pas rattrapable.
+    await notifierFactureEmise({
+      tenantId: params.tenantId,
+      factureId: facture.id,
+      numero: facture.numero,
+      emiseLe: facture.emiseLe,
+      totalTtcCentimes: facture.totalTtcCentimes,
+    });
+
     return { etat: "emise", numero: facture.numero };
   } catch (e) {
     // Absence d'identite de facturation : ce n'est pas une panne, c'est un
