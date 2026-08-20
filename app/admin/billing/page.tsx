@@ -301,6 +301,27 @@ export default async function BillingPage() {
           TTC ; le détail HT et TVA figure sur le PDF.
         </p>
         <ListeFactures factures={factures} />
+
+        {factures.length > 0 && (
+          <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-slate-700 dark:bg-slate-800/40">
+            <p className="text-sm font-bold text-gray-700 dark:text-gray-200">
+              Export pour la comptabilité
+            </p>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+              Une archive avec les PDF, les XML Factur-X et un récapitulatif qui
+              porte la <strong>référence de paiement</strong> — c&apos;est elle
+              qui permet de recroiser avec le rapport de versement de votre
+              encaisseur, car un virement regroupe souvent plusieurs ventes.
+            </p>
+            <a
+              href="/api/factures/export"
+              className="mt-3 inline-flex items-center gap-2 rounded-xl border-2 border-gray-200 bg-white px-4 py-2 text-sm font-bold text-gray-700 transition hover:border-accent-500 dark:border-slate-700 dark:bg-slate-900 dark:text-gray-200"
+            >
+              <span aria-hidden="true">📦</span>
+              Télécharger l&apos;archive
+            </a>
+          </div>
+        )}
       </section>
 
       {/* === Help === */}

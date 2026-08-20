@@ -15,13 +15,18 @@ export const CSV_BOM = "﻿";
  * - anti CSV-injection : préfixe les cellules débutant par = + - @ (ou
  *   tab/CR) pour qu'Excel/Sheets ne les interprète pas comme des formules
  */
-export function csvEscape(v: string | number | null | undefined): string {
+export function csvEscape(
+  v: string | number | null | undefined,
+  separateur = ",",
+): string {
   if (v === null || v === undefined) return "";
   let s = String(v);
   if (/^[=+\-@\t\r]/.test(s)) {
     s = `'${s}`;
   }
-  if (/[",\n\r]/.test(s)) {
+  // On protege sur LE separateur reellement utilise : avec « ; », une cellule
+  // contenant une virgule n'a pas besoin de guillemets, et inversement.
+  if (s.includes(separateur) || /["\n\r]/.test(s)) {
     return `"${s.replace(/"/g, '""')}"`;
   }
   return s;
@@ -34,10 +39,20 @@ export function csvEscape(v: string | number | null | undefined): string {
 export function buildCsv(
   header: string[],
   rows: (string | number | null | undefined)[][],
+  /**
+   * Separateur de colonnes. Virgule par defaut (RFC 4180), pour ne rien
+   * changer aux exports existants.
+   *
+   * PASSER « ; » POUR UN EXPORT DESTINE A EXCEL EN FRANCAIS : la locale
+   * francaise attend le point-virgule, et surtout les montants y portent une
+   * VIRGULE decimale. Avec le separateur par defaut, chaque montant devrait
+   * etre entoure de guillemets et la moindre erreur de citation eclate la
+   * ligne en deux colonnes.
+   */
+  separateur: "," | ";" = ",",
 ): string {
-  const lines = [
-    header.map(csvEscape).join(","),
-    ...rows.map((r) => r.map(csvEscape).join(",")),
-  ];
+  const ligne = (cells: (string | number | null | undefined)[]) =>
+    cells.map((c) => csvEscape(c, separateur)).join(separateur);
+  const lines = [ligne(header), ...rows.map(ligne)];
   return CSV_BOM + lines.join("\r\n") + "\r\n";
 }
