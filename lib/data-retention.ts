@@ -28,6 +28,7 @@
 
 import { AuditAction } from "@prisma/client";
 import { db } from "@/lib/db";
+import { purgerCoordonneesAbandonnees } from "@/lib/facturation/en-attente";
 import { auditLog, AuditActions, AuditOutcomes } from "@/lib/audit";
 
 export const RETENTION_MIN_DAYS = 30;
@@ -316,6 +317,24 @@ export async function executePurge(
   }
 
   // === 4. Met a jour le timestamp et trace l'AuditLog ===
+  // Coordonnees de facturation saisies au checkout puis abandonnees.
+  //
+  // Elles ne sont rattachees a aucun tenant -- le paiement n'a jamais abouti
+  // -- mais elles contiennent l'adresse d'une entreprise. Rien ne justifie de
+  // les garder au-dela du delai ou le client peut encore revenir finir son
+  // paiement.
+  try {
+    const abandonnees = await purgerCoordonneesAbandonnees(30);
+    if (abandonnees > 0) {
+      console.warn(
+        `[data-retention] ${abandonnees} coordonnee(s) de facturation abandonnee(s) purgee(s)`,
+      );
+    }
+  } catch (e) {
+    // Best-effort : cette purge ne doit pas faire echouer la retention.
+    console.warn("[data-retention] purge des coordonnees abandonnees echouee", e);
+  }
+
   await db.tenant.update({
     where: { id: tenantId },
     data: { dataRetentionLastRunAt: now },

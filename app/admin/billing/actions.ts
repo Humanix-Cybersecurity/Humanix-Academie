@@ -12,7 +12,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
-import { formeTvaIntraPlausible } from "@/lib/facturation/regime-tva";
+import { validerCoordonnees } from "@/lib/facturation/coordonnees";
 import { verifierTvaIntra } from "@/lib/facturation/vies";
 import { facturerPaiement } from "@/lib/facturation/au-paiement";
 import { paiementsAFacturer } from "@/lib/facturation/rattrapage";
@@ -35,36 +35,23 @@ export async function enregistrerIdentiteFacturation(donnees: FormData) {
   }
   const tenantId = session.user.tenantId as string;
 
-  const raisonSociale = propre(donnees.get("raisonSociale"));
-  const adresse = propre(donnees.get("adresse"));
-  const codePostal = propre(donnees.get("codePostal"), 20);
-  const ville = propre(donnees.get("ville"), 100);
-  const pays = propre(donnees.get("pays"), 2).toUpperCase() || "FR";
-  const siren = propre(donnees.get("siren"), 20) || null;
-  const tvaIntra = propre(donnees.get("tvaIntra"), 20) || null;
-
-  const manquants: string[] = [];
-  if (!raisonSociale) manquants.push("la dénomination sociale");
-  if (!adresse) manquants.push("l'adresse");
-  if (!codePostal) manquants.push("le code postal");
-  if (!ville) manquants.push("la ville");
-  if (manquants.length > 0) {
-    redirect(
-      `${CHEMIN}?error=${encodeURIComponent(`Il manque ${manquants.join(", ")}.`)}`,
-    );
+  // Validation partagee avec le checkout public : les deux chemins doivent
+  // appliquer EXACTEMENT les memes regles, sinon une adresse acceptee d'un
+  // cote serait refusee de l'autre.
+  const v = validerCoordonnees({
+    raisonSociale: donnees.get("raisonSociale"),
+    adresse: donnees.get("adresse"),
+    codePostal: donnees.get("codePostal"),
+    ville: donnees.get("ville"),
+    pays: donnees.get("pays"),
+    siren: donnees.get("siren"),
+    tvaIntra: donnees.get("tvaIntra"),
+  });
+  if (!v.ok) {
+    redirect(`${CHEMIN}?error=${encodeURIComponent(v.erreur)}`);
   }
-  if (!/^[A-Z]{2}$/.test(pays)) {
-    redirect(
-      `${CHEMIN}?error=${encodeURIComponent("Le pays doit être un code à deux lettres (FR, BE, DE...).")}`,
-    );
-  }
-  // On refuse un numero de TVA mal forme PLUTOT que de l'ignorer : ignore, il
-  // ferait croire a une autoliquidation qui ne s'appliquerait pas.
-  if (tvaIntra && !formeTvaIntraPlausible(tvaIntra)) {
-    redirect(
-      `${CHEMIN}?error=${encodeURIComponent("Le numéro de TVA intracommunautaire est mal formé (ex. FR80103901799).")}`,
-    );
-  }
+  const { raisonSociale, adresse, codePostal, ville, pays, siren, tvaIntra } =
+    v.valeur;
 
   // Verification VIES a l'ENREGISTREMENT, pas a l'emission : une facture ne
   // doit pas dependre de la disponibilite d'un service tiers. Le resultat est

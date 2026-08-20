@@ -23,6 +23,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { facturerPaiement } from "@/lib/facturation/au-paiement";
+import { reprendreCoordonnees } from "@/lib/facturation/en-attente";
 import { auditLog, AuditActions } from "@/lib/audit";
 import {
   getPayment,
@@ -360,6 +361,17 @@ async function onFirstPaymentPaid(payment: MolliePaymentResource): Promise<{
   }
 
   tenantId = result.tenantId;
+
+  // Reprise des coordonnees saisies au checkout. AVANT la facturation, qui se
+  // declenche plus bas : sans elles, l'emission serait differee alors que le
+  // client les a deja fournies.
+  //
+  // Ne leve jamais (cf. l'en-tete du module) : un probleme ici ne doit pas
+  // faire rejouer le provisionnement.
+  await reprendreCoordonnees({
+    tenantId: result.tenantId,
+    paymentCustomerId: payment.customerId,
+  });
 
   if (result.created) {
     // Magic link de bienvenue (non-bloquant si echec : l'admin peut

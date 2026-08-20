@@ -26,6 +26,11 @@
 import { normaliserTvaIntra } from "./regime-tva";
 
 const RACINE = "https://ec.europa.eu/taxation_customs/vies/rest-api/ms";
+/**
+ * Budget par defaut. Volontairement genereux hors du tunnel de paiement.
+ * Le checkout passe un budget plus court : mieux vaut un « inconnu » qu'un
+ * client qui attend devant un ecran de paiement.
+ */
 const DELAI_MS = 8000;
 
 export type ResultatVies =
@@ -62,7 +67,10 @@ function texte(v: unknown): string | null {
  * Interroge VIES. Ne leve jamais : un service tiers indisponible ne doit pas
  * empecher un client d'enregistrer ses coordonnees.
  */
-export async function verifierTvaIntra(numero: string): Promise<ResultatVies> {
+export async function verifierTvaIntra(
+  numero: string,
+  options: { delaiMs?: number } = {},
+): Promise<ResultatVies> {
   const n = normaliserTvaIntra(numero);
   const pays = n.slice(0, 2);
   const reste = n.slice(2);
@@ -76,7 +84,7 @@ export async function verifierTvaIntra(numero: string): Promise<ResultatVies> {
       `${RACINE}/${pays}/vat/${encodeURIComponent(reste)}`,
       {
         headers: { accept: "application/json" },
-        signal: AbortSignal.timeout(DELAI_MS),
+        signal: AbortSignal.timeout(options.delaiMs ?? DELAI_MS),
         cache: "no-store",
       },
     );

@@ -2982,3 +2982,38 @@ model IdentiteFacturation {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// Coordonnees de facturation saisies AU CHECKOUT, en attente du tenant.
+//
+// POURQUOI UNE TABLE ET PAS LES METADONNEES MOLLIE
+//
+//   Mollie plafonne ses metadata (~1 ko). Une raison sociale, une adresse,
+//   une ville et deux identifiants les feraient deborder -- et un depassement
+//   se traduirait par une troncature silencieuse, donc une facture fausse.
+//   Ces donnees restent chez nous ; seule la reference du client Mollie fait
+//   le lien.
+//
+// Cycle de vie : creee au demarrage du paiement, transformee en
+// IdentiteFacturation au provisionnement du tenant, puis supprimee. Les
+// lignes des paniers abandonnes sont purgees par le travail de retention.
+model IdentiteFacturationEnAttente {
+  // Identifiant du client chez Mollie (cst_xxx) : c'est la seule chose que
+  // le webhook connaisse avant que le tenant n'existe.
+  paymentCustomerId String @id
+
+  raisonSociale  String
+  adresse        String
+  codePostal     String
+  ville          String
+  pays           String  @default("FR")
+  siren          String?
+  tvaIntra       String?
+  // Resultat VIES releve au checkout. Peut valoir "inconnu" : le service est
+  // interroge avec un budget court pour ne pas retarder le paiement.
+  tvaIntraStatut String?
+  tvaIntraNom    String?
+
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
