@@ -119,6 +119,29 @@ quelle échéance.
 
 ---
 
+## Faits vérifiés, à ne pas réécrire de mémoire
+
+La saison « facturation électronique » repose sur le **décret n° 2026-677 et
+l'arrêté du 27 juillet 2026**, postérieurs à la date de connaissance du modèle
+qui a rédigé ces épisodes. Deux points auraient été faux sans vérification :
+
+- les « PDP » s'appellent désormais **plateformes agréées (PA)** ;
+- le **portail public (Chorus Pro) n'est plus** une option gratuite d'émission
+  ou de réception — il ne garde que l'annuaire central et la remontée des
+  données à l'administration. **Tous** les échanges B2B passent par une PA.
+
+Calendrier retenu : réception obligatoire pour **toute entreprise assujettie à
+la TVA au 1er septembre 2026** (micro-entrepreneurs compris) ; émission au
+1er septembre 2026 pour les grandes entreprises et ETI, au 1er septembre 2027
+pour les PME et TPE. Sanctions progressives : mise en demeure, 3 mois, 500 €,
+3 mois, 1 000 €, renouvelable.
+
+Sources consultées le 2026-08-19 : [compta-online](https://www.compta-online.com/facturation-electronique-ao5562),
+[LégiFiscal](https://www.legifiscal.fr/actualites-fiscales/4580-facturation-electronique-decret-27-juillet-2026.html),
+[PwC Avocats](https://www.pwcavocats.com/fr/ealertes/ealertes-france/2026/juillet/decret-et-arrete-du-27-juillet-2026-la-reforme-franchit-sa-derniere-etape-reglementaire.html).
+
+---
+
 ## Ordre proposé
 
 1. ~~**Questionnaire sécurité client** — déblocage de vente, aucun concurrent
@@ -126,6 +149,7 @@ quelle échéance.
 2. ~~**Parcours complet par un œil neuf**~~ — écarté par l'utilisateur ;
 3. ~~**Site web de l'entreprise** — parle à qui n'a pas de DSI~~ — **livré**
    le 2026-08-19, 6 épisodes, 40 min, ordre 60 ;
-4. **Facturation électronique** — fenêtre de recherche à ne pas rater ;
+4. ~~**Facturation électronique** — fenêtre de recherche à ne pas rater~~ —
+   **livré** le 2026-08-20, 6 épisodes, 42 min, ordre 61 ;
 5. **Secteurs commerce et BTP** — volume ;
 6. **Assurance cyber** — étendre l'épisode existant en saison.
