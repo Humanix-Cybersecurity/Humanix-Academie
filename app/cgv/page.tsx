@@ -103,7 +103,7 @@ export default function CGVPage() {
             choisi (Starter, Pro, Enterprise). Le sous-palier Starter free est
             mis à disposition gracieusement, sans engagement et sans CB, dans la
             limite de cinq (5) sièges actifs. Au-delà, le palier Starter passe
-            en forfait payant (19 €/mois HT jusqu'à quinze sièges).
+            en forfait payant (19 €/mois TTC jusqu'à quinze sièges).
           </p>
         </LegalSubsection>
 
@@ -204,10 +204,12 @@ export default function CGVPage() {
         title="Tarifs et modalités de paiement"
       >
         <p>
-          Les tarifs sont indiqués en euros, hors taxes. La TVA française au
-          taux en vigueur est applicable sauf cas d'autoliquidation pour les
+          Les tarifs sont indiqués en euros, toutes taxes comprises : le prix
+          affiché est le prix prélevé. Le détail hors taxes et le montant de la
+          TVA française au taux en vigueur figurent sur chaque facture. Pour les
           clients établis dans un autre État membre de l'UE et titulaires d'un
-          numéro de TVA intracommunautaire valide.
+          numéro de TVA intracommunautaire valide, la facture est émise sans TVA
+          française et porte la mention d'autoliquidation.
         </p>
         <p>
           <strong>Modalités de paiement</strong> : par virement bancaire ou

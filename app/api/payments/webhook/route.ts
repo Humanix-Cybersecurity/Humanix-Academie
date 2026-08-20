@@ -22,6 +22,7 @@
 
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { facturerPaiement } from "@/lib/facturation/au-paiement";
 import { auditLog, AuditActions } from "@/lib/audit";
 import {
   getPayment,
@@ -188,6 +189,21 @@ async function handlePaymentEvent(paymentId: string) {
     errorMessage = err instanceof Error ? err.message : String(err);
   }
 
+  // --- Facturation -------------------------------------------------------
+  // Apres l'encaissement, jamais avant : on ne facture que ce qui est paye.
+  // `facturerPaiement` ne leve JAMAIS (cf. son en-tete) -- un probleme de
+  // facture ne doit pas faire rejouer le webhook, donc reprovisionner.
+  let facturation: string | null = null;
+  if (molliePaymentIsPaid(payment.status) && tenantId) {
+    const r = await facturerPaiement({
+      tenantId,
+      paiementRef: payment.id,
+      montantValeur: payment.amount.value,
+      presteeLe: payment.paidAt ? new Date(payment.paidAt) : new Date(),
+    });
+    facturation = r.etat === "emise" ? r.numero : `${r.etat}:${r.motif}`;
+  }
+
   // Persistence event pour idempotence + audit
   await db.billingEvent.create({
     data: {
@@ -195,7 +211,12 @@ async function handlePaymentEvent(paymentId: string) {
       providerEventId: eventKey,
       type: `payment.${payment.status}`,
       tenantId,
-      payload: payment as unknown as object,
+      payload: {
+        ...(payment as unknown as object),
+        // Trace de facturation : permet de retrouver, depuis le journal des
+        // paiements, ceux qui attendent encore une facture.
+        _facturation: facturation,
+      },
       status,
       errorMessage,
       providerCreatedAt: new Date(payment.createdAt),

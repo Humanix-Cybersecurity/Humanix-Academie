@@ -197,6 +197,10 @@ model Tenant {
   memberships            TenantMembership[]
   etapesConformite       EtapeConformiteTenant[]
 
+  // Facturation (cf. modeles en fin de fichier)
+  factures            Facture[]
+  identiteFacturation IdentiteFacturation?
+
   @@index([parentTenantId])
 }
 
@@ -2848,4 +2852,108 @@ model EtapeConformiteTenant {
 
   @@unique([tenantId, cle])
   @@index([tenantId])
+}
+
+// =====================================================
+// FACTURATION
+//
+// POURQUOI CE MODELE EXISTE
+//
+//   Jusqu'au 2026-08-20, Humanix n'emettait AUCUNE facture. Le bouton
+//   « Portail Mollie - telecharger tes factures » de /admin/billing pointait
+//   vers une route qui n'accepte que POST (il etait rendu en <a href>, donc
+//   GET -> 405), et dont le commentaire disait lui-meme que Mollie n'expose
+//   pas de portail client. La promesse etait tenue par personne.
+//
+// LES DEUX REGLES QUI GOUVERNENT CE MODELE
+//
+//   1. UNE FACTURE EST IMMUABLE. Une fois emise, on ne la modifie plus : on
+//      emet un avoir. D'ou le snapshot complet (vendeur, acheteur, lignes,
+//      montants) : on ne recalcule JAMAIS depuis les donnees vivantes du
+//      tenant, sinon changer une raison sociale reecrirait le passe.
+//
+//   2. LA NUMEROTATION EST CONTINUE. Sequentielle, chronologique, sans trou.
+//      C'est pour ca qu'on utilise CompteurFacture (une ligne verrouillee
+//      dans la transaction) et NON une SEQUENCE Postgres : une sequence n'est
+//      pas transactionnelle, un rollback y laisserait un trou definitif.
+// =====================================================
+
+model Facture {
+  id     String @id @default(cuid())
+  // Numero legal, unique et sans trou. Format FA-AAAA-NNNN.
+  numero String @unique
+
+  tenantId String
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+
+  // Date d'emission (fait foi) et date de la prestation facturee.
+  emiseLe   DateTime @default(now())
+  presteeLe DateTime
+
+  // Paiement d'origine. Unique : un paiement ne peut donner deux factures.
+  // Null pour une facture emise a la main ou pour un avoir.
+  paiementRef String? @unique
+
+  // --- SNAPSHOT IMMUABLE ------------------------------------------------
+  // Figes a l'emission. Ne jamais recalculer depuis Tenant ou les constantes.
+  vendeur  Json
+  acheteur Json
+  lignes   Json
+
+  // Montants en centimes : jamais de flottant sur de l'argent.
+  totalHtCentimes  Int
+  tvaCentimes      Int
+  totalTtcCentimes Int
+  // Taux en points de base : 2000 = 20,00 %. Entier, donc exact.
+  tauxTvaBp        Int
+  // Mention legale du regime : « TVA 20 % », « Autoliquidation - article 283-2
+  // du CGI », « TVA non applicable, article 293 B du CGI »...
+  mentionTva       String
+  devise           String @default("EUR")
+
+  // Avoir : si renseigne, cette facture annule (totalement) celle qui est
+  // pointee. Les montants d'un avoir sont negatifs.
+  avoirDeId String?
+  avoirDe   Facture?  @relation("AvoirFacture", fields: [avoirDeId], references: [id])
+  avoirs    Facture[] @relation("AvoirFacture")
+
+  createdAt DateTime @default(now())
+
+  @@index([tenantId, emiseLe])
+  @@index([emiseLe])
+}
+
+// Compteur de numerotation, une ligne par annee civile.
+//
+// L'allocation se fait par UPDATE ... RETURNING DANS la transaction qui insere
+// la facture : le verrou de ligne serialise les emissions concurrentes, et un
+// rollback rend le numero au lieu de le perdre. C'est exactement ce qu'une
+// SEQUENCE Postgres ne sait pas faire.
+model CompteurFacture {
+  annee   Int @id
+  dernier Int @default(0)
+}
+
+// Identite de facturation du client. Separee de Tenant : ce sont des mentions
+// LEGALEMENT OBLIGATOIRES sur la facture (article 242 nonies A de l'annexe II
+// au CGI), pas des preferences produit. Tant qu'elle est absente, aucune
+// facture conforme ne peut etre emise -- on ne devine pas une adresse.
+model IdentiteFacturation {
+  tenantId String @id
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  raisonSociale String
+  adresse       String
+  codePostal    String
+  ville         String
+  pays          String  @default("FR")
+  // SIREN de l'acheteur : mention obligatoire sur les factures entre
+  // assujettis etablis en France depuis le decret du 26 juin 2024.
+  siren         String?
+  // Numero de TVA intracommunautaire. Requis pour justifier une
+  // autoliquidation UE -- sans lui, la TVA francaise s'applique.
+  tvaIntra      String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
