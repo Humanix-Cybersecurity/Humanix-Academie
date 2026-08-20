@@ -143,14 +143,21 @@ RUN AUTH_SECRET="build-time-only-not-a-real-secret" npm run build
 # bundling cassait EN SILENCE : 58 saisons devenaient 5, sans erreur. La
 # résolution est désormais statique, et vérifiée identique dans les trois
 # modes d'exécution.
+# --outbase=. fige les chemins de sortie, et ce n'est pas cosmetique : sans
+# lui, esbuild deduit la base du prefixe COMMUN aux points d'entree. Retirer
+# `prisma/seed.ts` de la liste ci-dessous ferait passer tous les .mjs de
+# `dist-scripts/scripts/` a `dist-scripts/`, et docker-entrypoint.sh ne les
+# trouverait plus -- en silence, au demarrage d'un conteneur de production.
 RUN npx esbuild \
       scripts/migrate-legacy-trial.ts \
       scripts/migrate-4-tiers-pivot.ts \
       scripts/seed-catalog.ts \
+      scripts/catalog-report.ts \
       scripts/bootstrap-admin.ts \
       scripts/scrape-breaches.ts \
       prisma/seed.ts \
       --bundle --platform=node --format=esm --target=node22 \
+      --outbase=. \
       --packages=external --tsconfig=tsconfig.json \
       --outdir=dist-scripts --out-extension:.js=.mjs \
   && echo "[build] scripts de demarrage compiles :" \

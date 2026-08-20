@@ -188,3 +188,6 @@ docs/STRATEGIE_*.md
 # Dossier de travail des verifications Factur-X (schemas FNFE-MPE, Saxon).
 # Les schemas ne sont pas redistribuables : cf. scripts/verifier-factur-x.ts.
 .verif-fx/
+
+# Scripts de demarrage compiles par esbuild (Dockerfile). Artefact de build.
+dist-scripts/

@@ -10,10 +10,25 @@
 // et voit le commercial. On délègue donc le diagnostic ET le re-seed de
 // /superadmin/catalog à tsx pour qu'ils reflètent la réalité du disque.
 //
-// tsx est présent dans l'image (node_modules complet copié depuis le builder ;
-// le docker-entrypoint fait déjà `npx tsx scripts/seed-catalog.ts`).
+// CE COMMENTAIRE ETAIT FAUX, ET IL A CASSE LE BOUTON DE RE-IMPORT.
+//
+//   Il affirmait que « tsx est présent dans l'image ». Ca ne l'est plus : le
+//   Dockerfile fait `npm prune --omit=dev`, qui retire tsx (dependance de
+//   developpement), puis retire npm lui-meme. Constate en production le
+//   2026-08-20 : `spawn /app/node_modules/.bin/tsx ENOENT`, et ni le binaire
+//   ni le paquet tsx n'existent dans le conteneur.
+//
+//   L'entrypoint, lui, avait ete migre vers des scripts COMPILES :
+//   `node dist-scripts/scripts/seed-catalog.mjs`. Ce module est reste en
+//   arriere. Le re-import etait donc casse depuis cette migration, sans que
+//   rien ne le signale -- le diagnostic, lui, retombait silencieusement sur
+//   la resolution in-process et continuait d'afficher des chiffres justes.
+//
+// ON APPELLE DONC LE MEME SCRIPT COMPILE QUE L'ENTRYPOINT, avec repli sur tsx
+// en developpement, ou dist-scripts n'existe pas.
 
 import { execFile } from "node:child_process";
+import fs from "node:fs";
 import path from "node:path";
 import { promisify } from "node:util";
 
@@ -42,33 +57,60 @@ export type CatalogReseedResult = {
   newBadges: number;
 };
 
-/** Binaire tsx local (présent dans node_modules de l'image). */
-function tsxBin(): string {
-  return path.join(process.cwd(), "node_modules", ".bin", "tsx");
+/**
+ * Choisit comment executer un script catalogue.
+ *
+ * En production : le `.mjs` compile par esbuild, lance par `node` -- exactement
+ * ce que fait docker-entrypoint.sh au demarrage.
+ * En developpement : le `.ts` via tsx, qui n'existe que la.
+ *
+ * @param scriptRelPath chemin du source, ex. « scripts/seed-catalog.ts »
+ */
+function commandePour(scriptRelPath: string): {
+  binaire: string;
+  argument: string;
+} | null {
+  const compile = path.join(
+    process.cwd(),
+    "dist-scripts",
+    scriptRelPath.replace(/\.ts$/, ".mjs"),
+  );
+  if (fs.existsSync(compile)) {
+    return { binaire: process.execPath, argument: compile };
+  }
+  const tsx = path.join(process.cwd(), "node_modules", ".bin", "tsx");
+  if (fs.existsSync(tsx)) {
+    return { binaire: tsx, argument: path.join(process.cwd(), scriptRelPath) };
+  }
+  // Ni l'un ni l'autre : on le dit clairement plutot que de laisser remonter
+  // un ENOENT que personne ne sait interpreter.
+  return null;
 }
 
-async function runTsxScript(
+async function runScript(
   scriptRelPath: string,
   timeoutMs: number,
 ): Promise<string> {
-  const { stdout } = await execFileAsync(
-    tsxBin(),
-    [path.join(process.cwd(), scriptRelPath)],
-    {
-      cwd: process.cwd(),
-      // Hérite de l'env (DEMO_MODE, DATABASE_URL…) du process Next.
-      env: process.env,
-      timeout: timeoutMs,
-      maxBuffer: 16 * 1024 * 1024,
-    },
-  );
+  const cmd = commandePour(scriptRelPath);
+  if (!cmd) {
+    throw new Error(
+      `${scriptRelPath} introuvable : ni dist-scripts/*.mjs (production), ` +
+        `ni tsx (developpement). Le script a-t-il ete ajoute a la liste ` +
+        `esbuild du Dockerfile ?`,
+    );
+  }
+  const { stdout } = await execFileAsync(cmd.binaire, [cmd.argument], {
+    cwd: process.cwd(),
+    // Hérite de l'env (DEMO_MODE, DATABASE_URL…) du process Next.
+    env: process.env,
+    timeout: timeoutMs,
+    maxBuffer: 16 * 1024 * 1024,
+  });
   return stdout;
 }
 
 function extractJsonLine<T>(stdout: string, marker: string): T | null {
-  const line = stdout
-    .split("\n")
-    .find((l) => l.startsWith(marker));
+  const line = stdout.split("\n").find((l) => l.startsWith(marker));
   if (!line) return null;
   try {
     return JSON.parse(line.slice(marker.length)) as T;
@@ -84,7 +126,7 @@ function extractJsonLine<T>(stdout: string, marker: string): T | null {
  */
 export async function getCatalogReport(): Promise<CatalogReport | null> {
   try {
-    const out = await runTsxScript("scripts/catalog-report.ts", 60_000);
+    const out = await runScript("scripts/catalog-report.ts", 60_000);
     return extractJsonLine<CatalogReport>(out, "__CATALOG_REPORT__");
   } catch {
     return null;
@@ -97,7 +139,7 @@ export async function getCatalogReport(): Promise<CatalogReport | null> {
  * inattendue - l'appelant (server action) loggue l'erreur en audit.
  */
 export async function reseedCatalogViaTsx(): Promise<CatalogReseedResult> {
-  const out = await runTsxScript("scripts/seed-catalog.ts", 180_000);
+  const out = await runScript("scripts/seed-catalog.ts", 180_000);
   const result = extractJsonLine<CatalogReseedResult>(out, "__SEED_RESULT__");
   if (!result) {
     throw new Error(
