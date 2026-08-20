@@ -23,6 +23,7 @@
 
 import fs from "node:fs";
 import path from "node:path";
+import matter from "gray-matter";
 
 const ROOT = process.cwd();
 const CATALOG = path.join(ROOT, "prisma", "catalog-saisons.ts");
@@ -179,7 +180,76 @@ function listMdxFiles(): CatalogEntry[] {
   return out;
 }
 
-function main(): void {
+/**
+ * Episodes que le lecteur sert REELLEMENT, et dont le frontmatter est
+ * incomplet.
+ *
+ * POURQUOI ON PASSE PAR loadEpisode ET PAS PAR LE SYSTEME DE FICHIERS
+ *
+ *   Un MDX peut exister sans jamais etre charge : 19 fichiers de
+ *   content/saisons-demo sont dans ce cas, et le generateur de secours sert
+ *   un contenu complet a leur place. Les signaler serait une fausse alerte.
+ *
+ *   Inversement, un episode SANS MDX est parfaitement servi par le secours.
+ *   Ce qui casse la production, c'est uniquement le cas intermediaire : un
+ *   MDX charge, mais ampute de ce que le lecteur consomme.
+ *
+ *   On interroge donc le chargeur lui-meme. Le controle teste le vrai chemin.
+ */
+async function episodesServisIncomplets(): Promise<{
+  servis: number;
+  incomplets: { cle: string; champs: string[] }[];
+}> {
+  const { loadEpisode } = await import("../lib/episodes");
+  const catalogues = [
+    { chemin: CATALOG, racine: ROOT },
+    { chemin: CATALOG_DEMO, racine: ROOT },
+  ];
+  const vus = new Set<string>();
+  const incomplets: { cle: string; champs: string[] }[] = [];
+  let servis = 0;
+
+  for (const { chemin } of catalogues) {
+    if (!fs.existsSync(chemin)) continue;
+    for (const e of parseCatalogFile(chemin)) {
+      const cle = `${e.saisonSlug}/${e.episodeSlug}`;
+      if (vus.has(cle)) continue;
+      vus.add(cle);
+
+      let charge: Awaited<ReturnType<typeof loadEpisode>>;
+      try {
+        charge = await loadEpisode(e.saisonSlug, e.episodeSlug);
+      } catch (err) {
+        incomplets.push({
+          cle,
+          champs: [`chargement impossible (${(err as Error).message.slice(0, 60)})`],
+        });
+        continue;
+      }
+      // Pas de MDX : le secours prend le relais et fournit un contenu
+      // complet. Ce n'est pas un defaut.
+      if (!charge) continue;
+      servis++;
+
+      const meta = charge.meta as unknown as Record<string, unknown>;
+      const champs: string[] = [];
+      if (!String(meta.scenario ?? "").trim()) champs.push("scenario");
+      if (!Array.isArray(meta.choices) || meta.choices.length < 2) {
+        champs.push("choices (>= 2)");
+      }
+      if (!String(meta.debrief ?? "").trim()) champs.push("debrief");
+      // Le piege : un tableau VIDE est present, typé, et casse le lecteur.
+      // Il affiche « Question 1 / 0 » puis lit quiz[0], qui n'existe pas.
+      if (!Array.isArray(meta.quiz) || meta.quiz.length === 0) {
+        champs.push("quiz (>= 1 question)");
+      }
+      if (champs.length > 0) incomplets.push({ cle, champs });
+    }
+  }
+  return { servis, incomplets };
+}
+
+async function main(): Promise<void> {
   const catalog = extractCatalogEntries();
 
   // Aucun catalogue trouve (ni commercial ni demo) : on a deja affiche le
@@ -242,6 +312,43 @@ function main(): void {
   }
 
   console.log("✓ Aucun MDX orphelin detecte.");
+
+  // === Frontmatter incomplet : BLOQUANT ===================================
+  //
+  // POURQUOI CE CONTROLE EXISTE
+  //
+  //   Le 2026-08-20, un utilisateur a signale que deux saisons « ne marchaient
+  //   pas ». Leurs 12 episodes avaient bien un MDX -- ce script les declarait
+  //   donc conformes -- mais aucun n'avait de `debrief` ni de `quiz`.
+  //
+  //   Le lecteur d'episode passe alors a l'etape quiz avec un tableau vide :
+  //   il affiche « Question 1 / 0 » et lit `quiz[0]`, qui n'existe pas.
+  //   L'episode devient impossible a terminer, donc la saison entiere est
+  //   inutilisable -- et rien ne le signalait avant la mise en production.
+  //
+  //   Verifier la PRESENCE du fichier ne suffit pas : il faut verifier qu'il
+  //   contient ce que le lecteur consomme.
+  const { servis: vusServis, incomplets } = await episodesServisIncomplets();
+
+  if (incomplets.length > 0) {
+    console.error("");
+    console.error(`✗ ${incomplets.length} episode(s) servi(s) au frontmatter incomplet :`);
+    for (const i of incomplets.slice(0, 30)) {
+      console.error(`  - ${i.cle} : ${i.champs.join(", ")}`);
+    }
+    if (incomplets.length > 30) {
+      console.error(`  ... et ${incomplets.length - 30} autre(s)`);
+    }
+    console.error("");
+    console.error("→ Le lecteur d'episode consomme scenario, choices, debrief");
+    console.error("  et quiz. Un episode qui n'a pas les quatre est INUTILISABLE");
+    console.error("  en production, meme si son fichier existe.");
+    process.exit(1);
+  }
+
+  console.log(
+    `✓ Frontmatter complet sur les ${vusServis} episode(s) reellement servi(s).`,
+  );
 }
 
 main();
