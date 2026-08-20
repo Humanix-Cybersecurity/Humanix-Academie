@@ -184,3 +184,7 @@ docs/INTERNE_*.md
 docs/STRATEGIE_*.md
 /docs-internes/
 /internal/
+
+# Dossier de travail des verifications Factur-X (schemas FNFE-MPE, Saxon).
+# Les schemas ne sont pas redistribuables : cf. scripts/verifier-factur-x.ts.
+.verif-fx/

@@ -52,7 +52,7 @@ export default function ListeFactures({
               Total TTC
             </th>
             <th className="py-2 text-right text-xs uppercase tracking-widest text-gray-500">
-              PDF
+              Formats
             </th>
           </tr>
         </thead>
@@ -76,7 +76,18 @@ export default function ListeFactures({
                   href={`/api/factures/${f.id}`}
                   className="font-medium text-accent-500 hover:underline"
                 >
-                  Télécharger
+                  PDF
+                </Link>
+                {/* Le XML est ce qu'une plateforme agréée traite. Le PDF est
+                    ce qu'un humain lit. Les deux décrivent la même facture,
+                    puisqu'ils viennent du même instantané figé. */}
+                <span className="mx-2 text-gray-300">·</span>
+                <Link
+                  href={`/api/factures/${f.id}/facturx`}
+                  className="font-medium text-accent-500 hover:underline"
+                  title="Factur-X, profil EN 16931 — format structuré pour votre plateforme agréée"
+                >
+                  Factur-X
                 </Link>
               </td>
             </tr>
