@@ -48,29 +48,24 @@ export const dynamic = "force-dynamic";
 
 export default async function SuperadminCatalogPage() {
   // Counts actuels en BDD
-  const [
-    saisonsInDb,
-    episodesInDb,
-    badgesInDb,
-    shopItemsInDb,
-    lastReseed,
-  ] = await Promise.all([
-    db.saison.count(),
-    db.episode.count(),
-    db.achievement.count(),
-    db.shopItem.count(),
-    db.auditLog.findFirst({
-      where: { action: "CATALOG_RESEEDED" },
-      orderBy: { createdAt: "desc" },
-      select: {
-        createdAt: true,
-        outcome: true,
-        message: true,
-        actorEmail: true,
-        metadata: true,
-      },
-    }),
-  ]);
+  const [saisonsInDb, episodesInDb, badgesInDb, shopItemsInDb, lastReseed] =
+    await Promise.all([
+      db.saison.count(),
+      db.episode.count(),
+      db.achievement.count(),
+      db.shopItem.count(),
+      db.auditLog.findFirst({
+        where: { action: "CATALOG_RESEEDED" },
+        orderBy: { createdAt: "desc" },
+        select: {
+          createdAt: true,
+          outcome: true,
+          message: true,
+          actorEmail: true,
+          metadata: true,
+        },
+      }),
+    ]);
 
   // Counts attendus depuis le code.
   //
@@ -134,8 +129,8 @@ export default async function SuperadminCatalogPage() {
           Catalog partagé
         </h1>
         <p className="text-gray-600 dark:text-gray-300 mt-2">
-          Synchronise le contenu code → BDD (saisons, épisodes, badges, items boutique).
-          Idempotent : ré-exécuter est sans danger.
+          Synchronise le contenu code → BDD (saisons, épisodes, badges, items
+          boutique). Idempotent : ré-exécuter est sans danger.
         </p>
       </header>
 
@@ -146,8 +141,8 @@ export default async function SuperadminCatalogPage() {
             ⚠️ Des entités du code manquent en BDD
           </p>
           <p className="text-sm text-amber-800 dark:text-amber-300 mt-1">
-            {missingInDb} entité(s) définie(s) dans le code ne sont pas encore en
-            BDD. Un re-import les ajoutera (idempotent).
+            {missingInDb} entité(s) définie(s) dans le code ne sont pas encore
+            en BDD. Un re-import les ajoutera (idempotent).
           </p>
         </div>
       ) : extraInDb > 0 ? (
@@ -168,7 +163,8 @@ export default async function SuperadminCatalogPage() {
             ✅ BDD synchronisée avec le code
           </p>
           <p className="text-sm text-emerald-800 dark:text-emerald-300 mt-1">
-            Aucun écart. Re-importer reste safe (idempotent) mais pas nécessaire.
+            Aucun écart. Re-importer reste safe (idempotent) mais pas
+            nécessaire.
           </p>
         </div>
       )}
@@ -215,7 +211,9 @@ export default async function SuperadminCatalogPage() {
             <p className="mt-1 text-xs">
               Tant que la source est « démo », les saisons commerciales ne sont
               pas seedées → leurs épisodes renvoient 404 (ex.{" "}
-              <code>/apprendre/enfants-numerique-famille/01-premiere-tablette</code>
+              <code>
+                /apprendre/enfants-numerique-famille/01-premiere-tablette
+              </code>
               ).
             </p>
           )}
@@ -226,14 +224,30 @@ export default async function SuperadminCatalogPage() {
               <th className="py-2 font-semibold">Entité</th>
               <th className="py-2 font-semibold text-right">Dans le code</th>
               <th className="py-2 font-semibold text-right">En BDD</th>
-              <th className="py-2 font-semibold text-right">Écart</th>
+              <th className="py-2 font-semibold text-right">
+                Écart{" "}
+                <span
+                  className="font-normal text-gray-400"
+                  title="La base porte aussi le catalogue démo (5 saisons, 28 épisodes) : un surplus est normal. Seul un manque appelle un re-import."
+                >
+                  ⓘ
+                </span>
+              </th>
             </tr>
           </thead>
           <tbody>
             <CountRow label="Saisons" code={expectedSaisons} db={saisonsInDb} />
-            <CountRow label="Épisodes" code={expectedEpisodes} db={episodesInDb} />
+            <CountRow
+              label="Épisodes"
+              code={expectedEpisodes}
+              db={episodesInDb}
+            />
             <CountRow label="Badges" code={expectedBadges} db={badgesInDb} />
-            <CountRow label="Items boutique" code={expectedItems} db={shopItemsInDb} />
+            <CountRow
+              label="Items boutique"
+              code={expectedItems}
+              db={shopItemsInDb}
+            />
           </tbody>
         </table>
       </section>
@@ -290,8 +304,15 @@ function CountRow({
   code: number;
   db: number;
 }) {
-  // gap = BDD − code. >0 : entités EN PLUS en BDD (bénin, le seed additif ne
-  // les retire pas). <0 : entités MANQUANTES en BDD (un re-import les ajoute).
+  // gap = BDD − code.
+  //
+  //   > 0  entités EN PLUS en BDD. BENIN, et c'est le cas NOMINAL : la base
+  //        porte le catalogue commercial ET le catalogue démo (5 saisons,
+  //        28 épisodes), alors que cette colonne ne compte que le commercial.
+  //        Le 2026-08-20 ce « +5 / +28 » a été pris pour une anomalie, d'où
+  //        le libellé explicite ci-dessous.
+  //   < 0  entités MANQUANTES en BDD. Seul cas qui appelle une action : un
+  //        re-import les ajoute.
   const gap = db - code;
   return (
     <tr className="border-b border-gray-100 dark:border-slate-800 last:border-0">
@@ -310,7 +331,7 @@ function CountRow({
         {gap === 0
           ? "-"
           : gap > 0
-            ? `+${gap} en BDD`
+            ? `+${gap} (démo, normal)`
             : `${Math.abs(gap)} manquant`}
       </td>
     </tr>
