@@ -6,6 +6,189 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.6.0] - 2026-08-25 🧾 Humanix émet ses factures, et deux saisons redeviennent utilisables
+
+Cette version tient en une phrase : la plateforme **encaissait sans facturer**, et
+deux parcours livrés la semaine précédente ne pouvaient pas être terminés. Les deux
+défauts ont été trouvés en exécutant, jamais en relisant.
+
+### Added
+
+#### 🧾 Facturation, de bout en bout
+
+La plateforme n'émettait **aucune facture**. La console portait un bouton
+« Portail Mollie, télécharger tes factures » qui promettait l'inexistant : Mollie
+n'expose pas de portail client, la route n'accepte que `POST`, et le bouton était un
+lien. Il répondait **405**, vérifié en production avant d'écrire une ligne de code.
+
+Deux règles gouvernent le modèle :
+
+- Une facture est **immuable**. Vendeur, acheteur, lignes et montants sont figés à
+  l'émission ; corriger, c'est émettre un avoir.
+- La numérotation est **continue**, d'où une ligne de table verrouillée dans la
+  transaction plutôt qu'une `SEQUENCE` Postgres. Une séquence n'est pas
+  transactionnelle : chaque rollback laisserait un trou définitif dans la
+  numérotation. Un témoin le démontre dans
+  `scripts/verifier-numerotation-factures.ts`.
+
+S'y ajoutent la vérification VIES des numéros de TVA intracommunautaire, la collecte
+des coordonnées au checkout, la notification **par lien et jamais en pièce jointe**,
+et un export ZIP pour la comptabilité.
+
+#### 📐 Factur-X, profil EN 16931
+
+Le XML _Cross Industry Invoice_ est généré pour chaque facture. Les profils MINIMUM
+et BASIC ne passent pas les contrôles français, d'où le choix d'EN 16931.
+
+La validation contre le XSD **et** le Schematron de la FNFE-MPE a trouvé trois
+défauts invisibles à la relecture : **BR-O-05**, **BR-O-02**, **BR-27**.
+
+Le premier passage annonçait « 0 échec » y compris sur des documents volontairement
+faux. Le Schematron officiel est écrit en **XSLT 2.0**, `xsltproc` n'implémente que
+la 1.0 : il échouait à compiler et rendait un fichier vide, que le harnais lisait
+comme un succès. Corrigé avec Saxon, 436 règles réellement déclenchées.
+
+#### 🎬 Trois saisons
+
+**Questionnaire sécurité client**, **Le site web de l'entreprise** et **La facture
+électronique obligatoire**. Cette dernière repose sur le décret du 27 juillet 2026,
+vérifié à la source : les « PDP » s'appellent désormais **plateformes agréées**, et
+le portail public n'est plus un canal d'échange gratuit.
+
+### Changed
+
+#### 💶 Le prix affiché est le prix prélevé
+
+Les CGV et `/tarifs` annonçaient des montants _hors taxes_ pendant que le code
+prélevait exactement ce montant sans y ajouter de TVA. La contradiction est tranchée
+dans le sens qui ne change rien pour le client : les prix sont **TTC**.
+
+#### 🛡️ L'Espace DPO scindé en deux
+
+Il mélangeait ce que Humanix conserve des utilisateurs et la mise en conformité de
+l'entreprise cliente. Un **nom de rôle**, sous lequel deux sujets sans rapport
+s'étaient installés. Ils vivent désormais séparément, et chaque page dit ce qu'elle
+**n'est pas**.
+
+#### 🚀 Bascule bleu/vert
+
+Schéma et seeds sortent du démarrage du conteneur et s'appliquent sur l'ancienne
+version encore en ligne. **Trois livraisons sur quatre mesurées sans aucune
+coupure** ; la quatrième a produit un 502 d'une seconde. Cause identifiée : HAProxy
+n'a pas de socket d'administration, on ne peut donc pas drainer l'ancienne couleur
+avant de l'arrêter. Les livraisons antérieures sans coupure étaient des tirages
+favorables, pas une garantie.
+
+### Fixed
+
+#### 🎧 Trente-six épisodes ne pouvaient pas être terminés
+
+Un utilisateur a signalé que deux parcours « ne marchaient pas ». Leurs épisodes
+avaient bien un fichier MDX, mais **aucun n'avait de débrief ni de quiz** : le
+lecteur affichait « Question 1 / 0 » puis lisait `quiz[0]`, inexistant.
+
+L'audit a trouvé **36 épisodes** concernés, dont **19 sur la démo publique**. Tous
+corrigés. La validation MDX vérifie désormais **le contenu** du frontmatter et non la
+seule présence du fichier, **dans les deux racines de contenu** — la seconde n'était
+pas regardée, ce qui explique précisément pourquoi la démo est passée à travers.
+
+#### 🔁 Le bouton de ré-import appelait un binaire absent de l'image
+
+`tsx` avait disparu de l'image d'exécution avec le `npm prune --omit=dev`. Le bouton
+était donc cassé depuis cette migration, alors que le commentaire du code affirmait
+le contraire. La commande retombe désormais sur le script compilé.
+
+### Security
+
+#### 📦 `deepmerge-ts` en 8.0.1 par override
+
+Toutes les versions de Prisma épinglent 7.1.5 exactement : **aucun correctif amont
+n'existe**. Le saut majeur a été éprouvé sur toute la chaîne que le conteneur
+emprunte au démarrage. Cela ferme le point « Connu » de la 1.5.0.
+
+#### 🧹 Les 23 acceptations Trivy supprimées, non prolongées
+
+Les paquets qu'elles couvraient ne sont plus livrés en production. Démontré par un
+scan sans aucune exception, puis confirmé sur l'image publiée :
+`Total: 0 (MEDIUM: 0, HIGH: 0, CRITICAL: 0)`.
+
+### Dépendances
+
+`@react-pdf/renderer` 4.6.1 · `papaparse` 5.6.0 · `deepmerge-ts` 8.0.1 (override) ·
+`vitest` 4.1.11 · `@vitest/coverage-v8` 4.1.11
+
+---
+
+## [1.5.0] - 2026-08-17 🔍 Détection, conformité, et une CI qui teste enfin la production
+
+Cette version corrige surtout des **contrôles qui rassuraient sans rien garantir**.
+C'est le fil qui relie presque tout ce qui suit.
+
+### Added
+
+#### 🔍 Détection, le maillon qui manquait
+
+Les événements d'audit n'atteignaient **jamais** Loki : un `AuditLog` part en base
+PostgreSQL, Vector ne collecte que la sortie standard des conteneurs. Les deux ne se
+rencontrent nulle part, donc aucune règle d'alerte n'aurait pu les voir, quelle que
+soit son écriture.
+
+- `lib/audit.ts` émet désormais sur stdout une liste courte d'actions surveillables.
+  **Ni courriel, ni adresse IP** : ces lignes partent chez un tiers, hors de la
+  rétention paramétrée par le Client.
+- `instrumentation.ts` ajoute un battement de cœur, sans lequel une règle « homme
+  mort » ne peut pas distinguer _rien d'anormal_ de _la collecte est morte_.
+- `docs/ALERTES-GRAFANA.md` documente sept règles, leurs seuils, et les réglages qui
+  les rendent réellement opérantes.
+
+### Changed
+
+#### ⚖️ Deux catégories de prestataires, et non une
+
+La politique de confidentialité rangeait Mollie, Qonto, Dougs et Hiscox parmi les
+_sous-traitants_, promettant au lecteur un **droit d'opposition sur des traitements
+qui ne le concernent pas**. Reclassés en deux listes distinctes, alignées sur le DPA.
+
+Également : rapport mensuel au comité de direction (par lien, jamais en pièce
+jointe), analyse d'appui sur la notation des collaborateurs, procédure de violation
+de données et registre associé.
+
+### Fixed
+
+#### ⚙️ Les PR documentaires étaient impossibles à fusionner
+
+Le `paths-ignore` ajouté pour épargner quinze minutes empêchait le workflow de
+démarrer sur une PR purement documentaire. Les dix contrôles exigés par le ruleset
+n'étaient donc jamais rapportés, et GitHub attendait indéfiniment. La PR restait
+bloquée **sans qu'aucun voyant ne soit rouge**.
+
+### Security
+
+#### 🔐 L'épinglage d'IP sortante était rompu
+
+La protection anti-SSRF par re-résolution DNS dépendait d'`undici` sans le déclarer,
+et passait son `Agent` au `fetch` **global** de Node : deux moitiés issues de paquets
+différents, qui ont cessé d'être compatibles à undici 8. Corrigé, et `undici` est
+désormais une dépendance explicite.
+
+#### 🧪 La CI ne testait pas le binaire publié
+
+Elle validait sur **Node 20** pendant que le Dockerfile livrait **Node 25**. Tout est
+aligné sur **Node 24**, seule version satisfaisant l'ensemble des dépendances :
+`jsdom` exclut la 25, et 24 est une ligne LTS.
+
+#### 🔎 Le dépôt porte deux `package-lock.json`
+
+La CI n'en auditait qu'un. Le second est resté sur une version vulnérable de
+`nanoid` pendant que la CI affichait « 0 vulnérabilité ».
+
+### Dépendances
+
+`next` 16.3.1 · `undici` 8.10.0 · `isomorphic-dompurify` 3.22.0 · `nanoid` 3.3.18 ·
+`@react-pdf/renderer` 4.6.0 · `nodemailer` 9.0.5
+
+---
+
 ## [1.4.0] - 2026-08-13 🔒 Sauvegardes immuables, archivage légal, production sans démon root
 
 Journée entière consacrée à ce qui ne se voit pas tant qu'on n'en a pas besoin :
