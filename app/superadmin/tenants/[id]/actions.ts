@@ -24,6 +24,8 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
+import { paiementsAFacturer } from "@/lib/facturation/rattrapage";
+import { notifierCoordonneesRequises } from "@/lib/facturation/notification";
 
 async function requireSuperadminSession() {
   const session = await auth();
@@ -45,7 +47,9 @@ export async function deactivateTenant(formData: FormData): Promise<void> {
   const actorEmail = session.user.email ?? "unknown";
 
   const tenantId = String(formData.get("tenantId") ?? "").trim();
-  const reason = String(formData.get("reason") ?? "").trim().slice(0, 500);
+  const reason = String(formData.get("reason") ?? "")
+    .trim()
+    .slice(0, 500);
 
   if (!tenantId) throw new Error("tenantId requis");
   if (!reason) throw new Error("raison requise");
@@ -95,7 +99,13 @@ export async function reactivateTenant(formData: FormData): Promise<void> {
 
   const tenant = await db.tenant.findUnique({
     where: { id: tenantId },
-    select: { id: true, name: true, slug: true, isActive: true, disabledReason: true },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      isActive: true,
+      disabledReason: true,
+    },
   });
   if (!tenant) throw new Error("Tenant introuvable");
   if (tenant.isActive) {
@@ -265,4 +275,86 @@ export async function deleteTenant(formData: FormData): Promise<void> {
   await db.tenant.delete({ where: { id: tenantId } });
 
   redirect("/superadmin/tenants?msg=deleted");
+}
+
+/**
+ * Relance un client dont un paiement encaisse attend sa facture.
+ *
+ * POURQUOI CETTE ACTION N'EMET PAS LA FACTURE
+ *
+ *   Emettre depuis ici serait facturer a l'aveugle. Un paiement encaisse a pu
+ *   etre REMBOURSE depuis -- le double prelevement du 2026-08-17 en est
+ *   l'exemple : deux fois 48,00 EUR, une moitie rendue. Une facture emise sur
+ *   la moitie rendue exigerait aussitot un avoir, et une facture ne se corrige
+ *   pas autrement.
+ *
+ *   L'etat des remboursements n'est lisible que sur /admin/billing, qui
+ *   interroge Mollie paiement par paiement. C'est donc la que l'emission se
+ *   decide, par un humain qui voit cette colonne. Ici on debloque seulement ce
+ *   qui manque : les coordonnees, qu'on ne devine pas.
+ */
+export async function relancerFacturation(formData: FormData): Promise<void> {
+  const session = await requireSuperadminSession();
+  const actorEmail = session.user.email ?? "unknown";
+
+  const tenantId = String(formData.get("tenantId") ?? "").trim();
+  if (!tenantId) throw new Error("tenantId requis");
+
+  const tenant = await db.tenant.findUnique({
+    where: { id: tenantId },
+    select: { id: true, name: true },
+  });
+  if (!tenant) throw new Error("Tenant introuvable");
+
+  // Sans verifierRemboursements : on ne veut qu'un decompte, pas un appel
+  // reseau par paiement. Le montant sert a ce que le client se reconnaisse.
+  const candidats = await paiementsAFacturer(tenantId);
+  if (candidats.length === 0) {
+    redirect(`/superadmin/tenants/${tenantId}?msg=facturation-rien`);
+  }
+
+  const identite = await db.identiteFacturation.findUnique({
+    where: { tenantId },
+    select: { tenantId: true },
+  });
+  if (identite) {
+    // Rien a reclamer : la facture peut etre emise, mais c'est au client (ou a
+    // un admin en son nom) de le faire depuis la page qui montre les
+    // remboursements.
+    redirect(`/superadmin/tenants/${tenantId}?msg=facturation-prete`);
+  }
+
+  const totalTtcCentimes = candidats.reduce(
+    (somme, p) => somme + p.montantTtcCentimes,
+    0,
+  );
+  const envoi = await notifierCoordonneesRequises({
+    tenantId,
+    paiementsEnAttente: candidats.length,
+    totalTtcCentimes,
+  });
+
+  await auditLog({
+    action: AuditActions.TENANT_UPDATED,
+    outcome: envoi.etat === "envoyee" ? "SUCCESS" : "FAILURE",
+    severity: "INFO",
+    actor: { userId: session.user.id, email: actorEmail, role: "SUPERADMIN" },
+    tenantId,
+    target: { type: "facture", id: tenantId, label: tenant.name },
+    message:
+      envoi.etat === "envoyee"
+        ? `Relance coordonnees de facturation envoyee a ${envoi.destinataires} admin(s) pour ${candidats.length} paiement(s)`
+        : `Relance coordonnees de facturation non envoyee : ${envoi.motif}`,
+    metadata: {
+      paiementsEnAttente: candidats.length,
+      totalTtcCentimes,
+      resultat: envoi.etat,
+    },
+  });
+
+  redirect(
+    `/superadmin/tenants/${tenantId}?msg=${
+      envoi.etat === "envoyee" ? "facturation-relancee" : "facturation-echec"
+    }`,
+  );
 }

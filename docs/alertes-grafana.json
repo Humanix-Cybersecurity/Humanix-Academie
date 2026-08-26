@@ -1,0 +1,525 @@
+{
+  "apiVersion": 1,
+  "groups": [
+    {
+      "orgId": 1,
+      "name": "Export anormal",
+      "folder": "Scaleway",
+      "interval": "10m",
+      "rules": [
+        {
+          "uid": "bfv8ghmp9y2v4c",
+          "title": "Débit d'export anormal",
+          "condition": "C",
+          "data": [
+            {
+              "refId": "A",
+              "queryType": "instant",
+              "relativeTimeRange": {
+                "from": 600,
+                "to": 0
+              },
+              "datasourceUid": "efuy2mn30xtkwc",
+              "model": {
+                "editorMode": "code",
+                "expr": "sum by (tenantId) (count_over_time({env=\"prod\"} | json | canal=\"securite\" | action=\"DATA_EXPORTED\" [1h]))",
+                "instant": true,
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "queryType": "instant",
+                "refId": "A"
+              }
+            },
+            {
+              "refId": "C",
+              "queryType": "expression",
+              "datasourceUid": "__expr__",
+              "model": {
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "params": [10],
+                      "type": "gt"
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "query": {
+                      "params": ["C"]
+                    },
+                    "reducer": {
+                      "params": [],
+                      "type": "last"
+                    },
+                    "type": "query"
+                  }
+                ],
+                "datasource": {
+                  "type": "__expr__",
+                  "uid": "__expr__"
+                },
+                "expression": "A",
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "refId": "C",
+                "type": "threshold"
+              }
+            }
+          ],
+          "noDataState": "OK",
+          "execErrState": "Error",
+          "for": "10m",
+          "isPaused": false,
+          "notification_settings": {
+            "receiver": "Security"
+          }
+        },
+        {
+          "uid": "afv8gy8v33yf4d",
+          "title": "taux d'erreurs serveur",
+          "condition": "C",
+          "data": [
+            {
+              "refId": "A",
+              "relativeTimeRange": {
+                "from": 600,
+                "to": 0
+              },
+              "datasourceUid": "afuy2mvfzer5sc",
+              "model": {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "afuy2mvfzer5sc"
+                },
+                "editorMode": "code",
+                "expr": "sum(rate(humanix_http_requests_total{status=~\"5..\"}[5m]))\n  / sum(rate(humanix_http_requests_total[5m]))",
+                "hide": false,
+                "instant": true,
+                "intervalMs": 1000,
+                "legendFormat": "__auto",
+                "maxDataPoints": 43200,
+                "range": false,
+                "refId": "A"
+              }
+            },
+            {
+              "refId": "C",
+              "queryType": "expression",
+              "datasourceUid": "__expr__",
+              "model": {
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "params": [0.05],
+                      "type": "gt"
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "query": {
+                      "params": ["C"]
+                    },
+                    "reducer": {
+                      "params": [],
+                      "type": "last"
+                    },
+                    "type": "query"
+                  }
+                ],
+                "datasource": {
+                  "type": "__expr__",
+                  "uid": "__expr__"
+                },
+                "expression": "A",
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "refId": "C",
+                "type": "threshold"
+              }
+            }
+          ],
+          "noDataState": "OK",
+          "execErrState": "Error",
+          "for": "10m",
+          "isPaused": false,
+          "notification_settings": {
+            "receiver": "Security"
+          }
+        }
+      ]
+    },
+    {
+      "orgId": 1,
+      "name": "Security 1m",
+      "folder": "Scaleway",
+      "interval": "1m",
+      "rules": [
+        {
+          "uid": "afv8gt7uk03y8e",
+          "title": "L'homme mort",
+          "condition": "C",
+          "data": [
+            {
+              "refId": "A",
+              "queryType": "instant",
+              "relativeTimeRange": {
+                "from": 600,
+                "to": 0
+              },
+              "datasourceUid": "efuy2mn30xtkwc",
+              "model": {
+                "editorMode": "code",
+                "expr": "sum(count_over_time({env=\"prod\"} | json | canal=\"securite\" | action=\"HEARTBEAT\" [15m]))",
+                "instant": true,
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "queryType": "instant",
+                "refId": "A"
+              }
+            },
+            {
+              "refId": "C",
+              "queryType": "expression",
+              "datasourceUid": "__expr__",
+              "model": {
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "params": [1],
+                      "type": "lt"
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "query": {
+                      "params": ["C"]
+                    },
+                    "reducer": {
+                      "params": [],
+                      "type": "last"
+                    },
+                    "type": "query"
+                  }
+                ],
+                "datasource": {
+                  "type": "__expr__",
+                  "uid": "__expr__"
+                },
+                "expression": "A",
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "refId": "C",
+                "type": "threshold"
+              }
+            }
+          ],
+          "noDataState": "Alerting",
+          "execErrState": "Error",
+          "isPaused": false,
+          "notification_settings": {
+            "receiver": "Security"
+          }
+        }
+      ]
+    },
+    {
+      "orgId": 1,
+      "name": "bruteforce",
+      "folder": "Scaleway",
+      "interval": "1m",
+      "rules": [
+        {
+          "uid": "efv8g8gwzjqiof",
+          "title": "Rafale d'échecs d'authentification",
+          "condition": "C",
+          "data": [
+            {
+              "refId": "A",
+              "queryType": "instant",
+              "relativeTimeRange": {
+                "from": 600,
+                "to": 0
+              },
+              "datasourceUid": "efuy2mn30xtkwc",
+              "model": {
+                "editorMode": "code",
+                "expr": "sum(count_over_time({env=\"prod\"} | json | canal=\"securite\" | action=\"USER_LOGIN_FAILED\" [5m]))",
+                "instant": true,
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "queryType": "instant",
+                "refId": "A"
+              }
+            },
+            {
+              "refId": "C",
+              "queryType": "expression",
+              "datasourceUid": "__expr__",
+              "model": {
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "params": [20],
+                      "type": "gt"
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "query": {
+                      "params": ["C"]
+                    },
+                    "reducer": {
+                      "params": [],
+                      "type": "last"
+                    },
+                    "type": "query"
+                  }
+                ],
+                "datasource": {
+                  "type": "__expr__",
+                  "uid": "__expr__"
+                },
+                "expression": "A",
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "refId": "C",
+                "type": "threshold"
+              }
+            }
+          ],
+          "noDataState": "OK",
+          "execErrState": "Error",
+          "for": "5m",
+          "keepFiringFor": "5m",
+          "isPaused": false,
+          "notification_settings": {
+            "receiver": "Security"
+          }
+        },
+        {
+          "uid": "efv8gdvlbnvuod",
+          "title": "Exfiltration suspectée",
+          "condition": "C",
+          "data": [
+            {
+              "refId": "A",
+              "queryType": "instant",
+              "relativeTimeRange": {
+                "from": 600,
+                "to": 0
+              },
+              "datasourceUid": "efuy2mn30xtkwc",
+              "model": {
+                "editorMode": "code",
+                "expr": "sum(count_over_time({env=\"prod\"} | json | canal=\"securite\" | action=\"EXFILTRATION_SUSPECTED\" [5m]))",
+                "instant": true,
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "queryType": "instant",
+                "refId": "A"
+              }
+            },
+            {
+              "refId": "C",
+              "queryType": "expression",
+              "datasourceUid": "__expr__",
+              "model": {
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "params": [0],
+                      "type": "gt"
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "query": {
+                      "params": ["C"]
+                    },
+                    "reducer": {
+                      "params": [],
+                      "type": "last"
+                    },
+                    "type": "query"
+                  }
+                ],
+                "datasource": {
+                  "type": "__expr__",
+                  "uid": "__expr__"
+                },
+                "expression": "A",
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "refId": "C",
+                "type": "threshold"
+              }
+            }
+          ],
+          "noDataState": "OK",
+          "execErrState": "Error",
+          "for": "1m",
+          "keepFiringFor": "5m",
+          "isPaused": false,
+          "notification_settings": {
+            "receiver": "Security"
+          }
+        }
+      ]
+    },
+    {
+      "orgId": 1,
+      "name": "no traffic",
+      "folder": "Scaleway",
+      "interval": "15m",
+      "rules": [
+        {
+          "uid": "ffv8h223ma328c",
+          "title": "effondrement du trafic",
+          "condition": "C",
+          "data": [
+            {
+              "refId": "A",
+              "relativeTimeRange": {
+                "from": 600,
+                "to": 0
+              },
+              "datasourceUid": "afuy2mvfzer5sc",
+              "model": {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "afuy2mvfzer5sc"
+                },
+                "editorMode": "code",
+                "expr": "sum(rate(humanix_http_requests_total[10m]))",
+                "hide": false,
+                "instant": true,
+                "intervalMs": 1000,
+                "legendFormat": "__auto",
+                "maxDataPoints": 43200,
+                "range": false,
+                "refId": "A"
+              }
+            },
+            {
+              "refId": "C",
+              "queryType": "expression",
+              "datasourceUid": "__expr__",
+              "model": {
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "params": [0.01],
+                      "type": "lt"
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "query": {
+                      "params": ["C"]
+                    },
+                    "reducer": {
+                      "params": [],
+                      "type": "last"
+                    },
+                    "type": "query"
+                  }
+                ],
+                "datasource": {
+                  "type": "__expr__",
+                  "uid": "__expr__"
+                },
+                "expression": "A",
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "refId": "C",
+                "type": "threshold"
+              }
+            }
+          ],
+          "noDataState": "Alerting",
+          "execErrState": "Error",
+          "for": "15m",
+          "isPaused": true,
+          "notification_settings": {
+            "receiver": "Security"
+          }
+        }
+      ]
+    },
+    {
+      "orgId": 1,
+      "name": "privesc",
+      "folder": "Scaleway",
+      "interval": "3m",
+      "rules": [
+        {
+          "uid": "dfv8goqearn5sa",
+          "title": "Élévation de privilèges",
+          "condition": "C",
+          "data": [
+            {
+              "refId": "A",
+              "queryType": "instant",
+              "relativeTimeRange": {
+                "from": 600,
+                "to": 0
+              },
+              "datasourceUid": "efuy2mn30xtkwc",
+              "model": {
+                "editorMode": "code",
+                "expr": "sum(count_over_time({env=\"prod\"} | json | canal=\"securite\" | action=~\"USER_ROLE_CHANGED|USER_MFA_DISABLED|USER_MFA_RESET_BY_ADMIN|TENANT_DELETED\" [15m]))",
+                "instant": true,
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "queryType": "instant",
+                "refId": "A"
+              }
+            },
+            {
+              "refId": "C",
+              "queryType": "expression",
+              "datasourceUid": "__expr__",
+              "model": {
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "params": [3],
+                      "type": "gt"
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "query": {
+                      "params": ["C"]
+                    },
+                    "reducer": {
+                      "params": [],
+                      "type": "last"
+                    },
+                    "type": "query"
+                  }
+                ],
+                "datasource": {
+                  "type": "__expr__",
+                  "uid": "__expr__"
+                },
+                "expression": "A",
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "refId": "C",
+                "type": "threshold"
+              }
+            }
+          ],
+          "noDataState": "OK",
+          "execErrState": "Error",
+          "for": "6m",
+          "isPaused": false,
+          "notification_settings": {
+            "receiver": "Security"
+          }
+        }
+      ]
+    }
+  ]
+}

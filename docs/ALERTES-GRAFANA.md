@@ -23,6 +23,16 @@ se saisissent donc dans l'interface Grafana de Scaleway Cockpit :
 C'est fastidieux une fois, et jamais plus. Les requêtes sont écrites pour être
 recopiées telles quelles.
 
+### Le jeu complet, en un fichier
+
+`alertes-grafana.json` (à côté de ce document) contient les **sept règles telles
+qu'elles tournent**, exportées depuis Grafana après leur création. Il se recharge
+par **Alerting → Alert rules → Import**, sans repasser par la saisie manuelle.
+
+Ce fichier n'est pas une source de vérité : le jeton est en écriture seule, donc
+rien ne le synchronise avec Grafana. C'est un **instantané**, à ré-exporter après
+toute modification faite dans l'interface, sans quoi il diverge en silence.
+
 ### Trois mécaniques de l'interface, dont une qui rend une règle inopérante
 
 **La requête seule ne suffit pas.** Grafana construit une règle en trois étages :
