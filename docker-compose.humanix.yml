@@ -103,6 +103,11 @@ services:
         NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT: "${NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT:-}"
         NEXT_PUBLIC_MATOMO_URL: "${NEXT_PUBLIC_MATOMO_URL:-}"
         NEXT_PUBLIC_MATOMO_SITE_ID: "${NEXT_PUBLIC_MATOMO_SITE_ID:-}"
+        # Estampille de revision : posee par scripts/deploy.sh juste avant le
+        # build. Vide si l'on construit a la main, et c'est acceptable : la
+        # console affichera « revision inconnue » plutot qu'une valeur fausse.
+        HUMANIX_REVISION: "${HUMANIX_REVISION:-}"
+        HUMANIX_BUILD_REF: "${HUMANIX_BUILD_REF:-}"
     # `APP_COULEUR` (a|b) permet de faire coexister DEUX conteneurs applicatifs
     # le temps d'une bascule sans coupure. Vide par defaut : le nom et le port
     # restent alors ceux d'avant, et une pile qui ne fait pas de bascule n'a

@@ -175,6 +175,21 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # afficherait l'encart de mise a jour dans les journaux de production.
 ENV CHECKPOINT_DISABLE=1
 
+# --- Identite de la revision livree ------------------------------------------
+#
+# Sans cela, rien ne permet de savoir QUELLE version tourne : l'image ne porte
+# aucun label de revision, et rien ne lit package.json au runtime. La seule
+# reponse etait d'aller lire le HEAD du clone en SSH, ce qui suppose un acces
+# au serveur au moment ou l'on se demande justement ce qui tourne.
+#
+# Vide par defaut : un fork qui construit sans passer l'argument obtient une
+# image parfaitement valide, qui affichera simplement « revision inconnue ».
+ARG HUMANIX_REVISION=""
+ARG HUMANIX_BUILD_REF=""
+ENV HUMANIX_REVISION=${HUMANIX_REVISION}
+ENV HUMANIX_BUILD_REF=${HUMANIX_BUILD_REF}
+LABEL org.opencontainers.image.revision="${HUMANIX_REVISION}"
+
 # Utilisateur non-root pour la sécurité
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs

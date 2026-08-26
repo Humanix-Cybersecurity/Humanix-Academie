@@ -13,6 +13,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getCronHealth, type CronHealthRow } from "@/lib/cron/health";
+import { revisionDeployee } from "@/lib/version";
 
 export const dynamic = "force-dynamic";
 
@@ -65,6 +66,7 @@ function formatCadence(hours: number): string {
 
 export default async function SystemHealthPage() {
   const health = await getCronHealth();
+  const version = revisionDeployee();
   const needsAttention =
     health.counts.error + health.counts.never + health.counts.late;
 
@@ -80,6 +82,45 @@ export default async function SystemHealthPage() {
           des mails de phishing drippés n&apos;étaient jamais partis.
         </p>
       </header>
+
+      {/* Revision livree : la reponse a « qu'est-ce qui tourne ? » sans SSH */}
+      <section
+        aria-labelledby="revision-title"
+        className="rounded-2xl border border-gray-200 dark:border-slate-700 p-4"
+      >
+        <h2
+          id="revision-title"
+          className="text-sm font-bold text-gray-700 dark:text-gray-200"
+        >
+          Révision déployée
+        </h2>
+        {version.revision ? (
+          <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+            <code
+              className="rounded bg-gray-100 px-1.5 py-0.5 font-mono dark:bg-slate-800"
+              title={version.revision}
+            >
+              {version.courte}
+            </code>
+            {version.ref && (
+              <>
+                {" "}
+                livrée depuis{" "}
+                <code className="rounded bg-gray-100 px-1.5 py-0.5 font-mono dark:bg-slate-800">
+                  {version.ref}
+                </code>
+              </>
+            )}
+          </p>
+        ) : (
+          <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+            <strong>Inconnue.</strong> L&apos;image a été construite sans
+            estampille de révision : c&apos;est le cas d&apos;un build manuel,
+            ou d&apos;une livraison antérieure à sa mise en place. Le seul
+            témoin reste alors le HEAD du clone sur le serveur.
+          </p>
+        )}
+      </section>
 
       {/* Bandeau de synthèse */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
