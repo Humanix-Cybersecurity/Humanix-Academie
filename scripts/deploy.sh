@@ -390,6 +390,20 @@ CONTENEUR_APP="humanix-${ENVIRONMENT}-app"
 # a-t-il ete RECREE ? Son identifiant repond exactement a cela.
 CONTENEUR_AVANT="$($MOTEUR_BIN inspect "$CONTENEUR_APP" --format '{{.Id}}' 2>/dev/null | cut -c1-12 || true)"
 
+# --- Estampiller la revision dans l'image ------------------------------------
+#
+# Ces deux variables alimentent les `args` du service app (cf.
+# docker-compose.humanix.yml), qui les transforme en ENV du conteneur. Sans
+# elles, la seule facon de savoir ce qui tourne etait de venir lire le HEAD de
+# ce clone en SSH -- c'est-a-dire d'avoir deja l'acces qu'on cherche a eviter.
+#
+# `export` et non une simple affectation : la substitution ${...} du fichier
+# compose lit l'ENVIRONNEMENT du processus, pas les variables du shell.
+HUMANIX_REVISION="$(git rev-parse HEAD 2>/dev/null || echo "")"
+HUMANIX_BUILD_REF="$REF"
+export HUMANIX_REVISION HUMANIX_BUILD_REF
+log "Revision estampillee : ${HUMANIX_REVISION:-inconnue} (ref $HUMANIX_BUILD_REF)"
+
 $COMPOSE build app || die "build echoue" 5
 
 # --- Le remplacement du conteneur, et pourquoi il ne va pas de soi --------
