@@ -25,21 +25,22 @@
 //   oui.
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const { mockDb, mockMollie, mockAudit, mockProvision, mockFacturer } = vi.hoisted(() => ({
-  mockDb: {
-    billingEvent: { findUnique: vi.fn(), create: vi.fn() },
-    tenant: { findUnique: vi.fn(), update: vi.fn() },
-  },
-  mockMollie: {
-    getPayment: vi.fn(),
-    getSubscription: vi.fn(),
-    getMollieCustomer: vi.fn(),
-    createSubscriptionForCustomer: vi.fn(),
-  },
-  mockAudit: vi.fn(),
-  mockProvision: vi.fn(),
-  mockFacturer: vi.fn(),
-}));
+const { mockDb, mockMollie, mockAudit, mockProvision, mockFacturer } =
+  vi.hoisted(() => ({
+    mockDb: {
+      billingEvent: { findUnique: vi.fn(), create: vi.fn() },
+      tenant: { findUnique: vi.fn(), update: vi.fn() },
+    },
+    mockMollie: {
+      getPayment: vi.fn(),
+      getSubscription: vi.fn(),
+      getMollieCustomer: vi.fn(),
+      createSubscriptionForCustomer: vi.fn(),
+    },
+    mockAudit: vi.fn(),
+    mockProvision: vi.fn(),
+    mockFacturer: vi.fn(),
+  }));
 
 vi.mock("@/lib/db", () => ({ db: mockDb }));
 // La facturation est DOUBLEE ici, pas laissee au vrai module. Sans ce
