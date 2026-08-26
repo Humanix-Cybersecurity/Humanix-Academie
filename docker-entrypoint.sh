@@ -210,9 +210,25 @@ else
   preparer_etat_partage
 fi
 
+# L'URL annoncee suit la configuration au lieu de la supposer.
+#
+# Cette ligne disait « /demo » EN TOUTES CIRCONSTANCES, production comprise.
+# C'est la premiere chose qu'on lit dans les journaux d'un conteneur, et un
+# journal de production qui se presente comme la demo trompe celui qui le lit
+# sous pression. Meme famille que le docker-compose.yml de prod derive du
+# gabarit de la demo.
+#
+# `if` explicite et non `[ ... ] && ...` : sous `set -e`, un test faux en tete
+# d'une liste && fait sortir le script.
+BASE_AFFICHEE="${NEXT_PUBLIC_APP_URL:-${AUTH_URL:-http://localhost:3000}}"
+BASE_AFFICHEE="${BASE_AFFICHEE%/}"
+if [ "$DEMO_MODE" = "true" ]; then
+  BASE_AFFICHEE="$BASE_AFFICHEE/demo"
+fi
+
 echo ""
 echo "  =============================================="
-echo "  Pret. Ouvre http://localhost:3000/demo"
+echo "  Pret. Ouvre $BASE_AFFICHEE"
 echo "  =============================================="
 echo ""
 
