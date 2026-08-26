@@ -122,19 +122,19 @@ Détails : [docs/installation.md](./docs/installation.md#mode-0---quickstart-dev
 ### Option A - Image OCI officielle (recommandée)
 
 L'image OSS est publiée automatiquement à chaque release sur **GitHub
-Container Registry** (registre primaire, gratuit, illimité) et
-**Docker Hub** (mirror compte perso, pour visibilité grand public).
-**Multi-arch** (linux/amd64 + linux/arm64), **AGPLv3**, avec provenance
+Container Registry**, en **`linux/amd64`**, sous **AGPLv3**, avec provenance
 SLSA et SBOM SPDX inclus dans le manifest.
 
+> **Accès restreint.** Le paquet GHCR n'est pas public : `docker pull` échoue
+> sans autorisation sur l'organisation. Pour installer Humanix Académie sans
+> cet accès, suivez l'**option B** ci-dessous, qui construit la même image
+> depuis ces sources.
+
 ```bash
-# GHCR (primaire, recommandé)
+# Nécessite d'être authentifié sur GHCR avec accès à l'organisation
 docker pull ghcr.io/humanix-cybersecurity/humanix-academie:latest
 
-# Docker Hub (mirror, optionnel)
-docker pull humanixcybersecurity/humanix-academie:latest
-
-# ou un tag spécifique : :1.2.3, :edge (HEAD de main)
+# ou un tag spécifique : :1.6.0, :edge (HEAD de main)
 ```
 
 Tags disponibles :
@@ -146,11 +146,15 @@ Tags disponibles :
 | `:edge`                  | HEAD de `main` (build continu)     | Béta      |
 | `:main-<sha7>`           | Commit précis sur `main`           | Béta      |
 
-> **Pourquoi GHCR en primaire ?** Pas de quota pull (Docker Hub en
-> impose 100/6h aux utilisateurs anonymes depuis 2020), gratuit
-> illimité, intégré GitHub, et alignement souverain UE (Microsoft
-> Azure hébergement Europe). Docker Hub reste publié en mirror pour
-> les habitudes des développeurs.
+> **Pourquoi GHCR ?** Pas de quota pull (Docker Hub en impose 100/6h aux
+> utilisateurs anonymes depuis 2020), gratuit illimité, intégré GitHub, et
+> alignement souverain UE (Microsoft Azure hébergement Europe).
+
+> **Pourquoi amd64 seul ?** Sous QEMU, le moteur wasm de `prisma generate`
+> mal-parse le schéma et rend des erreurs P1012 sur des lignes fantômes.
+> `buildx` étant tout ou rien, cet échec arm64 emportait aussi l'image amd64
+> pourtant valide (8 et 11 juin). La production tourne en amd64 ; rétablir
+> arm64 proprement demande un runner arm64 natif, pas de l'émulation.
 
 ### Option B - Build local depuis les sources
 
@@ -417,17 +421,17 @@ Connecteurs techniques disponibles ou en cours
 (aucun partenariat commercial signé à ce jour - les intégrations sont
 techniquement prêtes côté Humanix, libre à chaque éditeur de les utiliser) :
 
-| Outil                                                                  | Rôle                                  | Statut           |
-| ---------------------------------------------------------------------- | ------------------------------------- | ---------------- |
-| [CISO Assistant](https://github.com/intuitem/ciso-assistant-community) | GRC (gouvernance, risque, conformité) | Connecteur natif |
-| Microsoft Outlook (add-in)                                             | Signalement phishing 1-clic           | Livré (manifest)  |
+| Outil                                                                  | Rôle                                  | Statut              |
+| ---------------------------------------------------------------------- | ------------------------------------- | ------------------- |
+| [CISO Assistant](https://github.com/intuitem/ciso-assistant-community) | GRC (gouvernance, risque, conformité) | Connecteur natif    |
+| Microsoft Outlook (add-in)                                             | Signalement phishing 1-clic           | Livré (manifest)    |
 | Gmail (Google Workspace Add-on)                                        | Signalement phishing 1-clic           | Livré (Apps Script) |
-| [OpenCTI](https://github.com/OpenCTI-Platform/opencti)                 | Threat intelligence                   | Roadmap Q3 2026  |
-| [Wazuh](https://github.com/wazuh/wazuh)                                | SIEM / détection                      | Format CEF       |
-| [TheHive](https://github.com/TheHive-Project/TheHive)                  | Réponse à incident                    | Roadmap Q4 2026  |
-| Microsoft Sentinel                                                     | SIEM cloud                            | Workbook fourni  |
-| Splunk                                                                 | SIEM                                  | Format HEC + SPL |
-| Sekoia.io                                                              | XDR français                          | Format CEF       |
+| [OpenCTI](https://github.com/OpenCTI-Platform/opencti)                 | Threat intelligence                   | Roadmap Q3 2026     |
+| [Wazuh](https://github.com/wazuh/wazuh)                                | SIEM / détection                      | Format CEF          |
+| [TheHive](https://github.com/TheHive-Project/TheHive)                  | Réponse à incident                    | Roadmap Q4 2026     |
+| Microsoft Sentinel                                                     | SIEM cloud                            | Workbook fourni     |
+| Splunk                                                                 | SIEM                                  | Format HEC + SPL    |
+| Sekoia.io                                                              | XDR français                          | Format CEF          |
 
 ---
 
