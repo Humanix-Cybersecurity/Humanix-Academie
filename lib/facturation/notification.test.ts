@@ -20,7 +20,10 @@ vi.mock("@/lib/subdomain-tenant", () => ({
   getAppBaseUrl: () => "https://humanix-academie.fr",
 }));
 
-import { notifierFactureEmise } from "./notification";
+import {
+  notifierFactureEmise,
+  notifierCoordonneesRequises,
+} from "./notification";
 
 const FACTURE = {
   tenantId: "t1",
@@ -79,7 +82,7 @@ describe("notifierFactureEmise", () => {
   });
 
   it("echappe le nom du tenant dans le HTML", async () => {
-    mockDb.tenant.findUnique.mockResolvedValue({ name: 'Dupont & Fils <b>' });
+    mockDb.tenant.findUnique.mockResolvedValue({ name: "Dupont & Fils <b>" });
     await notifierFactureEmise(FACTURE);
     const html = mockEmail.sendEmail.mock.calls[0][0].html;
     expect(html).toContain("Dupont &amp; Fils &lt;b&gt;");
@@ -121,5 +124,107 @@ describe("notifierFactureEmise", () => {
     mockEmail.sendEmail.mockRejectedValue(new Error("SMTP HS"));
     const r = await notifierFactureEmise(FACTURE);
     expect(r.etat).toBe("ignoree");
+  });
+});
+
+describe("notifierCoordonneesRequises", () => {
+  const RELANCE = {
+    tenantId: "t1",
+    paiementsEnAttente: 1,
+    totalTtcCentimes: 4800,
+  };
+
+  it("vise les memes ADMIN actifs : le formulaire est derriere leur acces", async () => {
+    const r = await notifierCoordonneesRequises(RELANCE);
+    expect(r).toEqual({ etat: "envoyee", destinataires: 1 });
+    const filtre = mockDb.user.findMany.mock.calls[0][0].where;
+    expect(filtre).toMatchObject({
+      tenantId: "t1",
+      role: "ADMIN",
+      isActive: true,
+    });
+  });
+
+  it("mene au formulaire de coordonnees, pas ailleurs", async () => {
+    await notifierCoordonneesRequises(RELANCE);
+    const arg = mockEmail.sendEmail.mock.calls[0][0];
+    const lien = "https://humanix-academie.fr/admin/billing#factures";
+    expect(arg.html).toContain(lien);
+    expect(arg.text).toContain(lien);
+  });
+
+  it("rappelle le montant deja regle, pour que le client reconnaisse", async () => {
+    await notifierCoordonneesRequises(RELANCE);
+    const arg = mockEmail.sendEmail.mock.calls[0][0];
+    expect(arg.html).toContain("48,00");
+    expect(arg.text).toContain("48,00");
+  });
+
+  // Le piege de ce mail : ressembler a une demande de paiement alors que le
+  // client a DEJA paye. Un impaye et une facture manquante ne se disent pas
+  // pareil, et confondre les deux ferait paniquer un client a jour.
+  it("ne reclame aucun reglement", async () => {
+    await notifierCoordonneesRequises(RELANCE);
+    const arg = mockEmail.sendEmail.mock.calls[0][0];
+    expect(arg.subject.toLowerCase()).not.toMatch(
+      /impay|relance de paiement|à régler/,
+    );
+    expect(arg.text).toContain("vous avez reglé");
+    expect(arg.html).toContain("ne réclame aucun règlement");
+  });
+
+  it("accorde le singulier et le pluriel", async () => {
+    await notifierCoordonneesRequises({ ...RELANCE, paiementsEnAttente: 3 });
+    const arg = mockEmail.sendEmail.mock.calls[0][0];
+    expect(arg.subject).toContain("Vos factures");
+    expect(arg.html).toContain("3 paiements");
+  });
+
+  // Sans cette garde, un bouton clique deux fois enverrait une relance vide.
+  it("n'envoie rien quand il n'y a aucun paiement en attente", async () => {
+    const r = await notifierCoordonneesRequises({
+      ...RELANCE,
+      paiementsEnAttente: 0,
+    });
+    expect(r).toEqual({ etat: "ignoree", motif: "aucun_paiement_en_attente" });
+    expect(mockEmail.sendEmail).not.toHaveBeenCalled();
+  });
+
+  it("n'envoie rien si aucun ADMIN actif", async () => {
+    mockDb.user.findMany.mockResolvedValue([]);
+    const r = await notifierCoordonneesRequises(RELANCE);
+    expect(r).toEqual({ etat: "ignoree", motif: "aucun_admin_actif" });
+    expect(mockEmail.sendEmail).not.toHaveBeenCalled();
+  });
+
+  it("ecarte les comptes anonymises", async () => {
+    mockDb.user.findMany.mockResolvedValue([
+      { email: "purged-abc@anonymized.local", name: null },
+    ]);
+    const r = await notifierCoordonneesRequises(RELANCE);
+    expect(r).toEqual({ etat: "ignoree", motif: "aucun_admin_actif" });
+  });
+
+  it("echappe le nom du tenant dans le HTML", async () => {
+    mockDb.tenant.findUnique.mockResolvedValue({ name: "Dupont & Fils <b>" });
+    await notifierCoordonneesRequises(RELANCE);
+    const html = mockEmail.sendEmail.mock.calls[0][0].html;
+    expect(html).toContain("Dupont &amp; Fils &lt;b&gt;");
+    expect(html).not.toContain("Dupont & Fils <b>");
+  });
+
+  it("est marque transactionnel", async () => {
+    await notifierCoordonneesRequises(RELANCE);
+    expect(mockEmail.sendEmail.mock.calls[0][0].unsubscribe).toEqual({
+      kind: "transactional",
+    });
+  });
+
+  it("NE LEVE JAMAIS", async () => {
+    mockDb.user.findMany.mockRejectedValue(new Error("base HS"));
+    expect((await notifierCoordonneesRequises(RELANCE)).etat).toBe("ignoree");
+    mockDb.user.findMany.mockResolvedValue([{ email: "a@b.test", name: null }]);
+    mockEmail.sendEmail.mockRejectedValue(new Error("SMTP HS"));
+    expect((await notifierCoordonneesRequises(RELANCE)).etat).toBe("ignoree");
   });
 });

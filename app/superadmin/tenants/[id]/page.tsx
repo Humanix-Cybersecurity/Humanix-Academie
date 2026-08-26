@@ -11,6 +11,7 @@ import {
   reactivateTenant,
   deleteTenant,
   setTenantReseller,
+  relancerFacturation,
 } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +19,8 @@ export const dynamic = "force-dynamic";
 const SIGNAL_BG: Record<string, string> = {
   ok: "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-900/40 text-emerald-900 dark:text-emerald-200",
   warn: "bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-900/40 text-amber-900 dark:text-amber-200",
-  error: "bg-rose-50 dark:bg-rose-900/20 border-rose-200 dark:border-rose-900/40 text-rose-900 dark:text-rose-200",
+  error:
+    "bg-rose-50 dark:bg-rose-900/20 border-rose-200 dark:border-rose-900/40 text-rose-900 dark:text-rose-200",
 };
 
 export default async function TenantDetailPage({
@@ -174,16 +176,14 @@ export default async function TenantDetailPage({
                   className="border-b border-gray-100 dark:border-slate-800/60 last:border-0"
                 >
                   <td className="px-4 py-2">
-                    <p className="font-semibold">{a.name ?? a.email.split("@")[0]}</p>
+                    <p className="font-semibold">
+                      {a.name ?? a.email.split("@")[0]}
+                    </p>
                     <p className="text-xs text-gray-500">{a.email}</p>
                   </td>
                   <td className="px-4 py-2 text-xs">{a.role}</td>
-                  <td className="px-4 py-2">
-                    {a.emailVerified ? "✓" : "-"}
-                  </td>
-                  <td className="px-4 py-2">
-                    {a.mfaEnabled ? "✓" : "-"}
-                  </td>
+                  <td className="px-4 py-2">{a.emailVerified ? "✓" : "-"}</td>
+                  <td className="px-4 py-2">{a.mfaEnabled ? "✓" : "-"}</td>
                   <td className="px-4 py-2">
                     {a.isActive ? "actif" : "suspendu"}
                   </td>
@@ -196,7 +196,10 @@ export default async function TenantDetailPage({
               ))}
               {admins.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="text-center py-6 italic text-rose-700 dark:text-rose-300">
+                  <td
+                    colSpan={6}
+                    className="text-center py-6 italic text-rose-700 dark:text-rose-300"
+                  >
                     Aucun administrateur. Le tenant est inutilisable en l'état.
                   </td>
                 </tr>
@@ -212,13 +215,24 @@ export default async function TenantDetailPage({
           role="status"
           className="rounded-xl border border-emerald-200 dark:border-emerald-900/40 bg-emerald-50 dark:bg-emerald-900/15 p-3 text-sm text-emerald-900 dark:text-emerald-200"
         >
-          {msg === "deactivated" && "✓ Tenant désactivé. Les utilisateurs ne peuvent plus se connecter."}
-          {msg === "reactivated" && "✓ Tenant réactivé. Les utilisateurs peuvent à nouveau se connecter."}
+          {msg === "deactivated" &&
+            "✓ Tenant désactivé. Les utilisateurs ne peuvent plus se connecter."}
+          {msg === "reactivated" &&
+            "✓ Tenant réactivé. Les utilisateurs peuvent à nouveau se connecter."}
           {msg === "already-disabled" && "ℹ Tenant déjà désactivé."}
           {msg === "already-active" && "ℹ Tenant déjà actif."}
-          {msg === "reseller-on" && "✓ Statut revendeur activé. Le tenant peut créer des clients en marque blanche (/admin/revendeur)."}
+          {msg === "reseller-on" &&
+            "✓ Statut revendeur activé. Le tenant peut créer des clients en marque blanche (/admin/revendeur)."}
           {msg === "reseller-off" && "✓ Statut revendeur désactivé."}
           {msg === "reseller-noop" && "ℹ Statut revendeur déjà dans cet état."}
+          {msg === "facturation-relancee" &&
+            "✓ Relance envoyée aux ADMIN du tenant : ils peuvent renseigner leurs coordonnées."}
+          {msg === "facturation-rien" &&
+            "ℹ Aucun paiement encaissé n'attend de facture."}
+          {msg === "facturation-prete" &&
+            "ℹ Coordonnées déjà renseignées. L'émission se fait depuis /admin/billing, qui affiche les remboursements."}
+          {msg === "facturation-echec" &&
+            "⚠ Relance non envoyée (messagerie non configurée, ou aucun ADMIN actif). Voir le journal d'audit."}
         </div>
       )}
 
@@ -232,7 +246,9 @@ export default async function TenantDetailPage({
           role="alert"
           className="rounded-xl border-2 border-rose-200 dark:border-rose-900/40 bg-rose-50 dark:bg-rose-900/15 p-4 text-sm text-rose-900 dark:text-rose-200 flex items-start gap-2"
         >
-          <span aria-hidden="true" className="text-lg">⚠️</span>
+          <span aria-hidden="true" className="text-lg">
+            ⚠️
+          </span>
           <div className="flex-1">
             <p className="font-bold mb-1">Action refusée</p>
             <p>{actionError}</p>
@@ -252,9 +268,9 @@ export default async function TenantDetailPage({
           👥 Tous les utilisateurs du tenant
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-          Voir la liste complète ({health.totalUsers} utilisateurs) avec
-          emails et noms <strong>masqués RGPD</strong>. Accès tracé dans le
-          journal d&apos;audit.
+          Voir la liste complète ({health.totalUsers} utilisateurs) avec emails
+          et noms <strong>masqués RGPD</strong>. Accès tracé dans le journal
+          d&apos;audit.
         </p>
         <Link
           href={`/superadmin/tenants/${id}/users`}
@@ -276,10 +292,9 @@ export default async function TenantDetailPage({
           ⚙️ Gestion des admins du tenant
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-          Inviter de nouveaux admins natifs, accorder des memberships
-          externes (acces admin cross-tenant pour des SUPERADMIN), ou
-          retirer des droits existants. Chaque action est tracee dans le
-          journal d&apos;audit.
+          Inviter de nouveaux admins natifs, accorder des memberships externes
+          (acces admin cross-tenant pour des SUPERADMIN), ou retirer des droits
+          existants. Chaque action est tracee dans le journal d&apos;audit.
         </p>
         <Link
           href={`/superadmin/tenants/${id}/admins`}
@@ -314,15 +329,17 @@ export default async function TenantDetailPage({
               REVENDEUR activé
             </span>
           ) : (
-            <span className="font-bold text-gray-500">standard (non revendeur)</span>
+            <span className="font-bold text-gray-500">
+              standard (non revendeur)
+            </span>
           )}
           {tenantMeta?.isReseller &&
             tenantMeta.plan !== "enterprise" &&
             tenantMeta.plan !== "ENTERPRISE" && (
               <span className="block mt-2 text-amber-700 dark:text-amber-300">
-                ⚠ Plan actuel «&nbsp;{tenantMeta.plan}&nbsp;» sans white-label : le
-                portail revendeur restera inactif côté client tant que le plan
-                n&apos;est pas Enterprise.
+                ⚠ Plan actuel «&nbsp;{tenantMeta.plan}&nbsp;» sans white-label :
+                le portail revendeur restera inactif côté client tant que le
+                plan n&apos;est pas Enterprise.
               </span>
             )}
         </p>
@@ -337,6 +354,36 @@ export default async function TenantDetailPage({
             {tenantMeta?.isReseller
               ? "Retirer le statut revendeur"
               : "Activer le statut revendeur"}
+          </button>
+        </form>
+      </section>
+
+      {/* === FACTURATION : relance des coordonnees === */}
+      <section
+        aria-labelledby="facturation-title"
+        className="rounded-2xl border border-gray-200 dark:border-slate-700 p-5"
+      >
+        <h2
+          id="facturation-title"
+          className="font-display font-bold text-primary-500 dark:text-accent-300 mb-2"
+        >
+          🧾 Facturation
+        </h2>
+        <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+          Envoie aux ADMIN du tenant le message qui leur demande leur
+          dénomination et leur adresse. Sans elles, aucune facture ne peut être
+          émise pour les paiements déjà encaissés.
+          <span className="block mt-2 text-gray-500 dark:text-gray-400">
+            Cette action <strong>n&apos;émet aucune facture</strong> : un
+            paiement encaissé a pu être remboursé depuis, et l&apos;émission se
+            décide sur <code>/admin/billing</code>, seule page qui affiche
+            l&apos;état des remboursements.
+          </span>
+        </p>
+        <form action={relancerFacturation}>
+          <input type="hidden" name="tenantId" value={id} />
+          <button type="submit" className="btn-secondary text-sm">
+            Relancer les coordonnées de facturation
           </button>
         </form>
       </section>
