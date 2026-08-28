@@ -10,14 +10,16 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 const { mockDb, mockMollie } = vi.hoisted(() => ({
   mockDb: {
     billingEvent: { findMany: vi.fn() },
-    facture: { findMany: vi.fn() },
+    facture: { findMany: vi.fn(), count: vi.fn() },
+    identiteFacturation: { findUnique: vi.fn() },
+    auditLog: { findMany: vi.fn() },
   },
   mockMollie: { getPayment: vi.fn(), isMollieConfigured: vi.fn() },
 }));
 vi.mock("@/lib/db", () => ({ db: mockDb }));
 vi.mock("@/lib/mollie", () => mockMollie);
 
-import { paiementsAFacturer } from "./rattrapage";
+import { paiementsAFacturer, etatFacturationTenant } from "./rattrapage";
 
 function evenement(
   id: string,
@@ -127,5 +129,89 @@ describe("paiementsAFacturer", () => {
     const r = await paiementsAFacturer("t1");
     expect(r).toEqual([]);
     expect(mockDb.facture.findMany).not.toHaveBeenCalled();
+  });
+});
+
+describe("etatFacturationTenant", () => {
+  const LE_17 = new Date("2026-08-17T22:54:02.000Z");
+  const LE_26 = new Date("2026-08-26T09:12:00.000Z");
+
+  beforeEach(() => {
+    mockDb.billingEvent.findMany.mockResolvedValue([
+      evenement("tr_1", "48.00"),
+      evenement("tr_2", "48.00"),
+    ]);
+    mockDb.facture.findMany.mockResolvedValue([]);
+    mockDb.facture.count.mockResolvedValue(0);
+    mockDb.identiteFacturation.findUnique.mockResolvedValue(null);
+    mockDb.auditLog.findMany.mockResolvedValue([]);
+    mockMollie.isMollieConfigured.mockReturnValue(true);
+  });
+
+  it("compte les paiements en attente et leur total", async () => {
+    const e = await etatFacturationTenant("t1");
+    expect(e.paiementsEnAttente).toBe(2);
+    expect(e.totalTtcCentimes).toBe(9600);
+  });
+
+  it("dit que les coordonnees manquent quand il n'y a pas d'identite", async () => {
+    expect((await etatFacturationTenant("t1")).coordonneesPresentes).toBe(
+      false,
+    );
+    mockDb.identiteFacturation.findUnique.mockResolvedValue({ tenantId: "t1" });
+    expect((await etatFacturationTenant("t1")).coordonneesPresentes).toBe(true);
+  });
+
+  it("n'a aucune relance a montrer au depart", async () => {
+    const e = await etatFacturationTenant("t1");
+    expect(e.nombreRelances).toBe(0);
+    expect(e.derniereRelance).toBeNull();
+  });
+
+  it("rend la plus recente relance et son nombre de destinataires", async () => {
+    mockDb.auditLog.findMany.mockResolvedValue([
+      { createdAt: LE_26, outcome: "SUCCESS", metadata: { destinataires: 2 } },
+      { createdAt: LE_17, outcome: "SUCCESS", metadata: { destinataires: 1 } },
+    ]);
+    const e = await etatFacturationTenant("t1");
+    expect(e.nombreRelances).toBe(2);
+    expect(e.derniereRelance).toEqual({ le: LE_26, destinataires: 2 });
+  });
+
+  // Un envoi refuse laisse une trace d'audit, mais le client n'a RIEN recu.
+  // L'afficher comme une relance ferait croire qu'il a ete prevenu.
+  it("ne compte PAS les tentatives qui ont echoue", async () => {
+    mockDb.auditLog.findMany.mockResolvedValue([
+      { createdAt: LE_26, outcome: "FAILURE", metadata: { destinataires: 0 } },
+      { createdAt: LE_17, outcome: "SUCCESS", metadata: { destinataires: 1 } },
+    ]);
+    const e = await etatFacturationTenant("t1");
+    expect(e.nombreRelances).toBe(1);
+    expect(e.derniereRelance).toEqual({ le: LE_17, destinataires: 1 });
+  });
+
+  it("survit a une metadata sans destinataires", async () => {
+    mockDb.auditLog.findMany.mockResolvedValue([
+      { createdAt: LE_26, outcome: "SUCCESS", metadata: null },
+    ]);
+    expect((await etatFacturationTenant("t1")).derniereRelance).toEqual({
+      le: LE_26,
+      destinataires: null,
+    });
+  });
+
+  // La requete doit viser le type PROPRE a la relance : "facture" est deja
+  // utilise par l'emission manuelle depuis /admin/billing.
+  it("n'interroge que les traces de relance, pas les emissions", async () => {
+    await etatFacturationTenant("t1");
+    expect(mockDb.auditLog.findMany.mock.calls[0][0].where).toEqual({
+      tenantId: "t1",
+      targetType: "relance-facturation",
+    });
+  });
+
+  it("remonte le nombre de factures deja emises", async () => {
+    mockDb.facture.count.mockResolvedValue(3);
+    expect((await etatFacturationTenant("t1")).facturesEmises).toBe(3);
   });
 });
