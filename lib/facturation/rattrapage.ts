@@ -103,3 +103,69 @@ export async function paiementsAFacturer(
   }
   return resultat;
 }
+
+/**
+ * Ce que la console doit montrer AVANT qu'on clique, et apres.
+ *
+ * POURQUOI CETTE FONCTION EXISTE
+ *
+ *   Le bouton de relance ne rendait qu'un bandeau transitoire. Une fois
+ *   celui-ci disparu, plus rien ne disait si une relance etait deja partie,
+ *   ni quand, ni combien. On ne pouvait donc pas distinguer « je viens de
+ *   l'envoyer » de « elle est partie hier », et rien n'empechait d'en
+ *   expedier une troisieme au meme client.
+ */
+export type EtatFacturationTenant = {
+  paiementsEnAttente: number;
+  totalTtcCentimes: number;
+  /** Sans elles, aucune facture ne peut etre emise. */
+  coordonneesPresentes: boolean;
+  /** Nombre de factures deja emises pour ce tenant. */
+  facturesEmises: number;
+  /** Relances effectivement PARTIES (les echecs ne comptent pas). */
+  nombreRelances: number;
+  derniereRelance: { le: Date; destinataires: number | null } | null;
+};
+
+export async function etatFacturationTenant(
+  tenantId: string,
+): Promise<EtatFacturationTenant> {
+  const [candidats, identite, facturesEmises, relances] = await Promise.all([
+    paiementsAFacturer(tenantId),
+    db.identiteFacturation.findUnique({
+      where: { tenantId },
+      select: { tenantId: true },
+    }),
+    db.facture.count({ where: { tenantId } }),
+    db.auditLog.findMany({
+      where: { tenantId, targetType: "relance-facturation" },
+      orderBy: { createdAt: "desc" },
+      select: { createdAt: true, outcome: true, metadata: true },
+      take: 50,
+    }),
+  ]);
+
+  // Un envoi refuse (messagerie absente, aucun ADMIN) laisse une trace, mais
+  // ce n'est pas une relance : l'afficher comme telle ferait croire que le
+  // client a ete prevenu.
+  const parties = relances.filter((r) => r.outcome === "SUCCESS");
+  const derniere = parties[0] ?? null;
+  const meta = (derniere?.metadata ?? null) as {
+    destinataires?: unknown;
+  } | null;
+
+  return {
+    paiementsEnAttente: candidats.length,
+    totalTtcCentimes: candidats.reduce((s, p) => s + p.montantTtcCentimes, 0),
+    coordonneesPresentes: Boolean(identite),
+    facturesEmises,
+    nombreRelances: parties.length,
+    derniereRelance: derniere
+      ? {
+          le: derniere.createdAt,
+          destinataires:
+            typeof meta?.destinataires === "number" ? meta.destinataires : null,
+        }
+      : null,
+  };
+}

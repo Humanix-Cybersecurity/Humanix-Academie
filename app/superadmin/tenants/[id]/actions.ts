@@ -340,7 +340,11 @@ export async function relancerFacturation(formData: FormData): Promise<void> {
     severity: "INFO",
     actor: { userId: session.user.id, email: actorEmail, role: "SUPERADMIN" },
     tenantId,
-    target: { type: "facture", id: tenantId, label: tenant.name },
+    // Type PROPRE a la relance. `emettreFactureManquante` (app/admin/billing)
+    // ecrit deja "facture" sous la meme action TENANT_UPDATED : sans cette
+    // distinction, une emission et une relance seraient indiscernables, et la
+    // console afficherait « derniere relance » sur une facture emise.
+    target: { type: "relance-facturation", id: tenantId, label: tenant.name },
     message:
       envoi.etat === "envoyee"
         ? `Relance coordonnees de facturation envoyee a ${envoi.destinataires} admin(s) pour ${candidats.length} paiement(s)`
@@ -349,6 +353,7 @@ export async function relancerFacturation(formData: FormData): Promise<void> {
       paiementsEnAttente: candidats.length,
       totalTtcCentimes,
       resultat: envoi.etat,
+      destinataires: envoi.etat === "envoyee" ? envoi.destinataires : 0,
     },
   });
 

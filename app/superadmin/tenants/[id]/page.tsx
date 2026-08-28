@@ -6,6 +6,8 @@ import { notFound } from "next/navigation";
 import { computeTenantHealth } from "@/lib/tenant-health";
 import { db } from "@/lib/db";
 import { getSeatUsage, formatSeatUsage } from "@/lib/seats";
+import { etatFacturationTenant } from "@/lib/facturation/rattrapage";
+import { formaterEuros } from "@/lib/facturation/montants";
 import {
   deactivateTenant,
   reactivateTenant,
@@ -33,6 +35,7 @@ export default async function TenantDetailPage({
   const { id } = await params;
   const { msg, error: actionError } = await searchParams;
   const health = await computeTenantHealth(id);
+  const fact = await etatFacturationTenant(id);
   if (!health) notFound();
 
   // Sieges (quota de plan) -- distinct des compteurs actifs/total ci-dessus.
@@ -369,6 +372,56 @@ export default async function TenantDetailPage({
         >
           🧾 Facturation
         </h2>
+        <dl className="mb-3 grid grid-cols-1 gap-1 text-sm sm:grid-cols-2">
+          <div className="flex gap-2">
+            <dt className="text-gray-500 dark:text-gray-400">
+              Paiements en attente
+            </dt>
+            <dd className="font-bold text-gray-800 dark:text-gray-100">
+              {fact.paiementsEnAttente === 0
+                ? "aucun"
+                : `${fact.paiementsEnAttente} (${formaterEuros(fact.totalTtcCentimes)})`}
+            </dd>
+          </div>
+          <div className="flex gap-2">
+            <dt className="text-gray-500 dark:text-gray-400">Coordonnées</dt>
+            <dd className="font-bold text-gray-800 dark:text-gray-100">
+              {fact.coordonneesPresentes ? "renseignées" : "absentes"}
+            </dd>
+          </div>
+          <div className="flex gap-2">
+            <dt className="text-gray-500 dark:text-gray-400">
+              Factures émises
+            </dt>
+            <dd className="font-bold text-gray-800 dark:text-gray-100">
+              {fact.facturesEmises}
+            </dd>
+          </div>
+          <div className="flex gap-2">
+            <dt className="text-gray-500 dark:text-gray-400">
+              Relances parties
+            </dt>
+            <dd className="font-bold text-gray-800 dark:text-gray-100">
+              {fact.derniereRelance === null ? (
+                "aucune"
+              ) : (
+                <>
+                  {fact.nombreRelances}, la dernière le{" "}
+                  {new Intl.DateTimeFormat("fr-FR", {
+                    dateStyle: "short",
+                    timeStyle: "short",
+                    timeZone: "Europe/Paris",
+                  }).format(fact.derniereRelance.le)}
+                  {fact.derniereRelance.destinataires !== null &&
+                    ` à ${fact.derniereRelance.destinataires} destinataire${
+                      fact.derniereRelance.destinataires > 1 ? "s" : ""
+                    }`}
+                </>
+              )}
+            </dd>
+          </div>
+        </dl>
+
         <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
           Envoie aux ADMIN du tenant le message qui leur demande leur
           dénomination et leur adresse. Sans elles, aucune facture ne peut être
