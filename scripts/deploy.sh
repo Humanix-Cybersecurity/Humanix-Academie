@@ -79,6 +79,52 @@ log()  { printf '[deploy] %s\n' "$*"; }
 warn() { printf '[deploy] ATTENTION : %s\n' "$*" >&2; }
 die()  { printf '[deploy] ERREUR : %s\n' "$*" >&2; exit "${2:-1}"; }
 
+# --- Pilotage de HAProxy pendant la bascule -----------------------------------
+#
+# POURQUOI DRAINER PLUTOT QU'ARRETER
+#
+#   Les backends sont sondes en `check inter 1s fall 2` : HAProxy met donc
+#   jusqu'a DEUX SECONDES a constater qu'un conteneur arrete ne repond plus, et
+#   pendant ce temps il continue d'y router des requetes. `option redispatch`
+#   en rejoue la plupart sur la couleur restante, mais pas celles deja
+#   transmises au backend. C'est le 502 d'une seconde mesure le 2026-08-19,
+#   et la raison pour laquelle les livraisons "sans coupure" precedentes
+#   etaient des tirages favorables plutot qu'une garantie.
+#
+#   Le drain inverse l'ordre : on previent HAProxy AVANT d'arreter. Plus aucune
+#   nouvelle connexion vers ce serveur, les connexions en cours vont a leur
+#   terme, et on n'arrete qu'une fois le compteur a zero.
+#
+# TOUT CECI EST FACULTATIF
+#
+#   Le socket d'administration peut manquer : configuration pas encore posee,
+#   ou pile qui ne passe pas par HAProxy. On retombe alors sur le comportement
+#   precedent en le DISANT, plutot que d'echouer une livraison pour un confort.
+HAPROXY_SOCKET="${HUMANIX_HAPROXY_SOCKET:-/run/haproxy/admin.sock}"
+HAPROXY_DRAIN_TIMEOUT="${HUMANIX_HAPROXY_DRAIN_TIMEOUT:-20}"
+
+haproxy_pilotable() {
+  [ -S "$HAPROXY_SOCKET" ] && command -v nc >/dev/null 2>&1
+}
+
+haproxy_envoyer() {
+  printf '%s\n' "$1" | nc -U "$HAPROXY_SOCKET" 2>/dev/null || true
+}
+
+# Nom du serveur HAProxy pour une couleur. La couleur `a` est representee par
+# une chaine VIDE cote conteneurs (humanix-prod-app), mais elle s'appelle bien
+# `prod_a` cote HAProxy.
+haproxy_serveur() {
+  printf '%s_%s' "$ENVIRONMENT" "${1:-a}"
+}
+
+# Sessions actuellement servies par ce serveur. Colonne `scur` du CSV de
+# `show stat` : pxname=1, svname=2, qcur=3, qmax=4, scur=5.
+haproxy_sessions() {
+  haproxy_envoyer "show stat" \
+    | awk -F, -v b="backend_${ENVIRONMENT}" -v s="$1" '$1==b && $2==s {print $5; exit}'
+}
+
 while [ $# -gt 0 ]; do
   case "$1" in
     demo|prod)  ENVIRONMENT="$1" ;;
@@ -544,10 +590,45 @@ if [ "$MOTEUR_BIN" = "podman" ]; then
   fi
   log "  -> prete apres ${attente}s"
 
+  # La couleur entrante a pu etre laissee en `drain` par une livraison
+  # precedente. Sans ce retour explicite a `ready`, HAProxy ne lui enverrait
+  # plus jamais de trafic et la bascule suivante viderait le service.
+  if haproxy_pilotable; then
+    haproxy_envoyer "set server backend_${ENVIRONMENT}/$(haproxy_serveur "$COULEUR_CIBLE") state ready"
+  fi
+
   # Laisser HAProxy la constater. `rise 1` + `inter 1s` suffiraient ; on prend
   # cinq secondes pour ne pas dependre du calage des sondes.
   log "Attente de la prise en compte par HAProxy (5s) ..."
   sleep 5
+
+  # --- Drain de l'ancienne couleur ---------------------------------------
+  if haproxy_pilotable; then
+    SORTANT_HAP="$(haproxy_serveur "$COULEUR_ACTUELLE")"
+    log "Drain de ${SORTANT_HAP} : plus de nouvelle connexion, on laisse finir les en cours."
+    haproxy_envoyer "set server backend_${ENVIRONMENT}/${SORTANT_HAP} state drain"
+
+    reste=0
+    while [ "$reste" -lt "$HAPROXY_DRAIN_TIMEOUT" ]; do
+      encours="$(haproxy_sessions "$SORTANT_HAP")"
+      # Une reponse vide veut dire qu'on ne SAIT pas : on n'en conclut pas
+      # que c'est vide, on laisse le delai s'ecouler puis on continue.
+      if [ "$encours" = "0" ]; then
+        log "  -> plus aucune session en cours apres ${reste}s"
+        break
+      fi
+      reste=$((reste + 1))
+      sleep 1
+    done
+    if [ "$reste" -ge "$HAPROXY_DRAIN_TIMEOUT" ]; then
+      warn "drain non confirme apres ${HAPROXY_DRAIN_TIMEOUT}s (sessions restantes : ${encours:-inconnu}). On arrete quand meme, 'option redispatch' couvre le reste."
+    fi
+  else
+    warn "socket d'administration HAProxy absent ($HAPROXY_SOCKET) : pas de drain."
+    warn "L'arret reste couvert par 'option redispatch', mais une requete peut"
+    warn "partir vers l'ancienne couleur pendant les ~2s que HAProxy met a la"
+    warn "voir DOWN. Cf. docs/HAPROXY-DRAIN.md pour poser le socket."
+  fi
 
   # Arret GRACIEUX : SIGTERM, Next.js termine les requetes en cours. HAProxy
   # sort l'ancienne du pool en ~2s, et `option redispatch` (deja dans
