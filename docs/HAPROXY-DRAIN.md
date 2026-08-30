@@ -52,12 +52,23 @@ exactement la coupure qu'on cherche à supprimer.
 ## Vérifier
 
 ```bash
-ls -l /run/haproxy/admin.sock                          # doit etre accessible au groupe humanix
-printf 'show stat\n' | nc -U /run/haproxy/admin.sock | head -3
+ls -l /run/haproxy/admin.sock   # attendu : srw-rw---- haproxy humanix
+python3 -c 'import socket,sys
+s=socket.socket(socket.AF_UNIX,socket.SOCK_STREAM); s.settimeout(5)
+s.connect("/run/haproxy/admin.sock"); s.sendall(b"show stat\n")
+print(s.recv(200).decode().splitlines()[0][:60])'
 ```
 
-La deuxième commande doit rendre l'en-tête CSV `# pxname,svname,qcur,...`. Si elle
-ne rend rien, le socket existe mais le niveau ou les droits sont insuffisants.
+La deuxième commande doit rendre l'en-tête CSV `# pxname,svname,qcur,...`.
+
+> ⚠️ **N'utilisez pas `nc -U` pour cette vérification.** Sur la production
+> (Ubuntu, `netcat-openbsd` 1.234), `nc -U` refuse ce socket avec
+> `Permission denied` **y compris en root**, alors que Python s'y connecte sans
+> élévation. Un refus que root ne lève pas n'est pas une question de droits, et
+> conclure « le socket est cassé » sur cette base serait faux : il fonctionne.
+>
+> `scripts/deploy.sh` essaie donc `python3`, puis `socat`, puis `nc`, et
+> **éprouve** le résultat au lieu de supposer qu'un binaire présent suffit.
 
 ## Ce que fait `deploy.sh`
 
