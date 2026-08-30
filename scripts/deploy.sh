@@ -103,12 +103,50 @@ die()  { printf '[deploy] ERREUR : %s\n' "$*" >&2; exit "${2:-1}"; }
 HAPROXY_SOCKET="${HUMANIX_HAPROXY_SOCKET:-/run/haproxy/admin.sock}"
 HAPROXY_DRAIN_TIMEOUT="${HUMANIX_HAPROXY_DRAIN_TIMEOUT:-20}"
 
-haproxy_pilotable() {
-  [ -S "$HAPROXY_SOCKET" ] && command -v nc >/dev/null 2>&1
+# QUEL CLIENT PARLE AU SOCKET
+#
+#   Pas `nc`. netcat-openbsd 1.234 (Ubuntu 24.04) refuse ce socket avec
+#   « Permission denied » MEME EN ROOT, alors que python s'y connecte sans
+#   elevation -- verifie sur la production le 2026-08-30. Un refus que root
+#   ne leve pas n'est pas une question de droits.
+#
+#   On essaie donc plusieurs clients, et `nc` en dernier.
+haproxy_envoyer() {
+  if command -v python3 >/dev/null 2>&1; then
+    python3 -c '
+import socket, sys
+s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+s.settimeout(5)
+s.connect(sys.argv[1])
+s.sendall((sys.argv[2] + "\n").encode())
+buf = []
+while True:
+    d = s.recv(65536)
+    if not d:
+        break
+    buf.append(d)
+sys.stdout.write(b"".join(buf).decode("utf-8", "replace"))
+' "$HAPROXY_SOCKET" "$1" 2>/dev/null && return 0
+  fi
+  if command -v socat >/dev/null 2>&1; then
+    printf '%s\n' "$1" | socat stdio "$HAPROXY_SOCKET" 2>/dev/null && return 0
+  fi
+  if command -v nc >/dev/null 2>&1; then
+    printf '%s\n' "$1" | nc -U "$HAPROXY_SOCKET" 2>/dev/null && return 0
+  fi
+  return 1
 }
 
-haproxy_envoyer() {
-  printf '%s\n' "$1" | nc -U "$HAPROXY_SOCKET" 2>/dev/null || true
+# ON EPROUVE, ON NE SUPPOSE PAS
+#
+#   La premiere version se contentait de `[ -S socket ] && command -v nc`.
+#   Les deux etaient vrais sur la production, et le drain ne fonctionnait
+#   pourtant pas : le fichier existait, le binaire existait, et la commande
+#   echouait. On envoie donc une vraie requete et on exige la reponse
+#   attendue -- l'en-tete CSV de `show stat`.
+haproxy_pilotable() {
+  [ -S "$HAPROXY_SOCKET" ] || return 1
+  haproxy_envoyer "show stat" 2>/dev/null | head -1 | grep -q '^# pxname'
 }
 
 # Nom du serveur HAProxy pour une couleur. La couleur `a` est representee par
