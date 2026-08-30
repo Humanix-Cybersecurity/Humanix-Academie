@@ -2979,6 +2979,20 @@ model IdentiteFacturation {
   // reellement le numero qu'il a saisi.
   tvaIntraNom       String?
 
+  // Qui a saisi ces coordonnees.
+  //
+  // NULL = le Client les a renseignees lui-meme depuis /admin/billing. Une
+  // adresse courriel = un SUPERADMIN les a transcrites pour lui, faute de
+  // reponse. La distinction est materielle : l'obligation d'emettre la facture
+  // pese sur le vendeur (article 289 du CGI), pas sur l'acheteur, mais une
+  // adresse transcrite au telephone n'a pas la meme valeur probante qu'une
+  // adresse saisie par l'interesse. Qui lira cette fiche doit pouvoir faire la
+  // difference sans fouiller le journal d'audit.
+  //
+  // Colonne AJOUTEE et NULLABLE a dessein : la preparation du bleu/vert
+  // applique le schema pendant que l'ANCIENNE version tourne encore.
+  saisiePar String?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

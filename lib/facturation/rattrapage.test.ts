@@ -170,8 +170,20 @@ describe("etatFacturationTenant", () => {
 
   it("rend la plus recente relance et son nombre de destinataires", async () => {
     mockDb.auditLog.findMany.mockResolvedValue([
-      { createdAt: LE_26, outcome: "SUCCESS", metadata: { destinataires: 2 } },
-      { createdAt: LE_17, outcome: "SUCCESS", metadata: { destinataires: 1 } },
+      {
+        createdAt: LE_26,
+        outcome: "SUCCESS",
+        metadata: { destinataires: 2 },
+        message: "Relance coordonnees ...",
+        targetType: "relance-facturation",
+      },
+      {
+        createdAt: LE_17,
+        outcome: "SUCCESS",
+        metadata: { destinataires: 1 },
+        message: "Relance coordonnees ...",
+        targetType: "relance-facturation",
+      },
     ]);
     const e = await etatFacturationTenant("t1");
     expect(e.nombreRelances).toBe(2);
@@ -182,8 +194,20 @@ describe("etatFacturationTenant", () => {
   // L'afficher comme une relance ferait croire qu'il a ete prevenu.
   it("ne compte PAS les tentatives qui ont echoue", async () => {
     mockDb.auditLog.findMany.mockResolvedValue([
-      { createdAt: LE_26, outcome: "FAILURE", metadata: { destinataires: 0 } },
-      { createdAt: LE_17, outcome: "SUCCESS", metadata: { destinataires: 1 } },
+      {
+        createdAt: LE_26,
+        outcome: "FAILURE",
+        metadata: { destinataires: 0 },
+        message: "Relance coordonnees ...",
+        targetType: "relance-facturation",
+      },
+      {
+        createdAt: LE_17,
+        outcome: "SUCCESS",
+        metadata: { destinataires: 1 },
+        message: "Relance coordonnees ...",
+        targetType: "relance-facturation",
+      },
     ]);
     const e = await etatFacturationTenant("t1");
     expect(e.nombreRelances).toBe(1);
@@ -192,7 +216,13 @@ describe("etatFacturationTenant", () => {
 
   it("survit a une metadata sans destinataires", async () => {
     mockDb.auditLog.findMany.mockResolvedValue([
-      { createdAt: LE_26, outcome: "SUCCESS", metadata: null },
+      {
+        createdAt: LE_26,
+        outcome: "SUCCESS",
+        metadata: null,
+        message: "Relance coordonnees ...",
+        targetType: "relance-facturation",
+      },
     ]);
     expect((await etatFacturationTenant("t1")).derniereRelance).toEqual({
       le: LE_26,
@@ -202,16 +232,90 @@ describe("etatFacturationTenant", () => {
 
   // La requete doit viser le type PROPRE a la relance : "facture" est deja
   // utilise par l'emission manuelle depuis /admin/billing.
-  it("n'interroge que les traces de relance, pas les emissions", async () => {
+  it("interroge le type propre ET l'ancien", async () => {
     await etatFacturationTenant("t1");
     expect(mockDb.auditLog.findMany.mock.calls[0][0].where).toEqual({
       tenantId: "t1",
-      targetType: "relance-facturation",
+      targetType: { in: ["relance-facturation", "facture"] },
     });
   });
 
   it("remonte le nombre de factures deja emises", async () => {
     mockDb.facture.count.mockResolvedValue(3);
     expect((await etatFacturationTenant("t1")).facturesEmises).toBe(3);
+  });
+});
+
+describe("relances heritees de l'ancien type", () => {
+  beforeEach(() => {
+    mockDb.billingEvent.findMany.mockResolvedValue([]);
+    mockDb.facture.findMany.mockResolvedValue([]);
+    mockDb.facture.count.mockResolvedValue(0);
+    mockDb.identiteFacturation.findUnique.mockResolvedValue(null);
+    mockMollie.isMollieConfigured.mockReturnValue(true);
+  });
+
+  // La relance du 2026-08-26 porte targetType "facture" : le type propre
+  // n'existait pas encore. Sans cette reconnaissance, la fiche dirait
+  // « aucune relance » alors qu'une est partie.
+  it("compte une ancienne relance, reconnue a son message", async () => {
+    mockDb.auditLog.findMany.mockResolvedValue([
+      {
+        createdAt: new Date("2026-08-26T09:35:51Z"),
+        outcome: "SUCCESS",
+        metadata: { destinataires: 1 },
+        message: "Relance coordonnees de facturation envoyee a 1 admin(s)",
+        targetType: "facture",
+      },
+    ]);
+    const e = await etatFacturationTenant("t1");
+    expect(e.nombreRelances).toBe(1);
+    expect(e.derniereRelance?.destinataires).toBe(1);
+  });
+
+  // Une EMISSION porte aussi targetType "facture". La confondre avec une
+  // relance ferait croire que le client a ete prevenu alors qu'on lui a
+  // simplement facture quelque chose.
+  it("ne prend PAS une emission pour une relance", async () => {
+    mockDb.auditLog.findMany.mockResolvedValue([
+      {
+        createdAt: new Date("2026-08-26T10:00:00Z"),
+        outcome: "SUCCESS",
+        metadata: {},
+        message: "Facture FA-2026-0001 emise pour le paiement tr_x",
+        targetType: "facture",
+      },
+    ]);
+    const e = await etatFacturationTenant("t1");
+    expect(e.nombreRelances).toBe(0);
+    expect(e.derniereRelance).toBeNull();
+  });
+});
+
+describe("provenance des coordonnees", () => {
+  beforeEach(() => {
+    mockDb.billingEvent.findMany.mockResolvedValue([]);
+    mockDb.facture.findMany.mockResolvedValue([]);
+    mockDb.facture.count.mockResolvedValue(0);
+    mockDb.auditLog.findMany.mockResolvedValue([]);
+    mockMollie.isMollieConfigured.mockReturnValue(true);
+  });
+
+  it("null quand le Client les a saisies lui-meme", async () => {
+    mockDb.identiteFacturation.findUnique.mockResolvedValue({
+      tenantId: "t1",
+      saisiePar: null,
+    });
+    expect((await etatFacturationTenant("t1")).coordonneesSaisiePar).toBeNull();
+  });
+
+  it("porte l'adresse du SUPERADMIN qui les a transcrites", async () => {
+    mockDb.identiteFacturation.findUnique.mockResolvedValue({
+      tenantId: "t1",
+      saisiePar: "moi@humanix.test",
+    });
+    expect((await etatFacturationTenant("t1")).coordonneesSaisiePar).toBe(
+      "moi@humanix.test",
+    );
   });
 });

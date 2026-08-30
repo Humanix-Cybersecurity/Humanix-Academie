@@ -14,6 +14,7 @@ import {
   deleteTenant,
   setTenantReseller,
   relancerFacturation,
+  enregistrerCoordonneesPourTenant,
 } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -234,6 +235,8 @@ export default async function TenantDetailPage({
             "ℹ Aucun paiement encaissé n'attend de facture."}
           {msg === "facturation-prete" &&
             "ℹ Coordonnées déjà renseignées. L'émission se fait depuis /admin/billing, qui affiche les remboursements."}
+          {msg === "coordonnees-saisies" &&
+            "✓ Coordonnées enregistrées pour ce tenant. La fiche indique qu'elles viennent de Humanix, pas du client."}
           {msg === "facturation-echec" &&
             "⚠ Relance non envoyée (messagerie non configurée, ou aucun ADMIN actif). Voir le journal d'audit."}
         </div>
@@ -386,7 +389,11 @@ export default async function TenantDetailPage({
           <div className="flex gap-2">
             <dt className="text-gray-500 dark:text-gray-400">Coordonnées</dt>
             <dd className="font-bold text-gray-800 dark:text-gray-100">
-              {fact.coordonneesPresentes ? "renseignées" : "absentes"}
+              {fact.coordonneesPresentes
+                ? fact.coordonneesSaisiePar
+                  ? `renseignées par Humanix (${fact.coordonneesSaisiePar})`
+                  : "renseignées par le client"
+                : "absentes"}
             </dd>
           </div>
           <div className="flex gap-2">
@@ -439,6 +446,84 @@ export default async function TenantDetailPage({
             Relancer les coordonnées de facturation
           </button>
         </form>
+
+        <details className="mt-5 rounded-xl border border-gray-200 p-4 dark:border-slate-700">
+          <summary className="cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200">
+            Saisir les coordonnées à la place du client
+          </summary>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+            À n&apos;utiliser que pour <strong>transcrire</strong> des
+            coordonnées obtenues autrement : téléphone, contrat, courriel. Ne
+            devinez rien : une adresse fausse rend la facture non conforme.
+            L&apos;origine est enregistrée, et la fiche indiquera que la saisie
+            vient de Humanix et non du client.
+          </p>
+          <form
+            action={enregistrerCoordonneesPourTenant}
+            className="mt-4 space-y-3"
+          >
+            <input type="hidden" name="tenantId" value={id} />
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className="text-sm">
+                Dénomination sociale *
+                <input
+                  name="raisonSociale"
+                  required
+                  className="input mt-1 w-full"
+                />
+              </label>
+              <label className="text-sm">
+                Adresse *
+                <input name="adresse" required className="input mt-1 w-full" />
+              </label>
+              <label className="text-sm">
+                Code postal *
+                <input
+                  name="codePostal"
+                  required
+                  className="input mt-1 w-full"
+                />
+              </label>
+              <label className="text-sm">
+                Ville *
+                <input name="ville" required className="input mt-1 w-full" />
+              </label>
+              <label className="text-sm">
+                Pays (code à 2 lettres)
+                <input
+                  name="pays"
+                  defaultValue="FR"
+                  maxLength={2}
+                  className="input mt-1 w-full"
+                />
+              </label>
+              <label className="text-sm">
+                SIREN
+                <input name="siren" className="input mt-1 w-full" />
+              </label>
+              <label className="text-sm">
+                TVA intracommunautaire
+                <input
+                  name="tvaIntra"
+                  placeholder="FR80103901799"
+                  className="input mt-1 w-full"
+                />
+              </label>
+              <label className="text-sm">
+                Origine de l&apos;information *
+                <input
+                  name="origine"
+                  required
+                  placeholder="ex. appel du 30/08 avec M. X"
+                  className="input mt-1 w-full"
+                />
+              </label>
+            </div>
+            <button type="submit" className="btn-secondary text-sm">
+              Enregistrer ces coordonnées
+            </button>
+          </form>
+        </details>
       </section>
 
       {/* === DESACTIVATION / REACTIVATION === */}

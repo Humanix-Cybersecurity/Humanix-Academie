@@ -120,6 +120,13 @@ export type EtatFacturationTenant = {
   totalTtcCentimes: number;
   /** Sans elles, aucune facture ne peut etre emise. */
   coordonneesPresentes: boolean;
+  /**
+   * NULL quand le Client les a saisies lui-meme ; une adresse courriel quand
+   * un SUPERADMIN les a transcrites a sa place. La fiche doit le dire : une
+   * adresse recopiee au telephone n'a pas la meme valeur qu'une saisie de
+   * l'interesse.
+   */
+  coordonneesSaisiePar: string | null;
   /** Nombre de factures deja emises pour ce tenant. */
   facturesEmises: number;
   /** Relances effectivement PARTIES (les echecs ne comptent pas). */
@@ -134,13 +141,27 @@ export async function etatFacturationTenant(
     paiementsAFacturer(tenantId),
     db.identiteFacturation.findUnique({
       where: { tenantId },
-      select: { tenantId: true },
+      select: { tenantId: true, saisiePar: true },
     }),
     db.facture.count({ where: { tenantId } }),
     db.auditLog.findMany({
-      where: { tenantId, targetType: "relance-facturation" },
+      // "facture" est l'ANCIEN type, porte par les relances anterieures au
+      // 2026-08-30. Sans lui, la fiche afficherait « aucune relance » alors
+      // qu'une est partie -- exactement le silence que cette section existe
+      // pour supprimer. Le message les distingue des emissions, qui disent
+      // « Facture X emise ».
+      where: {
+        tenantId,
+        targetType: { in: ["relance-facturation", "facture"] },
+      },
       orderBy: { createdAt: "desc" },
-      select: { createdAt: true, outcome: true, metadata: true },
+      select: {
+        createdAt: true,
+        outcome: true,
+        metadata: true,
+        message: true,
+        targetType: true,
+      },
       take: 50,
     }),
   ]);
@@ -148,7 +169,12 @@ export async function etatFacturationTenant(
   // Un envoi refuse (messagerie absente, aucun ADMIN) laisse une trace, mais
   // ce n'est pas une relance : l'afficher comme telle ferait croire que le
   // client a ete prevenu.
-  const parties = relances.filter((r) => r.outcome === "SUCCESS");
+  const parties = relances.filter(
+    (r) =>
+      r.outcome === "SUCCESS" &&
+      (r.targetType === "relance-facturation" ||
+        (r.message ?? "").startsWith("Relance coordonnees")),
+  );
   const derniere = parties[0] ?? null;
   const meta = (derniere?.metadata ?? null) as {
     destinataires?: unknown;
@@ -158,6 +184,7 @@ export async function etatFacturationTenant(
     paiementsEnAttente: candidats.length,
     totalTtcCentimes: candidats.reduce((s, p) => s + p.montantTtcCentimes, 0),
     coordonneesPresentes: Boolean(identite),
+    coordonneesSaisiePar: identite?.saisiePar ?? null,
     facturesEmises,
     nombreRelances: parties.length,
     derniereRelance: derniere
