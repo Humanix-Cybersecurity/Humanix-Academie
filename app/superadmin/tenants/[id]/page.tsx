@@ -37,6 +37,15 @@ export default async function TenantDetailPage({
   const { msg, error: actionError } = await searchParams;
   const health = await computeTenantHealth(id);
   const fact = await etatFacturationTenant(id);
+  // Les valeurs deja enregistrees, pour PREREMPLIR le formulaire. Sans elles,
+  // revenir ajouter une information imposait de tout retaper -- et le champ
+  // `pays`, prerempli a « FR » en dur, aurait silencieusement ramene en France
+  // un acheteur canadien, donc applique 20 % de TVA sur une prestation hors
+  // champ. L'`upsert` ecrit tous les champs : ce qui n'est pas retape est
+  // efface.
+  const identiteExistante = await db.identiteFacturation.findUnique({
+    where: { tenantId: id },
+  });
   if (!health) notFound();
 
   // Sieges (quota de plan) -- distinct des compteurs actifs/total ci-dessus.
@@ -449,7 +458,9 @@ export default async function TenantDetailPage({
 
         <details className="mt-5 rounded-xl border border-gray-200 p-4 dark:border-slate-700">
           <summary className="cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200">
-            Saisir les coordonnées à la place du client
+            {identiteExistante
+              ? "Modifier les coordonnées de facturation"
+              : "Saisir les coordonnées à la place du client"}
           </summary>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
             À n&apos;utiliser que pour <strong>transcrire</strong> des
@@ -468,30 +479,43 @@ export default async function TenantDetailPage({
                 Dénomination sociale *
                 <input
                   name="raisonSociale"
+                  defaultValue={identiteExistante?.raisonSociale ?? ""}
                   required
                   className="input mt-1 w-full"
                 />
               </label>
               <label className="text-sm">
                 Adresse *
-                <input name="adresse" required className="input mt-1 w-full" />
+                <input
+                  name="adresse"
+                  defaultValue={identiteExistante?.adresse ?? ""}
+                  required
+                  className="input mt-1 w-full"
+                />
               </label>
               <label className="text-sm">
                 Code postal *
                 <input
                   name="codePostal"
+                  defaultValue={identiteExistante?.codePostal ?? ""}
                   required
                   className="input mt-1 w-full"
                 />
               </label>
               <label className="text-sm">
                 Ville *
-                <input name="ville" required className="input mt-1 w-full" />
+                <input
+                  name="ville"
+                  defaultValue={identiteExistante?.ville ?? ""}
+                  required
+                  className="input mt-1 w-full"
+                />
               </label>
               <label className="text-sm">
                 Province / État / Région
                 <input
                   name="province"
+                  defaultValue={identiteExistante?.province ?? ""}
                   maxLength={100}
                   placeholder="Québec, Ontario…"
                   className="input mt-1 w-full"
@@ -501,19 +525,24 @@ export default async function TenantDetailPage({
                 Pays (code à 2 lettres)
                 <input
                   name="pays"
-                  defaultValue="FR"
+                  defaultValue={identiteExistante?.pays ?? "FR"}
                   maxLength={2}
                   className="input mt-1 w-full"
                 />
               </label>
               <label className="text-sm">
                 SIREN
-                <input name="siren" className="input mt-1 w-full" />
+                <input
+                  name="siren"
+                  defaultValue={identiteExistante?.siren ?? ""}
+                  className="input mt-1 w-full"
+                />
               </label>
               <label className="text-sm">
                 TVA intracommunautaire
                 <input
                   name="tvaIntra"
+                  defaultValue={identiteExistante?.tvaIntra ?? ""}
                   placeholder="FR80103901799"
                   className="input mt-1 w-full"
                 />
@@ -523,6 +552,8 @@ export default async function TenantDetailPage({
                 <input
                   name="origine"
                   required
+                  /* Volontairement PAS prerempli : l'origine de cette
+                     saisie-ci n'est pas celle de la precedente. */
                   placeholder="ex. appel du 30/08 avec M. X"
                   className="input mt-1 w-full"
                 />
