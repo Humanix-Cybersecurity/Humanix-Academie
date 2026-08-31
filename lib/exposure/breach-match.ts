@@ -73,7 +73,10 @@ export type DomainMatchResult = {
 export function extractDomain(email: string): string | null {
   const at = email.lastIndexOf("@");
   if (at === -1 || at === email.length - 1) return null;
-  const domain = email.slice(at + 1).trim().toLowerCase();
+  const domain = email
+    .slice(at + 1)
+    .trim()
+    .toLowerCase();
   if (!domain.includes(".")) return null;
   return domain;
 }

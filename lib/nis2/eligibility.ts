@@ -29,10 +29,7 @@ export type Nis2Secteur = "annexe1" | "annexe2" | "autre";
 export type Nis2Taille = "micro" | "petite" | "moyenne" | "grande";
 
 export type Nis2Statut =
-  | "essentielle"
-  | "importante"
-  | "indirecte"
-  | "hors_probable";
+  "essentielle" | "importante" | "indirecte" | "hors_probable";
 
 export type Nis2EligibilityInput = {
   secteur: Nis2Secteur;
@@ -102,8 +99,7 @@ export const NIS2_TAILLES: Array<{
   {
     id: "moyenne",
     label: "Entreprise moyenne",
-    critere:
-      "De 50 a 249 personnes, ou de 10 a 50 M€ de chiffre d'affaires.",
+    critere: "De 50 a 249 personnes, ou de 10 a 50 M€ de chiffre d'affaires.",
   },
   {
     id: "grande",

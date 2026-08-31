@@ -18,7 +18,11 @@ const REMEDIATION_EPISODE = "02-email-dans-une-fuite";
 
 export type AssignResult =
   | { ok: true; episodeId: string }
-  | { ok: false; error: "not_found" | "monitoring_inactive" | "no_episode" | "wrong_status" };
+  | {
+      ok: false;
+      error:
+        "not_found" | "monitoring_inactive" | "no_episode" | "wrong_status";
+    };
 
 /**
  * Valide une exposition (RSSI) et assigne la formation de remédiation au
@@ -34,7 +38,10 @@ export async function validateAndAssignTraining(
     select: { id: true, userId: true, status: true },
   });
   if (!exposure) return { ok: false, error: "not_found" };
-  if (exposure.status === "TRAINING_ASSIGNED" || exposure.status === "REMEDIATED") {
+  if (
+    exposure.status === "TRAINING_ASSIGNED" ||
+    exposure.status === "REMEDIATED"
+  ) {
     return { ok: false, error: "wrong_status" };
   }
 

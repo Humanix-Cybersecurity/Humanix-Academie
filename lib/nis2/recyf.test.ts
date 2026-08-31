@@ -1,10 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 import { describe, it, expect } from "vitest";
-import {
-  RECYF_OBJECTIFS,
-  RECYF_META,
-  objectifsForProfil,
-} from "./recyf";
+import { RECYF_OBJECTIFS, RECYF_META, objectifsForProfil } from "./recyf";
 
 describe("RECYF_OBJECTIFS (socle)", () => {
   it("contient exactement 20 objectifs, numerotes 1 a 20 sans trou", () => {
@@ -85,6 +81,8 @@ describe("objectifsForProfil (proportionnalite)", () => {
     expect(objectifsForProfil("EE")).toHaveLength(20);
   });
   it("une EI ne voit aucun objectif reserve aux EE", () => {
-    expect(objectifsForProfil("EI").every((o) => o.scope === "EI_EE")).toBe(true);
+    expect(objectifsForProfil("EI").every((o) => o.scope === "EI_EE")).toBe(
+      true,
+    );
   });
 });

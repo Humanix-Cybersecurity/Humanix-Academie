@@ -47,7 +47,10 @@ const MIN_SAMPLE = 50;
 export async function getExposureStats(): Promise<{
   enoughData: boolean;
   totalChecks: number;
-  byType: Record<CheckType, { exposed: number; clean: number; exposedPct: number }>;
+  byType: Record<
+    CheckType,
+    { exposed: number; clean: number; exposedPct: number }
+  >;
 }> {
   const rows = await db.exposureCheckMetric.groupBy({
     by: ["checkType", "bucket"],
@@ -79,7 +82,10 @@ export async function getExposureStats(): Promise<{
         },
       ];
     }),
-  ) as Record<CheckType, { exposed: number; clean: number; exposedPct: number }>;
+  ) as Record<
+    CheckType,
+    { exposed: number; clean: number; exposedPct: number }
+  >;
 
   return { enoughData: total >= MIN_SAMPLE, totalChecks: total, byType };
 }

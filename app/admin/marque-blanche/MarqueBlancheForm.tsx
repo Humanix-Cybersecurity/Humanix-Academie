@@ -29,9 +29,10 @@ export default function MarqueBlancheForm({
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
-  const [feedback, setFeedback] = useState<
-    { kind: "success" | "error"; message: string } | null
-  >(null);
+  const [feedback, setFeedback] = useState<{
+    kind: "success" | "error";
+    message: string;
+  } | null>(null);
 
   // État live (pour l'aperçu). Les valeurs par défaut Humanix servent de repère.
   const [enabled, setEnabled] = useState(initial.brandingEnabled);
@@ -41,7 +42,9 @@ export default function MarqueBlancheForm({
   const [hidePoweredBy, setHidePoweredBy] = useState(initial.hidePoweredBy);
   const [subdomain, setSubdomain] = useState(initial.brandSubdomain);
   // Aperçu local du logo (data URL) si un nouveau fichier est choisi.
-  const [logoPreview, setLogoPreview] = useState<string | null>(initial.logoUrl);
+  const [logoPreview, setLogoPreview] = useState<string | null>(
+    initial.logoUrl,
+  );
 
   const onLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
@@ -60,7 +63,8 @@ export default function MarqueBlancheForm({
       if (res.ok) {
         setFeedback({
           kind: "success",
-          message: "✓ Marque blanche enregistrée. Rechargement de l'aperçu réel…",
+          message:
+            "✓ Marque blanche enregistrée. Rechargement de l'aperçu réel…",
         });
         router.refresh();
       } else {
@@ -105,7 +109,8 @@ export default function MarqueBlancheForm({
               Activer la marque blanche
             </span>
             <span className="block text-xs text-gray-500 dark:text-gray-400">
-              Tant que c'est désactivé, l'identité Humanix par défaut s'applique.
+              Tant que c'est désactivé, l'identité Humanix par défaut
+              s'applique.
             </span>
           </span>
         </label>
@@ -175,7 +180,8 @@ export default function MarqueBlancheForm({
           />
           {initial.logoUrl && (
             <label className="mt-1.5 flex items-center gap-2 text-xs text-gray-500">
-              <input type="checkbox" name="logo_remove" /> Retirer le logo actuel
+              <input type="checkbox" name="logo_remove" /> Retirer le logo
+              actuel
             </label>
           )}
         </div>

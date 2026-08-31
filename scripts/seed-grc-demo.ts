@@ -42,13 +42,28 @@ async function main() {
   const demoUsers = [
     { email: "alice.martin.communaute@humanix-demo.fr", name: "Alice Martin" },
     { email: "bob.dupont.communaute@humanix-demo.fr", name: "Bob Dupont" },
-    { email: "claire.bernard.communaute@humanix-demo.fr", name: "Claire Bernard" },
+    {
+      email: "claire.bernard.communaute@humanix-demo.fr",
+      name: "Claire Bernard",
+    },
     { email: "david.petit.communaute@humanix-demo.fr", name: "David Petit" },
-    { email: "emma.rousseau.communaute@humanix-demo.fr", name: "Emma Rousseau" },
-    { email: "francois.moreau.communaute@humanix-demo.fr", name: "François Moreau" },
-    { email: "gabrielle.simon.communaute@humanix-demo.fr", name: "Gabrielle Simon" },
+    {
+      email: "emma.rousseau.communaute@humanix-demo.fr",
+      name: "Emma Rousseau",
+    },
+    {
+      email: "francois.moreau.communaute@humanix-demo.fr",
+      name: "François Moreau",
+    },
+    {
+      email: "gabrielle.simon.communaute@humanix-demo.fr",
+      name: "Gabrielle Simon",
+    },
     { email: "hugo.laurent.communaute@humanix-demo.fr", name: "Hugo Laurent" },
-    { email: "isabelle.michel.communaute@humanix-demo.fr", name: "Isabelle Michel" },
+    {
+      email: "isabelle.michel.communaute@humanix-demo.fr",
+      name: "Isabelle Michel",
+    },
   ];
   let usersCreated = 0;
   const userIds: string[] = [];
@@ -75,7 +90,9 @@ async function main() {
     userIds.push(created.id);
     usersCreated += 1;
   }
-  console.log(`Utilisateurs : ${usersCreated} créés (${userIds.length} total démo).`);
+  console.log(
+    `Utilisateurs : ${usersCreated} créés (${userIds.length} total démo).`,
+  );
 
   // === 2. Créer 3 events phishing.report pour atteindre rate 0.3 ===
   // (3 reports sur 10 users = 0.3, entre partial 0.2 et compliant 0.5)
@@ -107,8 +124,7 @@ async function main() {
     (await db.user.findFirst({
       where: { role: { in: ["ADMIN", "SUPERADMIN"] } },
       select: { id: true },
-    })) ??
-    (await db.user.findFirst({ select: { id: true } }));
+    })) ?? (await db.user.findFirst({ select: { id: true } }));
   if (!moduleAuthor) throw new Error("Pas d'auteur disponible");
 
   const moduleSlug = "bureau-propre";
@@ -236,7 +252,9 @@ async function main() {
   console.log("- A.6.3  → non_compliant (tenant_score faible, ~0.05)");
   console.log("- A.8.7  → not_assessed  (pas de seuil défini)");
   console.log("\n=== Trigger RiskScenario (v1.4) ===");
-  console.log("nbPartial + nbNonCompliant = 1 + 1 = 2 >= 2 → trigger déclenchement précoce");
+  console.log(
+    "nbPartial + nbNonCompliant = 1 + 1 = 2 >= 2 → trigger déclenchement précoce",
+  );
   console.log("→ RiskScenario auto-créé côté CISO Assistant si toggle activé.");
   console.log("\n→ Relance une sync depuis /admin/integrations/ciso-assistant");
 

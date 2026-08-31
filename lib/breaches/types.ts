@@ -5,9 +5,7 @@
 // en BDD), mais ne figure plus dans SOURCE_META et n'est plus scrapé
 // (structure non-stable, retournait du contenu non exploitable).
 export type BreachSourceKey =
-  | "FRENCHBREACHES"
-  | "BONJOURLAFUITE"
-  | "FUITESINFOS";
+  "FRENCHBREACHES" | "BONJOURLAFUITE" | "FUITESINFOS";
 
 export type ScrapedBreach = {
   // Identifiant externe stable cote source. Si la source n'en propose pas,

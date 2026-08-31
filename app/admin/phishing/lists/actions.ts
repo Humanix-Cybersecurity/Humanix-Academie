@@ -30,7 +30,9 @@ export async function createListFromCsv(formData: FormData): Promise<{
   const session = await requireAdmin();
   const tenantId = session.user.tenantId as string;
 
-  const name = String(formData.get("name") ?? "").trim().slice(0, 200);
+  const name = String(formData.get("name") ?? "")
+    .trim()
+    .slice(0, 200);
   const description = String(formData.get("description") ?? "")
     .trim()
     .slice(0, 500);

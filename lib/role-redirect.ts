@@ -12,11 +12,7 @@
 //   - magic links de bienvenue (Phase 2 + Phase 3b webhook)
 
 export type UserRoleString =
-  | "LEARNER"
-  | "MANAGER"
-  | "RSSI"
-  | "ADMIN"
-  | "SUPERADMIN";
+  "LEARNER" | "MANAGER" | "RSSI" | "ADMIN" | "SUPERADMIN";
 
 const ADMIN_ROLES: ReadonlySet<UserRoleString> = new Set<UserRoleString>([
   "MANAGER",

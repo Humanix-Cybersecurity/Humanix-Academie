@@ -7,7 +7,11 @@
 //
 // L'app runtime importe uniquement verify.ts (avec la cle publique).
 
-import { createPrivateKey, generateKeyPairSync, sign as cryptoSign } from "node:crypto";
+import {
+  createPrivateKey,
+  generateKeyPairSync,
+  sign as cryptoSign,
+} from "node:crypto";
 import { canonicalJson, encodeLicense } from "./format";
 import type { LicensePayload } from "./types";
 
@@ -47,12 +51,13 @@ export function signLicense(
  *
  * NE JAMAIS committer la PRIV. NE JAMAIS la transmettre par email/Slack.
  */
-export function generateKeyPair(): { publicKeyPem: string; privateKeyPem: string } {
+export function generateKeyPair(): {
+  publicKeyPem: string;
+  privateKeyPem: string;
+} {
   const { publicKey, privateKey } = generateKeyPairSync("ed25519");
   return {
-    publicKeyPem: publicKey
-      .export({ format: "pem", type: "spki" })
-      .toString(),
+    publicKeyPem: publicKey.export({ format: "pem", type: "spki" }).toString(),
     privateKeyPem: privateKey
       .export({ format: "pem", type: "pkcs8" })
       .toString(),

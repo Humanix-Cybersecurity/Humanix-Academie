@@ -22,7 +22,11 @@ export default function LinkedInMockup({ media }: Props) {
       {/* Auteur */}
       <div className="px-5 py-4 flex items-start gap-3">
         <div className="shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white font-bold text-lg">
-          {m.author.split(" ").map((s) => s[0]).join("").slice(0, 2)}
+          {m.author
+            .split(" ")
+            .map((s) => s[0])
+            .join("")
+            .slice(0, 2)}
         </div>
         <div className="flex-1 min-w-0">
           <div className="font-bold text-gray-900 dark:text-gray-100">
@@ -63,13 +67,25 @@ export default function LinkedInMockup({ media }: Props) {
       )}
 
       <div className="border-t border-gray-200 dark:border-slate-700 px-5 py-2 flex items-center justify-around text-xs text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-slate-800/50">
-        <button type="button" className="px-3 py-1.5 hover:bg-gray-100 dark:hover:bg-slate-800 rounded transition-colors" aria-disabled="true">
+        <button
+          type="button"
+          className="px-3 py-1.5 hover:bg-gray-100 dark:hover:bg-slate-800 rounded transition-colors"
+          aria-disabled="true"
+        >
           👍 J'aime
         </button>
-        <button type="button" className="px-3 py-1.5 hover:bg-gray-100 dark:hover:bg-slate-800 rounded transition-colors" aria-disabled="true">
+        <button
+          type="button"
+          className="px-3 py-1.5 hover:bg-gray-100 dark:hover:bg-slate-800 rounded transition-colors"
+          aria-disabled="true"
+        >
           💬 Commenter
         </button>
-        <button type="button" className="px-3 py-1.5 hover:bg-gray-100 dark:hover:bg-slate-800 rounded transition-colors" aria-disabled="true">
+        <button
+          type="button"
+          className="px-3 py-1.5 hover:bg-gray-100 dark:hover:bg-slate-800 rounded transition-colors"
+          aria-disabled="true"
+        >
           🔁 Partager
         </button>
       </div>

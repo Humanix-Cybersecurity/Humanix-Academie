@@ -26,14 +26,13 @@ export default function SmtpStatusBanner({
         </h3>
         <p className="text-xs text-amber-900/90 dark:text-amber-100/90 mt-2 leading-relaxed">
           Humanix-Cybersecurity ne partage pas son serveur SMTP pour les
-          phishing simulés. Tu dois configurer{" "}
-          <strong>ton propre SMTP</strong> pour envoyer depuis ton domaine
-          (réputation IP, SPF, DKIM, DMARC à ta charge).
+          phishing simulés. Tu dois configurer <strong>ton propre SMTP</strong>{" "}
+          pour envoyer depuis ton domaine (réputation IP, SPF, DKIM, DMARC à ta
+          charge).
         </p>
         <p className="text-xs text-amber-900/90 dark:text-amber-100/90 mt-2 leading-relaxed">
-          <strong>3 options</strong> : (1) self-host (Postfix, M365 dédié),
-          (2) provider transactionnel (Brevo, Mailjet, Scaleway TEM client),
-          ou (3){" "}
+          <strong>3 options</strong> : (1) self-host (Postfix, M365 dédié), (2)
+          provider transactionnel (Brevo, Mailjet, Scaleway TEM client), ou (3){" "}
           <Link
             href="/demande-abonnement?type=opsec"
             className="underline font-bold"

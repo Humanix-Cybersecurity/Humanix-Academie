@@ -38,7 +38,8 @@ export function isB2bMonitoringActive(tenant: TenantMonitoringFlags): boolean {
   if (!tenant.exposureMonitoringDpaSignedAt) return false;
   // Sans domaine déclaré, il n'y a rien à surveiller (et surtout aucun risque
   // de matcher des données de tiers).
-  if (!tenant.exposureDomains || tenant.exposureDomains.length === 0) return false;
+  if (!tenant.exposureDomains || tenant.exposureDomains.length === 0)
+    return false;
   return true;
 }
 
@@ -46,9 +47,11 @@ export function isB2bMonitoringActive(tenant: TenantMonitoringFlags): boolean {
 export function monitoringBlockedReason(
   tenant: TenantMonitoringFlags,
 ): string | null {
-  if (!isB2bGloballyEnabled()) return "Désactivée au niveau plateforme (EXPOSURE_B2B_ENABLED).";
+  if (!isB2bGloballyEnabled())
+    return "Désactivée au niveau plateforme (EXPOSURE_B2B_ENABLED).";
   if (!tenant.exposureMonitoringEnabled) return "Non activée pour ce tenant.";
-  if (!tenant.exposureMonitoringDpaSignedAt) return "DPA art.28 non enregistrée (gate légal).";
+  if (!tenant.exposureMonitoringDpaSignedAt)
+    return "DPA art.28 non enregistrée (gate légal).";
   if (!tenant.exposureDomains || tenant.exposureDomains.length === 0)
     return "Aucun domaine déclaré à surveiller.";
   return null;

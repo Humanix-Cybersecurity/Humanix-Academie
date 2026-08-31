@@ -18,7 +18,8 @@ import {
 
 export type ExposureRow = {
   id: string;
-  status: "NEW" | "VALIDATED" | "TRAINING_ASSIGNED" | "DISMISSED" | "REMEDIATED";
+  status:
+    "NEW" | "VALIDATED" | "TRAINING_ASSIGNED" | "DISMISSED" | "REMEDIATED";
   matchedDomain: string;
   detectedAt: string;
   userName: string;
@@ -77,7 +78,8 @@ const ERROR_LABELS: Record<string, string> = {
   no_valid_domain: "Saisissez au moins un domaine valide (ex. acme.fr).",
   domain_not_owned:
     "Domaine non prouvé : il doit correspondre à l'email vérifié d'un salarié.",
-  monitoring_inactive: "Veille inactive (vérifiez les conditions d'activation).",
+  monitoring_inactive:
+    "Veille inactive (vérifiez les conditions d'activation).",
   inactive: "Veille inactive : rien à exporter.",
   no_tenant: "Tenant introuvable.",
   not_found: "Exposition introuvable ou déjà traitée.",
@@ -145,7 +147,9 @@ export default function ExpositionAdminClient({
     });
   }
 
-  function run(fn: () => Promise<{ ok: boolean; error?: string; message?: string }>) {
+  function run(
+    fn: () => Promise<{ ok: boolean; error?: string; message?: string }>,
+  ) {
     setMsg(null);
     startTransition(async () => {
       const r = await fn();
@@ -175,9 +179,7 @@ export default function ExpositionAdminClient({
         }`}
       >
         <p className="text-sm font-bold mb-1">
-          {monitoring.active
-            ? "✅ Veille active"
-            : "⏸️ Veille inactive"}
+          {monitoring.active ? "✅ Veille active" : "⏸️ Veille inactive"}
         </p>
         {monitoring.blockedReason && (
           <p className="text-sm text-gray-700 dark:text-gray-300">
@@ -186,9 +188,10 @@ export default function ExpositionAdminClient({
         )}
         {!monitoring.globallyEnabled && (
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-            ℹ️ Le module est verrouillé au niveau plateforme. Votre configuration
-            est enregistrée mais la veille ne démarrera qu'après déverrouillage
-            par Humanix (validation juridique DPA / AIPD / notice salariés).
+            ℹ️ Le module est verrouillé au niveau plateforme. Votre
+            configuration est enregistrée mais la veille ne démarrera qu'après
+            déverrouillage par Humanix (validation juridique DPA / AIPD / notice
+            salariés).
           </p>
         )}
       </div>
@@ -218,7 +221,9 @@ export default function ExpositionAdminClient({
               </p>
             </div>
             <div className="text-right">
-              <p className={`text-3xl font-bold ${scoreColor(posture.orgExposureScore)}`}>
+              <p
+                className={`text-3xl font-bold ${scoreColor(posture.orgExposureScore)}`}
+              >
                 {posture.orgExposureScore}
                 <span className="text-base text-gray-400">/100</span>
               </p>
@@ -237,9 +242,7 @@ export default function ExpositionAdminClient({
                 <Stat label="Remédiées" value={posture.remediatedCount} />
                 <Stat label="Écartées" value={posture.dismissedCount} />
               </div>
-              {posture.trend.length > 1 && (
-                <TrendBar trend={posture.trend} />
-              )}
+              {posture.trend.length > 1 && <TrendBar trend={posture.trend} />}
             </>
           ) : (
             <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -340,16 +343,12 @@ export default function ExpositionAdminClient({
             </div>
 
             <label className="flex items-start gap-2 text-sm">
-              <input
-                type="checkbox"
-                name="dpaConfirmed"
-                className="mt-0.5"
-              />
+              <input type="checkbox" name="dpaConfirmed" className="mt-0.5" />
               <span>
-                Je confirme qu'un <strong>contrat de sous-traitance (DPA,
-                art.28 RGPD)</strong> couvrant cette veille est signé, et que
-                la notice de transparence salariés ainsi que l'AIPD sont en
-                place.
+                Je confirme qu'un{" "}
+                <strong>contrat de sous-traitance (DPA, art.28 RGPD)</strong>{" "}
+                couvrant cette veille est signé, et que la notice de
+                transparence salariés ainsi que l'AIPD sont en place.
               </span>
             </label>
 

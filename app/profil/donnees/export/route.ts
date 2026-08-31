@@ -14,107 +14,104 @@ export async function GET() {
   }
   const userId = session.user.id as string;
 
-  const [
-    user,
-    progress,
-    events,
-    notifications,
-    webauthn,
-    phishingResults,
-  ] = await Promise.all([
-    db.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        service: true,
-        role: true,
-        coins: true,
-        level: true,
-        riskScore: true,
-        mascotSpecies: true,
-        mascotEmojiCustom: true,
-        mood: true,
-        shareCount: true,
-        emailVerified: true,
-        mfaEnabled: true,
-        mfaEnabledAt: true,
-        passwordUpdatedAt: true,
-        lastLoginAt: true,
-        lastSeenAt: true,
-        createdAt: true,
-        tenant: { select: { name: true, slug: true, plan: true } },
-        groups: {
-          select: {
-            joinedAt: true,
-            isLead: true,
-            group: { select: { name: true, slug: true } },
+  const [user, progress, events, notifications, webauthn, phishingResults] =
+    await Promise.all([
+      db.user.findUnique({
+        where: { id: userId },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          service: true,
+          role: true,
+          coins: true,
+          level: true,
+          riskScore: true,
+          mascotSpecies: true,
+          mascotEmojiCustom: true,
+          mood: true,
+          shareCount: true,
+          emailVerified: true,
+          mfaEnabled: true,
+          mfaEnabledAt: true,
+          passwordUpdatedAt: true,
+          lastLoginAt: true,
+          lastSeenAt: true,
+          createdAt: true,
+          tenant: { select: { name: true, slug: true, plan: true } },
+          groups: {
+            select: {
+              joinedAt: true,
+              isLead: true,
+              group: { select: { name: true, slug: true } },
+            },
           },
         },
-      },
-    }),
-    db.progress.findMany({
-      where: { userId },
-      select: {
-        score: true,
-        bestScore: true,
-        quizScorePct: true,
-        bestQuizScorePct: true,
-        attempts: true,
-        status: true,
-        startedAt: true,
-        completedAt: true,
-        saison: { select: { slug: true, title: true } },
-        episode: { select: { slug: true, title: true } },
-      },
-    }),
-    db.event.findMany({
-      where: { userId },
-      orderBy: { createdAt: "desc" },
-      take: 1000,
-      select: { type: true, payload: true, createdAt: true },
-    }),
-    db.notificationLog.findMany({
-      where: { userId },
-      orderBy: { sentAt: "desc" },
-      take: 1000,
-      select: { type: true, channel: true, status: true, sentAt: true },
-    }),
-    db.webAuthnCredential.findMany({
-      where: { userId },
-      select: {
-        deviceName: true,
-        transports: true,
-        backedUp: true,
-        userVerified: true,
-        createdAt: true,
-        lastUsedAt: true,
-      },
-    }),
-    // Resultats des campagnes phishing/vishing/smishing (RGPD art. 20)
-    db.phishingResult.findMany({
-      where: { userId },
-      orderBy: { sentAt: "desc" },
-      select: {
-        status: true,
-        sentAt: true,
-        clickedAt: true,
-        reportedAt: true,
-        campaign: {
-          select: {
-            title: true,
-            template: true,
-            channel: true,
-            sentAt: true,
+      }),
+      db.progress.findMany({
+        where: { userId },
+        select: {
+          score: true,
+          bestScore: true,
+          quizScorePct: true,
+          bestQuizScorePct: true,
+          attempts: true,
+          status: true,
+          startedAt: true,
+          completedAt: true,
+          saison: { select: { slug: true, title: true } },
+          episode: { select: { slug: true, title: true } },
+        },
+      }),
+      db.event.findMany({
+        where: { userId },
+        orderBy: { createdAt: "desc" },
+        take: 1000,
+        select: { type: true, payload: true, createdAt: true },
+      }),
+      db.notificationLog.findMany({
+        where: { userId },
+        orderBy: { sentAt: "desc" },
+        take: 1000,
+        select: { type: true, channel: true, status: true, sentAt: true },
+      }),
+      db.webAuthnCredential.findMany({
+        where: { userId },
+        select: {
+          deviceName: true,
+          transports: true,
+          backedUp: true,
+          userVerified: true,
+          createdAt: true,
+          lastUsedAt: true,
+        },
+      }),
+      // Resultats des campagnes phishing/vishing/smishing (RGPD art. 20)
+      db.phishingResult.findMany({
+        where: { userId },
+        orderBy: { sentAt: "desc" },
+        select: {
+          status: true,
+          sentAt: true,
+          clickedAt: true,
+          reportedAt: true,
+          campaign: {
+            select: {
+              title: true,
+              template: true,
+              channel: true,
+              sentAt: true,
+            },
           },
         },
-      },
-    }),
-  ]);
+      }),
+    ]);
 
   if (!user) {
-    return NextResponse.json({ error: "Utilisateur introuvable." }, { status: 404 });
+    return NextResponse.json(
+      { error: "Utilisateur introuvable." },
+      { status: 404 },
+    );
   }
 
   const exported = {

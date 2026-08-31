@@ -92,8 +92,7 @@ export function SoftwareApplicationJsonLd(
       props.description ??
       "Plateforme française open source de sensibilisation cybersécurité. Modules de 5 minutes, phishing simulé, conformité RGPD/NIS2. Hébergement souverain France.",
     url: absUrl(props.url ?? "/tarifs"),
-    applicationCategory:
-      props.applicationCategory ?? "SecurityApplication",
+    applicationCategory: props.applicationCategory ?? "SecurityApplication",
     operatingSystem: props.operatingSystem ?? "Web",
     inLanguage: "fr-FR",
     isAccessibleForFree: true,

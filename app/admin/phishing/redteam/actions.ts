@@ -27,7 +27,12 @@ export async function generateRedTeamAction(
   // LEARNER d'un tenant gratuit) consomme le quota Mistral et la surface de
   // prompt-injection.
   const role = session.user.role;
-  if (role !== "ADMIN" && role !== "RSSI" && role !== "MANAGER" && role !== "SUPERADMIN") {
+  if (
+    role !== "ADMIN" &&
+    role !== "RSSI" &&
+    role !== "MANAGER" &&
+    role !== "SUPERADMIN"
+  ) {
     return { ok: false, error: "forbidden" };
   }
   const tenantId = session.user.tenantId as string;
@@ -41,7 +46,9 @@ export async function generateRedTeamAction(
     return { ok: false, error: "rate_limited" };
   }
 
-  const sector = String(formData.get("sector") ?? "").trim().slice(0, 200);
+  const sector = String(formData.get("sector") ?? "")
+    .trim()
+    .slice(0, 200);
   const attackContext = String(formData.get("attackContext") ?? "")
     .trim()
     .slice(0, 1000);
@@ -49,9 +56,7 @@ export async function generateRedTeamAction(
     .trim()
     .slice(0, 200);
   const difficulty = String(formData.get("difficulty") ?? "medium") as
-    | "subtle"
-    | "medium"
-    | "brutal";
+    "subtle" | "medium" | "brutal";
 
   if (!sector || !attackContext || !targetAudience) {
     return { ok: false, error: "missing_fields" };

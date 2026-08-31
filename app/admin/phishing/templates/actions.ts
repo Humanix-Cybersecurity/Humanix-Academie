@@ -41,8 +41,7 @@ function normalizeCustomSlug(raw: string): string {
 }
 
 export type CreateTemplateResult =
-  | { ok: true; id: string; slug: string }
-  | { ok: false; error: string };
+  { ok: true; id: string; slug: string } | { ok: false; error: string };
 
 export async function createCustomTemplate(
   formData: FormData,
@@ -58,15 +57,15 @@ export async function createCustomTemplate(
     };
   }
 
-  const name = String(formData.get("name") ?? "").trim().slice(0, 100);
+  const name = String(formData.get("name") ?? "")
+    .trim()
+    .slice(0, 100);
   const description = String(formData.get("description") ?? "")
     .trim()
     .slice(0, 500);
   const slugRaw = String(formData.get("slug") ?? "").trim();
-  const difficulty = (String(formData.get("difficulty") ?? "medium") as
-    | "easy"
-    | "medium"
-    | "hard");
+  const difficulty = String(formData.get("difficulty") ?? "medium") as
+    "easy" | "medium" | "hard";
   const emailSubject = String(formData.get("emailSubject") ?? "")
     .trim()
     .slice(0, 200);
@@ -83,12 +82,17 @@ export async function createCustomTemplate(
     String(formData.get("emailHtml") ?? "").trim(),
   );
   const markersRaw = String(formData.get("markers") ?? "").trim();
-  const emoji = String(formData.get("emoji") ?? "🎣").trim().slice(0, 4) || "🎣";
+  const emoji =
+    String(formData.get("emoji") ?? "🎣")
+      .trim()
+      .slice(0, 4) || "🎣";
   // Phase 2 (juin 2026) : landing custom optionnelle
   const landingFakeHtml = sanitizeEmailHtml(
     String(formData.get("landingFakeHtml") ?? "").trim(),
   );
-  const landingTitle = String(formData.get("landingTitle") ?? "").trim().slice(0, 100);
+  const landingTitle = String(formData.get("landingTitle") ?? "")
+    .trim()
+    .slice(0, 100);
 
   if (!name || !emailSubject || !emailFromAddr || !emailHtml) {
     return { ok: false, error: "missing_required_fields" };
@@ -160,9 +164,9 @@ export async function deleteCustomTemplate(formData: FormData): Promise<void> {
  * Pratique pour reutiliser un scenario genere par Mistral comme template
  * de campagne standard, sans re-generer.
  */
-export async function saveRedTeamAsTemplate(formData: FormData): Promise<
-  CreateTemplateResult
-> {
+export async function saveRedTeamAsTemplate(
+  formData: FormData,
+): Promise<CreateTemplateResult> {
   let tenantId: string;
   let userId: string;
   try {
@@ -174,10 +178,18 @@ export async function saveRedTeamAsTemplate(formData: FormData): Promise<
     };
   }
 
-  const name = String(formData.get("name") ?? "").trim().slice(0, 100);
-  const subject = String(formData.get("subject") ?? "").trim().slice(0, 200);
-  const fromEmail = String(formData.get("fromEmail") ?? "").trim().slice(0, 100);
-  const fromName = String(formData.get("fromName") ?? "").trim().slice(0, 100);
+  const name = String(formData.get("name") ?? "")
+    .trim()
+    .slice(0, 100);
+  const subject = String(formData.get("subject") ?? "")
+    .trim()
+    .slice(0, 200);
+  const fromEmail = String(formData.get("fromEmail") ?? "")
+    .trim()
+    .slice(0, 100);
+  const fromName = String(formData.get("fromName") ?? "")
+    .trim()
+    .slice(0, 100);
   // Anti-XSS : le corps red-team vient du client (form), on resanitise au
   // stockage (DOMPurify), comme pour les templates custom.
   const bodyHtml = sanitizeEmailHtml(
@@ -215,7 +227,8 @@ export async function saveRedTeamAsTemplate(formData: FormData): Promise<
         tenantId,
         slug,
         name: `[Red Team] ${name}`,
-        description: "Scenario genere par IA Mistral via /admin/phishing/redteam",
+        description:
+          "Scenario genere par IA Mistral via /admin/phishing/redteam",
         emoji: "🎯",
         difficulty: "medium",
         channel: "EMAIL",

@@ -60,9 +60,7 @@ function encodeFeedback(message: string): string {
  * pour que la page affiche un feedback visuel. revalidatePath garantit
  * que les valeurs en cache (preview, statut) sont rafraichies.
  */
-export async function saveRetentionConfig(
-  formData: FormData,
-): Promise<void> {
+export async function saveRetentionConfig(formData: FormData): Promise<void> {
   const ctx = await requireAdminTenant();
   if (!ctx.ok) {
     redirect(`${RETENTION_PATH}?error=${encodeFeedback(ctx.error)}`);

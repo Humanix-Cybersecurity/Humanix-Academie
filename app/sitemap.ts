@@ -30,13 +30,7 @@ type SitemapEntry = {
   path: string;
   priority: number;
   changeFrequency:
-    | "always"
-    | "hourly"
-    | "daily"
-    | "weekly"
-    | "monthly"
-    | "yearly"
-    | "never";
+    "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
 };
 
 const PAGES: SitemapEntry[] = [
@@ -56,8 +50,16 @@ const PAGES: SitemapEntry[] = [
   { path: "/communaute", priority: 0.8, changeFrequency: "weekly" },
   { path: "/presse", priority: 0.7, changeFrequency: "monthly" },
   { path: "/securite", priority: 0.7, changeFrequency: "monthly" },
-  { path: "/securite/rapport-audit", priority: 0.6, changeFrequency: "monthly" },
-  { path: "/securite/audits-externes", priority: 0.6, changeFrequency: "monthly" },
+  {
+    path: "/securite/rapport-audit",
+    priority: 0.6,
+    changeFrequency: "monthly",
+  },
+  {
+    path: "/securite/audits-externes",
+    priority: 0.6,
+    changeFrequency: "monthly",
+  },
   { path: "/integrations", priority: 0.7, changeFrequency: "monthly" },
   { path: "/famille", priority: 0.7, changeFrequency: "monthly" },
   { path: "/experts", priority: 0.6, changeFrequency: "weekly" },
@@ -75,10 +77,26 @@ const PAGES: SitemapEntry[] = [
   // Badges Detective publics (Mode Enqueteur partage social).
   // Tres faible priorite SEO car ces pages sont surtout cibles de
   // partage direct (LinkedIn/X), pas de crawl Google profond.
-  { path: "/badges/detective/detective-junior", priority: 0.4, changeFrequency: "yearly" },
-  { path: "/badges/detective/detective-confirme", priority: 0.4, changeFrequency: "yearly" },
-  { path: "/badges/detective/cyber-sherlock", priority: 0.4, changeFrequency: "yearly" },
-  { path: "/badges/detective/maitre-detective", priority: 0.4, changeFrequency: "yearly" },
+  {
+    path: "/badges/detective/detective-junior",
+    priority: 0.4,
+    changeFrequency: "yearly",
+  },
+  {
+    path: "/badges/detective/detective-confirme",
+    priority: 0.4,
+    changeFrequency: "yearly",
+  },
+  {
+    path: "/badges/detective/cyber-sherlock",
+    priority: 0.4,
+    changeFrequency: "yearly",
+  },
+  {
+    path: "/badges/detective/maitre-detective",
+    priority: 0.4,
+    changeFrequency: "yearly",
+  },
 
   // Auth (publiques)
   { path: "/connexion", priority: 0.4, changeFrequency: "yearly" },

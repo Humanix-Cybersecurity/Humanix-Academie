@@ -169,34 +169,35 @@ export default function SaisonCard({
               On affiche "~X min par episode" plutot que le total (qui ferait
               36 min et casserait la promesse "5 minutes par jour"). */}
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-4 text-center tabular-nums">
-          {total} episode{total > 1 ? "s" : ""} · ~{avgMinutes} min par
-          episode
-          {expertCount > 0 ? (
-            <>
-              {" "}
-              ·{" "}
-              <span
-                className="text-accent-500 font-semibold"
-                title="Episodes avec scenario detaille redige par un expert humain"
-              >
-                📝 {expertCount === total
-                  ? "tous experts"
-                  : `${expertCount} expert${expertCount > 1 ? "s" : ""}`}
-              </span>
-            </>
-          ) : !isLocked ? (
-            <>
-              {" "}
-              ·{" "}
-              <span
-                className="text-amber-600 dark:text-amber-400 font-semibold"
-                title="Episodes en fallback structure (questions + quiz generiques). Enrichissement par expert prevu."
-              >
-                🔜 bientot enrichi
-              </span>
-            </>
-          ) : null}
-        </p>
+            {total} episode{total > 1 ? "s" : ""} · ~{avgMinutes} min par
+            episode
+            {expertCount > 0 ? (
+              <>
+                {" "}
+                ·{" "}
+                <span
+                  className="text-accent-500 font-semibold"
+                  title="Episodes avec scenario detaille redige par un expert humain"
+                >
+                  📝{" "}
+                  {expertCount === total
+                    ? "tous experts"
+                    : `${expertCount} expert${expertCount > 1 ? "s" : ""}`}
+                </span>
+              </>
+            ) : !isLocked ? (
+              <>
+                {" "}
+                ·{" "}
+                <span
+                  className="text-amber-600 dark:text-amber-400 font-semibold"
+                  title="Episodes en fallback structure (questions + quiz generiques). Enrichissement par expert prevu."
+                >
+                  🔜 bientot enrichi
+                </span>
+              </>
+            ) : null}
+          </p>
         </div>
       </div>
     </article>

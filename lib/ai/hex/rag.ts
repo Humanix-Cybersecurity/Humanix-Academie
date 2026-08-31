@@ -92,7 +92,8 @@ export async function retrieveRagContext(opts: {
     .map<RagChunk>((r) => ({
       title: r.title,
       sourcePath: r.source_path,
-      url: typeof r.metadata?.url === "string" ? (r.metadata.url as string) : null,
+      url:
+        typeof r.metadata?.url === "string" ? (r.metadata.url as string) : null,
       score: r.score,
       excerpt: r.content,
     }));
@@ -115,7 +116,7 @@ export function formatRagContext(chunks: RagChunk[]): string {
     "\n\n# Extraits pertinents de la bibliotheque Humanix",
     "Voici des passages issus de modules officiels Humanix Académie qui",
     "pourraient eclairer la reponse. Utilise-les comme reference factuelle",
-    "et cite la source au format \"Source : <titre>\" quand tu t'en sers.",
+    'et cite la source au format "Source : <titre>" quand tu t\'en sers.',
     "Ne reproduis pas ces extraits mot pour mot : reformule en restant",
     "fidele au sens.\n",
   ];

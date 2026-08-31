@@ -37,10 +37,7 @@ import {
   adminResetUserMfa,
   setUserGroups,
 } from "@/app/admin/actions";
-import {
-  canModifyRoleOf,
-  getAssignableRoles,
-} from "@/lib/role-hierarchy";
+import { canModifyRoleOf, getAssignableRoles } from "@/lib/role-hierarchy";
 
 type GroupOpt = {
   id: string;
@@ -698,9 +695,7 @@ function GroupDrawer({
   onSave: (ids: string[]) => void;
   pending: boolean;
 }) {
-  const [selected, setSelected] = useState<Set<string>>(
-    new Set(user.groupIds),
-  );
+  const [selected, setSelected] = useState<Set<string>>(new Set(user.groupIds));
   const toggle = (id: string) => {
     const next = new Set(selected);
     if (next.has(id)) next.delete(id);

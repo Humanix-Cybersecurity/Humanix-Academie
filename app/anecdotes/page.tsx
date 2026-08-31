@@ -21,7 +21,9 @@ export const metadata: Metadata = {
     description: ANEC_DESC,
     type: "website",
     url: "/anecdotes",
-    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+    images: [
+      { url: "/logo-humanix-academie-512.png", width: 512, height: 512 },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -114,7 +116,6 @@ export default async function AnecdotesArchivePage() {
       </HexBackdrop>
 
       <div className="max-w-5xl mx-auto px-4 py-10">
-
         {/* Form principal */}
         <section
           className="rounded-3xl bg-gradient-to-br from-primary-500 to-accent-500 text-white p-6 sm:p-10 shadow-xl mb-12"
@@ -197,9 +198,9 @@ export default async function AnecdotesArchivePage() {
             ================================================================ */}
         <section className="text-center pt-10 pb-4">
           <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            « Une histoire vraie raconte plus qu'un manuel entier. Chaque
-            lundi, on partage celle qui a marque la semaine - pour qu'a la
-            tienne, l'histoire ne se repete pas. »
+            « Une histoire vraie raconte plus qu'un manuel entier. Chaque lundi,
+            on partage celle qui a marque la semaine - pour qu'a la tienne,
+            l'histoire ne se repete pas. »
           </blockquote>
           <p
             aria-hidden="true"

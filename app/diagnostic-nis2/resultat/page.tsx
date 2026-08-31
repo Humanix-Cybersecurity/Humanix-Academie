@@ -11,10 +11,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { decodeRecyf } from "@/lib/nis2/recyf-encoding";
-import {
-  buildRecyfPlan,
-  RECYF_VERDICT_LABEL,
-} from "@/lib/nis2/recyf-scoring";
+import { buildRecyfPlan, RECYF_VERDICT_LABEL } from "@/lib/nis2/recyf-scoring";
 import { RECYF_META } from "@/lib/nis2/recyf";
 import Nis2PlanView from "@/components/nis2/Nis2PlanView";
 
@@ -188,10 +185,10 @@ export default async function DiagnosticResultPage({
           Avancer concrètement, sans vous éparpiller
         </h2>
         <p className="text-gray-700 dark:text-gray-200 max-w-xl mx-auto mb-5 leading-relaxed">
-          La plupart de ces leviers passent par la formation des équipes. Humanix
-          Académie vous fournit les parcours, les campagnes de phishing et un
-          Pack NIS2 prêt à signer (politique, procédure d&apos;incident, registre
-          des actions) pour documenter votre démarche.
+          La plupart de ces leviers passent par la formation des équipes.
+          Humanix Académie vous fournit les parcours, les campagnes de phishing
+          et un Pack NIS2 prêt à signer (politique, procédure d&apos;incident,
+          registre des actions) pour documenter votre démarche.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
           <Link

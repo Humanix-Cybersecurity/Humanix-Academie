@@ -25,7 +25,10 @@ export async function POST(req: Request) {
 
   const body = await req.json().catch(() => ({}));
   const response = body?.response;
-  const deviceName = String(body?.deviceName ?? "Cle de sécurité").slice(0, 100);
+  const deviceName = String(body?.deviceName ?? "Cle de sécurité").slice(
+    0,
+    100,
+  );
   if (!response) {
     return NextResponse.json({ error: "Reponse manquante." }, { status: 400 });
   }
@@ -48,10 +51,7 @@ export async function POST(req: Request) {
   const h = await headers();
   const originCheck = buildRequestOrigin(h);
   if (!originCheck.ok) {
-    return NextResponse.json(
-      { error: "Origin invalide." },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "Origin invalide." }, { status: 400 });
   }
 
   const result = await verifyAndSaveRegistration({
@@ -71,7 +71,11 @@ export async function POST(req: Request) {
         role: session.user.role,
       },
       tenantId: (session.user.tenantId as string) ?? null,
-      target: { type: "webauthn_credential", id: result.credentialId, label: deviceName },
+      target: {
+        type: "webauthn_credential",
+        id: result.credentialId,
+        label: deviceName,
+      },
     });
   } else {
     await auditLog({

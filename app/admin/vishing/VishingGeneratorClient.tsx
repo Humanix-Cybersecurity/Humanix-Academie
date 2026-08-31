@@ -20,10 +20,22 @@ import { useState } from "react";
 // une seule voix `fr_FR-siwis-medium`). En mode Web Speech le browser choisit
 // sa propre voix FR.
 const VISHING_VOICES: Array<{ slug: string; label: string; tag: string }> = [
-  { slug: "fr_marie_angry", label: "Marie - Pressante", tag: "🔥 cred. attaque" },
+  {
+    slug: "fr_marie_angry",
+    label: "Marie - Pressante",
+    tag: "🔥 cred. attaque",
+  },
   { slug: "fr_marie_neutral", label: "Marie - Posee", tag: "🎯 baseline" },
-  { slug: "fr_marie_curious", label: "Marie - Insistante", tag: "🤔 manipulation" },
-  { slug: "fr_marie_sad", label: "Marie - Plaintive", tag: "💔 pretexte detresse" },
+  {
+    slug: "fr_marie_curious",
+    label: "Marie - Insistante",
+    tag: "🤔 manipulation",
+  },
+  {
+    slug: "fr_marie_sad",
+    label: "Marie - Plaintive",
+    tag: "💔 pretexte detresse",
+  },
 ];
 
 type VishingScript = {
@@ -261,7 +273,9 @@ export default function VishingGeneratorClient() {
           disabled={loading || !service.trim()}
           className="btn-primary"
         >
-          {loading ? "Generation en cours..." : "🎙️ Générer le script de vishing"}
+          {loading
+            ? "Generation en cours..."
+            : "🎙️ Générer le script de vishing"}
         </button>
 
         {error && (
@@ -316,9 +330,7 @@ export default function VishingGeneratorClient() {
                 disabled={ttsLoading}
                 className="btn-secondary text-sm whitespace-nowrap"
               >
-                {ttsLoading
-                  ? "Synthese..."
-                  : "🔊 Ecouter (TTS souverain FR)"}
+                {ttsLoading ? "Synthese..." : "🔊 Ecouter (TTS souverain FR)"}
               </button>
             </div>
           </header>
@@ -326,7 +338,10 @@ export default function VishingGeneratorClient() {
           <div className="space-y-3">
             <Block label="🎙 Phrase d'ouverture" text={script.openingLine} />
             <Block label="💬 Corps de la conversation" text={script.body} />
-            <Block label="⚡ Pression / Call-to-action" text={script.callToAction} />
+            <Block
+              label="⚡ Pression / Call-to-action"
+              text={script.callToAction}
+            />
           </div>
 
           {script.redFlags.length > 0 && (

@@ -199,10 +199,7 @@ export async function recordExportAccess(params: {
         },
       });
     } catch (err) {
-      console.error(
-        "[exfiltration-detection] audit log failed",
-        err,
-      );
+      console.error("[exfiltration-detection] audit log failed", err);
     }
   }
 

@@ -17,6 +17,7 @@ SaaS B2B et il s'introduit en quelques caractères.
 > garantissant cette isolation.**
 
 Modèles tenant-scoped (cf. `prisma/schema.prisma`) :
+
 - `User`, `Group`, `UserGroup`
 - `Progress`, `Event`, `TeamChallenge`
 - `TenantSaisonConfig`, `Saison` (si `tenantId != null`)
@@ -31,6 +32,7 @@ Modèles tenant-scoped (cf. `prisma/schema.prisma`) :
 - `WebAuthnCredential` (via `userId` qui implique `tenantId`)
 
 Modèles **NON** tenant-scoped (catalogue global) :
+
 - `Tenant` (lui-même)
 - `Saison` (si `tenantId == null` → catalogue commun)
 - `Episode`, `ShopItem`, `LibraryArticle`
@@ -128,20 +130,20 @@ await db.progress.deleteMany({ where: { score: 0 } });
 
 ## État de l'audit (à date de PR #92)
 
-| Surface | Verdict |
-|---|---|
-| Server actions `app/admin/actions.ts` | ✅ filtre `tenantId !== ctx.tenantId` partout |
-| Server actions sécurité `app/profil/securite/*` | ✅ scope par `userId` issu de la session |
-| Routes `/api/v1/*` | ✅ `authenticateApiKey` pose tenantId |
-| Routes `/api/admin/*` | ✅ vérifient role + tenantId session |
-| Routes `/api/me/*` | ✅ filtre par `session.user.id` |
-| Pages `/admin/[id]` (incidents) | ✅ `findFirst({ id, tenantId })` |
-| Pages `/admin/[id]` (contributions) | ✅ filtre par `authorId === userId` |
-| Pages `/admin/[id]` (moderation, anecdotes) | ✅ gating SUPERADMIN explicite (catalogue global) |
-| Pages `/superadmin/*` | ✅ gating role + step-up WebAuthn |
-| Routes `/api/webauthn/*` | ✅ scope par `userId` session ou email login |
-| Routes `/api/stripe/webhook` | ✅ tenantId résolu depuis `metadata.tenantId` ou `stripeCustomerId` |
-| Routes `/api/audit-flash/*` | N/A (table sans tenantId, leads pré-clients) |
+| Surface                                         | Verdict                                                             |
+| ----------------------------------------------- | ------------------------------------------------------------------- |
+| Server actions `app/admin/actions.ts`           | ✅ filtre `tenantId !== ctx.tenantId` partout                       |
+| Server actions sécurité `app/profil/securite/*` | ✅ scope par `userId` issu de la session                            |
+| Routes `/api/v1/*`                              | ✅ `authenticateApiKey` pose tenantId                               |
+| Routes `/api/admin/*`                           | ✅ vérifient role + tenantId session                                |
+| Routes `/api/me/*`                              | ✅ filtre par `session.user.id`                                     |
+| Pages `/admin/[id]` (incidents)                 | ✅ `findFirst({ id, tenantId })`                                    |
+| Pages `/admin/[id]` (contributions)             | ✅ filtre par `authorId === userId`                                 |
+| Pages `/admin/[id]` (moderation, anecdotes)     | ✅ gating SUPERADMIN explicite (catalogue global)                   |
+| Pages `/superadmin/*`                           | ✅ gating role + step-up WebAuthn                                   |
+| Routes `/api/webauthn/*`                        | ✅ scope par `userId` session ou email login                        |
+| Routes `/api/stripe/webhook`                    | ✅ tenantId résolu depuis `metadata.tenantId` ou `stripeCustomerId` |
+| Routes `/api/audit-flash/*`                     | N/A (table sans tenantId, leads pré-clients)                        |
 
 **Pas de fuite cross-tenant identifiée à date.**
 

@@ -49,8 +49,8 @@ export default function HeroSection({ meteo }: { meteo: CyberMeteo }) {
             className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto mb-10 leading-relaxed animate-slide-up"
             style={{ animationDelay: "300ms" }}
           >
-            Reconnaître les arnaques numériques avant de cliquer :
-            phishing, faux SMS, QR codes piégés, faux profils.{" "}
+            Reconnaître les arnaques numériques avant de cliquer : phishing,
+            faux SMS, QR codes piégés, faux profils.{" "}
             <strong className="text-gray-900 dark:text-white font-semibold">
               Un mini-épisode par semaine, en français, pour ton équipe{" "}
               <em>et</em> ta famille.
@@ -86,8 +86,8 @@ export default function HeroSection({ meteo }: { meteo: CyberMeteo }) {
             className="text-sm text-gray-500 dark:text-gray-400 mt-4 italic animate-fadeIn"
             style={{ animationDelay: "540ms" }}
           >
-            Sans carte bancaire · Déploiement en moins de 30 minutes ·
-            Hébergé en France
+            Sans carte bancaire · Déploiement en moins de 30 minutes · Hébergé
+            en France
           </p>
 
           <div

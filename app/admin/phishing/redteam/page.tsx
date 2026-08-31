@@ -69,25 +69,22 @@ export default async function RedTeamPage() {
         <RedTeamForm />
       </AdminSection>
 
-      <AdminSection
-        title="Bonnes pratiques"
-        variant="muted"
-      >
+      <AdminSection title="Bonnes pratiques" variant="muted">
         <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-2 list-disc pl-5">
           <li>
             <strong>Difficulte progressive :</strong> commence par "brutal"
-            (signaux evidents) pour acclimater l'equipe, puis monte en
-            "subtle" pour vraiment tester la vigilance.
+            (signaux evidents) pour acclimater l'equipe, puis monte en "subtle"
+            pour vraiment tester la vigilance.
           </li>
           <li>
             <strong>Contexte specifique :</strong> mentionne une vraie attaque
-            que tu as vu passer dans ton secteur (CNIL, ANSSI, RSSI peer
-            group) -- les scenarios "vecu" sont plus pedagogiques.
+            que tu as vu passer dans ton secteur (CNIL, ANSSI, RSSI peer group)
+            -- les scenarios "vecu" sont plus pedagogiques.
           </li>
           <li>
             <strong>Cibles ciblees :</strong> teste les services les plus
-            exposes (compta = fraude president, RH = faux CV avec malware,
-            IT = faux ticket support).
+            exposes (compta = fraude president, RH = faux CV avec malware, IT =
+            faux ticket support).
           </li>
           <li>
             <strong>Revue humaine :</strong> Mistral propose, tu disposes.

@@ -4,7 +4,11 @@
 
 import { describeLicenseError, type LicenseError } from "@/lib/license";
 
-export default function InactiveLicensePanel({ error }: { error: LicenseError }) {
+export default function InactiveLicensePanel({
+  error,
+}: {
+  error: LicenseError;
+}) {
   const message = describeLicenseError(error);
 
   // Si la licence n'est pas configuree, c'est un cas normal - pas une erreur.
@@ -84,9 +88,9 @@ export default function InactiveLicensePanel({ error }: { error: LicenseError })
           </p>
           <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
             Vérifiez que vous avez collé la string complète (commençant par{" "}
-            <code className="font-mono text-xs">HUMANIX-LICENSE-v1.</code>),
-            que l'horloge serveur est à jour, et que le domaine de l'app
-            correspond à celui de la licence si elle est cluster-lockée.
+            <code className="font-mono text-xs">HUMANIX-LICENSE-v1.</code>), que
+            l'horloge serveur est à jour, et que le domaine de l'app correspond
+            à celui de la licence si elle est cluster-lockée.
           </p>
           <div className="mt-6">
             <a

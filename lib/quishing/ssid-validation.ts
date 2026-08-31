@@ -63,11 +63,7 @@ export type SsidValidationResult =
   | { ok: true; value: string }
   | {
       ok: false;
-      reason:
-        | "empty"
-        | "too_long"
-        | "invalid_chars"
-        | "wrong_type";
+      reason: "empty" | "too_long" | "invalid_chars" | "wrong_type";
     };
 
 /**

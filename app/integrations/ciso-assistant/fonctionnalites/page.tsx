@@ -49,13 +49,7 @@ type Feature = {
   /** Cas d'usage type - pour qui c'est utile. */
   useCase: string;
   /** Catégorie pour grouper. */
-  category:
-    | "core"
-    | "grc"
-    | "metrology"
-    | "people"
-    | "automation"
-    | "audit";
+  category: "core" | "grc" | "metrology" | "people" | "automation" | "audit";
 };
 
 const CATEGORIES: Record<
@@ -125,8 +119,8 @@ const FEATURES: Feature[] = [
           <li>
             <strong>Statut</strong> mappé sur l'enum CISO Assistant :{" "}
             <code>compliant→approved</code>, <code>partial→in_review</code>,{" "}
-            <code>non_compliant→rejected</code>,{" "}
-            <code>not_assessed→draft</code>.
+            <code>non_compliant→rejected</code>, <code>not_assessed→draft</code>
+            .
           </li>
           <li>
             <strong>Lien direct</strong> vers la page Humanix qui prouve la
@@ -204,8 +198,11 @@ const FEATURES: Feature[] = [
       <>
         <p>
           Crée un AppliedControl{" "}
-          <em>« Programme de sensibilisation Humanix Académie · &lt;framework&gt; »</em>
-          {" "}avec sémantique NIST CSF 2.0 :
+          <em>
+            « Programme de sensibilisation Humanix Académie · &lt;framework&gt;
+            »
+          </em>{" "}
+          avec sémantique NIST CSF 2.0 :
         </p>
         <ul>
           <li>
@@ -216,8 +213,7 @@ const FEATURES: Feature[] = [
             comportementale)
           </li>
           <li>
-            <code>priority: 3</code>, <code>effort: L</code> (programme
-            continu)
+            <code>priority: 3</code>, <code>effort: L</code> (programme continu)
           </li>
           <li>
             <code>eta: +12 mois</code> - date du prochain audit
@@ -236,7 +232,7 @@ const FEATURES: Feature[] = [
       "PATCH /api/applied-controls/{id}/ (link M2M)",
     ],
     useCase:
-      "Le RSSI veut une vue \"un contrôle ↔ N evidences\" propre dans la matrice de conformité, pas 7 evidences orphelines.",
+      'Le RSSI veut une vue "un contrôle ↔ N evidences" propre dans la matrice de conformité, pas 7 evidences orphelines.',
     category: "grc",
   },
   {
@@ -253,7 +249,9 @@ const FEATURES: Feature[] = [
           Pour chaque contrôle en <code>partial</code> ou{" "}
           <code>non_compliant</code>, on crée un Finding sous un
           FindingsAssessment dédié{" "}
-          <em>« Audit sensibilisation Humanix Académie · &lt;framework&gt; »</em>{" "}
+          <em>
+            « Audit sensibilisation Humanix Académie · &lt;framework&gt; »
+          </em>{" "}
           (catégorie <code>self_identified</code>) :
         </p>
         <ul>
@@ -262,8 +260,8 @@ const FEATURES: Feature[] = [
             <code>P2</code> si partial
           </li>
           <li>
-            <strong>Statut</strong> : <code>confirmed</code> (non_compliant)
-            ou <code>identified</code> (partial)
+            <strong>Statut</strong> : <code>confirmed</code> (non_compliant) ou{" "}
+            <code>identified</code> (partial)
           </li>
           <li>
             <strong>ETA & due_date</strong> : +12 mois
@@ -272,8 +270,8 @@ const FEATURES: Feature[] = [
             <strong>Lien</strong> vers l'AppliedControl agrégateur (M2M)
           </li>
           <li>
-            <strong>Owner</strong> : User CISO Assistant correspondant à
-            l'<code>ownerEmail</code> du tenant (si toggle owner actif)
+            <strong>Owner</strong> : User CISO Assistant correspondant à l'
+            <code>ownerEmail</code> du tenant (si toggle owner actif)
           </li>
         </ul>
       </>
@@ -297,9 +295,7 @@ const FEATURES: Feature[] = [
     toggleName: "createRiskScenarios",
     effect: (
       <>
-        <p>
-          Triggers déclenchés à l'analyse du bundle :
-        </p>
+        <p>Triggers déclenchés à l'analyse du bundle :</p>
         <ul>
           <li>
             <strong>{">"} 30%</strong> des contrôles non_compliant
@@ -342,8 +338,7 @@ const FEATURES: Feature[] = [
       <>
         <p>
           Pas une déclaration formelle d'incident - c'est un constat d'écart
-          automatique pour la traçabilité audit ISO 27001 §10.1 / NIS2 §21.2.g
-          :
+          automatique pour la traçabilité audit ISO 27001 §10.1 / NIS2 §21.2.g :
         </p>
         <ul>
           <li>
@@ -360,8 +355,7 @@ const FEATURES: Feature[] = [
             jour)
           </li>
           <li>
-            <code>owners</code> : User CISO Assistant si syncOwnerAsActor
-            actif
+            <code>owners</code> : User CISO Assistant si syncOwnerAsActor actif
           </li>
         </ul>
       </>
@@ -387,8 +381,8 @@ const FEATURES: Feature[] = [
     effect: (
       <>
         <p>
-          Pour chaque sync, on push 6 séries temporelles via le module
-          Metrology natif de CISO Assistant :
+          Pour chaque sync, on push 6 séries temporelles via le module Metrology
+          natif de CISO Assistant :
         </p>
         <ul>
           <li>
@@ -408,8 +402,8 @@ const FEATURES: Feature[] = [
             conformes (<em>Count</em>)
           </li>
           <li>
-            <code>humanix.evidences_non_compliant_count</code> - N non
-            conformes (<em>Count</em>)
+            <code>humanix.evidences_non_compliant_count</code> - N non conformes
+            (<em>Count</em>)
           </li>
           <li>
             <code>humanix.evidences_partial_count</code> - N partiels (
@@ -417,8 +411,8 @@ const FEATURES: Feature[] = [
           </li>
         </ul>
         <p>
-          Chaque MetricDefinition est créée avec son unité résolue
-          dynamiquement (lookup{" "}
+          Chaque MetricDefinition est créée avec son unité résolue dynamiquement
+          (lookup{" "}
           <code>/api/terminologies/?field_path=metric_definition.unit</code>),
           son <code>provider</code> Humanix Académie, et les 3{" "}
           <code>filtering_labels</code> standards (<code>humanix</code>,{" "}
@@ -447,9 +441,8 @@ const FEATURES: Feature[] = [
     effect: (
       <>
         <p>
-          Un Dashboard{" "}
-          <em>« Cockpit Humanix Académie · &lt;framework&gt; »</em> avec 6
-          widgets pointant sur les MetricInstances :
+          Un Dashboard <em>« Cockpit Humanix Académie · &lt;framework&gt; »</em>{" "}
+          avec 6 widgets pointant sur les MetricInstances :
         </p>
         <ul>
           <li>
@@ -472,9 +465,8 @@ const FEATURES: Feature[] = [
           </li>
         </ul>
         <p>
-          Layout 12-col propre. Nécessite{" "}
-          <code>pushMetrologySamples</code> actif (sinon les widgets n'ont
-          pas de cible).
+          Layout 12-col propre. Nécessite <code>pushMetrologySamples</code>{" "}
+          actif (sinon les widgets n'ont pas de cible).
         </p>
       </>
     ),
@@ -502,18 +494,19 @@ const FEATURES: Feature[] = [
           <code>resolveOwnerUser(email)</code> qui :
         </p>
         <ol>
-          <li>
-            Cherche l'utilisateur par email côté CISO Assistant
-          </li>
+          <li>Cherche l'utilisateur par email côté CISO Assistant</li>
           <li>
             Le crée s'il n'existe pas (
-            <code>POST /api/users/ {`{ email, is_active: true, is_third_party: false }`}</code>
+            <code>
+              POST /api/users/{" "}
+              {`{ email, is_active: true, is_third_party: false }`}
+            </code>
             )
           </li>
           <li>
-            Retourne le User UUID (<strong>pas</strong> Actor UUID - le
-            schéma OpenAPI confirme que les champs <code>owner</code>{" "}
-            attendent des User refs)
+            Retourne le User UUID (<strong>pas</strong> Actor UUID - le schéma
+            OpenAPI confirme que les champs <code>owner</code> attendent des
+            User refs)
           </li>
         </ol>
         <p>
@@ -540,8 +533,8 @@ const FEATURES: Feature[] = [
     effect: (
       <>
         <p>
-          Pour chaque Group Humanix actif (<code>isActive: true</code>), on
-          crée une Team CISO Assistant nommée{" "}
+          Pour chaque Group Humanix actif (<code>isActive: true</code>), on crée
+          une Team CISO Assistant nommée{" "}
           <code>Humanix · &lt;Group.name&gt;</code> dans le folder. Idempotent
           par nom.
         </p>
@@ -683,9 +676,7 @@ const FEATURES: Feature[] = [
     toggleName: "enableLiveMode",
     effect: (
       <>
-        <p>
-          Architecture event-driven fire-and-forget :
-        </p>
+        <p>Architecture event-driven fire-and-forget :</p>
         <ul>
           <li>
             Hook dans <code>/api/progress</code> →{" "}
@@ -707,14 +698,13 @@ const FEATURES: Feature[] = [
         </p>
         <p>
           Re-upsert des evidences uniquement (pas de PDF, pas d'extensions -
-          trop coûteux temps réel). Skip si une sync manuelle est déjà en
-          cours. No-op si aucun framework n'a jamais été syncé manuellement
-          (live mode rafraîchit, n'initialise pas).
+          trop coûteux temps réel). Skip si une sync manuelle est déjà en cours.
+          No-op si aucun framework n'a jamais été syncé manuellement (live mode
+          rafraîchit, n'initialise pas).
         </p>
         <p>
-          Télémétrie visible dans la console admin :{" "}
-          <code>lastLiveSyncAt</code>, <code>lastLiveSyncEvent</code>,{" "}
-          <code>liveSyncCount</code>.
+          Télémétrie visible dans la console admin : <code>lastLiveSyncAt</code>
+          , <code>lastLiveSyncEvent</code>, <code>liveSyncCount</code>.
         </p>
       </>
     ),
@@ -737,14 +727,17 @@ const FEATURES: Feature[] = [
       <>
         <p>
           Résolus une fois par sync via <code>ensureFilteringLabel</code>{" "}
-          (normalisation regex <code>^[\w-]{`{`}1,36{`}`}$</code>),
-          stockés sur <code>client.filteringLabelIds</code>, inclus
+          (normalisation regex{" "}
+          <code>
+            ^[\w-]{`{`}1,36{`}`}$
+          </code>
+          ), stockés sur <code>client.filteringLabelIds</code>, inclus
           automatiquement dans toutes les opérations d'écriture.
         </p>
         <p>
-          Le RSSI peut filtrer rapidement « toutes les entités venant
-          d'Humanix » dans la sidebar CISO Assistant, sans risque de
-          confusion avec d'autres connecteurs ou imports manuels.
+          Le RSSI peut filtrer rapidement « toutes les entités venant d'Humanix
+          » dans la sidebar CISO Assistant, sans risque de confusion avec
+          d'autres connecteurs ou imports manuels.
         </p>
       </>
     ),
@@ -767,9 +760,8 @@ const FEATURES: Feature[] = [
     effect: (
       <>
         <p>
-          Le RSSI suit toutes ses campagnes phishing simulé / smishing dans
-          son cockpit GRC habituel, sans replonger dans Humanix. Status mappé
-          :
+          Le RSSI suit toutes ses campagnes phishing simulé / smishing dans son
+          cockpit GRC habituel, sans replonger dans Humanix. Status mappé :
         </p>
         <ul>
           <li>
@@ -787,8 +779,8 @@ const FEATURES: Feature[] = [
           Comme <code>CampaignWrite.frameworks</code> et{" "}
           <code>CampaignWrite.perimeters</code> sont required côté Django, on
           crée automatiquement un Perimeter{" "}
-          <em>« Humanix Académie · scope par défaut »</em> dans le folder, et
-          on liste tous les Frameworks chargés. Idempotent par nom.
+          <em>« Humanix Académie · scope par défaut »</em> dans le folder, et on
+          liste tous les Frameworks chargés. Idempotent par nom.
         </p>
       </>
     ),
@@ -815,14 +807,15 @@ const FEATURES: Feature[] = [
     defaultOn: true,
     effect: (
       <>
-        <p>5 actions auditées (cf. enum Prisma <code>AuditAction</code>) :</p>
+        <p>
+          5 actions auditées (cf. enum Prisma <code>AuditAction</code>) :
+        </p>
         <ul>
           <li>
             <code>CISO_CONNECTION_CONFIGURED</code> - sauvegarde des creds
           </li>
           <li>
-            <code>CISO_CONNECTION_TESTED</code> - bouton « Tester la
-            connexion »
+            <code>CISO_CONNECTION_TESTED</code> - bouton « Tester la connexion »
           </li>
           <li>
             <code>CISO_CONNECTION_DELETED</code> - suppression des creds
@@ -836,11 +829,10 @@ const FEATURES: Feature[] = [
         </ul>
         <p>
           Chaque entrée capture : <code>actor</code> (userId, email, role),{" "}
-          <code>tenantId</code>, <code>target</code>{" "}
-          (type=ciso_connection, label=baseUrl), <code>outcome</code>{" "}
-          (SUCCESS/FAILURE), <code>severity</code> (INFO/WARNING),{" "}
-          <code>metadata</code> (folderId, framework, ok/fail counts, durée
-          ms).
+          <code>tenantId</code>, <code>target</code> (type=ciso_connection,
+          label=baseUrl), <code>outcome</code> (SUCCESS/FAILURE),{" "}
+          <code>severity</code> (INFO/WARNING), <code>metadata</code> (folderId,
+          framework, ok/fail counts, durée ms).
         </p>
       </>
     ),
@@ -860,25 +852,20 @@ const FEATURES: Feature[] = [
     effect: (
       <>
         <p>
-          Aucun secret en clair en base de données. La clé de chiffrement
-          est dérivée à la volée à partir de <code>AUTH_SECRET</code> via
-          HKDF SHA-256 (HMAC-Key-Derivation-Function, RFC 5869).
+          Aucun secret en clair en base de données. La clé de chiffrement est
+          dérivée à la volée à partir de <code>AUTH_SECRET</code> via HKDF
+          SHA-256 (HMAC-Key-Derivation-Function, RFC 5869).
         </p>
-        <p>
-          Avantages :
-        </p>
+        <p>Avantages :</p>
         <ul>
           <li>
-            Si la DB est dumpée, le password reste illisible (clé jamais en
-            DB)
+            Si la DB est dumpée, le password reste illisible (clé jamais en DB)
           </li>
           <li>
-            Rotation simple : changer <code>AUTH_SECRET</code> = invalider
-            tous les passwords stockés (à reconfigurer)
+            Rotation simple : changer <code>AUTH_SECRET</code> = invalider tous
+            les passwords stockés (à reconfigurer)
           </li>
-          <li>
-            Pas de dépendance KMS externe - on reste hébergeable on-prem
-          </li>
+          <li>Pas de dépendance KMS externe - on reste hébergeable on-prem</li>
         </ul>
       </>
     ),
@@ -1013,12 +1000,11 @@ export default function CisoAssistantFeaturesPage() {
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl">
           Cette page documente exhaustivement chaque fonctionnalité du
-          connecteur Humanix Académie × CISO Assistant : effet côté
-          gouvernance, risque et conformité, services OpenAPI consommés,
-          interrupteur d'activation, cas d'usage type. Chaque
-          fonctionnalité est alignée contre le contrat OpenAPI réel de
-          CISO Assistant community - pas d'analyse à l'envers, pas de
-          devinette.
+          connecteur Humanix Académie × CISO Assistant : effet côté gouvernance,
+          risque et conformité, services OpenAPI consommés, interrupteur
+          d'activation, cas d'usage type. Chaque fonctionnalité est alignée
+          contre le contrat OpenAPI réel de CISO Assistant community - pas
+          d'analyse à l'envers, pas de devinette.
         </p>
       </header>
 
@@ -1052,9 +1038,7 @@ export default function CisoAssistantFeaturesPage() {
           </div>
         </div>
         <div className="rounded-xl bg-amber-500/5 dark:bg-amber-500/10 border border-amber-500/20 p-5 text-center">
-          <div className="text-3xl font-extrabold text-amber-600 mb-1">
-            0
-          </div>
+          <div className="text-3xl font-extrabold text-amber-600 mb-1">0</div>
           <div className="text-xs uppercase tracking-wider text-gray-600 dark:text-gray-400">
             Modification côté intuitem
           </div>
@@ -1134,13 +1118,12 @@ export default function CisoAssistantFeaturesPage() {
         <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-2 list-disc pl-5">
           <li>
             <strong>Vulnérabilités techniques</strong> (
-            <code>/api/vulnerabilities/</code>, CVE) - du ressort d'un
-            scanneur de vulnérabilités du type Tenable ou Wiz.
+            <code>/api/vulnerabilities/</code>, CVE) - du ressort d'un scanneur
+            de vulnérabilités du type Tenable ou Wiz.
           </li>
           <li>
-            <strong>Contrats fournisseurs</strong> (
-            <code>/api/contracts/</code>) - du ressort de l'achat ou du
-            juridique.
+            <strong>Contrats fournisseurs</strong> (<code>/api/contracts/</code>
+            ) - du ressort de l'achat ou du juridique.
           </li>
           <li>
             <strong>Questionnaires d'audit</strong> (
@@ -1153,16 +1136,15 @@ export default function CisoAssistantFeaturesPage() {
             rester manuelle.
           </li>
           <li>
-            <strong>Membres d'équipes</strong> - nous transmettons les
-            groupes Humanix comme équipes (interrupteur{" "}
-            <code>syncGroupsAsTeams</code>), mais <em>pas</em> les membres
-            individuels. Nécessite un utilisateur CISO Assistant pour chaque
-            membre - hors périmètre.
+            <strong>Membres d'équipes</strong> - nous transmettons les groupes
+            Humanix comme équipes (interrupteur <code>syncGroupsAsTeams</code>),
+            mais <em>pas</em> les membres individuels. Nécessite un utilisateur
+            CISO Assistant pour chaque membre - hors périmètre.
           </li>
           <li>
-            <strong>Évaluations de conformité complètes</strong> - coquille
-            trop lourde à entretenir automatiquement. Le RSSI les crée à la
-            main et y rattache nos preuves.
+            <strong>Évaluations de conformité complètes</strong> - coquille trop
+            lourde à entretenir automatiquement. Le RSSI les crée à la main et y
+            rattache nos preuves.
           </li>
         </ul>
       </section>
@@ -1174,8 +1156,8 @@ export default function CisoAssistantFeaturesPage() {
         </h2>
         <p className="text-white/90 mb-5 max-w-2xl mx-auto">
           Si vous êtes administrateur, RSSI ou super-administrateur du compte
-          client, vous pouvez configurer la connexion à CISO Assistant en
-          deux minutes dans la console d'administration.
+          client, vous pouvez configurer la connexion à CISO Assistant en deux
+          minutes dans la console d'administration.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
           <Link

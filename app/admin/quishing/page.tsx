@@ -13,11 +13,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import {
-  FEATURE_MIN_PLAN,
-  getTenantPlan,
-  planHasFeature,
-} from "@/lib/plans";
+import { FEATURE_MIN_PLAN, getTenantPlan, planHasFeature } from "@/lib/plans";
 import PlanGate from "@/components/PlanGate";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import AdminSection from "@/components/admin/AdminSection";
@@ -61,8 +57,7 @@ export default async function AdminQuishingPage() {
     );
   }
 
-  const canAct =
-    role === "ADMIN" || role === "RSSI" || role === "SUPERADMIN";
+  const canAct = role === "ADMIN" || role === "RSSI" || role === "SUPERADMIN";
 
   const [groups, campaigns] = await Promise.all([
     db.group.findMany({
@@ -123,8 +118,8 @@ export default async function AdminQuishingPage() {
             <strong>annoncés au préalable</strong> aux collaborateurs (charte,
             CSE). Le quishing physique est particulièrement sensible : il
             implique de coller des affiches qui pourraient passer pour de la
-            communication officielle (RH, parking, cantine). Soyez vigilant
-            sur le retrait des posters après l&apos;exercice.
+            communication officielle (RH, parking, cantine). Soyez vigilant sur
+            le retrait des posters après l&apos;exercice.
           </p>
         </article>
 
@@ -136,8 +131,7 @@ export default async function AdminQuishingPage() {
           </h3>
           <ol className="text-xs text-cyan-900/85 dark:text-cyan-100/85 space-y-1 list-decimal pl-5 leading-relaxed">
             <li>
-              Choisis un template (faux WiFi, faux menu, faux affichage
-              RH...)
+              Choisis un template (faux WiFi, faux menu, faux affichage RH...)
             </li>
             <li>Sélectionne tes destinataires (par groupe métier ou tous)</li>
             <li>
@@ -145,16 +139,15 @@ export default async function AdminQuishingPage() {
               destinataire (chaque QR est unique et trackable)
             </li>
             <li>
-              Tu imprimes et tu colles physiquement (parking, cafétéria,
-              panneau RH... selon le template)
+              Tu imprimes et tu colles physiquement (parking, cafétéria, panneau
+              RH... selon le template)
             </li>
             <li>
-              Quand un employé scanne, il atterrit sur la landing
-              pédagogique avec le bandeau adapté au QR
+              Quand un employé scanne, il atterrit sur la landing pédagogique
+              avec le bandeau adapté au QR
             </li>
             <li>
-              Stats temps réel disponibles sur cette page (qui a scanné quel
-              QR)
+              Stats temps réel disponibles sur cette page (qui a scanné quel QR)
             </li>
           </ol>
         </article>
@@ -221,8 +214,7 @@ export default async function AdminQuishingPage() {
                             )}
                           </div>
                           <p className="text-xs text-gray-500 mt-0.5">
-                            Lancée le{" "}
-                            {c.sentAt?.toLocaleDateString("fr-FR")} ·{" "}
+                            Lancée le {c.sentAt?.toLocaleDateString("fr-FR")} ·{" "}
                             {sent} affiche{sent > 1 ? "s" : ""} · {clicked}{" "}
                             scannée{clicked > 1 ? "s" : ""}
                           </p>

@@ -52,8 +52,7 @@ function computeFingerprint(publicKey: KeyObject): string {
 
 function loadOrGenerate(): KeyState {
   const cached = (globalThis as Record<symbol, unknown>)[GLOBAL_KEY_SYMBOL] as
-    | KeyState
-    | undefined;
+    KeyState | undefined;
   if (cached) return cached;
 
   const envPem = process.env.HUMANIX_PDF_SIGNING_PRIVATE_KEY_PEM;

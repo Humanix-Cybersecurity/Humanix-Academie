@@ -16,10 +16,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import HexBackdrop from "@/components/HexBackdrop";
 import { TIERS } from "@/lib/pricing";
-import {
-  isMollieConfigured,
-  MOLLIE_BUYABLE_PLANS,
-} from "@/lib/mollie";
+import { isMollieConfigured, MOLLIE_BUYABLE_PLANS } from "@/lib/mollie";
 import { isPlanId } from "@/lib/plans";
 import { isDevMode } from "@/lib/dev-mode";
 import SouscrireForm from "./SouscrireForm";
@@ -89,9 +86,9 @@ export default async function SouscrirePage({
             On y est.
           </h1>
           <p className="text-base text-gray-700 dark:text-gray-200 leading-relaxed">
-            Plan choisi : <strong>{tier.name}</strong> · {tier.tagline}.
-            Après paiement, vous recevez un lien magique pour entrer dans
-            votre console admin.
+            Plan choisi : <strong>{tier.name}</strong> · {tier.tagline}. Après
+            paiement, vous recevez un lien magique pour entrer dans votre
+            console admin.
           </p>
         </section>
       </HexBackdrop>
@@ -174,7 +171,10 @@ export default async function SouscrirePage({
           {tier.seats?.max && (
             <p className="text-xs text-gray-500 mt-3">
               Inclus jusqu&apos;à {tier.seats.max} sièges. Au-delà,{" "}
-              <Link href="/demande-abonnement?type=enterprise" className="underline">
+              <Link
+                href="/demande-abonnement?type=enterprise"
+                className="underline"
+              >
                 contactez-nous
               </Link>
               .
@@ -189,8 +189,8 @@ export default async function SouscrirePage({
               instance.
             </p>
             <p className="text-sm leading-relaxed mb-4">
-              On bascule manuellement sur le flow accompagné. Remplis ce
-              court formulaire, on te configure tout sous 24h ouvrées.
+              On bascule manuellement sur le flow accompagné. Remplis ce court
+              formulaire, on te configure tout sous 24h ouvrées.
             </p>
             <Link
               href={`/demande-abonnement?plan=${tier.id}`}

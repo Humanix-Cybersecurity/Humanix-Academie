@@ -7,11 +7,7 @@
 // Une carte est "highlight" (maitrise) car c'est l'indicateur cyber le plus
 // significatif.
 
-import {
-  BarChart,
-  Bar,
-  ResponsiveContainer,
-} from "recharts";
+import { BarChart, Bar, ResponsiveContainer } from "recharts";
 import type { Stats, WeeklyPoint } from "./types";
 import { LEVEL_META, levelFromScore, type Level } from "./levels";
 

@@ -118,9 +118,9 @@ MIIDxxx...
           required
         />
         <p className="text-xs text-gray-500 mt-1">
-          Sert à valider la signature de la SAML Response. Téléchargez-le
-          depuis l&apos;IdP (souvent &quot;X.509 Certificate&quot; ou
-          &quot;Signing Certificate&quot;).
+          Sert à valider la signature de la SAML Response. Téléchargez-le depuis
+          l&apos;IdP (souvent &quot;X.509 Certificate&quot; ou &quot;Signing
+          Certificate&quot;).
         </p>
       </div>
 
@@ -147,7 +147,11 @@ MIIDxxx...
           disabled={pending}
           className="btn-primary text-sm px-5 disabled:opacity-50"
         >
-          {pending ? "Enregistrement…" : hasExisting ? "Mettre à jour" : "Enregistrer"}
+          {pending
+            ? "Enregistrement…"
+            : hasExisting
+              ? "Mettre à jour"
+              : "Enregistrer"}
         </button>
         {hasExisting && (
           <button

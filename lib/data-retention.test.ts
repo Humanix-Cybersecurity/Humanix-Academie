@@ -130,7 +130,9 @@ describe("isAnonymizedEmail", () => {
 
   it("false pour des emails qui contiennent 'anonymized.local' mais pas en suffixe", () => {
     expect(isAnonymizedEmail("anonymized.local@evil.example")).toBe(false);
-    expect(isAnonymizedEmail("anonymized.local.notreally@example.com")).toBe(false);
+    expect(isAnonymizedEmail("anonymized.local.notreally@example.com")).toBe(
+      false,
+    );
   });
 
   it("case-sensitive (le suffixe DOIT etre lowercase)", () => {

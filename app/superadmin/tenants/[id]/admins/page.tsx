@@ -156,8 +156,8 @@ export default async function TenantAdminsPage({
               Admins externes ({externals.length})
             </h2>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              Users d&apos;autres tenants qui ont un acces admin a celui-ci
-              via un TenantMembership.
+              Users d&apos;autres tenants qui ont un acces admin a celui-ci via
+              un TenantMembership.
             </p>
           </div>
         </div>

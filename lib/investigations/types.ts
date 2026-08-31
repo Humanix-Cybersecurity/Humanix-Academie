@@ -28,7 +28,9 @@ export type InvestigationType = (typeof INVESTIGATION_TYPES)[number];
 // Un signal (red flag) que l'apprenant doit reperer.
 // `points` est positif et reflete la subtilite du signal (5-25 typiquement).
 const RedFlagSchema = z.object({
-  id: z.string().regex(/^[a-z0-9_-]+$/, "id doit etre alpha-num-tirets-underscores"),
+  id: z
+    .string()
+    .regex(/^[a-z0-9_-]+$/, "id doit etre alpha-num-tirets-underscores"),
   label: z.string().min(5).max(200),
   points: z.number().int().min(1).max(50),
   // Phrase pedagogique affichee apres validation. Repond a "pourquoi

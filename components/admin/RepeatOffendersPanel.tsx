@@ -33,8 +33,8 @@ export default function RepeatOffendersPanel({
       </div>
       <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
         Collaborateurs qui ont cliqué (ou saisi leurs identifiants) sur
-        plusieurs simulations. Assignez-leur un module anti-phishing ciblé
-        — l&apos;assignation est une décision RSSI/admin, jamais automatique.
+        plusieurs simulations. Assignez-leur un module anti-phishing ciblé —
+        l&apos;assignation est une décision RSSI/admin, jamais automatique.
       </p>
 
       {offenders.length === 0 ? (

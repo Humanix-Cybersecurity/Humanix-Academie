@@ -87,10 +87,7 @@ export async function POST(req: Request) {
 
   const quiz = ep.meta.quiz ?? [];
   if (quiz.length === 0) {
-    return NextResponse.json(
-      { ok: false, error: "no_quiz" },
-      { status: 400 },
-    );
+    return NextResponse.json({ ok: false, error: "no_quiz" }, { status: 400 });
   }
 
   // Identification des questions ratees

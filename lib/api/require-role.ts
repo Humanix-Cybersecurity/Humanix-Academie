@@ -39,7 +39,8 @@ import { AuditAction, AuditOutcome } from "@prisma/client";
 import { auth } from "@/lib/auth";
 import { auditLog } from "@/lib/audit";
 
-export type HumanixRole = "LEARNER" | "MANAGER" | "RSSI" | "ADMIN" | "SUPERADMIN";
+export type HumanixRole =
+  "LEARNER" | "MANAGER" | "RSSI" | "ADMIN" | "SUPERADMIN";
 
 /**
  * Resultat d'un guard : soit la session (acces autorise), soit une

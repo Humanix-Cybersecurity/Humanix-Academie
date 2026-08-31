@@ -145,7 +145,8 @@ export default function GlobalError({
                 fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace",
               }}
             >
-              Code de référence : <span style={{ userSelect: "all" }}>{error.digest}</span>
+              Code de référence :{" "}
+              <span style={{ userSelect: "all" }}>{error.digest}</span>
             </p>
           )}
         </div>

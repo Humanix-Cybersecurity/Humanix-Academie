@@ -1,10 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // /superadmin - vue d'ensemble cross-tenant : KPIs globaux + alertes.
 import Link from "next/link";
-import {
-  listAllTenantsHealth,
-  computeGlobalKpis,
-} from "@/lib/tenant-health";
+import { listAllTenantsHealth, computeGlobalKpis } from "@/lib/tenant-health";
 
 export const dynamic = "force-dynamic";
 
@@ -25,9 +22,7 @@ export default async function SuperadminHomePage() {
   const now = Date.now();
   const newWithoutStart = healths.filter(
     (h) =>
-      now - h.createdAt.getTime() <= ms7 &&
-      h.totalUsers <= 1 &&
-      !h.hasProgress,
+      now - h.createdAt.getTime() <= ms7 && h.totalUsers <= 1 && !h.hasProgress,
   );
 
   return (
@@ -52,10 +47,7 @@ export default async function SuperadminHomePage() {
           value={kpis.newTenantsLast7d}
           accent={kpis.newTenantsLast7d > 0 ? "emerald" : undefined}
         />
-        <Kpi
-          label="Utilisateurs total"
-          value={kpis.totalUsers}
-        />
+        <Kpi label="Utilisateurs total" value={kpis.totalUsers} />
         <Kpi
           label="Utilisateurs actifs"
           value={kpis.totalActiveUsers}
@@ -89,11 +81,7 @@ export default async function SuperadminHomePage() {
           Santé globale
         </h2>
         <div className="grid grid-cols-3 gap-3 text-sm">
-          <SignalCard
-            label="OK"
-            value={kpis.bySignal.ok}
-            color="emerald"
-          />
+          <SignalCard label="OK" value={kpis.bySignal.ok} color="emerald" />
           <SignalCard
             label="À surveiller"
             value={kpis.bySignal.warn}
@@ -141,8 +129,8 @@ export default async function SuperadminHomePage() {
                   </div>
                 </div>
                 <p className="text-xs text-amber-900 dark:text-amber-200 mt-2">
-                  💡 Bon moment pour un appel de bienvenue / aide à la
-                  prise en main.
+                  💡 Bon moment pour un appel de bienvenue / aide à la prise en
+                  main.
                 </p>
               </li>
             ))}

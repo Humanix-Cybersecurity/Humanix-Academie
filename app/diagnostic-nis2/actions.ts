@@ -28,8 +28,7 @@ function asAnswer(v: string | undefined): RecyfAnswer | null {
 export async function submitDiagnosticRecyf(formData: FormData) {
   const profil: RecyfProfil =
     formData.get("profil")?.toString() === "EE" ? "EE" : "EI";
-  const companyName =
-    formData.get("companyName")?.toString().trim() || null;
+  const companyName = formData.get("companyName")?.toString().trim() || null;
 
   // On ne lit que les objectifs applicables au profil declare.
   const answers: RecyfAnswers = {};

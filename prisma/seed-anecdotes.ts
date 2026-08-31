@@ -121,8 +121,7 @@ const ANECDOTES: AnecdoteSeed[] = [
       "Un IBAN volé n'est pas un mot de passe : il ne permet pas de retirer d'argent directement, mais il est la matière première du phishing ciblé (« nous avons constaté une opération suspecte sur votre compte CC FR76… »). Plus l'attaquant a de données vraies, plus son piège est crédible.",
     miniAction:
       "Si tu es client Free, vérifie que tu n'as pas de prélèvement inconnu sur ton compte courant. Surveille tes mails : tout message qui te demande de « confirmer ton IBAN » ou de cliquer sur un lien pour « sécuriser ton compte » est un piège. En cas de doute, appelle ta banque depuis le numéro au dos de ta carte.",
-    sourceUrl:
-      "https://www.iliad.fr/finance/2024/CP_GroupeIliad_271024.pdf",
+    sourceUrl: "https://www.iliad.fr/finance/2024/CP_GroupeIliad_271024.pdf",
     sourceLabel: "Groupe Iliad / Free · 27 octobre 2024",
     category: "DATA_LEAK",
     incidentDate: new Date("2024-10-26"),
@@ -139,8 +138,7 @@ const ANECDOTES: AnecdoteSeed[] = [
       "Le credential stuffing exploite le fait qu'un humain réutilise le même mot de passe sur 5 à 10 sites. Quand un site faiblement protégé fuit, les attaquants testent ses identifiants sur tous les autres. La parade : un mot de passe unique par site (gestionnaire de mots de passe) et la 2FA partout où c'est possible.",
     miniAction:
       "Liste mentalement tes 5 sites les plus utilisés (banque, mail principal, employeur, Amazon, sécu). Pour chacun : as-tu un mot de passe différent ET la 2FA activée ? Si la réponse est « oui partout », tu es en avance. Sinon, commence par le mail principal - c'est le plus critique.",
-    sourceUrl:
-      "https://www.cnil.fr/fr/violation-donnees-personnelles-auchan",
+    sourceUrl: "https://www.cnil.fr/fr/violation-donnees-personnelles-auchan",
     sourceLabel: "CNIL · 22 novembre 2024",
     category: "DATA_LEAK",
     incidentDate: new Date("2024-11-22"),
@@ -150,15 +148,15 @@ const ANECDOTES: AnecdoteSeed[] = [
 
   {
     slug: "chu-cannes-rancongiciel-avril-2024",
-    title: "CHU de Cannes : trois mois de retour au papier après un rançongiciel",
+    title:
+      "CHU de Cannes : trois mois de retour au papier après un rançongiciel",
     summary:
       "16 avril 2024, le centre hospitalier Simone Veil de Cannes est paralysé par un rançongiciel attribué au groupe LockBit. L'établissement bascule en mode dégradé : prescriptions papier, déprogrammation des opérations non urgentes, transferts de patients vers les hôpitaux voisins. Le retour à la normale prendra plusieurs mois. Aucune rançon n'est versée, conformément à la doctrine française.",
     lesson:
       "Les hôpitaux sont une cible privilégiée des ransomware parce qu'ils combinent données sensibles, dépendance critique au SI, et obligation morale de fonctionner. La meilleure défense reste la sauvegarde froide (déconnectée du réseau) et un plan de continuité testé en mode papier - pas juste sur PowerPoint.",
     miniAction:
       "Ton organisation a-t-elle un PCA (Plan de Continuité d'Activité) testé en condition réelle dans les 12 derniers mois ? Si oui, demande la dernière fiche de test. Si non, c'est le sujet à mettre à l'ordre du jour du prochain comité de direction.",
-    sourceUrl:
-      "https://www.ch-cannes.fr/cyberattaque-avril-2024",
+    sourceUrl: "https://www.ch-cannes.fr/cyberattaque-avril-2024",
     sourceLabel: "CH Simone Veil de Cannes · communiqué 18 avril 2024",
     category: "RANSOMWARE",
     incidentDate: new Date("2024-04-16"),
@@ -258,7 +256,8 @@ const ANECDOTES: AnecdoteSeed[] = [
 
   {
     slug: "mairie-bordereaux-rancongiciel-juillet-2025",
-    title: "Une mairie de 8 000 habitants paralysée 18 jours par un rançongiciel",
+    title:
+      "Une mairie de 8 000 habitants paralysée 18 jours par un rançongiciel",
     summary:
       "Juillet 2025, la mairie de Bordereaux (Nouvelle-Aquitaine, 8 000 habitants) est victime d'un rançongiciel introduit par un email piégé ouvert par un agent de l'état civil. Tous les services en ligne sont coupés : actes d'état civil, urbanisme, cantine, crèche, police municipale. Pendant 18 jours, les habitants doivent revenir aux démarches papier et aux files d'attente. Aucune rançon n'est payée. La sauvegarde froide hebdomadaire permet la restauration.",
     lesson:
@@ -276,7 +275,8 @@ const ANECDOTES: AnecdoteSeed[] = [
 
   {
     slug: "credentials-stuffing-loyalty-aout-2025",
-    title: "Cdiscount, Sephora, Decathlon : 600 000 comptes pris en deux semaines",
+    title:
+      "Cdiscount, Sephora, Decathlon : 600 000 comptes pris en deux semaines",
     summary:
       "Août 2025, plusieurs enseignes de e-commerce françaises signalent une vague coordonnée de prises de comptes (account takeover). Les attaquants utilisent les bases de mots de passe issues des fuites Free et Auchan de 2024, et les testent en masse sur Cdiscount, Sephora, Decathlon, Fnac. Quand un mot de passe fonctionne, ils utilisent les points de fidélité, déclenchent des commandes vers des « mules » (intermédiaires payés), ou revendent l'accès. 600 000 comptes compromis en 2 semaines.",
     lesson:

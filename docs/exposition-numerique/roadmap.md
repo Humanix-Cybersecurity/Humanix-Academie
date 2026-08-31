@@ -15,14 +15,14 @@ Source de vérité versionnée de la roadmap décidée en juin 2026.
 
 ## Phasage
 
-| Phase | Contenu | Effort | Statut légal |
-|---|---|---|---|
-| 0 | Socle commun (B2B-ready) | M | 🟢 RAS |
-| 1 | Tier gratuit individuel (MVP public) | M-L | 🟢 RAS |
-| 2 | **Feature cœur** : boucle exposition → formation auto-assignée → suivi RSSI | L | 🟡 code **livré (inerte)** ; activation conditionnée (cf. Go/No-Go + `runbook-activation-b2b.md`) |
-| 3 | Reporting & conformité B2B (NIS2/SIEM, posture agrégée) | M-L | 🟡 code **livré (inerte)** ; **pas** de notification CNIL art.33 (exposition tiers ≠ violation du tenant) ; activation = celle de la Phase 2 |
-| 4 | Veille avancée (e-réputation, VIP, stealer logs) | L+ | 🔴 NO-GO sans contrat+AIPD |
-| 5 | Engagement communauté (badges, challenges) | S-M | 🟢 RAS |
+| Phase | Contenu                                                                     | Effort | Statut légal                                                                                                                                 |
+| ----- | --------------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0     | Socle commun (B2B-ready)                                                    | M      | 🟢 RAS                                                                                                                                       |
+| 1     | Tier gratuit individuel (MVP public)                                        | M-L    | 🟢 RAS                                                                                                                                       |
+| 2     | **Feature cœur** : boucle exposition → formation auto-assignée → suivi RSSI | L      | 🟡 code **livré (inerte)** ; activation conditionnée (cf. Go/No-Go + `runbook-activation-b2b.md`)                                            |
+| 3     | Reporting & conformité B2B (NIS2/SIEM, posture agrégée)                     | M-L    | 🟡 code **livré (inerte)** ; **pas** de notification CNIL art.33 (exposition tiers ≠ violation du tenant) ; activation = celle de la Phase 2 |
+| 4     | Veille avancée (e-réputation, VIP, stealer logs)                            | L+     | 🔴 NO-GO sans contrat+AIPD                                                                                                                   |
+| 5     | Engagement communauté (badges, challenges)                                  | S-M    | 🟢 RAS                                                                                                                                       |
 
 ## ADR (décisions d'architecture)
 
@@ -36,20 +36,21 @@ Source de vérité versionnée de la roadmap décidée en juin 2026.
 
 ## Briques existantes réutilisées
 
-| Besoin | Existant |
-|---|---|
-| Auto-assignation formation ⭐ | `lib/onboarding/auto-assign.ts`, `app/phishing/[token]/page.tsx` |
-| Suivi complétion | `Progress`, dashboards `/admin`, `lib/risk-score.ts` |
-| Vérif email | `lib/inscription-intent.ts`, `lib/password-reset.ts` |
-| Base fuites + cron | `DataBreach`, `scripts/scrape-breaches.ts`, `app/api/cron/breaches-refresh/` |
-| Chiffrement | `lib/smtp/encryption.ts` (template) |
-| Plan-gating | `lib/plans.ts`, `lib/tenant-community.ts` |
-| Audit | `lib/audit.ts` |
-| Conformité DPO | `/admin/dpo/` (file effacement art.17) + `/admin/conformite-rgpd/` (parcours, AIPD) |
+| Besoin                        | Existant                                                                            |
+| ----------------------------- | ----------------------------------------------------------------------------------- |
+| Auto-assignation formation ⭐ | `lib/onboarding/auto-assign.ts`, `app/phishing/[token]/page.tsx`                    |
+| Suivi complétion              | `Progress`, dashboards `/admin`, `lib/risk-score.ts`                                |
+| Vérif email                   | `lib/inscription-intent.ts`, `lib/password-reset.ts`                                |
+| Base fuites + cron            | `DataBreach`, `scripts/scrape-breaches.ts`, `app/api/cron/breaches-refresh/`        |
+| Chiffrement                   | `lib/smtp/encryption.ts` (template)                                                 |
+| Plan-gating                   | `lib/plans.ts`, `lib/tenant-community.ts`                                           |
+| Audit                         | `lib/audit.ts`                                                                      |
+| Conformité DPO                | `/admin/dpo/` (file effacement art.17) + `/admin/conformite-rgpd/` (parcours, AIPD) |
 
 ## Go / No-Go Phase 2 (B2B)
 
 **🟢 GO** uniquement si les 4 conditions réunies :
+
 1. DPA art. 28 signé par le tenant
 2. AIPD instanciée (cf. `aipd-trame.md`)
 3. Notice transparence salariés diffusée (cf. `notice-transparence-salaries.md`) + écran d'info en prod

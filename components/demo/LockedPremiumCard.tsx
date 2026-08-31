@@ -118,11 +118,12 @@ export function PremiumPreviewIntro({
             +{totalCount} {label} dès la formule payante
           </h2>
           <p className="mt-1 text-sm text-amber-800 dark:text-amber-100/80 leading-relaxed">
-            Vous êtes sur une démo publique. Le contenu ci-dessous est verrouillé -
-            il s'active dès l'abonnement à partir de{" "}
-            <strong className="font-bold">3 €/utilisateur/mois</strong> (Pro), ou{" "}
-            <strong className="font-bold">19 €/mois forfait</strong> jusqu'à 15 sièges
-            (Starter). Pas de CB : le plan Starter est gratuit à vie jusqu'à 5 sièges.
+            Vous êtes sur une démo publique. Le contenu ci-dessous est
+            verrouillé - il s'active dès l'abonnement à partir de{" "}
+            <strong className="font-bold">3 €/utilisateur/mois</strong> (Pro),
+            ou <strong className="font-bold">19 €/mois forfait</strong> jusqu'à
+            15 sièges (Starter). Pas de CB : le plan Starter est gratuit à vie
+            jusqu'à 5 sièges.
           </p>
           <div className="mt-3 flex flex-wrap gap-2 text-xs">
             <Link

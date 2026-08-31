@@ -24,7 +24,9 @@ export const metadata = {
     description: CONTACT_DESC,
     type: "website",
     url: "/contact",
-    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+    images: [
+      { url: "/logo-humanix-academie-512.png", width: 512, height: 512 },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -155,8 +157,8 @@ export default async function ContactPage({
             style={{ animationDelay: "220ms" }}
           >
             Pas de formulaire labyrinthe. Une adresse email par sujet, un sujet
-            pré-rempli, et une vraie personne qui répond - sous 4 heures
-            ouvrées en moyenne. Florian ou son équipe (l'équipe = Florian).
+            pré-rempli, et une vraie personne qui répond - sous 4 heures ouvrées
+            en moyenne. Florian ou son équipe (l'équipe = Florian).
           </p>
         </section>
       </HexBackdrop>

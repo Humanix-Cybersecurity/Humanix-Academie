@@ -29,11 +29,7 @@ export const GRACE_PERIOD_DAYS = 7;
 export const READ_ONLY_PERIOD_DAYS = 30;
 
 export type SubscriptionStateName =
-  | "active"
-  | "grace_period"
-  | "read_only"
-  | "suspended"
-  | "none";
+  "active" | "grace_period" | "read_only" | "suspended" | "none";
 
 export type SubscriptionState = {
   /** Etat principal pour le routing/affichage. */
@@ -143,8 +139,7 @@ export async function getSubscriptionState(
         plan,
         rawStatus,
         restriction: "read_only",
-        daysLeft:
-          GRACE_PERIOD_DAYS + READ_ONLY_PERIOD_DAYS - daysSinceFailed,
+        daysLeft: GRACE_PERIOD_DAYS + READ_ONLY_PERIOD_DAYS - daysSinceFailed,
         cta: "renew",
         currentPeriodEnd: periodEnd,
       };

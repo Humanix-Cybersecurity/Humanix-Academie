@@ -478,8 +478,8 @@ export function SecurityAuditReport() {
           Zero-password par défaut : aucun mot de passe stocké côté HumaniX
         </Bullet>
         <Bullet>
-          3 modes : magic link Scaleway TEM, SSO Google OAuth 2.0, SSO Microsoft Entra
-          OIDC
+          3 modes : magic link Scaleway TEM, SSO Google OAuth 2.0, SSO Microsoft
+          Entra OIDC
         </Bullet>
         <Bullet>
           Auth.js v5 + Prisma Adapter, sessions JWT signées en mode database
@@ -503,8 +503,8 @@ export function SecurityAuditReport() {
           Rôles : LEARNER {"<"} MANAGER {"<"} ADMIN {"<"} SUPERADMIN
         </Bullet>
         <Bullet>
-          Plan-gating à 3 paliers cloud (starter / pro / enterprise) +
-          Community Edition self-host, sur les features payantes
+          Plan-gating à 3 paliers cloud (starter / pro / enterprise) + Community
+          Edition self-host, sur les features payantes
         </Bullet>
         <Bullet>
           Helper requireAdminTenant() réutilisé sur toutes les server actions
@@ -841,8 +841,8 @@ export function SecurityAuditReport() {
           et ses sous-domaines, ou la plateforme Humanix Académie, est éligible.
         </Text>
         <Text style={styles.paragraph}>
-          Hors périmètre : sites tiers (Scaleway TEM, Mollie, Mistral, etc.), social
-          engineering des employés, attaques DoS volumétriques.
+          Hors périmètre : sites tiers (Scaleway TEM, Mollie, Mistral, etc.),
+          social engineering des employés, attaques DoS volumétriques.
         </Text>
 
         <Text style={styles.h2}>Comment signaler</Text>

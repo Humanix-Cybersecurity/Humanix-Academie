@@ -127,8 +127,7 @@ export default async function ImpersonateAdminViewPage({ params }: Props) {
               : imp.status === "EXPIRED"
                 ? "expirée (lien de consentement non utilisé)"
                 : "terminée"}
-          . Pour consulter ce compte à nouveau, faites une nouvelle
-          demande.
+          . Pour consulter ce compte à nouveau, faites une nouvelle demande.
         </p>
         <Link href="/admin/utilisateurs" className="btn-primary">
           Retour aux utilisateurs
@@ -154,8 +153,8 @@ export default async function ImpersonateAdminViewPage({ params }: Props) {
           Session expirée
         </h1>
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          Cette session a atteint sa durée maximale et a été
-          automatiquement clôturée.
+          Cette session a atteint sa durée maximale et a été automatiquement
+          clôturée.
         </p>
         <Link href="/admin/utilisateurs" className="btn-primary">
           Retour aux utilisateurs
@@ -200,39 +199,39 @@ export default async function ImpersonateAdminViewPage({ params }: Props) {
           },
         },
       }),
-    db.userAchievement.findMany({
-      where: { userId: target.id },
-      orderBy: { unlockedAt: "desc" },
-      take: 8,
-      select: {
-        unlockedAt: true,
-        achievement: {
-          select: { title: true, emoji: true },
+      db.userAchievement.findMany({
+        where: { userId: target.id },
+        orderBy: { unlockedAt: "desc" },
+        take: 8,
+        select: {
+          unlockedAt: true,
+          achievement: {
+            select: { title: true, emoji: true },
+          },
         },
-      },
-    }),
-    db.event.findMany({
-      where: { userId: target.id },
-      orderBy: { createdAt: "desc" },
-      take: 15,
-      select: {
-        type: true,
-        createdAt: true,
-      },
-    }),
-    db.userGroup.findMany({
-      where: { userId: target.id },
-      select: {
-        group: {
-          select: { name: true, slug: true, emoji: true },
+      }),
+      db.event.findMany({
+        where: { userId: target.id },
+        orderBy: { createdAt: "desc" },
+        take: 15,
+        select: {
+          type: true,
+          createdAt: true,
         },
-      },
-    }),
-    db.progress.aggregate({
-      where: { userId: target.id },
-      _sum: { score: true },
-    }),
-  ]);
+      }),
+      db.userGroup.findMany({
+        where: { userId: target.id },
+        select: {
+          group: {
+            select: { name: true, slug: true, emoji: true },
+          },
+        },
+      }),
+      db.progress.aggregate({
+        where: { userId: target.id },
+        _sum: { score: true },
+      }),
+    ]);
   const totalXp = totalXpSum._sum.score ?? 0;
 
   return (
@@ -463,9 +462,9 @@ export default async function ImpersonateAdminViewPage({ params }: Props) {
       </section>
 
       <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-12">
-        Cette page est consultée en mode lecture seule, avec l'accord
-        explicite de l'utilisateur. Chaque chargement est tracé dans le
-        journal d'audit. La session se ferme automatiquement à{" "}
+        Cette page est consultée en mode lecture seule, avec l'accord explicite
+        de l'utilisateur. Chaque chargement est tracé dans le journal d'audit.
+        La session se ferme automatiquement à{" "}
         {imp.endsAt ? fmtDateTime(imp.endsAt) : "la fin"} ou sur action
         manuelle.
       </p>

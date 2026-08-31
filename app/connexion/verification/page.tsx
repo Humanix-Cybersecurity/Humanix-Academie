@@ -49,8 +49,8 @@ export default function VerificationPage() {
           </h1>
           <p className="text-base sm:text-lg text-gray-700 dark:text-gray-200 leading-relaxed mb-6">
             Un lien magique vient d&apos;être envoyé à l&apos;adresse que tu as
-            renseignée. Clique dessus depuis le même appareil pour finaliser
-            ta connexion.
+            renseignée. Clique dessus depuis le même appareil pour finaliser ta
+            connexion.
           </p>
 
           <div className="bg-white/70 dark:bg-slate-900/60 border border-gray-200/80 dark:border-slate-700/80 rounded-2xl p-5 backdrop-blur-sm space-y-3 text-left">
@@ -66,9 +66,9 @@ export default function VerificationPage() {
               vient sous 5 minutes, retente l&apos;envoi.
             </p>
             <p className="text-sm text-gray-700 dark:text-gray-200">
-              <strong className="text-primary-500">🦊 Astuce :</strong> ouvre
-              le mail sur le même navigateur que celui où tu as demandé le
-              lien (côté sécurité).
+              <strong className="text-primary-500">🦊 Astuce :</strong> ouvre le
+              mail sur le même navigateur que celui où tu as demandé le lien
+              (côté sécurité).
             </p>
           </div>
 

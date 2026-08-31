@@ -23,7 +23,8 @@
 //     importantes (EI) ET essentielles (EE) ; objectifs 16 a 20 applicables
 //     aux entites ESSENTIELLES uniquement.
 
-export type RecyfGroupe = "gouvernance" | "protection" | "defense" | "resilience";
+export type RecyfGroupe =
+  "gouvernance" | "protection" | "defense" | "resilience";
 
 /** EI_EE = importantes ET essentielles ; EE = essentielles uniquement */
 export type RecyfScope = "EI_EE" | "EE";
@@ -154,7 +155,8 @@ export const RECYF_OBJECTIFS: RecyfObjectif[] = [
   {
     num: 4,
     id: "obj-4",
-    titre: "Intégration de la sécurité numérique dans la gestion des ressources humaines",
+    titre:
+      "Intégration de la sécurité numérique dans la gestion des ressources humaines",
     groupe: "gouvernance",
     scope: "EI_EE",
     rappel:
@@ -287,7 +289,8 @@ export const RECYF_OBJECTIFS: RecyfObjectif[] = [
   {
     num: 9,
     id: "obj-9",
-    titre: "Protection des systèmes d'information contre les codes malveillants",
+    titre:
+      "Protection des systèmes d'information contre les codes malveillants",
     groupe: "protection",
     scope: "EI_EE",
     rappel:
@@ -312,7 +315,8 @@ export const RECYF_OBJECTIFS: RecyfObjectif[] = [
   {
     num: 10,
     id: "obj-10",
-    titre: "Gestion des identités et des accès des utilisateurs aux systèmes d'information",
+    titre:
+      "Gestion des identités et des accès des utilisateurs aux systèmes d'information",
     groupe: "protection",
     scope: "EI_EE",
     rappel:
@@ -510,7 +514,8 @@ export const RECYF_OBJECTIFS: RecyfObjectif[] = [
   {
     num: 18,
     id: "obj-18",
-    titre: "Sécurisation de la configuration des ressources des systèmes d'information",
+    titre:
+      "Sécurisation de la configuration des ressources des systèmes d'information",
     groupe: "protection",
     scope: "EE",
     rappel:
@@ -534,7 +539,8 @@ export const RECYF_OBJECTIFS: RecyfObjectif[] = [
   {
     num: 19,
     id: "obj-19",
-    titre: "Administration des systèmes d'information depuis des ressources dédiées",
+    titre:
+      "Administration des systèmes d'information depuis des ressources dédiées",
     groupe: "protection",
     scope: "EE",
     rappel:

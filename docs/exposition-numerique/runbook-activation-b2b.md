@@ -9,12 +9,12 @@
 
 ## 0. Pré-requis (les 4 conditions Go/No-Go)
 
-| # | Condition | Preuve | Matérialisé dans le code par |
-|---|-----------|--------|------------------------------|
-| 1 | DPA art. 28 signé par le tenant | Contrat signé archivé | `Tenant.exposureMonitoringDpaSignedAt` (horodatage, posé via l'UI) |
-| 2 | AIPD instanciée | `aipd-trame.md` complétée + validée DPO | Hors-code (dossier conformité) |
-| 3 | Notice transparence salariés diffusée | `notice-transparence-salaries.md` diffusée + écran d'info | Hors-code (RH/DPO) |
-| 4 | Validation RSSI avant toute notif/assignation | - | `validateAndAssignTraining()` : aucune assignation automatique |
+| #   | Condition                                     | Preuve                                                    | Matérialisé dans le code par                                       |
+| --- | --------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------ |
+| 1   | DPA art. 28 signé par le tenant               | Contrat signé archivé                                     | `Tenant.exposureMonitoringDpaSignedAt` (horodatage, posé via l'UI) |
+| 2   | AIPD instanciée                               | `aipd-trame.md` complétée + validée DPO                   | Hors-code (dossier conformité)                                     |
+| 3   | Notice transparence salariés diffusée         | `notice-transparence-salaries.md` diffusée + écran d'info | Hors-code (RH/DPO)                                                 |
+| 4   | Validation RSSI avant toute notif/assignation | -                                                         | `validateAndAssignTraining()` : aucune assignation automatique     |
 
 **Si l'une manque → STOP.** Le code reste inerte, c'est volontaire.
 

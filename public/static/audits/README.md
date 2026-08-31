@@ -7,15 +7,16 @@ marketing et le rapport d'audit public.
 
 > Pour vérifier ces scores en temps réel (pas la peine de croire les
 > screenshots), va sur la page Trust Center : `/securite/audits-externes`
+>
 > - chaque scanner a un lien live qui interroge nos serveurs en direct.
 
 ## Captures actuelles
 
-| Fichier | Scanner | Résultat | Date |
-|---|---|---|---|
+| Fichier                   | Scanner                  | Résultat                   | Date        |
+| ------------------------- | ------------------------ | -------------------------- | ----------- |
 | `mozilla-observatory.png` | Mozilla HTTP Observatory | A+ · 110/100 · 10/10 tests | 17 mai 2026 |
-| `ssllabs.png` | Qualys SSL Labs | A+ · TLS 1.3 · PQC | 17 mai 2026 |
-| `security-headers.png` | Security Headers (Snyk) | A+ · 6/6 headers | 17 mai 2026 |
+| `ssllabs.png`             | Qualys SSL Labs          | A+ · TLS 1.3 · PQC         | 17 mai 2026 |
+| `security-headers.png`    | Security Headers (Snyk)  | A+ · 6/6 headers           | 17 mai 2026 |
 
 ## Comment refaire les captures
 

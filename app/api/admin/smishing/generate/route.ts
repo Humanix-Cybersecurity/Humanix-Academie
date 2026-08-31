@@ -68,7 +68,8 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error: "rate_limited",
-        message: "Trop de générations dans la dernière heure. Réessayez plus tard.",
+        message:
+          "Trop de générations dans la dernière heure. Réessayez plus tard.",
         retryAfter: rl.retryAfter,
       },
       { status: 429, headers: { "Retry-After": String(rl.retryAfter) } },

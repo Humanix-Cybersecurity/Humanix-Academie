@@ -7,9 +7,7 @@ import {
   type Nis2EligibilityInput,
 } from "./eligibility";
 
-const base = (
-  o: Partial<Nis2EligibilityInput> = {},
-): Nis2EligibilityInput => ({
+const base = (o: Partial<Nis2EligibilityInput> = {}): Nis2EligibilityInput => ({
   secteur: "autre",
   taille: "petite",
   fournisseurEntiteRegulee: false,

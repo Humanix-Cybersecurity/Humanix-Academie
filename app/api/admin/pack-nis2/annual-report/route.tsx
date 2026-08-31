@@ -19,7 +19,10 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getTenantPlan } from "@/lib/plans";
-import { AnnualReportPdf, type AnnualReportData } from "@/lib/pack-nis2/annual-report";
+import {
+  AnnualReportPdf,
+  type AnnualReportData,
+} from "@/lib/pack-nis2/annual-report";
 import { computeTenantNis2Score } from "@/lib/nis2/score-tenant";
 
 export const dynamic = "force-dynamic";
@@ -136,8 +139,7 @@ export async function GET(req: NextRequest) {
   const totalCompletedModules = progressInPeriod.length;
   const avgScoreFraction = progressInPeriod.length
     ? progressInPeriod.reduce(
-        (sum, p) =>
-          sum + (p.maxScore > 0 ? (p.score ?? 0) / p.maxScore : 0),
+        (sum, p) => sum + (p.maxScore > 0 ? (p.score ?? 0) / p.maxScore : 0),
         0,
       ) / progressInPeriod.length
     : 0;
@@ -152,16 +154,12 @@ export async function GET(req: NextRequest) {
     include: { results: true },
   });
   const phishingCampaignsRun = phishingCampaigns.length;
-  const totalSent = phishingCampaigns.reduce(
-    (s, c) => s + c.results.length,
-    0,
-  );
+  const totalSent = phishingCampaigns.reduce((s, c) => s + c.results.length, 0);
   const totalClicked = phishingCampaigns.reduce(
     (s, c) =>
       s +
-      c.results.filter(
-        (r) => r.status === "CLICKED" || r.clickedAt !== null,
-      ).length,
+      c.results.filter((r) => r.status === "CLICKED" || r.clickedAt !== null)
+        .length,
     0,
   );
   const phishingClickRate =

@@ -75,6 +75,8 @@ export async function getCommunityTenantOrThrow() {
 }
 
 /** True si le tenant fourni est le tenant Communauté. */
-export function isCommunityTenant(tenant: WithSlug | null | undefined): boolean {
+export function isCommunityTenant(
+  tenant: WithSlug | null | undefined,
+): boolean {
   return tenant?.slug === COMMUNITY_TENANT_SLUG;
 }

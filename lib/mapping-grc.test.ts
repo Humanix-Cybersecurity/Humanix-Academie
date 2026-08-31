@@ -60,7 +60,8 @@ describe("FRAMEWORKS catalog", () => {
     for (const fw of Object.values(FRAMEWORKS)) {
       for (const c of fw.controls) {
         const hasArtifacts = c.artifacts.length > 0;
-        const hasScopeNote = typeof c.scopeNote === "string" && c.scopeNote.length > 0;
+        const hasScopeNote =
+          typeof c.scopeNote === "string" && c.scopeNote.length > 0;
         expect(
           hasArtifacts || hasScopeNote,
           `Le controle ${c.ref} doit avoir au moins un artifact OU un scopeNote (hors-scope explicite).`,
@@ -139,9 +140,7 @@ describe("statusFromMetric", () => {
     const noThreshold: ControlMapping = {
       ref: "NOT.1",
       name: "Sans seuil",
-      artifacts: [
-        { type: "metric", source: "completion_rate", label: "Taux" },
-      ],
+      artifacts: [{ type: "metric", source: "completion_rate", label: "Taux" }],
     };
     // Sans seuil explicite, on ne PEUT pas évaluer la conformité.
     // Le défaut "compliant" précédent faussait les rapports audit

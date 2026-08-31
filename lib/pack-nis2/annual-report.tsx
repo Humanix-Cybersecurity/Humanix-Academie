@@ -254,12 +254,18 @@ export function AnnualReportPdf({ data }: { data: AnnualReportData }) {
 
         <Text style={styles.h2}>1. Score global de conformité</Text>
         <Text
-          style={{ ...styles.scoreBig, color: scoreColor(data.nis2Score.globalScore) }}
+          style={{
+            ...styles.scoreBig,
+            color: scoreColor(data.nis2Score.globalScore),
+          }}
         >
           {data.nis2Score.globalScore} / 100
         </Text>
         <Text
-          style={{ ...styles.verdict, color: scoreColor(data.nis2Score.globalScore) }}
+          style={{
+            ...styles.verdict,
+            color: scoreColor(data.nis2Score.globalScore),
+          }}
         >
           {verdictLabel(data.nis2Score.globalScore)}
         </Text>
@@ -267,9 +273,9 @@ export function AnnualReportPdf({ data }: { data: AnnualReportData }) {
           Score basé sur la complétion réelle des modules de sensibilisation
           mappés aux articles de la directive NIS2 par les{" "}
           {data.nis2Score.activeUsersCount} utilisateur(s) actif(s) du
-          périmètre. Méthodologie : pour chaque article, moyenne des ratios
-          de complétion des saisons Humanix qui le couvrent. Articles non
-          couverts (N/A) exclus du calcul global.
+          périmètre. Méthodologie : pour chaque article, moyenne des ratios de
+          complétion des saisons Humanix qui le couvrent. Articles non couverts
+          (N/A) exclus du calcul global.
         </Text>
 
         <Text style={styles.h2}>2. Score par article NIS2</Text>
@@ -316,10 +322,10 @@ export function AnnualReportPdf({ data }: { data: AnnualReportData }) {
         <Text style={styles.h2}>3. Incidents déclarés dans la période</Text>
         {data.incidents.length === 0 ? (
           <Text style={styles.p}>
-            Aucun incident de sécurité formel n&apos;a été enregistré dans
-            la période couverte par ce rapport. (Cela ne signifie pas
-            absence totale d&apos;événements ; cela signifie qu&apos;aucun
-            n&apos;a été qualifié comme incident NIS2 par l&apos;équipe.)
+            Aucun incident de sécurité formel n&apos;a été enregistré dans la
+            période couverte par ce rapport. (Cela ne signifie pas absence
+            totale d&apos;événements ; cela signifie qu&apos;aucun n&apos;a été
+            qualifié comme incident NIS2 par l&apos;équipe.)
           </Text>
         ) : (
           <View style={styles.table}>
@@ -329,9 +335,7 @@ export function AnnualReportPdf({ data }: { data: AnnualReportData }) {
               <Text style={{ ...styles.td, width: 70 }}>Sévérité</Text>
               <Text style={{ ...styles.td, width: 70 }}>Détecté</Text>
               <Text style={{ ...styles.td, width: 60 }}>Statut</Text>
-              <Text style={{ ...styles.td, width: 70 }}>
-                Autorité notifiée
-              </Text>
+              <Text style={{ ...styles.td, width: 70 }}>Autorité notifiée</Text>
             </View>
             {data.incidents.map((inc, i) => {
               const isLast = i === data.incidents.length - 1;
@@ -390,9 +394,9 @@ export function AnnualReportPdf({ data }: { data: AnnualReportData }) {
 
         <Text style={styles.p}>
           Méthode : programme continu Humanix Académie, modules de 5-10 min
-          adaptés aux postes, simulations phishing intégrées, suivi
-          individuel + agrégé. Tous les cadres dirigeants (CODIR, COMEX)
-          sont inclus, conformément à l&apos;article 20 NIS2.
+          adaptés aux postes, simulations phishing intégrées, suivi individuel +
+          agrégé. Tous les cadres dirigeants (CODIR, COMEX) sont inclus,
+          conformément à l&apos;article 20 NIS2.
         </Text>
 
         <Text style={styles.footer}>
@@ -412,8 +416,8 @@ export function AnnualReportPdf({ data }: { data: AnnualReportData }) {
 
         <Text style={styles.h2}>5. Chantiers prioritaires (12 mois)</Text>
         <Text style={styles.p}>
-          Articles avec le score le plus faible, à traiter en priorité dans
-          la période suivante.
+          Articles avec le score le plus faible, à traiter en priorité dans la
+          période suivante.
         </Text>
         {data.nis2Score.articles
           .filter((a) => a.score !== null && a.score < 80)
@@ -430,22 +434,20 @@ export function AnnualReportPdf({ data }: { data: AnnualReportData }) {
 
         <Text style={styles.h2}>6. Engagement de la direction</Text>
         <Text style={styles.p}>
-          Je soussigné {data.directeurName}, en qualité de{" "}
-          {data.directeurTitle} de {data.tenantName}, atteste de
-          l&apos;exactitude des informations communiquées dans le présent
-          rapport et m&apos;engage à mettre en œuvre le plan d&apos;action
-          de la section 5 dans les 12 prochains mois.
+          Je soussigné {data.directeurName}, en qualité de {data.directeurTitle}{" "}
+          de {data.tenantName}, atteste de l&apos;exactitude des informations
+          communiquées dans le présent rapport et m&apos;engage à mettre en
+          œuvre le plan d&apos;action de la section 5 dans les 12 prochains
+          mois.
         </Text>
-        <Text style={styles.p}>
-          Je confirme également :
+        <Text style={styles.p}>Je confirme également :</Text>
+        <Text style={styles.bullet}>
+          - Avoir suivi la formation cybersécurité obligatoire des dirigeants
+          (art. 20 NIS2) dans les 24 derniers mois ;
         </Text>
         <Text style={styles.bullet}>
-          - Avoir suivi la formation cybersécurité obligatoire des
-          dirigeants (art. 20 NIS2) dans les 24 derniers mois ;
-        </Text>
-        <Text style={styles.bullet}>
-          - Que le rapport sera transmis au CSIRT compétent (ANSSI en
-          France) sur demande de l&apos;autorité ;
+          - Que le rapport sera transmis au CSIRT compétent (ANSSI en France)
+          sur demande de l&apos;autorité ;
         </Text>
         <Text style={styles.bullet}>
           - Que les indicateurs présentés sont auditables sur la plateforme
@@ -466,15 +468,13 @@ export function AnnualReportPdf({ data }: { data: AnnualReportData }) {
         </View>
 
         <View style={styles.alertBox}>
-          <Text style={{ fontWeight: "bold" }}>
-            Note méthodologique
-          </Text>
+          <Text style={{ fontWeight: "bold" }}>Note méthodologique</Text>
           <Text>
-            Ce rapport est un outil d&apos;auto-évaluation et de
-            communication interne. Il ne se substitue pas à un audit formel
-            réalisé par un PASSI (Prestataire d&apos;Audit de la Sécurité
-            des Systèmes d&apos;Information) qui resterait nécessaire en
-            cas de contrôle inopiné de l&apos;autorité compétente.
+            Ce rapport est un outil d&apos;auto-évaluation et de communication
+            interne. Il ne se substitue pas à un audit formel réalisé par un
+            PASSI (Prestataire d&apos;Audit de la Sécurité des Systèmes
+            d&apos;Information) qui resterait nécessaire en cas de contrôle
+            inopiné de l&apos;autorité compétente.
           </Text>
         </View>
 

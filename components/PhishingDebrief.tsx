@@ -19,9 +19,7 @@
 import { useEffect, useState } from "react";
 
 type State =
-  | { kind: "loading" }
-  | { kind: "ready"; text: string }
-  | { kind: "error" };
+  { kind: "loading" } | { kind: "ready"; text: string } | { kind: "error" };
 
 export default function PhishingDebrief({ token }: { token: string }) {
   const [state, setState] = useState<State>({ kind: "loading" });

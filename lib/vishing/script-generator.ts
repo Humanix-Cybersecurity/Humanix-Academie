@@ -216,8 +216,12 @@ function validateAndSanitize(s: VishingScript): VishingScript {
 function sanitizeCallerId(s: string): string {
   const digits = s.replace(/[^\d]/g, "").slice(0, 10);
   // Format national FR attendu: 0 suivi d'un chiffre 1-9, puis 8 chiffres.
-  if (digits.length !== 10 || !/^0[1-9]\d{8}$/.test(digits)) return "01 00 00 00 00";
-  return digits.replace(/(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/, "$1 $2 $3 $4 $5");
+  if (digits.length !== 10 || !/^0[1-9]\d{8}$/.test(digits))
+    return "01 00 00 00 00";
+  return digits.replace(
+    /(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/,
+    "$1 $2 $3 $4 $5",
+  );
 }
 
 function buildDemoFixture({
@@ -231,7 +235,8 @@ function buildDemoFixture({
       body: "Nous avons detecte une activite suspecte sur votre poste. Pour eviter le blocage de vos acces, je vais vous guider pour installer une mise a jour de securite. Pouvez-vous me confirmer votre identifiant ainsi que le code recu par SMS ?",
       callToAction:
         "C'est urgent, votre poste sera deconnecte du reseau dans quinze minutes si on ne reagit pas. On peut commencer ?",
-      attackerPersona: "Faux technicien IT externalise, ton presse mais courtois.",
+      attackerPersona:
+        "Faux technicien IT externalise, ton presse mais courtois.",
       spoofedCallerId: "01 73 28 45 91",
       redFlags: [
         "Demande d'identifiant + code SMS au telephone (jamais legitime)",
@@ -319,7 +324,8 @@ function buildDemoFixture({
         "Bonjour, ici l'inspection regionale CNIL. Suite a votre declaration NIS2, nous menons un controle d'urgence sur votre conformite. J'ai besoin de quelques informations rapides : la liste de vos sous-traitants critiques, le nom de votre DPO, et le mot de passe de votre dossier consolide. Si vous ne pouvez pas repondre tout de suite, on vous envoie un controle physique demain matin. C'est plus simple si on regle ca au telephone maintenant. Vous avez les infos sous la main ?",
     },
     free: {
-      openingLine: "Bonjour, j'appelle de la part du service [a personnaliser].",
+      openingLine:
+        "Bonjour, j'appelle de la part du service [a personnaliser].",
       body: "Scenario libre, a generer via l'API Mistral. Le mode demo n'a pas de fixture pour 'free'.",
       callToAction: "Vous pouvez confirmer ?",
       attackerPersona: "A personnaliser via le contexte admin.",

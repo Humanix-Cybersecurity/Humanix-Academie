@@ -19,16 +19,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-import {
-  InvestigationFrontmatterSchema,
-  type Investigation,
-} from "./types";
+import { InvestigationFrontmatterSchema, type Investigation } from "./types";
 
 const CONTENT_DEMO = path.resolve(process.cwd(), "content/enquetes-demo");
-const CONTENT_PRO = path.resolve(
-  process.cwd(),
-  "content-pro/content/enquetes",
-);
+const CONTENT_PRO = path.resolve(process.cwd(), "content-pro/content/enquetes");
 
 /**
  * En mode DEMO, on bypass content-pro meme si le submodule est present.

@@ -85,13 +85,7 @@ export async function upsertSamlConfig(
   const idpCertificate = String(formData.get("idpCertificate") ?? "").trim();
   const isActive = formData.has("isActive");
 
-  if (
-    !label ||
-    !spEntityId ||
-    !idpEntityId ||
-    !idpSsoUrl ||
-    !idpCertificate
-  ) {
+  if (!label || !spEntityId || !idpEntityId || !idpSsoUrl || !idpCertificate) {
     return { ok: false, error: "missing_field" };
   }
   if (!validateUrl(idpSsoUrl)) {

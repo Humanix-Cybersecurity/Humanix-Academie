@@ -131,7 +131,9 @@ function PlanCard({ item }: { item: RecyfPlanItem }) {
             🛠️
           </span>
           <p className="text-xs text-amber-800 dark:text-amber-200 leading-relaxed">
-            <span className="font-bold">À confier à votre prestataire IT : </span>
+            <span className="font-bold">
+              À confier à votre prestataire IT :{" "}
+            </span>
             {o.partnerAngle}
           </p>
         </div>

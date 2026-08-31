@@ -27,7 +27,11 @@ describe("frameworkCoverage - Sapin II", () => {
   it("tout couvert quand les métriques dépassent les seuils", () => {
     const cov = frameworkCoverage(
       "SAPIN2",
-      metrics({ tenantScore: 0.9, completionRate: 0.9, phishingReportRate: 0.9 }),
+      metrics({
+        tenantScore: 0.9,
+        completionRate: 0.9,
+        phishingReportRate: 0.9,
+      }),
     );
     // 4 contrôles mappés, tous compliant -> 100 %
     expect(cov.summary.total).toBe(4);

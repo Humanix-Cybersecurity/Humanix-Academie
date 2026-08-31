@@ -70,14 +70,22 @@ const SYSTEM_GROUPS = [
   { slug: "dev", name: "Développement", emoji: "💻", color: "#6366F1" },
   { slug: "commercial", name: "Commercial", emoji: "💼", color: "#EC4899" },
   { slug: "it", name: "IT / SI", emoji: "⚙️", color: "#0EA5E9" },
-  { slug: "atelier", name: "Atelier / Production", emoji: "🏭", color: "#A855F7" },
-  { slug: "communication", name: "Communication", emoji: "🎨", color: "#EF4444" },
+  {
+    slug: "atelier",
+    name: "Atelier / Production",
+    emoji: "🏭",
+    color: "#A855F7",
+  },
+  {
+    slug: "communication",
+    name: "Communication",
+    emoji: "🎨",
+    color: "#EF4444",
+  },
   { slug: "agents", name: "Agents", emoji: "👤", color: "#64748B" },
 ];
 
-export type SignupResult =
-  | { ok: true }
-  | { ok: false; error: string };
+export type SignupResult = { ok: true } | { ok: false; error: string };
 
 export async function createStarterAccount(
   formData: FormData,
@@ -132,7 +140,9 @@ export async function createStarterAccount(
   // ----------------------------
   // 3. Validation des champs
   // ----------------------------
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const email = String(formData.get("email") ?? "")
+    .trim()
+    .toLowerCase();
   const password = String(formData.get("password") ?? "");
   const passwordConfirm = String(formData.get("passwordConfirm") ?? "");
   const orgName = String(formData.get("orgName") ?? "").trim();
@@ -287,7 +297,9 @@ export async function createStarterAccount(
   // 5b. Welcome email (best-effort, non bloquant)
   // ----------------------------
   const appUrl =
-    process.env.AUTH_URL ?? process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+    process.env.AUTH_URL ??
+    process.env.NEXT_PUBLIC_APP_URL ??
+    "http://localhost:3000";
   if (!(await hasReceivedWelcome(created.user.id))) {
     const res = await sendWelcomeEmail({
       toEmail: email,

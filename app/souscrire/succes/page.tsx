@@ -33,9 +33,9 @@ export default async function SouscrireSuccesPage({
             Bienvenue dans Humanix.
           </h1>
           <p className="text-lg text-gray-700 dark:text-gray-200 leading-relaxed max-w-xl mx-auto">
-            Votre paiement a bien été reçu. On finalise la création de
-            votre console et on vous envoie un lien magique sur l&apos;email
-            que vous avez utilisé.
+            Votre paiement a bien été reçu. On finalise la création de votre
+            console et on vous envoie un lien magique sur l&apos;email que vous
+            avez utilisé.
           </p>
         </section>
       </HexBackdrop>
@@ -50,16 +50,16 @@ export default async function SouscrireSuccesPage({
               <span className="text-accent-500 font-bold">1.</span>
               <span>
                 Ouvrez votre boîte mail. Un message{" "}
-                <em>« 🦊 Hex t&apos;invite à entrer »</em> est en route
-                (≤ 2 min).
+                <em>« 🦊 Hex t&apos;invite à entrer »</em> est en route (≤ 2
+                min).
               </span>
             </li>
             <li className="flex items-start gap-3">
               <span className="text-accent-500 font-bold">2.</span>
               <span>
                 Cliquez le lien depuis le même appareil. Vous arriverez sur
-                votre console admin (rôle ADMIN), prête à inviter votre
-                équipe et à configurer vos modules.
+                votre console admin (rôle ADMIN), prête à inviter votre équipe
+                et à configurer vos modules.
               </span>
             </li>
             <li className="flex items-start gap-3">
@@ -83,8 +83,8 @@ export default async function SouscrireSuccesPage({
               contact@humanix-cybersecurity.fr
             </a>{" "}
             avec le plan choisi
-            {plan ? ` (${plan})` : ""} et l&apos;email utilisé - on regarde
-            tout de suite.
+            {plan ? ` (${plan})` : ""} et l&apos;email utilisé - on regarde tout
+            de suite.
           </p>
         </div>
 

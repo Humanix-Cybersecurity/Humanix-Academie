@@ -28,8 +28,8 @@ export default function SamlGuidePage() {
           <p className="text-base sm:text-lg text-gray-700 dark:text-gray-200 max-w-3xl mb-6 leading-relaxed">
             Fédération avec votre IdP SAML existant : ADFS, Azure AD SAML
             (legacy), Okta SAML, Keycloak, PingFederate. Pour OIDC moderne
-            (Microsoft Entra, Google), utilisez plutôt notre intégration
-            OIDC native (déjà incluse).
+            (Microsoft Entra, Google), utilisez plutôt notre intégration OIDC
+            native (déjà incluse).
           </p>
           <div className="flex flex-wrap gap-3 text-sm">
             <Link
@@ -57,14 +57,11 @@ export default function SamlGuidePage() {
           </h2>
           <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
             Toutes les voies consomment la même configuration saisie dans{" "}
-            <Link
-              href="/admin/sso-saml"
-              className="text-accent-500 underline"
-            >
+            <Link href="/admin/sso-saml" className="text-accent-500 underline">
               /admin/sso-saml
             </Link>{" "}
-            (Entity ID IdP, SSO URL, certificat X509). Choisissez selon
-            votre stack et votre niveau de tolérance ops.
+            (Entity ID IdP, SSO URL, certificat X509). Choisissez selon votre
+            stack et votre niveau de tolérance ops.
           </p>
         </div>
 
@@ -140,13 +137,10 @@ export default function SamlGuidePage() {
             Endpoints SP (Service Provider)
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-            Une fois la voie active, ces endpoints sont fonctionnels et
-            doivent être copiés dans la config de votre IdP. Saisissez la
-            config IdP dans{" "}
-            <Link
-              href="/admin/sso-saml"
-              className="text-accent-500 underline"
-            >
+            Une fois la voie active, ces endpoints sont fonctionnels et doivent
+            être copiés dans la config de votre IdP. Saisissez la config IdP
+            dans{" "}
+            <Link href="/admin/sso-saml" className="text-accent-500 underline">
               /admin/sso-saml
             </Link>{" "}
             pour les voir personnalisés à votre tenant.
@@ -180,9 +174,9 @@ export default function SamlGuidePage() {
             🇫🇷 Vous voulez nous déléguer l&apos;activation ?
           </h3>
           <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-            On déploie SAML-Jackson chez vous (ou chez nous), on connecte
-            votre ADFS/Okta/Entra SAML, on teste avec 3 users de votre
-            choix, on documente. Forfait <strong>1 jour conseil</strong>.
+            On déploie SAML-Jackson chez vous (ou chez nous), on connecte votre
+            ADFS/Okta/Entra SAML, on teste avec 3 users de votre choix, on
+            documente. Forfait <strong>1 jour conseil</strong>.
           </p>
           <Link
             href="/demande-abonnement?type=sso-saml"
@@ -329,7 +323,9 @@ function Endpoint({
         <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
           {label}
         </p>
-        <p className="text-xs text-gray-600 dark:text-gray-400">{description}</p>
+        <p className="text-xs text-gray-600 dark:text-gray-400">
+          {description}
+        </p>
       </div>
     </div>
   );

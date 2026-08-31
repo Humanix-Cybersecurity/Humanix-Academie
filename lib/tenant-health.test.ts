@@ -41,9 +41,24 @@ describe("computeGlobalKpis", () => {
 
   it("aggrege les compteurs par plan, signal, et users", () => {
     const k = computeGlobalKpis([
-      fakeHealth({ plan: "starter", signal: "ok", totalUsers: 5, activeUsers: 4 }),
-      fakeHealth({ plan: "pro", signal: "warn", totalUsers: 25, activeUsers: 20 }),
-      fakeHealth({ plan: "pro", signal: "error", totalUsers: 12, activeUsers: 0 }),
+      fakeHealth({
+        plan: "starter",
+        signal: "ok",
+        totalUsers: 5,
+        activeUsers: 4,
+      }),
+      fakeHealth({
+        plan: "pro",
+        signal: "warn",
+        totalUsers: 25,
+        activeUsers: 20,
+      }),
+      fakeHealth({
+        plan: "pro",
+        signal: "error",
+        totalUsers: 12,
+        activeUsers: 0,
+      }),
     ]);
     expect(k.totalTenants).toBe(3);
     expect(k.totalUsers).toBe(42);
@@ -56,9 +71,9 @@ describe("computeGlobalKpis", () => {
   it("compte les nouveaux tenants 7j et 30j", () => {
     const now = Date.now();
     const k = computeGlobalKpis([
-      fakeHealth({ createdAt: new Date(now - 1 * 24 * 3600 * 1000) }),  // 1j
-      fakeHealth({ createdAt: new Date(now - 6 * 24 * 3600 * 1000) }),  // 6j
-      fakeHealth({ createdAt: new Date(now - 8 * 24 * 3600 * 1000) }),  // 8j
+      fakeHealth({ createdAt: new Date(now - 1 * 24 * 3600 * 1000) }), // 1j
+      fakeHealth({ createdAt: new Date(now - 6 * 24 * 3600 * 1000) }), // 6j
+      fakeHealth({ createdAt: new Date(now - 8 * 24 * 3600 * 1000) }), // 8j
       fakeHealth({ createdAt: new Date(now - 35 * 24 * 3600 * 1000) }), // 35j
     ]);
     expect(k.newTenantsLast7d).toBe(2);

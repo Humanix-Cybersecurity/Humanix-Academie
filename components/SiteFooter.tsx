@@ -81,8 +81,16 @@ const OUTILS: FooterLink[] = [
 
 const CONFIANCE: FooterLink[] = [
   { href: "/securite", label: "Trust Center", emoji: "🔐" },
-  { href: "/securite/rapport-audit", label: "Rapport d'audit public", emoji: "📄" },
-  { href: "/securite/audits-externes", label: "Audits sécurité externes", emoji: "🛡️" },
+  {
+    href: "/securite/rapport-audit",
+    label: "Rapport d'audit public",
+    emoji: "📄",
+  },
+  {
+    href: "/securite/audits-externes",
+    label: "Audits sécurité externes",
+    emoji: "🛡️",
+  },
   { href: "/accessibilite", label: "Accessibilité (RGAA)", emoji: "♿" },
   { href: "/marketplace/security", label: "Charte Marketplace", emoji: "📋" },
   { href: "/presse", label: "Espace presse", emoji: "📰" },

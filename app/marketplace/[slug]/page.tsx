@@ -24,7 +24,8 @@ export default async function ModuleDetailPage({
   const session = await auth();
   if (!session?.user) redirect(getSignInPath());
   const role = session.user!.role;
-  if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") redirect("/apprendre");
+  if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN")
+    redirect("/apprendre");
   const tenantId = session.user!.tenantId as string;
 
   const { slug } = await params;

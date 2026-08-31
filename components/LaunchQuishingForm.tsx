@@ -32,9 +32,8 @@ export default function LaunchQuishingForm({
   groups: GroupOption[];
 }) {
   const [pending, startTransition] = useTransition();
-  const [selected, setSelected] = useState<keyof typeof QUISHING_TEMPLATES>(
-    "QR_FAKE_RH",
-  );
+  const [selected, setSelected] =
+    useState<keyof typeof QUISHING_TEMPLATES>("QR_FAKE_RH");
   const [selectedGroups, setSelectedGroups] = useState<Set<string>>(new Set());
   // SSID Wi-Fi custom (uniquement utilise si template = QR_FAKE_WIFI).
   // Vide = utilise la valeur par defaut "Humanix-Guest".
@@ -51,9 +50,7 @@ export default function LaunchQuishingForm({
   // applique la meme regle stricte que cote server (lib/quishing/
   // ssid-validation.ts).
   const ssidValidation =
-    wifiSsidInput.trim() === ""
-      ? null
-      : validateWifiSsid(wifiSsidInput);
+    wifiSsidInput.trim() === "" ? null : validateWifiSsid(wifiSsidInput);
   const ssidError =
     ssidValidation && !ssidValidation.ok
       ? ssidValidationErrorMessageFr(ssidValidation.reason)
@@ -282,8 +279,8 @@ export default function LaunchQuishingForm({
           </div>
           {totalTargets !== null && (
             <p className="text-xs text-accent-700 dark:text-accent-300 mt-2 font-medium">
-              👉 1 affiche A4 générée, à imprimer puis dupliquer pour la
-              poser dans les contextes que tu cibles ({totalTargets} personne
+              👉 1 affiche A4 générée, à imprimer puis dupliquer pour la poser
+              dans les contextes que tu cibles ({totalTargets} personne
               {totalTargets > 1 ? "s" : ""} dans la campagne).
             </p>
           )}

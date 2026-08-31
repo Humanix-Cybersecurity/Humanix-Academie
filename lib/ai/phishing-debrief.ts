@@ -61,8 +61,7 @@ export type DebriefInput = {
 };
 
 export type DebriefResult =
-  | { ok: true; text: string }
-  | { ok: false; error: string };
+  { ok: true; text: string } | { ok: false; error: string };
 
 const SYSTEM = `Tu es Hex, le compagnon pedagogique de Humanix Academie.
 Tu rediges un DEBRIEF PERSONNALISE apres qu'un apprenant a clique (ou pire,
@@ -86,7 +85,9 @@ REGLES :
 
 function buildUserPrompt(input: DebriefInput): string {
   const lines: string[] = [];
-  lines.push(`Apprenant : ${input.firstName} (service : ${input.serviceOrRole})`);
+  lines.push(
+    `Apprenant : ${input.firstName} (service : ${input.serviceOrRole})`,
+  );
   lines.push(`Template piege : ${input.templateName}`);
   lines.push(
     `Signaux factuels du mail : ${input.markers

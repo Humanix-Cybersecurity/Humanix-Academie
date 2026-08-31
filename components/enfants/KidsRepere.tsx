@@ -42,7 +42,9 @@ export default function KidsRepere({
 
       {/* Écran simulé */}
       <div className="rounded-3xl bg-white dark:bg-slate-900 border-2 border-gray-100 dark:border-slate-800 p-4 sm:p-6 shadow-sm">
-        <p className="text-center text-sm text-gray-500 mb-4">{activite.ecran}</p>
+        <p className="text-center text-sm text-gray-500 mb-4">
+          {activite.ecran}
+        </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {activite.elements.map((el) => {
             const trouve = found.has(el.id);
@@ -63,7 +65,10 @@ export default function KidsRepere({
                 </span>
                 <span className="flex-1">{el.texte}</span>
                 {trouve && (
-                  <span className="text-xl text-emerald-600" aria-label="trouvé">
+                  <span
+                    className="text-xl text-emerald-600"
+                    aria-label="trouvé"
+                  >
                     ✓
                   </span>
                 )}
@@ -74,7 +79,10 @@ export default function KidsRepere({
       </div>
 
       {/* Compteur + réaction */}
-      <p className="text-center text-sm font-bold text-gray-500" aria-live="polite">
+      <p
+        className="text-center text-sm font-bold text-gray-500"
+        aria-live="polite"
+      >
         Pièges trouvés : {found.size} / {totalPieges}
       </p>
       {reaction && !gagne && <HexDit mood="curious">{reaction}</HexDit>}
@@ -82,7 +90,8 @@ export default function KidsRepere({
       {gagne && (
         <div className="space-y-4" aria-live="polite">
           <HexDit mood="celebrate">
-            Tu les as tous trouvés ! Tu as l&apos;œil d&apos;un vrai détective 🕵️
+            Tu les as tous trouvés ! Tu as l&apos;œil d&apos;un vrai détective
+            🕵️
           </HexDit>
           <button
             type="button"

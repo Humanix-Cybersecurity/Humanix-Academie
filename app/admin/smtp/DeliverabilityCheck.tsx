@@ -17,10 +17,7 @@
 
 import { useState, useTransition } from "react";
 import { runDeliverabilityCheck } from "./actions";
-import type {
-  AuthRecord,
-  DnsAuthCheckResult,
-} from "@/lib/smtp/dns-auth-check";
+import type { AuthRecord, DnsAuthCheckResult } from "@/lib/smtp/dns-auth-check";
 
 export default function DeliverabilityCheck({ domain }: { domain: string }) {
   const [isPending, startTransition] = useTransition();
@@ -47,8 +44,12 @@ export default function DeliverabilityCheck({ domain }: { domain: string }) {
             <span aria-hidden="true">📧</span> Délivrabilité du domaine
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-            Verifie que <strong className="font-mono text-cyan-700 dark:text-cyan-300">{domain}</strong> a SPF, DKIM et DMARC bien configures.
-            Sans ca, tes phishing simulés risquent d&apos;arriver en spam.
+            Verifie que{" "}
+            <strong className="font-mono text-cyan-700 dark:text-cyan-300">
+              {domain}
+            </strong>{" "}
+            a SPF, DKIM et DMARC bien configures. Sans ca, tes phishing simulés
+            risquent d&apos;arriver en spam.
           </p>
         </div>
         <button
@@ -104,21 +105,20 @@ export default function DeliverabilityCheck({ domain }: { domain: string }) {
             </summary>
             <div className="mt-2 space-y-2 leading-relaxed">
               <p>
-                <strong>SPF (Sender Policy Framework)</strong> : record TXT
-                qui declare quels serveurs ont le droit d&apos;envoyer du mail
-                pour ton domaine. Sans SPF, les serveurs recepteurs (Gmail,
-                Outlook) considerent tes mails suspects.
+                <strong>SPF (Sender Policy Framework)</strong> : record TXT qui
+                declare quels serveurs ont le droit d&apos;envoyer du mail pour
+                ton domaine. Sans SPF, les serveurs recepteurs (Gmail, Outlook)
+                considerent tes mails suspects.
               </p>
               <p>
                 <strong>DKIM (DomainKeys Identified Mail)</strong> : signature
-                cryptographique des mails. Ton serveur SMTP signe avec une
-                cle privee, et le record TXT publie la cle publique. Le
-                recepteur verifie la signature : si valide = mail non
-                modifié.
+                cryptographique des mails. Ton serveur SMTP signe avec une cle
+                privee, et le record TXT publie la cle publique. Le recepteur
+                verifie la signature : si valide = mail non modifié.
               </p>
               <p>
-                <strong>DMARC</strong> : politique declaree au monde "que
-                faire si SPF OU DKIM échoue". Trois modes :
+                <strong>DMARC</strong> : politique declaree au monde "que faire
+                si SPF OU DKIM échoue". Trois modes :
               </p>
               <ul className="list-disc pl-5">
                 <li>
@@ -133,15 +133,15 @@ export default function DeliverabilityCheck({ domain }: { domain: string }) {
               </ul>
               <p>
                 <strong>Recommandation</strong> : commencer SPF + DKIM + DMARC
-                p=none, observer les rapports pendant 2-4 semaines, puis
-                durcir vers p=quarantine puis p=reject.
+                p=none, observer les rapports pendant 2-4 semaines, puis durcir
+                vers p=quarantine puis p=reject.
               </p>
             </div>
           </details>
 
           <p className="text-[10px] text-gray-400 italic">
-            Verifie le {new Date(result.checkedAt).toLocaleString("fr-FR")}{" "}
-            via lookup DNS direct (pas de cache).
+            Verifie le {new Date(result.checkedAt).toLocaleString("fr-FR")} via
+            lookup DNS direct (pas de cache).
           </p>
         </>
       )}

@@ -60,8 +60,8 @@ export default async function ActiveImpersonationsList({
   if (sessions.length === 0) {
     return (
       <p className="text-xs text-gray-500 dark:text-gray-400 italic">
-        Aucune demande active. Utilisez le formulaire ci-dessous pour en
-        envoyer une.
+        Aucune demande active. Utilisez le formulaire ci-dessous pour en envoyer
+        une.
       </p>
     );
   }
@@ -80,10 +80,7 @@ export default async function ActiveImpersonationsList({
               : "bg-amber-50 dark:bg-amber-950/30 border-amber-300 dark:border-amber-800/40"
           }`}
         >
-          <div
-            className="text-xl shrink-0"
-            aria-hidden="true"
-          >
+          <div className="text-xl shrink-0" aria-hidden="true">
             {s.status === "ACTIVE" ? "👁️" : "⏳"}
           </div>
           <div className="flex-1 min-w-0">
@@ -93,11 +90,8 @@ export default async function ActiveImpersonationsList({
             <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
               {s.status === "ACTIVE" ? (
                 <>
-                  Acceptée le {s.grantedAt && fmtDateTime(s.grantedAt)} ·{" "}
-                  Reste{" "}
-                  <strong>
-                    {s.endsAt ? fmtRemaining(s.endsAt) : "-"}
-                  </strong>
+                  Acceptée le {s.grantedAt && fmtDateTime(s.grantedAt)} · Reste{" "}
+                  <strong>{s.endsAt ? fmtRemaining(s.endsAt) : "-"}</strong>
                 </>
               ) : (
                 <>

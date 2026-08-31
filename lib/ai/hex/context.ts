@@ -39,11 +39,13 @@ export type EnrichedContextInput = {
  */
 export async function buildEnrichedContext(
   input: EnrichedContextInput,
-): Promise<HexChatContext & {
-  recentModules?: string[];
-  recentAvgQuizPct?: number | null;
-  toneHint?: "encouragement" | "challenge" | "neutral";
-}> {
+): Promise<
+  HexChatContext & {
+    recentModules?: string[];
+    recentAvgQuizPct?: number | null;
+    toneHint?: "encouragement" | "challenge" | "neutral";
+  }
+> {
   const base: HexChatContext = {
     userFirstName:
       typeof input.userName === "string"
@@ -107,7 +109,10 @@ export async function buildEnrichedContext(
     };
   } catch (err) {
     // DB down ou query echouee : on degrade gracieusement
-    console.warn("hex-context: enrichment failed, falling back to minimal", err);
+    console.warn(
+      "hex-context: enrichment failed, falling back to minimal",
+      err,
+    );
     return base;
   }
 }
@@ -128,9 +133,7 @@ export function buildToneAddendum(
   }
 
   if (typeof ctx.recentAvgQuizPct === "number") {
-    lines.push(
-      `Score quiz moyen sur 30 jours : ${ctx.recentAvgQuizPct} %.`,
-    );
+    lines.push(`Score quiz moyen sur 30 jours : ${ctx.recentAvgQuizPct} %.`);
   }
 
   if (ctx.toneHint === "encouragement") {

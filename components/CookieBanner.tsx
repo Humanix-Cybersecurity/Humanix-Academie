@@ -39,10 +39,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import {
-  POPUP_PRIORITY,
-  usePopupSlot,
-} from "@/components/popup-coordinator";
+import { POPUP_PRIORITY, usePopupSlot } from "@/components/popup-coordinator";
 
 const STORAGE_KEY = "humanix-cookie-consent";
 

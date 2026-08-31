@@ -112,9 +112,7 @@ PERSONA UTILISATEUR : ${personaBrief}`;
   return { system, user: userMsg };
 }
 
-export async function explain(
-  req: ExplainRequest,
-): Promise<ExplainResult> {
+export async function explain(req: ExplainRequest): Promise<ExplainResult> {
   if (process.env.DEMO_MODE === "true") {
     // En mode demo : reponse fixture pour montrer l'UX sans bruler de
     // tokens API (et sans dependre du reseau)

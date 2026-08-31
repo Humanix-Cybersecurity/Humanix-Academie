@@ -45,10 +45,7 @@ export default function ResetPage({
         <p className="text-gray-600">
           Votre nouveau mot de passe est actif. Vous pouvez vous connecter.
         </p>
-        <Link
-          href="/connexion"
-          className="btn-primary mt-6 inline-block"
-        >
+        <Link href="/connexion" className="btn-primary mt-6 inline-block">
           Aller à la connexion →
         </Link>
       </div>

@@ -110,7 +110,10 @@ export default async function PostLoginPage() {
   const h = await headers();
   const currentHost = (h.get("host") ?? "").split(":")[0].toLowerCase();
   const currentSlug = h.get("x-tenant-slug");
-  if (currentSlug === tenant.slug || currentHost.startsWith(`${tenant.slug}.`)) {
+  if (
+    currentSlug === tenant.slug ||
+    currentHost.startsWith(`${tenant.slug}.`)
+  ) {
     redirect(targetPath);
   }
 

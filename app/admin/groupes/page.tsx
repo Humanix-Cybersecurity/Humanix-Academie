@@ -49,8 +49,7 @@ export default async function AdminGroupesPage() {
 
         <article className="rounded-xl border border-blue-200 dark:border-blue-900/50 bg-blue-50/60 dark:bg-blue-900/15 p-4">
           <h3 className="font-bold text-blue-900 dark:text-blue-200 text-sm flex items-center gap-2">
-            <span aria-hidden="true">💡</span>
-            À quoi servent les groupes ?
+            <span aria-hidden="true">💡</span>À quoi servent les groupes ?
           </h3>
           <ul className="text-xs text-blue-900/80 dark:text-blue-200/80 mt-2 leading-relaxed space-y-1 list-disc list-inside">
             <li>
@@ -61,12 +60,8 @@ export default async function AdminGroupesPage() {
               Imposer un module obligatoire à un groupe seulement (ex: RGPD pour
               RH).
             </li>
-            <li>
-              Segmenter le reporting RSSI / NIS2 par direction.
-            </li>
-            <li>
-              Un utilisateur peut appartenir à plusieurs groupes.
-            </li>
+            <li>Segmenter le reporting RSSI / NIS2 par direction.</li>
+            <li>Un utilisateur peut appartenir à plusieurs groupes.</li>
           </ul>
         </article>
       </div>

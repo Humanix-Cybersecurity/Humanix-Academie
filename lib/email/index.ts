@@ -29,7 +29,11 @@ import {
  */
 export type EmailUnsubscribeSpec =
   | { kind: "transactional" }
-  | { kind: "one-click"; email: string; list: Exclude<EmailListId, "anecdote"> };
+  | {
+      kind: "one-click";
+      email: string;
+      list: Exclude<EmailListId, "anecdote">;
+    };
 
 export type SendEmailParams = {
   /** Adresse(s) destinataire */

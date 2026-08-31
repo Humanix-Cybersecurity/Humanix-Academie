@@ -46,7 +46,7 @@ C'est tout. Le script :
    Linux). Propose l'installation via Homebrew / curl si manquant.
 3. **Installe `mkcert`** (pour le certificat local trust-safe)
 4. **Génère un cert TLS** signé par le CA local mkcert pour `humanix.local`
-   + `localhost` (cf. `infra/haproxy/certs/`)
+   - `localhost` (cf. `infra/haproxy/certs/`)
 5. **Ajoute `127.0.0.1 humanix.local`** à `/etc/hosts` (avec sudo)
 6. **Crée un `.env` minimal** en `DEMO_MODE=true` avec `AUTH_URL=https://humanix.local`
 7. **Active la config HAProxy dev** (HTTPS sur 443 + redirect HTTP→HTTPS)

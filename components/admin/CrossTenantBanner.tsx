@@ -33,8 +33,8 @@ export default function CrossTenantBanner({
           <span className="font-bold text-amber-950 dark:text-amber-50 bg-amber-200/60 dark:bg-amber-800/60 px-1.5 py-0.5 rounded">
             {activeTenantName}
           </span>
-          , pas dans ton tenant home. Toutes tes actions sont auditees avec
-          ton identite et leur impact sur ce tenant.
+          , pas dans ton tenant home. Toutes tes actions sont auditees avec ton
+          identite et leur impact sur ce tenant.
         </p>
       </div>
     </div>

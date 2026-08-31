@@ -12,8 +12,7 @@ import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
 
 export type UpdateAutomationsResult =
-  | { ok: true }
-  | { ok: false; error: "unauthorized" | "forbidden" | "unknown" };
+  { ok: true } | { ok: false; error: "unauthorized" | "forbidden" | "unknown" };
 
 export async function updateAutomations(
   formData: FormData,

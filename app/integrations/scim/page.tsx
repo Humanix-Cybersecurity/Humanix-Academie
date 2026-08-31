@@ -92,9 +92,7 @@ export default function ScimDocPage() {
                 <ul className="list-disc list-inside ml-5 mt-1">
                   <li>
                     URL du locataire :{" "}
-                    <code>
-                      https://humanix-academie.fr/scim/v2
-                    </code>
+                    <code>https://humanix-academie.fr/scim/v2</code>
                   </li>
                   <li>
                     Jeton secret : <code>hxa_VOTRE_CLE_API</code>
@@ -133,10 +131,7 @@ export default function ScimDocPage() {
                 <em>Enable API Integration</em>.
                 <ul className="list-disc list-inside ml-5 mt-1">
                   <li>
-                    Base URL :{" "}
-                    <code>
-                      https://humanix-academie.fr/scim/v2
-                    </code>
+                    Base URL : <code>https://humanix-academie.fr/scim/v2</code>
                   </li>
                   <li>
                     API Token : <code>hxa_VOTRE_CLE_API</code>

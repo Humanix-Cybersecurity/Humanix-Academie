@@ -4,10 +4,7 @@
 // Auth requise. Le challenge est passe en cookie HMAC-signe pour le verify.
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import {
-  buildRegisterOptions,
-  WEBAUTHN_REGISTER_COOKIE,
-} from "@/lib/webauthn";
+import { buildRegisterOptions, WEBAUTHN_REGISTER_COOKIE } from "@/lib/webauthn";
 
 export async function POST() {
   const session = await auth();

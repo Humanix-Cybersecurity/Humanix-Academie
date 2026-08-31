@@ -118,9 +118,9 @@ export default async function EnquetesPage() {
           Cherche les signaux suspects.
         </h1>
         <p className="text-base sm:text-lg text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed">
-          Au lieu de te dire ce qu'est un phishing, on t'en montre un.
-          Tu analyses, tu coches, tu gagnes des points. Le piège qu'on
-          repère soi-même, on ne le retient pas - on le voit venir.
+          Au lieu de te dire ce qu'est un phishing, on t'en montre un. Tu
+          analyses, tu coches, tu gagnes des points. Le piège qu'on repère
+          soi-même, on ne le retient pas - on le voit venir.
         </p>
         {userId && (
           <div className="mt-5 flex flex-col items-center justify-center gap-3">
@@ -147,7 +147,10 @@ export default async function EnquetesPage() {
       {/* Free enquetes */}
       <section className="max-w-5xl mx-auto px-4 py-6">
         <h2 className="font-display text-2xl font-extrabold text-primary-500 dark:text-accent-300 mb-4">
-          Enquêtes gratuites <span className="text-sm font-normal text-gray-500">({free.length})</span>
+          Enquêtes gratuites{" "}
+          <span className="text-sm font-normal text-gray-500">
+            ({free.length})
+          </span>
         </h2>
         <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {free.map((inv) => (
@@ -164,7 +167,10 @@ export default async function EnquetesPage() {
       {paid.length > 0 && (
         <section className="max-w-5xl mx-auto px-4 py-6">
           <h2 className="font-display text-2xl font-extrabold text-primary-500 dark:text-accent-300 mb-4">
-            Enquêtes premium <span className="text-sm font-normal text-gray-500">({paid.length})</span>
+            Enquêtes premium{" "}
+            <span className="text-sm font-normal text-gray-500">
+              ({paid.length})
+            </span>
           </h2>
           <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {paid.map((inv) => (
@@ -225,7 +231,10 @@ function InvestigationCard({
     emoji: "🔍",
     label: investigation.investigationType,
   };
-  const ratio = best && best.maxScore > 0 ? Math.round((best.score / best.maxScore) * 100) : null;
+  const ratio =
+    best && best.maxScore > 0
+      ? Math.round((best.score / best.maxScore) * 100)
+      : null;
   return (
     <li>
       <Link
@@ -240,7 +249,9 @@ function InvestigationCard({
           <span className="text-base" aria-hidden="true">
             {meta.emoji}
           </span>
-          <span className="font-bold uppercase tracking-wider">{meta.label}</span>
+          <span className="font-bold uppercase tracking-wider">
+            {meta.label}
+          </span>
           {premium && (
             <span className="ml-auto bg-amber-500 text-white px-1.5 py-0.5 rounded text-[10px] font-bold">
               PREMIUM
@@ -258,7 +269,9 @@ function InvestigationCard({
         {ratio !== null && (
           <div className="mt-3 pt-3 border-t border-gray-200 dark:border-slate-700">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-gray-500 dark:text-gray-400">Meilleur score</span>
+              <span className="text-gray-500 dark:text-gray-400">
+                Meilleur score
+              </span>
               <span
                 className={`font-bold ${
                   ratio >= 75

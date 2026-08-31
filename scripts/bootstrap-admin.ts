@@ -33,14 +33,8 @@
 // SUPERADMIN, ou de promouvoir manuellement sans toucher à la DB.
 
 import { PrismaClient } from "@prisma/client";
-import {
-  hashPassword,
-  validatePasswordPolicy,
-} from "../lib/password";
-import {
-  parseBootstrapRole,
-  shouldPromote,
-} from "../lib/admin/bootstrap-role";
+import { hashPassword, validatePasswordPolicy } from "../lib/password";
+import { parseBootstrapRole, shouldPromote } from "../lib/admin/bootstrap-role";
 
 const prisma = new PrismaClient();
 
@@ -50,9 +44,7 @@ async function main() {
   const name = process.env.BOOTSTRAP_ADMIN_NAME ?? "Administrateur";
   const role = parseBootstrapRole(process.env.BOOTSTRAP_ADMIN_ROLE);
   const tenantName = process.env.BOOTSTRAP_TENANT_NAME ?? "Mon organisation";
-  const tenantSlug = (
-    process.env.BOOTSTRAP_TENANT_SLUG ?? "default"
-  )
+  const tenantSlug = (process.env.BOOTSTRAP_TENANT_SLUG ?? "default")
     .toLowerCase()
     .replace(/[^a-z0-9-]/g, "-");
 
@@ -149,8 +141,18 @@ async function main() {
     { slug: "dev", name: "Développement", emoji: "💻", color: "#6366F1" },
     { slug: "commercial", name: "Commercial", emoji: "💼", color: "#EC4899" },
     { slug: "it", name: "IT / SI", emoji: "⚙️", color: "#0EA5E9" },
-    { slug: "atelier", name: "Atelier / Production", emoji: "🏭", color: "#A855F7" },
-    { slug: "communication", name: "Communication", emoji: "🎨", color: "#EF4444" },
+    {
+      slug: "atelier",
+      name: "Atelier / Production",
+      emoji: "🏭",
+      color: "#A855F7",
+    },
+    {
+      slug: "communication",
+      name: "Communication",
+      emoji: "🎨",
+      color: "#EF4444",
+    },
     { slug: "agents", name: "Agents", emoji: "👤", color: "#64748B" },
   ];
   for (const g of SYSTEM_GROUPS) {

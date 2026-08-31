@@ -30,20 +30,20 @@ export class HumanixApiError extends Error {
 
 // Endpoints exposes par le MCP server. Tous read-only.
 export type EvidenceFramework =
-  | "ISO27001:2022"
-  | "NIS2"
-  | "RGPD"
-  | "ANSSI-HG"
-  | "NIST-CSF";
+  "ISO27001:2022" | "NIS2" | "RGPD" | "ANSSI-HG" | "NIST-CSF";
 
-export type EvidenceFormat = "humanix-v1" | "oscal-v1" | "splunk-cim-v1" | "sentinel-cef-v1";
+export type EvidenceFormat =
+  "humanix-v1" | "oscal-v1" | "splunk-cim-v1" | "sentinel-cef-v1";
 
 export async function fetchEvidenceExport(
   cfg: HumanixConfig,
   framework: EvidenceFramework,
   format: EvidenceFormat = "humanix-v1",
 ): Promise<unknown> {
-  return getJson(cfg, `/api/v1/evidence-export?framework=${encodeURIComponent(framework)}&format=${encodeURIComponent(format)}`);
+  return getJson(
+    cfg,
+    `/api/v1/evidence-export?framework=${encodeURIComponent(framework)}&format=${encodeURIComponent(format)}`,
+  );
 }
 
 export async function fetchUsersAtRisk(
@@ -59,7 +59,10 @@ export async function fetchComplianceScore(
   cfg: HumanixConfig,
   framework: EvidenceFramework,
 ): Promise<unknown> {
-  return getJson(cfg, `/api/v1/compliance-score?framework=${encodeURIComponent(framework)}`);
+  return getJson(
+    cfg,
+    `/api/v1/compliance-score?framework=${encodeURIComponent(framework)}`,
+  );
 }
 
 export async function fetchRecentCampaigns(
@@ -155,7 +158,8 @@ async function getJson(cfg: HumanixConfig, path: string): Promise<unknown> {
 
 export function loadConfigFromEnv(): HumanixConfig {
   const apiKey = process.env.HUMANIX_API_KEY;
-  const baseUrl = process.env.HUMANIX_BASE_URL || "https://app.humanix-cybersecurity.fr";
+  const baseUrl =
+    process.env.HUMANIX_BASE_URL || "https://app.humanix-cybersecurity.fr";
 
   if (!apiKey) {
     throw new Error(

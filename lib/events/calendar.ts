@@ -108,8 +108,7 @@ export const CYBER_EVENTS: CyberEventDef[] = [
     slugBase: "anti_phishing_day",
     title: "Anti-Phishing Day",
     emoji: "🎣",
-    description:
-      "Le 17 juin, focus mondial sur la détection des mails piégés.",
+    description: "Le 17 juin, focus mondial sur la détection des mails piégés.",
     highlightSaisonSlug: "phishing",
     durationDays: 3,
     autoChallenge: false,

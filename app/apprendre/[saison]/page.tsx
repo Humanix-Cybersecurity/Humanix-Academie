@@ -78,10 +78,7 @@ export default async function SaisonPage({
             ← Toutes les saisons
           </Link>
           <div className="flex items-start gap-4 sm:gap-6">
-            <div
-              className="text-6xl sm:text-7xl shrink-0"
-              aria-hidden="true"
-            >
+            <div className="text-6xl sm:text-7xl shrink-0" aria-hidden="true">
               {saison.coverEmoji}
             </div>
             <div className="flex-1 min-w-0">
@@ -190,7 +187,11 @@ export default async function SaisonPage({
                             : "text-gray-500 dark:text-gray-500"
                       }`}
                     >
-                      {isDone ? "✓ Fini" : isInProgress ? "En cours" : "À faire"}
+                      {isDone
+                        ? "✓ Fini"
+                        : isInProgress
+                          ? "En cours"
+                          : "À faire"}
                     </span>
                   </Link>
                 </li>

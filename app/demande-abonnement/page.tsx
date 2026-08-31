@@ -32,7 +32,10 @@ export const metadata = {
 };
 
 const PLAN_OPTIONS = [
-  { value: "starter", label: "Starter - 1 à 15 sièges (gratuit ≤5, 19 €/mois 6-15)" },
+  {
+    value: "starter",
+    label: "Starter - 1 à 15 sièges (gratuit ≤5, 19 €/mois 6-15)",
+  },
   { value: "pro", label: "Pro - 16 à 250 sièges (3 €/utilisateur/mois)" },
   { value: "enterprise", label: "Enterprise - 250+ sièges / sur-mesure" },
   { value: "non-decide", label: "Je n'ai pas encore décidé, conseillez-moi" },
@@ -63,11 +66,13 @@ export default async function DemandeAbonnementPage({
     ? "Une erreur est survenue. Réessaye dans un instant ou écris-nous directement à contact@humanix-cybersecurity.fr."
     : null;
   // Pre-fill depuis query params (CTA Pro/Enterprise sur /tarifs)
-  const prefillPlan = params.plan && ["starter", "pro", "enterprise"].includes(params.plan)
-    ? params.plan
-    : "non-decide";
+  const prefillPlan =
+    params.plan && ["starter", "pro", "enterprise"].includes(params.plan)
+      ? params.plan
+      : "non-decide";
   const prefillBilling = params.billing === "monthly" ? "monthly" : "annual";
-  const prefillSeats = params.seats && /^\d+$/.test(params.seats) ? params.seats : "";
+  const prefillSeats =
+    params.seats && /^\d+$/.test(params.seats) ? params.seats : "";
   // Si on arrive parce que PayPlug est down (CTA Pro reroutee), on change le ton.
   const paymentDownContext = params.via === "payment-pending";
 
@@ -89,8 +94,8 @@ export default async function DemandeAbonnementPage({
                 <strong>Mollie</strong> finalise notre validation KYC. En
                 attendant, remplissez ce formulaire :{" "}
                 <strong>nous activons votre compte sous 24h ouvrées</strong>{" "}
-                avec une facture proforma payable par virement, et la
-                bascule en paiement automatique se fera dès Mollie en place.
+                avec une facture proforma payable par virement, et la bascule en
+                paiement automatique se fera dès Mollie en place.
               </p>
             </>
           ) : (
@@ -122,14 +127,16 @@ export default async function DemandeAbonnementPage({
             role="status"
             className="bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-300 dark:border-emerald-700 rounded-2xl p-6 text-center"
           >
-            <p className="text-2xl mb-2" aria-hidden="true">✅</p>
+            <p className="text-2xl mb-2" aria-hidden="true">
+              ✅
+            </p>
             <h2 className="font-display font-extrabold text-emerald-900 dark:text-emerald-200 text-xl mb-2">
               Demande reçue.
             </h2>
             <p className="text-emerald-800 dark:text-emerald-300 text-sm leading-relaxed">
-              Florian (le founder) revient vers vous sous 24h ouvrées par
-              email. Si vous avez besoin d&apos;une réponse plus rapide,
-              écrivez-nous directement à{" "}
+              Florian (le founder) revient vers vous sous 24h ouvrées par email.
+              Si vous avez besoin d&apos;une réponse plus rapide, écrivez-nous
+              directement à{" "}
               <a
                 href="mailto:contact@humanix-cybersecurity.fr"
                 className="underline font-bold"
@@ -164,7 +171,8 @@ export default async function DemandeAbonnementPage({
                   htmlFor="organization"
                   className="block text-sm font-medium mb-1"
                 >
-                  Nom de l&apos;organisation <span className="text-warn">*</span>
+                  Nom de l&apos;organisation{" "}
+                  <span className="text-warn">*</span>
                 </label>
                 <input
                   id="organization"
@@ -322,7 +330,10 @@ export default async function DemandeAbonnementPage({
                       className="accent-accent-500"
                       required
                     />
-                    <span className="text-sm">Annuel <span className="text-emerald-600 text-xs">(-10 %)</span></span>
+                    <span className="text-sm">
+                      Annuel{" "}
+                      <span className="text-emerald-600 text-xs">(-10 %)</span>
+                    </span>
                   </label>
                 </div>
               </div>
@@ -347,7 +358,12 @@ export default async function DemandeAbonnementPage({
               <div className="hidden" aria-hidden="true">
                 <label>
                   Ne rien remplir :
-                  <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+                  <input
+                    type="text"
+                    name="website"
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
                 </label>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between pt-2">
@@ -355,8 +371,8 @@ export default async function DemandeAbonnementPage({
                   Envoyer la demande
                 </button>
                 <p className="text-xs text-gray-500">
-                  RGPD : ces données sont stockées 6 mois max, sans cession à
-                  un tiers.
+                  RGPD : ces données sont stockées 6 mois max, sans cession à un
+                  tiers.
                 </p>
               </div>
             </form>

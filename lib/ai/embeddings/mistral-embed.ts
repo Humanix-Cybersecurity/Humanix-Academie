@@ -50,7 +50,10 @@ export async function embedTexts(
   // Si l'appelant fournit un signal externe, on relaye l'abort
   if (options?.signal) {
     if (options.signal.aborted) ctrl.abort();
-    else options.signal.addEventListener("abort", () => ctrl.abort(), { once: true });
+    else
+      options.signal.addEventListener("abort", () => ctrl.abort(), {
+        once: true,
+      });
   }
 
   let res: Response;

@@ -155,9 +155,7 @@ function mapDbToResolved(
   };
 }
 
-function mapHardcodedToResolved(
-  t: PhishingTemplateDef,
-): ResolvedEmailTemplate {
+function mapHardcodedToResolved(t: PhishingTemplateDef): ResolvedEmailTemplate {
   return {
     source: "hardcoded-fallback",
     slug: t.id,

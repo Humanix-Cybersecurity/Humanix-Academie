@@ -94,7 +94,8 @@ export async function resolveTenantContext(): Promise<TenantContext> {
   // Cast explicite : NextAuth v5 a plusieurs overloads pour `auth`,
   // et ReturnType resout sur le middleware handler. Sans args, c'est bien
   // une promesse de Session | null.
-  const session = (await (auth as unknown as () => Promise<SessionLike>)()) ?? null;
+  const session =
+    (await (auth as unknown as () => Promise<SessionLike>)()) ?? null;
   const headersList = await headers();
   const slug = headersList.get("x-tenant-slug");
 
@@ -149,8 +150,9 @@ export async function resolveTenantContext(): Promise<TenantContext> {
       })
     : null;
 
-  const protocol =
-    process.env.NEXT_PUBLIC_APP_URL?.startsWith("http://") ? "http" : "https";
+  const protocol = process.env.NEXT_PUBLIC_APP_URL?.startsWith("http://")
+    ? "http"
+    : "https";
   const rootDomain = process.env.NEXT_PUBLIC_APP_URL
     ? new URL(process.env.NEXT_PUBLIC_APP_URL).hostname.replace(/^www\./, "")
     : "humanix-academie.fr";

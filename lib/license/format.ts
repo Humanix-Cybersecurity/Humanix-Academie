@@ -18,7 +18,10 @@ const PREFIX = "HUMANIX-LICENSE-v1";
  * Serialise un payload + signature en string transportable.
  * NB : ne fait PAS la signature elle-meme (cf. sign.ts).
  */
-export function encodeLicense(payload: LicensePayload, signatureB64: string): string {
+export function encodeLicense(
+  payload: LicensePayload,
+  signatureB64: string,
+): string {
   const payloadJson = canonicalJson(payload);
   const payloadB64 = base64UrlEncode(payloadJson);
   return `${PREFIX}.${payloadB64}.${signatureB64}`;

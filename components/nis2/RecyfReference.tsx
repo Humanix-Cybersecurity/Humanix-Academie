@@ -31,10 +31,13 @@ export default function RecyfReference() {
       <p className="text-gray-700 dark:text-gray-200 leading-relaxed mb-3">
         NIS2 fixe des objectifs. En France, c&apos;est l&apos;ANSSI qui les
         traduit en mesures concrètes, dans le{" "}
-        <strong>{RECYF_META.nom} ({RECYF_META.sigle})</strong>. Ce référentiel
-        organise la sécurité en <strong>20 objectifs de sécurité</strong>,
-        regroupés en quatre grands thèmes. Notre diagnostic suit cette
-        structure pour vous parler le même langage que l&apos;autorité.
+        <strong>
+          {RECYF_META.nom} ({RECYF_META.sigle})
+        </strong>
+        . Ce référentiel organise la sécurité en{" "}
+        <strong>20 objectifs de sécurité</strong>, regroupés en quatre grands
+        thèmes. Notre diagnostic suit cette structure pour vous parler le même
+        langage que l&apos;autorité.
       </p>
 
       <div className="grid sm:grid-cols-2 gap-2 mb-4">
@@ -47,8 +50,8 @@ export default function RecyfReference() {
         <div className="rounded-xl bg-accent-50 dark:bg-accent-950/30 p-3 text-sm text-accent-800 dark:text-accent-100">
           <span aria-hidden="true">👤 </span>
           <strong>Le dirigeant est responsable.</strong> ReCyF place la
-          gouvernance de la sécurité numérique sous la responsabilité directe
-          du dirigeant exécutif.
+          gouvernance de la sécurité numérique sous la responsabilité directe du
+          dirigeant exécutif.
         </div>
       </div>
 

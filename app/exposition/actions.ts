@@ -15,7 +15,12 @@ export type SavePlanResult =
   | { ok: true }
   | { ok: false; error: "not_authenticated" | "invalid_input" | "db_error" };
 
-type PlanItemInput = { key: string; label: string; done: boolean; sourceUrl: string };
+type PlanItemInput = {
+  key: string;
+  label: string;
+  done: boolean;
+  sourceUrl: string;
+};
 
 export async function saveRemediationPlan(
   items: PlanItemInput[],

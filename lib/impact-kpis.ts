@@ -171,12 +171,8 @@ export async function computeImpactKpis(tenantId: string): Promise<ImpactKpis> {
         );
 
   // Cohortes novice (0-1 module) vs engagee (5+ modules)
-  const novices = users.filter(
-    (u) => (usersByActivity.get(u.id) ?? 0) <= 1,
-  );
-  const engaged = users.filter(
-    (u) => (usersByActivity.get(u.id) ?? 0) >= 5,
-  );
+  const novices = users.filter((u) => (usersByActivity.get(u.id) ?? 0) <= 1);
+  const engaged = users.filter((u) => (usersByActivity.get(u.id) ?? 0) >= 5);
   const novicesAvgRiskScore =
     novices.length === 0
       ? 50 // valeur neutre par defaut

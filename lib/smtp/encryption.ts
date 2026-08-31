@@ -21,7 +21,12 @@
 // ROTATION : voir docs/SMTP_KEY_ROTATION.md (a creer si besoin). Pour
 // l'instant : pas de rotation automatique.
 
-import { createCipheriv, createDecipheriv, hkdfSync, randomBytes } from "node:crypto";
+import {
+  createCipheriv,
+  createDecipheriv,
+  hkdfSync,
+  randomBytes,
+} from "node:crypto";
 
 const ALGO = "aes-256-gcm";
 const IV_LENGTH = 12; // 96 bits - recommande pour GCM

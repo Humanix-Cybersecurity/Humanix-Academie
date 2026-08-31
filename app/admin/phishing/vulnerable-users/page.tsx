@@ -83,9 +83,12 @@ export default async function VulnerableUsersPage() {
       const submitted = u.phishingResults.filter(
         (r) => r.submittedAt !== null,
       ).length;
-      const clicked = u.phishingResults.filter((r) => r.clickedAt !== null)
-        .length;
-      const opened = u.phishingResults.filter((r) => r.openedAt !== null).length;
+      const clicked = u.phishingResults.filter(
+        (r) => r.clickedAt !== null,
+      ).length;
+      const opened = u.phishingResults.filter(
+        (r) => r.openedAt !== null,
+      ).length;
       const reported = u.phishingResults.filter(
         (r) => r.reportedAt !== null,
       ).length;
@@ -111,7 +114,9 @@ export default async function VulnerableUsersPage() {
         description="Profil IA Mistral par apprenant sur 180 jours d'interactions avec les simulations. Clique sur 'Analyser' pour generer un narratif personnalise."
       />
 
-      <AdminSection title={`${sorted.length} apprenant${sorted.length > 1 ? "s" : ""} actif${sorted.length > 1 ? "s" : ""} avec historique phishing`}>
+      <AdminSection
+        title={`${sorted.length} apprenant${sorted.length > 1 ? "s" : ""} actif${sorted.length > 1 ? "s" : ""} avec historique phishing`}
+      >
         {sorted.length === 0 ? (
           <p className="text-sm text-gray-500">
             Aucun apprenant avec interactions phishing sur les 180 derniers

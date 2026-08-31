@@ -32,8 +32,8 @@ const LEGACY_SUBSCRIPTION_STATUS = "trialing";
 const TARGET_SUBSCRIPTION_STATUS = "active";
 
 async function main() {
-  const [planChange, statusChange, trialEndsCleared] = await prisma.$transaction(
-    async (tx) => {
+  const [planChange, statusChange, trialEndsCleared] =
+    await prisma.$transaction(async (tx) => {
       const planChange = await tx.tenant.updateMany({
         where: { plan: LEGACY_PLAN_ID },
         data: { plan: TARGET_PLAN_ID },
@@ -50,8 +50,7 @@ async function main() {
       });
 
       return [planChange, statusChange, trialEndsCleared] as const;
-    },
-  );
+    });
 
   if (planChange.count > 0) {
     console.log(

@@ -55,17 +55,9 @@ export default function MadeInFranceStamp({
       >
         <defs>
           {/* Arc HAUT pour "MADE IN FRANCE" (rayon plus grand pour aerer) */}
-          <path
-            id="mif-arc-top"
-            d="M 16,60 A 44,44 0 0 1 104,60"
-            fill="none"
-          />
+          <path id="mif-arc-top" d="M 16,60 A 44,44 0 0 1 104,60" fill="none" />
           {/* Arc BAS pour "RGPD · NIS2 · SOUVERAIN" -- même rayon, lisible */}
-          <path
-            id="mif-arc-bot"
-            d="M 16,60 A 44,44 0 0 0 104,60"
-            fill="none"
-          />
+          <path id="mif-arc-bot" d="M 16,60 A 44,44 0 0 0 104,60" fill="none" />
           {/* Filtre : grain papier/encre très subtil */}
           <filter id="mif-grain" x="0" y="0" width="100%" height="100%">
             <feTurbulence

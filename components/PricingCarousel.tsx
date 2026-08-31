@@ -156,8 +156,7 @@ export default function PricingCarousel({
               // Selected = pleine opacite + scale 1 + ring
               // Distance 1 = opacity 0.45, scale 0.92
               // Distance 2+ = opacity 0.1 (quasi invisible, accessible via fleche)
-              const opacity =
-                absDist === 0 ? 1 : absDist === 1 ? 0.45 : 0.1;
+              const opacity = absDist === 0 ? 1 : absDist === 1 ? 0.45 : 0.1;
               const scale = absDist === 0 ? 1 : 0.92;
               return (
                 <li
@@ -439,8 +438,7 @@ function CtaButton({
     //
     // Flip via env : NEXT_PUBLIC_MOLLIE_AVAILABLE=false en prod ->
     // les CTA basculent. Defaut "true" (Mollie ON) si non defini.
-    const paymentDown =
-      process.env.NEXT_PUBLIC_MOLLIE_AVAILABLE === "false";
+    const paymentDown = process.env.NEXT_PUBLIC_MOLLIE_AVAILABLE === "false";
 
     // Si l'utilisateur est connecte avec un plan inferieur, l'upgrade doit
     // passer par /admin/billing (qui contient PlanUpgradeOptions et call

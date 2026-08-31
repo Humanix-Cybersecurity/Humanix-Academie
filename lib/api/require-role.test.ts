@@ -101,9 +101,7 @@ describe("requireRole", () => {
   });
 
   it("autorise si role exact", async () => {
-    vi.mocked(auth).mockResolvedValue(
-      fakeSession({ id: "u1", role: "ADMIN" }),
-    );
+    vi.mocked(auth).mockResolvedValue(fakeSession({ id: "u1", role: "ADMIN" }));
     const g = await requireRole(["ADMIN", "RSSI"]);
     expect("session" in g).toBe(true);
     expect(auditLog).not.toHaveBeenCalled();
@@ -143,9 +141,7 @@ describe("requireSuperadmin / requireAdmin", () => {
   afterEach(() => vi.restoreAllMocks());
 
   it("requireSuperadmin : seul SUPERADMIN passe", async () => {
-    vi.mocked(auth).mockResolvedValue(
-      fakeSession({ id: "u1", role: "ADMIN" }),
-    );
+    vi.mocked(auth).mockResolvedValue(fakeSession({ id: "u1", role: "ADMIN" }));
     const g = await requireSuperadmin();
     expect("response" in g).toBe(true);
 

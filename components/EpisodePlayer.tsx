@@ -40,9 +40,11 @@ type Step = "scenario" | "debrief" | "quiz" | "recap";
 // Citations rotatives selon le score quiz - pas la même philosophie selon
 // le niveau de maitrise atteint. Toutes chaleureuses, jamais jugeantes.
 const RECAP_CITATIONS = {
-  perfect: "« Tu n'as pas a être expert. Tu as juste a être averti une seconde avant le clic. C'est exactement ce que tu viens de faire. »",
+  perfect:
+    "« Tu n'as pas a être expert. Tu as juste a être averti une seconde avant le clic. C'est exactement ce que tu viens de faire. »",
   good: "« La maitrise cyber, c'est moins une affaire d'expert qu'une habitude tranquille. Tu construis cette habitude. »",
-  partial: "« Le meilleur reflexe cyber, c'est de prendre 30 secondes avant d'agir. Tu en es déjà capable. »",
+  partial:
+    "« Le meilleur reflexe cyber, c'est de prendre 30 secondes avant d'agir. Tu en es déjà capable. »",
   low: "« Apprendre la cyber, c'est apprendre a se faire confiance. Hex t'accompagne, pas le contraire. »",
 };
 
@@ -75,10 +77,9 @@ export default function EpisodePlayer(props: {
   // choice depuis l'id stocke (utile pour rejouer le bon debrief sans
   // reposer la question scenario).
   const initialStep: Step = props.resume?.step ?? "scenario";
-  const initialChoice: Choice | null =
-    props.resume?.choiceId
-      ? (props.choices.find((c) => c.id === props.resume!.choiceId) ?? null)
-      : null;
+  const initialChoice: Choice | null = props.resume?.choiceId
+    ? (props.choices.find((c) => c.id === props.resume!.choiceId) ?? null)
+    : null;
   const initialQuizIndex = props.resume?.quizIndex ?? 0;
 
   const [step, setStep] = useState<Step>(initialStep);
@@ -580,8 +581,8 @@ export default function EpisodePlayer(props: {
                   }}
                   className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-500 via-pink-500 to-amber-500 text-white rounded-2xl px-6 py-3 font-display font-extrabold shadow-lg animate-glow"
                 >
-                  <span aria-hidden="true">✨</span> Niveau {levelUp} debloque
-                  - clique pour voir
+                  <span aria-hidden="true">✨</span> Niveau {levelUp} debloque -
+                  clique pour voir
                 </button>
               </div>
             )}

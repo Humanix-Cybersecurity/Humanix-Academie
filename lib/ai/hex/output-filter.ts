@@ -60,7 +60,9 @@ const PROMPT_LEAK_SIGNATURES: RegExp[] = [
  * Cherche une signature de leak dans un buffer textuel. Renvoie l'index
  * du match (pour le debug) ou null si rien trouve.
  */
-export function findPromptLeak(buffer: string): { match: string; index: number } | null {
+export function findPromptLeak(
+  buffer: string,
+): { match: string; index: number } | null {
   for (const re of PROMPT_LEAK_SIGNATURES) {
     const m = buffer.match(re);
     if (m && m.index !== undefined) {

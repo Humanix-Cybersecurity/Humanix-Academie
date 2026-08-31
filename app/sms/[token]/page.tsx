@@ -100,18 +100,14 @@ export default async function SmishingLandingPage({
               presque toujours un signal d&apos;arnaque
             </li>
             <li>
-              Signale les SMS suspects au <strong>33700</strong> (numéro
-              gratuit Signal Spam) en transférant le SMS et le numéro
-              expéditeur
+              Signale les SMS suspects au <strong>33700</strong> (numéro gratuit
+              Signal Spam) en transférant le SMS et le numéro expéditeur
             </li>
           </ul>
         </section>
 
         <div className="text-center">
-          <Link
-            href="/apprendre"
-            className="btn-primary inline-block text-sm"
-          >
+          <Link href="/apprendre" className="btn-primary inline-block text-sm">
             Approfondir avec un module Humanix →
           </Link>
         </div>

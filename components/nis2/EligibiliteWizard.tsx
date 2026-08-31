@@ -143,8 +143,8 @@ export default function EligibiliteWizard() {
       {/* Q3 - Fournisseur */}
       <fieldset className="rounded-2xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6">
         <legend className="font-display text-lg font-bold text-primary-600 dark:text-accent-300 px-2">
-          3. Fournissez-vous un produit ou service à une grande entreprise ou
-          un acteur d'un secteur réglementé ?
+          3. Fournissez-vous un produit ou service à une grande entreprise ou un
+          acteur d'un secteur réglementé ?
         </legend>
         <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-3 px-2 italic">
           Par exemple : vous êtes prestataire, fournisseur ou sous-traitant d'un
@@ -230,10 +230,10 @@ export default function EligibiliteWizard() {
             </Link>
           </div>
           <p className="text-xs text-gray-500 dark:text-gray-400 italic mt-5 leading-relaxed">
-            Estimation indicative, fournie pour vous orienter. Elle ne
-            constitue pas un avis juridique. Le périmètre exact dépend des
-            textes de transposition de NIS2 et de votre situation : certaines
-            entités sont concernées quelle que soit leur taille.
+            Estimation indicative, fournie pour vous orienter. Elle ne constitue
+            pas un avis juridique. Le périmètre exact dépend des textes de
+            transposition de NIS2 et de votre situation : certaines entités sont
+            concernées quelle que soit leur taille.
           </p>
         </section>
       )}

@@ -54,7 +54,14 @@ const WHITELIST = new Set([
 ]);
 
 // Dossiers a scanner pour trouver process.env.X
-const SCAN_DIRS = ["app", "lib", "components", "scripts", "prisma", "middleware.ts"];
+const SCAN_DIRS = [
+  "app",
+  "lib",
+  "components",
+  "scripts",
+  "prisma",
+  "middleware.ts",
+];
 
 function findUsedEnvVars(): Set<string> {
   const used = new Set<string>();

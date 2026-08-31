@@ -57,8 +57,7 @@ const PLAUSIBLE_SRC = process.env.NEXT_PUBLIC_PLAUSIBLE_CLOUD_SCRIPT ?? "";
  * decider, on ne lui impose pas notre flow consent.
  */
 const HAS_SELFHOST =
-  typeof process !== "undefined" &&
-  !!process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN;
+  typeof process !== "undefined" && !!process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN;
 
 export default function PlausibleLoader() {
   const [consent, setConsent] = useState<ConsentValue>(null);

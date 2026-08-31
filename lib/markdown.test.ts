@@ -6,7 +6,9 @@ import { renderInline, markdownToPlainText, parseMarkdown } from "./markdown";
 
 describe("renderInline - rendu liens cliquables", () => {
   it("convertit [texte](https://...) en token link", () => {
-    const tokens = renderInline("Va sur [Facebook](https://facebook.com) maintenant.");
+    const tokens = renderInline(
+      "Va sur [Facebook](https://facebook.com) maintenant.",
+    );
     expect(tokens).toEqual([
       "Va sur ",
       { link: { text: "Facebook", href: "https://facebook.com" } },
@@ -37,7 +39,9 @@ describe("renderInline - SECURITE anti-XSS", () => {
   it("rejette javascript: et fallback en texte brut", () => {
     const tokens = renderInline("[click](javascript:alert(1))");
     // GARANTIE SECURITE : aucun token de type "link" -> pas d'<a href> rendu
-    expect(tokens.some((t) => typeof t === "object" && "link" in t)).toBe(false);
+    expect(tokens.some((t) => typeof t === "object" && "link" in t)).toBe(
+      false,
+    );
     // Le contenu reste visible (en string brute) pour que l'auteur du markdown
     // voie son erreur. Le rendering peut split en plusieurs strings selon les
     // parentheses imbriquees -- pas un probleme cote affichage.
@@ -46,23 +50,33 @@ describe("renderInline - SECURITE anti-XSS", () => {
   });
 
   it("rejette data: (eviter les data URLs malveillantes)", () => {
-    const tokens = renderInline("[x](data:text/html,<script>alert(1)</script>)");
-    expect(tokens.some((t) => typeof t === "object" && "link" in t)).toBe(false);
+    const tokens = renderInline(
+      "[x](data:text/html,<script>alert(1)</script>)",
+    );
+    expect(tokens.some((t) => typeof t === "object" && "link" in t)).toBe(
+      false,
+    );
   });
 
   it("rejette vbscript:", () => {
     const tokens = renderInline("[x](vbscript:msgbox)");
-    expect(tokens.some((t) => typeof t === "object" && "link" in t)).toBe(false);
+    expect(tokens.some((t) => typeof t === "object" && "link" in t)).toBe(
+      false,
+    );
   });
 
   it("rejette file:", () => {
     const tokens = renderInline("[x](file:///etc/passwd)");
-    expect(tokens.some((t) => typeof t === "object" && "link" in t)).toBe(false);
+    expect(tokens.some((t) => typeof t === "object" && "link" in t)).toBe(
+      false,
+    );
   });
 
   it("rejette about:", () => {
     const tokens = renderInline("[x](about:blank)");
-    expect(tokens.some((t) => typeof t === "object" && "link" in t)).toBe(false);
+    expect(tokens.some((t) => typeof t === "object" && "link" in t)).toBe(
+      false,
+    );
   });
 
   it("URL avec espaces / chars bizarres -> traite ou rejette safely", () => {

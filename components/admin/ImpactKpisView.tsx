@@ -223,9 +223,9 @@ export default function ImpactKpisView({ kpis }: { kpis: ImpactKpis }) {
           Ces KPIs mesurent <strong>ce qui s'est passé chez toi</strong> grâce à
           la plateforme - pas une projection théorique. Le delta "Effet
           plateforme" est un proxy avant/après basé sur la comparaison entre
-          collaborateurs novices (0-1 module) et engagés (5+ modules) - c'est
-          de la causalité statistique, pas absolue. Pour le ROI financier
-          (économie €/an espérée), voir{" "}
+          collaborateurs novices (0-1 module) et engagés (5+ modules) - c'est de
+          la causalité statistique, pas absolue. Pour le ROI financier (économie
+          €/an espérée), voir{" "}
           <Link
             href="/admin/business"
             className="text-accent-500 underline font-medium"

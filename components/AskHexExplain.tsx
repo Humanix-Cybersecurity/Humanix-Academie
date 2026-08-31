@@ -194,7 +194,8 @@ export default function AskHexExplain({
             />
           </div>
           <p className="text-[11px] text-gray-500 dark:text-gray-400 italic">
-            Hex t&apos;a répondu en mode <strong>{personaLabel(state.persona)}</strong>.{" "}
+            Hex t&apos;a répondu en mode{" "}
+            <strong>{personaLabel(state.persona)}</strong>.{" "}
             <button
               type="button"
               onClick={reset}

@@ -48,8 +48,13 @@ function main() {
 
   console.log(c.bold(`\n🧹 TTS cache prune`));
   console.log(c.dim(`   cache=${root.root}`));
-  console.log(c.dim(`   manifest=${Object.keys(manifest.segments).length} segments references, ${knownHashes.size} hashes uniques`));
-  if (!APPLY) console.log(c.yellow(`   --dry mode (use --apply pour supprimer)`));
+  console.log(
+    c.dim(
+      `   manifest=${Object.keys(manifest.segments).length} segments references, ${knownHashes.size} hashes uniques`,
+    ),
+  );
+  if (!APPLY)
+    console.log(c.yellow(`   --dry mode (use --apply pour supprimer)`));
 
   // Parcours des shards <2chars>/<hash>.mp3
   const orphans: string[] = [];
@@ -72,7 +77,9 @@ function main() {
     }
   }
 
-  console.log(`\n   ${totalFiles} fichiers MP3 sur disque (${(totalBytes / 1024 / 1024).toFixed(1)} Mo)`);
+  console.log(
+    `\n   ${totalFiles} fichiers MP3 sur disque (${(totalBytes / 1024 / 1024).toFixed(1)} Mo)`,
+  );
   console.log(`   ${c.yellow(`${orphans.length} orphelin(s)`)} a nettoyer\n`);
 
   if (orphans.length === 0) {
@@ -86,14 +93,21 @@ function main() {
     bytesFreed += sz;
     if (APPLY) {
       unlinkSync(p);
-      console.log(`  ${c.red("rm")}  ${p.replace(root.root, "data/tts-cache")}  (${(sz / 1024).toFixed(0)} Ko)`);
+      console.log(
+        `  ${c.red("rm")}  ${p.replace(root.root, "data/tts-cache")}  (${(sz / 1024).toFixed(0)} Ko)`,
+      );
     } else {
-      console.log(`  ${c.dim("would rm")}  ${p.replace(root.root, "data/tts-cache")}  (${(sz / 1024).toFixed(0)} Ko)`);
+      console.log(
+        `  ${c.dim("would rm")}  ${p.replace(root.root, "data/tts-cache")}  (${(sz / 1024).toFixed(0)} Ko)`,
+      );
     }
   }
 
-  console.log(`\n${APPLY ? c.green("✓ Supprime") : c.yellow("Liste")} : ${(bytesFreed / 1024 / 1024).toFixed(1)} Mo de cache orphelin`);
-  if (!APPLY) console.log(c.dim(`Relance avec --apply pour effacer reellement.\n`));
+  console.log(
+    `\n${APPLY ? c.green("✓ Supprime") : c.yellow("Liste")} : ${(bytesFreed / 1024 / 1024).toFixed(1)} Mo de cache orphelin`,
+  );
+  if (!APPLY)
+    console.log(c.dim(`Relance avec --apply pour effacer reellement.\n`));
   else console.log();
 }
 

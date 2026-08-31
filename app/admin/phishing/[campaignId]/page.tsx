@@ -76,9 +76,7 @@ export default async function CampaignDetailPage({
   // Phase 7a (juin 2026) : decomposition A/B si la campagne avait un
   // variantBSlug. On compute les memes metrics par variant pour comparison.
   const isAbTest = !!campaign.variantBSlug;
-  const variantStats = isAbTest
-    ? computeVariantStats(campaign.results)
-    : null;
+  const variantStats = isAbTest ? computeVariantStats(campaign.results) : null;
 
   return (
     <>
@@ -141,7 +139,11 @@ export default async function CampaignDetailPage({
       {/* TAUX CLES */}
       <AdminSection title="Taux clés">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          <RateKpi label="Taux d'ouverture" value={openRate} hint="opened / sent" />
+          <RateKpi
+            label="Taux d'ouverture"
+            value={openRate}
+            hint="opened / sent"
+          />
           <RateKpi
             label="Taux de clic"
             value={clickFromOpenRate}
@@ -453,7 +455,11 @@ export function VariantComparisonSection({
 }) {
   // Determine le "gagnant" sur chaque metric (le pire = celui qui a fait
   // cliquer / soumettre le plus).
-  function badge(value: number, comparison: number, kind: "lower-is-better" | "higher-is-better") {
+  function badge(
+    value: number,
+    comparison: number,
+    kind: "lower-is-better" | "higher-is-better",
+  ) {
     if (value === comparison) return null;
     const isWorse =
       kind === "lower-is-better" ? value > comparison : value < comparison;

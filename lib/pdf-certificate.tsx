@@ -267,7 +267,9 @@ export function CertificateOfCompletion(props: Props) {
   // Marque blanche : nom emetteur + filigrane logo du tenant si fournis,
   // sinon defaut Humanix.
   const issuer = props.brandName?.trim() || "Humanix-Cybersecurity";
-  const brandTitle = (props.brandName?.trim() || "Humanix Académie").toUpperCase();
+  const brandTitle = (
+    props.brandName?.trim() || "Humanix Académie"
+  ).toUpperCase();
   const isCustomBrand = Boolean(props.brandName?.trim());
 
   // Resolution lazy au moment du rendu (1ere demande). Evite que le

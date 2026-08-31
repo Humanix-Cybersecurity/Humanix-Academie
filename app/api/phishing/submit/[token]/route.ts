@@ -42,7 +42,10 @@ export const dynamic = "force-dynamic";
  * Reduce une valeur de field a juste sa metadata "safe". Aucune valeur
  * sensible n'est stockee.
  */
-function metadataOfField(name: string, value: FormDataEntryValue): {
+function metadataOfField(
+  name: string,
+  value: FormDataEntryValue,
+): {
   name: string;
   type: string;
   length: number;
@@ -52,10 +55,14 @@ function metadataOfField(name: string, value: FormDataEntryValue): {
   // son nom. Pas parfait mais suffit pour le debrief educatif.
   const lowerName = name.toLowerCase();
   let type = "text";
-  if (lowerName.includes("password") || lowerName.includes("mdp")) type = "password";
-  else if (lowerName.includes("email") || lowerName.includes("mail")) type = "email";
-  else if (lowerName.includes("tel") || lowerName.includes("phone")) type = "tel";
-  else if (lowerName.includes("user") || lowerName.includes("login")) type = "username";
+  if (lowerName.includes("password") || lowerName.includes("mdp"))
+    type = "password";
+  else if (lowerName.includes("email") || lowerName.includes("mail"))
+    type = "email";
+  else if (lowerName.includes("tel") || lowerName.includes("phone"))
+    type = "tel";
+  else if (lowerName.includes("user") || lowerName.includes("login"))
+    type = "username";
   return {
     name,
     type,
@@ -92,7 +99,8 @@ export async function POST(
 
   // Parse le payload (FormData ou JSON). La landing soumet en FormData natif.
   const contentType = req.headers.get("content-type") ?? "";
-  let fieldsMetadata: Array<{ name: string; type: string; length: number }> = [];
+  let fieldsMetadata: Array<{ name: string; type: string; length: number }> =
+    [];
   try {
     if (contentType.includes("application/json")) {
       const body = (await req.json()) as Record<string, unknown>;
@@ -122,8 +130,7 @@ export async function POST(
     // Le status passe a SUBMITTED seulement si on n'etait pas deja REPORTED
     // (REPORTED a priorite -- un user qui a signale ne devrait pas etre marque
     // SUBMITTED meme s'il a clique apres pour voir).
-    const shouldUpgradeStatus =
-      result.status !== PhishingStatus.REPORTED;
+    const shouldUpgradeStatus = result.status !== PhishingStatus.REPORTED;
 
     await db.phishingResult.update({
       where: { id: result.id },

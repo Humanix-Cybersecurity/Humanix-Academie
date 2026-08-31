@@ -10,11 +10,7 @@
 // rang est dans l'URL, donc l'image est specifique a chaque rang.
 
 import { notFound } from "next/navigation";
-import {
-  OG_SIZE,
-  OG_CONTENT_TYPE,
-  renderOgCard,
-} from "@/lib/og-card";
+import { OG_SIZE, OG_CONTENT_TYPE, renderOgCard } from "@/lib/og-card";
 import {
   DETECTIVE_RANK_LABELS,
   type DetectiveRank,

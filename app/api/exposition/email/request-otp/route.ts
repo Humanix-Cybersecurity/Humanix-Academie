@@ -18,11 +18,17 @@ export async function POST(req: Request) {
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
+    return NextResponse.json(
+      { ok: false, error: "invalid_json" },
+      { status: 400 },
+    );
   }
   const parsed = Schema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ ok: false, error: "invalid_email" }, { status: 400 });
+    return NextResponse.json(
+      { ok: false, error: "invalid_email" },
+      { status: 400 },
+    );
   }
 
   // ANTI-ABUS : cet endpoint anonyme declenche un VRAI envoi d'email. Sans
@@ -38,7 +44,11 @@ export async function POST(req: Request) {
     .digest("hex")
     .slice(0, 32);
   const ipRl = checkRateLimit(`exposure-otp-ip:${ip}`, 10, 60 * 60 * 1000);
-  const emailRl = checkRateLimit(`exposure-otp-mail:${emailKey}`, 3, 60 * 60 * 1000);
+  const emailRl = checkRateLimit(
+    `exposure-otp-mail:${emailKey}`,
+    3,
+    60 * 60 * 1000,
+  );
   if (!ipRl.ok || !emailRl.ok) {
     return NextResponse.json(
       { ok: false, error: "rate_limited" },
@@ -48,7 +58,10 @@ export async function POST(req: Request) {
 
   const result = await requestEmailOtp(parsed.data.email);
   if (!result.ok) {
-    return NextResponse.json({ ok: false, error: result.reason }, { status: 400 });
+    return NextResponse.json(
+      { ok: false, error: result.reason },
+      { status: 400 },
+    );
   }
   // On ne révèle jamais si l'email "existe" : réponse identique dans tous les
   // cas valides (anti-énumération).

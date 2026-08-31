@@ -505,7 +505,8 @@ const ANSSI_HG: FrameworkMapping = {
         {
           type: "metric",
           source: "marketplace_modules",
-          label: "Saisons techniques deployees (cyber-dev, securiser-administration-si)",
+          label:
+            "Saisons techniques deployees (cyber-dev, securiser-administration-si)",
           filter: { audience: "operationnel" },
         },
       ],
@@ -622,7 +623,8 @@ const ANSSI_HG: FrameworkMapping = {
         {
           type: "report",
           source: "audit_trail",
-          label: "Inventaire comptes privilegies (/superadmin/admins-by-tenant)",
+          label:
+            "Inventaire comptes privilegies (/superadmin/admins-by-tenant)",
           filter: { role: "ADMIN_RSSI_SUPERADMIN" },
         },
         {
@@ -692,7 +694,8 @@ const ANSSI_HG: FrameworkMapping = {
         {
           type: "metric",
           source: "tenant_score",
-          label: "Comptes nominatifs (User.email unique, pas de comptes partages)",
+          label:
+            "Comptes nominatifs (User.email unique, pas de comptes partages)",
         },
       ],
       thresholdCompliant: 1.0,
@@ -866,7 +869,8 @@ const ANSSI_HG: FrameworkMapping = {
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux completion modules chiffrement disque / FileVault / BitLocker",
+          label:
+            "Taux completion modules chiffrement disque / FileVault / BitLocker",
           filter: { category: "chiffrement" },
         },
       ],
@@ -943,7 +947,8 @@ const ANSSI_HG: FrameworkMapping = {
         {
           type: "document",
           source: "audit_trail",
-          label: "Architecture Humanix : HAProxy bare-metal en frontal, app Next.js cloisonnee Docker",
+          label:
+            "Architecture Humanix : HAProxy bare-metal en frontal, app Next.js cloisonnee Docker",
           filter: { type: "evidence.network_segmentation" },
         },
       ],
@@ -962,7 +967,8 @@ const ANSSI_HG: FrameworkMapping = {
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux completion module poste-admin-dedie (saison securiser-administration-si)",
+          label:
+            "Taux completion module poste-admin-dedie (saison securiser-administration-si)",
           filter: { slug: "01-poste-admin-dedie" },
         },
       ],
@@ -998,7 +1004,8 @@ const ANSSI_HG: FrameworkMapping = {
         {
           type: "event_log",
           source: "audit_trail",
-          label: "Verifications hierarchie RBAC (canActOn, assertCanChangeRole)",
+          label:
+            "Verifications hierarchie RBAC (canActOn, assertCanChangeRole)",
           filter: { type: "RBAC_HIERARCHY_VIOLATION_BLOCKED" },
         },
       ],
@@ -1081,7 +1088,8 @@ const ANSSI_HG: FrameworkMapping = {
         {
           type: "document",
           source: "audit_trail",
-          label: "Politique mises a jour Humanix (Dependabot + revue mensuelle)",
+          label:
+            "Politique mises a jour Humanix (Dependabot + revue mensuelle)",
           filter: { type: "evidence.update_policy" },
         },
         {
@@ -1141,7 +1149,8 @@ const ANSSI_HG: FrameworkMapping = {
         {
           type: "document",
           source: "audit_trail",
-          label: "Backup quotidien Postgres + chiffrement age + FTPS Scaleway Object Storage",
+          label:
+            "Backup quotidien Postgres + chiffrement age + FTPS Scaleway Object Storage",
           filter: { type: "evidence.backup_policy" },
         },
       ],
@@ -1156,7 +1165,8 @@ const ANSSI_HG: FrameworkMapping = {
         {
           type: "document",
           source: "audit_trail",
-          label: "Audits externes (Mozilla Observatory A+, SSLLabs A+, securityheaders.com A+) + pentest annuel",
+          label:
+            "Audits externes (Mozilla Observatory A+, SSLLabs A+, securityheaders.com A+) + pentest annuel",
           filter: { type: "evidence.security_audits" },
         },
       ],
@@ -1171,7 +1181,8 @@ const ANSSI_HG: FrameworkMapping = {
         {
           type: "policy",
           source: "incident_procedure",
-          label: "Point de contact securite : security@humanix-cybersecurity.fr + RSSI Humanix",
+          label:
+            "Point de contact securite : security@humanix-cybersecurity.fr + RSSI Humanix",
         },
       ],
       scopeNote:
@@ -1185,7 +1196,8 @@ const ANSSI_HG: FrameworkMapping = {
         {
           type: "policy",
           source: "incident_procedure",
-          label: "Procedure incident Pack NIS2 (notification CNIL 72h + ANSSI 24h/72h/1mois)",
+          label:
+            "Procedure incident Pack NIS2 (notification CNIL 72h + ANSSI 24h/72h/1mois)",
         },
         {
           type: "event_log",
@@ -1224,7 +1236,8 @@ const ANSSI_HG: FrameworkMapping = {
         {
           type: "document",
           source: "audit_trail",
-          label: "Roadmap certification ANSSI (dossier Q4 2026, reconnaissance visee 2027)",
+          label:
+            "Roadmap certification ANSSI (dossier Q4 2026, reconnaissance visee 2027)",
           filter: { type: "evidence.certification_roadmap" },
         },
       ],
@@ -1354,7 +1367,8 @@ const SAPIN2: FrameworkMapping = {
         {
           type: "metric",
           source: "completion_rate",
-          label: "Taux de completion modules ingenierie sociale (phishing/vishing)",
+          label:
+            "Taux de completion modules ingenierie sociale (phishing/vishing)",
         },
         {
           type: "document",
@@ -1384,7 +1398,8 @@ const SAPIN2: FrameworkMapping = {
         {
           type: "document",
           source: "user_certificates",
-          label: "Acceptation tracable de la charte cyber + fraude (timestamp + signature electronique)",
+          label:
+            "Acceptation tracable de la charte cyber + fraude (timestamp + signature electronique)",
         },
       ],
       scopeNote:
@@ -1405,7 +1420,8 @@ const SAPIN2: FrameworkMapping = {
         {
           type: "report",
           source: "compliance_report",
-          label: "Rapport tendance trimestriel (evolution du score d'exposition)",
+          label:
+            "Rapport tendance trimestriel (evolution du score d'exposition)",
         },
       ],
       thresholdCompliant: 0.6,
@@ -1419,7 +1435,8 @@ const SAPIN2: FrameworkMapping = {
     },
     {
       ref: "art-17-II-2",
-      reason: "Dispositif d'alerte interne (whistleblowing) : outils dedies (Whispli, etc.)",
+      reason:
+        "Dispositif d'alerte interne (whistleblowing) : outils dedies (Whispli, etc.)",
     },
     {
       ref: "art-17-II-4",
@@ -1549,7 +1566,8 @@ const SOC2: FrameworkMapping = {
         {
           type: "document",
           source: "audit_trail",
-          label: "Page publique /securite + /architecture + /conformite/anssi-hg",
+          label:
+            "Page publique /securite + /architecture + /conformite/anssi-hg",
           filter: { type: "evidence.public_trust_center" },
         },
         {
@@ -1588,7 +1606,8 @@ const SOC2: FrameworkMapping = {
         {
           type: "document",
           source: "audit_trail",
-          label: "Audit ANSSI HG 42 mesures + pentest annuel + STACK_EOL_TRACKING",
+          label:
+            "Audit ANSSI HG 42 mesures + pentest annuel + STACK_EOL_TRACKING",
           filter: { type: "evidence.risk_assessment" },
         },
       ],
@@ -1607,7 +1626,8 @@ const SOC2: FrameworkMapping = {
         {
           type: "document",
           source: "audit_trail",
-          label: "Triple A+ continu (Mozilla Observatory + SSLLabs + securityheaders.com)",
+          label:
+            "Triple A+ continu (Mozilla Observatory + SSLLabs + securityheaders.com)",
           filter: { type: "evidence.continuous_monitoring" },
         },
         {
@@ -1645,11 +1665,13 @@ const SOC2: FrameworkMapping = {
         {
           type: "document",
           source: "audit_trail",
-          label: "RBAC hierarchique (lib/role-hierarchy.ts) + multi-tenant isolation",
+          label:
+            "RBAC hierarchique (lib/role-hierarchy.ts) + multi-tenant isolation",
           filter: { type: "evidence.rbac" },
         },
       ],
-      scopeNote: "★ COUVERT NATIVEMENT. Hierarchie LEARNER < MANAGER < RSSI < ADMIN < SUPERADMIN, isolation tenant stricte.",
+      scopeNote:
+        "★ COUVERT NATIVEMENT. Hierarchie LEARNER < MANAGER < RSSI < ADMIN < SUPERADMIN, isolation tenant stricte.",
     },
     {
       ref: "CC5.3",
@@ -1694,7 +1716,8 @@ const SOC2: FrameworkMapping = {
           filter: { type: "USER_INVITED" },
         },
       ],
-      scopeNote: "Tout cycle de vie utilisateur audite (creation, role, suspension, suppression).",
+      scopeNote:
+        "Tout cycle de vie utilisateur audite (creation, role, suspension, suppression).",
     },
     {
       ref: "CC6.3",
@@ -1704,11 +1727,13 @@ const SOC2: FrameworkMapping = {
         {
           type: "report",
           source: "audit_trail",
-          label: "Inventaire comptes privilegies (/superadmin/admins-by-tenant)",
+          label:
+            "Inventaire comptes privilegies (/superadmin/admins-by-tenant)",
           filter: { role: "ADMIN_RSSI_SUPERADMIN" },
         },
       ],
-      scopeNote: "★ COUVERT NATIVEMENT. Cf. mesure 7 ANSSI HG : inventaire exhaustif + export CSV + detection dormants.",
+      scopeNote:
+        "★ COUVERT NATIVEMENT. Cf. mesure 7 ANSSI HG : inventaire exhaustif + export CSV + detection dormants.",
     },
     {
       ref: "CC6.6",
@@ -1718,11 +1743,13 @@ const SOC2: FrameworkMapping = {
         {
           type: "document",
           source: "audit_trail",
-          label: "HAProxy frontal + rate-limit + WAF leger + HSTS preload + CSP nonce",
+          label:
+            "HAProxy frontal + rate-limit + WAF leger + HSTS preload + CSP nonce",
           filter: { type: "evidence.network_defense" },
         },
       ],
-      scopeNote: "★ COUVERT NATIVEMENT. Defense en profondeur reseau + applicative.",
+      scopeNote:
+        "★ COUVERT NATIVEMENT. Defense en profondeur reseau + applicative.",
     },
     {
       ref: "CC6.7",
@@ -1732,7 +1759,8 @@ const SOC2: FrameworkMapping = {
         {
           type: "document",
           source: "audit_trail",
-          label: "TLS 1.3 only + chiffrement age backup + isolation multi-tenant Prisma",
+          label:
+            "TLS 1.3 only + chiffrement age backup + isolation multi-tenant Prisma",
           filter: { type: "evidence.data_protection" },
         },
       ],
@@ -1745,11 +1773,13 @@ const SOC2: FrameworkMapping = {
         {
           type: "document",
           source: "audit_trail",
-          label: "Dependabot + npm audit hebdo + scan secrets en CI + provenance SLSA + SBOM",
+          label:
+            "Dependabot + npm audit hebdo + scan secrets en CI + provenance SLSA + SBOM",
           filter: { type: "evidence.supply_chain" },
         },
       ],
-      scopeNote: "Couverture supply chain : alertes deps + scan secrets + provenance Docker.",
+      scopeNote:
+        "Couverture supply chain : alertes deps + scan secrets + provenance Docker.",
     },
 
     // ========================================================================
@@ -1776,7 +1806,8 @@ const SOC2: FrameworkMapping = {
         {
           type: "event_log",
           source: "audit_trail",
-          label: "Detection bursts admin / exfiltration en masse (sprint 3 pentest)",
+          label:
+            "Detection bursts admin / exfiltration en masse (sprint 3 pentest)",
           filter: { type: "anomaly.detected" },
         },
       ],
@@ -1803,7 +1834,8 @@ const SOC2: FrameworkMapping = {
         {
           type: "policy",
           source: "incident_procedure",
-          label: "Procedure incident unifiee (CNIL 72h + ANSSI 24h/72h/1mois + client < 24h)",
+          label:
+            "Procedure incident unifiee (CNIL 72h + ANSSI 24h/72h/1mois + client < 24h)",
         },
         {
           type: "event_log",
@@ -1812,7 +1844,8 @@ const SOC2: FrameworkMapping = {
           filter: { type: "incident.declared" },
         },
       ],
-      scopeNote: "★ COUVERT NATIVEMENT. Procedure formalisee + tests tabletop annuels.",
+      scopeNote:
+        "★ COUVERT NATIVEMENT. Procedure formalisee + tests tabletop annuels.",
     },
     {
       ref: "CC7.5",
@@ -1839,7 +1872,8 @@ const SOC2: FrameworkMapping = {
         {
           type: "document",
           source: "audit_trail",
-          label: "PR review obligatoire + CI/CD + tests automatises Vitest + Production build",
+          label:
+            "PR review obligatoire + CI/CD + tests automatises Vitest + Production build",
           filter: { type: "evidence.change_management" },
         },
       ],
@@ -1858,11 +1892,13 @@ const SOC2: FrameworkMapping = {
         {
           type: "document",
           source: "audit_trail",
-          label: "Plan de reprise + tests restauration mensuel + geo-redondance Scaleway Paris/Amsterdam",
+          label:
+            "Plan de reprise + tests restauration mensuel + geo-redondance Scaleway Paris/Amsterdam",
           filter: { type: "evidence.brc_drp" },
         },
       ],
-      scopeNote: "DRP/BCP partiel : backup + geo-redondance OK, mais test formel annuel a formaliser.",
+      scopeNote:
+        "DRP/BCP partiel : backup + geo-redondance OK, mais test formel annuel a formaliser.",
     },
     {
       ref: "CC9.2",
@@ -1872,10 +1908,12 @@ const SOC2: FrameworkMapping = {
         {
           type: "policy",
           source: "dpa_pdf",
-          label: "DPA signe avec tous les sous-traitants (Scaleway, Mollie, Mistral, OVH)",
+          label:
+            "DPA signe avec tous les sous-traitants (Scaleway, Mollie, Mistral, OVH)",
         },
       ],
-      scopeNote: "Tous sous-traitants UE souverains, DPA RGPD art. 28 systematique.",
+      scopeNote:
+        "Tous sous-traitants UE souverains, DPA RGPD art. 28 systematique.",
     },
   ],
   outOfScope: [

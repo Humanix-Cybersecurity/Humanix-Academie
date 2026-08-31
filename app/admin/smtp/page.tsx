@@ -71,10 +71,10 @@ export default async function SmtpConfigPage() {
         </h1>
         <p className="text-gray-600 dark:text-gray-300 mt-2 leading-relaxed">
           Pour envoyer des phishing simulés à ton équipe, ton tenant doit
-          utiliser <strong>son propre serveur SMTP</strong>. Humanix ne
-          partage pas son infra mail : c&apos;est à chaque organisation de
-          gérer son OPSEC (réputation IP, SPF, DKIM, DMARC) et la
-          responsabilité légale des envois.
+          utiliser <strong>son propre serveur SMTP</strong>. Humanix ne partage
+          pas son infra mail : c&apos;est à chaque organisation de gérer son
+          OPSEC (réputation IP, SPF, DKIM, DMARC) et la responsabilité légale
+          des envois.
         </p>
       </header>
 
@@ -94,25 +94,24 @@ export default async function SmtpConfigPage() {
             <strong className="text-primary-500">
               1. Ton propre serveur SMTP
             </strong>{" "}
-            (gratuit, autonomie totale) - tu utilises un Postfix self-host,
-            un Mailcow, ou un compte Office 365 / Google Workspace dédié.
-            Tu maîtrises tout : domaine, IP, réputation.
+            (gratuit, autonomie totale) - tu utilises un Postfix self-host, un
+            Mailcow, ou un compte Office 365 / Google Workspace dédié. Tu
+            maîtrises tout : domaine, IP, réputation.
           </li>
           <li>
             <strong className="text-primary-500">
               2. Un provider transactionnel
             </strong>{" "}
-            (Brevo, Mailjet, Scaleway TEM client, Mailgun…) - tu renseignes
-            ici les credentials du compte client que tu as ouvert
-            spécifiquement pour les phishing simulés. Coût : variable selon
-            le provider, souvent gratuit en deçà de quelques centaines
-            d&apos;envois/mois.
+            (Brevo, Mailjet, Scaleway TEM client, Mailgun…) - tu renseignes ici
+            les credentials du compte client que tu as ouvert spécifiquement
+            pour les phishing simulés. Coût : variable selon le provider,
+            souvent gratuit en deçà de quelques centaines d&apos;envois/mois.
           </li>
           <li>
             <strong className="text-primary-500">3. Prestation Humanix</strong>{" "}
-            - pas envie de gérer l&apos;OPSEC ? Nous contacter pour une mise
-            en place complète facturée au forfait : SMTP dédié, délégation
-            de domaine, suivi réputation.{" "}
+            - pas envie de gérer l&apos;OPSEC ? Nous contacter pour une mise en
+            place complète facturée au forfait : SMTP dédié, délégation de
+            domaine, suivi réputation.{" "}
             <Link
               href="/demande-abonnement?type=opsec"
               className="text-accent-700 dark:text-accent-300 underline font-medium"
@@ -123,16 +122,15 @@ export default async function SmtpConfigPage() {
         </ol>
         <div className="mt-4 pt-4 border-t border-primary-200/60 dark:border-primary-900/30">
           <p className="text-sm text-gray-700 dark:text-gray-200">
-            🎯 <strong>Avant de configurer ton SMTP</strong>, lis notre
-            cadrage{" "}
+            🎯 <strong>Avant de configurer ton SMTP</strong>, lis notre cadrage{" "}
             <Link
               href="/opsec-phishing"
               className="text-accent-700 dark:text-accent-300 underline font-bold"
             >
               OPSEC du phishing simulé →
             </Link>{" "}
-            (8 chantiers, 5 min de lecture). Tu sauras si tu es pret a
-            assumer ou s&apos;il vaut mieux nous deleguer ca.
+            (8 chantiers, 5 min de lecture). Tu sauras si tu es pret a assumer
+            ou s&apos;il vaut mieux nous deleguer ca.
           </p>
         </div>
       </section>
@@ -201,21 +199,21 @@ export default async function SmtpConfigPage() {
       {/* ===== INFO LEGALE ===== */}
       <section className="rounded-xl border border-dashed border-gray-300 dark:border-slate-700 bg-gray-50/60 dark:bg-slate-900/60 px-4 py-4 text-xs text-gray-600 dark:text-gray-400 leading-relaxed space-y-2">
         <p>
-          <strong>🔐 Sécurité du password</strong> : le mot de passe est
-          chiffré <code>AES-256-GCM</code> avec une clé dérivée de notre
-          secret JWT (<code>AUTH_SECRET</code>). Il n&apos;est jamais
-          retourné en clair via l&apos;API, même chiffré. Pour le modifier,
-          re-saisis-le dans le formulaire.
+          <strong>🔐 Sécurité du password</strong> : le mot de passe est chiffré{" "}
+          <code>AES-256-GCM</code> avec une clé dérivée de notre secret JWT (
+          <code>AUTH_SECRET</code>). Il n&apos;est jamais retourné en clair via
+          l&apos;API, même chiffré. Pour le modifier, re-saisis-le dans le
+          formulaire.
         </p>
         <p>
           <strong>📜 Responsabilité légale</strong> : les phishing simulés
           envoyés depuis ton SMTP engagent ta responsabilité (RGPD, droit du
-          travail, accord CSE/IRP recommandé). Humanix ne fait que fournir
-          la plateforme et les templates pédagogiques.
+          travail, accord CSE/IRP recommandé). Humanix ne fait que fournir la
+          plateforme et les templates pédagogiques.
         </p>
         <p>
-          <strong>📊 Audit</strong> : chaque modification de cette
-          configuration est tracée dans{" "}
+          <strong>📊 Audit</strong> : chaque modification de cette configuration
+          est tracée dans{" "}
           <Link href="/admin/audit" className="underline">
             /admin/audit
           </Link>

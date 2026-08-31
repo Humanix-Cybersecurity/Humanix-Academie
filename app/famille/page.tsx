@@ -27,7 +27,8 @@ import { isEligibleToInvite, remainingInvitesFor } from "@/lib/family-invites";
 
 export const dynamic = "force-dynamic";
 
-const FAM_TITLE = "Cyber Famille - Articles cyber gratuits sans inscription | Humanix Académie";
+const FAM_TITLE =
+  "Cyber Famille - Articles cyber gratuits sans inscription | Humanix Académie";
 const FAM_DESC =
   "La cyber-protection de tes proches en cadeau. Articles courts (5-10 min), sans jargon, sans pub, sans inscription. Pour ta grand-mère, ton ado, tes parents, tes amis. Made in France.";
 
@@ -40,7 +41,9 @@ export const metadata = {
     description: FAM_DESC,
     type: "website",
     url: "/famille",
-    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+    images: [
+      { url: "/logo-humanix-academie-512.png", width: 512, height: 512 },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -89,8 +92,8 @@ export default async function FamillePage() {
           aria-labelledby="hero-title"
         >
           <p className="inline-flex items-center gap-2 text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-rose-600 dark:text-rose-300 bg-white/70 dark:bg-slate-800/60 backdrop-blur-sm border border-rose-200 dark:border-rose-900/40 px-4 py-2 rounded-full mb-8 shadow-sm">
-            <span aria-hidden="true">🌷</span> Le cadeau qu'on n'attend
-            pas · Sans inscription
+            <span aria-hidden="true">🌷</span> Le cadeau qu'on n'attend pas ·
+            Sans inscription
           </p>
 
           {/* Constellation des proches qu'on protège */}
@@ -101,10 +104,7 @@ export default async function FamillePage() {
             <span className="animate-float" style={{ animationDelay: "0s" }}>
               👵
             </span>
-            <span
-              className="animate-float"
-              style={{ animationDelay: "0.8s" }}
-            >
+            <span className="animate-float" style={{ animationDelay: "0.8s" }}>
               👨
             </span>
             <span
@@ -113,16 +113,10 @@ export default async function FamillePage() {
             >
               ❤️
             </span>
-            <span
-              className="animate-float"
-              style={{ animationDelay: "1.2s" }}
-            >
+            <span className="animate-float" style={{ animationDelay: "1.2s" }}>
               🧒
             </span>
-            <span
-              className="animate-float"
-              style={{ animationDelay: "1.6s" }}
-            >
+            <span className="animate-float" style={{ animationDelay: "1.6s" }}>
               👩
             </span>
           </div>
@@ -144,10 +138,9 @@ export default async function FamillePage() {
             style={{ animationDelay: "220ms" }}
           >
             Tu apprends la cyber au boulot. Tes proches, eux, n'ont pas cette
-            chance. Cette page leur est{" "}
-            <strong>offerte</strong> - articles courts, pas de jargon, pas
-            d'inscription. Comme une lampe qu'on laisse allumée, pour qu'ils
-            sachent où aller s'ils ont un doute.
+            chance. Cette page leur est <strong>offerte</strong> - articles
+            courts, pas de jargon, pas d'inscription. Comme une lampe qu'on
+            laisse allumée, pour qu'ils sachent où aller s'ils ont un doute.
           </p>
 
           <div
@@ -186,7 +179,10 @@ export default async function FamillePage() {
             href="/famille/enfants"
             className="group flex flex-col sm:flex-row items-center gap-5 rounded-3xl bg-gradient-to-br from-sky-400 to-cyan-400 text-white p-6 sm:p-8 shadow-md hover:shadow-lg transition-all"
           >
-            <div className="text-6xl sm:text-7xl group-hover:scale-110 transition-transform" aria-hidden="true">
+            <div
+              className="text-6xl sm:text-7xl group-hover:scale-110 transition-transform"
+              aria-hidden="true"
+            >
               🦊
             </div>
             <div className="flex-1 text-center sm:text-left">
@@ -236,8 +232,8 @@ export default async function FamillePage() {
                     {inviteCta.remaining > 1 ? "s" : ""} à offrir
                   </h2>
                   <p className="text-sm sm:text-base text-rose-900 dark:text-rose-100/90">
-                    Tes proches accèdent à un parcours cyber simplifié, sans
-                    pub ni traçage. Aucune donnée collectée chez eux. C'est ton
+                    Tes proches accèdent à un parcours cyber simplifié, sans pub
+                    ni traçage. Aucune donnée collectée chez eux. C'est ton
                     cadeau, on s'efface.
                   </p>
                 </div>
@@ -432,8 +428,7 @@ export default async function FamillePage() {
                 Ce que cette page n'est pas
               </h2>
               <p className="text-sm text-emerald-800 dark:text-emerald-200/80 italic mt-2">
-                Transparence : on assume autant nos non-actions que nos
-                actions.
+                Transparence : on assume autant nos non-actions que nos actions.
               </p>
             </div>
 

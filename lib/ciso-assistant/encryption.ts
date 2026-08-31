@@ -13,7 +13,12 @@
 // illisibles et l'admin doit reconfigurer la connexion. Volontaire :
 // resistance a une fuite de BDD seule.
 
-import { createCipheriv, createDecipheriv, hkdfSync, randomBytes } from "node:crypto";
+import {
+  createCipheriv,
+  createDecipheriv,
+  hkdfSync,
+  randomBytes,
+} from "node:crypto";
 
 const ALGO = "aes-256-gcm";
 const IV_LENGTH = 12;

@@ -41,8 +41,7 @@ export default function TenantPageError({
   // debug. En prod on reste user-friendly. Le digest est toujours montre
   // pour la tracabilite (rapprochement avec les logs).
   const showRawMessage = process.env.NODE_ENV !== "production";
-  const friendlyMessage =
-    error.message || "Action impossible sur ce tenant.";
+  const friendlyMessage = error.message || "Action impossible sur ce tenant.";
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
@@ -87,13 +86,12 @@ export default function TenantPageError({
         <p className="font-semibold mb-1">Causes les plus fréquentes :</p>
         <ul className="list-disc pl-5 space-y-1">
           <li>
-            Le nom de confirmation ne matche pas exactement (espaces,
-            accents, majuscules - copie-colle depuis le label en gras pour
-            être sûr)
+            Le nom de confirmation ne matche pas exactement (espaces, accents,
+            majuscules - copie-colle depuis le label en gras pour être sûr)
           </li>
           <li>
-            Le tenant Communauté ne peut pas être supprimé (protection
-            intégrée - il accueille les apprenants gratuits)
+            Le tenant Communauté ne peut pas être supprimé (protection intégrée
+            - il accueille les apprenants gratuits)
           </li>
           <li>
             Un abonnement Mollie actif est rattaché - résilie d'abord la

@@ -43,7 +43,8 @@ export default async function SuperadminTenantsPage({
           Tous les tenants
         </h1>
         <p className="text-gray-600 dark:text-gray-300 mt-2">
-          {filtered.length} sur {allHealths.length} tenants{signalFilter || planFilter ? " (filtré)" : ""}.
+          {filtered.length} sur {allHealths.length} tenants
+          {signalFilter || planFilter ? " (filtré)" : ""}.
         </p>
       </header>
 
@@ -60,7 +61,9 @@ export default async function SuperadminTenantsPage({
 
       <div className="overflow-x-auto bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-800">
         <table className="w-full text-sm">
-          <caption className="sr-only">Liste de tous les tenants de la plateforme</caption>
+          <caption className="sr-only">
+            Liste de tous les tenants de la plateforme
+          </caption>
           <thead className="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-slate-800">
             <tr>
               <th className="px-4 py-3 font-medium text-xs uppercase tracking-wider">
@@ -100,7 +103,8 @@ export default async function SuperadminTenantsPage({
                     {h.tenantName}
                   </Link>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                    {h.tenantSlug} · créé {h.createdAt.toLocaleDateString("fr-FR")}
+                    {h.tenantSlug} · créé{" "}
+                    {h.createdAt.toLocaleDateString("fr-FR")}
                   </p>
                 </td>
                 <td className="px-4 py-3">

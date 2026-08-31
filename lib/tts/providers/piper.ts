@@ -64,14 +64,19 @@ export async function synthesizePiper(args: {
     writeCachedMP3(cacheRoot, hash, buffer);
     return { buffer, format, cached: false };
   } catch (e) {
-    if ((e as { name?: string })?.name === "AbortError") throw new Error("tts_timeout");
+    if ((e as { name?: string })?.name === "AbortError")
+      throw new Error("tts_timeout");
     throw new Error(`piper_failed:${(e as Error).message}`);
   } finally {
     clearTimeout(timer);
   }
 }
 
-export async function checkPiperHealth(): Promise<{ ok: boolean; voices?: string[]; error?: string }> {
+export async function checkPiperHealth(): Promise<{
+  ok: boolean;
+  voices?: string[];
+  error?: string;
+}> {
   if (!isPiperEnabled()) return { ok: false, error: "piper_disabled" };
   try {
     const res = await fetch(`${process.env.TTS_SERVER_URL}/health`, {

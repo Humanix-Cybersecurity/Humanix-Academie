@@ -42,7 +42,8 @@ export default function CreateListForm() {
             htmlFor="list-description"
             className="block text-sm font-bold text-gray-700 dark:text-gray-200 mb-1"
           >
-            Description <span className="text-gray-400 font-normal">(optionnel)</span>
+            Description{" "}
+            <span className="text-gray-400 font-normal">(optionnel)</span>
           </label>
           <textarea
             id="list-description"
@@ -70,7 +71,8 @@ export default function CreateListForm() {
             className="block w-full text-sm text-gray-700 dark:text-gray-200 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-bold file:bg-primary-500 file:text-white hover:file:bg-primary-600"
           />
           <p className="text-xs text-gray-500 mt-1">
-            Max 10 000 lignes / 1 Mo. Format : email;name;service (separateur ; ou , auto-detecte)
+            Max 10 000 lignes / 1 Mo. Format : email;name;service (separateur ;
+            ou , auto-detecte)
           </p>
         </div>
 

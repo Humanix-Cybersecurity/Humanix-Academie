@@ -112,11 +112,7 @@ describe("computeDetectiveRank", () => {
   });
 
   it("détective junior à partir de 3 enquêtes ≥60%", () => {
-    const rank = computeDetectiveRank([
-      r(60, 100),
-      r(70, 100),
-      r(65, 100),
-    ]);
+    const rank = computeDetectiveRank([r(60, 100), r(70, 100), r(65, 100)]);
     expect(rank).toBe("detective-junior");
   });
 

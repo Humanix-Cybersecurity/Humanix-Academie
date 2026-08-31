@@ -24,11 +24,11 @@ npm run tts:prune:apply          # supprime
 
 ## Choix du backend
 
-| Backend | Coût | Qualité | Infra | Quand l'utiliser |
-|---|---|---|---|---|
-| **`voxtral`** | $0.0001/mot ≈ $2.50/catalogue | ⭐⭐⭐⭐⭐ Marie 6 émotions | Aucune (SaaS) | Prod commerciale, démos prospects, demo.humanix |
-| **`piper`** | Gratuit | ⭐⭐⭐ siwis-medium FR | Container Docker (`--profile piper`) | Self-hosters AGPL, conformité RGPD stricte, offline |
-| `""` (vide) | Gratuit | ⭐⭐ dépendant du navigateur | Aucune | Dev local, tenants sans plan Pro+ |
+| Backend       | Coût                          | Qualité                      | Infra                                | Quand l'utiliser                                    |
+| ------------- | ----------------------------- | ---------------------------- | ------------------------------------ | --------------------------------------------------- |
+| **`voxtral`** | $0.0001/mot ≈ $2.50/catalogue | ⭐⭐⭐⭐⭐ Marie 6 émotions  | Aucune (SaaS)                        | Prod commerciale, démos prospects, demo.humanix     |
+| **`piper`**   | Gratuit                       | ⭐⭐⭐ siwis-medium FR       | Container Docker (`--profile piper`) | Self-hosters AGPL, conformité RGPD stricte, offline |
+| `""` (vide)   | Gratuit                       | ⭐⭐ dépendant du navigateur | Aucune                               | Dev local, tenants sans plan Pro+                   |
 
 Le composant `TTSButton` détecte le mode via `GET /api/tts/status` au mount
 et bascule automatiquement sur Web Speech API si le serveur n'est pas
@@ -43,6 +43,7 @@ MISTRAL_API_KEY="sk-..."        # console.mistral.ai → API Keys
 ```
 
 Le batch `npm run tts:build` :
+
 - Lit les 54 MDX du catalogue dans `content/saisons/`
 - Pour chaque épisode : extrait jusqu'à ~12 segments audio (intro, feedback de chaque choix, debrief, quiz)
 - Hash content-addressed `sha256(model + marker + voice + text)` → idempotent
@@ -52,6 +53,7 @@ Le batch `npm run tts:build` :
 - Met à jour `data/tts-cache/manifest.json` (committed)
 
 **Stratégie de mise à jour** :
+
 - Tu ajoutes un nouveau MDX → `npm run tts:build` génère uniquement les nouveaux segments
 - Tu modifies un MDX existant → le texte change → nouveau hash → régénération automatique de cet épisode (les anciens MP3 deviennent orphelins, à `tts:prune`)
 - Tu changes une voix par défaut dans `lib/tts/segments.ts` → bumper `CACHE_VERSION_MARKER` dans `lib/tts/cache.ts` puis `npm run tts:build` régénère tout
@@ -68,12 +70,14 @@ docker compose --profile piper up -d
 ```
 
 Caractéristiques :
+
 - Voix unique : `fr_FR-siwis-medium` (femme FR, qualité acceptable)
 - Container : 200-500 Mo RAM, ~1.5 CPU
 - Latence : ~200-500 ms / phrase sur CPU moderne
 - **Pas de batch nécessaire** : Piper synthétise au runtime, le cache se remplit au fil des clics utilisateurs (mêmes hashes/disque que Voxtral, mais avec `model="piper-fr_FR-siwis-medium"` pour disjoindre)
 
 `npm run tts:build` refuse explicitement de tourner si `TTS_PROVIDER=piper`
+
 - le batch n'a aucun intérêt pour Piper.
 
 ## Cache disque & volume Docker
@@ -131,12 +135,12 @@ sur un épisode pré-généré.
 
 ## Où l'audio apparaît dans l'UI
 
-| Composant | Fichier | Use case | Voix par défaut |
-|---|---|---|---|
-| `<TTSButton>` | `components/TTSButton.tsx` | Bouton riche (play/pause/seek/vitesse/voix) sur les pages **détail** : module, article librairie | `fr_marie_neutral` |
-| `<AudioPreviewButton>` | `components/AudioPreviewButton.tsx` | Mini-bouton compact sur les **cartes** d'une grille (page liste). Lit titre + description, ~10-30 mots. Toggle play/pause | `fr_marie_neutral` |
-| Vishing admin | `app/admin/vishing/VishingGeneratorClient.tsx` | Lecture du script de phishing vocal généré, avec sélecteur de voix (Pressante / Posée / Insistante / Plaintive) | `fr_marie_angry` (rendu pressant typique d'attaque) |
-| EpisodePlayer | `components/EpisodePlayer.tsx` | Boutons « Écouter le scénario » et « Écouter le débrief » dans la lecture d'un module | `fr_marie_neutral` |
+| Composant              | Fichier                                        | Use case                                                                                                                  | Voix par défaut                                     |
+| ---------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `<TTSButton>`          | `components/TTSButton.tsx`                     | Bouton riche (play/pause/seek/vitesse/voix) sur les pages **détail** : module, article librairie                          | `fr_marie_neutral`                                  |
+| `<AudioPreviewButton>` | `components/AudioPreviewButton.tsx`            | Mini-bouton compact sur les **cartes** d'une grille (page liste). Lit titre + description, ~10-30 mots. Toggle play/pause | `fr_marie_neutral`                                  |
+| Vishing admin          | `app/admin/vishing/VishingGeneratorClient.tsx` | Lecture du script de phishing vocal généré, avec sélecteur de voix (Pressante / Posée / Insistante / Plaintive)           | `fr_marie_angry` (rendu pressant typique d'attaque) |
+| EpisodePlayer          | `components/EpisodePlayer.tsx`                 | Boutons « Écouter le scénario » et « Écouter le débrief » dans la lecture d'un module                                     | `fr_marie_neutral`                                  |
 
 Trois entrées principales pour l'apprenant final :
 
@@ -145,20 +149,21 @@ Trois entrées principales pour l'apprenant final :
 3. **`/famille`** - `AudioPreviewButton` sur chaque carte (titre + description)
 
 Côté admin / formation :
+
 - **`/admin/vishing`** - Sélecteur de 4 voix Voxtral pour générer un audio crédible du script de phishing vocal (utile pour le debrief avec les apprenants après une simulation)
 
 ## Voix Voxtral disponibles
 
 6 voix françaises Marie (femme, ~30 ans), différenciées par émotion :
 
-| Slug | Tags | Usage typique |
-|---|---|---|
-| `fr_marie_neutral`  | composed, steady       | **Défaut** : lecture didactique de cours, debrief |
-| `fr_marie_curious`  | bright, probing        | Quiz, questions ouvertes, accroches |
-| `fr_marie_happy`    | warm, radiant          | Feedback positif (bonne réponse) |
-| `fr_marie_sad`      | muted, heavy           | Feedback didactique (mauvaise réponse, sans agressivité) |
-| `fr_marie_excited`  | vibrant, bubbly        | Découverte, célébration |
-| `fr_marie_angry`    | fierce, sharp          | Mise en situation alerte cyber, urgence |
+| Slug               | Tags             | Usage typique                                            |
+| ------------------ | ---------------- | -------------------------------------------------------- |
+| `fr_marie_neutral` | composed, steady | **Défaut** : lecture didactique de cours, debrief        |
+| `fr_marie_curious` | bright, probing  | Quiz, questions ouvertes, accroches                      |
+| `fr_marie_happy`   | warm, radiant    | Feedback positif (bonne réponse)                         |
+| `fr_marie_sad`     | muted, heavy     | Feedback didactique (mauvaise réponse, sans agressivité) |
+| `fr_marie_excited` | vibrant, bubbly  | Découverte, célébration                                  |
+| `fr_marie_angry`   | fierce, sharp    | Mise en situation alerte cyber, urgence                  |
 
 Mapping segment → voix dans `lib/tts/segments.ts → defaultVoiceFor()`.
 
@@ -168,18 +173,19 @@ Mapping segment → voix dans `lib/tts/segments.ts → defaultVoiceFor()`.
 
 ## Coûts et limites
 
-| Paramètre | Valeur |
-|---|---|
-| Coût Voxtral | ~$0.0001 / mot |
-| Catalogue complet | 54 modules × 12 segments = 662 segments, ~25 000 mots → **~$2.50** |
-| Limite Voxtral / requête | 300 mots (chunk auto via `chunkText()`) |
-| Concurrence batch | 5 par défaut (override via `--concurrency N`) |
-| Rate limit Mistral | empirique : ~5 req/s, 429 occasionnels - retry/backoff exponentiel auto |
-| Espace disque cache | ~80-100 Mo MP3 pour le catalogue complet |
+| Paramètre                | Valeur                                                                  |
+| ------------------------ | ----------------------------------------------------------------------- |
+| Coût Voxtral             | ~$0.0001 / mot                                                          |
+| Catalogue complet        | 54 modules × 12 segments = 662 segments, ~~25 000 mots → **~~$2.50**    |
+| Limite Voxtral / requête | 300 mots (chunk auto via `chunkText()`)                                 |
+| Concurrence batch        | 5 par défaut (override via `--concurrency N`)                           |
+| Rate limit Mistral       | empirique : ~5 req/s, 429 occasionnels - retry/backoff exponentiel auto |
+| Espace disque cache      | ~80-100 Mo MP3 pour le catalogue complet                                |
 
 ## Idempotence et reprise
 
 Le hash de cache inclut :
+
 - le modèle (`voxtral-mini-tts-2603` ou `piper-fr_FR-siwis-medium`)
 - le `CACHE_VERSION_MARKER` (`v1` actuellement)
 - la voix
@@ -212,6 +218,7 @@ Avant : un container `humanix-tts:1.0.0` (Piper) tournait toujours, exposé
 via `TTS_SERVER_URL=http://tts:5500`.
 
 Après :
+
 - Le container Piper est **conservé** mais derrière `--profile piper`
   (n'est plus démarré par défaut sur `docker compose up`)
 - Le code `infra/tts/` est conservé en l'état

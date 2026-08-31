@@ -77,8 +77,8 @@ export default async function LeaderboardPage() {
           Les meilleurs détectives.
         </h1>
         <p className="text-base sm:text-lg text-gray-700 dark:text-gray-200 max-w-xl mx-auto leading-relaxed">
-          Classement basé sur le nombre d'enquêtes réussies (≥ 60 %)
-          sur les 30 derniers jours. Tiebreaker : score moyen.
+          Classement basé sur le nombre d'enquêtes réussies (≥ 60 %) sur les 30
+          derniers jours. Tiebreaker : score moyen.
         </p>
       </section>
 
@@ -89,8 +89,7 @@ export default async function LeaderboardPage() {
               Aucune enquête complétée ce mois-ci.
             </p>
             <p className="text-sm text-amber-800 dark:text-amber-300 mb-4">
-              Sois le premier détective de ton équipe à valider une
-              enquête !
+              Sois le premier détective de ton équipe à valider une enquête !
             </p>
             <Link href="/apprendre/enquetes" className="btn-primary">
               Voir les enquêtes →

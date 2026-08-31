@@ -35,9 +35,9 @@ export default function CisoAssistantIntegrationPage() {
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
           Humanix Académie transmet automatiquement vos preuves de
-          sensibilisation à <strong>CISO Assistant</strong> (intuitem). Fini
-          le copier-coller, fini le tableur partagé, fini l'audit douloureux.
-          Tout est tracé, signé Ed25519, vérifiable hors-ligne avec OpenSSL.
+          sensibilisation à <strong>CISO Assistant</strong> (intuitem). Fini le
+          copier-coller, fini le tableur partagé, fini l'audit douloureux. Tout
+          est tracé, signé Ed25519, vérifiable hors-ligne avec OpenSSL.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Link
@@ -63,10 +63,10 @@ export default function CisoAssistantIntegrationPage() {
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
           Chaque branchement est <strong>indépendant</strong> et{" "}
-          <strong>désactivable</strong> dans la console d'administration.
-          Tout fonctionne en <em>émission sans attente d'accusé</em> : aucune
-          inertie entre Humanix et CISO Assistant, chaque outil reste
-          autonome. Aucune modification n'est requise côté intuitem.
+          <strong>désactivable</strong> dans la console d'administration. Tout
+          fonctionne en <em>émission sans attente d'accusé</em> : aucune inertie
+          entre Humanix et CISO Assistant, chaque outil reste autonome. Aucune
+          modification n'est requise côté intuitem.
         </p>
         <div className="grid sm:grid-cols-2 gap-4 text-sm">
           <div className="p-4 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
@@ -74,11 +74,11 @@ export default function CisoAssistantIntegrationPage() {
               📜 Preuves de conformité + PDF signé Ed25519
             </p>
             <p className="text-gray-600 dark:text-gray-400 text-xs">
-              Pour chaque contrôle du référentiel, une preuve datée avec
-              statut, score, responsable désigné et date d'expiration. Un
-              PDF prêt pour audit y est joint, signé cryptographiquement
-              et vérifiable hors-ligne avec OpenSSL pendant des années - sans
-              aucune dépendance à Humanix.
+              Pour chaque contrôle du référentiel, une preuve datée avec statut,
+              score, responsable désigné et date d'expiration. Un PDF prêt pour
+              audit y est joint, signé cryptographiquement et vérifiable
+              hors-ligne avec OpenSSL pendant des années - sans aucune
+              dépendance à Humanix.
             </p>
           </div>
           <div className="p-4 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
@@ -86,10 +86,11 @@ export default function CisoAssistantIntegrationPage() {
               🛡 Contrôles appliqués
             </p>
             <p className="text-gray-600 dark:text-gray-400 text-xs">
-              Un contrôle parent <em>« Programme de sensibilisation Humanix »</em>{" "}
-              par référentiel, lié à toutes les preuves transmises. Le RSSI
-              voit dans CISO Assistant le contrôle <strong>réel</strong> mis
-              en place, plutôt qu'une accumulation de preuves orphelines.
+              Un contrôle parent{" "}
+              <em>« Programme de sensibilisation Humanix »</em> par référentiel,
+              lié à toutes les preuves transmises. Le RSSI voit dans CISO
+              Assistant le contrôle <strong>réel</strong> mis en place, plutôt
+              qu'une accumulation de preuves orphelines.
             </p>
           </div>
           <div className="p-4 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
@@ -98,11 +99,11 @@ export default function CisoAssistantIntegrationPage() {
             </p>
             <p className="text-gray-600 dark:text-gray-400 text-xs">
               Pour chaque contrôle <code>partiel</code> (priorité 2) ou{" "}
-              <code>non conforme</code> (priorité 1), Humanix génère un
-              constat actionnable avec échéance, responsable et plan
-              d'action recommandé. Le RSSI dispose d'une liste de tâches
-              générée automatiquement, plutôt que d'un simple tableau de
-              bord à interpréter.
+              <code>non conforme</code> (priorité 1), Humanix génère un constat
+              actionnable avec échéance, responsable et plan d'action
+              recommandé. Le RSSI dispose d'une liste de tâches générée
+              automatiquement, plutôt que d'un simple tableau de bord à
+              interpréter.
             </p>
           </div>
           <div className="p-4 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
@@ -110,12 +111,12 @@ export default function CisoAssistantIntegrationPage() {
               📊 Scénarios de risque
             </p>
             <p className="text-gray-600 dark:text-gray-400 text-xs">
-              Si la couverture humaine s'effrite (au moins 30 % de contrôles
-              non conformes, deux contrôles partiels ou plus, ou
-              déclenchement précoce), Humanix génère un scénario{" "}
-              <em>« Compromission via couche humaine sous-formée »</em>{" "}
-              sous une analyse de risque dédiée. Humanix participe
-              ainsi au registre des risques avec une justification chiffrée.
+              Si la couverture humaine s'effrite (au moins 30 % de contrôles non
+              conformes, deux contrôles partiels ou plus, ou déclenchement
+              précoce), Humanix génère un scénario{" "}
+              <em>« Compromission via couche humaine sous-formée »</em> sous une
+              analyse de risque dédiée. Humanix participe ainsi au registre des
+              risques avec une justification chiffrée.
             </p>
           </div>
           <div className="p-4 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
@@ -124,9 +125,9 @@ export default function CisoAssistantIntegrationPage() {
             </p>
             <p className="text-gray-600 dark:text-gray-400 text-xs">
               Si au moins un contrôle est non conforme, Humanix ouvre un
-              incident de sévérité 3 <em>« Risque humain »</em>, idempotent
-              par jour. Cela garantit la traçabilité ISO 27001 §10.1 et
-              NIS2 §21.2.g, sans préjuger d'une compromission effective.
+              incident de sévérité 3 <em>« Risque humain »</em>, idempotent par
+              jour. Cela garantit la traçabilité ISO 27001 §10.1 et NIS2
+              §21.2.g, sans préjuger d'une compromission effective.
             </p>
           </div>
           <div className="p-4 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700">
@@ -137,8 +138,8 @@ export default function CisoAssistantIntegrationPage() {
               Le RSSI ou le DPO désigné est créé comme utilisateur CISO
               Assistant s'il n'existe pas, puis affecté comme{" "}
               <em>responsable</em> sur toutes les preuves, constats et
-              incidents. Le responsable filtre son périmètre nativement
-              dans l'interface CISO Assistant.
+              incidents. Le responsable filtre son périmètre nativement dans
+              l'interface CISO Assistant.
             </p>
           </div>
           <div className="p-4 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 sm:col-span-2">
@@ -146,14 +147,13 @@ export default function CisoAssistantIntegrationPage() {
               📈 Métrologie - séries temporelles
             </p>
             <p className="text-gray-600 dark:text-gray-400 text-xs">
-              Six métriques transmises en continu dans le module Métrologie
-              de CISO Assistant : score de maturité cyber humaine, taux
+              Six métriques transmises en continu dans le module Métrologie de
+              CISO Assistant : score de maturité cyber humaine, taux
               d'achèvement, taux de signalement de tentatives d'hameçonnage,
-              nombre de preuves par statut. Le RSSI, le DSI ou le DPO
-              compose ensuite ses propres tableaux de bord CISO Assistant
-              avec des vignettes pointant sur ces séries - évolution dans le
-              temps, alerte si la valeur devient périmée, cible par
-              métrique.
+              nombre de preuves par statut. Le RSSI, le DSI ou le DPO compose
+              ensuite ses propres tableaux de bord CISO Assistant avec des
+              vignettes pointant sur ces séries - évolution dans le temps,
+              alerte si la valeur devient périmée, cible par métrique.
             </p>
           </div>
         </div>
@@ -170,19 +170,19 @@ export default function CisoAssistantIntegrationPage() {
               🤖 Serveur MCP (agent IA souverain)
             </p>
             <p className="text-gray-700 dark:text-gray-300 text-xs">
-              Premier serveur MCP du marché de la sensibilisation cyber.
-              Six outils en lecture seule pour interroger Humanix en
-              langage naturel depuis votre agent d'IA : Mistral, LM Studio,
-              Anything LLM, ou Ollama via passerelle. ChatGPT, Claude et
-              Gemini sont également pris en charge en option. Posture
-              souveraine assumée : votre instance n'a aucune dépendance
-              à la loi américaine d'extraterritorialité (Cloud Act).
+              Premier serveur MCP du marché de la sensibilisation cyber. Six
+              outils en lecture seule pour interroger Humanix en langage naturel
+              depuis votre agent d'IA : Mistral, LM Studio, Anything LLM, ou
+              Ollama via passerelle. ChatGPT, Claude et Gemini sont également
+              pris en charge en option. Posture souveraine assumée : votre
+              instance n'a aucune dépendance à la loi américaine
+              d'extraterritorialité (Cloud Act).
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
               Cas d'usage type :{" "}
               <em>
-                « Qui dans le Marketing n'a pas compris la politique de mot
-                de passe ? »
+                « Qui dans le Marketing n'a pas compris la politique de mot de
+                passe ? »
               </em>{" "}
               - réponse pseudonymisée et compatible RGPD en une requête.
             </p>
@@ -192,13 +192,15 @@ export default function CisoAssistantIntegrationPage() {
               📚 Référentiel communautaire (CC BY-SA 4.0)
             </p>
             <p className="text-gray-700 dark:text-gray-300 text-xs">
-              Catalogue Humanix Académie publié en bibliothèque chargeable
-              dans CISO Assistant (URN{" "}
-              <code>urn:humanix:risk:framework:humanix-awareness-catalog-v1</code>
+              Catalogue Humanix Académie publié en bibliothèque chargeable dans
+              CISO Assistant (URN{" "}
+              <code>
+                urn:humanix:risk:framework:humanix-awareness-catalog-v1
+              </code>
               ), accompagné de correspondances libres vers ISO 27001:2022
               (relations <code>equal</code> et <code>intersect</code>). Les
-              correspondances NIS2, RGPD, ANSSI Hygiène Informatique et
-              NIST CSF arrivent ensuite. Contribution future sur{" "}
+              correspondances NIS2, RGPD, ANSSI Hygiène Informatique et NIST CSF
+              arrivent ensuite. Contribution future sur{" "}
               <a
                 href="https://github.com/intuitem/risk-libraries"
                 target="_blank"
@@ -225,11 +227,11 @@ export default function CisoAssistantIntegrationPage() {
           Comment cela fonctionne ?
         </h2>
         <p className="text-center text-sm text-gray-600 dark:text-gray-300 mb-6">
-          Approche par <strong>transmission</strong> : Humanix Académie
-          transmet les preuves vivantes (statut, score, PDF signé Ed25519) à
-          votre instance CISO Assistant via son API publique. Aucune
-          modification n'est requise côté intuitem - c'est Humanix qui
-          s'adapte à leur schéma.
+          Approche par <strong>transmission</strong> : Humanix Académie transmet
+          les preuves vivantes (statut, score, PDF signé Ed25519) à votre
+          instance CISO Assistant via son API publique. Aucune modification
+          n'est requise côté intuitem - c'est Humanix qui s'adapte à leur
+          schéma.
         </p>
 
         <svg
@@ -422,10 +424,7 @@ export default function CisoAssistantIntegrationPage() {
         className="card mb-10 mt-12 border-2 border-accent-500/30 bg-accent-50/40 dark:bg-accent-900/10"
       >
         <div className="flex items-start gap-3 mb-3">
-          <span
-            aria-hidden="true"
-            className="text-3xl shrink-0 leading-none"
-          >
+          <span aria-hidden="true" className="text-3xl shrink-0 leading-none">
             🖱️
           </span>
           <div>
@@ -433,16 +432,16 @@ export default function CisoAssistantIntegrationPage() {
               id="admin-console-title"
               className="text-2xl font-extrabold text-primary-500 dark:text-accent-300"
             >
-              Synchronisation en un clic depuis l'administration (sans
-              ligne de commande)
+              Synchronisation en un clic depuis l'administration (sans ligne de
+              commande)
             </h2>
             <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-              Pour les RSSI, DAF et membres de la direction qui ne veulent
-              pas toucher au terminal : Humanix embarque une console
-              d'administration dédiée. Vous renseignez vos identifiants
-              CISO Assistant <strong>une seule fois</strong>, puis vous
-              synchronisez en un clic, avec un terminal en direct à la
-              manière d'un journal d'intégration continue.
+              Pour les RSSI, DAF et membres de la direction qui ne veulent pas
+              toucher au terminal : Humanix embarque une console
+              d'administration dédiée. Vous renseignez vos identifiants CISO
+              Assistant <strong>une seule fois</strong>, puis vous synchronisez
+              en un clic, avec un terminal en direct à la manière d'un journal
+              d'intégration continue.
             </p>
           </div>
         </div>
@@ -453,9 +452,8 @@ export default function CisoAssistantIntegrationPage() {
               1. Configurer
             </p>
             <p className="text-gray-600 dark:text-gray-400">
-              URL de base, compte, mot de passe (chiffré en
-              AES-256-GCM). Le bouton « Tester la connexion » valide en
-              deux secondes.
+              URL de base, compte, mot de passe (chiffré en AES-256-GCM). Le
+              bouton « Tester la connexion » valide en deux secondes.
             </p>
           </div>
           <div className="bg-white dark:bg-slate-800 rounded-lg p-3 border border-gray-200 dark:border-slate-700">
@@ -463,9 +461,9 @@ export default function CisoAssistantIntegrationPage() {
               2. Synchroniser
             </p>
             <p className="text-gray-600 dark:text-gray-400">
-              Sélectionnez un référentiel (ISO 27001, NIS2, RGPD, ANSSI
-              Hygiène ou NIST CSF) et cliquez. Terminal en direct,
-              indicateur final OK, partiel ou en échec.
+              Sélectionnez un référentiel (ISO 27001, NIS2, RGPD, ANSSI Hygiène
+              ou NIST CSF) et cliquez. Terminal en direct, indicateur final OK,
+              partiel ou en échec.
             </p>
           </div>
           <div className="bg-white dark:bg-slate-800 rounded-lg p-3 border border-gray-200 dark:border-slate-700">
@@ -473,10 +471,10 @@ export default function CisoAssistantIntegrationPage() {
               3. Auditer
             </p>
             <p className="text-gray-600 dark:text-gray-400">
-              Chaque action (configuration, test, synchronisation) est
-              tracée dans <code className="text-xs">/admin/audit</code>{" "}
-              (conforme RGPD et NIS2). L'historique des 20 dernières
-              exécutions reste consultable.
+              Chaque action (configuration, test, synchronisation) est tracée
+              dans <code className="text-xs">/admin/audit</code> (conforme RGPD
+              et NIS2). L'historique des 20 dernières exécutions reste
+              consultable.
             </p>
           </div>
         </div>
@@ -505,21 +503,19 @@ export default function CisoAssistantIntegrationPage() {
         </h2>
         <ul className="space-y-3 text-sm">
           <li>
-            <strong>Pour le RSSI externalisé</strong> : huit PME, huit
-            instances CISO Assistant. Une seule passerelle Humanix
-            consolide les preuves de sensibilisation des huit comptes
-            clients.
+            <strong>Pour le RSSI externalisé</strong> : huit PME, huit instances
+            CISO Assistant. Une seule passerelle Humanix consolide les preuves
+            de sensibilisation des huit comptes clients.
           </li>
           <li>
-            <strong>Pour le DSI d'une ETI en démarche ISO 27001</strong> :
-            le contrôle A.6.3 (sensibilisation) est alimenté
-            automatiquement en preuves vivantes - score, certificats,
-            taux de signalement.
+            <strong>Pour le DSI d'une ETI en démarche ISO 27001</strong> : le
+            contrôle A.6.3 (sensibilisation) est alimenté automatiquement en
+            preuves vivantes - score, certificats, taux de signalement.
           </li>
           <li>
-            <strong>Pour le dirigeant en conformité NIS2</strong> : le
-            score affiché dans CISO Assistant intègre désormais le facteur
-            humain, première ligne de défense.
+            <strong>Pour le dirigeant en conformité NIS2</strong> : le score
+            affiché dans CISO Assistant intègre désormais le facteur humain,
+            première ligne de défense.
           </li>
         </ul>
       </section>
@@ -538,11 +534,10 @@ export default function CisoAssistantIntegrationPage() {
               CISO Assistant est-il obligatoire ?
             </summary>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-              Non. Le format <code>ciso-assistant-v1</code> est documenté
-              et stable. N'importe quel outil GRC - Eramba, MetricStream,
-              ServiceNow GRC, ou un script maison - peut consommer le
-              service. Le format <code>raw</code> donne accès aux données
-              brutes.
+              Non. Le format <code>ciso-assistant-v1</code> est documenté et
+              stable. N'importe quel outil GRC - Eramba, MetricStream,
+              ServiceNow GRC, ou un script maison - peut consommer le service.
+              Le format <code>raw</code> donne accès aux données brutes.
             </p>
           </details>
           <details className="card">
@@ -561,14 +556,12 @@ export default function CisoAssistantIntegrationPage() {
               Quelle est la fréquence de rafraîchissement ?
             </summary>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-              Vous choisissez la fréquence côté Humanix. Trois modes
-              cohabitent : déclenchement manuel depuis la console
-              d'administration (bouton{" "}
-              <em>Synchroniser maintenant</em>), tâche planifiée
-              quotidienne via le connecteur Python autonome, ou
-              transmission événementielle à chaque achèvement de module
-              ou changement de score (mode temps réel, depuis la version
-              2.0).
+              Vous choisissez la fréquence côté Humanix. Trois modes cohabitent
+              : déclenchement manuel depuis la console d'administration (bouton{" "}
+              <em>Synchroniser maintenant</em>), tâche planifiée quotidienne via
+              le connecteur Python autonome, ou transmission événementielle à
+              chaque achèvement de module ou changement de score (mode temps
+              réel, depuis la version 2.0).
             </p>
           </details>
           <details className="card">
@@ -580,8 +573,7 @@ export default function CisoAssistantIntegrationPage() {
               manifeste d'intégrité signé Ed25519 en page 2 - algorithme,
               empreinte de la clé publique, hachage SHA-256, signature
               base64url, charge utile JSON canonique et procédure de
-              vérification OpenSSL. La clé publique est exposée à
-              l'adresse{" "}
+              vérification OpenSSL. La clé publique est exposée à l'adresse{" "}
               <a
                 href="/.well-known/humanix-pdf-pubkey.pem"
                 target="_blank"
@@ -599,11 +591,10 @@ export default function CisoAssistantIntegrationPage() {
               Et la conformité RGPD de l'export ?
             </summary>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-              L'export ne contient aucune donnée personnelle en clair :
-              les certificats sont représentés par des liens
-              téléchargeables avec votre clé d'API, jamais par leur
-              contenu. Les métriques sont agrégées au niveau du compte
-              client.
+              L'export ne contient aucune donnée personnelle en clair : les
+              certificats sont représentés par des liens téléchargeables avec
+              votre clé d'API, jamais par leur contenu. Les métriques sont
+              agrégées au niveau du compte client.
             </p>
           </details>
         </div>
@@ -621,9 +612,8 @@ export default function CisoAssistantIntegrationPage() {
           Prêt à brancher votre outil GRC ?
         </h2>
         <p className="text-gray-600 dark:text-gray-300 mb-5 max-w-xl mx-auto">
-          Nous vous accompagnons sur la configuration. Connecteur Python
-          prêt à l'emploi, correspondances documentées, accompagnement
-          direct.
+          Nous vous accompagnons sur la configuration. Connecteur Python prêt à
+          l'emploi, correspondances documentées, accompagnement direct.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
           <a

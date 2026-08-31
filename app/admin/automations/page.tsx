@@ -55,8 +55,8 @@ export default async function AdminAutomationsPage() {
           Ces actions touchent l&apos;expérience de tes collaborateurs
         </h3>
         <p className="text-xs text-amber-900/90 dark:text-amber-100/90 leading-relaxed">
-          Activer une automation veut dire que dès qu&apos;un user clique sur
-          un phishing simulé, l&apos;action s&apos;applique automatiquement.
+          Activer une automation veut dire que dès qu&apos;un user clique sur un
+          phishing simulé, l&apos;action s&apos;applique automatiquement.
           Communique-le clairement (charte, CSE, FAQ) avant d&apos;activer.
           Inactif par défaut, désactivable à tout moment.
         </p>

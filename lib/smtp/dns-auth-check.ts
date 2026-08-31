@@ -52,7 +52,13 @@ export type DnsAuthCheckResult = {
   checkedAt: string;
 };
 
-const DEFAULT_DKIM_SELECTORS = ["default", "google", "scaleway", "mxvault", "dkim"];
+const DEFAULT_DKIM_SELECTORS = [
+  "default",
+  "google",
+  "scaleway",
+  "mxvault",
+  "dkim",
+];
 
 /**
  * Probe SPF, DKIM, DMARC pour un domaine donne. Best-effort, ne throw jamais.
@@ -61,10 +67,7 @@ export async function checkDomainAuth(
   domain: string,
 ): Promise<DnsAuthCheckResult> {
   // Normalisation : trim, lowercase, supprime trailing dot
-  const cleanDomain = domain
-    .trim()
-    .toLowerCase()
-    .replace(/\.$/, "");
+  const cleanDomain = domain.trim().toLowerCase().replace(/\.$/, "");
 
   const records: AuthRecord[] = await Promise.all([
     checkSpf(cleanDomain),
@@ -116,7 +119,7 @@ async function checkSpf(domain: string): Promise<AuthRecord> {
       severity: "ERROR",
       advice:
         "Aucun record SPF trouvé. Ajoute un TXT @ avec une valeur comme " +
-        "\"v=spf1 include:smtp.tem.scaleway.com -all\" (adapte selon ton fournisseur). " +
+        '"v=spf1 include:smtp.tem.scaleway.com -all" (adapte selon ton fournisseur). ' +
         "Sans SPF, tes mails phishing simulés risquent d'être bloqués ou marqués spam.",
     };
   } catch {
@@ -176,7 +179,11 @@ async function checkDmarc(domain: string): Promise<AuthRecord> {
       if (joined.toLowerCase().startsWith("v=dmarc1")) {
         const policy = extractDmarcPolicy(joined);
         const severity: AuthRecord["severity"] =
-          policy === "reject" ? "INFO" : policy === "quarantine" ? "INFO" : "WARN";
+          policy === "reject"
+            ? "INFO"
+            : policy === "quarantine"
+              ? "INFO"
+              : "WARN";
         return {
           protocol: "DMARC",
           found: true,
@@ -198,7 +205,7 @@ async function checkDmarc(domain: string): Promise<AuthRecord> {
       severity: "WARN",
       advice:
         "Aucun record DMARC trouvé. Ajoute un TXT _dmarc.<domain> avec " +
-        "\"v=DMARC1; p=none; rua=mailto:dmarc-reports@ton-domaine.fr\" " +
+        '"v=DMARC1; p=none; rua=mailto:dmarc-reports@ton-domaine.fr" ' +
         "pour commencer en mode monitoring (sans impact). Tu pourras durcir ensuite vers p=quarantine puis p=reject.",
     };
   } catch {
@@ -224,5 +231,8 @@ function extractDmarcPolicy(record: string): string | null {
 export function extractDomainFromEmail(email: string): string | null {
   const at = email.lastIndexOf("@");
   if (at === -1 || at === email.length - 1) return null;
-  return email.slice(at + 1).trim().toLowerCase();
+  return email
+    .slice(at + 1)
+    .trim()
+    .toLowerCase();
 }

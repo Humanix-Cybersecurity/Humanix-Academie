@@ -230,9 +230,9 @@ export default async function ArticleReadPage({
           Tu veux aller plus loin que la lecture ?
         </h2>
         <p className="text-sm text-gray-700 dark:text-gray-200 max-w-xl mx-auto mb-4">
-          La plateforme Humanix Académie propose en plus des saisons interactives,
-          un mode Enquêteur, du suivi d'équipe, et un dashboard pour ton RSSI.
-          Démarrage gratuit, 5 sièges, sans carte bancaire.
+          La plateforme Humanix Académie propose en plus des saisons
+          interactives, un mode Enquêteur, du suivi d'équipe, et un dashboard
+          pour ton RSSI. Démarrage gratuit, 5 sièges, sans carte bancaire.
         </p>
         <div className="flex flex-wrap gap-2 justify-center">
           <Link

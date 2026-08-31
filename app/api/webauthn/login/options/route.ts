@@ -9,7 +9,9 @@ import { buildLoginOptions, WEBAUTHN_LOGIN_COOKIE } from "@/lib/webauthn";
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
-  const email = String(body?.email ?? "").trim().toLowerCase();
+  const email = String(body?.email ?? "")
+    .trim()
+    .toLowerCase();
   if (!email) {
     return NextResponse.json({ error: "Email requis." }, { status: 400 });
   }
@@ -26,7 +28,10 @@ export async function POST(req: Request) {
       const res = NextResponse.json(dummyOptions.options);
       return res;
     }
-    return NextResponse.json({ error: "Service indisponible." }, { status: 503 });
+    return NextResponse.json(
+      { error: "Service indisponible." },
+      { status: 503 },
+    );
   }
   const credCount = await db.webAuthnCredential.count({
     where: { userId: user.id },

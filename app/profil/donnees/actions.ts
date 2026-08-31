@@ -39,7 +39,8 @@ export async function requestSelfErasure(
   if (confirmation.trim().toUpperCase() !== "EFFACER MON COMPTE") {
     return {
       ok: false,
-      error: "Confirmation incorrecte. Tapez exactement « EFFACER MON COMPTE ».",
+      error:
+        "Confirmation incorrecte. Tapez exactement « EFFACER MON COMPTE ».",
     };
   }
 

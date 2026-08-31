@@ -9,7 +9,11 @@
 //   a : map { numObjectif -> "o" (oui) | "p" (en_partie) | "n" (non) }
 
 import { RECYF_BY_ID, type RecyfProfil } from "./recyf";
-import { sanitizeAnswers, type RecyfAnswer, type RecyfAnswers } from "./recyf-scoring";
+import {
+  sanitizeAnswers,
+  type RecyfAnswer,
+  type RecyfAnswers,
+} from "./recyf-scoring";
 
 const TO_CHAR: Record<RecyfAnswer, "o" | "p" | "n"> = {
   oui: "o",

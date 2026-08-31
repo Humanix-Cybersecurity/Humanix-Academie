@@ -141,9 +141,9 @@ export default function CisoSyncForm({
           Configuration de la connexion
         </h2>
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-5">
-          Renseignez l'URL et un compte CISO Assistant ayant les droits de
-          créer un folder et des evidences. Le password est chiffré AES-256-GCM
-          en base.
+          Renseignez l'URL et un compte CISO Assistant ayant les droits de créer
+          un folder et des evidences. Le password est chiffré AES-256-GCM en
+          base.
         </p>
 
         <form action={onSave} className="space-y-4">
@@ -200,7 +200,10 @@ export default function CisoSyncForm({
             </label>
             <label className="block md:col-span-2">
               <span className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
-                Email du responsable désigné <span className="text-gray-400">(optionnel - RSSI ou DPO du tenant)</span>
+                Email du responsable désigné{" "}
+                <span className="text-gray-400">
+                  (optionnel - RSSI ou DPO du tenant)
+                </span>
               </span>
               <input
                 type="email"
@@ -210,7 +213,8 @@ export default function CisoSyncForm({
                 className="w-full rounded-lg border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-white text-sm"
               />
               <span className="block text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Embedded dans la description de chaque evidence - exigence audit ISO 27001 §7.5 (informations documentées).
+                Embedded dans la description de chaque evidence - exigence audit
+                ISO 27001 §7.5 (informations documentées).
               </span>
             </label>
           </div>
@@ -221,7 +225,8 @@ export default function CisoSyncForm({
               defaultChecked={existing?.verifySSL ?? true}
               className="rounded border-gray-300 dark:border-slate-600 text-primary-500"
             />
-            Vérifier le certificat SSL (décocher uniquement en dev local avec cert auto-signé)
+            Vérifier le certificat SSL (décocher uniquement en dev local avec
+            cert auto-signé)
           </label>
 
           {/* ============ Extensions optionnelles (v1.3) ============ */}
@@ -230,8 +235,9 @@ export default function CisoSyncForm({
               Extensions optionnelles
             </legend>
             <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 -mt-1">
-              Désactivées par défaut. Chacune fonctionne indépendamment - la sync des
-              evidences continue normalement si CISO Assistant refuse l'une d'elles.
+              Désactivées par défaut. Chacune fonctionne indépendamment - la
+              sync des evidences continue normalement si CISO Assistant refuse
+              l'une d'elles.
             </p>
             <div className="space-y-3">
               <label className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
@@ -244,8 +250,9 @@ export default function CisoSyncForm({
                 <span>
                   <strong>Créer un AppliedControl</strong> par framework.
                   <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                    Un contrôle "Programme de sensibilisation Humanix" agrège toutes les
-                    evidences poussées. Sémantique GRC plus propre pour un RSSI.
+                    Un contrôle "Programme de sensibilisation Humanix" agrège
+                    toutes les evidences poussées. Sémantique GRC plus propre
+                    pour un RSSI.
                   </span>
                 </span>
               </label>
@@ -257,11 +264,13 @@ export default function CisoSyncForm({
                   className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
                 />
                 <span>
-                  <strong>Générer des Findings</strong> pour les contrôles non conformes.
+                  <strong>Générer des Findings</strong> pour les contrôles non
+                  conformes.
                   <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                    À chaque sync, chaque contrôle en statut <code>partial</code> ou{" "}
-                    <code>non_compliant</code> crée un Finding actionnable côté CISO
-                    Assistant (priorité P1/P2, ETA +12 mois, owner désigné).
+                    À chaque sync, chaque contrôle en statut{" "}
+                    <code>partial</code> ou <code>non_compliant</code> crée un
+                    Finding actionnable côté CISO Assistant (priorité P1/P2, ETA
+                    +12 mois, owner désigné).
                   </span>
                 </span>
               </label>
@@ -273,9 +282,11 @@ export default function CisoSyncForm({
                   className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
                 />
                 <span>
-                  <strong>Générer un RiskScenario</strong> si la couche humaine est sous-formée.
+                  <strong>Générer un RiskScenario</strong> si la couche humaine
+                  est sous-formée.
                   <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                    Déclenché si {">"}30% des contrôles sont <code>non_compliant</code> OU 2+ en <code>partial</code>.
+                    Déclenché si {">"}30% des contrôles sont{" "}
+                    <code>non_compliant</code> OU 2+ en <code>partial</code>.
                     Crée un scénario "Compromission via couche humaine" sous un
                     RiskAssessment Humanix (nécessite une RiskMatrix préchargée
                     côté CISO Assistant).
@@ -290,13 +301,14 @@ export default function CisoSyncForm({
                   className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
                 />
                 <span>
-                  <strong>Synchroniser le responsable</strong> comme Actor CISO Assistant.
+                  <strong>Synchroniser le responsable</strong> comme Actor CISO
+                  Assistant.
                   <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                    L'<em>email du responsable</em> ci-dessus est résolu côté CISO
-                    Assistant (User créé s'il n'existe pas), puis son Actor est assigné
-                    comme owner sur chaque evidence et finding générés. Nécessite des
-                    permissions admin sur l'instance CISO Assistant pour la création
-                    de User.
+                    L'<em>email du responsable</em> ci-dessus est résolu côté
+                    CISO Assistant (User créé s'il n'existe pas), puis son Actor
+                    est assigné comme owner sur chaque evidence et finding
+                    générés. Nécessite des permissions admin sur l'instance CISO
+                    Assistant pour la création de User.
                   </span>
                 </span>
               </label>
@@ -308,13 +320,17 @@ export default function CisoSyncForm({
                   className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
                 />
                 <span>
-                  <strong>Ouvrir un Incident</strong> en cas de signal critique (≥1 contrôle non conforme).
+                  <strong>Ouvrir un Incident</strong> en cas de signal critique
+                  (≥1 contrôle non conforme).
                   <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                    Crée un Incident SEV3 <em>"Risque humain"</em> côté CISO Assistant à chaque
-                    sync où au moins un contrôle est <code>non_compliant</code>.
-                    Idempotent par jour (ref_id <code>humanix-{"{"}framework{"}"}-YYYY-MM-DD</code>).
-                    Sert d'alerte proactive type NIS2 §23, sans préjuger d'une compromission
-                    effective.
+                    Crée un Incident SEV3 <em>"Risque humain"</em> côté CISO
+                    Assistant à chaque sync où au moins un contrôle est{" "}
+                    <code>non_compliant</code>. Idempotent par jour (ref_id{" "}
+                    <code>
+                      humanix-{"{"}framework{"}"}-YYYY-MM-DD
+                    </code>
+                    ). Sert d'alerte proactive type NIS2 §23, sans préjuger
+                    d'une compromission effective.
                   </span>
                 </span>
               </label>
@@ -326,14 +342,15 @@ export default function CisoSyncForm({
                   className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
                 />
                 <span>
-                  <strong>Pousser les métriques dans le temps</strong> (Metrology dashboards).
+                  <strong>Pousser les métriques dans le temps</strong>{" "}
+                  (Metrology dashboards).
                   <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                     À chaque sync, crée 6 séries temporelles dans le module
                     Metrology de CISO Assistant : score de maturité humaine,
-                    taux de complétion, taux de signalement phishing, nombre
-                    de contrôles conformes / partiels / non conformes. Le
-                    RSSI, DSI ou DPO visualise l'évolution dans les
-                    dashboards natifs CISO Assistant.
+                    taux de complétion, taux de signalement phishing, nombre de
+                    contrôles conformes / partiels / non conformes. Le RSSI, DSI
+                    ou DPO visualise l'évolution dans les dashboards natifs CISO
+                    Assistant.
                   </span>
                 </span>
               </label>
@@ -345,13 +362,14 @@ export default function CisoSyncForm({
                   className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
                 />
                 <span>
-                  <strong>Synchroniser les équipes</strong> (Groups Humanix → Teams CISO Assistant).
+                  <strong>Synchroniser les équipes</strong> (Groups Humanix →
+                  Teams CISO Assistant).
                   <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                    Crée une Team CISO Assistant par Group Humanix (Compta,
-                    RH, Dev, Commercial...). Le RSSI peut ensuite assigner
-                    findings et incidents par équipe nativement. Les
-                    membres ne sont pas pushés automatiquement (cf. demande 1
-                    du document roadmap intuitem).
+                    Crée une Team CISO Assistant par Group Humanix (Compta, RH,
+                    Dev, Commercial...). Le RSSI peut ensuite assigner findings
+                    et incidents par équipe nativement. Les membres ne sont pas
+                    pushés automatiquement (cf. demande 1 du document roadmap
+                    intuitem).
                   </span>
                 </span>
               </label>
@@ -363,13 +381,14 @@ export default function CisoSyncForm({
                   className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
                 />
                 <span>
-                  <strong>Synchroniser les campagnes</strong> phishing simulé / smishing.
+                  <strong>Synchroniser les campagnes</strong> phishing simulé /
+                  smishing.
                   <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                    À chaque sync, pour chaque PhishingCampaign Humanix
-                    active ou récente (90 jours), crée/maintient une Campaign
-                    CISO Assistant avec statut mappé (draft / in_progress /
-                    done). Le RSSI suit toutes ses campagnes dans son cockpit
-                    GRC habituel.
+                    À chaque sync, pour chaque PhishingCampaign Humanix active
+                    ou récente (90 jours), crée/maintient une Campaign CISO
+                    Assistant avec statut mappé (draft / in_progress / done). Le
+                    RSSI suit toutes ses campagnes dans son cockpit GRC
+                    habituel.
                   </span>
                 </span>
               </label>
@@ -393,9 +412,9 @@ export default function CisoSyncForm({
                     <code>phishing.user_clicked</code>. Debouncée à 5 secondes
                     pour éviter les rafales (50 utilisateurs qui terminent un
                     module en 30 s = 1 seule sync). Le RSSI voit le score
-                    remonter en direct pendant une présentation COMEX.
-                    Nécessite d'avoir lancé au moins une sync manuelle d'un
-                    framework au préalable (sinon no-op).
+                    remonter en direct pendant une présentation COMEX. Nécessite
+                    d'avoir lancé au moins une sync manuelle d'un framework au
+                    préalable (sinon no-op).
                   </span>
                 </span>
               </label>
@@ -407,15 +426,17 @@ export default function CisoSyncForm({
                   className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
                 />
                 <span>
-                  <strong>Asset « Workforce »</strong> - couche humaine comme asset GRC{" "}
+                  <strong>Asset « Workforce »</strong> - couche humaine comme
+                  asset GRC{" "}
                   <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold uppercase tracking-wider">
                     v2.2
                   </span>
                   <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                    Crée un Asset primary <em>« Personnel · Couche humaine
-                    Humanix Académie »</em> dans le folder. Permet de cibler
-                    explicitement la couche humaine sur les RiskScenarios,
-                    Findings et Incidents. Idempotent par nom.
+                    Crée un Asset primary{" "}
+                    <em>« Personnel · Couche humaine Humanix Académie »</em>{" "}
+                    dans le folder. Permet de cibler explicitement la couche
+                    humaine sur les RiskScenarios, Findings et Incidents.
+                    Idempotent par nom.
                   </span>
                 </span>
               </label>
@@ -427,7 +448,8 @@ export default function CisoSyncForm({
                   className="rounded border-gray-300 dark:border-slate-600 text-primary-500 mt-0.5"
                 />
                 <span>
-                  <strong>Catalogue de 15 menaces humaines</strong> - FOVI, deepfake CEO, smishing…{" "}
+                  <strong>Catalogue de 15 menaces humaines</strong> - FOVI,
+                  deepfake CEO, smishing…{" "}
                   <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold uppercase tracking-wider">
                     v2.2
                   </span>
@@ -436,9 +458,9 @@ export default function CisoSyncForm({
                     finance, fraude au président, vishing CFO, smishing,
                     quishing, deepfake CEO, password reuse, shadow IT,
                     tailgating, fuite RGPD, fuite secrets dev, etc.) comme{" "}
-                    <code>Threat</code> entities. Le RSSI peut les linker à
-                    ses RiskScenarios (M2M <code>threats</code>) sans avoir
-                    à charger la stored-library manuellement.
+                    <code>Threat</code> entities. Le RSSI peut les linker à ses
+                    RiskScenarios (M2M <code>threats</code>) sans avoir à
+                    charger la stored-library manuellement.
                   </span>
                 </span>
               </label>
@@ -455,13 +477,13 @@ export default function CisoSyncForm({
                     v2.2
                   </span>
                   <span className="block text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                    Crée un Dashboard <em>« Cockpit Humanix Académie »</em>{" "}
-                    avec 6 widgets pointant sur les MetricInstances Humanix :
-                    jauge score maturité, KPI cards complétion / signalement
-                    phishing, line chart évolution 90 j, sparklines
-                    conformes / non conformes. <strong>Nécessite
-                    pushMetrologySamples actif</strong> (sinon les widgets
-                    n'ont pas de cible).
+                    Crée un Dashboard <em>« Cockpit Humanix Académie »</em> avec
+                    6 widgets pointant sur les MetricInstances Humanix : jauge
+                    score maturité, KPI cards complétion / signalement phishing,
+                    line chart évolution 90 j, sparklines conformes / non
+                    conformes.{" "}
+                    <strong>Nécessite pushMetrologySamples actif</strong> (sinon
+                    les widgets n'ont pas de cible).
                   </span>
                 </span>
               </label>
@@ -501,7 +523,8 @@ export default function CisoSyncForm({
 
         {existing?.lastTestedAt && (
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
-            Dernier test : {new Date(existing.lastTestedAt).toLocaleString("fr-FR")} -{" "}
+            Dernier test :{" "}
+            {new Date(existing.lastTestedAt).toLocaleString("fr-FR")} -{" "}
             <span
               className={
                 existing.lastTestStatus === "ok"
@@ -527,14 +550,17 @@ export default function CisoSyncForm({
               <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-amber-500"></span>
             </span>
             <div className="text-xs text-amber-900 dark:text-amber-200 flex-1">
-              <span className="font-bold uppercase tracking-wider">Live Mode actif</span>
+              <span className="font-bold uppercase tracking-wider">
+                Live Mode actif
+              </span>
               {existing.lastLiveSyncAt ? (
                 <span className="block mt-0.5">
                   Dernière mini-sync :{" "}
                   {new Date(existing.lastLiveSyncAt).toLocaleString("fr-FR")}
                   {existing.lastLiveSyncEvent && (
                     <>
-                      {" "}- événement{" "}
+                      {" "}
+                      - événement{" "}
                       <code className="font-mono">
                         {existing.lastLiveSyncEvent}
                       </code>
@@ -545,9 +571,8 @@ export default function CisoSyncForm({
               ) : (
                 <span className="block mt-0.5">
                   Aucune mini-sync déclenchée pour l'instant. Lancez une sync
-                  manuelle d'un framework au moins une fois, puis les
-                  événements métier déclencheront automatiquement les
-                  rafraîchissements.
+                  manuelle d'un framework au moins une fois, puis les événements
+                  métier déclencheront automatiquement les rafraîchissements.
                 </span>
               )}
             </div>
@@ -564,7 +589,9 @@ export default function CisoSyncForm({
           >
             <div className="font-medium">{toast.text}</div>
             {toast.detail && (
-              <div className="font-mono text-xs mt-1 opacity-80">{toast.detail}</div>
+              <div className="font-mono text-xs mt-1 opacity-80">
+                {toast.detail}
+              </div>
             )}
           </div>
         )}
@@ -577,7 +604,8 @@ export default function CisoSyncForm({
             Synchroniser un framework
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-            Choisissez un référentiel et lancez la sync. Le déroulement s'affiche en live.
+            Choisissez un référentiel et lancez la sync. Le déroulement
+            s'affiche en live.
           </p>
           <div className="flex flex-wrap items-end gap-3">
             <label className="block">

@@ -110,10 +110,7 @@ function familyOf(s: Saison): Family {
 
 // --- normalisation pour recherche -----------------------------------------
 function norm(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "");
+  return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 }
 
 type StatusFilter = "all" | "active" | "inactive" | "mandatory";
@@ -244,11 +241,7 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
     });
   };
   const onBulk = (
-    action:
-      | "activate"
-      | "deactivate"
-      | "make-mandatory"
-      | "drop-mandatory",
+    action: "activate" | "deactivate" | "make-mandatory" | "drop-mandatory",
   ) => {
     if (selected.size === 0) return;
     startTransition(async () => {
@@ -566,7 +559,8 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
                             {s.episodesCount > 0 && (
                               <>
                                 {" "}
-                                · ~{Math.round(
+                                · ~
+                                {Math.round(
                                   s.totalMinutes / s.episodesCount,
                                 )}{" "}
                                 min / episode · {s.totalMinutes} min total ·{" "}
@@ -671,8 +665,7 @@ export default function ModulesTable({ saisons }: { saisons: Saison[] }) {
                             )}
                           </div>
 
-                          {(s.completionsCount > 0 ||
-                            s.avgScore !== null) && (
+                          {(s.completionsCount > 0 || s.avgScore !== null) && (
                             <div>
                               <p className="text-[10px] uppercase tracking-widest font-bold text-accent-500 mb-2">
                                 Engagement de tes equipes

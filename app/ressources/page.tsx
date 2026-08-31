@@ -162,10 +162,9 @@ export default function RessourcesPage() {
             <strong className="text-primary-500 dark:text-accent-300">
               Pourquoi tout ce gratuit&nbsp;?
             </strong>{" "}
-            Parce qu'on pense que la cyber utile commence par ce qu'on
-            comprend. Le produit payant existe pour les organisations qui
-            veulent industrialiser ; les ressources publiques sont pour
-            tout le monde.
+            Parce qu'on pense que la cyber utile commence par ce qu'on comprend.
+            Le produit payant existe pour les organisations qui veulent
+            industrialiser ; les ressources publiques sont pour tout le monde.
           </p>
           <Link
             href="/manifeste"

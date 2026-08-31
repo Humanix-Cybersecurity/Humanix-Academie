@@ -29,9 +29,7 @@ import {
 } from "@/lib/analytics/risk-forecast";
 import KpiCard from "@/components/admin/forecast/KpiCard";
 import ForecastChart from "@/components/admin/forecast/ForecastChart";
-import MoverList, {
-  EmptyMovers,
-} from "@/components/admin/forecast/MoverList";
+import MoverList, { EmptyMovers } from "@/components/admin/forecast/MoverList";
 
 export const dynamic = "force-dynamic";
 
@@ -119,9 +117,9 @@ export default async function ForecastPage() {
           />
         ) : (
           <p className="text-sm text-gray-500 italic">
-            Aucun snapshot disponible. Le cron <code>/api/cron/risk-snapshot</code>{" "}
-            doit tourner au moins une fois par jour pour alimenter cette
-            projection.
+            Aucun snapshot disponible. Le cron{" "}
+            <code>/api/cron/risk-snapshot</code> doit tourner au moins une fois
+            par jour pour alimenter cette projection.
           </p>
         )}
       </AdminSection>

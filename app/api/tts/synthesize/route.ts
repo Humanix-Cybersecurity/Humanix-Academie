@@ -97,7 +97,9 @@ export async function POST(req: NextRequest) {
   // on prefere un 502 explicite plutot qu'un 200 avec audio vide qui resterait
   // silencieux dans le navigateur.
   if (!result.buffer || result.buffer.length < 256) {
-    console.error(`[tts/synthesize] buffer suspicious : len=${result.buffer?.length ?? 0}`);
+    console.error(
+      `[tts/synthesize] buffer suspicious : len=${result.buffer?.length ?? 0}`,
+    );
     return NextResponse.json(
       { error: "tts_empty_buffer", len: result.buffer?.length ?? 0 },
       { status: 502 },

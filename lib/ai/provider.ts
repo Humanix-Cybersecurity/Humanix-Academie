@@ -99,9 +99,9 @@ async function streamMistral(
   // serait retenue et Mistral renverrait 400 "Missing model parameter".
   // Cas reel observe en prod 2026-05-22 : MISTRAL_MODEL="" dans le .env.
   const model =
-    (process.env.HEX_AI_MODEL?.trim() ||
-      process.env.MISTRAL_MODEL?.trim() ||
-      "mistral-small-latest");
+    process.env.HEX_AI_MODEL?.trim() ||
+    process.env.MISTRAL_MODEL?.trim() ||
+    "mistral-small-latest";
 
   const res = await fetch(MISTRAL_API, {
     method: "POST",
@@ -121,9 +121,7 @@ async function streamMistral(
 
   if (!res.ok) {
     const body = await res.text().catch(() => "");
-    throw new Error(
-      `Mistral API ${res.status}: ${body.slice(0, 300)}`,
-    );
+    throw new Error(`Mistral API ${res.status}: ${body.slice(0, 300)}`);
   }
   if (!res.body) {
     throw new Error("Mistral API returned no body");
@@ -161,9 +159,7 @@ async function streamOllama(
 
   if (!res.ok) {
     const body = await res.text().catch(() => "");
-    throw new Error(
-      `Ollama ${res.status}: ${body.slice(0, 300)}`,
-    );
+    throw new Error(`Ollama ${res.status}: ${body.slice(0, 300)}`);
   }
   if (!res.body) {
     throw new Error("Ollama returned no body");

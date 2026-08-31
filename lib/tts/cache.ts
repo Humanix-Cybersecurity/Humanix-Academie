@@ -72,14 +72,21 @@ export function isCached(cacheRoot: CacheRoot, hash: string): boolean {
   return existsSync(pathForHash(cacheRoot, hash));
 }
 
-export function writeCachedMP3(cacheRoot: CacheRoot, hash: string, buffer: Buffer): string {
+export function writeCachedMP3(
+  cacheRoot: CacheRoot,
+  hash: string,
+  buffer: Buffer,
+): string {
   ensureCacheDir(cacheRoot, hash);
   const p = pathForHash(cacheRoot, hash);
   writeFileSync(p, buffer);
   return p;
 }
 
-export function readCachedMP3(cacheRoot: CacheRoot, hash: string): Buffer | null {
+export function readCachedMP3(
+  cacheRoot: CacheRoot,
+  hash: string,
+): Buffer | null {
   const p = pathForHash(cacheRoot, hash);
   if (!existsSync(p)) return null;
   return readFileSync(p);
@@ -108,7 +115,8 @@ export function loadManifest(cacheRoot: CacheRoot): Manifest {
 
 export function saveManifest(cacheRoot: CacheRoot, manifest: Manifest): void {
   const p = manifestPath(cacheRoot);
-  if (!existsSync(cacheRoot.root)) mkdirSync(cacheRoot.root, { recursive: true });
+  if (!existsSync(cacheRoot.root))
+    mkdirSync(cacheRoot.root, { recursive: true });
   writeFileSync(p, JSON.stringify(manifest, null, 2));
 }
 
@@ -116,7 +124,11 @@ export function saveManifest(cacheRoot: CacheRoot, manifest: Manifest): void {
  * Cle stable pour un segment dans le manifest.
  * Format : `${saisonSlug}/${episodeSlug}/${segmentId}`
  */
-export function manifestKey(saisonSlug: string, episodeSlug: string, segmentId: string): string {
+export function manifestKey(
+  saisonSlug: string,
+  episodeSlug: string,
+  segmentId: string,
+): string {
   return `${saisonSlug}/${episodeSlug}/${segmentId}`;
 }
 

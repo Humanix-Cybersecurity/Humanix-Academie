@@ -166,7 +166,8 @@ export function applyScimPatch(
       if (typeof v.displayName === "string") update.name = v.displayName;
       const ext = v[HUMANIX_EXT] as Record<string, unknown> | undefined;
       if (ext) {
-        if (typeof ext.role === "string") update.role = coerceScimRole(ext.role);
+        if (typeof ext.role === "string")
+          update.role = coerceScimRole(ext.role);
         if (typeof ext.service === "string") update.service = ext.service;
       }
     }

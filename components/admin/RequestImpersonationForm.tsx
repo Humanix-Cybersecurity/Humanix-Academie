@@ -18,9 +18,7 @@ const DURATION_OPTIONS = [
 export default function RequestImpersonationForm() {
   const [pending, startTransition] = useTransition();
   const [feedback, setFeedback] = useState<
-    | { type: "ok"; msg: string }
-    | { type: "err"; msg: string }
-    | null
+    { type: "ok"; msg: string } | { type: "err"; msg: string } | null
   >(null);
 
   const onSubmit = async (formData: FormData) => {
@@ -50,10 +48,10 @@ export default function RequestImpersonationForm() {
       className="space-y-3"
     >
       <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-        Pour le support / debug : demandez à un utilisateur de votre
-        espace l'autorisation de consulter son compte en{" "}
-        <strong>lecture seule</strong>. Il recevra un mail pour donner
-        son accord explicite. Aucune modification ne sera possible.
+        Pour le support / debug : demandez à un utilisateur de votre espace
+        l'autorisation de consulter son compte en <strong>lecture seule</strong>
+        . Il recevra un mail pour donner son accord explicite. Aucune
+        modification ne sera possible.
       </p>
 
       <div>
@@ -97,8 +95,8 @@ export default function RequestImpersonationForm() {
           className="w-full rounded-xl border-2 border-gray-200 dark:border-slate-700 p-3 focus:border-accent-500 focus:outline-none text-sm resize-none"
         />
         <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-          Cette raison sera visible par l'utilisateur dans le mail de
-          demande. Soyez clair et précis.
+          Cette raison sera visible par l'utilisateur dans le mail de demande.
+          Soyez clair et précis.
         </p>
       </div>
 

@@ -62,7 +62,9 @@ export type RequestImpersonationResult =
  * - La raison doit faire au moins 10 caracteres (force la documentation)
  * - La duree maximum est 24h
  */
-export async function requestImpersonation(formData: FormData): Promise<RequestImpersonationResult> {
+export async function requestImpersonation(
+  formData: FormData,
+): Promise<RequestImpersonationResult> {
   const admin = await requireAdmin();
   const targetEmail = ((formData.get("targetEmail") as string) || "")
     .trim()
@@ -327,10 +329,7 @@ export async function endImpersonation(
   const currentUserId = session.user.id as string;
   // Verif d'autorisation : seul l'admin proprietaire ou la cible
   // peuvent terminer la session.
-  if (
-    currentUserId !== imp.adminUserId &&
-    currentUserId !== imp.targetUserId
-  ) {
+  if (currentUserId !== imp.adminUserId && currentUserId !== imp.targetUserId) {
     return { ok: false, reason: "unauthorized" };
   }
 

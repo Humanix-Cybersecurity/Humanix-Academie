@@ -9,11 +9,11 @@ export default function LegalNotice() {
         Cadre éthique et légal
       </h3>
       <p className="text-xs text-amber-800/80 dark:text-amber-200/80 mt-2 leading-relaxed">
-        Les simulations doivent être{" "}
-        <strong>annoncées préalablement</strong> aux salariés (charte, CSE).
-        Aucun usage disciplinaire des résultats. Pas de stigmatisation : seuls
-        les chiffres agrégés sont exploités. Conformément au RGPD (art. 32) et
-        au Code pénal (art. 323), ces tests sont des
+        Les simulations doivent être <strong>annoncées préalablement</strong>{" "}
+        aux salariés (charte, CSE). Aucun usage disciplinaire des résultats. Pas
+        de stigmatisation : seuls les chiffres agrégés sont exploités.
+        Conformément au RGPD (art. 32) et au Code pénal (art. 323), ces tests
+        sont des
         <strong> exercices pédagogiques</strong>, pas des attaques.
       </p>
     </article>

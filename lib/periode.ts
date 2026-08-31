@@ -46,7 +46,9 @@ export function instantParis(
   // On retire le decalage. Une seconde passe rattrape le cas ou la borne
   // tombe le jour meme d'un changement d'heure -- le decalage lu sur
   // l'approximation peut alors differer de celui de l'instant reel.
-  let resultat = new Date(approx.getTime() - decalageParisMinutes(approx) * 60_000);
+  let resultat = new Date(
+    approx.getTime() - decalageParisMinutes(approx) * 60_000,
+  );
   const decalageReel = decalageParisMinutes(resultat);
   resultat = new Date(approx.getTime() - decalageReel * 60_000);
   return resultat;

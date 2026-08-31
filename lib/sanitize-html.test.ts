@@ -4,13 +4,15 @@ import { sanitizeEmailHtml } from "./sanitize-html";
 
 describe("sanitizeEmailHtml - neutralise les vecteurs XSS", () => {
   it("supprime <script>", () => {
-    const out = sanitizeEmailHtml('<p>ok</p><script>alert(1)</script>');
+    const out = sanitizeEmailHtml("<p>ok</p><script>alert(1)</script>");
     expect(out).toContain("<p>ok</p>");
     expect(out.toLowerCase()).not.toContain("<script");
   });
 
   it("retire les gestionnaires on* (garde la balise)", () => {
-    const out = sanitizeEmailHtml('<img src="https://x/a.png" onerror="alert(1)">');
+    const out = sanitizeEmailHtml(
+      '<img src="https://x/a.png" onerror="alert(1)">',
+    );
     expect(out).toContain("<img");
     expect(out.toLowerCase()).not.toContain("onerror");
   });
@@ -32,7 +34,9 @@ describe("sanitizeEmailHtml - neutralise les vecteurs XSS", () => {
 
 describe("sanitizeEmailHtml - préserve le présentationnel (réalisme)", () => {
   it("garde les styles inline", () => {
-    const out = sanitizeEmailHtml('<div style="color:#0078d4;padding:20px">Microsoft</div>');
+    const out = sanitizeEmailHtml(
+      '<div style="color:#0078d4;padding:20px">Microsoft</div>',
+    );
     expect(out).toContain("style=");
     expect(out).toContain("Microsoft");
   });

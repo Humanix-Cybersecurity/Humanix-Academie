@@ -27,12 +27,42 @@ const ITEMS: Array<{
   label: string;
   tone: Tone;
 }> = [
-  { key: "DATA_ACCESSED", emoji: "👁", label: "Acces aux données", tone: "info" },
-  { key: "DATA_EXPORTED", emoji: "📤", label: "Exports (article 20)", tone: "info" },
-  { key: "DATA_ERASURE_REQUESTED", emoji: "🗑", label: "Effacements demandes", tone: "warning" },
-  { key: "DATA_ERASURE_COMPLETED", emoji: "✅", label: "Effacements termines", tone: "success" },
-  { key: "CONSENT_GIVEN", emoji: "✓", label: "Consentements donnes", tone: "success" },
-  { key: "CONSENT_WITHDRAWN", emoji: "✗", label: "Consentements retires", tone: "warning" },
+  {
+    key: "DATA_ACCESSED",
+    emoji: "👁",
+    label: "Acces aux données",
+    tone: "info",
+  },
+  {
+    key: "DATA_EXPORTED",
+    emoji: "📤",
+    label: "Exports (article 20)",
+    tone: "info",
+  },
+  {
+    key: "DATA_ERASURE_REQUESTED",
+    emoji: "🗑",
+    label: "Effacements demandes",
+    tone: "warning",
+  },
+  {
+    key: "DATA_ERASURE_COMPLETED",
+    emoji: "✅",
+    label: "Effacements termines",
+    tone: "success",
+  },
+  {
+    key: "CONSENT_GIVEN",
+    emoji: "✓",
+    label: "Consentements donnes",
+    tone: "success",
+  },
+  {
+    key: "CONSENT_WITHDRAWN",
+    emoji: "✗",
+    label: "Consentements retires",
+    tone: "warning",
+  },
 ];
 
 export default function ComplianceCounters({

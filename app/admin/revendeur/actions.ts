@@ -37,12 +37,11 @@ export async function createClient(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
   const planRaw = String(formData.get("plan") ?? "pro").trim();
   const plan = (PLANS.has(planRaw) ? planRaw : "pro") as
-    | "starter"
-    | "pro"
-    | "enterprise";
+    "starter" | "pro" | "enterprise";
   const subdomain = String(formData.get("subdomain") ?? "").trim() || null;
   const brandName = String(formData.get("brandName") ?? "").trim() || null;
-  const primaryColor = String(formData.get("primaryColor") ?? "").trim() || null;
+  const primaryColor =
+    String(formData.get("primaryColor") ?? "").trim() || null;
   const accentColor = String(formData.get("accentColor") ?? "").trim() || null;
   const adminEmail = String(formData.get("adminEmail") ?? "").trim() || null;
   const adminName = String(formData.get("adminName") ?? "").trim() || null;
@@ -120,10 +119,15 @@ export async function saveClientBranding(formData: FormData) {
   const brandingEnabled = formData.get("brandingEnabled") === "on";
   const hidePoweredBy = formData.get("hidePoweredBy") === "on";
   const brandName =
-    String(formData.get("brandName") ?? "").trim().slice(0, 80) || null;
+    String(formData.get("brandName") ?? "")
+      .trim()
+      .slice(0, 80) || null;
   const emailFromName =
-    String(formData.get("emailFromName") ?? "").trim().slice(0, 80) || null;
-  const primaryColor = String(formData.get("primaryColor") ?? "").trim() || null;
+    String(formData.get("emailFromName") ?? "")
+      .trim()
+      .slice(0, 80) || null;
+  const primaryColor =
+    String(formData.get("primaryColor") ?? "").trim() || null;
   const accentColor = String(formData.get("accentColor") ?? "").trim() || null;
 
   if (primaryColor && !isValidHexColor(primaryColor)) {
@@ -134,11 +138,14 @@ export async function saveClientBranding(formData: FormData) {
   }
 
   // Sous-domaine
-  const subRaw = String(formData.get("subdomain") ?? "").trim().toLowerCase();
+  const subRaw = String(formData.get("subdomain") ?? "")
+    .trim()
+    .toLowerCase();
   let brandSubdomain: string | null = null;
   if (subRaw) {
     if (!SUBDOMAIN_RE.test(subRaw)) redirect(`${back}?error=invalid_subdomain`);
-    if (isReservedSubdomain(subRaw)) redirect(`${back}?error=subdomain_reserved`);
+    if (isReservedSubdomain(subRaw))
+      redirect(`${back}?error=subdomain_reserved`);
     const clash = await db.tenant.findFirst({
       where: { brandSubdomain: subRaw, NOT: { id: clientId } },
       select: { id: true },

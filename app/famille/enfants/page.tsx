@@ -30,7 +30,10 @@ export const metadata: Metadata = {
 
 export default function EcoleDeHexPage() {
   return (
-    <main id="main-content" className="bg-gradient-to-b from-sky-50 via-white to-white dark:from-slate-900 dark:via-slate-900 dark:to-slate-900">
+    <main
+      id="main-content"
+      className="bg-gradient-to-b from-sky-50 via-white to-white dark:from-slate-900 dark:via-slate-900 dark:to-slate-900"
+    >
       <div className="max-w-3xl mx-auto px-4 py-10 sm:py-14">
         {/* Hero */}
         <header className="text-center mb-10">
@@ -82,9 +85,7 @@ export default function EcoleDeHexPage() {
                 href={`/famille/enfants/${m.slug}`}
                 className="group rounded-3xl border-2 border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all"
               >
-                <div
-                  className={`bg-gradient-to-br ${c.grad} p-6 text-center`}
-                >
+                <div className={`bg-gradient-to-br ${c.grad} p-6 text-center`}>
                   <div className="text-6xl" aria-hidden="true">
                     {m.emoji}
                   </div>
@@ -117,8 +118,9 @@ export default function EcoleDeHexPage() {
           </p>
           <p>
             « L&apos;école de Hex » est <strong>gratuite</strong> et conçue pour
-            être jouée seul·e ou avec vous. <strong>Aucun compte</strong> n&apos;est
-            demandé et <strong>aucune donnée n&apos;est enregistrée</strong> : la
+            être jouée seul·e ou avec vous. <strong>Aucun compte</strong>{" "}
+            n&apos;est demandé et{" "}
+            <strong>aucune donnée n&apos;est enregistrée</strong> : la
             progression reste sur l&apos;appareil. Pas de publicité, pas de lien
             sortant pendant les jeux.{" "}
             <Link href="/famille" className="underline">

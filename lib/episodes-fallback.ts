@@ -171,8 +171,7 @@ const CATEGORIE_PROFILS: Record<
 
   // ==== IA generative ====
   "ia-generative": {
-    persona:
-      "Vous êtes collaborateur utilisant ChatGPT/Mistral au quotidien",
+    persona: "Vous êtes collaborateur utilisant ChatGPT/Mistral au quotidien",
     objective: "Utiliser l'IA générative sans fuiter de données sensibles",
     scenarioTemplate: (t) =>
       `Vous utilisez une IA pour gagner du temps. Sujet : "${t}". Vous êtes sur le point de coller du contenu pro dans le prompt. Que faites-vous ?`,

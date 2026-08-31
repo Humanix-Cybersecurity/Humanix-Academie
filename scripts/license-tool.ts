@@ -137,7 +137,8 @@ function commandGenerate(): void {
     process.exit(2);
   }
 
-  const maxSeats = seatsStr === "" || seatsStr === "unlimited" ? null : parseInt(seatsStr, 10);
+  const maxSeats =
+    seatsStr === "" || seatsStr === "unlimited" ? null : parseInt(seatsStr, 10);
   if (maxSeats !== null && (!Number.isFinite(maxSeats) || maxSeats <= 0)) {
     console.error(`ERREUR : seats invalide.`);
     process.exit(2);
@@ -162,7 +163,10 @@ function commandGenerate(): void {
     plan: plan as LicensePayload["plan"],
     maxSeats,
     featuresOverride: featuresStr
-      ? featuresStr.split(",").map((s) => s.trim()).filter(Boolean)
+      ? featuresStr
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
       : [],
     issuedAt: issuedAt.toISOString(),
     expiresAt: expiresAt.toISOString(),

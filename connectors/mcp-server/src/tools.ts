@@ -172,8 +172,7 @@ export const TOOLS: readonly ToolDefinition[] = [
 ] as const;
 
 export type ToolCallResult =
-  | { ok: true; data: unknown }
-  | { ok: false; error: string; code?: number };
+  { ok: true; data: unknown } | { ok: false; error: string; code?: number };
 
 // Validateurs runtime - on ne fait pas confiance au LLM pour respecter le
 // JSON Schema. On rejette toute valeur hors enum / hors range avec un
@@ -242,7 +241,10 @@ export async function callTool(
 }
 
 function parseFramework(v: unknown): EvidenceFramework {
-  if (typeof v !== "string" || !FRAMEWORK_VALUES.includes(v as EvidenceFramework)) {
+  if (
+    typeof v !== "string" ||
+    !FRAMEWORK_VALUES.includes(v as EvidenceFramework)
+  ) {
     throw new Error(
       `framework invalide. Attendu: ${FRAMEWORK_VALUES.join(", ")}. Recu: ${String(v)}`,
     );
@@ -262,7 +264,9 @@ function parseFormat(v: unknown): EvidenceFormat {
 function parseLimit(v: unknown, min: number, max: number): number {
   const n = typeof v === "number" ? v : Number(v);
   if (!Number.isInteger(n) || n < min || n > max) {
-    throw new Error(`Valeur invalide. Attendu entier entre ${min} et ${max}. Recu: ${String(v)}`);
+    throw new Error(
+      `Valeur invalide. Attendu entier entre ${min} et ${max}. Recu: ${String(v)}`,
+    );
   }
   return n;
 }

@@ -23,8 +23,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
-const TITLE =
-  "Le certificat cyber qui vaut quelque chose - Humanix Académie";
+const TITLE = "Le certificat cyber qui vaut quelque chose - Humanix Académie";
 const DESC =
   "Certificat de sensibilisation cyber signé Ed25519, exportable OSCAL, conçu comme bouclier assurance cyber + preuve de conformité NIS2. Démarche d'agrément ANSSI en cours.";
 
@@ -255,8 +254,8 @@ export default function CertificatPage() {
               </p>
               <p className="text-sm text-primary-900 dark:text-primary-200">
                 Certificat personnel sur 3 modules de gouvernance cyber
-                (responsabilité juridique, déclaration d'incident,
-                continuité d'activité).
+                (responsabilité juridique, déclaration d'incident, continuité
+                d'activité).
               </p>
             </div>
             <div className="rounded-2xl border-2 border-primary-200 dark:border-primary-900/50 bg-primary-50/50 dark:bg-primary-950/20 p-5">
@@ -275,8 +274,8 @@ export default function CertificatPage() {
               </p>
               <p className="text-sm text-primary-900 dark:text-primary-200">
                 Export <strong>OSCAL v1.1.2</strong> (NIST) intégrable
-                directement dans CISO Assistant. Mapping technique
-                préétabli vers les contrôles NIS2.
+                directement dans CISO Assistant. Mapping technique préétabli
+                vers les contrôles NIS2.
               </p>
             </div>
           </div>
@@ -357,9 +356,9 @@ export default function CertificatPage() {
                 <p className="font-bold mb-2">🇫🇷 Souveraineté technique</p>
                 <p>
                   Hébergement Scaleway Paris, IA Mistral, paiement Mollie UE,
-                  email Scaleway TEM. Zéro dépendance Cloud Act US. Audit
-                  Triple A+ (Mozilla Observatory 110/100, Security Headers 6/6,
-                  SSL Labs PQC ready).
+                  email Scaleway TEM. Zéro dépendance Cloud Act US. Audit Triple
+                  A+ (Mozilla Observatory 110/100, Security Headers 6/6, SSL
+                  Labs PQC ready).
                 </p>
               </div>
               <div>
@@ -382,11 +381,13 @@ export default function CertificatPage() {
                 </p>
               </div>
               <div>
-                <p className="font-bold mb-2">🔐 Sécurité défense en profondeur</p>
+                <p className="font-bold mb-2">
+                  🔐 Sécurité défense en profondeur
+                </p>
                 <p>
-                  Certificats Ed25519, signatures PDF, anti-PII régex strict
-                  sur prompts IA, CSP nonce-based, HSTS preload, MFA TOTP +
-                  FIDO2. Conforme RGS B ANSSI.
+                  Certificats Ed25519, signatures PDF, anti-PII régex strict sur
+                  prompts IA, CSP nonce-based, HSTS preload, MFA TOTP + FIDO2.
+                  Conforme RGS B ANSSI.
                 </p>
               </div>
             </div>
@@ -446,9 +447,9 @@ export default function CertificatPage() {
           </h2>
           <p className="text-base text-gray-700 dark:text-gray-200 max-w-2xl mx-auto mb-8 leading-relaxed">
             Dirigeant qui veut sécuriser son audit NIS2 ? Courtier ou
-            souscripteur cyber qui négocie son barème ? RSSI qui veut piloter
-            le facteur humain ? On vous propose un entretien de 30 minutes
-            pour vous montrer la chaîne complète.
+            souscripteur cyber qui négocie son barème ? RSSI qui veut piloter le
+            facteur humain ? On vous propose un entretien de 30 minutes pour
+            vous montrer la chaîne complète.
           </p>
 
           <div className="flex flex-wrap justify-center gap-3">

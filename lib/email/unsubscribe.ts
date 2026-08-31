@@ -48,10 +48,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
  * - "marketing"     : nouveautes produit, conseils mensuels. Idem.
  */
 export type EmailListId =
-  | "transactional"
-  | "anecdote"
-  | "admin-alerts"
-  | "marketing";
+  "transactional" | "anecdote" | "admin-alerts" | "marketing";
 
 const VALID_LISTS = new Set<EmailListId>([
   "transactional",
@@ -127,14 +124,23 @@ export function signUnsubscribeToken(input: {
 
 export type VerifyResult =
   | { ok: true; email: string; list: EmailListId }
-  | { ok: false; reason: "malformed" | "bad_signature" | "expired" | "unknown_list" | "unknown_version" };
+  | {
+      ok: false;
+      reason:
+        | "malformed"
+        | "bad_signature"
+        | "expired"
+        | "unknown_list"
+        | "unknown_version";
+    };
 
 /**
  * Verifie un token unsubscribe. Retourne l'email + liste si valide.
  * Constant-time comparison pour eviter les timing attacks.
  */
 export function verifyUnsubscribeToken(token: string): VerifyResult {
-  if (!token || typeof token !== "string") return { ok: false, reason: "malformed" };
+  if (!token || typeof token !== "string")
+    return { ok: false, reason: "malformed" };
   const parts = token.split(".");
   if (parts.length !== 2) return { ok: false, reason: "malformed" };
   const [payloadB64, sigB64] = parts;
@@ -142,7 +148,9 @@ export function verifyUnsubscribeToken(token: string): VerifyResult {
   let expected: Buffer;
   let received: Buffer;
   try {
-    expected = createHmac("sha256", getSigningKey()).update(payloadB64).digest();
+    expected = createHmac("sha256", getSigningKey())
+      .update(payloadB64)
+      .digest();
     received = base64UrlDecode(sigB64);
   } catch {
     return { ok: false, reason: "malformed" };
@@ -160,9 +168,12 @@ export function verifyUnsubscribeToken(token: string): VerifyResult {
   } catch {
     return { ok: false, reason: "malformed" };
   }
-  if (payload.v !== TOKEN_VERSION) return { ok: false, reason: "unknown_version" };
-  if (!VALID_LISTS.has(payload.list)) return { ok: false, reason: "unknown_list" };
-  if (payload.exp < Math.floor(Date.now() / 1000)) return { ok: false, reason: "expired" };
+  if (payload.v !== TOKEN_VERSION)
+    return { ok: false, reason: "unknown_version" };
+  if (!VALID_LISTS.has(payload.list))
+    return { ok: false, reason: "unknown_list" };
+  if (payload.exp < Math.floor(Date.now() / 1000))
+    return { ok: false, reason: "expired" };
   return { ok: true, email: payload.email, list: payload.list };
 }
 
@@ -175,8 +186,7 @@ export function buildOneClickUnsubscribeUrl(
   email: string,
   list: EmailListId,
 ): string {
-  const base =
-    process.env.NEXT_PUBLIC_APP_URL ?? "https://humanix-academie.fr";
+  const base = process.env.NEXT_PUBLIC_APP_URL ?? "https://humanix-academie.fr";
   const token = signUnsubscribeToken({ email, list });
   return `${base.replace(/\/$/, "")}/api/unsubscribe?token=${encodeURIComponent(token)}`;
 }

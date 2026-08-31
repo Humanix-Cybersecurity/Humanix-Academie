@@ -139,7 +139,9 @@ export default function ApiKeysManager({ keys }: { keys: Key[] }) {
       ) : (
         <div className="card">
           <table className="w-full text-sm">
-            <caption className="sr-only">Cles API actives sur le tenant</caption>
+            <caption className="sr-only">
+              Cles API actives sur le tenant
+            </caption>
             <thead className="text-left text-gray-500 border-b">
               <tr>
                 <th scope="col" className="pb-3">

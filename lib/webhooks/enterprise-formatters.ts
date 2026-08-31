@@ -75,13 +75,13 @@ export function formatJiraIssue(
   const sev = severityForEvent(event);
   const url = new URL(webhookUrl);
   const projectKey =
-    url.searchParams.get("projectKey") ?? url.searchParams.get("project") ?? "SEC";
+    url.searchParams.get("projectKey") ??
+    url.searchParams.get("project") ??
+    "SEC";
 
   // Description plain text + lien vers le dashboard
   const factsBlock = Object.entries(data)
-    .filter(
-      ([, v]) => v !== null && v !== undefined && typeof v !== "object",
-    )
+    .filter(([, v]) => v !== null && v !== undefined && typeof v !== "object")
     .slice(0, 10)
     .map(([k, v]) => `- ${k} : ${String(v)}`)
     .join("\n");

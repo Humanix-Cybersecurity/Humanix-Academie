@@ -18,7 +18,8 @@ import ParcoursSteps from "@/components/nis2/ParcoursSteps";
 export const dynamic = "force-static";
 
 export const metadata: Metadata = {
-  title: "Espace NIS2 pour dirigeants - comprendre et se mettre en conformité | Humanix Académie",
+  title:
+    "Espace NIS2 pour dirigeants - comprendre et se mettre en conformité | Humanix Académie",
   description:
     "NIS2 expliqué en clair pour les dirigeants : suis-je concerné, où j'en suis, et un plan d'action personnalisé pour avancer grâce à la formation. Sans jargon, sans cases à cocher.",
   alternates: { canonical: "/nis2" },
@@ -183,8 +184,9 @@ export default function Nis2EspacePage() {
             Par où commencer ?
           </h2>
           <p className="text-gray-700 dark:text-gray-200 max-w-xl mx-auto mb-6 leading-relaxed">
-            Si vous ne savez même pas si NIS2 vous concerne, commencez par là. Si
-            vous le savez déjà, lancez le diagnostic et repartez avec votre plan.
+            Si vous ne savez même pas si NIS2 vous concerne, commencez par là.
+            Si vous le savez déjà, lancez le diagnostic et repartez avec votre
+            plan.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link

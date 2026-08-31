@@ -26,15 +26,15 @@ describe("toVectorLiteral", () => {
   });
 
   it("rejette undefined dans l'array (typage runtime)", () => {
-    expect(() => toVectorLiteral([0.1, undefined as unknown as number])).toThrow(
-      /non-numerique/,
-    );
+    expect(() =>
+      toVectorLiteral([0.1, undefined as unknown as number]),
+    ).toThrow(/non-numerique/);
   });
 
   it("rejette string deguisee en number (anti-injection)", () => {
-    expect(() =>
-      toVectorLiteral([0.1, "0.2" as unknown as number]),
-    ).toThrow(/non-numerique/);
+    expect(() => toVectorLiteral([0.1, "0.2" as unknown as number])).toThrow(
+      /non-numerique/,
+    );
   });
 
   it("supporte un vecteur de dimension EMBED_DIMS (1024)", () => {

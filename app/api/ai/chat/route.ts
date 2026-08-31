@@ -27,10 +27,7 @@ import { requireSession } from "@/lib/api/require-role";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { streamChat, getProviderKind } from "@/lib/ai/provider";
 import { buildSystemPrompt } from "@/lib/ai/hex/system-prompt";
-import {
-  buildEnrichedContext,
-  buildToneAddendum,
-} from "@/lib/ai/hex/context";
+import { buildEnrichedContext, buildToneAddendum } from "@/lib/ai/hex/context";
 import { retrieveRagContext, formatRagContext } from "@/lib/ai/hex/rag";
 import { wrapWithLeakFilter } from "@/lib/ai/hex/output-filter";
 import { scanPii, describePiiHits } from "@/lib/security/pii-filter";
@@ -185,10 +182,7 @@ export async function POST(req: Request) {
   let upstream: ReadableStream<string>;
   try {
     upstream = await streamChat({
-      messages: [
-        { role: "system", content: systemPrompt },
-        ...body.messages,
-      ],
+      messages: [{ role: "system", content: systemPrompt }, ...body.messages],
       temperature: 0.5,
       maxTokens: 800,
     });
@@ -196,7 +190,10 @@ export async function POST(req: Request) {
     const msg = e instanceof Error ? e.message : "ai_error";
     console.error("hex-chat: provider error", msg);
     return NextResponse.json(
-      { error: "Hex a rencontre un probleme technique. Reessaye dans un instant." },
+      {
+        error:
+          "Hex a rencontre un probleme technique. Reessaye dans un instant.",
+      },
       { status: 502 },
     );
   }
@@ -213,7 +210,8 @@ export async function POST(req: Request) {
         actor: { userId, email: session.user.email ?? "unknown" },
         tenantId,
         target: { type: "ai_chat", id: userId, label: "hex" },
-        message: "Tentative de fuite du system prompt Hex detectee (signature match)",
+        message:
+          "Tentative de fuite du system prompt Hex detectee (signature match)",
         // On NE logue PAS le match exact pour eviter de re-stocker un fragment
         // du prompt dans l'audit log. On logue uniquement les meta utiles
         // pour l'investigation.
@@ -223,7 +221,10 @@ export async function POST(req: Request) {
         },
       });
     } catch (err) {
-      console.error("hex-chat: audit log AI_PROMPT_INJECTION_ATTEMPT failed", err);
+      console.error(
+        "hex-chat: audit log AI_PROMPT_INJECTION_ATTEMPT failed",
+        err,
+      );
     }
   });
 

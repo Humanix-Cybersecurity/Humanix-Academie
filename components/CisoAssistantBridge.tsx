@@ -246,8 +246,7 @@ export default function CisoAssistantBridge() {
         <div className="overflow-x-auto card p-0">
           <table className="w-full text-sm">
             <caption className="sr-only">
-              Correspondance des contrôles {fw.title} vers les données
-              Humanix
+              Correspondance des contrôles {fw.title} vers les données Humanix
             </caption>
             <thead>
               <tr className="bg-gray-50 dark:bg-slate-800 text-left">

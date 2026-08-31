@@ -88,8 +88,7 @@ describe("encode/decode round-trip", () => {
   });
 
   it("retourne null pour un payload incomplet", () => {
-    const incomplete = Buffer.from('{"v":1}', "utf-8")
-      .toString("base64url");
+    const incomplete = Buffer.from('{"v":1}', "utf-8").toString("base64url");
     expect(decodeLicense(`HUMANIX-LICENSE-v1.${incomplete}.sig`)).toBeNull();
   });
 });
@@ -98,7 +97,11 @@ describe("verifyLicenseString - happy path", () => {
   it("valide une licence fraichement signee", () => {
     const payload = makePayload();
     const str = signLicense(payload, TEST_KEYS.privateKeyPem);
-    const r = verifyLicenseString(str, undefined, new Date("2026-06-01T12:00:00Z"));
+    const r = verifyLicenseString(
+      str,
+      undefined,
+      new Date("2026-06-01T12:00:00Z"),
+    );
     expect(r.valid).toBe(true);
     if (r.valid) {
       expect(r.license.licenseId).toBe(payload.licenseId);
@@ -111,7 +114,11 @@ describe("verifyLicenseString - happy path", () => {
       expiresAt: "2026-06-10T00:00:00Z",
     });
     const str = signLicense(payload, TEST_KEYS.privateKeyPem);
-    const r = verifyLicenseString(str, undefined, new Date("2026-06-01T00:00:00Z"));
+    const r = verifyLicenseString(
+      str,
+      undefined,
+      new Date("2026-06-01T00:00:00Z"),
+    );
     expect(r.valid).toBe(true);
     if (r.valid) {
       expect(r.warning).toMatch(/9 jour/);
@@ -121,7 +128,11 @@ describe("verifyLicenseString - happy path", () => {
   it("ne declenche pas de warning si expire > 14 jours", () => {
     const payload = makePayload();
     const str = signLicense(payload, TEST_KEYS.privateKeyPem);
-    const r = verifyLicenseString(str, undefined, new Date("2026-06-01T00:00:00Z"));
+    const r = verifyLicenseString(
+      str,
+      undefined,
+      new Date("2026-06-01T00:00:00Z"),
+    );
     expect(r.valid).toBe(true);
     if (r.valid) {
       expect(r.warning).toBeUndefined();

@@ -18,8 +18,16 @@
 // du contenu (RGPD : le texte peut contenir des donnees du tenant).
 
 import { manifestKey, pathForHash, segmentHash } from "./cache";
-import { isPiperEnabled, synthesizePiper, checkPiperHealth } from "./providers/piper";
-import { isVoxtralEnabled, synthesizeVoxtral, VOXTRAL_VOICES } from "./providers/voxtral";
+import {
+  isPiperEnabled,
+  synthesizePiper,
+  checkPiperHealth,
+} from "./providers/piper";
+import {
+  isVoxtralEnabled,
+  synthesizeVoxtral,
+  VOXTRAL_VOICES,
+} from "./providers/voxtral";
 
 type Provider = "voxtral" | "piper" | "";
 
@@ -68,7 +76,8 @@ export async function checkTtsHealth(): Promise<{
 }> {
   const provider = detectProvider();
   if (provider === "voxtral") {
-    if (!isVoxtralEnabled()) return { ok: false, provider, error: "voxtral_disabled" };
+    if (!isVoxtralEnabled())
+      return { ok: false, provider, error: "voxtral_disabled" };
     return { ok: true, provider, voices: VOXTRAL_VOICES };
   }
   if (provider === "piper") {

@@ -4,8 +4,8 @@ Assets de fallback utilises si une demo live rencontre un obstacle.
 
 ## Inventaire
 
-| Fichier | Usage | Quand le sortir |
-|---|---|---|
+| Fichier                      | Usage                                                             | Quand le sortir                                         |
+| ---------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------- |
 | `sample-vishing-script.json` | Script vishing pre-genere (template fake-direction Compta medium) | Si l'API Mistral est down ou met plus de 8 s a repondre |
 
 ## Comment regenerer le sample vishing

@@ -25,10 +25,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import HexBackdrop from "@/components/HexBackdrop";
 import HexMascot from "@/components/HexMascot";
-import {
-  startSsoInscription,
-  startMagicLinkInscription,
-} from "./actions";
+import { startSsoInscription, startMagicLinkInscription } from "./actions";
 
 // force-dynamic : même rationale que /demo/layout.tsx. La decision
 // de rediriger vers /demo depend de DEMO_MODE qui n'est pas set au build,
@@ -47,9 +44,7 @@ type SsoEnabled = {
 
 function detectSsoEnabled(): SsoEnabled {
   return {
-    google: !!(
-      process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET
-    ),
+    google: !!(process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET),
     microsoft: !!(
       process.env.AUTH_MICROSOFT_ENTRA_ID_ID &&
       process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET
@@ -97,9 +92,7 @@ async function InscriptionInner({
 }) {
   const sso = detectSsoEnabled();
   const params = await searchParams;
-  const errorMsg = params.error
-    ? errorMessageFromCode(params.error)
-    : null;
+  const errorMsg = params.error ? errorMessageFromCode(params.error) : null;
   // Si l'utilisateur a ete redirige depuis /signup parce qu'il s'est declare
   // employe / particulier, on lui affiche un bandeau explicatif amical.
   const fromSignupRole = params.via === "signup-role";
@@ -123,8 +116,8 @@ async function InscriptionInner({
             <br className="hidden sm:block" /> à ton rythme.
           </h1>
           <p className="text-base sm:text-lg text-gray-700 dark:text-gray-200 leading-relaxed max-w-md mx-auto">
-            Accès libre aux modules pédagogiques. Pas de carte bancaire,
-            pas de mot de passe à retenir.
+            Accès libre aux modules pédagogiques. Pas de carte bancaire, pas de
+            mot de passe à retenir.
           </p>
 
           {/* Aiguillage : pour aider les visiteurs perdus a choisir la
@@ -186,15 +179,12 @@ async function InscriptionInner({
           >
             <span aria-hidden="true">🌱</span>
             <span>
-              <strong>On t&apos;a dirigé·e au bon endroit.</strong> Pas
-              besoin de tenant à gérer pour apprendre : ici tu rejoins la
-              <strong> Communauté Humanix</strong> et tu accèdes aux modules
-              en quelques secondes. Si tu es en fait décideur·euse d&apos;une
+              <strong>On t&apos;a dirigé·e au bon endroit.</strong> Pas besoin
+              de tenant à gérer pour apprendre : ici tu rejoins la
+              <strong> Communauté Humanix</strong> et tu accèdes aux modules en
+              quelques secondes. Si tu es en fait décideur·euse d&apos;une
               organisation,{" "}
-              <Link
-                href="/signup?plan=starter"
-                className="underline font-bold"
-              >
+              <Link href="/signup?plan=starter" className="underline font-bold">
                 reviens à l&apos;inscription pro
               </Link>
               .
@@ -309,9 +299,8 @@ async function InscriptionInner({
               <span>Recevoir mon lien magique</span>
             </button>
             <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-              <span aria-hidden="true">🔒</span> Lien à usage unique, valable
-              24 h. Ouvre-le sur le même appareil pour finaliser ton
-              inscription.
+              <span aria-hidden="true">🔒</span> Lien à usage unique, valable 24
+              h. Ouvre-le sur le même appareil pour finaliser ton inscription.
             </p>
           </form>
         </div>
@@ -405,12 +394,7 @@ function errorMessageFromCode(code: string): string {
 function SsoLogo({ provider }: { provider: "google" | "apple" | "microsoft" }) {
   if (provider === "google") {
     return (
-      <svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-      >
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
         <path
           fill="#EA4335"
           d="M12 10.2v3.9h5.5c-.2 1.4-1.7 4.1-5.5 4.1-3.3 0-6-2.7-6-6.1 0-3.4 2.7-6.1 6-6.1 1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.7 3.4 14.6 2.5 12 2.5 6.7 2.5 2.5 6.7 2.5 12s4.2 9.5 9.5 9.5c5.5 0 9.1-3.9 9.1-9.3 0-.6-.1-1.2-.2-1.6H12z"
@@ -433,12 +417,7 @@ function SsoLogo({ provider }: { provider: "google" | "apple" | "microsoft" }) {
   }
   // microsoft
   return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-    >
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
       <rect x="2" y="2" width="9" height="9" fill="#F25022" />
       <rect x="13" y="2" width="9" height="9" fill="#7FBA00" />
       <rect x="2" y="13" width="9" height="9" fill="#00A4EF" />

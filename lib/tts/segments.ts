@@ -32,13 +32,20 @@ export { sanitizeForTTS };
  */
 export function defaultVoiceFor(kind: SegmentKind): FrenchVoiceSlug {
   switch (kind) {
-    case "intro": return "fr_marie_neutral";
-    case "feedback_good": return "fr_marie_happy";
-    case "feedback_bad": return "fr_marie_sad";
-    case "feedback_neutral": return "fr_marie_neutral";
-    case "debrief": return "fr_marie_neutral";
-    case "quiz_question": return "fr_marie_curious";
-    case "quiz_explanation": return "fr_marie_neutral";
+    case "intro":
+      return "fr_marie_neutral";
+    case "feedback_good":
+      return "fr_marie_happy";
+    case "feedback_bad":
+      return "fr_marie_sad";
+    case "feedback_neutral":
+      return "fr_marie_neutral";
+    case "debrief":
+      return "fr_marie_neutral";
+    case "quiz_question":
+      return "fr_marie_curious";
+    case "quiz_explanation":
+      return "fr_marie_neutral";
   }
 }
 
@@ -70,9 +77,11 @@ export function extractSegments(episode: EpisodeContent): AudioSegment[] {
     const fbText = sanitizeForTTS(choice.feedback);
     if (!fbText) continue;
     const kind: SegmentKind =
-      choice.outcome === "good" ? "feedback_good"
-      : choice.outcome === "bad" ? "feedback_bad"
-      : "feedback_neutral";
+      choice.outcome === "good"
+        ? "feedback_good"
+        : choice.outcome === "bad"
+          ? "feedback_bad"
+          : "feedback_neutral";
     out.push({
       id: `feedback_${choice.id}`,
       kind,

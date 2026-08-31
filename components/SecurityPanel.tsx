@@ -44,7 +44,8 @@ export default function SecurityPanel(props: Props) {
       />
       {props.lastLoginAt && (
         <p className="text-xs text-gray-500 italic">
-          Dernière connexion : {new Date(props.lastLoginAt).toLocaleString("fr-FR")}
+          Dernière connexion :{" "}
+          {new Date(props.lastLoginAt).toLocaleString("fr-FR")}
         </p>
       )}
     </div>
@@ -153,7 +154,8 @@ function PasswordSection({
           )}
           <div>
             <label className="block text-sm font-medium mb-1">
-              Nouveau mot de passe (10 caractères min, 3 types parmi maj/min/chiffre/symbole)
+              Nouveau mot de passe (10 caractères min, 3 types parmi
+              maj/min/chiffre/symbole)
             </label>
             <input
               type="password"
@@ -666,8 +668,8 @@ function TotpEnrollmentBox({
           Option C · URI otpauth (avancé)
         </summary>
         <p className="text-gray-500 mt-2">
-          Pour les apps qui acceptent un import par URI (1Password,
-          Bitwarden) - collez le lien ci-dessous.
+          Pour les apps qui acceptent un import par URI (1Password, Bitwarden) -
+          collez le lien ci-dessous.
         </p>
         <p className="font-mono break-all select-all mt-1 bg-gray-50 dark:bg-slate-800 p-1 rounded">
           {otpauthUri}

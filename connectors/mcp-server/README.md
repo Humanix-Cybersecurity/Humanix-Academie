@@ -27,20 +27,20 @@ Vous êtes RSSI, DPO ou consultant cyber. Vous utilisez un client IA pour
 rédiger des rapports, préparer un COMEX, ou auditer une démarche cyber.
 Avec ce connecteur :
 
-- **vous demandez à votre agent IA** : *« Qui dans Marketing n'a pas compris la politique de mots de passe ? »*
+- **vous demandez à votre agent IA** : _« Qui dans Marketing n'a pas compris la politique de mots de passe ? »_
 - l'agent appelle `humanix_team_module_performance(module="mots-de-passe", team="marketing")` via MCP
-- vous obtenez la réponse **dans la conversation** : *« 2 utilisateurs (pseudonymisés) en échec, scores 55% et 48%. Je suggère une session de rappel. »*
+- vous obtenez la réponse **dans la conversation** : _« 2 utilisateurs (pseudonymisés) en échec, scores 55% et 48%. Je suggère une session de rappel. »_
 
 Le serveur expose **6 outils read-only** :
 
-| Outil MCP | Usage |
-|---|---|
-| `humanix_evidence_export` | Preuves vivantes par framework (ISO 27001, NIS2, RGPD, ANSSI HG, NIST CSF) |
-| `humanix_users_at_risk` | Top N utilisateurs avec score de risque humain le plus élevé |
-| `humanix_compliance_score` | Score conformité humaine par framework, breakdown par contrôle |
-| `humanix_recent_campaigns` | Campagnes phishing/awareness des N derniers jours |
-| `humanix_team_module_performance` | Drill-down : completion + quiz d'une équipe sur un module, top failing users pseudonymisés (RGPD-safe) |
-| `humanix_recommend_modules_for_threat` | Recommande 1-5 modules Humanix adaptés à une menace identifiée par votre analyse de risque |
+| Outil MCP                              | Usage                                                                                                  |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `humanix_evidence_export`              | Preuves vivantes par framework (ISO 27001, NIS2, RGPD, ANSSI HG, NIST CSF)                             |
+| `humanix_users_at_risk`                | Top N utilisateurs avec score de risque humain le plus élevé                                           |
+| `humanix_compliance_score`             | Score conformité humaine par framework, breakdown par contrôle                                         |
+| `humanix_recent_campaigns`             | Campagnes phishing/awareness des N derniers jours                                                      |
+| `humanix_team_module_performance`      | Drill-down : completion + quiz d'une équipe sur un module, top failing users pseudonymisés (RGPD-safe) |
+| `humanix_recommend_modules_for_threat` | Recommande 1-5 modules Humanix adaptés à une menace identifiée par votre analyse de risque             |
 
 **Read-only par design** : un agent IA n'a pas l'autorité humaine pour
 modifier l'état d'un programme de sensibilisation. Les écritures restent
@@ -128,22 +128,22 @@ infrastructures américaines. À utiliser en connaissance de cause.
 
 ### Variables d'environnement
 
-| Variable | Obligatoire | Défaut | Description |
-|---|---|---|---|
-| `HUMANIX_API_KEY` | ✅ | - | Clé API Humanix (commence par `hxa_`) |
-| `HUMANIX_BASE_URL` | ❌ | `https://app.humanix-cybersecurity.fr` | URL de votre instance Humanix |
+| Variable           | Obligatoire | Défaut                                 | Description                           |
+| ------------------ | ----------- | -------------------------------------- | ------------------------------------- |
+| `HUMANIX_API_KEY`  | ✅          | -                                      | Clé API Humanix (commence par `hxa_`) |
+| `HUMANIX_BASE_URL` | ❌          | `https://app.humanix-cybersecurity.fr` | URL de votre instance Humanix         |
 
 ## Exemples de prompts
 
-> *« Donne-moi le score de conformité humaine NIS2 et explique-moi les 3 contrôles les plus en retard. »*
+> _« Donne-moi le score de conformité humaine NIS2 et explique-moi les 3 contrôles les plus en retard. »_
 
-> *« Liste les 10 utilisateurs les plus à risque, propose un plan de remédiation par profil. »*
+> _« Liste les 10 utilisateurs les plus à risque, propose un plan de remédiation par profil. »_
 
-> *« Qui dans l'équipe Comptabilité n'a pas compris la politique de mots de passe ? »*
+> _« Qui dans l'équipe Comptabilité n'a pas compris la politique de mots de passe ? »_
 
-> *« Mon analyse de risque CISO Assistant a identifié 'fraude au président' comme critique. Quels modules Humanix recommandez-vous ? »*
+> _« Mon analyse de risque CISO Assistant a identifié 'fraude au président' comme critique. Quels modules Humanix recommandez-vous ? »_
 
-> *« Exporte les preuves OSCAL ISO 27001:2022 du tenant et propose-moi un mapping vers les contrôles CIS v8. »*
+> _« Exporte les preuves OSCAL ISO 27001:2022 du tenant et propose-moi un mapping vers les contrôles CIS v8. »_
 
 ## Sécurité
 
