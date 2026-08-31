@@ -97,6 +97,7 @@ export async function emettreFacture(demande: DemandeEmission) {
           adresse: identite.adresse,
           codePostal: identite.codePostal,
           ville: identite.ville,
+          province: identite.province,
           pays: identite.pays,
           siren: identite.siren,
           tvaIntra: identite.tvaIntra,

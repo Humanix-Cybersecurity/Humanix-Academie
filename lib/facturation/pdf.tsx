@@ -178,6 +178,8 @@ export type AcheteurRendu = {
   adresse: string;
   codePostal: string;
   ville: string;
+  /** Province, Etat ou region (BT-54). Vide en France. */
+  province?: string | null;
   pays: string;
   siren?: string | null;
   tvaIntra?: string | null;
@@ -267,7 +269,8 @@ export function DocumentFacture({ f }: { f: FacturePdf }) {
             <Text style={s.nom}>{a.raisonSociale}</Text>
             <Text>{a.adresse}</Text>
             <Text>
-              {a.codePostal} {a.ville}, {a.pays}
+              {a.codePostal} {a.ville}
+              {a.province ? ` (${a.province})` : ""}, {a.pays}
             </Text>
             {a.siren ? <Text>SIREN : {a.siren}</Text> : null}
             {a.tvaIntra ? <Text>TVA : {a.tvaIntra}</Text> : null}

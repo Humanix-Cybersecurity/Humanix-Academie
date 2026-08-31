@@ -14,6 +14,7 @@ export type IdentiteExistante = {
   adresse: string;
   codePostal: string;
   ville: string;
+  province: string | null;
   pays: string;
   siren: string | null;
   tvaIntra: string | null;
@@ -87,6 +88,23 @@ export default function IdentiteForm({
             defaultValue={identite?.ville ?? ""}
             className={champ}
           />
+        </div>
+        <div>
+          <label htmlFor="province" className={etiquette}>
+            Province / État / Région
+          </label>
+          <input
+            id="province"
+            name="province"
+            maxLength={100}
+            defaultValue={identite?.province ?? ""}
+            className={champ}
+            placeholder="Québec, Ontario, California…"
+          />
+          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            Inutile en France, où le code postal suffit. Nécessaire pour une
+            adresse canadienne ou américaine.
+          </p>
         </div>
         <div>
           <label htmlFor="pays" className={etiquette}>

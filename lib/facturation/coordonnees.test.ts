@@ -78,3 +78,36 @@ describe("validerCoordonnees", () => {
     expect(r.ok && r.valeur.ville).toBe("Paris");
   });
 });
+
+describe("province (BT-54)", () => {
+  it("est facultative : la France n'en a pas l'usage", () => {
+    const r = validerCoordonnees(OK);
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.valeur.province).toBeNull();
+  });
+
+  it("est conservee telle quelle quand elle est fournie", () => {
+    const r = validerCoordonnees({ ...OK, pays: "CA", province: "Québec" });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.valeur.province).toBe("Québec");
+  });
+
+  it("une chaine vide vaut absence, pas chaine vide", () => {
+    const r = validerCoordonnees({ ...OK, province: "   " });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.valeur.province).toBeNull();
+  });
+
+  // Un environnement ou un formulaire ne sont pas de confiance.
+  it("est bornee en longueur", () => {
+    const r = validerCoordonnees({ ...OK, province: "Q".repeat(500) });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.valeur.province).toHaveLength(100);
+  });
+
+  // Elle ne doit PAS conditionner la validite : une adresse canadienne sans
+  // province reste acceptable, seulement moins precise.
+  it("son absence ne rend pas les coordonnees invalides hors de France", () => {
+    expect(validerCoordonnees({ ...OK, pays: "CA" }).ok).toBe(true);
+  });
+});

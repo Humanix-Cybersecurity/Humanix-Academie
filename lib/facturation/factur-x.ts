@@ -147,6 +147,8 @@ function partie(
     ville: string;
     pays: string;
     tvaIntra?: string | null;
+    /** Province, Etat ou region : BT-54. Facultatif, vide en France. */
+    province?: string | null;
     email?: string | null;
     /** Hors champ de la TVA : aucun identifiant de TVA n'est admis (BR-O-02). */
     masquerTva?: boolean;
@@ -168,6 +170,14 @@ function partie(
     `          <ram:LineOne>${x(p.adresse)}</ram:LineOne>`,
     `          <ram:CityName>${x(p.ville)}</ram:CityName>`,
     `          <ram:CountryID>${x(p.pays.toUpperCase())}</ram:CountryID>`,
+    // BT-54. L'ORDRE COMPTE : dans ram:TradeAddress, CountrySubDivisionName
+    // SUIT CountryID. Le placer avant fait echouer la validation XSD, pas
+    // seulement le Schematron. Verifie avec scripts/verifier-factur-x.ts.
+    ...(p.province
+      ? [
+          `          <ram:CountrySubDivisionName>${x(p.province)}</ram:CountrySubDivisionName>`,
+        ]
+      : []),
     `        </ram:PostalTradeAddress>`,
   );
   if (p.email) {
@@ -282,6 +292,7 @@ ${partie("BuyerTradeParty", {
   adresse: a.adresse,
   codePostal: a.codePostal,
   ville: a.ville,
+  province: a.province,
   pays: a.pays,
   tvaIntra: a.tvaIntra,
   masquerTva: cat === "O",

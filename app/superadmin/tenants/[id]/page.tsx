@@ -489,6 +489,15 @@ export default async function TenantDetailPage({
                 <input name="ville" required className="input mt-1 w-full" />
               </label>
               <label className="text-sm">
+                Province / État / Région
+                <input
+                  name="province"
+                  maxLength={100}
+                  placeholder="Québec, Ontario…"
+                  className="input mt-1 w-full"
+                />
+              </label>
+              <label className="text-sm">
                 Pays (code à 2 lettres)
                 <input
                   name="pays"

@@ -2961,6 +2961,11 @@ model IdentiteFacturation {
   adresse           String
   codePostal        String
   ville             String
+  // Province, Etat ou region. Vide en France, ou l'adresse se suffit du code
+  // postal. Necessaire des qu'on facture hors de France : une adresse
+  // canadienne sans province, ou americaine sans Etat, est incomplete.
+  // Correspond au champ BT-54 de la norme EN 16931.
+  province          String?
   pays              String    @default("FR")
   // SIREN de l'acheteur : mention obligatoire sur les factures entre
   // assujettis etablis en France depuis le decret du 26 juin 2024.
@@ -3019,6 +3024,7 @@ model IdentiteFacturationEnAttente {
   adresse        String
   codePostal     String
   ville          String
+  province       String?
   pays           String  @default("FR")
   siren          String?
   tvaIntra       String?
