@@ -534,9 +534,16 @@ jobs:
         if: steps.cache-deps.outputs.cache-hit != 'true'
         run: npm ci --ignore-scripts
 
+      # Le controle BLOQUE desormais. Il portait `continue-on-error: true`, donc
+      # il ne pouvait pas echouer : 442 fichiers etaient non conformes pendant
+      # que le voyant restait vert. Un contributeur qui voyait la coche croyait
+      # le format tenu ; il ne l'etait pas.
+      #
+      # Les exceptions vivent dans .prettierignore, et chacune y est motivee :
+      # sous-module, artefacts generes, exports Grafana re-exportes depuis
+      # l'interface, et un fichier sur lequel Prettier ne converge pas.
       - name: Check formatting
         run: npx prettier --check --cache "**/*.{ts,tsx,js,jsx,json,md,yml,yaml}"
-        continue-on-error: true # Format check ne bloque pas la PR (avertissement seulement)
 
   # ---------------------------------------------------------------------------
   # Job : Vérification DCO (Developer Certificate of Origin)
