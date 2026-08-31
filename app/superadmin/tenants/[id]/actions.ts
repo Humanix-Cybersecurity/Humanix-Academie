@@ -26,6 +26,8 @@ import { db } from "@/lib/db";
 import { auditLog, AuditActions } from "@/lib/audit";
 import { paiementsAFacturer } from "@/lib/facturation/rattrapage";
 import { notifierCoordonneesRequises } from "@/lib/facturation/notification";
+import { validerCoordonnees } from "@/lib/facturation/coordonnees";
+import { verifierTvaIntra } from "@/lib/facturation/vies";
 
 async function requireSuperadminSession() {
   const session = await auth();
@@ -362,4 +364,104 @@ export async function relancerFacturation(formData: FormData): Promise<void> {
       envoi.etat === "envoyee" ? "facturation-relancee" : "facturation-echec"
     }`,
   );
+}
+
+/**
+ * Enregistre les coordonnees de facturation D'UN TENANT, a sa place.
+ *
+ * POURQUOI CETTE ACTION EXISTE
+ *
+ *   L'obligation d'emettre une facture pese sur le VENDEUR (article 289 du
+ *   CGI). Or jusqu'ici le mecanisme dependait entierement de la cooperation de
+ *   l'acheteur : sans denomination ni adresse, aucune facture ne peut sortir,
+ *   et rien ne permettait de les enregistrer autrement que par le formulaire du
+ *   Client. Un client qui ne repond pas bloquait donc une obligation qui n'est
+ *   pas la sienne. Constate avec le premier client : relance envoyee le
+ *   2026-08-26, aucune reponse, facture toujours due depuis le 17 aout.
+ *
+ *   Cette action ne devine RIEN. Elle sert a transcrire des coordonnees
+ *   obtenues autrement -- par telephone, par le contrat, par courriel -- et
+ *   marque leur origine dans `saisiePar`, pour que personne ne les prenne plus
+ *   tard pour une saisie du Client.
+ */
+export async function enregistrerCoordonneesPourTenant(
+  formData: FormData,
+): Promise<void> {
+  const session = await requireSuperadminSession();
+  const actorEmail = session.user.email ?? "unknown";
+
+  const tenantId = String(formData.get("tenantId") ?? "").trim();
+  if (!tenantId) throw new Error("tenantId requis");
+
+  const tenant = await db.tenant.findUnique({
+    where: { id: tenantId },
+    select: { id: true, name: true },
+  });
+  if (!tenant) throw new Error("Tenant introuvable");
+
+  // Memes regles que le formulaire du Client et que le checkout public. Une
+  // adresse acceptee ici doit l'etre partout ailleurs, sinon la meme saisie
+  // passerait d'un cote et pas de l'autre.
+  const v = validerCoordonnees({
+    raisonSociale: formData.get("raisonSociale"),
+    adresse: formData.get("adresse"),
+    codePostal: formData.get("codePostal"),
+    ville: formData.get("ville"),
+    pays: formData.get("pays"),
+    siren: formData.get("siren"),
+    tvaIntra: formData.get("tvaIntra"),
+  });
+  if (!v.ok) {
+    redirect(
+      `/superadmin/tenants/${tenantId}?error=${encodeURIComponent(v.erreur)}`,
+    );
+  }
+  const { raisonSociale, adresse, codePostal, ville, pays, siren, tvaIntra } =
+    v.valeur;
+
+  // VIES a l'enregistrement, comme cote Client : une facture ne doit pas
+  // dependre de la disponibilite d'un service tiers au moment de l'emission.
+  let tvaIntraStatut: string | null = null;
+  let tvaIntraNom: string | null = null;
+  let tvaIntraVerifieLe: Date | null = null;
+  if (tvaIntra) {
+    const r = await verifierTvaIntra(tvaIntra);
+    tvaIntraStatut = r.statut;
+    tvaIntraVerifieLe = new Date();
+    if (r.statut === "valide") tvaIntraNom = r.nom;
+  }
+
+  const identite = {
+    raisonSociale,
+    adresse,
+    codePostal,
+    ville,
+    pays,
+    siren,
+    tvaIntra,
+    tvaIntraStatut,
+    tvaIntraNom,
+    tvaIntraVerifieLe,
+    saisiePar: actorEmail,
+  };
+  await db.identiteFacturation.upsert({
+    where: { tenantId },
+    create: { tenantId, ...identite },
+    update: identite,
+  });
+
+  await auditLog({
+    action: AuditActions.TENANT_UPDATED,
+    outcome: "SUCCESS",
+    severity: "INFO",
+    actor: { userId: session.user.id, email: actorEmail, role: "SUPERADMIN" },
+    tenantId,
+    target: { type: "identite_facturation", id: tenantId, label: tenant.name },
+    message: `Coordonnees de facturation saisies PAR HUMANIX pour ${tenant.name}`,
+    metadata: {
+      origine: formData.get("origine")?.toString()?.slice(0, 200) ?? null,
+    },
+  });
+
+  redirect(`/superadmin/tenants/${tenantId}?msg=coordonnees-saisies`);
 }
