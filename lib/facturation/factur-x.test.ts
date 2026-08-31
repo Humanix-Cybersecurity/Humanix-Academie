@@ -187,3 +187,34 @@ describe("genererFacturX", () => {
     expect(xml).toContain('<ram:ID schemeID="0002">123456789</ram:ID>');
   });
 });
+
+describe("province de l'acheteur (BT-54)", () => {
+  // L'ORDRE est impose par le schema CII : CountrySubDivisionName SUIT
+  // CountryID. Inverser les deux fait echouer le XSD -- et PASSER le
+  // Schematron, ce qui rend l'erreur invisible a qui ne valide qu'avec lui.
+  it("emet la subdivision APRES CountryID", () => {
+    const xml = fx({
+      acheteur: {
+        raisonSociale: "Braver inc.",
+        adresse: "50-190 rue Dorchester",
+        codePostal: "G1K 5Y9",
+        ville: "Québec",
+        province: "Québec",
+        pays: "CA",
+        siren: null,
+        tvaIntra: null,
+      },
+    });
+    const iPays = xml.indexOf("<ram:CountryID>CA</ram:CountryID>");
+    const iProv = xml.indexOf("<ram:CountrySubDivisionName>");
+    expect(iPays).toBeGreaterThan(-1);
+    expect(iProv).toBeGreaterThan(iPays);
+    expect(xml).toContain(
+      "<ram:CountrySubDivisionName>Québec</ram:CountrySubDivisionName>",
+    );
+  });
+
+  it("n'emet rien du tout quand elle est absente", () => {
+    expect(fx()).not.toContain("CountrySubDivisionName");
+  });
+});

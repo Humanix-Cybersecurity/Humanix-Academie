@@ -29,6 +29,7 @@ const COORD = {
   adresse: "1 rue de la Paix",
   codePostal: "75002",
   ville: "Paris",
+  province: null,
   pays: "FR",
   siren: "123456789",
   tvaIntra: null,

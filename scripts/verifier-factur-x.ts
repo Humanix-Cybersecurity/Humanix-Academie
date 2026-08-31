@@ -112,6 +112,26 @@ const CAS: Record<string, unknown> = {
       tvaIntra: "BE0123456789",
     },
   },
+  // Une province (BT-54) : la placer AVANT CountryID fait echouer le XSD, pas
+  // seulement le Schematron. Ce cas existe pour que l'ordre soit VERIFIE et
+  // non suppose -- les autres cas n'en portent pas, leur vert ne dit rien
+  // de ce champ.
+  "hors-ue-avec-province": {
+    ...sansTva,
+    tauxTvaBp: 0,
+    mentionTva:
+      "TVA non applicable - prestation hors champ, article 259-1 du CGI",
+    acheteur: {
+      raisonSociale: "Braver inc.",
+      adresse: "50-190 rue Dorchester",
+      codePostal: "G1K 5Y9",
+      ville: "Québec",
+      province: "Québec",
+      pays: "CA",
+      siren: null,
+      tvaIntra: null,
+    },
+  },
   "hors-ue": {
     ...sansTva,
     tauxTvaBp: 0,

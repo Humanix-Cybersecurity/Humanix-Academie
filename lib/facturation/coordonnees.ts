@@ -12,6 +12,7 @@ export type CoordonneesBrutes = {
   adresse?: unknown;
   codePostal?: unknown;
   ville?: unknown;
+  province?: unknown;
   pays?: unknown;
   siren?: unknown;
   tvaIntra?: unknown;
@@ -22,6 +23,7 @@ export type Coordonnees = {
   adresse: string;
   codePostal: string;
   ville: string;
+  province: string | null;
   pays: string;
   siren: string | null;
   tvaIntra: string | null;
@@ -35,6 +37,7 @@ const MAX = {
   adresse: 200,
   codePostal: 20,
   ville: 100,
+  province: 100,
   siren: 20,
   tvaIntra: 20,
 } as const;
@@ -50,6 +53,8 @@ export function validerCoordonnees(brut: CoordonneesBrutes): Validation {
   const adresse = propre(brut.adresse, MAX.adresse);
   const codePostal = propre(brut.codePostal, MAX.codePostal);
   const ville = propre(brut.ville, MAX.ville);
+  // Facultative : la France n'en a pas l'usage, le code postal suffit.
+  const province = propre(brut.province, MAX.province) || null;
   // Le pays n'est PAS tronque : on valide la saisie entiere.
   //
   // Tronquer a deux lettres transforme une faute de frappe en code valide mais
@@ -92,6 +97,7 @@ export function validerCoordonnees(brut: CoordonneesBrutes): Validation {
       adresse,
       codePostal,
       ville,
+      province,
       pays,
       siren,
       tvaIntra,
