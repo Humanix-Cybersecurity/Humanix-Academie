@@ -12,7 +12,8 @@ export default async function Image() {
   return renderOgCard({
     kicker: "Diagnostic offert · 5 minutes",
     title: "Faisons le point. Tranquillement.",
-    subtitle: "Une photo bienveillante de votre maturité cyber, avec un PDF brandé reçu par mail.",
+    subtitle:
+      "Une photo bienveillante de votre maturité cyber, avec un PDF brandé reçu par mail.",
     bullets: ["📄 PDF immédiat", "🇫🇷 100 % français", "🤝 Aucune relance auto"],
     glyph: "🌿",
     accentColor: "#2E8B57", // success green

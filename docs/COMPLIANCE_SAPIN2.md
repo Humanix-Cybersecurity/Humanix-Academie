@@ -13,16 +13,16 @@ L'**Article 17** rend obligatoire pour les entreprises **>500 salariés OU
 CA > 100 M€** (et leurs filiales >50 %) la mise en place de **8 mesures
 anti-corruption** :
 
-| # | Mesure | Couvert par Humanix |
-|---|---|---|
-| 1 | Code de conduite | ❌ (rédaction juridique, hors scope) |
-| 2 | Dispositif d'alerte interne (whistleblowing) | ❌ (outils dédiés Whispli, etc.) |
-| 3 | **Cartographie des risques de corruption** | ✅ Volet humain : score d'exposition à la fraude/manipulation |
-| 4 | Procédure d'évaluation des tiers (KYC) | ❌ (outils KYS dédiés) |
-| 5 | Procédures de contrôle comptable | ❌ (ERP) |
-| 6 | **Dispositif de formation des cadres et personnels exposés** | ✅✅✅ **PILIER CENTRAL HUMANIX** |
-| 7 | **Régime disciplinaire** | ✅ Trace tamper-proof acceptation charte cyber + fraude |
-| 8 | **Dispositif de contrôle et évaluation interne** | ✅ Taux signalement phishing + rapports trimestriels |
+| #   | Mesure                                                       | Couvert par Humanix                                           |
+| --- | ------------------------------------------------------------ | ------------------------------------------------------------- |
+| 1   | Code de conduite                                             | ❌ (rédaction juridique, hors scope)                          |
+| 2   | Dispositif d'alerte interne (whistleblowing)                 | ❌ (outils dédiés Whispli, etc.)                              |
+| 3   | **Cartographie des risques de corruption**                   | ✅ Volet humain : score d'exposition à la fraude/manipulation |
+| 4   | Procédure d'évaluation des tiers (KYC)                       | ❌ (outils KYS dédiés)                                        |
+| 5   | Procédures de contrôle comptable                             | ❌ (ERP)                                                      |
+| 6   | **Dispositif de formation des cadres et personnels exposés** | ✅✅✅ **PILIER CENTRAL HUMANIX**                             |
+| 7   | **Régime disciplinaire**                                     | ✅ Trace tamper-proof acceptation charte cyber + fraude       |
+| 8   | **Dispositif de contrôle et évaluation interne**             | ✅ Taux signalement phishing + rapports trimestriels          |
 
 → Sur les 8 mesures, **4 sont directement couvertes par Humanix** dont **la mesure 6 est notre raison d'être**.
 
@@ -55,16 +55,17 @@ manipulation par lesquels la corruption ciblée s'opère.
 
 ### Modules complémentaires alignés
 
-| Module | Lien Sapin II |
-|---|---|
-| `phishing/06-spear-phishing.mdx` | Phishing ciblé exec = vecteur principal de la fraude au président |
-| `phishing/05-vishing.mdx` | Appel manipulé du « DAF » exigeant un virement urgent |
-| `donnees-sensibles/03-fuite-72h.mdx` | Notification AFA en cas de soupçon de corruption |
-| `dpo-quotidien/06-mutualisation-pme.mdx` | Programme conformité partagé inter-PME |
+| Module                                   | Lien Sapin II                                                     |
+| ---------------------------------------- | ----------------------------------------------------------------- |
+| `phishing/06-spear-phishing.mdx`         | Phishing ciblé exec = vecteur principal de la fraude au président |
+| `phishing/05-vishing.mdx`                | Appel manipulé du « DAF » exigeant un virement urgent             |
+| `donnees-sensibles/03-fuite-72h.mdx`     | Notification AFA en cas de soupçon de corruption                  |
+| `dpo-quotidien/06-mutualisation-pme.mdx` | Programme conformité partagé inter-PME                            |
 
 ### Génération de preuves pour l'AFA
 
 En cas de contrôle AFA, l'entreprise doit fournir :
+
 1. **Liste des collaborateurs exposés** (DAF, compta, RH, exécutifs)
 2. **Preuve de formation** par collaborateur (certificat individuel timestampé)
 3. **Score de couverture** (taux de complétion des modules pertinents)
@@ -85,11 +86,13 @@ Le mapping technique est dans `lib/mapping-grc.ts → const SAPIN2`.
 ## Argumentaire commercial DAF
 
 Le DAF (Directeur Administratif et Financier) est **personnellement exposé** aux conséquences d'un défaut Sapin II :
+
 - Co-signature des virements → impliqué dans la chaîne de vérification
 - Responsable de la procédure de contrôle interne (mesure 8)
 - Premier audité lors d'un contrôle AFA
 
 **Les arguments qui résonnent** :
+
 - « Humanix forme vos équipes compta + RH au coût d'**une journée de la prestation Big Four** »
 - « Vous générez les preuves AFA en 3 clics, pas en 3 semaines »
 - « La saison Fraude au Président est plus précise que les modules Sapin II génériques des concurrents (cas Pathé, cas Arup, deepfake vocal) »
@@ -98,6 +101,7 @@ Le DAF (Directeur Administratif et Financier) est **personnellement exposé** au
 ## Périmètre out-of-scope (à dire honnêtement)
 
 Humanix **ne se substitue pas** à :
+
 - **Compliance Officer** (humain, pour décider du périmètre + revoir les cas)
 - **Outils GRC** (CISO Assistant, Eramba, MetricStream - pour suivre les contrôles 1, 4, 5)
 - **ERP financier** (Sage, SAP - pour la mesure 5 contrôle comptable)
@@ -116,12 +120,12 @@ pour éviter toute surcote.
 
 ## Roadmap
 
-| Item | Statut |
-|---|---|
-| Framework `SAPIN2` dans `lib/mapping-grc.ts` | ✅ |
-| Saison fraude-president (6 modules) | ✅ |
-| Export OSCAL `framework=SAPIN2` | ✅ (via `/api/v1/evidence-export`) |
-| Rapport PDF dédié AFA | ⏳ (générique fonctionne, dédié à venir) |
-| Module « Plan de formation continue » avec rappels annuels | ⏳ |
-| Intégration native CISO Assistant pour Sapin II | ⏳ (ISO/NIS2 déjà OK, ajout Sapin II Q3 2026) |
-| Saison dédiée « Whistleblowing safe » (mesure 2) | ⏳ |
+| Item                                                       | Statut                                        |
+| ---------------------------------------------------------- | --------------------------------------------- |
+| Framework `SAPIN2` dans `lib/mapping-grc.ts`               | ✅                                            |
+| Saison fraude-president (6 modules)                        | ✅                                            |
+| Export OSCAL `framework=SAPIN2`                            | ✅ (via `/api/v1/evidence-export`)            |
+| Rapport PDF dédié AFA                                      | ⏳ (générique fonctionne, dédié à venir)      |
+| Module « Plan de formation continue » avec rappels annuels | ⏳                                            |
+| Intégration native CISO Assistant pour Sapin II            | ⏳ (ISO/NIS2 déjà OK, ajout Sapin II Q3 2026) |
+| Saison dédiée « Whistleblowing safe » (mesure 2)           | ⏳                                            |

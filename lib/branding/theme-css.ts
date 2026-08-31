@@ -36,12 +36,22 @@ const clamp = (n: number) => Math.max(0, Math.min(255, Math.round(n)));
 const triplet = (rgb: [number, number, number]) => rgb.join(" ");
 
 /** Assombrit vers le noir (amount 0..1). */
-function darken(rgb: [number, number, number], amount: number): [number, number, number] {
-  return [clamp(rgb[0] * (1 - amount)), clamp(rgb[1] * (1 - amount)), clamp(rgb[2] * (1 - amount))];
+function darken(
+  rgb: [number, number, number],
+  amount: number,
+): [number, number, number] {
+  return [
+    clamp(rgb[0] * (1 - amount)),
+    clamp(rgb[1] * (1 - amount)),
+    clamp(rgb[2] * (1 - amount)),
+  ];
 }
 
 /** Éclaircit vers le blanc (amount 0..1) — pour la teinte "50". */
-function tint(rgb: [number, number, number], amount: number): [number, number, number] {
+function tint(
+  rgb: [number, number, number],
+  amount: number,
+): [number, number, number] {
   return [
     clamp(rgb[0] + (255 - rgb[0]) * amount),
     clamp(rgb[1] + (255 - rgb[1]) * amount),
@@ -58,7 +68,10 @@ const toHex = (rgb: [number, number, number]) =>
  */
 export function buildTenantThemeCss(branding: EffectiveBranding): string {
   if (!branding.isCustom) return "";
-  if (!isValidHexColor(branding.primaryColor) || !isValidHexColor(branding.accentColor)) {
+  if (
+    !isValidHexColor(branding.primaryColor) ||
+    !isValidHexColor(branding.accentColor)
+  ) {
     return "";
   }
   const primary = hexToRgb(branding.primaryColor);

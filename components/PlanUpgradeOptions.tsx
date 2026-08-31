@@ -68,8 +68,8 @@ export default function PlanUpgradeOptions({
   if (upgrades.length === 0) {
     return (
       <p className="text-sm text-gray-500 dark:text-gray-400">
-        Tu es déjà sur le plan le plus complet. Pour des besoins
-        spécifiques (multi-instances, SLA dédié), écris-nous à{" "}
+        Tu es déjà sur le plan le plus complet. Pour des besoins spécifiques
+        (multi-instances, SLA dédié), écris-nous à{" "}
         <a
           href="mailto:contact@humanix-cybersecurity.fr"
           className="text-accent-500 underline"
@@ -104,9 +104,7 @@ export default function PlanUpgradeOptions({
         error?: string;
       };
       if (!res.ok || !data.url) {
-        throw new Error(
-          data.error ?? `Échec du checkout (HTTP ${res.status})`,
-        );
+        throw new Error(data.error ?? `Échec du checkout (HTTP ${res.status})`);
       }
       window.location.href = data.url;
     } catch (e: unknown) {

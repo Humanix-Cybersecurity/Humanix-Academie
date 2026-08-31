@@ -166,7 +166,9 @@ export async function launchPhishingCampaign(
   // Phase 7a (juin 2026) : on resout les 2 templates en parallel si A/B test.
   const [tpl, tplB] = await Promise.all([
     getEmailTemplateBySlug(tenantId, templateId),
-    templateBId ? getEmailTemplateBySlug(tenantId, templateBId) : Promise.resolve(null),
+    templateBId
+      ? getEmailTemplateBySlug(tenantId, templateBId)
+      : Promise.resolve(null),
   ]);
   if (!tpl) {
     return { ok: false, error: "invalid_template" };

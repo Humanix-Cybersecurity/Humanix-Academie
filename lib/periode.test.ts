@@ -11,9 +11,14 @@ import { instantParis, decalageParisMinutes } from "./periode";
  */
 function aParis(d: Date): string {
   const p = new Intl.DateTimeFormat("fr-CA", {
-    year: "numeric", month: "2-digit", day: "2-digit",
-    hour: "2-digit", minute: "2-digit", second: "2-digit",
-    hour12: false, timeZone: "Europe/Paris",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+    timeZone: "Europe/Paris",
   }).formatToParts(d);
   const v = (t: string) => p.find((x) => x.type === t)?.value ?? "";
   // hourCycle h23 : minuit peut sortir en « 24 » selon l'implementation.
@@ -34,7 +39,9 @@ describe("instantParis", () => {
   });
 
   it("la fin d'un jour d'ete est bien 23:59:59 A PARIS", () => {
-    expect(aParis(instantParis("2026-08-31", true)!)).toBe("2026-08-31 23:59:59");
+    expect(aParis(instantParis("2026-08-31", true)!)).toBe(
+      "2026-08-31 23:59:59",
+    );
   });
 
   // LE DEFAUT CORRIGE : en UTC, cette borne tombait au 1er septembre 01 h 59
@@ -54,22 +61,38 @@ describe("instantParis", () => {
 
   it("fonctionne en hiver aussi", () => {
     expect(aParis(instantParis("2026-01-01")!)).toBe("2026-01-01 00:00:00");
-    expect(aParis(instantParis("2026-12-31", true)!)).toBe("2026-12-31 23:59:59");
+    expect(aParis(instantParis("2026-12-31", true)!)).toBe(
+      "2026-12-31 23:59:59",
+    );
   });
 
   // Les deux jours de bascule d'heure : la borne doit rester sur le bon jour.
   it("tient le jour du passage a l'heure d'ete", () => {
-    expect(aParis(instantParis("2026-03-29")!).startsWith("2026-03-29")).toBe(true);
-    expect(aParis(instantParis("2026-03-29", true)!).startsWith("2026-03-29")).toBe(true);
+    expect(aParis(instantParis("2026-03-29")!).startsWith("2026-03-29")).toBe(
+      true,
+    );
+    expect(
+      aParis(instantParis("2026-03-29", true)!).startsWith("2026-03-29"),
+    ).toBe(true);
   });
 
   it("tient le jour du passage a l'heure d'hiver", () => {
-    expect(aParis(instantParis("2026-10-25")!).startsWith("2026-10-25")).toBe(true);
-    expect(aParis(instantParis("2026-10-25", true)!).startsWith("2026-10-25")).toBe(true);
+    expect(aParis(instantParis("2026-10-25")!).startsWith("2026-10-25")).toBe(
+      true,
+    );
+    expect(
+      aParis(instantParis("2026-10-25", true)!).startsWith("2026-10-25"),
+    ).toBe(true);
   });
 
   it("refuse ce qui n'est pas une date", () => {
-    for (const v of ["", "nimportequoi", "01/08/2026", "2026-8-1", "2026-13-01x"]) {
+    for (const v of [
+      "",
+      "nimportequoi",
+      "01/08/2026",
+      "2026-8-1",
+      "2026-13-01x",
+    ]) {
       expect(instantParis(v)).toBeNull();
     }
   });

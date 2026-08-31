@@ -113,8 +113,9 @@ export default function TeamTable({ rows }: { rows: TeamRow[] }) {
       </header>
 
       <table className="w-full text-sm table-auto">
-
-        <caption className="sr-only">Equipe : utilisateurs et leur progression</caption>
+        <caption className="sr-only">
+          Equipe : utilisateurs et leur progression
+        </caption>
         <thead className="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-slate-800">
           <tr>
             <Th

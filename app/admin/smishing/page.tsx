@@ -5,11 +5,7 @@
 
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import {
-  FEATURE_MIN_PLAN,
-  getTenantPlan,
-  planHasFeature,
-} from "@/lib/plans";
+import { FEATURE_MIN_PLAN, getTenantPlan, planHasFeature } from "@/lib/plans";
 import PlanGate from "@/components/PlanGate";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import SmishingGeneratorClient from "./SmishingGeneratorClient";
@@ -21,7 +17,12 @@ export default async function AdminSmishingPage() {
   if (!session?.user) redirect("/connexion");
 
   const role = session.user!.role;
-  if (role !== "ADMIN" && role !== "MANAGER" && role !== "RSSI" && role !== "SUPERADMIN") {
+  if (
+    role !== "ADMIN" &&
+    role !== "MANAGER" &&
+    role !== "RSSI" &&
+    role !== "SUPERADMIN"
+  ) {
     redirect("/admin");
   }
   const tenantId = session.user!.tenantId as string;
@@ -68,8 +69,8 @@ export default async function AdminSmishingPage() {
               d'une <strong>confiance instinctive</strong> du destinataire.
             </li>
             <li>
-              Aucune plateforme de sensibilisation française ne couvre encore
-              ce vecteur de manière dédiée. Cette feature comble le manque.
+              Aucune plateforme de sensibilisation française ne couvre encore ce
+              vecteur de manière dédiée. Cette feature comble le manque.
             </li>
             <li>
               <strong>Souveraineté</strong> : SMS généré par Mistral (Paris).
@@ -85,8 +86,8 @@ export default async function AdminSmishingPage() {
           </h2>
           <p className="text-sm text-blue-900 dark:text-blue-100 mb-2">
             Humanix Académie génère gratuitement les <strong>templates</strong>{" "}
-            de smishing simulés (idem pour le phishing email et le vishing).
-            L'<strong>envoi réel des SMS aux collaborateurs</strong> n'est{" "}
+            de smishing simulés (idem pour le phishing email et le vishing). L'
+            <strong>envoi réel des SMS aux collaborateurs</strong> n'est{" "}
             <strong>pas inclus</strong> dans nos plans : chaque SMS a un coût
             opérateur réel (~0,05 €/SMS en France).
           </p>

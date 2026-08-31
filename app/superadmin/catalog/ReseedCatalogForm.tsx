@@ -11,10 +11,7 @@
 // - useActionState (React 19) pour le state.
 
 import { useActionState } from "react";
-import {
-  reseedCatalogAction,
-  type ReseedCatalogResponse,
-} from "./actions";
+import { reseedCatalogAction, type ReseedCatalogResponse } from "./actions";
 
 export function ReseedCatalogForm() {
   const [state, formAction, isPending] = useActionState<
@@ -36,8 +33,9 @@ export function ReseedCatalogForm() {
         Re-importer le catalog
       </h2>
       <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-        Synchronise dans la BDD toutes les saisons, épisodes, badges et items boutique
-        définis dans le code. Idempotent : ne crée pas de doublons, ne supprime rien.
+        Synchronise dans la BDD toutes les saisons, épisodes, badges et items
+        boutique définis dans le code. Idempotent : ne crée pas de doublons, ne
+        supprime rien.
       </p>
 
       <form

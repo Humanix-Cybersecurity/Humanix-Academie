@@ -20,10 +20,7 @@ type Props = {
 // fort, amber = risque moyen, gris = neutre/distractor potentiel).
 // Les bordures/halos ne sont PAS appliquees ici pour ne pas donner
 // la reponse a l'apprenant - c'est le clic + scoring qui revele.
-const SCENE_ITEMS: Record<
-  string,
-  { emoji: string; label: string }
-> = {
+const SCENE_ITEMS: Record<string, { emoji: string; label: string }> = {
   // Office (clean desk audit)
   laptop_unlocked: { emoji: "💻", label: "Laptop" },
   sticky_note_password: { emoji: "🟨", label: "Post-it" },
@@ -114,7 +111,10 @@ export default function PhotoOfficeMockup({ media }: Props) {
 
         {/* Items positionnes */}
         {items.map((item) => {
-          const meta = SCENE_ITEMS[item.kind] ?? { emoji: "❓", label: item.kind };
+          const meta = SCENE_ITEMS[item.kind] ?? {
+            emoji: "❓",
+            label: item.kind,
+          };
           return (
             <div
               key={item.id}
@@ -139,9 +139,9 @@ export default function PhotoOfficeMockup({ media }: Props) {
       </div>
 
       <p className="text-xs text-gray-600 dark:text-gray-400 italic px-4 py-2 bg-amber-50 dark:bg-slate-800/50 border-t border-gray-200 dark:border-slate-700">
-        🔍 Chaque élément de la scène peut être un risque cyber, un
-        risque RH, ou un faux positif (mug, chaise...). À toi de
-        discriminer dans les réponses ci-dessous.
+        🔍 Chaque élément de la scène peut être un risque cyber, un risque RH,
+        ou un faux positif (mug, chaise...). À toi de discriminer dans les
+        réponses ci-dessous.
       </p>
     </div>
   );

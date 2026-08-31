@@ -35,7 +35,9 @@ export async function sendWelcomeEmail(
 
 function buildHtml(ctx: WelcomeEmailContext): string {
   const adminUrl = `${ctx.appUrl}/admin`;
-  const greeting = ctx.toName ? `Bonjour ${escapeHtml(ctx.toName)},` : "Bonjour,";
+  const greeting = ctx.toName
+    ? `Bonjour ${escapeHtml(ctx.toName)},`
+    : "Bonjour,";
   return `<!DOCTYPE html>
 <html lang="fr"><head><meta charset="utf-8"></head>
 <body style="font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #EAF3F8; padding: 40px 20px; margin: 0;">

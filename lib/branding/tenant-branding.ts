@@ -53,7 +53,9 @@ export const DEFAULT_BRANDING: EffectiveBranding = {
 
 /** Valide une couleur hex #RGB ou #RRGGBB. */
 export function isValidHexColor(c: string | null | undefined): c is string {
-  return typeof c === "string" && /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(c);
+  return (
+    typeof c === "string" && /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(c)
+  );
 }
 
 const MAX_DEPTH = 5; // garde-fou anti-chaîne infinie (revendeur de revendeur…)

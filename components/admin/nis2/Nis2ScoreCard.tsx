@@ -45,11 +45,7 @@ function ScoreBadge({ score }: { score: number | null }) {
   );
 }
 
-export default function Nis2ScoreCard({
-  score,
-}: {
-  score: Nis2TenantScore;
-}) {
+export default function Nis2ScoreCard({ score }: { score: Nis2TenantScore }) {
   const globalColor =
     score.globalScore >= 80
       ? "text-emerald-600 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800"
@@ -78,8 +74,8 @@ export default function Nis2ScoreCard({
           <div className="text-xs text-gray-600 dark:text-gray-400 max-w-xs text-right">
             {score.activeUsersCount} utilisateur
             {score.activeUsersCount > 1 ? "s" : ""} actif
-            {score.activeUsersCount > 1 ? "s" : ""} pris en compte.
-            Moyenne des articles couverts par tes saisons disponibles.
+            {score.activeUsersCount > 1 ? "s" : ""} pris en compte. Moyenne des
+            articles couverts par tes saisons disponibles.
           </div>
         </div>
       </div>
@@ -114,9 +110,7 @@ export default function Nis2ScoreCard({
                     key={s.slug}
                     className="flex items-center justify-between gap-2"
                   >
-                    <span
-                      className={s.isAvailable ? "" : "italic opacity-60"}
-                    >
+                    <span className={s.isAvailable ? "" : "italic opacity-60"}>
                       {s.title}
                     </span>
                     {s.isAvailable ? (

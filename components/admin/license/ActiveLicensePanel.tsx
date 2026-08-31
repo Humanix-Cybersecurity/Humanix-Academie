@@ -70,7 +70,9 @@ export default function ActiveLicensePanel({
           <dl className="grid sm:grid-cols-2 gap-x-8 gap-y-5">
             <Field label="Plan octroyé">
               <span className="font-display text-2xl font-extrabold text-primary-500 dark:text-emerald-200">
-                <span aria-hidden="true">{PLAN_EMOJI[license.plan as PlanId] ?? ""}</span>{" "}
+                <span aria-hidden="true">
+                  {PLAN_EMOJI[license.plan as PlanId] ?? ""}
+                </span>{" "}
                 {PLAN_LABEL[license.plan as PlanId] ?? license.plan}
               </span>
             </Field>
@@ -122,7 +124,11 @@ export default function ActiveLicensePanel({
                       : "text-gray-500 dark:text-gray-400"
                   }`}
                 >
-                  ({daysUntilExpiry > 0 ? `dans ${daysUntilExpiry} j` : "expirée"})
+                  (
+                  {daysUntilExpiry > 0
+                    ? `dans ${daysUntilExpiry} j`
+                    : "expirée"}
+                  )
                 </span>
               </div>
             </Field>
@@ -134,8 +140,8 @@ export default function ActiveLicensePanel({
                 Override de features
               </p>
               <p className="text-sm text-gray-600 dark:text-gray-300 mb-3 italic">
-                Cette licence active une whitelist explicite de features
-                (custom Enterprise) plutôt que la table par plan classique :
+                Cette licence active une whitelist explicite de features (custom
+                Enterprise) plutôt que la table par plan classique :
               </p>
               <div className="flex flex-wrap gap-2">
                 {license.featuresOverride.map((f) => (

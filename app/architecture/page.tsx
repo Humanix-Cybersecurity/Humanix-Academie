@@ -15,8 +15,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title:
-    "Architecture technique - Humanix Académie",
+  title: "Architecture technique - Humanix Académie",
   description:
     "Cartographie publique de l'infrastructure Humanix Académie : stack souveraine, cloisonnement réseau, crypto, sauvegardes, sous-traitants. Conforme mesure 5 du Guide d'hygiène informatique ANSSI v2.",
   alternates: { canonical: "/architecture" },
@@ -154,10 +153,10 @@ export default function ArchitecturePage() {
             Architecture technique
           </h1>
           <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            La transparence n'est pas une vulnérabilité. Voici la
-            cartographie complète de l'infrastructure Humanix Académie :
-            composants, technos, localisations, choix souverains. Conforme à
-            la <strong>mesure 5 du Guide d'hygiène informatique ANSSI</strong>{" "}
+            La transparence n'est pas une vulnérabilité. Voici la cartographie
+            complète de l'infrastructure Humanix Académie : composants, technos,
+            localisations, choix souverains. Conforme à la{" "}
+            <strong>mesure 5 du Guide d'hygiène informatique ANSSI</strong>{" "}
             (cartographie précise de l'installation maintenue à jour).
           </p>
         </header>
@@ -262,8 +261,8 @@ export default function ArchitecturePage() {
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
             Tous les algorithmes sont conformes aux recommandations{" "}
-            <strong>RGS B+ de l'ANSSI</strong> et aux standards
-            NIST / IETF en vigueur.
+            <strong>RGS B+ de l'ANSSI</strong> et aux standards NIST / IETF en
+            vigueur.
           </p>
           <div className="overflow-x-auto rounded-2xl border border-gray-200 dark:border-slate-800">
             <table className="w-full text-sm">
@@ -349,29 +348,29 @@ export default function ArchitecturePage() {
           </h2>
           <ul className="space-y-2 text-sm text-emerald-900 dark:text-emerald-200">
             <li>
-              <strong>Hébergement Scaleway Paris</strong> : opérateur de
-              droit français (filiale Iliad), non soumis au Cloud Act US.
+              <strong>Hébergement Scaleway Paris</strong> : opérateur de droit
+              français (filiale Iliad), non soumis au Cloud Act US.
             </li>
             <li>
-              <strong>IA Mistral (France)</strong> au lieu d'OpenAI ou
-              Anthropic US : préserve la souveraineté sur le contexte tenant
-              (prompts, réponses, embeddings).
+              <strong>IA Mistral (France)</strong> au lieu d'OpenAI ou Anthropic
+              US : préserve la souveraineté sur le contexte tenant (prompts,
+              réponses, embeddings).
             </li>
             <li>
               <strong>Paiement Mollie B.V. (Pays-Bas)</strong> : régulé DNB
               (banque centrale néerlandaise), PSD2 UE, pas de Stripe US.
             </li>
             <li>
-              <strong>Email Scaleway TEM (France)</strong> : pas de SendGrid
-              US, pas de Mailgun US, pas de Resend US.
+              <strong>Email Scaleway TEM (France)</strong> : pas de SendGrid US,
+              pas de Mailgun US, pas de Resend US.
             </li>
             <li>
               <strong>Backup Object Storage Scaleway</strong> : copies
               redondantes UE uniquement (Paris + Amsterdam).
             </li>
             <li>
-              <strong>Domaine OVHcloud France</strong> : enregistrement DNS
-              sur sol français.
+              <strong>Domaine OVHcloud France</strong> : enregistrement DNS sur
+              sol français.
             </li>
           </ul>
         </section>

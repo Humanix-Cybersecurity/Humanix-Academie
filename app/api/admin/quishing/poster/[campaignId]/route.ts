@@ -43,7 +43,9 @@ const MAX_LOGO_BYTES = 2 * 1024 * 1024; // 2 MB
 async function authorizeAndLoad(campaignId: string) {
   const session = await auth();
   if (!session?.user) {
-    return { error: NextResponse.json({ error: "unauthorized" }, { status: 401 }) };
+    return {
+      error: NextResponse.json({ error: "unauthorized" }, { status: 401 }),
+    };
   }
   const role = session.user.role;
   if (
@@ -52,7 +54,9 @@ async function authorizeAndLoad(campaignId: string) {
     role !== "RSSI" &&
     role !== "SUPERADMIN"
   ) {
-    return { error: NextResponse.json({ error: "forbidden" }, { status: 403 }) };
+    return {
+      error: NextResponse.json({ error: "forbidden" }, { status: 403 }),
+    };
   }
   const tenantId = session.user.tenantId as string;
 
@@ -79,10 +83,7 @@ async function authorizeAndLoad(campaignId: string) {
   const tpl = QUISHING_TEMPLATES[campaign.template as QuishingTemplate];
   if (!tpl) {
     return {
-      error: NextResponse.json(
-        { error: "invalid_template" },
-        { status: 500 },
-      ),
+      error: NextResponse.json({ error: "invalid_template" }, { status: 500 }),
     };
   }
 
@@ -133,8 +134,7 @@ async function readLogoOrNull(
     head[1] === 0x50 &&
     head[2] === 0x4e &&
     head[3] === 0x47;
-  const isJpeg =
-    head[0] === 0xff && head[1] === 0xd8 && head[2] === 0xff;
+  const isJpeg = head[0] === 0xff && head[1] === 0xd8 && head[2] === 0xff;
   if (!isPng && !isJpeg) {
     return {
       dataUrl: null,
@@ -231,10 +231,7 @@ export async function POST(
   try {
     formData = await req.formData();
   } catch {
-    return NextResponse.json(
-      { error: "invalid_multipart" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "invalid_multipart" }, { status: 400 });
   }
   const logoResult = await readLogoOrNull(formData.get("logo"));
   if (logoResult.error) return logoResult.error;

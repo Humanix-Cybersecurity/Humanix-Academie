@@ -21,9 +21,18 @@ export default function EmailMockup({ media }: Props) {
       {/* Toolbar minimaliste, type Outlook */}
       <div className="bg-gray-100 dark:bg-slate-800 border-b border-gray-300 dark:border-slate-700 px-4 py-2 flex items-center gap-2">
         <div className="flex gap-1">
-          <span className="w-3 h-3 rounded-full bg-red-400" aria-hidden="true" />
-          <span className="w-3 h-3 rounded-full bg-amber-400" aria-hidden="true" />
-          <span className="w-3 h-3 rounded-full bg-emerald-400" aria-hidden="true" />
+          <span
+            className="w-3 h-3 rounded-full bg-red-400"
+            aria-hidden="true"
+          />
+          <span
+            className="w-3 h-3 rounded-full bg-amber-400"
+            aria-hidden="true"
+          />
+          <span
+            className="w-3 h-3 rounded-full bg-emerald-400"
+            aria-hidden="true"
+          />
         </div>
         <span className="ml-3 text-xs text-gray-500 dark:text-gray-400 font-mono">
           📧 Boîte de réception
@@ -89,8 +98,8 @@ export default function EmailMockup({ media }: Props) {
               </div>
             ))}
             <p className="text-xs text-gray-400 dark:text-gray-500 italic">
-              Survole le lien pour voir sa vraie destination (comme dans
-              ton client mail).
+              Survole le lien pour voir sa vraie destination (comme dans ton
+              client mail).
             </p>
           </div>
         )}

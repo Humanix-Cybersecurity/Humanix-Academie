@@ -173,9 +173,7 @@ export async function listTenantAdmins(
         select: { id: true, name: true },
       })
     : [];
-  const homeTenantByid = new Map(
-    homeTenants.map((t) => [t.id, t]),
-  );
+  const homeTenantByid = new Map(homeTenants.map((t) => [t.id, t]));
 
   const result: TenantAdminEntry[] = [];
 

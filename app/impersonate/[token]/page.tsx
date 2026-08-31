@@ -85,8 +85,8 @@ export default async function ImpersonateConsentPage({ params }: Props) {
           Demande expirée
         </h1>
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          Cette demande d'accès a expiré. L'administrateur peut vous en
-          envoyer une nouvelle si nécessaire.
+          Cette demande d'accès a expiré. L'administrateur peut vous en envoyer
+          une nouvelle si nécessaire.
         </p>
         <Link href="/" className="btn-primary">
           Retour à l'accueil
@@ -105,16 +105,16 @@ export default async function ImpersonateConsentPage({ params }: Props) {
           Accès déjà autorisé
         </h1>
         <p className="text-gray-600 dark:text-gray-300 mb-4">
-          Vous avez déjà accepté cette demande. L'administrateur a
-          actuellement accès à votre compte en lecture seule, jusqu'au{" "}
+          Vous avez déjà accepté cette demande. L'administrateur a actuellement
+          accès à votre compte en lecture seule, jusqu'au{" "}
           <strong>
             {req.endsAt ? fmtDateTime(req.endsAt) : "fin de session"}
           </strong>
           .
         </p>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
-          Vous pouvez révoquer cet accès à tout moment depuis vos paramètres
-          de sécurité.
+          Vous pouvez révoquer cet accès à tout moment depuis vos paramètres de
+          sécurité.
         </p>
         <Link href="/profil/securite" className="btn-primary">
           Mes paramètres de sécurité
@@ -137,8 +137,8 @@ export default async function ImpersonateConsentPage({ params }: Props) {
           Demande déjà traitée
         </h1>
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          Cette demande a déjà été refusée ou révoquée. Votre compte
-          n'est pas accessible à l'administrateur.
+          Cette demande a déjà été refusée ou révoquée. Votre compte n'est pas
+          accessible à l'administrateur.
         </p>
         <Link href="/" className="btn-primary">
           Retour à l'accueil
@@ -171,11 +171,11 @@ export default async function ImpersonateConsentPage({ params }: Props) {
 
       <section className="rounded-2xl bg-white dark:bg-slate-900 border-2 border-primary-500/20 p-6 mb-6 space-y-4">
         <p className="text-gray-700 dark:text-gray-200">
-          <strong>{req.adminUser.name || req.adminUser.email}</strong>{" "}
-          (<code className="font-mono text-sm">{req.adminUser.email}</code>),
-          administrateur de l'espace{" "}
-          <strong>{req.adminTenant.name}</strong>, demande votre autorisation
-          pour consulter votre compte en <strong>lecture seule</strong>.
+          <strong>{req.adminUser.name || req.adminUser.email}</strong> (
+          <code className="font-mono text-sm">{req.adminUser.email}</code>),
+          administrateur de l'espace <strong>{req.adminTenant.name}</strong>,
+          demande votre autorisation pour consulter votre compte en{" "}
+          <strong>lecture seule</strong>.
         </p>
 
         <div className="border-l-4 border-primary-500 pl-4 py-2 italic text-gray-700 dark:text-gray-200 bg-primary-50/50 dark:bg-primary-950/30 rounded-r-lg">
@@ -216,12 +216,10 @@ export default async function ImpersonateConsentPage({ params }: Props) {
             ⏱ Durée demandée
           </p>
           <p className="text-amber-900 dark:text-amber-100">
-            <strong>
-              {fmtDuration(req.requestedDurationMinutes)} maximum
-            </strong>{" "}
-            à partir de votre acceptation. Vous pouvez <strong>révoquer
-            l'accès à tout moment</strong> depuis vos paramètres de
-            sécurité.
+            <strong>{fmtDuration(req.requestedDurationMinutes)} maximum</strong>{" "}
+            à partir de votre acceptation. Vous pouvez{" "}
+            <strong>révoquer l'accès à tout moment</strong> depuis vos
+            paramètres de sécurité.
           </p>
         </div>
       </section>
@@ -269,9 +267,9 @@ export default async function ImpersonateConsentPage({ params }: Props) {
 
       <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-8">
         Cette demande de consentement expire le{" "}
-        <strong>{fmtDateTime(req.consentExpiresAt)}</strong>. Conformément
-        au RGPD, l'accès n'est accordé qu'avec votre consentement explicite,
-        limité dans le temps, et tracé dans le journal d'audit. Vos droits :{" "}
+        <strong>{fmtDateTime(req.consentExpiresAt)}</strong>. Conformément au
+        RGPD, l'accès n'est accordé qu'avec votre consentement explicite, limité
+        dans le temps, et tracé dans le journal d'audit. Vos droits :{" "}
         <a
           href="mailto:rgpd@humanix-cybersecurity.fr"
           className="text-primary-500 underline"

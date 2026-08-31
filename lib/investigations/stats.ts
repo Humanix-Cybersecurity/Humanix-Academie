@@ -115,9 +115,7 @@ export async function getTenantLeaderboard(
 /**
  * Stats personnelles d'un user pour la page profil.
  */
-export async function getUserInvestigationStats(
-  userId: string,
-): Promise<{
+export async function getUserInvestigationStats(userId: string): Promise<{
   totalAttempts: number;
   uniquePassedScenarios: number;
   avgScoreRatio: number;

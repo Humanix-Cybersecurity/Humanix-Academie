@@ -32,7 +32,8 @@ import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 import HexMascotEvolved from "@/components/HexMascotEvolved";
 
-const MANIFESTE_TITLE = "Manifeste - La cybersécurité humaine, française, libre | Humanix Académie";
+const MANIFESTE_TITLE =
+  "Manifeste - La cybersécurité humaine, française, libre | Humanix Académie";
 const MANIFESTE_DESC =
   "Pourquoi Humanix existe. La cybersécurité humaine, française, libre. Une plateforme open source AGPLv3 pour que personne - particulier, équipe, association, organisation - ne soit plus le maillon faible.";
 
@@ -45,7 +46,9 @@ export const metadata = {
     description: MANIFESTE_DESC,
     type: "article",
     url: "/manifeste",
-    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+    images: [
+      { url: "/logo-humanix-academie-512.png", width: 512, height: 512 },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -104,8 +107,8 @@ export default function ManifestePage() {
             className="text-lg sm:text-2xl text-gray-700 dark:text-gray-200 max-w-3xl mx-auto leading-relaxed animate-slide-up"
             style={{ animationDelay: "240ms" }}
           >
-            On a passé deux ans à construire la brique manquante de
-            l'écosystème cyber français. Aujourd'hui, on te la donne.
+            On a passé deux ans à construire la brique manquante de l'écosystème
+            cyber français. Aujourd'hui, on te la donne.
             <br />
             <span className="font-semibold text-primary-500 dark:text-accent-300">
               Code libre. AGPLv3. Souverain. Sans condition.
@@ -173,7 +176,12 @@ export default function ManifestePage() {
         className="py-24 sm:py-32 bg-white dark:bg-slate-900"
       >
         <div className="max-w-5xl mx-auto px-4">
-          <ChapterHeader number="01" title="Le problème" eyebrow="On a tous vu ces scènes" id="ch2-title" />
+          <ChapterHeader
+            number="01"
+            title="Le problème"
+            eyebrow="On a tous vu ces scènes"
+            id="ch2-title"
+          />
 
           <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 leading-relaxed max-w-3xl mb-16 mx-auto text-center">
             Dix ans en pentest. À chaque mission - entreprise, collectivité,
@@ -210,7 +218,9 @@ export default function ManifestePage() {
             <p className="text-2xl sm:text-3xl font-display font-extrabold text-primary-500 dark:text-accent-300 leading-tight">
               On ne casse pas un firewall.
               <br />
-              <span className="text-accent-500">On casse un humain pas formé.</span>
+              <span className="text-accent-500">
+                On casse un humain pas formé.
+              </span>
             </p>
           </div>
         </div>
@@ -221,12 +231,14 @@ export default function ManifestePage() {
           Stat 90% géante + écosystème français. Fond gradient soft.
           ============================================================ */}
       <HexBackdrop intensity="medium" className="bg-humanix-soft">
-        <section
-          aria-labelledby="ch3-title"
-          className="py-24 sm:py-32"
-        >
+        <section aria-labelledby="ch3-title" className="py-24 sm:py-32">
           <div className="max-w-5xl mx-auto px-4">
-            <ChapterHeader number="02" title="Le constat" eyebrow="Une brique manquait" id="ch3-title" />
+            <ChapterHeader
+              number="02"
+              title="Le constat"
+              eyebrow="Une brique manquait"
+              id="ch3-title"
+            />
 
             <div className="grid sm:grid-cols-2 gap-8 items-center mb-16">
               <div className="text-center sm:text-left animate-slide-up">
@@ -241,30 +253,57 @@ export default function ManifestePage() {
                   particulier au grand groupe - passent par un humain.
                 </p>
               </div>
-              <div className="animate-slide-up" style={{ animationDelay: "120ms" }}>
+              <div
+                className="animate-slide-up"
+                style={{ animationDelay: "120ms" }}
+              >
                 <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 leading-relaxed mb-6">
                   Et 90 % des outils pour former cet humain viennent des
-                  États-Unis, sont fermés, et coûtent <strong>8 000 €/an</strong> et plus.
+                  États-Unis, sont fermés, et coûtent{" "}
+                  <strong>8 000 €/an</strong> et plus.
                 </p>
                 <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 leading-relaxed">
                   Pendant ce temps, l'open source cyber français s'est
-                  structuré. Mais il manquait toujours <em>la brique
-                  humaine</em>.
+                  structuré. Mais il manquait toujours{" "}
+                  <em>la brique humaine</em>.
                 </p>
               </div>
             </div>
 
             {/* Mini-tableau écosystème */}
-            <div className="card border-2 border-accent-500/20 dark:border-accent-500/30 max-w-3xl mx-auto animate-slide-up" style={{ animationDelay: "240ms" }}>
+            <div
+              className="card border-2 border-accent-500/20 dark:border-accent-500/30 max-w-3xl mx-auto animate-slide-up"
+              style={{ animationDelay: "240ms" }}
+            >
               <p className="text-xs uppercase tracking-widest font-bold text-accent-500 mb-4">
                 L'écosystème open source cyber français
               </p>
               <ul className="space-y-3 text-base">
-                <EcoRow brand="CISO Assistant (intuitem)" role="Gouvernance, Risque, Conformité" status="✓" />
-                <EcoRow brand="OpenCTI (Filigran)" role="Threat intelligence" status="✓" />
-                <EcoRow brand="Wazuh" role="SIEM, détection, réponse" status="✓" />
-                <EcoRow brand="TheHive (StrangeBee)" role="Réponse à incident" status="✓" />
-                <EcoRow brand="MISP" role="Partage de threat intel" status="✓" />
+                <EcoRow
+                  brand="CISO Assistant (intuitem)"
+                  role="Gouvernance, Risque, Conformité"
+                  status="✓"
+                />
+                <EcoRow
+                  brand="OpenCTI (Filigran)"
+                  role="Threat intelligence"
+                  status="✓"
+                />
+                <EcoRow
+                  brand="Wazuh"
+                  role="SIEM, détection, réponse"
+                  status="✓"
+                />
+                <EcoRow
+                  brand="TheHive (StrangeBee)"
+                  role="Réponse à incident"
+                  status="✓"
+                />
+                <EcoRow
+                  brand="MISP"
+                  role="Partage de threat intel"
+                  status="✓"
+                />
                 <li className="pt-3 mt-3 border-t-2 border-dashed border-accent-500/30">
                   <div className="flex items-center justify-between gap-4 flex-wrap">
                     <div>
@@ -275,7 +314,10 @@ export default function ManifestePage() {
                         Sensibilisation, formation, simulation
                       </p>
                     </div>
-                    <span className="text-warn font-bold text-lg" aria-label="Manquant">
+                    <span
+                      className="text-warn font-bold text-lg"
+                      aria-label="Manquant"
+                    >
                       <span aria-hidden="true">○</span> Trou béant
                     </span>
                   </div>
@@ -299,7 +341,12 @@ export default function ManifestePage() {
         className="py-24 sm:py-32 bg-white dark:bg-slate-900"
       >
         <div className="max-w-5xl mx-auto px-4">
-          <ChapterHeader number="03" title="Ce qu'on construit" eyebrow="La brique humaine, libre" id="ch4-title" />
+          <ChapterHeader
+            number="03"
+            title="Ce qu'on construit"
+            eyebrow="La brique humaine, libre"
+            id="ch4-title"
+          />
 
           <div className="card-hero text-center max-w-3xl mx-auto mb-16 animate-slide-up animate-glow">
             <p className="text-2xl sm:text-3xl font-display font-extrabold leading-tight">
@@ -307,8 +354,8 @@ export default function ManifestePage() {
               sur Duolingo.
             </p>
             <p className="text-base sm:text-lg opacity-90 mt-4">
-              Cinq minutes par semaine. Mascotte évolutive. Histoires
-              concrètes. Quiz courts. Badges. Et zéro jargon RSSI.
+              Cinq minutes par semaine. Mascotte évolutive. Histoires concrètes.
+              Quiz courts. Badges. Et zéro jargon RSSI.
             </p>
           </div>
 
@@ -358,12 +405,14 @@ export default function ManifestePage() {
           3 captures conceptuelles : MCP, vishing souverain, OSCAL.
           ============================================================ */}
       <HexBackdrop className="bg-gray-50 dark:bg-slate-950/50">
-        <section
-          aria-labelledby="ch5-title"
-          className="py-24 sm:py-32"
-        >
+        <section aria-labelledby="ch5-title" className="py-24 sm:py-32">
           <div className="max-w-5xl mx-auto px-4">
-            <ChapterHeader number="04" title="Le code parle" eyebrow="Trois choses qu'on est seul à faire" id="ch5-title" />
+            <ChapterHeader
+              number="04"
+              title="Le code parle"
+              eyebrow="Trois choses qu'on est seul à faire"
+              id="ch5-title"
+            />
 
             <p className="text-lg text-gray-700 dark:text-gray-200 max-w-2xl mx-auto text-center mb-16">
               On n'est pas le moins cher pour rien. On est aussi le plus
@@ -389,7 +438,7 @@ export default function ManifestePage() {
                   </div>
                   <div className="sm:col-span-2">
                     <pre className="text-xs sm:text-sm bg-slate-900 text-slate-100 dark:bg-black dark:text-emerald-300 rounded-xl p-5 overflow-x-auto font-mono leading-relaxed">
-{`> "Donne-moi le score NIS2 et les 5 utilisateurs
+                      {`> "Donne-moi le score NIS2 et les 5 utilisateurs
    les plus à risque ce mois-ci."
 
 🤖 Claude Desktop appelle :
@@ -404,7 +453,10 @@ export default function ManifestePage() {
               </div>
 
               {/* Vishing souverain */}
-              <div className="card overflow-hidden animate-slide-up" style={{ animationDelay: "120ms" }}>
+              <div
+                className="card overflow-hidden animate-slide-up"
+                style={{ animationDelay: "120ms" }}
+              >
                 <div className="grid sm:grid-cols-3 gap-6 items-start">
                   <div className="sm:col-span-1">
                     <p className="text-xs uppercase tracking-widest font-bold text-warn mb-2">
@@ -415,14 +467,14 @@ export default function ManifestePage() {
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
                       Adaptive Security le fait avec OpenAI. Hoxhunt avec
-                      OpenAI. Nous : Mistral à Paris pour générer le
-                      script, Piper TTS local pour la voix. <strong>Aucun
-                      audio ne quitte ton infrastructure</strong>.
+                      OpenAI. Nous : Mistral à Paris pour générer le script,
+                      Piper TTS local pour la voix.{" "}
+                      <strong>Aucun audio ne quitte ton infrastructure</strong>.
                     </p>
                   </div>
                   <div className="sm:col-span-2">
                     <pre className="text-xs sm:text-sm bg-slate-900 text-slate-100 dark:bg-black dark:text-amber-200 rounded-xl p-5 overflow-x-auto font-mono leading-relaxed">
-{`📞 Bonjour, ici Olivier du support technique
+                      {`📞 Bonjour, ici Olivier du support technique
    externalisé mandaté par votre DSI.
 
    Activité suspecte sur votre poste à 11h47.
@@ -436,7 +488,10 @@ export default function ManifestePage() {
               </div>
 
               {/* OSCAL + CISO Assistant */}
-              <div className="card overflow-hidden animate-slide-up" style={{ animationDelay: "240ms" }}>
+              <div
+                className="card overflow-hidden animate-slide-up"
+                style={{ animationDelay: "240ms" }}
+              >
                 <div className="grid sm:grid-cols-3 gap-6 items-start">
                   <div className="sm:col-span-1">
                     <p className="text-xs uppercase tracking-widest font-bold text-success mb-2">
@@ -447,15 +502,15 @@ export default function ManifestePage() {
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
                       Format OSCAL v1.1.2 du NIST exporté sur un endpoint
-                      simple. Compatible CISO Assistant, Eramba, RegScale.
-                      Plus jamais de copier-coller manuel pour ton audit
-                      ISO 27001, NIS2 ou Sapin II (1 M€ d'amende encourue
-                      en cas de défaut de formation anti-corruption).
+                      simple. Compatible CISO Assistant, Eramba, RegScale. Plus
+                      jamais de copier-coller manuel pour ton audit ISO 27001,
+                      NIS2 ou Sapin II (1 M€ d'amende encourue en cas de défaut
+                      de formation anti-corruption).
                     </p>
                   </div>
                   <div className="sm:col-span-2">
                     <pre className="text-xs sm:text-sm bg-slate-900 text-slate-100 dark:bg-black dark:text-cyan-300 rounded-xl p-5 overflow-x-auto font-mono leading-relaxed">
-{`$ curl -H "Authorization: Bearer $KEY" \\
+                      {`$ curl -H "Authorization: Bearer $KEY" \\
     "https://academie.acme.fr/api/v1/\\
     evidence-export?framework=NIS2&format=oscal-v1"
 
@@ -491,24 +546,28 @@ export default function ManifestePage() {
         className="py-24 sm:py-32 bg-white dark:bg-slate-900"
       >
         <div className="max-w-4xl mx-auto px-4">
-          <ChapterHeader number="05" title="Le modèle" eyebrow="Open core, service-led" id="ch6-title" />
+          <ChapterHeader
+            number="05"
+            title="Le modèle"
+            eyebrow="Open core, service-led"
+            id="ch6-title"
+          />
 
           <div className="space-y-6 text-lg text-gray-700 dark:text-gray-200 leading-relaxed">
             <p className="animate-slide-up">
               <em>« Et tu vis comment, alors ? »</em> - c'est la question qu'on
-              nous pose dix fois par jour depuis qu'on a annoncé la bascule
-              open source. Voici la réponse, sans détour.
+              nous pose dix fois par jour depuis qu'on a annoncé la bascule open
+              source. Voici la réponse, sans détour.
             </p>
 
             <p className="animate-slide-up" style={{ animationDelay: "100ms" }}>
               <strong className="text-primary-500 dark:text-accent-300">
                 La plateforme est libre. L'expertise se monnaie.
               </strong>{" "}
-              Audit de maturité cyber humaine, formation Qualiopi
-              certifiante, RSSI externalisé pour les organisations qui
-              n'en ont pas, hosting cloud managé sur Scaleway Paris, et le
-              Pack NIS2 turnkey pour les structures qui ont 30 jours pour
-              passer la directive.
+              Audit de maturité cyber humaine, formation Qualiopi certifiante,
+              RSSI externalisé pour les organisations qui n'en ont pas, hosting
+              cloud managé sur Scaleway Paris, et le Pack NIS2 turnkey pour les
+              structures qui ont 30 jours pour passer la directive.
             </p>
 
             <p className="animate-slide-up" style={{ animationDelay: "200ms" }}>
@@ -517,17 +576,16 @@ export default function ManifestePage() {
               <strong>Filigran avec OpenCTI</strong>. Ce qu'a fait{" "}
               <strong>Centreon</strong> avant tout le monde. Le SaaS US a
               prospéré avec la rente. La France a inventé l'autre voie : la
-              prospérité par l'expertise. Plus juste. Plus durable. Plus
-              utile.
+              prospérité par l'expertise. Plus juste. Plus durable. Plus utile.
             </p>
 
             <p className="animate-slide-up" style={{ animationDelay: "300ms" }}>
               La cible 24 mois est honnête :{" "}
-              <strong>180 à 250 k€ en solo bootstrap</strong>. Pas une
-              licorne, pas une IPO. Une activité qui paie ses factures, fait
-              vivre son fondateur, et accompagne <strong>tout le monde</strong>{" "}
-              - particuliers, équipes, organisations de toute taille - plutôt
-              que de courir après 30 grosses boîtes.
+              <strong>180 à 250 k€ en solo bootstrap</strong>. Pas une licorne,
+              pas une IPO. Une activité qui paie ses factures, fait vivre son
+              fondateur, et accompagne <strong>tout le monde</strong> -
+              particuliers, équipes, organisations de toute taille - plutôt que
+              de courir après 30 grosses boîtes.
             </p>
           </div>
         </div>
@@ -558,12 +616,18 @@ export default function ManifestePage() {
           </h2>
           <blockquote className="font-display italic text-2xl sm:text-3xl lg:text-4xl leading-snug">
             <p className="animate-slide-up">
-              « En 2026, en France, la cybersécurité du quotidien ne se
-              gagnera pas avec un éditeur de plus.
+              « En 2026, en France, la cybersécurité du quotidien ne se gagnera
+              pas avec un éditeur de plus.
             </p>
-            <p className="mt-6 animate-slide-up" style={{ animationDelay: "200ms" }}>
-              Elle se gagnera avec un <strong className="not-italic text-accent-300">écosystème souverain</strong>,
-              libre, auditable, où chacun - du particulier au RSSI - peut
+            <p
+              className="mt-6 animate-slide-up"
+              style={{ animationDelay: "200ms" }}
+            >
+              Elle se gagnera avec un{" "}
+              <strong className="not-italic text-accent-300">
+                écosystème souverain
+              </strong>
+              , libre, auditable, où chacun - du particulier au RSSI - peut
               savoir exactement ce qui tourne dans son outil. »
             </p>
           </blockquote>
@@ -585,7 +649,12 @@ export default function ManifestePage() {
         className="py-24 sm:py-32 bg-humanix-soft"
       >
         <div className="max-w-5xl mx-auto px-4">
-          <ChapterHeader number="06" title="Le voyage commence" eyebrow="Trois portes pour entrer" id="ch8-title" />
+          <ChapterHeader
+            number="06"
+            title="Le voyage commence"
+            eyebrow="Trois portes pour entrer"
+            id="ch8-title"
+          />
 
           <div className="grid md:grid-cols-3 gap-6">
             <Door
@@ -622,8 +691,8 @@ export default function ManifestePage() {
             <p className="text-base text-gray-600 dark:text-gray-300 italic max-w-2xl mx-auto">
               Et si tu connais un dirigeant, un RSSI, un journaliste, ou
               simplement quelqu'un qui se sent dépassé par la cyber : partage
-              cette page. C'est comme ça qu'on construit une cyber souveraine
-              - un humain à la fois.
+              cette page. C'est comme ça qu'on construit une cyber souveraine -
+              un humain à la fois.
             </p>
           </div>
         </div>
@@ -637,12 +706,7 @@ export default function ManifestePage() {
         className="py-12 bg-humanix-soft border-t-2 border-dashed border-accent-500/20 text-center"
       >
         <div className="inline-block animate-bounce-slow">
-          <HexMascotEvolved
-            species="fox"
-            xp={30}
-            size="sm"
-            mood="happy"
-          />
+          <HexMascotEvolved species="fox" xp={30} size="sm" mood="happy" />
         </div>
         <p className="mt-3 text-xs uppercase tracking-[0.3em] text-gray-500 dark:text-gray-400">
           Hex veille · Made with <span className="text-warn">❤</span> in France
@@ -747,10 +811,7 @@ function EcoRow({
         </p>
         <p className="text-sm text-gray-600 dark:text-gray-300">{role}</p>
       </div>
-      <span
-        className="text-success font-bold text-lg"
-        aria-label="Disponible"
-      >
+      <span className="text-success font-bold text-lg" aria-label="Disponible">
         <span aria-hidden="true">{status}</span> Couvert
       </span>
     </li>

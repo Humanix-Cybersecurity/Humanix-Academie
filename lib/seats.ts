@@ -74,7 +74,9 @@ export async function getSeatUsage(tenantId: string): Promise<SeatUsage> {
   const max = isCommunity ? Infinity : PLAN_SEATS[plan];
   const isUnlimited = !Number.isFinite(max);
 
-  const percent = isUnlimited ? 0 : Math.min(100, Math.round((used / max) * 100));
+  const percent = isUnlimited
+    ? 0
+    : Math.min(100, Math.round((used / max) * 100));
   const remaining = isUnlimited ? Infinity : Math.max(0, max - used);
   const canAdd = isUnlimited || used < max;
   const approaching = !isUnlimited && percent >= 80;

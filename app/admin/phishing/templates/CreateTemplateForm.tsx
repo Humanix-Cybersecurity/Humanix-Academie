@@ -191,8 +191,8 @@ export default function CreateTemplateForm() {
             <code className="bg-gray-100 dark:bg-slate-800 px-1 rounded">
               {"{trackingUrl}"}
             </code>{" "}
-            pour le lien piégé tracké. HTML inline simple (table, p, a,
-            strong). Pas de script, pas d'iframe.
+            pour le lien piégé tracké. HTML inline simple (table, p, a, strong).
+            Pas de script, pas d'iframe.
           </p>
           <textarea
             id="emailHtml"
@@ -213,15 +213,15 @@ export default function CreateTemplateForm() {
           <div className="mt-3 space-y-3">
             <p className="text-xs text-violet-800 dark:text-violet-200 leading-relaxed">
               Par défaut, la landing post-clic affiche un fake login générique
-              "Connexion sécurisée". Tu peux le remplacer par une fausse page
-              de login custom (Microsoft 365 pixel-perfect, portail RH, banque...).
+              "Connexion sécurisée". Tu peux le remplacer par une fausse page de
+              login custom (Microsoft 365 pixel-perfect, portail RH, banque...).
               Utilise le placeholder{" "}
               <code className="bg-violet-100 dark:bg-violet-900 px-1 rounded">
                 {"{submitUrl}"}
               </code>{" "}
               dans l&apos;attribut <code>action</code> de ton form -- il sera
-              remplacé par /api/phishing/submit/[token] qui capture la
-              metadata (sans valeurs).
+              remplacé par /api/phishing/submit/[token] qui capture la metadata
+              (sans valeurs).
             </p>
 
             <div>
@@ -287,8 +287,8 @@ export default function CreateTemplateForm() {
             Signaux pédagogiques (1 par ligne, max 10)
           </label>
           <p className="text-xs text-gray-500 mb-2">
-            Indices concrets que l'apprenant aurait pu repérer (affichés
-            sur la landing post-clic).
+            Indices concrets que l'apprenant aurait pu repérer (affichés sur la
+            landing post-clic).
           </p>
           <textarea
             id="markers"
@@ -331,8 +331,8 @@ export default function CreateTemplateForm() {
             ✅ Template créé
           </p>
           <p className="text-sm text-emerald-800 dark:text-emerald-300 mt-1">
-            Slug : <code className="font-mono">{state.slug}</code>. Disponible dans
-            le sélecteur de campagne /admin/phishing.
+            Slug : <code className="font-mono">{state.slug}</code>. Disponible
+            dans le sélecteur de campagne /admin/phishing.
           </p>
         </div>
       )}

@@ -12,7 +12,8 @@
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
-const INT_TITLE = "Connecteurs & intégrations - Écosystème cyber souverain | Humanix Académie";
+const INT_TITLE =
+  "Connecteurs & intégrations - Écosystème cyber souverain | Humanix Académie";
 const INT_DESC =
   "Tous les connecteurs natifs Humanix : GRC, SIEM, IAM, ITSM, RH, anti-phishing. Hub-and-spoke avec priorité souveraineté française : Lucca, GLPI, Sekoia, HarfangLab, CISO Assistant, Mailinblack. Standards ouverts (OSCAL, SCIM, CEF, CIM, ECS).";
 
@@ -25,7 +26,9 @@ export const metadata = {
     description: INT_DESC,
     type: "website",
     url: "/integrations",
-    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+    images: [
+      { url: "/logo-humanix-academie-512.png", width: 512, height: 512 },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -355,8 +358,7 @@ export default function IntegrationsHubPage() {
             className="font-display text-4xl sm:text-6xl font-extrabold text-primary-500 dark:text-accent-300 leading-[1.05] mb-4 animate-slide-up"
             style={{ animationDelay: "100ms" }}
           >
-            Connecteurs &{" "}
-            <span className="text-accent-500">integrations.</span>
+            Connecteurs & <span className="text-accent-500">integrations.</span>
           </h1>
           <p
             className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed animate-slide-up"
@@ -370,102 +372,101 @@ export default function IntegrationsHubPage() {
       </HexBackdrop>
 
       <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
-
-      {/* Stats bandeau */}
-      <section
-        aria-labelledby="stats-title"
-        className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10"
-      >
-        <h2 id="stats-title" className="sr-only">
-          Statistiques d'intégration
-        </h2>
-        <Stat number={stats.live} label="Connecteurs livrés" accent />
-        <Stat number={stats.fr} label="Souverains 🇫🇷 livrés" />
-        <Stat number={stats.onDemand} label="Sur demande client" />
-        <Stat number={stats.total} label="Au catalogue total" />
-      </section>
-
-      {/* Liste par catégorie */}
-      {CATEGORIES.map((cat) => {
-        const items = INTEGRATIONS.filter((i) => i.category === cat);
-        if (items.length === 0) return null;
-        return (
-          <section key={cat} aria-labelledby={`cat-${cat}`} className="mb-10">
-            <h2
-              id={`cat-${cat}`}
-              className="text-xl font-extrabold text-primary-500 mb-4 flex items-center gap-2"
-            >
-              {cat}
-              <span className="text-sm font-normal text-gray-500">
-                ({items.length})
-              </span>
-            </h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {items.map((i) => (
-                <IntegrationCard key={i.slug} integration={i} />
-              ))}
-            </div>
-          </section>
-        );
-      })}
-
-      {/* Politique hors-liste */}
-      <section
-        aria-labelledby="custom-title"
-        className="card mb-10 bg-gradient-to-br from-primary-50 to-cyan-50 dark:from-slate-800 dark:to-slate-700"
-      >
-        <h2
-          id="custom-title"
-          className="text-xl font-extrabold text-primary-500 mb-3"
+        {/* Stats bandeau */}
+        <section
+          aria-labelledby="stats-title"
+          className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10"
         >
-          Votre outil n'est pas dans la liste ?
-        </h2>
-        <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-          Trois cas de figure :
-        </p>
-        <ol className="space-y-2 text-sm list-decimal list-inside">
-          <li>
-            <strong>Votre outil parle un standard que nous exposons</strong>{" "}
-            (OSCAL, SCIM v2, webhook signé, CEF) → la doc suffit, vous codez
-            côté client.
-          </li>
-          <li>
-            <strong>Vous voulez un connecteur dédié</strong> → développement
-            sur-mesure facturé en prestation séparée. Le connecteur reste votre
-            propriété.
-          </li>
-          <li>
-            <strong>L'outil est très répandu</strong> → on l'évalue pour la
-            roadmap suivante.
-          </li>
-        </ol>
-        <div className="mt-4">
-          <a
-            href="mailto:contact@humanix-cybersecurity.fr?subject=Demande%20d'int%C3%A9gration"
-            className="btn-primary inline-block"
-          >
-            Demander un connecteur custom
-          </a>
-        </div>
-      </section>
+          <h2 id="stats-title" className="sr-only">
+            Statistiques d'intégration
+          </h2>
+          <Stat number={stats.live} label="Connecteurs livrés" accent />
+          <Stat number={stats.fr} label="Souverains 🇫🇷 livrés" />
+          <Stat number={stats.onDemand} label="Sur demande client" />
+          <Stat number={stats.total} label="Au catalogue total" />
+        </section>
 
-      {/* ================================================================
+        {/* Liste par catégorie */}
+        {CATEGORIES.map((cat) => {
+          const items = INTEGRATIONS.filter((i) => i.category === cat);
+          if (items.length === 0) return null;
+          return (
+            <section key={cat} aria-labelledby={`cat-${cat}`} className="mb-10">
+              <h2
+                id={`cat-${cat}`}
+                className="text-xl font-extrabold text-primary-500 mb-4 flex items-center gap-2"
+              >
+                {cat}
+                <span className="text-sm font-normal text-gray-500">
+                  ({items.length})
+                </span>
+              </h2>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {items.map((i) => (
+                  <IntegrationCard key={i.slug} integration={i} />
+                ))}
+              </div>
+            </section>
+          );
+        })}
+
+        {/* Politique hors-liste */}
+        <section
+          aria-labelledby="custom-title"
+          className="card mb-10 bg-gradient-to-br from-primary-50 to-cyan-50 dark:from-slate-800 dark:to-slate-700"
+        >
+          <h2
+            id="custom-title"
+            className="text-xl font-extrabold text-primary-500 mb-3"
+          >
+            Votre outil n'est pas dans la liste ?
+          </h2>
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+            Trois cas de figure :
+          </p>
+          <ol className="space-y-2 text-sm list-decimal list-inside">
+            <li>
+              <strong>Votre outil parle un standard que nous exposons</strong>{" "}
+              (OSCAL, SCIM v2, webhook signé, CEF) → la doc suffit, vous codez
+              côté client.
+            </li>
+            <li>
+              <strong>Vous voulez un connecteur dédié</strong> → développement
+              sur-mesure facturé en prestation séparée. Le connecteur reste
+              votre propriété.
+            </li>
+            <li>
+              <strong>L'outil est très répandu</strong> → on l'évalue pour la
+              roadmap suivante.
+            </li>
+          </ol>
+          <div className="mt-4">
+            <a
+              href="mailto:contact@humanix-cybersecurity.fr?subject=Demande%20d'int%C3%A9gration"
+              className="btn-primary inline-block"
+            >
+              Demander un connecteur custom
+            </a>
+          </div>
+        </section>
+
+        {/* ================================================================
           CITATION FINALE - signature cosy "Hex veille"
           ================================================================ */}
-      <section className="text-center pt-10 pb-4">
-        <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-          « Une plateforme cyber qui vit seule est une plateforme qui meurt
-          seule. On a investi gros sur les connecteurs français (Sekoia,
-          HarfangLab, Lucca, GLPI, CISO Assistant) que les acteurs
-          internationaux n'envisagent même pas. »
-        </blockquote>
-        <p
-          aria-hidden="true"
-          className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
-        >
-          - Hex veille
-        </p>
-      </section>
+        <section className="text-center pt-10 pb-4">
+          <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            « Une plateforme cyber qui vit seule est une plateforme qui meurt
+            seule. On a investi gros sur les connecteurs français (Sekoia,
+            HarfangLab, Lucca, GLPI, CISO Assistant) que les acteurs
+            internationaux n'envisagent même pas. »
+          </blockquote>
+          <p
+            aria-hidden="true"
+            className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
+          >
+            - Hex veille
+          </p>
+        </section>
       </div>
     </main>
   );

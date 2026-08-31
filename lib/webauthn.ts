@@ -85,9 +85,7 @@ export function getOrigin(): string {
  */
 export function buildRequestOrigin(headersList: {
   get: (name: string) => string | null;
-}):
-  | { ok: true; origin: string }
-  | { ok: false; reason: string } {
+}): { ok: true; origin: string } | { ok: false; reason: string } {
   const host = headersList.get("host");
   if (!host) return { ok: false, reason: "no_host_header" };
   const protocol = headersList.get("x-forwarded-proto") ?? "https";
@@ -120,7 +118,9 @@ export function signChallenge(env: ChallengeEnvelope): string {
   const payload = Buffer.from(JSON.stringify(env), "utf-8").toString(
     "base64url",
   );
-  const mac = createHmac("sha256", getSecret()).update(payload).digest("base64url");
+  const mac = createHmac("sha256", getSecret())
+    .update(payload)
+    .digest("base64url");
   return `${payload}.${mac}`;
 }
 
@@ -128,9 +128,7 @@ export function verifyChallenge(token: string): ChallengeEnvelope | null {
   if (!token) return null;
   const parts = token.split(".");
   if (parts.length !== 2) return null;
-  const expected = createHmac("sha256", getSecret())
-    .update(parts[0])
-    .digest();
+  const expected = createHmac("sha256", getSecret()).update(parts[0]).digest();
   let received: Buffer;
   try {
     received = Buffer.from(parts[1], "base64url");
@@ -223,7 +221,10 @@ export async function verifyAndSaveRegistration(params: {
       requireUserVerification: false,
     });
   } catch (e) {
-    return { ok: false, error: e instanceof Error ? e.message : "verify_failed" };
+    return {
+      ok: false,
+      error: e instanceof Error ? e.message : "verify_failed",
+    };
   }
   if (!verification.verified || !verification.registrationInfo) {
     return { ok: false, error: "not_verified" };
@@ -317,9 +318,7 @@ export async function verifyLogin(params: {
     return { ok: false, error: "credential_not_found" };
   }
 
-  let verification: Awaited<
-    ReturnType<typeof verifyAuthenticationResponse>
-  >;
+  let verification: Awaited<ReturnType<typeof verifyAuthenticationResponse>>;
   try {
     verification = await verifyAuthenticationResponse({
       response: params.response,
@@ -338,7 +337,10 @@ export async function verifyLogin(params: {
       requireUserVerification: false,
     });
   } catch (e) {
-    return { ok: false, error: e instanceof Error ? e.message : "verify_failed" };
+    return {
+      ok: false,
+      error: e instanceof Error ? e.message : "verify_failed",
+    };
   }
   if (!verification.verified) {
     return { ok: false, error: "not_verified" };

@@ -109,7 +109,8 @@ export default function LaunchCampaignForm({
           };
           setFeedback({
             type: "err",
-            msg: msgByError[res.error] ?? res.message ?? "Lancement impossible.",
+            msg:
+              msgByError[res.error] ?? res.message ?? "Lancement impossible.",
           });
           return;
         }
@@ -222,8 +223,8 @@ export default function LaunchCampaignForm({
         {abTestEnabled && (
           <div className="mt-3 space-y-2">
             <p className="text-xs text-fuchsia-700 dark:text-fuchsia-300">
-              Les destinataires seront divises 50/50 (split deterministe).
-              Le dashboard de campagne affichera les metrics cote a cote pour
+              Les destinataires seront divises 50/50 (split deterministe). Le
+              dashboard de campagne affichera les metrics cote a cote pour
               identifier le template qui convertit le mieux.
             </p>
             <label className="text-xs font-medium text-gray-700 dark:text-gray-300 block">
@@ -242,8 +243,8 @@ export default function LaunchCampaignForm({
             </select>
             {selectedB === selected && (
               <p className="text-xs text-amber-700 dark:text-amber-400">
-                ⚠️ Le template B doit etre different du template A pour que
-                le test ait du sens.
+                ⚠️ Le template B doit etre different du template A pour que le
+                test ait du sens.
               </p>
             )}
           </div>
@@ -268,8 +269,8 @@ export default function LaunchCampaignForm({
         {dripEnabled && (
           <div className="mt-3 space-y-2">
             <p className="text-xs text-orange-700 dark:text-orange-300">
-              Repartit les envois en round-robin sur N jours. Evite la
-              vague &quot;tout le monde a recu le meme mail bizarre en meme
+              Repartit les envois en round-robin sur N jours. Evite la vague
+              &quot;tout le monde a recu le meme mail bizarre en meme
               temps&quot; qui casse la pedagogie en open space.
             </p>
             <label className="text-xs font-medium text-gray-700 dark:text-gray-300 block">
@@ -294,9 +295,9 @@ export default function LaunchCampaignForm({
               <span>14j (max)</span>
             </div>
             <p className="text-xs text-orange-700 dark:text-orange-300 italic">
-              Les premieres cibles recoivent immediatement (J0), les
-              suivantes sont planifiees pour le cron qui les envoie au fur
-              et a mesure (/api/cron/phishing-drip, planifie 1x/heure).
+              Les premieres cibles recoivent immediatement (J0), les suivantes
+              sont planifiees pour le cron qui les envoie au fur et a mesure
+              (/api/cron/phishing-drip, planifie 1x/heure).
             </p>
           </div>
         )}
@@ -316,7 +317,9 @@ export default function LaunchCampaignForm({
             onChange={(e) => setSelectedListId(e.target.value)}
             className="w-full rounded-xl border-2 border-gray-200 p-3 focus:border-accent-500 focus:outline-none text-sm bg-white"
           >
-            <option value="">- Pas de liste, utiliser le ciblage ci-dessous -</option>
+            <option value="">
+              - Pas de liste, utiliser le ciblage ci-dessous -
+            </option>
             {lists.map((l) => (
               <option key={l.id} value={l.id}>
                 📋 {l.name} ({l.recipientCount} destinataire
@@ -327,8 +330,8 @@ export default function LaunchCampaignForm({
           </select>
           {selectedListId && (
             <p className="text-xs text-accent-700 mt-2 font-medium">
-              👉 Cette liste sera ciblée en priorité. Les autres modes
-              (groupes / service) seront ignorés.
+              👉 Cette liste sera ciblée en priorité. Les autres modes (groupes
+              / service) seront ignorés.
             </p>
           )}
           <p className="text-xs text-gray-500 italic mt-1">
@@ -348,7 +351,8 @@ export default function LaunchCampaignForm({
           <label className="text-sm font-medium text-gray-700 block mb-2">
             Cibler des groupes métier
             <span className="ml-2 text-xs font-normal text-gray-500">
-              (recommandé - un DAF n&apos;a pas les mêmes risques qu&apos;un dev)
+              (recommandé - un DAF n&apos;a pas les mêmes risques qu&apos;un
+              dev)
             </span>
           </label>
           <div className="flex flex-wrap gap-2">
@@ -372,9 +376,7 @@ export default function LaunchCampaignForm({
                   <span
                     className={clsx(
                       "tabular-nums text-[10px] px-1.5 py-0.5 rounded-full",
-                      active
-                        ? "bg-white/25"
-                        : "bg-gray-100 text-gray-500",
+                      active ? "bg-white/25" : "bg-gray-100 text-gray-500",
                     )}
                   >
                     {g.memberCount}
@@ -387,8 +389,8 @@ export default function LaunchCampaignForm({
             <p className="text-xs text-accent-700 mt-2 font-medium">
               👉 {totalGroupTargets} collaborateur
               {totalGroupTargets > 1 ? "s" : ""} ciblé
-              {totalGroupTargets > 1 ? "s" : ""} dans{" "}
-              {selectedGroups.size} groupe
+              {totalGroupTargets > 1 ? "s" : ""} dans {selectedGroups.size}{" "}
+              groupe
               {selectedGroups.size > 1 ? "s" : ""}.
             </p>
           )}
@@ -396,7 +398,9 @@ export default function LaunchCampaignForm({
       )}
 
       {/* CIBLAGE LEGACY PAR SERVICE (string libre). Desactive si liste OU groupes selectionnes. */}
-      <details className={`text-sm ${selectedListId ? "opacity-40 pointer-events-none" : ""}`}>
+      <details
+        className={`text-sm ${selectedListId ? "opacity-40 pointer-events-none" : ""}`}
+      >
         <summary className="cursor-pointer text-gray-600 hover:text-gray-800">
           {selectedListId
             ? "Ou cibler par service (ignoré si une liste est sélectionnée)"
@@ -418,8 +422,8 @@ export default function LaunchCampaignForm({
             ))}
           </select>
           <p className="text-xs text-gray-500 italic mt-1">
-            Le champ service est libre (saisi en CSV import). Pour un
-            ciblage structuré, utilise les groupes ci-dessus.
+            Le champ service est libre (saisi en CSV import). Pour un ciblage
+            structuré, utilise les groupes ci-dessus.
           </p>
         </div>
       </details>

@@ -61,7 +61,8 @@ export async function saveBranding(
     String(formData.get("emailFromName") ?? "")
       .trim()
       .slice(0, 80) || null;
-  const primaryColor = String(formData.get("primaryColor") ?? "").trim() || null;
+  const primaryColor =
+    String(formData.get("primaryColor") ?? "").trim() || null;
   const accentColor = String(formData.get("accentColor") ?? "").trim() || null;
 
   if (primaryColor && !isValidHexColor(primaryColor)) {
@@ -124,7 +125,10 @@ export async function saveBranding(
     const file = formData.get(field);
     if (file instanceof File && file.size > 0) {
       if (file.size > MAX_BYTES) {
-        return { ok: false, error: `Fichier ${field} trop lourd (max 256 Ko).` };
+        return {
+          ok: false,
+          error: `Fichier ${field} trop lourd (max 256 Ko).`,
+        };
       }
       if (!ALLOWED_MIME.has(file.type)) {
         return {

@@ -312,8 +312,7 @@ export async function computeIncidentCorrelation(
       : null;
   const tenantAvg =
     tenantUsers.length > 0
-      ? tenantUsers.reduce((s, u) => s + u.riskScore, 0) /
-        tenantUsers.length
+      ? tenantUsers.reduce((s, u) => s + u.riskScore, 0) / tenantUsers.length
       : null;
 
   return {

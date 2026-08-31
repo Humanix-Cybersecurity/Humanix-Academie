@@ -74,8 +74,8 @@ export default function ProofSection() {
               La cybersécurité ne devrait pas être un piège commercial.
             </h2>
             <p className="opacity-95 mb-8 max-w-2xl mx-auto leading-relaxed">
-              Humanix Académie est conçue, hébergée et opérée en France par
-              une équipe spécialiste cyber depuis plus de 10 ans. Code AGPLv3
+              Humanix Académie est conçue, hébergée et opérée en France par une
+              équipe spécialiste cyber depuis plus de 10 ans. Code AGPLv3
               public, audit de sécurité publié, gaps assumés. La transparence
               radicale plutôt que le marketing.
             </p>

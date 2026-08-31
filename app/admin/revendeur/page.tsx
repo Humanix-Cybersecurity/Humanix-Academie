@@ -68,8 +68,8 @@ export default async function RevendeurPage({
             sous-domaine.
           </p>
           <p className="text-sm text-gray-700 dark:text-gray-300">
-            Ce programme est activé par l&apos;équipe Humanix dans le cadre d&apos;un
-            partenariat. Contactez-nous à{" "}
+            Ce programme est activé par l&apos;équipe Humanix dans le cadre
+            d&apos;un partenariat. Contactez-nous à{" "}
             <a
               className="text-accent-600 dark:text-accent-300 underline"
               href="mailto:contact@humanix-cybersecurity.fr?subject=Programme%20revendeur"
@@ -124,8 +124,7 @@ export default async function RevendeurPage({
           role="status"
           className="rounded-xl border border-emerald-200 dark:border-emerald-900/40 bg-emerald-50 dark:bg-emerald-900/15 p-3 text-sm text-emerald-900 dark:text-emerald-200"
         >
-          {msg === "created" &&
-            `✓ Client créé${slug ? ` (${slug})` : ""}.`}
+          {msg === "created" && `✓ Client créé${slug ? ` (${slug})` : ""}.`}
           {msg === "created-invited" &&
             `✓ Client créé${slug ? ` (${slug})` : ""} et invitation envoyée à son administrateur.`}
         </div>
@@ -149,7 +148,10 @@ export default async function RevendeurPage({
           client hérite de la vôtre. L&apos;email administrateur reçoit un lien
           d&apos;activation (lien magique, sans mot de passe).
         </p>
-        <NewClientForm rootDomain={rootDomain} resellerName={gate.tenant.name} />
+        <NewClientForm
+          rootDomain={rootDomain}
+          resellerName={gate.tenant.name}
+        />
       </section>
 
       {/* Liste des clients */}

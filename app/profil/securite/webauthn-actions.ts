@@ -39,9 +39,7 @@ async function getCtx(): Promise<Ctx | null> {
   };
 }
 
-export type WebauthnActionResult =
-  | { ok: true }
-  | { ok: false; error: string };
+export type WebauthnActionResult = { ok: true } | { ok: false; error: string };
 
 export async function renameWebauthnCredential(
   credentialDbId: string,

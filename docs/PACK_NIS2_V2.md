@@ -81,13 +81,13 @@ Postgres `humanix_ro_user` (SELECT-only). Fallback transparent sinon.
 
 ### Codes couleur
 
-| Score | Verdict | Couleur |
-|---|---|---|
-| ≥ 80 | Robuste | Emerald |
-| 60-79 | En marche | Sky blue |
-| 40-59 | Fragile | Amber |
-| < 40 | Alerte | Red |
-| N/A | Aucune saison mappée disponible | Gray |
+| Score | Verdict                         | Couleur  |
+| ----- | ------------------------------- | -------- |
+| ≥ 80  | Robuste                         | Emerald  |
+| 60-79 | En marche                       | Sky blue |
+| 40-59 | Fragile                         | Amber    |
+| < 40  | Alerte                          | Red      |
+| N/A   | Aucune saison mappée disponible | Gray     |
 
 ### Performance
 
@@ -106,24 +106,28 @@ jusqu'à ~10000 users / tenant. Au-delà, prévoir un cache snapshot
 
 Dans `/admin/conformite-nis2`, le formulaire `PackNis2Form` a maintenant
 **2 boutons** qui partagent les mêmes champs identité :
+
 - **"Télécharger le pack PDF"** → 4 documents signables (v1)
 - **"Télécharger le rapport annuel NIS2"** → rapport autorité (v2)
 
 ### Contenu du PDF (3 pages)
 
 **Page 1 - Couverture + état des lieux**
+
 - Identité de l'entité (raison sociale, SIREN, siège, dirigeant, DPO)
 - Période couverte (12 derniers mois par défaut)
 - Score global gros (avec verdict)
 - Tableau des 11 articles NIS2 avec score per-article
 
 **Page 2 - Incidents + sensibilisation**
+
 - Tableau des incidents déclarés dans la période (depuis `IncidentResponse`)
 - "Autorité notifiée" = `anssiNotifiedAt OR cnilNotifiedAt` non null
 - Agrégats sensibilisation : apprenants actifs, modules complétés, score
   moyen, campagnes phishing simulé, taux de clic
 
 **Page 3 - Plan + engagement direction**
+
 - 5 chantiers prioritaires (articles avec le score le plus bas)
 - Texte d'engagement attestable + signature dirigeant
 - Note méthodologique : "ne remplace pas un audit PASSI"
@@ -152,19 +156,19 @@ Pour le code TypeScript, le mapping est dans `lib/nis2/articles.ts`
 
 Articles couverts :
 
-| Article | Domaine | Saisons Humanix |
-|---|---|---|
-| 21.2.a | Politiques d'analyse des risques | nis2-pme, donnees-sensibles |
-| 21.2.b | Gestion des incidents | crise-cyber, remediation-flash |
-| 21.2.c | Continuité + sauvegardes | ransomware, sauvegardes |
-| 21.2.d | Chaîne d'approvisionnement | supply-chain |
-| 21.2.e | Dev / acquisition / maintenance | cyber-dev |
-| 21.2.f | Évaluation efficacité | nis2-pme |
-| 21.2.g | Cyber-hygiène + formation | phishing, mots-de-passe, email-pro, télétravail, cyber-dirigeants, fraude-président, deepfakes, ia-generative |
-| 21.2.h | Cryptographie | donnees-sensibles, stockage-cloud |
-| 21.2.i | Sécurité RH + contrôle d'accès | cyber-rh, acces-physiques |
-| 21.2.j | MFA + authentification | mots-de-passe, visios-meetings |
-| 23 | Notification autorité | crise-cyber |
+| Article | Domaine                          | Saisons Humanix                                                                                               |
+| ------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| 21.2.a  | Politiques d'analyse des risques | nis2-pme, donnees-sensibles                                                                                   |
+| 21.2.b  | Gestion des incidents            | crise-cyber, remediation-flash                                                                                |
+| 21.2.c  | Continuité + sauvegardes         | ransomware, sauvegardes                                                                                       |
+| 21.2.d  | Chaîne d'approvisionnement       | supply-chain                                                                                                  |
+| 21.2.e  | Dev / acquisition / maintenance  | cyber-dev                                                                                                     |
+| 21.2.f  | Évaluation efficacité            | nis2-pme                                                                                                      |
+| 21.2.g  | Cyber-hygiène + formation        | phishing, mots-de-passe, email-pro, télétravail, cyber-dirigeants, fraude-président, deepfakes, ia-generative |
+| 21.2.h  | Cryptographie                    | donnees-sensibles, stockage-cloud                                                                             |
+| 21.2.i  | Sécurité RH + contrôle d'accès   | cyber-rh, acces-physiques                                                                                     |
+| 21.2.j  | MFA + authentification           | mots-de-passe, visios-meetings                                                                                |
+| 23      | Notification autorité            | crise-cyber                                                                                                   |
 
 ---
 

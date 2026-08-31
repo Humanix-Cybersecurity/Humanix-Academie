@@ -42,7 +42,8 @@ const TEST_STATUS_LABELS: Record<string, string> = {
 
 export default async function CisoAssistantAdminPage() {
   const session = await auth();
-  if (!session?.user) redirect("/connexion?next=/admin/integrations/ciso-assistant");
+  if (!session?.user)
+    redirect("/connexion?next=/admin/integrations/ciso-assistant");
   const role = session.user.role;
   if (role !== "ADMIN" && role !== "RSSI" && role !== "SUPERADMIN") {
     redirect("/");
@@ -100,7 +101,9 @@ export default async function CisoAssistantAdminPage() {
           >
             <span aria-hidden="true">📖</span>
             Voir toutes les fonctionnalités du connecteur
-            <span aria-hidden="true" className="text-xs opacity-70">↗</span>
+            <span aria-hidden="true" className="text-xs opacity-70">
+              ↗
+            </span>
           </a>
         </div>
       </header>
@@ -221,17 +224,16 @@ export default async function CisoAssistantAdminPage() {
             s'affichent en live dans le terminal puis dans CISO Assistant.
           </li>
           <li>
-            Mettez en place un cron (côté Humanix ou côté CISO Assistant via
-            le connecteur Python autonome) pour une sync automatique
-            quotidienne. Le mode <em>upsert idempotent</em> garantit zéro
-            doublon.
+            Mettez en place un cron (côté Humanix ou côté CISO Assistant via le
+            connecteur Python autonome) pour une sync automatique quotidienne.
+            Le mode <em>upsert idempotent</em> garantit zéro doublon.
           </li>
           <li>
             Activez <strong>Live Mode</strong> (extension v2.0) pour des
-            rafraîchissements temps réel : à chaque module complété,
-            phishing signalé ou clic sur faux mail, une mini-sync incrémentale
-            (debouncée 5 s) repousse les preuves impactées vers CISO
-            Assistant - utile en présentation COMEX.
+            rafraîchissements temps réel : à chaque module complété, phishing
+            signalé ou clic sur faux mail, une mini-sync incrémentale (debouncée
+            5 s) repousse les preuves impactées vers CISO Assistant - utile en
+            présentation COMEX.
           </li>
         </ol>
         <p className="text-xs text-gray-500 dark:text-gray-500 mt-3">

@@ -11,7 +11,11 @@ export type RecentEntry = {
   createdAt: Date;
 };
 
-export default function RecentActivity({ entries }: { entries: RecentEntry[] }) {
+export default function RecentActivity({
+  entries,
+}: {
+  entries: RecentEntry[];
+}) {
   if (entries.length === 0) {
     return (
       <p className="text-sm text-gray-500 dark:text-gray-400 italic">

@@ -49,9 +49,9 @@ export default async function IntegrationsPage() {
                       CISO Assistant (intuitem)
                     </p>
                     <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
-                      Push 1-clic des preuves de conformité Humanix
-                      (ISO 27001, NIS2, RGPD, ANSSI, NIST CSF) vers votre
-                      instance CISO Assistant. Terminal live, idempotent.
+                      Push 1-clic des preuves de conformité Humanix (ISO 27001,
+                      NIS2, RGPD, ANSSI, NIST CSF) vers votre instance CISO
+                      Assistant. Terminal live, idempotent.
                     </p>
                   </div>
                 </div>
@@ -186,7 +186,9 @@ export default async function IntegrationsPage() {
                   <option value="PAGERDUTY">
                     🟧 PagerDuty (déclencher une alerte)
                   </option>
-                  <option value="GENERIC">🔌 Générique (JSON signé HMAC)</option>
+                  <option value="GENERIC">
+                    🔌 Générique (JSON signé HMAC)
+                  </option>
                 </select>
               </div>
             </div>
@@ -247,8 +249,8 @@ export default async function IntegrationsPage() {
                     est dans l&apos;URL du webhook.
                   </li>
                   <li>
-                    <strong>Jira</strong> : <code>base64(email:apitoken)</code>
-                    . Génère un API token sur{" "}
+                    <strong>Jira</strong> : <code>base64(email:apitoken)</code>.
+                    Génère un API token sur{" "}
                     <a
                       href="https://id.atlassian.com/manage-profile/security/api-tokens"
                       className="underline"
@@ -257,23 +259,22 @@ export default async function IntegrationsPage() {
                     >
                       id.atlassian.com
                     </a>{" "}
-                    puis <code>echo -n &quot;email@xx:apitoken&quot; | base64</code>.
+                    puis{" "}
+                    <code>echo -n &quot;email@xx:apitoken&quot; | base64</code>.
                     URL avec <code>?projectKey=SEC</code> obligatoire.
                   </li>
                   <li>
-                    <strong>ServiceNow</strong> : <code>base64(user:pass)</code>.
-                    Crée un user d&apos;intégration dédié dans ServiceNow.
+                    <strong>ServiceNow</strong> : <code>base64(user:pass)</code>
+                    . Crée un user d&apos;intégration dédié dans ServiceNow.
                   </li>
                   <li>
-                    <strong>PagerDuty</strong> :{" "}
-                    <code>routing_key</code> (Integration Key, 32 chars hex)
-                    fournie par PagerDuty quand tu crées un service Events
-                    API v2.
+                    <strong>PagerDuty</strong> : <code>routing_key</code>{" "}
+                    (Integration Key, 32 chars hex) fournie par PagerDuty quand
+                    tu crées un service Events API v2.
                   </li>
                   <li>
                     <strong>Générique</strong> : auto-généré si vide (HMAC
-                    SHA-256 envoyé en header{" "}
-                    <code>x-humanix-signature</code>).
+                    SHA-256 envoyé en header <code>x-humanix-signature</code>).
                   </li>
                 </ul>
               </details>

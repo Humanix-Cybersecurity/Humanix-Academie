@@ -39,7 +39,9 @@ export const metadata = {
       "Sources francophones de référence. Sans dramatiser, sans publicité, sans tracker. Mis à jour chaque matin.",
     type: "website",
     url: "/observatoire-fuites",
-    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+    images: [
+      { url: "/logo-humanix-academie-512.png", width: 512, height: 512 },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -151,8 +153,8 @@ export default async function ObservatoireFuitesPage({
           className="max-w-5xl mx-auto px-4 pt-12 pb-10 sm:pt-16 sm:pb-12 text-center"
         >
           <p className="inline-flex items-center gap-2 text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-accent-500 bg-white/70 dark:bg-slate-800/60 backdrop-blur-sm border border-accent-500/30 px-4 py-2 rounded-full mb-8 shadow-sm">
-            <span aria-hidden="true">🔍</span> Observatoire indépendant ·
-            Mise à jour quotidienne
+            <span aria-hidden="true">🔍</span> Observatoire indépendant · Mise à
+            jour quotidienne
           </p>
 
           <h1
@@ -376,8 +378,7 @@ export default async function ObservatoireFuitesPage({
                         rel="noopener noreferrer"
                         className="ml-auto text-accent-700 dark:text-accent-300 underline-offset-4 hover:underline font-bold"
                       >
-                        Source officielle{" "}
-                        <span aria-hidden="true">↗</span>
+                        Source officielle <span aria-hidden="true">↗</span>
                       </a>
                     </div>
                   </article>
@@ -443,8 +444,8 @@ export default async function ObservatoireFuitesPage({
           <p className="text-sm text-gray-700 dark:text-gray-200 mb-6 leading-relaxed">
             Cet observatoire ne produit aucune information : il agrège et cite
             les 3 sources francophones de référence. Tous les contenus restent
-            la propriété de leurs auteurs. Cliquez sur le titre d'une fuite
-            pour consulter l'article original.
+            la propriété de leurs auteurs. Cliquez sur le titre d'une fuite pour
+            consulter l'article original.
           </p>
           <div className="grid sm:grid-cols-3 gap-3 text-sm">
             {(

@@ -312,9 +312,9 @@ export async function GET(req: Request) {
         (sum, set) => sum + set.size,
         0,
       );
-      module_completion_rate = Math.round(
-        (totalCompletions / (tenantUsers * totalEpisodes)) * 1000,
-      ) / 1000;
+      module_completion_rate =
+        Math.round((totalCompletions / (tenantUsers * totalEpisodes)) * 1000) /
+        1000;
     }
   }
 

@@ -62,248 +62,244 @@ export async function renderOgCard(variant: OgVariant) {
   const logoDataUrl = await getLogoDataUrl();
 
   return new ImageResponse(
-    (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        background: SOFT_BG,
+        fontFamily: "sans-serif",
+        position: "relative",
+      }}
+    >
+      {/* Bandeau supérieur cyber-météo (signature visuelle Humanix) */}
       <div
         style={{
-          width: "100%",
-          height: "100%",
           display: "flex",
-          flexDirection: "column",
-          background: SOFT_BG,
-          fontFamily: "sans-serif",
-          position: "relative",
+          height: "8px",
+          background: `linear-gradient(90deg, #2E8B57 0%, ${accent} 50%, ${PRIMARY} 100%)`,
         }}
-      >
-        {/* Bandeau supérieur cyber-météo (signature visuelle Humanix) */}
-        <div
-          style={{
-            display: "flex",
-            height: "8px",
-            background: `linear-gradient(90deg, #2E8B57 0%, ${accent} 50%, ${PRIMARY} 100%)`,
-          }}
-        />
+      />
 
-        {/* Hexagones de fond (subtil, pattern Humanix) -- en SVG inline car
+      {/* Hexagones de fond (subtil, pattern Humanix) -- en SVG inline car
             le glyph Unicode ⬡ (U+2B21) n'est dans aucune Google Font, ce qui
             faisait pleuvoir des warnings "Failed to download dynamic font" au
             build (-> Satori echoue silencieusement et n'affiche rien). Un
             polygone SVG fait le job sans dependance de police. */}
-        <svg
-          width="700"
-          height="260"
-          viewBox="0 0 700 260"
-          style={{
-            position: "absolute",
-            right: "60px",
-            top: "50%",
-            transform: "translateY(-50%)",
-            opacity: 0.06,
-          }}
-        >
-          {[120, 360, 600].map((cx) => (
-            <polygon
-              key={cx}
-              points={`${cx},20 ${cx + 104},80 ${cx + 104},180 ${cx},240 ${cx - 104},180 ${cx - 104},80`}
-              fill={PRIMARY}
-            />
-          ))}
-        </svg>
+      <svg
+        width="700"
+        height="260"
+        viewBox="0 0 700 260"
+        style={{
+          position: "absolute",
+          right: "60px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          opacity: 0.06,
+        }}
+      >
+        {[120, 360, 600].map((cx) => (
+          <polygon
+            key={cx}
+            points={`${cx},20 ${cx + 104},80 ${cx + 104},180 ${cx},240 ${cx - 104},180 ${cx - 104},80`}
+            fill={PRIMARY}
+          />
+        ))}
+      </svg>
 
-        {/* Contenu principal */}
-        <div
-          style={{
-            display: "flex",
-            flex: 1,
-            flexDirection: "column",
-            padding: "60px 80px 50px",
-            justifyContent: "space-between",
-            position: "relative",
-          }}
-        >
-          {/* Top : marque + kicker */}
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "32px" }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "16px",
-              }}
-            >
-              {/* Logo officiel Humanix Académie (toque + bouclier-H) */}
-              {logoDataUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={logoDataUrl}
-                  alt=""
-                  width={68}
-                  height={68}
-                  style={{ display: "flex" }}
-                />
-              ) : (
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "68px",
-                    height: "68px",
-                    background: PRIMARY,
-                    borderRadius: "12px",
-                    color: "white",
-                    fontSize: "36px",
-                    fontWeight: 800,
-                  }}
-                >
-                  H
-                </div>
-              )}
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  lineHeight: 1.1,
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: "30px",
-                    fontWeight: 800,
-                    color: PRIMARY,
-                  }}
-                >
-                  Humanix Académie
-                </div>
-                <div
-                  style={{
-                    fontSize: "17px",
-                    color: MUTED,
-                    fontWeight: 500,
-                  }}
-                >
-                  par Humanix-Cybersecurity
-                </div>
-              </div>
-            </div>
-
-            {/* Kicker (badge catégorie) */}
-            <div
-              style={{
-                display: "flex",
-                alignSelf: "flex-start",
-                background: "white",
-                border: `2px solid ${accent}`,
-                color: accent,
-                fontSize: "18px",
-                fontWeight: 800,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                padding: "10px 22px",
-                borderRadius: "999px",
-              }}
-            >
-              {variant.kicker}
-            </div>
-          </div>
-
-          {/* Centre : titre + subtitle + glyph */}
+      {/* Contenu principal */}
+      <div
+        style={{
+          display: "flex",
+          flex: 1,
+          flexDirection: "column",
+          padding: "60px 80px 50px",
+          justifyContent: "space-between",
+          position: "relative",
+        }}
+      >
+        {/* Top : marque + kicker */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "40px",
-              marginTop: "20px",
+              gap: "16px",
             }}
           >
+            {/* Logo officiel Humanix Académie (toque + bouclier-H) */}
+            {logoDataUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={logoDataUrl}
+                alt=""
+                width={68}
+                height={68}
+                style={{ display: "flex" }}
+              />
+            ) : (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "68px",
+                  height: "68px",
+                  background: PRIMARY,
+                  borderRadius: "12px",
+                  color: "white",
+                  fontSize: "36px",
+                  fontWeight: 800,
+                }}
+              >
+                H
+              </div>
+            )}
             <div
               style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: "20px",
-                flex: 1,
+                lineHeight: 1.1,
               }}
             >
-              <div
-                style={{
-                  fontSize: "68px",
-                  fontWeight: 900,
-                  color: INK,
-                  lineHeight: 1.05,
-                  letterSpacing: "-1.5px",
-                }}
-              >
-                {variant.title}
-              </div>
               <div
                 style={{
                   fontSize: "30px",
-                  color: MUTED,
-                  fontWeight: 500,
-                  lineHeight: 1.3,
+                  fontWeight: 800,
+                  color: PRIMARY,
                 }}
               >
-                {variant.subtitle}
+                Humanix Académie
               </div>
-            </div>
-            {glyph && (
               <div
                 style={{
-                  display: "flex",
-                  fontSize: "180px",
-                  lineHeight: 1,
-                  color: glyphColor,
-                  flexShrink: 0,
+                  fontSize: "17px",
+                  color: MUTED,
+                  fontWeight: 500,
                 }}
               >
-                {glyph}
+                par Humanix-Cybersecurity
               </div>
-            )}
+            </div>
           </div>
 
-          {/* Bottom : bullets + URL */}
+          {/* Kicker (badge catégorie) */}
           <div
             style={{
               display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginTop: "20px",
+              alignSelf: "flex-start",
+              background: "white",
+              border: `2px solid ${accent}`,
+              color: accent,
+              fontSize: "18px",
+              fontWeight: 800,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              padding: "10px 22px",
+              borderRadius: "999px",
             }}
           >
-            <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
-              {(variant.bullets ?? []).slice(0, 3).map((b, i) => (
-                <div
-                  key={i}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    background: "white",
-                    color: PRIMARY,
-                    fontSize: "20px",
-                    fontWeight: 700,
-                    padding: "12px 22px",
-                    borderRadius: "999px",
-                    border: `1px solid ${PRIMARY}22`,
-                  }}
-                >
-                  {b}
-                </div>
-              ))}
+            {variant.kicker}
+          </div>
+        </div>
+
+        {/* Centre : titre + subtitle + glyph */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "40px",
+            marginTop: "20px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+              flex: 1,
+            }}
+          >
+            <div
+              style={{
+                fontSize: "68px",
+                fontWeight: 900,
+                color: INK,
+                lineHeight: 1.05,
+                letterSpacing: "-1.5px",
+              }}
+            >
+              {variant.title}
             </div>
             <div
               style={{
-                display: "flex",
-                fontSize: "20px",
-                fontWeight: 700,
-                color: PRIMARY,
+                fontSize: "30px",
+                color: MUTED,
+                fontWeight: 500,
+                lineHeight: 1.3,
               }}
             >
-              humanix-cybersecurity.fr
+              {variant.subtitle}
             </div>
+          </div>
+          {glyph && (
+            <div
+              style={{
+                display: "flex",
+                fontSize: "180px",
+                lineHeight: 1,
+                color: glyphColor,
+                flexShrink: 0,
+              }}
+            >
+              {glyph}
+            </div>
+          )}
+        </div>
+
+        {/* Bottom : bullets + URL */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginTop: "20px",
+          }}
+        >
+          <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
+            {(variant.bullets ?? []).slice(0, 3).map((b, i) => (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  background: "white",
+                  color: PRIMARY,
+                  fontSize: "20px",
+                  fontWeight: 700,
+                  padding: "12px 22px",
+                  borderRadius: "999px",
+                  border: `1px solid ${PRIMARY}22`,
+                }}
+              >
+                {b}
+              </div>
+            ))}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              fontSize: "20px",
+              fontWeight: 700,
+              color: PRIMARY,
+            }}
+          >
+            humanix-cybersecurity.fr
           </div>
         </div>
       </div>
-    ),
+    </div>,
     OG_SIZE,
   );
 }

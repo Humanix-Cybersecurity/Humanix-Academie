@@ -151,12 +151,11 @@ export async function GET(req: Request) {
 
   // Aggregation : par utilisateur, quel % d'episodes complete et quel
   // meilleur score quiz moyen
-  const perUser: Record<
-    string,
-    { completed: number; quizScores: number[] }
-  > = {};
+  const perUser: Record<string, { completed: number; quizScores: number[] }> =
+    {};
   for (const p of progress) {
-    if (!perUser[p.userId]) perUser[p.userId] = { completed: 0, quizScores: [] };
+    if (!perUser[p.userId])
+      perUser[p.userId] = { completed: 0, quizScores: [] };
     if (p.status === "COMPLETED") perUser[p.userId].completed += 1;
     const score = p.bestQuizScorePct ?? p.quizScorePct;
     if (score != null) perUser[p.userId].quizScores.push(score);
@@ -171,8 +170,7 @@ export async function GET(req: Request) {
   const userAvgScores: { userId: string; avg: number }[] = [];
   for (const [userId, u] of Object.entries(perUser)) {
     if (u.quizScores.length === 0) continue;
-    const avg =
-      u.quizScores.reduce((s, v) => s + v, 0) / u.quizScores.length;
+    const avg = u.quizScores.reduce((s, v) => s + v, 0) / u.quizScores.length;
     userAvgScores.push({ userId, avg });
   }
   userAvgScores.sort((a, b) => a.avg - b.avg);
@@ -180,14 +178,16 @@ export async function GET(req: Request) {
     userAvgScores.length === 0
       ? null
       : Math.round(
-          (userAvgScores.reduce((s, u) => s + u.avg, 0) / userAvgScores.length) *
+          (userAvgScores.reduce((s, u) => s + u.avg, 0) /
+            userAvgScores.length) *
             10,
         ) / 10;
   const quizMedian =
     userAvgScores.length === 0
       ? null
-      : Math.round(userAvgScores[Math.floor(userAvgScores.length / 2)].avg * 10) /
-        10;
+      : Math.round(
+          userAvgScores[Math.floor(userAvgScores.length / 2)].avg * 10,
+        ) / 10;
   const failingUsers = userAvgScores.filter(
     (u) => u.avg < FAILING_QUIZ_THRESHOLD,
   );

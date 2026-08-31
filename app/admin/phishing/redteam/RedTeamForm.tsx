@@ -162,7 +162,9 @@ function ScenarioPreview({
         <div className="bg-gray-50 dark:bg-slate-800 px-4 py-3 border-b border-gray-200 dark:border-slate-700 text-sm space-y-1">
           <div className="flex gap-2 flex-wrap items-baseline">
             <strong>De :</strong>
-            <span className="font-mono text-xs">{scenario.fromName} &lt;{scenario.fromEmail}&gt;</span>
+            <span className="font-mono text-xs">
+              {scenario.fromName} &lt;{scenario.fromEmail}&gt;
+            </span>
             <button
               type="button"
               onClick={() => copy("from", scenario.fromEmail)}
@@ -238,10 +240,9 @@ function ScenarioPreview({
 
       <div className="rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-3 text-xs text-amber-900 dark:text-amber-200">
         <strong>Prochaine etape :</strong> utilise le bouton{" "}
-        <em>Sauvegarder comme template</em> pour persister ce scenario en
-        BDD et le rendre dispo dans le selecteur de campagne sur
-        /admin/phishing. Sinon copie le HTML / sujet / sender et utilise-les
-        manuellement.
+        <em>Sauvegarder comme template</em> pour persister ce scenario en BDD et
+        le rendre dispo dans le selecteur de campagne sur /admin/phishing. Sinon
+        copie le HTML / sujet / sender et utilise-les manuellement.
       </div>
     </div>
   );
@@ -258,9 +259,7 @@ function SaveAsTemplateButton({
 }) {
   const [isPending, startTransition] = useTransition();
   const [feedback, setFeedback] = useState<
-    | { kind: "saved"; slug: string }
-    | { kind: "error"; msg: string }
-    | null
+    { kind: "saved"; slug: string } | { kind: "error"; msg: string } | null
   >(null);
 
   function save() {

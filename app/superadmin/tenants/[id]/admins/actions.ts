@@ -76,16 +76,22 @@ export async function addExternalAdminMembership(
   } catch (e) {
     return {
       ok: false,
-      error: (e as Error).message === "forbidden" ? "forbidden" : "unauthorized",
+      error:
+        (e as Error).message === "forbidden" ? "forbidden" : "unauthorized",
     };
   }
 
   const tenant = await db.tenant.findUnique({ where: { id: tenantId } });
   if (!tenant) return { ok: false, error: "tenant_not_found" };
 
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const email = String(formData.get("email") ?? "")
+    .trim()
+    .toLowerCase();
   const roleRaw = String(formData.get("role") ?? "ADMIN") as Role;
-  const note = String(formData.get("note") ?? "").trim().slice(0, 200) || null;
+  const note =
+    String(formData.get("note") ?? "")
+      .trim()
+      .slice(0, 200) || null;
 
   // Role assigne : doit etre dans le set admin et <= rang de l'operateur.
   if (!["MANAGER", "RSSI", "ADMIN"].includes(roleRaw)) {
@@ -215,7 +221,8 @@ export async function revokeExternalAdminMembership(
   } catch (e) {
     return {
       ok: false,
-      error: (e as Error).message === "forbidden" ? "forbidden" : "unauthorized",
+      error:
+        (e as Error).message === "forbidden" ? "forbidden" : "unauthorized",
     };
   }
 
@@ -267,7 +274,8 @@ export async function updateExternalAdminMembershipRole(
   } catch (e) {
     return {
       ok: false,
-      error: (e as Error).message === "forbidden" ? "forbidden" : "unauthorized",
+      error:
+        (e as Error).message === "forbidden" ? "forbidden" : "unauthorized",
     };
   }
 
@@ -342,14 +350,17 @@ export async function inviteNewTenantAdmin(
   } catch (e) {
     return {
       ok: false,
-      error: (e as Error).message === "forbidden" ? "forbidden" : "unauthorized",
+      error:
+        (e as Error).message === "forbidden" ? "forbidden" : "unauthorized",
     };
   }
 
   const tenant = await db.tenant.findUnique({ where: { id: tenantId } });
   if (!tenant) return { ok: false, error: "tenant_not_found" };
 
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const email = String(formData.get("email") ?? "")
+    .trim()
+    .toLowerCase();
   const name = String(formData.get("name") ?? "").trim() || null;
   const roleRaw = String(formData.get("role") ?? "ADMIN") as Role;
 

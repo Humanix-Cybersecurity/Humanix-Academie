@@ -185,7 +185,9 @@ export async function upsertChunk(args: {
  * Supprime tous les chunks d'une source (utilise quand on re-indexe un
  * fichier MDX modifie : on purge l'ancien puis on re-insert).
  */
-export async function deleteChunksFromSource(sourcePath: string): Promise<void> {
+export async function deleteChunksFromSource(
+  sourcePath: string,
+): Promise<void> {
   await db.$executeRawUnsafe(
     `DELETE FROM ${TABLE} WHERE source_path = $1`,
     sourcePath,

@@ -100,9 +100,9 @@ describe("lib/secrets", () => {
 
     it("required + resolver async pending => throw au 1er appel sync", () => {
       setSecretResolver(async () => "ok");
-      expect(() =>
-        getSecret("ASYNC_REQUIRED", { required: true }),
-      ).toThrow(/secret_pending_async/);
+      expect(() => getSecret("ASYNC_REQUIRED", { required: true })).toThrow(
+        /secret_pending_async/,
+      );
     });
   });
 

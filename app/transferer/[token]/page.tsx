@@ -51,9 +51,9 @@ export default async function TransferPage({ params }: Props) {
           Lien introuvable
         </h1>
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          Ce lien de rattachement n'existe pas ou a été déjà utilisé.
-          Pour rattacher un compte, demandez à l'administrateur de
-          renouveler la demande.
+          Ce lien de rattachement n'existe pas ou a été déjà utilisé. Pour
+          rattacher un compte, demandez à l'administrateur de renouveler la
+          demande.
         </p>
         <Link href="/" className="btn-primary">
           Retour à l'accueil
@@ -72,8 +72,8 @@ export default async function TransferPage({ params }: Props) {
           Demande expirée
         </h1>
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          Cette demande de rattachement a expiré. Demandez à
-          l'administrateur de vous en envoyer une nouvelle.
+          Cette demande de rattachement a expiré. Demandez à l'administrateur de
+          vous en envoyer une nouvelle.
         </p>
         <Link href="/" className="btn-primary">
           Retour à l'accueil
@@ -92,8 +92,8 @@ export default async function TransferPage({ params }: Props) {
           Rattachement déjà effectué
         </h1>
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          Vous avez déjà accepté ce rattachement. Vous êtes maintenant
-          membre de l'espace.
+          Vous avez déjà accepté ce rattachement. Vous êtes maintenant membre de
+          l'espace.
         </p>
         <Link href="/apprendre" className="btn-primary">
           Accéder à mes contenus
@@ -112,8 +112,8 @@ export default async function TransferPage({ params }: Props) {
           Demande déjà traitée
         </h1>
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          Cette demande a déjà été refusée ou annulée. Votre compte
-          actuel n'a pas été modifié.
+          Cette demande a déjà été refusée ou annulée. Votre compte actuel n'a
+          pas été modifié.
         </p>
         <Link href="/" className="btn-primary">
           Retour à l'accueil
@@ -158,7 +158,9 @@ export default async function TransferPage({ params }: Props) {
 
       <section className="rounded-2xl bg-white dark:bg-slate-900 border-2 border-primary-500/20 p-6 mb-6 space-y-4">
         <p className="text-gray-700 dark:text-gray-200">
-          <strong>{requester?.name || requester?.email || "Un administrateur"}</strong>{" "}
+          <strong>
+            {requester?.name || requester?.email || "Un administrateur"}
+          </strong>{" "}
           souhaite que votre compte Humanix Académie (à l'adresse{" "}
           <code className="font-mono text-sm bg-gray-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
             {req.targetEmail}
@@ -178,12 +180,8 @@ export default async function TransferPage({ params }: Props) {
             Ce qui change si vous acceptez :
           </p>
           <ul className="list-disc pl-5 space-y-1 text-emerald-900 dark:text-emerald-100">
-            <li>
-              Vos identifiants restent les mêmes (email + mot de passe)
-            </li>
-            <li>
-              Vos progrès, certificats et badges sont conservés
-            </li>
+            <li>Vos identifiants restent les mêmes (email + mot de passe)</li>
+            <li>Vos progrès, certificats et badges sont conservés</li>
             <li>
               Vous accédez aux saisons et règles de l'espace{" "}
               <strong>{tenant?.name}</strong>
@@ -196,8 +194,8 @@ export default async function TransferPage({ params }: Props) {
             Si vous refusez ou ignorez :
           </p>
           <p className="text-amber-900 dark:text-amber-100">
-            Votre compte actuel n'est pas modifié. Vous continuez à
-            utiliser Humanix Académie comme avant.
+            Votre compte actuel n'est pas modifié. Vous continuez à utiliser
+            Humanix Académie comme avant.
           </p>
         </div>
       </section>
@@ -231,8 +229,8 @@ export default async function TransferPage({ params }: Props) {
               {req.targetEmail}
             </code>
             . Vous êtes actuellement connecté avec un autre email.
-            Déconnectez-vous puis reconnectez-vous avec la bonne adresse
-            pour traiter cette demande.
+            Déconnectez-vous puis reconnectez-vous avec la bonne adresse pour
+            traiter cette demande.
           </p>
           <Link href="/deconnexion" className="btn-secondary text-sm">
             Se déconnecter
@@ -245,8 +243,8 @@ export default async function TransferPage({ params }: Props) {
       )}
 
       <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-8">
-        Conformément au RGPD, votre compte ne sera transféré qu'avec
-        votre consentement explicite. Cette demande expire le{" "}
+        Conformément au RGPD, votre compte ne sera transféré qu'avec votre
+        consentement explicite. Cette demande expire le{" "}
         {req.expiresAt.toLocaleDateString("fr-FR", {
           day: "numeric",
           month: "long",

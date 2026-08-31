@@ -103,7 +103,10 @@ export function buildSignedPdfUrl(
 
 export type VerifyResult =
   | { ok: true; expiresAt: Date }
-  | { ok: false; reason: "missing_sig" | "missing_exp" | "expired" | "bad_signature" };
+  | {
+      ok: false;
+      reason: "missing_sig" | "missing_exp" | "expired" | "bad_signature";
+    };
 
 /**
  * Verifie la signature et l'expiration d'une URL signee.

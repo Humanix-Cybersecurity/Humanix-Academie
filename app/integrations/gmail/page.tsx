@@ -150,17 +150,18 @@ export default function GmailIntegrationPage() {
                   → afficher le manifeste).
                 </li>
                 <li>
-                  Adaptez la constante <code>HUMANIX_BASE_URL</code> si vous êtes
-                  en self-host.
+                  Adaptez la constante <code>HUMANIX_BASE_URL</code> si vous
+                  êtes en self-host.
                 </li>
                 <li>
-                  <strong>Déployer</strong> → <strong>Tester les déploiements</strong>{" "}
-                  → type <strong>Module complémentaire Google Workspace</strong>{" "}
-                  → <strong>Installer</strong>.
+                  <strong>Déployer</strong> →{" "}
+                  <strong>Tester les déploiements</strong> → type{" "}
+                  <strong>Module complémentaire Google Workspace</strong> →{" "}
+                  <strong>Installer</strong>.
                 </li>
                 <li>
-                  Ouvrez Gmail puis un email : le volet Humanix et le bouton
-                  « Signaler comme phishing » apparaissent à droite.
+                  Ouvrez Gmail puis un email : le volet Humanix et le bouton «
+                  Signaler comme phishing » apparaissent à droite.
                 </li>
               </ol>
             </article>
@@ -204,8 +205,8 @@ export default function GmailIntegrationPage() {
           </h2>
           <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-200">
             <li>
-              <strong>Exécution côté Google</strong> : l'add-on tourne dans
-              Apps Script, aucun secret ni clé API n'est stocké.
+              <strong>Exécution côté Google</strong> : l'add-on tourne dans Apps
+              Script, aucun secret ni clé API n'est stocké.
             </li>
             <li>
               <strong>Authentification par email pro</strong> : l'utilisateur

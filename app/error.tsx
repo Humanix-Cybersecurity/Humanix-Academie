@@ -45,8 +45,8 @@ export default function Error({
             className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed animate-slide-up mb-8"
             style={{ animationDelay: "220ms" }}
           >
-            On n'a pas réussi à charger cette page proprement. Ce n'est pas
-            ta faute, c'est la nôtre. Réessaie une fois - souvent ça suffit.
+            On n'a pas réussi à charger cette page proprement. Ce n'est pas ta
+            faute, c'est la nôtre. Réessaie une fois - souvent ça suffit.
           </p>
 
           <div
@@ -76,7 +76,8 @@ export default function Error({
 
           {error.digest && (
             <p className="mt-10 text-xs text-gray-500 dark:text-gray-400 font-mono">
-              Code de référence : <span className="select-all">{error.digest}</span>
+              Code de référence :{" "}
+              <span className="select-all">{error.digest}</span>
             </p>
           )}
         </section>
@@ -84,8 +85,8 @@ export default function Error({
 
       <div className="max-w-3xl mx-auto px-4 py-10 text-center">
         <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-          « Une erreur n'est pas un échec - c'est un signal. On note, on
-          répare, on continue. »
+          « Une erreur n'est pas un échec - c'est un signal. On note, on répare,
+          on continue. »
         </blockquote>
         <p
           aria-hidden="true"

@@ -19,7 +19,12 @@
 // email. L'OTP (6 chiffres) ne vit QUE dans l'email reçu par le propriétaire.
 
 import { cookies } from "next/headers";
-import { createHmac, createHash, timingSafeEqual, randomInt } from "node:crypto";
+import {
+  createHmac,
+  createHash,
+  timingSafeEqual,
+  randomInt,
+} from "node:crypto";
 import { sendEmail } from "@/lib/email";
 
 const COOKIE_NAME = "humanix-exposure-otp";
@@ -52,8 +57,7 @@ function generateOtp(): string {
 }
 
 export type RequestOtpResult =
-  | { ok: true }
-  | { ok: false; reason: "invalid_email" | "email_not_sent" };
+  { ok: true } | { ok: false; reason: "invalid_email" | "email_not_sent" };
 
 /**
  * Génère un OTP, l'envoie par email, et pose le cookie de binding signé.
@@ -101,7 +105,10 @@ export async function requestEmailOtp(
 
 export type VerifyOtpResult =
   | { ok: true }
-  | { ok: false; reason: "no_cookie" | "expired" | "email_mismatch" | "bad_code" };
+  | {
+      ok: false;
+      reason: "no_cookie" | "expired" | "email_mismatch" | "bad_code";
+    };
 
 /**
  * Vérifie un OTP soumis par l'utilisateur contre le cookie de binding.

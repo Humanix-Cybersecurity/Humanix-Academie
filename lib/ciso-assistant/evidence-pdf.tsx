@@ -262,13 +262,13 @@ function EvidenceDoc({
           <Text style={styles.badge}>{framework}</Text>
         </View>
 
-        <Text style={styles.title}>
-          Preuve · {evidence.control_ref}
-        </Text>
+        <Text style={styles.title}>Preuve · {evidence.control_ref}</Text>
         <Text style={styles.subtitle}>{evidence.control_name}</Text>
 
         <View style={styles.section}>
-          <Text style={styles.sectionH}>Métadonnées audit (ISO 27001 §7.5)</Text>
+          <Text style={styles.sectionH}>
+            Métadonnées audit (ISO 27001 §7.5)
+          </Text>
           <View style={styles.row}>
             <Text style={styles.label}>Tenant</Text>
             <Text style={styles.value}>{tenant.name}</Text>
@@ -292,7 +292,8 @@ function EvidenceDoc({
           <View style={styles.row}>
             <Text style={styles.label}>Période de couverture</Text>
             <Text style={styles.value}>
-              {audit.coverageStart.slice(0, 10)} → {audit.coverageEnd.slice(0, 10)}
+              {audit.coverageStart.slice(0, 10)} →{" "}
+              {audit.coverageEnd.slice(0, 10)}
             </Text>
           </View>
           <View style={styles.row}>
@@ -371,19 +372,22 @@ function EvidenceDoc({
         </View>
 
         <Text style={styles.smallNote}>
-          La signature ci-dessous porte sur le payload JSON canonical
-          ci-dessous (et NON sur le binaire PDF, qui inclut la signature
-          elle-même). Cette approche permet une vérification reproductible
-          des années après l'émission, indépendamment de toute infrastructure
-          Humanix.
+          La signature ci-dessous porte sur le payload JSON canonical ci-dessous
+          (et NON sur le binaire PDF, qui inclut la signature elle-même). Cette
+          approche permet une vérification reproductible des années après
+          l'émission, indépendamment de toute infrastructure Humanix.
         </Text>
 
         <View style={[styles.section, styles.manifestBlock]}>
           <Text style={styles.manifestKey}>Algorithme</Text>
           <Text style={styles.manifestVal}>{signature.algorithm}</Text>
 
-          <Text style={styles.manifestKey}>Empreinte clé publique (SHA-256)</Text>
-          <Text style={styles.manifestVal}>{signature.publicKeyFingerprint}</Text>
+          <Text style={styles.manifestKey}>
+            Empreinte clé publique (SHA-256)
+          </Text>
+          <Text style={styles.manifestVal}>
+            {signature.publicKeyFingerprint}
+          </Text>
 
           <Text style={styles.manifestKey}>Hash SHA-256 du payload</Text>
           <Text style={styles.manifestVal}>{signature.contentHashSha256}</Text>
@@ -398,9 +402,7 @@ function EvidenceDoc({
         <View style={styles.section}>
           <Text style={styles.sectionH}>Payload signé (JSON canonical)</Text>
           <View style={styles.manifestBlock}>
-            <Text style={styles.manifestVal}>
-              {canonicalJson(payload)}
-            </Text>
+            <Text style={styles.manifestVal}>{canonicalJson(payload)}</Text>
           </View>
         </View>
 
@@ -423,7 +425,10 @@ function EvidenceDoc({
             {"  "}-rawin -in payload.json -sigfile sig.bin
           </Text>
           <Text style={{ fontSize: 9, marginTop: 6 }}>
-            Sortie attendue : <Text style={{ fontWeight: "bold" }}>Signature Verified Successfully</Text>
+            Sortie attendue :{" "}
+            <Text style={{ fontWeight: "bold" }}>
+              Signature Verified Successfully
+            </Text>
           </Text>
         </View>
 
@@ -453,10 +458,7 @@ export async function renderSignedEvidencePdf(opts: {
     opts.audit,
   );
   // Sign le payload canonical (JSON deterministique).
-  const canonicalBuf = Buffer.from(
-    canonicalJson(payload),
-    "utf-8",
-  );
+  const canonicalBuf = Buffer.from(canonicalJson(payload), "utf-8");
   const signature = signPdfBuffer(canonicalBuf);
 
   // Render le PDF avec la signature incrustee dans la page 2.

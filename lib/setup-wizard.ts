@@ -169,7 +169,10 @@ export const SIZE_LABELS: Record<TenantSize, string> = {
   grande: "Grande entreprise - 500+ personnes",
 };
 
-export const SECTOR_LABELS: Record<TenantSector, { label: string; emoji: string }> = {
+export const SECTOR_LABELS: Record<
+  TenantSector,
+  { label: string; emoji: string }
+> = {
   services: { label: "Services / conseil", emoji: "💼" },
   sante: { label: "Santé / médico-social", emoji: "🏥" },
   finance: { label: "Finance / banque / assurance", emoji: "🏦" },
@@ -178,7 +181,10 @@ export const SECTOR_LABELS: Record<TenantSector, { label: string; emoji: string 
   tech: { label: "Tech / éditeur logiciel", emoji: "💻" },
 };
 
-export const MATURITY_LABELS: Record<CyberMaturity, { label: string; helper: string }> = {
+export const MATURITY_LABELS: Record<
+  CyberMaturity,
+  { label: string; helper: string }
+> = {
   debutant: {
     label: "Débutant",
     helper: "On démarre la cyber, on a peu de processus en place.",

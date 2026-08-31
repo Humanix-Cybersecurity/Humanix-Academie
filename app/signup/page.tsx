@@ -132,7 +132,9 @@ function SignupInner() {
         <fieldset>
           <legend className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-2">
             Je m&apos;inscris en tant que{" "}
-            <span className="text-warn" aria-hidden="true">*</span>
+            <span className="text-warn" aria-hidden="true">
+              *
+            </span>
           </legend>
           <div className="grid sm:grid-cols-2 gap-2">
             {[

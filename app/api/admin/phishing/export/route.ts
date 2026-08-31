@@ -67,14 +67,18 @@ export async function GET(req: Request) {
   const campaigns = await db.phishingCampaign.findMany({
     where: campaignWhere,
     orderBy: { scheduledAt: "desc" },
-    select: { id: true, title: true, channel: true, template: true, scheduledAt: true, sentAt: true },
+    select: {
+      id: true,
+      title: true,
+      channel: true,
+      template: true,
+      scheduledAt: true,
+      sentAt: true,
+    },
   });
 
   if (campaigns.length === 0) {
-    return NextResponse.json(
-      { error: "campaign_not_found" },
-      { status: 404 },
-    );
+    return NextResponse.json({ error: "campaign_not_found" }, { status: 404 });
   }
 
   const campaignIds = campaigns.map((c) => c.id);

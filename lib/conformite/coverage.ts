@@ -51,8 +51,12 @@ function summarize(controls: ControlCoverage[]): FrameworkCoverage["summary"] {
   const total = controls.length;
   const compliant = controls.filter((c) => c.status === "compliant").length;
   const partial = controls.filter((c) => c.status === "partial").length;
-  const nonCompliant = controls.filter((c) => c.status === "non_compliant").length;
-  const notAssessed = controls.filter((c) => c.status === "not_assessed").length;
+  const nonCompliant = controls.filter(
+    (c) => c.status === "non_compliant",
+  ).length;
+  const notAssessed = controls.filter(
+    (c) => c.status === "not_assessed",
+  ).length;
   const coveragePct =
     total === 0 ? 0 : Math.round(((compliant + 0.5 * partial) / total) * 100);
   return {

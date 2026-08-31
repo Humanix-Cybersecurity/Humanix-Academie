@@ -33,12 +33,18 @@ export async function POST() {
 
   const tenant = await db.tenant.findUnique({ where: { id: tenantId } });
   if (!tenant?.paymentSubscriptionId || !tenant.paymentCustomerId) {
-    return NextResponse.json({ error: "Aucun abonnement actif." }, { status: 404 });
+    return NextResponse.json(
+      { error: "Aucun abonnement actif." },
+      { status: 404 },
+    );
   }
 
   try {
     // Mollie requiert le customerId en plus du subscriptionId pour cancel.
-    await cancelSubscription(tenant.paymentCustomerId, tenant.paymentSubscriptionId);
+    await cancelSubscription(
+      tenant.paymentCustomerId,
+      tenant.paymentSubscriptionId,
+    );
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : "erreur";
     return NextResponse.json({ error: msg }, { status: 500 });

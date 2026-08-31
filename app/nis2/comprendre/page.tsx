@@ -100,8 +100,8 @@ export default function Nis2ComprendrePage() {
             Principalement les organisations d'une certaine taille dans des
             secteurs jugés critiques (énergie, santé, transport, banque, eau,
             numérique, industrie, et d'autres). Et par effet de ricochet, leurs
-            fournisseurs et sous-traitants, à qui ces exigences sont
-            répercutées par contrat.
+            fournisseurs et sous-traitants, à qui ces exigences sont répercutées
+            par contrat.
           </p>
           <Link
             href="/nis2/concerne"
@@ -120,7 +120,8 @@ export default function Nis2ComprendrePage() {
             <Idee num={1} titre="La direction s'implique">
               NIS2 fait de la cybersécurité un sujet de dirigeant, pas seulement
               de service informatique. La direction doit comprendre les risques,
-              se former, et porter le sujet. C'est nouveau, et c'est structurant.
+              se former, et porter le sujet. C'est nouveau, et c'est
+              structurant.
             </Idee>
             <Idee num={2} titre="Des mesures de bon sens">
               Sauvegardes fiables, double authentification, mises à jour,
@@ -150,8 +151,8 @@ export default function Nis2ComprendrePage() {
             possibles, qui peuvent engager la responsabilité de la direction.
             Mais le vrai sujet est ailleurs : une cyberattaque non préparée peut
             arrêter votre activité, abîmer votre réputation et coûter bien plus
-            cher qu'une mise à niveau progressive. La bonne nouvelle, c'est qu'on
-            avance par petits pas, et que chaque pas vous protège déjà.
+            cher qu'une mise à niveau progressive. La bonne nouvelle, c'est
+            qu'on avance par petits pas, et que chaque pas vous protège déjà.
           </p>
         </section>
 

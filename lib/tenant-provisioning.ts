@@ -31,10 +31,7 @@ import { auditLog, AuditActions } from "@/lib/audit";
 import type { PlanId } from "@/lib/plans";
 
 export type ProvisionSource =
-  | "mollie-webhook"
-  | "superadmin-manual"
-  | "demande-abonnement"
-  | "dev-mode";
+  "mollie-webhook" | "superadmin-manual" | "demande-abonnement" | "dev-mode";
 
 export type ProvisionResult =
   | { ok: true; tenantId: string; userId: string; created: boolean }

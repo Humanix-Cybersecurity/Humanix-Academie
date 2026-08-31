@@ -138,9 +138,7 @@ export default function QuickSetupWizard() {
 
           <Field label="Taille de l'organisation">
             <div className="grid sm:grid-cols-2 gap-2">
-              {(
-                Object.keys(SIZE_LABELS) as TenantSize[]
-              ).map((s) => (
+              {(Object.keys(SIZE_LABELS) as TenantSize[]).map((s) => (
                 <Choice
                   key={s}
                   selected={size === s}
@@ -153,9 +151,7 @@ export default function QuickSetupWizard() {
 
           <Field label="Secteur d'activite">
             <div className="grid sm:grid-cols-2 gap-2">
-              {(
-                Object.keys(SECTOR_LABELS) as TenantSector[]
-              ).map((s) => (
+              {(Object.keys(SECTOR_LABELS) as TenantSector[]).map((s) => (
                 <Choice
                   key={s}
                   selected={sector === s}
@@ -168,9 +164,7 @@ export default function QuickSetupWizard() {
 
           <Field label="Maturite cyber actuelle">
             <div className="space-y-2">
-              {(
-                Object.keys(MATURITY_LABELS) as CyberMaturity[]
-              ).map((m) => (
+              {(Object.keys(MATURITY_LABELS) as CyberMaturity[]).map((m) => (
                 <Choice
                   key={m}
                   selected={maturity === m}
@@ -262,8 +256,8 @@ export default function QuickSetupWizard() {
           />
 
           <p className="text-xs text-gray-500 mt-2">
-            Vous pouvez sauter cette etape - on vous laissera inviter plus
-            tard depuis{" "}
+            Vous pouvez sauter cette etape - on vous laissera inviter plus tard
+            depuis{" "}
             <Link
               href="/admin/utilisateurs"
               className="text-accent-600 hover:underline"
@@ -300,15 +294,15 @@ export default function QuickSetupWizard() {
       {step === 4 && (
         <Card title="Votre rituel hebdomadaire" icon="📅">
           <p className="text-sm text-gray-600 dark:text-gray-300 mb-5">
-            Vos collaborateurs recevront une fois par semaine un rappel
-            pour leur module. Choisissez le jour qui s'integre le mieux
-            dans leur semaine.
+            Vos collaborateurs recevront une fois par semaine un rappel pour
+            leur module. Choisissez le jour qui s'integre le mieux dans leur
+            semaine.
           </p>
 
           {invitedCount !== null && invitedCount > 0 && (
             <p className="text-xs text-emerald-700 dark:text-emerald-300 mb-4">
-              ✓ {invitedCount} collaborateur{invitedCount > 1 ? "s" : ""}{" "}
-              invite{invitedCount > 1 ? "s" : ""} a l'etape precedente.
+              ✓ {invitedCount} collaborateur{invitedCount > 1 ? "s" : ""} invite
+              {invitedCount > 1 ? "s" : ""} a l'etape precedente.
             </p>
           )}
 
@@ -377,7 +371,9 @@ export default function QuickSetupWizard() {
               href="/admin"
               className="rounded-xl border-2 border-accent-500 bg-accent-50/40 dark:bg-accent-900/15 p-4 hover:bg-accent-50 transition"
             >
-              <p className="font-bold text-primary-500 mb-1">📊 Tableau de bord</p>
+              <p className="font-bold text-primary-500 mb-1">
+                📊 Tableau de bord
+              </p>
               <p className="text-xs text-gray-600 dark:text-gray-300">
                 Etat cyber de l'organisation, KPIs, suivi equipe.
               </p>
@@ -404,7 +400,9 @@ export default function QuickSetupWizard() {
               href="/profil/securite"
               className="rounded-xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-4 hover:border-accent-500 transition"
             >
-              <p className="font-bold text-primary-500 mb-1">🔒 Activer la 2FA</p>
+              <p className="font-bold text-primary-500 mb-1">
+                🔒 Activer la 2FA
+              </p>
               <p className="text-xs text-gray-600 dark:text-gray-300">
                 Securiser votre compte admin (recommande).
               </p>
@@ -424,8 +422,7 @@ function Stepper({ current, total }: { current: Step; total: number }) {
   return (
     <ol className="flex items-center gap-2">
       {Array.from({ length: total }, (_, i) => i + 1).map((n) => {
-        const state =
-          current > n ? "done" : current === n ? "current" : "todo";
+        const state = current > n ? "done" : current === n ? "current" : "todo";
         return (
           <li key={n} className="flex-1 flex items-center gap-2">
             <span

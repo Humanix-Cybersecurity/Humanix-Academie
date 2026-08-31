@@ -118,7 +118,8 @@ export async function GET(
       return NextResponse.json(
         {
           error: "signed_url_required",
-          message: "Cette URL n'est plus valide. Regenerez votre lien depuis la page de resultat.",
+          message:
+            "Cette URL n'est plus valide. Regenerez votre lien depuis la page de resultat.",
         },
         { status: 401 },
       );
@@ -144,7 +145,10 @@ export async function GET(
         verify.reason === "expired"
           ? "Ce lien a expire. Regenerez un nouveau lien depuis la page de resultat."
           : "Lien invalide. Verifiez que vous avez bien copie l'URL complete.";
-      return NextResponse.json({ error: verify.reason, message }, { status: 401 });
+      return NextResponse.json(
+        { error: verify.reason, message },
+        { status: 401 },
+      );
     }
     accessStatus = "ok";
     signatureExp = verify.expiresAt;

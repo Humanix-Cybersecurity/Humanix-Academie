@@ -1,0 +1,23 @@
+# Sous-module : content-pro appartient au depot humanix-content-pro. Le
+# reformater d'ici modifierait des fichiers que ce depot ne versionne pas.
+content-pro/
+
+# Caches et artefacts generes : reformates, ils reviendraient a leur forme
+# d'origine a la prochaine generation.
+data/tts-cache/
+
+# Exports Grafana. Ces fichiers sont RE-EXPORTES depuis l'interface (le jeton
+# Cockpit etant en ecriture seule, rien ne les synchronise). Un export revient
+# non formate : avec un controle bloquant, la moindre modification d'alerte
+# ferait echouer la CI pour une raison sans rapport avec le changement.
+docs/alertes-grafana.json
+infra/grafana/dashboards/
+
+# Prettier NE CONVERGE PAS sur ce fichier : il reecrit les memes 32 lignes a
+# chaque passe, sur l'indentation de lignes de continuation profondement
+# imbriquees, et les juge toujours non conformes. Verifie sur quatre passes
+# successives, sans oscillation entre deux etats : c'est un defaut
+# d'idempotence de son formateur Markdown.
+#
+# Sans cette exclusion, le controle rendu BLOQUANT ne pourrait jamais passer.
+docs/PODMAN.md

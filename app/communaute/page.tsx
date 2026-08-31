@@ -17,7 +17,8 @@
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 
-const COMMU_TITLE = "Communauté - Rejoins l'écosystème cyber souverain | Humanix Académie";
+const COMMU_TITLE =
+  "Communauté - Rejoins l'écosystème cyber souverain | Humanix Académie";
 const COMMU_DESC =
   "Rejoins la communauté Humanix Académie : Discord, GitHub Discussions, contribue un module MDX, un connecteur, ou simplement utilise. Open source AGPLv3, écosystème cyber souverain français.";
 
@@ -30,7 +31,9 @@ export const metadata = {
     description: COMMU_DESC,
     type: "website",
     url: "/communaute",
-    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+    images: [
+      { url: "/logo-humanix-academie-512.png", width: 512, height: 512 },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -353,8 +356,8 @@ export default function CommunautePage() {
                 <strong className="text-primary-500 dark:text-accent-300">
                   DCO simple, pas de CLA pesant
                 </strong>{" "}
-                - Developer Certificate of Origin = `git commit -s` suffit.
-                Pas de paperasse a signer, pas de cession de droits abusive.
+                - Developer Certificate of Origin = `git commit -s` suffit. Pas
+                de paperasse a signer, pas de cession de droits abusive.
               </span>
             </li>
             <li className="flex items-start gap-3">
@@ -494,12 +497,7 @@ function ChannelCard({
 
   if (disabled || !href) return content;
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="block"
-    >
+    <a href={href} target="_blank" rel="noopener noreferrer" className="block">
       {content}
       <span className="sr-only"> (s'ouvre dans un nouvel onglet)</span>
     </a>

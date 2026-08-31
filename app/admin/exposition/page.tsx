@@ -82,7 +82,8 @@ export default async function AdminExpositionPage() {
 
   const flags = {
     exposureMonitoringEnabled: tenant?.exposureMonitoringEnabled ?? false,
-    exposureMonitoringDpaSignedAt: tenant?.exposureMonitoringDpaSignedAt ?? null,
+    exposureMonitoringDpaSignedAt:
+      tenant?.exposureMonitoringDpaSignedAt ?? null,
     exposureDomains: tenant?.exposureDomains ?? [],
   };
 

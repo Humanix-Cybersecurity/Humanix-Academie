@@ -46,56 +46,58 @@ export default async function AdminPhishingPage() {
     );
   }
 
-  const [services, campaigns, smtpCfg, groupsRaw, listsRaw] = await Promise.all([
-    db.user.findMany({
-      where: { tenantId, isActive: true },
-      select: { service: true },
-      distinct: ["service"],
-    }),
-    db.phishingCampaign.findMany({
-      where: { tenantId },
-      include: { results: true },
-      orderBy: { createdAt: "desc" },
-      take: 10,
-    }),
-    db.tenantSmtpConfig.findUnique({
-      where: { tenantId },
-      select: { id: true, isVerified: true, host: true, fromEmail: true },
-    }),
-    db.group.findMany({
-      where: { tenantId, isActive: true },
-      orderBy: { name: "asc" },
-      select: {
-        slug: true,
-        name: true,
-        emoji: true,
-        _count: {
-          select: {
-            members: {
-              where: {
-                user: {
-                  isActive: true,
-                  role: { in: ["LEARNER", "MANAGER"] },
+  const [services, campaigns, smtpCfg, groupsRaw, listsRaw] = await Promise.all(
+    [
+      db.user.findMany({
+        where: { tenantId, isActive: true },
+        select: { service: true },
+        distinct: ["service"],
+      }),
+      db.phishingCampaign.findMany({
+        where: { tenantId },
+        include: { results: true },
+        orderBy: { createdAt: "desc" },
+        take: 10,
+      }),
+      db.tenantSmtpConfig.findUnique({
+        where: { tenantId },
+        select: { id: true, isVerified: true, host: true, fromEmail: true },
+      }),
+      db.group.findMany({
+        where: { tenantId, isActive: true },
+        orderBy: { name: "asc" },
+        select: {
+          slug: true,
+          name: true,
+          emoji: true,
+          _count: {
+            select: {
+              members: {
+                where: {
+                  user: {
+                    isActive: true,
+                    role: { in: ["LEARNER", "MANAGER"] },
+                  },
                 },
               },
             },
           },
         },
-      },
-    }),
-    // Phase 3 v2 (juin 2026) : recipient lists actives pour le selecteur
-    // du form de lancement. Cf. /admin/phishing/lists pour la gestion.
-    db.phishingRecipientList.findMany({
-      where: { tenantId, isActive: true },
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        _count: { select: { recipients: true } },
-      },
-    }),
-  ]);
+      }),
+      // Phase 3 v2 (juin 2026) : recipient lists actives pour le selecteur
+      // du form de lancement. Cf. /admin/phishing/lists pour la gestion.
+      db.phishingRecipientList.findMany({
+        where: { tenantId, isActive: true },
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          _count: { select: { recipients: true } },
+        },
+      }),
+    ],
+  );
 
   const distinctServices = services
     .map((s) => s.service)
@@ -176,7 +178,8 @@ export default async function AdminPhishingPage() {
                 🎯 Vulnerabilites IA par apprenant
               </p>
               <p className="text-sm text-gray-700 dark:text-gray-300">
-                Profil narratif Mistral pour identifier qui pousser, qui valoriser, qui faire un debrief 1:1.
+                Profil narratif Mistral pour identifier qui pousser, qui
+                valoriser, qui faire un debrief 1:1.
               </p>
             </div>
             <a
@@ -193,7 +196,8 @@ export default async function AdminPhishingPage() {
                 📋 Listes de destinataires
               </p>
               <p className="text-sm text-gray-700 dark:text-gray-300">
-                Importe un CSV pour cibler une cohorte custom (panel pilote, prestataires, nouveaux arrivants).
+                Importe un CSV pour cibler une cohorte custom (panel pilote,
+                prestataires, nouveaux arrivants).
               </p>
             </div>
             <a
@@ -212,7 +216,8 @@ export default async function AdminPhishingPage() {
               ✉️ Templates email custom
             </p>
             <p className="text-sm text-gray-700 dark:text-gray-300">
-              Crée tes propres templates ou sauvegarde les scenarios IA Red Team. Override possible des templates platform-wide.
+              Crée tes propres templates ou sauvegarde les scenarios IA Red
+              Team. Override possible des templates platform-wide.
             </p>
           </div>
           <a

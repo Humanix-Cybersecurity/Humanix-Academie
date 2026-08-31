@@ -30,13 +30,7 @@
 //   - IBAN exige le prefixe FR + checksum coherent.
 
 export type PiiType =
-  | "email"
-  | "phone_fr"
-  | "iban"
-  | "siren"
-  | "siret"
-  | "nir"
-  | "credit_card";
+  "email" | "phone_fr" | "iban" | "siren" | "siret" | "nir" | "credit_card";
 
 export type PiiHit = {
   type: PiiType;
@@ -120,8 +114,7 @@ const PATTERNS: PiiPattern[] = [
   // Tolere espaces, points, tirets entre paires
   {
     type: "phone_fr",
-    regex:
-      /(?:\+33\s?[1-9](?:[\s.-]?\d{2}){4}|\b0[1-9](?:[\s.-]?\d{2}){4})\b/g,
+    regex: /(?:\+33\s?[1-9](?:[\s.-]?\d{2}){4}|\b0[1-9](?:[\s.-]?\d{2}){4})\b/g,
     redactWith: "{redacted-phone}",
   },
 ];

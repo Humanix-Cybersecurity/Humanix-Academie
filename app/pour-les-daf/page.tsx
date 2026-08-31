@@ -25,7 +25,8 @@ import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
 import { BreadcrumbJsonLd } from "@/lib/seo/jsonld";
 
-const DAF_TITLE = "Pour les DAF - Éviter FOVI, reporting NIS2 prêt COMEX | Humanix Académie";
+const DAF_TITLE =
+  "Pour les DAF - Éviter FOVI, reporting NIS2 prêt COMEX | Humanix Académie";
 const DAF_DESC =
   "Pour les Directeurs Administratifs et Financiers : éviter les FOVI / deepfakes qui coûtent 200 k€ en moyenne, reporting NIS2/RGPD prêt pour COMEX, ROI calculé en €. La cybersécurité humaine en langage de directeur financier.";
 
@@ -38,7 +39,9 @@ export const metadata = {
     description: DAF_DESC,
     type: "website",
     url: "/pour-les-daf",
-    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+    images: [
+      { url: "/logo-humanix-academie-512.png", width: 512, height: 512 },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -58,7 +61,10 @@ const PROMESSES = [
       accent: "text-rose-700 dark:text-rose-300",
     },
     body: "La fraude au président coûte en moyenne 200 k€ à une PME française. Le deepfake video amplifie : 25 M$ chez Arup en janvier 2024. Trois saisons MDX expert + un protocole de re-validation 3 niveaux livré clé-en-main.",
-    cta: { label: "Voir saison fraude-président", href: "/apprendre/fraude-president/01-mecanisme" },
+    cta: {
+      label: "Voir saison fraude-président",
+      href: "/apprendre/fraude-president/01-mecanisme",
+    },
   },
   {
     emoji: "📋",
@@ -162,8 +168,8 @@ export default function DafLandingPage() {
           >
             Une fraude au président coûte 200 k€ à une PME française. Un
             ransomware, 250 k€. Humanix transforme la cybersécurité humaine en
-            langage que ton COMEX comprend : exposition financière calculée,
-            ROI en €, reporting NIS2 turnkey, audit trail complet.
+            langage que ton COMEX comprend : exposition financière calculée, ROI
+            en €, reporting NIS2 turnkey, audit trail complet.
           </p>
         </section>
       </HexBackdrop>
@@ -433,9 +439,7 @@ function Number({
           {value}
         </span>
         {unit ? (
-          <span className="block text-xs font-semibold opacity-80">
-            {unit}
-          </span>
+          <span className="block text-xs font-semibold opacity-80">{unit}</span>
         ) : null}
       </span>
       <span className="flex-1">

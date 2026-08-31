@@ -17,7 +17,8 @@ const AUTH_ERROR_FR: Record<string, string> = {
   OAuthSignin: "La connexion via le fournisseur SSO a échoué.",
   OAuthCallback: "La réponse du fournisseur SSO est invalide.",
   OAuthCreateAccount: "Impossible de créer le compte via le fournisseur SSO.",
-  EmailCreateAccount: "Impossible de créer le compte. Demandez à votre administrateur de vous inviter.",
+  EmailCreateAccount:
+    "Impossible de créer le compte. Demandez à votre administrateur de vous inviter.",
   Callback: "Le callback d'authentification a échoué.",
   OAuthAccountNotLinked:
     "Cette adresse est déjà liée à une autre méthode de connexion. Utilisez la méthode initiale.",
@@ -46,8 +47,7 @@ const AUTH_ERROR_FR: Record<string, string> = {
     "Trop de tentatives depuis votre réseau. Patientez quelques minutes puis réessayez.",
 
   // Erreurs WebAuthn
-  credential_not_found:
-    "Clé de sécurité non reconnue pour ce compte.",
+  credential_not_found: "Clé de sécurité non reconnue pour ce compte.",
   not_verified: "La vérification de la clé a échoué.",
   verify_failed: "La vérification a échoué. Réessayez en touchant la clé.",
   signature_invalide: "Signature invalide. Réessayez en touchant la clé.",

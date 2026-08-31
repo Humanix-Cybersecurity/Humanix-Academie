@@ -19,16 +19,22 @@ describe("extractTenantSlug - cas nominaux", () => {
     expect(extractTenantSlug("acme.humanix-academie.fr", ROOT)).toBe("acme");
   });
   it("extrait un slug avec tirets", () => {
-    expect(extractTenantSlug("ma-pme.humanix-academie.fr", ROOT)).toBe("ma-pme");
+    expect(extractTenantSlug("ma-pme.humanix-academie.fr", ROOT)).toBe(
+      "ma-pme",
+    );
   });
   it("extrait un slug avec chiffres", () => {
-    expect(extractTenantSlug("client42.humanix-academie.fr", ROOT)).toBe("client42");
+    expect(extractTenantSlug("client42.humanix-academie.fr", ROOT)).toBe(
+      "client42",
+    );
   });
   it("normalise en lowercase", () => {
     expect(extractTenantSlug("ACME.humanix-academie.fr", ROOT)).toBe("acme");
   });
   it("strip le port", () => {
-    expect(extractTenantSlug("acme.humanix-academie.fr:443", ROOT)).toBe("acme");
+    expect(extractTenantSlug("acme.humanix-academie.fr:443", ROOT)).toBe(
+      "acme",
+    );
   });
 });
 

@@ -104,9 +104,7 @@ export default async function AdminModulesPage() {
         .map((st) => st?.avgScore)
         .filter((v): v is number => v !== null && v !== undefined);
       const saisonAvgScore = avgScores.length
-        ? Math.round(
-            avgScores.reduce((a, b) => a + b, 0) / avgScores.length,
-          )
+        ? Math.round(avgScores.reduce((a, b) => a + b, 0) / avgScores.length)
         : null;
       // Fallback : si la BDD n'a pas encore ete reseed avec les tags
       // (migration recente), on prend les tags par defaut depuis le

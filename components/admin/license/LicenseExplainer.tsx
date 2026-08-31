@@ -19,12 +19,11 @@ export default function LicenseExplainer() {
       </h2>
       <div className="space-y-4 text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
         <p>
-          Humanix Cybersecurity émet une licence{" "}
-          <strong>Ed25519 signée</strong> qui débloque les features payantes
-          (Pack NIS2 turnkey, phishing IA, vishing, marketplace…) en self-host
-          commercial. La licence est vérifiée localement par l'app, sans appel
-          à Humanix : <strong>fonctionne offline</strong>, avec cache mémoire
-          5 minutes.
+          Humanix Cybersecurity émet une licence <strong>Ed25519 signée</strong>{" "}
+          qui débloque les features payantes (Pack NIS2 turnkey, phishing IA,
+          vishing, marketplace…) en self-host commercial. La licence est
+          vérifiée localement par l'app, sans appel à Humanix :{" "}
+          <strong>fonctionne offline</strong>, avec cache mémoire 5 minutes.
         </p>
         <p>
           <strong>Pour les utilisateurs cloud SaaS</strong>, la licence n'est
@@ -42,8 +41,8 @@ export default function LicenseExplainer() {
         </p>
         <p className="italic text-gray-600 dark:text-gray-300">
           Transparence assumée : ce système n'est pas opposable légalement à un
-          client AGPLv3 motivé qui patcherait la vérification. C'est l'esprit
-          de l'AGPL - la vraie protection commerciale vient du service, du
+          client AGPLv3 motivé qui patcherait la vérification. C'est l'esprit de
+          l'AGPL - la vraie protection commerciale vient du service, du
           trademark et de l'expertise. Cf.{" "}
           <code className="px-1 py-0.5 bg-cyan-100 dark:bg-cyan-900/40 rounded text-cyan-800 dark:text-cyan-200 font-mono text-xs">
             docs/OPEN_CORE.md

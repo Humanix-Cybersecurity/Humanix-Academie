@@ -13,7 +13,8 @@ export const dynamic = "force-dynamic";
 const SEVERITY_CLASS: Record<string, string> = {
   INFO: "bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-slate-300",
   NOTICE: "bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
-  WARNING: "bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
+  WARNING:
+    "bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
   CRITICAL: "bg-rose-50 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300",
 };
 
@@ -49,14 +50,11 @@ export default async function AdminAuditPage() {
           <p className="text-xs text-blue-900/80 dark:text-blue-200/80 mt-2 leading-relaxed">
             Toutes les actions sensibles de votre organisation sont enregistrées
             ici (connexions, modifications de comptes, paiements, exports
-            RGPD…). Les entrées sont append-only (jamais modifiées). Conservation
-            recommandée 13 mois (politique CNIL).
+            RGPD…). Les entrées sont append-only (jamais modifiées).
+            Conservation recommandée 13 mois (politique CNIL).
           </p>
           <p className="text-xs text-blue-900/80 dark:text-blue-200/80 mt-2">
-            <a
-              href="/admin/audit/export"
-              className="underline font-medium"
-            >
+            <a href="/admin/audit/export" className="underline font-medium">
               📥 Exporter en CSV
             </a>{" "}
             (200 dernières entrées, format compatible Excel)
@@ -107,7 +105,9 @@ export default async function AdminAuditPage() {
                     <td className="px-2 py-2 font-mono text-gray-700 dark:text-gray-200 whitespace-nowrap">
                       {row.action}
                     </td>
-                    <td className={`px-2 py-2 font-bold ${OUTCOME_CLASS[row.outcome]}`}>
+                    <td
+                      className={`px-2 py-2 font-bold ${OUTCOME_CLASS[row.outcome]}`}
+                    >
                       {row.outcome}
                     </td>
                     <td className="px-2 py-2 whitespace-nowrap">

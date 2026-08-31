@@ -52,7 +52,9 @@ export const metadata = {
     description: URG_DESC,
     type: "website",
     url: "/urgence-cyber",
-    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+    images: [
+      { url: "/logo-humanix-academie-512.png", width: 512, height: 512 },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -77,7 +79,11 @@ export default function UrgenceCyberPage() {
         description="Procédures publiques pour rançongiciel, fuite de données, fraude au président, compte compromis, vol de matériel. Sources officielles, intervention curative par Humanix Cybersecurity."
         url="/urgence-cyber"
         serviceType="Cyber incident response guidance"
-        offers={{ price: "0", priceCurrency: "EUR", description: "Hub gratuit, sans inscription" }}
+        offers={{
+          price: "0",
+          priceCurrency: "EUR",
+          description: "Hub gratuit, sans inscription",
+        }}
       />
       <BreadcrumbJsonLd
         items={[
@@ -97,8 +103,8 @@ export default function UrgenceCyberPage() {
           className="max-w-5xl mx-auto px-4 pt-16 pb-12 sm:pt-20 sm:pb-14 text-center"
         >
           <p className="inline-flex items-center gap-2 text-xs sm:text-sm uppercase tracking-[0.25em] font-bold text-amber-700 dark:text-amber-300 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-amber-300 dark:border-amber-900/50 px-4 py-2 rounded-full mb-8 shadow-sm">
-            <span aria-hidden="true">🚨</span> Hub d'urgence · Public ·
-            Sans inscription
+            <span aria-hidden="true">🚨</span> Hub d'urgence · Public · Sans
+            inscription
           </p>
 
           <h1
@@ -118,9 +124,9 @@ export default function UrgenceCyberPage() {
             style={{ animationDelay: "220ms" }}
           >
             Pas de panique. Cinq scénarios, cinq fiches courtes : les{" "}
-            <strong>réflexes des 60 premières minutes</strong>, les erreurs
-            à éviter, et qui appeler ensuite. Conçu pour être lu vite,
-            même paniqué.
+            <strong>réflexes des 60 premières minutes</strong>, les erreurs à
+            éviter, et qui appeler ensuite. Conçu pour être lu vite, même
+            paniqué.
           </p>
 
           <div
@@ -155,10 +161,7 @@ export default function UrgenceCyberPage() {
             ============================================================ */}
         <section aria-labelledby="preamble-title">
           <div className="rounded-3xl bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/30 border-2 border-emerald-200 dark:border-emerald-900/40 p-8 sm:p-10">
-            <h2
-              id="preamble-title"
-              className="sr-only"
-            >
+            <h2 id="preamble-title" className="sr-only">
               À lire en premier
             </h2>
             <div className="grid sm:grid-cols-3 gap-6">
@@ -200,8 +203,8 @@ export default function UrgenceCyberPage() {
               Choisissez votre scénario
             </h2>
             <p className="text-base text-gray-600 dark:text-gray-300 italic mt-2 max-w-2xl mx-auto">
-              Chaque fiche : 5 réflexes immédiats · 5 erreurs à éviter ·
-              5 actions sous 24 h · outils & quand appeler Humanix.
+              Chaque fiche : 5 réflexes immédiats · 5 erreurs à éviter · 5
+              actions sous 24 h · outils & quand appeler Humanix.
             </p>
           </div>
 
@@ -296,13 +299,14 @@ export default function UrgenceCyberPage() {
                 </h3>
                 <ol className="space-y-2 text-sm text-gray-700 dark:text-gray-200">
                   <ProofStep n="1">
-                    <strong>Ne jamais éteindre brutalement.</strong> Si possible,
-                    laisser sous tension pour préserver la mémoire vive (RAM dump
-                    si forensic engagé).
+                    <strong>Ne jamais éteindre brutalement.</strong> Si
+                    possible, laisser sous tension pour préserver la mémoire
+                    vive (RAM dump si forensic engagé).
                   </ProofStep>
                   <ProofStep n="2">
                     <strong>Photographier l'écran et la machine</strong> avec
-                    horodatage (téléphone perso, hors infrastructure compromise).
+                    horodatage (téléphone perso, hors infrastructure
+                    compromise).
                   </ProofStep>
                   <ProofStep n="3">
                     <strong>Calculer le hash SHA-256</strong> du disque ou de
@@ -454,10 +458,9 @@ export default function UrgenceCyberPage() {
                 L'accompagnement Humanix Cybersecurity
               </h2>
               <p className="text-base sm:text-lg opacity-95 mb-8 max-w-3xl leading-relaxed">
-                Notre équipe intervient <strong>directement</strong> sur site
-                en métropole, sans sous-traitance. De la qualification
-                d'incident à la remédiation complète - humain, francophone,
-                souverain.
+                Notre équipe intervient <strong>directement</strong> sur site en
+                métropole, sans sous-traitance. De la qualification d'incident à
+                la remédiation complète - humain, francophone, souverain.
               </p>
 
               <div className="grid sm:grid-cols-2 gap-4 mb-8">
@@ -530,8 +533,8 @@ export default function UrgenceCyberPage() {
             </h2>
             <p className="text-base text-gray-700 dark:text-gray-200 mb-6 max-w-3xl leading-relaxed">
               Notre conviction : la cybersécurité ne doit pas être un piège
-              commercial. Si Humanix n'est pas le bon choix pour vous, voici
-              les portes officielles d'orientation gratuites.
+              commercial. Si Humanix n'est pas le bon choix pour vous, voici les
+              portes officielles d'orientation gratuites.
             </p>
 
             <div className="grid sm:grid-cols-3 gap-4">
@@ -562,9 +565,9 @@ export default function UrgenceCyberPage() {
             ============================================================ */}
         <section className="text-center pt-4">
           <blockquote className="font-display italic text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            « Un incident bien géré est invisible un an plus tard. Un
-            incident mal géré laisse des traces dix ans. La différence&nbsp;:
-            la première heure. »
+            « Un incident bien géré est invisible un an plus tard. Un incident
+            mal géré laisse des traces dix ans. La différence&nbsp;: la première
+            heure. »
           </blockquote>
           <p
             aria-hidden="true"
@@ -573,8 +576,8 @@ export default function UrgenceCyberPage() {
             - Hex veille
           </p>
           <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-8 italic">
-            Page publique, gratuite, sans inscription, sans cookies de
-            tracking. C'est notre engagement.
+            Page publique, gratuite, sans inscription, sans cookies de tracking.
+            C'est notre engagement.
           </p>
         </section>
       </div>
@@ -597,7 +600,10 @@ function PreambleItem({
 }) {
   return (
     <div className="text-center sm:text-left">
-      <div className="text-4xl mb-2 inline-block animate-float" aria-hidden="true">
+      <div
+        className="text-4xl mb-2 inline-block animate-float"
+        aria-hidden="true"
+      >
         {emoji}
       </div>
       <h3 className="font-display text-lg font-extrabold text-emerald-800 dark:text-emerald-200 mb-2">
@@ -610,13 +616,7 @@ function PreambleItem({
   );
 }
 
-function ProofStep({
-  n,
-  children,
-}: {
-  n: string;
-  children: React.ReactNode;
-}) {
+function ProofStep({ n, children }: { n: string; children: React.ReactNode }) {
   return (
     <li className="flex gap-3">
       <span

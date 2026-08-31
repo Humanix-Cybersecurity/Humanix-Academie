@@ -147,7 +147,8 @@ export async function enableExposureMonitoring(
     tenantId: guard.tenantId,
     actor: { userId: guard.userId, role: guard.role },
     target: { type: "tenant", id: guard.tenantId },
-    message: "Veille d'exposition activee (opt-in tenant + DPA art.28 confirme).",
+    message:
+      "Veille d'exposition activee (opt-in tenant + DPA art.28 confirme).",
     metadata: { domains, domainCount: domains.length },
   });
 
@@ -239,7 +240,10 @@ export async function exportSiemAction(
     outcome: "SUCCESS",
     tenantId: guard.tenantId,
     actor: { userId: guard.userId, role: guard.role },
-    target: { type: "siem_export", label: `${data.count} evenement(s) / ${format}` },
+    target: {
+      type: "siem_export",
+      label: `${data.count} evenement(s) / ${format}`,
+    },
     message: "Export SIEM des expositions.",
     metadata: { format, count: data.count },
   });

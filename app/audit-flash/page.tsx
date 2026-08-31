@@ -50,7 +50,11 @@ export default function AuditFlashPage() {
         description="Auto-évaluation de la maturité cyber en 5 minutes, 15 questions, rapport PDF envoyé par email. 100 % gratuit, sans relance commerciale, RGPD-compliant."
         url="/audit-flash"
         serviceType="Cybersecurity self-assessment"
-        offers={{ price: "0", priceCurrency: "EUR", description: "Gratuit, rapport PDF envoyé par email" }}
+        offers={{
+          price: "0",
+          priceCurrency: "EUR",
+          description: "Gratuit, rapport PDF envoyé par email",
+        }}
       />
       <BreadcrumbJsonLd
         items={[
@@ -86,8 +90,8 @@ export default function AuditFlashPage() {
             style={{ animationDelay: "220ms" }}
           >
             Pas un examen. Une <strong>photo bienveillante</strong> de votre
-            cybersécurité actuelle, pour savoir par où commencer - sans
-            jargon, sans pression.
+            cybersécurité actuelle, pour savoir par où commencer - sans jargon,
+            sans pression.
           </p>
 
           <div
@@ -148,7 +152,11 @@ export default function AuditFlashPage() {
         {/* ============================================================
             3. WIZARD - composant client, garde tel quel
             ============================================================ */}
-        <section aria-label="Quiz audit cyber" className="scroll-mt-20" id="quiz">
+        <section
+          aria-label="Quiz audit cyber"
+          className="scroll-mt-20"
+          id="quiz"
+        >
           <AuditWizard />
         </section>
 
@@ -210,9 +218,9 @@ export default function AuditFlashPage() {
             <ul className="space-y-5 text-gray-700 dark:text-gray-200 max-w-3xl mx-auto">
               <TrustItem title="Conçu pour la réalité française">
                 Pas un copier-coller d'un questionnaire ISO 27001 inadapté à
-                votre réalité. Chaque question vise un sujet concret -
-                quelle que soit la taille de votre structure (du
-                particulier au grand groupe).
+                votre réalité. Chaque question vise un sujet concret - quelle
+                que soit la taille de votre structure (du particulier au grand
+                groupe).
               </TrustItem>
               <TrustItem title="Aligné sur la réalité 2026">
                 Inclut la conformité NIS2, les obligations RGPD et les
@@ -268,12 +276,13 @@ export default function AuditFlashPage() {
                 </li>
                 <li>
                   <strong>Score fragile ?</strong> Pas de panique. Vous saurez
-                  par où commencer. Et c'est exactement ce dont vous avez besoin.
+                  par où commencer. Et c'est exactement ce dont vous avez
+                  besoin.
                 </li>
                 <li>
                   <strong>Score moyen ?</strong> C'est la majorité des
-                  organisations françaises. Bienvenue dans la normalité -
-                  et dans le chemin vers la maîtrise.
+                  organisations françaises. Bienvenue dans la normalité - et
+                  dans le chemin vers la maîtrise.
                 </li>
               </ul>
               <p className="text-sm italic opacity-80 mt-6">
@@ -312,10 +321,10 @@ export default function AuditFlashPage() {
               </p>
               <p>
                 Chaque question est pondérée selon sa criticité (1 à 3 points).
-                Une réponse "OUI" rapporte les points, "NON" et "Je ne sais
-                pas" ne rapportent rien - en cybersécurité, ne pas savoir
-                équivaut à ne pas faire (ce n'est pas un jugement, juste une
-                réalité opérationnelle).
+                Une réponse "OUI" rapporte les points, "NON" et "Je ne sais pas"
+                ne rapportent rien - en cybersécurité, ne pas savoir équivaut à
+                ne pas faire (ce n'est pas un jugement, juste une réalité
+                opérationnelle).
               </p>
               <p>
                 Le score final est un pourcentage entre 0 et 100. Verdict
@@ -338,8 +347,8 @@ export default function AuditFlashPage() {
             ============================================================ */}
         <section className="text-center pt-4">
           <blockquote className="font-display italic text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            « La cybersécurité, c'est moins une affaire d'expert qu'une
-            habitude tranquille. »
+            « La cybersécurité, c'est moins une affaire d'expert qu'une habitude
+            tranquille. »
           </blockquote>
           <p
             aria-hidden="true"

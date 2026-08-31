@@ -9,7 +9,10 @@ import EcouterBtn from "./EcouterBtn";
 
 type Theme = (typeof COULEURS)[keyof typeof COULEURS];
 
-const BULLE: Record<NonNullable<ActiviteBD["panels"][number]["qui"]>, string> = {
+const BULLE: Record<
+  NonNullable<ActiviteBD["panels"][number]["qui"]>,
+  string
+> = {
   hex: "bg-amber-50 border-amber-300 dark:bg-amber-950/40 dark:border-amber-800",
   enfant: "bg-sky-50 border-sky-300 dark:bg-sky-950/40 dark:border-sky-800",
   piege: "bg-rose-50 border-rose-300 dark:bg-rose-950/40 dark:border-rose-800",
@@ -64,7 +67,9 @@ export default function KidsBD({
 
       {(panel.texte || panel.bulle) && (
         <div className="flex justify-center">
-          <EcouterBtn texte={[panel.texte, panel.bulle].filter(Boolean).join(". ")} />
+          <EcouterBtn
+            texte={[panel.texte, panel.bulle].filter(Boolean).join(". ")}
+          />
         </div>
       )}
 

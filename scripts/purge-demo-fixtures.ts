@@ -139,9 +139,7 @@ async function main() {
     console.error(
       `   demo-pme. Le supprimer en cascade est probablement une erreur :`,
     );
-    console.error(
-      `   c'est le compte SUPERADMIN de la plateforme HumaniX.`,
-    );
+    console.error(`   c'est le compte SUPERADMIN de la plateforme HumaniX.`);
     console.error("");
     console.error("   Action requise AVANT de relancer ce script :");
     console.error(
@@ -169,9 +167,7 @@ async function main() {
   // === DRY-RUN ===
   if (!apply) {
     console.log("🔎 DRY-RUN : aucune modification effectuee.");
-    console.log(
-      "   Pour executer reellement la suppression : --apply",
-    );
+    console.log("   Pour executer reellement la suppression : --apply");
     return;
   }
 
@@ -191,7 +187,9 @@ async function main() {
   const remainingDemoUsers = await prisma.user.count({
     where: { email: { endsWith: "@demo-pme.fr" } },
   });
-  console.log(`Verification : tenant ${DEMO_TENANT_SLUG} = ${remainingTenant ? "ENCORE PRESENT" : "supprime ✓"}`);
+  console.log(
+    `Verification : tenant ${DEMO_TENANT_SLUG} = ${remainingTenant ? "ENCORE PRESENT" : "supprime ✓"}`,
+  );
   console.log(
     `Verification : users @demo-pme.fr restants = ${remainingDemoUsers} ${remainingDemoUsers === 0 ? "✓" : "⚠️"}`,
   );

@@ -87,35 +87,37 @@ export default function AccessibilitePage() {
           <strong>Humanix Académie est en conformité partielle</strong> avec le
           RGAA 4.1 niveau AA - <strong>environ 91 %</strong> au regard du
           référentiel, à la date du {TODAY} (v1.1, post-correctifs). Audit
-          externe par un cabinet certifié RGAA planifié pour atteindre 95 %+
-          et obtenir une déclaration formelle.
+          externe par un cabinet certifié RGAA planifié pour atteindre 95 %+ et
+          obtenir une déclaration formelle.
         </LegalHighlight>
 
         <LegalHighlight variant="info">
-          <strong>Évolution du score (transparence méthodologique)</strong> :
-          90 % (auto-audit initial) → 82 % (audit approfondi mai 2026) → <strong>91 % (v1.1, post-correctifs 12 mai 2026)</strong>. Les 3 zones structurelles identifiées en v1.0 ont été traitées :
+          <strong>Évolution du score (transparence méthodologique)</strong> : 90
+          % (auto-audit initial) → 82 % (audit approfondi mai 2026) →{" "}
+          <strong>91 % (v1.1, post-correctifs 12 mai 2026)</strong>. Les 3 zones
+          structurelles identifiées en v1.0 ont été traitées :
           <ul className="mt-2">
             <li>
               <strong>Contraste libellés secondaires (RGAA 3.2)</strong> : 94
-              occurrences de <code>text-gray-400</code> sur fond clair
-              (ratio 2.84:1, échec WCAG AA) remplacées par{" "}
-              <code>text-gray-500</code> (ratio 4.61:1, conforme). Les usages
-              légitimes <code>dark:text-gray-400</code> (mode sombre) ont été
-              préservés.
+              occurrences de <code>text-gray-400</code> sur fond clair (ratio
+              2.84:1, échec WCAG AA) remplacées par <code>text-gray-500</code>{" "}
+              (ratio 4.61:1, conforme). Les usages légitimes{" "}
+              <code>dark:text-gray-400</code> (mode sombre) ont été préservés.
             </li>
             <li>
-              <strong>Légendes de tableaux (RGAA 5.4)</strong> : 15 tableaux
-              ont reçu un <code>{`<caption className="sr-only">`}</code>{" "}
-              descriptif (pages admin, profil, comparatif, tarifs, sécurité,
-              tenants superadmin).
+              <strong>Légendes de tableaux (RGAA 5.4)</strong> : 15 tableaux ont
+              reçu un <code>{`<caption className="sr-only">`}</code> descriptif
+              (pages admin, profil, comparatif, tarifs, sécurité, tenants
+              superadmin).
             </li>
             <li>
               <strong>Landmarks explicites (RGAA 9.1)</strong> : audit révèle
               que les landmarks étaient <strong>déjà bien marqués</strong> dans
               le code (<code>{`<nav aria-label="Navigation principale">`}</code>{" "}
               sur HeaderBar, <code>{`<footer aria-label="Pied de page">`}</code>{" "}
-              sur SiteFooter, <code>{`<aside aria-label="Navigation console">`}</code>{" "}
-              sur AdminSidebar). L'audit v1.0 sous-estimait. Ajout mineur :{" "}
+              sur SiteFooter,{" "}
+              <code>{`<aside aria-label="Navigation console">`}</code> sur
+              AdminSidebar). L'audit v1.0 sous-estimait. Ajout mineur :{" "}
               <code>aria-label="Sections console admin"</code> sur la nav
               imbriquée de la sidebar pour distinguer les navs.
             </li>
@@ -125,7 +127,8 @@ export default function AccessibilitePage() {
         <LegalSubsection title="Méthode d'évaluation">
           <p>
             L'évaluation a été réalisée par auto-audit interne approfondi, en
-            analysant le code et les pages selon les 13 thématiques du RGAA 4.1 :
+            analysant le code et les pages selon les 13 thématiques du RGAA 4.1
+            :
           </p>
           <ul>
             <li>
@@ -222,8 +225,8 @@ export default function AccessibilitePage() {
           prioritaires identifiés en v1.0 sont résolus (contraste +25 pts,
           tableaux +25 pts, landmarks +20 pts). Reste à traiter avant audit
           externe : sous-titres synchronisés vidéos (V2 contenu), navigation
-          clavier point-par-point sur charts Recharts, audit RGAA détaillé
-          par cabinet certifié pour viser 95 %+.
+          clavier point-par-point sur charts Recharts, audit RGAA détaillé par
+          cabinet certifié pour viser 95 %+.
         </p>
       </LegalSection>
 
@@ -268,14 +271,14 @@ export default function AccessibilitePage() {
               1.4.3) - <em>résolu 12 mai 2026, v1.1</em> : 94 occurrences de{" "}
               <code>text-gray-400</code> sur fond clair (ratio 2.84:1, échec
               WCAG AA) remplacées par <code>text-gray-500</code> (ratio 4.61:1,
-              conforme) via patch automatisé Python avec lookbehind négatif
-              pour préserver les usages légitimes <code>dark:text-gray-400</code>{" "}
-              sur fond sombre. Audit : 270 occurrences <code>dark:</code>{" "}
+              conforme) via patch automatisé Python avec lookbehind négatif pour
+              préserver les usages légitimes <code>dark:text-gray-400</code> sur
+              fond sombre. Audit : 270 occurrences <code>dark:</code>{" "}
               préservées, 94 isolées corrigées.
             </li>
             <li>
-              <strong>Légendes de tableaux</strong> (RGAA 5.4) - <em>résolu
-              12 mai 2026, v1.1</em> : 15 tableaux ont reçu un{" "}
+              <strong>Légendes de tableaux</strong> (RGAA 5.4) -{" "}
+              <em>résolu 12 mai 2026, v1.1</em> : 15 tableaux ont reçu un{" "}
               <code>{`<caption className="sr-only">`}</code> descriptif (pages
               admin TeamTable, AtRiskUsers, AnecdoteAdmin, GroupsManager,
               WebhookTable, UsersTable, ApiKeysManager, CsvImporter,
@@ -288,11 +291,12 @@ export default function AccessibilitePage() {
               <em>vérifié 12 mai 2026, v1.1</em> : audit révèle que les
               landmarks étaient <strong>déjà bien marqués</strong> dans le code
               (<code>{`<nav aria-label="Navigation principale">`}</code> sur
-              HeaderBar, <code>{`<footer aria-label="Pied de page">`}</code>{" "}
-              sur SiteFooter, <code>{`<aside aria-label="Navigation console">`}</code>{" "}
-              sur AdminSidebar). L'audit v1.0 sous-estimait ce point. Ajout
-              mineur : <code>aria-label="Sections console admin"</code> sur la
-              nav imbriquée de la sidebar admin pour distinguer les deux navs.
+              HeaderBar, <code>{`<footer aria-label="Pied de page">`}</code> sur
+              SiteFooter,{" "}
+              <code>{`<aside aria-label="Navigation console">`}</code> sur
+              AdminSidebar). L'audit v1.0 sous-estimait ce point. Ajout mineur :{" "}
+              <code>aria-label="Sections console admin"</code> sur la nav
+              imbriquée de la sidebar admin pour distinguer les deux navs.
             </li>
             <li>
               <strong>ThemeToggle sur mobile</strong> : les boutons "Clair /
@@ -310,10 +314,10 @@ export default function AccessibilitePage() {
               <code>{`<span aria-hidden>`}</code>.
             </li>
             <li>
-              <strong>Bouton "Rechercher" observatoire fuites</strong> :
-              l'emoji 🔍 n'était pas marqué <code>aria-hidden</code> → annoncé
-              "loupe rechercher". Fix : <code>aria-hidden</code> sur l'emoji,
-              le texte "Rechercher" suffit.
+              <strong>Bouton "Rechercher" observatoire fuites</strong> : l'emoji
+              🔍 n'était pas marqué <code>aria-hidden</code> → annoncé "loupe
+              rechercher". Fix : <code>aria-hidden</code> sur l'emoji, le texte
+              "Rechercher" suffit.
             </li>
             <li>
               <strong>Confettis et animations</strong> : annoncés via LiveRegion

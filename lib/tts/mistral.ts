@@ -57,7 +57,10 @@ export type GenerateSpeechResult = {
  * frontieres de phrase. Si une "phrase" depasse la limite (rare en
  * francais didactique), on tombe en fallback word-split.
  */
-export function chunkText(text: string, maxWords = MAX_WORDS_PER_REQUEST): string[] {
+export function chunkText(
+  text: string,
+  maxWords = MAX_WORDS_PER_REQUEST,
+): string[] {
   const cleaned = text.trim().replace(/\s+/g, " ");
   if (countWords(cleaned) <= maxWords) return [cleaned];
 
@@ -72,7 +75,11 @@ export function chunkText(text: string, maxWords = MAX_WORDS_PER_REQUEST): strin
     const sWords = countWords(s);
     if (sWords > maxWords) {
       // Phrase a rallonge : on flush le buffer, puis on split la phrase elle-meme.
-      if (current) { chunks.push(current.trim()); current = ""; currentWords = 0; }
+      if (current) {
+        chunks.push(current.trim());
+        current = "";
+        currentWords = 0;
+      }
       chunks.push(...splitOversizedSentence(s, maxWords));
       continue;
     }
@@ -109,7 +116,9 @@ export function countWords(text: string): number {
  * Inclut un retry automatique sur 429 (rate limit) et 502/503/504 (transients)
  * avec backoff exponentiel : 1s, 2s, 4s, 8s. Apres 4 retries, lance l'erreur.
  */
-export async function generateSpeech(opts: GenerateSpeechOpts): Promise<GenerateSpeechResult> {
+export async function generateSpeech(
+  opts: GenerateSpeechOpts,
+): Promise<GenerateSpeechResult> {
   const format = opts.format ?? "mp3";
   const t0 = Date.now();
   const maxAttempts = 5;
@@ -118,7 +127,7 @@ export async function generateSpeech(opts: GenerateSpeechOpts): Promise<Generate
     const res = await fetch(`${API_BASE}/audio/speech`, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${opts.apiKey}`,
+        Authorization: `Bearer ${opts.apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -137,9 +146,10 @@ export async function generateSpeech(opts: GenerateSpeechOpts): Promise<Generate
     // Retry sur 429 / 502 / 503 / 504. Backoff exponentiel.
     if ([429, 502, 503, 504].includes(res.status) && attempt < maxAttempts) {
       const retryAfter = Number(res.headers.get("retry-after"));
-      const backoffMs = Number.isFinite(retryAfter) && retryAfter > 0
-        ? retryAfter * 1000
-        : 1000 * Math.pow(2, attempt - 1);
+      const backoffMs =
+        Number.isFinite(retryAfter) && retryAfter > 0
+          ? retryAfter * 1000
+          : 1000 * Math.pow(2, attempt - 1);
       // Petit jitter pour eviter le thundering herd
       const jitter = Math.floor(Math.random() * 500);
       await new Promise((r) => setTimeout(r, backoffMs + jitter));
@@ -162,14 +172,16 @@ async function parseSpeechResponse(
   t0: number,
   format: string,
 ): Promise<GenerateSpeechResult> {
-
   let buffer: Buffer;
   if (opts.stream) {
     buffer = await consumeSSEStream(res);
   } else {
-    const json = await res.json() as { audio_data?: string };
+    const json = (await res.json()) as { audio_data?: string };
     if (!json.audio_data) {
-      throw new MistralTTSError(200, `Reponse sans audio_data : ${JSON.stringify(json).slice(0, 200)}`);
+      throw new MistralTTSError(
+        200,
+        `Reponse sans audio_data : ${JSON.stringify(json).slice(0, 200)}`,
+      );
     }
     buffer = Buffer.from(json.audio_data, "base64");
   }
@@ -199,7 +211,11 @@ async function consumeSSEStream(res: Response): Promise<Buffer> {
       const payload = line.slice(5).trim();
       if (!payload || payload === "[DONE]") continue;
       try {
-        const evt = JSON.parse(payload) as { audio_data?: string; delta?: string; data?: string };
+        const evt = JSON.parse(payload) as {
+          audio_data?: string;
+          delta?: string;
+          data?: string;
+        };
         const b64 = evt.audio_data || evt.delta || evt.data;
         if (b64) chunks.push(Buffer.from(b64, "base64"));
       } catch {
@@ -272,7 +288,10 @@ export function stripID3v2Header(buf: Buffer): Buffer {
 }
 
 export class MistralTTSError extends Error {
-  constructor(public status: number, public body: string) {
+  constructor(
+    public status: number,
+    public body: string,
+  ) {
     super(`Mistral TTS HTTP ${status} : ${body.slice(0, 300)}`);
     this.name = "MistralTTSError";
   }

@@ -98,7 +98,9 @@ describe("getAssignableRoles", () => {
 
 describe("assertCanChangeRole", () => {
   it("OK : ADMIN promeut un LEARNER en MANAGER", () => {
-    expect(() => assertCanChangeRole("ADMIN", "LEARNER", "MANAGER")).not.toThrow();
+    expect(() =>
+      assertCanChangeRole("ADMIN", "LEARNER", "MANAGER"),
+    ).not.toThrow();
   });
 
   it("OK : ADMIN retrograde un RSSI en LEARNER", () => {
@@ -106,21 +108,21 @@ describe("assertCanChangeRole", () => {
   });
 
   it("KO : ADMIN essaie de promouvoir un LEARNER en SUPERADMIN (privilege escalation)", () => {
-    expect(() =>
-      assertCanChangeRole("ADMIN", "LEARNER", "SUPERADMIN"),
-    ).toThrow("forbidden_role_hierarchy");
+    expect(() => assertCanChangeRole("ADMIN", "LEARNER", "SUPERADMIN")).toThrow(
+      "forbidden_role_hierarchy",
+    );
   });
 
   it("KO : ADMIN essaie de modifier un SUPERADMIN", () => {
-    expect(() =>
-      assertCanChangeRole("ADMIN", "SUPERADMIN", "ADMIN"),
-    ).toThrow("forbidden_role_hierarchy");
+    expect(() => assertCanChangeRole("ADMIN", "SUPERADMIN", "ADMIN")).toThrow(
+      "forbidden_role_hierarchy",
+    );
   });
 
   it("KO : MANAGER essaie de modifier un ADMIN (cas signale par Florian 2026-05-22)", () => {
-    expect(() =>
-      assertCanChangeRole("MANAGER", "ADMIN", "LEARNER"),
-    ).toThrow("forbidden_role_hierarchy");
+    expect(() => assertCanChangeRole("MANAGER", "ADMIN", "LEARNER")).toThrow(
+      "forbidden_role_hierarchy",
+    );
   });
 
   it("KO : MANAGER essaie de modifier un SUPERADMIN", () => {

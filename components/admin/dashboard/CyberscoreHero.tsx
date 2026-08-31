@@ -7,11 +7,7 @@
 // section pliable explique le calcul (composantes + penalites + seuils)
 // pour ceux qui veulent creuser, sans alourdir la lecture initiale.
 
-import {
-  ResponsiveContainer,
-  RadialBarChart,
-  RadialBar,
-} from "recharts";
+import { ResponsiveContainer, RadialBarChart, RadialBar } from "recharts";
 import type { CyberscoreBreakdown } from "@/lib/cyber-score";
 import { LEVEL_META, type Level } from "./levels";
 

@@ -120,9 +120,9 @@ export default async function EpisodePage({
             </p>
             <p className="leading-relaxed">
               Cet épisode reçoit bientôt un scénario détaillé rédigé par un
-              expert humain. En attendant, voici la version de base - tes
-              points de progression sont attribués normalement, et tu peux y
-              revenir plus tard pour la version enrichie.
+              expert humain. En attendant, voici la version de base - tes points
+              de progression sont attribués normalement, et tu peux y revenir
+              plus tard pour la version enrichie.
             </p>
           </div>
         </div>

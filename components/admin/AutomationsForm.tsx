@@ -18,7 +18,9 @@ type Initial = {
 
 export default function AutomationsForm({ initial }: { initial: Initial }) {
   const [pending, startTransition] = useTransition();
-  const [force2FA, setForce2FA] = useState(initial.autoForce2FAAfterPhishingClick);
+  const [force2FA, setForce2FA] = useState(
+    initial.autoForce2FAAfterPhishingClick,
+  );
   const [revokeSession, setRevokeSession] = useState(
     initial.autoRevokeSessionAfterPhishingClick,
   );
@@ -32,7 +34,8 @@ export default function AutomationsForm({ initial }: { initial: Initial }) {
     setFeedback(null);
     const formData = new FormData();
     if (force2FA) formData.set("autoForce2FAAfterPhishingClick", "on");
-    if (revokeSession) formData.set("autoRevokeSessionAfterPhishingClick", "on");
+    if (revokeSession)
+      formData.set("autoRevokeSessionAfterPhishingClick", "on");
     startTransition(async () => {
       const res = await updateAutomations(formData);
       if (res.ok) {

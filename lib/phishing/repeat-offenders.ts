@@ -46,7 +46,10 @@ export async function listRepeatOffenders(
   tenantId: string,
   opts: { minFails?: number } = {},
 ): Promise<{ offenders: RepeatOffender[]; minFails: number }> {
-  const minFails = Math.max(1, Math.min(10, opts.minFails ?? DEFAULT_MIN_FAILS));
+  const minFails = Math.max(
+    1,
+    Math.min(10, opts.minFails ?? DEFAULT_MIN_FAILS),
+  );
 
   // Tous les échecs de simulation du tenant (clic OU saisie). Le couple
   // (userId, campaignId) est unique en base -> 1 ligne = 1 échec distinct.
@@ -63,10 +66,20 @@ export async function listRepeatOffenders(
   });
   if (rows.length === 0) return { offenders: [], minFails };
 
-  type Acc = { fails: number; clicks: number; submits: number; last: Date | null };
+  type Acc = {
+    fails: number;
+    clicks: number;
+    submits: number;
+    last: Date | null;
+  };
   const byUser = new Map<string, Acc>();
   for (const r of rows) {
-    const e = byUser.get(r.userId) ?? { fails: 0, clicks: 0, submits: 0, last: null };
+    const e = byUser.get(r.userId) ?? {
+      fails: 0,
+      clicks: 0,
+      submits: 0,
+      last: null,
+    };
     e.fails += 1;
     if (r.submittedAt) e.submits += 1;
     else if (r.clickedAt) e.clicks += 1;

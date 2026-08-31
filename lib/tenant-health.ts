@@ -156,10 +156,7 @@ async function computeTenantHealthFromTenant(
       `phishing utilisé (${phishingCampaigns}) mais plan ${plan} (requis : ${FEATURE_MIN_PLAN.phishing}+)`,
     );
   }
-  if (
-    incidents > 0 &&
-    planRankActual < PLAN_RANK[FEATURE_MIN_PLAN.incidents]
-  ) {
+  if (incidents > 0 && planRankActual < PLAN_RANK[FEATURE_MIN_PLAN.incidents]) {
     planMismatches.push(
       `incidents utilisé (${incidents}) mais plan ${plan} (requis : ${FEATURE_MIN_PLAN.incidents}+)`,
     );
@@ -174,7 +171,9 @@ async function computeTenantHealthFromTenant(
   if (hasUsers && !hasProgress) issues.push("Aucune progression enregistrée");
   if (planMismatches.length > 0) issues.push(...planMismatches);
   if (lastActivityDays !== null && lastActivityDays > 90) {
-    issues.push(`Aucune activité depuis ${lastActivityDays} jours (risque churn)`);
+    issues.push(
+      `Aucune activité depuis ${lastActivityDays} jours (risque churn)`,
+    );
   } else if (lastActivityDays !== null && lastActivityDays > 30) {
     issues.push(`Activité faible (${lastActivityDays} jours sans connexion)`);
   } else if (lastActivityDays === null && hasUsers) {

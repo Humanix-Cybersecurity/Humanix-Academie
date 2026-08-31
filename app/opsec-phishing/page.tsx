@@ -52,10 +52,10 @@ export default function OpsecPhishingPage() {
             ce que tu prends à ta charge.
           </h1>
           <p className="text-base sm:text-lg text-gray-700 dark:text-gray-200 leading-relaxed max-w-2xl mx-auto">
-            Humanix génère les templates pédagogiques. Mais une vraie
-            campagne, c&apos;est <strong>10 % de templates</strong> et{" "}
-            <strong>90 % d&apos;OPSEC</strong>. Voici les 8 chantiers à
-            cocher pour ne pas rater ta première campagne.
+            Humanix génère les templates pédagogiques. Mais une vraie campagne,
+            c&apos;est <strong>10 % de templates</strong> et{" "}
+            <strong>90 % d&apos;OPSEC</strong>. Voici les 8 chantiers à cocher
+            pour ne pas rater ta première campagne.
           </p>
         </section>
       </HexBackdrop>
@@ -73,8 +73,8 @@ export default function OpsecPhishingPage() {
           </p>
           <ul className="text-sm text-amber-900 dark:text-amber-100 space-y-1 list-disc list-inside leading-relaxed">
             <li>
-              <strong>Setup initial</strong> : 4 à 8 jours·homme (DSI + RSSI
-              + DPO + RH)
+              <strong>Setup initial</strong> : 4 à 8 jours·homme (DSI + RSSI +
+              DPO + RH)
             </li>
             <li>
               <strong>Par campagne récurrente</strong> : 1 à 2 jours·homme
@@ -221,8 +221,8 @@ export default function OpsecPhishingPage() {
             Tu fais quoi maintenant&nbsp;?
           </h2>
           <p className="text-base text-gray-700 dark:text-gray-200 leading-relaxed mb-6">
-            Tu viens de découvrir 8 chantiers. Selon ton équipe et ton
-            budget, deux voies s&apos;ouvrent à toi&nbsp;:
+            Tu viens de découvrir 8 chantiers. Selon ton équipe et ton budget,
+            deux voies s&apos;ouvrent à toi&nbsp;:
           </p>
 
           <div className="grid sm:grid-cols-2 gap-4">
@@ -235,9 +235,9 @@ export default function OpsecPhishingPage() {
                 Je gère moi-même
               </h3>
               <p className="text-sm text-gray-700 dark:text-gray-200 mb-4 leading-relaxed">
-                Tu as une équipe DSI/RSSI capable. Tu maîtrises DNS,
-                SMTP, RGPD. Tu vas configurer ton SMTP dédié et lancer
-                tes campagnes en autonomie.
+                Tu as une équipe DSI/RSSI capable. Tu maîtrises DNS, SMTP, RGPD.
+                Tu vas configurer ton SMTP dédié et lancer tes campagnes en
+                autonomie.
               </p>
               <Link
                 href="/admin/smtp"
@@ -277,9 +277,9 @@ export default function OpsecPhishingPage() {
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-6 italic leading-relaxed">
             ⚠️ Cette page est un cadrage, pas un manuel exhaustif. Chaque
             chapitre mérite un livre. Si tu veux entrer dans le détail
-            technique, on a des partenaires audit qui peuvent intervenir
-            sur des missions ciblées (audit DNS, configuration SMTP,
-            rédaction charte, formation DPO).
+            technique, on a des partenaires audit qui peuvent intervenir sur des
+            missions ciblées (audit DNS, configuration SMTP, rédaction charte,
+            formation DPO).
           </p>
         </div>
       </section>
@@ -380,11 +380,7 @@ function Chapter({
     >
       <header className="flex items-start gap-4 mb-3">
         <div className="shrink-0 flex flex-col items-center">
-          <span
-            className="text-3xl"
-            aria-hidden="true"
-            title={`Chantier ${n}`}
-          >
+          <span className="text-3xl" aria-hidden="true" title={`Chantier ${n}`}>
             {emoji}
           </span>
           <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mt-1">
@@ -406,10 +402,7 @@ function Chapter({
       <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
         {points.map((p, i) => (
           <li key={i} className="flex items-start gap-2">
-            <span
-              aria-hidden="true"
-              className="text-accent-500 mt-1 shrink-0"
-            >
+            <span aria-hidden="true" className="text-accent-500 mt-1 shrink-0">
               →
             </span>
             <span>{p}</span>

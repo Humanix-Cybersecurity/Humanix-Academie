@@ -22,8 +22,7 @@ async function requireAdmin() {
 }
 
 export type DeliverabilityCheckResult =
-  | { ok: true; data: DnsAuthCheckResult }
-  | { ok: false; error: string };
+  { ok: true; data: DnsAuthCheckResult } | { ok: false; error: string };
 
 export async function runDeliverabilityCheck(
   domain: string,

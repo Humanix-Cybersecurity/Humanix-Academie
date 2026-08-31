@@ -19,9 +19,10 @@ export default function KidsTri({
   onDone: (success: boolean) => void;
 }) {
   const [i, setI] = useState(0);
-  const [reponse, setReponse] = useState<null | { bon: boolean; reaction: string }>(
-    null,
-  );
+  const [reponse, setReponse] = useState<null | {
+    bon: boolean;
+    reaction: string;
+  }>(null);
   const [erreurs, setErreurs] = useState(0);
 
   const carte = activite.cartes[i];

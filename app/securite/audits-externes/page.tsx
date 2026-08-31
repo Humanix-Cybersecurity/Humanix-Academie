@@ -112,8 +112,8 @@ export default function AuditsExternesPage() {
           <p className="text-sm text-amber-900 dark:text-amber-100">
             <strong>Notre engagement</strong> - si l&apos;un de ces scores
             descend en-dessous de la cible affichée, vous le verrez avant nous.
-            Les liens ci-dessous interrogent les scanners en temps réel : pas
-            de capture d&apos;écran datée, pas de communiqué arrangé.
+            Les liens ci-dessous interrogent les scanners en temps réel : pas de
+            capture d&apos;écran datée, pas de communiqué arrangé.
           </p>
         </div>
       </header>
@@ -156,9 +156,7 @@ export default function AuditsExternesPage() {
               href={a.liveUrl}
               target={a.liveUrl.startsWith("/") ? undefined : "_blank"}
               rel={
-                a.liveUrl.startsWith("/")
-                  ? undefined
-                  : "noopener noreferrer"
+                a.liveUrl.startsWith("/") ? undefined : "noopener noreferrer"
               }
               className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-primary-500 hover:bg-primary-600 text-white text-sm font-semibold transition-colors"
             >
@@ -175,8 +173,8 @@ export default function AuditsExternesPage() {
           Pourquoi cette page existe
         </h2>
         <p className="text-gray-700 dark:text-gray-200 leading-relaxed mb-3">
-          On vend de la cybersécurité. Si notre propre site web ne tenait pas
-          la route, ce serait incohérent.
+          On vend de la cybersécurité. Si notre propre site web ne tenait pas la
+          route, ce serait incohérent.
         </p>
         <p className="text-gray-700 dark:text-gray-200 leading-relaxed mb-3">
           Mais surtout, on est convaincus qu&apos;une démarche cyber crédible
@@ -185,9 +183,7 @@ export default function AuditsExternesPage() {
             (notre repo est public sous AGPLv3)
           </span>
           , <strong>des audits indépendants</strong>{" "}
-          <span className="text-gray-500 dark:text-gray-400">
-            (cette page)
-          </span>
+          <span className="text-gray-500 dark:text-gray-400">(cette page)</span>
           , et <strong>la possibilité de tout reproduire chez soi</strong>{" "}
           <span className="text-gray-500 dark:text-gray-400">
             (self-host AGPLv3)

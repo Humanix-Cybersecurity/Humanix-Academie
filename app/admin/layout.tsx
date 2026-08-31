@@ -61,7 +61,8 @@ export default async function AdminLayout({
   // acme.humanix-academie.fr/admin d'agir dans Acme plutot que dans son
   // tenant home Humanix.
   const ctxSummary = await getTenantContextSummary();
-  const activeTenantId = ctxSummary?.activeTenantId ?? (session.user.tenantId as string | undefined);
+  const activeTenantId =
+    ctxSummary?.activeTenantId ?? (session.user.tenantId as string | undefined);
   const isCrossTenant = ctxSummary ? !ctxSummary.isHome : false;
 
   // Defense en profondeur : si on est en mode cross-tenant (membership),

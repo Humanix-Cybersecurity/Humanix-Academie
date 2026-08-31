@@ -257,8 +257,19 @@ function sanitizeHtml(html: string): string {
   return DOMPurify.sanitize(html, {
     ALLOWED_TAGS,
     ALLOWED_ATTR,
-    ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i,
-    FORBID_TAGS: ["script", "iframe", "object", "embed", "style", "link", "meta", "svg", "math"],
+    ALLOWED_URI_REGEXP:
+      /^(?:(?:https?|mailto):|[^a-z]|[a-z+.-]+(?:[^a-z+.\-:]|$))/i,
+    FORBID_TAGS: [
+      "script",
+      "iframe",
+      "object",
+      "embed",
+      "style",
+      "link",
+      "meta",
+      "svg",
+      "math",
+    ],
     FORBID_ATTR: ["style", "onerror", "onload", "onclick"],
     KEEP_CONTENT: true,
   });

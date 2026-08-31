@@ -38,7 +38,9 @@ export default async function AdminUsersPage() {
         progress: { select: { score: true, status: true, completedAt: true } },
         groups: {
           include: {
-            group: { select: { id: true, name: true, emoji: true, color: true } },
+            group: {
+              select: { id: true, name: true, emoji: true, color: true },
+            },
           },
         },
       },
@@ -63,8 +65,7 @@ export default async function AdminUsersPage() {
       .map((p) => p.completedAt)
       .filter(Boolean)
       .sort((a, b) => (b as Date).getTime() - (a as Date).getTime())[0] as
-      | Date
-      | undefined;
+      Date | undefined;
     return {
       id: u.id,
       name: u.name ?? u.email.split("@")[0],
@@ -94,8 +95,7 @@ export default async function AdminUsersPage() {
 
   const activeCount = enriched.filter((u) => u.isActive).length;
   const adminCount = enriched.filter(
-    (u) =>
-      u.role === "ADMIN" || u.role === "SUPERADMIN" || u.role === "RSSI",
+    (u) => u.role === "ADMIN" || u.role === "SUPERADMIN" || u.role === "RSSI",
   ).length;
   const mfaCount = enriched.filter((u) => u.mfaEnabled).length;
   const suspendedCount = enriched.length - activeCount;

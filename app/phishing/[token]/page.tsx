@@ -89,9 +89,9 @@ export default async function PhishingLandingPage({
       : null;
   const quishingTpl =
     channel === "QUISHING"
-      ? QUISHING_TEMPLATES[
+      ? (QUISHING_TEMPLATES[
           result.campaign.template as keyof typeof QUISHING_TEMPLATES
-        ] ?? null
+        ] ?? null)
       : null;
 
   // Trace les remediations auto declenchees pour pouvoir afficher un
@@ -181,7 +181,10 @@ export default async function PhishingLandingPage({
     //   - Revoke sessions : deconnecte tous les devices
     // Best-effort : un echec ici ne bloque pas la landing.
     const tenantPolicy = result.campaign.tenant;
-    if (tenantPolicy.autoForce2FAAfterPhishingClick && !result.user.mfaEnabled) {
+    if (
+      tenantPolicy.autoForce2FAAfterPhishingClick &&
+      !result.user.mfaEnabled
+    ) {
       try {
         await db.user.update({
           where: { id: result.userId },
@@ -240,9 +243,9 @@ export default async function PhishingLandingPage({
             </p>
             <p className="text-sm text-red-800 dark:text-red-300 mb-3 leading-relaxed">
               Pas de panique : c&apos;etait un test, AUCUNE valeur n&apos;a ete
-              enregistree (on stocke uniquement les metadonnees : tu as soumis
-              X champs dont un mot de passe). Mais si ca avait ete un vrai site
-              de phishing, ton mot de passe serait deja entre les mains d&apos;un
+              enregistree (on stocke uniquement les metadonnees : tu as soumis X
+              champs dont un mot de passe). Mais si ca avait ete un vrai site de
+              phishing, ton mot de passe serait deja entre les mains d&apos;un
               attaquant.
             </p>
             <p className="text-sm font-bold text-red-900 dark:text-red-200 mb-2">
@@ -250,7 +253,9 @@ export default async function PhishingLandingPage({
             </p>
             <ol className="text-sm text-red-800 dark:text-red-300 list-decimal pl-5 space-y-1">
               <li>Changer ce mot de passe sur le vrai site immediatement</li>
-              <li>Le changer aussi sur tout autre site ou il etait reutilise</li>
+              <li>
+                Le changer aussi sur tout autre site ou il etait reutilise
+              </li>
               <li>Activer la 2FA partout ou c&apos;est possible</li>
               <li>Verifier les connexions recentes / sessions actives</li>
             </ol>
@@ -276,14 +281,14 @@ export default async function PhishingLandingPage({
               {remediationTriggered.includes("revoke_sessions") && (
                 <li>
                   Tes sessions actives ont été{" "}
-                  <strong>déconnectées sur tous tes devices</strong>. Tu
-                  devras te reconnecter.
+                  <strong>déconnectées sur tous tes devices</strong>. Tu devras
+                  te reconnecter.
                 </li>
               )}
             </ul>
             <p className="text-[11px] text-blue-900/60 dark:text-blue-100/60 italic mt-2">
-              Politique de sécurité de ton entreprise - pas une sanction,
-              une protection.
+              Politique de sécurité de ton entreprise - pas une sanction, une
+              protection.
             </p>
           </div>
         )}
@@ -324,9 +329,7 @@ export default async function PhishingLandingPage({
             </h2>
             <p className="text-sm text-gray-700 mb-3">
               Voici les{" "}
-              <strong>
-                {quishingTpl.pedagogicalMarkers.length} indices
-              </strong>{" "}
+              <strong>{quishingTpl.pedagogicalMarkers.length} indices</strong>{" "}
               que ce QR aurait dû te mettre la puce à l&apos;oreille :
             </p>
             <ul className="text-sm text-gray-700 space-y-2">
@@ -429,9 +432,9 @@ export default async function PhishingLandingPage({
               <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
                 Sur un vrai site de phishing, tu serais arrive sur une fausse
                 page de login (souvent une copie pixel-perfect de Microsoft,
-                Google, ta banque...). Tu peux essayer de la soumettre ci-dessous
-                pour vivre l&apos;experience -- on capture seulement le geste,
-                jamais les valeurs.
+                Google, ta banque...). Tu peux essayer de la soumettre
+                ci-dessous pour vivre l&apos;experience -- on capture seulement
+                le geste, jamais les valeurs.
               </p>
               {/* Phase 2 (juin 2026) : si le template definit une landing
                   custom, on la rend dans une iframe SANDBOX="" (no
@@ -531,9 +534,12 @@ export default async function PhishingLandingPage({
               {tpl.remediationEpisode.label}
             </h2>
             <p className="text-sm opacity-90 mb-5 max-w-xl mx-auto">
-              On profite que c&apos;est encore frais pour ancrer le bon
-              réflexe. {tpl.remediationEpisode.durationMinutes} minutes
-              chrono, {tpl.remediationEpisode.label.toLowerCase().includes("éviter") ? "" : "et"} c&apos;est gravé pour la prochaine fois.
+              On profite que c&apos;est encore frais pour ancrer le bon réflexe.{" "}
+              {tpl.remediationEpisode.durationMinutes} minutes chrono,{" "}
+              {tpl.remediationEpisode.label.toLowerCase().includes("éviter")
+                ? ""
+                : "et"}{" "}
+              c&apos;est gravé pour la prochaine fois.
             </p>
             <Link
               href={`/apprendre/${tpl.remediationEpisode.saisonSlug}/${tpl.remediationEpisode.episodeSlug}?from=remediation`}
@@ -563,8 +569,8 @@ export default async function PhishingLandingPage({
           <Link href="/apprendre" className="underline hover:text-accent-500">
             l&apos;ensemble du parcours
           </Link>{" "}
-          quand tu veux. 1 personne sur 3 clique sur ce type de mail - c&apos;est
-          exactement pour ça qu&apos;on s&apos;entraîne.
+          quand tu veux. 1 personne sur 3 clique sur ce type de mail -
+          c&apos;est exactement pour ça qu&apos;on s&apos;entraîne.
         </p>
       </div>
 
@@ -685,8 +691,8 @@ async function renderQuishingPosterScan(campaignId: string) {
       <div className="rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border-2 border-emerald-200 dark:border-emerald-900/50 p-5 mb-6">
         <p className="text-sm text-emerald-900 dark:text-emerald-100 leading-relaxed">
           <strong>La règle d&apos;or :</strong> ne scanne jamais un QR code que
-          tu n&apos;attendais pas, surtout s&apos;il est imprimé sur papier
-          dans un lieu public. Vérifie la source par un autre canal avant
+          tu n&apos;attendais pas, surtout s&apos;il est imprimé sur papier dans
+          un lieu public. Vérifie la source par un autre canal avant
           d&apos;agir.
         </p>
       </div>
@@ -703,8 +709,8 @@ async function renderQuishingPosterScan(campaignId: string) {
       )}
 
       <p className="text-xs text-center text-gray-500 italic mt-6">
-        Test effectué dans le cadre du programme de sensibilisation cyber de
-        ton entreprise.
+        Test effectué dans le cadre du programme de sensibilisation cyber de ton
+        entreprise.
         <br />
         Aucun usage disciplinaire de ce résultat - c&apos;est un exercice
         pédagogique.

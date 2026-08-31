@@ -99,14 +99,9 @@ export default function CookiesPage() {
         />
       </LegalSection>
 
-      <LegalSection
-        id="audience"
-        num="4"
-        title="Mesure d'audience anonyme"
-      >
+      <LegalSection id="audience" num="4" title="Mesure d'audience anonyme">
         <p>
-          Lorsque l'opérateur de cette instance active une mesure d'audience
-          via{" "}
+          Lorsque l'opérateur de cette instance active une mesure d'audience via{" "}
           <a
             href="https://plausible.io/privacy-focused-web-analytics"
             rel="noopener noreferrer"

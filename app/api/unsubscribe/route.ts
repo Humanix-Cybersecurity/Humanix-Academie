@@ -44,7 +44,9 @@ function getClientIp(req: NextRequest): string | null {
 async function handleUnsubscribe(
   req: NextRequest,
   token: string | null,
-): Promise<{ ok: true; email: string; list: string } | { ok: false; reason: string }> {
+): Promise<
+  { ok: true; email: string; list: string } | { ok: false; reason: string }
+> {
   if (!token) return { ok: false, reason: "missing_token" };
 
   const verify = verifyUnsubscribeToken(token);

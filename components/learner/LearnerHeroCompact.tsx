@@ -62,9 +62,7 @@ export default function LearnerHeroCompact({
             value={`${currentLevel.emoji} ${currentLevel.name}`}
           />
           <Stat label="XP" value={totalXP.toLocaleString("fr-FR")} />
-          {streak > 0 && (
-            <Stat label="Streak" value={`🔥 ${streak}j`} accent />
-          )}
+          {streak > 0 && <Stat label="Streak" value={`🔥 ${streak}j`} accent />}
           <Stat label="Modules" value={`${completedCount}/${totalEpisodes}`} />
         </div>
       </div>
@@ -105,9 +103,7 @@ function Stat({
     <div className="text-center">
       <p
         className={`font-bold text-lg leading-none ${
-          accent
-            ? "text-accent-500"
-            : "text-primary-500 dark:text-accent-300"
+          accent ? "text-accent-500" : "text-primary-500 dark:text-accent-300"
         }`}
       >
         {value}

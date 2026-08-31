@@ -111,7 +111,9 @@ export default async function FacturationPage({
 
       {!paymentReady && (
         <div className="rounded-2xl border border-gray-300 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 p-4 text-gray-700 dark:text-gray-300">
-          <p className="font-bold">Le module de paiement n&apos;est pas configuré.</p>
+          <p className="font-bold">
+            Le module de paiement n&apos;est pas configuré.
+          </p>
           <p className="text-sm mt-1">
             Contactez l'administrateur de la plateforme pour souscrire un plan
             payant. En attendant, le plan {tenant.plan} reste actif.
@@ -142,9 +144,7 @@ export default async function FacturationPage({
         <dl className="grid grid-cols-2 gap-3 text-sm">
           {tenant.currentPeriodEnd && (
             <div>
-              <dt className="text-xs text-gray-500">
-                Prochaine facturation
-              </dt>
+              <dt className="text-xs text-gray-500">Prochaine facturation</dt>
               <dd className="font-semibold">
                 {tenant.currentPeriodEnd.toLocaleDateString("fr-FR")}
               </dd>
@@ -167,8 +167,8 @@ export default async function FacturationPage({
             Passer à un plan payant ?
           </p>
           <p className="text-sm text-gray-700 dark:text-gray-300 mt-1 mb-3">
-            Débloquez les campagnes de phishing simulé, le module
-            Cyber-Réflexe, l'IA Coach Hex et la marketplace de modules.
+            Débloquez les campagnes de phishing simulé, le module Cyber-Réflexe,
+            l'IA Coach Hex et la marketplace de modules.
           </p>
           <Link href="/tarifs" className="btn-primary text-sm">
             Voir les plans →

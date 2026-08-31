@@ -170,7 +170,9 @@ export function buildRecyfPlan(
       };
     })
     .filter((x): x is RecyfGroupScore => x !== null)
-    .sort((a, b) => RECYF_GROUPES[a.groupe].ordre - RECYF_GROUPES[b.groupe].ordre);
+    .sort(
+      (a, b) => RECYF_GROUPES[a.groupe].ordre - RECYF_GROUPES[b.groupe].ordre,
+    );
 
   return {
     profil,

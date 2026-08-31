@@ -19,7 +19,8 @@ import ExpositionChecker from "./ExpositionChecker";
 export const dynamic = "force-static";
 
 export const metadata: Metadata = {
-  title: "Suis-je exposé ? - Vérifier mon exposition numérique | Humanix Académie",
+  title:
+    "Suis-je exposé ? - Vérifier mon exposition numérique | Humanix Académie",
   description:
     "Vérifie gratuitement si ton mot de passe a fuité (sans jamais l'envoyer) et si ton organisation est concernée par une fuite connue. Souverain, éphémère, zéro donnée conservée.",
   alternates: { canonical: "/exposition" },
@@ -56,10 +57,22 @@ export default function ExpositionPage() {
         className="rounded-2xl border-2 border-emerald-200 dark:border-emerald-800 bg-emerald-50/60 dark:bg-emerald-950/30 p-4 mb-8 text-sm text-emerald-900 dark:text-emerald-100"
       >
         <ul className="space-y-1.5">
-          <li>🔒 <strong>Mot de passe en k-anonymity</strong> : seul un fragment d'empreinte est envoyé, jamais le mot de passe.</li>
-          <li>🇫🇷 <strong>Observatoire souverain</strong> : fuites hébergées en France, aucune dépendance cloud US.</li>
-          <li>🗑️ <strong>Zéro conservation</strong> : aucun email, aucun résultat n'est stocké.</li>
-          <li>🛡️ <strong>Anti-doxxing</strong> : on vérifie que c'est bien ton email avant d'afficher quoi que ce soit.</li>
+          <li>
+            🔒 <strong>Mot de passe en k-anonymity</strong> : seul un fragment
+            d'empreinte est envoyé, jamais le mot de passe.
+          </li>
+          <li>
+            🇫🇷 <strong>Observatoire souverain</strong> : fuites hébergées en
+            France, aucune dépendance cloud US.
+          </li>
+          <li>
+            🗑️ <strong>Zéro conservation</strong> : aucun email, aucun résultat
+            n'est stocké.
+          </li>
+          <li>
+            🛡️ <strong>Anti-doxxing</strong> : on vérifie que c'est bien ton
+            email avant d'afficher quoi que ce soit.
+          </li>
         </ul>
       </section>
 

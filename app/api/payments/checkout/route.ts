@@ -18,7 +18,9 @@ import { isPlanId } from "@/lib/plans";
 export async function POST(req: Request) {
   if (!isMollieConfigured()) {
     return NextResponse.json(
-      { error: "Le module de paiement n'est pas configuré sur cette instance." },
+      {
+        error: "Le module de paiement n'est pas configuré sur cette instance.",
+      },
       { status: 503 },
     );
   }
@@ -68,20 +70,21 @@ export async function POST(req: Request) {
   }
 
   const effectiveSeats =
-    planRaw === "starter" ? 1 : seats ?? tenant.seatCount ?? 1;
+    planRaw === "starter" ? 1 : (seats ?? tenant.seatCount ?? 1);
 
   if (planRaw === "pro" && !seats && !tenant.seatCount) {
     return NextResponse.json(
       {
-        error:
-          "Le nombre de sieges est requis pour le plan Pro.",
+        error: "Le nombre de sieges est requis pour le plan Pro.",
       },
       { status: 400 },
     );
   }
 
   const baseUrl =
-    process.env.AUTH_URL ?? process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+    process.env.AUTH_URL ??
+    process.env.NEXT_PUBLIC_APP_URL ??
+    "http://localhost:3000";
 
   try {
     const checkout = await createCheckoutSession({

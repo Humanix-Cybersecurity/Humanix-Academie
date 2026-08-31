@@ -10,7 +10,10 @@
 // Ouvrir par « article 30 » ferait fuir exactement la personne qu'on vise.
 import { useState, useTransition } from "react";
 import { definirStatutEtape } from "@/app/admin/conformite-rgpd/actions";
-import type { EtapeParcours, StatutEtape } from "@/lib/conformite-rgpd/catalogue";
+import type {
+  EtapeParcours,
+  StatutEtape,
+} from "@/lib/conformite-rgpd/catalogue";
 import type { EtatEtape } from "@/lib/conformite-rgpd/etat";
 import { MODELES_PAR_ETAPE } from "@/lib/conformite-rgpd/modeles";
 

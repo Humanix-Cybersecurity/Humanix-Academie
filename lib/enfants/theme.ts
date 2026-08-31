@@ -6,7 +6,14 @@ type Couleur = Monde["couleur"];
 
 export const COULEURS: Record<
   Couleur,
-  { grad: string; soft: string; ring: string; text: string; btn: string; dot: string }
+  {
+    grad: string;
+    soft: string;
+    ring: string;
+    text: string;
+    btn: string;
+    dot: string;
+  }
 > = {
   sky: {
     grad: "from-sky-400 to-cyan-400",

@@ -57,8 +57,7 @@ export type RedTeamScenario = {
 };
 
 export type RedTeamResult =
-  | { ok: true; scenario: RedTeamScenario }
-  | { ok: false; error: string };
+  { ok: true; scenario: RedTeamScenario } | { ok: false; error: string };
 
 const SYSTEM = `Tu es l'assistant red team de Humanix Academie.
 Tu generes des scenarios de PHISHING SIMULE pour la formation interne d'une
@@ -153,7 +152,9 @@ export async function generateRedTeamScenario(
       return {
         ok: false,
         error:
-          res.status === 429 ? "rate_limited_upstream" : `upstream_${res.status}`,
+          res.status === 429
+            ? "rate_limited_upstream"
+            : `upstream_${res.status}`,
       };
     }
 

@@ -37,7 +37,7 @@ describe("isB2bGloballyEnabled (kill switch plateforme)", () => {
     expect(isB2bGloballyEnabled()).toBe(false);
   });
 
-  it('false si l\'env n\'est pas exactement "true"', () => {
+  it("false si l'env n'est pas exactement \"true\"", () => {
     process.env[ENV_KEY] = "1";
     expect(isB2bGloballyEnabled()).toBe(false);
     process.env[ENV_KEY] = "yes";

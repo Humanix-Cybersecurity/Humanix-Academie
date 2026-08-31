@@ -24,10 +24,7 @@
 
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
-import {
-  ServiceJsonLd,
-  BreadcrumbJsonLd,
-} from "@/lib/seo/jsonld";
+import { ServiceJsonLd, BreadcrumbJsonLd } from "@/lib/seo/jsonld";
 
 const SEC_TITLE =
   "Sécurité & Conformité - Trust Center souverain | Humanix Cybersecurity";
@@ -43,7 +40,9 @@ export const metadata = {
     description: SEC_DESC,
     type: "website",
     url: "/securite",
-    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+    images: [
+      { url: "/logo-humanix-academie-512.png", width: 512, height: 512 },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -208,9 +207,9 @@ export default function SecuritePage() {
                 </h2>
                 <p className="opacity-90 leading-relaxed">
                   Méthodologie OWASP/ANSSI. 12 sections, contrôles vérifiés,
-                  gaps assumés, plan de remédiation à 6 mois. Aucun acteur
-                  cyber français n'expose ce niveau de transparence
-                  publiquement. C'est notre signature.
+                  gaps assumés, plan de remédiation à 6 mois. Aucun acteur cyber
+                  français n'expose ce niveau de transparence publiquement.
+                  C'est notre signature.
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 whitespace-nowrap">
@@ -296,16 +295,16 @@ export default function SecuritePage() {
         >
           <p>
             Toutes les données de la plateforme Humanix Académie sont hébergées
-            par <strong>Scaleway SAS</strong> (Paris, France), filiale du
-            groupe Iliad. Datacenters en région parisienne, opérateur de droit
+            par <strong>Scaleway SAS</strong> (Paris, France), filiale du groupe
+            Iliad. Datacenters en région parisienne, opérateur de droit
             français, <strong>non soumis au Cloud Act</strong>.
           </p>
           <p>
-            Aucun transfert de données vers un pays tiers (notamment
-            États-Unis) n'est effectué dans le cadre du fonctionnement de la
-            plateforme. Si nous devions un jour recourir à un sous-traitant
-            hors UE, nous appliquerions les clauses contractuelles types de la
-            Commission européenne.
+            Aucun transfert de données vers un pays tiers (notamment États-Unis)
+            n'est effectué dans le cadre du fonctionnement de la plateforme. Si
+            nous devions un jour recourir à un sous-traitant hors UE, nous
+            appliquerions les clauses contractuelles types de la Commission
+            européenne.
           </p>
           <ul>
             <li>Datacenters certifiés ISO 27001, ISO 50001, HDS</li>
@@ -365,16 +364,16 @@ export default function SecuritePage() {
               X-Content-Type-Options, Referrer-Policy, Permissions-Policy
             </li>
             <li>
-              <strong>Authentification</strong> : magic link par email (Scaleway TEM)
-              + sessions signées (Auth.js v5)
+              <strong>Authentification</strong> : magic link par email (Scaleway
+              TEM) + sessions signées (Auth.js v5)
             </li>
             <li>
               <strong>Mots de passe</strong> : aucun mot de passe stocké côté
               Humanix - authentification sans mot de passe
             </li>
             <li>
-              <strong>API keys</strong> hashées en SHA-256 ; révocation 1-clic
-              ; expiration configurable
+              <strong>API keys</strong> hashées en SHA-256 ; révocation 1-clic ;
+              expiration configurable
             </li>
             <li>
               <strong>Cloisonnement multi-tenant</strong> : isolation logique
@@ -382,16 +381,16 @@ export default function SecuritePage() {
               tests automatisés
             </li>
             <li>
-              <strong>Principe du moindre privilège</strong> appliqué côté
-              rôles applicatifs (LEARNER / MANAGER / ADMIN / SUPERADMIN)
+              <strong>Principe du moindre privilège</strong> appliqué côté rôles
+              applicatifs (LEARNER / MANAGER / ADMIN / SUPERADMIN)
             </li>
             <li>
               <strong>Logs d'accès</strong> conservés 12 mois, horodatés,
               immuables
             </li>
             <li>
-              <strong>Limitation de débit</strong> et protection contre les
-              abus de soumission
+              <strong>Limitation de débit</strong> et protection contre les abus
+              de soumission
             </li>
           </ul>
         </Section>
@@ -403,17 +402,19 @@ export default function SecuritePage() {
               automatisé en CI (TruffleHog + grep patterns)
             </li>
             <li>
-              Variables d'environnement injectées au runtime, jamais
-              persistées dans les images Docker
+              Variables d'environnement injectées au runtime, jamais persistées
+              dans les images Docker
             </li>
             <li>
-              <strong>Coffre 1Password vault dédié Humanix Cybersecurity</strong>{" "}
+              <strong>
+                Coffre 1Password vault dédié Humanix Cybersecurity
+              </strong>{" "}
               pour les credentials administrateur et secrets d'infrastructure
             </li>
             <li>
-              <strong>Clé Ed25519 de signature certificats</strong> :
-              jamais en repo, jamais dans le runtime applicatif. Signature dans
-              une étape isolée. Backup hors-bande (YubiKey + papier coffre).
+              <strong>Clé Ed25519 de signature certificats</strong> : jamais en
+              repo, jamais dans le runtime applicatif. Signature dans une étape
+              isolée. Backup hors-bande (YubiKey + papier coffre).
             </li>
           </ul>
 
@@ -495,12 +496,14 @@ export default function SecuritePage() {
           id="sous-traitants"
         >
           <p>
-            Liste des sous-traitants impliqués dans le fonctionnement du
-            service :
+            Liste des sous-traitants impliqués dans le fonctionnement du service
+            :
           </p>
           <div className="overflow-x-auto -mx-2 px-2 mt-3">
             <table className="w-full text-sm border-collapse">
-              <caption className="sr-only">Mesures de securite techniques de la plateforme</caption>
+              <caption className="sr-only">
+                Mesures de securite techniques de la plateforme
+              </caption>
               <thead>
                 <tr>
                   <th className="text-left p-3 bg-primary-500 text-white font-bold rounded-tl-xl">
@@ -567,8 +570,8 @@ export default function SecuritePage() {
               moyenne
             </li>
             <li>
-              <strong>Sauvegardes</strong> : quotidiennes, chiffrées,
-              conservées 30 jours, testées par restauration mensuelle
+              <strong>Sauvegardes</strong> : quotidiennes, chiffrées, conservées
+              30 jours, testées par restauration mensuelle
             </li>
             <li>
               <strong>RPO</strong> (perte maximale de données acceptable) : 24h
@@ -610,7 +613,8 @@ export default function SecuritePage() {
         <Section n="08" emoji="🗺️" title="Roadmap conformité" id="roadmap">
           <ul>
             <li>
-              <strong>Q3 2026 :</strong> Référencement CyberMalveillance.gouv.fr finalisé
+              <strong>Q3 2026 :</strong> Référencement CyberMalveillance.gouv.fr
+              finalisé
             </li>
             <li>
               <strong>Q4 2026 :</strong> Évaluation Label Cyber Expert AFNOR
@@ -639,11 +643,10 @@ export default function SecuritePage() {
         <Section n="09" emoji="🔗" title="Intégration GRC native" id="grc">
           <p>
             Vos preuves de sensibilisation alimentent automatiquement votre
-            outil GRC via l'API <code>/api/v1/evidence-export</code>.
-            Connecteur Python prêt à l'emploi pour{" "}
-            <strong>CISO Assistant</strong> (intuitem). Mappings ISO 27001,
-            NIS2, RGPD, ANSSI HG, NIST CSF et Sapin II documentés et
-            auditables dans{" "}
+            outil GRC via l'API <code>/api/v1/evidence-export</code>. Connecteur
+            Python prêt à l'emploi pour <strong>CISO Assistant</strong>{" "}
+            (intuitem). Mappings ISO 27001, NIS2, RGPD, ANSSI HG, NIST CSF et
+            Sapin II documentés et auditables dans{" "}
             <Link
               href="https://github.com/Humanix-Cybersecurity/Humanix-Academie/blob/main/lib/mapping-grc.ts"
               className="font-mono text-accent-500 underline-offset-4 hover:underline"

@@ -90,42 +90,71 @@ function scoreFor(answer: Answer): number {
   }
 }
 
-function planActionFor(score: number, answers: Record<string, Answer>): string[] {
+function planActionFor(
+  score: number,
+  answers: Record<string, Answer>,
+): string[] {
   const actions: string[] = [];
   if (answers.charte === "no") {
-    actions.push("📜 Rédiger une charte IA d'entreprise (template fourni dans la saison Maîtrise IA, épisode 12).");
+    actions.push(
+      "📜 Rédiger une charte IA d'entreprise (template fourni dans la saison Maîtrise IA, épisode 12).",
+    );
   }
   if (answers.formation === "no" || answers.formation === "partial") {
-    actions.push("🎓 Déployer la saison &laquo; Maîtrise IA &raquo; (12 épisodes, 5 min chacun) à toutes vos équipes.");
+    actions.push(
+      "🎓 Déployer la saison &laquo; Maîtrise IA &raquo; (12 épisodes, 5 min chacun) à toutes vos équipes.",
+    );
   }
   if (answers["shadow-ai"] === "no") {
-    actions.push("🌑 Lancer un audit Shadow AI : sondage anonyme + monitoring DLP sur les exports vers IAs publiques.");
+    actions.push(
+      "🌑 Lancer un audit Shadow AI : sondage anonyme + monitoring DLP sur les exports vers IAs publiques.",
+    );
   }
-  if (answers["donnees-sensibles"] === "no" || answers["donnees-sensibles"] === "partial") {
-    actions.push("🔒 Formaliser une politique &laquo; données interdites en prompt &raquo; et la communiquer (épisode 04).");
+  if (
+    answers["donnees-sensibles"] === "no" ||
+    answers["donnees-sensibles"] === "partial"
+  ) {
+    actions.push(
+      "🔒 Formaliser une politique &laquo; données interdites en prompt &raquo; et la communiquer (épisode 04).",
+    );
   }
   if (answers.supervision === "no") {
-    actions.push("👁️ Recenser tous les workflows IA &laquo; haut risque &raquo; et y intégrer un point de validation humaine.");
+    actions.push(
+      "👁️ Recenser tous les workflows IA &laquo; haut risque &raquo; et y intégrer un point de validation humaine.",
+    );
   }
   if (answers.deepfake === "no") {
-    actions.push("🎭 Mettre en place un mot de passe interne pour valider les ordres de paiement par téléphone (épisode 06).");
+    actions.push(
+      "🎭 Mettre en place un mot de passe interne pour valider les ordres de paiement par téléphone (épisode 06).",
+    );
   }
   if (answers["ai-act"] === "no") {
-    actions.push("⚖️ Cartographier vos systèmes IA selon les 4 niveaux de risque AI Act (épisode 11).");
+    actions.push(
+      "⚖️ Cartographier vos systèmes IA selon les 4 niveaux de risque AI Act (épisode 11).",
+    );
   }
   if (answers.audit === "no") {
-    actions.push("📜 Activer un audit log centralisé sur les usages IA (Humanix le fait nativement pour l'usage Hex Chat interne).");
+    actions.push(
+      "📜 Activer un audit log centralisé sur les usages IA (Humanix le fait nativement pour l'usage Hex Chat interne).",
+    );
   }
   if (actions.length === 0) {
-    actions.push("✨ Excellent niveau ! Maintenez l'effort : audit trimestriel de la charte + revue annuelle des outils déployés.");
+    actions.push(
+      "✨ Excellent niveau ! Maintenez l'effort : audit trimestriel de la charte + revue annuelle des outils déployés.",
+    );
   }
   return actions;
 }
 
-function maturityLevel(score: number): { label: string; color: string; emoji: string } {
+function maturityLevel(score: number): {
+  label: string;
+  color: string;
+  emoji: string;
+} {
   if (score >= 80) return { label: "Référence", color: "emerald", emoji: "🏆" };
   if (score >= 60) return { label: "Mature", color: "cyan", emoji: "✅" };
-  if (score >= 40) return { label: "En progression", color: "amber", emoji: "📈" };
+  if (score >= 40)
+    return { label: "En progression", color: "amber", emoji: "📈" };
   if (score >= 20) return { label: "Débutant", color: "orange", emoji: "🌱" };
   return { label: "Critique", color: "rose", emoji: "🚨" };
 }
@@ -161,7 +190,8 @@ export default function MaturiteIAClient() {
   );
   const answeredCount = QUESTIONS.filter((q) => answers[q.id]).length;
   const level = maturityLevel(score);
-  const actions = answeredCount === QUESTIONS.length ? planActionFor(score, answers) : [];
+  const actions =
+    answeredCount === QUESTIONS.length ? planActionFor(score, answers) : [];
 
   function setAnswer(id: string, val: Answer) {
     setAnswers((prev) => ({ ...prev, [id]: val }));
@@ -221,9 +251,12 @@ export default function MaturiteIAClient() {
             </p>
           </div>
           <div className="text-center text-sm">
-            <p className="text-gray-500 dark:text-gray-400 mb-1">vs PME française médiane</p>
+            <p className="text-gray-500 dark:text-gray-400 mb-1">
+              vs PME française médiane
+            </p>
             <p className="text-3xl font-extrabold tabular-nums text-gray-600 dark:text-gray-300">
-              {BENCHMARK_PME}<span className="text-base text-gray-400">/100</span>
+              {BENCHMARK_PME}
+              <span className="text-base text-gray-400">/100</span>
             </p>
             <p
               className={`text-xs font-bold mt-1 ${
@@ -240,11 +273,12 @@ export default function MaturiteIAClient() {
           <div className="text-center sm:text-right text-sm">
             <p className="text-gray-500 dark:text-gray-400 mb-1">Progression</p>
             <p className="text-2xl font-bold tabular-nums">
-              {answeredCount}<span className="text-base text-gray-400">/{QUESTIONS.length}</span>
+              {answeredCount}
+              <span className="text-base text-gray-400">
+                /{QUESTIONS.length}
+              </span>
             </p>
-            <p className="text-xs text-gray-500 mt-1">
-              questions répondues
-            </p>
+            <p className="text-xs text-gray-500 mt-1">questions répondues</p>
           </div>
         </div>
       </section>

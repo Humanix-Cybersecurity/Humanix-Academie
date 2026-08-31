@@ -40,10 +40,7 @@ export default function LearnerHero({
   equipped,
 }: Props) {
   return (
-    <section
-      aria-labelledby="hero-title"
-      className="relative bg-humanix-soft"
-    >
+    <section aria-labelledby="hero-title" className="relative bg-humanix-soft">
       <HexBackdrop intensity="soft">
         <div className="max-w-5xl mx-auto px-4 py-10 sm:py-14">
           <div className="grid sm:grid-cols-[auto_1fr] gap-8 items-center">
@@ -79,7 +76,11 @@ export default function LearnerHero({
               <LevelProgressBar xp={totalXP} />
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
-                <SoftStat emoji="⚡" value={totalXP.toString()} label="XP gagnes" />
+                <SoftStat
+                  emoji="⚡"
+                  value={totalXP.toString()}
+                  label="XP gagnes"
+                />
                 <SoftStat emoji="🪙" value={coins.toString()} label="Coins" />
                 <SoftStat
                   emoji="🔥"

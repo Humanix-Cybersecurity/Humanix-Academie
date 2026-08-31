@@ -59,7 +59,9 @@ export default function XProfileMockup({ media }: Props) {
               </span>
             )}
           </div>
-          <p className="text-sm text-gray-500 dark:text-gray-400">@{m.handle}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            @{m.handle}
+          </p>
         </div>
 
         {/* Bio */}

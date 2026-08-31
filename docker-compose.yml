@@ -67,7 +67,7 @@ services:
           "CMD",
           "sh",
           "-c",
-          "wget -qO- \"http://admin:$$HAPROXY_STATS_PASSWORD@127.0.0.1:8404/\" | grep -q 'Statistics Report'",
+          'wget -qO- "http://admin:$$HAPROXY_STATS_PASSWORD@127.0.0.1:8404/" | grep -q ''Statistics Report''',
         ]
       interval: 10s
       timeout: 3s
@@ -115,7 +115,7 @@ services:
     healthcheck:
       test:
         - "CMD-SHELL"
-        - "pg_isready -U humanix -d humanix && psql -U humanix -d humanix -tAc \"SELECT 1 FROM pg_roles WHERE rolname='humanix_readonly';\" | grep -q 1"
+        - 'pg_isready -U humanix -d humanix && psql -U humanix -d humanix -tAc "SELECT 1 FROM pg_roles WHERE rolname=''humanix_readonly'';" | grep -q 1'
       interval: 5s
       timeout: 3s
       retries: 20

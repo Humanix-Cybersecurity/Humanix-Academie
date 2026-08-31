@@ -31,7 +31,7 @@ const FORBIDDEN_PATTERNS: Rule[] = [
     //   - any other string ref to a route that doesn't exist
     pattern: /["'`]\/saisons\//,
     reason:
-      '/saisons/ est le chemin du contenu source (content/saisons/), pas une route applicative.',
+      "/saisons/ est le chemin du contenu source (content/saisons/), pas une route applicative.",
     fix: 'Remplacer "/saisons/" par "/apprendre/" (route Next.js : app/apprendre/[saison]/[episode]/page.tsx).',
   },
 ];
@@ -98,7 +98,9 @@ async function main() {
     return;
   }
 
-  console.error(`\n✗ lint-routes : ${hits.length} href(s) interdit(s) détecté(s)\n`);
+  console.error(
+    `\n✗ lint-routes : ${hits.length} href(s) interdit(s) détecté(s)\n`,
+  );
   for (const hit of hits) {
     console.error(`  ${hit.file}:${hit.line}`);
     console.error(`    ${hit.snippet}`);

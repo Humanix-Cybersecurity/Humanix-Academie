@@ -25,7 +25,9 @@ export const dynamic = "force-dynamic";
 const RATE_LIMIT_PER_HOUR = 20;
 const buckets = new Map<string, { count: number; resetAt: number }>();
 
-function checkRateLimit(tenantId: string): { ok: true } | { ok: false; retryAfter: number } {
+function checkRateLimit(
+  tenantId: string,
+): { ok: true } | { ok: false; retryAfter: number } {
   const now = Date.now();
   const bucket = buckets.get(tenantId);
   if (!bucket || bucket.resetAt < now) {
@@ -111,9 +113,7 @@ export async function POST(req: Request) {
   }
 }
 
-function parseArgs(
-  body: unknown,
-): VishingArgs | { error: string } {
+function parseArgs(body: unknown): VishingArgs | { error: string } {
   if (!body || typeof body !== "object") {
     return { error: "invalid_body" };
   }
@@ -124,7 +124,11 @@ function parseArgs(
   ) {
     return { error: "invalid_template" };
   }
-  if (typeof b.service !== "string" || b.service.length < 1 || b.service.length > 50) {
+  if (
+    typeof b.service !== "string" ||
+    b.service.length < 1 ||
+    b.service.length > 50
+  ) {
     return { error: "invalid_service" };
   }
   if (

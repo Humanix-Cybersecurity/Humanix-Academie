@@ -29,8 +29,8 @@ function truncateErrorMessage(message: string, maxLength: number): string {
 export function isScalewayTemConfigured(): boolean {
   return Boolean(
     process.env.SCALEWAY_TEM_TOKEN &&
-      process.env.SCALEWAY_TEM_PROJECT_ID &&
-      process.env.EMAIL_FROM,
+    process.env.SCALEWAY_TEM_PROJECT_ID &&
+    process.env.EMAIL_FROM,
   );
 }
 
@@ -107,9 +107,9 @@ export async function sendViaScalewayTem(
     };
   }
 
-  const recipients = (
-    Array.isArray(params.to) ? params.to : [params.to]
-  ).map((email) => ({ email }));
+  const recipients = (Array.isArray(params.to) ? params.to : [params.to]).map(
+    (email) => ({ email }),
+  );
 
   const additionalHeaders = params.headers
     ? Object.entries(params.headers).map(([key, value]) => ({ key, value }))
@@ -138,9 +138,13 @@ export async function sendViaScalewayTem(
       const statusDetails = `${res.status} ${res.statusText || "Unknown Status"}`;
       const rawErrBody = await res.text().catch(() => "");
       const errBody =
-        rawErrBody || "[Failed to read error response body from Scaleway TEM API]";
+        rawErrBody ||
+        "[Failed to read error response body from Scaleway TEM API]";
       const details = `HTTP ${statusDetails}${errBody ? ` - ${errBody}` : ""}`;
-      const boundedDetails = truncateErrorMessage(details, MAX_ERROR_BODY_LENGTH);
+      const boundedDetails = truncateErrorMessage(
+        details,
+        MAX_ERROR_BODY_LENGTH,
+      );
       return {
         ok: false,
         reason: "scaleway_tem_api_error",

@@ -20,7 +20,11 @@ export default function FacebookMockup({ media }: Props) {
       {/* Auteur */}
       <div className="px-5 py-4 flex items-start gap-3">
         <div className="shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center text-white font-bold text-lg">
-          {m.author.split(" ").map((s) => s[0]).join("").slice(0, 2)}
+          {m.author
+            .split(" ")
+            .map((s) => s[0])
+            .join("")
+            .slice(0, 2)}
         </div>
         <div className="flex-1 min-w-0">
           <div className="font-bold text-gray-900 dark:text-gray-100">

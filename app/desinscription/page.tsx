@@ -72,9 +72,9 @@ export default async function UnsubscribePage({
                 C&apos;est noté.
               </h1>
               <p className="text-base sm:text-lg text-gray-700 dark:text-gray-200 leading-relaxed mb-6">
-                L&apos;adresse <strong>{params.email}</strong> ne recevra
-                plus les <strong>{listLabel ?? "communications"}</strong> de
-                Humanix Académie.
+                L&apos;adresse <strong>{params.email}</strong> ne recevra plus
+                les <strong>{listLabel ?? "communications"}</strong> de Humanix
+                Académie.
               </p>
               <div className="bg-white/70 dark:bg-slate-900/60 border border-gray-200/80 dark:border-slate-700/80 rounded-2xl p-5 backdrop-blur-sm space-y-2 text-left text-sm text-gray-700 dark:text-gray-200">
                 <p>
@@ -82,9 +82,9 @@ export default async function UnsubscribePage({
                   demande est prise en compte immédiatement.
                 </p>
                 <p>
-                  <strong className="text-primary-500">📬 Erreur ?</strong>{" "}
-                  Si tu ne souhaitais pas te désinscrire, tu peux te
-                  ré-abonner depuis ton{" "}
+                  <strong className="text-primary-500">📬 Erreur ?</strong> Si
+                  tu ne souhaitais pas te désinscrire, tu peux te ré-abonner
+                  depuis ton{" "}
                   <Link
                     href="/profil"
                     className="text-accent-700 dark:text-accent-300 underline"
@@ -119,9 +119,8 @@ export default async function UnsubscribePage({
                 {errorMessage}
               </p>
               <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
-                Si le problème persiste, tu peux nous contacter directement
-                en répondant à n&apos;importe quel mail Humanix, ou en
-                écrivant à{" "}
+                Si le problème persiste, tu peux nous contacter directement en
+                répondant à n&apos;importe quel mail Humanix, ou en écrivant à{" "}
                 <a
                   href="mailto:contact@humanix-cybersecurity.fr?subject=Désinscription"
                   className="text-accent-700 dark:text-accent-300 underline"

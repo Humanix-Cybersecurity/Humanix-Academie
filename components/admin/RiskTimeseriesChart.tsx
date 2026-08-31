@@ -51,11 +51,7 @@ type State =
   | { kind: "ready"; points: Point[]; summary: Summary }
   | { kind: "error"; message: string };
 
-export default function RiskTimeseriesChart({
-  days = 90,
-}: {
-  days?: number;
-}) {
+export default function RiskTimeseriesChart({ days = 90 }: { days?: number }) {
   const [state, setState] = useState<State>({ kind: "loading" });
 
   useEffect(() => {
@@ -121,8 +117,8 @@ export default function RiskTimeseriesChart({
           Pas encore de courbe d&apos;évolution
         </p>
         <p className="text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto">
-          Le score moyen est photographié chaque nuit. Reviens demain pour
-          voir la première mesure, et dans 30 jours pour avoir une tendance
+          Le score moyen est photographié chaque nuit. Reviens demain pour voir
+          la première mesure, et dans 30 jours pour avoir une tendance
           actionnable.
         </p>
       </div>

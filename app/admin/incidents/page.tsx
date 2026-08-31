@@ -124,9 +124,9 @@ export default async function AdminIncidentsPage() {
           <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-slate-700">
             <table className="w-full text-sm">
               <caption className="sr-only">
-                Liste des incidents Cyber-Reflexe declenches : reference,
-                titre, severite, statut (ouvert/en cours/clos), date de
-                detection, deadline notification CNIL/ANSSI
+                Liste des incidents Cyber-Reflexe declenches : reference, titre,
+                severite, statut (ouvert/en cours/clos), date de detection,
+                deadline notification CNIL/ANSSI
               </caption>
               <thead className="bg-gray-50 dark:bg-slate-800">
                 <tr className="text-left text-xs uppercase text-gray-500 dark:text-gray-400">

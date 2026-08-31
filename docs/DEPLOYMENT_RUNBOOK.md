@@ -142,12 +142,13 @@ psql $DATABASE_URL -c "SELECT email, role FROM \"User\" WHERE role='SUPERADMIN';
 
 `DEMO_MODE` contrôle la posture globale de l'app :
 
-| `DEMO_MODE` | `/demo` | `/inscription` | `/signup` |
-|---|---|---|---|
-| `true` (dev/showcase) | ✅ accessible | ❌ redirect vers `/demo` | ✅ accessible (form legacy) |
-| `false` (prod) | ❌ 404 | ✅ accessible (Communauté) | ❌ redirect vers `/demande-abonnement` (sauf si `SIGNUP_ALLOW_SELF_SERVICE=true`) |
+| `DEMO_MODE`           | `/demo`       | `/inscription`             | `/signup`                                                                         |
+| --------------------- | ------------- | -------------------------- | --------------------------------------------------------------------------------- |
+| `true` (dev/showcase) | ✅ accessible | ❌ redirect vers `/demo`   | ✅ accessible (form legacy)                                                       |
+| `false` (prod)        | ❌ 404        | ✅ accessible (Communauté) | ❌ redirect vers `/demande-abonnement` (sauf si `SIGNUP_ALLOW_SELF_SERVICE=true`) |
 
 **En prod commerciale, toujours :**
+
 - `DEMO_MODE` non posé ou `false`
 - `SIGNUP_ALLOW_SELF_SERVICE` non posé ou `false`
 
@@ -170,11 +171,11 @@ dans GitHub.
 **Temps 1 — automatique (GitHub Actions).** `docker-publish.yml` build,
 smoke-teste et publie l'image OSS sur GHCR avec provenance SLSA + SBOM :
 
-| Tag publié | Quand | Destiné à |
-|---|---|---|
-| `:edge` | à chaque push sur `main` | self-hosters qui suivent le fil |
-| `:latest` + `:1.2.3`, `:1.2`, `:1` | sur un tag git `v*.*.*` | self-hosters, version stable |
-| `:main-<sha7>` | à chaque push sur `main` | rejouer un build précis |
+| Tag publié                         | Quand                    | Destiné à                       |
+| ---------------------------------- | ------------------------ | ------------------------------- |
+| `:edge`                            | à chaque push sur `main` | self-hosters qui suivent le fil |
+| `:latest` + `:1.2.3`, `:1.2`, `:1` | sur un tag git `v*.*.*`  | self-hosters, version stable    |
+| `:main-<sha7>`                     | à chaque push sur `main` | rejouer un build précis         |
 
 Ces tags servent la **distribution OSS**. La démo et la production, elles, sont
 livrées depuis le clone git avec `content-pro` (temps 2 ci-dessous).

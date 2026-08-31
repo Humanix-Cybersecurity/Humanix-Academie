@@ -77,8 +77,7 @@ export default function SmtpConfigForm({ initial }: { initial: ConfigShape }) {
       }
       setFeedback({
         kind: "success",
-        message:
-          "✓ Configuration enregistrée. Pense à tester la connexion.",
+        message: "✓ Configuration enregistrée. Pense à tester la connexion.",
       });
       setPassword(""); // vide le champ après save (sécurité visuelle)
       router.refresh();
@@ -161,7 +160,10 @@ export default function SmtpConfigForm({ initial }: { initial: ConfigShape }) {
         setNotes("");
         router.refresh();
       } else {
-        setFeedback({ kind: "error", message: "Erreur lors de la suppression." });
+        setFeedback({
+          kind: "error",
+          message: "Erreur lors de la suppression.",
+        });
       }
     } finally {
       setPending(false);
@@ -268,8 +270,7 @@ export default function SmtpConfigForm({ initial }: { initial: ConfigShape }) {
             htmlFor="smtp-password"
             className="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1"
           >
-            Password{" "}
-            {!isUpdate && <span className="text-warn">*</span>}
+            Password {!isUpdate && <span className="text-warn">*</span>}
             {isUpdate && (
               <span className="text-xs font-normal text-gray-500 ml-1">
                 (laisse vide pour conserver l&apos;actuel)
@@ -316,7 +317,10 @@ export default function SmtpConfigForm({ initial }: { initial: ConfigShape }) {
             htmlFor="smtp-from-name"
             className="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1"
           >
-            From name <span className="text-xs font-normal text-gray-500">(optionnel)</span>
+            From name{" "}
+            <span className="text-xs font-normal text-gray-500">
+              (optionnel)
+            </span>
           </label>
           <input
             id="smtp-from-name"
@@ -336,7 +340,8 @@ export default function SmtpConfigForm({ initial }: { initial: ConfigShape }) {
           htmlFor="smtp-notes"
           className="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1"
         >
-          Notes <span className="text-xs font-normal text-gray-500">(optionnel)</span>
+          Notes{" "}
+          <span className="text-xs font-normal text-gray-500">(optionnel)</span>
         </label>
         <textarea
           id="smtp-notes"

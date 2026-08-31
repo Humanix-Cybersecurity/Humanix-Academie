@@ -162,7 +162,8 @@ export default function InvestigationPlayer({
       <div className="max-w-4xl mx-auto space-y-6">
         <header className="text-center">
           <p className="text-xs uppercase tracking-widest text-accent-500 font-bold mb-2">
-            🔍 Mode Enquêteur · {investigation.investigationType.toLowerCase().replace("_", " ")}
+            🔍 Mode Enquêteur ·{" "}
+            {investigation.investigationType.toLowerCase().replace("_", " ")}
           </p>
           <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-primary-500 dark:text-accent-300">
             {investigation.title}
@@ -210,7 +211,9 @@ export default function InvestigationPlayer({
           >
             <span aria-hidden="true">⏱</span>
             <span>{elapsedSec}s</span>
-            <span className="opacity-50">/ ~{investigation.durationSeconds}s</span>
+            <span className="opacity-50">
+              / ~{investigation.durationSeconds}s
+            </span>
           </div>
         </header>
 
@@ -229,8 +232,8 @@ export default function InvestigationPlayer({
             Quels signaux suspects identifies-tu ?
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-            Coche tout ce qui te paraît anormal. Attention aux faux
-            positifs - sur-alarmer pénalise le score.
+            Coche tout ce qui te paraît anormal. Attention aux faux positifs -
+            sur-alarmer pénalise le score.
           </p>
           <ul className="space-y-2">
             {shuffledItems.map((item) => (
@@ -272,7 +275,9 @@ export default function InvestigationPlayer({
             disabled={phase === "submitting" || checked.size === 0}
             className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {phase === "submitting" ? "Analyse en cours…" : "Valider mon analyse →"}
+            {phase === "submitting"
+              ? "Analyse en cours…"
+              : "Valider mon analyse →"}
           </button>
         </div>
       </div>
@@ -287,12 +292,28 @@ export default function InvestigationPlayer({
         : 0;
     const badge =
       ratio >= 90
-        ? { label: "Cyber Sherlock", emoji: "🕵️‍♂️", color: "from-purple-500 to-purple-700" }
+        ? {
+            label: "Cyber Sherlock",
+            emoji: "🕵️‍♂️",
+            color: "from-purple-500 to-purple-700",
+          }
         : ratio >= 75
-          ? { label: "Détective Confirmé", emoji: "🔍", color: "from-blue-500 to-blue-700" }
+          ? {
+              label: "Détective Confirmé",
+              emoji: "🔍",
+              color: "from-blue-500 to-blue-700",
+            }
           : ratio >= 60
-            ? { label: "Détective Junior", emoji: "🔎", color: "from-emerald-500 to-emerald-700" }
-            : { label: "À rejouer", emoji: "📚", color: "from-amber-500 to-amber-700" };
+            ? {
+                label: "Détective Junior",
+                emoji: "🔎",
+                color: "from-emerald-500 to-emerald-700",
+              }
+            : {
+                label: "À rejouer",
+                emoji: "📚",
+                color: "from-amber-500 to-amber-700",
+              };
     return (
       <div className="max-w-3xl mx-auto space-y-6 text-center">
         <div
@@ -306,7 +327,8 @@ export default function InvestigationPlayer({
             {ratio}%
           </p>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            {serverResult.score} / {serverResult.maxScore} points · en {elapsedSec}s
+            {serverResult.score} / {serverResult.maxScore} points · en{" "}
+            {elapsedSec}s
           </p>
         </div>
         <p className="text-sm text-gray-700 dark:text-gray-300 max-w-prose mx-auto">
@@ -322,10 +344,7 @@ export default function InvestigationPlayer({
           >
             Voir le débrief →
           </button>
-          <Link
-            href="/apprendre/enquetes"
-            className="btn-secondary"
-          >
+          <Link href="/apprendre/enquetes" className="btn-secondary">
             Autres enquêtes
           </Link>
         </div>

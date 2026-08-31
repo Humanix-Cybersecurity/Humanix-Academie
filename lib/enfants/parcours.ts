@@ -27,7 +27,8 @@ export const MONDES: Monde[] = [
           {
             emoji: "🦊",
             qui: "hex",
-            bulle: "Coucou ! Moi c'est Hex. On va déjouer des pièges ensemble ?",
+            bulle:
+              "Coucou ! Moi c'est Hex. On va déjouer des pièges ensemble ?",
           },
           {
             emoji: "💻🎮",
@@ -41,7 +42,8 @@ export const MONDES: Monde[] = [
           {
             emoji: "🦊❓",
             qui: "hex",
-            bulle: "Hmm… un cadeau énorme, gratuit, et il faut se dépêcher ? Bizarre, non ?",
+            bulle:
+              "Hmm… un cadeau énorme, gratuit, et il faut se dépêcher ? Bizarre, non ?",
           },
         ],
         question: {
@@ -210,7 +212,8 @@ export const MONDES: Monde[] = [
           {
             emoji: "🦊🔑",
             qui: "hex",
-            bulle: "Un mot de passe, c'est comme la clé secrète d'un coffre : et le trésor, c'est TOI !",
+            bulle:
+              "Un mot de passe, c'est comme la clé secrète d'un coffre : et le trésor, c'est TOI !",
           },
           {
             emoji: "🧒",
@@ -381,12 +384,14 @@ export const MONDES: Monde[] = [
           {
             emoji: "🕵️",
             qui: "piege",
-            bulle: "Salut ! T'es trop fort ! On s'appelle ? Envoie une photo de toi !",
+            bulle:
+              "Salut ! T'es trop fort ! On s'appelle ? Envoie une photo de toi !",
           },
           {
             emoji: "🦊❓",
             qui: "hex",
-            bulle: "Derrière « Léo_12 », on ne sait pas qui c'est vraiment. Un enfant ? Un adulte ?",
+            bulle:
+              "Derrière « Léo_12 », on ne sait pas qui c'est vraiment. Un enfant ? Un adulte ?",
           },
         ],
         question: {
@@ -564,7 +569,8 @@ export const MONDES: Monde[] = [
           {
             emoji: "🦊🤔",
             qui: "hex",
-            bulle: "Attends : une photo en ligne peut rester longtemps et être vue par BEAUCOUP de gens.",
+            bulle:
+              "Attends : une photo en ligne peut rester longtemps et être vue par BEAUCOUP de gens.",
           },
         ],
         question: {
@@ -719,12 +725,14 @@ export const MONDES: Monde[] = [
           {
             emoji: "📢",
             qui: "piege",
-            bulle: "Les bonbons rendent INVINCIBLE ! Partage à 10 amis ou tu auras un malheur !",
+            bulle:
+              "Les bonbons rendent INVINCIBLE ! Partage à 10 amis ou tu auras un malheur !",
           },
           {
             emoji: "🦊🤨",
             qui: "hex",
-            bulle: "Ça fait peur pour te forcer à partager… et c'est trop bizarre pour être vrai.",
+            bulle:
+              "Ça fait peur pour te forcer à partager… et c'est trop bizarre pour être vrai.",
           },
         ],
         question: {
@@ -879,12 +887,14 @@ export const MONDES: Monde[] = [
           {
             emoji: "🎉",
             qui: "piege",
-            bulle: "1000 pièces GRATUITES ! Entre vite ton mot de passe de compte ici !",
+            bulle:
+              "1000 pièces GRATUITES ! Entre vite ton mot de passe de compte ici !",
           },
           {
             emoji: "🦊🤨",
             qui: "hex",
-            bulle: "Un vrai jeu ne te demande JAMAIS ton mot de passe sur un autre site.",
+            bulle:
+              "Un vrai jeu ne te demande JAMAIS ton mot de passe sur un autre site.",
           },
         ],
         question: {
@@ -1056,12 +1066,14 @@ export const MONDES: Monde[] = [
           {
             emoji: "🦊💙",
             qui: "hex",
-            bulle: "Stop. Ce n'est PAS ta faute. Et tu n'es pas tout seul, je suis là.",
+            bulle:
+              "Stop. Ce n'est PAS ta faute. Et tu n'es pas tout seul, je suis là.",
           },
           {
             emoji: "🦊",
             qui: "hex",
-            bulle: "On ne répond pas à la méchanceté par la méchanceté. On va trouver de l'aide.",
+            bulle:
+              "On ne répond pas à la méchanceté par la méchanceté. On va trouver de l'aide.",
           },
         ],
         question: {
@@ -1077,7 +1089,8 @@ export const MONDES: Monde[] = [
             },
             {
               id: "parle",
-              label: "Je garde une preuve, je bloque, et j'en parle à un adulte",
+              label:
+                "Je garde une preuve, je bloque, et j'en parle à un adulte",
               emoji: "🛡️",
               bon: true,
               reaction: "Bravo. En parler, c'est fort et c'est la bonne idée.",
@@ -1101,7 +1114,10 @@ export const MONDES: Monde[] = [
           {
             id: "message",
             gauche: { emoji: "📩", label: "Un message méchant" },
-            droite: { emoji: "📸", label: "Je garde une preuve, je ne réponds pas" },
+            droite: {
+              emoji: "📸",
+              label: "Je garde une preuve, je ne réponds pas",
+            },
           },
           {
             id: "continue",
@@ -1111,7 +1127,10 @@ export const MONDES: Monde[] = [
           {
             id: "malheureux",
             gauche: { emoji: "😞", label: "Je me sens mal" },
-            droite: { emoji: "🧑‍🦰", label: "J'en parle à un adulte de confiance" },
+            droite: {
+              emoji: "🧑‍🦰",
+              label: "J'en parle à un adulte de confiance",
+            },
           },
         ],
       },
@@ -1187,7 +1206,8 @@ export const MONDES: Monde[] = [
             label: "Je bloque, je garde une preuve et j'en parle à un adulte",
             emoji: "🛡️",
             bon: true,
-            reaction: "PARFAIT. Demander de l'aide, c'est la plus grande force 💙",
+            reaction:
+              "PARFAIT. Demander de l'aide, c'est la plus grande force 💙",
           },
         ],
       },
@@ -1217,7 +1237,8 @@ export const MONDES: Monde[] = [
           {
             emoji: "🦊😴",
             qui: "hex",
-            bulle: "Les écrans, c'est sympa ! Mais ton corps a besoin de pauses et de sommeil pour être au top.",
+            bulle:
+              "Les écrans, c'est sympa ! Mais ton corps a besoin de pauses et de sommeil pour être au top.",
           },
         ],
         question: {
@@ -1362,7 +1383,8 @@ export const MONDES: Monde[] = [
             label: "Je n'obéis pas et j'en parle tout de suite à un adulte",
             emoji: "🛡️",
             bon: true,
-            reaction: "PARFAIT. En parler, c'est exactement ce qu'il faut faire 💙",
+            reaction:
+              "PARFAIT. En parler, c'est exactement ce qu'il faut faire 💙",
           },
         ],
       },
@@ -1386,7 +1408,8 @@ export const MONDES: Monde[] = [
         panels: [
           {
             emoji: "📲🆓",
-            texte: "Tu installes un jeu marqué « GRATUIT ». Tu joues, c'est top !",
+            texte:
+              "Tu installes un jeu marqué « GRATUIT ». Tu joues, c'est top !",
           },
           {
             emoji: "💳",
@@ -1396,7 +1419,8 @@ export const MONDES: Monde[] = [
           {
             emoji: "🦊🤔",
             qui: "hex",
-            bulle: "« Gratuit » au début ne veut pas dire gratuit après. Et l'argent, ce n'est pas à toi de décider seul.",
+            bulle:
+              "« Gratuit » au début ne veut pas dire gratuit après. Et l'argent, ce n'est pas à toi de décider seul.",
           },
         ],
         question: {
@@ -1415,7 +1439,8 @@ export const MONDES: Monde[] = [
               label: "Je demande à un adulte avant de payer",
               emoji: "🛡️",
               bon: true,
-              reaction: "Bravo ! L'argent, on en parle toujours avec un adulte.",
+              reaction:
+                "Bravo ! L'argent, on en parle toujours avec un adulte.",
             },
           ],
         },
@@ -1441,7 +1466,8 @@ export const MONDES: Monde[] = [
             emoji: "🛍️",
             texte: "« ACHÈTE VITE, -50 % aujourd'hui ! »",
             piege: true,
-            reaction: "Oui ! Te presser, c'est pour te faire payer sans réfléchir.",
+            reaction:
+              "Oui ! Te presser, c'est pour te faire payer sans réfléchir.",
           },
           {
             id: "gagnant",
@@ -1568,12 +1594,14 @@ export const MONDES: Monde[] = [
           {
             emoji: "🦊🤖",
             qui: "hex",
-            bulle: "Aujourd'hui, un ordinateur (on dit l'IA) peut fabriquer des images, et même des voix, très réalistes.",
+            bulle:
+              "Aujourd'hui, un ordinateur (on dit l'IA) peut fabriquer des images, et même des voix, très réalistes.",
           },
           {
             emoji: "🦊",
             qui: "hex",
-            bulle: "Donc une image « preuve », ce n'est plus toujours vrai. On réfléchit avant de croire.",
+            bulle:
+              "Donc une image « preuve », ce n'est plus toujours vrai. On réfléchit avant de croire.",
           },
         ],
         question: {
@@ -1626,7 +1654,8 @@ export const MONDES: Monde[] = [
             emoji: "🎙️",
             label: "Une « voix de maman » qui réclame un code par message",
             bon: "droite",
-            reaction: "Méfiance ! Une voix peut être imitée. Je vérifie en vrai.",
+            reaction:
+              "Méfiance ! Une voix peut être imitée. Je vérifie en vrai.",
           },
           {
             id: "vacances",
@@ -1692,7 +1721,8 @@ export const MONDES: Monde[] = [
             label: "Je réponds au message pour demander",
             emoji: "💬",
             bon: false,
-            reaction: "Non ! Le message peut être un faux. On vérifie autrement.",
+            reaction:
+              "Non ! Le message peut être un faux. On vérifie autrement.",
           },
           {
             id: "c",
@@ -1723,16 +1753,19 @@ export const MONDES: Monde[] = [
         panels: [
           {
             emoji: "🔊🏠",
-            texte: "À la maison, un petit haut-parleur répond quand on lui parle.",
+            texte:
+              "À la maison, un petit haut-parleur répond quand on lui parle.",
           },
           {
             emoji: "🦊👂",
             qui: "hex",
-            bulle: "C'est pratique ! Mais il a un micro qui écoute pour répondre. On fait attention à ce qu'on dit devant.",
+            bulle:
+              "C'est pratique ! Mais il a un micro qui écoute pour répondre. On fait attention à ce qu'on dit devant.",
           },
         ],
         question: {
-          consigne: "L'assistant te demande ton mot de passe pour « jouer ». Tu fais quoi ?",
+          consigne:
+            "L'assistant te demande ton mot de passe pour « jouer ». Tu fais quoi ?",
           options: [
             {
               id: "dit",
@@ -1747,7 +1780,8 @@ export const MONDES: Monde[] = [
               label: "Je ne le dis pas et j'en parle à un adulte",
               emoji: "🛡️",
               bon: true,
-              reaction: "Bravo ! Un secret reste un secret, même devant un micro.",
+              reaction:
+                "Bravo ! Un secret reste un secret, même devant un micro.",
             },
           ],
         },
@@ -1879,12 +1913,14 @@ export const MONDES: Monde[] = [
         panels: [
           {
             emoji: "📍🗺️",
-            texte: "Une appli propose de partager ta position « avec tout le monde ».",
+            texte:
+              "Une appli propose de partager ta position « avec tout le monde ».",
           },
           {
             emoji: "🦊🤔",
             qui: "hex",
-            bulle: "Partager où tu es, c'est dire à des inconnus où te trouver. On garde ça pour les gens de confiance.",
+            bulle:
+              "Partager où tu es, c'est dire à des inconnus où te trouver. On garde ça pour les gens de confiance.",
           },
         ],
         question: {
@@ -2055,12 +2091,14 @@ export const MONDES: Monde[] = [
           {
             emoji: "👥",
             qui: "enfant",
-            bulle: "Vas-y, retiens ta respiration le plus longtemps possible ! Tout le monde le fait !",
+            bulle:
+              "Vas-y, retiens ta respiration le plus longtemps possible ! Tout le monde le fait !",
           },
           {
             emoji: "🦊🛑",
             qui: "hex",
-            bulle: "Un défi qui peut te faire mal, ce n'est pas un jeu. Un vrai ami ne te pousse jamais au danger.",
+            bulle:
+              "Un défi qui peut te faire mal, ce n'est pas un jeu. Un vrai ami ne te pousse jamais au danger.",
           },
         ],
         question: {
@@ -2079,7 +2117,8 @@ export const MONDES: Monde[] = [
               label: "Je dis non et j'en parle à un adulte",
               emoji: "🛡️",
               bon: true,
-              reaction: "Bravo ! Dire non quand c'est dangereux, c'est très courageux.",
+              reaction:
+                "Bravo ! Dire non quand c'est dangereux, c'est très courageux.",
             },
           ],
         },
@@ -2216,12 +2255,14 @@ export const MONDES: Monde[] = [
           {
             emoji: "⛓️",
             qui: "piege",
-            bulle: "Envoie ce message à 15 personnes ou il t'arrive malheur cette nuit !",
+            bulle:
+              "Envoie ce message à 15 personnes ou il t'arrive malheur cette nuit !",
           },
           {
             emoji: "🦊😌",
             qui: "hex",
-            bulle: "C'est une « chaîne ». Une fausse menace pour te faire peur et tout encombrer. Rien ne va t'arriver.",
+            bulle:
+              "C'est une « chaîne ». Une fausse menace pour te faire peur et tout encombrer. Rien ne va t'arriver.",
           },
         ],
         question: {
@@ -2388,17 +2429,20 @@ export const MONDES: Monde[] = [
         panels: [
           {
             emoji: "📝",
-            texte: "Un site veut que tu crées un compte pour jouer. Il demande :",
+            texte:
+              "Un site veut que tu crées un compte pour jouer. Il demande :",
           },
           {
             emoji: "🪪",
             qui: "piege",
-            bulle: "Ton vrai nom, ton adresse, ton âge, ton numéro et une photo de toi !",
+            bulle:
+              "Ton vrai nom, ton adresse, ton âge, ton numéro et une photo de toi !",
           },
           {
             emoji: "🦊🤔",
             qui: "hex",
-            bulle: "On ne s'inscrit pas partout, et on donne le MOINS d'infos possible. Un adulte doit être au courant.",
+            bulle:
+              "On ne s'inscrit pas partout, et on donne le MOINS d'infos possible. Un adulte doit être au courant.",
           },
         ],
         question: {
@@ -2488,7 +2532,10 @@ export const MONDES: Monde[] = [
           {
             id: "mail",
             gauche: { emoji: "✉️", label: "Un e-mail bizarre d'un inconnu" },
-            droite: { emoji: "🙅", label: "Je n'ouvre pas, je montre à un adulte" },
+            droite: {
+              emoji: "🙅",
+              label: "Je n'ouvre pas, je montre à un adulte",
+            },
           },
           {
             id: "mdp",

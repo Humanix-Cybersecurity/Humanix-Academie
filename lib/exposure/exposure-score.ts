@@ -47,11 +47,7 @@ export function computeExposureScore(input: ExposureInput): ExposureScore {
   if (input.passwordPwned) {
     const base = 45;
     const amplifier =
-      input.passwordCount > 100000
-        ? 15
-        : input.passwordCount > 1000
-          ? 8
-          : 0;
+      input.passwordCount > 100000 ? 15 : input.passwordCount > 1000 ? 8 : 0;
     const pts = base + amplifier;
     score += pts;
     factors.push({ label: "Mot de passe trouvé dans une fuite", points: pts });
@@ -79,20 +75,32 @@ export function computeExposureScore(input: ExposureInput): ExposureScore {
   // Téléphone signalé.
   if (input.phoneFlagged) {
     score += 10;
-    factors.push({ label: "Numéro de téléphone potentiellement exposé", points: 10 });
+    factors.push({
+      label: "Numéro de téléphone potentiellement exposé",
+      points: 10,
+    });
   }
 
   score = clamp(Math.round(score), 0, 100);
 
   const verdict: ExposureVerdict =
-    score >= 75 ? "critique" : score >= 50 ? "eleve" : score >= 25 ? "modere" : "faible";
+    score >= 75
+      ? "critique"
+      : score >= 50
+        ? "eleve"
+        : score >= 25
+          ? "modere"
+          : "faible";
 
   return { score, verdict, version: SCORE_VERSION, factors };
 }
 
 /** Libellé + couleur pour l'UI (RGAA : la couleur ne porte jamais seule l'info,
  * toujours accompagnée du libellé textuel). */
-export function verdictLabel(v: ExposureVerdict): { label: string; tone: string } {
+export function verdictLabel(v: ExposureVerdict): {
+  label: string;
+  tone: string;
+} {
   switch (v) {
     case "faible":
       return { label: "Exposition faible", tone: "emerald" };

@@ -258,9 +258,7 @@ export default function SmishingGeneratorClient() {
             </p>
 
             <div>
-              <h3 className="font-bold text-sm mb-1">
-                Persona attaquant
-              </h3>
+              <h3 className="font-bold text-sm mb-1">Persona attaquant</h3>
               <p className="text-sm text-gray-700 dark:text-gray-300">
                 {script.attackerPersona}
               </p>

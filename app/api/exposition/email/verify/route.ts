@@ -32,11 +32,17 @@ export async function POST(req: Request) {
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
+    return NextResponse.json(
+      { ok: false, error: "invalid_json" },
+      { status: 400 },
+    );
   }
   const parsed = Schema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ ok: false, error: "invalid_input" }, { status: 400 });
+    return NextResponse.json(
+      { ok: false, error: "invalid_input" },
+      { status: 400 },
+    );
   }
   const { email, otp } = parsed.data;
 
@@ -47,12 +53,18 @@ export async function POST(req: Request) {
   const ip = clientIp(req) ?? "unknown";
   const rl = checkRateLimit(`exposure-otp-verify:${ip}`, 10, 10 * 60 * 1000);
   if (!rl.ok) {
-    return NextResponse.json({ ok: false, error: "rate_limited" }, { status: 429 });
+    return NextResponse.json(
+      { ok: false, error: "rate_limited" },
+      { status: 429 },
+    );
   }
 
   const verified = await verifyEmailOtp(email, otp);
   if (!verified.ok) {
-    return NextResponse.json({ ok: false, error: verified.reason }, { status: 401 });
+    return NextResponse.json(
+      { ok: false, error: verified.reason },
+      { status: 401 },
+    );
   }
 
   // Matching souverain éphémère (aucun write, aucun log de l'email).
@@ -64,7 +76,8 @@ export async function POST(req: Request) {
     outcome: "SUCCESS",
     ip: clientIp(req),
     userAgent: req.headers.get("user-agent"),
-    message: "Vérification propriété email pour check exposition (cible non journalisée)",
+    message:
+      "Vérification propriété email pour check exposition (cible non journalisée)",
   });
 
   // Métrique agrégée non-identifiante.

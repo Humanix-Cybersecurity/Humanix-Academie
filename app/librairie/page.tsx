@@ -40,8 +40,7 @@ const ARTICLE_PALETTES = [
   {
     bg: "from-cyan-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-cyan-950/40",
     ring: "border-cyan-200 dark:border-cyan-900/40",
-    badge:
-      "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-200",
+    badge: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-200",
   },
   {
     bg: "from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-teal-950/40",
@@ -123,9 +122,8 @@ export default async function LibrairiePage({
             className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed animate-slide-up"
             style={{ animationDelay: "220ms" }}
           >
-            Articles courts et autonomes - 5 à 10 minutes par lecture.
-            Aucune obligation, juste une invitation à apprendre quand tu en
-            as envie.
+            Articles courts et autonomes - 5 à 10 minutes par lecture. Aucune
+            obligation, juste une invitation à apprendre quand tu en as envie.
           </p>
           {articles.length > 0 && (
             <p
@@ -133,7 +131,9 @@ export default async function LibrairiePage({
               style={{ animationDelay: "340ms" }}
             >
               {articles.length}{" "}
-              {articles.length > 1 ? "articles disponibles" : "article disponible"}{" "}
+              {articles.length > 1
+                ? "articles disponibles"
+                : "article disponible"}{" "}
               · environ {totalMinutes} minutes de lecture au total
             </p>
           )}

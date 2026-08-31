@@ -147,7 +147,7 @@ export default async function PhishingListsPage() {
           <code>,</code> (auto-détecté). Header en première ligne autorisé.
         </p>
         <pre className="bg-gray-100 dark:bg-slate-800 rounded p-3 text-xs overflow-x-auto">
-{`email;name;service
+          {`email;name;service
 alice@exemple.fr;Alice Dupont;Compta
 bob@exemple.fr;Bob Martin;RH
 contact@prestataire.com;;Externe`}
@@ -156,7 +156,9 @@ contact@prestataire.com;;Externe`}
           <li>Max 10 000 lignes par CSV (1 Mo)</li>
           <li>Emails validés par regex simple, lignes invalides ignorées</li>
           <li>Dédupe automatique au sein du CSV</li>
-          <li>Match auto avec les utilisateurs existants du tenant (Userld lié)</li>
+          <li>
+            Match auto avec les utilisateurs existants du tenant (Userld lié)
+          </li>
         </ul>
       </AdminSection>
     </>

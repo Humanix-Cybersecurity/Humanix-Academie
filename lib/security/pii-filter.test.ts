@@ -14,9 +14,7 @@ describe("scanPii - emails", () => {
     expect(r.hasPii).toBe(true);
     expect(r.hits).toHaveLength(1);
     expect(r.hits[0].type).toBe("email");
-    expect(r.redacted).toBe(
-      "Contacte-moi a {redacted-email} pour le suivi",
-    );
+    expect(r.redacted).toBe("Contacte-moi a {redacted-email} pour le suivi");
   });
 
   it("detecte plusieurs emails", () => {
@@ -152,9 +150,7 @@ describe("describePiiHits", () => {
   });
 
   it("singulier pour 1 occurrence", () => {
-    const d = describePiiHits([
-      { type: "email", match: "a@b", index: 0 },
-    ]);
+    const d = describePiiHits([{ type: "email", match: "a@b", index: 0 }]);
     expect(d).toBe("1 email");
   });
 

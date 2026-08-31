@@ -237,11 +237,7 @@ export default function PackNis2Form({ tenantName }: Props) {
       </div>
 
       <div className="flex flex-wrap gap-3 pt-2">
-        <button
-          type="submit"
-          className="btn-primary"
-          disabled={submitting}
-        >
+        <button type="submit" className="btn-primary" disabled={submitting}>
           {submitting ? "Génération en cours…" : "📄 Télécharger le pack PDF"}
         </button>
         <button
@@ -251,7 +247,9 @@ export default function PackNis2Form({ tenantName }: Props) {
           disabled={submitting}
           title="Rapport annuel formel destiné à l'autorité compétente (ANSSI) - utilise les mêmes informations que ci-dessus."
         >
-          {submitting ? "Génération en cours…" : "📋 Télécharger le rapport annuel NIS2"}
+          {submitting
+            ? "Génération en cours…"
+            : "📋 Télécharger le rapport annuel NIS2"}
         </button>
       </div>
       <p className="text-xs text-gray-500 italic">

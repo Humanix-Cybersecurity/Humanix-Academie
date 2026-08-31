@@ -151,8 +151,7 @@ const BADGE_CLASSES: Record<Persona["accent"], string> = {
     "bg-accent-100 dark:bg-accent-900/40 text-accent-800 dark:text-accent-200",
   emerald:
     "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-200",
-  amber:
-    "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200",
+  amber: "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200",
   purple:
     "bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-200",
   rose: "bg-rose-100 dark:bg-rose-900/40 text-rose-800 dark:text-rose-200",
@@ -174,8 +173,8 @@ export default function RejoindrePage() {
           ?
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-          Six profils, six parcours. Choisissez celui qui correspond le mieux
-          à votre situation - vous serez orienté vers la bonne formule, en
+          Six profils, six parcours. Choisissez celui qui correspond le mieux à
+          votre situation - vous serez orienté vers la bonne formule, en
           quelques secondes.
         </p>
       </header>
@@ -244,8 +243,8 @@ export default function RejoindrePage() {
         <div className="space-y-3">
           <details className="rounded-lg bg-white dark:bg-slate-900 p-4 border border-gray-200 dark:border-slate-700">
             <summary className="cursor-pointer font-bold text-primary-500 dark:text-accent-300">
-              Je me suis inscrit comme particulier, je devais en fait
-              créer un espace pour mon équipe
+              Je me suis inscrit comme particulier, je devais en fait créer un
+              espace pour mon équipe
             </summary>
             <p className="mt-3 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
               Pas de panique. Connectez-vous à votre compte actuel et
@@ -256,27 +255,27 @@ export default function RejoindrePage() {
               >
                 contact@humanix-cybersecurity.fr
               </a>{" "}
-              en précisant votre email et le nom de votre organisation.
-              Nous basculerons votre compte en mode ADMIN avec un nouvel
-              espace dédié, en conservant vos progrès.
+              en précisant votre email et le nom de votre organisation. Nous
+              basculerons votre compte en mode ADMIN avec un nouvel espace
+              dédié, en conservant vos progrès.
             </p>
           </details>
 
           <details className="rounded-lg bg-white dark:bg-slate-900 p-4 border border-gray-200 dark:border-slate-700">
             <summary className="cursor-pointer font-bold text-primary-500 dark:text-accent-300">
-              Ma conjointe / mon conjoint s'est inscrit, je veux qu'elle
-              ou il rejoigne mon espace
+              Ma conjointe / mon conjoint s'est inscrit, je veux qu'elle ou il
+              rejoigne mon espace
             </summary>
             <p className="mt-3 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
               Depuis votre console admin (
               <code className="text-xs bg-gray-100 dark:bg-slate-800 px-1 py-0.5 rounded">
                 /admin/utilisateurs
               </code>
-              ), utilisez le formulaire « Inviter un collaborateur ». Si
-              l'email de votre proche existe déjà, le système enverra
-              automatiquement une demande de rattachement RGPD-safe. Votre
-              proche recevra un mail clair et pourra accepter en un clic
-              avec son consentement explicite.
+              ), utilisez le formulaire « Inviter un collaborateur ». Si l'email
+              de votre proche existe déjà, le système enverra automatiquement
+              une demande de rattachement RGPD-safe. Votre proche recevra un
+              mail clair et pourra accepter en un clic avec son consentement
+              explicite.
             </p>
           </details>
 
@@ -301,21 +300,20 @@ export default function RejoindrePage() {
               >
                 Starter gratuit jusqu'à 5 sièges
               </Link>{" "}
-              : créez votre espace, invitez votre équipe, testez en
-              conditions réelles. Sans carte bancaire, sans engagement.
+              : créez votre espace, invitez votre équipe, testez en conditions
+              réelles. Sans carte bancaire, sans engagement.
             </p>
           </details>
 
           <details className="rounded-lg bg-white dark:bg-slate-900 p-4 border border-gray-200 dark:border-slate-700">
             <summary className="cursor-pointer font-bold text-primary-500 dark:text-accent-300">
-              Je veux héberger Humanix Académie chez moi (Community
-              Edition)
+              Je veux héberger Humanix Académie chez moi (Community Edition)
             </summary>
             <p className="mt-3 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
               Humanix Académie est{" "}
-              <strong>open source sous licence AGPLv3</strong>. Vous
-              pouvez télécharger le code, l'installer chez vous, sans
-              limite ni dépendance Humanix. Documentation et code sur{" "}
+              <strong>open source sous licence AGPLv3</strong>. Vous pouvez
+              télécharger le code, l'installer chez vous, sans limite ni
+              dépendance Humanix. Documentation et code sur{" "}
               <a
                 href="https://github.com/Humanix-Cybersecurity/Humanix-Academie"
                 target="_blank"
@@ -334,20 +332,18 @@ export default function RejoindrePage() {
 
           <details className="rounded-lg bg-white dark:bg-slate-900 p-4 border border-gray-200 dark:border-slate-700">
             <summary className="cursor-pointer font-bold text-primary-500 dark:text-accent-300">
-              Je suis indépendant / consultant, je gère plusieurs
-              clients
+              Je suis indépendant / consultant, je gère plusieurs clients
             </summary>
             <p className="mt-3 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-              Le plan{" "}
-              <strong>RSSI externalisé</strong> (cf.{" "}
+              Le plan <strong>RSSI externalisé</strong> (cf.{" "}
               <Link href="/tarifs" className="text-primary-500 underline">
                 /tarifs
               </Link>
               ) vous permet de gérer plusieurs tenants depuis une console
               centrale. Chaque client a son propre espace, ses propres
-              utilisateurs, ses propres données. Une seule passerelle
-              cyber consolide les preuves de sensibilisation pour tous
-              vos clients. Contactez-nous à{" "}
+              utilisateurs, ses propres données. Une seule passerelle cyber
+              consolide les preuves de sensibilisation pour tous vos clients.
+              Contactez-nous à{" "}
               <a
                 href="mailto:contact@humanix-cybersecurity.fr?subject=Plan%20RSSI%20externalis%C3%A9"
                 className="text-primary-500 underline"
@@ -363,8 +359,7 @@ export default function RejoindrePage() {
       {/* ===== CTA SECONDAIRE ===== */}
       <section className="text-center mb-8">
         <p className="text-gray-600 dark:text-gray-300 mb-3">
-          Vous hésitez encore ? Comparez les formules ou parlez à un
-          conseiller.
+          Vous hésitez encore ? Comparez les formules ou parlez à un conseiller.
         </p>
         <div className="flex flex-wrap gap-3 justify-center">
           <Link href="/tarifs" className="btn-secondary">

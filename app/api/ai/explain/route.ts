@@ -48,11 +48,7 @@ export async function POST(req: Request) {
   const userId = session.user.id as string;
 
   // Rate limit : 20 req/h par user (suffisant pour usage normal)
-  const rl = checkRateLimit(
-    `ai_explain:${userId}`,
-    20,
-    60 * 60 * 1000,
-  );
+  const rl = checkRateLimit(`ai_explain:${userId}`, 20, 60 * 60 * 1000);
   if (!rl.ok) {
     return NextResponse.json(
       {
@@ -66,10 +62,7 @@ export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
   const parsed = Schema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json(
-      { error: "invalid_payload" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
   }
 
   // Le persona est infere du user : il ne peut pas être triche cote client

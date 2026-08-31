@@ -54,18 +54,13 @@
 import { AuditAction, AuditOutcome, AuditSeverity } from "@prisma/client";
 import { db } from "@/lib/db";
 import { auditLog } from "@/lib/audit";
-import {
-  SUPPORTED_FRAMEWORKS,
-  type FrameworkRef,
-} from "@/lib/mapping-grc";
+import { SUPPORTED_FRAMEWORKS, type FrameworkRef } from "@/lib/mapping-grc";
 import { buildCisoBundle } from "./build-bundle";
 import { CisoAssistantClient } from "./client";
 import { decryptCisoPassword } from "./encryption";
 
 export type LiveEvent =
-  | "episode.completed"
-  | "phishing.reported"
-  | "phishing.user_clicked";
+  "episode.completed" | "phishing.reported" | "phishing.user_clicked";
 
 const DEBOUNCE_MS = 5000;
 const COVERAGE_DAYS = 365;
@@ -85,10 +80,7 @@ const inFlight = new Set<string>();
  * Point d'entree public. Non-bloquant, ne throw jamais.
  * Appele depuis les routes API juste apres fireWebhook().
  */
-export function triggerCisoLiveSync(
-  tenantId: string,
-  event: LiveEvent,
-): void {
+export function triggerCisoLiveSync(tenantId: string, event: LiveEvent): void {
   try {
     scheduleLiveSync(tenantId, event);
   } catch (err) {
@@ -238,8 +230,7 @@ async function runLiveSync(
     await auditLog({
       action: AuditAction.CISO_LIVE_SYNC,
       outcome: totalFail === 0 ? AuditOutcome.SUCCESS : AuditOutcome.FAILURE,
-      severity:
-        totalFail === 0 ? AuditSeverity.INFO : AuditSeverity.WARNING,
+      severity: totalFail === 0 ? AuditSeverity.INFO : AuditSeverity.WARNING,
       tenantId,
       target: { type: "ciso_connection", label: conn.baseUrl },
       message: `Live sync ${triggerEvent} : ${totalOk}/${totalAll} evidences sur ${perFramework.length} framework(s) en ${durationMs}ms`,

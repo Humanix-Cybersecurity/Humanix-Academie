@@ -224,9 +224,7 @@ p{font-size:18px;color:#334155}.pied{color:#64748b;font-size:13px;margin-top:24p
   const activite = monde.activites[index];
 
   return (
-    <div
-      className={`min-h-screen bg-gradient-to-b ${theme.grad} bg-fixed`}
-    >
+    <div className={`min-h-screen bg-gradient-to-b ${theme.grad} bg-fixed`}>
       <div className="max-w-xl mx-auto px-4 py-6">
         {/* Barre du haut : retour + progression */}
         <div className="flex items-center justify-between mb-4">
@@ -236,7 +234,10 @@ p{font-size:18px;color:#334155}.pied{color:#64748b;font-size:13px;margin-top:24p
           >
             ✕ Quitter
           </Link>
-          <div className="flex items-center gap-1.5" aria-label={`Étape ${index + 1} sur ${total}`}>
+          <div
+            className="flex items-center gap-1.5"
+            aria-label={`Étape ${index + 1} sur ${total}`}
+          >
             {monde.activites.map((_, i) => (
               <span
                 key={i}

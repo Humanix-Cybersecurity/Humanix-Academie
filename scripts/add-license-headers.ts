@@ -77,7 +77,9 @@ function addHeader(content: string): string {
     return content.slice(0, nl + 1) + HEADER + "\n" + content.slice(nl + 1);
   }
   // Si le fichier commence par "use client" ou "use server", on insere apres.
-  const directiveMatch = content.match(/^(["']use (?:client|server)["'];?\s*\n)/);
+  const directiveMatch = content.match(
+    /^(["']use (?:client|server)["'];?\s*\n)/,
+  );
   if (directiveMatch) {
     const offset = directiveMatch[0].length;
     return content.slice(0, offset) + HEADER + "\n" + content.slice(offset);

@@ -5,11 +5,7 @@
 
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import {
-  FEATURE_MIN_PLAN,
-  getTenantPlan,
-  planHasFeature,
-} from "@/lib/plans";
+import { FEATURE_MIN_PLAN, getTenantPlan, planHasFeature } from "@/lib/plans";
 import PlanGate from "@/components/PlanGate";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import VishingGeneratorClient from "./VishingGeneratorClient";
@@ -73,8 +69,8 @@ export default async function AdminVishingPage() {
             </li>
             <li>
               <strong>Souveraineté</strong> : script généré par Mistral (Paris),
-              lecture par Piper TTS local. Aucune donnée envoyée à OpenAI / Cloud
-              Act US.
+              lecture par Piper TTS local. Aucune donnée envoyée à OpenAI /
+              Cloud Act US.
             </li>
           </ul>
         </div>
@@ -85,19 +81,19 @@ export default async function AdminVishingPage() {
             💶 Génération gratuite, exécution à la charge du client
           </h2>
           <p className="text-sm text-blue-900 dark:text-blue-100 mb-2">
-            Humanix Académie génère gratuitement les <strong>scripts</strong>{" "}
-            de vishing pédagogiques. L&apos;<strong>exécution réelle</strong>{" "}
+            Humanix Académie génère gratuitement les <strong>scripts</strong> de
+            vishing pédagogiques. L&apos;<strong>exécution réelle</strong>{" "}
             (appel téléphonique sortant avec lecture TTS, traçabilité de la
-            cible) n&apos;est <strong>pas incluse</strong> : un appel a un
-            coût opérateur réel et nécessite une infra SIP dédiée.
+            cible) n&apos;est <strong>pas incluse</strong> : un appel a un coût
+            opérateur réel et nécessite une infra SIP dédiée.
           </p>
           <p className="text-sm text-blue-900 dark:text-blue-100 mb-2">
             Deux options :
           </p>
           <ul className="text-sm text-blue-900 dark:text-blue-100 space-y-1 list-disc list-inside">
             <li>
-              <strong>Vous gérez l&apos;exécution</strong> : copiez le script
-              + écoutez la lecture Piper TTS, puis utilisez votre solution
+              <strong>Vous gérez l&apos;exécution</strong> : copiez le script +
+              écoutez la lecture Piper TTS, puis utilisez votre solution
               téléphonique habituelle.
             </li>
             <li>
@@ -120,7 +116,9 @@ export default async function AdminVishingPage() {
 
         {/* Roadmap */}
         <div className="card text-sm text-gray-600 dark:text-gray-400">
-          <strong className="text-primary-500">Roadmap vishing (Q3 2026)</strong>{" "}
+          <strong className="text-primary-500">
+            Roadmap vishing (Q3 2026)
+          </strong>{" "}
           : campagnes programmées, score de risque vishing par utilisateur,
           appel sortant simulé via SIP test (sandboxed), import de scénarios
           contributeurs depuis la marketplace.

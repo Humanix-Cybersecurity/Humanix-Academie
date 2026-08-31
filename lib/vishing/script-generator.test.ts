@@ -40,7 +40,9 @@ describe("detectPII", () => {
 
   it("accepte un texte propre sans PII", () => {
     expect(detectPII("Je veux simuler un faux support IT")).toBeNull();
-    expect(detectPII("Cible : service compta, scenario fraude au RIB")).toBeNull();
+    expect(
+      detectPII("Cible : service compta, scenario fraude au RIB"),
+    ).toBeNull();
   });
 });
 
@@ -161,16 +163,18 @@ describe("generateVishingScript - appel Mistral mocke", () => {
       attackerPersona: "Faux DSI",
       spoofedCallerId: "0123456789",
       redFlags: ["Demande de mot de passe au telephone"],
-      ttsScript: "Bonjour, ici la DSI. On a besoin de votre mot de passe. Maintenant svp.",
+      ttsScript:
+        "Bonjour, ici la DSI. On a besoin de votre mot de passe. Maintenant svp.",
     };
 
-    const fetchMock = vi.fn(async () =>
-      new Response(
-        JSON.stringify({
-          choices: [{ message: { content: JSON.stringify(fakeResp) } }],
-        }),
-        { status: 200 },
-      ),
+    const fetchMock = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            choices: [{ message: { content: JSON.stringify(fakeResp) } }],
+          }),
+          { status: 200 },
+        ),
     );
     vi.stubGlobal("fetch", fetchMock);
 
@@ -189,13 +193,14 @@ describe("generateVishingScript - appel Mistral mocke", () => {
   it("rejette une reponse Mistral non-JSON", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn(async () =>
-        new Response(
-          JSON.stringify({
-            choices: [{ message: { content: "definitely not json" } }],
-          }),
-          { status: 200 },
-        ),
+      vi.fn(
+        async () =>
+          new Response(
+            JSON.stringify({
+              choices: [{ message: { content: "definitely not json" } }],
+            }),
+            { status: 200 },
+          ),
       ),
     );
     await expect(
@@ -233,13 +238,14 @@ describe("generateVishingScript - appel Mistral mocke", () => {
     };
     vi.stubGlobal(
       "fetch",
-      vi.fn(async () =>
-        new Response(
-          JSON.stringify({
-            choices: [{ message: { content: JSON.stringify(fakeResp) } }],
-          }),
-          { status: 200 },
-        ),
+      vi.fn(
+        async () =>
+          new Response(
+            JSON.stringify({
+              choices: [{ message: { content: JSON.stringify(fakeResp) } }],
+            }),
+            { status: 200 },
+          ),
       ),
     );
     const s = await generateVishingScript({
@@ -254,27 +260,28 @@ describe("generateVishingScript - appel Mistral mocke", () => {
     const huge = "x".repeat(10_000);
     vi.stubGlobal(
       "fetch",
-      vi.fn(async () =>
-        new Response(
-          JSON.stringify({
-            choices: [
-              {
-                message: {
-                  content: JSON.stringify({
-                    openingLine: huge,
-                    body: huge,
-                    callToAction: huge,
-                    attackerPersona: huge,
-                    spoofedCallerId: "0123456789",
-                    redFlags: Array(20).fill(huge),
-                    ttsScript: huge,
-                  }),
+      vi.fn(
+        async () =>
+          new Response(
+            JSON.stringify({
+              choices: [
+                {
+                  message: {
+                    content: JSON.stringify({
+                      openingLine: huge,
+                      body: huge,
+                      callToAction: huge,
+                      attackerPersona: huge,
+                      spoofedCallerId: "0123456789",
+                      redFlags: Array(20).fill(huge),
+                      ttsScript: huge,
+                    }),
+                  },
                 },
-              },
-            ],
-          }),
-          { status: 200 },
-        ),
+              ],
+            }),
+            { status: 200 },
+          ),
       ),
     );
     const s = await generateVishingScript({

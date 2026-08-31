@@ -207,7 +207,12 @@ Pour les **alertes temps réel**, utilisez les **webhooks** (\`/admin/integratio
           {
             name: "limit",
             in: "query",
-            schema: { type: "integer", default: 100, minimum: 1, maximum: 1000 },
+            schema: {
+              type: "integer",
+              default: 100,
+              minimum: 1,
+              maximum: 1000,
+            },
           },
           {
             name: "since",

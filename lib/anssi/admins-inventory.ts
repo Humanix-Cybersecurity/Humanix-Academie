@@ -155,9 +155,7 @@ export async function listPrivilegedAccounts(): Promise<PrivilegedAccount[]> {
 /**
  * Groupe l'inventaire par tenant pour l'affichage.
  */
-export function groupByTenant(
-  accounts: PrivilegedAccount[],
-): {
+export function groupByTenant(accounts: PrivilegedAccount[]): {
   tenantId: string;
   tenantName: string;
   tenantSlug: string;

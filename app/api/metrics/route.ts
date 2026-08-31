@@ -48,7 +48,7 @@ export async function GET(req: Request) {
     if (!auth || !auth.startsWith("Bearer ")) {
       return new NextResponse("missing_token", {
         status: 401,
-        headers: { "WWW-Authenticate": "Bearer realm=\"metrics\"" },
+        headers: { "WWW-Authenticate": 'Bearer realm="metrics"' },
       });
     }
     const provided = auth.slice(7).trim();

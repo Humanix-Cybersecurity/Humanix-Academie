@@ -29,10 +29,10 @@ export default function QuishingPosterDownloadForm({
     try {
       const fd = new FormData();
       if (logoFile) fd.append("logo", logoFile);
-      const res = await fetch(
-        `/api/admin/quishing/poster/${campaignId}`,
-        { method: "POST", body: fd },
-      );
+      const res = await fetch(`/api/admin/quishing/poster/${campaignId}`, {
+        method: "POST",
+        body: fd,
+      });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         const messages: Record<string, string> = {
@@ -53,10 +53,11 @@ export default function QuishingPosterDownloadForm({
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = res.headers
-        .get("content-disposition")
-        ?.match(/filename="([^"]+)"/)?.[1]
-        ?? `humanix-quishing-${campaignId.slice(0, 8)}.pdf`;
+      a.download =
+        res.headers
+          .get("content-disposition")
+          ?.match(/filename="([^"]+)"/)?.[1] ??
+        `humanix-quishing-${campaignId.slice(0, 8)}.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -110,8 +111,7 @@ export default function QuishingPosterDownloadForm({
             className="block w-full text-xs text-gray-700 dark:text-gray-300 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-accent-500 file:text-white hover:file:bg-accent-600 file:cursor-pointer cursor-pointer"
           />
           <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 italic">
-            PNG ou JPEG, max 2 MB. Non stocké - utilisé uniquement pour ce
-            PDF.
+            PNG ou JPEG, max 2 MB. Non stocké - utilisé uniquement pour ce PDF.
           </p>
           <div className="flex gap-2 mt-2 justify-end">
             <button

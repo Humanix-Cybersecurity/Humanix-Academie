@@ -119,7 +119,10 @@ export async function POST(req: NextRequest) {
   // Idem ici : on sanitise pour aligner avec le hash du cache batch.
   const text = sanitizeForTTS(rawText);
   if (text.length === 0) {
-    return NextResponse.json({ error: "empty_text_after_sanitize" }, { status: 400 });
+    return NextResponse.json(
+      { error: "empty_text_after_sanitize" },
+      { status: 400 },
+    );
   }
   const hash = segmentHash(text, voice ?? "fr_marie_neutral", TTS_MODEL);
 
@@ -147,7 +150,9 @@ export async function POST(req: NextRequest) {
     });
   } catch (e: unknown) {
     const code = String((e as Error)?.message ?? "tts_failed");
-    console.error(`[tts/prepare] synth failed: ${code} (textLen=${text.length})`);
+    console.error(
+      `[tts/prepare] synth failed: ${code} (textLen=${text.length})`,
+    );
     return NextResponse.json({ error: code }, { status: 502 });
   }
 

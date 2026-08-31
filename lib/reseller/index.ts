@@ -36,10 +36,17 @@ export type ResellerTenant = {
 };
 
 export type ResellerGate =
-  | { ok: true; tenantId: string; tenant: ResellerTenant; userId: string; role: string }
+  | {
+      ok: true;
+      tenantId: string;
+      tenant: ResellerTenant;
+      userId: string;
+      role: string;
+    }
   | {
       ok: false;
-      reason: "unauthenticated" | "forbidden_role" | "not_reseller" | "plan_required";
+      reason:
+        "unauthenticated" | "forbidden_role" | "not_reseller" | "plan_required";
     };
 
 /**
@@ -69,7 +76,12 @@ export async function getResellerGate(): Promise<ResellerGate> {
   return {
     ok: true,
     tenantId,
-    tenant: { id: tenant.id, name: tenant.name, plan: tenant.plan, slug: tenant.slug },
+    tenant: {
+      id: tenant.id,
+      name: tenant.name,
+      plan: tenant.plan,
+      slug: tenant.slug,
+    },
     userId: session.user.id as string,
     role,
   };
@@ -160,7 +172,13 @@ export type ProvisionClientInput = {
 };
 
 export type ProvisionClientResult =
-  | { ok: true; tenantId: string; slug: string; subdomain: string | null; invited: boolean }
+  | {
+      ok: true;
+      tenantId: string;
+      slug: string;
+      subdomain: string | null;
+      invited: boolean;
+    }
   | {
       ok: false;
       reason:
@@ -196,8 +214,10 @@ export async function provisionClientTenant(
   let subdomain: string | null = null;
   if (input.subdomain && input.subdomain.trim()) {
     const sub = input.subdomain.trim().toLowerCase();
-    if (!SUBDOMAIN_RE.test(sub)) return { ok: false, reason: "invalid_subdomain" };
-    if (isReservedSubdomain(sub)) return { ok: false, reason: "subdomain_reserved" };
+    if (!SUBDOMAIN_RE.test(sub))
+      return { ok: false, reason: "invalid_subdomain" };
+    if (isReservedSubdomain(sub))
+      return { ok: false, reason: "subdomain_reserved" };
     const clash = await db.tenant.findFirst({
       where: { brandSubdomain: sub },
       select: { id: true },
@@ -238,7 +258,9 @@ export async function provisionClientTenant(
   const slug = await buildUniqueSlug(name);
   if (!slug) return { ok: false, reason: "slug_collision" };
 
-  const hasBrand = Boolean(brandName || primaryColor || accentColor || subdomain);
+  const hasBrand = Boolean(
+    brandName || primaryColor || accentColor || subdomain,
+  );
 
   try {
     const result = await db.$transaction(async (tx) => {

@@ -115,7 +115,8 @@ export default function MascotPeek() {
   // aucune autre popup en queue. Sur landing on s'autoriser une seule
   // popup non-essentielle = la mascotte (avec dwell de 10s). Le PWA install
   // et le HexChat tooltip sont supprimes sur landing (cf. leurs onLanding).
-  const ready = mounted && !dismissed && !isHiddenPath && Boolean(msg) && dwelled;
+  const ready =
+    mounted && !dismissed && !isHiddenPath && Boolean(msg) && dwelled;
   const allowed = usePopupSlot({
     id: "mascot",
     priority: POPUP_PRIORITY.mascot,

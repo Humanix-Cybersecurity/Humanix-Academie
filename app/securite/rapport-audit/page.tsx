@@ -40,14 +40,12 @@ export default function RapportAuditPage() {
             <p className="text-xs uppercase tracking-widest opacity-80 font-bold mb-1">
               Édition v1.6 · 17 mai 2026 · Triple A+ audits externes
             </p>
-            <h2 className="text-xl font-bold">
-              Rapport complet (~15 pages)
-            </h2>
+            <h2 className="text-xl font-bold">Rapport complet (~15 pages)</h2>
             <p className="text-sm opacity-90 mt-1">
               Méthodologie, périmètre, contrôles vérifiés, gaps assumés, plan de
               remédiation à 6 mois - avec mise à jour Sprints sécurité 1, 2 et 4
-              (RBAC central, dbReadOnly analytiques, CSP nonce per-request,
-              page publique audits externes).
+              (RBAC central, dbReadOnly analytiques, CSP nonce per-request, page
+              publique audits externes).
             </p>
           </div>
           <a
@@ -62,8 +60,16 @@ export default function RapportAuditPage() {
 
       {/* Synthèse en chiffres */}
       <section className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
-        <Stat value="0" label="vulnérabilité critique exploitée" tone="success" />
-        <Stat value="0" label="CVE npm audit (781 deps scannées)" tone="success" />
+        <Stat
+          value="0"
+          label="vulnérabilité critique exploitée"
+          tone="success"
+        />
+        <Stat
+          value="0"
+          label="CVE npm audit (781 deps scannées)"
+          tone="success"
+        />
         <Stat value="0" label="finding pentest non résolu" tone="success" />
         <Stat value="100 %" label="hébergement France" tone="info" />
       </section>
@@ -78,13 +84,13 @@ export default function RapportAuditPage() {
         </h2>
         <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
           Test offensif réalisé depuis un container Exegol isolé, contre une
-          instance staging en docker-compose (HAProxy + Next.js + Postgres).
-          25+ vecteurs d'attaque testés (méthodes HTTP, header injection, path
-          traversal, SSRF, IDOR, XSS, SQLi, info disclosure, brute-force,
-          rate limit). Bilan : aucun bypass d'authentification, aucune fuite
-          de données, aucune exécution de code. <strong>3 findings non-critiques
-          documentés ci-dessous</strong>, déjà corrigés en code (déploiement à
-          rejouer).
+          instance staging en docker-compose (HAProxy + Next.js + Postgres). 25+
+          vecteurs d'attaque testés (méthodes HTTP, header injection, path
+          traversal, SSRF, IDOR, XSS, SQLi, info disclosure, brute-force, rate
+          limit). Bilan : aucun bypass d'authentification, aucune fuite de
+          données, aucune exécution de code.{" "}
+          <strong>3 findings non-critiques documentés ci-dessous</strong>, déjà
+          corrigés en code (déploiement à rejouer).
         </p>
 
         <div className="space-y-3">
@@ -153,8 +159,9 @@ export default function RapportAuditPage() {
         </h2>
         <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
           Période de stabilisation supply chain (12 PRs, bumps stables majeurs)
-          et déploiement du <strong>consentement explicite CNIL 2020-091</strong>.
-          Aucune régression sécurité, plusieurs durcissements.
+          et déploiement du{" "}
+          <strong>consentement explicite CNIL 2020-091</strong>. Aucune
+          régression sécurité, plusieurs durcissements.
         </p>
         <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-2 list-none">
           <li className="flex items-start gap-2">
@@ -164,7 +171,11 @@ export default function RapportAuditPage() {
               (texte/taille/couleur identiques pour Accepter et Refuser, aucune
               case pré-cochée). Plausible Analytics chargé{" "}
               <strong>uniquement</strong> si consentement explicite. Article 7.3
-              RGPD : panneau de révocation sur <Link href="/cookies" className="underline">/cookies</Link>.
+              RGPD : panneau de révocation sur{" "}
+              <Link href="/cookies" className="underline">
+                /cookies
+              </Link>
+              .
             </span>
           </li>
           <li className="flex items-start gap-2">
@@ -199,15 +210,16 @@ export default function RapportAuditPage() {
           <li className="flex items-start gap-2">
             <span aria-hidden="true">✅</span>
             <span>
-              <strong>0 warning &laquo; deprecated &raquo;</strong> au build
-              (vs 2 en v1.3 : <code className="text-xs">glob@10.5.0</code> et{" "}
+              <strong>0 warning &laquo; deprecated &raquo;</strong> au build (vs
+              2 en v1.3 : <code className="text-xs">glob@10.5.0</code> et{" "}
               <code className="text-xs">@simplewebauthn/types@10</code>).
             </span>
           </li>
           <li className="flex items-start gap-2">
             <span aria-hidden="true">✅</span>
             <span>
-              <strong>WebAuthn lib bumpée 10 → 13.3</strong> (latest stable FIDO2).
+              <strong>WebAuthn lib bumpée 10 → 13.3</strong> (latest stable
+              FIDO2).
               <strong> TypeScript 6.0</strong> (strictness accrue, side-effect
               imports désormais explicites). <strong>Next.js 16.2</strong> +
               <strong> ESLint 10 flat config</strong>.
@@ -227,7 +239,8 @@ export default function RapportAuditPage() {
             <span>
               <strong>Tests CI restaurés</strong> : 14 failures préexistantes
               (domain drift mai 2026) fixées. Suite à 710/723 verts (13 skipped
-              attendus en runtime constraint). Gate de régression sécurité actif.
+              attendus en runtime constraint). Gate de régression sécurité
+              actif.
             </span>
           </li>
           <li className="flex items-start gap-2">
@@ -261,9 +274,10 @@ export default function RapportAuditPage() {
           Triple A+ - Mozilla, Security Headers, SSL Labs
         </h2>
         <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
-          Validation indépendante des Sprints sécurité 1-4 par trois
-          scanners publics reconnus. <strong>Tous les rapports sont
-          rejouables en un clic</strong> depuis la page{" "}
+          Validation indépendante des Sprints sécurité 1-4 par trois scanners
+          publics reconnus.{" "}
+          <strong>Tous les rapports sont rejouables en un clic</strong> depuis
+          la page{" "}
           <Link
             href="/securite/audits-externes"
             className="underline font-semibold"
@@ -318,10 +332,10 @@ export default function RapportAuditPage() {
         </div>
         <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
           <strong>Note technique notable</strong> : Qualys détecte que le
-          serveur supporte <strong>PQC (Post-Quantum Cryptography)</strong>{" "}
-          pour l&apos;échange de clé TLS - protection contre les attaques
-          quantiques à long terme. C&apos;est un standard récent que peu
-          de serveurs HTTPS exposent encore en 2026.
+          serveur supporte <strong>PQC (Post-Quantum Cryptography)</strong> pour
+          l&apos;échange de clé TLS - protection contre les attaques quantiques
+          à long terme. C&apos;est un standard récent que peu de serveurs HTTPS
+          exposent encore en 2026.
         </p>
       </section>
 
@@ -337,8 +351,8 @@ export default function RapportAuditPage() {
           Application concrète des principes <strong>Zero-Trust</strong> et{" "}
           <strong>Least Privilege</strong> à l&apos;architecture existante.
           Trois chantiers livrés en 4 jours, zéro régression fonctionnelle,
-          défense en profondeur renforcée sur 3 vecteurs (autorisation, base
-          de données analytique, exécution scripts inline navigateur).
+          défense en profondeur renforcée sur 3 vecteurs (autorisation, base de
+          données analytique, exécution scripts inline navigateur).
         </p>
         <ul className="text-sm text-gray-700 dark:text-gray-300 space-y-2 list-none">
           <li className="flex items-start gap-2">
@@ -349,8 +363,8 @@ export default function RapportAuditPage() {
                 requireRole()
               </code>{" "}
               applicable sur tous les middlewares API. Supprime les{" "}
-              <code className="text-xs">if (role !== ...)</code> dupliqués
-              ~30 fois et garantit un comportement uniforme. Filtre PII{" "}
+              <code className="text-xs">if (role !== ...)</code> dupliqués ~30
+              fois et garantit un comportement uniforme. Filtre PII{" "}
               <strong>côté serveur</strong> dans Hex Chat (anti exfiltration
               accidentelle via prompt injection). 18 tests d&apos;invariant
               tenant verts.
@@ -359,13 +373,12 @@ export default function RapportAuditPage() {
           <li className="flex items-start gap-2">
             <span aria-hidden="true">✅</span>
             <span>
-              <strong>dbReadOnly sur analytiques (Sprint 2 reste)</strong> :
-              5 modules de reporting (heatmap, at-risk-users, risk-forecast,
-              risk-trend, computeRiskScore) passent par un client Prisma
-              dédié branché sur un rôle Postgres{" "}
+              <strong>dbReadOnly sur analytiques (Sprint 2 reste)</strong> : 5
+              modules de reporting (heatmap, at-risk-users, risk-forecast,
+              risk-trend, computeRiskScore) passent par un client Prisma dédié
+              branché sur un rôle Postgres{" "}
               <code className="text-xs">SELECT</code>-only. En cas de bug code
-              qui appellerait{" "}
-              <code className="text-xs">.update()</code> ou{" "}
+              qui appellerait <code className="text-xs">.update()</code> ou{" "}
               <code className="text-xs">.delete()</code> sur ces clients, la
               base refuse au niveau SQL avec « permission denied ». Fallback
               transparent sur le client principal si{" "}
@@ -376,16 +389,16 @@ export default function RapportAuditPage() {
           <li className="flex items-start gap-2">
             <span aria-hidden="true">✅</span>
             <span>
-              <strong>CSP nonce per-request (Sprint 4)</strong> : adoption de
-              la stratégie « Strict CSP » Google -{" "}
+              <strong>CSP nonce per-request (Sprint 4)</strong> : adoption de la
+              stratégie « Strict CSP » Google -{" "}
               <code className="text-xs">
                 script-src &apos;self&apos; &apos;nonce-XXX&apos;
                 &apos;strict-dynamic&apos;
               </code>
               . Nonce 96 bits b64 généré à chaque requête par le proxy edge,
-              injecté dans les 4 scripts inline du site (theme init,
-              JSON-LD SEO). Sur les navigateurs CSP3-aware (Chrome 60+,
-              Firefox 56+, Safari 14+, Edge moderne),{" "}
+              injecté dans les 4 scripts inline du site (theme init, JSON-LD
+              SEO). Sur les navigateurs CSP3-aware (Chrome 60+, Firefox 56+,
+              Safari 14+, Edge moderne),{" "}
               <code className="text-xs">&apos;unsafe-inline&apos;</code>
               est <strong>ignoré</strong> dès qu&apos;un nonce est présent -
               protection forte contre XSS reflechi.
@@ -394,18 +407,16 @@ export default function RapportAuditPage() {
           <li className="flex items-start gap-2">
             <span aria-hidden="true">✅</span>
             <span>
-              <strong>Page publique{" "}
-                <Link
-                  href="/securite/audits-externes"
-                  className="underline"
-                >
+              <strong>
+                Page publique{" "}
+                <Link href="/securite/audits-externes" className="underline">
                   /securite/audits-externes
                 </Link>
               </strong>{" "}
               - transparence radicale : Mozilla Observatory, Security Headers
-              (Scott Helme), Qualys SSL Labs, rapport interne. Chaque entrée
-              a un lien LIVE vers le scanner officiel. Aucun score
-              auto-déclaré, le visiteur vérifie en temps réel.
+              (Scott Helme), Qualys SSL Labs, rapport interne. Chaque entrée a
+              un lien LIVE vers le scanner officiel. Aucun score auto-déclaré,
+              le visiteur vérifie en temps réel.
             </span>
           </li>
           <li className="flex items-start gap-2">
@@ -413,22 +424,23 @@ export default function RapportAuditPage() {
             <span>
               <strong>Reste à activer en prod</strong> : provisionner le rôle
               Postgres readonly avec{" "}
-              <code className="text-xs">prisma/sql/setup-readonly-role.sql</code>{" "}
+              <code className="text-xs">
+                prisma/sql/setup-readonly-role.sql
+              </code>{" "}
               puis renseigner{" "}
               <code className="text-xs">DATABASE_URL_READONLY</code> dans
-              l&apos;environnement. Sans cette étape, le code tourne en
-              fallback mais la défense en profondeur n&apos;est pas effective.
+              l&apos;environnement. Sans cette étape, le code tourne en fallback
+              mais la défense en profondeur n&apos;est pas effective.
             </span>
           </li>
           <li className="flex items-start gap-2">
             <span aria-hidden="true">🔜</span>
             <span>
-              <strong>Sprint 3 (à venir)</strong> : finalisation WebAuthn
-              (login passkey-first par défaut, fallback password en backup)
-              + interface{" "}
-              <code className="text-xs">getSecret()</code> pour découpler
-              les secrets API tiers de l&apos;environnement (préparation à
-              une intégration Scaleway Secret Manager ou Vault optionnels).
+              <strong>Sprint 3 (à venir)</strong> : finalisation WebAuthn (login
+              passkey-first par défaut, fallback password en backup) + interface{" "}
+              <code className="text-xs">getSecret()</code> pour découpler les
+              secrets API tiers de l&apos;environnement (préparation à une
+              intégration Scaleway Secret Manager ou Vault optionnels).
             </span>
           </li>
         </ul>
@@ -462,7 +474,10 @@ export default function RapportAuditPage() {
             label="CI/CD : déploiement auto au push main"
             level="todo"
           />
-          <Maturity label="Gestion des incidents (Cyber-Réflexe)" level="intermediate" />
+          <Maturity
+            label="Gestion des incidents (Cyber-Réflexe)"
+            level="intermediate"
+          />
           <Maturity
             label="Audit externe formel par cabinet PASSI"
             level="todo"
@@ -478,8 +493,9 @@ export default function RapportAuditPage() {
         <ul className="text-sm text-amber-900 dark:text-amber-100 space-y-2 list-disc pl-5">
           <li>
             Nous <strong>ne prétendons pas</strong> être ISO 27001 ni SOC 2. Ces
-            certifications sont disproportionnées pour notre cible (organisations
-            avec budget cyber limité &lt; 5 K€/an, particuliers, associations).
+            certifications sont disproportionnées pour notre cible
+            (organisations avec budget cyber limité &lt; 5 K€/an, particuliers,
+            associations).
           </li>
           <li>
             Nous <strong>ne prétendons pas</strong> non plus être SecNumCloud.
@@ -576,8 +592,8 @@ export default function RapportAuditPage() {
           <li>
             <strong>Pas de SAML 2.0 / SCIM enterprise</strong> par défaut. Focus
             délibéré sur la cible standard (particuliers, équipes, organisations
-            de taille moyenne). SSO Google + Microsoft Entra suffit pour 95 % des
-            prospects. SAML/SCIM disponible sur demande pour les contrats
+            de taille moyenne). SSO Google + Microsoft Entra suffit pour 95 %
+            des prospects. SAML/SCIM disponible sur demande pour les contrats
             &gt; 50 utilisateurs.
           </li>
           <li>

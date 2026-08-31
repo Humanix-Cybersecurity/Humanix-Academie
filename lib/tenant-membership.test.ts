@@ -263,7 +263,9 @@ describe("listTenantAdmins", () => {
         },
       },
     ]);
-    mockTenantFindMany.mockResolvedValueOnce([{ id: "humanix", name: "Humanix" }]);
+    mockTenantFindMany.mockResolvedValueOnce([
+      { id: "humanix", name: "Humanix" },
+    ]);
 
     const result = await listTenantAdmins("t1");
     expect(result[0].source).toBe("native");

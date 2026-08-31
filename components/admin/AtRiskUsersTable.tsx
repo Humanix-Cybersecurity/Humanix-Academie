@@ -16,11 +16,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
-type TrendVerdict =
-  | "improving"
-  | "stable"
-  | "degrading"
-  | "insufficient_data";
+type TrendVerdict = "improving" | "stable" | "degrading" | "insufficient_data";
 
 type User = {
   id: string;
@@ -236,7 +232,9 @@ export default function AtRiskUsersTable({
       {/* Table */}
       <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-slate-700">
         <table className="w-full text-sm">
-          <caption className="sr-only">Utilisateurs identifies comme a risque cyber</caption>
+          <caption className="sr-only">
+            Utilisateurs identifies comme a risque cyber
+          </caption>
           <thead className="bg-gray-50 dark:bg-slate-800/40">
             <tr>
               {canAct && (

@@ -10,12 +10,7 @@ import { hashIp } from "@/lib/password-reset";
 const FOUNDER_EMAIL =
   process.env.FOUNDER_NOTIFICATION_EMAIL ?? "contact@humanix-cybersecurity.fr";
 
-const VALID_PLANS = new Set([
-  "starter",
-  "pro",
-  "enterprise",
-  "non-decide",
-]);
+const VALID_PLANS = new Set(["starter", "pro", "enterprise", "non-decide"]);
 const VALID_SIZES = new Set(["", "1-9", "10-49", "50-249", "250+"]);
 const VALID_DURATIONS = new Set(["6", "12", "24", "36"]);
 const VALID_BILLINGS = new Set(["monthly", "annual"]);

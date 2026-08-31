@@ -128,7 +128,9 @@ export function buildSystemPrompt(ctx: HexChatContext = {}): string {
     );
   }
   if (ctx.currentRoute) {
-    contextBits.push(`Il navigue actuellement sur la page ${ctx.currentRoute}.`);
+    contextBits.push(
+      `Il navigue actuellement sur la page ${ctx.currentRoute}.`,
+    );
   }
   if (ctx.currentModule) {
     contextBits.push(`Il vient de consulter le module "${ctx.currentModule}".`);

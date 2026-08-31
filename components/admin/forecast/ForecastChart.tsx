@@ -117,7 +117,13 @@ export default function ForecastChart({
         {/* Legende */}
         <g transform={`translate(${PAD.left}, ${H - 4})`}>
           <line x1="0" x2="14" y1="0" y2="0" stroke="#0B3D91" strokeWidth="2" />
-          <text x="18" y="0" fontSize="10" fill="currentColor" dominantBaseline="middle">
+          <text
+            x="18"
+            y="0"
+            fontSize="10"
+            fill="currentColor"
+            dominantBaseline="middle"
+          >
             Historique
           </text>
           <line
@@ -129,7 +135,13 @@ export default function ForecastChart({
             strokeWidth="2"
             strokeDasharray="5 4"
           />
-          <text x="98" y="0" fontSize="10" fill="currentColor" dominantBaseline="middle">
+          <text
+            x="98"
+            y="0"
+            fontSize="10"
+            fill="currentColor"
+            dominantBaseline="middle"
+          >
             Projection
           </text>
         </g>

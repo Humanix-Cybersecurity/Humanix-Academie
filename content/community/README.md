@@ -6,10 +6,10 @@ Espace réservé aux **modules pédagogiques contribués par la communauté**.
 
 ## Différence avec `content/saisons/`
 
-| Dossier              | Maintenu par                  | Périmètre                                                                                  |
-| -------------------- | ----------------------------- | ------------------------------------------------------------------------------------------ |
-| `content/saisons/`   | Équipe Humanix (mainteneurs)  | Modules officiels de la **Community Edition**, alignés sur le catalogue marketing publié.  |
-| `content/community/` | Contributeurs externes        | Modules proposés par la communauté, validés par review puis disponibles dans la marketplace. |
+| Dossier              | Maintenu par                 | Périmètre                                                                                    |
+| -------------------- | ---------------------------- | -------------------------------------------------------------------------------------------- |
+| `content/saisons/`   | Équipe Humanix (mainteneurs) | Modules officiels de la **Community Edition**, alignés sur le catalogue marketing publié.    |
+| `content/community/` | Contributeurs externes       | Modules proposés par la communauté, validés par review puis disponibles dans la marketplace. |
 
 Les deux dossiers sont **sous AGPLv3** côté code et **CC BY-SA 4.0** côté contenu pédagogique (texte, scénarios, quiz). Cette double licence est documentée dans `LICENSES.md` à la racine.
 
@@ -35,19 +35,19 @@ content/community/
 ---
 title: "Le faux SMS de la livraison"
 durationMinutes: 6
-persona: "tous-collaborateurs"            # tous | direction | rh | compta | dev | admin
+persona: "tous-collaborateurs" # tous | direction | rh | compta | dev | admin
 objective: "Detecter un smishing en moins de 5 secondes"
 xpReward: 50
-difficulty: "easy"                         # easy | medium | hard
+difficulty: "easy" # easy | medium | hard
 author:
   name: "Pseudo ou nom complet"
-  url: "https://github.com/contributeur"   # optionnel
-contentLicense: "CC-BY-SA-4.0"             # imposé pour la marketplace
+  url: "https://github.com/contributeur" # optionnel
+contentLicense: "CC-BY-SA-4.0" # imposé pour la marketplace
 scenario: |
   ...
-choices: [ ... ]                           # min 3, max 6 (cf. _template.mdx)
+choices: [...] # min 3, max 6 (cf. _template.mdx)
 debrief: ...
-quiz: [ ... ]                              # min 3 questions
+quiz: [...] # min 3 questions
 ---
 ```
 

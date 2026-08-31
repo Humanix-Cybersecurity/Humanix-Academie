@@ -85,14 +85,8 @@ export default async function DonneesPage() {
           <Field label="Plan" value={user.tenant?.plan ?? "-"} />
           <Field label="Niveau" value={String(user.level)} />
           <Field label="Coins" value={String(user.coins)} />
-          <Field
-            label="Score de risque"
-            value={`${user.riskScore} / 100`}
-          />
-          <Field
-            label="2FA activée"
-            value={user.mfaEnabled ? "oui" : "non"}
-          />
+          <Field label="Score de risque" value={`${user.riskScore} / 100`} />
+          <Field label="2FA activée" value={user.mfaEnabled ? "oui" : "non"} />
           <Field
             label="Clés FIDO2 enregistrées"
             value={String(webauthnCount)}
@@ -131,10 +125,9 @@ export default async function DonneesPage() {
           </h2>
         </header>
         <p className="text-sm text-gray-600 dark:text-gray-300">
-          Téléchargez un export JSON de toutes vos données personnelles
-          stockées par Humanix Académie : profil, progression, événements,
-          notifications. Format structuré, lisible par toute application
-          tierce conforme.
+          Téléchargez un export JSON de toutes vos données personnelles stockées
+          par Humanix Académie : profil, progression, événements, notifications.
+          Format structuré, lisible par toute application tierce conforme.
         </p>
         <a
           href="/profil/donnees/export"
@@ -156,8 +149,8 @@ export default async function DonneesPage() {
           </h2>
         </header>
         <p className="text-sm text-gray-600 dark:text-gray-300">
-          Modifiez votre nom, votre mascotte ou votre photo depuis votre
-          profil. Pour le service ou le rôle, contactez votre administrateur.
+          Modifiez votre nom, votre mascotte ou votre photo depuis votre profil.
+          Pour le service ou le rôle, contactez votre administrateur.
         </p>
         <Link href="/profil" className="btn-secondary text-sm inline-block">
           Aller à mon profil →
@@ -175,10 +168,10 @@ export default async function DonneesPage() {
           </h2>
         </header>
         <p className="text-sm text-rose-900 dark:text-rose-200">
-          Cette action efface définitivement votre compte, vos progressions,
-          vos événements et vos clés de sécurité. Une trace agrégée et
-          anonymisée peut être conservée pour des obligations légales (preuve
-          de formation, durée légale de conservation des logs sécurité).
+          Cette action efface définitivement votre compte, vos progressions, vos
+          événements et vos clés de sécurité. Une trace agrégée et anonymisée
+          peut être conservée pour des obligations légales (preuve de formation,
+          durée légale de conservation des logs sécurité).
         </p>
         <DataRightsActions
           userEmail={user.email}
@@ -188,10 +181,7 @@ export default async function DonneesPage() {
 
       <p className="text-xs text-gray-500 italic text-center">
         Pour toute question RGPD, contactez{" "}
-        <a
-          href="mailto:dpo@humanix-cybersecurity.fr"
-          className="underline"
-        >
+        <a href="mailto:dpo@humanix-cybersecurity.fr" className="underline">
           dpo@humanix-cybersecurity.fr
         </a>
         .

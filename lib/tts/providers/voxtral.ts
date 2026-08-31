@@ -29,12 +29,13 @@ const VALID_VOICES: ReadonlySet<FrenchVoiceSlug> = new Set<FrenchVoiceSlug>([
 const LEGACY_VOICE_MAP: Record<string, FrenchVoiceSlug> = {
   "fr_FR-siwis-medium": "fr_marie_neutral",
   "fr_FR-siwis": "fr_marie_neutral",
-  "fr_marie": "fr_marie_neutral",
+  fr_marie: "fr_marie_neutral",
 };
 
 function resolveVoice(voice: string | undefined): FrenchVoiceSlug {
   if (!voice) return DEFAULT_VOICE;
-  if (VALID_VOICES.has(voice as FrenchVoiceSlug)) return voice as FrenchVoiceSlug;
+  if (VALID_VOICES.has(voice as FrenchVoiceSlug))
+    return voice as FrenchVoiceSlug;
   return LEGACY_VOICE_MAP[voice] ?? DEFAULT_VOICE;
 }
 
@@ -79,8 +80,10 @@ export async function synthesizeVoxtral(args: {
     writeCachedMP3(cacheRoot, hash, result.buffer);
     return { buffer: result.buffer, format, cached: false };
   } catch (e) {
-    if (e instanceof MistralTTSError) throw new Error(`voxtral_http_${e.status}`);
-    if ((e as { name?: string })?.name === "AbortError") throw new Error("tts_timeout");
+    if (e instanceof MistralTTSError)
+      throw new Error(`voxtral_http_${e.status}`);
+    if ((e as { name?: string })?.name === "AbortError")
+      throw new Error("tts_timeout");
     throw new Error(`voxtral_failed:${(e as Error).message}`);
   } finally {
     clearTimeout(timer);

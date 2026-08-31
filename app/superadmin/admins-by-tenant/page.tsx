@@ -22,10 +22,8 @@ export const dynamic = "force-dynamic";
 const ROLE_BADGE: Record<string, string> = {
   SUPERADMIN:
     "bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-300",
-  ADMIN:
-    "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300",
-  RSSI:
-    "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300",
+  ADMIN: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300",
+  RSSI: "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300",
 };
 
 export default async function SuperadminAdminsByTenantPage() {
@@ -42,7 +40,8 @@ export default async function SuperadminAdminsByTenantPage() {
       membership: accounts.filter((a) => a.source === "membership").length,
     },
     byRole: {
-      SUPERADMIN: accounts.filter((a) => a.effectiveRole === "SUPERADMIN").length,
+      SUPERADMIN: accounts.filter((a) => a.effectiveRole === "SUPERADMIN")
+        .length,
       ADMIN: accounts.filter((a) => a.effectiveRole === "ADMIN").length,
       RSSI: accounts.filter((a) => a.effectiveRole === "RSSI").length,
     },
@@ -61,8 +60,8 @@ export default async function SuperadminAdminsByTenantPage() {
           Inventaire des comptes à privilèges
         </h1>
         <p className="text-gray-600 dark:text-gray-300 mt-2 max-w-3xl">
-          Inventaire exhaustif et tenu à jour de tous les comptes ADMIN, RSSI
-          et SUPERADMIN de la plateforme, sources confondues (rôle natif +
+          Inventaire exhaustif et tenu à jour de tous les comptes ADMIN, RSSI et
+          SUPERADMIN de la plateforme, sources confondues (rôle natif +
           memberships croisées). Conforme à la mesure 7 du guide d'hygiène
           informatique ANSSI v2.
         </p>
@@ -161,8 +160,8 @@ export default async function SuperadminAdminsByTenantPage() {
           </ul>
           {dormant.length > 10 && (
             <p className="text-xs text-gray-500 italic mt-2">
-              … et {dormant.length - 10} autre(s). Voir export CSV pour la
-              liste complète.
+              … et {dormant.length - 10} autre(s). Voir export CSV pour la liste
+              complète.
             </p>
           )}
         </section>
@@ -243,9 +242,7 @@ export default async function SuperadminAdminsByTenantPage() {
                                 : "bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300"
                             }`}
                           >
-                            {a.source === "native"
-                              ? "natif"
-                              : "membership"}
+                            {a.source === "native" ? "natif" : "membership"}
                           </span>
                         </td>
                         <td className="px-4 py-2.5">
@@ -256,9 +253,7 @@ export default async function SuperadminAdminsByTenantPage() {
                           </div>
                         </td>
                         <td className="px-4 py-2.5 text-xs text-gray-600 dark:text-gray-300">
-                          {a.lastLoginAt
-                            ? daysAgo(a.lastLoginAt)
-                            : "jamais"}
+                          {a.lastLoginAt ? daysAgo(a.lastLoginAt) : "jamais"}
                         </td>
                         <td className="px-4 py-2.5 text-xs text-gray-600 dark:text-gray-300">
                           {a.grantedAt.toLocaleDateString("fr-FR")}
@@ -298,8 +293,8 @@ export default async function SuperadminAdminsByTenantPage() {
             l'état courant de la BDD (force-dynamic).
           </li>
           <li>
-            ✓ <strong>Traçable</strong> : chaque attribution est auditée
-            (table Event, événement <code>USER_ROLE_CHANGED</code>).
+            ✓ <strong>Traçable</strong> : chaque attribution est auditée (table
+            Event, événement <code>USER_ROLE_CHANGED</code>).
           </li>
           <li>
             ✓ <strong>Exportable</strong> CSV pour revue annuelle (mesure 38
@@ -405,8 +400,7 @@ function Pill({ ok, label }: { ok: boolean; label: string }) {
 }
 
 function RoleBadge({ role }: { role: string }) {
-  const cls =
-    ROLE_BADGE[role] ?? "bg-gray-100 dark:bg-slate-800 text-gray-700";
+  const cls = ROLE_BADGE[role] ?? "bg-gray-100 dark:bg-slate-800 text-gray-700";
   return (
     <span
       className={`text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full ${cls}`}

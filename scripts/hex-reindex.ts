@@ -70,7 +70,10 @@ function parseArgs(): Args {
   return { dry, only };
 }
 
-async function findMdxFiles(root: string, subset: string | null): Promise<string[]> {
+async function findMdxFiles(
+  root: string,
+  subset: string | null,
+): Promise<string[]> {
   const found: string[] = [];
   async function walk(dir: string) {
     let entries: import("node:fs").Dirent[];
@@ -97,7 +100,10 @@ async function findMdxFiles(root: string, subset: string | null): Promise<string
 // champs structures (scenario, choices, debrief...) sont concatenes en
 // une chaine plate pour le chunking. On garde l'ordre source pour
 // preserver la coherence du flow narratif.
-function extractBody(frontmatter: Record<string, unknown>, content: string): string {
+function extractBody(
+  frontmatter: Record<string, unknown>,
+  content: string,
+): string {
   const parts: string[] = [];
 
   const push = (label: string, val: unknown) => {
@@ -208,12 +214,15 @@ async function main() {
   const files = await findMdxFiles(root, args.only);
   console.log(`       ${files.length} fichier(s) trouve(s)`);
   if (args.dry) {
-    for (const f of files) console.log(`  - ${path.relative(process.cwd(), f)}`);
+    for (const f of files)
+      console.log(`  - ${path.relative(process.cwd(), f)}`);
     console.log("\nDry-run termine. Re-lance sans --dry pour indexer.");
     return;
   }
 
-  console.log(`\n[3/3] Indexation (chunks ~${CHUNK_SIZE} chars, batch ${BATCH_SIZE})…`);
+  console.log(
+    `\n[3/3] Indexation (chunks ~${CHUNK_SIZE} chars, batch ${BATCH_SIZE})…`,
+  );
   let totalChunks = 0;
   let errors = 0;
 
@@ -261,7 +270,9 @@ async function main() {
         }
       }
 
-      console.log(`  [${i + 1}/${files.length}] ${rel} → ${chunks.length} chunks`);
+      console.log(
+        `  [${i + 1}/${files.length}] ${rel} → ${chunks.length} chunks`,
+      );
     } catch (err) {
       errors += 1;
       console.error(`  [${i + 1}/${files.length}] ${rel} → ERREUR`, err);

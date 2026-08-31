@@ -98,7 +98,9 @@ export default async function AnecdoteDetailPage({
         description={a.summary.slice(0, 160)}
         url={`/anecdotes/${a.slug}`}
         datePublished={a.incidentDate.toISOString()}
-        dateModified={a.updatedAt?.toISOString() ?? a.incidentDate.toISOString()}
+        dateModified={
+          a.updatedAt?.toISOString() ?? a.incidentDate.toISOString()
+        }
         section={badge.label}
       />
       <BreadcrumbJsonLd

@@ -25,10 +25,7 @@ import {
 } from "@/lib/ciso-assistant/encryption";
 import { testCisoConnection } from "@/lib/ciso-assistant/client";
 import { runCisoSync } from "@/lib/ciso-assistant/sync";
-import {
-  SUPPORTED_FRAMEWORKS,
-  type FrameworkRef,
-} from "@/lib/mapping-grc";
+import { SUPPORTED_FRAMEWORKS, type FrameworkRef } from "@/lib/mapping-grc";
 
 async function requireAdmin() {
   const session = await auth();
@@ -67,8 +64,7 @@ export async function saveConnection(formData: FormData): Promise<{
   const syncGroupsAsTeams = formData.get("syncGroupsAsTeams") === "on";
   const syncCampaigns = formData.get("syncCampaigns") === "on";
   const enableLiveMode = formData.get("enableLiveMode") === "on";
-  const createWorkforceAsset =
-    formData.get("createWorkforceAsset") === "on";
+  const createWorkforceAsset = formData.get("createWorkforceAsset") === "on";
   const syncThreats = formData.get("syncThreats") === "on";
   const createDashboard = formData.get("createDashboard") === "on";
 
@@ -195,7 +191,10 @@ export async function testConnection(): Promise<{
       ? `Connexion OK (${result.existingEvidences} evidences existantes)`
       : `Echec : ${result.reason}`,
     metadata: result.ok
-      ? { folderId: result.folderId, existingEvidences: result.existingEvidences }
+      ? {
+          folderId: result.folderId,
+          existingEvidences: result.existingEvidences,
+        }
       : { reason: result.reason },
   });
 

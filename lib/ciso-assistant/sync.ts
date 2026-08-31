@@ -21,10 +21,7 @@
 import { AuditAction, AuditOutcome, AuditSeverity } from "@prisma/client";
 import { db } from "@/lib/db";
 import { auditLog } from "@/lib/audit";
-import {
-  SUPPORTED_FRAMEWORKS,
-  type FrameworkRef,
-} from "@/lib/mapping-grc";
+import { SUPPORTED_FRAMEWORKS, type FrameworkRef } from "@/lib/mapping-grc";
 import { buildCisoBundle } from "./build-bundle";
 import { CisoAssistantClient, CisoError } from "./client";
 import { decryptCisoPassword } from "./encryption";
@@ -67,7 +64,9 @@ export async function runCisoSync(opts: {
     where: { tenantId },
   });
   if (!conn) {
-    throw new Error("Aucune connexion CISO Assistant configuree pour ce tenant.");
+    throw new Error(
+      "Aucune connexion CISO Assistant configuree pour ce tenant.",
+    );
   }
 
   const run = await db.cisoAssistantSyncRun.create({
@@ -92,11 +91,9 @@ export async function runCisoSync(opts: {
 
   // Fire-and-forget : on ne await PAS le sync complet pour que la server
   // action retourne le runId immediatement. L'UI suit via SSE.
-  void executeSync(run.id, tenantId, framework, conn, actor).catch(
-    (err) => {
-      console.error("[ciso-sync] uncaught error", err);
-    },
-  );
+  void executeSync(run.id, tenantId, framework, conn, actor).catch((err) => {
+    console.error("[ciso-sync] uncaught error", err);
+  });
 
   return { runId: run.id };
 }
@@ -147,7 +144,10 @@ async function executeSync(
     process.env.NEXT_PUBLIC_BASE_URL || "https://humanix-academie.fr";
 
   try {
-    await appendLog(runId, nowLine("INFO", `Démarrage sync framework=${framework}`));
+    await appendLog(
+      runId,
+      nowLine("INFO", `Démarrage sync framework=${framework}`),
+    );
     await appendLog(runId, nowLine("INFO", `Tenant=${tenantId}`));
 
     const tenant = await db.tenant.findUniqueOrThrow({
@@ -190,7 +190,10 @@ async function executeSync(
       ),
     );
 
-    await appendLog(runId, nowLine("INFO", "Construction du bundle Humanix..."));
+    await appendLog(
+      runId,
+      nowLine("INFO", "Construction du bundle Humanix..."),
+    );
     const bundle = await buildCisoBundle({
       tenant,
       frameworkRef: framework,
@@ -213,7 +216,10 @@ async function executeSync(
       verifySSL: conn.verifySSL,
     });
 
-    await appendLog(runId, nowLine("INFO", `Login CISO Assistant : ${conn.baseUrl}`));
+    await appendLog(
+      runId,
+      nowLine("INFO", `Login CISO Assistant : ${conn.baseUrl}`),
+    );
     await client.login();
     await appendLog(runId, nowLine("OK", "Authentifié (token Knox)"));
 
@@ -227,7 +233,10 @@ async function executeSync(
     const existingCount = await client.loadExistingEvidences();
     await appendLog(
       runId,
-      nowLine("INFO", `Cache : ${existingCount} evidences existantes dans le folder`),
+      nowLine(
+        "INFO",
+        `Cache : ${existingCount} evidences existantes dans le folder`,
+      ),
     );
 
     const pubkey = getCurrentPublicKeyPem();
@@ -391,7 +400,10 @@ async function executeSync(
           runId,
           appliedControlId
             ? nowLine("OK", `AppliedControl prêt (id ${appliedControlId})`)
-            : nowLine("WARN", "AppliedControl non créé (extension désactivée côté CISO Assistant ?)"),
+            : nowLine(
+                "WARN",
+                "AppliedControl non créé (extension désactivée côté CISO Assistant ?)",
+              ),
         );
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
@@ -405,7 +417,10 @@ async function executeSync(
         await appendLog(
           runId,
           findingsAssessmentId
-            ? nowLine("OK", `FindingsAssessment prêt (id ${findingsAssessmentId})`)
+            ? nowLine(
+                "OK",
+                `FindingsAssessment prêt (id ${findingsAssessmentId})`,
+              )
             : nowLine("WARN", "FindingsAssessment non créé"),
         );
       } catch (err) {
@@ -445,8 +460,7 @@ async function executeSync(
       if (
         conn.createFindings &&
         findingsAssessmentId &&
-        (evidence.status === "partial" ||
-          evidence.status === "non_compliant")
+        (evidence.status === "partial" || evidence.status === "non_compliant")
       ) {
         try {
           const fr = await client.upsertFinding({
@@ -551,10 +565,7 @@ async function executeSync(
         // Trigger declenchement precoce : 2+ controles affaiblis (partial OU
         // non_compliant). Une organisation qui veut etre proactive cherche
         // a anticiper plutot que reagir aux seuils stricts.
-        if (
-          triggers.length === 0 &&
-          nbPartial + nbNonCompliant >= 2
-        ) {
+        if (triggers.length === 0 && nbPartial + nbNonCompliant >= 2) {
           triggers.push(
             `${nbPartial + nbNonCompliant} contrôles affaiblis (déclenchement précoce)`,
           );
@@ -749,13 +760,19 @@ async function executeSync(
           if (firstCampError) {
             await appendLog(
               runId,
-              nowLine("WARN", `Campaigns sync - première cause : ${firstCampError}`),
+              nowLine(
+                "WARN",
+                `Campaigns sync - première cause : ${firstCampError}`,
+              ),
             );
           }
         }
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
-        await appendLog(runId, nowLine("WARN", `Campaigns sync bloc échec : ${msg}`));
+        await appendLog(
+          runId,
+          nowLine("WARN", `Campaigns sync bloc échec : ${msg}`),
+        );
       }
     }
 
@@ -765,14 +782,21 @@ async function executeSync(
       try {
         const groups = await db.group.findMany({
           where: { tenantId, isActive: true },
-          select: { id: true, slug: true, name: true, description: true, _count: { select: { members: true } } },
+          select: {
+            id: true,
+            slug: true,
+            name: true,
+            description: true,
+            _count: { select: { members: true } },
+          },
         });
         let teamsOk = 0;
         let teamsFail = 0;
         for (const g of groups) {
           const desc =
-            (g.description ?? `Équipe ${g.name} (${g._count.members} membres) ` +
-              `synchronisée automatiquement depuis Humanix Académie.`);
+            g.description ??
+            `Équipe ${g.name} (${g._count.members} membres) ` +
+              `synchronisée automatiquement depuis Humanix Académie.`;
           const r = await client.ensureTeam({
             name: `Humanix · ${g.name}`,
             description: desc,
@@ -789,7 +813,10 @@ async function executeSync(
         );
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
-        await appendLog(runId, nowLine("WARN", `Teams sync bloc échec : ${msg}`));
+        await appendLog(
+          runId,
+          nowLine("WARN", `Teams sync bloc échec : ${msg}`),
+        );
       }
     }
 
@@ -956,7 +983,10 @@ async function executeSync(
           } catch (err) {
             metricsFail += 1;
             const msg = err instanceof Error ? err.message : String(err);
-            await appendLog(runId, nowLine("WARN", `Metric ${m.refId}: ${msg}`));
+            await appendLog(
+              runId,
+              nowLine("WARN", `Metric ${m.refId}: ${msg}`),
+            );
           }
         }
         if (metrologyUnavailable) {
@@ -978,7 +1008,10 @@ async function executeSync(
           if (firstMetricError) {
             await appendLog(
               runId,
-              nowLine("WARN", `Metrology - première cause : ${firstMetricError}`),
+              nowLine(
+                "WARN",
+                `Metrology - première cause : ${firstMetricError}`,
+              ),
             );
           }
 
@@ -1000,20 +1033,13 @@ async function executeSync(
                   title: string;
                   refId: string;
                   chartType:
-                    | "kpi_card"
-                    | "donut"
-                    | "line"
-                    | "sparkline"
-                    | "gauge";
+                    "kpi_card" | "donut" | "line" | "sparkline" | "gauge";
                   positionX: number;
                   positionY: number;
                   width: number;
                   height: number;
                   aggregation?: "last" | "avg";
-                  timeRange?:
-                    | "last_30_days"
-                    | "last_90_days"
-                    | "last_year";
+                  timeRange?: "last_30_days" | "last_90_days" | "last_year";
                 }> = [
                   {
                     title: "Score maturité cyber humaine",
@@ -1145,7 +1171,10 @@ async function executeSync(
         }
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
-        await appendLog(runId, nowLine("WARN", `Metrology bloc échec : ${msg}`));
+        await appendLog(
+          runId,
+          nowLine("WARN", `Metrology bloc échec : ${msg}`),
+        );
       }
     }
 
@@ -1175,8 +1204,7 @@ async function executeSync(
       }
     }
 
-    const status =
-      fail === 0 ? "success" : ok === 0 ? "failed" : "partial";
+    const status = fail === 0 ? "success" : ok === 0 ? "failed" : "partial";
     const elapsed = ((Date.now() - startedAt) / 1000).toFixed(1);
     await appendLog(
       runId,
@@ -1202,8 +1230,10 @@ async function executeSync(
         status === "failed"
           ? AuditAction.CISO_SYNC_FAILED
           : AuditAction.CISO_SYNC_COMPLETED,
-      outcome: status === "failed" ? AuditOutcome.FAILURE : AuditOutcome.SUCCESS,
-      severity: status === "failed" ? AuditSeverity.WARNING : AuditSeverity.INFO,
+      outcome:
+        status === "failed" ? AuditOutcome.FAILURE : AuditOutcome.SUCCESS,
+      severity:
+        status === "failed" ? AuditSeverity.WARNING : AuditSeverity.INFO,
       actor,
       tenantId,
       target: { type: "ciso_sync_run", id: runId, label: framework },
@@ -1213,7 +1243,10 @@ async function executeSync(
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     const reason = err instanceof CisoError ? err.reason : "unknown";
-    await appendLog(runId, nowLine("FAIL", `Erreur fatale (${reason}) : ${msg}`));
+    await appendLog(
+      runId,
+      nowLine("FAIL", `Erreur fatale (${reason}) : ${msg}`),
+    );
     await db.cisoAssistantSyncRun.update({
       where: { id: runId },
       data: { status: "failed", finishedAt: new Date() },

@@ -137,9 +137,7 @@ export async function listAtRiskUsers(
     };
   });
 
-  const partial = enriched.filter(
-    (u): u is AtRiskUserPartial => u !== null,
-  );
+  const partial = enriched.filter((u): u is AtRiskUserPartial => u !== null);
 
   // 2e passe : tendance par user (batch). Cf. lib/analytics/risk-trend.ts
   const trends = await computeUserTrendsBatch(partial.map((u) => u.id));

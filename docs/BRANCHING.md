@@ -13,14 +13,14 @@ feat/xxx ────► develop ───────────────�
 "branche dev jetable"           "QA / pre-prod stable"    "production / release"
 ```
 
-| Branche      | Rôle                                                | Push direct |
-|--------------|-----------------------------------------------------|-------------|
-| `main`       | Code de production. Reflète ce qui tourne en live.  | ❌ Jamais   |
-| `testing`    | Recette / pré-prod. Stabilisation avant `main`.     | ❌ Jamais   |
-| `develop`    | Intégration continue des features en cours.         | ❌ Jamais   |
-| `feat/xxx`   | Branche de travail individuelle (jetable).          | ✅ Auteur   |
-| `fix/xxx`    | Correctif pré-merge. Idem.                          | ✅ Auteur   |
-| `chore/xxx`  | Maintenance, refacto, doc.                          | ✅ Auteur   |
+| Branche     | Rôle                                               | Push direct |
+| ----------- | -------------------------------------------------- | ----------- |
+| `main`      | Code de production. Reflète ce qui tourne en live. | ❌ Jamais   |
+| `testing`   | Recette / pré-prod. Stabilisation avant `main`.    | ❌ Jamais   |
+| `develop`   | Intégration continue des features en cours.        | ❌ Jamais   |
+| `feat/xxx`  | Branche de travail individuelle (jetable).         | ✅ Auteur   |
+| `fix/xxx`   | Correctif pré-merge. Idem.                         | ✅ Auteur   |
+| `chore/xxx` | Maintenance, refacto, doc.                         | ✅ Auteur   |
 
 ## Workflow standard
 
@@ -66,6 +66,7 @@ le repo est privé sur un plan GitHub Free (la feature est réservée aux repos
 publics ou aux plans GitHub Team / Pro / Enterprise).
 
 Options pour l'activer :
+
 1. **Rendre le repo public** (cohérent avec le projet OSS / AGPL).
 2. **Upgrade vers GitHub Team** (4 \$/utilisateur/mois).
 3. Migrer le repo sur GitLab (qui propose la protection gratuite sur le plan Free).

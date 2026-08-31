@@ -271,8 +271,18 @@ async function main() {
     { slug: "dev", name: "Développement", emoji: "💻", color: "#6366F1" },
     { slug: "commercial", name: "Commercial", emoji: "💼", color: "#EC4899" },
     { slug: "it", name: "IT / SI", emoji: "⚙️", color: "#0EA5E9" },
-    { slug: "atelier", name: "Atelier / Production", emoji: "🏭", color: "#A855F7" },
-    { slug: "communication", name: "Communication", emoji: "🎨", color: "#EF4444" },
+    {
+      slug: "atelier",
+      name: "Atelier / Production",
+      emoji: "🏭",
+      color: "#A855F7",
+    },
+    {
+      slug: "communication",
+      name: "Communication",
+      emoji: "🎨",
+      color: "#EF4444",
+    },
     { slug: "agents", name: "Agents", emoji: "👤", color: "#64748B" },
   ];
   for (const g of SYSTEM_GROUPS) {
@@ -359,7 +369,7 @@ async function main() {
       Comptabilité: "compta",
       RH: "rh",
       Dev: "dev",
-      "Développement": "dev",
+      Développement: "dev",
       Commercial: "commercial",
       IT: "it",
       "IT / SI": "it",
@@ -515,8 +525,7 @@ async function main() {
     const targetAvg =
       tenantUsers.length === 0
         ? 60
-        : tenantUsers.reduce((s, u) => s + u.riskScore, 0) /
-          tenantUsers.length;
+        : tenantUsers.reduce((s, u) => s + u.riskScore, 0) / tenantUsers.length;
     for (let d = 30; d >= 0; d--) {
       const day = new Date();
       day.setUTCHours(0, 0, 0, 0);
@@ -533,10 +542,7 @@ async function main() {
           p10Score: Math.max(0, Math.round(avg - 25)),
           p50Score: Math.round(avg),
           p90Score: Math.min(100, Math.round(avg + 20)),
-          atRiskCount: Math.max(
-            0,
-            Math.round((40 - Math.min(40, avg)) / 5),
-          ),
+          atRiskCount: Math.max(0, Math.round((40 - Math.min(40, avg)) / 5)),
         },
         create: {
           tenantId: tenant.id,
@@ -546,10 +552,7 @@ async function main() {
           p10Score: Math.max(0, Math.round(avg - 25)),
           p50Score: Math.round(avg),
           p90Score: Math.min(100, Math.round(avg + 20)),
-          atRiskCount: Math.max(
-            0,
-            Math.round((40 - Math.min(40, avg)) / 5),
-          ),
+          atRiskCount: Math.max(0, Math.round((40 - Math.min(40, avg)) / 5)),
         },
       });
     }
@@ -578,9 +581,21 @@ async function main() {
       daysAgo: number;
     };
     const campaigns: CampaignSpec[] = [
-      { id: "demo-phishing-1", title: "Phishing M365 · Démo (mois -2)", daysAgo: 65 },
-      { id: "demo-phishing-2", title: "Phishing M365 · Démo (mois -1)", daysAgo: 40 },
-      { id: "demo-phishing-3", title: "Phishing M365 · Démo (récent)", daysAgo: 10 },
+      {
+        id: "demo-phishing-1",
+        title: "Phishing M365 · Démo (mois -2)",
+        daysAgo: 65,
+      },
+      {
+        id: "demo-phishing-2",
+        title: "Phishing M365 · Démo (mois -1)",
+        daysAgo: 40,
+      },
+      {
+        id: "demo-phishing-3",
+        title: "Phishing M365 · Démo (récent)",
+        daysAgo: 10,
+      },
     ];
     const dbCampaigns = await Promise.all(
       campaigns.map((c) => {
@@ -625,7 +640,11 @@ async function main() {
       // 1 CLICKED + 2 SENT
       {
         email: "yanis@demo-pme.fr",
-        results: [PhishingStatus.CLICKED, PhishingStatus.SENT, PhishingStatus.SENT],
+        results: [
+          PhishingStatus.CLICKED,
+          PhishingStatus.SENT,
+          PhishingStatus.SENT,
+        ],
       },
       // 3 REPORTED (top user)
       {
@@ -648,7 +667,11 @@ async function main() {
       // 1 REPORTED + 2 SENT (admin Sophie reporte au moins une fois)
       {
         email: "sophie@demo-pme.fr",
-        results: [PhishingStatus.REPORTED, PhishingStatus.SENT, PhishingStatus.SENT],
+        results: [
+          PhishingStatus.REPORTED,
+          PhishingStatus.SENT,
+          PhishingStatus.SENT,
+        ],
       },
     ];
 

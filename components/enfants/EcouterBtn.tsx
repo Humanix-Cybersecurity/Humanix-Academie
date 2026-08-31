@@ -13,9 +13,7 @@ export default function EcouterBtn({ texte }: { texte: string }) {
   const [parle, setParle] = useState(false);
 
   useEffect(() => {
-    setSupporte(
-      typeof window !== "undefined" && "speechSynthesis" in window,
-    );
+    setSupporte(typeof window !== "undefined" && "speechSynthesis" in window);
     return () => {
       try {
         window.speechSynthesis?.cancel();

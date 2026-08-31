@@ -53,18 +53,18 @@ Contact : `contact@humanix-cybersecurity.fr`
 
 ### 5. Quelle est la différence entre self-host gratuit et Cloud payant ?
 
-| Critère         | Self-host (Community)               | Cloud (Starter) |
-| --------------- | ----------------------------------- | ------------------------------ |
-| Prix            | 0 €                                 | 0 € à sur devis                |
-| Installation    | Tu installes (Docker ou bare-metal) | Aucune, juste signup           |
-| Maintenance     | Tu maintiens                        | Géré par Humanix               |
-| Mises à jour    | Manuelles                           | Automatiques                   |
-| Hébergement     | Chez toi (souverain par défaut)     | France garantie                |
-| Support         | Communautaire (Discord, GitHub)     | Email/Chat selon palier        |
-| Modules         | 5 de base + connecteur GRC          | 5 → 30+ selon palier           |
-| Phishing simulé | Non inclus                          | Inclus dès Pro                 |
-| SSO entreprise  | Non inclus                          | Inclus dès Pro         |
-| SecNumCloud     | Non                                 | Inclus dès Enterprise          |
+| Critère         | Self-host (Community)               | Cloud (Starter)         |
+| --------------- | ----------------------------------- | ----------------------- |
+| Prix            | 0 €                                 | 0 € à sur devis         |
+| Installation    | Tu installes (Docker ou bare-metal) | Aucune, juste signup    |
+| Maintenance     | Tu maintiens                        | Géré par Humanix        |
+| Mises à jour    | Manuelles                           | Automatiques            |
+| Hébergement     | Chez toi (souverain par défaut)     | France garantie         |
+| Support         | Communautaire (Discord, GitHub)     | Email/Chat selon palier |
+| Modules         | 5 de base + connecteur GRC          | 5 → 30+ selon palier    |
+| Phishing simulé | Non inclus                          | Inclus dès Pro          |
+| SSO entreprise  | Non inclus                          | Inclus dès Pro          |
+| SecNumCloud     | Non                                 | Inclus dès Enterprise   |
 
 ### 6. Quel est le coût réel du self-host ?
 

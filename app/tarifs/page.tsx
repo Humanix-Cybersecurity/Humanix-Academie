@@ -41,7 +41,9 @@ export const metadata = {
     description: META_DESCRIPTION,
     type: "website",
     url: "/tarifs",
-    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+    images: [
+      { url: "/logo-humanix-academie-512.png", width: 512, height: 512 },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -92,7 +94,8 @@ const PRICING_FAQ = [
       "Aucun engagement minimum sur Cloud. Tu peux résilier à tout moment depuis ta console, prorata jour exact. Engagement annuel = remise −17 à −21 %, totalement optionnel.",
   },
   {
-    question: "Quelle différence avec votre concurrent intuitem (CISO Assistant) ?",
+    question:
+      "Quelle différence avec votre concurrent intuitem (CISO Assistant) ?",
     answer:
       "Aucune, on est complémentaires. CISO Assistant fait la conformité (registres, contrôles, preuves). Humanix fait la sensibilisation humaine (modules, gamification, phishing). Notre intégration native exporte les preuves Humanix vers CISO Assistant.",
   },
@@ -166,10 +169,7 @@ export default async function TarifsPage({
           badge "Logiciel" + l'affichage du price range. FAQPage genere
           l'accordeon FAQ visible dans la SERP. BreadcrumbList remplace l'URL
           brute par un fil d'Ariane. Cf. lib/seo/jsonld.tsx. */}
-      <SoftwareApplicationJsonLd
-        url="/tarifs"
-        offers={PRICING_OFFERS}
-      />
+      <SoftwareApplicationJsonLd url="/tarifs" offers={PRICING_OFFERS} />
       <FaqJsonLd items={PRICING_FAQ} />
       <BreadcrumbJsonLd
         items={[
@@ -220,375 +220,380 @@ export default async function TarifsPage({
       </HexBackdrop>
 
       <div className="max-w-6xl mx-auto px-4 py-10 sm:py-12">
-
-      {/* =====================================================================
+        {/* =====================================================================
           2. AUDIT FLASH CTA - invitation, pas urgence
           ===================================================================== */}
-      <section
-        className="mb-12 animate-slide-up"
-        style={{ animationDelay: "100ms" }}
-        aria-labelledby="audit-cta-title"
-      >
-        <div className="rounded-3xl bg-gradient-to-br from-accent-500 to-primary-500 text-white p-6 sm:p-10 shadow-xl relative overflow-hidden">
-          <div
-            aria-hidden="true"
-            className="absolute -top-8 -right-6 text-[140px] opacity-10 select-none pointer-events-none rotate-12"
-          >
-            🌱
-          </div>
-          <div className="flex flex-col sm:flex-row items-center gap-6 relative">
-            <div className="text-6xl" aria-hidden="true">
-              🎯
+        <section
+          className="mb-12 animate-slide-up"
+          style={{ animationDelay: "100ms" }}
+          aria-labelledby="audit-cta-title"
+        >
+          <div className="rounded-3xl bg-gradient-to-br from-accent-500 to-primary-500 text-white p-6 sm:p-10 shadow-xl relative overflow-hidden">
+            <div
+              aria-hidden="true"
+              className="absolute -top-8 -right-6 text-[140px] opacity-10 select-none pointer-events-none rotate-12"
+            >
+              🌱
             </div>
-            <div className="flex-1 text-center sm:text-left">
-              <p className="text-xs uppercase tracking-[0.25em] opacity-80 font-bold mb-1">
-                Photo claire · 5 minutes · gratuit
-              </p>
-              <h2
-                id="audit-cta-title"
-                className="font-display text-2xl sm:text-3xl font-extrabold mb-2"
-              >
-                Tu hésites entre nos offres ?
-              </h2>
-              <p className="opacity-90 mb-4 leading-relaxed">
-                Notre <strong>audit cyber flash</strong> donne une photo claire
-                de la maturité humaine de ton organisation, en 15 questions
-                bienveillantes. Rapport PDF a la fin, recommandation
-                personnalisee - sans pression.
-              </p>
-              <Link
-                href="/audit-flash"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white text-primary-500 font-bold hover:scale-105 transition shadow-md"
-              >
-                Démarrer l'audit · 5 min →
-              </Link>
+            <div className="flex flex-col sm:flex-row items-center gap-6 relative">
+              <div className="text-6xl" aria-hidden="true">
+                🎯
+              </div>
+              <div className="flex-1 text-center sm:text-left">
+                <p className="text-xs uppercase tracking-[0.25em] opacity-80 font-bold mb-1">
+                  Photo claire · 5 minutes · gratuit
+                </p>
+                <h2
+                  id="audit-cta-title"
+                  className="font-display text-2xl sm:text-3xl font-extrabold mb-2"
+                >
+                  Tu hésites entre nos offres ?
+                </h2>
+                <p className="opacity-90 mb-4 leading-relaxed">
+                  Notre <strong>audit cyber flash</strong> donne une photo
+                  claire de la maturité humaine de ton organisation, en 15
+                  questions bienveillantes. Rapport PDF a la fin, recommandation
+                  personnalisee - sans pression.
+                </p>
+                <Link
+                  href="/audit-flash"
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white text-primary-500 font-bold hover:scale-105 transition shadow-md"
+                >
+                  Démarrer l'audit · 5 min →
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* =====================================================================
+        {/* =====================================================================
           SIMULATEUR - gardé, branché sur la nouvelle grille
           ===================================================================== */}
-      <section className="mb-16">
-        <div className="card bg-gradient-to-br from-primary-50 via-white to-cyan-50 border-2 border-accent-500/30">
-          <PricingSimulator />
-        </div>
-      </section>
+        <section className="mb-16">
+          <div className="card bg-gradient-to-br from-primary-50 via-white to-cyan-50 border-2 border-accent-500/30">
+            <PricingSimulator />
+          </div>
+        </section>
 
-      {/* =====================================================================
+        {/* =====================================================================
           DEUX FACONS DE COMMENCER - leve la confusion apprenant vs organisation.
           Point crucial : "s'inscrire" (/inscription) = compte apprenant SANS
           console ; "creer un espace" (/signup) = tu deviens ADMIN avec la
           console. Les 2 sont gratuits sans CB.
           ===================================================================== */}
-      <section className="mb-16" aria-labelledby="deux-parcours-title">
-        <div className="text-center mb-6">
-          <h2
-            id="deux-parcours-title"
-            className="text-3xl font-extrabold text-primary-500 mb-2"
-          >
-            Deux façons de commencer
-          </h2>
-          <p className="text-gray-600 dark:text-gray-300">
-            Choisis ton point d&apos;entrée. Les deux sont gratuits, sans carte
-            bancaire.
+        <section className="mb-16" aria-labelledby="deux-parcours-title">
+          <div className="text-center mb-6">
+            <h2
+              id="deux-parcours-title"
+              className="text-3xl font-extrabold text-primary-500 mb-2"
+            >
+              Deux façons de commencer
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              Choisis ton point d&apos;entrée. Les deux sont gratuits, sans
+              carte bancaire.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+            {/* Parcours apprenant (individuel) */}
+            <div className="rounded-3xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 flex flex-col">
+              <div className="text-4xl mb-3" aria-hidden="true">
+                🎓
+              </div>
+              <h3 className="font-display text-xl font-extrabold text-primary-600 dark:text-accent-200 mb-1">
+                J&apos;apprends, pour moi
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4 flex-1">
+                Un compte apprenant gratuit. Tu suis les parcours pour toi, en
+                solo ou avec tes proches. Pas de gestion d&apos;équipe, pas de
+                console : juste toi et ta progression.
+              </p>
+              <Link
+                href="/inscription"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border-2 border-gray-200 dark:border-slate-700 hover:border-accent-400 font-bold px-5 py-3 transition-colors"
+              >
+                Créer mon compte apprenant →
+              </Link>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+                Gratuit, sans carte bancaire.
+              </p>
+            </div>
+            {/* Parcours organisation (mis en avant) */}
+            <div className="rounded-3xl border-2 border-accent-400 dark:border-accent-600 bg-accent-50/50 dark:bg-accent-950/20 p-6 flex flex-col relative">
+              <span className="absolute top-4 right-4 text-xs font-bold px-3 py-1 rounded-full bg-accent-500 text-white">
+                Console admin incluse
+              </span>
+              <div className="text-4xl mb-3" aria-hidden="true">
+                🏢
+              </div>
+              <h3 className="font-display text-xl font-extrabold text-primary-600 dark:text-accent-200 mb-1">
+                Je déploie pour mon organisation
+              </h3>
+              <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed mb-4 flex-1">
+                Tu crées l&apos;espace de ta structure et tu en deviens
+                l&apos;administrateur : console d&apos;admin, invitation de ton
+                équipe, tableaux de bord, suivi de conformité.{" "}
+                <strong>Gratuit jusqu&apos;à 5 personnes</strong>, sans CB.
+              </p>
+              <Link
+                href="/signup?plan=starter"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-bold px-5 py-3 shadow-md transition-colors"
+              >
+                Créer mon espace gratuit →
+              </Link>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+                Tu deviens administrateur · forever-free jusqu&apos;à 5 sièges.
+              </p>
+            </div>
+          </div>
+          <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
+            Les offres ci-dessous détaillent le parcours organisation.
           </p>
-        </div>
-        <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
-          {/* Parcours apprenant (individuel) */}
-          <div className="rounded-3xl border-2 border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 flex flex-col">
-            <div className="text-4xl mb-3" aria-hidden="true">
-              🎓
-            </div>
-            <h3 className="font-display text-xl font-extrabold text-primary-600 dark:text-accent-200 mb-1">
-              J&apos;apprends, pour moi
-            </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4 flex-1">
-              Un compte apprenant gratuit. Tu suis les parcours pour toi, en solo
-              ou avec tes proches. Pas de gestion d&apos;équipe, pas de console :
-              juste toi et ta progression.
-            </p>
-            <Link
-              href="/inscription"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border-2 border-gray-200 dark:border-slate-700 hover:border-accent-400 font-bold px-5 py-3 transition-colors"
-            >
-              Créer mon compte apprenant →
-            </Link>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-              Gratuit, sans carte bancaire.
-            </p>
-          </div>
-          {/* Parcours organisation (mis en avant) */}
-          <div className="rounded-3xl border-2 border-accent-400 dark:border-accent-600 bg-accent-50/50 dark:bg-accent-950/20 p-6 flex flex-col relative">
-            <span className="absolute top-4 right-4 text-xs font-bold px-3 py-1 rounded-full bg-accent-500 text-white">
-              Console admin incluse
-            </span>
-            <div className="text-4xl mb-3" aria-hidden="true">
-              🏢
-            </div>
-            <h3 className="font-display text-xl font-extrabold text-primary-600 dark:text-accent-200 mb-1">
-              Je déploie pour mon organisation
-            </h3>
-            <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed mb-4 flex-1">
-              Tu crées l&apos;espace de ta structure et tu en deviens
-              l&apos;administrateur : console d&apos;admin, invitation de ton
-              équipe, tableaux de bord, suivi de conformité.{" "}
-              <strong>Gratuit jusqu&apos;à 5 personnes</strong>, sans CB.
-            </p>
-            <Link
-              href="/signup?plan=starter"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary-500 hover:bg-primary-600 text-white font-bold px-5 py-3 shadow-md transition-colors"
-            >
-              Créer mon espace gratuit →
-            </Link>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-              Tu deviens administrateur · forever-free jusqu&apos;à 5 sièges.
-            </p>
-          </div>
-        </div>
-        <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
-          Les offres ci-dessous détaillent le parcours organisation.
-        </p>
-      </section>
+        </section>
 
-      {/* =====================================================================
+        {/* =====================================================================
           4 PALIERS - rendu via PricingCarousel (client component)
           - Mobile : stack vertical
           - >= md  : carousel 3-visibles avec navigation arrows + dots
           - Defaut : Starter au centre, CE / Pro en transparence laterale,
             Enterprise hors ecran (accessible via fleche droite)
           ===================================================================== */}
-      <section className="mb-16">
-        <div className="text-center mb-6">
-          <h2 className="text-3xl font-extrabold text-primary-500 mb-2">
-            Choisis ton offre
-          </h2>
-          <p className="text-gray-600">
-            Self-host libre ou cloud managé. Tu peux changer à tout moment, sans
-            pénalité.
-          </p>
-        </div>
+        <section className="mb-16">
+          <div className="text-center mb-6">
+            <h2 className="text-3xl font-extrabold text-primary-500 mb-2">
+              Choisis ton offre
+            </h2>
+            <p className="text-gray-600">
+              Self-host libre ou cloud managé. Tu peux changer à tout moment,
+              sans pénalité.
+            </p>
+          </div>
 
-        {/* === Toggle mensuel / annuel === */}
-        <div className="flex justify-center mb-8">
-          <div
-            role="tablist"
-            aria-label="Choix de la facturation"
-            className="inline-flex items-center gap-1 rounded-2xl border-2 border-gray-200 bg-white p-1 shadow-sm"
-          >
-            <Link
-              role="tab"
-              aria-selected={billing === "monthly"}
-              href="/tarifs?billing=monthly"
-              scroll={false}
-              className={`px-4 sm:px-5 py-2 rounded-xl text-sm font-bold transition-colors ${
-                billing === "monthly"
-                  ? "bg-primary-500 text-white shadow-sm"
-                  : "text-gray-700 hover:text-primary-500"
-              }`}
+          {/* === Toggle mensuel / annuel === */}
+          <div className="flex justify-center mb-8">
+            <div
+              role="tablist"
+              aria-label="Choix de la facturation"
+              className="inline-flex items-center gap-1 rounded-2xl border-2 border-gray-200 bg-white p-1 shadow-sm"
             >
-              Mensuel · sans engagement
-            </Link>
-            <Link
-              role="tab"
-              aria-selected={billing === "annual"}
-              href="/tarifs?billing=annual"
-              scroll={false}
-              className={`relative px-4 sm:px-5 py-2 rounded-xl text-sm font-bold transition-colors ${
-                billing === "annual"
-                  ? "bg-primary-500 text-white shadow-sm"
-                  : "text-gray-700 hover:text-primary-500"
-              }`}
-            >
-              Annuel
-              <span
-                className={`ml-1.5 inline-block rounded-full px-2 py-0.5 text-[10px] font-extrabold ${
-                  billing === "annual"
-                    ? "bg-white text-primary-600"
-                    : "bg-success/10 text-success"
+              <Link
+                role="tab"
+                aria-selected={billing === "monthly"}
+                href="/tarifs?billing=monthly"
+                scroll={false}
+                className={`px-4 sm:px-5 py-2 rounded-xl text-sm font-bold transition-colors ${
+                  billing === "monthly"
+                    ? "bg-primary-500 text-white shadow-sm"
+                    : "text-gray-700 hover:text-primary-500"
                 }`}
               >
-                jusqu&apos;à −21 %
-              </span>
-            </Link>
+                Mensuel · sans engagement
+              </Link>
+              <Link
+                role="tab"
+                aria-selected={billing === "annual"}
+                href="/tarifs?billing=annual"
+                scroll={false}
+                className={`relative px-4 sm:px-5 py-2 rounded-xl text-sm font-bold transition-colors ${
+                  billing === "annual"
+                    ? "bg-primary-500 text-white shadow-sm"
+                    : "text-gray-700 hover:text-primary-500"
+                }`}
+              >
+                Annuel
+                <span
+                  className={`ml-1.5 inline-block rounded-full px-2 py-0.5 text-[10px] font-extrabold ${
+                    billing === "annual"
+                      ? "bg-white text-primary-600"
+                      : "bg-success/10 text-success"
+                  }`}
+                >
+                  jusqu&apos;à −21 %
+                </span>
+              </Link>
+            </div>
           </div>
-        </div>
 
-        <PricingCarousel
-          tiers={TIERS}
-          billing={billing}
-          currentPlan={currentPlan}
-        />
+          <PricingCarousel
+            tiers={TIERS}
+            billing={billing}
+            currentPlan={currentPlan}
+          />
 
-        <p className="text-xs text-center text-gray-500 mt-8">
-          Tous les prix sont TTC, TVA française 20 % incluse : le prix affiché
+          <p className="text-xs text-center text-gray-500 mt-8">
+            Tous les prix sont TTC, TVA française 20 % incluse : le prix affiché
             est le prix prélevé. Vente directe sans essai gratuit (la{" "}
-          <Link href="/demo" className="underline">démo</Link> remplit ce rôle).
-          Mensuel résiliable à tout moment, annuel = engagement 12 mois.
-        </p>
-        <p className="text-xs text-center text-gray-500 mt-2 hidden md:block">
-          Cliquez sur un palier ou utilisez les flèches ‹ › pour le mettre en avant.
-        </p>
-      </section>
+            <Link href="/demo" className="underline">
+              démo
+            </Link>{" "}
+            remplit ce rôle). Mensuel résiliable à tout moment, annuel =
+            engagement 12 mois.
+          </p>
+          <p className="text-xs text-center text-gray-500 mt-2 hidden md:block">
+            Cliquez sur un palier ou utilisez les flèches ‹ › pour le mettre en
+            avant.
+          </p>
+        </section>
 
-      {/* =====================================================================
+        {/* =====================================================================
           ADD-ONS
           ===================================================================== */}
-      <section className="mb-16">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-extrabold text-primary-500 mb-2">
-            Options additionnelles
-          </h2>
-          <p className="text-gray-600">
-            À combiner avec n'importe quel palier payant.
-          </p>
-        </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {ADD_ONS.map((a) => (
-            <div
-              key={a.id}
-              className="card border border-amber-200 bg-amber-50/30"
-            >
-              <div className="flex items-start gap-4 mb-3">
-                <span className="text-4xl shrink-0">{a.emoji}</span>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-bold text-primary-500">
-                    {a.name}
-                  </h3>
-                  <p className="text-sm text-gray-600 mt-0.5">
-                    {a.description}
-                  </p>
+        <section className="mb-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-extrabold text-primary-500 mb-2">
+              Options additionnelles
+            </h2>
+            <p className="text-gray-600">
+              À combiner avec n'importe quel palier payant.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {ADD_ONS.map((a) => (
+              <div
+                key={a.id}
+                className="card border border-amber-200 bg-amber-50/30"
+              >
+                <div className="flex items-start gap-4 mb-3">
+                  <span className="text-4xl shrink-0">{a.emoji}</span>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-lg font-bold text-primary-500">
+                      {a.name}
+                    </h3>
+                    <p className="text-sm text-gray-600 mt-0.5">
+                      {a.description}
+                    </p>
+                  </div>
                 </div>
+                <p className="text-right">
+                  <span className="font-extrabold text-amber-700">
+                    {a.price.display}
+                  </span>
+                  <span className="block text-[10px] text-gray-500">
+                    {a.price.details}
+                  </span>
+                </p>
+                <ul className="space-y-1 text-sm mt-3 pt-3 border-t border-amber-200/50">
+                  {a.features.map((f, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <span className="text-amber-600 mt-0.5">→</span>
+                      <span className="text-gray-700">{f}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <p className="text-right">
-                <span className="font-extrabold text-amber-700">
-                  {a.price.display}
-                </span>
-                <span className="block text-[10px] text-gray-500">
-                  {a.price.details}
-                </span>
-              </p>
-              <ul className="space-y-1 text-sm mt-3 pt-3 border-t border-amber-200/50">
-                {a.features.map((f, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="text-amber-600 mt-0.5">→</span>
-                    <span className="text-gray-700">{f}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
 
-      {/* =====================================================================
+        {/* =====================================================================
           POURQUOI HUMANIX - palette 6 saisons cyclees, animation cascade
           ===================================================================== */}
-      <section className="mb-16">
-        <div className="text-center mb-8">
-          <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
-            Notre lecture du marche
-          </p>
-          <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary-500 dark:text-accent-300 mb-2 leading-tight">
-            Pourquoi Humanix ?
-          </h2>
-          <p className="text-gray-600 dark:text-gray-300 max-w-xl mx-auto">
-            9 raisons structurelles, pas 9 arguments marketing.
-          </p>
-        </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {[
-            {
-              emoji: "🌐",
-              title: "Open source AGPLv3",
-              text: "Code complet sur GitHub. Audite-le, fork-le, héberge-le. Zéro boîte noire, transparence totale.",
-            },
-            {
-              emoji: "🇫🇷",
-              title: "Souverain par defaut",
-              text: "Conçu, hébergé et opéré en France. Conformité RGPD/NIS2 native. Pas de Cloud Act au menu.",
-            },
-            {
-              emoji: "🤝",
-              title: "Integre a l'ecosysteme",
-              text: "Connecteur natif CISO Assistant (intuitem). Format OSCAL standard. Webhooks Sentinel/Splunk/Sekoia.",
-            },
-            {
-              emoji: "🎮",
-              title: "Ludique pour de vrai",
-              text: "Mascotte evolutive, boutique, challenges entre services, badges. Les collaborateurs reviennent par envie.",
-            },
-            {
-              emoji: "⚡",
-              title: "Deployable en 30 minutes",
-              text: "Pas de chef de projet, pas de SSO obligatoire, pas de 3 semaines de mise en place. Import CSV, c'est parti.",
-            },
-            {
-              emoji: "📊",
-              title: "Score de risque humain",
-              text: "Mesure objective, en temps reel, par collaborateur et par service. Ce que ton assureur cyber demande.",
-            },
-            {
-              emoji: "🎨",
-              title: "Marque blanche & revendeur",
-              text: "Déploie la plateforme sous ta marque (logo, couleurs, sous-domaine). Le mode revendeur gère des espaces clients en cascade - ESN, MSSP, cabinets de conseil.",
-            },
-            {
-              emoji: "🦊",
-              title: "Une mascotte qui te parle",
-              text: "Hex t'accompagne, te coache, te felicite. Pas un chatbot froid. Un compagnon de progression.",
-            },
-            {
-              emoji: "💰",
-              title: "Volume plutot que rente",
-              text: "3 €/user/mois en Pro. 5 a 10x moins cher que les acteurs US. Volume > 30 grosses boites.",
-            },
-          ].map((diff, idx) => (
-            <DiffCard
-              key={diff.title}
-              emoji={diff.emoji}
-              title={diff.title}
-              text={diff.text}
-              paletteIndex={idx}
-            />
-          ))}
-        </div>
-      </section>
+        <section className="mb-16">
+          <div className="text-center mb-8">
+            <p className="text-xs uppercase tracking-[0.25em] font-bold text-accent-500 mb-2">
+              Notre lecture du marche
+            </p>
+            <h2 className="font-display text-3xl sm:text-4xl font-extrabold text-primary-500 dark:text-accent-300 mb-2 leading-tight">
+              Pourquoi Humanix ?
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 max-w-xl mx-auto">
+              9 raisons structurelles, pas 9 arguments marketing.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[
+              {
+                emoji: "🌐",
+                title: "Open source AGPLv3",
+                text: "Code complet sur GitHub. Audite-le, fork-le, héberge-le. Zéro boîte noire, transparence totale.",
+              },
+              {
+                emoji: "🇫🇷",
+                title: "Souverain par defaut",
+                text: "Conçu, hébergé et opéré en France. Conformité RGPD/NIS2 native. Pas de Cloud Act au menu.",
+              },
+              {
+                emoji: "🤝",
+                title: "Integre a l'ecosysteme",
+                text: "Connecteur natif CISO Assistant (intuitem). Format OSCAL standard. Webhooks Sentinel/Splunk/Sekoia.",
+              },
+              {
+                emoji: "🎮",
+                title: "Ludique pour de vrai",
+                text: "Mascotte evolutive, boutique, challenges entre services, badges. Les collaborateurs reviennent par envie.",
+              },
+              {
+                emoji: "⚡",
+                title: "Deployable en 30 minutes",
+                text: "Pas de chef de projet, pas de SSO obligatoire, pas de 3 semaines de mise en place. Import CSV, c'est parti.",
+              },
+              {
+                emoji: "📊",
+                title: "Score de risque humain",
+                text: "Mesure objective, en temps reel, par collaborateur et par service. Ce que ton assureur cyber demande.",
+              },
+              {
+                emoji: "🎨",
+                title: "Marque blanche & revendeur",
+                text: "Déploie la plateforme sous ta marque (logo, couleurs, sous-domaine). Le mode revendeur gère des espaces clients en cascade - ESN, MSSP, cabinets de conseil.",
+              },
+              {
+                emoji: "🦊",
+                title: "Une mascotte qui te parle",
+                text: "Hex t'accompagne, te coache, te felicite. Pas un chatbot froid. Un compagnon de progression.",
+              },
+              {
+                emoji: "💰",
+                title: "Volume plutot que rente",
+                text: "3 €/user/mois en Pro. 5 a 10x moins cher que les acteurs US. Volume > 30 grosses boites.",
+              },
+            ].map((diff, idx) => (
+              <DiffCard
+                key={diff.title}
+                emoji={diff.emoji}
+                title={diff.title}
+                text={diff.text}
+                paletteIndex={idx}
+              />
+            ))}
+          </div>
+        </section>
 
-      {/* =====================================================================
+        {/* =====================================================================
           COMPARATIF DÉTAILLÉ - 4 paliers
           ===================================================================== */}
-      <section className="mb-16">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-extrabold text-primary-500 mb-2">
-            Comparaison détaillée
-          </h2>
-          <p className="text-gray-600">
-            Ce qui est inclus, ce qui ne l'est pas.
-          </p>
-        </div>
-        <div className="overflow-x-auto card p-0">
-          <table className="w-full text-sm">
-            <caption className="sr-only">Comparaison detaillee des paliers tarifaires</caption>
-            <thead>
-              <tr className="border-b border-gray-200 bg-gray-50">
-                <th className="text-left p-4 font-bold text-primary-500 sticky left-0 bg-gray-50 z-10">
-                  Fonctionnalité
-                </th>
-                {TIERS.map((t) => (
-                  <th
-                    key={t.id}
-                    className="p-3 font-bold text-primary-500 text-center min-w-[100px]"
-                  >
-                    <div className="text-lg">{t.emoji}</div>
-                    <div className="text-xs">{t.name}</div>
+        <section className="mb-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-extrabold text-primary-500 mb-2">
+              Comparaison détaillée
+            </h2>
+            <p className="text-gray-600">
+              Ce qui est inclus, ce qui ne l'est pas.
+            </p>
+          </div>
+          <div className="overflow-x-auto card p-0">
+            <table className="w-full text-sm">
+              <caption className="sr-only">
+                Comparaison detaillee des paliers tarifaires
+              </caption>
+              <thead>
+                <tr className="border-b border-gray-200 bg-gray-50">
+                  <th className="text-left p-4 font-bold text-primary-500 sticky left-0 bg-gray-50 z-10">
+                    Fonctionnalité
                   </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {/* Convention de marquage (typographie laique uniquement) :
+                  {TIERS.map((t) => (
+                    <th
+                      key={t.id}
+                      className="p-3 font-bold text-primary-500 text-center min-w-[100px]"
+                    >
+                      <div className="text-lg">{t.emoji}</div>
+                      <div className="text-xs">{t.name}</div>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {/* Convention de marquage (typographie laique uniquement) :
                   - "✓"        : disponible sans condition
                   - "-"        : non disponible
                   - "✓*"       : disponible en Starter mais payant >5 sieges
@@ -598,377 +603,377 @@ export default async function TarifsPage({
                                  note ambre de bas de tableau)
                   - une chaine : niveau (Lite, Avancée…), peut aussi être
                                  suffixee par * ou ** */}
-              <FeatureRow
-                label="Code source AGPL"
-                cells={["✓", "-", "-", "-"]}
-              />
-              <FeatureRow
-                label="Self-host"
-                cells={["✓", "-", "-", "✓"]}
-              />
-              <FeatureRow
-                label="Cloud SaaS hébergé France"
-                cells={["-", "✓", "✓", "✓"]}
-              />
-              <FeatureRow
-                label="Gratuit jusqu'à 5 utilisateurs"
-                cells={["✓", "✓", "-", "-"]}
-              />
-              <FeatureRow
-                label="5 modules de base"
-                cells={["✓", "✓", "✓", "✓"]}
-              />
-              <FeatureRow
-                label="Catalogue complet (58 saisons · 344 modules)"
-                cells={["-", "✓*", "✓", "✓"]}
-              />
-              <FeatureRow
-                label="Mascotte évolutive"
-                cells={["✓", "✓", "✓", "✓"]}
-              />
-              <FeatureRow
-                label="Console dirigeant"
-                cells={["Basique", "Standard", "Avancée", "Avancée"]}
-              />
-              <FeatureRow
-                label="Score de risque humain"
-                cells={["-", "-", "✓", "✓"]}
-              />
-              <FeatureRow
-                label="SSO M365 / Google"
-                cells={["-", "-", "✓", "✓"]}
-              />
-              <FeatureRow
-                label="SCIM v2 (Entra/Okta)"
-                cells={["-", "-", "✓", "✓"]}
-              />
-              <FeatureRow
-                label="Certificats individuels PDF"
-                cells={["-", "-", "✓", "✓"]}
-              />
-              <FeatureRow
-                label="API REST publique"
-                cells={["-", "-", "Illimitée", "Illimitée"]}
-              />
-              <FeatureRow
-                label="Connecteur CISO Assistant"
-                cells={["✓", "-", "✓", "✓"]}
-              />
-              <FeatureRow
-                label="Webhooks signés HMAC"
-                cells={["-", "-", "✓", "✓"]}
-              />
-              <FeatureRow
-                label="Phishing email - génération templates"
-                cells={["-", "-", "Illimité**", "Illimité**"]}
-              />
-              <FeatureRow
-                label="Vishing IA souverain 🇫🇷 (Mistral + Piper TTS)"
-                cells={["-", "-", "✓**", "✓**"]}
-              />
-              <FeatureRow
-                label="Smishing IA souverain 🇫🇷 (Mistral)"
-                cells={["-", "-", "✓**", "✓**"]}
-              />
-              <FeatureRow
-                label="Quishing IA souverain 🇫🇷 (QR codes piégés)"
-                cells={["-", "-", "✓**", "✓**"]}
-              />
-              <FeatureRow
-                label="MCP Server (agents IA Claude/Mistral/GPT)"
-                cells={["✓", "✓", "✓", "✓"]}
-              />
-              <FeatureRow
-                label="Challenges d'équipe"
-                cells={["-", "-", "✓", "✓"]}
-              />
-              <FeatureRow
-                label="Marketplace communauté"
-                cells={["-", "-", "✓", "✓"]}
-              />
-              <FeatureRow
-                label="IA Coach personnalisé"
-                cells={["-", "-", "✓", "✓"]}
-              />
-              <FeatureRow
-                label="Cyber-Réflexe (incidents)"
-                cells={["-", "-", "✓", "✓"]}
-              />
-              <FeatureRow
-                label="Pack NIS2 turnkey"
-                cells={["Lite", "Lite", "Complet", "Complet"]}
-              />
-              <FeatureRow
-                label="Hub conformité multi-référentiels (NIS2, RGPD, ISO 27001…)"
-                cells={["-", "-", "✓", "✓"]}
-              />
-              <FeatureRow
-                label="Veille fuites de données salariés (RSSI · DPA)"
-                cells={["-", "-", "-", "✓"]}
-              />
-              <FeatureRow
-                label="Multi-établissements"
-                cells={["-", "-", "Light", "Filiales"]}
-              />
-              <FeatureRow
-                label="Customer Success Manager"
-                cells={["-", "-", "Dédié", "Dédié + onsite"]}
-              />
-              <FeatureRow
-                label="Disponibilité visée"
-                cells={["-", "-", "-", "99,9 %"]}
-              />
-              <FeatureRow
-                label="Option SecNumCloud"
-                cells={["-", "-", "-", "✓"]}
-              />
-              <FeatureRow
-                label="Marque blanche + portail revendeur multi-clients"
-                cells={["-", "-", "-", "✓"]}
-              />
-              <FeatureRow
-                label="Support"
-                cells={[
-                  "Communauté",
-                  "Email 48h*",
-                  "Chat prioritaire",
-                  "Prioritaire + DPO",
-                ]}
-              />
-            </tbody>
-          </table>
-        </div>
-
-        {/* Notes de bas de tableau */}
-        <div className="mt-4 space-y-3 text-sm">
-          {/* Note * : feature dispo en Starter mais payante >5 sieges */}
-          <div className="rounded-lg border border-primary-200 bg-primary-50 dark:border-primary-900/50 dark:bg-primary-900/15 p-4 text-primary-900 dark:text-primary-100">
-            <p>
-              <strong>*</strong> Disponible dans l'offre Starter, mais{" "}
-              <strong>uniquement payant au-delà de 5 utilisateurs</strong>{" "}
-              (forfait 19 €/mois 6-15 sièges). En-dessous de 5 sièges, c'est
-              gratuit pour toujours mais ces fonctions précises ne sont pas
-              activées - un signal pour faire grandir ton équipe avec nous.
-            </p>
+                <FeatureRow
+                  label="Code source AGPL"
+                  cells={["✓", "-", "-", "-"]}
+                />
+                <FeatureRow label="Self-host" cells={["✓", "-", "-", "✓"]} />
+                <FeatureRow
+                  label="Cloud SaaS hébergé France"
+                  cells={["-", "✓", "✓", "✓"]}
+                />
+                <FeatureRow
+                  label="Gratuit jusqu'à 5 utilisateurs"
+                  cells={["✓", "✓", "-", "-"]}
+                />
+                <FeatureRow
+                  label="5 modules de base"
+                  cells={["✓", "✓", "✓", "✓"]}
+                />
+                <FeatureRow
+                  label="Catalogue complet (58 saisons · 344 modules)"
+                  cells={["-", "✓*", "✓", "✓"]}
+                />
+                <FeatureRow
+                  label="Mascotte évolutive"
+                  cells={["✓", "✓", "✓", "✓"]}
+                />
+                <FeatureRow
+                  label="Console dirigeant"
+                  cells={["Basique", "Standard", "Avancée", "Avancée"]}
+                />
+                <FeatureRow
+                  label="Score de risque humain"
+                  cells={["-", "-", "✓", "✓"]}
+                />
+                <FeatureRow
+                  label="SSO M365 / Google"
+                  cells={["-", "-", "✓", "✓"]}
+                />
+                <FeatureRow
+                  label="SCIM v2 (Entra/Okta)"
+                  cells={["-", "-", "✓", "✓"]}
+                />
+                <FeatureRow
+                  label="Certificats individuels PDF"
+                  cells={["-", "-", "✓", "✓"]}
+                />
+                <FeatureRow
+                  label="API REST publique"
+                  cells={["-", "-", "Illimitée", "Illimitée"]}
+                />
+                <FeatureRow
+                  label="Connecteur CISO Assistant"
+                  cells={["✓", "-", "✓", "✓"]}
+                />
+                <FeatureRow
+                  label="Webhooks signés HMAC"
+                  cells={["-", "-", "✓", "✓"]}
+                />
+                <FeatureRow
+                  label="Phishing email - génération templates"
+                  cells={["-", "-", "Illimité**", "Illimité**"]}
+                />
+                <FeatureRow
+                  label="Vishing IA souverain 🇫🇷 (Mistral + Piper TTS)"
+                  cells={["-", "-", "✓**", "✓**"]}
+                />
+                <FeatureRow
+                  label="Smishing IA souverain 🇫🇷 (Mistral)"
+                  cells={["-", "-", "✓**", "✓**"]}
+                />
+                <FeatureRow
+                  label="Quishing IA souverain 🇫🇷 (QR codes piégés)"
+                  cells={["-", "-", "✓**", "✓**"]}
+                />
+                <FeatureRow
+                  label="MCP Server (agents IA Claude/Mistral/GPT)"
+                  cells={["✓", "✓", "✓", "✓"]}
+                />
+                <FeatureRow
+                  label="Challenges d'équipe"
+                  cells={["-", "-", "✓", "✓"]}
+                />
+                <FeatureRow
+                  label="Marketplace communauté"
+                  cells={["-", "-", "✓", "✓"]}
+                />
+                <FeatureRow
+                  label="IA Coach personnalisé"
+                  cells={["-", "-", "✓", "✓"]}
+                />
+                <FeatureRow
+                  label="Cyber-Réflexe (incidents)"
+                  cells={["-", "-", "✓", "✓"]}
+                />
+                <FeatureRow
+                  label="Pack NIS2 turnkey"
+                  cells={["Lite", "Lite", "Complet", "Complet"]}
+                />
+                <FeatureRow
+                  label="Hub conformité multi-référentiels (NIS2, RGPD, ISO 27001…)"
+                  cells={["-", "-", "✓", "✓"]}
+                />
+                <FeatureRow
+                  label="Veille fuites de données salariés (RSSI · DPA)"
+                  cells={["-", "-", "-", "✓"]}
+                />
+                <FeatureRow
+                  label="Multi-établissements"
+                  cells={["-", "-", "Light", "Filiales"]}
+                />
+                <FeatureRow
+                  label="Customer Success Manager"
+                  cells={["-", "-", "Dédié", "Dédié + onsite"]}
+                />
+                <FeatureRow
+                  label="Disponibilité visée"
+                  cells={["-", "-", "-", "99,9 %"]}
+                />
+                <FeatureRow
+                  label="Option SecNumCloud"
+                  cells={["-", "-", "-", "✓"]}
+                />
+                <FeatureRow
+                  label="Marque blanche + portail revendeur multi-clients"
+                  cells={["-", "-", "-", "✓"]}
+                />
+                <FeatureRow
+                  label="Support"
+                  cells={[
+                    "Communauté",
+                    "Email 48h*",
+                    "Chat prioritaire",
+                    "Prioritaire + DPO",
+                  ]}
+                />
+              </tbody>
+            </table>
           </div>
 
-          {/* Note ** : phishing/vishing/smishing modèle */}
-          <div className="rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-900/50 dark:bg-amber-900/15 p-4 text-amber-900 dark:text-amber-100">
-            <p>
-              <strong>** Phishing / Vishing / Smishing</strong> - Humanix génère
-              gratuitement les{" "}
-              <strong>templates et scripts pédagogiques</strong> via IA
-              souveraine Mistral. L'<strong>envoi réel</strong> (emails, SMS,
-              appels téléphoniques) n'est <strong>pas inclus</strong> : chaque
-              message a un coût opérateur (provider transactionnel SMS, email,
-              ou SIP). Deux options : (1) vous gérez l'envoi via votre propre
-              provider FR, ou (2)
-              <a
-                href="mailto:contact@humanix-cybersecurity.fr?subject=Forfait+phishing+vishing+smishing+sur+mesure"
-                className="underline font-medium ml-1"
-              >
-                forfait sur mesure
-              </a>{" "}
-              avec exécution complète et traçabilité par Humanix.
-            </p>
-          </div>
-        </div>
-      </section>
+          {/* Notes de bas de tableau */}
+          <div className="mt-4 space-y-3 text-sm">
+            {/* Note * : feature dispo en Starter mais payante >5 sieges */}
+            <div className="rounded-lg border border-primary-200 bg-primary-50 dark:border-primary-900/50 dark:bg-primary-900/15 p-4 text-primary-900 dark:text-primary-100">
+              <p>
+                <strong>*</strong> Disponible dans l'offre Starter, mais{" "}
+                <strong>uniquement payant au-delà de 5 utilisateurs</strong>{" "}
+                (forfait 19 €/mois 6-15 sièges). En-dessous de 5 sièges, c'est
+                gratuit pour toujours mais ces fonctions précises ne sont pas
+                activées - un signal pour faire grandir ton équipe avec nous.
+              </p>
+            </div>
 
-      {/* =====================================================================
+            {/* Note ** : phishing/vishing/smishing modèle */}
+            <div className="rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-900/50 dark:bg-amber-900/15 p-4 text-amber-900 dark:text-amber-100">
+              <p>
+                <strong>** Phishing / Vishing / Smishing</strong> - Humanix
+                génère gratuitement les{" "}
+                <strong>templates et scripts pédagogiques</strong> via IA
+                souveraine Mistral. L'<strong>envoi réel</strong> (emails, SMS,
+                appels téléphoniques) n'est <strong>pas inclus</strong> : chaque
+                message a un coût opérateur (provider transactionnel SMS, email,
+                ou SIP). Deux options : (1) vous gérez l'envoi via votre propre
+                provider FR, ou (2)
+                <a
+                  href="mailto:contact@humanix-cybersecurity.fr?subject=Forfait+phishing+vishing+smishing+sur+mesure"
+                  className="underline font-medium ml-1"
+                >
+                  forfait sur mesure
+                </a>{" "}
+                avec exécution complète et traçabilité par Humanix.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* =====================================================================
           ROI - chiffres a froid, sans urgence
           ===================================================================== */}
-      <section className="mb-16">
-        <div className="rounded-3xl border-2 border-emerald-200 dark:border-emerald-900/40 bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/40 p-6 sm:p-10 shadow-sm">
-          <div className="grid sm:grid-cols-[auto_1fr] gap-6 items-start">
-            <div className="text-6xl" aria-hidden="true">
-              💡
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-[0.25em] font-bold text-emerald-700 dark:text-emerald-300 mb-2">
-                Retour sur investissement · sans embellir
-              </p>
-              <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-3 leading-tight">
-                Les chiffres, posés froidement.
-              </h2>
-              <ul className="space-y-2 text-gray-700">
-                <Roi
-                  label="Une attaque par phishing réussie chez une organisation française"
-                  value="coûte en moyenne 35 000 € (Tracfin 2024)"
-                />
-                <Roi
-                  label="Notre offre Pro pour 25 collaborateurs"
-                  value="coûte 750 €/an (63 €/mois en annuel) ou 900 €/an en mensuel"
-                />
-                <Roi
-                  label="Réduction observée du taux de clic phishing après 6 mois"
-                  value="−60 % (cible standard du marché)"
-                />
-                <Roi
-                  label="Réduction de la prime d'assurance cyber"
-                  value="5 à 15 % avec preuve de formation continue"
-                />
-              </ul>
-              <p className="text-sm text-gray-600 mt-4 italic">
-                À 900 €/an, l'investissement est rentabilisé dès la première
-                attaque évitée - qui statistiquement arrive en 18 mois pour une
-                équipe non-formée.
-              </p>
+        <section className="mb-16">
+          <div className="rounded-3xl border-2 border-emerald-200 dark:border-emerald-900/40 bg-gradient-to-br from-emerald-50 via-white to-teal-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-950/40 p-6 sm:p-10 shadow-sm">
+            <div className="grid sm:grid-cols-[auto_1fr] gap-6 items-start">
+              <div className="text-6xl" aria-hidden="true">
+                💡
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-[0.25em] font-bold text-emerald-700 dark:text-emerald-300 mb-2">
+                  Retour sur investissement · sans embellir
+                </p>
+                <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-primary-500 dark:text-accent-300 mb-3 leading-tight">
+                  Les chiffres, posés froidement.
+                </h2>
+                <ul className="space-y-2 text-gray-700">
+                  <Roi
+                    label="Une attaque par phishing réussie chez une organisation française"
+                    value="coûte en moyenne 35 000 € (Tracfin 2024)"
+                  />
+                  <Roi
+                    label="Notre offre Pro pour 25 collaborateurs"
+                    value="coûte 750 €/an (63 €/mois en annuel) ou 900 €/an en mensuel"
+                  />
+                  <Roi
+                    label="Réduction observée du taux de clic phishing après 6 mois"
+                    value="−60 % (cible standard du marché)"
+                  />
+                  <Roi
+                    label="Réduction de la prime d'assurance cyber"
+                    value="5 à 15 % avec preuve de formation continue"
+                  />
+                </ul>
+                <p className="text-sm text-gray-600 mt-4 italic">
+                  À 900 €/an, l'investissement est rentabilisé dès la première
+                  attaque évitée - qui statistiquement arrive en 18 mois pour
+                  une équipe non-formée.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* =====================================================================
+        {/* =====================================================================
           FAQ
           ===================================================================== */}
-      <section className="mb-16">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-extrabold text-primary-500 mb-2">
-            Questions fréquentes
-          </h2>
-        </div>
-        <div className="grid md:grid-cols-2 gap-4">
-          <Faq question="C'est trop pas cher, ça m'inspire pas confiance">
-            Notre code est en open source sur GitHub, vous pouvez l'auditer
-            ligne par ligne. Notre équipe vit de l'expertise et de
-            l'accompagnement (audit, formation, RSSI externalisé), pas du
-            hold-up sur les abonnements SaaS. Le prix bas est un choix politique
-            : la cybersécurité ne doit pas être un luxe.
-          </Faq>
-          <Faq question="Pourquoi gratuit en self-host si vous êtes sérieux ?">
-            C'est exactement le modèle de CISO Assistant (intuitem), OpenCTI
-            (Filigran), Centreon, Wazuh. Open source = plateforme libre +
-            service expert payant. Modèle éprouvé qui finance durablement le
-            développement.
-          </Faq>
-          <Faq question="Comment tester avant de payer ?">
-            Pas d&apos;essai gratuit sur les paliers payants : la{" "}
-            <Link href="/demo" className="underline">
-              démo en ligne
-            </Link>{" "}
-            (comptes pré-remplis, données fictives) couvre déjà ce besoin.
-            Le plan{" "}
-            <Link href="/inscription" className="underline">
-              Starter
-            </Link>{" "}
-            est gratuit jusqu&apos;à 5 sièges (forever-free, sans CB), puis
-            19 €/mois forfait jusqu&apos;à 15 sièges. Au-delà : Pro à
-            3 €/utilisateur/mois (mensuel sans engagement ou annuel −17 %).
-          </Faq>
-          <Faq question="Mes données sont-elles hébergées en France ?">
-            Hébergement en France (Scaleway, Paris) pour toute la plateforme,
-            tous paliers confondus. Option SecNumCloud disponible en Enterprise.
-          </Faq>
-          <Faq question="Que se passe-t-il en cas de désinstallation ?">
-            Tes données restent accessibles 30 jours pour export complet (RGPD).
-            Au-delà, suppression définitive avec attestation. Les certificats
-            individuels déjà émis restent valables.
-          </Faq>
-          <Faq question="Y aura-t-il des hausses de prix dans 6 mois ?">
-            La grille de mai 2026 est garantie pour 12 mois minimum. Les clients
-            déjà inscrits gardent leur tarif lock-in à vie (grand-fathering).
-            Toute évolution sera annoncée 60 jours en avance.
-          </Faq>
-          <Faq question="Quel est l'engagement contractuel ?">
-            Aucun engagement minimum sur Cloud. Tu peux résilier à tout moment
-            depuis ta console, prorata jour exact. Engagement annuel = remise
-            de 17 à 21 %, totalement optionnel.
-          </Faq>
-          <Faq question="Quelle différence avec votre concurrent intuitem (CISO Assistant) ?">
-            Aucune, on est complémentaires. CISO Assistant fait la conformité
-            (registres, contrôles, preuves). Humanix fait la sensibilisation
-            humaine (modules, gamification, phishing). Notre intégration native
-            exporte les preuves Humanix vers CISO Assistant.
-          </Faq>
-          <Faq question="Proposez-vous la marque blanche ou un programme revendeur ?">
-            Oui, en Enterprise. Vous déployez la plateforme sous votre marque
-            (logo, couleurs, sous-domaine, emails, certificats). Le programme
-            revendeur permet en plus de créer et gérer des espaces clients,
-            chacun sous sa propre marque, avec cascade automatique de la vôtre -
-            pensé pour les ESN, MSSP et cabinets de conseil.
-          </Faq>
-        </div>
-      </section>
+        <section className="mb-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-extrabold text-primary-500 mb-2">
+              Questions fréquentes
+            </h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            <Faq question="C'est trop pas cher, ça m'inspire pas confiance">
+              Notre code est en open source sur GitHub, vous pouvez l'auditer
+              ligne par ligne. Notre équipe vit de l'expertise et de
+              l'accompagnement (audit, formation, RSSI externalisé), pas du
+              hold-up sur les abonnements SaaS. Le prix bas est un choix
+              politique : la cybersécurité ne doit pas être un luxe.
+            </Faq>
+            <Faq question="Pourquoi gratuit en self-host si vous êtes sérieux ?">
+              C'est exactement le modèle de CISO Assistant (intuitem), OpenCTI
+              (Filigran), Centreon, Wazuh. Open source = plateforme libre +
+              service expert payant. Modèle éprouvé qui finance durablement le
+              développement.
+            </Faq>
+            <Faq question="Comment tester avant de payer ?">
+              Pas d&apos;essai gratuit sur les paliers payants : la{" "}
+              <Link href="/demo" className="underline">
+                démo en ligne
+              </Link>{" "}
+              (comptes pré-remplis, données fictives) couvre déjà ce besoin. Le
+              plan{" "}
+              <Link href="/inscription" className="underline">
+                Starter
+              </Link>{" "}
+              est gratuit jusqu&apos;à 5 sièges (forever-free, sans CB), puis 19
+              €/mois forfait jusqu&apos;à 15 sièges. Au-delà : Pro à 3
+              €/utilisateur/mois (mensuel sans engagement ou annuel −17 %).
+            </Faq>
+            <Faq question="Mes données sont-elles hébergées en France ?">
+              Hébergement en France (Scaleway, Paris) pour toute la plateforme,
+              tous paliers confondus. Option SecNumCloud disponible en
+              Enterprise.
+            </Faq>
+            <Faq question="Que se passe-t-il en cas de désinstallation ?">
+              Tes données restent accessibles 30 jours pour export complet
+              (RGPD). Au-delà, suppression définitive avec attestation. Les
+              certificats individuels déjà émis restent valables.
+            </Faq>
+            <Faq question="Y aura-t-il des hausses de prix dans 6 mois ?">
+              La grille de mai 2026 est garantie pour 12 mois minimum. Les
+              clients déjà inscrits gardent leur tarif lock-in à vie
+              (grand-fathering). Toute évolution sera annoncée 60 jours en
+              avance.
+            </Faq>
+            <Faq question="Quel est l'engagement contractuel ?">
+              Aucun engagement minimum sur Cloud. Tu peux résilier à tout moment
+              depuis ta console, prorata jour exact. Engagement annuel = remise
+              de 17 à 21 %, totalement optionnel.
+            </Faq>
+            <Faq question="Quelle différence avec votre concurrent intuitem (CISO Assistant) ?">
+              Aucune, on est complémentaires. CISO Assistant fait la conformité
+              (registres, contrôles, preuves). Humanix fait la sensibilisation
+              humaine (modules, gamification, phishing). Notre intégration
+              native exporte les preuves Humanix vers CISO Assistant.
+            </Faq>
+            <Faq question="Proposez-vous la marque blanche ou un programme revendeur ?">
+              Oui, en Enterprise. Vous déployez la plateforme sous votre marque
+              (logo, couleurs, sous-domaine, emails, certificats). Le programme
+              revendeur permet en plus de créer et gérer des espaces clients,
+              chacun sous sa propre marque, avec cascade automatique de la vôtre
+              - pensé pour les ESN, MSSP et cabinets de conseil.
+            </Faq>
+          </div>
+        </section>
 
-      {/* =====================================================================
+        {/* =====================================================================
           CTA FINAL - invitation cosy, pas urgence
           ===================================================================== */}
-      <section
-        aria-labelledby="cta-final"
-        className="relative text-center bg-gradient-to-br from-primary-500 via-primary-600 to-accent-500 rounded-3xl p-8 sm:p-12 text-white shadow-xl overflow-hidden"
-      >
-        <div
-          aria-hidden="true"
-          className="absolute -top-12 -right-8 text-[180px] opacity-10 select-none pointer-events-none rotate-12"
+        <section
+          aria-labelledby="cta-final"
+          className="relative text-center bg-gradient-to-br from-primary-500 via-primary-600 to-accent-500 rounded-3xl p-8 sm:p-12 text-white shadow-xl overflow-hidden"
         >
-          🌱
-        </div>
-        <p className="text-xs uppercase tracking-[0.3em] font-bold opacity-80 mb-2 relative">
-          A toi de jouer
-        </p>
-        <h2
-          id="cta-final"
-          className="font-display text-3xl sm:text-4xl font-extrabold mb-3 relative leading-tight"
-        >
-          Prends une etoile, prends un compte, ou juste un cafe.
-        </h2>
-        <p className="text-lg opacity-90 mb-8 max-w-xl mx-auto leading-relaxed relative">
-          Self-host libre ou cloud gratuit en 2 minutes. Premier module jouable
-          immediatement. Pas de carte bancaire, pas de relance commerciale, pas
-          de pression.
-        </p>
-        <div className="flex flex-wrap justify-center gap-3 relative">
-          <Link
-            href="/rejoindre"
-            className="bg-white text-primary-500 font-bold px-6 sm:px-8 py-4 rounded-2xl hover:scale-105 transition shadow-lg"
+          <div
+            aria-hidden="true"
+            className="absolute -top-12 -right-8 text-[180px] opacity-10 select-none pointer-events-none rotate-12"
           >
-            🧭 Trouver mon profil
-          </Link>
-          <Link
-            href="/demo"
-            className="bg-white/10 backdrop-blur border-2 border-white/70 text-white font-bold px-6 sm:px-8 py-4 rounded-2xl hover:bg-white/20 transition"
+            🌱
+          </div>
+          <p className="text-xs uppercase tracking-[0.3em] font-bold opacity-80 mb-2 relative">
+            A toi de jouer
+          </p>
+          <h2
+            id="cta-final"
+            className="font-display text-3xl sm:text-4xl font-extrabold mb-3 relative leading-tight"
           >
-            🎮 Tester la demo publique
-          </Link>
-          <a
-            href="https://github.com/Humanix-Cybersecurity/Humanix-Academie"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-white/10 backdrop-blur border-2 border-white/70 text-white font-bold px-6 sm:px-8 py-4 rounded-2xl hover:bg-white/20 transition"
-          >
-            ⭐ Voir le repo GitHub
-            <span className="sr-only"> (nouvel onglet)</span>
-          </a>
-          <a
-            href="mailto:contact@humanix-cybersecurity.fr"
-            className="bg-white/10 backdrop-blur border-2 border-white/70 text-white font-bold px-6 sm:px-8 py-4 rounded-2xl hover:bg-white/20 transition"
-          >
-            📞 Echanger avec un expert
-          </a>
-        </div>
-        <p className="text-xs opacity-70 mt-6 relative">
-          Une question ? <strong>contact@humanix-cybersecurity.fr</strong> - on
-          repond sous 4 h ouvrees.
-        </p>
-      </section>
+            Prends une etoile, prends un compte, ou juste un cafe.
+          </h2>
+          <p className="text-lg opacity-90 mb-8 max-w-xl mx-auto leading-relaxed relative">
+            Self-host libre ou cloud gratuit en 2 minutes. Premier module
+            jouable immediatement. Pas de carte bancaire, pas de relance
+            commerciale, pas de pression.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3 relative">
+            <Link
+              href="/rejoindre"
+              className="bg-white text-primary-500 font-bold px-6 sm:px-8 py-4 rounded-2xl hover:scale-105 transition shadow-lg"
+            >
+              🧭 Trouver mon profil
+            </Link>
+            <Link
+              href="/demo"
+              className="bg-white/10 backdrop-blur border-2 border-white/70 text-white font-bold px-6 sm:px-8 py-4 rounded-2xl hover:bg-white/20 transition"
+            >
+              🎮 Tester la demo publique
+            </Link>
+            <a
+              href="https://github.com/Humanix-Cybersecurity/Humanix-Academie"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white/10 backdrop-blur border-2 border-white/70 text-white font-bold px-6 sm:px-8 py-4 rounded-2xl hover:bg-white/20 transition"
+            >
+              ⭐ Voir le repo GitHub
+              <span className="sr-only"> (nouvel onglet)</span>
+            </a>
+            <a
+              href="mailto:contact@humanix-cybersecurity.fr"
+              className="bg-white/10 backdrop-blur border-2 border-white/70 text-white font-bold px-6 sm:px-8 py-4 rounded-2xl hover:bg-white/20 transition"
+            >
+              📞 Echanger avec un expert
+            </a>
+          </div>
+          <p className="text-xs opacity-70 mt-6 relative">
+            Une question ? <strong>contact@humanix-cybersecurity.fr</strong> -
+            on repond sous 4 h ouvrees.
+          </p>
+        </section>
 
-      {/* =====================================================================
+        {/* =====================================================================
           CITATION FINALE - signature cosy "Hex veille"
           ===================================================================== */}
-      <section className="text-center pt-10 pb-4">
-        <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-          « Le prix est un choix politique. On a choisi de ne laisser personne
-          au bord du chemin - pas par charite, par strategie. La cybersecurite
-          ne peut pas être un luxe quand 90 % des attaques visent les humains. »
-        </blockquote>
-        <p
-          aria-hidden="true"
-          className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
-        >
-          - Hex veille
-        </p>
-      </section>
+        <section className="text-center pt-10 pb-4">
+          <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            « Le prix est un choix politique. On a choisi de ne laisser personne
+            au bord du chemin - pas par charite, par strategie. La cybersecurite
+            ne peut pas être un luxe quand 90 % des attaques visent les humains.
+            »
+          </blockquote>
+          <p
+            aria-hidden="true"
+            className="mt-4 text-xs uppercase tracking-[0.25em] text-accent-500/70 font-bold"
+          >
+            - Hex veille
+          </p>
+        </section>
       </div>
     </main>
   );

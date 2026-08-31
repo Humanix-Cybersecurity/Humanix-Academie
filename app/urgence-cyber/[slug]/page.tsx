@@ -254,8 +254,8 @@ export default async function IncidentPage({
             ============================================================ */}
         <section className="text-center pt-6">
           <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            « Pas de panique. Une heure de réflexion claire vaut une journée
-            de sprint dans la peur. »
+            « Pas de panique. Une heure de réflexion claire vaut une journée de
+            sprint dans la peur. »
           </blockquote>
           <p
             aria-hidden="true"

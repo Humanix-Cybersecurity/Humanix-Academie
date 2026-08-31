@@ -45,7 +45,9 @@ describe("sanitizeForTTS - basics", () => {
   });
 
   it("retire les emojis", () => {
-    expect(sanitizeForTTS("Hello 👋 monde 🌍 !")).toBe("Hello  monde  !".replace(/\s+/g, " "));
+    expect(sanitizeForTTS("Hello 👋 monde 🌍 !")).toBe(
+      "Hello  monde  !".replace(/\s+/g, " "),
+    );
   });
 
   it("normalise les whitespaces", () => {
@@ -118,13 +120,16 @@ describe("stripID3v2Header - critique pour le concat MP3 multi-chunk", () => {
   // (synchsafe : 0,0,0,100) + 100 bytes de "tag data" + 4 bytes de "frames"
   function makeID3v2(tagSize: number, frameBytes: number[]): Buffer {
     const header = Buffer.from([
-      0x49, 0x44, 0x33,                    // "ID3"
-      0x04, 0x00,                          // version 4.0
-      0x00,                                // flags
-      0,                                   // size byte 1 (synchsafe)
-      0,                                   // size byte 2
-      (tagSize >> 7) & 0x7f,               // size byte 3
-      tagSize & 0x7f,                      // size byte 4
+      0x49,
+      0x44,
+      0x33, // "ID3"
+      0x04,
+      0x00, // version 4.0
+      0x00, // flags
+      0, // size byte 1 (synchsafe)
+      0, // size byte 2
+      (tagSize >> 7) & 0x7f, // size byte 3
+      tagSize & 0x7f, // size byte 4
     ]);
     const tagData = Buffer.alloc(tagSize, 0x00);
     const frames = Buffer.from(frameBytes);
@@ -159,8 +164,16 @@ describe("stripID3v2Header - critique pour le concat MP3 multi-chunk", () => {
     // Reverse : (b6 << 21) | (b7 << 14) | (b8 << 7) | b9 = 16384
     //   b6=0, b7=1, b8=0, b9=0  ->  1 << 14 = 16384 ✓
     const header = Buffer.from([
-      0x49, 0x44, 0x33, 0x04, 0x00, 0x00,
-      0, 1, 0, 0,                        // size = 16384
+      0x49,
+      0x44,
+      0x33,
+      0x04,
+      0x00,
+      0x00,
+      0,
+      1,
+      0,
+      0, // size = 16384
     ]);
     const tagData = Buffer.alloc(16384, 0xaa);
     const frames = Buffer.from([0xff, 0xfb]);

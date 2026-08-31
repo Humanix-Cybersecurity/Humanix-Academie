@@ -151,9 +151,8 @@ export default function HexRecap(props: Props) {
           </div>
           <p className="text-[11px] text-gray-500 dark:text-gray-400 italic mt-3">
             Synthèse adaptée {personaLabel(state.persona)} sur les{" "}
-            {state.missedCount} question{state.missedCount > 1 ? "s" : ""}{" "}
-            ratée{state.missedCount > 1 ? "s" : ""} sur{" "}
-            {state.totalQuestions}.
+            {state.missedCount} question{state.missedCount > 1 ? "s" : ""} ratée
+            {state.missedCount > 1 ? "s" : ""} sur {state.totalQuestions}.
           </p>
         </>
       )}

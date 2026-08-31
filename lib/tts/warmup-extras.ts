@@ -49,7 +49,9 @@ export function extractLibrarySegments(): AudioSegment[] {
 
     // 2. Teaser (AudioPreviewButton sur /famille pour audience='famille')
     //    Format identique au call site : `${title}. ${description}`.
-    const teaserText = sanitizeForTTS(`${article.title}. ${article.description}`);
+    const teaserText = sanitizeForTTS(
+      `${article.title}. ${article.description}`,
+    );
     if (teaserText) {
       out.push({
         id: `library/${article.slug}/teaser`,

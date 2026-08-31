@@ -155,8 +155,8 @@ export default function WebAuthnPanel({
         </div>
         <p className="text-xs text-gray-500">
           Branchez votre clé puis cliquez « Enrôler ma clé ». Une dialogue
-          navigateur vous demandera de toucher le capteur ou saisir le PIN
-          de la clé.
+          navigateur vous demandera de toucher le capteur ou saisir le PIN de la
+          clé.
         </p>
       </div>
     </section>
@@ -240,14 +240,17 @@ function CredentialRow({ cred }: { cred: WebAuthnCredentialItem }) {
               ` · dernière utilisation ${new Date(cred.lastUsedAt).toLocaleDateString("fr-FR")}`}
           </p>
           <div className="flex gap-1 mt-1 flex-wrap text-[10px]">
-            {cred.transports?.split(",").filter(Boolean).map((t) => (
-              <span
-                key={t}
-                className="bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded font-mono"
-              >
-                {t}
-              </span>
-            ))}
+            {cred.transports
+              ?.split(",")
+              .filter(Boolean)
+              .map((t) => (
+                <span
+                  key={t}
+                  className="bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded font-mono"
+                >
+                  {t}
+                </span>
+              ))}
             {cred.userVerified && (
               <span className="bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 px-1.5 py-0.5 rounded font-bold">
                 PIN/biométrie

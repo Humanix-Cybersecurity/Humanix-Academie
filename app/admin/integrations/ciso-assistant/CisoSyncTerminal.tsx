@@ -157,7 +157,10 @@ export default function CisoSyncTerminal({
           </div>
         )}
         {lines.map((line, i) => (
-          <div key={i} className={`${lineColor(line)} whitespace-pre-wrap leading-relaxed`}>
+          <div
+            key={i}
+            className={`${lineColor(line)} whitespace-pre-wrap leading-relaxed`}
+          >
             {line}
           </div>
         ))}

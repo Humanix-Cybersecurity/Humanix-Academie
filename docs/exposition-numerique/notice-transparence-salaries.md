@@ -43,15 +43,15 @@ Pour lever toute ambiguïté, ce dispositif :
 
 ### Données traitées et finalité
 
-| Élément | Détail |
-|---|---|
-| **Finalité** | Sécurité du système d'information (détection de comptes exposés, remédiation par la formation) |
-| **Base légale** | Intérêt légitime de l'employeur à assurer la sécurité de son SI (RGPD art. 6.1.f) |
-| **Données** | Adresse email professionnelle, présence/absence dans une fuite publique, statut de remédiation |
-| **Destinataires** | Le Responsable de la Sécurité (RSSI) et les personnes habilitées de l'organisation |
-| **Sous-traitant** | Humanix (hébergement souverain France), encadré par un contrat de sous-traitance (RGPD art. 28) |
-| **Durée de conservation** | « [à compléter, ex. 12 mois] », puis suppression automatique |
-| **Hébergement** | France, aucun transfert hors Union européenne |
+| Élément                   | Détail                                                                                          |
+| ------------------------- | ----------------------------------------------------------------------------------------------- |
+| **Finalité**              | Sécurité du système d'information (détection de comptes exposés, remédiation par la formation)  |
+| **Base légale**           | Intérêt légitime de l'employeur à assurer la sécurité de son SI (RGPD art. 6.1.f)               |
+| **Données**               | Adresse email professionnelle, présence/absence dans une fuite publique, statut de remédiation  |
+| **Destinataires**         | Le Responsable de la Sécurité (RSSI) et les personnes habilitées de l'organisation              |
+| **Sous-traitant**         | Humanix (hébergement souverain France), encadré par un contrat de sous-traitance (RGPD art. 28) |
+| **Durée de conservation** | « [à compléter, ex. 12 mois] », puis suppression automatique                                    |
+| **Hébergement**           | France, aucun transfert hors Union européenne                                                   |
 
 ### Vos droits
 
@@ -65,8 +65,8 @@ Vous pouvez également introduire une réclamation auprès de la CNIL.
 
 Conformément au Code du travail, ce dispositif a fait l'objet « [d'une information /
 d'une consultation] » du Comité Social et Économique (CSE) en date du
-« [date] ». *(À adapter : la consultation préalable du CSE peut être requise
-selon l'ampleur du dispositif - à valider juridiquement.)*
+« [date] ». _(À adapter : la consultation préalable du CSE peut être requise
+selon l'ampleur du dispositif - à valider juridiquement.)_
 
 ---
 

@@ -80,11 +80,7 @@ export type CyberscoreTenantMeta = {
 // -----------------------------------------------------------------------------
 
 export type CyberscoreLevel =
-  | "excellent"
-  | "bon"
-  | "correct"
-  | "warning"
-  | "danger";
+  "excellent" | "bon" | "correct" | "warning" | "danger";
 
 export type CyberscoreBreakdown = {
   /** Score final 0-100 (clamp + arrondi) */

@@ -19,8 +19,12 @@ function answerAll(profil: RecyfProfil, value: RecyfAnswer): RecyfAnswers {
 
 describe("buildRecyfPlan", () => {
   it("EI : 15 objectifs evalues ; EE : 20", () => {
-    expect(buildRecyfPlan(answerAll("EI", "oui"), "EI").objectifsCount).toBe(15);
-    expect(buildRecyfPlan(answerAll("EE", "oui"), "EE").objectifsCount).toBe(20);
+    expect(buildRecyfPlan(answerAll("EI", "oui"), "EI").objectifsCount).toBe(
+      15,
+    );
+    expect(buildRecyfPlan(answerAll("EE", "oui"), "EE").objectifsCount).toBe(
+      20,
+    );
   });
 
   it("tout en place -> score 100, verdict robuste, aucune priorite", () => {

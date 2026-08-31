@@ -16,7 +16,10 @@ let cwdSpy: ReturnType<typeof vi.spyOn>;
 function writeMdx(saisonSlug: string, episodeSlug: string) {
   const dir = path.join(tmpRoot, "content", "saisons", saisonSlug);
   fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, `${episodeSlug}.mdx`), "---\ntitle: x\n---\n");
+  fs.writeFileSync(
+    path.join(dir, `${episodeSlug}.mdx`),
+    "---\ntitle: x\n---\n",
+  );
 }
 
 beforeEach(() => {

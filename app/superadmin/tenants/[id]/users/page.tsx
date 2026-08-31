@@ -141,8 +141,13 @@ export default async function TenantUsersPage({
           </thead>
           <tbody className="divide-y divide-gray-200 dark:divide-slate-800">
             {users.map((u) => (
-              <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-slate-800/30">
-                <td className="px-4 py-3 font-mono text-xs">{maskEmail(u.email)}</td>
+              <tr
+                key={u.id}
+                className="hover:bg-gray-50 dark:hover:bg-slate-800/30"
+              >
+                <td className="px-4 py-3 font-mono text-xs">
+                  {maskEmail(u.email)}
+                </td>
                 <td className="px-4 py-3">{maskName(u.name) || "-"}</td>
                 <td className="px-4 py-3">
                   <span

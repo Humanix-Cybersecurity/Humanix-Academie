@@ -332,7 +332,10 @@ export async function executePurge(
     }
   } catch (e) {
     // Best-effort : cette purge ne doit pas faire echouer la retention.
-    console.warn("[data-retention] purge des coordonnees abandonnees echouee", e);
+    console.warn(
+      "[data-retention] purge des coordonnees abandonnees echouee",
+      e,
+    );
   }
 
   await db.tenant.update({

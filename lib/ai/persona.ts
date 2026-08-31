@@ -24,13 +24,7 @@
 import { db } from "@/lib/db";
 
 export type Persona =
-  | "beginner"
-  | "technical"
-  | "manager"
-  | "developer"
-  | "finance"
-  | "hr"
-  | "ops";
+  "beginner" | "technical" | "manager" | "developer" | "finance" | "hr" | "ops";
 
 const VALID_PERSONAS = new Set<Persona>([
   "beginner",
@@ -85,9 +79,7 @@ export async function getUserPersona(userId: string): Promise<Persona> {
     svc.includes("devops") ||
     svc.includes("sre")
   ) {
-    return svc.includes("ops") || svc.includes("sre")
-      ? "ops"
-      : "developer";
+    return svc.includes("ops") || svc.includes("sre") ? "ops" : "developer";
   }
   if (
     svc.includes("compta") ||

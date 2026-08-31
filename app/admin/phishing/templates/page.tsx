@@ -83,8 +83,8 @@ export default async function PhishingTemplatesPage() {
       >
         {customTemplates.length === 0 ? (
           <p className="text-sm text-gray-500">
-            Aucun template custom pour l'instant. Crée-en un ci-dessus ou
-            depuis le{" "}
+            Aucun template custom pour l'instant. Crée-en un ci-dessus ou depuis
+            le{" "}
             <Link
               href="/admin/phishing/redteam"
               className="underline hover:text-accent-500"
@@ -135,11 +135,7 @@ export default async function PhishingTemplatesPage() {
                     </td>
                     <td className="px-3 py-2">
                       <form action={deleteCustomTemplate}>
-                        <input
-                          type="hidden"
-                          name="templateId"
-                          value={t.id}
-                        />
+                        <input type="hidden" name="templateId" value={t.id} />
                         <button
                           type="submit"
                           className="text-xs text-red-600 hover:underline"
@@ -207,7 +203,9 @@ function DifficultyPill({ d }: { d: string }) {
         : "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300";
   const label = d === "easy" ? "Facile" : d === "hard" ? "Difficile" : "Moyen";
   return (
-    <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-bold ${cls}`}>
+    <span
+      className={`inline-block px-2 py-0.5 rounded-full text-xs font-bold ${cls}`}
+    >
       {label}
     </span>
   );

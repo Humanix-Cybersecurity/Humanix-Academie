@@ -43,7 +43,10 @@ export async function GET(
   // token legitime n'en a pas besoin de plus ; bloque le martelage du quota).
   const rl = checkRateLimit(`phishing-debrief:${token}`, 5, 60 * 60 * 1000);
   if (!rl.ok) {
-    return NextResponse.json({ ok: false, error: "rate_limited" }, { status: 429 });
+    return NextResponse.json(
+      { ok: false, error: "rate_limited" },
+      { status: 429 },
+    );
   }
 
   const result = await db.phishingResult.findUnique({
@@ -54,7 +57,10 @@ export async function GET(
     },
   });
   if (!result) {
-    return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 });
+    return NextResponse.json(
+      { ok: false, error: "not_found" },
+      { status: 404 },
+    );
   }
 
   const tpl = getTemplate(result.campaign.template);

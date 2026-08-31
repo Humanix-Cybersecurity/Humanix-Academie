@@ -17,8 +17,7 @@ import Link from "next/link";
 import { FRAMEWORKS } from "@/lib/mapping-grc";
 
 export const metadata = {
-  title:
-    "Conformité ANSSI HG (42 mesures) - Humanix Académie",
+  title: "Conformité ANSSI HG (42 mesures) - Humanix Académie",
   description:
     "Mapping public, mesure par mesure, de la conformité Humanix Académie aux 42 mesures du Guide d'hygiène informatique de l'ANSSI v2 (2017). Source de vérité unique avec l'API evidence-export.",
   alternates: { canonical: "/conformite/anssi-hg" },
@@ -48,7 +47,10 @@ function statusOf(controlRef: string): MeasureStatus {
   return "out_of_scope";
 }
 
-const STATUS_BADGE: Record<MeasureStatus, { label: string; cls: string; emoji: string }> = {
+const STATUS_BADGE: Record<
+  MeasureStatus,
+  { label: string; cls: string; emoji: string }
+> = {
   platform_native: {
     label: "Natif plateforme",
     emoji: "★",
@@ -74,7 +76,11 @@ const STATUS_BADGE: Record<MeasureStatus, { label: string; cls: string; emoji: s
 const CHAPTERS: { roman: string; label: string; range: [number, number] }[] = [
   { roman: "I", label: "Sensibiliser et former", range: [1, 2] },
   { roman: "II", label: "Connaître le système d'information", range: [3, 10] },
-  { roman: "III", label: "Authentifier et contrôler les accès", range: [11, 16] },
+  {
+    roman: "III",
+    label: "Authentifier et contrôler les accès",
+    range: [11, 16],
+  },
   { roman: "IV", label: "Sécuriser les postes", range: [17, 21] },
   { roman: "V", label: "Sécuriser le réseau", range: [22, 26] },
   { roman: "VI", label: "Sécuriser l'administration", range: [27, 29] },
@@ -103,9 +109,7 @@ export default function ConformiteAnssiHgPage() {
   const coveragePercent =
     inScope === 0
       ? 0
-      : Math.round(
-          ((stats.platform_native + stats.covered) / inScope) * 100,
-        );
+      : Math.round(((stats.platform_native + stats.covered) / inScope) * 100);
 
   return (
     <main id="main-content" className="overflow-x-hidden">
@@ -126,8 +130,8 @@ export default function ConformiteAnssiHgPage() {
               className="font-mono text-accent-500 underline-offset-4 hover:underline"
             >
               lib/mapping-grc.ts
-            </Link>
-            {" "}- le même fichier qui alimente l'API{" "}
+            </Link>{" "}
+            - le même fichier qui alimente l'API{" "}
             <code className="font-mono text-sm">/api/v1/evidence-export</code>{" "}
             et le connecteur CISO Assistant. Aucune dérive possible entre
             l'affichage commercial et la réalité opérationnelle.
@@ -171,8 +175,8 @@ export default function ConformiteAnssiHgPage() {
             {coveragePercent}%
           </p>
           <p className="text-sm text-emerald-900 dark:text-emerald-200 mt-3 max-w-xl mx-auto">
-            <strong>{stats.platform_native + stats.covered}</strong>{" "}
-            mesures couvertes nativement ou par sensibilisation sur{" "}
+            <strong>{stats.platform_native + stats.covered}</strong> mesures
+            couvertes nativement ou par sensibilisation sur{" "}
             <strong>{inScope}</strong> mesures applicables à un SaaS de
             sensibilisation (4 mesures sont assumées hors scope car elles
             concernent l'architecture réseau du client).
@@ -181,19 +185,19 @@ export default function ConformiteAnssiHgPage() {
 
         {/* Légende */}
         <section className="grid sm:grid-cols-4 gap-2 text-xs">
-          {(["platform_native", "covered", "partial", "out_of_scope"] as const).map(
-            (s) => {
-              const b = STATUS_BADGE[s];
-              return (
-                <div
-                  key={s}
-                  className={`px-3 py-2 rounded-lg ${b.cls} font-semibold`}
-                >
-                  <span className="font-mono">{b.emoji}</span> {b.label}
-                </div>
-              );
-            },
-          )}
+          {(
+            ["platform_native", "covered", "partial", "out_of_scope"] as const
+          ).map((s) => {
+            const b = STATUS_BADGE[s];
+            return (
+              <div
+                key={s}
+                className={`px-3 py-2 rounded-lg ${b.cls} font-semibold`}
+              >
+                <span className="font-mono">{b.emoji}</span> {b.label}
+              </div>
+            );
+          })}
         </section>
 
         {/* Mesures par chapitre */}
@@ -296,10 +300,9 @@ export default function ConformiteAnssiHgPage() {
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-300 mb-3 leading-relaxed">
             Certaines mesures ANSSI HG concernent l'architecture réseau ou
-            l'outillage de gestion du parc du client lui-même. Elles ne
-            peuvent pas être couvertes par un SaaS de sensibilisation, et
-            nous l'assumons explicitement plutôt que de prétendre les
-            couvrir :
+            l'outillage de gestion du parc du client lui-même. Elles ne peuvent
+            pas être couvertes par un SaaS de sensibilisation, et nous
+            l'assumons explicitement plutôt que de prétendre les couvrir :
           </p>
           <ul className="space-y-2 text-sm">
             {anssi.outOfScope.map((o) => (
@@ -316,8 +319,8 @@ export default function ConformiteAnssiHgPage() {
           </ul>
           <p className="text-xs text-gray-500 italic mt-4">
             Cette transparence est ce qui distingue un éditeur honnête d'un
-            vendeur de fumée : nous préférons documenter clairement ce que
-            nous ne faisons pas plutôt que sur-promettre.
+            vendeur de fumée : nous préférons documenter clairement ce que nous
+            ne faisons pas plutôt que sur-promettre.
           </p>
         </section>
 
@@ -328,8 +331,8 @@ export default function ConformiteAnssiHgPage() {
           </h2>
           <p className="text-sm text-gray-700 dark:text-gray-200 max-w-xl mx-auto mb-5">
             RSSI, DSI, auditeur ANSSI : vérifiez nos affirmations directement
-            dans le code source AGPLv3, ou demandez un dossier complet pour
-            vos due diligence.
+            dans le code source AGPLv3, ou demandez un dossier complet pour vos
+            due diligence.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link
@@ -367,9 +370,9 @@ export default function ConformiteAnssiHgPage() {
         </section>
 
         <p className="text-center text-xs text-gray-500 dark:text-gray-400 italic">
-          Page générée dynamiquement à partir du mapping public.
-          Toute modification du fichier{" "}
-          <code>lib/mapping-grc.ts</code> se reflète automatiquement ici.
+          Page générée dynamiquement à partir du mapping public. Toute
+          modification du fichier <code>lib/mapping-grc.ts</code> se reflète
+          automatiquement ici.
         </p>
       </div>
     </main>

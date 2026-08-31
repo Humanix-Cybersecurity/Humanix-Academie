@@ -20,12 +20,7 @@ export const dynamic = "force-dynamic";
 // Mapping mot-cle (lowercase) -> slugs de saisons / modules Humanix.
 // On rangee par ordre de pertinence. Le RSSI peut survoler et choisir.
 const THREAT_TO_MODULES: Record<string, string[]> = {
-  phishing: [
-    "phishing",
-    "email-pro",
-    "fraude-president",
-    "deepfakes",
-  ],
+  phishing: ["phishing", "email-pro", "fraude-president", "deepfakes"],
   spear_phishing: ["fraude-president", "phishing", "deepfakes"],
   whaling: ["fraude-president", "cyber-dirigeants"],
   vishing: ["fraude-president", "phishing"],

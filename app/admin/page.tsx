@@ -257,8 +257,8 @@ export default async function AdminPage() {
         style={{ animationDelay: "200ms" }}
       >
         <blockquote className="font-display italic text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-          « Piloter une culture cyber, c'est moins une chasse aux failles
-          qu'une attention reguliere - comme entretenir un jardin. Aujourd'hui,
+          « Piloter une culture cyber, c'est moins une chasse aux failles qu'une
+          attention reguliere - comme entretenir un jardin. Aujourd'hui,
           observe. Demain, arrose. »
         </blockquote>
         <p

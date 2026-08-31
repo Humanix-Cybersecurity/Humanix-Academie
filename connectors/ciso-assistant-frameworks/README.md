@@ -6,10 +6,10 @@ de la cybersécurité.
 
 ## Contenu
 
-| Fichier | Type | Description |
-|---|---|---|
-| `humanix-awareness-catalog-v1.yaml` | Framework | Catalogue des 27 modules de sensibilisation Humanix Académie, indexés par typologie de menace et vertical métier. |
-| `mapping-humanix-awareness-to-iso27001-2022.yaml` | Mapping | Lie chaque module Humanix aux contrôles ISO/IEC 27001:2022 (relation `equal` ou `intersect`). |
+| Fichier                                           | Type      | Description                                                                                                       |
+| ------------------------------------------------- | --------- | ----------------------------------------------------------------------------------------------------------------- |
+| `humanix-awareness-catalog-v1.yaml`               | Framework | Catalogue des 27 modules de sensibilisation Humanix Académie, indexés par typologie de menace et vertical métier. |
+| `mapping-humanix-awareness-to-iso27001-2022.yaml` | Mapping   | Lie chaque module Humanix aux contrôles ISO/IEC 27001:2022 (relation `equal` ou `intersect`).                     |
 
 D'autres mappings suivront (NIS2, RGPD, ANSSI HG, NIST CSF 2.0).
 
@@ -83,6 +83,7 @@ Humanix-Cybersecurity/Humanix-Academie sur GitHub (licence CC BY-SA 4.0).
 ## Relations utilisées dans les mappings
 
 Selon le standard CISO Assistant :
+
 - **`equal`** : le module Humanix couvre intégralement et littéralement
   l'exigence du framework cible (cas A.6.3 Sensibilisation où Humanix
   est le cœur de métier).
@@ -110,10 +111,12 @@ Cf. `publication_date` pour la date de publication exacte.
 
 **CC BY-SA 4.0** (Creative Commons Attribution-ShareAlike 4.0
 International). Reuse autorisé avec :
+
 - attribution claire à Humanix-Cybersecurity SASU,
 - partage des éventuelles modifications sous la même licence.
 
 Cette licence permissive vise à encourager :
+
 - les **PR/contributions** d'autres acteurs cyber souverains français
   (ajouts de modules, mappings additionnels vers Sapin II, DORA, etc.),
 - la **réutilisation par d'autres GRC** que CISO Assistant (Eramba,

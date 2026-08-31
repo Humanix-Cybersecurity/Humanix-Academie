@@ -30,10 +30,7 @@ const PREVIOUS_WINDOW_DAYS = 30;
 const PHISHING_WINDOW_DAYS = 90;
 
 export type TrendVerdict =
-  | "improving"
-  | "stable"
-  | "degrading"
-  | "insufficient_data";
+  "improving" | "stable" | "degrading" | "insufficient_data";
 
 export type UserTrend = {
   verdict: TrendVerdict;
@@ -68,8 +65,8 @@ export async function computeUserTrend(userId: string): Promise<UserTrend> {
   const previousCutoff = daysAgo(RECENT_WINDOW_DAYS + PREVIOUS_WINDOW_DAYS);
   const phishingCutoff = daysAgo(PHISHING_WINDOW_DAYS);
 
-  const [user, recentProgress, previousProgress, phishings] =
-    await Promise.all([
+  const [user, recentProgress, previousProgress, phishings] = await Promise.all(
+    [
       db.user.findUnique({
         where: { id: userId },
         select: { lastSeenAt: true, lastLoginAt: true, createdAt: true },
@@ -92,7 +89,8 @@ export async function computeUserTrend(userId: string): Promise<UserTrend> {
         where: { userId, sentAt: { gte: phishingCutoff } },
         select: { status: true, sentAt: true },
       }),
-    ]);
+    ],
+  );
 
   const reasons: string[] = [];
   let scoreDelta = 0;
@@ -116,7 +114,8 @@ export async function computeUserTrend(userId: string): Promise<UserTrend> {
   }
 
   // === 2. Désengagement (lastSeenAt) ===
-  const lastActivity = user?.lastSeenAt ?? user?.lastLoginAt ?? user?.createdAt ?? null;
+  const lastActivity =
+    user?.lastSeenAt ?? user?.lastLoginAt ?? user?.createdAt ?? null;
   if (lastActivity) {
     const daysSilent = Math.floor(
       (Date.now() - lastActivity.getTime()) / (24 * 3600 * 1000),
@@ -195,10 +194,7 @@ export async function computeUserTrendsBatch(
         const trend = await computeUserTrend(id);
         result.set(id, trend);
       } catch (e) {
-        console.warn(
-          `[risk-trend] computeUserTrend failed for ${id}`,
-          e,
-        );
+        console.warn(`[risk-trend] computeUserTrend failed for ${id}`, e);
         result.set(id, {
           verdict: "insufficient_data",
           indicator: 0,

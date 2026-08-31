@@ -19,7 +19,9 @@ export const metadata = {
     description: PRESSE_DESC,
     type: "website",
     url: "/presse",
-    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+    images: [
+      { url: "/logo-humanix-academie-512.png", width: 512, height: 512 },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -131,10 +133,10 @@ export default function PressePage() {
           </span>
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-          La première plateforme française de cybersensibilisation pour
-          tous - particuliers, équipes, organisations de toute taille -
-          passe en AGPLv3 le mardi 26 mai 2026. Voici tout ce dont vous
-          avez besoin pour en parler.
+          La première plateforme française de cybersensibilisation pour tous -
+          particuliers, équipes, organisations de toute taille - passe en AGPLv3
+          le mardi 26 mai 2026. Voici tout ce dont vous avez besoin pour en
+          parler.
         </p>
       </header>
 
@@ -174,8 +176,8 @@ export default function PressePage() {
         </h2>
         <blockquote className="card border-l-4 border-primary-500 italic text-lg">
           Humanix Académie, c'est CISO Assistant pour le facteur humain : open
-          source AGPLv3, souverain français, accessible à tous (du
-          particulier au grand groupe).
+          source AGPLv3, souverain français, accessible à tous (du particulier
+          au grand groupe).
         </blockquote>
       </section>
 

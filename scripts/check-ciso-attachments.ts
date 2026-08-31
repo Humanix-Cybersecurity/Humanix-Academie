@@ -31,6 +31,8 @@ async function main() {
         `link=${(e.link ?? "").slice(0, 40)}`,
     );
   }
-  console.log(`\nTotal : ${withAtt}/${items.length} evidences avec PDF attaché`);
+  console.log(
+    `\nTotal : ${withAtt}/${items.length} evidences avec PDF attaché`,
+  );
 }
 main().catch(console.error);

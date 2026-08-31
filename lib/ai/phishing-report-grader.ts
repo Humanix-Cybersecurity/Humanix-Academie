@@ -57,8 +57,7 @@ export type ReportGrade = {
 };
 
 export type ReportGradeResult =
-  | { ok: true; grade: ReportGrade }
-  | { ok: false; error: string };
+  { ok: true; grade: ReportGrade } | { ok: false; error: string };
 
 const SYSTEM = `Tu es l'analyste phishing de Humanix Academie. Tu evalues
 la qualite d'un signalement phishing recu via le plugin Outlook.

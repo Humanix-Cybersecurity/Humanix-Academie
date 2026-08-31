@@ -91,8 +91,8 @@ export default async function OnboardingPage() {
                   <p className="text-sm text-gray-700 dark:text-gray-300 mt-1">
                     {otherUsersCount} collaborateur
                     {otherUsersCount > 1 ? "s" : ""} actif
-                    {otherUsersCount > 1 ? "s" : ""} ·{" "}
-                    {activatedSaisonCount} module
+                    {otherUsersCount > 1 ? "s" : ""} · {activatedSaisonCount}{" "}
+                    module
                     {activatedSaisonCount > 1 ? "s" : ""} active
                     {activatedSaisonCount > 1 ? "s" : ""}.
                   </p>
@@ -144,9 +144,7 @@ export default async function OnboardingPage() {
                   }
                   href="/admin/modules"
                   ctaLabel={
-                    activatedSaisonCount > 0
-                      ? "Ajuster"
-                      : "Aller au catalogue"
+                    activatedSaisonCount > 0 ? "Ajuster" : "Aller au catalogue"
                   }
                 />
                 <ChecklistItem
@@ -170,7 +168,10 @@ export default async function OnboardingPage() {
               <ul className="text-sm space-y-2">
                 <li>
                   📚{" "}
-                  <Link href="/securite" className="text-accent-700 hover:underline">
+                  <Link
+                    href="/securite"
+                    className="text-accent-700 hover:underline"
+                  >
                     Trust Center / docs securite
                   </Link>
                 </li>

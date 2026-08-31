@@ -105,7 +105,10 @@ export async function POST(req: NextRequest) {
   if (!ipRl.ok) {
     return NextResponse.json(
       { error: "rate_limited", retry_after_seconds: ipRl.retryAfter },
-      { status: 429, headers: { ...cors, "retry-after": String(ipRl.retryAfter) } },
+      {
+        status: 429,
+        headers: { ...cors, "retry-after": String(ipRl.retryAfter) },
+      },
     );
   }
 

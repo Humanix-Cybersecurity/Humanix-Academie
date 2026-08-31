@@ -111,7 +111,10 @@ export async function scanTenantDomainExposure(
       action: "EXPOSURE_DETECTED",
       outcome: "SUCCESS",
       tenantId,
-      target: { type: "employee_exposure", label: `${newExposures} detection(s)` },
+      target: {
+        type: "employee_exposure",
+        label: `${newExposures} detection(s)`,
+      },
       message: `Veille domaine : ${newExposures} exposition(s) NEW (validation RSSI requise avant toute notification).`,
       metadata: { matchedBreaches, newExposures },
     });

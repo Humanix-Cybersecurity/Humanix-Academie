@@ -19,6 +19,7 @@ CISO Assistant.
 ## Architecture en place
 
 Connecteur Python autonome qui :
+
 1. Pull `/api/v1/evidence-export` côté Humanix (bundle JSON multi-framework)
 2. Auth Knox côté CISO Assistant (`POST /api/iam/login/`)
 3. Crée ou récupère un folder `"Humanix Académie"` (`GET/POST /api/folders/`)
@@ -62,13 +63,13 @@ Chaque contrôle est associé à un seuil de conformité explicite et à des art
 
 Découverts en validant le connecteur contre CISO Assistant Community v2.x. Tous résolus côté connecteur Python :
 
-| Champ | Humanix natif | CISO Assistant attend | Adaptation |
-|---|---|---|---|
-| Statut | `compliant`/`partial`/`non_compliant`/`not_assessed` (conformité) | `draft`/`missing`/`in_review`/`approved`/`rejected`/`expired` (workflow document) | Mapping : compliant→approved, partial→in_review, non_compliant→rejected, not_assessed→draft |
-| `folder` (FK) | Inexistant | Requis sur Evidence | Connecteur crée/retrouve un folder "Humanix Académie" au boot |
-| `link` (URL) | Renvoyé comme URL relative (`/api/...`) | URLField Django : exige absolue | Connecteur préfixe avec `HUMANIX_BASE_URL` |
-| `metadata` (JSON libre) | Bundle riche envoyé | Inexistant côté CISO Assistant | Embeddé dans `description` en markdown lisible |
-| Unicité `name` par scope | Pas de contrainte | Une seule evidence par name+folder | Connecteur GET-by-name puis PATCH si existe, POST sinon |
+| Champ                    | Humanix natif                                                     | CISO Assistant attend                                                             | Adaptation                                                                                  |
+| ------------------------ | ----------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Statut                   | `compliant`/`partial`/`non_compliant`/`not_assessed` (conformité) | `draft`/`missing`/`in_review`/`approved`/`rejected`/`expired` (workflow document) | Mapping : compliant→approved, partial→in_review, non_compliant→rejected, not_assessed→draft |
+| `folder` (FK)            | Inexistant                                                        | Requis sur Evidence                                                               | Connecteur crée/retrouve un folder "Humanix Académie" au boot                               |
+| `link` (URL)             | Renvoyé comme URL relative (`/api/...`)                           | URLField Django : exige absolue                                                   | Connecteur préfixe avec `HUMANIX_BASE_URL`                                                  |
+| `metadata` (JSON libre)  | Bundle riche envoyé                                               | Inexistant côté CISO Assistant                                                    | Embeddé dans `description` en markdown lisible                                              |
+| Unicité `name` par scope | Pas de contrainte                                                 | Une seule evidence par name+folder                                                | Connecteur GET-by-name puis PATCH si existe, POST sinon                                     |
 
 ### Authentification
 

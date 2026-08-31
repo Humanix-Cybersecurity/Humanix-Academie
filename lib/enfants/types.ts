@@ -105,11 +105,7 @@ export type ActivitePaires = {
 };
 
 export type Activite =
-  | ActiviteBD
-  | ActiviteRepere
-  | ActiviteTri
-  | ActiviteQuiz
-  | ActivitePaires;
+  ActiviteBD | ActiviteRepere | ActiviteTri | ActiviteQuiz | ActivitePaires;
 
 /** Un « monde » = un parcours thématique enchaînant des activités. */
 export type Monde = {

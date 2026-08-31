@@ -44,7 +44,8 @@ import { countExpertEpisodes } from "@/lib/content-availability";
 import HexBackdrop from "@/components/HexBackdrop";
 import { BreadcrumbJsonLd } from "@/lib/seo/jsonld";
 
-const META_TITLE = "Comparatif honnête - Humanix vs concurrents | Humanix Académie";
+const META_TITLE =
+  "Comparatif honnête - Humanix vs concurrents | Humanix Académie";
 const META_DESCRIPTION =
   "Comparatif honnête entre Humanix Académie et les principales plateformes de sensibilisation cyber 2026 (KnowBe4, Hoxhunt, Phished, Cyber Guru, Adaptive Security). 9 catégories, 60+ critères : tarification, catalogue (344 modules dont 27 enquêtes interactives), simulation phishing, conformité, pilotage dirigeant, HRM 2026, intégrations (CISO Assistant 17 surfaces), onboarding RGPD, écosystème.";
 
@@ -57,7 +58,9 @@ export const metadata = {
     description: META_DESCRIPTION,
     url: "/comparatif",
     type: "website",
-    images: [{ url: "/logo-humanix-academie-512.png", width: 512, height: 512 }],
+    images: [
+      { url: "/logo-humanix-academie-512.png", width: 512, height: 512 },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -151,7 +154,9 @@ const ROWS: Row[] = [
   {
     category: "Catalogue & contenu",
     feature: "Catalogue gratuit (OSS, CC BY-SA 4.0)",
-    humanix: win("5 saisons démo (CC BY-SA) + 30 articles, sans inscription pro"),
+    humanix: win(
+      "5 saisons démo (CC BY-SA) + 30 articles, sans inscription pro",
+    ),
     knowbe4: loss("Non (essai 30 j, puis payant)"),
     cyberGuru: loss("Non"),
     hoxhunt: loss("Non"),
@@ -409,7 +414,9 @@ const ROWS: Row[] = [
   {
     category: "Human Risk Management 2026",
     feature: "Sandbox courrier suspect (repeat offender protection)",
-    humanix: eq("Protection récidivistes livrée ; bac à sable d'analyse à venir"),
+    humanix: eq(
+      "Protection récidivistes livrée ; bac à sable d'analyse à venir",
+    ),
     knowbe4: eq("Add-on PhishER"),
     cyberGuru: loss("Non"),
     hoxhunt: eq("Threat triage"),
@@ -627,7 +634,9 @@ const ROWS: Row[] = [
   {
     category: "Mode Enquêteur (formats interactifs)",
     feature: "Débrief IA personnalisé post-quiz (Hex)",
-    humanix: win("Oui - synthèse adaptée au persona, sourcée Mistral souverain"),
+    humanix: win(
+      "Oui - synthèse adaptée au persona, sourcée Mistral souverain",
+    ),
     knowbe4: loss("Non"),
     cyberGuru: loss("Non"),
     hoxhunt: loss("Non"),
@@ -650,7 +659,8 @@ const ROWS: Row[] = [
   // -----------------------------------------------------------------------
   {
     category: "Onboarding & RGPD utilisateurs",
-    feature: "Page d'aiguillage 6 profils (curieux, RSSI, Pro, Enterprise, etc.)",
+    feature:
+      "Page d'aiguillage 6 profils (curieux, RSSI, Pro, Enterprise, etc.)",
     humanix: win("Oui - /rejoindre + FAQ cas particuliers"),
     knowbe4: loss("Non (formulaire commercial unique)"),
     cyberGuru: loss("Non"),
@@ -684,7 +694,8 @@ const ROWS: Row[] = [
   },
   {
     category: "Onboarding & RGPD utilisateurs",
-    feature: "Mode « Voir en tant que » read-only (debug support, consentement)",
+    feature:
+      "Mode « Voir en tant que » read-only (debug support, consentement)",
     humanix: win(
       "Oui - admin demande l'accès par mail, user accepte (double-clic anti-prefetch), session ACTIVE 15min..24h, lecture seule, bandeau visible, révocation à tout moment",
     ),
@@ -708,7 +719,11 @@ const ROWS: Row[] = [
   },
 ];
 
-const COMPETITORS: Array<{ key: keyof Omit<Row, "category" | "feature" | "humanix">; name: string; site: string }> = [
+const COMPETITORS: Array<{
+  key: keyof Omit<Row, "category" | "feature" | "humanix">;
+  name: string;
+  site: string;
+}> = [
   { key: "knowbe4", name: "KnowBe4", site: "https://www.knowbe4.com" },
   { key: "cyberGuru", name: "Cyber Guru", site: "https://www.cyberguru.it" },
   { key: "hoxhunt", name: "Hoxhunt", site: "https://hoxhunt.com" },
@@ -764,7 +779,8 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
     palette: {
       bg: "from-amber-50 via-white to-yellow-50 dark:from-slate-900 dark:via-slate-900 dark:to-amber-950/40",
       ring: "border-amber-200 dark:border-amber-900/40",
-      badge: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200",
+      badge:
+        "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200",
       accent: "text-amber-700 dark:text-amber-300",
     },
   },
@@ -833,8 +849,7 @@ const CATEGORY_META: Record<string, CategoryMeta> = {
     palette: {
       bg: "from-rose-50 via-white to-pink-50 dark:from-slate-900 dark:via-slate-900 dark:to-rose-950/40",
       ring: "border-rose-200 dark:border-rose-900/40",
-      badge:
-        "bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-200",
+      badge: "bg-rose-100 text-rose-800 dark:bg-rose-900/40 dark:text-rose-200",
       accent: "text-rose-700 dark:text-rose-300",
     },
   },
@@ -943,9 +958,9 @@ export default function ComparatifPage() {
             className="text-lg sm:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto leading-relaxed animate-slide-up"
             style={{ animationDelay: "220ms" }}
           >
-            On vous dit franchement ce qu'on fait mieux que nos concurrents,
-            ce qu'on fait équivalent, et ce qu'on apprend d'eux. Avec liens
-            vers leurs sites pour que vous vérifiiez par vous-même.
+            On vous dit franchement ce qu'on fait mieux que nos concurrents, ce
+            qu'on fait équivalent, et ce qu'on apprend d'eux. Avec liens vers
+            leurs sites pour que vous vérifiiez par vous-même.
           </p>
 
           {/* Stats compactes (3 mini-cards animees) */}
@@ -1001,14 +1016,14 @@ export default function ComparatifPage() {
               <span>Notre engagement éditorial</span>
             </h2>
             <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
-              Cette page est mise à jour <strong>à chaque sortie produit majeure</strong>{" "}
-              - la nôtre comme celle des concurrents.{" "}
-              <strong>Refresh mai 2026 :</strong> Mantra a été racheté par Cyber
-              Guru (Italie) en mars 2025 - on a remplacé la colonne. On a aussi
-              ajouté <strong>Adaptive Security</strong> (US, $136M levés dont
-              Series B 81M en 2025 par Bain Capital, NVIDIA, OpenAI Fund, a16z),
-              le disrupteur AI-native du marché. Si vous voyez une information
-              inexacte, écrivez à{" "}
+              Cette page est mise à jour{" "}
+              <strong>à chaque sortie produit majeure</strong> - la nôtre comme
+              celle des concurrents. <strong>Refresh mai 2026 :</strong> Mantra
+              a été racheté par Cyber Guru (Italie) en mars 2025 - on a remplacé
+              la colonne. On a aussi ajouté <strong>Adaptive Security</strong>{" "}
+              (US, $136M levés dont Series B 81M en 2025 par Bain Capital,
+              NVIDIA, OpenAI Fund, a16z), le disrupteur AI-native du marché. Si
+              vous voyez une information inexacte, écrivez à{" "}
               <a
                 href="mailto:contact@humanix-cybersecurity.fr"
                 className="text-accent-500 underline font-medium"
@@ -1039,8 +1054,8 @@ export default function ComparatifPage() {
               </Link>
               ). Les autres utilisent un fallback structuré (questions, quiz,
               débrief générique). C'est la même mécanique que chez la plupart
-              des concurrents listés, mais la plupart ne le disent pas. Cible
-              Q3 2026 : 30 modules expert sur les saisons critiques.
+              des concurrents listés, mais la plupart ne le disent pas. Cible Q3
+              2026 : 30 modules expert sur les saisons critiques.
             </p>
           </div>
         </section>
@@ -1142,7 +1157,9 @@ export default function ComparatifPage() {
                     className="w-full border-collapse min-w-[1100px] bg-white dark:bg-slate-900"
                     aria-label={`Comparatif Humanix Académie versus concurrents - ${cat}`}
                   >
-                    <caption className="sr-only">Comparatif fonctionnel : Humanix vs concurrents</caption>
+                    <caption className="sr-only">
+                      Comparatif fonctionnel : Humanix vs concurrents
+                    </caption>
                     <thead>
                       <tr>
                         <th className="bg-gray-50 dark:bg-slate-800 p-3 border text-left text-xs uppercase tracking-wide text-gray-600 dark:text-gray-300 sticky left-0 z-10">
@@ -1224,9 +1241,9 @@ export default function ComparatifPage() {
               </strong>{" "}
               - souveraineté FR end-to-end, AGPLv3 auditable, écosystème
               connecteurs FR/UE, marketplace ouverte, accessibilité, programme
-              famille, pack NIS2 par-tenant, MCP server premier mover. Ces
-              choix sont structurels, difficiles à copier rapidement par des
-              acteurs internationaux focalisés sur le mid-market US.
+              famille, pack NIS2 par-tenant, MCP server premier mover. Ces choix
+              sont structurels, difficiles à copier rapidement par des acteurs
+              internationaux focalisés sur le mid-market US.
             </p>
             <p>
               <strong className="text-primary-500 dark:text-accent-300">
@@ -1257,14 +1274,14 @@ export default function ComparatifPage() {
                 Notre conviction
               </strong>{" "}
               - pour une organisation française qui démarre une démarche cyber
-              (du particulier au mid-market), payer 5 à 10 fois moins cher
-              pour 80 % des fonctionnalités utiles, et bénéficier d'un
-              accompagnement humain plutôt que d'un support tier-3
-              anglophone, est le bon arbitrage. Pour une ETI multi-pays avec
-              besoins SSO/SCIM lourds, les acteurs historiques restent plus
-              adaptés. Pour une organisation soumise à NIS2/DORA qui veut
-              garder ses preuves dans l'UE, on est seuls sur ce créneau
-              combiné cyber + humain + souverain.
+              (du particulier au mid-market), payer 5 à 10 fois moins cher pour
+              80 % des fonctionnalités utiles, et bénéficier d'un accompagnement
+              humain plutôt que d'un support tier-3 anglophone, est le bon
+              arbitrage. Pour une ETI multi-pays avec besoins SSO/SCIM lourds,
+              les acteurs historiques restent plus adaptés. Pour une
+              organisation soumise à NIS2/DORA qui veut garder ses preuves dans
+              l'UE, on est seuls sur ce créneau combiné cyber + humain +
+              souverain.
             </p>
           </div>
         </section>
@@ -1294,8 +1311,8 @@ export default function ComparatifPage() {
           </h2>
           <p className="opacity-90 mb-6 max-w-xl mx-auto text-base sm:text-lg leading-relaxed relative">
             Aucun comparatif ne remplace votre intuition de terrain. Ouvrez
-            notre démo, regardez ce qui vous parle, confrontez avec vos
-            critères réels - et écrivez-nous si on s'est trompé quelque part.
+            notre démo, regardez ce qui vous parle, confrontez avec vos critères
+            réels - et écrivez-nous si on s'est trompé quelque part.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center relative">
             <Link
@@ -1345,18 +1362,18 @@ export default function ComparatifPage() {
           </h2>
           <p className="mb-2">
             Cette page constitue une <strong>publicité comparative</strong> au
-            sens des articles L.122-1 à L.122-7 du Code de la consommation et
-            de la directive 2006/114/CE. Elle compare des services répondant
-            aux mêmes besoins (sensibilisation cybersécurité humaine en B2B)
-            sur des caractéristiques objectives, pertinentes, vérifiables et
+            sens des articles L.122-1 à L.122-7 du Code de la consommation et de
+            la directive 2006/114/CE. Elle compare des services répondant aux
+            mêmes besoins (sensibilisation cybersécurité humaine en B2B) sur des
+            caractéristiques objectives, pertinentes, vérifiables et
             représentatives.
           </p>
           <p className="mb-2">
             Les informations relatives aux concurrents sont issues de leurs
             sites publics, communiqués de presse, fiches produits commerciales
-            et témoignages publics, à la date de dernière mise à jour
-            indiquée. Elles sont susceptibles d&apos;évoluer ; nous corrigeons
-            toute donnée erronée signalée à{" "}
+            et témoignages publics, à la date de dernière mise à jour indiquée.
+            Elles sont susceptibles d&apos;évoluer ; nous corrigeons toute
+            donnée erronée signalée à{" "}
             <a
               href="mailto:contact@humanix-cybersecurity.fr"
               className="underline"
@@ -1369,14 +1386,14 @@ export default function ComparatifPage() {
             <strong>Marques déposées</strong> : KnowBe4®, Hoxhunt®, Phished®,
             Cyber Guru®, Adaptive Security®, Mantra® sont des marques de leurs
             propriétaires respectifs, citées à seule fin d&apos;identification
-            dans le cadre de la comparaison. Aucune affiliation, partenariat
-            ou endossement par ces tiers n&apos;est suggéré.
+            dans le cadre de la comparaison. Aucune affiliation, partenariat ou
+            endossement par ces tiers n&apos;est suggéré.
           </p>
           <p>
             Cette comparaison ne dispense pas l&apos;acheteur d&apos;une
             évaluation personnelle des solutions sur la base de ses propres
-            critères et contexte. Pour toute contestation, le tribunal
-            compétent est celui du siège social d&apos;Humanix Cybersecurity.
+            critères et contexte. Pour toute contestation, le tribunal compétent
+            est celui du siège social d&apos;Humanix Cybersecurity.
           </p>
         </section>
       </div>

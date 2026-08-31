@@ -329,6 +329,7 @@ const { session } = guard;
 ```
 
 Variants disponibles :
+
 - `requireSession()` - user connecté quelconque
 - `requireAdmin(req?)` - ADMIN, RSSI, SUPERADMIN
 - `requireSuperadmin(req?)` - SUPERADMIN uniquement
@@ -362,6 +363,7 @@ Tout `process.env.X` qui ne commence pas par `NEXT_PUBLIC_` est server-only. Ne 
 **5. Logs d'audit : actions sensibles**
 
 Les actions sensibles DOIVENT appeler `auditLog()` (cf. `lib/audit.ts`) :
+
 - Modifications de role (USER_ROLE_CHANGED)
 - Suppressions (USER_DELETED, TENANT_DELETED)
 - Billing (BILLING_*)

@@ -34,10 +34,14 @@ describe("TOOLS catalog", () => {
 
 describe("callTool - validation et dispatch", () => {
   beforeEach(() => {
-    vi.spyOn(api, "fetchEvidenceExport").mockResolvedValue({ stub: "evidence" });
+    vi.spyOn(api, "fetchEvidenceExport").mockResolvedValue({
+      stub: "evidence",
+    });
     vi.spyOn(api, "fetchUsersAtRisk").mockResolvedValue({ stub: "users" });
     vi.spyOn(api, "fetchComplianceScore").mockResolvedValue({ stub: "score" });
-    vi.spyOn(api, "fetchRecentCampaigns").mockResolvedValue({ stub: "campaigns" });
+    vi.spyOn(api, "fetchRecentCampaigns").mockResolvedValue({
+      stub: "campaigns",
+    });
   });
 
   afterEach(() => {
@@ -78,7 +82,11 @@ describe("callTool - validation et dispatch", () => {
     );
     expect(r.ok).toBe(true);
     if (r.ok) expect(r.data).toEqual({ stub: "evidence" });
-    expect(api.fetchEvidenceExport).toHaveBeenCalledWith(cfg, "NIS2", "humanix-v1");
+    expect(api.fetchEvidenceExport).toHaveBeenCalledWith(
+      cfg,
+      "NIS2",
+      "humanix-v1",
+    );
   });
 
   it("accepte un evidence-export OSCAL", async () => {
@@ -119,9 +127,15 @@ describe("callTool - validation et dispatch", () => {
   });
 
   it("rejette des days hors plage pour recent_campaigns", async () => {
-    expect((await callTool("humanix_recent_campaigns", { days: 0 }, cfg)).ok).toBe(false);
-    expect((await callTool("humanix_recent_campaigns", { days: 400 }, cfg)).ok).toBe(false);
-    expect((await callTool("humanix_recent_campaigns", { days: "abc" }, cfg)).ok).toBe(false);
+    expect(
+      (await callTool("humanix_recent_campaigns", { days: 0 }, cfg)).ok,
+    ).toBe(false);
+    expect(
+      (await callTool("humanix_recent_campaigns", { days: 400 }, cfg)).ok,
+    ).toBe(false);
+    expect(
+      (await callTool("humanix_recent_campaigns", { days: "abc" }, cfg)).ok,
+    ).toBe(false);
   });
 
   it("propage les erreurs HumanixApiError avec leur status", async () => {

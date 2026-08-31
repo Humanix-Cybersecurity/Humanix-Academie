@@ -31,8 +31,8 @@ export default function ApiDocPage() {
           </h1>
           <p className="text-base sm:text-lg text-gray-700 dark:text-gray-200 max-w-3xl mb-6 leading-relaxed">
             OpenAPI 3.0 - consommez les utilisateurs, progrès, score de
-            conformité et exports SIEM depuis vos outils GRC, BI, HRIS.
-            Auth Bearer, rate-limit, exports SIEM CEF/CIM.
+            conformité et exports SIEM depuis vos outils GRC, BI, HRIS. Auth
+            Bearer, rate-limit, exports SIEM CEF/CIM.
           </p>
           <div className="flex flex-wrap gap-3 text-sm">
             <a
@@ -197,8 +197,8 @@ curl -X GET "${PUBLIC_URL}/api/v1/evidence-export?framework=NIS2&format=sentinel
 
       <footer className="max-w-5xl mx-auto px-4 py-12 text-center text-sm text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-slate-800">
         <p>
-          Pour le provisioning automatique des utilisateurs (Microsoft Entra
-          ID, Okta), préférer{" "}
+          Pour le provisioning automatique des utilisateurs (Microsoft Entra ID,
+          Okta), préférer{" "}
           <Link
             href="/integrations/scim"
             className="text-accent-500 hover:underline"

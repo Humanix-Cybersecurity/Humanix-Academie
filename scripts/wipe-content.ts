@@ -132,7 +132,9 @@ async function main() {
   console.log("");
   console.log("✅ Wipe terminé. Relance `npm run db:seed` pour re-peupler.");
   if (isDemo) {
-    console.log("   (DEMO_MODE=true → seed démo + 5 articles + 6 anecdotes 2024)");
+    console.log(
+      "   (DEMO_MODE=true → seed démo + 5 articles + 6 anecdotes 2024)",
+    );
   }
 }
 

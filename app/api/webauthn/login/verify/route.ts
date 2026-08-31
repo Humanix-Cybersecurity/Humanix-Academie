@@ -22,7 +22,9 @@ import {
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
-  const email = String(body?.email ?? "").trim().toLowerCase();
+  const email = String(body?.email ?? "")
+    .trim()
+    .toLowerCase();
   const response = body?.response;
   if (!email || !response) {
     return NextResponse.json(
@@ -35,7 +37,10 @@ export async function POST(req: Request) {
     select: { id: true, isActive: true },
   });
   if (!user || !user.isActive) {
-    return NextResponse.json({ error: "Authentification echouee." }, { status: 401 });
+    return NextResponse.json(
+      { error: "Authentification echouee." },
+      { status: 401 },
+    );
   }
 
   const cookieStore = await cookies();
@@ -56,10 +61,7 @@ export async function POST(req: Request) {
   const h = await headers();
   const originCheck = buildRequestOrigin(h);
   if (!originCheck.ok) {
-    return NextResponse.json(
-      { error: "Origin invalide." },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "Origin invalide." }, { status: 400 });
   }
 
   const result = await verifyLogin({
@@ -77,7 +79,10 @@ export async function POST(req: Request) {
 
   // Pose le cookie fresh-auth pour autoriser le step-up super-admin
   const fresh = signFreshAuth(user.id);
-  const res = NextResponse.json({ ok: true, credentialId: result.credentialId });
+  const res = NextResponse.json({
+    ok: true,
+    credentialId: result.credentialId,
+  });
   res.cookies.set(WEBAUTHN_LOGIN_COOKIE, "", { path: "/", maxAge: 0 });
   res.cookies.set(WEBAUTHN_FRESH_COOKIE, fresh, {
     httpOnly: true,
