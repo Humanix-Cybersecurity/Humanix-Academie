@@ -6,6 +6,123 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.7.0] - 2026-08-31 🔍 Des contrôles qui vérifient enfin ce qu'ils affirment
+
+Trois défauts ont compté dans cette version, et ils avaient la même forme : un
+contrôle qui **affirmait sans vérifier**. Aucun n'a été trouvé en relisant du
+code ; tous les trois en exécutant.
+
+### Added
+
+#### 🧾 Relancer, et saisir à la place du client
+
+L'obligation d'émettre une facture pèse sur le **vendeur** (article 289 du CGI).
+Or le mécanisme dépendait entièrement de la coopération de l'acheteur : sans
+dénomination ni adresse, aucune facture ne sort. Un client qui ne répond pas
+bloquait donc une obligation qui n'est pas la sienne.
+
+Deux ajouts. `notifierCoordonneesRequises` envoie aux ADMIN du tenant le message
+qui réclame ces mentions — jusque-là, le seul signal était un bandeau sur une
+page qu'un client n'a aucune raison d'ouvrir. Et un formulaire SUPERADMIN permet
+de **transcrire** des coordonnées obtenues autrement, avec l'origine
+obligatoirement renseignée.
+
+La colonne `saisiePar` enregistre la provenance : `NULL` quand le client a saisi
+lui-même, une adresse courriel quand Humanix a transcrit. Une adresse recopiée au
+téléphone n'a pas la même valeur probante qu'une saisie de l'intéressé, et
+personne ne doit prendre l'une pour l'autre en relisant dans six mois.
+
+Le bouton **n'émet pas** la facture, volontairement : un paiement encaissé a pu
+être remboursé depuis, et facturer l'argent rendu exigerait aussitôt un avoir.
+
+#### 🔀 Drainer HAProxy avant d'arrêter une couleur
+
+Les backends sont sondés en `check inter 1s fall 2` : HAProxy met **jusqu'à deux
+secondes** à constater qu'un conteneur arrêté ne répond plus, et continue d'y
+router des requêtes pendant ce temps. `option redispatch` en rejoue la plupart,
+mais pas celles déjà transmises. C'est le 502 mesuré le 2026-08-19 — et les
+livraisons « sans coupure » précédentes étaient des tirages favorables, pas une
+garantie.
+
+Le drain inverse l'ordre : on prévient HAProxy **avant** d'arrêter, et on
+n'arrête qu'une fois le compteur de sessions à zéro.
+
+#### 🔍 Savoir quelle révision tourne
+
+Aucun label de revision sur l'image, aucun journal de déploiement, et rien ne
+lisait `package.json` au runtime. Répondre à « qu'est-ce qui tourne en
+production ? » supposait d'ouvrir une session SSH et de lire le HEAD du clone,
+c'est-à-dire de disposer déjà de l'accès que la question cherche à économiser.
+
+`deploy.sh` estampille désormais `HUMANIX_REVISION`, et
+`/superadmin/system-health` l'affiche. Une valeur mal formée vaut **absence** :
+afficher « inconnue » est honnête, un fragment tronqué donnerait une fausse
+assurance à qui compare deux instances.
+
+### Fixed
+
+#### 🎭 Le drain se croyait prêt
+
+`haproxy_pilotable` vérifiait qu'un fichier et un binaire **existent**. Les deux
+étaient vrais en production, et le drain ne fonctionnait pourtant pas : `nc -U`
+refuse ce socket avec `Permission denied` **y compris en root**, là où Python s'y
+connecte sans élévation. Un refus que root ne lève pas n'est pas une question de
+droits.
+
+La garde aurait donc annoncé « pilotable », envoyé des commandes échouant en
+silence, attendu vingt secondes un compteur illisible, puis arrêté le conteneur
+sans avoir rien drainé — produisant exactement le 502 qu'elle devait supprimer.
+Elle envoie maintenant une vraie requête et exige la réponse attendue.
+
+#### 🏷️ La bannière annonçait `/demo` en production
+
+La ligne était littérale, quelle que soit la valeur de `DEMO_MODE`. C'est la
+première chose qu'on lit dans les journaux d'un conteneur, et un journal de
+production qui se présente comme la démo trompe celui qui le lit sous pression.
+
+#### 🔇 Le bouton de relance ne disait pas ce qu'il avait fait
+
+Un bandeau transitoire, et rien d'autre. Une fois disparu, plus rien n'indiquait
+si une relance était partie, ni quand, ni à combien de destinataires — on ne
+pouvait donc pas distinguer « je viens de l'envoyer » de « elle est partie
+hier ». La section affiche désormais l'état en permanence, et les **tentatives
+échouées ne comptent pas** : une trace d'audit existe, mais le client n'a rien
+reçu.
+
+#### 📄 Le README annonçait une distribution qui n'existait pas
+
+Trois affirmations fausses pour un lecteur extérieur, sur un dépôt public : le
+`docker pull` GHCR (paquet privé), le miroir Docker Hub (inexistant, et désactivé
+par le workflow lui-même faute de secrets), et un « multi-arch » réduit à
+`linux/amd64` depuis le retrait d'arm64.
+
+### 🧪 Tests
+
+**82 tests sur les quatre routes de paiement** qui n'en avaient aucune : `cancel`,
+`portal`, `checkout` et `checkout/start`. Le TODO « tests d'intégration
+post-launch » datait d'avant qu'il y ait de l'argent réel dessus.
+
+Et **le rendu PDF, que personne n'exécutait**. Quinze routes produisent des PDF —
+factures, attestations, rapports NIS2, certificats — et aucun test n'en rendait
+un seul. La montée `@react-pdf/renderer` 4.6.1 → 4.9.0 est passée verte sur onze
+contrôles sans qu'un octet de PDF soit produit. Le témoin justifie l'assertion de
+taille : un `<Document>` vide produit un PDF **parfaitement valide de 1171
+octets**, qui passerait un contrôle d'en-tête sans rien contenir.
+
+### 📦 Dépendances
+
+`next` 16.3.3 · `@react-pdf/renderer` 4.9.0 · `isomorphic-dompurify` 3.23.0 ·
+`papaparse` 5.7.0 · `nodemailer` 9.0.6 · `@simplewebauthn/server` 13.3.3 ·
+`eslint-config-next` 16.3.3
+
+### ⚠️ Connu
+
+Le job **« Prettier check » de la CI ne peut pas échouer** : il porte
+`continue-on-error: true`. 442 fichiers ne respectent pas le format pendant que
+le voyant reste vert. C'est le motif de cette version, et il reste ouvert.
+
+---
+
 ## [1.6.0] - 2026-08-25 🧾 Humanix émet ses factures, et deux saisons redeviennent utilisables
 
 Cette version tient en une phrase : la plateforme **encaissait sans facturer**, et
