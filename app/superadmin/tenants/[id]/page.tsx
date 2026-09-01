@@ -6,7 +6,10 @@ import { notFound } from "next/navigation";
 import { computeTenantHealth } from "@/lib/tenant-health";
 import { db } from "@/lib/db";
 import { getSeatUsage, formatSeatUsage } from "@/lib/seats";
-import { etatFacturationTenant } from "@/lib/facturation/rattrapage";
+import {
+  etatFacturationTenant,
+  paiementsAFacturer,
+} from "@/lib/facturation/rattrapage";
 import { formaterEuros } from "@/lib/facturation/montants";
 import {
   deactivateTenant,
@@ -15,6 +18,8 @@ import {
   setTenantReseller,
   relancerFacturation,
   enregistrerCoordonneesPourTenant,
+  emettreFacturePourTenant,
+  renvoyerNotificationFacture,
 } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -46,6 +51,18 @@ export default async function TenantDetailPage({
   const identiteExistante = await db.identiteFacturation.findUnique({
     where: { tenantId: id },
   });
+
+  // `verifierRemboursements` interroge Mollie paiement par paiement. C'est un
+  // appel reseau par ligne, acceptable ici : sans lui, on facturerait a
+  // l'aveugle de l'argent peut-etre rendu.
+  const [paiements, factures] = await Promise.all([
+    paiementsAFacturer(id, { verifierRemboursements: true }),
+    db.facture.findMany({
+      where: { tenantId: id },
+      orderBy: { emiseLe: "desc" },
+      take: 20,
+    }),
+  ]);
   if (!health) notFound();
 
   // Sieges (quota de plan) -- distinct des compteurs actifs/total ci-dessus.
@@ -244,6 +261,16 @@ export default async function TenantDetailPage({
             "ℹ Aucun paiement encaissé n'attend de facture."}
           {msg === "facturation-prete" &&
             "ℹ Coordonnées déjà renseignées. L'émission se fait depuis /admin/billing, qui affiche les remboursements."}
+          {msg === "facture-emise" &&
+            "✓ Facture émise. Le client a reçu le lien par courriel."}
+          {msg === "facture-refusee" &&
+            "⚠ Émission refusée. Coordonnées absentes, ou paiement déjà facturé. Voir le journal d'audit."}
+          {msg === "facture-introuvable" &&
+            "⚠ Paiement ou facture introuvable pour ce tenant."}
+          {msg === "notification-renvoyee" &&
+            "✓ Lien de la facture renvoyé aux ADMIN du tenant."}
+          {msg === "notification-echec" &&
+            "⚠ Renvoi impossible (messagerie non configurée, ou aucun ADMIN actif)."}
           {msg === "coordonnees-saisies" &&
             "✓ Coordonnées enregistrées pour ce tenant. La fiche indique qu'elles viennent de Humanix, pas du client."}
           {msg === "facturation-echec" &&
@@ -455,6 +482,127 @@ export default async function TenantDetailPage({
             Relancer les coordonnées de facturation
           </button>
         </form>
+
+        {/* Paiements encaisses qui attendent leur facture */}
+        {paiements.length > 0 && (
+          <div className="mt-5">
+            <h3 className="text-sm font-bold text-gray-700 dark:text-gray-200">
+              Paiements en attente de facture
+            </h3>
+            {!fact.coordonneesPresentes && (
+              <p className="mt-2 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-900/40 dark:bg-amber-950/20 dark:text-amber-200">
+                Sans coordonnées, aucune facture ne peut être émise.
+                Renseignez-les ci-dessous ou relancez le client.
+              </p>
+            )}
+            <ul className="mt-3 space-y-2">
+              {paiements.map((p) => {
+                const rendu =
+                  p.rembourseCentimes !== null && p.rembourseCentimes > 0;
+                const rembourseTout =
+                  p.rembourseCentimes !== null &&
+                  p.rembourseCentimes >= p.montantTtcCentimes;
+                return (
+                  <li
+                    key={p.ref}
+                    className="flex flex-wrap items-center gap-3 rounded-xl border border-gray-200 p-3 text-sm dark:border-slate-700"
+                  >
+                    <span className="font-bold text-gray-800 dark:text-gray-100">
+                      {formaterEuros(p.montantTtcCentimes)}
+                    </span>
+                    <span className="text-gray-500 dark:text-gray-400">
+                      {new Intl.DateTimeFormat("fr-FR", {
+                        dateStyle: "short",
+                        timeZone: "Europe/Paris",
+                      }).format(p.encaisseLe)}
+                    </span>
+                    <code className="text-xs text-gray-400">{p.ref}</code>
+                    {p.rembourseCentimes === null ? (
+                      <span className="text-amber-700 dark:text-amber-300">
+                        remboursement inconnu (Mollie injoignable)
+                      </span>
+                    ) : rendu ? (
+                      <span className="font-bold text-rose-700 dark:text-rose-300">
+                        {rembourseTout
+                          ? "REMBOURSÉ"
+                          : "partiellement remboursé"}{" "}
+                        ({formaterEuros(p.rembourseCentimes)})
+                      </span>
+                    ) : null}
+                    <form action={emettreFacturePourTenant} className="ml-auto">
+                      <input type="hidden" name="tenantId" value={id} />
+                      <input type="hidden" name="paiementRef" value={p.ref} />
+                      <button
+                        type="submit"
+                        className="btn-secondary text-sm"
+                        disabled={!fact.coordonneesPresentes}
+                      >
+                        Émettre la facture
+                      </button>
+                    </form>
+                  </li>
+                );
+              })}
+            </ul>
+            <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+              Un paiement remboursé ne se facture pas : la facture porterait sur
+              de l&apos;argent rendu, et il faudrait l&apos;annuler par un
+              avoir.
+            </p>
+          </div>
+        )}
+
+        {/* Factures deja emises */}
+        {factures.length > 0 && (
+          <div className="mt-5">
+            <h3 className="text-sm font-bold text-gray-700 dark:text-gray-200">
+              Factures émises
+            </h3>
+            <ul className="mt-3 space-y-2">
+              {factures.map((f) => (
+                <li
+                  key={f.id}
+                  className="flex flex-wrap items-center gap-3 rounded-xl border border-gray-200 p-3 text-sm dark:border-slate-700"
+                >
+                  <span className="font-bold text-primary-500 dark:text-accent-300">
+                    {f.numero}
+                  </span>
+                  <span className="text-gray-500 dark:text-gray-400">
+                    {new Intl.DateTimeFormat("fr-FR", {
+                      dateStyle: "short",
+                      timeZone: "Europe/Paris",
+                    }).format(f.emiseLe)}
+                  </span>
+                  <span className="font-bold text-gray-800 dark:text-gray-100">
+                    {formaterEuros(f.totalTtcCentimes)}
+                  </span>
+                  <a
+                    href={`/api/factures/${f.id}`}
+                    className="underline hover:no-underline"
+                  >
+                    PDF
+                  </a>
+                  <a
+                    href={`/api/factures/${f.id}/facturx`}
+                    className="underline hover:no-underline"
+                  >
+                    Factur-X
+                  </a>
+                  <form
+                    action={renvoyerNotificationFacture}
+                    className="ml-auto"
+                  >
+                    <input type="hidden" name="tenantId" value={id} />
+                    <input type="hidden" name="factureId" value={f.id} />
+                    <button type="submit" className="btn-secondary text-sm">
+                      Renvoyer le lien au client
+                    </button>
+                  </form>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <details className="mt-5 rounded-xl border border-gray-200 p-4 dark:border-slate-700">
           <summary className="cursor-pointer text-sm font-bold text-gray-700 dark:text-gray-200">

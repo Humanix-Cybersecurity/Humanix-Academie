@@ -28,6 +28,8 @@ import { paiementsAFacturer } from "@/lib/facturation/rattrapage";
 import { notifierCoordonneesRequises } from "@/lib/facturation/notification";
 import { validerCoordonnees } from "@/lib/facturation/coordonnees";
 import { verifierTvaIntra } from "@/lib/facturation/vies";
+import { facturerPaiement } from "@/lib/facturation/au-paiement";
+import { notifierFactureEmise } from "@/lib/facturation/notification";
 
 async function requireSuperadminSession() {
   const session = await auth();
@@ -464,4 +466,122 @@ export async function enregistrerCoordonneesPourTenant(
   });
 
   redirect(`/superadmin/tenants/${tenantId}?msg=coordonnees-saisies`);
+}
+
+/**
+ * Emet la facture d'un paiement encaisse, POUR UN AUTRE TENANT.
+ *
+ * POURQUOI CETTE ACTION EXISTE
+ *
+ *   Tout ce qui touchait aux factures etait cadre sur `session.user.tenantId` :
+ *   la page /admin/billing, ses actions, et les routes de telechargement. Un
+ *   SUPERADMIN de Humanix ne pouvait donc rien emettre pour un Client -- il
+ *   aurait agi sur le tenant Humanix.
+ *
+ *   Or le VENDEUR de ces factures, c'est Humanix, et l'obligation d'emettre
+ *   pese sur lui (article 289 du CGI). Il lui fallait le moyen de le faire.
+ *
+ * UNITAIRE, ET JAMAIS EN MASSE
+ *
+ *   Un paiement encaisse a pu etre REMBOURSE depuis. La liste affichee releve
+ *   l'etat chez Mollie et le montre ; c'est un humain qui choisit la ligne.
+ *   Facturer les deux prelevements du 2026-08-17 produirait une facture pour
+ *   de l'argent rendu, qu'il faudrait annuler par un avoir.
+ */
+export async function emettreFacturePourTenant(
+  formData: FormData,
+): Promise<void> {
+  const session = await requireSuperadminSession();
+  const actorEmail = session.user.email ?? "unknown";
+
+  const tenantId = String(formData.get("tenantId") ?? "").trim();
+  const ref = String(formData.get("paiementRef") ?? "").trim();
+  if (!tenantId || !ref) throw new Error("tenantId et paiementRef requis");
+
+  // On repart de la LISTE, jamais de la reference recue : un formulaire
+  // trafique ne peut donc pas faire facturer un paiement deja facture, ni
+  // celui d'un autre tenant.
+  const candidats = await paiementsAFacturer(tenantId);
+  const cible = candidats.find((p) => p.ref === ref);
+  if (!cible) {
+    redirect(`/superadmin/tenants/${tenantId}?msg=facture-introuvable`);
+  }
+
+  const r = await facturerPaiement({
+    tenantId,
+    paiementRef: cible.ref,
+    montantValeur: (cible.montantTtcCentimes / 100).toFixed(2),
+    presteeLe: cible.encaisseLe,
+  });
+
+  await auditLog({
+    action: AuditActions.TENANT_UPDATED,
+    outcome: r.etat === "emise" ? "SUCCESS" : "FAILURE",
+    severity: "INFO",
+    actor: { userId: session.user.id, email: actorEmail, role: "SUPERADMIN" },
+    tenantId,
+    target: { type: "facture", id: cible.ref },
+    message:
+      r.etat === "emise"
+        ? `Facture ${r.numero} emise PAR HUMANIX pour le paiement ${cible.ref}`
+        : `Emission refusee pour ${cible.ref} : ${r.etat === "differee" ? r.motif : r.motif}`,
+  });
+
+  redirect(
+    `/superadmin/tenants/${tenantId}?msg=${
+      r.etat === "emise" ? "facture-emise" : "facture-refusee"
+    }`,
+  );
+}
+
+/**
+ * Renvoie au Client le courriel qui pointe vers une facture deja emise.
+ *
+ * Le mail ne porte QUE le lien, jamais la piece : elle reste derriere l'acces
+ * administrateur du Client. Utile quand il l'a perdu, ou quand le premier
+ * envoi est parti avant qu'il n'ait un administrateur actif.
+ */
+export async function renvoyerNotificationFacture(
+  formData: FormData,
+): Promise<void> {
+  const session = await requireSuperadminSession();
+  const actorEmail = session.user.email ?? "unknown";
+
+  const tenantId = String(formData.get("tenantId") ?? "").trim();
+  const factureId = String(formData.get("factureId") ?? "").trim();
+  if (!tenantId || !factureId) throw new Error("parametres requis");
+
+  // La facture doit appartenir au tenant vise : on ne renvoie pas la piece
+  // d'un Client a un autre.
+  const f = await db.facture.findFirst({ where: { id: factureId, tenantId } });
+  if (!f) {
+    redirect(`/superadmin/tenants/${tenantId}?msg=facture-introuvable`);
+  }
+
+  const envoi = await notifierFactureEmise({
+    tenantId,
+    factureId: f.id,
+    numero: f.numero,
+    emiseLe: f.emiseLe,
+    totalTtcCentimes: f.totalTtcCentimes,
+  });
+
+  await auditLog({
+    action: AuditActions.TENANT_UPDATED,
+    outcome: envoi.etat === "envoyee" ? "SUCCESS" : "FAILURE",
+    severity: "INFO",
+    actor: { userId: session.user.id, email: actorEmail, role: "SUPERADMIN" },
+    tenantId,
+    target: { type: "facture", id: f.id, label: f.numero },
+    message:
+      envoi.etat === "envoyee"
+        ? `Notification de la facture ${f.numero} renvoyee a ${envoi.destinataires} admin(s)`
+        : `Notification de la facture ${f.numero} non renvoyee : ${envoi.motif}`,
+  });
+
+  redirect(
+    `/superadmin/tenants/${tenantId}?msg=${
+      envoi.etat === "envoyee" ? "notification-renvoyee" : "notification-echec"
+    }`,
+  );
 }

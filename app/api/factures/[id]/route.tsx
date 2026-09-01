@@ -34,10 +34,22 @@ export async function GET(
   }
 
   const { id } = await ctx.params;
+
+  // LE SUPERADMIN VOIT TOUTES LES FACTURES, ET C'EST LEGITIME
+  //
+  //   Ces documents sont les factures de VENTE de Humanix-Cybersecurity : le
+  //   vendeur, c'est nous. Le cadrage par tenant protege l'acces de l'ACHETEUR
+  //   a ses propres pieces ; il n'a pas a empecher le vendeur de consulter les
+  //   siennes. Sans cela, personne chez Humanix ne peut relire une facture
+  //   qu'il a lui-meme emise, ni la renvoyer a un client qui l'a perdue.
+  //
+  //   L'acces est tout de meme journalise : consulter la piece comptable d'un
+  //   Client reste une action qu'on doit pouvoir retracer.
+  const estSuperadmin = role === "SUPERADMIN";
   const tenantId = session.user.tenantId as string;
 
   const f = await db.facture.findFirst({
-    where: { id, tenantId },
+    where: estSuperadmin ? { id } : { id, tenantId },
   });
   if (!f) {
     return new Response("Facture introuvable", { status: 404 });
@@ -64,14 +76,22 @@ export async function GET(
     action: AuditActions.DATA_EXPORTED,
     outcome: "SUCCESS",
     severity: "INFO",
-    tenantId,
+    // Le tenant de LA FACTURE, pas celui de la session. Un SUPERADMIN qui
+    // consulte la piece d'un Client doit laisser sa trace CHEZ CE CLIENT :
+    // c'est la que le journal sera relu, et la regle Grafana « debit d'export
+    // anormal » regroupe par tenantId. Classee sous Humanix, l'entree serait
+    // invisible la ou elle compte.
+    tenantId: f.tenantId,
     actor: {
       userId: session.user.id,
       email: session.user.email ?? null,
       role,
     },
     target: { type: "facture", id: f.id, label: f.numero },
-    message: `Telechargement de la facture ${f.numero}`,
+    message:
+      estSuperadmin && f.tenantId !== tenantId
+        ? `Telechargement de la facture ${f.numero} par un SUPERADMIN`
+        : `Telechargement de la facture ${f.numero}`,
   });
 
   return new Response(new Uint8Array(pdf), {
