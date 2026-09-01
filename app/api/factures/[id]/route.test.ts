@@ -1,14 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Autorisation sur le telechargement d'une facture.
 //
-// POURQUOI CE FICHIER N'EST PAS DANS [id]/
-//
-//   Vitest NE DECOUVRE PAS les tests places dans un dossier de route dynamique.
-//   Le motif `**/*.{test,spec}.{ts,tsx}` traite `[id]` comme une CLASSE DE
-//   CARACTERES : le dossier ne correspond a rien, et le fichier est ignore --
-//   sans le moindre avertissement. Verifie le 2026-08-31 : le meme fichier
-//   deplace d'un niveau est trouve immediatement.
-//
 // CE QUI EST EN JEU
 //
 //   Une facture est une piece comptable nominative. La regle a tenir tient en
@@ -45,7 +37,7 @@ vi.mock("@react-pdf/renderer", async (importOriginal) => ({
   renderToBuffer: mockRender,
 }));
 
-import { GET } from "./[id]/route";
+import { GET } from "./route";
 
 const FACTURE = {
   id: "f1",
