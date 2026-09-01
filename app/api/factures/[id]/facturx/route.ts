@@ -29,8 +29,14 @@ export async function GET(
   }
 
   const { id } = await ctx.params;
+  // Meme raison que pour le PDF : le vendeur de ces factures, c'est Humanix.
+  // Le cadrage par tenant protege l'acces de l'ACHETEUR, pas celui du vendeur
+  // a ses propres pieces. Cf. le commentaire detaille dans ../route.tsx.
+  const estSuperadmin = role === "SUPERADMIN";
   const tenantId = session.user.tenantId as string;
-  const f = await db.facture.findFirst({ where: { id, tenantId } });
+  const f = await db.facture.findFirst({
+    where: estSuperadmin ? { id } : { id, tenantId },
+  });
   if (!f) return new Response("Facture introuvable", { status: 404 });
 
   // Tout vient du snapshot fige : le XML et le PDF decrivent forcement la
