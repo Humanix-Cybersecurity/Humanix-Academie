@@ -208,13 +208,34 @@ updates:
         update-types: ["version-update:semver-major"]
 
   # =========================================================================
-  # 4. Docker (Dockerfile à la racine) - patch uniquement, mensuel
+  # 4. Docker (les trois Dockerfile) - patch uniquement, mensuel
   # =========================================================================
   # Plus strict que le reste : pour Docker, même les minors sont risquées
   # (changement de runtime Node.js, libssl, glibc, etc.). On reste sur les
   # patches de sécurité uniquement.
+  #
+  # LES IMAGES SONT ÉPINGLÉES PAR DIGEST, ET C'EST CE BLOC QUI LES RENOUVELLE
+  #
+  # Tant que le Dockerfile portait `FROM node:24-alpine`, ce bloc ne pouvait
+  # RIEN faire : un tag mouvant n'a pas de version à monter. Il était écrit,
+  # configuré, assigné, et inerte. Le tag glissait sous nos pieds à chaque
+  # construction, ce qui a fini par changer le comportement de npm sans que
+  # personne ne l'ait décidé.
+  #
+  # Avec `tag@sha256:...`, Dependabot a de nouveau prise : il propose le
+  # nouveau digest quand le tag bouge. Le tag reste écrit à côté du digest
+  # précisément pour ça, et pour dire au lecteur ce qu'il regarde.
+  #
+  # Le filet, si ce bloc devait rester muet : le scan quotidien Trivy analyse
+  # les paquets système de l'image publiée et échoue sur tout HIGH/CRITICAL
+  # corrigeable. Une image épinglée qui vieillit finit donc par faire échouer
+  # la CI. Ce n'est pas une hypothèse : c'est ce contrôle qui a levé js-yaml
+  # et sharp le 2026-09-10.
   - package-ecosystem: "docker"
-    directory: "/"
+    directories:
+      - "/"
+      - "/docker/postgres"
+      - "/infra/tts"
     schedule:
       interval: "monthly"
       day: "monday"
