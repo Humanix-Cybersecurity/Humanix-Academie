@@ -42,7 +42,7 @@
 #   docker tag humanix-postgres:secured ghcr.io/.../postgres:16-secured
 #   docker push ghcr.io/.../postgres:16-secured
 
-FROM postgres:16-alpine
+FROM postgres:16-alpine@sha256:cf78e76683b9ca8c5733cbbdce6c9262b45b6767934dd0a95e671f9a0fc20685
 
 LABEL org.opencontainers.image.title="Humanix Postgres"
 LABEL org.opencontainers.image.description="Postgres 16-alpine preconfigure avec role read-only Least Privilege"
