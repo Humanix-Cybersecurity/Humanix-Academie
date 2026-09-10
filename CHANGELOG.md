@@ -6,6 +6,72 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.8.0] - 2026-09-10 🧾 La facturation va jusqu'au bout, et des dépendances remises au vert
+
+La 1.7.0 avait donné au vendeur de quoi **réclamer** des coordonnées et les
+transcrire. Il manquait la moitié aval : une fois ces coordonnées obtenues,
+personne ne pouvait émettre la facture. Toutes les routes de facture étaient
+portées par `session.user.tenantId`, ce qu'un SUPERADMIN n'a pas. Le défaut n'a
+pas été trouvé en relisant du code, mais en essayant de s'en servir.
+
+### Added
+
+#### 🧾 Émettre et consulter une facture depuis la console superadmin
+
+`emettreFacturePourTenant` émet à l'unité, en **re-dérivant** le montant depuis
+`paiementsAFacturer` plutôt qu'en faisant confiance à ce que l'écran affichait :
+entre l'affichage et le clic, un paiement a pu être remboursé. Le superadmin peut
+aussi consulter le PDF et le Factur-X d'une facture qui n'est pas la sienne, et
+renvoyer la notification au client.
+
+Au passage, un mauvais classement d'audit préexistant est corrigé : l'export
+d'une facture était journalisé sous le tenant de la **session**, pas sous celui
+de la **facture**. La règle Grafana « débit d'export anormal » regroupe par
+`tenantId` ; elle comptait donc les exports du superadmin comme ceux d'un client.
+
+#### 🍁 Une province sur les adresses hors de France
+
+Le premier client hors Union européenne est québécois. Deux conséquences.
+
+La province devient un champ à part entière (`BT-54`) et se sérialise en
+`<ram:CountrySubDivisionName>`, qui doit impérativement **suivre**
+`<ram:CountryID>`. Placé avant, le document passe le Schematron et **échoue au
+XSD** : deux contrôles qui ne disent pas la même chose, et un seul des deux le
+signale.
+
+Et la TVA. Une prestation de services B2B hors UE est **hors du champ** de la TVA
+française : taux à zéro, mention « TVA non applicable - prestation hors champ,
+article 259-1 du CGI », et aucun identifiant de TVA sur le document, ce que
+`BR-O-02` interdit formellement.
+
+### Fixed
+
+- **Le formulaire de coordonnées superadmin ne reprenait pas l'existant**
+  (#867). Revenir dessus pour compléter une seule information obligeait à tout
+  ressaisir, et le champ `pays` retombait sur `FR` en dur : rouvrir la fiche d'un
+  client québécois l'aurait rebasculé en TVA française sans que rien ne le
+  signale.
+- **Le test de facture est retourné à côté de sa route** (#869). Le message de
+  #868 affirmait que Vitest ne découvrait pas les tests dans un dossier `[id]`.
+  C'était faux : le fichier avait une erreur de chargement, et le motif de
+  recherche utilisé pour le « démontrer » masquait la ligne qui le contredisait.
+- **Le contrôle Prettier ne pouvait pas échouer** (#865).
+
+### Security
+
+- **`js-yaml` et `sharp`** (#879, #880). Le scan quotidien échouait depuis le
+  9 septembre sur `GHSA-2883-xcg3-v3hh` et `GHSA-rgj7-g3m4-5g8c`. Les deux
+  copies de `js-yaml` sont traitées séparément : celle imbriquée sous
+  `gray-matter`, qui part dans l'image, passe en 3.15.2 par un override
+  **imbriqué** ; celle de développement passe en 4.3.2. Un override global
+  aurait fait redescendre la seconde vers une branche dont l'API a changé.
+- **`hono` et `@vitest/mocker`** dans le connecteur MCP (#878), qui portaient
+  les quatre dernières alertes ouvertes.
+- **Montées de routine** (#870 à #876) : `next` 16.3.4, `nodemailer` 9.1.1,
+  `zod` 4.5.4, `undici` 8.10.1, plus les dépendances de développement.
+
+---
+
 ## [1.7.0] - 2026-08-31 🔍 Des contrôles qui vérifient enfin ce qu'ils affirment
 
 Trois défauts ont compté dans cette version, et ils avaient la même forme : un
