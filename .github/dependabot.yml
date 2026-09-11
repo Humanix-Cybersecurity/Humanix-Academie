@@ -114,6 +114,27 @@ updates:
       - dependency-name: "@auth/*"
         update-types: ["version-update:semver-major"]
 
+      # nodemailer - MAJORS bloquées, et la raison n'est pas « c'est risqué »
+      #
+      # NextAuth consomme nodemailer via son provider Email, et sa plage de
+      # support s'arrête à `^7.0.7 || ^8.0.5` (next-auth 5.0.0-beta.32 et
+      # @auth/core 0.41.3, les DERNIÈRES publiées au 2026-09-11). Il n'existe
+      # aucune version amont qui accepte au-delà.
+      #
+      # L'arbre est déjà à 9.1.1, soit une majeure HORS de cette plage, et
+      # `legacy-peer-deps=true` dans .npmrc fait taire l'avertissement : rien
+      # ne signale l'écart. Accepter la 10 en ajouterait une seconde sur la
+      # bibliothèque qui porte les liens de connexion et les invitations.
+      #
+      # La 10.0.1 n'apportait par ailleurs qu'une rupture de TYPES (« drop the
+      # internal members from the published declarations ») : aucun gain
+      # fonctionnel contre un écart aggravé. Cf. PR #884, fermée pour ça.
+      #
+      # À rouvrir quand NextAuth élargira sa plage. Les patches continuent de
+      # passer : seules les majors sont bloquées.
+      - dependency-name: "nodemailer"
+        update-types: ["version-update:semver-major"]
+
       # Validation / serialization - MAJORS souvent breaking
       - dependency-name: "zod"
         update-types: ["version-update:semver-major"]
