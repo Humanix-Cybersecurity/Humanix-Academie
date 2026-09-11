@@ -80,7 +80,7 @@
     "@mollie/api-client": "^4.6.0",
     "@prisma/client": "^6.16.0",
     "@react-pdf/renderer": "^4.9.0",
-    "@simplewebauthn/browser": "^13.3.0",
+    "@simplewebauthn/browser": "^14.0.0",
     "@simplewebauthn/server": "^13.3.3",
     "@types/nodemailer": "^8.0.1",
     "@types/qrcode": "^1.5.6",
