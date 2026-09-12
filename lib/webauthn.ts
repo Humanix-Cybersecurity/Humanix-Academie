@@ -22,10 +22,13 @@ import {
 // `@simplewebauthn/server` (et `/browser`). On importe donc les types
 // directement depuis `/server`. Ref :
 // https://simplewebauthn.dev/docs/advanced/server-changelog#v1100
+// v14 : `AuthenticatorTransportFuture` a ete renomme `AuthenticatorTransport`.
+// L'ancien nom datait de l'epoque ou le type anticipait des transports pas
+// encore normalises ; ils le sont, le suffixe n'avait plus d'objet.
 import type {
   PublicKeyCredentialCreationOptionsJSON,
   PublicKeyCredentialRequestOptionsJSON,
-  AuthenticatorTransportFuture,
+  AuthenticatorTransport,
   RegistrationResponseJSON,
   AuthenticationResponseJSON,
 } from "@simplewebauthn/server";
@@ -383,7 +386,7 @@ export function verifyFreshAuth(
 // -----------------------------------------------------------------------------
 function parseTransports(
   csv: string | null,
-): AuthenticatorTransportFuture[] | undefined {
+): AuthenticatorTransport[] | undefined {
   if (!csv) return undefined;
-  return csv.split(",").filter(Boolean) as AuthenticatorTransportFuture[];
+  return csv.split(",").filter(Boolean) as AuthenticatorTransport[];
 }
