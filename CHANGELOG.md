@@ -6,6 +6,105 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.8.1] - 2026-09-12 🔍 Des dépendances qu'on croyait surveillées
+
+Neuf commits, six fichiers hors verrous. Aucune fonctionnalité : cette version
+ne corrige que des dépendances. Mais les trois défauts qu'elle ferme avaient la
+même forme, et ce n'est pas celle qu'on attendait d'un lot de montées de
+version : **trois contrôles qui ne regardaient pas ce qu'ils prétendaient
+regarder**.
+
+### Security
+
+#### 🔒 Les images de base sont épinglées par digest
+
+Un déploiement a fait apparaître cinq avertissements npm que la veille ne
+connaissait pas. Aucun commit ne les explique : le tag `node:24-alpine` avait
+glissé, apportant un npm dont la politique d'exécution des scripts
+d'installation avait changé. Le même commit, construit à deux dates, ne se
+comportait plus pareil.
+
+Les trois `Dockerfile` épinglent désormais `tag@sha256:...`. Le tag reste écrit
+à côté du digest, pour dire au lecteur ce qu'il regarde.
+
+Surtout, le bloc `package-ecosystem: docker` de Dependabot **était inerte** :
+configuré, assigné, planifié tous les mois, et incapable d'agir puisqu'un tag
+mouvant n'a pas de version à monter. On croyait surveiller ces images, on ne
+surveillait rien. Le digest lui redonne prise, et sa portée passe de `/` aux
+trois dossiers.
+
+Le filet, s'il devait rester muet : le scan quotidien Trivy échoue sur tout
+HIGH/CRITICAL corrigeable des paquets système. Une image épinglée qui vieillit
+finit donc par faire échouer la CI.
+
+#### 🧩 `isomorphic-dompurify`, `undici`, `@simplewebauthn`
+
+`isomorphic-dompurify` 3.23 → 4.2, `undici` 8.10.1 → 8.10.2,
+`@simplewebauthn/browser` et `/server` 13 → 14. Le passage en majeure de
+`dompurify` est cosmétique de l'aveu de ses auteurs : « le même code que
+3.23.0 », remis sur un numéro correct après un plancher Node relevé sans
+majeure.
+
+### Fixed
+
+#### 🧪 `vite` n'était déclaré nulle part
+
+`vitest` 5 a retiré `vite` de ses dépendances pour n'en garder qu'un peer. Or
+`.npmrc` porte `legacy-peer-deps=true`, qui n'installe pas les peers : plus
+personne ne tirait `vite`, il disparaissait de l'arbre, et vitest ne le trouvait
+plus au démarrage.
+
+On dépendait de `vite` sans le dire, et ça a tenu tant qu'un paquet tiers le
+déclarait à notre place. Même forme que `3c4a954`, où `undici` portait un
+contrôle anti-SSRF sans être déclaré. L'override est passé de `^6.4.2` à
+`^6.4.3` parce que npm refuse qu'un override diverge d'une dépendance directe.
+
+#### 🔑 `@simplewebauthn` est resté dépareillé une journée
+
+`browser` est monté en 14 le 11 septembre, sur la foi de notes de version
+n'annonçant qu'un plancher Node relevé. Exact pour ce paquet **lu seul** : mais
+`browser` et `server` forment un couple, ils échangent des charges WebAuthn.
+L'arbre est resté en 14.0.0 / 13.3.3 pendant vingt-quatre heures.
+
+L'écart n'a pas atteint la production, restée sur la v1.8.0. Il serait parti au
+déploiement suivant.
+
+Le réalignement demandait un renommage : `AuthenticatorTransportFuture` est
+devenu `AuthenticatorTransport` en v14. Le suffixe datait de l'époque où le type
+anticipait des transports pas encore normalisés ; ils le sont.
+
+#### 📊 Un job, deux commandes, une nuit en rouge
+
+`main` est resté rouge du 11 au 12 septembre. La cause : `vitest` a été monté en
+5 sans son compagnon `@vitest/coverage-v8`, resté en 4.1.11 avec un
+`peer vitest: 4.1.11` exact.
+
+Ce qui l'a laissé passer mérite d'être écrit, parce que le piège est réutilisable
+ailleurs : le job **`Tests unitaires (Vitest)` porte le même nom des deux côtés
+mais lance deux commandes différentes**. `npm test` sur une pull request,
+`npm run test:coverage` sur un push vers `main`. Une PR verte ne dit donc rien
+de ce qui attend `main`.
+
+### Changed
+
+#### 📧 `nodemailer` est borné à ce que NextAuth supporte
+
+Dependabot proposait la 10. En cherchant à débloquer sa CI, un problème plus
+important est apparu : `next-auth` 5.0.0-beta.32 et `@auth/core` 0.41.3, les
+**dernières publiées**, déclarent `peer nodemailer: ^7.0.7 || ^8.0.5`. L'arbre
+est à 9.1.1, soit une majeure au-delà, et `legacy-peer-deps=true` fait taire
+l'avertissement.
+
+La 10 n'apportait qu'une rupture de types. Ses majors sont donc bloquées, avec
+la condition de réouverture écrite dans `dependabot.yml` : quand NextAuth
+élargira sa plage.
+
+**Reste ouvert** : aligner l'arbre sur `^8.0.5` serait une _descente_ de version
+sur le chemin d'authentification. Ça se décide, et ça se vérifie par un envoi
+réel.
+
+---
+
 ## [1.8.0] - 2026-09-10 🧾 La facturation va jusqu'au bout, et des dépendances remises au vert
 
 La 1.7.0 avait donné au vendeur de quoi **réclamer** des coordonnées et les
