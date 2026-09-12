@@ -18,7 +18,8 @@
 //   - Theme      : "phishing", "rgpd", "nis2", "ransomware", "ia",
 //                  "supply-chain", "deepfake", "byod", "mobile",
 //                  "physique", "cloud", "sauvegardes", "vie-privee",
-//                  "collaboration", "visios", "social-media", "crise"
+//                  "collaboration", "visios", "social-media", "crise",
+//                  "crypto"
 //   - Vecteur    : "vecteur:email", "vecteur:sms", "vecteur:appel",
 //                  "vecteur:qr", "vecteur:web"
 //
@@ -225,6 +226,13 @@ export const SAISON_TAGS: Record<string, string[]> = {
     "ingenierie-sociale",
   ],
   "navigation-web": ["famille:public", "tout-public", "web", "vecteur:web"],
+  "crypto-actifs": [
+    "famille:public",
+    "tout-public",
+    "fraude",
+    "ingenierie-sociale",
+    "crypto",
+  ],
   "iot-maison": ["famille:public", "tout-public", "iot", "teletravail"],
   cyberharcelement: [
     "famille:public",
