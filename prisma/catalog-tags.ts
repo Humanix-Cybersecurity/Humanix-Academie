@@ -233,6 +233,31 @@ export const SAISON_TAGS: Record<string, string[]> = {
     "ingenierie-sociale",
     "crypto",
   ],
+
+  // --- Saisons livrees sans tags (rattrapage 2026-09-13) ---
+  //
+  // Ces neuf saisons etaient ABSENTES de SAISON_TAGS, pas seulement sans
+  // famille. Consequence : fallback "autres" dans l'accordeon de /apprendre,
+  // et invisibles au filtrage de /admin/modules. Quatre d'entre elles sont
+  // les livraisons les plus recentes, donc les moins trouvables.
+  "voyages-affaires": ["famille:public", "tout-public", "mobile", "physique"],
+  "enfants-numerique-famille": ["famille:public", "tout-public", "vie-privee"],
+  "byod-perso-pro": ["famille:public", "tout-public", "byod", "mobile"],
+  "osint-particuliers": ["famille:public", "tout-public", "vie-privee"],
+  "site-web-entreprise": [
+    "famille:public",
+    "tout-public",
+    "web",
+    "vecteur:web",
+  ],
+  "securiser-administration-si": ["famille:avance", "metier:dev", "cloud"],
+  "identites-machines-agents-ia": ["famille:avance", "ia", "cloud"],
+  "questionnaire-securite-client": [
+    "famille:metier",
+    "metier:managers",
+    "supply-chain",
+  ],
+  "facturation-electronique": ["famille:conformite", "metier:compta", "fraude"],
   "iot-maison": ["famille:public", "tout-public", "iot", "teletravail"],
   cyberharcelement: [
     "famille:public",
