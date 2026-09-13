@@ -6,6 +6,96 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.9.0] - 2026-09-13 🗺️ Quatre saisons, et neuf qui sortaient enfin de l'ombre
+
+Trois commits dans le depot public, quarante-quatre lignes. Et dans le
+submodule de contenu, **2 974 lignes sur 25 fichiers** : cette version est
+presque entierement du contenu, ce que le diff public ne montre pas.
+
+Le catalogue passe de **61 a 65 saisons** et de **362 a 386 episodes**.
+
+### Added
+
+#### ⛓️ Crypto-actifs : ce qui ne se rattrape pas
+
+Aucune des saisons existantes ne couvrait la detention de crypto-actifs.
+L'angle retenu n'est pas la crypto mais **l'irreversibilite**, seule propriete
+qu'aucune autre saison n'enseigne : toutes les habitudes de securite se sont
+construites dans un monde ou l'erreur se repare, opposition, contestation,
+retrofacturation, treize mois pour un prelevement SEPA. Ici rien.
+
+Deux episodes portent la jonction avec l'entreprise, faute de quoi le sujet
+resterait personnel : le faux recruteur web3 dont le « test technique » exploite
+le fait que `npm install` execute les scripts d'installation avant toute
+lecture, et la sextorsion au bitcoin en boite professionnelle, dont le levier
+reel n'est pas la menace mais la honte.
+
+#### 🏗️ Cyber-BTP & chantiers
+
+Le secteur a une propriete qu'aucune autre saison n'exploite : **sur un
+chantier, ne pas connaitre son interlocuteur est normal**. Sous-traitance en
+cascade, interim, loueurs, bureaux d'etudes. L'escroc n'a pas besoin d'etre
+credible, seulement banal.
+
+S'y ajoute un calendrier public - avis de marches, panneaux de chantier - et des
+situations de travaux mensuelles a gros montants. Le faux changement de RIB y
+trouve des conditions qu'il ne rencontre nulle part ailleurs.
+
+#### 🚪 Le depart d'un collaborateur
+
+Le seul manque thematique de la cartographie, donc le seul qui s'adresse a tous
+les clients plutot qu'a un secteur. Les episodes existaient disperses
+(`02-offboarding`, `06-depart-entreprise-donnees`, `05-fuite-credentials`), pas
+la saison.
+
+Parti pris : dans les trois cas de l'episode de synthese, **personne n'a mal
+agi**. Une saison sur la menace interne qui ne parlerait que de malveillance
+raterait l'essentiel du prejudice, qui vient de departs ordinaires mal prepares
+
+- acces oublies, comptes partages impossibles a revoquer, donnees qui n'existent
+  qu'a un seul endroit.
+
+#### 🛒 Cyber-Commerce & restauration
+
+Terrain absent d'un catalogue jusqu'ici entierement tertiaire. La contrainte de
+conception y est differente de toutes les autres saisons : **celui qui decide
+est seul, en public, et presse**. Toute regle qui suppose d'analyser echoue un
+samedi a 12h40, d'ou des formules applicables sans juger - « on n'accepte que ce
+qu'on a demande », « on ne paie jamais pour encaisser ».
+
+### Fixed
+
+#### 🏷️ Neuf saisons n'apparaissaient nulle part
+
+Neuf saisons etaient **absentes de `SAISON_TAGS`**. Pas « sans famille » : sans
+aucun tag. Consequences, toutes deux silencieuses : fallback « autres » dans
+l'accordeon de `/apprendre`, et invisibles au filtrage de `/admin/modules`.
+
+Quatre d'entre elles etaient les livraisons **les plus recentes** :
+`facturation-electronique`, `site-web-entreprise`,
+`identites-machines-agents-ia`, `questionnaire-securite-client`. Le contenu le
+plus frais etait le moins trouvable.
+
+Rien ne le signalait, et rien ne pouvait le signaler : une saison sans tag
+s'affiche normalement, elle se range juste au mauvais endroit. `validate-mdx`
+verifie que chaque MDX a un episode au catalogue, pas que chaque saison a une
+famille.
+
+**65 / 65 saisons taguees.** public 29 · metiers 12 · avance 9 · conformite 8 ·
+sectoriel 7
+
+### Connu
+
+Le validateur ne controle toujours pas la presence d'une famille : c'est ce qui
+a laisse neuf saisons invisibles pendant des mois, et la classe de defaut reste
+ouverte.
+
+La population `production` / `atelier` est seedee comme groupe par defaut et
+n'est servie par aucune saison. C'est le seul trou que les donnees du depot
+designent elles-memes.
+
+---
+
 ## [1.8.1] - 2026-09-12 🔍 Des dépendances qu'on croyait surveillées
 
 Neuf commits, six fichiers hors verrous. Aucune fonctionnalité : cette version
