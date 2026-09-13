@@ -257,6 +257,15 @@ export const SAISON_TAGS: Record<string, string[]> = {
     "metier:managers",
     "supply-chain",
   ],
+  "secteur-btp": ["famille:sectoriel", "fraude", "supply-chain", "physique"],
+  "depart-collaborateur": [
+    "famille:metier",
+    "metier:rh",
+    "metier:managers",
+    "fondamentaux",
+  ],
+  "secteur-commerce": ["famille:sectoriel", "fraude", "physique"],
+
   "facturation-electronique": ["famille:conformite", "metier:compta", "fraude"],
   "iot-maison": ["famille:public", "tout-public", "iot", "teletravail"],
   cyberharcelement: [
