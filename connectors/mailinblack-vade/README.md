@@ -15,7 +15,7 @@ Bridge bidirectionnel entre **Mailinblack** / **Vade Secure** (anti-phishing sou
 
 - Mailinblack ou Vade Secure avec webhooks sortants activés
 - Clé API Humanix (Pro+)
-- Endpoint Humanix `/api/integrations/edr-trigger` (à venir, MVP)
+- Endpoint Humanix `/api/integrations/edr-trigger` (disponible : cf. `docs/BOUCLE-FERMEE.md`)
 
 ## Installation
 
