@@ -345,6 +345,117 @@ Idéal pour automatiser la collecte de preuves dans votre GRC ou SIEM.`,
         },
       },
     },
+    // Hors /api/v1 : la boucle fermee vit sous /api/integrations, comme le
+    // manifeste Outlook. Le `servers` de chemin surcharge la base v1.
+    "/integrations/edr-trigger": {
+      servers: [{ url: `${APP_URL}/api` }],
+      post: {
+        summary:
+          "Boucle fermée : une menace réelle déclenche une formation ciblée",
+        description: `Un outil de détection (filtre mail, EDR, SIEM) signale qu'une menace a atteint des collaborateurs. Humanix résout la menace en une saison, assigne le premier épisode aux personnes concernées et les prévient dans l'heure.
+
+- Idempotent : \`external_id\` ou empreinte du contenu ; un rejeu répond 200 sans second effet.
+- Plafonné : une personne ne reçoit pas deux fois la même saison en 7 jours, ni plus de deux déclenchements.
+- \`dry_run\` calcule le plan sans rien écrire.
+- La réponse ne contient jamais d'adresse.
+
+Documentation : docs/BOUCLE-FERMEE.md.`,
+        tags: ["Integrations"],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["source", "logins", "reason"],
+                properties: {
+                  source: {
+                    type: "string",
+                    maxLength: 40,
+                    example: "mailinblack",
+                  },
+                  logins: {
+                    type: "array",
+                    items: { type: "string", format: "email" },
+                    minItems: 1,
+                    maxItems: 500,
+                  },
+                  reason: { type: "string", maxLength: 2000 },
+                  trigger_module: {
+                    type: "string",
+                    nullable: true,
+                    description:
+                      "Slug de saison suggéré. Ignoré s'il n'est pas publié.",
+                  },
+                  subject: { type: "string", nullable: true, maxLength: 500 },
+                  from_address: {
+                    type: "string",
+                    nullable: true,
+                    maxLength: 320,
+                  },
+                  verdict: { type: "string", nullable: true, maxLength: 80 },
+                  external_id: {
+                    type: "string",
+                    nullable: true,
+                    maxLength: 200,
+                  },
+                  dry_run: { type: "boolean" },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "202": {
+            description: "Déclencheur traité",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    trigger_id: { type: "string", nullable: true },
+                    replay: { type: "boolean" },
+                    status: {
+                      type: "string",
+                      enum: [
+                        "assigned",
+                        "already_done",
+                        "all_throttled",
+                        "no_match",
+                        "no_recipients",
+                        "dry_run",
+                      ],
+                    },
+                    saison: { type: "object", nullable: true },
+                    episode: { type: "object", nullable: true },
+                    recipients: {
+                      type: "object",
+                      properties: {
+                        requested: { type: "integer" },
+                        matched: { type: "integer" },
+                        assigned: { type: "integer" },
+                        in_progress: { type: "integer" },
+                        already_done: { type: "integer" },
+                        throttled: { type: "integer" },
+                        notified: { type: "integer" },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "200": {
+            description: "Rejeu d'un déclencheur déjà traité, aucun effet",
+          },
+          "400": { description: "Corps invalide" },
+          "401": { description: "Clé API invalide" },
+          "429": {
+            description: "Plus de 60 déclencheurs par heure pour cette clé",
+          },
+        },
+      },
+    },
   },
   tags: [
     {

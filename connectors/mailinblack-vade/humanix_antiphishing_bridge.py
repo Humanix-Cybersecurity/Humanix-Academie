@@ -20,7 +20,7 @@ Logique :
 
 Pré-requis :
     - Mailinblack ou Vade Secure avec webhook sortant configuré
-    - Endpoint Humanix /api/integrations/edr-trigger (à venir)
+    - Endpoint Humanix /api/integrations/edr-trigger (cf. docs/BOUCLE-FERMEE.md)
     - Clé API Humanix (Essentielle+)
 
 Licence : MIT.

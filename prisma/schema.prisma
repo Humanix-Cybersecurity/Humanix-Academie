@@ -196,6 +196,7 @@ model Tenant {
   // SUPERADMIN Humanix qui gere plusieurs tenants clients.
   memberships            TenantMembership[]
   etapesConformite       EtapeConformiteTenant[]
+  threatTriggers         ThreatTrigger[]
 
   // Facturation (cf. modeles en fin de fichier).
   // Pas de `factures Facture[]` : la facture ne porte pas de cle etrangere
@@ -475,6 +476,7 @@ model User {
   tenantMemberships            TenantMembership[]           @relation("UserTenantMemberships")
   tenantMembershipsGrantedByMe TenantMembership[]           @relation("TenantMembershipsGrantedBy")
   etapesApprentissageDpo       EtapeApprentissageDpo[]
+  threatTriggerRecipients      ThreatTriggerRecipient[]
 
   @@index([tenantId])
   @@index([isActive])
@@ -3036,4 +3038,98 @@ model IdentiteFacturationEnAttente {
   createdAt DateTime @default(now())
 
   @@index([createdAt])
+}
+
+// =====================================================
+// BOUCLE FERMEE - menace reelle -> formation ciblee
+// =====================================================
+// Un outil de detection du tenant (filtre mail, EDR, SIEM) signale via
+// POST /api/integrations/edr-trigger qu'une menace a atteint certains
+// collaborateurs. On resout la menace vers une saison, on assigne le
+// premier episode aux personnes concernees, on les notifie.
+//
+// POURQUOI DEUX TABLES ET PAS SEULEMENT UN Event
+//
+//   Le declencheur est une PREUVE : « apres l'incident X, ces N personnes
+//   ont recu la formation Y le jour meme ». Il doit etre requetable par
+//   tenant, par periode, par personne, et exportable avec les autres
+//   preuves de conformite. Un Event a payload JSON ne s'indexe pas.
+//
+// POURQUOI DES CHAINES ET PAS DES ENUMS
+//
+//   Regle bleu/vert du projet : on n'ajoute pas de valeur d'enum, la
+//   preparation applique le schema pendant que l'ANCIENNE version sert
+//   encore. `status` et `outcome` sont des String documentees dans
+//   lib/boucle-fermee/declencheur.ts, comme NotificationLog.status.
+//
+// IDEMPOTENCE
+//
+//   Le pont amont rejoue sur tout code != 200/202. `externalId` porte soit
+//   l'identifiant fourni par la source, soit une empreinte calculee du
+//   contenu. L'unicite (tenantId, source, externalId) transforme un rejeu
+//   en lecture : meme reponse, aucune seconde assignation, aucun second
+//   mail.
+//
+// VIE PRIVEE
+//
+//   La table ne stocke ni le corps du mail ni la liste brute des adresses
+//   recues : seulement les destinataires RESOLUS en utilisateurs du tenant,
+//   et des compteurs. Les adresses inconnues sont comptees, pas conservees.
+model ThreatTrigger {
+  id       String  @id @default(cuid())
+  tenantId String
+  // Snapshot de la cle API appelante (audit), sans FK : une cle revoquee
+  // ne doit pas effacer la trace d'un declenchement passe.
+  apiKeyId String?
+
+  // "mailinblack", "vade", "harfanglab", "sekoia", "sentinel", "manuel"...
+  source     String
+  // Identifiant fourni par la source, ou empreinte "fp_<sha256>" calculee.
+  externalId String
+
+  // Ce que la source a dit de la menace. `reason` est la seule obligatoire.
+  reason      String  @db.Text
+  subject     String?
+  fromAddress String?
+  verdict     String?
+
+  // Ce que le pont a suggere (trigger_module) et ce qu'on a retenu.
+  requestedModule String?
+  saisonSlug      String?
+  episodeId       String?
+
+  // "assigned" | "no_match" | "no_recipients" | "all_throttled" | "dry_run"
+  status String
+
+  recipientsRequested Int @default(0)
+  recipientsMatched   Int @default(0)
+  recipientsAssigned  Int @default(0)
+  recipientsThrottled Int @default(0)
+  recipientsNotified  Int @default(0)
+
+  createdAt DateTime @default(now())
+
+  tenant     Tenant                   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  recipients ThreatTriggerRecipient[]
+
+  @@unique([tenantId, source, externalId])
+  @@index([tenantId, createdAt])
+  @@index([tenantId, saisonSlug])
+}
+
+model ThreatTriggerRecipient {
+  id        String @id @default(cuid())
+  triggerId String
+  userId    String
+
+  // "assigned" | "in_progress" | "already_done" | "throttled"
+  outcome    String
+  notifiedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  trigger ThreatTrigger @relation(fields: [triggerId], references: [id], onDelete: Cascade)
+  user    User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([triggerId, userId])
+  @@index([userId, createdAt])
 }

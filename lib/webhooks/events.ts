@@ -27,6 +27,22 @@ export const WEBHOOK_EVENTS = {
       familyInvitesUnlocked: 3,
     },
   },
+  "threat.trigger.fired": {
+    label: "Une menace réelle a déclenché une formation ciblée",
+    description:
+      "Envoye quand POST /api/integrations/edr-trigger a assigne un episode aux collaborateurs touches par une menace detectee (boucle fermee). Compteurs uniquement, jamais d'adresse.",
+    sample: {
+      triggerId: "clx...",
+      source: "mailinblack",
+      saisonSlug: "remediation-flash",
+      saisonTitle: "Remédiation flash post-phishing",
+      episodeTitle: "Le faux Microsoft, en six minutes",
+      recipientsMatched: 14,
+      recipientsAssigned: 11,
+      recipientsThrottled: 2,
+      recipientsNotified: 11,
+    },
+  },
   "phishing.campaign_completed": {
     label: "Une campagne phishing simulé est terminée",
     description:
