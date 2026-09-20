@@ -19,7 +19,12 @@
 //                  "supply-chain", "deepfake", "byod", "mobile",
 //                  "physique", "cloud", "sauvegardes", "vie-privee",
 //                  "collaboration", "visios", "social-media", "crise",
-//                  "crypto"
+//                  "crypto", "assurance", "continuite", "resilience",
+//                  "cra", "journalisation", "detection"
+//   - Secteur    : "secteur:sante", "secteur:collectivites",
+//                  "secteur:education", "secteur:liberales",
+//                  "secteur:industrie", "secteur:transport",
+//                  "secteur:immobilier", "secteur:hotellerie"
 //   - Vecteur    : "vecteur:email", "vecteur:sms", "vecteur:appel",
 //                  "vecteur:qr", "vecteur:web"
 //
@@ -309,10 +314,39 @@ export const SAISON_TAGS: Record<string, string[]> = {
     "ethique",
   ],
   "ai-act": ["famille:conformite", "ai-act", "ia", "rgpd"],
+  "assurance-cyber": [
+    "famille:conformite",
+    "metier:dirigeants",
+    "assurance",
+    "incident",
+    "gouvernance",
+  ],
+  "continuite-activite": [
+    "famille:conformite",
+    "metier:dirigeants",
+    "metier:managers",
+    "continuite",
+    "resilience",
+    "crise",
+  ],
+  "cyber-resilience-act": [
+    "famille:conformite",
+    "metier:dirigeants",
+    "cra",
+    "regulation",
+    "dev",
+  ],
   "securiser-m365": ["famille:avance", "cloud", "m365", "admin"],
   "gestion-secrets": ["famille:avance", "dev", "secrets", "api"],
   "zero-trust": ["famille:avance", "zero-trust", "architecture"],
   "securite-api-cloud": ["famille:avance", "dev", "api", "cloud"],
+  "journalisation-detection": [
+    "famille:avance",
+    "journalisation",
+    "detection",
+    "incident",
+    "admin",
+  ],
   "secteur-sante": ["famille:sectoriel", "secteur:sante", "donnees-sensibles"],
   "secteur-collectivites": [
     "famille:sectoriel",
@@ -326,6 +360,28 @@ export const SAISON_TAGS: Record<string, string[]> = {
     "secret-professionnel",
   ],
   "secteur-industrie-ot": ["famille:sectoriel", "secteur:industrie", "ot"],
+  "secteur-transport-logistique": [
+    "famille:sectoriel",
+    "secteur:transport",
+    "fraude",
+    "supply-chain",
+    "physique",
+  ],
+  "secteur-immobilier": [
+    "famille:sectoriel",
+    "secteur:immobilier",
+    "fraude",
+    "donnees-sensibles",
+    "physique",
+  ],
+  "secteur-hotellerie-tourisme": [
+    "famille:sectoriel",
+    "secteur:hotellerie",
+    "fraude",
+    "phishing",
+    "donnees-sensibles",
+    "physique",
+  ],
 };
 
 /**
