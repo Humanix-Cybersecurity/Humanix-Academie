@@ -259,7 +259,8 @@ export default async function TenantDetailPage({
                   ? "⚠ L'envoi du lien de connexion a échoué : renvoyez-le depuis l'onglet Admins."
                   : "Aucun lien envoyé : invitez l'admin depuis l'onglet Admins."
             }`}
-          {msg === "existant" && "ℹ Ce tenant existait déjà, rien n'a été créé."}
+          {msg === "existant" &&
+            "ℹ Ce tenant existait déjà, rien n'a été créé."}
           {msg === "reseller-on" &&
             "✓ Statut revendeur activé. Le tenant peut créer des clients en marque blanche (/admin/revendeur)."}
           {msg === "reseller-off" && "✓ Statut revendeur désactivé."}

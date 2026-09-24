@@ -51,7 +51,9 @@ describe("lireFormulaireCreationTenant", () => {
 
   it("refuse un nom trop court ou trop long", () => {
     expect(
-      lireFormulaireCreationTenant(form({ org: "A", email: "a@b.fr", plan: "pro" })),
+      lireFormulaireCreationTenant(
+        form({ org: "A", email: "a@b.fr", plan: "pro" }),
+      ),
     ).toEqual({ ok: false, erreur: "nom_invalide" });
     expect(
       lireFormulaireCreationTenant(
@@ -71,7 +73,9 @@ describe("lireFormulaireCreationTenant", () => {
   it("refuse starter et les plans inconnus : seuls pro et enterprise creent un tenant payant", () => {
     for (const plan of ["starter", "premium", "", "non-decide"]) {
       expect(
-        lireFormulaireCreationTenant(form({ org: "ACME", email: "a@b.fr", plan })),
+        lireFormulaireCreationTenant(
+          form({ org: "ACME", email: "a@b.fr", plan }),
+        ),
       ).toEqual({ ok: false, erreur: "plan_invalide" });
     }
   });
@@ -79,10 +83,12 @@ describe("lireFormulaireCreationTenant", () => {
 
 describe("messageErreurCreationTenant", () => {
   it("traduit les erreurs du provisioning et garde un message par defaut", () => {
-    expect(messageErreurCreationTenant("email_already_on_other_tenant")).toMatch(
-      /Communauté/,
+    expect(
+      messageErreurCreationTenant("email_already_on_other_tenant"),
+    ).toMatch(/Communauté/);
+    expect(messageErreurCreationTenant("db_error")).toMatch(
+      /Rien n'a été créé/,
     );
-    expect(messageErreurCreationTenant("db_error")).toMatch(/Rien n'a été créé/);
     expect(messageErreurCreationTenant("inconnue")).toMatch(/inattendue/);
   });
 });

@@ -34,10 +34,7 @@ export type CreationTenantInput = {
 };
 
 export type ErreurCreationTenant =
-  | "nom_invalide"
-  | "email_invalide"
-  | "plan_invalide"
-  | ProvisionError;
+  "nom_invalide" | "email_invalide" | "plan_invalide" | ProvisionError;
 
 export type LectureFormulaire =
   | { ok: true; input: CreationTenantInput }
