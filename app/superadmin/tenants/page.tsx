@@ -2,6 +2,8 @@
 // /superadmin/tenants - liste detaillee de tous les tenants avec leur sante.
 import Link from "next/link";
 import { listAllTenantsHealth, type TenantHealth } from "@/lib/tenant-health";
+import { messageErreurCreationTenant } from "@/lib/superadmin/creation-tenant";
+import NewTenantForm from "./NewTenantForm";
 
 export const dynamic = "force-dynamic";
 
@@ -20,10 +22,28 @@ const SIGNAL_CLASS: Record<TenantHealth["signal"], string> = {
 export default async function SuperadminTenantsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ signal?: string; plan?: string }>;
+  searchParams: Promise<{
+    signal?: string;
+    plan?: string;
+    // Formulaire de creation (cf. lib/superadmin/creation-tenant.ts) :
+    // ouvert par ?nouveau=1, prerempli par le mail de demande d'abonnement
+    // ou par le retour d'erreur de l'action.
+    nouveau?: string;
+    org?: string;
+    email?: string;
+    adminName?: string;
+    nplan?: string;
+    revendeur?: string;
+    erreur?: string;
+  }>;
 }) {
   const params = await searchParams;
   const allHealths = await listAllTenantsHealth();
+
+  const formulaireOuvert = params.nouveau === "1" || Boolean(params.erreur);
+  const erreurCreation = params.erreur
+    ? messageErreurCreationTenant(params.erreur)
+    : null;
 
   const signalFilter = params.signal;
   const planFilter = params.plan;
@@ -46,7 +66,55 @@ export default async function SuperadminTenantsPage({
           {filtered.length} sur {allHealths.length} tenants
           {signalFilter || planFilter ? " (filtré)" : ""}.
         </p>
+        {!formulaireOuvert && (
+          <Link
+            href="/superadmin/tenants?nouveau=1"
+            className="btn-primary text-sm mt-3 inline-block"
+          >
+            ➕ Nouveau tenant
+          </Link>
+        )}
       </header>
+
+      {formulaireOuvert && (
+        <section
+          aria-labelledby="nouveau-tenant"
+          className="bg-white dark:bg-slate-900 rounded-2xl border border-gray-200 dark:border-slate-800 p-5 space-y-4"
+        >
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2
+                id="nouveau-tenant"
+                className="font-display text-xl font-extrabold text-primary-500 dark:text-accent-300"
+              >
+                Nouveau tenant
+              </h2>
+              <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                Crée un tenant payant et son premier ADMIN, sans passer par
+                Mollie : espace d&apos;évaluation, client signé hors ligne,
+                revendeur. Le premier utilisateur pourra ensuite inviter ses
+                collègues.
+              </p>
+            </div>
+            <Link
+              href="/superadmin/tenants"
+              className="text-sm text-gray-500 hover:text-accent-500 whitespace-nowrap"
+            >
+              Fermer
+            </Link>
+          </div>
+          <NewTenantForm
+            defaults={{
+              org: params.org ?? "",
+              email: params.email ?? "",
+              adminName: params.adminName ?? "",
+              plan: params.nplan === "enterprise" ? "enterprise" : "pro",
+              revendeur: params.revendeur === "1",
+            }}
+            erreur={erreurCreation}
+          />
+        </section>
+      )}
 
       <FilterBar
         signal={signalFilter}

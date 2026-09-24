@@ -4,6 +4,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { sendEmail, isEmailConfigured } from "@/lib/email";
+import { urlFormulaireCreationTenant } from "@/lib/superadmin/creation-tenant";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { hashIp } from "@/lib/password-reset";
 
@@ -99,6 +100,12 @@ export async function submitDemandeAbonnement(
 
   // Notification email au founder
   if (isEmailConfigured()) {
+    // Lien direct vers le formulaire de creation de /superadmin/tenants,
+    // prerempli avec la demande (cf. lib/superadmin/creation-tenant.ts).
+    const lienCreation =
+      (process.env.NEXT_PUBLIC_APP_URL ?? "").replace(/\/$/, "") +
+      urlFormulaireCreationTenant({ org: organization, email, plan });
+
     const html = `
 <!DOCTYPE html>
 <html lang="fr"><head><meta charset="utf-8"></head>
@@ -124,8 +131,8 @@ export async function submitDemandeAbonnement(
         : ""
     }
     <p style="margin-top: 20px; font-size: 12px; color: #64748b;">
-      Pour provisionner le tenant : utilise <code>/superadmin</code> ou
-      <code>npm run db:provision-tenant -- --email=${escapeHtml(email)} --org="${escapeHtml(organization)}" --plan=${escapeHtml(plan)}</code>.
+      Pour ouvrir l'espace : <a href="${escapeHtml(lienCreation)}" style="color: #0B3D91;">créer le tenant dans /superadmin</a>
+      (formulaire prérempli : organisation, e-mail de l'admin${plan === "pro" || plan === "enterprise" ? ", plan" : ""}).
     </p>
   </div>
 </body></html>`;
