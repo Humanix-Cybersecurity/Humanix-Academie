@@ -6,6 +6,114 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.10.0] - 2026-09-24 🔁 La boucle fermée : une menace réelle déclenche la formation dans l'heure
+
+Une fonctionnalité, sept saisons, et un Dependabot enfin débloqué. Dans le
+sous-module de contenu, **42 épisodes sur 43 fichiers** ; dans le dépôt
+public, la route qui manquait depuis mai.
+
+Le catalogue passe de **65 à 72 saisons** et de **386 à 428 épisodes**.
+
+### Added
+
+#### 🔁 Boucle fermée
+
+Quand un outil de détection du client (filtre de messagerie, EDR, SIEM)
+signale qu'une menace **réelle** a atteint des collaborateurs, Humanix leur
+pousse l'épisode correspondant dans l'heure. Le pont `connectors/mailinblack-vade`
+envoyait depuis mai vers `/api/integrations/edr-trigger`, annoncé « à venir »
+dans son README : le récepteur n'avait jamais été construit. Tout le reste
+existait, la cartographie menace vers saison, la saison `remediation-flash`
+écrite pour le « juste après », les groupes, l'envoi de mail, les webhooks.
+
+- `POST /api/integrations/edr-trigger` : clé API `hxa_` (plan pro), 60 requêtes
+  par heure et par clé, validation zod, `?dry_run=1` pour répéter sans effet.
+- Idempotence sur (tenant, source, `external_id` ou empreinte SHA-256) : un
+  rejeu répond 200 et ne fait rien.
+- Plafond par personne : une fois la même saison par sept jours, deux
+  déclenchements par sept jours.
+- Le mail dit « ceci a circulé », jamais « vous avez cliqué », et ne cite
+  jamais l'expéditeur, qui est usurpé. Réponses HTTP et événements ne
+  contiennent aucune adresse ; un test l'affirme.
+- Base d'abord, mail ensuite : un échec d'envoi ne perd pas l'assignation.
+- Webhook sortant `threat.trigger.fired`. Modèles `ThreatTrigger` et
+  `ThreatTriggerRecipient` additifs, sans enum, compatibles avec la bascule
+  bleu/vert.
+- Référence : `docs/BOUCLE-FERMEE.md`.
+
+Effet de bord assumé : la cartographie menace vers saison est désormais
+partagée, et `GET /api/v1/recommend-modules?threat=phishing` renvoie
+`remediation-flash` en cinquième position.
+
+#### 🗺️ Sept saisons dans les familles les moins fournies
+
+Les familles étaient très inégales : 29 saisons grand public, 12 métiers,
+puis 9 avancé, 8 conformité et 7 sectorielles. Sept saisons de six épisodes,
+chacune close par un épisode de synthèse « le réflexe … » qui rejoue les
+situations précédentes en une seule scène.
+
+- Sectoriel : `secteur-transport-logistique` (le vol de fret se fait au
+  clavier et commence au quai), `secteur-immobilier` (l'agence est un passage
+  obligé, le dossier de location un kit d'usurpation prêt à l'emploi),
+  `secteur-hotellerie-tourisme` (tout converge à la réception, tenue la nuit
+  par une personne seule).
+- Conformité : `assurance-cyber` (ce que l'assureur paiera se joue avant le
+  sinistre ; aucun montant ni délai légal n'est affirmé), `continuite-activite`
+  (un plan tient dans un classeur rouge et un exercice sur table),
+  `cyber-resilience-act` (un produit connecté engage son fabricant pendant
+  toute sa vie).
+- Avancé : `journalisation-detection` (on ne répond qu'à ce qu'on peut voir).
+
+Les 42 épisodes sont écrits avec les accents. Tags posés dès l'ajout :
+**72 / 72 saisons avec famille**, public 29 · métiers 12 · conformité 11 ·
+sectoriel 10 · avancé 10.
+
+#### 🛠️ Créer un tenant depuis /superadmin, sans passer par Mollie
+
+Depuis le retrait de l'essai gratuit, un tenant ne se créait plus que par un
+paiement. Le mail de demande d'abonnement renvoyait vers un script qui
+n'existe plus, et l'image de production n'embarque pas npm : ouvrir un espace
+d'évaluation à un prospect revendeur demandait une manipulation en base. Un
+formulaire sur `/superadmin/tenants` crée un tenant Pro ou Enterprise et son
+premier ADMIN par la même porte que le webhook Mollie, avec le statut
+revendeur d'emblée et le lien de connexion envoyé à l'admin. Le mail de
+demande d'abonnement y renvoie, prérempli.
+
+### Changed
+
+- `.nvmrc` passe de 20 à 24, aligné sur la CI, le Dockerfile et `engines`.
+- Dépendances : next 16.3.5, react et react-dom 19.3.0, zod 4.6.5,
+  @simplewebauthn/server 14.0.2 ; vitest et @vitest/coverage-v8 5.0.1,
+  vite 8.3.0, prettier 3.9.8, eslint-config-next 16.3.5, @types/node 22.20.3,
+  @types/react 19.3.0.
+
+### Fixed
+
+#### 🔓 Dependabot bloqué depuis #888
+
+Le correctif #888 avait déclaré vite directement (vitest 5 l'a déplacé en
+dépendance de pairs) tout en gardant un `override` aligné sur la même
+version. Chaque tentative de Dependabot échouait alors en `EOVERRIDE`, sans
+qu'aucune alerte ne le dise. L'override est retiré (#902), le lockfile ne
+bouge pas, ce qui prouvait sa redondance. Preuve du résultat : la mise à jour
+de vite est arrivée le lundi suivant et a été fusionnée.
+
+### Connu
+
+- L'aller-retour complet de la boucle fermée n'a pas encore été rejoué sur
+  la démo : il demande une clé API, donc un tenant au plan pro. Restent à
+  faire, dans l'ordre : une page d'administration avec l'historique, un mode
+  « confirmer avant d'envoyer » pour les MSSP, le regroupement des campagnes
+  similaires, l'intégration à l'export de preuves.
+- nodemailer 9.1.1 est hors de la plage de pairs de next-auth (`^7 || ^8`),
+  ce que `legacy-peer-deps` masque ; l'envoi fonctionne en production.
+- 223 des 432 fichiers MDX du catalogue sont écrits sans accents, dont les
+  quatre saisons de la v1.9.0. Un nettoyage saison par saison est possible.
+- Le validateur ne contrôle toujours pas qu'une saison a une famille, et la
+  population `production` / `atelier` n'est servie par aucune saison.
+
+---
+
 ## [1.9.0] - 2026-09-13 🗺️ Quatre saisons, et neuf qui sortaient enfin de l'ombre
 
 Trois commits dans le depot public, quarante-quatre lignes. Et dans le
