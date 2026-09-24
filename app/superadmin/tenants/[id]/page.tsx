@@ -36,10 +36,10 @@ export default async function TenantDetailPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ msg?: string; error?: string }>;
+  searchParams: Promise<{ msg?: string; error?: string; invitation?: string }>;
 }) {
   const { id } = await params;
-  const { msg, error: actionError } = await searchParams;
+  const { msg, error: actionError, invitation } = await searchParams;
   const health = await computeTenantHealth(id);
   const fact = await etatFacturationTenant(id);
   // Les valeurs deja enregistrees, pour PREREMPLIR le formulaire. Sans elles,
@@ -251,6 +251,15 @@ export default async function TenantDetailPage({
             "✓ Tenant réactivé. Les utilisateurs peuvent à nouveau se connecter."}
           {msg === "already-disabled" && "ℹ Tenant déjà désactivé."}
           {msg === "already-active" && "ℹ Tenant déjà actif."}
+          {msg === "cree" &&
+            `✓ Tenant créé. ${
+              invitation === "envoyee"
+                ? "Le lien de connexion a été envoyé à l'admin."
+                : invitation === "echec"
+                  ? "⚠ L'envoi du lien de connexion a échoué : renvoyez-le depuis l'onglet Admins."
+                  : "Aucun lien envoyé : invitez l'admin depuis l'onglet Admins."
+            }`}
+          {msg === "existant" && "ℹ Ce tenant existait déjà, rien n'a été créé."}
           {msg === "reseller-on" &&
             "✓ Statut revendeur activé. Le tenant peut créer des clients en marque blanche (/admin/revendeur)."}
           {msg === "reseller-off" && "✓ Statut revendeur désactivé."}
