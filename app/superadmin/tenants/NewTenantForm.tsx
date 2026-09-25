@@ -89,6 +89,10 @@ export default function NewTenantForm({
             placeholder="prenom@entreprise.fr"
             className={CHAMP}
           />
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            Un compte gratuit existant sur le tenant Communauté devient
+            l&apos;admin du nouveau tenant, avec sa progression.
+          </p>
         </div>
         <div>
           <label htmlFor="nt-admin-name" className={LIBELLE}>

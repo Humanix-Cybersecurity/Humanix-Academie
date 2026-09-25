@@ -89,7 +89,7 @@ export const MESSAGES_ERREUR: Record<ErreurCreationTenant, string> = {
   invalid_plan:
     "Le plan doit être Pro ou Enterprise : Starter est réservé aux comptes gratuits du tenant Communauté.",
   email_already_on_other_tenant:
-    "Cette adresse a déjà un compte sur un autre tenant. Un compte gratuit sur le tenant Communauté compte aussi : utilisez une autre adresse, ou supprimez ce compte d'abord.",
+    "Cette adresse a déjà un compte sur un autre tenant payant. Utilisez une autre adresse, ou faites passer la demande par ce tenant. Un compte gratuit sur le tenant Communauté, lui, est rattaché automatiquement.",
   community_slug_collision:
     "Ce nom produit le même identifiant que le tenant Communauté. Choisissez un autre nom.",
   invalid_state:

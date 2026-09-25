@@ -85,7 +85,7 @@ describe("messageErreurCreationTenant", () => {
   it("traduit les erreurs du provisioning et garde un message par defaut", () => {
     expect(
       messageErreurCreationTenant("email_already_on_other_tenant"),
-    ).toMatch(/Communauté/);
+    ).toMatch(/autre tenant payant/);
     expect(messageErreurCreationTenant("db_error")).toMatch(
       /Rien n'a été créé/,
     );

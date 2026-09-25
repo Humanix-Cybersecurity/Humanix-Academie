@@ -103,6 +103,6 @@ export async function creerTenant(formData: FormData): Promise<void> {
   }
 
   redirect(
-    `/superadmin/tenants/${result.tenantId}?msg=cree&invitation=${invitation}`,
+    `/superadmin/tenants/${result.tenantId}?msg=cree&invitation=${invitation}${result.communityAccountAttached ? "&rattache=1" : ""}`,
   );
 }

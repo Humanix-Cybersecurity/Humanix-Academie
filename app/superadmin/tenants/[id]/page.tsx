@@ -36,10 +36,15 @@ export default async function TenantDetailPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ msg?: string; error?: string; invitation?: string }>;
+  searchParams: Promise<{
+    msg?: string;
+    error?: string;
+    invitation?: string;
+    rattache?: string;
+  }>;
 }) {
   const { id } = await params;
-  const { msg, error: actionError, invitation } = await searchParams;
+  const { msg, error: actionError, invitation, rattache } = await searchParams;
   const health = await computeTenantHealth(id);
   const fact = await etatFacturationTenant(id);
   // Les valeurs deja enregistrees, pour PREREMPLIR le formulaire. Sans elles,
@@ -258,6 +263,10 @@ export default async function TenantDetailPage({
                 : invitation === "echec"
                   ? "⚠ L'envoi du lien de connexion a échoué : renvoyez-le depuis l'onglet Admins."
                   : "Aucun lien envoyé : invitez l'admin depuis l'onglet Admins."
+            }${
+              rattache === "1"
+                ? " Le compte Communauté existant de l'admin a été rattaché, avec sa progression."
+                : ""
             }`}
           {msg === "existant" &&
             "ℹ Ce tenant existait déjà, rien n'a été créé."}

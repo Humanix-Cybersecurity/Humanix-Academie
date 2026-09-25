@@ -21,6 +21,16 @@
 //   - Refuse si l'email cible existe déjà sur un autre tenant (anti-
 //     piratage de session : un attaquant qui pré-paie avec l'email d'une
 //     cible ne crée pas un nouveau compte ADMIN sur la cible).
+//
+// RATTACHEMENT DU COMPTE COMMUNAUTÉ :
+//   Si l'email a déjà un compte sur le tenant Communauté (LEARNER gratuit),
+//   ce compte DEVIENT l'ADMIN du nouveau tenant : tenantId et rôle sont mis
+//   à jour dans la même transaction, la personne garde sa progression, ses
+//   succès et sa passkey. Aucune table liée ne porte de tenantId en plus du
+//   userId, le déplacement de la ligne User suffit.
+//   Avant le 2026-09-25, ce cas passait le contrôle anti-piratage puis
+//   échouait sur l'unicité de l'email (P2002) : un prospect qui avait goûté
+//   à la Communauté ne pouvait plus recevoir de tenant.
 
 import { db } from "@/lib/db";
 import {
@@ -34,7 +44,14 @@ export type ProvisionSource =
   "mollie-webhook" | "superadmin-manual" | "demande-abonnement" | "dev-mode";
 
 export type ProvisionResult =
-  | { ok: true; tenantId: string; userId: string; created: boolean }
+  | {
+      ok: true;
+      tenantId: string;
+      userId: string;
+      created: boolean;
+      /** Le compte Communauté existant de l'email est devenu l'ADMIN. */
+      communityAccountAttached: boolean;
+    }
   | { ok: false; reason: ProvisionError };
 
 export type ProvisionError =
@@ -149,6 +166,7 @@ export async function provisionTenantWithAdmin(
         tenantId: existing.id,
         userId: existingAdminId,
         created: false,
+        communityAccountAttached: false,
       };
     }
   }
@@ -164,6 +182,10 @@ export async function provisionTenantWithAdmin(
   if (existingUser && !isCommunityTenant(existingUser.tenant)) {
     return { ok: false, reason: "email_already_on_other_tenant" };
   }
+  const compteCommunaute =
+    existingUser && isCommunityTenant(existingUser.tenant)
+      ? existingUser
+      : null;
 
   const slug = await buildUniqueSlug(input.organizationName);
   if (!slug) return { ok: false, reason: "community_slug_collision" };
@@ -181,17 +203,28 @@ export async function provisionTenantWithAdmin(
           subscriptionStatus: input.subscriptionStatus ?? "active",
         },
       });
-      const user = await tx.user.create({
-        data: {
-          email,
-          name: input.adminName ?? null,
-          tenantId: tenant.id,
-          role: "ADMIN",
-          isActive: true,
-          // emailVerified null à dessein : magic link de bienvenue le
-          // marquera vérifié lors du premier sign-in.
-        },
-      });
+      const user = compteCommunaute
+        ? await tx.user.update({
+            where: { id: compteCommunaute.id },
+            data: {
+              tenantId: tenant.id,
+              role: "ADMIN",
+              isActive: true,
+              // On ne remplace pas un nom que la personne a déjà choisi.
+              name: compteCommunaute.name ?? input.adminName ?? null,
+            },
+          })
+        : await tx.user.create({
+            data: {
+              email,
+              name: input.adminName ?? null,
+              tenantId: tenant.id,
+              role: "ADMIN",
+              isActive: true,
+              // emailVerified null à dessein : magic link de bienvenue le
+              // marquera vérifié lors du premier sign-in.
+            },
+          });
       return { tenantId: tenant.id, userId: user.id };
     });
 
@@ -201,19 +234,25 @@ export async function provisionTenantWithAdmin(
         actor: { email: `provisioning:${input.source}` },
         tenantId: result.tenantId,
         target: { type: "tenant", id: result.tenantId, label: slug },
-        message: `Tenant payant provisionné (${input.source}, plan=${input.plan})`,
+        message: `Tenant payant provisionné (${input.source}, plan=${input.plan}${compteCommunaute ? ", compte Communauté rattaché" : ""})`,
         metadata: {
           source: input.source,
           plan: input.plan,
           adminEmail: email,
           paymentCustomerId: input.paymentCustomerId ?? "",
+          communityAccountAttached: Boolean(compteCommunaute),
         },
       });
     } catch (e) {
       console.error("[provisioning] audit log failed (non-blocking)", e);
     }
 
-    return { ok: true, ...result, created: true };
+    return {
+      ok: true,
+      ...result,
+      created: true,
+      communityAccountAttached: Boolean(compteCommunaute),
+    };
   } catch (e) {
     console.error("[provisioning] db transaction failed", e);
     return { ok: false, reason: "db_error" };
