@@ -28,6 +28,10 @@ import { paiementsAFacturer } from "@/lib/facturation/rattrapage";
 import { notifierCoordonneesRequises } from "@/lib/facturation/notification";
 import { validerCoordonnees } from "@/lib/facturation/coordonnees";
 import { verifierTvaIntra } from "@/lib/facturation/vies";
+import {
+  facturerRevendeur,
+  referenceFactureRevendeur,
+} from "@/lib/reseller/facturation";
 import { facturerPaiement } from "@/lib/facturation/au-paiement";
 import { notifierFactureEmise } from "@/lib/facturation/notification";
 
@@ -584,4 +588,67 @@ export async function renvoyerNotificationFacture(
       envoi.etat === "envoyee" ? "notification-renvoyee" : "notification-echec"
     }`,
   );
+}
+
+/**
+ * Emet la facture mensuelle d'un REVENDEUR : licence + utilisateurs actifs de
+ * ses espaces clients par tranches (cf. lib/reseller/tarification.ts). Une
+ * facture par mois, idempotente ; l'emission passe par le moteur commun.
+ */
+export async function facturerRevendeurAction(
+  formData: FormData,
+): Promise<void> {
+  const session = await requireSuperadminSession();
+  const actorEmail = session.user.email ?? "unknown";
+  const tenantId = String(formData.get("tenantId") ?? "").trim();
+  const annee = Number.parseInt(String(formData.get("annee") ?? ""), 10);
+  const mois = Number.parseInt(String(formData.get("mois") ?? ""), 10);
+  if (
+    !tenantId ||
+    !Number.isInteger(annee) ||
+    !Number.isInteger(mois) ||
+    mois < 1 ||
+    mois > 12
+  ) {
+    throw new Error("tenantId, annee et mois requis");
+  }
+  const tenant = await db.tenant.findUnique({
+    where: { id: tenantId },
+    select: { id: true, name: true },
+  });
+  if (!tenant) throw new Error("Tenant introuvable");
+
+  const periode = { annee, mois };
+  const r = await facturerRevendeur({ tenantId, periode });
+
+  await auditLog({
+    action: AuditActions.TENANT_UPDATED,
+    outcome: r.etat === "emise" ? "SUCCESS" : "FAILURE",
+    severity: "INFO",
+    actor: { userId: session.user.id, email: actorEmail, role: "SUPERADMIN" },
+    tenantId,
+    target: {
+      type: "facture",
+      id: referenceFactureRevendeur(tenantId, periode),
+      label: tenant.name,
+    },
+    message:
+      r.etat === "emise"
+        ? `Facture revendeur ${r.numero} emise pour ${annee}-${mois} (${r.totalTtcCentimes} c TTC, notification ${r.notification})`
+        : r.etat === "deja_emise"
+          ? `Facture revendeur deja emise pour ${annee}-${mois} : ${r.numero}`
+          : `Facture revendeur refusee pour ${annee}-${mois} : ${r.motif}`,
+    metadata: {
+      periode: `${annee}-${String(mois).padStart(2, "0")}`,
+      etat: r.etat,
+    },
+  });
+
+  const suffixe =
+    r.etat === "emise"
+      ? "revendeur-facturee"
+      : r.etat === "deja_emise"
+        ? "revendeur-deja"
+        : `revendeur-refusee&motif=${encodeURIComponent(r.motif)}`;
+  redirect(`/superadmin/tenants/${tenantId}?msg=${suffixe}`);
 }

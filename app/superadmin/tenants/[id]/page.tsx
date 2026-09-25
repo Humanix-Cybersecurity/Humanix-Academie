@@ -11,12 +11,15 @@ import {
   paiementsAFacturer,
 } from "@/lib/facturation/rattrapage";
 import { formaterEuros } from "@/lib/facturation/montants";
+import { libellePeriode, usageRevendeur } from "@/lib/reseller/facturation";
+import { GRILLE_REVENDEUR } from "@/lib/reseller/tarification";
 import {
   deactivateTenant,
   reactivateTenant,
   deleteTenant,
   setTenantReseller,
   relancerFacturation,
+  facturerRevendeurAction,
   enregistrerCoordonneesPourTenant,
   emettreFacturePourTenant,
   renvoyerNotificationFacture,
@@ -41,10 +44,17 @@ export default async function TenantDetailPage({
     error?: string;
     invitation?: string;
     rattache?: string;
+    motif?: string;
   }>;
 }) {
   const { id } = await params;
-  const { msg, error: actionError, invitation, rattache } = await searchParams;
+  const {
+    msg,
+    error: actionError,
+    invitation,
+    rattache,
+    motif,
+  } = await searchParams;
   const health = await computeTenantHealth(id);
   const fact = await etatFacturationTenant(id);
   // Les valeurs deja enregistrees, pour PREREMPLIR le formulaire. Sans elles,
@@ -92,6 +102,8 @@ export default async function TenantDetailPage({
   });
   // tenant existe forcement (health serait null sinon). On a deja notFound() ci-dessus.
   if (!tenantMeta) notFound();
+  // Releve du mois pour un revendeur : ce que la facture contiendrait.
+  const usageRev = tenantMeta.isReseller ? await usageRevendeur(id) : null;
 
   // Liste des admins du tenant pour le support (qui contacter)
   const admins = await db.user.findMany({
@@ -274,6 +286,16 @@ export default async function TenantDetailPage({
             "✓ Statut revendeur activé. Le tenant peut créer des clients en marque blanche (/admin/revendeur)."}
           {msg === "reseller-off" && "✓ Statut revendeur désactivé."}
           {msg === "reseller-noop" && "ℹ Statut revendeur déjà dans cet état."}
+          {msg === "revendeur-facturee" &&
+            "✓ Facture revendeur émise et notifiée aux admins du tenant. Elle apparaît dans la liste des factures ci-dessous."}
+          {msg === "revendeur-deja" &&
+            "ℹ La facture de ce mois existe déjà : une seule par revendeur et par mois."}
+          {msg === "revendeur-refusee" &&
+            `⚠ Facture revendeur refusée : ${
+              motif === "identite_facturation_absente"
+                ? "coordonnées de facturation absentes, à renseigner dans la section Facturation."
+                : (motif ?? "motif inconnu")
+            }`}
           {msg === "facturation-relancee" &&
             "✓ Relance envoyée aux ADMIN du tenant : ils peuvent renseigner leurs coordonnées."}
           {msg === "facturation-rien" &&
@@ -418,6 +440,104 @@ export default async function TenantDetailPage({
           </button>
         </form>
       </section>
+
+      {/* === FACTURATION REVENDEUR (licence + tranches) === */}
+      {usageRev && (
+        <section
+          aria-labelledby="facturation-revendeur-title"
+          className="rounded-2xl border border-indigo-200 dark:border-indigo-900/40 bg-indigo-50/40 dark:bg-indigo-950/20 p-5"
+        >
+          <h2
+            id="facturation-revendeur-title"
+            className="font-display font-bold text-indigo-900 dark:text-indigo-200 mb-2"
+          >
+            💶 Facturation revendeur · {libellePeriode(usageRev.periode)}
+          </h2>
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+            Licence mensuelle, puis les utilisateurs actifs cumulés des espaces
+            clients par tranches progressives, avec un plancher de{" "}
+            {GRILLE_REVENDEUR.minimumUtilisateursParEspace} par espace. Une
+            facture par mois, émise par le moteur commun (numérotation,
+            Factur-X), notifiée aux admins du revendeur. Grille dans{" "}
+            <code>lib/reseller/tarification.ts</code>.
+          </p>
+          {usageRev.calcul.espaces.length === 0 ? (
+            <p className="text-sm text-gray-500 mb-3">
+              Aucun espace client actif : seule la licence sera facturée.
+            </p>
+          ) : (
+            <table className="w-full text-sm mb-4">
+              <thead className="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-slate-800">
+                <tr>
+                  <th className="py-1 font-medium">Espace client</th>
+                  <th className="py-1 font-medium text-right">Actifs</th>
+                  <th className="py-1 font-medium text-right">Facturés</th>
+                </tr>
+              </thead>
+              <tbody>
+                {usageRev.calcul.espaces.map((e) => (
+                  <tr
+                    key={e.nom}
+                    className="border-b border-gray-100 dark:border-slate-800/60"
+                  >
+                    <td className="py-1">{e.nom}</td>
+                    <td className="py-1 text-right tabular-nums">
+                      {e.utilisateursActifs}
+                    </td>
+                    <td className="py-1 text-right tabular-nums">
+                      {e.utilisateursFactures}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          <table className="w-full text-sm mb-4">
+            <tbody>
+              {usageRev.calcul.lignes.map((l) => (
+                <tr
+                  key={l.designation}
+                  className="border-b border-gray-100 dark:border-slate-800/60"
+                >
+                  <td className="py-1">{l.designation}</td>
+                  <td className="py-1 text-right tabular-nums">
+                    {l.quantite} × {formaterEuros(l.prixUnitaireHtCentimes)}
+                  </td>
+                  <td className="py-1 text-right tabular-nums">
+                    {formaterEuros(l.totalHtCentimes)}
+                  </td>
+                </tr>
+              ))}
+              <tr className="font-semibold">
+                <td className="py-2" colSpan={2}>
+                  Total HT du mois
+                </td>
+                <td className="py-2 text-right tabular-nums">
+                  {formaterEuros(usageRev.calcul.totalHtCentimes)}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          {!identiteExistante && (
+            <p className="text-sm text-amber-700 dark:text-amber-300 mb-3">
+              ⚠ Coordonnées de facturation absentes : à renseigner dans la
+              section Facturation avant d&apos;émettre.
+            </p>
+          )}
+          <form action={facturerRevendeurAction}>
+            <input type="hidden" name="tenantId" value={id} />
+            <input type="hidden" name="annee" value={usageRev.periode.annee} />
+            <input type="hidden" name="mois" value={usageRev.periode.mois} />
+            <button
+              type="submit"
+              className="btn-primary text-sm"
+              disabled={!identiteExistante}
+            >
+              Émettre la facture de {libellePeriode(usageRev.periode)}
+            </button>
+          </form>
+        </section>
+      )}
 
       {/* === FACTURATION : relance des coordonnees === */}
       <section

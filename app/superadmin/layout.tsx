@@ -75,6 +75,13 @@ export default async function SuperadminLayout({
               Tenants
             </Link>
             <Link
+              href="/superadmin/devis-revendeur"
+              className="text-gray-700 dark:text-gray-200 hover:text-accent-500 font-medium"
+              title="Devis pour un prospect revendeur, grille partenaire"
+            >
+              Devis revendeur
+            </Link>
+            <Link
               href="/superadmin/admins-by-tenant"
               className="text-gray-700 dark:text-gray-200 hover:text-accent-500 font-medium"
               title="Inventaire des comptes à privilèges (ANSSI HG mesure 7)"

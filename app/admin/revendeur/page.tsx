@@ -10,6 +10,9 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import { getResellerGate, listClients } from "@/lib/reseller";
+import { libellePeriode, usageRevendeur } from "@/lib/reseller/facturation";
+import { GRILLE_REVENDEUR } from "@/lib/reseller/tarification";
+import { formaterEuros } from "@/lib/facturation/montants";
 import { getRootDomain } from "@/lib/subdomain-tenant";
 import NewClientForm from "./NewClientForm";
 
@@ -109,6 +112,7 @@ export default async function RevendeurPage({
   if (!gate.ok) redirect("/admin");
 
   const clients = await listClients(gate.tenantId);
+  const usage = await usageRevendeur(gate.tenantId);
 
   return (
     <div className="space-y-6">
@@ -152,6 +156,46 @@ export default async function RevendeurPage({
           rootDomain={rootDomain}
           resellerName={gate.tenant.name}
         />
+      </section>
+
+      {/* Consommation du mois : ce que la facture contiendra */}
+      <section className="rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
+        <h2 className="font-display font-bold text-primary-500 dark:text-accent-300 mb-1">
+          Votre consommation · {libellePeriode(usage.periode)}
+        </h2>
+        <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+          Facturée en fin de mois : la licence revendeur, puis vos utilisateurs
+          actifs cumulés par tranches progressives, avec un plancher de{" "}
+          {GRILLE_REVENDEUR.minimumUtilisateursParEspace} par espace client. Vos
+          propres collaborateurs ne comptent pas.
+        </p>
+        <table className="w-full text-sm">
+          <tbody>
+            {usage.calcul.lignes.map((l) => (
+              <tr
+                key={l.designation}
+                className="border-b border-gray-100 dark:border-slate-800/60"
+              >
+                <td className="py-1">{l.designation}</td>
+                <td className="py-1 text-right tabular-nums">
+                  {l.quantite} × {formaterEuros(l.prixUnitaireHtCentimes)}
+                </td>
+                <td className="py-1 text-right tabular-nums">
+                  {formaterEuros(l.totalHtCentimes)}
+                </td>
+              </tr>
+            ))}
+            <tr className="font-semibold">
+              <td className="py-2" colSpan={2}>
+                Total HT du mois, {usage.calcul.utilisateursFacturables}{" "}
+                utilisateurs facturables
+              </td>
+              <td className="py-2 text-right tabular-nums">
+                {formaterEuros(usage.calcul.totalHtCentimes)}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
       {/* Liste des clients */}
