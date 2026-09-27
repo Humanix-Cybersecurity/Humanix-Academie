@@ -382,6 +382,33 @@ export const SAISON_TAGS: Record<string, string[]> = {
     "donnees-sensibles",
     "physique",
   ],
+  "mairie-maire-et-elus": [
+    "famille:sectoriel",
+    "secteur:collectivites",
+    "service-public",
+    "deepfake",
+    "ingenierie-sociale",
+    "social-media",
+    "vie-privee",
+  ],
+  "mairie-secretaire-de-mairie": [
+    "famille:sectoriel",
+    "secteur:collectivites",
+    "service-public",
+    "fraude",
+    "phishing",
+    "mots-de-passe",
+    "sauvegardes",
+  ],
+  "mairie-accueil-etat-civil": [
+    "famille:sectoriel",
+    "secteur:collectivites",
+    "service-public",
+    "donnees-sensibles",
+    "ingenierie-sociale",
+    "physique",
+    "vecteur:appel",
+  ],
 };
 
 /**
