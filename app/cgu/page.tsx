@@ -5,13 +5,12 @@ import LegalLayout, {
   LegalSection,
   LegalHighlight,
 } from "@/components/legal/LegalLayout";
+import { DOCUMENTS_LEGAUX } from "@/lib/legal/versions";
 
 export const metadata = {
   title: "CGU - Conditions Générales d'Utilisation - Humanix Académie",
   description: "Règles d'utilisation de la plateforme Humanix Académie.",
 };
-
-const TODAY = new Date().toLocaleDateString("fr-FR");
 
 const TOC = [
   { id: "definitions", label: "1. Définitions" },
@@ -24,6 +23,7 @@ const TOC = [
   { id: "propriete", label: "8. Propriété intellectuelle" },
   { id: "fermeture", label: "9. Suspension du compte" },
   { id: "tiers", label: "10. Liens et services tiers" },
+  { id: "ia", label: "10 bis. Fonctions d'intelligence artificielle" },
   { id: "modifications", label: "11. Modifications des CGU" },
   { id: "droit", label: "12. Loi applicable" },
 ];
@@ -34,8 +34,8 @@ export default function CGUPage() {
       badge="Conditions d'utilisation · v1.0"
       title="Conditions Générales d'Utilisation"
       subtitle="Règles d'utilisation de la plateforme Humanix Académie pour les apprenants, managers et administrateurs des organisations clientes."
-      version="1.0"
-      lastUpdate={TODAY}
+      version={DOCUMENTS_LEGAUX.cgu.version}
+      lastUpdate={DOCUMENTS_LEGAUX.cgu.date}
       toc={TOC}
     >
       <LegalHighlight variant="info">
@@ -290,6 +290,31 @@ export default function CGUPage() {
           responsable du contenu, de la disponibilité ou des pratiques de ces
           tiers, mais s'engage à choisir des partenaires conformes au RGPD pour
           tout traitement de données personnelles.
+        </p>
+      </LegalSection>
+
+      <LegalSection
+        id="ia"
+        num="10 bis"
+        title="Fonctions d'intelligence artificielle"
+      >
+        <p>
+          Certaines fonctions de la Plateforme (assistant Hex, synthèses après
+          un quiz, génération de scénarios d&apos;exercice) reposent sur un
+          modèle de langage fourni par <strong>Mistral AI</strong>, hébergé en
+          France. Conformément à l&apos;article 50 du règlement (UE) 2024/1689,
+          l&apos;Utilisateur est informé qu&apos;il interagit avec un système
+          automatisé, et chaque réponse le rappelle.
+        </p>
+        <p>
+          Les réponses sont générées automatiquement : elles peuvent être
+          inexactes ou incomplètes et ne remplacent ni les consignes de
+          l&apos;organisation de l&apos;Utilisateur ni un avis professionnel.
+          L&apos;Utilisateur ne saisit aucune donnée personnelle, confidentielle
+          ou couverte par le secret professionnel dans ces champs ; un filtre
+          masque les adresses, numéros et identifiants avant tout envoi. Les
+          voix des exercices de vishing sont des voix de synthèse qui
+          n&apos;imitent aucune personne réelle.
         </p>
       </LegalSection>
 

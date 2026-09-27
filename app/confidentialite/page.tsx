@@ -7,6 +7,7 @@ import LegalLayout, {
   LegalTable,
   LegalHighlight,
 } from "@/components/legal/LegalLayout";
+import { DOCUMENTS_LEGAUX } from "@/lib/legal/versions";
 
 export const metadata = {
   title: "Politique de confidentialité - Humanix-Cybersecurity",
@@ -14,8 +15,6 @@ export const metadata = {
     "Comment nous traitons vos données personnelles, en application du RGPD.",
   alternates: { canonical: "/confidentialite" },
 };
-
-const TODAY = new Date().toLocaleDateString("fr-FR");
 
 const TOC = [
   { id: "responsable", label: "1. Responsable du traitement" },
@@ -35,7 +34,8 @@ export default function ConfidentialitePage() {
       badge="RGPD art. 13-14"
       title="Politique de confidentialité"
       subtitle="Comment nous traitons vos données personnelles, en application du RGPD. Quelles données, pourquoi, combien de temps, et quels sont vos droits."
-      lastUpdate={TODAY}
+      version={DOCUMENTS_LEGAUX.confidentialite.version}
+      lastUpdate={DOCUMENTS_LEGAUX.confidentialite.date}
       toc={TOC}
     >
       <LegalSection id="responsable" num="1" title="Responsable du traitement">
@@ -132,6 +132,12 @@ export default function ConfidentialitePage() {
                 "Mémorisation de votre choix d'affichage",
                 "Intérêt légitime",
                 "Persistant tant que non supprimé",
+              ],
+              [
+                "Mesure d'audience (Plausible Analytics, sans cookie)",
+                "Statistiques de fréquentation agrégées du site public",
+                "Consentement via le bandeau, retirable à tout moment",
+                "Aucune donnée individuelle conservée, agrégats seulement",
               ],
             ]}
           />
@@ -259,6 +265,14 @@ export default function ConfidentialitePage() {
                 transactionnels (lien magique de connexion, alertes, newsletter
                 Cyber-Anecdote du Lundi)
               </li>
+              <li>
+                <strong>Mistral AI SAS</strong> (France 🇫🇷, Paris) - génère les
+                réponses de l&apos;assistant Hex, les synthèses de quiz et les
+                scénarios d&apos;exercice. Reçoit ta question et le contexte
+                pédagogique, jamais ton nom, ton adresse ni ton identifiant
+                (filtre anti-PII avant envoi) ; aucune conservation des échanges
+                chez le prestataire
+              </li>
             </ul>
           </li>
           <li>
@@ -305,6 +319,11 @@ export default function ConfidentialitePage() {
           <li>
             <strong>Tiers institutionnels</strong> : administration fiscale,
             URSSAF, en cas d'obligation légale
+          </li>
+          <li>
+            <strong>Plausible Insights OÜ</strong> (Estonie 🇪🇪, UE) - mesure
+            d&apos;audience du site public, sans cookie, uniquement si tu
+            l&apos;acceptes dans le bandeau ; aucune donnée d&apos;apprenant
           </li>
         </ul>
         <LegalHighlight variant="success">

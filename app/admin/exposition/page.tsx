@@ -14,6 +14,7 @@ import { db } from "@/lib/db";
 import PlanGate from "@/components/PlanGate";
 import { getTenantPlan, planHasFeature, FEATURE_MIN_PLAN } from "@/lib/plans";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import LegalNotice from "@/components/admin/phishing/LegalNotice";
 import {
   isB2bGloballyEnabled,
   isB2bMonitoringActive,
@@ -131,6 +132,9 @@ export default async function AdminExpositionPage() {
         title="Veille d'exposition"
         description="Comptes salariés détectés dans des fuites publiques. Aucune notification n'est envoyée sans votre validation."
       />
+      <div className="mb-6">
+        <LegalNotice variante="exposition" />
+      </div>
       <ExpositionAdminClient
         monitoring={monitoring}
         exposures={exposures}

@@ -350,6 +350,7 @@ async function onFirstPaymentPaid(payment: MolliePaymentResource): Promise<{
     paymentSubscriptionId: subscriptionId ?? undefined,
     subscriptionStatus: "active",
     source: "mollie-webhook",
+    cgvVersion: md.cgvVersion,
   });
 
   if (!result.ok) {

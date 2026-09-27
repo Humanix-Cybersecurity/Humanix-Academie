@@ -5,6 +5,7 @@
 // → POST /api/payments/checkout/start → window.location.href = checkout url.
 
 import { useState, useTransition } from "react";
+import { CGV_VERSION } from "@/lib/legal/versions";
 
 type Props = {
   planId: string;
@@ -39,6 +40,7 @@ export default function SouscrireForm({
   const [tvaIntra, setTvaIntra] = useState("");
   const [seats, setSeats] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  const [cgvAccepted, setCgvAccepted] = useState(false);
   const [pending, startTransition] = useTransition();
 
   const onSubmit = (e: React.FormEvent) => {
@@ -65,6 +67,7 @@ export default function SouscrireForm({
             pays,
             siren,
             tvaIntra,
+            cgvAccepted,
           }),
         });
         const data = (await res.json()) as { url?: string; error?: string };
@@ -315,6 +318,27 @@ export default function SouscrireForm({
         </div>
       )}
 
+      <label className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-200">
+        <input
+          type="checkbox"
+          required
+          checked={cgvAccepted}
+          onChange={(e) => setCgvAccepted(e.target.checked)}
+          className="mt-1"
+        />
+        <span>
+          J&apos;accepte les{" "}
+          <a href="/cgv" target="_blank" rel="noreferrer" className="underline">
+            CGV
+          </a>{" "}
+          (v{CGV_VERSION}), les{" "}
+          <a href="/cgu" target="_blank" rel="noreferrer" className="underline">
+            CGU
+          </a>{" "}
+          et l&apos;accord de traitement des données qui en fait partie.
+        </span>
+      </label>
+
       {error && (
         <div
           role="alert"
@@ -326,7 +350,7 @@ export default function SouscrireForm({
 
       <button
         type="submit"
-        disabled={pending || !email || !organization}
+        disabled={pending || !email || !organization || !cgvAccepted}
         className="btn-primary w-full"
       >
         {pending

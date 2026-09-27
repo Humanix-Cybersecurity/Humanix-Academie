@@ -153,6 +153,8 @@ export default function HexRecap(props: Props) {
             Synthèse adaptée {personaLabel(state.persona)} sur les{" "}
             {state.missedCount} question{state.missedCount > 1 ? "s" : ""} ratée
             {state.missedCount > 1 ? "s" : ""} sur {state.totalQuestions}.
+            Générée par une IA (Mistral, hébergée en France) : elle peut se
+            tromper.
           </p>
         </>
       )}

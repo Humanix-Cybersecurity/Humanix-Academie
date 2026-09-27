@@ -82,6 +82,8 @@ export type ProvisionInput = {
   subscriptionStatus?: string;
   /** Provenance pour tracing/audit. */
   source: ProvisionSource;
+  /** Version des CGV acceptée à la commande (preuve, cf. lib/legal/versions.ts). */
+  cgvVersion?: string;
 };
 
 /**
@@ -201,6 +203,8 @@ export async function provisionTenantWithAdmin(
           paymentCustomerId: input.paymentCustomerId ?? null,
           paymentSubscriptionId: input.paymentSubscriptionId ?? null,
           subscriptionStatus: input.subscriptionStatus ?? "active",
+          cgvVersion: input.cgvVersion ?? null,
+          cgvAcceptedAt: input.cgvVersion ? new Date() : null,
         },
       });
       const user = compteCommunaute

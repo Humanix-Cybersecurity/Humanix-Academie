@@ -18,6 +18,13 @@ type Outil = {
 
 const OUTILS: Outil[] = [
   {
+    href: "/admin/conformite-rgpd/note-information",
+    emoji: "📄",
+    title: "Informer les collaborateurs",
+    description:
+      "Deux notes à diffuser avant le premier exercice de simulation ou l'activation de la veille d'exposition, pré-remplies avec le nom de votre organisation",
+  },
+  {
     href: "/admin/conformite-rgpd/aipd",
     emoji: "📝",
     title: "Générateur AIPD",

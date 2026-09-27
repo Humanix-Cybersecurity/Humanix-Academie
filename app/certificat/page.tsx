@@ -12,8 +12,8 @@
 //      un rabais sur les primes Cyber des PME qui ont X% de salaries certifies.
 //   2. NIS2 : packager le certificat comme preuve de conformite (obligation
 //      legale dirigeants ETI secteurs critiques depuis octobre 2024).
-//   3. ANSSI : demarche officielle d'agrement pour devenir reconnu comme
-//      "Pix de la cyber" cote sensibilisation.
+//   3. RECONNAISSANCE PUBLIQUE : objectif « Pix de la cyber ». Aucun agrement
+//      n'existe pour ce type de plateforme (2026-09) : la page le dit tel quel.
 //
 // Cette page est le hub de ces 3 angles : RSSI, dirigeant, courtier ou
 // assureur qui atterrit ici doit comprendre en 30 secondes pourquoi ce
@@ -25,7 +25,7 @@ import HexBackdrop from "@/components/HexBackdrop";
 
 const TITLE = "Le certificat cyber qui vaut quelque chose - Humanix Académie";
 const DESC =
-  "Certificat de sensibilisation cyber signé Ed25519, exportable OSCAL, conçu comme bouclier assurance cyber + preuve de conformité NIS2. Démarche d'agrément ANSSI en cours.";
+  "Certificat de sensibilisation cyber signé Ed25519, exportable OSCAL, conçu comme bouclier assurance cyber + preuve de conformité NIS2. Sans label public à ce jour, et nous le disons.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -100,7 +100,7 @@ export default function CertificatPage() {
               href="#anssi"
               className="inline-flex items-center gap-2 bg-white/80 dark:bg-slate-800/80 border-2 border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-200 px-5 py-3 rounded-2xl font-bold shadow-sm hover:scale-105 transition-transform"
             >
-              🇫🇷 Démarche ANSSI
+              🇫🇷 Reconnaissance publique
             </a>
           </div>
         </section>
@@ -328,7 +328,7 @@ export default function CertificatPage() {
           className="scroll-mt-24"
         >
           <p className="text-xs uppercase tracking-[0.25em] font-bold text-rose-600 mb-3">
-            🇫🇷 Levier #3 · Reconnaissance ANSSI
+            🇫🇷 Levier #3 · Reconnaissance publique
           </p>
           <h2
             id="anssi-title"
@@ -336,29 +336,36 @@ export default function CertificatPage() {
           >
             Le Pix de la cyber,
             <br />
-            en chantier.
+            un objectif, pas un acquis.
           </h2>
 
           <p className="text-lg text-gray-700 dark:text-gray-200 mb-6 leading-relaxed">
             Pix a mis dix ans à devenir la référence numérique reconnue par
             l'État pour les compétences digitales (collèges, lycées,
             entreprises). Humanix Académie s'inscrit dans la même logique pour
-            la <strong>cybersécurité du facteur humain</strong>, avec une
-            démarche d'agrément formelle auprès de l'ANSSI lancée en 2026.
+            la <strong>cybersécurité du facteur humain</strong>. À ce jour,{" "}
+            <strong>
+              aucun label ni agrément public ne couvre les plateformes de
+              sensibilisation
+            </strong>{" "}
+            : le référentiel le plus proche est le label SecNumedu-FC de
+            l'ANSSI, réservé aux formations continues. Nous construisons le
+            dossier pour être prêts le jour où un cadre existera, et nous le
+            disons tel quel.
           </p>
 
           <div className="rounded-2xl border-2 border-rose-200 dark:border-rose-900/50 bg-rose-50/50 dark:bg-rose-950/20 p-6 sm:p-8 mb-6">
             <h3 className="text-xl font-bold text-rose-900 dark:text-rose-200 mb-4">
-              Pourquoi l'ANSSI prendra Humanix au sérieux
+              Ce que le dossier contient déjà
             </h3>
             <div className="grid sm:grid-cols-2 gap-4 text-sm text-rose-900/90 dark:text-rose-200/90">
               <div>
                 <p className="font-bold mb-2">🇫🇷 Souveraineté technique</p>
                 <p>
                   Hébergement Scaleway Paris, IA Mistral, paiement Mollie UE,
-                  email Scaleway TEM. Zéro dépendance Cloud Act US. Audit Triple
-                  A+ (Mozilla Observatory 110/100, Security Headers 6/6, SSL
-                  Labs PQC ready).
+                  email Scaleway TEM. Aucun sous-traitant hors UE pour les
+                  données de la plateforme. En-têtes de sécurité et TLS notés A+
+                  (Mozilla Observatory, Security Headers, SSL Labs).
                 </p>
               </div>
               <div>
@@ -369,7 +376,7 @@ export default function CertificatPage() {
                   <code className="text-xs bg-rose-100 dark:bg-rose-900/40 px-1 rounded">
                     lib/mapping-grc.ts
                   </code>
-                  . L'ANSSI peut vérifier chaque ligne.
+                  . Chaque contrôle est vérifiable par un auditeur.
                 </p>
               </div>
               <div>
@@ -387,7 +394,6 @@ export default function CertificatPage() {
                 <p>
                   Certificats Ed25519, signatures PDF, anti-PII régex strict sur
                   prompts IA, CSP nonce-based, HSTS preload, MFA TOTP + FIDO2.
-                  Conforme RGS B ANSSI.
                 </p>
               </div>
             </div>
@@ -403,18 +409,8 @@ export default function CertificatPage() {
                   ✓
                 </span>
                 <span>
-                  <strong>Dossier technique préparé</strong> : architecture,
-                  sécurité, mapping de conformité, gouvernance OSS - documenté
-                  publiquement.
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span aria-hidden="true" className="text-amber-500">
-                  ⏳
-                </span>
-                <span>
-                  <strong>Échanges initiés avec l'ANSSI</strong> - réponse
-                  attendue 2026 Q3.
+                  <strong>Dossier technique public</strong> : architecture,
+                  sécurité, mapping de conformité, gouvernance OSS.
                 </span>
               </li>
               <li className="flex items-start gap-2">
@@ -422,8 +418,21 @@ export default function CertificatPage() {
                   ○
                 </span>
                 <span>
-                  <strong>Reconnaissance officielle</strong> visée 2027 - sera
-                  affichée sur cette page dès obtention.
+                  <strong>
+                    Aucune démarche formelle engagée auprès de l'ANSSI
+                  </strong>{" "}
+                  : il n'existe pas de procédure d'agrément pour ce type de
+                  plateforme, et nous ne prétendons pas le contraire.
+                </span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span aria-hidden="true" className="text-gray-400">
+                  ○
+                </span>
+                <span>
+                  <strong>Objectif</strong> : une reconnaissance publique dès
+                  qu'un cadre existera. Cette page sera mise à jour à ce
+                  moment-là, pas avant.
                 </span>
               </li>
             </ul>

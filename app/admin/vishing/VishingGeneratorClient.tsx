@@ -364,6 +364,11 @@ export default function VishingGeneratorClient() {
                 self-hosted selon `TTS_PROVIDER`). Aucun audio n'est conserve
                 cote provider - le buffer est cache en local pour reutilisation.
               </p>
+              <p className="text-xs text-blue-700 dark:text-blue-300 mb-2">
+                Voix de synthèse : elle n'imite aucune personne réelle. Le
+                débrief remis au collaborateur doit dire que la voix était
+                artificielle (règlement UE 2024/1689, art. 50).
+              </p>
               <audio
                 controls
                 src={audioUrl}

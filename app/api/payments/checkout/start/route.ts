@@ -34,6 +34,7 @@ import {
   createCheckoutSession,
 } from "@/lib/mollie";
 import { isPlanId } from "@/lib/plans";
+import { CGV_VERSION } from "@/lib/legal/versions";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { validerCoordonnees } from "@/lib/facturation/coordonnees";
 import { memoriserCoordonnees } from "@/lib/facturation/en-attente";
@@ -61,6 +62,8 @@ type StartRequest = {
   pays?: string;
   siren?: string;
   tvaIntra?: string;
+  /** Case « j'accepte les CGV » du formulaire : exigée, sa version est stampée. */
+  cgvAccepted?: boolean;
 };
 
 export async function POST(req: Request) {
@@ -118,6 +121,12 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   }
+  if (body.cgvAccepted !== true) {
+    return NextResponse.json(
+      { error: "Vous devez accepter les CGV et les CGU pour souscrire." },
+      { status: 400 },
+    );
+  }
   if (!isPlanId(planRaw)) {
     return NextResponse.json({ error: "Plan invalide." }, { status: 400 });
   }
@@ -146,6 +155,7 @@ export async function POST(req: Request) {
       paymentSubscriptionId: undefined,
       subscriptionStatus: "active",
       source: "dev-mode",
+      cgvVersion: CGV_VERSION,
     });
     if (!result.ok) {
       return NextResponse.json(
@@ -229,6 +239,7 @@ export async function POST(req: Request) {
         mode: "anonymous-inscription",
         organization,
         email,
+        cgvVersion: CGV_VERSION,
       },
     });
     // Memorisation APRES la creation du client Mollie : c'est son identifiant

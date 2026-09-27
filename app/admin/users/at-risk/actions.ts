@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 "use server";
 //
-// Actions de la page « Utilisateurs vulnérables » : assignation du module
+// Actions de la page « Collaborateurs à accompagner » : assignation du module
 // anti-phishing à un récidiviste. Décision humaine RSSI/admin, audit-loggée.
 
 import { auth } from "@/lib/auth";

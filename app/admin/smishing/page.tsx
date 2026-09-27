@@ -8,6 +8,7 @@ import { auth } from "@/lib/auth";
 import { FEATURE_MIN_PLAN, getTenantPlan, planHasFeature } from "@/lib/plans";
 import PlanGate from "@/components/PlanGate";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import LegalNotice from "@/components/admin/phishing/LegalNotice";
 import SmishingGeneratorClient from "./SmishingGeneratorClient";
 
 export const dynamic = "force-dynamic";
@@ -54,6 +55,8 @@ export default async function AdminSmishingPage() {
       />
 
       <div className="space-y-6 min-w-0">
+        <LegalNotice variante="smishing" />
+
         {/* Bandeau pédagogique */}
         <div className="card bg-amber-50 dark:bg-amber-900/20 border-amber-300 dark:border-amber-700">
           <h2 className="font-bold text-amber-800 dark:text-amber-200 mb-2">

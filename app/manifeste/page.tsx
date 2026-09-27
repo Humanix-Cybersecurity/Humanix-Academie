@@ -564,9 +564,9 @@ export default function ManifestePage() {
               <strong className="text-primary-500 dark:text-accent-300">
                 La plateforme est libre. L'expertise se monnaie.
               </strong>{" "}
-              Audit de maturité cyber humaine, formation Qualiopi certifiante,
-              RSSI externalisé pour les organisations qui n'en ont pas, hosting
-              cloud managé sur Scaleway Paris, et le Pack NIS2 turnkey pour les
+              Audit de maturité cyber humaine, formations sur mesure, RSSI
+              externalisé pour les organisations qui n'en ont pas, hosting cloud
+              managé sur Scaleway Paris, et le Pack NIS2 turnkey pour les
               structures qui ont 30 jours pour passer la directive.
             </p>
 

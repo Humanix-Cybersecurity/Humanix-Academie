@@ -275,7 +275,7 @@ const SECTIONS: Section[] = [
       // de fragilite cyber).
       {
         href: "/admin/users/at-risk",
-        label: "Utilisateurs vulnérables",
+        label: "Collaborateurs à accompagner",
         icon: "⚠️",
         minRole: "RSSI",
       },
