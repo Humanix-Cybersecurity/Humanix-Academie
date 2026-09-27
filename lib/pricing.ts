@@ -10,6 +10,7 @@
 
 import type { PlanId } from "@/lib/plans";
 import { PLAN_FREE_SEATS } from "@/lib/plans";
+import { LIBELLE_CATALOGUE } from "@/lib/catalogue-chiffres";
 
 // Le palier "community" (self-host) n'est pas un PlanId tenant.
 // On l'ajoute uniquement pour l'afficher dans la page /tarifs.
@@ -130,7 +131,7 @@ export const TIERS: PricingTier[] = [
     seats: { min: 16, max: 250 },
     // Top 10 features (detail complet - 25+ items - dans le tableau comparatif).
     features: [
-      "Tout le catalogue : 58 saisons · 344 modules + nouveautés mensuelles",
+      `Tout le catalogue : ${LIBELLE_CATALOGUE} + nouveautés mensuelles`,
       "SSO Microsoft 365 + Google + SCIM v2 (Entra/Okta)",
       "Score de risque humain temps réel + certificats PDF",
       "Phishing / Vishing / Smishing / Quishing IA souverains Mistral 🇫🇷",

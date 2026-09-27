@@ -16,6 +16,10 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { TIERS, ADD_ONS } from "@/lib/pricing";
+import {
+  CATALOGUE_CHIFFRES,
+  LIBELLE_CATALOGUE,
+} from "@/lib/catalogue-chiffres";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import type { PlanId } from "@/lib/plans";
@@ -29,8 +33,7 @@ import {
 } from "@/lib/seo/jsonld";
 
 const META_TITLE = "Tarifs cybersécurité 2026 - Humanix Académie";
-const META_DESCRIPTION =
-  "Sensibilisation cybersécurité française open source AGPL : 58 saisons, 344 modules. Self-host gratuit à vie. Cloud souverain France gratuit jusqu'à 5 utilisateurs, puis 19 €/mois ou 3 €/utilisateur. 4 paliers sans engagement, RGPD by design, aligné NIS2/ANSSI. Marque blanche et revendeur en Enterprise.";
+const META_DESCRIPTION = `Sensibilisation cybersécurité française open source AGPL : ${CATALOGUE_CHIFFRES.saisons} saisons, ${CATALOGUE_CHIFFRES.modules} modules. Self-host gratuit à vie. Cloud souverain France gratuit jusqu'à 5 utilisateurs, puis 19 €/mois ou 3 €/utilisateur. 4 paliers sans engagement, RGPD by design, aligné NIS2/ANSSI. Marque blanche et revendeur en Enterprise.`;
 
 export const metadata = {
   title: META_TITLE,
@@ -621,7 +624,7 @@ export default async function TarifsPage({
                   cells={["✓", "✓", "✓", "✓"]}
                 />
                 <FeatureRow
-                  label="Catalogue complet (58 saisons · 344 modules)"
+                  label={`Catalogue complet (${LIBELLE_CATALOGUE})`}
                   cells={["-", "✓*", "✓", "✓"]}
                 />
                 <FeatureRow

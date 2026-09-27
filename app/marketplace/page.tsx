@@ -12,6 +12,7 @@ import {
 import LockedPremiumCard, {
   PremiumPreviewIntro,
 } from "@/components/demo/LockedPremiumCard";
+import { CATALOGUE_CHIFFRES } from "@/lib/catalogue-chiffres";
 
 export const dynamic = "force-dynamic";
 
@@ -142,7 +143,7 @@ export default async function MarketplacePage({
       {/* En DEMO_MODE : bandeau introductif AVANT la grille (vide ou pas) */}
       {isDemoMode() && (
         <PremiumPreviewIntro
-          totalCount={PREMIUM_MODULES_PREVIEW.length}
+          totalCount={CATALOGUE_CHIFFRES.modulesMarketplace}
           label="modules marketplace à installer en formule Standard"
         />
       )}

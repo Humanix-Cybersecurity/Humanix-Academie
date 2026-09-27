@@ -1,7 +1,7 @@
 {
   "name": "Humanix Académie",
   "short_name": "Humanix",
-  "description": "Plateforme française open source AGPLv3 de cybersensibilisation pour PME. 48 modules pédagogiques experts, gamification, mascotte évolutive, hébergement souverain Paris.",
+  "description": "Plateforme française open source AGPLv3 de cybersensibilisation pour PME. 470 modules pédagogiques experts, gamification, mascotte évolutive, hébergement souverain Paris.",
   "start_url": "/apprendre",
   "scope": "/",
   "display": "standalone",

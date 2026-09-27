@@ -96,7 +96,7 @@ const PORTES = [
       ring: "border-amber-200 dark:border-amber-900/40",
       accent: "text-amber-700 dark:text-amber-300",
     },
-    body: "Tu es RSSI, gendarme cyber, formateur, DPO, consultant. Tu as une experience terrain unique. 18 saisons sur 26 attendent encore leurs modules MDX. Voir CONTRIBUTING.md section 'Contribuer un module MDX'.",
+    body: "Tu es RSSI, gendarme cyber, formateur, DPO, consultant. Tu as une experience terrain unique. Le catalogue s'enrichit chaque mois de modules ecrits par des praticiens, et le tien y a sa place. Voir CONTRIBUTING.md section 'Contribuer un module MDX'.",
     actions: [
       {
         label: "Guide module MDX",

@@ -57,6 +57,7 @@ import {
 import LockedPremiumCard, {
   PremiumPreviewIntro,
 } from "@/components/demo/LockedPremiumCard";
+import { CATALOGUE_CHIFFRES } from "@/lib/catalogue-chiffres";
 
 export const dynamic = "force-dynamic";
 
@@ -474,8 +475,8 @@ export default async function ApprendrePage() {
             {isDemoMode() && (
               <div className="mb-6">
                 <PremiumPreviewIntro
-                  totalCount={PREMIUM_SAISONS_PREVIEW.length}
-                  label={`saisons premium à débloquer (${PREMIUM_SAISONS_PREVIEW.reduce((s, p) => s + p.episodes, 0)}+ modules)`}
+                  totalCount={CATALOGUE_CHIFFRES.saisons}
+                  label={`saisons premium à débloquer (${CATALOGUE_CHIFFRES.modules} modules)`}
                 />
               </div>
             )}

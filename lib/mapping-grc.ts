@@ -10,6 +10,8 @@
 // Conformite et integrite : on ne doit JAMAIS surcoter un controle. Si on n'a
 // pas la donnee, on retourne `not_assessed` plutot qu'un score arbitraire.
 
+import { CATALOGUE_CHIFFRES } from "@/lib/catalogue-chiffres";
+
 export type FrameworkRef =
   | "ISO27001:2022"
   | "NIS2"
@@ -538,8 +540,7 @@ const ANSSI_HG: FrameworkMapping = {
       ],
       thresholdCompliant: 0.7,
       thresholdPartial: 0.4,
-      scopeNote:
-        "MESURE PHARE HUMANIX. 31 saisons / 200+ modules couvrent l'ensemble des bonnes pratiques (phishing, mots de passe, donnees sensibles, mobilite, etc.).",
+      scopeNote: `MESURE PHARE HUMANIX. ${CATALOGUE_CHIFFRES.saisons} saisons / ${CATALOGUE_CHIFFRES.modules} modules couvrent l'ensemble des bonnes pratiques (phishing, mots de passe, donnees sensibles, mobilite, etc.).`,
     },
 
     // -------------------------------------------------------------------------

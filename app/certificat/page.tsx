@@ -22,6 +22,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import HexBackdrop from "@/components/HexBackdrop";
+import { CATALOGUE_CHIFFRES } from "@/lib/catalogue-chiffres";
 
 const TITLE = "Le certificat cyber qui vaut quelque chose - Humanix Académie";
 const DESC =
@@ -291,9 +292,9 @@ export default function CertificatPage() {
                 journalisé en table AuditLog avec horodatage signé.
               </li>
               <li>
-                <strong>Mapping ANSSI HG → NIS2</strong> - chacun des 200+
-                modules est cartographié sur les 42 mesures du Guide Hygiène
-                ANSSI et les contrôles NIS2 (cf.{" "}
+                <strong>Mapping ANSSI HG → NIS2</strong> - chaque module est
+                cartographié sur les 42 mesures du Guide Hygiène ANSSI et les
+                contrôles NIS2 (cf.{" "}
                 <code className="bg-primary-100 dark:bg-primary-900/40 px-1.5 py-0.5 rounded text-xs">
                   lib/mapping-grc.ts
                 </code>{" "}
@@ -375,9 +376,10 @@ export default function CertificatPage() {
               <div>
                 <p className="font-bold mb-2">🧠 Format pédagogique éprouvé</p>
                 <p>
-                  200+ modules MDX experts, format 5-10 minutes par semaine,
-                  scénarii français terrain, debriefs avec sources ANSSI/CNIL,
-                  quiz contre-intuitifs. Pas du e-learning vidéo générique.
+                  {CATALOGUE_CHIFFRES.modules} modules MDX experts, format 5-10
+                  minutes par semaine, scénarii français terrain, debriefs avec
+                  sources ANSSI/CNIL, quiz contre-intuitifs. Pas du e-learning
+                  vidéo générique.
                 </p>
               </div>
               <div>
