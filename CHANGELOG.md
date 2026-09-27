@@ -6,6 +6,154 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.11.0] - 2026-09-27 🏛️ Mairies, revendeurs et mise en conformité
+
+Une collection écrite pour le salon des maires, un premier revendeur qu'on
+sait facturer, et un état des lieux légal fait le jour même : trois choses
+qui pouvaient nous être reprochées ont été corrigées, et deux qui manquaient
+ont été écrites. Le catalogue passe de **72 à 79 saisons** et de **428 à 470
+épisodes**.
+
+### Added
+
+#### 🏛️ Collection Mairies : sept saisons par population de la mairie
+
+Écrites pour le salon des maires du 2 octobre 2026, audience `collectivites`,
+famille sectorielle, sans aucun chiffre réglementaire affirmé. Chaque saison
+se termine par un épisode de synthèse « le réflexe … ».
+
+- `mairie-maire-et-elus` : la voix, le nom et les comptes d'un élu sont
+  publics, donc imitables ; aucun ordre de paiement par téléphone, même du
+  maire.
+- `mairie-secretaire-de-mairie` (« Mairie : le secrétariat de mairie ») : un
+  seul poste, tous les circuits d'argent et d'accès ; cinq règles qui ne
+  demandent pas de juger, et le soutien du maire pour dire non.
+- `mairie-accueil-etat-civil` : le guichet remet des identités ; un canal que
+  la mairie détient pour chaque demande, du faux fils au faux agent de la
+  préfecture.
+- `mairie-services-techniques-eau` : les équipements ouvrent des vannes et
+  des portes, pas des fichiers ; la commune tient elle-même ses clés.
+- `mairie-enfance-ecoles-ccas` : les données des enfants et des familles
+  fragiles ne vivent que dans des outils de la commune.
+- `mairie-police-municipale-videoprotection` : des images que tout le monde
+  veut voir ; chaque demande, chaque réquisition, chaque appareil s'inscrit
+  dans un cadre.
+- `mairie-direction-intercommunalite` : cinq questions qu'aucun prestataire ne
+  posera à la place de la direction.
+
+Avec « Cyber-Collectivités » en porte d'entrée, le parcours Mairies compte
+huit saisons. (#914, #915)
+
+#### 💶 Revendeurs : grille par paliers, facture mensuelle, devis
+
+Le premier revendeur (un prestataire informatique qui ouvre des espaces pour
+ses clients) existait depuis la 1.10.0 ; il fallait pouvoir le facturer et
+lui chiffrer un devis sans manipulation manuelle. (#913)
+
+- `lib/reseller/tarification.ts` : licence mensuelle de l'espace revendeur
+  (40 € HT), puis utilisateurs actifs cumulés des espaces clients par
+  tranches progressives (1,80 € jusqu'à 100, 1,50 € jusqu'à 500, 1,20 €
+  jusqu'à 2 000, 0,90 € au-delà), plancher de huit utilisateurs facturés par
+  espace client. Arithmétique en centimes, monotonie testée.
+- Relevé du mois et bouton « Émettre la facture » sur la page superadmin du
+  revendeur, référence idempotente `revendeur:<tenant>:<AAAA-MM>` ; le
+  revendeur voit la même consommation sur `/admin/revendeur`.
+- `/superadmin/devis-revendeur` : devis PDF (react-pdf), paramètres bornés,
+  rien n'est stocké.
+- CGV, article 15 « Revendeurs et marque blanche », et modèle de contrat de
+  revente `docs/CONTRAT-REVENTE-MODELE.md` avec la chaîne de sous-traitance
+  des données (client final responsable, revendeur sous-traitant, Humanix
+  sous-traitant ultérieur). (#918, #919)
+
+#### 📄 Informer les collaborateurs avant le premier exercice
+
+- `/admin/conformite-rgpd/note-information` : deux notes d'information
+  pré-remplies avec le nom de l'organisation, imprimables, l'une pour les
+  exercices de simulation, l'autre pour la veille d'exposition (Code du
+  travail L1222-4 et L2312-38). Source versionnée dans `docs/modeles/`.
+- Le bandeau « cadre éthique et légal » existe en quatre variantes
+  (phishing, vishing, smishing, exposition) et couvre enfin les pages qui
+  n'en avaient pas ; il renvoie vers la note. (#918)
+
+#### 🧾 Preuve d'acceptation des conditions
+
+- `User.cguVersion` et `User.cguAcceptedAt` à l'inscription ;
+  `Tenant.cgvVersion` et `Tenant.cgvAcceptedAt` à la souscription (case
+  « j'accepte les CGV » exigée par le formulaire et par la route, version
+  transmise dans les métadonnées Mollie) et à la montée de gamme.
+- `lib/legal/versions.ts` : version et date fixes de chaque document légal ;
+  les pages n'affichent plus la date du jour. (#918)
+
+#### 🔢 Une seule source pour les chiffres publics du catalogue
+
+`lib/catalogue-chiffres.ts` alimente tarifs, comparatif, certificat, pricing,
+mapping GRC et les bandeaux de la démo ; un test compare les constantes au
+catalogue réel quand content-pro est présent et vérifie que README, manifest
+et `docs/OPEN_CORE.md` citent les mêmes nombres. (#916)
+
+#### 📚 Documents
+
+`docs/AIPD-SCORING-COLLABORATEURS.md` et
+`docs/exposition-numerique/aipd-trame.md` complétés et datés,
+`docs/DPA-MODELE.md` (Mistral AI, cas du revendeur), `docs/COMPLIANCE.md`
+(règlement IA, chaîne revendeur, versions), `docs/VENDRE-AUX-COLLECTIVITES.md`
+(Chorus Pro, mandat administratif, seuils, pièces à fournir). (#919)
+
+### Changed
+
+#### ✍️ Des textes qui ne présupposent pas le genre des rôles
+
+Les saisons Mairies écrivaient « Tu es seule » au secrétariat et « Tu es
+seul » à l'accueil. Réécriture des sept saisons et de quatre saisons de
+septembre (hôtellerie, commerce, immobilier, transport), sans point médian :
+aucun accord de genre sur l'apprenant, rôles génériques par la fonction ou en
+forme épicène (le secrétariat, la direction de l'école, l'équipe d'animation,
+la personne en stage, l'agent de police municipale, l'agent du CSU), fonctions
+institutionnelles gardées au générique, plus de « monsieur le maire » ni de
+« Madame » adressés à l'apprenant. 35 fichiers, 185 remplacements vérifiés un
+à un. (#917)
+
+#### ⚖️ Pages légales et allégations publiques
+
+- CGV : l'article formation est requalifié (l'abonnement est un service de
+  sensibilisation, pas une action de formation professionnelle ; pas
+  d'organisme déclaré, pas de Qualiopi, pas d'OPCO), le placeholder DREETS a
+  disparu, la décision citée pour les clauses types est la 2021/915, le DPA
+  est accepté à la commande pour les offres en ligne et signé pour Enterprise
+  et revendeurs, Mistral AI figure parmi les sous-traitants.
+- CGU : section 10 bis « Fonctions d'intelligence artificielle » (règlement
+  UE 2024/1689, art. 50). Confidentialité : Mistral AI et Plausible. Trust
+  Center : Mistral AI.
+- Certificat : la section « reconnaissance » dit qu'aucun label public ne
+  couvre ce type de plateforme et qu'aucune démarche formelle n'est engagée ;
+  plus de « RGS B ». Manifeste et comparatif : plus de Qualiopi.
+- Hex annonce sous chaque réponse et synthèse qu'elle est générée par une IA ;
+  le générateur de vishing rappelle que la voix est de synthèse et que le
+  débrief doit le dire.
+- La page « Utilisateurs vulnérables » devient « Collaborateurs à
+  accompagner », comme le recommande l'analyse d'impact. (#918)
+
+#### Divers
+
+- Les pages publiques affichent 79 saisons et 470 modules au lieu de 58 et
+  344 ; la démo annonce le vrai nombre de saisons à débloquer. (#916)
+- Dépendances de développement : groupe `development-others`. (#909)
+
+### Fixed
+
+- Création d'un espace depuis `/superadmin` quand l'adresse existe déjà comme
+  compte Communauté : le compte est rattaché à l'espace au lieu de faire
+  échouer la création. (#912)
+- La note de transparence du comparatif n'annonce plus une cible passée et
+  s'adapte au nombre réel d'épisodes rédigés. (#916)
+
+### Exploitation
+
+Quatre colonnes nullables ajoutées par `db push` au démarrage
+(`User.cguVersion`, `User.cguAcceptedAt`, `Tenant.cgvVersion`,
+`Tenant.cgvAcceptedAt`), compatibles avec la bascule bleu/vert. Aucune
+reprise de données.
+
 ## [1.10.0] - 2026-09-24 🔁 La boucle fermée : une menace réelle déclenche la formation dans l'heure
 
 Une fonctionnalité, sept saisons, et un Dependabot enfin débloqué. Dans le
