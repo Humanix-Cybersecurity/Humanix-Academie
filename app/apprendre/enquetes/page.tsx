@@ -25,6 +25,7 @@ import LockedPremiumCard, {
   PremiumPreviewIntro,
 } from "@/components/demo/LockedPremiumCard";
 import ShareDetectiveBadgeButton from "@/components/investigations/ShareDetectiveBadgeButton";
+import { CATALOGUE_CHIFFRES } from "@/lib/catalogue-chiffres";
 
 export const dynamic = "force-dynamic";
 
@@ -192,7 +193,7 @@ export default async function EnquetesPage() {
           className="max-w-5xl mx-auto px-4 py-6"
         >
           <PremiumPreviewIntro
-            totalCount={PREMIUM_INVESTIGATIONS_PREVIEW.length}
+            totalCount={CATALOGUE_CHIFFRES.enquetes}
             label="enquêtes premium à débloquer"
           />
           <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">

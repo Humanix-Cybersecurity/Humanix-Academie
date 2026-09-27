@@ -27,7 +27,7 @@
 //  - CISO Assistant connector v2.2 (17 surfaces : Evidence + PDF Ed25519,
 //    Findings, RiskScenarios, Incidents, Métrologie, Dashboard pré-cuisiné,
 //    Asset Workforce, Threats catalog, Teams, Campaigns, Live Mode, etc.)
-//  - Mode Enquêteur (catégorie complète) : 27 enquêtes interactives avec
+//  - Mode Enquêteur (catégorie complète) : enquêtes interactives avec
 //    mockups visuels (email, SMS, LinkedIn, Facebook, photo bureau,
 //    piggyback, hotspot Wi-Fi), red flags + faux positifs, débrief IA Hex
 //  - Onboarding & RGPD utilisateurs (catégorie complète) :
@@ -35,19 +35,19 @@
 //      * /signup?plan=starter - self-service 5 sièges gratuits
 //      * Rattachement RGPD-safe cross-tenant (anti-énumération)
 //      * Mode « Voir en tant que » read-only avec consentement explicite
-//  - Catalogue mis à jour : 58 saisons / 344 modules (dont 27 enquêtes) / 30
-//    articles librairie. Gratuit OSS : 5 saisons démo + 30 articles.
+//  - Chiffres du catalogue : lib/catalogue-chiffres.ts, une seule source,
+//    testée contre content-pro quand le submodule est présent.
 
 import { Fragment } from "react";
 import Link from "next/link";
 import { countExpertEpisodes } from "@/lib/content-availability";
+import { CATALOGUE_CHIFFRES } from "@/lib/catalogue-chiffres";
 import HexBackdrop from "@/components/HexBackdrop";
 import { BreadcrumbJsonLd } from "@/lib/seo/jsonld";
 
 const META_TITLE =
   "Comparatif honnête - Humanix vs concurrents | Humanix Académie";
-const META_DESCRIPTION =
-  "Comparatif honnête entre Humanix Académie et les principales plateformes de sensibilisation cyber 2026 (KnowBe4, Hoxhunt, Phished, Cyber Guru, Adaptive Security). 9 catégories, 60+ critères : tarification, catalogue (344 modules dont 27 enquêtes interactives), simulation phishing, conformité, pilotage dirigeant, HRM 2026, intégrations (CISO Assistant 17 surfaces), onboarding RGPD, écosystème.";
+const META_DESCRIPTION = `Comparatif honnête entre Humanix Académie et les principales plateformes de sensibilisation cyber 2026 (KnowBe4, Hoxhunt, Phished, Cyber Guru, Adaptive Security). 9 catégories, 60+ critères : tarification, catalogue (${CATALOGUE_CHIFFRES.modules} modules dont ${CATALOGUE_CHIFFRES.enquetes} enquêtes interactives), simulation phishing, conformité, pilotage dirigeant, HRM 2026, intégrations (CISO Assistant 17 surfaces), onboarding RGPD, écosystème.`;
 
 export const metadata = {
   title: META_TITLE,
@@ -143,7 +143,7 @@ const ROWS: Row[] = [
     category: "Catalogue & contenu",
     feature: "Nombre de modules disponibles (catalogue)",
     humanix: win(
-      "344 modules (58 saisons, dont 27 enquêtes interactives) + 30 articles librairie",
+      `${CATALOGUE_CHIFFRES.modules} modules (${CATALOGUE_CHIFFRES.saisons} saisons, dont ${CATALOGUE_CHIFFRES.enquetes} enquêtes interactives) + ${CATALOGUE_CHIFFRES.articles} articles librairie`,
     ),
     knowbe4: win("1 000+ modules"),
     cyberGuru: eq("300+ modules"),
@@ -155,7 +155,7 @@ const ROWS: Row[] = [
     category: "Catalogue & contenu",
     feature: "Catalogue gratuit (OSS, CC BY-SA 4.0)",
     humanix: win(
-      "5 saisons démo (CC BY-SA) + 30 articles, sans inscription pro",
+      `${CATALOGUE_CHIFFRES.saisonsDemo} saisons démo (CC BY-SA) + ${CATALOGUE_CHIFFRES.articlesDemo} articles, sans inscription pro`,
     ),
     knowbe4: loss("Non (essai 30 j, puis payant)"),
     cyberGuru: loss("Non"),
@@ -613,7 +613,7 @@ const ROWS: Row[] = [
     category: "Mode Enquêteur (formats interactifs)",
     feature: "Enquêtes ludiques à signaux (red flags + faux positifs)",
     humanix: win(
-      "27 enquêtes (3 gratuites + 24 premium) - email, SMS, LinkedIn, Facebook, photo bureau, piggyback parking, hotspot Wi-Fi",
+      `${CATALOGUE_CHIFFRES.enquetes + CATALOGUE_CHIFFRES.enquetesDemo} enquêtes (${CATALOGUE_CHIFFRES.enquetesDemo} gratuites + ${CATALOGUE_CHIFFRES.enquetes} premium) - email, SMS, LinkedIn, Facebook, photo bureau, piggyback parking, hotspot Wi-Fi`,
     ),
     knowbe4: loss("Non (modules linéaires)"),
     cyberGuru: loss("Non"),
@@ -1043,7 +1043,8 @@ export default function ComparatifPage() {
               <span>Note transparence : modules pédagogiques</span>
             </h2>
             <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed">
-              Notre catalogue affiche 344 modules. À ce jour,{" "}
+              Notre catalogue affiche {CATALOGUE_CHIFFRES.modules} modules. À ce
+              jour,{" "}
               <strong>
                 {expertCount} épisode{expertCount > 1 ? "s ont" : " a"} un
                 scénario détaillé rédigé par un expert
@@ -1052,10 +1053,10 @@ export default function ComparatifPage() {
               <Link href="/apprendre" className="text-accent-500 underline">
                 /apprendre
               </Link>
-              ). Les autres utilisent un fallback structuré (questions, quiz,
-              débrief générique). C'est la même mécanique que chez la plupart
-              des concurrents listés, mais la plupart ne le disent pas. Cible Q3
-              2026 : 30 modules expert sur les saisons critiques.
+              ).
+              {expertCount < CATALOGUE_CHIFFRES.modules
+                ? " Les autres utilisent un fallback structuré (questions, quiz, débrief générique), la même mécanique que chez la plupart des concurrents listés, qui ne le disent pas."
+                : " Aucun module ne repose sur un fallback générique."}
             </p>
           </div>
         </section>
