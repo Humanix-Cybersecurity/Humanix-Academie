@@ -409,6 +409,39 @@ export const SAISON_TAGS: Record<string, string[]> = {
     "physique",
     "vecteur:appel",
   ],
+  "mairie-services-techniques-eau": [
+    "famille:sectoriel",
+    "secteur:collectivites",
+    "service-public",
+    "ot",
+    "physique",
+    "prestataires",
+  ],
+  "mairie-enfance-ecoles-ccas": [
+    "famille:sectoriel",
+    "secteur:collectivites",
+    "service-public",
+    "donnees-sensibles",
+    "rgpd",
+    "mineurs",
+  ],
+  "mairie-police-municipale-videoprotection": [
+    "famille:sectoriel",
+    "secteur:collectivites",
+    "service-public",
+    "donnees-sensibles",
+    "ingenierie-sociale",
+    "mobile",
+  ],
+  "mairie-direction-intercommunalite": [
+    "famille:sectoriel",
+    "secteur:collectivites",
+    "service-public",
+    "crise",
+    "continuite",
+    "sauvegardes",
+    "gouvernance",
+  ],
 };
 
 /**
