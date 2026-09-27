@@ -11,10 +11,11 @@
 > traitement avec une précision qu'aucun client ne pourrait atteindre seul,
 > puisqu'elle vient du code.
 
-> **État : TRAME À COMPLÉTER ET À VALIDER.** Ce document décrit le traitement
-> tel que le code l'exécute réellement au 2026-08-14. Les sections marquées
-> **⬜ À TRANCHER** appellent une décision de la direction, et l'ensemble doit
-> être relu par un conseil juridique avant d'être opposable.
+> **État : analyse complétée le 2026-09-27, à faire relire par un conseil
+> juridique avant d'être opposable.** Ce document décrit le traitement tel que
+> le code l'exécute au 2026-09-27. Les points laissés ouverts le 2026-08-14
+> (libellé du verdict, classement, mesures du tableau des risques, validation)
+> sont tranchés ci-dessous et datés.
 >
 > Rédigé selon la méthode AIPD de la CNIL (contexte, principes fondamentaux,
 > risques, validation).
@@ -77,10 +78,14 @@ composantes pondérées `high` / `medium` / `low`, puis converti en verdict :
 
 ⚠️ **Deux points appellent une attention particulière.**
 
-Le libellé **« Vulnérable »** qualifie une personne, pas un comportement. En
+Le libellé **« Vulnérable »** qualifiait une personne, pas un comportement. En
 contexte de travail, cette formulation est difficile à défendre : elle décrit
 un état supposé de l'individu plutôt qu'un constat sur une action.
-**⬜ À TRANCHER** : reformuler, par exemple « Sensibilisation à renforcer ».
+**TRANCHÉ** : le verdict le plus bas est libellé « Sensibilisation à
+renforcer » (`RISK_VERDICT_LABEL`, `lib/risk-score.ts`), et la page
+d'administration « Utilisateurs vulnérables » est devenue « Collaborateurs à
+accompagner » le 2026-09-27, avec une description qui rappelle qu'elle n'est
+pas un outil d'évaluation.
 
 Le score est **pondéré par le métier** : `lib/risk-score.ts` ligne 202 indique
 qu'un collaborateur de « compta/finance » est _pénalisé plus_ qu'un profil
@@ -192,7 +197,13 @@ une mesure de minimisation délibérée.
 
 ### 2.3 Le classement nominatif
 
-**⬜ À TRANCHER — mais moins urgent qu'il n'y paraissait.**
+**TRANCHÉ le 2026-09-27 : l'option de retrait existe.** Chaque collaborateur
+peut se retirer du classement depuis son profil (`/profil/infos`, champ
+`User.showInLeaderboard`), et `lib/challenge.ts` exclut les comptes retirés
+du palmarès (`getChallengeIndividualRanking`). Le service reste affiché pour
+les participants ; c'est un choix produit assumé, documenté ici.
+
+Historique de la question, conservé pour la lecture du conseil :
 
 Rectification d'une première version de ce document, qui présentait ce point
 comme le plus exposé : **c'était inexact**. `/classement` n'ordonne pas sur le
@@ -238,18 +249,20 @@ conséquence — qui justifie l'AIPD, et non le palmarès.
 
 ## 3. Risques pour les personnes
 
-| Risque                                   | Impact                                   | Mesures existantes                                   | **⬜ À compléter**                               |
-| ---------------------------------------- | ---------------------------------------- | ---------------------------------------------------- | ------------------------------------------------ |
-| Accès illégitime au score                | Jugement sur une personne hors contexte  | Cloisonnement par tenant, rôles, journal d'audit     | Restreindre l'export au seul RSSI ?              |
-| Détournement de finalité par l'employeur | Usage en évaluation professionnelle      | Aucune                                               | Clause contractuelle d'interdiction dans les CGU |
-| Modification indue                       | Score faussé                             | `computeRiskScore()` en lecture seule (`dbReadOnly`) | —                                                |
-| Conservation excessive                   | Historique indéfini                      | `RiskScoreSnapshot`                                  | Fixer une durée                                  |
-| Stigmatisation par le classement         | Atteinte à la réputation entre collègues | Aucune                                               | Cf. §2.3                                         |
+| Risque                                   | Impact                                   | Mesures existantes                                                                                                                      | Décision (2026-09-27)                                                                                                                                                                  |
+| ---------------------------------------- | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Accès illégitime au score                | Jugement sur une personne hors contexte  | Cloisonnement par tenant, rôles, journal d'audit                                                                                        | Export réservé aux rôles ADMIN, RSSI, MANAGER, SUPERADMIN ; alerte `EXFILTRATION_SUSPECTED` au-delà d'un seuil. **Ouvert** : retirer MANAGER de l'export (décision produit, cf. § 2.4) |
+| Détournement de finalité par l'employeur | Usage en évaluation professionnelle      | CGV art. 9 (interdiction contractuelle, 2026-08-14) ; note d'information des collaborateurs (`/admin/conformite-rgpd/note-information`) | Fait                                                                                                                                                                                   |
+| Modification indue                       | Score faussé                             | `computeRiskScore()` en lecture seule (`dbReadOnly`)                                                                                    | —                                                                                                                                                                                      |
+| Conservation excessive                   | Historique indéfini                      | Aucun historique individuel (§ 1.6) ; score courant écrasé ; purge par tenant (`Tenant.dataRetentionDays`, cron quotidien)              | Fait                                                                                                                                                                                   |
+| Stigmatisation par le classement         | Atteinte à la réputation entre collègues | Retrait individuel du classement (`User.showInLeaderboard`)                                                                             | Fait (§ 2.3)                                                                                                                                                                           |
 
-Le **détournement de finalité** mérite d'être souligné : rien n'empêche
-aujourd'hui un employeur d'utiliser le score en entretien annuel. Une
-interdiction contractuelle explicite dans les CGU serait à la fois une mesure de
-protection et un argument commercial.
+Le **détournement de finalité** reste le risque principal, et il est traité
+par le contrat (CGV art. 9) et par l'information des collaborateurs, qui
+rend l'engagement opposable à l'employeur devant eux. Il n'est pas traité
+par la technique : aucun logiciel n'empêche un manager de lire un score en
+entretien. C'est pourquoi la question de l'export par les rôles MANAGER
+reste ouverte.
 
 ---
 
@@ -265,15 +278,13 @@ protection et un argument commercial.
 
 ## 5. Validation
 
-**⬜ À COMPLÉTER après arbitrage des points ci-dessus.**
-
-|                           |                              |
-| ------------------------- | ---------------------------- |
-| Responsable de traitement | Humanix-Cybersecurity (SASU) |
-| Rédacteur                 |                              |
-| Date de validation        |                              |
-| Avis du conseil juridique |                              |
-| Prochaine révision        |                              |
+|                           |                                                                                              |
+| ------------------------- | -------------------------------------------------------------------------------------------- |
+| Sous-traitant, rédacteur  | Humanix-Cybersecurity (SASU), analyse issue du code, complétée le 2026-09-27                 |
+| Responsable de traitement | Chaque client, qui instancie ce document pour sa propre AIPD                                 |
+| Date de validation        | En attente de la relecture par un conseil juridique                                          |
+| Avis du conseil juridique | À recueillir                                                                                 |
+| Prochaine révision        | Au premier seuil de la section 6, à tout changement du calcul, et au plus tard le 2027-03-31 |
 
 ## 6. Faut-il désigner un DPO ? — analyse motivée
 
@@ -313,9 +324,6 @@ devraient renvoyer à la présente analyse plutôt qu'énoncer une conclusion nu
 
 ---
 
-Rappel : Humanix-Cybersecurity n'a pas désigné de DPO, se jugeant hors du champ
-de l'article 37 du RGPD (cf. mentions légales). **⬜ À VÉRIFIER** : l'article
-37.1.b vise les organismes dont les activités de base impliquent un « suivi
-régulier et systématique à grande échelle » des personnes. Un produit dont la
-fonction est de noter en continu les collaborateurs de ses clients mérite que
-cette conclusion soit réexaminée et écrite, plutôt que supposée.
+Vérifié le 2026-09-27 : les mentions légales renvoient à la présente analyse
+au lieu d'énoncer une conclusion nue, et les seuils de réexamen ci-dessus
+sont les seuls déclencheurs. Au 2026-09-27, aucun n'est atteint.

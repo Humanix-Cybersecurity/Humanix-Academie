@@ -2,11 +2,13 @@
 
 # Trame AIPD - Veille d'exposition numérique des comptes salariés (Phase 2 B2B)
 
-> **STATUT : TRAME À FAIRE VALIDER.** Analyse d'Impact relative à la Protection
-> des Données. Ce document est une trame pré-remplie côté Humanix (sous-traitant)
-> que le client (responsable de traitement) instancie et fait valider par son
-> DPO / un juriste **avant toute activation** de la veille. Sans AIPD instanciée,
-> la veille B2B est en **NO-GO**.
+> **STATUT : trame complétée côté Humanix le 2026-09-27, à instancier par le
+> client.** Analyse d'Impact relative à la Protection des Données. Ce document
+> est pré-rempli par Humanix (sous-traitant) à partir du code ; le client
+> (responsable de traitement) l'instancie et le fait valider par son DPO ou un
+> juriste **avant toute activation** de la veille. Sans AIPD instanciée, la
+> veille B2B est en **NO-GO**. La notice d'information des salariés est servie
+> pré-remplie dans la console (`/admin/conformite-rgpd/note-information`).
 >
 > Aligné sur la méthode CNIL (PIA). Le générateur AIPD existant de l'Académie
 > (`/admin/conformite-rgpd/aipd`) peut servir de point de départ instanciable par tenant.
@@ -48,7 +50,7 @@
 
 ## 4. Sous-traitance et flux
 
-- **Humanix = sous-traitant** : DPA art. 28 signé avant activation, listant les sous-traitants ultérieurs éventuels (aucun hors UE).
+- **Humanix = sous-traitant** : DPA art. 28 signé avant activation (`Tenant.exposureMonitoringDpaSignedAt`, sans quoi la veille est inerte), listant les sous-traitants ultérieurs : Scaleway (hébergement) et Scaleway TEM (notification par courriel). Aucun modèle d'IA n'intervient dans ce traitement (`lib/exposure/*` n'appelle pas Mistral).
 - **Pas de sous-traitant US** pour la donnée sensible. (Le check _password_ du tier gratuit utilise le k-anonymat HIBP - aucune donnée personnelle n'y circule, et il est **hors périmètre de cette AIPD B2B**.)
 
 ## 5. Analyse des risques

@@ -112,13 +112,22 @@ droit d'opposition motivé pendant ce délai.
 **Sous-traitants ultérieurs — ils traitent les données des collaborateurs du
 Client :**
 
-| Sous-traitant | Localisation   | Rôle                                                |
-| ------------- | -------------- | --------------------------------------------------- |
-| Scaleway SAS  | France         | Hébergement, sauvegardes, infrastructure            |
-| Scaleway TEM  | France (Paris) | Envois transactionnels (lien de connexion, alertes) |
+| Sous-traitant  | Localisation   | Rôle                                                                                                                                                                                                     |
+| -------------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Scaleway SAS   | France         | Hébergement, sauvegardes, infrastructure                                                                                                                                                                 |
+| Scaleway TEM   | France (Paris) | Envois transactionnels (lien de connexion, alertes)                                                                                                                                                      |
+| Mistral AI SAS | France (Paris) | Modèle de langage de l'assistant Hex, des synthèses de quiz et des scénarios d'exercice : reçoit la question saisie et le contexte pédagogique après filtrage anti-PII, aucune conservation des échanges |
 
 **Aucun transfert hors Union européenne** n'a lieu dans le cadre de ces
-traitements. Scaleway est un opérateur de droit français.
+traitements. Scaleway et Mistral AI sont des sociétés de droit français.
+
+**Cas d'un revendeur.** Lorsque l'espace du Client est administré par un
+revendeur agréé (CGV, art. 15), le revendeur est le sous-traitant du Client
+et Humanix-Cybersecurity son sous-traitant ultérieur : le présent accord est
+alors signé entre Humanix-Cybersecurity et le revendeur, et le revendeur
+conclut avec le Client un accord de traitement qui reprend les mêmes
+obligations et mentionne Humanix-Cybersecurity et les sous-traitants
+ultérieurs ci-dessus.
 
 ⚠️ **Ne sont PAS des sous-traitants ultérieurs**, contrairement à ce que
 suggérait une rédaction antérieure des CGV : Mollie, Qonto, Dougs et Hiscox.
