@@ -252,7 +252,11 @@ describe("customer Mollie", () => {
   // de ses prelevements en cours.
   it("N'ECRASE PAS un customer deja enregistre", async () => {
     await appeler(requete({ plan: "pro", seats: 16 }));
-    expect(mockDb.tenant.update).not.toHaveBeenCalled();
+    expect(mockDb.tenant.update).not.toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ paymentCustomerId: expect.anything() }),
+      }),
+    );
   });
 });
 

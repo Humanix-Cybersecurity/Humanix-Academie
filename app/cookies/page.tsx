@@ -6,14 +6,13 @@ import LegalLayout, {
   LegalTable,
   LegalHighlight,
 } from "@/components/legal/LegalLayout";
+import { DOCUMENTS_LEGAUX } from "@/lib/legal/versions";
 import ConsentControl from "@/components/ConsentControl";
 
 export const metadata = {
   title: "Politique de cookies - Humanix-Cybersecurity",
   description: "Quels cookies utilisons-nous, pourquoi, comment les refuser.",
 };
-
-const TODAY = new Date().toLocaleDateString("fr-FR");
 
 const TOC = [
   { id: "definition", label: "1. Qu'est-ce qu'un cookie ?" },
@@ -30,7 +29,7 @@ export default function CookiesPage() {
       badge="CNIL · e-Privacy"
       title="Politique de cookies"
       subtitle="Pas de tracking publicitaire. Pas de pixel tiers. Juste les cookies techniques pour faire fonctionner le service."
-      lastUpdate={TODAY}
+      lastUpdate={DOCUMENTS_LEGAUX.cookies.date}
       toc={TOC}
     >
       <LegalSection id="definition" num="1" title="Qu'est-ce qu'un cookie ?">

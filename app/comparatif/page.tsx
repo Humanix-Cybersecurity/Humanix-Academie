@@ -578,7 +578,9 @@ const ROWS: Row[] = [
   {
     category: "Écosystème",
     feature: "Certification Qualiopi (financement OPCO)",
-    humanix: eq("Sur demande contrats > 50 users"),
+    humanix: loss(
+      "Non : sensibilisation en SaaS, hors formation professionnelle",
+    ),
     knowbe4: loss("Non"),
     cyberGuru: eq("Partenaire OF (ex-Mantra)"),
     hoxhunt: loss("Non"),

@@ -43,6 +43,11 @@ model Tenant {
   // (Payplug : "cus_xxx", Stripe : "cus_xxx", interchangeables coté schema).
   paymentCustomerId     String?   @unique
   paymentSubscriptionId String?   @unique
+  // Version des CGV acceptee a la souscription et date (preuve de la
+  // formation du contrat, cf. lib/legal/versions.ts). Null pour un espace
+  // ouvert par le superadmin ou un revendeur : le contrat est signe a part.
+  cgvVersion            String?
+  cgvAcceptedAt         DateTime?
   // Statut normalise : active, past_due, canceled, incomplete, unpaid.
   // ("trialing" est un statut legacy retire en mai 2026 mais encore tolere
   // par le state machine pour les anciens tenants - cf. lib/subscription-state.ts).
@@ -444,6 +449,11 @@ model User {
   mood              String    @default("neutral")
   shareCount        Int       @default(0) // Nombre d'articles partages (badge ambassadeur)
   lastSeenAt        DateTime?
+  // Version des CGU acceptee a l'inscription et date d'acceptation (preuve
+  // du consentement, cf. lib/legal/versions.ts). Null pour les comptes crees
+  // par invitation ou provisionnement.
+  cguVersion        String?
+  cguAcceptedAt     DateTime?
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 

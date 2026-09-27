@@ -121,9 +121,16 @@ const TARGETS: Target[] = [
   },
   {
     href: "/admin/users/at-risk",
-    label: "Utilisateurs vulnérables",
+    label: "Collaborateurs à accompagner",
     hint: "/admin/users/at-risk",
-    keywords: ["risk", "risque", "alertes", "rouge"],
+    keywords: [
+      "risk",
+      "risque",
+      "alertes",
+      "rouge",
+      "vulnérables",
+      "accompagner",
+    ],
     icon: "⚠️",
     group: "Equipe",
   },

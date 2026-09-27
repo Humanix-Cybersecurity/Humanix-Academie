@@ -18,6 +18,7 @@
 // le plan -- l'action est gardée server-side dans actions.ts.
 
 import Link from "next/link";
+import { CGV_VERSION } from "@/lib/legal/versions";
 import { auth } from "@/lib/auth";
 import { getSubscriptionState } from "@/lib/subscription-state";
 import { getSeatUsage, formatSeatUsage } from "@/lib/seats";
@@ -180,6 +181,19 @@ export default async function BillingPage() {
           >
             Faire évoluer ton plan
           </h2>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            En cliquant sur « Souscrire », vous acceptez les{" "}
+            <a
+              href="/cgv"
+              target="_blank"
+              rel="noreferrer"
+              className="underline"
+            >
+              CGV
+            </a>{" "}
+            (v{CGV_VERSION}) et l&apos;accord de traitement des données qui en
+            fait partie.
+          </p>
           <p className="text-sm text-gray-600 dark:text-gray-300">
             Tu peux changer de palier à tout moment. Le checkout Mollie calcule
             le prorata, et ton accès passe au plan supérieur dès confirmation du

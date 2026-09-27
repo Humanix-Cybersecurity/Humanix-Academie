@@ -14,6 +14,7 @@ import {
   createCheckoutSession,
 } from "@/lib/mollie";
 import { isPlanId } from "@/lib/plans";
+import { CGV_VERSION } from "@/lib/legal/versions";
 
 export async function POST(req: Request) {
   if (!isMollieConfigured()) {
@@ -67,6 +68,17 @@ export async function POST(req: Request) {
   const tenant = await db.tenant.findUnique({ where: { id: tenantId } });
   if (!tenant) {
     return NextResponse.json({ error: "Tenant introuvable." }, { status: 404 });
+  }
+  // Preuve de la formation du contrat : cliquer « Souscrire » vaut acceptation
+  // des CGV dans leur version courante (cf. lib/legal/versions.ts). Best-effort,
+  // un echec ici ne doit pas empecher le paiement.
+  try {
+    await db.tenant.update({
+      where: { id: tenantId },
+      data: { cgvVersion: CGV_VERSION, cgvAcceptedAt: new Date() },
+    });
+  } catch {
+    // journalise par Prisma ; la commande continue
   }
 
   const effectiveSeats =

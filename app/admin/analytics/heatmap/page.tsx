@@ -112,7 +112,7 @@ export default async function AdminHeatmapPage() {
             className="rounded-lg border-2 border-gray-200 dark:border-slate-700 hover:border-accent-500 transition p-4 group"
           >
             <p className="font-bold text-gray-900 dark:text-gray-100 mb-1 group-hover:text-accent-600">
-              ⚠️ Voir les utilisateurs vulnérables
+              ⚠️ Voir les collaborateurs à accompagner
             </p>
             <p className="text-xs text-gray-500 dark:text-gray-400">
               Drill-down sur les collaborateurs à score bas ou inactifs, avec

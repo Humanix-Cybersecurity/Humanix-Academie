@@ -5,6 +5,7 @@ import LegalLayout, {
   LegalSection,
   LegalHighlight,
 } from "@/components/legal/LegalLayout";
+import { DOCUMENTS_LEGAUX } from "@/lib/legal/versions";
 
 export const metadata = {
   title: "Mentions légales - Humanix-Cybersecurity",
@@ -12,8 +13,6 @@ export const metadata = {
     "Informations légales relatives à l'éditeur du site et de la plateforme Humanix Académie.",
   alternates: { canonical: "/mentions-legales" },
 };
-
-const TODAY = new Date().toLocaleDateString("fr-FR");
 
 const TOC = [
   { id: "editeur", label: "1. Éditeur du site" },
@@ -33,7 +32,7 @@ export default function MentionsLegalesPage() {
       badge="LCEN art. 6-III-1"
       title="Mentions légales"
       subtitle="Informations légales relatives à l'éditeur du site humanix-cybersecurity.fr et de la plateforme Humanix Académie."
-      lastUpdate={TODAY}
+      lastUpdate={DOCUMENTS_LEGAUX.mentionsLegales.date}
       toc={TOC}
     >
       <LegalSection id="editeur" num="1" title="Éditeur du site">

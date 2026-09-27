@@ -10,6 +10,7 @@ import LegalLayout, {
   LegalHighlight,
   LegalTable,
 } from "@/components/legal/LegalLayout";
+import { DOCUMENTS_LEGAUX } from "@/lib/legal/versions";
 
 export const metadata = {
   title: "Accessibilité - Déclaration RGAA - Humanix Académie",
@@ -17,8 +18,6 @@ export const metadata = {
     "Déclaration d'accessibilité de la plateforme Humanix Académie : conformité partielle au RGAA 4.1 (~91 %). Engagement, état de conformité, signalement.",
   alternates: { canonical: "/accessibilite" },
 };
-
-const TODAY = new Date().toLocaleDateString("fr-FR");
 
 const TOC = [
   { id: "reglages", label: "Réglages d'accessibilité" },
@@ -38,8 +37,8 @@ export default function AccessibilitePage() {
       badge="RGAA 4.1 · conformité partielle ~91 %"
       title="Déclaration d'accessibilité"
       subtitle="La cybersécurité ne devrait exclure personne. Voici notre état de conformité, en transparence."
-      version="1.1"
-      lastUpdate={TODAY}
+      version={DOCUMENTS_LEGAUX.accessibilite.version}
+      lastUpdate={DOCUMENTS_LEGAUX.accessibilite.date}
       toc={TOC}
     >
       {/* Réglages directs en haut, accessibles immédiatement */}
@@ -86,9 +85,9 @@ export default function AccessibilitePage() {
         <LegalHighlight variant="success">
           <strong>Humanix Académie est en conformité partielle</strong> avec le
           RGAA 4.1 niveau AA - <strong>environ 91 %</strong> au regard du
-          référentiel, à la date du {TODAY} (v1.1, post-correctifs). Audit
-          externe par un cabinet certifié RGAA planifié pour atteindre 95 %+ et
-          obtenir une déclaration formelle.
+          référentiel, à la date du {DOCUMENTS_LEGAUX.accessibilite.date} (v1.1,
+          post-correctifs). Audit externe par un cabinet certifié RGAA planifié
+          pour atteindre 95 %+ et obtenir une déclaration formelle.
         </LegalHighlight>
 
         <LegalHighlight variant="info">
@@ -147,8 +146,9 @@ export default function AccessibilitePage() {
 
       <LegalSection id="resultats" num="3" title="Résultats des tests">
         <p>
-          Synthèse des points de contrôle évalués au {TODAY} sur les 13
-          thématiques du RGAA 4.1 :
+          Synthèse des points de contrôle évalués au{" "}
+          {DOCUMENTS_LEGAUX.accessibilite.date} sur les 13 thématiques du RGAA
+          4.1 :
         </p>
         <LegalTable
           headers={["Thématique RGAA", "Score", "État"]}
@@ -483,9 +483,10 @@ export default function AccessibilitePage() {
           </li>
         </ul>
         <LegalHighlight variant="info">
-          Cette déclaration d'accessibilité a été établie le {TODAY}. Elle sera
-          mise à jour à chaque modification substantielle de la plateforme et au
-          minimum tous les 12 mois.
+          Cette déclaration d'accessibilité a été établie le{" "}
+          {DOCUMENTS_LEGAUX.accessibilite.date}. Elle sera mise à jour à chaque
+          modification substantielle de la plateforme et au minimum tous les 12
+          mois.
         </LegalHighlight>
       </LegalSection>
     </LegalLayout>

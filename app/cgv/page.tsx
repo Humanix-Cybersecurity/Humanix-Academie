@@ -7,14 +7,13 @@ import LegalLayout, {
   LegalSubsection,
   LegalHighlight,
 } from "@/components/legal/LegalLayout";
+import { DOCUMENTS_LEGAUX } from "@/lib/legal/versions";
 
 export const metadata = {
   title: "CGV - Conditions Générales de Vente - Humanix-Cybersecurity",
   description:
     "CGV B2B applicables aux prestations Humanix-Cybersecurity (SaaS, formation, audit).",
 };
-
-const TODAY = new Date().toLocaleDateString("fr-FR");
 
 const TOC = [
   { id: "objet", label: "1. Objet et identification" },
@@ -31,9 +30,10 @@ const TOC = [
   { id: "formation", label: "12. Formation" },
   { id: "soustraitance", label: "13. Sous-traitance" },
   { id: "confidentialite", label: "14. Confidentialité" },
-  { id: "reference", label: "15. Référencement" },
-  { id: "droit", label: "16. Loi applicable" },
-  { id: "modifications", label: "17. Modifications" },
+  { id: "revente", label: "15. Revendeurs et marque blanche" },
+  { id: "reference", label: "16. Référencement" },
+  { id: "droit", label: "17. Loi applicable" },
+  { id: "modifications", label: "18. Modifications" },
 ];
 
 export default function CGVPage() {
@@ -42,8 +42,8 @@ export default function CGVPage() {
       badge="CGV B2B · v1.0"
       title="Conditions Générales de Vente"
       subtitle="Conditions applicables aux relations commerciales B2B avec Humanix-Cybersecurity. Couvrent SaaS Humanix Académie, formation professionnelle, audits et conseils en cybersécurité."
-      version="1.0"
-      lastUpdate={TODAY}
+      version={DOCUMENTS_LEGAUX.cgv.version}
+      lastUpdate={DOCUMENTS_LEGAUX.cgv.date}
       toc={TOC}
     >
       <LegalHighlight variant="warning">
@@ -368,10 +368,13 @@ export default function CGVPage() {
         </LegalHighlight>
         <LegalHighlight variant="info">
           Un <strong>contrat de sous-traitance (DPA)</strong> conforme au RGPD
-          art. 28 et aux Clauses Contractuelles Types de la Commission
-          européenne (décision 2021/914) est transmis au Client avant toute mise
-          en service de la plateforme. Sans DPA signé, la prestation SaaS ne
-          peut être activée. Un modèle peut être obtenu sur demande à{" "}
+          art. 28 et aux clauses contractuelles types de la Commission
+          européenne entre responsables et sous-traitants (décision
+          d&apos;exécution (UE) 2021/915) fait partie du contrat. Pour les
+          offres souscrites en ligne, il est accepté avec les présentes CGV lors
+          de la commande ; pour les contrats Enterprise et les revendeurs, il
+          est signé avant la mise en service. Son texte peut être obtenu à tout
+          moment à{" "}
           <a href="mailto:contact@humanix-cybersecurity.fr">
             contact@humanix-cybersecurity.fr
           </a>
@@ -545,6 +548,14 @@ export default function CGVPage() {
             transactionnels (lien magique de connexion, alertes système,
             newsletter Cyber-Anecdote du Lundi) ;
           </li>
+          <li>
+            <strong>Mistral AI SAS</strong> (France 🇫🇷, Paris) - génération des
+            réponses de l&apos;assistant Hex, des synthèses de quiz et des
+            scénarios d&apos;exercice. Reçoit la question saisie par
+            l&apos;apprenant et le contexte pédagogique, jamais son nom, son
+            adresse ni son identifiant (filtre anti-PII avant envoi) ; aucune
+            conservation des échanges chez le prestataire ;
+          </li>
         </ul>
         <p>
           <strong>
@@ -604,8 +615,60 @@ export default function CGVPage() {
       </LegalSection>
 
       <LegalSection
-        id="reference"
+        id="revente"
         num="Article 15"
+        title="Revendeurs et marque blanche"
+      >
+        <p>
+          Un Client titulaire d&apos;un contrat Enterprise peut, avec
+          l&apos;accord écrit de Humanix-Cybersecurity et dans le cadre
+          d&apos;un <strong>contrat de revente distinct</strong>, distribuer la
+          plateforme à ses propres clients (mode revendeur), le cas échéant sous
+          sa propre marque (marque blanche). Sans contrat de revente signé, la
+          revente, la sous-licence ou la mise à disposition de la plateforme à
+          des tiers est interdite.
+        </p>
+        <p>Le contrat de revente précise au minimum :</p>
+        <ul>
+          <li>
+            le territoire, la grille tarifaire applicable au revendeur et le
+            préavis de modification de cette grille ;
+          </li>
+          <li>
+            la répartition du support : premier niveau assuré par le revendeur
+            auprès de ses clients, second niveau par Humanix-Cybersecurity ;
+          </li>
+          <li>
+            l&apos;usage des marques et la conservation des mentions légales, de
+            la licence AGPLv3 du code et des présentes CGV ;
+          </li>
+          <li>
+            la chaîne de sous-traitance des données personnelles : chaque client
+            final reste <strong>responsable de traitement</strong>, le revendeur
+            agit comme <strong>sous-traitant</strong> pour les espaces
+            qu&apos;il administre et Humanix-Cybersecurity comme{" "}
+            <strong>sous-traitant ultérieur</strong> (RGPD, art. 28.4). Le
+            revendeur s&apos;engage à conclure avec chaque client final un
+            accord de traitement qui mentionne Humanix-Cybersecurity et reprend
+            les obligations du DPA ;
+          </li>
+          <li>
+            la réversibilité : à la fin du contrat, les espaces des clients
+            finaux sont transférés à Humanix-Cybersecurity ou à un autre
+            revendeur, ou exportés, sans interruption de service pour les
+            clients finaux.
+          </li>
+        </ul>
+        <p>
+          Le revendeur reste seul responsable de ses engagements envers ses
+          clients, de leur facturation et des informations qu&apos;il leur
+          communique sur la plateforme.
+        </p>
+      </LegalSection>
+
+      <LegalSection
+        id="reference"
+        num="Article 16"
         title="Référencement commercial"
       >
         <p>
@@ -619,7 +682,7 @@ export default function CGVPage() {
 
       <LegalSection
         id="droit"
-        num="Article 16"
+        num="Article 17"
         title="Loi applicable et juridiction"
       >
         <p>
@@ -632,7 +695,7 @@ export default function CGVPage() {
 
       <LegalSection
         id="modifications"
-        num="Article 17"
+        num="Article 18"
         title="Modifications des CGV"
       >
         <p>

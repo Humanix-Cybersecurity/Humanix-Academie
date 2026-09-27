@@ -529,6 +529,11 @@ export default function SecuritePage() {
                   loc="France 🇫🇷 (Paris)"
                 />
                 <SubcontractorRow
+                  name="Mistral AI SAS"
+                  role="Modèle de langage de l'assistant Hex, des synthèses de quiz et des scénarios d'exercice (question et contexte pédagogique, filtre anti-PII, aucune conservation)"
+                  loc="France 🇫🇷 (Paris)"
+                />
+                <SubcontractorRow
                   name="Mollie B.V."
                   role="Prestataire de paiement (PCI-DSS niveau 1, tokenisation CB, régulé DNB, PSD2 UE)"
                   loc="UE 🇪🇺 (Amsterdam, Pays-Bas)"

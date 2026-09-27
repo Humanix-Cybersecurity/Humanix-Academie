@@ -2,7 +2,7 @@
 //
 // /admin/users/at-risk
 //
-// Page RSSI : liste les utilisateurs vulnerables (riskScore bas et/ou
+// Page RSSI : liste les collaborateurs a accompagner (riskScore bas et/ou
 // inactifs) pour permettre une action ciblee :
 //   - Export CSV (rapport COMEX, suivi DPO)
 //   - Envoi rappel email a une selection
@@ -65,8 +65,8 @@ export default async function AdminUsersAtRiskPage({
   return (
     <div className="space-y-6">
       <AdminPageHeader
-        title="Utilisateurs vulnérables"
-        description="Liste actionnable des collaborateurs avec un score de risque bas et/ou inactifs. Le lundi matin du RSSI."
+        title="Collaborateurs à accompagner"
+        description="Liste actionnable des collaborateurs dont la sensibilisation est à renforcer (score bas et/ou inactivité). Jamais un outil d'évaluation : le lundi matin du RSSI, pas celui des RH."
         icon="⚠️"
       />
 

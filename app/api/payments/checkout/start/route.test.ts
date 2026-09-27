@@ -54,6 +54,7 @@ function corpsValide(surcharge: Record<string, unknown> = {}) {
     seats: 16,
     email: "contact@braver.test",
     organization: "Braver inc.",
+    cgvAccepted: true,
     adresse: "12 rue des Lilas",
     codePostal: "75011",
     ville: "Paris",
@@ -133,6 +134,7 @@ describe("ce qui est refuse a l'entree", () => {
     ["organisation trop courte", { organization: "B" }],
     ["organisation demesuree", { organization: "B".repeat(121) }],
     ["plan inconnu", { plan: "platine" }],
+    ["CGV non acceptées", { cgvAccepted: false }],
   ])("refuse : %s", async (_titre, surcharge) => {
     const r = await POST(requete(corpsValide(surcharge)));
     expect(r.status).toBe(400);

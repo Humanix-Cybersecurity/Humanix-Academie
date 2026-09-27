@@ -23,6 +23,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Role } from "@prisma/client";
 import { db } from "@/lib/db";
+import { CGU_VERSION } from "@/lib/legal/versions";
 import { hashPassword, validatePasswordPolicy } from "@/lib/password";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { hashIp } from "@/lib/password-reset";
@@ -289,8 +290,12 @@ export async function createStarterAccount(
     action: AuditActions.CONSENT_GIVEN,
     actor: { userId: created.user.id, email, role: "ADMIN" },
     tenantId: created.tenant.id,
-    message: "CGU + politique de confidentialite acceptees au signup",
+    message: `CGU v${CGU_VERSION} + politique de confidentialite acceptees au signup`,
     ip,
+  });
+  await db.user.update({
+    where: { id: created.user.id },
+    data: { cguVersion: CGU_VERSION, cguAcceptedAt: new Date() },
   });
 
   // ----------------------------
