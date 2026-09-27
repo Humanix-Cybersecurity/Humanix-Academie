@@ -52,9 +52,12 @@ guidée pour notifier la CNIL en 72h conformément à l'article 33.
 
 ### Sous-traitants (article 28)
 
-Statut au démarrage : **aucun sous-traitant tiers** activé. Les modules
-ci-dessous sont disponibles dans le code mais désactivés tant que les
-variables d'env correspondantes ne sont pas posées.
+Statut au 2026-09-27 sur le SaaS : Scaleway (hébergement), Scaleway TEM
+(emails), Mollie (paiement) et Mistral AI (IA) sont actifs ; les providers
+SMS et SIP restent à la charge du client. En self-host, chaque module est
+inerte tant que sa variable d'environnement n'est pas posée. La liste
+publique est tenue sur `/confidentialite`, `/securite`, dans les CGV
+(art. 13) et dans le DPA (§ 5) : les quatre doivent dire la même chose.
 
 | Sous-traitant                                              | Localisation                                              | Données traitées                                                   | Statut                                                |
 | ---------------------------------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------------ | ----------------------------------------------------- |
@@ -95,7 +98,7 @@ Les trois modules suivent la même éthique pédagogique (cf. section 1, art. 32
 
 **Important** : la sortie HTML du générateur Mistral est sanitizée via DOMPurify (parseur HTML5, audit Cure53, OWASP recommandé) avant tout rendu - whitelist stricte de balises sûres, blocage `javascript:` / `data:`. Cf. `lib/ai/mistral.ts:sanitizeHtml`.
 
-**Cadre éthique RGPD/Code pénal art. 323** : tests pédagogiques jamais disciplinaires, annonce préalable obligatoire (charte, CSE), seuls chiffres agrégés exploités. Cf. bandeau légal sur chaque page admin.
+**Cadre éthique RGPD/Code pénal art. 323** : tests pédagogiques jamais disciplinaires (CGV art. 9), annonce préalable obligatoire (Code du travail L1222-4, CSE L2312-38), seuls chiffres agrégés exploités. Bandeau `LegalNotice` sur chaque page admin (variantes phishing, vishing, smishing, exposition ; le quishing a son propre encart), et modèle de note d'information des collaborateurs dans `/admin/conformite-rgpd/note-information` (source : `docs/modeles/note-information-collaborateurs-simulations.md`).
 
 ## 3. ANSSI - recommandations
 
@@ -139,6 +142,45 @@ Les trois modules suivent la même éthique pédagogique (cf. section 1, art. 32
 - [ ] DPO désigné si > 250 employés ou traitement à grande échelle
 - [ ] Politique de confidentialité publique à jour (`/confidentialite`)
 - [ ] Page Cookies (`/cookies`) à jour si tracking ajouté
+
+## 7. Règlement IA (UE 2024/1689)
+
+Applicable depuis le 2 août 2026 pour la transparence (article 50).
+
+| Fonction                                                        | Qualification                                                                                                      | Obligation et mise en œuvre                                                                                                                                                               |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Hex (`AskHexExplain`, `HexRecap`, `HexChat`), scénarios générés | Déploiement d'un modèle à usage général (Mistral) : système d'IA interagissant avec des personnes                  | Art. 50.1 : l'utilisateur est informé qu'il interagit avec une IA. Mention sous chaque réponse depuis le 2026-09-27, CGU 10 bis, sous-traitant listé sur `/confidentialite`               |
+| Voix de synthèse du vishing (Voxtral ou Piper)                  | Contenu audio généré artificiellement (art. 50.2 et 50.4)                                                          | La voix n'imite aucune personne réelle ; le bandeau `LegalNotice` (variante vishing) et le générateur exigent que le débrief remis au collaborateur dise que la voix était artificielle   |
+| Score de risque (`lib/risk-score.ts`), score d'exposition       | Règles déterministes, sans apprentissage : pas un « système d'IA » au sens de l'art. 3.1, donc hors annexe III 4.b | À préserver : introduire un modèle appris dans le calcul d'un score individuel de collaborateur ferait basculer le traitement en haut risque et impose un réexamen avant tout déploiement |
+
+Art. 4 (maîtrise de l'IA) : les personnes qui exploitent ces fonctions chez
+Humanix sont formées par construction (produit de sensibilisation) ; les
+clients disposent de la saison « IA générative » et de la page Maturité IA.
+
+## 8. Revendeurs : chaîne de sous-traitance
+
+Depuis le 2026-09-25, un espace revendeur peut administrer des espaces
+clients (`Tenant.isReseller`, `parentTenantId`, `/admin/revendeur`).
+Qualification retenue (CGV art. 15, `docs/CONTRAT-REVENTE-MODELE.md`) :
+
+- le client final reste **responsable de traitement** ;
+- le revendeur, qui administre l'espace, est **sous-traitant** du client
+  final et signe avec lui un accord de traitement qui mentionne Humanix ;
+- Humanix est **sous-traitant ultérieur** (art. 28.4), lié au revendeur par
+  le DPA (`docs/DPA-MODELE.md`, annexe 2 du contrat de revente).
+
+Aucun espace client ne doit être ouvert sous un revendeur sans contrat de
+revente signé.
+
+## 9. Documents légaux : versions et preuve d'acceptation
+
+- `lib/legal/versions.ts` porte la version et la date fixe de chaque page
+  légale (CGU, CGV, confidentialité, mentions, cookies, accessibilité). Les
+  pages n'affichent plus la date du jour.
+- À l'inscription, `User.cguVersion` et `User.cguAcceptedAt` enregistrent
+  la version acceptée ; l'`AuditLog` `CONSENT_GIVEN` la mentionne aussi.
+- Changer le fond d'un document = changer sa version et sa date, et notifier
+  les clients en cours pour les CGV (art. 18, préavis de 30 jours).
 
 ## Contacts
 

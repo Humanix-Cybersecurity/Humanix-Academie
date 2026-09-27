@@ -8,7 +8,9 @@
 > la veille. Sans cette notice diffusée aux salariés, la veille B2B est en
 > **NO-GO** (cf. `roadmap.md` § Go/No-Go Phase 2).
 >
-> Les passages entre `«…»` et `[…]` sont à compléter par l'employeur.
+> Les passages entre `«…»` et `[…]` sont à compléter par l'employeur. La même
+> notice, pré-remplie avec le nom de l'organisation, est servie dans la console :
+> `/admin/conformite-rgpd/note-information`.
 
 ---
 
