@@ -207,6 +207,8 @@ model Tenant {
   // Pas de `factures Facture[]` : la facture ne porte pas de cle etrangere
   // vers le tenant, pour survivre a sa suppression (voir le modele Facture).
   identiteFacturation IdentiteFacturation?
+  // Regles de securite numerique adoptees (deliberation), cf. lib/regles-organisation.
+  regles              ReglesOrganisation?
 
   @@index([parentTenantId])
 }
@@ -487,6 +489,7 @@ model User {
   tenantMembershipsGrantedByMe TenantMembership[]           @relation("TenantMembershipsGrantedBy")
   etapesApprentissageDpo       EtapeApprentissageDpo[]
   threatTriggerRecipients      ThreatTriggerRecipient[]
+  lecturesRegles               LectureRegles[]
 
   @@index([tenantId])
   @@index([isActive])
@@ -3142,4 +3145,56 @@ model ThreatTriggerRecipient {
 
   @@unique([triggerId, userId])
   @@index([userId, createdAt])
+}
+
+// ---------------------------------------------------------------------------
+// Regles de securite numerique de l'organisation (2026-09-30)
+//
+// Pour une commune : la deliberation du conseil municipal qui adopte les cinq
+// regles (aucun ordre de paiement par telephone, meme du maire ; canal detenu ;
+// un compte par personne ; le droit de refuser ; on declare). Le texte des
+// regles vit dans le code (lib/regles-organisation/regles.ts, versionne) ;
+// la base ne porte que l'etat d'adoption et les attestations de lecture.
+// Modeles additifs, sans enum : compatibles avec la bascule bleu/vert.
+// ---------------------------------------------------------------------------
+
+model ReglesOrganisation {
+  id                 String          @id @default(cuid())
+  tenantId           String          @unique
+  tenant             Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  /**
+   * commune | intercommunalite | entreprise : change le vocabulaire de l'acte.
+   */
+  typeOrganisation   String          @default("commune")
+  nomOrganisation    String
+  nomSignataire      String?
+  fonctionSignataire String?
+  /**
+   * Numero de la deliberation ou de la decision, libre.
+   */
+  referenceActe      String?
+  dateSeance         DateTime?
+  /**
+   * Null tant que l'organe deliberant n'a pas adopte les regles.
+   */
+  adopteeLe          DateTime?
+  versionRegles      Int             @default(1)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  lectures           LectureRegles[]
+}
+
+/// Attestation de lecture des regles par une personne, une par version.
+model LectureRegles {
+  id            String             @id @default(cuid())
+  tenantId      String
+  userId        String
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reglesId      String
+  regles        ReglesOrganisation @relation(fields: [reglesId], references: [id], onDelete: Cascade)
+  versionRegles Int
+  lueLe         DateTime           @default(now())
+
+  @@unique([userId, versionRegles])
+  @@index([tenantId])
 }

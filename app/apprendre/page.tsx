@@ -49,6 +49,8 @@ import SaisonsAccordion, {
 } from "@/components/learner/SaisonsAccordion";
 import LearnerEmptyState from "@/components/learner/LearnerEmptyState";
 import JoinExerciseCard from "@/components/learner/JoinExerciseCard";
+import ReglesCard from "@/components/learner/ReglesCard";
+import { etatPourApprenant } from "@/lib/regles-organisation/etat";
 import { SAISON_PALETTES } from "@/components/learner/palettes";
 import {
   PREMIUM_SAISONS_PREVIEW,
@@ -117,6 +119,9 @@ export default async function ApprendrePage() {
   const userGroupSlugs = new Set(userGroups.map((ug) => ug.group.slug));
 
   const activeChallenge = await getActiveChallenge(tenantId);
+  // Regles de l'organisation : la carte n'apparait que si elles sont
+  // adoptees et pas encore attestees par cette personne.
+  const regles = await etatPourApprenant(tenantId, userId);
 
   // Persona pedagogique infere : sert a prioriser les saisons sur la page
   // (un developpeur voit "cyber-dev" en haut, un finance voit
@@ -429,6 +434,13 @@ export default async function ApprendrePage() {
       />
 
       <div className="max-w-5xl mx-auto px-4 py-8 sm:py-10 space-y-8">
+        {regles.adoptee && !regles.lueLe && regles.adopteeLe && (
+          <ReglesCard
+            nomOrganisation={regles.nomOrganisation}
+            adopteeLe={regles.adopteeLe}
+          />
+        )}
+
         {/* Ton prochain pas - UN seul appel a l'action, mis en valeur.
             C'est la seule chose qui compte si tu viens sur cette page
             pour APPRENDRE plutot que pour CONSULTER ton tableau de bord. */}
