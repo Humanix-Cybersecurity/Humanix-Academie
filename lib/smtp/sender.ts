@@ -11,7 +11,7 @@
 // { ok: false, reason: "smtp_not_configured" } et le caller doit afficher
 // un CTA vers /admin/parametres/smtp ou /demande-abonnement (forfait).
 
-import nodemailer from "nodemailer";
+import nodemailer, { type Transporter } from "nodemailer";
 import { db } from "@/lib/db";
 import { decryptSmtpPassword } from "./encryption";
 
@@ -56,7 +56,7 @@ async function loadTenantSmtp(tenantId: string): Promise<TenantSmtpRow | null> {
   return cfg;
 }
 
-function buildTransport(cfg: TenantSmtpRow): nodemailer.Transporter {
+function buildTransport(cfg: TenantSmtpRow): Transporter {
   const password = decryptSmtpPassword(cfg.passwordEnc);
   return nodemailer.createTransport({
     host: cfg.host,
@@ -98,7 +98,7 @@ export async function sendMailViaTenantSmtp(
     return { ok: false, reason: "smtp_not_configured" };
   }
 
-  let transporter: nodemailer.Transporter;
+  let transporter: Transporter;
   try {
     transporter = buildTransport(cfg);
   } catch (e) {
@@ -152,7 +152,7 @@ export async function testTenantSmtp(
     return { ok: false, reason: "smtp_not_configured" };
   }
 
-  let transporter: nodemailer.Transporter;
+  let transporter: Transporter;
   try {
     transporter = buildTransport(cfg);
   } catch (e) {
