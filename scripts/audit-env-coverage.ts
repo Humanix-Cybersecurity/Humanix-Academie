@@ -35,6 +35,9 @@ const WHITELIST = new Set([
   "SIGNUP_BLOCK_SELF_SERVICE",
   // Variables de tests vitest (lib/secrets.test.ts, etc.)
   // Elles ne servent qu'aux tests unitaires, jamais en runtime.
+  // HUMANIX_PDF_OUT : lib/regles-organisation/pdf.test.tsx ecrit les PDF
+  // d'exemple dans ce dossier quand elle est posee (controle visuel).
+  "HUMANIX_PDF_OUT",
   "ABSENT",
   "ASYNC_REQUIRED",
   "CACHED",

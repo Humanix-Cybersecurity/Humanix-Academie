@@ -18,6 +18,13 @@ type Outil = {
 
 const OUTILS: Outil[] = [
   {
+    href: "/admin/regles",
+    emoji: "📜",
+    title: "Les règles de l'organisation",
+    description:
+      "Cinq règles adoptées par l'organe qui décide, l'acte et l'affiche en PDF, et l'attestation de lecture de chaque personne",
+  },
+  {
     href: "/admin/conformite-rgpd/note-information",
     emoji: "📄",
     title: "Informer les collaborateurs",

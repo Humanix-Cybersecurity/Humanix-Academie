@@ -176,6 +176,14 @@ const SECTIONS: Section[] = [
         minRole: "RSSI",
       },
       {
+        // Les cinq regles adoptees par l'organe qui decide : l'acte, l'affiche,
+        // les attestations de lecture. Pivot du parcours Mairies.
+        href: "/admin/regles",
+        label: "Règles de l'organisation",
+        icon: "📜",
+        minRole: "RSSI",
+      },
+      {
         // Ce que HUMANIX detient. URL conservee : champ d'API publique.
         href: "/admin/dpo",
         label: "Vos données chez Humanix",
