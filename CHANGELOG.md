@@ -6,6 +6,69 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.12.0] - 2026-10-01 📜 Les règles de la commune, adoptées en conseil, affichées, lues
+
+Tout le parcours Mairies repose sur le même ressort : des règles qui ne
+demandent pas de juger, et l'autorité qui couvre le refus. Le produit
+l'enseignait, il ne le produisait pas. Une commune repart désormais avec la
+trace qu'elle a décidé. Et deux correctifs de sécurité, dont une exécution de
+code à distance dans Next, qui n'avaient pas encore d'image publiée.
+
+### Added
+
+#### 📜 Les règles de l'organisation
+
+- **Cinq règles**, versionnées dans le code (`lib/regles-organisation/regles.ts`),
+  écrites une fois avec le vocabulaire du type d'organisation : commune
+  (conseil municipal, le maire), intercommunalité (conseil communautaire, la
+  présidence), entreprise (la direction). Aucun ordre de paiement par
+  téléphone, même du maire ; chaque demande passe par un canal que nous
+  détenons ; un compte par personne ; refuser et faire attendre n'est jamais
+  une faute ; on déclare, on porte plainte, on n'accuse pas. Plus les
+  engagements de l'organisation : attestations, parcours par poste,
+  inventaire, restauration testée, exercice sur table annuel, revue annuelle.
+- **L'acte d'adoption en PDF** : en-tête, visas (CGCT L2121-29, RGPD art. 32),
+  considérants, cinq articles, clôture, signature, annexe avec le texte
+  complet ; pointillés pour les champs vides ; mention « modèle à adapter, ne
+  constitue pas un conseil juridique ».
+- **L'affiche** des cinq règles en A4, pour le secrétariat et l'accueil.
+- `/admin/regles` (ADMIN, RSSI) : formulaire, deux téléchargements, tableau des
+  attestations par personne ; entrées dans le menu, la recherche et les outils
+  du parcours RGPD.
+- `/regles` : les règles telles que chaque personne les lit, bouton « j'ai lu
+  les règles », une attestation par personne et par version, journalisée ;
+  une carte sur `/apprendre` tant que l'attestation manque.
+- Modèles `ReglesOrganisation` et `LectureRegles`, additifs, sans enum,
+  compatibles bleu/vert. Aucune barrière de plan. (#927)
+
+### Security
+
+- **Next 16.3.6** : exécution de code à distance dans `ImageResponse` de
+  `next/og` (GHSA-vcvr-r3jv-pc5j, critique). L'application n'y était pas
+  exposée, la seule image générée depuis un paramètre d'URL refuse toute
+  valeur hors d'une liste fixe, mais l'image publiée portait la version
+  vulnérable. (#921)
+- **nodemailer 10.0.10** : quatre avis HIGH, dont un cache DNS global qui
+  réutilisait le `servername` TLS entre transports, donc entre tenants, alors
+  que nous construisons un transport SMTP par tenant. Les types sont embarqués,
+  `@types/nodemailer` est retiré. (#925)
+- Avis modérés : brace-expansion (racine, développement), ip-address et
+  fast-uri dans le connecteur MCP. (#924, #926, #928)
+
+### Changed
+
+- Images de base par empreinte : node 24-alpine et postgres 16-alpine mises à
+  jour. (#929, #930)
+- Dépendances : undici 8.11.2, isomorphic-dompurify 4.3.0 ; eslint-config-next
+  16.3.6, prettier 3.9.9, vite 8.3.1. (#922, #923)
+
+### Exploitation
+
+Deux tables ajoutées par `db push` au démarrage (`ReglesOrganisation`,
+`LectureRegles`), aucune reprise de données. Le tag publie l'image `latest`
+corrigée : le scan de sécurité planifié, en échec depuis le 30 septembre sur
+cette image, repasse au vert.
+
 ## [1.11.0] - 2026-09-27 🏛️ Mairies, revendeurs et mise en conformité
 
 Une collection écrite pour le salon des maires, un premier revendeur qu'on
