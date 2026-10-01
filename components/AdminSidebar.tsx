@@ -4,15 +4,16 @@
 // =============================================================================
 // AdminSidebar - Navigation console dirigeant (refonte juin 2026).
 //
-// Pattern : sidebar fixe 240px avec sections accordéon.
+// Pattern : barre slim 56px (icônes) qui s'étend à 240px au survol, avec
+// sections accordéon ; tiroir plein écran sous lg.
 //   - Chaque section est un bouton (icône + titre + chevron) cliquable.
 //   - Open / close fluide via grid-template-rows transition (pas de
 //     max-height fragile).
 //   - Multi-open : on peut garder plusieurs sections ouvertes.
-//   - Auto-open : la section qui contient la page courante est ouverte
-//     par défaut (à chaque changement de route).
-//   - Plus de slim icons-only / hover-expand (la barre de scroll qui
-//     décalait les icônes était une régression).
+//   - Auto-open : au survol, la section qui contient la page courante
+//     s'ouvre ; tout se replie quand le pointeur sort.
+//   - Tactile sans survol (iPad) : la barre s'épingle au toucher
+//     (`pinned` / `data-expanded`), cf. plus bas.
 // =============================================================================
 
 import Link from "next/link";
@@ -437,6 +438,22 @@ export default function AdminSidebar() {
     });
   };
 
+  // === Epinglage de la barre (ecrans tactiles) ===
+  // Tailwind v4 n'applique `hover:` que sous `@media (hover: hover)` : sur
+  // un iPad sans trackpad, la barre slim ne s'etendait jamais et ses items
+  // (hidden / grid-rows-[0fr] hors survol) restaient inaccessibles. `pinned`
+  // pose `data-expanded` sur l'aside, et chaque classe `group-hover:` a son
+  // jumeau `group-data-expanded:`. Toucher le titre ou une section de la
+  // barre repliee l'epingle ; toucher hors de la barre, Echap ou un
+  // changement de route la replie. A la souris rien ne change : le survol
+  // suffit, et le clic sur le titre maintient la barre ouverte.
+  const [pinned, setPinned] = useState(false);
+  const pin = (sectionId?: string) => {
+    setPinned(true);
+    const target = sectionId ?? findActiveSectionId(path, sections);
+    setOpenSections(target ? new Set([target]) : new Set());
+  };
+
   // === Sync de l'etat openSections avec le hover de la sidebar (desktop) ===
   // Comportement souhaite :
   //   - Souris quitte la sidebar (slim 56px) -> on referme TOUTES les
@@ -449,10 +466,12 @@ export default function AdminSidebar() {
   // sans perdre les togglages manuels qu'il fait pendant qu'il survole
   // (l'etat est conserve tant qu'il reste dans la sidebar).
   const handleSidebarEnter = () => {
+    if (pinned || !canHover()) return;
     const active = findActiveSectionId(path, sections);
     setOpenSections(active ? new Set([active]) : new Set());
   };
   const handleSidebarLeave = () => {
+    if (pinned || !canHover()) return;
     setOpenSections(new Set());
   };
 
@@ -466,8 +485,21 @@ export default function AdminSidebar() {
     return () => document.removeEventListener("keydown", onKey);
   }, [drawerOpen]);
 
+  // Barre epinglee : Echap la replie.
+  useEffect(() => {
+    if (!pinned) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPinned(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [pinned]);
+
+  // Changement de route : le tiroir mobile se ferme, la barre epinglee se
+  // replie (la section a rouvrir sera recalculee au prochain epinglage).
   useEffect(() => {
     setDrawerOpen(false);
+    setPinned(false);
   }, [path]);
 
   // Expose le toggle drawer mobile à la TopBar via window event
@@ -494,22 +526,34 @@ export default function AdminSidebar() {
       <aside
         onMouseEnter={handleSidebarEnter}
         onMouseLeave={handleSidebarLeave}
-        className="group hidden lg:flex fixed top-[var(--app-chrome-h)] left-0 bottom-0 z-30 w-14 hover:w-60 flex-col bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-slate-800 transition-[width] duration-200 ease-out shadow-[2px_0_0_0_transparent] hover:shadow-[2px_0_8px_-2px_rgba(0,0,0,0.08)]"
+        data-expanded={pinned || undefined}
+        className="group hidden lg:flex fixed top-[var(--app-chrome-h)] left-0 bottom-0 z-30 w-14 hover:w-60 data-expanded:w-60 flex-col bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-slate-800 transition-[width] duration-200 ease-out shadow-[2px_0_0_0_transparent] hover:shadow-[2px_0_8px_-2px_rgba(0,0,0,0.08)] data-expanded:shadow-[2px_0_8px_-2px_rgba(0,0,0,0.08)]"
         aria-label="Navigation console"
       >
-        <div className="px-4 pt-4 pb-2 whitespace-nowrap overflow-hidden">
-          <p className="text-[10px] uppercase tracking-widest font-bold text-accent-500 flex items-center gap-2">
+        {/* Le titre est un bouton : il epingle / replie la barre (seul moyen
+            de l'ouvrir sans survol, cf. `pinned`). */}
+        <button
+          type="button"
+          onClick={() => (pinned ? setPinned(false) : pin())}
+          aria-expanded={pinned}
+          aria-controls="admin-nav-desktop"
+          aria-label={pinned ? "Replier le menu" : "Déplier le menu"}
+          title={pinned ? "Replier le menu" : "Déplier le menu"}
+          className="w-full text-left px-4 pt-4 pb-2 whitespace-nowrap overflow-hidden"
+        >
+          <span className="text-[10px] uppercase tracking-widest font-bold text-accent-500 flex items-center gap-2">
             <span aria-hidden="true">🎛</span>
-            <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+            <span className="opacity-0 group-hover:opacity-100 group-data-expanded:opacity-100 transition-opacity duration-150">
               Console
             </span>
-          </p>
-        </div>
+          </span>
+        </button>
 
         {/* La nav peut scroller si l'ensemble des sections ouvertes excede
             la hauteur. scrollbar-gutter: stable evite le decalage des items
             quand la scrollbar apparait/disparait. */}
         <nav
+          id="admin-nav-desktop"
           aria-label="Sections console admin"
           className="flex-1 overflow-y-auto overflow-x-hidden admin-nav-scroll px-2 py-2 space-y-1"
           style={{ scrollbarGutter: "stable" }}
@@ -520,11 +564,26 @@ export default function AdminSidebar() {
               section={section}
               path={path}
               isOpen={openSections.has(section.id)}
-              onToggle={() => toggleSection(section.id)}
+              onToggle={() => {
+                // Barre repliee sur un ecran sans survol : toucher une
+                // section epingle la barre et ouvre cette section.
+                if (!pinned && !canHover()) pin(section.id);
+                else toggleSection(section.id);
+              }}
             />
           ))}
         </nav>
       </aside>
+
+      {/* Barre epinglee : un voile referme au toucher hors de la barre,
+          comme le tiroir mobile. Sous l'aside (z-30), au-dessus du contenu. */}
+      {pinned && (
+        <div
+          className="hidden lg:block fixed top-[var(--app-chrome-h)] left-0 right-0 bottom-0 z-20 bg-black/20"
+          onClick={() => setPinned(false)}
+          aria-hidden="true"
+        />
+      )}
 
       {/* =====================================================================
           MOBILE - drawer plein écran avec accordeon
@@ -576,6 +635,16 @@ export default function AdminSidebar() {
   );
 }
 
+// Tailwind v4 n'applique `hover:` que sous `@media (hover: hover)` : sur un
+// ecran tactile sans pointeur fin (iPad sans trackpad), rien ne survole et la
+// barre doit s'epingler au toucher. Evalue a l'evenement, jamais au rendu
+// (pas de window cote serveur, pas de desaccord d'hydratation).
+function canHover(): boolean {
+  return (
+    typeof window !== "undefined" && window.matchMedia("(hover: hover)").matches
+  );
+}
+
 // =============================================================================
 // Accordion section : header cliquable + liste d'items revelee a l'ouverture
 // =============================================================================
@@ -617,7 +686,8 @@ function Accordion({
             ? "text-primary-500 dark:text-accent-300"
             : "text-gray-700 dark:text-gray-300",
           "hover:bg-gray-100 dark:hover:bg-slate-800/60",
-          isDesktop && "justify-center group-hover:justify-start",
+          isDesktop &&
+            "justify-center group-hover:justify-start group-data-expanded:justify-start",
         )}
       >
         <span aria-hidden="true" className="text-base shrink-0 w-5 text-center">
@@ -626,7 +696,9 @@ function Accordion({
         <span
           className={clsx(
             "text-left text-sm font-bold truncate whitespace-nowrap",
-            isDesktop ? "hidden group-hover:block flex-1" : "flex-1",
+            isDesktop
+              ? "hidden group-hover:block group-data-expanded:block flex-1"
+              : "flex-1",
           )}
         >
           {section.title}
@@ -636,7 +708,8 @@ function Accordion({
           className={clsx(
             "shrink-0 text-xs text-gray-500 dark:text-gray-500 transition-transform duration-200",
             isOpen ? "rotate-90" : "rotate-0",
-            isDesktop && "hidden group-hover:inline-block",
+            isDesktop &&
+              "hidden group-hover:inline-block group-data-expanded:inline-block",
           )}
         >
           ▶
@@ -653,7 +726,9 @@ function Accordion({
         className={clsx(
           "grid transition-[grid-template-rows] duration-200 ease-out",
           isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
-          isDesktop && isOpen && "grid-rows-[0fr] group-hover:grid-rows-[1fr]",
+          isDesktop &&
+            isOpen &&
+            "grid-rows-[0fr] group-hover:grid-rows-[1fr] group-data-expanded:grid-rows-[1fr]",
         )}
       >
         <div className="overflow-hidden">
@@ -715,7 +790,7 @@ function NavLink({
         className={clsx(
           "flex-1 truncate whitespace-nowrap",
           isDesktop &&
-            "opacity-0 group-hover:opacity-100 transition-opacity duration-150",
+            "opacity-0 group-hover:opacity-100 group-data-expanded:opacity-100 transition-opacity duration-150",
         )}
       >
         {item.label}
@@ -728,7 +803,7 @@ function NavLink({
               ? "bg-white/20 text-white"
               : "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300",
             isDesktop &&
-              "opacity-0 group-hover:opacity-100 transition-opacity duration-150",
+              "opacity-0 group-hover:opacity-100 group-data-expanded:opacity-100 transition-opacity duration-150",
           )}
           title={`Inclus à partir de l'offre ${item.gate}`}
         >
