@@ -1,7 +1,7 @@
 # ============= Multi-stage Dockerfile pour HumaniX Academy =============
 
 # Stage 1 : dependencies
-FROM node:24-alpine@sha256:50c8e8ca1d27439048670df5883f32d57cf81cff6233222c893fd0d9884cbd81 AS deps
+FROM node:24-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1 AS deps
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 COPY package*.json ./
@@ -9,7 +9,7 @@ COPY prisma ./prisma
 RUN npm install --legacy-peer-deps --no-audit --no-fund
 
 # Stage 2 : builder
-FROM node:24-alpine@sha256:50c8e8ca1d27439048670df5883f32d57cf81cff6233222c893fd0d9884cbd81 AS builder
+FROM node:24-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1 AS builder
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
@@ -164,7 +164,7 @@ RUN npx esbuild \
   && ls -la dist-scripts/scripts dist-scripts/prisma
 
 # Stage 3 : runner (production)
-FROM node:24-alpine@sha256:50c8e8ca1d27439048670df5883f32d57cf81cff6233222c893fd0d9884cbd81 AS runner
+FROM node:24-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1 AS runner
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 ENV NODE_ENV=production
