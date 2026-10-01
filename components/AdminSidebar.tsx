@@ -18,7 +18,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import type { Role } from "@prisma/client";
 import clsx from "clsx";
@@ -453,6 +453,13 @@ export default function AdminSidebar() {
     const target = sectionId ?? findActiveSectionId(path, sections);
     setOpenSections(target ? new Set([target]) : new Set());
   };
+  // Replier referme aussi les sections, comme la sortie du pointeur a la
+  // souris : une section laissee ouverte dans la barre repliee y laissait
+  // ses items (icones decalees, labels invisibles) sur tactile.
+  const unpin = () => {
+    setPinned(false);
+    setOpenSections(new Set());
+  };
 
   // === Sync de l'etat openSections avec le hover de la sidebar (desktop) ===
   // Comportement souhaite :
@@ -489,17 +496,29 @@ export default function AdminSidebar() {
   useEffect(() => {
     if (!pinned) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setPinned(false);
+      if (e.key === "Escape") {
+        setPinned(false);
+        setOpenSections(new Set());
+      }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [pinned]);
 
-  // Changement de route : le tiroir mobile se ferme, la barre epinglee se
-  // replie (la section a rouvrir sera recalculee au prochain epinglage).
+  // Changement de route : le tiroir mobile se ferme ; si la barre etait
+  // epinglee, elle se replie et ses sections se referment. Le ref evite de
+  // dependre de `pinned` : l'effet ne doit tourner qu'au changement de
+  // route, pas a chaque epinglage.
+  const pinnedRef = useRef(false);
+  useEffect(() => {
+    pinnedRef.current = pinned;
+  }, [pinned]);
   useEffect(() => {
     setDrawerOpen(false);
-    setPinned(false);
+    if (pinnedRef.current) {
+      setPinned(false);
+      setOpenSections(new Set());
+    }
   }, [path]);
 
   // Expose le toggle drawer mobile à la TopBar via window event
@@ -534,7 +553,7 @@ export default function AdminSidebar() {
             de l'ouvrir sans survol, cf. `pinned`). */}
         <button
           type="button"
-          onClick={() => (pinned ? setPinned(false) : pin())}
+          onClick={() => (pinned ? unpin() : pin())}
           aria-expanded={pinned}
           aria-controls="admin-nav-desktop"
           aria-label={pinned ? "Replier le menu" : "Déplier le menu"}
@@ -580,7 +599,7 @@ export default function AdminSidebar() {
       {pinned && (
         <div
           className="hidden lg:block fixed top-[var(--app-chrome-h)] left-0 right-0 bottom-0 z-20 bg-black/20"
-          onClick={() => setPinned(false)}
+          onClick={unpin}
           aria-hidden="true"
         />
       )}
@@ -725,10 +744,18 @@ function Accordion({
         id={`section-${section.id}`}
         className={clsx(
           "grid transition-[grid-template-rows] duration-200 ease-out",
-          isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
-          isDesktop &&
-            isOpen &&
-            "grid-rows-[0fr] group-hover:grid-rows-[1fr] group-data-expanded:grid-rows-[1fr]",
+          // Bureau : la base est toujours 0fr, seules les variantes survol et
+          // epinglage passent a 1fr. Ne jamais emettre grid-rows-[1fr] nu
+          // ici : a specificite egale, l'ordre d'emission de Tailwind
+          // tranche, et les items d'une section ouverte debordent de la
+          // barre repliee.
+          isDesktop
+            ? isOpen
+              ? "grid-rows-[0fr] group-hover:grid-rows-[1fr] group-data-expanded:grid-rows-[1fr]"
+              : "grid-rows-[0fr]"
+            : isOpen
+              ? "grid-rows-[1fr]"
+              : "grid-rows-[0fr]",
         )}
       >
         <div className="overflow-hidden">
