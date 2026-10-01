@@ -2,11 +2,20 @@
 // Section "preuve sociale" : chiffres cles + bandeau confiance.
 // Fusion des sections 2 (chiffres) et 5 (trust) du brouillon precedent
 // pour rester sous 5 sections sur la home.
+//
+// Le nombre de modules vient de lib/catalogue-chiffres.ts, jamais d'un
+// litteral : la page d'accueil a affiche « 344 » pendant des mois alors que
+// le catalogue en comptait 470.
 
 import Link from "next/link";
+import { CATALOGUE_CHIFFRES } from "@/lib/catalogue-chiffres";
 
 const STATS = [
-  { value: "344", label: "modules cyber", emoji: "📚" },
+  {
+    value: String(CATALOGUE_CHIFFRES.modules),
+    label: "modules cyber",
+    emoji: "📚",
+  },
   { value: "5 min", label: "par semaine, par employé", emoji: "⏱" },
   { value: "0 €", label: "self-host AGPLv3", emoji: "🌐" },
   { value: "100 %", label: "hébergé en France", emoji: "🇫🇷" },

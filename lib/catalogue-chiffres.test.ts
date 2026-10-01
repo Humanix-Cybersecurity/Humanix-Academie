@@ -76,4 +76,23 @@ describe("chiffres publics du catalogue", () => {
       readFileSync(join(racine, "public", "manifest.json"), "utf8"),
     ).toContain(`${CATALOGUE_CHIFFRES.modules} modules`);
   });
+
+  it("sont importés par chaque page publique qui cite le catalogue", () => {
+    // La page d'accueil a gardé « 344 modules » en dur pendant des mois
+    // après la centralisation (#916) : une page publique qui cite le
+    // catalogue doit lire la constante, jamais un littéral.
+    const pages = [
+      "components/home/ProofSection.tsx",
+      "app/tarifs/page.tsx",
+      "app/comparatif/page.tsx",
+      "app/certificat/page.tsx",
+      "app/marketplace/page.tsx",
+    ];
+    for (const page of pages) {
+      const source = readFileSync(join(racine, page), "utf8");
+      expect(source, `${page} doit importer lib/catalogue-chiffres`).toMatch(
+        /from "[^"]*lib\/catalogue-chiffres"/,
+      );
+    }
+  });
 });
