@@ -9,6 +9,7 @@ describe("getProviderKind", () => {
   beforeEach(() => {
     delete process.env.HEX_AI_PROVIDER;
     delete process.env.MISTRAL_API_KEY;
+    delete process.env.DEMO_MODE;
   });
   afterEach(() => {
     process.env = { ...originalEnv };
@@ -44,6 +45,20 @@ describe("getProviderKind", () => {
     process.env.MISTRAL_API_KEY = "sk-test-123";
     // Notre logique : valeur inconnue -> auto-detect mistral si key OK
     expect(getProviderKind()).toBe("mistral");
+  });
+
+  // Les comptes de demo sont partages : la limite par utilisateur ne
+  // protege pas les credits Mistral. Aucun provider facturable en demo.
+  it("retourne 'disabled' en DEMO_MODE, meme avec une cle Mistral", () => {
+    process.env.DEMO_MODE = "true";
+    process.env.MISTRAL_API_KEY = "sk-test-123";
+    expect(getProviderKind()).toBe("disabled");
+  });
+
+  it("retourne 'disabled' en DEMO_MODE, meme avec HEX_AI_PROVIDER=ollama", () => {
+    process.env.DEMO_MODE = "true";
+    process.env.HEX_AI_PROVIDER = "ollama";
+    expect(getProviderKind()).toBe("disabled");
   });
 });
 

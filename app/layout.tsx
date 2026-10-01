@@ -252,11 +252,12 @@ export default async function RootLayout({
 
   // Hex chat : on n'affiche le FAB qu'aux users connectes ET si un
   // provider IA est configure cote serveur. Anonymous = pas de chat
-  // (coûts API + tracage). Mode demo : on autorise quand meme pour
-  // que la feature soit demontrable lors d'evenements.
+  // (coûts API + tracage). La route /api/ai/chat exige une session, y
+  // compris en mode demo : afficher le bouton aux visiteurs anonymes de
+  // la demo leur montrait « Hex est tombe : Non authentifie ». Les comptes
+  // de demonstration, une fois connectes, gardent la fonctionnalite.
   const session = await auth();
-  const hexChatEnabled =
-    isHexChatAvailable() && (Boolean(session?.user?.id) || isDemo);
+  const hexChatEnabled = isHexChatAvailable() && Boolean(session?.user?.id);
 
   // CSP nonce per-request : genere par proxy.ts (edge), recupere ici
   // pour autoriser les scripts inline (theme init, JSON-LD) avec

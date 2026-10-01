@@ -42,6 +42,12 @@ export type ChatStreamOptions = {
 export type ProviderKind = "mistral" | "ollama" | "disabled";
 
 export function getProviderKind(): ProviderKind {
+  // Jamais d'IA facturee sur une instance de demonstration : les comptes
+  // de demo sont partages par tous les visiteurs, la limite par
+  // utilisateur de /api/ai/chat ne protege donc pas les credits Mistral.
+  // Les autres fonctions IA (phishing, vishing, smishing, recap...) ont
+  // deja ce garde-fou DEMO_MODE chacune de leur cote.
+  if (process.env.DEMO_MODE === "true") return "disabled";
   const raw = (process.env.HEX_AI_PROVIDER ?? "").toLowerCase();
   if (raw === "ollama") return "ollama";
   if (raw === "disabled") return "disabled";
