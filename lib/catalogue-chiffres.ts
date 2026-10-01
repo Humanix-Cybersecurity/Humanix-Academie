@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Chiffres publics du catalogue, en un seul endroit.
 //
-// Pourquoi : les pages publiques (tarifs, comparatif, certificat, README,
-// manifest) ont affiché « 58 saisons · 344 modules » pendant des mois alors
+// Pourquoi : les pages publiques (accueil, tarifs, comparatif, certificat,
+// README, manifest) ont affiché « 58 saisons · 344 modules » pendant des mois alors
 // que le catalogue en comptait 79 et 470. Un chiffre codé en dur dans chaque
 // page se périme sans bruit. Ici, une seule source, et un test qui compare
 // ces constantes au catalogue réel quand content-pro est présent
