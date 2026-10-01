@@ -52,11 +52,10 @@ const MESSAGES: {
     match: (p) => p.startsWith("/observatoire-fuites"),
     text: "Personne n'est à l'abri. Voici la preuve, mise à jour chaque jour.",
   },
-  {
-    match: (p) => p === "/",
-    text: "Bienvenue ! Je suis Hex 🦊 - la mascotte Humanix. Une question ?",
-    cta: { label: "Voir la démo", href: "/demo" },
-  },
+  // Pas de bulle sur l'accueil : celle qui proposait « Voir la démo » ne
+  // menait qu'aux cinq saisons libres (la démo publique ne porte plus le
+  // catalogue commercial depuis le 2026-09-27) et distrayait de l'appel
+  // principal, l'inscription. Le FAB de Hex reste, lui, visible.
 ];
 
 // Pages ou la mascotte ne doit JAMAIS apparaitre (espace prive)
