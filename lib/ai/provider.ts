@@ -37,6 +37,13 @@ export type ChatStreamOptions = {
   temperature?: number;
   maxTokens?: number;
   signal?: AbortSignal;
+  /**
+   * Modele demande pour cet appel (Mistral uniquement). Prioritaire sur
+   * HEX_AI_MODEL : permet de servir un modele moins cher au palier
+   * gratuit (cf. lib/ai/hex/quotas.ts). Ignore par Ollama, un seul
+   * modele local.
+   */
+  model?: string;
 };
 
 export type ProviderKind = "mistral" | "ollama" | "disabled";
@@ -105,6 +112,7 @@ async function streamMistral(
   // serait retenue et Mistral renverrait 400 "Missing model parameter".
   // Cas reel observe en prod 2026-05-22 : MISTRAL_MODEL="" dans le .env.
   const model =
+    opts.model?.trim() ||
     process.env.HEX_AI_MODEL?.trim() ||
     process.env.MISTRAL_MODEL?.trim() ||
     "mistral-small-latest";

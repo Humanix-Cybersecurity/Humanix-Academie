@@ -24,7 +24,11 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireSession } from "@/lib/api/require-role";
-import { checkRateLimit } from "@/lib/rate-limit";
+import {
+  messageQuota,
+  modelePourPlan,
+  verifierQuotasHex,
+} from "@/lib/ai/hex/quotas";
 import { streamChat, getProviderKind } from "@/lib/ai/provider";
 import { buildSystemPrompt } from "@/lib/ai/hex/system-prompt";
 import { buildEnrichedContext, buildToneAddendum } from "@/lib/ai/hex/context";
@@ -51,13 +55,8 @@ const Schema = z.object({
     .optional(),
 });
 
-// Rate-limit par plan : on protege le free tier Mistral (~1 req/s) sans
-// frustrer les users Pro qui ont paye pour un usage soutenu.
-const RATE_LIMIT_PER_HOUR: Record<PlanId, number> = {
-  starter: 12,
-  pro: 60,
-  enterprise: 200,
-};
+// Quotas par plan (heure, jour, espace, instance) et modele selon le plan :
+// lib/ai/hex/quotas.ts, avec le calcul des couts qui justifie les chiffres.
 
 export async function POST(req: Request) {
   // 1) Auth - RBAC central (cf. lib/api/require-role.ts)
@@ -132,18 +131,17 @@ export async function POST(req: Request) {
       plan = "starter";
     }
   }
-  const limit = RATE_LIMIT_PER_HOUR[plan];
-  const rl = checkRateLimit(`hex-chat:${userId}`, limit, 60 * 60 * 1000);
-  if (!rl.ok) {
+  // Quotas : heure et jour de la personne, jour de l'espace, jour de
+  // l'instance. Un refus consomme au plus le compteur refuse.
+  const quota = verifierQuotasHex({ userId, tenantId, plan });
+  if (!quota.ok) {
     return NextResponse.json(
-      {
-        error:
-          `Tu as atteint la limite de ${limit} messages par heure sur ton plan. ` +
-          "Reessaye dans un moment, ou passe sur un plan superieur pour augmenter la cadence.",
-      },
+      { error: messageQuota(quota) },
       {
         status: 429,
-        headers: { "Retry-After": String(Math.ceil(rl.retryAfter / 1000)) },
+        // Le limiteur renvoie deja des secondes : l'ancien code divisait
+        // encore par mille et annoncait 4 s au lieu d'une heure.
+        headers: { "Retry-After": String(quota.retryAfter) },
       },
     );
   }
@@ -185,6 +183,9 @@ export async function POST(req: Request) {
       messages: [{ role: "system", content: systemPrompt }, ...body.messages],
       temperature: 0.5,
       maxTokens: 800,
+      // Small pour le palier gratuit, le modele configure pour les plans
+      // payants (cf. quotas.ts) ; undefined = choix du provider.
+      model: modelePourPlan(plan),
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : "ai_error";
