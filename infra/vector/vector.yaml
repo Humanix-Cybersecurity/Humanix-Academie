@@ -184,6 +184,31 @@ sources:
     # compteurs.
     read_from: end
 
+  # === Journaux de la crontab de l'hote ===
+  #
+  # Sauvegardes, archivage, crons applicatifs, acme.sh : les scripts ecrivent
+  # dans /var/log/humanix/*.log (cf. infra/cron/crontab.prod), monte en
+  # lecture seule dans le conteneur. Jusqu'au 2026-10-03 rien n'en sortait :
+  # 1 468 echecs de crons en six semaines, et personne ne les a vus.
+  exploitation_journaux:
+    type: file
+    include:
+      - /var/log/humanix/backup.log
+      - /var/log/humanix/archive.log
+      - /var/log/humanix/cron.log
+      - /var/log/humanix/acme.log
+    read_from: end
+
+  # === Mesures de l'hote et des conteneurs (scripts/host-stats.py) ===
+  #
+  # Une ligne JSON par mesure, chaque minute, depuis la crontab de l'hote.
+  # Converties en jauges plus bas : ~40 series, ~0,30 EUR/mois.
+  hote_stats:
+    type: file
+    include:
+      - /var/log/humanix/stats.log
+    read_from: end
+
 transforms:
   # Les logs applicatifs sont deja du JSON : on l'aplatit pour pouvoir
   # requeter les champs dans Loki plutot qu'une chaine opaque.
@@ -380,6 +405,179 @@ transforms:
       del(.file)
       del(.source_type)
 
+  # === Journaux d'exploitation -> Loki ===
+  #
+  # Chaque ligne recoit son fichier d'origine, un resultat a trois valeurs
+  # (ok / echec / info, label Loki) et, pour les crons, le job et le code.
+  exploitation_lignes:
+    type: remap
+    inputs:
+      - exploitation_journaux
+    source: |
+      .fichier = replace(string!(.file), r'^.*/', "")
+      msg = string!(.message)
+      .resultat = "info"
+      if match(msg, r'\] OK \d+ ') || contains(msg, "avec succes") || contains(msg, "Cert success") {
+        .resultat = "ok"
+      }
+      if contains(msg, "ECHEC") || contains(msg, "FATAL") || match(msg, r'(?i)\berror\b') {
+        .resultat = "echec"
+      }
+      # Le job : sur la ligne POST (/api/cron/<slug>) comme sur la ligne de
+      # resultat (job=<slug>, cf. scripts/cron-runner.sh).
+      job, err = parse_regex(msg, r'(?:job=|/api/cron/)(?P<job>[a-z0-9-]+)')
+      if err == null {
+        .job = job.job
+      }
+      code, err = parse_regex(msg, r'\] (?:OK|ECHEC) (?P<code>\d+) ')
+      if err == null {
+        .code = code.code
+      }
+      del(.file)
+      del(.source_type)
+
+  # === Mesures de l'hote : JSON -> champs, puis aiguillage par type ===
+  hote_stats_json:
+    type: remap
+    inputs:
+      - hote_stats
+    drop_on_error: true
+    drop_on_abort: true
+    source: |
+      msg = string!(.message)
+      del(.message)
+      parsed, err = parse_json(msg)
+      if err != null || !is_object(parsed) {
+        abort
+      }
+      . = merge(., object!(parsed))
+      del(.file)
+      del(.source_type)
+
+  hote_stats_route:
+    type: route
+    inputs:
+      - hote_stats_json
+    route:
+      hote: '.type == "hote"'
+      disque: '.type == "disque"'
+      conteneur: '.type == "conteneur"'
+      certificat: '.type == "certificat"'
+      erreur: '.type == "erreur"'
+
+  # Jauges Prometheus. Noms attendus par
+  # infra/grafana/dashboards/humanix-exploitation.json et les regles 12 a 16
+  # de docs/ALERTES-GRAFANA.md.
+  metriques_hote:
+    type: log_to_metric
+    inputs:
+      - hote_stats_route.hote
+    metrics:
+      - type: gauge
+        field: cpu_pct
+        name: hote_cpu_pourcent
+        namespace: humanix
+      - type: gauge
+        field: charge_1m
+        name: hote_charge_1m
+        namespace: humanix
+      - type: gauge
+        field: charge_5m
+        name: hote_charge_5m
+        namespace: humanix
+      - type: gauge
+        field: charge_15m
+        name: hote_charge_15m
+        namespace: humanix
+      - type: gauge
+        field: mem_total
+        name: hote_memoire_totale_octets
+        namespace: humanix
+      - type: gauge
+        field: mem_utilisee
+        name: hote_memoire_utilisee_octets
+        namespace: humanix
+      - type: gauge
+        field: mem_disponible
+        name: hote_memoire_disponible_octets
+        namespace: humanix
+      - type: gauge
+        field: swap_total
+        name: hote_swap_total_octets
+        namespace: humanix
+      - type: gauge
+        field: swap_utilise
+        name: hote_swap_utilise_octets
+        namespace: humanix
+      - type: gauge
+        field: uptime_s
+        name: hote_uptime_secondes
+        namespace: humanix
+
+  metriques_disques:
+    type: log_to_metric
+    inputs:
+      - hote_stats_route.disque
+    metrics:
+      - type: gauge
+        field: total
+        name: hote_disque_total_octets
+        namespace: humanix
+        tags:
+          point: "{{point}}"
+      - type: gauge
+        field: utilise
+        name: hote_disque_utilise_octets
+        namespace: humanix
+        tags:
+          point: "{{point}}"
+
+  metriques_conteneurs:
+    type: log_to_metric
+    inputs:
+      - hote_stats_route.conteneur
+    metrics:
+      - type: gauge
+        field: cpu_pct
+        name: conteneur_cpu_pourcent
+        namespace: humanix
+        tags:
+          conteneur: "{{nom}}"
+      - type: gauge
+        field: mem
+        name: conteneur_memoire_octets
+        namespace: humanix
+        tags:
+          conteneur: "{{nom}}"
+      - type: gauge
+        field: pids
+        name: conteneur_pids
+        namespace: humanix
+        tags:
+          conteneur: "{{nom}}"
+
+  metriques_certificats:
+    type: log_to_metric
+    inputs:
+      - hote_stats_route.certificat
+    metrics:
+      - type: gauge
+        field: jours
+        name: certificat_jours_restants
+        namespace: humanix
+        tags:
+          domaine: "{{domaine}}"
+
+  # Les erreurs du script partent dans Loki avec les journaux d'exploitation.
+  hote_stats_erreurs:
+    type: remap
+    inputs:
+      - hote_stats_route.erreur
+    source: |
+      .fichier = "stats.log"
+      .resultat = "echec"
+      .message = join!([string!(.section), string!(.message)], " : ")
+
   # Conversion en metriques Prometheus. Les noms sont ceux qu'attendent
   # infra/grafana/dashboards/humanix-overview.json et alerts-cockpit.md.
   haproxy_metriques:
@@ -445,11 +643,34 @@ sinks:
       type: "{{ type }}"
       classe: "{{ classe }}"
 
+  # Journaux d'exploitation : meme data source Loki, labels fichier/resultat.
+  scaleway_loki_exploitation:
+    type: loki
+    inputs:
+      - exploitation_lignes
+      - hote_stats_erreurs
+    endpoint: "${SCW_LOKI_URL}"
+    auth:
+      strategy: bearer
+      token: "${SCW_COCKPIT_TOKEN}"
+    encoding:
+      codec: json
+    remove_label_fields: true
+    labels:
+      host: humanix-prod-01
+      source: exploitation
+      fichier: "{{ fichier }}"
+      resultat: "{{ resultat }}"
+
   scaleway_mimir:
     type: prometheus_remote_write
     inputs:
       - humanix_metrics
       - haproxy_metriques
+      - metriques_hote
+      - metriques_disques
+      - metriques_conteneurs
+      - metriques_certificats
     endpoint: "${SCW_MIMIR_URL}"
     # Bornes de l'histogramme des durees. Vector agrege les distributions en
     # histogrammes Prometheus a l'aide de ces bornes ; sans elles il prendrait
@@ -595,3 +816,173 @@ tests:
             source: |
               assert_eq!(.statut, "200")
               assert_eq!(.duree_secondes, 0.003)
+
+  - name: exploitation_lignes, cron reussi avec son job
+    inputs:
+      - insert_at: exploitation_lignes
+        type: log
+        log_fields:
+          file: /var/log/humanix/cron.log
+          message: '[cron-runner] OK 200 en 0s job=phishing-drip : {"ok":true,"picked":0,"sent":0,"failed":0,"errors":[]}'
+    outputs:
+      - extract_from: exploitation_lignes
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.fichier, "cron.log")
+              assert_eq!(.resultat, "ok")
+              assert_eq!(.job, "phishing-drip")
+              assert_eq!(.code, "200")
+
+  - name: exploitation_lignes, cron en echec
+    inputs:
+      - insert_at: exploitation_lignes
+        type: log
+        log_fields:
+          file: /var/log/humanix/cron.log
+          message: "[cron-runner] ECHEC 000000 apres 10s job=phishing-launch : "
+    outputs:
+      - extract_from: exploitation_lignes
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.resultat, "echec")
+              assert_eq!(.job, "phishing-launch")
+              assert_eq!(.code, "000000")
+
+  - name: exploitation_lignes, ligne POST d'avant le correctif, job lu dans l'URL
+    inputs:
+      - insert_at: exploitation_lignes
+        type: log
+        log_fields:
+          file: /var/log/humanix/cron.log
+          message: "[cron-runner] 2026-10-03T09:00:01Z POST http://127.0.0.1:3000/api/cron/breaches-refresh"
+    outputs:
+      - extract_from: exploitation_lignes
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.resultat, "info")
+              assert_eq!(.job, "breaches-refresh")
+
+  - name: exploitation_lignes, sauvegarde reussie
+    inputs:
+      - insert_at: exploitation_lignes
+        type: log
+        log_fields:
+          file: /var/log/humanix/backup.log
+          message: "[2026-10-03T00:49:03Z] Sauvegarde terminee avec succes."
+    outputs:
+      - extract_from: exploitation_lignes
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.fichier, "backup.log")
+              assert_eq!(.resultat, "ok")
+
+  - name: exploitation_lignes, sauvegarde en echec
+    inputs:
+      - insert_at: exploitation_lignes
+        type: log
+        log_fields:
+          file: /var/log/humanix/backup.log
+          message: "[2026-10-03T00:49:03Z] FATAL: pg_dump a echoue"
+    outputs:
+      - extract_from: exploitation_lignes
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.resultat, "echec")
+
+  - name: exploitation_lignes, archivage sans objet reste une information
+    inputs:
+      - insert_at: exploitation_lignes
+        type: log
+        log_fields:
+          file: /var/log/humanix/archive.log
+          message: "[2026-10-02T23:00:01Z] Aucun mois complet au-dela du seuil. Rien a archiver."
+    outputs:
+      - extract_from: exploitation_lignes
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.fichier, "archive.log")
+              assert_eq!(.resultat, "info")
+
+  - name: hote_stats, mesure disque -> deux jauges etiquetees par point de montage
+    inputs:
+      - insert_at: hote_stats_json
+        type: log
+        log_fields:
+          file: /var/log/humanix/stats.log
+          message: '{"ts":"2026-10-03T10:00:00Z","type":"disque","point":"/var/log","total":20935426048,"utilise":14250123264}'
+    outputs:
+      - extract_from: metriques_disques
+        conditions:
+          - type: vrl
+            source: |
+              # Dans une condition VRL, un evenement metrique n'expose que
+              # kind, name, namespace, tags, timestamp et type : pas sa valeur.
+              assert_eq!(.type, "gauge")
+              assert_eq!(.kind, "absolute")
+              assert_eq!(.namespace, "humanix")
+              assert!(starts_with(string!(.name), "hote_disque_"))
+              assert_eq!(.tags.point, "/var/log")
+
+  - name: hote_stats, certificat -> jours restants par domaine
+    inputs:
+      - insert_at: hote_stats_json
+        type: log
+        log_fields:
+          file: /var/log/humanix/stats.log
+          message: '{"ts":"2026-10-03T10:00:00Z","type":"certificat","domaine":"humanix-academie.fr","jours":71}'
+    outputs:
+      - extract_from: metriques_certificats
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.type, "gauge")
+              assert_eq!(.name, "certificat_jours_restants")
+              assert_eq!(.tags.domaine, "humanix-academie.fr")
+
+  - name: hote_stats, conteneur -> jauges etiquetees par nom
+    inputs:
+      - insert_at: hote_stats_json
+        type: log
+        log_fields:
+          file: /var/log/humanix/stats.log
+          message: '{"ts":"2026-10-03T10:00:00Z","type":"conteneur","nom":"humanix-prod-app","cpu_pct":1.5,"mem":113553408,"pids":23}'
+    outputs:
+      - extract_from: metriques_conteneurs
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.namespace, "humanix")
+              assert!(starts_with(string!(.name), "conteneur_"))
+              assert_eq!(.tags.conteneur, "humanix-prod-app")
+
+  - name: hote_stats, erreur du script -> journal d'exploitation en echec
+    inputs:
+      - insert_at: hote_stats_json
+        type: log
+        log_fields:
+          file: /var/log/humanix/stats.log
+          message: '{"ts":"2026-10-03T10:00:00Z","type":"erreur","section":"certificat demo.humanix-academie.fr","message":"SSLCertVerificationError: certificate has expired"}'
+    outputs:
+      - extract_from: hote_stats_erreurs
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.fichier, "stats.log")
+              assert_eq!(.resultat, "echec")
+              assert!(contains(string!(.message), "certificat demo.humanix-academie.fr : SSLCertVerificationError"))
+
+  - name: hote_stats, ligne non JSON ignoree
+    inputs:
+      - insert_at: hote_stats_json
+        type: log
+        log_fields:
+          file: /var/log/humanix/stats.log
+          message: "Traceback (most recent call last):"
+    no_outputs_from:
+      - hote_stats_json

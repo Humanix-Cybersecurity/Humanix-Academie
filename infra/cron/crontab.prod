@@ -73,7 +73,17 @@ HUMANIX=/opt/humanix-prod
 LOG=/var/log/humanix/cron.log
 
 # --- Renouvellement des certificats TLS -------------------------------
-19 12 * * * "/home/humanix/.acme.sh"/acme.sh --cron --home "/home/humanix/.acme.sh" > /dev/null
+#
+# Sortie journalisee (et plus jetee dans /dev/null) : Vector l'envoie a Loki,
+# et le tableau de bord d'exploitation suit les jours restants du certificat.
+19 12 * * * "/home/humanix/.acme.sh"/acme.sh --cron --home "/home/humanix/.acme.sh" >> /var/log/humanix/acme.log 2>&1
+
+# --- Mesures de l'hote et des conteneurs, chaque minute ---------------
+#
+# Une ligne JSON par mesure (CPU, memoire, disques, conteneurs, certificats)
+# dans stats.log ; Vector les convertit en metriques pour Mimir. Cf.
+# scripts/host-stats.py et infra/logrotate/humanix pour la rotation.
+* * * * * $HUMANIX/scripts/host-stats.py >> /var/log/humanix/stats.log 2>&1
 
 # --- Sauvegarde chiffree de la base -----------------------------------
 45 2 * * * $HUMANIX/scripts/backup-db.sh >> /var/log/humanix/backup.log 2>&1

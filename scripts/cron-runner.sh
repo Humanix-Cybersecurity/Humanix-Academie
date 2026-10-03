@@ -69,11 +69,15 @@ ELAPSED=$(($(date +%s) - START))
 
 case "$HTTP_CODE" in
   2*)
-    echo "[cron-runner] OK ${HTTP_CODE} en ${ELAPSED}s : $(head -c 200 "$BODY")"
+    # `job=` sur la ligne de resultat : chaque ligne se suffit a elle-meme
+    # pour Loki (la ligne POST qui precede ne peut pas lui etre jointe quand
+    # deux jobs s'entrelacent, phishing-launch et breaches-refresh a l'heure
+    # pile par exemple).
+    echo "[cron-runner] OK ${HTTP_CODE} en ${ELAPSED}s job=${NAME} : $(head -c 200 "$BODY")"
     exit 0
     ;;
   *)
-    echo "[cron-runner] ECHEC ${HTTP_CODE} apres ${ELAPSED}s : $(head -c 500 "$BODY")" >&2
+    echo "[cron-runner] ECHEC ${HTTP_CODE} apres ${ELAPSED}s job=${NAME} : $(head -c 500 "$BODY")" >&2
     exit 2
     ;;
 esac

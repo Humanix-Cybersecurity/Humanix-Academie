@@ -453,6 +453,120 @@ bord pendant deux semaines avant de les durcir.
 
 ---
 
+## Règle 12 — Disque à plus de 80 %
+
+Un disque plein arrête PostgreSQL sans prévenir, et `/var/log` est une
+partition à part de 20 Go : le 2026-10-03 elle était à 68 %, AIDE y
+écrivant 5 Go par jour.
+
+```promql
+100 * humanix_hote_disque_utilise_octets / humanix_hote_disque_total_octets
+```
+
+| Paramètre            | Valeur                         |
+| -------------------- | ------------------------------ |
+| Type de requête      | `Instant`                      |
+| Condition            | `IS ABOVE 80`                  |
+| Évaluation           | toutes les `5m`, pendant `10m` |
+| **Si aucune donnée** | **`Alerting`**                 |
+| Sévérité             | `warning` ; `critical` à 90    |
+
+**Pourquoi « aucune donnée » alerte ici, et seulement ici.** Cette série vient
+de `scripts/host-stats.py`, lancé par la crontab de l'hôte. Si elle disparaît,
+c'est que la crontab ou Vector est arrêté, et toutes les règles 12 à 16
+deviennent aveugles en même temps. Une seule règle porte ce rôle de vigie.
+
+---
+
+## Règle 13 — Mémoire disponible sous 10 %
+
+```promql
+100 * humanix_hote_memoire_disponible_octets / humanix_hote_memoire_totale_octets
+```
+
+| Paramètre            | Valeur                        |
+| -------------------- | ----------------------------- |
+| Type de requête      | `Instant`                     |
+| Condition            | `IS BELOW 10`                 |
+| Évaluation           | toutes les `1m`, pendant `5m` |
+| **Si aucune donnée** | **`OK`**                      |
+| Sévérité             | `warning`                     |
+
+La machine a 30 Go dont 28 libres : ce seuil ne se verra que sur une fuite
+mémoire de l'application ou un conteneur qui s'emballe. Le tableau de bord
+dit lequel (`humanix_conteneur_memoire_octets`).
+
+---
+
+## Règle 14 — Aucune sauvegarde réussie depuis 26 heures
+
+La règle la plus rentable du dispositif. La sauvegarde chiffrée part à 02:45
+et écrit « Sauvegarde terminee avec succes » dans `backup.log`. L'envoi FTP
+peut échouer chaque nuit pendant un mois sans que rien ne le dise.
+
+```logql
+sum(count_over_time({source="exploitation", fichier="backup.log", resultat="ok"}[26h]))
+```
+
+| Paramètre            | Valeur                         |
+| -------------------- | ------------------------------ |
+| Type de requête      | `Instant`                      |
+| Condition            | `IS BELOW 1`                   |
+| Évaluation           | toutes les `30m`, pendant `1h` |
+| **Si aucune donnée** | **`Alerting`**                 |
+| Sévérité             | `critical`                     |
+
+**Pourquoi « aucune donnée » alerte.** Une sauvegarde absente et un journal
+absent sont la même nouvelle : on ne sait pas si la base est sauvegardée.
+C'est l'inverse des règles 1 à 11, où l'absence de données est la normalité.
+
+---
+
+## Règle 15 — Un cron a échoué
+
+```logql
+sum by (job) (count_over_time({source="exploitation", fichier="cron.log", resultat="echec"} | json [3h]))
+```
+
+| Paramètre            | Valeur                          |
+| -------------------- | ------------------------------- |
+| Type de requête      | `Instant`                       |
+| Condition            | `IS ABOVE 1`                    |
+| Évaluation           | toutes les `15m`, pendant `15m` |
+| **Si aucune donnée** | **`OK`**                        |
+| Sévérité             | `warning`                       |
+
+**Pourquoi 2 en 3 heures et pas 1.** Une livraison coupe l'application
+quelques secondes ; un job horaire qui tombe pile dessus échoue une fois et
+réussit l'heure suivante. Deux échecs du même job en trois heures, ce n'est
+plus la livraison : c'est le cas vu le 2026-10-03, où la cible des crons ne
+suivait pas la bascule bleu/vert, pendant six semaines.
+
+---
+
+## Règle 16 — Certificat TLS à moins de 14 jours
+
+acme.sh renouvelle à 30 jours de l'échéance (cron de 12:19, journal
+`acme.log`). Sous 14 jours, il a échoué deux semaines de suite.
+
+```promql
+humanix_certificat_jours_restants
+```
+
+| Paramètre            | Valeur                        |
+| -------------------- | ----------------------------- |
+| Type de requête      | `Instant`                     |
+| Condition            | `IS BELOW 14`                 |
+| Évaluation           | toutes les `1h`, pendant `2h` |
+| **Si aucune donnée** | **`OK`**                      |
+| Sévérité             | `critical`                    |
+
+La valeur `-1` signifie que la poignée de main TLS locale a échoué (certificat
+expiré ou chaîne invalide) : elle déclenche la règle, et le détail est dans
+`{source="exploitation", fichier="stats.log"}`.
+
+---
+
 ## Acheminement
 
 Une alerte qui reste dans Grafana n'a réveillé personne.
