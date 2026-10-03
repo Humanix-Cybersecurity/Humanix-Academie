@@ -404,6 +404,9 @@ transforms:
       }
       del(.file)
       del(.source_type)
+      # `host` ici = nom d'hote du conteneur Vector (un identifiant), pas la
+      # machine : le label host du sink dit deja humanix-prod-01.
+      del(.host)
 
   # === Journaux d'exploitation -> Loki ===
   #
@@ -435,6 +438,9 @@ transforms:
       }
       del(.file)
       del(.source_type)
+      # `host` ici = nom d'hote du conteneur Vector (un identifiant), pas la
+      # machine : le label host du sink dit deja humanix-prod-01.
+      del(.host)
 
   # === Mesures de l'hote : JSON -> champs, puis aiguillage par type ===
   hote_stats_json:
@@ -453,6 +459,9 @@ transforms:
       . = merge(., object!(parsed))
       del(.file)
       del(.source_type)
+      # `host` ici = nom d'hote du conteneur Vector (un identifiant), pas la
+      # machine : le label host du sink dit deja humanix-prod-01.
+      del(.host)
 
   hote_stats_route:
     type: route

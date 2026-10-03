@@ -23,7 +23,8 @@ Lignes emises (champ `type`) :
               swap_total/utilise, uptime_s
   disque      point, total, utilise                (un par systeme de fichiers)
   conteneur   nom, cpu_pct, mem, pids              (un par conteneur en marche)
-  certificat  domaine, jours                       (un par domaine surveille)
+  certificat  domaine, jours                       (un par domaine surveille,
+                                                    poignee de main reelle 1x/h)
   base        conteneur, taille, connexions, max_connexions, cache_pct,
               tuples_morts, transaction_max_s      (un par conteneur PostgreSQL)
   erreur      section, message                     (jamais de plantage global)
@@ -254,20 +255,52 @@ def mesurer_conteneurs(
 
 def jours_restants(domaine: str) -> int:
     contexte = ssl.create_default_context()
+    # HTTP/1.1 seul et fermeture propre (unwrap) : sans ALPN h2, HAProxy
+    # n'envoie pas de trame SETTINGS a un client qui ne demandera rien, et
+    # il ne se retrouve pas a ecrire sur une connexion morte. Avec `option
+    # dontlognull`, une poignee de main sans requete ne laisse alors aucune
+    # ligne de journal. Avant ce reglage, chaque sonde laissait un
+    # « ECONNRESET returned by OS » ou « EPIPE » dans Loki, deux par minute.
+    contexte.set_alpn_protocols(["http/1.1"])
     with socket.create_connection((TLS_HOTE, TLS_PORT), timeout=5) as brut:
-        with contexte.wrap_socket(brut, server_hostname=domaine) as tls:
+        tls = contexte.wrap_socket(brut, server_hostname=domaine)
+        try:
             cert = tls.getpeercert()
+        finally:
+            try:
+                tls.unwrap()
+            except (OSError, ssl.SSLError):
+                pass
     fin = ssl.cert_time_to_seconds(cert["notAfter"])
     return int((fin - time.time()) // 86400)
 
 
-def mesurer_certificats() -> None:
+# Une vraie poignee de main par domaine et par heure suffit : un certificat
+# ne change pas plus souvent. Entre deux, la valeur memorisee est reemise
+# chaque minute pour que la jauge reste fraiche cote Mimir (les regles
+# d'alerte lisent la derniere valeur). Un echec se retente au bout de 5 min.
+CERTIFICAT_INTERVALLE_S = 3600
+CERTIFICAT_RETENTATIVE_S = 300
+
+
+def mesurer_certificats(avant: dict, apres: dict) -> None:
+    cache = dict(avant.get("certificats") or {})
+    maintenant = time.time()
     for domaine in DOMAINES:
+        connu = cache.get(domaine)
+        if connu and maintenant - connu.get("t", 0) < CERTIFICAT_INTERVALLE_S:
+            emettre("certificat", domaine=domaine, jours=connu["jours"])
+            continue
         try:
-            emettre("certificat", domaine=domaine, jours=jours_restants(domaine))
+            jours = jours_restants(domaine)
+            horodatage = maintenant
         except Exception as exc:  # expire, chaine invalide, port ferme : on le dit
-            emettre("certificat", domaine=domaine, jours=-1)
+            jours = -1
+            horodatage = maintenant - CERTIFICAT_INTERVALLE_S + CERTIFICAT_RETENTATIVE_S
             erreur(f"certificat {domaine}", exc)
+        cache[domaine] = {"jours": jours, "t": horodatage}
+        emettre("certificat", domaine=domaine, jours=jours)
+    apres["certificats"] = cache
 
 
 # --- Bases PostgreSQL -------------------------------------------------------
@@ -356,7 +389,7 @@ def principal() -> int:
         ("hote", lambda: mesurer_hote(avant, apres)),
         ("disques", mesurer_disques),
         ("conteneurs", lambda: mesurer_conteneurs(conteneurs, avant, apres)),
-        ("certificats", mesurer_certificats),
+        ("certificats", lambda: mesurer_certificats(avant, apres)),
         ("bases", lambda: mesurer_bases(conteneurs)),
     ):
         try:
