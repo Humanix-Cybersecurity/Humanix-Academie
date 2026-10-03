@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Rotation des journaux de l'hote ecrits par la crontab (infra/cron/crontab.prod)
+# et lus par Vector (infra/vector/vector.yaml). A installer une fois :
+#
+#     sudo install -m 0644 infra/logrotate/humanix /etc/logrotate.d/humanix
+#
+# Pourquoi : sans rotation, cron.log avait atteint 664 Ko et stats.log
+# ajouterait ~3 Mo par jour. `copytruncate` plutot que `create` : les
+# scripts ecrivent en `>>` depuis cron et ne rouvrent jamais le fichier,
+# et Vector suit la troncature (il repart du debut du fichier).
+/var/log/humanix/*.log {
+    daily
+    rotate 14
+    missingok
+    notifempty
+    compress
+    delaycompress
+    copytruncate
+}

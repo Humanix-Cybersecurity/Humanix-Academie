@@ -75,6 +75,10 @@ services:
       # puis jetées (cf. infra/vector/vector.yaml). Aucune adresse IP ni aucun
       # chemin de requête ne sort de la machine.
       - /var/log/haproxy.log:/var/log/haproxy.log:ro
+      # Journaux de la crontab de l'hote (sauvegardes, archivage, crons
+      # applicatifs, acme.sh) et mesures de scripts/host-stats.py : Vector
+      # les lit, cf. les sources `exploitation_*` et `hote_stats`.
+      - /var/log/humanix:/var/log/humanix:ro
 
     # Le journal HAProxy est en `syslog:adm 640`. Sans appartenir au groupe
     # `adm`, Vector ne peut pas l'ouvrir — et une source `file` qui ne peut pas

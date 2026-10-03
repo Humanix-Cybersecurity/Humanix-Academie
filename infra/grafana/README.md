@@ -124,6 +124,8 @@ Estimation pour Humanix, sur volumes **mesurés** et non supposés :
 | ---------------------------------------- | ------------------ | --------- |
 | Logs des conteneurs                      | ~11 Mo/mois        | ~0,01 €   |
 | Journal HAProxy (13 000 lignes/jour)     | ~150 Mo/mois       | ~0,05 €   |
+| Journaux d'exploitation (cron, backup…)  | < 1 Mo/mois        | ~0 €      |
+| Mesures hôte et conteneurs (~40 séries)  | 1,7 M échantillons | ~0,26 €   |
 | Métriques app (~110 séries @ 60 s)       | 4,8 M échantillons | ~0,71 €   |
 | _(option)_ node_exporter (~1 000 séries) | 43 M échantillons  | ~6,50 €   |
 
@@ -398,6 +400,37 @@ podman logs --since 2m humanix-prod_vector_1 2>&1 | grep -iE 'error|401|404|refu
 
 Puis dans Grafana Explore : `{source="haproxy"}` doit afficher des lignes dans
 la minute (les scanners ne laissent jamais le journal vide longtemps).
+
+### 10. Exploitation : journaux de l'hôte et mesures de la machine
+
+Depuis le 2026-10-03, Vector lit aussi `/var/log/humanix/` (sauvegardes,
+archivage, crons applicatifs, acme.sh → Loki, label `source="exploitation"`)
+et `stats.log`, écrit chaque minute par `scripts/host-stats.py` (CPU, charge,
+mémoire, disques, conteneurs, jours restants des certificats → Mimir, jauges
+`humanix_hote_*`, `humanix_conteneur_*`, `humanix_certificat_*`). Tableau de
+bord : `dashboards/humanix-exploitation.json`, règles 12 à 16 de
+`docs/ALERTES-GRAFANA.md`.
+
+Trois gestes sur l'hôte, une fois :
+
+```bash
+cd /opt/humanix-prod
+# 1. Rotation des journaux de /var/log/humanix (sans elle, stats.log grossit de 3 Mo/jour).
+sudo install -m 0644 infra/logrotate/humanix /etc/logrotate.d/humanix
+# 2. La crontab : acme.sh journalisé, host-stats.py chaque minute.
+./infra/cron/install-crontab.sh
+# 3. Vector relit sa configuration et le nouveau montage (cf. §9 pour la validation).
+podman-compose -f docker-compose.yml -f docker-compose.observabilite.yml up -d --force-recreate vector
+```
+
+Puis importer `dashboards/humanix-exploitation.json` en choisissant les deux
+data sources, Prometheus et Loki. Vérifications : `{source="exploitation"}`
+dans Explore, et `humanix_hote_cpu_pourcent` côté métriques, dans la minute.
+
+Pourquoi un script plutôt que node_exporter ou `host_metrics` de Vector :
+node_exporter coûte ~6,50 €/mois pour un millier de séries, et Vector, dans
+son conteneur, ne voit ni les montages ni les cgroups rootless de l'hôte.
+Depuis l'hôte, `/proc`, `/sys/fs/cgroup` et `podman inspect` suffisent.
 
 ## Maintenance
 
