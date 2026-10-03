@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // API : POST progression d'un episode + attribution XP, coins, level up
+import { recordEpisodeTermine } from "@/lib/metrics/registry";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { auth } from "@/lib/auth";
@@ -120,6 +121,10 @@ export async function POST(req: Request) {
         completedAt: status === "COMPLETED" ? now : existing?.completedAt,
       },
     });
+
+    // Metrique produit : une personne vient de finir cet episode pour la
+    // premiere fois (humanix_episodes_termines_total). Best-effort.
+    if (status === "COMPLETED" && isFirstCompletion) recordEpisodeTermine();
 
     let coinsAwarded = 0;
     let leveledUp = false;

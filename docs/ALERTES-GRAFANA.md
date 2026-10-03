@@ -567,6 +567,32 @@ expiré ou chaîne invalide) : elle déclenche la règle, et le détail est dans
 
 ---
 
+## Règle 17 — Hex : le fournisseur répond en erreur
+
+Depuis le 2026-10-03 chaque message adressé à Hex est compté dans
+`humanix_hex_messages_total`, avec son résultat. `fournisseur` veut dire que
+Mistral a répondu en erreur : modèle refusé sur ce palier (403), limite de
+débit (429), incident (5xx). Le 2026-10-01, c'est ainsi que Hex est resté muet
+une journée : le palier gratuit avait disparu, personne n'a vu les 403.
+
+```promql
+sum(increase(humanix_hex_messages_total{resultat="fournisseur"}[15m]))
+```
+
+| Paramètre            | Valeur                         |
+| -------------------- | ------------------------------ |
+| Type de requête      | `Instant`                      |
+| Condition            | `IS ABOVE 2`                   |
+| Évaluation           | toutes les `5m`, pendant `10m` |
+| **Si aucune donnée** | **`OK`**                       |
+| Sévérité             | `warning`                      |
+
+Les refus de quota (`resultat=~"quota_.*"`) ne sont pas une alerte : c'est le
+dispositif qui fait son travail. Ils se lisent dans le tableau de bord
+`humanix-produit-hex.json`, avec le coût estimé du mois.
+
+---
+
 ## Acheminement
 
 Une alerte qui reste dans Grafana n'a réveillé personne.

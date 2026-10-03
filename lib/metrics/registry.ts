@@ -57,8 +57,11 @@ type HumanixMetrics = {
   auditActionTotal: Counter<string>;
   httpRequestsTotal: Counter<string>;
   httpRequestDurationSeconds: Histogram<string>;
-  // Reserve pour futurs gauges metiers (active_users, tenant_count, etc.)
-  // Pour le moment on garde le set minimal.
+  // Produit et IA (2026-10-03) : cf. le bloc du meme nom dans buildMetrics.
+  hexMessagesTotal: Counter<string>;
+  hexCaracteresTotal: Counter<string>;
+  courrielsTotal: Counter<string>;
+  episodesTerminesTotal: Counter<string>;
 };
 
 function buildMetrics(): HumanixMetrics {
@@ -110,11 +113,48 @@ function buildMetrics(): HumanixMetrics {
     registers: [registry],
   });
 
+  // --- Produit et IA (2026-10-03) ---------------------------------------
+  //
+  // Jusqu'ici l'application n'exposait que ses requetes HTTP et ses actions
+  // d'audit. Depuis que les jetons Mistral sont payants, il faut lire
+  // combien de messages Hex partent, pour qui, avec quel modele, et
+  // combien sont refuses par les quotas (lib/ai/hex/quotas.ts). Les
+  // caracteres entres et sortis donnent une estimation du cout (un jeton
+  // vaut environ quatre caracteres de francais). Labels bornes : plan (3),
+  // modele (2 ou 3), resultat (8), sens (2).
+  const hexMessagesTotal = new Counter({
+    name: "humanix_hex_messages_total",
+    help: "Messages envoyes a Hex, par plan, modele et resultat (ok, quota_*, fournisseur, indisponible, invalide)",
+    labelNames: ["plan", "modele", "resultat"],
+    registers: [registry],
+  });
+  const hexCaracteresTotal = new Counter({
+    name: "humanix_hex_caracteres_total",
+    help: "Caracteres envoyes au modele (entree : prompt systeme et historique) et recus (sortie), par plan",
+    labelNames: ["plan", "sens"],
+    registers: [registry],
+  });
+  const courrielsTotal = new Counter({
+    name: "humanix_courriels_total",
+    help: "Courriels envoyes par la plateforme, par voie et resultat (ok ou raison d'echec SMTP)",
+    labelNames: ["voie", "resultat"],
+    registers: [registry],
+  });
+  const episodesTerminesTotal = new Counter({
+    name: "humanix_episodes_termines_total",
+    help: "Episodes termines par les apprenants, toutes organisations confondues",
+    registers: [registry],
+  });
+
   return {
     registry,
     auditActionTotal,
     httpRequestsTotal,
     httpRequestDurationSeconds,
+    hexMessagesTotal,
+    hexCaracteresTotal,
+    courrielsTotal,
+    episodesTerminesTotal,
   };
 }
 
@@ -186,5 +226,75 @@ export function recordHttpMetric(params: {
     m.httpRequestDurationSeconds.observe(labels, elapsedSec);
   } catch (err) {
     console.error("[metrics] recordHttpMetric failed", err);
+  }
+}
+
+// --- Produit et IA : helpers best-effort, comme recordAuditMetric -----------
+
+export type ResultatHex =
+  | "ok"
+  | "quota_heure"
+  | "quota_jour"
+  | "quota_espace"
+  | "quota_instance"
+  | "fournisseur"
+  | "indisponible"
+  | "invalide";
+
+/** Un message adresse a Hex, quel qu'en soit le sort. */
+export function recordHexMessage(params: {
+  plan: string;
+  modele: string;
+  resultat: ResultatHex;
+}): void {
+  try {
+    getMetrics().hexMessagesTotal.inc({
+      plan: params.plan,
+      modele: params.modele,
+      resultat: params.resultat,
+    });
+  } catch (err) {
+    console.error("[metrics] recordHexMessage failed", err);
+  }
+}
+
+/** Caracteres entres (prompt + historique) ou sortis (reponse) pour Hex. */
+export function recordHexCaracteres(params: {
+  plan: string;
+  sens: "entree" | "sortie";
+  nombre: number;
+}): void {
+  if (!Number.isFinite(params.nombre) || params.nombre <= 0) return;
+  try {
+    getMetrics().hexCaracteresTotal.inc(
+      { plan: params.plan, sens: params.sens },
+      params.nombre,
+    );
+  } catch (err) {
+    console.error("[metrics] recordHexCaracteres failed", err);
+  }
+}
+
+/** Un courriel tente, par voie d'envoi et resultat. */
+export function recordCourriel(params: {
+  voie: string;
+  resultat: string;
+}): void {
+  try {
+    getMetrics().courrielsTotal.inc({
+      voie: params.voie,
+      resultat: params.resultat,
+    });
+  } catch (err) {
+    console.error("[metrics] recordCourriel failed", err);
+  }
+}
+
+/** Un episode termine par une personne. */
+export function recordEpisodeTermine(): void {
+  try {
+    getMetrics().episodesTerminesTotal.inc();
+  } catch (err) {
+    console.error("[metrics] recordEpisodeTermine failed", err);
   }
 }

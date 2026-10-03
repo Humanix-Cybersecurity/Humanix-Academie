@@ -12,6 +12,10 @@
 // un CTA vers /admin/parametres/smtp ou /demande-abonnement (forfait).
 
 import nodemailer, { type Transporter } from "nodemailer";
+import { recordCourriel } from "@/lib/metrics/registry";
+
+// Voie d'envoi pour humanix_courriels_total : le SMTP du tenant (phishing).
+const VOIE = "smtp_tenant";
 import { db } from "@/lib/db";
 import { decryptSmtpPassword } from "./encryption";
 
@@ -95,6 +99,7 @@ export async function sendMailViaTenantSmtp(
 ): Promise<SmtpSendResult> {
   const cfg = await loadTenantSmtp(tenantId);
   if (!cfg) {
+    recordCourriel({ voie: VOIE, resultat: "smtp_not_configured" });
     return { ok: false, reason: "smtp_not_configured" };
   }
 
@@ -102,6 +107,7 @@ export async function sendMailViaTenantSmtp(
   try {
     transporter = buildTransport(cfg);
   } catch (e) {
+    recordCourriel({ voie: VOIE, resultat: "smtp_decrypt_failed" });
     return {
       ok: false,
       reason: "smtp_decrypt_failed",
@@ -122,6 +128,7 @@ export async function sendMailViaTenantSmtp(
       text: params.text,
       headers: params.headers,
     });
+    recordCourriel({ voie: VOIE, resultat: "ok" });
     return { ok: true, messageId: info.messageId };
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
@@ -133,6 +140,7 @@ export async function sendMailViaTenantSmtp(
       : /connect|timeout|enotfound|getaddrinfo|econnrefused/i.test(msg)
         ? "smtp_connect_failed"
         : "smtp_send_failed";
+    recordCourriel({ voie: VOIE, resultat: reason });
     return { ok: false, reason, details: msg.slice(0, 500) };
   } finally {
     transporter.close();
