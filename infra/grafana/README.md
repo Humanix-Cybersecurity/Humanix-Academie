@@ -126,6 +126,7 @@ Estimation pour Humanix, sur volumes **mesurés** et non supposés :
 | Journal HAProxy (13 000 lignes/jour)     | ~150 Mo/mois       | ~0,05 €   |
 | Journaux d'exploitation (cron, backup…)  | < 1 Mo/mois        | ~0 €      |
 | Mesures hôte et conteneurs (~40 séries)  | 1,7 M échantillons | ~0,26 €   |
+| Mesures PostgreSQL (~12 séries)          | 0,5 M échantillons | ~0,08 €   |
 | Métriques produit et Hex (~30 séries)    | 1,3 M échantillons | ~0,20 €   |
 | Métriques app (~110 séries @ 60 s)       | 4,8 M échantillons | ~0,71 €   |
 | _(option)_ node_exporter (~1 000 séries) | 43 M échantillons  | ~6,50 €   |
@@ -421,7 +422,7 @@ Depuis le 2026-10-03, Vector lit aussi `/var/log/humanix/` (sauvegardes,
 archivage, crons applicatifs, acme.sh → Loki, label `source="exploitation"`)
 et `stats.log`, écrit chaque minute par `scripts/host-stats.py` (CPU, charge,
 mémoire, disques, conteneurs, jours restants des certificats → Mimir, jauges
-`humanix_hote_*`, `humanix_conteneur_*`, `humanix_certificat_*`). Tableau de
+`humanix_hote_*`, `humanix_conteneur_*`, `humanix_certificat_*`, `humanix_base_*`). Tableau de
 bord : `dashboards/humanix-exploitation.json`, règles 12 à 16 de
 `docs/ALERTES-GRAFANA.md`.
 
@@ -447,6 +448,26 @@ Pourquoi un script plutôt que node_exporter ou `host_metrics` de Vector :
 node_exporter coûte ~6,50 €/mois pour un millier de séries, et Vector, dans
 son conteneur, ne voit ni les montages ni les cgroups rootless de l'hôte.
 Depuis l'hôte, `/proc`, `/sys/fs/cgroup` et `podman inspect` suffisent.
+
+### 11. Disponibilité vue de l'extérieur
+
+Tout ce qui précède tourne sur la machine ou dépend d'elle : si l'hôte tombe,
+Vector se tait, et la règle 5 (« homme mort ») ne se déclenche que par
+absence de données chez Scaleway. Une sonde externe comble ce cas, et c'est
+la seule brique qui ne se configure pas ici : un service tiers, gratuit à ce
+volume, qui appelle les deux adresses ci-dessous toutes les 5 minutes depuis
+l'extérieur et pousse une notification sur le téléphone en cas d'échec.
+
+| Adresse                                       | Attendu                           |
+| --------------------------------------------- | --------------------------------- |
+| `https://humanix-academie.fr/api/health`      | HTTP 200, corps `{"status":"ok"}` |
+| `https://demo.humanix-academie.fr/api/health` | HTTP 200, corps `{"status":"ok"}` |
+
+Exiger le corps, pas seulement le code : HAProxy répond 200 avec une page
+d'erreur si l'application est absente mais le proxy en vie. Ne pas router la
+notification vers une adresse hébergée par la plateforme elle-même, pour les
+mêmes raisons que les alertes Grafana (cf. `docs/ALERTES-GRAFANA.md`,
+« Acheminement »).
 
 ## Maintenance
 

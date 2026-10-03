@@ -24,6 +24,8 @@ Lignes emises (champ `type`) :
   disque      point, total, utilise                (un par systeme de fichiers)
   conteneur   nom, cpu_pct, mem, pids              (un par conteneur en marche)
   certificat  domaine, jours                       (un par domaine surveille)
+  base        conteneur, taille, connexions, max_connexions, cache_pct,
+              tuples_morts, transaction_max_s      (un par conteneur PostgreSQL)
   erreur      section, message                     (jamais de plantage global)
 
 Le CPU se mesure par difference avec la minute precedente : l'etat tient
@@ -268,6 +270,67 @@ def mesurer_certificats() -> None:
             erreur(f"certificat {domaine}", exc)
 
 
+# --- Bases PostgreSQL -------------------------------------------------------
+
+REQUETE_BASE = (
+    "select pg_database_size(current_database()),"
+    " (select count(*) from pg_stat_activity where datname = current_database()),"
+    " (select setting from pg_settings where name = 'max_connections'),"
+    " (select coalesce(round(100.0 * sum(blks_hit)"
+    "   / nullif(sum(blks_hit) + sum(blks_read), 0), 1), 0)"
+    "  from pg_stat_database where datname = current_database()),"
+    " (select coalesce(sum(n_dead_tup), 0) from pg_stat_user_tables),"
+    " (select coalesce(extract(epoch from max(now() - xact_start)), 0)::int"
+    "  from pg_stat_activity where datname = current_database()"
+    "  and state <> 'idle')"
+)
+
+
+def mesurer_bases(conteneurs: list[tuple[str, Path]]) -> None:
+    """Taille, connexions, cache, tuples morts et plus longue transaction de
+    chaque conteneur PostgreSQL, par `podman exec ... psql` avec le role et la
+    base du conteneur lui-meme : ni role de lecture ni secret supplementaire.
+    Une douzaine de series, la ou la source postgresql_metrics de Vector en
+    produirait soixante pour une base de 17 Mo."""
+    for nom, _ in conteneurs:
+        if "postgres" not in nom:
+            continue
+        try:
+            env = subprocess.run(
+                ["podman", "exec", nom, "sh", "-c", 'echo "$POSTGRES_USER|$POSTGRES_DB"'],
+                capture_output=True,
+                text=True,
+                timeout=20,
+                check=True,
+            ).stdout.strip()
+            utilisateur, _, base = env.partition("|")
+            sortie = subprocess.run(
+                [
+                    "podman", "exec", nom, "psql",
+                    "-U", utilisateur or "postgres",
+                    "-d", base or "postgres",
+                    "-At", "-F", "|", "-c", REQUETE_BASE,
+                ],
+                capture_output=True,
+                text=True,
+                timeout=20,
+                check=True,
+            ).stdout.strip()
+            taille, connexions, max_conn, cache, morts, trans = sortie.split("|")
+            emettre(
+                "base",
+                conteneur=nom,
+                taille=int(taille),
+                connexions=int(connexions),
+                max_connexions=int(max_conn),
+                cache_pct=float(cache),
+                tuples_morts=int(morts),
+                transaction_max_s=int(trans),
+            )
+        except Exception as exc:
+            erreur(f"base {nom}", exc)
+
+
 # --- Principal --------------------------------------------------------------
 
 
@@ -294,6 +357,7 @@ def principal() -> int:
         ("disques", mesurer_disques),
         ("conteneurs", lambda: mesurer_conteneurs(conteneurs, avant, apres)),
         ("certificats", mesurer_certificats),
+        ("bases", lambda: mesurer_bases(conteneurs)),
     ):
         try:
             fonction()
