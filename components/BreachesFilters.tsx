@@ -53,7 +53,7 @@ function BreachesFiltersInner({
     { key: "ALL", label: "Toutes les sources" },
     { key: "FRENCHBREACHES", label: SOURCE_META.FRENCHBREACHES.name },
     { key: "BONJOURLAFUITE", label: SOURCE_META.BONJOURLAFUITE.name },
-    // FUITESINFOS retiré (source désactivée - items historiques conservés en BDD)
+    // FUITESINFOS retiré : collecteur jamais mis en service, aucun enregistrement.
   ];
 
   const totalAll = statsBySource.reduce((s, x) => s + x.count, 0);

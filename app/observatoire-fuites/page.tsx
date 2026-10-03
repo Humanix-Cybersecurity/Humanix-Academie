@@ -31,7 +31,7 @@ export const revalidate = 1800; // 30 min cote Next
 export const metadata = {
   title: "Observatoire des fuites de données françaises | Humanix Académie",
   description:
-    "Recensement des fuites de données récentes en France, agrégé depuis FrenchBreaches, Bonjour la Fuite et Fuites Infos. Mise à jour quotidienne. Sans dramatiser.",
+    "Recensement des fuites de données récentes en France, agrégé depuis FrenchBreaches et Bonjour la Fuite. Mise à jour quotidienne. Sans dramatiser.",
   alternates: { canonical: "/observatoire-fuites" },
   openGraph: {
     title: "Les fuites de données françaises, en un seul endroit",
@@ -112,11 +112,10 @@ export default async function ObservatoireFuitesPage({
   const offset = (page - 1) * PER_PAGE;
 
   const sourceFilter = (sp.source ?? "").toUpperCase();
-  const allowedSources: BreachSource[] = [
-    "FRENCHBREACHES",
-    "BONJOURLAFUITE",
-    "FUITESINFOS",
-  ];
+  // Seules les sources actives sont filtrables : FUITESINFOS (collecteur
+  // retiré avant la première version, aucun enregistrement) ne doit pas
+  // pouvoir contourner le filtre ACTIVE_SOURCES du dépôt via ?source=.
+  const allowedSources: BreachSource[] = ["FRENCHBREACHES", "BONJOURLAFUITE"];
   const filterSource = allowedSources.includes(sourceFilter as BreachSource)
     ? (sourceFilter as BreachSource)
     : undefined;

@@ -11,6 +11,7 @@
 // PRIVACY : lecture seule, ÉPHÉMÈRE. Aucun write, aucun log de la cible.
 // Utilise dbReadOnly (least privilege) quand dispo.
 
+import { ACTIVE_SOURCES } from "@/lib/breaches/types";
 import { dbReadOnly } from "@/lib/db-readonly";
 
 // Domaines de messagerie grand public : un email perso ne matchera jamais une
@@ -118,6 +119,9 @@ export async function matchEmailDomain(
   const rows = await dbReadOnly.dataBreach.findMany({
     where: {
       isPublished: true,
+      // Sources actives uniquement, comme l'observatoire public : une
+      // source retiree (FUITESINFOS) ne doit alimenter aucune alerte.
+      source: { in: ACTIVE_SOURCES },
       OR: [
         { organization: { contains: orgGuess, mode: "insensitive" } },
         { title: { contains: orgGuess, mode: "insensitive" } },

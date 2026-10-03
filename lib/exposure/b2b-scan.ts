@@ -12,6 +12,7 @@
 //     jamais créée.
 //   - Idempotent : @@unique([userId, breachId]) -> pas de doublon au re-scan.
 
+import { ACTIVE_SOURCES } from "@/lib/breaches/types";
 import { db } from "@/lib/db";
 import { auditLog } from "@/lib/audit";
 import { isB2bMonitoringActive } from "@/lib/exposure/b2b-flags";
@@ -29,6 +30,9 @@ async function breachesForDomain(domain: string): Promise<string[]> {
   const rows = await db.dataBreach.findMany({
     where: {
       isPublished: true,
+      // Sources actives uniquement, comme l'observatoire public : une
+      // source retiree (FUITESINFOS) ne doit alimenter aucune alerte.
+      source: { in: ACTIVE_SOURCES },
       OR: [
         { organization: { contains: orgGuess, mode: "insensitive" } },
         { title: { contains: orgGuess, mode: "insensitive" } },
