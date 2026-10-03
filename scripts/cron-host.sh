@@ -13,7 +13,9 @@
 #
 # VARIABLES D'ENV (toutes optionnelles) :
 #   HUMANIX_ENV_FILE    defaut /opt/humanix-prod/.env
-#   APP_INTERNAL_URL    defaut http://127.0.0.1:3000
+#   HUMANIX_STACK_DIR   defaut : le repertoire du .env (porte .humanix-deployed)
+#   APP_INTERNAL_URL    surcharge explicite ; sinon la couleur active est
+#                       resolue (cf. plus bas)
 #
 # EXIT CODES : ceux de cron-runner.sh, plus
 #   1  fichier .env introuvable, ou secret absent / trop court
@@ -80,10 +82,64 @@ if [ "${#CRON_SECRET}" -lt 16 ]; then
   exit 1
 fi
 
-# Depuis l'hote, l'app est joignable sur le port publie en local. Depuis
-# un conteneur du meme reseau, ce serait http://app:3000 — d'ou le defaut
-# different de celui de cron-runner.sh.
-APP_INTERNAL_URL="${APP_INTERNAL_URL:-http://127.0.0.1:3000}"
+# --- La cible suit la couleur active --------------------------------------
+#
+# Jusqu'au 2026-10-03, la cible etait figee a http://127.0.0.1:3000. Or la
+# bascule bleu/vert de scripts/deploy.sh alterne l'application entre deux
+# ports (prod : 3000 pour la couleur a, 3010 pour la b ; demo : 3001/3011).
+# Une livraison sur deux laissait donc la prod sur un port que ce script
+# ne visait pas : 1 468 echecs « 000 » dans cron.log entre le 2026-08-19 et
+# le 2026-10-03, soit la moitie des executions. Campagnes de phishing non
+# lancees, purges non faites, et rien ne le signalait : le journal n'etait
+# lu par personne.
+#
+# Resolution, dans l'ordre :
+#   1. APP_INTERNAL_URL si elle est fournie (surcharge explicite) ;
+#   2. le port ecrit par deploy.sh dans .humanix-deployed a la derniere
+#      bascule, s'il repond sur /api/health ;
+#   3. sinon les deux ports de la pile, couleur a puis b, le premier qui
+#      repond. La pile est deduite du repertoire du .env : « demo » dans le
+#      chemin = ports 3001/3011, sinon 3000/3010. On ne sonde JAMAIS les
+#      ports de l'autre pile : un cron de prod ne doit pas frapper la demo.
+#
+# `cron-host.sh --resolve-only` affiche la cible retenue sans rien lancer.
+STACK_DIR="${HUMANIX_STACK_DIR:-$(dirname "$ENV_FILE")}"
+
+sonde() {
+  curl -sf -o /dev/null --max-time 3 "http://127.0.0.1:$1/api/health"
+}
+
+resoudre_port() {
+  p=$(grep -m1 -E '^port=[0-9]+$' "$STACK_DIR/.humanix-deployed" 2>/dev/null | cut -d= -f2)
+  if [ -n "$p" ] && sonde "$p"; then
+    echo "$p"
+    return 0
+  fi
+  base=3000
+  case "$STACK_DIR" in
+    *demo*) base=3001 ;;
+  esac
+  for p in "$base" $((base + 10)); do
+    if sonde "$p"; then
+      echo "$p"
+      return 0
+    fi
+  done
+  return 1
+}
+
+if [ -z "${APP_INTERNAL_URL:-}" ]; then
+  port=$(resoudre_port) || {
+    echo "[cron-host] ERREUR : aucune couleur de l'application ne repond sur 127.0.0.1 pour la pile $STACK_DIR" >&2
+    exit 1
+  }
+  APP_INTERNAL_URL="http://127.0.0.1:$port"
+fi
 export APP_INTERNAL_URL
+
+if [ "$1" = "--resolve-only" ]; then
+  echo "$APP_INTERNAL_URL"
+  exit 0
+fi
 
 exec "$(dirname "$0")/cron-runner.sh" "$1"

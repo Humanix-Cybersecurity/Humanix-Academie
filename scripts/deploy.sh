@@ -750,6 +750,10 @@ DEPLOYED_FILE="$STACK_DIR/.humanix-deployed"
   echo "content_pro=$(git -C content-pro rev-parse HEAD 2>/dev/null || echo inconnu)"
   echo "deployed_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   echo "deployed_by=${USER:-inconnu}"
+  # Couleur et port actifs (vides avec le moteur docker, sans bascule).
+  # Lus par scripts/cron-host.sh : la cible des crons suit la couleur.
+  echo "couleur=${COULEUR_CIBLE:-a}"
+  echo "port=${PORT_CIBLE:-}"
 } > "$DEPLOYED_FILE"
 log "Trace ecrite dans $DEPLOYED_FILE"
 
