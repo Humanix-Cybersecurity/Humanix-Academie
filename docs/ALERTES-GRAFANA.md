@@ -140,6 +140,17 @@ chercher une fois l'alerte reçue.
 (`env` vaut `prod` ou `demo` — dérivé du nom du conteneur, les deux piles
 partageant le même Vector).
 
+**Depuis le 2026-10-03, le journal HAProxy arrive aussi dans Loki**, sous le
+label `source="haproxy"` (labels : `env` = `prod`, `demo` ou `edge` quand
+HAProxy a répondu seul ; `type` = `http` ou `connexion` ; `classe` = `2xx`…
+`5xx`). Contrairement aux lignes d'audit, celles-ci portent **l'adresse IP**, la
+méthode, le chemin **sans ses paramètres**, le statut, les octets, la durée et
+l'état de terminaison (`PR--` = refusé par une règle HAProxy). Décision
+documentée dans `infra/vector/vector.yaml` (transform `haproxy_journal`) :
+finalité sécurité, rétention 7 jours chez Scaleway. C'est le flux qui rend
+visibles les balayages, la force brute lente et les refus en rafale : règles 8
+à 11 ci-dessous, tableau de bord `infra/grafana/dashboards/humanix-trafic-haproxy.json`.
+
 ---
 
 ## Règle 1 — Rafale d'échecs d'authentification
@@ -343,6 +354,105 @@ l'erreur évitée à la règle 5. Regarder d'abord la courbe sur sept jours.
 
 ---
 
+## Règle 8 — Balayage (une adresse enchaîne les 404)
+
+Les scanners énumèrent des chemins qui n'existent pas : `/.env`,
+`/wp-login.php`, `/geoserver/web/`. Le 2026-10-02, 6 111 des 13 313 lignes du
+journal étaient des 404, et trois adresses en portaient la moitié.
+
+```logql
+sum by (client_ip) (count_over_time({source="haproxy", type="http", classe="4xx"} | json | statut = 404 [10m]))
+```
+
+| Paramètre            | Valeur                        |
+| -------------------- | ----------------------------- |
+| Type de requête      | `Instant`                     |
+| Condition            | `IS ABOVE 100`                |
+| Évaluation           | toutes les `1m`, pendant `5m` |
+| **Si aucune donnée** | **`OK`**                      |
+| Sévérité             | `warning`                     |
+
+**Pourquoi 100 en 10 minutes.** Un humain qui se trompe d'URL en produit deux
+ou trois ; un robot d'indexation honnête en produit quelques dizaines par
+heure et respecte `robots.txt`. Cent 404 en dix minutes depuis une seule
+adresse, c'est une liste de mots. L'alerte est **par adresse** (`sum by`) : elle
+nomme l'IP à bloquer, et HAProxy sait la bloquer (`stk_abuse`, ou une liste
+d'adresses refusées si cela devient récurrent).
+
+---
+
+## Règle 9 — Force brute lente sur l'authentification
+
+HAProxy coupe déjà à 150 requêtes par 10 secondes sur `/api/auth/callback`
+(429). Cette règle attrape ce qui passe **sous** ce seuil : une adresse qui
+tente un mot de passe toutes les dix secondes pendant une heure.
+
+```logql
+sum by (client_ip) (count_over_time({source="haproxy", type="http"} | json | methode = "POST" | chemin =~ "/api/auth/.*|/connexion.*" [15m]))
+```
+
+| Paramètre            | Valeur                        |
+| -------------------- | ----------------------------- |
+| Type de requête      | `Instant`                     |
+| Condition            | `IS ABOVE 40`                 |
+| Évaluation           | toutes les `1m`, pendant `5m` |
+| **Si aucune donnée** | **`OK`**                      |
+| Sévérité             | `warning`                     |
+
+Elle complète la règle 1, qui compte les échecs côté application mais sans
+adresse. Les deux ensemble : _combien_ d'échecs (règle 1), _depuis où_
+(règle 9).
+
+---
+
+## Règle 10 — Les protections HAProxy tirent en rafale
+
+Chaque refus décidé par HAProxy lui-même (agent interdit → 403, méthode
+exotique → 405, compteurs d'abus → 429) porte la terminaison `PR`. Quelques-uns
+par heure, c'est le bruit de fond d'Internet. Des centaines en cinq minutes,
+c'est une attaque en cours que les règles encaissent : il faut regarder si
+elles tiennent, et d'où ça vient.
+
+```logql
+sum(count_over_time({source="haproxy", type="http"} | json | terminaison =~ "PR.*" [5m]))
+```
+
+| Paramètre            | Valeur                        |
+| -------------------- | ----------------------------- |
+| Type de requête      | `Instant`                     |
+| Condition            | `IS ABOVE 300`                |
+| Évaluation           | toutes les `1m`, pendant `5m` |
+| **Si aucune donnée** | **`OK`**                      |
+| Sévérité             | `warning`                     |
+
+---
+
+## Règle 11 — Échecs de poignée de main TLS
+
+Les lignes `SSL handshake failure` (label `type="connexion"`) viennent de
+clients qui n'achèvent pas le TLS : sondes de certificats, scanners de
+versions, vieux clients. Un pic soudain signale un balayage de la machine
+entière, souvent quelques minutes avant la règle 8.
+
+```logql
+sum(count_over_time({source="haproxy", type="connexion"}[10m]))
+```
+
+| Paramètre            | Valeur                        |
+| -------------------- | ----------------------------- |
+| Type de requête      | `Instant`                     |
+| Condition            | `IS ABOVE 200`                |
+| Évaluation           | toutes les `1m`, pendant `5m` |
+| **Si aucune donnée** | **`OK`**                      |
+| Sévérité             | `warning`                     |
+
+**Ce que ces quatre règles ne font pas** : bloquer. Elles nomment une adresse
+et un motif ; le blocage reste une décision humaine, dans `haproxy.cfg`. Les
+seuils sont des premiers réglages : relever le compte réel dans le tableau de
+bord pendant deux semaines avant de les durcir.
+
+---
+
 ## Acheminement
 
 Une alerte qui reste dans Grafana n'a réveillé personne.
@@ -377,3 +487,9 @@ pas la patience.
 
 **L'intégrité des fichiers.** AIDE est installé sur le serveur ; son rapport
 n'est lu par personne. C'est la prochaine marche, et elle est bon marché.
+
+**L'agent utilisateur.** HAProxy bloque déjà quelques signatures (sqlmap,
+nikto…) mais ne journalise pas l'en-tête : les règles 8 à 11 raisonnent par
+adresse et par chemin, jamais par outil. Ajouter `capture request header
+User-Agent` dans `haproxy.cfg` le rendrait disponible, `haproxy_journal` sait
+déjà le lire s'il apparaît.

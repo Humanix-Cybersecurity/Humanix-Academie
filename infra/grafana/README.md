@@ -87,6 +87,14 @@ Total ~30-45 min côté ops.
                   └────────────┘
 ```
 
+> Depuis le 2026-10-03, Vector lit aussi `/var/log/haproxy.log` et en tire
+> **deux flux** : des métriques (statut, durée → Mimir, depuis août) et, nouveau,
+> les **requêtes structurées** (adresse IP, méthode, chemin sans paramètres,
+> statut, octets, durée → Loki, label `source="haproxy"`). C'est ce second flux
+> qui répond à « qui nous scanne ? ». Tableau de bord dédié :
+> `dashboards/humanix-trafic-haproxy.json`, règles 8 à 11 de
+> `docs/ALERTES-GRAFANA.md`.
+
 > ⚠️ Le bloc « Cockpit Agent (scrape) » du schéma ci-dessus est **trompeur** :
 > Cockpit ne scrape rien, il ne fait que **recevoir du push**. C'est ce
 > malentendu qui a fait chercher au mauvais endroit pendant trois mois. C'est
@@ -115,6 +123,7 @@ Estimation pour Humanix, sur volumes **mesurés** et non supposés :
 | Poste                                    | Volume             | Coût/mois |
 | ---------------------------------------- | ------------------ | --------- |
 | Logs des conteneurs                      | ~11 Mo/mois        | ~0,01 €   |
+| Journal HAProxy (13 000 lignes/jour)     | ~150 Mo/mois       | ~0,05 €   |
 | Métriques app (~110 séries @ 60 s)       | 4,8 M échantillons | ~0,71 €   |
 | _(option)_ node_exporter (~1 000 séries) | 43 M échantillons  | ~6,50 €   |
 
@@ -318,6 +327,12 @@ Grafana Cockpit → **Dashboards → Import** → uploader
 
 Sélectionner la datasource Prometheus quand demandé.
 
+Même manœuvre pour `infra/grafana/dashboards/humanix-trafic-haproxy.json`
+(trafic, scanners, authentification, refus HAProxy, TLS), en choisissant cette
+fois la data source **Loki** (`humanix-prod-logs`). Il ne montre quelque chose
+qu'une fois Vector redémarré avec la configuration qui contient
+`haproxy_journal` (cf. §9).
+
 ### 8. Provisionner les 7 alertes
 
 Suivre `infra/grafana/alerts-cockpit.md`. Compter ~5 min par alerte
@@ -358,9 +373,31 @@ puis §4 (URL complète ? un seul nom de variable ?).
 Une fois non nul, dans Grafana :
 
 - LogQL : `{host="humanix-prod-01", env="prod"}`
+- LogQL, journal HAProxy : `{source="haproxy"} | json | statut = 404`
 - PromQL : `humanix_nodejs_heap_size_used_bytes`
   (choisir une métrique **réellement alimentée** — pas
   `humanix_http_requests_total`, cf. l'avertissement du §6)
+
+### 9. Redémarrer Vector après une modification de `vector.yaml`
+
+Le fichier est monté en lecture seule depuis le clone (`./infra/vector/vector.yaml`) :
+une livraison met le fichier à jour, mais Vector ne le relit **pas** tout seul.
+
+```bash
+cd /opt/humanix-prod && vector_cfg=infra/vector/vector.yaml
+# 1. Valider et jouer les tests unitaires AVEC l'image de prod, sans rien redémarrer.
+podman run --rm -v "$PWD/infra/vector:/etc/vector:ro" --env-file .env \
+  timberio/vector:0.55.X-alpine validate --no-environment /etc/vector/vector.yaml
+podman run --rm -v "$PWD/infra/vector:/etc/vector:ro" --env-file .env \
+  timberio/vector:0.55.X-alpine test /etc/vector/vector.yaml
+# 2. Redémarrer (quelques secondes de trou dans les logs, rien d'autre).
+podman restart humanix-prod_vector_1
+# 3. Vérifier qu'il ne rejette rien, puis que les lignes arrivent.
+podman logs --since 2m humanix-prod_vector_1 2>&1 | grep -iE 'error|401|404|refused' | head
+```
+
+Puis dans Grafana Explore : `{source="haproxy"}` doit afficher des lignes dans
+la minute (les scanners ne laissent jamais le journal vide longtemps).
 
 ## Maintenance
 

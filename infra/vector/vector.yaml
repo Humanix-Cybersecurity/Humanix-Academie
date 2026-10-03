@@ -4,6 +4,8 @@
 #
 # Pousse vers Scaleway Cockpit :
 #   - logs des conteneurs      -> data source `humanix-prod-logs`   (Loki)
+#   - requetes HTTP de HAProxy -> data source `humanix-prod-logs`   (Loki,
+#                                 label source="haproxy", cf. haproxy_journal)
 #   - scrape de /api/metrics   -> data source `humanix-prod-metrics` (Mimir)
 #
 # ---------------------------------------------------------------------
@@ -229,9 +231,9 @@ transforms:
   #   <ts> <host> haproxy[<pid>]: <ip>:<port> [<date>] <front>~ <back>/<srv>
   #   <Tq>/<Tw>/<Tc>/<Tr>/<Tt> <status> <octets> - - <flags> ... "<methode> <chemin> <proto>"
   #
-  # On ne garde QUE le statut et la duree totale. Ni l'IP, ni le chemin, ni
-  # l'agent : ce sont des donnees personnelles au sens du RGPD, et elles ne
-  # servent a aucune des requetes du tableau de bord.
+  # Cette branche ne garde QUE le statut et la duree totale : elle alimente
+  # les METRIQUES (Mimir). Les lignes completes, adresse IP comprise, partent
+  # vers Loki par `haproxy_journal` ci-dessous, avec leur justification.
   haproxy_extraction:
     type: remap
     inputs:
@@ -256,6 +258,127 @@ transforms:
       # bord filtre deja avec `status=~"5.."` sur le statut brut, et les codes
       # HTTP forment un ensemble naturellement borne : une vingtaine de
       # valeurs, pas de risque d'explosion de cardinalite.
+
+  # === Journal HAProxy -> Loki : voir les attaques ===
+  #
+  # Jusqu'au 2026-10-03, HAProxy n'alimentait que des metriques (statut,
+  # duree). Impossible de repondre a « qui nous scanne ? », « quelle IP
+  # martele /api/auth ? », « que cherchaient les 6 000 lignes en 404
+  # d'hier ? ». Cette branche envoie chaque requete a Loki, structuree.
+  #
+  # RGPD, decision explicite du 2026-10-03 : finalite = securite du
+  # traitement (art. 32). Donnees envoyees : adresse IP, methode, chemin
+  # SANS parametres, statut, octets, duree, etat de terminaison. Retention
+  # Cockpit : 7 jours (defaut des sources custom, cf. infra/grafana/
+  # README.md). Pas d'agent utilisateur ni d'en-tete : HAProxy ne les
+  # journalise pas. Les parametres de requete sont retires AVANT envoi :
+  # /api/auth/callback?code=... ou ?email=... ne quittent jamais la
+  # machine. La politique de confidentialite cite deja « adresse IP, user
+  # agent (logs serveur) » parmi les donnees traitees.
+  #
+  # Volume mesure le 2026-10-03 : ~13 000 lignes/jour, ~5 Mo/jour en JSON,
+  # soit ~0,05 EUR/mois a 0,35 EUR/Go. Labels Loki (faible cardinalite) :
+  # source, env, type, classe. L'IP et le chemin restent dans le corps,
+  # requetables via `| json`.
+  haproxy_journal:
+    type: remap
+    inputs:
+      - haproxy
+    drop_on_error: true
+    drop_on_abort: true
+    source: |
+      # 1. Prefixe rsyslog : "<iso> <hote> haproxy[<pid>]: <ligne haproxy>"
+      corps, err = parse_regex(.message, r'^\S+\s+\S+\s+haproxy\[\d+\]:\s+(?P<ligne>.*)$')
+      if err != null {
+        abort
+      }
+      ligne = string!(corps.ligne)
+
+      # 2. Requete HTTP (format `option httplog`). Les captures d'en-tetes
+      #    entre accolades sont optionnelles : absentes aujourd'hui,
+      #    tolerees si on en ajoute un jour dans haproxy.cfg.
+      http, err = parse_regex(ligne, r'^(?P<client_ip>[0-9a-fA-F.:]+):(?P<client_port>\d+)\s\[(?P<date>[^\]]+)\]\s(?P<frontend>[^\s~]+)(?P<tls>~)?\s(?P<backend>[^/\s]+)/(?P<serveur>\S+)\s(?P<tq>-?\d+)/(?P<tw>-?\d+)/(?P<tc>-?\d+)/(?P<tr>-?\d+)/(?P<tt>-?\d+)\s(?P<statut>\d{3})\s(?P<octets>\d+)\s\S+\s\S+\s(?P<terminaison>\S{4})\s\d+/\d+/\d+/\d+/\d+\s\d+/\d+(?:\s\{(?P<entetes_req>[^}]*)\})?(?:\s\{(?P<entetes_rep>[^}]*)\})?\s"(?P<requete>[^"]*)"$')
+      if err == null {
+        .type = "http"
+        .client_ip = http.client_ip
+        .frontend = http.frontend
+        .tls = (string(http.tls) ?? "") == "~"
+        .backend = http.backend
+        .serveur = http.serveur
+        .statut = to_int(http.statut) ?? 0
+        .octets = to_int(http.octets) ?? 0
+        ms = to_int(http.tt) ?? 0
+        if ms < 0 { ms = 0 }
+        .duree_ms = ms
+        .terminaison = http.terminaison
+        .date_haproxy = http.date
+        entetes = string(http.entetes_req) ?? ""
+        if entetes != "" { .entetes_requete = entetes }
+
+        # Methode, chemin, protocole. "<BADREQ>" = requete illisible.
+        requete = string!(http.requete)
+        req, err = parse_regex(requete, r'^(?P<methode>[A-Z]+)\s(?P<cible>\S+)(?:\s(?P<proto>\S+))?$')
+        if err == null {
+          .methode = req.methode
+          .proto = req.proto
+          cible = string!(req.cible)
+          # Parametres de requete retires : jamais envoyes hors machine.
+          morceaux = split(cible, "?", 2)
+          .chemin = morceaux[0]
+          .parametres = length(morceaux) > 1
+        } else {
+          .methode = "BADREQ"
+          .chemin = ""
+          .parametres = false
+        }
+
+        # Classe de statut : label Loki a six valeurs au plus.
+        if .statut >= 500 {
+          .classe = "5xx"
+        } else if .statut >= 400 {
+          .classe = "4xx"
+        } else if .statut >= 300 {
+          .classe = "3xx"
+        } else if .statut >= 200 {
+          .classe = "2xx"
+        } else {
+          .classe = "1xx"
+        }
+      } else {
+        # 3. Lignes sans requete, ex. "<ip>:<port> [<date>] https_front/1:
+        #    SSL handshake failure". Un pic = balayage de la machine.
+        autre, err = parse_regex(ligne, r'^(?P<client_ip>[0-9a-fA-F.:]+):(?P<client_port>\d+)\s\[(?P<date>[^\]]+)\]\s(?P<frontend>[^/\s:]+)(?:/\S+)?:\s(?P<erreur>.*)$')
+        if err != null {
+          # Messages de service (demarrage, rechargement, serveur UP ou
+          # DOWN) : ils restent dans les journaux de l'hote.
+          abort
+        }
+        .type = "connexion"
+        .client_ip = autre.client_ip
+        .frontend = autre.frontend
+        .erreur = autre.erreur
+        .classe = "0xx"
+        .date_haproxy = autre.date
+      }
+
+      # Environnement d'apres le backend : ce Vector est partage prod/demo.
+      # "edge" = HAProxy a repondu seul (redirection, refus, requete illisible).
+      .env = "edge"
+      backend = string(.backend) ?? ""
+      if backend == "backend_prod" {
+        .env = "prod"
+      } else if backend == "backend_demo" {
+        .env = "demo"
+      }
+
+      # Ligne compacte pour l'oeil ; le detail est dans les champs.
+      if .type == "http" {
+        .message = join!([string!(.methode), string!(.chemin), to_string(.statut) ?? "", "depuis", string!(.client_ip)], " ")
+      } else {
+        .message = join!([string!(.erreur), "depuis", string!(.client_ip)], " ")
+      }
+      del(.file)
+      del(.source_type)
 
   # Conversion en metriques Prometheus. Les noms sont ceux qu'attendent
   # infra/grafana/dashboards/humanix-overview.json et alerts-cockpit.md.
@@ -301,6 +424,27 @@ sinks:
       image: "{{ image }}"
       env: "{{ env }}"
 
+  # Journal HAProxy : meme data source Loki, labels differents, d'ou un
+  # second sink. Jamais d'IP ni de chemin en label : chaque valeur distincte
+  # creerait un flux. Ils sont dans le corps JSON.
+  scaleway_loki_haproxy:
+    type: loki
+    inputs:
+      - haproxy_journal
+    endpoint: "${SCW_LOKI_URL}"
+    auth:
+      strategy: bearer
+      token: "${SCW_COCKPIT_TOKEN}"
+    encoding:
+      codec: json
+    remove_label_fields: true
+    labels:
+      host: humanix-prod-01
+      source: haproxy
+      env: "{{ env }}"
+      type: "{{ type }}"
+      classe: "{{ classe }}"
+
   scaleway_mimir:
     type: prometheus_remote_write
     inputs:
@@ -336,3 +480,118 @@ sinks:
     # d'ingestion Cockpit, et absence de "events dropped" dans ces logs.
     healthcheck:
       enabled: false
+
+# ---------------------------------------------------------------------
+# TESTS UNITAIRES : `vector test infra/vector/vector.yaml`
+# ---------------------------------------------------------------------
+# Lignes reelles du 2026-10-03 (adresses conservees telles quelles : ce sont
+# des scanners, et c'est precisement ce qu'on veut savoir reconnaitre).
+tests:
+  - name: haproxy_journal, requete HTTPS servie par la prod
+    inputs:
+      - insert_at: haproxy_journal
+        type: log
+        log_fields:
+          message: '2026-10-03T00:18:40.895560+02:00 humanix-prod-01 haproxy[838232]: 217.113.194.238:3809 [03/Oct/2026:00:18:40.891] https_front~ backend_prod/prod_a 0/0/0/3/3 200 1663 - - ---- 1/1/0/0/0 0/0 "GET /robots.txt HTTP/1.1"'
+    outputs:
+      - extract_from: haproxy_journal
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.type, "http")
+              assert_eq!(.client_ip, "217.113.194.238")
+              assert_eq!(.env, "prod")
+              assert_eq!(.tls, true)
+              assert_eq!(.frontend, "https_front")
+              assert_eq!(.backend, "backend_prod")
+              assert_eq!(.methode, "GET")
+              assert_eq!(.chemin, "/robots.txt")
+              assert_eq!(.parametres, false)
+              assert_eq!(.statut, 200)
+              assert_eq!(.classe, "2xx")
+              assert_eq!(.octets, 1663)
+              assert_eq!(.duree_ms, 3)
+              assert_eq!(.terminaison, "----")
+              assert_eq!(.message, "GET /robots.txt 200 depuis 217.113.194.238")
+
+  - name: haproxy_journal, sonde de scanner sur la demo, parametres retires
+    inputs:
+      - insert_at: haproxy_journal
+        type: log
+        log_fields:
+          message: '2026-10-03T01:02:03.000000+02:00 humanix-prod-01 haproxy[838232]: 80.94.95.211:50123 [03/Oct/2026:01:02:03.000] https_front~ backend_demo/demo_b 0/0/1/12/13 404 2048 - - ---- 3/3/1/1/0 0/0 "GET /.env?email=a@b.fr&code=secret HTTP/1.1"'
+    outputs:
+      - extract_from: haproxy_journal
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.env, "demo")
+              assert_eq!(.chemin, "/.env")
+              assert_eq!(.parametres, true)
+              assert!(!contains(encode_json(.), "secret"))
+              assert!(!contains(encode_json(.), "a@b.fr"))
+              assert_eq!(.statut, 404)
+              assert_eq!(.classe, "4xx")
+              assert_eq!(.duree_ms, 13)
+
+  - name: haproxy_journal, requete illisible refusee par HAProxy seul
+    inputs:
+      - insert_at: haproxy_journal
+        type: log
+        log_fields:
+          message: '2026-10-03T00:16:58.823076+02:00 humanix-prod-01 haproxy[838232]: 45.82.78.108:49086 [03/Oct/2026:00:16:58.822] http_front http_front/<NOSRV> -1/-1/-1/-1/0 400 0 - - PR-- 1/1/0/0/0 0/0 "<BADREQ>"'
+    outputs:
+      - extract_from: haproxy_journal
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.type, "http")
+              assert_eq!(.env, "edge")
+              assert_eq!(.tls, false)
+              assert_eq!(.methode, "BADREQ")
+              assert_eq!(.chemin, "")
+              assert_eq!(.statut, 400)
+              assert_eq!(.terminaison, "PR--")
+              assert_eq!(.duree_ms, 0)
+
+  - name: haproxy_journal, echec de poignee de main TLS
+    inputs:
+      - insert_at: haproxy_journal
+        type: log
+        log_fields:
+          message: "2026-10-03T00:24:18.777013+02:00 humanix-prod-01 haproxy[838232]: 94.231.206.206:55241 [03/Oct/2026:00:24:18.459] https_front/1: SSL handshake failure"
+    outputs:
+      - extract_from: haproxy_journal
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.type, "connexion")
+              assert_eq!(.client_ip, "94.231.206.206")
+              assert_eq!(.frontend, "https_front")
+              assert_eq!(.erreur, "SSL handshake failure")
+              assert_eq!(.classe, "0xx")
+              assert_eq!(.env, "edge")
+              assert_eq!(.message, "SSL handshake failure depuis 94.231.206.206")
+
+  - name: haproxy_journal, message de service ignore
+    inputs:
+      - insert_at: haproxy_journal
+        type: log
+        log_fields:
+          message: "2026-10-03T00:00:01.000000+02:00 humanix-prod-01 haproxy[838232]: Server backend_prod/prod_a is UP, reason: Layer7 check passed"
+    no_outputs_from:
+      - haproxy_journal
+
+  - name: haproxy_extraction, les metriques restent alimentees
+    inputs:
+      - insert_at: haproxy_extraction
+        type: log
+        log_fields:
+          message: '2026-10-03T00:18:40.895560+02:00 humanix-prod-01 haproxy[838232]: 217.113.194.238:3809 [03/Oct/2026:00:18:40.891] https_front~ backend_prod/prod_a 0/0/0/3/3 200 1663 - - ---- 1/1/0/0/0 0/0 "GET /robots.txt HTTP/1.1"'
+    outputs:
+      - extract_from: haproxy_extraction
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.statut, "200")
+              assert_eq!(.duree_secondes, 0.003)
