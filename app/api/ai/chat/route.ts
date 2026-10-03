@@ -36,6 +36,7 @@ import { retrieveRagContext, formatRagContext } from "@/lib/ai/hex/rag";
 import { wrapWithLeakFilter } from "@/lib/ai/hex/output-filter";
 import { scanPii, describePiiHits } from "@/lib/security/pii-filter";
 import { normalizePlan, type PlanId } from "@/lib/plans";
+import { recordHexCaracteres, recordHexMessage } from "@/lib/metrics/registry";
 import { auditLog, AuditActions } from "@/lib/audit";
 
 export const dynamic = "force-dynamic";
@@ -69,6 +70,11 @@ export async function POST(req: Request) {
   // 2) Provider disponible ?
   const provider = getProviderKind();
   if (provider === "disabled") {
+    recordHexMessage({
+      plan: "inconnu",
+      modele: "aucun",
+      resultat: "indisponible",
+    });
     return NextResponse.json(
       {
         error:
@@ -85,6 +91,11 @@ export async function POST(req: Request) {
     body = Schema.parse(raw);
   } catch (e) {
     const msg = e instanceof Error ? e.message : "invalid";
+    recordHexMessage({
+      plan: "inconnu",
+      modele: "aucun",
+      resultat: "invalide",
+    });
     return NextResponse.json(
       { error: `Requête invalide: ${msg.slice(0, 200)}` },
       { status: 400 },
@@ -94,6 +105,11 @@ export async function POST(req: Request) {
   // Dernier message doit etre user (sinon on n'a rien a repondre)
   const last = body.messages[body.messages.length - 1];
   if (last.role !== "user") {
+    recordHexMessage({
+      plan: "inconnu",
+      modele: "aucun",
+      resultat: "invalide",
+    });
     return NextResponse.json(
       { error: "Le dernier message doit etre de role 'user'." },
       { status: 400 },
@@ -133,8 +149,13 @@ export async function POST(req: Request) {
   }
   // Quotas : heure et jour de la personne, jour de l'espace, jour de
   // l'instance. Un refus consomme au plus le compteur refuse.
+  // Modele servi a ce plan, pour les metriques : small au palier gratuit,
+  // le modele configure sinon (cf. lib/ai/hex/quotas.ts).
+  const modele =
+    modelePourPlan(plan) ?? process.env.HEX_AI_MODEL?.trim() ?? "defaut";
   const quota = verifierQuotasHex({ userId, tenantId, plan });
   if (!quota.ok) {
+    recordHexMessage({ plan, modele, resultat: `quota_${quota.portee}` });
     return NextResponse.json(
       { error: messageQuota(quota) },
       {
@@ -190,6 +211,7 @@ export async function POST(req: Request) {
   } catch (e) {
     const msg = e instanceof Error ? e.message : "ai_error";
     console.error("hex-chat: provider error", msg);
+    recordHexMessage({ plan, modele, resultat: "fournisseur" });
     return NextResponse.json(
       {
         error:
@@ -204,6 +226,15 @@ export async function POST(req: Request) {
   // de signatures du system prompt (cf. lib/ai/hex/output-filter.ts).
   // En cas de detection : remplace par un refus standard + audit log
   // AI_PROMPT_INJECTION_ATTEMPT pour traçabilite.
+  recordHexMessage({ plan, modele, resultat: "ok" });
+  recordHexCaracteres({
+    plan,
+    sens: "entree",
+    nombre:
+      systemPrompt.length +
+      body.messages.reduce((total, m) => total + m.content.length, 0),
+  });
+
   upstream = wrapWithLeakFilter(upstream, async (match) => {
     try {
       await auditLog({
@@ -257,10 +288,12 @@ export async function POST(req: Request) {
       }
 
       const reader = upstream.getReader();
+      let sortie = 0;
       try {
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
+          sortie += value.length;
           // Format SSE : "data: {json}\n\n". On encode en JSON pour preserver
           // les sauts de ligne et caracteres speciaux dans le delta.
           const event = `data: ${JSON.stringify({ delta: value })}\n\n`;
@@ -277,6 +310,7 @@ export async function POST(req: Request) {
           ),
         );
       } finally {
+        recordHexCaracteres({ plan, sens: "sortie", nombre: sortie });
         controller.close();
         try {
           reader.releaseLock();

@@ -126,6 +126,7 @@ Estimation pour Humanix, sur volumes **mesurés** et non supposés :
 | Journal HAProxy (13 000 lignes/jour)     | ~150 Mo/mois       | ~0,05 €   |
 | Journaux d'exploitation (cron, backup…)  | < 1 Mo/mois        | ~0 €      |
 | Mesures hôte et conteneurs (~40 séries)  | 1,7 M échantillons | ~0,26 €   |
+| Métriques produit et Hex (~30 séries)    | 1,3 M échantillons | ~0,20 €   |
 | Métriques app (~110 séries @ 60 s)       | 4,8 M échantillons | ~0,71 €   |
 | _(option)_ node_exporter (~1 000 séries) | 43 M échantillons  | ~6,50 €   |
 
@@ -328,6 +329,12 @@ Grafana Cockpit → **Dashboards → Import** → uploader
 `infra/grafana/dashboards/humanix-overview.json`.
 
 Sélectionner la datasource Prometheus quand demandé.
+
+Troisième tableau, `infra/grafana/dashboards/humanix-produit-hex.json` (activité,
+campagnes, courriels, messages Hex par résultat, plan et modèle, coût Mistral
+estimé) : data source Prometheus. Il lit les compteurs `humanix_hex_*`,
+`humanix_courriels_total` et `humanix_episodes_termines_total` ajoutés le
+2026-10-03 à `lib/metrics/registry.ts`, en plus des actions d'audit.
 
 Même manœuvre pour `infra/grafana/dashboards/humanix-trafic-haproxy.json`
 (trafic, scanners, authentification, refus HAProxy, TLS), en choisissant cette
