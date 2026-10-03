@@ -393,6 +393,13 @@ podman run --rm -v "$PWD/infra/vector:/etc/vector:ro" --env-file .env \
 podman run --rm -v "$PWD/infra/vector:/etc/vector:ro" --env-file .env \
   timberio/vector:0.55.X-alpine test /etc/vector/vector.yaml
 # 2. Redémarrer (quelques secondes de trou dans les logs, rien d'autre).
+#    JAMAIS `podman-compose ... up` à la main dans /opt/humanix-prod : hors
+#    de deploy.sh, les variables de la pile (couleur, port, réseau, noms)
+#    manquent, et compose crée une TROISIÈME pile, `humanix-app` et
+#    `humanix-postgres` sur un réseau à part, avec une base vide qu'il
+#    sème au passage. Vu le 2026-10-03, nettoyé à la main. Une livraison
+#    (`./scripts/deploy.sh prod main`) recrée Vector proprement quand le
+#    compose ou le montage change ; un simple restart suffit pour la conf.
 podman restart humanix-prod_vector_1
 # 3. Vérifier qu'il ne rejette rien, puis que les lignes arrivent.
 podman logs --since 2m humanix-prod_vector_1 2>&1 | grep -iE 'error|401|404|refused' | head
@@ -419,8 +426,10 @@ cd /opt/humanix-prod
 sudo install -m 0644 infra/logrotate/humanix /etc/logrotate.d/humanix
 # 2. La crontab : acme.sh journalisé, host-stats.py chaque minute.
 ./infra/cron/install-crontab.sh
-# 3. Vector relit sa configuration et le nouveau montage (cf. §9 pour la validation).
-podman-compose -f docker-compose.yml -f docker-compose.observabilite.yml up -d --force-recreate vector
+# 3. Vector : la livraison l'a recréé avec le nouveau montage ; sinon un
+#    redémarrage suffit (cf. §9, et surtout son avertissement : jamais de
+#    `podman-compose up` à la main dans /opt/humanix-prod).
+podman restart humanix-prod_vector_1
 ```
 
 Puis importer `dashboards/humanix-exploitation.json` en choisissant les deux
