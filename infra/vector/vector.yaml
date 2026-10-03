@@ -463,6 +463,7 @@ transforms:
       disque: '.type == "disque"'
       conteneur: '.type == "conteneur"'
       certificat: '.type == "certificat"'
+      base: '.type == "base"'
       erreur: '.type == "erreur"'
 
   # Jauges Prometheus. Noms attendus par
@@ -568,6 +569,48 @@ transforms:
         tags:
           domaine: "{{domaine}}"
 
+  metriques_bases:
+    type: log_to_metric
+    inputs:
+      - hote_stats_route.base
+    metrics:
+      - type: gauge
+        field: taille
+        name: base_taille_octets
+        namespace: humanix
+        tags:
+          conteneur: "{{conteneur}}"
+      - type: gauge
+        field: connexions
+        name: base_connexions
+        namespace: humanix
+        tags:
+          conteneur: "{{conteneur}}"
+      - type: gauge
+        field: max_connexions
+        name: base_connexions_max
+        namespace: humanix
+        tags:
+          conteneur: "{{conteneur}}"
+      - type: gauge
+        field: cache_pct
+        name: base_cache_pourcent
+        namespace: humanix
+        tags:
+          conteneur: "{{conteneur}}"
+      - type: gauge
+        field: tuples_morts
+        name: base_tuples_morts
+        namespace: humanix
+        tags:
+          conteneur: "{{conteneur}}"
+      - type: gauge
+        field: transaction_max_s
+        name: base_transaction_max_secondes
+        namespace: humanix
+        tags:
+          conteneur: "{{conteneur}}"
+
   # Les erreurs du script partent dans Loki avec les journaux d'exploitation.
   hote_stats_erreurs:
     type: remap
@@ -671,6 +714,7 @@ sinks:
       - metriques_disques
       - metriques_conteneurs
       - metriques_certificats
+      - metriques_bases
     endpoint: "${SCW_MIMIR_URL}"
     # Bornes de l'histogramme des durees. Vector agrege les distributions en
     # histogrammes Prometheus a l'aide de ces bornes ; sans elles il prendrait
@@ -986,3 +1030,20 @@ tests:
           message: "Traceback (most recent call last):"
     no_outputs_from:
       - hote_stats_json
+
+  - name: hote_stats, base PostgreSQL -> six jauges etiquetees par conteneur
+    inputs:
+      - insert_at: hote_stats_json
+        type: log
+        log_fields:
+          file: /var/log/humanix/stats.log
+          message: '{"ts":"2026-10-03T12:00:00Z","type":"base","conteneur":"humanix-prod-postgres","taille":17587223,"connexions":11,"max_connexions":100,"cache_pct":100.0,"tuples_morts":505,"transaction_max_s":0}'
+    outputs:
+      - extract_from: metriques_bases
+        conditions:
+          - type: vrl
+            source: |
+              assert_eq!(.type, "gauge")
+              assert_eq!(.namespace, "humanix")
+              assert!(starts_with(string!(.name), "base_"))
+              assert_eq!(.tags.conteneur, "humanix-prod-postgres")

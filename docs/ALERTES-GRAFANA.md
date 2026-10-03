@@ -593,6 +593,31 @@ dispositif qui fait son travail. Ils se lisent dans le tableau de bord
 
 ---
 
+## Règle 18 — PostgreSQL : connexions à plus de 80 % du maximum
+
+Mesuré chaque minute par `scripts/host-stats.py` dans chaque conteneur
+PostgreSQL, avec le rôle du conteneur lui-même : pas de rôle de lecture ni
+de secret supplémentaire. Le maximum vaut 100 (défaut), la prod en tient 11.
+
+```promql
+100 * humanix_base_connexions / humanix_base_connexions_max
+```
+
+| Paramètre            | Valeur                        |
+| -------------------- | ----------------------------- |
+| Type de requête      | `Instant`                     |
+| Condition            | `IS ABOVE 80`                 |
+| Évaluation           | toutes les `1m`, pendant `5m` |
+| **Si aucune donnée** | **`OK`**                      |
+| Sévérité             | `critical`                    |
+
+Quand ce seuil est atteint, l'application rend des erreurs 5xx d'un coup ;
+la cause habituelle est une fuite de connexions côté Node (Prisma) ou une
+transaction qui ne se termine pas, visible sur le panneau « plus longue
+transaction en cours » du tableau de bord d'exploitation.
+
+---
+
 ## Acheminement
 
 Une alerte qui reste dans Grafana n'a réveillé personne.
