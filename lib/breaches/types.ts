@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 // Types partages entre scrapers et repository.
 
-// FUITESINFOS reste dans le type pour rétrocompat (enum Prisma + items déjà
-// en BDD), mais ne figure plus dans SOURCE_META et n'est plus scrapé
-// (structure non-stable, retournait du contenu non exploitable).
+// FUITESINFOS : valeur de l'enum Prisma conservée pour ne pas migrer, et
+// rien d'autre. La source a été retirée avant la première version, n'a
+// jamais alimenté la base, et son éditeur a demandé le 2026-10-03 que rien
+// ne soit repris : ni nom, ni adresse, ni collecte, nulle part dans l'image.
 export type BreachSourceKey =
   "FRENCHBREACHES" | "BONJOURLAFUITE" | "FUITESINFOS";
 
@@ -49,16 +50,10 @@ export const SOURCE_META: Record<
       "Suivi indépendant des incidents de fuites de données en France.",
     active: true,
   },
-  // Collecteur retiré avant la première version (flux non exploitable, cf.
-  // lib/breaches/parsers.ts), aucun enregistrement en base. L'éditeur a
-  // demandé le 2026-10-03 qu'aucune donnée de son site ne soit reprise :
-  // ne pas réactiver. L'entrée ne reste que pour couvrir l'enum Prisma.
-  FUITESINFOS: {
-    name: "Fuites Infos",
-    url: "https://fuitesinfos.fr",
-    description: "Source retirée, jamais alimentée.",
-    active: false,
-  },
+  // Source retirée : entrée vide, ne couvre que l'enum Prisma. `active:
+  // false` la tient hors de l'affichage, et il n'y a plus ni nom ni
+  // adresse à afficher (cf. la note en tête de fichier).
+  FUITESINFOS: { name: "", url: "", description: "", active: false },
 };
 
 // Liste des sources actives (pour les filtres UI et le scrape)

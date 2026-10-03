@@ -624,13 +624,13 @@ export async function scrapeBonjourLaFuite(
 }
 
 // =============================================================================
-// SCRAPER 3 : fuitesinfos.fr - RETIRÉ
-// Le site WordPress + Yoast retournait un /feed/ HTML non parsable et une
-// API REST WP inaccessible / vide. Sans structure exploitable de manière
-// fiable, on a retiré la source plutôt que de polluer la BDD avec des
-// items mal extraits. L'enum BreachSource.FUITESINFOS reste dans le
-// schema Prisma pour rétrocompat des items déjà en BDD (à purger via
-// `DELETE FROM "DataBreach" WHERE source = 'FUITESINFOS';`).
+// SCRAPER 3 : RETIRÉ avant la première version
+// La troisième source (valeur d'enum FUITESINFOS) exposait un flux HTML non
+// parsable et une API vide : plutôt que de polluer la base avec des items
+// mal extraits, on l'a retirée, et elle n'a jamais rien alimenté. Son
+// éditeur a demandé le 2026-10-03 que rien ne soit repris : ne pas la
+// réactiver. La valeur d'enum reste dans le schéma Prisma pour ne pas
+// migrer ; aucun enregistrement ne la porte.
 // =============================================================================
 
 // (fonction retirée - voir l'enum BreachSource côté Prisma)
