@@ -1989,10 +1989,13 @@ model ExpertProfile {
 
 // =====================================================
 // OBSERVATOIRE DES FUITES DE DONNEES
-// Aggregation de 3 sources publiques francophones :
+// Aggregation de 2 sources publiques francophones :
 //  - frenchbreaches.com
 //  - bonjourlafuite.eu.org
-//  - fuitesinfos.fr
+// fuitesinfos.fr : collecteur retire avant la premiere version (flux non
+// exploitable), aucun enregistrement en base ; la valeur d'enum reste pour
+// ne pas migrer, et l'editeur a demande le 2026-10-03 qu'aucune donnee de
+// son site ne soit reprise.
 //
 // Pas de tenantId : les fuites sont des INFOS PUBLIQUES, partagees a tous.
 // Ne contient PAS de donnees fuitees, juste les metadonnees de l'incident
@@ -2001,7 +2004,7 @@ model ExpertProfile {
 enum BreachSource {
   FRENCHBREACHES // frenchbreaches.com
   BONJOURLAFUITE // bonjourlafuite.eu.org
-  FUITESINFOS // fuitesinfos.fr
+  FUITESINFOS // fuitesinfos.fr : retire, jamais alimente, ne pas reactiver
   MANUAL // saisie manuelle SUPERADMIN
 }
 

@@ -49,12 +49,14 @@ export const SOURCE_META: Record<
       "Suivi indépendant des incidents de fuites de données en France.",
     active: true,
   },
-  // Source historique non scrapée - voir lib/breaches/parsers.ts pour la note.
-  // Les items déjà en BDD restent affichés (filtre côté UI : source.active).
+  // Collecteur retiré avant la première version (flux non exploitable, cf.
+  // lib/breaches/parsers.ts), aucun enregistrement en base. L'éditeur a
+  // demandé le 2026-10-03 qu'aucune donnée de son site ne soit reprise :
+  // ne pas réactiver. L'entrée ne reste que pour couvrir l'enum Prisma.
   FUITESINFOS: {
     name: "Fuites Infos",
     url: "https://fuitesinfos.fr",
-    description: "Source historique (non rafraîchie).",
+    description: "Source retirée, jamais alimentée.",
     active: false,
   },
 };
