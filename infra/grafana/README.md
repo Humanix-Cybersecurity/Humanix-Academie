@@ -343,11 +343,32 @@ fois la data source **Loki** (`humanix-prod-logs`). Il ne montre quelque chose
 qu'une fois Vector redémarré avec la configuration qui contient
 `haproxy_journal` (cf. §9).
 
-### 8. Provisionner les 7 alertes
+### 8. Provisionner les alertes
 
-Suivre `infra/grafana/alerts-cockpit.md`. Compter ~5 min par alerte
-via l'UI (35 min total). À automatiser via API Scaleway quand le
-besoin se fera sentir.
+Les règles 1 à 7 (`infra/grafana/alerts-cockpit.md`, `docs/ALERTES-GRAFANA.md`)
+ont été saisies à la main en août 2026. Les règles 8 à 18 se créent par l'API
+de Grafana avec `infra/grafana/provisionner-alertes.py`, idempotent : relancer
+met à jour sans doubler, et les règles restent modifiables dans l'interface.
+
+Il faut un jeton de **compte de service Grafana** (pas le jeton Cockpit de
+Vector, qui ne sait qu'écrire des logs et des métriques) : Administration →
+Users and access → Service accounts → Add service account, rôle Editor →
+Add service account token. Le jeton ne se met que dans l'environnement du
+terminal, jamais dans un fichier du dépôt ni dans une discussion.
+
+```bash
+export GRAFANA_URL=https://c9a236c0-86de-4360-9a19-21e04705c7f6.dashboard.cockpit.scaleway.com
+export GRAFANA_TOKEN=glsa_...        # colle-le ici, dans le terminal seulement
+python3 infra/grafana/provisionner-alertes.py --dry-run   # affiche, n'envoie rien
+python3 infra/grafana/provisionner-alertes.py             # crée ou met à jour les 11 règles
+```
+
+Le script retrouve les data sources Loki et Prometheus (préfère
+`humanix-prod-*`), crée le dossier « Humanix », pose chaque règle sous
+l'identifiant `humanix-regle-<n>` et règle l'intervalle d'évaluation par
+groupe. Les notifications suivent la politique par défaut, comme les règles 1
+à 7 : vérifier qu'elle pointe sur le point de contact de
+`docs/ALERTES-GRAFANA.md`, « Acheminement ».
 
 ## Vérifications post-déploiement
 
