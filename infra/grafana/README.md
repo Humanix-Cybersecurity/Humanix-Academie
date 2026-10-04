@@ -437,6 +437,26 @@ podman logs --since 2m humanix-prod_vector_1 2>&1 | grep -iE 'error|401|404|refu
 Puis dans Grafana Explore : `{source="haproxy"}` doit afficher des lignes dans
 la minute (les scanners ne laissent jamais le journal vide longtemps).
 
+### 9 bis. Le montage d'un fichier fige son inode : HAProxy et la rotation
+
+Constaté le 2026-10-04 : plus aucune ligne HAProxy dans Loki ni Mimir depuis
+minuit. Le compose monte le **fichier** `/var/log/haproxy.log` dans le
+conteneur Vector ; à la rotation quotidienne, logrotate renomme ce fichier et
+rsyslog en crée un nouveau, mais le conteneur garde l'ancien inode, devenu
+`haproxy.log.1`. Vector lit donc un fichier que plus personne n'écrit, sans
+erreur, jusqu'à la prochaine recréation du conteneur. Les livraisons quasi
+quotidiennes masquaient le défaut depuis août : les métriques HAProxy
+s'arrêtaient chaque nuit et repartaient à la livraison suivante.
+
+Remède côté hôte, une fois : `copytruncate` dans `/etc/logrotate.d/haproxy`.
+Le fichier est copié puis vidé en place, l'inode ne change plus, et Vector
+détecte la troncature. C'est déjà la règle choisie pour `/var/log/humanix`
+(`infra/logrotate/humanix`), qui est, lui, monté comme répertoire.
+
+Pour récupérer après une rotation déjà passée : supprimer le conteneur Vector
+puis relivrer (`podman rm -f humanix-prod_vector_1 && ./scripts/deploy.sh prod main`),
+jamais `podman-compose up` à la main (cf. §9).
+
 ### 10. Exploitation : journaux de l'hôte et mesures de la machine
 
 Depuis le 2026-10-03, Vector lit aussi `/var/log/humanix/` (sauvegardes,
