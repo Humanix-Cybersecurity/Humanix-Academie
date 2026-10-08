@@ -350,23 +350,39 @@ ont été saisies à la main en août 2026. Les règles 8 à 18 se créent par l
 de Grafana avec `infra/grafana/provisionner-alertes.py`, idempotent : relancer
 met à jour sans doubler, et les règles restent modifiables dans l'interface.
 
-Il faut un jeton de **compte de service Grafana** (pas le jeton Cockpit de
-Vector, qui ne sait qu'écrire des logs et des métriques) : Administration →
-Users and access → Service accounts → Add service account, rôle Editor →
-Add service account token. Le jeton ne se met que dans l'environnement du
-terminal, jamais dans un fichier du dépôt ni dans une discussion.
+**Sur Cockpit, pas de jeton possible.** Le Grafana de Cockpit est géré par
+Scaleway et la connexion passe par IAM : la page Administration → Service
+accounts n'existe pas, donc aucun jeton `glsa_...` à créer (constaté le
+2026-10-05). La voie qui marche est la **session du navigateur** : le script
+imprime un équivalent JavaScript à coller dans la console de l'onglet Grafana
+déjà connecté (Safari : Développement → Afficher la console JavaScript ;
+Chrome : F12 → Console). Le résultat s'affiche en tableau, une ligne par
+règle et par groupe. C'est ainsi que les règles 8 à 18 ont été créées le
+2026-10-08.
 
 ```bash
-export GRAFANA_URL=https://c9a236c0-86de-4360-9a19-21e04705c7f6.dashboard.cockpit.scaleway.com
+python3 infra/grafana/provisionner-alertes.py --dry-run   # affiche les règles, n'envoie rien
+python3 infra/grafana/provisionner-alertes.py --console | pbcopy   # à coller dans la console du navigateur
+```
+
+Pour un Grafana auto-hébergé, la voie par jeton reste là : un **compte de
+service Grafana** (pas le jeton Cockpit de Vector, qui ne sait qu'écrire des
+logs et des métriques), rôle Editor, jeton mis dans l'environnement du
+terminal seulement, jamais dans un fichier du dépôt ni dans une discussion.
+
+```bash
+export GRAFANA_URL=https://grafana.exemple.fr
 export GRAFANA_TOKEN=glsa_...        # colle-le ici, dans le terminal seulement
-python3 infra/grafana/provisionner-alertes.py --dry-run   # affiche, n'envoie rien
 python3 infra/grafana/provisionner-alertes.py             # crée ou met à jour les 11 règles
 ```
 
-Le script retrouve les data sources Loki et Prometheus (préfère
-`humanix-prod-*`), crée le dossier « Humanix », pose chaque règle sous
-l'identifiant `humanix-regle-<n>` et règle l'intervalle d'évaluation par
-groupe. Les notifications suivent la politique par défaut, comme les règles 1
+Dans les deux cas, le script retrouve les data sources Loki et Prometheus
+(préfère `humanix-prod-*`), crée le dossier « Humanix », pose chaque règle
+sous l'identifiant `humanix-regle-<n>` et règle l'intervalle d'évaluation
+par groupe. **Piège de l'API** : `PUT .../rule-groups/<groupe>` remplace le
+groupe entier ; envoyer seulement l'intervalle efface ses règles. Le script
+relit donc chaque groupe et le renvoie complet, règles comprises, avec
+l'intervalle en secondes entières. Les notifications suivent la politique par défaut, comme les règles 1
 à 7 : vérifier qu'elle pointe sur le point de contact de
 `docs/ALERTES-GRAFANA.md`, « Acheminement ».
 
