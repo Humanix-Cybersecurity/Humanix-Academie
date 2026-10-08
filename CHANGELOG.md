@@ -6,6 +6,106 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.13.0] - 2026-10-08 🔭 Voir enfin ce qui se passe sur la machine
+
+Une semaine d'exploitation après la veille du salon. Rien ne surveillait la
+machine ni la crontab, et c'est en construisant les tableaux de bord qu'on a
+découvert que la moitié des crons de production échouaient depuis six
+semaines. Côté produit, Hex a des quotas et un modèle par plan, parce que les
+jetons Mistral sont désormais payants, et la console se déplie enfin sur
+iPad.
+
+### Added
+
+#### 🔭 Observabilité : quatre tableaux de bord, dix-huit règles
+
+- **Le journal HAProxy dans Loki**, structuré par Vector : adresse IP,
+  méthode, chemin sans paramètres, statut, octets, durée, terminaison. Qui
+  nous scanne, qui martèle l'authentification, ce que HAProxy refuse, les
+  échecs TLS. Tableau de bord « Trafic HAProxy & attaques », règles 8 à 11.
+  Décision RGPD documentée dans `infra/vector/vector.yaml` : finalité
+  sécurité, rétention 7 jours, paramètres de requête retirés avant envoi. (#939)
+- **Le tableau de bord d'exploitation** : CPU, charge, mémoire, disques par
+  système de fichiers, CPU et mémoire par conteneur via les cgroups podman,
+  jours restants des certificats, sauvegardes, crons réussis et échoués par
+  job, taille, connexions, cache et tuples morts de PostgreSQL.
+  `scripts/host-stats.py` mesure chaque minute depuis la crontab, Vector
+  convertit en jauges ; les journaux de `/var/log/humanix` partent dans Loki
+  avec leur résultat. Règles 12 à 16 et 18. (#941, #945, #947)
+- **Le tableau de bord « Produit & Hex »** : connexions, comptes, espaces,
+  épisodes terminés, règles lues, campagnes et courriels, messages Hex par
+  résultat, plan et modèle, refus de quota, erreurs fournisseur et **coût
+  Mistral estimé** avec la grille du 1er octobre. Quatre compteurs ajoutés
+  au registre : `humanix_hex_messages_total`, `humanix_hex_caracteres_total`,
+  `humanix_courriels_total`, `humanix_episodes_termines_total`. Règle 17. (#943)
+- **Les règles 8 à 18 se créent par l'API** avec
+  `infra/grafana/provisionner-alertes.py`, idempotent, au lieu d'une heure de
+  clics. (#946)
+
+#### 🤖 Hex : quotas, modèle par plan, plafond d'instance
+
+- Plafonds par personne et par jour (40 / 200 / 500), par espace et par jour
+  (120 / 800 / 2 500), en plus de l'heure ; plafond quotidien de l'instance
+  `HEX_DAILY_CAP`, 500 par défaut avec Mistral. Le palier gratuit reçoit
+  `mistral-small-latest` (`HEX_AI_MODEL_STARTER`), les plans payants le
+  modèle configuré. Un message par portée, sans genre présupposé. (#937)
+- Plus aucune IA facturée en démo, quelle que soit la clé : les comptes de
+  démonstration sont partagés par tous les visiteurs. Le bouton de Hex
+  n'apparaît qu'avec une session. (#936)
+
+### Fixed
+
+- **La moitié des crons de production échouaient depuis le 19 août** :
+  `cron-host.sh` visait toujours le port 3000 alors que la bascule bleu/vert
+  alterne entre 3000 et 3010. La cible suit désormais la couleur active,
+  lue dans la trace de livraison puis sondée. 1 468 échecs silencieux en six
+  semaines : campagnes non lancées, purges sautées. (#940)
+- **La barre latérale de la console sur iPad** : Tailwind v4 n'applique
+  `hover:` que sous `@media (hover: hover)`, la barre ne se dépliait jamais au
+  toucher. Elle s'épingle d'un toucher, se replie proprement après
+  navigation. (#933, #934)
+- L'accueil affichait encore « 344 modules », littéral oublié par la
+  centralisation des chiffres ; le test de dérive vérifie désormais que
+  chaque page publique importe la constante. (#935)
+- Plus de bulle « Voir la démo » sur l'accueil. (#936)
+- La sonde des certificats n'écrit plus deux lignes d'erreur par minute dans
+  HAProxy : HTTP/1.1 seul, fermeture propre, une poignée de main par heure. (#947)
+- L'en-tête `Retry-After` de la route de chat annonçait 4 secondes au lieu
+  d'une heure. (#937)
+
+### Changed
+
+- **Observatoire des fuites** : plus aucune mention ni lecture d'une source
+  retirée avant la première version, à la demande de son éditeur ; la
+  description de page ne cite que FrenchBreaches et Bonjour la Fuite, le
+  paramètre de filtre n'accepte plus cette source, la veille d'exposition
+  ne lit que les sources actives, ni nom ni adresse ne subsistent dans
+  l'image. (#938, #944)
+- Documentation du monitoring : jamais de `podman-compose up` à la main dans
+  `/opt/humanix-prod` (une troisième pile en naît), le montage du fichier
+  `haproxy.log` fige son inode à la rotation (`copytruncate` côté hôte),
+  sonde externe de disponibilité à ouvrir chez un tiers. (#942, #948, #945)
+
+### Security
+
+- **sharp 0.35.5** (GHSA-wq5f-xc86-pv6w, HIGH, dépendance librsvg) et
+  **source-map-js 1.2.2** (CVE-2026-93749, HIGH, déni de service), relevés par
+  le scan planifié sur les deux images publiées. (#955)
+- **Connecteur MCP** : @modelcontextprotocol/sdk 1.31.0 (GHSA-6qxp-vccf-f47h,
+  HIGH), proxy-addr 2.0.8 (GHSA-jqcg-44mw-7w3h, CRITICAL), source-map-js 1.2.2,
+  dans son propre lockfile. (#955)
+- Next 16.3.8, nodemailer 10.0.13, isomorphic-dompurify 4.4.0,
+  @simplewebauthn/server 14.0.3, dompurify 3.4.16. (#932, #949, #950)
+
+### Exploitation
+
+Aucune table nouvelle. Côté hôte, une fois : `infra/logrotate/humanix`
+installé, crontab réinstallée (`host-stats.py` chaque minute, acme.sh
+journalisé), `copytruncate` pour `/etc/logrotate.d/haproxy`, exclusions AIDE.
+Tout est déjà en place sur humanix-prod-01 depuis le 4 octobre. Ce tag
+republie l'image `latest` : le scan de sécurité planifié, en échec depuis le
+6 octobre sur les deux images, repasse au vert.
+
 ## [1.12.0] - 2026-10-01 📜 Les règles de la commune, adoptées en conseil, affichées, lues
 
 Tout le parcours Mairies repose sur le même ressort : des règles qui ne
