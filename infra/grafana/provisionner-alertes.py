@@ -12,6 +12,7 @@ Usage :
     GRAFANA_URL=https://<id>.dashboard.cockpit.scaleway.com \\
     GRAFANA_TOKEN=glsa_... \\
     python3 infra/grafana/provisionner-alertes.py [--dry-run] [--seulement 12,14]
+    python3 infra/grafana/provisionner-alertes.py --console   # sans jeton : a coller dans le navigateur
 
 Le jeton est celui d'un compte de service Grafana (Administration > Users
 and access > Service accounts, role Editor, puis Add token). Ce n'est PAS
@@ -226,14 +227,102 @@ def payload(regle: dict, sources: dict[str, str]) -> dict:
     }
 
 
+def regler_intervalle(base: str, token: str, groupe: str, voulu: int) -> str:
+    """Regle l'intervalle d'evaluation d'un groupe, en secondes entieres.
+
+    PIEGE : PUT .../rule-groups/<groupe> REMPLACE le groupe entier. Envoyer
+    seulement {"interval": ...} efface toutes ses regles (ou, avec une duree
+    en texte, repond « bad request data »). On relit donc le groupe, on ne
+    touche qu'a l'intervalle et on le renvoie complet, regles comprises.
+    Verifie le 2026-10-08 sur Cockpit : 5 groupes, 11 regles conservees.
+    """
+    chemin = f"/api/v1/provisioning/folder/{DOSSIER_UID}/rule-groups/{groupe}"
+    code, groupe_complet = api(base, token, "GET", chemin)
+    if code != 200 or not isinstance(groupe_complet, dict) or not isinstance(groupe_complet.get("rules"), list):
+        return f"ECHEC lecture HTTP {code} : {groupe_complet}"
+    if not groupe_complet["rules"]:
+        return "ignore, aucune regle dans le groupe"
+    if groupe_complet.get("interval") == voulu:
+        return "ok, deja en place"
+    groupe_complet["interval"] = voulu
+    code, rep = api(base, token, "PUT", chemin, groupe_complet)
+    if code not in (200, 201):
+        return f"ECHEC HTTP {code} : {rep}"
+    code, relu = api(base, token, "GET", chemin)
+    restantes = len(relu.get("rules", [])) if isinstance(relu, dict) else "?"
+    return f"ok ({len(groupe_complet['rules'])} regle(s) conservee(s), relu : {restantes})"
+
+
+SCRIPT_CONSOLE = r"""
+(async () => {
+  const h = { "Content-Type": "application/json", "Accept": "application/json", "X-Disable-Provenance": "true" };
+  const j = async (m, u, b) => { const r = await fetch(u, { method: m, headers: h, body: b ? JSON.stringify(b) : undefined, credentials: "same-origin" }); let d = null; try { d = await r.json(); } catch (e) {} return [r.status, d]; };
+  const out = [];
+  const [cu, du] = await j("GET", "/api/user");
+  if (cu !== 200 || !du || !du.login) { console.error("session Grafana absente", cu, location.href); return; }
+  const [cds, ds] = await j("GET", "/api/datasources");
+  if (cds !== 200 || !Array.isArray(ds)) { console.error("data sources illisibles", cds, ds); return; }
+  const pick = (t) => { const c = ds.filter(x => x.type === t); const p = c.filter(x => (x.name || "").includes("humanix-prod")); const r = p[0] || c[0]; return r ? r.uid : null; };
+  const LOKI = pick("loki"), PROM = pick("prometheus");
+  if (!LOKI || !PROM) { console.error("data source manquante", ds.map(x => x.type + ":" + x.name)); return; }
+  out.push({ objet: "data sources", resultat: "loki=" + LOKI + " prometheus=" + PROM });
+  const [cf] = await j("GET", "/api/folders/__DOSSIER__");
+  if (cf !== 200) { const [c2, d2] = await j("POST", "/api/folders", { uid: "__DOSSIER__", title: "__TITRE__" }); out.push({ objet: "dossier", resultat: (c2 === 200 || c2 === 201) ? "cree" : JSON.stringify(d2) }); }
+  const regles = __REGLES__;
+  for (const r of regles) {
+    const corps = JSON.parse(JSON.stringify(r).replaceAll("__LOKI__", LOKI).replaceAll("__PROM__", PROM));
+    const [ce] = await j("GET", "/api/v1/provisioning/alert-rules/" + corps.uid);
+    const [cr, dr] = ce === 200 ? await j("PUT", "/api/v1/provisioning/alert-rules/" + corps.uid, corps) : await j("POST", "/api/v1/provisioning/alert-rules", corps);
+    out.push({ objet: corps.title, resultat: (cr === 200 || cr === 201) ? (ce === 200 ? "mise a jour" : "creee") : "ECHEC HTTP " + cr + " " + JSON.stringify(dr) });
+  }
+  const groupes = __GROUPES__;
+  for (const [g, voulu] of groupes) {
+    const chemin = "/api/v1/provisioning/folder/__DOSSIER__/rule-groups/" + g;
+    const [cg, grp] = await j("GET", chemin);
+    if (cg !== 200 || !grp || !Array.isArray(grp.rules) || grp.rules.length === 0) { out.push({ objet: "groupe " + g, resultat: "lecture HTTP " + cg + ", intervalle non modifie" }); continue; }
+    if (grp.interval === voulu) { out.push({ objet: "groupe " + g, resultat: "ok, deja a " + voulu + " s" }); continue; }
+    grp.interval = voulu;
+    const [cp, dp] = await j("PUT", chemin, grp);
+    out.push({ objet: "groupe " + g, resultat: (cp === 200 || cp === 201) ? "ok, " + voulu + " s, " + grp.rules.length + " regle(s) conservee(s)" : "ECHEC HTTP " + cp + " " + JSON.stringify(dp) });
+  }
+  console.table(out);
+  return out;
+})();
+"""
+
+
+def script_console(regles: list[dict]) -> str:
+    """Le meme travail que principal(), mais execute par le navigateur deja connecte.
+
+    Cockpit (Grafana gere par Scaleway, connexion IAM) n'offre pas de compte de
+    service, donc pas de jeton : la session du navigateur est la seule voie.
+    Le script imprime se colle dans la console de l'onglet Grafana ; il porte
+    les memes appels, le meme dossier, la meme protection des groupes.
+    """
+    charges = [payload(r, {"loki": "__LOKI__", "prometheus": "__PROM__"}) for r in regles]
+    groupes = sorted({c["ruleGroup"]: secondes(r["intervalle"]) for c, r in zip(charges, regles)}.items())
+    return (
+        SCRIPT_CONSOLE.strip()
+        .replace("__REGLES__", json.dumps(charges, ensure_ascii=False))
+        .replace("__GROUPES__", json.dumps(groupes))
+        .replace("__DOSSIER__", DOSSIER_UID)
+        .replace("__TITRE__", DOSSIER_TITRE)
+    )
+
+
 def principal() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--dry-run", action="store_true", help="affiche les regles sans rien envoyer")
     ap.add_argument("--seulement", default="", help="numeros de regles, separes par des virgules (defaut : 8 a 18)")
+    ap.add_argument("--console", action="store_true", help="imprime un script a coller dans la console du navigateur connecte a Grafana (sans jeton)")
     args = ap.parse_args()
 
     retenues = {int(x) for x in args.seulement.split(",") if x.strip()} if args.seulement else {r["n"] for r in REGLES}
     regles = [r for r in REGLES if r["n"] in retenues]
+
+    if args.console:
+        print(script_console(regles))
+        return 0
 
     if args.dry_run:
         sources = {"loki": "LOKI", "prometheus": "PROM"}
@@ -269,9 +358,7 @@ def principal() -> int:
 
     # L'intervalle d'evaluation se regle par groupe, pas par regle.
     for groupe, intervalle in groupes.items():
-        code, rep = api(base, token, "PUT", f"/api/v1/provisioning/folder/{DOSSIER_UID}/rule-groups/{groupe}", {"interval": intervalle})
-        etat = "ok" if code in (200, 201) else f"ECHEC HTTP {code} : {rep}"
-        print(f"  groupe {groupe:<14} evalue toutes les {intervalle} : {etat}")
+        print(f"  groupe {groupe:<14} evalue toutes les {intervalle} : {regler_intervalle(base, token, groupe, secondes(intervalle))}")
     return 0
 
 
