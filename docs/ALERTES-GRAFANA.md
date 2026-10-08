@@ -23,6 +23,14 @@ se saisissent donc dans l'interface Grafana de Scaleway Cockpit :
 C'est fastidieux une fois, et jamais plus. Les requêtes sont écrites pour être
 recopiées telles quelles.
 
+Depuis le 2026-10-08, les règles 8 à 18 ne se saisissent plus à la main :
+`python3 infra/grafana/provisionner-alertes.py --console` imprime un script à
+exécuter dans l'onglet Grafana connecté, qui les crée ou les met à jour, dossier
+« Humanix », identifiants `humanix-regle-<n>`. Cockpit n'offre pas de compte de
+service, donc pas de jeton : la session du navigateur est la seule voie, décrite
+dans `infra/grafana/README.md`. La saisie manuelle reste celle des règles 1 à 7
+et de toute retouche faite dans l'interface.
+
 ### Le jeu complet, en un fichier
 
 `alertes-grafana.json` (à côté de ce document) contient les **sept règles telles
@@ -95,9 +103,10 @@ Remettre la condition d'origine ensuite.
 ### État de la chaîne
 
 Vérifié de bout en bout le 2026-08-14 : `instrumentation.ts` émet, `podman logs`
-le montre, Vector l'achemine, et les battements sont visibles dans Grafana. Ce
-qui reste manquant, ce sont les règles ci-dessous — le code émet, personne
-n'écoute encore.
+le montre, Vector l'achemine, et les battements sont visibles dans Grafana. Les
+règles 1 à 7 écoutent depuis août (export dans `alertes-grafana.json`), les
+règles 8 à 18 depuis le 2026-10-08, toutes acheminées vers Telegram selon la
+section « Acheminement ».
 
 ---
 
@@ -622,18 +631,42 @@ transaction en cours » du tableau de bord d'exploitation.
 
 Une alerte qui reste dans Grafana n'a réveillé personne.
 
-**Alerting → Contact points → Add contact point**, type `Email`, adresse
-`securite@humanix-cybersecurity.fr`.
+**En place, lu par l'API le 2026-10-08.** Un point de contact **Telegram** nommé
+« Security » (un bot et un salon privé ; le jeton du bot ne vit que dans Grafana)
+et une politique de notification à deux étages :
+
+| Route  | Correspondance       | Récepteur           | Attente | Intervalle | Répétition |
+| ------ | -------------------- | ------------------- | ------- | ---------- | ---------- |
+| racine | toutes les alertes   | Security (Telegram) | 30 s    | 5 min      | 10 min     |
+| enfant | `severity = warning` | Security (Telegram) | hérité  | hérité     | 24 h       |
+
+Regroupement par dossier et par règle (`grafana_folder`, `alertname`). L'attente
+est le délai avant la première notification d'un groupe ; l'intervalle, celui
+avant d'annoncer une alerte nouvelle dans un groupe déjà notifié ; la
+répétition, le rappel d'une alerte qui dure sans changement.
+
+La route enfant, ajoutée le 2026-10-08, évite qu'un disque à 81 % ou un cron en
+échec réveillent le téléphone toutes les dix minutes pendant trois jours : les
+avertissements (règles 8 à 13, 15 et 17) se rappellent une fois par jour. Les
+critiques (14, 16 et 18) et les règles 1 à 7, sans label de sévérité, gardent
+les dix minutes. Une alerte nouvelle prévient toujours aussi vite, et la
+résolution est annoncée dans tous les cas.
+
+Telegram remplit l'exigence de **notification poussée sur téléphone** pour les
+règles critiques : sans elle, le délai réel de connaissance est « demain
+matin », et l'engagement de 48 h repose sur une heure zéro qu'on se sera fixée
+soi-même. Le salon ne doit donc pas être mis en silencieux la nuit. Aucune
+adresse courriel n'est dans la chaîne.
 
 ⚠️ **Ne pas router vers une adresse hébergée par la plateforme elle-même.** Une
 compromission qui rend le service inaccessible rendrait aussi l'alerte
-illisible — au moment précis où elle compte.
+illisible, au moment précis où elle compte. Telegram est hors de la plateforme.
 
-Pour les règles `critical` (2, 4 et 5), l'adresse ne suffit pas la nuit. Le
-strict minimum est une **notification poussée sur téléphone** : Grafana OnCall,
-ou un webhook vers n'importe quel service de push. Sans cela, le délai réel de
-connaissance est « demain matin », et l'engagement de 48 h repose sur une heure
-zéro qu'on se sera fixée soi-même.
+**Modifier l'acheminement** : Alerting → Notification policies dans l'interface,
+ou `/api/v1/provisioning/policies` depuis la session du navigateur (pas de
+jeton sur Cockpit). Le `PUT` remplace l'arbre entier : relire, modifier,
+renvoyer complet, avec l'en-tête `X-Disable-Provenance: true` pour que
+l'interface reste modifiable.
 
 ---
 
