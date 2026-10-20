@@ -205,6 +205,36 @@ caractères, avec un message lisible plutôt qu'un 400 opaque. Toute la
 logique utile (retries, timeout, codes de sortie) reste dans
 `scripts/cron-runner.sh`, partagé avec Ofelia.
 
+### La remise à zéro de la démo
+
+La démo est ouverte sans mot de passe : chaque visiteur y laisse des traces,
+et sans remise à zéro l'expérience finit par ne plus ressembler au produit.
+`scripts/reset-demo.sh` tourne **le dimanche à 03h30** depuis cette crontab
+et remet la démo dans l'état d'une installation fraîche, en réutilisant
+exactement ce que fait une livraison :
+
+1. arrêt de la couleur applicative qui sert (HAProxy répond 503 pendant deux
+   à trois minutes) ;
+2. `DROP SCHEMA public CASCADE` dans la base de la démo, sans toucher au
+   volume ni au rôle Postgres ;
+3. `podman-compose run --rm --no-deps app preparer`, c'est-à-dire
+   `prisma db push`, seed du catalogue, seed des comptes de démonstration
+   (`DEMO_MODE=true`), bootstrap admin ;
+4. redémarrage de la couleur, attente de `/api/health`, vérification que
+   les comptes `@demo-pme.fr` existent.
+
+Il **refuse** tout répertoire dont le `.env` ne dit pas `STACK=demo` et
+`DEMO_MODE=true` : il ne peut pas s'exécuter contre la production. Le
+détail va dans `demo-reset.log`, et une ligne de synthèse au format de
+`cron-host.sh` (`job=demo-reset`) dans `cron.log`, pour que le tableau
+d'exploitation et la règle 15 voient un échec. `--dry-run` montre le plan.
+
+Il remplace un script de mai 2026, jamais versionné, lancé par
+`/etc/cron.d/humanix-demo-reset` et écrit pour l'ancienne pile Docker
+Compose : il échouait chaque nuit en « Permission denied », et c'était une
+chance, puisqu'il aurait supprimé les volumes de la démo sans savoir la
+reconstruire. Retirés le 2026-10-20.
+
 ## 5. Alternative self-hosters : Ofelia sur docker compose
 
 Le repo livre une **extension compose** prête à l'emploi :

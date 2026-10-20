@@ -107,6 +107,24 @@ LOG=/var/log/humanix/cron.log
 # possible entre archiver et supprimer.
 0 1 * * * $HUMANIX/scripts/archive-audit-logs.sh >> /var/log/humanix/archive.log 2>&1
 
+# --- Remise a zero de la demo, le dimanche a 03h30 ---------------------
+#
+# La demo est ouverte sans mot de passe : chaque visiteur y laisse des
+# traces. scripts/reset-demo.sh vide le schema de SA base (jamais celle de
+# prod : il refuse tout .env qui ne dit pas STACK=demo et DEMO_MODE=true),
+# rejoue la preparation de l'image livree (schema, catalogue, comptes de
+# demonstration) et redemarre la couleur qui servait. Deux a trois minutes
+# de 503 sur la demo, un dimanche a 3 h 30.
+#
+# Le detail va dans demo-reset.log ; une ligne de synthese est aussi ecrite
+# dans cron.log (job=demo-reset), donc visible sur le tableau d'exploitation
+# et par la regle 15 de Grafana en cas d'echec.
+#
+# Remplace /etc/cron.d/humanix-demo-reset et son script de mai 2026,
+# retires le 2026-10-20 : ecrits pour l'ancienne pile Docker Compose, ils
+# auraient supprime les volumes de la demo sans savoir la reconstruire.
+30 3 * * 0 $HUMANIX/scripts/reset-demo.sh >> /var/log/humanix/demo-reset.log 2>&1
+
 # Rapport de conformite au comite de direction, le 1er de chaque mois.
 #
 # 07h00 et non la nuit : ce courriel arrive chez des dirigeants, autant

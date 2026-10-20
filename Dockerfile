@@ -199,6 +199,12 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
+# prisma.config.ts porte la commande de seed depuis le 2026-08 (elle etait
+# dans package.json#prisma). Sans lui dans l'image, `prisma db seed` ne
+# trouve aucune commande et sort en silence : les comptes de demonstration
+# n'etaient plus seedes a la livraison, decouvert le 2026-10-20 en vidant
+# la base de la demo.
+COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/content ./content
 # content-pro/ : submodule prive contenant le catalogue commercial (saisons,
