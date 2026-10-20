@@ -88,7 +88,11 @@ preparer_etat_partage() {
   # inappropries en prod. seed.ts re-appelle seedCatalog en interne (idempotent).
   if [ "$DEMO_MODE" = "true" ]; then
     echo "  -> DEMO_MODE=true, seed des comptes de demonstration"
-    ./node_modules/.bin/prisma db seed
+    # Le bundle compile directement, pas `prisma db seed` : celui-ci depend
+    # de prisma.config.ts, longtemps absent de l'image, et sortait alors en
+    # silence sans rien seeder (constate le 2026-10-20). Une demo sans ses
+    # comptes n'est pas une demo : l'echec arrete la preparation.
+    node dist-scripts/prisma/seed.mjs || { echo "  -> ECHEC du seed de demonstration" >&2; exit 1; }
   fi
 
   # Bootstrap du premier administrateur si la base est vierge.
