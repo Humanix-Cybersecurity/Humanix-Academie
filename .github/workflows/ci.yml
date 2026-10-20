@@ -22,7 +22,11 @@ name: CI
 #   2. Cache node_modules + .prisma partage entre jobs via actions/cache,
 #      key = hash(package-lock + schema.prisma). Sur self-hosted-runner
 #      mono-job, les jobs sont serialises ; le 1er paie `npm ci` (~60s),
-#      les suivants restaurent en ~5s. Gain : 50s × 9 jobs = ~7 min/CI.
+#      les suivants restaurent le cache. ATTENTION : il pese ~1 Go et se
+#      telecharge a 8-10 Mo/s depuis les runners pve2, soit 2 a 3 min par
+#      job (mesure le 2026-10-19 : le job Prettier a depasse son delai de
+#      5 min alors que toutes ses etapes avaient reussi). D'ou des delais
+#      de job a 8-10 min minimum, meme pour un controle de dix secondes.
 #
 #   3. Vitest sans coverage sur les PR (juste les tests). Coverage seulement
 #      sur push main pour archive. Gain : ~15s par run de test.
@@ -306,7 +310,7 @@ jobs:
     name: npm audit (HIGH/CRITICAL)
     runs-on: self-hosted
     continue-on-error: true
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -368,7 +372,7 @@ jobs:
   mdx-catalog:
     name: Validation MDX <-> catalogue
     runs-on: self-hosted
-    timeout-minutes: 3
+    timeout-minutes: 8
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -403,7 +407,7 @@ jobs:
   license-headers:
     name: Headers SPDX AGPL-3.0
     runs-on: self-hosted
-    timeout-minutes: 3
+    timeout-minutes: 8
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -437,7 +441,7 @@ jobs:
   env-audit:
     name: Couverture .env.example
     runs-on: self-hosted
-    timeout-minutes: 3
+    timeout-minutes: 8
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -472,7 +476,7 @@ jobs:
   mcp-server-build:
     name: Build connectors/mcp-server
     runs-on: self-hosted
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -512,7 +516,7 @@ jobs:
   format:
     name: Prettier check
     runs-on: self-hosted
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -552,7 +556,7 @@ jobs:
     name: DCO signed-off-by check
     runs-on: self-hosted
     if: github.event_name == 'pull_request'
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v6
