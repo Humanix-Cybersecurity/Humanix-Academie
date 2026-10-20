@@ -14,6 +14,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { sanitizeEmailHtml } from "@/lib/sanitize-html";
+import { premierGrapheme } from "@/lib/emoji";
 
 async function requireAdmin() {
   const session = await auth();
@@ -82,10 +83,7 @@ export async function createCustomTemplate(
     String(formData.get("emailHtml") ?? "").trim(),
   );
   const markersRaw = String(formData.get("markers") ?? "").trim();
-  const emoji =
-    String(formData.get("emoji") ?? "🎣")
-      .trim()
-      .slice(0, 4) || "🎣";
+  const emoji = premierGrapheme(formData.get("emoji"), "🎣");
   // Phase 2 (juin 2026) : landing custom optionnelle
   const landingFakeHtml = sanitizeEmailHtml(
     String(formData.get("landingFakeHtml") ?? "").trim(),

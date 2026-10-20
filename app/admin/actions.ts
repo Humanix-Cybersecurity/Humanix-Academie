@@ -17,6 +17,7 @@ import {
 } from "@/lib/role-hierarchy";
 import { getCurrentTenantId } from "@/lib/current-tenant";
 import { canActAsAdminInTenant } from "@/lib/tenant-membership";
+import { premierGrapheme } from "@/lib/emoji";
 
 /**
  * Garde commun a toutes les server actions admin. Resout le tenant ACTIF
@@ -550,7 +551,7 @@ export async function createGroup(formData: FormData) {
   const tenantId = ctx.tenantId;
   const name = ((formData.get("name") as string) ?? "").trim();
   const description = ((formData.get("description") as string) ?? "").trim();
-  const emoji = ((formData.get("emoji") as string) ?? "🏷️").slice(0, 4);
+  const emoji = premierGrapheme(formData.get("emoji"), "🏷️");
   const color = ((formData.get("color") as string) ?? "").trim() || null;
   if (!name) throw new Error("name_required");
   let slug = slugify(name);
@@ -590,7 +591,7 @@ export async function updateGroup(groupId: string, formData: FormData) {
   if (!target || target.tenantId !== tenantId) throw new Error("not_found");
   const name = ((formData.get("name") as string) ?? target.name).trim();
   const description = ((formData.get("description") as string) ?? "").trim();
-  const emoji = ((formData.get("emoji") as string) ?? target.emoji).slice(0, 4);
+  const emoji = premierGrapheme(formData.get("emoji"), target.emoji);
   const color = ((formData.get("color") as string) ?? "").trim() || null;
   const isActive = formData.get("isActive") !== null;
   await db.group.update({
