@@ -14,9 +14,9 @@
 // et les comptages listés ci-dessous, puis changer les valeurs ET la date.
 export const CATALOGUE_CHIFFRES = {
   /** Saisons du catalogue commercial, hors démo. */
-  saisons: 79,
+  saisons: 80,
   /** Épisodes (modules MDX) du catalogue commercial. */
-  modules: 470,
+  modules: 476,
   /** Enquêtes interactives premium (content-pro/content/enquetes). */
   enquetes: 27,
   /** Enquêtes gratuites livrées avec la Community Edition (content/enquetes-demo). */
@@ -33,5 +33,5 @@ export const CATALOGUE_CHIFFRES = {
   releveLe: "2026-09-27",
 } as const;
 
-/** « 79 saisons · 470 modules », le libellé court des pages publiques. */
+/** « 80 saisons · 476 modules », le libellé court des pages publiques. */
 export const LIBELLE_CATALOGUE = `${CATALOGUE_CHIFFRES.saisons} saisons · ${CATALOGUE_CHIFFRES.modules} modules`;
