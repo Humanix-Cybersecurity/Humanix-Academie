@@ -442,6 +442,14 @@ export const SAISON_TAGS: Record<string, string[]> = {
     "sauvegardes",
     "gouvernance",
   ],
+  "ia-au-quotidien": [
+    "famille:public",
+    "tout-public",
+    "ia",
+    "fondamentaux",
+    "fraude",
+    "rgpd",
+  ],
 };
 
 /**
