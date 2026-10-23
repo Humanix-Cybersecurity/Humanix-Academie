@@ -6,6 +6,92 @@ Toutes les évolutions notables du produit, classées par version. Conforme
 
 ---
 
+## [1.14.0] - 2026-10-23 🧠 L'IA au quotidien, et une démo qui se remet à zéro
+
+Deux semaines de petites choses qui comptent : une saison entière sur l'IA
+telle qu'elle entre vraiment dans une équipe, une démo qui redevient propre
+chaque dimanche, un bug signalé par un revendeur corrigé le jour même, et une
+série de correctifs de sécurité dont deux avis DOMPurify publiés la veille de
+cette version.
+
+### Added
+
+#### 🧠 Saison « IA au quotidien : les dangers et les bons réflexes »
+
+Six épisodes tout public, ordre 80, en complément des trois saisons existantes
+sur l'IA (IA générative au bureau, Deepfakes, AI Act) sans les recouvrir :
+l'IA que personne n'a validée, l'IA qui se trompe avec aplomb, l'assistant qui
+a les clés et l'injection indirecte, le mail sans faute qui n'est plus un
+indice, les personnes derrière les données, et le réflexe IA, la règle
+d'équipe en cinq lignes transposée à la maison. Vouvoiement, accents, aucun
+genre présupposé, scénario à quatre choix, débrief, trois questions. Le
+catalogue passe à **80 saisons et 476 modules**, chiffres mis à jour partout
+où ils s'affichent. (#972)
+
+#### 🔄 La démo se remet à zéro le dimanche
+
+`scripts/reset-demo.sh`, planifié le dimanche à 03h30 dans la crontab
+versionnée : arrêt de la couleur qui sert, schéma de la base de la démo vidé
+sans toucher au volume, rejeu de la préparation de l'image livrée exactement
+comme une livraison, redémarrage, vérification des comptes de démonstration et
+du catalogue. Il refuse tout `.env` qui ne dit pas `STACK=demo` et
+`DEMO_MODE=true`, donc jamais la production. Synthèse dans `cron.log` au
+format des crons, visible sur le tableau d'exploitation et par la règle 15.
+Remplace un cron système et un script de mai 2026, jamais versionnés, écrits
+pour l'ancienne pile et qui échouaient chaque nuit. (#971)
+
+#### 📣 Règles d'alerte sans jeton
+
+`provisionner-alertes.py --console` imprime un script à exécuter dans l'onglet
+Grafana connecté : Cockpit n'offre pas de compte de service, la session du
+navigateur est la seule voie. C'est ainsi que les règles 8 à 18 ont été
+créées. Le guide des alertes décrit l'acheminement réel, Telegram et une route
+`warning` à rappel quotidien. (#957, #958)
+
+### Fixed
+
+- **L'emoji « technicien » ne casse plus la création d'un groupe.** Signalé
+  par un revendeur : choisir 🧑‍🔧 renvoyait une erreur React 441. Les actions
+  tronquaient l'emoji à quatre unités UTF-16 ; cette séquence en fait cinq,
+  coupée elle finissait par une demi-paire de substitution que Prisma refuse.
+  `premierGrapheme()` garde le premier caractère tel que l'œil le voit, sur
+  les groupes et les modèles de phishing. (#969)
+- **Le seed de démonstration ne tournait plus à la livraison** : depuis le
+  passage de la commande de seed dans `prisma.config.ts`, le fichier n'était
+  pas copié dans l'image et `prisma db seed` sortait en silence. Les comptes
+  survivaient parce que la base n'était jamais vidée. L'image copie le
+  fichier, l'entrypoint lance le seed compilé et s'arrête s'il échoue. (#971)
+- **Le réglage des intervalles de groupes d'alerte** envoyait une durée en
+  texte et aurait, format corrigé, effacé les règles du groupe : le script
+  relit le groupe et le renvoie complet. (#957)
+- Des contrôles de CI de dix secondes rougissaient parce que la restauration
+  du cache de 1 Go dépassait leur délai de cinq minutes : délais à 8 et 10
+  minutes. (#970)
+
+### Security
+
+- **dompurify 3.4.17** : deux avis publiés le 22 octobre sur la 3.4.16,
+  GHSA-cg2g-xh64-v4q7 (CRITICAL, contournement de `SAFE_FOR_TEMPLATES`) et
+  GHSA-mrv2-3pqr-j5jr (HIGH, `IN_PLACE`). Ce tag republie l'image `latest`
+  corrigée.
+- **Connecteur MCP** : @modelcontextprotocol/sdk 1.32.1 (quatre avis HIGH,
+  dont des jetons d'un autre serveur acceptés), vite 8.3.4 (trois avis sur
+  launch-editor), hono 4.13.13 (GHSA-5r4p-p66f-jhc7). (#973, #974)
+- Next 16.4.2, React et React DOM 19.3.1, nodemailer 10.1.1, undici 8.12.2,
+  zod 4.6.7, isomorphic-dompurify 4.5.0. (#959, #961, #964, #966)
+
+### Exploitation
+
+Aucune migration. Côté hôte, déjà en place sur humanix-prod-01 depuis le
+20 octobre : crontab réinstallée avec la ligne du dimanche, ancien cron
+système de remise à zéro retiré. Toutes les montées de dépendances ont
+respecté la garde des sept jours, vérifiée sur le lockfile et à l'heure près.
+
+### Dépendances
+
+- vitest 5.0.5, @vitest/coverage-v8 5.0.5, prettier 3.9.10, eslint-config-next
+  16.4.2, postcss 8.5.30, vite 8.3.4. (#960, #962, #965, #967)
+
 ## [1.13.0] - 2026-10-08 🔭 Voir enfin ce qui se passe sur la machine
 
 Une semaine d'exploitation après la veille du salon. Rien ne surveillait la
