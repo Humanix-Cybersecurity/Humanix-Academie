@@ -52,15 +52,4 @@
 # expiraient toutes le meme jour : 23 alertes rouges le meme matin se
 # lisent comme du bruit, pas comme une alerte.
 
-vulnerabilities:
-  # body-parser 2.3.0 dans connectors/mcp-server (via express, lui-meme via
-  # @modelcontextprotocol/sdk) : deni de service par octets residuels apres
-  # une requete, GHSA-27r3-jxmh-p828, publie le 2026-10-23, corrige en 2.4.0
-  # publiee le 2026-10-22. La garde npm des sept jours (min-release-age)
-  # refuse 2.4.0 avant le 2026-10-29 11:39 UTC. Le connecteur MCP n'est pas
-  # livre sur humanix-prod-01 : aucune exposition en production. A faire le
-  # 2026-10-29 ou 30 : `npm update body-parser --package-lock-only` dans
-  # connectors/mcp-server, puis retirer cette entree.
-  - id: GHSA-27r3-jxmh-p828
-    statement: "body-parser 2.4.0 trop jeune pour la garde des sept jours ; montee prevue le 2026-10-29, connecteur non livre en production"
-    expired_at: 2026-10-30
+vulnerabilities: []
