@@ -98,7 +98,7 @@ export default function HeroSection({ meteo }: { meteo: CyberMeteo }) {
               🌿
             </span>
             <p className="text-sm text-gray-700 dark:text-gray-200 text-left">
-              Pas encore prêt·e ? Faites une{" "}
+              Encore en réflexion ? Faites une{" "}
               <Link
                 href="/audit-flash"
                 className="font-bold text-accent-700 dark:text-accent-300 underline-offset-4 hover:underline"

@@ -139,12 +139,13 @@ function SignupInner() {
           <div className="grid sm:grid-cols-2 gap-2">
             {[
               { value: "dsi", label: "DSI / RSSI / Responsable IT" },
-              { value: "direction", label: "Direction / Dirigeant·e" },
+              { value: "direction", label: "Direction" },
               { value: "drh-daf", label: "DRH / DAF / Manager" },
               { value: "autre-cadre", label: "Autre fonction d'encadrement" },
               {
                 value: "employee",
-                label: "Employé·e curieux·se (pas décideur)",
+                label:
+                  "Membre du personnel, par curiosité (sans pouvoir de décision)",
               },
               { value: "individual", label: "Particulier ou famille" },
             ].map((opt) => (
@@ -164,7 +165,7 @@ function SignupInner() {
             ))}
           </div>
           <p className="text-xs text-gray-500 mt-2">
-            Les employé·es et particuliers seront redirigés vers{" "}
+            Les salariés et les particuliers seront redirigés vers{" "}
             <Link
               href="/inscription"
               className="text-accent-700 underline hover:text-accent-600"

@@ -169,7 +169,7 @@ export async function createStarterAccount(
     return {
       ok: false,
       error:
-        "Merci de choisir votre fonction dans l'organisation (DSI, direction, DRH/DAF, autre cadre, ou employé·e).",
+        "Merci de choisir votre fonction dans l'organisation (DSI, direction, DRH/DAF, autre cadre, ou membre du personnel).",
     };
   }
 

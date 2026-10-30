@@ -179,11 +179,11 @@ async function InscriptionInner({
           >
             <span aria-hidden="true">🌱</span>
             <span>
-              <strong>On t&apos;a dirigé·e au bon endroit.</strong> Pas besoin
-              de tenant à gérer pour apprendre : ici tu rejoins la
+              <strong>Te voilà au bon endroit.</strong> Pas besoin de tenant à
+              gérer pour apprendre : ici tu rejoins la
               <strong> Communauté Humanix</strong> et tu accèdes aux modules en
-              quelques secondes. Si tu es en fait décideur·euse d&apos;une
-              organisation,{" "}
+              quelques secondes. Si tu as en fait un pouvoir de décision dans
+              une organisation,{" "}
               <Link href="/signup?plan=starter" className="underline font-bold">
                 reviens à l&apos;inscription pro
               </Link>

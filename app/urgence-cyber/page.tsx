@@ -177,7 +177,7 @@ export default function UrgenceCyberPage() {
               />
               <PreambleItem
                 emoji="🤝"
-                title="Vous n'êtes pas seul·e"
+                title="Il y a du monde pour vous aider"
                 text="CyberMalveillance.gouv.fr, votre cyber-assurance, l'ANSSI, votre prestataire - appelez. Personne n'est jugé."
               />
             </div>

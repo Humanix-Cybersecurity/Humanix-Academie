@@ -8,7 +8,12 @@ import { useTransition } from "react";
 import { chooseMood } from "@/app/profil/mascotte/actions";
 
 const MOODS = [
-  { id: "neutral", label: "Neutre", emoji: "😐", desc: "Calme et concentré·e" },
+  {
+    id: "neutral",
+    label: "Neutre",
+    emoji: "😐",
+    desc: "Au calme, on se concentre",
+  },
   { id: "happy", label: "Heureux", emoji: "😊", desc: "La forme !" },
   { id: "celebrate", label: "Célébration", emoji: "🎉", desc: "On a réussi" },
   { id: "curious", label: "Curieux", emoji: "🤔", desc: "On apprend" },

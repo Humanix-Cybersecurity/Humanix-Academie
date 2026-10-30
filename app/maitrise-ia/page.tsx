@@ -272,9 +272,9 @@ export default function MaitriseIAPage() {
           <li className="flex gap-3">
             <span aria-hidden="true">🌑</span>
             <span>
-              <strong>Indicateur Shadow AI</strong> - pourcentage
-              d&apos;employé·es déclarant utiliser des outils IA hors politique
-              IT. Indispensable avant l&apos;AI Act.
+              <strong>Indicateur Shadow AI</strong> - pourcentage du personnel
+              déclarant utiliser des outils IA hors politique IT. Indispensable
+              avant l&apos;AI Act.
             </span>
           </li>
           <li className="flex gap-3">

@@ -47,7 +47,7 @@ export default async function FamilleInviterPage() {
           Offrez Cyber Famille à 3 proches
         </h1>
         <p className="text-gray-700 dark:text-gray-300 max-w-xl mx-auto">
-          Vos parents, votre conjoint·e, vos ados : ils sont aussi exposés que
+          Vos parents, votre partenaire, vos ados : ils sont aussi exposés que
           vous l'étiez. Offrez-leur un accès gratuit aux articles Cyber Famille,
           écrits sans jargon. Aucun compte à créer pour eux, aucune donnée
           collectée.

@@ -218,7 +218,8 @@ const CATEGORIE_PROFILS: Record<
 
   // ==== NIS2 ====
   "nis2-pme": {
-    persona: "Vous êtes dirigeant·e ou RSSI d'une organisation française",
+    persona:
+      "Vous êtes membre de la direction ou RSSI d'une organisation française",
     objective: "Comprendre l'impact NIS2 sur votre organisation",
     scenarioTemplate: (t) =>
       `Votre entreprise est potentiellement concernée par la directive NIS2. Sujet du jour : "${t}". Vous devez prendre une décision de gouvernance.`,
