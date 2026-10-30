@@ -12,7 +12,7 @@ export async function GET(req: Request) {
 
   // Multi-tenant : on n'expose que les saisons globales (tenantId null)
   // + les saisons custom du tenant courant. Pas celles d'autres tenants.
-  const [saisons, configs] = await Promise.all([
+  const [saisons, configs, affectations] = await Promise.all([
     db.saison.findMany({
       where: {
         isPublished: true,
@@ -21,9 +21,21 @@ export async function GET(req: Request) {
       include: { episodes: { where: { isPublished: true } } },
     }),
     db.tenantSaisonConfig.findMany({ where: { tenantId: a.tenantId! } }),
+    // Prescription par groupes : slugs des groupes vises par chaque saison
+    // (vide = toute l'organisation). Cf. lib/catalogue/prescription.ts.
+    db.tenantSaisonGroupe.findMany({
+      where: { tenantId: a.tenantId! },
+      select: { saisonId: true, group: { select: { slug: true } } },
+    }),
   ]);
 
   const cfg = new Map(configs.map((c) => [c.saisonId, c]));
+  const groupesParSaison = new Map<string, string[]>();
+  for (const aff of affectations) {
+    const liste = groupesParSaison.get(aff.saisonId) ?? [];
+    liste.push(aff.group.slug);
+    groupesParSaison.set(aff.saisonId, liste);
+  }
 
   const data = saisons.map((s) => {
     const c = cfg.get(s.id);
@@ -36,6 +48,7 @@ export async function GET(req: Request) {
       order: c?.customOrder ?? s.order,
       isActive: c ? c.isActive : true,
       isMandatory: c?.isMandatory ?? false,
+      groupes: groupesParSaison.get(s.id) ?? [],
       episodes: s.episodes.map((e) => ({
         id: e.id,
         slug: e.slug,
