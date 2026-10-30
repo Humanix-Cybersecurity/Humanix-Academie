@@ -86,6 +86,46 @@ export async function toggleSaisonMandatory(
   return { ok: true };
 }
 
+/**
+ * Public vise d'une saison : les groupes auxquels elle est PRESCRITE.
+ *
+ * Liste vide = tout l'espace. Les groupes doivent appartenir a l'espace ;
+ * les autres sont ignores en silence, comme dans setUserGroups. La regle
+ * de lecture est dans lib/catalogue/prescription.ts.
+ */
+export async function setSaisonGroupes(saisonId: string, groupIds: string[]) {
+  const ctx = await requireAdmin();
+  const tenantId = ctx.tenantId;
+  const saison = await db.saison.findFirst({
+    where: { id: saisonId, OR: [{ tenantId: null }, { tenantId }] },
+    select: { id: true, title: true },
+  });
+  if (!saison) throw new Error("not_found");
+  const validGroups = await db.group.findMany({
+    where: { id: { in: groupIds }, tenantId },
+    select: { id: true },
+  });
+  const validIds = Array.from(new Set(validGroups.map((g) => g.id)));
+  await db.$transaction([
+    db.tenantSaisonGroupe.deleteMany({ where: { tenantId, saisonId } }),
+    db.tenantSaisonGroupe.createMany({
+      data: validIds.map((groupId) => ({ tenantId, saisonId, groupId })),
+      skipDuplicates: true,
+    }),
+  ]);
+  await auditLog({
+    action: AuditActions.SAISON_GROUPS_CHANGED,
+    actor: { userId: ctx.userId, email: ctx.email, role: ctx.role },
+    tenantId,
+    target: { type: "saison", id: saisonId, label: saison.title },
+    metadata: { groupIds: validIds },
+  });
+  revalidatePath("/admin/modules");
+  revalidatePath("/admin/groupes");
+  revalidatePath("/apprendre");
+  return { ok: true, groupIds: validIds };
+}
+
 export async function moveSaison(saisonId: string, direction: "up" | "down") {
   const { tenantId } = await requireAdmin();
   // Recupere toutes les saisons accessibles au tenant + leurs configs custom

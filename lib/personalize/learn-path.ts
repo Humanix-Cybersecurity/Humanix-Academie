@@ -95,13 +95,17 @@ export type SaisonClassification = {
   /** Texte court (1 phrase) explicant POURQUOI cette saison est recommandee.
    *  Affiche en tooltip / micro-copy sur la card. null si pas recommandee. */
   reason: string | null;
+  /** True si la saison est prescrite au groupe de la personne */
+  prescribed: boolean;
 };
 
 export type ClassifyInput = {
   /** Slug de la saison a classer */
   saisonSlug: string;
-  /** True si Tenant.config.isMandatory pour cette saison */
+  /** True si Tenant.config.isMandatory pour cette saison, POUR CETTE PERSONNE (cf. lib/catalogue/prescription.ts) */
   isMandatory: boolean;
+  /** True si la saison est prescrite a un groupe de la personne sans lui etre obligatoire */
+  isPrescribed?: boolean;
   /** Persona infere (cf. lib/ai/persona.ts) */
   persona: Persona;
   /** Maturite : nb d'episodes COMPLETED + score moyen quiz */
@@ -138,6 +142,9 @@ export function classifySaisonForUser(
   if (input.isMandatory) {
     bucket = "mandatory";
     reason = "Saison recommandée par ton entreprise.";
+  } else if (input.isPrescribed) {
+    bucket = "recommended";
+    reason = "Saison prescrite à ton groupe par ton entreprise.";
   } else if (personaRank >= 0) {
     bucket = "recommended";
     reason = personaReasonText(input.persona);
@@ -150,6 +157,7 @@ export function classifySaisonForUser(
     personaRank,
     recommendedDifficulty,
     reason,
+    prescribed: input.isPrescribed === true,
   };
 }
 
@@ -190,9 +198,23 @@ export function compareSaisonsForUser<
   const bb = order[b.classification.bucket];
   if (ba !== bb) return ba - bb;
 
-  // Dans le bucket "recommended", on classe par personaRank (0 d'abord)
+  // Dans le bucket "recommended" : les saisons prescrites au groupe de la
+  // personne d'abord, puis par personaRank (0 d'abord ; -1 = sans rang,
+  // donc apres), puis ordre canonique.
   if (a.classification.bucket === "recommended") {
-    return a.classification.personaRank - b.classification.personaRank;
+    const pa = a.classification.prescribed ? 0 : 1;
+    const pb = b.classification.prescribed ? 0 : 1;
+    if (pa !== pb) return pa - pb;
+    const ra =
+      a.classification.personaRank < 0
+        ? Number.MAX_SAFE_INTEGER
+        : a.classification.personaRank;
+    const rb =
+      b.classification.personaRank < 0
+        ? Number.MAX_SAFE_INTEGER
+        : b.classification.personaRank;
+    if (ra !== rb) return ra - rb;
+    return a.effectiveOrder - b.effectiveOrder;
   }
 
   // Sinon, ordre canonique du tenant

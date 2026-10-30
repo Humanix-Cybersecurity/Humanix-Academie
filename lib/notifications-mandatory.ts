@@ -20,6 +20,10 @@
 
 import { db } from "@/lib/db";
 import { sendEmail, isEmailConfigured } from "@/lib/email";
+import {
+  chargerContextePrescription,
+  filtrerSaisonsPrescrites,
+} from "@/lib/catalogue/prescription";
 
 /** Ne pas relancer un meme user sur la meme saison avant ce delai. */
 const MANDATORY_REMINDER_COOLDOWN_DAYS = 7;
@@ -63,13 +67,17 @@ export async function computeMandatoryProgress(
       },
     },
   });
-  if (configs.length === 0) return [];
+  // Prescription par groupes : on ne relance une personne que sur les
+  // saisons obligatoires POUR ELLE (cf. lib/catalogue/prescription.ts).
+  const contexte = await chargerContextePrescription(tenantId, userId);
+  const prescrites = filtrerSaisonsPrescrites(configs, contexte);
+  if (prescrites.length === 0) return [];
 
   const done = await db.progress.findMany({
     where: {
       userId,
       status: "COMPLETED",
-      saisonId: { in: configs.map((c) => c.saisonId) },
+      saisonId: { in: prescrites.map((c) => c.saisonId) },
     },
     select: { saisonId: true, episodeId: true },
   });
@@ -81,7 +89,7 @@ export async function computeMandatoryProgress(
     doneBySaison.set(p.saisonId, set);
   }
 
-  return configs
+  return prescrites
     .map((c) => ({
       saisonId: c.saisonId,
       title: c.saison.title,

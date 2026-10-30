@@ -27,6 +27,10 @@
 //   SCIM, etc.). Le caller wrap dans try/catch et log mais continue.
 
 import { db } from "@/lib/db";
+import {
+  chargerContextePrescription,
+  filtrerSaisonsPrescrites,
+} from "@/lib/catalogue/prescription";
 
 export type AutoAssignResult = {
   assigned: number;
@@ -69,7 +73,13 @@ export async function autoAssignMandatorySaisons(
     },
   });
 
-  if (mandatoryConfigs.length === 0) {
+  // Prescription par groupes : une saison obligatoire ciblee sur d'autres
+  // groupes que ceux de la personne ne fait pas partie de son parcours
+  // d'arrivee (cf. lib/catalogue/prescription.ts). Sans affectation dans
+  // l'espace, la liste est inchangee.
+  const contexte = await chargerContextePrescription(tenantId, userId);
+  const prescrites = filtrerSaisonsPrescrites(mandatoryConfigs, contexte);
+  if (prescrites.length === 0) {
     return { assigned: 0, skipped: 0, saisonSlugs: [] };
   }
 
@@ -77,7 +87,7 @@ export async function autoAssignMandatorySaisons(
   let skipped = 0;
   const saisonSlugs: string[] = [];
 
-  for (const config of mandatoryConfigs) {
+  for (const config of prescrites) {
     const firstEpisode = config.saison.episodes[0];
     if (!firstEpisode) {
       skipped++; // saison obligatoire sans episode publie : on saute silencieusement

@@ -12,6 +12,10 @@
 //     (le client RW principal).
 import { db } from "@/lib/db";
 import { dbReadOnly } from "@/lib/db-readonly";
+import {
+  chargerAffectations,
+  filtrerSaisonsPrescrites,
+} from "@/lib/catalogue/prescription";
 
 export type RiskFactors = {
   baseline: number;
@@ -50,6 +54,7 @@ export async function computeRiskScore(userId: string): Promise<RiskFactors> {
       // pondérer le scoring par metier (cf. composant 7).
       groups: {
         select: {
+          groupId: true,
           group: { select: { slug: true, isActive: true } },
         },
       },
@@ -138,9 +143,15 @@ export async function computeRiskScore(userId: string): Promise<RiskFactors> {
     score -= 20;
   }
 
-  // 4. Modules obligatoires non complétés
+  // 4. Modules obligatoires non complétés, POUR CETTE PERSONNE : une saison
+  // obligatoire prescrite a d'autres groupes que les siens ne compte pas
+  // (cf. lib/catalogue/prescription.ts).
+  const affectations = await chargerAffectations(user.tenantId);
   const mandatorySaisonIds = new Set(
-    user.tenant.saisonConfigs.map((c) => c.saisonId),
+    filtrerSaisonsPrescrites(user.tenant.saisonConfigs, {
+      affectations,
+      groupesUtilisateur: new Set(user.groups.map((ug) => ug.groupId)),
+    }).map((c) => c.saisonId),
   );
   if (mandatorySaisonIds.size > 0) {
     const completedSaisonIds = new Set(user.progress.map((p) => p.saisonId));

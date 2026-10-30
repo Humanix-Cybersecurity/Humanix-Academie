@@ -60,6 +60,11 @@ import LockedPremiumCard, {
   PremiumPreviewIntro,
 } from "@/components/demo/LockedPremiumCard";
 import { CATALOGUE_CHIFFRES } from "@/lib/catalogue-chiffres";
+import {
+  chargerAffectations,
+  etatPrescription,
+  groupesParSaison,
+} from "@/lib/catalogue/prescription";
 
 export const dynamic = "force-dynamic";
 
@@ -108,9 +113,15 @@ export default async function ApprendrePage() {
       // Sert pour l'highlight des episodes targetes (Episode.targetGroups).
       db.userGroup.findMany({
         where: { userId },
-        select: { group: { select: { slug: true } } },
+        select: { groupId: true, group: { select: { slug: true } } },
       }),
     ]);
+  // Prescription par groupes (cf. lib/catalogue/prescription.ts) : une
+  // saison affectee a des groupes est mise en avant pour leurs membres et
+  // n'est obligatoire que pour eux ; elle reste consultable par tous.
+  const affectations = await chargerAffectations(tenantId);
+  const groupesSaison = groupesParSaison(affectations);
+  const groupesUtilisateur = new Set(userGroups.map((ug) => ug.groupId));
 
   // Set des slugs de groupes de l'user pour test rapide d'intersection
   // avec Episode.targetGroups (CSV "compta,rh"). Empty set = user sans
@@ -174,10 +185,17 @@ export default async function ApprendrePage() {
     })
     .map((s) => {
       const cfg = configBySaison.get(s.id);
-      const isMandatory = cfg?.isMandatory ?? false;
+      const etat = etatPrescription({
+        isMandatory: cfg?.isMandatory ?? false,
+        groupesSaison: groupesSaison.get(s.id) ?? [],
+        groupesUtilisateur,
+      });
+      const isMandatory = etat.obligatoire;
+      const isPrescribed = etat.ciblee && etat.prescrite;
       const classification: SaisonClassification = classifySaisonForUser({
         saisonSlug: s.slug,
         isMandatory,
+        isPrescribed,
         persona,
         completedCount,
         avgQuizScorePct,
@@ -185,6 +203,7 @@ export default async function ApprendrePage() {
       return {
         ...s,
         isMandatory,
+        isPrescribed,
         effectiveOrder: cfg?.customOrder ?? s.order,
         classification,
         // Annote chaque episode avec un flag "pour ton metier" pour que

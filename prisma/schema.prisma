@@ -174,6 +174,7 @@ model Tenant {
   progress               Progress[]
   events                 Event[]
   saisonConfigs          TenantSaisonConfig[]
+  saisonGroupes          TenantSaisonGroupe[]
   smtpConfig             TenantSmtpConfig?
   challenges             TeamChallenge[]
   apiKeys                ApiKey[]
@@ -637,6 +638,7 @@ model Group {
   updatedAt   DateTime @updatedAt
 
   members UserGroup[]
+  saisons TenantSaisonGroupe[]
 
   @@unique([tenantId, slug])
   @@index([tenantId, isActive])
@@ -729,6 +731,7 @@ model Saison {
   episodes      Episode[]
   progress      Progress[]
   tenantConfigs TenantSaisonConfig[]
+  tenantGroupes TenantSaisonGroupe[]
 
   @@index([tenantId])
   @@index([sourceModuleId])
@@ -788,6 +791,39 @@ model TenantSaisonConfig {
 
   @@unique([tenantId, saisonId])
   @@index([tenantId])
+}
+
+// =====================================================
+// PRESCRIPTION D'UNE SAISON A DES GROUPES (2026-10-30)
+// =====================================================
+// Une saison affectee a un ou plusieurs groupes de l'espace est PRESCRITE
+// aux membres de ces groupes : mise en avant sur /apprendre, et, si la
+// saison est obligatoire (TenantSaisonConfig.isMandatory), obligatoire pour
+// eux seulement. Elle reste CONSULTABLE par tout le monde : prescrite, pas
+// dediee (decision du 2026-10-30). Zero ligne = la saison s'adresse a tout
+// l'espace, comme avant cette table.
+//
+// Table de jointure avec cle etrangere, et non un CSV de slugs comme
+// Episode.targetGroups : c'est de la configuration d'espace editee par des
+// admins, et Group.slug est renommable. Supprimer un groupe retire ses
+// affectations (cascade), et une saison sans affectation redevient pour
+// tout le monde.
+//
+// La regle de lecture est ecrite une seule fois : lib/catalogue/prescription.ts.
+model TenantSaisonGroupe {
+  id        String   @id @default(cuid())
+  tenantId  String
+  saisonId  String
+  groupId   String
+  createdAt DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  saison Saison @relation(fields: [saisonId], references: [id], onDelete: Cascade)
+  group  Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, saisonId, groupId])
+  @@index([tenantId, saisonId])
+  @@index([groupId])
 }
 
 // =====================================================
@@ -2231,6 +2267,7 @@ enum AuditAction {
   USER_SUSPENDED
   USER_ROLE_CHANGED
   USER_GROUPS_CHANGED
+  SAISON_GROUPS_CHANGED // Public vise d'une saison (prescription par groupes) modifie
   // Rattachement cross-tenant (RGPD-safe)
   TRANSFER_REQUEST_CREATED // Admin a demande le rattachement d'un email
   TRANSFER_REQUEST_ACCEPTED // L'utilisateur cible a accepte

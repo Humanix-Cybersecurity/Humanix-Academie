@@ -11,6 +11,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 vi.mock("@/lib/db", () => ({
   db: {
     tenantSaisonConfig: { findMany: vi.fn() },
+    tenantSaisonGroupe: { findMany: vi.fn() },
+    userGroup: { findMany: vi.fn() },
     progress: { findMany: vi.fn() },
     notificationLog: { findMany: vi.fn(), create: vi.fn() },
     user: { findMany: vi.fn() },
@@ -32,6 +34,8 @@ import { sendEmail, isEmailConfigured } from "@/lib/email";
 
 const dbMock = db as unknown as {
   tenantSaisonConfig: { findMany: ReturnType<typeof vi.fn> };
+  tenantSaisonGroupe: { findMany: ReturnType<typeof vi.fn> };
+  userGroup: { findMany: ReturnType<typeof vi.fn> };
   progress: { findMany: ReturnType<typeof vi.fn> };
   notificationLog: {
     findMany: ReturnType<typeof vi.fn>;
@@ -82,6 +86,9 @@ beforeEach(() => {
   sendEmailMock.mockResolvedValue({ ok: true });
   dbMock.notificationLog.findMany.mockResolvedValue([]);
   dbMock.notificationLog.create.mockResolvedValue({});
+  // Sans affectation de groupe, la prescription ne change rien.
+  dbMock.tenantSaisonGroupe.findMany.mockResolvedValue([]);
+  dbMock.userGroup.findMany.mockResolvedValue([]);
 });
 
 describe("computeMandatoryProgress", () => {
