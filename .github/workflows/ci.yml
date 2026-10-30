@@ -19,14 +19,17 @@ name: CI
 #      >>> documentaires impossibles a fusionner. Conserve sur `push`.
 #      >>> Explication complete sous le bloc `on:`.
 #
-#   2. Cache node_modules + .prisma partage entre jobs via actions/cache,
-#      key = hash(package-lock + schema.prisma). Sur self-hosted-runner
-#      mono-job, les jobs sont serialises ; le 1er paie `npm ci` (~60s),
-#      les suivants restaurent le cache. ATTENTION : il pese ~1 Go et se
-#      telecharge a 8-10 Mo/s depuis les runners pve2, soit 2 a 3 min par
-#      job (mesure le 2026-10-19 : le job Prettier a depasse son delai de
-#      5 min alors que toutes ses etapes avaient reussi). D'ou des delais
-#      de job a 8-10 min minimum, meme pour un controle de dix secondes.
+#   2. PLUS DE CACHE GITHUB ACTIONS (retire le 2026-10-30). Chaque job
+#      restaurait ~1 Go de node_modules plus ~400 Mo de cache npm depuis le
+#      cache GitHub : onze jobs par run, soit 10 a 15 Go de sortie par CI.
+#      Le 2026-10-30, GitHub a coupe : « Failed to restore: Egress is over
+#      the account limit », et les jobs restaient bloques dix minutes sur
+#      Setup Node.js avant d'etre tues. Les executeurs sont des machines
+#      persistantes : le cache local de npm (~/.npm) survit d'un job a
+#      l'autre, et `npm ci` y prend une minute sans rien telecharger de
+#      GitHub. Chaque job installe donc ses dependances lui-meme. Si un
+#      jour les jobs retournent sur des executeurs GitHub, remettre le
+#      cache GitHub ; jamais sur les executeurs maison.
 #
 #   3. Vitest sans coverage sur les PR (juste les tests). Coverage seulement
 #      sur push main pour archive. Gain : ~15s par run de test.
@@ -123,12 +126,6 @@ env:
   # et schema.prisma pour le client Prisma genere (qui est dans
   # node_modules/.prisma/). Si l'un ou l'autre change -> cache miss = full
   # `npm ci` + `prisma generate`.
-  # v2 le 2026-08-17 : la cle NE CONTIENT PAS la version de Node, donc un
-  # node_modules construit sous Node 20 serait restaure tel quel sous Node 24 --
-  # avec des modules natifs compiles pour la mauvaise ABI. On fait tourner le
-  # prefixe pour invalider les caches de l'ancien runtime. A refaire a chaque
-  # changement de `node-version`.
-  CACHE_KEY_PREFIX: "node-deps-v2"
 
 # Annule les runs précédents pour la même PR (gain CI minutes).
 concurrency:
@@ -163,19 +160,8 @@ jobs:
           # 24 et non 25 : jsdom 30 declare `^22.22.2 || ^24.15.0 || >=26.0.0`,
           # qui EXCLUT la 25. Et 24 est une ligne LTS, la 25 non.
           node-version: 24
-          cache: npm
 
-      - name: Cache node_modules + Prisma client
-        id: cache-deps
-        uses: actions/cache@v5
-        with:
-          path: |
-            node_modules
-            node_modules/.prisma
-          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('package-lock.json', 'prisma/schema.prisma') }}
-
-      - name: Install dependencies + generate Prisma (cache miss only)
-        if: steps.cache-deps.outputs.cache-hit != 'true'
+      - name: Install dependencies + generate Prisma
         run: |
           npm ci
           npx prisma generate
@@ -216,19 +202,8 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: npm
 
-      - name: Cache node_modules + Prisma client
-        id: cache-deps
-        uses: actions/cache@v5
-        with:
-          path: |
-            node_modules
-            node_modules/.prisma
-          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('package-lock.json', 'prisma/schema.prisma') }}
-
-      - name: Install dependencies + generate Prisma (cache miss only)
-        if: steps.cache-deps.outputs.cache-hit != 'true'
+      - name: Install dependencies + generate Prisma
         run: |
           npm ci
           npx prisma generate
@@ -265,19 +240,8 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: npm
 
-      - name: Cache node_modules + Prisma client
-        id: cache-deps
-        uses: actions/cache@v5
-        with:
-          path: |
-            node_modules
-            node_modules/.prisma
-          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('package-lock.json', 'prisma/schema.prisma') }}
-
-      - name: Install dependencies + generate Prisma (cache miss only)
-        if: steps.cache-deps.outputs.cache-hit != 'true'
+      - name: Install dependencies + generate Prisma
         run: |
           npm ci
           npx prisma generate
@@ -319,17 +283,8 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: npm
 
-      - name: Cache node_modules
-        id: cache-deps
-        uses: actions/cache@v5
-        with:
-          path: node_modules
-          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('package-lock.json', 'prisma/schema.prisma') }}
-
-      - name: Install dependencies (cache miss only)
-        if: steps.cache-deps.outputs.cache-hit != 'true'
+      - name: Install dependencies
         run: npm ci --ignore-scripts
 
       - name: Audit production dependencies (HIGH/CRITICAL only)
@@ -381,17 +336,8 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: npm
 
-      - name: Cache node_modules
-        id: cache-deps
-        uses: actions/cache@v5
-        with:
-          path: node_modules
-          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('package-lock.json', 'prisma/schema.prisma') }}
-
-      - name: Install dependencies (cache miss only)
-        if: steps.cache-deps.outputs.cache-hit != 'true'
+      - name: Install dependencies
         run: npm ci --ignore-scripts
 
       - name: Verify MDX slugs match catalog
@@ -416,17 +362,8 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: npm
 
-      - name: Cache node_modules
-        id: cache-deps
-        uses: actions/cache@v5
-        with:
-          path: node_modules
-          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('package-lock.json', 'prisma/schema.prisma') }}
-
-      - name: Install dependencies (cache miss only)
-        if: steps.cache-deps.outputs.cache-hit != 'true'
+      - name: Install dependencies
         run: npm ci --ignore-scripts
 
       - name: Verify SPDX headers on source files
@@ -450,17 +387,8 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: npm
 
-      - name: Cache node_modules
-        id: cache-deps
-        uses: actions/cache@v5
-        with:
-          path: node_modules
-          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('package-lock.json', 'prisma/schema.prisma') }}
-
-      - name: Install dependencies (cache miss only)
-        if: steps.cache-deps.outputs.cache-hit != 'true'
+      - name: Install dependencies
         run: npm ci --ignore-scripts
 
       - name: Audit env coverage
@@ -486,17 +414,9 @@ jobs:
         with:
           node-version: 24
 
-      - name: Cache MCP server node_modules
-        id: cache-mcp
-        uses: actions/cache@v5
-        with:
-          path: connectors/mcp-server/node_modules
-          key: mcp-server-deps-v1-${{ hashFiles('connectors/mcp-server/package-lock.json', 'connectors/mcp-server/package.json') }}
-
-      - name: Install MCP server dependencies (cache miss only)
-        if: steps.cache-mcp.outputs.cache-hit != 'true'
+      - name: Install MCP server dependencies
         working-directory: connectors/mcp-server
-        run: npm install
+        run: npm ci
 
       - name: Lint (tsc --noEmit)
         working-directory: connectors/mcp-server
@@ -525,17 +445,8 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: npm
 
-      - name: Cache node_modules
-        id: cache-deps
-        uses: actions/cache@v5
-        with:
-          path: node_modules
-          key: ${{ env.CACHE_KEY_PREFIX }}-${{ hashFiles('package-lock.json', 'prisma/schema.prisma') }}
-
-      - name: Install dependencies (cache miss only)
-        if: steps.cache-deps.outputs.cache-hit != 'true'
+      - name: Install dependencies
         run: npm ci --ignore-scripts
 
       # Le controle BLOQUE desormais. Il portait `continue-on-error: true`, donc
